@@ -1,0 +1,394 @@
+{
+  "key": "toll-keeper",
+  "source": "toll-keeper.sheet.webp",
+  "source_sha256": "13c8502466b2392021c3b41198ab33df80eea6eae9cfd0aceb61c5012fb7c60d",
+  "generator": "art-department/tools/clean-ai-sheet.py",
+  "canvas": {
+    "input_size": [
+      2048,
+      768
+    ],
+    "canvas": [
+      2048,
+      768
+    ],
+    "resampled": false
+  },
+  "components": {
+    "cores": 44,
+    "soft_islands": 4603,
+    "welded_split": 1,
+    "welded_necked": 1
+  },
+  "anchor": {
+    "kind": "foot-line",
+    "x": 71.5,
+    "y": 171.2,
+    "why": "stands: the idle foot line moves 1px (0.4% of the 256px cell, within 6%); anchored at the median foot line y 250.0 and the body's median centre x 136.0; after the fit (scale 0.648, shift -32,-1) and the cut at 176px it sits at (71.5, 171.2)",
+    "foot_spread_px": 1.0
+  },
+  "global_scale": 0.648,
+  "global_shift": [
+    -32,
+    -1
+  ],
+  "out_frame": 176,
+  "totals": {
+    "sliver_px_removed": 26838,
+    "cells_with_slivers": 24,
+    "px_reassembled": 26838,
+    "cells_reassembled": 24
+  },
+  "a9": {
+    "idle_centre_drift_px": 0.38,
+    "row_start_offset_px": {
+      "struck": 0.09,
+      "attacking": 0.14
+    },
+    "max_px": 3.0,
+    "pass": true
+  },
+  "pixels_sha256": "02dae9487e40cc2d7b7d6e5db084fa6658d5892afe1eceb2cd7c1ba272d41090",
+  "cells": [
+    {
+      "cell": 0,
+      "row": "idle",
+      "sliver_px_removed": 54,
+      "sliver_sources": [
+        8
+      ],
+      "px_reassembled": 124,
+      "translate": [
+        -32,
+        -1
+      ]
+    },
+    {
+      "cell": 1,
+      "row": "idle",
+      "sliver_px_removed": 9,
+      "sliver_sources": [
+        9
+      ],
+      "px_reassembled": 367,
+      "translate": [
+        -32,
+        -1
+      ]
+    },
+    {
+      "cell": 2,
+      "row": "idle",
+      "sliver_px_removed": 3,
+      "sliver_sources": [
+        1,
+        10
+      ],
+      "px_reassembled": 609,
+      "translate": [
+        -32,
+        -1
+      ]
+    },
+    {
+      "cell": 3,
+      "row": "idle",
+      "sliver_px_removed": 29,
+      "sliver_sources": [
+        2,
+        11
+      ],
+      "px_reassembled": 282,
+      "translate": [
+        -31,
+        -1
+      ]
+    },
+    {
+      "cell": 4,
+      "row": "idle",
+      "sliver_px_removed": 105,
+      "sliver_sources": [
+        5,
+        12
+      ],
+      "px_reassembled": 229,
+      "translate": [
+        -30,
+        0
+      ]
+    },
+    {
+      "cell": 5,
+      "row": "idle",
+      "sliver_px_removed": 86,
+      "sliver_sources": [
+        6,
+        13
+      ],
+      "px_reassembled": 152,
+      "translate": [
+        -30,
+        -1
+      ]
+    },
+    {
+      "cell": 6,
+      "row": "idle",
+      "sliver_px_removed": 97,
+      "sliver_sources": [
+        14
+      ],
+      "px_reassembled": 153,
+      "translate": [
+        -32,
+        -1
+      ]
+    },
+    {
+      "cell": 7,
+      "row": "idle",
+      "sliver_px_removed": 79,
+      "sliver_sources": [
+        15
+      ],
+      "px_reassembled": 128,
+      "translate": [
+        -32,
+        0
+      ]
+    },
+    {
+      "cell": 8,
+      "row": "struck",
+      "sliver_px_removed": 2354,
+      "sliver_sources": [
+        0,
+        9,
+        16
+      ],
+      "px_reassembled": 382,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 9,
+      "row": "struck",
+      "sliver_px_removed": 538,
+      "sliver_sources": [
+        1,
+        8,
+        10,
+        17
+      ],
+      "px_reassembled": 2805,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 10,
+      "row": "struck",
+      "sliver_px_removed": 710,
+      "sliver_sources": [
+        2,
+        9,
+        18
+      ],
+      "px_reassembled": 184,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 11,
+      "row": "struck",
+      "sliver_px_removed": 284,
+      "sliver_sources": [
+        3,
+        12,
+        19
+      ],
+      "px_reassembled": 385,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 12,
+      "row": "struck",
+      "sliver_px_removed": 278,
+      "sliver_sources": [
+        4,
+        20
+      ],
+      "px_reassembled": 238,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 13,
+      "row": "struck",
+      "sliver_px_removed": 185,
+      "sliver_sources": [
+        5,
+        20,
+        21
+      ],
+      "px_reassembled": 152,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 14,
+      "row": "struck",
+      "sliver_px_removed": 247,
+      "sliver_sources": [
+        6,
+        22
+      ],
+      "px_reassembled": 207,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 15,
+      "row": "struck",
+      "sliver_px_removed": 215,
+      "sliver_sources": [
+        7,
+        23
+      ],
+      "px_reassembled": 141,
+      "translate": [
+        -30,
+        -3
+      ]
+    },
+    {
+      "cell": 16,
+      "row": "attacking",
+      "sliver_px_removed": 1319,
+      "sliver_sources": [
+        8,
+        17
+      ],
+      "px_reassembled": 1,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 17,
+      "row": "attacking",
+      "sliver_px_removed": 591,
+      "sliver_sources": [
+        9,
+        18
+      ],
+      "px_reassembled": 1296,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 18,
+      "row": "attacking",
+      "sliver_px_removed": 315,
+      "sliver_sources": [
+        10,
+        17
+      ],
+      "px_reassembled": 10273,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 19,
+      "row": "attacking",
+      "sliver_px_removed": 10525,
+      "sliver_sources": [
+        11,
+        18,
+        20
+      ],
+      "px_reassembled": 7329,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 20,
+      "row": "attacking",
+      "sliver_px_removed": 7481,
+      "sliver_sources": [
+        12,
+        19,
+        21
+      ],
+      "px_reassembled": 1019,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 21,
+      "row": "attacking",
+      "sliver_px_removed": 986,
+      "sliver_sources": [
+        13,
+        20
+      ],
+      "px_reassembled": 194,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 22,
+      "row": "attacking",
+      "sliver_px_removed": 286,
+      "sliver_sources": [
+        14,
+        21,
+        23
+      ],
+      "px_reassembled": 97,
+      "translate": [
+        -30,
+        10
+      ]
+    },
+    {
+      "cell": 23,
+      "row": "attacking",
+      "sliver_px_removed": 62,
+      "sliver_sources": [
+        15
+      ],
+      "px_reassembled": 91,
+      "translate": [
+        -30,
+        10
+      ]
+    }
+  ]
+}

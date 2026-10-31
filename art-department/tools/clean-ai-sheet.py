@@ -29,8 +29,10 @@ THE STEPS, IN ORDER (A1 a-d, A2)
     flood inside alpha >= 1), so the fringe travels with its figure; a soft
     island that touches no core is a component of its own and is placed by
     its own centroid. A core with a quarter or more of its area in a second
-    cell is two poses welded together, not one limb, and is cut at the
-    gridlines instead (reported as `welded_split`).
+    cell is two poses welded together, not one limb: it is separated at its
+    neck when eroding it apart finds two poses in different cells (each
+    pixel then goes to the pose it is geodesically nearest; reported as
+    `welded_necked`), and otherwise cut at the gridlines (`welded_split`).
 (c) Registration, by integer translation only. The anchor is measured from
     the idle row (A2): if the lowest opaque row of each idle cell moves by
     no more than 6% of the cell the enemy STANDS (`foot-line`, at the median
@@ -107,6 +109,17 @@ DRIFT_MAX_PX = 3.0
 # pose's limb reaching over a gridline. The Gallows Crow's widest crossing
 # wing leaves under 15% of its core in the neighbour.
 WELD_SHARE = 0.25
+
+# (b): a welded core is first separated at its neck (the thinnest join, found
+# by eroding it a ring at a time) when that yields two poses: pieces of at
+# least 1% of a cell's area each (655 px at 256) whose centroids lie in
+# different cells, within a cell/16 rings (16 at 256). The Toll-Keeper's
+# lunge row welds two whole figures through a shield and its motion streak
+# (x 518-1102, phase AN5d): cut at the gridline, the left pose lost the end
+# of its shield to the right pose's cell. A thin weld (the Crane-Hook's
+# 378 px chain, a 2px touch) never yields two such pieces and is still cut at
+# the gridlines.
+NECK_SEED_SHARE = 0.01
 
 ROW_NAMES = ("idle", "struck", "attacking")
 
@@ -253,21 +266,89 @@ def assign(labels: np.ndarray, count: int, owner: np.ndarray, frame: int,
 
     target = np.full(n, -1, dtype=np.int64)
     welded = np.zeros(n, dtype=bool)
+    necked: dict[int, np.ndarray] = {}
     for c in range(1, n):
         # A limb that crossed a gridline leaves a small share of its core in
         # the neighbour; two poses welded by a touching weapon leave a large
-        # share in each. Only the second is cut, at the gridlines: a figure
-        # merely wider than its cell is still one figure, and (d) fits it.
+        # share in each. Only the second is separated: a figure merely wider
+        # than its cell is still one figure, and (d) fits it.
         second = np.sort(share[c])[-2] if n_cells > 1 else 0.0
         if cut_welds and second >= WELD_SHARE * area[c]:
             welded[c] = True
-            note["welded_split"] += 1
+            split = split_at_neck(labels, c, frame, columns, rows)
+            if split is None:
+                note["welded_split"] += 1
+            else:
+                necked[c] = split
+                note["welded_necked"] += 1
             continue
         target[c] = cell_of(sx[c] / area[c], sy[c] / area[c], frame, columns, rows)
     cells = target[lab]
     cut = welded[lab]
     cells[cut] = in_cell[cut]
     owner[ys, xs] = cells
+    for y0, x0, part in necked.values():
+        h, w = part.shape
+        region = owner[y0:y0 + h, x0:x0 + w]
+        mine = part >= 0
+        region[mine] = part[mine]
+
+
+def erode(mask: np.ndarray) -> np.ndarray:
+    """One 8-connected erosion ring: a pixel survives only if all 8 neighbours are set."""
+    h, w = mask.shape
+    pad = np.zeros((h + 2, w + 2), dtype=bool)
+    pad[1:-1, 1:-1] = mask
+    out = mask.copy()
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            if dy or dx:
+                out &= pad[1 + dy:1 + dy + h, 1 + dx:1 + dx + w]
+    return out
+
+
+def split_at_neck(labels: np.ndarray, c: int, frame: int, columns: int,
+                  rows: int):
+    """Separate a welded core along its thinnest joins, or None.
+
+    The core is eroded one ring at a time, up to NECK_MAX_RINGS; at the first
+    ring where it falls apart into two or more pieces of at least
+    NECK_SEED_SHARE of a cell's area whose centroids lie in different cells,
+    each such piece is a pose and seeds its cell, and every pixel of the
+    original core is grown back to the seed it is geodesically nearest
+    (inside the core, the same flood as `grow`). A weld that no erosion within
+    the cap separates into two such poses (a thin chain, a 2px touch) returns
+    None and is cut at the gridlines as before.
+    Returns (y0, x0, owner) with owner the cell per pixel of the core's
+    bounding box, -1 outside the core.
+    """
+    ys, xs = np.nonzero(labels == c)
+    y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+    core = labels[y0:y1, x0:x1] == c
+    min_area = NECK_SEED_SHARE * frame * frame
+    rings = max(1, frame // 16)
+    eroded = core
+    for _ in range(rings):
+        eroded = erode(eroded)
+        if not eroded.any():
+            return None
+        pieces, count = label_components(eroded)
+        if count < 2:
+            continue
+        seeds = np.full(core.shape, -1, dtype=np.int32)
+        seen = set()
+        for p in range(1, count + 1):
+            py, px = np.nonzero(pieces == p)
+            if len(py) < min_area:
+                continue
+            k = cell_of(px.mean() + x0, py.mean() + y0, frame, columns, rows)
+            seeds[py, px] = k
+            seen.add(k)
+        if len(seen) < 2:
+            continue
+        grow(seeds, core)
+        return int(y0), int(x0), seeds
+    return None
 
 
 def grow(owner: np.ndarray, mask: np.ndarray) -> None:
@@ -297,7 +378,7 @@ def grow(owner: np.ndarray, mask: np.ndarray) -> None:
 
 def ownership(alpha: np.ndarray, frame: int, columns: int, rows: int) -> tuple[np.ndarray, dict]:
     """Which cell every painted pixel belongs to (-1 for unpainted)."""
-    note = {"cores": 0, "soft_islands": 0, "welded_split": 0}
+    note = {"cores": 0, "soft_islands": 0, "welded_split": 0, "welded_necked": 0}
     owner = np.full(alpha.shape, -1, dtype=np.int32)
 
     cores, n_cores = label_components(alpha >= CORE_ALPHA)

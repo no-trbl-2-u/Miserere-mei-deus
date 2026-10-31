@@ -71,3 +71,7 @@ plan/messy/
 
 # /heads-down session ledgers: untracked, primary checkout only (scripts/heads-down-ledger.mjs)
 .heads-down/
+
+# Python bytecode from the art department's tools and pytest (phase AN5d: two .pyc files were committed by accident in AN5a-AN5c).
+__pycache__/
+*.pyc

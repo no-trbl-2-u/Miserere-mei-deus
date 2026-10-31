@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 176 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times. The stand-in portrait lamplighter.webp was ingested in colour, and the sheet drawn from it carries the portrait's own saturation, so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait lamplighter.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/lamplighter.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows, rows idle / struck / attacking; prompt in lamplighter.prompt.txt), drawn from the shipped stand-in portrait lamplighter.webp",
+    "portrait": "lamplighter.webp",
+    "portrait_sha256": "584bb51f2aac3bb4372e5462239f288413ba5c3661eefff49894c02623a1cf7b",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/lamplighter.cleanup-report.json - 294 alpha >= 160 cores; slivers removed and limbs reassembled as the report lists; anchor measured foot-line (stands: the idle foot line moves 5px (2.0% of the 256px cell, within 6%)); every idle cell translated onto it, each reaction row moved as a whole by its first cell; sheet-wide scale 0.675; A9 idle drift 0.57px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 176px (A6) so every cell is under the 12000 B ceiling. The cleaned 1408x528 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar lamplighter.sheet.json and the report (which pins its pixels' SHA-256) are.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['lamplighter'], via ./anim/lamplighter/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's Lamplighter in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 176px, 142322 B (139.0 KB) in total, mean 5930 B, max 8382 B (lamplighter-19.webp), min 4988 B (lamplighter-05.webp) - against 29062 B for the static lamplighter.webp. 4.9x, +110.6 KB for one enemy.",
+    "covers": [
+      "lamplighter-00.webp",
+      "lamplighter-01.webp",
+      "lamplighter-02.webp",
+      "lamplighter-03.webp",
+      "lamplighter-04.webp",
+      "lamplighter-05.webp",
+      "lamplighter-06.webp",
+      "lamplighter-07.webp",
+      "lamplighter-08.webp",
+      "lamplighter-09.webp",
+      "lamplighter-10.webp",
+      "lamplighter-11.webp",
+      "lamplighter-12.webp",
+      "lamplighter-13.webp",
+      "lamplighter-14.webp",
+      "lamplighter-15.webp",
+      "lamplighter-16.webp",
+      "lamplighter-17.webp",
+      "lamplighter-18.webp",
+      "lamplighter-19.webp",
+      "lamplighter-20.webp",
+      "lamplighter-21.webp",
+      "lamplighter-22.webp",
+      "lamplighter-23.webp"
+    ]
+  }
+]

@@ -40,7 +40,8 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     // 2026-07-06 drop until T's portrait swap. The Gallows Crow also has a
     // frame set (phase AN5a), and so do the next five (phase AN5b) and the
     // Wreck-Picker and Tithe-Collector (phase AN5c), each bound to this exact
-    // portrait by its hash (A7); the rest are static until AN5d-AN5e.
+    // portrait by its hash (A7); the Smokehouse Gutter and the Tide-Gate are
+    // static until AN5e.
     'gallows-crow':      require('./gallows-crow.webp'),
     'net-mender':        require('./net-mender.webp'),
     'crane-hook':        require('./crane-hook.webp'),
@@ -52,11 +53,13 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'smokehouse-gutter': require('./smokehouse-gutter.webp'),
     'tithe-collector':   require('./tithe-collector.webp'),
     // Chapter 1's elites (phase EN1j on): stand-ins restored from the same
-    // drop until T's portrait swap; static, no frame set.
+    // drop until T's portrait swap; each has a frame set (phase AN5d), bound
+    // to this exact portrait by its hash (A7).
     'cave-choir':        require('./cave-choir.webp'),
     'lamplighter':       require('./lamplighter.webp'),
     'wrecker':           require('./wrecker.webp'),
-    // The keep causeway's two elites (phase EN1l).
+    // The keep causeway's two elites (phase EN1l): the Toll-Keeper animates
+    // (phase AN5d), the Tide-Gate is static until AN5e.
     'toll-keeper':       require('./toll-keeper.webp'),
     'tide-gate':         require('./tide-gate.webp'),
 };
