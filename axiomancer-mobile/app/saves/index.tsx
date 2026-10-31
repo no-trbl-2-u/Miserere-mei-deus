@@ -34,6 +34,7 @@ import {
     type SaveSlotRowVM,
     type SaveSlotsMode,
 } from '@/state/presenters/main-menu.engine';
+import { entryRoute } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -58,11 +59,6 @@ export default function SaveSlotsScreen() {
 
     const rows = selectSaveSlotRows(summaries, mode, Date.now());
 
-    /** Enter the run the store now holds. */
-    const enterRun = useCallback(() => {
-        router.replace(`/${selectActiveTab(store.getState())}`);
-    }, [router, store]);
-
     /**
      * Begin a new game in `slot`: always through the character select, which
      * starts the run on CONFIRM, so an abandoned select writes nothing to the slot.
@@ -77,9 +73,11 @@ export default function SaveSlotsScreen() {
         } else if (row.action === 'overwrite') {
             setPending({ kind: 'overwrite', slot: row.id });
         } else if (row.action === 'load') {
-            if (loadGame(row.id)) enterRun();
+            if (loadGame(row.id)) {
+                router.replace(entryRoute(store.getState(), row.id, `/${selectActiveTab(store.getState())}`));
+            }
         }
-    }, [beginRun, enterRun, loadGame]);
+    }, [beginRun, loadGame, router, store]);
 
     const onClear = useCallback((row: SaveSlotRowVM) => {
         setPending({ kind: 'clear', slot: row.id });

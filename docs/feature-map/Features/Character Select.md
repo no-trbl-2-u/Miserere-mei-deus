@@ -25,6 +25,7 @@ route in World routes, from `axiomancer-mobile/app/character-select/index.tsx`.
 - [[Features/The map|The map]]
 - [[Features/Inventory|Inventory]]
 - [[Features/Memoir|Memoir]]
+- [[Features/Saves|Saves]]
 
 ## Uses
 

@@ -26,12 +26,13 @@ import { Redirect, useLocalSearchParams, useRouter } from '@/lib/platform/router
 import { useGameStore } from '@/state/GameStoreProvider';
 import { useSaveSlots } from '@/state/SaveSlotsProvider';
 import { getBootFixture } from '@/state/fixtures';
+import { entryRoute } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 
 export default function Index() {
     const router = useRouter();
     const store = useGameStore();
-    const { continueGame } = useSaveSlots();
+    const { continueGame, slots } = useSaveSlots();
     const params = useLocalSearchParams<{ menu?: string }>();
 
     // A fixture boot IS the intended state — straight in, no menu.
@@ -46,7 +47,13 @@ export default function Index() {
                 <MainMenu
                     embedded
                     onContinue={() => {
-                        if (continueGame()) router.replace(`/${selectActiveTab(store.getState())}`);
+                        if (continueGame()) {
+                            router.replace(entryRoute(
+                                store.getState(),
+                                slots.getActiveSlot(),
+                                `/${selectActiveTab(store.getState())}`,
+                            ));
+                        }
                     }}
                     onNewGame={() => router.push('/saves?mode=new')}
                     onLoadGame={() => router.push('/saves?mode=load')}

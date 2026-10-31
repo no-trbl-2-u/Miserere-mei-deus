@@ -24,7 +24,9 @@ import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { StakesCard } from '@/components/hazard/StakesCard';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
 import { isDeathReturnArmed } from '@/state/death-return';
-import { useGameActions, useGameState } from '@/state/GameStoreProvider';
+import { runEndRoute } from '@/state/run-end';
+import { useActiveSlot } from '@/state/SaveSlotsProvider';
+import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { selectHazardStakes } from '@/state/presenters/hazard-stakes.engine';
 import { selectHazardViewModel, type HazardCardVM } from '@/state/presenters/hazard.engine';
 import { HUE } from '@/theme/axm';
@@ -37,6 +39,8 @@ export default function HazardScreen() {
     // The stakes card shows once per hazard, before the route select.
     const [faced, setFaced] = useState(false);
     const actions = useGameActions();
+    const store = useGameStore();
+    const slot = useActiveSlot();
     const router = useRouter();
 
     const [detailCard, setDetailCard] = useState<HazardCardVM | null>(null);
@@ -53,8 +57,9 @@ export default function HazardScreen() {
         // EVENT alike) hands off to the return moment, which owns the way
         // back to the map: do not pop it as well.
         if (isDeathReturnArmed()) router.replace('/death-return');
+        else if (store.getState().runOver === true) router.replace(runEndRoute(slot) as never);
         else if (router.canGoBack()) router.back();
-    }, [vm.active, router]);
+    }, [vm.active, router, store, slot]);
 
     if (!vm.active) return <View style={styles.root} testID="hazard-empty" />;
 

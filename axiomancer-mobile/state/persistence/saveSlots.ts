@@ -74,21 +74,31 @@ export interface SaveSlotSummary {
      * before characters existed (CH1f): such a save is only offered for deletion.
      */
     readonly characterId: string | null;
+    /**
+     * The save is a finished run (`GameState.runOver`): no character, the codex
+     * kept, waiting on character select. `false` unless `saved`.
+     */
+    readonly runOver: boolean;
 }
 
 /** Whether a slot holds a save made before characters: readable, but never continued. */
 export function isPreCharacterSave(summary: SaveSlotSummary): boolean {
-    return summary.status === 'saved' && summary.characterId === null;
+    return summary.status === 'saved' && summary.characterId === null && !summary.runOver;
+}
+
+/** Whether a slot holds a finished run: continuing it opens character select. */
+export function isRunOverSave(summary: SaveSlotSummary): boolean {
+    return summary.status === 'saved' && summary.runOver;
 }
 
 /** The summary of a slot nothing was written to. */
 export function emptySlotSummary(id: SaveSlotId): SaveSlotSummary {
-    return { id, status: 'empty', savedAt: null, level: null, mapName: null, runId: null, characterId: null };
+    return { id, status: 'empty', savedAt: null, level: null, mapName: null, runId: null, characterId: null, runOver: false };
 }
 
 /** The summary of a slot whose bytes could not be read. */
 export function unreadableSlotSummary(id: SaveSlotId): SaveSlotSummary {
-    return { id, status: 'unreadable', savedAt: null, level: null, mapName: null, runId: null, characterId: null };
+    return { id, status: 'unreadable', savedAt: null, level: null, mapName: null, runId: null, characterId: null, runOver: false };
 }
 
 /**
@@ -117,12 +127,14 @@ export function summarizeSlot(
         mapName: state.world?.currentMap?.name ?? null,
         runId: state.runId ?? null,
         characterId: state.player?.characterId ?? null,
+        runOver: state.runOver === true,
     };
 }
 
 /**
  * The slot CONTINUE resumes: the `saved` slot with the greatest `savedAt`,
- * a save made before characters never (it is only deleted).
+ * a save made before characters never (it is only deleted). A finished run
+ * counts: continuing it opens character select.
  * Ties resolve to the lowest id (stable, deterministic). `null` when no slot
  * is saved — the menu then hides CONTINUE.
  */

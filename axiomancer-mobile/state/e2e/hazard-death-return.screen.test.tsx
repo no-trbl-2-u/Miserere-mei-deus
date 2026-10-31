@@ -19,6 +19,7 @@ import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import type { AppStore } from '@/state/store';
 import { HAZARD_CRACK_CARD } from '@mechanics';
 import type { GameState, HazardHandEntry } from '@mechanics';
+import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const mockReplace = jest.fn();
@@ -42,7 +43,9 @@ afterEach(() => {
 });
 
 function mountHazard(): { store: AppStore; actions: AppActions } {
-    const { tree, store } = withAllProviders(<HazardScreen />);
+    const slots = createMemorySlotStore();
+    slots.selectSlot(3);
+    const { tree, store } = withAllProviders(<HazardScreen />, { slots });
     render(tree);
     return { store, actions: createAppActions(store) };
 }
@@ -111,8 +114,9 @@ describe('hazard screen -- a lethal crossing', () => {
         expect(post).toHaveBeenCalledWith(expect.objectContaining({ kind: 'run-end' }));
         expect((store.getState() as unknown as GameState).dying).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
-        expect(mockReplace).not.toHaveBeenCalled();
-        expect(mockBack).toHaveBeenCalled();
+        expect((store.getState() as unknown as GameState).runOver).toBe(true);
+        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=3&runEnd=1');
+        expect(mockBack).not.toHaveBeenCalled();
     });
 
     it('a survived crossing leaves the screen as before', () => {

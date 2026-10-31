@@ -24,7 +24,7 @@ import {
 } from './menu/store-actions';
 import { createMemorySlotStore } from './persistence/memorySlotStore';
 import type { SaveSlotId, SaveSlotStore, SaveSlotSummary } from './persistence/saveSlots';
-import type { CharacterDefinition, MapName } from '@mechanics';
+import type { CharacterDefinition, GameState, MapName } from '@mechanics';
 
 export interface SaveSlotsApi {
     /** The slot store itself (for the few callers that need `readSlot` / `clearSlot`). */
@@ -40,6 +40,7 @@ export interface SaveSlotsApi {
         startMap?: MapName,
         characterId?: string,
         roster?: readonly CharacterDefinition[],
+        codex?: GameState['codex'],
     ) => void;
     /** LOAD GAME from `slot`; `false` when the slot holds nothing loadable. */
     loadGame: (slot: SaveSlotId) => boolean;
@@ -68,8 +69,8 @@ export function SaveSlotsProvider({ children, slots }: SaveSlotsProviderProps) {
         const s = slots ?? createMemorySlotStore();
         return {
             slots: s,
-            startNewGame: (slot, startMap, characterId, roster) => {
-                startNewGameAction(store, s, slot, startMap, characterId, roster);
+            startNewGame: (slot, startMap, characterId, roster, codex) => {
+                startNewGameAction(store, s, slot, startMap, characterId, roster, codex);
             },
             loadGame: (slot) => loadGameAction(store, s, slot),
             continueGame: () => continueGameAction(store, s),
@@ -84,6 +85,16 @@ export function useSaveSlots(): SaveSlotsApi {
     const ctx = useContext(SaveSlotsContext);
     if (ctx === null) throw new Error('useSaveSlots must be used inside <SaveSlotsProvider>');
     return ctx;
+}
+
+/**
+ * The slot the run saves to, or `null` when none is picked or no provider is
+ * mounted (a screen under test, a fixture boot). Never throws: the run-end
+ * routes read it from screens that tests mount without the slot context.
+ */
+export function useActiveSlot(): SaveSlotId | null {
+    const ctx = useContext(SaveSlotsContext);
+    return ctx === null ? null : ctx.slots.getActiveSlot();
 }
 
 /** The live slot summaries; re-renders whenever the slot store changes. */
