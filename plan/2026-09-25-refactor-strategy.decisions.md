@@ -1043,6 +1043,14 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D119 — Every change lands by PR; plot, rules-change and nexus-sync PRs wait for T; the loop follows nexus v2.** (T, 2026-10-31, attended, ruling on `docs/nexus-deviations.md`; recorded by the NX1 plot. Amends D84's path split and D101.)
+
+- T: "I still want everything to be opened up as a PR, let the reviewers do their thing, then merge it. (Except for "/plot" PRs like plans, and "rules-change" PRs)." No direct pushes to main, plan-only changes included: once NX1e ships they ride in the PR as `plan/pending/` files and the merge job settles them. Until then D84's plan pushes stand.
+- The merge job holds `plot`, `review:rules-change` (NX1a) and `nexus-sync` (NX1h) PRs for T; the review merges the rest (D95).
+- Miserere moves to nexus v2 at the Nov 11 cut-over (NX1d) after the old queue drains, and stays current through a weekly sync PR (NX1h). Nexus itself is never edited. What we keep of our own, and why, is `docs/nexus-deviations.md`.
+- T's orchestrator is `/pilot` (NX1g); a sync that changes nexus's `/heads-down` is called out so T and a session bring `/pilot` up to date.
+- Built by Phase NX1 (`plan/phases/phase_NX1_nexus_v2.md`).
+
 **D118 — Every play-log row names who played it: T, a harness or the sim.** (T, 2026-10-31, in session; recorded by the SM1 plot, run unattended on T's word. Extends BE2's play log.)
 
 - One D1 database (`miserere`, Worker `miserere-api`) holds all play data. Every row carries `source`: `human` (T's preview APK), `harness` (local e2e, `critique:drive`, the `playtester` agent, any web export or dev server) or `sim` (the headless bots).
