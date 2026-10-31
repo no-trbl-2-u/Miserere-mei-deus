@@ -301,6 +301,8 @@ async function rest(page) {
 async function fight(page) {
     await travelTo(page, 'bw-w3')
     await waitFor(page, 'combat-reveal', 'bw-w3 encounter reveal')
+    // The ink curtain (ET1a) eats taps for ~1.2 s; let it draw back first.
+    await page.getByTestId('ink-curtain').waitFor({ state: 'detached', timeout: 25000 }).catch(() => {})
     await tap(page, 'combat-enter') || fail('bw-w3: the reveal has no ENTER COMBAT')
     await waitFor(page, 'combat-arena-backdrop', 'bw-w3 combat board')
 

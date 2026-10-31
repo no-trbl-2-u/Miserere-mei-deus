@@ -378,6 +378,7 @@ const SEAMS = {
         leaf: 'debug-trigger-encounter-encounter',
         after: async (page) => {
             await waitFor(page, 'combat-reveal', 'the encounter reveal')
+            await page.getByTestId('ink-curtain').waitFor({ state: 'detached', timeout: 25000 }).catch(() => {})
             await tap(page, 'combat-enter') || fail('the reveal has no ENTER COMBAT')
         },
         landing: 'combat-arena-backdrop',

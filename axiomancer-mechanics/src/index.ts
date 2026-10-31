@@ -43,6 +43,7 @@ export {
     createEnemy, isEnemyBefriendable, hasEnemyPhases,
 } from './Enemy';
 export { hasDefeatedEnemy, defeatedEnemies, enemySlugOf } from './Game/defeat-ledger';
+export { dangerKey, seenDangers, hasSeenDanger, seenDangerNames, firedDangerKeys } from './Game/seen-dangers';
 export type {
     Enemy, EnemyDifficulty,
     // CodexEntry's semantic home is the Game-loop persistence surface; the
@@ -276,7 +277,7 @@ export {
     // item-reward queue reads a pending piece through.
     reslotRelicPiece, reslotRelicSave,
     // The death rule: a first death revives, a death while dying ends the run.
-    resolveDeath, clearDying,
+    resolveDeath, clearDying, runOverState,
 } from './Game';
 export type {
     StateFixture,
@@ -494,7 +495,11 @@ export {
     AUTHORED_QUESTLINES,
     BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_STEPS,
     BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD,
+    // Encounter reveal reads (ET1a).
+    BREAKWATER_ENCOUNTER_NODES, BREAKWATER_ARRIVAL_LINES, arrivalLineAt, breakwaterEncounterTier,
+    heldRoadPlaceAt, breakwaterPlaceAt,
 } from './World';
+export type { BreakwaterEncounterTier } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';
 export {

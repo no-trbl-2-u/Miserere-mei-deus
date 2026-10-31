@@ -5,8 +5,8 @@
  * run the first time. `resolveDeath` brings them back on the node they walked
  * from (`MapState.arrivedFrom`) with 1 VITAE and `dying` set, and the node
  * they died on is made live again so it can be walked into and retried. A
- * death while dying ends the run exactly as `RESET_RUN` with
- * `keepCharacter: true` does. `clearDying` is what a rest's heal calls.
+ * death while dying ends the run: `runOverState`, the pre-run shell with no
+ * character, the codex and rng kept. `clearDying` is what a rest's heal calls.
  *
  * Pure. It does not depend on how a lost fight settled the node: the revive
  * un-spends the death node itself, so it holds whether or not `END_COMBAT`
@@ -21,19 +21,66 @@ import { getMapDefinition } from '../World/map.registry';
 import { revealAdjacent, syncMoveLists, unspendNode } from '../World/world.reducer';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
+import type { Character } from '../Character/types';
+import { createCharacter } from '../Character';
+import { DEV_PRESET_LANE_IDS } from '../Character/presets';
+import { FRESH_RUN_BASE_STATS } from '../Character/roster';
 
 export type DeathCause = 'fight' | 'hazard';
 
 export interface DeathResult {
     state: GameState;
-    /** `'revived'`: back on the map, dying. `'run-over'`: the run is reset. */
+    /** `'revived'`: back on the map, dying. `'run-over'`: the run has ended (`runOverState`). */
     outcome: 'revived' | 'run-over';
 }
 
 /**
- * The state `RESET_RUN` with `keepCharacter: true` gives: a fresh `runId` and
+ * The pre-run shell's player: an apprentice with no relic or cards and the dev
+ * preset lanes as an explicit lane list, so even it has a reward pool.
+ */
+export function createShellPlayer(): Character {
+    return {
+        ...createCharacter({ name: 'Player', level: 1, baseStats: { ...FRESH_RUN_BASE_STATS } }),
+        startingLaneIds: [...DEV_PRESET_LANE_IDS],
+    };
+}
+
+/**
+ * The state a run end leaves: the pre-run shell (what `createNewGameState()`
+ * builds with no character) with the old `codex` and `rngState` carried and `runOver` set, so
+ * a caller can tell "a run ended, pick a character" from "a save made before
+ * characters". A fresh `runId` and world; the player, quests, flags, labyrinth
+ * and encounter are dropped (spelled out so a store merging this over the old
+ * state drops them). `version` is carried from `state`; the reducer stamps its
+ * own. The next run starts through `createNewGameState({ characterId, codex })`,
+ * which carries no marker.
+ */
+export function runOverState(
+    state: GameState,
+    runId: string = generateRunId(() => getRng().random()),
+): GameState {
+    return {
+        version: state.version,
+        runId,
+        player: createShellPlayer(),
+        world: createStartingWorld(),
+        quests: emptyQuestLog(),
+        flags: [],
+        rngState: state.rngState,
+        codex: state.codex,
+        runOver: true,
+        currentEncounter: undefined,
+        labyrinth: undefined,
+        dying: undefined,
+    };
+}
+
+/**
+ * The state `RESET_RUN` with `keepCharacter: true` gives (the dev control only): a fresh `runId` and
  * world, full VITAE, empty quests and flags; the character, codex and rng
- * kept. `version` is carried from `state`; the reducer stamps its own.
+ * kept. `runOver` is cleared (spelled out, as `dying` is, so a store merging
+ * this over a run-over state doesn't leave it stranded `true`). `version` is
+ * carried from `state`; the reducer stamps its own.
  */
 export function freshRunKeepingCharacter(
     state: GameState,
@@ -52,8 +99,9 @@ export function freshRunKeepingCharacter(
         flags: [],
         rngState: state.rngState,
         codex: state.codex,
-        // Spelled out so a store merging this over the old state drops it.
+        // Spelled out so a store merging this over the old state drops them.
         dying: undefined,
+        runOver: undefined,
     };
 }
 
@@ -71,7 +119,7 @@ function returnNode(map: MapState): NodeId {
  */
 export function resolveDeath(state: GameState, _cause: DeathCause): DeathResult {
     if (state.dying) {
-        return { state: freshRunKeepingCharacter(state), outcome: 'run-over' };
+        return { state: runOverState(state), outcome: 'run-over' };
     }
 
     const map = state.world.currentMap;

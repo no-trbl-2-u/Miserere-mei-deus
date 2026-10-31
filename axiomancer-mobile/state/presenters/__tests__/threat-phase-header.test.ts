@@ -55,8 +55,12 @@ describe('threatPhaseHeader for a phases foe (EN1c)', () => {
         });
     });
 
-    it('leaves a DANGER unnamed until the foe is beaten', () => {
+    it('leaves a DANGER unnamed until it has been seen', () => {
         expect(threatPhaseHeader(move('danger', 'Toll')).text).toBe('PHASE 2 · DANGER');
-        expect(threatPhaseHeader(move('danger', 'Toll'), true).text).toBe('PHASE 2 · DANGER · Toll');
+        expect(threatPhaseHeader(move('danger', 'Toll'), new Set(['Toll'])).text).toBe('PHASE 2 · DANGER · Toll');
+    });
+
+    it('names only the DANGER whose own name has been seen, not any seen name', () => {
+        expect(threatPhaseHeader(move('danger', 'Toll'), new Set(['Other'])).text).toBe('PHASE 2 · DANGER');
     });
 });

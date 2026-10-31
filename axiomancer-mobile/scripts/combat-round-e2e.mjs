@@ -571,6 +571,10 @@ async function playSeed(browser, baseUrl, seed, mode) {
         await enterLive(page, baseUrl, seed)
 
         await page.getByTestId('combat-reveal').waitFor({ state: 'visible', timeout: 25000 }).catch(() => {})
+        // The ink curtain (ET1a) covers the reveal for ~1.2 s and eats any
+        // click aimed at it (a tap on it skips the draw-back). Let it draw
+        // back before the forced clicks below, as a player would.
+        await page.getByTestId('ink-curtain').waitFor({ state: 'detached', timeout: 25000 }).catch(() => {})
         await assertAlive(page, sink, `${tag}, the reveal`)
 
         // Retreat path: WITHDRAW lives only on the reveal, before ENTER

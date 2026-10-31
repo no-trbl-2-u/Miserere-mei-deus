@@ -2,6 +2,31 @@
   "version": 1,
   "features": [
     {
+      "id": "area:Atlas",
+      "name": "Atlas",
+      "kind": "engine-area",
+      "group": "engine",
+      "source": "axiomancer-mechanics/src/Atlas",
+      "named": false,
+      "reachable": {
+        "value": false,
+        "source": "no coupling path from a reachable route"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Atlas\")",
+        "source": null
+      }
+    },
+    {
       "id": "area:Cards",
       "name": "Cards",
       "kind": "engine-area",
@@ -18,7 +43,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/chapter1-enemies.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/chapter1-enemies.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -43,7 +68,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/card-lanes.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -68,7 +93,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/combat.cli.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/combat.cli.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -143,7 +168,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/fixture-boot.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/fixture-boot.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -168,7 +193,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/merciful.engine.test.ts, axiomancer-mechanics/src/Character/e2e/character-roster.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/merciful.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -243,7 +268,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/CLI/chapter1-enemies.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/game.cli.route-audit.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/chapter1-enemies.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/cli.docs-examples.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -868,7 +893,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-upgrade.UP1d.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-night.ET1c.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -978,6 +1003,48 @@
     }
   ],
   "edges": [
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:Game",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Atlas",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Atlas/atlas.data.ts"
+    },
     {
       "kind": "coupling",
       "from": "area:Cards",
@@ -1660,6 +1727,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/death.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/fixtures/state-fixture.builder.ts"
     },
     {
@@ -1703,6 +1776,12 @@
       "from": "area:Game",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/seen-dangers.ts"
     },
     {
       "kind": "coupling",
@@ -3808,6 +3887,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/encounter-reveal.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {
@@ -5201,6 +5286,12 @@
       "from": "route:rest",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
     },
     {
       "kind": "coupling",

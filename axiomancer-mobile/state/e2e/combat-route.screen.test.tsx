@@ -133,20 +133,19 @@ describe('the live combat route', () => {
         expect(combat.inCombat).toBe(false);
     });
 
-    it('a defeat while dying ends the run as today: a fresh run, no return moment', () => {
+    it('a defeat while dying ends the run: a run-over state with no character, no return moment', () => {
         const store = stagedStore();
         store.setState({ dying: true } as never);
         const runId = store.getState().runId;
-        const name = store.getState().player.name;
         const tree = mount(store);
 
         fireEvent.press(tree.getByTestId('stub-exit-defeat'));
 
         const s = store.getState();
         expect(s.runId).not.toBe(runId);
-        expect(s.player.name).toBe(name);
+        expect(s.runOver).toBe(true);
+        expect(s.player.characterId).toBeUndefined();
         expect(s.dying).toBeUndefined();
-        expect(s.player.health).toBe(s.player.maxHealth);
         expect(isDeathReturnArmed()).toBe(false);
         expect(mockReplace).not.toHaveBeenCalled();
         expect(mockBack).toHaveBeenCalledTimes(1);

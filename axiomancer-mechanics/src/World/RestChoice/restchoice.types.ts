@@ -59,6 +59,8 @@ export interface RestChoiceSession {
     offers: readonly RestChoiceOffer[];
     /** The authored MapEvent one-liner, preferred over the placeholder intro when present. */
     description: string | null;
+    /** The node's dream line, shown while the night passes (ET1c). Absent on a session saved before it. */
+    dream?: string | null;
     outcome: RestChoiceOutcome | null;
     seed: SeedInput;
 }
