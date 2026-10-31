@@ -461,6 +461,7 @@ export {
     // The walk back along open roads to a node.
     roadRouteTo, walkRoadTo, roadReachable,
     auditRoadReachability, mapPassages,
+    heldRoadTargets, heldRoadPlaces, nodePlace, isRoadHeld,
     // The forward skeleton the progression audits walk.
     forwardEdges,
 } from './World';

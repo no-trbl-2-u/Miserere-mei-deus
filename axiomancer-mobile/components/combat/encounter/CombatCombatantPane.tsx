@@ -42,7 +42,7 @@ import type {
     CombatEnemyPaneVM, CombatPlayerPaneVM, CombatEffectChipVM,
 } from '@/state/presenters/combat-encounter.engine';
 import {
-    DOT_TICK_STAGGER_MS, HIT_FLOAT_COLOR, PROGRAM_COPY, dotTickFloat, effectChipA11y, selectCombatLogLines,
+    DOT_TICK_STAGGER_MS, HIT_FLOAT_COLOR, PROGRAM_COPY, dotTickFloat, effectChipA11y, isTelegraphKind, selectCombatLogLines,
 } from '@/state/presenters/combat-encounter.engine';
 import { type CombatEvent } from '@mechanics';
 import { effectGlyph } from '@/components/combat/statusGlyphs';
@@ -831,7 +831,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     signature column starts under this block. */}
                 <View style={styles.hudUnderBar} pointerEvents="box-none" testID="combat-hud-under-bar">
                     <View style={styles.hudIntent} pointerEvents="box-none" testID="combat-hud-intent">
-                        <IntentIcon intent={enemy.intent} />
+                        {isTelegraphKind(enemy.intent.type) ? null : <IntentIcon intent={enemy.intent} />}
                         <EffectChips effects={enemy.effects} onChip={onChip} align="flex-start" testID="combat-enemy-effects" />
                         {/* The Toll-Keeper's toll (phase EN1l): paid on your turn
                             as a SACRIFICE. A refused tap still reaches the engine,
@@ -854,6 +854,25 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     </View>
                 </View>
             </View>
+            {/* A `phases` foe's telegraph (phase EN2b): one large icon against the
+                foe's portrait, on the figure's own geometry, not in the chip
+                column under its name. The inner box shares the portrait's own
+                width cap (`enemyFigureImg`/`enemyFigureImgBoss`) so it rides
+                the figure itself at a wide viewport instead of flex-ending
+                against the full-bleed outer wrap, which would land it near
+                the screen edge while the (centered, capped) portrait stays
+                near the middle. */}
+            {isTelegraphKind(enemy.intent.type) ? (
+                <View style={[styles.enemyFigureWrap, figureTop]} pointerEvents="box-none">
+                    <View
+                        style={[styles.telegraphByFoe, enemy.isBoss && styles.telegraphByFoeBoss]}
+                        pointerEvents="box-none"
+                        testID="combat-telegraph-by-foe"
+                    >
+                        <IntentIcon intent={enemy.intent} />
+                    </View>
+                </View>
+            ) : null}
             {/* The enemy's floats rise from the foe's body: a twin of the scene
                 band and the figure wrap (same geometry, same live top), drawn
                 above the HUD and the scrims, with its origin over the upper
@@ -934,6 +953,15 @@ const useStyles = makeStyles((AXM) => ({
     },
     altMeterFill: { height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 3 },
     hudUnderBar: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 2 },
+    // Same width cap as `enemyFigureImg`/`enemyFigureImgBoss`, centered the
+    // same way inside the full-bleed `enemyFigureWrap` (its `alignItems:
+    // 'center'`), so the icon rides the portrait's own box at any viewport
+    // width instead of the wrap's full-bleed edge.
+    telegraphByFoe: {
+        width: '78%', maxWidth: 380, height: '100%',
+        alignItems: 'flex-end', justifyContent: 'flex-start', paddingRight: 18, paddingTop: 10, zIndex: 15,
+    },
+    telegraphByFoeBoss: { maxWidth: 460 },
     hudIntent: { alignItems: 'flex-start', gap: 6, flexShrink: 1 },
     // The Toll-Keeper's "Pay the toll (n)" button (phase EN1l).
     tollButton: {

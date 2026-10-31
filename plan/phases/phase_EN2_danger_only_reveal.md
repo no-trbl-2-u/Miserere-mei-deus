@@ -77,7 +77,7 @@ and nothing else about its moves; in a fight the telegraph is one clear icon per
   the seen record.
 - **A6 (one icon per kind)** In combat the telegraph is a single icon per kind (ATTACK, DEFEND,
   STATUS, UNKNOWN, DANGER), each kind its own drawn icon, with no move name under it and no number
-  for a `phases` foe [T to confirm #1]. The accessibility label still names the kind.
+  for a `phases` foe (Accepted at merge (default)). The accessibility label still names the kind.
 - **A7 (bigger, by the foe)** The icon is at least half again its current size and sits against the
   foe's portrait on the enemy pane, not in the strip below it. A `verify:visual` baseline of the
   combat board at phone width shows it.
@@ -127,7 +127,7 @@ character (`game.reducer.ts:503-506`), so a DANGER seen in one run stays seen.
    which with A6 already covers its DANGER intent in the fight. Confirmed by T (2026-10-31): "Dark
    hides its DANGER". EN1k's brief needs no change for the reveal: the reveal comes before Lit or
    Dark exists.
-7. **Icon only in combat**: the move name under the badge goes [T to confirm #1]; the pill and
+7. **Icon only in combat**: the move name under the badge goes (Accepted at merge (default)); the pill and
    numbers for a `phases` foe were already gone (EN1c).
 8. **Slot: asap** (Accepted at merge (default)): T is playing these screens now and the MVP run shows them.
 

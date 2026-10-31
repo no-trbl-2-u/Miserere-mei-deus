@@ -46,7 +46,7 @@ export function holdsRoads(def: MapDefinition, map: RoadState, nodeId: NodeId): 
  * True when the road `a`–`b` is held: one end is an unspent held node and the
  * other end is on that node's own onward roads.
  */
-function isRoadHeld(def: MapDefinition, map: RoadState, a: NodeId, b: NodeId): boolean {
+export function isRoadHeld(def: MapDefinition, map: RoadState, a: NodeId, b: NodeId): boolean {
     const onward = (from: NodeId, to: NodeId) =>
         holdsRoads(def, map, from) && (def.nodes.find(n => n.id === from)?.connectedNodes.includes(to) ?? false);
     return onward(a, b) || onward(b, a);

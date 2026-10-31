@@ -228,6 +228,16 @@ export const INTENT_ICONS: Record<CombatIntentType, { icon: string; label: strin
 export type SeenDangerNames = ReadonlySet<string>;
 export const NO_DANGERS_SEEN: SeenDangerNames = new Set<string>();
 
+/** The five kinds a `phases` foe telegraphs. Their icon draws large, by the foe,
+ *  with no name and no number (phase EN2b). */
+export const TELEGRAPH_KINDS: ReadonlySet<CombatIntentType> = new Set<CombatIntentType>([
+    'attack', 'defend', 'status', 'danger', 'unknown',
+]);
+
+export function isTelegraphKind(type: CombatIntentType): boolean {
+    return TELEGRAPH_KINDS.has(type);
+}
+
 /** A `phases` foe's telegraph: the entry's move name, or null for a DANGER
  *  the player has not seen fire. Null for any other entry. */
 export function telegraphName(phase: CombatThreatPhase | undefined, seen: SeenDangerNames): string | null {

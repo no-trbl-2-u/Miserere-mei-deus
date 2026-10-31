@@ -212,6 +212,7 @@ export function nondeterministicRoutes(shots) {
  * @param {'safe' | 'risk'} hazardRoute the route to pick.
  */
 export async function pickHazardRoute(page, hazardRoute) {
+    await page.getByTestId('hazard-stakes-face').click()
     await page.getByTestId(`hazard-route-${hazardRoute}`).click()
     await page.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
     await settleDiceRoll(page)

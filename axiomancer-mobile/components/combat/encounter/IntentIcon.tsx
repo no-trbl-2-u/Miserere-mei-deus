@@ -14,7 +14,7 @@ import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import type { CombatIntentVM } from '@/state/presenters/combat-encounter.engine';
 import {
-    INTENT_BLIZZARD_COLOR, intentBlizzardLine, stripThreatPayload,
+    INTENT_BLIZZARD_COLOR, intentBlizzardLine, isTelegraphKind, stripThreatPayload,
 } from '@/state/presenters/combat-encounter.engine';
 
 /** One a11y sentence for a fork: condition + both outcomes (+ taken). */
@@ -25,6 +25,25 @@ function branchA11y(branch: NonNullable<CombatIntentVM['branch']>): string {
 
 export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPress?: () => void }) {
     const styles = useStyles();
+    // A `phases` foe's five kinds draw as one large icon with no name, pill or
+    // number (phase EN2b). The label names the kind only, so a DANGER the
+    // player has not seen is not spoiled for a screen reader either.
+    if (isTelegraphKind(intent.type)) {
+        return (
+            <View
+                style={styles.wrap}
+                testID="combat-intent"
+                accessible
+                accessibilityRole="text"
+                accessibilityLabel={`Enemy intent: ${intent.label}.`}
+                onTouchEnd={onPress}
+            >
+                <View testID="combat-intent-disc" style={[styles.bigDisc, { borderColor: intent.color, backgroundColor: `${intent.color}2e` }]}>
+                    <Text style={[styles.bigIcon, { color: intent.color, textShadowColor: intent.color }]} testID="combat-intent-icon">{intent.icon}</Text>
+                </View>
+            </View>
+        );
+    }
     // Wall-math: `intent.damage` is the authored face value only. The pill
     // prints `projectedDamage`, the hit after the engine's threat scale and
     // escalation, and the → badge prints `netDamage`, what lands through the
@@ -73,12 +92,6 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
                     {intent.branch && <Text style={[styles.pillText, { color: intent.color }]} allowFontScaling={false}>⑂</Text>}
                 </View>
             )}
-            {/* A `phases` foe names its move under the badge; an unseen DANGER has no name. */}
-            {intent.moveName ? (
-                <Text style={[styles.moveName, { color: intent.color }]} testID="combat-intent-name" allowFontScaling={false} numberOfLines={1}>
-                    {intent.moveName}
-                </Text>
-            ) : null}
             {blizzardLine ? (
                 <Text style={[styles.wallMathBlizzard, { color: INTENT_BLIZZARD_COLOR }]} testID="combat-intent-blizzard" allowFontScaling={false}>
                     {blizzardLine}
@@ -99,6 +112,12 @@ const useStyles = makeStyles((AXM) => ({
         width: 36, height: 36, borderRadius: 18, borderWidth: 2,
         alignItems: 'center', justifyContent: 'center',
     },
+    // The telegraph kinds: 56 against the badge's 36, over half again.
+    bigDisc: {
+        width: 56, height: 56, borderRadius: 28, borderWidth: 3,
+        alignItems: 'center', justifyContent: 'center',
+    },
+    bigIcon: { fontSize: 28, lineHeight: 32, textShadowRadius: 8, textShadowOffset: { width: 0, height: 0 } },
     icon: { fontSize: 17, lineHeight: 20, textShadowRadius: 6, textShadowOffset: { width: 0, height: 0 } },
     pill: {
         flexDirection: 'row', alignItems: 'center', gap: 2, marginTop: -6,
@@ -109,6 +128,5 @@ const useStyles = makeStyles((AXM) => ({
     debuffMark: { fontFamily: FONTS.sans, fontSize: 10, color: HUE.tickPurple },
     wallMathDenied: { fontFamily: FONTS.sans, fontSize: 9, color: HUE.goldAccent, marginTop: 1, letterSpacing: 0.5 },
     wallMathBlizzard: { fontFamily: FONTS.mono, fontSize: 9, marginTop: 1 },
-    moveName: { fontFamily: FONTS.sans, fontSize: 9, marginTop: 2, letterSpacing: 0.4, maxWidth: 96 },
     wallMathNet: { fontFamily: FONTS.mono, fontSize: 9, color: HUE.stoneGrey, marginTop: 1 },
 }));
