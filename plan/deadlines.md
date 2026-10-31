@@ -261,7 +261,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 
 - HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - TF1 — loop tooling fix (the reminder and the AUDIT blank line); no T act waits on it
-- AN5a — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5d — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set

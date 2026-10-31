@@ -98,5 +98,20 @@
     "used_by": [
       "plan/phases/phase_AN5_chapter1_enemy_animations.md"
     ]
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --sheet gallows-crow.sheet.webp --out-frame 176 (Pillow + numpy; phase AN5a)",
+    "covers": [
+      "gallows-crow.sheet.json (the cleaned sheet's sidecar: grid, measured anchor, sheet-wide scale, clip table)",
+      "gallows-crow.cleanup-report.json (slivers removed, pixels reassembled, translation per cell, the global scale, A9 drift, and the SHA-256 of the cleaned pixels)"
+    ],
+    "source": "gallows-crow.sheet.webp, T's approved image-model sheet (the record above)",
+    "method": "No pixel was edited by hand. The tool drops each neighbour's sliver by the area centroid of its alpha component, reassembles limbs that crossed a gridline into their own cell, registers every cell by integer translation onto an anchor measured from the idle row (foot-line here), and applies one sheet-wide scale (0.844) so the wing-spread attack fits, then downscales the whole cleaned sheet to 176px cells (A6). The cleaned sheet itself is not committed: it is regenerated from the master, and tests/test_clean_ai_sheet.py checks the regeneration reproduces this sidecar and this report, its pixel hash included.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/gallows-crow/ - phase AN5a split the cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the master nor the cleaned sheet ships."
+    ]
   }
 ]

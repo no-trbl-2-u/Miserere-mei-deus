@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 176 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times. The stand-in portrait gallows-crow.webp was ingested in colour, and the sheet drawn from it carries the same saturation as the portrait (measured at plot time: 4 against 0, a near-grey bird), so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait gallows-crow.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/gallows-crow.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows of 256px cells, rows idle / struck / attacking; T's approved sheet, with no prompt file), drawn from the shipped stand-in portrait gallows-crow.webp",
+    "portrait": "gallows-crow.webp",
+    "portrait_sha256": "d6c363730a433c9a87fd5c6d88ae4b8abc30170777adebf5cb46a6f408782de6",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/gallows-crow.cleanup-report.json - 77 alpha >= 160 cores, none welded; 11916 px of neighbours' slivers removed from 16 cells and the same 11916 px restored to the 14 cells they crossed out of; anchor measured foot-line (the idle foot line moves 6px, 2.3% of the cell); every idle cell translated onto it, each reaction row moved as a whole by its first cell; one sheet-wide scale 0.844 about the anchor and one shift (-13, 0) so the wing-spread attack fits; A9 idle drift 0.71px, struck start 0.66px, attacking start 0.32px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 176px, the death-beholder's answer (A6): at 256px the cells weighed up to 16760 B, over the 12000 B ceiling. The cleaned 1408x528 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar gallows-crow.sheet.json and the report (which pins its pixels' SHA-256) are, and the art-department suite regenerates both.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['gallows-crow'], via ./anim/gallows-crow/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's normal in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 176px, 177768 B (173.6 KB) in total, mean 7407 B, max 9548 B (gallows-crow-19.webp, the attack's wing spread), min 6528 B (gallows-crow-01.webp, an idle frame) - against 45124 B for the static gallows-crow.webp. 3.9x, +129.5 KB for one enemy.",
+    "covers": [
+      "gallows-crow-00.webp",
+      "gallows-crow-01.webp",
+      "gallows-crow-02.webp",
+      "gallows-crow-03.webp",
+      "gallows-crow-04.webp",
+      "gallows-crow-05.webp",
+      "gallows-crow-06.webp",
+      "gallows-crow-07.webp",
+      "gallows-crow-08.webp",
+      "gallows-crow-09.webp",
+      "gallows-crow-10.webp",
+      "gallows-crow-11.webp",
+      "gallows-crow-12.webp",
+      "gallows-crow-13.webp",
+      "gallows-crow-14.webp",
+      "gallows-crow-15.webp",
+      "gallows-crow-16.webp",
+      "gallows-crow-17.webp",
+      "gallows-crow-18.webp",
+      "gallows-crow-19.webp",
+      "gallows-crow-20.webp",
+      "gallows-crow-21.webp",
+      "gallows-crow-22.webp",
+      "gallows-crow-23.webp"
+    ]
+  }
+]

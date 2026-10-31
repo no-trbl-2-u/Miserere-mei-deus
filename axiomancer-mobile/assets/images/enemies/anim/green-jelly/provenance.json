@@ -17,6 +17,9 @@
       "components/combat/encounter/CombatCombatantPane.tsx - the Act 1 elite in live combat"
     ],
     "measured": "A8, measured on these exact files: 24 cells, 179610 B (175.4 KB) in total, mean 7484 B, max 7920 B (green-jelly-21.webp, the attack's landing wobble), min 5122 B (green-jelly-08.webp, the struck flash) - against 12572 B for the static green-jelly.webp. 14.3x, +163.1 KB for one enemy. Beside the float-eye's 24 cells / 156452 B (152.8 KB): the jelly's cells are 256px like the float-eye's, and a little heavier because its painting fills more of each cell.",
+    "portrait": "green-jelly.webp",
+    "portrait_sha256": "56ee0cf005a9abdc8311067b2f665f0639baa0b1a8e951806641f943a9df447c",
+    "portrait_note": "A7 (phase AN5a): the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
     "covers": [
       "green-jelly-00.webp",
       "green-jelly-01.webp",
