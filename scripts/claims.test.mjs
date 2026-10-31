@@ -279,7 +279,9 @@ test('a push that loses the race is re-fetched and re-decided against the winner
     return opClaim(record, now, { ids: ['W'], owner: 'alice' })
   }
   const prev = { ...process.env }
-  Object.assign(process.env, w.env)
+  // Pin the clock: writeWithRetry reads CLAIMS_NOW, else the wall clock, and the
+  // fixed T0 claims above expire 24 h after T0 (the wall clock passed that on 2026-10-31).
+  Object.assign(process.env, w.env, { CLAIMS_NOW: at(0) })
   try {
     const result = writeWithRetry(a, 'origin', op, 'test')
     assert.equal(calls, 2, 'the rejected push re-fetched once')
