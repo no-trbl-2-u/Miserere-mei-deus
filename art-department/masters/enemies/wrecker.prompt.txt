@@ -1,0 +1,31 @@
+I'm attaching a painting of an enemy from my game. Turn it into a sprite sheet so I can animate it in three states: idle, attacking, and getting struck.
+
+THE ONE HARD RULE: DO NOT CHANGE THE ART STYLE.
+The attached image is the reference for every frame. Keep its exact rendering style: same linework, brushwork, shading, palette, lighting direction, level of detail, proportions and silhouette. Don't redesign, restyle, "clean up", smooth, add detail, or make it look more modern, 3D, anime or pixel art. Each frame should look like the original artist drew it. Keep it the same creature: no new limbs, colours, accessories or features, except effects the action calls for (see below).
+
+WHERE YOU CAN BE CREATIVE: THE ACTION.
+Choose how this creature moves, attacks and reacts, based on what it is. A jelly might squash and lunge; an eye might widen and fire a beam; a beast might rear back and slam. Make the motion feel alive and specific to this enemy. Short effects tied to an action are fine (a flash, a spray, a glow, motion smears) as long as they're painted in the same style as the creature.
+
+SHEET LAYOUT (exact; a script slices this automatically):
+- One PNG, 2048 × 768 pixels.
+- A grid of 8 columns × 3 rows. Every cell is exactly 256 × 256 pixels, with no gutters, borders, labels, numbers or text anywhere.
+- Fully transparent background (real alpha, not a checkerboard pattern or a solid colour).
+- Read left to right; each row is one animation:
+  Row 1 = IDLE (8 frames, loops). A subtle, continuous breathing, bobbing or pulsing motion. Frame 8 must flow straight back into frame 1 with no pop.
+  Row 2 = GETTING STRUCK (8 frames, plays once). Frame 1 is the moment of impact: a sharp recoil or flinch (a brief bright flash is fine). Frames 2–7 recover. Frame 8 is back in a neutral pose that matches idle frame 1, because the game holds on that frame afterwards.
+  Row 3 = ATTACKING (8 frames, plays once). Roughly: frames 1–2 wind up or anticipate, 3–4 strike (the most dramatic frames), 5–7 follow through, and frame 8 returns to the neutral idle pose.
+
+CONSISTENCY ACROSS FRAMES (most important after style):
+- Same size and scale in every cell. Don't let the creature grow or shrink between frames unless the motion calls for it (a squash or a lunge).
+- Same anchor in every cell. If the creature stands on the ground, its feet/base sit on the same baseline in every frame, about 85% of the way down the cell. If it floats or hovers, its body stays centred in the cell, and the bob comes from the motion, not from drift.
+- Leave a margin: nothing touches or crosses a cell edge, not even the attack's furthest reach or an effect. If the attack is big, shrink the creature slightly so the whole sheet fits, but use the same scale in all 24 frames.
+- Face the same direction as the reference image in every frame. Attacks lunge toward the viewer or forward in that facing, never off-screen.
+- Adjacent frames should change only a little, so it plays smoothly at 12–16 fps.
+
+BEFORE YOU GENERATE: in 2–3 sentences, describe the idle, struck and attack motions you've chosen for this creature, then produce the sheet. If you can't hit the exact 2048 × 768 size or the 8 × 3 grid in one image, say so, and don't quietly change the layout.
+
+Reference clarification: the solid charcoal inspection backdrop is NOT part of the creature and must be removed. Preserve original internal dark colours, coloured accents, distressed edges and linework. Render all 24 complete figures, one per cell, with consistent scale and safe transparent cell margins. Do not add any written description into the image; motion description has already been provided in chat.
+Strict cell safety: reserve at least 16px of genuinely transparent padding at ALL FOUR edges of EVERY 256px cell. Make the character small enough to leave room for the widest attack. Never crop head, feet, robe, effects, or appendages. At rest, standing feet/base at local y=218, floating body at x=128 y=128. Each cell is an isolated complete sprite.
+
+ENEMY: wrecker
+CHOSEN MOTION AND IDENTITY: Idle: the black boatman silhouette remains still in the same little boat while surrounding cyan painted mist gently curls. Struck: upper body jerks backward and pole tilts, mist briefly scattering then returning; attack: figure pulls its existing long pole back then thrusts/sweeps it forward within the cell, boat rocks slightly then settles. Preserve the source's near-featureless black silhouette, same small boat and pole, and rough cyan-turquoise mist brushwork. Do not invent facial details, clothing folds, eyes or new limbs.

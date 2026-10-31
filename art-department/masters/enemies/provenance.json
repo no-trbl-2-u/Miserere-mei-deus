@@ -57,5 +57,46 @@
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/green-jelly/ — phase AN3b cut this master into 24 per-cell WebP with tools/split-spritesheet.py and ingested them --no-grade. The master itself does not ship."
     ]
+  },
+  {
+    "generated_by": "image model (T's built-in image generator)",
+    "date": "2026-10-30",
+    "tool": "T's image generator, one sheet per enemy from its shipped stand-in portrait; re-encoded PNG -> WebP q95 exact alpha by the /plot AN5 session (no pixel edits)",
+    "covers": [
+      "brine-widow.sheet.webp",
+      "brine-widow.prompt.txt",
+      "cave-choir.sheet.webp",
+      "cave-choir.prompt.txt",
+      "crane-hook.sheet.webp",
+      "crane-hook.prompt.txt",
+      "curfew-ringer.sheet.webp",
+      "curfew-ringer.prompt.txt",
+      "gallows-crow.sheet.webp",
+      "lamplighter.sheet.webp",
+      "lamplighter.prompt.txt",
+      "lamprey-knot.sheet.webp",
+      "lamprey-knot.prompt.txt",
+      "net-mender.sheet.webp",
+      "net-mender.prompt.txt",
+      "smokehouse-gutter.sheet.webp",
+      "smokehouse-gutter.prompt.txt",
+      "tide-gate.sheet.webp",
+      "tide-gate.prompt.txt",
+      "tithe-collector.sheet.webp",
+      "tithe-collector.prompt.txt",
+      "toll-keeper.sheet.webp",
+      "toll-keeper.prompt.txt",
+      "wreck-picker.sheet.webp",
+      "wreck-picker.prompt.txt",
+      "wrecker.sheet.webp",
+      "wrecker.prompt.txt",
+      "ai-sheets.layout-report.json"
+    ],
+    "source": "axiomancer-mobile/assets/images/enemies/<key>.webp, the stand-in portrait of each enemy",
+    "method": "Requested 2048x768, 8x3 cells of 256px, rows idle / struck / attacking. Each prompt is in <key>.prompt.txt (gallows-crow, approved earlier, has none). Not yet cleaned or split: tithe-collector is 2043x770, and paint crosses inner gridlines on 13 of 14 sheets. Phase AN5 cleans, splits and installs them. The layout report also lists three sheets (float-eye, death-beholder, green-jelly) deleted as duplicates of installed sets.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "plan/phases/phase_AN5_chapter1_enemy_animations.md"
+    ]
   }
 ]
