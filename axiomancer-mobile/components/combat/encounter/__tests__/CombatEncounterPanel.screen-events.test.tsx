@@ -55,7 +55,7 @@ function mountLiveBoard(persistOutcome: boolean) {
         player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 160, maxHealth: 160 },
     });
     const bootstrapPlayer = store.getState().player;
-    fightRecorder.start({ enemyId: enemy.id, playerLevel: bootstrapPlayer.level, enemyHpMultiplier: 1, vitaeStart: bootstrapPlayer.health });
+    fightRecorder.start({ enemyId: enemy.id, playerLevel: bootstrapPlayer.level, enemyHpMultiplier: 1, vitaeStart: bootstrapPlayer.health, runId: null });
     const { tree } = withAllProviders(
         <CombatEncounterPanel
             enemy={enemy} bootstrapPlayer={bootstrapPlayer} deck={CARDS} seed={7}

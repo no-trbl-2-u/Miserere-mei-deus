@@ -42,6 +42,7 @@ const ENDED: HazardPuzzleLogAttempt = {
 };
 
 const CONFIG = { url: 'https://miserere-api.example.workers.dev', token: 'dev-token' };
+const ORIGIN = { source: 'harness' as const, runId: 'run-9' };
 
 let warn: jest.SpiedFunction<typeof console.warn>;
 const expoConfig = (Constants as unknown as { expoConfig: { version?: string } }).expoConfig;
@@ -83,7 +84,7 @@ describe('puzzleApiConfig', () => {
 
 describe('toPuzzleAttemptPost', () => {
     it('maps an ended attempt to a body the shared validator accepts', () => {
-        const post = toPuzzleAttemptPost(ENDED, 'easy', puzzleAppBuild());
+        const post = toPuzzleAttemptPost(ENDED, 'easy', puzzleAppBuild(), ORIGIN);
         expect(post).toEqual({
             solver: 'T',
             layoutId: 'cand-easy-01',
@@ -94,16 +95,24 @@ describe('toPuzzleAttemptPost', () => {
             endMs: 4_200,
             cleared: true,
             appBuild: '1.0.0 preview',
+            source: 'harness',
+            runId: 'run-9',
         });
         expect(validatePuzzleAttemptPost(post)).toMatchObject({ ok: true, attempt: post });
     });
 
+    it('carries the human source and a null run id when no run is in progress (SM1b)', () => {
+        const post = toPuzzleAttemptPost(ENDED, 'easy', 'x', { source: 'human', runId: null });
+        expect(post).toMatchObject({ source: 'human', runId: null });
+        expect(validatePuzzleAttemptPost(post).ok).toBe(true);
+    });
+
     it('carries a null band for a demo and is null for an unfinished attempt', () => {
         const demo = { ...ENDED, layoutId: 'demo-undercroft-hard', end: { ...ENDED.end!, kind: 'expiry' as const, cleared: false } };
-        const post = toPuzzleAttemptPost(demo, null, 'x');
+        const post = toPuzzleAttemptPost(demo, null, 'x', ORIGIN);
         expect(post).toMatchObject({ intendedBand: null, endKind: 'expiry', cleared: false });
         expect(validatePuzzleAttemptPost(post).ok).toBe(true);
-        expect(toPuzzleAttemptPost({ ...ENDED, end: null }, 'easy', 'x')).toBeNull();
+        expect(toPuzzleAttemptPost({ ...ENDED, end: null }, 'easy', 'x', ORIGIN)).toBeNull();
     });
 
     it('keys an attempt by its layout and clock start, not its solver', () => {
@@ -112,7 +121,7 @@ describe('toPuzzleAttemptPost', () => {
 });
 
 describe('postPuzzleAttempt', () => {
-    const post = toPuzzleAttemptPost(ENDED, 'easy', '1.0.0 preview')!;
+    const post = toPuzzleAttemptPost(ENDED, 'easy', '1.0.0 preview', ORIGIN)!;
 
     it('POSTs the body with the bearer token to the versioned path', async () => {
         const fetcher = jest.fn<PuzzleFetch>(async () => ({ ok: true, status: 201 }));

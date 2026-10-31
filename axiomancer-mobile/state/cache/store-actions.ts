@@ -24,7 +24,7 @@ import {
     rollCombatCardRewards,
 } from '@mechanics';
 import type { CacheLootTier, LootCacheChoiceOfferId, LootCacheChoiceOutcome, LootCacheChoiceSession } from '@mechanics';
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
 import { resolveMinigameSeed } from '../minigame-seeds';
 import { EMPTY_CACHE_SLICE, type AppStore } from '../store';
@@ -151,5 +151,6 @@ function postCacheRewardEvent(store: AppStore, cardCandidate: string | undefined
         offered: [cardCandidate],
         deck: runDeck(state),
         where: deckEventWhere(state, 'cache'),
+        runId: deckEventRunId(state),
     });
 }

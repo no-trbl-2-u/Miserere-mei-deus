@@ -40,11 +40,10 @@ import {
     type CombatOutcome,
     type FightPost,
     type PlayLogEvent,
-    type PlayLogSource,
     type PlayLogUiEventKind,
 } from '@mechanics';
 
-import { playLogConfig, playLogSource, postPlayLog } from '@/lib/playLog';
+import { playLogConfig, playLogSource, postPlayLog, type PlayLogStamps } from '@/lib/playLog';
 import type { PuzzleApiConfig, PuzzleFetch } from '@/lib/puzzleAttempts';
 
 /** What the bridge knows when the fight is staged. */
@@ -53,6 +52,8 @@ export interface FightStart {
     playerLevel: number;
     enemyHpMultiplier: number;
     vitaeStart: number;
+    /** The save's `GameState.runId` as the fight starts (SM1b); null when no run is in progress. */
+    runId: string | null;
     /** The relic ids worn as the fight starts (LR1g); omitted by callers that wear none. */
     relics?: string[];
 }
@@ -83,7 +84,7 @@ export interface FightRecorder {
 export interface FightRecorderDeps {
     now?: () => number;
     config?: () => PuzzleApiConfig | null;
-    source?: () => PlayLogSource;
+    source?: () => PlayLogStamps;
     fetcher?: PuzzleFetch;
 }
 
@@ -163,6 +164,7 @@ export function createFightRecorder(deps: FightRecorderDeps = {}): FightRecorder
             if (cfg === null) return false;
             const post: FightPost = {
                 ...source(),
+                runId: rec.runId,
                 enemyId: rec.enemyId,
                 playerLevel: rec.playerLevel,
                 enemyHpMultiplier: rec.enemyHpMultiplier,
