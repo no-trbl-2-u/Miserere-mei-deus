@@ -113,8 +113,8 @@ with no fallback and no torio art, and the renamed cards read under their new na
 - **Blood Price is repainted**, not added beside: the torio paintings go (T: all four lanes get the new art).
 - **The Elementalist's names ship as listed** in Sources. [T to confirm #1]
 - **The Merciful's "What Grace Owes" keeps its name**, though "What Is Owed" is now free. [T to confirm #2]
-- **Paintings ship as T selected them**, including the Elementalist's winged figure (rule 9 of the art direction bans
-  wings; T generated and kept these sheets after writing it). [T to confirm #3]
+- **Paintings ship as T selected them**, including the Elementalist's winged figure. Confirmed by T (2026-10-31):
+  ship it as painted; wings are allowed, and the art direction's rule 9 no longer bans them.
 
 ## Phases
 

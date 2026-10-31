@@ -24,7 +24,7 @@ Rules for every painting:
 4. No text, letters, numbers, letter-like runes, borders, frames or card chrome anywhere.
 5. Same hand on every card: the same line weight, the same hatching, light from the top left.
 6. Grim, not gory.
-8. No animals or insects anywhere: no beasts, birds, insects, fish or reptiles, and none of their parts (wings, feathers, claws, beaks, scales, quills, carapaces, sea or creature shells). Armour, shields and spikes are forged metal, wood or thorn; a "shell" is always forged armour.
+8. No animals or insects anywhere: no beasts, birds, insects, fish or reptiles, and none of their parts (feathers, claws, beaks, scales, quills, carapaces, sea or creature shells). Armour, shields and spikes are forged metal, wood or thorn; a "shell" is always forged armour. Wings are allowed (T, 2026-10-31).
 7. Framing: draw each painting as a smaller isolated subject fully contained in its own tile. The subject and every effect fit inside the central 70% of the tile's width and height, with generous pure black padding on all sides and a completely empty black bottom 15%. No weapon, spike, hand, cape, blood, bramble or effect touches a tile edge or gutter. Keep the grid; recompose the artwork inside each tile rather than shrinking the sheet or adding a frame.
 
 Every image I ask for is one sheet of six cards:

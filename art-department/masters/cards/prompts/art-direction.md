@@ -50,9 +50,10 @@ engraving: the linework is ink, the light and the magic are colour.
    the same across every card of a lane.
 8. **Grim, not gory.** Wounds and blood are fine and in keeping; no gore close-ups.
 9. **No animals or insects, anywhere** (T, 2026-10-30): no beasts, birds, insects, fish or reptiles, and none of
-   their parts (wings, feathers, claws, beaks, scales, quills, carapaces, sea or creature shells). Armour, shields and spikes are
+   their parts (feathers, claws, beaks, scales, quills, carapaces, sea or creature shells). Armour, shields and spikes are
    forged metal, wood or thorn; the Defender's "shell" is always forged armour. This covers card names and every word of a card's painting brief. Humanoid
-   foes (ghouls, devils, demons) are people, not animals, and stay.
+   foes (ghouls, devils, demons) are people, not animals, and stay. **Wings are allowed** (T, 2026-10-31): a winged
+   figure is not an animal, and the old ban on wings is lifted.
 
 ## Names are actions (T, 2026-10-30)
 
