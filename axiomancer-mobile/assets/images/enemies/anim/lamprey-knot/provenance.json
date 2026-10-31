@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 168 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times. The stand-in portrait lamprey-knot.webp was ingested in colour, and the sheet drawn from it carries the portrait's own saturation, so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait lamprey-knot.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/lamprey-knot.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows of 256px cells, rows idle / struck / attacking; prompt in lamprey-knot.prompt.txt), drawn from the shipped stand-in portrait lamprey-knot.webp",
+    "portrait": "lamprey-knot.webp",
+    "portrait_sha256": "0ef9205a8915aa95e6b2c1f5d076b3c795e98c04ac793819fc70c6cf5621b5bc",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/lamprey-knot.cleanup-report.json - 115 alpha >= 160 cores, 0 welded and cut; 3200 px of neighbours' slivers removed from 21 cells and 3200 px restored to the 21 cells they crossed out of; anchor measured foot-line (stands: the idle foot line moves 4px (1.6% of the 256px cell, within 6%)); every idle cell translated onto it, each reaction row moved as a whole by its first cell; one sheet-wide scale 0.864 about the anchor and one shift (17, 0); A9 idle drift 0.76px, struck start 0.67px, attacking start 0.7px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 168px (A6): at 256px the busiest cells overshoot the 12000 B per-cell ceiling, and 176px still overshot it by a few hundred bytes. The cleaned 1344x504 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar lamprey-knot.sheet.json and the report (which pins its pixels' SHA-256) are.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['lamprey-knot'], via ./anim/lamprey-knot/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's Lamprey-Knot in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 168px, 215158 B (210.1 KB) in total, mean 8965 B, max 11700 B (lamprey-knot-19.webp), min 8228 B (lamprey-knot-05.webp) - against 52902 B for the static lamprey-knot.webp. 4.1x, +158.5 KB for one enemy.",
+    "covers": [
+      "lamprey-knot-00.webp",
+      "lamprey-knot-01.webp",
+      "lamprey-knot-02.webp",
+      "lamprey-knot-03.webp",
+      "lamprey-knot-04.webp",
+      "lamprey-knot-05.webp",
+      "lamprey-knot-06.webp",
+      "lamprey-knot-07.webp",
+      "lamprey-knot-08.webp",
+      "lamprey-knot-09.webp",
+      "lamprey-knot-10.webp",
+      "lamprey-knot-11.webp",
+      "lamprey-knot-12.webp",
+      "lamprey-knot-13.webp",
+      "lamprey-knot-14.webp",
+      "lamprey-knot-15.webp",
+      "lamprey-knot-16.webp",
+      "lamprey-knot-17.webp",
+      "lamprey-knot-18.webp",
+      "lamprey-knot-19.webp",
+      "lamprey-knot-20.webp",
+      "lamprey-knot-21.webp",
+      "lamprey-knot-22.webp",
+      "lamprey-knot-23.webp"
+    ]
+  }
+]

@@ -113,5 +113,23 @@
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/gallows-crow/ - phase AN5a split the cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the master nor the cleaned sheet ships."
     ]
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --sheet <key>.sheet.webp --out-frame 168|176 (Pillow + numpy; phase AN5b): net-mender, brine-widow and lamprey-knot at 168, crane-hook and curfew-ringer at 176",
+    "covers": [
+      "net-mender.sheet.json, net-mender.cleanup-report.json",
+      "crane-hook.sheet.json, crane-hook.cleanup-report.json",
+      "brine-widow.sheet.json, brine-widow.cleanup-report.json",
+      "lamprey-knot.sheet.json, lamprey-knot.cleanup-report.json",
+      "curfew-ringer.sheet.json, curfew-ringer.cleanup-report.json"
+    ],
+    "source": "<key>.sheet.webp, T's image-model sheets (the 2026-10-30 record above)",
+    "method": "No pixel was edited by hand. Same chain as the gallows-crow record: slivers dropped by the area centroid of each alpha component, crossing limbs reassembled into their own cell, every cell registered by integer translation onto an anchor measured from the idle row (foot-line for all five), one sheet-wide scale, then the whole cleaned sheet downscaled to the cell edge. 176px (the crow's edge) left net-mender, brine-widow and lamprey-knot over the 12000 B per-cell ceiling by 114, 12 and 584 B, so those three are cut at 168px; the ceiling is not raised. The cleaned sheets are not committed: tests/test_clean_ai_sheet.py regenerates each from its master and checks the sidecar, the report and the pixel hash.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5b split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
+    ]
   }
 ]

@@ -78,7 +78,7 @@ export function portraitProblems(enemiesDir) {
 test('every frame set was drawn from the portrait that ships beside it', () => {
   const keys = frameSetKeys(ENEMIES)
   // If the parse ever finds nothing, the check below passes about nothing.
-  for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow']) {
+  for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow', 'net-mender', 'crane-hook', 'brine-widow', 'lamprey-knot', 'curfew-ringer']) {
     assert.ok(keys.includes(key), `ENEMY_FRAME_SETS has no '${key}' (or the parse broke)`)
   }
   assert.deepEqual(portraitProblems(ENEMIES), [], 'a frame set must be retired when its portrait is swapped')

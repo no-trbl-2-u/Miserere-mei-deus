@@ -38,8 +38,8 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'death-beholder':    require('./death-beholder.webp'),
     // Chapter 1's normals (phases EN1f and EN1g): stand-ins restored from the
     // 2026-07-06 drop until T's portrait swap. The Gallows Crow also has a
-    // frame set (phase AN5a), bound to this exact portrait by its hash (A7);
-    // the other five are static, no frame set, until AN5b.
+    // frame set (phase AN5a), and so do the next five (phase AN5b), each bound to
+    // this exact portrait by its hash (A7); the rest are static until AN5c-AN5e.
     'gallows-crow':      require('./gallows-crow.webp'),
     'net-mender':        require('./net-mender.webp'),
     'crane-hook':        require('./crane-hook.webp'),
