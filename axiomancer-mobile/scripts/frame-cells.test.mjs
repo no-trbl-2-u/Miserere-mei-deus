@@ -74,7 +74,7 @@ test('no shipped cell exceeds the recorded ceiling', () => {
   assert.deepEqual(over, [], 'a cell over the ceiling means the set was regenerated hotter')
 })
 
-for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow']) {
+for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow', 'net-mender', 'crane-hook', 'brine-widow', 'lamprey-knot', 'curfew-ringer']) {
 test(`the ${key} set is whole: 24 cells, named row-major`, () => {
   // A truncated set is the failure the registry's own validation catches at
   // runtime; catching it here says which FILE is missing rather than that a
