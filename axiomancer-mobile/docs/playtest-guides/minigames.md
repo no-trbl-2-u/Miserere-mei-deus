@@ -37,14 +37,12 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 | `blacksmith-card` / `blacksmith-continue` | A card interlude; CONTINUE |
 | `blacksmith-outcome` / `blacksmith-claim` | Outcome; CLAIM |
 | `blacksmith-abandon` | Walk away without forging |
-| `event-choice-<id>` / `event-skip` / `event-choice-back` / `event-empty` / `event-consequence-chips` | The `/event` shell used by gathering |
 
 ## 4. A correct play, step by step
 
 - Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (card removal is the village's now; if you chose the upgrade, press a `card-upgrade-row-<cardId>` to preview it, then `card-upgrade-confirm`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
 - Cache: tap a `cache-choice-offer-<id>`; `cache-outcome` → `cache-claim`.
 - Blacksmith: `blacksmith-begin`; tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
-- Gathering: on `/event` read the card, tap an `event-choice-<id>` if any, else `event-skip`.
 
 ## 5. Looks stuck but isn't
 
@@ -53,14 +51,12 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 - The upgrade sheet with no confirm button: no row is picked yet; `card-upgrade-confirm` appears with the preview once you press a `card-upgrade-row-<cardId>`.
 - One-way note (`*-intro-one-way`): there is no back button by design; the only exits are an offer or (blacksmith) `blacksmith-abandon`.
 - Blacksmith `blacksmith-card` interlude blocks the forge until `blacksmith-continue`.
-- `/event` for gathering has no choices on many cards — `event-skip` is the correct exit, not a bug.
 
 ## 6. Actually stuck
 
 - Offers list empty (`*-choice-offers` with zero `*-choice-offer-*`) or every offer disabled with no `blacksmith-abandon`.
 - CLAIM pressed, `action/claim*` logged, and the route does not return to `/exploration`.
 - `*-inactive` persisting with no map behind it.
-- `/event` with `event-empty` and no `event-choice-back`.
 Record: kind, fixture/trigger, offer ids visible, purse, last 20 `action` lines, screenshot. Then `globalThis.__AXM_SKIP_EVENT__()` if you must — filed as a finding.
 
 ## 7. Read the log

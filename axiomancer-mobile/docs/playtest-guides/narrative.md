@@ -45,14 +45,12 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 | `cutscene-line-<index>` | The current line |
 | `cutscene-advance` | Tap anywhere to advance (last line dismisses) |
 | `cutscene-skip` | SKIP |
-| `event-prelude-header` / `event-strife-sash` / `event-choice-<id>` / `event-skip` / `event-choice-back` / `event-empty` | The `/event` fallback shell |
 
 ## 4. A correct play, step by step
 
 - Dialogue: read `dialogue-speech`; tap `dialogue-choice-<id>` twice (arm, confirm) until no choices remain; `dialogue-leave`. Map returns.
 - Village: tap `village-rest` (purse drops, VITAE rises); tap a `village-card-<cardId>-buy` (it reads SOLD); tap `village-remove` then a `village-remove-card-<cardId>`; `village-leave`.
 - Cutscene: tap `cutscene-advance` once per line (or `cutscene-skip`). Map returns.
-- `/event`: `event-choice-<id>` if present, else `event-skip`.
 
 ## 5. Looks stuck but isn't
 
@@ -67,7 +65,7 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 
 - `/dialogue` with `dialogue-speech` and neither a `dialogue-choice-*` nor `dialogue-leave` reachable.
 - `dialogue-leave` / `village-leave` / last `cutscene-advance` pressed, `action/dismissEvent` logged, and the route stays.
-- `*-inactive` persisting with no map behind it, or `/event` with `event-empty` and no `event-choice-back`.
+- `*-inactive` persisting with no map behind it.
 - A choice confirmed and `game/dialogue:applied` never logged.
 Record: route, fixture/trigger, nameplate/village name, the choice ids shown, last 20 `action`+`game` lines, screenshot. `globalThis.__AXM_SKIP_EVENT__()` only after that, and file it.
 
