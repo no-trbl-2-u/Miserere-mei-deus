@@ -322,13 +322,11 @@ async function shell(page) {
     await waitForPath(page, '/character', 'back from the hazard deck')
     log('play: the hazard deck and back')
 
-    await page.getByTestId('self-settings-link').first().scrollIntoViewIfNeeded().catch(() => {})
-    await tap(page, 'self-settings-link') || fail('the SELF sheet has no settings link')
-    await waitForPath(page, '/settings', 'settings')
+    await clickTab(page, 'Settings', '/settings-tab')
     await waitFor(page, 'settings-screen', 'the settings screen')
-    await tap(page, 'settings-back')
-    await waitForPath(page, '/character', 'back from settings')
-    log('play: settings and back')
+    if (await page.getByTestId('settings-back').count()) fail('the SETTINGS tab shows a close control')
+    await clickTab(page, 'Character', '/character')
+    log('play: the settings tab and back')
 
     await clickTab(page, 'Exploration', '/exploration')
     await settleOnMap(page, 'back to the map')

@@ -9,6 +9,8 @@ import {
     REDUCED_MOTION_OPTIONS,
     TEXT_SCALE_OPTIONS,
     TOGGLE_OPTIONS,
+    FEEDBACK_MAX_CHARS,
+    selectFeedbackViewModel,
     selectSettingsViewModel,
     volumeStep,
 } from '../settings.engine';
@@ -38,5 +40,37 @@ describe('selectSettingsViewModel', () => {
         expect(vm.inRun).toBe(true);
         expect(vm.textScale).toBe(1);
         expect(selectSettingsViewModel(DEFAULT_SETTINGS, false).inRun).toBe(false);
+    });
+});
+
+describe('the music switch', () => {
+    it('defaults on and reaches the view model', () => {
+        expect(DEFAULT_SETTINGS.musicOn).toBe(true);
+        expect(selectSettingsViewModel(DEFAULT_SETTINGS, false).musicOn).toBe(true);
+        expect(selectSettingsViewModel({ ...DEFAULT_SETTINGS, musicOn: false }, false).musicOn).toBe(false);
+    });
+});
+
+describe('selectFeedbackViewModel', () => {
+    it('is disabled until a kind is picked and the text is not blank', () => {
+        expect(selectFeedbackViewModel({ kind: null, text: 'it broke' }).canSubmit).toBe(false);
+        expect(selectFeedbackViewModel({ kind: 'bug', text: '' }).canSubmit).toBe(false);
+        expect(selectFeedbackViewModel({ kind: 'bug', text: '  \n ' }).canSubmit).toBe(false);
+        expect(selectFeedbackViewModel({ kind: 'bug', text: 'it broke' }).canSubmit).toBe(true);
+    });
+
+    it('builds the draft only when submittable', () => {
+        expect(selectFeedbackViewModel({ kind: null, text: 'x' }).draft).toBeNull();
+        expect(selectFeedbackViewModel({ kind: 'proposal', text: 'add a map' }).draft).toEqual({
+            kind: 'proposal',
+            text: 'add a map',
+        });
+    });
+
+    it('caps the text at 1000 characters and counts it', () => {
+        const vm = selectFeedbackViewModel({ kind: 'bug', text: 'a'.repeat(FEEDBACK_MAX_CHARS + 50) });
+        expect(vm.text).toHaveLength(FEEDBACK_MAX_CHARS);
+        expect(vm.countLabel).toBe('1000 / 1000');
+        expect(selectFeedbackViewModel({ kind: 'bug', text: 'abc' }).countLabel).toBe('3 / 1000');
     });
 });

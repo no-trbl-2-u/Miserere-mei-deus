@@ -13,6 +13,8 @@ export interface MusicInputs {
     readonly hasHazard: boolean;
     /** The Settings music volume, 0 to 100. */
     readonly musicVolume: number;
+    /** The Settings music switch (master mute). Absent reads as on. */
+    readonly musicOn?: boolean;
     /** False while the OS has sent the app to the background. */
     readonly appActive: boolean;
 }
@@ -32,7 +34,8 @@ export const FADE_TICK_MS = 50;
 
 export function decideMusic(inputs: MusicInputs): MusicDirective {
     const targetVolume = Math.min(1, Math.max(0, inputs.musicVolume / 100));
-    const quiet = inputs.inCombat || inputs.hasHazard || !inputs.appActive || targetVolume === 0;
+    const quiet = inputs.inCombat || inputs.hasHazard || !inputs.appActive || targetVolume === 0 ||
+        inputs.musicOn === false;
     return { state: quiet ? 'paused' : 'playing', targetVolume };
 }
 

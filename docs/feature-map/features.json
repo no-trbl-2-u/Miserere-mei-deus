@@ -402,6 +402,31 @@
       }
     },
     {
+      "id": "route:(tabs)/settings",
+      "name": "Settings",
+      "kind": "route",
+      "group": "tabs",
+      "source": "axiomancer-mobile/app/(tabs)/settings/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:(tabs)/settings"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/settings.screen.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Settings\")",
+        "source": null
+      }
+    },
+    {
       "id": "route:blacksmith",
       "name": "The Anvil",
       "kind": "route",
@@ -964,11 +989,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/theme-switch-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/theme-switch-e2e.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/ThemeSwitcher.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/settings.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/settings.screen.test.tsx"
       },
       "needsPitch": {
         "value": true,
@@ -2532,12 +2557,6 @@
       "kind": "coupling",
       "from": "route:(tabs)/character",
       "to": "area:Game",
-      "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/character",
-      "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/character.engine.ts"
     },
     {
@@ -3199,6 +3218,36 @@
       "from": "route:(tabs)/memoir",
       "to": "area:World",
       "file": "axiomancer-mobile/state/rest/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
       "kind": "coupling",
@@ -5897,6 +5946,12 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/character",
+      "to": "route:(tabs)/settings",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/character",
       "to": "route:blacksmith",
       "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
     },
@@ -5969,12 +6024,6 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/character",
-      "to": "route:settings",
-      "file": "axiomancer-mobile/components/menu/SettingsLink.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/character",
       "to": "route:travel",
       "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
@@ -6006,6 +6055,12 @@
       "kind": "flow",
       "from": "route:(tabs)/deck",
       "to": "route:(tabs)/memoir",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/deck",
+      "to": "route:(tabs)/settings",
       "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
     },
     {
@@ -6113,6 +6168,12 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/exploration",
+      "to": "route:(tabs)/settings",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/exploration",
       "to": "route:blacksmith",
       "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
     },
@@ -6204,6 +6265,12 @@
       "kind": "flow",
       "from": "route:(tabs)/inventory",
       "to": "route:(tabs)/memoir",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/inventory",
+      "to": "route:(tabs)/settings",
       "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
     },
     {
@@ -6305,6 +6372,12 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/memoir",
+      "to": "route:(tabs)/settings",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/memoir",
       "to": "route:blacksmith",
       "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
     },
@@ -6371,6 +6444,114 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/memoir",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:(tabs)/character",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:(tabs)/deck",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:(tabs)/exploration",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:(tabs)/inventory",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:(tabs)/memoir",
+      "file": "axiomancer-mobile/app/(tabs)/_layout.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:index",
+      "file": "axiomancer-mobile/components/settings/SettingsBody.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
@@ -8136,7 +8317,7 @@
       "kind": "flow",
       "from": "route:settings",
       "to": "route:index",
-      "file": "axiomancer-mobile/app/settings/index.tsx"
+      "file": "axiomancer-mobile/components/settings/SettingsBody.tsx"
     },
     {
       "kind": "flow",

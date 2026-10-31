@@ -74,8 +74,9 @@ occupied slot and deleting any slot go through a confirmation sheet.
 |---|---|
 | Store — `settingsStore`, `useSettings()`, `useSetting(key)`, `SettingsProvider` | `state/settings.ts` |
 | Presenter + copy + option lists | `state/presenters/settings.engine.ts` |
-| Screen | `app/settings/index.tsx` |
-| Reached from | the main menu, and the SELF tab's SETTINGS row (`components/menu/SettingsLink.tsx`) |
+| Body (one component, two hosts) | `components/settings/SettingsBody.tsx` |
+| Hosts | the `/settings` route (`app/settings/index.tsx`, from the main menu, with a close control) and the SETTINGS tab (`app/(tabs)/settings/index.tsx`, the sixth tab, no close control; URL `/settings-tab`) |
+| Feedback form | `components/menu/FeedbackSheet.tsx` — BUG or PROPOSAL, up to 1000 characters; SUBMIT sends and saves nothing yet |
 
 Persisted under `@axiomancer/settings:v1`, hydrated at boot beside the
 save preload. A UX preference, not gameplay state: a new game, a slot
@@ -87,7 +88,8 @@ change and a corrupt save leave it alone.
 | TEXT SIZE | 0.9 · 1 · 1.15 · 1.3 | `makeStyles` scales every `fontSize` / `lineHeight` (`scaleTextStyles`); chrome metrics hold |
 | REDUCED MOTION | system · on · off | `hooks/useReducedMotion.ts` — the OS switch, overridable |
 | HAPTICS | on · off | `lib/platform/haptics.ts` — `hapticsAllowed()` reads the store synchronously |
-| MUSIC | 0–100 | `components/BackgroundMusic.tsx` — T's theme loops under the whole game, paused while a fight or hazard is staged (`state/presenters/music.engine.ts`) |
+| MUSIC (switch) | on · off | `musicOn` (default on, an old save reads as on); off pauses the theme through `decideMusic`, the volume below is kept; RESET SETTINGS turns it on |
+| MUSIC VOLUME | 0–100 | `components/BackgroundMusic.tsx` — T's theme loops under the whole game, paused while a fight or hazard is staged (`state/presenters/music.engine.ts`) |
 | SOUND EFFECTS | 0–100 | persisted only — **no sound effects play yet**; the screen says so |
 | STORY MODE | — | listed as COMING SOON, disabled; nothing persisted |
 | SAVE & RETURN TO TITLE *(in a run)* | — | `returnToTitleAction` (save + flush) then `/?menu=1` |

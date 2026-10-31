@@ -68,10 +68,11 @@ export function BackgroundMusic() {
     const inCombat = useGameState(selectIsInCombat);
     const hasHazard = useGameState(selectHasActiveHazard);
     const musicVolume = useSetting('musicVolume');
+    const musicOn = useSetting('musicOn');
     const appActive = useAppActive();
     const unlocked = useAudioUnlocked();
 
-    const directive = decideMusic({ inCombat, hasHazard, musicVolume, appActive });
+    const directive = decideMusic({ inCombat, hasHazard, musicVolume, musicOn, appActive });
 
     const playerRef = useRef<LoopingPlayer | null>(null);
     const volumeRef = useRef(0);

@@ -25,6 +25,11 @@ describe('decideMusic', () => {
         expect(decideMusic({ ...base, musicVolume: 0 })).toEqual({ state: 'paused', targetVolume: 0 });
     });
 
+    it('pauses while the music switch is off, and plays again at the kept volume when it is on', () => {
+        expect(decideMusic({ ...base, musicOn: false })).toEqual({ state: 'paused', targetVolume: 0.7 });
+        expect(decideMusic({ ...base, musicOn: true })).toEqual({ state: 'playing', targetVolume: 0.7 });
+    });
+
     it('pauses while the app is in the background', () => {
         expect(decideMusic({ ...base, appActive: false }).state).toBe('paused');
     });
