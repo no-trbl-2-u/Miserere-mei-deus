@@ -1,6 +1,7 @@
 {
   "report": "card-usage",
   "build": "rep1234",
+  "source": "human",
   "card": null,
   "fights": 2,
   "cards": [

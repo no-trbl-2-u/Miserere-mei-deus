@@ -2202,6 +2202,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.attempt-contract.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Combat",
       "file": "axiomancer-mechanics/src/World/MapEvents/handlers.ts"
     },
     {

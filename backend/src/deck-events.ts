@@ -4,7 +4,7 @@
  * shape here and nowhere else.
  */
 
-import type { DeckEventPost, DeckEventRow } from './contract';
+import type { DeckEventPost, DeckEventRow, PlayLogSourceKind } from './contract';
 
 interface DeckEventRecord {
     id: number;
@@ -18,6 +18,8 @@ interface DeckEventRecord {
     offered_json: string | null;
     deck_json: string;
     where_json: string;
+    source: PlayLogSourceKind;
+    run_id: string | null;
 }
 
 function toRow(record: DeckEventRecord): DeckEventRow {
@@ -33,6 +35,8 @@ function toRow(record: DeckEventRecord): DeckEventRow {
         offered: record.offered_json === null ? null : (JSON.parse(record.offered_json) as string[]),
         deck: JSON.parse(record.deck_json) as string[],
         where: JSON.parse(record.where_json) as DeckEventRow['where'],
+        source: record.source,
+        runId: record.run_id,
     };
 }
 
@@ -45,8 +49,8 @@ export async function insertDeckEvent(
     const result = await db
         .prepare(
             `INSERT INTO deck_events
-                (received_at, solver, session_id, build_commit, app_build, kind, card_id, offered_json, deck_json, where_json)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (received_at, solver, session_id, build_commit, app_build, kind, card_id, offered_json, deck_json, where_json, source, run_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
              RETURNING id`,
         )
         .bind(
@@ -60,17 +64,19 @@ export async function insertDeckEvent(
             deckEvent.offered === null ? null : JSON.stringify(deckEvent.offered),
             JSON.stringify(deckEvent.deck),
             JSON.stringify(deckEvent.where),
+            deckEvent.source ?? 'human',
+            deckEvent.runId ?? null,
         )
         .first<{ id: number }>();
     if (!result) throw new Error('insert returned no id');
     return { id: result.id, receivedAt };
 }
 
-/** Every stored deck change, newest first; `cardId` narrows to one card picked or removed. */
-export async function listDeckEvents(db: D1Database, cardId?: string): Promise<DeckEventRow[]> {
-    const statement = cardId === undefined
-        ? db.prepare('SELECT * FROM deck_events ORDER BY id DESC')
-        : db.prepare('SELECT * FROM deck_events WHERE card_id = ? ORDER BY id DESC').bind(cardId);
+/** Every stored deck change, newest first; `cardId` narrows to one card picked or removed and `source` to one source (null: every source). */
+export async function listDeckEvents(db: D1Database, cardId?: string, source: PlayLogSourceKind | null = null): Promise<DeckEventRow[]> {
+    const statement = db
+        .prepare('SELECT * FROM deck_events WHERE (?1 IS NULL OR card_id = ?1) AND (?2 IS NULL OR source = ?2) ORDER BY id DESC')
+        .bind(cardId ?? null, source);
     const { results } = await statement.all<DeckEventRecord>();
     return results.map(toRow);
 }

@@ -49,6 +49,17 @@ export const PLAY_LOG_UI_EVENT_KINDS = ['ui-staged', 'ui-unstaged', 'ui-detail-o
 
 export const PLAY_LOG_FIGHT_OUTCOMES = ['victory', 'mercy', 'defeat', 'retreat'] as const satisfies readonly CombatOutcome[];
 
+/**
+ * Who played a row (phase SM1a): T on a preview APK (`human`), a local harness
+ * run, an e2e, a web export or a dev server (`harness`), or a headless bot
+ * (`sim`). The app never sends `sim`. A body that leaves it out is an older
+ * APK and is stored as `human`.
+ */
+export const PLAY_LOG_SOURCES = ['human', 'harness', 'sim'] as const;
+
+/** What a report or a list may filter on: one source, or every source. */
+export const PLAY_LOG_SOURCE_FILTERS = [...PLAY_LOG_SOURCES, 'all'] as const;
+
 /** What changed the deck. `upgrade` is reserved for when the upgrade actions reach the app. */
 export const DECK_EVENT_KINDS = ['reward', 'cache-reward', 'remove', 'run-end'] as const;
 
@@ -70,6 +81,8 @@ export const PLAY_LOG_LIMITS = {
 export type CombatEventKind = (typeof COMBAT_EVENT_KINDS)[number];
 export type PlayLogUiEventKind = (typeof PLAY_LOG_UI_EVENT_KINDS)[number];
 export type DeckEventKind = (typeof DECK_EVENT_KINDS)[number];
+export type PlayLogSourceKind = (typeof PLAY_LOG_SOURCES)[number];
+export type PlayLogSourceFilter = (typeof PLAY_LOG_SOURCE_FILTERS)[number];
 
 /** When an event happened: ms since the fight began, and the player's VITAE then. */
 export interface PlayLogStamp {
@@ -109,8 +122,19 @@ export interface PlayLogSource {
     appBuild: string;
 }
 
+/**
+ * Who played the row and in which run (phase SM1a). Both are optional on the
+ * wire: an installed build from before this phase sends neither, and the Worker
+ * stores `human` and a null run id.
+ */
+export interface PlayLogOrigin {
+    source?: PlayLogSourceKind;
+    /** The save's `GameState.runId`; null when no run is in progress. */
+    runId?: string | null;
+}
+
 /** The body of `POST /v1/fights`: one ended fight. */
-export interface FightPost extends PlayLogSource {
+export interface FightPost extends PlayLogSource, PlayLogOrigin {
     enemyId: string;
     playerLevel: number;
     /** The live HP multiplier the fight ran under, so its length compares to the measured report. */
@@ -136,7 +160,7 @@ export interface DeckEventWhere {
 }
 
 /** The body of `POST /v1/deck-events`: one change to the run's deck. */
-export interface DeckEventPost extends PlayLogSource {
+export interface DeckEventPost extends PlayLogSource, PlayLogOrigin {
     kind: DeckEventKind;
     /** The card picked or removed; null for a skipped reward or a run's end. */
     cardId: string | null;
@@ -150,6 +174,8 @@ export interface DeckEventPost extends PlayLogSource {
 /** One stored fight, as `GET /v1/fights` returns it. */
 export interface FightRow extends FightPost {
     id: number;
+    source: PlayLogSourceKind;
+    runId: string | null;
     /** ISO instant the Worker stored it. */
     receivedAt: string;
 }
@@ -157,6 +183,8 @@ export interface FightRow extends FightPost {
 /** One stored deck change, as `GET /v1/deck-events` returns it. */
 export interface DeckEventRow extends DeckEventPost {
     id: number;
+    source: PlayLogSourceKind;
+    runId: string | null;
     receivedAt: string;
 }
 
@@ -192,13 +220,15 @@ export type DeckEventValidation =
 
 const SOURCE_KEYS: readonly (keyof PlayLogSource)[] = ['solver', 'sessionId', 'buildCommit', 'appBuild'];
 
+const ORIGIN_KEYS: readonly (keyof PlayLogOrigin)[] = ['source', 'runId'];
+
 const FIGHT_KEYS: readonly (keyof FightPost)[] = [
-    ...SOURCE_KEYS, 'enemyId', 'playerLevel', 'enemyHpMultiplier', 'outcome', 'turns',
+    ...SOURCE_KEYS, ...ORIGIN_KEYS, 'enemyId', 'playerLevel', 'enemyHpMultiplier', 'outcome', 'turns',
     'vitaeStart', 'vitaeEnd', 'vitaeLow', 'deck', 'relics', 'signatures', 'events',
 ];
 
 const DECK_EVENT_KEYS: readonly (keyof DeckEventPost)[] = [
-    ...SOURCE_KEYS, 'kind', 'cardId', 'offered', 'deck', 'where',
+    ...SOURCE_KEYS, ...ORIGIN_KEYS, 'kind', 'cardId', 'offered', 'deck', 'where',
 ];
 
 const COMBAT_KINDS: ReadonlySet<string> = new Set(COMBAT_EVENT_KINDS);
@@ -240,6 +270,24 @@ function checkCardIds(value: unknown, field: string, max: number, reasons: strin
     } else {
         value.forEach((id, i) => checkText(id, `${field}[${i}]`, reasons, false));
     }
+}
+
+/**
+ * Checks the optional `source` and `runId` of a post body (phase SM1a): an
+ * absent field is an older build and passes; a present one must be a known
+ * source and a non-empty run id (or null).
+ */
+export function checkPlayLogOrigin(body: Record<string, unknown>, reasons: string[]): void {
+    if (body.source !== undefined) checkOneOf(body.source, PLAY_LOG_SOURCES, 'source', reasons);
+    if (body.runId !== undefined && body.runId !== null) checkText(body.runId, 'runId', reasons, false);
+}
+
+/** Drops the origin keys a body left out, so a validated shape never carries `undefined`. */
+export function withoutAbsentOrigin<T extends PlayLogOrigin>(post: T): T {
+    const out = { ...post };
+    if (out.source === undefined) delete out.source;
+    if (out.runId === undefined) delete out.runId;
+    return out;
 }
 
 function checkSource(body: Record<string, unknown>, reasons: string[]): void {
@@ -296,6 +344,7 @@ export function validateFightPost(body: unknown): FightValidation {
     const reasons: string[] = [];
 
     checkSource(body, reasons);
+    checkPlayLogOrigin(body, reasons);
     checkText(body.enemyId, 'enemyId', reasons, false);
     if (!isWhole(body.playerLevel, 1)) reasons.push('playerLevel: expected a whole number of at least 1');
     if (!isFiniteNumber(body.enemyHpMultiplier) || body.enemyHpMultiplier <= 0) {
@@ -326,7 +375,7 @@ export function validateFightPost(body: unknown): FightValidation {
     return {
         ok: true,
         fight: {
-            ...fight,
+            ...withoutAbsentOrigin(fight),
             relics: (body.relics as string[] | undefined) ?? [],
             signatures: (body.signatures as string[] | undefined) ?? [],
             events: (body.events as Record<string, unknown>[]).map(pickEvent),
@@ -353,6 +402,7 @@ export function validateDeckEventPost(body: unknown): DeckEventValidation {
     const reasons: string[] = [];
 
     checkSource(body, reasons);
+    checkPlayLogOrigin(body, reasons);
     checkOneOf(body.kind, DECK_EVENT_KINDS, 'kind', reasons);
     checkCardIds(body.deck, 'deck', PLAY_LOG_LIMITS.deck, reasons);
 
@@ -389,7 +439,7 @@ export function validateDeckEventPost(body: unknown): DeckEventValidation {
     const where = body.where as Record<string, unknown>;
     return {
         ok: true,
-        deckEvent: { ...deckEvent, where: { nodeId: where.nodeId as string | null, screen: where.screen as string } },
+        deckEvent: { ...withoutAbsentOrigin(deckEvent), where: { nodeId: where.nodeId as string | null, screen: where.screen as string } },
         reasons: [],
     };
 }

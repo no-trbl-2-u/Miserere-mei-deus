@@ -111,3 +111,21 @@ describe('validatePuzzleAttemptPost', () => {
         expect(reasonsOf(attempt({ moves }))).toEqual([`moves: more than ${PUZZLE_ATTEMPT_LIMITS.moves} entries`]);
     });
 });
+
+describe('SM1a: validatePuzzleAttemptPost source and run id', () => {
+    it('accepts each source, a run id or null, and neither field', () => {
+        for (const source of ['human', 'harness', 'sim']) {
+            const result = validatePuzzleAttemptPost(attempt({ source, runId: 'run-1' }));
+            expect(result.ok && result.attempt).toMatchObject({ source, runId: 'run-1' });
+        }
+        expect(reasonsOf(attempt({ runId: null }))).toEqual([]);
+        const old = validatePuzzleAttemptPost(attempt());
+        expect(old.ok && old.attempt).not.toHaveProperty('source');
+        expect(old.ok && old.attempt).not.toHaveProperty('runId');
+    });
+
+    it('refuses an unknown source and an empty run id', () => {
+        expect(reasonsOf(attempt({ source: 'bot' }))).toEqual(['source: expected one of human, harness, sim']);
+        expect(reasonsOf(attempt({ runId: '' }))).toEqual(['runId: must not be empty']);
+    });
+});

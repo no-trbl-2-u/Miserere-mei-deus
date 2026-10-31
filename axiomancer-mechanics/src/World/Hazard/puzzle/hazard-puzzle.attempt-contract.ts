@@ -11,6 +11,8 @@
  * this shape forever, so a breaking change is a new path, never an edit here.
  */
 
+import { checkPlayLogOrigin, withoutAbsentOrigin } from '../../../Combat/combat.play-log-contract';
+import type { PlayLogOrigin } from '../../../Combat/combat.play-log-contract';
 import type { HazardRouteKey } from '../hazard.types';
 import type { HazardPuzzleBand } from './hazard-puzzle.types';
 
@@ -43,7 +45,7 @@ export interface PuzzleAttemptMove {
 }
 
 /** The body of `POST /v1/puzzle-attempts`: one ended attempt. */
-export interface PuzzleAttemptPost {
+export interface PuzzleAttemptPost extends PlayLogOrigin {
     /** The name the solver typed on the list screen. */
     solver: string;
     layoutId: string;
@@ -62,6 +64,8 @@ export interface PuzzleAttemptPost {
 /** One stored attempt, as `GET /v1/puzzle-attempts` returns it. */
 export interface PuzzleAttemptRow extends PuzzleAttemptPost {
     id: number;
+    source: NonNullable<PlayLogOrigin['source']>;
+    runId: string | null;
     /** ISO instant the Worker stored it. */
     receivedAt: string;
 }
@@ -89,6 +93,7 @@ export type PuzzleAttemptValidation =
 
 const POST_KEYS: readonly (keyof PuzzleAttemptPost)[] = [
     'solver', 'layoutId', 'route', 'intendedBand', 'moves', 'endKind', 'endMs', 'cleared', 'appBuild',
+    'source', 'runId',
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -144,6 +149,7 @@ export function validatePuzzleAttemptPost(body: unknown): PuzzleAttemptValidatio
     checkText(body.solver, 'solver', reasons, true);
     checkText(body.layoutId, 'layoutId', reasons, false);
     checkText(body.appBuild, 'appBuild', reasons, false);
+    checkPlayLogOrigin(body, reasons);
     checkOneOf(body.route, PUZZLE_ATTEMPT_ROUTES, 'route', reasons);
     if (body.intendedBand !== null) {
         checkOneOf(body.intendedBand, PUZZLE_ATTEMPT_BANDS, 'intendedBand', reasons);
@@ -166,5 +172,5 @@ export function validatePuzzleAttemptPost(body: unknown): PuzzleAttemptValidatio
     const moves = (body.moves as PuzzleAttemptMove[]).map((m) => ({
         n: m.n, kind: m.kind, uid: m.uid, ...(m.dieId === undefined ? {} : { dieId: m.dieId }), ms: m.ms,
     }));
-    return { ok: true, attempt: { ...(picked as unknown as PuzzleAttemptPost), moves }, reasons: [] };
+    return { ok: true, attempt: { ...withoutAbsentOrigin(picked as unknown as PuzzleAttemptPost), moves }, reasons: [] };
 }

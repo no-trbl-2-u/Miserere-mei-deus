@@ -14,7 +14,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { REPORTS_PATH_PREFIX, REPORT_NAMES, checkBody, formatCardGaps, formatCardUsage, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
+import { REPORTS_PATH_PREFIX, REPORT_NAMES, SOURCE_FILTERS, checkBody, formatCardGaps, formatCardUsage, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const USAGE_FIXTURE = path.join(HERE, 'fixtures', 'card-usage-report.json')
@@ -35,10 +35,24 @@ test('the path prefix and report names match the Worker', () => {
   assert.match(source, new RegExp(`REPORT_NAMES = \\[${REPORT_NAMES.map((n) => `'${n}'`).join(', ')}\\]`))
 })
 
+test('the source filters match the play-log contract', () => {
+  const contract = fs.readFileSync(path.join(HERE, '..', 'axiomancer-mechanics', 'src', 'Combat', 'combat.play-log-contract.ts'), 'utf-8')
+  assert.match(contract, /PLAY_LOG_SOURCES = \['human', 'harness', 'sim'\] as const/)
+  assert.deepEqual(SOURCE_FILTERS, ['human', 'harness', 'sim', 'all'])
+})
+
 test('parseArgs: one named report with its flags', () => {
   assert.deepEqual(parseArgs(['card-usage', '--card', 'strike', '--build', 'abc', '--json']),
-    { report: 'card-usage', build: 'abc', card: 'strike', json: true, file: undefined })
+    { report: 'card-usage', build: 'abc', source: undefined, card: 'strike', json: true, file: undefined })
   assert.equal(parseArgs(['card-gaps']).report, 'card-gaps')
+})
+
+test('parseArgs: --source takes human, harness, sim or all and nothing else', () => {
+  for (const source of SOURCE_FILTERS) assert.equal(parseArgs(['card-usage', '--source', source]).source, source)
+  assert.equal(parseArgs(['card-usage']).source, undefined)
+  assert.throws(() => parseArgs(['card-usage', '--source', 'bot']), /--source expects human, harness, sim, all \(got bot\)/)
+  assert.throws(() => parseArgs(['card-usage', '--source']), /--source needs a value/)
+  assert.equal(parseArgs(['signature-usage', '--source', 'sim']).source, 'sim')
 })
 
 test('parseArgs: refuses a missing, unknown or second report, a bare flag and --card on card-gaps', () => {
@@ -53,6 +67,8 @@ test('parseArgs: refuses a missing, unknown or second report, a bare flag and --
 test('reportPath: the flags become query values, encoded', () => {
   assert.equal(reportPath({ report: 'card-gaps' }), '/v1/reports/card-gaps')
   assert.equal(reportPath({ report: 'card-usage', build: 'abc', card: 'strike+' }), '/v1/reports/card-usage?build=abc&card=strike%2B')
+  assert.equal(reportPath({ report: 'card-usage', build: 'abc', source: 'sim' }), '/v1/reports/card-usage?build=abc&source=sim')
+  assert.equal(reportPath({ report: 'card-gaps', source: 'all' }), '/v1/reports/card-gaps?source=all')
 })
 
 test('table: first column left, the rest right-aligned', () => {
@@ -61,7 +77,7 @@ test('table: first column left, the rest right-aligned', () => {
 
 test('formatCardUsage: a header naming the scope and one row per card in the order given', () => {
   const text = formatCardUsage(USAGE)
-  assert.match(text, /^Card usage: 2 fights \(build rep1234\)\./)
+  assert.match(text, /^Card usage: 2 fights \(build rep1234, source human\)\./)
   const lines = text.split('\n')
   const head = lines.findIndex((l) => l.startsWith('card '))
   assert.match(lines[head], /^card\s+decks\s+drawn\s+played\s+free\s+paid\s+held\s+fizzled\s+offered\s+picked\s+skipped\s+removed$/)
@@ -71,7 +87,7 @@ test('formatCardUsage: a header naming the scope and one row per card in the ord
 
 test('formatCardGaps: three sections, (none) for an empty one', () => {
   const text = formatCardGaps(GAPS)
-  assert.match(text, /^Card gaps: 2 fights \(every build\)\./)
+  assert.match(text, /^Card gaps: 2 fights \(every build, source all\)\./)
   assert.match(text, /THREATS THAT OVERWHELMED A PHASE\nenemy\s+threat\s+overwhelmed\s+fights\ngutter-wretch\s+Gnaw\s+1\s+1/)
   assert.match(text, /LIVE DICE LEFT UNSPENT AT TURN END\n.*\ngutter-wretch\s+body\s+2\s+1\ngutter-wretch\s+wild\s+1\s+1/)
   assert.match(text, /WHAT ENDED EACH LOST FIGHT\n\(none\)$/)
@@ -98,6 +114,24 @@ test('main: fetches the named report with the token and prints it, never the tok
   assert.doesNotMatch(stdout.text, /sekrit/)
 })
 
+test('main: --source goes to the Worker as a query value and the header prints the source the body names', async () => {
+  const calls = []
+  const fetchImpl = async (url) => {
+    calls.push(url)
+    return { ok: true, status: 200, json: async () => ({ ...USAGE, source: 'sim' }) }
+  }
+  const stdout = sink()
+  const code = await main(['card-usage', '--build', 'rep1234', '--source', 'sim'], {
+    env: { PUZZLE_API_URL: 'https://api.example', PUZZLE_API_TOKEN: 'sekrit' }, envFile: NO_ENV_FILE, fetchImpl, stdout, stderr: sink(),
+  })
+  assert.equal(code, 0)
+  assert.deepEqual(calls, ['https://api.example/v1/reports/card-usage?build=rep1234&source=sim'])
+  assert.match(stdout.text, /^Card usage: 2 fights \(build rep1234, source sim\)\./)
+  const bad = sink()
+  assert.equal(await main(['card-usage', '--source', 'bot'], { env: {}, envFile: NO_ENV_FILE, stdout: sink(), stderr: bad }), 2)
+  assert.match(bad.text, /--source expects/)
+})
+
 test('main: --json prints the body; --file reads a saved one with no network', async () => {
   const stdout = sink()
   const fetchImpl = async () => { throw new Error('no network expected') }
@@ -122,7 +156,7 @@ test('main: 2 on bad arguments or a missing variable, 1 on an HTTP failure', asy
 
 test('signature-usage: parses, the path has no card, the table lists one row per signature', () => {
   assert.deepEqual(parseArgs(['signature-usage', '--build', 'abc']),
-    { report: 'signature-usage', build: 'abc', card: undefined, json: false, file: undefined })
+    { report: 'signature-usage', build: 'abc', source: undefined, card: undefined, json: false, file: undefined })
   assert.throws(() => parseArgs(['signature-usage', '--card', 'x']), /card-usage only/)
   assert.equal(reportPath({ report: 'signature-usage', build: 'abc' }), '/v1/reports/signature-usage?build=abc')
   const body = {

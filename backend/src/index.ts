@@ -2,12 +2,14 @@
  * miserere-api: the dev Worker (phases BE1a, BE2a, BE2f, BV1a, BV2a).
  *
  *   POST /v1/puzzle-attempts           store one ended attempt        -> 201 { id, receivedAt }
- *   GET  /v1/puzzle-attempts[?layout=] the stored rows, newest first  -> 200 { attempts }
+ *   GET  /v1/puzzle-attempts[?layout=][&source=]
+ *                                      the stored rows, newest first  -> 200 { attempts }
  *   POST /v1/fights                    store one ended fight          -> 201 { id, receivedAt }
- *   GET  /v1/fights[?enemy=]           the stored fights, newest first -> 200 { fights }
+ *   GET  /v1/fights[?enemy=][&source=] the stored fights, newest first -> 200 { fights }
  *   POST /v1/deck-events               store one deck change          -> 201 { id, receivedAt }
- *   GET  /v1/deck-events[?card=]       the stored changes, newest first -> 200 { deckEvents }
- *   GET  /v1/reports/<name>[?build=][&card=]
+ *   GET  /v1/deck-events[?card=][&source=]
+ *                                      the stored changes, newest first -> 200 { deckEvents }
+ *   GET  /v1/reports/<name>[?build=][&source=][&card=]
  *                                      a fixed play-log report         -> 200 { report, ... }
  *   POST /v1/ballot-verdicts           store one ballot save or verdict -> 201 { id, receivedAt }
  *   GET  /v1/ballot-verdicts[?ballot=][&status=]
@@ -22,6 +24,11 @@
  * (the default when a post leaves it out). The verdict in force for a ballot
  * is its newest `final` row, `?ballot=<id>&status=final`; a `draft` is
  * progress, never a verdict. A `status=` other than those two is a 400.
+ *
+ * Every fight, deck event and puzzle attempt says who played it (phase SM1a): `source` is `human`,
+ * `harness` or `sim`, stored `human` when a post leaves it out, and `runId` is the save's run id or
+ * null. A list takes `?source=` (`human`, `harness`, `sim` or `all`; absent reads every source); a
+ * report takes the same and reads `human` when it is absent. Any other value is a 400.
  *
  * The reports are `card-usage`, `card-gaps` and `signature-usage` (`reports.ts`); their SQL is
  * fixed on the Worker and the query string only binds values. Another name is
@@ -43,12 +50,13 @@ import {
     PLAY_LOG_DECK_EVENTS_PATH,
     PLAY_LOG_FIGHTS_PATH,
     PLAY_LOG_LIMITS,
+    PLAY_LOG_SOURCE_FILTERS,
     PUZZLE_ATTEMPTS_PATH,
     validateDeckEventPost,
     validateFightPost,
     validatePuzzleAttemptPost,
 } from './contract';
-import type { DeckEventList, FightList, PlayLogCreated, PuzzleAttemptList } from './contract';
+import type { DeckEventList, FightList, PlayLogCreated, PlayLogSourceFilter, PlayLogSourceKind, PuzzleAttemptList } from './contract';
 import { allowedOrigin, preflight, withCors } from './cors';
 import { insertDeckEvent, listDeckEvents } from './deck-events';
 import type { Env } from './env';
@@ -71,6 +79,21 @@ function created(body: PlayLogCreated): Response {
     return json(body, 201);
 }
 
+const isSourceFilter = (value: string): value is PlayLogSourceFilter =>
+    (PLAY_LOG_SOURCE_FILTERS as readonly string[]).includes(value);
+
+/** A bad `?source=`: the 400 every list and report answers with. */
+function badSource(value: string): Response {
+    return error(400, 'invalid query', [`source: expected one of ${PLAY_LOG_SOURCE_FILTERS.join(', ')}, got ${JSON.stringify(value)}`]);
+}
+
+/** `?source=` on a list route: absent or `all` reads every source (null), else one. */
+function listSource(url: URL): { source: PlayLogSourceKind | null } | { response: Response } {
+    const value = url.searchParams.get('source');
+    if (value === null || value === 'all') return { source: null };
+    return isSourceFilter(value) ? { source: value as PlayLogSourceKind } : { response: badSource(value) };
+}
+
 const ROUTES: Record<string, Route> = {
     [PUZZLE_ATTEMPTS_PATH]: {
         maxBytes: 256 * 1024,
@@ -82,7 +105,9 @@ const ROUTES: Record<string, Route> = {
         },
         async get(url, env) {
             const layout = url.searchParams.get('layout');
-            const list: PuzzleAttemptList = { attempts: await listAttempts(env.DB, layout ?? undefined) };
+            const filter = listSource(url);
+            if ('response' in filter) return filter.response;
+            const list: PuzzleAttemptList = { attempts: await listAttempts(env.DB, layout ?? undefined, filter.source) };
             return json(list);
         },
     },
@@ -96,7 +121,9 @@ const ROUTES: Record<string, Route> = {
         },
         async get(url, env) {
             const enemy = url.searchParams.get('enemy');
-            const list: FightList = { fights: await listFights(env.DB, enemy ?? undefined) };
+            const filter = listSource(url);
+            if ('response' in filter) return filter.response;
+            const list: FightList = { fights: await listFights(env.DB, enemy ?? undefined, filter.source) };
             return json(list);
         },
     },
@@ -110,7 +137,9 @@ const ROUTES: Record<string, Route> = {
         },
         async get(url, env) {
             const card = url.searchParams.get('card');
-            const list: DeckEventList = { deckEvents: await listDeckEvents(env.DB, card ?? undefined) };
+            const filter = listSource(url);
+            if ('response' in filter) return filter.response;
+            const list: DeckEventList = { deckEvents: await listDeckEvents(env.DB, card ?? undefined, filter.source) };
             return json(list);
         },
     },
@@ -161,7 +190,9 @@ async function handleReport(request: Request, url: URL, env: Env): Promise<Respo
     if (request.method !== 'GET') return error(405, 'method not allowed', undefined, { Allow: 'GET' });
     const build = url.searchParams.get('build') || null;
     const card = url.searchParams.get('card') || null;
-    return json(await runReport(name, env, { build, card }));
+    const asked = url.searchParams.get('source') || 'human';
+    if (!isSourceFilter(asked)) return badSource(asked);
+    return json(await runReport(name, env, { build, card, source: asked }));
 }
 
 export default {

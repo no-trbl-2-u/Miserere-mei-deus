@@ -153,11 +153,13 @@ export type { LampState } from './Combat';
 export {
     PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
     PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
+    PLAY_LOG_SOURCES, PLAY_LOG_SOURCE_FILTERS,
 } from './Combat';
 export type {
     CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent, PlayLogCardUiEvent, PlayLogSignatureRefusedEvent,
     PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
-    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
+    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation, PlayLogSourceKind,
+    PlayLogSourceFilter, PlayLogOrigin,
 } from './Combat';
 // Measured truth (R12a): the Act 1 ledger x spread x deck measurement.
 export {

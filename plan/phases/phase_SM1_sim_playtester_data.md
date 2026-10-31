@@ -73,8 +73,8 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
   the barrel and re-exported by `backend/src/contract.ts`.
 - **A2** Migration `backend/migrations/0006_play_log_source.sql` adds `source TEXT NOT NULL DEFAULT 'human'` and a
   nullable `run_id` to `fights`, `deck_events` and `puzzle_attempts`, indexes `source` and `run_id` on the first two,
-  and relabels every existing `fights` and `deck_events` row whose `build_commit` is NULL as `harness` [T to confirm
-  #1]. `0001`-`0005` are unchanged. A body without `source` is stored as `human`.
+  and relabels every existing `fights` and `deck_events` row, whatever its `build_commit`, as `harness` to start clean;
+  existing `puzzle_attempts` rows stay `human` (Confirmed by T (2026-10-31)). `0001`-`0005` are unchanged. A body without `source` is stored as `human`.
 - **A3** Every list route takes `?source=` and every report in `REPORT_NAMES` takes `?source=human|harness|sim|all`,
   defaulting to `human`; each report's body names the source it read. `npm run api -- <report> --source <s>` passes
   it, and the table's header line prints it. Worker tests cover the default, each source, `all`, and a 400 on an
@@ -202,9 +202,9 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
 - **The bot's brain is engine-side heuristics** (Confirmed by T (2026-10-31)): lane archetype policies in
   `axiomancer-mechanics` that path the map, pick rewards and play fights, free to run at scale in CI. An LLM-driven
   player is a Follow-up, not a phase.
-- **The old rows** [T to confirm #1]: rows already in D1 whose `build_commit` is NULL came from web exports (a static
-  export cannot read `extra`), so `0006` relabels them `harness`; rows with a sha came from a preview APK and stay
-  `human`. Puzzle attempts carry no build commit and all stay `human`.
+- **The old rows** (Confirmed by T (2026-10-31)): every `fights` and `deck_events` row already in D1, whatever its
+  `build_commit`, is relabelled `harness` by `0006`, to start clean; from here only a build carrying the human stamp
+  posts `human`. Puzzle attempts carry no build commit and all stay `human`.
 - **Who counts as T** [T to confirm #2]: only a build that carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the
   committed preview profile in `eas.json` sets. Every other build posts `harness`, so a forgotten harness can never
   land in T's numbers. A dev server T opens by hand posts `harness` too.

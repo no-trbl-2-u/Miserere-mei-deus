@@ -1,8 +1,9 @@
 /**
  * The play-log reports (phase BE2f): `GET /v1/reports/card-usage` and
  * `GET /v1/reports/card-gaps`, and (phase LR1g) `signature-usage`. The SQL is fixed here and never taken from the
- * client; a query string only binds values (`?build=`, and `?card=` on
- * card-usage). Every number is a count for T to read; nothing grades the game
+ * client; a query string only binds values (`?build=`, `?source=`, and `?card=` on
+ * card-usage). `?source=` is `human` (the default: only T's play), `harness`, `sim` or `all` (phase SM1a), and
+ * every report's body names the source it read. Every number is a count for T to read; nothing grades the game
  * from it. Ad hoc questions go to `wrangler d1 execute --remote`.
  *
  * The reports read `events_json` with SQLite's JSON functions: each fight's
@@ -48,6 +49,7 @@
  *   refused       `ui-signature-refused` taps naming it
  */
 
+import type { PlayLogSourceFilter } from './contract';
 import type { Env } from './env';
 
 export const REPORTS_PATH_PREFIX = '/v1/reports/';
@@ -77,6 +79,7 @@ export interface CardUsageRow {
 export interface CardUsageReport {
     report: 'card-usage';
     build: string | null;
+    source: PlayLogSourceFilter;
     card: string | null;
     fights: number;
     cards: CardUsageRow[];
@@ -105,6 +108,7 @@ export interface DefeatGapRow {
 export interface CardGapsReport {
     report: 'card-gaps';
     build: string | null;
+    source: PlayLogSourceFilter;
     fights: number;
     threats: ThreatGapRow[];
     unspentDice: DiceGapRow[];
@@ -123,6 +127,7 @@ export interface SignatureUsageRow {
 export interface SignatureUsageReport {
     report: 'signature-usage';
     build: string | null;
+    source: PlayLogSourceFilter;
     fights: number;
     signatures: SignatureUsageRow[];
 }
@@ -132,20 +137,25 @@ export type Report = CardUsageReport | CardGapsReport | SignatureUsageReport;
 export interface ReportQuery {
     build: string | null;
     card: string | null;
+    /** `all` reads every source; the Worker defaults an absent `?source=` to `human`. */
+    source: PlayLogSourceFilter;
 }
 
-// `?1` is the build filter (null for every build). Every report starts here.
+/** The SQL's source binding: null for `all`, else the source. */
+const sourceParam = (source: PlayLogSourceFilter): string | null => (source === 'all' ? null : source);
+
+// `?1` is the build filter (null for every build), `?2` the source (null for every source). Every report starts here.
 const FIGHTS_CTE = `
-    f AS (SELECT * FROM fights WHERE ?1 IS NULL OR build_commit = ?1),
+    f AS (SELECT * FROM fights WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)),
     ev AS (
         SELECT f.id AS fight_id, f.enemy_id, CAST(e.key AS INTEGER) AS ord, e.value AS v,
                json_extract(e.value, '$.kind') AS kind
         FROM f, json_each(f.events_json) AS e
     )`;
 
-const FIGHT_COUNT_SQL = 'SELECT COUNT(*) AS n FROM fights WHERE ?1 IS NULL OR build_commit = ?1';
+const FIGHT_COUNT_SQL = 'SELECT COUNT(*) AS n FROM fights WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)';
 
-// `?2` is the card filter (null for every card).
+// `?3` is the card filter (null for every card).
 const CARD_USAGE_SQL = `
 WITH ${FIGHTS_CTE},
     seg AS (
@@ -189,7 +199,7 @@ WITH ${FIGHTS_CTE},
         SELECT json_extract(v, '$.cardId') AS card_id, COUNT(*) AS n FROM ev WHERE kind = 'effect-fizzled' GROUP BY 1
     ),
     de AS (
-        SELECT * FROM deck_events WHERE ?1 IS NULL OR build_commit = ?1
+        SELECT * FROM deck_events WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)
     ),
     offers AS (
         SELECT o.value AS card_id, COUNT(*) AS offered,
@@ -226,7 +236,7 @@ LEFT JOIN hand AS h ON h.card_id = c.card_id
 LEFT JOIN fizzles AS z ON z.card_id = c.card_id
 LEFT JOIN offers AS o ON o.card_id = c.card_id
 LEFT JOIN removals AS r ON r.card_id = c.card_id
-WHERE c.card_id IS NOT NULL AND (?2 IS NULL OR c.card_id = ?2)
+WHERE c.card_id IS NOT NULL AND (?3 IS NULL OR c.card_id = ?3)
 ORDER BY fightsInDeck DESC, played DESC, cardId`;
 
 const THREAT_GAPS_SQL = `
@@ -316,26 +326,29 @@ LEFT JOIN refusals AS r ON r.sig = s.sig
 WHERE s.sig IS NOT NULL
 ORDER BY fightsWorn DESC, casts DESC, signatureId`;
 
-async function fightCount(db: D1Database, build: string | null): Promise<number> {
-    const row = await db.prepare(FIGHT_COUNT_SQL).bind(build).first<{ n: number }>();
+async function fightCount(db: D1Database, query: ReportQuery): Promise<number> {
+    const row = await db.prepare(FIGHT_COUNT_SQL).bind(query.build, sourceParam(query.source)).first<{ n: number }>();
     return row?.n ?? 0;
 }
 
 export async function cardUsage(db: D1Database, query: ReportQuery): Promise<CardUsageReport> {
-    const { results } = await db.prepare(CARD_USAGE_SQL).bind(query.build, query.card).all<CardUsageRow>();
-    return { report: 'card-usage', build: query.build, card: query.card, fights: await fightCount(db, query.build), cards: results };
+    const { results } = await db.prepare(CARD_USAGE_SQL).bind(query.build, sourceParam(query.source), query.card).all<CardUsageRow>();
+    return {
+        report: 'card-usage', build: query.build, source: query.source, card: query.card, fights: await fightCount(db, query), cards: results,
+    };
 }
 
 export async function cardGaps(db: D1Database, query: ReportQuery): Promise<CardGapsReport> {
     const [threats, dice, defeats] = await db.batch([
-        db.prepare(THREAT_GAPS_SQL).bind(query.build),
-        db.prepare(DICE_GAPS_SQL).bind(query.build),
-        db.prepare(DEFEAT_GAPS_SQL).bind(query.build),
+        db.prepare(THREAT_GAPS_SQL).bind(query.build, sourceParam(query.source)),
+        db.prepare(DICE_GAPS_SQL).bind(query.build, sourceParam(query.source)),
+        db.prepare(DEFEAT_GAPS_SQL).bind(query.build, sourceParam(query.source)),
     ]);
     return {
         report: 'card-gaps',
         build: query.build,
-        fights: await fightCount(db, query.build),
+        source: query.source,
+        fights: await fightCount(db, query),
         threats: threats.results as unknown as ThreatGapRow[],
         unspentDice: dice.results as unknown as DiceGapRow[],
         defeats: defeats.results as unknown as DefeatGapRow[],
@@ -343,8 +356,10 @@ export async function cardGaps(db: D1Database, query: ReportQuery): Promise<Card
 }
 
 export async function signatureUsage(db: D1Database, query: ReportQuery): Promise<SignatureUsageReport> {
-    const { results } = await db.prepare(SIGNATURE_USAGE_SQL).bind(query.build).all<SignatureUsageRow>();
-    return { report: 'signature-usage', build: query.build, fights: await fightCount(db, query.build), signatures: results };
+    const { results } = await db.prepare(SIGNATURE_USAGE_SQL).bind(query.build, sourceParam(query.source)).all<SignatureUsageRow>();
+    return {
+        report: 'signature-usage', build: query.build, source: query.source, fights: await fightCount(db, query), signatures: results,
+    };
 }
 
 /** Runs one named report; `?card=` only narrows card-usage. */

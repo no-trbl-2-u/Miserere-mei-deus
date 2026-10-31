@@ -89,7 +89,7 @@ describe('POST /v1/puzzle-attempts', () => {
         expect(Number.isNaN(Date.parse(created.receivedAt))).toBe(false);
 
         const list = await (await get()).json<PuzzleAttemptList>();
-        expect(list.attempts).toEqual([{ id: created.id, receivedAt: created.receivedAt, ...attempt() }]);
+        expect(list.attempts).toEqual([{ id: created.id, receivedAt: created.receivedAt, source: 'human', runId: null, ...attempt() }]);
     });
 
     it('round-trips a demo (null band) and an uncleared expiry', async () => {
