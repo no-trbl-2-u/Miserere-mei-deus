@@ -17,11 +17,11 @@
 
 import React, { useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
 
 import { getPlayerPortrait } from '@/assets/images/portraits';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
+import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { Image } from '@/lib/platform/image';
 import { useLocalSearchParams, useRouter } from '@/lib/platform/router';
 import { useGameStore } from '@/state/GameStoreProvider';
@@ -38,28 +38,12 @@ import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
+/** The starting relic's mark, in points. */
+const RELIC_MARK_SIZE = 44;
+
 function readSlot(raw: unknown): SaveSlotId | null {
     const n = Number(raw);
     return n === 1 || n === 2 || n === 3 ? n : null;
-}
-
-/** The relic's mark: a ring with a gem. */
-function RelicMark({ size }: { size: number }) {
-    const AXM = usePalette();
-    return (
-        <Svg
-            width={size}
-            height={size}
-            viewBox="0 0 28 28"
-            fill="none"
-            accessibilityRole="image"
-            accessibilityLabel="Relic icon"
-        >
-            <Circle cx={14} cy={15} r={9} stroke={AXM.parchment} strokeWidth={1.5} fill="none" />
-            <Circle cx={14} cy={6} r={3.5} fill={AXM.sulfur} />
-            <Path d="M10 19 Q14 23 18 19" stroke={AXM.parchment} strokeWidth={1.2} fill="none" />
-        </Svg>
-    );
 }
 
 export default function CharacterSelectScreen() {
@@ -162,7 +146,7 @@ export default function CharacterSelectScreen() {
                         <Text style={styles.relicLabel}>{COPY.relicLabel}</Text>
                         {selected !== null ? (
                             <>
-                                <RelicMark size={44} />
+                                <ItemGlyph category="equipment" sub="Relic" itemId={selected.relicId} size={RELIC_MARK_SIZE} />
                                 <Text style={styles.relicName} testID="character-select-relic-name">
                                     {selected.relicName}
                                 </Text>
