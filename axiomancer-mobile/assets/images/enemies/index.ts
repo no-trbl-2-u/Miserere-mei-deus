@@ -50,6 +50,8 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     // Chapter 1's elites (phase EN1j on): stand-ins restored from the same
     // drop until T's portrait swap; static, no frame set.
     'cave-choir':        require('./cave-choir.webp'),
+    'lamplighter':       require('./lamplighter.webp'),
+    'wrecker':           require('./wrecker.webp'),
     // The keep causeway's two elites (phase EN1l).
     'toll-keeper':       require('./toll-keeper.webp'),
     'tide-gate':         require('./tide-gate.webp'),

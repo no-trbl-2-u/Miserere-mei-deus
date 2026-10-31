@@ -318,6 +318,15 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
   map's seeded pool roll draws one on arrival, 50/50. The sea cave draws the
   Cave Choir or the Tithe-Collector.
+- **The Lamplighter and the Wrecker:** level 7, elites with three HP phases
+  (EN1k), drawn one per run at the lighthouse path (`bw-l4`). The
+  Lamplighter's lamp (fight state on its pane, LIT or DARK, not a word) starts
+  Lit. While Dark every intent it shows reads UNKNOWN with no name and Glare is
+  skipped. Its Shutter puts it Dark (in phase 2 every other time, relit the
+  time between), its 60% DANGER Lure Light relights it, and its 30% DANGER The
+  Lamp Goes Out leaves it Dark for the fight. The Wrecker's Bait telegraphs
+  UNKNOWN and reads your GUARD as your turn ends: GUARD up and it takes WARD,
+  none and it hits. A BAIT chip stands on its pane while the Bait is next.
 - **The Toll-Keeper and the Tide-Gate:** level 8, elites with three HP phases
   (EN1l), drawn 50/50 at the keep causeway (`bw-w5`). The Toll-Keeper's TOLL
   (fight state on its pane) rises 1 each foe turn and its Levy adds it to the

@@ -250,14 +250,16 @@ export function EffectChips({ effects, onChip, align = 'flex-start', testID }: {
                             <Text style={styles.chipDurText} allowFontScaling={false}>{e.duration}t</Text>
                         </View>
                     ) : null}
-                    <View style={styles.chipBadge}>
-                        <Text style={styles.chipBadgeText} allowFontScaling={false}>{`${e.intensity}${e.unit ?? ''}`}</Text>
-                    </View>
+                    {e.noBadge ? null : (
+                        <View style={styles.chipBadge}>
+                            <Text style={styles.chipBadgeText} allowFontScaling={false}>{`${e.intensity}${e.unit ?? ''}`}</Text>
+                        </View>
+                    )}
                 </Pressable>
                 {e.caption ? (
                     <Text
                         style={[styles.chipCaption, { color: e.glyph.color }]}
-                        testID="combat-self-burn"
+                        testID={e.effectId === 'weather-your-inferno' ? 'combat-self-burn' : `combat-caption-${e.effectId}`}
                         numberOfLines={1}
                         allowFontScaling={false}
                     >

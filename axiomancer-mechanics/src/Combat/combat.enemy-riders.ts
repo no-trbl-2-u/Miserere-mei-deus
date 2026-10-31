@@ -105,6 +105,17 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
             return { ...rider, ward: scale(rider.ward), damage: scale(rider.damage) };
         case 'verse-gain':
             return rider;
+        // The lighthouse path (phase EN1k).
+        case 'wick-lash':
+            return { ...rider, dark: scale(rider.dark) };
+        case 'bait':
+            return { ...rider, ward: scale(rider.ward), damage: scale(rider.damage) };
+        case 'strip-wreck':
+            return { ...rider, ward: scale(rider.ward) };
+        case 'lamp':
+        case 'lit-only':
+        case 'barnacle-if-through':
+            return rider;
         // The Toll-Keeper and the Tide-Gate (phase EN1l).
         case 'toll-levy':
         case 'toll-seize':
@@ -286,6 +297,11 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
             case 'antiphon':
                 effects = planVerseMove(state, effects, rider);
                 break;
+            case 'wick-lash':
+            case 'lit-only':
+            case 'bait':
+                effects = planLighthouseMove(state, effects, rider);
+                break;
             case 'toll-levy':
             case 'toll-seize':
             case 'curse-count-hit':
@@ -381,6 +397,8 @@ export interface RiderMoveOutcome {
     guardBefore: number;
     /** The fight's random source (the hoard's random pick). */
     rng?: () => number;
+    /** Hits that got through your GUARD and BARRIER (absent = none). */
+    hitsThrough?: number;
 }
 
 /** The foe gains `n` WARD (the event is a word gain like any other). */
@@ -604,6 +622,15 @@ export function applyRiderAfterMove(
         case 'verse-amen':
         case 'antiphon': {
             const after = verseAfterMove(state, rider);
+            state = after.state;
+            events.push(...after.events);
+            break;
+        }
+        case 'lamp':
+        case 'wick-lash':
+        case 'barnacle-if-through':
+        case 'strip-wreck': {
+            const after = lighthouseAfterMove(state, rider, outcome);
             state = after.state;
             events.push(...after.events);
             break;
@@ -838,6 +865,102 @@ function verseAfterMove(
     }
 }
 
+// ─── The lighthouse path: the Lamplighter's lamp, the Wrecker's Bait (phase EN1k) ──
+//
+// The lamp is fight state on the foe (`enemyRiders.lamp`, absent = Lit), not
+// a keyword. While it is Dark every intent the board shows reads UNKNOWN with
+// no name, and a Lit-only move (Glare) is skipped. The Wrecker's Bait reads
+// your GUARD as your turn ends.
+
+/** The Lamplighter's lamp as the board shows it. */
+export type LampState = 'lit' | 'dark';
+
+/** The lamp of a foe that carries one (`null` for every other foe). */
+export function lampOf(state: Pick<CombatEncounterState, 'enemy' | 'enemyRiders'>): LampState | null {
+    if (!enemyCarriesRider(state.enemy, ['lamp'])) return null;
+    return state.enemyRiders?.lamp ? 'dark' : 'lit';
+}
+
+/** True while the foe's lamp is Dark: every intent the board shows reads UNKNOWN, unnamed. */
+export function intentsInTheDark(state: Pick<CombatEncounterState, 'enemy' | 'enemyRiders'>): boolean {
+    return lampOf(state) === 'dark';
+}
+
+/** True when the foe's next move is a Bait: your GUARD at your turn end decides it. */
+export function baitSet(state: Pick<CombatEncounterState, 'threatPhases' | 'currentPhaseIndex'>): boolean {
+    const cur = state.threatPhases[Math.min(state.currentPhaseIndex, state.threatPhases.length - 1)];
+    return cur?.threatAction.rider?.kind === 'bait';
+}
+
+type LighthousePlanRider = Extract<EnemyMoveRider, { kind: 'wick-lash' | 'lit-only' | 'bait' }>;
+
+/** A lighthouse move's effects from the board: Wick-Lash's dark bonus, Glare skipped in the dark, the Bait's read. */
+function planLighthouseMove(
+    state: CombatEncounterState, effects: CombatThreatEffect[], rider: LighthousePlanRider,
+): CombatThreatEffect[] {
+    switch (rider.kind) {
+        case 'wick-lash':
+            return lampOf(state) === 'dark' ? bumpFirstHit(effects, rider.dark).effects : effects;
+        case 'lit-only':
+            return lampOf(state) === 'dark' ? [] : effects;
+        case 'bait':
+            return (state.guard ?? 0) > 0
+                ? [...effects.filter(e => !isHit(e)), { ward: rider.ward }]
+                : withHits(effects, [rider.damage]);
+    }
+}
+
+type LighthouseAfterRider = Extract<EnemyMoveRider, { kind: 'lamp' | 'wick-lash' | 'barnacle-if-through' | 'strip-wreck' }>;
+
+/** What a lighthouse move leaves: the lamp turned, Wick-Lash's INFERNO, a Cudgel's Barnacle, the wreck stripped. */
+function lighthouseAfterMove(
+    state: CombatEncounterState, rider: LighthouseAfterRider, outcome: RiderMoveOutcome,
+): { state: CombatEncounterState; events: CombatEvent[] } {
+    switch (rider.kind) {
+        case 'lamp': {
+            const was = state.enemyRiders?.lamp;
+            if (was === 'out') return { state, events: [] };
+            const next: EnemyRidersState['lamp'] = rider.to === 'out' ? 'out'
+                : rider.to === 'dark' ? 'dark'
+                : rider.to === 'lit' ? undefined
+                : was ? undefined : 'dark';
+            if (next === was) return { state, events: [] };
+            const { lamp: _was, ...rest } = state.enemyRiders ?? {};
+            return {
+                state: { ...state, enemyRiders: next ? { ...rest, lamp: next } : rest },
+                events: [{ kind: 'enemy-rider', rider: rider.kind, amount: next ? 0 : 1 }],
+            };
+        }
+        case 'wick-lash': {
+            // The weather lives on the program ledger; a deck with no program card opens one here.
+            const l = state.program ?? initProgramLedger();
+            if (rider.inferno <= 0 || lampOf(state) !== 'lit') return { state, events: [] };
+            const el = l.el ?? initElementState();
+            const burnt = { ...el, infSelf: el.infSelf + rider.inferno, upSelf: false };
+            return {
+                state: { ...state, program: { ...l, el: burnt } },
+                events: [...weatherEvents(el, burnt), { kind: 'enemy-rider', rider: rider.kind, amount: rider.inferno }],
+            };
+        }
+        case 'barnacle-if-through': {
+            if ((outcome.hitsThrough ?? 0) <= 0 || rider.barnacle <= 0) return { state, events: [] };
+            const events: CombatEvent[] = [];
+            const next = addBarnacles(state, rider.barnacle, events);
+            events.push({ kind: 'enemy-rider', rider: rider.kind, amount: rider.barnacle });
+            return { state: next, events };
+        }
+        case 'strip-wreck': {
+            const dice = (state.reserve ?? []).length;
+            const conviction = Math.min(state.conviction, rider.conviction);
+            const taken = dice + conviction;
+            if (taken <= 0) return { state, events: [] };
+            const events: CombatEvent[] = [];
+            const next = gainWard({ ...state, reserve: [], conviction: state.conviction - conviction }, rider.ward * taken, events);
+            events.push({ kind: 'enemy-rider', rider: rider.kind, amount: taken });
+            return { state: next, events };
+        }
+    }
+}
 // ─── The keep causeway: TOLL and TIDE (phase EN1l) ──────────────────────────
 //
 // The Toll-Keeper's TOLL and the Tide-Gate's TIDE are fight state on the foe

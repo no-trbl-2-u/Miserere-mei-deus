@@ -41,6 +41,10 @@
     only two are registered. The third lane is T's to plot (pitch, out of scope). CH1e and CH1f wait on it.
     Met by DF1d: the Defender is the third registered lane (`defender`, 2026-10-27). The Merciful is the fourth
     (`merciful`, MF1d, 2026-10-30), and the Suppliant's Ring is its relic (`laneId: 'merciful'`), so CH1e can pick it.
+- **Amended by `/plot asap` from T, 2026-10-30, at the CH1e sitting** (attended): T authored the Chosen and changed
+  the deck rule for every character (A8, CH1g): grey Blow 3 / Ward 3 / Word 2 plus one card from each starting
+  lane, none from the relic's lane. CH1a-CH1d had shipped (#974, #978, #979, #981), so the amend is a new phase,
+  not an edit of CH1a; CH1f now requires it and names the Chosen.
 
 ## Outcome
 
@@ -75,6 +79,10 @@ plus the lane of every worn relic, never grey, so late-run lane control differs 
   an image T supplies), the starting relic (an existing library relic or one T writes, with its lane), the stat
   spread, the two starting lanes, the three starting lane cards and the playstyle line, each in T's words. (Split out of A6 so the authoring and
   the wiring are closed by different phases.)
+- **A8** (T, CH1e, 2026-10-30; amends A1's and A2's deck rule) A character carries two starting lane cards, one from
+  each starting lane and none from its relic's lane, and its run deals Blow 3, Ward 3, Word 2 plus those two. The
+  content test fails a character whose starting cards are not exactly one from each starting lane, include a card
+  of the relic's lane, or include a Spell, a Global or a Curse.
 
 Measure: the A3 engine test passes, and the A5 report column shows the late-run lane mix includes a lane absent at
 run start.
@@ -190,14 +198,40 @@ against the lanes then registered.
   lanes exist. T keeps the block (2026-10-26): the character waits on at least one new lane, and T plans two new
   lanes before a character goes live. The plot that registers the third lane (or T) turns the row to `[ ]`.
 
-### CH1f — The first character, selectable · M · closes A6 · requires CH1b, CH1c, CH1d, CH1e · blocked until a third lane is registered
+### CH1g — The character deck rule, amended · S · closes A8 · requires nothing (CH1a shipped)
 
-Measure: on the web build, NEW GAME after the slot pick opens the select screen with T's character selectable and
-the other squares locked; the regenerated report's "Reward lanes by character" row for that character is read
+Measure: `npm run verify -w axiomancer-mechanics` and `npm run verify -w axiomancer-mobile` green; the roster
+content test's fixture cases hit each amended rule once, and the new-run-with-character test deals Blow 3, Ward 3,
+Word 2 plus the two lane cards.
+
+- Scope: `Character/roster.ts`: `startingCardIds: readonly [string, string]` (one per starting lane; the doc
+  comment says so); `CHARACTER_GREY_DECK` becomes Blow 3, Ward 3, Word 2; `characterProblems` replaces the
+  one-per-three-lanes match with one card per starting lane, and adds a rule (its own `CharacterProblemCode`) for a
+  starting card in the relic's lane; the Spell/Global/Curse rule stays. The run's deck already comes from
+  `CHARACTER_GREY_DECK` plus `startingCardIds` (`roster.ts`, the ten-card deck helper), so the reducer is
+  unchanged. The roster stays empty; no content.
+- Consumers: every fixture that builds a `CharacterDefinition` with three cards:
+  `Character/e2e/character-roster.engine.test.ts`, `Game/e2e/new-run-character.engine.test.ts`,
+  `Combat/e2e/character-pool.engine.test.ts`, `Combat/combat.reward-lanes.test.ts`, and on mobile
+  `app/__tests__/character-select.screen.test.tsx`, `state/e2e/menu-store-actions.engine.test.ts`,
+  `state/presenters/__tests__/character-select.test.ts`.
+- Save / schema: none (the roster is empty; no save holds a character yet).
+- Tests matrix: the roster test's fixture cases (a relic-lane card, two cards from one starting lane, a missing
+  starting-lane card, a Spell) each fail once and a sound two-card fixture passes; the new-run test pins the
+  ten-card deck.
+- Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`.
+
+### CH1f — The first character, selectable · M · closes A6 · requires CH1b, CH1c, CH1d, CH1e, CH1g
+
+Measure: on the web build, NEW GAME after the slot pick opens the select screen with the Chosen selectable and
+the other squares locked; the regenerated report's "Reward lanes by character" row for the Chosen is read
 against the Measure above.
 
-- Scope: T's character from CH1e into `CHARACTER_ROSTER`; its relic into `relicLibrary` with its `laneId` if T
-  wrote a new one (content T authored, D88); its portrait key in `PLAYER_PORTRAITS` if T supplied a new image;
+- Scope: the Chosen from the "T's characters" table into `CHARACTER_ROSTER`: id `the-chosen`, name "The Chosen",
+  portrait `altair-man`, relic `relic-disarming-plea` (the Suppliant's Ring, already in the library, lane
+  `merciful`), stats Heart 7 / Body 3 / Mind 5, starting lanes `defender` and `blood-price`, starting cards Hedge
+  Strike `df-e-04a` and Scar Tissue `bp-p-02a`, playstyle "Fumbling Squire trying to hold the line". No new relic or
+  portrait is needed;
   `PlayerPortraitImage` reads the character's portrait for a run with a character. The character becomes
   mandatory: NEW GAME always goes through the select screen; RW1a's grey empty-pool fallback is deleted, and the
   new-run path cannot build a player with an empty pool (dev presets, the CLI and the sims pass a roster character
@@ -216,11 +250,20 @@ against the Measure above.
 
 ## T's characters
 
-Filled in CH1e. T set the first character's stats on 2026-10-26; the rest waits for the sitting.
+Filled in CH1e (T, in session, 2026-10-30).
 
 | Character | Portrait | Starting relic (lane) | HEART / BODY / MIND | Starting lanes | Starting lane cards | Playstyle |
 |---|---|---|---|---|---|---|
-| 1 (first) | CH1e | CH1e | 5 or 3 / **7** / 3 or 5 (Body "since it's going to need that extra raw deal to start"; max VITAE 182, against 170 at 5/5/5) | CH1e | CH1e | CH1e |
+| The Chosen (T: "for now, just 'The Chosen'") | `altair-man` (the gallery's Knight-Errant) | Suppliant's Ring, `relic-disarming-plea` (`merciful`) | **7 / 3 / 5** (T: "to encourage the swap to focus on healing. Plus this character should not start optimized"; max VITAE 158, against 170 at 5/5/5) | `defender`, `blood-price` | Hedge Strike (Defender), Scar Tissue (Blood Price); none from the Merciful lane (T: "no suppliants ring") | "Fumbling Squire trying to hold the line (again, not optimized)" |
+
+T changed the deck rule in the same sitting, for every character (built by CH1g, A8):
+
+- **A character's deck is grey Blow 3 / Ward 3 / Word 2 plus one card from each of its two starting lanes** (T:
+  "3/3/2 + 1 Defender + 1 BP"; "Let them do their thing!"). Ten cards. This replaces Blow 3 / Ward 2 / Word 2 plus
+  one card from each of the three lanes.
+- **No starting card from the relic's lane.** The relic's lane still reaches the reward pool through the worn relic.
+- T weighed two cards per lane (grey 3/2/1 plus four lane cards) in the sitting and dropped it as too much.
+- The Stats line changes T's 2026-10-26 Body 7: Heart is now the 7 and Body the 3.
 
 ## Scope
 
@@ -286,7 +329,8 @@ Calls this plot made, T not present:
 - **A character starts with a smaller grey deck plus one card from each of its lanes.** Confirmed by T (2026-10-26),
   changed from the default: Blow 3 / Ward 2 / Word 2, plus one card from each of the two starting lanes and one from
   the starting relic's lane (ten cards). No Spell or Global; ideally cards thematic enough that the player gets a
-  sense of each lane. T picks them in CH1e.
+  sense of each lane. T picks them in CH1e. **Superseded by T (2026-10-30, CH1e):** Blow 3 / Ward 3 / Word 2 plus
+  one card from each starting lane, none from the relic's lane (A8, CH1g).
 - **A character's stats total the fresh-run budget of 15 points**, as every level-1 preset does; the content test
   enforces it, so no character starts stronger than another. Confirmed by T (2026-10-26). The first character is
   7/5/3 with Body at 7. Max VITAE is 50 + 12·Body + 6·Mind + 6·Heart (`calculateMaxHealth`), so Body is the one
@@ -336,11 +380,11 @@ load as runs with no character.
 Closes A1, A2 of plan/phases/phase_CH1_character_select.md.
 ```
 
-(CH1b closes A3; CH1c A4; CH1d A5; CH1e A7; CH1f A6.)
+(CH1b closes A3; CH1c A4; CH1d A5; CH1e A7; CH1f A6; CH1g A8.)
 
 ## DoD
 
-A1-A7 ticked across CH1a-CH1f; the Measure met.
+A1-A8 ticked across CH1a-CH1g; the Measure met.
 
 ## Follow-ups (out of scope)
 

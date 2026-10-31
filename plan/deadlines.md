@@ -135,7 +135,7 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Tue Oct 27 | 1 | Pick the rest of the item icons (IT2a); the six lane relics are done (IT1b, #989) | Real item icons | Claude renders candidates at 28 px beside each item, the 2026-10-19 sheet plus fresh ones for the Defender's relics, the unknown mark and the bag; you pick (art is yours, D88) |
 | Wed Oct 28 | 0.5 | Design the Breakwater map before enemy session 1: the total node count and how many of each kind, drop the two gathering nodes, and check on the coast art (`act1-coast.webp`) whether more keep nodes fit | Chapter 1's real enemies; event-node UX | Claude brings the current count from `plan/revamp/breakwater-map.md` (22 nodes since QL1d) and the coast art beside it; you decide the kinds and counts |
 | Wed Oct 28 | 1 | Enemy session 1: Chapter 1's normal roster (the Breakwater's 15 fight nodes on T's new map, D114; B2) | Chapter 1's real enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
-| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
+| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
 | Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
 | Sat Oct 31 | 1 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l) (B2) | Chapter 1's real enemies | Claude drafts the boss's four phases under D116 |
 | Sat Oct 31 | 1 | Pitch Chapter 1's weapons and armor: how many of each, what each does in a fight, where each drops, and settle them | Chapter 1's weapons and armor | Claude brings the empty weapon and armor slots (one of each is worn beside three relics) and two or three directions per slot to react to; you decide each piece |
@@ -155,13 +155,14 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Wed Nov 11 | 1 | Review the held loop-doctrine candidates (R11 watch ends) | Loop health | Claude summarises each candidate's evidence since Oct 12 |
 | Thu Nov 12 | 0 | Event kind 4, quest: settled early (Oct 30, the giver scene) and plotted (ET1d) | Event-node UX | Done Oct 30 |
 | Thu Nov 12 | 0.5 | Play the Defender test deck on the preview build; check the reward pool (DF1f) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule |
+| Thu Nov 12 | 0.5 | Decide the stat scaling (`Combat/stat-scaling.ts`): one-shot numbers move 20% per point from 5, repeating ones 10%; T suspects that is a little high | Stat scaling | Claude brings a table of each lane's printed numbers at stats 3, 5, 7 and 9 beside the first character's spread (H7 / B3 / M5); you set the rates |
 | Fri Nov 13 | 0.5 | Play your quest line on the preview build; rule on its lines | The Breakwater's questline | Claude turns your notes into fixes for BW1e |
 | Sat Nov 14 | 1 | File what is still broken (`/plot` or `/messy`); decide what Sunday's run must show | The MVP run | Claude lists what the mid-MVP check filed and what has shipped since; you cut or keep |
 | Sun Nov 15 | 1.5 | The MVP run: a full Breakwater run on the phone | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump |
 
 Every day from Oct 26 to Nov 15 has a piece of T's own (T, 2026-10-28: "make sure each item is something I need to
 do"), except Nov 4, 5 and 6, freed when the four MVP event kinds were settled and plotted early on Oct 30 (ET1).
-Total: about 22 hours in three weeks (10, 5 and 7), with Chapter 1's weapons and armor (T, 2026-10-30) adding 1.5. Chapter 1's scope freed about 3.5 hours (shorter enemy sessions, eight kinds to pitch, one quest line; the quest kind, QL1, made it nine); 2 of
+Total: about 22.5 hours in three weeks (10, 5 and 7.5), with Chapter 1's weapons and armor (T, 2026-10-30) adding 1.5. Chapter 1's scope freed about 3.5 hours (shorter enemy sessions, eight kinds to pitch, one quest line; the quest kind, QL1, made it nine); 2 of
 them go to Chapter 1's enemy art, which the MVP now includes.
 
 After the MVP, T's pieces are the Items below: W3 about 12 hours (Chapters 2-4's enemy sessions on Nov 21 and 22,
@@ -203,7 +204,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [x] | 2026-10-27 | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | W1 | IT2a | - |
 | [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
 | [x] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
-| [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
+| [x] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
 | [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
@@ -218,12 +219,13 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c, NK1a, MU1, EN2a, EN2b |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, BW1c, NK1a, MU1, EN2a, EN2b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
 | [x] | 2026-11-12 | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | W2 | needs plot | - |
-| [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | - |
+| [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | CA3a, CA3e |
+| [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | W2 | T | - |
 | [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | - |
 | [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d |
@@ -257,10 +259,12 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
-- HW1a — loop tooling for T's `/heads-down` runs; no T act waits on it
 - HW1b — loop tooling (row claims); no T act waits on it
 - HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
+- CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
+- CA3d — Blood Price's new paintings; no T act scheduled to view them yet (date not set)
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
 - AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
@@ -352,6 +356,9 @@ attended session.
 ## Change log
 
 - **2026-10-31** — **the DANGER-only fight-or-flee screen and the plain combat icon plotted (EN2)** (T, in session: "Plot it, yes."). **Added** EN2a and EN2b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the fight screens. Nothing ticked; no date moved.
+- **2026-10-31** — **stat scaling added** (T, in the first-character session: "Add to the deadlines that we need to determine the stat scaling since right now, it miiiight be a little high. Idk"). **Added** one Item and its MVP-schedule piece, date Claude's draft for T to move: decide the stat scaling on Thu Nov 12 (0.5 h, `T`), beside the Defender check and after the first character is playable (CH1f, which the Nov 9 mid-MVP check already waits on). It precedes the Dec 7 card tuning, which tunes numbers on top of whatever rates T sets. Weeks now 10, 5 and 7.5 hours. Nothing ticked; no date moved.
+- **2026-10-30** — **the first character authored; CH1g plotted** (T in session, the CH1e sitting into `/plot asap`). **Ticked** the Item "Author the first character" (its Status re-derived from CH1e, now `[x]`: the Chosen is recorded in the CH1 brief). **Edited** that Item's name from "three lane cards" to "the starting lane cards": T changed the deck rule to one card from each starting lane and none from the relic's (CH1g). **Added** CH1g to the `Waits on` of "Mid-MVP check", beside CH1f, which now requires it.
+- **2026-10-31** — **all four lanes' card art plotted (CA3)** (T, in session: "I want to swap out all the new art I've gotten on to the 4 lanes' cards"). **Added** CA3a (the cutter and the Defender's paintings) and CA3e (the names) to the `Waits on` of the Nov 12 Defender check; CA3b beside MF1e and CA3c, CA3d under Unscheduled. Nothing ticked; no date moved.
 - **2026-10-31** — **the Defender's and Merciful's card art plots removed (CA1, CA2)** (T, in session: "remove those two plots" / "Remove those phases"; T has new sheets for all four lanes and does not like the CA1/CA2 sheets). **Removed** CA1a and CA1b from the `Waits on` of the Nov 12 Defender check (now `-`), and the CA2a and CA2b lines under Unscheduled. Nothing ticked; no date moved. One card-art `/plot` for all four lanes follows once T's new sheets and names are in the repo.
 - **2026-10-30** — **`/heads-down` gates, claims and resume plotted (HW1)** (T, in session: "let's plot it", after the Nexus v2 comparison). **Added** HW1a-HW1c under Unscheduled: loop tooling no T act waits on. **Edited** the W2 note on the Nov 11 R11 review: four held candidates, not five, since claims is now HW1b. Nothing ticked; no date moved.
 - **2026-10-30** — **the Merciful's card art plotted (CA2)** (T, in session: "When you're done, plot the merciful cards as well."). **Added** CA2a and CA2b under Unscheduled beside MF1e, T's Merciful check, which has no date yet. Nothing ticked; no date moved.

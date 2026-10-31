@@ -317,6 +317,9 @@ export interface EnemyRidersState {
     infernoRead?: number;
     /** The Cave Choir's VERSE: +1 per Hymn; its Amen spends them all. */
     verse?: number;
+    /** The Lamplighter's lamp: absent = Lit; `dark` until a move lights it;
+     *  `out` = Dark for the rest of the fight. */
+    lamp?: 'dark' | 'out';
     /** The Toll-Keeper's TOLL: +1 each foe turn; paying it resets it to 0. */
     tollOwed?: number;
     /** The cards Distrain took from your hand, back in your hand when you pay the TOLL. */
