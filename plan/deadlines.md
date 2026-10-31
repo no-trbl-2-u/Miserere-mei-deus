@@ -135,7 +135,7 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Tue Oct 27 | 1 | Pick the rest of the item icons (IT2a); the six lane relics are done (IT1b, #989) | Real item icons | Claude renders candidates at 28 px beside each item, the 2026-10-19 sheet plus fresh ones for the Defender's relics, the unknown mark and the bag; you pick (art is yours, D88) |
 | Wed Oct 28 | 0.5 | Design the Breakwater map before enemy session 1: the total node count and how many of each kind, drop the two gathering nodes, and check on the coast art (`act1-coast.webp`) whether more keep nodes fit | Chapter 1's real enemies; event-node UX | Claude brings the current count from `plan/revamp/breakwater-map.md` (22 nodes since QL1d) and the coast art beside it; you decide the kinds and counts |
 | Wed Oct 28 | 1 | Enemy session 1: Chapter 1's normal roster (the Breakwater's 15 fight nodes on T's new map, D114; B2) | Chapter 1's real enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
-| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
+| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
 | Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
 | Sat Oct 31 | 1 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l) (B2) | Chapter 1's real enemies | Claude drafts the boss's four phases under D116 |
 | Sat Oct 31 | 1 | Pitch Chapter 1's weapons and armor: how many of each, what each does in a fight, where each drops, and settle them | Chapter 1's weapons and armor | Claude brings the empty weapon and armor slots (one of each is worn beside three relics) and two or three directions per slot to react to; you decide each piece |
@@ -203,7 +203,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [x] | 2026-10-27 | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | W1 | IT2a | - |
 | [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
 | [x] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
-| [ ] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, three lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
+| [x] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
 | [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
@@ -218,7 +218,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c, NK1a, MU1 |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, BW1c, NK1a, MU1 |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -354,6 +354,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **the first character authored; CH1g plotted** (T in session, the CH1e sitting into `/plot asap`). **Ticked** the Item "Author the first character" (its Status re-derived from CH1e, now `[x]`: the Chosen is recorded in the CH1 brief). **Edited** that Item's name from "three lane cards" to "the starting lane cards": T changed the deck rule to one card from each starting lane and none from the relic's (CH1g). **Added** CH1g to the `Waits on` of "Mid-MVP check", beside CH1f, which now requires it.
 - **2026-10-31** — **all four lanes' card art plotted (CA3)** (T, in session: "I want to swap out all the new art I've gotten on to the 4 lanes' cards"). **Added** CA3a (the cutter and the Defender's paintings) and CA3e (the names) to the `Waits on` of the Nov 12 Defender check; CA3b beside MF1e and CA3c, CA3d under Unscheduled. Nothing ticked; no date moved.
 - **2026-10-31** — **the Defender's and Merciful's card art plots removed (CA1, CA2)** (T, in session: "remove those two plots" / "Remove those phases"; T has new sheets for all four lanes and does not like the CA1/CA2 sheets). **Removed** CA1a and CA1b from the `Waits on` of the Nov 12 Defender check (now `-`), and the CA2a and CA2b lines under Unscheduled. Nothing ticked; no date moved. One card-art `/plot` for all four lanes follows once T's new sheets and names are in the repo.
 - **2026-10-30** — **`/heads-down` gates, claims and resume plotted (HW1)** (T, in session: "let's plot it", after the Nexus v2 comparison). **Added** HW1a-HW1c under Unscheduled: loop tooling no T act waits on. **Edited** the W2 note on the Nov 11 R11 review: four held candidates, not five, since claims is now HW1b. Nothing ticked; no date moved.
