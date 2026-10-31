@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { ExplorationNode, NODE_MIN_SCREEN, NODE_SIZE, nodeCounterScale } from '../ExplorationNode';
 import { MapCameraContext } from '../mapSheetContext';
-import { minScaleFor } from '../MapCanvas';
+import { canvasSizeOf, minScaleFor } from '../MapCanvas';
 import { ALL_MAP_LAYOUTS } from '@/state/exploration-maps';
 import { Circle } from 'react-native-svg';
 import { NODE_MARK_RADIUS, SEALED_MARK_OPACITY } from '@/components/NodeMark';
@@ -130,9 +130,14 @@ describe('node marks at any zoom (critique pass 75)', () => {
     });
 
     it.each(ALL_MAP_LAYOUTS.map((l) => [l.mapId, l] as const))(
-        '%s: at a phone\'s widest fit, no two marks overlap',
+        '%s: zoomed out until the plate just fills a phone, no two marks overlap',
         (_id, layout) => {
-            const camera = minScaleFor({ w: 375, h: 600 }, layout.sheet);
+            // The scale where the plate COVERS the pane. Since MC1a the zoom
+            // floor is lower (the whole plate in the pane, black around it);
+            // between the two, close marks on a dense sheet may touch.
+            const canvas = canvasSizeOf(layout.sheet);
+            const camera = Math.max(375 / canvas.w, 600 / canvas.h);
+            expect(camera).toBeGreaterThanOrEqual(minScaleFor({ w: 375, h: 600 }, layout.sheet));
             const drawn = NODE_SIZE * camera * nodeCounterScale(camera);
             let closest = Infinity;
             for (let i = 0; i < layout.nodes.length; i++) {
