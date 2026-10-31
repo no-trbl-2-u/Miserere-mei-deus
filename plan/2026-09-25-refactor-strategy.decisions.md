@@ -1043,6 +1043,15 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D118 — Every play-log row names who played it: T, a harness or the sim.** (T, 2026-10-31, in session; recorded by the SM1 plot, run unattended on T's word. Extends BE2's play log.)
+
+- One D1 database (`miserere`, Worker `miserere-api`) holds all play data. Every row carries `source`: `human` (T's preview APK), `harness` (local e2e, `critique:drive`, the `playtester` agent, any web export or dev server) or `sim` (the headless bots).
+- Every report reads `human` unless asked for another source or `all`, so T's numbers are T's alone, and `card-vs-bot` sets T beside the bots at one build.
+- Local harness runs keep posting, tagged `harness`; they never count as T.
+- The sim playtester is engine-side heuristic bots, one per lane archetype, that walk the map, pick rewards and play fights through the game's own code, free to run in CI. An LLM-driven player is a later follow-up.
+- Sim numbers are measurements beside `measured-truth`, never a gate or a baseline (D57).
+- Built by Phase SM1 (`plan/phases/phase_SM1_sim_playtester_data.md`).
+
 **D117 — The fight-or-flee screen shows only the foe's DANGER, named once seen.** (T, 2026-10-31, attended; recorded by the EN2 plot, built by EN2a. Amends D116's second bullet: "beaten" becomes "seen".)
 
 - Before a fight, the reveal shows the DANGER moves of a foe that has `phases`, and no other move: a DANGER the player has seen fire in any earlier fight shows its name and what it does; one never seen reads `[ ? ? ? ]`.

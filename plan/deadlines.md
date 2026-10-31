@@ -219,7 +219,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -264,6 +264,11 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- SM1e — the sim's run driver (SM1); no dated T act waits on it, only SM1i, whose date T has not set
+- SM1f — the sim's archetype bots (SM1); no dated T act waits on it, only SM1i, whose date T has not set
+- SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
+- SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
+- SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — the Settings tab for the beta; date not set (the beta handout is not dated yet).
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
@@ -358,6 +363,7 @@ attended session.
 ## Change log
 
 - **2026-10-31** — **card detail and icon polish plotted (CD1)** (T's two bug reports from the preview APK, `/plot asap`). **Added** CD1a and CD1b to the `Waits on` of the Nov 9 mid-MVP check, the first T act that plays the character-select and reward screens. Nothing ticked; no date moved.
+- **2026-10-31** — **the sim playtester and its own data plotted (SM1)** (T, `/plot asap` run unattended on T's word: "Have the sim collect it's own data", "Build a specialized sim playtester", "Differentiate between my playtesting data and the simulator"). **Added** SM1a-SM1d to the `Waits on` of the Nov 9 mid-MVP check: the preview APK T plays then should post as `human` with a run id and the whole run logged, so local harness runs stop landing in T's numbers and the check's run is the first human sample the bots are compared against. **Added** SM1e-SM1h and the attended SM1i under Unscheduled: no dated T act follows them, and SM1i's date is T's to pick. The mid-MVP check's premise still holds (T plays Chapter 1 and files what broke); no other Item's premise changes. No date moved; nothing ticked.
 - **2026-10-31** — **a Settings tab plotted** (T, in session, planning the beta: a gear tab with the music switch, a feedback form and the dev menu). **Added** ST1a and ST1b under `## Unscheduled`: the beta handout has no date yet. Nothing ticked; no date moved.
 - **2026-10-31** — **a Game Over screen before character select (CH1j)** (T on plot PR #1181: "can we ratify this that the player gets a Game over screen?"). **Added** CH1j to the `Waits on` of the Mid-MVP check, beside CH1h and CH1i. Nothing ticked; no date moved.
 - **2026-10-31** — **a run end sends the player back to character select (CH1h, CH1i)** (T in session, during `/heads-down CH1`: "Ending a run means, yes, you should make a new character"). **Added** CH1h and CH1i to the `Waits on` of the Mid-MVP check, beside CH1f, whose game over still kept the whole character. Nothing ticked.
