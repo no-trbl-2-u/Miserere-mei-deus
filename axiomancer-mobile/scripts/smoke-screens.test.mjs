@@ -51,6 +51,7 @@ test('pickHazardRoute clicks the route, then waits for the board and for the rol
     const page = fakePage()
     await pickHazardRoute(page, 'risk')
     assert.deepEqual(page.calls, [
+        ['click', 'hazard-stakes-face'],
         ['click', 'hazard-route-risk'],
         ['waitFor', 'hazard-board', 'visible'],
         ['waitFor', 'hazard-dice-roll', 'hidden'],

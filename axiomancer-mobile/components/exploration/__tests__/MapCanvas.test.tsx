@@ -18,6 +18,7 @@ jest.mock('react-native-reanimated', () => {
     return {
         ...Reanimated,
         useSharedValue: <V,>(init: V) => useRef({ value: init }).current,
+        useReducedMotion: () => false,
     };
 });
 
