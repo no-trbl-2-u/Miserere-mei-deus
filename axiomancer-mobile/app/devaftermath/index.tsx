@@ -52,9 +52,8 @@ const PARLEY_VM: AftermathParleyViewModel = {
     enemyEpithet: 'no longer hungry',
     pactPhrase: 'It set the knife down, slow, and let the wet ground take the rest.',
     rewards: {
-        xp: 6,
-        currency: { shillings: 4 },
-        loot: [{ name: 'Walking Rite', slot: 'hazard', rarity: 'uncommon' }],
+        currency: { shillings: 6 },
+        loot: [],
     },
     journalEntry: {
         bookName: 'THE BESTIARY',

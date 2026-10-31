@@ -10,18 +10,20 @@ import { act, render } from '@testing-library/react-native';
 import React from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
-interface MockPlayer { play: jest.Mock; pause: jest.Mock; setVolume: jest.Mock; release: jest.Mock }
+interface MockPlayer { play: jest.Mock; pause: jest.Mock; setVolume: jest.Mock; release: jest.Mock; isPlaying: jest.Mock }
 const mockPlayers: MockPlayer[] = [];
 jest.mock('@/lib/platform/audio', () => ({
+    configureGameAudio: jest.fn(),
     createLoopingPlayer: jest.fn(() => {
-        const player = { play: jest.fn(), pause: jest.fn(), setVolume: jest.fn(), release: jest.fn() };
+        const player = { play: jest.fn(), pause: jest.fn(), setVolume: jest.fn(), release: jest.fn(), isPlaying: jest.fn(() => true) };
         mockPlayers.push(player);
         return player;
     }),
 }));
 
 import { BackgroundMusic } from '@/components/BackgroundMusic';
-import { createLoopingPlayer } from '@/lib/platform/audio';
+import { configureGameAudio, createLoopingPlayer } from '@/lib/platform/audio';
+import { useCombatMode, type CombatModeApi } from '@/state/combat-mode';
 import { createSettingsStore } from '@/state/settings';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
@@ -48,6 +50,7 @@ beforeEach(() => {
     jest.useFakeTimers();
     mockPlayers.length = 0;
     (createLoopingPlayer as jest.Mock).mockClear();
+    (configureGameAudio as jest.Mock).mockClear();
 });
 
 afterEach(() => {
@@ -156,6 +159,77 @@ describe('BackgroundMusic', () => {
         advance(2100);
         expect(lastVolume()).toBeCloseTo(0.7, 5);
         expect(player().play).toHaveBeenCalledTimes(2);
+    });
+
+    it('stays paused through the summary and resumes only when the fight screen flag drops, without a reload', () => {
+        let mode: CombatModeApi | null = null;
+        const Probe = () => {
+            mode = useCombatMode();
+            return null;
+        };
+        const settings = createSettingsStore({ storage: NO_STORAGE, initial: { musicVolume: 70 } });
+        const { store, tree } = withAllProviders(
+            <>
+                <BackgroundMusic />
+                <Probe />
+            </>,
+            { settings },
+        );
+        render(tree);
+        advance(2000);
+
+        // The fight is staged and the fight screen opens.
+        act(() => { store.setState({ currentEncounter: FOE }); });
+        act(() => { mode!.enterCombat(); });
+        advance(600);
+        expect(player().pause).toHaveBeenCalledTimes(1);
+
+        // The outcome is written: the engine clears the staged fight, the screen is still up.
+        player().play.mockClear();
+        act(() => { store.setState({ currentEncounter: undefined } as never); });
+        advance(3000);
+        expect(player().play).not.toHaveBeenCalled();
+        expect(player().pause).toHaveBeenCalledTimes(1);
+        expect((globalThis as { __AXM_MUSIC__?: unknown }).__AXM_MUSIC__).toEqual({ context: 'combat', playing: false });
+
+        // The player leaves the screen: the same player plays on, no seek, no reload.
+        act(() => { mode!.exitCombat(); });
+        expect(player().play).toHaveBeenCalledTimes(1);
+        expect(player()).not.toHaveProperty('seekTo');
+        advance(2100);
+        expect(lastVolume()).toBeCloseTo(0.7, 5);
+        expect(createLoopingPlayer).toHaveBeenCalledTimes(1);
+        expect((globalThis as { __AXM_MUSIC__?: unknown }).__AXM_MUSIC__).toEqual({
+            context: 'exploration',
+            playing: true,
+        });
+    });
+
+    it('starts the theme again when the native player was stopped behind its back', () => {
+        let listener: ((s: AppStateStatus) => void) | null = null;
+        jest.spyOn(AppState, 'addEventListener').mockImplementation(((_e: string, cb: never) => {
+            listener = cb as unknown as (s: AppStateStatus) => void;
+            return { remove: jest.fn() } as never;
+        }) as never);
+
+        mount(70);
+        advance(2100);
+        expect(player().play).toHaveBeenCalledTimes(1);
+
+        // An Android focus loss pauses the player; nothing told the director.
+        player().isPlaying.mockReturnValue(false);
+        act(() => { listener?.('active'); });
+        expect(player().play).toHaveBeenCalledTimes(2);
+
+        // A player that is still playing is left alone.
+        player().isPlaying.mockReturnValue(true);
+        act(() => { listener?.('active'); });
+        expect(player().play).toHaveBeenCalledTimes(2);
+    });
+
+    it('sets the audio mode once at start', () => {
+        mount(70);
+        expect(configureGameAudio).toHaveBeenCalledTimes(1);
     });
 
     it('releases the player on unmount', () => {

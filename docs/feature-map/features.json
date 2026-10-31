@@ -1692,6 +1692,12 @@
       "kind": "coupling",
       "from": "area:Enemy",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Enemy/befriend.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Enemy",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Enemy/enemy.library.ts"
     },
     {

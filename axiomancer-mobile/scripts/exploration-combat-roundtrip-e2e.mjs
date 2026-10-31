@@ -153,6 +153,23 @@ async function characterTabReachable(page) {
 
 const onCombatRoute = (url) => url.pathname.endsWith('/combat-encounter')
 
+// The music director's dev probe (BackgroundMusic, phase CX1a): `{ context, playing }`.
+async function expectMusic(page, context, playing, where) {
+    await page
+        .waitForFunction(
+            ([c, p]) => {
+                const m = globalThis.__AXM_MUSIC__
+                return !!m && m.context === c && m.playing === p
+            },
+            [context, playing],
+            { timeout: 10000 },
+        )
+        .catch(async () => {
+            const seen = await page.evaluate(() => JSON.stringify(globalThis.__AXM_MUSIC__ ?? null))
+            fail(`music on ${where}: wanted ${context}/${playing ? 'playing' : 'paused'}, saw ${seen}`)
+        })
+}
+
 // ---------------------------------------------------------------------------
 // The round trip
 // ---------------------------------------------------------------------------
@@ -188,6 +205,7 @@ async function runRoundTrip(page, baseUrl) {
         fail('tab bar (Character tab) reachable while the fight is on screen')
     }
     log('fight on /combat-encounter; tab bar covered')
+    await expectMusic(page, 'combat', false, 'the fight reveal')
 
     log('pressing WITHDRAW ...')
     const flee = page.getByTestId('combat-withdraw')
@@ -261,7 +279,8 @@ async function runRoundTrip(page, baseUrl) {
         .waitFor({ state: 'visible', timeout: 10000 })
         .catch(() => fail('map-canvas-wrapper not visible after the round trip'))
 
-    log('round trip clean — fight route left, tab bar and map back')
+    await expectMusic(page, 'exploration', true, 'the map after the fight')
+    log('round trip clean — fight route left, tab bar and map back, music back')
 }
 
 /** Reload while on the fight route: the player lands back in the fight. */
