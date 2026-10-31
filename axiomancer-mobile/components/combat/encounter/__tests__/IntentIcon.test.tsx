@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
@@ -132,13 +133,13 @@ describe('IntentIcon: after BLIZZARD, and one number', () => {
     });
 });
 
-/** Phase EN1c: a `phases` foe's five kinds draw with a name and no number. */
+/** Phase EN2b: a `phases` foe's five kinds draw as one large icon, no name, no number. */
 describe('IntentIcon: the five telegraph kinds', () => {
     const kinds = ['attack', 'defend', 'status', 'danger', 'unknown'] as const;
     const zeroWall = { projectedDamage: 0, netDamage: 0, willDeny: false, guard: 0, barrier: 0, blizzardCut: 0 };
 
     for (const kind of kinds) {
-        it(`draws ${kind} with its icon, its name and no number`, () => {
+        it(`draws ${kind} as its icon alone, with no name and no number`, () => {
             const meta = INTENT_ICONS[kind];
             const intent: CombatIntentVM = {
                 ...baseIntent, type: kind, icon: meta.icon, label: meta.label, color: meta.color,
@@ -147,22 +148,29 @@ describe('IntentIcon: the five telegraph kinds', () => {
             const { tree } = withAllProviders(<IntentIcon intent={intent} />);
             render(tree);
             expect(screen.getByText(meta.icon)).toBeTruthy();
-            expect(screen.getByTestId('combat-intent-name').props.children).toBe('Move');
+            expect(screen.queryByTestId('combat-intent-name')).toBeNull();
+            expect(screen.queryByText('Move')).toBeNull();
             expect(screen.queryByText(/\d/)).toBeNull();
             expect(screen.queryByTestId('combat-intent-wallmath')).toBeNull();
-            expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toBe(`Enemy intent: ${meta.label}. Move.`);
+            expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toBe(`Enemy intent: ${meta.label}.`);
         });
     }
 
-    it('draws an unnamed DANGER as the icon alone', () => {
+    it('draws the disc at least half again the size of the legacy badge', () => {
         const meta = INTENT_ICONS.danger;
-        const intent: CombatIntentVM = {
+        const big: CombatIntentVM = {
             ...baseIntent, type: 'danger', icon: meta.icon, label: meta.label, color: meta.color,
             damage: 0, description: '', moveName: null, wallMath: zeroWall,
         };
-        const { tree } = withAllProviders(<IntentIcon intent={intent} />);
+        const { tree } = withAllProviders(<IntentIcon intent={big} />);
         render(tree);
-        expect(screen.queryByTestId('combat-intent-name')).toBeNull();
-        expect(screen.getByTestId('combat-intent').props.accessibilityLabel).toBe('Enemy intent: DANGER.');
+        const flat = StyleSheet.flatten(screen.getByTestId('combat-intent-disc').props.style) as { width: number };
+        expect(flat.width).toBeGreaterThanOrEqual(36 * 1.5);
+    });
+
+    it('keeps the legacy badge for a foe without phases', () => {
+        const { tree } = withAllProviders(<IntentIcon intent={baseIntent} />);
+        render(tree);
+        expect(screen.getByText('−10')).toBeTruthy();
     });
 });
