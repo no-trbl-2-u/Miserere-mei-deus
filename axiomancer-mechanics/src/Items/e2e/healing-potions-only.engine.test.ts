@@ -7,6 +7,7 @@
  * the library has, so no surface hands out an item that does not exist.
  */
 
+import { BEFRIEND_TUNING } from '../../Enemy/befriend';
 import { describe, it, expect } from 'vitest';
 import { EnemiesByMap } from '../../Enemy/enemy.library';
 import { characterPresets, levelLadderPresets } from '../../Character/presets';
@@ -45,10 +46,8 @@ describe('R5 — the consumable library is the healing potions', () => {
         expect(hits).toEqual([]);
     });
 
-    it('no friendship reward grants anything else', () => {
-        const hits = allEnemies().flatMap(e => (e.friendshipReward?.items ?? [])
-            .filter(it => it.category === 'consumable' && !isPotion(it.id))
-            .map(it => `${e.id}: ${it.id}`));
+    it('no befriend payout grants anything else', () => {
+        const hits = BEFRIEND_TUNING.potionTiers.filter(t => !isPotion(t.itemId)).map(t => t.itemId);
         expect(hits).toEqual([]);
     });
 

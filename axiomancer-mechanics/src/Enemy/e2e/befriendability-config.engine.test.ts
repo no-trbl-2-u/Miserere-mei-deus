@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { befriendHpGateOpen } from '../befriend';
+import { BEFRIEND_TUNING, befriendHpGateOpen } from '../befriend';
 import type { BefriendabilityConfig } from '../types';
 
 function foe(config: BefriendabilityConfig | undefined, health: number, maxHealth = 100) {
@@ -15,12 +15,14 @@ function foe(config: BefriendabilityConfig | undefined, health: number, maxHealt
 }
 
 describe('befriendHpGateOpen', () => {
-    it('is open for a foe with no config', () => {
-        expect(befriendHpGateOpen(foe(undefined, 100))).toBe(true);
+    it('a foe with no config uses the default gate', () => {
+        expect(befriendHpGateOpen(foe(undefined, 100))).toBe(false);
+        expect(befriendHpGateOpen(foe(undefined, 100 * BEFRIEND_TUNING.defaultHpGate))).toBe(true);
     });
 
-    it('is open for a config with no hpGate', () => {
-        expect(befriendHpGateOpen(foe({}, 100))).toBe(true);
+    it('a config with no hpGate uses the default gate', () => {
+        expect(befriendHpGateOpen(foe({}, 100))).toBe(false);
+        expect(befriendHpGateOpen(foe({}, 30))).toBe(true);
     });
 
     it('opens at or below the gate fraction and stays shut above it', () => {

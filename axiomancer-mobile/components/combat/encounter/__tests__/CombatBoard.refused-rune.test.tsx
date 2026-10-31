@@ -3,14 +3,14 @@
  *
  * A rune that cannot fire shows its reason on the column, not only in its
  * a11y label. Short of Conviction it reads "◆n" as before; refused by
- * `signatureCastBlock` for any other reason (Float-Eye will not be befriended,
- * not yet low enough to spare, a SACRIFICE already armed) it carries a distinct
+ * `signatureCastBlock` for any other reason (Float-Eye not yet low enough to spare,
+ * a SACRIFICE already armed) it carries a distinct
  * refused mark, and a tap opens the info popup, whose lines
  * (`signatureInfoLines`) put the reason first.
  *
- * The fight is the real one: the default fixture is bw-w2's Float-Eye, a foe
- * with no friendship reward, so The Open Hand is refused there however much
- * Conviction the player holds. Each rune prints its own cost: Ruby Tithe ◆3,
+ * The fight is the real one: the default fixture is bw-w2's Float-Eye at full
+ * VITAE, above the default befriend gate, so The Open Hand is refused there
+ * once the player holds the Conviction for it (every foe can be befriended). Each rune prints its own cost: Ruby Tithe ◆3,
  * The Open Hand ◆4 (LR1d A11).
  */
 
@@ -50,7 +50,7 @@ describe('A6 — the signature VM splits short-of-Conviction from refused', () =
         expect(combat.enemy.name).toMatch(/float-eye/i);
         expect(sig(combat, RUBY)).toMatchObject({ affordable: true, refused: false, reason: null });
         expect(sig(combat, 'sig-disarming-plea')).toMatchObject({
-            affordable: false, refused: true, reason: `${combat.enemy.name} will not be befriended`,
+            affordable: false, refused: true, reason: `${combat.enemy.name} is not yet low enough to spare`,
         });
     });
 
@@ -60,7 +60,7 @@ describe('A6 — the signature VM splits short-of-Conviction from refused', () =
         expect(sig(combat, RUBY).reason).toMatch(/Conviction/);
         // More Conviction would not lift the refusal, so the refusal is the reason.
         expect(sig(combat, 'sig-disarming-plea')).toMatchObject({
-            affordable: false, refused: true, reason: `${combat.enemy.name} will not be befriended`,
+            affordable: false, refused: true, reason: `${combat.enemy.name} is not yet low enough to spare`,
         });
     });
 
@@ -115,11 +115,11 @@ describe('A6 — the column shows the three states', () => {
         const { combat, onSignature, onSignatureInfo } = renderBoard(0);
         expect(screen.getByTestId('combat-signature-refused-sig-disarming-plea')).toBeTruthy();
         expect(ring('sig-disarming-plea').borderStyle).toBe('dashed');
-        expect(label('sig-disarming-plea')).toMatch(/refused: .*will not be befriended/);
+        expect(label('sig-disarming-plea')).toMatch(/refused: .*not yet low enough to spare/);
         fireEvent.press(screen.getByTestId('combat-signature-sig-disarming-plea'));
         expect(onSignature).not.toHaveBeenCalled();
         expect(onSignatureInfo).toHaveBeenCalledWith(expect.objectContaining({
-            id: 'sig-disarming-plea', refused: true, reason: `${combat.enemy.name} will not be befriended`,
+            id: 'sig-disarming-plea', refused: true, reason: `${combat.enemy.name} is not yet low enough to spare`,
         }), true); // `true`: a tap, not a long-press (LR1g logs it)
     });
 });
@@ -128,7 +128,7 @@ describe('A6 — the info popup leads with the refusal', () => {
     it('a refused rune: the reason first, the cost line plain', () => {
         const { combat } = fight(9);
         expect(signatureInfoLines(sig(combat, 'sig-disarming-plea'))).toEqual({
-            lead: `${combat.enemy.name} will not be befriended`,
+            lead: `${combat.enemy.name} is not yet low enough to spare`,
             meta: `consumes ◆ ${HAND_COST} conviction`,
         });
     });

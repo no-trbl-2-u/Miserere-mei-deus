@@ -35,6 +35,7 @@
 import { createStore, StoreApi } from 'zustand/vanilla';
 import { Character } from '../Character/types';
 import { Enemy } from '../Enemy/types';
+import { rollBefriendPayout } from '../Enemy/befriend';
 import { Encounter } from '../World/types';
 import {
     Item, Equipment, EquipmentSlot,
@@ -90,11 +91,11 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
  *
  * - `outcome` — `'victory'` when the player killed the enemy, `'defeat'`
  *   when the player went down first, `'friendship'` when the
- *   friendship-counter capped (half XP),
+ *   spared (no XP: it pays shillings or a potion),
  *   `'flee'` when combat ended without any of the above (manual escape).
  * - `xpGained` — flat XP added to `player.experience` this turn (enemy XP
  *   only; quest reward XP is folded directly into `player.experience`).
- *   Half-XP on `'friendship'`; full XP on `'victory'`; zero on `'defeat'` /
+ *   Zero on `'friendship'`; full XP on `'victory'`; zero on `'defeat'` /
  *   `'flee'`.
  * - `loot` — items added to `player.inventory` (pre stack-merge). Granted
  *   on victory and friendship; empty on defeat / flee.
@@ -102,13 +103,15 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
 export interface CombatEndReport {
     outcome: 'victory' | 'defeat' | 'friendship' | 'flee';
     xpGained: number;
+    /** Shillings paid (a befriend's shilling payout; 0 when none). Added to `player.currency`. */
+    shillings: number;
     loot: Item[];
     /**
      * Per-enemy friendship-reward content. Only present on
      * `outcome === 'friendship'` when the befriended enemy carries a
-     * `friendshipReward`. The engine has already applied the reward's
-     * `items` to `loot` and `xpBonus` to `xpGained` by the time this
-     * surfaces; `narrative` is here for the CLI / UI to render.
+     * `friendshipReward` or a codex entry to unlock. The payout (shillings or
+     * a potion, no XP) is in `shillings` / `loot`; `narrative` is here for the
+     * CLI / UI to render.
      */
     friendshipReward?: {
         narrative?: string;
@@ -388,40 +391,35 @@ export function createGameStore(
                 const pre = get();
                 const encounter = pre.currentEncounter;
                 if (!encounter) {
-                    return { outcome: 'flee', xpGained: 0, loot: [] };
+                    return { outcome: 'flee', xpGained: 0, shillings: 0, loot: [] };
                 }
                 const foe = encounter.enemies[0]!;
 
                 let xpGained = 0;
+                let shillings = 0;
                 let loot: Item[] = [];
                 if (outcome === 'victory') {
                     xpGained = totalEncounterXp(encounter);
                     loot = rollEncounterLoot(encounter, () => getRng().random());
                 } else if (outcome === 'friendship') {
-                    // Friendship grants half the kill-win XP and the
-                    // full loot table (consistent with the reducer treating
-                    // friendship as a peaceful resolution rather than a flee).
-                    xpGained = Math.floor(totalEncounterXp(encounter) * 0.5);
-                    loot = rollEncounterLoot(encounter, () => getRng().random());
-                    // Per-enemy friendshipReward supplement. Items
-                    // append to the weighted-loot roll; xpBonus adds on top of
-                    // the half-XP base.
-                    const fr = foe.friendshipReward;
-                    if (fr) {
-                        if (fr.items) loot = [...loot, ...fr.items];
-                        if (fr.xpBonus) xpGained += fr.xpBonus;
-                    }
+                    // A befriend pays no XP and rolls no loot table: it pays
+                    // shillings or the foe's level's potion, from the combat rng
+                    // (`BEFRIEND_TUNING`, Enemy/befriend.ts).
+                    const payout = rollBefriendPayout(foe.level, () => getRng().random());
+                    shillings = payout.shillings;
+                    loot = payout.items;
                 }
 
                 if (options?.withholdSpoils) {
                     xpGained = 0;
+                    shillings = 0;
                     loot = [];
                 }
 
-                const report: CombatEndReport = { outcome, xpGained, loot };
+                const report: CombatEndReport = { outcome, xpGained, shillings, loot };
                 // Surface the narrative on the report so the CLI /
-                // UI can render it. Items + xpBonus already reach the consumer
-                // through report.loot / report.xpGained.
+                // UI can render it. The payout reaches the consumer
+                // through report.loot / report.shillings.
                 if (outcome === 'friendship') {
                     const fr = foe.friendshipReward;
                     const entry = foe.journalEntry;
@@ -451,7 +449,7 @@ export function createGameStore(
                     {
                         type: 'END_COMBAT',
                         payload: {
-                            outcome, finalPlayer, grantedLoot: loot, grantedXp: xpGained,
+                            outcome, finalPlayer, grantedLoot: loot, grantedXp: xpGained, grantedShillings: shillings,
                             ...(options?.seenDangers ? { seenDangers: [...options.seenDangers] } : {}),
                         },
                     },
