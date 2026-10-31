@@ -313,6 +313,7 @@ T answered the vote's Open lines and the remaining Session 0 Open lines in four 
 - **Pairs.** T: "Do the other lanes pair? Ultimately this healing lane could pair with any of them. But Blood price
   and Defender was what I had in mind for the first character". No pair identities are set; the lane pairs with any.
 - **A Merciful starting lane card** (T picked "Decide at CH1"): settled when the character is authored (CH1e).
+  Settled 2026-10-30: the Chosen starts with the Suppliant's Ring and no Merciful card (T: "no suppliants ring").
 
 ### Still open for the revisions (step 7)
 
