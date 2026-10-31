@@ -259,6 +259,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - TF1 — loop tooling fix (the reminder and the AUDIT blank line); no T act waits on it
 - AN5a — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set

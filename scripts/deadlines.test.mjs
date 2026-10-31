@@ -89,6 +89,22 @@ test('itemNeed: needs plot, and a named id with no row, need a plot', () => {
     assert.deepEqual(itemNeed(byName('Half-plotted thing'), phases), { kind: 'needs a plot', detail: 'no row for Z9' })
 })
 
+test('itemNeed: a ticked needs-plot Item is silent', () => {
+    const [ticked, open] = parseItems([
+        '# Deadlines',
+        '',
+        '## Items',
+        '',
+        '| Status | Due | Item | Window | Rows |',
+        '|---|---|---|---|---|',
+        '| [x] | 2026-10-26 | Plotted already | W1 | needs plot |',
+        '| [ ] | 2026-10-26 | Not plotted | W1 | needs plot |',
+        '',
+    ].join('\n'))
+    assert.equal(itemNeed(ticked, phases), null)
+    assert.deepEqual(itemNeed(open, phases), { kind: 'needs a plot', detail: 'no build-plan rows yet' })
+})
+
 test('itemNeed: T tasks need T until ticked', () => {
     assert.equal(itemNeed(byName('A done task'), phases), null)
     assert.equal(itemNeed(byName('An open task'), phases).kind, 'needs you')
