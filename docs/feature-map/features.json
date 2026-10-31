@@ -3845,6 +3845,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/encounter-reveal.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {

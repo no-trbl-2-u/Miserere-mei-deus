@@ -48,6 +48,12 @@ function regionOf(state: AppStoreState): string | undefined {
     return selectExplorationViewModel(state).region;
 }
 
+/** The map node the fight was walked to: none in the labyrinth. */
+function nodeOf(state: AppStoreState): string | undefined {
+    if (state.labyrinthUi?.session) return undefined;
+    return selectExplorationViewModel(state).currentNodeId;
+}
+
 export default function CombatEncounterScreen() {
     const styles = useStyles();
     const router = useRouter();
@@ -59,6 +65,7 @@ export default function CombatEncounterScreen() {
 
     const [fight] = useState(() => selectResumableFight(store.getState()));
     const [region] = useState(() => regionOf(store.getState()));
+    const [nodeId] = useState(() => nodeOf(store.getState()));
     const [seed] = useState(readDevSeed);
 
     const leave = useCallback(() => {
@@ -136,6 +143,7 @@ export default function CombatEncounterScreen() {
                 onWithdraw={fight.fleeAllowed ? onWithdraw : undefined}
                 onExit={onExit}
                 region={region}
+                nodeId={nodeId}
             />
         </SafeAreaView>
     );

@@ -495,7 +495,11 @@ export {
     AUTHORED_QUESTLINES,
     BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_STEPS,
     BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD,
+    // Encounter reveal reads (ET1a).
+    BREAKWATER_ENCOUNTER_NODES, BREAKWATER_ARRIVAL_LINES, arrivalLineAt, breakwaterEncounterTier,
+    heldRoadPlaceAt, breakwaterPlaceAt,
 } from './World';
+export type { BreakwaterEncounterTier } from './World';
 // Rest shelter classification. Mobile gates the hazard-scar max-VITAE mend on this.
 export type { RestShelter } from './World';
 export {
