@@ -158,6 +158,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // script, which CI cannot run (it needs the local icon archive), to
         // pin its MANIFEST against the generated geometry.
         'components/icons/__tests__/icon-manifest.test.ts',
+        // The inline-glyph guard (phase IT2b) reads the committed inventory
+        // components to prove no one-off `<Svg` is drawn there but the
+        // material glyph's; a component added later is swept with no edit.
+        'components/inventory/__tests__/no-inline-svg.IT2b.test.ts',
         // The endCombat-caller guard (phase QL1d) reads the committed sources
         // to prove every engine endCombat caller routes the quest extras; a
         // caller added later is swept with no edit to the test.

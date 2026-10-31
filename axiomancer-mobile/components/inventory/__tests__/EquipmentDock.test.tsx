@@ -322,7 +322,7 @@ describe('EquipmentDock', () => {
 
             const svgs = UNSAFE_getAllByType(Svg);
             const relicIcon = svgs.find(
-                (svg) => svg.props.accessibilityLabel === 'Relic equipment icon'
+                (svg) => svg.props.accessibilityLabel === 'Gem on a chain'
             );
             expect(relicIcon).toBeDefined();
         });

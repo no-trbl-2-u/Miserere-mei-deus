@@ -81,6 +81,14 @@ const MANIFEST = {
     'potion-heart-flask': 'delapouite/health-potion',
     'potion-vial': 'sbed/vial',
     'potion-perfume-bottle': 'lorc/perfume-bottle',
+    'relic-engagement-ring': 'lorc/engagement-ring',
+    'relic-thorn-helix': 'lorc/thorn-helix',
+    'relic-mirror-mirror': 'lorc/mirror-mirror',
+    'relic-turtle-shell': 'lorc/turtle-shell',
+    'category-consumable': 'lorc/bubbling-flask',
+    'category-relic': 'lorc/gem-chain',
+    'category-quest': 'lorc/key',
+    'mark-unknown': 'sbed/help',
 };
 
 const rows = Object.entries(MANIFEST).map(([name, source]) => {

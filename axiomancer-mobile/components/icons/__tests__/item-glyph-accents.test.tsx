@@ -54,7 +54,7 @@ describe('item accent table', () => {
     });
 
     it('an id with no row gets no accents', () => {
-        expect(getItemGlyphAccents('relic-disarming-plea')).toEqual([]);
+        expect(getItemGlyphAccents('relic-not-in-the-table')).toEqual([]);
         expect(getItemGlyphAccents(null)).toEqual([]);
         expect(getItemGlyphAccents('constructor')).toEqual([]);
     });

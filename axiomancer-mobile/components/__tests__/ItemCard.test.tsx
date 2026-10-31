@@ -114,18 +114,18 @@ describe('ItemGlyph: category-based icon rendering', () => {
         expect(actionIcons[0].props.kind).toBe('shield');
     });
 
-    it('renders custom SVG for Accessory equipment', () => {
+    it('draws the registry relic mark for Relic equipment', () => {
         const tree = render(<ItemGlyph category="equipment" sub="Relic" />);
         const svgs = tree.UNSAFE_queryAllByType(Svg);
         expect(svgs).toHaveLength(1);
-        expect(svgs[0].props.accessibilityLabel).toBe('Relic equipment icon');
+        expect(svgs[0].props.accessibilityLabel).toBe('Gem on a chain');
     });
 
-    it('renders custom SVG for consumable category', () => {
+    it('draws the registry flask for the consumable category', () => {
         const tree = render(<ItemGlyph category="consumable" sub={null} />);
         const svgs = tree.UNSAFE_queryAllByType(Svg);
         expect(svgs).toHaveLength(1);
-        expect(svgs[0].props.accessibilityLabel).toBe('Consumable item icon');
+        expect(svgs[0].props.accessibilityLabel).toBe('Bubbling flask');
     });
 
     it('renders custom SVG for material category', () => {
@@ -135,18 +135,18 @@ describe('ItemGlyph: category-based icon rendering', () => {
         expect(svgs[0].props.accessibilityLabel).toBe('Material item icon');
     });
 
-    it('renders custom SVG for quest category', () => {
+    it('draws the registry key for the quest category', () => {
         const tree = render(<ItemGlyph category="quest" sub={null} />);
         const svgs = tree.UNSAFE_queryAllByType(Svg);
         expect(svgs).toHaveLength(1);
-        expect(svgs[0].props.accessibilityLabel).toBe('Quest item icon');
+        expect(svgs[0].props.accessibilityLabel).toBe('Key');
     });
 
-    it('renders unknown category fallback SVG', () => {
+    it('draws the registry question mark for an unknown category', () => {
         const tree = render(<ItemGlyph category="equipment" sub="Unknown" />);
         const svgs = tree.UNSAFE_queryAllByType(Svg);
         expect(svgs).toHaveLength(1);
-        expect(svgs[0].props.accessibilityLabel).toBe('Unknown item type icon');
+        expect(svgs[0].props.accessibilityLabel).toBe('Question mark');
     });
 });
 
