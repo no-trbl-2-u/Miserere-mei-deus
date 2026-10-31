@@ -171,6 +171,13 @@ differently:
   runs it on every merge to `main` that touches `axiomancer-mechanics/src/`,
   on Sundays, and by hand. Engine: `npm run measured-truth -w
   axiomancer-mechanics` (`measuredTruthCells`).
+- **Chapter 1's enemies** (turns to kill and VITAE lost for every Breakwater
+  foe at its node's level, all six elites included, against the four kitted
+  lane decks at player levels 8 and 10, and the share of fights reaching each
+  HP phase) are in **`docs/reports/chapter1-enemies.md`** (phase EN1i), with
+  its own commit stamp, seed and run count. A measurement for T's tuning
+  session, not a gate. Re-record it with `npm run chapter1-enemies -w
+  axiomancer-mechanics -- --commit=<sha> --write=../docs/reports/chapter1-enemies.md`.
 - **The loop's own gates** (how often CI, `verify`, the antagonist, the
   merge gate and the builder's `[x]` let an escape through) are measured
   in **`docs/reports/eval/latest.md`** (phase EV1): the escape ledger,
