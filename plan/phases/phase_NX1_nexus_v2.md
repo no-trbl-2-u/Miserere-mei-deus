@@ -45,7 +45,8 @@ Miserere runs the nexus v2 loop (specs and chunks, `/next`, its pick order, clai
 diet) with everything that is ours and load-bearing kept on top of it: every change by PR, reviewed and
 auto-merged, except `plot`, `review:rules-change` and nexus-sync PRs, which T merges; the game's content
 and canon rules; deadlines, NEEDS_T, the DevLog. `/pilot` is T's parallel orchestrator. Once a week a
-workflow opens one sync PR when nexus has moved, and it says so when nexus's `/heads-down` changed.
+workflow opens one sync PR when nexus has moved, which only T merges; its body shows in plain words and a
+diagram what nexus is giving us, and it says so first when nexus's `/heads-down` changed.
 
 Measure: on the first v2 tick after the cut-over, `/march` picks a carried chunk, lands it as a `loop:pr`
 PR that the review merges, and the first nexus-sync PR opens (or reports nothing to sync) on schedule.
@@ -93,13 +94,32 @@ PR that the review merges, and the first nexus-sync PR opens (or reports nothing
   callout bus, push-once during review, one plot PR merging at a time, PR screenshots). `/pilot peek`
   launches nothing. Our `skills/heads-down.md` is retired; nexus's stays as the kit ships it.
 - **A12** `.github/workflows/nexus-sync.yml` runs `npx @usenexus/cli upgrade --pr --no-assist` on a weekly
-  schedule and by hand: one PR, updated in place, labelled `nexus-sync`, which the merge job never merges.
-  Its body lists each conflicting file kept as ours, each `docs/nexus-deviations.md` row whose file the
-  kit changed, and, when nexus's `skills/heads-down.md` changed since the lock's ref, a first line: "nexus
-  changed /heads-down: walk the diff with T and bring /pilot up to date". With nothing to sync it opens
-  nothing.
+  schedule and by hand: one PR, updated in place, labelled `nexus-sync`, which only T merges: the merge
+  job never merges it, and no loop verb, `/pilot` worker, `pr-autofix` or `pr-resolve` run merges it
+  (`scripts/loop-pr.test.mjs` pins each). With nothing to sync it opens nothing. When nexus's
+  `skills/heads-down.md` changed since the lock's ref, the body's first line is: "nexus changed
+  /heads-down: walk the diff with T and bring /pilot up to date".
 - **A13** T turns `march` and `night` back on and watches the first v2 tick; T's line on it goes in the
   run's report. (Attended.)
+- **A14** The sync PR's body (written by `scripts/nexus-sync-body.mjs`) says plainly, and in pictures,
+  what we are getting from nexus, in this order:
+  1. a banner: "Only T merges this PR", the nexus version and kit ref we are on and the one this brings
+     (`0.6.5 @ abc1234 → 0.7.0 @ def5678`), and the count of files by outcome;
+  2. **What nexus is giving us**: one plain-words line per upstream change (from nexus's commit
+     subjects and changelog between the two refs), grouped by the loop part it touches (picking work,
+     landing, review, planning, workflows), each saying what changes for Miserere, not what changed in
+     the file;
+  3. a Mermaid flow diagram (GitHub draws it in the PR): nexus old ref → new ref → the three-way merge →
+     Miserere, with one node per changed file coloured by outcome: taken as nexus wrote it (green), merged
+     with our lanes (amber), conflict kept as ours (red);
+  4. a file table: file, what nexus changed in plain words, what happens here (taken, merged, kept as
+     ours), and the `docs/nexus-deviations.md` row it touches, if any;
+  5. a before/after table for each changed skill or workflow whose behaviour moves (today the loop does
+     X; after merge it does Y);
+  6. **What we are not getting**: each conflict kept as ours, why (its map row), and what T can do about
+     it (take nexus's version, or keep ours and say so in the map).
+  Fixtures pin every section, the diagram's colour per outcome, and that a sync with no behaviour change
+  says so in one line instead of an empty table.
 
 ## Decisions made upfront — DO NOT ASK
 
@@ -124,7 +144,9 @@ PR that the review merges, and the first nexus-sync PR opens (or reports nothing
 - **The cut-over takes the newest CLI on the day** and records its version and kit ref in the lock and the
   PR. `[T to confirm #1]`
 - **Sync schedule**: Mondays 14:00 UTC, plus `workflow_dispatch`. `[T to confirm #2]`
-- **Sync PR label**: a new `nexus-sync` label the merge job holds for T. `[T to confirm #3]`
+- **Sync PR label**: a new `nexus-sync` label the merge job holds for T. Confirmed by T (2026-10-31): yes,
+  a sync PR only T can merge, and its description must make very clear what we get from nexus, with
+  diagrams and visual explanations (A14).
 - **`/pitch`**: the repo copy is Miserere's from now on; the global copy is left as it is. `[T to confirm
   #4]`
 - **Turning workflows on is T's** (AGENTS.md "Repository settings are T's alone"): NX1f writes the
@@ -254,20 +276,24 @@ Measure: a `/pilot peek` on today's plan prints waves that match the chunks' `ne
 
 ### Phase NX1h — The weekly nexus sync
 
-Closes A12. Requires NX1d. Size: M.
+Closes A12, A14. Requires NX1d. Size: M.
 
-Scope: `.github/workflows/nexus-sync.yml`, a body script (`scripts/nexus-sync-body.mjs`: the conflicts,
-the map rows touched, the `/heads-down` line), the `nexus-sync` label, `scripts/pr-merge.mjs` (hold it),
-`docs/nexus-deviations.md` ("How a sync reads this map").
+Scope: `.github/workflows/nexus-sync.yml`, a body script (`scripts/nexus-sync-body.mjs`: the banner, what
+nexus is giving us, the Mermaid diagram, the file table, the before/after tables, what we are not getting,
+the `/heads-down` line), the `nexus-sync` label, `scripts/pr-merge.mjs` (hold it),
+`scripts/loop-pr.test.mjs` (nothing else merges it), `docs/nexus-deviations.md` ("How a sync reads this
+map").
 
 Consumers: T, weekly.
 
-Tests: the body script on fixtures (no change, a conflict, a `heads-down.md` change); the merge
-decision holds a `nexus-sync` PR.
+Tests: the body script on fixtures (no change, a conflict, a `heads-down.md` change, a merged lanes
+file), each pinning the six sections of A14 and the diagram's colour per outcome; the merge decision holds
+a `nexus-sync` PR, and no loop workflow or skill merges one.
 
 Verify gate: root `npm test` and workflow-lint.
 
-Measure: a hand-dispatched run opens the PR or reports nothing to sync.
+Measure: a hand-dispatched run opens the PR or reports nothing to sync, and T can say from its body
+alone, without opening a file, what nexus is giving us.
 
 ### Phase NX1i — The loop back on (attended)
 
