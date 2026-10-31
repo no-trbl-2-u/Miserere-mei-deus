@@ -176,3 +176,13 @@ All Merciful human characters are women, including acting healers and human reci
 
 Use T's attached ledger-holding woman: long brown hair, youthful adult face, ivory robes, gold detailing and radiant golden magic. Her appearance supersedes earlier plain/cropped-hair restrictions; those were an attempt to remove the male Jesus-like likeness, not a rejection of this woman's design. All human roles use this female character design; the smitten demon remains a demon. Cloaks stay deep navy, never red. Reference attached in the art session; preserve a durable copy with the approved set when approved.
 
+
+## Approved Gignos set — T, 2026-10-30
+
+This supersedes the earlier Merciful character and rendering directions above for the selected set.
+- Whenever a character is involved, use gignos-cleric-a.webp, gignos-male.webp, or both. Use their recognizable clothes and sleeves for hand close-ups too.
+- Match the supplied portraits' illustrated style as closely as possible; do not apply the older engraving or alternate female-character direction.
+- Keep the focal point central and the artwork clear of tile edges. T selected the FIRST, LARGER generated versions, not the subsequent reduced-size versions.
+- The approved five sheets are in ../card-images/merciful/. Sheet 3 returned only once. Exact prompts, character references, card mapping and selection notes are saved there alongside the sheets.
+- When asked to save an approved set, replace the previous lane sheets in that folder, remove stale cuts, and preserve its prompts and references there. Generator output is a preview location, not the final saved lane set.
+- Slicing and app integration are separate downstream steps; see slicer-spec.md.

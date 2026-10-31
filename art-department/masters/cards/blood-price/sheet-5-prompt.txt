@@ -1,0 +1,16 @@
+Generate NEW BLOOD PRICE SHEET 5 OF 5 for Miserere Mei, Deus. Attached approved sheet 1 is the authoritative character, rendering and grid reference ONLY. Paint SIX NEW card actions.
+
+Lead: pale adult woman, straight shoulder-length ash-blonde hair, dark eyes, cool solemn expression, long dark plum/black gown, flowing dark violet mantle, small dark neck ornament. Match her identity in reference. Occasionally a SMALL one-handed hand scythe with short handle and crescent steel blade, not a full-sized reaper scythe.
+
+STRICT source-character pattern: WITHOUT / WITH / WITHOUT / WITH / WITHOUT / WITH in reading order. Odd tiles omit her entirely, including hands/clothing; anonymous humanoid foes or symbolic effects may carry actions. Even tiles show her acting, recognizable face visible.
+
+1 TOP LEFT — Grim Resolve, WITHOUT source woman: an anonymous battle-worn knight standing with eyes closed, both hands braced on sword pommel, crimson stains and old bandages, resolute posture. No landscape or floor.
+2 TOP MIDDLE — Not Yet, WITH source woman: chosen ash-blonde woman battered and bandaged, down on one knee refusing to fall, one hand raised defiantly, the other holding her small hand scythe low. Solemn determined face, compact crimson spectral pulse keeping her upright, no gore.
+3 TOP RIGHT — Feeding Mark, WITHOUT source woman: an anonymous humanoid foe's forearm bearing a glowing red NON-LETTER abstract brand, tiny crimson magical droplets rising from it. Intact skin, no graphic burn, no text or runes, no caster.
+4 BOTTOM LEFT — Nothing Wasted, WITH source woman: she carefully tips a short blade above a tarnished goblet, catching EVERY crimson drop running off its edge. Her cool face and controlled hands visible, no cutting act, no injury.
+5 BOTTOM MIDDLE — Brimming, WITHOUT source woman: a crimson HEART-SHAPED TALISMAN overflowing with spectral red magic, its excess flowing upward and hardening into a translucent crimson shield. Symbolic carved charm, not exposed anatomical heart, no gore. Depict transformation mid-motion, no person.
+6 BOTTOM RIGHT — Repaid in Kind, WITH source woman: she catches a blood-red spectral arrow beside a previously bandaged shoulder and immediately hurls it back, a clear return arc showing retaliation. Her determined face visible, one arm in throwing motion. No arrow penetrating body, no extraction from flesh or graphic wound, purely magical counterattack.
+
+Rendering: established hand-coloured engraving, dense cross-hatching, heavy ink outlines, top-left key light. Muted earth and dark plum with saturated blood CRIMSON, dried rust, bone, tarnished gold, cold violet contrast. Grim non-graphic fantasy blood magic. No animals, wings, feathers, beaks, creature shells or other animal parts.
+
+ONE 1536x1024 LANDSCAPE sheet, exact 3-column x2-row grid of six equal square-like tiles, solid flat magenta #FF00FF gutters about 16px and matching outside border; magenta nowhere else. Pure #000000 tile backgrounds, no scenery, floor, horizon, crowd or grey vignette. ENTIRE subjects, clothes, blades and every effect within central 70% of tile WIDTH AND HEIGHT, generous completely black padding ALL sides, bottom 15% completely empty black. Nothing touches gutters. No text, labels, letters, numbers, letter-like runes, frames or card UI. Generate final six-card sheet now.

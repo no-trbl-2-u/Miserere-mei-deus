@@ -1,0 +1,16 @@
+Generate one production card-art sheet for the Merciful deck in Miserere Mei Deus.
+INPUT IMAGES ARE CHARACTER AND EXACT STYLE REFERENCES, not edit targets. Image 1: youthful fair-haired cleric in ivory and purple vestments, purple/ivory mitre, gold emblem round shield and pale hammer. Image 2: pale-haired young male mage in ochre ivory pointed hood and robes, dark undersleeves, gold/red trim, holding book. Whenever a human character or human body part appears use ONLY these two characters, singly or together; preserve their recognizable faces, hair, clothes, colors, silhouettes. Cast them in new poses doing the requested card actions. Human recipients also one of these two. Hand close-ups retain their recognizable sleeves. Demon exception only where explicitly requested.
+Match the reference rendering 1:1 as closely as possible: Japanese fantasy RPG illustrated sprites, delicate dark ink contours, angular economical cel shaded color planes, subtle hand drawn texture, pale warm ivory and muted gold, original purple cleric clothes and ochre mage clothes. Same proportions and face design. NOT photorealism, NOT 3D, NOT painterly realism, NOT Dore engraving, NOT western saints. Preserve reference garment emblems but no readable writing.
+LAYOUT: landscape 1536x1024 sheet, exactly 3 equal columns by 2 equal rows, six near-square tiles. Flat magenta #FF00FF gutters about 16 pixels and outer magenta border. Every tile pure black #000000 background. No magenta elsewhere. No titles, labels, lettering, UI, frames, or watermarks.
+CRUCIAL FRAMING: each isolated composition is small and central in its own tile, subject plus ALL weapons, clothes, ribbons, halos and magic entirely within middle 65% of tile width AND height. Leave broad pure black padding on EVERY side, at least 17% on left/right/top and completely empty black bottom 18%. No part or glow touches any tile boundary. Full figures fully visible where needed. Effects compact and sharply contained; no diffuse full tile glow. Each tile independently composed. Golden magical healing light with soft rose or cold blue accents. No landscape or environmental scenery. No animals, wings, feathers or insects. Respect individual object-only and hand-only compositions. 
+Read the following tile descriptions in row-major order; card names are metadata ONLY and must NOT appear in image:
+
+SHEET 3 of 5.
+1 top left Gentle Debt: reference hooded male mage offering a coin of light to reference cleric.
+2 top middle Swelling Grace: isolated ornate simple chalice overflowing with compact liquid golden light.
+3 top right Open the Wound: reference male mage making a small ritual cut in his own palm, tiny red drop turning golden as it falls; non graphic.
+4 bottom left Kindled Prayer: close-up reference cleric's praying hands cupping a small flame bright like a sun, purple sleeves.
+5 bottom middle Draw the Fever: reference male mage drawing red magical fever out of reference cleric into a small glass; original costumes and faces, no plague mask.
+6 bottom right Twin Mending: both reference characters back to back, cleric tending a small bandaged wound, male mage casting compact golden healing light.
+
+EXTRA: each artwork must be SMALL, with broad completely empty black margins of 20% on all four sides of each tile.

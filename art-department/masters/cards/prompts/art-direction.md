@@ -1,5 +1,10 @@
 # Card art direction
 
+> **Superseded look (T, 2026-10-30 evening).** T's final sheets for all four lanes moved to the app's own
+> character-portrait style (Japanese fantasy RPG illustration, fine ink contours, cel-shaded colour planes; "NOT Dore
+> engraving"). The look of record is the `sheet-<n>-prompt.txt` files T saved beside the masters in `../<lane>/`. The rest
+> of this page still holds: black ground, no text, centred subject, magenta gutters, no animals, action names.
+
 > **Superseded in part (T, 2026-10-31).** The Defender and Merciful sheets this page calls "the house paintings"
 > were deleted with Phases CA1 and CA2; T has new sheets for all four lanes, in the same format (1536 x 1024, 3 x 2,
 > magenta gutters, five per lane, a manifest), and **the names changed**: the "Names are actions" table below is no

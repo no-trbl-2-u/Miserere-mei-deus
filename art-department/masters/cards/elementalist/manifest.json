@@ -1,0 +1,67 @@
+{
+ "lane": "elementalist",
+ "grid": {
+  "cols": 3,
+  "rows": 2
+ },
+ "gutter": "#FF00FF",
+ "sheets": [
+  {
+   "file": "sheet-1.webp",
+   "tiles": [
+    "el-p-01b",
+    "el-p-02b",
+    "el-p-03a",
+    "el-p-04a",
+    "el-p-05b",
+    "el-p-06b"
+   ]
+  },
+  {
+   "file": "sheet-2.webp",
+   "tiles": [
+    "el-p-07a",
+    "el-p-08b",
+    "el-p-09a",
+    "el-p-10b",
+    "el-e-01b",
+    "el-e-02c"
+   ]
+  },
+  {
+   "file": "sheet-3.webp",
+   "tiles": [
+    "el-e-03b",
+    "el-e-04c",
+    "el-e-05b",
+    "el-e-06a",
+    "el-e-07b",
+    "el-e-08c"
+   ]
+  },
+  {
+   "file": "sheet-4.webp",
+   "tiles": [
+    "el-e-09b",
+    "el-e-10c",
+    "el-m-01a",
+    "el-m-02a",
+    "el-m-03a",
+    "el-m-04a"
+   ]
+  },
+  {
+   "file": "sheet-5.webp",
+   "tiles": [
+    "el-m-05c",
+    "el-m-06a",
+    "el-m-07b",
+    "el-m-08c",
+    "el-m-09c",
+    "el-m-10n"
+   ]
+  }
+ ],
+ "source": "ChatGPT image generation, generated and selected by T, 2026-10-30. Lossy WebP q95 of T's 1536 x 1024 PNG sheets. Where a sheet-<n>-prompt.txt sits beside a sheet, it is the exact prompt that made it.",
+ "license": "T's own commission (open source, T, 2026-10-29, D115)"
+}
