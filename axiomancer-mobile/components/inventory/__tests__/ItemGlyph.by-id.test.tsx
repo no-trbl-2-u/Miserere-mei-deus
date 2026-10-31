@@ -71,15 +71,15 @@ describe('ItemGlyph: id-keyed resolution', () => {
 
     const withRow = (id: string) => Object.prototype.hasOwnProperty.call(ITEM_GLYPH_BY_ID, id);
 
-    it.each(LIBRARY_ITEMS.filter((it) => !withRow(it.id)).map((it) => [it.id, it] as const))(
-        '%s (no row) draws the glyph it drew before the table existed',
-        (_id, item) => {
-            const byId = renderJson(<ItemGlyph category={item.category} sub={item.sub} itemId={item.id} />);
-            const byCategory = renderJson(<ItemGlyph category={item.category} sub={item.sub} />);
-            expect(byId).not.toBeNull();
-            expect(byId).toEqual(byCategory);
-        },
-    );
+    it.each(LIBRARY_ITEMS.map((it) => [it.id] as const))('%s has its own table entry', (id) => {
+        expect(withRow(id)).toBe(true);
+    });
+
+    it('the three potions resolve to three distinct icons', () => {
+        const names = ['healing-potion', 'minor-healing-potion', 'greater-healing-potion'].map((id) => getItemGlyph(id));
+        expect(names.every((n) => n !== null)).toBe(true);
+        expect(new Set(names).size).toBe(3);
+    });
 
     it.each(LIBRARY_ITEMS.filter((it) => withRow(it.id)).map((it) => [it.id, it] as const))(
         '%s (picked) draws its own icon, not the category glyph',
@@ -89,13 +89,18 @@ describe('ItemGlyph: id-keyed resolution', () => {
             const { tree } = withAllProviders(<ItemGlyph category={item.category} sub={item.sub} itemId={id} />);
             const rendered = render(tree);
             expect(rendered.getByLabelText(AXM_ICON_SPECS[name as AxmIconName].label)).toBeTruthy();
-            expect(rendered.queryByLabelText('Relic equipment icon')).toBeNull();
+            expect(rendered.queryByLabelText('Gem on a chain')).toBeNull();
         },
     );
 
     it('every table row names an item in the libraries', () => {
         const ids = new Set(LIBRARY_ITEMS.map((it) => it.id));
         for (const id of Object.keys(ITEM_GLYPH_BY_ID)) expect(ids.has(id)).toBe(true);
+    });
+
+    it('an id with no entry draws the category mark, never nothing', () => {
+        const { tree } = withAllProviders(<ItemGlyph category="consumable" sub={null} itemId="not-in-the-table" />);
+        expect(render(tree).getByLabelText('Bubbling flask')).toBeTruthy();
     });
 
     it('picked items draw distinct icons', () => {
@@ -110,7 +115,7 @@ describe('ItemGlyph: id-keyed resolution', () => {
         );
         const rendered = render(tree);
         expect(rendered.getByLabelText(AXM_ICON_SPECS['action-herbs'].label)).toBeTruthy();
-        expect(rendered.queryByLabelText('Consumable item icon')).toBeNull();
+        expect(rendered.queryByLabelText('Bubbling flask')).toBeNull();
     });
 
     it('a bogus entry falls back to the category glyph instead of rendering nothing', () => {
@@ -134,6 +139,34 @@ describe("ItemGlyph: T's potion picks (IT2, 2026-10-29)", () => {
         expect(getItemGlyph(id)).toBe(icon);
         expect(AXM_ICON_SPECS[icon].label).toBe(label);
         const { tree } = withAllProviders(<ItemGlyph category="consumable" sub={null} itemId={id} />);
+        expect(render(tree).getByLabelText(label)).toBeTruthy();
+    });
+});
+
+describe("ItemGlyph: T's relic picks (IT2, 2026-10-30)", () => {
+    const PICKS: [string, AxmIconName, string][] = [
+        ['relic-disarming-plea', 'relic-engagement-ring', 'Hand holding a ring'],
+        ['relic-thornback-signet', 'relic-thorn-helix', 'Thorned vine'],
+        ['relic-mirror-brooch', 'relic-mirror-mirror', 'Framed mirror'],
+        ['relic-carapace-belt', 'relic-turtle-shell', 'Turtle shell'],
+    ];
+    it.each(PICKS)('%s draws %s, read aloud as "%s"', (id, icon, label) => {
+        expect(getItemGlyph(id)).toBe(icon);
+        expect(AXM_ICON_SPECS[icon].label).toBe(label);
+        const { tree } = withAllProviders(<ItemGlyph category="equipment" sub="Relic" itemId={id} />);
+        expect(render(tree).getByLabelText(label)).toBeTruthy();
+    });
+});
+
+describe("ItemGlyph: category and unknown marks are registry icons (IT2, 2026-10-30)", () => {
+    const MARKS: [InventoryCategory, string | null, string][] = [
+        ['consumable', null, 'Bubbling flask'],
+        ['equipment', 'Relic', 'Gem on a chain'],
+        ['quest', null, 'Key'],
+        ['equipment', 'Unknown', 'Question mark'],
+    ];
+    it.each(MARKS)('%s / %s draws "%s"', (category, sub, label) => {
+        const { tree } = withAllProviders(<ItemGlyph category={category} sub={sub} />);
         expect(render(tree).getByLabelText(label)).toBeTruthy();
     });
 });

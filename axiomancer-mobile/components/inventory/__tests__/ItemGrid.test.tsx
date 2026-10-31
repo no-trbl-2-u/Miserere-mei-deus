@@ -120,6 +120,8 @@ describe('ItemGrid: empty state', () => {
         const rendered = render(tree);
 
         expect(rendered.getByTestId('inventory-empty')).toBeTruthy();
+        // The bag drawing is the registry's, not an inline one-off (IT2b).
+        expect(rendered.getByLabelText('Bag or inventory')).toBeTruthy();
         expect(rendered.getByText('Carry nothing here yet — gather provisions.')).toBeTruthy();
         expect(rendered.queryByTestId('inventory-scroll')).toBeNull();
     });

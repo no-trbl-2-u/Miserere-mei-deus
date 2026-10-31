@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -64,41 +64,10 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
     }
     // The icon is chosen by the slot kind the presenter labels 'Relic'.
     if (category === 'equipment' && sub === 'Relic') {
-        return (
-            <Svg 
-                width={28} 
-                height={28} 
-                viewBox="0 0 28 28" 
-                fill="none"
-                accessibilityRole="image"
-                accessibilityLabel="Relic equipment icon"
-            >
-                <Circle cx={14} cy={14} r={10} stroke={AXM.parchment} strokeWidth={1.5} fill="none" />
-                <Circle cx={14} cy={10} r={3.5} fill={AXM.sulfur} />
-                <Path d="M10 18 Q14 22 18 18" stroke={AXM.parchment} strokeWidth={1.2} fill="none" />
-            </Svg>
-        );
+        return <AxmIcon name="category-relic" size={28} color={AXM.parchment} />;
     }
     if (category === 'consumable') {
-        return (
-            <Svg 
-                width={28} 
-                height={28} 
-                viewBox="0 0 28 28" 
-                fill="none"
-                accessibilityRole="image"
-                accessibilityLabel="Consumable item icon"
-            >
-                <Path
-                    d="M10 24 L10 10 Q10 5 14 4 Q18 5 18 10 L18 24 Z"
-                    stroke={AXM.parchment}
-                    strokeWidth={1.5}
-                    fill="none"
-                />
-                <Path d="M10 16 L18 16" stroke={AXM.parchment} strokeWidth={1} />
-                <Circle cx={14} cy={11} r={2} fill={AXM.blood} />
-            </Svg>
-        );
+        return <AxmIcon name="category-consumable" size={28} color={AXM.parchment} />;
     }
     if (category === 'material') {
         return (
@@ -121,39 +90,9 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
         );
     }
     if (category === 'quest') {
-        return (
-            <Svg 
-                width={28} 
-                height={28} 
-                viewBox="0 0 28 28" 
-                fill="none"
-                accessibilityRole="image"
-                accessibilityLabel="Quest item icon"
-            >
-                <Path
-                    d="M6 22 L6 6 L22 6 L22 22 Z"
-                    stroke={AXM.parchment}
-                    strokeWidth={1.5}
-                    fill="none"
-                />
-                <Path d="M10 10 L18 10 M10 14 L18 14 M10 18 L15 18" stroke={AXM.parchment} strokeWidth={1} />
-                <Path d="M20 4 L24 4 L24 8" stroke={AXM.sulfur} strokeWidth={1.5} />
-            </Svg>
-        );
+        return <AxmIcon name="category-quest" size={28} color={AXM.parchment} />;
     }
-    return (
-        <Svg 
-            width={28} 
-            height={28} 
-            viewBox="0 0 28 28" 
-            fill="none"
-            accessibilityRole="image"
-            accessibilityLabel="Unknown item type icon"
-        >
-            <Circle cx={14} cy={14} r={10} stroke={AXM.bone} strokeWidth={1} strokeDasharray="3,2" fill="none" />
-            <Path d="M11 11 L17 17 M17 11 L11 17" stroke={AXM.bone} strokeWidth={1} />
-        </Svg>
-    );
+    return <AxmIcon name="mark-unknown" size={28} color={AXM.bone} />;
 }
 
 export interface ItemCardProps {

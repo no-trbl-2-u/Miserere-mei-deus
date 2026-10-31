@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import { AxmIcon } from '@/components/icons/AxmIcon';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { SectionLabel } from '@/components/SectionLabel';
@@ -16,11 +16,7 @@ function EmptySack({ message }: EmptySackProps) {
     const AXM = usePalette();
     return (
         <View style={styles.emptyOuter} testID="inventory-empty">
-            <Svg viewBox="0 0 64 64" width={64} height={64} fill="none" stroke={AXM.bone} strokeWidth={2}>
-                <Path d="M14 18 L 50 18 L 54 56 H 10 Z" fill={AXM.bg} fillOpacity={0.6} />
-                <Path d="M22 18 V 12 A 10 10 0 0 1 42 12 V 18" />
-                <Path d="M22 30 Q 32 22 42 30" strokeLinecap="round" />
-            </Svg>
+            <AxmIcon name="action-bag" size={64} color={AXM.bone} />
             <Text style={styles.emptyText}>{message}</Text>
         </View>
     );

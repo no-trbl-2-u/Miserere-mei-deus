@@ -33,6 +33,10 @@ export const ITEM_GLYPH_BY_ID = {
     'healing-potion': 'potion-heart-flask',
     'minor-healing-potion': 'potion-vial',
     'greater-healing-potion': 'potion-perfume-bottle',
+    'relic-disarming-plea': 'relic-engagement-ring',
+    'relic-thornback-signet': 'relic-thorn-helix',
+    'relic-mirror-brooch': 'relic-mirror-mirror',
+    'relic-carapace-belt': 'relic-turtle-shell',
 } as const satisfies ItemGlyphTable;
 
 export type ItemGlyphAccentTable = Readonly<Record<string, readonly IconAccent[]>>;
@@ -95,6 +99,14 @@ export const ITEM_GLYPH_ACCENTS = {
     'minor-healing-potion': [{ hue: 'blood', clip: [{ kind: 'rect', x: 0, y: 248, w: 512, h: 264 }] }],
     // The bottle's belly, below the collar.
     'greater-healing-potion': [{ hue: 'blood', clip: [{ kind: 'ellipse', cx: 256, cy: 322, rx: 168, ry: 80 }] }],
+    // The band on the finger, gold (T, 2026-10-30).
+    'relic-disarming-plea': [{ hue: 'storm', clip: [{ kind: 'rect', x: 270, y: 146, w: 122, h: 52 }] }],
+    // The whole vine, amber (T, 2026-10-30).
+    'relic-thornback-signet': [{ hue: 'ember', clip: [{ kind: 'rect', x: 0, y: 0, w: 512, h: 512 }] }],
+    // The glass GUARD blue inside the parchment frame (T, 2026-10-30).
+    'relic-mirror-brooch': [{ hue: 'frost', clip: [{ kind: 'rect', x: 140, y: 100, w: 236, h: 316 }] }],
+    // The inner plates amber inside the parchment rim (T, 2026-10-30).
+    'relic-carapace-belt': [{ hue: 'ember', clip: [{ kind: 'polygon', points: [[423, 277], [417, 352], [399, 398], [370, 431], [328, 450], [260, 457], [192, 450], [150, 431], [121, 398], [103, 352], [97, 277], [103, 202], [121, 156], [150, 123], [192, 104], [260, 97], [328, 104], [370, 123], [399, 156], [417, 202]] }] }],
 } as const satisfies ItemGlyphAccentTable;
 
 /**

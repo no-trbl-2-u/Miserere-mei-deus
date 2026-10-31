@@ -119,6 +119,14 @@ const ICON_LABELS: Record<GameIconName, string> = {
     'potion-heart-flask': 'Flask with a heart',
     'potion-vial': 'Slim vial',
     'potion-perfume-bottle': 'Stoppered crystal bottle',
+    'relic-engagement-ring': 'Hand holding a ring',
+    'relic-thorn-helix': 'Thorned vine',
+    'relic-mirror-mirror': 'Framed mirror',
+    'relic-turtle-shell': 'Turtle shell',
+    'category-consumable': 'Bubbling flask',
+    'category-relic': 'Gem on a chain',
+    'category-quest': 'Key',
+    'mark-unknown': 'Question mark',
 };
 
 function buildSpecs(): Record<GameIconName, AxmIconSpec> {
