@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run assets:check && npm run art:test && npm run critique-drive:test && npm run smoke:test && npm run feature-map-drive:test && npm run playtest-session:test",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run assets:check && npm run art:test && npm run critique-drive:test && npm run smoke:test && npm run feature-map-drive:test && npm run playtest-session:test && npm run env-run:test",
     "verify:visual": "node scripts/smoke-screens.mjs",
     "e2e:hazard": "node scripts/hazard-e2e.mjs",
     "e2e:combat": "node scripts/combat-round-e2e.mjs",
@@ -31,9 +31,9 @@
     "e2e:act1-walk": "node scripts/act1-walk-e2e.mjs",
     "e2e:feature-map": "node scripts/feature-map-e2e.mjs",
     "e2e:combat-round": "node scripts/combat-round-e2e.mjs",
-    "e2e:combat-round:boss": "ENCOUNTER_KIND=boss PRESET=sage node scripts/combat-round-e2e.mjs",
-    "e2e:combat-round:withdraw": "WITHDRAW=1 node scripts/combat-round-e2e.mjs",
-    "e2e:combat-round:levelup": "LEVEL_UP=1 PRESET=sage node scripts/combat-round-e2e.mjs",
+    "e2e:combat-round:boss": "node scripts/env-run.mjs ENCOUNTER_KIND=boss PRESET=sage node scripts/combat-round-e2e.mjs",
+    "e2e:combat-round:withdraw": "node scripts/env-run.mjs WITHDRAW=1 node scripts/combat-round-e2e.mjs",
+    "e2e:combat-round:levelup": "node scripts/env-run.mjs LEVEL_UP=1 PRESET=sage node scripts/combat-round-e2e.mjs",
     "e2e:fixture": "node scripts/fixture-e2e.mjs",
     "critique:drive": "node scripts/critique-drive.mjs",
     "perf:combat-drag": "node scripts/combat-drag-perf.mjs",
@@ -58,7 +58,8 @@
     "eas-build-on-success": "node scripts/sentry-release.mjs",
     "e2e:playtest-sessions": "node scripts/playtest-sessions-e2e.mjs",
     "playtest:session": "node scripts/playtest-session.mjs",
-    "playtest-session:test": "node --test scripts/playtest-session.test.mjs"
+    "playtest-session:test": "node --test scripts/playtest-session.test.mjs",
+    "env-run:test": "node --test scripts/env-run.test.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

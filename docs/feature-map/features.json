@@ -268,7 +268,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/components/__tests__/EffectGlyph.test.tsx, axiomancer-mobile/components/__tests__/StanceGlyph.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/components/__tests__/EffectGlyph.test.tsx, axiomancer-mobile/components/__tests__/Splatter.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -693,37 +693,12 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/dev/__tests__/story-catalog.test.ts, axiomancer-mobile/state/e2e/event.screen.test.tsx, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, ..."
+        "source": "axiomancer-mobile/state/dev/__tests__/story-catalog.test.ts, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, axiomancer-mobile/state/e2e/scene-measure.S5-talk-C13.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
         "missing": null,
         "source": "plan/2026-09-25-refactor-strategy.decisions.md D39"
-      }
-    },
-    {
-      "id": "route:event",
-      "name": "Event",
-      "kind": "route",
-      "group": "world",
-      "source": "axiomancer-mobile/app/event/index.tsx",
-      "named": false,
-      "reachable": {
-        "value": false,
-        "source": "no flow path from route:index"
-      },
-      "driven": {
-        "value": false,
-        "source": null
-      },
-      "tested": {
-        "value": true,
-        "source": "axiomancer-mobile/state/e2e/app-components.engine.test.tsx, axiomancer-mobile/state/e2e/event.screen.test.tsx, axiomancer-mobile/state/e2e/smoke-render.engine.test.tsx"
-      },
-      "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Event\")",
-        "source": null
       }
     },
     {
@@ -968,7 +943,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx"
+        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/components/event/__tests__/EventArt.test.tsx, axiomancer-mobile/components/event/__tests__/PlaceholderIllustration.test.tsx"
       },
       "needsPitch": {
         "value": false,
@@ -4485,48 +4460,6 @@
     },
     {
       "kind": "coupling",
-      "from": "route:event",
-      "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/engine-id-copy.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:Effects",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:Game",
-      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:Log",
-      "file": "axiomancer-mobile/lib/platform/router.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:NPCs",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/event-assets.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:event",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/event.engine.ts"
-    },
-    {
-      "kind": "coupling",
       "from": "route:hazard",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/store.ts"
@@ -7162,78 +7095,6 @@
     {
       "kind": "flow",
       "from": "route:dialogue",
-      "to": "route:village",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:blacksmith",
-      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:cache",
-      "file": "axiomancer-mobile/components/CacheGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:combat-encounter",
-      "file": "axiomancer-mobile/components/CombatGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:cutscene",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:hazard",
-      "file": "axiomancer-mobile/components/HazardGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:item-reward",
-      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:labyrinth",
-      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:quest",
-      "file": "axiomancer-mobile/components/QuestGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:rest",
-      "file": "axiomancer-mobile/components/RestGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
-      "to": "route:travel",
-      "file": "axiomancer-mobile/components/TravelGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:event",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },

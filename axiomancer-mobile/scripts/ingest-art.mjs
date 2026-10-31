@@ -21,9 +21,9 @@
 // Flags:
 //   --in <path>          file or directory to ingest (required)
 //   --category <path>    destination under assets/images/ (required)
+//   --license <text>     the licence of THIS file (required; a new third-party
+//                        file records its own, a traced grant or D115)
 //   --source <url>       where the art came from (recorded verbatim)
-//   --license <text>     license, or UNRESOLVED with --license-note
-//   --license-note <t>   why the license is unresolved
 //   --artist <name>      creator, when known
 //   --quality <n>        WebP quality (default 44, the recorded Doré value)
 //   --max-edge <n>       longest edge in px (default 640, the conventions cap)
@@ -97,11 +97,23 @@ export function destinationFor(inputAbs, category) {
 }
 
 /**
- * The provenance entry this run adds. `license: 'UNRESOLVED'` is a legitimate,
- * REPORTED state — see `asset-provenance.test.mjs`. It is not a way to skip the
- * record; it is how the record says the question is open, so the debt is
- * counted on every run instead of vanishing.
+ * Why this run may not write a provenance entry, or null when it may. The
+ * licence has no default: D115 closed the old UNRESOLVED question, so a new
+ * third-party file must record its own licence (a traced grant), and a run
+ * that names none is refused rather than filed as an open debt.
  */
+export function licenceProblem(opts) {
+  const licence = typeof opts.license === 'string' ? opts.license.trim() : ''
+  if (!licence) {
+    return 'ingest-art: --license <text> is required; there is no default. Record the licence of this file (a traced grant), or D115 for the art of this game.'
+  }
+  if (licence.toUpperCase() === 'UNRESOLVED') {
+    return 'ingest-art: --license UNRESOLVED is refused: D115 closed the art licence question, so name the licence this file is under.'
+  }
+  return null
+}
+
+/** The provenance entry this run adds. */
 export function provenanceEntry(opts, covers) {
   const entry = {
     generated_by: opts.source ? 'acquisition' : 'owner-supplied',
@@ -111,15 +123,11 @@ export function provenanceEntry(opts, covers) {
       ? `grayscale, brightness ${RECIPE.brightness} / contrast ${RECIPE.contrast} toward the void, `
         + `longest edge <= ${opts.maxEdge}px, WebP q${opts.quality}`
       : `longest edge <= ${opts.maxEdge}px, WebP q${opts.quality}`,
-    license: opts.license ?? 'UNRESOLVED',
+    license: opts.license.trim(),
     covers,
   }
   if (opts.source) entry.source = opts.source
   if (opts.artist) entry.artist = opts.artist
-  if (entry.license === 'UNRESOLVED') {
-    entry.license_note = opts.licenseNote
-      ?? 'License not on record. Do not treat as cleared; see docs/asset-conventions.md.'
-  }
   return entry
 }
 
@@ -136,6 +144,11 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2))
   if (!opts.in || !opts.category) {
     console.error('ingest-art: --in <path> and --category <dir> are required.')
+    process.exit(1)
+  }
+  const problem = licenceProblem(opts)
+  if (problem) {
+    console.error(problem)
     process.exit(1)
   }
 
@@ -192,9 +205,6 @@ async function main() {
       + `(${Math.round((1 - after / before) * 100)}% smaller)`,
   )
   console.log(`provenance: ${opts.dryRun ? 'would update' : 'updated'} ${path.relative(MOBILE, provPath)}`)
-  if (entry.license === 'UNRESOLVED') {
-    console.log('NOTE: license recorded as UNRESOLVED — the asset test will report it every run.')
-  }
   console.log('Remember the registry: add the require() literals to that directory\'s index.ts.')
 }
 

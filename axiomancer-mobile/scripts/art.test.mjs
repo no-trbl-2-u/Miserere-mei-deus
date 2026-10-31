@@ -18,6 +18,7 @@ import { compile, validateSpec } from './art/prompt.mjs'
 import { PALETTE, PREAMBLE, STYLE_VERSION, CATEGORIES } from './art/style.mjs'
 import { paletteDistance, summarize } from './art/qa.mjs'
 import { postProcess } from './generate-art.mjs'
+import { licenceProblem, provenanceEntry } from './ingest-art.mjs'
 import { ACCEPTED_LICENCES, buildPlatePage, buildSilhouette, detectPlateBox, loadSources, verifyLicence } from './acquire-art.mjs'
 
 const spec = {
@@ -141,6 +142,25 @@ test('an injected backend bypasses selection entirely — the test seam', async 
   const result = await generate(compile(spec), { backend: fakeBackend(Buffer.from('y')), env: {} })
   assert.equal(result.backend, 'fake')
   assert.equal(result.inert, false)
+})
+
+// ── the ingest refuses an unlicensed file (phase HD1b, D115) ─────────────────
+
+test('ingest-art refuses to run without --license, and names the flag', () => {
+  assert.match(licenceProblem({}), /--license <text> is required/)
+  assert.match(licenceProblem({ license: '   ' }), /is required/)
+})
+
+test('ingest-art rejects a --license of UNRESOLVED with a line citing D115', () => {
+  assert.match(licenceProblem({ license: 'UNRESOLVED' }), /D115/)
+  assert.match(licenceProblem({ license: 'unresolved' }), /D115/)
+})
+
+test('ingest-art accepts a named licence and records it without a note', () => {
+  assert.equal(licenceProblem({ license: 'CC0 1.0' }), null)
+  const entry = provenanceEntry({ license: 'CC0 1.0', quality: 44, maxEdge: 640, grade: true }, ['a.webp'])
+  assert.equal(entry.license, 'CC0 1.0')
+  assert.equal('license_note' in entry, false)
 })
 
 // ── the QA drift metrics ─────────────────────────────────────────────────────

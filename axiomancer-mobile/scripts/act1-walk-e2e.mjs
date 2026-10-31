@@ -18,7 +18,7 @@
 // leaves the node's screen (or takes the passage when the next step is it).
 //
 // Each node is resolved through its own screen by test id, the way a player
-// does: a cache by taking an offer, a gathering by acknowledging `/event`, a
+// does: a cache by taking an offer, a
 // cutscene by advancing it, a rest by REST on `/rest`, a village by opening its Anvil, leaving
 // `/blacksmith` unchanged and taking the road, a door by its crossing. Fights (the four door fights
 // included) and hazard boards are resolved with the dev seam

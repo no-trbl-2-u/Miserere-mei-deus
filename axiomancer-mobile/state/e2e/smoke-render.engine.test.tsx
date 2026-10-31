@@ -54,7 +54,6 @@ import CharacterScreen from '@/app/(tabs)/character';
 import InventoryScreen from '@/app/(tabs)/inventory';
 import ExplorationScreen from '@/app/(tabs)/exploration';
 import MemoirScreen from '@/app/(tabs)/memoir';
-import EventScreen from '@/app/event';
 
 afterEach(() => {
     jest.restoreAllMocks();
@@ -161,11 +160,6 @@ describe('smoke-render: each primary surface', () => {
         const store = makeStore();
         expect(() => render(withProviders(store, <MemoirScreen />))).not.toThrow();
     });
-
-    it('renders the Event modal at fresh-store boot (empty event) without throwing', () => {
-        const store = makeStore();
-        expect(() => render(withProviders(store, <EventScreen />))).not.toThrow();
-    });
 });
 
 /**
@@ -208,12 +202,6 @@ describe('smoke-render: primary body is non-empty (no blank screens)', () => {
         const api = render(withProviders(store, <MemoirScreen />));
         expectNonEmptyBody(collectVisibleStrings(api), 'memoir');
     });
-
-    it('Event modal paints visible text in its empty-event state', () => {
-        const store = makeStore();
-        const api = render(withProviders(store, <EventScreen />));
-        expectNonEmptyBody(collectVisibleStrings(api), 'event (empty)');
-    });
 });
 
 describe('smoke-render: no template-string leaks in rendered output', () => {
@@ -239,12 +227,6 @@ describe('smoke-render: no template-string leaks in rendered output', () => {
         const store = makeStore();
         const api = render(withProviders(store, <MemoirScreen />));
         expectNoTemplateLeaks(collectVisibleStrings(api), 'memoir');
-    });
-
-    it('Event modal renders no `{ ... }` template strings (empty event)', () => {
-        const store = makeStore();
-        const api = render(withProviders(store, <EventScreen />));
-        expectNoTemplateLeaks(collectVisibleStrings(api), 'event');
     });
 });
 
@@ -274,12 +256,6 @@ describe('smoke-render: surfaces with an ACTIVE event (no infinite render loop)'
         // A real arrival at bw-w2: the prelude holds the node's own foe.
         const { store } = arriveAtRealFight();
         expect(() => render(withProviders(store, <ExplorationScreen />))).not.toThrow();
-    });
-
-    it('renders the Event modal with an active narrative event without throwing', () => {
-        const store = makeStore();
-        seedActiveEvent(store, REST_EVENT);
-        expect(() => render(withProviders(store, <EventScreen />))).not.toThrow();
     });
 });
 

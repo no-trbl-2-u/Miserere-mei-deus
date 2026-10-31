@@ -33,7 +33,6 @@ jest.mock('@/lib/platform/router', () => ({
 
 // Import components after mocks
 import IndexScreen from '@/app/index';
-import EventScreen from '@/app/event/index';
 import InventoryScreen from '@/app/(tabs)/inventory/index';
 import MemoirScreen from '@/app/(tabs)/memoir/index';
 
@@ -53,16 +52,6 @@ describe('App Component Smoke Tests', () => {
                 render(
                     <TestWrapper>
                         <IndexScreen />
-                    </TestWrapper>
-                );
-            }).not.toThrow();
-        });
-
-        it('renders event screen without crashing', () => {
-            expect(() => {
-                render(
-                    <TestWrapper>
-                        <EventScreen />
                     </TestWrapper>
                 );
             }).not.toThrow();
@@ -94,7 +83,6 @@ describe('App Component Smoke Tests', () => {
             // Test that all main app components can be imported
             expect(() => {
                 require('@/app/index');
-                require('@/app/event/index');
                 require('@/app/(tabs)/inventory/index');
                 require('@/app/(tabs)/memoir/index');
                 require('@/app/(tabs)/character/index');
@@ -107,7 +95,6 @@ describe('App Component Smoke Tests', () => {
             // Tests that the main app directory has proper structure
             const appComponents = [
                 '@/app/index',
-                '@/app/event/index', 
                 '@/app/(tabs)/_layout',
                 '@/app/(tabs)/character/index',
                 '@/app/(tabs)/exploration/index',

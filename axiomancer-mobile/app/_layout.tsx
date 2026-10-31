@@ -49,7 +49,6 @@ import SaveSlotsScreen from './saves/index';
 import CharacterSelectScreen from './character-select/index';
 import SettingsScreen from './settings/index';
 import TabLayout from './(tabs)/_layout';
-import EventScreen from './event/index';
 import HazardScreen from './hazard/index';
 import CombatEncounterScreen from './combat-encounter/index';
 import HazardDeckScreen from './hazard-deck/index';
@@ -325,11 +324,6 @@ function RootLayout() {
             <Stack.Screen
               name="settings/index"
               component={SettingsScreen}
-              options={{ headerShown: false, presentation: 'fullScreenModal' }}
-            />
-            <Stack.Screen
-              name="event/index"
-              component={EventScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen

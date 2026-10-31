@@ -125,7 +125,7 @@ python art-department/tools/split-spritesheet.py \
 
 # from axiomancer-mobile/
 node scripts/ingest-art.mjs --in <staging-dir> \
-  --category enemies/anim/<key> --no-grade --license UNRESOLVED --license-note "..."
+  --category enemies/anim/<key> --no-grade --license "<the licence of this file>"
 ```
 
 The cells come out `<key>-NN.webp`, zero-padded and row-major, and the
@@ -297,8 +297,9 @@ torio files keep their traced free-material grant and the Act 1 map
 plates their owner-generated record. Nobody re-opens the question.
 A new third-party file still records its own licence: a traced grant, or
 T's ruling written into its record by a session T runs.
-`ingest-art.mjs` still defaults a file with no `--license` to
-`UNRESOLVED`, and `assets:check` still reports any record that says so.
+`ingest-art.mjs` refuses to run without `--license` (no default) and
+rejects `UNRESOLVED` with a line citing D115; `assets:check` still reports
+any older record that says so.
 The DevLog art gate (`scripts/devlog-art-licence.mjs`) withholds such a
 file from the public site until its record names a licence.
 

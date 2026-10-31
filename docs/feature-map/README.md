@@ -21,7 +21,6 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Cutscene | route | yes | yes | yes | no |
 | Death Return | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Death Return") |
 | Dialogue | route | yes | yes | yes | no |
-| Event | route | no | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Event") |
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
 | Reward | route | yes | no | yes | no |
 | Quest | route | yes | yes | yes | no |
@@ -55,7 +54,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 
 ### Built but unreachable
 
-- Event (`route:event`)
+- none
 
 ### Routes with no way out but back
 
@@ -65,7 +64,6 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Loot cache (`route:cache`)
 - Cutscene (`route:cutscene`)
 - Dialogue (`route:dialogue`)
-- Event (`route:event`)
 - Reward (`route:item-reward`)
 - Quest (`route:quest`)
 - Rest (`route:rest`)
@@ -92,7 +90,6 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Memoir (`route:(tabs)/memoir`)
 - Character Select (`route:character-select`)
 - Death Return (`route:death-return`)
-- Event (`route:event`)
 - Index (`route:index`)
 - Quest (`route:quest`)
 - Saves (`route:saves`)
