@@ -67,6 +67,17 @@ describe('accent hues', () => {
         expect(accentHueColor('ember', { blood: '#123456' })).toBe(HUE.statDownAmber);
         expect(accentHueColor('frost', { blood: '#123456' })).toBe(HUE.guardBlue);
     });
+
+    // Pinned against T's picks (PR body, 2026-10-30): gold = storm, amber =
+    // ember, GUARD blue = frost. Hardcoded, not derived from the table, so a
+    // swapped hue on one of these four new rows fails here even though the
+    // data-driven checks above would still pass.
+    it("IT2b's four new relics wear the hue T picked", () => {
+        expect(ITEM_GLYPH_ACCENTS['relic-disarming-plea'].map((a) => a.hue)).toEqual(['storm']);
+        expect(ITEM_GLYPH_ACCENTS['relic-thornback-signet'].map((a) => a.hue)).toEqual(['ember']);
+        expect(ITEM_GLYPH_ACCENTS['relic-mirror-brooch'].map((a) => a.hue)).toEqual(['frost']);
+        expect(ITEM_GLYPH_ACCENTS['relic-carapace-belt'].map((a) => a.hue)).toEqual(['ember']);
+    });
 });
 
 describe('accent clip paths', () => {
