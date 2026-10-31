@@ -8,7 +8,8 @@
  * paintings in this folder stay as that pool (`CARD_ART_POOL`,
  * `provenance.json`). The 30 Blood Price cards each have their own torio
  * painting (`bp-*.webp`), and the 30 Defender cards each have their own
- * painting (`df-*.webp`, T's sheets), and the 30 Elementalist cards theirs (`el-*.webp`). Unmapped ids (sandbox and fixture cards) fall back
+ * painting (`df-*.webp`, T's sheets), the 29 Merciful cards theirs (`mc-*.webp`),
+ * and the 30 Elementalist cards theirs (`el-*.webp`). Unmapped ids (sandbox and fixture cards) fall back
  * to the circe placeholder.
  */
 
@@ -106,6 +107,36 @@ const CARD_ART_BY_ID: Record<string, number> = {
     'df-m-08c': require('./df-m-08c.webp'),
     'df-m-09a': require('./df-m-09a.webp'),
     'df-m-10n': require('./df-m-10n.webp'),
+    // Merciful lane: T's paintings (provenance.json), one per card.
+    'mc-p-01a': require('./mc-p-01a.webp'),
+    'mc-p-02b': require('./mc-p-02b.webp'),
+    'mc-p-03b': require('./mc-p-03b.webp'),
+    'mc-p-04a': require('./mc-p-04a.webp'),
+    'mc-p-05a': require('./mc-p-05a.webp'),
+    'mc-p-06a': require('./mc-p-06a.webp'),
+    'mc-p-06c': require('./mc-p-06c.webp'),
+    'mc-p-07b': require('./mc-p-07b.webp'),
+    'mc-p-08b': require('./mc-p-08b.webp'),
+    'mc-p-09c': require('./mc-p-09c.webp'),
+    'mc-p-10c': require('./mc-p-10c.webp'),
+    'mc-e-01b': require('./mc-e-01b.webp'),
+    'mc-e-02c': require('./mc-e-02c.webp'),
+    'mc-e-03b': require('./mc-e-03b.webp'),
+    'mc-e-04b': require('./mc-e-04b.webp'),
+    'mc-e-06a': require('./mc-e-06a.webp'),
+    'mc-e-07b': require('./mc-e-07b.webp'),
+    'mc-e-08b': require('./mc-e-08b.webp'),
+    'mc-e-09b': require('./mc-e-09b.webp'),
+    'mc-e-10b': require('./mc-e-10b.webp'),
+    'mc-m-01b': require('./mc-m-01b.webp'),
+    'mc-m-02b': require('./mc-m-02b.webp'),
+    'mc-m-04b': require('./mc-m-04b.webp'),
+    'mc-m-05c': require('./mc-m-05c.webp'),
+    'mc-m-06c': require('./mc-m-06c.webp'),
+    'mc-m-07c': require('./mc-m-07c.webp'),
+    'mc-m-08a': require('./mc-m-08a.webp'),
+    'mc-m-09c': require('./mc-m-09c.webp'),
+    'mc-m-10c': require('./mc-m-10c.webp'),
     // Elementalist lane: T's paintings (provenance.json), one per card.
     'el-p-01b': require('./el-p-01b.webp'),
     'el-p-02b': require('./el-p-02b.webp'),

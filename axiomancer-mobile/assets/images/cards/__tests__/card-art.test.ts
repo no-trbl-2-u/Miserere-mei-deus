@@ -24,6 +24,14 @@ describe('card art registry', () => {
         expect(new Set(art).size).toBe(ids.length);
     });
 
+    it('gives every Merciful card its own painting', () => {
+        const ids = getCardLane('merciful')?.cardIds ?? [];
+        expect(ids.length).toBeGreaterThan(0);
+        const art = ids.map(getCardArt);
+        for (const a of art) expect(a).not.toBe(FALLBACK_CARD_ART);
+        expect(new Set(art).size).toBe(ids.length);
+    });
+
     it('gives every Elementalist card its own painting', () => {
         const ids = getCardLane('elementalist')?.cardIds ?? [];
         expect(ids.length).toBeGreaterThan(0);
