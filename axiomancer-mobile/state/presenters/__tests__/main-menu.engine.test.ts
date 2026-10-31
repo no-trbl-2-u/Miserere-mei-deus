@@ -15,9 +15,30 @@ import {
 
 const NOW = 1_700_000_000_000;
 const saved = (id: 1 | 2 | 3, savedAt: number, level = 3, mapName = 'northern-forest'): SaveSlotSummary => ({
-    id, status: 'saved', savedAt, level, mapName, runId: `run-${id}`, characterId: 'fx-char',
+    id, status: 'saved', savedAt, level, mapName, runId: `run-${id}`, characterId: 'fx-char', runOver: false,
+});
+const runOver = (id: 1 | 2 | 3, savedAt: number): SaveSlotSummary => ({
+    ...saved(id, savedAt), characterId: null, runOver: true,
 });
 const torn = (id: 1 | 2 | 3): SaveSlotSummary => ({ ...emptySlotSummary(id), status: 'unreadable' });
+
+describe('a run-over slot', () => {
+    it('reads as a finished run whose continue opens character select, not "Made before characters"', () => {
+        const rows = selectSaveSlotRows([runOver(1, 5), emptySlotSummary(2), emptySlotSummary(3)], 'load', NOW);
+        expect(rows[0].detail).toBe(SAVE_SLOTS_COPY.runOver);
+        expect(rows[0].action).toBe('load');
+        expect(rows[0].actionLabel).toBe(SAVE_SLOTS_COPY.runOverAction);
+        expect(rows[0].clearable).toBe(true);
+    });
+
+    it('CONTINUE and LOAD GAME treat it as continuable', () => {
+        const vm = selectMainMenuViewModel([runOver(1, 5), emptySlotSummary(2), emptySlotSummary(3)], NOW);
+        expect(vm.continue.enabled).toBe(true);
+        expect(vm.continue.slot).toBe(1);
+        expect(vm.continue.hint).toContain(SAVE_SLOTS_COPY.runOver);
+        expect(vm.loadGame.enabled).toBe(true);
+    });
+});
 
 describe('selectMainMenuViewModel', () => {
     it('with nothing saved: no CONTINUE, LOAD GAME disabled with the empty hint', () => {

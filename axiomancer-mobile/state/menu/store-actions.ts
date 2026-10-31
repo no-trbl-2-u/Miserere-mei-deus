@@ -65,6 +65,8 @@ export function hydrateStoreWithGameState(store: AppStore, next: GameState): voi
     const patch: Partial<AppStoreState> = {
         ...next,
         currentEncounter: next.currentEncounter,
+        // Spelled out, as `currentEncounter` is: a loaded run must not inherit a run-over marker.
+        runOver: next.runOver,
         event: EMPTY_EVENT_SLICE,
         combatReward: EMPTY_COMBAT_REWARD_SLICE,
         itemReward: EMPTY_ITEM_REWARD_SLICE,
@@ -100,6 +102,8 @@ export function hydrateStoreWithGameState(store: AppStore, next: GameState): voi
  * stats and deck dealt; see the engine's `createNewGameState`). Required: a
  * run always has a character, and this throws without one. `roster` replaces the engine's roster
  * (tests pass a fixture character; the player path never passes it).
+ * `codex` carries a finished run's codex into the new run (character select's
+ * run-end entry); omitted, the run opens a blank codex.
  */
 export function startNewGameAction(
     store: AppStore,
@@ -108,11 +112,12 @@ export function startNewGameAction(
     startMap?: MapName,
     characterId?: string,
     roster?: readonly CharacterDefinition[],
+    codex?: GameState['codex'],
 ): GameState {
     if (characterId === undefined) {
         throw new Error('startNewGameAction: a new run opens as a roster character; pass a characterId.');
     }
-    const fresh = createNewGameState({ startMap, characterId, roster });
+    const fresh = createNewGameState({ startMap, characterId, roster, codex });
     slots.selectSlot(slot);
     hydrateStoreWithGameState(store, fresh);
     try {
@@ -127,7 +132,8 @@ export function startNewGameAction(
 /**
  * LOAD GAME from `slot`. Returns `false` (and changes nothing) when the slot
  * is empty, unreadable or made before characters — the slot screen disables those rows, so this is
- * a guard, not a path.
+ * a guard, not a path. A finished run (`runOver`) loads: the store holds the run-over state and the
+ * caller routes to character select (`state/run-end.ts`).
  */
 export function loadGameAction(store: AppStore, slots: SaveSlotStore, slot: SaveSlotId): boolean {
     const saved = slots.readSlot(slot);
@@ -135,14 +141,14 @@ export function loadGameAction(store: AppStore, slots: SaveSlotStore, slot: Save
         getLogger().warn('persistence', 'load-game-empty', { slot });
         return false;
     }
-    if (saved.player?.characterId === undefined) {
+    if (saved.player?.characterId === undefined && saved.runOver !== true) {
         // Made before characters: it has no reward lanes, so it is deleted, never resumed.
         getLogger().warn('persistence', 'load-game-pre-character', { slot });
         return false;
     }
     slots.selectSlot(slot);
     hydrateStoreWithGameState(store, saved);
-    getLogger().info('persistence', 'load-game', { slot, runId: saved.runId, level: saved.player.level });
+    getLogger().info('persistence', 'load-game', { slot, runId: saved.runId, level: saved.player.level, runOver: saved.runOver === true });
     return true;
 }
 

@@ -6,7 +6,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { createNewGameState, type GameState } from '@mechanics';
+import { createNewGameState, runOverState, type GameState } from '@mechanics';
 
 import SaveSlotsScreen from '@/app/saves/index';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
@@ -112,6 +112,23 @@ describe('/saves — a save made before characters', () => {
         act(() => { fireEvent.press(screen.getByTestId('save-slot-3-action')); });
         expect(store.getState().player.name).toBe('Third');
         expect(mockReplace).toHaveBeenCalledWith('/exploration');
+    });
+});
+
+describe('/saves — a finished run', () => {
+    it('JOURNEY ON on a run-over slot opens character select for the slot, never the map', () => {
+        const base = createNewGameState({ characterId: 'the-chosen' });
+        const over = { ...runOverState(base), codex: { unlockedEntries: ['seen-it'] } } as GameState;
+        const slots = createMemorySlotStore({ initial: { 2: { state: over, savedAt: 10 } } });
+        const { store } = mount('load', slots);
+
+        expect(screen.queryByText('Made before characters')).toBeNull();
+        expect(screen.getByText('Run over')).toBeTruthy();
+        act(() => { fireEvent.press(screen.getByTestId('save-slot-2-action')); });
+
+        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=2&runEnd=1');
+        expect(store.getState().runOver).toBe(true);
+        expect(slots.getActiveSlot()).toBe(2);
     });
 });
 

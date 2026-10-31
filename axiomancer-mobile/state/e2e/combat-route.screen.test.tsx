@@ -51,6 +51,8 @@ jest.mock('@/components/combat/encounter/CombatEncounterPanel', () => {
 import CombatEncounterScreen from '@/app/combat-encounter/index';
 import { HardwareBackHandler } from '@/components/HardwareBackHandler';
 import { CombatModeProvider, useCombatMode } from '@/state/combat-mode';
+import { SaveSlotsProvider } from '@/state/SaveSlotsProvider';
+import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, type AppStore } from '@/state/store';
@@ -64,7 +66,10 @@ function Probe() {
     return null;
 }
 
+let slotStore = createMemorySlotStore();
 beforeEach(() => {
+    slotStore = createMemorySlotStore();
+    slotStore.selectSlot(2);
     mockCanGoBack = true;
     clearDeathReturn();
 });
@@ -81,9 +86,11 @@ function mount(store: AppStore, extra?: React.ReactNode) {
     return render(
         <CombatModeProvider>
             <GameStoreProvider store={store}>
-                <Probe />
-                {extra}
-                <CombatEncounterScreen />
+                <SaveSlotsProvider slots={slotStore}>
+                    <Probe />
+                    {extra}
+                    <CombatEncounterScreen />
+                </SaveSlotsProvider>
             </GameStoreProvider>
         </CombatModeProvider>,
     );
@@ -147,12 +154,13 @@ describe('the live combat route', () => {
         expect(s.player.characterId).toBeUndefined();
         expect(s.dying).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
-        expect(mockReplace).not.toHaveBeenCalled();
-        expect(mockBack).toHaveBeenCalledTimes(1);
+        // A run end opens character select for the slot, not the map.
+        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=2&runEnd=1');
+        expect(mockBack).not.toHaveBeenCalled();
         expect(combat.inCombat).toBe(false);
     });
 
-    it('a defeat inside the Labyrinth resets the run and never revives', () => {
+    it('a defeat inside the Labyrinth is a run end: no character, character select for the slot', () => {
         const store = stagedStore();
         const runId = store.getState().runId;
         store.setState({ labyrinthUi: { session: { actId: 'act1' } } } as never);
@@ -163,8 +171,11 @@ describe('the live combat route', () => {
         const s = store.getState();
         expect(s.runId).not.toBe(runId);
         expect(s.dying).toBeUndefined();
+        expect(s.runOver).toBe(true);
+        expect(s.player.characterId).toBeUndefined();
         expect(isDeathReturnArmed()).toBe(false);
-        expect(mockBack).toHaveBeenCalledTimes(1);
+        expect(mockReplace).toHaveBeenCalledWith('/character-select?slot=2&runEnd=1');
+        expect(mockBack).not.toHaveBeenCalled();
     });
 
     it('WITHDRAW: narrates the retreat, ends the staged fight and leaves', () => {

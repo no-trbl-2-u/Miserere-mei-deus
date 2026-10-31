@@ -10,6 +10,8 @@
  * Flow: `/saves?mode=new` opens this screen after the slot pick once the
  * roster holds a character. CONFIRM starts the run as the shown character in
  * the slot and enters it; BACK returns to the slot list and writes nothing.
+ * A run end (`?runEnd=1`, `state/run-end.ts`) opens it for the same slot and
+ * CONFIRM carries that slot's codex into the next run.
  * `?locked=1` (the `/dev` row) shows the all-locked state and cannot confirm.
  */
 
@@ -31,6 +33,7 @@ import {
     selectRoster,
     type CharacterSquareVM,
 } from '@/state/presenters/character-select.engine';
+import { RUN_END_PARAM } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -64,10 +67,11 @@ export default function CharacterSelectScreen() {
     const styles = useStyles();
     const router = useRouter();
     const store = useGameStore();
-    const { startNewGame } = useSaveSlots();
-    const params = useLocalSearchParams<{ slot?: string; locked?: string }>();
+    const { startNewGame, slots } = useSaveSlots();
+    const params = useLocalSearchParams<{ slot?: string; locked?: string; runEnd?: string }>();
     const slot = readSlot(params.slot);
     const locked = params.locked === '1';
+    const runEnd = params[RUN_END_PARAM] === '1';
 
     const roster = selectRoster();
     const [pickedId, setPickedId] = useState<string | null>(null);
@@ -77,9 +81,12 @@ export default function CharacterSelectScreen() {
 
     const onConfirm = useCallback(() => {
         if (selected === null || slot === null || locked) return;
-        startNewGame(slot, undefined, selected.id, roster);
+        // A run end carries the slot's codex into the next run; a plain new game opens a blank one.
+        const finished = runEnd ? slots.readSlot(slot) : null;
+        const codex = finished?.runOver === true ? finished.codex : undefined;
+        startNewGame(slot, undefined, selected.id, roster, codex);
         router.replace(`/${selectActiveTab(store.getState())}`);
-    }, [locked, roster, router, selected, slot, startNewGame, store]);
+    }, [locked, roster, router, runEnd, selected, slot, slots, startNewGame, store]);
 
     const renderSquare = (sq: CharacterSquareVM) => {
         if (sq.kind === 'locked') {
@@ -127,7 +134,7 @@ export default function CharacterSelectScreen() {
                     </View>
                     <Pressable
                         style={styles.backBtn}
-                        onPress={() => router.back()}
+                        onPress={() => (runEnd ? router.replace('/saves?mode=load') : router.back())}
                         accessibilityRole="button"
                         accessibilityLabel={COPY.back}
                         testID="character-select-back"

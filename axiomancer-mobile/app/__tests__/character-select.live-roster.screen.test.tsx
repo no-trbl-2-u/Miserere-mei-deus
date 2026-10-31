@@ -8,7 +8,7 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { CHARACTER_ROSTER, getEquippedItems, rewardPoolFor } from '@mechanics';
+import { CHARACTER_ROSTER, createNewGameState, getEquippedItems, rewardPoolFor, runOverState, type GameState } from '@mechanics';
 
 import CharacterSelectScreen from '@/app/character-select/index';
 import CharacterScreen from '@/app/(tabs)/character/index';
@@ -68,6 +68,42 @@ describe('/character-select with the live roster', () => {
         expect(saved.knownCards).toHaveLength(10);
         expect(rewardPoolFor(store.getState().player).length).toBeGreaterThan(0);
         expect(mockReplace).toHaveBeenCalledWith('/exploration');
+    });
+});
+
+describe('/character-select as a run end', () => {
+    const finishedSlots = () => {
+        const over = { ...runOverState(createNewGameState({ characterId: 'the-chosen' })), codex: { unlockedEntries: ['seen-it'] } } as GameState;
+        return createMemorySlotStore({ initial: { 2: { state: over, savedAt: 10 } } });
+    };
+
+    it('CONFIRM starts the Chosen in the slot with the finished run codex; BACK goes to the slot list', () => {
+        mockParams = { slot: '2', runEnd: '1' };
+        const slots = finishedSlots();
+        const store = createAppStore({ adapter: slots });
+        const { tree } = withAllProviders(<CharacterSelectScreen />, { store, slots });
+        render(tree);
+
+        act(() => { fireEvent.press(screen.getByTestId('character-select-back')); });
+        expect(mockReplace).toHaveBeenCalledWith('/saves?mode=load');
+
+        act(() => { fireEvent.press(screen.getByTestId('character-select-confirm')); });
+        const saved = slots.readSlot(2)!;
+        expect(saved.runOver).toBeUndefined();
+        expect(saved.player.characterId).toBe('the-chosen');
+        expect(saved.player.level).toBe(1);
+        expect(saved.codex.unlockedEntries).toContain('seen-it');
+        expect(slots.listSlots()[1].runOver).toBe(false);
+    });
+
+    it('a plain new game over a finished slot opens a blank codex', () => {
+        mockParams = { slot: '2' };
+        const slots = finishedSlots();
+        const store = createAppStore({ adapter: slots });
+        const { tree } = withAllProviders(<CharacterSelectScreen />, { store, slots });
+        render(tree);
+        act(() => { fireEvent.press(screen.getByTestId('character-select-confirm')); });
+        expect(slots.readSlot(2)!.codex.unlockedEntries).not.toContain('seen-it');
     });
 });
 

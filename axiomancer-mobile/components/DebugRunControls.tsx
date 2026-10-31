@@ -4,7 +4,8 @@
  *   SAVE       — persist now (`actions.save`).
  *   RESET RUN  — `resetRun({ keepCharacter: true })`: fresh world, same
  *                character. Blood border: it discards map progress.
- *   NEW RUN    — `resetRun({ keepCharacter: false })`: everything fresh.
+ *   NEW RUN    — `resetRun({ keepCharacter: false })`: a run end, as in play;
+ *                saved, then character select for the slot.
  *   GALLERIES  — the dev-only visual routes: enemy art (`/devart`),
  *                Aporia rooms (`/devart/rooms`), the DEFEAT / PARLEY
  *                aftermath panels (`/devaftermath?panel=…`), and the
@@ -18,7 +19,9 @@ import { useRouter } from '@/lib/platform/router';
 
 import { DevButton, DevButtons, DevRow } from '@/components/dev/DevControls';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { useGameActions } from '@/state/GameStoreProvider';
+import { useGameActions, useGameStore } from '@/state/GameStoreProvider';
+import { runEndRoute } from '@/state/run-end';
+import { useActiveSlot } from '@/state/SaveSlotsProvider';
 
 const GALLERIES: readonly { label: string; route: string; testID: string }[] = [
     { label: 'ENEMY ART', route: '/devart', testID: 'debug-gallery-enemy-art' },
@@ -30,6 +33,8 @@ const GALLERIES: readonly { label: string; route: string; testID: string }[] = [
 
 export function DebugRunControls() {
     const actions = useGameActions();
+    const store = useGameStore();
+    const slot = useActiveSlot();
     const router = useRouter();
     const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -41,7 +46,11 @@ export function DebugRunControls() {
     };
     const onReset = (keepCharacter: boolean) => {
         actions.resetRun({ keepCharacter });
-        setFeedback(keepCharacter ? 'run reset · character kept' : 'new run · everything fresh');
+        setFeedback(keepCharacter ? 'run reset · character kept' : 'new run · choose a character');
+        if (!keepCharacter) {
+            store.getState().save();
+            router.replace(runEndRoute(slot) as never);
+        }
     };
 
     return (

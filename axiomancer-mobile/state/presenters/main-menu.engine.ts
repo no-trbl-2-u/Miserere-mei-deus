@@ -18,6 +18,7 @@ import {
     describeSavedAt,
     formatMapName,
     isPreCharacterSave,
+    isRunOverSave,
     mostRecentSlot,
     type SaveSlotId,
     type SaveSlotSummary,
@@ -50,6 +51,9 @@ export const SAVE_SLOTS_COPY = Object.freeze({
     unreadable: 'the page was torn — it cannot be read',
     // A save with no character (made before characters): readable, never continued.
     preCharacter: 'Made before characters',
+    // A finished run: its continue action opens character select for the slot.
+    runOver: 'Run over',
+    runOverAction: 'CHOOSE A CHARACTER',
     startAction: 'BEGIN',
     overwriteAction: 'OVERWRITE',
     // The LOAD screen's verbs: JOURNEY ON… (resume) and DELETE SAVE (clear).
@@ -109,6 +113,19 @@ export function slotRowVM(
             stamp: `saved ${describeSavedAt(summary.savedAt, now)}`,
             action: 'none',
             actionLabel: '',
+            clearable: true,
+        };
+    }
+    if (isRunOverSave(summary)) {
+        return {
+            id: summary.id,
+            numeral: slotNumeral(summary.id),
+            status: summary.status,
+            mostRecent: mostRecent === summary.id,
+            detail: SAVE_SLOTS_COPY.runOver,
+            stamp: `saved ${describeSavedAt(summary.savedAt, now)}`,
+            action: mode === 'new' ? 'overwrite' : 'load',
+            actionLabel: mode === 'new' ? SAVE_SLOTS_COPY.overwriteAction : SAVE_SLOTS_COPY.runOverAction,
             clearable: true,
         };
     }
@@ -183,6 +200,8 @@ export function selectMainMenuViewModel(
             slot: recent,
             hint: recentSummary === null
                 ? MAIN_MENU_COPY.continueHint
+                : isRunOverSave(recentSummary)
+                ? `chronicle ${slotNumeral(recentSummary.id)} · ${SAVE_SLOTS_COPY.runOver} · ${describeSavedAt(recentSummary.savedAt, now)}`
                 : `chronicle ${slotNumeral(recentSummary.id)} · Level ${recentSummary.level ?? 1} · ${formatMapName(recentSummary.mapName)} · ${describeSavedAt(recentSummary.savedAt, now)}`,
         },
         newGame: { hint: MAIN_MENU_COPY.newGameHint },

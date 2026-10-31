@@ -24,7 +24,7 @@ import { GateSockets } from '@/components/labyrinth/GateSockets';
 import { LabyrinthAccordion } from '@/components/labyrinth/LabyrinthAccordion';
 import { RoomScene } from '@/components/labyrinth/RoomScene';
 import { useCombatMode } from '@/state/combat-mode';
-import { useGameActions, useGameState } from '@/state/GameStoreProvider';
+import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
     LABYRINTH_COPY,
     selectLabyrinthFinaleViewModel,
@@ -85,6 +85,7 @@ export default function LabyrinthScreen() {
         return () => clearTimeout(t);
     }, [arrivalToast, actions]);
 
+    const store = useGameStore();
     const leavingRef = useRef(false);
     const leave = useCallback(() => {
         leavingRef.current = true;
@@ -105,9 +106,11 @@ export default function LabyrinthScreen() {
         }
         if (hadSessionRef.current && !leavingRef.current) {
             hadSessionRef.current = false;
+            // A run end routes on to character select itself (combat-encounter); popping would undo it.
+            if (store.getState().runOver === true) return;
             if (router.canGoBack()) router.back();
         }
-    }, [hasSession, router]);
+    }, [hasSession, router, store]);
 
     // ── Act select ──
     if (vm.kind === 'act-select') {

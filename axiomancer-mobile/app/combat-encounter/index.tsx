@@ -28,6 +28,8 @@ import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncoun
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useCombatMode } from '@/state/combat-mode';
 import { armDeathReturn } from '@/state/death-return';
+import { runEndRoute } from '@/state/run-end';
+import { useActiveSlot } from '@/state/SaveSlotsProvider';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { selectExplorationViewModel } from '@/state/presenters/exploration.engine';
 import { selectResumableFight } from '@/state/presenters/navigation.engine';
@@ -59,6 +61,7 @@ export default function CombatEncounterScreen() {
     const router = useRouter();
     const store = useGameStore();
     const actions = useGameActions();
+    const slot = useActiveSlot();
     const { inCombat, enterCombat, exitCombat, resetRunStats } = useCombatMode();
     const player = useGameState((s) => s.player);
     const flags = useGameState((s) => (s as unknown as { flags?: string[] }).flags);
@@ -92,7 +95,8 @@ export default function CombatEncounterScreen() {
     const onExit = useCallback((outcome: CombatOutcome | null) => {
         if (outcome === 'defeat') {
             if (store.getState().labyrinthUi?.session) {
-                actions.resetRun({ keepCharacter: true });
+                // A Labyrinth defeat is a run end: no character, the codex kept.
+                actions.resetRun({ keepCharacter: false });
                 resetRunStats();
             } else if (actions.playerDied('fight') === 'revived') {
                 exitCombat();
@@ -102,10 +106,21 @@ export default function CombatEncounterScreen() {
             } else {
                 resetRunStats();
             }
+            if (store.getState().runOver === true) {
+                // Checkpoint the run-over state so a reload reopens character select.
+                try {
+                    store.getState().save();
+                } catch {
+                    /* persistence must not strand the player on the fight */
+                }
+                exitCombat();
+                router.replace(runEndRoute(slot) as never);
+                return;
+            }
         }
         exitCombat();
         leave();
-    }, [actions, store, router, resetRunStats, exitCombat, leave]);
+    }, [actions, store, router, resetRunStats, exitCombat, leave, slot]);
 
     // WITHDRAW, from the reveal: pay the retreat and settle the node, then end
     // the staged encounter so the gate does not route straight back into it.
