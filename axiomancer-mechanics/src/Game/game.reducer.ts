@@ -397,6 +397,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 }
             }
 
+            // The DANGER moves that fired in the fight, any outcome (de-duped).
+            const fired = action.payload?.seenDangers ?? [];
+            const known = nextCodex.seenDangers ?? [];
+            const fresh = fired.filter((k, i) => !known.includes(k) && fired.indexOf(k) === i);
+            if (fresh.length > 0) {
+                nextCodex = { ...nextCodex, seenDangers: [...known, ...fresh] };
+            }
+
             const over: GameState = settleQuestLog({
                 ...state,
                 player: nextPlayer,

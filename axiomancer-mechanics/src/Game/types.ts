@@ -69,6 +69,12 @@ export interface CodexState {
      * as none beaten (`defeatedEnemies` in `defeat-ledger.ts`).
      */
     defeatedEnemies?: EnemySlug[];
+    /**
+     * The DANGER moves the player has seen fire, as `<enemy slug>:<move name>`
+     * keys, written by the END_COMBAT reducer, de-duped. Optional: a save written
+     * before it reads as none seen (`seenDangers` in `seen-dangers.ts`).
+     */
+    seenDangers?: string[];
 }
 
 export interface GameState {

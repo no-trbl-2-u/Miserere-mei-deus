@@ -1043,6 +1043,15 @@ satisfied for exactly these.)
 - Portraits, relics, stat spreads and playstyle lines are T's content (D88). The first character is due 2026-10-26 (T); three for December. Character content waits on at least one new lane, because a character needs three distinct lanes; T plans two new lanes before a character goes live.
 - Built by Phase CH1 (`plan/phases/phase_CH1_character_select.md`).
 
+**D117 — The fight-or-flee screen shows only the foe's DANGER, named once seen.** (T, 2026-10-31, attended; recorded by the EN2 plot, built by EN2a. Amends D116's second bullet: "beaten" becomes "seen".)
+
+- Before a fight, the reveal shows the DANGER moves of a foe that has `phases`, and no other move: a DANGER the player has seen fire in any earlier fight shows its name and what it does; one never seen reads `[ ? ? ? ]`.
+- "Seen" means it fired in a fight the player was in, whoever won. It is recorded when the fight ends, on any outcome, as `<enemy slug>:<move name>` keys on `codex.seenDangers` (optional, no version bump, carried across runs). Reading the reveal is not seeing; beating a foe without its DANGER firing is not seeing.
+- The DANGER name gate in the combat telegraph, the reveal header, the enemy pane and the combat log moves from beaten to seen; a DANGER that fires is named in the log from that moment.
+- In combat the telegraph becomes one icon per kind (ATTACK, DEFEND, STATUS, UNKNOWN, DANGER), larger and beside the foe (EN2b).
+- Foes without `phases` are untouched until the enemy swap; T decides their reveal then.
+- Built by Phase EN2a (`plan/phases/phase_EN2_danger_only_reveal.md`).
+
 **D116 — Enemies telegraph a kind, change phase at HP lines, play a fixed loop per phase, and may carry six words.** (T, 2026-10-29 and 2026-10-30, in the Claude Duet enemy-drafts thread on the Breakwater Bestiary page; recorded by the EN1 plot, run on T's word. Amends `docs/game-model.md`'s "No enemy keywords, afflictions, summons or riders", B2's "re-adds enemy keywords one at a time", the round-gated deck tiers (`TIER2_DEFAULT_ROUND`) and, for normals and elites, the escalation clock. T on 2026-10-30, after reading the drafts and their recommendations: "Set tithe collector as the elite instead of the lamprey knot. For the normals, we'll use all of them. Keep the first region's set below level 10 though we'll figure out how frequently they repeat. ... but yes to everything.")
 
 - The intent shows a kind, never exact numbers: ATTACK, DEFEND, STATUS, DANGER or UNKNOWN.

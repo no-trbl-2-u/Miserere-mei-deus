@@ -129,7 +129,7 @@ character (`game.reducer.ts:503-506`), so a DANGER seen in one run stays seen.
    Dark exists.
 7. **Icon only in combat**: the move name under the badge goes [T to confirm #1]; the pill and
    numbers for a `phases` foe were already gone (EN1c).
-8. **Slot: asap** [T to confirm #2]: T is playing these screens now and the MVP run shows them.
+8. **Slot: asap** (Accepted at merge (default)): T is playing these screens now and the MVP run shows them.
 
 ## Tests matrix
 

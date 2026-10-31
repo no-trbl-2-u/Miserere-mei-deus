@@ -223,12 +223,17 @@ export const INTENT_ICONS: Record<CombatIntentType, { icon: string; label: strin
     unknown: { icon: '?', label: 'UNKNOWN', color: HUE.stoneGrey },
 };
 
+/** The DANGER move names of a foe the player has seen fire (the seen record,
+ *  plus any that fired in the fight under way). */
+export type SeenDangerNames = ReadonlySet<string>;
+export const NO_DANGERS_SEEN: SeenDangerNames = new Set<string>();
+
 /** A `phases` foe's telegraph: the entry's move name, or null for a DANGER
- *  the save has not seen beaten. Null for any other entry. */
-export function telegraphName(phase: CombatThreatPhase | undefined, beaten: boolean): string | null {
+ *  the player has not seen fire. Null for any other entry. */
+export function telegraphName(phase: CombatThreatPhase | undefined, seen: SeenDangerNames): string | null {
     const move = phase?.enemyMove;
     if (!move) return null;
-    return move.kind === 'danger' && !beaten ? null : move.name;
+    return move.kind === 'danger' && !seen.has(move.name) ? null : move.name;
 }
 
 // ── View-model types ─────────────────────────────────────────────────────────
@@ -265,7 +270,7 @@ export interface CombatIntentBranchVM {
 export interface CombatIntentVM {
     type: CombatIntentType; icon: string; label: string; color: string; description: string;
     /** A `phases` foe's move name (null when it has none to show: a DANGER not
-     *  yet beaten, or any other foe). Its intent carries no number at all:
+     *  yet seen, or any other foe). Its intent carries no number at all:
      *  `damage` is 0, `debuffs` false and `wallMath` zero. */
     moveName?: string | null;
     /** Total HP damage this phase's threat action deals if NOT cleared (0 if none).
@@ -304,7 +309,7 @@ export interface CombatEnemyPaneVM {
      *  this presenter only forwards it. */
     pendingDot: number; roundsToKill: number | null; isLethalInFlight: boolean;
     /** A `phases` foe's DANGER moves, one per later phase, named only once the
-     *  save records the foe beaten (null otherwise). Empty for any other foe. */
+     *  save records it seen (null otherwise). Empty for any other foe. */
     dangers?: { phase: number; name: string | null }[];
     /** The Toll-Keeper's "Pay the toll (n)" action (phase EN1l); absent for any other foe. */
     toll?: CombatTollVM;
@@ -919,7 +924,7 @@ export const COMBAT_LOG_BACK_TEXT = '‹ BACK';
 /** Long fights scroll early turns off rather than growing the sheet forever. */
 const LOG_HISTORY_CAP = 200;
 
-export function selectCombatLogHistory(state: CombatEncounterState, beaten = false): CombatLogHistoryEntryVM[] {
+export function selectCombatLogHistory(state: CombatEncounterState): CombatLogHistoryEntryVM[] {
     const events = state.log ?? [];
     const out: CombatLogHistoryEntryVM[] = [];
     let seq = 0;
@@ -981,12 +986,8 @@ export function selectCombatLogHistory(state: CombatEncounterState, beaten = fal
             }
             case 'threat-fired':
                 midPlay = false;
-                {
-                // An unbeaten foe's DANGER fires nameless, as its telegraph did.
-                const fired = state.threatPhases[e.phaseIndex - 1];
-                const hidden = fired?.enemyMove?.kind === 'danger' && !beaten;
-                push('enemy', GLYPH_COLORS.control, hidden ? 'DANGER.' : stripThreatPayload(e.description));
-            }
+                // A DANGER that fires is seen, so the log names it from that moment.
+                push('enemy', GLYPH_COLORS.control, stripThreatPayload(e.description));
                 break;
             case 'hand-drawn':
                 if (midPlay && e.cards.length > 0) {
@@ -1065,11 +1066,11 @@ function cardNames(ids: readonly string[]): string {
  *  most phases share one intent, so the damage is what tells them apart and
  *  shows the fight escalating without opening each row. A branch phase omits
  *  it: its face is only the baseline fork, and the open row reads both. */
-export function threatPhaseHeader(phase: CombatThreatPhase, beaten = false): { text: string; a11y: string } {
+export function threatPhaseHeader(phase: CombatThreatPhase, seen: SeenDangerNames = NO_DANGERS_SEEN): { text: string; a11y: string } {
     const label = INTENT_ICONS[phase.intentType ?? 'pass'].label;
     if (phase.enemyMove) {
         // A `phases` foe: a kind and a name, no figure.
-        const name = telegraphName(phase, beaten);
+        const name = telegraphName(phase, seen);
         return {
             text: `PHASE ${phase.index} · ${label}${name ? ` · ${name}` : ''}`,
             a11y: `Phase ${phase.index}, ${label}${name ? `, ${name}` : ''}`,
@@ -1082,6 +1083,44 @@ export function threatPhaseHeader(phase: CombatThreatPhase, beaten = false): { t
         text: `PHASE ${phase.index} · ${label}${damage > 0 ? ` · ${damage}` : ''}`,
         a11y: `Phase ${phase.index}, ${label}${damage > 0 ? `, ${damage} damage` : ''}`,
     };
+}
+
+/** The fight-or-flee screen's line for one DANGER of a `phases` foe. */
+export interface RevealDangerVM {
+    phase: number;
+    /** The move's name once seen, else null. */
+    name: string | null;
+    /** What the move does once seen, else null. */
+    text: string | null;
+    /** The line as drawn: `[ ? ? ? ]` or "<name>: <text>". */
+    line: string;
+    a11y: string;
+}
+
+export const UNSEEN_DANGER_LINE = '[ ? ? ? ]';
+
+/**
+ * What the reveal shows of a `phases` foe: one line per DANGER it carries, in
+ * phase order, and nothing of its other moves. A DANGER the player has not seen
+ * fire reads `[ ? ? ? ]`. Null for any other foe (its reveal is untouched).
+ */
+export function revealDangers(state: CombatEncounterState, seen: SeenDangerNames): RevealDangerVM[] | null {
+    if (!hasEnemyPhases(state.enemy)) return null;
+    return (state.enemy.phases ?? []).flatMap((p, i) => {
+        if (i === 0 || !p.danger) return [];
+        const known = seen.has(p.danger.name);
+        return [known
+            ? {
+                phase: i + 1, name: p.danger.name, text: p.danger.text,
+                line: `${p.danger.name}: ${p.danger.text}`,
+                a11y: `Danger, ${p.danger.name}. ${p.danger.text}`,
+            }
+            : {
+                phase: i + 1, name: null, text: null,
+                line: UNSEEN_DANGER_LINE,
+                a11y: 'Danger, unknown. You have not seen this move yet.',
+            }];
+    });
 }
 
 const LEDGER_WORD: Record<CombatViewModel['ledger'][number], string> = {
@@ -1108,19 +1147,19 @@ export function ledgerA11y(ledger: CombatViewModel['ledger']): string {
 }
 
 /** The intent of a `phases` foe: the move's kind and name, every number left out. */
-function phasesIntentVM(state: CombatEncounterState, cur: CombatThreatPhase, beaten: boolean): CombatIntentVM {
+function phasesIntentVM(state: CombatEncounterState, cur: CombatThreatPhase, seen: SeenDangerNames): CombatIntentVM {
     // The Lamplighter's Dark (phase EN1k): every intent it shows reads UNKNOWN, unnamed.
     const dark = intentsInTheDark(state);
     const type = dark ? 'unknown' : (cur.intentType ?? 'unknown') as CombatIntentType;
     const meta = INTENT_ICONS[type];
-    const moveName = dark ? null : telegraphName(cur, beaten);
+    const moveName = dark ? null : telegraphName(cur, seen);
     const nextIndex = nextEnemyPhaseIndex(state.threatPhases, state.currentPhaseIndex, state.enemy);
     const nextPhase = nextIndex === null ? undefined : state.threatPhases[nextIndex];
     const next = nextPhase
         ? (() => {
             const t = dark ? 'unknown' : (nextPhase.intentType ?? 'unknown') as CombatIntentType;
             const m = INTENT_ICONS[t];
-            return { type: t, icon: m.icon, label: m.label, branch: null, moveName: dark ? null : telegraphName(nextPhase, beaten) };
+            return { type: t, icon: m.icon, label: m.label, branch: null, moveName: dark ? null : telegraphName(nextPhase, seen) };
         })()
         : null;
     return {
@@ -1131,9 +1170,9 @@ function phasesIntentVM(state: CombatEncounterState, cur: CombatThreatPhase, bea
     };
 }
 
-function intentVM(state: CombatEncounterState, beaten: boolean): CombatIntentVM {
+function intentVM(state: CombatEncounterState, seen: SeenDangerNames): CombatIntentVM {
     const cur = currentPhase(state);
-    if (cur?.enemyMove && hasEnemyPhases(state.enemy)) return phasesIntentVM(state, cur, beaten);
+    if (cur?.enemyMove && hasEnemyPhases(state.enemy)) return phasesIntentVM(state, cur, seen);
     const type = (cur?.intentType ?? 'pass') as CombatIntentType;
     const meta = INTENT_ICONS[type];
     const nextPhase = state.threatPhases[state.currentPhaseIndex + 1];
@@ -1156,7 +1195,7 @@ function intentVM(state: CombatEncounterState, beaten: boolean): CombatIntentVM 
     };
 }
 
-function enemyPane(state: CombatEncounterState, beaten: boolean): CombatEnemyPaneVM {
+function enemyPane(state: CombatEncounterState, seen: SeenDangerNames): CombatEnemyPaneVM {
     const e = state.enemy;
     const isBoss = e.difficulty === 'boss' || e.difficulty === 'unique'
         || (e.tags ?? []).includes('boss') || (e.tags ?? []).includes('unique');
@@ -1172,13 +1211,13 @@ function enemyPane(state: CombatEncounterState, beaten: boolean): CombatEnemyPan
         hp: Math.max(0, e.health), maxHp: e.maxHealth,
         hpPct: e.maxHealth > 0 ? Math.max(0, e.health) / e.maxHealth : 0,
         effects: [...chips(e.effects), ...programChips(state), ...weatherChips(state, 'enemy'), ...enemyWordChips(state, 'enemy')],
-        intent: intentVM(state, beaten),
+        intent: intentVM(state, seen),
         stagesEntered: (state.stagesEntered ?? []).length,
         pendingDot: lethality.pendingDot,
         roundsToKill: lethality.roundsToKill,
         isLethalInFlight: lethality.isLethalInFlight,
         dangers: (e.phases ?? []).flatMap((p, i) => (i > 0 && p.danger
-            ? [{ phase: i + 1, name: beaten ? p.danger.name : null }]
+            ? [{ phase: i + 1, name: seen.has(p.danger.name) ? p.danger.name : null }]
             : [])),
         ...(toll ? { toll } : {}),
     };
@@ -2525,14 +2564,14 @@ function dieGearRailVM(state: CombatEncounterState): CombatDieGearRailVM {
 
 // ── Entry point ──────────────────────────────────────────────────────────────
 
-/** `beaten`: the save records this foe as beaten, so its DANGER names show. */
-export function buildCombatViewModel(state: CombatEncounterState, beaten = false): CombatViewModel {
+/** `seen`: the foe's DANGER names the player has seen fire, so those names show. */
+export function buildCombatViewModel(state: CombatEncounterState, seen: SeenDangerNames = NO_DANGERS_SEEN): CombatViewModel {
     const total = state.threatPhases.length;
     const idx = Math.min(state.currentPhaseIndex, total - 1);
     const dice = diceVM(state);
     return {
         phase: state.phase,
-        enemy: enemyPane(state, beaten),
+        enemy: enemyPane(state, seen),
         player: playerPane(state),
         dice,
         reserveRoom: (state.reserve ?? []).length < RESERVE_MAX,
