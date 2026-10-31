@@ -112,6 +112,8 @@ export interface MobileQuestPaid {
     currency: number;
     /** Display names of the items the step put in the satchel. */
     itemNames: readonly string[];
+    /** Engine ids of those items, for their icons (absent on an older ledger). */
+    itemIds?: readonly string[];
 }
 
 /**
@@ -122,7 +124,7 @@ export interface MobileQuestPaid {
  * shown on the spoils tiles until taken or skipped. `null` outside a quest node.
  */
 export interface MobileQuestSlice {
-    open: { questline: string; node: number; description?: string } | null;
+    open: { questline: string; node: number; description?: string; lockedLine?: string; giver?: { name: string; portrait: string } } | null;
     paid: MobileQuestPaid | null;
     cardOffers: readonly string[];
 }

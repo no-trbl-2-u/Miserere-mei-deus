@@ -209,6 +209,7 @@ export function resolveQuestNodeEvent(log: QuestLog, payload: QuestPayload): Ext
         stage: questNodeStage(log, payload.questline, payload.node),
         description: payload.description,
     };
+    if (payload.giver !== undefined) event.giver = payload.giver;
     if (event.stage === 'locked' && payload.lockedLine !== undefined) event.lockedLine = payload.lockedLine;
     const questline = getQuestline(payload.questline);
     if (!questline) return event;

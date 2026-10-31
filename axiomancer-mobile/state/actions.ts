@@ -1560,6 +1560,8 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
                 questline: result.event.questline,
                 node: result.event.node,
                 description: result.event.description,
+                lockedLine: result.event.lockedLine,
+                giver: result.event.giver,
             });
             return true;
         }

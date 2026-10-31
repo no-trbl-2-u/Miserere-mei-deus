@@ -477,7 +477,7 @@ export {
     isTravelOpen,
 } from './World';
 export type {
-    MapEventKind, QuestPayload, TravelPayload, TravelDestination,
+    MapEventKind, QuestPayload, QuestGiver, TravelPayload, TravelDestination,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
     QuestStepState,

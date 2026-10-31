@@ -56,7 +56,7 @@ describe('/quest - a step paid on arrival', () => {
         expect(paid).toBeTruthy();
         expect(screen.getByText(LONG_STEP_2)).toBeTruthy();
         expect(screen.getByText('+30 XP')).toBeTruthy();
-        expect(screen.getByText(CASTLE_KEY.name)).toBeTruthy();
+        expect(screen.getByTestId('quest-relic-name').props.children).toBe(CASTLE_KEY.name);
         expect(screen.getByTestId('quest-offer')).toBeTruthy();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
     });
