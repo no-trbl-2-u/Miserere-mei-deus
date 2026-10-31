@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 168 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times. The stand-in portrait brine-widow.webp was ingested in colour, and the sheet drawn from it carries the portrait's own saturation, so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait brine-widow.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/brine-widow.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows of 256px cells, rows idle / struck / attacking; prompt in brine-widow.prompt.txt), drawn from the shipped stand-in portrait brine-widow.webp",
+    "portrait": "brine-widow.webp",
+    "portrait_sha256": "8652db0dcb374c4424d87d9b7dbb5415ffeb300c9c3ad4a259e316efe4fff71d",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/brine-widow.cleanup-report.json - 113 alpha >= 160 cores, 0 welded and cut; 37746 px of neighbours' slivers removed from 20 cells and 37746 px restored to the 24 cells they crossed out of; anchor measured foot-line (stands: the idle foot line moves 1px (0.4% of the 256px cell, within 6%)); every idle cell translated onto it, each reaction row moved as a whole by its first cell; one sheet-wide scale 0.859 about the anchor and one shift (-16, -15); A9 idle drift 0.8px, struck start 0.55px, attacking start 0.04px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 168px (A6): at 256px the busiest cells overshoot the 12000 B per-cell ceiling, and 176px still overshot it by a few hundred bytes. The cleaned 1344x504 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar brine-widow.sheet.json and the report (which pins its pixels' SHA-256) are.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['brine-widow'], via ./anim/brine-widow/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's Brine-Widow in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 168px, 192272 B (187.8 KB) in total, mean 8011 B, max 11288 B (brine-widow-18.webp), min 6538 B (brine-widow-07.webp) - against 28082 B for the static brine-widow.webp. 6.8x, +160.3 KB for one enemy.",
+    "covers": [
+      "brine-widow-00.webp",
+      "brine-widow-01.webp",
+      "brine-widow-02.webp",
+      "brine-widow-03.webp",
+      "brine-widow-04.webp",
+      "brine-widow-05.webp",
+      "brine-widow-06.webp",
+      "brine-widow-07.webp",
+      "brine-widow-08.webp",
+      "brine-widow-09.webp",
+      "brine-widow-10.webp",
+      "brine-widow-11.webp",
+      "brine-widow-12.webp",
+      "brine-widow-13.webp",
+      "brine-widow-14.webp",
+      "brine-widow-15.webp",
+      "brine-widow-16.webp",
+      "brine-widow-17.webp",
+      "brine-widow-18.webp",
+      "brine-widow-19.webp",
+      "brine-widow-20.webp",
+      "brine-widow-21.webp",
+      "brine-widow-22.webp",
+      "brine-widow-23.webp"
+    ]
+  }
+]

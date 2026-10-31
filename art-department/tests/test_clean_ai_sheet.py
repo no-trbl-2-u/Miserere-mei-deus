@@ -281,5 +281,36 @@ class TheGallowsCrowRegenerates(unittest.TestCase):
         self.assertLessEqual(self.report["a9"]["idle_centre_drift_px"], 3.0)
 
 
+class TheFirstFiveNormalsRegenerate(unittest.TestCase):
+    """Phase AN5b: each committed sidecar and report is what the tool makes of
+    its master, at the cell edge that kept every cell under the byte ceiling."""
+
+    FRAMES = {
+        "net-mender": 168,
+        "crane-hook": 176,
+        "brine-widow": 168,
+        "lamprey-knot": 168,
+        "curfew-ringer": 176,
+    }
+
+    def test_each_sidecar_and_report_is_reproduced_and_holds_still(self):
+        for key, frame in self.FRAMES.items():
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as tmp:
+                out = Path(tmp)
+                report = clean_ai_sheet.clean(
+                    MASTERS / f"{key}.sheet.webp", out, out_frame=frame)
+                committed_sidecar = json.loads(
+                    (MASTERS / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                fresh_sidecar = json.loads(
+                    (out / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                self.assertEqual(fresh_sidecar, committed_sidecar)
+                committed = json.loads(
+                    (MASTERS / f"{key}.cleanup-report.json").read_text(encoding="utf-8"))
+                self.assertEqual(report["pixels_sha256"], committed["pixels_sha256"])
+                self.assertEqual(report, committed)
+                self.assertTrue(report["a9"]["pass"])
+                self.assertLessEqual(report["a9"]["idle_centre_drift_px"], 3.0)
+
+
 if __name__ == "__main__":
     unittest.main()
