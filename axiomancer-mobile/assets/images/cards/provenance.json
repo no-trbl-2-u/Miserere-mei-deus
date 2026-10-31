@@ -90,5 +90,46 @@
       "bp-m-09a.webp": "Potential Assets/torio/2024_added_monsters_ver4/2024 追加モンスター ver4/Pot of Bliss B.png",
       "bp-m-10a.webp": "Potential Assets/torio/2025_added_monsters_ver1/2025 追加モンスター ver1/Mirror Knight A.png"
     }
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-10-31",
+    "tool": "scripts/ingest-art.mjs (sharp) — ungraded",
+    "post_process": "longest edge <= 640px, WebP q44",
+    "license": "T's own commission (open source, T, 2026-10-29, D115)",
+    "covers": [
+      "df-e-01c.webp",
+      "df-e-02b.webp",
+      "df-e-03b.webp",
+      "df-e-04a.webp",
+      "df-e-05c.webp",
+      "df-e-06c.webp",
+      "df-e-07c.webp",
+      "df-e-08b.webp",
+      "df-e-09c.webp",
+      "df-e-10c.webp",
+      "df-m-01b.webp",
+      "df-m-02b.webp",
+      "df-m-03b.webp",
+      "df-m-04b.webp",
+      "df-m-05c.webp",
+      "df-m-06b.webp",
+      "df-m-07c.webp",
+      "df-m-08c.webp",
+      "df-m-09a.webp",
+      "df-m-10n.webp",
+      "df-p-01a.webp",
+      "df-p-02b.webp",
+      "df-p-03c.webp",
+      "df-p-04a.webp",
+      "df-p-05c.webp",
+      "df-p-06c.webp",
+      "df-p-07c.webp",
+      "df-p-08b.webp",
+      "df-p-09b.webp",
+      "df-p-10b.webp"
+    ],
+    "source": "Defender lane, 30 paintings: masters art-department/masters/cards/defender/sheet-1.webp to sheet-5.webp (WebP q95 of T's 1536 x 1024 PNG sheets, 3 x 2 tiles, tile ids in the lane manifest.json), made from the saved prompts sheet-1-prompt.txt to sheet-5-prompt.txt beside them, selected by T; cut to lossless PNG by art-department/tools/split-card-sheet.py (phase CA3a), then encoded here",
+    "artist": "T (ChatGPT image generation, selected by T, 2026-10-30)"
   }
 ]

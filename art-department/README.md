@@ -76,6 +76,7 @@ npm run art:rig -- --enemy green-jelly
 | `run-tests.py` | Runs this tree's own suite. |
 | `tools/rig-spritesheet.py` | Rigs a shipped enemy painting into an animation spritesheet by affine transforms. No image model, no API spend. One `RIGS` row per enemy: the float-eye (two layers, its eye lifted out) the death-beholder (one matted layer; its attack is pure scale) and the green jelly (one matted layer posed about a foot-line pivot: the first rig that stands). |
 | `tools/split-spritesheet.py` | Cuts a sheet master into one lossless PNG cell per frame, row-major, for the app ingest to encode. It does the geometry; the encode recipe and the provenance record stay in `axiomancer-mobile/scripts/ingest-art.mjs`, which has one copy of both. |
+| `tools/split-card-sheet.py` | Cuts one of T's magenta-gutter card sheets (`masters/cards/<lane>/sheet-<n>.webp`) into one lossless PNG per card id, by the lane's `manifest.json`. It refuses a grid that is not the manifest's, a tile off square or under 400 px, and a gutter fringe on a tile's edge; it warns on a tile whose ring is not near black. Encode and provenance stay with the ingest (`--category cards --no-grade`). |
 | `tests/` | The suite: the doctor names what is missing; the rig reproduces each master byte for byte; the beholder's attack keeps its 40% swell; the jelly's grounded frames sit on its foot line. |
 | `masters/` | The large build-time artifacts the tools produce. Committed (they are the regeneration source of truth and what a reviewer compares against), never shipped. |
 
