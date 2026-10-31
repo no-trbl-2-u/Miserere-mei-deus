@@ -258,6 +258,9 @@ async function newGame(page, baseUrl) {
     await tap(page, 'main-menu-new-game') || fail('the main menu has no NEW GAME')
     await waitFor(page, 'save-slot-1-action', 'the new-game slot picker')
     await page.getByTestId('save-slot-1-action').click()
+    // CH1f: every new game opens the character select first; CONFIRM starts the run as the shown character.
+    await waitFor(page, 'character-select-confirm', 'the character select')
+    await page.getByTestId('character-select-confirm').click()
 
     // D31: a new game opens on the windmill's arrival scene, not a rest.
     await waitFor(page, 'cutscene-advance', 'the windmill arrival scene')
