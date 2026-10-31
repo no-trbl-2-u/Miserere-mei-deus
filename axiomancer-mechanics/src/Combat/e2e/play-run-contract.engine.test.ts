@@ -96,6 +96,43 @@ describe('the run routes and kinds', () => {
     });
 });
 
+describe('every validator success carries no reasons, and the shared source fields are checked', () => {
+    it('returns an empty reasons list on success', () => {
+        expect(validatePlayRunPost(open()).reasons).toEqual([]);
+        expect(validatePlayRunEndPost(end()).reasons).toEqual([]);
+        expect(validateRunEventsPost(batch()).reasons).toEqual([]);
+    });
+
+    it('names a missing solver, session or build on an opening', () => {
+        const { solver: _s, sessionId: _i, appBuild: _a, ...rest } = open();
+        expect(openReasons(rest)).toEqual([
+            'solver: expected a string', 'sessionId: expected a string', 'appBuild: expected a string',
+        ]);
+    });
+
+    it('refuses an empty string in every text field of every kind, naming it', () => {
+        for (const kind of RUN_EVENT_KINDS) {
+            const fields = Object.entries(PAYLOADS[kind]).filter(([, v]) => typeof v === 'string').map(([k]) => k);
+            expect(fields.length).toBeGreaterThan(0);
+            for (const field of fields) {
+                const payload = { ...PAYLOADS[kind], [field]: '' };
+                expect(batchReasons(batch({ events: [{ seq: 0, kind, payload }] }))).toEqual([
+                    `events[0].payload.${field}: must not be empty`,
+                ]);
+            }
+        }
+    });
+
+    it('wants a boolean cleared on a hazard and refuses a non-number VITAE', () => {
+        for (const cleared of [1, 'true', null]) {
+            expect(batchReasons(batch({ events: [{ seq: 0, kind: 'hazard-ended', payload: { ...PAYLOADS['hazard-ended'], cleared } }] })))
+                .toEqual(['events[0].payload.cleared: expected true or false']);
+        }
+        expect(batchReasons(batch({ events: [{ seq: 0, kind: 'hazard-ended', payload: { ...PAYLOADS['hazard-ended'], cleared: false, vitaeAfter: -4 } }] })))
+            .toEqual([]);
+    });
+});
+
 describe('validatePlayRunPost', () => {
     it('accepts an opening and returns it unchanged, with no source key when the body left it out', () => {
         const result = validatePlayRunPost(open());
