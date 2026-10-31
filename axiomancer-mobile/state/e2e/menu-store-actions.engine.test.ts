@@ -97,7 +97,7 @@ describe('startNewGameAction — NEW GAME', () => {
             startingRelicId: 'relic-bleeding-signet',
             baseStats: { heart: 5, body: 7, mind: 3 },
             startingLaneIds: ['lane-x', 'lane-y'],
-            startingCardIds: ['card-x', 'card-y', 'card-z'],
+            startingCardIds: ['card-x', 'card-y'],
             playstyle: 'Bleeds to win.',
         };
         const slots = createMemorySlotStore();
@@ -110,7 +110,7 @@ describe('startNewGameAction — NEW GAME', () => {
         expect(saved?.startingLaneIds).toEqual(['lane-x', 'lane-y']);
         expect(saved?.baseStats).toEqual({ heart: 5, body: 7, mind: 3 });
         expect(getEquippedItems(saved!.equipment).map(p => p.id)).toEqual(['relic-bleeding-signet']);
-        expect(saved?.knownCards).toEqual([...CHARACTER_GREY_DECK, 'card-x', 'card-y', 'card-z']);
+        expect(saved?.knownCards).toEqual([...CHARACTER_GREY_DECK, 'card-x', 'card-y']);
         expect(store.getState().player.characterId).toBe('fixture-knight');
     });
 
