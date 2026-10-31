@@ -166,8 +166,9 @@ so T approves the phase split by merging it. Open PRs ready for
 review, not drafts. **The loop never merges, closes or force-pushes a
 PR** (D86). Since D95 the `pr-review.yml` `merge` job merges every
 non-plot PR whose adversarial review is complete and green; T merges
-`plot` PRs (the `plot` label or a `plot:` title; D101) and
-anything the review holds, and every PR that changes the review pipeline
+`plot` PRs (the `plot` label or a `plot:` title; D101), every PR
+labelled `review:rules-change` (reviewed, never merged by the job; D119)
+and anything the review holds, and every PR that changes the review pipeline
 itself. **Repository settings are T's alone** (rulesets, auto-merge,
 secrets, variables, labels' meaning): a session never changes them, even
 at T's word in the moment; it writes the exact command as a
