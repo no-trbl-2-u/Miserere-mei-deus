@@ -162,6 +162,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // components to prove no one-off `<Svg` is drawn there but the
         // material glyph's; a component added later is swept with no edit.
         'components/inventory/__tests__/no-inline-svg.IT2b.test.ts',
+        // The select-screen guard (phase CD1a) reads the committed
+        // character-select route folder to prove it draws no `<Svg` of its own.
+        'app/__tests__/character-select.relic-icon.test.tsx',
         // The endCombat-caller guard (phase QL1d) reads the committed sources
         // to prove every engine endCombat caller routes the quest extras; a
         // caller added later is swept with no edit to the test.
