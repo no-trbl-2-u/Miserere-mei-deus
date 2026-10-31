@@ -47,8 +47,15 @@ describe('decideMusic', () => {
     });
 
     it('pauses while the music switch is off, and plays again at the kept volume when it is on', () => {
-        expect(decideMusic({ ...base, musicOn: false })).toEqual({ state: 'paused', targetVolume: 0.7 });
-        expect(decideMusic({ ...base, musicOn: true })).toEqual({ state: 'playing', targetVolume: 0.7 });
+        expect(decideMusic({ ...base, musicOn: false })).toEqual({
+            context: 'exploration', track: 'theme', state: 'paused', targetVolume: 0.7,
+        });
+        expect(decideMusic({ ...base, musicOn: true })).toEqual({
+            context: 'exploration', track: 'theme', state: 'playing', targetVolume: 0.7,
+        });
+        for (const ctx of [{ inCombat: true }, { hasHazard: true }]) {
+            expect(decideMusic({ ...base, ...ctx, musicOn: false }).state).toBe('paused');
+        }
     });
 
     it('pauses while the app is in the background', () => {
