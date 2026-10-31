@@ -260,7 +260,6 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - HW1a — loop tooling for T's `/heads-down` runs; no T act waits on it
-- HW1b — loop tooling (row claims); no T act waits on it
 - HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
