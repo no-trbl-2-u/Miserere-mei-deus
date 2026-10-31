@@ -31,7 +31,25 @@ export function statedCount(text, noun) {
 }
 
 const plain = (s) => s.replace(/[‘’]/g, "'")
-const hasWord = (text, word) => new RegExp(`(^|[^A-Za-z0-9_])${escapeRe(plain(word))}($|[^A-Za-z0-9_])`).test(plain(text))
+const squash = (s) => plain(s).replace(/\s+/g, ' ')
+const hasWord = (text, word) => new RegExp(`(^|[^A-Za-z0-9_])${escapeRe(plain(word))}($|[^A-Za-z0-9_])`).test(squash(text))
+
+/** Each non-indented line starts a new paragraph; its indented continuation
+ * lines (the doc's soft-wrap) join it. */
+const paragraphs = (text) => plain(text).split(/\n(?=\S)/)
+
+/** A name is found if it appears in full, or — for a possessive compound
+ * name ("Elementalist's Signet") — if the group's possessive and the rest
+ * both appear in the same paragraph: the doc states the group once and
+ * refers to its members by the bare noun after that (e.g. "the
+ * Elementalist's three: the Signet, the Brooch and the Belt"). */
+const hasName = (text, name) => {
+  if (hasWord(text, name)) return true
+  const m = /^(.+?)'s (.+)$/.exec(name)
+  if (!m) return false
+  const [, group, rest] = m
+  return paragraphs(text).some((p) => hasWord(p, `${group}'s`) && hasWord(p, rest))
+}
 
 export function findDrift(atlas, docs = {}) {
   const out = []
@@ -43,8 +61,8 @@ export function findDrift(atlas, docs = {}) {
     const f = 'docs/game-model.md'
     const rc = statedCount(gm, 'relics')
     if (rc && rc.n !== atlas.relics.length) add('hi', f, `states "${rc.text}"`, `${atlas.relics.length} relics in relicLibrary`)
-    for (const r of atlas.relics) if (!hasWord(gm, r.name)) add('md', f, `does not name the relic ${r.name}`, `relic ${r.id}`)
-    for (const s of atlas.signatures) if (!hasWord(gm, s.name)) add('md', f, `does not name the signature ${s.name}`, `signature ${s.id}`)
+    for (const r of atlas.relics) if (!hasName(gm, r.name)) add('md', f, `does not name the relic ${r.name}`, `relic ${r.id}`)
+    for (const s of atlas.signatures) if (!hasName(gm, s.name)) add('md', f, `does not name the signature ${s.name}`, `signature ${s.id}`)
     const kws = [...new Set(atlas.cards.flatMap((c) => c.keywords))].sort()
     for (const k of kws) if (!hasWord(gm, k)) add('lo', f, `does not mention the keyword ${k}`, `printed on ${atlas.cards.filter((c) => c.keywords.includes(k)).length} card(s)`)
   }

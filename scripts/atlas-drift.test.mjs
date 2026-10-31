@@ -49,6 +49,31 @@ test('missing names, keywords, spec count and commit are each found', () => {
   assert.ok(f.some((x) => x.file === 'devlog/data/meta.json'))
 })
 
+test('a name split across a soft-wrapped line is still found', () => {
+  const gm = 'Five relics: Relic One, Relic\n  Two, Relic Three, Relic Four, Relic Five. Keywords DEAL and GUARD.'
+  const f = findDrift(ATLAS, { gameModel: gm })
+  assert.ok(!f.some((x) => /relic Relic Two/.test(x.claim)))
+})
+
+test("a possessive name never spelled in full is found if the group's and the bare noun share a paragraph", () => {
+  const atlas = { ...ATLAS, relics: ATLAS.relics.map((r) => (r.name === 'Relic One' ? { ...r, name: "One's Relic" } : r)) }
+  const gm = "Five relics: Relic Two, Relic Three, Relic Four, Relic Five. The One's three: the Relic. Keywords DEAL and GUARD."
+  const f = findDrift(atlas, { gameModel: gm })
+  assert.ok(!f.some((x) => /relic One's Relic/.test(x.claim)))
+})
+
+test('a word-boundary negative: a keyword that is only a substring of a longer word is still reported missing', () => {
+  const f = findDrift(ATLAS, { gameModel: 'Five relics: Relic One, Relic Two, Relic Three, Relic Four, Relic Five. GUARDIAN angels watch.' })
+  assert.ok(f.some((x) => /keyword GUARD\b/.test(x.claim)))
+})
+
+test('a curly apostrophe in the doc still matches a straight apostrophe in the name', () => {
+  const relics = [{ id: 'relic-one', name: "One's Relic", laneId: null, relicSource: 'quest', statLines: [], signatureId: 'sg-one' }]
+  const atlas = { ...ATLAS, relics, signatures: [] }
+  const f = findDrift(atlas, { gameModel: "Five relics. One’s Relic is here. DEAL and GUARD." })
+  assert.ok(!f.some((x) => /relic One's Relic/.test(x.claim)))
+})
+
 test('the page shows the finding on its drift plate', () => {
   const page = renderAtlas(ATLAS, { gameModel: GOOD.replace('Five relics', 'Four relics') })
   const plate = page.split('id="drift"')[1].split('</section>')[0]
