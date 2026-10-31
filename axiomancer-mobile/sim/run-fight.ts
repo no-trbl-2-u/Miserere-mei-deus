@@ -59,13 +59,14 @@ function runDeck(store: AppStore): string[] {
 }
 
 /** The fight seam's view of the staged foe. */
-export function fightContext(store: AppStore, enemy: Enemy, fleeAllowed: boolean): RunFightContext {
+export function fightContext(store: AppStore, enemy: Enemy, fleeAllowed: boolean, fledHere = 0): RunFightContext {
     const player = store.getState().player;
     return {
         enemyName: enemy.name,
         isBoss: !fleeAllowed,
         isElite: isEliteEnemy(enemy),
         fleeAllowed,
+        fledHere,
         health: player.health,
         maxHealth: player.maxHealth,
         deck: runDeck(store),
@@ -120,9 +121,16 @@ function claimDraft(store: AppStore, enemy: Enemy, policy: RunPolicy): void {
 /**
  * Engage the pending encounter and play it to the end through the app.
  *
+ * @param fled - Withdrawals so far this run, by node id; a WITHDRAW adds one
+ *               for the node underfoot.
  * @returns How it ended, or null when no fight was staged.
  */
-export function playFight(store: AppStore, actions: AppActions, policy: RunPolicy): RunFightResult | null {
+export function playFight(
+    store: AppStore,
+    actions: AppActions,
+    policy: RunPolicy,
+    fled: Map<string, number> = new Map(),
+): RunFightResult | null {
     if (!store.getState().currentEncounter) {
         // The gate's engage: stage the foe from the pending prelude.
         if (!actions.beginHazardEncounter()) return null;
@@ -130,8 +138,10 @@ export function playFight(store: AppStore, actions: AppActions, policy: RunPolic
     const fight = selectResumableFight(store.getState());
     if (!fight) return null;
     const enemy = fight.enemy;
-    const ctx = fightContext(store, enemy, fight.fleeAllowed);
+    const nodeId = store.getState().world.currentMap.currentNode;
+    const ctx = fightContext(store, enemy, fight.fleeAllowed, fled.get(nodeId) ?? 0);
     if (fight.fleeAllowed && policy.flee(ctx)) {
+        fled.set(nodeId, (fled.get(nodeId) ?? 0) + 1);
         // WITHDRAW, from the reveal.
         actions.fleeEncounter();
         actions.endCombat('flee');

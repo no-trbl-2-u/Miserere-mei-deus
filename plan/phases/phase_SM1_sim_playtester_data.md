@@ -123,15 +123,17 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
   up, and when to flee. A `wanderer` baseline (first legal choice on the map, `greedy` in fights) ships with the
   driver.
 - **A11** Four archetype policies that know the game ship in `axiomancer-mechanics`: `blood-price`, `defender`,
-  `merciful` and `elementalist`. Each starts its run as its lane (Decisions: "How an archetype starts") [T to
-  confirm #4]; picks rewards of its own lane first, then cards whose keywords its lane uses, and skips the rest; removes off-lane cards
+  `merciful` and `elementalist`. Each starts its run as a character from the live roster through character select,
+  as a player does (Decisions: "How an archetype starts") (Confirmed by T (2026-10-31)); picks rewards of its own lane first, then cards whose keywords its lane uses, and skips the rest; removes off-lane cards
   at a rest when it can; rests when VITAE is under its threshold and takes an elite only above it; raises its lane's
   stat; and plays fights with a lane-aware ranking (Blood Price spends VITAE when a signature pays it back; the
   Defender guards against ATTACK and DANGER intents; the Merciful drives to befriend and spares; the Elementalist
   chains its elements and refuses a self-burn that would end it). Every rule reads lanes, keywords, intents and
   effects from the card and enemy data, never a card id, so a new card in a lane is picked up with no edit.
-- **A12** A policy test runs each archetype over 10 seeds and checks the bot did what its name says: its end deck
-  holds more cards of its lane than of any other lane, and the Merciful ends at least one fight by befriending. It
+- **A12** A policy test runs each archetype over 10 seeds and checks the bot did what its name says: where the run
+  starts in-lane (its character's starting lanes or starting relic open the lane; T, 2026-10-31), its end deck holds
+  more cards of its lane than of any other card lane (the grey office, the dealt deck no reward offers, is not
+  counted: SM1f's default, parked for T), and the Merciful ends at least one fight by befriending. It
   asserts no win rate, no VITAE and no count of fights won (doctrine: a test of the bot, not of the game).
 - **A13** `npm run sim:run -- --post` sends each run through the app's own posters with `source: 'sim'`: `solver` is
   the policy id, `sessionId` is the batch (`GITHUB_RUN_ID`, or a local id), `buildCommit` is the checked-out sha,
@@ -214,9 +216,12 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
   resolves through the code T's taps reach and the posts go through the same recorder and posters. The policies stay
   in mechanics; the driver lives in `axiomancer-mobile/sim/`, run under a dedicated jest config. Rejected for now: a
   second copy of the run's glue in mechanics, faster but free to drift from the app.
-- **How an archetype starts** [T to confirm #4]: as the character whose starting lanes include its lane once the roster
-  holds one (D108); until then, from its lane's `/dev` test-deck preset and lane relic, the setup T uses for the
-  DF1f, MF1e and EL1d checks. The `wanderer` starts as a new game does.
+- **How an archetype starts** (Confirmed by T (2026-10-31): "Characters only right now. I want to test ACTUAL
+  playthrough a player will experience right now because as it stands, it's ROUGH."): through character select, as a
+  character from the live roster, exactly as a player does: the character whose starting lanes include its lane when
+  one exists, else one whose starting relic opens it, else the closest-fitting playable character (most of the lane's
+  stat) (D108). Never the `/dev` test-deck presets or lane relics. The `wanderer` starts as a new game does. A lane no
+  character opens gets no lane-led end deck from the bot; A12's lane check applies where the run starts in-lane.
 - **When the bot runs, and how much** [T to confirm #5]: at the commit of every successful preview build, so every APK
   T plays has the bots' numbers at the same build, and by hand; four archetypes, 5 runs each. Preview builds are by
   hand and rare, which keeps D1 writes small; the batch cap is 25 MB.
@@ -338,7 +343,7 @@ Measure: `npm run sim:run -- --policy wanderer --runs 3 --seed 1` prints three r
 Measure: `npm run verify -w axiomancer-mechanics`; `npm run sim:run -- --policy <each archetype> --runs 3` prints end
 decks led by that archetype's lane.
 - Scope: the four archetype `RunPolicy`s and their fight rankings (each a `CombatSimPolicy`) in
-  `axiomancer-mechanics`; the start rule (character or lane preset) in the driver.
+  `axiomancer-mechanics`; the start rule (a roster character through character select, Confirmed by T (2026-10-31)).
 - Tests: each policy's seams over fixture states; the no-card-id guard; A12's behaviour test.
 - Verify gate: mechanics verify, mobile verify, root `npm test`.
 

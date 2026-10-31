@@ -45,35 +45,37 @@ export interface ItemGlyphProps {
     itemId?: string | null;
     /** Test seam: the table to resolve against (defaults to `ITEM_GLYPH_BY_ID`). */
     glyphs?: ItemGlyphTable;
+    /** Draw size in points; defaults to the inventory's 28 (32 for weapon and shield). */
+    size?: number;
 }
 
-export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
+export function ItemGlyph({ category, sub, itemId, glyphs, size }: ItemGlyphProps) {
     const AXM = usePalette();
     const byId = getItemGlyph(itemId, glyphs);
     if (byId !== null) {
         // Accents only ride the production table: a test's fixture table names
         // its own icons, so the shipped accents would not fit them.
         const accents = glyphs === undefined ? getItemGlyphAccents(itemId) : [];
-        return <AxmIcon name={byId} size={28} color={AXM.parchment} accents={accents} />;
+        return <AxmIcon name={byId} size={size ?? 28} color={AXM.parchment} accents={accents} />;
     }
     if (category === 'equipment' && sub === 'Weapon') {
-        return <ActionIcon kind="sword" size={32} color={AXM.parchment} />;
+        return <ActionIcon kind="sword" size={size ?? 32} color={AXM.parchment} />;
     }
     if (category === 'equipment' && (sub === 'Armor' || sub === 'Shield')) {
-        return <ActionIcon kind="shield" size={32} color={AXM.parchment} />;
+        return <ActionIcon kind="shield" size={size ?? 32} color={AXM.parchment} />;
     }
     // The icon is chosen by the slot kind the presenter labels 'Relic'.
     if (category === 'equipment' && sub === 'Relic') {
-        return <AxmIcon name="category-relic" size={28} color={AXM.parchment} />;
+        return <AxmIcon name="category-relic" size={size ?? 28} color={AXM.parchment} />;
     }
     if (category === 'consumable') {
-        return <AxmIcon name="category-consumable" size={28} color={AXM.parchment} />;
+        return <AxmIcon name="category-consumable" size={size ?? 28} color={AXM.parchment} />;
     }
     if (category === 'material') {
         return (
             <Svg 
-                width={28} 
-                height={28} 
+                width={size ?? 28} 
+                height={size ?? 28} 
                 viewBox="0 0 28 28" 
                 fill="none"
                 accessibilityRole="image"
@@ -90,9 +92,9 @@ export function ItemGlyph({ category, sub, itemId, glyphs }: ItemGlyphProps) {
         );
     }
     if (category === 'quest') {
-        return <AxmIcon name="category-quest" size={28} color={AXM.parchment} />;
+        return <AxmIcon name="category-quest" size={size ?? 28} color={AXM.parchment} />;
     }
-    return <AxmIcon name="mark-unknown" size={28} color={AXM.bone} />;
+    return <AxmIcon name="mark-unknown" size={size ?? 28} color={AXM.bone} />;
 }
 
 export interface ItemCardProps {

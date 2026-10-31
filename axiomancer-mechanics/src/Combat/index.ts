@@ -148,3 +148,13 @@ export type {
     DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation, PlayLogSourceKind,
     PlayLogSourceFilter, PlayLogOrigin,
 } from './combat.play-log-contract';
+// The whole-run play-log contract (phase SM1c): a run opening, its events and its close.
+export {
+    PLAY_RUNS_PATH, RUN_EVENTS_PATH, PLAY_RUN_OUTCOMES, RUN_EVENT_KINDS, playRunEndPath, validatePlayRunPost,
+    validatePlayRunEndPost, validateRunEventsPost,
+} from './combat.play-run-contract';
+export type {
+    PlayRunOutcome, RunEventPayloads, RunEventKind, RunEvent, PlayRunPost, PlayRunEndPost, RunEventsPost, PlayRunRow,
+    RunEventRow, PlayRunList, RunEventList, PlayRunOpened, PlayRunClosed, RunEventsCreated, PlayRunValidation,
+    PlayRunEndValidation, RunEventsValidation,
+} from './combat.play-run-contract';

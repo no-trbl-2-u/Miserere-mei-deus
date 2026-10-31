@@ -49,19 +49,64 @@ export function canvasSizeOf(size: SheetSize): { w: number; h: number } {
     return { w: size.width * size.scale, h: size.height * size.scale };
 }
 
-const MAX_SCALE = 3;
+export const MAX_SCALE = 3;
 
 /**
  * The zoom-out floor for this sheet in this viewport: the scale at which the
- * plate just COVERS the pane, so the map always fills the screen and never
- * shows black around it (T, 2026-10-28: "the screen would always be the map").
+ * WHOLE plate just fits inside the pane (contain, not cover). Past the plate's
+ * edges the pane's near-black ground shows: T ruled stability over
+ * edge-clamping (2026-10-31), so a zoom-out never has to fight the plate's
+ * edge to keep the screen filled.
  *
  * Exported for unit coverage; the fit, the pinch and the wheel share it.
  */
 export function minScaleFor(viewport: { w: number; h: number }, size: SheetSize = LEGACY_SHEET_SIZE): number {
     'worklet';
     const canvas = canvasSizeOf(size);
-    return Math.max(viewport.w / canvas.w, viewport.h / canvas.h);
+    return Math.min(viewport.w / canvas.w, viewport.h / canvas.h);
+}
+
+/**
+ * The zoom a pinch or wheel step asks for, held between the contain floor and
+ * `MAX_SCALE`. Exported for unit coverage.
+ */
+export function clampScale(next: number, floor: number): number {
+    'worklet';
+    return Math.min(MAX_SCALE, Math.max(floor, next));
+}
+
+/**
+ * One axis of a zoom anchored on a pane point: with the canvas's top-left
+ * transform origin a pane point is `t + s·c`, so holding the plate point that
+ * was under `f` (at scale s, translation t) under `fNext` at scale s' = k·s
+ * gives t' = fNext − k(f − t).
+ *
+ * `f` and `fNext` MUST be pane coordinates. Fed a point measured in the
+ * transformed canvas's own frame (what RNGH reports when the detector is
+ * attached to the canvas), every write moves the frame the next reading is
+ * taken in and the map is thrown about (MC1a, the regression #1046 shipped).
+ * Nothing clamps here: an edge clamp would move the anchor.
+ */
+export function anchorAxis(t: number, f: number, fNext: number, k: number): number {
+    'worklet';
+    return fNext - k * (f - t);
+}
+
+/**
+ * One axis of a pan step: the translation after a drag of `d`, limited so a
+ * plate edge comes no further than the middle of the pane (the plate can never
+ * be lost entirely). The limit bounds the DELTA only: a camera already past it
+ * (a pinch is never limited) is not snapped back, and a drag back toward the
+ * plate is never refused.
+ */
+export function panAxis(t: number, d: number, viewportLen: number, canvasLen: number): number {
+    'worklet';
+    const hi = viewportLen / 2;
+    const lo = viewportLen / 2 - canvasLen;
+    const next = t + d;
+    if (d > 0) return Math.min(next, Math.max(t, hi));
+    if (d < 0) return Math.max(next, Math.min(t, lo));
+    return t;
 }
 
 // The camera fits the whole focus bounding box in frame, zooming out (never
@@ -119,25 +164,10 @@ export function focusKeyOf(nodes: readonly ExplorationNode[]): string {
 interface FocusTransform { scale: number; tx: number; ty: number; }
 
 /**
- * Settle one axis of the camera against the plate's edges.
- *
- * Centring on the focus nodes alone can pull the plate's edge into the frame:
- * a node set near the top of a tall plate drops the plate a fifth of a phone
- * down and leaves flat black above it, with nothing there to drag to. A plate
- * that covers the axis at this scale is slid back until it meets the frame's
- * edge; one that does not is centred, so its margin splits evenly.
- *
- * Never takes a focus node off-screen: every node lies on the plate, and the
- * slide only moves plate that was already past the frame's edge. The pinch,
- * pan and wheel clamp through it too, so no gesture can drag black in.
+ * Exported for unit coverage — the pure math behind the initial camera fit.
+ * The focus is centred as it is, with no slide against the plate's edges:
+ * black past an edge is allowed (T, 2026-10-31).
  */
-function settleAxis(t: number, viewportLen: number, canvasLen: number): number {
-    'worklet';
-    if (canvasLen <= viewportLen) return (viewportLen - canvasLen) / 2;
-    return Math.min(0, Math.max(viewportLen - canvasLen, t));
-}
-
-/** Exported for unit coverage — the pure math behind the initial camera fit. */
 export function computeFocusTransform(
     nodes: readonly ExplorationNode[],
     viewport: { w: number; h: number },
@@ -167,8 +197,8 @@ export function computeFocusTransform(
 
     return {
         scale,
-        tx: settleAxis(viewport.w / 2 - cx * scale, viewport.w, canvas.w * scale),
-        ty: settleAxis(viewport.h / 2 - cy * scale, viewport.h, canvas.h * scale),
+        tx: viewport.w / 2 - cx * scale,
+        ty: viewport.h / 2 - cy * scale,
     };
 }
 
@@ -403,7 +433,6 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
     // drive a single transform; gestures compose simultaneously so the
     // user can zoom and drag at once.
     const scale = useSharedValue(1);
-    const savedScale = useSharedValue(1);
     const tx = useSharedValue(0);
     const ty = useSharedValue(0);
 
@@ -438,31 +467,26 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
      *
      * Both the automatic fit and the manual RECENTRE go through here, so the
      * two can never drift into different ideas of what "framed on the player"
-     * means — and, just as importantly, both write `savedScale` as well.
+     * means.
      */
     const commitCamera = React.useCallback((fit: FocusTransform) => {
         scale.value = fit.scale;
-        savedScale.value = fit.scale;
         tx.value = fit.tx;
         ty.value = fit.ty;
-    }, [scale, savedScale, tx, ty]);
+    }, [scale, tx, ty]);
 
     /**
      * RECENTRE — the drag affordance's missing return leg.
      *
-     * The chart is far larger than a phone-sized window and the pan is
-     * unbounded, so a player who drags to look down a side strand can end up
-     * holding a blank corner of the sheet with no way back except guessing.
-     * With lateral ribs and frontier roaming, looking sideways is the point,
-     * so looking sideways has to be undoable.
+     * The chart is far larger than a phone-sized window, and the pan lets a
+     * plate edge come as far as the middle of the pane, so a player who drags
+     * to look down a side strand can end up holding a blank corner of the
+     * sheet. With lateral ribs and frontier roaming, looking sideways is the
+     * point, so looking sideways has to be undoable in one tap.
      *
      * It re-runs the SAME fit the camera performs on mount and whenever the
      * road ahead changes, which is why it needs no geometry of its own and
-     * cannot disagree with the automatic camera. Chosen over clamping the pan
-     * because a clamp has to model where the scaled canvas actually sits on
-     * screen, and this file's fit math and React Native's transform origin do
-     * not currently agree about that; a wrong clamp fights the player's drag
-     * on every gesture, whereas a redundant recentre costs one tap.
+     * cannot disagree with the automatic camera.
      */
     const recenter = React.useCallback(() => {
         if (!viewport || nodes.length === 0) return;
@@ -497,16 +521,23 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [viewport, focusKey, size.width, size.height, size.scale, commitCamera]);
 
-    // Every gesture works in DELTAS from its last event and clamps through
-    // `settleAxis`, so pinch and pan compose without either replaying its
-    // whole translation over the other's, and the plate always covers the
-    // pane. With the canvas's top-left transform origin a screen point is
-    // `t + s·c`; holding the pinch's focal point fixed across s→s' while it
-    // moves f→f' gives t' = f' − (s'/s)(f − t).
+    // Every gesture works in DELTAS from its last event, so pinch and pan
+    // compose without either replaying its whole translation over the
+    // other's. The pinch and the wheel move the translation by the anchor
+    // alone (`anchorAxis`): no edge clamp, so the point under the fingers
+    // stays under them, black past the plate's edge included. Only the pan's
+    // own delta is limited (`panAxis`).
+    //
+    // The detector sits on the untransformed gesture pane (see the JSX), so on
+    // a device `focalX/Y` arrive in pane coordinates: native RNGH reports them
+    // relative to the view the detector is attached to. Web RNGH does not: its
+    // pinch averages the pointers' PAGE coordinates, so on web the pane's page
+    // origin (`focalOrigin`, read on every pointer-down) is taken off first.
+    // Both platforms then feed the anchor the same pane point.
     //
     // The pane and plate sizes ride in a shared value, not the callbacks'
-    // closures: a handler built before the first layout must not clamp
-    // against a zero-sized pane.
+    // closures: a handler built before the first layout must not read a
+    // zero-sized pane.
     const bounds = useSharedValue({ vw: 0, vh: 0, cw: canvas.w, ch: canvas.h, min: 1 });
     React.useEffect(() => {
         bounds.value = {
@@ -517,31 +548,65 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
             min: viewport ? minScaleFor(viewport, size) : 1,
         };
     }, [bounds, viewport, canvas.w, canvas.h, size]);
+    // `pinching` is true only while TWO pointers drive the pinch; then its
+    // focal point carries the drag and the pan stands down. A pinch event with
+    // fewer pointers (a finger lifted mid-pinch: the focal point jumps to the
+    // finger left down) moves nothing and asks for a rebase, so the next
+    // two-pointer event, and the pan's next event, start from where the
+    // fingers are instead of replaying the jump.
     const pinching = useSharedValue(false);
+    const pinchRebase = useSharedValue(false);
+    const panRebase = useSharedValue(false);
     const lastFocalX = useSharedValue(0);
     const lastFocalY = useSharedValue(0);
+    const lastPinchScale = useSharedValue(1);
+    const focalOrigin = useSharedValue({ x: 0, y: 0 });
     const pinch = Gesture.Pinch()
         .withTestId('map-pinch')
         .onStart((e) => {
-            pinching.value = true;
-            savedScale.value = scale.value;
-            lastFocalX.value = e.focalX;
-            lastFocalY.value = e.focalY;
+            const two = (e.numberOfPointers ?? 2) >= 2;
+            pinching.value = two;
+            pinchRebase.value = !two;
+            lastFocalX.value = e.focalX - focalOrigin.value.x;
+            lastFocalY.value = e.focalY - focalOrigin.value.y;
+            lastPinchScale.value = e.scale;
         })
         .onUpdate((e) => {
+            const fx = e.focalX - focalOrigin.value.x;
+            const fy = e.focalY - focalOrigin.value.y;
+            if ((e.numberOfPointers ?? 2) < 2) {
+                pinching.value = false;
+                pinchRebase.value = true;
+                panRebase.value = true;
+                return;
+            }
+            if (pinchRebase.value) {
+                pinching.value = true;
+                pinchRebase.value = false;
+                panRebase.value = true;
+                lastFocalX.value = fx;
+                lastFocalY.value = fy;
+                lastPinchScale.value = e.scale;
+                return;
+            }
             const s = scale.value;
-            const b = bounds.value;
-            const next = Math.min(MAX_SCALE, Math.max(b.min, savedScale.value * e.scale));
+            const step = lastPinchScale.value > 0 ? e.scale / lastPinchScale.value : 1;
+            const next = clampScale(s * step, bounds.value.min);
             const k = next / s;
             scale.value = next;
-            tx.value = settleAxis(e.focalX - k * (lastFocalX.value - tx.value), b.vw, b.cw * next);
-            ty.value = settleAxis(e.focalY - k * (lastFocalY.value - ty.value), b.vh, b.ch * next);
-            lastFocalX.value = e.focalX;
-            lastFocalY.value = e.focalY;
+            tx.value = anchorAxis(tx.value, lastFocalX.value, fx, k);
+            ty.value = anchorAxis(ty.value, lastFocalY.value, fy, k);
+            lastFocalX.value = fx;
+            lastFocalY.value = fy;
+            lastPinchScale.value = e.scale;
         })
         .onFinalize(() => {
+            // Only a pinch that actually held two fingers hands the pan a
+            // rebase; a one-finger touch the pinch never claimed (it fails
+            // straight from BEGAN) must not cost the drag its first step.
+            if (pinching.value || pinchRebase.value) panRebase.value = true;
             pinching.value = false;
-            savedScale.value = scale.value;
+            pinchRebase.value = false;
         });
 
     // `withTestId` is RNGH's own test affordance, inert in production — it
@@ -554,6 +619,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
         .onBegin(() => {
             lastPanX.value = 0;
             lastPanY.value = 0;
+            panRebase.value = false;
         })
         .onUpdate((e) => {
             const dx = e.translationX - lastPanX.value;
@@ -562,9 +628,14 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
             lastPanY.value = e.translationY;
             // While two fingers pinch, the pinch's focal point carries the drag.
             if (pinching.value) return;
+            // The first step after a pinch is a rebase, never a move.
+            if (panRebase.value) {
+                panRebase.value = false;
+                return;
+            }
             const b = bounds.value;
-            tx.value = settleAxis(tx.value + dx, b.vw, b.cw * scale.value);
-            ty.value = settleAxis(ty.value + dy, b.vh, b.ch * scale.value);
+            tx.value = panAxis(tx.value, dx, b.vw, b.cw * scale.value);
+            ty.value = panAxis(ty.value, dy, b.vh, b.ch * scale.value);
         });
 
     const composed = Gesture.Simultaneous(pinch, pan);
@@ -584,17 +655,25 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
             const px = e.clientX - rect.left;
             const py = e.clientY - rect.top;
             const s = scale.value;
-            const b = bounds.value;
-            const next = Math.min(MAX_SCALE, Math.max(b.min, s * Math.exp(-e.deltaY * 0.0015)));
+            const next = clampScale(s * Math.exp(-e.deltaY * 0.0015), bounds.value.min);
             const k = next / s;
             scale.value = next;
-            savedScale.value = next;
-            tx.value = settleAxis(px - k * (px - tx.value), b.vw, b.cw * next);
-            ty.value = settleAxis(py - k * (py - ty.value), b.vh, b.ch * next);
+            tx.value = anchorAxis(tx.value, px, px, k);
+            ty.value = anchorAxis(ty.value, py, py, k);
+        };
+        // Capture phase on the wrapper, so the pane's page origin is current
+        // before the gesture handler below it reads the pointer.
+        const onDown = () => {
+            const rect = el.getBoundingClientRect();
+            focalOrigin.value = { x: rect.left, y: rect.top };
         };
         el.addEventListener('wheel', onWheel, { passive: false });
-        return () => el.removeEventListener('wheel', onWheel);
-    }, [bounds, scale, savedScale, tx, ty]);
+        el.addEventListener('pointerdown', onDown, true);
+        return () => {
+            el.removeEventListener('wheel', onWheel);
+            el.removeEventListener('pointerdown', onDown, true);
+        };
+    }, [bounds, scale, tx, ty, focalOrigin]);
 
     const mapTransform = useAnimatedStyle(() => ({
         transform: [
@@ -612,143 +691,159 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
         <View ref={wrapRef} style={styles.graphWrap} onLayout={onWrapLayout} testID="map-canvas-wrapper">
             <View style={[StyleSheet.absoluteFillObject, styles.graphBackground]} />
 
+            {/* The gesture pane: an UNTRANSFORMED layer that fills the
+                wrapper and holds the canvas. The detector is attached here,
+                never to the transformed canvas: RNGH reports `focalX/Y` and
+                the pan's translation relative to the view it is attached to,
+                so on this layer they are pane coordinates, the frame the
+                anchor math is written in. On the canvas they would be the
+                canvas's own scaled, moving frame, and every zoom step would
+                move the frame of the next reading (the device jump #1046
+                left behind). A drag that starts on the black past the
+                plate's edge lands here too. */}
             <GestureDetector gesture={composed}>
-                <Animated.View
-                    testID="map-canvas"
-                    style={[styles.canvas, { width: canvas.w, height: canvas.h }, mapTransform]}
+                <View
+                    testID="map-gesture-pane"
+                    collapsable={false}
+                    style={StyleSheet.absoluteFillObject}
                 >
-                    {/* The engraving plate — pans and zooms with the chart so the
-                        wood feels painted onto the page. An atmosphere plate is
-                        dimmed so roads and nodes keep contrast (dim, never blur);
-                        a plate that is the map itself reads near full.
-                        Wrapped pointerEvents="none": on web `expo-image` is a
-                        native <img>, and a mouse drag that starts on it fires
-                        the browser's image drag-and-drop, which cancels the
-                        pan's pointer stream — the map would not move. */}
-                    {sheet != null && (
-                        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
-                            <Image
-                                source={sheet.backdrop}
-                                style={[styles.backdropPlate, { opacity: sheet.plateOpacity }]}
-                                contentFit="cover"
-                                testID="map-backdrop"
-                            />
-                        </View>
-                    )}
-                    {/* The chart sheet: diagonal hatch + contour hills under the
-                        roads — only over an atmosphere plate, never over a plate
-                        that draws its own terrain. This is the one canvas-wide
-                        SVG left, so it is mounted only when a sheet asks for it. */}
-                    {chartTexture && (
-                        <Svg
-                            viewBox={`0 0 ${size.width} ${size.height}`}
-                            width={canvas.w}
-                            height={canvas.h}
-                            style={StyleSheet.absoluteFillObject}
-                            pointerEvents="none"
-                            testID="map-chart-texture"
-                        >
-                            <G stroke={AXM.parchment} strokeWidth={0.4} opacity={0.05}>
-                                {hatch.map((d) => (
-                                    <Path key={d} d={d} fill="none" />
-                                ))}
-                            </G>
-                            {CONTOUR_GROUPS.map((group, gi) => (
-                                <G
-                                    key={gi}
-                                    opacity={0.45}
-                                    stroke={AXM.ash}
-                                    strokeWidth={1}
-                                    fill="none"
-                                    transform={`scale(${size.width / 360} ${size.height / 400})`}
-                                >
-                                    {group.map((d) => (
-                                        <Path key={d} d={d} />
+                    <Animated.View
+                        testID="map-canvas"
+                        style={[styles.canvas, { width: canvas.w, height: canvas.h }, mapTransform]}
+                    >
+                        {/* The engraving plate — pans and zooms with the chart so the
+                            wood feels painted onto the page. An atmosphere plate is
+                            dimmed so roads and nodes keep contrast (dim, never blur);
+                            a plate that is the map itself reads near full.
+                            Wrapped pointerEvents="none": on web `expo-image` is a
+                            native <img>, and a mouse drag that starts on it fires
+                            the browser's image drag-and-drop, which cancels the
+                            pan's pointer stream — the map would not move. */}
+                        {sheet != null && (
+                            <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+                                <Image
+                                    source={sheet.backdrop}
+                                    style={[styles.backdropPlate, { opacity: sheet.plateOpacity }]}
+                                    contentFit="cover"
+                                    testID="map-backdrop"
+                                />
+                            </View>
+                        )}
+                        {/* The chart sheet: diagonal hatch + contour hills under the
+                            roads — only over an atmosphere plate, never over a plate
+                            that draws its own terrain. This is the one canvas-wide
+                            SVG left, so it is mounted only when a sheet asks for it. */}
+                        {chartTexture && (
+                            <Svg
+                                viewBox={`0 0 ${size.width} ${size.height}`}
+                                width={canvas.w}
+                                height={canvas.h}
+                                style={StyleSheet.absoluteFillObject}
+                                pointerEvents="none"
+                                testID="map-chart-texture"
+                            >
+                                <G stroke={AXM.parchment} strokeWidth={0.4} opacity={0.05}>
+                                    {hatch.map((d) => (
+                                        <Path key={d} d={d} fill="none" />
                                     ))}
                                 </G>
-                            ))}
-                        </Svg>
-                    )}
-                    {/* Roads: straight node-to-node paths so the graph reads as a
-                        connected route, each in its own strip (see `edgeStripOf`).
-                        A dark casing under the stroke gives each path a defined
-                        "road" edge. */}
-                    {edges.map((e) => {
-                        const A = nodeById.get(e.fromId);
-                        const B = nodeById.get(e.toId);
-                        if (!A || !B) return null;
-                        // A road drawing itself open sits closed underneath while its open
-                        // ink grows over it; the base lands open when the draw ends.
-                        const drawing = opening.has(edgeKey(e));
-                        const ink = edgeStroke(drawing ? { ...e, locked: true } : e, AXM);
-                        const openInk = drawing ? edgeStroke(e, AXM) : null;
-                        // The travelled-road bead marks progression, so a rib
-                        // never wears one even once both its lanes are spent.
-                        const bead = e.traveled && !e.lateral;
-                        const strip = edgeStripOf(A, B, ink, bead, size.scale);
-                        const pivot = strip.pad * size.scale;
-                        const d = `M ${strip.pad} ${strip.pad} L ${strip.pad + strip.length} ${strip.pad}`;
-                        return (
-                            <View
-                                key={`${e.fromId}|${e.toId}`}
-                                pointerEvents="none"
-                                testID="map-edge"
-                                style={[
-                                    styles.edgeStrip,
-                                    {
-                                        left: strip.left,
-                                        top: strip.top,
-                                        width: strip.width,
-                                        height: strip.height,
-                                        transformOrigin: `${pivot}px ${pivot}px`,
-                                        transform: [{ rotate: `${strip.angle}deg` }],
-                                    },
-                                ]}
-                            >
-                                <Svg
-                                    viewBox={`0 0 ${strip.length + strip.pad * 2} ${strip.pad * 2}`}
-                                    width={strip.width}
-                                    height={strip.height}
-                                >
-                                    {ink.casing && (
-                                        <Path d={d} stroke={AXM.deepBg} strokeWidth={ink.width + CASING_EXTRA} fill="none" opacity={0.95} strokeLinecap="round" />
-                                    )}
-                                    <Path
-                                        d={d}
-                                        stroke={ink.color}
-                                        strokeWidth={ink.width}
-                                        strokeDasharray={ink.dash}
+                                {CONTOUR_GROUPS.map((group, gi) => (
+                                    <G
+                                        key={gi}
+                                        opacity={0.45}
+                                        stroke={AXM.ash}
+                                        strokeWidth={1}
                                         fill="none"
-                                        opacity={ink.opacity}
-                                        strokeLinecap="round"
-                                    />
-                                    {openInk !== null && (
-                                        <OpeningStroke d={d} length={strip.length} color={openInk.color} width={openInk.width} opacity={openInk.opacity} />
-                                    )}
-                                    {bead && (
-                                        <Circle cx={strip.pad + strip.length / 2} cy={strip.pad} r={BEAD_RADIUS} fill={AXM.sulfur} />
-                                    )}
-                                </Svg>
+                                        transform={`scale(${size.width / 360} ${size.height / 400})`}
+                                    >
+                                        {group.map((d) => (
+                                            <Path key={d} d={d} />
+                                        ))}
+                                    </G>
+                                ))}
+                            </Svg>
+                        )}
+                        {/* Roads: straight node-to-node paths so the graph reads as a
+                            connected route, each in its own strip (see `edgeStripOf`).
+                            A dark casing under the stroke gives each path a defined
+                            "road" edge. */}
+                        {edges.map((e) => {
+                            const A = nodeById.get(e.fromId);
+                            const B = nodeById.get(e.toId);
+                            if (!A || !B) return null;
+                            // A road drawing itself open sits closed underneath while its open
+                            // ink grows over it; the base lands open when the draw ends.
+                            const drawing = opening.has(edgeKey(e));
+                            const ink = edgeStroke(drawing ? { ...e, locked: true } : e, AXM);
+                            const openInk = drawing ? edgeStroke(e, AXM) : null;
+                            // The travelled-road bead marks progression, so a rib
+                            // never wears one even once both its lanes are spent.
+                            const bead = e.traveled && !e.lateral;
+                            const strip = edgeStripOf(A, B, ink, bead, size.scale);
+                            const pivot = strip.pad * size.scale;
+                            const d = `M ${strip.pad} ${strip.pad} L ${strip.pad + strip.length} ${strip.pad}`;
+                            return (
+                                <View
+                                    key={`${e.fromId}|${e.toId}`}
+                                    pointerEvents="none"
+                                    testID="map-edge"
+                                    style={[
+                                        styles.edgeStrip,
+                                        {
+                                            left: strip.left,
+                                            top: strip.top,
+                                            width: strip.width,
+                                            height: strip.height,
+                                            transformOrigin: `${pivot}px ${pivot}px`,
+                                            transform: [{ rotate: `${strip.angle}deg` }],
+                                        },
+                                    ]}
+                                >
+                                    <Svg
+                                        viewBox={`0 0 ${strip.length + strip.pad * 2} ${strip.pad * 2}`}
+                                        width={strip.width}
+                                        height={strip.height}
+                                    >
+                                        {ink.casing && (
+                                            <Path d={d} stroke={AXM.deepBg} strokeWidth={ink.width + CASING_EXTRA} fill="none" opacity={0.95} strokeLinecap="round" />
+                                        )}
+                                        <Path
+                                            d={d}
+                                            stroke={ink.color}
+                                            strokeWidth={ink.width}
+                                            strokeDasharray={ink.dash}
+                                            fill="none"
+                                            opacity={ink.opacity}
+                                            strokeLinecap="round"
+                                        />
+                                        {openInk !== null && (
+                                            <OpeningStroke d={d} length={strip.length} color={openInk.color} width={openInk.width} opacity={openInk.opacity} />
+                                        )}
+                                        {bead && (
+                                            <Circle cx={strip.pad + strip.length / 2} cy={strip.pad} r={BEAD_RADIUS} fill={AXM.sulfur} />
+                                        )}
+                                    </Svg>
+                                </View>
+                            );
+                        })}
+                        {/* Node halos over the roads and under the glyphs: a dark
+                            pool that clears a dense plate's linework from around
+                            each mark, so the mark reads as a mark. A node wearing
+                            its kind token gets none: the opaque token covers the
+                            roads itself. */}
+                        {nodeHalo && (
+                            <View style={StyleSheet.absoluteFillObject} pointerEvents="none" testID="map-node-halos">
+                                {nodes.filter((n) => n.showKind !== true).map((n) => (
+                                    <NodeHalo key={n.id} cx={n.x} cy={n.y} r={haloRadius} scale={size.scale} color={AXM.deepBg} counterScale={markerCounterScale} />
+                                ))}
                             </View>
-                        );
-                    })}
-                    {/* Node halos over the roads and under the glyphs: a dark
-                        pool that clears a dense plate's linework from around
-                        each mark, so the mark reads as a mark. A node wearing
-                        its kind token gets none: the opaque token covers the
-                        roads itself. */}
-                    {nodeHalo && (
-                        <View style={StyleSheet.absoluteFillObject} pointerEvents="none" testID="map-node-halos">
-                            {nodes.filter((n) => n.showKind !== true).map((n) => (
-                                <NodeHalo key={n.id} cx={n.x} cy={n.y} r={haloRadius} scale={size.scale} color={AXM.deepBg} counterScale={markerCounterScale} />
-                            ))}
-                        </View>
-                    )}
+                        )}
 
-                    <MapSheetContext.Provider value={size}>
-                        <MapCameraContext.Provider value={scale}>{children}</MapCameraContext.Provider>
-                    </MapSheetContext.Provider>
-                </Animated.View>
+                        <MapSheetContext.Provider value={size}>
+                            <MapCameraContext.Provider value={scale}>{children}</MapCameraContext.Provider>
+                        </MapSheetContext.Provider>
+                    </Animated.View>
+                </View>
             </GestureDetector>
 
             {/* Viewport-fixed chart furniture — never pans with the map.

@@ -57,7 +57,7 @@ describe('the headless run driver', () => {
 
     it('plays a new game as a roster character to a run end, through every Breakwater node kind', () => {
         const { policy, asked } = spying();
-        const { result, screens } = tracedRun({ policy, seed: 1 });
+        const { result, screens } = tracedRun({ policy, seed: 8 });
         expect(['run-over', 'chapter-clear']).toContain(result.outcome);
         expect(result.characterId).toBe(CHARACTER_ROSTER[0]!.id);
         expect(result.runId).toMatch(/^[0-9a-f]{16}$/);
@@ -101,6 +101,22 @@ describe('the headless run driver', () => {
             expect(stuck.node).toBe('bw-w1');
             expect(stuck.message).toMatch(/run stuck at breakwater\/bw-w1 .*screen map.*no road leads to anything unfinished/);
         }
+    });
+
+    it('counts each node\'s withdrawals, so a policy can walk away once and fight the next time', () => {
+        const seen: number[] = [];
+        const shy: RunPolicy = {
+            ...WANDERER_POLICY,
+            flee: (ctx) => {
+                seen.push(ctx.fledHere);
+                return ctx.fledHere === 0;
+            },
+        };
+        const result = playRun({ policy: shy, seed: 1 });
+        expect(['run-over', 'chapter-clear']).toContain(result.outcome);
+        expect(result.fights.fled).toBeGreaterThan(0);
+        expect(seen).toContain(1);
+        expect(Math.max(...seen)).toBe(1);
     });
 
     it('throws when the policy names a road that is not legal', () => {

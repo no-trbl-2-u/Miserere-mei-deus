@@ -93,6 +93,7 @@ left; otherwise after.
   Chapter 1's enemy art, a mid-MVP check on the preview build, the walk's `[content]` answers with the Breakwater's
   quest line, the R11 review, and the MVP run.
 - Nov 11: the R11 watch ends; the four held loop-doctrine candidates come up for review (the fifth, claims, was plotted as HW1b on Oct 30).
+- Nov 11: the cut-over to nexus v2 (NX1d, 2 h, attended), once the old queue has drained; `march` and `night` stay off until T turns them back on (NX1i, date not set).
 
 ### W3 — Chapters 2-4 designed; hazards tuned (Nov 17 - Nov 30)
 
@@ -223,6 +224,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
+| [ ] | 2026-11-11 | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h) | W2 | NX1d | NX1a, NX1c |
 | [x] | 2026-11-12 | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | CA3a, CA3e |
 | [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | W2 | T | - |
@@ -264,11 +266,16 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
-- SM1f — the sim's archetype bots (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
+- NX1b — `/pitch` copied into the repo; no T act waits on it
+- NX1e — v2's landing after the cut-over; the T act after it, NX1i, has no date yet
+- NX1f — the workflows on v2's steps after the cut-over; the T act after it, NX1i, has no date yet
+- NX1g — `/pilot`, T's orchestrator; no dated T act waits on it
+- NX1h — the weekly nexus sync; no dated T act waits on it (T reads each sync PR as it comes)
+- NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
 - CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
 - CA3d — Blood Price's new paintings; no T act scheduled to view them yet (date not set)
@@ -360,6 +367,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **Miserere onto nexus v2, kept current with it, plotted (NX1)** (T, attended `/plot`, from the deviation map `docs/nexus-deviations.md`: "I would like to update Miserere with the latest of what's in nexus AND determine a means for it to remain up to date"; "Drain to Nov 11"). **Added** the Item "Cut over to nexus v2" on Nov 11 (W2) naming the attended NX1d, waiting on NX1a and NX1c; NX1b and NX1e-NX1i under `## Unscheduled`; a W2 line for the cut-over. The Nov 11 R11 review's premise still holds (v2's decisions log may answer one of the held candidates; the brief's Follow-ups say so). Nothing ticked; no date moved.
 - **2026-10-31** — **every foe befriendable (BUG1j)** (T on plot PR #1236, call 1: "let's make all the enemies befriendable so we can do some testing"). **Added** BUG1j to the `Waits on` of the Mid-MVP check (Nov 9), beside BUG1a and BUG1b: the check plays the Chosen, whose Open Hand now befriends any foe. Nothing ticked; no date moved.
 - **2026-10-31** — **the Chosen's signature, and the play log's fights, plotted (SK1)** (T, bug report from the 8f876ec preview APK: "I still can't play the Signature Skills o.0?"; plot run unattended). **Added** BUG1a and BUG1b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the Chosen on a preview build. **Edited** BE2g's Unscheduled line: its premise (a preview fight shows up in the play log) needs BUG1b, since the deployed Worker refuses every fight post today. Nothing ticked; no date moved.
 - **2026-10-31** — **card detail and icon polish plotted (CD1)** (T's two bug reports from the preview APK, `/plot asap`). **Added** CD1a and CD1b to the `Waits on` of the Nov 9 mid-MVP check, the first T act that plays the character-select and reward screens. Nothing ticked; no date moved.
