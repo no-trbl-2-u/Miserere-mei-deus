@@ -48,8 +48,8 @@ export const KEYWORD_TAG_COLORS: Record<string, string> = {
 
 export const DEFAULT_KEYWORD_TAG = 'KEYWORD';
 
-/** Height cap in points: about three rows, then the ledger scrolls. */
-export const LEDGER_MAX_HEIGHT = 170;
+/** Height cap in points: about two rows, then the ledger scrolls. */
+export const LEDGER_MAX_HEIGHT = 112;
 
 export function CardKeywordLedger({ keywords, typeTagFor, testID }: CardKeywordLedgerProps) {
     const styles = useStyles();
