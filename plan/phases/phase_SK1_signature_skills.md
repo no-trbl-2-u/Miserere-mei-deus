@@ -1,7 +1,9 @@
 # Phase SK1 — The Chosen's signature says why it will not fire, and the play log takes fights again
 
+Phase ids: BUG1a, BUG1b, BUG1j (the 2026-10-31 bug batch; renamed from SK1a, SK1b, SK1c at T's request).
+
 > `/plot asap` from T, 2026-10-31, run unattended (T not available for
-> questions). Three phases: SK1c, SK1a and SK1b. SK1c was added on T's
+> questions). Three phases: BUG1j, BUG1a and BUG1b. BUG1j was added on T's
 > answer to call 1 on PR #1236 (2026-10-31): every foe can be befriended.
 
 ## Sources
@@ -61,7 +63,7 @@ Bleeding Signet from the dev chip, and the refused-rune tests
    Chosen's deck at bw-w2 and bw-w3 on build 8f876ec (evidence below), so both
    of T's fights refused the signature with "Float-Eye will not be befriended"
    and "Gallows Crow will not be befriended". The refusal was legitimate under
-   the rule of the day (SK1c changes the rule on T's answer to call 1).
+   the rule of the day (BUG1j changes the rule on T's answer to call 1).
 3. **Conviction starts at 0 and the Open Hand costs ◆4**
    (`combat.engine.ts:272`; `combat.signature.ts:49`). Conviction comes only
    from scrapping a card (+1, two per turn, `combat.engine.ts:121, 668-680`),
@@ -122,9 +124,9 @@ the fights a preview build posts, so the next refused tap is on record.
   `signatures` `['sig-disarming-plea']`; with Conviction at 4 and Float-Eye
   at full VITAE, `playSignatureSkill` refuses with "Float-Eye is not yet low
   enough to spare", spends nothing and logs no `signature-cast`. With
-  Float-Eye's VITAE at its gate (SK1c's default gate, A9), the same call
+  Float-Eye's VITAE at its gate (BUG1j's default gate, A9), the same call
   casts: the phase is `mercy-choice`, Conviction drops by 4 and the log holds
-  `signature-cast`; sparing it ends the fight as `friendship` and pays SK1c's
+  `signature-cast`; sparing it ends the fight as `friendship` and pays BUG1j's
   reward (A10). Confirmed by T (2026-10-31): every foe can be befriended
   (this line used to expect "Float-Eye will not be befriended").
 - **A2** Roster guard (same file or `character-roster.engine.test.ts`): for
@@ -209,7 +211,7 @@ table gains that fight's row.
 
 - **Every foe can be befriended.** Confirmed by T (2026-10-31): make all
   the enemies befriendable, for testing; a befriend pays no XP, and
-  shillings or a consumable, both scaled to the foe's level (SK1c, A8-A11).
+  shillings or a consumable, both scaled to the foe's level (BUG1j, A8-A11).
   The Open Hand stays the Chosen's signature and the Suppliant's Ring his
   relic. The rule lives in `isEnemyBefriendable` and one tuning table, not in
   a `friendshipReward` on each foe, so it can be narrowed later in one place.
@@ -229,7 +231,7 @@ table gains that fight's row.
   bundled mechanics files keeps the Worker in step with the contract without
   a cron; the D1 migrations step is unchanged. SM1's backend phases (D1
   migrations 0006 and 0007, plotted the same day) touch `backend/**` and so
-  would redeploy as a side effect if they ship first; SK1b stays, so the next
+  would redeploy as a side effect if they ship first; BUG1b stays, so the next
   contract-only change does not strand the Worker again.
 - **The stale local token is not a phase.** `~/.config/miserere/puzzle-api.env`
   is T's machine file, outside the repo; refreshing it is noted for T, not
@@ -237,7 +239,7 @@ table gains that fight's row.
 
 ## Consumers to update
 
-- SK1c: `Enemy/befriend.ts` (`isEnemyBefriendable`, the default gate),
+- BUG1j: `Enemy/befriend.ts` (`isEnemyBefriendable`, the default gate),
   `Combat/combat.signature.ts` (`signatureCastBlock` reads the default gate),
   `Combat/combat.card-program.ts:533, 1280` (bot value), `Game/store.ts`
   `endCombat` (the friendship branch) and `CombatEndReport`,
@@ -259,7 +261,7 @@ table gains that fight's row.
 
 No save field, no migration: `player.currency` already exists.
 `CombatEndReport` (in memory, not saved) gains `shillings`. The play-log
-contract is unchanged; SK1b only redeploys it.
+contract is unchanged; BUG1b only redeploys it.
 
 ## Tests matrix
 
@@ -278,7 +280,7 @@ contract is unchanged; SK1b only redeploys it.
 
 `npm run verify -w axiomancer-mechanics`, `npm run verify -w
 axiomancer-mobile`, root `npm test` (with `scripts/backend-deploy.test.mjs`);
-SK1b also `npm test -w backend`.
+BUG1b also `npm test -w backend`.
 
 ## Commit body template
 
@@ -304,7 +306,7 @@ A1 to A11 ticked, each by exactly one phase below.
 
 ## Phases
 
-### SK1c — Every foe can be befriended, for shillings or a potion and no XP · M · closes A8, A9, A10, A11 · requires nothing
+### BUG1j — Every foe can be befriended, for shillings or a potion and no XP · M · closes A8, A9, A10, A11 · requires nothing
 Measure: `befriend.engine.test.ts`, `befriend-reward.engine.test.ts` and the friendship panel test pass; a seeded befriend of Float-Eye at level 2 pays 6 shillings or a Minor Healing Potion and 0 XP.
 - Scope: `axiomancer-mechanics` (`Enemy/befriend.ts` and `BEFRIEND_TUNING`,
   `Combat/combat.signature.ts`, `Combat/combat.card-program.ts`, `Game/store.ts`,
@@ -318,7 +320,7 @@ Measure: `befriend.engine.test.ts`, `befriend-reward.engine.test.ts` and the fri
 - Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w
   axiomancer-mobile`, root `npm test`.
 
-### SK1a — The refused rune says why on the board, and the Chosen's kit is pinned · M · closes A1, A2, A3, A4, A5 · requires SK1c
+### BUG1a — The refused rune says why on the board, and the Chosen's kit is pinned · M · closes A1, A2, A3, A4, A5 · requires BUG1j
 Measure: `chosen-signature.engine.test.ts` and `chosen-signature.screen.test.tsx` pass; the board shot shows the caption beside the Chosen's refused rune at bw-w2 at full VITAE.
 - Scope: `axiomancer-mechanics` (tests only: A1, A2); `axiomancer-mobile`
   (`CombatBoard.tsx` `SignatureColumn` caption, `combat-encounter.engine.ts`
@@ -331,7 +333,7 @@ Measure: `chosen-signature.engine.test.ts` and `chosen-signature.screen.test.tsx
 - Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w
   axiomancer-mobile`, root `npm test`.
 
-### SK1b — The play log takes today's fights: the Worker deploys with its contract · S · closes A6, A7 · requires nothing
+### BUG1b — The play log takes today's fights: the Worker deploys with its contract · S · closes A6, A7 · requires nothing
 Measure: `scripts/backend-deploy.test.mjs` and the backend fights test pass; the merge's `backend-deploy` run on `main` is green.
 - Scope: `.github/workflows/backend-deploy.yml` (push paths),
   `scripts/backend-deploy.test.mjs`, a `backend/` fights test.
