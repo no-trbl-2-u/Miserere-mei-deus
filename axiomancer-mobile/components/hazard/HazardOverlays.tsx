@@ -272,10 +272,15 @@ export function CardDetailOverlay({ card, onClose }: { card: HazardCardVM; onClo
     return (
         <Pressable style={styles.detailRoot} onPress={onClose} testID="hazard-card-detail">
             <View style={{ paddingTop: 14, paddingHorizontal: 14 }}>
-                <CardKeywordLedger
-                    keywords={card.keywords.map((kw) => ({ name: kw.name, def: kw.desc }))}
-                    testID="hazard-card-detail-keywords"
-                />
+                {/* Wrapped in its own Pressable so a tap landing on the ledger's
+                    rows still closes the overlay, matching CombatEncounterPanel's
+                    identical card-detail-over-backdrop case. */}
+                <Pressable onPress={onClose}>
+                    <CardKeywordLedger
+                        keywords={card.keywords.map((kw) => ({ name: kw.name, def: kw.desc }))}
+                        testID="hazard-card-detail-keywords"
+                    />
+                </Pressable>
             </View>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} testID="hazard-card-detail-card">
                 <Animated.View entering={FadeIn.duration(180)}>
