@@ -112,7 +112,7 @@ view with nothing drawn over it but the recentre button.
 - **A3 (black past the edges, with limits)** The pane's ground behind the canvas is the existing
   near-black `deepBg` (`MapCanvas.tsx:613`). Zooming out stops at the scale where the whole plate
   fits the pane (not the cover scale); the pan stops when a plate edge reaches the middle of the
-  pane `[T to confirm #2]`. The pan limit is applied to the pan's own delta only, never inside a
+  pane (Accepted at merge (default), #2). The pan limit is applied to the pan's own delta only, never inside a
   pinch. Tests for the floor, the 3x ceiling and the pan limit on each side.
 - **A4 (a finger lifted mid-pinch does not jump)** A pinch update with fewer than two pointers moves
   nothing, and the pan's delta is rebased when the pinch ends, so lifting one finger and dragging on
@@ -177,7 +177,7 @@ None. The camera memory is in-memory only (A7) and never written to the save.
 1. **Stability over edge-clamping** (Confirmed by T, 2026-10-31): black may show past the plate's
    edges; no gesture is ever clamped in a way that moves the anchor.
 2. **The pan limit** (A3): a plate edge may come as far as the middle of the pane, so the plate can
-   never be lost entirely and RECENTRE is not the only way back `[T to confirm #2]`.
+   never be lost entirely and RECENTRE is not the only way back (Accepted at merge (default), #2).
 3. **The recentre zoom** (A5): about 40% of the sheet's width across the pane, as a constant beside
    `MAX_SCALE`, the same on every sheet `[T to confirm #3]`. The open moves are not framed: T asked
    for the player's icon.
