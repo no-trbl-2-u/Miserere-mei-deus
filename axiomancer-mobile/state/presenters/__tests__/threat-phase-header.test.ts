@@ -59,4 +59,8 @@ describe('threatPhaseHeader for a phases foe (EN1c)', () => {
         expect(threatPhaseHeader(move('danger', 'Toll')).text).toBe('PHASE 2 · DANGER');
         expect(threatPhaseHeader(move('danger', 'Toll'), new Set(['Toll'])).text).toBe('PHASE 2 · DANGER · Toll');
     });
+
+    it('names only the DANGER whose own name has been seen, not any seen name', () => {
+        expect(threatPhaseHeader(move('danger', 'Toll'), new Set(['Other'])).text).toBe('PHASE 2 · DANGER');
+    });
 });

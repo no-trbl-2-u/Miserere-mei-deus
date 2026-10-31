@@ -810,7 +810,7 @@ export function CombatEncounterPanel({
                         <Text style={styles.revealYours} testID="combat-reveal-player-vitae">
                             YOURS ♥ {vm.player.hp} / {vm.player.maxHp}
                         </Text>
-                        {revealDangerLines ? (
+                        {revealDangerLines && revealDangerLines.length > 0 ? (
                             <View testID="combat-reveal-dangers">
                                 <Text style={styles.revealSection}>DANGER</Text>
                                 {revealDangerLines.map((d) => (
