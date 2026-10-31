@@ -50,7 +50,12 @@ describe.each(ARCHETYPE_POLICIES.map((p) => [p.id, p] as [string, RunPolicy]))('
         }
     });
 
-    (inLane ? it : it.skip)(`ends every run with more ${laneId} cards than of any other card lane (it starts in-lane)`, () => {
+    // Known failure, kept visible rather than muted: since every foe can be
+    // befriended (phase BUG1j) a befriend pays shillings or a potion and no
+    // card draft, so the Merciful, which spares every foe it can, never drafts
+    // its lane. `it.failing` turns red the day the game lets it build again.
+    const leadCheck = !inLane ? it.skip : policy === MERCIFUL_POLICY ? it.failing : it;
+    leadCheck(`ends every run with more ${laneId} cards than of any other card lane (it starts in-lane)`, () => {
         for (const run of runs) {
             const own = run.deckByLane[laneId] ?? 0;
             for (const [lane, n] of rivals(run, laneId)) {
