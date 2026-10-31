@@ -203,6 +203,10 @@ before cleanup), so they go through the tool after it has held the other twelve.
 Acceptance closure: A1, A2, A7 by AN5a; A4 by AN5c; A3, A5, A6, A8, A9 by AN5e (AN5a-d each install
 their keys under A3, A5, A6 and A9, and AN5e closes them when the seventeenth set lands).
 
+- [x] A1, A2, A7 (AN5a) · [x] A4 (AN5c) · [x] A3, A5, A6, A8, A9 (AN5e, 2026-10-31): 17 of 17 keys
+  animate; both late idles hold within 1 px (0.72 and 0.77); every cell under 12000 B; the roster
+  weighs 3040824 B.
+
 ## Definition of done
 
 Every key with a portrait has a validated frame set that plays its three clips in a live encounter;
