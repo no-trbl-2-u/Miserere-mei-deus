@@ -78,7 +78,9 @@ export function runOverState(
 /**
  * The state `RESET_RUN` with `keepCharacter: true` gives (the dev control only): a fresh `runId` and
  * world, full VITAE, empty quests and flags; the character, codex and rng
- * kept. `version` is carried from `state`; the reducer stamps its own.
+ * kept. `runOver` is cleared (spelled out, as `dying` is, so a store merging
+ * this over a run-over state doesn't leave it stranded `true`). `version` is
+ * carried from `state`; the reducer stamps its own.
  */
 export function freshRunKeepingCharacter(
     state: GameState,
@@ -97,8 +99,9 @@ export function freshRunKeepingCharacter(
         flags: [],
         rngState: state.rngState,
         codex: state.codex,
-        // Spelled out so a store merging this over the old state drops it.
+        // Spelled out so a store merging this over the old state drops them.
         dying: undefined,
+        runOver: undefined,
     };
 }
 
