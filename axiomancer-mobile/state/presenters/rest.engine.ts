@@ -58,6 +58,8 @@ export interface RestChoiceVM {
     outcome: RestChoiceOutcomeVM | null;
     /** The authored MapEvent one-liner; `null` falls back to the placeholder intro. */
     description: string | null;
+    /** The node's dream line, shown while the night passes (ET1c); `null` shows none. */
+    dream: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -74,6 +76,7 @@ const EMPTY_VM: RestChoiceVM = Object.freeze({
     upgrade: null,
     outcome: null,
     description: null,
+    dream: null,
 });
 
 export function selectHasActiveRest(state: Pick<AppStoreState, 'rest'>): boolean {
@@ -170,5 +173,6 @@ export function selectRestVM(
         upgrade,
         outcome,
         description: s.description,
+        dream: s.dream ?? null,
     };
 }

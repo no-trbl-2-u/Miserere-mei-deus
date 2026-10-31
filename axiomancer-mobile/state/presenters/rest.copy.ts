@@ -70,6 +70,21 @@ export function restEliteReturnLine(foeName: string, place: string): string {
     return `The ${foeName.replace(/^The /, '')} is back at ${place}.`;
 }
 
-export function restOutcomeUpgradedChip(fromName: string, toName: string): string {
-    return `UPGRADED: ${fromName} → ${toName}`;
+/**
+ * The dawn line after an upgrade (ET1c): the card's name as the player chose it
+ * (before the upgrade), with no VITAE line beside it.
+ *
+ * @example restDawnUpgradedChip('Strike') // 'Strike upgraded'
+ */
+export function restDawnUpgradedChip(fromName: string): string {
+    return `${fromName} upgraded`;
 }
+
+/** The word shown for each stage of the night (ET1c). */
+export const REST_NIGHT_STAGE_WORD = Object.freeze({
+    dusk: 'DUSK',
+    night: 'NIGHT',
+    dawn: 'DAWN',
+} as const);
+
+export const REST_NIGHT_SKIP_LABEL = 'Skip the night';

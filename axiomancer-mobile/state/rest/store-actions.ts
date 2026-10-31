@@ -63,6 +63,8 @@ export interface BeginRestOptions {
     shelter?: RestShelter;
     /** The authored MapEvent one-liner (`ResolvedEvent.description`). */
     description?: string | null;
+    /** The node's dream line for the night screen (ET1c). */
+    dream?: string | null;
 }
 
 /** Start a rest node from the player's current stats. One node at a time. */
@@ -79,6 +81,7 @@ export function beginRestAction(store: AppStore, options: BeginRestOptions = {})
         currency: player.currency,
         deckCardIds: buildCombatDeck(player, flags),
         description: options.description,
+        dream: options.dream,
     }));
     return true;
 }

@@ -11,7 +11,7 @@
  * See docs/testing.md for the full standard.
  */
 
-import { describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 
@@ -63,6 +63,10 @@ function count(ids: readonly string[], id: string): number {
     return ids.filter((x) => x === id).length;
 }
 
+// The night between the pick and the dawn is ET1c's; its own suite plays it.
+beforeAll(() => { (globalThis as { __AXM_JUICE_INSTANT__?: unknown }).__AXM_JUICE_INSTANT__ = true; });
+afterAll(() => { delete (globalThis as { __AXM_JUICE_INSTANT__?: unknown }).__AXM_JUICE_INSTANT__; });
+
 describe('rest site: upgrade a card (Phase UP1d)', () => {
     it('offers the upgrade beside rest, and no cut (removal is at the village, NK1c)', () => {
         const r = render(
@@ -103,7 +107,7 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         expect(r.getByTestId('card-upgrade-locked')).toHaveTextContent(/\?\?\?/);
 
         fireEvent.press(r.getByTestId('card-upgrade-confirm'));
-        expect(String(r.getByTestId('rest-outcome-upgraded').props.children)).toContain(after.name);
+        expect(String(r.getByTestId('rest-outcome-upgraded').props.children)).toBe(`${before.name} upgraded`);
 
         fireEvent.press(r.getByTestId('rest-claim'));
         const { player, flags } = store.getState() as unknown as {

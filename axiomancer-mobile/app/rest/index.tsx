@@ -6,17 +6,22 @@
  * Card removal is the village's (`/village`). `resolveMapEvent` consumes the node on entry,
  * before any choice — there is no back-out: no header back, no
  * swipe-dismiss (`gestureEnabled: false` in the root layout), no Android
- * hardware-back (`<HardwareBackHandler>`). All rules live in
+ * hardware-back (`<HardwareBackHandler>`). After the pick the screen runs
+ * dusk to night to dawn with the node's dream line (ET1c) and shows the
+ * outcome at dawn; reduced motion lands on the dawn at once. All rules live in
  * `axiomancer-mechanics` (World/RestChoice); this screen renders the
  * presenter VM and dispatches store actions only.
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
+import { NightPassing } from '@/components/rest/NightPassing';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { resolveJuiceMode } from '@/lib/juice/instant';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
     selectRestVM,
@@ -31,7 +36,7 @@ import {
     REST_OUTCOME_CLAIM_LABEL,
     REST_OUTCOME_EYEBROW,
     restOutcomeHealChip,
-    restOutcomeUpgradedChip,
+    restDawnUpgradedChip,
 } from '@/state/presenters/rest.copy';
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -79,6 +84,16 @@ export default function RestScreen() {
     const vm = useMemo(() => selectRestVM({ rest: slice, world }), [slice, world]);
     const actions = useGameActions();
     const router = useRouter();
+
+    // The night plays only when the pick happens on this mount; a screen that
+    // mounts already settled (a resume) opens on the dawn.
+    const instant = resolveJuiceMode({ reducedMotion: useReducedMotion() }) === 'instant';
+    const [dawned, setDawned] = useState(false);
+    const choosing = useRef(false);
+    useEffect(() => {
+        if (vm.phase === 'offer' || vm.phase === 'upgrade-pick') choosing.current = true;
+    }, [vm.phase]);
+    const nightPassing = vm.phase === 'outcome' && choosing.current && !dawned && !instant;
 
     useEffect(() => {
         if (!vm.active && router.canGoBack()) router.back();
@@ -140,7 +155,11 @@ export default function RestScreen() {
                         />
                     )}
 
-                    {vm.phase === 'outcome' && vm.outcome !== null && (
+                    {nightPassing && (
+                        <NightPassing dream={vm.dream} onDone={() => setDawned(true)} />
+                    )}
+
+                    {vm.phase === 'outcome' && vm.outcome !== null && !nightPassing && (
                         <View style={styles.card} testID="rest-outcome">
                             <Text style={styles.eyebrow}>{REST_OUTCOME_EYEBROW}</Text>
                             <Text style={[styles.cardTitle, { color: AXM.sulfur }]}>{vm.outcome.label}</Text>
@@ -150,7 +169,7 @@ export default function RestScreen() {
                                 )}
                                 {vm.outcome.upgraded !== null && (
                                     <Text style={styles.chip} testID="rest-outcome-upgraded">
-                                        {restOutcomeUpgradedChip(vm.outcome.upgraded.fromName, vm.outcome.upgraded.toName)}
+                                        {restDawnUpgradedChip(vm.outcome.upgraded.fromName)}
                                     </Text>
                                 )}
                             </View>

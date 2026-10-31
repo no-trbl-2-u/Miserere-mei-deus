@@ -85,6 +85,8 @@ export interface RestPayload {
      */
     shelter?: RestShelter;
     description?: string;
+    /** The one dream line the night shows on the way to dawn (ET1c); the screen shows none when absent. */
+    dream?: string;
 }
 
 export interface VillagePayload {
@@ -263,7 +265,7 @@ export type ResolvedEvent =
     // The resolved rest event carries the SHELTER CLASS so hosts (and the
     // rest-choice engine) decide the heal from an honest marker rather than
     // a number. `healed` is a computed OUTCOME, not an authoring knob.
-    | { kind: 'rest';        healed: number; shelter: RestShelter; description?: string }
+    | { kind: 'rest';        healed: number; shelter: RestShelter; description?: string; dream?: string }
     // The village's counters: `rest` and `cardShop` carry what the host shows
     // (the price, the seeded offer); `anvil` the smith's variants.
     | {

@@ -96,7 +96,7 @@ export function resolveRest(
         state: withPlayer(state, player),
         // `shelter` rides along so hosts that replace the passive heal with
         // their own rest flow keep the authored inn/camp signal.
-        event: { kind: 'rest', healed, shelter, description: payload.description },
+        event: { kind: 'rest', healed, shelter, description: payload.description, dream: payload.dream },
     };
 }
 
