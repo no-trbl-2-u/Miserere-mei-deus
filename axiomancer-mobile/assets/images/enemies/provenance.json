@@ -81,11 +81,13 @@
     "tool": "restored unchanged from the repo's own history (each file at c20ebe14e^, the commit before the R2a enemy reset deleted it)",
     "covers": [
       "lamplighter.webp",
-      "wrecker.webp"
+      "wrecker.webp",
+      "toll-keeper.webp",
+      "tide-gate.webp"
     ],
-    "source": "the 2026-07-06 temp art drop (see the float-eye record): lamplighter.webp was wichtlein.webp and wrecker.webp was sendou-figure-a.webp; the stand-ins T saw on the Breakwater Bestiary page's Elites tab",
+    "source": "the 2026-07-06 temp art drop (see the float-eye record): lamplighter.webp was wichtlein.webp, wrecker.webp was sendou-figure-a.webp, toll-keeper.webp was paladin-cursed-a.webp and tide-gate.webp was mabadi.webp; the stand-ins T saw on the Breakwater Bestiary page's Elites tab",
     "used_by": [
-      "assets/images/enemies/index.ts (registry - the portraitAssets of the Lamplighter and the Wrecker, the lighthouse path's two elites, since phase EN1k)"
+      "assets/images/enemies/index.ts (registry - the portraitAssets of the Lamplighter and the Wrecker, the lighthouse path's two elites, since phase EN1k; of the Toll-Keeper and the Tide-Gate, the keep causeway's two elites, since phase EN1l)"
     ],
     "license": "open source (T, 2026-10-29, D115)",
     "license_note": "stand-in until T's portrait swap. Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\" No sprite sheets (D97)."

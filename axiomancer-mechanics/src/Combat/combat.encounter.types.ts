@@ -320,6 +320,12 @@ export interface EnemyRidersState {
     /** The Lamplighter's lamp: absent = Lit; `dark` until a move lights it;
      *  `out` = Dark for the rest of the fight. */
     lamp?: 'dark' | 'out';
+    /** The Toll-Keeper's TOLL: +1 each foe turn; paying it resets it to 0. */
+    tollOwed?: number;
+    /** The cards Distrain took from your hand, back in your hand when you pay the TOLL. */
+    distrained?: CombatHandEntry[];
+    /** The Tide-Gate's TIDE, 0 to 5 (absent reads 0). */
+    tide?: number;
 }
 
 /** A status a `copy-last-status` rider can throw back at you. */

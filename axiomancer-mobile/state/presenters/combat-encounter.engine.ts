@@ -38,6 +38,12 @@ import {
     hasEnemyPhases, nextEnemyPhaseIndex, playLimitBlock,
     lampOf, intentsInTheDark, baitSet,
 } from '@mechanics';
+// The keep causeway (phase EN1l): the toll button and the TOLL and TIDE chips.
+import {
+    carriesTide, carriesToll, tideOf, tollOwed, tollPayBlock, tollPayCost, tollPayShortfall,
+    LOW_TIDE, LOW_TIDE_VULNERABLE_PCT, TIDE_MAX,
+    type ProgramShortfall,
+} from '@mechanics';
 // The card-text projection. The detail panel's printed clauses are DERIVED in
 // mechanics from the effect data; this presenter only formats them (keyword
 // casing, separators, de-abbreviation). It never decides what is in the list.
@@ -300,6 +306,8 @@ export interface CombatEnemyPaneVM {
     /** A `phases` foe's DANGER moves, one per later phase, named only once the
      *  save records the foe beaten (null otherwise). Empty for any other foe. */
     dangers?: { phase: number; name: string | null }[];
+    /** The Toll-Keeper's "Pay the toll (n)" action (phase EN1l); absent for any other foe. */
+    toll?: CombatTollVM;
 }
 export interface CombatPlayerPaneVM {
     name: string; hp: number; maxHp: number; hpPct: number; guard: number; effects: CombatEffectChipVM[];
@@ -1155,6 +1163,7 @@ function enemyPane(state: CombatEncounterState, beaten: boolean): CombatEnemyPan
     // Pure selector, no state mutation; safe to call once
     // per render off the same encounter state the rest of the pane reads.
     const lethality = projectCombatOutcome(state);
+    const toll = tollVM(state);
     return {
         name: e.name,
         artKey: e.portraitAsset ?? e.id,
@@ -1171,6 +1180,7 @@ function enemyPane(state: CombatEncounterState, beaten: boolean): CombatEnemyPan
         dangers: (e.phases ?? []).flatMap((p, i) => (i > 0 && p.danger
             ? [{ phase: i + 1, name: beaten ? p.danger.name : null }]
             : [])),
+        ...(toll ? { toll } : {}),
     };
 }
 
@@ -2079,7 +2089,7 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
  */
 export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
     const r = state.enemyRiders;
-    if (!r) return [];
+    if (!r) return causewayCounterChips(state, side);
     const chip = (id: string, label: string, intensity: number, glyph: string, color: string, gloss: string, caption?: string): CombatEffectChipVM => ({
         effectId: `enemy-counter-${id}`, intensity, duration: 0,
         glyph: { glyph, color, kind: 'control', label },
@@ -2109,7 +2119,81 @@ export function foeCounterChips(state: CombatEncounterState, side: 'enemy' | 'pl
         const left = Math.max(0, r.curfew! - (r.played ?? 0));
         out.push(chip('curfew', 'Curfew', left, '☾', GLYPH_COLORS.statdown, ENEMY_COUNTER_GLOSS.curfew, `${left} of ${r.curfew} plays left`));
     }
+    return [...out, ...causewayCounterChips(state, side)];
+}
+
+// ── The keep causeway (phase EN1l): TOLL, the distrained cards, TIDE ─────────
+
+/**
+ * The Toll-Keeper's TOLL and the cards it has distrained, and the Tide-Gate's
+ * TIDE, on the foe's side. TIDE shows from the first turn, 0 included: low
+ * tide is the gate's opening. Live numbers, like GUARD; never on the telegraph.
+ */
+function causewayCounterChips(state: CombatEncounterState, side: 'enemy' | 'player'): CombatEffectChipVM[] {
+    if (side !== 'enemy') return [];
+    const chip = (id: string, label: string, intensity: number, glyph: string, color: string, gloss: string, caption?: string): CombatEffectChipVM => ({
+        effectId: `enemy-counter-${id}`, intensity, duration: 0,
+        glyph: { glyph, color, kind: 'control', label },
+        gloss,
+        ...(caption ? { caption } : {}),
+    });
+    const out: CombatEffectChipVM[] = [];
+    if (carriesToll(state.enemy)) {
+        const owed = tollOwed(state);
+        if (owed > 0) out.push(chip('toll-owed', 'Toll', owed, '¤', GLYPH_COLORS.statdown, CAUSEWAY_GLOSS.tollOwed, 'Levy hits harder per TOLL'));
+        const taken = state.enemyRiders?.distrained?.length ?? 0;
+        if (taken > 0) out.push(chip('distrained', 'Distrained', taken, '⊘', GLYPH_COLORS.control, CAUSEWAY_GLOSS.distrained));
+    }
+    if (carriesTide(state.enemy)) {
+        const tide = tideOf(state);
+        out.push(chip('tide', 'Tide', tide, '≈', GLYPH_COLORS.mark, CAUSEWAY_GLOSS.tide,
+            tide <= LOW_TIDE ? `low tide: VULNERABLE ${LOW_TIDE_VULNERABLE_PCT}%` : `${tide} of ${TIDE_MAX}`));
+    }
     return out;
+}
+
+/** What each causeway counter says when tapped (state of the fight, not a keyword). */
+const CAUSEWAY_GLOSS = {
+    tollOwed: 'The toll the keeper is owed. It rises 1 each of his turns, and his Levy adds it to the hit. Pay it on your turn as a SACRIFICE equal to the toll to reset it to 0.',
+    distrained: 'Cards Distrain took from your hand. They come back when you pay the toll.',
+    tide: `The gate's TIDE, 0 to ${TIDE_MAX}. It rises each of its turns. At TIDE ${LOW_TIDE} or less the gate is VULNERABLE ${LOW_TIDE_VULNERABLE_PCT}%.`,
+} as const;
+
+/** The board's "Pay the toll (n)" action on the Toll-Keeper's pane. */
+export interface CombatTollVM {
+    /** The TOLL owed. */
+    owed: number;
+    /** What paying costs now (0 under a WAIVE). */
+    cost: number;
+    /** The button's words, e.g. "Pay the toll (3)". */
+    label: string;
+    /** The engine's refusal (null = it can be paid now). */
+    block: string | null;
+    /** Non-null exactly when `block` is the SACRIFICE floor. */
+    shortfall: ProgramShortfall | null;
+    a11y: string;
+}
+
+/** Board copy for the toll action. */
+export const TOLL_COPY = Object.freeze({
+    label: (owed: number) => `Pay the toll (${owed})`,
+    a11y: (owed: number, cost: number, block: string | null) => (block
+        ? `Pay the toll, ${owed}. Refused: ${block}.`
+        : `Pay the toll: SACRIFICE ${cost} VITAE to reset the toll to 0 and take back any distrained card.`),
+    refused: (why: string) => `The toll can't be paid now: ${why}`,
+});
+
+/** The toll action, on the Toll-Keeper's pane only (null for every other foe). */
+export function tollVM(state: CombatEncounterState): CombatTollVM | null {
+    if (!carriesToll(state.enemy)) return null;
+    const owed = tollOwed(state);
+    const block = tollPayBlock(state);
+    const cost = tollPayCost(state);
+    return {
+        owed, cost, label: TOLL_COPY.label(owed), block,
+        shortfall: tollPayShortfall(state),
+        a11y: TOLL_COPY.a11y(owed, cost, block),
+    };
 }
 
 /** What each foe counter says when tapped (state of the fight, not a keyword). */
@@ -2213,6 +2297,8 @@ export function effectChipA11y(e: CombatEffectChipVM): string {
         : e.effectId === 'enemy-counter-verse' ? 'until the Amen spends it'
         : e.effectId === 'enemy-counter-lamp' ? (e.span ?? lampSpan(e))
         : e.effectId === 'enemy-counter-bait' ? 'until your turn ends and the Bait reads it'
+        : e.effectId === 'enemy-counter-toll-owed' || e.effectId === 'enemy-counter-distrained' ? 'until you pay the toll'
+        : e.effectId === 'enemy-counter-tide' ? "rises each foe turn until a DANGER moves it"
         : e.effectId.startsWith('enemy-counter-') ? (ENEMY_WORD_SPAN[e.effectId] ?? 'a count that lasts the fight')
         : ENEMY_WORD_SPAN[e.effectId] ?? (e.effectId.startsWith('enemy-word-') && e.duration <= 0 ? "until the foe's next turn" : `${e.duration} turns left`);
     // A state chip (no badge) has no intensity to speak.

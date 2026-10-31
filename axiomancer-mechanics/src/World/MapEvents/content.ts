@@ -317,7 +317,7 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
  * The elite nodes' draws (phase EN1j): each elite node names one foe or two,
  * and with two the map's seeded pool roll (`rollPool`, run once on arrival
  * from the run's RNG) picks one, 50/50. An elite node with no row keeps the
- * Green Jelly staged as an elite until its pair lands (EN1l: `bw-w5`).
+ * Green Jelly staged as an elite (`poolFor`).
  * Levels are T's Breakwater table, every foe under level 10.
  */
 export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
@@ -325,6 +325,8 @@ export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
     'bw-c1': [{ slug: 'cave-choir', level: 5 }, { slug: 'tithe-collector', level: 5, difficulty: 'elite' }],
     // The lighthouse path, level 7: the Lamplighter or the Wrecker (EN1k).
     'bw-l4': [{ slug: 'lamplighter', level: 7 }, { slug: 'wrecker', level: 7 }],
+    // The keep causeway, level 8 (phase EN1l): the Toll-Keeper or the Tide-Gate.
+    'bw-w5': [{ slug: 'toll-keeper', level: 8 }, { slug: 'tide-gate', level: 8 }],
 };
 
 /**

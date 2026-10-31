@@ -76,6 +76,9 @@ import {
     programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
     programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart,
 } from './combat.card-program';
+import {
+    programPaySacrifice, programSacrificeCost, programSacrificeShortfall, SACRIFICE_FLOOR_REASON,
+} from './combat.card-program';
 import { weatherEvents } from './combat.elements';
 import { spikeEvents } from './combat.spikes';
 import { TANGLE_FREE_REFUSAL, cutGuardGain, soakDealWithWard } from './combat.enemy-words';
@@ -86,6 +89,9 @@ import {
 import {
     applyRiderAfterMove, planRiderTurn, playLimitBlock, riderAfterPlay, riderBeforeMove, riderGuardShare,
     riderAfterSpend, riderStealPerHit, riderTurnEnd,
+} from './combat.enemy-riders';
+import {
+    causewayFightStart, causewayFoeTurnEnd, settleToll, tollOwed, tollOwedBlock,
 } from './combat.enemy-riders';
 export { playLimitBlock };
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
@@ -256,7 +262,8 @@ export function initializeCombatEncounter(
 
     return {
         phase: 'reveal',
-        enemy: clonedEnemy,
+        // The Tide-Gate opens at low tide (phase EN1l).
+        enemy: causewayFightStart(clonedEnemy, 1),
         player: clonedPlayer,
         dice: [],
         turn: 0,
@@ -1589,6 +1596,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         threatMarks,
         phaseResults: [...state.phaseResults, result],
     };
+    // The Toll-Keeper's TOLL and the Tide-Gate's TIDE rise as its turn ends (phase EN1l).
+    if (hasEnemyPhases(enemy)) next = causewayFoeTurnEnd(next, hindered ? undefined : rider);
 
     // THE COVETED DIE: a boss/unique phase authored
     // `stake: true` converts to a temp gold die the moment its telegraph is
@@ -2034,6 +2043,51 @@ export function playSignatureSkill(
     events.push(...ledger.events);
     const next = withLog(ledger.state, events);
     return checkImmediateOutcome(next, events);
+}
+
+// ── The toll (phase EN1l) ────────────────────────────────────────────────────
+
+/** The name the toll's SACRIFICE carries in the log. */
+export const TOLL_SOURCE = 'the toll';
+
+/**
+ * Why the Toll-Keeper's toll cannot be paid now (null = it can): no toll in
+ * this fight, none owed yet, or its SACRIFICE would leave you below 1 VITAE.
+ */
+export function tollPayBlock(state: CombatEncounterState): string | null {
+    return tollOwedBlock(state)
+        ?? (programSacrificeShortfall(state, tollOwed(state), PROGRAM_KIT) ? SACRIFICE_FLOOR_REASON : null);
+}
+
+/** The toll's SACRIFICE floor: non-null exactly when `tollPayBlock` refuses it at the floor. */
+export function tollPayShortfall(state: CombatEncounterState): ProgramShortfall | null {
+    if (tollOwedBlock(state)) return null;
+    return programSacrificeShortfall(state, tollOwed(state), PROGRAM_KIT);
+}
+
+/** What paying the toll would cost now (0 under a WAIVE). */
+export function tollPayCost(state: CombatEncounterState): number {
+    return tollOwedBlock(state) ? 0 : programSacrificeCost(state, tollOwed(state), PROGRAM_KIT);
+}
+
+/**
+ * Pays the Toll-Keeper's toll on your turn: a SACRIFICE equal to the TOLL,
+ * through the card-program path (WAIVE, the SACRIFICE Globals and TETHER all
+ * apply), then the TOLL resets to 0 and every distrained card comes back to
+ * your hand. Not a card play: it never counts against a curfew, moves
+ * momentum or meets TANGLE. Refused (a fizzle, nothing paid) when
+ * `tollPayBlock` names a reason.
+ */
+export function payTheToll(state: CombatEncounterState): CombatTransition {
+    if (state.phase !== 'phase-play' || state.finalOutcome) return { state, events: [] };
+    const block = tollPayBlock(state);
+    if (block) {
+        const events: CombatEvent[] = [{ kind: 'effect-fizzled', cardId: TOLL_SOURCE, effectId: '', message: block }];
+        return { state: withLog(state, events), events };
+    }
+    const paid = programPaySacrifice(state, tollOwed(state), TOLL_SOURCE, PROGRAM_KIT);
+    const settled = settleToll(paid.state);
+    return checkImmediateOutcome(withLog(settled, paid.events), paid.events);
 }
 
 /** The baseline signature kit (for the presenter / UI bar). */

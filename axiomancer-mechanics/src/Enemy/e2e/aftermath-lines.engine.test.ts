@@ -51,6 +51,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         'enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector',
         'enemy-cave-choir',
         'enemy-lamplighter', 'enemy-wrecker',
+        'enemy-toll-keeper', 'enemy-tide-gate',
     ]);
 
     it('Chapter 1\'s description-only foes carry no aftermath prose yet', () => {

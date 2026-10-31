@@ -914,11 +914,13 @@ export interface CombatBoardProps {
      *  the arena backdrop plate. Omitted by the dev-only sandbox
      *  route, which falls back to the plate every unmapped region gets. */
     region?: string;
+    /** Pays the Toll-Keeper's toll (phase EN1l). */
+    onPayToll?: () => void;
 }
 
 export const CombatBoard = React.memo(function CombatBoard({
     vm, drag, stagedUids, onApply, onStage, onUnstage, onDiscard, onSignature, onEndPhase, resolving = false, onInspect, onChip, onGloss, onSignatureInfo, onPlayerInspect, onMomentumInfo, fx,
-    onHudLayout, region,
+    onHudLayout, region, onPayToll,
 }: CombatBoardProps) {
     const AXM = usePalette();
     const styles = useStyles();
@@ -1415,6 +1417,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                 metaLine={vm.metaLine}
                 onHudLayout={handleHudLayout}
                 region={region}
+                onPayToll={onPayToll}
             />
 
             {/* interactive column */}
