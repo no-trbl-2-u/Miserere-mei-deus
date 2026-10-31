@@ -219,7 +219,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, BW1c, NK1a, MU1, EN2a, EN2b |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, BW1c, NK1a, MU1, EN2a, EN2b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -360,6 +360,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **a run end sends the player back to character select (CH1h, CH1i)** (T in session, during `/heads-down CH1`: "Ending a run means, yes, you should make a new character"). **Added** CH1h and CH1i to the `Waits on` of the Mid-MVP check, beside CH1f, whose game over still kept the whole character. Nothing ticked.
 - **2026-10-30** — **AN5e added** (T, in session: "plot and implement them last", of the Smokehouse Gutter and the Tide-Gate, whose idles slide). **Added** AN5e under Unscheduled. Nothing ticked; no date moved.
 - **2026-10-30** — **every portrait animates, plotted (AN5)** (T, in session: "/plot Use all the new spritesheets from anim-temp in order to animate all the enemies that we currently have images for"). **Added** AN5a-AN5d under Unscheduled: no T act waits on them. The Nov 8 portrait swap keeps its premise; T ruled a swapped enemy goes back to static until a new sheet is drawn, and AN5a's test enforces it. Nothing ticked; no date moved.
 - **2026-10-31** — **two tooling fixes plotted (TF1)** (T, in session during `/heads-down`: "/plot asap, join this run"). **Added** TF1 under Unscheduled: no T act waits on it. Once it ships, the four ticked event-kind Items (Nov 4, 5, 6, 12) leave the reminder. Nothing ticked; no date moved.

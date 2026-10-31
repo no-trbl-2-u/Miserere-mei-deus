@@ -45,6 +45,10 @@
   the deck rule for every character (A8, CH1g): grey Blow 3 / Ward 3 / Word 2 plus one card from each starting
   lane, none from the relic's lane. CH1a-CH1d had shipped (#974, #978, #979, #981), so the amend is a new phase,
   not an edit of CH1a; CH1f now requires it and names the Chosen.
+- **Amended by `/plot asap` from T, 2026-10-31** (attended, during `/heads-down CH1`): after CH1f (#1180) shipped, a
+  game over still restarted the run as the same character with everything kept, and a full reset rebuilt the same
+  character. T: "New run, new character"; "Ending a run means, yes, you should make a new character". T also ruled
+  that a Labyrinth defeat ends the run, and that the codex carries over (A9, A10; CH1h, CH1i).
 
 ## Outcome
 
@@ -83,6 +87,16 @@ plus the lane of every worn relic, never grey, so late-run lane control differs 
   each starting lane and none from its relic's lane, and its run deals Blow 3, Ward 3, Word 2 plus those two. The
   content test fails a character whose starting cards are not exactly one from each starting lane, include a card
   of the relic's lane, or include a Spell, a Global or a Curse.
+- **A9** (T, 2026-10-31: "New run, new character"; "Ending a run means, yes, you should make a new character") A run
+  ends at a game over (a death while dying, on the map or at a hazard) and at a Labyrinth defeat (T, same day). A
+  run end keeps only the codex (T: carry it) and the rng state; the character, its level, deck, relics, gold,
+  quests, flags and world are dropped, and the state says the run is over with no character chosen. Starting the
+  next run as a roster character gives that character's fresh level-1 run with the codex carried. `RESET_RUN` never
+  reuses the previous `characterId` by itself. An engine test covers each run end and the codex carry.
+- **A10** After a run end the player lands on character select for the same save slot: CONFIRM starts the next run
+  in that slot as the chosen character (codex carried), BACK returns to the slot list. A slot saved at a run end is
+  never "Made before characters": it reads as a finished run, and continuing it opens character select. A screen or
+  store test covers the map game over, the hazard game over and the Labyrinth defeat.
 
 Measure: the A3 engine test passes, and the A5 report column shows the late-run lane mix includes a lane absent at
 run start.
@@ -248,6 +262,63 @@ against the Measure above.
   delete, and offers no continue.
 - Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`, root `npm test`.
 
+### CH1h — A run end drops the character · M · closes A9 · requires nothing (CH1f shipped, #1180)
+
+Measure: `npm run verify -w axiomancer-mechanics` and `npm run verify -w axiomancer-mobile` green; the run-end engine
+test shows a game over and a Labyrinth-defeat reset leave no character, keep the codex, and the next run as the
+Chosen starts at level 1 with its ten-card deck and the codex entries unlocked before.
+
+- Today (read 2026-10-31): `Game/death.ts` `resolveDeath` answers a death while dying with
+  `freshRunKeepingCharacter` (the whole player kept: level, deck, relics, gold); `RESET_RUN` with `keepCharacter:
+  false` rebuilds the same character via `again` (`game.reducer.ts`, CH1f); mobile's Labyrinth defeat calls
+  `resetRun({ keepCharacter: true })` (`app/combat-encounter/index.tsx`).
+- Scope (engine): one run-end state, built in `Game/death.ts` (or a sibling): the pre-run shell (`createNewGameState()`
+  with no character, as CH1f left it) with the old `codex` and `rngState` carried and a run-over marker on the state
+  (e.g. `runOver: true`, optional and additive), so a caller can tell "a run ended, pick a character" from "a save
+  made before characters". `resolveDeath`'s run-over outcome returns it; `RESET_RUN { keepCharacter: false }`
+  returns it and drops `again`. A new-run entry that takes a character id and the codex to carry (e.g.
+  `createNewGameState({ characterId, codex })` or a `START_RUN` action) clears the marker. `RESET_RUN { keepCharacter:
+  true }` and `freshRunKeepingCharacter` stay for the DEV "RESET RUN" control only; no player path calls them after
+  CH1i. Engine store: `playerDied` and `resetRun` keep their return values.
+- Consumers: `Game/store.ts` (`playerDied`, `resetRun`), `Game/death.ts`, mobile `state/actions.ts` (types only in
+  this phase), the run-end play-log record (`recordRunEnd`, unchanged), every test asserting a game over keeps the
+  player (grep `freshRunKeepingCharacter`, `run-over`, `keepCharacter`).
+- Save / schema: the run-over marker is optional and additive; no `game.migrate.ts` hop unless a reader rejects
+  unknown fields.
+- Tests matrix: new `Game/e2e/run-end.engine.test.ts`: a death while dying gives the run-over state (no
+  `characterId`, codex kept, world and quests fresh, marker set); `RESET_RUN { keepCharacter: false }` from a Chosen
+  run gives the same, never the Chosen again; the new-run entry as the Chosen from it gives level 1, the ten-card
+  deck, the Ring worn, the codex kept and no marker; `keepCharacter: true` is unchanged (dev). Death-rule tests
+  (DY1) that pin the old "run over keeps the character" are rewritten.
+- Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`.
+
+### CH1i — After a run end, character select · M · closes A10 · requires CH1h
+
+Measure: on the web build, a second death on the map opens character select for the same slot; CONFIRM starts a
+fresh Chosen there with the codex kept; a reload at character select reopens it, never "Made before characters".
+
+- Scope (mobile): the map fight's run-over branch (`app/combat-encounter/index.tsx`, `actions.playerDied` returns
+  `'run-over'`), the hazard's run-over branch (`state/hazard/store-actions.ts`, `armingHazardDeath`) and the
+  Labyrinth defeat (today `resetRun({ keepCharacter: true })`, now a run end: `resetRun({ keepCharacter: false })`)
+  each save the run-over state and route to `/character-select?slot=<current slot>`. Character select gains the
+  run-end entry: CONFIRM starts the next run in that slot through CH1h's new-run entry with the slot's codex
+  carried (not `startNewGameAction`'s blank state), BACK goes to the slot list. The saves list and main menu read a
+  run-over slot as a finished run (copy in the presenter's copy table, e.g. "Run over") whose continue action opens
+  character select; `mostRecentSlot` and CONTINUE treat it the same way. "Made before characters" stays for saves
+  with no `characterId` and no run-over marker. DEV "NEW RUN" routes the same way; DEV "RESET RUN" keeps its
+  dev behaviour.
+- Consumers: `app/combat-encounter/index.tsx`, `state/hazard/store-actions.ts` and its screen, `app/labyrinth/`,
+  `app/character-select/index.tsx`, `state/presenters/character-select.engine.ts`, `state/menu/store-actions.ts`,
+  `state/persistence/saveSlots.ts` (`SaveSlotSummary`), `app/saves/index.tsx`, `state/presenters/main-menu.engine.ts`,
+  `components/DebugRunControls.tsx`, `app/death-return` (unchanged for a first death).
+- Save / schema: `SaveSlotSummary` reads the run-over marker.
+- Tests matrix: store/screen tests for the map game over, the hazard game over and the Labyrinth defeat each landing
+  on character select for the slot; CONFIRM from there starting the Chosen in the slot with the codex kept; the
+  saves list and main menu showing a run-over slot as continuable into character select; a pre-character save still
+  delete-only. UI change: before/after shots in the PR body (heads-down §4) for the saves list and the run-end
+  arrival at character select.
+- Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w axiomancer-mobile`, root `npm test`.
+
 ## T's characters
 
 Filled in CH1e (T, in session, 2026-10-30).
@@ -380,13 +451,16 @@ load as runs with no character.
 Closes A1, A2 of plan/phases/phase_CH1_character_select.md.
 ```
 
-(CH1b closes A3; CH1c A4; CH1d A5; CH1e A7; CH1f A6; CH1g A8.)
+(CH1b closes A3; CH1c A4; CH1d A5; CH1e A7; CH1f A6; CH1g A8; CH1h A9; CH1i A10.)
 
 ## DoD
 
-A1-A8 ticked across CH1a-CH1g; the Measure met.
+A1-A10 ticked across CH1a-CH1i; the Measure met.
 
 ## Follow-ups (out of scope)
+
+- **A game-over moment:** CH1i routes a run end straight to character select. A game-over screen or line between
+  them (copy, art) is T's content and was not asked.
 
 - **The December roster:** two more characters, their authoring session and their wiring (a new `/plot` when T
   formalises the December milestone). With them, a fourth lane makes the Measure's "absent lane" clause reachable.
