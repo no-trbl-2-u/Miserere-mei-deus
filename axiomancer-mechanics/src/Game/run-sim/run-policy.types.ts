@@ -31,7 +31,11 @@ export interface RunRoadOption {
     readonly nodeId: string;
     /** How the driver takes it: walk the road, retry the node underfoot, or take the trip from here. */
     readonly via: 'road' | 'retry' | 'travel';
-    /** The node's authored event kind (`fight`, `rest`, `quest`, …), or null when it has none. */
+    /**
+     * The node's engine event kind (a `MapEventKind`: `encounter`, `rest`,
+     * `village`, `quest`, …), or null when it has none. An elite or a boss is
+     * still an `encounter`: the fight seam's `isElite` / `isBoss` tell them apart.
+     */
     readonly nodeKind: string | null;
     /** True when the node still has something to do (unspent, or a quest node with business). */
     readonly unfinished: boolean;
@@ -152,6 +156,12 @@ export interface RunFightContext {
     readonly isElite: boolean;
     /** True when the fight may be walked away from (WITHDRAW). */
     readonly fleeAllowed: boolean;
+    /**
+     * How many times this run has already walked away from a fight on this
+     * node. An elite holds its road on, so a policy that withdraws every time
+     * never gets past it: read this to withdraw once, not forever.
+     */
+    readonly fledHere: number;
     readonly health: number;
     readonly maxHealth: number;
     readonly deck: readonly string[];

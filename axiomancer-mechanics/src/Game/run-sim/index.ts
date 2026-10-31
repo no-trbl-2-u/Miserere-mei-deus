@@ -13,5 +13,14 @@ export type {
 } from './run-policy.types';
 export { WANDERER_POLICY, nearestRoad } from './run-policy.wanderer';
 export { RUN_POLICIES, RUN_POLICY_IDS, getRunPolicy } from './run-policy.registry';
+export {
+    ARCHETYPE_POLICIES, BLOOD_PRICE_POLICY, DEFENDER_POLICY, MERCIFUL_POLICY, ELEMENTALIST_POLICY,
+    MIN_DECK_SIZE, archetypePolicy, bestLaneOffer, offLaneRemovals, type ArchetypeSpec,
+} from './run-policy.archetypes';
+export { laneFightPolicy, BLOOD_PRICE_SPEND_FLOOR } from './run-policy.fight';
+export {
+    cardLaneId, cardKeywords, laneKeywords, laneStat, itemLaneId,
+    characterLaneFit, characterOpensLane, characterForLane,
+} from './run-policy.lanes';
 export { runRoadOptions, isNodeUnfinished, isReachTarget, distanceToUnfinished, travelPassageTarget } from './run-roads';
 export { nextHazardStep, hazardRouteFor, type HazardStep } from './run-hazard';

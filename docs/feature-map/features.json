@@ -1734,6 +1734,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.lanes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/Game/store.ts"
     },
     {
@@ -1788,6 +1794,18 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.archetypes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.lanes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
     },
     {
@@ -1807,6 +1825,18 @@
       "from": "area:Game",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.archetypes.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.fight.ts"
     },
     {
       "kind": "coupling",
@@ -1915,6 +1945,12 @@
       "from": "area:Game",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Game/legacy-slots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.lanes.ts"
     },
     {
       "kind": "coupling",
