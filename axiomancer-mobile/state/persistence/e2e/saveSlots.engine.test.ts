@@ -39,7 +39,7 @@ describe('summarizeSlot', () => {
     });
 
     it('a saved slot reads level, map, run and the envelope stamp', () => {
-        const state = createNewGameState();
+        const state = createNewGameState({ characterId: 'the-chosen' });
         const s = summarizeSlot(1, { schemaVersion: 3, state, savedAt: 5_000 }, state);
         expect(s.status).toBe('saved');
         expect(s.level).toBe(1);
@@ -49,14 +49,20 @@ describe('summarizeSlot', () => {
     });
 
     it('an envelope without a stamp reads as the oldest possible write', () => {
-        const state = createNewGameState();
+        const state = createNewGameState({ characterId: 'the-chosen' });
         expect(summarizeSlot(1, { schemaVersion: 3, state }, state).savedAt).toBe(0);
     });
 });
 
 describe('mostRecentSlot — what CONTINUE resumes', () => {
     const saved = (id: 1 | 2 | 3, savedAt: number) => ({
-        ...emptySlotSummary(id), status: 'saved' as const, savedAt,
+        ...emptySlotSummary(id), status: 'saved' as const, savedAt, characterId: 'fx-char',
+    });
+
+    it('never picks a save made before characters, however recent', () => {
+        const legacy = { ...saved(1, 99), characterId: null };
+        expect(mostRecentSlot([legacy, saved(2, 5)])).toBe(2);
+        expect(mostRecentSlot([legacy])).toBeNull();
     });
 
     it('is null when nothing is saved', () => {

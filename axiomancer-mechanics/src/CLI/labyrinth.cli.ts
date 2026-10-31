@@ -23,6 +23,7 @@
 
 import { parseArgv, prompt, emit, log, logState, setIoMode, setOutputMode, setStateLogPath, type CliFlags } from './io';
 import { createCharacter } from '../Character';
+import { DEV_PRESET_LANE_IDS } from '../Character/presets';
 import { createGameStore } from '../Game/store';
 import { createEventEmitter } from '../Game/events';
 import { nullAdapter } from '../Game/persistence/null.adapter';
@@ -309,11 +310,14 @@ export async function runLabyrinthCli(rawArgs = process.argv.slice(2)): Promise<
 
     const events = createEventEmitter();
     events.onAny(emit);
-    const player = createCharacter({
-        name: 'Walker',
-        level: 1,
-        baseStats: { heart: 6, body: 6, mind: 6 },
-    });
+    const player = {
+        ...createCharacter({
+            name: 'Walker',
+            level: 1,
+            baseStats: { heart: 6, body: 6, mind: 6 },
+        }),
+        startingLaneIds: [...DEV_PRESET_LANE_IDS],
+    };
     const store = createGameStore(nullAdapter, { player }, events);
     const level = Number.isFinite(Number(levelArg)) && Number(levelArg) > 0 ? Number(levelArg) : 14;
     // Late-game continent: the level-ladder combat preset (not the fresh

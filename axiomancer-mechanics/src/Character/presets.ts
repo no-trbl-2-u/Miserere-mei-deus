@@ -237,6 +237,13 @@ export function getPresetById(id: string): CharacterPreset | undefined {
 
 // ─── Builder ──────────────────────────────────────────────────────────────────
 
+/**
+ * The lanes a preset-built character draws rewards from. A preset is a dev
+ * and CLI shortcut, not a roster character, but every player needs a reward
+ * pool, so each one starts on two explicit lanes.
+ */
+export const DEV_PRESET_LANE_IDS: readonly string[] = Object.freeze(['defender', 'blood-price']);
+
 export function buildCharacterFromPreset(preset: CharacterPreset): Character {
     const consumables: Item[] = preset.consumables.map(({ id, quantity }) => {
         const source = consumableLibrary.find(c => c.id === id);
@@ -250,7 +257,7 @@ export function buildCharacterFromPreset(preset: CharacterPreset): Character {
     // (there is no procedural gear), so presets carry only their consumables
     // and wear no relic (a run starts with none). The `equipment` field stays
     // on the recipe as vestigial metadata.
-    return createCharacter({
+    const built = createCharacter({
         name: preset.name,
         level: preset.level,
         baseStats: preset.baseStats,
@@ -258,4 +265,5 @@ export function buildCharacterFromPreset(preset: CharacterPreset): Character {
         inventory: consumables,
         knownCards: preset.knownCards,
     });
+    return { ...built, startingLaneIds: [...DEV_PRESET_LANE_IDS] };
 }

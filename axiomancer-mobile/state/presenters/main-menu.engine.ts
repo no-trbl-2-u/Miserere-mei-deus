@@ -17,6 +17,7 @@
 import {
     describeSavedAt,
     formatMapName,
+    isPreCharacterSave,
     mostRecentSlot,
     type SaveSlotId,
     type SaveSlotSummary,
@@ -47,6 +48,8 @@ export const SAVE_SLOTS_COPY = Object.freeze({
     subtitleLoad: 'choose a page to resume',
     empty: 'an empty page',
     unreadable: 'the page was torn — it cannot be read',
+    // A save with no character (made before characters): readable, never continued.
+    preCharacter: 'Made before characters',
     startAction: 'BEGIN',
     overwriteAction: 'OVERWRITE',
     // The LOAD screen's verbs: JOURNEY ON… (resume) and DELETE SAVE (clear).
@@ -96,6 +99,19 @@ export function slotRowVM(
     now: number,
     mostRecent: SaveSlotId | null,
 ): SaveSlotRowVM {
+    if (isPreCharacterSave(summary)) {
+        return {
+            id: summary.id,
+            numeral: slotNumeral(summary.id),
+            status: summary.status,
+            mostRecent: false,
+            detail: SAVE_SLOTS_COPY.preCharacter,
+            stamp: `saved ${describeSavedAt(summary.savedAt, now)}`,
+            action: 'none',
+            actionLabel: '',
+            clearable: true,
+        };
+    }
     const base = {
         id: summary.id,
         numeral: slotNumeral(summary.id),
@@ -160,7 +176,7 @@ export function selectMainMenuViewModel(
 ): MainMenuViewModel {
     const recent = mostRecentSlot(summaries);
     const recentSummary = recent === null ? null : summaries.find((s) => s.id === recent) ?? null;
-    const anySaved = summaries.some((s) => s.status === 'saved');
+    const anySaved = summaries.some((s) => s.status === 'saved' && !isPreCharacterSave(s));
     return {
         continue: {
             enabled: recent !== null,

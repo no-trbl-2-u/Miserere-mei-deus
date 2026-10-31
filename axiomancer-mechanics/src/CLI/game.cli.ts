@@ -30,6 +30,7 @@ import fs from 'fs';
 import { parseArgv, prompt, emit, log, logState, setIoMode, setOutputMode, setStateLogPath, attachCliLogSinks, type CliFlags } from './io';
 
 import { createCharacter } from '../Character';
+import { DEV_PRESET_LANE_IDS } from '../Character/presets';
 import { ENEMY_REGISTRY, EnemyLibrary, type EnemySlug } from '../Enemy/enemy.library';
 import { deepClone } from '../Utils';
 import type { EquipmentSlot } from '../Items';
@@ -117,11 +118,15 @@ async function bootstrapStore(adapter: PersistenceAdapter, initial?: GameState, 
         return store;
     }
 
-    const player = createCharacter({
-        name: 'Player',
-        level: 1,
-        baseStats: { heart: 5, body: 5, mind: 5 },
-    });
+    // The blank character holds the dev preset lanes, so its rewards have a pool.
+    const player = {
+        ...createCharacter({
+            name: 'Player',
+            level: 1,
+            baseStats: { heart: 5, body: 5, mind: 5 },
+        }),
+        startingLaneIds: [...DEV_PRESET_LANE_IDS],
+    };
     log('\nStarting with a blank character (level 1, 5/5/5). Use the DEV menu to configure.\n');
 
     // `--start-map` (map revamp M3a): a fresh game placed on another map.

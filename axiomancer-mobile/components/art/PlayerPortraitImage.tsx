@@ -3,8 +3,9 @@
  *
  * Used at every production portrait call site (character-sheet header,
  * combat medallion, pilgrim inspect modal).
- * Reads the chosen portrait from the store (`portrait:<id>` flag — see
- * assets/images/portraits); decorative, the caller's frame supplies a label.
+ * A run opened as a roster character shows that character's portrait. Any
+ * other state reads the chosen portrait from the store (`portrait:<id>` flag —
+ * see assets/images/portraits). Decorative, the caller's frame supplies a label.
  */
 
 import React from 'react';
@@ -17,6 +18,7 @@ import { usePalette } from '@/theme/runtime';
 
 import { getPlayerPortrait, portraitIdFromFlags } from '@/assets/images/portraits';
 import { useGameState } from '@/state/GameStoreProvider';
+import { characterPortraitKey } from '@/state/presenters/character-select.engine';
 
 interface PlayerPortraitImageProps {
     /** Accepts a percentage (e.g. '100%') so the portrait can fill a flex column. */
@@ -46,7 +48,9 @@ export function PlayerPortraitImage({
 }: PlayerPortraitImageProps) {
     const dying = useGameState((s) => s.dying === true);
     const palette = usePalette();
-    const portraitId = useGameState((s) => portraitIdFromFlags(s.flags));
+    const characterPortrait = useGameState((s) => characterPortraitKey(s.player?.characterId));
+    const flagPortrait = useGameState((s) => portraitIdFromFlags(s.flags));
+    const portraitId = characterPortrait ?? flagPortrait;
     const portrait = getPlayerPortrait(portraitId);
     if (skullWhenDying && dying) {
         const box = [width, height].filter((n): n is number => typeof n === 'number');

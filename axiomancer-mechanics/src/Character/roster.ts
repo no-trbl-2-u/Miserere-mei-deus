@@ -7,8 +7,9 @@
  * (one per starting lane, none from the relic's lane) and a one-line playstyle. `createNewGameState({ characterId })`
  * (`Game/game.reducer.ts`) turns a definition into a run.
  *
- * The roster is empty until T's first character is written (phase CH1f); a
- * run with no character plays as before.
+ * Every run opens as a roster character (NEW GAME goes through the select
+ * screen); a save with no `characterId` predates characters and is only
+ * offered for deletion.
  *
  * Everything here is data or a pure function over plain values. The checker
  * takes the lane registry and the relic library as optional last arguments,
@@ -60,8 +61,22 @@ export const CHARACTER_GREY_DECK: readonly string[] = Object.freeze([
     'grey-word', 'grey-word',
 ]);
 
-/** Every character a run can open as. Empty until T's first character. */
-export const CHARACTER_ROSTER: readonly CharacterDefinition[] = Object.freeze([]);
+/**
+ * Every character a run can open as. T's words for each field are in
+ * `plan/phases/phase_CH1_character_select.md` ("T's characters").
+ */
+export const CHARACTER_ROSTER: readonly CharacterDefinition[] = Object.freeze([
+    Object.freeze({
+        id: 'the-chosen',
+        name: 'The Chosen',
+        portraitKey: 'altair-man',
+        startingRelicId: 'relic-disarming-plea',
+        baseStats: Object.freeze({ heart: 7, body: 3, mind: 5 }),
+        startingLaneIds: Object.freeze(['defender', 'blood-price'] as const) as readonly [string, string],
+        startingCardIds: Object.freeze(['df-e-04a', 'bp-p-02a'] as const) as readonly [string, string],
+        playstyle: 'Fumbling Squire trying to hold the line',
+    }),
+]);
 
 /**
  * Looks a character up by id.

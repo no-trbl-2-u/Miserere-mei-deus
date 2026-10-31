@@ -111,12 +111,10 @@ Mean VITAE per fight the deck lost to the foe's threats against what it lost to 
 
 Each state rolls 400 seeded combat rewards (seed 1). **start** is the run as dealt, the starting relic worn; **late** adds relics until three are worn, each the library lane relic that adds the most lanes the pool lacks (ties in library order). A lane reads its share of the cards offered; `grey fallback` is a pool with no lane in it.
 
-No roster character yet: the no-character baseline row only.
-
 | character | state | relics worn | lanes in the pool | share of offers |
 |---|---|---|---|---|
-| no character | start | none | grey fallback | grey 100% |
-| no character | late | relic-disarming-plea, relic-crimson-circlet, relic-elementalist-signet | blood-price, elementalist, merciful | elementalist 35%, blood-price 34%, merciful 31% |
+| The Chosen | start | relic-disarming-plea | blood-price, defender, merciful | merciful 54%, defender 23%, blood-price 22% |
+| The Chosen | late | relic-disarming-plea, relic-elementalist-signet, relic-crimson-circlet | blood-price, elementalist, defender, merciful | blood-price 29%, elementalist 28%, merciful 26%, defender 17% |
 
 ## Decks
 

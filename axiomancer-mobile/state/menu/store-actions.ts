@@ -97,8 +97,8 @@ export function hydrateStoreWithGameState(store: AppStore, next: GameState): voi
  * path never passes it.
  *
  * `characterId` opens the run as a roster character (its relic worn, its
- * stats and deck dealt; see the engine's `createNewGameState`). Absent, the
- * run has no character, as before. `roster` replaces the engine's roster
+ * stats and deck dealt; see the engine's `createNewGameState`). Required: a
+ * run always has a character, and this throws without one. `roster` replaces the engine's roster
  * (tests pass a fixture character; the player path never passes it).
  */
 export function startNewGameAction(
@@ -109,6 +109,9 @@ export function startNewGameAction(
     characterId?: string,
     roster?: readonly CharacterDefinition[],
 ): GameState {
+    if (characterId === undefined) {
+        throw new Error('startNewGameAction: a new run opens as a roster character; pass a characterId.');
+    }
     const fresh = createNewGameState({ startMap, characterId, roster });
     slots.selectSlot(slot);
     hydrateStoreWithGameState(store, fresh);
@@ -123,13 +126,18 @@ export function startNewGameAction(
 
 /**
  * LOAD GAME from `slot`. Returns `false` (and changes nothing) when the slot
- * is empty or unreadable — the slot screen disables those rows, so this is
+ * is empty, unreadable or made before characters — the slot screen disables those rows, so this is
  * a guard, not a path.
  */
 export function loadGameAction(store: AppStore, slots: SaveSlotStore, slot: SaveSlotId): boolean {
     const saved = slots.readSlot(slot);
     if (saved === null) {
         getLogger().warn('persistence', 'load-game-empty', { slot });
+        return false;
+    }
+    if (saved.player?.characterId === undefined) {
+        // Made before characters: it has no reward lanes, so it is deleted, never resumed.
+        getLogger().warn('persistence', 'load-game-pre-character', { slot });
         return false;
     }
     slots.selectSlot(slot);

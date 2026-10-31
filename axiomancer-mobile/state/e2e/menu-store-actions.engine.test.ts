@@ -21,7 +21,7 @@ import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { EMPTY_HAZARD_SLICE, createAppStore, type AppStore } from '@/state/store';
 
 function savedState(name: string, level = 1, rngState = 7): GameState {
-    const s = createNewGameState();
+    const s = createNewGameState({ characterId: 'the-chosen' });
     return { ...s, rngState, player: { ...s.player, name, level } };
 }
 
@@ -66,7 +66,7 @@ describe('startNewGameAction — NEW GAME', () => {
         const store = makeStore(slots);
         store.setState({ player: { ...store.getState().player, name: 'Stale', level: 9 } });
 
-        const fresh = startNewGameAction(store, slots, 2);
+        const fresh = startNewGameAction(store, slots, 2, undefined, 'the-chosen');
 
         expect(slots.getActiveSlot()).toBe(2);
         expect(slots.saveCount).toBe(1);
@@ -82,8 +82,8 @@ describe('startNewGameAction — NEW GAME', () => {
     it('two new games get distinct runs', () => {
         const slots = createMemorySlotStore();
         const store = makeStore(slots);
-        const a = startNewGameAction(store, slots, 1);
-        const b = startNewGameAction(store, slots, 3);
+        const a = startNewGameAction(store, slots, 1, undefined, 'the-chosen');
+        const b = startNewGameAction(store, slots, 3, undefined, 'the-chosen');
         expect(a.runId).not.toBe(b.runId);
         expect(slots.readSlot(1)?.runId).toBe(a.runId);
         expect(slots.readSlot(3)?.runId).toBe(b.runId);
@@ -114,12 +114,30 @@ describe('startNewGameAction — NEW GAME', () => {
         expect(store.getState().player.characterId).toBe('fixture-knight');
     });
 
-    it('without a character, the slot holds a run with no character', () => {
+    it('without a character it throws and writes nothing', () => {
         const slots = createMemorySlotStore();
         const store = makeStore(slots);
-        startNewGameAction(store, slots, 1);
-        expect(slots.readSlot(1)?.player).not.toHaveProperty('characterId');
-        expect(slots.readSlot(1)?.player).not.toHaveProperty('startingLaneIds');
+        expect(() => startNewGameAction(store, slots, 1)).toThrow(/characterId/);
+        expect(slots.readSlot(1)).toBeNull();
+    });
+
+    it('the Chosen starts with a reward pool that is not empty', () => {
+        const slots = createMemorySlotStore();
+        const store = makeStore(slots);
+        startNewGameAction(store, slots, 1, undefined, 'the-chosen');
+        const saved = slots.readSlot(1)!.player;
+        expect(saved.characterId).toBe('the-chosen');
+        expect(saved.startingLaneIds).toEqual(['defender', 'blood-price']);
+        expect(getEquippedItems(saved.equipment).map(p => p.id)).toEqual(['relic-disarming-plea']);
+    });
+
+    it('a save made before characters is never loaded or continued', () => {
+        const old = createNewGameState();
+        const legacy = { ...old, player: { ...old.player, characterId: undefined } } as GameState;
+        const slots = createMemorySlotStore({ initial: { 2: { state: legacy, savedAt: 99 } } });
+        const store = makeStore(slots);
+        expect(loadGameAction(store, slots, 2)).toBe(false);
+        expect(continueGameAction(store, slots)).toBe(false);
     });
 });
 

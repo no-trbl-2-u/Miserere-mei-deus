@@ -27,7 +27,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { STARTABLE_MAPS, STARTING_MAP } from '@mechanics';
+import { CHARACTER_ROSTER, STARTABLE_MAPS, STARTING_MAP } from '@mechanics';
 import type { GameState, LabyrinthActId, MapName } from '@mechanics';
 
 import { DevButton, DevButtons, DevChip, DevChips, DevRow } from '@/components/dev/DevControls';
@@ -90,7 +90,9 @@ export function DebugWorldTravel() {
     const onNewGameOn = (map: MapName) => {
         // The active slot, or slot 1 when none is chosen yet (a fixture boot).
         const slot = slots.getActiveSlot() ?? 1;
-        startNewGame(slot, map);
+        // The run's own character, else the first on the roster: a run always has one.
+        const characterId = (store.getState() as unknown as GameState).player?.characterId ?? CHARACTER_ROSTER[0]?.id;
+        startNewGame(slot, map, characterId);
         router.push('/(tabs)/exploration');
         setFeedback(`new game · slot ${slot} · ${map}`);
     };

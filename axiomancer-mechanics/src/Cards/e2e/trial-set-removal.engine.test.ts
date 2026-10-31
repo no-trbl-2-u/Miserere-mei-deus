@@ -30,7 +30,7 @@ vi.mock('../library/merciful.cards', () => ({
     MERCIFUL_SET: { id: 'merciful', cards: [], lanes: [] },
 }));
 
-import { cardLibrary, getCardById } from '../cards.library';
+import { cardLibrary } from '../cards.library';
 import { CARD_LANES } from '../card.lanes';
 import { COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards } from '../../Combat/combat.rewards';
 import { runOneEncounter } from '../../Combat/combat.encounter.sim';
@@ -47,11 +47,9 @@ describe('the game without the trial sets', () => {
         expect(CARD_LANES.map(l => l.id)).toEqual(['grey']);
     });
 
-    it('the reward pool still fills', () => {
+    it('no card is offered as a reward: grey is never one, and a pool of no lane throws', () => {
         expect([...COMBAT_REWARD_POOL].sort()).toEqual(['grey-strike', 'grey-ward', 'grey-word']);
-        const offers = rollCombatCardRewards(deepClone(Player), () => 0.3, 3);
-        expect(offers).toHaveLength(3);
-        for (const id of offers) expect(getCardById(id)).toBeDefined();
+        expect(() => rollCombatCardRewards(deepClone(Player), () => 0.3, 3)).toThrow(/no reward pool/);
     });
 
     it('a fresh-run fight runs to an outcome with no program ledger', () => {
@@ -77,6 +75,8 @@ describe('the game without the trial sets', () => {
  *  the mobile art registry (Metro needs a literal id per painting; removing a
  *  set deletes its rows and paintings there, and an unmapped id falls back). */
 const ALLOWED = new Set([
+    path.join('axiomancer-mechanics', 'src', 'Character', 'roster.ts'),
+    path.join('axiomancer-mechanics', 'src', 'Character', 'e2e', 'character-roster.engine.test.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'blood-price.cards.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'blood-price.engine.test.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'library', 'elementalist.cards.ts'),

@@ -2,14 +2,14 @@
  * Reward lanes by character — which card lanes a run's rewards draw on, at the
  * start of the run and after three relics are worn (phase CH1d).
  *
- * One row per roster character, plus a baseline row for a run with no
- * character. Each row rolls `rolls` seeded combat rewards in two states:
+ * One row per roster character. Each row rolls `rolls` seeded combat rewards in
+ * two states:
  *
  *  - **start**: the character as `createNewGameState` deals it (its starting
- *    relic worn, nothing else); the baseline has nothing worn;
+ *    relic worn, nothing else);
  *  - **late**: the same player with three relics worn: the starting relic plus
  *    the library lane relics that add the most lanes not already in the pool,
- *    ties in library order (the baseline fills all three positions the same way).
+ *    ties in library order.
  *
  * A state reports the lanes in the pool ({@link unlockedLaneIds}) and each
  * lane's share of the cards offered. A card in no registered lane reads under
@@ -51,10 +51,10 @@ export interface RewardLaneState {
     shares: Record<string, number>;
 }
 
-/** One report row: a character, or the no-character baseline. */
+/** One report row: a roster character. */
 export interface RewardLaneRow {
-    /** The roster character's id; `null` for the baseline. */
-    character: string | null;
+    /** The roster character id. */
+    character: string;
     name: string;
     start: RewardLaneState;
     late: RewardLaneState;
@@ -64,7 +64,7 @@ export interface RewardLaneRow {
 export interface RewardLanesReport {
     rolls: number;
     seed: number;
-    /** One row per roster character in roster order, then the baseline row. */
+    /** One row per roster character in roster order, in roster order. */
     rows: RewardLaneRow[];
 }
 
@@ -169,7 +169,7 @@ function measureState(
 /** One row: the start player (as dealt) and the same player with relics added. */
 function measureRow(
     start: Character,
-    character: string | null,
+    character: string,
     name: string,
     opts: Required<Omit<RewardLanesOptions, 'roster'>>,
 ): RewardLaneRow {
@@ -187,11 +187,11 @@ function measureRow(
 }
 
 /**
- * The reward-lane section: one row per roster character and a baseline.
+ * The reward-lane section: one row per roster character.
  *
  * @param options - the roster, lanes and relics (fixtures in tests), rolls and seed.
- * @returns The rows; with an empty roster, the baseline row alone.
- * @example rewardLanesByCharacter({ rolls: 50 }).rows.at(-1)!.character // null
+ * @returns The rows; none for an empty roster.
+ * @example rewardLanesByCharacter({ rolls: 50 }).rows[0]!.character // "the-chosen"
  */
 export function rewardLanesByCharacter(options: RewardLanesOptions = {}): RewardLanesReport {
     const roster = options.roster ?? CHARACTER_ROSTER;
@@ -205,6 +205,5 @@ export function rewardLanesByCharacter(options: RewardLanesOptions = {}): Reward
         createNewGameState({ characterId: def.id, roster, relics: opts.relics }).player,
         def.id, def.name, opts,
     ));
-    rows.push(measureRow(createNewGameState().player, null, 'No character', opts));
     return { rolls: opts.rolls, seed: opts.seed, rows };
 }

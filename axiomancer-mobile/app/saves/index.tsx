@@ -12,9 +12,9 @@
  * The rows come from `selectSaveSlotRows` over the live slot summaries;
  * the verbs are the `useSaveSlots()` actions. After a BEGIN / RESUME the
  * screen replaces itself with the run's active tab (combat if a fight was
- * saved mid-encounter, the map otherwise). Once the character roster holds a
- * character, a new game's slot pick opens `/character-select` instead, and
- * its CONFIRM starts the run.
+ * saved mid-encounter, the map otherwise). A new game's slot pick opens
+ * `/character-select`, whose CONFIRM starts the run. A save made before
+ * characters reads "Made before characters" and offers DELETE SAVE only.
  */
 
 import React, { useCallback, useState } from 'react';
@@ -34,7 +34,6 @@ import {
     type SaveSlotRowVM,
     type SaveSlotsMode,
 } from '@/state/presenters/main-menu.engine';
-import { selectRoster } from '@/state/presenters/character-select.engine';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -54,7 +53,7 @@ export default function SaveSlotsScreen() {
     const params = useLocalSearchParams<{ mode?: string }>();
     const mode = readMode(params.mode);
     const summaries = useSaveSlotSummaries();
-    const { startNewGame, loadGame, clearSlot } = useSaveSlots();
+    const { loadGame, clearSlot } = useSaveSlots();
     const [pending, setPending] = useState<Pending>(null);
 
     const rows = selectSaveSlotRows(summaries, mode, Date.now());
@@ -65,18 +64,12 @@ export default function SaveSlotsScreen() {
     }, [router, store]);
 
     /**
-     * Begin a new game in `slot`: straight into the run while the roster is
-     * empty, otherwise through the character select (which starts the run on
-     * CONFIRM, so an abandoned select writes nothing to the slot).
+     * Begin a new game in `slot`: always through the character select, which
+     * starts the run on CONFIRM, so an abandoned select writes nothing to the slot.
      */
     const beginRun = useCallback((slot: SaveSlotId) => {
-        if (selectRoster().length > 0) {
-            router.push(`/character-select?slot=${slot}`);
-            return;
-        }
-        startNewGame(slot);
-        enterRun();
-    }, [enterRun, router, startNewGame]);
+        router.push(`/character-select?slot=${slot}`);
+    }, [router]);
 
     const onAction = useCallback((row: SaveSlotRowVM) => {
         if (row.action === 'start') {

@@ -7,8 +7,8 @@
  *   · a relic's lane is the relic library's entry first, then the item's own
  *     `laneId`; a lane id the registry does not carry is ignored (A1);
  *   · the unlocked lanes are the worn relics' lanes, registry order, never
- *     grey; a carried, unworn relic opens nothing; with none worn the pool is
- *     the grey office (A2);
+ *     grey; a carried, unworn relic opens nothing; with none worn there is no
+ *     pool and the draft throws (A2, CH1f deleted the grey fallback);
  *   · the lane slots follow the worn count, 0 / 1-2 / 3-4 / 5 → 0 / 1 / 2 / 3,
  *     from the lane worn most, a tie broken by the seeded rng (A3);
  *   · the roll fills the lane slots first, then the rest from the pool:
@@ -104,10 +104,10 @@ describe('A2 · the unlocked lanes are the worn relics\' lanes', () => {
         expect(rewardPoolFor(p, LANES, RELICS)).toEqual([...BLOOD_CARDS]);
     });
 
-    it('the same relic carried in the satchel, unworn, opens nothing: the pool is grey', () => {
+    it('the same relic carried in the satchel, unworn, opens nothing: there is no pool', () => {
         const p = player([], [saved('fx-relic-blood')]);
         expect(unlockedLaneIds(p, LANES, RELICS)).toEqual([]);
-        expect(rewardPoolFor(p, LANES, RELICS)).toEqual([...GREY_LANE.cardIds]);
+        expect(() => rewardPoolFor(p, LANES, RELICS)).toThrow(/no reward pool/);
     });
 
     it('unequipping it removes the lane again', () => {
@@ -115,11 +115,11 @@ describe('A2 · the unlocked lanes are the worn relics\' lanes', () => {
         const unequipped = { ...worn, equipment: { weapon: null, armor: null, relics: [] } };
         expect(unlockedLaneIds(worn, LANES, RELICS)).toEqual(['fx-blood']);
         expect(unlockedLaneIds(unequipped, LANES, RELICS)).toEqual([]);
-        expect(rewardPoolFor(unequipped, LANES, RELICS)).toEqual([...GREY_LANE.cardIds]);
+        expect(() => rewardPoolFor(unequipped, LANES, RELICS)).toThrow(/no reward pool/);
     });
 
-    it('no worn lane relic gives the grey fallback; grey is never an unlocked lane', () => {
-        expect(rewardPoolFor(player(), LANES, RELICS)).toEqual([...GREY_LANE.cardIds]);
+    it('no worn lane relic gives no pool; grey is never an unlocked lane', () => {
+        expect(() => rewardPoolFor(player(), LANES, RELICS)).toThrow(/no reward pool/);
         const greyRelic = player([saved('fx-relic-grey'), saved('fx-relic-plain')]);
         expect(unlockedLaneIds(greyRelic, LANES, RELICS)).toEqual([]);
     });
@@ -172,17 +172,15 @@ describe('A3 · the lane slots follow the worn count', () => {
 });
 
 describe('A4 · the roll: lane slots first, then the pool', () => {
-    it('no lane relic gives grey ids only', () => {
+    it('a relic with no lane gives no pool, so the roll throws rather than offering grey', () => {
         for (const seed of SEEDS) {
-            const offers = roll(player([saved('fx-relic-plain')]), seed);
-            expect(offers).toHaveLength(3);
-            for (const id of offers) expect(GREY_LANE.cardIds).toContain(id);
+            expect(() => roll(player([saved('fx-relic-plain')]), seed)).toThrow(/no reward pool/);
         }
     });
 
-    it('an unworn lane relic changes nothing: grey only, exactly as with no relic', () => {
+    it('an unworn lane relic changes nothing: no pool, exactly as with no relic', () => {
         for (const seed of SEEDS) {
-            expect(roll(player([], [saved('fx-relic-blood')]), seed)).toEqual(roll(player(), seed));
+            expect(() => roll(player([], [saved('fx-relic-blood')]), seed)).toThrow(/no reward pool/);
         }
     });
 

@@ -15,7 +15,7 @@ import {
 
 const NOW = 1_700_000_000_000;
 const saved = (id: 1 | 2 | 3, savedAt: number, level = 3, mapName = 'northern-forest'): SaveSlotSummary => ({
-    id, status: 'saved', savedAt, level, mapName, runId: `run-${id}`,
+    id, status: 'saved', savedAt, level, mapName, runId: `run-${id}`, characterId: 'fx-char',
 });
 const torn = (id: 1 | 2 | 3): SaveSlotSummary => ({ ...emptySlotSummary(id), status: 'unreadable' });
 
@@ -60,6 +60,19 @@ describe('selectSaveSlotRows', () => {
         // Owner call: the LOAD verbs read JOURNEY ON… and DELETE SAVE.
         expect(SAVE_SLOTS_COPY.loadAction).toBe('JOURNEY ON\u2026');
         expect(SAVE_SLOTS_COPY.clearAction).toBe('DELETE SAVE');
+    });
+
+    it.each(['new', 'load'] as const)('a save made before characters reads "Made before characters", delete only (%s)', (mode) => {
+        const legacy: SaveSlotSummary = { ...saved(1, NOW - 1000), characterId: null };
+        const [row] = selectSaveSlotRows([legacy, emptySlotSummary(2), emptySlotSummary(3)], mode, NOW);
+        expect(row?.detail).toBe('Made before characters');
+        expect(row?.action).toBe('none');
+        expect(row?.actionLabel).toBe('');
+        expect(row?.clearable).toBe(true);
+        expect(row?.mostRecent).toBe(false);
+        const vm = selectMainMenuViewModel([legacy, emptySlotSummary(2), emptySlotSummary(3)], NOW);
+        expect(vm.continue.enabled).toBe(false);
+        expect(vm.loadGame.enabled).toBe(false);
     });
 
     it('numerals are roman', () => {

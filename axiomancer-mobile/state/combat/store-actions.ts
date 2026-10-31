@@ -36,7 +36,7 @@ import { offerEliteRelicAction } from '../item-reward/relic-sources';
 //
 // The ROLL is engine truth (`rollCombatCardRewards` fills the lane slots from
 // the lane the player wears most, then draws from `rewardPoolFor`: the worn
-// relics' lanes, grey when none is worn; after an elite, `rollEliteReward`
+// relics' lanes plus the character's starting lanes, never grey; after an elite, `rollEliteReward`
 // offers the best cards or a random upgrade). Mobile owns exactly two things: WHEN the draft
 // opens, and persisting the claim.
 // ---------------------------------------------------------------------------

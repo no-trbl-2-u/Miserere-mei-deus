@@ -35,7 +35,7 @@ afterEach(async () => {
 
 /** A v40 save, standing on the old Breakwater's first fight (`bw-2`, gone from the map). */
 function v40Envelope(): string {
-    const fresh = createNewGameState();
+    const fresh = createNewGameState({ characterId: 'the-chosen' });
     const old = {
         ...fresh,
         version: 40,
@@ -91,7 +91,7 @@ describe('a save older than v41 (A7)', () => {
         const adapter = await adapterWithOldSave();
         const store = createAppStore({ adapter });
 
-        const fresh = startNewGameAction(store, adapter, 2);
+        const fresh = startNewGameAction(store, adapter, 2, undefined, 'the-chosen');
         await adapter.flush?.();
 
         expect(fresh.version).toBe(GAME_STATE_VERSION);
