@@ -16,6 +16,12 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
+      # The engine files the Worker bundles (backend/src/contract.ts). A change
+      # to either must redeploy it, or the Worker validates against a stale
+      # contract and refuses what the app sends. scripts/backend-deploy.test.mjs
+      # fails when backend/src imports a mechanics file not listed here.
+      - 'axiomancer-mechanics/src/Combat/combat.play-log-contract.ts'
+      - 'axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.attempt-contract.ts'
       - '.github/workflows/backend-deploy.yml'
   workflow_dispatch:
 
