@@ -23,6 +23,30 @@ jest.mock('react-native-reanimated', () => {
     return Reanimated;
 });
 
+type TestNode = { props?: Record<string, unknown>; children?: unknown[]; parent?: TestNode | null };
+
+/** Depth-first testIDs under a node, in render order. */
+function renderOrder(node: TestNode): string[] {
+    const out: string[] = [];
+    const walk = (n: unknown): void => {
+        if (n === null || typeof n !== 'object') return;
+        const el = n as TestNode;
+        if (typeof el.props?.testID === 'string') out.push(el.props.testID);
+        for (const c of el.children ?? []) walk(c);
+    };
+    walk(node);
+    return out;
+}
+
+/** testIDs of every ancestor of a node. */
+function ancestorIds(node: TestNode): string[] {
+    const out: string[] = [];
+    for (let p = node.parent; p; p = p.parent) {
+        if (typeof p.props?.testID === 'string') out.push(p.props.testID);
+    }
+    return out;
+}
+
 const mockCard: HazardCardVM = {
     uid: 'test-card-1',
     cardId: 'test-card',
@@ -173,6 +197,21 @@ describe('CardDetailOverlay', () => {
             <CardDetailOverlay card={mockCard} onClose={jest.fn()} />
         );
         expect(getByText('Test Card')).toBeTruthy();
+    });
+
+    it('floats the shared keyword ledger above the card, outside it', () => {
+        const card = { ...mockCard, keywords: [{ id: 'k1', name: 'PROLONG', desc: 'Lasts longer.' }] } as HazardCardVM;
+        const { getByTestId, getAllByText } = render(
+            <CardDetailOverlay card={card} onClose={jest.fn()} />
+        );
+        const ledger = getByTestId('hazard-card-detail-keywords');
+        const panel = getByTestId('hazard-card-detail-card');
+        expect(getAllByText('Lasts longer.').length).toBeGreaterThan(0);
+        expect(ancestorIds(ledger)).not.toContain('hazard-card-detail-card');
+        expect(ancestorIds(panel)).not.toContain('hazard-card-detail-keywords');
+        const order = renderOrder(getByTestId('hazard-card-detail'));
+        expect(order.indexOf('hazard-card-detail-keywords')).toBeGreaterThanOrEqual(0);
+        expect(order.indexOf('hazard-card-detail-keywords')).toBeLessThan(order.indexOf('hazard-card-detail-card'));
     });
 
     it('renders utility card details', () => {

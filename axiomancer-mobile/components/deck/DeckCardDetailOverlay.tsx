@@ -22,6 +22,7 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { RarityMark } from '@/components/deck/RarityMark';
 import { SectionLabel } from '@/components/SectionLabel';
 import {
@@ -48,22 +49,10 @@ export function DeckCardDetailOverlay({ card, onClose }: DeckCardDetailOverlayPr
                 showsVerticalScrollIndicator={false}
             >
                 {/* 1 — KEYWORDS. Definitions before the text that uses them. */}
-                {card.keywords.length > 0 && (
-                    <View style={styles.block} testID="deck-card-detail-keywords">
-                        {card.keywords.map((kw) => (
-                            <View key={kw.name} style={styles.keyword}>
-                                <View style={styles.keywordHead}>
-                                    <Text style={styles.keywordName}>{kw.name}</Text>
-                                    <Text style={styles.keywordTag}>KEYWORD</Text>
-                                </View>
-                                <Text style={styles.keywordDesc}>{kw.def}</Text>
-                            </View>
-                        ))}
-                    </View>
-                )}
+                <CardKeywordLedger keywords={card.keywords} testID="deck-card-detail-keywords" />
 
                 {/* 2 — the card itself. */}
-                <View style={[styles.card, { borderLeftColor: card.rarity.color }]}>
+                <View style={[styles.card, { borderLeftColor: card.rarity.color }]} testID="deck-card-detail-card">
                     <View style={styles.titleRow}>
                         <Text style={styles.name}>{card.name}</Text>
                         {card.count > 1 && (
@@ -129,17 +118,6 @@ const useStyles = makeStyles((AXM) => ({
     root: { ...StyleSheet.absoluteFillObject, zIndex: 62, backgroundColor: 'rgba(5,4,3,0.97)' },
     content: { paddingHorizontal: 14, paddingTop: 18, paddingBottom: 24, gap: 14 },
     block: { gap: 6 },
-    keyword: {
-        paddingHorizontal: 11,
-        paddingVertical: 8,
-        backgroundColor: 'rgba(10,9,7,0.95)',
-        borderWidth: 1,
-        borderColor: AXM.ash,
-    },
-    keywordHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
-    keywordName: { fontFamily: FONTS.gothic, fontSize: 14, letterSpacing: 1, color: AXM.sulfur },
-    keywordTag: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 2, color: AXM.bone },
-    keywordDesc: { fontFamily: FONTS.serif, fontSize: 14, lineHeight: 18, color: AXM.parchment, marginTop: 3 },
     card: {
         borderWidth: 1,
         borderColor: AXM.divider,
