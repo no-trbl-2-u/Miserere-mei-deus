@@ -8,6 +8,7 @@
 
 import {
     CHARACTER_ROSTER,
+    COMBAT_SIM_POLICIES,
     WANDERER_POLICY,
     characterDeck,
     type RunPolicy,
@@ -56,7 +57,14 @@ describe('the headless run driver', () => {
     });
 
     it('plays a new game as a roster character to a run end, through every Breakwater node kind', () => {
-        const { policy, asked } = spying();
+        // A wanderer that takes the kill when its Befriend opens mercy: every
+        // foe can be spared since BUG1j, and a sparing wanderer earns no XP and
+        // dies before the village, so it could not walk the whole chapter.
+        const killer: RunPolicy = {
+            ...WANDERER_POLICY,
+            fightPolicy: () => ({ ...COMBAT_SIM_POLICIES.greedy, mercyChoice: 'exploit' }),
+        };
+        const { policy, asked } = spying(killer);
         const { result, screens } = tracedRun({ policy, seed: 1 });
         expect(['run-over', 'chapter-clear']).toContain(result.outcome);
         expect(result.characterId).toBe(CHARACTER_ROSTER[0]!.id);
