@@ -6,8 +6,8 @@
  * The three grey starters borrow paintings from the pool as placeholders
  * until the card art revamp (B8) decides art per card type. The other
  * paintings in this folder stay as that pool (`CARD_ART_POOL`,
- * `provenance.json`). The 30 Blood Price cards each have their own torio
- * painting (`bp-*.webp`), and the 30 Defender cards each have their own
+ * `provenance.json`). The 30 Blood Price cards each have their own
+ * painting (`bp-*.webp`, T's sheets), and the 30 Defender cards each have their own
  * painting (`df-*.webp`, T's sheets). Unmapped ids (sandbox and fixture cards) fall back
  * to the circe placeholder.
  */
@@ -44,7 +44,7 @@ const CARD_ART_BY_ID: Record<string, number> = {
     'grey-strike': iceSword,
     'grey-ward': guardTorso,
     'grey-word': godEye,
-    // Blood Price lane: torio paintings (provenance.json), one per card.
+    // Blood Price lane: T's paintings (provenance.json), one per card.
     'bp-e-01n': require('./bp-e-01n.webp'),
     'bp-e-02d': require('./bp-e-02d.webp'),
     'bp-e-03d': require('./bp-e-03d.webp'),
