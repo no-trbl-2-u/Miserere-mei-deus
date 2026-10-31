@@ -17,8 +17,11 @@ export const PLAN_LABELS = Object.freeze(['plot'])
 /** A title that names a plan PR: `plot:` or `plot(...)` only (D101). */
 export const PLAN_TITLE = /^plot\s*[:(]/i
 
-/** Labels that hold a PR for T or the loop. */
-export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge'])
+/**
+ * Labels that hold a PR for T or the loop. `review:rules-change` (D119, NX1a):
+ * the PR is reviewed, but only T merges a change to the game's rules.
+ */
+export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
 
 /**
  * Files that are the review pipeline itself. A PR that changes them is
