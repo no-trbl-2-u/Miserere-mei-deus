@@ -72,7 +72,10 @@ export type AftermathData =
               pactLines?: { quiet: string; setDown: string; heavy: string };
               causeLines?: { brutal: string; broken: string; quiet: string };
           };
-          xpReward: number | null;
+          /** Shillings the befriend paid (`CombatEndReport.shillings`); 0 when it paid a potion. */
+          shillings?: number;
+          /** The potion a befriend paid (`CombatEndReport.loot`); empty when it paid shillings. A befriend pays no XP. */
+          loot?: Item[];
           /**
            * Optional journal entry unlocked by the pact. When null the
            * panel collapses the "A NEW ENTRY" section.

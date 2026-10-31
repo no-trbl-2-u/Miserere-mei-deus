@@ -72,14 +72,15 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
         store.getState().startCombat(greenJelly);
         const finalState = openEncounter(greenJelly);
 
+        const xpBefore = store.getState().player!.experience;
         applyHazardOutcome(store, 'mercy' as CombatOutcome, finalState, greenJelly);
 
         const state = store.getState();
         expect(state.currentEncounter).toBeUndefined();
         expect(state.flags).toContain(greenJelly.friendshipReward!.flagSet);
         expect(state.codex.unlockedEntries).toContain(greenJelly.journalEntry!.id);
-        const expectedXp = Math.floor((greenJelly.xpReward ?? 0) * 0.5) + (greenJelly.friendshipReward!.xpBonus ?? 0);
-        expect(state.player!.experience).toBe(expectedXp);
+        // A befriend pays no XP: shillings or a potion.
+        expect(state.player!.experience).toBe(xpBefore);
     });
 
     it('befriending a kill-objective target completes its quest and grants the quest reward', () => {

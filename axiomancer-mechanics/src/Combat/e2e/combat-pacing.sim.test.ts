@@ -36,7 +36,8 @@ describe('the pacing sim', () => {
     it('reads the share of fights reaching each declared HP phase', () => {
         const declared = FloatEye.phases?.length ?? 0;
         expect(declared).toBeGreaterThan(1);
-        const base = { player: deepClone(Player), enemy: deepClone(FloatEye), deck, runs: 20, policy: 'witness' as const };
+        const base = { player: deepClone(Player), enemy: deepClone(FloatEye), deck, runs: 20, policy: 'witness' as const, mercy: false };
+        // Every foe can be befriended now, so the phase reading turns the bot's mercy off.
         // A foe far past the deck's reach is beaten through every phase: each share is 1.
         const long = simulatePacing({ ...base, enemyHpMultiplier: 8 });
         expect(long.winRate).toBe(1);
@@ -47,7 +48,7 @@ describe('the pacing sim', () => {
         // In between, shares fall off and each equals the fraction of runs whose peak phase reached it.
         const mid = simulatePacing({ ...base, enemyHpMultiplier: 1 });
         const peaks = Array.from({ length: 20 }, (_, i) =>
-            runPacingEncounter(deepClone(Player), scaleEnemyVitae(deepClone(FloatEye), 1), deck, 1 + i, 'witness').phaseReached);
+            runPacingEncounter(deepClone(Player), scaleEnemyVitae(deepClone(FloatEye), 1), deck, 1 + i, 'witness', { mercy: false }).phaseReached);
         expect(mid.phaseShares).toEqual(
             Array.from({ length: declared }, (_, k) => peaks.filter(p => p >= k).length / 20));
         expect(mid.phaseShares[1]).toBeGreaterThan(0);
@@ -61,7 +62,7 @@ describe('the pacing sim', () => {
     });
 
     it('a longer foe takes more turns; the summary reads its runs', () => {
-        const base = { player: deepClone(Player), enemy: deepClone(FloatEye), deck, runs: 20, policy: 'human-like' as const };
+        const base = { player: deepClone(Player), enemy: deepClone(FloatEye), deck, runs: 20, policy: 'human-like' as const, mercy: false };
         const authored = simulatePacing({ ...base, enemyHpMultiplier: 1 });
         const live = simulatePacing(base);
         expect(live.runs).toBe(20);

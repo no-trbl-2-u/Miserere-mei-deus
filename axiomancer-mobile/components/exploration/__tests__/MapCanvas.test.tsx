@@ -1,9 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
-import { State } from 'react-native-gesture-handler';
+import { GestureDetector, State } from 'react-native-gesture-handler';
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
-import { MapCanvas, computeFocusTransform, focusKeyOf, edgeStroke, minScaleFor } from '../MapCanvas';
+import {
+    MapCanvas, computeFocusTransform, focusKeyOf, edgeStroke, minScaleFor,
+    anchorAxis, clampScale, panAxis, MAX_SCALE,
+} from '../MapCanvas';
 import type { ExplorationNode, ExplorationEdge } from '@/state/presenters/exploration.engine';
 
 // The stock reanimated mock builds a fresh `{ value }` box on EVERY render
@@ -447,47 +450,35 @@ describe('computeFocusTransform', () => {
         expect(fit.ty).toBeCloseTo(800 / 2 - 200 * SPREAD);
     });
 
-    // CRITIQUE pass 73: a node set near the plate's top edge, centred, dropped
-    // the plate ~150px down a phone pane and left flat black above it.
-    it('slides the plate to the frame edge rather than leave an empty band', () => {
+    // MC1a (T, 2026-10-31: stability over edge-clamping): a node near the
+    // plate's edge is centred as it is, with black past the edge, rather than
+    // the plate slid against the frame.
+    it('centres a node near the plate edge with no slide against the frame', () => {
         const nodes: ExplorationNode[] = [
             { id: 'a', label: 'A', kind: 'current', type: 'encounter', x: 100, y: 100, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
         expect(fit.scale).toBe(1);
-        expect(fit.ty).toBe(0);
         expect(fit.tx).toBeCloseTo(400 / 2 - 100 * SPREAD);
-        const screenY = 100 * SPREAD + fit.ty;
-        expect(screenY).toBeGreaterThanOrEqual(0);
-        expect(screenY).toBeLessThanOrEqual(800);
+        expect(fit.ty).toBeCloseTo(800 / 2 - 100 * SPREAD);
+        expect(fit.ty).toBeGreaterThan(0);
     });
 
-    it('never leaves a band on any edge of a plate that covers the pane', () => {
+    it('puts a corner node at the pane centre on every corner of the plate', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
         const viewport = { w: 355, h: 600 };
-        const corners: Array<[number, number]> = [[60, 60], [2340, 60], [60, 2340], [2340, 2340]];
+        const corners: [number, number][] = [[60, 60], [2340, 60], [60, 2340], [2340, 2340]];
         for (const [x, y] of corners) {
             const nodes: ExplorationNode[] = [
                 { id: 'a', label: 'A', kind: 'current', type: 'encounter', x, y, triggersCombat: false },
             ];
             const fit = computeFocusTransform(nodes, viewport, sheet);
-            const plateW = sheet.width * fit.scale;
-            const plateH = sheet.height * fit.scale;
-            expect(fit.tx).toBeLessThanOrEqual(0);
-            expect(fit.ty).toBeLessThanOrEqual(0);
-            expect(fit.tx + plateW).toBeGreaterThanOrEqual(viewport.w);
-            expect(fit.ty + plateH).toBeGreaterThanOrEqual(viewport.h);
-            const sx = x * fit.scale + fit.tx;
-            const sy = y * fit.scale + fit.ty;
-            expect(sx).toBeGreaterThanOrEqual(0);
-            expect(sx).toBeLessThanOrEqual(viewport.w);
-            expect(sy).toBeGreaterThanOrEqual(0);
-            expect(sy).toBeLessThanOrEqual(viewport.h);
+            expect(x * fit.scale + fit.tx).toBeCloseTo(viewport.w / 2, 5);
+            expect(y * fit.scale + fit.ty).toBeCloseTo(viewport.h / 2, 5);
         }
     });
 
-    // T, 2026-10-28: the screen is always the map — no zoom shows black.
-    it('never zooms a plate out smaller than the pane, even for a plate-wide focus', () => {
+    it('zooms a plate-wide focus out no further than the whole plate in the pane', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
         const viewport = { w: 394, h: 557 };
         const nodes: ExplorationNode[] = [
@@ -495,15 +486,12 @@ describe('computeFocusTransform', () => {
             { id: 'b', label: 'B', kind: 'available', type: 'encounter', x: 2400, y: 2400, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, viewport, sheet);
-        expect(sheet.width * fit.scale).toBeGreaterThanOrEqual(viewport.w);
-        expect(sheet.height * fit.scale).toBeGreaterThanOrEqual(viewport.h);
-        expect(fit.tx).toBeLessThanOrEqual(0);
-        expect(fit.ty).toBeLessThanOrEqual(0);
-        expect(fit.tx + sheet.width * fit.scale).toBeGreaterThanOrEqual(viewport.w);
-        expect(fit.ty + sheet.height * fit.scale).toBeGreaterThanOrEqual(viewport.h);
+        expect(fit.scale).toBe(minScaleFor(viewport, sheet));
+        expect(sheet.width * fit.scale).toBeCloseTo(viewport.w, 5);
+        expect(sheet.height * fit.scale).toBeLessThanOrEqual(viewport.h);
     });
 
-    it('with no focus nodes, holds the cover floor when 1x would leave black', () => {
+    it('with no focus nodes, holds the contain floor when it is above 1x', () => {
         const nodes: ExplorationNode[] = [
             { id: 'a', label: 'A', kind: 'locked', type: 'encounter', x: 100, y: 100, triggersCombat: false },
         ];
@@ -559,14 +547,14 @@ describe('computeFocusTransform', () => {
         expect(fit.scale).toBe(1);
     });
 
-    it('clamps to the cover floor rather than shrinking without bound', () => {
+    it('clamps to the contain floor rather than shrinking without bound', () => {
         const nodes: ExplorationNode[] = [
             { id: 'left',  label: 'Left',  kind: 'available', type: 'encounter', x: 0,   y: 0,   triggersCombat: false },
             { id: 'right', label: 'Right', kind: 'available', type: 'encounter', x: 1000, y: 1000, triggersCombat: false },
         ];
         const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        // The default sheet is 936x1040: the floor is the scale where it just covers 400x800.
-        expect(fit.scale).toBeCloseTo(800 / 1040, 5);
+        // The default sheet is 936x1040: the floor is the scale where it just fits inside 400x800.
+        expect(fit.scale).toBeCloseTo(400 / 936, 5);
         expect(fit.scale).toBe(minScaleFor({ w: 400, h: 800 }));
     });
 
@@ -596,10 +584,10 @@ describe('computeFocusTransform', () => {
         }
     });
 
-    it('floors at the scale where the plate just covers the pane', () => {
+    it('floors at the scale where the whole plate just fits the pane (MC1a A3)', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
-        expect(minScaleFor({ w: 394, h: 557 }, sheet)).toBeCloseTo(557 / 2400, 5);
-        expect(minScaleFor({ w: 1200, h: 900 })).toBeCloseTo(1200 / 936, 5);
+        expect(minScaleFor({ w: 394, h: 557 }, sheet)).toBeCloseTo(394 / 2400, 5);
+        expect(minScaleFor({ w: 1200, h: 900 })).toBeCloseTo(900 / 1040, 5);
     });
 });
 
@@ -804,28 +792,36 @@ describe('MapCanvas re-frames on a focus change', () => {
         expect(slid.ty).toBeCloseTo(zoomed.ty - 10, 5);
     });
 
-    it('clamps a pinch between the cover floor and 3x, never showing black', () => {
+    // MC1a A3: the floor is the whole plate in the pane (contain), the ceiling
+    // 3x, and the anchor holds at both: black may show, nothing jumps.
+    it('holds a pinch between the contain floor and 3x, anchored at both', () => {
         const { getByTestId, flush } = mountFitted();
+        const f = { x: 100, y: 100 };
         const pinchTo = (scale: number) => {
+            const before = cameraOf(getByTestId);
+            const u = (f.x - before.tx) / before.scale;
+            const v = (f.y - before.ty) / before.scale;
             fireGestureHandler(getByGestureTestId('map-pinch'), [
-                { state: State.BEGAN, focalX: 100, focalY: 100, scale: 1 },
-                { state: State.ACTIVE, focalX: 100, focalY: 100, scale: 1 },
-                { state: State.ACTIVE, focalX: 100, focalY: 100, scale },
-                { state: State.END, focalX: 100, focalY: 100, scale },
+                { state: State.BEGAN, focalX: f.x, focalY: f.y, scale: 1 },
+                { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1 },
+                { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale },
+                { state: State.END, focalX: f.x, focalY: f.y, scale },
             ]);
             flush();
-            return cameraOf(getByTestId);
+            const after = cameraOf(getByTestId);
+            expect(after.tx + u * after.scale).toBeCloseTo(f.x, 5);
+            expect(after.ty + v * after.scale).toBeCloseTo(f.y, 5);
+            return after;
         };
         expect(pinchTo(50).scale).toBe(3);
         const out = pinchTo(0.001);
         expect(out.scale).toBe(minScaleFor(VIEWPORT));
-        expect(out.tx).toBeLessThanOrEqual(0);
-        expect(out.ty).toBeLessThanOrEqual(0);
-        expect(out.tx + CANVAS.w * out.scale).toBeGreaterThanOrEqual(VIEWPORT.w - 1e-6);
-        expect(out.ty + CANVAS.h * out.scale).toBeGreaterThanOrEqual(VIEWPORT.h - 1e-6);
+        // The whole plate fits the pane at the floor.
+        expect(CANVAS.w * out.scale).toBeLessThanOrEqual(VIEWPORT.w + 1e-6);
+        expect(CANVAS.h * out.scale).toBeLessThanOrEqual(VIEWPORT.h + 1e-6);
     });
 
-    it('pans by each step delta and stops at the plate edges', () => {
+    it('pans by each step delta, and stops when a plate edge reaches the middle of the pane (MC1a A3)', () => {
         const { getByTestId, flush, fit } = mountFitted();
         fireGestureHandler(getByGestureTestId('map-pan'), [
             { state: State.BEGAN },
@@ -837,16 +833,287 @@ describe('MapCanvas re-frames on a focus change', () => {
         flush();
         expect(cameraOf(getByTestId)).toEqual({ scale: fit.scale, tx: fit.tx + 70, ty: fit.ty });
 
+        const panBy = (dx: number, dy: number) => {
+            fireGestureHandler(getByGestureTestId('map-pan'), [
+                { state: State.BEGAN },
+                { state: State.ACTIVE },
+                { state: State.ACTIVE, translationX: dx, translationY: dy },
+                { state: State.END, translationX: dx, translationY: dy },
+            ]);
+            flush();
+            return cameraOf(getByTestId);
+        };
+        // Dragged right and up as far as it goes: the plate's LEFT edge and
+        // its BOTTOM edge stop at the pane's middle.
+        const rightUp = panBy(5000, -5000);
+        expect(rightUp.tx).toBeCloseTo(VIEWPORT.w / 2, 5);
+        expect(rightUp.ty + CANVAS.h * fit.scale).toBeCloseTo(VIEWPORT.h / 2, 5);
+        // Dragged left and down: the RIGHT edge and the TOP edge stop there.
+        const leftDown = panBy(-20000, 20000);
+        expect(leftDown.tx + CANVAS.w * fit.scale).toBeCloseTo(VIEWPORT.w / 2, 5);
+        expect(leftDown.ty).toBeCloseTo(VIEWPORT.h / 2, 5);
+        expect(leftDown.scale).toBe(fit.scale);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// MC1a: the pinch holds under the fingers; black past the edges
+// ---------------------------------------------------------------------------
+
+type Pt = { x: number; y: number };
+type Handlers = {
+    onBegin?: (e: Record<string, number>) => void;
+    onStart?: (e: Record<string, number>) => void;
+    onUpdate?: (e: Record<string, number>) => void;
+    onFinalize?: (e: Record<string, number>) => void;
+};
+/** The gesture's own callbacks, so a test can interleave pinch and pan events as a device does. */
+const handlersOf = (testId: string): Handlers =>
+    (getByGestureTestId(testId) as unknown as { handlers: Handlers }).handlers;
+
+describe('MapCanvas: the pinch holds under the fingers (MC1a)', () => {
+    const MockChildren = () => <></>;
+    const VIEWPORT = { w: 414, h: 896 };
+    const CANVAS = { w: 360 * 2.6, h: 400 * 2.6 };
+
+    const cameraOf = (getByTestId: (id: string) => { props: { style: unknown } }) => {
+        const flat = StyleSheet.flatten(getByTestId('map-canvas').props.style) as {
+            transform: Record<string, number>[];
+        };
+        const [{ translateX: tx }, { translateY: ty }, { scale }] = flat.transform;
+        return { scale, tx, ty };
+    };
+
+    const mountFitted = () => {
+        const utils = render(<MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>);
+        fireEvent(utils.getByTestId('map-canvas-wrapper'), 'layout', {
+            nativeEvent: { layout: { width: VIEWPORT.w, height: VIEWPORT.h } },
+        });
+        const flush = () => utils.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        flush();
+        return { ...utils, flush, camera: () => cameraOf(utils.getByTestId) };
+    };
+
+    /**
+     * Where a pane point lands in the frame of the view the GestureDetector is
+     * attached to: what RNGH reports as `focalX/Y` on a device. Read from the
+     * attached view's own rendered style (its offset and transform, top-left
+     * origin) at the moment of the event, so a detector moved back onto the
+     * transformed canvas reports canvas-local points here exactly as the
+     * device did under #1046, and the anchor cases below fail.
+     */
+    const detectorFrame = (utils: ReturnType<typeof mountFitted>) => (p: Pt): Pt => {
+        const child = utils.UNSAFE_getByType(GestureDetector).props.children as React.ReactElement<{ testID: string }>;
+        const host = utils.getByTestId(child.props.testID);
+        const flat = (StyleSheet.flatten(host.props.style) ?? {}) as {
+            left?: number; top?: number; transform?: Record<string, number>[];
+        };
+        const tr = flat.transform ?? [];
+        const pick = (k: string, d: number) => tr.find((o) => k in o)?.[k] ?? d;
+        const s = pick('scale', 1);
+        return {
+            x: (p.x - (flat.left ?? 0) - pick('translateX', 0)) / s,
+            y: (p.y - (flat.top ?? 0) - pick('translateY', 0)) / s,
+        };
+    };
+
+    it('attaches the gesture detector to an untransformed layer spanning the pane (A1)', () => {
+        const utils = mountFitted();
+        const child = utils.UNSAFE_getByType(GestureDetector).props.children as React.ReactElement<{ testID: string }>;
+        expect(child.props.testID).toBe('map-gesture-pane');
+        const pane = utils.getByTestId('map-gesture-pane');
+        const flat = StyleSheet.flatten(pane.props.style) as Record<string, unknown>;
+        expect(flat.transform).toBeUndefined();
+        expect(flat).toMatchObject({ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 });
+        // The pane holds the canvas; only the canvas carries the camera.
+        let up = utils.getByTestId('map-canvas').parent;
+        while (up && up !== pane) up = up.parent;
+        expect(up).toBe(pane);
+        expect(cameraOf(utils.getByTestId).scale).toBeGreaterThan(0);
+        // The black ground sits behind the pane (A3).
+        const wrapper = utils.getByTestId('map-canvas-wrapper');
+        const ground = StyleSheet.flatten((wrapper.props.children as React.ReactElement<{ style: unknown }>[])[0].props.style) as { backgroundColor?: string };
+        expect(ground.backgroundColor).toBeDefined();
+    });
+
+    /**
+     * A device-shaped pinch near one edge of the plate: the two fingers'
+     * midpoint `F` is a fixed pane point (drifting a little each frame), each
+     * frame's focal point is read in the detector's own frame, and the plate
+     * point that started under `F` must stay under it to within 1 px through
+     * a zoom-out and a zoom-in, black past the edge included (A1, A2).
+     */
+    const pinchNearEdge = (place: (c: { scale: number; tx: number; ty: number }) => { pan: Pt; focal: Pt }) => {
+        const utils = mountFitted();
+        const { pan, focal } = place(utils.camera());
+        // Bring the edge into view with a pan (inside the pan limit).
         fireGestureHandler(getByGestureTestId('map-pan'), [
             { state: State.BEGAN },
             { state: State.ACTIVE },
-            { state: State.ACTIVE, translationX: 5000, translationY: -5000 },
-            { state: State.END, translationX: 5000, translationY: -5000 },
+            { state: State.ACTIVE, translationX: pan.x, translationY: pan.y },
+            { state: State.END, translationX: pan.x, translationY: pan.y },
         ]);
-        flush();
-        const far = cameraOf(getByTestId);
-        expect(far.tx).toBe(0);
-        expect(far.ty).toBeCloseTo(VIEWPORT.h - CANVAS.h * fit.scale, 5);
+        utils.flush();
+        const start = utils.camera();
+        const plate = { x: (focal.x - start.tx) / start.scale, y: (focal.y - start.ty) / start.scale };
+        expect(plate.x).toBeGreaterThanOrEqual(0);
+        expect(plate.x).toBeLessThanOrEqual(CANVAS.w);
+        expect(plate.y).toBeGreaterThanOrEqual(0);
+        expect(plate.y).toBeLessThanOrEqual(CANVAS.h);
+
+        const frame = detectorFrame(utils);
+        const pinch = handlersOf('map-pinch');
+        const scales = [1, 0.85, 0.7, 0.55, 0.45, 0.6, 0.9, 1.4, 2.2, 3.5, 6];
+        let F = focal;
+        const at = (scale: number) => {
+            const f = frame(F);
+            return { focalX: f.x, focalY: f.y, scale, numberOfPointers: 2 };
+        };
+        pinch.onStart?.(at(scales[0]));
+        for (const s of scales.slice(1)) {
+            F = { x: F.x + 1.5, y: F.y - 1 };
+            pinch.onUpdate?.(at(s));
+            utils.flush();
+            const c = utils.camera();
+            expect(Math.abs(c.tx + plate.x * c.scale - F.x)).toBeLessThanOrEqual(1);
+            expect(Math.abs(c.ty + plate.y * c.scale - F.y)).toBeLessThanOrEqual(1);
+        }
+        pinch.onFinalize?.({});
+        return utils.camera();
+    };
+
+    it('holds the anchor near the plate\'s LEFT edge (A2)', () => {
+        pinchNearEdge((c) => ({ pan: { x: VIEWPORT.w / 4 - c.tx, y: 0 }, focal: { x: VIEWPORT.w / 4 + 10, y: VIEWPORT.h / 2 } }));
+    });
+    it('holds the anchor near the plate\'s RIGHT edge (A2)', () => {
+        pinchNearEdge((c) => ({
+            pan: { x: (3 * VIEWPORT.w) / 4 - (c.tx + CANVAS.w * c.scale), y: 0 },
+            focal: { x: (3 * VIEWPORT.w) / 4 - 10, y: VIEWPORT.h / 2 },
+        }));
+    });
+    it('holds the anchor near the plate\'s TOP edge (A2)', () => {
+        pinchNearEdge((c) => ({ pan: { x: 0, y: VIEWPORT.h / 4 - c.ty }, focal: { x: VIEWPORT.w / 2, y: VIEWPORT.h / 4 + 10 } }));
+    });
+    it('holds the anchor near the plate\'s BOTTOM edge (A2)', () => {
+        pinchNearEdge((c) => ({
+            pan: { x: 0, y: (3 * VIEWPORT.h) / 4 - (c.ty + CANVAS.h * c.scale) },
+            focal: { x: VIEWPORT.w / 2, y: (3 * VIEWPORT.h) / 4 - 10 },
+        }));
+    });
+
+    it('never limits a pinch: zooming in on the black past an edge carries the plate past the pan limit (A3)', () => {
+        const utils = mountFitted();
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, translationX: 5000, translationY: 0 },
+            { state: State.END, translationX: 5000, translationY: 0 },
+        ]);
+        utils.flush();
+        expect(utils.camera().tx).toBeCloseTo(VIEWPORT.w / 2, 5);
+        // Fingers on the black left of the plate, zooming in: the plate moves
+        // away from them, past the pan's own limit, and is not snapped back.
+        const f = { x: VIEWPORT.w / 4, y: VIEWPORT.h / 2 };
+        fireGestureHandler(getByGestureTestId('map-pinch'), [
+            { state: State.BEGAN, focalX: f.x, focalY: f.y, scale: 1 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 2 },
+            { state: State.END, focalX: f.x, focalY: f.y, scale: 2 },
+        ]);
+        utils.flush();
+        const zoomed = utils.camera();
+        expect(zoomed.tx).toBeCloseTo(f.x + 2 * (VIEWPORT.w / 2 - f.x), 5);
+        expect(zoomed.tx).toBeGreaterThan(VIEWPORT.w / 2);
+        // A further drag outward is refused; a drag back toward the plate is not.
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, translationX: 30, translationY: 0 },
+            { state: State.ACTIVE, translationX: -10, translationY: 0 },
+            { state: State.END, translationX: -10, translationY: 0 },
+        ]);
+        utils.flush();
+        expect(utils.camera().tx).toBeCloseTo(zoomed.tx - 40, 5);
+    });
+
+    it('moves nothing on a one-pointer pinch event, and rebases when the second finger returns (A4)', () => {
+        const utils = mountFitted();
+        const c0 = utils.camera();
+        const f = { x: 150, y: 400 };
+        const f2 = { x: 320, y: 700 };
+        fireGestureHandler(getByGestureTestId('map-pinch'), [
+            { state: State.BEGAN, focalX: f.x, focalY: f.y, scale: 1, numberOfPointers: 2 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1, numberOfPointers: 2 },
+            { state: State.ACTIVE, focalX: f.x, focalY: f.y, scale: 1.2, numberOfPointers: 2 },
+            // A finger lifts: the focal point jumps to the finger left down.
+            { state: State.ACTIVE, focalX: f2.x + 60, focalY: f2.y - 90, scale: 1.7, numberOfPointers: 1 },
+            // It comes back down somewhere else: rebase, no move.
+            { state: State.ACTIVE, focalX: f2.x, focalY: f2.y, scale: 0.9, numberOfPointers: 2 },
+            { state: State.ACTIVE, focalX: f2.x, focalY: f2.y, scale: 0.9 * 1.1, numberOfPointers: 2 },
+            { state: State.END, focalX: f2.x, focalY: f2.y, scale: 0.9 * 1.1, numberOfPointers: 2 },
+        ]);
+        utils.flush();
+        // Expected: x1.2 about f, then x1.1 about f2; the one-pointer jump and
+        // the scale it carried count for nothing.
+        const s1 = c0.scale * 1.2;
+        const t1 = { x: f.x - 1.2 * (f.x - c0.tx), y: f.y - 1.2 * (f.y - c0.ty) };
+        const s2 = s1 * 1.1;
+        const t2 = { x: f2.x - 1.1 * (f2.x - t1.x), y: f2.y - 1.1 * (f2.y - t1.y) };
+        const c = utils.camera();
+        expect(c.scale).toBeCloseTo(s2, 6);
+        expect(c.tx).toBeCloseTo(t2.x, 5);
+        expect(c.ty).toBeCloseTo(t2.y, 5);
+    });
+
+    it('lifting one finger and dragging on with the other moves the map by the drag alone (A4)', () => {
+        const utils = mountFitted();
+        const pinch = handlersOf('map-pinch');
+        const pan = handlersOf('map-pan');
+        const f = { x: 200, y: 400 };
+        // Both fingers down: the pan begins, the pinch starts and zooms.
+        pan.onBegin?.({ translationX: 0, translationY: 0 });
+        pinch.onStart?.({ focalX: f.x, focalY: f.y, scale: 1, numberOfPointers: 2 });
+        pan.onUpdate?.({ translationX: 0, translationY: 0 });
+        pinch.onUpdate?.({ focalX: f.x, focalY: f.y, scale: 1.5, numberOfPointers: 2 });
+        pan.onUpdate?.({ translationX: 0, translationY: 0 });
+        utils.flush();
+        const zoomed = utils.camera();
+        // One finger lifts: the pinch ends, and the pan's centroid jumps 80 px
+        // to the finger left down. That jump is not a drag.
+        pinch.onUpdate?.({ focalX: f.x + 80, focalY: f.y, scale: 1.5, numberOfPointers: 1 });
+        pinch.onFinalize?.({});
+        pan.onUpdate?.({ translationX: 80, translationY: 0 });
+        utils.flush();
+        expect(utils.camera()).toEqual(zoomed);
+        // The remaining finger drags 25 px down: the map follows by 25.
+        pan.onUpdate?.({ translationX: 80, translationY: 25 });
+        utils.flush();
+        expect(utils.camera()).toEqual({ ...zoomed, ty: zoomed.ty + 25 });
+    });
+});
+
+describe('MapCanvas camera math (MC1a)', () => {
+    it('anchorAxis holds the plate point under a moving focal point', () => {
+        // t=−100, s=0.5: pane 50 sits over plate 300. Zoom x2 with the focal moving to 60.
+        const t = anchorAxis(-100, 50, 60, 2);
+        expect(t + 300 * 1).toBeCloseTo(60, 9);
+    });
+
+    it('clampScale keeps a zoom between the floor and 3x', () => {
+        expect(clampScale(10, 0.2)).toBe(MAX_SCALE);
+        expect(clampScale(0.01, 0.2)).toBe(0.2);
+        expect(clampScale(1.3, 0.2)).toBe(1.3);
+    });
+
+    it('panAxis bounds the delta only: past the limit it is not snapped back, and a drag home is free', () => {
+        // Pane 400, plate 1000: tx may run from −800 (right edge at 200) to 200 (left edge at 200).
+        expect(panAxis(150, 100, 400, 1000)).toBe(200);
+        expect(panAxis(-750, -100, 400, 1000)).toBe(-800);
+        expect(panAxis(300, 10, 400, 1000)).toBe(300);
+        expect(panAxis(300, -10, 400, 1000)).toBe(290);
+        expect(panAxis(-900, -10, 400, 1000)).toBe(-900);
+        expect(panAxis(-900, 10, 400, 1000)).toBe(-890);
+        expect(panAxis(0, 0, 400, 1000)).toBe(0);
     });
 });
 

@@ -96,12 +96,12 @@ describe('signature runes (the engine cast gate)', () => {
         expect(r.reason).toMatch(/Need 4/);
     });
 
-    it('The Open Hand is refused, with the reason, on a foe that cannot be befriended', () => {
+    it('The Open Hand is refused, with the reason, on a foe above its gate', () => {
         const s = withRunes(4);
-        s.enemy = { ...s.enemy, friendshipReward: undefined };
+        s.enemy = { ...s.enemy, health: s.enemy.maxHealth };
         const r = rune(s, 'sig-disarming-plea');
         expect(r.affordable).toBe(false);
-        expect(r.reason).toMatch(/will not be befriended/);
+        expect(r.reason).toMatch(/not yet low enough/);
     });
 
     it('The Open Hand is castable on a befriendable foe inside its gate', () => {

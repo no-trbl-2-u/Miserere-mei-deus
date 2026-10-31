@@ -6,7 +6,7 @@
  * its own Conviction price (`SignatureSkill.cost`); nothing assumes one price.
  *
  *   The Open Hand (the Suppliant's Ring, ◆4) — the befriend: it opens the
- *     mercy choice on a foe that can be befriended and is low enough.
+ *     mercy choice on a foe that is low enough (every foe can be befriended).
  *   Crimson Return (the Crimson Circlet, ◆5) — your next SACRIFICE HEALs
  *     you by the VITAE it would have cost instead of costing it; it still
  *     counts as a SACRIFICE.
@@ -30,7 +30,7 @@
  * `combat.engine` (no cycle).
  */
 
-import { befriendHpGateOpen, isEnemyBefriendable } from '../Enemy/befriend';
+import { befriendHpGateOpen } from '../Enemy/befriend';
 import {
     programArmSacrifice, programFoeYielding, programSacrificeArmed, programSignatureHeal, programTriggerLeech,
     programSpikeSignature, programSpikeSignatureLive, programWeatherSignature, programWeatherSignatureLive,
@@ -113,7 +113,6 @@ export function signatureCastBlock(state: CombatEncounterState, skill: Signature
     switch (skill.kind) {
         case 'mercy':
             if (state.mercyChoiceActive) return 'Mercy is already offered';
-            if (!isEnemyBefriendable(state.enemy)) return `${state.enemy.name} will not be befriended`;
             // A YIELDING foe can be spared whatever its VITAE.
             if (!programFoeYielding(state) && !befriendHpGateOpen(state.enemy)) return `${state.enemy.name} is not yet low enough to spare`;
             return null;

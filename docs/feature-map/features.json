@@ -468,7 +468,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-select.relic-icon.test.tsx, axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -1692,6 +1692,12 @@
       "kind": "coupling",
       "from": "area:Enemy",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Enemy/befriend.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Enemy",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Enemy/enemy.library.ts"
     },
     {
@@ -1788,6 +1794,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/store.ts"
     },
     {
@@ -1801,6 +1813,18 @@
       "from": "area:Game",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.wanderer.ts"
     },
     {
       "kind": "coupling",
@@ -2029,6 +2053,24 @@
       "from": "area:Game",
       "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/run-loop.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-hazard.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-roads.ts"
     },
     {
       "kind": "coupling",
@@ -3354,6 +3396,12 @@
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Character",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
@@ -3371,8 +3419,26 @@
     {
       "kind": "coupling",
       "from": "route:character-select",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3385,6 +3451,12 @@
       "from": "route:character-select",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3420,6 +3492,12 @@
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
     },
     {
@@ -3439,6 +3517,18 @@
       "from": "route:character-select",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -3505,6 +3595,12 @@
       "from": "route:character-select",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",

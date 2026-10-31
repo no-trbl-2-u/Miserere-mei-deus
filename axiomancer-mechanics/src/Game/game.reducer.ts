@@ -328,10 +328,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             let nextQuests: QuestLog = state.quests;
 
             if (outcome === 'victory' || outcome === 'friendship') {
+                // A befriend pays no XP and no loot table (shillings or a
+                // potion arrive pre-rolled by the store).
+                const befriended = outcome === 'friendship';
                 const grantedLoot = action.payload?.grantedLoot
-                    ?? rollEncounterLoot(encounter, () => getRng().random());
+                    ?? (befriended ? [] : rollEncounterLoot(encounter, () => getRng().random()));
                 const grantedXp = action.payload?.grantedXp
-                    ?? totalEncounterXp(encounter);
+                    ?? (befriended ? 0 : totalEncounterXp(encounter));
+                const grantedShillings = action.payload?.grantedShillings ?? 0;
 
                 let nextInventory = nextPlayer.inventory;
                 for (const drop of grantedLoot) {
@@ -340,6 +344,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 nextPlayer = {
                     ...nextPlayer,
                     experience: nextPlayer.experience + grantedXp,
+                    currency: nextPlayer.currency + grantedShillings,
                     inventory: nextInventory,
                 };
                 // Advance any active `kill` objectives whose target matches

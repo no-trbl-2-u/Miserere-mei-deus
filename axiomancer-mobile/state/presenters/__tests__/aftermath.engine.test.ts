@@ -163,7 +163,7 @@ const PARLEY_SNAPSHOT_MID: Extract<AftermathData, { variant: 'parley' }> = {
         description: 'A figure long since gnawed by the road.',
         level: 4,
     },
-    xpReward: 12,
+    shillings: 6,
     journalEntry: null,
 };
 
@@ -204,8 +204,8 @@ describe('selectAftermathViewModel: parley branch', () => {
 
     it('threads xpReward + collapses currency / loot to nullish defaults', () => {
         const vm = selectAftermathViewModel(PARLEY_SNAPSHOT_MID);
-        expect(vm?.kind === 'parley' && vm.rewards.xp).toBe(12);
-        expect(vm?.kind === 'parley' && vm.rewards.currency).toBeNull();
+        expect(vm?.kind === 'parley' && vm.rewards).not.toHaveProperty('xp');
+        expect(vm?.kind === 'parley' && vm.rewards.currency).toEqual({ shillings: 6 });
         expect(vm?.kind === 'parley' && vm.rewards.loot).toEqual([]);
     });
 

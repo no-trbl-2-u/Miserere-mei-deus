@@ -1,5 +1,5 @@
 /**
- * miserere-api: the dev Worker (phases BE1a, BE2a, BE2f, BV1a, BV2a).
+ * miserere-api: the dev Worker (phases BE1a, BE2a, BE2f, BV1a, BV2a, SM1c).
  *
  *   POST /v1/puzzle-attempts           store one ended attempt        -> 201 { id, receivedAt }
  *   GET  /v1/puzzle-attempts[?layout=][&source=]
@@ -9,6 +9,12 @@
  *   POST /v1/deck-events               store one deck change          -> 201 { id, receivedAt }
  *   GET  /v1/deck-events[?card=][&source=]
  *                                      the stored changes, newest first -> 200 { deckEvents }
+ *   POST /v1/play-runs                 open a run (idempotent on runId) -> 201 { id, startedAt }, 200 if already open
+ *   POST /v1/play-runs/<runId>/end     close it once                  -> 200 { id, endedAt }, 409 if closed, 404 if unknown
+ *   GET  /v1/play-runs[?source=]       the stored runs, newest first  -> 200 { playRuns }
+ *   POST /v1/run-events                store one batch of a run's events -> 201 { count, receivedAt }
+ *   GET  /v1/run-events[?run=][&source=]
+ *                                      the stored events, run then seq -> 200 { runEvents }
  *   GET  /v1/reports/<name>[?build=][&source=][&card=]
  *                                      a fixed play-log report         -> 200 { report, ... }
  *   POST /v1/ballot-verdicts           store one ballot save or verdict -> 201 { id, receivedAt }
@@ -29,6 +35,11 @@
  * `harness` or `sim`, stored `human` when a post leaves it out, and `runId` is the save's run id or
  * null. A list takes `?source=` (`human`, `harness`, `sim` or `all`; absent reads every source); a
  * report takes the same and reads `human` when it is absent. Any other value is a 400.
+ *
+ * A run (phase SM1c) is one `play_runs` row, opened when it starts and closed once when it ends; the
+ * Worker stamps `startedAt` and `endedAt`. Its `run_events` (a node entered or resolved, a hazard
+ * ended, XP, a level, an item) post in batches of at most 200 events and 256 KiB, each carrying a
+ * per-run `seq`. An open body is capped at 64 KiB, as is a close. The run id is the save's.
  *
  * The reports are `card-usage`, `card-gaps` and `signature-usage` (`reports.ts`); their SQL is
  * fixed on the Worker and the query string only binds values. Another name is
@@ -51,18 +62,35 @@ import {
     PLAY_LOG_FIGHTS_PATH,
     PLAY_LOG_LIMITS,
     PLAY_LOG_SOURCE_FILTERS,
+    PLAY_RUNS_PATH,
     PUZZLE_ATTEMPTS_PATH,
+    RUN_EVENTS_PATH,
     validateDeckEventPost,
     validateFightPost,
+    validatePlayRunEndPost,
+    validatePlayRunPost,
     validatePuzzleAttemptPost,
+    validateRunEventsPost,
 } from './contract';
-import type { DeckEventList, FightList, PlayLogCreated, PlayLogSourceFilter, PlayLogSourceKind, PuzzleAttemptList } from './contract';
+import type {
+    DeckEventList,
+    FightList,
+    PlayLogCreated,
+    PlayLogSourceFilter,
+    PlayLogSourceKind,
+    PlayRunList,
+    PuzzleAttemptList,
+    RunEventList,
+    RunEventsCreated,
+} from './contract';
 import { allowedOrigin, preflight, withCors } from './cors';
 import { insertDeckEvent, listDeckEvents } from './deck-events';
 import type { Env } from './env';
 import { insertFight, listFights } from './fights';
 import { error, json, readJsonBody } from './http';
+import { closePlayRun, listPlayRuns, openPlayRun } from './play-runs';
 import { REPORTS_PATH_PREFIX, isReportName, runReport } from './reports';
+import { insertRunEvents, listRunEvents } from './run-events';
 
 /** One path's two methods. `post` gets a parsed body already under the route's byte cap. */
 interface Route {
@@ -143,6 +171,40 @@ const ROUTES: Record<string, Route> = {
             return json(list);
         },
     },
+    [PLAY_RUNS_PATH]: {
+        maxBytes: PLAY_LOG_LIMITS.playRunBytes,
+        invalid: 'invalid play run',
+        async post(body, env) {
+            const checked = validatePlayRunPost(body);
+            if (!checked.ok) return error(400, this.invalid, checked.reasons);
+            const { created, run } = await openPlayRun(env.DB, checked.playRun, new Date().toISOString());
+            return json(run, created ? 201 : 200);
+        },
+        async get(url, env) {
+            const filter = listSource(url);
+            if ('response' in filter) return filter.response;
+            const list: PlayRunList = { playRuns: await listPlayRuns(env.DB, filter.source) };
+            return json(list);
+        },
+    },
+    [RUN_EVENTS_PATH]: {
+        maxBytes: PLAY_LOG_LIMITS.runEventBytes,
+        invalid: 'invalid run events',
+        async post(body, env) {
+            const checked = validateRunEventsPost(body);
+            if (!checked.ok) return error(400, this.invalid, checked.reasons);
+            const receivedAt = new Date().toISOString();
+            const count = await insertRunEvents(env.DB, checked.batch, receivedAt);
+            const out: RunEventsCreated = { count, receivedAt };
+            return json(out, 201);
+        },
+        async get(url, env) {
+            const filter = listSource(url);
+            if ('response' in filter) return filter.response;
+            const list: RunEventList = { runEvents: await listRunEvents(env.DB, url.searchParams.get('run') || undefined, filter.source) };
+            return json(list);
+        },
+    },
     [BALLOT_VERDICTS_PATH]: {
         maxBytes: BALLOT_LIMITS.bodyBytes,
         invalid: 'invalid ballot verdict',
@@ -180,6 +242,36 @@ async function handle(route: Route, request: Request, url: URL, env: Env): Promi
     return error(405, 'method not allowed', undefined, { Allow: 'GET, POST' });
 }
 
+const PLAY_RUN_END_PATH = /^\/v1\/play-runs\/([^/]+)\/end$/;
+
+/** The run id in a `POST /v1/play-runs/<runId>/end` path, or null when the path is not one. */
+function playRunEndId(pathname: string): string | null {
+    const match = PLAY_RUN_END_PATH.exec(pathname);
+    if (!match) return null;
+    try {
+        return decodeURIComponent(match[1]);
+    } catch {
+        return null;
+    }
+}
+
+/** `POST /v1/play-runs/<runId>/end`: token first, then the method, then the body; a second close is a 409. */
+async function handlePlayRunEnd(runId: string, request: Request, env: Env): Promise<Response> {
+    if (!isAuthorized(request, env.PUZZLE_API_TOKEN)) {
+        return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
+    }
+    if (request.method !== 'POST') return error(405, 'method not allowed', undefined, { Allow: 'POST' });
+    const invalid = 'invalid play run end';
+    const read = await readJsonBody(request, PLAY_LOG_LIMITS.playRunBytes, invalid);
+    if (!read.ok) return read.response;
+    const checked = validatePlayRunEndPost(read.body);
+    if (!checked.ok) return error(400, invalid, checked.reasons);
+    const closed = await closePlayRun(env.DB, runId, checked.end, new Date().toISOString());
+    if (closed.result === 'closed') return json(closed.run);
+    if (closed.result === 'already-closed') return error(409, 'run already closed', [`runId: ${JSON.stringify(runId)} has ended`]);
+    return error(404, 'not found', [`runId: no run opened as ${JSON.stringify(runId)}`]);
+}
+
 /** `GET /v1/reports/<name>`: token first, then the name, then the method. */
 async function handleReport(request: Request, url: URL, env: Env): Promise<Response> {
     if (!isAuthorized(request, env.PUZZLE_API_TOKEN)) {
@@ -199,6 +291,8 @@ export default {
     async fetch(request: Request, env: Env): Promise<Response> {
         const url = new URL(request.url);
         if (url.pathname.startsWith(REPORTS_PATH_PREFIX)) return handleReport(request, url, env);
+        const endedRun = playRunEndId(url.pathname);
+        if (endedRun !== null) return handlePlayRunEnd(endedRun, request, env);
         const route = Object.hasOwn(ROUTES, url.pathname) ? ROUTES[url.pathname] : undefined;
         if (!route) return error(404, 'not found');
         if (!route.cors) return handle(route, request, url, env);
