@@ -166,6 +166,7 @@ footer.foot { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--b
 .hue-enemies { --hue: #e0574b; }
 .hue-effects { --hue: #b08bf0; }
 .hue-log { --hue: #d0a92b; }
+.hue-atlas { --hue: #8fa855; }
 .hue-tuning { --hue: #3ec9b0; }
 
 /* ── Catalog: cards grid ─────────────────────────────────────────────── */

@@ -86,7 +86,7 @@ with the engine today.
 - **A9** The drift plate is generated from `findDrift` at build: one row per
   finding (severity, file, claim, engine value), or "no drift found at
   <commit>". The check is advisory: it never fails a build or a test on a
-  finding [T to confirm #1].
+  finding Accepted (T, 2026-10-31).
 - **A10** Root `npm test` runs `scripts/atlas-drift.test.mjs` on fixture
   JSON and fixture docs: a doc that says "Four relics" against five fixture
   relics yields one finding, a matching doc yields none, and the fixture page
@@ -149,7 +149,7 @@ its shape is pinned by `atlas.data.test.ts` and the fixture in
   loop diagrams describe structure the libraries do not hold; generating them
   is not this phase. Each says when it was last checked, so a stale one is
   visible.
-- **The drift check is advisory** [T to confirm #1]: findings are listed on the
+- **The drift check is advisory** Accepted (T, 2026-10-31): findings are listed on the
   page and printed by `node scripts/atlas-drift.mjs`, never a failing test.
   A gate on doc wording would block unrelated PRs whenever content moves.
 - **Breakwater.** `regions` reads `MAP_REGISTRY` as it is at build time, so the

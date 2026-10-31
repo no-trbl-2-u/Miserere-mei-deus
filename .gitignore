@@ -42,6 +42,7 @@ web-build/
 devlog/index.html
 devlog/log.html
 devlog/catalog.html
+devlog/atlas.html
 devlog/entries/*.html
 devlog/data/
 devlog/assets/catalog/

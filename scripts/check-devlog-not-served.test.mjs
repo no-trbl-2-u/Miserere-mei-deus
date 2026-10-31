@@ -22,6 +22,7 @@ const GENERATED_PATHS = [
   'devlog/index.html',
   'devlog/log.html',
   'devlog/catalog.html',
+  'devlog/atlas.html',
   'devlog/entries/DIGEST_2026-08-11.html',
   'devlog/data/cards.json',
   'devlog/data/effects.json',

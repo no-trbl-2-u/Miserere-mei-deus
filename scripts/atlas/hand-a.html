@@ -1,0 +1,75 @@
+<section class="plate" id="context" data-toc="Context">
+  <div class="plate-head"><div class="eyebrow"><b>C4 · Level 1</b> · System context</div><h2>Who and what touches the game</h2>
+  <p>One person designs and plays it; an autonomous loop builds it through pull requests; a few hosted services carry builds, play logs and research. No external service owns game rules (<code>docs/external-architecture.md</code>, rule 1).</p></div>
+  <div class="toolbar"><button class="primary" data-trace="d-context">▶ Trace the flows</button></div>
+  <div class="frame"><svg id="d-context"></svg></div>
+  <div class="inspector" id="i-context"></div>
+</section>
+
+<section class="plate" id="containers" data-toc="Containers">
+  <div class="plate-head"><div class="eyebrow"><b>C4 · Level 2</b> · Containers</div><h2>Inside the monorepo</h2>
+  <p>Three npm workspaces (engine, app, worker) plus the loop's Markdown state, the DevLog, the art tree and the agent-facing MCP. The app reads the engine as local source, never a published package, so any engine surface change can break the app.</p></div>
+  <div class="toolbar"><button class="primary" data-trace="d-containers">▶ Trace the flows</button></div>
+  <div class="frame"><svg id="d-containers"></svg></div>
+  <div class="inspector" id="i-containers"></div>
+</section>
+
+<section class="plate" id="engine" data-toc="Engine">
+  <div class="plate-head"><div class="eyebrow"><b>C4 · Level 3</b> · Components of <span class="mono">axiomancer-mechanics</span></div><h2>The engine's modules</h2>
+  <p>Box counts are source files (tests excluded) under <code>axiomancer-mechanics/src/</code>. Gold edges are the cross-package impact paths: a diff in those modules must pass <code>npm run verify -w axiomancer-mobile</code>.</p></div>
+  <div class="toolbar"><button class="primary" data-trace="d-engine">▶ Trace the flows</button></div>
+  <div class="frame"><svg id="d-engine"></svg></div>
+  <div class="inspector" id="i-engine"></div>
+  <h3>The app's side of the seam</h3>
+  <div class="frame"><svg id="d-app"></svg></div>
+  <div class="inspector" id="i-app"></div>
+</section>
+
+<section class="plate" id="domain" data-toc="Domain">
+  <div class="plate-head"><div class="eyebrow"><b>UML</b> · Class diagrams</div><h2>The domain model</h2>
+  <p>Field names are the real ones from the type files. Filled diamonds are composition (the owner holds the part), open arrows are references by id, hollow triangles are specialisation.</p></div>
+  <div class="toolbar" role="tablist"><button class="on" data-cls="run">Run &amp; character</button><button data-cls="card">Cards &amp; combat</button></div>
+  <div class="frame"><svg id="d-class"></svg></div>
+  <div class="inspector" id="i-class"></div>
+</section>
+
+<section class="plate" id="combat" data-toc="Combat">
+  <div class="plate-head"><div class="eyebrow"><b>UML</b> · State machine + sequence</div><h2>A fight, phase by phase</h2>
+  <p><code>CombatEncounterPhase</code> drives the board. The enemy plays one card per threat phase from an ordered deck, telegraphed before you act; its damage escalates +0.22 per round after round 1, up to ×2 (×1.6 faster against a boss).</p></div>
+  <div class="toolbar"><button class="primary" id="fsm-play">▶ Walk a round</button><span class="note" id="fsm-cap">Press to walk the phases.</span></div>
+  <div class="frame"><svg id="d-fsm"></svg></div>
+  <div class="inspector" id="i-fsm"></div>
+  <h3>Playing a PAID line, message by message</h3>
+  <div class="toolbar"><button class="primary" id="seq-play">▶ Play</button><button id="seq-step">Step</button><button id="seq-reset">Reset</button><span class="note" id="seq-cap"></span></div>
+  <div class="frame"><svg id="d-seq" class="seq"></svg></div>
+  <h3>Run life: death is a step back, then the end</h3>
+  <div class="frame narrow"><svg id="d-death"></svg></div>
+  <div class="inspector" id="i-death"></div>
+</section>
+
+<section class="plate" id="dice" data-toc="Dice">
+  <div class="plate-head"><div class="eyebrow"><b>Mechanics</b> · Resource flow</div><h2>The dice and Conviction economy</h2>
+  <p>Four dice a threat phase, one per colour. A die only powers a card's PAID line; Conviction is spent only on signatures. Every source and sink below names its constant.</p></div>
+  <div class="toolbar"><button class="primary" data-trace="d-dice">▶ Trace the flows</button></div>
+  <div class="frame"><svg id="d-dice"></svg></div>
+  <div class="inspector" id="i-dice"></div>
+  <div class="grid2">
+    <div class="calc">
+      <div class="eyebrow">Roll the tray (default gear)</div>
+      <div class="dice" id="tray"></div>
+      <div class="toolbar"><button class="primary" id="roll">Roll four dice</button><span class="note" id="rollout"></span></div>
+      <div class="kv">
+        <span>Coloured die: special / mana / miss</span><span>1 / 2 / 3</span>
+        <span>Gold die: special / mana / miss</span><span>1 / 1 / 4</span>
+        <span>Expected usable dice per phase</span><span>1.83</span>
+        <span>Chance the whole tray misses</span><span>8.3%</span>
+        <span>Expected Conviction from specials</span><span>1.33</span>
+      </div>
+    </div>
+    <div class="calc">
+      <div class="eyebrow">The Color Law (<span class="mono">dieSatisfiesColorLaw</span>)</div>
+      <div class="tablewrap"><table id="colorlaw"></table></div>
+      <p class="note">A legal die adds nothing beyond powering the line (D79): no bonus for paying in the card's own colour.</p>
+    </div>
+  </div>
+</section>
