@@ -196,11 +196,6 @@ describe('roster health — each orphan lens fires', () => {
         expect(found.map(f => [f.subject, f.id])).toEqual([['consumable', 'healing-potion'], ['relic', 'relic-test']]);
     });
 
-    it('item-ungranted: a friendship reward grants', () => {
-        const foe = { ...FloatEye, friendshipReward: { items: [ring] } };
-        expect(orphanItems(sources({ enemyLibrary: [foe], startingItemIds: [] }))).toEqual([]);
-    });
-
     it('npc-unreached: a rostered NPC with a tree no node reaches', () => {
         const tree: DialogueTree = { rootId: 'r', nodes: { r: { id: 'r', text: '' } } };
         const maps = [mapDef({ name: 'rh-lonely' as never, npcs: [{ name: 'Hermit', dialogueTree: tree }] })];

@@ -239,10 +239,8 @@ describe('the Green Jelly is the Brine Hag\'s fight, reworked into a town normal
         expect(ENEMY_DECKS['enemy-green-jelly']).toBeUndefined();
     });
 
-    it('keeps the befriend gate below 30% and its 35 XP friendship bonus', () => {
+    it('keeps the befriend gate below 30%, its flag and no authored payout', () => {
         expect(GreenJelly.befriendabilityConfig).toEqual({ hpGate: { belowPct: 0.3 } });
-        expect(GreenJelly.friendshipReward?.items?.map(i => i.id)).toEqual(['healing-potion']);
-        expect(GreenJelly.friendshipReward?.xpBonus).toBe(35);
         expect(GreenJelly.friendshipReward?.flagSet).toBe('befriended-green-jelly');
         expect(GreenJelly.journalEntry?.id).toBe('codex-green-jelly');
     });

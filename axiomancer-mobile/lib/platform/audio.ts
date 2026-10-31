@@ -1,4 +1,4 @@
-import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
+import { createAudioPlayer, setAudioModeAsync, type AudioPlayer } from 'expo-audio';
 
 /**
  * The audio seam. Backed by `expo-audio` (the SDK 54 module; `expo-av`'s
@@ -18,8 +18,32 @@ export interface LoopingPlayer {
     pause(): void;
     /** 0 to 1, clamped. */
     setVolume(volume: number): void;
+    /** What the native player reports now (false after an OS-side pause or focus loss). */
+    isPlaying(): boolean;
     /** Free the native player. */
     release(): void;
+}
+
+/**
+ * Looping game music: take lasting audio focus (not the transient request
+ * `expo-audio` makes by default, which a permanent loss pauses for good),
+ * play over the iOS silent switch, and stop when the app is backgrounded.
+ * Best-effort: a refusal leaves the default mode.
+ */
+export function configureGameAudio(): void {
+    try {
+        void Promise.resolve(
+            setAudioModeAsync({
+                playsInSilentMode: true,
+                interruptionMode: 'doNotMix',
+                allowsRecording: false,
+                shouldPlayInBackground: false,
+                shouldRouteThroughEarpiece: false,
+            }),
+        ).catch(() => undefined);
+    } catch {
+        // web or a missing module: the default mode stands
+    }
 }
 
 /** A bundled asset id, as `require('...mp3')` returns. */
@@ -35,6 +59,7 @@ export function createLoopingPlayer(source: AudioAsset): LoopingPlayer {
         setVolume: (volume) => {
             player.volume = Math.min(1, Math.max(0, volume));
         },
+        isPlaying: () => player.playing,
         release: () => player.remove(),
     };
 }

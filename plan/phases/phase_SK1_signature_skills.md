@@ -179,14 +179,14 @@ the fights a preview build posts, so the next refused tap is on record.
 - **A9** A foe with no `befriendabilityConfig.hpGate` uses a default gate in
   one tuning constant (`BEFRIEND_TUNING.defaultHpGate`, 0.3, the Green
   Jelly's line); a foe that declares its own gate keeps it, and a YIELDING foe
-  can still be spared at any VITAE. [T to confirm #5]
+  can still be spared at any VITAE. Accepted at merge (default).
 - **A10** A befriend pays **no XP** and **either shillings or one
   consumable, scaled to the foe's level**, from one tuning table
   (`BEFRIEND_TUNING`, `[content]` for T): shillings = `shillingsPerLevel`
   (3) x the foe's level; the consumable is the Minor Healing Potion below
   level 5, the Healing Potion at 5-9 and the Greater Healing Potion at 10
   and above. Which of the two is paid is drawn from the combat rng (even
-  odds), so a seed reproduces it. [T to confirm #4] `CombatEndReport`
+  odds), so a seed reproduces it. Accepted at merge (default). `CombatEndReport`
   gains `shillings` (0 when none), the END_COMBAT reducer adds it to
   `player.currency`; a befriend no longer rolls the loot table and no longer
   pays the half-XP base; the Green Jelly's `xpBonus` and potion are retired
