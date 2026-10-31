@@ -218,7 +218,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c, NK1a, MU1 |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1f, BW1c, NK1a, MU1, EN2a, EN2b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -351,6 +351,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **the DANGER-only fight-or-flee screen and the plain combat icon plotted (EN2)** (T, in session: "Plot it, yes."). **Added** EN2a and EN2b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the fight screens. Nothing ticked; no date moved.
 - **2026-10-31** — **the Defender's and Merciful's card art plots removed (CA1, CA2)** (T, in session: "remove those two plots" / "Remove those phases"; T has new sheets for all four lanes and does not like the CA1/CA2 sheets). **Removed** CA1a and CA1b from the `Waits on` of the Nov 12 Defender check (now `-`), and the CA2a and CA2b lines under Unscheduled. Nothing ticked; no date moved. One card-art `/plot` for all four lanes follows once T's new sheets and names are in the repo.
 - **2026-10-30** — **`/heads-down` gates, claims and resume plotted (HW1)** (T, in session: "let's plot it", after the Nexus v2 comparison). **Added** HW1a-HW1c under Unscheduled: loop tooling no T act waits on. **Edited** the W2 note on the Nov 11 R11 review: four held candidates, not five, since claims is now HW1b. Nothing ticked; no date moved.
 - **2026-10-30** — **the Merciful's card art plotted (CA2)** (T, in session: "When you're done, plot the merciful cards as well."). **Added** CA2a and CA2b under Unscheduled beside MF1e, T's Merciful check, which has no date yet. Nothing ticked; no date moved.
