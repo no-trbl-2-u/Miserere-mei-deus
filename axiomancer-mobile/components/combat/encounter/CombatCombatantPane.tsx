@@ -443,11 +443,13 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
 // ── The overlay ──────────────────────────────────────────────────────────────
 
 export const CombatCombatantPane = React.memo(function CombatCombatantPane({
-    enemy, player, onChip, fx, topInset = 0, metaLine, onHudLayout, region,
+    enemy, player, onChip, fx, topInset = 0, metaLine, onHudLayout, region, onPayToll,
 }: {
     enemy: CombatEnemyPaneVM;
     player: CombatPlayerPaneVM;
     onChip?: (e: CombatEffectChipVM) => void;
+    /** Pays the Toll-Keeper's toll (phase EN1l); the button shows only with it. */
+    onPayToll?: () => void;
     fx?: CombatFx;
     /** Safe-area insets, passed by the board (the overlay is absolute-fill). */
     topInset?: number;
@@ -831,6 +833,24 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     <View style={styles.hudIntent} pointerEvents="box-none" testID="combat-hud-intent">
                         <IntentIcon intent={enemy.intent} />
                         <EffectChips effects={enemy.effects} onChip={onChip} align="flex-start" testID="combat-enemy-effects" />
+                        {/* The Toll-Keeper's toll (phase EN1l): paid on your turn
+                            as a SACRIFICE. A refused tap still reaches the engine,
+                            which logs its reason; the reason also shows here. */}
+                        {enemy.toll && enemy.toll.owed > 0 && onPayToll ? (
+                            <Pressable
+                                onPress={onPayToll}
+                                accessibilityRole="button"
+                                accessibilityLabel={enemy.toll.a11y}
+                                accessibilityState={{ disabled: enemy.toll.block !== null }}
+                                style={[styles.tollButton, enemy.toll.block !== null && styles.tollButtonRefused]}
+                                testID="combat-pay-toll"
+                            >
+                                <Text style={styles.tollLabel}>{enemy.toll.label}</Text>
+                                {enemy.toll.block ? (
+                                    <Text style={styles.tollReason} testID="combat-pay-toll-reason">{enemy.toll.block}</Text>
+                                ) : null}
+                            </Pressable>
+                        ) : null}
                     </View>
                 </View>
             </View>
@@ -915,6 +935,14 @@ const useStyles = makeStyles((AXM) => ({
     altMeterFill: { height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 3 },
     hudUnderBar: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 2 },
     hudIntent: { alignItems: 'flex-start', gap: 6, flexShrink: 1 },
+    // The Toll-Keeper's "Pay the toll (n)" button (phase EN1l).
+    tollButton: {
+        paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6,
+        borderWidth: 1, borderColor: AXM.blood, backgroundColor: AXM.bg,
+    },
+    tollButtonRefused: { opacity: 0.55 },
+    tollLabel: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.blood, letterSpacing: 0.5 },
+    tollReason: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.blood, marginTop: 2, maxWidth: 200 },
 
     // Status tiles.
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },

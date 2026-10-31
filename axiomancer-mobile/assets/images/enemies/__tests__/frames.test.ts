@@ -57,7 +57,7 @@ describe('installing a frame set took nothing away from the static registry', ()
         // Chapter 1's stand-in portraits carry no frame set until T picks them.
         expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual([
             'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'gallows-crow', 'lamplighter', 'lamprey-knot',
-            'net-mender', 'smokehouse-gutter', 'tithe-collector', 'wreck-picker', 'wrecker',
+            'net-mender', 'smokehouse-gutter', 'tide-gate', 'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker',
         ]);
     });
 

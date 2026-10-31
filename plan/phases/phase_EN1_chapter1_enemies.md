@@ -158,7 +158,7 @@ table exists for T's tuning session.
   UNKNOWN intent with no name. This is a new override in the intent VM, not a new kind.
 - **Paying the toll.** The player pays on their own turn with a "Pay the toll (n)" action on the
   Toll-Keeper's pane, not a turn-end prompt, because the board has no turn-end prompt today
-  [T to confirm #5]. It is legal only when the player's VITAE is above TOLL (the board refuses it
+  [Accepted at merge (default), #5]. It is legal only when the player's VITAE is above TOLL (the board refuses it
   loudly otherwise) and it runs through the card-program SACRIFICE path, so TETHER and WAIVE apply.
 - **Elite stand-ins**, from the Bestiary page, each at `c20ebe14e^`: cave-choir ← `zoma-a`,
   lamplighter ← `wichtlein`, wrecker ← `sendou-figure-a`, toll-keeper ← `paladin-cursed-a`,

@@ -1,5 +1,10 @@
 # Card art direction
 
+> **Superseded in part (T, 2026-10-31).** The Defender and Merciful sheets this page calls "the house paintings"
+> were deleted with Phases CA1 and CA2; T has new sheets for all four lanes, in the same format (1536 x 1024, 3 x 2,
+> magenta gutters, five per lane, a manifest), and **the names changed**: the "Names are actions" table below is no
+> longer the source of card names. The next card-art `/plot` replaces both from T's new sheets and names.
+
 Miserere Mei, Deus is a dark fantasy deckbuilder for mobile. This page is the look every lane card shares. All four
 lanes (Blood Price, Defender, Elementalist, Merciful) are painted to it, Blood Price included, so the whole library
 reads as one game (T, 2026-10-30).

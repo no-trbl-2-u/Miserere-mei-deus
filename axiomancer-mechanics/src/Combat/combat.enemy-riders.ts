@@ -31,6 +31,7 @@
 import type { Enemy, EnemyMoveRider, EnemyMoveRiderKind } from '../Enemy/types';
 import { lookupEffect, applyEffect } from '../Effects';
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
+import { isCurseCard } from './combat.card-program';
 import { wordsOf } from './combat.enemy-words';
 import { foeInferno, initElementState, weatherEvents, yourInferno } from './combat.elements';
 import { initProgramLedger } from './combat.card-program';
@@ -114,6 +115,18 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
         case 'lamp':
         case 'lit-only':
         case 'barnacle-if-through':
+            return rider;
+        // The Toll-Keeper and the Tide-Gate (phase EN1l).
+        case 'toll-levy':
+        case 'toll-seize':
+        case 'curse-count-hit':
+        case 'tide-wash':
+        case 'tide-surge':
+            return { ...rider, damage: scale(rider.damage) };
+        case 'tide-ward':
+            return { ...rider, ward: scale(rider.ward) };
+        case 'distrain':
+        case 'tide-ebb':
             return rider;
     }
 }
@@ -288,6 +301,14 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
             case 'lit-only':
             case 'bait':
                 effects = planLighthouseMove(state, effects, rider);
+                break;
+            case 'toll-levy':
+            case 'toll-seize':
+            case 'curse-count-hit':
+            case 'tide-wash':
+            case 'tide-ward':
+            case 'tide-surge':
+                effects = planCausewayMove(state, effects, rider);
                 break;
             default:
                 break;
@@ -614,6 +635,15 @@ export function applyRiderAfterMove(
             events.push(...after.events);
             break;
         }
+        case 'toll-seize':
+        case 'distrain':
+        case 'tide-surge':
+        case 'tide-ebb': {
+            const after = causewayAfterMove(state, rider, outcome.rng);
+            state = after.state;
+            events.push(...after.events);
+            break;
+        }
         default:
             break;
     }
@@ -930,4 +960,195 @@ function lighthouseAfterMove(
             return { state: next, events };
         }
     }
+}
+// ─── The keep causeway: TOLL and TIDE (phase EN1l) ──────────────────────────
+//
+// The Toll-Keeper's TOLL and the Tide-Gate's TIDE are fight state on the foe
+// (`enemyRiders.tollOwed`, `.tide`), not keywords. Each rises at the end of
+// every foe turn; the toll is paid on your turn (`settleToll`, after the
+// card-program SACRIFICE), and TIDE 0-1 leaves the gate VULNERABLE.
+
+/** The riders that mark a foe as the Toll-Keeper (its TOLL rises each turn). */
+const TOLL_RIDERS: readonly EnemyMoveRiderKind[] = ['toll-levy', 'toll-seize', 'distrain'];
+/** The riders that mark a foe as the Tide-Gate (its TIDE rises each turn). */
+const TIDE_RIDERS: readonly EnemyMoveRiderKind[] = ['tide-wash', 'tide-ward', 'tide-surge', 'tide-ebb'];
+
+/** The highest TIDE. */
+export const TIDE_MAX = 5;
+/** At this TIDE or lower the gate is VULNERABLE. */
+export const LOW_TIDE = 1;
+/** How VULNERABLE the gate is at low tide, in %. */
+export const LOW_TIDE_VULNERABLE_PCT = 25;
+
+/** The TOLL owed to the Toll-Keeper. */
+export function tollOwed(state: Pick<CombatEncounterState, 'enemyRiders'>): number {
+    return state.enemyRiders?.tollOwed ?? 0;
+}
+
+/** The Tide-Gate's TIDE. */
+export function tideOf(state: Pick<CombatEncounterState, 'enemyRiders'>): number {
+    return state.enemyRiders?.tide ?? 0;
+}
+
+/** True for the Toll-Keeper: a foe whose moves read the TOLL. */
+export function carriesToll(enemy: Pick<Enemy, 'phases'>): boolean {
+    return enemyCarriesRider(enemy, TOLL_RIDERS);
+}
+
+/** True for the Tide-Gate: a foe whose moves read the TIDE. */
+export function carriesTide(enemy: Pick<Enemy, 'phases'>): boolean {
+    return enemyCarriesRider(enemy, TIDE_RIDERS);
+}
+
+/** The Curses you carry: in your hand, your draw pile and your discard. */
+export function cursesCarried(state: Pick<CombatEncounterState, 'hand' | 'drawPile' | 'discard'>): number {
+    return state.hand.filter(h => isCurseCard(h.cardId)).length
+        + state.drawPile.filter(isCurseCard).length
+        + state.discard.filter(isCurseCard).length;
+}
+
+type CausewayPlanRider = Extract<EnemyMoveRider, {
+    kind: 'toll-levy' | 'toll-seize' | 'curse-count-hit' | 'tide-wash' | 'tide-ward' | 'tide-surge';
+}>;
+
+/** A TOLL or TIDE move's effects from the board. */
+function planCausewayMove(state: CombatEncounterState, effects: CombatThreatEffect[], rider: CausewayPlanRider): CombatThreatEffect[] {
+    switch (rider.kind) {
+        case 'toll-levy':
+            return bumpFirstHit(effects, rider.damage * tollOwed(state)).effects;
+        case 'toll-seize':
+            return withHits(effects, [rider.damage * tollOwed(state) * 2]);
+        case 'curse-count-hit':
+            return withHits(effects, [rider.damage * cursesCarried(state)]);
+        case 'tide-wash': {
+            const tide = tideOf(state);
+            const hit = (effects.find(isHit)?.damage ?? 0) + rider.damage * tide;
+            const twice = rider.twiceAt !== undefined && tide >= rider.twiceAt;
+            return withHits(effects, twice ? [hit, hit] : [hit]);
+        }
+        case 'tide-ward': {
+            const ward = rider.ward * tideOf(state);
+            const rest = effects.filter(e => (e.ward ?? 0) <= 0);
+            return ward > 0 ? [...rest, { ward }] : rest;
+        }
+        case 'tide-surge':
+            return withHits(effects, [rider.damage * rider.to]);
+    }
+}
+
+/**
+ * The foe takes VULNERABLE `pct`% lasting `duration` round ends. Held, not
+ * stacked: a VULNERABLE already on it keeps the larger % and the longer span.
+ */
+function holdFoeVulnerable(enemy: Enemy, round: number, pct: number, duration: number): Enemy {
+    const def = lookupEffect('debuff_vulnerable');
+    if (!def) return enemy;
+    const held = enemy.effects.find(ae => ae.effectId === 'debuff_vulnerable');
+    if (held) {
+        if (held.intensity >= pct && held.remainingDuration >= duration) return enemy;
+        return {
+            ...enemy,
+            effects: enemy.effects.map(ae => (ae === held
+                ? { ...ae, intensity: Math.max(ae.intensity, pct), remainingDuration: Math.max(ae.remainingDuration, duration) }
+                : ae)),
+        };
+    }
+    const applied = applyEffect(enemy.effects, def, round, {
+        intensityDelta: pct, uncapped: true, durationMode: 'additive', durationDelta: duration, sourceId: enemy.id,
+    });
+    return { ...enemy, effects: applied.activeEffects };
+}
+
+/** What a TOLL or TIDE move leaves: the TOLL doubled, a card distrained, the TIDE set. */
+function causewayAfterMove(
+    state: CombatEncounterState,
+    rider: Extract<EnemyMoveRider, { kind: 'toll-seize' | 'distrain' | 'tide-surge' | 'tide-ebb' }>,
+    rng: (() => number) | undefined,
+): { state: CombatEncounterState; events: CombatEvent[] } {
+    const riders = state.enemyRiders ?? {};
+    switch (rider.kind) {
+        case 'toll-seize': {
+            const toll = tollOwed(state) * 2;
+            return {
+                state: { ...state, enemyRiders: { ...riders, tollOwed: toll } },
+                events: [{ kind: 'enemy-rider', rider: rider.kind, amount: toll }],
+            };
+        }
+        case 'distrain': {
+            const takeable = state.hand.filter(h => !isCurseCard(h.cardId));
+            if (takeable.length === 0) return { state, events: [] };
+            const pick = rng ? Math.min(takeable.length - 1, Math.floor(rng() * takeable.length)) : takeable.length - 1;
+            const taken = takeable[pick]!;
+            return {
+                state: {
+                    ...state,
+                    hand: state.hand.filter(h => h.uid !== taken.uid),
+                    enemyRiders: { ...riders, distrained: [...(riders.distrained ?? []), taken] },
+                },
+                events: [{ kind: 'enemy-rider', rider: rider.kind, amount: 1 }],
+            };
+        }
+        case 'tide-surge':
+            return {
+                state: { ...state, enemyRiders: { ...riders, tide: rider.to } },
+                events: [{ kind: 'enemy-rider', rider: rider.kind, amount: rider.to }],
+            };
+        case 'tide-ebb': {
+            const enemy = holdFoeVulnerable(state.enemy, state.round, rider.pct, rider.turns + 1);
+            return {
+                state: { ...state, enemy, enemyRiders: { ...riders, tide: rider.to } },
+                events: [{ kind: 'enemy-rider', rider: rider.kind, amount: rider.pct }],
+            };
+        }
+    }
+}
+
+/** How far the TIDE rises at the end of a turn in the foe's phase `phase`. */
+function tideRise(enemy: Pick<Enemy, 'phases'>, phase: number): number {
+    const moves = enemy.phases?.[phase]?.moves ?? [];
+    const rises = moves.flatMap(m => (m.rider?.kind === 'tide-wash' && m.rider.rise !== undefined ? [m.rider.rise] : []));
+    return rises.length > 0 ? Math.max(...rises) : 1;
+}
+
+/**
+ * The end of every foe turn: the TOLL rises 1 and the TIDE rises (1, or its
+ * phase's rate) up to `TIDE_MAX`, unless the move that fired set the TIDE
+ * itself (`fired`: the rider of the move that fired, absent when it was
+ * hindered). Then a TIDE of `LOW_TIDE` or less holds the gate VULNERABLE
+ * through your next turn. A foe with neither returns the state as is.
+ */
+export function causewayFoeTurnEnd(
+    state: CombatEncounterState, fired: EnemyMoveRider | undefined,
+): CombatEncounterState {
+    const toll = carriesToll(state.enemy);
+    const tide = carriesTide(state.enemy);
+    if (!toll && !tide) return state;
+    const riders: EnemyRidersState = { ...state.enemyRiders };
+    if (toll) riders.tollOwed = tollOwed(state) + 1;
+    let enemy = state.enemy;
+    if (tide) {
+        const set = fired?.kind === 'tide-surge' || fired?.kind === 'tide-ebb';
+        const phase = state.threatPhases[state.currentPhaseIndex]?.enemyMove?.phase ?? 0;
+        riders.tide = set ? tideOf(state) : Math.min(TIDE_MAX, tideOf(state) + tideRise(state.enemy, phase));
+        // One round end ticks off before your turn, so it lasts through it.
+        if (riders.tide <= LOW_TIDE) enemy = holdFoeVulnerable(enemy, state.round, LOW_TIDE_VULNERABLE_PCT, 2);
+    }
+    return { ...state, enemy, enemyRiders: riders };
+}
+
+/** The fight's start: the Tide-Gate opens at low tide (TIDE 0), so VULNERABLE through the first round. */
+export function causewayFightStart(enemy: Enemy, round: number): Enemy {
+    return carriesTide(enemy) ? holdFoeVulnerable(enemy, round, LOW_TIDE_VULNERABLE_PCT, 1) : enemy;
+}
+
+/** Why the toll cannot be paid now, before its SACRIFICE is priced (null = it may be). */
+export function tollOwedBlock(state: Pick<CombatEncounterState, 'enemy' | 'enemyRiders'>): string | null {
+    if (!carriesToll(state.enemy)) return 'no toll is asked in this fight';
+    return tollOwed(state) > 0 ? null : 'no toll is owed yet';
+}
+
+/** The toll paid: TOLL back to 0 and every distrained card back in your hand. */
+export function settleToll(state: CombatEncounterState): CombatEncounterState {
+    const { distrained = [], ...rest } = state.enemyRiders ?? {};
+    return { ...state, hand: [...state.hand, ...distrained], enemyRiders: { ...rest, tollOwed: 0 } };
 }

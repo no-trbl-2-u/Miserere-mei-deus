@@ -359,6 +359,15 @@ export interface EnemyMove {
  *   barnacle-if-through      if a hit gets through your GUARD, `barnacle` Barnacles join your hand.
  *   strip-wreck              takes your banked dice and up to `conviction` Conviction, WARD `ward` per
  *                            die and per point taken.
+ *   toll-levy                +`damage` on the hit per TOLL owed.
+ *   toll-seize               TOLL doubles, then one hit of `damage` per TOLL.
+ *   curse-count-hit          one hit of `damage` per Curse in your hand, draw pile and discard.
+ *   distrain                 takes a random card (not a Curse) from your hand until you pay the TOLL.
+ *   tide-wash                +`damage` on the hit per TIDE; at TIDE `twiceAt`+ it hits twice; TIDE
+ *                            rises `rise` a turn in the phase that carries it (default 1).
+ *   tide-ward                WARD `ward` per TIDE.
+ *   tide-surge               TIDE jumps to `to`, then one hit of `damage` per TIDE.
+ *   tide-ebb                 TIDE drops to `to`, then the foe takes VULNERABLE `pct`% for `turns`.
  */
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
@@ -410,7 +419,17 @@ export type EnemyMoveRider =
     | { kind: 'lit-only' }
     | { kind: 'bait'; ward: number; damage: number }
     | { kind: 'barnacle-if-through'; barnacle: number }
-    | { kind: 'strip-wreck'; conviction: number; ward: number };
+    | { kind: 'strip-wreck'; conviction: number; ward: number }
+    // The Toll-Keeper (phase EN1l).
+    | { kind: 'toll-levy'; damage: number }
+    | { kind: 'toll-seize'; damage: number }
+    | { kind: 'curse-count-hit'; damage: number }
+    | { kind: 'distrain' }
+    // The Tide-Gate (phase EN1l).
+    | { kind: 'tide-wash'; damage: number; twiceAt?: number; rise?: number }
+    | { kind: 'tide-ward'; ward: number }
+    | { kind: 'tide-surge'; damage: number; to: number }
+    | { kind: 'tide-ebb'; to: number; pct: number; turns: number };
 
 /** A rider's kind, e.g. `half-guard`. */
 export type EnemyMoveRiderKind = EnemyMoveRider['kind'];
