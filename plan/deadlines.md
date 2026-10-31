@@ -223,7 +223,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
 | [x] | 2026-11-12 | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | W2 | needs plot | - |
-| [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | - |
+| [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | CA3a, CA3e |
 | [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | - |
 | [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d |
@@ -261,6 +261,9 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - HW1b — loop tooling (row claims); no T act waits on it
 - HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
+- CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
+- CA3d — Blood Price's new paintings; no T act scheduled to view them yet (date not set)
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
 - AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
 - AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
@@ -351,6 +354,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **all four lanes' card art plotted (CA3)** (T, in session: "I want to swap out all the new art I've gotten on to the 4 lanes' cards"). **Added** CA3a (the cutter and the Defender's paintings) and CA3e (the names) to the `Waits on` of the Nov 12 Defender check; CA3b beside MF1e and CA3c, CA3d under Unscheduled. Nothing ticked; no date moved.
 - **2026-10-31** — **the Defender's and Merciful's card art plots removed (CA1, CA2)** (T, in session: "remove those two plots" / "Remove those phases"; T has new sheets for all four lanes and does not like the CA1/CA2 sheets). **Removed** CA1a and CA1b from the `Waits on` of the Nov 12 Defender check (now `-`), and the CA2a and CA2b lines under Unscheduled. Nothing ticked; no date moved. One card-art `/plot` for all four lanes follows once T's new sheets and names are in the repo.
 - **2026-10-30** — **`/heads-down` gates, claims and resume plotted (HW1)** (T, in session: "let's plot it", after the Nexus v2 comparison). **Added** HW1a-HW1c under Unscheduled: loop tooling no T act waits on. **Edited** the W2 note on the Nov 11 R11 review: four held candidates, not five, since claims is now HW1b. Nothing ticked; no date moved.
 - **2026-10-30** — **the Merciful's card art plotted (CA2)** (T, in session: "When you're done, plot the merciful cards as well."). **Added** CA2a and CA2b under Unscheduled beside MF1e, T's Merciful check, which has no date yet. Nothing ticked; no date moved.

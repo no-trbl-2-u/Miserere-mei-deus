@@ -1,0 +1,67 @@
+{
+ "lane": "merciful",
+ "grid": {
+  "cols": 3,
+  "rows": 2
+ },
+ "gutter": "#FF00FF",
+ "sheets": [
+  {
+   "file": "sheet-1.webp",
+   "tiles": [
+    "mc-p-01a",
+    "mc-p-02b",
+    "mc-p-03b",
+    "mc-p-04a",
+    "mc-p-05a",
+    "mc-p-06a"
+   ]
+  },
+  {
+   "file": "sheet-2.webp",
+   "tiles": [
+    "mc-p-06c",
+    "mc-p-07b",
+    "mc-p-08b",
+    "mc-p-09c",
+    "mc-p-10c",
+    "mc-e-01b"
+   ]
+  },
+  {
+   "file": "sheet-3.webp",
+   "tiles": [
+    "mc-e-02c",
+    "mc-e-03b",
+    "mc-e-04b",
+    "mc-e-06a",
+    "mc-e-07b",
+    "mc-e-08b"
+   ]
+  },
+  {
+   "file": "sheet-4.webp",
+   "tiles": [
+    "mc-e-09b",
+    "mc-e-10b",
+    "mc-m-01b",
+    "mc-m-02b",
+    "mc-m-04b",
+    "mc-m-05c"
+   ]
+  },
+  {
+   "file": "sheet-5.webp",
+   "tiles": [
+    "mc-m-06c",
+    "mc-m-07c",
+    "mc-m-08a",
+    "mc-m-09c",
+    "mc-m-10c",
+    null
+   ]
+  }
+ ],
+ "source": "ChatGPT image generation, generated and selected by T, 2026-10-30. Lossy WebP q95 of T's 1536 x 1024 PNG sheets. Where a sheet-<n>-prompt.txt sits beside a sheet, it is the exact prompt that made it.",
+ "license": "T's own commission (open source, T, 2026-10-29, D115)"
+}
