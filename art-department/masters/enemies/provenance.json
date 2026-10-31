@@ -131,5 +131,20 @@
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5b split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
     ]
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --sheet <key>.sheet.webp --out-frame 176|168 (Pillow + numpy; phase AN5c): wreck-picker at 176, tithe-collector at 168",
+    "covers": [
+      "wreck-picker.sheet.json, wreck-picker.cleanup-report.json",
+      "tithe-collector.sheet.json, tithe-collector.cleanup-report.json"
+    ],
+    "source": "<key>.sheet.webp, T's image-model sheets (the 2026-10-30 record above)",
+    "method": "No pixel was edited by hand. Same chain as the AN5b record. The tithe-collector master is 2043x770 and was resampled (Lanczos) to 2048x768 first, within the 1% bound, on T's call of 2026-10-30; the report records resampled: true. Both anchors measured foot-line. The tithe-collector overshot the 12000 B per-cell ceiling at 176px by 4 B (12004), so it is cut at 168px; the wreck-picker fits at 176px (max 11542 B). The ceiling is not raised. The cleaned sheets are not committed: tests/test_clean_ai_sheet.py regenerates each from its master and checks the sidecar, the report and the pixel hash.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5c split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
+    ]
   }
 ]
