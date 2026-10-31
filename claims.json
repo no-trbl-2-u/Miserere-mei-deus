@@ -2,13 +2,13 @@
   "CX1a": {
     "owner": "heads-down:6d912eef",
     "at": "2026-10-31T21:14:50.752Z",
-    "renewed": "2026-10-31T21:15:27.996Z",
+    "renewed": "2026-10-31T21:24:51.259Z",
     "ttlHours": 24
   },
   "MC1a": {
     "owner": "heads-down:6d912eef",
     "at": "2026-10-31T20:58:15.605Z",
-    "renewed": "2026-10-31T21:05:54.768Z",
+    "renewed": "2026-10-31T21:24:51.259Z",
     "ttlHours": 24
   }
 }
