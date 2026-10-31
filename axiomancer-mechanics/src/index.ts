@@ -161,6 +161,16 @@ export type {
     DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation, PlayLogSourceKind,
     PlayLogSourceFilter, PlayLogOrigin,
 } from './Combat';
+// The whole-run play-log contract (phase SM1c): a run opening, its events and its close.
+export {
+    PLAY_RUNS_PATH, RUN_EVENTS_PATH, PLAY_RUN_OUTCOMES, RUN_EVENT_KINDS, playRunEndPath, validatePlayRunPost,
+    validatePlayRunEndPost, validateRunEventsPost,
+} from './Combat';
+export type {
+    PlayRunOutcome, RunEventPayloads, RunEventKind, RunEvent, PlayRunPost, PlayRunEndPost, RunEventsPost, PlayRunRow,
+    RunEventRow, PlayRunList, RunEventList, PlayRunOpened, PlayRunClosed, RunEventsCreated, PlayRunValidation,
+    PlayRunEndValidation, RunEventsValidation,
+} from './Combat';
 // Measured truth (R12a): the Act 1 ledger x spread x deck measurement.
 export {
     measuredTruthCells, sampledFamilyDraws, MEASURED_DECK_LANES, MEASURED_SAMPLED_FAMILIES, MEASURED_SPREADS,
