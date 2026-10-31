@@ -9,6 +9,9 @@
  * See docs/testing.md for the full standard.
  */
 
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
 import { describe, it, expect, jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import React from 'react';
@@ -16,6 +19,8 @@ import { createAppStore } from '@/state/store';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { SaveSlotsProvider } from '@/state/SaveSlotsProvider';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
 
 // Mock expo-router for all tests
 jest.mock('@/lib/platform/router', () => ({
@@ -105,6 +110,20 @@ describe('App Component Smoke Tests', () => {
             appComponents.forEach(component => {
                 expect(() => require(component)).not.toThrow();
             });
+        });
+    });
+
+    describe('A5 — /event removed, /dialogue stays with its header', () => {
+        it('removes the /event route with every caller', () => {
+            expect(existsSync(path.join(REPO_ROOT, 'app', 'event'))).toBe(false);
+            expect(() => require('@/app/event/index')).toThrow();
+        });
+
+        it('keeps a /dialogue header naming its live callers', () => {
+            const source = readFileSync(path.join(REPO_ROOT, 'app', 'dialogue', 'index.tsx'), 'utf8');
+            expect(source).toMatch(/stagedDialogue/);
+            expect(source).toMatch(/seatDialogue/);
+            expect(source).toMatch(/giveQuestStep/);
         });
     });
 });
