@@ -265,7 +265,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5d — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5e — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
-- HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
 - CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
