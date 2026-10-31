@@ -147,8 +147,8 @@ PR that the review merges, and the first nexus-sync PR opens (or reports nothing
 - **Sync PR label**: a new `nexus-sync` label the merge job holds for T. Confirmed by T (2026-10-31): yes,
   a sync PR only T can merge, and its description must make very clear what we get from nexus, with
   diagrams and visual explanations (A14).
-- **`/pitch`**: the repo copy is Miserere's from now on; the global copy is left as it is.
-  Accepted at merge (default).
+- **`/pitch`**: the repo copy is Miserere's from now on; the global copy is left as it is. Accepted at
+  merge (default).
 - **Turning workflows on is T's** (AGENTS.md "Repository settings are T's alone"): NX1f writes the
   `gh workflow enable` lines as a NEEDS_T row; T runs them in NX1i.
 

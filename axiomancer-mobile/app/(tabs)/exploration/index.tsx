@@ -186,9 +186,9 @@ export default function ExplorationScreen() {
 
             {/* Region Header */}
             <View style={styles.regionHeader}>
-                <View>
+                <View style={styles.regionHeadText}>
                     <SectionLabel size={9} style={styles.continentLabel}>{vm.continent}</SectionLabel>
-                    <Text style={styles.regionTitle}>{vm.region}</Text>
+                    <Text style={styles.regionTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{vm.region}</Text>
                     <Text style={styles.regionSub}>{vm.regionProgress}</Text>
                 </View>
             </View>
@@ -233,6 +233,9 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
     },
+    // Takes the row's full width so the title never wraps; a name too
+    // long for one line shrinks (native) or truncates (web) instead.
+    regionHeadText: { flex: 1, minWidth: 0 },
     regionTitle: {
         fontFamily: FONTS.gothic,
         fontSize: 26,

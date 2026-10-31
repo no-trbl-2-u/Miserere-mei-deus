@@ -93,6 +93,34 @@ test('pr-resolve hands Claude only Read and Edit, on Haiku', () => {
   assert.match(resolve, /model: 'claude-haiku-5-5'/)
 })
 
+// NX1a (A2): `--dangerously-skip-permissions` makes Claude Code ignore the
+// allow list, so a workflow that pairs the two states a limit it does not
+// have. The resolver ran that way until NX1a; it now runs `acceptEdits`.
+// A block is a job or a step; the reusable `_claude-skill.yml` carries the
+// default grant and its callers add a bypass on purpose, so only an
+// explicit list (`allowed_tools:` or `--allowedTools`) counts as a pairing.
+// KNOWN_PAIRINGS are the ones not yet fixed; a new one fails, and so does a
+// listed one that has been fixed (delete it from the list).
+const KNOWN_PAIRINGS = ['claude.yml']
+const BYPASS = /--dangerously-skip-permissions|--permission-mode\s+bypassPermissions/
+const ALLOW_LIST = /allowed_tools:|--allowedTools/
+const pairsAllowListWithBypass = (text) =>
+  code(text).split(/\n(?=\s*- name: |  [\w-]+:[ \t]*(?:\n|$))/).some((b) => ALLOW_LIST.test(b) && BYPASS.test(b))
+
+test('no workflow pairs an allow list with a permission bypass (NX1a)', () => {
+  const found = fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml') && pairsAllowListWithBypass(read(`${WF}/${f}`)))
+  assert.deepEqual(found, KNOWN_PAIRINGS)
+  assert.equal(pairsAllowListWithBypass(resolve), false, 'pr-resolve runs without a bypass')
+  assert.match(resolve, /--permission-mode acceptEdits/)
+  // The detector itself.
+  const job = (args) => `  job:\n    with:\n      allowed_tools: 'Read'\n      extra_claude_args: |\n        ${args}\n`
+  assert.equal(pairsAllowListWithBypass(job('--dangerously-skip-permissions')), true)
+  assert.equal(pairsAllowListWithBypass(job('--permission-mode bypassPermissions')), true)
+  assert.equal(pairsAllowListWithBypass(job('--permission-mode acceptEdits')), false)
+  assert.equal(pairsAllowListWithBypass('      - name: x\n        with:\n          claude_args: |\n            --dangerously-skip-permissions\n            --allowedTools "Read"\n'), true)
+  assert.equal(pairsAllowListWithBypass("  a:\n    allowed_tools: 'Read'\n  b:\n    extra_claude_args: --dangerously-skip-permissions\n"), false, 'two jobs, no pairing')
+})
+
 // claude-code-action rejects a `push` event ("Unsupported event type:
 // push"), so the Claude resolve must never ride the push run: the scan
 // dispatches one workflow_dispatch run per conflicted PR (issue #524).
@@ -538,6 +566,37 @@ test('no other skill dispatches /plot or /messy', () => {
     if (f === 'plot.md' || f === 'messy.md') continue
     assert.doesNotMatch(read(`skills/${f}`), dispatch, f)
   }
+})
+
+// --- /pitch is only ever fired by T (NX1b) ----------------------------------
+
+test('no workflow fires /pitch', () => {
+  for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
+    assert.doesNotMatch(read(`${WF}/${f}`), /\/pitch\b|skills\/pitch\b/, f)
+  }
+})
+
+test('no loop skill or command fires /pitch', () => {
+  const fires = /\/pitch\b|skills\/pitch\b|Skill\(\s*['"]?pitch/i
+  for (const f of fs.readdirSync(path.join(ROOT, 'skills')).filter((f) => f.endsWith('.md'))) {
+    assert.doesNotMatch(read(`skills/${f}`), fires, f)
+  }
+  for (const f of fs.readdirSync(path.join(ROOT, '.claude/commands')).filter((f) => f.endsWith('.md'))) {
+    assert.doesNotMatch(read(`.claude/commands/${f}`), fires, f)
+  }
+})
+
+test('/pitch lives in the repo, picks the game-design lens and never fires from a loop', () => {
+  const skill = read('.claude/skills/pitch/SKILL.md')
+  assert.match(skill, /^---\nname: pitch\n/)
+  assert.match(skill, /Never fired by a loop, workflow or another skill/)
+  for (const f of ['config.md', 'references.md', 'replays.md', 'lenses/game-design.md']) {
+    assert.ok(fs.existsSync(path.join(ROOT, '.claude/skills/pitch', f)), f)
+  }
+  const cfg = read('.claude/pitch.md')
+  assert.match(cfg, /^lens: game-design$/m)
+  assert.match(cfg, /^pitch_dir: braindump\/$/m)
+  assert.match(read('AGENTS.md'), /`AskUserQuestion` only in `\/oversight`[\s\S]{0,200}`\/pitch`/)
 })
 
 test('the two intake skills and /heads-down say the loop never fires them', () => {
