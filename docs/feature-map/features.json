@@ -2692,6 +2692,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/exploration",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
       "to": "area:NPCs",
       "file": "axiomancer-mobile/state/actions.ts"
     },
@@ -4522,8 +4528,26 @@
     {
       "kind": "coupling",
       "from": "route:hazard",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -4536,6 +4560,12 @@
       "from": "route:hazard",
       "to": "area:Log",
       "file": "axiomancer-mobile/state/settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:NPCs",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",
@@ -4565,7 +4595,19 @@
       "kind": "coupling",
       "from": "route:hazard",
       "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/hazard-stakes.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/hazard.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/store.ts"
     },
     {
       "kind": "coupling",

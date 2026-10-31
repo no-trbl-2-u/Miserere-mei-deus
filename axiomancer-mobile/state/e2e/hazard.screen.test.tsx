@@ -49,11 +49,15 @@ function rigHand(store: AppStore, cards: { uid: string; cardId: string }[]): voi
 }
 
 describe('hazard screen — opening', () => {
-    it('opens straight on route select', () => {
+    it('opens on the stakes card, and Face it leads on to route select', () => {
         const { actions } = mountHazard();
         act(() => {
             actions.beginHazard({ seed: 7, hazardId: 'cracked-cliff' });
         });
+        expect(screen.getByTestId('hazard-stakes')).toBeTruthy();
+        expect(screen.queryByTestId('hazard-route-select')).toBeNull();
+        fireEvent.press(screen.getByTestId('hazard-stakes-face'));
+        expect(screen.queryByTestId('hazard-stakes')).toBeNull();
         expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
         expect(screen.getAllByText('CRACKED CLIFF PATH').length).toBeGreaterThan(0);
     });
@@ -65,6 +69,7 @@ describe('hazard screen — route select', () => {
         act(() => {
             actions.beginHazard({ seed: 7, hazardId: 'cracked-cliff' });
         });
+        fireEvent.press(screen.getByTestId('hazard-stakes-face'));
         expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
         expect(screen.getAllByText('CRACKED CLIFF PATH').length).toBeGreaterThan(0);
         expect(screen.getByTestId('hazard-opening-hand')).toBeTruthy();
@@ -81,6 +86,7 @@ describe('hazard screen — route select', () => {
         act(() => {
             actions.beginHazard({ seed: 7, hazardId: 'cracked-cliff' });
         });
+        fireEvent.press(screen.getByTestId('hazard-stakes-face'));
         fireEvent.press(screen.getByTestId('hazard-route-risk'));
         expect(store.getState().hazard.session?.route).toBe('risk');
         expect(store.getState().hazard.session?.phase).toBe('rolling');

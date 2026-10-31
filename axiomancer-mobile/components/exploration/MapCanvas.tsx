@@ -2,8 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+    Easing,
+    useAnimatedProps,
     useAnimatedStyle,
     useSharedValue,
+    withTiming,
 } from 'react-native-reanimated';
 import Svg, { Path, Circle, G, Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { Image } from '@/lib/platform/image';
@@ -14,6 +17,9 @@ import type { MapSheet } from '@/state/exploration-maps';
 import { LEGACY_SHEET_SIZE } from '@/state/exploration-maps/sheet';
 import { MapCameraContext, MapSheetContext, type SheetSize } from './mapSheetContext';
 import { NODE_SIZE, nodeCounterScale } from './ExplorationNode';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { resolveJuiceMode } from '@/lib/juice/instant';
+import { edgeKey, HELD_ROAD_DRAW_MS, useOpeningRoads } from './heldRoads';
 
 interface MapCanvasProps {
     nodes: readonly ExplorationNode[];
@@ -231,6 +237,30 @@ export function edgeStroke(e: ExplorationEdge, AXM: EdgePalette): EdgeStroke {
     };
 }
 
+const AnimatedPath = Animated.createAnimatedComponent(Path);
+
+/** The open ink of a road drawing itself open: a stroke that grows along the road's length. */
+function OpeningStroke({ d, length, color, width, opacity }: { d: string; length: number; color: string; width: number; opacity: number }) {
+    const progress = useSharedValue(0);
+    React.useEffect(() => {
+        progress.value = withTiming(1, { duration: HELD_ROAD_DRAW_MS, easing: Easing.inOut(Easing.cubic) });
+    }, [progress]);
+    const animatedProps = useAnimatedProps(() => ({ strokeDashoffset: length * (1 - progress.value) }));
+    return (
+        <AnimatedPath
+            testID="map-edge-opening"
+            d={d}
+            stroke={color}
+            strokeWidth={width}
+            strokeDasharray={[length, length]}
+            animatedProps={animatedProps}
+            fill="none"
+            opacity={opacity}
+            strokeLinecap="round"
+        />
+    );
+}
+
 /** The dark road casing is this much wider than the stroke it sits under, in sheet units. */
 const CASING_EXTRA = 3;
 /** Radius of the travelled-road bead, in sheet units. */
@@ -361,6 +391,8 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
     // A halo reaches a little past the node glyph, in sheet units.
     const haloRadius = NODE_SIZE / size.scale;
     const hatch = React.useMemo(() => hatchLines(size.width, size.height), [size.width, size.height]);
+    const instant = resolveJuiceMode({ reducedMotion: useReducedMotion() }) === 'instant';
+    const opening = useOpeningRoads(edges, instant);
     const nodeById = React.useMemo(() => {
         const m = new Map<string, ExplorationNode>();
         for (const n of nodes) m.set(n.id, n);
@@ -645,7 +677,11 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
                         const A = nodeById.get(e.fromId);
                         const B = nodeById.get(e.toId);
                         if (!A || !B) return null;
-                        const ink = edgeStroke(e, AXM);
+                        // A road drawing itself open sits closed underneath while its open
+                        // ink grows over it; the base lands open when the draw ends.
+                        const drawing = opening.has(edgeKey(e));
+                        const ink = edgeStroke(drawing ? { ...e, locked: true } : e, AXM);
+                        const openInk = drawing ? edgeStroke(e, AXM) : null;
                         // The travelled-road bead marks progression, so a rib
                         // never wears one even once both its lanes are spent.
                         const bead = e.traveled && !e.lateral;
@@ -686,6 +722,9 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
                                         opacity={ink.opacity}
                                         strokeLinecap="round"
                                     />
+                                    {openInk !== null && (
+                                        <OpeningStroke d={d} length={strip.length} color={openInk.color} width={openInk.width} opacity={openInk.opacity} />
+                                    )}
                                     {bead && (
                                         <Circle cx={strip.pad + strip.length / 2} cy={strip.pad} r={BEAD_RADIUS} fill={AXM.sulfur} />
                                     )}

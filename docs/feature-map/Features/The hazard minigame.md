@@ -27,8 +27,11 @@ Opens from any screen.
 
 Code it uses, as plain text so Graph view draws player flow only.
 
+- A fight
 - Game
+- Items
 - Log
+- NPCs
 - The world
 
 ## Pitch

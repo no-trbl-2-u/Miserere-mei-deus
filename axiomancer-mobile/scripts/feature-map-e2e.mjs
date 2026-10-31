@@ -372,7 +372,7 @@ const SEAMS = {
     'route:village': { section: 'encounters', leaf: 'debug-trigger-encounter-village', landing: 'village-column' },
     'route:cutscene': { section: 'encounters', leaf: 'debug-trigger-encounter-cutscene', landing: 'cutscene-advance' },
     'route:cache': { section: 'encounters', leaf: 'debug-trigger-encounter-treasure', landing: 'cache-choice-offers' },
-    'route:hazard': { section: 'encounters', leaf: 'debug-trigger-encounter-hazard', landing: 'hazard-route-select' },
+    'route:hazard': { section: 'encounters', leaf: 'debug-trigger-encounter-hazard', landing: 'hazard-stakes' },
     'route:combat-encounter': {
         section: 'encounters',
         leaf: 'debug-trigger-encounter-encounter',

@@ -21,15 +21,21 @@ import {
 } from '@/components/hazard/HazardOverlays';
 import { RewardsOverlay } from '@/components/hazard/RewardsOverlay';
 import { RouteSelect } from '@/components/hazard/RouteSelect';
+import { StakesCard } from '@/components/hazard/StakesCard';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
 import { isDeathReturnArmed } from '@/state/death-return';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
+import { selectHazardStakes } from '@/state/presenters/hazard-stakes.engine';
 import { selectHazardViewModel, type HazardCardVM } from '@/state/presenters/hazard.engine';
 import { HUE } from '@/theme/axm';
 
 export default function HazardScreen() {
     const hazard = useGameState((s) => s.hazard);
+    const world = useGameState((s) => s.world);
     const vm = useMemo(() => selectHazardViewModel({ hazard }), [hazard]);
+    const stakes = useMemo(() => selectHazardStakes({ hazard, world }), [hazard, world]);
+    // The stakes card shows once per hazard, before the route select.
+    const [faced, setFaced] = useState(false);
     const actions = useGameActions();
     const router = useRouter();
 
@@ -42,6 +48,7 @@ export default function HazardScreen() {
     // abandoned elsewhere).
     useEffect(() => {
         if (vm.active) return;
+        setFaced(false);
         // A revive (armed in the claim, by the rewards ledger or the dev SKIP
         // EVENT alike) hands off to the return moment, which owns the way
         // back to the map: do not pop it as well.
@@ -67,7 +74,11 @@ export default function HazardScreen() {
                 />
             )}
 
-            {vm.phase === 'route-select' && (
+            {vm.phase === 'route-select' && stakes !== null && !faced && (
+                <StakesCard stakes={stakes} onFace={() => setFaced(true)} />
+            )}
+
+            {vm.phase === 'route-select' && (faced || stakes === null) && (
                 <RouteSelect
                     vm={vm}
                     onPick={(route) => actions.selectHazardRoute(route)}

@@ -368,6 +368,8 @@ async function skipFight(page, nodeId) {
 
 async function hazard(page) {
     await travelTo(page, 'bw-m2')
+    await waitFor(page, 'hazard-stakes', 'bw-m2 hazard stakes card')
+    await page.getByTestId('hazard-stakes-face').click()
     await waitFor(page, 'hazard-route-select', 'bw-m2 hazard')
     log('bw-m2 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')
     await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 15000 })
