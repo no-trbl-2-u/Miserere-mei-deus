@@ -6,8 +6,8 @@
 // from the title screen; this drive checks it in a browser, from a fresh save.
 //
 //   1. PLAY: a new game the way a player starts one (title, save slot, the
-//      windmill arrival; a run starts with no relic), every tab, the hazard deck and
-//      settings from the SELF sheet, then the start map's first road: onto the
+//      windmill arrival; a run starts with no relic), every tab (SETTINGS among them), the hazard
+//      deck from the SELF sheet, then the start map's first road: onto the
 //      windmill's one neighbour, a fight, to its reveal.
 //   2. SEAMS: every reachable route play did not reach is provoked from the
 //      dev tools (the same `/dev` buttons the encounter-routing journey
@@ -400,6 +400,9 @@ const SEAMS = {
     // A revive arms this screen in memory and a lost fight is not a seam, so the
     // forced-dev-tools leg opens its preview (`?preview=1`) directly.
     'route:death-return': { url: '/death-return?preview=1', landing: 'death-return' },
+    // The full-screen settings route is the title menu's SETTINGS (the SELF sheet no
+    // longer links to it); the SETTINGS tab is the play leg's. Open it by its path.
+    'route:settings': { url: '/settings', landing: 'settings-screen' },
     'route:character-select': { leaf: 'dev-open-character-select', landing: 'character-select-carousel' },
 }
 

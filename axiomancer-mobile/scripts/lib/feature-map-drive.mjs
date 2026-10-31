@@ -67,12 +67,20 @@ export function loadFeatureMap(path) {
 }
 
 /**
+ * Routes whose web URL differs from their file path: the SETTINGS tab is served
+ * at `/settings-tab` (see `lib/platform/router.ts`) so `/settings` stays the main
+ * menu's full-screen route.
+ */
+const URL_OVERRIDES = { 'route:(tabs)/settings': '/settings-tab' }
+
+/**
  * The URL path a route id is served at on the web build: route groups such
  * as `(tabs)` do not appear in the URL, and `index` is the root.
  * @example routePathForId('route:(tabs)/deck') // '/deck'
  * @example routePathForId('route:index') // '/'
  */
 export function routePathForId(id) {
+    if (URL_OVERRIDES[id]) return URL_OVERRIDES[id]
     const rest = id.replace(/^route:/, '')
     const segments = rest.split('/').filter((s) => s && !/^\(.*\)$/.test(s) && s !== 'index')
     return `/${segments.join('/')}`
