@@ -1415,7 +1415,9 @@ const useStyles = makeStyles((AXM) => ({
     // Sanguine-Step inspect stack (keyword defs → large card → fork) — UN-BOXED:
     // panels/card/pills float directly on the dimmed backdrop.
     detailStack: { width: '100%', maxWidth: 380, padding: 8, paddingBottom: 64, alignItems: 'center' },
-    detailCardWrap: { marginTop: 2, marginBottom: 6, alignItems: 'center', justifyContent: 'center', shadowColor: HUE.black, shadowOpacity: 0.8, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 10 },
+    // marginTop clears the free corner pill (it pokes 18 above the large face)
+    // past the keyword ledger's 8 bottom margin, leaving a 6 gap between them.
+    detailCardWrap: { marginTop: 16, marginBottom: 6, alignItems: 'center', justifyContent: 'center', shadowColor: HUE.black, shadowOpacity: 0.8, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 10 },
     detailHalo: { position: 'absolute' },
     detailBold: { fontFamily: FONTS.gothic, color: AXM.parchment },
     detailKeywordHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2, gap: 8 },
