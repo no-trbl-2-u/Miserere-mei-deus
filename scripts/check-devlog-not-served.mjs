@@ -30,7 +30,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export function isGeneratedDevlogPath(rel) {
   // The public site's build directory — every byte of it is generated.
   if (rel === 'dist' || rel.startsWith('dist/')) return true
-  if (rel === 'devlog/index.html' || rel === 'devlog/log.html' || rel === 'devlog/catalog.html') return true
+  if (rel === 'devlog/index.html' || rel === 'devlog/log.html' || rel === 'devlog/catalog.html' || rel === 'devlog/atlas.html') return true
   if (/^devlog\/entries\/.*\.html$/.test(rel)) return true
   if (rel.startsWith('devlog/data/')) return true
   if (rel.startsWith('devlog/assets/catalog/')) return true

@@ -14,13 +14,20 @@ committed, so publishing stays a deliberate act.
 
 **The private index** (`npm run site:build`) is the internal tool this file
 originally described, unchanged: a self-contained set of pages opened from the
-filesystem. `index.html` is a **hub** with two links:
+filesystem. `index.html` is a **hub** with three links:
 
 - **Catalog** (`catalog.html`) — one HTML file containing every combat card,
   enemy, and live status effect, with inline CSS and inline JavaScript. It has no
   separate catalog page, script file, or stylesheet.
 - **DevLog** (`log.html`) — the accumulating, one-visual-entry-per-day
   development log.
+- **Atlas** (`atlas.html`) — the architecture and content atlas (phase AT1b).
+  One self-contained page: the cards, relics, stats and world plates are
+  generated from `data/atlas.json` (`npm run catalog:export` writes it from the
+  engine; `npm run atlas:build`, i.e. `scripts/build-atlas.mjs`, renders it), and the
+  context, container, engine, domain, combat, dice and loop plates are
+  hand-drawn (`scripts/atlas/`) and each carry a "last checked" date.
+  Generated and gitignored like the rest of this index.
 
 The Tuning Lab (hand-authored balance reports) was retired in revamp phase R1;
 its three reports sit in `archive-pre-revamp:plan/archive/tuning-lab/`.

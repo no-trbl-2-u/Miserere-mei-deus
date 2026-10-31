@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Build the DevLog site:
-//   - devlog/index.html                 the HUB — links: Catalog, DevLog
+//   - devlog/index.html                 the HUB — links: Catalog, DevLog, Atlas
 //   - devlog/log.html                   the DevLog entry list (newest first)
 //   - devlog/entries/DIGEST_<date>.html one page per structured markdown entry
 //
@@ -143,7 +143,18 @@ function dataCount(name) {
   }
 }
 
+// Counts for the Atlas tile, from devlog/data/atlas.json (an object, not an array).
+function atlasCounts() {
+  try {
+    const a = JSON.parse(readFileSync(join(DATA, "atlas.json"), "utf8"));
+    return { cards: a.cards.length, relics: a.relics.length, regions: a.regions.length };
+  } catch {
+    return null;
+  }
+}
+
 function buildHub(entryCount) {
+  const atlas = atlasCounts();
   const cards = dataCount("cards");
   const enemies = dataCount("enemies");
   const effects = dataCount("effects");
@@ -163,6 +174,15 @@ function buildHub(entryCount) {
       glyph: "❯",
       title: "DevLog",
       sub: entryCount === 0 ? "no entries yet" : `${entryCount} ${entryCount === 1 ? "entry" : "entries"}`,
+    },
+    {
+      href: "./atlas.html",
+      hue: "atlas",
+      glyph: "⌖",
+      title: "Atlas",
+      sub: atlas
+        ? `${atlas.cards} cards · ${atlas.relics} relics · ${atlas.regions} regions`
+        : "architecture and content map",
     },
   ];
 
