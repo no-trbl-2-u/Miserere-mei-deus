@@ -1,4 +1,10 @@
 {
+  "AN5a": {
+    "owner": "heads-down:f50891b3",
+    "at": "2026-10-31T09:23:23.340Z",
+    "renewed": "2026-10-31T09:23:23.340Z",
+    "ttlHours": 24
+  },
   "EN2a": {
     "owner": "tick:march-en2a",
     "at": "2026-10-31T09:22:50.500Z",
