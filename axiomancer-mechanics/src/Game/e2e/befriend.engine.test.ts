@@ -1,20 +1,9 @@
 /**
- * Hermetic e2e — befriendable-enemy content arc.
+ * Hermetic e2e: a befriend threads through `createGameStore`.
  *
- * Drives a friendship outcome for the Green Jelly end-to-end
- * through `createGameStore`, asserts the per-enemy `friendshipReward`
- * threads through `store.endCombat()`:
- *
- *   - items append to `report.loot`
- *   - xpBonus adds to `report.xpGained` on top of the half-XP base
- *   - narrative surfaces on `report.friendshipReward.narrative`
- *
- * The half-XP base is preserved.
- *
- * Combat is now decoupled from the store: `endCombat(outcome)` takes the
- * resolved outcome directly (the Hazard-Pattern engine decides eligibility
- * outside the store), so the reward-threading assertions are driven by
- * calling `endCombat('friendship')` / `endCombat('victory')` directly.
+ * Every foe can be befriended and a befriend pays no XP: shillings or one
+ * potion (`befriend-reward.engine.test.ts`). The Green Jelly keeps its
+ * narrative and flag; the codex unlock rides the same path.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -34,9 +23,7 @@ describe('Phase 60 — befriendable-enemy content arc', () => {
 
         expect(report.outcome).toBe('friendship');
         expect(report.friendshipReward).toBeUndefined();
-        // The base still computes: half-XP only; no xpBonus applied.
-        // Base half-XP for FloatEye (level 1, normal: 1 * 20 / 2 = 10).
-        expect(report.xpGained).toBe(10);
+        expect(report.xpGained).toBe(0);
     });
 
     it('victory outcome does NOT thread friendshipReward content even when authored', () => {
@@ -76,14 +63,13 @@ describe('Phase 62 — quest-branch wire-in on outcome === friendship', () => {
 });
 
 describe('Phase 102 — Befriendable-enemy Tier-2 expansion', () => {
-    it('GreenJelly friendship threads its normal-tier reward', () => {
+    it('GreenJelly friendship threads its narrative and pays no XP', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(GreenJelly);
 
         const report = store.getState().endCombat('friendship');
         expect(report.outcome).toBe('friendship');
-        expect(report.loot.some(item => item.id === 'healing-potion')).toBe(true);
-        expect(report.xpGained).toBe(Math.floor(5 * 20 * 0.5) + 35); // base half-XP (normal, level 5) + 35 bonus
+        expect(report.xpGained).toBe(0);
         expect(report.friendshipReward?.narrative).toMatch(/jelly settles, slow as cooling wax/);
         expect(store.getState().flags).toContain('befriended-green-jelly');
     });

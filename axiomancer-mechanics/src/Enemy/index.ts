@@ -250,7 +250,8 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
     };
 }
 
-export { isEnemyBefriendable, befriendHpGateOpen } from './befriend';
+export { isEnemyBefriendable, befriendHpGateOpen, BEFRIEND_TUNING, rollBefriendPayout, befriendPotionFor } from './befriend';
+export type { BefriendPayout } from './befriend';
 export type { EnemyKeyword } from './enemy-keywords';
 export { ENEMY_KEYWORDS, moveKeywords, enemyPhaseKeywords } from './enemy-keywords';
 

@@ -100,10 +100,8 @@ export interface AftermathParleyViewModel {
      * `pactLines`; falls back to a presenter-local phrase.
      */
     pactPhrase: string;
+    /** A befriend pays no XP: shillings (null when none) or a potion in `loot`. */
     rewards: {
-        xp: number | null;
-        /** Currency reads the same rust accent as the pact emblem; the
-         *  field stays null until engine integration. */
         currency: AftermathCurrency | null;
         loot: AftermathLootEntry[];
     };
@@ -189,9 +187,8 @@ export function selectAftermathViewModel(
             enemyEpithet: deriveEpithet(data.enemy.description),
             pactPhrase: derivePactPhrase(data),
             rewards: {
-                xp: data.xpReward,
-                currency: null,
-                loot: [],
+                currency: (data.shillings ?? 0) > 0 ? { shillings: data.shillings! } : null,
+                loot: (data.loot ?? []).map(toAftermathLootEntry),
             },
             journalEntry: data.journalEntry,
         };
