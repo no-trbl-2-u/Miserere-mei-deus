@@ -7,7 +7,8 @@
  * until the card art revamp (B8) decides art per card type. The other
  * paintings in this folder stay as that pool (`CARD_ART_POOL`,
  * `provenance.json`). The 30 Blood Price cards each have their own torio
- * painting (`bp-*.webp`). Unmapped ids (sandbox and fixture cards) fall back
+ * painting (`bp-*.webp`), and the 30 Defender cards each have their own
+ * painting (`df-*.webp`, T's sheets). Unmapped ids (sandbox and fixture cards) fall back
  * to the circe placeholder.
  */
 
@@ -74,6 +75,37 @@ const CARD_ART_BY_ID: Record<string, number> = {
     'bp-p-08d': require('./bp-p-08d.webp'),
     'bp-p-09b': require('./bp-p-09b.webp'),
     'bp-p-10c': require('./bp-p-10c.webp'),
+    // Defender lane: T's paintings (provenance.json), one per card.
+    'df-p-01a': require('./df-p-01a.webp'),
+    'df-p-02b': require('./df-p-02b.webp'),
+    'df-p-03c': require('./df-p-03c.webp'),
+    'df-p-04a': require('./df-p-04a.webp'),
+    'df-p-05c': require('./df-p-05c.webp'),
+    'df-p-06c': require('./df-p-06c.webp'),
+    'df-p-07c': require('./df-p-07c.webp'),
+    'df-p-08b': require('./df-p-08b.webp'),
+    'df-p-09b': require('./df-p-09b.webp'),
+    'df-p-10b': require('./df-p-10b.webp'),
+    'df-e-01c': require('./df-e-01c.webp'),
+    'df-e-02b': require('./df-e-02b.webp'),
+    'df-e-03b': require('./df-e-03b.webp'),
+    'df-e-04a': require('./df-e-04a.webp'),
+    'df-e-05c': require('./df-e-05c.webp'),
+    'df-e-06c': require('./df-e-06c.webp'),
+    'df-e-07c': require('./df-e-07c.webp'),
+    'df-e-08b': require('./df-e-08b.webp'),
+    'df-e-09c': require('./df-e-09c.webp'),
+    'df-e-10c': require('./df-e-10c.webp'),
+    'df-m-01b': require('./df-m-01b.webp'),
+    'df-m-02b': require('./df-m-02b.webp'),
+    'df-m-03b': require('./df-m-03b.webp'),
+    'df-m-04b': require('./df-m-04b.webp'),
+    'df-m-05c': require('./df-m-05c.webp'),
+    'df-m-06b': require('./df-m-06b.webp'),
+    'df-m-07c': require('./df-m-07c.webp'),
+    'df-m-08c': require('./df-m-08c.webp'),
+    'df-m-09a': require('./df-m-09a.webp'),
+    'df-m-10n': require('./df-m-10n.webp'),
 };
 
 export function getCardArt(cardId: string): number {
