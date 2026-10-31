@@ -23,11 +23,21 @@
 /heads-down <id> <id> ...      # these build-plan rows (and their open PRs)
 /heads-down "<goal>"           # every open row the goal names, e.g. "finish the Defender lane"
 /heads-down peek <ids|goal>    # map the waves and print the plan; launch nothing
+/heads-down resume             # pick the latest unended run back up from its ledger (§2 "Resume")
 ```
+
+`peek` launches nothing, claims nothing and writes no ledger.
 
 ## 2. The procedure
 
 ### Step 1 — Map the graph
+
+First fix the run's identity. The **session id** is the first eight
+characters of this session's id (the suffix of its `telemetry/`
+shard), and the **owner** is `heads-down:<session id>`. The owner goes
+into every claim (Step 4) and every worker prompt, and the session id
+names the ledger (Step 4). A `resume` run keeps the ledger's owner,
+never its own new session's.
 
 Read `plan/steps/01_build_plan.md` (Status block), then the open PRs:
 `gh pr list --label loop:pr` (claims, D85) and `gh pr list --label
@@ -96,9 +106,56 @@ or turn on auto-merge for any `plot` PR a worker is about to edit
 
 ### Step 4 — Launch the wave
 
-One background subagent per row or PR, each in its own git worktree
-(isolation). The prompt is self-contained; the worker sees nothing
-of this conversation. It carries:
+**Open the ledger and claim the wave first.** Both run before the
+first worker starts and never under `peek`.
+
+The ledger is `scripts/heads-down-ledger.mjs`, an untracked
+`.heads-down/<session id>.json` in the **primary checkout** (the root
+`.gitignore` ignores `.heads-down/`; a worktree's copy would be lost
+with the worktree, and the scratchpad does not survive a restart). On
+the first wave, start it with the scope and the waves, then beat it
+with the gate's answers:
+
+```bash
+node scripts/heads-down-ledger.mjs start --session <id> --scope "<scope>" --waves '<json>'
+node scripts/heads-down-ledger.mjs beat --session <id> --push 'gate.answers=<json>'
+```
+
+The ledger records the scope and the waves; each worker's `row`,
+`agentId`, `worktree`, `branch`, `model`, `promptFile`, `status` and
+`pr`; the claims; the gate's answers, the defaults and the parked
+questions; and the callout digest's path (Step 5). **Beat it at every
+step**: `beat --worker <row> --set status=running --set agentId=<id>
+--prompt-file <file>` at launch (it copies the prompt to
+`.heads-down/<id>/prompts/<row>.md`), `--set status=pr-open --set
+pr=<n>` at a report, `--push 'gate.defaults=<json>'` and
+`--push 'gate.parked=<json>'` as reports arrive, and `end` at wrap-up
+(Step 8).
+
+Claim the wave's **rows** (an open PR is already a claim, D85) in one
+call, all or nothing:
+
+```bash
+node scripts/claims.mjs claim <row> <row> ... --owner heads-down:<id>
+```
+
+- **Exit 0** (`claimed <row> by ...`): launch the wave. Beat
+  `--push claims=<row>` for each.
+- **Exit 1** prints `held <row> by <holder> until <time>` for each
+  refused row and writes nothing. Drop those rows from the wave, name
+  each holder in the wave note and the final report (never a
+  mid-run question), and claim the rest again.
+- **Exit 3** is a tooling error: log its stderr and launch anyway.
+  The worker's own claim and the PR and mirror checks are the
+  fallback (best-effort, like the mirror).
+
+Each worker runs `/ship-a-phase`, whose Step 2 claims its row again
+under the same owner (a renewal), and whose Step 12.5 releases that
+row alone once its PR opens: the PR is the claim from there.
+
+Then launch: one background subagent per row or PR, each in its own
+git worktree (isolation). The prompt is self-contained; the worker
+sees nothing of this conversation. It carries:
 
 1. the row id, the brief path and its `§`, and the verb with its
    argument;
@@ -119,7 +176,11 @@ of this conversation. It carries:
    recommended default and log it under `DEFAULTS:`. Park any
    genuine new question under `PARKED:` and carry on building the
    default;
-10. the fixed final-report shape:
+10. **the claim owner**: `CLAIM_OWNER=heads-down:<session id>`, to be
+    set for every `claims.mjs` call the verb makes. `/ship-a-phase`
+    Step 2's claim then reads as a renewal, and Step 12.5 releases
+    only its own row;
+11. the fixed final-report shape:
 
 ```
 STATUS: pr-open | green | blocked
@@ -146,7 +207,9 @@ end gate.
 ### Step 5 — The callout bus
 
 Keep a running digest in the session's scratchpad: one block per
-worker report, its callouts verbatim. Paste the callouts tagged for a
+worker report, its callouts verbatim. Beat the digest's path into the
+ledger once (`beat --set digest=<path>`), so a resumed session finds
+it. Paste the callouts tagged for a
 row into that row's worker prompt (Step 4, item 4) and every `all`
 callout into every later prompt. The digest is the session's working
 memory, not a lessons log: durable lessons reach `plan/lessons.md`
@@ -156,6 +219,11 @@ digest into a skill.
 
 ### Step 6 — React, then the next wave
 
+- **Renew at every worker report and every wave start**:
+  `node scripts/claims.mjs renew --owner heads-down:<id>`, then beat
+  the ledger (`--worker <row> --set status=<status> --set pr=<n>`).
+  Claims last 24 h from their last renewal, and this is what keeps
+  them alive on a long run.
 - A worker's PR goes red: forward the failing check and log line to
   the owning worker (`SendMessage`); never patch it yourself.
 - Mutation or review reports: forward to the owner as advisory.
@@ -163,7 +231,8 @@ digest into a skill.
 - A `loop:pr` PR merges itself on a green adversarial review (D95).
   Start wave k+1 only when its prerequisite PR has **merged on
   `main`** (`gh pr view <n> --json state,mergedAt`), never on a green
-  check alone; re-read the build plan from `origin/main` first.
+  check alone; re-read the build plan from `origin/main` first. Claim
+  the next wave's rows as Step 4 says before launching it.
 
 The orchestrator never builds, edits, commits to or merges a
 worker's branch.
@@ -194,11 +263,58 @@ and skip. Then route each answer that **contradicts** a default:
 
 An answer that agrees with the default needs no action.
 
+Release the claims the session still holds without a PR, then end the
+ledger:
+
+```bash
+node scripts/claims.mjs release <row> ... --owner heads-down:<id>
+node scripts/heads-down-ledger.mjs end --session <id>
+```
+
+Name only rows whose worker has finished (a row whose PR opened was
+released by its worker already). `release --all --owner
+heads-down:<id>` is the same call when no worker is still running.
+Never release a row whose worker is still running.
+
 Then report to T in one block: each merged PR (number, row, one line),
 each PR still open and what it waits on, every default taken and
 every answer to a parked question, the open items for T (calls,
 `plot` PRs to merge, attended rows), and the callout digest grouped
 by the phase it matters to.
+
+### Resume — `/heads-down resume`
+
+A restart kills background workers with no report. Resume reads the
+ledger instead of guessing from transcripts. It asks T nothing
+(hard rule 11): the gate's answers, defaults and parked questions are
+in the ledger.
+
+1. `node scripts/heads-down-ledger.mjs latest` names the latest
+   unended ledger (no output, exit 1: say there is nothing to resume
+   and stop), and `show` prints it. The owner is that ledger's
+   `heads-down:<session id>`, never this session's.
+2. Renew its claims: `node scripts/claims.mjs renew --owner
+   heads-down:<ledger id>`. A claim that expired meanwhile is gone:
+   claim the row again (Step 4) and drop it if another owner holds it.
+3. For each worker whose status is not final (not `pr-open`,
+   `green`, `blocked` or `merged`), try `SendMessage` to its
+   `agentId`; no answer means it died. Then read its state on origin:
+   `git ls-remote --heads origin <branch>` and `gh pr list --head
+   <branch> --state all --json number,state`:
+   - **a live PR** (open): drive it with a fresh worker in the
+     `fix-ci --branch` posture (`skills/fix-ci.md` §3.5), never by
+     hand; a merged PR is done;
+   - **a dead or empty worker** (no branch, a branch with no PR and
+     no commits past `main`, or a branch with commits but no
+     answer): relaunch it from its saved prompt,
+     `.heads-down/<ledger id>/prompts/<row>.md`, with the same
+     `CLAIM_OWNER`. A branch that has commits is checked out by the
+     new worker, which continues it.
+4. Beat the ledger for each decision, then continue from the first
+   unfinished wave per Step 6: a wave starts only on a merged
+   prerequisite. The callout digest is at the ledger's `digest` path;
+   if that scratchpad is gone, rebuild the digest from each worker's
+   PR body and the `CALLOUTS:` it left there.
 
 ## 3. Hard rules
 
@@ -239,6 +355,10 @@ by the phase it matters to.
     Step 8 end gate (everything parked). Never mid-run: workers take
     the default and park, and the orchestrator relays T's own
     mid-run decisions but does not start questions of its own.
+12. **A crash never releases claims.** Only a worker's PR opening
+    (Step 12.5 of its verb) and the orchestrator's wrap-up release a
+    claim; a dead session or worker leaves its claims to the 24 h TTL
+    so the work is kept, and `resume` renews them.
 
 ## 4. UI before/after shots (tell every UI worker)
 
@@ -303,8 +423,9 @@ is not a push, so it keeps the push-once rule.
 - **Restarts kill workers silently.** A container restart ends
   background workers with no report (one died a minute in, its branch
   empty); a finished worker's result may arrive only as an output
-  file. After a restart, check each worker's transcript mtime and
-  branch state and relaunch the dead ones. A stale worktree can still
+  file. After a restart run `/heads-down resume` (§2 "Resume"): it
+  reads the ledger, renews the claims, and relaunches the dead
+  workers from their saved prompts. A stale worktree can still
   hold the branch name: push from a new local branch with `git push
   origin HEAD:<branch>`.
 - **Telemetry.** Stop hooks write the session's `telemetry/` shard;
