@@ -11,7 +11,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { resolveMapEvent } from '../MapEvents/resolve-map-event';
-import { BW_ELITE_DRAWS, BW_ELITE_LEVEL, BW_ENCOUNTER_FOES } from '../MapEvents/content';
+import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import { getNodeEventPool } from '../../World';
 import { scaleEnemyToLevel } from '../encounter';
 import { createNewGameState } from '../../Game/game.reducer';
@@ -175,20 +175,5 @@ describe('the keep causeway draws the Toll-Keeper or the Tide-Gate, each firing 
             expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
             s = res.state;
         }
-    });
-});
-
-describe('the other elite slots still hold the Green Jelly, staged as an elite', () => {
-    // The Green Jelly is a normal on its own; the elite nodes stage it at the
-    // elite tier until their own foes land, so the elite reward, respawn and
-    // phase lines keep working there.
-    it.each(['bw-l4'])('%s', (nodeId) => {
-        const s = fightAt(nodeId);
-        expect(s.enemy.id).toBe(ENEMY_REGISTRY['green-jelly'].id);
-        expect(s.enemy.difficulty).toBe('elite');
-        expect(s.enemy.level).toBe(BW_ELITE_LEVEL);
-        // It crosses its elite line at 60%, with its DANGER.
-        const res = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * 0.6) } }, rng);
-        expect(res.events.some(e => e.kind === 'enemy-phase-entered')).toBe(true);
     });
 });

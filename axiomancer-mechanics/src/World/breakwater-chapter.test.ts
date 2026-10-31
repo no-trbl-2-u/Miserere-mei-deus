@@ -129,6 +129,11 @@ describe('A1: the graph is T\'s node list', () => {
             expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);
             expect(boardKindOf(n.id), n.id).toBe(n.kind);
         }
+        // The above reads BW_ELITE_DRAWS itself, so pin each elite pair's
+        // count independently, or a one-foe regression would pass above.
+        for (const id of ['bw-c1', 'bw-l4', 'bw-w5']) {
+            expect(getNodeEventPool('coastal-continent', 'breakwater', id)!.entries, id).toHaveLength(2);
+        }
     });
 
     it('tallies the kinds as the brief does', () => {

@@ -1541,6 +1541,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             fullyBlocked: attacksLanded > 0 && attacksFullyBlocked === attacksLanded,
             guardBefore,
             rng,
+            hitsThrough: attacksLanded - attacksFullyBlocked,
         });
         // Some riders only leave state behind (an armed bonus, a delayed hit).
         if (after.state !== beforeRider) {

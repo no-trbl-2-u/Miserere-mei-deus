@@ -40,18 +40,20 @@ describe('the R2 roster', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
             .toEqual([
                 'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
-                'green-jelly', 'lamprey-knot', 'net-mender', 'sandbag', 'smokehouse-gutter', 'tide-gate', 'tithe-collector',
-                'toll-keeper', 'wreck-picker',
+                'green-jelly', 'lamplighter', 'lamprey-knot', 'net-mender', 'sandbag', 'smokehouse-gutter', 'tide-gate',
+                'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker',
             ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
             'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', ...CLIFF_IDS,
             'enemy-cave-choir',
+            'enemy-lamplighter', 'enemy-wrecker',
             'enemy-toll-keeper', 'enemy-tide-gate',
             'enemy-death-beholder',
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
             .toEqual([
                 ...SURVIVOR_IDS, ...CHAPTER1_IDS, 'enemy-curfew-ringer', ...CLIFF_IDS, 'enemy-cave-choir',
+                'enemy-lamplighter', 'enemy-wrecker',
                 ENEMY_REGISTRY.sandbag.id,
                 'enemy-toll-keeper', 'enemy-tide-gate',
             ].sort());

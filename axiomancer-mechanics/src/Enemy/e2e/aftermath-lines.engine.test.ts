@@ -50,6 +50,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         'enemy-brine-widow', 'enemy-lamprey-knot', 'enemy-curfew-ringer',
         'enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector',
         'enemy-cave-choir',
+        'enemy-lamplighter', 'enemy-wrecker',
         'enemy-toll-keeper', 'enemy-tide-gate',
     ]);
 
