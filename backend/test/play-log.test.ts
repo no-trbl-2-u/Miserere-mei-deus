@@ -113,7 +113,7 @@ describe('POST /v1/fights', () => {
         const created = await response.json<PlayLogCreated>();
         expect(created.id).toBeTypeOf('number');
         expect(Number.isNaN(Date.parse(created.receivedAt))).toBe(false);
-        expect(await fights()).toEqual([{ id: created.id, receivedAt: created.receivedAt, ...fight() }]);
+        expect(await fights()).toEqual([{ id: created.id, receivedAt: created.receivedAt, source: 'human', runId: null, ...fight() }]);
     });
 
     it('BUG1b A7: takes a fight holding one of every engine and screen event kind', async () => {
@@ -198,7 +198,7 @@ describe('POST /v1/deck-events', () => {
         }
         const rows = await deckEvents();
         expect(rows.map((r) => r.id)).toEqual([...ids].reverse());
-        expect(rows.map(({ id: _id, receivedAt: _at, ...rest }) => rest)).toEqual([...posted].reverse());
+        expect(rows.map(({ id: _id, receivedAt: _at, ...rest }) => rest)).toEqual([...posted].reverse().map((p) => ({ source: 'human', runId: null, ...p })));
     });
 
     it('rejects a picked card that was not offered', async () => {

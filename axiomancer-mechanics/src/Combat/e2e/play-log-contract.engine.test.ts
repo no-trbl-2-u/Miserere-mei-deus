@@ -11,6 +11,8 @@ import type { CombatEvent } from '../combat.encounter.types';
 import {
     COMBAT_EVENT_KINDS,
     PLAY_LOG_LIMITS,
+    PLAY_LOG_SOURCES,
+    PLAY_LOG_SOURCE_FILTERS,
     validateDeckEventPost,
     validateFightPost,
     type CombatEventKind,
@@ -230,5 +232,46 @@ describe('validateDeckEventPost', () => {
     it('names a missing where and a wrong-typed deck', () => {
         const { where: _w, ...rest } = deckEvent({ deck: 'card-1' });
         expect(deckReasons(rest)).toEqual(['deck: expected an array', 'where: expected an object']);
+    });
+});
+
+describe('SM1a: who played a row, and in which run', () => {
+    it('names the three sources and the filter that adds all, through the barrel', () => {
+        expect(PLAY_LOG_SOURCES).toEqual(['human', 'harness', 'sim']);
+        expect(PLAY_LOG_SOURCE_FILTERS).toEqual(['human', 'harness', 'sim', 'all']);
+        expect(barrel.PLAY_LOG_SOURCES).toBe(PLAY_LOG_SOURCES);
+        expect(barrel.PLAY_LOG_SOURCE_FILTERS).toBe(PLAY_LOG_SOURCE_FILTERS);
+    });
+
+    it('accepts each source and a run id on a fight and a deck event, and keeps them', () => {
+        for (const source of PLAY_LOG_SOURCES) {
+            const f = validateFightPost(fight({ source, runId: 'run-1' }));
+            expect(f.ok && f.fight).toMatchObject({ source, runId: 'run-1' });
+            const d = validateDeckEventPost(deckEvent({ source, runId: 'run-1' }));
+            expect(d.ok && d.deckEvent).toMatchObject({ source, runId: 'run-1' });
+        }
+        const none = validateFightPost(fight({ runId: null }));
+        expect(none.ok && none.fight.runId).toBeNull();
+    });
+
+    it('accepts a body with neither field (an older APK) and returns neither key', () => {
+        const f = validateFightPost(fight());
+        expect(f.ok && f.fight).not.toHaveProperty('source');
+        expect(f.ok && f.fight).not.toHaveProperty('runId');
+        const d = validateDeckEventPost(deckEvent());
+        expect(d.ok && d.deckEvent).not.toHaveProperty('source');
+        expect(d.ok && d.deckEvent).not.toHaveProperty('runId');
+    });
+
+    it('refuses any other source, a non-string source, and an empty or non-string run id', () => {
+        for (const bad of ['bot', 'all', 'Human', '', 1, null]) {
+            expect(fightReasons(fight({ source: bad }))).toEqual(['source: expected one of human, harness, sim']);
+            expect(deckReasons(deckEvent({ source: bad }))).toEqual(['source: expected one of human, harness, sim']);
+        }
+        expect(fightReasons(fight({ runId: '' }))).toEqual(['runId: must not be empty']);
+        expect(deckReasons(deckEvent({ runId: 7 }))).toEqual(['runId: expected a string']);
+        expect(fightReasons(fight({ runId: 'x'.repeat(PLAY_LOG_LIMITS.text + 1) }))).toEqual([
+            `runId: longer than ${PLAY_LOG_LIMITS.text} characters`,
+        ]);
     });
 });

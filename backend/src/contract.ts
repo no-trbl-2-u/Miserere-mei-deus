@@ -18,6 +18,8 @@ export {
     PLAY_LOG_DECK_EVENTS_PATH,
     PLAY_LOG_FIGHTS_PATH,
     PLAY_LOG_LIMITS,
+    PLAY_LOG_SOURCES,
+    PLAY_LOG_SOURCE_FILTERS,
     validateDeckEventPost,
     validateFightPost,
 } from '../../axiomancer-mechanics/src/Combat/combat.play-log-contract';
@@ -31,4 +33,7 @@ export type {
     PlayLogCreated,
     PlayLogError,
     PlayLogEvent,
+    PlayLogOrigin,
+    PlayLogSourceFilter,
+    PlayLogSourceKind,
 } from '../../axiomancer-mechanics/src/Combat/combat.play-log-contract';

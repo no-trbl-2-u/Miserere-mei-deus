@@ -3,13 +3,17 @@
 //
 //   npm run api -- card-usage                       # per card, every build
 //   npm run api -- card-usage --card strike         # one card
+//   npm run api -- card-usage --source sim          # the bots' play (human is the default)
+//   npm run api -- card-usage --source all          # every source
 //   npm run api -- card-gaps --build <sha>          # per enemy, one build
 //   npm run api -- card-usage --json                # the report body as JSON
 //   npm run api -- card-gaps --file report.json     # a saved GET body, no network
 //
 // Calls `GET /v1/reports/<name>` (`backend/src/reports.ts`, phase BE2f) and
 // prints it as plain-text tables. The Worker holds the SQL; this script only
-// names a report and passes `--build` and `--card` as query values. Every
+// names a report and passes `--build`, `--source` and `--card` as query values.
+// A report reads `human` (T's own play) unless `--source human|harness|sim|all`
+// says otherwise (phase SM1a); each table's header line names the source it read. Every
 // number is a count for T to read; nothing here grades the game.
 //
 // The Worker URL and token are the solve-time API's: `PUZZLE_API_URL` and
@@ -29,17 +33,19 @@ import { ENV_FILE, resolveConfig } from './puzzle-times.mjs'
 /** Mirrors `REPORTS_PATH_PREFIX` and `REPORT_NAMES` in `backend/src/reports.ts`. */
 export const REPORTS_PATH_PREFIX = '/v1/reports/'
 export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage']
+/** Mirrors `PLAY_LOG_SOURCE_FILTERS` in the play-log contract. */
+export const SOURCE_FILTERS = ['human', 'harness', 'sim', 'all']
 
-const USAGE = `usage: npm run api -- <${REPORT_NAMES.join('|')}> [--build <sha>] [--card <id>] [--json] [--file <report.json>]`
+const USAGE = `usage: npm run api -- <${REPORT_NAMES.join('|')}> [--build <sha>] [--source <${SOURCE_FILTERS.join('|')}>] [--card <id>] [--json] [--file <report.json>]`
 
 /** Parse argv (after the script name). Throws an Error with a one-line message on bad input. */
 export function parseArgs(argv) {
-  const opts = { report: undefined, build: undefined, card: undefined, json: false, file: undefined }
+  const opts = { report: undefined, build: undefined, source: undefined, card: undefined, json: false, file: undefined }
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     if (arg === '--json') opts.json = true
     else if (arg === '-h' || arg === '--help') opts.help = true
-    else if (arg === '--build' || arg === '--card' || arg === '--file') {
+    else if (arg === '--build' || arg === '--source' || arg === '--card' || arg === '--file') {
       const value = argv[++i]
       if (value === undefined || value.startsWith('--')) throw new Error(`${arg} needs a value`)
       opts[arg.slice(2)] = value
@@ -50,14 +56,18 @@ export function parseArgs(argv) {
   }
   if (opts.help) return opts
   if (opts.report === undefined) throw new Error('name a report')
+  if (opts.source !== undefined && !SOURCE_FILTERS.includes(opts.source)) {
+    throw new Error(`--source expects ${SOURCE_FILTERS.join(', ')} (got ${opts.source})`)
+  }
   if (opts.card !== undefined && opts.report !== 'card-usage') throw new Error('--card applies to card-usage only')
   return opts
 }
 
-/** The report's URL path and query: `--build` and `--card` as `?build=` and `?card=`. */
-export function reportPath({ report, build, card }) {
+/** The report's URL path and query: `--build`, `--source` and `--card` as `?build=`, `?source=` and `?card=`. */
+export function reportPath({ report, build, source, card }) {
   const query = new URLSearchParams()
   if (build !== undefined) query.set('build', build)
+  if (source !== undefined) query.set('source', source)
   if (card !== undefined) query.set('card', card)
   const qs = query.toString()
   return `${REPORTS_PATH_PREFIX}${report}${qs ? `?${qs}` : ''}`
@@ -71,7 +81,7 @@ export function table(head, rows) {
   return all.map(line).join('\n')
 }
 
-const scopeOf = (body) => (body.build ? `build ${body.build}` : 'every build')
+const scopeOf = (body) => `${body.build ? `build ${body.build}` : 'every build'}${body.source ? `, source ${body.source}` : ''}`
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`
 
 const USAGE_COLUMNS = [

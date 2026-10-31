@@ -1,6 +1,7 @@
 {
   "report": "card-gaps",
   "build": null,
+  "source": "all",
   "fights": 2,
   "threats": [{ "enemyId": "gutter-wretch", "threat": "Gnaw", "overwhelmed": 1, "fights": 1 }],
   "unspentDice": [

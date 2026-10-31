@@ -3,7 +3,7 @@
  * Rows map to the contract's camelCase shape here and nowhere else.
  */
 
-import type { FightPost, FightRow, PlayLogEvent } from './contract';
+import type { FightPost, FightRow, PlayLogEvent, PlayLogSourceKind } from './contract';
 
 interface FightRecord {
     id: number;
@@ -24,6 +24,8 @@ interface FightRecord {
     relics_json: string;
     signatures_json: string;
     events_json: string;
+    source: PlayLogSourceKind;
+    run_id: string | null;
 }
 
 function toRow(record: FightRecord): FightRow {
@@ -46,6 +48,8 @@ function toRow(record: FightRecord): FightRow {
         relics: JSON.parse(record.relics_json) as string[],
         signatures: JSON.parse(record.signatures_json) as string[],
         events: JSON.parse(record.events_json) as PlayLogEvent[],
+        source: record.source,
+        runId: record.run_id,
     };
 }
 
@@ -59,8 +63,8 @@ export async function insertFight(
         .prepare(
             `INSERT INTO fights
                 (received_at, solver, session_id, build_commit, app_build, enemy_id, player_level,
-                 enemy_hp_multiplier, outcome, turns, vitae_start, vitae_end, vitae_low, deck_json, relics_json, signatures_json, events_json)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 enemy_hp_multiplier, outcome, turns, vitae_start, vitae_end, vitae_low, deck_json, relics_json, signatures_json, events_json, source, run_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
              RETURNING id`,
         )
         .bind(
@@ -81,17 +85,19 @@ export async function insertFight(
             JSON.stringify(fight.relics ?? []),
             JSON.stringify(fight.signatures ?? []),
             JSON.stringify(fight.events),
+            fight.source ?? 'human',
+            fight.runId ?? null,
         )
         .first<{ id: number }>();
     if (!result) throw new Error('insert returned no id');
     return { id: result.id, receivedAt };
 }
 
-/** Every stored fight, newest first; `enemyId` narrows to one foe. */
-export async function listFights(db: D1Database, enemyId?: string): Promise<FightRow[]> {
-    const statement = enemyId === undefined
-        ? db.prepare('SELECT * FROM fights ORDER BY id DESC')
-        : db.prepare('SELECT * FROM fights WHERE enemy_id = ? ORDER BY id DESC').bind(enemyId);
+/** Every stored fight, newest first; `enemyId` narrows to one foe and `source` to one source (null: every source). */
+export async function listFights(db: D1Database, enemyId?: string, source: PlayLogSourceKind | null = null): Promise<FightRow[]> {
+    const statement = db
+        .prepare('SELECT * FROM fights WHERE (?1 IS NULL OR enemy_id = ?1) AND (?2 IS NULL OR source = ?2) ORDER BY id DESC')
+        .bind(enemyId ?? null, source);
     const { results } = await statement.all<FightRecord>();
     return results.map(toRow);
 }

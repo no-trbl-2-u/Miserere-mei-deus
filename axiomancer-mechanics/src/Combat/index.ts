@@ -140,9 +140,11 @@ export {
 export {
     PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
     PLAY_LOG_FIGHT_OUTCOMES, DECK_EVENT_KINDS, PLAY_LOG_LIMITS, validateFightPost, validateDeckEventPost,
+    PLAY_LOG_SOURCES, PLAY_LOG_SOURCE_FILTERS,
 } from './combat.play-log-contract';
 export type {
     CombatEventKind, PlayLogUiEventKind, DeckEventKind, PlayLogStamp, PlayLogCombatEvent, PlayLogUiEvent, PlayLogCardUiEvent, PlayLogSignatureRefusedEvent,
     PlayLogEvent, PlayLogSource, FightPost, DeckEventWhere, DeckEventPost, FightRow, DeckEventRow, FightList,
-    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation,
+    DeckEventList, PlayLogCreated, PlayLogError, FightValidation, DeckEventValidation, PlayLogSourceKind,
+    PlayLogSourceFilter, PlayLogOrigin,
 } from './combat.play-log-contract';
