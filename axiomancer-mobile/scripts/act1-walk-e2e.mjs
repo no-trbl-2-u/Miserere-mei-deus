@@ -465,6 +465,9 @@ const RESOLVERS = {
     },
     async hazard(page, nodeId) {
         await expectPath(page, '/hazard', nodeId)
+        // The stakes card comes first (ET1b); Face it leads on to the route select.
+        await waitFor(page, 'hazard-stakes', `${nodeId} hazard stakes card`)
+        await tap(page, 'hazard-stakes-face') || fail(`${nodeId}: the stakes card has no Face it`)
         await waitFor(page, 'hazard-route-select', `${nodeId} hazard`)
         const r = await skipEvent(page, nodeId)
         if (r.kind !== 'hazard' || r.outcome === 'abandoned') fail(`${nodeId}: the skip did not cross the hazard (${r.kind} ${r.outcome})`)

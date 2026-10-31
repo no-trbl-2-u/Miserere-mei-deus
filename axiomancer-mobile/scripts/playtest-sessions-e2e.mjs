@@ -90,7 +90,7 @@ async function hazardSeedCheck(agent) {
     await must('start', '--agent', agent, '--fixture', HAZARD_FIXTURE,
         '--minigame-seeds', JSON.stringify({ hazard: { seed: HAZARD_SEED } }))
     await must('goto', '--agent', agent, '/(tabs)/exploration')
-    await must('wait', '--agent', agent, 'hazard-route-select', '--timeout', '30000')
+    await must('wait', '--agent', agent, 'hazard-stakes', '--timeout', '30000')
     const { entries } = await must('log', '--agent', agent, '--tail', '200', '--domains', 'rng')
     const lines = entries.filter((e) => e.kind === 'minigame-seed' && e.data?.key === 'hazard')
     check(lines.length > 0, `${agent}: no rng/minigame-seed line for the hazard`)

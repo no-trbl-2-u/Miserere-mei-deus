@@ -313,7 +313,10 @@ async function playHazard(page, baseUrl, route, seed) {
     await page.getByTestId('debug-hazard-button').waitFor({ state: 'visible', timeout: 15000 })
     await page.getByTestId('debug-hazard-button').click()
 
-    // Phase: route select — opening hand before dice.
+    // Phase: the stakes card, then route select — opening hand before dice.
+    await page.getByTestId('hazard-stakes').waitFor({ state: 'visible', timeout: 15000 })
+    await shot(page, `${route}-stakes`)
+    await page.getByTestId('hazard-stakes-face').click()
     await page.getByTestId('hazard-route-select').waitFor({ state: 'visible', timeout: 15000 })
     await page.getByTestId('hazard-opening-hand').waitFor({ state: 'visible' })
     await shot(page, `${route}-route-select`)
