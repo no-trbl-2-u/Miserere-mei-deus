@@ -15,7 +15,7 @@
 			"x": 1060,
 			"y": 0,
 			"width": 340,
-			"height": 170,
+			"height": 300,
 			"label": "Elsewhere"
 		},
 		{
@@ -57,6 +57,16 @@
 			"width": 260,
 			"height": 90,
 			"color": "1"
+		},
+		{
+			"id": "elsewhere:route:saves",
+			"type": "file",
+			"file": "Features/Saves.md",
+			"x": 1100,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
 		}
 	],
 	"edges": [
@@ -64,6 +74,12 @@
 			"id": "flow:route:hazard->elsewhere:route:death-return",
 			"fromNode": "route:hazard",
 			"toNode": "elsewhere:route:death-return",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:hazard->elsewhere:route:saves",
+			"fromNode": "route:hazard",
+			"toNode": "elsewhere:route:saves",
 			"color": "5"
 		}
 	]

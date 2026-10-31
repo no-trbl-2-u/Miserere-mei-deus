@@ -20,11 +20,6 @@ route in World routes, from `axiomancer-mobile/app/saves/index.tsx`.
 
 ## Leads to
 
-- [[Features/Character|Character]]
-- [[Features/Deck|Deck]]
-- [[Features/The map|The map]]
-- [[Features/Inventory|Inventory]]
-- [[Features/Memoir|Memoir]]
 - [[Features/Character Select|Character Select]]
 
 ## Uses

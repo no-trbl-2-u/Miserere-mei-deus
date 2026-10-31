@@ -251,6 +251,13 @@
 			"color": "5"
 		},
 		{
+			"id": "flow:route:character-select->route:saves",
+			"fromNode": "route:character-select",
+			"toNode": "route:saves",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
 			"id": "flow:route:combat-encounter->elsewhere:route:(tabs)/exploration",
 			"fromNode": "route:combat-encounter",
 			"toNode": "elsewhere:route:(tabs)/exploration",
@@ -260,6 +267,12 @@
 			"id": "flow:route:combat-encounter->route:death-return",
 			"fromNode": "route:combat-encounter",
 			"toNode": "route:death-return",
+			"color": "5"
+		},
+		{
+			"id": "flow:route:combat-encounter->route:saves",
+			"fromNode": "route:combat-encounter",
+			"toNode": "route:saves",
 			"color": "5"
 		},
 		{
@@ -310,42 +323,6 @@
 			"toNode": "route:settings",
 			"color": "5",
 			"fromEnd": "arrow"
-		},
-		{
-			"id": "flow:route:saves->elsewhere:route:(tabs)/character",
-			"fromNode": "route:saves",
-			"toNode": "elsewhere:route:(tabs)/character",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:saves->elsewhere:route:(tabs)/deck",
-			"fromNode": "route:saves",
-			"toNode": "elsewhere:route:(tabs)/deck",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:saves->elsewhere:route:(tabs)/exploration",
-			"fromNode": "route:saves",
-			"toNode": "elsewhere:route:(tabs)/exploration",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:saves->elsewhere:route:(tabs)/inventory",
-			"fromNode": "route:saves",
-			"toNode": "elsewhere:route:(tabs)/inventory",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:saves->elsewhere:route:(tabs)/memoir",
-			"fromNode": "route:saves",
-			"toNode": "elsewhere:route:(tabs)/memoir",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:saves->route:character-select",
-			"fromNode": "route:saves",
-			"toNode": "route:character-select",
-			"color": "5"
 		}
 	]
 }

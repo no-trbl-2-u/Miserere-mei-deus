@@ -27,6 +27,7 @@ route in World routes, from `axiomancer-mobile/app/settings/index.tsx`.
 Code it uses, as plain text so Graph view draws player flow only.
 
 - VITAE and stats
+- Game
 - Log
 - The world
 

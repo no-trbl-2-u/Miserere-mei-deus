@@ -468,7 +468,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/state/e2e/saves.screen.test.tsx"
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-select.screen.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -918,7 +918,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/saves.screen.test.tsx"
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/run-end-route.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": true,
@@ -3377,6 +3377,12 @@
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
     },
     {
@@ -3384,6 +3390,12 @@
       "from": "route:character-select",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
     },
     {
       "kind": "coupling",
@@ -3534,6 +3546,12 @@
       "from": "route:combat-encounter",
       "to": "area:Character",
       "file": "axiomancer-mobile/components/combat/encounter/CombatEncounterPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
       "kind": "coupling",
@@ -3725,6 +3743,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/actions.ts"
     },
     {
@@ -3738,6 +3762,12 @@
       "from": "route:combat-encounter",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
     },
     {
       "kind": "coupling",
@@ -3762,6 +3792,12 @@
       "from": "route:combat-encounter",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/quest/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
     },
     {
       "kind": "coupling",
@@ -3852,6 +3888,12 @@
       "from": "route:combat-encounter",
       "to": "area:NPCs",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
       "kind": "coupling",
@@ -4103,6 +4145,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/actions.ts"
     },
     {
@@ -4145,6 +4193,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/exploration.engine.ts"
     },
     {
@@ -4152,6 +4206,12 @@
       "from": "route:dev",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/quest-tracker.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
     },
     {
       "kind": "coupling",
@@ -4546,6 +4606,12 @@
     {
       "kind": "coupling",
       "from": "route:hazard",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/store.ts"
     },
@@ -4554,6 +4620,24 @@
       "from": "route:hazard",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
     },
     {
       "kind": "coupling",
@@ -4608,6 +4692,12 @@
       "from": "route:hazard",
       "to": "area:World",
       "file": "axiomancer-mobile/components/hazard/palette.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
       "kind": "coupling",
@@ -4793,6 +4883,12 @@
       "kind": "coupling",
       "from": "route:index",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/fixtures.ts"
     },
     {
@@ -4806,6 +4902,12 @@
       "from": "route:index",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
     },
     {
       "kind": "coupling",
@@ -5381,6 +5483,12 @@
       "kind": "coupling",
       "from": "route:saves",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
     },
     {
@@ -5388,6 +5496,12 @@
       "from": "route:saves",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/presenters/navigation.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-end.ts"
     },
     {
       "kind": "coupling",
@@ -5477,6 +5591,12 @@
       "kind": "coupling",
       "from": "route:settings",
       "to": "area:Character",
+      "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:settings",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
     {
@@ -6394,6 +6514,12 @@
     {
       "kind": "flow",
       "from": "route:character-select",
+      "to": "route:saves",
+      "file": "axiomancer-mobile/app/character-select/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
       "to": "route:travel",
       "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
@@ -6468,6 +6594,12 @@
       "from": "route:combat-encounter",
       "to": "route:rest",
       "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:combat-encounter",
+      "to": "route:saves",
+      "file": "axiomancer-mobile/app/combat-encounter/index.tsx"
     },
     {
       "kind": "flow",
@@ -6750,6 +6882,12 @@
       "from": "route:dev",
       "to": "route:rest",
       "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:dev",
+      "to": "route:saves",
+      "file": "axiomancer-mobile/components/DebugRunControls.tsx"
     },
     {
       "kind": "flow",
@@ -7252,6 +7390,12 @@
     {
       "kind": "flow",
       "from": "route:hazard",
+      "to": "route:saves",
+      "file": "axiomancer-mobile/app/hazard/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:hazard",
       "to": "route:travel",
       "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
@@ -7710,36 +7854,6 @@
       "from": "route:rest",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:saves",
-      "to": "route:(tabs)/character",
-      "file": "axiomancer-mobile/app/saves/index.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:saves",
-      "to": "route:(tabs)/deck",
-      "file": "axiomancer-mobile/app/saves/index.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:saves",
-      "to": "route:(tabs)/exploration",
-      "file": "axiomancer-mobile/app/saves/index.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:saves",
-      "to": "route:(tabs)/inventory",
-      "file": "axiomancer-mobile/app/saves/index.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:saves",
-      "to": "route:(tabs)/memoir",
-      "file": "axiomancer-mobile/app/saves/index.tsx"
     },
     {
       "kind": "flow",

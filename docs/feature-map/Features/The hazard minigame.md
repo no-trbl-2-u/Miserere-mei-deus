@@ -22,11 +22,13 @@ route in Minigames, from `axiomancer-mobile/app/hazard/index.tsx`.
 Opens from any screen.
 
 - [[Features/Death Return|Death Return]]
+- [[Features/Saves|Saves]]
 
 ## Uses
 
 Code it uses, as plain text so Graph view draws player flow only.
 
+- VITAE and stats
 - A fight
 - Game
 - Items

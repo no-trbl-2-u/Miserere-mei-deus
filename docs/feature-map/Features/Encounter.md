@@ -23,6 +23,7 @@ Opens from any screen.
 
 - [[Features/The map|The map]]
 - [[Features/Death Return|Death Return]]
+- [[Features/Saves|Saves]]
 
 ## Uses
 
