@@ -126,11 +126,16 @@ The ledger records the scope and the waves; each worker's `row`,
 `pr`; the claims; the gate's answers, the defaults and the parked
 questions; and the callout digest's path (Step 5). **Beat it at every
 step**: `beat --worker <row> --set status=running --set agentId=<id>
+--set worktree=<path> --set branch=<branch> --set model=<model>
 --prompt-file <file>` at launch (it copies the prompt to
 `.heads-down/<id>/prompts/<row>.md`), `--set status=pr-open --set
 pr=<n>` at a report, `--push 'gate.defaults=<json>'` and
 `--push 'gate.parked=<json>'` as reports arrive, and `end` at wrap-up
-(Step 8).
+(Step 8). `worktree` and `branch` come back in the `Agent` call's own
+launch result (`isolation: "worktree"`), before the worker's first
+turn, not from a worker report: beat them at launch, so a worker that
+crashes before its first report still leaves `resume` (§2 "Resume") a
+branch to check.
 
 Claim the wave's **rows** (an open PR is already a claim, D85) in one
 call, all or nothing:
