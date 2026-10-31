@@ -57,7 +57,6 @@ assertions. Suites that need the player seated somewhere boot from a
 | `engine-events.hook.test.tsx` | P3 | `useGameEvents` subscribes on mount, fires in dispatch order, unsubscribes on unmount, tolerates a non-stable handler reference (internal ref) | 1 | 3 |
 | `event-assets.test.ts` | P1 (pure) | Exhaustively maps `ResolvedEvent.kind` → `EventArtSlug` (no store; pure unit-shape) | 2 | 14 |
 | `event.engine.test.ts` | P1 | Event VM + `selectHasActiveEvent` / `selectHasActivePacedEvent` / `selectHasActiveCombatPrelude` across all event kinds (encounter, rest, gathering, loot-cache, interaction, village); combat-prelude STRIKE/KNEEL relabel; action subtitles | 10 | 52 |
-| `event.screen.test.tsx` | P4 | `app/event/index.tsx` renders right VM-driven content per kind; pick dispatches the right action; `canSkip` gating | 3 | 13 |
 | `exploration.engine.test.ts` | P1+P2 | Exploration VM shape; `moveTo` / `changeMap` action layer; event-callout shape; deep-freeze invariant; **encounter seam** pin | 13 | 31 |
 | `inventory.engine.test.ts` | P1+P2 | Inventory VM (5 canonical tabs in order); `useItem` / `equipItem` / `dropItem` end-to-end; equipment dock; replace-preview; `parseHealAmount` | 18 | 46 |
 | `inventory-feedback.engine.test.ts` | P1 (pure) | `selectInventoryToast` — synthetic `inventory:changed` events produce correct toasts; unrelated event kinds yield `null` (no false toasts) | 1 | 8 |

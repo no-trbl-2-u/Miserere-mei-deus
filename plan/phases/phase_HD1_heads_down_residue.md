@@ -57,12 +57,12 @@ shows a mobile score row (not "failed"); `npm run e2e:combat-round:boss -w axiom
   equivalent) exits 0 locally and on the PR.
 - **A5** `/event` is deleted with every caller (presenter, fixtures, scripts); `/dialogue` stays, with a comment
   at its route naming its live callers (fixture, dev jump, `giveQuestStep`) and T's flavour follow-up as its next
-  user [T to confirm #1].
+  user Accepted at merge (default).
 - **A6** The mobile npm scripts that set env vars use a cross-platform form (`node --env` style or a wrapper that
   sets `process.env`), and scripts that spawn `npx` pass `shell: true` on win32; each touched script still runs on
   CI's Linux.
 - **A7** `ingest-art.mjs` refuses to run without `--license` (no default), and its help text no longer offers
-  UNRESOLVED; a `--license` value of `UNRESOLVED` is rejected with a line citing D115 [T to confirm #2].
+  UNRESOLVED; a `--license` value of `UNRESOLVED` is rejected with a line citing D115 Accepted at merge (default).
 
 ## Phases
 
@@ -100,9 +100,9 @@ closes A4, A5, A6, A7. Size: M. Requires nothing.
 2. Survivor tests go in this PR with `// guard-test:` markers where the fail-on-parent rule needs them; never
    weaken the rule.
 3. `/event` is deleted; `/dialogue` is kept, because MQ1b's `giveQuestStep` and T's coming flavour follow-up are its
-   users [T to confirm #1].
+   users Accepted at merge (default).
 4. `ingest-art.mjs` requires an explicit licence; the D115 string is not a default, because a new third-party file
-   must record its own licence [T to confirm #2].
+   must record its own licence Accepted at merge (default).
 5. The measured-truth report is not touched: it already uses the new ids.
 
 ## Definition of done

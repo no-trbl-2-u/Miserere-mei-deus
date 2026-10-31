@@ -56,7 +56,6 @@ Examples of e2e entry points by module:
 | `app/(tabs)/character/`     | `selectCharacterViewModel(state)` in `state/presenters/character.engine.ts`            |
 | `app/(tabs)/inventory/`     | `selectInventoryViewModel(state, localUi?)` in `state/presenters/inventory.engine.ts`  |
 | `app/(tabs)/exploration/`   | `selectExplorationViewModel(state)` in `state/presenters/exploration.engine.ts`        |
-| `app/event/`                | `selectEventViewModel(state)` in `state/presenters/event.engine.ts`                    |
 | `app/(tabs)/_layout.tsx`    | `selectVisibleTabs(inCombat)` in `state/presenters/tabs.engine.ts`                     |
 | Engine store lifecycle      | `createGameStore(memoryAdapter, …)` driven through `startCombat` / `endCombat` / `save` from `axiomancer-mechanics` |
 | `components/<X>.tsx`        | `render(<X {...props} />)` → assert on `getByText` / `getByA11yLabel`. Only when the component has branching UI logic worth pinning. |

@@ -5,6 +5,12 @@
  * (dialogue-cursor walking, flag/quest gating, consequence
  * chips all live in `state/presenters/event.engine`), with chrome
  * built for a conversation: nameplate, spoken text panel, replies.
+ *
+ * No map node opens it since NK1a. Its live callers are the staged-dialogue
+ * fixture (`StateFixture.stagedDialogue`), the dev jump `seatDialogue`
+ * (`state/dev/story-catalog.ts`) and a dialogue choice's
+ * `effect.giveQuestStep`. T's flavour follow-up is its next user, so it
+ * stays (the generic `/event` card it once sat beside is deleted).
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';

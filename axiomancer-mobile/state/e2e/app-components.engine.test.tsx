@@ -9,6 +9,9 @@
  * See docs/testing.md for the full standard.
  */
 
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
 import { describe, it, expect, jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import React from 'react';
@@ -16,6 +19,8 @@ import { createAppStore } from '@/state/store';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { SaveSlotsProvider } from '@/state/SaveSlotsProvider';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
 
 // Mock expo-router for all tests
 jest.mock('@/lib/platform/router', () => ({
@@ -33,7 +38,6 @@ jest.mock('@/lib/platform/router', () => ({
 
 // Import components after mocks
 import IndexScreen from '@/app/index';
-import EventScreen from '@/app/event/index';
 import InventoryScreen from '@/app/(tabs)/inventory/index';
 import MemoirScreen from '@/app/(tabs)/memoir/index';
 
@@ -53,16 +57,6 @@ describe('App Component Smoke Tests', () => {
                 render(
                     <TestWrapper>
                         <IndexScreen />
-                    </TestWrapper>
-                );
-            }).not.toThrow();
-        });
-
-        it('renders event screen without crashing', () => {
-            expect(() => {
-                render(
-                    <TestWrapper>
-                        <EventScreen />
                     </TestWrapper>
                 );
             }).not.toThrow();
@@ -94,7 +88,6 @@ describe('App Component Smoke Tests', () => {
             // Test that all main app components can be imported
             expect(() => {
                 require('@/app/index');
-                require('@/app/event/index');
                 require('@/app/(tabs)/inventory/index');
                 require('@/app/(tabs)/memoir/index');
                 require('@/app/(tabs)/character/index');
@@ -107,7 +100,6 @@ describe('App Component Smoke Tests', () => {
             // Tests that the main app directory has proper structure
             const appComponents = [
                 '@/app/index',
-                '@/app/event/index', 
                 '@/app/(tabs)/_layout',
                 '@/app/(tabs)/character/index',
                 '@/app/(tabs)/exploration/index',
@@ -118,6 +110,20 @@ describe('App Component Smoke Tests', () => {
             appComponents.forEach(component => {
                 expect(() => require(component)).not.toThrow();
             });
+        });
+    });
+
+    describe('A5 — /event removed, /dialogue stays with its header', () => {
+        it('removes the /event route with every caller', () => {
+            expect(existsSync(path.join(REPO_ROOT, 'app', 'event'))).toBe(false);
+            expect(() => require('@/app/event/index')).toThrow();
+        });
+
+        it('keeps a /dialogue header naming its live callers', () => {
+            const source = readFileSync(path.join(REPO_ROOT, 'app', 'dialogue', 'index.tsx'), 'utf8');
+            expect(source).toMatch(/stagedDialogue/);
+            expect(source).toMatch(/seatDialogue/);
+            expect(source).toMatch(/giveQuestStep/);
         });
     });
 });

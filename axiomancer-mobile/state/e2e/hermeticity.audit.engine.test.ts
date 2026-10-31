@@ -162,6 +162,11 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // to prove every engine endCombat caller routes the quest extras; a
         // caller added later is swept with no edit to the test.
         'state/__tests__/end-combat-callers-source.test.ts',
+        // The /event-removed, /dialogue-header guard (phase HD1b, A5) reads
+        // the committed app/ tree the same way the route guards above do:
+        // that the route is gone and the header names its callers are source
+        // facts, unprovable by rendering.
+        'state/e2e/app-components.engine.test.tsx',
     ]);
 
     const FS_PATTERN =
