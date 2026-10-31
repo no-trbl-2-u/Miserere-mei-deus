@@ -1490,6 +1490,7 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
                 // The authored one-liner, same passthrough
                 // pattern as the other kinds (event.engine.ts::bodyFromPayload).
                 description: result.event.description,
+                dream: result.event.dream,
             });
             return true;
         }

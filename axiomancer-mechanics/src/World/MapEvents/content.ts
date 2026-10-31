@@ -75,13 +75,13 @@ export function villagePool(nodeId: string, villageName: string, description: st
     };
 }
 
-export function campRestPool(nodeId: string, description: string): MapEventPool {
+export function campRestPool(nodeId: string, description: string, dream?: string): MapEventPool {
     return {
         id: `${nodeId}.rest`,
         entries: [{
             // A cavern camp is never an inn.
             kind: 'rest', weight: 1,
-            payload: { kind: 'rest', shelter: 'camp', description },
+            payload: { kind: 'rest', shelter: 'camp', description, ...(dream ? { dream } : {}) },
         }],
     };
 }
@@ -362,7 +362,7 @@ function poolFor(nodeId: string): MapEventPool {
         }
         case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
-        case 'rest':     return campRestPool(nodeId, `[content] ${place}.`);
+        case 'rest':     return campRestPool(nodeId, `[content] ${place}.`, BREAKWATER_REST_DREAMS[nodeId]);
         case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
         case 'village':  return breakwaterVillagePool(nodeId, place);
         case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`] });
@@ -376,6 +376,16 @@ function poolFor(nodeId: string): MapEventPool {
         }
     }
 }
+
+/**
+ * The dream line each Breakwater rest shows while the night passes (ET1c).
+ * `[content]` until T's sitting writes them; keyed by node id, one per rest.
+ */
+export const BREAKWATER_REST_DREAMS: Readonly<Record<string, string>> = Object.freeze({
+    'bw-w4': '[content] A dream of the West cliff road.',
+    'bw-h5': '[content] A dream of the Moored ship.',
+    'bw-l3': '[content] A dream of the Cliff road.',
+});
 
 /** The 44 pools, in map-definition order. */
 export const BREAKWATER_CHAPTER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =

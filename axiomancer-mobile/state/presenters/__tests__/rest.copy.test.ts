@@ -7,7 +7,13 @@
  * engine suite and in `rest-offer-heal-cap.audit.test.ts`.
  */
 
-import { REST_CHOICE_OFFER_DESC, REST_INN_OFFER_DESC, restOfferDesc } from '../rest.copy';
+import {
+    REST_CHOICE_OFFER_DESC,
+    REST_INN_OFFER_DESC,
+    restDawnUpgradedChip,
+    restOfferDesc,
+    restOutcomeHealChip,
+} from '../rest.copy';
 
 describe('restOfferDesc', () => {
     it('appends the restored amount for the walked case', () => {
@@ -35,5 +41,16 @@ describe('restOfferDesc', () => {
         expect(restOfferDesc(44, 'inn')).not.toMatch(/where you stand/i);
         expect(restOfferDesc(0, 'inn')).toBe(REST_INN_OFFER_DESC);
         expect(restOfferDesc(44, 'camp')).toBe(`${REST_CHOICE_OFFER_DESC.rest} Restores 44 VITAE.`);
+    });
+});
+
+describe('the dawn outcome lines (ET1c)', () => {
+    it('reads +N VITAE after a rest', () => {
+        expect(restOutcomeHealChip(40)).toBe('+40 VITAE');
+    });
+
+    it('reads "<card> upgraded" after an upgrade, with no VITAE in it', () => {
+        expect(restDawnUpgradedChip('Grey Strike')).toBe('Grey Strike upgraded');
+        expect(restDawnUpgradedChip('Grey Strike')).not.toMatch(/VITAE/);
     });
 });

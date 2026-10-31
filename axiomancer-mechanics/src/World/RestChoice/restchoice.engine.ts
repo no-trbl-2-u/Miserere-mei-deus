@@ -43,6 +43,8 @@ export interface CreateRestChoiceOptions {
     deckCardIds: readonly string[];
     /** The authored MapEvent one-liner. `null`/absent falls back to the presenter's placeholder intro. */
     description?: string | null;
+    /** The node's dream line for the night screen (ET1c). `null`/absent shows none. */
+    dream?: string | null;
 }
 
 function buildOffers(upgradableCount: number): RestChoiceOffer[] {
@@ -71,6 +73,7 @@ export function createRestChoiceSession(seed: SeedInput, opts: CreateRestChoiceO
         upgradableCardIds: upgradable,
         offers: buildOffers(upgradable.length),
         description: opts.description?.trim() || null,
+        dream: opts.dream?.trim() || null,
         outcome: null,
         seed,
     };
