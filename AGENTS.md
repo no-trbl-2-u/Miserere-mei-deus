@@ -355,7 +355,7 @@ them; update here first.
    same-root-cause iterations, then leave it to `pr-autofix`). Red on
    `main` is `ci-autofix`'s.
 6. **`AskUserQuestion` only in `/oversight`, and in `/plot`, `/messy`,
-   `/vault`, `/lane-creator` or `/heads-down` when T is present.** Every other skill decides, documents the call in
+   `/vault`, `/lane-creator`, `/heads-down` or `/pitch` when T is present.** Every other skill decides, documents the call in
    the commit body or PR, and ships. Since
    THE OPEN GATE (T direct, 2026-08-28 — see `plan/bearings.md`)
    there are no owner-blocked decisions: the loop answers every open
