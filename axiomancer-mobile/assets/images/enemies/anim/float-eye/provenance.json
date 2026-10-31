@@ -17,6 +17,9 @@
       "components/combat/encounter/CombatCombatantPane.tsx - the enemy figure in live combat"
     ],
     "measured": "A11, measured on these exact files: 24 cells, 156452 B (152.8 KB) in total, mean 6519 B, max 9352 B (float-eye-20.webp, the attack flare), min 3786 B - against 23624 B for the static float-eye.webp. 6.6x, +132.8 KB for one enemy. FRAME_CELL_MAX_BYTES is 12000 and frame-cells.test.mjs fails any cell above it, so a regenerated set cannot quietly triple.",
+    "portrait": "float-eye.webp",
+    "portrait_sha256": "3f9935a16bafb97cf1e6430d339093fedbe20b2e85d9a36c90bf6e98ec90534d",
+    "portrait_note": "A7 (phase AN5a): the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
     "covers": [
       "float-eye-00.webp",
       "float-eye-01.webp",

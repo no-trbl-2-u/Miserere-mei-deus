@@ -12,7 +12,8 @@
  * There is no "one asset per enemy" law. An enemy may carry a single
  * painting, or a painting plus an animated FRAME SET — see `./frames.ts`. The
  * float-eye carries both: its painting below, and the 24 cells under
- * `anim/float-eye/` that phase AN1e installed. The bindings below hold either
+ * `anim/float-eye/` that phase AN1e installed (the death-beholder, green
+ * jelly and gallows crow do too). The bindings below hold either
  * way: a frame set is additional art for an enemy, never a replacement for
  * its key, and an enemy with no set renders through `getEncounterEnemyArt`
  * exactly as it always did.
@@ -36,7 +37,9 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'green-jelly':       require('./green-jelly.webp'),
     'death-beholder':    require('./death-beholder.webp'),
     // Chapter 1's normals (phases EN1f and EN1g): stand-ins restored from the
-    // 2026-07-06 drop until T's portrait swap; static, no frame set.
+    // 2026-07-06 drop until T's portrait swap. The Gallows Crow also has a
+    // frame set (phase AN5a), bound to this exact portrait by its hash (A7);
+    // the other five are static, no frame set, until AN5b.
     'gallows-crow':      require('./gallows-crow.webp'),
     'net-mender':        require('./net-mender.webp'),
     'crane-hook':        require('./crane-hook.webp'),
