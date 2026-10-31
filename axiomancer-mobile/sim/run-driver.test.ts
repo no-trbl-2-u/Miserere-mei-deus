@@ -57,7 +57,7 @@ describe('the headless run driver', () => {
 
     it('plays a new game as a roster character to a run end, through every Breakwater node kind', () => {
         const { policy, asked } = spying();
-        const { result, screens } = tracedRun({ policy, seed: 1 });
+        const { result, screens } = tracedRun({ policy, seed: 8 });
         expect(['run-over', 'chapter-clear']).toContain(result.outcome);
         expect(result.characterId).toBe(CHARACTER_ROSTER[0]!.id);
         expect(result.runId).toMatch(/^[0-9a-f]{16}$/);
