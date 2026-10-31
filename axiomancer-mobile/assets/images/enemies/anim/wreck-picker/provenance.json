@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 176 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times (audited in AN5c). The stand-in portrait wreck-picker.webp was ingested in colour, and the sheet drawn from it carries the portrait's own saturation, so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait wreck-picker.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/wreck-picker.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows, rows idle / struck / attacking; prompt in wreck-picker.prompt.txt), drawn from the shipped stand-in portrait wreck-picker.webp",
+    "portrait": "wreck-picker.webp",
+    "portrait_sha256": "a6058638205feae20d9de587a2f9bf11f1107ef8c4fa92b3d637773792cfa5a7",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/wreck-picker.cleanup-report.json - 137 alpha >= 160 cores; slivers removed and limbs reassembled as the report lists; anchor measured foot-line (stands: the idle foot line moves 1px (0.4% of the 256px cell, within 6%)); every idle cell translated onto it, each reaction row moved as a whole by its first cell; sheet-wide scale 1.0; A9 idle drift 0.92px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 176px (A6) so every cell is under the 12000 B ceiling. The cleaned 1408x528 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar wreck-picker.sheet.json and the report (which pins its pixels' SHA-256) are.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['wreck-picker'], via ./anim/wreck-picker/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's Wreck-Picker in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 176px, 198898 B (194.2 KB) in total, mean 8287 B, max 11542 B (wreck-picker-19.webp), min 7154 B (wreck-picker-09.webp) - against 36922 B for the static wreck-picker.webp. 5.4x, +158.2 KB for one enemy.",
+    "covers": [
+      "wreck-picker-00.webp",
+      "wreck-picker-01.webp",
+      "wreck-picker-02.webp",
+      "wreck-picker-03.webp",
+      "wreck-picker-04.webp",
+      "wreck-picker-05.webp",
+      "wreck-picker-06.webp",
+      "wreck-picker-07.webp",
+      "wreck-picker-08.webp",
+      "wreck-picker-09.webp",
+      "wreck-picker-10.webp",
+      "wreck-picker-11.webp",
+      "wreck-picker-12.webp",
+      "wreck-picker-13.webp",
+      "wreck-picker-14.webp",
+      "wreck-picker-15.webp",
+      "wreck-picker-16.webp",
+      "wreck-picker-17.webp",
+      "wreck-picker-18.webp",
+      "wreck-picker-19.webp",
+      "wreck-picker-20.webp",
+      "wreck-picker-21.webp",
+      "wreck-picker-22.webp",
+      "wreck-picker-23.webp"
+    ]
+  }
+]

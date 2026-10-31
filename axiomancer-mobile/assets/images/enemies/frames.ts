@@ -14,7 +14,7 @@
  * third, the Act 1 elite's and the first that stands. Phase AN5a installed
  * the fourth, the Gallows Crow's, the first cut from an image-model sheet
  * (cleaned by the art department's `clean-ai-sheet.py` before the split);
- * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c-AN5e install the other eight. Every
+ * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c the Wreck-Picker (176px) and the Tithe-Collector (168px, its 2043x770 master resampled first); AN5d-AN5e install the other six. Every
  * enemy not yet in the registry still renders exactly the single image it
  * rendered before — absence from here is the static path, not a missing
  * feature.
@@ -74,6 +74,8 @@ import { CRANE_HOOK_CELLS } from './anim/crane-hook';
 import { BRINE_WIDOW_CELLS } from './anim/brine-widow';
 import { LAMPREY_KNOT_CELLS } from './anim/lamprey-knot';
 import { CURFEW_RINGER_CELLS } from './anim/curfew-ringer';
+import { WRECK_PICKER_CELLS } from './anim/wreck-picker';
+import { TITHE_COLLECTOR_CELLS } from './anim/tithe-collector';
 import { GREEN_JELLY_CELLS } from './anim/green-jelly';
 
 /** How a cell is registered against the frame beneath it. */
@@ -467,11 +469,71 @@ const CURFEW_RINGER_FRAME_SET: EnemyFrameSet = {
 };
 
 /**
+ * WRECK-PICKER (phase AN5c) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `wreck-picker.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 176px so none passes the
+ * per-cell ceiling). The clip table is the jelly's (the AN5 brief). Bound to
+ * its stand-in portrait by hash (A7) in `anim/wreck-picker/provenance.json`.
+ */
+const WRECK_PICKER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 98.4,
+            y: 171.9,
+            why: 'stands: the idle foot line moves 1px (0.4% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/wreck-picker/provenance.json',
+    },
+    frames: WRECK_PICKER_CELLS,
+};
+
+/**
+ * TITHE-COLLECTOR (phase AN5c) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `tithe-collector.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 168px so none passes the
+ * per-cell ceiling). The clip table is the jelly's (the AN5 brief). Bound to
+ * its stand-in portrait by hash (A7) in `anim/tithe-collector/provenance.json`.
+ */
+const TITHE_COLLECTOR_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 168,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 82.6,
+            y: 154.9,
+            why: 'stands: the idle foot line moves 0px (0.0% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/tithe-collector/provenance.json',
+    },
+    frames: TITHE_COLLECTOR_CELLS,
+};
+
+/**
  * THE REGISTRY. An enemy absent from here resolves through
  * `getEncounterEnemyArt` exactly as it always has. AN1a shipped this empty on
  * purpose so the engine's review was not hostage to an art review; AN1e put
  * the float-eye in it, and that is the row where the chain stops being
- * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow, AN5b five more normals.
+ * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow, AN5b five more normals, AN5c the Wreck-Picker and the Tithe-Collector.
  */
 export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'death-beholder': DEATH_BEHOLDER_FRAME_SET,
@@ -482,6 +544,8 @@ export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'brine-widow': BRINE_WIDOW_FRAME_SET,
     'lamprey-knot': LAMPREY_KNOT_FRAME_SET,
     'curfew-ringer': CURFEW_RINGER_FRAME_SET,
+    'wreck-picker': WRECK_PICKER_FRAME_SET,
+    'tithe-collector': TITHE_COLLECTOR_FRAME_SET,
     'green-jelly': GREEN_JELLY_FRAME_SET,
 };
 

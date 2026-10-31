@@ -74,7 +74,7 @@ test('no shipped cell exceeds the recorded ceiling', () => {
   assert.deepEqual(over, [], 'a cell over the ceiling means the set was regenerated hotter')
 })
 
-for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow', 'net-mender', 'crane-hook', 'brine-widow', 'lamprey-knot', 'curfew-ringer']) {
+for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow', 'net-mender', 'crane-hook', 'brine-widow', 'lamprey-knot', 'curfew-ringer', 'wreck-picker', 'tithe-collector']) {
 test(`the ${key} set is whole: 24 cells, named row-major`, () => {
   // A truncated set is the failure the registry's own validation catches at
   // runtime; catching it here says which FILE is missing rather than that a
@@ -89,6 +89,28 @@ test(`the ${key} set is whole: 24 cells, named row-major`, () => {
   }
 })
 }
+
+// A4, grade once (phase AN5c): every set cut from an image-model sheet was
+// drawn from a portrait that was ingested in colour, so none is graded again.
+// A set is one of these when its provenance names a cleanup report.
+test('every image-model set is ungraded in its provenance and its manifest (A4)', () => {
+  const frames = fs.readFileSync(path.join(ENEMIES, 'frames.ts'), 'utf-8')
+  let audited = 0
+  for (const set of sets) {
+    const record = JSON.parse(fs.readFileSync(path.join(set.dir, 'provenance.json'), 'utf-8'))[0]
+    if (!record.cleanup_report) continue
+    audited++
+    assert.equal(record.graded, false, `${set.key}: provenance says graded`)
+    assert.equal(record.graded_in_this_run, false, `${set.key}: provenance says graded in its run`)
+    assert.match(record.tool, /--no-grade/, `${set.key}: the recorded tool chain lacks --no-grade`)
+    const name = set.key.toUpperCase().replace(/-/g, '_')
+    const start = frames.indexOf(`const ${name}_FRAME_SET`)
+    assert.ok(start >= 0, `${set.key}: no ${name}_FRAME_SET in frames.ts`)
+    const block = frames.slice(start, frames.indexOf('\n};', start))
+    assert.match(block, /graded: false/, `${set.key}: manifest says graded`)
+  }
+  assert.ok(audited >= 8, 'the audit found fewer image-model sets than AN5a-AN5c installed')
+})
 
 test('every provenance record states the measured cost, and it is the cost on disk', () => {
   for (const set of sets) {

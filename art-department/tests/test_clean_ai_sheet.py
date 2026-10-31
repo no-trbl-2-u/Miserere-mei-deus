@@ -312,5 +312,35 @@ class TheFirstFiveNormalsRegenerate(unittest.TestCase):
                 self.assertLessEqual(report["a9"]["idle_centre_drift_px"], 3.0)
 
 
+class TheWreckPickerAndTitheCollectorRegenerate(unittest.TestCase):
+    """Phase AN5c: the same check for the next two sets. The tithe-collector
+    master is 2043 x 770 and is resampled to 2048 x 768 first (T's call)."""
+
+    FRAMES = {"wreck-picker": 176, "tithe-collector": 168}
+
+    def test_each_sidecar_and_report_is_reproduced_and_holds_still(self):
+        for key, frame in self.FRAMES.items():
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as tmp:
+                out = Path(tmp)
+                report = clean_ai_sheet.clean(
+                    MASTERS / f"{key}.sheet.webp", out, out_frame=frame)
+                committed_sidecar = json.loads(
+                    (MASTERS / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                fresh_sidecar = json.loads(
+                    (out / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                self.assertEqual(fresh_sidecar, committed_sidecar)
+                committed = json.loads(
+                    (MASTERS / f"{key}.cleanup-report.json").read_text(encoding="utf-8"))
+                self.assertEqual(report["pixels_sha256"], committed["pixels_sha256"])
+                self.assertEqual(report, committed)
+                self.assertTrue(report["a9"]["pass"])
+                self.assertLessEqual(report["a9"]["idle_centre_drift_px"], 3.0)
+
+    def test_the_tithe_collector_report_shows_the_resample(self):
+        committed = json.loads(
+            (MASTERS / "tithe-collector.cleanup-report.json").read_text(encoding="utf-8"))
+        self.assertTrue(committed["canvas"]["resampled"])
+
+
 if __name__ == "__main__":
     unittest.main()
