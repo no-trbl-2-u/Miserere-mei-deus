@@ -59,6 +59,11 @@ export {
     BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY,
 } from './breakwater-chapter.questline';
 export { BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD } from './Continents/Coastal-Village/breakwater-chapter';
+export {
+    BREAKWATER_ENCOUNTER_NODES, BREAKWATER_ARRIVAL_LINES, arrivalLineAt, breakwaterEncounterTier,
+    heldRoadPlaceAt, breakwaterPlaceAt,
+} from './MapEvents/arrival-lines';
+export type { BreakwaterEncounterTier } from './MapEvents/arrival-lines';
 
 export {
     resolveMapEvent,

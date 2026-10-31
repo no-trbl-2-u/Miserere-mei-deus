@@ -25,7 +25,7 @@
 
 import React, { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { FadeInDown, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import Svg, { Circle, Defs, Line, Polygon, RadialGradient, Stop } from 'react-native-svg';
 import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase,
@@ -45,6 +45,11 @@ import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/Com
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { Image } from '@/lib/platform/image';
+import { InkCurtain } from '@/components/combat/encounter/InkCurtain';
+import { BOSS_CARD_HINT } from '@/components/combat/encounter/reveal.copy';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { resolveJuiceMode } from '@/lib/juice/instant';
+import { buildRevealFrame } from '@/state/presenters/encounter-reveal.engine';
 import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
@@ -137,6 +142,13 @@ export interface CombatEncounterPanelProps {
      * Omitted (dev sandbox, boss encounters) = no retreat is offered.
      */
     onWithdraw?: () => void;
+    /**
+     * The map node the fight was walked to (live play). It dresses the reveal:
+     * the ink curtain, the node's arrival line, an elite's oxblood frame and
+     * held road, the boss's title card. Omitted (dev sandbox, labyrinth) = a
+     * plain reveal with no curtain.
+     */
+    nodeId?: string;
     /** Fired once when the player dismisses the terminal summary. */
     onExit: (outcome: CombatOutcome | null) => void;
     /** The live map region (`vm.region` from the exploration screen), keying
@@ -330,6 +342,7 @@ export function CombatEncounterPanel({
     seed,
     persistOutcome = false,
     onWithdraw,
+    nodeId,
     onExit,
     region,
 }: CombatEncounterPanelProps) {
@@ -731,6 +744,14 @@ export function CombatEncounterPanel({
     // Ghost stays MOUNTED once the first drag begins (opacity-gated by dragShown):
     // remounting the face + image on every drag begin cost a mount + decode while
     // the finger was already moving — the start-of-drag stutter.
+    // The ink curtain and tier frame (ET1a): the motion answer comes from the
+    // reduced-motion hook here and is handed down, never asked for below.
+    const revealFrame = useMemo(() => buildRevealFrame(nodeId), [nodeId]);
+    const inkInstant = resolveJuiceMode({ reducedMotion: useReducedMotion() }) === 'instant';
+    const [inkDone, setInkDone] = useState(nodeId === undefined);
+    const [bossCardHeld, setBossCardHeld] = useState(true);
+    const onInkDone = useCallback(() => setInkDone(true), []);
+
     const lastDragRef = useRef<DragPayload | null>(null);
     if (ghostDrag) lastDragRef.current = ghostDrag;
     const ghostPayload = ghostDrag ?? lastDragRef.current;
@@ -773,12 +794,36 @@ export function CombatEncounterPanel({
                 />
             )}
 
+            {/* The held title card (boss) and the ink curtain sit over the reveal below. */}
+            {showReveal && inkDone && revealFrame.bossCard && bossCardHeld && (
+                <Pressable
+                    style={styles.bossCard}
+                    onPress={() => setBossCardHeld(false)}
+                    testID="combat-reveal-boss-card"
+                    accessibilityRole="button"
+                    accessibilityLabel={`${revealFrame.bossCard.place}. ${revealFrame.bossCard.subtitle}. ${BOSS_CARD_HINT}`}
+                >
+                    <Text style={styles.bossCardPlace}>{revealFrame.bossCard.place}</Text>
+                    <Text style={styles.bossCardSub}>{revealFrame.bossCard.subtitle}</Text>
+                    <Text style={styles.bossCardHint}>{BOSS_CARD_HINT}</Text>
+                </Pressable>
+            )}
+            {showReveal && !inkDone && <InkCurtain instant={inkInstant} onDone={onInkDone} />}
+
             {/* CombatRevealOverlay — read the foe before you commit */}
             {showReveal && (
                 <View style={styles.reveal} testID="combat-reveal">
                     <ScrollView contentContainerStyle={styles.revealScroll} testID="combat-reveal-column">
-                        <Text style={styles.revealEyebrow}>⚔ A FOE BARS THE WAY</Text>
-                        <View style={[styles.revealPortrait, { borderColor: AXM.blood }]}>
+                        <Text style={styles.revealEyebrow} testID="combat-reveal-eyebrow">{revealFrame.eyebrow}</Text>
+                        <Animated.View
+                            entering={inkInstant ? undefined : FadeInDown.delay(600).duration(500)}
+                            style={[
+                                styles.revealPortrait,
+                                { borderColor: revealFrame.tier === 'elite' ? AXM.kindElite : AXM.blood },
+                                revealFrame.tier === 'elite' ? styles.revealPortraitElite : null,
+                            ]}
+                            testID={`combat-reveal-frame-${revealFrame.tier}`}
+                        >
                             <Image
                                 source={getEncounterEnemyArt(vm.enemy.artKey, vm.enemy.artNonce)}
                                 style={{ width: 120, height: 140 }}
@@ -786,8 +831,14 @@ export function CombatEncounterPanel({
                                 transition={0}
                                 accessibilityLabel={vm.enemy.name}
                             />
-                        </View>
+                        </Animated.View>
                         <Text style={styles.revealName}>{vm.enemy.name}</Text>
+                        {revealFrame.heldLine && (
+                            <Text style={styles.revealHeld} testID="combat-reveal-held">{revealFrame.heldLine}</Text>
+                        )}
+                        {revealFrame.arrivalLine && (
+                            <Text style={styles.revealArrival} testID="combat-reveal-arrival">{revealFrame.arrivalLine}</Text>
+                        )}
                         <Text style={styles.revealHp}>♥ {vm.enemy.hp} / {vm.enemy.maxHp}</Text>
                         {/* This screen is the commit gate for a fight: beside the
                           * foe's VITAE and threat sequence, show the player's own
@@ -1438,6 +1489,13 @@ const useStyles = makeStyles((AXM) => ({
     revealScroll: { alignItems: 'center', padding: 22, paddingBottom: 40, width: '100%', maxWidth: REVEAL_COLUMN_MAX_WIDTH, alignSelf: 'center' },
     revealEyebrow: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.blood, marginBottom: 14, marginTop: 8 },
     revealPortrait: { borderWidth: 2, borderRadius: 6, padding: 6, backgroundColor: AXM.deepBg },
+    revealPortraitElite: { borderWidth: 4 },
+    revealHeld: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1, color: AXM.kindElite, marginTop: 6, textAlign: 'center' },
+    revealArrival: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 8, textAlign: 'center' },
+    bossCard: { ...StyleSheet.absoluteFillObject, zIndex: 20, backgroundColor: HUE.inkBg, alignItems: 'center', justifyContent: 'center', padding: 24 },
+    bossCardPlace: { fontFamily: FONTS.gothic, fontSize: 32, color: AXM.parchment, textAlign: 'center' },
+    bossCardSub: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 3, color: AXM.blood, marginTop: 10, textTransform: 'uppercase' },
+    bossCardHint: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, marginTop: 28 },
     revealName: { fontFamily: FONTS.gothic, fontSize: 24, color: AXM.parchment, marginTop: 12, textAlign: 'center' },
     revealHp: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.blood, marginTop: 2 },
     // The player's side of the same trade, quieter than the foe's.
