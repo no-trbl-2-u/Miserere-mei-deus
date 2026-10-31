@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 176 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times. The stand-in portrait toll-keeper.webp was ingested in colour, and the sheet drawn from it carries the portrait's own saturation, so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait toll-keeper.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/toll-keeper.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows, rows idle / struck / attacking; prompt in toll-keeper.prompt.txt), drawn from the shipped stand-in portrait toll-keeper.webp",
+    "portrait": "toll-keeper.webp",
+    "portrait_sha256": "2076b688251761040f8099309d937c3f8d412ad784b8ada16007ac0c0c3ac6ee",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/toll-keeper.cleanup-report.json - 44 alpha >= 160 cores; 1 welded core(s) separated at the neck and 1 cut at the gridlines; slivers removed and limbs reassembled as the report lists; anchor measured foot-line (stands: the idle foot line moves 1px (0.4% of the 256px cell, within 6%)); every idle cell translated onto it, each reaction row moved as a whole by its first cell; sheet-wide scale 0.648; A9 idle drift 0.38px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 176px (A6) so every cell is under the 12000 B ceiling. The cleaned 1408x528 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar toll-keeper.sheet.json and the report (which pins its pixels' SHA-256) are.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['toll-keeper'], via ./anim/toll-keeper/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's Toll-Keeper in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 176px, 135592 B (132.4 KB) in total, mean 5650 B, max 7826 B (toll-keeper-18.webp), min 4784 B (toll-keeper-07.webp) - against 47592 B for the static toll-keeper.webp. 2.8x, +85.9 KB for one enemy.",
+    "covers": [
+      "toll-keeper-00.webp",
+      "toll-keeper-01.webp",
+      "toll-keeper-02.webp",
+      "toll-keeper-03.webp",
+      "toll-keeper-04.webp",
+      "toll-keeper-05.webp",
+      "toll-keeper-06.webp",
+      "toll-keeper-07.webp",
+      "toll-keeper-08.webp",
+      "toll-keeper-09.webp",
+      "toll-keeper-10.webp",
+      "toll-keeper-11.webp",
+      "toll-keeper-12.webp",
+      "toll-keeper-13.webp",
+      "toll-keeper-14.webp",
+      "toll-keeper-15.webp",
+      "toll-keeper-16.webp",
+      "toll-keeper-17.webp",
+      "toll-keeper-18.webp",
+      "toll-keeper-19.webp",
+      "toll-keeper-20.webp",
+      "toll-keeper-21.webp",
+      "toll-keeper-22.webp",
+      "toll-keeper-23.webp"
+    ]
+  }
+]

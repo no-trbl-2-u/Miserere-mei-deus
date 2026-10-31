@@ -21,7 +21,8 @@
   "components": {
     "cores": 39,
     "soft_islands": 1403,
-    "welded_split": 0
+    "welded_split": 0,
+    "welded_necked": 0
   },
   "anchor": {
     "kind": "foot-line",

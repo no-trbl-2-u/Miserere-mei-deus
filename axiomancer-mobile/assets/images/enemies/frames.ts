@@ -14,7 +14,7 @@
  * third, the Act 1 elite's and the first that stands. Phase AN5a installed
  * the fourth, the Gallows Crow's, the first cut from an image-model sheet
  * (cleaned by the art department's `clean-ai-sheet.py` before the split);
- * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c the Wreck-Picker (176px) and the Tithe-Collector (168px, its 2043x770 master resampled first); AN5d-AN5e install the other six. Every
+ * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c the Wreck-Picker (176px) and the Tithe-Collector (168px, its 2043x770 master resampled first); AN5d the four elites, the Lamplighter, the Wrecker and the Toll-Keeper at 176px and the Cave-Choir at 152px (the busiest sheet yet: over the ceiling at 176, 168 and 160); AN5e installs the last two. Every
  * enemy not yet in the registry still renders exactly the single image it
  * rendered before — absence from here is the static path, not a missing
  * feature.
@@ -76,6 +76,10 @@ import { LAMPREY_KNOT_CELLS } from './anim/lamprey-knot';
 import { CURFEW_RINGER_CELLS } from './anim/curfew-ringer';
 import { WRECK_PICKER_CELLS } from './anim/wreck-picker';
 import { TITHE_COLLECTOR_CELLS } from './anim/tithe-collector';
+import { CAVE_CHOIR_CELLS } from './anim/cave-choir';
+import { LAMPLIGHTER_CELLS } from './anim/lamplighter';
+import { WRECKER_CELLS } from './anim/wrecker';
+import { TOLL_KEEPER_CELLS } from './anim/toll-keeper';
 import { GREEN_JELLY_CELLS } from './anim/green-jelly';
 
 /** How a cell is registered against the frame beneath it. */
@@ -529,11 +533,127 @@ const TITHE_COLLECTOR_FRAME_SET: EnemyFrameSet = {
 };
 
 /**
+ * CAVE-CHOIR (phase AN5d) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `cave-choir.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 152px so none passes the per-cell ceiling (at 176, 168 and 160px a cell of the attack's ribbon still did)). The clip table is the jelly's (the AN5 brief). Bound to
+ * its stand-in portrait by hash (A7) in `anim/cave-choir/provenance.json`.
+ */
+const CAVE_CHOIR_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 152,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 65.5,
+            y: 145.5,
+            why: 'stands: the idle foot line moves 0px (0.0% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/cave-choir/provenance.json',
+    },
+    frames: CAVE_CHOIR_CELLS,
+};
+
+/**
+ * LAMPLIGHTER (phase AN5d) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `lamplighter.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 176px so none passes the per-cell ceiling). The clip table is the jelly's (the AN5 brief). Bound to
+ * its stand-in portrait by hash (A7) in `anim/lamplighter/provenance.json`.
+ */
+const LAMPLIGHTER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 110.2,
+            y: 169.1,
+            why: 'stands: the idle foot line moves 5px (2.0% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/lamplighter/provenance.json',
+    },
+    frames: LAMPLIGHTER_CELLS,
+};
+
+/**
+ * WRECKER (phase AN5d) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `wrecker.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 176px so none passes the per-cell ceiling). The clip table is the jelly's (the AN5 brief). Bound to
+ * its stand-in portrait by hash (A7) in `anim/wrecker/provenance.json`.
+ */
+const WRECKER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 75.1,
+            y: 169.8,
+            why: 'stands: the idle foot line moves 0px (0.0% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/wrecker/provenance.json',
+    },
+    frames: WRECKER_CELLS,
+};
+
+/**
+ * TOLL-KEEPER (phase AN5d) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `toll-keeper.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 176px so none passes the per-cell ceiling; its shield bash welds two lunge poses into one core, separated at the neck so each keeps its whole shield). The clip table is the jelly's (the AN5 brief). Bound to
+ * its stand-in portrait by hash (A7) in `anim/toll-keeper/provenance.json`.
+ */
+const TOLL_KEEPER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 71.5,
+            y: 171.2,
+            why: 'stands: the idle foot line moves 1px (0.4% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/toll-keeper/provenance.json',
+    },
+    frames: TOLL_KEEPER_CELLS,
+};
+
+/**
  * THE REGISTRY. An enemy absent from here resolves through
  * `getEncounterEnemyArt` exactly as it always has. AN1a shipped this empty on
  * purpose so the engine's review was not hostage to an art review; AN1e put
  * the float-eye in it, and that is the row where the chain stops being
- * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow, AN5b five more normals, AN5c the Wreck-Picker and the Tithe-Collector.
+ * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow, AN5b five more normals, AN5c the Wreck-Picker and the Tithe-Collector, AN5d the four elites.
  */
 export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'death-beholder': DEATH_BEHOLDER_FRAME_SET,
@@ -546,6 +666,10 @@ export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'curfew-ringer': CURFEW_RINGER_FRAME_SET,
     'wreck-picker': WRECK_PICKER_FRAME_SET,
     'tithe-collector': TITHE_COLLECTOR_FRAME_SET,
+    'cave-choir': CAVE_CHOIR_FRAME_SET,
+    'lamplighter': LAMPLIGHTER_FRAME_SET,
+    'wrecker': WRECKER_FRAME_SET,
+    'toll-keeper': TOLL_KEEPER_FRAME_SET,
     'green-jelly': GREEN_JELLY_FRAME_SET,
 };
 

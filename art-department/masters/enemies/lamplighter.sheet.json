@@ -1,0 +1,37 @@
+{
+  "source": "lamplighter.sheet.webp",
+  "generator": "art-department/tools/clean-ai-sheet.py",
+  "frame": 176,
+  "columns": 8,
+  "rows": 3,
+  "scale": 0.675,
+  "anchor": {
+    "kind": "foot-line",
+    "x": 110.2,
+    "y": 169.1,
+    "why": "stands: the idle foot line moves 5px (2.0% of the 256px cell, within 6%); anchored at the median foot line y 246.0 and the body's median centre x 135.3; after the fit (scale 0.675, shift 25,0) and the cut at 176px it sits at (110.2, 169.1)"
+  },
+  "clips": {
+    "idle": {
+      "row": 0,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "rest": 0
+    },
+    "struck": {
+      "row": 1,
+      "frames": 8,
+      "fps": 16,
+      "loop": false,
+      "rest": 7
+    },
+    "attacking": {
+      "row": 2,
+      "frames": 8,
+      "fps": 12,
+      "loop": false,
+      "rest": 0
+    }
+  }
+}

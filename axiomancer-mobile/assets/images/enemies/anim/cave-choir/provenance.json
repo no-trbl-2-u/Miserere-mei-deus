@@ -1,0 +1,51 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --out-frame 152 (Pillow + numpy cleanup, lossless) then art-department/tools/split-spritesheet.py (Pillow, lossless cells) then scripts/ingest-art.mjs (sharp) --no-grade",
+    "model": "T's built-in image generator drew the sheet (2026-10-30) from the shipped stand-in portrait; nothing in this run called a model or spent anything",
+    "post_process": "longest edge <= 640px, WebP q44, UNGRADED",
+    "graded": false,
+    "graded_in_this_run": false,
+    "graded_note": "A4 / A6b, grade once - here, zero times. The stand-in portrait cave-choir.webp was ingested in colour, and the sheet drawn from it carries the portrait's own saturation, so these cells ingested --no-grade and graded: false on the frame manifest says so.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait cave-choir.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
+    "source": "art-department/masters/enemies/cave-choir.sheet.webp (2048x768 WebP q95 master, 8 columns x 3 rows, rows idle / struck / attacking; prompt in cave-choir.prompt.txt), drawn from the shipped stand-in portrait cave-choir.webp",
+    "portrait": "cave-choir.webp",
+    "portrait_sha256": "c141d557a9e2c352f708ed41e8a9a342408f2aaf4d8ec4d3a806491cb53372a1",
+    "portrait_note": "A7: the SHA-256 of the static portrait this set was drawn from. scripts/frame-set-portraits.test.mjs (root npm test) fails when the portrait's bytes no longer match: a swapped portrait retires this set (remove it or regenerate it from the new portrait).",
+    "cleanup_report": "art-department/masters/enemies/cave-choir.cleanup-report.json - 70 alpha >= 160 cores; slivers removed and limbs reassembled as the report lists; anchor measured foot-line (stands: the idle foot line moves 0px (0.0% of the 256px cell, within 6%)); every idle cell translated onto it, each reaction row moved as a whole by its first cell; sheet-wide scale 0.904; A9 idle drift 0.65px (max 3)",
+    "method": "The image-model master was cleaned by the tool, deterministically and reported, with no hand edits (AN5 Decisions): neighbour slivers dropped by the area centroid of each alpha component, limbs that crossed a gridline reassembled into their own cell, every cell registered by integer translation, then one sheet-wide scale. Cut at 152px (A6): at 176px, 168px and 160px a cell still overshot the 12000 B ceiling (max 14878, 13750 and 12758 B), so the whole chain was rerun 8px smaller each time; the ceiling is not raised. The cleaned 1216x456 sheet was split into 24 lossless PNG cells, row-major, and each encoded to WebP q44 by the shared ingest recipe with the grade skipped. The cleaned sheet itself is not committed: the sidecar cave-choir.sheet.json and the report (which pins its pixels' SHA-256) are.",
+    "used_by": [
+      "assets/images/enemies/frames.ts - ENEMY_FRAME_SETS['cave-choir'], via ./anim/cave-choir/index.ts",
+      "components/combat/encounter/CombatCombatantPane.tsx - Chapter 1's Cave-Choir in live combat"
+    ],
+    "measured": "A6, measured on these exact files: 24 cells at 152px, 186542 B (182.2 KB) in total, mean 7773 B, max 11682 B (cave-choir-19.webp), min 6280 B (cave-choir-04.webp) - against 63644 B for the static cave-choir.webp. 2.9x, +120.0 KB for one enemy.",
+    "covers": [
+      "cave-choir-00.webp",
+      "cave-choir-01.webp",
+      "cave-choir-02.webp",
+      "cave-choir-03.webp",
+      "cave-choir-04.webp",
+      "cave-choir-05.webp",
+      "cave-choir-06.webp",
+      "cave-choir-07.webp",
+      "cave-choir-08.webp",
+      "cave-choir-09.webp",
+      "cave-choir-10.webp",
+      "cave-choir-11.webp",
+      "cave-choir-12.webp",
+      "cave-choir-13.webp",
+      "cave-choir-14.webp",
+      "cave-choir-15.webp",
+      "cave-choir-16.webp",
+      "cave-choir-17.webp",
+      "cave-choir-18.webp",
+      "cave-choir-19.webp",
+      "cave-choir-20.webp",
+      "cave-choir-21.webp",
+      "cave-choir-22.webp",
+      "cave-choir-23.webp"
+    ]
+  }
+]

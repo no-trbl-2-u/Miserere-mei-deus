@@ -118,17 +118,56 @@ class SliversAndLimbs(unittest.TestCase):
 
 
 class TwoPosesWelded(unittest.TestCase):
-    """(b): two poses joined by a bar are cut at the gridline, not merged."""
+    """(b): two poses joined by a bar are separated, never merged."""
 
-    def test_a_weld_is_split_at_the_gridline(self):
+    def test_a_weld_that_erodes_into_two_poses_is_separated_at_its_neck(self):
         sheet = standing_sheet()
         box(sheet, 1 * F + 21, 22, 2 * F + 11, 24)  # joins cell 1's and 2's squares
         report, _, cleaned, _ = run(sheet)
-        self.assertEqual(report["components"]["welded_split"], 1)
+        self.assertEqual(report["components"]["welded_necked"], 1)
+        self.assertEqual(report["components"]["welded_split"], 0)
         # Each cell keeps a square: neither lost its figure to the other.
         for k in (1, 2):
             with self.subTest(cell=k):
                 self.assertGreaterEqual(int((cell(cleaned, k)[..., 3] > 0).sum()), 100)
+
+    def test_a_pose_whose_shield_crosses_the_gridline_keeps_it_whole(self):
+        # The Toll-Keeper's lunge (AN5d) in miniature: cell 1's red figure
+        # holds a shield that crosses 6px into cell 2 and touches cell 2's
+        # green figure through a 2px streak. A gridline cut would clip the
+        # shield and leave its end in cell 2; the neck split gives every red
+        # pixel back to cell 1.
+        sheet = standing_sheet()
+        c1, c2 = 1 * F, 2 * F
+        box(sheet, c1 + 14, 18, c1 + 24, 28, RED)        # body
+        box(sheet, c1 + 24, 16, c2 + 6, 28, RED)         # shield, over the line
+        box(sheet, c2 + 6, 21, c2 + 8, 23, (30, 30, 220, 255))  # the streak
+        box(sheet, c2 + 8, 18, c2 + 18, 28)              # cell 2's own figure
+        red_total = int(is_colour(sheet, RED).sum())
+        report, _, cleaned, _ = run(sheet)
+        self.assertEqual(report["components"]["welded_necked"], 1)
+        self.assertEqual(int(is_colour(cell(cleaned, 2), RED).sum()), 0)
+        s = report["global_scale"]
+        if s == 1.0:
+            self.assertEqual(int(is_colour(cell(cleaned, 1), RED).sum()), red_total)
+        self.assertGreaterEqual(int((cell(cleaned, 2)[..., 3] > 0).sum()), int(90 * s * s))
+
+    def test_a_thin_weld_no_erosion_separates_is_cut_at_the_gridline(self):
+        # A 1px line half in each cell (the Crane-Hook's chain): a weld by
+        # the share rule, but erosion empties it before it yields two poses,
+        # so the gridline cut stands.
+        sheet = standing_sheet()
+        box(sheet, 1 * F + 20, 8, 2 * F + 12, 9)
+        report, _, _, _ = run(sheet)
+        self.assertEqual(report["components"]["welded_necked"], 0)
+        self.assertEqual(report["components"]["welded_split"], 1)
+
+    def test_the_neck_split_is_deterministic(self):
+        sheet = standing_sheet()
+        box(sheet, 1 * F + 21, 22, 2 * F + 11, 24)
+        first, _, _, _ = run(sheet)
+        second, _, _, _ = run(sheet)
+        self.assertEqual(first["pixels_sha256"], second["pixels_sha256"])
 
 
 class Resample(unittest.TestCase):
@@ -340,6 +379,41 @@ class TheWreckPickerAndTitheCollectorRegenerate(unittest.TestCase):
         committed = json.loads(
             (MASTERS / "tithe-collector.cleanup-report.json").read_text(encoding="utf-8"))
         self.assertTrue(committed["canvas"]["resampled"])
+
+
+class TheFourElitesRegenerate(unittest.TestCase):
+    """Phase AN5d: the same check for the four elites. The Cave-Choir is cut
+    at 152px (over the ceiling at 176, 168 and 160); the Toll-Keeper's lunge
+    row is the welded core the neck split exists for."""
+
+    FRAMES = {"cave-choir": 152, "lamplighter": 176, "wrecker": 176, "toll-keeper": 176}
+
+    def test_each_sidecar_and_report_is_reproduced_and_holds_still(self):
+        for key, frame in self.FRAMES.items():
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as tmp:
+                out = Path(tmp)
+                report = clean_ai_sheet.clean(
+                    MASTERS / f"{key}.sheet.webp", out, out_frame=frame)
+                committed_sidecar = json.loads(
+                    (MASTERS / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                fresh_sidecar = json.loads(
+                    (out / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                self.assertEqual(fresh_sidecar, committed_sidecar)
+                committed = json.loads(
+                    (MASTERS / f"{key}.cleanup-report.json").read_text(encoding="utf-8"))
+                self.assertEqual(report["pixels_sha256"], committed["pixels_sha256"])
+                self.assertEqual(report, committed)
+                self.assertTrue(report["a9"]["pass"])
+                self.assertLessEqual(report["a9"]["idle_centre_drift_px"], 3.0)
+
+    def test_the_toll_keeper_lunge_is_separated_at_its_neck(self):
+        committed = json.loads(
+            (MASTERS / "toll-keeper.cleanup-report.json").read_text(encoding="utf-8"))
+        self.assertEqual(committed["components"]["welded_necked"], 1)
+        # A second welded core on this sheet never finds two poses and is
+        # still cut at the gridline (provenance.json's AN5d record): this
+        # pins that count too, so a drift in either direction is caught.
+        self.assertEqual(committed["components"]["welded_split"], 1)
 
 
 if __name__ == "__main__":

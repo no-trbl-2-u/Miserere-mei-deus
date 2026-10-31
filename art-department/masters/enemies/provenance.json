@@ -146,5 +146,22 @@
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5c split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
     ]
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --sheet <key>.sheet.webp --out-frame 176|152 (Pillow + numpy; phase AN5d): lamplighter, wrecker and toll-keeper at 176, cave-choir at 152",
+    "covers": [
+      "cave-choir.sheet.json, cave-choir.cleanup-report.json",
+      "lamplighter.sheet.json, lamplighter.cleanup-report.json",
+      "wrecker.sheet.json, wrecker.cleanup-report.json",
+      "toll-keeper.sheet.json, toll-keeper.cleanup-report.json"
+    ],
+    "source": "<key>.sheet.webp, T's image-model sheets (the 2026-10-30 record above)",
+    "method": "No pixel was edited by hand. Same chain as the AN5b record, with one deterministic change to the tool made in this phase: a welded core (a quarter or more of its area in a second cell) is now first separated at its neck, by eroding it until it falls apart into two poses in different cells and growing every pixel back to the nearer pose, and only cut at the gridlines when no erosion within a cell/16 rings finds two such poses. The Toll-Keeper's shield bash welded attacking cells 18 and 19 into one core (x 518-1102) through a shield and its smear; cut at the gridline, cell 18 lost the end of its shield to cell 19. The Toll-Keeper's report also counts a second welded core elsewhere on the sheet that erosion never separated into two poses (`welded_split: 1`), the same outcome the Crane-Hook's two thin welds got in AN5b; it is still cut at the gridline, and all 24 shipped cells were checked by eye against it with no clipped pose found. Every earlier set's pixels are unchanged (their reports gain welded_necked: 0). All four anchors measured foot-line. The cave-choir's attack ribbon overshot the 12000 B per-cell ceiling at 176, 168 and 160px (max 14878, 13750, 12758 B), so it is cut at 152px; the other three fit at 176px. The ceiling is not raised. The cleaned sheets are not committed: tests/test_clean_ai_sheet.py regenerates each from its master and checks the sidecar, the report and the pixel hash.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5d split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
+    ]
   }
 ]
