@@ -94,6 +94,8 @@ test('fileDrifts: two spreads of one key in one run file one row', () => {
 })
 
 test('fileDrifts: new rows keep single blank lines', () => {
+  // guard-test: 16c57dd9b fixed the blank-line drop before this PR branched; this pins A2's own
+  // fixture (one and two drifts) so it passes on the parent by design.
   const base = '# Audit\n\n## Pending\n\n### [ ] [bug] old\n- category: bug\n'
   const other = { ...drift, deck: 'blood-price' }
   for (const drifts of [[drift], [drift, other]]) {
