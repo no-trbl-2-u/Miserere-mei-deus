@@ -112,4 +112,11 @@ export interface GameState {
      * (`clearDying`) and every run reset drops it. Persisted only when set.
      */
     dying?: true;
+    /**
+     * Set on the pre-run shell a run end leaves behind (`runOverState`): the
+     * run ended and the slot waits for a new character, as against a save made
+     * before characters. Optional and additive; a new run
+     * (`createNewGameState`) never carries it.
+     */
+    runOver?: true;
 }

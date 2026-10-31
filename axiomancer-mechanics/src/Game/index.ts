@@ -10,7 +10,7 @@ export {
 export type { GameStore, StoreApi } from './store';
 
 export { createNewGameState, GAME_STATE_VERSION } from './game.reducer';
-export { resolveDeath, clearDying } from './death';
+export { resolveDeath, clearDying, runOverState } from './death';
 export type { DeathCause, DeathResult } from './death';
 export type { NewGameOptions } from './game.reducer';
 export type { GameState, CodexEntry } from './types';

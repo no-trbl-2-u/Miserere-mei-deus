@@ -3,7 +3,7 @@
  *
  * A first death in a fight or on a hazard puts the player back on the node
  * they walked from at 1 VITAE, dying, with the death node open to retry. A
- * death while dying is `RESET_RUN` with `keepCharacter: true`. A rest's heal
+ * death while dying ends the run (`runOverState`: no character). A rest's heal
  * (`clearDying`) takes dying off.
  *
  * The tests assert what dying DOES (the next death is final), never that
@@ -232,8 +232,9 @@ describe.each(FIGHTS)('A2, A5 - $name', ({ approach, from, node, onward, boss })
 });
 
 describe('A3 - the final death', () => {
-    it('two deaths in one run end it as RESET_RUN does, and dying is gone', () => {
-        const store = createGameStore(memoryDisk(), { player: Player, world: FIGHTS[0]!.approach(), flags: ['a-flag'] });
+    it('two deaths in one run end it as a run over, and dying is gone', () => {
+        const disk = memoryDisk();
+        const store = createGameStore(disk, { player: Player, world: FIGHTS[0]!.approach(), flags: ['a-flag'] });
         const first = store.getState();
 
         enterFight(store, 'bw-w3', false);
@@ -244,22 +245,14 @@ describe('A3 - the final death', () => {
         const after = store.getState();
         expect(after.dying).toBeUndefined();
         expect(after.runId).not.toBe(first.runId);
-        expect(after.player.health).toBe(after.player.maxHealth);
+        expect(after.runOver).toBe(true);
+        expect(after.player.characterId).toBeUndefined();
         expect(after.flags).toEqual([]);
         expect(after.world.currentMap.currentNode).toBe('bw-w1');
         expect(after.world.currentMap.consumedNodes).toEqual([]);
-        expect(after.player.level).toBe(first.player.level);
-
-        const reset = gameReducer(
-            { ...first, dying: true },
-            { type: 'RESET_RUN', payload: { keepCharacter: true } },
-        );
-        // Same fields as RESET_RUN's state (the store adds its verbs on top).
-        const project = (g: GameState) => ({
-            version: g.version, player: g.player, world: g.world, quests: g.quests,
-            flags: g.flags, codex: g.codex, dying: g.dying,
-        });
-        expect(project(after)).toEqual(project(reset));
+        expect(after.player.level).toBe(1);
+        // Persisted with the marker, so a reload reads a run over.
+        expect(disk.raw()?.runOver).toBe(true);
     });
 
     it('a death, a clearDying, then a death revives again', () => {
