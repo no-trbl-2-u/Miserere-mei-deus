@@ -111,10 +111,10 @@ with no fallback and no torio art, and the renamed cards read under their new na
 - **All names land in one phase** (CA3e): renames touch only the mechanics library, its tests, two docs and the
   ledgers, so they need neither the art nor the cutter and can ship first.
 - **Blood Price is repainted**, not added beside: the torio paintings go (T: all four lanes get the new art).
-- **The Elementalist's names ship as listed** in Sources. [T to confirm #1]
-- **The Merciful's "What Grace Owes" keeps its name**, though "What Is Owed" is now free. [T to confirm #2]
+- **The Elementalist's names ship as listed** in Sources. Accepted at merge (default).
+- **The Merciful's "What Grace Owes" keeps its name**, though "What Is Owed" is now free. Accepted at merge (default).
 - **Paintings ship as T selected them**, including the Elementalist's winged figure (rule 9 of the art direction bans
-  wings; T generated and kept these sheets after writing it). [T to confirm #3]
+  wings; T generated and kept these sheets after writing it). Accepted at merge (default).
 
 ## Phases
 

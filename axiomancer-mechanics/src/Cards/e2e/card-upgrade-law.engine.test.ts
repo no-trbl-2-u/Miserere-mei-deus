@@ -224,12 +224,12 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
         // The Defender's five: formulas and holds (THORNS or HEAL read off the fight, a Global GUARD
         // equal to THORNS, DRAW 1, RETRIEVE and the exile return).
         const defender = cardLibrary.filter(c => noPayoff.has(c.id) && c.tags?.includes('defender'));
-        expect(defender.map(c => c.name)).toEqual(['Spite Growth', 'Bramble Carapace', 'Mend the Shell', 'Steady Shell', 'Rummage']);
+        expect(defender.map(c => c.name)).toEqual(['Spite Growth', 'Don the Brambles', 'Mend the Shell', 'Steady Shell', 'Rummage']);
         // The Merciful's six: the clock tick and the burst, two "equal to the foe's MERCY" cards, the
         // SACRIFICE and DRAW card, the heal-mode Spell, and the card that returns MERCY cards.
         const merciful = cardLibrary.filter(c => noPayoff.has(c.id) && c.tags?.includes('merciful'));
         expect(merciful.map(c => c.name)).toEqual([
-            'Hastened Reckoning', 'Weight of Grace', 'Shelter of Grace', 'Open the Wound', 'Kindled Prayer', 'Remembered Kindness',
+            'Hastened Reckoning', 'Weight of Grace', 'Spread the Mantle', 'Open the Wound', 'Kindled Prayer', 'Call Back a Kindness',
         ]);
     });
 

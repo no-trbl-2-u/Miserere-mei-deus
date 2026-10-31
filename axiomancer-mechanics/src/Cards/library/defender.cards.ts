@@ -145,7 +145,7 @@ const ENTRIES: Entry[] = [
         paid: L(`GUARD {guard:${u.m(6)}}. If the foe attacks on their turn, REFLECT ${u.m(50)}% before they DEAL damage.`, c => {
             c.guard(u.m(6)); c.reflectOnAttack(u.m(50));
         }) }) },
-    { slot: 'P-10', option: 'b', name: 'Bramble Carapace', type: 'global', color: BLUE, program: () => turnGlobal(
+    { slot: 'P-10', option: 'b', name: 'Don the Brambles', type: 'global', color: BLUE, program: () => turnGlobal(
         'GUARD equal to your THORNS.', c => { c.guard(0, { plus: c.q.thorns }); }) },
 
     // ── ENGINE: puts the shell and the spikes up, keeps the hand stocked ─────
@@ -157,7 +157,7 @@ const ENTRIES: Entry[] = [
     { slot: 'E-02', option: 'b', name: 'Barbed Wall', type: 'skill', color: PURPLE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}, THORNS {thorns:${u.i(1)}}.`, c => { c.guard(u.m(3)); c.thorns(u.i(1)); }),
         paid: L(`GUARD {guard:${u.m(5)}}, THORNS {thorns:${u.i(3)}}.`, c => { c.guard(u.m(5)); c.thorns(u.i(3)); }) }) },
-    { slot: 'E-03', option: 'b', name: 'Mirrorhide', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'E-03', option: 'b', name: 'Turn the Blow', type: 'skill', color: BLUE, program: u => ({
         free: L(`REFLECT ${u.m(50)}%.`, c => { c.reflect(u.m(50)); }),
         paid: L(`REFLECT ${u.m(100)}%.`, c => { c.reflect(u.m(100)); }) }) },
     { slot: 'E-04', option: 'a', name: 'Hedge Strike', type: 'attack', color: RED, program: u => ({
@@ -204,7 +204,7 @@ const ENTRIES: Entry[] = [
         paid: L(`GUARD {guard:${u.m(6)}}, VULNERABLE +{vuln:${u.m(75)}}% for 2 turns.`, c => {
             c.guard(u.m(6)); c.vulnerable(u.m(75), 2);
         }) }) },
-    { slot: 'M-04', option: 'b', name: 'Turtle Up', type: 'skill', color: BLUE, program: u => ({
+    { slot: 'M-04', option: 'b', name: 'Draw In', type: 'skill', color: BLUE, program: u => ({
         free: L(`GUARD {guard:${u.m(4)}}.`, c => { c.guard(u.m(4)); }),
         paid: L(`GUARD {guard:${u.m(4)}}. You don't lose your GUARD at the end of the enemy's turn this turn.`, c => {
             c.guard(u.m(4)); c.holdGuard();
@@ -225,7 +225,7 @@ const ENTRIES: Entry[] = [
             c.deal(u.m(2)); c.thorns(u.i(2)); c.draw(1);
         }) }) },
     // T: a property of the card, printed once, fired by a random discard and by the scrap.
-    { slot: 'M-09', option: 'a', name: 'Loose Spine', type: 'attack', color: RED,
+    { slot: 'M-09', option: 'a', name: 'Loose the Barbs', type: 'attack', color: RED,
         onDiscard: u => ({
             text: `If this card is discarded, THORNS {thorns:${u.i(2)}}.`,
             run: c => { c.thorns(u.i(2)); },
@@ -234,7 +234,7 @@ const ENTRIES: Entry[] = [
         free: L(`GUARD {guard:${u.m(4)}}.`, c => { c.guard(u.m(4)); }),
         paid: L(`DEAL {deal:${u.m(5)}}, GUARD {guard:${u.m(4)}}.`, c => { c.deal(u.m(5)); c.guard(u.m(4)); }) }) },
     // T's own card: the withdraw slot, cut and rewritten as a Global.
-    { slot: 'M-10', option: 'new', name: 'Lacquered Shell', type: 'global', color: PURPLE, program: u => turnGlobal(
+    { slot: 'M-10', option: 'new', name: 'Lacquer the Plate', type: 'global', color: PURPLE, program: u => turnGlobal(
         `REFLECT ${u.m(15)}%.`, c => { c.reflect(u.m(15)); }) },
 ];
 

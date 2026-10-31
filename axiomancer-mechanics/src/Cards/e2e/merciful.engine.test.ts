@@ -46,13 +46,13 @@ const WILD = { id: 'w', color: 'wild' as const, state: 'available' as const, tem
 /** The drafted names (ledger "Revisions", "Names"), by card id. */
 const NAMES: Record<string, string> = {
     'mc-p-01a': 'Searing Mend', 'mc-p-02b': 'Dawn Bulwark', 'mc-p-03b': 'Grace Called Due', 'mc-p-04a': 'What Grace Owes',
-    'mc-p-05a': 'Hastened Reckoning', 'mc-p-06a': 'Weight of Grace', 'mc-p-06c': 'Shelter of Grace',
-    'mc-p-07b': 'Mended Wrath', 'mc-p-08b': 'Shared Mending', 'mc-p-09c': 'Scarred Resolve', 'mc-p-10c': 'Morning Absolution',
+    'mc-p-05a': 'Hastened Reckoning', 'mc-p-06a': 'Weight of Grace', 'mc-p-06c': 'Spread the Mantle',
+    'mc-p-07b': 'Mended Wrath', 'mc-p-08b': 'Shared Mending', 'mc-p-09c': 'Scarred Resolve', 'mc-p-10c': 'Absolve at Dawn',
     'mc-e-01b': 'Salve', 'mc-e-02c': 'Gentle Debt', 'mc-e-03b': 'Swelling Grace', 'mc-e-04b': 'Open the Wound',
     'mc-e-06a': 'Kindled Prayer', 'mc-e-07b': 'Draw the Fever', 'mc-e-08b': 'Twin Mending', 'mc-e-09b': 'Vigil',
     'mc-e-10b': 'Quiet Breath',
     'mc-m-01b': 'Sanctuary', 'mc-m-02b': 'Offer of Peace', 'mc-m-04b': 'Purifying Light', 'mc-m-05c': 'Deep Well',
-    'mc-m-06c': 'Steady Pulse', 'mc-m-07c': 'Kind Cut', 'mc-m-08a': 'Stay the Hand', 'mc-m-09c': 'Remembered Kindness',
+    'mc-m-06c': 'Steady Pulse', 'mc-m-07c': 'Kind Cut', 'mc-m-08a': 'Stay the Hand', 'mc-m-09c': 'Call Back a Kindness',
     'mc-m-10c': 'Overflowing Cup',
 };
 
@@ -105,7 +105,7 @@ describe('the Merciful set', () => {
             for (const id of ids) expect(getCardById(id)!.color, id).toBe(colour);
         }
         expect(CARDS.filter(c => c.cardType === 'global').map(c => c.name).sort())
-            .toEqual(['Morning Absolution', 'Steady Pulse', 'Vigil']);
+            .toEqual(['Absolve at Dawn', 'Steady Pulse', 'Vigil']);
         expect(CARDS.filter(c => c.cardType === 'spell').map(c => c.name).sort())
             .toEqual(['Deep Well', 'Grace Called Due', 'Hastened Reckoning', 'Kindled Prayer', 'Swelling Grace']);
     });
@@ -289,7 +289,7 @@ describe('the cards play RADIANCE and MERCY', () => {
         const gain = (vitae: number): number => start(['mc-m-06c'], { vitae }).player.health - start([FILLER], { vitae }).player.health;
         expect(gain(40)).toBe(5);
         expect(gain(90)).toBe(2);
-        // Morning Absolution hits only while the foe has MERCY.
+        // Absolve at Dawn hits only while the foe has MERCY.
         const dry = start(['mc-p-10c']);
         expect(dry.enemy.health).toBe(300);
         const wet = start(['mc-e-02c', 'mc-p-10c']);

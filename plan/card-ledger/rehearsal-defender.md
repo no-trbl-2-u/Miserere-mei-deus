@@ -349,3 +349,5 @@ T chose the sims' suggested changes 1, 2, 3, 4, 6 and 7 for the trial set; THORN
 - The pace: even with these numbers the Defender runs under T's targets.
 - Structure: M-07 PAID rarely has an exiled card to return; M-09 FREE loses to scrapping it; M-02 and M-05 PAID are
   rarely worth paying.
+
+- **2026-10-31, action names (Phase CA3e, T's CA3 plot):** five cards renamed to verbs: Mirrorhide to Turn the Blow, Turtle Up to Draw In, Bramble Carapace to Don the Brambles, Lacquered Shell to Lacquer the Plate, Loose Spine to Loose the Barbs. Source: T, 2026-10-30, "rename the card itself so that the card is a verb"; names table in `plan/phases/phase_CA3_lane_card_art.md`. Names only.

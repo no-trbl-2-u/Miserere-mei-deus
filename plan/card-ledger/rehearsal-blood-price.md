@@ -216,3 +216,5 @@ the VITAE lost this round; P-05b VULNERABLE +50% to +70%; P-09b the foe loses
 Conviction 1 to 2; E-07b Conviction 2 to 3; E-10d the X cap 15 to 21; M-07a
 VULNERABLE +25% to +35% and HEAL 2 to 4 per hit; M-10a the cap 15 to 21. Each
 now EXILEs on PAID (P-04c already did). FREE lines are unchanged.
+
+- **2026-10-31, action names (Phase CA3e, T's CA3 plot):** two cards renamed to verbs: What Is Owed to Collect the Debt (bp-p-06d), Famished to Gorge (bp-m-03d). Source: T, 2026-10-30, "rename the card itself so that the card is a verb"; names table in `plan/phases/phase_CA3_lane_card_art.md`. Names only.

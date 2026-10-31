@@ -51,13 +51,13 @@ const TEST_DECK_SLOTS = {
 const NAMES: Record<string, string> = {
     'P-01': 'Bristling Blow', 'P-02': 'Shield Bash', 'P-03': 'Cracking Swing', 'P-04': 'Mirror Barb',
     'P-05': 'Thornwall', 'P-06': 'Spite Growth', 'P-07': 'Shed the Shell', 'P-08': 'Spiked Shell',
-    'P-09': 'Riposte', 'P-10': 'Bramble Carapace',
-    'E-01': 'Studded Guard', 'E-02': 'Barbed Wall', 'E-03': 'Mirrorhide', 'E-04': 'Hedge Strike',
+    'P-09': 'Riposte', 'P-10': 'Don the Brambles',
+    'E-01': 'Studded Guard', 'E-02': 'Barbed Wall', 'E-03': 'Turn the Blow', 'E-04': 'Hedge Strike',
     'E-05': 'Briar Surge', 'E-06': 'Overgrowth', 'E-07': 'Thorn Lash', 'E-08': 'Polished Shell',
     'E-09': 'Rose Wrap', 'E-10': 'Gather Thistles',
-    'M-01': 'Hunker Down', 'M-02': 'Mend the Shell', 'M-03': 'Crack the Armour', 'M-04': 'Turtle Up',
+    'M-01': 'Hunker Down', 'M-02': 'Mend the Shell', 'M-03': 'Crack the Armour', 'M-04': 'Draw In',
     'M-05': 'Prickly Resolve', 'M-06': 'Steady Shell', 'M-07': 'Rummage', 'M-08': 'Nettle Poke',
-    'M-09': 'Loose Spine', 'M-10': 'Lacquered Shell',
+    'M-09': 'Loose the Barbs', 'M-10': 'Lacquer the Plate',
 };
 
 /** T's colours (revisions, "Colours"). */
@@ -106,7 +106,7 @@ describe('the Defender set', () => {
             for (const slot of slots) expect(getCardById(idOf(slot))!.color, slot).toBe(colour);
         }
         expect(CARDS.filter(c => c.cardType === 'global').map(c => c.name).sort())
-            .toEqual(['Bramble Carapace', 'Lacquered Shell', 'Rose Wrap', 'Steady Shell']);
+            .toEqual(['Don the Brambles', 'Lacquer the Plate', 'Rose Wrap', 'Steady Shell']);
         expect(CARDS.filter(c => c.cardType === 'spell').map(c => c.name).sort())
             .toEqual(['Briar Surge', 'Overgrowth', 'Shed the Shell']);
         // T's own card keeps the `n` suffix.
