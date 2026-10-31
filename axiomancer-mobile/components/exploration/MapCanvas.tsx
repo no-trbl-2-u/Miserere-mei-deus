@@ -511,23 +511,28 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
 
     // The camera's framing (MC1b). Three moments, all keyed on the player's
     // own node so a pan can never be fought (issue #294):
-    //   - the first time the pane is measured: the camera this map was left at
-    //     (memory), else the recentre framing; then the move rule, in case the
-    //     player now stands off-frame (a fight's win moved them on);
-    //   - the player's node changing later: the same zoom, panned only if the
-    //     new node is outside the inner 80% of the pane;
+    //   - the first time the pane is measured, or `mapId` changes under a
+    //     still-mounted canvas (crossing to another map in place, same
+    //     screen): the camera that map was left at (memory), else the
+    //     recentre framing; then the move rule, in case the player now
+    //     stands off-frame (a fight's win moved them on);
+    //   - the player's node changing later on the SAME map: the same zoom,
+    //     panned only if the new node is outside the inner 80% of the pane;
     //   - never on a re-measure of the pane (MC1c owns the pane's relayout).
     const currentId = nodes.find((n) => n.kind === 'current')?.id ?? '';
     const framed = React.useRef(false);
     const lastCurrent = React.useRef<string | null>(null);
+    const lastMapId = React.useRef<string | undefined>(undefined);
     React.useEffect(() => {
         if (!viewport || nodes.length === 0) return;
         const current = nodes.find((n) => n.kind === 'current');
         const px = current ? current.x * size.scale : canvas.w / 2;
         const py = current ? current.y * size.scale : canvas.h / 2;
-        if (!framed.current) {
+        const crossedMap = framed.current && mapId !== lastMapId.current;
+        if (!framed.current || crossedMap) {
             framed.current = true;
             lastCurrent.current = currentId;
+            lastMapId.current = mapId;
             const remembered = mapId ? recallCamera(mapId) : undefined;
             if (!remembered) {
                 commitCamera(computeFocusTransform(nodes, viewport, size));
@@ -551,7 +556,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
         // `nodes` is deliberately NOT a dependency: it is a fresh array every
         // render. `currentId` is the stable projection of what the camera follows.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [viewport, currentId, size.width, size.height, size.scale, commitCamera]);
+    }, [viewport, currentId, mapId, size.width, size.height, size.scale, commitCamera]);
 
     // Remember the camera as the map unmounts (a fight, a rest, a hazard): the
     // canvas point at the pane's centre, so it survives a pane of another size.

@@ -718,6 +718,34 @@ describe('MapCanvas re-frames on a focus change', () => {
         expect(cameraOf(other.getByTestId)).toEqual(fit);
     });
 
+    it('crossing to another map in place (no unmount) frames the new map, not a pan of the old one (A7)', () => {
+        clearCameraMemory();
+        const onA = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>,
+        );
+        layoutIn(onA.getByTestId);
+        onA.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const drag = { translationX: -60, translationY: 0 };
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, ...drag },
+            { state: State.END, ...drag },
+        ]);
+        onA.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const leftOnA = cameraOf(onA.getByTestId);
+
+        // `takeTravelAction` swaps `world.currentMap` under the same screen: the
+        // same `MapCanvas` instance gets a new `mapId` and a new current node,
+        // never an unmount.
+        const onB = withKind('node-2', []);
+        onA.rerender(<MapCanvas nodes={onB} edges={mockEdges} mapId="m-b"><MockChildren /></MapCanvas>);
+        onA.rerender(<MapCanvas nodes={[...onB]} edges={mockEdges} mapId="m-b"><MockChildren /></MapCanvas>);
+        const onCrossing = cameraOf(onA.getByTestId);
+        expect(onCrossing).toEqual(computeFocusTransform(onB, VIEWPORT));
+        expect(onCrossing).not.toEqual(leftOnA);
+    });
+
     it('a pane re-measure does not re-frame the camera', () => {
         const { getByTestId, rerender } = render(
             <MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>,
