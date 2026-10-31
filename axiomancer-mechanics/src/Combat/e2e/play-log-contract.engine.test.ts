@@ -199,6 +199,7 @@ describe('validateDeckEventPost', () => {
         expect(deckReasons(deckEvent({ cardId: null }))).toEqual([]);
         expect(deckReasons(deckEvent({ kind: 'cache-reward', where: { nodeId: null, screen: 'cache' } }))).toEqual([]);
         expect(deckReasons(deckEvent({ kind: 'remove', offered: null }))).toEqual([]);
+        expect(deckReasons(deckEvent({ kind: 'upgrade', cardId: 'card-1', offered: ['card-1+'] }))).toEqual([]);
         expect(deckReasons(deckEvent({ kind: 'run-end', cardId: null, offered: null }))).toEqual([]);
     });
 
@@ -211,11 +212,11 @@ describe('validateDeckEventPost', () => {
         }
     });
 
-    it('names a card that was not offered, an empty offer and a reserved kind', () => {
+    it('names a card that was not offered, an empty offer and an unknown kind', () => {
         expect(deckReasons(deckEvent({ cardId: 'card-9' }))).toEqual(['cardId: expected one of the offered cards']);
         expect(deckReasons(deckEvent({ cardId: null, offered: [] }))).toEqual(['offered: expected at least one card']);
-        expect(deckReasons(deckEvent({ kind: 'upgrade' }))).toEqual([
-            'kind: expected one of reward, cache-reward, remove, run-end',
+        expect(deckReasons(deckEvent({ kind: 'forge' }))).toEqual([
+            'kind: expected one of reward, cache-reward, remove, upgrade, run-end',
         ]);
     });
 
@@ -227,6 +228,15 @@ describe('validateDeckEventPost', () => {
             'cardId: expected null for run-end',
             'offered: expected null for run-end',
         ]);
+    });
+
+    it('SM1c: an upgrade names the card before and the one card after, and keeps both', () => {
+        const kept = validateDeckEventPost(deckEvent({ kind: 'upgrade', cardId: 'card-1', offered: ['card-1+'] }));
+        expect(kept.ok && kept.deckEvent).toMatchObject({ kind: 'upgrade', cardId: 'card-1', offered: ['card-1+'] });
+        expect(deckReasons(deckEvent({ kind: 'upgrade', cardId: null, offered: ['card-1+'] }))).toEqual(['cardId: expected a string']);
+        expect(deckReasons(deckEvent({ kind: 'upgrade', cardId: 'card-1', offered: null }))).toEqual(['offered: expected an array']);
+        expect(deckReasons(deckEvent({ kind: 'upgrade', cardId: 'card-1', offered: [] }))).toEqual(['offered: expected the upgraded card']);
+        expect(deckReasons(deckEvent({ kind: 'upgrade', cardId: 'card-1', offered: ['a', 'b'] }))).toEqual(['offered: more than 1 entries']);
     });
 
     it('names a missing where and a wrong-typed deck', () => {
