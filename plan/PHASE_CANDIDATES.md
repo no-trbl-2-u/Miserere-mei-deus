@@ -804,6 +804,7 @@
 - part plan: `plan/revamp/hazards.md` "The Act 1 rollout and the live board (T, 2026-10-24, `/messy`)"; B3 brief Decision and Follow-ups (`plan/phases/phase_B3_hazard_puzzle.md:185-188,269-277`)
 - T's call (2026-10-24): no authored set now. Each of the seven Act 1 hazard nodes (Breakwater 2, Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2) draws a random puzzle from the thirty; the hand-picked seven is a later `/plot` of T's ("the swap", `plan/deadlines.md` T Item 2026-11-13) once T has played the thirty in `/dev`.
 - proposed scope: 2 rows under one `/plot`. (a) `app/hazard` resolves to the puzzle board under the puzzle's clock and outcome, the node drawing one of the thirty at random (seeded, so a run replays). (b) The cuts: three-round engine paths, RE-CAST cards, the saved hazard deck and its screens, `deadcard`, a save migration dropping `hazard-card:` flags; the "Hazard deck-thinning remove-card consumer" candidate retired; a net VITAE line on the reckoning if it survives.
+- narrowed (2026-10-31, T's `/plot` of HP6): the Breakwater's six hazard nodes are taken by HP6 (a bot-measured curve, six from its middle third along the story route); this row is now the other five Act 1 nodes and the cuts.
 - conflicts: HP4f/HP4g (patterns, clocks) and HP2d–HP2f (calibration) run in the same window on the same kept set; (a) may wait on HP4e's rulings (Nov 2). T's untracked `HazardPuzzleBoardView.tsx` draft is in this folder.
 - promote with `/plot`.
 
