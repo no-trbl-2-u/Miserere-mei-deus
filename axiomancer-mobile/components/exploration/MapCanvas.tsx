@@ -20,6 +20,7 @@ import { NODE_SIZE, nodeCounterScale } from './ExplorationNode';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
 import { edgeKey, HELD_ROAD_DRAW_MS, useOpeningRoads } from './heldRoads';
+import { recallCamera, rememberCamera } from './mapCameraMemory';
 
 interface MapCanvasProps {
     nodes: readonly ExplorationNode[];
@@ -36,6 +37,12 @@ interface MapCanvasProps {
      * viewport instead of the pannable canvas.
      */
     overlays?: React.ReactNode;
+    /**
+     * The map's identity for the camera memory (MC1b): the camera is kept per
+     * map across the map unmounting under a fight. Omitted, nothing is
+     * remembered.
+     */
+    mapId?: string;
     children: React.ReactNode;
 }
 
@@ -109,15 +116,20 @@ export function panAxis(t: number, d: number, viewportLen: number, canvasLen: nu
     return t;
 }
 
-// The camera fits the whole focus bounding box in frame, zooming out (never
-// in — a lone node shouldn't get punched in past 1x) just enough that every
-// currently-open node starts visible, even on a branch wider than the
-// viewport.
-const FIT_PADDING = 40;
+/**
+ * RECENTRE's zoom: the pane spans this share of the sheet's width (MC1b,
+ * Accepted at merge (default), #3). The same on every sheet, so a 1000-unit
+ * Act 1 plate shows about 400 units across: the player's icon and its near
+ * neighbours, not a seventh of the region.
+ */
+export const RECENTRE_SPAN = 0.4;
+
+/** A move pans the camera only when the player's node leaves this share of the pane. */
+export const INNER_FRAME = 0.8;
 
 /**
- * True for a node the camera frames beside the one underfoot: one of the
- * player's legal moves, new (`available`) or a walked road back (`walkable`).
+ * True for a node that is one of the player's legal moves, new (`available`)
+ * or a walked road back (`walkable`). Part of the camera's focus key.
  */
 function isFocusMove(n: ExplorationNode): boolean {
     return n.kind === 'available' || (n.kind === 'completed' && n.walkable === true);
@@ -164,9 +176,20 @@ export function focusKeyOf(nodes: readonly ExplorationNode[]): string {
 interface FocusTransform { scale: number; tx: number; ty: number; }
 
 /**
- * Exported for unit coverage — the pure math behind the initial camera fit.
- * The focus is centred as it is, with no slide against the plate's edges:
- * black past an edge is allowed (T, 2026-10-31).
+ * The zoom RECENTRE and a first visit use: the pane spans `RECENTRE_SPAN` of
+ * the sheet's width, held between the contain floor and `MAX_SCALE`.
+ */
+export function recentreScale(viewport: { w: number; h: number }, size: SheetSize = LEGACY_SHEET_SIZE): number {
+    const canvas = canvasSizeOf(size);
+    return clampScale(viewport.w / (RECENTRE_SPAN * canvas.w), minScaleFor(viewport, size));
+}
+
+/**
+ * Exported for unit coverage: the recentre framing. The player's node (the
+ * `current` one) sits at the pane's centre at `recentreScale`; the open moves
+ * are not framed, T asked for the player's icon (MC1b). With no current node
+ * the sheet's centre is framed. No slide against the plate's edges: black past
+ * an edge is allowed (T, 2026-10-31).
  */
 export function computeFocusTransform(
     nodes: readonly ExplorationNode[],
@@ -174,31 +197,40 @@ export function computeFocusTransform(
     size: SheetSize = LEGACY_SHEET_SIZE,
 ): FocusTransform {
     const canvas = canvasSizeOf(size);
-    const focus = nodes.filter((n) => n.kind === 'current' || isFocusMove(n));
-    if (focus.length === 0) {
-        const s = Math.max(1, minScaleFor(viewport, size));
-        return { scale: s, tx: (viewport.w - canvas.w * s) / 2, ty: (viewport.h - canvas.h * s) / 2 };
-    }
+    const scale = recentreScale(viewport, size);
+    const current = nodes.find((n) => n.kind === 'current');
+    const cx = current ? current.x * size.scale : canvas.w / 2;
+    const cy = current ? current.y * size.scale : canvas.h / 2;
+    return { scale, tx: viewport.w / 2 - cx * scale, ty: viewport.h / 2 - cy * scale };
+}
 
-    const xs = focus.map((n) => n.x * size.scale);
-    const ys = focus.map((n) => n.y * size.scale);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    const bboxW = maxX - minX;
-    const bboxH = maxY - minY;
-    const cx = (minX + maxX) / 2;
-    const cy = (minY + maxY) / 2;
+/**
+ * One axis of the move rule: the translation that keeps canvas coordinate `c`
+ * inside the pane's inner `INNER_FRAME` share, moved only as far as needed.
+ */
+function keepInFrameAxis(t: number, c: number, scale: number, viewportLen: number): number {
+    const margin = (viewportLen * (1 - INNER_FRAME)) / 2;
+    const at = t + c * scale;
+    if (at < margin) return margin - c * scale;
+    if (at > viewportLen - margin) return viewportLen - margin - c * scale;
+    return t;
+}
 
-    const fitScaleX = bboxW > 0 ? (viewport.w - FIT_PADDING * 2) / bboxW : MAX_SCALE;
-    const fitScaleY = bboxH > 0 ? (viewport.h - FIT_PADDING * 2) / bboxH : MAX_SCALE;
-    const scale = Math.max(minScaleFor(viewport, size), Math.min(1, fitScaleX, fitScaleY));
-
+/**
+ * The move rule (MC1b A8): the same zoom, panned only if the node at canvas
+ * point (`px`, `py`) is outside the pane's inner 80%, and then only enough to
+ * bring it inside. A node already inside leaves the camera untouched.
+ */
+export function panIntoFrame(
+    camera: FocusTransform,
+    px: number,
+    py: number,
+    viewport: { w: number; h: number },
+): FocusTransform {
     return {
-        scale,
-        tx: viewport.w / 2 - cx * scale,
-        ty: viewport.h / 2 - cy * scale,
+        scale: camera.scale,
+        tx: keepInFrameAxis(camera.tx, px, camera.scale, viewport.w),
+        ty: keepInFrameAxis(camera.ty, py, camera.scale, viewport.h),
     };
 }
 
@@ -411,7 +443,7 @@ function NodeHalo({ cx, cy, r, scale, color, counterScale }: {
     );
 }
 
-export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvasProps) {
+export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: MapCanvasProps) {
     const styles = useStyles();
     const AXM = usePalette();
     const size: SheetSize = sheet ?? LEGACY_SHEET_SIZE;
@@ -436,22 +468,6 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
     const tx = useSharedValue(0);
     const ty = useSharedValue(0);
 
-    // Open the map framed on the nodes the player can actually act on
-    // right now — the current position plus its available next steps —
-    // rather than the geometric middle of the (much larger) spread
-    // canvas. We measure the viewport on layout, then centre once both
-    // the viewport and the node set are available.
-    /**
-     * The identity of the camera's SUBJECT — where the player stands plus the
-     * steps open from there — as a stable string.
-     *
-     * The camera re-fits whenever this changes, so after a move the newly
-     * opened branch is framed. Keying the fit on THIS rather than on `nodes`
-     * keeps it safe: `nodes` is a fresh array every render, while this key
-     * changes only when the player's actual position or set of options
-     * changes. See the effect below for why that matters.
-     */
-    const focusKey = React.useMemo(() => focusKeyOf(nodes), [nodes]);
     const [viewport, setViewport] = React.useState<{ w: number; h: number } | null>(null);
     const onWrapLayout = React.useCallback(
         (e: { nativeEvent: { layout: { width: number; height: number } } }) => {
@@ -484,42 +500,73 @@ export function MapCanvas({ nodes, edges, sheet, overlays, children }: MapCanvas
      * sheet. With lateral ribs and frontier roaming, looking sideways is the
      * point, so looking sideways has to be undoable in one tap.
      *
-     * It re-runs the SAME fit the camera performs on mount and whenever the
-     * road ahead changes, which is why it needs no geometry of its own and
-     * cannot disagree with the automatic camera.
+     * It puts the player's icon at the pane's centre at the recentre zoom,
+     * the same framing a first visit opens with, so it needs no geometry of
+     * its own and cannot disagree with the opening camera.
      */
     const recenter = React.useCallback(() => {
         if (!viewport || nodes.length === 0) return;
         commitCamera(computeFocusTransform(nodes, viewport, size));
     }, [viewport, nodes, size, commitCamera]);
 
+    // The camera's framing (MC1b). Three moments, all keyed on the player's
+    // own node so a pan can never be fought (issue #294):
+    //   - the first time the pane is measured: the camera this map was left at
+    //     (memory), else the recentre framing; then the move rule, in case the
+    //     player now stands off-frame (a fight's win moved them on);
+    //   - the player's node changing later: the same zoom, panned only if the
+    //     new node is outside the inner 80% of the pane;
+    //   - never on a re-measure of the pane (MC1c owns the pane's relayout).
+    const currentId = nodes.find((n) => n.kind === 'current')?.id ?? '';
+    const framed = React.useRef(false);
+    const lastCurrent = React.useRef<string | null>(null);
     React.useEffect(() => {
         if (!viewport || nodes.length === 0) return;
-        // The choosable nodes: where the player stands + the steps they
-        // can take from here, fit whole into frame (zoomed out if a wide
-        // branch demands it) rather than just centred at 1x.
-        //
-        // This runs on every CHANGE OF `focusKey` — not once, and not on every
-        // render. That distinction is the whole design, because it has to
-        // satisfy two requirements at once:
-        //
-        //   - The camera must re-fit when the road ahead changes, or the
-        //     player's onward choices sit off-screen after a move.
-        //   - The camera must NOT fight a player who is panning to look
-        //     around (issue #294).
-        //
-        // Keying on `focusKey` satisfies both structurally rather than by
-        // heuristic: panning does not change where the player stands or what
-        // is open to them, so it cannot produce a re-fit — no "has the user
-        // panned?" flag is needed, and there is no window in which the camera
-        // could snap back mid-gesture. The camera moves only at the moments the
-        // player themselves changed the map's subject.
-        commitCamera(computeFocusTransform(nodes, viewport, size));
-        // `nodes` is deliberately NOT a dependency — it is a fresh array every
-        // render, and depending on it would re-fit constantly and fight the
-        // player's pan (issue #294). `focusKey` is its stable projection.
+        const current = nodes.find((n) => n.kind === 'current');
+        const px = current ? current.x * size.scale : canvas.w / 2;
+        const py = current ? current.y * size.scale : canvas.h / 2;
+        if (!framed.current) {
+            framed.current = true;
+            lastCurrent.current = currentId;
+            const remembered = mapId ? recallCamera(mapId) : undefined;
+            if (!remembered) {
+                commitCamera(computeFocusTransform(nodes, viewport, size));
+                return;
+            }
+            const sc = clampScale(remembered.scale, minScaleFor(viewport, size));
+            const restored = {
+                scale: sc,
+                tx: viewport.w / 2 - remembered.cx * sc,
+                ty: viewport.h / 2 - remembered.cy * sc,
+            };
+            commitCamera(current ? panIntoFrame(restored, px, py, viewport) : restored);
+            return;
+        }
+        if (lastCurrent.current === currentId) return;
+        lastCurrent.current = currentId;
+        commitCamera(panIntoFrame(
+            { scale: scale.value, tx: tx.value, ty: ty.value },
+            px, py, viewport,
+        ));
+        // `nodes` is deliberately NOT a dependency: it is a fresh array every
+        // render. `currentId` is the stable projection of what the camera follows.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [viewport, focusKey, size.width, size.height, size.scale, commitCamera]);
+    }, [viewport, currentId, size.width, size.height, size.scale, commitCamera]);
+
+    // Remember the camera as the map unmounts (a fight, a rest, a hazard): the
+    // canvas point at the pane's centre, so it survives a pane of another size.
+    const viewportRef = React.useRef(viewport);
+    viewportRef.current = viewport;
+    React.useEffect(() => () => {
+        const vp = viewportRef.current;
+        if (!mapId || !vp || !framed.current) return;
+        const sc = scale.value;
+        rememberCamera(mapId, {
+            scale: sc,
+            cx: (vp.w / 2 - tx.value) / sc,
+            cy: (vp.h / 2 - ty.value) / sc,
+        });
+    }, [mapId, scale, tx, ty]);
 
     // Every gesture works in DELTAS from its last event, so pinch and pan
     // compose without either replaying its whole translation over the

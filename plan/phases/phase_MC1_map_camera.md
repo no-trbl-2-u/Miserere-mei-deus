@@ -118,7 +118,7 @@ view with nothing drawn over it but the recentre button.
   nothing, and the pan's delta is rebased when the pinch ends, so lifting one finger and dragging on
   with the other moves the map by the drag alone. A test.
 - **A5 (RECENTRE centres on the player's icon)** RECENTRE puts the current node at the pane's
-  centre at the recentre zoom: the pane spans about 40% of the sheet's width `[T to confirm #3]`
+  centre at the recentre zoom: the pane spans about 40% of the sheet's width (Accepted at merge (default), #3)
   (on the Breakwater, 400 of 1000 sheet units across, about 0.4x on a phone), whatever the open
   moves are. A test on the Breakwater sheet at 360x640.
 - **A6 (a first visit opens at the recentre framing)** A map seen for the first time this app
@@ -126,7 +126,7 @@ view with nothing drawn over it but the recentre button.
 - **A7 (the camera is remembered across a fight)** The camera (zoom and the sheet point at the
   pane's centre) is kept per map outside `MapCanvas`, in memory, and restored when the map mounts
   again, so returning from a fight, a rest, a hazard or any other screen shows the same zoom and
-  place as before the node was entered `[T to confirm #4]`. Not saved: a fresh app launch opens as
+  place as before the node was entered (Accepted at merge (default), #4). Not saved: a fresh app launch opens as
   A6. A screen test: zoom, pan, enter a fight, close it, the camera matches.
 - **A8 (a move pans, never zooms)** When the player's node changes, the zoom is kept; the camera
   pans only if the new current node would sit outside the pane's inner 80%, and then only enough to
@@ -179,11 +179,11 @@ None. The camera memory is in-memory only (A7) and never written to the save.
 2. **The pan limit** (A3): a plate edge may come as far as the middle of the pane, so the plate can
    never be lost entirely and RECENTRE is not the only way back (Accepted at merge (default), #2).
 3. **The recentre zoom** (A5): about 40% of the sheet's width across the pane, as a constant beside
-   `MAX_SCALE`, the same on every sheet `[T to confirm #3]`. The open moves are not framed: T asked
+   `MAX_SCALE`, the same on every sheet (Accepted at merge (default), #3). The open moves are not framed: T asked
    for the player's icon.
 4. **What "where they were" means** (A7, A8): the zoom and centre point from before the node was
    entered, restored as they were; the camera then pans only if the node the player now stands on
-   is off-frame `[T to confirm #4]`. This covers every return to the map, not only fights, since
+   is off-frame (Accepted at merge (default), #4). This covers every return to the map, not only fights, since
    every move used to re-fit too.
 5. **The memory is per map, in memory, not saved**: a different region opens at the recentre
    framing; so does a fresh launch.
