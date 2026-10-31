@@ -55,16 +55,15 @@ describe('installing a frame set took nothing away from the static registry', ()
     it('the framed and the static enemies are exact lists', () => {
         expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual([
             'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye',
-            'gallows-crow', 'green-jelly', 'lamplighter', 'lamprey-knot', 'net-mender', 'tithe-collector',
-            'toll-keeper', 'wreck-picker', 'wrecker',
+            'gallows-crow', 'green-jelly', 'lamplighter', 'lamprey-knot', 'net-mender', 'smokehouse-gutter',
+            'tide-gate', 'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker',
         ]);
-        // Chapter 1's stand-in portraits animate one AN5 phase at a time; the
+        // Chapter 1's stand-in portraits animated one AN5 phase at a time; the
         // Gallows Crow went first (AN5a), five normals followed (AN5b), then
-        // the Wreck-Picker and the Tithe-Collector (AN5c), then the four elites
-        // (AN5d); the last two are static until AN5e.
-        expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual([
-            'smokehouse-gutter', 'tide-gate',
-        ]);
+        // the Wreck-Picker and the Tithe-Collector (AN5c), the four elites
+        // (AN5d), and the Smokehouse Gutter and the Tide-Gate last (AN5e). No
+        // enemy is static now; `every-portrait-has-a-set.test.ts` keeps it so.
+        expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual([]);
     });
 
     it('an unknown key still falls back to the hash pick, as it always did', () => {

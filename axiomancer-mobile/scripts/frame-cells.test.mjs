@@ -74,7 +74,7 @@ test('no shipped cell exceeds the recorded ceiling', () => {
   assert.deepEqual(over, [], 'a cell over the ceiling means the set was regenerated hotter')
 })
 
-for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow', 'net-mender', 'crane-hook', 'brine-widow', 'lamprey-knot', 'curfew-ringer', 'wreck-picker', 'tithe-collector', 'cave-choir', 'lamplighter', 'wrecker', 'toll-keeper']) {
+for (const key of ['float-eye', 'death-beholder', 'green-jelly', 'gallows-crow', 'net-mender', 'crane-hook', 'brine-widow', 'lamprey-knot', 'curfew-ringer', 'wreck-picker', 'tithe-collector', 'cave-choir', 'lamplighter', 'wrecker', 'toll-keeper', 'smokehouse-gutter', 'tide-gate']) {
 test(`the ${key} set is whole: 24 cells, named row-major`, () => {
   // A truncated set is the failure the registry's own validation catches at
   // runtime; catching it here says which FILE is missing rather than that a
@@ -136,6 +136,26 @@ test('every provenance record states the measured cost, and it is the cost on di
       `${set.key}: the record does not state the ${staticBytes} B static image it is measured against`,
     )
   }
+})
+
+// A6, the roster's bill (phase AN5e): frames.ts's BUNDLE COST passage states
+// the total for every set together, and that sentence is held to the disk
+// like each set's own record, so a regenerated set cannot leave it stale.
+test("frames.ts states the whole roster's bundle total, and it is the total on disk", () => {
+  const frames = fs.readFileSync(path.join(ENEMIES, 'frames.ts'), 'utf-8')
+  const cells = sets.reduce((n, s) => n + s.cells.length, 0)
+  const total = sets.reduce(
+    (sum, s) => sum + s.cells.reduce((a, c) => a + fs.statSync(path.join(s.dir, c)).size, 0),
+    0,
+  )
+  const portraits = sets.reduce((sum, s) => sum + fs.statSync(path.join(ENEMIES, `${s.key}.webp`)).size, 0)
+  const m = frames.match(/THE WHOLE ROSTER[^:]*: (\d+) sets, (\d+) cells,\s*\*?\s*(\d+) B[\s\S]*?against (\d+) B/)
+  assert.ok(m, "frames.ts's BUNDLE COST passage no longer states the whole roster's total")
+  assert.deepEqual(
+    m.slice(1).map(Number),
+    [sets.length, cells, total, portraits],
+    `the roster on disk is ${sets.length} sets, ${cells} cells, ${total} B against ${portraits} B static`,
+  )
 })
 
 test('a frame set records that it was NOT graded on the way in (A6b)', () => {

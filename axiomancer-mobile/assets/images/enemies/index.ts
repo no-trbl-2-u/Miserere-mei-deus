@@ -12,11 +12,12 @@
  * There is no "one asset per enemy" law. An enemy may carry a single
  * painting, or a painting plus an animated FRAME SET — see `./frames.ts`. The
  * float-eye carries both: its painting below, and the 24 cells under
- * `anim/float-eye/` that phase AN1e installed (the death-beholder, green
- * jelly and gallows crow do too). The bindings below hold either
- * way: a frame set is additional art for an enemy, never a replacement for
- * its key, and an enemy with no set renders through `getEncounterEnemyArt`
- * exactly as it always did.
+ * `anim/float-eye/` that phase AN1e installed, and since phase AN5e every
+ * key below carries both: seventeen paintings, seventeen frame sets. The
+ * bindings below hold either way: a frame set is additional art for an enemy,
+ * never a replacement for its key, and an enemy with no set (one exempted in
+ * `FRAME_SET_EXEMPTIONS`, say after a portrait swap retires its set) renders
+ * through `getEncounterEnemyArt` exactly as it always did.
  *
  * `getEncounterEnemyArt(artKey, nonce)` resolves the key directly; unknown /
  * missing keys fall back to a stable hash pick over the whole pool (so an
@@ -38,10 +39,9 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'death-beholder':    require('./death-beholder.webp'),
     // Chapter 1's normals (phases EN1f and EN1g): stand-ins restored from the
     // 2026-07-06 drop until T's portrait swap. The Gallows Crow also has a
-    // frame set (phase AN5a), and so do the next five (phase AN5b) and the
-    // Wreck-Picker and Tithe-Collector (phase AN5c), each bound to this exact
-    // portrait by its hash (A7); the Smokehouse Gutter and the Tide-Gate are
-    // static until AN5e.
+    // frame set (phase AN5a), and so do the next five (phase AN5b), the
+    // Wreck-Picker and Tithe-Collector (phase AN5c) and the Smokehouse Gutter
+    // (phase AN5e), each bound to this exact portrait by its hash (A7).
     'gallows-crow':      require('./gallows-crow.webp'),
     'net-mender':        require('./net-mender.webp'),
     'crane-hook':        require('./crane-hook.webp'),
@@ -59,7 +59,7 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'lamplighter':       require('./lamplighter.webp'),
     'wrecker':           require('./wrecker.webp'),
     // The keep causeway's two elites (phase EN1l): the Toll-Keeper animates
-    // (phase AN5d), the Tide-Gate is static until AN5e.
+    // (phase AN5d) and the Tide-Gate (phase AN5e), both bound by hash (A7).
     'toll-keeper':       require('./toll-keeper.webp'),
     'tide-gate':         require('./tide-gate.webp'),
 };

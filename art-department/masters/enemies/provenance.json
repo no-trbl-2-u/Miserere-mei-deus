@@ -163,5 +163,20 @@
     "used_by": [
       "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5d split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
     ]
+  },
+  {
+    "generated_by": "derived",
+    "date": "2026-10-31",
+    "tool": "art-department/tools/clean-ai-sheet.py --sheet <key>.sheet.webp --out-frame 176 (Pillow + numpy; phase AN5e): smokehouse-gutter and tide-gate at 176",
+    "covers": [
+      "smokehouse-gutter.sheet.json, smokehouse-gutter.cleanup-report.json",
+      "tide-gate.sheet.json, tide-gate.cleanup-report.json"
+    ],
+    "source": "<key>.sheet.webp, T's image-model sheets (the 2026-10-30 record above)",
+    "method": "No pixel was edited by hand, and the tool was not changed: the two worst drifters went through the same chain as AN5a-d, installed last on T's ruling (2026-10-30) once the tool had held the other twelve. Before cleanup the Smokehouse Gutter's idle body centre slid 41.6px across the row (the brief's 42) and the Tide-Gate's 27.1px, both one way, so the loop slid and snapped back; the tool moved each idle cell onto the measured anchor (per-cell x shifts spanning 41px and 27px), and after it the idle drift is 0.72px and 0.77px, each reaction row starting within 0.71px of rest (A9, max 3). Both anchors measured foot-line (foot line moves 0px). The Smokehouse Gutter's report counts one welded core that erosion never separated into two poses (`welded_split: 1`, as the Crane-Hook's and the Toll-Keeper's did); it is cut at the gridline, and all 24 shipped cells were checked by eye on the contact sheet with no clipped pose found. Both fit at 176px (max 8696 B and 9556 B). The ceiling is not raised. The cleaned sheets are not committed: tests/test_clean_ai_sheet.py regenerates each from its master and checks the sidecar, the report and the pixel hash.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "axiomancer-mobile/assets/images/enemies/anim/<key>/ - phase AN5e split each cleaned sheet into 24 cells with tools/split-spritesheet.py and ingested them --no-grade. Neither the masters nor the cleaned sheets ship."
+    ]
   }
 ]
