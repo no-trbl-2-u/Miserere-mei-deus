@@ -19,15 +19,25 @@
 
 The character-select screen draws the starting relic with the same icon the satchel shows (the
 Suppliant's Ring is the engagement-ring icon, not a hand-drawn ring-and-gem), and every card detail
-reads the same way: the keyword explanations in one ledger above the card, the card and its plays
-below.
+reads the same way: the keyword explanations in one ledger above the card detail, outside it, in the
+space above (combat, rewards preview, deck and hazard deck alike), the card and its plays below.
 
 Measure: `npm run verify -w axiomancer-mobile` is green; the character-select relic icon test and the
-card-detail keyword-order tests below pass; each UI phase's PR carries before/after shots.
+per-surface ledger-above-and-outside-the-panel tests below pass; each UI phase's PR carries before/after shots.
 
 ## What is already built, planned, new
 
-- Already built: the keyword-on-top layout in combat (`CombatEncounterPanel.tsx:973-1004`, styles
+- Already built, re-read 2026-10-31 for T's call 2 (the ledger must sit above and outside the detail, on
+  every surface, not merely first inside a panel): combat (`CombatEncounterPanel.tsx:973-1004`) renders
+  the ledger as the first child of an un-boxed stack floating on the dimmed backdrop; there is no
+  bordered panel around the card, so the ledger is above the card and outside any frame (it shares the
+  scroll column with the card, nothing wraps both). Deck (`DeckCardDetailOverlay.tsx:51-64`) is a
+  full-screen scroll whose first block is the ledger and whose only framed element is the card below it,
+  so the ledger is likewise above and outside the card's frame. Hazard (`HazardOverlays.tsx:258-280`) puts
+  the ledger in its own top region, a sibling of the region holding the card. So all three already
+  comply in effect; they change only to use the shared component, and a test pins "above and outside"
+  on each. The rewards preview is the only surface that puts the ledger inside the panel. Also built:
+  keyword-on-top layout in combat (`CombatEncounterPanel.tsx:973-1004`, styles
   `:1458-1465`) and in the deck screen (`DeckCardDetailOverlay.tsx:51-64`, keywords first) and the
   hazard deck (`HazardOverlays.tsx:258-280`); the item icon table (`item-glyphs.ts:26-40`, the
   Suppliant's Ring is `'relic-disarming-plea': 'relic-engagement-ring'` at `:36`) and `ItemGlyph`
@@ -73,28 +83,34 @@ card-detail keyword-order tests below pass; each UI phase's PR carries before/af
   ledger's look (`CombatEncounterPanel.tsx:1458-1465`) as the single style. The combat detail, the
   rewards preview, the deck detail and the hazard-deck detail all render it; the four local keyword row
   markups and their styles are deleted.
-- **A4** In the rewards preview the ledger is a sibling ABOVE the bordered panel, not inside it: from top
-  to bottom the keyword ledger, then the panel (card face, NO DIE / +DIE lines, flavor, BACK / CHOOSE
+- **A4** In the rewards preview the ledger is a sibling ABOVE the bordered panel, not inside it, in the
+  space above the panel (T, 2026-10-31: keyword explanations sit above the card-detail modal in every
+  card detail): from top to bottom the keyword ledger, then the panel (card face, NO DIE / +DIE lines, flavor, BACK / CHOOSE
   THIS). The ledger scrolls inside its own capped height so a card with many keywords never pushes the
   buttons off a small phone.
-- **A5** Every other card detail puts the ledger first, above the card, as it does today in combat
-  (`CombatEncounterPanel.tsx:988`) and deck; a test per surface asserts the ledger precedes the card in
-  render order (extends `CombatEncounterPanel.card-detail.test.ts`, `DeckScreen.test.tsx`,
+- **A5** Every card detail (combat, rewards preview, deck, hazard deck) renders the ledger above the
+  card and outside the card's panel or frame: the ledger is never a descendant of the element that holds
+  the card face, and precedes it in render order. Combat, deck and hazard already do this
+  (`CombatEncounterPanel.tsx:988`, `DeckCardDetailOverlay.tsx:51`, `HazardOverlays.tsx:262`) and keep it
+  through the shared component. One test per surface pins both facts, "ledger outside the panel" and
+  "ledger precedes the card" (extends `CombatEncounterPanel.card-detail.test.ts`, `DeckScreen.test.tsx`,
   `HazardOverlays.test.tsx`, plus a new rewards-preview test).
-- **A6** Before/after shots of the rewards preview, the combat card detail, the deck card detail and
-  the character-select screen (the Suppliant selected) are in the PR bodies
+- **A6** Before/after shots of the rewards preview, the combat card detail, the deck card detail, the
+  hazard-deck card detail, all four at 360x640 as well as the default viewport (ledger and the BACK /
+  CHOOSE THIS or close control all on screen), and the character-select screen (the Suppliant selected) are in the PR bodies
   (`skills/heads-down.md` §4).
 
 ## Decisions made upfront — DO NOT ASK
 
-- **One layout everywhere** (default, `[T to confirm #1]`): the shared ledger is used by all four
-  existing card details; keywords above the card. Alternative: fix the rewards preview only (A4) and
-  leave the deck and hazard-deck rows as they are; then A3 shrinks to combat plus rewards.
-- **Report 7 is read as the rewards preview** (T's screenshot), with combat checked and kept as the
-  reference shape; combat is not redesigned. `[T to confirm #2]`: if T meant a combat-only issue not
-  visible on the reward screen, the combat detail needs a second look from a combat screenshot.
-- **Above the panel, not a tooltip.** The ledger sits on the dimmed backdrop, un-boxed to the panel's
-  border, exactly as combat floats it; the panel keeps the card's category colour border.
+- **One layout everywhere** (`Confirmed by T (2026-10-31): yes, all four card details share one keyword
+  ledger above the card`): the shared ledger is used by all four existing card details.
+- **Report 7 applies to every card detail** (`Confirmed by T (2026-10-31): the rule is for card detail in
+  general: combat, reward screens, deck screen, all card details`): in each, the keyword explanations sit
+  above the card-detail modal or panel, outside it. The rewards preview is the surface that breaks the
+  rule today; combat, deck and hazard already comply (re-read above) and are not redesigned, only moved
+  onto the shared ledger and pinned by a test.
+- **Above the panel, not a tooltip.** The ledger sits on the dimmed backdrop, outside the panel and not
+  inside its border, exactly as combat floats it; the panel keeps the card's category colour border.
 - **Village, cache and blacksmith get no new detail** here; a tap-to-inspect on a shop or cache offer is a
   new feature, named under Follow-ups.
 - **No new art, no copy change.** Keyword definitions are the existing `detail.keywords` strings.
@@ -118,22 +134,25 @@ axiomancer-mobile` is green.
   visual baseline for the select screen is re-stamped.
 - Verify gate: `npm run verify -w axiomancer-mobile`; before/after shot of `/character-select`.
 
-### CD1b — Keyword explanations above the card, in one shared ledger · M · closes A3, A4, A5, A6 · requires nothing
-Measure: the four render-order tests pass (ledger before the card on each detail; on the rewards preview
-the ledger is outside the bordered panel), the four local keyword row markups are gone, `npm run verify
+### CD1b — Keyword explanations above and outside the card detail, in one shared ledger · M · closes A3, A4, A5, A6 · requires nothing
+Measure: the four per-surface tests pass (on combat, rewards, deck and hazard the ledger renders outside
+and above the card's panel or frame, and precedes the card in render order), the four local keyword row markups are gone, `npm run verify
 -w axiomancer-mobile` is green, and the PR carries four before/after pairs.
 - Scope: new `components/card/CardKeywordLedger.tsx` (props: `keywords: {name, def, minor?}[]`,
   optional `typeTagFor(index)`); `CombatEncounterPanel.tsx` (`:988-1004` and styles `:1458-1465`, the
   `keywordTypeTag`/`TAG_COLORS` helper `:268-289` moves with the ledger or stays passed in),
   `CombatRewardsOverlay.tsx` (`:200-256`, `:281-290`: overlay becomes a column, ledger then panel),
+  combat, deck and hazard keep their ledger-first position and only swap in the shared component,
   `DeckCardDetailOverlay.tsx:51-64`, `HazardOverlays.tsx:258-280`.
 - Consumers: the dev-menu card-detail views if any render these overlays; none else.
 - Save/schema: none.
-- Tests: ledger unit test (rows, minor flag, tag); render-order tests per surface (A5); the existing
+- Tests: ledger unit test (rows, minor flag, tag); per-surface tests (A5): ledger renders outside and
+  above the panel on combat, rewards, deck and hazard; the existing
   `CombatEncounterPanel.card-detail`, `DeckScreen`, `HazardOverlays`, `fewer-taps.TQ1` suites stay green
   (testIDs `combat-reward-preview*`, `deck-card-detail-keywords` kept); visual baselines re-stamped.
 - Verify gate: `npm run verify -w axiomancer-mobile`; before/after shots (rewards preview first), also
-  checked at a 360x640 viewport so the buttons stay on screen.
+  checked at a 360x640 viewport on all four details (ledger capped and scrolling, the BACK / CHOOSE THIS
+  buttons, the close control and the card all still on screen).
 
 ## Tests matrix
 
@@ -141,8 +160,8 @@ the ledger is outside the bordered panel), the four local keyword row markups ar
 |---|---|---|
 | `app/__tests__/character-select.relic-icon.test.tsx` | A2 | new |
 | `components/card/__tests__/CardKeywordLedger.test.tsx` | A3 | new |
-| `components/combat/encounter/__tests__/CombatRewardsOverlay.preview-order.test.tsx` | A4, A5 | new |
-| `CombatEncounterPanel.card-detail.test.ts`, `DeckScreen.test.tsx`, `HazardOverlays.test.tsx` | A5 | extended |
+| `components/combat/encounter/__tests__/CombatRewardsOverlay.preview-order.test.tsx` | A4, A5 | new (ledger outside and above the panel) |
+| `CombatEncounterPanel.card-detail.test.ts`, `DeckScreen.test.tsx`, `HazardOverlays.test.tsx` | A5 | extended (ledger outside and above the card, per surface) |
 
 ## Verify gate
 
