@@ -1,0 +1,67 @@
+{
+ "lane": "blood-price",
+ "grid": {
+  "cols": 3,
+  "rows": 2
+ },
+ "gutter": "#FF00FF",
+ "sheets": [
+  {
+   "file": "sheet-1.webp",
+   "tiles": [
+    "bp-p-01a",
+    "bp-p-02a",
+    "bp-p-03a",
+    "bp-p-04c",
+    "bp-p-05b",
+    "bp-p-06d"
+   ]
+  },
+  {
+   "file": "sheet-2.webp",
+   "tiles": [
+    "bp-p-07b",
+    "bp-p-08d",
+    "bp-p-09b",
+    "bp-p-10c",
+    "bp-e-01n",
+    "bp-e-02d"
+   ]
+  },
+  {
+   "file": "sheet-3.webp",
+   "tiles": [
+    "bp-e-03d",
+    "bp-e-04c",
+    "bp-e-05n",
+    "bp-e-06b",
+    "bp-e-07b",
+    "bp-e-08n"
+   ]
+  },
+  {
+   "file": "sheet-4.webp",
+   "tiles": [
+    "bp-e-09n",
+    "bp-e-10d",
+    "bp-m-01d",
+    "bp-m-02b",
+    "bp-m-03d",
+    "bp-m-04n"
+   ]
+  },
+  {
+   "file": "sheet-5.webp",
+   "tiles": [
+    "bp-m-05b",
+    "bp-m-06c",
+    "bp-m-07a",
+    "bp-m-08d",
+    "bp-m-09a",
+    "bp-m-10a"
+   ]
+  }
+ ],
+ "source": "ChatGPT image generation, generated and selected by T, 2026-10-30. Lossy WebP q95 of T's 1536 x 1024 PNG sheets. Where a sheet-<n>-prompt.txt sits beside a sheet, it is the exact prompt that made it.",
+ "license": "T's own commission (open source, T, 2026-10-29, D115)"
+}
