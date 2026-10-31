@@ -11,10 +11,13 @@
  * the engine and the art install are separate phases so that the engine's
  * review is not hostage to an art review. Phase AN1e installed the first set,
  * the float-eye's; phase AN4b the second, the Act 1 boss's; phase AN3b the
- * third, the Act 1 elite's and the first that stands. Every OTHER enemy
- * is still absent from the registry and
- * still renders exactly the single image it rendered before — absence from
- * here is the static path, not a missing feature.
+ * third, the Act 1 elite's and the first that stands. Phase AN5a installed
+ * the fourth, the Gallows Crow's, the first cut from an image-model sheet
+ * (cleaned by the art department's `clean-ai-sheet.py` before the split);
+ * AN5b-AN5e install Chapter 1's other thirteen stand-ins the same way. Every
+ * enemy not yet in the registry still renders exactly the single image it
+ * rendered before — absence from here is the static path, not a missing
+ * feature.
  *
  * WHAT A SET IS MADE OF
  * ---------------------
@@ -53,6 +56,9 @@
  * held the same ceiling by cutting at 176px rather than 256: 24 cells,
  * 197658 B, max 11068 B, against 56286 B static. The green jelly (AN3b) is
  * back at 256px: 24 cells, 179610 B, max 7920 B, against 12572 B static.
+ * The gallows crow (AN5a) overshot at 256px (max 16760 B: an image-model
+ * drawing is busier than a rig's pose) and was cut at 176px like the
+ * beholder: 24 cells, 177768 B, max 9548 B, against 45124 B static.
  * `FRAME_CELL_MAX_BYTES` below is that ceiling, and
  * `scripts/frame-cells.test.mjs` is what enforces it against the bytes on
  * disk — a constant nothing weighs is a wish.
@@ -62,6 +68,7 @@ import type { ImageSourcePropType } from 'react-native';
 
 import { DEATH_BEHOLDER_CELLS } from './anim/death-beholder';
 import { FLOAT_EYE_CELLS } from './anim/float-eye';
+import { GALLOWS_CROW_CELLS } from './anim/gallows-crow';
 import { GREEN_JELLY_CELLS } from './anim/green-jelly';
 
 /** How a cell is registered against the frame beneath it. */
@@ -263,15 +270,58 @@ const GREEN_JELLY_FRAME_SET: EnemyFrameSet = {
 };
 
 /**
+ * THE GALLOWS CROW (phase AN5a) — Chapter 1's first normal, and the first set
+ * cut from an image-model sheet rather than posed by a rig.
+ *
+ * Transcribed from `gallows-crow.sheet.json`, the sidecar the cleanup tool
+ * wrote. Every number in it was MEASURED by that tool, not chosen: the anchor
+ * kind came from the idle row (its foot line moves 6px, 2.3% of the cell, so
+ * the crow stands on its perch), the point is the median foot line and body
+ * centre after one sheet-wide fit. 176px cells, because at 256 the busiest
+ * cells overshoot the per-cell ceiling. The clip table is the jelly's and the
+ * beholder's (the AN5 brief: not re-tuned per enemy).
+ *
+ * `graded: false`: the stand-in portrait it was drawn from was ingested in
+ * colour, and the sheet carries the portrait's own saturation.
+ *
+ * A7: the set is bound to the portrait it was drawn from. Its provenance
+ * records that portrait's SHA-256, and the root suite fails when the
+ * portrait changes, so a swapped stand-in retires this set rather than
+ * animating a drawing of the old one.
+ */
+const GALLOWS_CROW_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 77.1,
+            y: 167.8,
+            why: 'stands on its perch: the idle foot line moves 6px (2.3% of the cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/gallows-crow/provenance.json',
+    },
+    frames: GALLOWS_CROW_CELLS,
+};
+
+/**
  * THE REGISTRY. An enemy absent from here resolves through
  * `getEncounterEnemyArt` exactly as it always has. AN1a shipped this empty on
  * purpose so the engine's review was not hostage to an art review; AN1e put
  * the float-eye in it, and that is the row where the chain stops being
- * invisible. AN4b added the boss, AN3b the elite.
+ * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow.
  */
 export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'death-beholder': DEATH_BEHOLDER_FRAME_SET,
     'float-eye': FLOAT_EYE_FRAME_SET,
+    'gallows-crow': GALLOWS_CROW_FRAME_SET,
     'green-jelly': GREEN_JELLY_FRAME_SET,
 };
 

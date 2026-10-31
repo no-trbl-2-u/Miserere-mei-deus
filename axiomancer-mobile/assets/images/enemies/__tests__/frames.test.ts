@@ -53,10 +53,13 @@ describe('installing a frame set took nothing away from the static registry', ()
     // count, so the next enemy added static, or framed, is a decision this
     // line has to be edited for.
     it('the framed and the static enemies are exact lists', () => {
-        expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual(['death-beholder', 'float-eye', 'green-jelly']);
-        // Chapter 1's stand-in portraits carry no frame set until T picks them.
+        expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual([
+            'death-beholder', 'float-eye', 'gallows-crow', 'green-jelly',
+        ]);
+        // Chapter 1's stand-in portraits animate one AN5 phase at a time; the
+        // Gallows Crow went first (AN5a), the rest are static until theirs.
         expect(keys.filter((k) => !hasEnemyFrames(k)).sort()).toEqual([
-            'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'gallows-crow', 'lamplighter', 'lamprey-knot',
+            'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'lamplighter', 'lamprey-knot',
             'net-mender', 'smokehouse-gutter', 'tide-gate', 'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker',
         ]);
     });

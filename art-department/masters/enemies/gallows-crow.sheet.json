@@ -1,0 +1,37 @@
+{
+  "source": "gallows-crow.sheet.webp",
+  "generator": "art-department/tools/clean-ai-sheet.py",
+  "frame": 176,
+  "columns": 8,
+  "rows": 3,
+  "scale": 0.844,
+  "anchor": {
+    "kind": "foot-line",
+    "x": 77.1,
+    "y": 167.8,
+    "why": "stands: the idle foot line moves 6px (2.3% of the 256px cell, within 6%); anchored at the median foot line y 244.0 and the body's median centre x 125.2; after the fit (scale 0.844, shift -13,0) and the cut at 176px it sits at (77.1, 167.8)"
+  },
+  "clips": {
+    "idle": {
+      "row": 0,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "rest": 0
+    },
+    "struck": {
+      "row": 1,
+      "frames": 8,
+      "fps": 16,
+      "loop": false,
+      "rest": 7
+    },
+    "attacking": {
+      "row": 2,
+      "frames": 8,
+      "fps": 12,
+      "loop": false,
+      "rest": 0
+    }
+  }
+}
