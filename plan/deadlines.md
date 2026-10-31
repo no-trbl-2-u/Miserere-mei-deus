@@ -219,7 +219,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, MC1a, MC1b, MC1c |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -357,6 +357,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **the map camera and layout plotted (MC1)** (T, from the preview APK: the zoom jumps, the map returns from a fight zoomed in, RECENTRE zooms in too far, the bottom is cut off; and "I'm going to go 'black background'"). **Added** MC1a, MC1b and MC1c to the `Waits on` of the Nov 9 mid-MVP check, the first preview build T plays after they ship and the check that proves them on the phone. No other Item's premise changes; nothing ticked; no date moved.
 - **2026-10-31** — **a Settings tab plotted** (T, in session, planning the beta: a gear tab with the music switch, a feedback form and the dev menu). **Added** ST1a and ST1b under `## Unscheduled`: the beta handout has no date yet. Nothing ticked; no date moved.
 - **2026-10-31** — **a Game Over screen before character select (CH1j)** (T on plot PR #1181: "can we ratify this that the player gets a Game over screen?"). **Added** CH1j to the `Waits on` of the Mid-MVP check, beside CH1h and CH1i. Nothing ticked; no date moved.
 - **2026-10-31** — **a run end sends the player back to character select (CH1h, CH1i)** (T in session, during `/heads-down CH1`: "Ending a run means, yes, you should make a new character"). **Added** CH1h and CH1i to the `Waits on` of the Mid-MVP check, beside CH1f, whose game over still kept the whole character. Nothing ticked.
