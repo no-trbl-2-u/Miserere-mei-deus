@@ -245,11 +245,11 @@ const owedRows = (item, phases) => (item.waitsOn ?? []).filter((id) => phases.ge
  * @returns {null | {kind: 'needs a plot' | 'needs you' | 'waiting on the loop', detail: string}}
  */
 export const itemNeed = (item, phases) => {
+    if (item.done) return null
     if (item.rows === 'needs plot') return { kind: 'needs a plot', detail: 'no build-plan rows yet' }
     const owed = owedRows(item, phases)
     const owes = owed.length ? `the loop still owes ${owed.join(', ')}` : ''
     if (item.rows === 'T') {
-        if (item.done) return null
         return { kind: 'needs you', detail: owes ? `your task; ${owes}` : 'your task' }
     }
     const missing = item.rows.filter((id) => !phases.has(id))

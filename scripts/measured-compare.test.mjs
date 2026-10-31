@@ -93,6 +93,18 @@ test('fileDrifts: two spreads of one key in one run file one row', () => {
   assert.match(text, /- evidence 2026-10-13: body/)
 })
 
+test('fileDrifts: new rows keep single blank lines', () => {
+  const base = '# Audit\n\n## Pending\n\n### [ ] [bug] old\n- category: bug\n'
+  const other = { ...drift, deck: 'blood-price' }
+  for (const drifts of [[drift], [drift, other]]) {
+    const { text, added } = fileDrifts(base, drifts, '2026-10-13')
+    assert.equal(added.length, drifts.length)
+    assert.ok(!text.includes('\n\n\n'), `${drifts.length} drift(s): no triple newline`)
+    assert.ok(text.includes('\n\n### [ ] [bug] old'), 'one blank line before the old first row')
+    assert.ok(text.startsWith('# Audit\n\n## Pending\n\n### '), 'one blank line under the heading')
+  }
+})
+
 test('fileDrifts: never leaves two blank lines in a row, and keeps CRLF', () => {
   const other = { ...drift, deck: 'blood-price' }
   const doubled = (t) => /\n[ \t]*\r?\n[ \t]*\r?\n/.test(t)
