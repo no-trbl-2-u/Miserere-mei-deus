@@ -49,7 +49,9 @@ export function InkCurtain({ instant, onDone }: InkCurtainProps) {
 
     if (gone) return null;
     return (
-        <Pressable style={StyleSheet.absoluteFill} onPress={finish} testID="ink-curtain" accessibilityLabel="skip transition">
+        // zIndex 30: above the reveal (static) and the held boss card (20), so the
+        // ink actually covers the foe instead of painting under later siblings.
+        <Pressable style={[StyleSheet.absoluteFill, { zIndex: 30 }]} onPress={finish} testID="ink-curtain" accessibilityLabel="skip transition">
             <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: HUE.inkBg }, style]} pointerEvents="none" />
         </Pressable>
     );
