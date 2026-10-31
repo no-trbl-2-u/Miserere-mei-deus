@@ -876,6 +876,11 @@
 - estimated phases: 1
 - conflicts: none. Not content (D88): it changes what the filer files, not a number in the game. An enemy level change (B2) also moves `enemyLevel`, so whether a re-authored foe at the same fight id should still drift is the one call the brief has to make; the default is "no", since its old numbers measured a different foe.
 
+### [ ] [loop] [score 3.5] A script-landing lint: every testid a browser walk waits on exists in the app
+- proposed: 2026-10-31, ship ET1b retro (lesson `kind-cut-strands-route`, seen 2×)
+- trigger: a screen gains a step before its first testid, or a kind is cut, and the walks only fail in CI.
+- proposed scope: 1 phase. A root test that reads the `landing:` and `waitFor` testids in `axiomancer-mobile/scripts/*.mjs` and fails when none appears in `app/` or `components/`.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
