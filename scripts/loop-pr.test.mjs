@@ -722,7 +722,7 @@ test("plot.md carries the Answering T's calls procedure, and merge means agreeme
     assert.match(ans, re)
   }
   assert.match(plot, /a call\s+still unanswered at merge is its default, accepted/)
-  assert.match(read('skills/ship-a-phase.md'), /Rewrite each `\[T to confirm #n\]` still in the brief to `Accepted at\s+merge \(default\)`/)
+  assert.match(read('AGENTS.md'), /Rewrite each `\[T to confirm #n\]` still in the brief to `Accepted at\s+merge \(default\)`/)
   assert.match(read('skills/march.md'), /`\[T to confirm #n\]` call left in a merged brief does not hold its\s+row/)
 })
 

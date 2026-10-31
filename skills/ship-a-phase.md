@@ -71,20 +71,10 @@ Spawn sub-agents aggressively. They protect main-agent context
 and parallelize independent work.
 
 - **`scout`** — every external research need.
-- **`playtester`** — when the phase needs the running app driven
-  and observed. It plays in its own browser through the playtest
-  session tool (`npm run --silent playtest:session -- prepare` once,
-  then hand each playtester an agent name, a seed and a screenshot
-  directory; four can run at once), not the Playwright MCP. See `.claude/agents/` for what else exists; the
-  archived design agents (banner) are not options.
+- **`playtester`** — playtests go through it: AGENTS.md § Building a phase ("Playtests").
 - **Parallel calls** when work is independent.
 
-A design or balance decision is made inline by the main agent and
-consults the truth-source MCPs first (AGENTS.md § Truth sources):
-`axio-query` for the engine's live card/effect/keyword facts and
-`kb-query` for external prior art, cited
-`kb:<game-slug>/<doc> (src-NNN)`. A Decisions bullet with a
-receipt beats one argued from model memory.
+Design and balance decisions consult the truth sources first: AGENTS.md § Building a phase ("Truth sources first").
 
 The main agent's job is wiring, code, decisions. Delegate
 research.
@@ -166,11 +156,7 @@ brief: `/plot <N>`" and return (§3 above). Note the brief's
 acceptance IDs (`A1…`) and its `Measure:` line; the PR body ticks
 the IDs this phase closes.
 
-**Calls left open at merge are accepted** (`skills/plot.md` §4).
-Rewrite each `[T to confirm #n]` still in the brief to `Accepted at
-merge (default)` and build the default it describes; the edit rides
-in this phase's PR. A `Confirmed by T (<date>): …` line is T's
-answer: build that.
+**Calls left open at merge are accepted:** AGENTS.md § Building a phase ("Calls left open").
 
 **A row pointing at `§ <id>` of a shared brief** (one of several
 phases `/plot` split a task into, D93) builds only that phase: read
@@ -273,23 +259,11 @@ grep -n "D<nn>" plan/2026-09-25-refactor-strategy.decisions.md   # each decision
 ls axiomancer-mechanics/specs/                      # formal specs, if any touch this code
 ```
 
-The part plan and its decisions are the design. Specs marked
-HISTORICAL and `braindump/` are background, never authority; where
-they disagree with a ruling, `docs/truth-sources.md` § hierarchy
-decides. If nothing beyond the part plan covers the change,
+The order of authority: AGENTS.md § Building a phase ("Order of authority"). If nothing beyond the part plan covers the change,
 proceed on the brief + canonical sibling + bearings and note it
 in commit-body Decisions.
 
-When the phase moves balance numbers or re-points or deletes game
-data (cards, keywords, enemies, maps, events, dialogue), also pull
-the truth sources first: `axio_overview` / `axio_cards` /
-`axio_effects` / `axio_keywords` for the engine's own current
-facts, and `kb_search` / `kb_find_games` / `kb_cards` /
-`kb_keyword` for external prior art worth citing in the brief or
-commit body. `axio-query` is an accelerator, not a dependency —
-grep the libraries directly when it is absent or erroring.
-`kb-query` is the only route to the external corpus: when it is
-absent, the prior art is UNGROUNDED and must be labeled so.
+A phase that moves balance numbers or game data pulls the truth sources first, UNGROUNDED when `kb-query` is absent: AGENTS.md § Building a phase ("Truth sources first").
 
 ### Step 4 — Build
 
@@ -311,9 +285,8 @@ owns the data, with colocated tests.
 
 Update every consumer of what changed: engine exports
 (`axiomancer-mechanics/src/index.ts`), mobile screens and
-navigation, catalog/devlog exporters. Anything removed from a player's save ships with a
-migration in `axiomancer-mechanics/src/Game/game.migrate.ts` and a
-test (`plan/revamp/README.md` §5 rule 4).
+navigation, catalog/devlog exporters.
+Save compatibility (a migration and a test): AGENTS.md § Building a phase ("Save compatibility").
 
 ### Step 6 — Output schema / contracts (where applicable)
 
@@ -347,14 +320,7 @@ npm run verify --workspace axiomancer-mobile
 npm run verify                                      # both, when in doubt
 ```
 
-A change to mechanics' public surface also runs the mobile gate
-— the `@mechanics` alias couples them. Any change to source also
-runs root `npm test`: its `check-comments` lint rejects a decision
-number (`D88`) in a code comment, and the workspace gates never run it
-(lesson `brief-dnum-in-comments`). An R-phase additionally runs the revamp gates
-(`plan/revamp/README.md` §5): root `npm test`,
-`npm run lint:content` and `node scripts/check-lexicon.mjs`.
-`baseline:check` is retired (D57). All legs are hard. Iterate up
+Which legs a change adds (mobile, root `npm test`, the R-phase gates): AGENTS.md § Building a phase ("Verify per workspace"). All legs are hard. Iterate up
 to 3 times on the same root cause; otherwise stop per §10.
 
 ### Step 10 — Branch, commit, open the PR
@@ -494,14 +460,8 @@ invocation — see §7 Hard Rule 12.
    files over 1 dense file.
 8. **Content stays in mechanics `src/*` + mobile `*.copy.ts`.** No
    hardcoded copy/records in components.
-9. Product title is "Miserere Mei, Deus" in player/doc-facing prose (the
-   `axiomancer-*` workspaces, repo and scheme keep the former title as
-   internal identifiers); VITAE copy canon. **VITAE is the one
-   bar:** emptying the foe's VITAE wins; befriending through The Open
-   Hand (the Suppliant's Ring signature, made a real befriend in R4)
-   opens the mercy choice, the only non-lethal ending (D47, D63).
-   RELENT and CONDEMN are cut (R7 deletes their engine code); never
-   reintroduce them or Pressure Tracks <!-- lexicon-ok: pressure-tracks, retired-keyword -->
+9. **The game's canon** (the title, VITAE the one bar, the cut terms;
+   D47, D63) is `identity/principles.md` P1 to P3.
 10. **Phase issue mirror is best-effort, not gating.** If
     `loop-issue.mjs phase-open` fails, the phase still ships;
     log the stderr and continue. The mirror is a public timeline,
@@ -549,8 +509,7 @@ Canonical in `plan/revamp/README.md` §5; in short:
 3. **Carrier rule (D45) runs last.** After removing a carrier,
    remove every glossary/atlas row, glyph, gloss and editor word
    left without one.
-4. **Save compatibility** — a migration plus a test for anything
-   removed from a save (Step 5).
+4. **Save compatibility** — AGENTS.md § Building a phase ("Save compatibility").
 5. **Gates** — Step 9.
 6. **Content per surface (D88).** An R-phase re-points and deletes.
    Any phase may author a card, keyword, art, enemy, relic, map, NPC
