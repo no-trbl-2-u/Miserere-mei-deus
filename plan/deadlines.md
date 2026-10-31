@@ -219,7 +219,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, BW1c, NK1a, MU1 |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, BW1c, NK1a, MU1, EN2a, EN2b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -357,6 +357,7 @@ attended session.
 ## Change log
 
 - **2026-10-31** — **two tooling fixes plotted (TF1)** (T, in session during `/heads-down`: "/plot asap, join this run"). **Added** TF1 under Unscheduled: no T act waits on it. Once it ships, the four ticked event-kind Items (Nov 4, 5, 6, 12) leave the reminder. Nothing ticked; no date moved.
+- **2026-10-31** — **the DANGER-only fight-or-flee screen and the plain combat icon plotted (EN2)** (T, in session: "Plot it, yes."). **Added** EN2a and EN2b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the fight screens. Nothing ticked; no date moved.
 - **2026-10-31** — **stat scaling added** (T, in the first-character session: "Add to the deadlines that we need to determine the stat scaling since right now, it miiiight be a little high. Idk"). **Added** one Item and its MVP-schedule piece, date Claude's draft for T to move: decide the stat scaling on Thu Nov 12 (0.5 h, `T`), beside the Defender check and after the first character is playable (CH1f, which the Nov 9 mid-MVP check already waits on). It precedes the Dec 7 card tuning, which tunes numbers on top of whatever rates T sets. Weeks now 10, 5 and 7.5 hours. Nothing ticked; no date moved.
 - **2026-10-30** — **the first character authored; CH1g plotted** (T in session, the CH1e sitting into `/plot asap`). **Ticked** the Item "Author the first character" (its Status re-derived from CH1e, now `[x]`: the Chosen is recorded in the CH1 brief). **Edited** that Item's name from "three lane cards" to "the starting lane cards": T changed the deck rule to one card from each starting lane and none from the relic's (CH1g). **Added** CH1g to the `Waits on` of "Mid-MVP check", beside CH1f, which now requires it.
 - **2026-10-31** — **all four lanes' card art plotted (CA3)** (T, in session: "I want to swap out all the new art I've gotten on to the 4 lanes' cards"). **Added** CA3a (the cutter and the Defender's paintings) and CA3e (the names) to the `Waits on` of the Nov 12 Defender check; CA3b beside MF1e and CA3c, CA3d under Unscheduled. Nothing ticked; no date moved.

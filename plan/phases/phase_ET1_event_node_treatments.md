@@ -101,8 +101,9 @@ its transition, copy slots, animation and tier cues, and still resolves end to e
   the line "Holds the road to <place>", naming the place of the node its held road leads to; the
   boss behind a held title card (its name and "Chapter 1 boss") before the reveal. A presenter
   test covers W5, C1, L4 and K2.
-- **A4** The reveal's intent strip is EN1c's, and the DANGER rule holds inside the new reveal: the
-  move is named only when the defeat ledger records that foe (a test for each case).
+- **A4** The reveal shows only the foe's DANGER moves, as EN2a builds it (D117): one line per DANGER,
+  `[ ? ? ? ]` until the player has seen it fire, then its name and line; no other move and no intent
+  strip (amended by the EN2 plot, 2026-10-31; a test for each case).
 - **A5** Before a hazard's board, a stakes card shows the place, its kind line ("Hazard", or "Hazard
   · holds the road" for a held hazard), what failing costs and what clearing pays as the engine
   states them, and its routes; one button, "Face it", leads on to today's route select. A line the
@@ -225,7 +226,7 @@ Measure: on the web build, walking to W2 plays the ink curtain into a reveal wit
 and C1 shows the oxblood frame with "Holds the road to Fishermen's camp".
 - Scope: the arrival-line table (19 `[content]` lines); the ink transition from the tapped token at
   `CombatGate`'s push; the reveal's tier frame, held-road line and the boss title card; the
-  existing intent strip and DANGER rule kept.
+  reveal's DANGER-only lines as EN2a leaves them (D117).
 - Tests: the reveal tier test, the arrival-line table, the DANGER pair, the transition in `instant`
   mode.
 - Verify: both workspaces, root `npm test`, `verify:visual` on the reveal, the Act 1 walk.
