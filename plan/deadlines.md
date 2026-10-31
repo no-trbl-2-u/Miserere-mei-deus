@@ -268,7 +268,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
-- ST1a — the Settings tab for the beta; date not set (the beta handout is not dated yet).
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
 - CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
