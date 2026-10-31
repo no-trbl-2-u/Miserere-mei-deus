@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join } from 'node:path'
 import { escapeHtml as esc } from './devlog-shell.mjs'
+import { findDrift, readDocs } from './atlas-drift.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(HERE, '..')
@@ -233,8 +234,23 @@ function foesPlate(atlas) {
 </section>`
 }
 
-/** Render the whole page for one atlas.json object. */
-export function renderAtlas(atlas) {
+function driftPlate(atlas, docs) {
+  const findings = findDrift(atlas, docs)
+  const SEV = { hi: 'HIGH', md: 'MED', lo: 'LOW' }
+  const rows = findings.length
+    ? findings.map((f) => `<div class="dr"><span class="sev ${esc(f.severity)}">${SEV[f.severity] ?? esc(f.severity)}</span><div><h3>${esc(f.claim)}</h3><p>Engine: ${esc(f.engine)}</p></div><div class="src">${esc(f.file)}</div></div>`).join('\n')
+    : `<p class="note">no drift found at ${esc(atlas.meta.commit)}</p>`
+  return `<section class="plate" id="drift" data-toc="Alignment">
+  <div class="plate-head"><div class="eyebrow"><b>Alignment</b> \u00B7 ${findings.length} finding${findings.length === 1 ? '' : 's'}</div><h2>Where the docs disagree with the engine</h2>
+  <p>Advisory: <code>docs/game-model.md</code>, <code>spec.md</code> and the catalog stamp are compared with <code>atlas.json</code> at build. A finding never fails a build or a test. Run <code>node scripts/atlas-drift.mjs</code> for the same list.</p></div>
+  <div class="drift">
+${rows}
+  </div>
+</section>`
+}
+
+/** Render the whole page for one atlas.json object; docs are the drift check's inputs. */
+export function renderAtlas(atlas, docs = {}) {
   const { meta } = atlas
   const data = JSON.stringify(atlas).replaceAll('<', '\\u003c').replaceAll('\u2028', '\\u2028').replaceAll('\u2029', '\\u2029')
   const js = [asset('engine.js'), asset('hand.js'), asset('generated.js')].join('\n')
@@ -277,7 +293,7 @@ ${foesPlate(atlas)}
 
 ${handPlates(asset('hand-b.html'))}
 
-<!-- The drift plate goes here (phase AT1c). -->
+${driftPlate(atlas, docs)}
 
 <footer>Engine data read at ${esc(meta.commit)} on ${esc(meta.generatedAt)} by <code>npm run catalog:export</code>; the cards, relics, foes, maps and XP table were read from the engine's own libraries. The hand-drawn plates are cited to their files and dated. A diagram is a reading of the code, not a replacement for it.</footer>
 </div>
@@ -304,6 +320,6 @@ if (isDirectRun()) {
     process.exit(1)
   }
   const atlas = JSON.parse(readFileSync(src, 'utf8'))
-  writeFileSync(out, renderAtlas(atlas))
+  writeFileSync(out, renderAtlas(atlas, readDocs()))
   console.log(`atlas: built ${out} (${atlas.cards.length} cards, ${atlas.relics.length} relics, ${atlas.regions.length} maps)`)
 }
