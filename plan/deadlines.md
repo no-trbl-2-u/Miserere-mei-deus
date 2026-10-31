@@ -219,7 +219,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, MC1a, MC1b, MC1c, CX1a, CX1b |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -328,7 +328,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - BE2d — loop work; follows BE2c; date not set.
 - BE2e — loop work; follows BE2a and BE2b; date not set.
 - BE2f — loop work; follows BE2a; date not set.
-- BE2g — attended; T's check on a preview APK once BE2c-BE2f ship; date not set.
+- BE2g — attended; T's check on a preview APK once BE2c-BE2f and BUG1b ship (until BUG1b, the Worker refuses every fight post); date not set.
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
 - BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
@@ -362,6 +362,8 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **every foe befriendable (BUG1j)** (T on plot PR #1236, call 1: "let's make all the enemies befriendable so we can do some testing"). **Added** BUG1j to the `Waits on` of the Mid-MVP check (Nov 9), beside BUG1a and BUG1b: the check plays the Chosen, whose Open Hand now befriends any foe. Nothing ticked; no date moved.
+- **2026-10-31** — **the Chosen's signature, and the play log's fights, plotted (SK1)** (T, bug report from the 8f876ec preview APK: "I still can't play the Signature Skills o.0?"; plot run unattended). **Added** BUG1a and BUG1b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the Chosen on a preview build. **Edited** BE2g's Unscheduled line: its premise (a preview fight shows up in the play log) needs BUG1b, since the deployed Worker refuses every fight post today. Nothing ticked; no date moved.
 - **2026-10-31** — **card detail and icon polish plotted (CD1)** (T's two bug reports from the preview APK, `/plot asap`). **Added** CD1a and CD1b to the `Waits on` of the Nov 9 mid-MVP check, the first T act that plays the character-select and reward screens. Nothing ticked; no date moved.
 - **2026-10-31** — **the map camera and layout plotted (MC1)** (T, from the preview APK: the zoom jumps, the map returns from a fight zoomed in, RECENTRE zooms in too far, the bottom is cut off; and "I'm going to go 'black background'"). **Added** MC1a, MC1b and MC1c to the `Waits on` of the Nov 9 mid-MVP check, the first preview build T plays after they ship and the check that proves them on the phone. No other Item's premise changes; nothing ticked; no date moved.
 - **2026-10-31** — **the music through a fight and the ink curtain fixed, plotted (CX1)** (T, `/plot asap` from two preview-APK bug reports: the music should pause for combat and resume after; "The 'Start Combat UX treatment' is broken"). **Added** CX1a and CX1b to the `Waits on` of the Mid-MVP check (Nov 9), the first preview build T plays after they ship. Both are app-side, so they reach T only through a new preview APK. Nothing ticked; no date moved.
