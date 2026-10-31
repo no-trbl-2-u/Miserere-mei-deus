@@ -335,9 +335,9 @@ describe('A3 YIELDING', () => {
         expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/not yet low enough/);
     });
 
-    it('a YIELDING foe without a friendshipReward stays unbefriendable', () => {
+    it('a YIELDING foe without a friendshipReward can be spared too: every foe can be befriended', () => {
         const s = encounter(FloatEye, 1, true);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/will not be befriended/);
+        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBeNull();
     });
 });
 

@@ -564,10 +564,6 @@ export const GreenJelly = createEnemy({
         hpGate: { belowPct: 0.3 },
     },
     friendshipReward: {
-        items: [
-            { ...getConsumableById('healing-potion')! },
-        ],
-        xpBonus: 35,
         narrative:
             'The jelly settles, slow as cooling wax, and goes still on the stone. Through it, ' +
             'the things it kept drift loose and sink, one by one, until it holds only light. ' +

@@ -43,22 +43,11 @@ export type EnemyDifficulty = 'simple' | 'normal' | 'elite' | 'boss' | 'unique';
  * Per-enemy content awarded when combat resolves via friendship (the
  * `outcome === 'friendship'` path).
  *
- * Layered ON TOP OF the base: half-XP + full loot. None of the
- * FriendshipReward fields REPLACE the base grants; they augment them. Authors leave
- * undefined for enemies whose friendship path is purely mechanical
- * (no content stakes).
- *
- * Engine wiring lives in `store.endCombat()` — items append to
- * `report.loot` and `xpBonus` adds to `report.xpGained` before the
- * level-up cascade fires. `narrative` surfaces on
- * `CombatEndReport.friendshipReward.narrative` for the CLI / UI
- * (engine does not interpret).
+ * What a befriend pays (shillings or a potion, no XP) is one rule for every
+ * foe, `BEFRIEND_TUNING` in `Enemy/befriend.ts`; a foe's own entry holds only
+ * its story: the narrative, the world flag.
  */
 export interface FriendshipReward {
-    /** Guaranteed items appended to the weighted-loot roll. */
-    items?: Item[];
-    /** Extra XP on top of the half-XP base. Additive, not multiplicative. */
-    xpBonus?: number;
     /** Optional flavour text for the CLI / UI to render after combat-end. */
     narrative?: string;
     /**
@@ -170,7 +159,7 @@ export interface Enemy {
      * Optional per-enemy reward content surfaced on
      * `outcome === 'friendship'`. See {@link FriendshipReward}.
      * When undefined, the enemy's friendship resolution is purely
-     * mechanical (base only: half-XP + weighted-loot roll).
+     * mechanical (a befriend pays by `BEFRIEND_TUNING`).
      */
     friendshipReward?: FriendshipReward;
     /** The befriend gate The Open Hand reads. See {@link BefriendabilityConfig}. */
