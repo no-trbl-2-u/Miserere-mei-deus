@@ -104,7 +104,7 @@ const ENTRIES: Entry[] = [
     { slot: 'p-05b', name: 'Shared Wound', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 50 }, program: u => ({
         free: L(`SACRIFICE 3, VULNERABLE +{vuln:${u.m(20)}}% for 1 turn.`, c => { c.sacrifice(3); c.vulnerable(u.m(20), 1); }),
         paid: L(`SACRIFICE 6, VULNERABLE +{vuln:${S(u).m(50)}}% for 2 turns. EXILE.`, c => { c.sacrifice(6); c.vulnerable(S(u).m(50), 2); }, EX) }) },
-    { slot: 'p-06d', name: 'What Is Owed', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'p-06d', name: 'Collect the Debt', type: 'skill', color: PURPLE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}.`, c => { c.guard(u.m(3)); }),
         paid: L(`LEECH 1 per 10 VITAE missing${iPlus(u)}.`, c => { c.leech(Math.floor(c.q.missing / 10) + iBonus(u)); }) }) },
     { slot: 'p-07b', name: 'Full Tally', type: 'attack', color: RED, program: u => ({
@@ -173,7 +173,7 @@ const ENTRIES: Entry[] = [
     { slot: 'm-02b', name: 'Reclaim', type: 'attack', color: RED, program: u => ({
         free: L(`DEAL {deal:${u.m(2)}}.`, c => { c.deal(u.m(2)); }),
         paid: L(`DEAL {deal:${u.m(6)}}; HEAL all the damage dealt.`, c => { const d = c.deal(u.m(6)); c.heal(d, { exact: true }); }) }) },
-    { slot: 'm-03d', name: 'Famished', type: 'skill', color: PURPLE, program: u => ({
+    { slot: 'm-03d', name: 'Gorge', type: 'skill', color: PURPLE, program: u => ({
         free: L(`GUARD {guard:${u.m(3)}}.`, c => { c.guard(u.m(3)); }),
         paid: L(`LEECH {leech:${u.i(3)}}, or {leech:${u.i(6)}} at half VITAE or less.`, c => { c.leech(c.q.atHalf ? u.i(6) : u.i(3)); }) }) },
     { slot: 'm-04n', name: 'Transfusion', type: 'skill', color: BLUE, program: u => ({

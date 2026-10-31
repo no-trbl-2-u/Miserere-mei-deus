@@ -3,8 +3,8 @@
  * A7 of `plan/phases/phase_EL1_elementalist_trial_set.md`).
  *
  * The set's own test (the only test that names its card ids). Pins:
- *   · the set: 30 cards (9 red / 11 blue / 10 purple), placeholder names
- *     "Elementalist <slot>", one upgrade each as commons;
+ *   · the set: 30 cards (9 red / 11 blue / 10 purple), each under its action
+ *     name (phase CA3e), one upgrade each as commons;
  *   · the lane `elementalist`: all 30 as its reward pool, and T's 20-card
  *     test deck (the sims' best-played, 7 red / 7 blue / 6 purple);
  *   · the sims' adjusted numbers on the faces, and printed equals applied
@@ -48,9 +48,9 @@ const TEST_DECK_SLOTS = {
     purple: ['M-08', 'E-09', 'M-04', 'P-08', 'E-04', 'E-05'],
 };
 
-/** A card's id from its ledger slot, read off its placeholder name. */
+/** A card's id from its ledger slot (`P-01` reads the id `el-p-01<option>`). */
 const idOf = (slot: string): string => {
-    const card = CARDS.find(c => c.name === `Elementalist ${slot}`);
+    const card = CARDS.find(c => c.id.startsWith(`el-${slot.toLowerCase()}`));
     if (!card) throw new Error(`no card for ${slot}`);
     return card.id;
 };
@@ -78,17 +78,18 @@ const play = (s: CombatEncounterState, uid: string, paid: boolean): CombatEncoun
 const weather = (s: CombatEncounterState) => weatherReading(s.program!.el);
 
 describe('the Elementalist set', () => {
-    it('holds the 30 kept cards, 9 red, 11 blue, 10 purple, with placeholder names', () => {
+    it('holds the 30 kept cards, 9 red, 11 blue, 10 purple, each under its action name', () => {
         expect(CARDS).toHaveLength(30);
         const by = (c: string) => CARDS.filter(card => card.color === c).length;
         expect([by('body'), by('mind'), by('heart')]).toEqual([9, 11, 10]);
         for (const card of CARDS) {
-            expect(card.name, card.id).toMatch(/^Elementalist [PEM]-\d{2}$/);
+            expect(card.name, card.id).toMatch(/^[A-Z][A-Za-z ]+$/);
+            expect(card.name, card.id).not.toMatch(/^Elementalist /);
             expect(card.id, card.id).toMatch(/^el-[pem]-\d{2}[a-z]$/);
             expect(getCardById(card.id), card.id).toBe(card);
         }
         expect(CARDS.filter(c => c.cardType === 'global').map(c => c.name).sort())
-            .toEqual(['Elementalist E-06', 'Elementalist E-09', 'Elementalist M-08', 'Elementalist M-10', 'Elementalist P-10']);
+            .toEqual(['Bind the Three', 'Bring the Hail', 'Draw the Lightning', 'Drink the Rain', 'Turn with the Wind']);
         // T's own card keeps the `n` suffix.
         expect(idOf('M-10')).toBe('el-m-10n');
     });
@@ -286,8 +287,8 @@ describe('the upgrade', () => {
             const up = upgradeCard(card)!;
             const text = (c: typeof card) => JSON.stringify([c.program?.free?.text, c.program?.paid?.text, c.program?.global?.text]);
             return text(up) === text(card);
-        }).map(c => c.name.replace('Elementalist ', ''));
-        expect(same.sort()).toEqual(['E-07', 'E-09', 'M-01', 'M-09', 'P-03', 'P-08']);
+        }).map(c => c.name);
+        expect(same.sort()).toEqual(['Bring the Hail', 'Douse the Flames', 'Raise the Drift', 'Scatter the Pages', 'Spit Fire', 'Stir the Thundersnow']);
     });
 
     it('grows a hit by MAGNITUDE and an element by 1', () => {
@@ -296,7 +297,7 @@ describe('the upgrade', () => {
         expect(getCardById(`${idOf('E-06')}+`)!.program!.global!.stormGrowth).toBe(2);
     });
 
-    it('the library holds no other card named "Elementalist"', () => {
-        expect(cardLibrary.filter(c => c.name.startsWith('Elementalist ')).length).toBe(30);
+    it('the library holds no placeholder "Elementalist <slot>" name', () => {
+        expect(cardLibrary.filter(c => c.name.startsWith('Elementalist ')).length).toBe(0);
     });
 });

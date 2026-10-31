@@ -35,7 +35,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   The Elementalist trial set (`ELEMENTALIST_SET`,
   `Cards/library/elementalist.cards.ts`, Phase EL1c) is 30 cards (9 body,
   11 mind, 10 heart, all rank 1, one upgrade each) at the sims' adjusted
-  numbers, with placeholder names ("Elementalist P-01"): they put up and
+  numbers, each under an action name ("Strike the Burning", CA3e): they put up and
   read the weather (INFERNO, BLIZZARD, FROZEN, STORM; `Combat/combat.elements.ts`)
   and DRAW. Its lane `elementalist` holds all 30 and deals T's 20-card test
   deck; it comes out the same way, by its file and its `TRIAL_SETS` line.

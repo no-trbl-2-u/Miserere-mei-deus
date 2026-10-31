@@ -110,7 +110,7 @@ const ENTRIES: Entry[] = [
     { slot: 'P-06', option: 'a', name: 'Weight of Grace', type: 'attack', color: RED, program: () => ({
         free: L("DEAL equal to the foe's MERCY.", c => { c.deal(c.q.foeMercy, { exact: true }); }),
         paid: L("DEAL twice the foe's MERCY.", c => { c.deal(2 * c.q.foeMercy, { exact: true }); }) }) },
-    { slot: 'P-06', option: 'c', name: 'Shelter of Grace', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'P-06', option: 'c', name: 'Spread the Mantle', type: 'skill', color: BLUE, program: () => ({
         free: L("GUARD equal to the foe's MERCY.", c => { c.guard(c.q.foeMercy, { exact: true }); }),
         paid: L("GUARD twice the foe's MERCY.", c => { c.guard(2 * c.q.foeMercy, { exact: true }); }) }) },
     { slot: 'P-07', option: 'b', name: 'Mended Wrath', type: 'attack', color: RED, program: u => ({
@@ -134,7 +134,7 @@ const ENTRIES: Entry[] = [
             c.guard(u.m(2), { plus: Math.floor(c.q.missing / 5) });
         }),
         paid: L('GUARD X, where X is the VITAE you are missing.', c => { c.guard(c.q.missing, { exact: true }); }) }) },
-    { slot: 'P-10', option: 'c', name: 'Morning Absolution', type: 'global', color: PURPLE, program: u => turnGlobal(
+    { slot: 'P-10', option: 'c', name: 'Absolve at Dawn', type: 'global', color: PURPLE, program: u => turnGlobal(
         `If the foe has MERCY, RADIANCE {radiance:${u.i(5)}}.`, c => { if (c.q.foeHasMercy) c.radiance(u.i(5)); }) },
 
     // ── ENGINE: makes room to heal and keeps MERCY going ─────────────────────
@@ -209,7 +209,7 @@ const ENTRIES: Entry[] = [
         paid: L(`If the foe has MERCY, its next attack deals ${u.m(5)} less; otherwise MERCY {mercy:${u.i(5)}}.`, c => {
             if (c.q.foeHasMercy) c.weakenNextAttack(u.m(5)); else c.mercy(u.i(5));
         }) }) },
-    { slot: 'M-09', option: 'c', name: 'Remembered Kindness', type: 'skill', color: BLUE, program: () => ({
+    { slot: 'M-09', option: 'c', name: 'Call Back a Kindness', type: 'skill', color: BLUE, program: () => ({
         free: L('Return the last MERCY card you played this combat to your hand.', c => { c.returnMercyCards(1); }),
         paid: L('Return the last two MERCY cards you played this combat to your hand.', c => { c.returnMercyCards(2); }) }) },
     { slot: 'M-10', option: 'c', name: 'Overflowing Cup', type: 'attack', color: RED, program: u => ({

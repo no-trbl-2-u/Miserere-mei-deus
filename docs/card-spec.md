@@ -394,9 +394,9 @@ content: a rename is a T-approved brief, like this one (D99).
 | `bp-p-03a` | Cornered | Payoff | `bp-e-08n` | Blood for Blood | Engine |
 | `bp-p-04c` | Returned Twofold | Payoff | `bp-e-09n` | Crimson Pact | Engine |
 | `bp-p-05b` | Shared Wound | Payoff | `bp-e-10d` | Name Your Price | Engine |
-| `bp-p-06d` | What Is Owed | Payoff | `bp-m-01d` | Siphon | Misc |
+| `bp-p-06d` | Collect the Debt | Payoff | `bp-m-01d` | Siphon | Misc |
 | `bp-p-07b` | Full Tally | Payoff | `bp-m-02b` | Reclaim | Misc |
-| `bp-p-08d` | Binding Vow | Payoff | `bp-m-03d` | Famished | Misc |
+| `bp-p-08d` | Binding Vow | Payoff | `bp-m-03d` | Gorge | Misc |
 | `bp-p-09b` | Uneven Trade | Payoff | `bp-m-04n` | Transfusion | Misc |
 | `bp-p-10c` | Callus | Payoff | `bp-m-05b` | Grim Resolve | Misc |
 | `bp-e-01n` | Bloodletting | Engine | `bp-m-06c` | Not Yet | Misc |
@@ -422,7 +422,7 @@ T's call (ballot, 2026-10-13):
 
 - **Canonical lane size going forward?** → A family is 3 sub-lanes of about 10 (30 + grey); a lane is a sub-lane
 - **Which family is next?** → None until Blood Price is measured (R12a)
-- **When do placeholder names become real names?** → A naming session before the next lane; names are card content: a `/plot` brief T approves (D99; D37 lifted)
+- **When do placeholder names become real names?** → Done for the Elementalist (its 30 got action names in CA3e, T's `/plot` brief); names are card content: a `/plot` brief T approves (D99; D37 lifted)
 ```
 
 The ballot's §17 asked about B5, the card-creator tool, which has no

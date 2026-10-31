@@ -705,7 +705,7 @@ describe('no caps (Phase NC1)', () => {
         expect(getCardById('bp-e-10d')?.program?.paid?.text).toContain('SACRIFICE any amount (max 21)');
     });
 
-    it('What Is Owed PAID leeches 1 per 10 VITAE missing, past the old 8', () => {
+    it('Collect the Debt PAID leeches 1 per 10 VITAE missing, past the old 8', () => {
         const max = fight([]).player.maxHealth;
         const missing = (n: number) => play(fight(['bp-p-06d'], max - n), 't0', true).program!.leechPotency;
         expect(missing(60)).toBe(6);
