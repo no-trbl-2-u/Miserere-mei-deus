@@ -18,7 +18,7 @@ const BASE_VM: AftermathParleyViewModel = {
     enemyName: 'THE LARCH-STALKER',
     enemyEpithet: 'cold-of-tooth',
     pactPhrase: 'it set down the bell, slow.',
-    rewards: { xp: 12, currency: null, loot: [] },
+    rewards: { currency: null, loot: [] },
     journalEntry: null,
 };
 
@@ -63,12 +63,32 @@ describe('CombatFriendshipPanel: render contract', () => {
         expect(tree.queryByText('❦ AN ACCORD')).not.toBeNull();
     });
 
-    it('renders the reward strip with the three columns', () => {
-        const tree = render(<CombatFriendshipPanel vm={BASE_VM} onContinue={() => {}} />);
-        expect(tree.queryByTestId('combat-friendship-panel-rewards')).not.toBeNull();
-        expect(tree.queryByText('EXPERIENCE')).not.toBeNull();
-        expect(tree.queryByText('SHILLINGS')).not.toBeNull();
-        expect(tree.queryByText('LOOT')).not.toBeNull();
+    it('shows no XP line and reads "+6 shillings" when the befriend paid shillings', () => {
+        const tree = render(
+            <CombatFriendshipPanel
+                vm={{ ...BASE_VM, rewards: { currency: { shillings: 6 }, loot: [] } }}
+                onContinue={() => {}}
+            />,
+        );
+        expect(tree.queryByText('EXPERIENCE')).toBeNull();
+        expect(tree.getByTestId('combat-friendship-panel-reward').props.children).toBe('+6 shillings');
+    });
+
+    it('reads the potion name when the befriend paid a potion', () => {
+        const tree = render(
+            <CombatFriendshipPanel
+                vm={{
+                    ...BASE_VM,
+                    rewards: {
+                        currency: null,
+                        loot: [{ name: 'Minor Healing Potion', slot: 'consumable', rarity: 'common' }],
+                    },
+                }}
+                onContinue={() => {}}
+            />,
+        );
+        expect(tree.queryByText('EXPERIENCE')).toBeNull();
+        expect(tree.getByTestId('combat-friendship-panel-reward').props.children).toBe('Minor Healing Potion');
     });
 
     it('collapses the journal entry section when journalEntry is null', () => {

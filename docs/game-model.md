@@ -300,7 +300,7 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
 - **Green Jelly:** level 5, a normal with HP phases (EN1g): it holds the
   next cards you play inside it, shows you your own face and throws your last
   status back. Placed on the town's nodes; an elite slot stages it at the elite
-  tier until its own foe lands. The only foe that can be befriended, below 30%
+  tier until its own foe lands. Its own befriend gate is below 30%
   VITAE, which is also where its second phase begins.
 - **Wreck-Picker and Smokehouse Gutter:** level 6 normals with HP phases (EN1h), on the cliffs
   and the hamlet. The Wreck-Picker takes cards from your discard into its hoard
@@ -373,10 +373,13 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   player taps WEAR. A character wears one weapon, one armor and up to three
   relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, and the
   signature bar lists every signature the worn relics grant.
-- **The Open Hand** befriends a foe that has a `friendshipReward` and sits
-  under its `hpGate` (the Green Jelly: below 30% VITAE; `Enemy/befriend.ts`).
+- **The Open Hand** befriends any foe (every foe can be befriended, T
+  2026-10-31, for testing) that sits under its `hpGate`, else under
+  `BEFRIEND_TUNING.defaultHpGate` (30% VITAE; `Enemy/befriend.ts`).
 - **The mercy choice** (`selectMercyChoice`) follows. Spare ends the fight
-  as mercy and pays the friendship reward. Exploit strikes for max(10, 50%
+  as mercy and pays no XP: either 3 shillings x the foe's level or one healing
+  potion by level (minor below 5, normal 5-9, greater 10+), even odds from the
+  combat rng (`BEFRIEND_TUNING`). Exploit strikes for max(10, 50%
   of the foe's maximum VITAE); the fight goes on if the foe survives.
   Befriending is the only non-lethal ending.
 

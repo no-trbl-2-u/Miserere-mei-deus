@@ -89,7 +89,7 @@ change and a corrupt save leave it alone.
 | REDUCED MOTION | system · on · off | `hooks/useReducedMotion.ts` — the OS switch, overridable |
 | HAPTICS | on · off | `lib/platform/haptics.ts` — `hapticsAllowed()` reads the store synchronously |
 | MUSIC (switch) | on · off | `musicOn` (default on, an old save reads as on); off pauses the theme through `decideMusic`, the volume below is kept; RESET SETTINGS turns it on |
-| MUSIC VOLUME | 0–100 | `components/BackgroundMusic.tsx` — T's theme loops under the whole game, paused while a fight or hazard is staged (`state/presenters/music.engine.ts`) |
+| MUSIC VOLUME | 0–100 | `components/BackgroundMusic.tsx` — T's theme loops under the whole game, paused for the whole fight (staged through its summary, until the player leaves the fight screen) and while a hazard is live, then resumed from where it stopped (`state/presenters/music.engine.ts`, which also holds the track table) |
 | SOUND EFFECTS | 0–100 | persisted only — **no sound effects play yet**; the screen says so |
 | STORY MODE | — | listed as COMING SOON, disabled; nothing persisted |
 | SAVE & RETURN TO TITLE *(in a run)* | — | `returnToTitleAction` (save + flush) then `/?menu=1` |

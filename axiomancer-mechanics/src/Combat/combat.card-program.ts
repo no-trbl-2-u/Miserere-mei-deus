@@ -60,6 +60,7 @@ import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
 import type { Enemy } from '../Enemy/types';
+import { isEnemyBefriendable } from '../Enemy/befriend';
 import { applyDamage, heal as healCombatant, isDefeated } from './health';
 import { fireDotTrigger, getDamageTakenMultiplier } from './effects';
 import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
@@ -530,7 +531,7 @@ class LineCtx implements ProgramCtx {
     conviction(n: number): void {
         if (n <= 0) return;
         if (this.mode === 'value') {
-            const befriendable = this.w.s.enemy.friendshipReward !== undefined;
+            const befriendable = isEnemyBefriendable(this.w.s.enemy);
             const room = Math.max(0, this.w.kit.convictionCap - this.w.s.conviction);
             this.w.value += Math.min(n, room) * (befriendable ? BEFRIEND_CONVICTION_VALUE : PLAIN_CONVICTION_VALUE);
             return;
@@ -1277,7 +1278,7 @@ class LineCtx implements ProgramCtx {
         if (next === m) return;
         l.mercy = next;
         // Worth a little: the befriend gate opens for as long as the MERCY lasts.
-        if (this.mode === 'value') this.w.value += this.w.s.enemy.friendshipReward !== undefined ? YIELDING_VALUE : 0;
+        if (this.mode === 'value') this.w.value += isEnemyBefriendable(this.w.s.enemy) ? YIELDING_VALUE : 0;
     }
 
     healsPlus(n: number): void {

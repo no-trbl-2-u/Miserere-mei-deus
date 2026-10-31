@@ -10,10 +10,12 @@ jest.mock('expo-audio', () => ({
     createAudioPlayer: () => ({
         loop: false,
         volume: 1,
+        playing: false,
         play: () => undefined,
         pause: () => undefined,
         remove: () => undefined,
     }),
+    setAudioModeAsync: () => Promise.resolve(),
 }));
 
 jest.mock('expo-splash-screen', () => ({

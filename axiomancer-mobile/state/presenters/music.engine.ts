@@ -1,14 +1,35 @@
 /**
- * Background music director (phase MU1). Pure: no audio, no React.
+ * Background music director (phases MU1, CX1a). Pure: no audio, no React.
  *
  * `<BackgroundMusic>` feeds it the app state and applies the answer. The
- * theme plays under everything except a staged fight or a live hazard; it is
- * silent at volume 0 and while the app is in the background.
+ * answer is a CONTEXT (exploration, combat, hazard) and the track table says
+ * which bundled track, if any, that context plays. Today only exploration has
+ * one (T's theme); a context with no track pauses the exploration track in
+ * place, so it resumes from the same spot. A combat track T supplies later is
+ * one entry in `MUSIC_TRACKS`.
  */
+
+export type MusicContext = 'exploration' | 'combat' | 'hazard';
+
+/** A bundled track, by id; `<BackgroundMusic>` maps ids to assets. */
+export type MusicTrackId = 'theme';
+
+/** The one place a context is wired to a track. `null` means silence. */
+export const MUSIC_TRACKS: Readonly<Record<MusicContext, MusicTrackId | null>> = {
+    exploration: 'theme',
+    combat: null,
+    hazard: null,
+};
 
 export interface MusicInputs {
     /** `selectIsInCombat`: a fight is staged. */
     readonly inCombat: boolean;
+    /**
+     * The fight screen's own flag (`useCombatMode().inCombat`). It stays up
+     * through the victory or defeat summary, after the engine has cleared the
+     * staged fight, and drops when the player leaves the screen.
+     */
+    readonly onCombatScreen: boolean;
     /** `selectHasActiveHazard`: a hazard session is live. */
     readonly hasHazard: boolean;
     /** The Settings music volume, 0 to 100. */
@@ -20,6 +41,9 @@ export interface MusicInputs {
 }
 
 export interface MusicDirective {
+    readonly context: MusicContext;
+    /** The track this context plays, or `null` for none. */
+    readonly track: MusicTrackId | null;
     readonly state: 'playing' | 'paused';
     /** 0 to 1, linear in `musicVolume`. */
     readonly targetVolume: number;
@@ -32,11 +56,21 @@ export const FADE_OUT_MS = 500;
 /** Volume steps are applied this often during a fade. */
 export const FADE_TICK_MS = 50;
 
+/** Which context the app is in: a fight (staged or on its screen) outranks a hazard. */
+export function musicContext(
+    inputs: Pick<MusicInputs, 'inCombat' | 'onCombatScreen' | 'hasHazard'>,
+): MusicContext {
+    if (inputs.inCombat || inputs.onCombatScreen) return 'combat';
+    if (inputs.hasHazard) return 'hazard';
+    return 'exploration';
+}
+
 export function decideMusic(inputs: MusicInputs): MusicDirective {
     const targetVolume = Math.min(1, Math.max(0, inputs.musicVolume / 100));
-    const quiet = inputs.inCombat || inputs.hasHazard || !inputs.appActive || targetVolume === 0 ||
-        inputs.musicOn === false;
-    return { state: quiet ? 'paused' : 'playing', targetVolume };
+    const context = musicContext(inputs);
+    const track = MUSIC_TRACKS[context];
+    const quiet = track === null || !inputs.appActive || targetVolume === 0 || inputs.musicOn === false;
+    return { context, track, state: quiet ? 'paused' : 'playing', targetVolume };
 }
 
 /** The volume `step` of `steps` into a linear fade from `from` to `to`. */

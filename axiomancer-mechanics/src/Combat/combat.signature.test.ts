@@ -136,12 +136,12 @@ describe('The Open Hand is the befriend', () => {
     it.each([
         ['Float-Eye', FloatEye],
         ['the Death Beholder', DeathBeholder],
-    ])('refuses on %s, which cannot be befriended', (_name, enemy) => {
+    ])('casts on %s inside the default gate: every foe can be befriended', (_name, enemy) => {
         const s = encounter(enemy, 0.05);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/will not be befriended/);
+        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBeNull();
         const r = playSignatureSkill(s, OPEN_HAND);
-        expect(r.state.conviction).toBe(cost(OPEN_HAND));
-        expect(r.state.mercyChoiceActive).toBeFalsy();
+        expect(r.state.conviction).toBe(0);
+        expect(r.state.mercyChoiceActive).toBe(true);
     });
 
     it('names the Conviction shortfall first', () => {

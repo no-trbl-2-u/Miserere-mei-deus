@@ -28,11 +28,13 @@ export interface CombatFriendshipPanelProps {
 export function CombatFriendshipPanel({ vm, onContinue }: CombatFriendshipPanelProps) {
     const AXM = usePalette();
     const styles = useStyles();
-    const lootCount = vm.rewards.loot.length;
-    const xpDisplay = vm.rewards.xp === null ? '—' : String(vm.rewards.xp);
-    const currencyDisplay =
-        vm.rewards.currency === null ? '—' : String(vm.rewards.currency.shillings);
-    const lootDisplay = lootCount === 0 ? '—' : String(lootCount);
+    // A befriend pays no XP: shillings, or one potion.
+    const rewardLine =
+        vm.rewards.currency !== null
+            ? `+${vm.rewards.currency.shillings} shillings`
+            : vm.rewards.loot.length > 0
+                ? vm.rewards.loot.map(l => l.name).join(', ')
+                : '—';
 
     return (
         <View style={styles.root} testID="combat-friendship-panel">
@@ -77,15 +79,15 @@ export function CombatFriendshipPanel({ vm, onContinue }: CombatFriendshipPanelP
                 </Text>
 
                 <View style={styles.rewardStrip} testID="combat-friendship-panel-rewards">
-                    <RewardCell label="EXPERIENCE" value={xpDisplay} tint={AXM.parchment} />
-                    <View style={styles.rewardDivider} />
-                    <RewardCell
-                        label="SHILLINGS"
-                        value={currencyDisplay}
-                        tint={AXM.rust}
-                    />
-                    <View style={styles.rewardDivider} />
-                    <RewardCell label="LOOT" value={lootDisplay} tint={AXM.parchment} />
+                    <View style={styles.rewardCell}>
+                        <Text
+                            style={[styles.rewardValue, { color: AXM.rust }]}
+                            testID="combat-friendship-panel-reward"
+                        >
+                            {rewardLine}
+                        </Text>
+                        <Text style={styles.rewardLabel}>THEIR GIFT</Text>
+                    </View>
                 </View>
 
                 {vm.journalEntry !== null && (
@@ -129,22 +131,6 @@ export function CombatFriendshipPanel({ vm, onContinue }: CombatFriendshipPanelP
                     <Text style={styles.partAsFriendsLabel}>❦ PART AS FRIENDS</Text>
                 </Pressable>
             </View>
-        </View>
-    );
-}
-
-interface RewardCellProps {
-    label: string;
-    value: string;
-    tint: string;
-}
-
-function RewardCell({ label, value, tint }: RewardCellProps) {
-    const styles = useStyles();
-    return (
-        <View style={styles.rewardCell}>
-            <Text style={[styles.rewardValue, { color: tint }]}>{value}</Text>
-            <Text style={styles.rewardLabel}>{label}</Text>
         </View>
     );
 }
@@ -248,10 +234,6 @@ const useStyles = makeStyles((AXM) => ({
         borderWidth: 1,
         borderColor: AXM.ash,
         backgroundColor: AXM.silhouette,
-    },
-    rewardDivider: {
-        width: 1,
-        backgroundColor: AXM.ash,
     },
     rewardCell: {
         flex: 1,

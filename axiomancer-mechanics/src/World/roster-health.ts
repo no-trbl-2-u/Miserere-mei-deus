@@ -190,7 +190,6 @@ function itemRefs(src: RosterSources): ItemRef[] {
         for (const entry of enemy.loot ?? []) {
             if (entry.item) push(entry.item, `${enemy.id}.loot`);
         }
-        for (const item of enemy.friendshipReward?.items ?? []) push(item, `${enemy.id}.friendshipReward`);
     }
     for (const pool of src.pools) {
         for (const { payload } of pool.entries) {
