@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [content] BUG1j's universal befriend collapses the greedy sim policy's chapter-clear rate from ~85% to ~12% (fix-ci, verify-mobile run 41245913757, 2026-10-31)
+- category: content
+- impact: 6
+- ease: 4
+- detail: `sim/run-driver.test.ts`'s "every Breakwater node kind" case (seed 1) went red on `main` after BUG1j (`b23c5f768`, "every foe can be befriended... no XP"): `isEnemyBefriendable` now holds for every foe (previously only the Green Jelly carried a `friendshipReward`), and the `greedy`/`blind` combat sim policy (`combat.sim-policies.ts`) already scored Befriend highest whenever a foe's VITAE was at or below 30% (`BAND_BEFRIEND_LOW_HP`, `LOW_HP_FRACTION`) — a threshold that happens to equal `BEFRIEND_TUNING.defaultHpGate` (also 0.3). Pre-BUG1j, that scoring never fired outside the Green Jelly; post-BUG1j it fires on nearly every winnable fight, so the `wanderer`/`greedy` headless run spares instead of finishing almost every fight it would have won, earning no XP or loot and dying well short of the Breakwater's villages. Measured over seeds 1-40 with `WANDERER_POLICY`: 34/40 `chapter-clear` before BUG1j (`950074f58`), 5/40 after (`0afc538bf`); most runs now die around `bw-t1`/`bw-h3`/`bw-h7`/`bw-c1`, never reaching `bw-t4`/`bw-m5`. Fixed the red run by repointing the test at seed 8 (also full node-kind coverage, `chapter-clear`) — a seed choice, not a balance assertion (the test's own docstring: "the tests check the driver, never the game's balance") — but the underlying survival-rate collapse of the designated "tuned balance witness" is a real content change worth a deliberate look, not an incidental one.
+- next: a design call on whether `greedy`'s Befriend-at-low-VITAE preference should still fire against every foe now that it pays no XP/loot (tune `BAND_BEFRIEND_LOW_HP` down, gate it to foes that still carry a `friendshipReward`-like marker, or accept the new survival curve and let `/iterate` or a measured-truth run re-baseline against it).
+
 ### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
 - category: process
 - impact: 6
