@@ -1,0 +1,652 @@
+{
+  "generator": "built-in image_gen",
+  "requested_columns": 8,
+  "requested_rows": 3,
+  "requested_frame_size": 256,
+  "row_order": [
+    "idle",
+    "struck",
+    "attacking"
+  ],
+  "edge_test": "Alpha >=160 within 1 pixel of an exact 256px cell edge flags a frame for visual cleanup. This does not validate smooth animation, scale or anchors.",
+  "sheets": [
+    {
+      "source": "brine-widow.webp",
+      "sheet": "brine-widow.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 1,
+          "frame": 8
+        },
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 2,
+          "frame": 4
+        },
+        {
+          "row": 2,
+          "frame": 5
+        },
+        {
+          "row": 2,
+          "frame": 6
+        },
+        {
+          "row": 2,
+          "frame": 7
+        },
+        {
+          "row": 2,
+          "frame": 8
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        },
+        {
+          "row": 3,
+          "frame": 7
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "cave-choir.webp",
+      "sheet": "cave-choir.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "crane-hook.webp",
+      "sheet": "crane-hook.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 2,
+          "frame": 4
+        },
+        {
+          "row": 2,
+          "frame": 5
+        },
+        {
+          "row": 2,
+          "frame": 6
+        },
+        {
+          "row": 3,
+          "frame": 1
+        },
+        {
+          "row": 3,
+          "frame": 2
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "curfew-ringer.webp",
+      "sheet": "curfew-ringer.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "death-beholder.webp",
+      "sheet": "death-beholder.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 2,
+          "frame": 4
+        },
+        {
+          "row": 2,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "float-eye.webp",
+      "sheet": "float-eye.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 1
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "gallows-crow.webp",
+      "sheet": "gallows-crow.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 2,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 1
+        },
+        {
+          "row": 3,
+          "frame": 2
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        },
+        {
+          "row": 3,
+          "frame": 7
+        }
+      ],
+      "status": "existing approved experiment"
+    },
+    {
+      "source": "green-jelly.webp",
+      "sheet": "green-jelly.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "lamplighter.webp",
+      "sheet": "lamplighter.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 2,
+          "frame": 5
+        },
+        {
+          "row": 2,
+          "frame": 6
+        },
+        {
+          "row": 2,
+          "frame": 7
+        },
+        {
+          "row": 2,
+          "frame": 8
+        },
+        {
+          "row": 3,
+          "frame": 2
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "lamprey-knot.webp",
+      "sheet": "lamprey-knot.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "net-mender.webp",
+      "sheet": "net-mender.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "smokehouse-gutter.webp",
+      "sheet": "smokehouse-gutter.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 1,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        },
+        {
+          "row": 3,
+          "frame": 7
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "tide-gate.webp",
+      "sheet": "tide-gate.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 1,
+          "frame": 1
+        },
+        {
+          "row": 1,
+          "frame": 2
+        },
+        {
+          "row": 1,
+          "frame": 3
+        },
+        {
+          "row": 1,
+          "frame": 4
+        },
+        {
+          "row": 1,
+          "frame": 5
+        },
+        {
+          "row": 1,
+          "frame": 6
+        },
+        {
+          "row": 1,
+          "frame": 7
+        },
+        {
+          "row": 1,
+          "frame": 8
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "tithe-collector.webp",
+      "sheet": "tithe-collector.sheet.png",
+      "width": 2043,
+      "height": 770,
+      "exact_canvas": false,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "toll-keeper.webp",
+      "sheet": "toll-keeper.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 3,
+          "frame": 1
+        },
+        {
+          "row": 3,
+          "frame": 2
+        },
+        {
+          "row": 3,
+          "frame": 3
+        },
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        },
+        {
+          "row": 3,
+          "frame": 6
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "wreck-picker.webp",
+      "sheet": "wreck-picker.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 1,
+          "frame": 1
+        },
+        {
+          "row": 1,
+          "frame": 2
+        },
+        {
+          "row": 1,
+          "frame": 3
+        },
+        {
+          "row": 1,
+          "frame": 4
+        },
+        {
+          "row": 1,
+          "frame": 5
+        },
+        {
+          "row": 1,
+          "frame": 6
+        },
+        {
+          "row": 1,
+          "frame": 7
+        },
+        {
+          "row": 1,
+          "frame": 8
+        },
+        {
+          "row": 2,
+          "frame": 1
+        },
+        {
+          "row": 2,
+          "frame": 2
+        },
+        {
+          "row": 2,
+          "frame": 3
+        },
+        {
+          "row": 2,
+          "frame": 4
+        },
+        {
+          "row": 2,
+          "frame": 5
+        },
+        {
+          "row": 2,
+          "frame": 6
+        },
+        {
+          "row": 2,
+          "frame": 7
+        },
+        {
+          "row": 2,
+          "frame": 8
+        }
+      ],
+      "status": "generated review candidate"
+    },
+    {
+      "source": "wrecker.webp",
+      "sheet": "wrecker.sheet.png",
+      "width": 2048,
+      "height": 768,
+      "exact_canvas": true,
+      "real_alpha": true,
+      "frames_touching_cell_edges": [
+        {
+          "row": 3,
+          "frame": 4
+        },
+        {
+          "row": 3,
+          "frame": 5
+        }
+      ],
+      "status": "generated review candidate"
+    }
+  ]
+}

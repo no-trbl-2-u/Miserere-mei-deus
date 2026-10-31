@@ -260,6 +260,11 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - TF1 — loop tooling fix (the reminder and the AUDIT blank line); no T act waits on it
+- AN5a — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
+- AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
+- AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
+- AN5d — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
+- AN5e — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
 - CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
@@ -354,6 +359,8 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **AN5e added** (T, in session: "plot and implement them last", of the Smokehouse Gutter and the Tide-Gate, whose idles slide). **Added** AN5e under Unscheduled. Nothing ticked; no date moved.
+- **2026-10-30** — **every portrait animates, plotted (AN5)** (T, in session: "/plot Use all the new spritesheets from anim-temp in order to animate all the enemies that we currently have images for"). **Added** AN5a-AN5d under Unscheduled: no T act waits on them. The Nov 8 portrait swap keeps its premise; T ruled a swapped enemy goes back to static until a new sheet is drawn, and AN5a's test enforces it. Nothing ticked; no date moved.
 - **2026-10-31** — **two tooling fixes plotted (TF1)** (T, in session during `/heads-down`: "/plot asap, join this run"). **Added** TF1 under Unscheduled: no T act waits on it. Once it ships, the four ticked event-kind Items (Nov 4, 5, 6, 12) leave the reminder. Nothing ticked; no date moved.
 - **2026-10-31** — **the DANGER-only fight-or-flee screen and the plain combat icon plotted (EN2)** (T, in session: "Plot it, yes."). **Added** EN2a and EN2b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the fight screens. Nothing ticked; no date moved.
 - **2026-10-31** — **stat scaling added** (T, in the first-character session: "Add to the deadlines that we need to determine the stat scaling since right now, it miiiight be a little high. Idk"). **Added** one Item and its MVP-schedule piece, date Claude's draft for T to move: decide the stat scaling on Thu Nov 12 (0.5 h, `T`), beside the Defender check and after the first character is playable (CH1f, which the Nov 9 mid-MVP check already waits on). It precedes the Dec 7 card tuning, which tunes numbers on top of whatever rates T sets. Weeks now 10, 5 and 7.5 hours. Nothing ticked; no date moved.
