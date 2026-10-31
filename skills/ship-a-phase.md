@@ -131,6 +131,35 @@ starts them (D88).
 
 ### Step 2 — Read the brief
 
+**Claim the row first**, before reading its brief, so no other
+session or cron tick starts it while this one does (`skills/march.md`
+§3 "Claims"):
+
+```bash
+owner="${CLAIM_OWNER:-tick:${GITHUB_RUN_ID:-<session id>}}"
+node scripts/claims.mjs claim "<N>" --owner "$owner"
+```
+
+The owner is `$CLAIM_OWNER` when it is set (a `/heads-down` worker
+carries its orchestrator's owner, so the claim it already holds is
+renewed), else `tick:${GITHUB_RUN_ID:-<session id>}`: the Actions run
+id in CI, or the session id (the suffix of this session's `telemetry/`
+shard) when attended.
+
+- **Exit 0** — the row is yours for 24 h. Carry on.
+- **A refused claim (exit 1) skips the row.** It prints `held <N> by
+  <owner> until <time>`: name the holder in the tick's summary and
+  take the next pickable row (Step 1). A `phase N` run stops there
+  and reports the holder.
+- **Any other exit is a `claims.mjs` tooling error** (git, network,
+  auth, or the race lost six times). Log its stderr and carry on: the
+  tick falls back to the PR and mirror-issue checks of Step 2.4 alone.
+  The claim is best-effort, like the mirror (§7 rule 10).
+
+A tick that gives the row up after claiming it (no brief, a Step 2.4
+skip, a §10 `[blocked: …]`) releases it in the same tick:
+`node scripts/claims.mjs release "<N>" --owner "$owner"`.
+
 `plan/phases/phase_<N>_<topic>.md` (or the part-plan section the
 row points to). If missing, the row is not pickable: file "needs a
 brief: `/plot <N>`" and return (§3 above). Note the brief's
@@ -160,10 +189,11 @@ scheduled CI cron, an attended session. Two ticks that pick the same
 files the phase owns.
 
 An open `loop:pr` PR whose title names `phase <N>` is the claim
-(`skills/march.md` §3 "Claims"): if one exists, skip the row. The
-mirror issue is the second, older claim for a tick that has not
-opened its PR yet. Before starting work, check whether one is
-already open **and recent**:
+(`skills/march.md` §3 "Claims"): if one exists, skip the row (and
+release Step 2's claim). Before the PR, the `claims.json` claim from
+Step 2 is the claim. The mirror issue is the third, oldest claim, and
+the one a tick falls back on when `claims.mjs` errored. Before
+starting work, check whether one is already open **and recent**:
 
 ```bash
 claimed=$(gh issue list --repo "$GH_REPO" --state open \
@@ -408,7 +438,7 @@ Outcomes:
   red.
 - **`gh` unreachable** — stop per §10.
 
-### Step 12.5 — Phase mirror comment
+### Step 12.5 — Phase mirror comment and claim release
 
 If Step 2.5 captured `$PHASE_ISSUE`, comment the PR URL on the
 mirror (best-effort):
@@ -416,6 +446,19 @@ mirror (best-effort):
 ```bash
 gh issue comment "$PHASE_ISSUE" --repo "$GH_REPO" --body "PR opened: <pr-url>"
 ```
+
+Release Step 2's claim: the PR is open, and the PR is the claim from
+here on (`skills/march.md` §3 "Claims"). Best-effort, like the claim:
+a tooling error is logged, and the claim expires 24 h after its last
+renewal anyway.
+
+```bash
+node scripts/claims.mjs release "<N>" --owner "$owner"
+```
+
+A `/heads-down` worker releases too: its owner is the orchestrator's,
+and the orchestrator's other claims are on other rows, so only this
+row's entry goes.
 
 The mirror closes when T merges: `close-trailers` reads the
 `Closes #<N>` trailer from the merge push's commit range, and

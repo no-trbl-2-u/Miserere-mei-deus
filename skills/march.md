@@ -132,7 +132,8 @@ that:
    one `plan/PHASE_CANDIDATES.md` row "needs a brief: `/plot <N>`"
    (once; skip if it exists) and move on. The loop never authors a
    brief; `/plot` and attended `/plan-a-phase` do;
-4. **is not claimed** by an open `loop:pr` PR (below, "Claims");
+4. **is not claimed** by an open `loop:pr` PR or a live claim in
+   `claims.json` held by another owner (below, "Claims");
 5. **is not held on another row's outcome.** A row can meet its
    `Requires` and still wait: a brief (its own, or a sibling's
    Follow-ups) may say it is amended or drawn from an open row's
@@ -176,8 +177,30 @@ An open `loop:pr` PR is the claim on the work it carries. Its title
 names the claim: `phase <N>` for a build-plan row, the queue item's
 ID (`AUDIT <id>`, `CRITIQUE <id>`) for a fix. `/march`,
 `/ship-a-phase` and `/iterate` skip any row or item an open PR's
-title names. No `claims` branch is needed while one loop runs at a
-time (`plan/PHASE_CANDIDATES.md` holds that candidate).
+title names.
+
+Before its PR exists, a build-plan row is claimed in `claims.json`,
+which `scripts/claims.mjs` keeps on an orphan `claims` branch of
+origin (phase HW1b). `/ship-a-phase` claims its row before it reads
+the brief (`skills/ship-a-phase.md` Step 2) and releases it once the
+PR is open, so the record only holds pre-PR work and the PR stays the
+one long-lived claim. A `/heads-down` worker claims under the
+orchestrator's owner (`$CLAIM_OWNER`); every other run claims as
+`tick:<GITHUB_RUN_ID or session id>`. A claim lives 24 h past its last
+renewal; an expired one counts as free and drops on the next write.
+Every write is a compare-and-swap (a plumbing commit on the fetched
+tip, pushed without force, re-fetched and retried up to five times),
+and a push to `claims` fires no workflow (every `push:` trigger is
+`branches: [main]`). To see whether a row is free:
+
+```bash
+node scripts/claims.mjs check <N> --owner "$owner"   # 0 free or yours, 1 held (prints the holder), 3 tooling error
+```
+
+`/march` and `/iterate` do not claim: `/march` dispatches
+`/ship-a-phase`, which claims, and `/iterate`'s queue items are
+claimed by their open PR. A `claims.mjs` tooling error (exit 3) never
+blocks a tick: it falls back to the PR and mirror-issue checks.
 
 ### Landing a change (the PR flow, D84–D87)
 
