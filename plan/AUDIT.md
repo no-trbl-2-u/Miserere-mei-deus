@@ -30,7 +30,7 @@
 > Pass narrative through the eleventh pass (2026-09-24) and resolved rows
 > moved verbatim to `archive-pre-revamp:plan/archive/AUDIT_2026.md` (TRIM THE FAT T4, 2026-09-25).
 
-### [loop-call] 2026-10-28 — the cache's TAKE THE GOODS reveals its rolled goods (CRITIQUE pass 108, issue #1041)
+### [x] [loop-call] 2026-10-28 — the cache's TAKE THE GOODS reveals its rolled goods (CRITIQUE pass 108, issue #1041) — RATIFIED via /oversight 2026-10-31
 - call: show the goods before the pick rather than rewrite the copy to say "sight unseen". RW1b (A8) treated a blind TAKE A CARD as a defect (CRITIQUE RC2 item 11) and left TAKE THE GOODS untouched without ruling it hidden; the goods are rolled at session creation, so the reveal is presentation only and makes the one-way pick symmetric.
 - reversible by T: drop the offer's `goods` chips in `cache.engine.ts` and the copy can say the box is blind.
 
@@ -66,6 +66,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next: `/iterate`: the recorder stamps one `hand-drawn` at ms 0
 
 ## Pending
+
+### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
+- category: process
+- impact: 6
+- ease: 6
+- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
+- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
 
 ### [ ] [content] measured drift: bw-w5/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.90 (even, 2026-10-30)
 - issue: #1141
