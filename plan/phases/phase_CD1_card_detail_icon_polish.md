@@ -1,5 +1,7 @@
 # Phase CD1 — Card detail and icon polish: keywords above the modal, the character-select relic icon
 
+Phase ids: BUG1h-BUG1i (the 2026-10-31 bug batch; renamed from CD1a, CD1b at T's request).
+
 ## Sources
 
 - T, playing the latest preview APK (main 8f876ec), 2026-10-31, two bug reports:
@@ -119,7 +121,7 @@ per-surface ledger-above-and-outside-the-panel tests below pass; each UI phase's
 
 ## Phases
 
-### CD1a — The character-select relic wears the satchel's icon · S · closes A1, A2 · requires nothing
+### BUG1h — The character-select relic wears the satchel's icon · S · closes A1, A2 · requires nothing
 Measure: the new `character-select.relic-icon.test.tsx` passes (select-screen icon equals
 `getItemGlyph(relicId)` for the roster and fixtures; Suppliant = `relic-engagement-ring`; no `<Svg` under
 `app/character-select/`), the PR shows the select screen before/after, and `npm run verify -w
@@ -134,7 +136,7 @@ axiomancer-mobile` is green.
   visual baseline for the select screen is re-stamped.
 - Verify gate: `npm run verify -w axiomancer-mobile`; before/after shot of `/character-select`.
 
-### CD1b — Keyword explanations above and outside the card detail, in one shared ledger · M · closes A3, A4, A5, A6 · requires nothing
+### BUG1i — Keyword explanations above and outside the card detail, in one shared ledger · M · closes A3, A4, A5, A6 · requires nothing
 Measure: the four per-surface tests pass (on combat, rewards, deck and hazard the ledger renders outside
 and above the card's panel or frame, and precedes the card in render order), the four local keyword row markups are gone, `npm run verify
 -w axiomancer-mobile` is green, and the PR carries four before/after pairs.
