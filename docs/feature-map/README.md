@@ -33,6 +33,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | The hazard minigame | route | yes | yes | yes | no |
 | The hazard deck | route | yes | yes | yes | no |
 | The Labyrinth | route | yes | yes | yes | no |
+| Atlas | engine area | no | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Atlas") |
 | Cards | engine area | yes | yes | yes | no |
 | VITAE and stats | engine area | yes | yes | yes | no |
 | A fight | engine area | yes | yes | yes | no |
@@ -99,6 +100,7 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Settings (`route:settings`)
 - Travel (`route:travel`)
 - Village (`route:village`)
+- Atlas (`area:Atlas`)
 - Effects (`area:Effects`)
 - Game (`area:Game`)
 - Log (`area:Log`)

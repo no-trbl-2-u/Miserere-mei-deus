@@ -270,7 +270,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
 - CA3d — Blood Price's new paintings; no T act scheduled to view them yet (date not set)
 - HD1b — plotted 2026-10-29; cleanup loop work, needs no time from T; date not set.
-- AT1a — plotted 2026-10-29; the DevLog atlas's data, loop work that needs no time from T; date not set.
 - AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
 - AT1c — plotted 2026-10-29; the atlas's drift plate, loop work; date not set.
 - AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
