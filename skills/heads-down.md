@@ -65,17 +65,34 @@ merges" is a real answer; say so instead of inventing fan-out.
   - **Haiku** for nothing that touches the repo's hard rules
     (commits, PRs, plan files); at most read-only lookups.
 
-### Step 3 — Show T the plan and ask
+### Step 3 — The question gate: show T the plan and ask everything now
 
-Print the waves as a table (wave, row or PR, verb, model and why,
-what it waits on, files it owns). Then propose **three improvements**
-to the strategy (a row to split, a wave to reorder, a model to
-change, a held row to unhold by a call) and ask T with
-`AskUserQuestion` (`docs/asking-well.md`: at most four questions,
-recommendation first and marked, each with its defer path). Tell T,
-in the same message, not to merge or turn on auto-merge for any
-`plot` PR a worker is about to edit (hard rule 6). `peek` stops
-here.
+This is the one place T is asked before work starts. It runs after
+the waves are mapped and before any launch. Print the waves as a
+table (wave, row or PR, verb, model and why, what it waits on, files
+it owns). Then propose **three improvements** to the strategy (a row
+to split, a wave to reorder, a model to change, a held row to unhold
+by a call).
+
+Then collect **every question the rows in scope will need**, from:
+
+- `[T to confirm #n]` markers still open in each row's brief;
+- `## Your calls` items still open on any `plot` PR for those rows;
+- `plan/NEEDS_T.md` rows that name them;
+- ambiguities you find by reading each brief (Read the brief of
+  every row in scope; a worker that would have had to guess is a
+  question).
+
+Ask them all, together with the plan and its three improvements, with
+`AskUserQuestion` (`docs/asking-well.md`) in batches of **at most four
+questions**, recommendation first and marked, each with its defer
+path. Ask every batch before the first launch. When no question
+turns up, say so in one line and go on. Record each answer against
+the row it belongs to: it goes into that worker's prompt (Step 4,
+item 5) as "T's answers", verbatim. A `plot` PR's calls go to a calls
+worker as Step 7 describes. Tell T, in the same message, not to merge
+or turn on auto-merge for any `plot` PR a worker is about to edit
+(hard rule 6). `peek` stops here.
 
 ### Step 4 — Launch the wave
 
@@ -89,24 +106,42 @@ of this conversation. It carries:
 3. what NOT to touch: every sibling worker's PR, branch and owned
    files, named one by one;
 4. the callouts so far that matter to this row (Step 5), pasted in;
-5. the house constraints that bite a worker (§5 notes);
-6. **push once**: the branch is pushed when the verify gate is
+5. **T's answers** from the Step 3 gate that concern this row,
+   verbatim (or "none");
+6. the house constraints that bite a worker (§5 notes);
+7. **push once**: the branch is pushed when the verify gate is
    green, and not again while its review runs; a second push
    mid-review cancels the `judge` and red-gates the old SHA;
-7. **UI shots, when the row changes what is on screen**: a before
+8. **UI shots, when the row changes what is on screen**: a before
    and after of every screen it touches, shown in the PR description
    and never committed (§4, hard rule 10);
-8. the fixed final-report shape:
+9. **the park rule**: never ask T. When a call comes up, take the
+   recommended default and log it under `DEFAULTS:`. Park any
+   genuine new question under `PARKED:` and carry on building the
+   default;
+10. the fixed final-report shape:
 
 ```
 STATUS: pr-open | green | blocked
 PR: <number or none>
 CHECKS: <commands and results>
 SHOTS: <screens attached, and how> | none: <not a UI change, or why not>
+DEFAULTS:
+- <call> | took: <option> | why: <reason>
+PARKED:
+- q: <whole question> | alts: <a; b> | default taken: <x> | why: <reason>
 CALLOUTS:
 - footgun: <what> | file: <path or n/a> | fix: <how to avoid> | matters to: <next phase id or all>
 OPEN: <anything for T>
 ```
+
+A parked `q` is a **whole question** that someone who knows the
+project but not the row can answer: say in words what it decides.
+Write `none` under a line with nothing to list. A report with
+neither a `DEFAULTS:` nor a `PARKED:` line goes back to its worker,
+like a report with no `SHOTS:` line. Keep every worker's `DEFAULTS:`
+and `PARKED:` entries in the digest (Step 5), tagged by row, for the
+end gate.
 
 ### Step 5 — The callout bus
 
@@ -143,10 +178,25 @@ them to the `plot` PR as `skills/plot.md` §3 "Answering T's calls"
 lays out. That worker fetches the PR's state before its first edit
 (hard rule 6).
 
-### Step 8 — Wrap up
+### Step 8 — The end gate and wrap up
 
-Report to T in one block: each merged PR (number, row, one line),
-each PR still open and what it waits on, the open items for T (calls,
+Before the final report, ask T every parked question of the run
+(each worker's `PARKED:` entries, de-duplicated) with
+`AskUserQuestion` in batches of at most four, recommendation first,
+each stating the default the worker took. No parked question: say so
+and skip. Then route each answer that **contradicts** a default:
+
+- the row's PR is still open: send it to that worker (`SendMessage`)
+  as a follow-up commit to make after the review verdict. The
+  push-once rule holds: no push while the review runs;
+- the PR has merged: offer T a `/plot` (AGENTS.md rule 8) in one
+  `AskUserQuestion`; never hand-make the fix.
+
+An answer that agrees with the default needs no action.
+
+Then report to T in one block: each merged PR (number, row, one line),
+each PR still open and what it waits on, every default taken and
+every answer to a parked question, the open items for T (calls,
 `plot` PRs to merge, attended rows), and the callout digest grouped
 by the phase it matters to.
 
@@ -184,6 +234,11 @@ by the phase it matters to.
     PR commits are the `baseline:approve` baselines it already owes.
     A report with no `SHOTS:` line, or a UI PR whose body has no
     shots and no reason, goes back to its worker.
+11. **Questions only at the two gates.** T is asked at the Step 3
+    gate (everything the rows need, before the first launch) and the
+    Step 8 end gate (everything parked). Never mid-run: workers take
+    the default and park, and the orchestrator relays T's own
+    mid-run decisions but does not start questions of its own.
 
 ## 4. UI before/after shots (tell every UI worker)
 

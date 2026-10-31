@@ -579,6 +579,46 @@ test('/heads-down UI workers show before/after shots in the PR body, never in th
   assert.match(hd, /## Screenshots/)
 })
 
+// --- /heads-down asks at two gates and workers park (HW1a) ------------------
+
+test('/heads-down asks every question at a gate before "Launch the wave"', () => {
+  const hd = read('skills/heads-down.md')
+  const gate = hd.indexOf('### Step 3 — The question gate')
+  const launch = hd.indexOf('### Step 4 — Launch the wave')
+  assert.ok(gate > 0 && launch > gate, 'the question gate precedes Launch the wave')
+  const body = hd.slice(gate, launch)
+  assert.match(body, /\[T to confirm #n\]/)
+  assert.match(body, /## Your calls/)
+  assert.match(body, /plan\/NEEDS_T\.md/)
+  assert.match(body, /at most four\s+questions/)
+  assert.match(body, /before the first launch/)
+  assert.match(body, /T's answers/)
+  assert.match(body, /calls\s+worker/)
+})
+
+test('/heads-down workers never ask T and report DEFAULTS and PARKED lines', () => {
+  const hd = read('skills/heads-down.md')
+  assert.match(hd, /\*\*the park rule\*\*: never ask T/)
+  assert.match(hd, /^DEFAULTS:\n- <call> \| took: <option> \| why: <reason>$/m)
+  assert.match(
+    hd,
+    /^PARKED:\n- q: <whole question> \| alts: <a; b> \| default taken: <x> \| why: <reason>$/m,
+  )
+  assert.match(hd, /neither a `DEFAULTS:` nor a `PARKED:` line goes back/)
+})
+
+test('/heads-down end gate asks the parked questions and routes contradicting answers', () => {
+  const hd = read('skills/heads-down.md')
+  const end = hd.slice(hd.indexOf('### Step 8 — The end gate'), hd.indexOf('## 3. Hard rules'))
+  assert.match(end, /every parked question of the run/)
+  assert.match(end, /`SendMessage`/)
+  assert.match(end, /follow-up commit[^.]*after the review verdict/)
+  assert.match(end, /push-once rule holds/)
+  assert.match(end, /`\/plot`/)
+  assert.match(end, /every default taken/)
+  assert.match(hd, /\*\*Questions only at the two gates\.\*\*/)
+})
+
 // --- /plot splits into phases and lands by a `plot` PR (D93) ----------------
 
 test('/plot opens a plot-labelled PR, never loop:pr, never a push to main', () => {
