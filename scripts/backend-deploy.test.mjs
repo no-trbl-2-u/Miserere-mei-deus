@@ -5,7 +5,7 @@
 // real D1 database id in backend/wrangler.toml.
 
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import test from 'node:test'
 
 const root = new URL('../', import.meta.url)
@@ -39,6 +39,23 @@ test('it runs on a push to main touching backend/**, and by hand', () => {
   assert.match(head, /\n  push:\n    branches: \[main\]\n    paths:\n(?:      - .+\n)*      - 'backend\/\*\*'\n/)
   assert.match(head, /\n  workflow_dispatch:\n/)
   assert.doesNotMatch(head, /pull_request/, 'a PR never deploys')
+})
+
+test('it also deploys on every mechanics file the Worker bundles (BUG1b)', () => {
+  const paths = [...head.matchAll(/^      - '([^']+)'$/gm)].map((m) => m[1])
+  const bundled = new Set()
+  for (const file of readdirSync(new URL('backend/src/', root)).filter((f) => f.endsWith('.ts'))) {
+    const text = readFileSync(new URL(`backend/src/${file}`, root), 'utf8')
+    for (const m of text.matchAll(/from '(?:\.\.\/)+axiomancer-mechanics\/src\/([^']+)'/g)) {
+      bundled.add(`axiomancer-mechanics/src/${m[1]}.ts`)
+    }
+  }
+  assert.ok(bundled.has('axiomancer-mechanics/src/Combat/combat.play-log-contract.ts'), 'the play-log contract is bundled')
+  assert.ok(bundled.has('axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.attempt-contract.ts'), 'the attempt contract is bundled')
+  for (const file of bundled) assert.ok(paths.includes(file), `${file} is bundled by the Worker but is not a deploy trigger path`)
+  for (const p of paths.filter((p) => p.startsWith('axiomancer-mechanics/'))) {
+    assert.ok(bundled.has(p), `${p} is a deploy trigger but the Worker does not import it`)
+  }
 })
 
 test('the job deploys only from main, so a dispatch on another branch does nothing', () => {

@@ -10,6 +10,10 @@ import { SELF } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
 
 import { PLAY_LOG_LIMITS } from '../src/contract';
+import {
+    COMBAT_EVENT_KINDS,
+    PLAY_LOG_UI_EVENT_KINDS,
+} from '../../axiomancer-mechanics/src/Combat/combat.play-log-contract';
 import type {
     DeckEventList,
     DeckEventPost,
@@ -110,6 +114,20 @@ describe('POST /v1/fights', () => {
         expect(created.id).toBeTypeOf('number');
         expect(Number.isNaN(Date.parse(created.receivedAt))).toBe(false);
         expect(await fights()).toEqual([{ id: created.id, receivedAt: created.receivedAt, ...fight() }]);
+    });
+
+    it('BUG1b A7: takes a fight holding one of every engine and screen event kind', async () => {
+        const events = [
+            ...COMBAT_EVENT_KINDS.map((kind, i) => ({ kind, ms: i, vitae: 30 })),
+            ...PLAY_LOG_UI_EVENT_KINDS.map((kind, i) => (
+                kind === 'ui-signature-refused'
+                    ? { kind, signatureId: 'sig-1', reason: 'Need 4 Conviction', ms: i, vitae: 30 }
+                    : { kind, cardId: 'card-1', ms: i, vitae: 30 }
+            )),
+        ] as unknown as FightPost['events'];
+        const response = await post(FIGHTS, fight({ events }));
+        expect(response.status).toBe(201);
+        expect((await fights())[0]!.events).toHaveLength(COMBAT_EVENT_KINDS.length + PLAY_LOG_UI_EVENT_KINDS.length);
     });
 
     it('round-trips a null build commit and a fractional multiplier', async () => {
