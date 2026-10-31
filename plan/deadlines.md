@@ -259,6 +259,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- TF1 — loop tooling fix (the reminder and the AUDIT blank line); no T act waits on it
 - HW1a — loop tooling for T's `/heads-down` runs; no T act waits on it
 - HW1b — loop tooling (row claims); no T act waits on it
 - HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
@@ -356,6 +357,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **two tooling fixes plotted (TF1)** (T, in session during `/heads-down`: "/plot asap, join this run"). **Added** TF1 under Unscheduled: no T act waits on it. Once it ships, the four ticked event-kind Items (Nov 4, 5, 6, 12) leave the reminder. Nothing ticked; no date moved.
 - **2026-10-31** — **stat scaling added** (T, in the first-character session: "Add to the deadlines that we need to determine the stat scaling since right now, it miiiight be a little high. Idk"). **Added** one Item and its MVP-schedule piece, date Claude's draft for T to move: decide the stat scaling on Thu Nov 12 (0.5 h, `T`), beside the Defender check and after the first character is playable (CH1f, which the Nov 9 mid-MVP check already waits on). It precedes the Dec 7 card tuning, which tunes numbers on top of whatever rates T sets. Weeks now 10, 5 and 7.5 hours. Nothing ticked; no date moved.
 - **2026-10-30** — **the first character authored; CH1g plotted** (T in session, the CH1e sitting into `/plot asap`). **Ticked** the Item "Author the first character" (its Status re-derived from CH1e, now `[x]`: the Chosen is recorded in the CH1 brief). **Edited** that Item's name from "three lane cards" to "the starting lane cards": T changed the deck rule to one card from each starting lane and none from the relic's (CH1g). **Added** CH1g to the `Waits on` of "Mid-MVP check", beside CH1f, which now requires it.
 - **2026-10-31** — **all four lanes' card art plotted (CA3)** (T, in session: "I want to swap out all the new art I've gotten on to the 4 lanes' cards"). **Added** CA3a (the cutter and the Defender's paintings) and CA3e (the names) to the `Waits on` of the Nov 12 Defender check; CA3b beside MF1e and CA3c, CA3d under Unscheduled. Nothing ticked; no date moved.
