@@ -1,4 +1,16 @@
 {
+  "CD1a": {
+    "owner": "heads-down:6d912eef",
+    "at": "2026-10-31T21:25:09.892Z",
+    "renewed": "2026-10-31T21:25:09.892Z",
+    "ttlHours": 24
+  },
+  "CD1b": {
+    "owner": "heads-down:6d912eef",
+    "at": "2026-10-31T21:25:09.892Z",
+    "renewed": "2026-10-31T21:25:09.892Z",
+    "ttlHours": 24
+  },
   "CX1a": {
     "owner": "heads-down:6d912eef",
     "at": "2026-10-31T21:14:50.752Z",
