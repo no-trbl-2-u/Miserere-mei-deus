@@ -3,8 +3,8 @@
  *
  * A character is a starting point for a run, not a preset: it carries a
  * portrait, a starting relic (worn from the first node), a stat spread, two
- * starting card lanes other than the relic's lane, three starting lane cards
- * (one per lane) and a one-line playstyle. `createNewGameState({ characterId })`
+ * starting card lanes other than the relic's lane, two starting lane cards
+ * (one per starting lane, none from the relic's lane) and a one-line playstyle. `createNewGameState({ characterId })`
  * (`Game/game.reducer.ts`) turns a definition into a run.
  *
  * The roster is empty until T's first character is written (phase CH1f); a
@@ -31,8 +31,8 @@ import { relicLaneId } from '../Items/relic-lanes';
  * @property startingRelicId  - A relic in the relic library; worn at run start.
  * @property baseStats        - HEART / BODY / MIND, totalling the fresh-run budget.
  * @property startingLaneIds  - Two registered lanes, neither the relic's lane nor grey.
- * @property startingCardIds  - Three lane cards: one from each starting lane and
- *                              one from the relic's lane, in any order.
+ * @property startingCardIds  - Two lane cards: one from each starting lane, in
+ *                              any order; none from the relic's lane.
  * @property playstyle        - One short line the select screen shows.
  */
 export interface CharacterDefinition {
@@ -42,7 +42,7 @@ export interface CharacterDefinition {
     readonly startingRelicId: string;
     readonly baseStats: Readonly<BaseStats>;
     readonly startingLaneIds: readonly [string, string];
-    readonly startingCardIds: readonly [string, string, string];
+    readonly startingCardIds: readonly [string, string];
     readonly playstyle: string;
 }
 
@@ -53,10 +53,10 @@ export const FRESH_RUN_BASE_STATS: Readonly<BaseStats> = Object.freeze({ heart: 
 export const FRESH_RUN_STAT_BUDGET =
     FRESH_RUN_BASE_STATS.heart + FRESH_RUN_BASE_STATS.body + FRESH_RUN_BASE_STATS.mind;
 
-/** The grey part of a character's deck: Blow 3, Ward 2, Word 2 (copies kept). */
+/** The grey part of a character's deck: Blow 3, Ward 3, Word 2 (copies kept). */
 export const CHARACTER_GREY_DECK: readonly string[] = Object.freeze([
     'grey-strike', 'grey-strike', 'grey-strike',
-    'grey-ward', 'grey-ward',
+    'grey-ward', 'grey-ward', 'grey-ward',
     'grey-word', 'grey-word',
 ]);
 
@@ -79,7 +79,7 @@ export function getCharacterDefinition(
 
 /**
  * The ten-card deck a character's run is dealt: {@link CHARACTER_GREY_DECK}
- * then the three starting lane cards.
+ * then the two starting lane cards.
  */
 export function characterDeck(def: Pick<CharacterDefinition, 'startingCardIds'>): string[] {
     return [...CHARACTER_GREY_DECK, ...def.startingCardIds];
@@ -96,7 +96,8 @@ export type CharacterProblemCode =
     | 'stats-budget'
     | 'card-unknown'
     | 'card-forbidden-type'
-    | 'cards-not-one-per-lane';
+    | 'cards-not-one-per-lane'
+    | 'card-in-relic-lane';
 
 /** One broken rule, with a sentence naming it. */
 export interface CharacterProblem {
@@ -113,8 +114,9 @@ const FORBIDDEN_STARTING_CARD_TYPES: ReadonlySet<string> = new Set(['spell', 'gl
  * The rules: the relic is in the library and opens a registered lane; each
  * starting lane is registered, is not grey and is not the relic's lane; the
  * two starting lanes differ; the stats total {@link FRESH_RUN_STAT_BUDGET};
- * each starting card exists and is not a Spell, a Global or a Curse; and the
- * three cards are exactly one from each of the three lanes.
+ * each starting card exists and is not a Spell, a Global or a Curse; the two
+ * cards are exactly one from each starting lane; and neither is a card of the
+ * relic's lane.
  *
  * @param def    - The definition to check.
  * @param lanes  - The lane registry; defaults to {@link CARD_LANES}.
@@ -159,9 +161,14 @@ export function characterProblems(
         }
     }
 
-    const characterLanes = [...def.startingLaneIds, relicLane];
-    if (!isOneCardPerLane(def.startingCardIds, characterLanes, lanes)) {
-        add('cards-not-one-per-lane', `${def.id}: the starting cards are not one card from each of its three lanes`);
+    if (!isOneCardPerLane(def.startingCardIds, def.startingLaneIds, lanes)) {
+        add('cards-not-one-per-lane', `${def.id}: the starting cards are not one card from each of its two starting lanes`);
+    }
+    const relicLaneCards = relicLane === undefined ? undefined : getCardLane(relicLane, lanes)?.cardIds;
+    for (const cardId of def.startingCardIds) {
+        if (relicLaneCards?.includes(cardId)) {
+            add('card-in-relic-lane', `${def.id}: starting card ${cardId} is in the relic's lane ${relicLane}`);
+        }
     }
     return problems;
 }
