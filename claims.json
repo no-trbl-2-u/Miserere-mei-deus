@@ -17,6 +17,24 @@
     "renewed": "2026-10-31T21:24:51.259Z",
     "ttlHours": 24
   },
+  "SM1b": {
+    "owner": "heads-down:3bb24178",
+    "at": "2026-10-31T21:34:16.812Z",
+    "renewed": "2026-10-31T21:34:16.812Z",
+    "ttlHours": 24
+  },
+  "SM1c": {
+    "owner": "heads-down:3bb24178",
+    "at": "2026-10-31T21:34:16.812Z",
+    "renewed": "2026-10-31T21:34:16.812Z",
+    "ttlHours": 24
+  },
+  "SM1f": {
+    "owner": "heads-down:3bb24178",
+    "at": "2026-10-31T21:34:16.812Z",
+    "renewed": "2026-10-31T21:34:16.812Z",
+    "ttlHours": 24
+  },
   "ST1a": {
     "owner": "heads-down:a1194c77",
     "at": "2026-10-31T21:33:43.372Z",
