@@ -1,7 +1,8 @@
 # Phase SK1 — The Chosen's signature says why it will not fire, and the play log takes fights again
 
 > `/plot asap` from T, 2026-10-31, run unattended (T not available for
-> questions). Two phases, SK1a and SK1b.
+> questions). Three phases: SK1c, SK1a and SK1b. SK1c was added on T's
+> answer to call 1 on PR #1236 (2026-10-31): every foe can be befriended.
 
 ## Sources
 
@@ -18,6 +19,9 @@
   Suppliant's Ring for the Chosen, 2026-10-30).
 - D47 (relics keep signatures), D88 and D99 (content only inside a briefed
   phase), D108 (each run opens as a character), D93 (plot PRs).
+- T's answer to call 1 on plot PR #1236 (2026-10-31): "Yes, let's make all
+  the enemies befriendable so we can do some testing. The reward right now is
+  no xp, but shillings or a consumable (both output for their level)".
 
 ## What was fixed before, and why it did not hold
 
@@ -56,7 +60,8 @@ Bleeding Signet from the dev chip, and the refused-rune tests
    the first Green Jelly is at bw-t2, level 5 (`:311`). T's play log shows the
    Chosen's deck at bw-w2 and bw-w3 on build 8f876ec (evidence below), so both
    of T's fights refused the signature with "Float-Eye will not be befriended"
-   and "Gallows Crow will not be befriended". The refusal is legitimate.
+   and "Gallows Crow will not be befriended". The refusal was legitimate under
+   the rule of the day (SK1c changes the rule on T's answer to call 1).
 3. **Conviction starts at 0 and the Open Hand costs ◆4**
    (`combat.engine.ts:272`; `combat.signature.ts:49`). Conviction comes only
    from scrapping a card (+1, two per turn, `combat.engine.ts:121, 668-680`),
@@ -100,7 +105,10 @@ Bleeding Signet from the dev chip, and the refused-rune tests
 
 ## Outcome
 
-The Chosen's rune says, on the board and without a tap, why it will not fire;
+Every foe can be befriended, and a befriend pays shillings or a consumable
+scaled to the foe's level and no XP, so the Chosen's Open Hand works from his
+first fight; the rune says, on the board and without a tap, why it will not
+fire when it will not (too little Conviction, or the foe not yet low enough);
 a test drives the Chosen's own starting kit into a real fight and both refuses
 and casts the signature through the engine and the UI; and the play log stores
 the fights a preview build posts, so the next refused tap is on record.
@@ -111,11 +119,14 @@ the fights a preview build posts, so the next refused tap is on record.
   new): `createNewGameState({ characterId: 'the-chosen' })` gives a player
   wearing `relic-disarming-plea`; a combat initialised against bw-w2's foe
   (Float-Eye, level 2, through the node's real encounter binding) has
-  `signatures` `['sig-disarming-plea']`; with Conviction at 4,
-  `playSignatureSkill` refuses with "Float-Eye will not be befriended",
-  spends nothing and logs no `signature-cast`. Against bw-t2's Green Jelly
-  with Conviction 4 and its VITAE at its gate, the same call casts: the phase
-  is `mercy-choice`, Conviction drops by 4 and the log holds `signature-cast`.
+  `signatures` `['sig-disarming-plea']`; with Conviction at 4 and Float-Eye
+  at full VITAE, `playSignatureSkill` refuses with "Float-Eye is not yet low
+  enough to spare", spends nothing and logs no `signature-cast`. With
+  Float-Eye's VITAE at its gate (SK1c's default gate, A9), the same call
+  casts: the phase is `mercy-choice`, Conviction drops by 4 and the log holds
+  `signature-cast`; sparing it ends the fight as `friendship` and pays SK1c's
+  reward (A10). Confirmed by T (2026-10-31): every foe can be befriended
+  (this line used to expect "Float-Eye will not be befriended").
 - **A2** Roster guard (same file or `character-roster.engine.test.ts`): for
   every `CHARACTER_ROSTER` character, its starting relic's signature is
   castable (`signatureCastBlock` returns null with Conviction at the cost and
@@ -137,12 +148,12 @@ the fights a preview build posts, so the next refused tap is on record.
   fresh store started through the real character-select CONFIRM as the
   Chosen, arrived at the real bw-w2 fight, the panel mounted as the route does:
   the rune `combat-signature-sig-disarming-plea` is drawn with
-  `combat-signature-refused-sig-disarming-plea`; the caption reads "Float-Eye
-  will not be befriended"; a press opens `combat-signature-info` leading with
-  the same reason; the fight recorder (a stub config) holds one
-  `ui-signature-refused` with that reason. Then a Green Jelly fight (bw-t2)
-  with Conviction 4 and the gate open: no caption, a press casts, the mercy
-  choice opens and the chip reads ◆ 0.
+  `combat-signature-refused-sig-disarming-plea` with Conviction 4 and
+  Float-Eye at full VITAE; the caption reads "Float-Eye is not yet low enough
+  to spare"; a press opens `combat-signature-info` leading with the same
+  reason; the fight recorder (a stub config) holds one `ui-signature-refused`
+  with that reason. Then, Float-Eye's VITAE at its gate: no caption, a press
+  casts, the mercy choice opens and the chip reads ◆ 0.
 - **A6** `backend-deploy.yml` deploys on a push to `main` touching
   `backend/**` **or any `axiomancer-mechanics` file the Worker bundles**
   (today `src/Combat/combat.play-log-contract.ts` and
@@ -154,20 +165,59 @@ the fights a preview build posts, so the next refused tap is on record.
   a 201, so the Worker as built from `main` takes every kind the engine emits.
   The phase's merge to `main` runs `backend-deploy` (it touches the workflow),
   and the run is green.
+- **A8** Every foe can be befriended. `isEnemyBefriendable` returns true for
+  every foe the engine builds (`createEnemy`: the library, Chapter 1's foes,
+  elites and bosses); "<foe> will not be befriended" is no longer
+  reachable from `signatureCastBlock`; a test walks `BW_ENCOUNTER_FOES`,
+  `BW_ELITE_DRAWS` and the enemy library and finds none refused for that
+  reason. The bot's Conviction value (`combat.card-program.ts:533, 1280`)
+  reads `isEnemyBefriendable`, not `friendshipReward !== undefined`.
+  Confirmed by T (2026-10-31): "let's make all the enemies befriendable so we
+  can do some testing".
+- **A9** A foe with no `befriendabilityConfig.hpGate` uses a default gate in
+  one tuning constant (`BEFRIEND_TUNING.defaultHpGate`, 0.3, the Green
+  Jelly's line); a foe that declares its own gate keeps it, and a YIELDING foe
+  can still be spared at any VITAE. [T to confirm #5]
+- **A10** A befriend pays **no XP** and **either shillings or one
+  consumable, scaled to the foe's level**, from one tuning table
+  (`BEFRIEND_TUNING`, `[content]` for T): shillings = `shillingsPerLevel`
+  (3) x the foe's level; the consumable is the Minor Healing Potion below
+  level 5, the Healing Potion at 5-9 and the Greater Healing Potion at 10
+  and above. Which of the two is paid is drawn from the combat rng (even
+  odds), so a seed reproduces it. [T to confirm #4] `CombatEndReport`
+  gains `shillings` (0 when none), the END_COMBAT reducer adds it to
+  `player.currency`; a befriend no longer rolls the loot table and no longer
+  pays the half-XP base; the Green Jelly's `xpBonus` and potion are retired
+  into the same rule (its narrative, flag and codex entry stay). Victory,
+  defeat and flee are unchanged. Confirmed by T (2026-10-31): "The reward
+  right now is no xp, but shillings or a consumable (both output for their
+  level)".
+- **A11** The friendship screen (`CombatFriendshipPanel`) shows the reward:
+  "+N shillings" or the consumable's name, and no XP line; a foe without a
+  `narrative` gets a plain one-line default from the presenter, marked
+  `[content]`. A test drives a befriend of Float-Eye at level 2 and reads
+  "+6 shillings" or "Minor Healing Potion" off the panel.
 
 Measure: `npm run verify -w axiomancer-mechanics`, `npm run verify -w
-axiomancer-mobile` and the root `npm test` pass with A1, A2 and A5 in them;
-on T's Nov 9 preview check the Chosen's first fight shows "Float-Eye will not
-be befriended" beside the rune without a tap, and the D1 `fights` table gains
-that fight's row.
+axiomancer-mobile` and the root `npm test` pass with A1, A2, A5, A8 and A10
+in them; on T's Nov 9 preview check the Chosen befriends Float-Eye at bw-w2
+with the Open Hand and is paid shillings or a potion and no XP, the rune
+says why beside it without a tap while it is refused, and the D1 `fights`
+table gains that fight's row.
 
 ## Decisions made upfront — DO NOT ASK
 
-- **The refusal is legitimate and stays.** The Open Hand is a befriend and
-  only the Green Jelly can be befriended; making other foes befriendable or
-  giving the Chosen another relic is content (D88, D99) and T's pick
-  (the CH1 "T's characters" table). The default fix is to say why.
-  [T to confirm #1]
+- **Every foe can be befriended.** Confirmed by T (2026-10-31): make all
+  the enemies befriendable, for testing; a befriend pays no XP, and
+  shillings or a consumable, both scaled to the foe's level (SK1c, A8-A11).
+  The Open Hand stays the Chosen's signature and the Suppliant's Ring his
+  relic. The rule lives in `isEnemyBefriendable` and one tuning table, not in
+  a `friendshipReward` on each foe, so it can be narrowed later in one place.
+- **The numbers are a first cut for testing.** `shillingsPerLevel` 3 puts a
+  level-2 befriend at 6 shillings (one village rest, `VILLAGE_TUNING.restPrice`)
+  and below a hazard's 12; the potion tiers follow the three potions in
+  `consumable.library.ts`. Both sit in `BEFRIEND_TUNING`, marked `[content]`
+  for T to retune.
 - **The words are the engine's.** The caption and the popup read
   `signatureCastBlock`'s reason through the VM, so the board, the popup, the
   accessibility label and the play log never disagree (the rule already at
@@ -187,6 +237,15 @@ that fight's row.
 
 ## Consumers to update
 
+- SK1c: `Enemy/befriend.ts` (`isEnemyBefriendable`, the default gate),
+  `Combat/combat.signature.ts` (`signatureCastBlock` reads the default gate),
+  `Combat/combat.card-program.ts:533, 1280` (bot value), `Game/store.ts`
+  `endCombat` (the friendship branch) and `CombatEndReport`,
+  `Game/game.reducer.ts` END_COMBAT (`player.currency`), the Green Jelly's
+  `friendshipReward` (`Enemy/enemy.library.ts:566`), `World/roster-health.ts:193`,
+  `axiomancer-mobile/components/event/aftermath/CombatFriendshipPanel.tsx`
+  and `app/devaftermath`; the Measured-truth report will move on its next
+  run (bots may now befriend), which is a measurement, not a gate (D57).
 - `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
   (`CombatSignatureVM` gains nothing new if `reason` and `refused` suffice;
   `signatureInfoLines` for A4).
@@ -198,13 +257,17 @@ that fight's row.
 
 ## Save / schema contracts
 
-None. No save field, no migration. The play-log contract is unchanged; SK1b
-only redeploys it.
+No save field, no migration: `player.currency` already exists.
+`CombatEndReport` (in memory, not saved) gains `shillings`. The play-log
+contract is unchanged; SK1b only redeploys it.
 
 ## Tests matrix
 
 | Suite | Kind | Subject |
 |---|---|---|
+| `axiomancer-mechanics/src/Enemy/befriend.engine.test.ts` (new) | unit | A8, A9 (every foe befriendable; default and declared gates) |
+| `axiomancer-mechanics/src/Game/e2e/befriend-reward.engine.test.ts` (new) | journey | A10 (no XP, shillings or the level's potion, seeded; currency rises) |
+| `axiomancer-mobile/components/event/aftermath/__tests__/CombatFriendshipPanel.test.tsx` | unit | A11 |
 | `axiomancer-mechanics/src/Character/e2e/chosen-signature.engine.test.ts` (new) | journey | A1, A2 |
 | `axiomancer-mobile/state/e2e/chosen-signature.screen.test.tsx` (new) | journey | A5 |
 | `axiomancer-mobile/components/combat/encounter/__tests__/CombatBoard.refused-rune.test.tsx` | unit | A3 caption shown when refused, absent when castable or short; A4 cost line |
@@ -227,14 +290,12 @@ Closes A<n>, ... Cause: <one line>. Tests: <suites>.
 
 ## DoD
 
-A1 to A7 ticked, each by exactly one phase below.
+A1 to A11 ticked, each by exactly one phase below.
 
 ## Follow-ups (out of scope)
 
-- If T answers call 1 with "make Float-Eye and the Gallows Crow
-  befriendable" or "give the Chosen a relic from his own lanes", that is a
-  content phase in T's words (friendship rewards, or a roster edit), plotted on
-  this PR before merge.
+- Per-foe friendship rewards and narratives (beyond the shared rule) are
+  content for a later phase in T's words, once the testing settles.
 - The Suppliant's lane (healing, stalling, utility) that T planned for the
   ring (SG1 answer 1) is MF1's Merciful lane; its card relics are not this
   plot's.
@@ -243,8 +304,22 @@ A1 to A7 ticked, each by exactly one phase below.
 
 ## Phases
 
-### SK1a — The refused rune says why on the board, and the Chosen's kit is pinned · M · closes A1, A2, A3, A4, A5 · requires nothing
-Measure: `chosen-signature.engine.test.ts` and `chosen-signature.screen.test.tsx` pass; the board shot shows the caption beside the Chosen's refused rune at bw-w2.
+### SK1c — Every foe can be befriended, for shillings or a potion and no XP · M · closes A8, A9, A10, A11 · requires nothing
+Measure: `befriend.engine.test.ts`, `befriend-reward.engine.test.ts` and the friendship panel test pass; a seeded befriend of Float-Eye at level 2 pays 6 shillings or a Minor Healing Potion and 0 XP.
+- Scope: `axiomancer-mechanics` (`Enemy/befriend.ts` and `BEFRIEND_TUNING`,
+  `Combat/combat.signature.ts`, `Combat/combat.card-program.ts`, `Game/store.ts`,
+  `Game/game.reducer.ts`, the Green Jelly's entry); `axiomancer-mobile`
+  (`CombatFriendshipPanel.tsx`, its presenter, `app/devaftermath`). Victory,
+  defeat and flee unchanged; no card, relic or cost changes.
+- Consumers: `World/roster-health.ts`; docs that say only the Green Jelly
+  can be befriended (grep "befriend" in `docs/` and the CLI help).
+- Save/schema: none (`CombatEndReport.shillings` is in memory).
+- Tests: rows A8, A9, A10, A11 of the matrix.
+- Verify gate: `npm run verify -w axiomancer-mechanics`, `npm run verify -w
+  axiomancer-mobile`, root `npm test`.
+
+### SK1a — The refused rune says why on the board, and the Chosen's kit is pinned · M · closes A1, A2, A3, A4, A5 · requires SK1c
+Measure: `chosen-signature.engine.test.ts` and `chosen-signature.screen.test.tsx` pass; the board shot shows the caption beside the Chosen's refused rune at bw-w2 at full VITAE.
 - Scope: `axiomancer-mechanics` (tests only: A1, A2); `axiomancer-mobile`
   (`CombatBoard.tsx` `SignatureColumn` caption, `combat-encounter.engine.ts`
   `signatureInfoLines`, the two tests, the refused-rune test). No engine rule
