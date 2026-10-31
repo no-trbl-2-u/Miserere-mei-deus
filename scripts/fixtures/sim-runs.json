@@ -1,0 +1,44 @@
+{
+  "policy": "wanderer",
+  "runs": [
+    {
+      "policy": "wanderer",
+      "seed": 1,
+      "characterId": "the-chosen",
+      "runId": "739503b8509ea073",
+      "outcome": "chapter-clear",
+      "endNodeId": "bw-b2",
+      "furthestNodeId": "bw-d5",
+      "level": 16,
+      "vitae": 283,
+      "maxVitae": 288,
+      "fights": { "won": 19, "spared": 0, "lost": 0, "fled": 0 },
+      "nodesResolved": 44,
+      "steps": 328,
+      "deckByLane": { "grey": 8, "defender": 2, "blood-price": 13, "merciful": 8 }
+    },
+    {
+      "policy": "wanderer",
+      "seed": 2,
+      "characterId": "the-chosen",
+      "runId": "752e8580a9162934",
+      "outcome": "run-over",
+      "endNodeId": "bw-k2",
+      "furthestNodeId": "bw-k2",
+      "level": 9,
+      "vitae": 0,
+      "maxVitae": 226,
+      "fights": { "won": 11, "spared": 1, "lost": 2, "fled": 0 },
+      "nodesResolved": 30,
+      "steps": 210,
+      "deckByLane": { "grey": 8, "merciful": 4, "defender": 4 }
+    },
+    {
+      "policy": "wanderer",
+      "seed": 3,
+      "stuck": true,
+      "node": "bw-l4",
+      "error": "run stuck at breakwater/bw-l4 (step 306, screen map, VITAE 276/276, level 14): no road leads to anything unfinished"
+    }
+  ]
+}

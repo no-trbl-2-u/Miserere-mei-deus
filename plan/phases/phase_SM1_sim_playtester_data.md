@@ -108,8 +108,9 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
   batched per node, posted in order with a per-run `seq`, and dropped on failure (BE1). Each call site has a test
   under a mocked fetch; the gate shut makes no call.
 - **A9** A headless run driver plays one Chapter 1 run from a new game to its end (`run-over`, or the Breakwater boss
-  beaten and its exit reached) through the app's own store actions (`createAppStore`, `createAppActions`) [T to
-  confirm #3]. Every node kind the Breakwater carries resolves through the action its screen calls; a fight plays on
+  beaten and its exit reached) through the app's own store actions (`createAppStore`, `createAppActions`)
+  (Confirmed by T (2026-10-31)), starting as a new game does: character select's CONFIRM as a roster character. Every
+  node kind the Breakwater carries resolves through the action its screen calls; a fight plays on
   the engine's encounter functions with the run's real deck, relics, level and the live foe HP multiplier, and is
   ended through the `endCombat` bridge; VITAE, XP, items and the deck carry from node to node. A step with no legal
   move throws, naming the node and the state (a bug detector, not a grade). The same seed and policy give the same
@@ -208,7 +209,7 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
 - **Who counts as T** [T to confirm #2]: only a build that carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the
   committed preview profile in `eas.json` sets. Every other build posts `harness`, so a forgotten harness can never
   land in T's numbers. A dev server T opens by hand posts `harness` too.
-- **The bot plays the game T plays** [T to confirm #3]: the driver walks the app's own store actions headlessly
+- **The bot plays the game T plays** (Confirmed by T (2026-10-31): "App's own code"): the driver walks the app's own store actions headlessly
   (`createAppStore` and `createAppActions`, the layer the `state/e2e` flow suites already drive), so every node
   resolves through the code T's taps reach and the posts go through the same recorder and posters. The policies stay
   in mechanics; the driver lives in `axiomancer-mobile/sim/`, run under a dedicated jest config. Rejected for now: a
