@@ -567,3 +567,12 @@ export type {
     AxmLogEntry, AxmLogLevel, AxmLogDomain,
     AxmLogFilter,
 } from './Log';
+
+// ── Run sim (phase SM1e): the RunPolicy contract, the wanderer, and the ──
+// engine pieces the app's headless run driver (`axiomancer-mobile/sim/`) plays with.
+export * from './Game/run-sim';
+export { upgradeablePlayPhase } from './Combat/combat.encounter.sim';
+export { COMBAT_SIM_POLICIES } from './Combat/combat.sim-policies';
+export type { CombatSimPolicy, CombatSimPolicyId } from './Combat/combat.sim-policies';
+export type { HazardPolicyId } from './World/Hazard/hazard.sim';
+export { setSeed } from './Utils/rng';

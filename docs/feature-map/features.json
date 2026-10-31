@@ -1788,6 +1788,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/store.ts"
     },
     {
@@ -1801,6 +1807,18 @@
       "from": "area:Game",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.wanderer.ts"
     },
     {
       "kind": "coupling",
@@ -2029,6 +2047,24 @@
       "from": "area:Game",
       "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/run-loop.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-hazard.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-roads.ts"
     },
     {
       "kind": "coupling",
