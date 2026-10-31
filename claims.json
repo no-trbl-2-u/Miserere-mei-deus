@@ -1,4 +1,22 @@
 {
+  "BUG1b": {
+    "owner": "heads-down:6d912eef",
+    "at": "2026-10-31T20:58:15.605Z",
+    "renewed": "2026-10-31T20:58:15.605Z",
+    "ttlHours": 24
+  },
+  "BUG1j": {
+    "owner": "heads-down:6d912eef",
+    "at": "2026-10-31T20:58:15.605Z",
+    "renewed": "2026-10-31T20:58:15.605Z",
+    "ttlHours": 24
+  },
+  "MC1a": {
+    "owner": "heads-down:6d912eef",
+    "at": "2026-10-31T20:58:15.605Z",
+    "renewed": "2026-10-31T20:58:15.605Z",
+    "ttlHours": 24
+  },
   "SM1e": {
     "owner": "heads-down:3bb24178",
     "at": "2026-10-31T20:25:34.130Z",
