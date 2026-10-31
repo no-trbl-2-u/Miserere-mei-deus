@@ -10,9 +10,10 @@
 import { getCardById, getQuestline, questNodeStage, questStepState, questlineStep, resolveQuestNodeEvent } from '@mechanics';
 import type { Quest, QuestNodeStage, Reward } from '@mechanics';
 import type { AppStoreState, MobileQuestPaid } from '@/state/store';
-import { objectiveText, rewardItemName } from './quest-tracker.engine';
+import { objectiveText, rewardItem, rewardItemName } from './quest-tracker.engine';
 import {
     QUEST_GIVER_FALLBACK,
+    QUEST_LOCKED_LINE,
     questCardLine,
     questCardPickLine,
     questProgressLine,
@@ -39,8 +40,18 @@ export interface QuestStepVM {
     status: 'unaccepted' | 'active' | 'ready' | 'completed';
 }
 
+export interface QuestGiverVM {
+    name: string;
+    /** A portrait slug the screen resolves to art. */
+    portrait: string;
+}
+
 export interface QuestVM {
     active: boolean;
+    /** Who speaks the node's lines; null when the node names no giver. */
+    giver: QuestGiverVM | null;
+    /** The refusal line while the stage is `locked`: the node's own, else the shared one. */
+    lockedLine: string;
     stage: QuestNodeStage;
     /** "STEP 2 OF 4". */
     eyebrow: string;
@@ -61,6 +72,8 @@ export interface QuestVM {
 const EMPTY_VM: QuestVM = Object.freeze({
     active: false,
     stage: 'locked',
+    giver: null,
+    lockedLine: QUEST_LOCKED_LINE,
     eyebrow: '',
     giverLine: '',
     behind: null,
@@ -160,10 +173,16 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
                     const name = rewardItemName(r);
                     return name === null ? [] : [name];
                 }),
+                itemIds: arrivalStep.rewards.flatMap(r => {
+                    const item = rewardItem(r);
+                    return item === null || item === undefined ? [] : [item.id];
+                }),
             }
             : null;
     return {
         active: true,
+        giver: open.giver ? { name: open.giver.name, portrait: open.giver.portrait } : null,
+        lockedLine: open.lockedLine ?? QUEST_LOCKED_LINE,
         stage,
         eyebrow: questStepEyebrow(open.node, total),
         giverLine: open.description ?? QUEST_GIVER_FALLBACK,

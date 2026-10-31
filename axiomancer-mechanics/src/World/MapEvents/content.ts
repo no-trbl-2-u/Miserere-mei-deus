@@ -18,7 +18,7 @@ import {
     registerMapEventPool,
     setNodeEventPoolOverride,
 } from './resolve-map-event';
-import type { MapEventPayload, MapEventPool } from './types';
+import type { MapEventPayload, MapEventPool, QuestGiver } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { EnemyDifficulty } from '../../Enemy/types';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
@@ -219,26 +219,30 @@ export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: Breakwate
 };
 
 /** The four quest nodes: their place in the chain and their refusal line. */
-const QUEST_NODES: Readonly<Record<string, { node: number; description: string; lockedLine: string }>> = {
+const QUEST_NODES: Readonly<Record<string, { node: number; description: string; lockedLine: string; giver: QuestGiver }>> = {
     'bw-c2': {
         node: 2,
         description: '[content] The fishermen huddle round a driftwood fire.',
         lockedLine: '[content] The fishermen do not know you. They keep to their fire.',
+        giver: { name: '[content] The fishermen elder', portrait: 'biwa-houshi' },
     },
     'bw-l5': {
         node: 3,
         description: '[content] The lighthouse door stands open.',
         lockedLine: '[content] The lighthouse keeper sends you back down the path. No one told him to expect you.',
+        giver: { name: '[content] The lighthouse keeper', portrait: 'gignos-male' },
     },
     'bw-k1': {
         node: 4,
         description: '[content] The keep gate, barred from the inside.',
         lockedLine: '[content] The keep gate does not open for strangers.',
+        giver: { name: '[content] The gate warden', portrait: 'paladin-cursed' },
     },
     'bw-b1': {
         node: 5,
         description: '[content] The river bridge. The far bank is close.',
         lockedLine: '[content] The bridge-keeper will not lift the bar while the sea keep stands.',
+        giver: { name: '[content] The bridge-keeper', portrait: 'dwarf-lordess' },
     },
 };
 
@@ -367,7 +371,7 @@ function poolFor(nodeId: string): MapEventPool {
             const q = QUEST_NODES[nodeId]!;
             return single(nodeId, {
                 kind: 'quest', questline: BREAKWATER_CHAPTER_QUESTLINE_ID,
-                node: q.node, description: q.description, lockedLine: q.lockedLine,
+                node: q.node, description: q.description, lockedLine: q.lockedLine, giver: q.giver,
             });
         }
     }

@@ -76,7 +76,7 @@ export {
 export { takeTravel, travelPayloadAt } from './MapEvents/travel';
 export { isTravelOpen } from './MapEvents/handlers';
 export type {
-    MapEventKind, QuestPayload, TravelPayload, TravelDestination,
+    MapEventKind, QuestPayload, QuestGiver, TravelPayload, TravelDestination,
     MapEventPayload, ResolvedEvent, ResolveMapEventResult,
 } from './MapEvents/types';
 export type {

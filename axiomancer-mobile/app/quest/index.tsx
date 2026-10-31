@@ -19,6 +19,8 @@ import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
+import { QuestGiverScene, RelicRise } from '@/components/quest/QuestGiverScene';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
@@ -28,7 +30,6 @@ import {
     QUEST_ACCEPTED_LINE,
     QUEST_EYEBROW,
     QUEST_LEAVE_LABEL,
-    QUEST_LOCKED_LINE,
     QUEST_OFFER_HEAD,
     QUEST_PAID_HEAD,
     QUEST_REWARDS_HEAD,
@@ -71,6 +72,7 @@ export default function QuestScreen() {
     const vm = useMemo(() => selectQuestVM({ quest: slice, quests }), [slice, quests]);
     const actions = useGameActions();
     const router = useRouter();
+    const reducedMotion = useReducedMotion();
 
     useEffect(() => {
         if (!active && router.canGoBack()) router.back();
@@ -95,7 +97,21 @@ export default function QuestScreen() {
                     <View style={styles.column} testID="quest-column">
                         <Text style={styles.eyebrow}>{QUEST_EYEBROW}</Text>
                         <Text style={styles.title} testID="quest-step-eyebrow">{vm.eyebrow}</Text>
-                        <Text style={styles.body} testID="quest-giver-line">{vm.giverLine}</Text>
+                        {vm.giver && (
+                            <QuestGiverScene giver={vm.giver} turnedAway={vm.stage === 'locked'} />
+                        )}
+                        {vm.stage !== 'locked' && (
+                            <Text style={styles.body} testID="quest-giver-line">{vm.giverLine}</Text>
+                        )}
+
+                        {vm.paid && vm.paid.itemNames.length > 0 && (
+                            <RelicRise
+                                key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
+                                itemId={vm.paid.itemIds?.[0] ?? null}
+                                name={vm.paid.itemNames[0]!}
+                                reducedMotion={reducedMotion}
+                            />
+                        )}
 
                         {vm.paid && (
                             <View style={styles.card} testID="quest-paid">
@@ -108,7 +124,8 @@ export default function QuestScreen() {
                                     {vm.paid.currency > 0 && (
                                         <Text style={styles.chip}>{questShillingsLine(vm.paid.currency)}</Text>
                                     )}
-                                    {vm.paid.itemNames.map(name => (
+                                    {/* The first item rises into view above; the rest ride as chips. */}
+                                    {vm.paid.itemNames.slice(1).map(name => (
                                         <Text key={name} style={styles.chip}>{name}</Text>
                                     ))}
                                 </View>
@@ -116,7 +133,7 @@ export default function QuestScreen() {
                         )}
 
                         {vm.stage === 'locked' && (
-                            <Text style={styles.body} testID="quest-locked-line">{QUEST_LOCKED_LINE}</Text>
+                            <Text style={styles.body} testID="quest-locked-line">{vm.lockedLine}</Text>
                         )}
 
                         {vm.stage === 'waiting' && vm.behind && (
