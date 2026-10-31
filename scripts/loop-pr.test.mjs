@@ -619,6 +619,58 @@ test('/heads-down end gate asks the parked questions and routes contradicting an
   assert.match(hd, /\*\*Questions only at the two gates\.\*\*/)
 })
 
+// --- /heads-down claims its waves, keeps a ledger, resumes (HW1c) -----------
+
+test('/heads-down claims each wave before launching and carries CLAIM_OWNER', () => {
+  const hd = read('skills/heads-down.md')
+  const launch = hd.slice(
+    hd.indexOf('### Step 4 — Launch the wave'),
+    hd.indexOf('### Step 5 — The callout bus'),
+  )
+  const claim = launch.indexOf('node scripts/claims.mjs claim <row>')
+  const spawn = launch.indexOf('Then launch: one background subagent')
+  assert.ok(claim > 0 && spawn > claim, 'the wave is claimed before any worker starts')
+  assert.match(launch, /--owner heads-down:<id>/)
+  assert.match(launch, /held <row> by <holder> until <time>/)
+  assert.match(launch, /Drop those rows from the wave/)
+  assert.match(launch, /\*\*the claim owner\*\*: `CLAIM_OWNER=heads-down:<session id>`/)
+  assert.match(hd, /heads-down:<session id>`\./)
+  const react = hd.slice(hd.indexOf('### Step 6'), hd.indexOf('### Step 7'))
+  assert.match(react, /Renew at every worker report and every wave start/)
+  assert.match(react, /claims\.mjs renew --owner heads-down:<id>/)
+  const end = hd.slice(hd.indexOf('### Step 8 — The end gate'), hd.indexOf('### Resume'))
+  assert.match(end, /claims\.mjs release <row> \.\.\. --owner heads-down:<id>/)
+  assert.match(hd, /\*\*A crash never releases claims\.\*\*/)
+})
+
+test('/heads-down keeps an untracked ledger in the primary checkout and beats it', () => {
+  const hd = read('skills/heads-down.md')
+  assert.match(hd, /scripts\/heads-down-ledger\.mjs/)
+  assert.match(hd, /untracked\s+`\.heads-down\/<session id>\.json`/)
+  assert.match(hd, /\*\*primary checkout\*\*/)
+  assert.match(hd, /\*\*Beat it at every\s+step\*\*/)
+  assert.match(hd, /\.heads-down\/<id>\/prompts\/<row>\.md/)
+  assert.match(hd, /heads-down-ledger\.mjs end --session <id>/)
+  assert.match(read('.gitignore'), /^\.heads-down\/$/m)
+  assert.ok(fs.existsSync(path.join(ROOT, 'scripts/heads-down-ledger.mjs')))
+})
+
+test('/heads-down resume has a doorway and replaces the manual restart check', () => {
+  const hd = read('skills/heads-down.md')
+  assert.match(hd, /^\/heads-down resume /m)
+  assert.match(read('.claude/commands/heads-down.md'), /- `resume` →/)
+  const resume = hd.slice(hd.indexOf('### Resume'), hd.indexOf('## 3. Hard rules'))
+  assert.match(resume, /heads-down-ledger\.mjs latest/)
+  assert.match(resume, /claims\.mjs renew --owner\s+heads-down:<ledger id>/)
+  assert.match(resume, /git ls-remote --heads origin <branch>/)
+  assert.match(resume, /gh pr list --head\s+<branch>/)
+  assert.match(resume, /`fix-ci --branch`/)
+  assert.match(resume, /relaunch it from its saved prompt/)
+  assert.match(resume, /first\s+unfinished wave/)
+  assert.doesNotMatch(hd, /check each worker's transcript mtime/)
+  assert.match(hd, /run `\/heads-down resume`/)
+})
+
 // --- /plot splits into phases and lands by a `plot` PR (D93) ----------------
 
 test('/plot opens a plot-labelled PR, never loop:pr, never a push to main', () => {

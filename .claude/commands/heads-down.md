@@ -10,14 +10,15 @@ Argument handling:
 - `<id> <id> ...` → these build-plan rows, and any open PR that claims one.
 - `"<goal>"` → every open row the goal names.
 - `peek <ids|goal>` → map the waves, print the plan, launch nothing.
+- `resume` → read the latest unended ledger (`node scripts/heads-down-ledger.mjs latest`), renew its claims, drive live PRs, relaunch dead workers from their saved prompts, continue from the first unfinished wave (`skills/heads-down.md` §2 "Resume").
 
 Procedure: §2 of `skills/heads-down.md` (map the graph, pick verb and
 model per worker, run the question gate: show T the plan and ask every
-question the rows need before the first launch, launch the wave, keep
+question the rows need before the first launch, claim the wave and open the ledger, launch the wave, keep
 the callout bus, react and start the next wave on a merge, route new
 loop work through `/plot`, then the end gate: ask the parked questions
 and wrap up). Workers never ask T: they take the default and park.
-Hard rules: §3. A worker whose row
+Hard rules: §3 (a crash never releases claims). A worker whose row
 changes what is on screen puts before/after shots in its PR
 description, hosted outside the repo (§4). Never build, merge or
 push `main` yourself.
