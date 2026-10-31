@@ -893,7 +893,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-upgrade.UP1d.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-night.ET1c.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -5172,6 +5172,12 @@
       "from": "route:rest",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
     },
     {
       "kind": "coupling",
