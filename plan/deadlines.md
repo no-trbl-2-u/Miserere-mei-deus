@@ -155,13 +155,14 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Wed Nov 11 | 1 | Review the held loop-doctrine candidates (R11 watch ends) | Loop health | Claude summarises each candidate's evidence since Oct 12 |
 | Thu Nov 12 | 0 | Event kind 4, quest: settled early (Oct 30, the giver scene) and plotted (ET1d) | Event-node UX | Done Oct 30 |
 | Thu Nov 12 | 0.5 | Play the Defender test deck on the preview build; check the reward pool (DF1f) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule |
+| Thu Nov 12 | 0.5 | Decide the stat scaling (`Combat/stat-scaling.ts`): one-shot numbers move 20% per point from 5, repeating ones 10%; T suspects that is a little high | Stat scaling | Claude brings a table of each lane's printed numbers at stats 3, 5, 7 and 9 beside the first character's spread (H7 / B3 / M5); you set the rates |
 | Fri Nov 13 | 0.5 | Play your quest line on the preview build; rule on its lines | The Breakwater's questline | Claude turns your notes into fixes for BW1e |
 | Sat Nov 14 | 1 | File what is still broken (`/plot` or `/messy`); decide what Sunday's run must show | The MVP run | Claude lists what the mid-MVP check filed and what has shipped since; you cut or keep |
 | Sun Nov 15 | 1.5 | The MVP run: a full Breakwater run on the phone | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump |
 
 Every day from Oct 26 to Nov 15 has a piece of T's own (T, 2026-10-28: "make sure each item is something I need to
 do"), except Nov 4, 5 and 6, freed when the four MVP event kinds were settled and plotted early on Oct 30 (ET1).
-Total: about 22 hours in three weeks (10, 5 and 7), with Chapter 1's weapons and armor (T, 2026-10-30) adding 1.5. Chapter 1's scope freed about 3.5 hours (shorter enemy sessions, eight kinds to pitch, one quest line; the quest kind, QL1, made it nine); 2 of
+Total: about 22.5 hours in three weeks (10, 5 and 7.5), with Chapter 1's weapons and armor (T, 2026-10-30) adding 1.5. Chapter 1's scope freed about 3.5 hours (shorter enemy sessions, eight kinds to pitch, one quest line; the quest kind, QL1, made it nine); 2 of
 them go to Chapter 1's enemy art, which the MVP now includes.
 
 After the MVP, T's pieces are the Items below: W3 about 12 hours (Chapters 2-4's enemy sessions on Nov 21 and 22,
@@ -224,6 +225,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
 | [x] | 2026-11-12 | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | CA3a, CA3e |
+| [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | W2 | T | - |
 | [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | - |
 | [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d |
@@ -354,6 +356,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-31** — **stat scaling added** (T, in the first-character session: "Add to the deadlines that we need to determine the stat scaling since right now, it miiiight be a little high. Idk"). **Added** one Item and its MVP-schedule piece, date Claude's draft for T to move: decide the stat scaling on Thu Nov 12 (0.5 h, `T`), beside the Defender check and after the first character is playable (CH1f, which the Nov 9 mid-MVP check already waits on). It precedes the Dec 7 card tuning, which tunes numbers on top of whatever rates T sets. Weeks now 10, 5 and 7.5 hours. Nothing ticked; no date moved.
 - **2026-10-30** — **the first character authored; CH1g plotted** (T in session, the CH1e sitting into `/plot asap`). **Ticked** the Item "Author the first character" (its Status re-derived from CH1e, now `[x]`: the Chosen is recorded in the CH1 brief). **Edited** that Item's name from "three lane cards" to "the starting lane cards": T changed the deck rule to one card from each starting lane and none from the relic's (CH1g). **Added** CH1g to the `Waits on` of "Mid-MVP check", beside CH1f, which now requires it.
 - **2026-10-31** — **all four lanes' card art plotted (CA3)** (T, in session: "I want to swap out all the new art I've gotten on to the 4 lanes' cards"). **Added** CA3a (the cutter and the Defender's paintings) and CA3e (the names) to the `Waits on` of the Nov 12 Defender check; CA3b beside MF1e and CA3c, CA3d under Unscheduled. Nothing ticked; no date moved.
 - **2026-10-31** — **the Defender's and Merciful's card art plots removed (CA1, CA2)** (T, in session: "remove those two plots" / "Remove those phases"; T has new sheets for all four lanes and does not like the CA1/CA2 sheets). **Removed** CA1a and CA1b from the `Waits on` of the Nov 12 Defender check (now `-`), and the CA2a and CA2b lines under Unscheduled. Nothing ticked; no date moved. One card-art `/plot` for all four lanes follows once T's new sheets and names are in the repo.
