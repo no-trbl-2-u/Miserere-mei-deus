@@ -54,7 +54,7 @@ const SOUND: CharacterDefinition = {
     startingRelicId: 'relic-c',
     baseStats: { heart: 5, body: 7, mind: 3 },
     startingLaneIds: ['lane-a', 'lane-b'],
-    startingCardIds: [cardC, cardA, cardB],
+    startingCardIds: [cardB, cardA],
     playstyle: 'Hits hard.',
 };
 
@@ -84,11 +84,11 @@ describe('character roster (CH1 A1)', () => {
         expect(FRESH_RUN_STAT_BUDGET).toBe(15);
     });
 
-    it('the character deck is Blow 3, Ward 2, Word 2 plus the three lane cards', () => {
+    it('the character deck is Blow 3, Ward 3, Word 2 plus the two lane cards', () => {
         expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-strike')).toHaveLength(3);
-        expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-ward')).toHaveLength(2);
+        expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-ward')).toHaveLength(3);
         expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-word')).toHaveLength(2);
-        expect(characterDeck(SOUND)).toEqual([...CHARACTER_GREY_DECK, cardC, cardA, cardB]);
+        expect(characterDeck(SOUND)).toEqual([...CHARACTER_GREY_DECK, cardB, cardA]);
         expect(characterDeck(SOUND)).toHaveLength(10);
     });
 
@@ -99,14 +99,16 @@ describe('character roster (CH1 A1)', () => {
     const broken: [string, Partial<CharacterDefinition>, CharacterProblemCode][] = [
         ['relic not in the library', { startingRelicId: 'relic-missing' }, 'relic-unknown'],
         ['relic with no lane', { startingRelicId: 'relic-none' }, 'relic-no-lane'],
-        ['a starting lane is grey', { startingLaneIds: ['grey', 'lane-b'], startingCardIds: ['grey-strike', cardB, cardC] }, 'lane-grey'],
+        ['a starting lane is grey', { startingLaneIds: ['grey', 'lane-b'], startingCardIds: ['grey-strike', cardB] }, 'lane-grey'],
         ['a starting lane is not registered', { startingLaneIds: ['lane-z', 'lane-b'] }, 'lane-unregistered'],
-        ['a starting lane is the relic\'s lane', { startingLaneIds: ['lane-c', 'lane-b'], startingCardIds: [cardD, cardB, cardC] }, 'lane-is-relic-lane'],
+        ['a starting lane is the relic\'s lane', { startingLaneIds: ['lane-c', 'lane-b'], startingCardIds: [cardD, cardB] }, 'lane-is-relic-lane'],
         ['the two starting lanes are equal', { startingLaneIds: ['lane-b', 'lane-b'] }, 'lanes-equal'],
         ['stats do not total the budget', { baseStats: { heart: 5, body: 7, mind: 5 } }, 'stats-budget'],
-        ['a card is not in the library', { startingCardIds: ['no-such-card', cardA, cardB] }, 'card-unknown'],
-        ['a card is a Spell', { startingCardIds: [cardC, spellId, cardB] }, 'card-forbidden-type'],
-        ['two cards from one lane', { startingCardIds: [cardC, cardD, cardB] }, 'cards-not-one-per-lane'],
+        ['a card is not in the library', { startingCardIds: ['no-such-card', cardA] }, 'card-unknown'],
+        ['a card is a Spell', { startingCardIds: [spellId, cardB] }, 'card-forbidden-type'],
+        ['two cards from one starting lane', { startingCardIds: [cardA, spellId] }, 'cards-not-one-per-lane'],
+        ['a starting lane has no card', { startingCardIds: [cardA, cardA] }, 'cards-not-one-per-lane'],
+        ['a card is in the relic lane', { startingCardIds: [cardA, cardC] }, 'card-in-relic-lane'],
     ];
 
     it.each(broken)('%s is caught', (_label, patch, code) => {
@@ -115,12 +117,13 @@ describe('character roster (CH1 A1)', () => {
 
     it('a Curse as a starting card is caught', () => {
         if (!curseId) return;
-        expect(codes({ ...SOUND, startingCardIds: [cardC, curseId, cardB] })).toContain('card-forbidden-type');
+        expect(codes({ ...SOUND, startingCardIds: [curseId, cardB] })).toContain('card-forbidden-type');
     });
 
     it('each broken rule is caught alone where it can be', () => {
         expect(codes({ ...SOUND, baseStats: { heart: 1, body: 1, mind: 1 } })).toEqual(['stats-budget']);
-        expect(codes({ ...SOUND, startingRelicId: 'relic-missing' })).toEqual(['relic-unknown', 'cards-not-one-per-lane']);
+        expect(codes({ ...SOUND, startingRelicId: 'relic-missing' })).toEqual(['relic-unknown']);
+        expect(codes({ ...SOUND, startingCardIds: [cardA, cardC] })).toEqual(['cards-not-one-per-lane', 'card-in-relic-lane']);
     });
 
     it('checks against the real registry and library by default', () => {

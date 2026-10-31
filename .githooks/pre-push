@@ -4,6 +4,18 @@ set -eu
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
+# A push of the claims record alone (scripts/claims.mjs, a plumbing commit on
+# the orphan `claims` branch) carries no working tree, so it strands nothing.
+pushed=0
+others=0
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  pushed=$((pushed + 1))
+  [ "$remote_ref" = "refs/heads/claims" ] || others=$((others + 1))
+done
+if [ "$pushed" -gt 0 ] && [ "$others" -eq 0 ]; then
+  exit 0
+fi
+
 # A telemetry row written after the last commit must not be stranded by push.
 if [ -n "$(git status --porcelain -- telemetry/)" ]; then
   printf '%s\n' 'pre-push: telemetry/ has uncommitted changes.' >&2
