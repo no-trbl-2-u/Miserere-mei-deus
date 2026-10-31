@@ -187,7 +187,8 @@ export interface GameActions {
      * `keepCharacter: true` preserves the character ledger
      * (player + rngState + codex) and
      * refills HP; world / combat / quests / flags reset.
-     * `keepCharacter: false` performs a full new-game reset. Every call
+     * `keepCharacter: false` is a run end: the pre-run shell with no
+     * character, the codex and rng kept, `runOver` set. Every call
      * assigns a fresh `runId`. Dispatches `RESET_RUN`; persists via the
      * standard DURABLE_ACTIONS pipeline. Returns the post-reset GameState.
      */
@@ -196,7 +197,7 @@ export interface GameActions {
      * The player's VITAE reached 0 (`cause`: a fight or a hazard). A first
      * death revives them (`'revived'`: 1 VITAE, dying, back on the node they
      * walked from, the death node open to retry); a death while dying ends
-     * the run as `resetRun({ keepCharacter: true })` does (`'run-over'`).
+     * the run (`'run-over'`, the state `runOverState` builds).
      * Dispatches `PLAYER_DIED`; persists through DURABLE_ACTIONS.
      */
     playerDied: (cause: 'fight' | 'hazard') => 'revived' | 'run-over';
@@ -306,13 +307,14 @@ function logGameEventSanitized(event: GameEvent): void {
 function durableSlice(next: GameState): GameState {
     const {
         version, runId, player, world, quests, flags,
-        rngState, codex, labyrinth, dying,
+        rngState, codex, labyrinth, dying, runOver,
     } = next;
     return {
         version, runId, player, world, quests, flags,
         rngState, codex,
         ...(labyrinth ? { labyrinth } : {}),
         ...(dying ? { dying } : {}),
+        ...(runOver ? { runOver } : {}),
     };
 }
 

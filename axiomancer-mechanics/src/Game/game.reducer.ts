@@ -11,7 +11,7 @@
  * state would become; the store decides what to do with it.
  */
 
-import { GameState } from './types';
+import { GameState, CodexState } from './types';
 import { GameAction } from './actions.types';
 import { Character } from '../Character/types';
 import { Encounter, QuestLog } from '../World/types';
@@ -28,9 +28,8 @@ import {
     wornMaxHpBonus,
 } from '../Character/equipment.reducer';
 import { createCharacter, allocateStatPoint } from '../Character';
-import { DEV_PRESET_LANE_IDS } from '../Character/presets';
 import {
-    CHARACTER_ROSTER, FRESH_RUN_BASE_STATS, characterDeck, getCharacterDefinition,
+    CHARACTER_ROSTER, characterDeck, getCharacterDefinition,
     type CharacterDefinition,
 } from '../Character/roster';
 import type { Equipment } from '../Items/types';
@@ -51,7 +50,7 @@ import { addItemStacking, rollEncounterLoot, totalEncounterXp } from './combat-g
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
 import { enemySlugOf } from './defeat-ledger';
-import { resolveDeath, freshRunKeepingCharacter } from './death';
+import { resolveDeath, freshRunKeepingCharacter, runOverState, createShellPlayer } from './death';
 
 /**
  * Increment when GameState's shape changes. Save loaders branch on this so
@@ -158,6 +157,8 @@ export interface NewGameOptions {
     roster?: readonly CharacterDefinition[];
     /** The relic library the starting relic is drawn from; defaults to `relicLibrary`. */
     relics?: readonly Equipment[];
+    /** The codex a run end carried over; absent opens an empty one. */
+    codex?: CodexState;
 }
 
 /**
@@ -174,10 +175,7 @@ function createNewRunPlayer(opts: NewGameOptions): Character {
     if (opts.characterId === undefined) {
         // The shell holds the dev preset lanes as an explicit lane list, so even
         // it has a reward pool: no player is ever built with an empty one.
-        return {
-            ...createCharacter({ name: 'Player', level: 1, baseStats: { ...FRESH_RUN_BASE_STATS } }),
-            startingLaneIds: [...DEV_PRESET_LANE_IDS],
-        };
+        return createShellPlayer();
     }
     const def = getCharacterDefinition(opts.characterId, opts.roster ?? CHARACTER_ROSTER);
     if (!def) throw new Error(`createNewGameState: no character with id "${opts.characterId}".`);
@@ -230,7 +228,7 @@ export function createNewGameState(opts: NewGameOptions = {}): GameState {
         quests: emptyQuestLog(),
         flags,
         rngState: getRng().getState(),
-        codex: { unlockedEntries: [] },
+        codex: opts.codex ?? { unlockedEntries: [] },
     };
 }
 
@@ -506,13 +504,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // Full new-game reset; carry rngState forward (don't
                 // reset the seed mid-session, that breaks deterministic
                 // replay) and assign a fresh runId.
-                // The same character again; an id the live roster lacks (a test
-                // fixture) resets to the shell.
-                const again = state.player.characterId;
-                const fresh = createNewGameState({
-                    characterId: again !== undefined && getCharacterDefinition(again) ? again : undefined,
-                });
-                return { ...fresh, runId: freshRunId, rngState: state.rngState, dying: undefined };
+                // A run end: no character, codex and rng kept, the run-over
+                // marker set; the next run picks a character.
+                return { ...runOverState(state, freshRunId), version: GAME_STATE_VERSION };
             }
 
             // keepCharacter: true — preserve persistent character ledger

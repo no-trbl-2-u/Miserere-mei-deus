@@ -276,7 +276,7 @@ export {
     // item-reward queue reads a pending piece through.
     reslotRelicPiece, reslotRelicSave,
     // The death rule: a first death revives, a death while dying ends the run.
-    resolveDeath, clearDying,
+    resolveDeath, clearDying, runOverState,
 } from './Game';
 export type {
     StateFixture,
