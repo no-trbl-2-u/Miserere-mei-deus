@@ -43,6 +43,7 @@ export {
     createEnemy, isEnemyBefriendable, hasEnemyPhases,
 } from './Enemy';
 export { hasDefeatedEnemy, defeatedEnemies, enemySlugOf } from './Game/defeat-ledger';
+export { dangerKey, seenDangers, hasSeenDanger, seenDangerNames, firedDangerKeys } from './Game/seen-dangers';
 export type {
     Enemy, EnemyDifficulty,
     // CodexEntry's semantic home is the Game-loop persistence surface; the

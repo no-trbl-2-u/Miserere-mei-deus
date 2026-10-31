@@ -155,7 +155,7 @@ export interface GameActions {
     endCombat: (
         outcome: CombatEndReport['outcome'],
         finalPlayer?: Character,
-        options?: { withholdSpoils?: boolean },
+        options?: { withholdSpoils?: boolean; seenDangers?: readonly string[] },
     ) => CombatEndReport;
 
     // ── World / dialogue ─────────────────────────────────────────────────────
@@ -448,7 +448,10 @@ export function createGameStore(
                 dispatch(
                     {
                         type: 'END_COMBAT',
-                        payload: { outcome, finalPlayer, grantedLoot: loot, grantedXp: xpGained },
+                        payload: {
+                            outcome, finalPlayer, grantedLoot: loot, grantedXp: xpGained,
+                            ...(options?.seenDangers ? { seenDangers: [...options.seenDangers] } : {}),
+                        },
                     },
                     { report },
                 );

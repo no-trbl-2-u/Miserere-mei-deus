@@ -40,6 +40,8 @@ export type GameAction =
               finalPlayer?: Character;
               grantedLoot?: Item[];
               grantedXp?: number;
+              /** The `<enemy slug>:<move name>` keys of the DANGER moves that fired in the fight. */
+              seenDangers?: string[];
           };
       }
     | { type: 'MOVE_TO_NODE';   payload: { nodeId: string } }
