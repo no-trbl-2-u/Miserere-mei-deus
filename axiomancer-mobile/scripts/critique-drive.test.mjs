@@ -62,8 +62,8 @@ test('entranceSettled waits on the named root, polling until two idle reads in a
         getByTestId: (id) => ({ first: () => ({ waitFor: async (o) => { calls.push(['attached', id, o.state]) } }) }),
         waitForFunction: async (_fn, arg, o) => { calls.push(['fn', arg, o.polling]) },
     }
-    await entranceSettled('hazard-route-select')(page)
-    assert.deepEqual(calls, [['attached', 'hazard-route-select', 'attached'], ['fn', 'hazard-route-select', 100]])
+    await entranceSettled('hazard-stakes')(page)
+    assert.deepEqual(calls, [['attached', 'hazard-stakes', 'attached'], ['fn', 'hazard-stakes', 100]])
 })
 
 // CRITIQUE pass 92: the mobile context must report a touch pointer, or the

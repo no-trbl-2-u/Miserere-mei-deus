@@ -238,7 +238,7 @@ export const SCREENS = [
         fixture: 'l30-bw-hazard-arrive',
         waitForPath: '/hazard',
         why: 'The hazard minigame entry with a late-game kit — does the danger read before the first card is dragged?',
-        settle: entranceSettled('hazard-route-select'),
+        settle: entranceSettled('hazard-stakes'),
     },
     {
         name: 'late-game-hub',

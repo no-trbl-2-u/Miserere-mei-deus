@@ -72,7 +72,7 @@ function fail(msg) {
 const CASES = [
     { button: 'treasure', route: '/cache', landing: 'cache-choice-offers', name: 'The Reliquary' },
     { button: 'rest', route: '/rest', landing: 'rest-choice-offers', name: 'the rest-choice node' },
-    { button: 'hazard', route: '/hazard', landing: 'hazard-route-select', name: 'Hazard' },
+    { button: 'hazard', route: '/hazard', landing: 'hazard-stakes', name: 'Hazard' },
 ]
 
 // ---------------------------------------------------------------------------

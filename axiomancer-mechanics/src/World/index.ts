@@ -44,6 +44,9 @@ export {
     forwardEdges,
 } from './world.reducer';
 export { auditRoadReachability, mapPassages } from './road-reachability';
+// Held roads: what a held node holds the road to, and whether a road is held.
+export { heldRoadTargets, heldRoadPlaces, nodePlace } from './held-roads';
+export { isRoadHeld } from './roads';
 export type { MapPassage, RoadReachabilityAudit } from './road-reachability';
 
 // MapEvents engine.

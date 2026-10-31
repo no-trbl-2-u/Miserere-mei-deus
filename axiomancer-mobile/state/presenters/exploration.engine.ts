@@ -10,7 +10,7 @@
  */
 
 import type { GameStore, MapEventKind } from '@mechanics';
-import { getMapDefinition, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING, isEliteNode } from '@mechanics';
+import { getMapDefinition, isRoadHeld, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING, isEliteNode } from '@mechanics';
 
 import { readCurrentNodeId } from '../actions';
 import { getMapLayout } from '@/state/exploration-maps';
@@ -111,6 +111,12 @@ export interface ExplorationEdge {
      * not reached yet.
      */
     blocked?: boolean;
+    /**
+     * True while an unspent held node (`holdRoadsUntilSettled`: the wreck, the
+     * elites) keeps this road shut. The canvas remembers it so the road draws
+     * itself open the first time it is drawn without it (phase ET1b).
+     */
+    held?: boolean;
 }
 
 export interface ExplorationAction {
@@ -457,6 +463,7 @@ function buildEdges(
     spent: ReadonlySet<string>,
     locked: readonly string[],
     blockedReason: (a: string, b: string) => string | null,
+    isHeld: (a: string, b: string) => boolean = () => false,
 ): ExplorationEdge[] {
     const edges: ExplorationEdge[] = [];
     const seen = new Set<string>();
@@ -480,6 +487,7 @@ function buildEdges(
                 locked: isLocked,
                 lateral: !isForward(node.id, target),
                 blocked: blockedReason(node.id, target) !== null,
+                held: isHeld(node.id, target),
             });
         }
     }
@@ -830,7 +838,7 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
 
     const options = buildOptions(metaById, orderById, reachable, currentNodeId, layout.sheet, readCurrency(state));
     const actions = buildActions(options);
-    const edges = buildEdges(def.nodes, forward, spent, locked, blockedReason);
+    const edges = buildEdges(def.nodes, forward, spent, locked, blockedReason, (a, b) => isRoadHeld(def, world.currentMap, a, b));
 
     return freezeViewModel({
         continent: layout.continent,
