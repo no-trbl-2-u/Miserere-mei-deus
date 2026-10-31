@@ -8,6 +8,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { ENEMY_FRAME_SETS, REQUIRED_CLIPS } from '@/assets/images/enemies/frames';
+import { ENEMY_ART_KEYS } from '@/assets/images/enemies';
 
 import DevFrameHarness from '../devframes/index';
 
@@ -68,6 +69,18 @@ describe('the enemy frame harness', () => {
     it.each(Object.keys(ENEMY_FRAME_SETS))('offers the installed %s set', (key) => {
         render(<DevFrameHarness />);
         expect(screen.getByTestId(`devframes-set-${key}`)).toBeTruthy();
+    });
+
+    // AN5 A8 (closed by AN5e): the gallery shows every enemy with a portrait,
+    // all seventeen, so T can watch each cycle its three clips outside a
+    // fight. Read off the static registry, not the frame registry, so a
+    // portrait whose set went missing is a missing button here too.
+    it('offers a set for every one of the seventeen portraits (A8)', () => {
+        render(<DevFrameHarness />);
+        expect(ENEMY_ART_KEYS).toHaveLength(17);
+        for (const key of ENEMY_ART_KEYS) {
+            expect(screen.getByTestId(`devframes-set-${key}`)).toBeTruthy();
+        }
     });
 
     it('offers the synthetic fixture too, so the harness survives an empty registry', () => {

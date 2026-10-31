@@ -416,5 +416,47 @@ class TheFourElitesRegenerate(unittest.TestCase):
         self.assertEqual(committed["components"]["welded_split"], 1)
 
 
+class TheTwoWorstDriftersRegenerate(unittest.TestCase):
+    """Phase AN5e: the last two sets, installed last on T's ruling because
+    their idles drift the most (Smokehouse Gutter 42 px, Tide-Gate 27 px across
+    the row before cleanup). Both fit at 176px, and the tool's per-cell idle
+    registration holds them with no change to the tool."""
+
+    FRAMES = {"smokehouse-gutter": 176, "tide-gate": 176}
+
+    # The generator's drift, as the span of the per-cell x shifts the tool
+    # applied to the idle row to undo it (the report's own record of it).
+    IDLE_SHIFT_SPAN = {"smokehouse-gutter": 41, "tide-gate": 27}
+
+    def test_each_sidecar_and_report_is_reproduced_and_holds_still(self):
+        for key, frame in self.FRAMES.items():
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as tmp:
+                out = Path(tmp)
+                report = clean_ai_sheet.clean(
+                    MASTERS / f"{key}.sheet.webp", out, out_frame=frame)
+                committed_sidecar = json.loads(
+                    (MASTERS / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                fresh_sidecar = json.loads(
+                    (out / f"{key}.sheet.json").read_text(encoding="utf-8"))
+                self.assertEqual(fresh_sidecar, committed_sidecar)
+                committed = json.loads(
+                    (MASTERS / f"{key}.cleanup-report.json").read_text(encoding="utf-8"))
+                self.assertEqual(report["pixels_sha256"], committed["pixels_sha256"])
+                self.assertEqual(report, committed)
+                self.assertTrue(report["a9"]["pass"])
+                self.assertLessEqual(report["a9"]["idle_centre_drift_px"], 3.0)
+                for offset in report["a9"]["row_start_offset_px"].values():
+                    self.assertLessEqual(offset, 3.0)
+
+    def test_the_drift_it_undid_is_the_drift_the_brief_measured(self):
+        for key, span in self.IDLE_SHIFT_SPAN.items():
+            with self.subTest(key=key):
+                committed = json.loads(
+                    (MASTERS / f"{key}.cleanup-report.json").read_text(encoding="utf-8"))
+                idle_x = [c["translate"][0] for c in committed["cells"] if c["row"] == "idle"]
+                self.assertEqual(len(idle_x), 8)
+                self.assertEqual(max(idle_x) - min(idle_x), span)
+
+
 if __name__ == "__main__":
     unittest.main()

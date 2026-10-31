@@ -14,10 +14,12 @@
  * third, the Act 1 elite's and the first that stands. Phase AN5a installed
  * the fourth, the Gallows Crow's, the first cut from an image-model sheet
  * (cleaned by the art department's `clean-ai-sheet.py` before the split);
- * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c the Wreck-Picker (176px) and the Tithe-Collector (168px, its 2043x770 master resampled first); AN5d the four elites, the Lamplighter, the Wrecker and the Toll-Keeper at 176px and the Cave-Choir at 152px (the busiest sheet yet: over the ceiling at 176, 168 and 160); AN5e installs the last two. Every
- * enemy not yet in the registry still renders exactly the single image it
- * rendered before — absence from here is the static path, not a missing
- * feature.
+ * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c the Wreck-Picker (176px) and the Tithe-Collector (168px, its 2043x770 master resampled first); AN5d the four elites, the Lamplighter, the Wrecker and the Toll-Keeper at 176px and the Cave-Choir at 152px (the busiest sheet yet: over the ceiling at 176, 168 and 160); AN5e the last two, the Smokehouse Gutter and the Tide-Gate, both at 176px (the worst
+ * drifters, held still by the same tool). Every enemy with a portrait now has
+ * a set: seventeen of seventeen. The static path is still real (a key absent
+ * from here renders exactly its single image), but it is no longer a quiet
+ * default: a portrait without a set fails `portraitsWithoutAValidSet` unless
+ * `FRAME_SET_EXEMPTIONS` names it with a reason.
  *
  * WHAT A SET IS MADE OF
  * ---------------------
@@ -59,6 +61,13 @@
  * The gallows crow (AN5a) overshot at 256px (max 16760 B: an image-model
  * drawing is busier than a rig's pose) and was cut at 176px like the
  * beholder: 24 cells, 177768 B, max 9548 B, against 45124 B static.
+ * THE WHOLE ROSTER (AN5e, the seventeenth set): 17 sets, 408 cells,
+ * 3040824 B (2969.6 KB) in total, against 730602 B for the seventeen static
+ * portraits beside them (4.2x, +2256.1 KB). The heaviest single cell is
+ * 11700 B (`lamprey-knot-19.webp`), 300 B under the ceiling; the last two sets
+ * weigh 159326 B (smokehouse-gutter) and 180928 B (tide-gate), both at 176px.
+ * Each set's own numbers are in its `anim/<key>/provenance.json`, and
+ * `scripts/frame-cells.test.mjs` checks the roster total here against disk.
  * `FRAME_CELL_MAX_BYTES` below is that ceiling, and
  * `scripts/frame-cells.test.mjs` is what enforces it against the bytes on
  * disk — a constant nothing weighs is a wish.
@@ -80,6 +89,8 @@ import { CAVE_CHOIR_CELLS } from './anim/cave-choir';
 import { LAMPLIGHTER_CELLS } from './anim/lamplighter';
 import { WRECKER_CELLS } from './anim/wrecker';
 import { TOLL_KEEPER_CELLS } from './anim/toll-keeper';
+import { SMOKEHOUSE_GUTTER_CELLS } from './anim/smokehouse-gutter';
+import { TIDE_GATE_CELLS } from './anim/tide-gate';
 import { GREEN_JELLY_CELLS } from './anim/green-jelly';
 
 /** How a cell is registered against the frame beneath it. */
@@ -649,11 +660,77 @@ const TOLL_KEEPER_FRAME_SET: EnemyFrameSet = {
 };
 
 /**
+ * SMOKEHOUSE GUTTER (phase AN5e) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `smokehouse-gutter.sheet.json`:
+ * every number was MEASURED by the tool (anchor kind from the idle row, the
+ * point after one sheet-wide fit, cells cut at 176px so none passes the
+ * per-cell ceiling). The worst drifter of the fourteen: its idle slid 42px
+ * left across the row before cleanup; the tool's per-cell registration holds
+ * it to 0.72px. The clip table is the jelly's (the AN5 brief). Bound to its
+ * stand-in portrait by hash (A7) in `anim/smokehouse-gutter/provenance.json`.
+ */
+const SMOKEHOUSE_GUTTER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 90.4,
+            y: 173.2,
+            why: 'stands: the idle foot line moves 0px (0.0% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/smokehouse-gutter/provenance.json',
+    },
+    frames: SMOKEHOUSE_GUTTER_CELLS,
+};
+
+/**
+ * TIDE-GATE (phase AN5e) - cut from an image-model sheet, cleaned by
+ * `clean-ai-sheet.py` first. Transcribed from `tide-gate.sheet.json`: every
+ * number was MEASURED by the tool (anchor kind from the idle row, the point
+ * after one sheet-wide fit, cells cut at 176px so none passes the per-cell
+ * ceiling). Its idle slid 27px before cleanup; registered, it holds to
+ * 0.77px. The clip table is the jelly's (the AN5 brief). Bound to its
+ * stand-in portrait by hash (A7) in `anim/tide-gate/provenance.json`.
+ */
+const TIDE_GATE_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 176,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 86.5,
+            y: 160.9,
+            why: 'stands: the idle foot line moves 0px (0.0% of the 256px cell, within 6%), measured by the cleanup tool',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 10, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 0 },
+        },
+        graded: false,
+        source: 'see anim/tide-gate/provenance.json',
+    },
+    frames: TIDE_GATE_CELLS,
+};
+
+/**
  * THE REGISTRY. An enemy absent from here resolves through
  * `getEncounterEnemyArt` exactly as it always has. AN1a shipped this empty on
  * purpose so the engine's review was not hostage to an art review; AN1e put
  * the float-eye in it, and that is the row where the chain stops being
- * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow, AN5b five more normals, AN5c the Wreck-Picker and the Tithe-Collector, AN5d the four elites.
+ * invisible. AN4b added the boss, AN3b the elite, AN5a the Gallows Crow, AN5b five more normals, AN5c the Wreck-Picker and the Tithe-Collector, AN5d the four elites, and
+ * AN5e the Smokehouse Gutter and the Tide-Gate: every key in
+ * `ENEMY_ART_BY_KEY` now has a set here, and `__tests__/every-portrait-has-a-set.test.ts`
+ * fails when a new portrait arrives without one.
  */
 export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'death-beholder': DEATH_BEHOLDER_FRAME_SET,
@@ -670,8 +747,52 @@ export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'lamplighter': LAMPLIGHTER_FRAME_SET,
     'wrecker': WRECKER_FRAME_SET,
     'toll-keeper': TOLL_KEEPER_FRAME_SET,
+    'smokehouse-gutter': SMOKEHOUSE_GUTTER_FRAME_SET,
+    'tide-gate': TIDE_GATE_FRAME_SET,
     'green-jelly': GREEN_JELLY_FRAME_SET,
 };
+
+/**
+ * Keys that may keep a portrait with no frame set, each with the reason. Empty:
+ * since AN5e every portrait animates, so a static enemy is now a decision that
+ * has to be written down here, not a set somebody forgot to install. An entry
+ * is how a portrait swap (A7 retires the old set) waits for its new sheet.
+ */
+export const FRAME_SET_EXEMPTIONS: Readonly<Record<string, string>> = {};
+
+/**
+ * AN5e: every portrait has a set. Given the static registry's keys, names each
+ * key that has no valid frame set and no exemption, and each exemption that
+ * no longer names a portrait (a stale exemption hides nothing, but it lies).
+ * An empty array is the Measure: 17 of 17.
+ */
+export function portraitsWithoutAValidSet(
+    portraitKeys: readonly string[],
+    sets: Readonly<Record<string, EnemyFrameSet>> = ENEMY_FRAME_SETS,
+    exemptions: Readonly<Record<string, string>> = FRAME_SET_EXEMPTIONS,
+): string[] {
+    const problems: string[] = [];
+    for (const key of portraitKeys) {
+        if (Object.prototype.hasOwnProperty.call(exemptions, key)) continue;
+        const set = Object.prototype.hasOwnProperty.call(sets, key) ? sets[key] : undefined;
+        if (!set) {
+            problems.push(
+                `${key}: has a portrait but no frame set; a portrait needs a set in ENEMY_FRAME_SETS or an explicit exemption in FRAME_SET_EXEMPTIONS`,
+            );
+            continue;
+        }
+        const invalid = validateFrameSet(key, set);
+        if (invalid.length > 0) {
+            problems.push(`${key}: its frame set is invalid (${invalid.join('; ')})`);
+        }
+    }
+    for (const key of Object.keys(exemptions)) {
+        if (!portraitKeys.includes(key)) {
+            problems.push(`${key}: is exempted from a frame set but has no portrait; drop the exemption`);
+        }
+    }
+    return problems;
+}
 
 /** The frame set for a `portraitAsset` key, or null when the enemy is static. */
 export function getEnemyFrameSet(artKey: string | null | undefined): EnemyFrameSet | null {
