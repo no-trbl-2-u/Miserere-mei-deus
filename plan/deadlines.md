@@ -264,6 +264,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - AN5d — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
+- AN5e — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
@@ -359,6 +360,7 @@ attended session.
 
 ## Change log
 
+- **2026-10-30** — **AN5e added** (T, in session: "plot and implement them last", of the Smokehouse Gutter and the Tide-Gate, whose idles slide). **Added** AN5e under Unscheduled. Nothing ticked; no date moved.
 - **2026-10-30** — **every portrait animates, plotted (AN5)** (T, in session: "/plot Use all the new spritesheets from anim-temp in order to animate all the enemies that we currently have images for"). **Added** AN5a-AN5d under Unscheduled: no T act waits on them. The Nov 8 portrait swap keeps its premise; T ruled a swapped enemy goes back to static until a new sheet is drawn, and AN5a's test enforces it. Nothing ticked; no date moved.
 - **2026-10-31** — **two tooling fixes plotted (TF1)** (T, in session during `/heads-down`: "/plot asap, join this run"). **Added** TF1 under Unscheduled: no T act waits on it. Once it ships, the four ticked event-kind Items (Nov 4, 5, 6, 12) leave the reminder. Nothing ticked; no date moved.
 - **2026-10-31** — **the DANGER-only fight-or-flee screen and the plain combat icon plotted (EN2)** (T, in session: "Plot it, yes."). **Added** EN2a and EN2b to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the fight screens. Nothing ticked; no date moved.

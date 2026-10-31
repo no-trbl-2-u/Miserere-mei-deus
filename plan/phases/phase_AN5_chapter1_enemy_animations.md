@@ -44,7 +44,7 @@ after a cleanup pass that removes neighbour slivers and holds the body still, so
 in from the next frame and nothing bobs that should not.
 
 Measure: `ENEMY_FRAME_SETS` has a valid entry for every key in `ENEMY_ART_BY_KEY` (17 of 17), each
-with a passing encounter test, every cell under `FRAME_CELL_MAX_BYTES`; `npm run verify -w
+with a passing encounter test, every cell under `FRAME_CELL_MAX_BYTES`, every idle within 3 px; `npm run verify -w
 axiomancer-mobile` and `npm test` green.
 
 ## Acceptance
@@ -56,8 +56,11 @@ axiomancer-mobile` and `npm test` green.
   cell, every alpha component (8-connected, alpha >= 1 after the generator's threshold mask) whose
   area centroid lies OUTSIDE the cell is a neighbour's sliver and is removed, and the cell's own
   figure is reassembled from the parts of it that crossed into neighbouring cells, so a pose that
-  reached over a gridline is whole again rather than clipped; (c) every cell is re-centred about the
-  set's anchor (A2) by an integer translation, never a scale; (d) a figure that, after (c), would
+  reached over a gridline is whole again rather than clipped; (c) every cell is registered to the
+  set's anchor (A2) by an integer translation, never a scale: each IDLE cell is moved so its own
+  body (the alpha-mass centroid) sits on the anchor, because an idle that travels is the
+  generator's drift, not motion; each `struck` and `attacking` row is moved as a whole so its first
+  cell lands on the anchor, keeping the recoil and the lunge the row was drawn with; (d) a figure that, after (c), would
   still not fit its 256px cell is scaled down as one sheet-wide factor applied to all 24 cells
   alike, recorded in the sidecar, never per cell (a per-cell scale makes the body pulse). It writes
   a report per sheet: slivers removed, pixels reassembled, translation per cell, any global scale.
@@ -99,6 +102,13 @@ axiomancer-mobile` and `npm test` green.
   `ENEMY_FRAME_SETS` has a static portrait whose bytes no longer match, naming the key and saying
   "remove its frame set or regenerate it". The three installed sets get the same field, so the rule
   covers all seventeen.
+- **A9 (the idle holds still)** After cleanup, the body's horizontal centre moves by no more than
+  3 px (of 256) across every idle row, and each `struck` and `attacking` row starts within 3 px of
+  the idle's rest frame. The tool reports both numbers per sheet and its suite fails a sheet over
+  either. Measured at plot time, before cleanup: Smokehouse Gutter slides 42 px left across its
+  idle and Tide-Gate 27 px, both in one direction, so the loop slides and snaps back (T saw it in
+  the preview, 2026-10-30); Wreck-Picker drifts 20 px, Net-Mender and Curfew-Ringer 10 px, the rest
+  2-7 px. T ruled the two worst are installed last (AN5e), once the tool has held the other twelve.
 - **A8 (the dev gallery shows all of them)** The existing frame dev route (`app/devframes/`) lists
   every registered set, so T can watch all seventeen cycle their three clips outside a fight. If it
   already enumerates `ENEMY_FRAME_SETS`, this is a check, not a change.
@@ -117,8 +127,8 @@ axiomancer-mobile` and `npm test` green.
   green-jelly's; tuning a single enemy's timing after seeing it is a follow-up, not this phase.
 - **WebP q95 masters, not PNG**, the CA3 convention (8.9 MB for fourteen, against 35 MB of
   PNG); the cleanup tool reads either.
-- **Requires is a chain** (b on a, c on b, d on c), not a fan, because every phase edits
-  `frames.ts` and `index.ts` and a fan would ship four conflicting PRs.
+- **Requires is a chain** (b on a, c on b, d on c, e on d), not a fan, because every phase edits
+  `frames.ts` and `index.ts` and a fan would ship five conflicting PRs.
 
 ## Phases
 
@@ -150,34 +160,48 @@ Closes nothing on its own beyond its share of A3–A6 for these keys. Requires A
 - **Verify gate:** as AN5a.
 - Measure: eight of seventeen keys animate; every new cell under the ceiling.
 
-### AN5c — The cliff, hamlet and cave normals animate (Size: M)
+### AN5c — The Wreck-Picker and the Tithe-Collector animate (Size: S)
 
 Closes A4. Requires AN5b. Attended: no.
 
-- **Scope:** `wreck-picker`, `smokehouse-gutter`, `tithe-collector` (EN1h), the last including the
-  resample (Decisions); the A4 grade audit across every AN5 set shipped so far (each manifest
+- **Scope:** `wreck-picker`, `tithe-collector` (EN1h), the last including the resample
+  (Decisions); the A4 grade audit across every AN5 set shipped so far (each manifest
   `graded: false`, each ingest run `--no-grade`, recorded in provenance).
-- **Tests:** three encounter tests; the tool's report for `tithe-collector` shows the resample.
+- **Tests:** two encounter tests; the tool's report for `tithe-collector` shows the resample.
 - **Verify gate:** as AN5a.
-- Measure: eleven of seventeen keys animate, the tithe-collector among them.
+- Measure: ten of seventeen keys animate, the tithe-collector among them.
 
-### AN5d — The five elites animate, and every portrait has a set (Size: M)
+### AN5d — Four elites animate (Size: M)
 
-Closes A3, A5, A6, A8. Requires AN5c. Attended: no.
+Closes nothing on its own beyond its share of A3, A5, A6 and A9 for these keys. Requires AN5c. Attended: no.
 
-- **Scope:** `cave-choir`, `lamplighter`, `wrecker`, `toll-keeper`, `tide-gate` (EN1j–EN1l) through
-  the chain; a root test that every key of `ENEMY_ART_BY_KEY` has a valid `ENEMY_FRAME_SETS` entry
-  (the Measure as a test, so a new portrait without a set is a visible red, not a quiet static
-  enemy — it names the key and says a portrait needs a set or an explicit exemption); the A8 dev
-  route check; the bundle total for all seventeen sets recorded in `frames.ts`'s BUNDLE COST
-  passage; the `frames.ts` and `index.ts` comments rewritten (A3).
-- **Tests:** five encounter tests; the every-portrait-has-a-set test; cell weights.
+- **Scope:** `cave-choir`, `lamplighter`, `wrecker`, `toll-keeper` (EN1j-EN1l) through A1's tool
+  and A3's chain; a test and provenance each.
+- **Tests:** four encounter tests; cell weights; the A7 test covers the new keys.
 - **Verify gate:** as AN5a.
-- Measure: 17 of 17 keys animate; the every-portrait test is green and goes red on a fixture
-  portrait with no set.
+- Measure: fourteen of seventeen keys animate; every new cell under the ceiling.
 
-Acceptance closure: A1, A2, A7 by AN5a; A4 by AN5c; A3, A5, A6, A8 by AN5d (AN5a–c each install
-their keys under A3, A5 and A6, and AN5d closes them when the seventeenth set lands).
+### AN5e — The Smokehouse Gutter and the Tide-Gate animate, and every portrait has a set (Size: M)
+
+Closes A3, A5, A6, A8, A9. Requires AN5d. Attended: no.
+
+Last on T's ruling (2026-10-30): these two sheets drift the most across their idle (42 px and 27 px
+before cleanup), so they go through the tool after it has held the other twelve.
+
+- **Scope:** `smokehouse-gutter` (EN1h) and `tide-gate` (EN1l) through the chain; the PR shows each
+  one's idle row before and after cleanup, with the tool's drift numbers (A9); a root test that
+  every key of `ENEMY_ART_BY_KEY` has a valid `ENEMY_FRAME_SETS` entry (the Measure as a test, so a
+  new portrait without a set is a visible red, not a quiet static enemy; it names the key and says
+  a portrait needs a set or an explicit exemption); the A8 dev route check; the bundle total for
+  all seventeen sets recorded in `frames.ts`'s BUNDLE COST passage; the `frames.ts` and `index.ts`
+  comments rewritten (A3).
+- **Tests:** two encounter tests; the every-portrait-has-a-set test; cell weights.
+- **Verify gate:** as AN5a.
+- Measure: 17 of 17 keys animate; both idles hold within 3 px; the every-portrait test is green and
+  goes red on a fixture portrait with no set.
+
+Acceptance closure: A1, A2, A7 by AN5a; A4 by AN5c; A3, A5, A6, A8, A9 by AN5e (AN5a-d each install
+their keys under A3, A5, A6 and A9, and AN5e closes them when the seventeenth set lands).
 
 ## Definition of done
 
