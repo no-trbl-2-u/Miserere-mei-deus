@@ -1,6 +1,6 @@
 /**
- * EQUIPMENT EFFECTS — a worn weapon's and armor's one fight effect (spec 136,
- * A10; the shape is `EquipmentEffect` in `Items/types.ts`).
+ * EQUIPMENT EFFECTS — a worn weapon's and armor's one fight effect (the
+ * shape is `EquipmentEffect` in `Items/types.ts`).
  *
  * The worn effects are read once, at `initializeCombatEncounter`, into
  * `CombatEncounterState.equipmentEffects`; a fight whose worn gear carries no

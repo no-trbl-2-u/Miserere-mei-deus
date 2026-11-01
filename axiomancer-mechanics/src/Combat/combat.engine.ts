@@ -317,7 +317,7 @@ export function initializeCombatEncounter(
         // The program ledger exists only for a deck that holds a program
         // card, so every other fight's state is unchanged.
         ...(deckHasProgramCards(deck) ? { program: initProgramLedger() } : {}),
-        // The worn gear's fight effects (spec 136, A10): read here, once, from
+        // The worn gear's fight effects: read here, once, from
         // the worn loadout, whatever the deck; absent when nothing worn has one.
         ...(equipmentEffects ? { equipmentEffects } : {}),
     };
@@ -831,7 +831,7 @@ function applyRiderToState(
     const stats = state.player.baseStats;
 
     // BRINE cuts the GUARD gain. A card's GUARD fires the worn gear's
-    // first-GUARD trigger (spec 136, A10).
+    // first-GUARD trigger.
     if (r.guard) {
         const gain = cutGuardGain(state, scaleFor(r.guard, stats, 'mind', 'one-shot'), events);
         state = { ...state, guard: (state.guard ?? 0) + gain };
@@ -1108,7 +1108,7 @@ function playBottomAction(
     // DEAL — each hit folds the scalers through `scalePlayerHit`, then the
     // foe's WARD soaks the part before VULNERABLE.
     let wardState: CombatEncounterState = state;
-    // The worn gear's running state (spec 136, A10): a card's DEAL fires its
+    // The worn gear's running state: a card's DEAL fires its
     // DEAL triggers and conditions (their +n joins the hit unscaled, before
     // VULNERABLE), and what they pay (HEAL, GUARD, Conviction, draw) rides
     // on `gear` into the play's result.

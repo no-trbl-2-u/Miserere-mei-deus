@@ -257,7 +257,7 @@ interface Frame {
     /** Who runs the line: a card ('line', the default; a Curse played by a card,
      *  a discard rider and the MERCY burst count too) or a Global in play
      *  ('global'). Only a card's DEAL and GUARD fire the worn gear's DEAL and
-     *  first-GUARD triggers (spec 136, A10). */
+     *  first-GUARD triggers. */
     source?: 'line' | 'global';
     /** The Curse is being played with its SACRIFICE WAIVED. */
     waived: boolean;
@@ -342,7 +342,7 @@ class LineCtx implements ProgramCtx {
     private byCard(): boolean { return this.f.source !== 'global'; }
 
     /**
-     * The worn gear's hook (spec 136, A10), on a real play only: fires what
+     * The worn gear's hook, on a real play only: fires what
      * `hook` reaches and returns a DEAL's +n. A gear HEAL counts toward the
      * VITAE you healed this turn.
      */
