@@ -21,7 +21,7 @@ import {
 import type { GameState, PaidQuestReward, QuestLog, Reward } from '@mechanics';
 
 import { offerCompletedQuestItemsAction } from '../item-reward/relic-sources';
-import { recordItemGained, recordNodeResolved, recordProgress } from '../run-log';
+import { recordItemGained, recordNodeResolved, recordProgress, recordQuestStep, recordQuestsCompleted } from '../run-log';
 import { EMPTY_QUEST_SLICE, type AppStore, type MobileQuestPaid } from '../store';
 
 /** The resolved quest event the screen opens on. */
@@ -72,6 +72,7 @@ export function acceptQuestStepAction(store: AppStore): boolean {
     store.setState({ quests: next.quests, world: next.world } as never);
     saveQuietly(store);
     // The run log: the step taken on this quest node.
+    recordQuestStep(store, { questId: open.questline, stepId: String(open.node) }, 'accept');
     recordNodeResolved(store, 'accept');
     return true;
 }
@@ -124,6 +125,8 @@ export function turnInQuestStepAction(store: AppStore): boolean {
     offerCompletedQuestItemsAction(store, before.quests);
     saveQuietly(store);
     // The run log: the step turned in, what it paid in XP and levels, and the items it handed over.
+    recordQuestStep(store, { questId: open.questline, stepId: String(open.node - 1) }, 'turn-in');
+    recordQuestsCompleted(store, before.quests);
     recordNodeResolved(store, 'turn-in');
     recordProgress(store, playerBefore, 'quest');
     // Equipment goes to the reward screen, which logs it when it is taken.
@@ -150,6 +153,8 @@ export function completedQuestCardOffers(state: GameState, before: QuestLog): st
  * `card-pick` to the spoils tiles. The one call every completion path makes.
  */
 export function offerCompletedQuestExtrasAction(store: AppStore, before: QuestLog): void {
+    // The run log: every quest the step finished, whatever finished it.
+    recordQuestsCompleted(store, before);
     offerCompletedQuestItemsAction(store, before);
     const offers = completedQuestCardOffers(store.getState() as unknown as GameState, before);
     if (offers.length === 0) return;
