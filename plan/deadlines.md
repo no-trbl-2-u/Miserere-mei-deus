@@ -212,7 +212,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
 | [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e | - |
 | [ ] | 2026-11-01 | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | W1 | T | EN1i |
-| [x] | 2026-11-01 | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h; moved up from Nov 11, T: "cut over now") | W1 | NX1d | NX1a, NX1c |
+| [ ] | 2026-11-01 | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h; moved up from Nov 11, T: "cut over now") | W1 | NX1d | NX1a, NX1c |
 | [ ] | 2026-11-02 | Plot the sea keep's boss from enemy session 2; the normals and all six elites are plotted (EN1) (0.5 h) | W1 | B2 | - |
 | [ ] | 2026-11-02 | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | W1 | needs plot | - |
 | [ ] | 2026-11-03 | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | W2 | needs plot | - |
