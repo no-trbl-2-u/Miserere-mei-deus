@@ -4026,6 +4026,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Items",
+      "file": "axiomancer-mobile/state/quest/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
       "file": "axiomancer-mobile/state/run-log.ts"
     },
     {
