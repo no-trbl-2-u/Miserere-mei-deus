@@ -210,8 +210,9 @@ path are stated in the two files' own headers;
   candidates.
 - `skills/plot.md`, `skills/messy.md` — T's intake. Never fired by
   the loop (rule 8).
-- `skills/heads-down.md` — T's attended parallel orchestrator,
-  ours until phase NX1g makes it `/pilot`.
+- `skills/pilot.md` — T's attended parallel orchestrator (ours,
+  nexus's heads-down frame around our waves); `skills/heads-down.md`
+  is the kit's, stock. Never fired by the loop.
 
 ## Queue change log
 

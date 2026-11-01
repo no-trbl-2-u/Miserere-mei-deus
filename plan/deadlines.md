@@ -274,7 +274,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - NX1f — the workflows on v2's steps after the cut-over; the T act after it, NX1i, has no date yet
-- NX1g — `/pilot`, T's orchestrator; no dated T act waits on it
 - NX1h — the weekly nexus sync; no dated T act waits on it (T reads each sync PR as it comes)
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
 - CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set

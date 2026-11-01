@@ -167,6 +167,9 @@ None. No game save, engine type or Worker route changes.
 
 ## Acceptance
 
+- **A10** `march.yml` and `night.yml` run v2's quota, cadence and idle steps ahead of the
+  `_claude-skill.yml` call; the one-verb wrappers take v2's verb names; `heartbeat.yml` is added; the
+  `claims` branch is migrated to v2's `claims.mjs` format; `loop-pr.test.mjs` follows every rename.
 - **A11** `/pilot` exists (`skills/pilot.md`, `.claude/commands/pilot.md`): nexus's heads-down frame
   (plan read from origin, the two question gates, claims, the ledger and `/reboot-resume`, the end gate,
   `progress.mjs`) around our wave scheduler (the dependency map, one background worker per chunk in its
@@ -207,8 +210,7 @@ None. No game save, engine type or Worker route changes.
 
 ## Chunks
 
-Measure: 4 open · 10 closed · next A15
+Measure: 2 open · 12 closed · next A15
 
-- [ ] **133.7** /pilot · L · closes A11 · needs — · alias: NX1g
 - [ ] **133.8** The weekly nexus sync · M · closes A12, A14 · needs — · alias: NX1h
 - [ ] **133.9** The loop back on (attended) · S · closes A13 · needs — · alias: NX1i

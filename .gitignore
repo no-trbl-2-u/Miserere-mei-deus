@@ -70,7 +70,10 @@ plan/messy/
 # The Obsidian vault: its own repo (no-trbl-2-u/miserere-vault), cloned here by scripts/vault.mjs (docs/vault.md).
 /vault/
 
-# /heads-down session ledgers: untracked, primary checkout only (scripts/heads-down-ledger.mjs)
+# Session ledgers and local settings: untracked, primary checkout only (scripts/ledger.mjs keeps
+# .nexus/sessions/ for /pilot, /heads-down and /next; scripts/owner.mjs reads .nexus/local.json).
+# .heads-down/ is the retired /heads-down ledger (phase NX1g), kept until its last run ends.
+.nexus/
 .heads-down/
 
 # Python bytecode from the art department's tools and pytest (phase AN5d: two .pyc files were committed by accident in AN5a-AN5c).
