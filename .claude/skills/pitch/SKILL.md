@@ -164,7 +164,26 @@ printed `/plot`-shaped block with no command run.
 Then, and only then: write the pitch file to `<pitch_dir>/<date>-<slug>.md`
 in the format of `references.md` section 4 (surface question, better
 question, path taken, evidence, prior art, rulings, directions, **Handoff
-to /plot** block). Ask one `AskUserQuestion`, recommended-first: "Run
+to /plot** block).
+
+**Show it before the handoff.** Before the `/plot` question, offer one
+picture of the pitch, so T sees what it is before it becomes a plan. Ask
+one `AskUserQuestion`: "See this pitch as <the form you would pick>
+(Recommended) / another form / skip". Pick the form that shows what the
+pitch changes:
+- an animated C4 or architecture diagram for a system change;
+- a UML sequence or state diagram for an interaction;
+- a flow chart for a process or a loop;
+- a crude before/after mock-up for a change a player or user sees.
+
+Draw it from the card alone (GOAL, FIXED, EVIDENCE paths, Acceptance), and
+mark anything still open as open. Make it an Artifact, or an inline visual
+when the session has no Artifact tool. It is a picture, not a prototype:
+no game code, no data, nothing committed. Link it in the pitch file's
+**Handoff to /plot** block, so `/plot` can carry it as a Source. On "skip",
+go straight on.
+
+Then ask one `AskUserQuestion`, recommended-first: "Run
 `/plot asap` with this pitch as its Source (Recommended) / `/plot anytime`
 / `/plot peek` / not now (the pitch file stays; run `/plot` later)". On a
 `/plot` answer, run it in this session with the pitch file as the Source
@@ -175,7 +194,8 @@ exists.
 ## 8. What /pitch refuses
 
 1. **Never builds.** No code, no tests, no prototypes beyond a scratch run
-   of an existing harness.
+   of an existing harness. The section 7 picture is a diagram or mock-up,
+   not a prototype.
 2. **Never commits or pushes.** The pitch file is left for T or for
    `/plot` to carry.
 3. **Never promotes.** No build-plan rows, briefs or candidates; that is

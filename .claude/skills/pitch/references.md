@@ -163,6 +163,7 @@ Never overwrite; add `-2` on a clash.
 ## Handoff to /plot
 Task: <GOAL line, in T's terms>
 Source: this file
+Visual: <the section 7 picture's link, or "skipped">
 Acceptance:
 - A1 <checkable statement>
 - A2 ...
