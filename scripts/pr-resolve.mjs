@@ -28,7 +28,10 @@
 // --write`, LIVE_DEADLINES.md put back), so rows that shipped on main do not
 // leave the PR red on check-deadlines.
 //
-// Never force-pushes, never rebases, never touches `main`. A union merge of
+// Before the scan it settles main's plan/pending/ files (`settleMain`, scripts/pr-settle.mjs,
+// phase NX1e): its one write to `main`, a `plan: settle` commit, pushed and never forced.
+//
+// Never force-pushes, never rebases, and touches `main` only through that settle. A union merge of
 // an append-only file can double a row both sides edited (hunt's lesson
 // `union-edit-doubles`); `unionMerge` counts each line three ways (base,
 // ours, theirs) so an edited row keeps only its edited form. The line order
@@ -415,9 +418,22 @@ function arg(name) {
   return i === -1 ? undefined : process.argv[i + 1]
 }
 
-function main() {
+async function main() {
   const mode = process.argv[2]
   if (mode === 'scan') {
+    // Settle first (phase NX1e): the push that started this run may be a merged PR whose
+    // plan/pending/ files fold into the plan now. Never in the way of the scan: a refusal or an
+    // error is a warning, and the pending files keep counting as closed until a later push settles.
+    // Imported here, not at the top: the other modes (and the merge job, which imports this
+    // file) need none of the plan scripts it loads.
+    try {
+      const { settleMain } = await import('./pr-settle.mjs')
+      const s = settleMain({ root: ROOT })
+      if (s.state === 'settled') console.log(`settle: pushed the settle of ${s.ids.join(', ')}`)
+      else if (s.state !== 'nothing') console.log(`::warning::pr-resolve: settle ${s.state}: ${s.reason}`)
+    } catch (err) {
+      console.log(`::warning::pr-resolve: settle errored: ${String(err?.message ?? err).split('\n')[0]}`)
+    }
     const needClaude = []
     for (const pr of openLoopPrs()) {
       if (pr.mergeable !== 'CONFLICTING') continue
@@ -481,4 +497,9 @@ function main() {
   process.exit(2)
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) main()
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  main().catch((err) => {
+    console.error(err)
+    process.exitCode = 1
+  })
+}

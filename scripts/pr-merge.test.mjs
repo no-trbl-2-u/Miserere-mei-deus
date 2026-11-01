@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url'
 import * as policy from './pr-policy.mjs'
 import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, treeCheckSafe, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
+import { settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -320,4 +321,146 @@ test('a throwing tree check becomes a hold outcome with a comment, never a throw
     else process.env.GITHUB_OUTPUT = before
     fs.rmSync(out, { force: true })
   }
+})
+
+// --- settle on merge (phase NX1e) ---------------------------------------------
+//
+// No checkout is nexus's owner here, so a merged PR's plan/pending/ files settle on main from
+// the push that merged it: pr-resolve's scan calls settleMain (scripts/pr-settle.mjs) first.
+// A scratch repo plays origin and main: a PR branch commits its work and its pending close,
+// merges as GitHub's merge commit does, and the settle lands on origin/main.
+
+const SPEC = [
+  '# 07 · Search',
+  '',
+  '## Acceptance',
+  '',
+  '- **A1** A query finds the offices.',
+  '- **A2** A zip finds them too.',
+  '',
+  '## Chunks',
+  '',
+  'Measure: 2 open · 0 closed · next A3',
+  '',
+  '- [ ] **07.1** Search · S · closes A1 · needs — · alias: XY1a',
+  '- [ ] **07.2** Zip · S · closes A2 · needs 07.1 · alias: XY1b',
+  '',
+].join('\n')
+const README = [
+  '# roadmap',
+  '',
+  '## Lanes',
+  '',
+  '**Asap** (in this order):',
+  '',
+  '- (none yet)',
+  '',
+  '**Held**:',
+  '',
+  '## Specs',
+  '',
+  '| # | Initiative | Spec | Status | Progress |',
+  '|---|---|---|---|---|',
+  '| 07 | Search | [07-search.md](07-search.md) | planned | 2 left |',
+  '',
+].join('\n')
+const PENDING = ['---', 'close: 07.1', 'date: 2026-11-01', 'says: A query finds the offices', '---', ''].join('\n')
+
+function scratchOrigin() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-settle-'))
+  const origin = path.join(dir, 'origin.git')
+  const work = path.join(dir, 'work')
+  const g = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio: 'pipe' }).trim()
+  g(dir, 'init', '-q', '--bare', '-b', 'main', origin)
+  g(dir, 'clone', '-q', origin, work)
+  for (const [k, v] of [['user.email', 't@example.com'], ['user.name', 't'], ['core.autocrlf', 'false']]) g(work, 'config', k, v)
+  g(work, 'switch', '-q', '-c', 'main')
+  fs.mkdirSync(path.join(work, 'plan'), { recursive: true })
+  fs.writeFileSync(path.join(work, 'plan/07-search.md'), SPEC)
+  fs.writeFileSync(path.join(work, 'plan/README.md'), README)
+  fs.writeFileSync(path.join(work, 'plan/ARCHIVE.md'), '# Archive\n\n- 2026-10-01 · 06.1 (alias: OLD1) · Old work · 1234567 (#7)\n')
+  g(work, 'add', '-A')
+  g(work, 'commit', '-q', '-m', 'plan: the search spec')
+  g(work, 'push', '-q', '-u', 'origin', 'main')
+  return { dir, work, g }
+}
+
+/** A PR from loop/next-07.1: its work, then its pending close, merged as GitHub merges. */
+function mergePr(work, g, n = 42) {
+  g(work, 'switch', '-q', '-c', 'loop/next-07.1')
+  fs.writeFileSync(path.join(work, 'search.txt'), 'finds offices\n')
+  g(work, 'add', 'search.txt')
+  g(work, 'commit', '-q', '-m', 'feat: search')
+  fs.mkdirSync(path.join(work, 'plan/pending'), { recursive: true })
+  fs.writeFileSync(path.join(work, 'plan/pending/07.1.md'), PENDING)
+  g(work, 'add', 'plan/pending/07.1.md')
+  g(work, 'commit', '-q', '-m', 'plan: close 07.1')
+  g(work, 'switch', '-q', 'main')
+  g(work, 'merge', '-q', '--no-ff', '-m', `Merge pull request #${n} from o/loop/next-07.1`, 'loop/next-07.1')
+  g(work, 'push', '-q', 'origin', 'main')
+}
+
+test('settle on merge: a merged PR\'s pending close settles on origin/main, with its alias and PR number', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    mergePr(work, g)
+    const logs = []
+    const r = settleMain({ root: work, lint: () => [], log: (s) => logs.push(s) })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.ids, ['07.1'])
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'log', '-1', '--format=%s', 'origin/main'), 'plan: settle 07.1')
+    const archive = g(work, 'show', 'origin/main:plan/ARCHIVE.md')
+    assert.match(archive, /^- 2026-11-01 · 07\.1 \(alias: XY1a\) · A query finds the offices · [0-9a-f]{8}\.\.[0-9a-f]{8} \(#42\)$/m)
+    assert.match(archive, /^- 2026-10-01 · 06\.1 \(alias: OLD1\) · Old work · 1234567 \(#7\)$/m, 'older lines untouched')
+    const spec = g(work, 'show', 'origin/main:plan/07-search.md')
+    assert.doesNotMatch(spec, /\*\*07\.1\*\*/)
+    assert.match(spec, /\*\*07\.2\*\* Zip/)
+    assert.doesNotMatch(g(work, 'ls-tree', '-r', '--name-only', 'origin/main', 'plan/'), /plan\/pending\/07\.1\.md/)
+    assert.match(g(work, 'show', 'origin/main:plan/README.md'), /\| 1 left \|/)
+    // The settle commit's own push settles nothing.
+    assert.equal(settleMain({ root: work, lint: () => [] }).state, 'nothing')
+    assert.ok(logs.some((l) => /settled 07\.1 \(PRs #42\)/.test(l)), logs.join('\n'))
+    assert.equal(g(work, 'worktree', 'list').split('\n').length, 1, 'the throwaway worktree is gone')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('settle on merge: a settle that adds a lint failure, or a dry run, pushes nothing', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    mergePr(work, g)
+    const tip = g(work, 'rev-parse', 'origin/main')
+    let calls = 0
+    const red = settleMain({ root: work, lint: () => (calls++ % 2 ? ['plan-check: something broke'] : []), log: () => {} })
+    assert.equal(red.state, 'refused')
+    assert.match(red.reason, /turns the plan lints red: plan-check: something broke/)
+    // A failure the plan already had before the settle is not the settle's: it would land.
+    assert.equal(settleMain({ root: work, lint: () => ['old failure'], dryRun: true, log: () => {} }).state, 'settled')
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'rev-parse', 'origin/main'), tip, 'neither the refusal nor the dry run pushed')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('shapeArchive: only the lines settle added gain the alias and the PR', () => {
+  const before = '- 2026-10-01 · 06.1 (alias: OLD1) · Old · 1234567 (#7)'
+  const added = '- 2026-11-01 · 07.1 · New · aaaaaaaa..bbbbbbbb'
+  const plain = '- 2026-11-01 · 07.3 · Plan only · plan only'
+  const out = shapeArchive([before, added, plain, ''].join('\n'), [added, plain], new Map([['07.1', ['XY1a']]]), new Map([['07.1', '42']]))
+  assert.deepEqual(out.split('\n'), [before, '- 2026-11-01 · 07.1 (alias: XY1a) · New · aaaaaaaa..bbbbbbbb (#42)', plain, ''])
+  assert.deepEqual(settleMessage(['07.1']), ['-m', 'plan: settle 07.1'])
+  assert.equal(settleMessage(Array.from({ length: 12 }, (_, i) => `07.${i + 10}`))[1], 'plan: settle 12 pending files')
+})
+
+test('the merge job owns the settle: pr-resolve\'s scan settles before it scans, pr-merge settle runs it by hand', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const resolve = fs.readFileSync(path.join(root, 'scripts/pr-resolve.mjs'), 'utf8')
+  const scan = resolve.slice(resolve.indexOf("if (mode === 'scan') {"))
+  assert.ok(scan.indexOf('settleMain(') > 0 && scan.indexOf('settleMain(') < scan.indexOf('openLoopPrs()'), 'settle runs before the scan')
+  assert.match(fs.readFileSync(path.join(root, 'scripts/pr-merge.mjs'), 'utf8'), /mode === 'settle'/)
+  assert.ok(PIPELINE_PATHS.includes('scripts/pr-settle.mjs'), 'a change to the settle is a pipeline PR T merges')
+  assert.match(fs.readFileSync(path.join(root, '.github/workflows/pr-resolve.yml'), 'utf8').replace(/\r\n/g, '\n'), /push:\n\s+branches: \[main\][\s\S]*node scripts\/pr-resolve\.mjs scan/)
 })

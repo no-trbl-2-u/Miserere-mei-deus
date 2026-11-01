@@ -94,7 +94,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 130 | The modular feature map: a note per feature, canvases you zoom into | [130-fm2-modular-feature-map.md](130-fm2-modular-feature-map.md) | planned | 1 left |
 | 131 | Set bonuses: T's design session | [131-sb1-set-bonuses.md](131-sb1-set-bonuses.md) | planned | 1 left |
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
-| 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 4 left |
+| 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 3 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
 
@@ -116,9 +116,10 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 3. **Land.** Every change lands by PR (D119): code as a
    `loop:pr` PR that the review merges, and `plot`,
    `review:rules-change` and `nexus-sync` PRs that T merges.
-   Until phase NX1e adapts v2's land step (`skills/next/land.md`)
-   to that, the loop stays off (`march` and `night` disabled) and
-   nobody runs `/next` unattended.
+   Plan changes ride in the PR as `plan/pending/` files, and the
+   merge job settles them here once it merges (phase NX1e,
+   `skills/next/land.md`'s local block). The loop stays off
+   (`march` and `night` disabled) until NX1i.
 4. **Bearings.** `bearings.md` holds stack pins, contracts,
    visual defaults, the sub-agent registry and standing
    decisions. Read once per session, with `docs/game-model.md`

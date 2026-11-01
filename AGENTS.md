@@ -160,9 +160,11 @@ MCP server, or external datastore.
 `loop:pr` onto `main` (D84; `skills/march.md` §3 "Landing a change");
 plus one `size:*`, at least one `area:*` and any applying `review:*`
 label (`skills/march.md` §3 "Area and review labels");
-plan-only and telemetry commits still push `main`, except `/plot`'s
-spec and rows, which open a PR labelled `plot` (never `loop:pr`; D93)
-so T approves the phase split by merging it. Open PRs ready for
+the plan changes that record the work ride in the same PR as
+`plan/pending/` files, which the merge job settles on `main` after the
+merge (D119, phase NX1e), and `/plot`'s spec and rows open a PR labelled
+`plot` (never `loop:pr`; D93) so T approves the phase split by merging
+it. Open PRs ready for
 review, not drafts. **The loop never merges, closes or force-pushes a
 PR** (D86). Since D95 the `pr-review.yml` `merge` job merges every
 non-plot PR whose adversarial review is complete and green; T merges
@@ -371,8 +373,8 @@ Two gates wrap every shipping tick: the **verify gate**
 gate** on the PR (`gh pr checks --watch`; `npm run deploy:check` for
 `main`). **Every change lands by PR** (D119): code as a `loop:pr` PR the
 review merges; `plot`, `review:rules-change` and `nexus-sync` PRs wait
-for T. Plan-only commits still push `main` (D84) until phase NX1e lands
-plan changes as `plan/pending/` files in the PR. From the cut-over until
+for T. Plan changes ride in the PR as `plan/pending/` files and settle on
+`main` once it merges (phase NX1e; `skills/next/land.md`'s local block). From the cut-over until
 NX1i, `march` and `night` stay disabled and nobody runs `/next`,
 `/heads-down` or `/pilot` unattended, so v2's land step never meets a
 landing it does not know yet. Every closing verb ends with a **Retro**
@@ -406,10 +408,15 @@ These apply to every loop skill and session. `plan/bearings.md` echoes
 them; update here first.
 
 1. **Commit and push as a single atomic act.** Code goes to a
-   `loop/<verb>-<slug>` branch and a `loop:pr` PR that T merges;
-   plan-only (`plan/`, `telemetry/`, `docs/reports/`, `devlog/entries/`) commits and
-   `fix-ci` on red `main` push `main` directly (D84), except `/plot`,
-   which opens a `plot` PR for T to merge (D93). Attended sessions
+   `loop/<verb>-<slug>` branch (`loop/next-<chunk id>` for `/next`) and a
+   `loop:pr` PR the review merges (D95); `/plot` opens a `plot` PR for T to
+   merge (D93). Every change lands by PR (D119): the plan changes a PR
+   makes ride in it as `plan/pending/` files, and the merge job settles
+   them on `main` (`scripts/pr-settle.mjs`, phase NX1e), so two PRs never
+   meet in `plan/README.md` or a spec. `fix-ci` on red `main` still pushes
+   `main` directly, and so, until their own move onto PRs, do the
+   queue-only verbs' bookkeeping commits (`plan/`, `telemetry/`,
+   `docs/reports/`, `devlog/entries/`; D84). Attended sessions
    may push `main` at T's word. No unpushed commits between ticks; no
    dirty tree left behind. The session's
    `telemetry/` shard is part of every commit that changes it: the tracked
@@ -426,8 +433,8 @@ them; update here first.
    The build plan's own driver (`merge.buildplan`) retired with the build
    plan at the nexus v2 cut-over (phase NX1d); `scripts/build-plan-merge.mjs`
    stays only as the clash-settling core `deadlines-merge.mjs` imports. Two
-   plots that both add a roadmap row meet at one spot in `plan/README.md`
-   until phase NX1e lands plan changes as `plan/pending/` files.
+   plots that both add a roadmap row never meet in `plan/README.md`: each
+   adds it through its own `plan/pending/` file (phase NX1e).
    `plan/deadlines.md` merges through `scripts/deadlines-merge.mjs`
    (`merge.deadlines.driver`, same registration, and `MERGE_DRIVERS` in
    `scripts/pr-resolve.mjs` for the runner): same-spot Items, Unscheduled

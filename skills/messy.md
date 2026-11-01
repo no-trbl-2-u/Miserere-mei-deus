@@ -165,8 +165,11 @@ kit's steps above disagree, this section wins for Miserere.
 - **It lands by PR** (D119): the part plan(s), `plan/CANDIDATES.md` and,
   when edited, `plan/deadlines.md`, staged explicitly (never
   `plan/messy/`), on `loop/messy-<slug>` as a PR labelled `plot` that T
-  merges. Until phase NX1e settles pending files on merge, the PR edits
-  those files directly:
+  merges. A dump adds no roadmap row or chunk, so the PR edits those
+  files directly (a part plan is a new file, `CANDIDATES.md` merges by
+  union and `plan/deadlines.md` by its driver); any edit of
+  `plan/README.md` or a spec goes through Step 4's pending file, which
+  the merge job settles on main after T merges (phase NX1e):
 
   ```bash
   git add plan/<topic>.md plan/CANDIDATES.md plan/deadlines.md

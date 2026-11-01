@@ -24,6 +24,7 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { parseCloseTrailers } from './loop-issue.mjs'
+import { branchFor, CAP, capState, labelsFor, land } from './loop-land.mjs'
 import { hasMarker, isUnionPath, keepCount, MERGE_DRIVERS, registerMergeDrivers, unionMerge } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -547,6 +548,130 @@ test('a plot PR carries a size label, size:multi-phase when it splits', () => {
   assert.match(plot, /--label plot --label "<size:S\|size:M\|size:L\|size:multi-phase>"/)
   assert.match(plot, /`size:multi-phase` for a plot that splits/)
   assert.match(plot, /--label review:plan-only --label "area:/)
+})
+
+// --- v2's land step, Miserere's PRs (phase NX1e) ----------------------------
+
+// A scratch repo plays origin; a fake gh records what land asks of GitHub. The PR comes
+// from loop/next-<chunk> with loop:pr, one size, the areas and any review label; an open
+// loop:pr PR counts toward the cap whatever its branch; the claim passes to the PR.
+function landRepo() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'loop-land-'))
+  const origin = path.join(dir, 'origin.git')
+  const work = path.join(dir, 'work')
+  const g = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio: 'pipe' }).trim()
+  g(dir, 'init', '-q', '--bare', '-b', 'main', origin)
+  g(dir, 'clone', '-q', origin, work)
+  for (const [k, v] of [['user.email', 't@example.com'], ['user.name', 't']]) g(work, 'config', k, v)
+  g(work, 'switch', '-q', '-c', 'main')
+  fs.writeFileSync(path.join(work, 'a.txt'), 'a\n')
+  g(work, 'add', '-A')
+  g(work, 'commit', '-q', '-m', 'init')
+  g(work, 'push', '-q', '-u', 'origin', 'main')
+  g(work, 'switch', '-q', '-c', 'loop/next-07.1')
+  fs.mkdirSync(path.join(work, 'plan/pending'), { recursive: true })
+  fs.writeFileSync(path.join(work, 'plan/pending/07.1.md'), '---\nclose: 07.1\ndate: 2026-11-01\nsays: Search works\n---\n')
+  g(work, 'add', '-A')
+  g(work, 'commit', '-q', '-m', 'plan: close 07.1')
+  return { dir, work, g }
+}
+
+function fakeGh(open = []) {
+  const calls = []
+  const gh = (args) => {
+    calls.push(args)
+    if (args[0] === 'pr' && args[1] === 'list' && args.includes('--head')) return JSON.stringify(open.filter((p) => p.headRefName === args[args.indexOf('--head') + 1]))
+    if (args[0] === 'pr' && args[1] === 'list') return JSON.stringify(open)
+    if (args[0] === 'pr' && args[1] === 'create') return 'https://github.com/o/r/pull/77\n'
+    throw new Error(`unexpected gh ${args.join(' ')}`)
+  }
+  return { gh, calls }
+}
+
+const LAND = { verb: 'next', slug: '07.1', size: 'M', areas: ['loop', 'ci'], reviews: ['rules-change'], title: 'feat: search works (XY1a)', bodyFile: 'body.md', chunk: '07.1' }
+
+test('land: the PR comes from loop/next-<chunk> with loop:pr, size, area and review labels; the claim passes to it', () => {
+  const { dir, work, g } = landRepo()
+  try {
+    const { gh, calls } = fakeGh([{ number: 5, labels: [{ name: 'plot' }], headRefName: 'loop/plot-x' }])
+    const claimed = []
+    const logs = []
+    const r = land(LAND, { git: (a) => g(work, ...a), gh, claims: (a) => claimed.push(a), log: (s) => logs.push(s) })
+    assert.equal(r.state, 'opened')
+    assert.equal(r.number, 77)
+    assert.equal(g(work, 'ls-remote', '--heads', 'origin', 'loop/next-07.1').split('\t')[0], g(work, 'rev-parse', 'HEAD'), 'the branch is on origin')
+    const create = calls.find((c) => c[1] === 'create')
+    assert.deepEqual(create.slice(0, 6), ['pr', 'create', '--base', 'main', '--head', 'loop/next-07.1'])
+    const labels = create.flatMap((x, i) => (x === '--label' ? [create[i + 1]] : []))
+    assert.deepEqual(labels, ['loop:pr', 'size:M', 'area:loop', 'area:ci', 'review:rules-change'])
+    assert.deepEqual(claimed, [['pr', '07.1', '77']])
+    assert.match(logs.join('\n'), /T merges it/, 'a review:rules-change PR waits for T')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('land: the cap counts every open loop:pr PR, loop/next-* included, and stops the sixth', () => {
+  const pr = (n, branch, labels = ['loop:pr']) => ({ number: n, headRefName: branch, labels: labels.map((name) => ({ name })) })
+  const open = [pr(1, 'loop/ship-A1'), pr(2, 'loop/next-03.2'), pr(3, 'loop/iterate-x'), pr(4, 'loop/next-04.1'), pr(5, 'loop/plot-y', ['plot']), pr(6, 'loop/fix-z')]
+  assert.deepEqual(capState(open), { count: 5, atCap: true, numbers: [1, 2, 3, 4, 6] })
+  assert.equal(capState(open.slice(0, 4)).atCap, false)
+  assert.equal(CAP, 5)
+  const { dir, work, g } = landRepo()
+  try {
+    const { gh, calls } = fakeGh(open)
+    const r = land(LAND, { git: (a) => g(work, ...a), gh })
+    assert.equal(r.state, 'capped')
+    assert.deepEqual(r.numbers, [1, 2, 3, 4, 6])
+    assert.ok(!calls.some((c) => c[1] === 'create'), 'no PR opened at the cap')
+    assert.equal(g(work, 'ls-remote', '--heads', 'origin', 'loop/next-07.1'), '', 'nothing pushed at the cap')
+    assert.equal(land({ ...LAND, overCap: true }, { git: (a) => g(work, ...a), gh }).state, 'opened', "T's word goes past it")
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('land: an open PR for the branch is pushed to, never doubled; the wrong branch or label is refused', () => {
+  const { dir, work, g } = landRepo()
+  try {
+    const { gh, calls } = fakeGh([{ number: 9, headRefName: 'loop/next-07.1', labels: [{ name: 'loop:pr' }] }])
+    assert.deepEqual(land(LAND, { git: (a) => g(work, ...a), gh }), { state: 'pushed', branch: 'loop/next-07.1', labels: ['loop:pr', 'size:M', 'area:loop', 'area:ci', 'review:rules-change'], number: 9 })
+    assert.ok(!calls.some((c) => c[1] === 'create'))
+    assert.throws(() => land({ ...LAND, slug: '07.2' }, { git: (a) => g(work, ...a), gh }), /HEAD is on loop\/next-07\.1; the PR comes from loop\/next-07\.2/)
+    assert.throws(() => labelsFor({ size: 'XL', areas: ['loop'] }), /size "XL"/)
+    assert.throws(() => labelsFor({ size: 'S', areas: [] }), /at least one --area/)
+    assert.throws(() => labelsFor({ size: 'S', areas: ['art'] }), /area "art"/)
+    assert.equal(branchFor('next', '133.5'), 'loop/next-133.5')
+    assert.throws(() => branchFor('next', '../main'))
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('land: an older claims module without `pr` releases the claim instead', () => {
+  const { dir, work, g } = landRepo()
+  try {
+    const { gh } = fakeGh()
+    const claimed = []
+    land({ ...LAND, owner: 'heads-down:1' }, { git: (a) => g(work, ...a), gh, claims: (a) => { claimed.push(a); if (a[0] === 'pr') throw new Error('usage') } })
+    assert.deepEqual(claimed, [['pr', '07.1', '77'], ['release', '07.1', '--owner', 'heads-down:1']])
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the land step names Miserere\'s landing in a marked local block; kit text stays above it', () => {
+  const land = read('skills/next/land.md').replace(/\r\n/g, '\n')
+  const block = land.slice(land.indexOf('<!-- miserere:local'), land.indexOf('<!-- /miserere:local -->'))
+  assert.ok(block.length > 0, 'the local block is marked')
+  for (const want of ['loop/next-<id>', 'scripts/loop-land.mjs', 'loop:pr', 'pr-merge.mjs settle', 'plot', 'review:rules-change', 'nexus-sync', 'skills/march.lanes.md']) {
+    assert.ok(block.includes(want), `the local block names ${want}`)
+  }
+  assert.match(land, /^## 4\. Contributor: land as a pull request$/m, 'the kit section stays')
+  const notes = read('skills/march.lanes.md')
+  const landing = notes.slice(notes.indexOf('### Landing a change'), notes.indexOf('### Retro'))
+  assert.match(landing, /plan\/pending\//)
+  assert.doesNotMatch(landing, /commit and `git push\s+origin main` as before/, 'D84 path split is gone (D119)')
 })
 
 // --- /plot and /messy are only ever fired by T ------------------------------

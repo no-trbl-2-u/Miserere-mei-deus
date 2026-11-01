@@ -216,17 +216,21 @@ never merges it). It carries exactly one size label (`size:S|M|L` for
 one chunk, `size:multi-phase` for several), `review:plan-only`, and at
 least one `area:*` label from the labels that exist (`gh label list
 --search area:`). It does not count toward the PR cap (D85) and is not
-a claim; `pr-resolve` keeps it mergeable (D87). Until phase NX1e
-teaches the merge job to settle pending files, the plot writes its
-spec, its roadmap row and its lane lines directly on that branch (a
-new spec file conflicts with nothing), not through `plan/pending/`.
+a claim; `pr-resolve` keeps it mergeable (D87). The plot lands its
+shared plan edits as Step 3's pending file (phase NX1e): its roadmap
+row, its Held lines and any new work for an open spec go in
+`plan/pending/plot-<slug>.md`, and when T merges the PR the merge job
+settles it on main (`skills/march.lanes.md` notes "Landing a change"),
+so two plots never meet at one spot in `plan/README.md`. A new spec
+file is written directly (it conflicts with nothing), and so is
+`plan/deadlines.md` (its own merge driver).
 
 ```bash
 git fetch origin main
 git worktree add -b "loop/plot-<slug>" ../miserere-wt/plot-<slug> origin/main
 # or, from a clean checkout: git switch -c "loop/plot-<slug>" origin/main
-# the spec, the roadmap row, Held lines, plan/deadlines.md edit here
-git add plan/<NN>-<slug>.md plan/README.md plan/deadlines.md
+# the spec, the pending file (roadmap row, Held lines), plan/deadlines.md edit here
+git add plan/<NN>-<slug>.md plan/pending/plot-<slug>.md plan/deadlines.md
 git commit -m "plan: plot <NN> — <title>" -m "<k> chunk(s): <aliases>. <asap|anytime> because <reason>."
 git push -u origin "loop/plot-<slug>"
 # one chunk: size:S|M|L (its size); several chunks: size:multi-phase
