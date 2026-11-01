@@ -74,6 +74,15 @@ describe('the village equipment counter (EQ3i)', () => {
         }
     });
 
+    it('each row says what the piece does, in the shared effect line', () => {
+        const store = makeStore(100);
+        renderVillage(store);
+        for (const piece of selectVillageVM(store.getState()).equipmentShop ?? []) {
+            expect(piece.effect).not.toBeNull();
+            expect(screen.getByTestId(`village-equipment-${piece.pieceId}-effect`).props.children).toBe(piece.effect);
+        }
+    });
+
     it('a village without the counter shows none', () => {
         const store = makeStore(100, false);
         expect(selectVillageVM(store.getState()).equipmentShop).toBeNull();

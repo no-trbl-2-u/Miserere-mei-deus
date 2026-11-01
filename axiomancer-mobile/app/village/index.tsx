@@ -292,6 +292,9 @@ export default function VillageScreen() {
                                             <View style={styles.flexOne}>
                                                 <Text style={styles.wareName}>{piece.name}</Text>
                                                 <Text style={styles.wareDesc}>{piece.sub}</Text>
+                                                {piece.effect !== null && (
+                                                    <Text style={styles.wareEffect} testID={`village-equipment-${piece.pieceId}-effect`}>{piece.effect}</Text>
+                                                )}
                                             </View>
                                             <Text
                                                 style={[styles.warePrice, !piece.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}

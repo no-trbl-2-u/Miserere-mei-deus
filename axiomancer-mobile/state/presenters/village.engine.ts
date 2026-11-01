@@ -30,6 +30,7 @@ import {
 } from '@mechanics';
 import type { AppStoreState } from '@/state/store';
 import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
+import { equipmentEffectLine } from './equipment-effect-line';
 import { villageRestEffect } from './village.copy';
 
 export interface VillageMerchantVM {
@@ -71,6 +72,8 @@ export interface VillageShopPieceVM {
     name: string;
     /** The satchel's slot label: `Weapon` or `Armor`. */
     sub: 'Weapon' | 'Armor';
+    /** What the piece does, the one effect line every surface shows; null for a piece with none. */
+    effect: string | null;
     price: number;
     /** Bought this visit. */
     sold: boolean;
@@ -238,6 +241,7 @@ export function selectVillageVM(
                 pieceId,
                 name: piece.name,
                 sub: piece.slot === 'weapon' ? 'Weapon' : 'Armor',
+                effect: equipmentEffectLine(piece.effect),
                 price: quote.price,
                 sold: (visit.boughtEquipmentIds ?? []).includes(pieceId),
                 enabled: quote.refusal === null,
