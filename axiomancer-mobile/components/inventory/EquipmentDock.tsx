@@ -5,7 +5,7 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 import { SectionLabel } from '@/components/SectionLabel';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { EquipmentSlot } from './EquipmentSlot';
-import type { EquipmentDockViewModel, EquipmentDockSlot } from '@/state/presenters/inventory.engine';
+import type { DockRowId, EquipmentDockViewModel, EquipmentDockSlot } from '@/state/presenters/inventory.engine';
 
 /** Stable React key per dock slot (the 3 relic rows share a slot key, so
  *  fold in `relicIndex` to disambiguate — mirrors EquipmentSlot's testID). */
@@ -19,32 +19,61 @@ function dockSlotKey(slot: EquipmentDockSlot): string {
  *  column still needs every point it won. */
 const WIDE_DOCK_MIN_WIDTH = 900;
 
+/** Share of the dock's inner width the slot column takes below the wide layout. */
+const SLOT_COLUMN_SHARE = 0.55;
+
+/** Gap between the bust and the slot column (pt); matches the dock grid's `gap`. */
+const DOCK_GRID_GAP = 12;
+
+/** Width the dock's own chrome takes from the viewport (pt): the margin, border
+ *  and padding on both sides (10 + 2 + 10 each). */
+const DOCK_CHROME_WIDTH = 44;
+
+/** The dock's inner width (pt) for a viewport width. */
+function dockInnerWidth(viewportWidth: number): number {
+    return Math.max(0, viewportWidth - DOCK_CHROME_WIDTH);
+}
+
+/**
+ * The slot column's width in points, or `null` when it should simply take the
+ * room the bust leaves (the wide layout).
+ *
+ * At phone and tablet widths the column is about 55% of the dock's inner width,
+ * so the bust keeps the rest instead of sitting in a dark gutter. Above the wide
+ * threshold the bust is a fixed 300 pt square and the column flexes to fit.
+ */
+export function equipmentDockSlotColumnWidth(viewportWidth: number): number | null {
+    if (viewportWidth >= WIDE_DOCK_MIN_WIDTH) return null;
+    return Math.round(dockInnerWidth(viewportWidth) * SLOT_COLUMN_SHARE);
+}
+
 /**
  * The pilgrim bust's box inside the equipment dock, chosen from the viewport
  * width.
  *
  * Purpose: the portrait sources are square (512x512) drawn with `fit="contain"`,
  * so a box taller than it is wide letterboxes the art into dead black instead of
- * showing more pilgrim — the 96x260 column the C11 fix left behind was ~70% empty.
- * The box is therefore always square, and scaled to the room the dock has: at
- * phone widths the gear list keeps the width it won (the "grants <signature>"
- * sub-label must not truncate mid-word again), so the bust stays a narrow gutter;
- * at desktop widths, where no sub-label ever wrapped, the bust reads as art again.
+ * showing more pilgrim. The box is therefore always square. Below the wide
+ * layout the slot column takes `SLOT_COLUMN_SHARE` of the dock and the bust is
+ * the square that fills what is left beside it (130 pt at 360 pt wide); at
+ * desktop widths it is a fixed 300 pt square.
  *
  * Inputs: `viewportWidth` — window width in points (from `useWindowDimensions`).
  * Outputs: `{ width, height }` in points, width === height.
- * Resolves: 07-inventory-fresh / 08-inventory-midgame portrait collapse (mobile
- * dead column, desktop thumbnail).
  */
 export function equipmentDockPortraitBox(viewportWidth: number): { width: number; height: number } {
-    const side = viewportWidth >= WIDE_DOCK_MIN_WIDTH ? 300 : 112;
+    const column = equipmentDockSlotColumnWidth(viewportWidth);
+    const side = column === null
+        ? 300
+        : Math.max(0, dockInnerWidth(viewportWidth) - column - DOCK_GRID_GAP);
     return { width: side, height: side };
 }
 
 interface EquipmentDockProps {
     vm: EquipmentDockViewModel;
-    selectedSlot: EquipmentDockSlot['key'] | null;
-    onSelectSlot: (key: EquipmentDockSlot['key'] | null) => void;
+    /** The one picked row (`weapon`, `armor`, `relic-0`..`relic-2`), or null. */
+    selectedRow: DockRowId | null;
+    onSelectRow: (id: DockRowId | null) => void;
     /** Long-press pass-through: a filled slot asks the screen to open the
      *  equipment detail card for the worn item's id. */
     onShowItemDetail?: (itemId: string) => void;
@@ -54,21 +83,22 @@ interface EquipmentDockProps {
  * The WORN UPON THE BODY panel: pilgrim bust on the left, the five worn slots
  * stacked on the right.
  *
- * Inputs: `vm` (dock view model — labels + slot rows), `selectedSlot` (the slot
- * key currently being fitted, or null), `onSelectSlot` (slot press handler).
+ * Inputs: `vm` (dock view model — labels + slot rows), `selectedRow` (the row
+ * being fitted, or null), `onSelectRow` (row press handler).
  * Outputs: the dock view. Resolves: 07-inventory-fresh / 08-inventory-midgame —
  * the portrait box is sized per viewport by `equipmentDockPortraitBox`.
  */
 export function EquipmentDock({
     vm,
-    selectedSlot,
-    onSelectSlot,
+    selectedRow,
+    onSelectRow,
     onShowItemDetail,
 }: EquipmentDockProps) {
     const styles = useStyles();
     const AXM = usePalette();
     const { width: viewportWidth } = useWindowDimensions();
     const portraitBox = equipmentDockPortraitBox(viewportWidth);
+    const slotColumnWidth = equipmentDockSlotColumnWidth(viewportWidth);
 
     return (
         <View style={styles.dock} testID="equipment-dock">
@@ -106,14 +136,17 @@ export function EquipmentDock({
                         contentPosition="center"
                     />
                 </View>
-                <View style={styles.dockCol} testID="equipment-dock-slots">
+                <View
+                    style={[styles.dockCol, slotColumnWidth === null ? styles.dockColFlex : { width: slotColumnWidth }]}
+                    testID="equipment-dock-slots"
+                >
                     {vm.slots.map((slot) => (
                         <EquipmentSlot
                             key={dockSlotKey(slot)}
                             slot={slot}
                             bareLabel={vm.bareLabel}
-                            selected={selectedSlot === slot.key}
-                            onPress={onSelectSlot}
+                            selected={selectedRow === slot.id}
+                            onPress={onSelectRow}
                             onShowItemDetail={onShowItemDetail}
                         />
                     ))}
@@ -158,11 +191,15 @@ const useStyles = makeStyles((AXM) => ({
         gap: 12,
     },
     dockCol: {
-        // The gear list is the information in this dock, so it takes every
-        // point the portrait does not claim; an even split leaves each row
-        // too narrow and the grants sub-label breaks mid-word.
-        flex: 1,
+        // Below the wide layout the width is set inline (about 55% of the dock,
+        // from `equipmentDockSlotColumnWidth`) so the bust has room to breathe.
+        flexShrink: 0,
         alignItems: 'stretch',
+    },
+    dockColFlex: {
+        // Wide layout: the bust is a fixed square and the gear list takes the rest.
+        flex: 1,
+        flexShrink: 1,
     },
     dockPortrait: {
         // A fixed box instead of flex:1 — the bust never reclaims

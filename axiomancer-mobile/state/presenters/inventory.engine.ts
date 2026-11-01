@@ -25,7 +25,17 @@ import {
 import { freezeViewModel } from './freeze';
 import { computeEquipDelta, type EquipDelta } from '@mechanics';
 import { getSignatureSkill } from '@mechanics';
-import { LOADOUT_ROWS, isWornId, replacedByEquip, wornAtRow } from './loadout';
+import {
+    LOADOUT_ROWS,
+    isWornId,
+    loadoutRowById,
+    replacedByEquip,
+    rowSlotKind,
+    wornAtRow,
+    type DockRowId,
+} from './loadout';
+
+export type { DockRowId } from './loadout';
 
 export type { EquipDelta } from '@mechanics';
 
@@ -40,15 +50,14 @@ export interface InventoryLocalUi {
     activeTab?: InventoryTab;
     expandedItemId?: string | null;
     /**
-     * When set, the equipment slot the user has tapped in the
-     * Equipment Dock to filter the sack to compatible items.
-     * The filter overrides `activeTab` —
-     * the screen sets `activeTab='all'` whenever it picks a slot,
-     * and the presenter additionally guards against the case where
-     * a stale tab is still set (slot filter wins). `null` / omitted
-     * → no slot filter.
+     * When set, the dock row (weapon, armor or one relic position) the user has
+     * tapped to filter the sack to pieces that fit it. Only that row is picked,
+     * and wearing from the sack goes into it. The filter overrides `activeTab`:
+     * the screen sets `activeTab='all'` whenever it picks a row, and the
+     * presenter additionally guards against a stale tab (the row filter wins).
+     * `null` / omitted → no row picked.
      */
-    selectedSlot?: Equipment['slot'] | null;
+    selectedRow?: DockRowId | null;
 }
 
 export interface InventoryItemRow {
@@ -147,6 +156,8 @@ export interface InventoryTabRow {
  * when the position is bare.
  */
 export interface EquipmentDockSlot {
+    /** The row's own identity (`weapon`, `armor`, `relic-0`..`relic-2`): what a tap picks. */
+    id: DockRowId;
     key: Equipment['slot'];
     /**
      * Which of the 3 interchangeable relic positions this row is (0-2).
@@ -176,15 +187,15 @@ export interface EquipmentDockViewModel {
     bareLabel: string;
     /**
      * Slot-filter banner copy & state.
-     * `selectedSlot` mirrors the user pick; `bannerEyebrow` /
+     * `selectedRow` mirrors the user pick; `bannerEyebrow` /
      * `bannerSlotLabel` / `bannerClearLabel` are the chrome strings
-     * the screen renders when a slot is active. `bannerSlotLabel`
-     * resolves to the dock slot's `label` (e.g. "WEAPON") so the
+     * the screen renders when a row is picked. `bannerSlotLabel`
+     * resolves to the picked row's `label` (e.g. "RELIC I") so the
      * screen doesn't have to reach back through `slots`. `null` /
-     * empty when no slot is selected; the screen treats `null` as
+     * empty when no row is picked; the screen treats `null` as
      * "do not render the banner".
      */
-    selectedSlot: Equipment['slot'] | null;
+    selectedRow: DockRowId | null;
     bannerEyebrow: string;
     bannerSlotLabel: string;
     bannerClearLabel: string;
@@ -276,17 +287,6 @@ const SLOT_LABELS: Record<Equipment['slot'], string> = {
 
 const BURDEN_MAX = 50;
 const EMPTY_MESSAGE = 'nothing in the satchel.';
-
-/**
- * Uppercase chrome label per slot — distinct from `SLOT_LABELS`
- * (which is title-case "Weapon" / "Armor" for the item-row sub
- * field). The three relic rows read RELIC I/II/III from `LOADOUT_ROWS`.
- */
-const DOCK_SLOT_TITLE: Record<Equipment['slot'], string> = {
-    weapon: 'WEAPON',
-    armor: 'ARMOR',
-    relic: 'RELIC',
-};
 
 
 const DOCK_HEADER_LABEL = '✠ WORN UPON THE BODY';
@@ -399,7 +399,7 @@ function computeReplacePreview(
  * computes `replacePreview` for every non-equipped
  * equipment row whose slot has an equipped sibling.
  */
-function buildRows(state: GameStore): InventoryItemRow[] {
+function buildRows(state: GameStore, pickedRow: DockRowId | null = null): InventoryItemRow[] {
     const inventory = state.player?.inventory ?? [];
     const rowsById = new Map<string, InventoryItemRow>();
     const order: string[] = [];
@@ -410,7 +410,7 @@ function buildRows(state: GameStore): InventoryItemRow[] {
     // (→ unequip delta), null when a position is free (→ equip), or the piece it
     // would displace when the slot is at capacity (→ swap).
     const siblingFor = (item: Equipment): Equipment | null =>
-        isWorn(item) ? item : replacedByEquip(player, item);
+        isWorn(item) ? item : replacedByEquip(player, item, pickedRow);
     // First-seen engine item per ID — used to grab the StatModifier
     // array on non-equipped equipment when we compute the preview.
     const itemById = new Map<string, Equipment>();
@@ -534,7 +534,7 @@ function computeBurden(rows: readonly InventoryItemRow[]): number {
 
 function buildEquipmentDock(
     player: Character,
-    selectedSlot: Equipment['slot'] | null,
+    selectedRow: DockRowId | null,
 ): EquipmentDockViewModel {
     // The dock draws `player.equipment` itself: one row each for the weapon
     // and the armor, then one per relic position in loadout order.
@@ -543,6 +543,7 @@ function buildEquipmentDock(
             ? null
             : { id: piece.id, name: piece.name, sub: subFor(piece), grantsSignature: grantsSignatureName(piece) };
     const slots: EquipmentDockSlot[] = LOADOUT_ROWS.map((row): EquipmentDockSlot => ({
+        id: row.id,
         key: row.key,
         ...(row.relicIndex !== undefined ? { relicIndex: row.relicIndex } : {}),
         label: row.dockLabel,
@@ -553,9 +554,9 @@ function buildEquipmentDock(
         headerLabel: DOCK_HEADER_LABEL,
         hintLabel: DOCK_HINT_LABEL,
         bareLabel: DOCK_BARE_LABEL,
-        selectedSlot,
+        selectedRow,
         bannerEyebrow: DOCK_BANNER_EYEBROW,
-        bannerSlotLabel: selectedSlot === null ? '' : DOCK_SLOT_TITLE[selectedSlot],
+        bannerSlotLabel: selectedRow === null ? '' : loadoutRowById(selectedRow).dockLabel,
         bannerClearLabel: DOCK_BANNER_CLEAR_LABEL,
     };
 }
@@ -577,15 +578,15 @@ export function selectInventoryViewModel(
     localUi: InventoryLocalUi = {},
 ): InventoryViewModel {
     const inventory = state.player?.inventory ?? [];
-    const rows = buildRows(state);
+    const selectedRow = localUi.selectedRow ?? null;
+    const rows = buildRows(state, selectedRow);
     const activeTab = localUi.activeTab ?? 'all';
-    const selectedSlot = localUi.selectedSlot ?? null;
-    // Slot filter overrides tab filter — the screen sets activeTab='all'
-    // when picking a slot, but we guard here too so a stale tab pick
+    // Row filter overrides tab filter — the screen sets activeTab='all'
+    // when picking a row, but we guard here too so a stale tab pick
     // can't leak through when the consumer is e.g. a hermetic test.
-    const items = selectedSlot === null
+    const items = selectedRow === null
         ? filterRowsByTab(rows, activeTab)
-        : filterRowsBySlot(rows, selectedSlot);
+        : filterRowsBySlot(rows, rowSlotKind(selectedRow));
 
     return freezeViewModel({
         tabs: buildTabs(rows),
@@ -599,6 +600,6 @@ export function selectInventoryViewModel(
         emptyMessage: EMPTY_MESSAGE,
         sectionHeader: SECTION_HEADER,
         categoryHeaders: CATEGORY_HEADERS,
-        equipmentDock: buildEquipmentDock(state.player, selectedSlot),
+        equipmentDock: buildEquipmentDock(state.player, selectedRow),
     });
 }

@@ -48,7 +48,7 @@ export interface ArchetypeSpec {
 }
 
 /** The deck size under which a bot has nothing more removed: the size of a character's dealt deck. */
-export const MIN_DECK_SIZE = CHARACTER_GREY_DECK.length + 2;
+export const MIN_DECK_SIZE = CHARACTER_GREY_DECK.length + 3;
 
 /**
  * The node kinds a hurt bot walks to: a rest, which is spent once used. A

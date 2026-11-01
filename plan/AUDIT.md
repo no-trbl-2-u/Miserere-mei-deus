@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [x] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01) — CLOSED 2026-11-01 (fix-ci, verify-root run 41298604682: reworded all ten lines in `combat.card-program.ts`, `combat.encounter.types.ts`, `combat.engine.ts`, `combat.equipment-effects.ts`, `e2e/equipment-effects.engine.test.ts` and `Items/types.ts` to drop the "spec 136"/"A10"/"chunk 136.4" narration; `check-comments.mjs` reports clean, root `npm test` and mobile `npm run verify` both pass)
+- category: debt
+- impact: 5
+- ease: 8
+- detail: `npm test`'s `check-comments.test.mjs` fails on `main` (HEAD `bc3a49000` at filing time) with 10 history-narrating comment lines, all from the EQ3d/136.4-136.5 equipment-effects work (`3f76fd9d4`, `c9ec5c21b`): `combat.card-program.ts:260,345`, `combat.encounter.types.ts:525`, `combat.engine.ts:320,834,1111`, `combat.equipment-effects.ts:2`, `e2e/equipment-effects.engine.test.ts:2`, `Items/types.ts:81,100` — each names "(spec 136, A10)" or similar. `verify-root` run 41295273531 reported a different failure first (`feature-map` staleness, fixed separately this same tick) because the npm script chain (`plan-check && feature-map --check && feature-map-render --check && node --test ...`) short-circuits before reaching `node --test`; this is the next thing that chain will hit once that earlier gate is green, so it will still block merges to `main` until fixed.
+- next: reword each flagged line to state what the code does, not its phase/spec history (git blame already keeps that); `check-comments.mjs`'s own docstring explains the two guarded kinds (history, retired lexicon terms) and the `lexicon-ok` escape hatch for a line that must legitimately name a deleted thing.
+
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5
@@ -194,6 +201,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: the measured-truth run moved lowestVitaeFractionP10 for ld-16/death-beholder with the grey deck (body-mind spread) from 0.31 at 368f4f2 to 0.50 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
 - next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
 - evidence 2026-10-31: even 0.07 -> 0.28 at cf431a4
+- evidence 2026-11-01: even 0.28 -> 0.05 at 431ed71
 
 ### [ ] [content] measured drift: cw-12/green-jelly grey lowestVitaeFractionP10 0.55 -> 0.78 (even, 2026-10-29)
 - issue: #1081
@@ -225,6 +233,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - evidence 2026-10-29: body 0.37 -> 0.60 at 3993f2a
 - evidence 2026-10-30: even 0.00 -> 0.35 at 00e0876
 - evidence 2026-10-30: body-mind 0.45 -> 0.61 at 00e0876
+- evidence 2026-11-01: even 0.55 -> 0.35 at 431ed71
 
 ### [ ] [content] measured drift: bc-15/death-beholder grey lowestVitaeFractionP10 0.23 -> 0.48 (body-mind, 2026-10-29)
 - issue: #1084

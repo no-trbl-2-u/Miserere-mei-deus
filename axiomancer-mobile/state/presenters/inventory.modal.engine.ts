@@ -26,7 +26,13 @@ import { keywordForEffect } from '@/state/combat/keywords';
 import { freezeViewModel } from './freeze';
 import { parseHealAmount } from '../actions';
 import { computeEquipDelta } from '@mechanics';
-import { findOwnedEquipment, loadoutActionFor } from './loadout';
+import {
+    equipPositionFor,
+    findOwnedEquipment,
+    loadoutActionFor,
+    loadoutRowById,
+    type DockRowId,
+} from './loadout';
 
 /**
  * Modal mode discriminator. The screen branches on this to pick
@@ -123,6 +129,7 @@ export interface ItemModalViewModel {
 export function selectItemModalViewModel(
     state: GameStore,
     itemId: string,
+    pickedRow: DockRowId | null = null,
 ): ItemModalViewModel | null {
     const inventory: readonly Item[] = state.player.inventory;
     const item = inventory.find((i: Item) => i.id === itemId)
@@ -130,7 +137,7 @@ export function selectItemModalViewModel(
     if (!item) return null;
 
     if (isConsumable(item)) return buildConsumableModal(state.player, item);
-    if (isEquipment(item)) return buildEquipmentModal(state.player, item);
+    if (isEquipment(item)) return buildEquipmentModal(state.player, item, pickedRow);
 
     return freezeViewModel({
         itemId: item.id,
@@ -217,19 +224,28 @@ function notWornLineFor(item: Equipment, mode: ItemModalMode): string | null {
     return signature ? `Not worn: ${signature} is off.` : null;
 }
 
-function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel {
+function buildEquipmentModal(
+    player: Character,
+    item: Item,
+    pickedRow: DockRowId | null,
+): ItemModalViewModel {
     const eq = item as Equipment;
     // Worn state is `player.equipment`. confirmLabel matrix:
     // - Worn → 'UNEQUIP' (the position is left empty).
+    // - A relic row picked → 'WEAR', or 'WEAR · REPLACE <NAME>' when that row is full.
     // - Not worn, a position free → 'EQUIP'.
     // - Not worn, slot full → 'EQUIP · REPLACE <NAME>' (the last-worn piece).
-    const action = loadoutActionFor(player, eq);
+    const action = loadoutActionFor(player, eq, pickedRow);
     const mode: ItemModalMode = action.mode;
     const confirmLabel = action.label;
     const replacing = action.replacing;
+    const position = equipPositionFor(eq, pickedRow);
+    const slotLine = mode === 'equip' && position !== undefined && pickedRow !== null
+        ? loadoutRowById(pickedRow).dockLabel
+        : eq.slot.toUpperCase();
 
     const previewLines: string[] = [
-        `Slot · ${eq.slot.toUpperCase()}`,
+        `Slot · ${slotLine}`,
         mode === 'unequip'
             ? 'Worn now.'
             : `${eq.slot.charAt(0).toUpperCase() + eq.slot.slice(1)} slot.`,
@@ -239,7 +255,7 @@ function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel 
     // performs; every changed stat and signature surfaces, nothing else.
     let afterChar: Character;
     if (mode === 'equip') {
-        const { index } = displacedBy(player, eq);
+        const { index } = displacedBy(player, eq, position === undefined ? undefined : { position });
         afterChar = engineEquipItem(player, eq, index === null ? undefined : { position: index });
     } else {
         const relicIndex = eq.slot === 'relic'

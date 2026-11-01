@@ -279,10 +279,11 @@ export interface AppActions {
     /**
      * Equip an item: the engine folds its stat line into `player.equipment`
      * and wears its signature. When every position of its slot is worn, the
-     * last-worn piece comes off to make room (it stays in the satchel). No-op
+     * last-worn piece comes off to make room (it stays in the satchel). A relic
+     * given a `position` (0-2) is worn there instead, replacing what is there. No-op
      * when the item isn't equipment or is already worn.
      */
-    equipItem: (itemId: string) => void;
+    equipItem: (itemId: string, position?: number) => void;
     /**
      * Take a worn item off `player.equipment`, leaving its position empty.
      * Wearing fewer pieces than are carried is legal, and so is wearing none.
@@ -794,7 +795,7 @@ export function createAppActions(store: AppStore): AppActions {
         removeItem: (itemId) => store.getState().removeItem(itemId),
         useConsumable: (itemId) => store.getState().useConsumable(itemId),
         useItem: (itemId) => useItemAction(store, itemId),
-        equipItem: (itemId) => equipItemAction(store, itemId),
+        equipItem: (itemId, position) => equipItemAction(store, itemId, position),
         unequipItem: (itemId) => unequipItemAction(store, itemId),
         dropItem: (itemId) => dropItemAction(store, itemId),
         moveTo: (nodeId) => moveToAction(store, nodeId),
@@ -1045,18 +1046,25 @@ function pushToast(store: AppStore, text: string): void {
     });
 }
 
-function equipItemAction(store: AppStore, itemId: string): void {
+function equipItemAction(store: AppStore, itemId: string, position?: number): void {
     const state = store.getState();
     const target = state.player.inventory.find((i: Item) => i.id === itemId);
     if (!target || !isEquipment(target)) return;
     const equip = target as Equipment;
     if (isWornId(state.player.equipment, equip.id)) return;
 
-    // The engine folds the stat line and wears the piece. A relic fills the
-    // first empty position; a full relic row gives up its last-worn piece (the
-    // one the modal names as REPLACE); it stays in the satchel, since worn
-    // pieces are carried too.
-    const { index } = displacedBy(state.player, equip);
+    // The engine folds the stat line and wears the piece. A relic goes into the
+    // position asked for (replacing what is there); with none asked for it fills
+    // the first empty position, and a full relic row gives up its last-worn
+    // piece (the one the modal names as REPLACE). A weapon or armor ignores the
+    // position. The replaced piece stays in the satchel, since worn pieces are
+    // carried too.
+    const asked = equip.slot === 'relic' ? position : undefined;
+    const { index } = displacedBy(
+        state.player,
+        equip,
+        asked === undefined ? undefined : { position: asked },
+    );
     const nextPlayer = engineEquipItem(
         state.player,
         equip,
