@@ -12,10 +12,14 @@
  */
 
 import { describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
+import { State } from 'react-native-gesture-handler';
+import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 
 import { ItemGrid } from '@/components/inventory/ItemGrid';
+import { useDockDrag, type DockDragController } from '@/components/inventory/useDockDrag';
+import type { DockDragPayload } from '@/state/presenters/inventory.drag';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { InventoryItemRow } from '@/state/presenters/inventory.engine';
 
@@ -398,5 +402,74 @@ describe('ItemGrid: accessibility and testIDs', () => {
 
         const scrollView = rendered.getByTestId('inventory-scroll');
         expect(scrollView.props.showsVerticalScrollIndicator).toBe(true);
+    });
+});
+
+describe('ItemGrid: a drag gesture beside the tap', () => {
+    let dockDrag: DockDragController;
+    const onItemTap = jest.fn();
+    const sword: DockDragPayload = {
+        itemId: 'sword-basic', name: 'Iron Sword', sub: 'Weapon', kind: 'weapon', from: 'satchel', wornRow: null,
+    };
+    const getPayload = jest.fn(() => sword);
+
+    function DragHarness() {
+        const { drag } = useDockDrag({ onDrop: () => undefined, measure: async () => null });
+        dockDrag = drag;
+        return (
+            <ItemGrid
+                items={[mockEquipmentWeapon, mockConsumable]}
+                categoryHeaders={mockCategoryHeaders}
+                emptyMessage=""
+                isEmpty={false}
+                expandedItemId={null}
+                onItemTap={(id) => { if (!drag.suppressTap()) onItemTap(id); }}
+                onUseOrEquip={jest.fn()}
+                onDiscard={jest.fn()}
+                itemGesture={(item) => item.category === 'equipment'
+                    ? drag.gestureFor(`item-${item.id}`, getPayload, 'tile')
+                    : undefined}
+            />
+        );
+    }
+
+    beforeEach(() => { jest.clearAllMocks(); });
+
+    it('the pan on an equipment tile starts a drag; the tile still taps once it is over', async () => {
+        const now = jest.spyOn(Date, 'now');
+        try {
+            now.mockReturnValue(1_000);
+            const { tree } = withAllProviders(<DragHarness />);
+            const rendered = render(tree);
+            await act(async () => {
+                fireGestureHandler(getByGestureTestId('dock-drag-item-sword-basic'), [
+                    { state: State.BEGAN, absoluteX: 10, absoluteY: 10 },
+                    { state: State.ACTIVE, absoluteX: 30, absoluteY: 30 },
+                    { state: State.END, absoluteX: 30, absoluteY: 30 },
+                ]);
+                await Promise.resolve();
+            });
+            // The drag began (its payload was read) and has let go.
+            expect(getPayload).toHaveBeenCalledTimes(1);
+            expect(dockDrag.active).toBeNull();
+            // A press right as the drag lets go is its own release, not a tap.
+            fireEvent.press(rendered.getByTestId('item-sword-basic'));
+            expect(onItemTap).not.toHaveBeenCalled();
+
+            now.mockReturnValue(5_000);
+            fireEvent.press(rendered.getByTestId('item-sword-basic'));
+            expect(onItemTap).toHaveBeenCalledWith('sword-basic');
+        } finally {
+            now.mockRestore();
+        }
+    });
+
+    it('only equipment tiles carry the drag; every tile still taps', () => {
+        const { tree } = withAllProviders(<DragHarness />);
+        const rendered = render(tree);
+        expect(() => getByGestureTestId('dock-drag-item-health-potion')).toThrow();
+        fireEvent.press(rendered.getByTestId('item-health-potion'));
+        fireEvent.press(rendered.getByTestId('item-sword-basic'));
+        expect(onItemTap.mock.calls.map((c) => c[0])).toEqual(['health-potion', 'sword-basic']);
     });
 });
