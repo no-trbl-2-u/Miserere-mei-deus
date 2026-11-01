@@ -76,6 +76,8 @@ export interface RunResult {
     readonly steps: number;
     /** The end deck's card count per lane (`none` for a card in no lane). */
     readonly deckByLane: Readonly<Record<string, number>>;
+    /** The end deck's card ids (what the `play_runs` close carries). */
+    readonly endDeck: readonly string[];
 }
 
 export interface PlayRunOptions {
@@ -238,6 +240,7 @@ function summarize(
         nodesResolved: tally.nodesResolved,
         steps,
         deckByLane: deckByLane(end),
+        endDeck: buildCombatDeck(game.player, game.flags),
     };
 }
 

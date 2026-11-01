@@ -207,9 +207,17 @@ store and actions (`axiomancer-mobile/sim/`), one per seed, as a run policy
 decides: `npm run sim:run -- --policy wanderer --runs 3 --seed 1 [--json]`.
 Each bot starts at character select, as a player does, never from a `/dev`
 preset, and reads lanes, keywords and intents from the card and enemy data.
-Today it prints one line per run and posts nothing. `sim:run --post` (the
-bots' rows into the play log as `sim`) and the `sim-runs` workflow that calls it
-at every preview build, by hand and nightly arrive in phase SM1g. **Sim numbers
+By default it prints one line per run and posts nothing. `sim:run --post` plays
+each run through the app's own posters (collected by `sim/run-post.ts`, so the
+rows are the ones a phone would send) and sends them to the Worker as `sim`:
+`solver` is the policy id, `sessionId` the batch (`GITHUB_RUN_ID`, or a local
+id), `buildCommit` the checked-out sha, and the run id is unique to the batch,
+policy and seed (`sim-<batch>-<policy>-<seed>`). It reads `PUZZLE_API_URL` and
+`PUZZLE_API_TOKEN`; without them it prints what it would post and sends nothing.
+It prints the rows and bytes posted, stops before a run that would take the
+batch past 25 MB, and exits 1 if a post is refused. The `sim-runs` workflow
+calls it for the four archetypes, 5 runs each, at every preview build, by hand
+and nightly. **Sim numbers
 from before BUG1j (`0afc538bf`) are not comparable with later ones:** from
 that commit every foe can be befriended and a befriend pays no XP and no card.
 

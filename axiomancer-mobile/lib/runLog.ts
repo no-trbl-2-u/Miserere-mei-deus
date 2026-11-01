@@ -62,6 +62,8 @@ export interface RunLogPosterDeps {
     config?: () => PuzzleApiConfig | null;
     source?: () => PlayLogStamps;
     fetcher?: PuzzleFetch;
+    /** The run policy playing (phase SM1g): stamped on the `play_runs` open. The app leaves it out (null). */
+    policyId?: () => string | null;
 }
 
 interface RunBuffer {
@@ -139,7 +141,7 @@ export function createRunLogPoster(deps: RunLogPosterDeps = {}): RunLogPoster {
                 ...source(),
                 runId: run.runId,
                 characterId: run.characterId,
-                policyId: null,
+                policyId: deps.policyId?.() ?? null,
                 startDeck: run.startDeck,
             };
             enqueue(() => postPlayLog(PLAY_RUNS_PATH, body, cfg, deps.fetcher));
@@ -166,5 +168,25 @@ export function createRunLogPoster(deps: RunLogPosterDeps = {}): RunLogPoster {
     };
 }
 
+/** The poster the app-wide instance hands its calls to: the app's own, unless the run driver swapped it. */
+let current: RunLogPoster = createRunLogPoster();
+
+/**
+ * Hands the app-wide poster's calls to `next` (phase SM1g: the run driver gives
+ * every run a fresh poster, so one run's closed-run record and event numbering
+ * never reach the next). Returns the poster it replaced.
+ */
+export function replaceRunLogPoster(next: RunLogPoster): RunLogPoster {
+    const previous = current;
+    current = next;
+    return previous;
+}
+
 /** The app's one poster: the run start, every node and the run end post through it. */
-export const runLogPoster: RunLogPoster = createRunLogPoster();
+export const runLogPoster: RunLogPoster = {
+    open: (run) => current.open(run),
+    event: (runId, kind, payload) => current.event(runId, kind, payload),
+    flush: (runId) => current.flush(runId),
+    close: (runId, end) => current.close(runId, end),
+    settled: () => current.settled(),
+};
