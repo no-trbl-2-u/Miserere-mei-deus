@@ -119,10 +119,18 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'l30-bw-hazard-arrive',
-        description: 'L30 ladder kit on the Breakwater\'s river-meadow hazard (bw-m2); `arrive` starts the hazard minigame → /hazard.',
+        description: 'L30 ladder kit on the Breakwater\'s river-meadow hazard (bw-m2); `arrive` opens its puzzle (HP6c: one of the six puzzle hazard nodes) → /hazard.',
         seed: 'fixture-l30-bw-hazard-arrive',
         preset: 'kid-l30',
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-m2' },
+        arrive: true,
+    },
+    {
+        id: 'l30-cw-hazard-arrive',
+        description: 'L30 ladder kit on the Charcoal Wood\'s shrine-floor hazard (cw-3); `arrive` starts the three-round hazard minigame → /hazard (the old board, HP6c leaves it on every non-Breakwater hazard).',
+        seed: 'fixture-l30-cw-hazard-arrive',
+        preset: 'kid-l30',
+        world: { continent: 'coastal-continent', map: 'charcoal-wood', node: 'cw-3' },
         arrive: true,
     },
     {

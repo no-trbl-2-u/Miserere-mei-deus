@@ -5137,6 +5137,12 @@
       "kind": "coupling",
       "from": "route:hazard",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/hazard/puzzle-node-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/persistence/saveSlots.ts"
     },
     {
@@ -5203,7 +5209,31 @@
       "kind": "coupling",
       "from": "route:hazard",
       "to": "area:World",
+      "file": "axiomancer-mobile/components/hazard/puzzle/HazardPuzzleNodeBoard.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/hazard/puzzle-node-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/hazard-puzzle.copy.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:hazard",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/hazard-puzzle.engine.ts"
     },
     {
       "kind": "coupling",

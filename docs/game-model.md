@@ -561,8 +561,12 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   HAZARD PUZZLES board plays them on the live hazard board (the same cards,
   dice, drag and route select as a live hazard, with no bin) under a per-band clock. The outcome pays XP,
   a modest consumable and a region material; full completion adds the purse,
-  and falling short costs VITAE. Act 1's live hazards are unchanged; the
-  puzzles reach the map only after T approves the demos.
+  and falling short costs VITAE. The Breakwater's six hazard nodes play one
+  puzzle each (`BREAKWATER_HAZARD_PUZZLES`, picked from the middle third of
+  the curve, harder along the story route): entering one opens that
+  candidate's board on its graded route, with no route choice, and the claim
+  applies the outcome. Every other Act 1 hazard (Charcoal Wood, Beacon Crags,
+  Lantern Deep) still runs the three-round board.
 
 ## What the game does not have
 

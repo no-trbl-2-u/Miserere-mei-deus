@@ -16,6 +16,7 @@ import {
 } from '@mechanics';
 
 import type { HazardSessionState } from '@mechanics';
+import type { HazardPuzzleNodePlay } from './hazard/puzzle-node-actions';
 import type { BlacksmithSession, EliteRewardUpgrade, LootCacheChoiceSession, RestChoiceSession } from '@mechanics';
 import type { LabyrinthActId, ResolvedEvent, VillageVisit, WorldState } from '@mechanics';
 
@@ -82,9 +83,14 @@ export interface MobileNotificationsSlice {
  * Sessions are transient by design: abandoning mid-hazard forfeits
  * progress. The persistent piece (the player's hazard action deck)
  * rides `GameState.flags` via the package's deck-flags codec.
+ *
+ * `puzzle` is the one-round board a puzzle hazard node opens instead (phase
+ * HP6c, `state/hazard/puzzle-node-actions.ts`); absent or null outside one.
+ * At most one of the two is open. Neither is ever saved.
  */
 export interface MobileHazardSlice {
     session: HazardSessionState | null;
+    puzzle?: HazardPuzzleNodePlay | null;
 }
 
 /**

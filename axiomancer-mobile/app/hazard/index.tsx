@@ -23,6 +23,8 @@ import { RewardsOverlay } from '@/components/hazard/RewardsOverlay';
 import { RouteSelect } from '@/components/hazard/RouteSelect';
 import { StakesCard } from '@/components/hazard/StakesCard';
 import { useHazardDrag } from '@/components/hazard/useHazardDrag';
+import { HazardPuzzleNodeBoard } from '@/components/hazard/puzzle/HazardPuzzleNodeBoard';
+import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { isDeathReturnArmed } from '@/state/death-return';
 import { armGameOver } from '@/state/game-over';
 import { runEndRoute } from '@/state/run-end';
@@ -31,6 +33,11 @@ import { useGameActions, useGameState, useGameStore } from '@/state/GameStorePro
 import { selectHazardStakes } from '@/state/presenters/hazard-stakes.engine';
 import { selectHazardViewModel, type HazardCardVM } from '@/state/presenters/hazard.engine';
 import { HUE } from '@/theme/axm';
+
+declare global {
+    // eslint-disable-next-line no-var
+    var __AXM_HAZARD_CLOCK_PAUSED__: boolean | undefined;
+}
 
 export default function HazardScreen() {
     const hazard = useGameState((s) => s.hazard);
@@ -49,10 +56,16 @@ export default function HazardScreen() {
     // Screen-level drag controller and ghost (shared with the puzzle board).
     const { drag, ghost } = useHazardDrag();
 
+    // A puzzle hazard node (HP6c) plays its one-round board instead. A dev
+    // build may hold its clock (`__AXM_HAZARD_CLOCK_PAUSED__`) for stable shots.
+    const puzzle = hazard?.puzzle ?? null;
+    const clockPaused = isDevToolsEnabled() && globalThis.__AXM_HAZARD_CLOCK_PAUSED__ === true;
+    const open = vm.active || puzzle !== null;
+
     // Leave the screen when the session clears (rewards claimed /
-    // abandoned elsewhere).
+    // abandoned elsewhere, or the puzzle's outcome closed).
     useEffect(() => {
-        if (vm.active) return;
+        if (open) return;
         setFaced(false);
         // A revive (armed in the claim, by the rewards ledger or the dev SKIP
         // EVENT alike) hands off to the return moment, which owns the way
@@ -63,7 +76,15 @@ export default function HazardScreen() {
             router.replace(runEndRoute(slot) as never);
         }
         else if (router.canGoBack()) router.back();
-    }, [vm.active, router, store, slot]);
+    }, [open, router, store, slot]);
+
+    if (puzzle !== null) {
+        return (
+            <View style={styles.root}>
+                <HazardPuzzleNodeBoard play={puzzle} clockPaused={clockPaused} />
+            </View>
+        );
+    }
 
     if (!vm.active) return <View style={styles.root} testID="hazard-empty" />;
 

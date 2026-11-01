@@ -27,9 +27,25 @@ function fakePage() {
 test('the hazard-board shot boots the live hazard from its fixture and picks a route', () => {
     const route = ROUTES.find((r) => r.name === 'hazard-board')
     assert.ok(route, 'hazard-board is a visual route')
+    // The injector's pinned hazard id keeps the three-round board on bw-m2 (HP6c).
     assert.equal(route.fixture, 'l30-bw-hazard-arrive')
+    assert.equal(route.puzzleNode, undefined)
     assert.equal(route.waitForPath, '/hazard')
     assert.ok(route.hazardRoute === 'safe' || route.hazardRoute === 'risk')
+})
+
+test('a Breakwater hazard is shot as its puzzle: the stakes card, then the board after Face it', () => {
+    const stakes = ROUTES.find((r) => r.name === 'hazard-puzzle-stakes')
+    const board = ROUTES.find((r) => r.name === 'hazard-puzzle-node')
+    assert.ok(stakes && board)
+    for (const r of [stakes, board]) {
+        assert.equal(r.fixture, 'l30-bw-hazard-arrive')
+        assert.equal(r.waitForPath, '/hazard')
+        assert.equal(r.hazardRoute, undefined)
+        assert.equal(r.puzzleNode, true)
+    }
+    assert.equal(stakes.waitForTestId, 'hazard-stakes')
+    assert.equal(board.hazardPuzzle, true)
 })
 
 test('only the live hazard shot picks a route', () => {

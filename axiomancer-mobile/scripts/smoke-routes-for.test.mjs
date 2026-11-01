@@ -29,11 +29,11 @@ test('a screen change selects its own route', () => {
     assert.deepEqual(routesForPaths(['axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx'], names).routes, ['combat-encounter'])
     assert.deepEqual(
         routesForPaths(['axiomancer-mobile/components/hazard/HazardBoard.tsx'], names).routes,
-        ['combat-encounter', 'devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board'],
+        ['combat-encounter', 'devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board', 'hazard-puzzle-node', 'hazard-puzzle-stakes'],
     )
     assert.deepEqual(
         routesForPaths(['axiomancer-mobile/app/devpuzzle/index.tsx'], names).routes,
-        ['devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board'],
+        ['devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board', 'hazard-puzzle-node', 'hazard-puzzle-stakes'],
     )
 })
 

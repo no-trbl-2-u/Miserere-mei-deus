@@ -11,10 +11,10 @@ import { spawnSync } from 'node:child_process'
 
 export const ALL = 'all'
 
-const HAZARD = ['hazard-board', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
+const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.
-const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'hazard-board']
+const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node']
 
 /**
  * Paths that cannot change a pixel: tests, prose, plans, tooling outside the

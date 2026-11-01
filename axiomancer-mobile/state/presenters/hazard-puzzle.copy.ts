@@ -79,6 +79,32 @@ export function hazardPuzzleRoutePenalty(vitae: number): string {
     return `up to −${vitae}♥`;
 }
 
+// The stakes card at a puzzle hazard node (HP6c): the one goal, the clock,
+// what falling short costs and what clearing pays. Plain register, numbers
+// straight from the engine.
+
+export const HAZARD_PUZZLE_STAKES_GOAL_LABEL = 'THE GOAL';
+export const HAZARD_PUZZLE_STAKES_FAIL_LABEL = 'FALLING SHORT COSTS';
+export const HAZARD_PUZZLE_STAKES_CLEAR_LABEL = 'CLEARING PAYS';
+
+/** The one goal as the meters read it: combined on safe, both on risk. */
+export function hazardPuzzleStakesGoal(goal: number | readonly [number, number]): string {
+    if (typeof goal === 'number') return `FORCE + ESCAPE ${goal} in one round`;
+    return `FORCE ${goal[0]} and ESCAPE ${goal[1]} in one round`;
+}
+
+export function hazardPuzzleStakesClock(seconds: number): string {
+    return `${seconds} seconds on the clock`;
+}
+
+export function hazardPuzzleStakesFail(vitae: number, scar: number): string[] {
+    return [`Up to −${vitae} VITAE, by how far short`, `Under half the goal: −${scar} max VITAE`];
+}
+
+export function hazardPuzzleStakesClear(shillings: number): string {
+    return `XP and a find; a full clear adds +${shillings} shillings`;
+}
+
 export function hazardPuzzleRouteCta(routeName: string): string {
     return `TAKE ${routeName} ›`;
 }
