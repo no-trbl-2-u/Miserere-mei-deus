@@ -1,3 +1,4 @@
+// guard-test: pins SM1f's archetype seams (mutation survivors on #1259)
 /**
  * The archetype seams at their edges (phase SM1f follow-up, from the PR's
  * mutation report): the VITAE threshold itself, which roads count as a rest

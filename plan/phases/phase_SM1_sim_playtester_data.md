@@ -141,8 +141,9 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
   `PUZZLE_API_TOKEN` from the environment and, without them, prints what it would post and posts nothing. It prints
   the rows and bytes posted, and stops before posting past 25 MB in one batch.
 - **A14** A workflow, `.github/workflows/sim-runs.yml`, runs the sim with `--post` at the commit of every successful
-  `preview-build` (`workflow_run`, at its `head_sha`) and by hand (`workflow_dispatch` with a ref and a run count):
-  four archetypes, 5 runs each by default [T to confirm #5]. It reads the existing repo secrets for the Worker URL and
+  `preview-build` (`workflow_run`, at its `head_sha`), by hand (`workflow_dispatch` with a ref and a run count) and on
+  a nightly `schedule` on `main`: four archetypes, 5 runs each by default (Confirmed by T (2026-10-31): "Also
+  nightly"). It reads the existing repo secrets for the Worker URL and
   token. It fails only when the driver crashes or a post is refused, never on a number, and is never a required check.
   `measured-truth.yml` and `npm run measured:truth` are unchanged.
 - **A15** Two new reports join `REPORT_NAMES`: `card-vs-bot` (per card, at one build: T's fights in deck, drawn,
@@ -222,9 +223,10 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
   one exists, else one whose starting relic opens it, else the closest-fitting playable character (most of the lane's
   stat) (D108). Never the `/dev` test-deck presets or lane relics. The `wanderer` starts as a new game does. A lane no
   character opens gets no lane-led end deck from the bot; A12's lane check applies where the run starts in-lane.
-- **When the bot runs, and how much** [T to confirm #5]: at the commit of every successful preview build, so every APK
-  T plays has the bots' numbers at the same build, and by hand; four archetypes, 5 runs each. Preview builds are by
-  hand and rare, which keeps D1 writes small; the batch cap is 25 MB.
+- **When the bot runs, and how much** (Confirmed by T (2026-10-31): "Also nightly"): at the commit of every successful
+  preview build, so every APK T plays has the bots' numbers at the same build; by hand; and nightly on `main`. Four
+  archetypes, 5 runs each. That is 20 runs a night, about 8 MB of rows, so D1 grows steadily and the first batch's
+  database size is recorded in the PR; the batch cap is 25 MB.
 - **Chapter 1 only.** A sim run ends at `run-over` or when the Breakwater boss is beaten and its exit reached (D106,
   D114: the MVP is Chapter 1). Later chapters are a Follow-up.
 - **The game's run id is the run id.** `GameState.runId` is stamped on every row; nothing new is minted. The session id
