@@ -100,6 +100,9 @@ Not an R-phase. None.
   shared values, so a pan the player made before the fight is not kept;
   the fit on the player's node is what a fresh visit shows, and after a
   fight the player is standing on that node. (T confirmed 2026-10-19)
+  Amended by MC1b (`phase_MC1_map_camera.md`): the camera is now kept per
+  map in memory and restored on return, so the player sees the zoom and
+  place they left; it pans only if the player's node is off-frame.
 - **Not a separate route.** Moving live combat to its own
   `fullScreenModal` like hazard would also work, but it moves the
   encounter state machine, the prelude/aftermath flow and the resume

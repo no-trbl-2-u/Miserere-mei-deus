@@ -198,7 +198,7 @@ export default function ExplorationScreen() {
             {/* Node Graph */}
             {/* Legend/compass copy ride the `overlays` slot (viewport-fixed),
                 not `children` (the pannable canvas) — CRITIQUE pass 20. */}
-            <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} overlays={<MapOverlays legend={vm.legend} />}>
+            <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays legend={vm.legend} />}>
                 <NodeGrid
                     nodes={vm.nodes}
                     onNodePress={onNodePress}
