@@ -368,7 +368,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.drag.test.tsx, ..."
+        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.portrait-box.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,

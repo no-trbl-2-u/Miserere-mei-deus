@@ -58,8 +58,8 @@ afterEach(() => {
 });
 
 const GREY = ['grey-strike', 'grey-strike', 'grey-strike', 'grey-ward', 'grey-ward', 'grey-word', 'grey-word'];
-/** The keep causeway's elite at level 8 (`DEFAULT_XP_BY_DIFFICULTY.elite` 50 a level), either of its two (phase EN1l). */
-const ELITE_XP = 400;
+/** The keep causeway's elite at level 8 (`DEFAULT_XP_BY_DIFFICULTY.elite` 40 a level), either of its two (phase EN1l). */
+const ELITE_XP = 320;
 
 function gs(store: AppStore): GameState {
     return store.getState() as unknown as GameState;

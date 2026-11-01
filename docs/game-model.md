@@ -289,9 +289,9 @@ the Expo app (`axiomancer-mobile`) presents it.
   `Character/experience.ts`). Levels 5, 10 and 20 sit at 325, 950 and
   3,582 total; level 40 at 47,440. A level gives `STAT_POINTS_PER_LEVEL`
   = 1 stat point and does not refill VITAE (healing comes from rest and
-  items). A kill gives level × `DEFAULT_XP_BY_DIFFICULTY` (normal 20, elite
-  50, boss 200). A full Act 1 clear ends at level 20, meeting the four
-  doors at levels 4, 9, 14 and 18 (`npm run act1-progression`). Level 50
+  items). A kill gives level × `DEFAULT_XP_BY_DIFFICULTY` (simple 8, normal 16,
+  elite 40, boss 160, unique 400; a fifth below the old table, T 2026-11-01). A full Act 1 clear
+  ends at level 21, meeting the four doors at levels 8, 15, 18 and 20 (`npm run act1-progression`). Level 50
   costs 229,326 XP in total, about 63 times Act 1's income: a projection
   for Acts 2 and 3, which do not exist yet.
   How each door and fight measures at the level a full clear brings:

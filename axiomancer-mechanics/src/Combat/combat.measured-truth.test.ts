@@ -92,7 +92,7 @@ describe('measuredTruthCells (R12a A1, A2; EM1 A1)', () => {
 
     it('meets each door at the full-clear level, against its pinned level', () => {
         const doors = report.cells.filter(c => c.isBoss && c.deck === 'grey' && c.spread === 'even');
-        expect(doors.map(d => d.playerLevel)).toEqual([9, 17, 19, 22]);
+        expect(doors.map(d => d.playerLevel)).toEqual([8, 15, 18, 20]);
         expect(doors.map(d => d.enemyLevel)).toEqual([1, 2, 3, 4]);
     });
 
