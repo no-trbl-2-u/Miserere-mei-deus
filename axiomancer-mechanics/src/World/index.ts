@@ -139,3 +139,15 @@ export type {
     LabyrinthActDef, LabyrinthActId,
     LabyrinthProgress, LabyrinthBossOutcome,
 } from './Labyrinth/types';
+// A chapter's story read from data (phase SM2b): elites, the boss, the exit,
+// the main questline and what its current step needs.
+export {
+    poolEncounters, poolStagesElite, poolStagesBoss, nodeStagesElite, nodeStagesBoss, isExitNode,
+    bossNodes, exitNodes, questlinesOn, mainQuestline, stepNodes, currentStoryTargets,
+} from './chapter-story';
+// Chapter 1's content as data (phase SM2b): nodes, quests, foes, hazards, items, gates, regions.
+export { chapter1Content, mapContent, storyOrderedGates } from './chapter1-content';
+export type {
+    ChapterContent, ChapterNode, ChapterQuest, ChapterQuestStep, ChapterObjective, ChapterEnemy, ChapterStaging,
+    ChapterHazard, ChapterItem, ChapterItemSource, ChapterGate, ChapterRegion,
+} from './chapter1-content';

@@ -602,3 +602,12 @@ export { COMBAT_SIM_POLICIES } from './Combat/combat.sim-policies';
 export type { CombatSimPolicy, CombatSimPolicyId } from './Combat/combat.sim-policies';
 export type { HazardPolicyId } from './World/Hazard/hazard.sim';
 export { setSeed } from './Utils/rng';
+// ── Chapter 1 as data (phase SM2b): the content listing the sim report reads, ──
+// and the story readers the run sim's roads use.
+export {
+    chapter1Content, mapContent, storyOrderedGates, mainQuestline, currentStoryTargets, exitNodes, bossNodes,
+} from './World';
+export type {
+    ChapterContent, ChapterNode, ChapterQuest, ChapterQuestStep, ChapterObjective, ChapterEnemy, ChapterStaging,
+    ChapterHazard, ChapterItem, ChapterItemSource, ChapterGate, ChapterRegion,
+} from './World';

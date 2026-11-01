@@ -1,6 +1,7 @@
 /**
  * The `wanderer` (phase SM1e): the baseline run policy. It takes the first
- * legal choice at every seam and fights as the `greedy` witness.
+ * legal choice at every seam and fights with the player witness
+ * (`PLAYER_WITNESS`: greedy, never sparing, phase SM2b).
  *
  * "First" is the order the context lists: the roster's first character, the
  * first offer, the first enabled rest option, the first stat. On the map the
@@ -12,7 +13,7 @@
  * removes nothing, and wears every item it can.
  */
 
-import { COMBAT_SIM_POLICIES } from '../../Combat/combat.sim-policies';
+import { PLAYER_WITNESS } from './player-witness';
 import type { RunPolicy, RunRoadOption } from './run-policy.types';
 
 /** The first option among the nearest to something unfinished, or null when none leads anywhere. */
@@ -27,7 +28,7 @@ export function nearestRoad(options: readonly RunRoadOption[]): RunRoadOption | 
 
 export const WANDERER_POLICY: RunPolicy = Object.freeze<RunPolicy>({
     id: 'wanderer',
-    description: 'The baseline: the first legal choice at every seam, greedy in fights.',
+    description: 'The baseline: the first legal choice at every seam, the player witness in fights.',
     chooseCharacter: (roster) => {
         const first = roster[0];
         if (!first) throw new Error('wanderer: the roster holds no character.');
@@ -55,7 +56,7 @@ export const WANDERER_POLICY: RunPolicy = Object.freeze<RunPolicy>({
     }),
     hazardPolicy: () => 'greedy',
     pickHazardCard: (ctx) => ctx.offers[0] ?? null,
-    fightPolicy: () => COMBAT_SIM_POLICIES.greedy,
+    fightPolicy: () => PLAYER_WITNESS,
     flee: () => false,
     raiseStat: () => 'heart',
     takeItem: (ctx) => (ctx.wearable ? 'equip' : 'keep'),

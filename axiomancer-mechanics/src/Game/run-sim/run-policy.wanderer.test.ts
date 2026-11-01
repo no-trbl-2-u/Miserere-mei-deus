@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest';
 
 import { CHARACTER_ROSTER } from '../../Character/roster';
 import { COMBAT_SIM_POLICIES } from '../../Combat/combat.sim-policies';
+import { PLAYER_WITNESS } from './player-witness';
 import { getRunPolicy, RUN_POLICY_IDS } from './run-policy.registry';
 import type { RunRoadOption } from './run-policy.types';
 import { nearestRoad, WANDERER_POLICY as W } from './run-policy.wanderer';
 
 const road = (nodeId: string, distanceToUnfinished: number | null): RunRoadOption => ({
     nodeId, via: 'road', nodeKind: 'encounter', unfinished: distanceToUnfinished === 0, distanceToUnfinished,
+    elite: false, story: false, distanceToStory: null, distanceToExit: null,
 });
 
 describe('the wanderer', () => {
@@ -30,7 +32,7 @@ describe('the wanderer', () => {
     });
 
     it('travels only somewhere new, or out of the map', () => {
-        const trip = { fromNodeId: 'a', toNodeId: 'b', toMap: null, leavesMap: false, destinationVisited: false };
+        const trip = { fromNodeId: 'a', toNodeId: 'b', toMap: null, leavesMap: false, destinationVisited: false, unfinishedReachable: 0 };
         expect(W.takeTravel(trip)).toBe(true);
         expect(W.takeTravel({ ...trip, destinationVisited: true })).toBe(false);
         expect(W.takeTravel({ ...trip, toNodeId: null, toMap: 'charcoal-wood', leavesMap: true, destinationVisited: true })).toBe(true);
@@ -56,9 +58,10 @@ describe('the wanderer', () => {
         expect(W.visitVillage({ ...base, health: 10, maxHealth: 10 }).rest).toBe(false);
     });
 
-    it('fights greedy, never flees, raises heart, wears what it can', () => {
+    it('fights with the player witness, never flees, raises heart, wears what it can', () => {
         const fight = { enemyName: 'x', isBoss: false, isElite: false, fleeAllowed: true, fledHere: 0, health: 1, maxHealth: 9, deck: [] };
-        expect(W.fightPolicy(fight)).toBe(COMBAT_SIM_POLICIES.greedy);
+        expect(W.fightPolicy(fight)).toBe(PLAYER_WITNESS);
+        expect(W.fightPolicy(fight)).not.toBe(COMBAT_SIM_POLICIES.greedy);
         expect(W.flee(fight)).toBe(false);
         expect(W.hazardPolicy({ hazardId: 'h', health: 1, maxHealth: 9 })).toBe('greedy');
         expect(W.pickHazardCard({ offers: ['h1', 'h2'], canSkip: true })).toBe('h1');

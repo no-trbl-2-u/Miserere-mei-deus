@@ -17,7 +17,8 @@
  * knows the game from data").
  *
  * The `wanderer` baseline (`run-policy.wanderer.ts`) takes the first legal
- * choice at every seam and fights `greedy`.
+ * choice at every seam and fights with the player witness (`PLAYER_WITNESS`,
+ * `player-witness.ts`).
  */
 
 import type { CharacterDefinition } from '../../Character/roster';
@@ -44,6 +45,23 @@ export interface RunRoadOption {
      * is unfinished itself), or null when no unfinished node lies past it.
      */
     readonly distanceToUnfinished: number | null;
+    /** True when the node's pool stages an elite foe (phase SM2b). */
+    readonly elite: boolean;
+    /**
+     * True when the node is on the chapter's story now (phase SM2b): a node
+     * the main questline's current step needs (its giver, an objective's
+     * target, its turn-in), a held node still holding its road on, or an
+     * unbeaten boss. Read from the map, its pools and the chapter questline.
+     */
+    readonly story: boolean;
+    /** Roads from this option to the nearest story node (0 when it is one), or null when none lies past it. */
+    readonly distanceToStory: number | null;
+    /**
+     * Roads from this option to the chapter's exit trip (a travel node that
+     * leaves the map; 0 when it is one) by the open road rule, or null while
+     * no exit is reachable (the bridge still shut).
+     */
+    readonly distanceToExit: number | null;
 }
 
 /** The road seam's view of the map. */
@@ -68,6 +86,12 @@ export interface RunTravelContext {
     readonly leavesMap: boolean;
     /** True when the destination node has been stood on this run. */
     readonly destinationVisited: boolean;
+    /**
+     * The unfinished nodes still reachable from the node underfoot (phase
+     * SM2b): the work a trip off the map would leave behind. Counted by the
+     * open road rule and same-map passages, the node underfoot left out.
+     */
+    readonly unfinishedReachable: number;
 }
 
 /** Where a card offer came from. */

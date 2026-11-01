@@ -26,7 +26,8 @@ const PLAIN = CARD_LANES.filter(l => l.id !== 'defender' && l.id !== 'grey').fla
     .find(id => laneKeywordOverlap(id, laneKeywords('defender')) === 0)!;
 
 const road = (nodeId: string, over: Partial<RunRoadOption> = {}): RunRoadOption => ({
-    nodeId, via: 'road', nodeKind: 'encounter', unfinished: true, distanceToUnfinished: 0, ...over,
+    nodeId, via: 'road', nodeKind: 'encounter', unfinished: true, distanceToUnfinished: 0,
+    elite: false, story: false, distanceToStory: null, distanceToExit: null, ...over,
 });
 const at = (health: number, options: RunRoadOption[]): RunRoadContext => ({
     mapName: 'breakwater', currentNodeId: 'here', options, health, maxHealth: 100, dying: false,
@@ -64,7 +65,7 @@ describe('the archetype seams at their edges', () => {
     });
 
     it('takes a trip somewhere new or off the map, never back to where it has stood', () => {
-        const trip = { fromNodeId: 'a', toNodeId: 'b', toMap: null, leavesMap: false, destinationVisited: false };
+        const trip = { fromNodeId: 'a', toNodeId: 'b', toMap: null, leavesMap: false, destinationVisited: false, unfinishedReachable: 0 };
         expect(P.takeTravel(trip)).toBe(true);
         expect(P.takeTravel({ ...trip, destinationVisited: true })).toBe(false);
         expect(P.takeTravel({ ...trip, leavesMap: true, toNodeId: null, toMap: 'next', destinationVisited: true })).toBe(true);

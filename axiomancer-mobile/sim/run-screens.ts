@@ -11,6 +11,7 @@ import {
     isEquipment,
     nextHazardStep,
     hazardRouteFor,
+    unfinishedReachable,
     type GameState,
     type HazardPolicyId,
     type RunPolicy,
@@ -130,6 +131,7 @@ export function resolveTravel(
         toMap,
         leavesMap: toMap !== null,
         destinationVisited: toNodeId !== null && visited.has(toNodeId),
+        unfinishedReachable: unfinishedReachable(store.getState() as unknown as GameState),
     });
     if (take && actions.takeTravel()) return true;
     actions.closeTravel();
