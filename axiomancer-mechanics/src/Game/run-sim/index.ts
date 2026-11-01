@@ -22,5 +22,9 @@ export {
     cardLaneId, cardKeywords, laneKeywords, laneStat, itemLaneId,
     characterLaneFit, characterOpensLane, characterForLane,
 } from './run-policy.lanes';
-export { runRoadOptions, isNodeUnfinished, isReachTarget, distanceToUnfinished, travelPassageTarget } from './run-roads';
+export {
+    runRoadOptions, isNodeUnfinished, isReachTarget, distanceToUnfinished, travelPassageTarget,
+    isEliteNode, isStoryNode, distanceToStory, distanceToExit, unfinishedReachable,
+} from './run-roads';
+export { PLAYER_WITNESS } from './player-witness';
 export { nextHazardStep, hazardRouteFor, type HazardStep } from './run-hazard';

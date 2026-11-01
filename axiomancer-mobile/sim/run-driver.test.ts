@@ -119,6 +119,30 @@ describe('the headless run driver', () => {
         expect(Math.max(...seen)).toBe(1);
     });
 
+    it('tells the road seam what each road leads to, and the travel seam the work left in reach', () => {
+        const roads: { elite: boolean; story: boolean; distanceToExit: number | null; distanceToStory: number | null }[] = [];
+        const trips: number[] = [];
+        const reading: RunPolicy = {
+            ...WANDERER_POLICY,
+            chooseRoad: (ctx) => {
+                roads.push(...ctx.options);
+                return WANDERER_POLICY.chooseRoad(ctx);
+            },
+            takeTravel: (ctx) => {
+                trips.push(ctx.unfinishedReachable);
+                return WANDERER_POLICY.takeTravel(ctx);
+            },
+        };
+        playRun({ policy: reading, seed: 8 });
+        // Filled from the map, the pools and the chapter questline at every step.
+        expect(roads.some((o) => o.elite)).toBe(true);
+        expect(roads.some((o) => o.story)).toBe(true);
+        expect(roads.some((o) => o.distanceToStory !== null)).toBe(true);
+        expect(roads.every((o) => o.distanceToExit === null || o.distanceToExit >= 0)).toBe(true);
+        expect(trips.length).toBeGreaterThan(0);
+        expect(trips.every((n) => Number.isInteger(n) && n >= 0)).toBe(true);
+    });
+
     it('throws when the policy names a road that is not legal', () => {
         const wrong: RunPolicy = { ...WANDERER_POLICY, chooseRoad: () => 'bw-k2' };
         expect(() => playRun({ policy: wrong, seed: 1 })).toThrow(/'bw-k2', which is not a legal road/);

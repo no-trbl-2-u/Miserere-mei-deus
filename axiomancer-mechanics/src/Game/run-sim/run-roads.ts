@@ -14,6 +14,12 @@
  * blocked gates and held roads are shut) plus same-map travel passages (a
  * travel node whose trip lands on another node of the map). Reads only; no
  * RNG.
+ *
+ * Phase SM2b adds what a player sees on the road: whether a node stages an
+ * elite, whether it is on the story now (`isStoryNode`), how far the story and
+ * the chapter's exit are, and, for a trip, how much unfinished work is still
+ * in reach (`unfinishedReachable`). All of it reads the map, its pools and the
+ * chapter questline (`World/chapter-story.ts`), never a node id.
  */
 
 import type { GameState } from '../types';
@@ -21,6 +27,7 @@ import type { MapState } from '../../World/types';
 import type { MapEventPool } from '../../World/MapEvents/types';
 import { getMapDefinition } from '../../World/map.registry';
 import { isNodeSpent, legalMovesFrom } from '../../World/world.reducer';
+import { currentStoryTargets, isExitNode, nodeStagesBoss, nodeStagesElite } from '../../World/chapter-story';
 import {
     actsOnRevisit,
     getNodeEventPool,
@@ -63,11 +70,12 @@ function neighbours(map: MapState, nodeId: string): { roads: string[]; passage: 
 }
 
 /**
- * Steps from `startId` to the nearest unfinished node, counting `startId`
- * itself as 0, or null when none is reachable. `blocked` is never entered
- * (the node the player stands on, so a distance never runs back through it).
+ * Steps from `startId` to the nearest node `wanted` accepts, counting
+ * `startId` itself as 0, or null when none is reachable. `blocked` is never
+ * entered (the node the player stands on, so a distance never runs back
+ * through it).
  */
-export function distanceToUnfinished(state: RoadState, startId: string, blocked?: string): number | null {
+function distanceTo(state: RoadState, startId: string, wanted: (id: string) => boolean, blocked?: string): number | null {
     const map = state.world.currentMap;
     const seen = new Set<string>([startId]);
     if (blocked !== undefined) seen.add(blocked);
@@ -75,7 +83,7 @@ export function distanceToUnfinished(state: RoadState, startId: string, blocked?
     for (let depth = 0; frontier.length > 0; depth++) {
         const next: string[] = [];
         for (const id of frontier) {
-            if (isNodeUnfinished(state, id)) return depth;
+            if (wanted(id)) return depth;
             const { roads, passage } = neighbours(map, id);
             for (const n of passage === null ? roads : [...roads, passage]) {
                 if (seen.has(n)) continue;
@@ -86,6 +94,75 @@ export function distanceToUnfinished(state: RoadState, startId: string, blocked?
         frontier = next;
     }
     return null;
+}
+
+/**
+ * Steps from `startId` to the nearest unfinished node, counting `startId`
+ * itself as 0, or null when none is reachable. `blocked` is never entered
+ * (the node the player stands on, so a distance never runs back through it).
+ */
+export function distanceToUnfinished(state: RoadState, startId: string, blocked?: string): number | null {
+    return distanceTo(state, startId, id => isNodeUnfinished(state, id), blocked);
+}
+
+/** True when `nodeId` on the current map can stage an elite foe. */
+export function isEliteNode(state: RoadState, nodeId: string): boolean {
+    const map = state.world.currentMap;
+    return nodeStagesElite(getMapDefinition(map.continent, map.name), nodeId);
+}
+
+/** The story test for the current map and quest log (see `isStoryNode`). */
+function storyTest(state: RoadState): (id: string) => boolean {
+    const map = state.world.currentMap;
+    const def = getMapDefinition(map.continent, map.name);
+    const targets = new Set(currentStoryTargets(def, state.quests));
+    const held = new Set(def.holdRoadsUntilSettled ?? []);
+    return (id) => targets.has(id) || (!isNodeSpent(map, id) && (held.has(id) || nodeStagesBoss(def, id)));
+}
+
+/**
+ * True when `nodeId` is on the chapter's story now: a node the main
+ * questline's current step needs (`currentStoryTargets`), a held node still
+ * holding its road on (unspent), or an unbeaten boss.
+ */
+export function isStoryNode(state: RoadState, nodeId: string): boolean {
+    return storyTest(state)(nodeId);
+}
+
+/** Steps from `startId` to the nearest story node (`isStoryNode`; 0 when it is one), or null. */
+export function distanceToStory(state: RoadState, startId: string, blocked?: string): number | null {
+    return distanceTo(state, startId, storyTest(state), blocked);
+}
+
+/** Steps from `startId` to the nearest trip off the map (the chapter's exit), or null while none is reachable. */
+export function distanceToExit(state: RoadState, startId: string, blocked?: string): number | null {
+    const map = state.world.currentMap;
+    const def = getMapDefinition(map.continent, map.name);
+    return distanceTo(state, startId, id => isExitNode(def, id), blocked);
+}
+
+/**
+ * The unfinished nodes still reachable from where the player stands, by open
+ * roads and same-map passages, the node underfoot left out: the work a trip
+ * off the map would leave behind.
+ */
+export function unfinishedReachable(state: RoadState): number {
+    const map = state.world.currentMap;
+    const here = map.currentNode;
+    const seen = new Set<string>([here]);
+    const queue = [here];
+    let count = 0;
+    while (queue.length > 0) {
+        const id = queue.shift()!;
+        if (id !== here && isNodeUnfinished(state, id)) count++;
+        const { roads, passage } = neighbours(map, id);
+        for (const n of passage === null ? roads : [...roads, passage]) {
+            if (seen.has(n)) continue;
+            seen.add(n);
+            queue.push(n);
+        }
+    }
+    return count;
 }
 
 /**
@@ -100,13 +177,21 @@ export function distanceToUnfinished(state: RoadState, startId: string, blocked?
 export function runRoadOptions(state: RoadState): RunRoadOption[] {
     const map = state.world.currentMap;
     const here = map.currentNode;
-    const option = (nodeId: string, via: RunRoadOption['via']): RunRoadOption => ({
-        nodeId,
-        via,
-        nodeKind: getNodePrimaryEventKind(map.continent, map.name, nodeId) ?? null,
-        unfinished: isNodeUnfinished(state, nodeId),
-        distanceToUnfinished: distanceToUnfinished(state, nodeId, nodeId === here ? undefined : here),
-    });
+    const story = storyTest(state);
+    const option = (nodeId: string, via: RunRoadOption['via']): RunRoadOption => {
+        const blocked = nodeId === here ? undefined : here;
+        return {
+            nodeId,
+            via,
+            nodeKind: getNodePrimaryEventKind(map.continent, map.name, nodeId) ?? null,
+            unfinished: isNodeUnfinished(state, nodeId),
+            distanceToUnfinished: distanceToUnfinished(state, nodeId, blocked),
+            elite: isEliteNode(state, nodeId),
+            story: story(nodeId),
+            distanceToStory: distanceTo(state, nodeId, story, blocked),
+            distanceToExit: distanceToExit(state, nodeId, blocked),
+        };
+    };
     const out: RunRoadOption[] = [];
     const answered = (map.pendingArrival ?? null) === null;
     if (answered && isNodeUnfinished(state, here)) out.push(option(here, 'retry'));

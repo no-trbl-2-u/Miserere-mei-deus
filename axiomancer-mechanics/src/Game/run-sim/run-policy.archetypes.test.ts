@@ -29,7 +29,8 @@ const card = (laneId: string, i = 0): string => cardsOf(laneId)[i]!;
 const GREY = GREY_LANE.cardIds[0]!;
 
 const road = (nodeId: string, over: Partial<RunRoadOption> = {}): RunRoadOption => ({
-    nodeId, via: 'road', nodeKind: 'encounter', unfinished: false, distanceToUnfinished: 1, ...over,
+    nodeId, via: 'road', nodeKind: 'encounter', unfinished: false, distanceToUnfinished: 1,
+    elite: false, story: false, distanceToStory: null, distanceToExit: null, ...over,
 });
 const roads = (health: number, options: RunRoadOption[]): RunRoadContext => ({
     mapName: 'breakwater', currentNodeId: 'here', options, health, maxHealth: 100, dying: false,
