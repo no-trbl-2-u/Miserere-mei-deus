@@ -214,7 +214,6 @@ export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: Breakwate
     'bw-m4': { kind: 'hazard',   place: 'Manor road' },
     'bw-m5': { kind: 'village',  place: 'Walled manor' },
     'bw-p1': { kind: 'hazard',   place: 'Foothills' },
-    'bw-p2': { kind: 'fight',    place: 'Mountain path' },
     'bw-p3': { kind: 'cutscene', place: 'High pass' },
 };
 
@@ -299,7 +298,6 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     'bw-w2': { slug: 'float-eye', level: 2 },
     'bw-w3': { slug: 'gallows-crow', level: 2 },
     'bw-m1': { slug: 'float-eye', level: 2 },
-    'bw-p2': { slug: 'gallows-crow', level: 2 },
     // The quays, level 3.
     'bw-h1': { slug: 'net-mender', level: 3 },
     'bw-h2': { slug: 'crane-hook', level: 3 },

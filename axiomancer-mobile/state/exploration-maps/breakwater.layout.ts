@@ -1,4 +1,5 @@
 import { ACT1_PLATES } from '@/assets/images/maps';
+import { ACT1_FADED_PLATES } from '@/assets/images/map-fog';
 import landmarks from '@/assets/images/maps/act1-landmarks.json';
 import type { MapLayout, MapSheet } from './types';
 
@@ -16,7 +17,7 @@ import type { MapLayout, MapSheet } from './types';
  * contour hills over drawn terrain would contradict it.
  *
  * The engine graph (`Continents/Coastal-Village/breakwater-chapter.ts`) is T's
- * Chapter 1 map: 44 nodes branching out from the windmill to the sea keep in
+ * Chapter 1 map: 43 nodes branching out from the windmill to the sea keep in
  * the west, the cove through the sea cave, the lighthouse in the north and the
  * river bridge in the east. Each node sits on its own coast mark, the board's
  * plate position (`braindump/2026-10-28-breakwater-chapter-1-map.md`).
@@ -29,6 +30,7 @@ export const ACT1_SHEET_SIZE = { width: 1000, height: 1000, scale: 2.4 } as cons
 const sheet: MapSheet = {
     ...ACT1_SHEET_SIZE,
     backdrop: ACT1_PLATES.coast,
+    fadedBackdrop: ACT1_FADED_PLATES.coast,
     plateOpacity: 0.85,
     chartTexture: false,
 };
@@ -77,8 +79,7 @@ export const BREAKWATER_LANDMARKS: Readonly<Record<string, string>> = {
     'bw-m4': 'manor-road',
     'bw-m5': 'walled-manor',
     'bw-p1': 'foothills',
-    'bw-p2': 'mountain-path',
-    'bw-p3': 'high-pass',
+    'bw-p3': 'mountain-path',
 };
 
 /** Where a landmark sits on the sheet: its plate fraction times the sheet size. */
@@ -152,7 +153,6 @@ export const breakwaterLayout: MapLayout = {
         { id: 'bw-m5', ...at('bw-m5'), label: 'The Walled Manor', description: 'A bell rings in the yard. Nobody is at service.' },
         // ── the pass ──
         { id: 'bw-p1', ...at('bw-p1'), label: 'The Foothills', description: '[content] Foothills.' },
-        { id: 'bw-p2', ...at('bw-p2'), label: 'The Mountain Path', description: '[content] Mountain path.' },
         { id: 'bw-p3', ...at('bw-p3'), label: 'The High Pass', description: '[content] High pass.' },
     ],
 };

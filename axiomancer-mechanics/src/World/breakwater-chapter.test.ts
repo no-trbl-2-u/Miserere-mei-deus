@@ -68,9 +68,8 @@ M2|hazard|M1, M3, M4
 M3|loot cache|M2
 M4|hazard|M2, M5
 M5|village|M4
-P1|hazard|M1, P2
-P2|fight|P1, P3
-P3|cutscene|P2
+P1|hazard|M1, P3
+P3|cutscene|P1
 `.trim().split('\n').map(line => {
     const [code, kind, roads] = line.split('|') as [string, string, string];
     const id = (c: string) => `bw-${c.trim().toLowerCase()}`;
@@ -103,18 +102,18 @@ function boardKindOf(nodeId: string): string {
 }
 
 describe('A1: the graph is T\'s node list', () => {
-    it('has exactly the 44 nodes, by board code, starting on the windmill', () => {
-        expect(NODE_LIST).toHaveLength(44);
+    it('has exactly the 43 nodes, by board code, starting on the windmill', () => {
+        expect(NODE_LIST).toHaveLength(43);
         expect(breakwaterChapter.nodes.map(n => n.id)).toEqual(NODE_LIST.map(n => n.id));
         expect(breakwaterChapter.startingNode.id).toBe('bw-w1');
         expect(breakwaterChapter.name).toBe('breakwater');
     });
 
-    it('has exactly the 42 roads, each authored once', () => {
+    it('has exactly the 41 roads, each authored once', () => {
         const listed = new Set(NODE_LIST.flatMap(n => n.roads.map(r => roadKey(n.id, r))));
         const authored = breakwaterChapter.nodes.flatMap(n => n.connectedNodes.map(r => roadKey(n.id, r)));
-        expect(listed.size).toBe(42);
-        expect(authored).toHaveLength(42);
+        expect(listed.size).toBe(41);
+        expect(authored).toHaveLength(41);
         expect(new Set(authored)).toEqual(listed);
     });
 
@@ -125,7 +124,7 @@ describe('A1: the graph is T\'s node list', () => {
     });
 
     it('gives every node its listed kind, through its one-entry pool (an elite node, one per foe it draws)', () => {
-        expect(BREAKWATER_CHAPTER_POOLS).toHaveLength(44);
+        expect(BREAKWATER_CHAPTER_POOLS).toHaveLength(43);
         for (const n of NODE_LIST) {
             expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);
             expect(boardKindOf(n.id), n.id).toBe(n.kind);
@@ -153,13 +152,13 @@ describe('A1: the graph is T\'s node list', () => {
         for (const n of NODE_LIST) tally[n.kind] = (tally[n.kind] ?? 0) + 1;
         expect(tally).toEqual({
             start: 1, village: 2, quest: 4, 'chapter boss': 1, 'elite fight': 3, hazard: 6,
-            fight: 15, rest: 3, 'loot cache': 3, cutscene: 3, travel: 3,
+            fight: 14, rest: 3, 'loot cache': 3, cutscene: 3, travel: 3,
         });
         const kinds: Record<string, number> = {};
         for (const { kind } of Object.values(BREAKWATER_CHAPTER_KINDS)) kinds[kind] = (kinds[kind] ?? 0) + 1;
         expect(kinds).toEqual({
             start: 1, village: 2, quest: 4, boss: 1, elite: 3, hazard: 6,
-            fight: 15, rest: 3, loot: 3, cutscene: 3, travel: 3,
+            fight: 14, rest: 3, loot: 3, cutscene: 3, travel: 3,
         });
     });
 

@@ -9,11 +9,13 @@
  * NEW GAME starts on the windmill (`bw-w1`). There is no hop chain: the
  * earlier hops (v11 .. v40) went with the saves they served.
  *
- * Two load-time cleanups run on every load after `migrate`, at any version:
- * `dropUnknownCardIds` and `dropRetiredFlags`.
+ * Three load-time cleanups run on every load after `migrate`, at any version:
+ * `dropUnknownCardIds`, `dropRetiredFlags` and `dropCutNodes`.
  */
 
 import { GameState } from './types';
+import type { MapState, NodeId } from '../World/types';
+import type { MapName } from '../World/map.library';
 import { getCardById } from '../Cards/cards.library';
 import { STARTING_CARD_IDS } from '../Combat/combat.rewards';
 import { GAME_STATE_VERSION } from './game.reducer';
@@ -99,6 +101,75 @@ export function dropRetiredFlags(state: GameState): GameState {
     const flags = state.flags;
     if (!Array.isArray(flags) || !flags.some(f => RETIRED_FLAGS.has(f))) return state;
     return { ...state, flags: flags.filter(f => !RETIRED_FLAGS.has(f)) };
+}
+
+/**
+ * Node ids a live map no longer has, each with the node a save standing on it
+ * moves to. The Breakwater's mountain path (`bw-p2`) was cut on 2026-11-01
+ * (T): the high pass took its mark, and the foothills lead straight there.
+ */
+const CUT_NODES: Readonly<Partial<Record<MapName, Readonly<Record<NodeId, NodeId>>>>> = {
+    breakwater: { 'bw-p2': 'bw-p1' },
+};
+
+function scrubMap(map: MapState): MapState {
+    const cut = CUT_NODES[map.name];
+    if (!cut) return map;
+    const gone = (id: NodeId | null | undefined): boolean => id != null && id in cut;
+    const lists = [
+        map.completedNodes, map.availableNodes, map.lockedNodes, map.discoveredNodes, map.consumedNodes,
+        map.retiredEliteNodes ?? [], map.eliteUpgradeTakenNodes ?? [],
+    ];
+    const touched = gone(map.currentNode) || gone(map.pendingArrival) || gone(map.arrivedFrom)
+        || lists.some(l => l.some(gone))
+        || map.hazardOutcomes.some(o => gone(o.nodeId))
+        || map.blockedRoutes.some(r => gone(r.from) || gone(r.to));
+    if (!touched) return map;
+    const keep = (l: NodeId[]): NodeId[] => l.filter(id => !gone(id));
+    return {
+        ...map,
+        currentNode: gone(map.currentNode) ? cut[map.currentNode]! : map.currentNode,
+        completedNodes: keep(map.completedNodes),
+        availableNodes: keep(map.availableNodes),
+        lockedNodes: keep(map.lockedNodes),
+        discoveredNodes: keep(map.discoveredNodes),
+        consumedNodes: keep(map.consumedNodes),
+        ...(map.retiredEliteNodes ? { retiredEliteNodes: keep(map.retiredEliteNodes) } : {}),
+        ...(map.eliteUpgradeTakenNodes ? { eliteUpgradeTakenNodes: keep(map.eliteUpgradeTakenNodes) } : {}),
+        ...(gone(map.pendingArrival) ? { pendingArrival: null } : {}),
+        ...(gone(map.arrivedFrom) ? { arrivedFrom: cut[map.arrivedFrom!]! } : {}),
+        hazardOutcomes: map.hazardOutcomes.filter(o => !gone(o.nodeId)),
+        blockedRoutes: map.blockedRoutes.filter(r => !gone(r.from) && !gone(r.to)),
+    };
+}
+
+/**
+ * Scrub the `CUT_NODES` ids from every map a save holds, on every load.
+ *
+ * Like `dropRetiredFlags` this is not a version hop: a save at the current
+ * version can name a node cut after it was written. A player standing on a
+ * cut node moves to the node it names; the cut id leaves every list. The
+ * move lists are rebuilt from where the player stands by
+ * `syncWorldMoveLists`, which the load paths run after this. Returns `state`
+ * itself when nothing changes.
+ */
+export function dropCutNodes(state: GameState): GameState {
+    const world = state.world;
+    if (!world?.currentMap) return state;
+    const currentMap = scrubMap(world.currentMap);
+    let mapStates = world.mapStates;
+    if (mapStates) {
+        const next: Partial<Record<MapName, MapState>> = {};
+        let changed = false;
+        for (const [name, m] of Object.entries(mapStates) as [MapName, MapState | undefined][]) {
+            const s = m ? scrubMap(m) : m;
+            if (s !== m) changed = true;
+            next[name] = s;
+        }
+        if (changed) mapStates = next;
+    }
+    if (currentMap === world.currentMap && mapStates === world.mapStates) return state;
+    return { ...state, world: { ...world, currentMap, ...(mapStates ? { mapStates } : {}) } };
 }
 
 /**

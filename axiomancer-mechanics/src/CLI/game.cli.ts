@@ -45,7 +45,7 @@ import {
 import type { CodexEntry } from '../Game/types';
 import { createGameStore } from '../Game/store';
 import { GAME_STATE_VERSION } from '../Game/game.reducer';
-import { migrate, dropUnknownCardIds, dropRetiredFlags } from '../Game/game.migrate';
+import { migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes } from '../Game/game.migrate';
 import { buildStateFromFixture } from '../Game/fixtures';
 import type { GameState } from '../Game/types';
 import { createStartingWorld, STARTABLE_MAPS } from '../World';
@@ -773,7 +773,7 @@ function loadTab(store: GameStoreHandle, snapshotAdapter: PersistenceAdapter | n
     const before = store.getState();
     // Restore EVERY persisted slice and bring an older save up to date through `migrate` first;
     // `currentEncounter` is transient and never saved.
-    const loaded = dropRetiredFlags(dropUnknownCardIds(saved.version < GAME_STATE_VERSION ? migrate(saved, saved.version) : saved));
+    const loaded = dropCutNodes(dropRetiredFlags(dropUnknownCardIds(saved.version < GAME_STATE_VERSION ? migrate(saved, saved.version) : saved)));
     // A save written under the frontier rule carries the frontier in its
     // move lists: rewrite them by the road rule from where the player stands.
     const syncedWorld = loaded.world ? syncWorldMoveLists(loaded.world) : loaded.world;

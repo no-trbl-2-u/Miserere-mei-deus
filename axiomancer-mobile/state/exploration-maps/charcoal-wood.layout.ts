@@ -1,4 +1,5 @@
 import { ACT1_PLATES } from '@/assets/images/maps';
+import { ACT1_FADED_PLATES } from '@/assets/images/map-fog';
 import landmarks from '@/assets/images/maps/act1-landmarks.json';
 import { ACT1_SHEET_SIZE } from './breakwater.layout';
 import type { MapLayout, MapSheet } from './types';
@@ -18,6 +19,7 @@ import type { MapLayout, MapSheet } from './types';
 const sheet: MapSheet = {
     ...ACT1_SHEET_SIZE,
     backdrop: ACT1_PLATES.forest,
+    fadedBackdrop: ACT1_FADED_PLATES.forest,
     plateOpacity: 0.85,
     chartTexture: false,
 };

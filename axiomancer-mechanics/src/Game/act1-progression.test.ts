@@ -10,8 +10,8 @@ import { wearGreyPair } from '../Items/equipment.library';
 describe('the Act 1 XP ledger (LV1)', () => {
     const ledger = act1FightLedger();
 
-    it('stages 39 fights, one door per map, every one pinned', () => {
-        expect(ledger).toHaveLength(39);
+    it('stages 38 fights, one door per map, every one pinned', () => {
+        expect(ledger).toHaveLength(38);
         expect(ledger.filter(f => f.isBoss).map(f => f.nodeId)).toEqual(['bw-k2', 'cw-17', 'bc-15', 'ld-16']);
         expect(ledger.every(f => f.level !== undefined)).toBe(true);
     });
@@ -19,10 +19,11 @@ describe('the Act 1 XP ledger (LV1)', () => {
     // Chapter 1's normals fight at levels 3 to 6 (EN1f, EN1g, EN1h), the sea
     // cave's elites at level 5 (EN1j), the lighthouse path's at level 7 (EN1k)
     // and the keep causeway's at level 8 (EN1l), so the Breakwater pays more
-    // XP than its old level-2 Float-Eyes and level-3 elites did.
-    it('a full clear meets the doors at levels 8, 15, 18 and 20 and ends at level 21', () => {
+    // XP than its old level-2 Float-Eyes and level-3 elites did. Cutting the
+    // mountain path's fight (2026-11-01) took the third door from 18 to 17.
+    it('a full clear meets the doors at levels 8, 15, 17 and 20 and ends at level 21', () => {
         const walk = walkAct1(ledger);
-        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 15, 18, 20]);
+        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 15, 17, 20]);
         expect(walk.doors.map(d => d.doorLevel)).toEqual([1, 2, 3, 4]);
         expect(walk.finalLevel).toBe(21);
     });

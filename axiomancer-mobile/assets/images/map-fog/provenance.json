@@ -1,0 +1,26 @@
+[
+  {
+    "generated_by": "procedural (agent)",
+    "date": "2026-11-01",
+    "tool": "numpy tileable value-noise fbm + Pillow, run by the agent",
+    "seed": "7 (still), 23 (drift)",
+    "artist": "Procedural noise; no source image",
+    "license": "Generated for this project; no third-party input",
+    "post_process": "512x512 tileable fbm, six octaves; the still plate is tinted from near-black (7,5,9) to mist (118,120,130), the drift tile is a pale mist colour with the noise as alpha. WebP q70. Placeholder: T supplies the real fog image.",
+    "spec_section": "map edge fog (T, 2026-11-01): the plate's edge fades into screen-fixed fog that drifts only past the plate",
+    "covers": ["fog-still.webp", "fog-drift.webp"],
+    "used_by": ["assets/images/map-fog/index.ts (MAP_FOG)"]
+  },
+  {
+    "generated_by": "derived (agent) from the owner-generated Act 1 plates",
+    "date": "2026-11-01",
+    "tool": "numpy + Pillow, run by the agent",
+    "source": "assets/images/maps/act1-{coast,forest,mountains,underworld}.webp (see assets/images/maps/provenance.json for their origin and licence)",
+    "artist": "As the source plates",
+    "license": "As the source plates",
+    "post_process": "Pixels unchanged; an alpha channel added that fades the outer 11% of the shorter side to transparent: per axis a = clamp(distance to the nearer edge / fade), alpha = 1 - clamp(hypot(1 - ax, 1 - ay)), smoothstepped, so the strips ramp linearly and the corners round. WebP q60 method 6 with alpha. Regenerate whenever a source plate changes.",
+    "spec_section": "map edge fog (T, 2026-11-01)",
+    "covers": ["act1-coast.faded.webp", "act1-forest.faded.webp", "act1-mountains.faded.webp", "act1-underworld.faded.webp"],
+    "used_by": ["assets/images/map-fog/index.ts (ACT1_FADED_PLATES)", "state/exploration-maps/*.layout.ts (sheet.fadedBackdrop)"]
+  }
+]
