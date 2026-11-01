@@ -47,7 +47,7 @@ reached by path, never `npm --workspace` — see "The art department" below.
   trade-off; lead with prose; every question states its defer path;
   answers are policy — file them durably and never re-ask. Autonomous
   loop skills never ask at all — `AskUserQuestion` is reserved for
-  `/oversight` there, and for `/plot`, `/messy`, `/vault`, `/lane-creator` and `/heads-down` with T
+  `/oversight` there, and for `/plot`, `/messy`, `/vault`, `/lane-creator`, `/pilot` and `/heads-down` with T
   present (standing rule 6 below); they decide, document
   the call, and file load-bearing calls as `[loop-call]` residue for T to
   audit afterwards (THE OPEN GATE retired `[needs-user-call]`).
@@ -102,8 +102,8 @@ writes a new one. The playtest matrix stays as
 Live, at the repo root:
 - `.claude/commands/` — the loop verbs' doorways, plus T's attended `/vault`
   session (`docs/vault.md`, phase OV1b) and `/lane-creator`, which runs the
-  lane-creator v1 flow with T for one card family (`docs/lane-creator.md`, D102), and `/heads-down`,
-  T's orchestrated parallel shipping (`skills/heads-down.md`). No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
+  lane-creator v1 flow with T for one card family (`docs/lane-creator.md`, D102), and `/pilot`,
+  T's orchestrated parallel shipping (`skills/pilot.md`), beside the kit's stock `/heads-down`. No domain command is live: `combat-tuning`, `legacy-combat-tuning`, `playtest`,
   `resolve-playtest` and `bump-engine` were trimmed earlier, the eight
   tuning/playtest commands above went in trim T5 (D10), and `combat-playtest`
   was archived in R0 (Phase R12 rebuilds it).
@@ -327,9 +327,10 @@ where each kept deviation lives). It is live at the repo root:
   our own `critique`, `triage`, `expand`, `oversight`, `digest`,
   `consolidate`, `fix-ci`, `review`, `review-fix`, `lane-creator` and
   `vault`; T's intake `plot` and `messy` (the kit's, with Miserere's
-  section 7 on top; never fired by the loop, rule 8); and T's attended
-  `heads-down` (ours, a parallel orchestrator, never fired by the loop,
-  until phase NX1g makes it `/pilot`). (The
+  section 7 on top; never fired by the loop, rule 8); T's attended
+  `pilot` (ours: nexus's heads-down frame around our parallel waves of
+  `/next` workers, never fired by the loop; `skills/pilot.md` §6 says
+  which part came from where); and the kit's `heads-down`, stock. (The
   `.claude/commands/<verb>.md` pointers are the doorways.) `/march` runs
   triage → critique → dispatch (the first ready chunk) → expand →
   iterate, plus our `pre` lanes, and builds only specced, unheld,
@@ -452,7 +453,10 @@ them; update here first.
    same-root-cause iterations, then leave it to `pr-autofix`). Red on
    `main` is `ci-autofix`'s.
 6. **`AskUserQuestion` only in `/oversight`, and in `/plot`, `/messy`,
-   `/vault`, `/lane-creator`, `/heads-down` or `/pitch` when T is present.** Every other skill decides, documents the call in
+   `/vault`, `/lane-creator`, `/pilot`, `/heads-down` or `/pitch` when T is present.**
+   `/pilot` and `/heads-down` ask only at their two gates (every question
+   before the first launch, the parked ones at the end); their workers
+   never ask, they take the default and park it. Every other skill decides, documents the call in
    the commit body or PR, and ships. Since
    THE OPEN GATE (T direct, 2026-08-28 — see `plan/bearings.md`)
    there are no owner-blocked decisions: the loop answers every open
@@ -484,8 +488,8 @@ them; update here first.
    file this dump?", `AskUserQuestion` per `docs/asking-well.md`) and run
    the one T picks; a no files nothing beyond rule 7's residue. No
    `/march` step, cron, workflow or loop verb ever fires them
-   (`scripts/loop-pr.test.mjs`), nor `/heads-down`, T's attended
-   parallel-shipping orchestrator.
+   (`scripts/loop-pr.test.mjs`), nor `/pilot` or `/heads-down`, T's
+   attended orchestrators.
 9. **`Potential Assets/` is a store, never a source (T, 2026-10-19,
    D96).** It holds candidate art, licensed packs and extracted
    reference material. An agent may read it to FIND something and may
