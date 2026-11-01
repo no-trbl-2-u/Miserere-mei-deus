@@ -73,7 +73,7 @@ describe('startNewGameAction — NEW GAME', () => {
         expect(slots.readSlot(2)?.runId).toBe(fresh.runId);
         const player = store.getState().player;
         expect(player.level).toBe(1);
-        expect(player.inventory.map(i => i.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat']);
+        expect(player.inventory.map(i => i.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat', player.equipment.relics[0]?.id]);
         expect(player.currency).toBe(0);
         expect(player.experience).toBe(0);
         expect(slots.listSlots()[1]?.status).toBe('saved');
