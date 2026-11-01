@@ -40,6 +40,8 @@ needs are done):
 - **136.9** (EQ3i)
 - **136.10** (EQ3j)
 - **136.11** (EQ3k)
+- **138.1** · XP1a: a fifth less XP per kill (T, `/plot asap`, 2026-11-01)
+- **138.2** · SD1a: the Chosen's ten-card deck from all three of its lanes (T, `/plot asap`, 2026-11-01)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -109,6 +111,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
 | 136 | Equipment: the dock fixed with drag and drop, and Chapter 1's weapons and armor | [136-eq3-equipment-dock.md](136-eq3-equipment-dock.md) | planned | 11 left |
+| 138 | The Chosen's ten-card deck from all three of its lanes, and a fifth less XP per kill | [138-sd1-chosen-deck-and-xp.md](138-sd1-chosen-deck-and-xp.md) | planned | 2 left |
 
 ## How the loop reads this folder
 
