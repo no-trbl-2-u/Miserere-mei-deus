@@ -23,6 +23,7 @@ route in Tabs, from `axiomancer-mobile/app/(tabs)/exploration/index.tsx`.
 - [[Features/Deck|Deck]]
 - [[Features/Inventory|Inventory]]
 - [[Features/Memoir|Memoir]]
+- [[Features/Settings|Settings]]
 
 ## Uses
 

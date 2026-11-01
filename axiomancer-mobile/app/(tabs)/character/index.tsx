@@ -8,7 +8,6 @@ import { AscendStrip } from '@/components/levelup/AscendStrip';
 import { LevelReadyStrip } from '@/components/levelup/LevelReadyStrip';
 import { LevelUpModal } from '@/components/levelup/LevelUpModal';
 import { DevToolsLink } from '@/components/dev/DevToolsLink';
-import { SettingsLink } from '@/components/menu/SettingsLink';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
 import { StanceGlyph } from '@/components/StanceGlyph';
@@ -320,8 +319,6 @@ export default function CharacterScreen() {
           </View>
         </View>
       )}
-      {/* The COLOUR THEME picker lives in /settings. */}
-      <SettingsLink />
       <DevToolsLink />
     </ScreenBg>
   );

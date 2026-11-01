@@ -10,7 +10,7 @@
  * Tested in state/e2e/tabs.engine.test.ts.
  */
 
-export type TabKey = 'exploration' | 'combat' | 'character' | 'memoir' | 'inventory' | 'deck';
+export type TabKey = 'exploration' | 'combat' | 'character' | 'memoir' | 'inventory' | 'deck' | 'settings';
 
 export interface TabsViewModel {
     /** Tabs the user can currently see in the bottom bar, in display order. */
@@ -45,9 +45,10 @@ export const TAB_TITLES: Record<TabKey, string> = {
     memoir: 'THE LEDGER',
     inventory: 'SATCHEL',
     deck: 'DECK',
+    settings: 'SETTINGS',
 };
 
-const ALWAYS_VISIBLE: TabKey[] = ['character', 'memoir', 'inventory', 'deck'];
+const ALWAYS_VISIBLE: TabKey[] = ['character', 'memoir', 'inventory', 'deck', 'settings'];
 
 export function selectVisibleTabs(inCombat: boolean): TabsViewModel {
     const positional: TabKey = inCombat ? 'combat' : 'exploration';
@@ -97,7 +98,8 @@ const SANS_ADVANCE_EM_FALLBACK = 0.557;
 
 /** Tab label type size. `_layout.tsx` styles the label from this constant, so
  *  the fit contract below measures what the bar actually renders. */
-export const TAB_BAR_LABEL_FONT_SIZE = 10;
+// One step down from 10: the sixth tab (SETTINGS) leaves THE LEDGER no headroom at 10.
+export const TAB_BAR_LABEL_FONT_SIZE = 9;
 
 /**
  * Tab label letter-spacing. With five tabs, THE LEDGER at spacing 2 measures
