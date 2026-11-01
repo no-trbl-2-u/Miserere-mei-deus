@@ -104,6 +104,7 @@ test('a prototype key as --worker or in a --set/--push path is refused before it
   for (const args of [
     ['--worker', '__proto__', '--set', 'polluted=yes'],
     ['--worker', 'constructor', '--set', 'polluted=yes'],
+    ['--worker', 'x.__proto__', '--set', 'polluted=yes'],
     ['--set', '__proto__.polluted=yes'],
     ['--set', 'workers.NX1a.constructor.prototype.polluted=yes'],
     ['--push', 'gate.__proto__=yes'],
@@ -120,6 +121,7 @@ test('translate() itself never hands ledger.mjs a prototype path', async () => {
   const { translate, UsageError } = await import('./heads-down-ledger.mjs')
   const flags = (o) => ({ worker: '', set: [], push: [], promptFile: '', note: '', ...o })
   assert.throws(() => translate(flags({ worker: '__proto__', set: ['x=1'] })), UsageError)
+  assert.throws(() => translate(flags({ worker: 'x.__proto__', set: ['x=1'] })), UsageError)
   assert.throws(() => translate(flags({ set: ['a.__proto__.x=1'] })), UsageError)
   assert.throws(() => translate(flags({ push: ['constructor=1'] })), UsageError)
   assert.deepEqual(translate(flags({ worker: 'NX1g', set: ['status=pr-open'], push: ['claims=NX1h'] })), ['--set', 'workers.NX1g.status=pr-open', '--add', 'workers.NX1g.claims=NX1h'])

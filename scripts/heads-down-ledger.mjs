@@ -90,7 +90,7 @@ export function latest(root) {
 
 /** The old verb's flags as ledger.mjs beat arguments. */
 export function translate(flags) {
-  if (flags.worker && (!ROW_RE.test(flags.worker) || FORBIDDEN.has(flags.worker))) throw new UsageError(`heads-down-ledger: bad row id: ${flags.worker}`)
+  if (flags.worker && (!ROW_RE.test(flags.worker) || flags.worker.split('.').some((s) => FORBIDDEN.has(s)))) throw new UsageError(`heads-down-ledger: bad row id: ${flags.worker}`)
   const out = []
   const at = (k) => (flags.worker ? `workers.${flags.worker}.${k}` : k)
   const split = (kv) => {
