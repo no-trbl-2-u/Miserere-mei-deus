@@ -37,6 +37,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { ARCHIVE_FILE, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
+import { pendingCloses, pendingFiles } from './plan/pending.mjs'
+import { settledView } from './plan/settled.mjs'
 
 const DEADLINES = 'plan/deadlines.md'
 const BUILD_PLAN = 'plan/steps/01_build_plan.md'
@@ -48,12 +50,18 @@ const BUILD_PLAN = 'plan/steps/01_build_plan.md'
  * @returns {{buildPlan: string | null, specs: {file: string, md: string}[], readme: string | null, archive: string | null}}
  */
 export const readPlanSources = (root) => {
-    const readOrNull = (rel) => (fs.existsSync(path.join(root, rel)) ? fs.readFileSync(path.join(root, rel), 'utf8') : null)
+    // The plan as it reads once plan/pending/ settles (phase NX1e): a branch's pending
+    // `## Edit` / `## Add` (a plot's Held line, its new chunks for an open spec) apply in
+    // memory, and a pending close counts its chunk as closed (`pending`), as plan-check reads it.
+    const files = pendingFiles(root)
+    const view = files.length ? settledView(root, { only: (p) => p.startsWith('plan/') }) : null
+    const readOrNull = (rel) => (view ? view.read(rel) : fs.existsSync(path.join(root, rel)) ? fs.readFileSync(path.join(root, rel), 'utf8') : null)
     const specs = fs.readdirSync(path.join(root, 'plan'))
         .filter((name) => SPEC_FILE.test(name))
         .sort()
-        .map((name) => ({ file: `plan/${name}`, md: fs.readFileSync(path.join(root, 'plan', name), 'utf8') }))
-    return { buildPlan: readOrNull(BUILD_PLAN), specs, readme: readOrNull('plan/README.md'), archive: readOrNull(ARCHIVE_FILE) }
+        .map((name) => ({ file: `plan/${name}`, md: readOrNull(`plan/${name}`) }))
+        .filter((s) => s.md !== null)
+    return { buildPlan: readOrNull(BUILD_PLAN), specs, readme: readOrNull('plan/README.md'), archive: readOrNull(ARCHIVE_FILE), pending: pendingCloses(files) }
 }
 
 /**

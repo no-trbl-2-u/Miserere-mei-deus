@@ -423,3 +423,13 @@ test('NX1c: parseSpecChunks reads aliases from a comma list and skips fenced exa
         ['07.5', [], ['07.4']],
     ])
 })
+
+test('NX1e: a pending close ships its aliases and frees the chunks that need it', () => {
+    const md = '- [ ] **31.1** first · S · closes A1 · needs — · alias: E1\n- [ ] **31.2** second · S · closes A2 · needs 31.1 · alias: E2\n'
+    const open = planRows({ specs: [{ file: 'plan/31-next.md', md }] }).phases
+    assert.deepEqual([open.get('E1').shipped, open.get('E2').requires], [false, ['E1']])
+    const closed = planRows({ specs: [{ file: 'plan/31-next.md', md }], pending: new Set(['31.1']) })
+    assert.deepEqual(closed.errors, [])
+    assert.deepEqual([closed.phases.get('E1').shipped, closed.phases.get('E1').open, closed.phases.get('E2').requires], [true, false, []])
+    assert.equal(derivedStatus({ rows: ['E1'] }, closed.phases), '[x]')
+})

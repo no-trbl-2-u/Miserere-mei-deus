@@ -28,7 +28,10 @@
 // --write`, LIVE_DEADLINES.md put back), so rows that shipped on main do not
 // leave the PR red on check-deadlines.
 //
-// Never force-pushes, never rebases, never touches `main`. A union merge of
+// Before the scan it settles main's plan/pending/ files (`settleMain`, scripts/pr-settle.mjs,
+// phase NX1e): its one write to `main`, a `plan: settle` commit, pushed and never forced.
+//
+// Never force-pushes, never rebases, and touches `main` only through that settle. A union merge of
 // an append-only file can double a row both sides edited (hunt's lesson
 // `union-edit-doubles`); `unionMerge` counts each line three ways (base,
 // ours, theirs) so an edited row keeps only its edited form. The line order
@@ -41,6 +44,8 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import { settleMain } from './pr-settle.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const FILES_LIST = path.join(ROOT, '.git', 'pr-resolve-files.txt')
@@ -418,6 +423,16 @@ function arg(name) {
 function main() {
   const mode = process.argv[2]
   if (mode === 'scan') {
+    // Settle first (phase NX1e): the push that started this run may be a merged PR whose
+    // plan/pending/ files fold into the plan now. Never in the way of the scan: a refusal or an
+    // error is a warning, and the pending files keep counting as closed until a later push settles.
+    try {
+      const s = settleMain({ root: ROOT })
+      if (s.state === 'settled') console.log(`settle: pushed the settle of ${s.ids.join(', ')}`)
+      else if (s.state !== 'nothing') console.log(`::warning::pr-resolve: settle ${s.state}: ${s.reason}`)
+    } catch (err) {
+      console.log(`::warning::pr-resolve: settle errored: ${String(err?.message ?? err).split('\n')[0]}`)
+    }
     const needClaude = []
     for (const pr of openLoopPrs()) {
       if (pr.mergeable !== 'CONFLICTING') continue

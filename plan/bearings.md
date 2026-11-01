@@ -659,8 +659,11 @@ I), `UI:` (the browser walk).
   `review:rules-change` and `nexus-sync` PRs that T merges (D93, D101,
   D119). `NEXUS_LOOP_MODE` stays unset (v2's pull-request mode), never
   `owner`, though the upgrader read three old `Cloud-Run` commits as
-  owner mode. v2's land step meets this in phase NX1e; until then the
-  loop is off (`march` and `night` disabled, NX1i turns them on).
+  owner mode. v2's land step meets this since phase NX1e: every run takes
+  v2's contributor path on `loop/next-<id>` (`scripts/loop-land.mjs`),
+  plan changes ride in the PR as `plan/pending/` files, and the merge job
+  settles them on main (`scripts/pr-settle.mjs`; `skills/next/land.md`'s
+  local block). The loop stays off until NX1i turns `march` and `night` on.
 
 **UI:** `none`
 
