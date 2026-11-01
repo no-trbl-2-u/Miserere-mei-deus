@@ -80,6 +80,12 @@ export interface ChapterObjective {
 /** One step of a questline. */
 export interface ChapterQuestStep {
     readonly step: number;
+    /**
+     * The run log's key for the step: a `quest-step` event carries the
+     * questline id as `questId` and `String(step)` as `stepId` (chunk 135.1),
+     * so coverage joins on `ChapterQuest.id` plus this.
+     */
+    readonly stepId: string;
     /** The quest log's name for the step (`Quest.name`). */
     readonly questName: string;
     /** The node that gives it. */
@@ -272,6 +278,7 @@ function chapterQuests(def: MapDefinition, questlines: readonly Questline[]): Ch
         main: line === main,
         steps: line.steps.map(step => ({
             step: step.step,
+            stepId: String(step.step),
             questName: step.quest.name,
             nodeId: step.nodeId,
             turnInNodeId: step.settle === 'turn-in' ? turnInNodeOf(line, step) ?? null : null,

@@ -70,6 +70,8 @@ describe('chapter1Content', () => {
         expect(main.id).toBe(BREAKWATER_CHAPTER_QUESTLINE.id);
         expect(main.steps.map((s) => s.questName)).toEqual(BREAKWATER_CHAPTER_QUESTLINE.steps.map((s) => s.quest.name));
         expect(main.steps.map((s) => s.turnInNodeId)).toEqual(['bw-c2', null, 'bw-k1', 'bw-b1']);
+        // The run log's quest-step key: the questline id and the step number as text.
+        expect(main.steps.map((s) => s.stepId)).toEqual(['1', '2', '3', '4']);
         expect(unique(c.quests.map((q) => q.id))).toBe(true);
     });
 
