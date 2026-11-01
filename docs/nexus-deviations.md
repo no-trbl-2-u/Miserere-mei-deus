@@ -90,7 +90,7 @@ The dry run is green, but run as-is it would:
 | plot | Splitting, `and do`, pending files, spec claims | v2 | v2-better | TAKE |
 | messy | Output is `[owner]` candidates T promotes, plus deadlines reconcile | R11, D88, DL1c | v2 writes `idea` specs | KEEP |
 | messy | Worktree, one agent per theme, pending file | v2 | v2-better | TAKE |
-| heads-down | Parallel waves, one worker per row in its own worktree, model per worker, callout bus, push-once during review, one plot PR merging at a time, PR screenshots | `8a6a07e41` (2026-10-28) | none (v2's same name loops `/next` serially) | KEEP, renamed |
+| heads-down | Parallel waves, one worker per row in its own worktree, model per worker, callout bus, push-once during review, one plot PR merging at a time, PR screenshots | `8a6a07e41` (2026-10-28) | none (v2's same name loops `/next` serially) | KEEP, renamed `/pilot` (NX1g) |
 | heads-down | Claims, ledger, resume | HW1 (copied from v2) | v2-better | TAKE |
 | oversight | `[loop-call]` ratify sweep; NEEDS_T leads Q0; asking-well | OPEN GATE (2026-08-28), D94 | partial | MERGE |
 | oversight | R11 watch counts | `a68039899` | none | drop after 2026-11-11 |
@@ -130,7 +130,7 @@ sessions and `/heads-down`.
 | `deadlines.yml` + scripts | `LIVE_DEADLINES.md`, the deadlines lint | T 2026-10-19, DL1 | none | KEEP |
 | `heartbeat.yml` | (v2 only) watchdog for wedged runs | | v2 | TAKE |
 | `claims.mjs` | Orphan `claims` branch, our own entry format | HW1b | v2-better | TAKE, migrate (same branch name, different format) |
-| `heads-down-ledger.mjs` | `.heads-down/` ledger | HW1c | v2 `ledger.mjs` | TAKE |
+| `heads-down-ledger.mjs` | `.heads-down/` ledger | HW1c | v2 `ledger.mjs` | TAKE (NX1g: a shim onto `ledger.mjs` until the last `.heads-down/` run ends) |
 | `loop-issue.mjs` | Kit file, doubled: close-trailers and deploy-comment sweeps | phases 35, 48, 91 | partial | MERGE |
 | `deploy-check.mjs` | Kit file tuned for path-filtered verify runs | `3375fe986` | partial | MERGE |
 | merge drivers | lessons/NEEDS_T, build plan, deadlines | ML1, MD1 | v2 pending files | KEEP deadlines + lessons; build-plan driver dies with the build plan |
@@ -244,7 +244,7 @@ finishes the row.
 | plot: every new chunk gets a deadlines home | KEEP | `skills/plot.md` §7.2 (aliases, Held lines, the reconcile) | carried |
 | plot: never fired by the loop | KEEP | `skills/plot.md` §7.6; `scripts/loop-pr.test.mjs` | carried |
 | messy: `[owner]` candidates, deadlines reconcile | KEEP | `skills/messy.md` §7 | carried |
-| heads-down: parallel waves | KEEP, renamed | `skills/heads-down.md`, `.claude/commands/heads-down.md` (ours, unchanged) | kept; becomes `/pilot` in NX1g, nexus's `/heads-down` restored then |
+| heads-down: parallel waves | KEEP, renamed | `skills/pilot.md`, `.claude/commands/pilot.md` (nexus's frame around our waves; §6 there says which part came from where, for every sync that changes nexus's `/heads-down`); `skills/heads-down.md` and its command are the kit's, stock | renamed `/pilot` in NX1g |
 | oversight: `[loop-call]` ratify, NEEDS_T Q0, asking-well | MERGE | `skills/oversight.md` (ours, refs updated) | kept ours whole; v2's lock asks and audit mode not folded in yet (first sync) |
 | iterate: content gaps filed; in-tick defect commit; game audit categories | KEEP / MERGE | `skills/iterate.lanes.md` (19 lanes the upgrader moved, verbatim) | carried |
 | critique, digest, expand, triage (and R4's `[loop-call]`) | KEEP | `skills/critique.md`, `skills/digest.md`, `skills/expand.md`, `skills/triage.md` (ours, refs updated) | kept |
