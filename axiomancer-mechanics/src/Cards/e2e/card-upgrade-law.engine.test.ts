@@ -177,7 +177,7 @@ function programLines(card: Card): [string, (c: ProgramCtx) => void, boolean][] 
     if (p.paid) out.push(['PAID', p.paid.run, !!p.paid.exile]);
     if (p.global) {
         const g = p.global;
-        out.push(['FREE', c => g.free(c, 4), false], ['PAID', c => g.paid(c, 4), false]);
+        out.push(['GLOBAL', c => g.run(c, 4), false]);
     }
     return out;
 }
@@ -278,7 +278,7 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
     it('the face prints every payoff number the upgrade changed', () => {
         // The deep probe binds every cap, so a scaled literal or cap is what
         // the line applies; an amount equal to the base card's is a formula
-        // ("DEAL 2X") or a resolved number, and the base honesty suites own it.
+        // ("DEAL 2× X") or a resolved number, and the base honesty suites own it.
         const deep = PROBES[PROBES.length - 1];
         const offenders: string[] = [];
         // How many payoff changes only the flat "+n" escape below explains:
@@ -294,16 +294,13 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
                     const before = record(baseLines[li][1], deep);
                     record(run, deep).forEach((call, ci) => {
                         if (!PAYOFF_VERBS.has(call.verb) || call.n === before[ci]?.n) return;
-                        // "SACRIFICE any amount X (max m), DEAL kX": the deep probe pays the
+                        // "SACRIFICE X (max m), DEAL k× X": the deep probe pays the
                         // cap, so the hit is k times m, both printed.
-                        const formula = /max (\d+)\).*?(\d+)X\./.exec(printed);
+                        const formula = /max (\d+)\).*?(\d+)× X\b/.exec(printed);
                         if (formula && call.n === Number(formula[1]) * Number(formula[2])) return;
-                        // "doubled if the foe is FROZEN": the deep probe meets the
-                        // condition, so the line applies twice the printed number.
-                        if (/\bdoubled\b/.test(printed) && nums.has(String(call.n / 2))) return;
-                        // "+n% per STORM", "n per different element": the printed rate
+                        // "n% for each STORM", "n for each element": the printed rate
                         // times the deep probe's count.
-                        const per = /per STORM/.test(printed) ? deep.storm : /per different element/.test(printed) ? deep.elementsOnFoe : 0;
+                        const per = /for each STORM/.test(printed) ? deep.storm : /for each element/.test(printed) ? deep.elementsOnFoe : 0;
                         if (per > 0 && nums.has(String(call.n / per))) return;
                         // "INFERNO equal to half the damage dealt": half the printed hit.
                         if (/\bhalf the damage dealt\b/.test(printed) && nums.has(String(call.n * 2))) return;
@@ -327,9 +324,9 @@ describe('A3 — every upgrade makes the numbers bigger, never a cost', () => {
         const offenders: string[] = [];
         for (const card of upgradable.filter(c => c.program?.global)) {
             const g = card.program!.global!;
-            if (!/\bn\b/.test(g.text)) continue;
+            if (!/\bX\b/.test(g.text)) continue;
             const up = upgradeCard(card)!;
-            if (!/\bn\+2\b/.test(up.program!.global!.text)) offenders.push(`${up.id}: "${up.program!.global!.text}"`);
+            if (!/\bX \+2\b/.test(up.program!.global!.text)) offenders.push(`${up.id}: "${up.program!.global!.text}"`);
         }
         expect(offenders).toEqual([]);
     });

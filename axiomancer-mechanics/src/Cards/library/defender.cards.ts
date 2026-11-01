@@ -20,8 +20,8 @@
  * Numbers:
  *   - DEAL, GUARD, HEAL, VULNERABLE and THORNS print as number tokens and
  *     scale with the stats, as live (THORNS with Heart). REFLECT is
- *     unscaled. A number a line reads off the fight ("GUARD equal to your
- *     THORNS") is added unscaled, as an already-resolved number.
+ *     unscaled. A number a line reads off the fight ("GUARD = your THORNS")
+ *     is added unscaled, as an already-resolved number.
  *   - One upgrade, as commons: DEAL, GUARD, HEAL, VULNERABLE and REFLECT
  *     take the MAGNITUDE step; THORNS and Conviction take the INTENSITY step
  *     (+1). The discard counts, DRAW, RETRIEVE, the VITAE a Global costs and
@@ -32,11 +32,10 @@
  *     `spellLawBaseline`; E-06's PAID doubles a number and has no payoff for a
  *     step to raise, so it is held for T in the card-rules fixture.
  *
- * The random discard is a PAID-only cost written first on its line; the
- * engine refuses a line that cannot pay it (`DISCARD_SHORTFALL_REASON`).
- * Globals print one line: the PAID line equals the FREE line, and paying
- * makes it permanent (T's Elementalist ruling, applied to P-10, E-09, M-06
- * and M-10).
+ * The random discard (DISCARD) is a PAID-only cost written first on its line;
+ * the engine refuses a line that cannot pay it (`DISCARD_SHORTFALL_REASON`).
+ * A Global has one effect: played FREE it stays 3 turns, PAID the whole
+ * combat (T's Elementalist ruling, applied to P-10, E-09, M-06 and M-10).
  *
  * This file is data-only.
  */
@@ -73,9 +72,9 @@ interface Entry {
     onDiscard?: (u: UpgradeScale) => NonNullable<CardProgram['onDiscard']>;
 }
 
-/** A start-of-turn Global whose PAID line equals its FREE line. */
+/** A start-of-turn Global: one effect, FREE or PAID. */
 function turnGlobal(text: string, body: (c: ProgramCtx) => void): CardProgram {
-    return { global: { trigger: 'turn', text, free: c => body(c), paid: c => body(c) } };
+    return { global: { trigger: 'turn', text, run: c => body(c) } };
 }
 
 const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' };
@@ -83,16 +82,16 @@ const SUB_LANE: Record<string, string> = { P: 'Payoff', E: 'Engine', M: 'Misc' }
 const ENTRIES: Entry[] = [
     // ── PAYOFF: paid for spikes up, a shell held, cards thrown away ──────────
     { slot: 'P-01', option: 'a', name: 'Bristling Blow', type: 'attack', color: RED, program: u => ({
-        free: L(`DEAL {deal:${u.m(2)}}, +1 per 2 THORNS you have.`, c => {
+        free: L(`DEAL {deal:${u.m(2)}} + half your THORNS`, c => {
             c.deal(u.m(2), { plus: Math.floor(c.q.thorns / 2) });
         }),
-        paid: L(`DEAL {deal:${u.m(4)}}, +1 per THORNS you have.`, c => {
+        paid: L(`DEAL {deal:${u.m(4)}} + your THORNS`, c => {
             c.deal(u.m(4), { plus: c.q.thorns });
         }) }) },
     // T: no max on either line.
     { slot: 'P-02', option: 'b', name: 'Shield Bash', type: 'skill', color: BLUE, program: u => ({
-        free: L(`GUARD {guard:${u.m(4)}}.`, c => { c.guard(u.m(4)); }),
-        paid: L(`Discard 1 card at random. GUARD {guard:${u.m(8)}}, then DEAL equal to your GUARD.`, c => {
+        free: L(`GUARD {guard:${u.m(4)}}`, c => { c.guard(u.m(4)); }),
+        paid: L(`DISCARD 1. GUARD {guard:${u.m(8)}}, DEAL = your GUARD`, c => {
             c.discardRandom(1);
             c.guard(u.m(8));
             const g = c.q.guard;
@@ -100,142 +99,142 @@ const ENTRIES: Entry[] = [
         }) }) },
     // T: the VULNERABLE lands before the DEAL it rides on.
     { slot: 'P-03', option: 'c', name: 'Cracking Swing', type: 'attack', color: RED, program: u => ({
-        free: L(`VULNERABLE +{vuln:${u.m(25)}}% for 1 turn, then DEAL {deal:${u.m(2)}}.`, c => {
+        free: L(`VULNERABLE {vuln:${u.m(25)}}% for 1 turn, DEAL {deal:${u.m(2)}}`, c => {
             c.vulnerable(u.m(25), 1); c.deal(u.m(2));
         }),
-        paid: L(`Discard 2 cards at random. VULNERABLE +{vuln:${u.m(75)}}% for 2 turns, then DEAL {deal:${u.m(8)}}.`, c => {
+        paid: L(`DISCARD 2. VULNERABLE {vuln:${u.m(75)}}% for 2 turns, DEAL {deal:${u.m(8)}}`, c => {
             c.discardRandom(2); c.vulnerable(u.m(75), 2); c.deal(u.m(8));
         }) }) },
     { slot: 'P-04', option: 'a', name: 'Mirror Barb', type: 'attack', color: PURPLE, program: u => ({
-        free: L(`REFLECT ${u.m(25)}%, THORNS {thorns:${u.i(2)}}.`, c => { c.reflect(u.m(25)); c.thorns(u.i(2)); }),
-        paid: L(`Discard 1 card at random. DEAL {deal:${u.m(3)}}, REFLECT ${u.m(75)}%.`, c => {
+        free: L(`REFLECT ${u.m(25)}%, THORNS {thorns:${u.i(2)}}`, c => { c.reflect(u.m(25)); c.thorns(u.i(2)); }),
+        paid: L(`DISCARD 1. DEAL {deal:${u.m(3)}}, REFLECT ${u.m(75)}%`, c => {
             c.discardRandom(1); c.deal(u.m(3)); c.reflect(u.m(75));
         }) }) },
     { slot: 'P-05', option: 'c', name: 'Thornwall', type: 'skill', color: PURPLE, program: u => ({
-        free: L(`THORNS {thorns:${u.i(2)}}, then GUARD equal to your THORNS.`, c => {
+        free: L(`THORNS {thorns:${u.i(2)}}, GUARD = your THORNS`, c => {
             c.thorns(u.i(2)); c.guard(0, { plus: c.q.thorns });
         }),
-        paid: L(`THORNS {thorns:${u.i(3)}}, then GUARD twice your THORNS.`, c => {
+        paid: L(`THORNS {thorns:${u.i(3)}}, GUARD 2× your THORNS`, c => {
             c.thorns(u.i(3)); c.guard(0, { plus: 2 * c.q.thorns });
         }) }) },
     { slot: 'P-06', option: 'c', name: 'Spite Growth', type: 'skill', color: RED, program: () => ({
-        free: L("THORNS equal to half the damage you've done this turn.", c => {
+        free: L('THORNS half the damage you dealt this turn', c => {
             c.thorns(Math.floor(c.q.dealtThisTurn / 2), { exact: true });
         }),
-        paid: L("THORNS equal to the damage you've done this turn.", c => {
+        paid: L('THORNS = the damage you dealt this turn', c => {
             c.thorns(c.q.dealtThisTurn, { exact: true });
         }) }) },
     // T: PAID is refused with no other card in hand, as every PAID discard line.
     { slot: 'P-07', option: 'c', name: 'Shed the Shell', type: 'spell', color: PURPLE, spellLaw: { thorns: 8 }, program: u => ({
-        free: L(`GUARD {guard:${u.m(4)}}.`, c => { c.guard(u.m(4)); }),
-        paid: L(`Discard your hand. THORNS {thorns:${u.i(3)}} for each card discarded. EXILE.`, c => {
+        free: L(`GUARD {guard:${u.m(4)}}`, c => { c.guard(u.m(4)); }),
+        paid: L(`DISCARD your hand. THORNS {thorns:${u.i(3)}} for each card discarded. EXILE`, c => {
             const k = c.discardHand();
             for (let i = 0; i < k; i++) c.thorns(u.i(3));
         }, EX) }) },
     { slot: 'P-08', option: 'b', name: 'Spiked Shell', type: 'skill', color: BLUE, program: u => ({
-        free: L(`GUARD {guard:${u.m(4)}}. While GUARD HOLDS, your THORNS deal double on the foe's next turn.`, c => {
+        free: L(`GUARD {guard:${u.m(4)}}, your THORNS hit 2× while GUARD HOLDS`, c => {
             c.guard(u.m(4)); c.thornsDoubleWhileGuardHolds();
         }),
-        paid: L(`GUARD {guard:${u.m(9)}}. While GUARD HOLDS, your THORNS deal double on the foe's next turn.`, c => {
+        paid: L(`GUARD {guard:${u.m(9)}}, your THORNS hit 2× while GUARD HOLDS`, c => {
             c.guard(u.m(9)); c.thornsDoubleWhileGuardHolds();
         }) }) },
     // T: REFLECT is up before the foe's first strike lands, so it reflects that strike too.
     { slot: 'P-09', option: 'b', name: 'Riposte', type: 'skill', color: BLUE, program: u => ({
-        free: L(`GUARD {guard:${u.m(3)}}, REFLECT ${u.m(25)}%.`, c => { c.guard(u.m(3)); c.reflect(u.m(25)); }),
-        paid: L(`GUARD {guard:${u.m(6)}}. If the foe attacks on their turn, REFLECT ${u.m(50)}% before they DEAL damage.`, c => {
+        free: L(`GUARD {guard:${u.m(3)}}, REFLECT ${u.m(25)}%`, c => { c.guard(u.m(3)); c.reflect(u.m(25)); }),
+        paid: L(`GUARD {guard:${u.m(6)}}, REFLECT ${u.m(50)}% if the foe attacks`, c => {
             c.guard(u.m(6)); c.reflectOnAttack(u.m(50));
         }) }) },
     { slot: 'P-10', option: 'b', name: 'Don the Brambles', type: 'global', color: BLUE, program: () => turnGlobal(
-        'GUARD equal to your THORNS.', c => { c.guard(0, { plus: c.q.thorns }); }) },
+        'GUARD = your THORNS', c => { c.guard(0, { plus: c.q.thorns }); }) },
 
     // ── ENGINE: puts the shell and the spikes up, keeps the hand stocked ─────
     { slot: 'E-01', option: 'c', name: 'Studded Guard', type: 'skill', color: BLUE, program: u => ({
-        free: L(`GUARD {guard:${u.m(4)}}, THORNS {thorns:${u.i(1)}}.`, c => { c.guard(u.m(4)); c.thorns(u.i(1)); }),
-        paid: L(`Discard 1 card at random. GUARD {guard:${u.m(10)}}, THORNS {thorns:${u.i(3)}}.`, c => {
+        free: L(`GUARD {guard:${u.m(4)}}, THORNS {thorns:${u.i(1)}}`, c => { c.guard(u.m(4)); c.thorns(u.i(1)); }),
+        paid: L(`DISCARD 1. GUARD {guard:${u.m(10)}}, THORNS {thorns:${u.i(3)}}`, c => {
             c.discardRandom(1); c.guard(u.m(10)); c.thorns(u.i(3));
         }) }) },
     { slot: 'E-02', option: 'b', name: 'Barbed Wall', type: 'skill', color: PURPLE, program: u => ({
-        free: L(`GUARD {guard:${u.m(3)}}, THORNS {thorns:${u.i(1)}}.`, c => { c.guard(u.m(3)); c.thorns(u.i(1)); }),
-        paid: L(`GUARD {guard:${u.m(5)}}, THORNS {thorns:${u.i(3)}}.`, c => { c.guard(u.m(5)); c.thorns(u.i(3)); }) }) },
+        free: L(`GUARD {guard:${u.m(3)}}, THORNS {thorns:${u.i(1)}}`, c => { c.guard(u.m(3)); c.thorns(u.i(1)); }),
+        paid: L(`GUARD {guard:${u.m(5)}}, THORNS {thorns:${u.i(3)}}`, c => { c.guard(u.m(5)); c.thorns(u.i(3)); }) }) },
     { slot: 'E-03', option: 'b', name: 'Turn the Blow', type: 'skill', color: BLUE, program: u => ({
-        free: L(`REFLECT ${u.m(50)}%.`, c => { c.reflect(u.m(50)); }),
-        paid: L(`REFLECT ${u.m(100)}%.`, c => { c.reflect(u.m(100)); }) }) },
+        free: L(`REFLECT ${u.m(50)}%`, c => { c.reflect(u.m(50)); }),
+        paid: L(`REFLECT ${u.m(100)}%`, c => { c.reflect(u.m(100)); }) }) },
     { slot: 'E-04', option: 'a', name: 'Hedge Strike', type: 'attack', color: RED, program: u => ({
-        free: L(`DEAL {deal:${u.m(2)}}, GUARD {guard:${u.m(2)}}, THORNS {thorns:${u.i(1)}}.`, c => {
+        free: L(`DEAL {deal:${u.m(2)}}, GUARD {guard:${u.m(2)}}, THORNS {thorns:${u.i(1)}}`, c => {
             c.deal(u.m(2)); c.guard(u.m(2)); c.thorns(u.i(1));
         }),
-        paid: L(`DEAL {deal:${u.m(3)}}, GUARD {guard:${u.m(4)}}, THORNS {thorns:${u.i(2)}}.`, c => {
+        paid: L(`DEAL {deal:${u.m(3)}}, GUARD {guard:${u.m(4)}}, THORNS {thorns:${u.i(2)}}`, c => {
             c.deal(u.m(3)); c.guard(u.m(4)); c.thorns(u.i(2));
         }) }) },
     { slot: 'E-05', option: 'c', name: 'Briar Surge', type: 'spell', color: PURPLE, spellLaw: { thorns: 6 }, program: u => ({
-        free: L(`THORNS {thorns:${u.i(3)}}.`, c => { c.thorns(u.i(3)); }),
-        paid: L(`Discard 2 cards at random. THORNS {thorns:${u.i(8)}}. EXILE.`, c => {
+        free: L(`THORNS {thorns:${u.i(3)}}`, c => { c.thorns(u.i(3)); }),
+        paid: L(`DISCARD 2. THORNS {thorns:${u.i(8)}}. EXILE`, c => {
             c.discardRandom(2); c.thorns(u.i(8));
         }, EX) }) },
     { slot: 'E-06', option: 'c', name: 'Overgrowth', type: 'spell', color: PURPLE, program: u => ({
-        free: L(`THORNS {thorns:${u.i(3)}}.`, c => { c.thorns(u.i(3)); }),
-        paid: L('Double your THORNS. EXILE.', c => { c.doubleThorns(); }, EX) }) },
+        free: L(`THORNS {thorns:${u.i(3)}}`, c => { c.thorns(u.i(3)); }),
+        paid: L('2× your THORNS. EXILE', c => { c.doubleThorns(); }, EX) }) },
     { slot: 'E-07', option: 'c', name: 'Thorn Lash', type: 'attack', color: RED, program: u => ({
-        free: L(`DEAL {deal:${u.m(1)}}, THORNS {thorns:${u.i(2)}}.`, c => { c.deal(u.m(1)); c.thorns(u.i(2)); }),
-        paid: L(`Discard 1 card at random. DEAL {deal:${u.m(5)}}, THORNS {thorns:${u.i(5)}}.`, c => {
+        free: L(`DEAL {deal:${u.m(1)}}, THORNS {thorns:${u.i(2)}}`, c => { c.deal(u.m(1)); c.thorns(u.i(2)); }),
+        paid: L(`DISCARD 1. DEAL {deal:${u.m(5)}}, THORNS {thorns:${u.i(5)}}`, c => {
             c.discardRandom(1); c.deal(u.m(5)); c.thorns(u.i(5));
         }) }) },
     { slot: 'E-08', option: 'b', name: 'Polished Shell', type: 'skill', color: BLUE, program: u => ({
-        free: L(`GUARD {guard:${u.m(3)}}, REFLECT ${u.m(25)}%.`, c => { c.guard(u.m(3)); c.reflect(u.m(25)); }),
-        paid: L(`GUARD {guard:${u.m(6)}}, REFLECT ${u.m(50)}%.`, c => { c.guard(u.m(6)); c.reflect(u.m(50)); }) }) },
+        free: L(`GUARD {guard:${u.m(3)}}, REFLECT ${u.m(25)}%`, c => { c.guard(u.m(3)); c.reflect(u.m(25)); }),
+        paid: L(`GUARD {guard:${u.m(6)}}, REFLECT ${u.m(50)}%`, c => { c.guard(u.m(6)); c.reflect(u.m(50)); }) }) },
     // T: "Can't wrap yourself in roses and expect not to get pricked."
     { slot: 'E-09', option: 'c', name: 'Rose Wrap', type: 'global', color: PURPLE, program: u => turnGlobal(
-        `lose 3 VITAE, THORNS {thorns:${u.i(3)}}.`, c => { c.loseVitae(3); c.thorns(u.i(3)); }) },
+        `lose 3 VITAE, THORNS {thorns:${u.i(3)}}`, c => { c.loseVitae(3); c.thorns(u.i(3)); }) },
     { slot: 'E-10', option: 'c', name: 'Gather Thistles', type: 'skill', color: RED, program: u => ({
-        free: L(`DRAW 1, THORNS {thorns:${u.i(1)}}.`, c => { c.draw(1); c.thorns(u.i(1)); }),
-        paid: L(`DRAW 2, THORNS {thorns:${u.i(2)}}.`, c => { c.draw(2); c.thorns(u.i(2)); }) }) },
+        free: L(`DRAW 1, THORNS {thorns:${u.i(1)}}`, c => { c.draw(1); c.thorns(u.i(1)); }),
+        paid: L(`DRAW 2, THORNS {thorns:${u.i(2)}}`, c => { c.draw(2); c.thorns(u.i(2)); }) }) },
 
     // ── MISC: utility around it ──────────────────────────────────────────────
     { slot: 'M-01', option: 'b', name: 'Hunker Down', type: 'skill', color: BLUE, program: u => ({
-        free: L(`DRAW 1, GUARD {guard:${u.m(4)}}.`, c => { c.draw(1); c.guard(u.m(4)); }),
-        paid: L(`DRAW 2, GUARD {guard:${u.m(8)}}.`, c => { c.draw(2); c.guard(u.m(8)); }) }) },
+        free: L(`DRAW 1, GUARD {guard:${u.m(4)}}`, c => { c.draw(1); c.guard(u.m(4)); }),
+        paid: L(`DRAW 2, GUARD {guard:${u.m(8)}}`, c => { c.draw(2); c.guard(u.m(8)); }) }) },
     { slot: 'M-02', option: 'b', name: 'Mend the Shell', type: 'skill', color: BLUE, program: () => ({
-        free: L('HEAL equal to your GUARD.', c => { c.heal(0, { plus: c.q.guard }); }),
-        paid: L('HEAL equal to your GUARD + your THORNS.', c => { c.heal(0, { plus: c.q.guard + c.q.thorns }); }) }) },
+        free: L('HEAL = your GUARD', c => { c.heal(0, { plus: c.q.guard }); }),
+        paid: L('HEAL = your GUARD + your THORNS', c => { c.heal(0, { plus: c.q.guard + c.q.thorns }); }) }) },
     { slot: 'M-03', option: 'b', name: 'Crack the Armour', type: 'skill', color: RED, program: u => ({
-        free: L(`GUARD {guard:${u.m(3)}}, VULNERABLE +{vuln:${u.m(50)}}% for 1 turn.`, c => {
+        free: L(`GUARD {guard:${u.m(3)}}, VULNERABLE {vuln:${u.m(50)}}% for 1 turn`, c => {
             c.guard(u.m(3)); c.vulnerable(u.m(50), 1);
         }),
-        paid: L(`GUARD {guard:${u.m(6)}}, VULNERABLE +{vuln:${u.m(75)}}% for 2 turns.`, c => {
+        paid: L(`GUARD {guard:${u.m(6)}}, VULNERABLE {vuln:${u.m(75)}}% for 2 turns`, c => {
             c.guard(u.m(6)); c.vulnerable(u.m(75), 2);
         }) }) },
     { slot: 'M-04', option: 'b', name: 'Draw In', type: 'skill', color: BLUE, program: u => ({
-        free: L(`GUARD {guard:${u.m(4)}}.`, c => { c.guard(u.m(4)); }),
-        paid: L(`GUARD {guard:${u.m(4)}}. You don't lose your GUARD at the end of the enemy's turn this turn.`, c => {
+        free: L(`GUARD {guard:${u.m(4)}}`, c => { c.guard(u.m(4)); }),
+        paid: L(`GUARD {guard:${u.m(4)}}, keep your GUARD after the foe's turn`, c => {
             c.guard(u.m(4)); c.holdGuard();
         }) }) },
     { slot: 'M-05', option: 'c', name: 'Prickly Resolve', type: 'skill', color: RED, program: u => ({
-        free: L(`Gain ${u.i(1)} Conviction. THORNS {thorns:${u.i(1)}}.`, c => { c.conviction(u.i(1)); c.thorns(u.i(1)); }),
-        paid: L(`Discard 1 card at random. Gain ${u.i(3)} Conviction. THORNS {thorns:${u.i(2)}}.`, c => {
+        free: L(`CONVICTION ${u.i(1)}, THORNS {thorns:${u.i(1)}}`, c => { c.conviction(u.i(1)); c.thorns(u.i(1)); }),
+        paid: L(`DISCARD 1. CONVICTION ${u.i(3)}, THORNS {thorns:${u.i(2)}}`, c => {
             c.discardRandom(1); c.conviction(u.i(3)); c.thorns(u.i(2));
         }) }) },
     { slot: 'M-06', option: 'b', name: 'Steady Shell', type: 'global', color: PURPLE, program: () => turnGlobal(
-        'DRAW 1.', c => { c.draw(1); }) },
+        'DRAW 1', c => { c.draw(1); }) },
     { slot: 'M-07', option: 'c', name: 'Rummage', type: 'skill', color: PURPLE, program: () => ({
-        free: L('RETRIEVE 1.', c => { c.retrieve(1); }),
-        paid: L('Return a random exiled card to your draw pile.', c => { c.unexileRandom(); }) }) },
+        free: L('RETRIEVE 1', c => { c.retrieve(1); }),
+        paid: L('Return 1 random card from EXILE to your deck', c => { c.unexileRandom(); }) }) },
     { slot: 'M-08', option: 'c', name: 'Nettle Poke', type: 'attack', color: RED, program: u => ({
-        free: L(`DEAL {deal:${u.m(1)}}, THORNS {thorns:${u.i(2)}}.`, c => { c.deal(u.m(1)); c.thorns(u.i(2)); }),
-        paid: L(`DEAL {deal:${u.m(2)}}, THORNS {thorns:${u.i(2)}}, DRAW 1.`, c => {
+        free: L(`DEAL {deal:${u.m(1)}}, THORNS {thorns:${u.i(2)}}`, c => { c.deal(u.m(1)); c.thorns(u.i(2)); }),
+        paid: L(`DEAL {deal:${u.m(2)}}, THORNS {thorns:${u.i(2)}}, DRAW 1`, c => {
             c.deal(u.m(2)); c.thorns(u.i(2)); c.draw(1);
         }) }) },
     // T: a property of the card, printed once, fired by a random discard and by the scrap.
     { slot: 'M-09', option: 'a', name: 'Loose the Barbs', type: 'attack', color: RED,
         onDiscard: u => ({
-            text: `If this card is discarded, THORNS {thorns:${u.i(2)}}.`,
+            text: `If discarded, THORNS {thorns:${u.i(2)}}`,
             run: c => { c.thorns(u.i(2)); },
         }),
         program: u => ({
-        free: L(`GUARD {guard:${u.m(4)}}.`, c => { c.guard(u.m(4)); }),
-        paid: L(`DEAL {deal:${u.m(5)}}, GUARD {guard:${u.m(4)}}.`, c => { c.deal(u.m(5)); c.guard(u.m(4)); }) }) },
+        free: L(`GUARD {guard:${u.m(4)}}`, c => { c.guard(u.m(4)); }),
+        paid: L(`DEAL {deal:${u.m(5)}}, GUARD {guard:${u.m(4)}}`, c => { c.deal(u.m(5)); c.guard(u.m(4)); }) }) },
     // T's own card: the withdraw slot, cut and rewritten as a Global.
     { slot: 'M-10', option: 'new', name: 'Lacquer the Plate', type: 'global', color: PURPLE, program: u => turnGlobal(
-        `REFLECT ${u.m(15)}%.`, c => { c.reflect(u.m(15)); }) },
+        `REFLECT ${u.m(15)}%`, c => { c.reflect(u.m(15)); }) },
 ];
 
 /** The card id of a slot: `df-p-01a`; T's own M-10 is `df-m-10n`. */

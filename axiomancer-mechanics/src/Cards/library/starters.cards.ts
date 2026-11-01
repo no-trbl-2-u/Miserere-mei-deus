@@ -27,7 +27,7 @@ const greyStrike: Card = {
         'hitting you. It works today the same as it will in a month.',
     tier: 1, rank: 1, cardType: 'attack',
     targetType: 'enemy',
-    paidSummary: 'Deal 5.',
+    paidSummary: 'DEAL 5',
     free: { damage: 2 },
     specialMechanics: [{ kind: 'deal', amount: 5 }],
     addedIn: GREY_ADDED,
@@ -43,7 +43,7 @@ const greyWard: Card = {
         'between yourself and the thing that wants in.',
     tier: 1, rank: 1, cardType: 'skill',
     targetType: 'self',
-    paidSummary: 'GUARD 5.',
+    paidSummary: 'GUARD 5',
     free: { guard: 2 },
     specialMechanics: [{ kind: 'guard', amount: 5 }],
     addedIn: GREY_ADDED,
@@ -61,7 +61,7 @@ const greyWord: Card = {
         'is, and it cannot unhear you.',
     tier: 1, rank: 1, cardType: 'spell',
     targetType: 'enemy',
-    paidSummary: 'VULNERABLE +25% for 2 turns.',
+    paidSummary: 'VULNERABLE 25% for 2 turns',
     // +25% for 2 turns, adds up and refreshes on re-application; FREE is
     // the same verb at whisper volume. Both scale with heart.
     free: { applyEffect: { effectId: 'debuff_vulnerable', intensity: 10, duration: 1 } },

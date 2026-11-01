@@ -59,6 +59,19 @@ somewhere else ("instead of what?"), so it is never printed. `burning` is not a 
 A word outside this list, the keywords and the entities is a lint failure. A new logic word is T's call and is
 added here first.
 
+### Pending T
+
+The library rewrite met effects this list cannot say (a plain VITAE loss, a cut to the foe's next attack, a card
+returned from EXILE). Each line below took the fewest new words it could, and the lint accepts them
+(`FACE_PENDING_LOGIC_WORDS`, `FACE_PENDING_CONTENT_WORDS` in `card-rules.ts`) until T rules: keep a word (it moves
+up into the table) or reword its cards (it goes).
+
+- Logic: `this`, `next`, `last`, `is`, `not`, `while`, `to`, `from`, `in`, `with`, `only`, `more`, `less`, `over`,
+  `below`, `max`, and `+` between two values (`DEAL 2 + your INFERNO`); `+X` is a number.
+- Content: `combat`, `damage`, `dealt`, `took`, `lost`, `healed`, `played`, `missing`, `lose`, `loses`, `card`,
+  `cards`, `deck`, `discarded`, `debuffs`, `element`, `elements`, `attack`, `attacks`, `hit`, `time`, `bursts`,
+  `sooner`, `grows`, `return`, `remove`, `move`, `swap`, `keep`, `take`, `cannot`, `random`.
+
 ## 4. Who it lands on
 
 - **DEAL hits the foe. GUARD, SACRIFICE and CONVICTION are yours.** The keyword says so, so the line never does.

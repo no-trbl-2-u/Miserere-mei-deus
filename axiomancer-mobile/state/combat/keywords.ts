@@ -67,7 +67,7 @@ const MECHANIC_KEYWORD: Record<string, string> = {
  * The table holds only words something live prints: the grey office
  * (GUARD/VULNERABLE), the Blood Price trial cards (SACRIFICE, WAIVE, EXILE,
  * HEAL, TETHER, LEECH), the Elementalist's weather (INFERNO, BLIZZARD, FROZEN,
- * STORM, DRAW), the Defender's spikes (THORNS, REFLECT, RETRIEVE), the
+ * STORM, DRAW), the Defender's spikes (THORNS, REFLECT, RETRIEVE, DISCARD), the
  * healing potions (HEAL), the Merciful's RADIANCE, MERCY and YIELDING, a map
  * hazard (BLEED), the dice system (PIP, BOON, HONE, TEMPER) and the enemy
  * words (WARD, MEND, SCOUR, BRINE, with VULNERABLE and LEECH landing on you).
@@ -91,7 +91,7 @@ const KEYWORD_GLOSS: Record<string, string> = {
     // ── Affliction ──
     Bleed: 'Each hit the bearer takes deals 3 more VITAE per Bleed stack, then removes a stack.',
     Vulnerable:
-        'The bearer takes that much more damage from every hit, and more stacks it and refreshes the turns. '
+        'VULNERABLE 25% means 25% more damage from every hit, and more stacks it and refreshes the turns. '
         + 'On you, GUARD still blocks the larger hit.',
     Tether: 'For that many turns, each SACRIFICE makes the foe take damage equal to the VITAE it paid.',
     Leech:
@@ -111,6 +111,7 @@ const KEYWORD_GLOSS: Record<string, string> = {
         'Each foe strike sends that % of its damage before GUARD back to the foe, and you still take the hit. '
         + 'It lasts 2 turns, and more REFLECT adds to it and refreshes it.',
     Retrieve: 'Return that many random cards from your discard to your hand.',
+    Discard: 'Discard that many cards from your hand, always at random. It is a cost, paid before the rest of the line.',
     // ── The enemy words: what a foe's move can do, each with its counter ──
     Ward:
         "The foe's GUARD: it soaks your DEALs before its VITAE and is gone at the start of its next turn. "
@@ -216,7 +217,10 @@ export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
     { term: 'CONVICTION ◆', def: 'A spend-anytime resource banked from unspent dice and overflow. It never decays.' },
     { term: 'RESERVE & PIPS', def: 'Up to 2 dice held between phases instead of played. Each gains +1 pip per phase it survives, spent for extra intensity or Guard.' },
     { term: 'WILD / X', def: "A WILD die counts as any color. A dead X die powers nothing, unlike an X on a card's line, which means the amount varies." },
-    { term: 'GLOBAL', def: 'Stays in play and fires on its trigger (⟳ your turn starts, 🩸 you SACRIFICE): 3 turns played FREE, all combat PAID. Copies stack (experimental).' },
+    { term: 'GLOBAL', def: 'Stays in play and fires on its trigger (⟳ your turn starts, 🩸 you SACRIFICE): 3 turns played FREE, the whole combat played PAID. Copies stack (experimental).' },
+    { term: 'READING A LINE', def: 'Steps resolve left to right, and a full stop parts a cost from what it pays for. Debuffs land on the foe.' },
+    { term: 'HALF YOUR VITAE', def: 'At half your VITAE means at half your max VITAE or less.' },
+    { term: 'ELEMENTS', def: 'INFERNO, BLIZZARD and STORM are the elements.' },
     { term: 'CURSE', def: 'A dead card that holds a hand slot until played. It cannot be scrapped.' },
     { term: 'HOLDS', def: 'GUARD holds: you have taken no damage this turn. A card that works "while GUARD holds" stops the moment a hit gets through.' },
 ];
@@ -231,6 +235,9 @@ const SYSTEM_TERM_MATCH: Record<string, RegExp> = {
     'GLOBAL': /\bGlobal\b/,
     'CURSE': /\bCurses?\b/,
     'HOLDS': /\bGUARD holds\b/i,
+    'READING A LINE': /,/,
+    'HALF YOUR VITAE': /\bhalf your VITAE\b/,
+    'ELEMENTS': /\belements?\b/,
 };
 
 /** Keyword chips whose own gloss already explains a system term — when such a

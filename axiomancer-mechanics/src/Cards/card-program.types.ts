@@ -260,16 +260,17 @@ export interface ProgramLine {
  */
 export type GlobalTrigger = 'turn' | 'sac' | 'curse';
 
-/** A Global card: one trigger, a FREE body and an optional PAID change. */
+/**
+ * A Global card: one trigger and one effect (T, 2026-11-01). Played FREE it
+ * stays in play 3 turns, played PAID the whole combat; nothing else differs,
+ * so a Global has no FREE body or PAID change of its own.
+ */
 export interface ProgramGlobal {
     trigger: GlobalTrigger;
-    /** The printed trigger body (FREE: in play 3 turns), with number tokens. */
+    /** The printed effect, after the trigger, with number tokens and no duration. */
     text: string;
-    /** The printed PAID change (PAID: in play for the rest of combat), when the PAID line changes anything. */
-    paidDelta?: string;
-    /** `n` is the SACRIFICE amount for a 🩸 trigger, 0 otherwise. */
-    free: (c: ProgramCtx, n: number) => void;
-    paid: (c: ProgramCtx, n: number) => void;
+    /** The effect. `n` is the SACRIFICE amount for a 🩸 trigger, 0 otherwise. */
+    run: (c: ProgramCtx, n: number) => void;
     /** While in play, the STORM grows by this much extra each foe turn. */
     stormGrowth?: number;
 }

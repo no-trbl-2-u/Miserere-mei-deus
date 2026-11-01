@@ -21,7 +21,7 @@
  *   parseAtlasKeywords(markdown)        atlas rows with their Card / Rule kind
  *   checkComplexityBudget(cards, kws)   keywords and conditions by rank
  *   checkScrapFloor(cards)              a line that only gains 1 Conviction
- *   checkGlobalTemplate(cards)          trigger first, no duration, PAID only if it differs
+ *   checkGlobalTemplate(cards)          trigger first, no duration in its effect
  *   checkCarrierRule(input)             every atlas word carried; every printed word in the atlas
  *   spellPaidPayoffs(card)              a Spell's applied PAID payoffs at the law's probe
  *   checkSpellLaw(cards)                a Spell's PAID EXILEs, its FREE does not, its PAID is a step up
@@ -82,7 +82,8 @@ export const COMPLEXITY_BUDGET: Readonly<Record<CardRank, { keywords: number; co
 /** Condition phrases in printed text, each with the label it counts as. A
  *  Global's trigger and a line's `requires` count too (`cardConditions`). */
 const CONDITION_PHRASES: readonly (readonly [RegExp, string])[] = [
-    [/\bat half VITAE or less\b/i, 'at half VITAE'],
+    [/\bat half (your )?VITAE\b/i, 'at half VITAE'],
+    [/\bbelow half (your )?VITAE\b/i, 'below half VITAE'],
     [/\beach time\b/i, 'each time'],
     [/\bwhen you\b/i, 'when you'],
     [/\bif\b/i, 'if'],
@@ -138,7 +139,7 @@ export function cardConditions(card: Card): string[] {
     if (g) labels.add(`trigger: ${g.trigger}`);
     const texts = [card.program?.free, card.program?.paid]
         .flatMap(line => line ? [line.text, line.requires?.why ?? ''] : []);
-    if (g) texts.push(g.text, g.paidDelta ?? '');
+    if (g) texts.push(g.text);
     if (!card.program) texts.push(card.paidSummary ?? '');
     for (const [re, label] of CONDITION_PHRASES) {
         if (texts.some(t => re.test(t))) labels.add(label);
@@ -250,7 +251,7 @@ export function checkScrapFloor(cards: readonly Card[]): CardRuleViolation[] {
         if (p.paid) lines.push(['PAID', p.paid.run]);
         if (p.global) {
             const g = p.global;
-            lines.push(['FREE', c => g.free(c, 2)], ['PAID', c => g.paid(c, 2)]);
+            lines.push(['GLOBAL', c => g.run(c, 2)]);
         }
         const dead = lines
             .filter(([, run]) => PROBE_QUERIES.some(q => onlyOneConviction(recordVerbs(run, q))))
@@ -274,8 +275,8 @@ export function checkDiscardCost(cards: readonly Card[]): CardRuleViolation[] {
     for (const card of cards) {
         const p = card.program;
         if (!p) continue;
-        const free: (c: ProgramCtx) => void = p.free?.run ?? (p.global ? c => p.global!.free(c, 2) : () => {});
-        const paid: (c: ProgramCtx) => void = p.paid?.run ?? (p.global ? c => p.global!.paid(c, 2) : () => {});
+        const free: (c: ProgramCtx) => void = p.free?.run ?? (p.global ? c => p.global!.run(c, 2) : () => {});
+        const paid: (c: ProgramCtx) => void = p.paid?.run ?? (p.global ? c => p.global!.run(c, 2) : () => {});
         const bad: string[] = [];
         for (const q of PROBE_QUERIES) {
             if (recordVerbs(free, q).some(v => DISCARD_VERBS.has(v.verb))) bad.push('FREE discards');
@@ -300,10 +301,10 @@ const TRIGGER_OPENERS: readonly string[] = Object.values(GLOBAL_TRIGGER_TEXT).ma
  * The Global text template (T, 2026-09-30). A Global card:
  *   - is a `global` program with one trigger from the closed set, and its
  *     printed lines open with that trigger (after the badge glyph);
- *   - prints no duration in its rules text (the FREE ⏳3 / PAID ∞ badges
- *     carry it; the authored body and PAID change are checked, not the
- *     face projection's "In play 3 turns." stand-in);
- *   - prints a PAID change only when it differs from the FREE body.
+ *   - prints no duration in its effect (the FREE ⏳3 / PAID ∞ badges carry
+ *     it; the authored effect is checked, not the face projection's
+ *     "In play 3 turns." stand-in).
+ * A Global has one effect (T, 2026-11-01), so there is no PAID change to judge.
  * A non-Global card must not carry a Global program.
  */
 export function checkGlobalTemplate(cards: readonly Card[]): CardRuleViolation[] {
@@ -321,11 +322,7 @@ export function checkGlobalTemplate(cards: readonly Card[]): CardRuleViolation[]
                 const body = text.replace(/^[^A-Za-z]+/, '');
                 if (!TRIGGER_OPENERS.some(o => body.startsWith(o))) issues.push(`${name} does not open with a closed-set trigger`);
             }
-            if (DURATION_RE.test(g.text)) issues.push(`the body prints a duration ("${g.text}")`);
-            if (g.paidDelta !== undefined) {
-                if (DURATION_RE.test(g.paidDelta)) issues.push(`the PAID change prints a duration ("${g.paidDelta}")`);
-                if (g.paidDelta.trim() === '' || g.paidDelta.trim() === g.text.trim()) issues.push('a PAID line that changes nothing');
-            }
+            if (DURATION_RE.test(g.text)) issues.push(`the effect prints a duration ("${g.text}")`);
         }
         if (issues.length) out.push({ rule: 'global-template', id: card.id, detail: issues.join('; ') });
     }
@@ -500,23 +497,21 @@ export function checkSpellLaw(cards: readonly Card[]): CardRuleViolation[] {
 /** One printed line the face grammar reads: its name, its text with number
  *  tokens read as numbers, and whether it is a Global's face line. */
 export interface FaceLine {
-    readonly name: 'FREE' | 'PAID' | 'GLOBAL' | 'GLOBAL PAID';
+    readonly name: 'FREE' | 'PAID' | 'GLOBAL';
     readonly text: string;
     readonly global: boolean;
 }
 
 /**
  * The lines a card prints, as the grammar reads them: a card's FREE and PAID
- * lines (`cardLinesText`, the discard rider included), or a Global's body and
- * PAID change. A Global's trigger opener and the face projection's duration
+ * lines (`cardLinesText`, the discard rider included), or a Global's one
+ * effect. A Global's trigger opener and the face projection's duration
  * stand-in are not card text, so they are not read. A missing line is skipped.
  */
 export function faceLines(card: Card): FaceLine[] {
     const g = card.program?.global;
     if (g) {
-        const out: FaceLine[] = [{ name: 'GLOBAL', text: untoken(programText(g.text, undefined)), global: true }];
-        if (g.paidDelta !== undefined) out.push({ name: 'GLOBAL PAID', text: untoken(programText(g.paidDelta, undefined)), global: true });
-        return out;
+        return [{ name: 'GLOBAL', text: untoken(programText(g.text, undefined)), global: true }];
     }
     const { free, paid } = cardLinesText(card);
     const p = card.program;
@@ -560,11 +555,29 @@ const FACE_LOGIC_WORDS: ReadonlySet<string> = new Set([
  *  added to `docs/card-voice.md` first. */
 const FACE_CONTENT_WORDS: ReadonlySet<string> = new Set(['spent']);
 
+/**
+ * Words the library rewrite needed for effects the closed lists above cannot
+ * say (a plain VITAE loss, a next-attack cut, a card returned from EXILE),
+ * each awaiting T's ruling in `docs/card-voice.md` §3 ("Pending T"). The
+ * logic words join a step to a condition or a value; the content words name a
+ * thing or an action that has no keyword. Moving one to the lists above, or
+ * rewording its card and deleting it here, is T's call.
+ */
+const FACE_PENDING_LOGIC_WORDS: ReadonlySet<string> = new Set([
+    'this', 'next', 'last', 'is', 'not', 'while', 'to', 'from', 'in', 'with', 'only', 'more', 'less',
+    'over', 'below', 'max', '+',
+]);
+const FACE_PENDING_CONTENT_WORDS: ReadonlySet<string> = new Set([
+    'combat', 'damage', 'dealt', 'took', 'lost', 'healed', 'played', 'missing', 'lose', 'loses',
+    'card', 'cards', 'deck', 'discarded', 'debuffs', 'element', 'elements', 'attack', 'attacks', 'hit', 'time', 'bursts',
+    'sooner', 'grows', 'return', 'remove', 'move', 'swap', 'keep', 'take', 'cannot', 'random',
+]);
+
 /** Capitalised words that are a number or an entity, not a keyword. */
 const FACE_UPPER_NON_KEYWORDS: ReadonlySet<string> = new Set(['X', 'VITAE']);
 
-/** A number token: `6`, `75%`, `+2`, `2×`, `X`, or the `=` that copies a value. */
-const FACE_NUMBER_RE = /^(?:\+?\d+%?|\d+×|X|=)$/;
+/** A number token: `6`, `75%`, `+2`, `2×`, `X`, `+X`, or the `=` that copies a value. */
+const FACE_NUMBER_RE = /^(?:\+?\d+%?|\d+×|\+?X|=)$/;
 
 /** A line's words: punctuation (`,` `;` `:` `.` and brackets) parts them. */
 const faceWords = (text: string): string[] => text.split(/[\s,;:.()]+/).filter(Boolean);
@@ -592,6 +605,7 @@ function faceLineIssues(line: FaceLine, keywords: ReadonlySet<string>): string[]
         }
         const lower = word.toLowerCase();
         if (FACE_ENTITY_WORDS.has(lower) || FACE_LOGIC_WORDS.has(lower) || FACE_CONTENT_WORDS.has(lower)) continue;
+        if (FACE_PENDING_LOGIC_WORDS.has(lower) || FACE_PENDING_CONTENT_WORDS.has(lower)) continue;
         outside.push(word);
     }
     if (notCapitals.length) issues.push(`a keyword not in capitals (${[...new Set(notCapitals)].join(', ')})`);
@@ -605,7 +619,8 @@ function faceLineIssues(line: FaceLine, keywords: ReadonlySet<string>): string[]
  * `2×`, `X`, `=`), the entities (you, your, the, foe, foe's, hand, VITAE) and
  * the closed logic words (or, at, if, has, half, for, each, twice, after,
  * turn, turns, when, start, of, spend, all, and `,` `;` `:` `.`), plus the
- * closed content list (`spent`, as in `BLIZZARD spent`). A line fails on any
+ * closed content list (`spent`, as in `BLIZZARD spent`), and the words pending
+ * T's ruling (`FACE_PENDING_LOGIC_WORDS`, `FACE_PENDING_CONTENT_WORDS`). A line fails on any
  * retired form (`RETIRED_FORMS`, and a duration on a Global's line) and on
  * any other word. One violation per card; its detail names each line's breaks.
  *
@@ -667,8 +682,8 @@ function calledSteps(run: (c: ProgramCtx) => void, q: ProgramQuery): string[] {
 
 /**
  * Text order is resolution order (`docs/card-voice.md` §2). For each line a
- * program can read (FREE, PAID, the discard rider, a Global's body and PAID
- * change), under each probe query, the keywords both the text prints as
+ * program can read (FREE, PAID, the discard rider, a Global's one effect),
+ * under each probe query, the keywords both the text prints as
  * steps and the run calls must come in the same order (first appearance of
  * each). A keyword only one side has (a branch the probe did not take, a
  * verb with no keyword) is not judged. Plain cards have no program to read.
@@ -684,8 +699,7 @@ export function checkTextOrder(cards: readonly Card[]): CardRuleViolation[] {
         if (p.onDiscard) lines.push(['discard rider', p.onDiscard.text, p.onDiscard.run]);
         if (p.global) {
             const g = p.global;
-            lines.push(['GLOBAL', g.text, c => g.free(c, 2)]);
-            lines.push(['GLOBAL PAID', g.paidDelta ?? g.text, c => g.paid(c, 2)]);
+            lines.push(['GLOBAL', g.text, c => g.run(c, 2)]);
         }
         const bad = new Set<string>();
         for (const [name, text, run] of lines) {

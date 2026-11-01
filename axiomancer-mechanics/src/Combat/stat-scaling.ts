@@ -234,7 +234,6 @@ function scaleProgramText(p: CardProgram, stats: BaseStats | undefined): CardPro
             global: {
                 ...p.global,
                 text: programText(p.global.text, stats),
-                ...(p.global.paidDelta ? { paidDelta: programText(p.global.paidDelta, stats) } : {}),
             },
         } : {}),
         ...(p.onDiscard ? { onDiscard: { ...p.onDiscard, text: programText(p.onDiscard.text, stats) } } : {}),

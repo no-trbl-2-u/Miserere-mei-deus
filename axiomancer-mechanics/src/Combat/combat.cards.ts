@@ -291,9 +291,9 @@ export function toCombatCard(cardId: string, lookupCard: CardLookup, lookupEffec
     });
     const dotSuffix = authored ? '' : dotFace ? ` (${dotFace})` : preview > 0 && !speciesGlossed ? ` (${preview} over its run)` : '';
     const bottomActionText = programFace
-        ? `PAID — ${programFace.paid} Costs 1 die.`
+        ? `PAID — ${programFace.paid}. Costs 1 die.`
         : authored
-        ? `PAID — ${authored} Costs 1 die.`
+        ? `PAID — ${authored}. Costs 1 die.`
         : `PAID — ${paid}${dotSuffix}. Costs 1 die.`;
 
     return {
@@ -317,15 +317,17 @@ export function toCombatCard(cardId: string, lookupCard: CardLookup, lookupEffec
  *  🩸 SACRIFICE, 📜 Curse played). */
 export const GLOBAL_TRIGGER_TEXT: Readonly<Record<'turn' | 'sac' | 'curse', string>> = Object.freeze({
     turn: '⟳ Start of your turn:',
-    sac: '🩸 When you SACRIFICE n:',
+    sac: '🩸 When you SACRIFICE X:',
     curse: '📜 When you play a Curse:',
 });
 
 /**
- * A program card's FREE and PAID lines as printed. Number tokens print at
- * the numbers already in the card (a stat-scaled copy carries its scaled
- * numbers). A Global prints its trigger, its body and how long it stays in
- * play; its PAID line prints only what changes.
+ * A program card's FREE and PAID lines as printed, in the card voice (no
+ * line-end full stop; `docs/card-voice.md`). Number tokens print at the
+ * numbers already in the card (a stat-scaled copy carries its scaled
+ * numbers). A Global has one effect, so both lines print its trigger and that
+ * effect, each followed by how long it stays in play. A discard rider follows
+ * the PAID line as its own sentence.
  */
 export function programFaceText(card: Card): { free: string; paid: string } {
     const p = card.program;
@@ -333,15 +335,14 @@ export function programFaceText(card: Card): { free: string; paid: string } {
     if (p.global) {
         const opener = GLOBAL_TRIGGER_TEXT[p.global.trigger];
         const body = programText(p.global.text, undefined);
-        const delta = p.global.paidDelta ? programText(p.global.paidDelta, undefined) : body;
         return {
-            free: `${opener} ${body} In play 3 turns.`,
-            paid: `${opener} ${delta} In play for the rest of combat.`,
+            free: `${opener} ${body}. In play 3 turns.`,
+            paid: `${opener} ${body}. In play for the rest of combat.`,
         };
     }
     return {
         free: p.free ? programText(p.free.text, undefined) : 'no effect.',
-        paid: p.paid ? programText(p.paid.text, undefined) + (p.onDiscard ? ` ${programText(p.onDiscard.text, undefined)}` : '') : 'no effect.',
+        paid: p.paid ? programText(p.paid.text, undefined) + (p.onDiscard ? `. ${programText(p.onDiscard.text, undefined)}` : '') : 'no effect.',
     };
 }
 

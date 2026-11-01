@@ -29,16 +29,16 @@ describe('printedKeywords and cardConditions', () => {
     });
 
     it('resolves number tokens and skips structural words', () => {
-        const card: Card = { ...base, program: { free: { text: 'DEAL {deal:3} at half VITAE or less.', run: noop } } };
-        expect(cardLinesText(card).free).toBe('DEAL 3 at half VITAE or less.');
+        const card: Card = { ...base, program: { free: { text: 'DEAL {deal:3} or {deal:6} at half your VITAE', run: noop } } };
+        expect(cardLinesText(card).free).toBe('DEAL 3 or 6 at half your VITAE');
         expect(printedKeywords(card)).toEqual(['DEAL']);
         expect(cardConditions(card)).toEqual(['at half VITAE']);
     });
 
     it('counts a Global trigger as a condition and its type as a printed word', () => {
         const card: Card = { ...base, cardType: 'global', program: {
-            global: { trigger: 'sac', text: 'GUARD n.', free: noop, paid: noop } } };
-        expect(printedKeywords(card)).toEqual(['GLOBAL', 'GUARD', 'SACRIFICE']);
+            global: { trigger: 'sac', text: 'DEAL X', run: noop } } };
+        expect(printedKeywords(card)).toEqual(['DEAL', 'GLOBAL', 'SACRIFICE']);
         expect(cardConditions(card)).toEqual(['trigger: sac']);
     });
 
@@ -109,16 +109,16 @@ describe('checkDiscardCost', () => {
 });
 
 describe('checkGlobalTemplate', () => {
-    const global = (text: string, paidDelta?: string): Card => ({ ...base, cardType: 'global', program: {
-        global: { trigger: 'turn', text, paidDelta, free: noop, paid: noop } } });
+    const global = (text: string): Card => ({ ...base, cardType: 'global', program: {
+        global: { trigger: 'turn', text, run: noop } } });
 
-    it('passes a body with no duration and a PAID change that differs', () => {
-        expect(checkGlobalTemplate([global('GUARD 2.', 'GUARD 4 instead.')])).toEqual([]);
+    it('passes one effect with no duration', () => {
+        expect(checkGlobalTemplate([global('GUARD 2')])).toEqual([]);
     });
 
-    it('flags a printed duration and a PAID line that changes nothing', () => {
-        expect(checkGlobalTemplate([global('GUARD 2 for 3 turns.')])[0].detail).toMatch(/duration/);
-        expect(checkGlobalTemplate([global('GUARD 2.', 'GUARD 2.')])[0].detail).toMatch(/changes nothing/);
+    it('flags a printed duration in the effect', () => {
+        expect(checkGlobalTemplate([global('GUARD 2 for 3 turns')])[0].detail).toMatch(/duration/);
+        expect(checkGlobalTemplate([global('GUARD 2 for the rest of combat')])[0].detail).toMatch(/duration/);
     });
 
     it('flags a Global with no trigger and a trigger on a non-Global', () => {
@@ -212,16 +212,16 @@ describe('checkFaceGrammar', () => {
     });
 
     it('fails a word outside the keywords, numbers, entities and logic words', () => {
-        expect(fails('DEAL 6; HEAL all the damage dealt')).toMatch(/outside the grammar \(HEAL, damage, dealt\)/);
+        expect(fails('DEAL 6; HEAL all the blood shed')).toMatch(/outside the grammar \(HEAL, blood, shed\)/);
         expect(fails('DEAL 3X')).toMatch(/outside the grammar \(3X\)/);
     });
 
-    it('fails a duration on a Global, and reads its body and PAID change, not the face stand-in', () => {
-        const g = (text: string, paidDelta?: string): Card => ({ ...base, cardType: 'global', program: {
-            global: { trigger: 'sac', text, paidDelta, free: noop, paid: noop } } });
+    it('fails a duration on a Global, and reads its one effect, not the face stand-in', () => {
+        const g = (text: string): Card => ({ ...base, cardType: 'global', program: {
+            global: { trigger: 'sac', text, run: noop } } });
         expect(checkFaceGrammar([g('DEAL X')], VOICE_KWS)).toEqual([]);
         expect(checkFaceGrammar([g('GUARD 2 for 3 turns')], VOICE_KWS)[0].detail).toMatch(/GLOBAL: a duration/);
-        expect(checkFaceGrammar([g('GUARD X', 'DEAL X instead')], VOICE_KWS)[0].detail).toMatch(/GLOBAL PAID: "instead"/);
+        expect(checkFaceGrammar([g('DEAL X instead')], VOICE_KWS)[0].detail).toMatch(/GLOBAL: "instead"/);
     });
 
     it('without an atlas, the capitalised words the cards print stand in as keywords', () => {
