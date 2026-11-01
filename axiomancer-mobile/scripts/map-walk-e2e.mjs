@@ -16,8 +16,11 @@
 //      then the dev skip seam wins it, so the walk can go on;
 //   3. bw-w4, a rest: REST, claim, back on the map;
 //   4. bw-m1, a fight (walked back through bw-w2, one tap): won by the seam;
-//   5. bw-m2, a hazard: lands on the route select, and the dev skip seam
-//      crosses it. Playing the board itself is `hazard-e2e.mjs`'s job;
+//   5. bw-m2, a hazard: one of the Breakwater's six puzzle nodes (HP6c), so
+//      Face it opens the puzzle board with no route select; the walk confirms
+//      it as it stands and takes the outcome back to the map. (An old-board
+//      hazard lands on the route select, crossed by the dev skip seam;
+//      playing that board is `hazard-e2e.mjs`'s job);
 //   6. bw-m3, a loot cache: take a card, move on, back on the map;
 //   7. bw-w3, a fight (walked back through bw-m2, bw-m1 and bw-w2): the
 //      reveal, the board on the plain black scene (D32), played to its end by
@@ -156,16 +159,6 @@ async function waitFor(page, testId, what, timeout = 15000) {
         .first()
         .waitFor({ state: 'visible', timeout })
         .catch(() => fail(`${what}: \`${testId}\` never appeared (at ${new URL(page.url()).pathname})`))
-}
-
-/** Wait until one of `testIds` is on screen; returns the first seen, or null. */
-async function waitForAny(page, testIds, timeout) {
-    const until = Date.now() + timeout
-    while (Date.now() < until) {
-        for (const id of testIds) if (await page.getByTestId(id).count()) return id
-        await sleep(150)
-    }
-    return null
 }
 
 /** On the map, idle: the WILDS route, the tab bar up, no encounter reveal. */
@@ -378,15 +371,39 @@ async function skipFight(page, nodeId) {
     log(`${nodeId} fight: won by the skip seam, back on the map`)
 }
 
+/**
+ * A Breakwater hazard is a puzzle node (HP6c): after Face it the puzzle board
+ * opens with no route select. Wait out the opening roll, CONFIRM the board as
+ * it stands, read the outcome, and take its button back to the map.
+ */
+async function playPuzzleNode(page, nodeId) {
+    if (await page.getByTestId('hazard-route-select').count()) fail(`${nodeId}: a puzzle node showed the route select`)
+    await page.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 15000 })
+        .catch(() => fail(`${nodeId}: the puzzle's opening roll never settled`))
+    await page.getByTestId('hazard-play-button').click()
+    await waitFor(page, 'hazard-puzzle-outcome', `${nodeId} puzzle outcome`)
+    const headline = (await page.getByTestId('hazard-puzzle-outcome-headline').innerText().catch(() => '')).trim()
+    await page.getByTestId('hazard-puzzle-done').click()
+    await settleOnMap(page, nodeId)
+    await expectHere(page, nodeId)
+    log(`${nodeId} hazard: the puzzle board (no route select), confirmed as it stood (${headline}), back on the map`)
+}
+
 async function hazard(page) {
     await travelTo(page, 'bw-m2')
     await waitFor(page, 'hazard-stakes', 'bw-m2 hazard stakes card')
     await page.getByTestId('hazard-stakes-face').click()
-    // A puzzle node (the Breakwater's six, HP6c) opens its board with no route
-    // select; every other hazard opens the three-round route select.
-    const board = await waitForAny(page, ['hazard-route-select', 'hazard-puzzle-node'], 15000)
-    if (!board) fail('bw-m2 hazard: neither the route select nor a puzzle board appeared')
-    log(`bw-m2 hazard: opened ${board === 'hazard-puzzle-node' ? 'the puzzle board' : 'the route select'} (the board is hazard-e2e.mjs's)`)
+    // bw-m2 is one of the Breakwater's six puzzle nodes (HP6c); any other
+    // hazard still opens the three-round route select, crossed by the skip seam.
+    const board = await page.locator('[data-testid="hazard-puzzle-node"], [data-testid="hazard-route-select"]').first()
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .then(async () => (await page.getByTestId('hazard-puzzle-node').count()) ? 'puzzle' : 'routes')
+        .catch(() => fail('bw-m2 hazard: neither the puzzle board nor the route select appeared'))
+    if (board === 'puzzle') {
+        await playPuzzleNode(page, 'bw-m2')
+        return
+    }
+    log('bw-m2 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')
     await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 15000 })
         .catch(() => fail('bw-m2: the dev skip seam is not installed'))
     const r = await page.evaluate(() => {
