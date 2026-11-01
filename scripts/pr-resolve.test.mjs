@@ -194,20 +194,29 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
 })
 
 test('the scratch repo carries the plan pending closes: without them a closed chunk reads open with no home', () => {
-  // A live plan with a pending close (133.8, alias NX1h) whose Unscheduled line went with it, as /next's close leaves it.
+  // A live plan with a pending close for an open chunk that sits under Unscheduled, its Unscheduled line gone with it, as /next's close leaves it.
+  // The chunk is read from the live plan (the first open chunk with an Unscheduled line), so settling one never stales this test.
   const live = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-live-'))
   try {
     fs.mkdirSync(path.join(live, 'plan', 'pending'), { recursive: true })
     for (const n of ['.gitattributes', 'LIVE_DEADLINES.md']) fs.copyFileSync(path.join(ROOT, n), path.join(live, n))
     for (const n of fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', n), path.join(live, 'plan', n))
-    write(live, DEADLINES, dropUnscheduled(read(live, DEADLINES), 'NX1h'))
-    write(live, 'plan/pending/133.8.md', ['---', 'close: 133.8', 'date: 2026-11-01', 'says: The weekly nexus sync opens one PR', '---', ''].join('\n'))
+    const unscheduled = read(live, DEADLINES)
+    let pick = null
+    for (const n of fs.readdirSync(path.join(live, 'plan')).filter((n) => /^\d+-.*\.md$/.test(n)).sort()) {
+      for (const m of read(live, 'plan/' + n).matchAll(/^- \[ \] \*\*(\d+\.\d+)\*\*.* alias: ([A-Za-z0-9]+)/gm)) {
+        if (!pick && new RegExp('^- ' + m[2] + ' — ', 'm').test(unscheduled)) pick = { id: m[1], alias: m[2] }
+      }
+    }
+    assert.ok(pick, 'the live plan has an open chunk under Unscheduled')
+    write(live, DEADLINES, dropUnscheduled(unscheduled, pick.alias))
+    write(live, `plan/pending/${pick.id}.md`, ['---', `close: ${pick.id}`, 'date: 2026-11-01', 'says: The chunk closes', '---', ''].join('\n'))
     const { dir, work } = scratch(undefined, live)
     try {
-      assert.ok(fs.existsSync(path.join(work, 'plan/pending/133.8.md')), 'the pending close is copied')
+      assert.ok(fs.existsSync(path.join(work, `plan/pending/${pick.id}.md`)), 'the pending close is copied')
       checkDeadlines(work) // throws when red
-      fs.rmSync(path.join(work, 'plan/pending/133.8.md'))
-      assert.throws(() => checkDeadlines(work), /open row NX1h \[ \] has no Item/, 'without the copy the close is lost')
+      fs.rmSync(path.join(work, `plan/pending/${pick.id}.md`))
+      assert.throws(() => checkDeadlines(work), new RegExp(`open row ${pick.alias} \\[ \\] has no Item`), 'without the copy the close is lost')
     } finally {
       fs.rmSync(dir, { recursive: true, force: true })
     }
