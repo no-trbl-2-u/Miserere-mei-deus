@@ -25,6 +25,13 @@ needs are done):
 - **136.1** (EQ3a)
 - **136.2** (EQ3b)
 - **136.3** (EQ3c)
+- **136.4** (EQ3d)
+- **136.5** (EQ3e)
+- **136.6** (EQ3f)
+- **136.7** (EQ3g)
+- **136.8** (EQ3h)
+- **136.9** (EQ3i)
+- **136.10** (EQ3j)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -92,7 +99,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 5 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
-| 136 | The equipment dock: every slot works, relics keep their place, drag and drop | [136-eq3-equipment-dock.md](136-eq3-equipment-dock.md) | planned | 3 left |
+| 136 | Equipment: the dock fixed with drag and drop, and Chapter 1's weapons and armor | [136-eq3-equipment-dock.md](136-eq3-equipment-dock.md) | planned | 10 left |
 
 ## How the loop reads this folder
 
