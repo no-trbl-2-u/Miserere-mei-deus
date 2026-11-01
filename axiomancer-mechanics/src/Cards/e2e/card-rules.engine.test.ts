@@ -15,6 +15,10 @@
  * Seeding keeps each surviving row's reason and date, drops fixed ones and
  * adds new ones as pinned, so a re-seed at HEAD writes no diff.
  *
+ * The face grammar and the text order (`docs/card-voice.md`) pin one row per
+ * card that breaks them, so a rewritten card that passes leaves a stale row
+ * and fails until the row is deleted.
+ *
  * This file names no trial card id (the trial-set removal test forbids it);
  * the fixture is JSON.
  */
@@ -27,8 +31,8 @@ import type { Card } from '../types';
 import { cardLibrary } from '../cards.library';
 import { upgradeCard } from '../card-upgrades';
 import {
-    checkCarrierRule, checkComplexityBudget, checkDiscardCost, checkGlobalTemplate, checkScrapFloor, checkSpellLaw,
-    parseAtlasKeywords, printedKeywords,
+    checkCarrierRule, checkComplexityBudget, checkDiscardCost, checkFaceGrammar, checkGlobalTemplate, checkScrapFloor,
+    checkSpellLaw, checkTextOrder, parseAtlasKeywords, printedKeywords,
     type CardRuleId, type CardRuleViolation,
 } from '../card-rules';
 import { RESERVE_MAX, RESERVE_PIP_CAP } from '../../Combat/combat.dice';
@@ -42,6 +46,16 @@ const ATLAS_PATH = path.resolve(__dirname, '../../../docs/keyword-atlas.md');
 const FIXTURE_PATH = path.resolve(__dirname, 'card-rules.exemptions.json');
 const SEED = process.env.CARD_RULES_SEED === '1';
 const PINNED_REASON = "pinned at CS1, awaits T's card session";
+/** A new row's reason by rule: the face-grammar rows are today's wording, which the rewrite empties. */
+const PINNED_REASONS: Partial<Record<CardRuleId, string>> = {
+    'face-grammar': "pinned at CF1a: today's wording, rewritten to docs/card-voice.md by CF1b",
+    'text-order': "pinned at CF1a: today's wording, rewritten to docs/card-voice.md by CF1b",
+};
+
+/** The rules the fence runs, each with its own fresh and stale check. */
+const FENCED_RULES = [
+    'complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule', 'spell-law', 'face-grammar', 'text-order',
+] as const satisfies readonly CardRuleId[];
 
 interface Exemption {
     rule: CardRuleId;
@@ -52,6 +66,8 @@ interface Exemption {
 
 const ATLAS = parseAtlasKeywords(fs.readFileSync(ATLAS_PATH, 'utf8'));
 const CARD_KEYWORDS = new Set(ATLAS.filter(a => a.kind === 'card').map(a => a.word));
+/** Every atlas word, the keywords the face grammar admits in capitals. */
+const ATLAS_WORDS = new Set(ATLAS.map(a => a.word));
 
 /**
  * Words carried outside the card library (the carrier rule's list: dice and blacksmith
@@ -90,6 +106,8 @@ function allViolations(cards: readonly Card[]): CardRuleViolation[] {
         }),
         ...checkSpellLaw(cards),
         ...checkDiscardCost(cards),
+        ...checkFaceGrammar(cards, ATLAS_WORDS),
+        ...checkTextOrder(cards),
     ];
 }
 
@@ -105,7 +123,7 @@ function seedExemptions(violations: readonly CardRuleViolation[], prior: readonl
     const kept = new Map(prior.map(e => [key(e), e]));
     const today = new Date().toISOString().slice(0, 10);
     const rows = violations
-        .map(v => kept.get(key(v)) ?? { rule: v.rule, id: v.id, reason: PINNED_REASON, filed: today })
+        .map(v => kept.get(key(v)) ?? { rule: v.rule, id: v.id, reason: PINNED_REASONS[v.rule] ?? PINNED_REASON, filed: today })
         .sort((a, b) => key(a).localeCompare(key(b)));
     const unique = rows.filter((r, i) => i === 0 || key(r) !== key(rows[i - 1]));
     fs.writeFileSync(FIXTURE_PATH, `${JSON.stringify(unique, null, 2)}\n`);
@@ -135,7 +153,7 @@ describe('the card-rules fence reads real inputs', () => {
 
     it('every exemption row is well formed', () => {
         for (const e of EXEMPTIONS) {
-            expect(['complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule', 'spell-law']).toContain(e.rule);
+            expect(FENCED_RULES).toContain(e.rule);
             expect(e.reason.length).toBeGreaterThan(0);
             expect(e.filed).toMatch(/^\d{4}-\d{2}-\d{2}$/);
         }
@@ -143,7 +161,7 @@ describe('the card-rules fence reads real inputs', () => {
     });
 });
 
-for (const rule of ['complexity-budget', 'scrap-floor', 'global-template', 'carrier-rule', 'spell-law'] as const) {
+for (const rule of FENCED_RULES) {
     describe(`rule: ${rule}`, () => {
         it('no card breaks it unless the fixture pins the break', () => {
             const fresh = LIVE.filter(v => v.rule === rule && !EXEMPT_KEYS.has(key(v)))
@@ -195,6 +213,23 @@ describe('each rule fires on a synthetic breaker', () => {
         expect(printedKeywords(card)).toContain('SMITE');
         const v = checkCarrierRule({ cards: [...cardLibrary, card], atlas: ATLAS, nonCardCarriers: NON_CARD_CARRIERS, barExempt: BAR_EXEMPT });
         expect(v.map(x => x.id)).toContain('syn-carrier:SMITE');
+    });
+
+    it('face grammar: a line with a retired form, against the real atlas', () => {
+        const card: Card = { ...base, id: 'syn-grammar', program: {
+            free: { text: 'DEAL 3', run: c => { c.deal(3); } },
+            paid: { text: 'DEAL 6, then gain 2 Conviction.', run: c => { c.deal(6); c.conviction(2); } },
+        } };
+        const v = allViolations([...cardLibrary, card]).filter(x => x.id === 'syn-grammar');
+        expect(v.map(x => x.rule)).toEqual(['face-grammar']);
+        expect(v[0].detail).toMatch(/^PAID: "then"/);
+    });
+
+    it('text order: a line printed out of its resolution order', () => {
+        const card: Card = { ...base, id: 'syn-order', program: {
+            paid: { text: 'GUARD 8, DEAL 4', run: c => { c.deal(4); c.guard(8); } },
+        } };
+        expect(checkTextOrder([card]).map(x => x.id)).toEqual(['syn-order']);
     });
 });
 
