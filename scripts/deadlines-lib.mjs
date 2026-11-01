@@ -17,8 +17,13 @@
 // An Item may also list `Waits on` rows (a sixth column, phase DL2a): loop rows a T
 // act needs. They never tick the Item; the reminder names the open ones beside the act.
 // Everything the loop can finish alone stays silent.
+//
+// A row id resolves from the build plan or, from the nexus v2 cut-over on, from a v2
+// spec chunk's `alias:` (planRows below, phase NX1c); every rule above reads the same.
 
 export const HORIZON_DAYS = 14
+export const BUILD_PLAN_FILE = 'plan/steps/01_build_plan.md'
+export const ARCHIVE_FILE = 'plan/ARCHIVE.md'
 
 // Group 6 is the optional `Waits on` cell: a five-column row still matches, with it undefined.
 export const ITEM_ROW = /^\|\s*(\[[ x]\])\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(.+?)\s*\|\s*(W\d+)\s*\|\s*(.+?)\s*(?:\|\s*(.*?)\s*)?\|\s*$/
@@ -116,6 +121,127 @@ export const parsePhaseRows = (md) =>
             ]
         }),
     )
+
+// --- nexus v2 specs (phase NX1c) ---------------------------------------------
+// At the cut-over each open build-plan row becomes a chunk of a v2 spec
+// (`plan/NN-<slug>.md`) that keeps its old id as an alias, so an Items row naming
+// `SM1a` still resolves:
+//   - [ ] **21.3** Cards read their lane · M · closes A2 · needs 21.2 · alias: SM1a
+// An alias is a row id like any other. Open: its chunk line is in a spec. Waits on
+// T: the chunk is on the README's Held lane, or its line says `(attended)`. Shipped:
+// a finished chunk leaves its spec, so its ARCHIVE.md line carries the alias in the
+// parentheses v2's gate allows after the id:
+//   - 2026-11-12 · 21.3 (alias: SM1a) · Cards read their lane · a1b2c3d
+// A need is met once its chunk's line is gone from every spec (v2's rule), so
+// `requires` lists only the needs still open, each by its first alias when it has one.
+
+/** A v2 spec's file name: `NN-<slug>.md` (nexus scripts/plan-check.mjs SPEC_FILE). */
+export const SPEC_FILE = /^(\d{2,})-[a-z0-9][a-z0-9-]*\.md$/
+const CHUNK_HEAD = /^- \[([ x])\] \*\*(\d{2,}\.\w+)\*\* (.*)$/
+const ARCHIVE_ALIAS = /^- \d{4}-\d{2}-\d{2} · (\d{2,}\.\w+) \(([^)]*)\) · /
+const HELD_LINE = /^- \*\*(\d{2,}\.\w+)\*\* · /
+
+/** The ids an `alias:` field lists (comma separated, backticks allowed). */
+const aliasIds = (text) => {
+    const m = text.match(/(?:^|·)\s*alias(?:es)?:\s*([^·)]+)/)
+    return m ? m[1].replace(/`/g, '').split(',').map((s) => s.trim()).filter(Boolean) : []
+}
+
+/**
+ * A spec's chunk lines, each with its wrapped header joined (continuation lines
+ * indented two spaces that are not sub-bullets, as v2's plan-check joins them).
+ * @returns {{chunk: string, ticked: boolean, aliases: string[], needs: string[], attended: boolean}[]}
+ */
+export const parseSpecChunks = (md) => {
+    const lines = md.split('\n')
+    const out = []
+    let fenced = false
+    for (let i = 0; i < lines.length; i++) {
+        if (/^\s*(```|~~~)/.test(lines[i])) fenced = !fenced
+        const m = !fenced && lines[i].match(CHUNK_HEAD)
+        if (!m) continue
+        let text = m[3]
+        while (i + 1 < lines.length && /^ {2}\S/.test(lines[i + 1]) && !/^ {2}- /.test(lines[i + 1])) text += ` ${lines[++i].trim()}`
+        const fields = text.split(' · ').map((f) => f.trim())
+        const needsField = fields.find((f) => f.startsWith('needs '))?.slice(6).trim() ?? ''
+        out.push({
+            chunk: m[2],
+            ticked: m[1] === 'x',
+            aliases: aliasIds(text),
+            needs: needsField === '—' || needsField === '-' ? [] : needsField.split(',').map((s) => s.trim()).filter(Boolean),
+            attended: /\(attended\)/.test(text),
+        })
+    }
+    return out
+}
+
+/** The chunk ids on the roadmap's Held lane (plan/README.md, `**Held**` up to the next lane or heading). */
+export const parseHeld = (readme) => {
+    const held = new Set()
+    let inHeld = false
+    for (const line of (readme ?? '').split('\n')) {
+        if (/^\*\*Held\*\*/.test(line)) inHeld = true
+        else if (/^\*\*[A-Z]/.test(line) || /^#{1,3} /.test(line)) inHeld = false
+        else if (inHeld) {
+            const m = line.match(HELD_LINE)
+            if (m) held.add(m[1])
+        }
+    }
+    return held
+}
+
+/** ARCHIVE.md lines that name aliases: `- <date> · <chunk> (alias: X, Y) · …`. */
+export const parseArchiveAliases = (archive) =>
+    (archive ?? '')
+        .split('\n')
+        .map((line) => line.match(ARCHIVE_ALIAS))
+        .filter(Boolean)
+        .map(([, chunk, paren]) => ({ chunk, aliases: aliasIds(paren) }))
+        .filter((a) => a.aliases.length)
+
+/**
+ * Every row id the deadline tools resolve, from the build plan and from v2 specs'
+ * aliases, in the shape parsePhaseRows returns plus the file each came from.
+ * `errors` names every id given two homes: an alias on two chunks (or twice on one),
+ * on a chunk and an archive line, or an alias that is also a build-plan row.
+ * @param {{buildPlan?: string | null, specs?: {file: string, md: string}[], readme?: string | null, archive?: string | null}} sources
+ * @returns {{phases: Map<string, {status: string, shipped: boolean, open: boolean, waitsOnT: boolean, requires: string[], source: string}>, errors: string[]}}
+ */
+export const planRows = ({ buildPlan = null, specs = [], readme = null, archive = null }) => {
+    const phases = new Map()
+    const homes = new Map()
+    const home = (id, where) => homes.set(id, [...(homes.get(id) ?? []), where])
+    if (buildPlan != null) {
+        for (const [id, row] of parsePhaseRows(buildPlan)) {
+            phases.set(id, { ...row, source: BUILD_PLAN_FILE })
+            home(id, BUILD_PLAN_FILE)
+        }
+    }
+    const held = parseHeld(readme)
+    const chunks = specs.flatMap(({ file, md }) => parseSpecChunks(md).filter((c) => !c.ticked).map((c) => ({ ...c, file })))
+    const live = new Set(chunks.map((c) => c.chunk))
+    const firstAlias = new Map(chunks.map((c) => [c.chunk, c.aliases[0] ?? c.chunk]))
+    const needOpen = (need) => (need.includes('.') ? live.has(need) : chunks.some((c) => c.chunk.startsWith(`${need}.`)))
+    for (const c of chunks) {
+        const requires = c.needs.filter(needOpen).map((need) => firstAlias.get(need) ?? need)
+        for (const id of c.aliases) {
+            home(id, `${c.file} chunk ${c.chunk}`)
+            if (phases.has(id)) continue
+            phases.set(id, { status: ' ', shipped: false, open: true, waitsOnT: c.attended || held.has(c.chunk), requires, source: c.file })
+        }
+    }
+    for (const a of parseArchiveAliases(archive)) {
+        for (const id of a.aliases) {
+            home(id, `${ARCHIVE_FILE} chunk ${a.chunk}`)
+            if (phases.has(id)) continue
+            phases.set(id, { status: 'x', shipped: true, open: false, waitsOnT: false, requires: [], source: ARCHIVE_FILE })
+        }
+    }
+    const errors = [...homes]
+        .filter(([, where]) => where.length > 1)
+        .map(([id, where]) => `${id} is named ${where.length} times (${where.join(', ')}); an id has one home: keep one alias.`)
+    return { phases, errors }
+}
 
 // The last "Requires …." clause: a row's prose can say "Requires" before the clause
 // itself (HP2e: "B3f dropped from Requires when it was cut").

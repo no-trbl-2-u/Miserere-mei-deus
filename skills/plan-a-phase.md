@@ -55,19 +55,7 @@ Use when:
 7. `spec.md` — only if brief touches a surface bearings doesn't
    describe.
 8. **Truth-source MCPs** — when the brief locks card / keyword /
-   mechanic / balance decisions: `axio-query`
-   (`axio_cards` / `axio_effects` / `axio_keywords` — the
-   engine's current facts, never stale) and `kb-query`
-   (`kb_find_games` / `kb_search` / `kb_cards` — external prior
-   art and player-reception evidence, cited
-   `kb:<game-slug>/<doc> (src-NNN)`). A "Decisions made upfront"
-   row backed by a reception receipt or an engine-fact query is
-   the brief doing its job; one argued from model memory is a
-   guess wearing a lock. `axio-query` is an accelerator, not a
-   dependency — grep the libraries when it is absent. `kb-query`
-   is the only route to the external corpus: when it is absent,
-   say the prior art is UNGROUNDED rather than sourcing it from
-   memory unlabeled.
+   mechanic / balance decisions: AGENTS.md § Building a phase ("Truth sources first").
 
 ## 4. The brief format (`plan/phases/phase_<N>_<topic>.md`)
 
@@ -171,13 +159,8 @@ Walk the brief format (§4). For each section, derive content
 from the inputs. Make decisions; document under "Decisions made
 upfront — DO NOT ASK".
 
-**Order of authority for Decisions:** the source-of-truth
-hierarchy in `docs/truth-sources.md` (T's latest explicit
-decision first — for the revamp, the D-numbers and the ratified
-part plans). Phase-specific calls come last and never contradict
-a ruling. If two sources disagree, follow that file's procedure:
-surface the drift and reconcile it (a separate prior commit)
-rather than silently pick one.
+**Order of authority for Decisions**, and citing their D-numbers:
+AGENTS.md § Building a phase ("Order of authority", "Cite the D-numbers").
 
 ### Step 4 — Reality-check against codebase
 

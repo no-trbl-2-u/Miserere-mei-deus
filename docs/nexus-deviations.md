@@ -76,12 +76,14 @@ The dry run is green, but run as-is it would:
 | march | The loop never writes a brief; a briefless row is filed "needs `/plot <N>`" | R11 | conflicts | KEEP (`Promote: owner`) |
 | ship-a-phase | Builds one row from its brief | adoption | replaced by `/next` | TAKE the shape |
 | ship-a-phase | Deadlines rewrite on close (`deadlines.mjs --write`) | DL1b | none | KEEP (into close) |
-| ship-a-phase | axio-query for engine facts, kb-query for prior art, UNGROUNDED label | `0549fab82`, `60b82f575` | none | KEEP (identity) |
-| ship-a-phase | Playtests through the `playtester` agent, up to 4 | PH1b | none | KEEP |
-| ship-a-phase | Monorepo verify per workspace; `check-comments` bans D-numbers in code | RH1 | partial | MERGE |
-| ship-a-phase | Hard rule 9: title, VITAE the one bar, banned terms | D47, D63 | none | KEEP (identity) |
-| ship-a-phase | `[T to confirm #n]` accepted at merge | `0d5d9e4e4` | none | KEEP |
+| ship-a-phase | axio-query for engine facts, kb-query for prior art, UNGROUNDED label | `0549fab82`, `60b82f575` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Truth sources first"), NX1c |
+| ship-a-phase | Playtests through the `playtester` agent, up to 4 | PH1b | none | KEEP: moved to `AGENTS.md` § Building a phase ("Playtests"), NX1c |
+| ship-a-phase | Monorepo verify per workspace; `check-comments` bans D-numbers in code | RH1 | partial | MERGE: the composition moved to `AGENTS.md` § Building a phase ("Verify per workspace"), NX1c |
+| ship-a-phase | Save migration with a test for anything removed from a save | revamp §5 rule 4 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Save compatibility"), NX1c |
+| ship-a-phase | Hard rule 9: title, VITAE the one bar, banned terms | D47, D63 | none | KEEP: moved to `identity/principles.md` P1 to P3, NX1c |
+| ship-a-phase | `[T to confirm #n]` accepted at merge | `0d5d9e4e4` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Calls left open"), NX1c |
 | plan-a-phase | Refresh a brief, attended only | R11, D93 | v2 spec format better | TAKE |
+| plan-a-phase | Cite the D-numbers; `docs/truth-sources.md` order of authority; HISTORICAL specs are background | trim T5, D88 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Order of authority", "Cite the D-numbers"), NX1c |
 | plot | Lands as a `plot` PR T merges; `What you'll see` / `Your calls` body; `@claude 1: yes` answering via claude.yml; merge = agreement | D93, D101, `0d5d9e4e4` | none | KEEP |
 | plot | Every new row gets a home in `plan/deadlines.md` | DL1c, DL2b | none | KEEP (most at risk) |
 | plot | Never fired by the loop (tested) | rule 8 | v2 can fire it | KEEP |
@@ -160,7 +162,7 @@ upgrade either way.
 | bearings knobs | march 2h, timeouts, digest odd days, `/expand` bold | as cited | v2 knob slots | KEEP values |
 | lessons / reflexes | Slug ladder, 2x automate, 3x reflex | R11, D94 | v2 footguns, better | TAKE (keep D94 split) |
 | NEEDS_T | Fixes only T can make | D94 | none | KEEP |
-| deadlines | W1-W5, every Item a T act | T 2026-10-19/28 | none | KEEP (needs an old-id alias map) |
+| deadlines | W1-W5, every Item a T act | T 2026-10-19/28 | none | KEEP: the old-id alias map is the chunk line's `alias:` (shipped: the ARCHIVE line's `(alias: …)`), read by `deadlines.mjs` and `check-deadlines.mjs` since NX1c |
 | AUDIT / CRITIQUE | 178 KB / 320 KB; stale "revamp support" bias | accreted | v2 state diet (256 KB cap) | TAKE, compact |
 | PHASE_CANDIDATES | `[owner]` rows | R11 | `CANDIDATES.md` | TAKE (renamed by the upgrader) |
 | `[blocked: owner-led]` | 9 locks with no timeout | D46/D64 | Held lines with `max_age` | TAKE |

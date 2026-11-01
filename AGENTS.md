@@ -217,6 +217,73 @@ node, flags, seed) boots the mechanics CLI (`--fixture <id>`), seeds a Jest
 store, and deep-links the web build (`?fixture=<id>` /
 `__AXM_FIXTURE__`). Registry: `axiomancer-mechanics/src/Game/fixtures`.
 
+## Building a phase
+
+These rules bind every build and every brief, whatever verb runs it
+(`/ship-a-phase` and `/plan-a-phase` today, nexus v2's `/next` and `/plot`
+after the cut-over, phase NX1d). They were carried here word for word from
+`skills/ship-a-phase.md` and `skills/plan-a-phase.md` (phase NX1c), which
+now point at them. The game's canon (the title, VITAE the one bar, the cut
+terms; D47, D63) is `identity/principles.md` P1 to P3: a hard constraint
+on code, copy and briefs.
+
+- **Truth sources first.** A design or balance decision is made inline by
+  the main agent and consults the truth-source MCPs first (§ Truth
+  sources): `axio-query` for the engine's live card/effect/keyword facts
+  and `kb-query` for external prior art, cited
+  `kb:<game-slug>/<doc> (src-NNN)`. A Decisions bullet with a receipt
+  beats one argued from model memory. When the phase moves balance numbers
+  or re-points or deletes game data (cards, keywords, enemies, maps,
+  events, dialogue), also pull the truth sources first: `axio_overview` /
+  `axio_cards` / `axio_effects` / `axio_keywords` for the engine's own
+  current facts, and `kb_search` / `kb_find_games` / `kb_cards` /
+  `kb_keyword` for external prior art worth citing in the brief or commit
+  body. `axio-query` is an accelerator, not a dependency — grep the
+  libraries directly when it is absent or erroring. `kb-query` is the only
+  route to the external corpus: when it is absent, the prior art is
+  UNGROUNDED and must be labeled so.
+- **Order of authority.** The part plan and its decisions are the design.
+  Specs marked HISTORICAL and `braindump/` are background, never
+  authority; where they disagree with a ruling, `docs/truth-sources.md` §
+  hierarchy decides (T's latest explicit decision first — for the revamp,
+  the D-numbers and the ratified part plans). Phase-specific calls come
+  last and never contradict a ruling. If two sources disagree, follow that
+  file's procedure: surface the drift and reconcile it (a separate prior
+  commit) rather than silently pick one.
+- **Cite the D-numbers.** A brief's Sources name the part plan
+  (`plan/revamp/<area>.md`, section cited) or the `/plot` request, and
+  every decision number the phase rests on (e.g. D47, D88). A brief that
+  cites neither is not done. Every call under "Decisions made upfront" is
+  tied to a D-number, the part plan, or a truth-source receipt; a build's
+  own calls go in its commit body and PR under "Decisions". Decision
+  numbers stay out of code comments (the verify bullet below).
+- **Calls left open at merge are accepted** (`skills/plot.md` §4).
+  Rewrite each `[T to confirm #n]` still in the brief to `Accepted at
+  merge (default)` and build the default it describes; the edit rides in
+  this phase's PR. A `Confirmed by T (<date>): …` line is T's answer:
+  build that.
+- **Playtests go through the `playtester` agent** when the phase needs the
+  running app driven and observed. It plays in its own browser through the
+  playtest session tool (`npm run --silent playtest:session -- prepare`
+  once, then hand each playtester an agent name, a seed and a screenshot
+  directory; four can run at once), not the Playwright MCP. See
+  `.claude/agents/` for what else exists; the archived design agents are
+  not options.
+- **Save compatibility.** Anything removed from a player's save ships with
+  a migration in `axiomancer-mechanics/src/Game/game.migrate.ts` and a
+  test (`plan/revamp/README.md` §5 rule 4).
+- **Verify per workspace.** Scope the gate to the workspace(s) the phase
+  touches (`plan/bearings.md` § Verify gate; the commands under § Verify
+  below; `npm run verify` runs both when in doubt). A change to mechanics'
+  public surface also runs the mobile gate — the `@mechanics` alias
+  couples them. Any change to source also runs root `npm test`: its
+  `check-comments` lint rejects a decision number (`D88`) in a code
+  comment, and the workspace gates never run it (lesson
+  `brief-dnum-in-comments`). An R-phase additionally runs the revamp gates
+  (`plan/revamp/README.md` §5): root `npm test`, `npm run lint:content`
+  and `node scripts/check-lexicon.mjs`. `baseline:check` is retired (D57).
+  All legs are hard.
+
 ## Verify
 
 - `npm run verify --workspace axiomancer-mechanics` — type-check + lint + tests + build

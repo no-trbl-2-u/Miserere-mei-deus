@@ -18,7 +18,12 @@
 //     or whose window has no row there;
 //   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
 //     derives from the build plan (a hand edit; `T` Items are hand-ticked and exempt).
+//   - one row id with two homes (phase NX1c): a v2 spec chunk's `alias:` named twice,
+//     on a chunk and an ARCHIVE.md line, or matching a build-plan row.
 // Both files are read through scripts/deadlines-lib.mjs's parsers, never re-parsed here.
+// A row id resolves from the build plan or from a v2 spec's chunk alias
+// (`plan/NN-<slug>.md`, `… · alias: SM1a`; readPlanSources below), so the lint reads
+// the same before and after the nexus v2 cut-over.
 //
 // It never fails on a `needs plot` Item, an overdue Item or an open `T` task: those
 // are the reminder's job, every chat.
@@ -31,24 +36,41 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { derivedStatus, inWindow, parseItems, parsePhaseRows, parseUnscheduled, parseWindows } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
 
 const DEADLINES = 'plan/deadlines.md'
 const BUILD_PLAN = 'plan/steps/01_build_plan.md'
 
 /**
- * Every disagreement between the deadline plan and the build plan, as messages naming
+ * The files a row id resolves from, read from a repo root: the build plan (null once
+ * it is retired), every v2 spec `plan/NN-<slug>.md`, the roadmap and the archive.
+ * Shared with deadlines.mjs so the reminder and the lint read one plan.
+ * @returns {{buildPlan: string | null, specs: {file: string, md: string}[], readme: string | null, archive: string | null}}
+ */
+export const readPlanSources = (root) => {
+    const readOrNull = (rel) => (fs.existsSync(path.join(root, rel)) ? fs.readFileSync(path.join(root, rel), 'utf8') : null)
+    const specs = fs.readdirSync(path.join(root, 'plan'))
+        .filter((name) => SPEC_FILE.test(name))
+        .sort()
+        .map((name) => ({ file: `plan/${name}`, md: fs.readFileSync(path.join(root, 'plan', name), 'utf8') }))
+    return { buildPlan: readOrNull(BUILD_PLAN), specs, readme: readOrNull('plan/README.md'), archive: readOrNull(ARCHIVE_FILE) }
+}
+
+/**
+ * Every disagreement between the deadline plan and the rows it names, as messages naming
  * the file, the row and what to change. Empty when they agree.
  * @param {string} deadlinesMd
- * @param {string} buildPlanMd
+ * @param {string | {buildPlan?: string | null, specs?: {file: string, md: string}[], readme?: string | null, archive?: string | null}} plan
+ *   the build plan's text, or every source readPlanSources returns
  * @returns {string[]}
  */
-export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
+export const checkDeadlines = (deadlinesMd, plan) => {
     const items = parseItems(deadlinesMd)
-    const phases = parsePhaseRows(buildPlanMd)
+    const resolved = planRows(typeof plan === 'string' ? { buildPlan: plan } : plan)
+    const phases = resolved.phases
     const unscheduled = parseUnscheduled(deadlinesMd)
     const windows = parseWindows(deadlinesMd)
-    const errors = []
+    const errors = resolved.errors.map((e) => `${DEADLINES}: ${e}`)
 
     // An id in `Rows` or in `Waits on` is named; each place is recorded so a clash names both.
     const namedBy = new Map()
@@ -100,7 +122,7 @@ export const checkDeadlines = (deadlinesMd, buildPlanMd) => {
 
     for (const [id, row] of phases) {
         if (!row.open || namedBy.has(id) || excused.has(id)) continue
-        errors.push(`${BUILD_PLAN}: open row ${id} [${row.status || ' '}] has no Item in ${DEADLINES}; give it an Items row with a date, or a "- ${id} — <reason>" line under ## Unscheduled.`)
+        errors.push(`${row.source ?? BUILD_PLAN}: open row ${id} [${row.status || ' '}] has no Item in ${DEADLINES}; give it an Items row with a date, or a "- ${id} — <reason>" line under ## Unscheduled.`)
     }
 
     return errors
@@ -111,7 +133,7 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
     const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8')
-    const errors = checkDeadlines(read(DEADLINES), read(BUILD_PLAN))
+    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root))
     if (errors.length) {
         process.stderr.write(`check-deadlines: ${errors.length} disagreement(s)\n${errors.map((e) => `  - ${e}`).join('\n')}\n`)
         process.exit(1)
