@@ -49,6 +49,8 @@ import type {
     CombatMomentumV2VM,
 } from '@/state/presenters/combat-encounter.engine';
 import { armedValue, dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
+import { paidLineFit, paidLineRuns, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
+import { globalDurationLine } from '@/state/presenters/card-program.engine';
 // The ONE mobile source for the rarity band. The face never
 // re-bands a rank and never re-types a rarity hue; see `card-rarity.engine.ts`.
 import { rarityFor, RARITY_LABEL, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
@@ -1732,8 +1734,11 @@ function paidValueFor(f: CombatCardVM['face'], override?: string): string {
  *     The large face adds the rarity WORD at the band's tail;
  *   · ② ART PLATE — seamless: no mat, no frame, no rules above or below it,
  *     so name, art and PAID line read as one surface;
- *   · ③ PAID LINE, bottom, one row — the stance die cube, then
- *     `[family glyph] KEYWORD value` as a single line.
+ *   · ③ PAID LINE, bottom. The SMALL face prints the card's whole PAID line
+ *     (the card voice) at 10pt over at most three rows, the stance die cube
+ *     riding the ledger's corner. The LARGE face keeps one row: the die cube,
+ *     then `[family glyph] KEYWORD value`, with a Global's duration under it;
+ *   · a Global has no FREE line: the word GLOBAL sits where the pill does.
  *
  * Rarity is not drawn on the face. The large face prints the WORD, and every
  * face says it to a screen reader through a 5pt spacer at the band's head
@@ -1743,50 +1748,15 @@ function paidValueFor(f: CombatCardVM['face'], override?: string): string {
  * category) colours the keyword. Instanced small in the hand and LARGE in the
  * inspect modal so the two can never drift.
  *
- * The face carries NO prose. The authored PAID sentence, the type strip, and
- * the printed die lines live in the inspect overlay. The face is the glance
- * read (name · free pill · keyword · value); the overlay is the explanation.
+ * The face carries no prose beyond the PAID line itself. The type strip and
+ * the projected action text live in the inspect overlay. The face is the
+ * glance read (name · free pill · PAID line); the overlay is the explanation.
  */
 /** Below this face width the face is NARROW: the reward offer (100) and the
  *  compact staged card (92) sit under it, the hand card (120) above. A narrow
  *  face draws a smaller die cube. Exported for the face test. */
 export const NARROW_FACE_W = 112;
 
-/** Bebas Neue capital advance per px of font size, letter spacing excluded, with a little slack. */
-const SANS_CAP_EM = 0.42;
-/** JetBrains Mono advance per px of font size, with a little slack. */
-const MONO_EM = 0.62;
-/** The space between the keyword and its value, per px of font size. */
-const SPACE_EM = 0.3;
-const PAID_KEYWORD_SPACING = 0.8;
-/** The PAID line's size on a small face. */
-export const PAID_LINE_SIZE = 12;
-/** The floor a too-long PAID line shrinks to. */
-export const PAID_LINE_FLOOR = 8;
-
-/**
- * The font size of a small face's PAID line: `[family glyph] KEYWORD value`
- * on ONE row beside the die cube. The whole width past the cube is the line's;
- * nothing else shares the ledger, so every card's line sits at the same height
- * and the ledger never stacks. A line too long for {@link PAID_LINE_SIZE}
- * shrinks (floored at {@link PAID_LINE_FLOOR}) rather than wrapping. Sizes are
- * computed, not `adjustsFontSizeToFit`, which react-native-web ignores.
- */
-export function paidLedgerFit({ width, keyword, value }: {
-    width: number;
-    keyword: string;
-    value: string;
-}): { size: number } {
-    const cube = width < NARROW_FACE_W ? 12 : 14;
-    // Card border 1.5 each side, ledger padding 6 each side; cube + its 5pt gap.
-    const room = width - 3 - 12 - cube - 5;
-    const kw = [...keyword].length;
-    const val = [...value].length;
-    const perPt = kw * SANS_CAP_EM + (kw > 0 && val > 0 ? SPACE_EM : 0) + val * MONO_EM;
-    if (perPt === 0) return { size: PAID_LINE_SIZE };
-    const fit = Math.floor((room - kw * PAID_KEYWORD_SPACING) / perPt);
-    return { size: Math.max(PAID_LINE_FLOOR, Math.min(PAID_LINE_SIZE, fit)) };
-}
 
 /**
  * The free corner pill: the FREE line's glyph in the card's colour and its
@@ -1839,6 +1809,35 @@ function FreeCornerPill({ shape, glyph, value, ink, large }: {
     );
 }
 
+/**
+ * The GLOBAL plate: a Global has no FREE line, so the word GLOBAL sits where
+ * the FREE pill does, in the card's colour. It says nothing about how long the
+ * Global lasts; the large face does.
+ */
+function GlobalPlate({ ink, large }: { ink: string; large: boolean }) {
+    const styles = useStyles();
+    return (
+        <View
+            pointerEvents="none"
+            testID="combat-card-face-global-plate"
+            accessibilityLabel="Global"
+            style={[styles.freePill, large && styles.freePillLarge, styles.globalPlate, large && styles.globalPlateLarge, { borderColor: ink }]}
+        >
+            <Text
+                style={[styles.globalPlateText, large && styles.globalPlateTextLarge, { color: ink }]}
+                allowFontScaling={false}
+                testID="combat-card-face-global-text"
+            >
+                GLOBAL
+            </Text>
+        </View>
+    );
+}
+
+/** The small face's ledger height: three rows of the PAID line and its padding.
+ *  Fixed, so every card's art is the same size however long its line. */
+const SMALL_LEDGER_H = 42;
+
 /** The free pill's glyph size, small and large face. */
 const FREE_PILL_GLYPH = 15;
 const FREE_PILL_GLYPH_LARGE = 20;
@@ -1884,11 +1883,14 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     const cardInk = f.inert ? AXM.ash : (accent ?? band);
     const narrow = !large && width < NARROW_FACE_W;
     const keywordText = f.keyword ? `${f.familyGlyph ? `${f.familyGlyph} ` : ''}${f.keyword.toUpperCase()}` : '';
-    // One line, one size: a small face sizes its PAID line to the width past
-    // the die cube (`paidLedgerFit`); the large face keeps its own sizes.
-    const lineSize = large ? null : paidLedgerFit({ width, keyword: keywordText, value: paidValue }).size;
+    // The small face prints the whole PAID line, wrapped to three rows at 10pt
+    // (`paidLineFit` shrinks a line too long for that); the large face keeps its
+    // own keyword-and-value ledger and states a Global's duration under it.
+    const paidFit = large ? null : paidLineFit({ width, line: f.paidLine });
     const bandH = large ? 36 : 26;
-    const ledgerH = large ? 60 : 42;
+    const ledgerH = large ? 60 : SMALL_LEDGER_H;
+    // A Global wears a GLOBAL plate where the FREE pill sits.
+    const hasPill = hasFree || f.isGlobal;
     // The drop shadow is STANCE-coloured. It is
     // applied inline on `faceOuter` rather than in the static style, because
     // the colour is per-card data; `accent` (the armed staged-card read tint)
@@ -1912,7 +1914,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                     style={[
                         styles.plateBand,
                         { minHeight: bandH },
-                        hasFree ? { paddingTop: large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD } : null,
+                        hasPill ? { paddingTop: large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD } : null,
                     ]}
                     pointerEvents="none"
                     testID="combat-card-face-band"
@@ -1964,62 +1966,94 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                             transition={0}
                         />
                         {f.inert ? <View style={styles.plateInertWash} /> : null}
-                        {f.typeTag ? (
+                        {f.typeTag && !f.isGlobal ? (
                             <View style={styles.typeTag} testID="combat-card-face-type-tag">
                                 <Text style={[styles.typeTagText, large && styles.typeTagTextLarge]} numberOfLines={1} allowFontScaling={false}>{f.typeTag}</Text>
                             </View>
                         ) : null}
                     </View>
                 </View>
-                {/* ③ PAID LINE — one row on solid ink: the stance die cube,
-                    then `[family glyph] KEYWORD value` as a single line. A PAID
-                    headline with no keyword prints its value alone. No prose;
-                    the overlay explains. */}
-                <View
-                    style={[styles.plateLedger, { minHeight: ledgerH }]}
-                    pointerEvents="none"
-                    testID="combat-card-face-ledger"
-                >
-                    <StanceCube color={band} size={large ? 20 : narrow ? 12 : 14} />
-                    <Text
-                        style={styles.paidLine}
-                        numberOfLines={1}
-                        allowFontScaling={false}
-                        testID="combat-card-face-paid-line"
+                {/* ③ PAID LINE. The SMALL face prints the whole line, wrapped to
+                    three rows at 10pt on solid ink, with the stance die cube
+                    on the ledger's corner (the die this line wants). The LARGE
+                    face keeps its one row: the die cube, then `[family glyph]
+                    KEYWORD value`, and a Global states how long it lasts. */}
+                {large ? (
+                    <View
+                        style={[styles.plateLedger, { minHeight: ledgerH }]}
+                        pointerEvents="none"
+                        testID="combat-card-face-ledger"
                     >
-                        {keywordText ? (
+                        <StanceCube color={band} size={20} />
+                        <View style={styles.paidColumn}>
                             <Text
-                                style={[
-                                    styles.paidKeyword,
-                                    large && styles.paidKeywordLarge,
-                                    lineSize != null && { fontSize: lineSize, lineHeight: lineSize + 3 },
-                                    { color: kwColor },
-                                ]}
-                                testID="combat-card-face-keyword"
+                                style={styles.paidLine}
+                                numberOfLines={1}
+                                allowFontScaling={false}
+                                testID="combat-card-face-paid-line"
                             >
-                                {keywordText}{paidValue ? ' ' : ''}
+                                {keywordText ? (
+                                    <Text
+                                        style={[styles.paidKeyword, styles.paidKeywordLarge, { color: kwColor }]}
+                                        testID="combat-card-face-keyword"
+                                    >
+                                        {keywordText}{paidValue ? ' ' : ''}
+                                    </Text>
+                                ) : null}
+                                {paidValue ? (
+                                    <Text
+                                        style={[styles.paidValue, styles.paidValueLarge, scaledTint ? { color: scaledTint } : null]}
+                                        testID="combat-card-face-value"
+                                    >
+                                        {paidValue}
+                                    </Text>
+                                ) : null}
                             </Text>
-                        ) : null}
-                        {paidValue ? (
-                            <Text
-                                style={[
-                                    styles.paidValue,
-                                    large && styles.paidValueLarge,
-                                    lineSize != null && { fontSize: lineSize, lineHeight: lineSize + 3 },
-                                    scaledTint ? { color: scaledTint } : null,
-                                ]}
-                                testID="combat-card-face-value"
-                            >
-                                {paidValue}
-                            </Text>
-                        ) : null}
-                    </Text>
-                </View>
+                            {f.isGlobal ? (
+                                <Text style={styles.durationLine} allowFontScaling={false} testID="combat-card-face-duration">
+                                    {globalDurationLine()}
+                                </Text>
+                            ) : null}
+                        </View>
+                    </View>
+                ) : (
+                    <View
+                        style={[styles.plateLedger, styles.plateLedgerSmall, { height: ledgerH }]}
+                        pointerEvents="none"
+                        testID="combat-card-face-ledger"
+                    >
+                        <View style={[styles.ledgerCube, { right: narrow ? 3 : 4 }]} testID="combat-card-face-cube">
+                            <StanceCube color={band} size={narrow ? 12 : 14} />
+                        </View>
+                        <Text
+                            style={[styles.paidLineSmall, { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING) }]}
+                            numberOfLines={PAID_LINE_ROWS}
+                            allowFontScaling={false}
+                            accessibilityLabel={f.paidLine}
+                            testID="combat-card-face-paid-line"
+                        >
+                            {paidLineRuns(f.paidLine).map((run, i) => (
+                                <Text
+                                    key={i}
+                                    style={[
+                                        run.caps ? styles.paidRunCaps : styles.paidRunSerif,
+                                        { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: accent ?? AXM.parchment },
+                                    ]}
+                                >
+                                    {run.text}
+                                </Text>
+                            ))}
+                        </Text>
+                    </View>
+                )}
                 {children}
             </View>
             {/* The free corner pill — a sibling of the frame, so the frame's
-                `overflow: hidden` cannot clip the half that straddles it. */}
-            {hasFree ? (
+                `overflow: hidden` cannot clip the half that straddles it. A
+                Global wears the GLOBAL plate in its place. */}
+            {f.isGlobal ? (
+                <GlobalPlate ink={cardInk} large={large} />
+            ) : hasFree ? (
                 <FreeCornerPill shape={freeShape} glyph={f.freeGlyph} value={freeInner} ink={cardInk} large={large} />
             ) : null}
         </View>
@@ -2362,6 +2396,22 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.deepBg,
     },
     paidLine: { flex: 1 },
+    paidColumn: { flex: 1, justifyContent: 'center' },
+    // A Global's duration, on the large face only.
+    durationLine: { fontFamily: FONTS.serif, fontSize: 12, lineHeight: 15, color: AXM.bone, marginTop: 2 },
+    // The small face's ledger: the whole PAID line over up to three rows, at
+    // `paidLineFit`'s size; the die cube rides its top-right corner, half over
+    // the art, so the text keeps the full width.
+    plateLedgerSmall: { paddingHorizontal: 5, justifyContent: 'center' },
+    ledgerCube: { position: 'absolute', top: -8, zIndex: 3 },
+    paidLineSmall: { alignSelf: 'stretch' },
+    paidRunCaps: { fontFamily: FONTS.sans, letterSpacing: PAID_CAPS_SPACING },
+    paidRunSerif: { fontFamily: FONTS.serif },
+    // The GLOBAL plate sits in the FREE pill's place and shape, text only.
+    globalPlate: { paddingHorizontal: 7 },
+    globalPlateLarge: { paddingHorizontal: 11 },
+    globalPlateText: { fontFamily: FONTS.sans, fontSize: 12, lineHeight: 14, letterSpacing: 1 },
+    globalPlateTextLarge: { fontSize: 17, lineHeight: 20, letterSpacing: 1.4 },
     // The keyword is the loudest word on the face — it is the whole read.
     paidKeyword: { fontFamily: FONTS.sans, fontSize: 12, lineHeight: 15, letterSpacing: 0.8 },
     paidKeywordLarge: { fontSize: 17, lineHeight: 20, letterSpacing: 1.2 },

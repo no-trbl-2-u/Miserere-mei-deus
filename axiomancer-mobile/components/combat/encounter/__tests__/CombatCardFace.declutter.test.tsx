@@ -71,16 +71,14 @@ describe('CombatCardFace — no prose on the face (2026-08-10 declutter)', () =>
         expect(cards.every(c => c.face.typeStrip.length > 0)).toBe(true);
     });
 
-    it('never prints the authored PAID sentence', () => {
+    it('prints the PAID line and none of the projected action prose around it', () => {
         for (const card of cards) {
             const flat = faceText(card);
-            // The authored sentence always carries its verb clause; sampling its
-            // longest word run is enough to catch a face that reprinted it.
-            const sentence = (card.bottomActionText || '').replace(/^PAID(\s*\([^)]*\))?\s*—\s*/i, '').trim();
-            const clause = sentence.split(/[.·]/)[0]?.trim() ?? '';
-            if (clause.split(/\s+/).length >= 4) {
-                expect(flat).not.toContain(clause);
-            }
+            // The face prints the card's whole PAID line; the
+            // projected action text's lead and tail ("PAID —", "Costs 1 die")
+            // are the overlay's, never the face's.
+            expect(flat).toContain(card.face.paidLine);
+            expect(flat).not.toMatch(/Costs 1 die|PAID —/);
         }
     });
 
@@ -90,17 +88,15 @@ describe('CombatCardFace — no prose on the face (2026-08-10 declutter)', () =>
         }
     });
 
-    it('still prints the card NAME, its KEYWORD and its value — the glance read survives', () => {
+    it('still prints the card NAME, its KEYWORD and its number — the glance read survives', () => {
         for (const card of cards) {
             const flat = faceText(card);
             expect(flat).toContain(card.name.toUpperCase());
             if (card.face.keyword) expect(flat).toContain(card.face.keyword.toUpperCase());
             // Real-units-or-no-number: a card with an honest number prints it.
             const value = (card.face.heroText || '').trim();
-            if (value && !/^\s*$/.test(value)) {
-                const bare = value.replace(new RegExp(`^${card.face.keyword ?? ''}\\s+`, 'i'), '').trim();
-                expect(flat).toContain(bare);
-            }
+            const digits = value.match(/\d+/)?.[0];
+            if (digits) expect(flat).toContain(digits);
         }
     });
 });

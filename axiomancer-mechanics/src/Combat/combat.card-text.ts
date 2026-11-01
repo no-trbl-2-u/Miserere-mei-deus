@@ -43,7 +43,7 @@
 import { MAX_EFFECT_INTENSITY } from '../Game/game-mechanics.constants';
 import type { Effect } from '../Effects/types';
 import type { Card, CardRider, CardSpecialMechanic } from '../Cards/types';
-import { mechanicText, REGISTRY_DOT_IDS } from './combat.cards';
+import { mechanicText, paidEffectHead, REGISTRY_DOT_IDS } from './combat.cards';
 import type { EffectLookup } from './combat.cards';
 
 /** Which side of the table a clause lands on. */
@@ -223,7 +223,7 @@ export function paidClauses(card: Card, lookupEffect: EffectLookup): CardClause[
         }
         if (toSelf !== (card.targetType === 'self')) notes.push(toSelf ? 'self' : 'enemy');
         const clock = dot?.growsOnEnemyAction ? ' (grows +1 each time the foe acts)' : ` d${d}`;
-        const text = `${def.name.toLowerCase()} i${i}${clock}${notes.length ? ` (${notes.join(', ')})` : ''}`;
+        const text = `${paidEffectHead(def, i, d, clock)}${notes.length ? ` (${notes.join(', ')})` : ''}`;
         const cross = toSelf === (card.targetType === 'self') ? '' : toSelf ? ' (self)' : ' (enemy)';
         const turns = dot?.growsOnEnemyAction ? '' : ` · ${d} turn${d === 1 ? '' : 's'}`;
         out.push({
@@ -254,7 +254,7 @@ export function clausesText(clauses: readonly CardClause[], separator = ' · '):
 /** The card's PAID payload as one line, in the engine's own wording. Matches
  *  `paidText`'s ` + ` join; `'utility'` when the card prints no clause. */
 export function paidDetailText(card: Card, lookupEffect: EffectLookup): string {
-    return clausesText(paidClauses(card, lookupEffect), ' + ') || 'utility';
+    return clausesText(paidClauses(card, lookupEffect), ', ') || 'utility';
 }
 
 /** The card's FREE payload as one line, in the engine's own wording. */

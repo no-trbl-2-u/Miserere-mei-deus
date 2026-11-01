@@ -18,16 +18,22 @@ import {
 
 /** The type tag a program card wears on its face, or null for a plain type. */
 export function programTypeTag(card: Pick<Card, 'cardType'>): string | null {
-    if (card.cardType === 'global') return `GLOBAL · ⏳${GLOBAL_FREE_TURNS} / ∞`;
+    if (card.cardType === 'global') return 'GLOBAL';
     if (card.cardType === 'curse') return 'CURSE · NO SCRAP';
     return null;
+}
+
+/** How long a Global lasts, the one sentence the large face states under its
+ *  line (the small face never does): the same for every Global. */
+export function globalDurationLine(): string {
+    return `${GLOBAL_FREE_TURNS} turns played FREE, the whole combat PAID`;
 }
 
 /** The lifecycle sentence the inspect overlay leads with. */
 export function programLifecycle(card: Pick<Card, 'cardType'>): string {
     switch (card.cardType) {
         case 'global':
-            return `Global: stays in play and fires on its trigger. FREE: ${GLOBAL_FREE_TURNS} turns. PAID: the rest of combat. Copies stack (experimental).`;
+            return `Global: stays in play and fires on its trigger. ${globalDurationLine()}. Copies stack (experimental).`;
         case 'curse':
             return 'Curse: holds a hand slot until played. It cannot be scrapped.';
         default:
@@ -58,6 +64,9 @@ const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegEx
     { re: /\bfoe loses VITAE\b/, keyword: null, value: () => `Foe − ${VARIES}` },
     { re: /\bVULNERABLE \+?(\d+)%/, keyword: 'VULNERABLE', value: (m) => `+${m[1]}%` },
     { re: /\bHEAL (\d+)\b(?!×)/, keyword: 'HEAL', value: (m) => m[1] },
+    // "HEAL 3× the VITAE you lost" is a multiple of a board number, so it
+    // reads "varies" and outranks the SACRIFICE that pays for it.
+    { re: /\bHEAL \d+× /, keyword: 'HEAL', value: () => VARIES },
     { re: /\bLEECH (\d+)\b(?!×)/, keyword: 'LEECH', value: (m) => m[1] },
     { re: /\bLEECH\b/, keyword: 'LEECH', value: () => VARIES },
     { re: /\bRADIANCE (\d+)\b(?!×)/, keyword: 'RADIANCE', value: (m) => m[1] },

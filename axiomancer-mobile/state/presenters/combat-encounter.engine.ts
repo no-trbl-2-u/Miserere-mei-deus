@@ -11,7 +11,7 @@
 import {
     handCards as engineHandCards, getCard, getCardById, toCombatCard,
     getSignatureSkill,
-    lookupEffect,
+    lookupEffect, paidFaceLine,
     RESERVE_MAX,
     riderText,
     // The wall-math readout on the intent.
@@ -455,9 +455,15 @@ export interface CombatCardFaceVM {
     freeValue: string | null;
     /** Type strip at the card foot — 'BODY · SPELL'. */
     typeStrip: string;
-    /** A Global's or a Curse's type tag over the art ('GLOBAL · ⏳3 / ∞',
-     *  'CURSE · NO SCRAP'); null for the plain types. */
+    /** A Global's or a Curse's type tag ('GLOBAL', 'CURSE · NO SCRAP'); null
+     *  for the plain types. A Global's face draws it as the plate in the FREE
+     *  pill's place; a Curse's rides over the art. */
     typeTag?: string | null;
+    /** The PAID line the small face prints whole, in the card voice (a
+     *  Global's is its trigger and its one effect, no duration). */
+    paidLine: string;
+    /** A Global: the face wears a GLOBAL plate where the FREE pill sits. */
+    isGlobal: boolean;
     verbLine: string;              // plain who/what
     powerRail: string;
     armable: boolean;              // the staged face reprints its number at commit (`armedValue`)
@@ -1631,7 +1637,7 @@ function buildDetailKeywords(card: CombatCard, c: CardCalc, sourceCard?: Card): 
 /** A program card's FACE: the headline of its PAID line (the FREE line's when
  *  the PAID line has none), and the FREE line's silhouette keyword in the
  *  FREE cell. */
-function programFaceStats(card: CombatCard, sourceCard: Card): CombatCardFaceVM {
+function programFaceStats(card: CombatCard, sourceCard: Card): Omit<CombatCardFaceVM, 'paidLine' | 'isGlobal'> {
     const lines = programLinesFor(sourceCard);
     const paidHead = programHeadline(lines.paid);
     const head = paidHead.keyword || paidHead.value ? paidHead : programHeadline(lines.free);
@@ -1694,8 +1700,26 @@ function programDetailCore(card: CombatCard, sourceCard: Card): DetailCore {
     };
 }
 
+/** The PAID line a face prints whole: the card's own (`paidFaceLine`), or, for
+ *  a face built with no card behind it, the projected action text without its
+ *  "PAID —" lead and "Costs 1 die." tail. */
+function facePaidLine(card: CombatCard, sourceCard?: Card): string {
+    if (sourceCard) return vitaeCopy(paidFaceLine(sourceCard, lookupEffect));
+    return vitaeCopy(card.bottomActionText.replace(/^PAID — /, '').replace(/\.? ?Costs 1 die\.$/, ''));
+}
+
 /** Honest card FACE view-model (the 5-zone hand card). */
 export function faceStats(card: CombatCard, sourceCard?: Card): CombatCardFaceVM {
+    return {
+        ...faceCore(card, sourceCard),
+        paidLine: facePaidLine(card, sourceCard),
+        isGlobal: (sourceCard?.cardType ?? card.cardType) === 'global',
+    };
+}
+
+type FaceCore = Omit<CombatCardFaceVM, 'paidLine' | 'isGlobal'>;
+
+function faceCore(card: CombatCard, sourceCard?: Card): FaceCore {
     if (sourceCard?.program) return programFaceStats(card, sourceCard);
     const c = cardCalc(card, sourceCard);
     const stanceColor = STANCE_COLORS[card.stance] ?? HUE.fallbackGrey;

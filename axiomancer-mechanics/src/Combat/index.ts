@@ -117,7 +117,7 @@ export {
     toCombatCard,
 
     mechanicText,
-    programFaceText, GLOBAL_TRIGGER_TEXT,
+    programFaceText, GLOBAL_TRIGGER_TEXT, GLOBAL_TRIGGER_FACE, paidFaceLine,
 } from './combat.cards';
 export {
     getThreatSequence, nextEnemyPhaseIndex,

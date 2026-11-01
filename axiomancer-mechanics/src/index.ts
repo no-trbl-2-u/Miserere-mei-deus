@@ -92,7 +92,7 @@ export {
     // Card programs (Global, Curse, SACRIFICE): the reads the board needs
     programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isProgramCard, isCurseCard,
     GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
-    programFaceText, GLOBAL_TRIGGER_TEXT,
+    programFaceText, GLOBAL_TRIGGER_TEXT, GLOBAL_TRIGGER_FACE, paidFaceLine,
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
     // The keep causeway (phase EN1l): the toll, TOLL and TIDE
     payTheToll, tollPayBlock, tollPayShortfall, tollPayCost, TOLL_SOURCE,
