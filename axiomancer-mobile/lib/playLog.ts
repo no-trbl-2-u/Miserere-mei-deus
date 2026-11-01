@@ -26,8 +26,31 @@ import { puzzleApiConfig, puzzleAppBuild, type PuzzleApiConfig, type PuzzleFetch
 import { getBuildCommit, isDevToolsEnabled } from '@/lib/buildProfile';
 import { devSettingsStore, type DevSettingsStore } from '@/state/dev/dev-settings';
 
+/**
+ * What the headless run driver swaps in for the app's gate and stamps (phase
+ * SM1g): a config that is always open, the `sim` stamps for the policy being
+ * played, and a fetcher that collects the posts instead of sending them. Only
+ * `axiomancer-mobile/sim/` sets it; the app never does, so a build sends what
+ * its gate and `EXPO_PUBLIC_PLAY_LOG_SOURCE` say and nothing else.
+ */
+export interface PlayLogOverride {
+    config: PuzzleApiConfig;
+    source: () => PlayLogStamps;
+    fetcher: PuzzleFetch;
+}
+
+let override: PlayLogOverride | null = null;
+
+/** Installs (or, with null, removes) the run driver's override. Returns the one it replaced. */
+export function setPlayLogOverride(next: PlayLogOverride | null): PlayLogOverride | null {
+    const previous = override;
+    override = next;
+    return previous;
+}
+
 /** Where and how to post the play log, or null when this build must send nothing. */
 export function playLogConfig(store: DevSettingsStore = devSettingsStore): PuzzleApiConfig | null {
+    if (override !== null) return override.config;
     if (!isDevToolsEnabled()) return null;
     if (!store.get().playLogging) return null;
     return puzzleApiConfig();
@@ -74,6 +97,7 @@ export function playLogSourceKind(): PlayLogSourceKind {
  * run id is not here: it is the save's, read from the store at each call site.
  */
 export function playLogSource(): PlayLogStamps {
+    if (override !== null) return override.source();
     return {
         solver: '',
         sessionId: playSessionId(),
@@ -96,7 +120,7 @@ export async function postPlayLog(
     path: string,
     body: FightPost | DeckEventPost | PlayRunPost | PlayRunEndPost | RunEventsPost,
     config: PuzzleApiConfig,
-    fetcher: PuzzleFetch = fetch,
+    fetcher: PuzzleFetch = override?.fetcher ?? fetch,
 ): Promise<boolean> {
     try {
         const res = await fetcher(`${config.url}${path}`, {
