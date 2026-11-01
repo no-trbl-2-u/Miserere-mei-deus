@@ -544,30 +544,22 @@ const RETIRED_FORMS: readonly (readonly [RegExp, string])[] = [
 /** Entities a line may name (§1, §5): you, the foe, your hand. */
 const FACE_ENTITY_WORDS: ReadonlySet<string> = new Set(['you', 'your', 'the', 'foe', "foe's", 'hand']);
 
-/** The closed logic words (§3), compared in lower case. */
+/** The closed logic words (§3), compared in lower case. They join a step to a
+ *  condition or a value; `+` between two values (`DEAL 2 + your INFERNO`) is one. */
 const FACE_LOGIC_WORDS: ReadonlySet<string> = new Set([
     'or', 'at', 'if', 'has', 'half', 'for', 'each', 'twice', 'after', 'turn', 'turns',
     'when', 'start', 'of', 'spend', 'all',
-]);
-
-/** Content words honestly part of a card's own wording, closed like the
- *  logic words: `spent` (`+2 for each BLIZZARD spent`). A new one is T's call,
- *  added to `docs/card-voice.md` first. */
-const FACE_CONTENT_WORDS: ReadonlySet<string> = new Set(['spent']);
-
-/**
- * Words the library rewrite needed for effects the closed lists above cannot
- * say (a plain VITAE loss, a next-attack cut, a card returned from EXILE),
- * each awaiting T's ruling in `docs/card-voice.md` §3 ("Pending T"). The
- * logic words join a step to a condition or a value; the content words name a
- * thing or an action that has no keyword. Moving one to the lists above, or
- * rewording its card and deleting it here, is T's call.
- */
-const FACE_PENDING_LOGIC_WORDS: ReadonlySet<string> = new Set([
     'this', 'next', 'last', 'is', 'not', 'while', 'to', 'from', 'in', 'with', 'only', 'more', 'less',
     'over', 'below', 'max', '+',
 ]);
-const FACE_PENDING_CONTENT_WORDS: ReadonlySet<string> = new Set([
+
+/** Content words honestly part of a card's own wording, closed like the
+ *  logic words: `spent` (`+2 for each BLIZZARD spent`) and the nouns and verbs
+ *  of effects that have no keyword (a plain VITAE loss, a cut to the foe's
+ *  next attack, a card returned from EXILE). A new one is T's call, added to
+ *  `docs/card-voice.md` first. */
+const FACE_CONTENT_WORDS: ReadonlySet<string> = new Set([
+    'spent',
     'combat', 'damage', 'dealt', 'took', 'lost', 'healed', 'played', 'missing', 'lose', 'loses',
     'card', 'cards', 'deck', 'discarded', 'debuffs', 'element', 'elements', 'attack', 'attacks', 'hit', 'time', 'bursts',
     'sooner', 'grows', 'return', 'remove', 'move', 'swap', 'keep', 'take', 'cannot', 'random',
@@ -605,7 +597,6 @@ function faceLineIssues(line: FaceLine, keywords: ReadonlySet<string>): string[]
         }
         const lower = word.toLowerCase();
         if (FACE_ENTITY_WORDS.has(lower) || FACE_LOGIC_WORDS.has(lower) || FACE_CONTENT_WORDS.has(lower)) continue;
-        if (FACE_PENDING_LOGIC_WORDS.has(lower) || FACE_PENDING_CONTENT_WORDS.has(lower)) continue;
         outside.push(word);
     }
     if (notCapitals.length) issues.push(`a keyword not in capitals (${[...new Set(notCapitals)].join(', ')})`);
@@ -618,9 +609,10 @@ function faceLineIssues(line: FaceLine, keywords: ReadonlySet<string>): string[]
  * (`faceLines`) names only keywords in capitals, numbers (`6`, `75%`, `+2`,
  * `2×`, `X`, `=`), the entities (you, your, the, foe, foe's, hand, VITAE) and
  * the closed logic words (or, at, if, has, half, for, each, twice, after,
- * turn, turns, when, start, of, spend, all, and `,` `;` `:` `.`), plus the
- * closed content list (`spent`, as in `BLIZZARD spent`), and the words pending
- * T's ruling (`FACE_PENDING_LOGIC_WORDS`, `FACE_PENDING_CONTENT_WORDS`). A line fails on any
+ * turn, turns, when, start, of, spend, all, this, next, last, is, not, while,
+ * to, from, in, with, only, more, less, over, below, max, `+` between two
+ * values, and `,` `;` `:` `.`), plus the closed content list (`FACE_CONTENT_WORDS`:
+ * `spent` and the card nouns and verbs T approved on 2026-11-01). A line fails on any
  * retired form (`RETIRED_FORMS`, and a duration on a Global's line) and on
  * any other word. One violation per card; its detail names each line's breaks.
  *
