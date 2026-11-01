@@ -9,7 +9,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { cardLibrary, lookupEffect, paidFaceLine } from '@mechanics';
 import {
-    PAID_LINE_FLOOR, PAID_LINE_ROWS, PAID_LINE_SIZE, paidLineFit, paidLineRoom, paidLineRows, paidLineRuns,
+    PAID_LINE_FLOOR, PAID_LINE_ROWS, PAID_LINE_SIZE, paidLineCube, paidLineFit, paidLineLead, paidLineRoom, paidLineRows, paidLineRuns,
 } from '@/state/presenters/paid-line.engine';
 import { programHeadline } from '@/state/presenters/card-program.engine';
 
@@ -38,16 +38,28 @@ describe('paidLineRuns', () => {
     });
 });
 
+/** The lead a hand card's line sits beside: its die and colon. */
+const LEAD = paidLineLead(paidLineCube(false));
+
 describe('paidLineFit', () => {
     it('the text room is the card less its border and ledger padding', () => {
         expect(paidLineRoom(HAND_W)).toBe(107);
     });
 
-    it.each(SAMPLE)('%s prints its whole PAID line at 10pt in at most three rows', (name) => {
+    it('the die and its colon lead the line, and their width comes out of the room', () => {
+        expect(paidLineLead(paidLineCube(false))).toBe(24);
+        expect(paidLineLead(paidLineCube(true))).toBe(22);
+        expect(paidLineRoom(HAND_W, paidLineLead(paidLineCube(false)))).toBe(83);
+    });
+
+    // Beside the die, Shatter the Frost's line takes four rows at 10pt, so it prints at 9.
+    const SHRUNK: Record<string, number> = { 'Shatter the Frost': 9 };
+
+    it.each(SAMPLE)('%s prints its whole PAID line beside the die in at most three rows', (name) => {
         const card = cardLibrary.find((c) => c.name === name)!;
         const line = paidFaceLine(card, lookupEffect);
-        const fit = paidLineFit({ width: HAND_W, line });
-        expect(fit.size).toBe(PAID_LINE_SIZE);
+        const fit = paidLineFit({ width: HAND_W, line, lead: LEAD });
+        expect(fit.size).toBe(SHRUNK[name] ?? PAID_LINE_SIZE);
         expect(fit.rows).toBeLessThanOrEqual(PAID_LINE_ROWS);
     });
 

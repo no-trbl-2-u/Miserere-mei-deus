@@ -45,6 +45,17 @@ export const HUE = {
     guardBlue: '#6fb3e0',
     guardBlueEdge: '#6fb3e055',
 
+    // Keyword glyphs, by what the keyword is (`state/presenters/keyword-glyph.engine.ts`)
+    glyphDamage: '#f06a5e',
+    glyphDefence: '#6aa8f0',
+    glyphBlood: '#d13b4a',
+    glyphHex: '#b39af5',
+    glyphGold: '#e0bb5c',
+    glyphFire: '#f39a3f',
+    glyphIce: '#a9dcf5',
+    glyphBone: '#b8ae98',
+    glyphEmber: '#f0997b',
+
     // Dice identities (the owner-specified dice palette) and the die cube
     dieHeart: '#9a5fd0',
     dieBody: '#d6543f',
