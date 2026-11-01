@@ -197,7 +197,7 @@ const ENTRIES: Entry[] = [
     // discard card it would read the damage once (30 at the Spell law probe).
     { slot: 'm-10a', name: 'Repaid in Kind', type: 'spell', color: RED, spellLaw: { foeLoses: 30 }, program: u => ({
         free: L(`The foe loses VITAE = the damage you took last turn${mPlus(u)}`, c => { c.foeLoses(c.q.takenLastTurn + u.plus); }),
-        paid: L(`The foe loses VITAE = 2× the damage you took last turn${mPlus(u)}. EXILE`, c => { c.foeLoses(2 * c.q.takenLastTurn + u.plus); }, EX) }) },
+        paid: L(`The foe loses VITAE = 2× damage you took last turn${mPlus(u)}. EXILE`, c => { c.foeLoses(2 * c.q.takenLastTurn + u.plus); }, EX) }) },
 ];
 
 function toCard(e: Entry): Card {

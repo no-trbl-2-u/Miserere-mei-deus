@@ -141,7 +141,7 @@ describe('the Defender set', () => {
         expect(programFaceText(getCardById(idOf('M-09'))!).paid).toBe('DEAL 5, GUARD 4. If discarded, THORNS 2');
         expect(getCardById(idOf('M-10'))!.program!.global!.text).toBe('REFLECT 15%');
         // The Spells' PAID lines carry T's numbers with EXILE.
-        expect(paid('P-07')).toBe('DISCARD your hand. THORNS {thorns:3} for each card discarded. EXILE');
+        expect(paid('P-07')).toBe('DISCARD your hand. THORNS {thorns:3} for each card. EXILE');
         expect(paid('E-05')).toBe('DISCARD 2. THORNS {thorns:8}. EXILE');
         expect(paid('E-06')).toBe('2× your THORNS. EXILE');
     });

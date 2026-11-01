@@ -210,8 +210,8 @@ const ENTRIES: Entry[] = [
             if (c.q.foeHasMercy) c.weakenNextAttack(u.m(5)); else c.mercy(u.i(5));
         }) }) },
     { slot: 'M-09', option: 'c', name: 'Call Back a Kindness', type: 'skill', color: BLUE, program: () => ({
-        free: L('Return the last MERCY card you played this combat to your hand', c => { c.returnMercyCards(1); }),
-        paid: L('Return the last 2 MERCY cards you played this combat to your hand', c => { c.returnMercyCards(2); }) }) },
+        free: L('Return the last MERCY card you played to your hand', c => { c.returnMercyCards(1); }),
+        paid: L('Return the last 2 MERCY cards you played to your hand', c => { c.returnMercyCards(2); }) }) },
     { slot: 'M-10', option: 'c', name: 'Overflowing Cup', type: 'attack', color: RED, program: u => ({
         free: L(`If the foe is at max VITAE, DEAL {deal:${u.m(4)}}; if not, MERCY {mercy:${u.i(2)}}`, c => {
             if (c.q.foeAtMax) c.deal(u.m(4)); else c.mercy(u.i(2));

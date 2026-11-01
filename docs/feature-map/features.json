@@ -2137,6 +2137,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:World",
+      "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:World",
       "file": "axiomancer-mechanics/src/Game/game.reducer.ts"
     },
     {

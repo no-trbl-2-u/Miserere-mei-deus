@@ -164,8 +164,8 @@ const ENTRIES: Entry[] = [
         }) }) },
     // The Spell law (T, 2026-10-24): the foe gains twice your INFERNO, not once.
     { slot: 'E-08', option: 'c', name: 'Boil to Steam', type: 'spell', color: PURPLE, spellLaw: { blizzard: 4, inferno: 4 }, program: u => ({
-        free: L(`BLIZZARD ${u.i(2)}, INFERNO ${u.i(1)} (foe only)`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1), 'foe'); }),
-        paid: L('Spend all your INFERNO, BLIZZARD 2 for each INFERNO spent, INFERNO 2 for each INFERNO spent (foe only). EXILE', c => {
+        free: L(`BLIZZARD ${u.i(2)}, foe's INFERNO ${u.i(1)}`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1), 'foe'); }),
+        paid: L("Spend all your INFERNO, BLIZZARD 2, foe's INFERNO 2 for each spent. EXILE", c => {
             const y = c.removeYourInferno(); c.blizzard(2 * y); c.inferno(2 * y, 'foe');
         }, EX) }) },
     { slot: 'E-09', option: 'b', name: 'Bring the Hail', type: 'global', color: PURPLE, program: () => turnGlobal(
@@ -206,7 +206,7 @@ const ENTRIES: Entry[] = [
         paid: L(`GUARD {guard:${u.m(9)}} or {guard:${2 * u.m(9)}} if the foe is FROZEN`, c => { c.guard(u.m(9) * (c.q.frozen ? 2 : 1)); }) }) },
     { slot: 'M-07', option: 'b', name: 'Pin with Lightning', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 40 }, program: u => ({
         free: L(`STORM ${u.i(1)}`, c => { c.storm(u.i(1)); }),
-        paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for each STORM the foe has, for 2 turns. EXILE`, c => {
+        paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for 2 turns for each STORM the foe has. EXILE`, c => {
             c.vulnerable(S(u).m(10) * c.q.storm, 2);
         }, EX) }) },
     { slot: 'M-08', option: 'c', name: 'Turn with the Wind', type: 'global', color: PURPLE, program: u => turnGlobal(
