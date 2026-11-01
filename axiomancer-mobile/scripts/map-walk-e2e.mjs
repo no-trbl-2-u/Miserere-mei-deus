@@ -158,6 +158,16 @@ async function waitFor(page, testId, what, timeout = 15000) {
         .catch(() => fail(`${what}: \`${testId}\` never appeared (at ${new URL(page.url()).pathname})`))
 }
 
+/** Wait until one of `testIds` is on screen; returns the first seen, or null. */
+async function waitForAny(page, testIds, timeout) {
+    const until = Date.now() + timeout
+    while (Date.now() < until) {
+        for (const id of testIds) if (await page.getByTestId(id).count()) return id
+        await sleep(150)
+    }
+    return null
+}
+
 /** On the map, idle: the WILDS route, the tab bar up, no encounter reveal. */
 async function onMap(page) {
     return (
@@ -372,8 +382,11 @@ async function hazard(page) {
     await travelTo(page, 'bw-m2')
     await waitFor(page, 'hazard-stakes', 'bw-m2 hazard stakes card')
     await page.getByTestId('hazard-stakes-face').click()
-    await waitFor(page, 'hazard-route-select', 'bw-m2 hazard')
-    log('bw-m2 hazard: landed on the route select (the board is hazard-e2e.mjs\'s)')
+    // A puzzle node (the Breakwater's six, HP6c) opens its board with no route
+    // select; every other hazard opens the three-round route select.
+    const board = await waitForAny(page, ['hazard-route-select', 'hazard-puzzle-node'], 15000)
+    if (!board) fail('bw-m2 hazard: neither the route select nor a puzzle board appeared')
+    log(`bw-m2 hazard: opened ${board === 'hazard-puzzle-node' ? 'the puzzle board' : 'the route select'} (the board is hazard-e2e.mjs's)`)
     await page.waitForFunction(() => typeof globalThis.__AXM_SKIP_EVENT__ === 'function', null, { timeout: 15000 })
         .catch(() => fail('bw-m2: the dev skip seam is not installed'))
     const r = await page.evaluate(() => {
