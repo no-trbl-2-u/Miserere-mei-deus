@@ -25,6 +25,7 @@ import {
     rollEncounterDice,
     selectEncounterMercyChoice,
     upgradeablePlayPhase,
+    wearGreySword,
     type CombatEncounterState,
     type CombatOutcome,
     type Enemy,
@@ -81,7 +82,10 @@ function playToOutcome(store: AppStore, enemy: Enemy, policy: RunPolicy, ctx: Ru
     const seed = Math.floor(Math.random() * 0xffffffff);
     const witness = policy.fightPolicy(ctx);
     const rng = (): number => getRng().random();
-    let live = initializeCombatEncounter(state.player, enemy, undefined, seed, flags);
+    // A special only pays when a weapon is worn, and a new game gives none yet: the run fights
+    // with the grey sword's stand-in so it plays as a fresh run is meant to.
+    const fighter = state.player.equipment.weapon ? state.player : wearGreySword({ ...state.player });
+    let live = initializeCombatEncounter(fighter, enemy, undefined, seed, flags);
     live = rollEncounterDice(live).state;
     // The panel hands every state it renders to the fight recorder; so does the driver.
     fightRecorder.observe(live);

@@ -25,6 +25,7 @@ import type {
     CombatDieColor, CombatEncounterState, CombatManaDie, UpgradeableDieGear, WheelStance,
 } from './combat.encounter.types';
 import type { CardAspect } from '../Cards/types';
+import { applyDieChanges } from './combat.equipment-effects';
 
 // ---------------------------------------------------------------------------
 // Constants ([owner-locked] unless noted)
@@ -126,10 +127,13 @@ export function honedDieGear(
  * model a stage of the campaign it has no authored loadout for.
  */
 export function activeDieGear(
-    state: Pick<CombatEncounterState, 'dieGear' | 'dieUpgradeLevel'>,
+    state: Pick<CombatEncounterState, 'dieGear' | 'dieUpgradeLevel' | 'equipmentDice'>,
     color: 'heart' | 'body' | 'mind' | 'wild',
 ): UpgradeableDieGear {
-    return state.dieGear?.[color] ?? honedDieGear(color, state.dieUpgradeLevel ?? 0);
+    const base = state.dieGear?.[color] ?? honedDieGear(color, state.dieUpgradeLevel ?? 0);
+    // The worn armor's die change rides on top of the character's gear (and a
+    // fully honed die has no miss face left for it to turn).
+    return applyDieChanges(base, state.equipmentDice?.dieChanges);
 }
 
 export type UpgradeableDieFace = 'special' | 'mana' | 'miss';
@@ -192,7 +196,7 @@ function actRewardDieColors(count: number): ('heart' | 'body' | 'mind')[] {
  */
 export function rollUpgradeableDice(
     turn: number,
-    state: Pick<CombatEncounterState, 'dieGear' | 'dieUpgradeLevel' | 'bonusTurnDice'>,
+    state: Pick<CombatEncounterState, 'dieGear' | 'dieUpgradeLevel' | 'bonusTurnDice' | 'equipmentDice'>,
     crackedColors: ReadonlySet<string>,
     rng: () => number = defaultRng,
 ): CombatManaDie[] {
@@ -212,7 +216,7 @@ export function rollUpgradeableDice(
  *  LEADEN die — 5 miss / 1 gold-colored mana. Fate pushes back. */
 export function rollGoldLeadPair(
     turn: number,
-    state: Pick<CombatEncounterState, 'dieGear' | 'dieUpgradeLevel'>,
+    state: Pick<CombatEncounterState, 'dieGear' | 'dieUpgradeLevel' | 'equipmentDice'>,
     rng: () => number = defaultRng,
 ): CombatManaDie[] {
     const gold = faceToDie(`t${turn}-u-gold2`, 'wild', rollUpgradeableFace(activeDieGear(state, 'wild'), rng));

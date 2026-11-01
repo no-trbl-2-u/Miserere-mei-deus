@@ -49,7 +49,7 @@ import {
 import {
     rollUpgradeableDice, rollGoldLeadPair,
     crackedColorsForTurn, expireCrackedDice, advanceMomentumV2,
-    isChainStance, activeDieGear, tableHasRoom,
+    isChainStance, tableHasRoom,
     UPGRADEABLE_TABLE_CEILING,
     OVERHEAT_CRACK_CHANCE, SPECIAL_FIRES_ON_USE, SURGE_DIE_PREFIX, COVETED_DIE_PREFIX,
 } from './combat.upgradeable-dice';
@@ -74,13 +74,13 @@ import {
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
     programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
-    programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart,
+    programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart, playSpecialPayload,
 } from './combat.card-program';
 import {
     programPaySacrifice, programSacrificeCost, programSacrificeShortfall, SACRIFICE_FLOOR_REASON,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
-import { equipmentTurnStart, fireEquipment, initEquipmentEffects } from './combat.equipment-effects';
+import { equipmentTurnStart, fireEquipment, initEquipmentDice, initEquipmentEffects } from './combat.equipment-effects';
 import { spikeEvents } from './combat.spikes';
 import { TANGLE_FREE_REFUSAL, cutGuardGain, soakDealWithWard } from './combat.enemy-words';
 import {
@@ -261,6 +261,7 @@ export function initializeCombatEncounter(
     // opening tray (they were forged in earlier combats and never spent).
     const floatingDice = materializeFloatingDice(clonedPlayer.floatingDice ?? []);
     const equipmentEffects = initEquipmentEffects(clonedPlayer.equipment, CONVICTION_CAP);
+    const equipmentDice = initEquipmentDice(clonedPlayer.equipment);
 
     return {
         phase: 'reveal',
@@ -317,9 +318,11 @@ export function initializeCombatEncounter(
         // The program ledger exists only for a deck that holds a program
         // card, so every other fight's state is unchanged.
         ...(deckHasProgramCards(deck) ? { program: initProgramLedger() } : {}),
-        // The worn gear's fight effects (spec 136, A10): read here, once, from
+        // The worn gear's fight effects: read here, once, from
         // the worn loadout, whatever the deck; absent when nothing worn has one.
         ...(equipmentEffects ? { equipmentEffects } : {}),
+        // The worn armor's die change and the worn weapon's special payload.
+        ...(equipmentDice ? { equipmentDice } : {}),
     };
 }
 
@@ -616,14 +619,28 @@ function applyBoonAndMomentumV2(
     if (SPECIAL_FIRES_ON_USE && played.dieId) {
         const preDie = preState.dice.find(d => d.id === played.dieId)
             ?? (preState.reserve ?? []).find(d => d.id === played.dieId);
-        if (preDie?.face === 'special' && preDie.color !== 'x') {
-            const gear = activeDieGear(preState, preDie.color as 'heart' | 'body' | 'mind' | 'wild');
-            const granted = gear.specialConviction;
-            const conviction = Math.min(CONVICTION_CAP, state.conviction + granted);
-            if (conviction > state.conviction) {
-                state = { ...state, conviction };
-                events.push({ kind: 'special-fired', dieId: preDie.id, conviction: granted, total: conviction });
-                events.push({ kind: 'conviction-gained', amount: conviction - transition.state.conviction, total: conviction, reason: 'effect' });
+        // The worn weapon sets what the special does; with no weapon worn it only powers its card.
+        const special = state.equipmentDice?.special;
+        const source = state.equipmentDice?.specialSource;
+        if (preDie?.face === 'special' && preDie.color !== 'x' && special && source) {
+            if (special.kind === 'conviction') {
+                const conviction = Math.min(CONVICTION_CAP, state.conviction + special.amount);
+                if (conviction > state.conviction) {
+                    state = { ...state, conviction };
+                    events.push({ kind: 'special-fired', dieId: preDie.id, conviction: special.amount, total: conviction });
+                    events.push({ kind: 'conviction-gained', amount: conviction - transition.state.conviction, total: conviction, reason: 'effect' });
+                }
+            } else {
+                events.push({ kind: 'special-fired', dieId: preDie.id, conviction: 0, total: state.conviction, payload: special });
+                const paid = playSpecialPayload(state, special, source, PROGRAM_KIT);
+                state = paid.state;
+                events.push(...paid.events);
+                // A payload that takes the foe's last VITAE ends the fight here.
+                if (isDefeated(state.enemy)) {
+                    return checkImmediateOutcome(
+                        withLog(state, events), [...transition.events, ...events],
+                    );
+                }
             }
         }
     }
@@ -831,7 +848,7 @@ function applyRiderToState(
     const stats = state.player.baseStats;
 
     // BRINE cuts the GUARD gain. A card's GUARD fires the worn gear's
-    // first-GUARD trigger (spec 136, A10).
+    // first-GUARD trigger.
     if (r.guard) {
         const gain = cutGuardGain(state, scaleFor(r.guard, stats, 'mind', 'one-shot'), events);
         state = { ...state, guard: (state.guard ?? 0) + gain };
@@ -1108,7 +1125,7 @@ function playBottomAction(
     // DEAL — each hit folds the scalers through `scalePlayerHit`, then the
     // foe's WARD soaks the part before VULNERABLE.
     let wardState: CombatEncounterState = state;
-    // The worn gear's running state (spec 136, A10): a card's DEAL fires its
+    // The worn gear's running state: a card's DEAL fires its
     // DEAL triggers and conditions (their +n joins the hit unscaled, before
     // VULNERABLE), and what they pay (HEAL, GUARD, Conviction, draw) rides
     // on `gear` into the play's result.
