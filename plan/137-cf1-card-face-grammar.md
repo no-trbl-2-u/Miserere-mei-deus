@@ -7,7 +7,7 @@
 ### Sources
 
 - `/pitch` with T, 2026-11-01 (attended, eleven turns, five mock rounds, three blind cold reads), written up as
-  `pitches/2026-11-01-card-face-meaning.md`; T closed it with "Okay, I think that'll do! Plot it!". The pitch file
+  `braindump/2026-11-01-card-face-meaning.md`; T closed it with "Okay, I think that'll do! Plot it!". The pitch file
   carries every ruling with its turn, the measured numbers and the mock artifact
   (https://claude.ai/artifact/NQXLdEFAAarvPRyJGms5mx, rounds 1-5 on twelve real cards with real art).
 - T, verbatim (the opening): "pitch ways for us to get more meaning on to the card faces so the player doesn't have
