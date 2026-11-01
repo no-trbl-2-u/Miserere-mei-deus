@@ -25,15 +25,21 @@
  *   checkCarrierRule(input)             every atlas word carried; every printed word in the atlas
  *   spellPaidPayoffs(card)              a Spell's applied PAID payoffs at the law's probe
  *   checkSpellLaw(cards)                a Spell's PAID EXILEs, its FREE does not, its PAID is a step up
+ *   faceLines(card)                     the lines the face grammar reads
+ *   checkFaceGrammar(cards, kws?)       every printed line in the card voice (`docs/card-voice.md`)
+ *   checkTextOrder(cards)               printed keyword order is the program's call order
  */
 
 import type { Card, CardRank } from './types';
 import type { ProgramCtx, ProgramQuery } from './card-program.types';
 import { GLOBAL_TRIGGER_TEXT, programFaceText } from '../Combat/combat.cards';
+import { programText } from '../Combat/stat-scaling';
 import { magnitudeStep, UPGRADE_INTENSITY_STEP } from './card-upgrade.scale';
 
 /** The rules this module checks; the exemptions fixture keys on these. */
-export type CardRuleId = 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law' | 'discard-cost';
+export type CardRuleId =
+    | 'complexity-budget' | 'scrap-floor' | 'global-template' | 'carrier-rule' | 'spell-law' | 'discard-cost'
+    | 'face-grammar' | 'text-order';
 
 /** One break of one rule. `id` is a card id, an atlas word, or `cardId:WORD`. */
 export interface CardRuleViolation {
@@ -485,6 +491,215 @@ export function checkSpellLaw(cards: readonly Card[]): CardRuleViolation[] {
             if (Object.keys(base).length === 0) issues.push('an empty spellLawBaseline: a Spell must have a PAID payoff to raise');
         }
         if (issues.length) out.push({ rule: 'spell-law', id: card.id, detail: issues.join('; ') });
+    }
+    return out;
+}
+
+// ── The face grammar (T, 2026-11-01; `docs/card-voice.md`) ─────────────────
+
+/** One printed line the face grammar reads: its name, its text with number
+ *  tokens read as numbers, and whether it is a Global's face line. */
+export interface FaceLine {
+    readonly name: 'FREE' | 'PAID' | 'GLOBAL' | 'GLOBAL PAID';
+    readonly text: string;
+    readonly global: boolean;
+}
+
+/**
+ * The lines a card prints, as the grammar reads them: a card's FREE and PAID
+ * lines (`cardLinesText`, the discard rider included), or a Global's body and
+ * PAID change. A Global's trigger opener and the face projection's duration
+ * stand-in are not card text, so they are not read. A missing line is skipped.
+ */
+export function faceLines(card: Card): FaceLine[] {
+    const g = card.program?.global;
+    if (g) {
+        const out: FaceLine[] = [{ name: 'GLOBAL', text: untoken(programText(g.text, undefined)), global: true }];
+        if (g.paidDelta !== undefined) out.push({ name: 'GLOBAL PAID', text: untoken(programText(g.paidDelta, undefined)), global: true });
+        return out;
+    }
+    const { free, paid } = cardLinesText(card);
+    const p = card.program;
+    const out: FaceLine[] = [];
+    if (free.trim() && (!p || p.free)) out.push({ name: 'FREE', text: free, global: false });
+    if (paid.trim() && (!p || p.paid)) out.push({ name: 'PAID', text: paid, global: false });
+    return out;
+}
+
+/**
+ * The retired forms (`docs/card-voice.md` §9), each with the name a failure
+ * prints. A Global's face line also fails on any duration (`DURATION_RE`).
+ */
+const RETIRED_FORMS: readonly (readonly [RegExp, string])[] = [
+    [/\binstead\b/i, '"instead"'],
+    [/\bdoubled\b/i, '"doubled" (print 2×)'],
+    [/\bburning\b/i, '"burning" (print the foe has INFERNO)'],
+    [/\bthen\b/i, '"then" (print a comma)'],
+    [/\bat random\b/i, '"at random"'],
+    [/\bon the foe\b/i, '"on the foe"'],
+    [/\byou and the foe\b|\bboth sides\b/i, '"you and the foe" or "both sides"'],
+    [/\bequal to\b/i, '"equal to" (print =)'],
+    [/\bEXILE\s+this card\b/i, '"EXILE this card" (EXILE stands alone)'],
+    [/\bgain\s+(\d+|X|n)\b/i, '"gain N" before a keyword (print KEYWORD N)'],
+    [/\bVULNERABLE\s*\+/, '"+" before a VULNERABLE percent'],
+    [/\b(SAC|CONV)\b/, 'an abbreviation (SAC, CONV)'],
+    [/\.\s*$/, 'a full stop at the end of the line'],
+];
+
+/** Entities a line may name (§1, §5): you, the foe, your hand. */
+const FACE_ENTITY_WORDS: ReadonlySet<string> = new Set(['you', 'your', 'the', 'foe', "foe's", 'hand']);
+
+/** The closed logic words (§3), compared in lower case. */
+const FACE_LOGIC_WORDS: ReadonlySet<string> = new Set([
+    'or', 'at', 'if', 'has', 'half', 'for', 'each', 'twice', 'after', 'turn', 'turns',
+    'when', 'start', 'of', 'spend', 'all',
+]);
+
+/** Content words honestly part of a card's own wording, closed like the
+ *  logic words: `spent` (`+2 for each BLIZZARD spent`). A new one is T's call,
+ *  added to `docs/card-voice.md` first. */
+const FACE_CONTENT_WORDS: ReadonlySet<string> = new Set(['spent']);
+
+/** Capitalised words that are a number or an entity, not a keyword. */
+const FACE_UPPER_NON_KEYWORDS: ReadonlySet<string> = new Set(['X', 'VITAE']);
+
+/** A number token: `6`, `75%`, `+2`, `2×`, `X`, or the `=` that copies a value. */
+const FACE_NUMBER_RE = /^(?:\+?\d+%?|\d+×|X|=)$/;
+
+/** A line's words: punctuation (`,` `;` `:` `.` and brackets) parts them. */
+const faceWords = (text: string): string[] => text.split(/[\s,;:.()]+/).filter(Boolean);
+
+/** What one line breaks; empty when it is in the grammar. */
+function faceLineIssues(line: FaceLine, keywords: ReadonlySet<string>): string[] {
+    const issues: string[] = [];
+    // Words a retired form already names are not listed again as outside the grammar.
+    const named = new Set<string>();
+    for (const [re, label] of RETIRED_FORMS) {
+        const m = re.exec(line.text);
+        if (!m) continue;
+        issues.push(label);
+        for (const w of faceWords(m[0])) named.add(w);
+    }
+    if (line.global && DURATION_RE.test(line.text)) issues.push("a duration on a Global's face line");
+    const notCapitals: string[] = [];
+    const outside: string[] = [];
+    for (const word of faceWords(line.text)) {
+        if (named.has(word) || FACE_NUMBER_RE.test(word) || FACE_UPPER_NON_KEYWORDS.has(word)) continue;
+        const upper = word.toUpperCase();
+        if (keywords.has(upper)) {
+            if (word !== upper) notCapitals.push(word);
+            continue;
+        }
+        const lower = word.toLowerCase();
+        if (FACE_ENTITY_WORDS.has(lower) || FACE_LOGIC_WORDS.has(lower) || FACE_CONTENT_WORDS.has(lower)) continue;
+        outside.push(word);
+    }
+    if (notCapitals.length) issues.push(`a keyword not in capitals (${[...new Set(notCapitals)].join(', ')})`);
+    if (outside.length) issues.push(`words outside the grammar (${[...new Set(outside)].join(', ')})`);
+    return issues;
+}
+
+/**
+ * The face grammar (T, 2026-11-01; `docs/card-voice.md`). Every printed line
+ * (`faceLines`) names only keywords in capitals, numbers (`6`, `75%`, `+2`,
+ * `2×`, `X`, `=`), the entities (you, your, the, foe, foe's, hand, VITAE) and
+ * the closed logic words (or, at, if, has, half, for, each, twice, after,
+ * turn, turns, when, start, of, spend, all, and `,` `;` `:` `.`), plus the
+ * closed content list (`spent`, as in `BLIZZARD spent`). A line fails on any
+ * retired form (`RETIRED_FORMS`, and a duration on a Global's line) and on
+ * any other word. One violation per card; its detail names each line's breaks.
+ *
+ * @param keywords - The keyword words (every atlas row, `parseAtlasKeywords`):
+ *   a capitalised word outside them fails, and so does one of them printed in
+ *   lower or title case. Without it, the capitalised words the given cards
+ *   print stand in (the carrier rule judges those against the atlas).
+ */
+export function checkFaceGrammar(cards: readonly Card[], keywords?: ReadonlySet<string>): CardRuleViolation[] {
+    const known = keywords ?? new Set(cards.flatMap(printedKeywords));
+    const out: CardRuleViolation[] = [];
+    for (const card of cards) {
+        const broken = faceLines(card)
+            .map(line => ({ line, issues: faceLineIssues(line, known) }))
+            .filter(x => x.issues.length)
+            .map(x => `${x.line.name}: ${x.issues.join('; ')}`);
+        if (broken.length) out.push({ rule: 'face-grammar', id: card.id, detail: broken.join(' | ') });
+    }
+    return out;
+}
+
+/** Program verbs that print as one keyword, for the order test. */
+const VERB_KEYWORD: Readonly<Record<string, string>> = {
+    deal: 'DEAL', guard: 'GUARD', heal: 'HEAL', vulnerable: 'VULNERABLE', tether: 'TETHER',
+    leech: 'LEECH', conviction: 'CONVICTION', sacrifice: 'SACRIFICE', sacrificeX: 'SACRIFICE',
+    inferno: 'INFERNO', blizzard: 'BLIZZARD', storm: 'STORM', draw: 'DRAW', thorns: 'THORNS',
+    reflect: 'REFLECT', discardRandom: 'DISCARD', discardHand: 'DISCARD', retrieve: 'RETRIEVE',
+    radiance: 'RADIANCE', mercy: 'MERCY',
+};
+const ORDER_KEYWORDS: ReadonlySet<string> = new Set(Object.values(VERB_KEYWORD));
+
+/** A word that makes the keyword after it a value read, not a step:
+ *  `= your GUARD`, `the foe's BLIZZARD`, `the foe has INFERNO`, `for each BLIZZARD`. */
+const REFERENCE_LEAD: ReadonlySet<string> = new Set(['your', "foe's", 'has', 'each']);
+
+/** The steps a printed line takes, in text order: each keyword the program
+ *  can call, first time only, skipping a keyword read as a value. */
+function printedSteps(text: string): string[] {
+    const words = faceWords(text);
+    const steps: string[] = [];
+    words.forEach((w, i) => {
+        const upper = w.toUpperCase();
+        if (w !== upper || !ORDER_KEYWORDS.has(upper)) return;
+        if (i > 0 && REFERENCE_LEAD.has(words[i - 1].toLowerCase())) return;
+        if (!steps.includes(upper)) steps.push(upper);
+    });
+    return steps;
+}
+
+/** The keywords a run calls under one probe, in call order, first time only. */
+function calledSteps(run: (c: ProgramCtx) => void, q: ProgramQuery): string[] {
+    const steps: string[] = [];
+    for (const { verb } of recordVerbs(run, q)) {
+        const kw = VERB_KEYWORD[verb];
+        if (kw && !steps.includes(kw)) steps.push(kw);
+    }
+    return steps;
+}
+
+/**
+ * Text order is resolution order (`docs/card-voice.md` §2). For each line a
+ * program can read (FREE, PAID, the discard rider, a Global's body and PAID
+ * change), under each probe query, the keywords both the text prints as
+ * steps and the run calls must come in the same order (first appearance of
+ * each). A keyword only one side has (a branch the probe did not take, a
+ * verb with no keyword) is not judged. Plain cards have no program to read.
+ */
+export function checkTextOrder(cards: readonly Card[]): CardRuleViolation[] {
+    const out: CardRuleViolation[] = [];
+    for (const card of cards) {
+        const p = card.program;
+        if (!p) continue;
+        const lines: [string, string, (c: ProgramCtx) => void][] = [];
+        if (p.free) lines.push(['FREE', p.free.text, p.free.run]);
+        if (p.paid) lines.push(['PAID', p.paid.text, p.paid.run]);
+        if (p.onDiscard) lines.push(['discard rider', p.onDiscard.text, p.onDiscard.run]);
+        if (p.global) {
+            const g = p.global;
+            lines.push(['GLOBAL', g.text, c => g.free(c, 2)]);
+            lines.push(['GLOBAL PAID', g.paidDelta ?? g.text, c => g.paid(c, 2)]);
+        }
+        const bad = new Set<string>();
+        for (const [name, text, run] of lines) {
+            const printed = printedSteps(untoken(programText(text, undefined)));
+            for (const q of PROBE_QUERIES) {
+                const called = calledSteps(run, q);
+                const both = printed.filter(k => called.includes(k));
+                const calledBoth = called.filter(k => both.includes(k));
+                if (both.join() !== calledBoth.join()) {
+                    bad.add(`${name} prints ${both.join(', ')} but resolves ${calledBoth.join(', ')}`);
+                }
+            }
+        }
+        if (bad.size) out.push({ rule: 'text-order', id: card.id, detail: [...bad].join('; ') });
     }
     return out;
 }

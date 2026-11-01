@@ -166,6 +166,13 @@ its own lines with number tokens. Pointers: `M/Cards/types.ts:99-140`;
 `mechanicText` `M/Combat/combat.cards.ts:213-218`;
 `M/Combat/e2e/paid-summary-honesty.engine.test.ts:46`.
 
+**The card voice.** How every printed line is worded (keywords in
+capitals, the closed logic words, the retired forms, text order as
+resolution order) is [`docs/card-voice.md`](card-voice.md), T's rulings of
+2026-11-01. `checkFaceGrammar` and `checkTextOrder`
+(`M/Cards/card-rules.ts`) enforce it (§17); today's lines are pinned in the
+exemptions fixture until the rewrite.
+
 **Ratified, not built.**
 
 - The scrap floor: no line gives only 1 Conviction. `plan/revamp/cards.md`
@@ -463,7 +470,7 @@ T's call (ballot, 2026-10-13):
 
 ## 17. Enforcement
 
-Which test guards which rule. The four card-rules rows read one exemptions
+Which test guards which rule. The card-rules rows read one exemptions
 fixture: an offender listed there passes with its reason, a new offender
 fails, and a listed offender that no longer breaks the rule fails as
 stale. Today's offenders are pinned for T's next card session (`[content]`
@@ -478,6 +485,8 @@ in `axiomancer-mechanics`.
 | Global text template | §6 | `card-rules.engine.test.ts` → "rule: global-template" (`checkGlobalTemplate`) | same |
 | Carrier rule and admission bar | §8 | `card-rules.engine.test.ts` → "rule: carrier-rule" (`checkCarrierRule`) | same |
 | The Spell law: PAID EXILEs, FREE does not, PAID a step up (D103) | §1 | `card-rules.engine.test.ts` → "rule: spell-law" and "the Spell law" (`checkSpellLaw`) | same (A Plain Word, held for T) |
+| Card voice: keywords in capitals, closed logic words, no retired form (`docs/card-voice.md`) | §6 | `card-rules.engine.test.ts` → "rule: face-grammar" (`checkFaceGrammar`) | same (today's lines, until the rewrite) |
+| Card voice: printed keyword order is the program's call order | §6 | `card-rules.engine.test.ts` → "rule: text-order" (`checkTextOrder`) | same |
 | House voice and retired terms on card text | §6 | `scripts/check-prose.mjs` (the card libraries are content surfaces) | none needed: the text is clean |
 | Ledger and library agree on the Blood Price slots | §15 | `scripts/content-drift.test.mjs` → "the Blood Price lane ships exactly the slots the ledger keeps" | none |
 | Every Blood Price card has a real name; library names are distinct | §15 | `axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts` → "every lane card carries a real name" | none |

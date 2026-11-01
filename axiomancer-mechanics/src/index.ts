@@ -272,6 +272,7 @@ export {
     COMPLEXITY_BUDGET, ADMISSION_BAR,
     cardLinesText, printedKeywords, cardConditions, parseAtlasKeywords,
     checkComplexityBudget, checkScrapFloor, checkGlobalTemplate, checkCarrierRule, checkDiscardCost,
+    checkFaceGrammar, checkTextOrder,
 } from './Cards';
 
 // ─── Game (state, store, persistence, constants) ──────────────────────────────
