@@ -206,6 +206,8 @@ test('the scratch repo carries the plan pending closes: without them a closed ch
     fs.mkdirSync(path.join(live, 'plan', 'pending'), { recursive: true })
     for (const n of ['.gitattributes', 'LIVE_DEADLINES.md']) fs.copyFileSync(path.join(ROOT, n), path.join(live, n))
     for (const n of fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', n), path.join(live, 'plan', n))
+    // The real pending files too: a pending plot adds Unscheduled lines whose rows live only there (plot 137, CF1e/CF1f).
+    for (const n of fs.readdirSync(path.join(ROOT, 'plan', 'pending')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', 'pending', n), path.join(live, 'plan', 'pending', n))
     addSpec(live, 'ZC', ['ZC1'])
     write(live, 'plan/pending/904.1.md', ['---', 'close: 904.1', 'date: 2026-11-01', 'says: fixture chunk ZC1 shipped', '---', ''].join('\n'))
     const { dir, work } = scratch(undefined, live)
