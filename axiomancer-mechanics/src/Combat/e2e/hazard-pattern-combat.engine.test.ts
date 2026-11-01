@@ -400,7 +400,7 @@ describe('Spec 26b §B/§C/§D — archetype kit, rewards, unlock, difficulty fl
         // Taking the ring off empties the kit; a signature-less relic in its
         // seat grants nothing — independent of base stats (the old archetype
         // gate is gone).
-        const ringIdx = bodyPlayer.equipment.relics.findIndex(a => a.id === 'relic-disarming-plea');
+        const ringIdx = bodyPlayer.equipment.relics.findIndex(a => a?.id === 'relic-disarming-plea');
         expect(ringIdx).toBeGreaterThanOrEqual(0);
         const swapped = equipItem(unequipItem(bodyPlayer, 'relic', ringIdx), FIXTURE_TRINKETS[0]);
         const s2 = initializeCombatEncounter(swapped, makeEnemy(60), [DOT_BODY], 1);

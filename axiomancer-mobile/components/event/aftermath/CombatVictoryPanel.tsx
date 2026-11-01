@@ -20,6 +20,7 @@ import Svg, { Circle, Path as SvgPath } from 'react-native-svg';
 
 import { TREASURE_FALLING_COINS } from '@/assets/images/treasure';
 import { AxmIcon } from '@/components/icons';
+import { getItemSprite, getItemSpriteLabel } from '@/components/icons/item-sprites';
 import { Splatter } from '@/components/Splatter';
 import { VictoryWreath } from '@/components/art/VictoryWreath';
 import { FONTS } from '@/theme/axm';
@@ -149,7 +150,7 @@ export function CombatVictoryPanel({ vm, onContinue }: CombatVictoryPanelProps) 
                                         testID={`loot-row-${i}`}
                                     >
                                         <View style={styles.lootGlyphWrap}>
-                                            <ItemGlyph slot={it.slot} />
+                                            <ItemGlyph slot={it.slot} itemId={it.itemId} />
                                         </View>
                                         <View style={styles.lootRowText}>
                                             <Text style={styles.lootName}>{it.name}</Text>
@@ -219,9 +220,23 @@ function RewardCell({ label, value, tint }: RewardCellProps) {
  * which glyph to draw. Unknown slots fall through to the bone
  * fragment default.
  */
-function ItemGlyph({ slot, size = 18 }: { slot: string; size?: number }) {
+function ItemGlyph({ slot, itemId, size = 18 }: { slot: string; itemId?: string; size?: number }) {
     const AXM = usePalette();
     const c = AXM.parchment;
+    // T's sheet picture, when the item has one (EQ3k).
+    const sprite = getItemSprite(itemId);
+    if (sprite !== null) {
+        return (
+            <Image
+                source={sprite}
+                style={{ width: size, height: size }}
+                contentFit="contain"
+                transition={0}
+                accessibilityRole="image"
+                accessibilityLabel={getItemSpriteLabel(itemId) ?? 'Item icon'}
+            />
+        );
+    }
     if (slot === 'weapon') {
         // Canonical sword mark from the icon registry.
         return <AxmIcon name="action-sword" size={size} color={c} />;

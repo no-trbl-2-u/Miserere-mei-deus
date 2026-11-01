@@ -182,7 +182,9 @@ differently:
   the build commit and the source it read. Sim numbers from before BUG1j
   (`0afc538bf`) are not comparable with later ones, and `harness` rows (a
   web export, a dev server, a jest run, and every row stored before
-  migration 0006) belong to neither T nor the bots.
+  migration 0006) belong to neither T nor the bots. A `sim` or `harness` row
+  stays in D1 for 14 days (the Worker's nightly cron, chunk 135.7); a `human`
+  row is kept for good.
 - **Chapter 1's enemies** (turns to kill and VITAE lost for every Breakwater
   foe at its node's level, all six elites included, against the four kitted
   lane decks at player levels 8 and 10, and the share of fights reaching each

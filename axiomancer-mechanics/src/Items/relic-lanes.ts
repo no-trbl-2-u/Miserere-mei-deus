@@ -45,7 +45,7 @@ export function relicLaneId(
  * one place the reward rule reads worn state.
  */
 export function wornPieces(player: Wearer): Equipment[] {
-    return [...(player.equipment?.relics ?? [])];
+    return (player.equipment?.relics ?? []).flatMap(r => (r ? [r] : []));
 }
 
 /**

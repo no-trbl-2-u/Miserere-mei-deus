@@ -56,6 +56,9 @@ import {
     addMercy, clearMercy, initHealMods, initMercyState, mercyTickEvent, mercyYielding, modifiedHeal, tickMercyClock,
     yieldWhileMercy, MERCY_BURST_MULT, type HealMods, type MercyState,
 } from './combat.mercy';
+import {
+    equipmentDealBonusPreview, equipmentTurnStart, fireEquipment, type EquipmentHook,
+} from './combat.equipment-effects';
 import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
@@ -251,6 +254,11 @@ interface Work {
 
 interface Frame {
     cardId: string;
+    /** Who runs the line: a card ('line', the default; a Curse played by a card,
+     *  a discard rider and the MERCY burst count too) or a Global in play
+     *  ('global'). Only a card's DEAL and GUARD fire the worn gear's DEAL and
+     *  first-GUARD triggers (spec 136, A10). */
+    source?: 'line' | 'global';
     /** The Curse is being played with its SACRIFICE WAIVED. */
     waived: boolean;
     /** MERCY applications the line has made (a card whose line added MERCY is a MERCY card). */
@@ -330,6 +338,24 @@ class LineCtx implements ProgramCtx {
     private stats() { return this.w.s.player.baseStats; }
     private incoming(): number { return this.w.kit.incomingNet(this.w.s); }
 
+    /** A card line, not a Global in play. */
+    private byCard(): boolean { return this.f.source !== 'global'; }
+
+    /**
+     * The worn gear's hook (spec 136, A10), on a real play only: fires what
+     * `hook` reaches and returns a DEAL's +n. A gear HEAL counts toward the
+     * VITAE you healed this turn.
+     */
+    private fireGear(hook: EquipmentHook): number {
+        if (this.mode !== 'apply' || !this.w.s.equipmentEffects) return 0;
+        const before = this.w.s.player.health;
+        const fired = fireEquipment(hook, { ...this.w.s, program: this.w.l }, this.w.events);
+        this.w.s = fired.state;
+        const healed = this.w.s.player.health - before;
+        if (healed > 0) this.heals().healed += healed;
+        return fired.bonus;
+    }
+
     // -- foe -----------------------------------------------------------------
     /** Returns the VITAE the foe actually lost (a hit past 0 counts what was left). */
     deal(n: number, opts?: { exact?: boolean; plus?: number }): number {
@@ -338,7 +364,10 @@ class LineCtx implements ProgramCtx {
         const enemy = this.w.s.enemy;
         if (isDefeated(enemy)) return 0;
         const base = (n > 0 ? (opts?.exact ? n : scaleFor(n, this.stats(), 'body', 'one-shot')) : 0) + plus;
-        let dmg = base + this.w.l.nextDealBonus;
+        // A card's DEAL takes the worn gear's +n, unscaled and before VULNERABLE, as the next-DEAL bonus is.
+        const gearBonus = !this.byCard() ? 0
+            : this.mode === 'apply' ? this.fireGear('card-deal') : equipmentDealBonusPreview(this.w.s);
+        let dmg = base + this.w.l.nextDealBonus + gearBonus;
         // FROZEN: the next DEAL the foe takes is doubled, then FROZEN ends.
         if (this.w.l.el.frozen && this.mode !== 'cost') {
             dmg *= 2;
@@ -486,6 +515,8 @@ class LineCtx implements ProgramCtx {
             this.w.guardPlus = (this.w.guardPlus ?? 0) + amt;
         } else if (this.mode === 'apply') {
             this.w.s = { ...this.w.s, guard: (this.w.s.guard ?? 0) + amt };
+            // A card's GUARD fires the worn gear's first-GUARD trigger.
+            if (this.byCard()) this.fireGear('card-guard');
         }
         return amt;
     }
@@ -523,7 +554,11 @@ class LineCtx implements ProgramCtx {
                 player: healCombatant(p, healed),
                 guard: (this.w.s.guard ?? 0) + toGuard,
             };
-            if (healed > 0) this.w.events.push({ kind: 'player-healed', cardId: this.f.cardId, amount: healed });
+            if (healed > 0) {
+                this.w.events.push({ kind: 'player-healed', cardId: this.f.cardId, amount: healed });
+                // A HEAL that restored VITAE fires the worn gear's HEAL trigger.
+                this.fireGear('heal');
+            }
         }
         return healed;
     }
@@ -623,6 +658,8 @@ class LineCtx implements ProgramCtx {
         }
         l.sacrificeCount += times;
         w.events.push({ kind: 'vitae-sacrificed', cardId: this.f.cardId, amount: paid, counted: nominalIn * times });
+        // Each SACRIFICE (a WAIVED one too: it still counts) fires the worn gear's SACRIFICE trigger.
+        this.fireGear('sacrifice');
         if (heals && cost > 0) this.healExact(cost, false);
         if (leeches && counted > 0 && !isDefeated(w.s.enemy)) {
             l.leechTurns += LEECH_TURNS_PER_APPLICATION;
@@ -655,7 +692,7 @@ class LineCtx implements ProgramCtx {
         for (const g of this.w.l.globals) {
             const spec = cardProgram(g.cardId)?.global;
             if (!spec || spec.trigger !== trigger) continue;
-            const ctx = new LineCtx(this.w, 'value', { cardId: g.cardId, waived: false });
+            const ctx = new LineCtx(this.w, 'value', { cardId: g.cardId, waived: false, source: 'global' });
             (g.paid ? spec.paid : spec.free)(ctx, n);
         }
     }
@@ -817,6 +854,8 @@ class LineCtx implements ProgramCtx {
         if (side === 'both') el.infShared += n;
         else if (side === 'foe') el.infFoe += n;
         else el.infSelf += n;
+        // Laying INFERNO fires the worn gear's INFERNO trigger.
+        this.fireGear('inferno');
     }
 
     /** The witness's worth of BLIZZARD going from `from` to `to`. */
@@ -1094,6 +1133,8 @@ class LineCtx implements ProgramCtx {
         };
         this.w.events.push({ kind: 'cards-discarded', cardIds: picks.map(p => p.cardId) });
         for (const p of picks) runDiscardRider(this.w, p.cardId);
+        // Paying by discarding fires the worn gear's discard trigger, once per payment.
+        this.fireGear('discard-pay');
         return picks.length;
     }
 
@@ -1448,7 +1489,7 @@ function fireTriggers(w: Work, trigger: GlobalTrigger, n: number): void {
         if (!glob || glob.trigger !== trigger) continue;
         if (isDefeated(w.s.enemy)) return;
         const body = g.paid ? glob.paid : glob.free;
-        const frame: Frame = { cardId: g.cardId, waived: false };
+        const frame: Frame = { cardId: g.cardId, waived: false, source: 'global' };
         const probe: Work = { ...w, s: { ...w.s, program: w.l }, l: cloneLedger(w.l), cost: 0, value: 0, events: [] };
         body(new LineCtx(probe, 'cost', frame), n);
         if (probe.cost > 0 && w.s.player.health - probe.cost < 1) continue;
@@ -1635,7 +1676,7 @@ export function programLineValue(
     if (program.global) {
         const body = paid ? program.global.paid : program.global.free;
         const n = program.global.trigger === 'sac' ? 4 : 0;
-        body(new LineCtx(w, 'value', frame), n);
+        body(new LineCtx(w, 'value', { ...frame, source: 'global' }), n);
         return w.value * expectedGlobalFires(program.global.trigger, paid);
     }
     const line = lineFor(program, paid);
@@ -1769,7 +1810,8 @@ export function playProgramCard(
 export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): ProgramPlayResult {
     if (!state.program) return { state, events: [] };
     const l = cloneLedger(state.program);
-    const w: Work = { s: { ...state, program: l }, l, events: [], kit, cost: 0, value: 0 };
+    // The worn gear's "first each turn" triggers re-arm (startTurn does it too; it is idempotent).
+    const w: Work = { s: { ...equipmentTurnStart(state), program: l }, l, events: [], kit, cost: 0, value: 0 };
     l.waives = 0;
     l.nextDouble = false;
     l.nextTwice = false;
@@ -1783,7 +1825,11 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
         const healed = Math.min(veilHeal(w.s, l.pendingHeal), Math.max(0, p.maxHealth - p.health));
         l.heals.healed += healed;
         w.s = { ...w.s, player: healCombatant(p, healed) };
-        if (healed > 0) w.events.push({ kind: 'player-healed', cardId: 'pending-heal', amount: healed });
+        if (healed > 0) {
+            w.events.push({ kind: 'player-healed', cardId: 'pending-heal', amount: healed });
+            // The delayed HEAL fires the worn gear's HEAL trigger.
+            w.s = fireEquipment('heal', w.s, w.events).state;
+        }
         l.pendingHeal = 0;
     }
     // INFERNO: you lose half the both-sides INFERNO (rounded down)
@@ -1886,10 +1932,10 @@ export function programSignatureHeal(
     const p = state.player;
     const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
     if (healed <= 0) return { state, events: [] };
-    return {
-        state: { ...state, player: healCombatant(p, healed) },
-        events: [{ kind: 'player-healed', cardId: sourceId, amount: healed }],
-    };
+    const events: CombatEvent[] = [{ kind: 'player-healed', cardId: sourceId, amount: healed }];
+    // A signature's HEAL fires the worn gear's HEAL trigger.
+    const fired = fireEquipment('heal', { ...state, player: healCombatant(p, healed) }, events);
+    return { state: fired.state, events };
 }
 
 /** One LEECH tick: the foe loses the potency, you HEAL what it lost, and a

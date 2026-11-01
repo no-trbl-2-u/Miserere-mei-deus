@@ -4,22 +4,24 @@ import type { UpgradeableDieGear } from '../Combat/combat.encounter.types';
 
 /**
  * A character's worn loadout. Exactly 5 worn pieces across 3 slot
- * kinds: 1 weapon, 1 armor, up to 3 interchangeable relics. The three
- * relic positions have no identity — a relic occupies *a* relic position;
- * array order is the display order (Relic I, II, III). `relics.length` is
- * capped at `SLOT_CAPACITY.relic` (3).
+ * kinds: 1 weapon, 1 armor, 3 relic positions. Relics keep their place
+ * (EQ3a): `relics` is positional, index 0..2 is RELIC I, II, III, and a
+ * position is a piece or `null`. Taking a relic off leaves a hole; the
+ * others do not slide. A packed array shorter than three (a save from before
+ * EQ3a) is still valid: its entries sit at positions 0..n-1 and the missing
+ * positions are empty. Readers skip `null` and tolerate a short array.
  */
 export interface EquipmentLoadout {
     weapon: Equipment | null;
     armor: Equipment | null;
-    relics: Equipment[];
+    relics: (Equipment | null)[];
 }
 
 /** A fresh, empty loadout (no piece worn in any slot). */
 export const emptyLoadout = (): EquipmentLoadout => ({
     weapon: null,
     armor: null,
-    relics: [],
+    relics: [null, null, null],
 });
 
 /**

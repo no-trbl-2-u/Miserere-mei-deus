@@ -1,11 +1,13 @@
 /**
- * Hermetic tests — item icon colour accents (IT1b).
+ * Hermetic tests — item icon colour accents (IT1b), after EQ3k.
  *
- * Pins: accent rows only ride items that wear a registry icon; every clip
- * shape sits inside the 512-unit icon space; each hue resolves to its
- * documented colour (blood follows the theme, the weather hues are fixed);
- * an accented ItemGlyph draws one accent layer per row entry, and an
- * accent-free icon draws none.
+ * The accent mechanism stays (an item with no sprite yet can wear a registry
+ * icon and colour accents), but T's sheets now draw every item, so the
+ * production tables are empty. Pins: the production tables are empty and a
+ * miss gives no accents; every clip shape of a fixture row sits inside the
+ * 512-unit icon space; each hue resolves to its documented colour (blood
+ * follows the theme, the weather hues are fixed); an accented icon draws one
+ * accent layer per row entry, and an accent-free icon draws none.
  */
 
 import { describe, expect, it } from '@jest/globals';
@@ -14,13 +16,32 @@ import React from 'react';
 
 import { AxmIcon } from '@/components/icons';
 import { accentHueColor, accentShapePath } from '@/components/icons/AxmIcon';
-import { ITEM_GLYPH_ACCENTS, ITEM_GLYPH_BY_ID, getItemGlyphAccents } from '@/components/icons/item-glyphs';
+import { ITEM_GLYPH_ACCENTS, ITEM_GLYPH_BY_ID, getItemGlyphAccents, type ItemGlyphAccentTable } from '@/components/icons/item-glyphs';
 import type { AccentShape, IconAccent } from '@/components/icons/icon-registry';
-import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { HUE } from '@/theme/axm';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
-const ROWS = Object.entries(ITEM_GLYPH_ACCENTS) as [string, readonly IconAccent[]][];
+/** Two rows in the shape the retired production rows had. */
+const FIXTURE: ItemGlyphAccentTable = {
+    'fx-chalice': [
+        {
+            hue: 'blood',
+            clip: [
+                { kind: 'ellipse', cx: 211, cy: 96, rx: 34, ry: 78 },
+                { kind: 'ellipse', cx: 252, cy: 120, rx: 38, ry: 92 },
+            ],
+        },
+    ],
+    'fx-ring': [
+        {
+            hue: 'blood',
+            clip: [{ kind: 'polygon', points: [[160, 15], [352, 15], [352, 62], [262, 160], [250, 160], [160, 62]] }],
+            grow: { factor: 1.45, ax: 256, ay: 25 },
+        },
+        { hue: 'storm', clip: [{ kind: 'rect', x: 270, y: 146, w: 122, h: 52 }] },
+    ],
+};
+const ROWS = Object.entries(FIXTURE) as [string, readonly IconAccent[]][];
 
 function inBounds(s: AccentShape): boolean {
     const inside = (v: number) => v >= 0 && v <= 512;
@@ -37,12 +58,19 @@ function inBounds(s: AccentShape): boolean {
 }
 
 describe('item accent table', () => {
-    it('is not empty (the checks below are not vacuous)', () => {
-        expect(ROWS.length).toBeGreaterThan(0);
+    it('is empty: T\'s sheets draw every item, so no registry icon needs a colour (EQ3k)', () => {
+        expect(Object.keys(ITEM_GLYPH_BY_ID)).toEqual([]);
+        expect(Object.keys(ITEM_GLYPH_ACCENTS)).toEqual([]);
     });
 
-    it.each(ROWS)('%s wears a registry icon, so its accents have geometry to paint', (id) => {
-        expect(Object.prototype.hasOwnProperty.call(ITEM_GLYPH_BY_ID, id)).toBe(true);
+    it('an id with no row gets no accents', () => {
+        expect(getItemGlyphAccents('relic-not-in-the-table')).toEqual([]);
+        expect(getItemGlyphAccents(null)).toEqual([]);
+        expect(getItemGlyphAccents('constructor')).toEqual([]);
+    });
+
+    it('a fixture table resolves its rows', () => {
+        expect(getItemGlyphAccents('fx-ring', FIXTURE).map((a) => a.hue)).toEqual(['blood', 'storm']);
     });
 
     it.each(ROWS)('%s: every layer has a clip, every shape inside the icon space', (_id, accents) => {
@@ -52,12 +80,6 @@ describe('item accent table', () => {
             for (const s of a.clip) expect(inBounds(s)).toBe(true);
         }
     });
-
-    it('an id with no row gets no accents', () => {
-        expect(getItemGlyphAccents('relic-not-in-the-table')).toEqual([]);
-        expect(getItemGlyphAccents(null)).toEqual([]);
-        expect(getItemGlyphAccents('constructor')).toEqual([]);
-    });
 });
 
 describe('accent hues', () => {
@@ -66,17 +88,6 @@ describe('accent hues', () => {
         expect(accentHueColor('storm', { blood: '#123456' })).toBe(HUE.goldAccent);
         expect(accentHueColor('ember', { blood: '#123456' })).toBe(HUE.statDownAmber);
         expect(accentHueColor('frost', { blood: '#123456' })).toBe(HUE.guardBlue);
-    });
-
-    // Pinned against T's picks (PR body, 2026-10-30): gold = storm, amber =
-    // ember, GUARD blue = frost. Hardcoded, not derived from the table, so a
-    // swapped hue on one of these four new rows fails here even though the
-    // data-driven checks above would still pass.
-    it("IT2b's four new relics wear the hue T picked", () => {
-        expect(ITEM_GLYPH_ACCENTS['relic-disarming-plea'].map((a) => a.hue)).toEqual(['storm']);
-        expect(ITEM_GLYPH_ACCENTS['relic-thornback-signet'].map((a) => a.hue)).toEqual(['ember']);
-        expect(ITEM_GLYPH_ACCENTS['relic-mirror-brooch'].map((a) => a.hue)).toEqual(['frost']);
-        expect(ITEM_GLYPH_ACCENTS['relic-carapace-belt'].map((a) => a.hue)).toEqual(['ember']);
     });
 });
 
@@ -112,8 +123,8 @@ describe('accent clip paths', () => {
 });
 
 describe('accent layers render', () => {
-    it.each(ROWS)('%s draws one layer per accent entry', (id, accents) => {
-        const { tree } = withAllProviders(<ItemGlyph category="equipment" sub="Relic" itemId={id} />);
+    it.each(ROWS)('%s draws one layer per accent entry', (_id, accents) => {
+        const { tree } = withAllProviders(<AxmIcon name="relic-chalice-drops" accents={accents} />);
         const rendered = render(tree);
         for (const hue of new Set(accents.map((a) => a.hue))) {
             const want = accents.filter((a) => a.hue === hue).length;
