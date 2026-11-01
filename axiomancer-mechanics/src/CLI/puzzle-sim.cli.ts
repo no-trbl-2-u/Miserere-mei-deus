@@ -13,6 +13,7 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { formatBreakwaterHazardPuzzles } from '../World/Continents/Coastal-Village/breakwater-puzzles';
 import { HAZARD_PUZZLE_CANDIDATES } from '../World/Hazard/puzzle/hazard-puzzle.candidates';
 import { formatHazardPuzzleCurve } from '../World/Hazard/puzzle/hazard-puzzle.curve-report';
 import { buildHazardPuzzleCurve } from '../World/Hazard/puzzle/hazard-puzzle.sim';
@@ -38,7 +39,8 @@ function headCommit(): string {
 
 /** The report's markdown at `plays` plays per bot; `commit` is the stamp. */
 export function hazardPuzzleCurveMarkdown(plays: number, commit: string): string {
-    return formatHazardPuzzleCurve(buildHazardPuzzleCurve(HAZARD_PUZZLE_CANDIDATES, { plays }), commit);
+    const curve = buildHazardPuzzleCurve(HAZARD_PUZZLE_CANDIDATES, { plays });
+    return `${formatHazardPuzzleCurve(curve, commit)}\n${formatBreakwaterHazardPuzzles(curve)}`;
 }
 
 if (require.main === module) {

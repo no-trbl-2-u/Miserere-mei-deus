@@ -2,7 +2,7 @@
 
 Written by `npm run puzzle:sim -w axiomancer-mechanics` (phase HP6a). Do not edit by hand; re-run the script.
 
-- **Commit:** `24baafbff`
+- **Commit:** `bf5efda9e`
 - **Seed:** 1031
 - **Plays per bot, per candidate:** 1000
 - **Candidates:** 30, each played on its graded route with no unlock.
@@ -47,3 +47,18 @@ measurement (D57), not a gated baseline, and not calibrated against human solve 
 | 28 | `cand-cost-medium-03` | two dives and a blank | medium | risk 15F + 4E | 0.0% | 0.4% | 0.2% | `....................` | 10 | 55.6% |
 | 29 | `cand-cost-medium-05` | two tithes, one held back | medium | risk 6F + 12E | 0.0% | 0.4% | 0.2% | `....................` | 6 | 50.0% |
 | 30 | `cand-cost-medium-07` | an oath in hand, a pawn beside it | medium | risk 15F + 8E | 0.0% | 0.0% | 0.0% | `....................` | 5 | 58.3% |
+
+## The Breakwater six
+
+Phase HP6b. `pickChapterHazardPuzzles` takes the middle third of the ranking (ranks 11-20 of 30), picks six
+evenly spaced ranks and gives them to the six hazard nodes in story order, so each is harder than the one
+before. `BREAKWATER_HAZARD_PUZZLES` holds this table; a test fails if the two drift.
+
+| order | node | place | candidate | label | rank | score | curve |
+|---|---|---|---|---|---|---|---|
+| 1 | `bw-h4` | The wreck | `cand-cost-hard-10` | one wild, one red, an oath | 11 | 27.4% | `#####...............` |
+| 2 | `bw-m2` | River meadow | `cand-hard-08` | an oath without gold, one purple | 13 | 23.7% | `#####...............` |
+| 3 | `bw-p1` | Foothills | `cand-cost-hard-08` | the stones wait in reserve | 15 | 21.1% | `####................` |
+| 4 | `bw-m4` | Manor road | `cand-cost-medium-09` | four costs and a wind | 16 | 20.1% | `####................` |
+| 5 | `bw-t5` | Back lanes | `cand-hard-10` | a blank, a purple, two purple cards | 18 | 4.7% | `#...................` |
+| 6 | `bw-d4` | Tower switchbacks | `cand-cost-medium-01` | two pawns and a wild die | 20 | 4.1% | `#...................` |

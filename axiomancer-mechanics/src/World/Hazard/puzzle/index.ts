@@ -122,3 +122,6 @@ export {
 } from './hazard-puzzle.sim';
 export { formatHazardPuzzleCurve, hazardPuzzleCurveBar } from './hazard-puzzle.curve-report';
 export { HAZARD_PUZZLE_SIM } from './hazard-puzzle.tuning';
+
+export type { HazardPuzzlePick } from './hazard-puzzle.pick';
+export { pickChapterHazardPuzzles, hazardPuzzleMiddleThird, hazardPuzzlePickRanks } from './hazard-puzzle.pick';
