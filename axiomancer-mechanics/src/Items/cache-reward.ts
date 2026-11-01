@@ -1,10 +1,11 @@
 /**
  * Loot-cache reward roller.
  *
- * Loot surfaces mint no random equipment: The Reliquary (and any other cache
- * surface) yields a deterministic set of **consumables** scaled by tier. Currency is handled by
- * the caller (the cache session carries its own currency reward). Relics are
- * never cache loot.
+ * The Reliquary (and any other cache surface) yields a deterministic set of
+ * **consumables** scaled by tier, and, when the caller names who is looking
+ * (`carrier`), sometimes one lane weapon or armor they do not carry
+ * (`EQUIPMENT_DROP_TUNING.cache`). Currency is handled by the caller (the
+ * cache session carries its own currency reward). Relics are never cache loot.
  *
  * Determinism: same `seed` + inputs → same rewards (a caller-supplied cache
  * seed drives a self-contained PRNG).
@@ -15,6 +16,7 @@
  */
 
 import { consumableLibrary } from './consumable.library';
+import { EQUIPMENT_DROP_TUNING, rollEquipmentDrop, type EquipmentCarrier } from './equipment-drop';
 import type { Item } from './types';
 
 /** Reward depth. `modest` = early locales, `rich` = deeper locales. */
@@ -27,6 +29,12 @@ export interface RollCacheRewardOptions {
     seed: number;
     /** Reward depth: scales the consumable count. */
     tier: CacheLootTier;
+    /**
+     * Who is looking. Given, the bundle can also hold one lane weapon or armor
+     * this carrier lacks, at `EQUIPMENT_DROP_TUNING.cache`. Absent, the bundle
+     * is consumables only (a hazard puzzle's haul).
+     */
+    carrier?: EquipmentCarrier;
 }
 
 interface TierTuning {
@@ -52,6 +60,9 @@ function mulberry32(seed: number): () => number {
     };
 }
 
+/** Offset for the equipment stream, so adding a piece never shifts the consumables. */
+const CACHE_EQUIPMENT_STREAM_OFFSET = 0x85ebca6b;
+
 /** Offset for the card stream, so the card and the goods never share draws. */
 const CACHE_CARD_STREAM_OFFSET = 0x9e3779b9;
 
@@ -73,8 +84,9 @@ function rollInt(rng: () => number, min: number, max: number): number {
  * Roll a deterministic set of consumable rewards for a loot cache. Draws a
  * tier-scaled count of consumables from `consumableLibrary` (the healing
  * potions), cloned at `quantity: 1` so the shared library is never
- * mutated. Never throws; returns `[]` only if the pool
- * is somehow empty.
+ * mutated. With a `carrier`, a lane piece it lacks joins the bundle at
+ * `EQUIPMENT_DROP_TUNING.cache`, drawn from the seed's own equipment stream.
+ * Never throws; returns `[]` only if the pool is somehow empty.
  */
 export function rollCacheReward(opts: RollCacheRewardOptions): Item[] {
     const rng = mulberry32(opts.seed);
@@ -86,6 +98,14 @@ export function rollCacheReward(opts: RollCacheRewardOptions): Item[] {
     for (let i = 0; i < count; i++) {
         const pick = pool[Math.floor(rng() * pool.length)];
         out.push({ ...pick, quantity: 1 });
+    }
+    if (opts.carrier) {
+        const piece = rollEquipmentDrop(
+            opts.carrier,
+            mulberry32((opts.seed ^ CACHE_EQUIPMENT_STREAM_OFFSET) >>> 0),
+            EQUIPMENT_DROP_TUNING.cache,
+        );
+        if (piece) out.push(piece);
     }
     return out;
 }

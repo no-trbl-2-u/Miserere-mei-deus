@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { breakwaterChapter, BREAKWATER_CHAPTER_GATES } from './Continents/Coastal-Village/breakwater-chapter';
 import { BREAKWATER_CHAPTER_KINDS, BREAKWATER_CHAPTER_POOLS, BW_ELITE_DRAWS } from './MapEvents/content';
 import {
-    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_KEEP_KEY,
+    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_PIECES, BREAKWATER_KEEP_KEY,
 } from './breakwater-chapter.questline';
 import { getMapDefinition } from './map.registry';
 import { getNodeEventPool } from './MapEvents/resolve-map-event';
@@ -22,6 +22,7 @@ import { questGateProblems } from './quest-gates';
 import { getQuestline } from './questline';
 import { AUTHORED_QUESTLINES } from './quest.library';
 import { getRelicById } from '../Items/relic.library';
+import { EQUIPMENT_LANE } from '../Items/equipment.library';
 import type { MapEventPayload } from './MapEvents/types';
 
 /** Code | kind | roads to ("C0 (travel)" marks the passage, not a road). */
@@ -256,11 +257,11 @@ describe('A2: the chain', () => {
         expect(new Set(lines).size).toBe(4);
     });
 
-    it('pays XP and exactly one relic per step; step 2 also pays the key, and step 3 carries it', () => {
+    it('pays XP and exactly one relic, weapon or armor per step; step 2 also pays the key, and step 3 carries it', () => {
         for (const step of BREAKWATER_CHAPTER_QUESTLINE.steps) {
-            const relics = step.rewards.filter(r => typeof r === 'object' && 'kind' in r && r.kind === 'item'
-                && r.item.category === 'equipment' && r.item.slot === 'relic');
-            expect(relics, `step ${step.step}`).toHaveLength(1);
+            const gear = step.rewards.filter(r => typeof r === 'object' && 'kind' in r && r.kind === 'item'
+                && r.item.category === 'equipment');
+            expect(gear, `step ${step.step}`).toHaveLength(1);
             expect(step.rewards[0], `step ${step.step}`).toMatchObject({ kind: 'experience' });
         }
         expect(BREAKWATER_CHAPTER_QUESTLINE.steps[1]!.rewards).toContain(BREAKWATER_KEEP_KEY);
@@ -270,10 +271,32 @@ describe('A2: the chain', () => {
     });
 });
 
-describe('A12: no relic is elite-only', () => {
-    it('lets a quest pay a relic the elite drop also draws (the chain\'s step 4 pays one)', () => {
-        const circlet = getRelicById('relic-crimson-circlet')!;
-        expect(circlet.relicSource).toBe('elite');
-        expect(BREAKWATER_CHAPTER_QUESTLINE.steps[3]!.rewards).toContainEqual({ kind: 'item', item: circlet });
+describe('A13: the rewards alternate', () => {
+    /** The one weapon, armor or relic a step pays. */
+    const gearOf = (step: number) => {
+        const rewards = BREAKWATER_CHAPTER_QUESTLINE.steps[step - 1]!.rewards;
+        const hits = rewards.flatMap(r => (typeof r === 'object' && 'kind' in r && r.kind === 'item'
+            && r.item.category === 'equipment' ? [r.item] : []));
+        expect(hits).toHaveLength(1);
+        return hits[0]!;
+    };
+
+    it('pays a relic, a weapon, a relic, an armor, in chain order', () => {
+        expect([1, 2, 3, 4].map(step => {
+            const g = gearOf(step);
+            return g.category === 'equipment' ? g.slot : null;
+        })).toEqual(['relic', 'weapon', 'relic', 'armor']);
+    });
+
+    it('pays an equipment step a piece of the lane of the relic the step before paid', () => {
+        const laneOfRelic = (step: number) => getRelicById(gearOf(step).id)!.laneId;
+        expect(EQUIPMENT_LANE[gearOf(2).id]).toBe(laneOfRelic(1));
+        expect(EQUIPMENT_LANE[gearOf(4).id]).toBe(laneOfRelic(3));
+        expect(gearOf(2).id).toBe(BREAKWATER_CHAPTER_PIECES[2]);
+        expect(gearOf(4).id).toBe(BREAKWATER_CHAPTER_PIECES[4]);
+    });
+
+    it('never pays the grey pair', () => {
+        for (const step of [2, 4]) expect(EQUIPMENT_LANE[gearOf(step).id]).toBeDefined();
     });
 });

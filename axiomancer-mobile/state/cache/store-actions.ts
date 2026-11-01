@@ -69,7 +69,7 @@ export function beginLootCacheChoiceAction(store: AppStore, options: BeginLootCa
 
     const player = (state as unknown as GameState).player;
     const tier = options.tier ?? 'modest';
-    const itemCandidates = rollCacheReward({ playerLevel: player?.level ?? 1, seed, tier });
+    const itemCandidates = rollCacheReward({ playerLevel: player?.level ?? 1, seed, tier, ...(player ? { carrier: player } : {}) });
     const cardCandidate = rollCombatCardRewards(player as Character, cacheCardRng(seed), 1)[0];
 
     setSession(store, createLootCacheChoiceSession(seed, {

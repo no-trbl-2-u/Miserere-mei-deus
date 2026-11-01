@@ -38,5 +38,10 @@ export {
     weaponLibrary, armorLibrary, equipmentLibrary, EQUIPMENT_LANE, GREY_WEAPON_ID, GREY_ARMOR_ID,
     getEquipmentPieceById, cloneEquipmentPiece, equipmentLaneId, greyPair, wearGreyPair,
 } from './equipment.library';
+// Where the lane pieces come from, and how often (one tuning table).
+export {
+    EQUIPMENT_DROP_TUNING, carriedPieceIds, equipmentDropPool, rollEquipmentDrop,
+} from './equipment-drop';
+export type { EquipmentCarrier } from './equipment-drop';
 // The lane a relic opens while worn (the card-reward rule reads it).
 export { relicLaneId, wornLaneCounts } from './relic-lanes';

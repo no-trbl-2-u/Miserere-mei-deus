@@ -11,11 +11,11 @@
  *   4  taken at the keep gate: beat the chapter boss at the sea keep
  *      (`bw-k2`); turned in at the river bridge (`bw-b1`); opens the bridge
  *
- * Every step pays XP and one relic (T: "every completed quest will offer a
- * new relic"). The relics are placeholders from the relic library until T
- * names them (BW1d, BW1e); step 4 pays the Crimson Circlet, a relic the elite
- * drop also draws, because no relic is elite-only any more (A12). Every line
- * is `[content]`.
+ * Every step pays XP and one reward, and the rewards alternate (T, 2026-11-01:
+ * "one quest is a relic, another is a weapon, etc."): steps 1 and 3 pay a
+ * relic, step 2 pays a weapon and step 4 an armor of the lane of the relic the
+ * step before paid. The relics are placeholders from the relic library until
+ * T names them (BW1d, BW1e). Every line is `[content]`.
  *
  * Registered on load by `quest.library.ts` (`AUTHORED_QUESTLINES`).
  */
@@ -24,6 +24,8 @@ import type { Questline } from './questline';
 import type { Quest, QuestObjective, Reward } from './types';
 import type { QuestItem } from '../Items/types';
 import { getRelicById } from '../Items/relic.library';
+import { equipmentLibrary, EQUIPMENT_LANE } from '../Items/equipment.library';
+import type { EquipmentSlot } from '../Items/types';
 import { BREAKWATER_CHAPTER_GATES } from './Continents/Coastal-Village/breakwater-chapter';
 
 /** The chain's questline id: its quest nodes and the windmill's cutscene name it. */
@@ -46,12 +48,31 @@ export const BREAKWATER_KEEP_KEY: QuestItem = {
     questId: BREAKWATER_CHAPTER_STEPS.keep,
 };
 
-/** The relic each step pays: placeholders until T names them (BW1d). */
+/** The relic steps 1 and 3 pay: placeholders until T names them (BW1d). */
 export const BREAKWATER_CHAPTER_RELICS = {
     1: 'relic-ruby-signet',
-    2: 'relic-elementalist-brooch',
     3: 'relic-mirror-brooch',
-    4: 'relic-crimson-circlet',
+} as const;
+
+/**
+ * The lane piece a step pays: the weapon or armor of the lane of the relic the
+ * step before paid (`EQUIPMENT_LANE`).
+ */
+function lanePieceId(relicStep: keyof typeof BREAKWATER_CHAPTER_RELICS, slot: EquipmentSlot): string {
+    const relic = getRelicById(BREAKWATER_CHAPTER_RELICS[relicStep]);
+    const piece = equipmentLibrary.find(p => p.slot === slot && EQUIPMENT_LANE[p.id] === relic?.laneId);
+    if (!piece) throw new Error(`breakwater-chapter: no ${slot} for the lane of '${BREAKWATER_CHAPTER_RELICS[relicStep]}'.`);
+    return piece.id;
+}
+
+/**
+ * The pieces steps 2 (a weapon) and 4 (an armor) pay: the lane of the relic
+ * before each (Blood Price after the Ruby Signet, Defender after the Mirror
+ * Brooch).
+ */
+export const BREAKWATER_CHAPTER_PIECES = {
+    2: lanePieceId(1, 'weapon'),
+    4: lanePieceId(3, 'armor'),
 } as const;
 
 const STEP_XP = 40;
@@ -61,6 +82,13 @@ function relicReward(step: keyof typeof BREAKWATER_CHAPTER_RELICS): Reward {
     const relic = getRelicById(id);
     if (!relic) throw new Error(`breakwater-chapter: no relic '${id}'.`);
     return { kind: 'item', item: relic };
+}
+
+function pieceReward(step: keyof typeof BREAKWATER_CHAPTER_PIECES): Reward {
+    const id = BREAKWATER_CHAPTER_PIECES[step];
+    const piece = equipmentLibrary.find(p => p.id === id);
+    if (!piece) throw new Error(`breakwater-chapter: no piece '${id}'.`);
+    return { kind: 'item', item: piece };
 }
 
 function quest(name: string, description: string, objective: Omit<QuestObjective, 'requiredCount' | 'currentCount'>): Quest {
@@ -95,7 +123,7 @@ export const BREAKWATER_CHAPTER_QUESTLINE: Questline = {
             quest: quest(BREAKWATER_CHAPTER_STEPS.lighthouse, '[content] Climb to the lighthouse.', {
                 id: 'lighthouse', type: 'reach', target: 'bw-l5', description: '[content] Reach the lighthouse.',
             }),
-            rewards: [{ kind: 'experience', amount: STEP_XP }, BREAKWATER_KEEP_KEY, relicReward(2)],
+            rewards: [{ kind: 'experience', amount: STEP_XP }, BREAKWATER_KEEP_KEY, pieceReward(2)],
             settle: 'on-arrival',
         },
         {
@@ -114,7 +142,7 @@ export const BREAKWATER_CHAPTER_QUESTLINE: Questline = {
             quest: quest(BREAKWATER_CHAPTER_STEPS.boss, '[content] Beat what holds the sea keep, then cross the bridge.', {
                 id: 'boss', type: 'kill', foeClass: 'boss', description: '[content] Beat the sea keep\'s master.',
             }),
-            rewards: [{ kind: 'experience', amount: STEP_XP }, relicReward(4)],
+            rewards: [{ kind: 'experience', amount: STEP_XP }, pieceReward(4)],
             settle: 'turn-in',
             turnInAt: 'bw-b1',
             gatesPast: [BREAKWATER_CHAPTER_GATES.pastBridge],

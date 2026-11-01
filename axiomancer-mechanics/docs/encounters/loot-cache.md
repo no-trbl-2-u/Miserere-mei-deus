@@ -17,7 +17,8 @@ of three offers:
 - **Card** — one reward card, granted straight to the deck (same pool /
   rarity weighting as a post-combat card reward).
 - **Item** — a tier-scaled consumable haul (`rollCacheReward`, unchanged
-  from the retired engine) plus the node's authored currency.
+  from the retired engine) plus the node's authored currency, and at
+  `EQUIPMENT_DROP_TUNING.cache` one lane weapon or armor the player does not carry.
 - **Sacrifice** — nothing to the player; the choice is simply consumed.
   (It used to tick a per-map goodwill tally, `GameState.mapGoodwill`, spent
   on village rewards; the goodwill system was purged in THE REVAMP R3b and

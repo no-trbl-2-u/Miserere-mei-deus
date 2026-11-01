@@ -65,7 +65,7 @@ import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
     claimCombatRewardAction, claimCombatUpgradeAction, resetCombatRewardAction, rollCombatRewardAction,
-    settleEliteRelicAction,
+    settleEliteEquipmentAction, settleEliteRelicAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -239,6 +239,9 @@ export function applyHazardOutcome(
     // A won elite fight rolls its relic FIRST: a drop is the whole reward,
     // so the XP and loot are withheld and the card draft never opens.
     const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
+    // A beaten elite may also drop a lane piece, a befriended one always hands
+    // one: on top of the relic roll, never the whole reward.
+    if (outcome === 'victory' || isMercifulWin(outcome)) settleEliteEquipmentAction(store, enemy, isMercifulWin(outcome));
     const questsBefore = (store.getState() as unknown as GameState).quests;
     const playerBefore = (store.getState() as unknown as GameState).player;
     const report = store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, {

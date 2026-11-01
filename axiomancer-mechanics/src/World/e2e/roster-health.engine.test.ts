@@ -29,13 +29,14 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     // No run starts with the ring or is handed it any more; old saves and
     // the dev menu hold it until it gets a lane.
     { lens: 'item-ungranted', id: 'relic-disarming-plea' },
-    // The Breakwater chain pays four relics, one per step (the Ruby Signet, the
-    // Elementalist Brooch, the Mirror Brooch and the Crimson Circlet), so those
-    // are granted. The rest drop from elites (`rollEliteRelicDrop`, a source this
-    // audit does not read) or wait on a quest that hands them out; until then only
-    // the dev menu hands them over.
+    // The Breakwater chain pays two relics (the Ruby Signet and the Mirror
+    // Brooch; its other two steps pay a weapon and an armor). The rest drop from
+    // elites (`rollEliteRelicDrop`, a source this audit does not read) or wait on
+    // a quest that hands them out; until then only the dev menu hands them over.
+    { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
     { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
     { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
+    { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
     { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
     { lens: 'item-ungranted', id: 'relic-thornback-signet' },
     { lens: 'item-ungranted', id: 'relic-carapace-belt' },

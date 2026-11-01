@@ -11,7 +11,7 @@ import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import { renderContent } from '../CLI/chapter1-content.cli';
 import { HAZARD_LIBRARY } from './Hazard/hazard.content';
 import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from './MapEvents/content';
-import { BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY } from './breakwater-chapter.questline';
+import { BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_PIECES, BREAKWATER_KEEP_KEY } from './breakwater-chapter.questline';
 import { chapter1Content } from './chapter1-content';
 import { BREAKWATER_CHAPTER_GATES, breakwaterChapter } from './Continents/Coastal-Village/breakwater-chapter';
 
@@ -95,7 +95,8 @@ describe('chapter1Content', () => {
         const item = (id: string) => c.items.find((i) => i.id === id);
         for (const relic of Object.values(BREAKWATER_CHAPTER_RELICS)) expect(item(relic)?.sources).toContain('quest');
         expect(item(BREAKWATER_KEEP_KEY.id)).toMatchObject({ sources: ['quest'], nodeIds: ['bw-l5'] });
-        expect(item('relic-crimson-circlet')?.sources).toEqual(expect.arrayContaining(['quest', 'elite-drop']));
+        for (const piece of Object.values(BREAKWATER_CHAPTER_PIECES)) expect(item(piece)?.sources).toContain('quest');
+        expect(item('relic-crimson-circlet')?.sources).toEqual(['elite-drop']);
         expect(c.items.some((i) => i.sources.includes('village'))).toBe(true);
         expect(c.items.some((i) => i.sources.includes('foe-drop'))).toBe(true);
     });

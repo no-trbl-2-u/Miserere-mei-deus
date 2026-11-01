@@ -24,7 +24,7 @@ import { resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { takeTravel } from '../MapEvents/travel';
 import { questStepState } from '../questline';
 import {
-    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_RELICS,
+    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_PIECES,
     BREAKWATER_CHAPTER_STEPS,
 } from '../breakwater-chapter.questline';
 import '../index';
@@ -45,7 +45,7 @@ const BOSS_NODE = 'bw-k2';
 const KEEP_GATE = 'bw-k1';
 const BRIDGE_NODE = 'bw-b1';
 const BRIDGE = 'bw-b2';
-const RELIC = BREAKWATER_CHAPTER_RELICS[4];
+const RELIC = BREAKWATER_CHAPTER_PIECES[4];
 
 const map = (s: GameState) => s.world.currentMap;
 const legal = (s: GameState) => legalMovesFrom(map(s));

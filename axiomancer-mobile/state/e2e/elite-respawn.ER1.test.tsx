@@ -19,8 +19,10 @@ import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 
 import {
+    EQUIPMENT_LANE,
     FIXTURE_ELITE_RELICS,
     createStartingWorld,
+    equipmentLibrary,
     initializeCombatEncounter,
     getMapDefinition,
     moveToNode,
@@ -188,7 +190,10 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
         expect(won.offers).toEqual([]);
         expect(store.getState().combatReward.claimed).toBe(true);
         expect(store.getState().combatReward.upgrade).toBeNull();
-        expect(store.getState().itemReward.queue.map(e => e.item.id)).toEqual([FIXTURE_ELITE_RELICS[0]!.id]);
+        // The relic is the whole reward; the lane piece (the forced roll hits both) rides on top of it.
+        const queued = store.getState().itemReward.queue.map(e => e.item);
+        expect(queued[0]!.id).toBe(FIXTURE_ELITE_RELICS[0]!.id);
+        expect(queued.slice(1).map(i => i.id)).toEqual([equipmentLibrary.find(p => EQUIPMENT_LANE[p.id])!.id]);
         expect(gs(store).world.currentMap.retiredEliteNodes).toEqual(['bw-w5']);
 
         arriveAtRest(store);
@@ -229,7 +234,9 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
             jest.spyOn(Math, 'random').mockReturnValue(0);
             applyHazardOutcome(store, outcome as CombatOutcome, finalState, enemy, FIXTURE_ELITE_RELICS);
             jest.restoreAllMocks();
-            expect(store.getState().itemReward.queue).toHaveLength(0);
+            // A spare is a befriend: it hands a lane piece (and only that), never a relic.
+            expect(store.getState().itemReward.queue).toHaveLength(outcome === 'mercy' ? 1 : 0);
+            for (const entry of store.getState().itemReward.queue) expect(EQUIPMENT_LANE[entry.item.id]).toBeDefined();
             expect(gs(store).world.currentMap.retiredEliteNodes ?? []).toEqual([]);
             if (outcome === 'flee') {
                 // A fled fight leaves its node unspent (phase QL1b): the

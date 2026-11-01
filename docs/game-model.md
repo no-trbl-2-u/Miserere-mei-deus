@@ -162,6 +162,14 @@ the Expo app (`axiomancer-mobile`) presents it.
   The ten weapons and armor (a grey pair and a pair per lane, one fight effect
   and one dice effect each, no stats) are in
   `axiomancer-mechanics/docs/equipment.md`.
+- **Where the lane pieces come from** (`EQUIPMENT_DROP_TUNING`, `Items/equipment-drop.ts`,
+  the one table of rates and shop numbers): a won elite fight drops one the
+  player does not carry at 25%, on top of its relic roll and never the whole
+  reward; a befriended elite always hands one; a loot cache's item bundle holds
+  one at 33% (`rollCacheReward` with a `carrier`); the Breakwater's quests
+  alternate relic, weapon, relic, armor, an equipment step paying the lane of the
+  relic the step before paid; the village shop stocks two at 40 shillings. The
+  grey pair never drops, and a lane piece goes to `/item-reward` as a relic does.
 - **The Color Law** (`dieSatisfiesColorLaw`): a die powers a card when the
   card is `any`, the die is gold, or the colours match. A mismatch fizzles.
   Powering is all a die does: PAID numbers land as printed (scaled by stats)
