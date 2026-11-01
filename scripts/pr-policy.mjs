@@ -24,6 +24,15 @@ export const PLAN_TITLE = /^plot\s*[:(]/i
 export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
 
 /**
+ * The weekly nexus sync PR (phase NX1h): only T merges it. `nexus-sync.yml` labels it; the
+ * head branch the CLI pushes (`nexus/upgrade-<version>`) and the title it writes (`plan: sync
+ * to nexus <version>`) hold it too, so a PR the label has not reached yet is held all the same.
+ */
+export const SYNC_LABEL = 'nexus-sync'
+export const SYNC_HEAD = /^nexus\/upgrade-/
+export const SYNC_TITLE = /^plan: sync to nexus\b/i
+
+/**
  * Files that are the review pipeline itself. A PR that changes them is
  * reviewed by main's copy but, once merged, becomes the new rule, so it
  * never merges itself: T merges it (T, 2026-10-20).

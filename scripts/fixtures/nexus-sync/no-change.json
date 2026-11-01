@@ -1,0 +1,66 @@
+{
+  "what": "the lock moves and nothing nexus changed reaches a file we carry",
+  "report": {
+    "files": [
+      {
+        "path": "plan/nexus.lock",
+        "status": "ref moved",
+        "note": "51b70f4d2125272bf4a66e080660c521fde13233 -> f63295db814e (2.0.0+f63295d); its comments kept"
+      },
+      {
+        "path": "skills/iterate.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/march.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/vault.md",
+        "status": "kept-custom",
+        "note": "a skill the kit does not ship: never touched"
+      }
+    ],
+    "warnings": [],
+    "gate": [
+      {
+        "name": "plan-check",
+        "ok": true
+      }
+    ],
+    "sync": {
+      "from": {
+        "ref": "51b70f4d2125272bf4a66e080660c521fde13233",
+        "sha": "51b70f4d2125272bf4a66e080660c521fde13233"
+      },
+      "to": {
+        "ref": "f63295db814e964f787dbb66b0e5d60004bae51f",
+        "version": "2.0.0+f63295d"
+      },
+      "counts": {
+        "replaced": 0,
+        "merged": 0,
+        "assisted": 0,
+        "new": 0,
+        "kept": 27,
+        "same": 91,
+        "held": 0,
+        "available": 0
+      },
+      "assisted": []
+    },
+    "available": []
+  },
+  "commits": [
+    {
+      "sha": "f63295db814e964f787dbb66b0e5d60004bae51f",
+      "subject": "docs: nexus-explained.html -- animated diagrams of the loop",
+      "files": [
+        "nexus-explained.html"
+      ]
+    }
+  ],
+  "texts": {}
+}

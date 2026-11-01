@@ -21,6 +21,7 @@
 // Holds, each a tested line of `mergeWanted`:
 //   - the kill switch: repository variable PR_AUTO_MERGE=off, or the label `no-auto-merge`
 //   - a plot PR: label `plot`, or a title that starts `plot:` (D101; `review:plan-only` and `plan:` merge like any PR)
+//   - a nexus sync PR (phase NX1h): label `nexus-sync`, a `nexus/upgrade-*` head or a `plan: sync to nexus` title; only T merges it
 //   - a pipeline PR: one that changes a file in `PIPELINE_PATHS` (the reviewer, the partition, the merge job)
 //   - a PR that waits on T or the loop: `review:needs-T`, `review:rules-change` (D119), `loop:pr-stuck`, `eval:seed`, a draft, a fork
 //   - a verdict comment from any account but the reviewer's (`TRUSTED_AUTHORS`): the repo is public
@@ -54,7 +55,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
-import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
+import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { updateBranchIsolated } from './pr-resolve.mjs'
 import { settleMain } from './pr-settle.mjs'
 import { markedHeads } from './pr-review.mjs'
@@ -62,7 +63,7 @@ import { markedHeads } from './pr-review.mjs'
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
 // them without importing this file (which imports it: the cycle deadlocked
 // the CLI's top-level await, exit 13). Re-exported here for every reader.
-export { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS }
+export { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, TRUSTED_AUTHORS }
 
 /**
  * The verdict the job trusts for this head and this run: the latest comment
@@ -134,7 +135,7 @@ export function verifyGateGreen(checks, head) {
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, head: string, liveHead?: string, mergeStateStatus: string, comments: { body: string, createdAt: string }[], since: string, killSwitch?: boolean, mergedToday?: number }} pr the PR's live facts; `head` is the one this run reviewed, `liveHead` the PR's current one.
  * @returns {{ go: boolean, reason: string }} the decision and why.
  */
-export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, head, liveHead = head, mergeStateStatus, checks = [], comments, since, digest = null, files = [], killSwitch = false, mergedToday = 0, trusted = TRUSTED_AUTHORS }) {
+export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, headRefName = '', head, liveHead = head, mergeStateStatus, checks = [], comments, since, digest = null, files = [], killSwitch = false, mergedToday = 0, trusted = TRUSTED_AUTHORS }) {
   if (killSwitch) return { go: false, reason: 'kill switch: PR_AUTO_MERGE is off' }
   if (liveHead !== head) return { go: false, reason: `head moved to ${liveHead.slice(0, 8)}; this run reviewed ${head.slice(0, 8)}` }
   if (labels.includes('no-auto-merge')) return { go: false, reason: 'label no-auto-merge' }
@@ -143,6 +144,8 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   if (isDraft) return { go: false, reason: 'draft' }
   const plan = labels.find((l) => PLAN_LABELS.includes(l)) ?? (PLAN_TITLE.test(title ?? '') ? 'title' : null)
   if (plan) return { go: false, reason: `plan PR (${plan === 'title' ? 'title' : `label ${plan}`}): T merges plans by hand` }
+  const sync = labels.includes(SYNC_LABEL) ? `label ${SYNC_LABEL}` : SYNC_HEAD.test(headRefName ?? '') ? `head ${headRefName}` : SYNC_TITLE.test(title ?? '') ? 'title' : null
+  if (sync) return { go: false, reason: `nexus sync PR (${sync}): only T merges a nexus sync` }
   const hold = labels.find((l) => HOLD_LABELS.includes(l))
   if (hold) return { go: false, reason: `label ${hold}` }
   const pipeline = files.find((f) => PIPELINE_PATHS.includes(f))
@@ -395,11 +398,11 @@ async function main() {
     console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id> | tree --pr <n> --head <sha> | settle [--dry-run]')
     process.exit(2)
   }
-  let view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,mergeStateStatus,comments,files']))
+  let view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefName,headRefOid,mergeStateStatus,comments,files']))
   // GitHub computes mergeability lazily; UNKNOWN right after a push is not an answer.
   for (let i = 0; i < 6 && view.mergeStateStatus === 'UNKNOWN'; i++) {
     await new Promise((r) => setTimeout(r, 20_000))
-    view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,mergeStateStatus,comments,files']))
+    view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefName,headRefOid,mergeStateStatus,comments,files']))
   }
   const merged = JSON.parse(gh(['pr', 'list', '--repo', repo, '--state', 'merged', '--limit', '50', '--json', 'mergedAt,comments']))
   const checkRuns = JSON.parse(gh(['api', `repos/${repo}/commits/${head}/check-runs?per_page=100`])).check_runs ?? []
@@ -412,6 +415,7 @@ async function main() {
     isCrossRepository: view.isCrossRepository,
     labels: view.labels.map((l) => l.name),
     title: view.title,
+    headRefName: view.headRefName ?? '',
     head,
     liveHead: view.headRefOid,
     mergeStateStatus: view.mergeStateStatus,

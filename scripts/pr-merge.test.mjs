@@ -76,6 +76,16 @@ test('a review:rules-change PR with a passing verdict is held for T (D119)', () 
   assert.equal(mergeWanted(pr({ labels: ['loop:pr', 'size:S'] })).go, true, 'the same PR without the label merges')
 })
 
+test('a nexus sync PR with a passing verdict is held for T: the label, the CLI\'s head branch or its title (NX1h)', () => {
+  const label = mergeWanted(pr({ labels: ['nexus-sync'] }))
+  assert.equal(label.go, false)
+  assert.match(label.reason, /nexus sync PR \(label nexus-sync\): only T merges/)
+  // Before the workflow's label lands, the CLI's own branch and title hold it.
+  assert.match(mergeWanted(pr({ headRefName: 'nexus/upgrade-2.0.0+f63295d' })).reason, /nexus sync PR \(head nexus\/upgrade-/)
+  assert.match(mergeWanted(pr({ title: 'plan: sync to nexus 2.0.0+f63295d' })).reason, /nexus sync PR \(title\)/)
+  assert.equal(mergeWanted(pr({ headRefName: 'loop/next-NX1h', title: 'feat: the weekly nexus sync (NX1h)' })).go, true, 'a PR that builds the sync merges like any other')
+})
+
 test('holds: needs-T, stuck, eval seeds, no-auto-merge, drafts, forks, closed', () => {
   assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
   for (const l of HOLD_LABELS) assert.equal(mergeWanted(pr({ labels: ['loop:pr', l] })).go, false, l)
