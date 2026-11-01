@@ -67,7 +67,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
-### [ ] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01)
+### [x] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01) — CLOSED 2026-11-01 (fix-ci, verify-root run 41298604682: reworded all ten lines in `combat.card-program.ts`, `combat.encounter.types.ts`, `combat.engine.ts`, `combat.equipment-effects.ts`, `e2e/equipment-effects.engine.test.ts` and `Items/types.ts` to drop the "spec 136"/"A10"/"chunk 136.4" narration; `check-comments.mjs` reports clean, root `npm test` and mobile `npm run verify` both pass)
 - category: debt
 - impact: 5
 - ease: 8
