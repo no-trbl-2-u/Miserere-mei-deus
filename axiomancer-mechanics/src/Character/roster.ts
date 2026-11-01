@@ -63,7 +63,7 @@ export const CHARACTER_GREY_DECK: readonly string[] = Object.freeze([
 
 /**
  * Every character a run can open as. T's words for each field are in
- * `plan/README.md` ("T's characters").
+ * `plan/phases/phase_CH1_character_select.md` ("T's characters").
  */
 export const CHARACTER_ROSTER: readonly CharacterDefinition[] = Object.freeze([
     Object.freeze({

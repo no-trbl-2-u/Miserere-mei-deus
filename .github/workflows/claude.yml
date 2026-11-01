@@ -57,7 +57,7 @@ jobs:
           BY_OWNER: ${{ github.event.sender.login == github.repository_owner }}
         run: |
           if [ "$IS_PLOT" = "true" ] && [ "$IS_PR" = "true" ] && [ "$BY_OWNER" = "true" ]; then
-            echo "args=--append-system-prompt \"This comment is T's, on a plot PR. Read skills/plot.md and follow its section 3, Answering T's calls, exactly: parse the answers, rewrite the brief, the build-plan row and any part-plan or deadline lines they touch, regenerate the PR body, rerun the deadline lint, push to this branch without force, and reply on the PR with what changed.\"" >> "$GITHUB_OUTPUT"
+            echo "args=--append-system-prompt \"This comment is T's, on a plot PR. Read skills/plot.md and follow its section 7.4, Answering T's calls, exactly: parse the answers, rewrite the spec, its roadmap row and any part-plan or deadline lines they touch, regenerate the PR body, rerun the deadline lint, push to this branch without force, and reply on the PR with what changed.\"" >> "$GITHUB_OUTPUT"
           else
             echo "args=" >> "$GITHUB_OUTPUT"
           fi

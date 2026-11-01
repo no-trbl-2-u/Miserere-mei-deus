@@ -96,7 +96,7 @@
     "method": "Requested 2048x768, 8x3 cells of 256px, rows idle / struck / attacking. Each prompt is in <key>.prompt.txt (gallows-crow, approved earlier, has none). Not yet cleaned or split: tithe-collector is 2043x770, and paint crosses inner gridlines on 13 of 14 sheets. Phase AN5 cleans, splits and installs them. The layout report also lists three sheets (float-eye, death-beholder, green-jelly) deleted as duplicates of installed sets.",
     "license": "open source (T, 2026-10-29, D115)",
     "used_by": [
-      "plan/README.md"
+      "plan/phases/phase_AN5_chapter1_enemy_animations.md"
     ]
   },
   {

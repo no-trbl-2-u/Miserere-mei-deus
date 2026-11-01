@@ -1,6 +1,6 @@
 /**
  * GUARD — the upgrade law and program scaling (Phase UP1b, brief
- * `plan/README.md` A2, A3, A4).
+ * `plan/phases/phase_UP1_card_upgrades.md` A2, A3, A4).
  *
  *   A2  rarity sets how many upgrades a card takes (common 1, uncommon 2,
  *       rare 3), ids `<id>+` / `++` / `+++`, `baseCardId` strips every `+`,

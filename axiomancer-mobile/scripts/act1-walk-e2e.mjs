@@ -3,7 +3,7 @@
 //
 // ACT 1 WALK: a browser journey from a brand-new game across all four Act 1
 // doors to the Lantern Deep's sealed stair (Phase AW1a,
-// plan/README.md).
+// plan/phases/phase_AW1_act1_walk.md).
 //
 // `e2e:map-walk` checks one map; this walks the whole act. The route is never
 // hand-listed: the walk asks the engine for it (`npm run act1-walk -- --json`

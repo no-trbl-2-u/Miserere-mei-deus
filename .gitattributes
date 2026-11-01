@@ -5,11 +5,6 @@
 plan/lessons.md merge=lessons
 plan/NEEDS_T.md merge=lessons
 
-# Merge plan/steps/01_build_plan.md with same-spot insertions unioned (Phase
-# ML1b): scripts/build-plan-merge.mjs, registered as merge.buildplan.driver the
-# same way. Unregistered, git falls back to its line merge.
-plan/steps/01_build_plan.md merge=buildplan
-
 # Merge plan/deadlines.md with same-spot insertions unioned and a row both
 # sides edited merged cell by cell (Phase MD1a): scripts/deadlines-merge.mjs,
 # registered as merge.deadlines.driver the same way. Unregistered, git falls

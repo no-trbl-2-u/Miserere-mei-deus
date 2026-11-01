@@ -266,4 +266,4 @@ belong somewhere better than a coin flip.
 Nothing in this report is fixed here. The repairs are sequenced as build-plan
 phases 53a → 53e, in dependency order — machinery before content, because
 authoring against a broken gate ships more dead content. See
-`plan/README.md` and the briefs in `plan/README.md`.
+`plan/steps/01_build_plan.md` and the briefs in `plan/phases/`.

@@ -2,7 +2,7 @@
 // scripts/pr-review.mjs
 //
 // Whether the reviewer runs on a PR (phase RV1b,
-// `plan/README.md` A5; every same-repo PR
+// `plan/phases/phase_RV1_pr_review_pipeline.md` A5; every same-repo PR
 // since D95). The `review` job in `pr-review.yml` starts a Claude run only
 // when this says go, so the draft rule, the seeded-draft rule, the plan
 // rule and the once-per-head rule live in one tested function instead of a
@@ -20,7 +20,7 @@
 // already has one (the reviewer's own label raise fires `labeled` again).
 //
 // The marker also carries a digest of the PR's diff against its base
-// (phase RV2, `plan/README.md`), so a
+// (phase RV2, `plan/phases/phase_RV2_review_skips_unchanged_diff.md`), so a
 // merge of `main`, a rebase or a content-free force-push is a new SHA with
 // the same digest and is not reviewed twice. A conflict resolution changes
 // the diff, so it still reviews. The digest comes from `gh pr diff` piped
@@ -42,7 +42,7 @@
 // own, and prints one line per file.
 //
 // With `--gate` it is a step of the `verify-gate` check (phase LG1d,
-// `plan/README.md` A4): it replays only the test
+// `plan/phases/phase_LG1_loop_gates.md` A4): it replays only the test
 // files the PR adds and fails when one passes on the base, unless the file
 // carries a `guard-test: <reason>` comment (a guard pins behaviour that
 // already holds, so it passes on the base by design). A file that fails at

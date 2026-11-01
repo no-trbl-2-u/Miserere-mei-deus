@@ -83,7 +83,7 @@ test('tests, prose and plans render nothing, and a diff of only those selects al
     const quiet = [
         'axiomancer-mobile/app/(tabs)/memoir/__tests__/memoir.test.tsx',
         'axiomancer-mobile/components/inventory/SlotBanner.test.tsx',
-        'plan/README.md',
+        'plan/steps/01_build_plan.md',
         '.github/workflows/verify-mobile.yml',
         'scripts/ci-e2e-scope.mjs',
         'axiomancer-mobile/screenshots/current/memoir.png',

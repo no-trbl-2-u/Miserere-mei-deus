@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-// The iPhone beta's build config (phase IO1a, `plan/README.md`
+// The iPhone beta's build config (phase IO1a, `plan/phases/phase_IO1_iphone_beta.md`
 // A1, A2): one TestFlight `beta` profile, no ad hoc channel, and the `ios` block
 // App Store Connect reads. `docs/ios-beta.md` is the runbook these keys serve.
 

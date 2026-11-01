@@ -80,7 +80,7 @@ a flat baseline across Phases 155–156 is evidence of an instrument gap, not of
 mechanics being inert in production.
 
 Suggested follow-up: promote to a `## Pending` candidate in
-`plan/CANDIDATES.md` (kept out of this commit to avoid colliding with the
+`plan/PHASE_CANDIDATES.md` (kept out of this commit to avoid colliding with the
 active `/expand` loop that owns that file): _"Combat-tuning bot policy + loadouts
 exercise the live status-interaction (amplification) engine so the matrix can
 witness status-combo leverage."_

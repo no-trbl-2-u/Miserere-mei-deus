@@ -132,7 +132,7 @@ type HazardPenalty = {
 };
 
 // ⚑ These types are defined now but not wired to world state in v0.
-// Filed in CANDIDATES.md under hazard world-state tracking (score 6.4).
+// Filed in PHASE_CANDIDATES.md under hazard world-state tracking (score 6.4).
 type HazardMapBenefit = {
   kind: 'threshold-reduction' | 'auto-succeed' | 'hazard-cleared';
   targetNodeId?: string;

@@ -1,6 +1,6 @@
 /**
  * The reward rule: worn relics' lanes feed the card reward (Phase RW1a,
- * A1-A5 of `plan/README.md`).
+ * A1-A5 of `plan/phases/phase_RW1_reward_rule.md`).
  *
  * The contract this file pins, against fixture lanes and fixture relics (no
  * library relic names a lane yet):

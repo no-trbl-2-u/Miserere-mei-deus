@@ -219,11 +219,11 @@ store, and deep-links the web build (`?fixture=<id>` /
 
 ## Building a phase
 
-These rules bind every build and every brief, whatever verb runs it
-(`/ship-a-chunk` and `/plan-a-spec` today, nexus v2's `/next` and `/plot`
-after the cut-over, phase NX1d). They were carried here word for word from
-`skills/ship-a-chunk.md` and `skills/plan-a-spec.md` (phase NX1c), which
-now point at them. The game's canon (the title, VITAE the one bar, the cut
+These rules bind every build and every spec, whatever verb runs it
+(nexus v2's `/next`, `/ship-a-chunk`, `/plan-a-spec` and `/plot` since the
+cut-over, phase NX1d). They were carried here word for word from the v1
+`skills/ship-a-phase.md` and `skills/plan-a-phase.md` (phase NX1c), which
+the cut-over retired. A "brief" below is a spec (`plan/<NN>-<slug>.md`). The game's canon (the title, VITAE the one bar, the cut
 terms; D47, D63) is `identity/principles.md` P1 to P3: a hard constraint
 on code, copy and briefs.
 
@@ -310,50 +310,73 @@ on code, copy and briefs.
 ## Nexus — the autonomous loop (live)
 
 The unified **nexus** harness was re-onboarded onto the monorepo on
-2026-07-03 (`chore: adopt nexus methodology`). It is now live at the repo root:
+2026-07-03 (`chore: adopt nexus methodology`) and moved onto **nexus v2**
+(specs and chunks) at the cut-over, phase NX1d (2026-11-01;
+`plan/nexus.lock` pins the kit ref, `npx @usenexus/cli upgrade` keeps it
+current). Nexus itself is never edited; what Miserere keeps of its own,
+and why, is `docs/nexus-deviations.md` (its `## Carried` section names
+where each kept deviation lives). It is live at the repo root:
 
-- `skills/` — the loop verbs: `ship-a-chunk`, `plan-a-spec`, `iterate`,
-  `critique`, `triage`, `expand`, `march`, `oversight`, `jot`, `digest`,
-  `consolidate`, `fix-ci`, T's intake `plot` and `messy` (never
-  fired by the loop, rule 8), and T's attended `heads-down` (an
-  orchestrator that ships several rows in parallel, one `/ship-a-chunk`
-  worker per row, in waves gated on merges; never fired by the loop). (Heavyweight source-of-truth files; the
+- `skills/` — the loop verbs: the kit's `next` (one chunk, done fully;
+  `skills/next/build.md`, `skills/next/land.md`), `ship-a-chunk`,
+  `plan-a-spec`, `march`, `iterate`, `jot`, `tidy`, `bug` and the rest
+  the kit ships, with Miserere's own steps in `skills/march.lanes.md`
+  and `skills/iterate.lanes.md` (a sync never touches a lanes file);
+  our own `critique`, `triage`, `expand`, `oversight`, `digest`,
+  `consolidate`, `fix-ci`, `review`, `review-fix`, `lane-creator` and
+  `vault`; T's intake `plot` and `messy` (the kit's, with Miserere's
+  section 7 on top; never fired by the loop, rule 8); and T's attended
+  `heads-down` (ours, a parallel orchestrator, never fired by the loop,
+  until phase NX1g makes it `/pilot`). (The
   `.claude/commands/<verb>.md` pointers are the doorways.) `/march` runs
-  the upstream chain (triage → critique → phase → expand → iterate) and
-  builds only briefed, unattended, unclaimed build-plan rows. **Content
-  per surface (D88, D99):** cards, keywords, art, enemies, relics, maps,
-  NPCs and events are built only from a row whose brief T wrote or
-  approved, and `/expand` may propose them.
+  triage → critique → dispatch (the first ready chunk) → expand →
+  iterate, plus our `pre` lanes, and builds only specced, unheld,
+  unclaimed chunks. **Content per surface (D88, D99):** cards, keywords,
+  art, enemies, relics, maps, NPCs and events are built only from a spec
+  T wrote or approved, and `/expand` may propose them.
 - `plan/` — the loop's durable memory: `bearings.md` (standing context —
-  **read this first**), `plan/README.md` (the phase queue),
-  `AUDIT.md` + `CRITIQUE.md` (the drain queues), `CANDIDATES.md`,
-  `revamp/` (THE REVAMP part plans, kept as the record),
-  `reflexes.md`, `lessons.md` (the counted retro ladder, linted by
-  `scripts/check-lessons.mjs`) and `phases/` (open + recent briefs).
-  There is no archive directory (D66): pre-revamp history is read with
-  `git show archive-pre-revamp:plan/archive/<path>`, and only when T asks
-  about history. Never read it to learn how the game works.
+  **read this first**; its `## Loop knobs` hold v2's conservative
+  values, `Promote: owner`, `Support: triage-only` and `Landing: pr`),
+  `README.md` (the roadmap: the Asap and Held lanes, then one row per
+  spec), the specs `NNN-<slug>.md` (each chunk keeping its v1 row id as
+  its `alias:`), `ARCHIVE.md` (one line per finished chunk, shipped v1
+  rows included with their aliases), `AUDIT.md` + `CRITIQUE.md` (the
+  drain queues), `CANDIDATES.md`, `revamp/` (THE REVAMP part plans, kept
+  as the record), `reflexes.md` and `lessons.md` (the counted retro
+  ladder, linted by `scripts/check-lessons.mjs`). `node
+  scripts/plan-check.mjs` gates the shape in the root `npm test`. The v1
+  build plan and briefs are in git (`git show
+  fd21d04ab:plan/steps/01_build_plan.md`). There is no archive
+  directory (D66): pre-revamp history is read with `git show
+  archive-pre-revamp:plan/archive/<path>`, and only when T asks about
+  history. Never read it to learn how the game works.
 - **Deadlines** (T, 2026-10-19): `plan/deadlines.md` is the whole deadline plan (the v0.3 milestone, the
-  two-week windows, and the Items table with every deadline item, done or open, its due date and the phase ids
-  that finish it or `needs plot`). `LIVE_DEADLINES.md` at the root is the next two weeks of items that need T,
-  generated from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A `/plot` of a
-  deadline item replaces its `needs plot` with the new phase ids. The loop is not restricted to the current
-  window.
-- `scripts/` — `deploy-check.mjs` (CI-green deploy gate),
-  `notify.mjs` (pager), `loop-issue.mjs` (GitHub issue mirror),
-  `pr-resolve.mjs` (keeps `loop:pr` PRs mergeable).
+  two-week windows, and the Items table with every deadline item, done or open, its due date and the ids
+  (chunk aliases) that finish it or `needs plot`). `LIVE_DEADLINES.md` at the root is the next two weeks of
+  items that need T, generated from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A
+  `/plot` of a deadline item replaces its `needs plot` with the new chunks' aliases. The loop is not
+  restricted to the current window.
+- `scripts/` — the kit's `plan-check.mjs`, `plan/*.mjs` (order, lanes,
+  locks, settle) and `cloud/*.mjs`; ours: `deploy-check.mjs` (CI-green
+  deploy gate), `notify.mjs` (pager), `loop-issue.mjs` (GitHub issue
+  mirror), `pr-resolve.mjs` (keeps `loop:pr` PRs mergeable), `claims.mjs`
+  (ours until phase NX1f takes v2's and migrates the `claims` branch).
 - `docs/game-model.md` — the game as the code stands; `spec.md` — the
   product spec the loop builds against.
 
 Two gates wrap every shipping tick: the **verify gate**
-(`npm run verify`, per-workspace, pre-commit) and the **CI gate** on the
-PR (`gh pr checks --watch`; `npm run deploy:check` for `main`). The loop
-**opens a PR** for code and pushes plan-only commits to `main`; T merges
-the PR. Every closing verb ends with a **Retro** (`skills/march.md` §3).
-Start at intervention level 0 (`/ship-a-chunk` by hand, which opens its
-PR); ratchet up via `/march` then `/loop /march`.
-Full context lives in `plan/bearings.md` and the nexus kit
-(`../nexus/`).
+(the per-workspace verify and root `npm test`, pre-commit) and the **CI
+gate** on the PR (`gh pr checks --watch`; `npm run deploy:check` for
+`main`). **Every change lands by PR** (D119): code as a `loop:pr` PR the
+review merges; `plot`, `review:rules-change` and `nexus-sync` PRs wait
+for T. Plan-only commits still push `main` (D84) until phase NX1e lands
+plan changes as `plan/pending/` files in the PR. From the cut-over until
+NX1i, `march` and `night` stay disabled and nobody runs `/next`,
+`/heads-down` or `/pilot` unattended, so v2's land step never meets a
+landing it does not know yet. Every closing verb ends with a **Retro**
+(`skills/march.md` §3, the notes in `skills/march.lanes.md`). Full
+context lives in `plan/bearings.md` and the nexus kit (`../nexus/`,
+read-only).
 
 **GitHub Actions layer.** Every zero-input skill/command also runs in CI
 via `.github/workflows/` (scheduled `/march` ticks, `/digest` every other
@@ -398,12 +421,11 @@ them; update here first.
    `seen`, later `last`, unioned citations, `guarded by` over `open`. It
    refuses with conflict markers where the result would break a cap or the
    two sides rewrote the same text; a human resolves those.
-   `plan/README.md` merges through `scripts/build-plan-merge.mjs`
-   (`merge.buildplan.driver`, registered the same way): two plots inserting
-   above the same row keep both sides' rows (ours first, each side's order
-   kept) and both Queue change log entries, and neighbouring row ticks
-   settle. Two rewrites of one row keep their markers, and a merge that
-   would give a phase a second row is refused.
+   The build plan's own driver (`merge.buildplan`) retired with the build
+   plan at the nexus v2 cut-over (phase NX1d); `scripts/build-plan-merge.mjs`
+   stays only as the clash-settling core `deadlines-merge.mjs` imports. Two
+   plots that both add a roadmap row meet at one spot in `plan/README.md`
+   until phase NX1e lands plan changes as `plan/pending/` files.
    `plan/deadlines.md` merges through `scripts/deadlines-merge.mjs`
    (`merge.deadlines.driver`, same registration, and `MERGE_DRIVERS` in
    `scripts/pr-resolve.mjs` for the runner): same-spot Items, Unscheduled
@@ -435,8 +457,8 @@ them; update here first.
    work discovered, design conclusions, side-findings — files that
    residue into the loop's queues before ending: buildable ideas to
    `plan/CANDIDATES.md`, findings and `[loop-call]`
-   decisions to `plan/AUDIT.md`, committed work as build-plan phase
-   rows, observable defects to `plan/CRITIQUE.md` (jot-row format).
+   decisions to `plan/AUDIT.md`, committed work as spec chunks
+   (through `/plot`), observable defects to `plan/CRITIQUE.md` (jot-row format).
    Direction that lives only in a conversation is invisible to the
    loop. File only unshipped direction — not routine work the tick
    already committed, and not chit-chat. When T is present, buildable
@@ -447,7 +469,7 @@ them; update here first.
    GitHub, a brainstorm), says they want work the loop should pick up
    ("let's add…", "the loop should build…", "make a phase for…", "queue
    this"), route it through `/plot` (one known task) or `/messy` (a
-   loose or many-themed dump) instead of writing a build-plan row, brief
+   loose or many-themed dump) instead of writing a spec, chunk
    or candidate by hand. A direct request runs the skill; an ambiguous
    one is asked first. At the end of a brainstorm or design conversation
    that produced buildable direction, offer it in one question ("Want to

@@ -340,7 +340,7 @@ export const SEEDS = Object.freeze([
   {
     id: 'S5',
     title: "SF1's brief asked for a `verify:visual` shot of the callout; none was taken",
-    evidence: ['PR #523', 'plan/README.md'],
+    evidence: ['PR #523', 'plan/phases/phase_SF1_sacrifice_floor_callout.md'],
     gate: "the builder's own `[x]` (an acceptance-ID-to-test map)",
     detail: 'The PR body says `verify:visual` was not run locally.',
     confirm: (_rows, facts) => {
@@ -458,7 +458,7 @@ export function spliceReport(existing, section, stamp) {
     '',
     `> Ledger stamp: commit \`${stamp.commit}\` (${stamp.date})`,
     '',
-    'A measurement, not a gate (phase EV1, `plan/README.md`). Each section is written by its own script between its markers.',
+    'A measurement, not a gate (phase EV1, `plan/phases/phase_EV1_loop_eval_ledger.md`). Each section is written by its own script between its markers.',
     '',
   ].join('\n')
   if (!existing) return `${header}\n${section}\n`

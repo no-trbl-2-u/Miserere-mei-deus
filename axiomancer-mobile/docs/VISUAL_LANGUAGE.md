@@ -4,7 +4,7 @@
 > owner's brief that started this redesign (2026-08-08, full creative
 > freedom on visual direction) and its ratification (2026-08-28, live
 > continent-playtest: *"OMG! This art direction is amazing!"*) are
-> recorded in `plan/README.md` — this
+> recorded in `plan/phases/phase_V_visual_redesign_masterplan.md` — this
 > doc is the finished system that brief produced, for anyone building a
 > new screen or asset against it. `SVG_ASSET_SPEC.md` tracks the
 > per-component placeholder → real-art checklist; `docs/asset-conventions.md`
@@ -190,7 +190,7 @@ category error.
 ## Naming: one concept, one word — the player-facing lexicon
 
 Phase 80 (2026-09-15) closed the "one concept, one word" candidate the
-2026-09-12 UI fresh-eyes swarm raised for five clusters (`plan/CANDIDATES.md`,
+2026-09-12 UI fresh-eyes swarm raised for five clusters (`plan/PHASE_CANDIDATES.md`,
 [score 6.5]). The swarm's own three-lens panel refuted every cluster taken
 screen-by-screen — no single screen shows two senses of the same word at
 once — which is a fair verdict on each screen alone and the exact argument

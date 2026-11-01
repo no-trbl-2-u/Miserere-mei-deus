@@ -7,7 +7,7 @@
 
 ## Why this folder exists
 
-[`plan/README.md`](../.plan/README.md) lists *what* is left to do. [`plan/AUDIT.md`](../../plan/AUDIT.md) / [`plan/CANDIDATES.md`](../../plan/CANDIDATES.md) list *what
+[`plan/steps/01_build_plan.md`](../../plan/steps/01_build_plan.md) lists *what* is left to do. [`plan/AUDIT.md`](../../plan/AUDIT.md) / [`plan/PHASE_CANDIDATES.md`](../../plan/PHASE_CANDIDATES.md) list *what
 isn't decided*. Neither tells you *what to do next* or *how to start*. The
 specs in this folder bridge that gap: each one is small enough to start work
 from, structured around the decisions that block implementation, and tagged

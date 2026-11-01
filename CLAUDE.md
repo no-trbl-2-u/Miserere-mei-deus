@@ -3,7 +3,7 @@ rules.
 
 The autonomous **nexus** loop is live at the repo root: read
 [`plan/bearings.md`](./plan/bearings.md) for standing context and `skills/` for
-the loop verbs (`/ship-a-chunk`, `/march`, `/iterate`, `/oversight`, …). Domain
+the loop verbs (`/next`, `/march`, `/iterate`, `/oversight`, …; nexus v2 since the NX1d cut-over, `plan/nexus.lock`). What ships next is `plan/README.md` (lanes, then the spec table); a chunk's requirements are its spec `plan/<NN>-<slug>.md`; what shipped is `plan/ARCHIVE.md`. Domain
 **design** skills and tuning/playtest commands live in `.claude/`. The loop
 lands code as `loop:pr` pull requests (D84–D87); a PR merges when its
 adversarial review is green, and T merges only `plot` PRs by hand (D95, D101).
@@ -11,8 +11,8 @@ adversarial review is green, and T merges only `plot` PRs by hand (D95, D101).
 **When T asks for loop work, use `/plot` or `/messy` (AGENTS.md rule 8).** If T
 says they want something the loop should build ("let's add…", "the loop should
 build…", "make a phase for…", "queue this"), run `/plot` for one known task or
-`/messy` for a loose or many-themed dump, instead of hand-writing a build-plan
-row, brief or `CANDIDATES` row; ask first if the request is ambiguous.
+`/messy` for a loose or many-themed dump, instead of hand-writing a spec,
+chunk or `CANDIDATES` row; ask first if the request is ambiguous.
 When a brainstorm or design conversation ends with buildable direction, offer
 it in one `AskUserQuestion`: "Want to use `/plot` to turn this into a phase?"
 or "Want to use `/messy` to file this dump?". The loop never fires either.
@@ -26,9 +26,9 @@ sit in the `Waits on` cell of the T act they unblock, and the lint fails a loop 
 session-start hook runs `node scripts/deadlines.mjs --remind` and prints a **DEADLINE REMINDER**: lead your
 first reply to T with that list (what needs a plot, what needs T, and when it is due) before anything else.
 It is silent in GitHub Actions, so loop ticks never see it. When you `/plot` a deadline item, replace its
-`needs plot` in the Items table with the new phase ids; when T finishes a `T` task, tick its Status `[x]`.
+`needs plot` in the Items table with the new chunks' aliases; when T finishes a `T` task, tick its Status `[x]`.
 A phase Item's Status is derived by `node scripts/deadlines.mjs --write`; never hand-edit it.
-`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an open build-plan row has no Item and no
+`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an open chunk (by its `alias:`) has no Item and no
 `## Unscheduled` line, an Item names a missing row, a date leaves its window, or a phase Status is stale. It
 cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a reconcile step that edits such Items.
 

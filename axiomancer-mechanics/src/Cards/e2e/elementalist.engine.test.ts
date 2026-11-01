@@ -1,6 +1,6 @@
 /**
  * Hermetic E2E — the Elementalist trial set (Phase EL1c, acceptance A5, A6,
- * A7 of `plan/README.md`).
+ * A7 of `plan/phases/phase_EL1_elementalist_trial_set.md`).
  *
  * The set's own test (the only test that names its card ids). Pins:
  *   · the set: 30 cards (9 red / 11 blue / 10 purple), each under its action

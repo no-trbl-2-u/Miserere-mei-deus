@@ -2,7 +2,7 @@
  * Hermetic E2E — the weather (Phase EL1a, acceptance A1 and A2).
  *
  * Pins the Elementalist's elements to T's rulings of 2026-10-24
- * (`plan/README.md`, Sources):
+ * (`plan/phases/phase_EL1_elementalist_trial_set.md`, Sources):
  *   · INFERNO burns both sides: the foe its whole INFERNO at the start of its
  *     turn, you half of it (rounded down) at the start of yours; plain loss,
  *     and yours can kill you. A foe-only line burns only the foe.

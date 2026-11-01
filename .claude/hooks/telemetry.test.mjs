@@ -246,12 +246,12 @@ test('reading a root skills/<verb>.md logs one verb-read row per tick', () => {
   const before = verbRows().length
   const read = (file_path) =>
     fire('tool', { ...base(), tool_name: 'Read', tool_input: { file_path } })
-  read(String.raw`C:\repo\skills\ship-a-chunk.md`)
-  read('/repo/skills/ship-a-chunk.md') // a second chunk of the same file
-  fire('tool-end', { ...base(), tool_name: 'Read', tool_input: { file_path: '/repo/skills/ship-a-chunk.md' } })
+  read(String.raw`C:\repo\skills\ship-a-phase.md`)
+  read('/repo/skills/ship-a-phase.md') // a second chunk of the same file
+  fire('tool-end', { ...base(), tool_name: 'Read', tool_input: { file_path: '/repo/skills/ship-a-phase.md' } })
   const added = verbRows().slice(before)
   assert.equal(added.length, 1, `one row per verb per tick: ${added.join('\n')}`)
-  assert.match(added[0], /\| verb-read \| ship-a-chunk \|/)
+  assert.match(added[0], /\| verb-read \| ship-a-phase \|/)
 })
 
 test('reads outside the root skills/ directory are not logged', () => {

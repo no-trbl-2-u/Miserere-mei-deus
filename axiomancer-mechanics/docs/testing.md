@@ -226,7 +226,7 @@ the `### Call-outs` section entirely in that case.
 
 Schema details and design decisions lived in the Phase 39 (agent verify
 report) and Phase 40 (prior-run diff) briefs, which are no longer in
-`plan/README.md`.
+`plan/phases/`.
 
 ---
 

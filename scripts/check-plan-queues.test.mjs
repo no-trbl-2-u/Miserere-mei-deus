@@ -156,7 +156,8 @@ test('kindOf maps each queue file', () => {
   assert.equal(kindOf('plan/AUDIT.md'), 'audit')
   assert.equal(kindOf('plan/CRITIQUE.md'), 'critique')
   assert.equal(kindOf('plan/CANDIDATES.md'), 'candidates')
-  assert.equal(kindOf('plan/README.md'), 'status')
+  assert.equal(kindOf('plan/PHASE_CANDIDATES.md'), 'candidates')
+  assert.equal(kindOf('plan/steps/01_build_plan.md'), 'status')
   assert.equal(kindOf('plan/lessons.md'), null)
 })
 

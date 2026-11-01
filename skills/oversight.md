@@ -27,84 +27,111 @@ resume.
 
 ```
 /oversight                  # full audit + general questionnaire
-/oversight chunks           # bias toward chunk progress / scope
+/oversight phase            # bias toward phase progress / scope
 /oversight content          # bias toward /iterate findings + content
-/oversight deploy           # bias toward Netlify / CI/CD signal
+/oversight deploy           # bias toward GitHub Actions CI signal
+                            # (npm run deploy:check, verify-* workflows)
 /oversight reset            # bias toward scope reduction
-/oversight audit            # READ-ONLY: print the §4 briefing, ask
-                            # nothing, change nothing, commit nothing
 ```
 
-`audit` is the one mode that is safe in non-interactive
-contexts (cloud ticks end with it so every Actions log closes
-with a state-of-the-loop snapshot). It is an instrument panel,
-not oversight — it never asks, never applies, never commits.
-Every other mode requires a present user; under `/loop` they
-are a misconfiguration (§9).
+Every mode requires a present user; under `/loop` it is a
+misconfiguration (§9).
 
-## 3. What `oversight` reads (the audit step)
+## 3. What `oversight` reads (audit phase)
 
 In parallel where independent:
 
-0. `node scripts/pulse.mjs` — the fast aggregate: specs and
-   chunks left / held, AUDIT pending, CRITIQUE pending + last
-   pass age, candidates pending + oldest-pending age. Items
-   4–7 below still get read in full — the briefing needs row
-   *content* (blocked reasons, durable rows, bias) that an
-   aggregate count can't carry.
 1. `git log --oneline -20` — recent shipping velocity.
 2. `git status --short` — uncommitted changes.
-3. `pnpm deploy:check` — current deploy state.
-4. `plan/README.md` — the lanes (Asap, Held) and the spec
-   table; each spec's `## Chunks` for what's left.
+3. `npm run deploy:check` — current deploy state.
+4. `plan/README.md` roadmap (lanes and spec table) — pending
+   phases.
 5. `plan/AUDIT.md` — open `/iterate` findings.
-6. `data/BACKLOG.md` — pending data work.
-7. `plan/CRITIQUE.md` — critique pending.
-8. The specs holding the next 3 ready chunks — current vs.
-   recent commits; the last 10 lines of `plan/ARCHIVE.md`.
-9. `design/` — has a new export landed since the last sibling
-   commit?
-10. Secret requests: `[needs-user-call] secret request <id>`
-    rows (`plan/pending/secrets-<id>.md`, then `plan/notes.md`)
-    and `node scripts/secrets.mjs status`. The owner sets each
-    with `node scripts/secrets.mjs set <NAME>` in their own
-    terminal, never pasted here; then delete the row.
-11. `node scripts/plan/promote.mjs sweep` — auto-promoted specs
-    still in their veto window (`skills/expand.md` Step 4b; a
-    dry run writes nothing).
-12. `node scripts/plan/locks.mjs list` and the open
-    `loop:lock` issues — every lock (Held line, lane lock,
-    owner-blocked row) with its age; one past its time with no
-    `fallback:` has its one `Lock past max_age` ask.
+6. `plan/CRITIQUE.md` — critique pending.
+7. Last 3 phase briefs — current vs. recent commits.
+8. `axiomancer-mechanics/specs/` — has a new design input
+   landed since the last sibling commit? (Skip HISTORICAL specs
+   and `axiomancer-mechanics/braindump/`, which is HISTORICAL.)
+9. **The loop-call sweep (standing).** Grep `\[loop-call\]` and
+   the legacy `\[needs-user-call\]` across `plan/` (AUDIT,
+   CRITIQUE, CANDIDATES). Since THE OPEN
+   GATE (2026-08-28) the loop no longer parks decisions — it
+   decides, ships, and files `[loop-call]` rows. This sweep is
+   AFTER-THE-FACT REVIEW: present the calls the loop made since
+   the last oversight so T can ratify or reverse them. A row is
+   **open** (unreviewed) unless marked reviewed/resolved (`[x]`,
+   "RESOLVED"/"RATIFIED", or moved to a resolved section). Any
+   legacy `[needs-user-call]` still open is presented the same
+   way — with the loop's recommended answer attached. Oversight
+   reads legacy rows; it never writes new ones. The same sweep reads
+   `plan/NEEDS_T.md` (T's own moves, D94): every row there is open
+   until T deletes it.
+
+10. **TEMPORARY — the R11 watch (T, 2026-10-11; remove this item and
+    §5's "Standing question R11" on or after 2026-11-11).** R11 changed
+    three things at once (intake by `/plot`/`/messy`, landing by PR, a
+    retro on every verb), and T ruled nothing else changes until a month
+    of ticks says which of them worked. Until then every oversight gathers
+    these four counts, since the last oversight (its commit date), and
+    reports them in the briefing as a four-line table:
+
+    - **Ticks that picked nothing.** `npm run telemetry -- --since
+      <date>`: march ticks whose `slash-prompt` was followed by a
+      `tick-end` with no `next`, `iterate` or `critique` verb-read,
+      plus any tick output or AUDIT row saying "no pickable row" / "at the
+      PR cap". A majority means the problem is intake, not the loop.
+    - **PRs stuck.** `gh pr list --label loop:pr --state all --search
+      "created:>=<date>"` and the count with `loop:pr-stuck`, plus the
+      number of `pr-autofix.yml` runs (`gh run list --workflow
+      pr-autofix.yml`). Two attempts per PR is the ceiling by design.
+    - **Shadow reviews.** The `pr-review.yml` `review` job's run count for
+      the window beside `pr-autofix`'s (`gh run list --workflow
+      pr-review.yml --json conclusion,createdAt`, counting runs whose
+      `review` job ran), and how many verdicts were `not-pass`. It is
+      the cost check on phase RV1b: one Claude run per reviewed head,
+      with up to 2 / 3 / 6 assignments by tier, each read by two Sonnet
+      readers (logic, seams), plus the
+      Tests lens and, on `risk:medium` and `risk:high`, a control
+      adversary (RV3; the manifest is `scripts/pr-partition.mjs`).
+    - **Intake used.** `git log --since=<date> --grep='^phases: plot'` and
+      the count of `plan/messy/`-refined specs (commit subjects
+      `plan(<topic>):`). Zero after two weeks means the habit didn't take.
+    - **Retros that fired.** `git log --since=<date> --grep='^lessons: retro'`
+      against the number of closing ticks; and how many `lessons.md`
+      entries reached `seen 2×` and were automated the same tick
+      (`guarded by` set) rather than only bumped.
+
+    For a window that starts before R11 merged, report each count as
+    "n/a (pre-R11)" rather than 0, so the first real number is not read
+    against a false zero. The `pr-autofix` and `pr-resolve` run counts
+    for the month are also the check on the cost assumption in
+    `.github/workflows/README.md` (free runners; Claude usage only on a
+    red check or a conflict).
 
 ## 4. The briefing (~25 lines max)
 
 ```
 oversight — <ISO date>
 
-locks past their time (listed first: each waits on you)
-- <slug> · <why> (#<issue>)   (or "none")
-
-auto-promoted (veto window; listed before the rest)
-- <NN> <title> · veto until <date> (#<issue>)   (or "none")
+loop-calls (standing — always first)
+- <count> open across plan/: <file>: "<one-liner>" (each)
+- (or "none open")
 
 shipping
 - last commit: <sha> "<subject>" (<relative time>)
-- chunks closed since last oversight: <ids from ARCHIVE.md>
+- phases shipped since last oversight: <list with hashes>
 - velocity: ~<N> commits/hour over last 24h
 
 state
-- chunks left: <count> across <K> specs; next is <NN.k> (<title>)
-- held: <count> (<ids + one-word reasons>)
+- pending phases: <count>; next is phase <N> (<topic>)
 - open audit findings: <count>; top score <X>: "<one-liner>"
-- pending data backlog: <count>
 - pending critique findings: <count>; pass count <N>; last pass <when>
 - working tree: <clean | N modified | N untracked>
 - last deploy: <state> (<sha>) — <admin URL or "ready">
 
 flags
-- <unusual patterns: stuck chunk, repeated fix commits,
-  divergent local/Netlify state, design newer than sibling
+- <unusual patterns: stuck phase, repeated fix commits,
+  divergent local/CI state, specs newer than sibling
   commit, etc.>
 ```
 
@@ -112,24 +139,76 @@ Tight. Factual. The flags section drives the questionnaire.
 
 ## 5. The questionnaire
 
-Generate 1–4 questions via `AskUserQuestion`. Rules:
+Generate 1–4 questions via `AskUserQuestion`, shaped per
+`docs/asking-well.md` (the canonical question-writing doctrine —
+defer paths named, answers filed as policy, never re-ask). Rules:
 
+- **Standing question 0 (mandatory):** if the §3 sweep found any
+  unreviewed `[loop-call]` (or legacy `[needs-user-call]`) rows or
+  any open `plan/NEEDS_T.md` row (D94),
+  the FIRST question presents them for review —
+  on top of (not counted against) the 1–4 computed questions.
+  Skipped only when the sweep is clean.
 - **Computed from observed flags**, not pre-canned.
 - **Each question targets a specific observable.**
 - **Multiple choice with recommended option marked first.**
 - **Last question is free-form** if there's room.
 
+### Standing question 0 — loop-call review
+
+> <N> unreviewed `[loop-call]` (or legacy `[needs-user-call]`)
+> rows are open. Top: "<one-liner>" (<file>). Review now?
+>
+> - (recommended) Walk through them — show each item's context;
+>   I ratify or reverse one by one.
+> - Review top only — resolve the highest-impact item, defer
+>   the rest.
+> - Defer all — leave open; they resurface next oversight.
+>
+> Applying a decision = edit the item in place (mark `[x]` with
+> the decision + date, or promote it to a candidate/phase per
+> the answer), same as any other adjustment in Step 5.
+>
+> Open `plan/NEEDS_T.md` rows (D94) lead this question, before the
+> loop-calls, highest `seen` first: "<slug>: <what T does> (seen
+> N×)". They are T's to-dos, not calls to ratify: the options are
+> "done, delete the row", "still to do" and "not needed, delete the
+> row". Never promote one to a candidate or phase.
+
+### Standing question R11 — TEMPORARY, remove on or after 2026-11-11
+
+Asked after question 0 and not counted against the 1–4, whenever
+§3 item 10 produced its table. It is one question, built from the
+count that is furthest from healthy:
+
+> R11 watch since <date>: <N> ticks picked nothing, <N> PRs stuck of
+> <M>, <N> plots/messies, <N> retros of <M> ticks. The weakest signal is
+> <which>. What now?
+>
+> - (recommended) Keep watching — change nothing until <2026-11-11>.
+> - Fix the weakest signal now — <the one-line fix the number implies:
+>   "run /plot on the two ideas in CANDIDATES marked [owner]",
+>   "raise the PR cap to 5", "pr-autofix is misfiring: file an AUDIT
+>   row", "the retro step is being skipped: tighten the verb">.
+> - End the watch early — remove §3 item 10 and this question now; the
+>   five `[owner]` candidates in `plan/CANDIDATES.md` become
+>   eligible for `/plot`.
+>
+> Applying "end the watch" or passing the date = delete §3 item 10 and
+> this section in the oversight commit, and note the final four counts
+> in `plan/AUDIT.md` as a `[loop-call]`-style record so the window's
+> result survives the deletion.
+
 ### Question templates
 
-**Stuck chunk**
+**Stuck phase**
 
-> Chunk <NN.k> has been next across <K> ticks; last <L> commits
+> Phase <N> has been pending across <K> ticks; last <L> commits
 > were "fix:" against it. What now?
 >
-> - (recommended) Split it — it's bigger than its size says.
-> - Hold — move it to the Held lane with a reason.
-> - Drop — remove it and its A-IDs with an archive line.
-> - Continue — the spec is right, just hard.
+> - (recommended) Refresh the brief — design or scope drifted.
+> - Abandon — mark `[skipped]`, move on.
+> - Continue — the brief is right, just hard.
 
 **Audit overload**
 
@@ -139,13 +218,13 @@ Generate 1–4 questions via `AskUserQuestion`. Rules:
 > - No — keep balanced.
 > - Prune — drop bottom <M> findings.
 
-**Spec out of date**
+**Brief out of date**
 
-> `design/<family>/` was updated <K> commits ago, after chunk
-> <NN.k> closed. Refresh spec <NN> and add a follow-up chunk?
+> `axiomancer-mechanics/specs/<area>/` was updated <K> commits ago, after phase
+> <N> shipped. Refresh phase <N>'s brief and ship a follow-up?
 >
-> - (recommended) Yes — `/plan-a-spec <NN>`, with a new A-ID
->   and chunk for the follow-up.
+> - (recommended) Yes — `/plan-a-spec <NN>` then add
+>   follow-up phase.
 > - No — note in `AUDIT.md`; let `/iterate` catch.
 > - Defer.
 
@@ -156,7 +235,7 @@ Generate 1–4 questions via `AskUserQuestion`. Rules:
 > - (recommended) Investigate — open log; I'll diagnose, no
 >   commit yet.
 > - Roll back — revert to <last-green-sha>.
-> - Continue — next ship-a-chunk will reach the right code.
+> - Continue — next next will reach the right code.
 
 **Uncommitted changes**
 
@@ -167,28 +246,17 @@ Generate 1–4 questions via `AskUserQuestion`. Rules:
 > - Roll forward — finish the tick.
 > - Roll back — `git checkout` and `git clean`; restart cleanly.
 
-**Candidates pending promotion**
+**Phase candidates pending promotion**
 
 > `plan/CANDIDATES.md` has <N> pending candidates. Top
 > score [<X.Y>]: "<one-line>". Promote any?
 >
 > - (recommended) Review one — show me the candidate's
 >   rationale + signals; I'll decide.
-> - Promote top — write it as a new spec (`plan/<NN>-<slug>.md`,
->   unchunked) with a row in `plan/README.md`, move the
->   candidate to `## Promoted`.
+> - Promote top — append as a new spec through `/plot` (the loop never writes one),
+>   move the candidate to `## Promoted`.
 > - Reject top — move to `## Rejected` with a one-line reason.
 > - Defer — leave them; next expand pass re-evaluates.
-
-**Auto-promotion in its veto window**
-
-> Spec <NN> "<title>" was auto-promoted from an aged candidate
-> (score <X.Y>, <N> days old); the loop builds it after
-> <date> unless you veto (#<issue>).
->
-> - (recommended) Let it run — the window closes on its own.
-> - Release now — the loop may build it this tick.
-> - Veto — the spec goes, the candidate is rejected.
 
 **Free-form**
 
@@ -212,8 +280,10 @@ Print synthesis per §4. **No questions yet.**
 
 ### Step 3 — Build questionnaire
 
-Compute 1–4 questions per §5. If zero warranted (project
-healthy, no flags), say so and exit at Step 7 with no commit.
+Compute 1–4 questions per §5, with standing question 0
+prepended whenever the loop-call sweep found open items.
+If zero warranted (project healthy, no flags, sweep clean), say
+so and exit at Step 7 with no commit.
 
 ### Step 4 — Ask
 
@@ -223,21 +293,12 @@ Invoke `AskUserQuestion`.
 
 For each answer:
 
-- **"Refresh spec" / "Split it"** → run the `/plan-a-spec
-  <NN>` flow inline.
-- **"Hold"** → add `- **<NN.k>** · held: <reason> · since:
-  <today> · until: <date or condition> · max_age: <Lock max
-  age>` to the Held lane in `plan/README.md` (a lock that
-  times out; `plan-check` rejects one without them). Unholding
-  is removing the line.
-- **"Answer a lock's ask"** → remove the lock, set a new
-  `since:` (keep waiting) or add a `fallback:`. The next
-  `/march` lock sweep closes its `Lock past max_age` issue.
-- **"Drop"** → remove the chunk and the A-IDs only it closed,
-  fix the Measure line (dropped IDs count as closed), and
-  archive `- <date> · <NN.k> · dropped via oversight: <reason>
-  · (this commit)`. Run `node scripts/plan-check.mjs --since
-  HEAD`.
+- **"Refresh brief"** → spawn `/plan-a-spec <NN>` flow
+  inline.
+- **"Abandon chunk"** → remove the chunk line (and the A-IDs only it
+  closes, the `Measure:` line updated) from its spec and append
+  `- <date> · <NN.k> (alias: <id>) · dropped: <reason> (via oversight) · (this commit)`
+  to `plan/ARCHIVE.md` (v2 has no `[skipped]` status).
 - **"Bias toward category X"** → write at top of
   `plan/AUDIT.md`: `> Bias: <category> (set via oversight
   <date>)`. `/iterate` reads this and weights 1.5x.
@@ -249,25 +310,27 @@ For each answer:
   no patch yet.
 - **"Promote candidate"** → move row from
   `plan/CANDIDATES.md` `## Pending` to `## Promoted` (with
-  promotion date + assigned spec number, the next free one).
-  Write `plan/<NN>-<slug>.md` from the candidate (outcome, Why,
-  scope as Design, Acceptance with A-IDs, `Not chunked yet.`)
-  and add its row to `plan/README.md`. Optionally run the
-  `/plan-a-spec <NN>` flow inline to chunk it.
+  promotion date), then run `/plot` on it with T present: the
+  spec, its chunks and its roadmap row land as a `plot` PR T merges
+  (D93). Never a hand-written spec (`Promote: owner`).
 - **"Reject candidate"** → move row from `## Pending` to
   `## Rejected` with one-line reason.
-- **"Release auto-promotion early"** → remove its Held line;
-  once landed, close its veto issue with "released early by
-  the owner". `/next` picks the spec as usual.
-- **"Veto auto-promotion"** → close its veto issue, then `node
-  scripts/plan/promote.mjs sweep --write` (or leave it to the
-  next tick's sweep): the spec goes and the candidate is
-  rejected as vetoed.
 - **"Other" (free-form)** → interpret conservatively. If clear
-  plan edit, apply. If ambiguous, write to `plan/AUDIT.md` as
-  `[needs-user-call]` and tell the user.
+  plan edit, apply. If ambiguous, apply nothing for it, quote it
+  under "Not applied" in the commit body, and tell the user.
 
-### Step 6 — Commit + land
+**Queue-mutation provenance** (adopted via /oversight 2026-07-30,
+issue #129): if any applied answer changes
+`plan/README.md`'s queue (abandon/promote a phase,
+reorder, reprioritize, split/merge, block/unblock, or otherwise
+materially change a phase row), add a row to that file's
+`## Queue change log` section in the **same commit** — date,
+actor (`T via Hermes` when the instruction came via Hermes,
+otherwise the actual source), the action + affected phase
+ID(s), confirmation this was T's request, T's stated reason (or
+"reason not stated"), and the resulting commit/issue/brief.
+
+### Step 6 — Commit + push
 
 ```bash
 git add <modified files>
@@ -280,7 +343,7 @@ User answers:
 - Q: <question> → <answer>
 EOF
 )"
-# land per owner mode: skills/next/land.md §6
+git push origin main
 ```
 
 If only adjustment was "everything looks good" with no edits,
@@ -290,7 +353,7 @@ the loop" and exit.
 ### Step 7 — Confirm deploy
 
 ```bash
-pnpm deploy:check
+npm run deploy:check
 ```
 
 Skip if no commit was made.
@@ -300,7 +363,7 @@ Skip if no commit was made.
 ```
 oversight complete. <N> adjustments applied.
 - ready to resume: /march (or /loop /march)
-- next ready chunk: <NN.k> (<title>)
+- next pending phase: <N> (<topic>)
 ```
 
 ## 7. Hard rules
@@ -311,12 +374,12 @@ oversight complete. <N> adjustments applied.
 3. **Single commit captures the adjustment set.**
 4. **Don't loop the questionnaire.** Ask once.
 5. **No emojis. No `Co-Authored-By:`.**
-6. **`AskUserQuestion` is allowed here and in `/bootstrap`**
-   among shipping skills — nowhere else.
+6. **`AskUserQuestion` is allowed here and only here** among
+   shipping skills.
 
 ## 8. When `oversight` is NOT the right tool
 
-- **Mid-tick of `/ship-a-chunk`** etc. Don't pre-empt.
+- **Mid-tick of `/next`** etc. Don't pre-empt.
 - **For trivia.** Read state files directly.
 - **As a way to ask permission mid-loop.** Decide instead.
 
@@ -325,36 +388,32 @@ oversight complete. <N> adjustments applied.
 1. **Invoked under `/loop`.** Misconfiguration. Stop.
 2. **`git pull` divergence.**
 3. **State files corrupted.**
-4. **"Other" with text the skill can't interpret.** Write
-   `[needs-user-call]` to AUDIT.md, no other adjustment, exit.
+4. **"Other" with text the skill can't interpret.** Apply
+   nothing for it; tell the user it was not applied.
 
 ## 10. Quick reference
 
 ```bash
 # Read (parallel where possible)
-node scripts/pulse.mjs             # the fast aggregate
 git log --oneline -20
 git status --short
-plan/README.md                     # lanes + spec table
-plan/<NN>-<slug>.md                # specs holding the next ready chunks
-plan/ARCHIVE.md                    # last 10 lines
+plan/README.md
 plan/AUDIT.md
-data/BACKLOG.md
 plan/CRITIQUE.md
-design/                            # for newer-than-sibling check
+plan/[0-9]*-*.md                       # last 3 modified
+axiomancer-mechanics/specs/        # for newer-than-sibling check
+grep -rnE "\[(loop-call|needs-user-call)\]" plan/   # standing question 0 sweep
 
 # Tools
-AskUserQuestion                    # allowed here and in /bootstrap only
+AskUserQuestion                    # only place this is allowed
 
 # Adjustment files
-plan/README.md                     # lanes, rows
-plan/<NN>-<slug>.md                # new specs, splits, drops
+plan/README.md
 plan/AUDIT.md
-data/BACKLOG.md
-plan/<NN>-<slug>.md                # new specs, via /plan-a-spec
+plan/<NN>-<slug>.md   # via /plan-a-spec
 
 # Commit
 git commit -m "oversight: <one-line>"
-# land per owner mode: skills/next/land.md §6
-pnpm deploy:check
+git push origin main
+npm run deploy:check
 ```

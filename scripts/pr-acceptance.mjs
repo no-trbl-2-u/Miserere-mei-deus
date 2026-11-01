@@ -2,7 +2,7 @@
 // scripts/pr-acceptance.mjs
 //
 // The acceptance-proof step of the `verify-gate` check (phase LG1c,
-// `plan/README.md` A3). A PR body's `## Acceptance`
+// `plan/phases/phase_LG1_loop_gates.md` A3). A PR body's `## Acceptance`
 // section ticks the brief's IDs it closes; each ticked `- [x] A<n>` line
 // must name its proof: a backticked test file or `verify:visual` shot that
 // exists on the PR head, or a backticked `npm`, `node` or `npx` command. A

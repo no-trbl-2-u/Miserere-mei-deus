@@ -268,7 +268,7 @@ test('A8: pr-resolve rederiveStatus needs no change: it re-derives a six-column 
   try {
     execFileSync('git', ['init', '-q', '-b', 'main'], { cwd: dir })
     fs.mkdirSync(path.join(dir, 'plan', 'steps'), { recursive: true })
-    fs.writeFileSync(path.join(dir, 'plan', 'steps', 'plan/README.md'), '## Status (at-a-glance)\n\n- [x] (#1) Phase R1 — shipped. Requires nothing.\n- [ ] Phase R2 — open. Requires nothing.\n')
+    fs.writeFileSync(path.join(dir, 'plan', 'steps', '01_build_plan.md'), '## Status (at-a-glance)\n\n- [x] (#1) Phase R1 — shipped. Requires nothing.\n- [ ] Phase R2 — open. Requires nothing.\n')
     const stale = doc({ items: [item6('Act', { rows: 'R1', waits: 'R2' }), item6('Loop wait', { rows: 'T', waits: 'R2' })], unscheduled: [], changes: [] })
     fs.writeFileSync(path.join(dir, 'plan', 'deadlines.md'), stale)
     assert.equal(rederiveStatus(dir, ROOT), true)

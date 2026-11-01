@@ -5,7 +5,7 @@
 The promises Miserere Mei, Deus keeps: *never / always* lines, read by
 every session as hard constraints on code, copy and briefs. A change that
 would break one stops and asks. These three are the game's canon, moved
-here word for word from `skills/ship-a-chunk.md` hard rule 9 (phase NX1c,
+here word for word from `skills/ship-a-phase.md` hard rule 9 (phase NX1c,
 2026-10-31) so they outlive that skill at the nexus v2 cut-over. The rules
 for building work (truth sources, playtests, verify, migrations, accepted
 calls) are in `AGENTS.md` § Building a phase.

@@ -1,7 +1,7 @@
 # Skill: review
 
 > **The adversarial reviewer** (phase RV1b, then RV3 and D95;
-> `plan/README.md`; design in
+> `plan/phases/phase_RV1_pr_review_pipeline.md`; design in
 > `docs/reports/pr-review-research.md` Part 3). Reads one PR, posts
 > inline MED/HIGH findings and one `## Review verdict` comment, and may
 > raise the PR's `risk:*` label. The review is a fan-out of Sonnet
@@ -69,8 +69,8 @@ Note the head SHA (the verdict's head marker), the labels, and the
 derived tier: the `risk:low|medium|high` label `verify-gate` applied
 (`scripts/pr-risk.mjs`). If no `risk:*` label is on the PR, run
 `node .review-tooling/scripts/pr-risk.mjs --pr <n>` (without `--apply`) and use the
-tier it prints. Read the PR body's `## Acceptance` lines and the brief
-they come from when it names one (`plan/README.md...`).
+tier it prints. Read the PR body's `## Acceptance` lines and the spec
+they come from when it names one (`plan/<NN>-<slug>.md`; a v1 brief, `plan/phases/...`, is in git history).
 
 ### Step 2 — The manifest decides the shape
 
@@ -251,8 +251,8 @@ adequacy, not correctness; the assignment readers check the logic and
 the consumers.
 
 Read only: the test files the diff adds or changes, the PR body
-(`gh pr view <n> --json body`), and the brief its `## Acceptance` lines
-come from when it names one (`plan/README.md...`).
+(`gh pr view <n> --json body`), and the spec its `## Acceptance` lines
+come from when it names one (`plan/<NN>-<slug>.md`; a v1 brief, `plan/phases/...`, is in git history).
 
 1. Run `node .review-tooling/scripts/pr-review.mjs parent-tests --pr <n>`. It runs each
    new or changed test at the PR's head and at its merge base with

@@ -6,9 +6,11 @@
 //   node scripts/check-plan-queues.mjs <path>...  # lint other paths (tests); kind from the file name
 //
 // The queues are plan/AUDIT.md, plan/CRITIQUE.md, plan/CANDIDATES.md
-// (each a list of `### ` rows with `- key:` bodies) and the Status block of
-// plan/README.md (`- [<status>] Phase <id> — …` rows with
-// six-space continuation lines). pr-resolve union-merges them, so a bad
+// (each a list of `### ` rows with `- key:` bodies) and, while a repo still
+// has one, the Status block of a v1 build plan (`- [<status>] Phase <id> — …`
+// rows with six-space continuation lines). Since the nexus v2 cut-over (NX1d)
+// Miserere has no build plan: its specs and roadmap are linted by
+// scripts/plan-check.mjs, and the status lint runs only on a path given. pr-resolve union-merges them, so a bad
 // merge can cut a row apart (c95114a2: a header left with one body line, its
 // observation and evidence glued under the next row; 49829988: a header left
 // with its issue line, then eleven blank lines). The rules:
@@ -64,7 +66,7 @@ export const QUEUES = {
 }
 
 export const STATUS = {
-  file: 'plan/README.md',
+  file: 'plan/steps/01_build_plan.md',
   heading: '## Status (at-a-glance)',
   row: /^- \[( |x|-|skipped|blocked: [^\]]+)\] (?:\(#\d+\) )?Phase ([A-Za-z0-9.]+)\b/,
   maxBlank: 1,
@@ -112,7 +114,7 @@ function blankRuns(lines, max, from = 0, to = lines.length) {
 }
 
 /**
- * Lint a `### `-row queue file (AUDIT, CRITIQUE, CANDIDATES). Pure.
+ * Lint a `### `-row queue file (AUDIT, CRITIQUE, PHASE_CANDIDATES). Pure.
  * @param {string} text
  * @param {keyof typeof QUEUES} kind
  * @returns {{ findings: string[], rows: number }}
@@ -210,7 +212,7 @@ function main() {
   const args = process.argv.slice(2)
   const files = args.length
     ? args.map((a) => path.resolve(a))
-    : [...Object.values(QUEUES).map((q) => q.file), STATUS.file].map((f) => path.join(ROOT, f))
+    : [...Object.values(QUEUES).map((q) => q.file), STATUS.file].map((f) => path.join(ROOT, f)).filter((f) => f !== path.join(ROOT, STATUS.file) || fs.existsSync(f))
   const out = []
   const counts = []
   for (const file of files) {

@@ -2,7 +2,7 @@
 
 > Ledger stamp: commit `4043ba25` (2026-10-17T10:40:15Z)
 
-A measurement, not a gate (phase EV1, `plan/README.md`). Each section is written by its own script between its markers.
+A measurement, not a gate (phase EV1, `plan/phases/phase_EV1_loop_eval_ledger.md`). Each section is written by its own script between its markers.
 
 <!-- eval:ledger:start -->
 
@@ -31,7 +31,7 @@ Window: `loop:pr` PRs merged 2026-10-12 to 2026-10-17. Stamp: commit `4043ba25` 
 | S2 | `pr-resolve` merges cut `plan/CRITIQUE.md` rows apart on `main` | merge c95114a2; merge 49829988; repair 23f06828; repair 662aa10b | a structural lint for the plan queue files | confirmed: all four commits touch plan/CRITIQUE.md |
 | S3 | Three tests that could not fail, their acceptance ticked `[x]` | PR #521 A4; PR #523 A6; PR #520 leaked `console.error` spy (near-miss) | a fail-on-parent check for new tests; an acceptance-ID-to-test map | seeded: 2 of 2 named ticks found in the PR bodies; "could not fail" is for EV1b to prove |
 | S4 | #526 merged with only Cloudflare Pages run | PR #526; head efc7f371 | CI path filters (a path-coverage audit so no diff merges unverified) | confirmed: ran: Cloudflare Pages: axiomancer; uncovered: 3 file(s) |
-| S5 | SF1's brief asked for a `verify:visual` shot of the callout; none was taken | PR #523; plan/README.md | the builder's own `[x]` (an acceptance-ID-to-test map) | confirmed: PR #523 body states verify:visual was not run |
+| S5 | SF1's brief asked for a `verify:visual` shot of the callout; none was taken | PR #523; plan/phases/phase_SF1_sacrifice_floor_callout.md | the builder's own `[x]` (an acceptance-ID-to-test map) | confirmed: PR #523 body states verify:visual was not run |
 | S6 | No gate runs on Android | .github/workflows/verify-*.yml | none exists (an Android smoke test on the preview APK) | confirmed: no verify-* workflow mentions Android |
 
 ### Every PR in the window
@@ -41,7 +41,7 @@ A follow-up is a fix or revert landing on `main` within 7 days that touched one 
 | PR | Merged | Head | Ran on the final head | `verify-*` skipped | Uncovered code | Follow-ups (7d) | Antagonist | Review |
 |---|---|---|---|---|---|---|---|---|
 | #505 loop: measured-truth baseline — phase R12a | 2026-10-13T10:26Z | cdba0b85 | Cloudflare Pages: axiomancer success; verify-mechanics success | verify-drift, verify-mobile, verify-prose | 10: .github/workflows/measured-truth.yml, CLAUDE.md, docs/game-model.md, ... | f6bc4f19 fix: cap the combat dock's VITAE column on wide windows (CRITIQUE pass 85 footer dock) | none | none |
-| #507 loop: roster-health lenses — phase RH1 | 2026-10-13T11:42Z | caee9f0b | Cloudflare Pages: axiomancer success; verify-mechanics success; verify-prose success | verify-drift, verify-mobile | 3: docs/game-model.md, skills/iterate.md, skills/ship-a-chunk.md | none | none | none |
+| #507 loop: roster-health lenses — phase RH1 | 2026-10-13T11:42Z | caee9f0b | Cloudflare Pages: axiomancer success; verify-mechanics success; verify-prose success | verify-drift, verify-mobile | 3: docs/game-model.md, skills/iterate.md, skills/ship-a-phase.md | none | none | none |
 | #509 loop: card-spec scaffold and card-rules lint — phase CS1 | 2026-10-13T10:27Z | cd8a8453 | Cloudflare Pages: axiomancer success (after merge); verify-drift success (after merge); verify-mechanics success (after merge); verify-prose success (after merge) | verify-mobile | 2: docs/card-spec.md, docs/truth-sources.md | none | none | none |
 | #512 a11y: hide the faded title CTA under the menu (CRITIQUE pass 79 title a11y) | 2026-10-13T16:57Z | 577060dd | Cloudflare Pages: axiomancer success; verify-mobile success | verify-drift, verify-mechanics, verify-prose | none | 4c2a08bf fix: critique drive waits for the title and dice to settle; EMBARK guard; dice springs rest (CRITIQUE pass 79 drive settle) | none | none |
 | #514 fix: P-07b's printed max holds (AUDIT bug P-07b) | 2026-10-13T21:36Z | 18f01653 | Cloudflare Pages: axiomancer success; verify-mechanics success | verify-drift, verify-mobile, verify-prose | none | none | none | none |

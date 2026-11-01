@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/eval/escape-ledger.mjs
 //
-// The escape ledger (phase EV1a, `plan/README.md`
+// The escape ledger (phase EV1a, `plan/phases/phase_EV1_loop_eval_ledger.md`
 // A1-A3): every `loop:pr` PR merged since 2026-10-12, the checks that ran on
 // its final head, the `verify-*` workflows its paths skipped, fix or revert
 // follow-ups within 7 days, the antagonist's and the shadow reviewer's

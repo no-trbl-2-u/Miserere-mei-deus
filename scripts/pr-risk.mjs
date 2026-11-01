@@ -2,7 +2,7 @@
 // scripts/pr-risk.mjs
 //
 // Derives a PR's risk tier, `risk:low`, `risk:medium` or `risk:high`, from
-// its diff and labels (phase RV1a, `plan/README.md`
+// its diff and labels (phase RV1a, `plan/phases/phase_RV1_pr_review_pipeline.md`
 // A2a and A3; the rule table is `docs/reports/pr-review-research.md` Part 3).
 // The tier is deterministic: a reviewer may raise it with a stated reason and
 // never lowers it. `verify-gate` in `.github/workflows/pr-review.yml` is the

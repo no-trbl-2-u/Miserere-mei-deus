@@ -1,6 +1,6 @@
 name: pr-review
 
-# The PR review pipeline (phase RV1, `plan/README.md`;
+# The PR review pipeline (phase RV1, `plan/phases/phase_RV1_pr_review_pipeline.md`;
 # design in `docs/reports/pr-review-research.md` Part 3).
 #
 # Job `verify-gate` (RV1a) is the one always-reporting check on every
@@ -181,6 +181,11 @@ jobs:
       # The queue lint has no dependencies and runs on every PR (phase LG1a).
       - name: Plan-queue lint
         run: node scripts/check-plan-queues.mjs
+
+      # The nexus v2 plan shape (specs, chunks, lanes, archive; phase NX1d)
+      # is bookkeeping too, so a plot PR reaches no verify-* job: gate it here.
+      - name: Plan shape (plan-check)
+        run: node scripts/plan-check.mjs
 
       - name: Classify the diff against the verify-* path filters
         id: classify

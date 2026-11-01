@@ -14,7 +14,7 @@ name: deploy-comment
 # hits its timeout, or `deploy:check` itself times out and the tick just
 # returns) skips that comment forever — nothing in a LATER tick resumes
 # it, because the next tick re-audits from scratch and moves on to other
-# work (plan/CANDIDATES.md, "Loop turns that end while CI is amber
+# work (plan/PHASE_CANDIDATES.md, "Loop turns that end while CI is amber
 # leave post-green work undone, with no retry", promoted 2026-09-17).
 #
 # This workflow triggers on the gated verify-* workflows' own COMPLETION

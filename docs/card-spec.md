@@ -7,7 +7,7 @@
 > (T's rulings the code does not carry yet), and **T's call** (T's answer,
 > pasted verbatim from the card-spec ballot, or `[T to fill]`).
 >
-> Written by Phase CS1 (`plan/README.md`) from
+> Written by Phase CS1 (`plan/phases/phase_CS1_card_spec_scaffold.md`) from
 > the B4 inventory, [`plan/revamp/card-rules-inventory.md`](../plan/revamp/card-rules-inventory.md),
 > and T's ballot, [`plan/card-ledger/card-spec-ballot-2026-10-13.md`](../plan/card-ledger/card-spec-ballot-2026-10-13.md).
 > It states no rule the inventory does not record. The inventory was taken

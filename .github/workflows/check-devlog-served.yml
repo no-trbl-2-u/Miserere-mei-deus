@@ -3,7 +3,7 @@ name: check-devlog-served
 # Cloudflare Pages serves whatever `main`'s tree contains. The tracked
 # pre-commit hook guards this on every devlog/-touching commit; this
 # weekly/manual sweep is the remote backstop for commits made without the
-# hook (phase 57 — archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/README.md).
+# hook (phase 57 — archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/phases/phase_57_devlog_pages_scopedown.md).
 
 on:
   schedule:

@@ -25,9 +25,9 @@
       "axiomancer-mobile/screenshots/bt2b/4-log-view.jpg",
       "axiomancer-mobile/state/presenters/combat-encounter.engine.ts",
       "plan/CRITIQUE.md",
-      "plan/CANDIDATES.md",
+      "plan/PHASE_CANDIDATES.md",
       "plan/lessons.md",
-      "plan/README.md"
+      "plan/steps/01_build_plan.md"
     ]
   },
   {
