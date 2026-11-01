@@ -144,11 +144,11 @@ export const DrawGlyph = (p: GlyphProps) => (
     </Frame>
 );
 
-/** A barbed twig. */
+/** Three spikes rising from a line. */
 export const ThornsGlyph = (p: GlyphProps) => (
     <Frame {...p}>
-        <Path d="M4 20L20 4" />
-        <Path d="M9 15l-1-6 6 1M14 10l-1-6 6 1" />
+        <Path d="M3 20h18" />
+        <Path d="M4 20L7 9l3 11M9 20L13 4l4 16M16 20l2.5-9 2.5 9" />
     </Frame>
 );
 

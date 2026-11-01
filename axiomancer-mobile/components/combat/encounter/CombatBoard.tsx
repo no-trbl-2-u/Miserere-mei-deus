@@ -1894,7 +1894,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     // own keyword-and-value ledger and states a Global's duration under it.
     const paidFit = large ? null : paidLineFit({ width, line: f.paidLine, mode: cardText });
     // The open card shows a keyword's glyph beside its word in both modes, so a glyph is learnt once.
-    const keywordGlyph = glyphKeywordFor(f.keyword);
+    // Its word is the headline keyword, or the first word of the value when the headline is the whole line (`Deal 9`).
+    const keywordGlyph = large ? (glyphKeywordFor(f.keyword) ?? glyphKeywordFor(paidValue.split(/\s+/)[0])) : null;
     const bandH = large ? 36 : 26;
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.

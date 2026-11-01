@@ -79,6 +79,13 @@ describe('the open card', () => {
         expect(screen.getByTestId('combat-card-face-keyword').props.children).toContain('DEAL');
     });
 
+    it('finds the word in the value when the headline is the whole line (Deal 9)', () => {
+        const card = withKeyword(null);
+        expect(card.face.heroText).toMatch(/^Deal /);
+        renderFace(card, 'words', true);
+        expect(screen.getByLabelText('DEAL')).toBeTruthy();
+    });
+
     it('draws no glyph for a headline word that has none', () => {
         renderFace(withKeyword('Bleed'), 'glyphs', true);
         expect(screen.queryByLabelText('BLEED')).toBeNull();
