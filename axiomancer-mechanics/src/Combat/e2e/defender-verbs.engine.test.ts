@@ -59,7 +59,7 @@ const CARDS: Card[] = [
     card('dv-unexile', c => c.guard(1, { exact: true }), c => c.unexileRandom()),
     card('dv-exile', c => c.guard(1, { exact: true }), c => c.guard(1, { exact: true }), { paid: { text: 'TEST.', run: () => {}, exile: true } }),
     card('dv-rider', c => c.guard(4, { exact: true }), c => c.deal(10, { exact: true }), {
-        onDiscard: { text: 'If this card is discarded, THORNS 2.', run: c => { c.thorns(2, { exact: true }); } },
+        onDiscard: { text: 'If discarded, THORNS 2', run: c => { c.thorns(2, { exact: true }); } },
     }),
     card('dv-discard-one', c => c.guard(1, { exact: true }), c => { c.discardRandom(1); c.guard(5, { exact: true }); }),
     card('dv-shed', c => c.guard(4, { exact: true }), c => { const k = c.discardHand(); c.thorns(3 * k, { exact: true }); }),

@@ -39,16 +39,21 @@ export function cardKeywords(cardId: string): readonly string[] {
     return card ? printedKeywords(card) : [];
 }
 
+/** CONVICTION is the pool every deck banks (each die's BOON face grants it), so a card
+ *  that prints it is no sign of a lane. */
+const SHARED_RESOURCE_WORDS: ReadonlySet<string> = new Set(['CONVICTION']);
+
 /**
  * The keywords a lane's own cards print that the grey office does not: the
  * lane's vocabulary (SACRIFICE for Blood Price, INFERNO for the Elementalist).
- * A keyword every deck prints says nothing about a lane.
+ * A keyword every deck prints says nothing about a lane, and nor does
+ * {@link SHARED_RESOURCE_WORDS}.
  */
 export function laneKeywords(laneId: string, lanes: readonly CardLane[] = CARD_LANES): ReadonlySet<string> {
     const lane = lanes.find(l => l.id === laneId);
     if (!lane) return new Set();
     const grey = new Set(GREY_LANE.cardIds.flatMap(id => cardKeywords(id)));
-    return new Set(lane.cardIds.flatMap(id => cardKeywords(id)).filter(k => !grey.has(k)));
+    return new Set(lane.cardIds.flatMap(id => cardKeywords(id)).filter(k => !grey.has(k) && !SHARED_RESOURCE_WORDS.has(k)));
 }
 
 /** How many of the lane's keywords a card prints. */

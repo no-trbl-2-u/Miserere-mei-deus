@@ -697,7 +697,7 @@ class LineCtx implements ProgramCtx {
             const spec = cardProgram(g.cardId)?.global;
             if (!spec || spec.trigger !== trigger) continue;
             const ctx = new LineCtx(this.w, 'value', { cardId: g.cardId, waived: false, source: 'global' });
-            (g.paid ? spec.paid : spec.free)(ctx, n);
+            spec.run(ctx, n);
         }
     }
 
@@ -1492,7 +1492,7 @@ function fireTriggers(w: Work, trigger: GlobalTrigger, n: number): void {
         const glob = cardProgram(g.cardId)?.global;
         if (!glob || glob.trigger !== trigger) continue;
         if (isDefeated(w.s.enemy)) return;
-        const body = g.paid ? glob.paid : glob.free;
+        const body = glob.run;
         const frame: Frame = { cardId: g.cardId, waived: false, source: 'global' };
         const probe: Work = { ...w, s: { ...w.s, program: w.l }, l: cloneLedger(w.l), cost: 0, value: 0, events: [] };
         body(new LineCtx(probe, 'cost', frame), n);
@@ -1678,7 +1678,7 @@ export function programLineValue(
     const w: Work = { s: { ...s, program: ledger }, l: cloneLedger(ledger), events: [], kit, cost: 0, value: 0 };
     const frame: Frame = { cardId: entry.cardId, waived: false };
     if (program.global) {
-        const body = paid ? program.global.paid : program.global.free;
+        const body = program.global.run;
         const n = program.global.trigger === 'sac' ? 4 : 0;
         body(new LineCtx(w, 'value', { ...frame, source: 'global' }), n);
         return w.value * expectedGlobalFires(program.global.trigger, paid);

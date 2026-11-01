@@ -35,8 +35,8 @@ const paidText = (c: Card): string => c.program?.paid?.text ?? '';
 const SACRIFICE_FREE = find((c) => /^SACRIFICE \d+, DEAL/.test(freeText(c)));
 const CURSE = find((c) => c.cardType === 'curse');
 const TURN_GLOBAL = find((c) => c.program?.global?.trigger === 'turn');
-const LEECH_CARD = find((c) => /^LEECH \{leech:\d+\}\.$/.test(paidText(c)));
-const TETHER_CARD = find((c) => /^TETHER \d+\. SACRIFICE 1/.test(paidText(c)));
+const LEECH_CARD = find((c) => /^LEECH \{leech:\d+\}$/.test(paidText(c)));
+const TETHER_CARD = find((c) => /^TETHER \d+, SACRIFICE 1/.test(paidText(c)));
 
 const WILD = { id: 'w', color: 'wild' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
 
@@ -64,10 +64,10 @@ describe('program faces', () => {
     it('headline a registry keyword as KEYWORD · value and DEAL as a plain hero line', () => {
         expect(programHeadline('SACRIFICE 4, GUARD 12.')).toEqual({ keyword: 'GUARD', value: '12' });
         expect(programHeadline('SACRIFICE 4, DEAL 12.')).toEqual({ keyword: null, value: 'Deal 12' });
-        expect(programHeadline('TETHER 3. SACRIFICE 4.')).toEqual({ keyword: 'TETHER', value: '3' });
+        expect(programHeadline('TETHER 3, SACRIFICE 4')).toEqual({ keyword: 'TETHER', value: '3' });
         expect(programFreeCell('SACRIFICE 2, DEAL 5.')).toEqual({ keyword: 'SACRIFICE', value: '−2' });
         // A FREE line always wears a pill, so a damage-only line reads DEAL.
-        expect(programFreeCell('DEAL 3.')).toEqual({ keyword: 'DEAL', value: '3' });
+        expect(programFreeCell('DEAL 3')).toEqual({ keyword: 'DEAL', value: '3' });
         expect(programFreeCell('DEAL half the VITAE you lost this combat (max 10).')).toEqual({ keyword: 'DEAL', value: 'X' });
     });
 
@@ -135,8 +135,9 @@ describe('the board reads the program ledger', () => {
     });
 
     it('headlines the next-DEAL bonus and a 2X DEAL', () => {
-        expect(programHeadline('🩸 When you SACRIFICE n: your next DEAL this turn deals +n.')).toEqual({ keyword: null, value: 'Next Deal +n' });
-        expect(programHeadline('SACRIFICE any amount X (max 12), DEAL 2X.')).toEqual({ keyword: null, value: 'Deal 2X' });
+        expect(programHeadline('🩸 When you SACRIFICE X: +X to your next DEAL this turn. In play 3 turns.')).toEqual({ keyword: null, value: 'Next Deal +X' });
+        expect(programHeadline('SACRIFICE X (max 12), DEAL 2× X')).toEqual({ keyword: null, value: 'Deal 2X' });
+        expect(programHeadline("DEAL 2× foe's MERCY")).toEqual({ keyword: null, value: 'Deal varies' });
     });
 
     it('a PAID headline whose amount is not printed reads "varies", never a bare X (GL1 A8)', () => {
@@ -145,9 +146,9 @@ describe('the board reads the program ledger', () => {
         expect(programHeadline("GUARD equal to the foe's BLIZZARD")).toEqual({ keyword: 'GUARD', value: 'varies' });
         expect(programHeadline('HEAL equal to your Conviction.')).toEqual({ keyword: 'HEAL', value: 'varies' });
         expect(programHeadline('LEECH {leech:0}.')).toEqual({ keyword: 'LEECH', value: 'varies' });
-        expect(programHeadline('SACRIFICE any amount X (max 12).')).toEqual({ keyword: 'SACRIFICE', value: 'varies' });
+        expect(programHeadline('SACRIFICE X (max 12)')).toEqual({ keyword: 'SACRIFICE', value: 'varies' });
         // A formula and the n amounts keep their letter; the FREE pill keeps its X.
-        expect(programHeadline('SACRIFICE any amount X (max 12), DEAL 2X.')).toEqual({ keyword: null, value: 'Deal 2X' });
+        expect(programHeadline('SACRIFICE X (max 12), DEAL 2× X')).toEqual({ keyword: null, value: 'Deal 2X' });
         expect(programHeadline('SACRIFICE n, GUARD n.')).toEqual({ keyword: 'GUARD', value: 'n' });
         expect(programFreeCell('DEAL half the VITAE you lost this combat (max 10).')).toEqual({ keyword: 'DEAL', value: 'X' });
     });

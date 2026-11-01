@@ -125,34 +125,34 @@ describe('the Defender set', () => {
     it('prints the numbers T chose to ship (the sims\' fixes)', () => {
         const free = (slot: string) => getCardById(idOf(slot))!.program!.free!.text;
         const paid = (slot: string) => getCardById(idOf(slot))!.program!.paid!.text;
-        expect(free('P-01')).toBe('DEAL {deal:2}, +1 per 2 THORNS you have.');
-        expect(paid('P-01')).toBe('DEAL {deal:4}, +1 per THORNS you have.');
-        expect(free('P-03')).toBe('VULNERABLE +{vuln:25}% for 1 turn, then DEAL {deal:2}.');
-        expect(paid('P-03')).toBe('Discard 2 cards at random. VULNERABLE +{vuln:75}% for 2 turns, then DEAL {deal:8}.');
-        expect(paid('P-04')).toBe('Discard 1 card at random. DEAL {deal:3}, REFLECT 75%.');
-        expect(free('P-06')).toBe("THORNS equal to half the damage you've done this turn.");
-        expect(paid('E-01')).toBe('Discard 1 card at random. GUARD {guard:10}, THORNS {thorns:3}.');
-        expect(paid('E-04')).toBe('DEAL {deal:3}, GUARD {guard:4}, THORNS {thorns:2}.');
-        expect(paid('E-07')).toBe('Discard 1 card at random. DEAL {deal:5}, THORNS {thorns:5}.');
-        expect(paid('M-04')).toBe("GUARD {guard:4}. You don't lose your GUARD at the end of the enemy's turn this turn.");
-        expect(paid('M-08')).toBe('DEAL {deal:2}, THORNS {thorns:2}, DRAW 1.');
-        expect(paid('M-09')).toBe('DEAL {deal:5}, GUARD {guard:4}.');
+        expect(free('P-01')).toBe('DEAL {deal:2} + half your THORNS');
+        expect(paid('P-01')).toBe('DEAL {deal:4} + your THORNS');
+        expect(free('P-03')).toBe('VULNERABLE {vuln:25}% for 1 turn, DEAL {deal:2}');
+        expect(paid('P-03')).toBe('DISCARD 2. VULNERABLE {vuln:75}% for 2 turns, DEAL {deal:8}');
+        expect(paid('P-04')).toBe('DISCARD 1. DEAL {deal:3}, REFLECT 75%');
+        expect(free('P-06')).toBe('THORNS half the damage you dealt this turn');
+        expect(paid('E-01')).toBe('DISCARD 1. GUARD {guard:10}, THORNS {thorns:3}');
+        expect(paid('E-04')).toBe('DEAL {deal:3}, GUARD {guard:4}, THORNS {thorns:2}');
+        expect(paid('E-07')).toBe('DISCARD 1. DEAL {deal:5}, THORNS {thorns:5}');
+        expect(paid('M-04')).toBe("GUARD {guard:4}, keep your GUARD after the foe's turn");
+        expect(paid('M-08')).toBe('DEAL {deal:2}, THORNS {thorns:2}, DRAW 1');
+        expect(paid('M-09')).toBe('DEAL {deal:5}, GUARD {guard:4}');
         // The rider is a card property, printed once, after the PAID line.
-        expect(programFaceText(getCardById(idOf('M-09'))!).paid).toBe('DEAL 5, GUARD 4. If this card is discarded, THORNS 2.');
-        expect(getCardById(idOf('M-10'))!.program!.global!.text).toBe('REFLECT 15%.');
+        expect(programFaceText(getCardById(idOf('M-09'))!).paid).toBe('DEAL 5, GUARD 4. If discarded, THORNS 2');
+        expect(getCardById(idOf('M-10'))!.program!.global!.text).toBe('REFLECT 15%');
         // The Spells' PAID lines carry T's numbers with EXILE.
-        expect(paid('P-07')).toBe('Discard your hand. THORNS {thorns:3} for each card discarded. EXILE.');
-        expect(paid('E-05')).toBe('Discard 2 cards at random. THORNS {thorns:8}. EXILE.');
-        expect(paid('E-06')).toBe('Double your THORNS. EXILE.');
+        expect(paid('P-07')).toBe('DISCARD your hand. THORNS {thorns:3} for each card discarded. EXILE');
+        expect(paid('E-05')).toBe('DISCARD 2. THORNS {thorns:8}. EXILE');
+        expect(paid('E-06')).toBe('2× your THORNS. EXILE');
     });
 
     it('P-08 prints the HOLDS term, and the glossary words are all carried', () => {
-        expect(getCardById(idOf('P-08'))!.program!.free!.text).toContain('While GUARD HOLDS');
+        expect(getCardById(idOf('P-08'))!.program!.free!.text).toContain('while GUARD HOLDS');
     });
 
-    it('a Global prints one line: PAID equals FREE, paying makes it permanent', () => {
+    it('a Global has one effect: playing it PAID only makes it permanent', () => {
         for (const card of CARDS.filter(c => c.program?.global)) {
-            expect(card.program!.global!.paidDelta, card.id).toBeUndefined();
+            expect(Object.keys(card.program!.global!).sort(), card.id).toEqual(['run', 'text', 'trigger']);
         }
     });
 

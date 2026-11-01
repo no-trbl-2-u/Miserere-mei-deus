@@ -12,8 +12,8 @@ import type { Card } from '../types';
 
 /** A cap on a card line: "(max 8)", "max +12", "max 15". */
 const CAP = /\(max\b|\bmax \+?\d/i;
-/** The kept exception: the X cap on a "SACRIFICE any amount" line. */
-const SACRIFICE_X_CAP = /SACRIFICE any amount(?: X)? \(max \d+\)/g;
+/** The kept exception: the X cap on a "SACRIFICE X" line. */
+const SACRIFICE_X_CAP = /SACRIFICE X \(max \d+\)/g;
 
 /** Every live card and each of its upgrades. */
 function everyFace(): Card[] {
@@ -27,7 +27,7 @@ function everyFace(): Card[] {
 function lines(card: Card): string[] {
     const { free, paid } = cardLinesText(card);
     const g = card.program?.global;
-    return [free, paid, g?.text ?? '', g?.paidDelta ?? ''];
+    return [free, paid, g?.text ?? ''];
 }
 
 describe('no caps (Phase NC1)', () => {

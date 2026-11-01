@@ -129,15 +129,15 @@ describe('the Merciful set', () => {
     it('prints the numbers T chose to ship (the sims\' fixes)', () => {
         const free = (id: string) => getCardById(id)!.program!.free!.text;
         const paid = (id: string) => getCardById(id)!.program!.paid!.text;
-        expect(free('mc-p-01a')).toBe('RADIANCE {radiance:3}.');
-        expect(paid('mc-p-01a')).toBe('RADIANCE {radiance:7}.');
-        expect(paid('mc-p-03b')).toBe("MERCY {mercy:8}, then the foe's MERCY bursts now. EXILE.");
-        expect(paid('mc-p-05a')).toBe("The foe's MERCY bursts now. EXILE.");
-        expect(free('mc-p-08b')).toBe('HEAL {heal:3}. MERCY equal to half all you healed this turn.');
-        expect(paid('mc-p-08b')).toBe('HEAL {heal:6}. MERCY equal to half all you healed this turn.');
-        expect(paid('mc-e-01b')).toBe('HEAL {heal:5}. DRAW 2.');
-        expect(paid('mc-e-03b')).toBe('Your heals this turn HEAL twice as much. EXILE.');
-        expect(paid('mc-m-05c')).toBe('+6 max VITAE this combat, then HEAL to full. EXILE.');
+        expect(free('mc-p-01a')).toBe('RADIANCE {radiance:3}');
+        expect(paid('mc-p-01a')).toBe('RADIANCE {radiance:7}');
+        expect(paid('mc-p-03b')).toBe("MERCY {mercy:8}, the foe's MERCY bursts. EXILE");
+        expect(paid('mc-p-05a')).toBe("The foe's MERCY bursts. EXILE");
+        expect(free('mc-p-08b')).toBe('HEAL {heal:3}, MERCY half all you healed this turn');
+        expect(paid('mc-p-08b')).toBe('HEAL {heal:6}, MERCY half all you healed this turn');
+        expect(paid('mc-e-01b')).toBe('HEAL {heal:5}, DRAW 2');
+        expect(paid('mc-e-03b')).toBe('2× each HEAL this turn. EXILE');
+        expect(paid('mc-m-05c')).toBe('+6 max VITAE this combat, HEAL = your missing VITAE. EXILE');
         // T: "bursts", never "triggers"; a number a face prints stays out of the printed word list.
         for (const card of CARDS) {
             const printed = JSON.stringify(cardLinesText(card));
@@ -146,9 +146,9 @@ describe('the Merciful set', () => {
         }
     });
 
-    it('a Global prints one line: PAID equals FREE, paying makes it permanent', () => {
+    it('a Global has one effect: playing it PAID only makes it permanent', () => {
         for (const card of CARDS.filter(c => c.program?.global)) {
-            expect(card.program!.global!.paidDelta, card.id).toBeUndefined();
+            expect(Object.keys(card.program!.global!).sort(), card.id).toEqual(['run', 'text', 'trigger']);
             expect(card.program!.global!.trigger, card.id).toBe('turn');
         }
     });

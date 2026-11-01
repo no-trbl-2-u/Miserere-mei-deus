@@ -225,8 +225,8 @@ describe('the FREE shortfall belongs to the SACRIFICE floor alone', () => {
         id: 'ew-sacrifice', name: 'ew-sacrifice', color: 'any', description: 'A sacrifice fixture.',
         tier: 1, rank: 1, cardType: 'skill', targetType: 'enemy',
         program: {
-            free: { text: 'SACRIFICE 2, DEAL 7.', run: (c) => { c.sacrifice(2); c.deal(7); } },
-            paid: { text: 'SACRIFICE 4, DEAL 16.', run: (c) => { c.sacrifice(4); c.deal(16); } },
+            free: { text: 'SACRIFICE 2, DEAL 7', run: (c) => { c.sacrifice(2); c.deal(7); } },
+            paid: { text: 'SACRIFICE 4, DEAL 16', run: (c) => { c.sacrifice(4); c.deal(16); } },
         },
     };
     beforeAll(() => registerSandboxCards([TITHE]));

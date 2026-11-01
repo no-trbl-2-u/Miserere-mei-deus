@@ -28,7 +28,7 @@ const find = (pred: (c: Card) => boolean): Card => {
     return card;
 };
 const SACRIFICE_FREE = find((c) => /^SACRIFICE \d+, DEAL/.test(c.program?.free?.text ?? ''));
-const X_LINE = find((c) => /SACRIFICE any amount/.test(c.program?.paid?.text ?? ''));
+const X_LINE = find((c) => /SACRIFICE X \(max/.test(c.program?.paid?.text ?? ''));
 const GLOBAL = find((c) => c.cardType === 'global');
 
 const noopDrag = (): DragController =>

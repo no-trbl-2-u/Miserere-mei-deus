@@ -171,7 +171,7 @@ describe('the spikes on card faces and in the glossary', () => {
     it('glosses THORNS, REFLECT and RETRIEVE, finds them in printed text, and explains "GUARD holds"', () => {
         for (const kw of ['Thorns', 'Reflect', 'Retrieve']) expect(keywordGloss(kw)).toBeTruthy();
         expect(keywordsInText('THORNS 2, REFLECT 25%. RETRIEVE 1.')).toEqual(['Thorns', 'Reflect', 'Retrieve']);
-        expect(systemTermsForCard('While GUARD holds, your THORNS deal double.', []).map((t) => t.term)).toEqual(['HOLDS']);
+        expect(systemTermsForCard('your THORNS hit 2× while GUARD HOLDS', []).map((t) => t.term)).toEqual(['HOLDS']);
         expect(systemTermsForCard('GUARD 6', [])).toEqual([]);
     });
 

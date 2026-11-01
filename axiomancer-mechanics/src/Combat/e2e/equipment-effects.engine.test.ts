@@ -60,7 +60,7 @@ const CARDS: Card[] = [
         tier: 1, rank: 1, cardType: 'global', targetType: 'self',
         program: { global: {
             trigger: 'turn', text: 'TEST.',
-            free: c => { c.deal(10, { exact: true }); }, paid: c => { c.deal(10, { exact: true }); },
+            run: c => { c.deal(10, { exact: true }); },
         } },
     },
 ];

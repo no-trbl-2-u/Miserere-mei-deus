@@ -106,19 +106,19 @@ describe('the Elementalist set', () => {
     it('prints the sims\' adjusted numbers', () => {
         const free = (slot: string) => getCardById(idOf(slot))!.program!.free!.text;
         const paid = (slot: string) => getCardById(idOf(slot))!.program!.paid!.text;
-        expect(free('P-01')).toBe('DEAL {deal:3}.');
-        expect(paid('P-02')).toBe('DEAL {deal:9}; INFERNO 4 (you and the foe both burn).');
+        expect(free('P-01')).toBe('DEAL {deal:3}');
+        expect(paid('P-02')).toBe('DEAL {deal:9}, INFERNO 4');
         // The Spells' PAID lines, a step up and EXILEd (the Spell law, T, 2026-10-24).
-        expect(paid('E-01')).toBe('INFERNO 6, GUARD {guard:7}. EXILE.');
-        expect(paid('E-05')).toBe('STORM 4, DRAW 3. EXILE.');
-        expect(free('M-07')).toBe('STORM 1.');
-        expect(paid('M-07')).toBe('VULNERABLE +{vuln:14}% per STORM on the foe, for 2 turns. EXILE.');
-        expect(getCardById(idOf('P-10'))!.program!.global!.text).toBe('if the foe has two or more elements, DEAL {deal:3}.');
+        expect(paid('E-01')).toBe('INFERNO 6, GUARD {guard:7}. EXILE');
+        expect(paid('E-05')).toBe('STORM 4, DRAW 3. EXILE');
+        expect(free('M-07')).toBe('STORM 1');
+        expect(paid('M-07')).toBe('VULNERABLE {vuln:14}% for each STORM the foe has, for 2 turns. EXILE');
+        expect(getCardById(idOf('P-10'))!.program!.global!.text).toBe('DEAL {deal:3} if the foe has 2 or more elements');
     });
 
-    it('a Global prints one line: PAID equals FREE, paying makes it permanent', () => {
+    it('a Global has one effect: playing it PAID only makes it permanent', () => {
         for (const card of CARDS.filter(c => c.program?.global)) {
-            expect(card.program!.global!.paidDelta, card.id).toBeUndefined();
+            expect(Object.keys(card.program!.global!).filter(k => k !== 'stormGrowth').sort(), card.id).toEqual(['run', 'text', 'trigger']);
         }
     });
 
@@ -271,8 +271,8 @@ describe('printed equals applied', () => {
 
 describe('no caps (Phase NC1)', () => {
     it('P-06b and P-09a read the whole stack (T, 2026-10-26)', () => {
-        expect(getCardById('el-p-06b')?.program?.paid?.text).toBe("GUARD {guard:5}, + the foe's STORM. DRAW 1.");
-        expect(getCardById('el-p-09a')?.program?.free?.text).toBe('DEAL {deal:2}, + your INFERNO.');
+        expect(getCardById('el-p-06b')?.program?.paid?.text).toBe("GUARD {guard:5} + the foe's STORM, DRAW 1");
+        expect(getCardById('el-p-09a')?.program?.free?.text).toBe('DEAL {deal:2} + your INFERNO');
     });
 
     it("P-06b PAID adds the whole STORM to its GUARD, past the old 12", () => {
@@ -293,7 +293,7 @@ describe('the upgrade', () => {
 
     it('grows a hit by MAGNITUDE and an element by 1', () => {
         const up = getCardById(`${idOf('P-02')}+`)!;
-        expect(up.program!.paid!.text).toBe('DEAL {deal:13}; INFERNO 5 (you and the foe both burn).');
+        expect(up.program!.paid!.text).toBe('DEAL {deal:13}, INFERNO 5');
         expect(getCardById(`${idOf('E-06')}+`)!.program!.global!.stormGrowth).toBe(2);
     });
 

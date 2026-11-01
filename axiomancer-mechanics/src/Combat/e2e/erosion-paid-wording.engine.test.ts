@@ -17,9 +17,9 @@ import { STARTING_CARD_IDS } from '../combat.rewards';
 // The grey office's lines. The production projection is the wording the
 // player reads, and it must not drift silently.
 const EXPECTED_PAID_LINES: Readonly<Record<string, string>> = {
-    'grey-strike': 'PAID — Deal 5. Costs 1 die.',
+    'grey-strike': 'PAID — DEAL 5. Costs 1 die.',
     'grey-ward': 'PAID — GUARD 5. Costs 1 die.',
-    'grey-word': 'PAID — VULNERABLE +25% for 2 turns. Costs 1 die.',
+    'grey-word': 'PAID — VULNERABLE 25% for 2 turns. Costs 1 die.',
 };
 
 describe('Starter (grey deck) paid-effect wording', () => {

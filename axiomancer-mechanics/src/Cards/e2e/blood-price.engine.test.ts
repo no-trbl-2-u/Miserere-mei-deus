@@ -240,8 +240,8 @@ describe('SACRIFICE, WAIVE, HEAL, EXILE', () => {
         s = play(s, 't2', false);
         expect(s.player.health).toBe(100);
         expect(s.program!.sacrificeCount).toBe(1);
-        // P-10c's GUARD n fires for the WAIVED SACRIFICE 2.
-        expect(s.guard).toBe(2);
+        // P-10c's DEAL X fires for the WAIVED SACRIFICE 2, beside the line's DEAL 7.
+        expect(s.enemy.health).toBe(500 - 7 - 2);
         expect(s.conviction).toBe(2);
     });
 });
@@ -267,10 +267,10 @@ describe('Globals', () => {
         expect(s.program!.leechPotency).toBe(5);
     });
 
-    it('a SACRIFICE fires the 🩸 Globals: P-10c FREE is GUARD n, PAID is DEAL n', () => {
+    it('a SACRIFICE fires the 🩸 Globals: P-10c deals X, played FREE or PAID', () => {
         const free = play(play(fight(['bp-p-10c', 'bp-p-01a']), 't0', false), 't1', false);
-        expect(free.guard).toBe(2);
-        expect(free.enemy.health).toBe(493);
+        expect(free.guard ?? 0).toBe(0);
+        expect(free.enemy.health).toBe(500 - 7 - 2);
         const paid = play(play(fight(['bp-p-10c', 'bp-p-01a']), 't0', true), 't1', false);
         expect(paid.enemy.health).toBe(500 - 7 - 2);
     });
@@ -302,12 +302,11 @@ describe('Globals stack as independent instances (experimental, T 2026-10-14)', 
         ]);
     });
 
-    it('each copy fires its own trigger: one SACRIFICE, two P-10c, GUARD n twice', () => {
+    it('each copy fires its own trigger: one SACRIFICE, two P-10c, DEAL X twice', () => {
         let s = play(fight(['bp-p-10c', 'bp-p-10c', 'bp-p-01a']), 't0', false);
         s = play(s, 't1', false);
         s = play(s, 't2', false);
-        expect(s.guard).toBe(4);
-        expect(s.enemy.health).toBe(493);
+        expect(s.enemy.health).toBe(500 - 7 - 2 - 2);
     });
 
     it('two ⟳ copies apply their SACRIFICE 2 and LEECH 1 twice per turn', () => {
@@ -442,8 +441,8 @@ describe('the revision 2 cards', () => {
         expect(CARD_RANK_NAMES[card.rank]).toBe('Skull');
         expect(rankToRarity(card.rank)).toBe('rare');
         // Before UP1c: rank 1, FREE DEAL 6, PAID DEAL 2X.
-        expect(card.program!.free!.text).toBe('SACRIFICE 3, DEAL {deal:9}.');
-        expect(card.program!.paid!.text).toBe('SACRIFICE any amount X (max 12), DEAL 3X.');
+        expect(card.program!.free!.text).toBe('SACRIFICE 3, DEAL {deal:9}');
+        expect(card.program!.paid!.text).toBe('SACRIFICE X (max 12), DEAL 3× X');
         // The only rare in the library today.
         expect(cardLibrary.filter(c => rankToRarity(c.rank) === 'rare').map(c => c.id)).toEqual(['bp-e-08n']);
 
@@ -451,9 +450,9 @@ describe('the revision 2 cards', () => {
         const ups = ['bp-e-08n+', 'bp-e-08n++', 'bp-e-08n+++'].map(id => getCardById(id));
         expect(ups.map(c => c?.id)).toEqual(['bp-e-08n+', 'bp-e-08n++', 'bp-e-08n+++']);
         expect(ups.map(c => c!.program!.free!.text)).toEqual([
-            'SACRIFICE 3, DEAL {deal:13}.',
-            'SACRIFICE 3, DEAL {deal:18}.',
-            'SACRIFICE 3, DEAL {deal:25}.',
+            'SACRIFICE 3, DEAL {deal:13}',
+            'SACRIFICE 3, DEAL {deal:18}',
+            'SACRIFICE 3, DEAL {deal:25}',
         ]);
         expect(canUpgrade(ups[2]!)).toBe(false);
         expect(upgradeCard(ups[2]!)).toBeUndefined();
@@ -461,9 +460,9 @@ describe('the revision 2 cards', () => {
 
         // PAID (T, 2026-10-23): X's cap +3 per upgrade, and the third upgrade is 4X.
         expect(ups.map(c => c!.program!.paid!.text)).toEqual([
-            'SACRIFICE any amount X (max 15), DEAL 3X.',
-            'SACRIFICE any amount X (max 18), DEAL 3X.',
-            'SACRIFICE any amount X (max 21), DEAL 4X.',
+            'SACRIFICE X (max 15), DEAL 3× X',
+            'SACRIFICE X (max 18), DEAL 3× X',
+            'SACRIFICE X (max 21), DEAL 4× X',
         ]);
         const ids = ['bp-e-08n', ...ups.map(c => c!.id)];
         expect(ids.map(id => programXRange(fight([id]), 't0', true, PROGRAM_KIT)?.max)).toEqual([12, 15, 18, 21]);
@@ -612,7 +611,7 @@ describe('TETHER, LEECH and the wards', () => {
 });
 
 /** Every number a plain line prints, summed per kind. */
-const PLAIN = /^(?:(?:SACRIFICE \d+|DEAL \d+|GUARD \d+|HEAL \d+|gain \d+ Conviction|the foe loses \d+ VITAE|EXILE)[,.;]?\s*)+$/i;
+const PLAIN = /^(?:(?:SACRIFICE \d+|DEAL \d+|GUARD \d+|HEAL \d+|CONVICTION \d+|the foe loses \d+ VITAE|EXILE)[,.;]?\s*)+$/i;
 
 function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: string[] } {
     const mismatches: string[] = [];
@@ -623,7 +622,7 @@ function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: 
             const before = fight([card.id], 100, stats);
             const hand = handCards(before).find(h => h.uid === 't0')!.card;
             const face = (paid ? hand.bottomActionText : hand.topActionText)
-                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/ Costs 1 die\.$/, '');
+                .replace(/^(FREE|PAID) — /, '').replace(/ \(Ash\)$/, '').replace(/\. Costs 1 die\.$/, '');
             if (!PLAIN.test(face)) continue;
             checked++;
             const sum = (re: RegExp): number => [...face.matchAll(re)].reduce((a, m) => a + Number(m[1]), 0);
@@ -631,7 +630,7 @@ function printedEqualsApplied(stats: BaseStats): { checked: number; mismatches: 
                 enemy: sum(/DEAL (\d+)/g) + sum(/loses (\d+) VITAE/g),
                 player: -sum(/SACRIFICE (\d+)/g) + sum(/HEAL (\d+)/g),
                 guard: sum(/GUARD (\d+)/g),
-                conviction: sum(/gain (\d+) Conviction/gi),
+                conviction: sum(/CONVICTION (\d+)/g),
             };
             const after = play(before, 't0', paid);
             const got = {
@@ -664,7 +663,7 @@ describe('printed equals applied', () => {
     it('a VULNERABLE face prints the heart-scaled percent it lands', () => {
         const s = fight(['bp-m-07a'], 100, { body: 5, mind: 5, heart: 10 });
         const face = handCards(s)[0].card.topActionText;
-        expect(face).toContain('+20%');
+        expect(face).toContain('VULNERABLE 20%');
         const after = play(s, 't0', false);
         expect(after.enemy.effects.find(e => e.effectId === 'debuff_vulnerable')?.intensity).toBe(20);
     });
@@ -717,9 +716,9 @@ describe('the SACRIFICE floor, as a number', () => {
 
 describe('no caps (Phase NC1)', () => {
     it('the two SACRIFICE X caps stay (T, 2026-10-26)', () => {
-        expect(getCardById('bp-e-08n')?.program?.paid?.text).toContain('SACRIFICE any amount X (max 12)');
+        expect(getCardById('bp-e-08n')?.program?.paid?.text).toContain('SACRIFICE X (max 12)');
         expect(getCardById('bp-e-08n+')?.program?.paid?.text).toContain('(max 15)');
-        expect(getCardById('bp-e-10d')?.program?.paid?.text).toContain('SACRIFICE any amount (max 21)');
+        expect(getCardById('bp-e-10d')?.program?.paid?.text).toContain('SACRIFICE X (max 21)');
     });
 
     it('Collect the Debt PAID leeches 1 per 10 VITAE missing, past the old 8', () => {
@@ -742,20 +741,19 @@ describe('no caps (Phase NC1)', () => {
 describe('Blood Price upgrades (Phase UP1b)', () => {
     it('an upgraded line prints and applies the bigger payoff, and keeps its SACRIFICE', () => {
         const up = getCardById('bp-p-01a+');
-        expect(up?.program?.free?.text).toBe('SACRIFICE 2, DEAL {deal:10}.');
-        expect(up?.program?.paid?.text).toBe('SACRIFICE 4, DEAL {deal:22}.');
-        expect(getCardById('bp-p-07b')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat.');
-        expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat +2.');
-        expect(getCardById('bp-p-06d+')?.program?.paid?.text).toBe('LEECH 1 per 10 VITAE missing, +1.');
+        expect(up?.program?.free?.text).toBe('SACRIFICE 2, DEAL {deal:10}');
+        expect(up?.program?.paid?.text).toBe('SACRIFICE 4, DEAL {deal:22}');
+        expect(getCardById('bp-p-07b')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat');
+        expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat +2');
+        expect(getCardById('bp-p-06d+')?.program?.paid?.text).toBe('LEECH 1 for each 10 VITAE missing, +1');
         expect(getCardById('bp-m-10a+')?.program?.paid?.text)
-            .toBe('The foe loses VITAE equal to twice the damage you took last turn +2. EXILE.');
-        expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, gain 6 Conviction. EXILE.');
+            .toBe('The foe loses VITAE = 2× the damage you took last turn +2. EXILE');
+        expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, CONVICTION 6. EXILE');
     });
 
     it('a Global adds to its trigger amount', () => {
-        expect(getCardById('bp-p-10c+')?.program?.global?.text).toBe('GUARD n+2.');
-        expect(getCardById('bp-p-10c+')?.program?.global?.paidDelta).toBe('DEAL n+2 instead.');
-        expect(getCardById('bp-e-09n+')?.program?.global?.text).toBe('your next DEAL this turn deals +n+2.');
+        expect(getCardById('bp-p-10c+')?.program?.global?.text).toBe('DEAL X +2');
+        expect(getCardById('bp-e-09n+')?.program?.global?.text).toBe('+X +2 to your next DEAL this turn');
     });
 
     it('Pinpricks and Name Your Price print no payoff, so their upgrade changes no number', () => {

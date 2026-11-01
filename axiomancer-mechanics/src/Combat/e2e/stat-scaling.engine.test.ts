@@ -216,7 +216,7 @@ describe('S3 — the hand prints final numbers (display only)', () => {
     it('handCards builds each card from its stat-scaled copy', () => {
         const hand = (build: [number, number, number]) =>
             handCards(stateFor('grey-strike', build))[0].card.bottomActionText;
-        expect(hand([5, 5, 5])).toMatch(/Deal 5\./);
+        expect(hand([5, 5, 5])).toMatch(/DEAL 5\./);
         expect(hand([47, 5, 5])).toMatch(/Deal 47\b/);
     });
 

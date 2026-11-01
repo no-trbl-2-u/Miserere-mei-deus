@@ -32,9 +32,10 @@ import { cardLibrary } from '../cards.library';
 import { upgradeCard } from '../card-upgrades';
 import {
     checkCarrierRule, checkComplexityBudget, checkDiscardCost, checkFaceGrammar, checkGlobalTemplate, checkScrapFloor,
-    checkSpellLaw, checkTextOrder, parseAtlasKeywords, printedKeywords,
+    checkSpellLaw, checkTextOrder, faceLines, parseAtlasKeywords, printedKeywords,
     type CardRuleId, type CardRuleViolation,
 } from '../card-rules';
+import { programFaceText } from '../../Combat/combat.cards';
 import { RESERVE_MAX, RESERVE_PIP_CAP } from '../../Combat/combat.dice';
 import { SPECIAL_CONVICTION_DEFAULT, UPGRADEABLE_DIE_COLORS } from '../../Combat/combat.upgradeable-dice';
 import { CONVICTION_CAP } from '../../Combat/combat.engine';
@@ -195,7 +196,7 @@ describe('each rule fires on a synthetic breaker', () => {
 
     it('scrap floor: a PAID line that only gains 1 Conviction', () => {
         const card: Card = { ...base, id: 'syn-scrap', program: {
-            free: { text: 'GUARD 3.', run: c => { c.guard(3); } },
+            free: { text: 'GUARD 3', run: c => { c.guard(3); } },
             paid: { text: 'Gain 1 Conviction.', run: c => { c.conviction(1); } },
         } };
         expect(checkScrapFloor([card]).map(x => x.id)).toEqual(['syn-scrap']);
@@ -203,7 +204,7 @@ describe('each rule fires on a synthetic breaker', () => {
 
     it('Global template: a body that prints its own duration', () => {
         const card: Card = { ...base, id: 'syn-global', cardType: 'global', program: {
-            global: { trigger: 'turn', text: 'GUARD 2 for 3 turns.', free: c => { c.guard(2); }, paid: c => { c.guard(2); } },
+            global: { trigger: 'turn', text: 'GUARD 2 for 3 turns', run: c => { c.guard(2); } },
         } };
         expect(checkGlobalTemplate([card]).map(x => x.id)).toEqual(['syn-global']);
     });
@@ -264,15 +265,15 @@ describe('the Spell law (T, 2026-10-24)', () => {
     it('fires on a Spell whose PAID does not EXILE, whose FREE does, or whose PAID is not a step up', () => {
         const spell: Card = { ...base, cardType: 'spell', spellLawBaseline: { guard: 5 } };
         const noExile: Card = { ...spell, id: 'syn-no-exile', program: {
-            free: { text: 'GUARD 2.', run: c => { c.guard(2); } },
-            paid: { text: 'GUARD 7.', run: c => { c.guard(7); } },
+            free: { text: 'GUARD 2', run: c => { c.guard(2); } },
+            paid: { text: 'GUARD 7', run: c => { c.guard(7); } },
         } };
         const freeExile: Card = { ...spell, id: 'syn-free-exile', program: {
             free: { text: 'GUARD 2. EXILE.', run: c => { c.guard(2); }, exile: true },
             paid: { text: 'GUARD 7. EXILE.', run: c => { c.guard(7); }, exile: true },
         } };
         const flat: Card = { ...spell, id: 'syn-flat', program: {
-            free: { text: 'GUARD 2.', run: c => { c.guard(2); } },
+            free: { text: 'GUARD 2', run: c => { c.guard(2); } },
             paid: { text: 'GUARD 6. EXILE.', run: c => { c.guard(6); }, exile: true },
         } };
         const plain: Card = { ...base, cardType: 'spell', id: 'syn-plain', specialMechanics: [{ kind: 'guard', amount: 7 }] };
@@ -283,5 +284,37 @@ describe('the Spell law (T, 2026-10-24)', () => {
         expect(v[2].detail).toContain('needs at least 7');
         expect(v[3].detail).toContain('PAID does not EXILE');
         expect(v[3].detail).toContain('no spellLawBaseline');
+    });
+});
+
+describe('the card voice prints its worked examples as written (docs/card-voice.md §11)', () => {
+    // FREE · PAID at base level; a Global prints one line after its trigger.
+    const EXAMPLES: readonly (readonly [string, string, string])[] = [
+        ['Burn Together', 'DEAL 3', 'DEAL 9, INFERNO 4'],
+        ['Encase in Ice', 'BLIZZARD 3', "BLIZZARD 5, GUARD = foe's BLIZZARD"],
+        ['Strike the Burning', 'DEAL 3', 'DEAL 4 or 8 if the foe has INFERNO'],
+        ['Shatter the Frost', 'DEAL 2, BLIZZARD 2', "Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent"],
+        ['Weight of Grace', "DEAL = foe's MERCY", "DEAL 2× foe's MERCY"],
+        ['Shield Bash', 'GUARD 4', 'DISCARD 1. GUARD 8, DEAL = your GUARD'],
+        ['Cracking Swing', 'VULNERABLE 25% for 1 turn, DEAL 2', 'DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8'],
+        ['Open Vein', 'TETHER 2, SACRIFICE 2', 'TETHER 3, SACRIFICE 4, LEECH 2'],
+        ['Double-Edged', 'DEAL 6, SACRIFICE 2', 'DEAL 9, twice; SACRIFICE 2 after each'],
+        ['Bloodletting', 'SACRIFICE 3, CONVICTION 2', 'SACRIFICE 6, CONVICTION 5. EXILE'],
+        ['Cornered', 'DEAL 3 or 6 at half your VITAE', 'DEAL 6 or 14 at half your VITAE'],
+    ];
+    const byName = (name: string): Card => {
+        const card = cardLibrary.find(c => c.name === name);
+        if (!card) throw new Error(`no library card named ${name}`);
+        return card;
+    };
+
+    it.each(EXAMPLES)('%s', (name, free, paid) => {
+        expect(faceLines(byName(name)).map(l => [l.name, l.text])).toEqual([['FREE', free], ['PAID', paid]]);
+    });
+
+    it('Callus: GLOBAL, one effect after its trigger', () => {
+        const callus = byName('Callus');
+        expect(faceLines(callus).map(l => [l.name, l.text])).toEqual([['GLOBAL', 'DEAL X']]);
+        expect(programFaceText(callus).paid).toMatch(/When you SACRIFICE X: DEAL X\./);
     });
 });

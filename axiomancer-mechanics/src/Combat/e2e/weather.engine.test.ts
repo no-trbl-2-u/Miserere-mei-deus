@@ -64,7 +64,7 @@ const CARDS: Card[] = [
         tier: 1, rank: 1, cardType: 'global', targetType: 'self',
         program: { global: {
             trigger: 'turn', text: 'TEST.', stormGrowth: 1,
-            free: c => c.stormGrowthMarker(1), paid: c => c.stormGrowthMarker(1),
+            run: c => c.stormGrowthMarker(1),
         } },
     },
 ];
