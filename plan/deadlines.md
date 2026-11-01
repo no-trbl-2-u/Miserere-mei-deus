@@ -273,6 +273,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM2g — 14-day retention of bot and harness rows (SM2); loop housekeeping, no T act waits on it
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
+- CF1a — the card-face grammar lint (spec 137); no dated T act waits on it, only T's read of CF1b's rewrite, whose date T has not set
+- CF1b — every card line rewritten to T's grammar; T reads and merges its rules-change PR; date not set (T picks it).
+- CF1c — the small face prints the whole PAID line (spec 137); no dated T act waits on it
+- CF1d — the words or glyphs toggle in Settings (spec 137); no dated T act waits on it
 - NX1f — the workflows on v2's steps after the cut-over; the T act after it, NX1i, has no date yet
 - NX1h — the weekly nexus sync; no dated T act waits on it (T reads each sync PR as it comes)
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
@@ -357,6 +361,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-01** — **Card faces you read without opening plotted as spec 137 (CF1a-CF1d)** (T, attended `/pitch` then "Plot it!"; pitch `pitches/2026-11-01-card-face-meaning.md`). **Added** CF1a-CF1d under `## Unscheduled`: no dated T act waits on them, and T sets the date for reading CF1b's rewrite. No Item edited, no date moved.
 - **2026-11-01** — **Chapter 1's weapons and armor plotted into spec 136 (EQ3d-EQ3j)** (T, attended `/pitch` then "Yeah, plot this and integrate it into 1268"; pitch `braindump/2026-11-01-weapons-and-armor.md`, dice effects included). **Ticked** the Oct 31 pitch Item and the Nov 2 plot Item (plotted early). **Added** EQ3d-EQ3j to the `Waits on` of the MVP demo (Nov 16), which shows Chapter 1's weapons and armor. No date moved.
 - **2026-11-01** — **Item icons plotted into spec 136 (EQ3k)** (T: "Yes, add it", after picking sheet A plus sheet D's hammer and scepter). **Added** EQ3k to the `Waits on` of the MVP demo (Nov 16), which lists icons. No date moved.
 - **2026-10-31** — **the equipment dock fixed, relics keep their place, drag and drop (EQ3)** (T, attended `/plot`: "Equipment slots are broken, we can only equip/unequip the bottom row"). **Added** EQ3a, EQ3b and EQ3c to the `Waits on` of the Mid-MVP check (Nov 9): the check plays the Chosen with two relics on the preview build, and today every relic equip replaces RELIC III. Nothing ticked; no date moved.
