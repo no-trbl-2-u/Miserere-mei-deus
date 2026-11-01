@@ -59,6 +59,31 @@
  *   runs, open (not yet ended), runOver, chapterClear, reset (the outcomes), avgLevel and maxLevel,
  *   avgVitaeEnd, avgNodesResolved and maxNodesResolved, and furthestNodeId (where the run that resolved the
  *   most nodes ended).
+ *
+ * run-ends, run-pacing and coverage (phase SM2e) read the same `play_runs` and `run_events` rows, narrowed by
+ * `?build=` and `?source=` (an absent `?source=` reads every source, as run-summary does: each row names its own).
+ * Each row is keyed by `source` and `policyId` (the sim's policy; null for any other source), and every id in a
+ * row is the raw id the game logged, so a caller can join the rows to Chapter 1's content by id.
+ *
+ * run-ends, per source, policy and end node, over the CLOSED runs (`ended_at` set): runs, runOver, chapterClear,
+ * avgLevel and avgVitaeEnd (to one place).
+ *
+ * run-pacing, per source, policy and node, over the runs that entered the node:
+ *   runs               runs that entered it
+ *   avgResolvedBefore  nodes those runs had resolved before first entering it (the sim has no clock: time is nodes)
+ *   avgLevel, avgVitae the player's level and VITAE after resolving it, over every resolution; an event from an
+ *                      older build carries neither, so it counts for neither, and null when no event carried one
+ *   rests              resolutions whose choice was `rest`
+ *   withdrawals        resolutions whose choice was `flee`
+ *
+ * coverage, per source, policy, kind and id (`runs` is the distinct runs; `count` the events; `cleared` the part of
+ * them that went through):
+ *   node        id = nodeId; count = node-entered; cleared = node-resolved there
+ *   quest-step  id = `<questId>/<stepId>`, or the bare questId when the step is null; count = quest-step events;
+ *               cleared = the `turn-in` and `complete` ones
+ *   enemy       id = the fight's enemy_id, from `fights`; count = fights; cleared = victories
+ *   hazard      id = hazardId; count = hazard-ended; cleared = the ones with `cleared` true
+ *   item        id = itemId; count = item-gained; cleared = null (an item is not cleared)
  */
 
 import type { PlayLogSourceFilter } from './contract';
@@ -66,7 +91,7 @@ import type { Env } from './env';
 
 export const REPORTS_PATH_PREFIX = '/v1/reports/';
 
-export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage', 'card-vs-bot', 'run-summary'] as const;
+export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage', 'card-vs-bot', 'run-summary', 'run-ends', 'run-pacing', 'coverage'] as const;
 export type ReportName = (typeof REPORT_NAMES)[number];
 
 export function isReportName(value: string): value is ReportName {
@@ -208,7 +233,81 @@ export interface RunSummaryReport {
     summary: RunSummaryRow[];
 }
 
-export type Report = CardUsageReport | CardGapsReport | SignatureUsageReport | CardVsBotReport | RunSummaryReport;
+export interface RunEndsRow {
+    source: string;
+    /** The sim's policy id; null for any other source. */
+    policyId: string | null;
+    /** Where the run ended; null for a run that ended off the map. */
+    endNodeId: string | null;
+    runs: number;
+    runOver: number;
+    chapterClear: number;
+    avgLevel: number | null;
+    avgVitaeEnd: number | null;
+}
+
+export interface RunEndsReport {
+    report: 'run-ends';
+    build: string | null;
+    source: PlayLogSourceFilter;
+    /** The closed runs read. */
+    runs: number;
+    ends: RunEndsRow[];
+}
+
+export interface RunPacingRow {
+    source: string;
+    policyId: string | null;
+    nodeId: string;
+    runs: number;
+    avgResolvedBefore: number | null;
+    avgLevel: number | null;
+    avgVitae: number | null;
+    rests: number;
+    withdrawals: number;
+}
+
+export interface RunPacingReport {
+    report: 'run-pacing';
+    build: string | null;
+    source: PlayLogSourceFilter;
+    /** Every run read, whether or not it entered a node. */
+    runs: number;
+    pacing: RunPacingRow[];
+}
+
+export const COVERAGE_KINDS = ['node', 'quest-step', 'enemy', 'hazard', 'item'] as const;
+export type CoverageKind = (typeof COVERAGE_KINDS)[number];
+
+export interface CoverageRow {
+    source: string;
+    policyId: string | null;
+    kind: CoverageKind;
+    id: string;
+    runs: number;
+    count: number;
+    /** Null for an item. */
+    cleared: number | null;
+}
+
+export interface CoverageReport {
+    report: 'coverage';
+    build: string | null;
+    source: PlayLogSourceFilter;
+    /** Every run read. */
+    runs: number;
+    coverage: CoverageRow[];
+}
+
+export type Report =
+    | CardUsageReport
+    | CardGapsReport
+    | SignatureUsageReport
+    | CardVsBotReport
+    | RunSummaryReport
+    | RunEndsReport
+    | RunPacingReport
+    | CoverageReport;
 
 export interface ReportQuery {
     build: string | null;
@@ -489,6 +588,107 @@ FROM (
 ) AS g
 ORDER BY CASE g.source WHEN 'human' THEN 0 WHEN 'harness' THEN 1 ELSE 2 END, g.pol`;
 
+// run-ends. `?1` build, `?2` source (null for every source). Closed runs only.
+const RUN_ENDS_SQL = `
+SELECT source, CASE WHEN source = 'sim' THEN policy_id END AS policyId, end_node_id AS endNodeId,
+       COUNT(*) AS runs,
+       COALESCE(SUM(outcome = 'run-over'), 0) AS runOver,
+       COALESCE(SUM(outcome = 'chapter-clear'), 0) AS chapterClear,
+       ROUND(AVG(level), 1) AS avgLevel, ROUND(AVG(vitae_end), 1) AS avgVitaeEnd
+FROM play_runs
+WHERE ended_at IS NOT NULL AND (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)
+GROUP BY source, policyId, end_node_id
+ORDER BY CASE source WHEN 'human' THEN 0 WHEN 'harness' THEN 1 ELSE 2 END, policyId, runs DESC, endNodeId`;
+
+// `?1` build, `?2` source. Every run read, closed or not.
+const RUN_COUNT_SQL = `
+SELECT COUNT(*) AS n FROM play_runs WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)`;
+
+// run-pacing. `seq` orders a run's events, so "resolved before" is the node-resolved events with a lower `seq` than the
+// run's first node-entered at the node.
+const RUN_PACING_SQL = `
+WITH r AS (
+        SELECT run_id, source, CASE WHEN source = 'sim' THEN policy_id END AS pol FROM play_runs
+        WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)
+    ),
+    ev AS (
+        SELECT r.source, r.pol, e.run_id, e.seq, e.kind, e.payload_json AS p
+        FROM run_events AS e JOIN r ON r.run_id = e.run_id WHERE e.kind IN ('node-entered', 'node-resolved')
+    ),
+    first_in AS (
+        SELECT source, pol, run_id, json_extract(p, '$.nodeId') AS node_id, MIN(seq) AS seq
+        FROM ev WHERE kind = 'node-entered' GROUP BY source, pol, run_id, node_id
+    ),
+    entered AS (
+        SELECT fi.source, fi.pol, fi.node_id, COUNT(*) AS runs,
+               AVG((SELECT COUNT(*) FROM ev AS x WHERE x.run_id = fi.run_id AND x.kind = 'node-resolved' AND x.seq < fi.seq)) AS before
+        FROM first_in AS fi GROUP BY fi.source, fi.pol, fi.node_id
+    ),
+    resolved AS (
+        SELECT source, pol, json_extract(p, '$.nodeId') AS node_id,
+               AVG(json_extract(p, '$.level')) AS lvl, AVG(json_extract(p, '$.vitae')) AS vit,
+               COALESCE(SUM(json_extract(p, '$.choice') = 'rest'), 0) AS rests,
+               COALESCE(SUM(json_extract(p, '$.choice') = 'flee'), 0) AS withdrawals
+        FROM ev WHERE kind = 'node-resolved' GROUP BY source, pol, node_id
+    )
+SELECT e.source AS source, e.pol AS policyId, e.node_id AS nodeId, e.runs AS runs,
+       ROUND(e.before, 1) AS avgResolvedBefore, ROUND(x.lvl, 1) AS avgLevel, ROUND(x.vit, 1) AS avgVitae,
+       COALESCE(x.rests, 0) AS rests, COALESCE(x.withdrawals, 0) AS withdrawals
+FROM entered AS e
+LEFT JOIN resolved AS x ON x.source = e.source AND x.pol IS e.pol AND x.node_id = e.node_id
+ORDER BY CASE e.source WHEN 'human' THEN 0 WHEN 'harness' THEN 1 ELSE 2 END, e.pol, e.runs DESC, e.node_id`;
+
+// coverage, the part read from run events. A node's `runs` and `count` come from node-entered alone; its resolutions only
+// add to `cleared`.
+const COVERAGE_EVENTS_SQL = `
+WITH r AS (
+        SELECT run_id, source, CASE WHEN source = 'sim' THEN policy_id END AS pol FROM play_runs
+        WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)
+    ),
+    ev AS (
+        SELECT r.source, r.pol, e.run_id, e.kind, e.payload_json AS p
+        FROM run_events AS e JOIN r ON r.run_id = e.run_id
+        WHERE e.kind IN ('node-entered', 'node-resolved', 'quest-step', 'hazard-ended', 'item-gained')
+    ),
+    keyed AS (
+        SELECT source, pol, run_id,
+               CASE kind WHEN 'quest-step' THEN 'quest-step' WHEN 'hazard-ended' THEN 'hazard'
+                         WHEN 'item-gained' THEN 'item' ELSE 'node' END AS cov_kind,
+               CASE kind
+                   WHEN 'quest-step' THEN CASE WHEN json_extract(p, '$.stepId') IS NULL THEN json_extract(p, '$.questId')
+                                               ELSE json_extract(p, '$.questId') || '/' || json_extract(p, '$.stepId') END
+                   WHEN 'hazard-ended' THEN json_extract(p, '$.hazardId')
+                   WHEN 'item-gained' THEN json_extract(p, '$.itemId')
+                   ELSE json_extract(p, '$.nodeId') END AS cov_id,
+               kind <> 'node-resolved' AS counted,
+               CASE kind WHEN 'node-resolved' THEN 1
+                         WHEN 'quest-step' THEN json_extract(p, '$.action') IN ('turn-in', 'complete')
+                         WHEN 'hazard-ended' THEN json_extract(p, '$.cleared') = 1
+                         ELSE 0 END AS went
+        FROM ev
+    )
+SELECT source, pol AS policyId, cov_kind AS kind, cov_id AS id,
+       COUNT(DISTINCT CASE WHEN counted THEN run_id END) AS runs,
+       COALESCE(SUM(counted), 0) AS count,
+       CASE WHEN cov_kind = 'item' THEN NULL ELSE COALESCE(SUM(went), 0) END AS cleared
+FROM keyed WHERE cov_id IS NOT NULL
+GROUP BY source, pol, cov_kind, cov_id
+HAVING COUNT(DISTINCT CASE WHEN counted THEN run_id END) > 0`;
+
+// coverage, the part read from `fights`: an enemy's policy is its run's, as the run-summary's is.
+const COVERAGE_ENEMIES_SQL = `
+SELECT f.source AS source,
+       CASE WHEN f.source = 'sim' THEN (SELECT p.policy_id FROM play_runs AS p WHERE p.run_id = f.run_id) END AS policyId,
+       'enemy' AS kind, f.enemy_id AS id,
+       COUNT(DISTINCT f.run_id) AS runs, COUNT(*) AS count, COALESCE(SUM(f.outcome = 'victory'), 0) AS cleared
+FROM fights AS f
+WHERE (?1 IS NULL OR f.build_commit = ?1) AND (?2 IS NULL OR f.source = ?2)
+GROUP BY f.source, policyId, f.enemy_id`;
+
+const SOURCE_RANK: Record<string, number> = { human: 0, harness: 1 };
+const COVERAGE_RANK: Record<string, number> = Object.fromEntries(COVERAGE_KINDS.map((k, i) => [k, i]));
+const byText = (a: string | null, b: string | null): number => (a === b ? 0 : a === null ? -1 : b === null ? 1 : a < b ? -1 : 1);
+
 async function fightCount(db: D1Database, query: ReportQuery): Promise<number> {
     const row = await db.prepare(FIGHT_COUNT_SQL).bind(query.build, sourceParam(query.source)).first<{ n: number }>();
     return row?.n ?? 0;
@@ -584,11 +784,44 @@ export async function runSummary(db: D1Database, query: ReportQuery): Promise<Ru
     };
 }
 
+export async function runEnds(db: D1Database, query: ReportQuery): Promise<RunEndsReport> {
+    const { results } = await db.prepare(RUN_ENDS_SQL).bind(query.build, sourceParam(query.source)).all<RunEndsRow>();
+    return {
+        report: 'run-ends', build: query.build, source: query.source, runs: results.reduce((sum, r) => sum + r.runs, 0), ends: results,
+    };
+}
+
+export async function runPacing(db: D1Database, query: ReportQuery): Promise<RunPacingReport> {
+    const args = [query.build, sourceParam(query.source)] as const;
+    const [pacing, runs] = await db.batch([db.prepare(RUN_PACING_SQL).bind(...args), db.prepare(RUN_COUNT_SQL).bind(...args)]);
+    return {
+        report: 'run-pacing', build: query.build, source: query.source, runs: (runs.results[0] as { n: number } | undefined)?.n ?? 0,
+        pacing: pacing.results as unknown as RunPacingRow[],
+    };
+}
+
+export async function coverage(db: D1Database, query: ReportQuery): Promise<CoverageReport> {
+    const args = [query.build, sourceParam(query.source)] as const;
+    const [events, enemies, runs] = await db.batch([
+        db.prepare(COVERAGE_EVENTS_SQL).bind(...args), db.prepare(COVERAGE_ENEMIES_SQL).bind(...args), db.prepare(RUN_COUNT_SQL).bind(...args),
+    ]);
+    const rows = [...(events.results as unknown as CoverageRow[]), ...(enemies.results as unknown as CoverageRow[])];
+    rows.sort((a, b) =>
+        (SOURCE_RANK[a.source] ?? 2) - (SOURCE_RANK[b.source] ?? 2) || byText(a.policyId, b.policyId)
+        || COVERAGE_RANK[a.kind] - COVERAGE_RANK[b.kind] || b.count - a.count || byText(a.id, b.id));
+    return {
+        report: 'coverage', build: query.build, source: query.source, runs: (runs.results[0] as { n: number } | undefined)?.n ?? 0, coverage: rows,
+    };
+}
+
 /** Runs one named report; `?card=` only narrows card-usage. */
 export function runReport(name: ReportName, env: Env, query: ReportQuery): Promise<Report> {
     if (name === 'card-usage') return cardUsage(env.DB, query);
     if (name === 'signature-usage') return signatureUsage(env.DB, query);
     if (name === 'card-vs-bot') return cardVsBot(env.DB, query);
     if (name === 'run-summary') return runSummary(env.DB, query);
+    if (name === 'run-ends') return runEnds(env.DB, query);
+    if (name === 'run-pacing') return runPacing(env.DB, query);
+    if (name === 'coverage') return coverage(env.DB, query);
     return cardGaps(env.DB, query);
 }

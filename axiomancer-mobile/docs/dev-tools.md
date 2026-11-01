@@ -228,11 +228,11 @@ that commit every foe can be befriended and a befriend pays no XP and no card.
 
 From the repo root, `npm run api -- <report>` calls
 `GET /v1/reports/<report>` and prints tables (phase BE2f). The Worker serves
-exactly five reports whose SQL is fixed in `backend/src/reports.ts`; the
+exactly eight reports whose SQL is fixed in `backend/src/reports.ts`; the
 script only names one and passes its flags as query values. Ad hoc questions
 go to `wrangler d1 execute miserere --remote`. A report reads `human` (T's own
 play) unless `--source` says otherwise, and its header names the source it
-read; `card-vs-bot` and `run-summary` are the two that differ (below).
+read; `card-vs-bot` and the four run reports (`run-summary`, `run-ends`, `run-pacing`, `coverage`) differ (below).
 
 | Report | Prints |
 |---|---|
@@ -241,11 +241,14 @@ read; `card-vs-bot` and `run-summary` are the two that differ (below).
 | `signature-usage` | per signature (LR1g): fights it was worn in, fights it was cast in, casts, casts per fight worn, and taps the engine refused (`ui-signature-refused`); a fight post carries `relics` and `signatures` worn at its start |
 | `card-vs-bot` | per card at ONE build (SM1h): T's column (`human`) beside one column per sim policy, each with fights with the card in the deck, drawn, played, offered, picked and skipped, and the rates per fight (in deck, drawn, played) and per offer (picked, skipped). Without `--build` it reads the newest build holding both a `human` and a `sim` fight, and its header names that build. It always reads `human` beside `sim` (a `harness` row is never read), so `--source` does not apply |
 | `run-summary` | per source, and per policy for `sim` (SM1h), over the `play_runs` rows: runs, how many are still open, how each closed run ended (`run-over`, `chapter-clear`, `reset`), level and VITAE at the end, nodes resolved (average and highest) and where the furthest run ended. With no `--source` it reads every source, one row group each; `--source` narrows it |
+| `run-ends` | per source, policy and end node (SM2e), over the closed runs: runs, how many ended `run-over` and `chapter-clear`, and the average level and VITAE at the end, most runs first. A run still open is not counted. Reads every source unless `--source` narrows it |
+| `run-pacing` | per source, policy and node (SM2e), over the runs that entered the node: runs, the average nodes resolved before first entering it (time is nodes, not a clock), the average level and VITAE after resolving it (a build that logged neither leaves them out), and the rests (`choice` `rest`) and withdrawals (`flee`) taken there. Reads every source unless `--source` narrows it |
+| `coverage` | per source, policy, kind and raw id (SM2e): the nodes entered (`cleared` = resolved), quest steps (`questId/stepId`, or the quest's name for a quest outside a questline; `cleared` = turned in or completed), enemies fought (from `fights`; `cleared` = won), hazards crossed (`cleared` = cleared) and items gained (no `cleared`), each with the runs that reached it and how often. The ids are the ones the game logs, so a caller joins them to Chapter 1's content. Reads every source unless `--source` narrows it |
 
 | Flag | Effect |
 |---|---|
 | `--build <sha>` | only fights, deck events and runs from that build commit |
-| `--source <human, harness, sim or all>` | which source the report reads; absent is `human` (T), except `run-summary` (every source) and `card-vs-bot` (refused: it is always `human` beside `sim`) |
+| `--source <human, harness, sim or all>` | which source the report reads; absent is `human` (T), except `run-summary`, `run-ends`, `run-pacing` and `coverage` (every source) and `card-vs-bot` (refused: it is always `human` beside `sim`) |
 | `--card <id>` | `card-usage` only: one card |
 | `--json` | the report body as JSON instead of the tables |
 | `--file <path>` | read a saved report body instead of calling the Worker |
