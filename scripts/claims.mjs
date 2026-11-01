@@ -202,7 +202,7 @@ export function fetchClaims(cwd, remote = remoteOf()) {
     const why = e instanceof Error ? e.message.split('\n')[0] : String(e);
     throw new Error(`claims: ${FILE} at ${tip.slice(0, 8)} can't be read (${why}); fix the branch, then retry.`);
   }
-  return { tip, map: fromV1(readMap(text, tip.slice(0, 8)), () => aliasesAt(cwd)) }; // Miserere: v1 entries read as v2
+  return { tip, map: fromV1(readMap(text, tip.slice(0, 8)), () => aliasesAt(cwd), () => whoami(cwd).who) }; // Miserere: v1 entries read as v2
 }
 
 function writeObject(cwd, text) {

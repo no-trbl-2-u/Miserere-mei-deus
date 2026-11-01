@@ -3,8 +3,10 @@
 //
 // v1 (scripts/claims.mjs before NX1f): { "<row>": { "owner", "at", "renewed", "ttlHours" } }.
 // v2 (the kit's, scripts/claims-codec.mjs): { "<chunk>": "<who>|<ip>|<host>|<ISO time>|s:<session>…" }.
-// Each v1 entry becomes "<owner>|-|-|<expiry less 24 h>|s:<owner>" under the chunk its row id is the alias of
-// (scripts/claims-local.mjs), so it expires when it did and its owner (`--owner` / CLAIM_OWNER) still holds it.
+// Each v1 entry moves under the chunk its row id is the alias of (scripts/claims-local.mjs) and expires when it
+// did. A run owner `heads-down:<id>` or `pilot:<id>` becomes the session `s:<id>` under this checkout's git name
+// ("<who>|-|-|<expiry less 24 h>|s:<id>"), so `--owner`, CLAIM_OWNER and a plain call with NEXUS_SESSION=<id>
+// all still hold it; any other owner stays its own who and session. Run it on the machine whose runs made them.
 // Nothing is dropped: an expired entry is converted too, and the kit's prune and audit decide what goes.
 //
 // v2's claims.mjs reads a v1 entry this way on every fetch, so its first write migrates the branch anyway; this

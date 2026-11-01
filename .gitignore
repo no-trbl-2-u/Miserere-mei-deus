@@ -76,3 +76,6 @@ plan/messy/
 # Python bytecode from the art department's tools and pytest (phase AN5d: two .pyc files were committed by accident in AN5a-AN5c).
 __pycache__/
 *.pyc
+
+# nexus v2 local state: claims hook markers, ledgers, quota and idle caches, local settings (NX1f).
+.nexus/

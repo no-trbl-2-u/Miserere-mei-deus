@@ -17,7 +17,7 @@ import test from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { parse, state } from './claims-codec.mjs'
-import { aliasTable, asOwner, bareIds, claimOwner, fromV1, resolveId, v1Value } from './claims-local.mjs'
+import { aliasTable, asOwner, bareIds, claimOwner, fromV1, resolveId, runSession, v1Value } from './claims-local.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
@@ -88,12 +88,15 @@ const iso = (ms) => new Date(ms).toISOString()
 
 // --- the local layer, pure --------------------------------------------
 
-test('claimOwner: --owner, else CLAIM_OWNER, else none; asOwner makes it who and session', () => {
+test('claimOwner: --owner, else CLAIM_OWNER, else none; a run owner is its session, any other is who and session', () => {
   assert.equal(claimOwner('heads-down:1', { CLAIM_OWNER: 'x' }), 'heads-down:1')
   assert.equal(claimOwner('', { CLAIM_OWNER: 'heads-down:747f1213' }), 'heads-down:747f1213')
   assert.equal(claimOwner('', {}), '')
   const me = asOwner({ who: 'T', session: 'abc', star: 'vega', host: 'h' }, 'heads-down:1')
-  assert.deepEqual([me.who, me.session, me.star, me.host], ['heads-down:1', 'heads-down:1', '', 'h'])
+  assert.deepEqual([me.who, me.session, me.star, me.host], ['T', '1', '', 'h'], 'a run owner is its session')
+  assert.deepEqual([asOwner({ who: 'T', session: 'abc' }, 'pilot:747f1213').session, runSession('pilot:747f1213')], ['747f1213', '747f1213'])
+  const plot = asOwner({ who: 'T', session: 'abc' }, 'plot-eq3')
+  assert.deepEqual([plot.who, plot.session, runSession('plot-eq3')], ['plot-eq3', 'plot-eq3', ''])
   assert.equal(asOwner({ who: 'T', session: 'abc' }, '').who, 'T')
 })
 
@@ -110,7 +113,8 @@ test('aliases resolve from chunk lines, then the archive; a chunk id and an unkn
 test('a v1 entry reads as v2 with the same owner and expiry, under its chunk', () => {
   const renewed = Date.parse('2026-11-01T06:00:00.000Z')
   const v = v1Value({ owner: 'heads-down:747f1213', at: iso(renewed - 3600e3), renewed: iso(renewed), ttlHours: 24 })
-  assert.equal(v, `heads-down:747f1213|-|-|${iso(renewed)}|s:heads-down:747f1213`)
+  assert.equal(v, `heads-down:747f1213|-|-|${iso(renewed)}|s:heads-down:747f1213`, 'no local who: kept whole')
+  assert.equal(v1Value({ owner: 'heads-down:747f1213', renewed: iso(renewed) }, 'TJ'), `TJ|-|-|${iso(renewed)}|s:747f1213`, 'a run owner becomes its session')
   const short = parse(v1Value({ owner: 'o', at: iso(renewed), renewed: iso(renewed), ttlHours: 1 }))
   assert.equal(state(short, renewed + 0.5 * 3600e3), 'live')
   assert.equal(state(short, renewed + 1.5 * 3600e3), 'stale', 'a 1 h v1 claim still ends after 1 h')
@@ -173,7 +177,9 @@ test('--owner and CLAIM_OWNER: one claimant across sessions, aliases claimed as 
   assert.equal(r.code, 0, r.stdout + r.stderr)
   assert.deepEqual(Object.keys(w.record()), ['133.5', '133.6'])
   const c = parse(w.record()['133.6'])
-  assert.deepEqual([c.who, c.session], [owner, owner])
+  assert.deepEqual([c.who, c.session], ['tester', '747f1213'])
+  // /pilot after NX1f: a plain call as that session (NEXUS_SESSION) holds the same claims.
+  assert.match(w.cli(b, ['renew', '133.5'], { NEXUS_SESSION: '747f1213' }).stdout, /^renewed: 133\.5$/m)
   // A worker in another session and checkout renews and releases under the same owner, by CLAIM_OWNER.
   const worker = { NEXUS_SESSION: 'worker', CLAIM_OWNER: owner }
   assert.match(w.cli(b, ['claim', 'NX1f'], worker).stdout, /^133\.6: yours$/m, 'a renewal')
@@ -204,7 +210,7 @@ test('the migration on a fixture branch: v1 entries become v2 under their chunks
   const listed = w.cli(b, ['list', '--json'])
   assert.equal(listed.code, 0, listed.stderr)
   const rows = JSON.parse(listed.stdout)
-  assert.deepEqual(rows.map((x) => [x.id, x.who, x.state]).sort(), [['133.5', 'heads-down:747f1213', 'live'], ['133.6', 'heads-down:747f1213', 'live'], ['136', 'plot-eq3', 'live']])
+  assert.deepEqual(rows.map((x) => [x.id, x.who, x.state]).sort(), [['133.5', 'tester', 'live'], ['133.6', 'tester', 'live'], ['136', 'plot-eq3', 'live']])
   // A dry run writes nothing.
   const before = w.commits()
   assert.match(w.run(MIGRATE, a, ['--dry-run']).stdout, /would migrate \(dry run\)/)
@@ -216,12 +222,13 @@ test('the migration on a fixture branch: v1 entries become v2 under their chunks
   assert.equal(w.commits(), before + 1)
   const rec = w.record()
   assert.deepEqual(Object.keys(rec).sort(), ['133.5', '133.6', '136'])
-  assert.equal(rec['133.5'], `heads-down:747f1213|-|-|${iso(now - 600e3)}|s:heads-down:747f1213`)
+  assert.equal(rec['133.5'], `tester|-|-|${iso(now - 600e3)}|s:747f1213`)
   assert.equal(parse(rec['136']).session, 'plot-eq3')
   assert.match(w.run(MIGRATE, a, []).stdout, /nothing to migrate$/m)
   assert.equal(w.commits(), before + 1)
   // The migrated claims are still their owners': the heads-down worker renews, plot-eq3 releases.
   assert.match(w.cli(b, ['renew', 'NX1f'], { CLAIM_OWNER: 'heads-down:747f1213' }).stdout, /^renewed: 133\.6$/m)
+  assert.match(w.cli(b, ['renew', 'NX1e'], { NEXUS_SESSION: '747f1213' }).stdout, /^renewed: 133\.5$/m, '/pilot resume renews them as the session')
   assert.match(w.cli(b, ['release', '136', '--owner', 'plot-eq3']).stdout, /^released: 136$/m)
 })
 
@@ -232,7 +239,7 @@ test('the first v2 write on a v1 branch migrates it with no claim lost', () => {
   w.seed(`${JSON.stringify({ NX1e: { owner: 'heads-down:1', at: iso(now), renewed: iso(now), ttlHours: 24 } })}\n`)
   assert.equal(w.cli(a, ['claim', '133.6']).code, 0)
   assert.deepEqual(Object.keys(w.record()), ['133.5', '133.6'])
-  assert.equal(parse(w.record()['133.5']).who, 'heads-down:1')
+  assert.equal(parse(w.record()['133.5']).session, '1')
   assert.equal(w.cli(a, ['claim', 'NX1e']).code, 1, 'still heads-down:1\'s')
 })
 
@@ -249,6 +256,31 @@ test('a Claude Code session claims once the guard hook has marked it, and is ref
   assert.ok(fs.existsSync(path.join(a, '.nexus', 'hooks', session.CLAUDE_CODE_SESSION_ID)), 'the guard marks the session')
   assert.equal(w.cli(a, ['whoami'], session).code, 0)
   assert.equal(w.cli(a, ['claim', '133.6'], session).code, 0)
+  // A worktree's call marks the primary checkout (gitdir: and commondir), where claims.mjs looks.
+  w.g(a, ['commit', '-q', '--allow-empty', '-m', 'base'])
+  const wt = path.join(w.dir, 'wt')
+  w.g(a, ['worktree', 'add', '-q', '-b', 'side', wt])
+  const other = { CLAUDECODE: '1', CLAUDE_CODE_SESSION_ID: '99999999-2222-3333-4444-555555555555' }
+  const wtInput = JSON.stringify({ session_id: other.CLAUDE_CODE_SESSION_ID, cwd: wt, tool_input: { command: 'ls' } })
+  assert.equal(spawnSync(process.execPath, [guard, 'pre-bash'], { cwd: wt, env: w.env, input: wtInput, encoding: 'utf-8' }).status, 0)
+  assert.ok(fs.existsSync(path.join(a, '.nexus', 'hooks', other.CLAUDE_CODE_SESSION_ID)), 'marked at the primary checkout')
+  assert.equal(fs.existsSync(path.join(wt, '.nexus')), false, 'not in the worktree')
+  // The markers never dirty the tree (the Stop hook's dirty-tree check): .nexus/ is ignored.
+  assert.match(fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf-8'), /^\.nexus\/$/m)
+})
+
+test('free says whether a chunk may be claimed; assign is the owner\'s alone', () => {
+  const w = makeWorld(1)
+  const [a] = w.clones
+  assert.match(w.cli(a, ['free', '133.6']).stdout, /^133\.6: free$/m)
+  assert.equal(w.cli(a, ['claim', '133.6']).code, 0)
+  const r = w.cli(a, ['free', '133.6'], { NEXUS_SESSION: 'other' })
+  assert.equal(r.code, 1)
+  assert.match(r.stdout, /^133\.6: held by tester on /m)
+  const asg = w.cli(a, ['assign', '133.5', '--to', 'pat', '--login', 'pat-gh'])
+  assert.notEqual(asg.code, 0)
+  assert.match(asg.stderr, /only the owner assigns chunks/)
+  assert.equal(w.record()['133.5'], undefined)
 })
 
 // Two real processes, released at the same instant, claim one chunk.
