@@ -1,6 +1,6 @@
 /**
- * Hermetic E2E — a worn weapon's and armor's fight effect (spec 136, chunk
- * 136.4, acceptance A10; `Combat/combat.equipment-effects.ts`).
+ * Hermetic E2E — a worn weapon's and armor's fight effect
+ * (`Combat/combat.equipment-effects.ts`).
  *
  *   · every trigger: a card's DEAL, the first card DEAL each turn, the first
  *     GUARD each turn, a SACRIFICE, laying INFERNO, paying by discarding, a HEAL;

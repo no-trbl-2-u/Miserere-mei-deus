@@ -195,8 +195,11 @@ launch, so one run can span several sessions.
 a `play_runs` row (opened when it starts, closed once when it ends, the Worker
 stamping `startedAt` and `endedAt`; it carries the character, the sim's
 `policy_id`, the start and end decks, outcome, end node, level, VITAE and nodes
-resolved) and the `run_events` between: a node entered or resolved, a hazard
-ended, XP gained, a level, an item. They post to `POST /v1/play-runs`,
+resolved) and the `run_events` between: a node entered or resolved (the
+resolve carries the player's `level` and `vitae` after it), a hazard ended,
+XP gained (a quest-completing kill logs the foe's XP as `fight` and the
+quest's as `quest`), a level, an item, a `quest-step` (`questId`, `stepId`,
+`accept`, `turn-in` or `complete`). They post to `POST /v1/play-runs`,
 `POST /v1/play-runs/<runId>/end` and `POST /v1/run-events` (at most 200 events
 and 256 KiB a batch, `seq` strictly rising); the contract is
 `axiomancer-mechanics/src/Combat/combat.play-run-contract.ts`. `GET /v1/play-runs`
