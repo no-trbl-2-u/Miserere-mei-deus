@@ -16,6 +16,7 @@ import {
 } from './encounter';
 import { Enemy } from '../Enemy/types';
 import { FloatEye, ENEMY_REGISTRY } from '../Enemy/enemy.library';
+import { DEFAULT_XP_BY_DIFFICULTY } from '../Enemy';
 import { MapNode } from './types';
 
 const coastNode:   MapNode = { id: 'bw-w2', location: [0, 0], connectedNodes: [] };
@@ -81,8 +82,12 @@ describe('scaleEnemyToLevel', () => {
 
     it('rescales xpReward when the source used the default multiplier', () => {
         const scaled = scaleEnemyToLevel(FloatEye, 4);
-        // FloatEye is normal; default = 4 × 20 = 80.
-        expect(scaled.xpReward).toBe(80);
+        // FloatEye is normal; default = 4 × 16 = 64.
+        expect(scaled.xpReward).toBe(64);
+    });
+
+    it('pays a fifth less XP per kill than the old table (138.1, A1)', () => {
+        expect(DEFAULT_XP_BY_DIFFICULTY).toEqual({ simple: 8, normal: 16, elite: 40, boss: 160, unique: 400 });
     });
 });
 
