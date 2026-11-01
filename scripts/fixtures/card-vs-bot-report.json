@@ -1,0 +1,29 @@
+{
+  "report": "card-vs-bot",
+  "build": "vsbot01",
+  "buildDefaulted": true,
+  "sources": ["human", "sim"],
+  "columns": [
+    { "column": "human", "source": "human", "fights": 2 },
+    { "column": "defender", "source": "sim", "fights": 1 },
+    { "column": "merciful", "source": "sim", "fights": 1 }
+  ],
+  "cards": [
+    {
+      "cardId": "strike",
+      "columns": {
+        "human": { "fightsInDeck": 2, "drawn": 1, "played": 2, "offered": 0, "picked": 0, "skipped": 0, "inDeckPerFight": 1, "drawnPerFight": 0.5, "playedPerFight": 1, "pickedPerOffer": null, "skippedPerOffer": null },
+        "defender": { "fightsInDeck": 0, "drawn": 0, "played": 0, "offered": 0, "picked": 0, "skipped": 0, "inDeckPerFight": 0, "drawnPerFight": 0, "playedPerFight": 0, "pickedPerOffer": null, "skippedPerOffer": null },
+        "merciful": { "fightsInDeck": 1, "drawn": 2, "played": 1, "offered": 0, "picked": 0, "skipped": 0, "inDeckPerFight": 1, "drawnPerFight": 2, "playedPerFight": 1, "pickedPerOffer": null, "skippedPerOffer": null }
+      }
+    },
+    {
+      "cardId": "ember",
+      "columns": {
+        "human": { "fightsInDeck": 0, "drawn": 0, "played": 0, "offered": 2, "picked": 1, "skipped": 1, "inDeckPerFight": 0, "drawnPerFight": 0, "playedPerFight": 0, "pickedPerOffer": 0.5, "skippedPerOffer": 0.5 },
+        "defender": { "fightsInDeck": 0, "drawn": 0, "played": 0, "offered": 0, "picked": 0, "skipped": 0, "inDeckPerFight": 0, "drawnPerFight": 0, "playedPerFight": 0, "pickedPerOffer": null, "skippedPerOffer": null },
+        "merciful": { "fightsInDeck": 0, "drawn": 0, "played": 0, "offered": 1, "picked": 0, "skipped": 1, "inDeckPerFight": 0, "drawnPerFight": 0, "playedPerFight": 0, "pickedPerOffer": 0, "skippedPerOffer": 1 }
+      }
+    }
+  ]
+}

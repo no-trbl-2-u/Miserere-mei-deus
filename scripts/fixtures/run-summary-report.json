@@ -1,0 +1,11 @@
+{
+  "report": "run-summary",
+  "build": "runsum1",
+  "source": "all",
+  "runs": 5,
+  "summary": [
+    { "source": "human", "policyId": null, "runs": 1, "open": 0, "runOver": 0, "chapterClear": 1, "reset": 0, "avgLevel": 5, "maxLevel": 5, "avgVitaeEnd": 20, "avgNodesResolved": 30, "maxNodesResolved": 30, "furthestNodeId": "bw-exit" },
+    { "source": "sim", "policyId": "defender", "runs": 3, "open": 1, "runOver": 1, "chapterClear": 1, "reset": 0, "avgLevel": 6, "maxLevel": 8, "avgVitaeEnd": 50, "avgNodesResolved": 17.5, "maxNodesResolved": 25, "furthestNodeId": "bw-exit" },
+    { "source": "sim", "policyId": "merciful", "runs": 1, "open": 0, "runOver": 1, "chapterClear": 0, "reset": 0, "avgLevel": 2, "maxLevel": 2, "avgVitaeEnd": 0, "avgNodesResolved": 3, "maxNodesResolved": 3, "furthestNodeId": "bw-a" }
+  ]
+}

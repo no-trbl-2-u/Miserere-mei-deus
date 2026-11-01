@@ -171,6 +171,17 @@ differently:
   runs it on every merge to `main` that touches `axiomancer-mechanics/src/`,
   on Sundays, and by hand. Engine: `npm run measured-truth -w
   axiomancer-mechanics` (`measuredTruthCells`).
+- **The play log's sim rows** (phases SM1a to SM1h) are measurements too,
+  and sit beside `measured/latest.md`, not in place of it. The headless
+  bots (`npm run sim:run`, source `sim`) post the same per-card counts and
+  whole-run rows as T's preview-APK play (`human`), read apart by
+  `npm run api` (`card-usage --source sim`, `card-vs-bot`, `run-summary`;
+  `axiomancer-mobile/docs/dev-tools.md`). They are a measurement, not a
+  baseline (D57): nothing fails on a number, and a claim citing them names
+  the build commit and the source it read. Sim numbers from before BUG1j
+  (`0afc538bf`) are not comparable with later ones, and `harness` rows (a
+  web export, a dev server, a jest run, and every row stored before
+  migration 0006) belong to neither T nor the bots.
 - **Chapter 1's enemies** (turns to kill and VITAE lost for every Breakwater
   foe at its node's level, all six elites included, against the four kitted
   lane decks at player levels 8 and 10, and the share of fights reaching each

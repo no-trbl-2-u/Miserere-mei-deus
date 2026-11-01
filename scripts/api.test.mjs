@@ -14,11 +14,15 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { REPORTS_PATH_PREFIX, REPORT_NAMES, SOURCE_FILTERS, checkBody, formatCardGaps, formatCardUsage, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
+import { REPORTS_PATH_PREFIX, REPORT_NAMES, SOURCE_FILTERS, checkBody, formatCardGaps, formatCardUsage, formatCardVsBot, formatRunSummary, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const USAGE_FIXTURE = path.join(HERE, 'fixtures', 'card-usage-report.json')
 const GAPS_FIXTURE = path.join(HERE, 'fixtures', 'card-gaps-report.json')
+const VS_BOT_FIXTURE = path.join(HERE, 'fixtures', 'card-vs-bot-report.json')
+const RUNS_FIXTURE = path.join(HERE, 'fixtures', 'run-summary-report.json')
+const VS_BOT = JSON.parse(fs.readFileSync(VS_BOT_FIXTURE, 'utf-8'))
+const RUNS = JSON.parse(fs.readFileSync(RUNS_FIXTURE, 'utf-8'))
 const USAGE = JSON.parse(fs.readFileSync(USAGE_FIXTURE, 'utf-8'))
 const GAPS = JSON.parse(fs.readFileSync(GAPS_FIXTURE, 'utf-8'))
 const WORKER_REPORTS = path.join(HERE, '..', 'backend', 'src', 'reports.ts')
@@ -174,4 +178,50 @@ test('signature-usage: parses, the path has no card, the table lists one row per
   assert.deepEqual(lines[head + 1].split(/\s+/), ['sig-crimson-covenant', '2', '1', '2', '1', '2'])
   assert.deepEqual(lines[head + 2].split(/\s+/), ['sig-orphan', '0', '0', '0', '-', '1'])
   assert.match(formatSignatureUsage({ ...body, signatures: [] }), /No signatures recorded\./)
+})
+
+test('card-vs-bot: --source is refused, --build is passed, --json parses a fixture body', async () => {
+  assert.throws(() => parseArgs(['card-vs-bot', '--source', 'sim']), /--source does not apply to card-vs-bot/)
+  assert.throws(() => parseArgs(['card-vs-bot', '--card', 'x']), /card-usage only/)
+  assert.equal(reportPath({ report: 'card-vs-bot', build: 'abc' }), '/v1/reports/card-vs-bot?build=abc')
+  const stdout = sink()
+  const fetchImpl = async () => { throw new Error('no network expected') }
+  assert.equal(await main(['card-vs-bot', '--json', '--file', VS_BOT_FIXTURE], { env: {}, envFile: NO_ENV_FILE, fetchImpl, stdout, stderr: sink() }), 0)
+  assert.deepEqual(JSON.parse(stdout.text), VS_BOT)
+  assert.equal(checkBody(VS_BOT, 'card-vs-bot'), VS_BOT)
+  assert.throws(() => checkBody({ report: 'card-vs-bot', columns: [] }, 'card-vs-bot'), /no cards list/)
+})
+
+test('formatCardVsBot: names the build and the columns, one row per card and column, T first', () => {
+  const lines = formatCardVsBot(VS_BOT).split('\n')
+  assert.equal(lines[0], 'Card vs bot: build vsbot01 (the newest holding both human and sim); human (2 fights), defender (1 fight), merciful (1 fight).')
+  const head = lines.findIndex((l) => l.startsWith('card '))
+  assert.deepEqual(lines[head].split(/\s+/), ['card', 'column', 'decks', 'drawn', 'played', 'offered', 'picked', 'skipped', 'deck/f', 'draw/f', 'play/f', 'pick/o', 'skip/o'])
+  const rows = lines.slice(head + 1).map((l) => l.trim().split(/\s+/))
+  assert.equal(rows.length, 6)
+  assert.deepEqual(rows[0], ['strike', 'human', '2', '1', '2', '0', '0', '0', '1', '0.5', '1', '-', '-'])
+  assert.deepEqual(rows[2], ['merciful', '1', '2', '1', '0', '0', '0', '1', '2', '1', '-', '-'])
+  assert.deepEqual(rows[3], ['ember', 'human', '0', '0', '0', '2', '1', '1', '0', '0', '0', '0.5', '0.5'])
+  assert.match(formatCardVsBot({ ...VS_BOT, build: null, columns: [], cards: [] }), /no build holds both a human and a sim fight/)
+  assert.match(formatCardVsBot({ ...VS_BOT, cards: [] }), /No cards recorded\./)
+})
+
+test('run-summary: --source goes to the Worker, the table lists a row per source and sim policy', async () => {
+  assert.equal(parseArgs(['run-summary', '--source', 'sim']).source, 'sim')
+  assert.equal(reportPath({ report: 'run-summary', build: 'abc', source: 'sim' }), '/v1/reports/run-summary?build=abc&source=sim')
+  const calls = []
+  const fetchImpl = async (url) => { calls.push(url); return { ok: true, status: 200, json: async () => RUNS } }
+  const stdout = sink()
+  const code = await main(['run-summary', '--build', 'runsum1'], {
+    env: { PUZZLE_API_URL: 'https://api.example', PUZZLE_API_TOKEN: 'sekrit' }, envFile: NO_ENV_FILE, fetchImpl, stdout, stderr: sink(),
+  })
+  assert.equal(code, 0)
+  assert.deepEqual(calls, ['https://api.example/v1/reports/run-summary?build=runsum1'])
+  const lines = stdout.text.split('\n')
+  assert.equal(lines[0], 'Run summary: 5 runs (build runsum1, source all).')
+  const head = lines.findIndex((l) => l.startsWith('source '))
+  assert.deepEqual(lines[head + 1].trim().split(/\s+/), ['human', '-', '1', '0', '0', '1', '0', '5', '5', '20', '30', '30', 'bw-exit'])
+  assert.deepEqual(lines[head + 2].trim().split(/\s+/), ['sim', 'defender', '3', '1', '1', '1', '0', '6', '8', '50', '17.5', '25', 'bw-exit'])
+  assert.match(formatRunSummary({ ...RUNS, runs: 0, summary: [] }), /No runs recorded\./)
+  assert.throws(() => checkBody({ report: 'run-summary' }, 'run-summary'), /no summary list/)
 })
