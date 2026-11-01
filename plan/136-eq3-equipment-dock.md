@@ -177,6 +177,20 @@ Each piece carries one trigger effect (the slate above) and one dice effect (thi
 Watch: an armor's +1 hit stacks with the Anvil's HONE until the die has no miss face left; the Blood Price pair is a
 combo (more specials, each one heals) and the first place to check for "carried away".
 
+### The names (T's call 1, 2026-11-01)
+
+| Lane | Weapon | Armor |
+|---|---|---|
+| Grey | Opening Blade (first attack each turn) | Bracing Coat (first block each turn) |
+| Blood Price | Siphoning Blade (heals on each attack card; T's name) | Bloodward Mail (GUARD on each SACRIFICE) |
+| Elementalist | Stormcaller Staff (hits harder while the foe has weather) | Flame Guard (Conviction per INFERNO; T's name) |
+| Defender | Bulwark Mace (hits harder while your GUARD holds) | Scavenger's Coat (draws when you pay by discarding) |
+| Merciful | Humbling Rod (hits harder while the foe is above half VITAE) | Mending Vestments (GUARD on each HEAL) |
+
+Ids: `weapon-opening-blade`, `armor-bracing-coat`, `weapon-siphoning-blade`, `armor-bloodward-mail`,
+`weapon-stormcaller-staff`, `armor-flame-guard`, `weapon-bulwark-mace`, `armor-scavengers-coat`,
+`weapon-humbling-rod`, `armor-mending-vestments`.
+
 ### Decisions made upfront: weapons and armor — DO NOT ASK
 
 - **Ten pieces: a weapon and an armor per lane, plus a grey pair** (T, 2026-11-01, pitch t3).
@@ -188,23 +202,27 @@ combo (more specials, each one heals) and the first place to check for "carried 
   so no effect multiplies through Globals, TETHER or THORNS.
 - **Every character starts wearing the grey pair** (T, t3); old saves get nothing (no version bump, A12).
 - **Drops from all four sources; rates are a tuning table to experiment with** (T, t3).
-- **Names are placeholders** `[T to confirm #1]`: "Grey Blade", "Grey Coat", and "<Lane> Blade" / "<Lane> Mail"
-  for the lane pieces, with T's "Flame Guard" for the Elementalist armor; T's names replace them as a `[content]`
-  swap.
-- **Quests pay a lane piece in addition to their relic** `[T to confirm #2]`: each Breakwater quest that pays a relic
-  of a lane also pays one of that lane's two pieces (weapon for the first such quest, armor for the next); pieces no
-  quest pays come from elites, caches and the shop. Alternative: instead of the relic; or no quest pays equipment.
-- **Starting rates** `[T to confirm #3]`: elite drop 25% a lane piece (on top of its relic roll), a loot cache's item
-  bundle 33%, the shop stocks two pieces per visit at 40 shillings each. Rates are for experimenting (T, t3).
-- **The shop sells them now, in the counter's current style** `[T to confirm #4]`, not held for the village's full
-  treatment (Nov 17), so all four sources work for the MVP demo. Alternative: 136.9 waits for the village pitch.
+- **Names** Confirmed by T (2026-11-01): "generate names for them, but keep them relatively simple/recognizable ...
+  Name them something thematic, but still clear where the synergy is (ie. Flame Guard, Siphoning Blade, etc.)". The
+  names are in "The names" below; T's "Flame Guard" and "Siphoning Blade" kept.
+- **Quest rewards alternate** Confirmed by T (2026-11-01): "one quest is a relic, another is a weapon, etc." The
+  Breakwater quests that pay a reward pay, in chain order, a relic, then a weapon or armor, then a relic, and so on;
+  an equipment step pays a piece of the lane of the relic that step paid before, weapon first, then armor. This
+  amends D114's "every quest pays a relic"; 136.8's PR records the amendment in the decisions log. Pieces no quest pays
+  come from elites, caches and the shop.
+- **Starting rates** Confirmed by T (2026-11-01): elite drop 25% a lane piece (on top of its relic roll), a loot cache's
+  item bundle 33%, the shop stocks two pieces per visit at 40 shillings each; and **befriending an elite always hands a
+  lane piece** the player does not carry (100%; T: "but also, 100% if you befriend an elite"). Rates are for
+  experimenting (T, t3).
+- **The shop sells them now, in the counter's current style** Confirmed by T (2026-11-01): yes. Not held for the
+  village's full treatment (Nov 17).
 - **Equipment gets its own effect source, not fake Global cards.** Globals look effects up by card id; a fake card
   would leak into deck, reward and play-log code.
 - **Effects reach the dice, both everywhere** (T, pitch t5): each piece keeps its trigger effect and adds a dice
   effect; weapons set the special, armor changes one face on one die.
 - **A weapon's special replaces the +2 Conviction** (T, t6); **the grey sword's special is the +2 Conviction** (T,
   t8), so a new run plays as today.
-- **With no weapon worn a special only powers its card** `[T to confirm #5]`. Alternative: it keeps paying +2 Conviction.
+- **With no weapon worn a special only powers its card** Confirmed by T (2026-11-01): "That is correct, yes".
 - **The dice slate is kept as drafted; numbers tuned later** (T, t7).
 - **The gear joins this spec** (T, 2026-11-01: "plot this and integrate it into 1268"): the dock chunks stay first, the
   gear follows as 136.4-136.10; both chains share the dock row 136.7 rewrites.
@@ -467,18 +485,20 @@ Weapons and armor (A10-A18):
   THORNS' or REFLECT's. Each firing emits an `equipment-fired` event naming the piece. An engine test per trigger and
   per condition, plus one proving a Global's and TETHER's DEAL fire nothing.
 - **A11** The ten pieces exist: `Items/equipment.library.ts` holds the slate's ten (below), slot weapon or armor, with
-  the effect and placeholder names `[T to confirm #1]`, no `statModifiers`, no `laneId`, no `grantsSignature`. A
+  the effect and the names in "The names" (Confirmed by T, 2026-11-01), no `statModifiers`, no `laneId`, no `grantsSignature`. A
   content test pins each piece's effect and fails if any weapon or armor in the library carries a stat line, a lane or
   a signature.
 - **A12** Every new run starts wearing the grey weapon and armor, for every roster character; a save made before this
   phase loads with its slots as they were (nothing granted).
 - **A13** The lane pieces drop from elites, quests and loot caches: the elite drop can hand a lane piece the player does
-  not carry, each Breakwater quest that pays a relic of a lane can pay that lane's weapon or armor instead or as well
-  `[T to confirm #2]`, and a loot cache's item bundle can hold a lane piece; every chance comes from one `[content]`
-  table `EQUIPMENT_DROP_TUNING` `[T to confirm #3]`. A test per source with a seeded roll.
+  not carry, and **befriending an elite always hands one** (100%); the Breakwater quests' rewards alternate in chain
+  order, relic then weapon or armor (Confirmed by T, 2026-11-01; an equipment step pays the lane of the relic before it,
+  weapon first); a loot cache's item bundle can hold a lane piece; every chance comes from one `[content]` table
+  `EQUIPMENT_DROP_TUNING` (25% elite, 33% cache, 100% befriended elite; Confirmed by T, 2026-11-01). A test per source with a
+  seeded roll, one for a befriended elite, and one walking the chain's reward order.
 - **A14** The village sells weapons and armor: the village's shop counter stocks lane pieces the player does not carry
   (count and prices from `EQUIPMENT_DROP_TUNING`) and `buyVillageEquipment` pays shillings and grants the piece
-  unworn; a test buys one and refuses one the purse cannot pay `[T to confirm #4]`.
+  unworn; a test buys one and refuses one the purse cannot pay (Confirmed by T, 2026-11-01).
 - **A15** Every surface says what a piece does: the satchel row, the dock row (in place of "grants ..." for a weapon or
   armor) and the detail card show the effect line in Dawncaster-terse words from one presenter; in a fight each
   `equipment-fired` event shows on the board (the piece's glyph pulses by the signature column and the log reads it);
@@ -491,13 +511,13 @@ Weapons and armor (A10-A18):
   honed die.
 - **A18** A worn weapon sets what a special does when used: one payload (+n Conviction, DEAL n, HEAL n, GUARD n,
   INFERNO n on the foe, VULNERABLE for n turns), replacing `specialConviction`. The grey sword's special is +2
-  Conviction, so a new run plays as today. With no weapon worn a special only powers its card `[T to confirm #5]`. An
+  Conviction, so a new run plays as today. With no weapon worn a special only powers its card (Confirmed by T, 2026-11-01). An
   engine test per payload, and one with no weapon worn.
 
 ## Open questions
 
 - The dock: none (T answered both in the session, 2026-10-31).
-- The gear: calls 1-5 above, each with its default (`[T to confirm #n]`); merging accepts the defaults.
+- The gear: none (T answered calls 1-5 on PR #1268, 2026-11-01).
 
 ## Chunks
 
