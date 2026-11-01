@@ -47,7 +47,8 @@
     "roster-health": "ts-node src/CLI/roster-health.cli.ts",
     "act1-walk": "ts-node --transpile-only src/CLI/act1-walk.cli.ts",
     "puzzle:report": "ts-node --transpile-only src/CLI/puzzle-report.cli.ts",
-    "puzzle:audit": "ts-node --transpile-only src/CLI/puzzle-audit.cli.ts"
+    "puzzle:audit": "ts-node --transpile-only src/CLI/puzzle-audit.cli.ts",
+    "puzzle:sim": "ts-node --transpile-only src/CLI/puzzle-sim.cli.ts"
   },
   "keywords": [
     "rpg",

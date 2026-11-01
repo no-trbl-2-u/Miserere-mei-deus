@@ -373,6 +373,16 @@ export type {
     HazardPuzzleFeatures, HazardPuzzleFirstPlays, HazardPuzzleSolution, HazardPuzzleSolveOptions,
     HazardPuzzleRouteAudit,
 } from './World/Hazard';
+// Hazard puzzle bots and the difficulty curve (HP6a).
+export {
+    HAZARD_PUZZLE_SIM, HAZARD_PUZZLE_BOTS, hazardPuzzleLegalMoves,
+    buildHazardPuzzleCurve, compareHazardPuzzleCurveRows, formatHazardPuzzleCurve,
+    hazardPuzzleCurveBar, hazardPuzzleShortfall, hazardPuzzleSimRng,
+    playHazardPuzzleBot, simulateHazardPuzzle,
+} from './World/Hazard';
+export type {
+    HazardPuzzleBotKind, HazardPuzzleCurve, HazardPuzzleCurveOptions, HazardPuzzleCurveRow, HazardPuzzleSimRng,
+} from './World/Hazard';
 // Hazard puzzle card report, the solve's difficulty features and its decision pressure.
 export {
     hazardPuzzleCardReport, formatHazardPuzzleCardReport, formatHazardPuzzleFeatures,

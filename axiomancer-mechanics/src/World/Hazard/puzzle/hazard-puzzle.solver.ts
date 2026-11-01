@@ -24,13 +24,14 @@
  */
 
 import { getHazardCardDef } from '../hazard.content';
-import { dieCanPowerCard, hazardCardValue } from '../hazard.engine';
-import type { HazardDieKind, HazardHandEntry, HazardRouteKey, HazardSessionState } from '../hazard.types';
+import { hazardCardValue } from '../hazard.engine';
+import type { HazardHandEntry, HazardRouteKey, HazardSessionState } from '../hazard.types';
 import {
     confirmHazardPuzzle,
     createHazardPuzzleSession,
     playHazardPuzzleMove,
 } from './hazard-puzzle.session';
+import { hazardPuzzleLegalMoves } from './hazard-puzzle.legal-moves';
 import { HAZARD_PUZZLE_SOLVER_BUDGET } from './hazard-puzzle.tuning';
 import type {
     HazardPuzzleGoal,
@@ -154,42 +155,6 @@ function outcomeKey(b: HazardSessionState): string {
     return `${staged}|${b.drawPile.join(',')}|${(b.rerollFaces ?? []).join(',')}|${dice}`;
 }
 
-/** The moves worth trying from a board, one per interchangeable choice. */
-function candidateMoves(b: HazardSessionState): HazardPuzzleMove[] {
-    const moves: HazardPuzzleMove[] = [];
-    const seenHand = new Set<string>();
-    for (const h of b.hand) {
-        if (seenHand.has(h.cardId)) continue;
-        seenHand.add(h.cardId);
-        moves.push({ type: 'stage', uid: h.uid });
-    }
-    const firstDieOfKind = new Map<HazardDieKind, string>();
-    for (const d of b.dice) {
-        if (d.state === 'available' && !firstDieOfKind.has(d.kind)) firstDieOfKind.set(d.kind, d.id);
-    }
-    const dieKind = new Map(b.dice.map((d) => [d.id, d.kind]));
-    const seenPower = new Set<string>();
-    const seenApply = new Set<string>();
-    for (const p of b.play) {
-        if (p.applied) continue;
-        const def = getHazardCardDef(p.cardId);
-        if (p.dieId === null && !def.dead && !seenPower.has(p.cardId)) {
-            seenPower.add(p.cardId);
-            for (const [kind, dieId] of firstDieOfKind) {
-                if (dieCanPowerCard(kind, def)) {
-                    moves.push({ type: 'power', uid: p.uid, dieId });
-                }
-            }
-        }
-        const applyKey = `${p.cardId}:${p.dieId ? dieKind.get(p.dieId) : '-'}`;
-        if (def.effect && !def.dead && !seenApply.has(applyKey)) {
-            seenApply.add(applyKey);
-            moves.push({ type: 'apply', uid: p.uid });
-        }
-    }
-    return moves;
-}
-
 interface Best {
     surplus: number;
     line: HazardPuzzleMove[];
@@ -245,7 +210,7 @@ export function solveHazardPuzzleSession(
         } else if (result && hazardPuzzleSurplus(result) === -1) {
             nearMisses.add(outcomeKey(resolved.board));
         }
-        for (const move of candidateMoves(s.board)) {
+        for (const move of hazardPuzzleLegalMoves(s)) {
             const next = playHazardPuzzleMove(s, move);
             if (next === s) continue;
             line.push(move);
@@ -270,12 +235,12 @@ export function solveHazardPuzzleSession(
             return next;
         };
         visit(root);
-        for (const stage of candidateMoves(root.board)) {
+        for (const stage of hazardPuzzleLegalMoves(root)) {
             if (stage.type !== 'stage') continue;
             const staged = place(root, stage);
             if (!staged) continue;
             line.push(stage);
-            for (const power of candidateMoves(staged.board)) {
+            for (const power of hazardPuzzleLegalMoves(staged)) {
                 if (power.type === 'power' && power.uid === stage.uid) place(staged, power);
             }
             line.pop();

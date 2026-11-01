@@ -123,6 +123,7 @@ describe('hermeticity guard: isolation (no disk / network / subprocess)', () => 
         'CLI/e2e/cli.docs-examples.engine.test.ts',
         'CLI/e2e/cli.process-smoke.engine.test.ts',
         'CLI/e2e/puzzle-audit.cli.engine.test.ts',
+        'CLI/e2e/puzzle-sim.cli.engine.test.ts',
         'Game/persistence/node.adapter.test.ts',
         'test-utils/e2e/agent-vitest-reporter.engine.test.ts',
         'test-utils/e2e/hermeticity.audit.test.ts',
