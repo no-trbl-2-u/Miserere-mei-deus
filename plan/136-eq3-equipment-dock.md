@@ -191,6 +191,48 @@ Ids: `weapon-opening-blade`, `armor-bracing-coat`, `weapon-siphoning-blade`, `ar
 `weapon-stormcaller-staff`, `armor-flame-guard`, `weapon-bulwark-mace`, `armor-scavengers-coat`,
 `weapon-humbling-rod`, `armor-mending-vestments`.
 
+### The icons (T, 2026-11-01)
+
+T's own item sheets replace the game-icons glyphs for every item (T: "Everything on the sheet"). T picked sheet A, the
+cool-silver finish ("A is fine"), and the hammer and scepter from sheet D for the two pieces A lacks ("why can't you use
+the mace I provided in the other sheet?"). The sheets are 1254 px squares, a 6x6 grid of 209 px cells, committed on this
+branch as `axiomancer-mobile/assets/images/items/sheet-a-cool-silver.png` and `sheet-d-ivory-lavender.png` (T's art, open
+source per D115). Cells are row,col from the top left.
+
+| Item id | Sheet, cell | Picture |
+|---|---|---|
+| `weapon-opening-blade` | A 2,5 | longsword |
+| `armor-bracing-coat` | A 4,4 | steel breastplate |
+| `weapon-siphoning-blade` | A 2,4 | scimitar |
+| `armor-bloodward-mail` | A 4,5 | gold breastplate |
+| `weapon-stormcaller-staff` | A 3,1 | staff |
+| `armor-flame-guard` | A 4,1 | kite shield |
+| `weapon-bulwark-mace` | D 3,0 | gold hammer |
+| `armor-scavengers-coat` | A 4,0 | round shield |
+| `weapon-humbling-rod` | D 3,1 | gold scepter |
+| `armor-mending-vestments` | A 5,3 | purple cloak |
+| `relic-disarming-plea` | A 0,0 | pearl ring |
+| `relic-crimson-circlet` | A 0,1 | circlet |
+| `relic-ruby-signet` | A 0,2 | ruby ring |
+| `relic-bleeding-signet` | A 0,3 | bleeding chalice |
+| `relic-elementalist-signet` | A 0,4 | eye |
+| `relic-elementalist-brooch` | A 0,5 | amber pendant |
+| `relic-elementalist-belt` | A 1,0 | flame belt |
+| `relic-thornback-signet` | A 1,1 | thorn ring |
+| `relic-mirror-brooch` | A 1,2 | mirror |
+| `relic-carapace-belt` | A 1,3 | shell belt |
+| `minor-healing-potion` | A 1,4 | vial |
+| `healing-potion` | A 1,5 | heart flask |
+| `greater-healing-potion` | A 2,0 | perfume bottle |
+
+The other cells (candle, scroll, rune, bow, dagger, axe, lute, helms, gauntlets, greaves, crown, sealed scroll, purse)
+are not wired; they wait for items that use them.
+
+**Slicing, proved in the session (2026-11-01).** A fixed 209 px crop shows slivers of the neighbouring icons (the vial beside
+the heart flask, the belt's ribbon). Cut by blob instead: label every 8-connected run of pixels with alpha 24 or more,
+give each blob to the cell holding its centroid, crop a cell to the union box of its own blobs, copy only those blobs onto
+a transparent square with 6 px padding, centred, and resize to 256 px. All 36 cells of sheet A came out clean this way.
+
 ### Decisions made upfront: weapons and armor — DO NOT ASK
 
 - **Ten pieces: a weapon and an armor per lane, plus a grey pair** (T, 2026-11-01, pitch t3).
@@ -253,6 +295,8 @@ Both workspace gates for EQ3a; the mobile gate for EQ3b and EQ3c. Foreground, ne
 - Weapons and armor for Chapters 2-4.
 - The village's full treatment (its own pitch, Nov 17) restyles the equipment counter.
 - Set bonuses that count weapons and armor (SB1).
+- Icons for items the table above does not list, and the other sheets' finishes (B, C, E, F): a `[content]` row when
+  an item needs one.
 
 ### Chunk notes (the brief's phase blocks)
 
@@ -420,7 +464,24 @@ commit stamp, and the Outcome Measure reads off it.
 - Tests matrix: the measured-truth cell test gains the worn column.
 - Verify gate: `npm run verify -w axiomancer-mechanics`; the measured-truth script run.
 
+### 136.11 (EQ3k) — Every item draws its picture from T's sheets · M · closes A19, A20 · requires nothing
 
+Measure: the slice script writes the 23 icons; the sprite-map test and the glyph tests pass; 360x640 shots of the satchel,
+the dock and an item reward with sprites in the PR.
+
+- Scope: a new `scripts/slice-item-sheet.mjs` (sharp, the blob method of "The icons"; args: sheet, cells, out dir) and
+  its test; the 23 icons written to `axiomancer-mobile/assets/images/items/<item-id>.png` with an
+  `items/provenance.json` (T's sheets, derived by the script, open source per D115); a new
+  `components/icons/item-sprites.ts` mapping item id to its `require`d PNG; `ItemGlyph` (`ItemCard.tsx`) draws the sprite
+  when the id has one and falls back to today's glyph chain otherwise; `ITEM_GLYPH_BY_ID` and `ITEM_GLYPH_ACCENTS` lose
+  the rows a sprite replaces (the colours are in the art). Every `ItemGlyph` consumer keeps its call (satchel, dock,
+  detail card, item reward, aftermath, character select, quest giver).
+- Consumers: every screen that shows an item; the web export and the APK bundle the PNGs.
+- Save / schema: none.
+- Tests matrix: `scripts/slice-item-sheet.test.mjs` (a synthetic sheet with a sliver across a grid line: the sliver
+  goes to its own cell); new `components/icons/__tests__/item-sprites.test.ts` (A20); `ItemGlyph.by-id.test.tsx`,
+  `item-glyph-accents.test.tsx`, `character-select.relic-icon.test.tsx` updated.
+- Verify gate: `npm run verify -w axiomancer-mobile`; the root `npm test` for the script.
 
 ## Contracts
 
@@ -431,6 +492,7 @@ commit stamp, and the Outcome Measure reads off it.
 - `Equipment.effect?: EquipmentEffect` (optional): a trigger or a condition and a payoff (136.4), a die change for
   armor and a special payload for weapons (136.5). No `GAME_STATE_VERSION` change.
 - New event kind `equipment-fired`; new `[content]` table `EQUIPMENT_DROP_TUNING`.
+- New mobile table `ITEM_SPRITES` (item id to PNG); `ItemGlyph` keeps its props.
 
 ## Acceptance
 
@@ -514,6 +576,16 @@ Weapons and armor (A10-A18):
   Conviction, so a new run plays as today. With no weapon worn a special only powers its card (Confirmed by T, 2026-11-01). An
   engine test per payload, and one with no weapon worn.
 
+Icons (A19-A20):
+
+- **A19** The icons are cut from T's sheets: `scripts/slice-item-sheet.mjs` cuts a sheet by blob (each opaque blob goes
+  to the cell holding its centroid), so no icon carries a sliver of a neighbour; it writes the 23 icons of "The icons"
+  as 256 px transparent PNGs named by item id, with a provenance file. A script test proves a sliver crossing a grid line
+  lands in its own cell.
+- **A20** Every item draws its picture: `ITEM_SPRITES` holds the 23 ids of "The icons" (the ten pieces' ids included,
+  ahead of 136.6); `ItemGlyph` draws the sprite for any of them on every surface and today's glyph for any other item. A
+  test fails if a relic or consumable in the libraries, or (once 136.6 lands) a weapon or armor, has no sprite.
+
 ## Open questions
 
 - The dock: none (T answered both in the session, 2026-10-31).
@@ -521,7 +593,7 @@ Weapons and armor (A10-A18):
 
 ## Chunks
 
-Measure: 18 open · 0 closed · next A19
+Measure: 20 open · 0 closed · next A21
 
 - [ ] **136.1** Relics keep their place, in the engine · M · closes A1, A2, A3 · needs — · alias: EQ3a
 - [ ] **136.2** Every dock row taps, the picked row changes, the bust breathes · M · closes A4, A5, A6 · needs 136.1 · alias: EQ3b
@@ -533,3 +605,4 @@ Measure: 18 open · 0 closed · next A19
 - [ ] **136.8** Lane pieces drop from elites, quests and caches · M · closes A13 · needs 136.6 · alias: EQ3h
 - [ ] **136.9** The village sells weapons and armor · M · closes A14 · needs 136.6 · alias: EQ3i
 - [ ] **136.10** The sims wear gear; the report shows the grey pair · M · closes A16 · needs 136.6 · alias: EQ3j
+- [ ] **136.11** Every item draws its picture from T's sheets · M · closes A19, A20 · needs — · alias: EQ3k
