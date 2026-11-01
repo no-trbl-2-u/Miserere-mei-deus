@@ -233,6 +233,7 @@ export {
 export type {
     Item, Equipment, Consumable, Material, QuestItem,
     EquipmentSlot,
+    EquipmentEffect, EquipmentTrigger, EquipmentCondition, EquipmentPayoff, EquipmentPayoffKind,
     CacheLootTier,
     GrantOutcome,
 } from './Items';

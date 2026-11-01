@@ -77,6 +77,14 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
  *                            `rollEliteRelicDrop`). A quest may pay
  *                            either. Optional; read from the
  *                            relic library's entry by id, like `laneId`.
+ * @property effect         - The piece's one fight effect (a weapon's or an
+ *                            armor's; spec 136, A10): a trigger and a payoff,
+ *                            or a condition and a DEAL bonus. Read from the
+ *                            worn loadout at `initializeCombatEncounter` and
+ *                            run by `Combat/combat.equipment-effects.ts`, so it
+ *                            applies in every fight and only while worn.
+ *                            Optional; a piece without one does nothing in a
+ *                            fight.
  */
 export interface Equipment extends BaseItem {
     category: 'equipment';
@@ -85,7 +93,69 @@ export interface Equipment extends BaseItem {
     grantsSignature?: SignatureSkillId;
     laneId?: string;
     relicSource?: RelicSource;
+    effect?: EquipmentEffect;
 }
+
+/**
+ * When a worn piece's trigger effect fires (spec 136, A10). "A card's DEAL" is
+ * a DEAL a card line makes (RADIANCE and the MERCY burst included), never a
+ * Global's, TETHER's, THORNS' or REFLECT's.
+ *
+ *   'card-deal'        each card's DEAL
+ *   'first-card-deal'  the first card DEAL each turn
+ *   'first-guard'      the first GUARD a card line gives you each turn
+ *   'sacrifice'        each SACRIFICE (a WAIVED one too: it still counts)
+ *   'inferno'          each time you lay INFERNO
+ *   'discard-pay'      each time you pay by discarding (a random discard or the hand)
+ *   'heal'             each HEAL that restores VITAE (a card's, a Global's,
+ *                      the delayed heal, a signature's); never the gear's own
+ */
+export type EquipmentTrigger =
+    | 'card-deal' | 'first-card-deal' | 'first-guard' | 'sacrifice' | 'inferno' | 'discard-pay' | 'heal';
+
+/**
+ * A condition that adds to each card's DEAL while it holds (read as the DEAL
+ * resolves): the foe has any weather (INFERNO, BLIZZARD or STORM on it), your
+ * GUARD holds (above 0), the foe is above half its max VITAE.
+ */
+export type EquipmentCondition = 'foe-has-weather' | 'guard-holds' | 'foe-above-half';
+
+/**
+ * What a trigger pays, unscaled: HEAL n (capped at max VITAE), GUARD n, n
+ * Conviction (capped at the Conviction cap), +n to the DEAL, draw n. A
+ * `'deal-bonus'` on a DEAL trigger adds to that DEAL; on any other trigger it
+ * adds to your next card DEAL this turn. The gear's own HEAL, GUARD, draw and
+ * Conviction never fire a gear trigger.
+ */
+export type EquipmentPayoffKind = 'heal' | 'guard' | 'conviction' | 'deal-bonus' | 'draw';
+
+export interface EquipmentPayoff {
+    kind: EquipmentPayoffKind;
+    amount: number;
+}
+
+/** A trigger effect: when `trigger` happens, `payoff` pays. */
+export interface EquipmentTriggerEffect {
+    trigger: EquipmentTrigger;
+    payoff: EquipmentPayoff;
+    condition?: never;
+    bonus?: never;
+}
+
+/** A condition effect: each card's DEAL deals `bonus` more (unscaled, before VULNERABLE) while `condition` holds. */
+export interface EquipmentConditionEffect {
+    condition: EquipmentCondition;
+    bonus: number;
+    trigger?: never;
+    payoff?: never;
+}
+
+/**
+ * A piece's one fight effect: a trigger and a payoff, or a condition and a
+ * DEAL bonus (A10). A closed union; the dice half (136.5) extends it with
+ * optional members shared by both arms.
+ */
+export type EquipmentEffect = EquipmentTriggerEffect | EquipmentConditionEffect;
 
 /** Where a relic is meant to come from: a quest's reward, or the elite drop's pool (a quest may pay either). */
 export type RelicSource = 'quest' | 'elite';

@@ -80,6 +80,7 @@ import {
     programPaySacrifice, programSacrificeCost, programSacrificeShortfall, SACRIFICE_FLOOR_REASON,
 } from './combat.card-program';
 import { weatherEvents } from './combat.elements';
+import { equipmentTurnStart, fireEquipment, initEquipmentEffects } from './combat.equipment-effects';
 import { spikeEvents } from './combat.spikes';
 import { TANGLE_FREE_REFUSAL, cutGuardGain, soakDealWithWard } from './combat.enemy-words';
 import {
@@ -259,6 +260,7 @@ export function initializeCombatEncounter(
     // The character's persistent GHOST dice arrive in the
     // opening tray (they were forged in earlier combats and never spent).
     const floatingDice = materializeFloatingDice(clonedPlayer.floatingDice ?? []);
+    const equipmentEffects = initEquipmentEffects(clonedPlayer.equipment, CONVICTION_CAP);
 
     return {
         phase: 'reveal',
@@ -315,6 +317,9 @@ export function initializeCombatEncounter(
         // The program ledger exists only for a deck that holds a program
         // card, so every other fight's state is unchanged.
         ...(deckHasProgramCards(deck) ? { program: initProgramLedger() } : {}),
+        // The worn gear's fight effects (spec 136, A10): read here, once, from
+        // the worn loadout, whatever the deck; absent when nothing worn has one.
+        ...(equipmentEffects ? { equipmentEffects } : {}),
     };
 }
 
@@ -410,7 +415,8 @@ export function startTurn(
     };
     events.push({ kind: 'turn-dice-rolled', turn, dice });
     events.push({ kind: 'dice-rolled', dice });
-    let started = withLog(next, events);
+    // The worn gear's "first each turn" triggers re-arm.
+    let started = withLog(equipmentTurnStart(next), events);
     // A foe's LEECH on you ticks at the start of your turn, and can kill you.
     const leeched = enemyWordsPlayerTurnStart(started);
     if (leeched.events.length > 0) {
@@ -813,24 +819,38 @@ function gainSouls(
  * lines. Every field is a real engine unit.
  */
 function applyRiderToState(
-    state: CombatEncounterState,
+    stateIn: CombatEncounterState,
     cardId: string,
     r: CardRider,
     events: CombatEvent[],
 ): CombatEncounterState {
-    let player = state.player;
-    let enemy = state.enemy;
-    let directDamage = state.directDamageDealt;
-    let guard = state.guard ?? 0;
-    let souls = state.souls ?? 0;
-    const washedOutHere: ActiveEffect[] = [];
+    let state = stateIn;
     // Every number a rider prints scales by the stat of where
     // it lands: damage by body, guard by mind, a status by heart (on the foe)
     // or mind (on you). See `stat-scaling.ts`.
-    const stats = player.baseStats;
+    const stats = state.player.baseStats;
 
-    // BRINE cuts the GUARD gain.
-    if (r.guard) guard += cutGuardGain(state, scaleFor(r.guard, stats, 'mind', 'one-shot'), events);
+    // BRINE cuts the GUARD gain. A card's GUARD fires the worn gear's
+    // first-GUARD trigger (spec 136, A10).
+    if (r.guard) {
+        const gain = cutGuardGain(state, scaleFor(r.guard, stats, 'mind', 'one-shot'), events);
+        state = { ...state, guard: (state.guard ?? 0) + gain };
+        if (gain > 0) state = fireEquipment('card-guard', state, events).state;
+    }
+    // A card's DEAL fires the worn gear's DEAL triggers and conditions; their
+    // +n joins the hit unscaled, before VULNERABLE.
+    let dealBonus = 0;
+    if (r.damage && !isDefeated(state.enemy)) {
+        const fired = fireEquipment('card-deal', state, events);
+        state = fired.state;
+        dealBonus = fired.bonus;
+    }
+    let player = state.player;
+    let enemy = state.enemy;
+    let directDamage = state.directDamageDealt;
+    const guard = state.guard ?? 0;
+    let souls = state.souls ?? 0;
+    const washedOutHere: ActiveEffect[] = [];
     // Attribution ledger: the FREE line records
     // provenance with the same `recordAttribution` calls as the PAID path.
     let attribution = state.attribution;
@@ -839,7 +859,7 @@ function applyRiderToState(
     if (r.damage) {
         // The printed number is the number, scaled by body and VULNERABLE;
         // the foe's WARD soaks the part before VULNERABLE.
-        const base = scaleFor(r.damage, stats, 'body', 'one-shot');
+        const base = scaleFor(r.damage, stats, 'body', 'one-shot') + dealBonus;
         const warded = soakDealWithWard(state, base, scalePlayerHit({
             base, vulnMult: getDamageTakenMultiplier(enemy),
         }), events);
@@ -1088,11 +1108,19 @@ function playBottomAction(
     // DEAL — each hit folds the scalers through `scalePlayerHit`, then the
     // foe's WARD soaks the part before VULNERABLE.
     let wardState: CombatEncounterState = state;
+    // The worn gear's running state (spec 136, A10): a card's DEAL fires its
+    // DEAL triggers and conditions (their +n joins the hit unscaled, before
+    // VULNERABLE), and what they pay (HEAL, GUARD, Conviction, draw) rides
+    // on `gear` into the play's result.
+    let gear: CombatEncounterState = state;
     for (const mech of mechs) {
         if (mech.kind !== 'deal') continue;
         if (isDefeated(enemy)) break;
+        const fired = fireEquipment('card-deal', { ...gear, player, enemy }, events);
+        gear = fired.state;
+        player = fired.state.player as Character;
         const healthBefore = enemy.health;
-        const base = scaleFor(mech.amount, stats, 'body', 'one-shot');
+        const base = scaleFor(mech.amount, stats, 'body', 'one-shot') + fired.bonus;
         const warded = soakDealWithWard(wardState, base, scalePlayerHit({ base, vulnMult }), events);
         wardState = warded.state;
         const dmg = warded.dealt;
@@ -1181,14 +1209,16 @@ function playBottomAction(
     const guardGain = cutGuardGain(state, guardBase + pipGuard, events);
 
     let next: CombatEncounterState = {
-        ...state, player, enemy, dice, reserve, resonance, attribution,
+        ...gear, player, enemy, dice, reserve, resonance, attribution,
         ...(wardState.enemyWords ? { enemyWords: wardState.enemyWords } : {}),
-        guard: (state.guard ?? 0) + guardGain,
+        guard: (gear.guard ?? 0) + guardGain,
         directDamageDealt: directDamage,
         floatingDice,
         souls,
         spellsPlayedThisTurn: (state.spellsPlayedThisTurn ?? 0) + 1,
     };
+    // A card's GUARD fires the worn gear's first-GUARD trigger.
+    if (guardGain > 0) next = fireEquipment('card-guard', next, events).state;
     if (sourceCard.paidExile) {
         next = exileEntry(next, uid);
         events.push({ kind: 'card-exiled', cardId: card.id });
