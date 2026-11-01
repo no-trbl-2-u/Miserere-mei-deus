@@ -168,6 +168,20 @@ describe('ItemCard: basic rendering', () => {
         expect(rendered.getByText('SLOT · WEAPON')).toBeTruthy();
     });
 
+    it('a weapon or armor row prints its effect line under the slot tag, collapsed only', () => {
+        const item = { ...mockEquipmentWeapon, effectLine: 'First DEAL +2' };
+        const collapsed = render(withAllProviders(<ItemCard item={item} expanded={false} {...mockHandlers} />).tree);
+        expect(collapsed.getByTestId('effect-line-sword-basic').props.children).toBe('First DEAL +2');
+        collapsed.unmount();
+        const open = render(withAllProviders(<ItemCard item={item} expanded {...mockHandlers} />).tree);
+        expect(open.queryByTestId('effect-line-sword-basic')).toBeNull();
+    });
+
+    it('a row with no effect line draws none', () => {
+        const rendered = render(withAllProviders(<ItemCard item={mockEquipmentWeapon} expanded={false} {...mockHandlers} />).tree);
+        expect(rendered.queryByTestId('effect-line-sword-basic')).toBeNull();
+    });
+
     it('renders consumable item with quantity badge', () => {
         const { tree } = withAllProviders(
             <ItemCard

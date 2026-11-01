@@ -137,3 +137,37 @@ describe('EquipmentSlot', () => {
         expect(button.props.accessibilityState).toEqual({ selected: true });
     });
 });
+
+describe('EquipmentSlot — what a piece does', () => {
+    const weapon = {
+        id: 'weapon' as const, key: 'weapon' as const, label: 'Weapon',
+        item: { id: 'weapon-opening-blade', name: 'Opening Blade', sub: 'Weapon', effectLine: 'First DEAL +2 · Special: +2 Conviction' },
+    };
+
+    it('a weapon or armor shows its effect line under its name', () => {
+        const { getByTestId } = render(
+            <EquipmentSlot slot={weapon} bareLabel="empty" selected={false} onPress={jest.fn()} />,
+        );
+        const line = getByTestId('dock-slot-effect-weapon');
+        expect(line.props.children).toBe('First DEAL +2 · Special: +2 Conviction');
+        expect(line.props.numberOfLines).toBe(2);
+    });
+
+    it('a signet relic still says "grants ..." and shows no effect line', () => {
+        const relic = { ...mockSlot, item: { ...mockSlot.item, grantsSignature: 'The Open Hand', effectLine: 'ignored' } };
+        const { getByText, queryByTestId } = render(
+            <EquipmentSlot slot={relic} bareLabel="empty" selected={false} onPress={jest.fn()} />,
+        );
+        expect(getByText('grants The Open Hand')).toBeDefined();
+        expect(queryByTestId('dock-slot-effect-relic-0')).toBeNull();
+    });
+
+    it('a piece with no effect and an empty row draw no effect line', () => {
+        const { queryByTestId, rerender } = render(
+            <EquipmentSlot slot={mockSlot} bareLabel="empty" selected={false} onPress={jest.fn()} />,
+        );
+        expect(queryByTestId('dock-slot-effect-relic-0')).toBeNull();
+        rerender(<EquipmentSlot slot={mockEmptySlot} bareLabel="empty" selected={false} onPress={jest.fn()} />);
+        expect(queryByTestId('dock-slot-effect-weapon')).toBeNull();
+    });
+});

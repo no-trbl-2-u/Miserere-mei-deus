@@ -97,7 +97,9 @@ export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: Equipm
                                     <Text style={styles.name} testID="equip-detail-name">{vm.name}</Text>
                                     <Text style={styles.slot}>{vm.slotLabel.toUpperCase()}</Text>
 
-                                    {/* Stats first — what the piece adds to the body. */}
+                                    {/* Stats first — what the piece adds to the body. A weapon or
+                                      * armor with no stats shows only its effect. */}
+                                    {(vm.statLines.length > 0 || vm.effect === null) && (
                                     <View style={styles.block} testID="equip-detail-stats">
                                         <Text style={styles.blockEyebrow}>GRANTS</Text>
                                         {vm.statLines.length > 0 ? (
@@ -115,6 +117,17 @@ export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: Equipm
                                             <Text style={styles.emptyLine}>No stat modifiers.</Text>
                                         )}
                                     </View>
+                                    )}
+
+                                    {/* What the piece does in a fight, where a relic's signature sits. */}
+                                    {vm.effect !== null && (
+                                        <View style={styles.block} testID="equip-detail-effect">
+                                            <Text style={styles.blockEyebrow}>EFFECT</Text>
+                                            {vm.effect.map((line, i) => (
+                                                <Text key={line} style={styles.effectLine} testID={`equip-detail-effect-${i}`}>{line}</Text>
+                                            ))}
+                                        </View>
+                                    )}
 
                                     {/* Then the signature skill: name, cost, exact effect. */}
                                     {vm.signature !== null && (
@@ -290,6 +303,12 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 17,
         color: AXM.bone,
         marginTop: 5,
+    },
+    effectLine: {
+        fontFamily: FONTS.serif,
+        fontSize: 13,
+        lineHeight: 18,
+        color: AXM.parchment,
     },
     laneLine: {
         fontFamily: FONTS.serif,
