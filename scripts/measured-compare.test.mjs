@@ -283,3 +283,21 @@ test('renderLatest: the section sits before Decks; compare ignores it', () => {
   assert.ok(text.indexOf('## Reward lanes by character') < text.indexOf('## Decks'))
   assert.deepEqual(compare({ current, previous: line([cell()], { rewardLanes: { ...rewardLanes, rolls: 1 } }) }), [])
 })
+
+test('renderLatest: names the grey pair worn column and the bare control, and marks each deck', () => {
+  const worn = line([cell(), cell({ deck: 'grey+bare' })], {
+    decks: {
+      grey: { worn: 'grey-pair', deckCards: ['grey-strike'], deadCardRate: 0 },
+      'grey+bare': { worn: 'none', deckCards: ['grey-strike'], deadCardRate: 0 },
+    },
+  })
+  const md = renderLatest(worn)
+  assert.match(md, /"grey even, grey pair worn" column; `grey\+bare` is the same deck with nothing worn/)
+  assert.match(md, /- \*\*grey\*\*: 1 cards;.* Grey pair worn\./)
+  assert.match(md, /- \*\*grey\+bare\*\*: 1 cards;.* Nothing worn \(the control\)\./)
+})
+
+test('renderLatest: an old line with no worn field renders no worn sentence', () => {
+  const md = renderLatest(line([cell()]))
+  assert.doesNotMatch(md, /grey pair worn/i)
+})

@@ -5,7 +5,7 @@ import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
 import { simulateHazardPatternCombat } from '../Combat/combat.encounter.sim';
 import { STARTING_CARD_IDS } from '../Combat/combat.rewards';
-import { wearGreySword } from '../Combat/combat.grey-sword';
+import { wearGreyPair } from '../Items/equipment.library';
 
 describe('the Act 1 XP ledger (LV1)', () => {
     const ledger = act1FightLedger();
@@ -54,13 +54,16 @@ describe('the Act 1 XP ledger (LV1)', () => {
     // more XP, so the Charcoal Wood door and the Lantern Deep door are free
     // too. XP1a (a fifth less XP per kill) moved the doors to levels 8, 15, 18
     // and 20, and the Breakwater's own door (level 8) is no longer free.
+    // The doors are played wearing the grey pair a new run opens with: its
+    // armor and +2 Conviction special lift the Breakwater door from 85% to
+    // near free, so it joins the excused set too.
     // T's tuning session after EN1i retunes the ledger; until then these
     // doors are held to "winnable" only. Filed for T in plan/CRITIQUE.md (BW1b).
-    const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['cw-17', 'bc-15', 'ld-16']);
+    const FREE_UNTIL_RETUNED: ReadonlySet<string> = new Set(['bw-k2', 'cw-17', 'bc-15', 'ld-16']);
 
     it('still finds each excused door free (drop it from the set once the retune lands)', () => {
         for (const door of walkAct1(ledger).doors.filter(d => FREE_UNTIL_RETUNED.has(d.nodeId))) {
-            const player = wearGreySword(createCharacter({
+            const player = wearGreyPair(createCharacter({
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
             }));
@@ -71,7 +74,7 @@ describe('the Act 1 XP ledger (LV1)', () => {
 
     it('each door is winnable, not free, at its expected stage (even spread, greedy witness)', () => {
         for (const door of walkAct1(ledger).doors) {
-            const player = wearGreySword(createCharacter({
+            const player = wearGreyPair(createCharacter({
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
             }));

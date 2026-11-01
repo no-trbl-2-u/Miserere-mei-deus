@@ -114,7 +114,6 @@ export {
     DEFAULT_DIE_GEAR, activeDieGear,
 } from './Combat';
 export type { UpgradeableDieGear, EliteReward, EliteRewardUpgrade, RewardLaneSlots } from './Combat';
-export { GREY_SWORD_STAND_IN, wearGreySword } from './Combat/combat.grey-sword';
 // Stat scaling.
 export {
     scaleAmount, scaleFor, statFor, scaleRider, scaleCardForStats,
