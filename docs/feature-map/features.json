@@ -1680,6 +1680,12 @@
     {
       "kind": "coupling",
       "from": "area:Combat",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.stage-profiles.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
       "to": "area:Log",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
     },
@@ -2197,6 +2203,12 @@
       "kind": "coupling",
       "from": "area:Items",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Items/equipment.library.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Items/item-grant.ts"
     },
     {
@@ -2216,6 +2228,12 @@
       "from": "area:Items",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Items/equipment.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Items/equipment.library.ts"
     },
     {
       "kind": "coupling",
