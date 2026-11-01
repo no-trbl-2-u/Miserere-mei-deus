@@ -111,7 +111,11 @@ function scratch(base) {
   fs.mkdirSync(path.join(work, 'plan'), { recursive: true })
   fs.mkdirSync(path.join(work, 'scripts', 'plan'), { recursive: true })
   const specs = fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => /^\d{2,}-[a-z0-9][a-z0-9-]*\.md$/.test(n)).map((n) => `plan/${n}`)
-  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', 'plan/README.md', ARCHIVE, DEADLINES, ...specs]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+  // The live plan includes its pending closes: a chunk closed by a pending file has already left deadlines.md's
+  // Unscheduled list, so a copy without them reads it as open with no home (NX1g, the first pending close).
+  fs.mkdirSync(path.join(work, 'plan', 'pending'), { recursive: true })
+  const pending = fs.readdirSync(path.join(ROOT, 'plan', 'pending')).filter((n) => n.endsWith('.md')).map((n) => `plan/pending/${n}`)
+  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', 'plan/README.md', ARCHIVE, DEADLINES, ...specs, ...pending]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
   for (const f of COPIED_SCRIPTS) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(work, 'scripts', f))
   write(work, 'notes.txt', 'one\n')
   base?.(work)
