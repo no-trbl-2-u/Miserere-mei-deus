@@ -216,6 +216,11 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
                         SLOT {'·'} {item.sub.toUpperCase()}
                     </Text>
                 )}
+                {item.category === 'equipment' && !expanded && item.effectLine ? (
+                    <Text style={styles.itemEffect} numberOfLines={3} testID={`effect-line-${item.id}`}>
+                        {item.effectLine}
+                    </Text>
+                ) : null}
             </TouchableOpacity>
             {item.quantity > 1 && (
                 <View style={styles.qtyBadge} pointerEvents="none">
@@ -368,6 +373,14 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.bone,
         letterSpacing: 1.2,
         marginTop: 1,
+    },
+    // A weapon or armor's effect, under its slot tag: the payload only.
+    itemEffect: {
+        fontFamily: FONTS.sans,
+        fontSize: 9,
+        color: AXM.sulfur,
+        lineHeight: 11,
+        marginTop: 2,
     },
     replacePreview: {
         marginTop: 6,

@@ -51,6 +51,7 @@ import {
 // barrel.
 import { paidClauses, type CardClause } from '@mechanics/Combat/combat.card-text';
 import { momentumV2A11y } from '@/state/combat/momentum';
+import { equipmentEffectLine, equipmentFiredText, specialFaceText } from '@/state/presenters/equipment-effect-line';
 // The single mobile source for the rarity band. Never re-band a rank here;
 // `rarityFor` owns that question for every surface.
 import { rarityFor, RARITY_LABEL, RARITY_PIPS, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
@@ -630,6 +631,15 @@ export interface CombatDieGearSlotVM {
     upgraded: boolean;
     a11y: string;
 }
+/** One worn weapon, armor or relic whose effect can fire in this fight (the gear chips by the rune column). */
+export interface CombatWornGearVM {
+    itemId: string;
+    name: string;
+    /** The ItemGlyph discriminator: 'Weapon' | 'Armor' | 'Relic'. */
+    sub: 'Weapon' | 'Armor' | 'Relic';
+    /** The piece's effect, terse (the shared `equipmentEffectLine`). */
+    line: string;
+}
 /** The 4-slot die-gear rail. */
 export interface CombatDieGearRailVM {
     slots: CombatDieGearSlotVM[];   // heart, body, mind, wild (rail order)
@@ -664,6 +674,10 @@ export interface CombatViewModel {
     dieGear: CombatDieGearRailVM;
     /** Globals in play, with their turns left. */
     globals: CombatGlobalVM[];
+    /** The worn pieces whose effect can fire this fight, in worn order. */
+    gear: CombatWornGearVM[];
+    /** What a special face does this fight (the weapon's payload, or that it only powers its card). */
+    specialGloss: string;
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -816,6 +830,11 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
             // The weather moving. A rise floats its word over the foe; a fall
             // (the round's drift, a spend) is log-only, so the drift does not
             // carpet the board every round.
+            // A worn piece fired: log only, since the piece's own glyph pulses
+            // on the board and a float would repeat it.
+            case 'equipment-fired':
+                out.push({ kind: e.kind, side: 'player', color: HUE.goldAccent, text: equipmentFiredText(e), float: null });
+                break;
             case 'weather-changed':
                 out.push(weatherLine(e));
                 break;
@@ -2568,6 +2587,16 @@ function gearSlotVM(state: CombatEncounterState, color: 'heart' | 'body' | 'mind
     };
 }
 
+const GEAR_SUB: Record<'weapon' | 'armor' | 'relic', CombatWornGearVM['sub']> = {
+    weapon: 'Weapon', armor: 'Armor', relic: 'Relic',
+};
+
+function wornGearVM(state: CombatEncounterState): CombatWornGearVM[] {
+    return (state.equipmentEffects?.worn ?? []).map((w) => ({
+        itemId: w.itemId, name: w.itemName, sub: GEAR_SUB[w.slot], line: equipmentEffectLine(w.effect) ?? '',
+    }));
+}
+
 function dieGearRailVM(state: CombatEncounterState): CombatDieGearRailVM {
     return { slots: GEAR_RAIL_ORDER.map((c) => gearSlotVM(state, c)) };
 }
@@ -2601,5 +2630,7 @@ export function buildCombatViewModel(state: CombatEncounterState, seen: SeenDang
         momentumV2: momentumV2VM(state),
         dieGear: dieGearRailVM(state),
         globals: globalsVM(state),
+        gear: wornGearVM(state),
+        specialGloss: specialFaceText(state.equipmentDice?.special),
     };
 }

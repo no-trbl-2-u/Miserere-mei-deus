@@ -30,7 +30,6 @@ import React from 'react';
 import { View } from 'react-native';
 import Svg, { Circle, ClipPath, Defs, G, LinearGradient as SvgLinearGradient, Path, Polygon, RadialGradient, Rect, Stop } from 'react-native-svg';
 
-import { SPECIAL_CONVICTION_DEFAULT } from '@mechanics';
 import type { CombatDieVM } from '@/state/presenters/combat-encounter.engine';
 import { spentDieTreatment } from '@/lib/juice';
 import { HUE } from '@/theme/axm';
@@ -49,7 +48,7 @@ import { HUE } from '@/theme/axm';
  */
 export function combatDieA11yLabel(
     die: CombatDieVM,
-    opts: { assigned?: boolean; specialConviction?: number } = {},
+    opts: { assigned?: boolean; specialText?: string } = {},
 ): string {
     const colour = die.stanceLabel;
     const wild = die.color === 'wild';
@@ -68,9 +67,8 @@ export function combatDieA11yLabel(
     if (die.face === 'miss') return `${noun}, MISS face: dead, powers nothing`;
     const face = die.face === 'special' ? 'BOON' : 'MANA';
     const target = wild ? 'a staged card of any colour' : `a staged ${colour} card`;
-    const payload = opts.specialConviction ?? SPECIAL_CONVICTION_DEFAULT;
     const power = die.face === 'special'
-        ? `power it and gain ${payload} Conviction`
+        ? `power it${opts.specialText ? `. ${opts.specialText}` : ''}`
         : 'power its paid line';
     if (die.spent) return `${noun}, ${face} face: spent, it already powered a card this turn`;
     if (opts.assigned) return `${noun}, ${face} face: assigned to a staged card, APPLY to ${power}`;
@@ -124,16 +122,15 @@ export function combatDieFootprint(size: number): { width: number; height: numbe
     return { width: size + o, height: size + o + size * 0.18 };
 }
 
-export const CombatDie = React.memo(function CombatDie({ die, size = 54, dimmed = false, testID, assigned = false, specialConviction, nested = false }: {
+export const CombatDie = React.memo(function CombatDie({ die, size = 54, dimmed = false, testID, assigned = false, specialText, nested = false }: {
     die: CombatDieVM;
     size?: number;
     dimmed?: boolean;
     /** Board-local state the VM cannot know: this die has been dropped on a
      *  staged card and waits for APPLY. Spoken in the a11y label. */
     assigned?: boolean;
-    /** The die's gear payload for its special face (`vm.dieGear`); the stock
-     *  default when the caller has no gear rail. */
-    specialConviction?: number;
+    /** What a special face does this fight (`vm.specialGloss`), spoken in the a11y label. */
+    specialText?: string;
     /** Overrides the default `combat-die-<id>`. The drag ghost renders a CLONE
      *  of a tray die and must not answer to the original's testID — two nodes
      *  under one id made the tray unreadable to the e2e harness (it picked the
@@ -174,7 +171,7 @@ export const CombatDie = React.memo(function CombatDie({ die, size = 54, dimmed 
     const gemId = `axmDieGem-${die.color}`;
     // The a11y state must not lie — see `combatDieA11yLabel` (colour, face,
     // what the die can do, spent / assigned).
-    const a11yLabel = combatDieA11yLabel(die, { assigned, specialConviction });
+    const a11yLabel = combatDieA11yLabel(die, { assigned, specialText });
     return (
         <View
             testID={testID ?? `combat-die-${die.id}`}

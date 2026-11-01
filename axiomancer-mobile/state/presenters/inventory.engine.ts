@@ -25,6 +25,7 @@ import {
 import { freezeViewModel } from './freeze';
 import { computeEquipDelta, type EquipDelta } from '@mechanics';
 import { getSignatureSkill } from '@mechanics';
+import { equipmentEffectLine } from './equipment-effect-line';
 import {
     LOADOUT_ROWS,
     isWornId,
@@ -109,6 +110,12 @@ export interface InventoryItemRow {
      */
     grantsSignature?: string | null;
     /**
+     * What a worn weapon or armor does, in one terse line (the shared
+     * `equipmentEffectLine`), or `null` when the item has no effect.
+     * Optional (sparse): fixtures may omit it.
+     */
+    effectLine?: string | null;
+    /**
      * Rich equip-change delta surface. Where `replacePreview`
      * is a single signed net-stat list for swaps only, this model carries
      * the net stat deltas plus the signet-relic signatures gained and lost
@@ -168,7 +175,11 @@ export interface EquipmentDockSlot {
     relicIndex?: 0 | 1 | 2;
     label: string;
     /** Worn item at this position, or `null`. */
-    item: { id: string; name: string; sub: string | null; grantsSignature?: string | null } | null;
+    item: {
+        id: string; name: string; sub: string | null; grantsSignature?: string | null;
+        /** The piece's effect line (`equipmentEffectLine`), or `null`. */
+        effectLine?: string | null;
+    } | null;
 }
 
 /**
@@ -347,6 +358,11 @@ function grantsSignatureName(item: Item): string | null {
     return getSignatureSkill(item.grantsSignature)?.name ?? null;
 }
 
+/** The terse effect line of a weapon or armor, or `null` for anything else. */
+function effectLineFor(item: Item): string | null {
+    return isEquipment(item) ? equipmentEffectLine(item.effect) : null;
+}
+
 function quantityFor(item: Item): number {
     if (isConsumable(item) || isMaterial(item)) {
         // `?? 1` defends against fixtures that omit the engine-required
@@ -451,6 +467,7 @@ function buildRows(state: GameStore, pickedRow: DockRowId | null = null): Invent
             canUse: canUseFor(item),
             canDiscard: canDiscardFor(item),
             grantsSignature: grantsSignatureName(item),
+            effectLine: effectLineFor(item),
             replacePreview: null,
             equipDelta: null,
         };
@@ -546,7 +563,7 @@ function buildEquipmentDock(
     const toItem = (piece: Equipment | null | undefined): EquipmentDockSlot['item'] =>
         piece == null
             ? null
-            : { id: piece.id, name: piece.name, sub: subFor(piece), grantsSignature: grantsSignatureName(piece) };
+            : { id: piece.id, name: piece.name, sub: subFor(piece), grantsSignature: grantsSignatureName(piece), effectLine: effectLineFor(piece) };
     const slots: EquipmentDockSlot[] = LOADOUT_ROWS.map((row): EquipmentDockSlot => ({
         id: row.id,
         key: row.key,

@@ -58,10 +58,10 @@ import { CombatCombatantPane, EffectChips, PlayerMedallion, COMBAT_HUD_HEIGHT, t
 import { CombatFooterDock, dockMinHeight } from './CombatFooterDock';
 import { SACRIFICE_CALLOUT_MS } from './VitaeSacrificeCallout';
 import { CARD_ENTER_MS, CARD_LAYOUT_MS } from './cardMotion';
-import { SPECIAL_CONVICTION_DEFAULT } from '@mechanics';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 import { CombatDie, combatDieA11yLabel } from './CombatDie';
 import { RollingDie } from './RollingDie';
+import { CombatGear, useGearFired } from './CombatGear';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import {
     planDiceRoll, rollSignatureMap, resolveRollMode, shouldInstantSettleDice,
@@ -549,9 +549,8 @@ const DiceRow = React.memo(function DiceRow({
                     );
                 }
                 const dieDimmed = draggingDieId === die.id;
-                // The BOON face's real payload (gear may raise it above the
-                // stock 2) — spoken in the die's a11y label.
-                const specialConviction = vm.dieGear?.slots.find((s) => s.color === die.color)?.specialConviction;
+                // What the worn weapon's special does, spoken in the die's a11y label.
+                const special = vm.specialGloss;
                 const node = (
                     <View style={isAssigned ? styles.dieAssigned : undefined}>
                         {plansById[die.id] ? (
@@ -564,10 +563,10 @@ const DiceRow = React.memo(function DiceRow({
                                 skipNonce={skipNonce}
                                 onTumbleChange={onTumbleChange}
                                 assigned={isAssigned}
-                                specialConviction={specialConviction}
+                                specialText={special}
                             />
                         ) : (
-                            <CombatDie die={die} size={TRAY_DIE_SIZE} dimmed={dieDimmed} assigned={isAssigned} specialConviction={specialConviction} />
+                            <CombatDie die={die} size={TRAY_DIE_SIZE} dimmed={dieDimmed} assigned={isAssigned} specialText={special} />
                         )}
                         {die.reserve ? (
                             <Text style={[styles.dieConv, { color: AXM.sulfur }]} testID={`combat-reserve-${die.id}`}>
@@ -1165,13 +1164,12 @@ export const CombatBoard = React.memo(function CombatBoard({
     const openConvictionGloss = useCallback(() => {
         openGloss(['conviction'], { conviction: convictionRef.current });
     }, [openGloss]);
-    const dieGearRef = useRef(vm.dieGear); dieGearRef.current = vm.dieGear;
+    const gearFired = useGearFired(fx);
+    const specialGlossRef = useRef(vm.specialGloss); specialGlossRef.current = vm.specialGloss;
     const glossDieJS = useCallback((dieId: string) => {
         const die = diceMapRef.current.get(dieId);
         if (!die) return;
-        const boon = dieGearRef.current?.slots.find((s) => s.color === die.color)?.specialConviction
-            ?? SPECIAL_CONVICTION_DEFAULT;
-        openGloss(dieGlossTerms(die), { boon, pips: die.pips ?? 0 });
+        openGloss(dieGlossTerms(die), { special: specialGlossRef.current, pips: die.pips ?? 0 });
     }, [openGloss]);
 
     const gestureCacheRef = useRef(new Map<string, ReturnType<typeof Gesture.Exclusive>>());
@@ -1576,6 +1574,7 @@ export const CombatBoard = React.memo(function CombatBoard({
                     onConviction={openConvictionGloss}
                     top={sigTop} onMeasureHeight={setSigH}
                 />
+                <CombatGear gear={vm.gear} fired={gearFired} top={sigTop} />
 
                 {/* the hand dock — the fan across the full board width, with room
                     above the cards for the FREE corner pill. No tap hint: the
