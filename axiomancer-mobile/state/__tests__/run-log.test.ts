@@ -490,7 +490,9 @@ describe('the hazard', () => {
 
         const fatal = eventsOf('hazard-ended').map((e) => e.payload);
         expect(fatal).toHaveLength(2);
-        expect(fatal.every((h) => h.cleared === false && h.vitaeAfter === 0)).toBe(true);
+        expect(fatal.every((h) => h.cleared === false)).toBe(true);
+        // The revive leaves the player at the VITAE the death rule gave; the run over leaves none.
+        expect(fatal.map((h) => h.vitaeAfter)).toEqual([1, 0]);
         expect(posts<RunEventsPost>(RUN_EVENTS_PATH).every((b) => b.runId === runId)).toBe(true);
         const closes = calls.filter((c) => c.url === playRunEndPath(runId));
         expect(closes).toHaveLength(1);
@@ -591,7 +593,7 @@ describe('travel', () => {
         expect(validatePlayRunEndPost(closes[0]!.body).reasons).toEqual([]);
     });
 
-    it('a later reset of a chapter-cleared run posts no second close', async () => {
+    it('a chapter-cleared run keeps posting its events, and a later reset posts no second close', async () => {
         const { store, actions } = createFixtureStore({
             id: 'sm1d-travel-no-double-close', seed: 'sm1d-travel-no-double-close',
             world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-b2' },
@@ -599,17 +601,22 @@ describe('travel', () => {
         const runId = gs(store).runId;
         actions.resolveCurrentMapEvent('travel');
         actions.takeTravel();
+        walkOn(store, actions);
         actions.resetRun({ keepCharacter: true });
         await landed();
         expect(calls.filter((c) => c.url === playRunEndPath(runId))).toHaveLength(1);
+        // The crossing's close ends the row, not the run: the node walked afterwards still posts.
+        const entered = eventsOf('node-entered').map((e) => e.payload.map);
+        expect(entered).toHaveLength(1);
+        expect(entered[0]).not.toBe('breakwater');
     });
 });
 
 describe('the run end', () => {
-    it('a reset closes the run with its level, VITAE, nodes resolved and deck', async () => {
+    it('a reset in place closes the run with its level, VITAE, nodes resolved and deck', async () => {
         const { store, actions, runId } = newGame();
         const before = gs(store);
-        actions.resetRun({ keepCharacter: false });
+        actions.resetRun({ keepCharacter: true });
         await landed();
         const [close] = posts<PlayRunEndPost>(playRunEndPath(runId));
         expect(close).toEqual({
@@ -620,6 +627,13 @@ describe('the run end', () => {
             nodesResolved: before.world.currentMap.consumedNodes.length,
             endDeck: before.player.knownCards,
         });
+    });
+
+    it('a reset that drops the character (a Labyrinth defeat) closes the run as run-over', async () => {
+        const { actions, runId } = newGame();
+        actions.resetRun({ keepCharacter: false });
+        await landed();
+        expect(posts<PlayRunEndPost>(playRunEndPath(runId)).map((c) => c.outcome)).toEqual(['run-over']);
     });
 
     it('a first death revives and closes nothing; the second ends the run as run-over', async () => {

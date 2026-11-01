@@ -15,6 +15,7 @@ import {
     newlyCompletedQuests,
     payCompletedQuests,
     acceptQuestStep,
+    isEquipment,
     turnInQuestStep,
 } from '@mechanics';
 import type { GameState, PaidQuestReward, QuestLog, Reward } from '@mechanics';
@@ -125,7 +126,8 @@ export function turnInQuestStepAction(store: AppStore): boolean {
     // The run log: the step turned in, what it paid in XP and levels, and the items it handed over.
     recordNodeResolved(store, 'turn-in');
     recordProgress(store, playerBefore, 'quest');
-    for (const item of result.paid.flatMap(p => p.items)) recordItemGained(store, item, 'quest');
+    // Equipment goes to the reward screen, which logs it when it is taken.
+    for (const item of result.paid.flatMap(p => p.items)) if (!isEquipment(item)) recordItemGained(store, item, 'quest');
     return true;
 }
 

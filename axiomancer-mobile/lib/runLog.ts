@@ -13,9 +13,9 @@
  *
  * With the gate shut (`playLogConfig()` is null) nothing is buffered and no
  * request is made. A failed post warns and is dropped (BE1): no retry, no
- * queue that survives the process. The per-run `seq` and the closed-run
+ * queue that survives the process. The per-run `seq` and the ended-run
  * record live in memory, so a run continued after an app restart numbers its
- * events from 0 again and may be closed only once per launch.
+ * events from 0 again. A row is closed once per launch; events keep posting after it.
  *
  * Functions:
  *   createRunLogPoster(deps)   open / event / flush / close / settled
@@ -98,7 +98,8 @@ export function createRunLogPoster(deps: RunLogPosterDeps = {}): RunLogPoster {
     const source = deps.source ?? playLogSource;
     const runs = new Map<string, RunBuffer>();
     const opened = new Set<string>();
-    const closed = new Set<string>();
+    /** Runs whose `play_runs` row has been closed: a second close is dropped, events still post. */
+    const ended = new Set<string>();
     let tail: Promise<unknown> = Promise.resolve();
 
     /** Runs a post after every earlier one has finished. A post never throws. */
@@ -118,10 +119,10 @@ export function createRunLogPoster(deps: RunLogPosterDeps = {}): RunLogPoster {
     function flush(runId: string): void {
         const run = runs.get(runId);
         if (run === undefined || run.events.length === 0) return;
-        const events = run.events;
-        run.events = [];
         const cfg = config();
         if (cfg === null) return;
+        const events = run.events;
+        run.events = [];
         const stamps = source();
         for (const batch of chunkEvents(events)) {
             const body: RunEventsPost = { runId, source: stamps.source, events: batch };
@@ -144,7 +145,7 @@ export function createRunLogPoster(deps: RunLogPosterDeps = {}): RunLogPoster {
             enqueue(() => postPlayLog(PLAY_RUNS_PATH, body, cfg, deps.fetcher));
         },
         event(runId, kind, payload) {
-            if (config() === null || closed.has(runId)) return;
+            if (config() === null) return;
             const run = bufferOf(runId);
             run.events.push({ seq: run.seq, kind, payload } as RunEvent);
             run.seq += 1;
@@ -152,10 +153,11 @@ export function createRunLogPoster(deps: RunLogPosterDeps = {}): RunLogPoster {
         },
         flush,
         close(runId, end) {
-            if (closed.has(runId)) return;
-            closed.add(runId);
+            // The buffer and seq stay: a chapter clear closes the row but the run goes on,
+            // so every close flushes, and only the first posts the end.
             flush(runId);
-            runs.delete(runId);
+            if (ended.has(runId)) return;
+            ended.add(runId);
             const cfg = config();
             if (cfg === null) return;
             enqueue(() => postPlayLog(playRunEndPath(runId), end, cfg, deps.fetcher));

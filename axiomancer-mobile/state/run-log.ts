@@ -92,8 +92,8 @@ function nodeKindOf(world: WorldState): string | null {
     return getNodePrimaryEventKind(map.continent, map.name, map.currentNode) ?? null;
 }
 
-function record<K extends keyof RunEventPayloads>(store: AppStore, kind: K, payload: RunEventPayloads[K]): void {
-    const runId = deckEventRunId(stateOf(store));
+function record<K extends keyof RunEventPayloads>(store: AppStore, kind: K, payload: RunEventPayloads[K], onRun?: string | null): void {
+    const runId = onRun ?? deckEventRunId(stateOf(store));
     if (runId !== null) runLogPoster.event(runId, kind, payload);
 }
 
@@ -169,8 +169,12 @@ export function recordItemGained(store: AppStore, item: Item, from: string): voi
 }
 
 /** A hazard ended: whether it was cleared, and the VITAE on either side of it. */
-export function recordHazardEnded(store: AppStore, hazard: RunEventPayloads['hazard-ended']): void {
-    safely(() => record(store, 'hazard-ended', hazard));
+export function recordHazardEnded(store: AppStore, hazard: RunEventPayloads['hazard-ended'], onRun?: string | null): void {
+    safely(() => {
+        record(store, 'hazard-ended', hazard, onRun);
+        // Logged on a run the store has left (a run over): nothing will flush it later.
+        if (onRun) runLogPoster.flush(onRun);
+    });
 }
 
 /** An upgrade at a rest, the anvil or an elite's reward: the card before in `cardId`, the card after in `offered`. */

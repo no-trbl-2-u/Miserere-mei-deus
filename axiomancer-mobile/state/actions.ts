@@ -827,7 +827,8 @@ export function createAppActions(store: AppStore): AppActions {
             const engineStore = store.getState() as unknown as {
                 resetRun?: (o: { keepCharacter: boolean }) => unknown;
             };
-            recordRunEnd(store, 'reset');
+            // keepCharacter false is the engine's run over (a Labyrinth defeat); true is a reset in place.
+            recordRunEnd(store, opts.keepCharacter ? 'reset' : 'run-over');
             engineStore.resetRun?.(opts);
             clearRunScopedSessions(store);
         },

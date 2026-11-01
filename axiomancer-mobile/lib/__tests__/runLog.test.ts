@@ -161,15 +161,17 @@ describe('close', () => {
         expect(validatePlayRunEndPost(calls[2]!.body).reasons).toEqual([]);
     });
 
-    it('closes a run once; a late event for a closed run is dropped', async () => {
+    it('closes a run once; its events keep posting after the close, numbered on', async () => {
         const log = poster();
-        log.close('run-1', END);
-        log.close('run-1', { ...END, outcome: 'reset' });
         log.event('run-1', 'xp-gained', { amount: 1, from: 'fight' });
+        log.close('run-1', { ...END, outcome: 'chapter-clear' });
+        log.close('run-1', { ...END, outcome: 'reset' });
+        log.event('run-1', 'xp-gained', { amount: 2, from: 'fight' });
         log.flush('run-1');
         await log.settled();
-        expect(calls).toHaveLength(1);
-        expect((calls[0]!.body as PlayRunEndPost).outcome).toBe('run-over');
+        expect(calls.filter((c) => c.url.endsWith('/end'))).toHaveLength(1);
+        expect((calls.find((c) => c.url.endsWith('/end'))!.body as PlayRunEndPost).outcome).toBe('chapter-clear');
+        expect(batches().flatMap((b) => b.events.map((e) => e.seq))).toEqual([0, 1]);
     });
 
     it('keeps the posts in the order they were made, even when an earlier one is slow', async () => {

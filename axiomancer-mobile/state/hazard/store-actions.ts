@@ -371,10 +371,14 @@ export function claimHazardRewardsAction(
     // `setState` below.
     const nominalHealth = player.health + vitaeDelta;
     if (engineIsDefeated({ ...player, health: nominalHealth })) {
-        // The run log, before the death rule can end the run and change its id.
-        recordHazardEnded(store, { hazardId: s.hazardId, cleared: false, vitaeBefore: player.health, vitaeAfter: 0 });
+        // The run log: the node is named before the death rule moves the player, and the
+        // hazard is logged on the run it happened in (a run over gives the store a new id).
+        const hazardRun = state.runId;
         recordNodeResolved(store, 'hazard-died');
         const outcomeKind = die('hazard');
+        // A revive leaves the player at the VITAE the death rule gave; a run over leaves none.
+        const vitaeAfter = outcomeKind === 'revived' ? (store.getState() as unknown as GameState).player.health : 0;
+        recordHazardEnded(store, { hazardId: s.hazardId, cleared: false, vitaeBefore: player.health, vitaeAfter }, hazardRun);
         // Stamp the tombstone onto the post-death flags (a run over rebuilds
         // run flags, so it is appended after the death rule ran). `dying` is
         // never written here: the death rule owns it.
