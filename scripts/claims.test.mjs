@@ -17,7 +17,7 @@ import test from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { parse, state } from './claims-codec.mjs'
-import { aliasTable, asOwner, claimOwner, fromV1, resolveId, v1Value } from './claims-local.mjs'
+import { aliasTable, asOwner, bareIds, claimOwner, fromV1, resolveId, v1Value } from './claims-local.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, '..')
@@ -120,6 +120,14 @@ test('a v1 entry reads as v2 with the same owner and expiry, under its chunk', (
   assert.equal(fromV1(v2, () => assert.fail('no table needed')), v2, 'a v2 map is left as it is')
 })
 
+test('audit reads a chunk closed on an aliased ARCHIVE line as archived, even when spec prose still names it', async () => {
+  const { verdict } = await import('./claims.mjs')
+  const c = parse('heads-down:1|-|-|2026-11-01T00:00:00.000Z|s:heads-down:1')
+  const plan = { archive: bareIds(ARCHIVE), specs: ['see **113.4** for the old run'], names: ['plan/113-x.md'] }
+  assert.equal(verdict('113.4', c, plan, { now: Date.parse('2026-11-01T01:00:00.000Z') }), 'archived')
+  assert.equal(bareIds('# Archive\n'), '# Archive\n')
+})
+
 // --- the CLI against a temporary bare origin --------------------------
 
 test('the verbs /next calls: whoami, claim, list, renew, pr, prune, release', () => {
@@ -170,6 +178,9 @@ test('--owner and CLAIM_OWNER: one claimant across sessions, aliases claimed as 
   const worker = { NEXUS_SESSION: 'worker', CLAIM_OWNER: owner }
   assert.match(w.cli(b, ['claim', 'NX1f'], worker).stdout, /^133\.6: yours$/m, 'a renewal')
   assert.match(w.cli(b, ['renew'], worker).stdout, /^renewed: 133\.5, 133\.6$/m)
+  // NX1e's loop-land attaches the PR with `pr <chunk> <n>`: NEXUS_SESSION set, CLAIM_OWNER inherited.
+  assert.equal(w.cli(b, ['pr', '133.5', '1284'], worker).code, 0)
+  assert.equal(parse(w.record()['133.5']).pr, 1284)
   // Someone else is refused.
   assert.equal(w.cli(b, ['claim', '133.6'], { NEXUS_SESSION: 'other' }).code, 1)
   assert.match(w.cli(b, ['release', 'NX1f'], worker).stdout, /^released: 133\.6$/m)
@@ -223,6 +234,21 @@ test('the first v2 write on a v1 branch migrates it with no claim lost', () => {
   assert.deepEqual(Object.keys(w.record()), ['133.5', '133.6'])
   assert.equal(parse(w.record()['133.5']).who, 'heads-down:1')
   assert.equal(w.cli(a, ['claim', 'NX1e']).code, 1, 'still heads-down:1\'s')
+})
+
+test('a Claude Code session claims once the guard hook has marked it, and is refused before', () => {
+  const w = makeWorld(1)
+  const [a] = w.clones
+  const session = { CLAUDECODE: '1', CLAUDE_CODE_SESSION_ID: '11111111-2222-3333-4444-555555555555' }
+  const r = w.cli(a, ['whoami'], session)
+  assert.equal(r.code, 1)
+  assert.match(r.stderr, /loaded no project hooks/)
+  const guard = path.join(ROOT, '.claude', 'hooks', 'guard.mjs')
+  const input = JSON.stringify({ session_id: session.CLAUDE_CODE_SESSION_ID, cwd: a, tool_input: { command: 'ls' } })
+  assert.equal(spawnSync(process.execPath, [guard, 'pre-bash'], { cwd: a, env: w.env, input, encoding: 'utf-8' }).status, 0)
+  assert.ok(fs.existsSync(path.join(a, '.nexus', 'hooks', session.CLAUDE_CODE_SESSION_ID)), 'the guard marks the session')
+  assert.equal(w.cli(a, ['whoami'], session).code, 0)
+  assert.equal(w.cli(a, ['claim', '133.6'], session).code, 0)
 })
 
 // Two real processes, released at the same instant, claim one chunk.

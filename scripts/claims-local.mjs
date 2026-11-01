@@ -69,6 +69,15 @@ export function resolveId(id, table) {
   return CHUNK_ID.test(id) ? id : (table.get(id) ?? id);
 }
 
+/**
+ * ARCHIVE.md text with each aliased line (`· 133.6 (alias: NX1f) ·`) also given in the kit's bare form
+ * (`· 133.6 · `), so the kit's audit verdict, which looks for ` · <id> · `, reads a closed chunk as archived.
+ */
+export function bareIds(archive) {
+  const extra = [...String(archive).matchAll(/ · (\d{2,}\.\d+[a-z0-9]*) \(alias: [^)]*\) · /g)].map((m) => `- · ${m[1]} · (alias line)\n`);
+  return extra.length ? `${archive}${extra.join('')}` : archive;
+}
+
 /** A v1 entry: { owner, at, renewed?, ttlHours? }. */
 export const isV1 = (v) => Boolean(v) && typeof v === 'object' && typeof v.owner === 'string';
 

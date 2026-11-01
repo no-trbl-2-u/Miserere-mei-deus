@@ -45,7 +45,7 @@ import { pendingArchiveLines, pendingAtRef } from './plan/pending.mjs';
 import { isOwner, primaryRoot } from './owner.mjs';
 import { BRANCH, CHUNK_ID as ID, FILE, PRIVILEGED, STAR, TTL_MS, claimInto, decide, format, idsProblem, mine, parse, pushRefusal, readMap, releaseFrom, renewIn, serialize, state } from './claims-codec.mjs';
 // Miserere: --owner / CLAIM_OWNER, row aliases and the v1 record (scripts/claims-local.mjs; NX1f).
-import { aliasesAt, asOwner, claimOwner, fromV1, resolveId } from './claims-local.mjs';
+import { aliasesAt, asOwner, bareIds, claimOwner, fromV1, resolveId } from './claims-local.mjs';
 
 export { BRANCH, FILE, PRIVILEGED, TTL_MS, decide, format, mine, parse, state };
 export const TRIES = 8;
@@ -435,7 +435,7 @@ export function branchPlan(cwd, remote = remoteOf(), branch = mainOf()) {
     // no archive yet
   }
   return {
-    archive: `${archive.replace(/\n*$/, '\n')}${pending.map((l) => `${l}\n`).join('')}`,
+    archive: bareIds(`${archive.replace(/\n*$/, '\n')}${pending.map((l) => `${l}\n`).join('')}`), // Miserere: an aliased line reads as its chunk
     specs: names.map((n) => git(['show', `${ref}:${n}`], { cwd })),
     names,
   };
