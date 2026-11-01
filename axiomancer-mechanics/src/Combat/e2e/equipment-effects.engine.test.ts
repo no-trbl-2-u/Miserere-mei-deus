@@ -1,5 +1,5 @@
 /**
- * Hermetic E2E: a worn weapon's and armor's fight effect
+ * Hermetic E2E — a worn weapon's and armor's fight effect
  * (`Combat/combat.equipment-effects.ts`).
  *
  *   · every trigger: a card's DEAL, the first card DEAL each turn, the first

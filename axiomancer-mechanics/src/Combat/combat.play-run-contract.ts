@@ -47,8 +47,11 @@ export type PlayRunOutcome = (typeof PLAY_RUN_OUTCOMES)[number];
 export interface RunEventPayloads {
     /** A node was stepped onto: the map, the node and its authored event kind (null when it has none). */
     'node-entered': { map: string; nodeId: string; nodeKind: string | null };
-    /** A node was resolved, and the choice taken: the rest option, the cache offer, the quest step, `flee` or `fight`. */
-    'node-resolved': { nodeId: string; nodeKind: string | null; choice: string };
+    /**
+     * A node was resolved, and the choice taken: the rest option, the cache offer, the quest step, `flee` or `fight`.
+     * `level` and `vitae` are the player after the node (SM2a); an older build posts neither.
+     */
+    'node-resolved': { nodeId: string; nodeKind: string | null; choice: string; level?: number; vitae?: number };
     /** A hazard ended: whether it was cleared, and the player's VITAE on either side of it. */
     'hazard-ended': { hazardId: string; cleared: boolean; vitaeBefore: number; vitaeAfter: number };
     /** Experience gained, and from what (a fight, a quest, a cache). */
@@ -57,14 +60,23 @@ export interface RunEventPayloads {
     'level-up': { level: number; stat: string | null };
     /** An item came into the pack: its id, the slot it fills, and from what. */
     'item-gained': { itemId: string; slot: string; from: string };
+    /**
+     * A quest step was accepted, turned in, or its quest completed (SM2a). `questId` is the questline's id (the
+     * quest's name for a quest outside a questline); `stepId` is the step number as text (null outside a questline).
+     */
+    'quest-step': { questId: string; stepId: string | null; action: QuestStepAction };
 }
+
+/** What a `quest-step` event records. */
+export const QUEST_STEP_ACTIONS = ['accept', 'turn-in', 'complete'] as const;
+export type QuestStepAction = (typeof QUEST_STEP_ACTIONS)[number];
 
 /**
  * Every run event kind. The `satisfies` clause rejects a kind with no payload
  * type; the contract test rejects a payload type whose kind is missing here.
  */
 export const RUN_EVENT_KINDS = [
-    'node-entered', 'node-resolved', 'hazard-ended', 'xp-gained', 'level-up', 'item-gained',
+    'node-entered', 'node-resolved', 'hazard-ended', 'xp-gained', 'level-up', 'item-gained', 'quest-step',
 ] as const satisfies readonly (keyof RunEventPayloads)[];
 
 export type RunEventKind = (typeof RUN_EVENT_KINDS)[number];
@@ -243,11 +255,14 @@ const PAYLOAD_CHECKS: {
         },
     },
     'node-resolved': {
-        keys: ['nodeId', 'nodeKind', 'choice'],
+        keys: ['nodeId', 'nodeKind', 'choice', 'level', 'vitae'],
         check(p, at, reasons) {
             checkText(p.nodeId, `${at}.nodeId`, reasons, false);
             checkNullableText(p.nodeKind, `${at}.nodeKind`, reasons);
             checkText(p.choice, `${at}.choice`, reasons, false);
+            // Absent from an older build; present, it must be well formed.
+            if (p.level !== undefined && !isWhole(p.level, 1)) reasons.push(`${at}.level: expected a whole number of at least 1`);
+            if (p.vitae !== undefined) checkNumber(p.vitae, `${at}.vitae`, reasons);
         },
     },
     'hazard-ended': {
@@ -279,6 +294,14 @@ const PAYLOAD_CHECKS: {
             checkText(p.itemId, `${at}.itemId`, reasons, false);
             checkText(p.slot, `${at}.slot`, reasons, false);
             checkText(p.from, `${at}.from`, reasons, false);
+        },
+    },
+    'quest-step': {
+        keys: ['questId', 'stepId', 'action'],
+        check(p, at, reasons) {
+            checkText(p.questId, `${at}.questId`, reasons, false);
+            checkNullableText(p.stepId, `${at}.stepId`, reasons);
+            checkOneOf(p.action, QUEST_STEP_ACTIONS, `${at}.action`, reasons);
         },
     },
 };
