@@ -167,9 +167,6 @@ None. No game save, engine type or Worker route changes.
 
 ## Acceptance
 
-- **A10** `march.yml` and `night.yml` run v2's quota, cadence and idle steps ahead of the
-  `_claude-skill.yml` call; the one-verb wrappers take v2's verb names; `heartbeat.yml` is added; the
-  `claims` branch is migrated to v2's `claims.mjs` format; `loop-pr.test.mjs` follows every rename.
 - **A12** `.github/workflows/nexus-sync.yml` runs `npx @usenexus/cli upgrade --pr --no-assist` on a weekly
   schedule and by hand: one PR, updated in place, labelled `nexus-sync`, which only T merges: the merge
   job never merges it, and no loop verb, `/pilot` worker, `pr-autofix` or `pr-resolve` run merges it
@@ -204,8 +201,7 @@ None. No game save, engine type or Worker route changes.
 
 ## Chunks
 
-Measure: 4 open · 10 closed · next A15
+Measure: 3 open · 11 closed · next A15
 
-- [ ] **133.6** The workflows on v2's steps; claims migrated · M · closes A10 · needs — · alias: NX1f
 - [ ] **133.8** The weekly nexus sync · M · closes A12, A14 · needs — · alias: NX1h
-- [ ] **133.9** The loop back on (attended) · S · closes A13 · needs 133.6 · alias: NX1i
+- [ ] **133.9** The loop back on (attended) · S · closes A13 · needs — · alias: NX1i

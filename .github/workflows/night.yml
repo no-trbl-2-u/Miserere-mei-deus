@@ -7,9 +7,20 @@ name: night
 # (odd days), off the march cadence so the two never queue — halved from
 # daily 2026-08 to cut Actions spend.
 #
+# Its own concurrency group, not march's (v2, phase NX1f): GitHub keeps
+# one pending run per group and cancels it when the next queues, so a
+# digest waiting behind a long march tick was evicted by march's next
+# cron. It writes only its own files.
+#
+# v2's quota governor runs first, in the `gate` job, before any model
+# (scripts/cloud/quota.mjs gate: a scheduled night run honours the soft
+# cap NEXUS_QUOTA_MAX too); the run's own reading and the weekly-quota
+# pause run after the model in `_claude-skill.yml` (`loop_gates: night`).
+# Fails open.
+#
 # PAUSED 2026-10-12 for Phase R11: disabled on GitHub (`gh workflow
-# disable night`), not by editing this file. R11's exit step (item 9 in
-# plan/revamp/loop.md) re-enables it. See plan/bearings.md § Operational notes.
+# disable night`), not by editing this file. T turns it back on in
+# NX1i (plan/NEEDS_T.md); editing this file never re-arms it.
 
 on:
   schedule:
@@ -24,11 +35,49 @@ permissions:
   id-token: write
 
 concurrency:
-  group: nexus-loop
+  group: night
   cancel-in-progress: false
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write     # the quota gate closes a pause issue after its reset
+    outputs:
+      skip: ${{ steps.quota_gate.outputs.skip }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Quota cache restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .nexus/quota.json
+          key: nexus-quota-${{ github.run_id }}
+          restore-keys: nexus-quota-
+
+      - name: Quota gate
+        id: quota_gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          QUOTA_MAX: ${{ vars.NEXUS_QUOTA_MAX || '0.90' }}
+        run: |
+          grep -qx '.nexus/' .git/info/exclude 2>/dev/null || echo '.nexus/' >> .git/info/exclude
+          node scripts/cloud/quota.mjs gate --event "$EVENT" --reason '' --max "$QUOTA_MAX" || echo "skip=false" >> "$GITHUB_OUTPUT"
+
   digest:
+    needs: gate
+    if: needs.gate.outputs.skip != 'true'
     uses: ./.github/workflows/_claude-skill.yml
     secrets: inherit
     with:
@@ -36,6 +85,7 @@ jobs:
         -p
         --dangerously-skip-permissions
       prompt: '/digest'
+      loop_gates: night
       # Longest observed run is ~34 min; 45 caps a wedged agent's burn.
       timeout_minutes: 45
       install_playwright: true

@@ -23,6 +23,7 @@
 
 ## Open
 
+- **enable-march-night** · at NX1i, once NX1e has merged, run `gh workflow enable march` and `gh workflow enable night`, then watch the first tick from pick to merge · blocks: the cloud loop (disabled since R11; on v2's gate steps since NX1f) · workaround: attended `/next` and `/heads-down` runs · seen 1× · last 2026-11-01
 - **local-api-token-stale** · copy the repo's `PUZZLE_API_TOKEN` secret into `~/.config/miserere/puzzle-api.env` on this machine · blocks: `npm run api -- signature-usage` and `card-usage` locally (401 from the Worker) · workaround: read D1 `miserere` directly through the Cloudflare connector · seen 1× · last 2026-10-31
 - **ruleset-bypass-for-t** · put T on the bypass list of ruleset 25469169 with the `gh api -X PUT .../rulesets/25469169` call in `.github/workflows/README.md` ("The `verify-gate` ruleset") · blocks: every direct push to `main` on T's token (plan-only ticks, telemetry, `fix-ci`, the `measured-truth` report commit) · workaround: open a PR from a throwaway branch instead of pushing `main`, and let `verify-gate` pass it · seen 14× · last 2026-10-31
 - **anim-temp-untracked** · commit, ignore or delete the untracked `axiomancer-mobile/assets/images/enemies/anim-temp/` · blocks: `npm run assets:check` (asset-provenance test) in the local mobile verify on this machine · workaround: move the dir outside the repo for the run, then back (CI is unaffected) · seen 1× · last 2026-10-31

@@ -23,6 +23,16 @@ name: _claude-skill
 #   6. Probe the remote kb-query MCP endpoint (warning only — a dead KB
 #      must not sink an unrelated tick).
 #   7. Run anthropics/claude-code-action with the given prompt.
+#   8. With `loop_gates` (march, night): v2's after-the-model steps
+#      (phase NX1f). The quota reading (scripts/cloud/quota.mjs read, its
+#      cache for the next run's gate, the weekly-quota pause issue), and
+#      for march the idle record and the no-op reason
+#      (scripts/cloud/idle.mjs). The caller's `gate` job ran the
+#      cadence, quota and idle gates before this job started.
+#
+# Tokens and secrets sit on the steps that use them, never in the job's
+# env, which every step (the agent's included) would inherit
+# (scripts/workflow-lint.mjs rule 2).
 #
 # Secrets (via `secrets: inherit` from callers):
 #   CLAUDE_CODE_OAUTH_TOKEN  required — Claude subscription OAuth token.
@@ -81,16 +91,19 @@ on:
         description: 'Shell run after Claude succeeds (pr-resolve checks no marker remains, commits and pushes). Empty = none.'
         type: string
         default: ''
+      loop_gates:
+        description: 'v2 loop steps after the model: "march" (quota reading, pause, idle record, no-op reason) or "night" (quota reading, pause). Empty = none.'
+        type: string
+        default: ''
+      reason:
+        description: 'Why the run was dispatched (issue-<n>, chain; empty by hand), for the idle record.'
+        type: string
+        default: ''
 
 jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.timeout_minutes }}
-    env:
-      GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
-      GH_REPO: ${{ github.repository }}
-      NOTIFY_NTFY_TOPIC: ${{ secrets.NOTIFY_NTFY_TOPIC }}
-      NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
     steps:
       - name: Checkout (full history)
         uses: actions/checkout@v4
@@ -113,7 +126,14 @@ jobs:
         working-directory: axiomancer-mobile
 
       - name: Materialize .env for the skills
-        run: printf 'GH_TOKEN=%s\nGH_REPO=%s\n' "$GH_TOKEN" "$GH_REPO" > .env
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          GH_REPO: ${{ github.repository }}
+        # .nexus/ (claims hook markers, the quota and idle state) is never
+        # committed: kept out of git before the agent runs.
+        run: |
+          printf 'GH_TOKEN=%s\nGH_REPO=%s\n' "$GH_TOKEN" "$GH_REPO" > .env
+          grep -qx '.nexus/' .git/info/exclude 2>/dev/null || echo '.nexus/' >> .git/info/exclude
 
       - name: Self-test nexus enforcement layer (guard hooks + deny walls)
         run: node .claude/hooks/guard.mjs self-test
@@ -176,13 +196,30 @@ jobs:
         if: ${{ inputs.pre_run != '' }}
         shell: bash
         env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          GH_REPO: ${{ github.repository }}
           PRE_RUN: ${{ inputs.pre_run }}
         run: bash -euo pipefail -c "$PRE_RUN"
 
       - name: Run Claude Code
         id: claude
         env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          GH_REPO: ${{ github.repository }}
+          NOTIFY_NTFY_TOPIC: ${{ secrets.NOTIFY_NTFY_TOPIC }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
           KB_MCP_TOKEN: ${{ secrets.KB_MCP_TOKEN }}
+          # This run's claims session (scripts/claims.mjs), so a later step
+          # of the same tick renews and releases what it claimed.
+          NEXUS_SESSION: cloud-${{ github.run_id }}
+          # claude-code-action may not load project hooks, so claims.mjs
+          # would refuse whoami and claim without this.
+          NEXUS_NO_HOOK_CHECK: '1'
+          # A gate leg can outrun the Bash tool's 10-minute default
+          # ceiling. Foreground is the rule (backgrounded, it is lost
+          # when the turn ends), so the ceiling is an hour, under the
+          # job's own timeout (v2, nexus 9138cc4).
+          BASH_MAX_TIMEOUT_MS: '3600000'
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -199,8 +236,77 @@ jobs:
         if: ${{ inputs.post_run != '' && steps.claude.outcome == 'success' }}
         shell: bash
         env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          GH_REPO: ${{ github.repository }}
+          NOTIFY_NTFY_TOPIC: ${{ secrets.NOTIFY_NTFY_TOPIC }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
           POST_RUN: ${{ inputs.post_run }}
         run: bash -euo pipefail -c "$POST_RUN"
+
+      # v2's after-the-model steps (loop_gates), as the kit's march.yml
+      # and night.yml run them: the tick's quota reading and its cache
+      # (the next run's gate reads the newest), the weekly-quota pause,
+      # and for march the idle record (the gate job's probe state comes
+      # back from its cache) and the one-line no-op reason.
+      - name: Quota read
+        id: quota
+        if: ${{ always() && inputs.loop_gates != '' && (steps.claude.outcome == 'success' || steps.claude.outcome == 'failure') }}
+        env:
+          EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
+        run: |
+          grep -qx '.nexus/' .git/info/exclude 2>/dev/null || echo '.nexus/' >> .git/info/exclude
+          node scripts/cloud/quota.mjs read "$EXEC_FILE"
+
+      - name: Quota cache save
+        if: ${{ always() && steps.quota.outputs.quota != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nexus/quota.json
+          key: nexus-quota-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Pause on the weekly quota
+        if: ${{ always() && steps.quota.outputs.status == 'rejected' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESETS: ${{ steps.quota.outputs.resets }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node scripts/cloud/quota.mjs pause --resets "$RESETS" --run-url "$RUN_URL"
+
+      - name: Idle cache restore
+        if: ${{ always() && inputs.loop_gates == 'march' && steps.claude.outcome != 'skipped' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: .nexus/idle.json
+          key: nexus-idle-${{ github.run_id }}
+          restore-keys: nexus-idle-
+
+      - name: Idle record
+        id: idle_record
+        if: ${{ always() && inputs.loop_gates == 'march' && (steps.claude.outcome == 'success' || steps.claude.outcome == 'failure') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REASON: ${{ inputs.reason }}
+          MAIN: ${{ github.event.repository.default_branch }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node scripts/cloud/idle.mjs record --event "$EVENT" --reason "$REASON" --main "$MAIN" --run-url "$RUN_URL"
+
+      - name: Idle cache save
+        if: ${{ always() && inputs.loop_gates == 'march' && hashFiles('.nexus/idle.json') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nexus/idle.json
+          key: nexus-idle-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: No-op reason
+        if: ${{ always() && inputs.loop_gates == 'march' }}
+        env:
+          LANDED: ${{ steps.idle_record.outputs.landed }}
+          QUOTA_STATUS: ${{ steps.quota.outputs.status }}
+          RESETS: ${{ steps.quota.outputs.resets }}
+          MODEL: ${{ steps.claude.outcome }}
+          EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
+        run: node scripts/cloud/idle.mjs noop --landed "$LANDED" --quota-status "$QUOTA_STATUS" --resets "$RESETS" --model "$MODEL" "$EXEC_FILE" || true
 
       # The Stop hook writes the tick's `tick-end` row (and any row after
       # the tick's last commit) to its telemetry shard once Claude has

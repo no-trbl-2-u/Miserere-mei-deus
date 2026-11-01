@@ -1,25 +1,42 @@
 name: march
 
 # The autonomous-beast tick: /march dispatches triage → critique →
-# ship-a-chunk → expand → iterate and executes one tick end-to-end (see
-# skills/march.md; in revamp mode, D58, phases are revamp phases only). Scheduled every 2 hours (raised from every 6 hours at
-# T's request on 2026-09-01; reason not stated); adjust or delete the cron
-# to retune, or run it by hand from the Actions tab. Ticks share
-# the nexus-loop concurrency group, so a long tick makes the next one
-# queue (and GitHub keeps only the newest queued run) — the loop
-# self-throttles instead of stacking.
+# /next top (v2's chunk step) → expand → iterate and executes one tick
+# end-to-end (see skills/march.md). Scheduled every 2 hours (raised from
+# every 6 hours at T's request on 2026-09-01; reason not stated); adjust
+# or delete the cron to retune, or run it by hand from the Actions tab.
+# Ticks share the nexus-loop concurrency group, so a long tick makes the
+# next one queue (and GitHub keeps only the newest queued run) — the
+# loop self-throttles instead of stacking.
+#
+# v2's control plane runs first (phase NX1f), in the `gate` job, before
+# any model: the cadence (scripts/cloud/cadence.mjs: NEXUS_CADENCE and
+# its per-field variables), the dispatch ceiling and the quota governor
+# (scripts/cloud/quota.mjs: NEXUS_DISPATCH_MAX, NEXUS_QUOTA_MAX) and the
+# idle probe (scripts/cloud/idle.mjs: NEXUS_IDLE_BACKOFF,
+# NEXUS_IDLE_WAKE_EVERY). A skip is a clean exit with its reason in the
+# step summary. The tick's own quota reading and idle record run after
+# the model in `_claude-skill.yml` (`loop_gates: march`). Every step
+# fails open: a gate that cannot decide lets the tick run.
 #
 # PAUSED 2026-10-12 for Phase R11: disabled on GitHub (`gh workflow
-# disable march`), not by editing this file. R11's exit step (item 9 in
-# plan/revamp/loop.md) re-enables it. See plan/bearings.md § Operational notes.
+# disable march`), not by editing this file. T turns it back on in
+# NX1i (plan/NEEDS_T.md); editing this file never re-arms it.
 
 on:
   schedule:
     - cron: '23 */2 * * *'
   workflow_dispatch:
     inputs:
-      focus_phase:
-        description: 'Optional chunk id (NN.k, for example 113.4) or spec number (NN) for this manual run, passed to /ship-a-chunk. Empty runs normal /march dispatch.'
+      chunk:
+        description: 'Optional chunk id (NN.k, for example 113.4) or spec number (NN) for this manual run, passed to /next. Empty runs normal /march dispatch.'
+        required: false
+        type: string
+        default: ''
+      # Why this run was dispatched: `issue-<n>`, `chain`, empty by
+      # hand. The quota gate and the idle probe read it through env.
+      reason:
+        description: 'Why this run was dispatched (issue-<n>, chain; empty by hand)'
         required: false
         type: string
         default: ''
@@ -36,21 +53,134 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write     # the quota gate closes a pause issue after its reset
+      actions: read     # the dispatch ceiling counts workflow_dispatch runs
+    outputs:
+      skip: ${{ steps.verdict.outputs.skip }}
+    steps:
+      - name: Checkout (full history, for the idle probe)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Cadence
+        id: cadence
+        env:
+          CADENCE: ${{ vars.NEXUS_CADENCE }}
+          CEILING: ${{ vars.NEXUS_DAILY_CEILING }}
+          CHAIN_MAX: ${{ vars.NEXUS_CHAIN_MAX }}
+          IDLE_BACKOFF: ${{ vars.NEXUS_IDLE_BACKOFF }}
+        run: node scripts/cloud/cadence.mjs resolve --cadence "$CADENCE" --dial "$(node scripts/plan/improve.mjs --cloud Cadence)" --ceiling "$CEILING" --chain-max "$CHAIN_MAX" --idle-backoff "$IDLE_BACKOFF" || true
+
+      # A dispatched run exits cleanly once NEXUS_DISPATCH_MAX (default
+      # 12) workflow_dispatch runs started here in 24 h. Scheduled runs
+      # never skip here.
+      - name: Dispatch ceiling
+        id: dispatch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          DISPATCH_MAX: ${{ vars.NEXUS_DISPATCH_MAX || '12' }}
+        run: node scripts/cloud/quota.mjs dispatch --event "$EVENT" --run-id "$GITHUB_RUN_ID" --max "$DISPATCH_MAX" || echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Quota cache restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .nexus/quota.json
+          key: nexus-quota-${{ github.run_id }}
+          restore-keys: nexus-quota-
+
+      - name: Quota gate
+        id: quota_gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REASON: ${{ github.event.inputs.reason }}
+          QUOTA_MAX: ${{ vars.NEXUS_QUOTA_MAX || '0.90' }}
+        run: |
+          grep -qx '.nexus/' .git/info/exclude 2>/dev/null || echo '.nexus/' >> .git/info/exclude
+          node scripts/cloud/quota.mjs gate --event "$EVENT" --reason "$REASON" --max "$QUOTA_MAX" || echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Idle cache restore
+        if: steps.dispatch.outputs.skip != 'true' && steps.quota_gate.outputs.skip != 'true'
+        uses: actions/cache/restore@v4
+        with:
+          path: .nexus/idle.json
+          key: nexus-idle-${{ github.run_id }}
+          restore-keys: nexus-idle-
+
+      - name: Idle probe
+        id: idle
+        if: steps.dispatch.outputs.skip != 'true' && steps.quota_gate.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REASON: ${{ github.event.inputs.reason }}
+          MAIN: ${{ github.event.repository.default_branch }}
+          BACKOFF: ${{ steps.cadence.outputs.idle_backoff }}
+          WAKE_EVERY: ${{ vars.NEXUS_IDLE_WAKE_EVERY }}
+        run: node scripts/cloud/idle.mjs probe --event "$EVENT" --reason "$REASON" --main "$MAIN" --backoff "$BACKOFF" --wake-every "$WAKE_EVERY" || echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      # The probe's state rides to the tick's idle record (the `march`
+      # job restores the newest nexus-idle- cache).
+      - name: Idle cache save
+        if: always() && hashFiles('.nexus/idle.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: .nexus/idle.json
+          key: nexus-idle-${{ github.run_id }}-${{ github.run_attempt }}-gate
+
+      - name: Verdict
+        id: verdict
+        if: always()
+        env:
+          DISPATCH_SKIP: ${{ steps.dispatch.outputs.skip }}
+          DISPATCH_REASON: ${{ steps.dispatch.outputs.reason }}
+          QUOTA_SKIP: ${{ steps.quota_gate.outputs.skip }}
+          QUOTA_REASON: ${{ steps.quota_gate.outputs.reason }}
+          IDLE_SKIP: ${{ steps.idle.outputs.skip }}
+          IDLE_REASON: ${{ steps.idle.outputs.reason }}
+          READY: ${{ steps.idle.outputs.ready }}
+        run: |
+          if [ "$DISPATCH_SKIP" = true ] || [ "$QUOTA_SKIP" = true ] || [ "$IDLE_SKIP" = true ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            node scripts/cloud/idle.mjs noop --landed false --ceiling "$DISPATCH_SKIP" --ceiling-reason "$DISPATCH_REASON" \
+              --quota-skip "$QUOTA_SKIP" --quota-reason "$QUOTA_REASON" --idle-skip "$IDLE_SKIP" --idle-reason "$IDLE_REASON" \
+              --model skipped --ready "$READY" || true
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   march:
+    needs: gate
+    if: needs.gate.outputs.skip != 'true'
     uses: ./.github/workflows/_claude-skill.yml
     secrets: inherit
     with:
       extra_claude_args: |
         -p
         --dangerously-skip-permissions
-      prompt: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.focus_phase != '' && format('/ship-a-chunk {0}', github.event.inputs.focus_phase) || '/march' }}
+      prompt: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.chunk != '' && format('/next {0}', github.event.inputs.chunk) || '/march' }}
+      loop_gates: march
+      reason: ${{ github.event.inputs.reason }}
       # Typical tick is ~23 min; at least one wedged run burned the full
       # 90-min budget (2026-08 usage review), which is why the ceiling
       # dropped 90->75 (b53dac5d, 2026-08-14). Raising it further is off
       # the table (plan/bearings.md § Operational notes: "a tick that
       # genuinely needs more should be split, not have its cap raised
-      # silently") — the fix is skills/ship-a-chunk.md §7 Hard Rule 12
-      # (one phase per invocation, never chain), added by Phase 92
+      # silently") — the fix is one chunk per invocation, never chained
+      # (skills/next.md: one chunk, done fully), added by Phase 92
       # (2026-09-18) after the chained-phase incident that hit this
       # ceiling exactly. Re-measured at Phase 92: last 100 runs, 0
       # cancellations, 53.3 min slowest — comfortable headroom under 75.
@@ -62,9 +192,9 @@ jobs:
       # critique tick no-ops (empty findings, no commit) while reporting
       # success — and since it never advances CRITIQUE.md's last-pass marker,
       # every following tick re-dispatches to the same dead end and starves
-      # pending phases. Grant Playwright so a march-dispatched critique runs.
+      # pending chunks. Grant Playwright so a march-dispatched critique runs.
       install_playwright: true
       # Pinned to Opus 5.5: /march runs every sub-skill it dispatches
-      # (triage, critique, ship-a-chunk, expand, iterate) inside this one session,
+      # (triage, critique, next, expand, iterate) inside this one session,
       # so this pin is what sets the model for the whole tick.
       model: 'claude-opus-5-5'
