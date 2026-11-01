@@ -249,13 +249,14 @@ finishes the row.
 | iterate: content gaps filed; in-tick defect commit; game audit categories | KEEP / MERGE | `skills/iterate.lanes.md` (19 lanes the upgrader moved, verbatim) | carried |
 | critique, digest, expand, triage (and R4's `[loop-call]`) | KEEP | `skills/critique.md`, `skills/digest.md`, `skills/expand.md`, `skills/triage.md` (ours, refs updated) | kept |
 | consolidate, fix-ci, review, review-fix, lane-creator, vault | KEEP | their own files (the upgrader kept them; vault's command body moved to `skills/vault.md`) | kept |
-| `_claude-skill.yml` | KEEP | unchanged | kept; v2's `BASH_MAX_TIMEOUT_MS` in NX1f |
-| `march.yml`, `night.yml`, one-verb wrappers | MERGE | prompts point at v2 verbs (`/ship-a-chunk`, `/plan-a-spec`); still disabled | deferred to NX1f |
+| `_claude-skill.yml` | KEEP | ours, plus v2's after-the-model steps behind `loop_gates` (quota read, pause, idle record, no-op reason), `NEXUS_SESSION`, `NEXUS_NO_HOOK_CHECK`, `BASH_MAX_TIMEOUT_MS`; tokens moved from the job env to the steps (workflow-lint) | done in NX1f |
+| `march.yml`, `night.yml`, one-verb wrappers | MERGE | a `gate` job runs v2's cadence, dispatch ceiling, quota and idle steps (night: quota) before the runner; night in its own `night` group; the manual input is `chunk` (`/next <chunk>`); `ship-a-phase.yml` and `plan-a-phase.yml` renamed `ship-a-chunk.yml` and `plan-a-spec.yml`; still disabled (NEEDS_T `enable-march-night`, NX1i) | done in NX1f |
+| `heartbeat.yml` | TAKE | the kit's template as it ships | done in NX1f |
 | `pr-review.yml` + `pr-*.mjs`, pr-autofix, ci-autofix, pr-resolve | KEEP | unchanged, but `pr-resolve` no longer registers the build-plan driver | kept |
 | close-trailers, claude.yml, deadlines.yml | KEEP | unchanged but claude.yml's route points at plot §7.4, deadlines.yml's paths at the specs | kept |
 | `loop-issue.mjs` | MERGE | ours (the kit's replacement reverted) | kept ours; merge at the first sync |
 | `deploy-check.mjs`, `guard.mjs` | MERGE | ours (the kit's copy list does not carry them) | kept |
-| `claims.mjs` | TAKE, migrate | ours (the kit's replacement reverted; `claims-codec.mjs` added, unused) | deferred to NX1f |
+| `claims.mjs` | TAKE, migrate | the kit's text plus eight marked `Miserere` lines calling `scripts/claims-local.mjs` (ours: `--owner` / `CLAIM_OWNER`, a run owner `heads-down:<id>` or `pilot:<id>` read as the session `s:<id>`, row aliases claimed as their chunks, v1 entries read as v2, `release --all`, aliased ARCHIVE lines read by the audit); `.claude/hooks/guard.mjs` pre-bash writes the kit's `.nexus/hooks/<session>` marker that `whoami` and `claim` require; `scripts/claims-migrate.mjs` rewrites the branch once | done in NX1f; the live branch migrates on its first v2 write after the merge |
 | merge drivers | KEEP deadlines + lessons | `.gitattributes`, `.claude/settings.json`, `pr-resolve.mjs` `MERGE_DRIVERS` | build-plan driver retired; its module stays as `deadlines-merge.mjs`'s core |
 | lints and `loop-pr.test.mjs` | KEEP | pins repointed to the lanes, plot §7, `next.md`, `plan-a-spec.md` | carried |
 | `.claude/settings.json` `.env` reads (R9) | KEEP | unchanged | kept |

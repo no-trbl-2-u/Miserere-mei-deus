@@ -143,18 +143,20 @@ before its first report still leaves `resume` a branch to check.
 **Claim the wave** (an open PR is already a claim) in one call:
 
 ```bash
-node scripts/claims.mjs claim <chunk> <chunk> ...
+node scripts/claims.mjs claim <chunk> <chunk> ... --package
 ```
 
-The claims are this session's (`s:<claims id>`, nexus v2). A refusal
+`--package` makes the wave one all-or-nothing claim: a contributor
+(no `.owner`) claims one chunk per call otherwise. The claims are this session's (`s:<claims id>`, nexus v2). A refusal
 names who holds what: drop those chunks from the wave, name each
 holder in the wave note and the final report (never a mid-run
 question), and claim the rest again. A tooling error: log its stderr
 and launch anyway; the worker's own claim and the PR are the
-fallback. Beat `--add claimed=<chunk>` for each. Until NX1f's v2
-`claims.mjs` is on `main`, the same calls take `--owner
-pilot:<id>`, and each worker gets `CLAIM_OWNER=pilot:<id>`. A run
-that began as `heads-down:<id>` keeps that owner to its end.
+fallback. Beat `--add claimed=<chunk>` for each. A run that began
+as `heads-down:<id>` keeps that owner to its end: `claims.mjs` reads
+an owner `heads-down:<id>` or `pilot:<id>` (`--owner`, or
+`CLAIM_OWNER`) as the session `s:<id>`, so the same claims answer to
+either (`scripts/claims-local.mjs`, NX1f).
 
 Each worker runs `/next <id>`, whose Step 2 claims its chunk again
 as this session (a renewal), and whose land step records the PR on
@@ -184,7 +186,7 @@ nothing of this conversation. It carries:
    genuine new question under `PARKED:` and carry on building the
    default;
 10. **the claim session**: `NEXUS_SESSION=<claims id>` for every
-    `claims.mjs` call (`CLAIM_OWNER=pilot:<id>` until NX1f), so
+    `claims.mjs` call, so
     `/next`'s claim reads as a renewal and its release touches only
     its own chunk;
 11. the fixed final-report shape:

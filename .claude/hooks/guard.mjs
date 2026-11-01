@@ -147,8 +147,80 @@ function readStdinJson() {
   }
 }
 
+// --- the hooked-session marker (the kit's, for scripts/claims.mjs; NX1f) --------------------------------------
+
+// The primary checkout's root (a worktree's too): the folder holding
+// the common .git. Read from the files, not by spawning git: this
+// runs on every Bash call. null outside a checkout.
+function primaryRootOf(start) {
+  let dir = path.resolve(start)
+  for (;;) {
+    const dotGit = path.join(dir, '.git')
+    let st = null
+    try {
+      st = fs.statSync(dotGit)
+    } catch {
+      /* not here: look up */
+    }
+    if (st?.isDirectory()) return dir
+    if (st) {
+      const m = fs.readFileSync(dotGit, 'utf-8').match(/^gitdir:\s*(.+?)\s*$/m)
+      if (!m) return null
+      const gitdir = path.resolve(dir, m[1])
+      let common = gitdir
+      try {
+        common = path.resolve(gitdir, fs.readFileSync(path.join(gitdir, 'commondir'), 'utf-8').trim())
+      } catch {
+        /* no commondir: the gitdir is the common dir */
+      }
+      return path.dirname(common)
+    }
+    const up = path.dirname(dir)
+    if (up === dir) return null
+    dir = up
+  }
+}
+
+// Touch .nexus/hooks/<session id> at the primary checkout of every
+// folder this call could run in: scripts/claims.mjs refuses a Claude
+// Code session without a fresh one (customization/claims.md), so a
+// session that loaded no hooks can't claim and build unguarded.
+// Best-effort and silent: a marker that can't be written only means
+// a claim refuses, never that this call is blocked.
+function markHooked(input, env = process.env) {
+  const ids = new Set([input?.session_id, env.CLAUDE_CODE_SESSION_ID].filter((x) => typeof x === 'string' && x))
+  if (!ids.size) return []
+  const roots = new Set()
+  for (const start of [input?.cwd, env.CLAUDE_PROJECT_DIR, process.cwd()]) {
+    if (typeof start !== 'string' || !start) continue
+    try {
+      const root = primaryRootOf(start)
+      if (root) roots.add(root)
+    } catch {
+      /* unreadable .git: skip */
+    }
+  }
+  const written = []
+  const stamp = new Date().toISOString() + '\n'
+  for (const root of roots) {
+    const dir = path.join(root, '.nexus', 'hooks')
+    try {
+      fs.mkdirSync(dir, { recursive: true })
+      for (const id of ids) {
+        const file = path.join(dir, id.replace(/[^\w.-]/g, '_'))
+        fs.writeFileSync(file, stamp)
+        written.push(file)
+      }
+    } catch {
+      /* best-effort */
+    }
+  }
+  return written
+}
+
 function preBash() {
   const input = readStdinJson()
+  markHooked(input)
   const cmd = String(input?.tool_input?.command ?? '')
   if (!cmd) return 0
   if (backgroundedGate(input)) {

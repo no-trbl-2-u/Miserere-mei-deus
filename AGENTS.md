@@ -362,8 +362,10 @@ where each kept deviation lives). It is live at the repo root:
 - `scripts/` — the kit's `plan-check.mjs`, `plan/*.mjs` (order, lanes,
   locks, settle) and `cloud/*.mjs`; ours: `deploy-check.mjs` (CI-green
   deploy gate), `notify.mjs` (pager), `loop-issue.mjs` (GitHub issue
-  mirror), `pr-resolve.mjs` (keeps `loop:pr` PRs mergeable), `claims.mjs`
-  (ours until phase NX1f takes v2's and migrates the `claims` branch).
+  mirror), `pr-resolve.mjs` (keeps `loop:pr` PRs mergeable), and
+  `claims-local.mjs` on top of the kit's `claims.mjs` (`--owner` /
+  `CLAIM_OWNER`, row aliases claimed as their chunks, v1 entries read as
+  v2; phase NX1f).
 - `docs/game-model.md` — the game as the code stands; `spec.md` — the
   product spec the loop builds against.
 

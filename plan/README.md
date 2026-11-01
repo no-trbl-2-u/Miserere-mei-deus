@@ -94,7 +94,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 130 | The modular feature map: a note per feature, canvases you zoom into | [130-fm2-modular-feature-map.md](130-fm2-modular-feature-map.md) | planned | 1 left |
 | 131 | Set bonuses: T's design session | [131-sb1-set-bonuses.md](131-sb1-set-bonuses.md) | planned | 1 left |
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
-| 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 3 left |
+| 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 2 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
 
