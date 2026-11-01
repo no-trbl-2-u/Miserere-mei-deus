@@ -12,11 +12,19 @@ import { ItemGrid } from '@/components/inventory/ItemGrid';
 import { EquipmentDetailModal } from '@/components/inventory/EquipmentDetailModal';
 import { ItemModal } from '@/components/inventory/ItemModal';
 import { SlotBanner } from '@/components/inventory/SlotBanner';
+import { useDockDrag } from '@/components/inventory/useDockDrag';
+import {
+    applyDockDrop,
+    dockDragPayloadForItem,
+    dockDragPayloadForRow,
+    type DockLoadoutDrop,
+} from '@/state/presenters/inventory.drag';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { rowRelicPosition } from '@/state/presenters/loadout';
 import {
     selectInventoryViewModel,
     type DockRowId,
+    type InventoryItemRow,
     type InventoryTab,
 } from '@/state/presenters/inventory.engine';
 import {
@@ -107,6 +115,27 @@ export default function InventoryScreen() {
         setDetailItemId(null);
     }, [actions]);
 
+    // Drag and drop: a drop that changes the loadout goes through the same
+    // actions as the tap paths (a drop on a row wears into that row; a drag
+    // between relic rows moves, swapping when full; a drop on the satchel list
+    // takes the piece off). A refusal stays inside the controller, which
+    // flashes the row and shows the reason on the dock.
+    const onDrop = useCallback((outcome: DockLoadoutDrop) => applyDockDrop(actions, outcome), [actions]);
+    const { drag, ghost } = useDockDrag({ onDrop });
+    const { register, gestureFor } = drag;
+    const getRowPayload = useCallback(
+        (id: DockRowId) => dockDragPayloadForRow(store.getState().player, id),
+        [store],
+    );
+    const itemGesture = useCallback(
+        (item: InventoryItemRow) => item.category === 'equipment'
+            ? gestureFor(`item-${item.id}`, () => dockDragPayloadForItem(store.getState().player, item.id), 'tile')
+            : undefined,
+        [gestureFor, store],
+    );
+    const registerOrigin = useCallback((node: View | null) => register('origin', node), [register]);
+    const registerSatchel = useCallback((node: View | null) => register('satchel', node), [register]);
+
     const onDiscard = useCallback(
         (itemId: string) => {
             actions.dropItem(itemId);
@@ -132,6 +161,7 @@ export default function InventoryScreen() {
         // Non-scrolling page — the header / dock / tabs stay fixed and only
         // the item list scrolls, inside its own bordered panel (below).
         <ScreenBg scrollable={false}>
+            <View style={styles.frame} ref={registerOrigin} collapsable={false}>
             <View style={styles.header}>
                 <SectionLabel size={9} color={AXM.bone}>{vm.sectionHeader}</SectionLabel>
                 <View style={styles.headerRow}>
@@ -162,6 +192,8 @@ export default function InventoryScreen() {
                 selectedRow={selectedRow}
                 onSelectRow={onSelectRow}
                 onShowItemDetail={setDetailItemId}
+                drag={drag}
+                getRowPayload={getRowPayload}
             />
 
             {vm.equipmentDock.selectedRow !== null && (
@@ -180,16 +212,25 @@ export default function InventoryScreen() {
                 dimmed={selectedRow !== null}
             />
 
-            <ItemGrid
-                items={vm.items}
-                categoryHeaders={vm.categoryHeaders}
-                emptyMessage={vm.emptyMessage}
-                isEmpty={vm.isEmpty}
-                expandedItemId={expandedItemId}
-                onItemTap={onItemTap}
-                onUseOrEquip={(itemId) => setModalItemId(itemId)}
-                onDiscard={onDiscard}
-            />
+            {/* The satchel list is a drop target: a worn piece let go here comes off. */}
+            <View style={styles.satchel} ref={registerSatchel} collapsable={false} testID="satchel-drop-zone">
+                <ItemGrid
+                    items={vm.items}
+                    categoryHeaders={vm.categoryHeaders}
+                    emptyMessage={vm.emptyMessage}
+                    isEmpty={vm.isEmpty}
+                    expandedItemId={expandedItemId}
+                    onItemTap={(itemId) => { if (!drag.suppressTap()) onItemTap(itemId); }}
+                    onUseOrEquip={(itemId) => setModalItemId(itemId)}
+                    onDiscard={onDiscard}
+                    itemGesture={itemGesture}
+                />
+                {drag.satchelLit ? (
+                    <View pointerEvents="none" style={styles.satchelLit} testID="satchel-drop-lit" />
+                ) : null}
+            </View>
+            {ghost}
+            </View>
 
             <ItemModal
                 modalVm={modalVm}
@@ -208,6 +249,19 @@ export default function InventoryScreen() {
 }
 
 const useStyles = makeStyles((AXM) => ({
+    // The screen's own frame: the drag ghost is placed inside it.
+    frame: { flex: 1 },
+    satchel: { flex: 1 },
+    // Lit while a worn piece is dragged: letting it go here takes it off.
+    satchelLit: {
+        position: 'absolute',
+        top: 8,
+        bottom: 8,
+        left: 10,
+        right: 10,
+        borderWidth: 2,
+        borderColor: AXM.sulfur,
+    },
     header: { padding: 14, paddingBottom: 0 },
     headerRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
     title: { fontFamily: FONTS.gothic, fontSize: 28, lineHeight: 30, color: AXM.parchment, marginTop: 2 },

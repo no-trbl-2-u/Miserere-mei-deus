@@ -14,7 +14,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { REPORTS_PATH_PREFIX, REPORT_NAMES, SOURCE_FILTERS, checkBody, formatCardGaps, formatCardUsage, formatCardVsBot, formatRunSummary, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
+import { REPORTS_PATH_PREFIX, REPORT_NAMES, SOURCE_FILTERS, checkBody, formatCardGaps, formatCardUsage, formatCardVsBot, formatCoverage, formatRunEnds, formatRunPacing, formatRunSummary, formatSignatureUsage, main, parseArgs, reportPath, table } from './api.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const USAGE_FIXTURE = path.join(HERE, 'fixtures', 'card-usage-report.json')
@@ -224,4 +224,57 @@ test('run-summary: --source goes to the Worker, the table lists a row per source
   assert.deepEqual(lines[head + 2].trim().split(/\s+/), ['sim', 'defender', '3', '1', '1', '1', '0', '6', '8', '50', '17.5', '25', 'bw-exit'])
   assert.match(formatRunSummary({ ...RUNS, runs: 0, summary: [] }), /No runs recorded\./)
   assert.throws(() => checkBody({ report: 'run-summary' }, 'run-summary'), /no summary list/)
+})
+
+// SM2e: run-ends, run-pacing and coverage. Each reads every source unless --source narrows it, like run-summary.
+const fixture = (name) => JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', name), 'utf-8'))
+const ENDS = fixture('run-ends-report.json')
+const PACING = fixture('run-pacing-report.json')
+const COVERAGE = fixture('coverage-report.json')
+
+for (const [report, body, list] of [['run-ends', ENDS, 'ends'], ['run-pacing', PACING, 'pacing'], ['coverage', COVERAGE, 'coverage']]) {
+  test(`${report}: --build and --source go to the Worker, --card is refused, and the body is checked`, async () => {
+    assert.ok(REPORT_NAMES.includes(report))
+    assert.equal(parseArgs([report, '--source', 'sim']).source, 'sim')
+    assert.throws(() => parseArgs([report, '--card', 'strike']), /--card applies to card-usage only/)
+    assert.equal(reportPath({ report, build: 'abc', source: 'sim' }), `/v1/reports/${report}?build=abc&source=sim`)
+    assert.throws(() => checkBody({ report }, report), new RegExp(`no ${list} list`))
+    const calls = []
+    const fetchImpl = async (url) => { calls.push(url); return { ok: true, status: 200, json: async () => body } }
+    const stdout = sink()
+    const code = await main([report, '--build', 'sm2e01', '--source', 'sim'], {
+      env: { PUZZLE_API_URL: 'https://api.example', PUZZLE_API_TOKEN: 'sekrit' }, envFile: NO_ENV_FILE, fetchImpl, stdout, stderr: sink(),
+    })
+    assert.equal(code, 0)
+    assert.deepEqual(calls, [`https://api.example/v1/reports/${report}?build=sm2e01&source=sim`])
+    assert.ok(!stdout.text.includes('sekrit'))
+  })
+}
+
+test('formatRunEnds: one row per policy and end node, a dash for a run that ended off the map', () => {
+  const lines = formatRunEnds(ENDS).split('\n')
+  assert.equal(lines[0], 'Run ends: 3 closed runs (build sm2e01, source sim).')
+  const head = lines.findIndex((l) => l.startsWith('source '))
+  assert.deepEqual(lines[head].trim().split(/\s+/), ['source', 'policy', 'ended', 'at', 'runs', 'run-over', 'clear', 'lvl', 'avg', 'vitae', 'avg'])
+  assert.deepEqual(lines[head + 2].trim().split(/\s+/), ['sim', 'cautious', 'n-c', '1', '0', '1', '3', '25'])
+  assert.deepEqual(lines[head + 3].trim().split(/\s+/), ['sim', 'rusher', '-', '1', '1', '0', '4', '0'])
+  assert.match(formatRunEnds({ ...ENDS, runs: 0, ends: [] }), /No closed runs recorded\./)
+})
+
+test('formatRunPacing: nodes with the averages, and a dash where no event carried a level or VITAE', () => {
+  const lines = formatRunPacing(PACING).split('\n')
+  assert.equal(lines[0], 'Run pacing: 3 runs (build sm2e01, source sim).')
+  const head = lines.findIndex((l) => l.startsWith('source '))
+  assert.deepEqual(lines[head + 2].trim().split(/\s+/), ['sim', 'cautious', 'n-b', '2', '1', '2.5', '29', '2', '0'])
+  assert.deepEqual(lines[head + 3].trim().split(/\s+/), ['sim', 'rusher', 'n-z', '1', '2', '-', '-', '0', '0'])
+  assert.match(formatRunPacing({ ...PACING, pacing: [] }), /No nodes entered\./)
+})
+
+test('formatCoverage: one row per kind and raw id, a dash for an item\'s cleared', () => {
+  const lines = formatCoverage(COVERAGE).split('\n')
+  assert.equal(lines[0], 'Coverage: 3 runs (build sm2e01, source sim).')
+  const head = lines.findIndex((l) => l.startsWith('source '))
+  assert.deepEqual(lines[head + 2].trim().split(/\s+/), ['sim', 'cautious', 'quest-step', 'breakwater-line/1', '1', '1', '0'])
+  assert.deepEqual(lines[head + 5].trim().split(/\s+/), ['sim', 'cautious', 'item', 'relic-a', '1', '1', '-'])
+  assert.match(formatCoverage({ ...COVERAGE, coverage: [] }), /Nothing reached\./)
 })

@@ -1,0 +1,13 @@
+{
+  "report": "coverage",
+  "build": "sm2e01",
+  "source": "sim",
+  "runs": 3,
+  "coverage": [
+    { "source": "sim", "policyId": "cautious", "kind": "node", "id": "n-b", "runs": 2, "count": 3, "cleared": 2 },
+    { "source": "sim", "policyId": "cautious", "kind": "quest-step", "id": "breakwater-line/1", "runs": 1, "count": 1, "cleared": 0 },
+    { "source": "sim", "policyId": "cautious", "kind": "enemy", "id": "gutter-wretch", "runs": 2, "count": 2, "cleared": 1 },
+    { "source": "sim", "policyId": "cautious", "kind": "hazard", "id": "h-1", "runs": 1, "count": 1, "cleared": 1 },
+    { "source": "sim", "policyId": "cautious", "kind": "item", "id": "relic-a", "runs": 1, "count": 1, "cleared": null }
+  ]
+}

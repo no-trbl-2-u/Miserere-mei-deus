@@ -309,6 +309,11 @@ function presentationCategory(item: Item): InventoryCategory {
     return 'material';
 }
 
+/** The satchel's slot label for an equipment kind (`Weapon`, `Armor`, `Relic`). */
+export function slotSubLabel(slot: Equipment['slot']): string {
+    return SLOT_LABELS[slot];
+}
+
 function subFor(item: Item): string | null {
     if (isEquipment(item)) return SLOT_LABELS[item.slot] ?? null;
     return null;
