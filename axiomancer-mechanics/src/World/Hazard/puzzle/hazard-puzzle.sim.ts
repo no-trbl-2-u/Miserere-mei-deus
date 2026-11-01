@@ -11,7 +11,7 @@
  *
  * `buildHazardPuzzleCurve` plays every candidate on its graded route with
  * both bots and ranks them easiest to hardest by the mean of the two win
- * rates. It is a rough measurement (D57), not a gated baseline. The
+ * rates. It is a rough measurement, not a gated baseline. The
  * solver's exhaustive numbers ride beside the score as a cross-check.
  */
 
