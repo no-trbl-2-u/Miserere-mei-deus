@@ -99,3 +99,19 @@ export const HAZARD_PUZZLE_CLOCK_SECONDS: Readonly<Record<HazardPuzzleBand, numb
     medium: 75,
     hard: 60,
 });
+
+/**
+ * The bot sim (HP6a): the difficulty curve over the candidates. The seed is
+ * a named constant so the committed report and the Breakwater table test
+ * (HP6b) agree. The score is the mean of the two bots' win rates.
+ */
+export const HAZARD_PUZZLE_SIM = Object.freeze({
+    /** The seed the committed report and the table test run at. */
+    seed: 1031,
+    /** Plays per bot per candidate. */
+    plays: 1000,
+    /** Most moves a bot makes before it confirms. */
+    moveCap: 40,
+    /** Chance the noisy-greedy bot plays a uniform random legal move instead of its best. */
+    noise: 0.15,
+});

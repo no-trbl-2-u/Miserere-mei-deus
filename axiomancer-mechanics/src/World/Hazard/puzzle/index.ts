@@ -105,3 +105,20 @@ export {
     PUZZLE_ATTEMPTS_PATH, PUZZLE_ATTEMPT_BANDS, PUZZLE_ATTEMPT_END_KINDS, PUZZLE_ATTEMPT_LIMITS,
     PUZZLE_ATTEMPT_MOVE_KINDS, PUZZLE_ATTEMPT_ROUTES, validatePuzzleAttemptPost,
 } from './hazard-puzzle.attempt-contract';
+
+export { hazardPuzzleLegalMoves } from './hazard-puzzle.legal-moves';
+
+export type {
+    HazardPuzzleBotKind, HazardPuzzleCurve, HazardPuzzleCurveOptions, HazardPuzzleCurveRow, HazardPuzzleSimRng,
+} from './hazard-puzzle.sim';
+export {
+    HAZARD_PUZZLE_BOTS,
+    buildHazardPuzzleCurve,
+    compareHazardPuzzleCurveRows,
+    hazardPuzzleShortfall,
+    hazardPuzzleSimRng,
+    playHazardPuzzleBot,
+    simulateHazardPuzzle,
+} from './hazard-puzzle.sim';
+export { formatHazardPuzzleCurve, hazardPuzzleCurveBar } from './hazard-puzzle.curve-report';
+export { HAZARD_PUZZLE_SIM } from './hazard-puzzle.tuning';

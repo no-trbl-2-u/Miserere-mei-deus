@@ -513,6 +513,15 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   cards, on a worse copy: a card no win stages in any demo that holds it, or
   one a pool card beats in every demo that holds it (at least as many
   winning outcomes everywhere, more in one: `hazardPuzzleDominatedCards`).
+  `npm run puzzle:sim -w axiomancer-mechanics` (HP6a) plays every candidate
+  on its graded route with two seeded bots, `random` and `noisy-greedy`
+  (1000 plays each by default; `--plays N`), through the session's move
+  functions and `hazardPuzzleLegalMoves`, the move generator the solver's
+  walk shares. It ranks the candidates easiest first by the mean of the two
+  win rates in `docs/reports/hazard-puzzle-curve.md`, with the solver's
+  winning lines and first-play share beside the score. The seed is
+  `HAZARD_PUZZLE_SIM.seed`; the curve is a rough measurement (D57), not a
+  gated baseline.
   Card values are signed: a negative
   number is a cost, on either line or both, and a meter can go below 0. The
   engine also has two utilities only the cost cards carry: `gainDie` (temporary
