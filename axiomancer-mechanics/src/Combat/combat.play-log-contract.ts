@@ -30,7 +30,7 @@ export const PLAY_LOG_DECK_EVENTS_PATH = '/v1/deck-events';
 export const COMBAT_EVENT_KINDS = [
     'dice-rolled', 'turn-dice-rolled', 'turn-law-blocked', 'conviction-gained', 'signature-cast',
     'card-played', 'effect-landed', 'effect-fizzled', 'damage-dealt', 'vitae-sacrificed', 'player-healed',
-    'global-entered', 'global-left', 'card-exiled', 'curse-added', 'die-refreshed', 'die-spent', 'dot-tick',
+    'global-entered', 'global-left', 'equipment-fired', 'card-exiled', 'curse-added', 'die-refreshed', 'die-spent', 'dot-tick',
     'weather-changed', 'blizzard-softened', 'spikes-changed', 'spike-struck',
     'radiance-struck', 'mercy-added', 'mercy-ticked', 'mercy-burst', 'cards-discarded', 'cards-retrieved', 'card-unexiled',
     'barrier-absorbed', 'riposte-fired', 'die-banked', 'die-ripened', 'resonance-gained', 'pips-cashed',

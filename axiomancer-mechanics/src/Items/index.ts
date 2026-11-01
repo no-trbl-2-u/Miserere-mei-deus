@@ -1,6 +1,8 @@
 export {
     type Item, type Equipment, type Consumable, type Material, type QuestItem,
     type EquipmentSlot,
+    type EquipmentEffect, type EquipmentTriggerEffect, type EquipmentConditionEffect,
+    type EquipmentTrigger, type EquipmentCondition, type EquipmentPayoff, type EquipmentPayoffKind,
     SLOT_CAPACITY,
     isEquipment, isConsumable, isMaterial, isQuestItem,
 } from './types';
