@@ -1,0 +1,104 @@
+{
+  "what": "the 2026-11-01 dry run of the dev CLI at nexus f63295d: march.yml conflicts, two cloud scripts are taken",
+  "report": {
+    "files": [
+      {
+        "path": ".github/workflows/march.yml",
+        "status": "conflict, left as ours",
+        "note": "1 conflicting hunk; no assisted merge (--no-assist)"
+      },
+      {
+        "path": "plan/nexus.lock",
+        "status": "ref moved",
+        "note": "51b70f4d2125272bf4a66e080660c521fde13233 -> f63295db814e (2.0.0+f63295d); its comments kept"
+      },
+      {
+        "path": "scripts/cloud/cadence.mjs",
+        "status": "replaced",
+        "note": "untouched since the ref"
+      },
+      {
+        "path": "scripts/cloud/chain.mjs",
+        "status": "replaced",
+        "note": "untouched since the ref"
+      },
+      {
+        "path": "skills/iterate.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/march.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/vault.md",
+        "status": "kept-custom",
+        "note": "a skill the kit does not ship: never touched"
+      }
+    ],
+    "warnings": [
+      ".github/workflows/march.yml: 1 conflicting hunk between the kit's change and the repo's own; left as the repo's (no assisted merge (--no-assist)): merge it by hand"
+    ],
+    "gate": [
+      {
+        "name": "plan-check",
+        "ok": true
+      }
+    ],
+    "sync": {
+      "from": {
+        "ref": "51b70f4d2125272bf4a66e080660c521fde13233",
+        "sha": "51b70f4d2125272bf4a66e080660c521fde13233"
+      },
+      "to": {
+        "ref": "f63295db814e964f787dbb66b0e5d60004bae51f",
+        "version": "2.0.0+f63295d"
+      },
+      "counts": {
+        "replaced": 2,
+        "merged": 0,
+        "assisted": 0,
+        "new": 0,
+        "kept": 25,
+        "same": 91,
+        "held": 0,
+        "available": 50
+      },
+      "assisted": []
+    },
+    "available": []
+  },
+  "commits": [
+    {
+      "sha": "fc23654aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "fix: a tick lost to background work retries even when no chunk is ready",
+      "files": [
+        "templates/scripts/cloud/chain.mjs"
+      ]
+    },
+    {
+      "sha": "1bbc3e4aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "fix: cadence reads and rewrites a cron line that carries a trailing comment",
+      "files": [
+        "templates/scripts/cloud/cadence.mjs"
+      ]
+    },
+    {
+      "sha": "faaffa8aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "fix: chained, retried and nudged ticks reach the model -- march lets the github-actions bot through",
+      "files": [
+        "templates/.github/workflows/march.yml"
+      ]
+    },
+    {
+      "sha": "f63295db814e964f787dbb66b0e5d60004bae51f",
+      "subject": "docs: nexus-explained.html -- animated diagrams of the loop",
+      "files": [
+        "nexus-explained.html"
+      ]
+    }
+  ],
+  "texts": {}
+}

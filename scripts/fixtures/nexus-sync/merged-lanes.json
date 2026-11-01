@@ -1,0 +1,96 @@
+{
+  "what": "nexus changes skills/march.md, which merges three-way around our lanes; the kit adds its own copy of a script we already have",
+  "report": {
+    "files": [
+      {
+        "path": "scripts/notify.mjs",
+        "status": "kept-custom",
+        "note": "the kit added its own scripts/notify.mjs since 51b70f4d2125272bf4a66e080660c521fde13233; the repo's is kept"
+      },
+      {
+        "path": "plan/nexus.lock",
+        "status": "ref moved",
+        "note": "51b70f4d2125272bf4a66e080660c521fde13233 -> f63295db814e (2.0.0+f63295d); its comments kept"
+      },
+      {
+        "path": "skills/march.md",
+        "status": "merged",
+        "note": "three-way, clean"
+      },
+      {
+        "path": "scripts/plan/order.mjs",
+        "status": "new",
+        "note": "new since 51b70f4d2125272bf4a66e080660c521fde13233"
+      },
+      {
+        "path": "skills/iterate.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/march.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/vault.md",
+        "status": "kept-custom",
+        "note": "a skill the kit does not ship: never touched"
+      }
+    ],
+    "warnings": [
+      "scripts/notify.mjs: the kit now ships a file of this name (new since ...); the repo's own is kept: compare them by hand"
+    ],
+    "gate": [
+      {
+        "name": "plan-check",
+        "ok": true
+      }
+    ],
+    "sync": {
+      "from": {
+        "ref": "51b70f4d2125272bf4a66e080660c521fde13233",
+        "sha": "51b70f4d2125272bf4a66e080660c521fde13233"
+      },
+      "to": {
+        "ref": "f63295db814e964f787dbb66b0e5d60004bae51f",
+        "version": "2.0.0+f63295d"
+      },
+      "counts": {
+        "replaced": 0,
+        "merged": 1,
+        "assisted": 0,
+        "new": 1,
+        "kept": 26,
+        "same": 90,
+        "held": 0,
+        "available": 0
+      },
+      "assisted": []
+    },
+    "available": []
+  },
+  "commits": [
+    {
+      "sha": "def5678aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "feat: march picks an asap chunk before a pre lane",
+      "files": [
+        "templates/skills/march.md",
+        "templates/scripts/plan/order.mjs"
+      ]
+    },
+    {
+      "sha": "0123456aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "feat: notify pages on a held chunk",
+      "files": [
+        "templates/scripts/notify.mjs"
+      ]
+    }
+  ],
+  "texts": {
+    "templates/skills/march.md": {
+      "before": "---\nname: march\ndescription: Kit dispatcher, triage then critique then chunk.\n---\n",
+      "after": "---\nname: march\ndescription: Kit dispatcher, asap chunks first, then triage and critique.\n---\n"
+    }
+  }
+}

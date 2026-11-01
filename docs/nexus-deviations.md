@@ -266,3 +266,44 @@ finishes the row.
 | deadlines, NEEDS_T, DevLog, part plans, `card-ledger/` | KEEP | unchanged; aliases resolve through `deadlines-lib.mjs` (NX1c) | kept |
 | `[blocked: owner-led]`, `(attended)` rows (R2) | TAKE | Held lines in `plan/README.md` with `since`/`until`/`max_age` | carried |
 | the ten `[-]` rows (R7) | archive as dropped | `plan/ARCHIVE.md` dropped lines; one `plan/AUDIT.md` row for the carry-overs | carried |
+
+---
+
+## How a sync reads this map
+
+Every Monday at 14:00 UTC (and by hand) `.github/workflows/nexus-sync.yml`
+runs `npx @usenexus/cli upgrade --pr --no-assist` (phase NX1h, R13). The CLI
+three-way merges each kit file: the kit at `plan/nexus.lock`'s `ref:`, the
+kit now, and our copy. A file we never touched is taken as nexus wrote it; a
+file we changed and nexus changed merges cleanly or conflicts; a conflict is
+kept as ours and listed (`--no-assist`: no helper model writes our files).
+The lanes files (`skills/march.lanes.md`, `skills/iterate.lanes.md`), our own
+skills and the `<!-- miserere:local -->` block in `skills/next/land.md` are
+never touched. The CLI opens one PR from `nexus/upgrade-<version>`, or
+updates the open one, and only T merges it: the merge job holds the
+`nexus-sync` label, that head branch and the `plan: sync to nexus` title
+(`scripts/pr-policy.mjs`).
+
+`scripts/nexus-sync-body.mjs` then writes the PR's body, and this map is one
+of its inputs:
+
+- **The file table** names, for each file the sync touches, the row here it
+  touches: the § Carried row whose "Lives now" cell names the file, else the
+  first row in the tables above whose first cell names it. A file with no row
+  is one this map does not speak for.
+- **What we are not getting** lists each conflict (and each file the kit now
+  ships that we keep our own of) with that row as the reason it stays ours.
+  T then takes nexus's version (resolve the conflict on the sync branch) or
+  keeps ours and records it here, in § Carried, so the next sync reads the
+  same answer.
+- **A change to nexus's `/heads-down`** (`templates/skills/heads-down.md`,
+  `templates/scripts/ledger.mjs` or its command) puts the callout first, per
+  R5: "nexus changed /heads-down: walk the diff with T and bring /pilot up to
+  date". It names the changed sections (`§3 Step 4`, `hard rule 5`) and the
+  `/pilot` parts that track them, from `skills/pilot.md` § "Where each part
+  comes from"; without that table it says to read the diff against all of
+  `/pilot`.
+
+So keep this map current when a sync is merged: a conflict T keeps as ours
+gets a § Carried row, and a row whose file nexus has now caught up with is
+moved to TAKE.

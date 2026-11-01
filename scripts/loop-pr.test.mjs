@@ -1098,6 +1098,55 @@ test('the mutation job never fails a check and runs Stryker with no token in rea
   assert.deepEqual(withToken.map((s) => s.split('\n')[0]), ['Post the score and survivors'])
 })
 
+// --- the weekly nexus sync: one PR only T merges (phase NX1h, A12) ------------
+
+const sync = read(`${WF}/nexus-sync.yml`).replace(/\r\n/g, '\n')
+
+test('nexus-sync runs the CLI weekly (Mondays 14:00 UTC) and by hand, with --pr --no-assist, on GH_PAT || github.token', () => {
+  assert.match(sync, /schedule:\n\s+- cron: '0 14 \* \* 1'\n\s+workflow_dispatch:/)
+  assert.match(code(sync), /npx --yes @usenexus\/cli@latest upgrade --pr --no-assist --json/)
+  assert.match(code(sync), /GH_TOKEN: \$\{\{ secrets\.GH_PAT \|\| github\.token \}\}/)
+  assert.match(sync, /concurrency:\n\s+group: nexus-sync\n\s+cancel-in-progress: false/, 'its own group, never nexus-loop')
+  assert.match(code(sync), /node scripts\/nexus-sync-body\.mjs --report/, 'the body is written by the body script')
+})
+
+test('nexus-sync labels its PR nexus-sync, never loop:pr, and merges nothing', () => {
+  assert.match(code(sync), /gh pr edit "\$PR" --body-file "\$RUNNER_TEMP\/body\.md" --add-label nexus-sync/)
+  assert.doesNotMatch(code(sync), /loop:pr|gh pr merge|--auto(?![\w-])|git push/)
+})
+
+test('the merge decision holds a nexus-sync PR: the label, the CLI\'s head branch or its title', async () => {
+  const { SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, mergeWanted } = await import('./pr-merge.mjs')
+  assert.equal(SYNC_LABEL, 'nexus-sync')
+  const { headMarker } = await import('./pr-review.mjs')
+  const head = 'c'.repeat(40)
+  const pass = { body: `<!-- pr-review:verdict pass -->\n${headMarker(head)}`, createdAt: '2026-11-02T01:00:00Z', author: 'no-trbl-2-u' }
+  const base = { state: 'OPEN', isDraft: false, isCrossRepository: false, labels: [], title: 't', headRefName: 'loop/next-NX1h', head, mergeStateStatus: 'CLEAN', checks: [{ name: 'verify-gate', conclusion: 'success', headSha: head }], comments: [pass], since: '2026-11-02T00:00:00Z' }
+  assert.equal(mergeWanted(base).go, true)
+  assert.match(mergeWanted({ ...base, labels: ['nexus-sync'] }).reason, /only T merges a nexus sync/)
+  assert.match(mergeWanted({ ...base, headRefName: 'nexus/upgrade-2.1.0' }).reason, /only T merges a nexus sync/)
+  assert.match(mergeWanted({ ...base, title: 'plan: sync to nexus 2.1.0' }).reason, /only T merges a nexus sync/)
+  assert.ok(SYNC_HEAD.test('nexus/upgrade-v2') && SYNC_TITLE.test('plan: sync to nexus 2.1.0'))
+  // The merge job reads the head branch, so the hold works before the label lands.
+  assert.match(read('scripts/pr-merge.mjs'), /headRefName: view\.headRefName/)
+})
+
+test('nothing else merges a nexus-sync PR: pr-autofix and pr-resolve act on loop:pr and plot only; no skill or command runs a merge', async () => {
+  const { RESOLVE_LABELS } = await import('./pr-resolve.mjs')
+  assert.ok(!RESOLVE_LABELS.includes('nexus-sync'), 'pr-resolve never picks it up')
+  assert.match(code(autofix), /\.name == "loop:pr"/, 'pr-autofix fixes loop:pr PRs only')
+  for (const dir of ['skills', 'skills/next', '.claude/commands']) {
+    for (const f of fs.readdirSync(path.join(ROOT, dir)).filter((f) => f.endsWith('.md'))) {
+      const blocks = (read(`${dir}/${f}`).match(/```[\s\S]*?```/g) ?? []).join('\n')
+      assert.doesNotMatch(blocks, /gh pr merge|--auto(?![\w-])/, `${dir}/${f} runs no merge`)
+    }
+  }
+  for (const f of fs.readdirSync(path.join(ROOT, 'scripts')).filter((f) => f.endsWith('.mjs') && !f.endsWith('.test.mjs'))) {
+    if (f === 'pr-merge.mjs') continue
+    assert.doesNotMatch(code(read(`scripts/${f}`)).replace(/^\s*\*.*$/gm, ''), /\['pr', 'merge'|'pr',\s*'merge'|gh pr merge/, `scripts/${f} merges no PR`)
+  }
+})
+
 // --- the loop workflows on v2's steps (phase NX1f, A10) ----------------------
 
 const loopWf = (name) => read(`${WF}/${name}`)

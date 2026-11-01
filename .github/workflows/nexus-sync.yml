@@ -1,0 +1,117 @@
+name: nexus-sync
+
+# The weekly nexus sync (phase NX1h, A12, A14; ruling R13). Nexus is never
+# edited: the kit comes in through its CLI. `npx @usenexus/cli upgrade --pr
+# --no-assist` three-way merges every kit file against the kit at
+# plan/nexus.lock's `ref:` (the kit then, the kit now, ours), keeps a
+# conflicting file as ours and lists it (no helper model), and opens one PR
+# from `nexus/upgrade-<version>`, or updates the open one in place. With
+# nothing to sync it opens nothing; with its gate red it opens nothing either.
+#
+# Only T merges that PR. This run labels it `nexus-sync`, and the merge job
+# (`scripts/pr-merge.mjs`, `SYNC_LABEL` / `SYNC_HEAD` / `SYNC_TITLE` in
+# `scripts/pr-policy.mjs`) holds it on the label, the `nexus/upgrade-*` head
+# or the `plan: sync to nexus` title, so a PR the label has not reached yet is
+# held all the same. It never carries `loop:pr`, so pr-autofix and pr-resolve
+# never touch it; `scripts/loop-pr.test.mjs` pins all of it. Nothing here
+# merges anything.
+#
+# The body is rewritten by `scripts/nexus-sync-body.mjs` from the CLI's JSON
+# report and a full clone of nexus (the commits between the two refs): what
+# nexus is giving us, the diagram, the file table, before/after, what we are
+# not getting, and, first, any change to nexus's heads-down skill (R5: T and
+# a session bring our orchestrator up to date). The same body goes to the run summary,
+# so a run that opened nothing still shows what it found.
+#
+# Token: `GH_PAT || github.token`, as pr-resolve.yml. The CLI pushes a branch
+# and opens a PR; with the fallback token that PR starts no `verify-*` run.
+# Set `GH_PAT` (repo + workflow scopes) so the sync PR is gated like any PR.
+#
+# Turning this on is T's: the PR that adds this file changes the merge
+# decision, so T merges it, and the schedule starts with that merge (the
+# first run is the next Monday, or T's dispatch). `gh workflow disable
+# nexus-sync` pauses it.
+
+on:
+  schedule:
+    - cron: '0 14 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: nexus-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # The CLI runs the repo's own verify in its worktree (npm run verify: both
+    # workspaces), up to 15 minutes a gate step.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          # The CLI pushes `nexus/upgrade-<version>` with these credentials.
+          token: ${{ secrets.GH_PAT || github.token }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # The sync's gate runs in a worktree of origin that links these
+      # node_modules (the CLI's linkDeps); without them `npm run verify` is red.
+      - name: Install
+        run: npm ci
+
+      # Full history: the body reads the commits between the two refs, and the
+      # CLI reads the kit at the lock's ref from it (NEXUS_KIT_REPO) instead of
+      # its shallow blobless fetch.
+      - name: Clone nexus
+        run: git clone --quiet https://github.com/daretodave/nexus.git "$RUNNER_TEMP/nexus"
+
+      - name: Sync (opens or updates the PR, or nothing)
+        id: sync
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          GIT_AUTHOR_NAME: claude[bot]
+          GIT_AUTHOR_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: claude[bot]
+          GIT_COMMITTER_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+        run: |
+          export NEXUS_KIT_REPO="$RUNNER_TEMP/nexus"
+          set +e
+          npx --yes @usenexus/cli@latest upgrade --pr --no-assist --json > "$RUNNER_TEMP/sync.json"
+          code=$?
+          set -e
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          node -e 'const r = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")); const p = r.pr || {}; console.log(`exit ${r.code}; pr: ${p.status || "none"} ${p.number || ""} ${p.why || p.error || ""}; ${r.message || r.error || ""}`); if (p.ok && p.number) require("fs").appendFileSync(process.env.GITHUB_OUTPUT, `pr=${p.number}\n`)' "$RUNNER_TEMP/sync.json" || echo "the CLI wrote no JSON report"
+
+      - name: Write the body
+        if: always()
+        run: |
+          node scripts/nexus-sync-body.mjs --report "$RUNNER_TEMP/sync.json" --kit "$RUNNER_TEMP/nexus" --out "$RUNNER_TEMP/body.md" --run "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          cat "$RUNNER_TEMP/body.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Label the PR nexus-sync and put the body on it
+        if: steps.sync.outputs.pr != ''
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          PR: ${{ steps.sync.outputs.pr }}
+        run: |
+          gh label create nexus-sync --color B60205 --description "Weekly nexus sync: only T merges it" 2>/dev/null || true
+          gh pr edit "$PR" --body-file "$RUNNER_TEMP/body.md" --add-label nexus-sync
+
+      - name: Fail loudly when the CLI did
+        if: steps.sync.outputs.code != '0'
+        env:
+          CODE: ${{ steps.sync.outputs.code }}
+        run: |
+          echo "::error::nexus upgrade exited $CODE: no sync PR was opened or updated. The run summary has the report (a red gate lists its rows)."
+          exit 1

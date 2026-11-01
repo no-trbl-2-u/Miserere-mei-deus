@@ -1,0 +1,83 @@
+{
+  "what": "nexus changes skills/heads-down.md (Step 4 and hard rule 5) and scripts/ledger.mjs",
+  "report": {
+    "files": [
+      {
+        "path": "plan/nexus.lock",
+        "status": "ref moved",
+        "note": "51b70f4d2125272bf4a66e080660c521fde13233 -> f63295db814e (2.0.0+f63295d); its comments kept"
+      },
+      {
+        "path": "skills/heads-down.md",
+        "status": "replaced",
+        "note": "untouched since the ref"
+      },
+      {
+        "path": "scripts/ledger.mjs",
+        "status": "replaced",
+        "note": "untouched since the ref"
+      },
+      {
+        "path": "skills/iterate.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/march.lanes.md",
+        "status": "kept-custom",
+        "note": "lanes file: never touched"
+      },
+      {
+        "path": "skills/vault.md",
+        "status": "kept-custom",
+        "note": "a skill the kit does not ship: never touched"
+      }
+    ],
+    "warnings": [],
+    "gate": [
+      {
+        "name": "plan-check",
+        "ok": true
+      }
+    ],
+    "sync": {
+      "from": {
+        "ref": "51b70f4d2125272bf4a66e080660c521fde13233",
+        "sha": "51b70f4d2125272bf4a66e080660c521fde13233"
+      },
+      "to": {
+        "ref": "f63295db814e964f787dbb66b0e5d60004bae51f",
+        "version": "2.0.0+f63295d"
+      },
+      "counts": {
+        "replaced": 2,
+        "merged": 0,
+        "assisted": 0,
+        "new": 0,
+        "kept": 25,
+        "same": 91,
+        "held": 0,
+        "available": 0
+      },
+      "assisted": []
+    },
+    "available": []
+  },
+  "commits": [
+    {
+      "sha": "abc1234aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "subject": "feat: heads-down prints progress after every chunk -- a stale ledger beat is resumed",
+      "files": [
+        "templates/skills/heads-down.md",
+        "templates/scripts/ledger.mjs"
+      ]
+    }
+  ],
+  "texts": {
+    "templates/skills/heads-down.md": {
+      "before": "# Skill: heads-down\n\n## 1. Purpose\nAsk up front.\n\n## 3. Procedure\n\n### Step 1 — Who and what\nRead origin.\n\n### Step 4 — Start the loop\nLoop /next.\n\n## 4. Hard rules\n\n1. Questions only at the two gates.\n5. Every step beats the ledger.\n",
+      "after": "# Skill: heads-down\n\n## 1. Purpose\nAsk up front.\n\n## 3. Procedure\n\n### Step 1 — Who and what\nRead origin.\n\n### Step 4 — Start the loop\nLoop /next; print progress after every chunk.\n\n## 4. Hard rules\n\n1. Questions only at the two gates.\n5. Every step beats the ledger, and a stale beat is resumed.\n"
+    }
+  },
+  "pilot": "# Skill: pilot\n\n## 6. Where each part comes from (read at every nexus sync)\n\n| Part of `/pilot` | From | nexus `/heads-down` section it tracks |\n|---|---|---|\n| The plan read from origin, never the primary checkout | nexus | §3 Step 1.2, hard rule 2 |\n| `progress.mjs` printed at the gate, at each wave and at the end | nexus | §3 Step 4, \"Print progress\" |\n| The ledger (`scripts/ledger.mjs`), beaten at every step | nexus | §3 Step 4, hard rule 5 |\n| Waves cut from the chunks' `needs` | ours | none (nexus loops serially) |\n"
+}
