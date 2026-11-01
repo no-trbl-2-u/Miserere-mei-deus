@@ -1861,6 +1861,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/run-sim/player-witness.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.archetypes.ts"
     },
     {
@@ -1874,12 +1880,6 @@
       "from": "area:Game",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.types.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Game",
-      "to": "area:Combat",
-      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.wanderer.ts"
     },
     {
       "kind": "coupling",
@@ -2371,6 +2371,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/World/chapter1-content.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/World/elite-respawn.ts"
     },
     {
@@ -2498,6 +2504,12 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/breakwater-chapter.questline.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/chapter1-content.ts"
     },
     {
       "kind": "coupling",
