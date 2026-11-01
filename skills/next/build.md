@@ -19,6 +19,10 @@ node scripts/worktree.mjs cut ../<PROJECT_LOWER>-wt/<id> --ref origin/<DEFAULT_B
 node scripts/worktree.mjs cut ../<PROJECT_LOWER>-wt/pkg-<slug> --ref origin/<DEFAULT_BRANCH> --branch pkg/<slug>
 ```
 
+<!-- miserere:local -->
+- **Miserere:** always the contributor line, with `--branch
+  loop/next-<id>` (`next/land.md`'s local block).
+<!-- /miserere:local -->
 - Install dependencies in the worktree if the gate needs them.
 - `base <b>`: cut from `origin/<b>` instead; land onto `<b>`.
 - A worktree already named for the pick: a live process or

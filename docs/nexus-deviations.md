@@ -228,7 +228,7 @@ finishes the row.
 
 | Map row | Verdict | Lives now | State |
 |---|---|---|---|
-| march: landing split by path | MERGE | `skills/march.lanes.md` notes "Landing a change"; `plan/bearings.md` `Landing: pr` | carried as notes; v2's land step adapted in NX1e |
+| march: landing split by path | MERGE | `skills/next/land.md` marked local block (`<!-- miserere:local -->`, a sync keeps it) pointing at `skills/march.lanes.md` notes "Landing a change"; `scripts/loop-land.mjs` (branch `loop/next-<id>`, labels, the cap); `scripts/pr-settle.mjs` (the merge job settles `plan/pending/` on main, called from `pr-resolve.mjs scan` and `pr-merge.mjs settle`); `plan/bearings.md` `Landing: pr` | adapted in NX1e: v2's contributor path plus our labels and settle-on-merge; the path split ended (D119) |
 | march: PR cap (D85) | KEEP | `skills/march.lanes.md` lane `pr-cap` (pre, end-tick) | carried |
 | march: 7d+ / stuck PRs / NEEDS_T every tick | KEEP | `skills/march.lanes.md` lane `pr-watch` (pre, continue) | carried |
 | march: size, area, review labels; PR body | KEEP | `skills/march.lanes.md` notes "Landing a change" (labels, Body template) | carried |
@@ -237,7 +237,8 @@ finishes the row.
 | march: gate distances on first-parent history | MERGE | `skills/march.lanes.md` notes "Gate distances (first-parent)" | carried as notes |
 | march: report sweep (RS1) | KEEP | `skills/march.lanes.md` lane `report-sweep` (pre, continue) | carried; now runs before triage, not after |
 | march: the loop never writes a brief | KEEP | `plan/bearings.md` `Promote: owner` | carried |
-| ship-a-phase: deadlines rewrite on close (DL1b) | KEEP | `skills/march.lanes.md` notes "Shipping a chunk", Step 11 | carried until NX1e folds it into the close |
+| ship-a-phase: deadlines rewrite on close (DL1b) | KEEP | `skills/march.lanes.md` notes "Shipping a chunk", Step 11 (the pending close and `deadlines.mjs --write` in one commit); the deadline tools read `plan/pending/` closes as done (`check-deadlines.mjs` `readPlanSources`, NX1e) | folded into the close (NX1e) |
+| plan/pending/ (v2) | TAKE | `plan/pending/README.md` (the kit's text); settle's archive line reshaped to ours, `(alias: …)` and `(#PR)`, by `scripts/pr-settle.mjs`; no footgun list, decisions or notes in a Miserere pending file (`skills/march.lanes.md` notes) | taken in NX1e |
 | ship-a-phase / plan-a-phase rules (truth sources, canon, playtests, verify, save, calls left open, D-numbers) | KEEP / MERGE | `AGENTS.md` § Building a phase; `identity/principles.md` P1-P3 (NX1c) | carried; both skills retired |
 | plot: `plot` PR T merges, the body, `@claude` answers, merge = agreement | KEEP | `skills/plot.md` §7.1, 7.3-7.5 (kit text above it) | carried |
 | plot: every new chunk gets a deadlines home | KEEP | `skills/plot.md` §7.2 (aliases, Held lines, the reconcile) | carried |

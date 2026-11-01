@@ -465,3 +465,4 @@
 - 2026-09-10 · 315.1 (alias: W6) · The Capital · f56fa198
 - 2026-10-31 · 113.4 (alias: SM1d) · The app posts the whole run · (this commit)
 - 2026-11-01 · 113.7 (alias: SM1g) · The bot posts its own data · 9ec80f5b4 (#1275)
+- 2026-11-01 · 133.5 (alias: NX1e) · Loop PRs land; pending files settle on merge · 3e238c69b (#1284)

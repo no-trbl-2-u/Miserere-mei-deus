@@ -16,6 +16,7 @@
 //   node scripts/pr-merge.mjs audit --pr <n> --head <sha> --run <id>        # prints the audit comment the job posts
 //   node scripts/pr-merge.mjs since --run <id>                               # writes since=<ISO> (this run's review start) to $GITHUB_OUTPUT
 //   node scripts/pr-merge.mjs tree --pr <n> --head <sha>                     # after a go: lints the merged tree, updates the branch once when red; writes go, reason
+//   node scripts/pr-merge.mjs settle [--dry-run]                             # after a merge: settles main's plan/pending/ files (scripts/pr-settle.mjs)
 //
 // Holds, each a tested line of `mergeWanted`:
 //   - the kill switch: repository variable PR_AUTO_MERGE=off, or the label `no-auto-merge`
@@ -39,6 +40,10 @@
 // kill switch, plot PRs and pipeline PRs never reach it and it adds no hold to a PR
 // they already hold; see `treeVerdict`.
 //
+// Once a PR merges, its plan/pending/ files settle on main (phase NX1e): `pr-resolve.yml`'s scan,
+// which runs on that push, calls `settleMain` (scripts/pr-settle.mjs) before it scans, and the
+// `settle` mode below runs the same by hand. The decision above never waits on it.
+//
 // `mergeWanted` is pure; only `main` reads GitHub. The merge job checks out
 // `main`'s copy of this file, so a PR cannot rewrite the decision that merges it.
 
@@ -51,6 +56,7 @@ import { fileURLToPath } from 'node:url'
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { updateBranchIsolated } from './pr-resolve.mjs'
+import { settleMain } from './pr-settle.mjs'
 import { markedHeads } from './pr-review.mjs'
 
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
@@ -370,6 +376,12 @@ async function main() {
   const ok = /^\d+$/.test(pr ?? '') && /^[0-9a-f]{40}$/.test(head ?? '')
   if (mode === 'audit' && ok && arg('--run')) return console.log(auditComment({ pr, head, run: arg('--run') }))
   if (mode === 'tree' && ok) return treeCheckSafe(repo, pr, head)
+  if (mode === 'settle') {
+    const r = settleMain({ dryRun: process.argv.includes('--dry-run') })
+    console.log(r.state === 'settled' ? `pr-merge settle: ${r.ids.join(', ')}` : r.state === 'nothing' ? 'pr-merge settle: nothing pending' : `::warning::pr-merge settle: ${r.reason}`)
+    process.exitCode = r.state === 'refused' ? 1 : r.state === 'lost' ? 3 : 0
+    return
+  }
   if (mode === 'since' && /^\d+$/.test(arg('--run') ?? '')) {
     const run = arg('--run')
     const jobs = JSON.parse(gh(['api', `repos/${repo}/actions/runs/${run}/jobs`])).jobs ?? []
@@ -380,7 +392,7 @@ async function main() {
     return
   }
   if (mode !== 'decide' || !ok || !since) {
-    console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id> | tree --pr <n> --head <sha>')
+    console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id> | tree --pr <n> --head <sha> | settle [--dry-run]')
     process.exit(2)
   }
   let view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,mergeStateStatus,comments,files']))
