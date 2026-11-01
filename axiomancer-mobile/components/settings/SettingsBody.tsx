@@ -37,7 +37,9 @@ import {
 } from '@/state/presenters/settings.engine';
 import { useSettings, useSettingsStore } from '@/state/settings';
 import { FONTS } from '@/theme/axm';
+import { DEFAULT_THEME_ID } from '@/theme/palette';
 import { makeStyles, usePalette } from '@/theme/runtime';
+import { setActiveTheme } from '@/theme/theme-switch';
 
 export interface SettingsBodyProps {
     /** The close control: on for the `/settings` route, off in the SETTINGS tab. */
@@ -197,7 +199,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                 body={SETTINGS_COPY.resetSettingsBody}
                 confirmLabel={SETTINGS_COPY.resetSettingsConfirm}
                 cancelLabel={SETTINGS_COPY.cancel}
-                onConfirm={() => { settingsStore.reset(); setConfirmReset(false); }}
+                onConfirm={() => { settingsStore.reset(); setActiveTheme(DEFAULT_THEME_ID); setConfirmReset(false); }}
                 onCancel={() => setConfirmReset(false)}
                 testID="settings-reset-confirm"
             />

@@ -13,6 +13,8 @@ import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { DEFAULT_SETTINGS, createSettingsStore } from '@/state/settings';
 import { createAppStore } from '@/state/store';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+import { DEFAULT_THEME_ID } from '@/theme/palette';
+import { getActiveThemeId, setActiveTheme } from '@/theme/runtime';
 
 const mockReplace = jest.fn();
 const mockBack = jest.fn();
@@ -23,6 +25,7 @@ jest.mock('@/lib/platform/router', () => ({
 
 afterEach(() => {
     jest.clearAllMocks();
+    setActiveTheme(DEFAULT_THEME_ID);
 });
 
 const NO_STORAGE = { getItem: async () => null, setItem: async () => undefined, removeItem: async () => undefined };
@@ -73,6 +76,15 @@ describe('/settings', () => {
         act(() => { fireEvent.press(screen.getByTestId('settings-reset')); });
         act(() => { fireEvent.press(screen.getByTestId('settings-reset-confirm-confirm')); });
         expect(settings.get()).toEqual(DEFAULT_SETTINGS);
+    });
+
+    it('RESET SETTINGS also restores the colour theme, as its body promises', () => {
+        mount(false);
+        act(() => { setActiveTheme('ember-depths'); });
+        expect(getActiveThemeId()).toBe('ember-depths');
+        act(() => { fireEvent.press(screen.getByTestId('settings-reset')); });
+        act(() => { fireEvent.press(screen.getByTestId('settings-reset-confirm-confirm')); });
+        expect(getActiveThemeId()).toBe(DEFAULT_THEME_ID);
     });
 
     it('inside a run: RETURN TO TITLE saves and lands on the menu', async () => {
