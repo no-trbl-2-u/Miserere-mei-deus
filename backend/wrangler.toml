@@ -20,3 +20,8 @@ migrations_dir = "migrations"
 # site and its branch previews (phase BV1a). Not a secret.
 [vars]
 BALLOT_ORIGINS = "https://axiomancer-ballots.pages.dev,https://*.axiomancer-ballots.pages.dev"
+
+# The retention cron (chunk 135.7): 05:17 UTC, after the 03:43 sim batch. It deletes sim and
+# harness rows older than 14 days (src/retention.ts); human rows stay.
+[triggers]
+crons = ["17 5 * * *"]
