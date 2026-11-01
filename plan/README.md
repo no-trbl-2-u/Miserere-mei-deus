@@ -22,7 +22,11 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
-- (none yet)
+- **135.1** · SM2a: the Merciful bot builds its lane (T, `/plot asap`, 2026-11-01)
+- **135.2** · SM2b: a quest's XP logged as the quest's, before the Nov 9 preview APK (T, `/plot asap`, 2026-11-01)
+- **135.3** · SM2c: where the runs end, as a report; the nightly report needs it (T, `/plot asap`, 2026-11-01)
+- **135.4** · SM2d: the nightly sim report (T, `/plot asap`, 2026-11-01)
+- **135.5** · SM2e: bot and harness rows leave D1 after 14 days (T, `/plot asap`, 2026-11-01)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -90,6 +94,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 5 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
+| 135 | The sim follow-ups: a Merciful bot that grows, rows that expire, a nightly report T reads | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 5 left |
 
 ## How the loop reads this folder
 
@@ -210,6 +215,14 @@ path are stated in the two files' own headers;
 Every queue mutation T asks for through another brain (Hermes; `plan/bearings.md`)
 adds a line here in the same commit. The v1 build plan's log, through
 2026-10-31, is in git: `git show fd21d04ab:plan/steps/01_build_plan.md`.
+
+- **2026-11-01** — actor: **T, in session** (`/plot asap`, run unattended on T's word, branch
+  `loop/plot-SM2-sim-followups-v2`). Action: **added spec 135 and chunks 135.1-135.5 (SM2a-SM2e)**, all five on the
+  Asap lane in that order. Confirmed T's request: the follow-up to SM1 in four parts (the Merciful bot kills to grow
+  and spares to play; 14-day retention of `sim` and `harness` rows by a cron on the Worker; a nightly sim report T
+  reads; a fight's quest XP logged as `quest`), with T's answers recorded in the spec as "Confirmed by T
+  (2026-11-01)". Reason: the Merciful and the wanderer die on every seed since BUG1j, so the bots' numbers say
+  nothing yet, and nightly batches add about 8 MB a day to D1. Spec `plan/135-sm2-sim-follow-ups.md`.
 
 - **2026-11-01** — actor: **T, in session** (`/heads-down`, phase NX1d, T's ruling of
   2026-10-31: "cut over now"). Action: **the v1 build plan carried to nexus v2**: every

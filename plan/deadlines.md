@@ -222,7 +222,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -270,6 +270,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
+- SM2a — the Merciful bot builds its lane (SM2); no dated T act waits on it, only T's read of the sim data (SM1i), whose date T has not set
+- SM2c — the `run-ends` report (SM2), which the nightly sim report needs; no dated T act waits on it
+- SM2d — the nightly sim report T reads (SM2); T reads it as it comes, and no dated T act waits on it
+- SM2e — 14-day retention of bot and harness rows (SM2); loop housekeeping, no T act waits on it
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - NX1e — v2's landing after the cut-over; the T act after it, NX1i, has no date yet
@@ -358,6 +362,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-01** — **the sim follow-ups plotted (SM2)** (T, `/plot asap` run unattended on T's word: the Merciful bot kills to grow and spares to play, 14-day retention of bot and harness rows, a nightly sim report, a fight's quest XP logged as `quest`). **Added** SM2b to the `Waits on` of the Mid-MVP check (Nov 9): it fixes the run log of the preview APK T plays then, and reaches T only on a new APK. **Added** SM2a, SM2c, SM2d and SM2e under Unscheduled: no dated T act follows them (T's read of the sim data, SM1i, has no date). SM1i's premise holds (the bots' columns are more telling once SM2a lands, but it needs nothing new); no other Item's premise changes. Nothing ticked; no date moved.
 - **2026-11-01** — **the cut-over to nexus v2 moved up, and the queue carried (NX1d)** (T, 2026-10-31: "cut over now", superseding the drain-to-Nov-11 plan). **Moved** the Item "Cut over to nexus v2" from Nov 11 (W2) to Nov 1 (W1), and its W2 note to a Nov 1 line. Every row id the Items name now resolves from a v2 spec chunk's `alias:` or an `ARCHIVE.md` line's `(alias: …)` (`plan/README.md`); the Status cells are re-derived from them. **Removed** the ten pre-revamp partials (90, 52b, 47c-47e, V2, V3, V6, V7, W5) from Unscheduled: archived as dropped (ruling R7), their live carry-overs filed as one AUDIT row. NX1d is ticked by its own PR; nothing else ticked.
 - **2026-10-31** — **the Breakwater's six hazards picked from a bot-measured curve, plotted (HP6)** (T, attended `/plot`: "run a reasonable amount of simulations of each hazard hidden in the devtools so we can get a rough difficulty curve. Then, pick n ... puzzles to add to the first map"; rulings: story route first, all thirty, the middle third, one puzzle per hazard). **Added** HP6a, HP6b and HP6c to the `Waits on` of the MVP demo (Nov 16), whose run plays puzzle hazards. **Edited** the Nov 3 routing plot (the eleven Act 1 hazard nodes to the other five; the Breakwater's six are HP6), its MVP-schedule row, the W2 note, and the Nov 19 swap (hand-pick the other five, and swap any of HP6's six). Nothing ticked; no date moved.
 - **2026-10-31** — **Miserere onto nexus v2, kept current with it, plotted (NX1)** (T, attended `/plot`, from the deviation map `docs/nexus-deviations.md`: "I would like to update Miserere with the latest of what's in nexus AND determine a means for it to remain up to date"; "Drain to Nov 11"). **Added** the Item "Cut over to nexus v2" on Nov 11 (W2) naming the attended NX1d, waiting on NX1a and NX1c; NX1b and NX1e-NX1i under `## Unscheduled`; a W2 line for the cut-over. The Nov 11 R11 review's premise still holds (v2's decisions log may answer one of the held candidates; the brief's Follow-ups say so). Nothing ticked; no date moved.
