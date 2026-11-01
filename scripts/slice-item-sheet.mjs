@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 // Slice T's item sheets into per-item icons (spec 136, EQ3k; "The icons").
 //
-//   node scripts/slice-item-sheet.mjs                 # the 23 icons of the table below
-//   node scripts/slice-item-sheet.mjs <sheet> <out>   # every cell of one sheet, as <row>-<col>.png
+//   node scripts/slice-item-sheet.mjs --sheet A=<sheet-a.png> --sheet D=<sheet-d.png> [--out <dir>]
+//       the 23 icons of the table below, named by item id (default dir: OUT_DIR)
+//   node scripts/slice-item-sheet.mjs <sheet.png> <out dir>
+//       every cell of one sheet, as <row>-<col>.png
+//
+// T's masters (sheet-a-cool-silver.png, sheet-d-ivory-lavender.png) live in the
+// art department's masters/items folder, outside the app tree, so the sheets are
+// arguments here, never paths this script resolves.
 //
 // A sheet is a 6x6 grid, but the pictures are not tidy: a fixed crop of a cell
 // shows slivers of its neighbours (the vial beside the heart flask, a belt's
@@ -27,11 +33,8 @@ export const ALPHA = 24;
 export const PAD = 6;
 export const SIZE = 256;
 
-/** T's sheets (masters, outside the bundle). */
-export const SHEETS = {
-    A: 'art-department/masters/items/sheet-a-cool-silver.png',
-    D: 'art-department/masters/items/sheet-d-ivory-lavender.png',
-};
+/** The sheet names `ITEM_CELLS` draws from; the CLI takes a file for each (T's masters sit outside the app tree). */
+export const SHEET_NAMES = ['A', 'D'];
 
 /** Item id to [sheet, row, col]: the table in spec 136 "The icons". */
 export const ITEM_CELLS = {
@@ -179,11 +182,12 @@ export async function sliceSheet(sharp, sheetPath, outDir, opts) {
 }
 
 /** Write the item table's icons, named by item id, with the provenance file. */
-export async function sliceItems(sharp, { root = ROOT, outDir = path.join(root, OUT_DIR) } = {}) {
+export async function sliceItems(sharp, { sheets, outDir = path.join(ROOT, OUT_DIR) }) {
     const cache = new Map();
     fs.mkdirSync(outDir, { recursive: true });
     for (const [id, [sheet, row, col]] of Object.entries(ITEM_CELLS)) {
-        if (!cache.has(sheet)) cache.set(sheet, blobCells(await readRaw(sharp, path.join(root, SHEETS[sheet]))));
+        if (!sheets?.[sheet]) throw new Error(`${id}: no file given for sheet ${sheet}`);
+        if (!cache.has(sheet)) cache.set(sheet, blobCells(await readRaw(sharp, sheets[sheet])));
         const icon = cache.get(sheet).get(row * GRID + col);
         if (!icon) throw new Error(`${id}: sheet ${sheet} cell ${row},${col} is empty`);
         fs.writeFileSync(path.join(outDir, `${id}.png`), await cellPng(sharp, icon));
@@ -194,10 +198,10 @@ export async function sliceItems(sharp, { root = ROOT, outDir = path.join(root, 
             date: '2026-11-01',
             tool: 'sharp, blob slicing of owner-supplied item sheets (spec 136, EQ3k)',
             covers: Object.keys(ITEM_CELLS).map((id) => `${id}.png`),
-            source: "T's item sheets: art-department/masters/items/sheet-a-cool-silver.png (every icon but two) and sheet-d-ivory-lavender.png (the hammer and the scepter). Each icon is one 6x6 cell found by blob, centred on a transparent square with 6 px padding, resized to 256 px.",
+            source: "T's item sheets: sheet-a-cool-silver.png (every icon but two) and sheet-d-ivory-lavender.png (the hammer and the scepter). Each icon is one 6x6 cell found by blob, centred on a transparent square with 6 px padding, resized to 256 px.",
             license: 'open source (T, 2026-10-29, D115)',
             used_by: ['components/icons/item-sprites.ts (registry: ITEM_SPRITES)'],
-            post_process: 'node scripts/slice-item-sheet.mjs',
+            post_process: 'node scripts/slice-item-sheet.mjs --sheet A=<sheet-a> --sheet D=<sheet-d>',
         },
     ];
     fs.writeFileSync(path.join(outDir, 'provenance.json'), JSON.stringify(provenance, null, 2) + '\n');
@@ -206,13 +210,25 @@ export async function sliceItems(sharp, { root = ROOT, outDir = path.join(root, 
 
 async function main(argv) {
     const sharp = loadSharp();
-    if (argv.length === 0) {
-        console.log(`sliced ${await sliceItems(sharp)} icons into ${OUT_DIR}`);
+    const sheets = {};
+    let outDir;
+    const rest = [];
+    for (let i = 0; i < argv.length; i++) {
+        if (argv[i] === '--sheet') {
+            const [name, file] = (argv[++i] ?? '').split('=');
+            if (!SHEET_NAMES.includes(name) || !file) throw new Error('--sheet takes A=<png> or D=<png>');
+            sheets[name] = file;
+        } else if (argv[i] === '--out') outDir = argv[++i];
+        else rest.push(argv[i]);
+    }
+    if (Object.keys(sheets).length > 0) {
+        const n = await sliceItems(sharp, { sheets, ...(outDir ? { outDir } : {}) });
+        console.log(`sliced ${n} icons into ${outDir ?? OUT_DIR}`);
         return;
     }
-    const [sheet, outDir] = argv;
-    if (!outDir) throw new Error('usage: slice-item-sheet.mjs [<sheet.png> <out dir>]');
-    console.log(`sliced ${await sliceSheet(sharp, sheet, outDir)} cells into ${outDir}`);
+    const [sheet, out] = rest;
+    if (!out) throw new Error('usage: slice-item-sheet.mjs --sheet A=<png> --sheet D=<png> [--out <dir>] | <sheet.png> <out dir>');
+    console.log(`sliced ${await sliceSheet(sharp, sheet, out)} cells into ${out}`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

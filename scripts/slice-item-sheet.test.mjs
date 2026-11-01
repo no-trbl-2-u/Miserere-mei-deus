@@ -8,7 +8,7 @@ import test from 'node:test';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
-import { ITEM_CELLS, SHEETS, blobCells, readRaw, sliceItems, sliceSheet } from './slice-item-sheet.mjs';
+import { ITEM_CELLS, SHEET_NAMES, blobCells, readRaw, sliceItems, sliceSheet } from './slice-item-sheet.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sharp = createRequire(path.join(ROOT, 'package.json'))('sharp');
@@ -93,36 +93,60 @@ test('the item table names 23 distinct ids, each on a known sheet and a real cel
     assert.equal(ids.length, 23);
     const spots = new Set();
     for (const [id, [sheet, row, col]] of Object.entries(ITEM_CELLS)) {
-        assert.ok(SHEETS[sheet], `${id}: unknown sheet ${sheet}`);
+        assert.ok(SHEET_NAMES.includes(sheet),`${id}: unknown sheet ${sheet}`);
         assert.ok(row >= 0 && row < 6 && col >= 0 && col < 6, `${id}: cell off the grid`);
         spots.add(`${sheet}${row}${col}`);
     }
     assert.equal(spots.size, 23, 'two items share one cell');
 });
 
-test("T's sheets slice into all 23 icons, each non-empty, with a provenance file", async () => {
+// A 6x6 sheet of 60 px cells with a 30 px square in the middle of every cell.
+async function fullSheet(file) {
+    const W = 360;
+    const data = Buffer.alloc(W * W * 4);
+    for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 6; c++) {
+            for (let y = r * 60 + 15; y < r * 60 + 45; y++) {
+                for (let x = c * 60 + 15; x < c * 60 + 45; x++) data.set([200, 200, 210, 255], (y * W + x) * 4);
+            }
+        }
+    }
+    await sharp(data, { raw: { width: W, height: W, channels: 4 } }).png().toFile(file);
+}
+
+test('the item table slices into all 23 icons named by id, with a provenance file', async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'slice-items-'));
     try {
-        assert.equal(await sliceItems(sharp, { outDir: dir }), 23);
+        const sheet = path.join(dir, 'sheet.png');
+        await fullSheet(sheet);
+        const out = path.join(dir, 'out');
+        assert.equal(await sliceItems(sharp, { sheets: { A: sheet, D: sheet }, outDir: out }), 23);
         for (const id of Object.keys(ITEM_CELLS)) {
-            const { data, width } = await readRaw(sharp, path.join(dir, `${id}.png`));
+            const { data, width } = await readRaw(sharp, path.join(out, `${id}.png`));
             assert.equal(width, 256, id);
             let opaque = 0;
             for (let i = 3; i < data.length; i += 4) if (data[i] >= 24) opaque++;
             assert.ok(opaque > 2000, `${id}: nearly empty`);
         }
-        const prov = JSON.parse(fs.readFileSync(path.join(dir, 'provenance.json'), 'utf8'));
+        const prov = JSON.parse(fs.readFileSync(path.join(out, 'provenance.json'), 'utf8'));
         assert.equal(prov[0].covers.length, 23);
         assert.match(prov[0].license, /D115/);
+        await assert.rejects(sliceItems(sharp, { sheets: { A: sheet }, outDir: out }), /no file given for sheet D/);
     } finally {
         fs.rmSync(dir, { recursive: true, force: true });
     }
 });
 
-test('the committed icons are what the script writes', async () => {
+test('the committed icons are the 23 of the table, 256 px, drawn, with their provenance', async () => {
     const committed = path.join(ROOT, 'axiomancer-mobile', 'assets', 'images', 'items');
     for (const id of Object.keys(ITEM_CELLS)) {
-        assert.ok(fs.existsSync(path.join(committed, `${id}.png`)), `${id}.png missing: run node scripts/slice-item-sheet.mjs`);
+        const file = path.join(committed, `${id}.png`);
+        assert.ok(fs.existsSync(file), `${id}.png missing`);
+        const { data, width, height } = await readRaw(sharp, file);
+        assert.deepEqual([width, height], [256, 256], id);
+        let opaque = 0;
+        for (let i = 3; i < data.length; i += 4) if (data[i] >= 24) opaque++;
+        assert.ok(opaque > 2000, `${id}: nearly empty`);
     }
     const prov = JSON.parse(fs.readFileSync(path.join(committed, 'provenance.json'), 'utf8'));
     assert.deepEqual(prov[0].covers, Object.keys(ITEM_CELLS).map((id) => `${id}.png`));
