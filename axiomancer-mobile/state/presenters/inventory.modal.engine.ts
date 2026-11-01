@@ -240,10 +240,10 @@ function buildEquipmentModal(player: Character, item: Item): ItemModalViewModel 
     let afterChar: Character;
     if (mode === 'equip') {
         const { index } = displacedBy(player, eq);
-        afterChar = engineEquipItem(player, eq, index === null ? undefined : { replaceIndex: index });
+        afterChar = engineEquipItem(player, eq, index === null ? undefined : { position: index });
     } else {
         const relicIndex = eq.slot === 'relic'
-            ? player.equipment.relics.findIndex((a) => a.id === eq.id)
+            ? player.equipment.relics.findIndex((a) => a?.id === eq.id)
             : undefined;
         afterChar = engineUnequipItem(player, eq.slot, relicIndex);
     }

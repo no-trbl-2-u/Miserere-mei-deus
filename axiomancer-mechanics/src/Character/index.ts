@@ -146,7 +146,7 @@ export function previewStatAllocation(
 }
 
 export type { Character, BaseStats } from './types';
-export { equipItem, unequipItem, getEquippedItems } from './equipment.reducer';
+export { equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems } from './equipment.reducer';
 export { computeEquipDelta } from './equip-delta';
 export { experienceForLevel, experienceToNext, levelForExperience } from './experience';
 export type {

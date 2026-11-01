@@ -17,12 +17,21 @@ consumables only) and Act 1 has no shops.
 
 A character wears up to five pieces across three slot kinds
 (`SLOT_CAPACITY`, [`src/Items/types.ts`](../src/Items/types.ts)): one
-`weapon`, one `armor` and three interchangeable `relic` positions. A relic
+`weapon`, one `armor` and three `relic` positions. A relic
 can be named anything (a ring, a brooch, a circlet) and fits any of the three
 relic positions; a piece has exactly one slot kind, so a weapon or armor never
 fills a relic position. The worn set is `Character.equipment: EquipmentLoadout`
-(`{ weapon, armor, relics[] }`, [`src/Character/types.ts`](../src/Character/types.ts));
+(`{ weapon, armor, relics }`, [`src/Character/types.ts`](../src/Character/types.ts));
 `emptyLoadout()` is the empty one.
+
+**Relics keep their place** (EQ3a; T, 2026-10-31, "Stay put"). `relics` is
+positional: index 0, 1, 2 are RELIC I, II, III, and each holds a piece or
+`null`. Taking a relic off leaves a hole and the others do not slide up. A
+packed list shorter than three (a save written before EQ3a) is still valid: its
+entries sit at positions 0..n-1 and the missing positions read as empty, so no
+`GAME_STATE_VERSION` change was needed. Every reader of `relics` skips
+`null` and tolerates a short list; `relicPositions(loadout)` is the padded
+three-entry view and `getEquippedItems` never returns `null`.
 
 ## The `Equipment` shape
 
@@ -60,8 +69,9 @@ all pure:
 
 | Function | What it does |
 |---|---|
-| `equipItem(character, item, { replaceIndex }?)` | Weapon and armor replace in place. A relic fills the first free relic position; with all three full it swaps `replaceIndex`, or without one returns the same character unchanged. |
-| `unequipItem(character, slot, index?)` | Frees the slot (for a relic, the position at `index`); the rest compact forward. A no-op on an empty slot. |
+| `equipItem(character, item, { position }?)` | Weapon and armor replace in place. A relic with a `position` (0-2) is worn there, replacing what is there; with none it fills the first empty position, and with all three full it returns the same character unchanged. `replaceIndex` is the older name for `position`. |
+| `moveRelic(character, from, to)` | Moves the relic at `from` to `to`, swapping when `to` is full; `from === to` (or an empty `from`) returns the same character. |
+| `unequipItem(character, slot, index?)` | Empties the slot (for a relic, the position at `index`, which becomes `null`; no other relic moves). A no-op on an empty slot. |
 | `getEquippedItems(loadout)` | Every worn piece, weapon then armor then relics. |
 | `wornMaxHpBonus(loadout)` | The summed worn `maxHp` bonus. |
 

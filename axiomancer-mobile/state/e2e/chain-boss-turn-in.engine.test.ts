@@ -105,7 +105,7 @@ describe('the chapter boss fills step 4; the bridge turns it in', () => {
         expect(gs(store).player.inventory.some((i) => i.id === CIRCLET)).toBe(false);
 
         equipItemRewardAction(store);
-        expect(gs(store).player.equipment.relics.map((r) => r.id)).toContain(CIRCLET);
+        expect(gs(store).player.equipment.relics.flatMap((r) => (r ? [r.id] : []))).toContain(CIRCLET);
         expect(store.getState().itemReward.queue).toEqual([]);
     });
 

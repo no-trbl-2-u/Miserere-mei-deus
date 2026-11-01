@@ -15,7 +15,7 @@
 // ─── Character ────────────────────────────────────────────────────────────────
 export {
     createCharacter,
-    equipItem, unequipItem, getEquippedItems,
+    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems,
     computeEquipDelta,
     validateDieGear, concreteDefaultRail,
     dieSpecialCap, dieGearMissFaces,

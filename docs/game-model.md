@@ -371,7 +371,9 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
   player taps WEAR. A character wears one weapon, one armor and up to three
-  relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, and the
+  relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, a relic keeps
+  the position it was worn in (taking one off leaves that position empty and
+  moves no other, EQ3a), and the
   signature bar lists every signature the worn relics grant.
 - **The Open Hand** befriends any foe (every foe can be befriended, T
   2026-10-31, for testing) that sits under its `hpGate`, else under
