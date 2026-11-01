@@ -22,7 +22,7 @@
 | 2026-11-10 (in 9 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 9 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-11 (in 10 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
-| 2026-11-11 (in 10 days) | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h) | waiting on the loop: the loop still owes NX1c | W2 |
+| 2026-11-11 (in 10 days) | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h) | needs you: NX1d ready for you | W2 |
 | 2026-11-12 (in 11 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
 | 2026-11-12 (in 11 days) | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | needs you: your task | W2 |
 | 2026-11-13 (in 12 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
