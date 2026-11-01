@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
     inputs:
       focus_phase:
-        description: 'Optional phase number/id for this manual run (for example: 22). Empty runs normal /march dispatch.'
+        description: 'Optional chunk id (NN.k, for example 113.4) or spec number (NN) for this manual run, passed to /ship-a-chunk. Empty runs normal /march dispatch.'
         required: false
         type: string
         default: ''
@@ -43,7 +43,7 @@ jobs:
       extra_claude_args: |
         -p
         --dangerously-skip-permissions
-      prompt: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.focus_phase != '' && format('/ship-a-chunk phase {0}', github.event.inputs.focus_phase) || '/march' }}
+      prompt: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.focus_phase != '' && format('/ship-a-chunk {0}', github.event.inputs.focus_phase) || '/march' }}
       # Typical tick is ~23 min; at least one wedged run burned the full
       # 90-min budget (2026-08 usage review), which is why the ceiling
       # dropped 90->75 (b53dac5d, 2026-08-14). Raising it further is off
