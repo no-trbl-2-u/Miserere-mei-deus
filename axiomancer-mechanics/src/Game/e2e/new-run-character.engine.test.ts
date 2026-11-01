@@ -25,7 +25,7 @@ const FIXTURE: CharacterDefinition = {
     startingRelicId: RELIC_ID,
     baseStats: { heart: 5, body: 7, mind: 3 },
     startingLaneIds: ['lane-x', 'lane-y'],
-    startingCardIds: ['card-x', 'card-y'],
+    startingCardIds: ['card-x', 'card-y', 'card-z'],
     playstyle: 'Bleeds to win.',
 };
 
@@ -49,9 +49,9 @@ describe('createNewGameState with a character (CH1 A2)', () => {
         expect(player.level).toBe(1);
     });
 
-    it('deals the ten-card character deck: Blow 3, Ward 3, Word 2 and the two lane cards', () => {
+    it('deals the ten-card character deck: Blow 3, Ward 2, Word 2 and the three lane cards', () => {
         const { knownCards } = run().player;
-        expect(knownCards).toEqual([...CHARACTER_GREY_DECK, 'card-x', 'card-y']);
+        expect(knownCards).toEqual([...CHARACTER_GREY_DECK, 'card-x', 'card-y', 'card-z']);
         expect(knownCards).toHaveLength(10);
     });
 

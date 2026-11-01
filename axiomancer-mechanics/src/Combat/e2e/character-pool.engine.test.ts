@@ -55,7 +55,7 @@ const FIXTURE: CharacterDefinition = {
     startingRelicId: START_RELIC.id,
     baseStats: { heart: 5, body: 5, mind: 5 },
     startingLaneIds: ['fx-x', 'fx-y'],
-    startingCardIds: [LANE_X.cardIds[0], LANE_Y.cardIds[0]],
+    startingCardIds: [LANE_X.cardIds[0], LANE_Y.cardIds[0], LANE_Z.cardIds[0]],
     playstyle: 'Fixture.',
 };
 

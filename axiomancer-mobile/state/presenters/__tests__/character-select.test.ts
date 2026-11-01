@@ -15,7 +15,7 @@ function def(id: string, over: Partial<CharacterDefinition> = {}): CharacterDefi
         startingRelicId: 'relic-bleeding-signet',
         baseStats: { heart: 5, body: 7, mind: 3 },
         startingLaneIds: ['lane-x', 'lane-y'],
-        startingCardIds: ['card-x', 'card-y'],
+        startingCardIds: ['card-x', 'card-y', 'card-z'],
         playstyle: 'Bleeds to win.',
         ...over,
     };
