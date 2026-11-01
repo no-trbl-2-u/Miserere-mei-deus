@@ -38,7 +38,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Cards | engine area | yes | yes | yes | no |
 | VITAE and stats | engine area | yes | yes | yes | no |
 | A fight | engine area | yes | yes | yes | no |
-| Effects | engine area | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Effects") |
+| Effects | engine area | yes | yes | yes | no |
 | The foes | engine area | yes | yes | yes | no |
 | Game | engine area | yes | yes | yes | no |
 | Items | engine area | yes | yes | yes | no |
