@@ -99,22 +99,41 @@ function withLoadout(
 }
 
 /**
+ * The three relic positions of a loadout as a fixed-length list: a packed
+ * save (fewer than three entries) is padded with `null`, and a stray
+ * `undefined` reads as empty. Position `i` is RELIC I, II, III for 0..2.
+ * Never mutates the loadout.
+ */
+export function relicPositions(loadout: Pick<EquipmentLoadout, 'relics'>): (Equipment | null)[] {
+    const out: (Equipment | null)[] = [];
+    for (let i = 0; i < SLOT_CAPACITY.relic; i++) out.push(loadout.relics?.[i] ?? null);
+    return out;
+}
+
+/** True when `i` names a relic position (an integer in 0..2). */
+export function isRelicPosition(i: unknown): i is number {
+    return typeof i === 'number' && Number.isInteger(i) && i >= 0 && i < SLOT_CAPACITY.relic;
+}
+
+/**
  * Equips `item` into its slot kind:
  *
  * - **weapon / armor** — replace in place (today's semantics). We don't return
  *   the displaced piece here; callers that need it back in `inventory` chain
  *   `unequipItem` + `addItem` first, per the existing convention.
- * - **relic** — fills the first free relic position. When all 3 are
- *   full, a passed `replaceIndex` (0-2) swaps that position; without it the
- *   equip is a **guarded no-op** (returns the same character reference — the
- *   caller surfaces "relic slots full"), never a throw or silent replace.
+ * - **relic** — with a `position` (0-2) the relic is worn *at that position*,
+ *   replacing what is there. With none it fills the first empty position; with
+ *   all three full it is a **guarded no-op** (returns the same character
+ *   reference — the caller surfaces "relic slots full"), never a throw or
+ *   silent replace. `replaceIndex` is the older name for `position`. An
+ *   out-of-range position is ignored (it reads as no position).
  *
  * Pure — returns a new `Character` (or the same reference on the full no-op).
  */
 export function equipItem(
     character: Character,
     item: Equipment,
-    opts?: { replaceIndex?: number },
+    opts?: { position?: number; replaceIndex?: number },
 ): Character {
     const loadout = character.equipment;
     const slot = item.slot;
@@ -127,26 +146,36 @@ export function equipItem(
     }
 
     // relic
-    const acc = loadout.relics;
-    if (acc.length < SLOT_CAPACITY.relic) {
-        return withLoadout(character, { ...loadout, relics: [...acc, item] });
-    }
-    // Full row: honour an explicit replaceIndex, otherwise guarded no-op.
-    const idx = opts?.replaceIndex;
-    if (idx === undefined || !Number.isInteger(idx) || idx < 0 || idx >= acc.length) {
-        return character;
-    }
-    const nextAcc = acc.slice();
-    nextAcc[idx] = item;
-    return withLoadout(character, { ...loadout, relics: nextAcc });
+    const acc = relicPositions(loadout);
+    const requested = opts?.position ?? opts?.replaceIndex;
+    const idx = isRelicPosition(requested) ? requested : acc.indexOf(null);
+    if (idx < 0) return character;
+    acc[idx] = item;
+    return withLoadout(character, { ...loadout, relics: acc });
 }
 
 /**
- * Unequips the piece in `slot`. For `'relic'`, `index` selects which of the
- * ≤3 positions to free (required); the remaining relics compact toward the
- * front (positions have no identity). For weapon/armor, `index` is ignored.
- * No-op (returns the same character reference) when the target is empty or the
- * relic index is out of range. Pure.
+ * Moves the relic at position `from` to position `to`. An empty `to` takes it;
+ * a full `to` swaps the two. Same worn set, same `maxHealth`. No-op (the same
+ * character reference) when `from === to`, when either index is not a relic
+ * position, or when `from` is empty. Pure.
+ */
+export function moveRelic(character: Character, from: number, to: number): Character {
+    if (!isRelicPosition(from) || !isRelicPosition(to) || from === to) return character;
+    const acc = relicPositions(character.equipment);
+    const moving = acc[from];
+    if (!moving) return character;
+    acc[from] = acc[to];
+    acc[to] = moving;
+    return withLoadout(character, { ...character.equipment, relics: acc });
+}
+
+/**
+ * Unequips the piece in `slot`. For `'relic'`, `index` (0-2, required) names
+ * the position to empty; it becomes `null` and no other relic moves (relics
+ * keep their place). For weapon/armor, `index` is ignored. No-op (returns the
+ * same character reference) when the target is empty or the relic index is not
+ * a position. Pure.
  */
 export function unequipItem(
     character: Character,
@@ -165,25 +194,24 @@ export function unequipItem(
     }
 
     // relic
-    const acc = loadout.relics;
-    if (index === undefined || !Number.isInteger(index) || index < 0 || index >= acc.length) {
-        return character;
-    }
-    const nextAcc = acc.slice();
-    nextAcc.splice(index, 1);
-    return withLoadout(character, { ...loadout, relics: nextAcc });
+    if (!isRelicPosition(index)) return character;
+    const acc = relicPositions(loadout);
+    if (!acc[index]) return character;
+    acc[index] = null;
+    return withLoadout(character, { ...loadout, relics: acc });
 }
 
 /**
  * List of every worn piece in canonical order (weapon, armor, relics by
- * position). Used by `getEquipmentModifiers`, the save migration and dev
- * tooling — anything that walks equipment without caring about slot identity.
+ * position). Never contains `null`: holes are skipped. Used by
+ * `getEquipmentModifiers`, the save migration and dev tooling — anything that
+ * walks equipment without caring about slot identity.
  */
 export function getEquippedItems(loadout: EquipmentLoadout): Equipment[] {
     const out: Equipment[] = [];
     if (loadout.weapon) out.push(loadout.weapon);
     if (loadout.armor)  out.push(loadout.armor);
-    for (const a of loadout.relics) out.push(a);
+    for (const a of loadout.relics ?? []) if (a) out.push(a);
     return out;
 }
 

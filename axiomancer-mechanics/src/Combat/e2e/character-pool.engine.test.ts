@@ -75,7 +75,7 @@ function character(wear: Equipment[] = [], carry: Equipment[] = []): Character {
     return {
         ...player,
         inventory: [...player.inventory, ...wear, ...carry],
-        equipment: { ...player.equipment, relics: [...player.equipment.relics, ...wear] },
+        equipment: { ...player.equipment, relics: [...player.equipment.relics.filter((r) => r !== null), ...wear] },
         devRewardLaneIds: undefined,
     };
 }
@@ -87,7 +87,7 @@ const roll = (p: Character, seed: number, count = 3) => rollCombatCardRewards(p,
 describe('A3 · the pool is the starting lanes plus the worn relics\' lanes', () => {
     it('a fresh character with its starting relic worn: X, Y and Z, registry order', () => {
         const p = character();
-        expect(p.equipment.relics.map(r => r.id)).toEqual(['fx-start-relic']);
+        expect(p.equipment.relics.flatMap((r) => (r ? [r.id] : []))).toEqual(['fx-start-relic']);
         expect(unlocked(p)).toEqual(['fx-x', 'fx-y', 'fx-z']);
         expect(rewardPoolFor(p, LANES, RELICS).sort()).toEqual(cardsOf(LANE_X, LANE_Y, LANE_Z).sort());
     });
@@ -117,7 +117,7 @@ describe('A3 · the pool is the starting lanes plus the worn relics\' lanes', ()
 
     it('unequipping the W relic removes W again', () => {
         const worn = character([RELIC_W]);
-        const off = { ...worn, equipment: { ...worn.equipment, relics: worn.equipment.relics.filter(r => r.id !== RELIC_W.id) } };
+        const off = { ...worn, equipment: { ...worn.equipment, relics: worn.equipment.relics.filter(r => r !== null && r.id !== RELIC_W.id) } };
         expect(unlocked(off)).toEqual(['fx-x', 'fx-y', 'fx-z']);
         for (const seed of SEEDS) for (const id of roll(off, seed)) expect(LANE_W.cardIds).not.toContain(id);
     });

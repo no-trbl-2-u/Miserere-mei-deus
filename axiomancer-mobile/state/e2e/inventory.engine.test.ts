@@ -589,7 +589,7 @@ describe('equipItem action: wears the piece in player.equipment (EQ1 A3)', () =>
     it('fills a free relic position', () => {
         const store = makeStore([trinket('r1'), trinket('r2')], [trinket('r1')]);
         createAppActions(store).equipItem('r2');
-        expect(store.getState().player.equipment.relics.map((a) => a.id)).toEqual(['r1', 'r2']);
+        expect(store.getState().player.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(['r1', 'r2']);
     });
 
     it('on a full relic row takes off the last-worn piece, which stays in the satchel', () => {
@@ -598,7 +598,7 @@ describe('equipItem action: wears the piece in player.equipment (EQ1 A3)', () =>
         createAppActions(store).equipItem('r4');
 
         const player = store.getState().player;
-        expect(player.equipment.relics.map((a) => a.id)).toEqual(['r1', 'r2', 'r4']);
+        expect(player.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(['r1', 'r2', 'r4']);
         expect(player.inventory.map((i: Item) => i.id)).toContain('r3');
     });
 
@@ -635,8 +635,20 @@ describe('unequipItem action: leaves the position empty (EQ1 A2, A3)', () => {
         createAppActions(store).unequipItem(signet.id);
 
         const player = store.getState().player;
-        expect(player.equipment.relics.map((a) => a.id)).toEqual([ring.id]);
+        expect(player.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual([ring.id]);
         expect(player.inventory.map((i: Item) => i.id)).toEqual([ring.id, signet.id]);
+    });
+
+    it('EQ3a: taking off RELIC I leaves RELIC II where it is, and the next relic fills the hole', () => {
+        const ring = getRelicById('relic-disarming-plea')!;
+        const signet = getRelicById('relic-bleeding-signet')!;
+        const extra = { ...ring, id: 'r-extra', name: 'Extra' };
+        const store = makeStore([ring, signet, extra], [ring, signet]);
+        const actions = createAppActions(store);
+        actions.unequipItem(ring.id);
+        expect(store.getState().player.equipment.relics.map((a) => a?.id ?? null)).toEqual([null, signet.id, null]);
+        actions.equipItem(extra.id);
+        expect(store.getState().player.equipment.relics.map((a) => a?.id ?? null)).toEqual([extra.id, signet.id, null]);
     });
 
     it('wearing none is legal: both relics off leaves an empty loadout', () => {
@@ -647,7 +659,7 @@ describe('unequipItem action: leaves the position empty (EQ1 A2, A3)', () => {
         actions.unequipItem(ring.id);
         actions.unequipItem(signet.id);
 
-        expect(store.getState().player.equipment.relics).toEqual([]);
+        expect(store.getState().player.equipment.relics).toEqual([null, null, null]);
     });
 
     it('no-ops when the item is missing, not equipment, or not worn', () => {
@@ -676,7 +688,7 @@ describe('the Crimson Circlet round trip (EQ1 A3; the Circlet carries the +max V
 
         actions.equipItem(signet.id);
         expect(store.getState().player.maxHealth).toBe(start.maxHealth + maxHp);
-        expect(store.getState().player.equipment.relics.map((a) => a.id)).toEqual([signet.id]);
+        expect(store.getState().player.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual([signet.id]);
 
         actions.unequipItem(signet.id);
         const end = store.getState().player;
@@ -1111,11 +1123,11 @@ describe('a save carrying a relic the loadout lacks (EQ1 A5)', () => {
 
         actions.equipItem(signet.id);
         const after = store.getState().player;
-        expect(after.equipment.relics.filter((a) => a.id === signet.id)).toHaveLength(1);
+        expect(after.equipment.relics.filter((a) => a?.id === signet.id)).toHaveLength(1);
         expect(after.maxHealth).toBe(player.maxHealth + 20);
 
         actions.equipItem(signet.id);
-        expect(store.getState().player.equipment.relics.filter((a) => a.id === signet.id)).toHaveLength(1);
+        expect(store.getState().player.equipment.relics.filter((a) => a?.id === signet.id)).toHaveLength(1);
         expect(store.getState().player.maxHealth).toBe(player.maxHealth + 20);
     });
 });

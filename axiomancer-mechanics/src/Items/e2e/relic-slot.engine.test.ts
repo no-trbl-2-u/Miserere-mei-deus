@@ -31,7 +31,7 @@ function permutations<T>(xs: readonly T[]): T[][] {
 describe('the slot model', () => {
     it('is one weapon, one armor and three relics', () => {
         expect(SLOT_CAPACITY).toEqual({ weapon: 1, armor: 1, relic: 3 });
-        expect(fresh().equipment).toEqual({ weapon: null, armor: null, relics: [] });
+        expect(fresh().equipment).toEqual({ weapon: null, armor: null, relics: [null, null, null] });
     });
 });
 
@@ -48,10 +48,10 @@ describe('any relic fits any relic slot', () => {
             let c = fresh();
             order.forEach((relic, i) => {
                 c = equipItem(c, relic);
-                expect(c.equipment.relics).toHaveLength(i + 1);
+                expect(c.equipment.relics).toHaveLength(3);
                 expect(c.equipment.relics[i]!.id).toBe(relic.id);
             });
-            expect(c.equipment.relics.map(r => r.id)).toEqual(order.map(r => r.id));
+            expect(c.equipment.relics.flatMap((r) => (r ? [r.id] : []))).toEqual(order.map(r => r.id));
         },
     );
 
@@ -67,14 +67,14 @@ describe('any relic fits any relic slot', () => {
         const swapped = equipItem(c, FOURTH, { replaceIndex: idx });
         const expected = [RING, BROOCH, CIRCLET].map(r => r.id);
         expected[idx] = FOURTH.id;
-        expect(swapped.equipment.relics.map(r => r.id)).toEqual(expected);
+        expect(swapped.equipment.relics.flatMap((r) => (r ? [r.id] : []))).toEqual(expected);
     });
 
-    it('unequip compacts the relic row', () => {
+    it('unequip leaves a hole, the other relics keep their place', () => {
         let c = fresh();
         for (const r of [RING, BROOCH, CIRCLET]) c = equipItem(c, r);
         c = unequipItem(c, 'relic', 0);
-        expect(c.equipment.relics.map(r => r.id)).toEqual([BROOCH.id, CIRCLET.id]);
+        expect(c.equipment.relics.map((r) => r?.id ?? null)).toEqual([null, BROOCH.id, CIRCLET.id]);
     });
 });
 

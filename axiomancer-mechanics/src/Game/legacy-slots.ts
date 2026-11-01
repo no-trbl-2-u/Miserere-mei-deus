@@ -102,8 +102,9 @@ export function reslotLegacyLoadout(
         const piece = record[legacySlot];
         if (!piece) continue;
         const reslotted = reslotRelicPiece(piece);
-        if (loadout.relics.length < SLOT_CAPACITY.relic) {
-            loadout.relics.push(reslotted);
+        const free = loadout.relics.indexOf(null);
+        if (free >= 0 && free < SLOT_CAPACITY.relic) {
+            loadout.relics[free] = reslotted;
         } else {
             overflow.push(reslotted);
         }

@@ -49,7 +49,7 @@ function v38Save(): { raw: Record<string, unknown>; today: Character } {
         player: {
             ...today,
             inventory: today.inventory.map(it => (it.category === 'equipment' ? asV38Piece(it as Equipment) : it)),
-            equipment: { ...rest, accessories: relics.map(asV38Piece) },
+            equipment: { ...rest, accessories: relics.map((r) => (r ? asV38Piece(r) : null)) },
         },
         quests: {
             ...fresh.quests,
@@ -67,8 +67,8 @@ describe('reslotRelicSave — a v38-shaped save on the relic slot', () => {
     it('keeps the same pieces worn and carried, under relics', () => {
         const { raw, today } = v38Save();
         const migrated = reslotRelicSave(raw) as unknown as GameState;
-        expect(migrated.player.equipment.relics.map(r => r.id)).toEqual([SIGNET_ID]);
-        expect(migrated.player.equipment.relics.every(r => r.slot === 'relic')).toBe(true);
+        expect(migrated.player.equipment.relics.flatMap((r) => (r ? [r.id] : []))).toEqual([SIGNET_ID]);
+        expect(migrated.player.equipment.relics.every(r => r === null || r.slot === 'relic')).toBe(true);
         expect(migrated.player.inventory.map(i => i.id)).toEqual(today.inventory.map(i => i.id));
         expect(migrated.player.equipment).toEqual(today.equipment);
         expect(migrated.player.inventory).toEqual(today.inventory);

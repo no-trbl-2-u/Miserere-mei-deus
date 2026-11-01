@@ -47,6 +47,9 @@
  * fixed on the Worker and the query string only binds values. Another name is
  * a 404 and any method but GET a 405.
  *
+ * A cron at 05:17 UTC (`scheduled`, `retention.ts`) deletes `sim` and `harness` rows older than 14 days
+ * from the play-log tables; `human` rows are never touched.
+ *
  * The ballot routes alone are called from a browser page on another origin
  * (the card-ledger ballots, `plan/card-ledger/ballot-kit.js`, phase BV1b):
  * they answer an `OPTIONS` preflight before the token check and echo an origin
@@ -92,6 +95,7 @@ import { insertFight, listFights } from './fights';
 import { error, json, readJsonBody } from './http';
 import { closePlayRun, listPlayRuns, openPlayRun } from './play-runs';
 import { REPORTS_PATH_PREFIX, isReportName, runReport } from './reports';
+import { retentionLogLine, runRetention } from './retention';
 import { insertRunEvents, listRunEvents } from './run-events';
 
 /** One path's two methods. `post` gets a parsed body already under the route's byte cap. */
@@ -302,5 +306,9 @@ export default {
         const origin = allowedOrigin(request, env.BALLOT_ORIGINS);
         if (request.method === 'OPTIONS') return preflight(origin);
         return withCors(await handle(route, request, url, env), origin);
+    },
+    /** The nightly cron (`[triggers]` in wrangler.toml): `sim` and `harness` rows older than 14 days leave D1. */
+    async scheduled(controller: ScheduledController, env: Env): Promise<void> {
+        console.log(retentionLogLine(await runRetention(env.DB, new Date(controller.scheduledTime))));
     },
 } satisfies ExportedHandler<Env>;

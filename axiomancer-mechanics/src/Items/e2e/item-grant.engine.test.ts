@@ -17,7 +17,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { createCharacter } from '../../Character/index';
-import { equipItem } from '../../Character/equipment.reducer';
+import { equipItem, unequipItem } from '../../Character/equipment.reducer';
 import { getRelicById, relicLibrary } from '../relic.library';
 import { FIXTURE_WEAPON, FIXTURE_ARMOR, FIXTURE_TRINKETS } from '../../Game/fixtures';
 import {
@@ -114,7 +114,7 @@ const countById = (inventory: readonly Item[], id: string): number =>
 const wornIds = (c: Character): string[] => [
     ...(c.equipment.weapon ? [c.equipment.weapon.id] : []),
     ...(c.equipment.armor ? [c.equipment.armor.id] : []),
-    ...c.equipment.relics.map(a => a.id),
+    ...c.equipment.relics.flatMap((a) => (a ? [a.id] : [])),
 ];
 
 // ─── the failure modes ────────────────────────────────────────────────────────
@@ -217,7 +217,7 @@ describe('grantItem — equipping into a free slot', () => {
 
         expect(res.outcome).toBe('equipped');
         expect(res.displaced).toBeNull();
-        expect(res.character.equipment.relics.map(a => a.id)).toEqual([T1, RING_ID]);
+        expect(res.character.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual([T1, RING_ID]);
     });
 
     it('folds the grant stat modifiers into the wearer (the sole equipment channel)', () => {
@@ -338,6 +338,25 @@ describe('displacedBy — the swap preview', () => {
         expect(acc.index).toBe(2);
     });
 
+    it('EQ3a: a position names the relic row to change, empty or not', () => {
+        const player = unequipItem(loadoutOnlyPlayer([trinket(0), trinket(1), trinket(2)]), 'relic', 1);
+        // An empty position displaces nothing but still names where the relic goes.
+        expect(displacedBy(player, ring(), { position: 1 })).toEqual({ item: null, index: 1 });
+        expect(displacedBy(player, ring(), { position: 2 }).item?.id).toBe(T3);
+        // No position and a hole: the relic fills the hole, nothing is displaced.
+        expect(displacedBy(player, ring())).toEqual({ item: null, index: null });
+        const res = grantItem(player, ring(), { equip: true, position: 1 });
+        expect(res.displaced).toBeNull();
+        expect(res.character.equipment.relics.map((a) => a?.id ?? null)).toEqual([T1, ring().id, T3]);
+    });
+
+    it('EQ3a: a hole is not full, and a swap puts the new relic back at the same position', () => {
+        const player = loadoutOnlyPlayer([trinket(0), trinket(1), trinket(2)]);
+        const res = grantItem(player, ring(), { equip: true, position: 0 });
+        expect(res.displaced?.id).toBe(T1);
+        expect(res.character.equipment.relics.map((a) => a?.id ?? null)).toEqual([ring().id, T2, T3]);
+    });
+
     it('agrees with what grantItem actually displaces', () => {
         const player = loadoutOnlyPlayer([trinket(0), trinket(1), trinket(2)]);
         const incoming = ring();
@@ -409,17 +428,17 @@ describe('grantWearingIfFree — every dev relic grant wears while a position is
             expect(res.displaced).toBeNull();
             player = res.character;
         }
-        expect(player.equipment.relics.map(a => a.id)).toEqual(ids.slice(0, fits));
+        expect(player.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(ids.slice(0, fits));
         expect(player.inventory.map(i => i.id)).toEqual(ids);
     });
 
     it('carries the relic when the slot is full, and nothing worn moves', () => {
         const full = loadoutOnlyPlayer([...FIXTURE_TRINKETS]);
-        const before = full.equipment.relics.map(a => a.id);
+        const before = full.equipment.relics.flatMap((a) => (a ? [a.id] : []));
         const res = grantWearingIfFree(full, getRelicById(SIGNET_ID)!);
         expect(res.equipped).toBe(false);
         expect(res.outcome).toBe('inventory');
-        expect(res.character.equipment.relics.map(a => a.id)).toEqual(before);
+        expect(res.character.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(before);
         expect(res.character.inventory.map(i => i.id)).toContain(SIGNET_ID);
     });
 
@@ -427,7 +446,7 @@ describe('grantWearingIfFree — every dev relic grant wears while a position is
         const player = seededPlayer();
         const res = grantWearingIfFree(player, getRelicById(RING_ID)!);
         expect(res.equipped).toBe(false);
-        expect(res.character.equipment.relics.map(a => a.id)).toEqual([RING_ID]);
+        expect(res.character.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual([RING_ID]);
     });
 
     it('grants a consumable as a plain stacking grant', () => {

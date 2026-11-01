@@ -1052,14 +1052,15 @@ function equipItemAction(store: AppStore, itemId: string): void {
     const equip = target as Equipment;
     if (isWornId(state.player.equipment, equip.id)) return;
 
-    // The engine folds the stat line and wears the piece. A full relic row
-    // gives up its last-worn piece (the one the modal names as REPLACE); it
-    // stays in the satchel, since worn pieces are carried too.
+    // The engine folds the stat line and wears the piece. A relic fills the
+    // first empty position; a full relic row gives up its last-worn piece (the
+    // one the modal names as REPLACE); it stays in the satchel, since worn
+    // pieces are carried too.
     const { index } = displacedBy(state.player, equip);
     const nextPlayer = engineEquipItem(
         state.player,
         equip,
-        index === null ? undefined : { replaceIndex: index },
+        index === null ? undefined : { position: index },
     );
     if (nextPlayer === state.player) return;
     store.setState({ player: nextPlayer });
@@ -1076,7 +1077,7 @@ function unequipItemAction(store: AppStore, itemId: string): void {
 
     const relicIndex =
         target.slot === 'relic'
-            ? loadout.relics.findIndex((a) => a.id === itemId)
+            ? loadout.relics.findIndex((a) => a?.id === itemId)
             : undefined;
     const nextPlayer = engineUnequipItem(state.player, target.slot, relicIndex);
     if (nextPlayer === state.player) return;
@@ -1397,7 +1398,7 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
     const player = state.player;
     const owned = new Set<string>([
         ...player.inventory.map((i: Item) => i.id),
-        ...player.equipment.relics.map((a) => a.id),
+        ...player.equipment.relics.flatMap((a) => (a ? [a.id] : [])),
         ...(player.equipment.weapon ? [player.equipment.weapon.id] : []),
         ...(player.equipment.armor ? [player.equipment.armor.id] : []),
     ]);
@@ -1409,7 +1410,7 @@ function grantAllRelicsAction(store: AppStore): GrantAllRelicsResult {
         devGrantItem(store, relic);
         added.push(relic.id);
     }
-    return { added, worn: store.getState().player.equipment.relics.map((a) => a.id) };
+    return { added, worn: store.getState().player.equipment.relics.flatMap((a) => (a ? [a.id] : [])) };
 }
 
 function applyCharacterPresetAction(

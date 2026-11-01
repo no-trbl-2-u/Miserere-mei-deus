@@ -80,8 +80,8 @@ describe('Phase 18 — reslotLegacyLoadout', () => {
             accessory: legacy('ring', 'accessory'),
         });
         // ring (old generic slot) first, then head, hands — feet overflows.
-        expect(loadout.relics.map(i => i.id)).toEqual(['ring', 'helm', 'gaunt']);
-        expect(loadout.relics.every(i => i.slot === 'relic')).toBe(true);
+        expect(loadout.relics.flatMap((i) => (i ? [i.id] : []))).toEqual(['ring', 'helm', 'gaunt']);
+        expect(loadout.relics.every(i => i?.slot === 'relic')).toBe(true);
         expect(overflow.map(i => i.id)).toEqual(['boots']);
     });
 });

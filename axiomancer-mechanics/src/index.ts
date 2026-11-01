@@ -15,7 +15,7 @@
 // ─── Character ────────────────────────────────────────────────────────────────
 export {
     createCharacter,
-    equipItem, unequipItem, getEquippedItems,
+    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems,
     computeEquipDelta,
     validateDieGear, concreteDefaultRail,
     dieSpecialCap, dieGearMissFaces,
@@ -233,6 +233,7 @@ export {
 export type {
     Item, Equipment, Consumable, Material, QuestItem,
     EquipmentSlot,
+    EquipmentEffect, EquipmentTrigger, EquipmentCondition, EquipmentPayoff, EquipmentPayoffKind,
     CacheLootTier,
     GrantOutcome,
 } from './Items';

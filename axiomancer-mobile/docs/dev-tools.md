@@ -258,6 +258,8 @@ is a count for T to read; nothing in `npm test` asserts a play rate. Tests:
 reports over fixture rows of all three sources in workerd),
 `scripts/api.test.mjs` (root `npm test`).
 
+**Retention:** `sim` and `harness` rows older than 14 days are deleted nightly (05:17 UTC) by the Worker's cron; `human` rows are never deleted (`backend/src/retention.ts`).
+
 ## Layout
 
 | File | Role |

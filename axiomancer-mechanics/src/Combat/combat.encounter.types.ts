@@ -20,6 +20,8 @@ import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind } from '.
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
+import type { EquipmentEffectsState } from './combat.equipment-effects';
+import type { EquipmentCondition, EquipmentPayoffKind, EquipmentSlot, EquipmentTrigger } from '../Items/types';
 
 // ---------------------------------------------------------------------------
 // Dice — the stance-color economy
@@ -520,6 +522,10 @@ export type CombatEvent =
     /** A Global entered play (`turnsLeft` null = rest of combat). */
     | { kind: 'global-entered'; cardId: string; paid: boolean; turnsLeft: number | null }
     | { kind: 'global-left'; cardId: string }
+    /** A worn piece's effect fired (spec 136, A10): its trigger or the condition that held, what it paid,
+     *  and how much it gave (VITAE healed, GUARD gained, Conviction gained, cards drawn, or the DEAL's +n). */
+    | { kind: 'equipment-fired'; itemId: string; itemName: string; slot: EquipmentSlot;
+        trigger?: EquipmentTrigger; condition?: EquipmentCondition; payoff: EquipmentPayoffKind; amount: number }
     /** A card left combat for good (EXILE). */
     | { kind: 'card-exiled'; cardId: string }
     | { kind: 'curse-added'; cardId: string; count: number }
@@ -774,6 +780,10 @@ export interface CombatEncounterState {
     /** The SACRIFICE / Global / Curse ledger. Present only when the deck
      *  holds a program card (`combat.card-program.ts`). */
     program?: ProgramLedger;
+    /** The worn weapon's, armor's and relics' fight effects and their per-turn flags
+     *  (`combat.equipment-effects.ts`). Present only when the worn gear carries an
+     *  effect, whatever the deck. */
+    equipmentEffects?: EquipmentEffectsState;
     /** The enemy words' state (WARD, BRINE, LEECH on you). Absent = none. */
     enemyWords?: EnemyWordsState;
     /** The move riders' state (`combat.enemy-riders.ts`). Absent = none. */
