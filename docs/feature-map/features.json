@@ -2197,6 +2197,12 @@
       "kind": "coupling",
       "from": "area:Items",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Items/equipment-drop.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Items",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Items/equipment.engine.ts"
     },
     {
