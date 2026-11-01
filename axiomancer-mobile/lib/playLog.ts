@@ -12,7 +12,7 @@
  * poster keeps its own gate, untouched by the switch.
  */
 
-import type { DeckEventPost, FightPost, PlayLogSource } from '@mechanics';
+import type { DeckEventPost, FightPost, PlayLogSource, PlayLogSourceKind } from '@mechanics';
 
 import { puzzleApiConfig, puzzleAppBuild, type PuzzleApiConfig, type PuzzleFetch } from '@/lib/puzzleAttempts';
 import { getBuildCommit, isDevToolsEnabled } from '@/lib/buildProfile';
@@ -44,13 +44,35 @@ export function playSessionId(): string {
     return sessionId;
 }
 
+/** The stamps a play-log body carries: the build and session (`PlayLogSource`) plus who played it. */
+export type PlayLogStamps = PlayLogSource & { source: PlayLogSourceKind };
+
+/**
+ * Who played this build (phase SM1b, acceptance A4): `human` only when the
+ * build carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the committed
+ * `eas.json` preview profile sets; every other build (a web export, a dev
+ * server T opens by hand, a jest run) is `harness`, so a forgotten harness can
+ * never land in T's numbers. The app never sends `sim`: the headless run driver
+ * stamps that itself. The name is written out in full because Expo inlines an
+ * EXPO_PUBLIC_ value only where the literal `process.env.EXPO_PUBLIC_...` appears.
+ */
+export function playLogSourceKind(): PlayLogSourceKind {
+    return process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE?.trim() === 'human' ? 'human' : 'harness';
+}
+
 /**
  * Who is posting, from which build: the stamps every play-log body carries.
- * The solver is blank: no solver name is kept outside the puzzle screen, and
- * T is the only player while the switch defaults to on.
+ * The solver is blank: no solver name is kept outside the puzzle screen. The
+ * run id is not here: it is the save's, read from the store at each call site.
  */
-export function playLogSource(): PlayLogSource {
-    return { solver: '', sessionId: playSessionId(), buildCommit: getBuildCommit(), appBuild: puzzleAppBuild() };
+export function playLogSource(): PlayLogStamps {
+    return {
+        solver: '',
+        sessionId: playSessionId(),
+        buildCommit: getBuildCommit(),
+        appBuild: puzzleAppBuild(),
+        source: playLogSourceKind(),
+    };
 }
 
 function warnDropped(path: string, reason: string): void {

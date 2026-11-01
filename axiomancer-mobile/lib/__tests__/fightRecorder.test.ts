@@ -16,11 +16,12 @@ import {
     validateFightPost,
     type CombatEncounterState,
     type FightPost,
-    type PlayLogSource,
+    type GameState,
 } from '@mechanics';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { createFightRecorder, endCombatOutcome, fightRecorder, type FightRecorderDeps } from '@/lib/fightRecorder';
+import type { PlayLogStamps } from '@/lib/playLog';
 import type { PuzzleApiConfig, PuzzleFetch } from '@/lib/puzzleAttempts';
 import { ENCOUNTER_ENEMY_HP_MULTIPLIER } from '@/state/actions';
 import { arriveAtRealFight, startRealFight } from '@/test-utils/realFight';
@@ -34,7 +35,7 @@ jest.mock('@/lib/buildProfile', () => ({
 const devTools = isDevToolsEnabled as unknown as jest.Mock<() => boolean>;
 
 const CONFIG: PuzzleApiConfig = { url: 'https://miserere-api.example.workers.dev', token: 'dev-token' };
-const SOURCE: PlayLogSource = { solver: '', sessionId: 'session-1', buildCommit: 'abc1234', appBuild: '1.0.0 preview' };
+const SOURCE: PlayLogStamps = { solver: '', sessionId: 'session-1', buildCommit: 'abc1234', appBuild: '1.0.0 preview', source: 'harness' };
 
 type Call = { url: string; init: { method: string; headers: Record<string, string>; body: string } };
 
@@ -97,7 +98,7 @@ describe('the recorder over a real fight', () => {
         const { fetcher, calls } = mockFetch();
         const recorder = recorderWith({ fetcher });
         const player = store.getState().player;
-        recorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier: 2, vitaeStart: player.health });
+        recorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier: 2, vitaeStart: player.health, runId: 'run-7' });
 
         const states = playToTheEnd((s) => recorder.observe(s), combat);
         const last = states[states.length - 1];
@@ -113,7 +114,7 @@ describe('the recorder over a real fight', () => {
         const post = JSON.parse(calls[0].init.body) as FightPost;
         expect(validateFightPost(post)).toMatchObject({ ok: true });
 
-        expect(post).toMatchObject({ ...SOURCE, enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier: 2 });
+        expect(post).toMatchObject({ ...SOURCE, runId: 'run-7', enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier: 2 });
         expect(post.outcome).toBe(last.finalOutcome);
         expect(post.deck).toEqual(combat.deck);
         expect(post.turns).toBe(last.turn);
@@ -136,7 +137,7 @@ describe('the recorder over a real fight', () => {
         const { combat } = startRealFight();
         const { fetcher, calls } = mockFetch();
         const recorder = recorderWith({ fetcher });
-        recorder.start({ enemyId: 'some-other-foe', playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.start({ enemyId: 'some-other-foe', playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null });
         playToTheEnd((s) => recorder.observe(s), combat);
         await flush();
         expect(calls).toHaveLength(0);
@@ -148,7 +149,7 @@ describe('the recorder over a real fight', () => {
         const { fetcher, calls } = mockFetch(false);
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
         const recorder = recorderWith({ fetcher });
-        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null });
         recorder.observe(combat);
         await expect(recorder.end('retreat')).resolves.toBe(false);
         expect(calls).toHaveLength(1);
@@ -160,7 +161,7 @@ describe('the recorder over a real fight', () => {
         const { combat, enemy } = startRealFight();
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
         const recorder = recorderWith({ fetcher: async () => { throw new Error('offline'); } });
-        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null });
         recorder.observe(combat);
         await expect(recorder.end('retreat')).resolves.toBe(false);
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('offline'));
@@ -172,7 +173,7 @@ describe('screen events (phase BE2d)', () => {
         const { fetcher, calls } = mockFetch();
         const recorder = recorderWith({ fetcher });
         recorder.screen('ui-staged', 'grey-strike'); // nothing open: dropped
-        recorder.start({ enemyId: 'foe', playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 40 });
+        recorder.start({ enemyId: 'foe', playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 40, runId: null });
         recorder.screen('ui-staged', 'grey-strike');
         recorder.screen('ui-unstaged', 'grey-strike');
         recorder.screen('ui-detail-opened', 'grey-ward');
@@ -196,7 +197,7 @@ describe('what was worn (phase LR1g, A19)', () => {
         const recorder = recorderWith({ fetcher });
         recorder.signatureRefused('sig-bleeding-signet', 'Need 4 Conviction'); // nothing open: dropped
         recorder.start({
-            enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, relics: ['relic-bleeding-signet'],
+            enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null, relics: ['relic-bleeding-signet'],
         });
         recorder.observe({ ...combat, signatures: ['sig-bleeding-signet'] });
         recorder.signatureRefused('sig-bleeding-signet', 'Need 4 Conviction');
@@ -215,7 +216,7 @@ describe('what was worn (phase LR1g, A19)', () => {
         const { combat, enemy } = startRealFight();
         const { fetcher, calls } = mockFetch();
         const recorder = recorderWith({ fetcher });
-        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null });
         recorder.observe({ ...combat, signatures: [] });
         await recorder.end('retreat');
         expect(JSON.parse(calls[0].init.body)).toMatchObject({ relics: [], signatures: [] });
@@ -248,7 +249,7 @@ describe('the gate', () => {
         const { combat, enemy } = startRealFight();
         const { fetcher, calls } = mockFetch();
         const recorder = recorderWith({ fetcher, config: () => null });
-        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null });
         expect(recorder.isRecording()).toBe(false);
         playToTheEnd((s) => recorder.observe(s), combat);
         await expect(recorder.end('defeat')).resolves.toBe(false);
@@ -260,7 +261,7 @@ describe('the gate', () => {
         const { fetcher, calls } = mockFetch();
         let open = true;
         const recorder = recorderWith({ fetcher, config: () => (open ? CONFIG : null) });
-        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10 });
+        recorder.start({ enemyId: enemy.id, playerLevel: 1, enemyHpMultiplier: 2, vitaeStart: 10, runId: null });
         recorder.observe(combat);
         open = false;
         await expect(recorder.end('retreat')).resolves.toBe(false);
@@ -308,7 +309,24 @@ describe('the app bridges', () => {
             outcome: 'retreat',
             vitaeStart: player.health,
             buildCommit: 'abc1234',
+            // A jest run is never the preview APK, so the app stamps it the harness (SM1b).
+            source: 'harness',
+            runId: (arrival.store.getState() as unknown as GameState).runId,
         });
+    });
+
+    it('stamps the fight with the run id it started under, even if the run is reset before it ends', async () => {
+        const arrival = arriveAtRealFight();
+        const before = (arrival.store.getState() as unknown as GameState).runId;
+        arrival.actions.beginHazardEncounter();
+        arrival.actions.resetRun({ keepCharacter: true });
+        const after = (arrival.store.getState() as unknown as GameState).runId;
+        expect(after).not.toBe(before);
+        arrival.actions.endCombat('flee');
+        await flush();
+        const posts = fetchSpy.mock.calls.filter(([url]) => url.endsWith(PLAY_LOG_FIGHTS_PATH));
+        expect(posts).toHaveLength(1);
+        expect((JSON.parse(posts[0][1].body) as FightPost).runId).toBe(before);
     });
 
     it('with dev tools off, staging and ending a fight makes no call', async () => {

@@ -82,7 +82,7 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
 - **A4** The app's `playLogSource()` stamps `source: 'human'` only when the build carries
   `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, and `harness` otherwise; the app never sends `sim`. The committed `eas.json`
   preview profile carries `EXPO_PUBLIC_PLAY_LOG_SOURCE: "human"` in its `env` (the `preview-build.yml` jq merge keeps
-  it). A static web export, a dev server and a jest run therefore post `harness` [T to confirm #2]. The puzzle-attempt
+  it). A static web export, a dev server and a jest run therefore post `harness` (Confirmed by T (2026-10-31): "Only APK is human"). The puzzle-attempt
   poster carries the same source.
 - **A5** Every fight, deck event and puzzle attempt the app posts carries `runId`: the store's `GameState.runId`, or
   null when no run is in progress (a `/devpuzzle` attempt from the title screen). A fight and the deck event after it
@@ -208,7 +208,7 @@ knows the game (one per lane archetype) plays whole Breakwater runs headlessly t
 - **The old rows** (Confirmed by T (2026-10-31)): every `fights` and `deck_events` row already in D1, whatever its
   `build_commit`, is relabelled `harness` by `0006`, to start clean; from here only a build carrying the human stamp
   posts `human`. Puzzle attempts carry no build commit and all stay `human`.
-- **Who counts as T** [T to confirm #2]: only a build that carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the
+- **Who counts as T** (Confirmed by T (2026-10-31): "Only APK is human"): only a build that carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the
   committed preview profile in `eas.json` sets. Every other build posts `harness`, so a forgotten harness can never
   land in T's numbers. A dev server T opens by hand posts `harness` too.
 - **The bot plays the game T plays** (Confirmed by T (2026-10-31): "App's own code"): the driver walks the app's own store actions headlessly

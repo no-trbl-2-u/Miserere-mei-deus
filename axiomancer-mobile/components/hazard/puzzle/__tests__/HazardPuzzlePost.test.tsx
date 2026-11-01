@@ -11,7 +11,12 @@ import React from 'react';
 
 import { DICE_ROLL_OVERLAY_MS } from '@/components/hazard/HazardOverlays';
 import { HazardPuzzleDemo } from '@/components/hazard/puzzle/HazardPuzzleDemo';
+import { createNewGameState, type GameState } from '@mechanics';
+
 import { isDevToolsEnabled } from '@/lib/buildProfile';
+import { hydrateStoreWithGameState } from '@/state/menu/store-actions';
+import { createAppStore } from '@/state/store';
+import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 jest.mock('@/lib/buildProfile', () => ({
@@ -130,6 +135,27 @@ describe('posting ended attempts (A3)', () => {
         fireEvent.press(screen.getByTestId('hazard-play-button'));
         expect(fetchMock).toHaveBeenCalledTimes(1);
         expect(postedBodies()[0]).toMatchObject({ layoutId: 'cand-hard-01', intendedBand: 'hard', route: 'risk' });
+    });
+
+    it('an attempt from the title screen carries no run id and posts as the harness (SM1b)', () => {
+        const screen = mount();
+        solveHardRisk(screen);
+        expect(postedBodies()[0]).toMatchObject({ source: 'harness', runId: null });
+    });
+
+    it('an attempt made inside a run carries the save run id, and the human stamp when the build has it (SM1b)', () => {
+        process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE = 'human';
+        try {
+            const store = createAppStore({ adapter: createMemoryAdapter() });
+            hydrateStoreWithGameState(store, createNewGameState({ characterId: 'the-chosen' }));
+            const runId = (store.getState() as unknown as GameState).runId;
+            const { tree } = withAllProviders(<HazardPuzzleDemo />, { store });
+            solveHardRisk(render(tree));
+            expect(postedBodies()[0]).toMatchObject({ source: 'human', runId });
+            expect(runId.length).toBeGreaterThan(0);
+        } finally {
+            delete process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE;
+        }
     });
 
     it('a production build makes no network call', () => {

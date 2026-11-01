@@ -26,7 +26,7 @@ import {
     type WorldState,
 } from '@mechanics';
 
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
 import { EMPTY_COMBAT_REWARD_SLICE, type AppStore } from '../store';
 import { offerEliteRelicAction } from '../item-reward/relic-sources';
@@ -153,6 +153,7 @@ function postRewardEvent(store: AppStore, offered: string[], cardId: string | nu
         offered,
         deck: runDeck(state),
         where: deckEventWhere(state, 'combat-reward'),
+        runId: deckEventRunId(state),
     });
 }
 

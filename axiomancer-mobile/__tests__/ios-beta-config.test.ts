@@ -40,7 +40,9 @@ describe('EAS profiles (A2)', () => {
   });
 
   test('preview stays Android-only: no ad hoc iOS channel', () => {
-    expect(Object.keys(eas.build.preview)).toEqual(['android']);
+    // `env` carries the play-log stamp that makes the APK the human (SM1b); `android` is the only platform.
+    expect(Object.keys(eas.build.preview).sort()).toEqual(['android', 'env']);
+    expect(eas.build.preview.env).toEqual({ EXPO_PUBLIC_PLAY_LOG_SOURCE: 'human' });
     expect(eas.build.preview.android).toEqual({ buildType: 'apk', distribution: 'internal' });
   });
 

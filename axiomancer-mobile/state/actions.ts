@@ -162,7 +162,7 @@ import {
 import { closeTravelAction, openTravelScreenAction, takeTravelAction } from './travel/store-actions';
 import { travelPayloadAt } from '@mechanics';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -668,7 +668,8 @@ function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: numb
     if (!player) return;
     const { weapon, armor } = player.equipment;
     const relics = [weapon, armor, ...player.equipment.relics].flatMap((piece) => (piece ? [piece.id] : []));
-    fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health, relics });
+    const runId = deckEventRunId(store.getState() as unknown as DeckEventState);
+    fightRecorder.start({ enemyId: enemy.id, playerLevel: player.level, enemyHpMultiplier, vitaeStart: player.health, runId, relics });
 }
 
 /**
@@ -685,6 +686,7 @@ function recordRunEnd(store: AppStore): void {
         offered: null,
         deck: runDeck(state),
         where: deckEventWhere(state, 'run-end'),
+        runId: deckEventRunId(state),
     });
 }
 

@@ -12,6 +12,7 @@ import { useEffect, useRef } from 'react';
 
 import type { HazardPuzzleBand } from '@mechanics';
 
+import { playLogSourceKind } from '@/lib/playLog';
 import {
     postPuzzleAttempt,
     puzzleApiConfig,
@@ -19,6 +20,7 @@ import {
     puzzleAttemptKey,
     toPuzzleAttemptPost,
 } from '@/lib/puzzleAttempts';
+import { useGameState } from '@/state/GameStoreProvider';
 import type { HazardPuzzleLogAttempt } from '@/state/presenters/hazard-puzzle-log.engine';
 
 export function usePostEndedPuzzleAttempts(
@@ -26,6 +28,9 @@ export function usePostEndedPuzzleAttempts(
     intendedBandFor: (layoutId: string) => HazardPuzzleBand | null,
 ): void {
     const posted = useRef(new Set<string>());
+    // The save's run id (SM1b); a store that never opened a run as a character
+    // is the title screen's shell, so an attempt made there carries null.
+    const runId = useGameState((s) => (s.player?.characterId !== undefined ? s.runId ?? null : null));
 
     useEffect(() => {
         const config = puzzleApiConfig();
@@ -34,8 +39,11 @@ export function usePostEndedPuzzleAttempts(
             const key = puzzleAttemptKey(attempt);
             if (attempt.end === null || posted.current.has(key)) continue;
             posted.current.add(key);
-            const post = toPuzzleAttemptPost(attempt, intendedBandFor(attempt.layoutId), puzzleAppBuild());
+            const post = toPuzzleAttemptPost(attempt, intendedBandFor(attempt.layoutId), puzzleAppBuild(), {
+                source: playLogSourceKind(),
+                runId,
+            });
             if (post !== null) void postPuzzleAttempt(post, config);
         }
-    }, [attempts, intendedBandFor]);
+    }, [attempts, intendedBandFor, runId]);
 }

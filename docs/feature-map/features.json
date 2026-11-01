@@ -4236,6 +4236,12 @@
       "kind": "coupling",
       "from": "route:dev",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/puzzleAttempts.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:dev",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/actions.ts"
     },
     {
@@ -4639,6 +4645,18 @@
       "from": "route:devframes",
       "to": "area:Log",
       "file": "axiomancer-mobile/state/settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devpuzzle",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/playLog.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devpuzzle",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/lib/puzzleAttempts.ts"
     },
     {
       "kind": "coupling",
