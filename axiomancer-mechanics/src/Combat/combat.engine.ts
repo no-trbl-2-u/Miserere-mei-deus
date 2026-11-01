@@ -1137,7 +1137,10 @@ function playBottomAction(
         gear = fired.state;
         player = fired.state.player as Character;
         const healthBefore = enemy.health;
-        const base = scaleFor(mech.amount, stats, 'body', 'one-shot') + fired.bonus;
+        // The next-DEAL bonus (Crimson Pact) joins unscaled, before VULNERABLE, and the first DEAL spends it.
+        const pending = gear.program?.nextDealBonus ?? 0;
+        if (pending > 0 && gear.program) gear = { ...gear, program: { ...gear.program, nextDealBonus: 0 } };
+        const base = scaleFor(mech.amount, stats, 'body', 'one-shot') + fired.bonus + pending;
         const warded = soakDealWithWard(wardState, base, scalePlayerHit({ base, vulnMult }), events);
         wardState = warded.state;
         const dmg = warded.dealt;

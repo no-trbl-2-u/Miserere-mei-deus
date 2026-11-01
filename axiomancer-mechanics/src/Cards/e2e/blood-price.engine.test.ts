@@ -380,6 +380,23 @@ describe('Crimson Pact: the next DEAL this turn deals +n', () => {
         expect(s.program!.nextDealBonus).toBe(0);
     });
 
+    it('a grey Blow\'s DEAL takes the bonus and spends it, as a program card\'s DEAL does', () => {
+        const owned = (s: CombatEncounterState): CombatEncounterState =>
+            ({ ...s, player: { ...s.player, knownCards: [...s.player.knownCards, FILLER] } });
+        const armed = (third: string): CombatEncounterState =>
+            play(play(owned(fight(['bp-e-09n', 'bp-e-02d', third])), 't0', false), 't1', false);
+        const hitOf = (third: string, withPact: boolean, paid = true): number => {
+            const before = withPact ? armed(third) : play(owned(fight(['bp-e-02d', third])), 't0', false);
+            const after = play(before, withPact ? 't2' : 't1', paid);
+            return before.enemy.health - after.enemy.health;
+        };
+        // The Pact is armed (+2) when the card is played; a grey Blow's DEAL takes it, unscaled, and spends it.
+        expect(armed(FILLER).program!.nextDealBonus).toBe(2);
+        expect(hitOf(FILLER, true) - hitOf(FILLER, false)).toBe(2);
+        expect(hitOf('bp-e-06b', true, false) - hitOf('bp-e-06b', false, false)).toBe(2);
+        expect(play(armed(FILLER), 't2', true).program!.nextDealBonus).toBe(0);
+    });
+
     it('TETHER\'s hit is a DEAL: it takes the bonus', () => {
         let s = play(fight(['bp-e-09n', 'bp-e-10d']), 't0', false);
         s = play(s, 't1', false);
