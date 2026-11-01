@@ -117,8 +117,9 @@ export interface ItemGrantResult {
 /**
  * D5: does this item deserve the full item-reward screen?
  *
- * `true` iff the item is `Equipment` AND carries a signature skill or at least
- * one stat modifier — i.e. there is something to *show*. Everything else (plain
+ * `true` iff the item is `Equipment` AND carries a signature skill, an effect
+ * (a weapon or armor) or at least one stat modifier — i.e. there is something
+ * to *show*. Everything else (plain
  * materials, quest items, consumables, and the degenerate stat-less signet)
  * keeps today's lightweight inline grant.
  *
@@ -128,6 +129,7 @@ export interface ItemGrantResult {
 export function qualifiesForItemRewardScreen(item: Item): boolean {
     if (!isEquipment(item)) return false;
     if (item.grantsSignature !== undefined) return true;
+    if (item.effect !== undefined) return true;
     return (item.statModifiers?.length ?? 0) > 0;
 }
 

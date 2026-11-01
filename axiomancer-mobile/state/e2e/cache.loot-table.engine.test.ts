@@ -57,9 +57,9 @@ describe('cache loot-table reward depth', () => {
 
         const after = store.getState() as unknown as GameState;
         expect(after.player.inventory.length).toBe(beforeInv + candidateCount);
-        // The Reliquary yields consumables only.
+        // The Reliquary yields consumables, and now and then one lane weapon or armor.
         const added = after.player.inventory.slice(beforeInv);
-        expect(added.every((i) => i.category === 'consumable')).toBe(true);
+        expect(added.every((i) => i.category === 'consumable' || (i.category === 'equipment' && i.slot !== 'relic'))).toBe(true);
     });
 
     it('yields consumables at any level (Phase 21 — no level gate on the reward roll)', () => {
@@ -77,8 +77,9 @@ describe('cache loot-table reward depth', () => {
         const { store, actions } = makeStoreAndActions();
         setLevel(store, 10);
         actions.beginLootCacheChoice({ currency: 8, seed: 5 });
-        // Modest tier rolls 1-2 consumables (CACHE_REWARD_TUNING) — never empty.
-        const candidates = store.getState().cache!.session!.itemCandidates;
+        // Modest tier rolls 1-2 consumables (CACHE_REWARD_TUNING) — never empty;
+        // a lane piece, when the cache holds one, comes on top.
+        const candidates = store.getState().cache!.session!.itemCandidates.filter((i) => i.category === 'consumable');
         expect(candidates.length).toBeGreaterThanOrEqual(1);
         expect(candidates.length).toBeLessThanOrEqual(2);
     });

@@ -11,7 +11,7 @@ The ten relics of [`src/Items/relic.library.ts`](../src/Items/relic.library.ts)
 slot is `relic`, a ring by its name alone, no stat line, granting The Open Hand,
 `sig-disarming-plea`), and the ten weapons and armor of
 [`src/Items/equipment.library.ts`](../src/Items/equipment.library.ts) below.
-Caches yield consumables (`src/Items/cache-reward.ts`).
+Caches yield consumables, and now and then a lane piece (`src/Items/cache-reward.ts`).
 
 ## The weapons and armor
 
@@ -21,6 +21,13 @@ its lane struggles; `EQUIPMENT_LANE` names that lane for the drop tables only
 (a worn weapon or armor opens no card lane). `weaponLibrary`, `armorLibrary`
 and `equipmentLibrary` (both) are exported from `@mechanics`; ids are
 `weapon-*` and `armor-*`.
+
+Drops: every rate and the shop's stock live in `EQUIPMENT_DROP_TUNING`
+(`src/Items/equipment-drop.ts`): elite 25% (on top of its relic roll),
+cache 33%, a befriended elite 100%, the shop two pieces at 40 shillings. A
+source draws only from the lane pieces the player does not carry, never the
+grey pair. The Breakwater quests alternate relic, weapon, relic, armor; an
+equipment step pays the lane of the relic the step before paid.
 
 | Lane | Weapon | Armor |
 |---|---|---|

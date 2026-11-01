@@ -105,7 +105,7 @@ export {
     // The elite reward: the best cards or a random upgrade
     isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,
     // The elite-only relic drop, rolled after the elite reward
-    eliteRelicPool, rollEliteRelicDrop,
+    eliteRelicPool, rollEliteRelicDrop, rollEliteEquipmentDrop,
     // Fate Engine — the dice get a second read
     riderText, RESERVE_MAX,
     // Upgradeable Dice (the combat dice model): the surfaces the app/sim
@@ -226,6 +226,8 @@ export {
     // The ten weapons and armor (the grey pair is worn from the start).
     weaponLibrary, armorLibrary, equipmentLibrary, EQUIPMENT_LANE, GREY_WEAPON_ID, GREY_ARMOR_ID,
     getEquipmentPieceById, cloneEquipmentPiece, equipmentLaneId, greyPair, wearGreyPair,
+    // Where the lane pieces come from: one tuning table, the pool and the roll.
+    EQUIPMENT_DROP_TUNING, carriedPieceIds, equipmentDropPool, rollEquipmentDrop,
     // The shared grant/equip/swap path. `equipItem` never returns the displaced
     // piece (weapon/armor replace in place; a full relic row is a guarded
     // no-op), so every grant site routes through `grantItem` rather than
@@ -240,7 +242,7 @@ export type {
     EquipmentEffect, EquipmentTrigger, EquipmentCondition, EquipmentPayoff, EquipmentPayoffKind,
     EquipmentDiceEffect, EquipmentDiceFields, EquipmentDieChange, EquipmentDieColor,
     SpecialPayload, SpecialPayloadKind,
-    CacheLootTier,
+    CacheLootTier, EquipmentCarrier,
     GrantOutcome,
 } from './Items';
 
@@ -523,7 +525,7 @@ export {
     // The authored questlines (the Breakwater's Chapter 1 chain).
     AUTHORED_QUESTLINES,
     BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_STEPS,
-    BREAKWATER_CHAPTER_RELICS, BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD,
+    BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_PIECES, BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_HELD,
     // Encounter reveal reads (ET1a).
     BREAKWATER_ENCOUNTER_NODES, BREAKWATER_ARRIVAL_LINES, arrivalLineAt, breakwaterEncounterTier,
     heldRoadPlaceAt, breakwaterPlaceAt,

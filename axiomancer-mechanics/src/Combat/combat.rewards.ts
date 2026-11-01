@@ -25,6 +25,7 @@ import { CARD_LANES, GREY_LANE, deckLaneIds, laneRewardPool, type CardLane } fro
 import type { Equipment } from '../Items/types';
 import { relicLibrary } from '../Items/relic.library';
 import { wornLaneCounts, wornPieces, type Wearer } from '../Items/relic-lanes';
+import { EQUIPMENT_DROP_TUNING, rollEquipmentDrop, type EquipmentCarrier } from '../Items/equipment-drop';
 import { ELITE_RELIC_DROP_CHANCE } from '../Game/game-mechanics.constants';
 import { deepClone } from '../Utils';
 import { nextUpgradeId, upgradableCardIds } from '../Cards/card-upgrades';
@@ -393,6 +394,25 @@ export function rollEliteRelicDrop(
     if (rng() >= ELITE_RELIC_DROP_CHANCE) return null;
     const pick = pool[Math.min(Math.floor(rng() * pool.length), pool.length - 1)]!;
     return deepClone(pick);
+}
+
+/**
+ * A won (or befriended) elite fight's lane piece: one weapon or armor the
+ * player does not carry, drawn on top of the relic roll and the card reward.
+ * A win drops it at `EQUIPMENT_DROP_TUNING.elite`; a befriended elite always
+ * hands one (`befriendedElite`, 1). Pure and seeded like
+ * {@link rollEliteRelicDrop}: the chance first, then the pick. The grey pair
+ * is never in the pool; with every lane piece carried it drops nothing.
+ *
+ * @example rollEliteEquipmentDrop(player, Math.random) // null, or { id: 'weapon-...', ... }
+ */
+export function rollEliteEquipmentDrop(
+    player: EquipmentCarrier,
+    rng: () => number,
+    opts: { befriended?: boolean } = {},
+): Equipment | null {
+    const chance = opts.befriended ? EQUIPMENT_DROP_TUNING.befriendedElite : EQUIPMENT_DROP_TUNING.elite;
+    return rollEquipmentDrop(player, rng, chance);
 }
 
 /** Appends a chosen reward card to the player's persistent deck collection. */

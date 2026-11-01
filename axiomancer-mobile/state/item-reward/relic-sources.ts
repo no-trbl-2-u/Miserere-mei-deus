@@ -21,7 +21,7 @@ import {
 import type { Equipment, GameState, Item, QuestLog } from '@mechanics';
 
 import type { AppStore } from '../store';
-import { eliteDropSource, questRewardSource } from '../presenters/relic-source.copy';
+import { eliteDropSource, eliteGiftSource, questRewardSource } from '../presenters/relic-source.copy';
 import { offerItemRewardAction } from './store-actions';
 
 /** Drops the LAST inventory row with `id` (the clone a grant just appended). */
@@ -72,4 +72,19 @@ export function offerCompletedQuestItemsAction(store: AppStore, before: QuestLog
  */
 export function offerEliteRelicAction(store: AppStore, relic: Equipment, eliteName: string): void {
     offerItemRewardAction(store, relic, { source: eliteDropSource(eliteName), includeInline: true });
+}
+
+/**
+ * Queues the lane weapon or armor an elite hands over (rolled by
+ * `rollEliteEquipmentDrop`) on the item-reward screen, its eyebrow naming the
+ * elite: dropped by a beaten one, given by a befriended one.
+ */
+export function offerElitePieceAction(
+    store: AppStore,
+    piece: Equipment,
+    eliteName: string,
+    befriended: boolean,
+): void {
+    const source = befriended ? eliteGiftSource(eliteName) : eliteDropSource(eliteName);
+    offerItemRewardAction(store, piece, { source, includeInline: true });
 }

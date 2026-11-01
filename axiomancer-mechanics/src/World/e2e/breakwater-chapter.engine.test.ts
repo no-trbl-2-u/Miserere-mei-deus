@@ -31,7 +31,7 @@ import type { GameState } from '../../Game/types';
 import type { ResolvedEvent } from '../MapEvents/types';
 import { BRIDGE_GATE_REASON, KEEP_GATE_REASON } from '../Continents/Coastal-Village/breakwater-chapter';
 import {
-    BREAKWATER_CHAPTER_QUESTLINE_ID as LINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_STEPS as STEPS,
+    BREAKWATER_CHAPTER_QUESTLINE_ID as LINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_PIECES, BREAKWATER_CHAPTER_STEPS as STEPS,
     BREAKWATER_KEEP_KEY,
 } from '../breakwater-chapter.questline';
 
@@ -48,8 +48,9 @@ const reachable = (s: GameState) => roadReachable(s.world.currentMap);
 const here = (s: GameState) => s.world.currentMap.currentNode;
 const spent = (s: GameState, id: string) =>
     s.world.currentMap.completedNodes.includes(id) || s.world.currentMap.consumedNodes.includes(id);
+/** Every relic, weapon and armor carried, in the order the chain paid them. */
 const relicsCarried = (s: GameState) =>
-    s.player.inventory.filter(i => i.category === 'equipment' && i.slot === 'relic').map(i => i.id);
+    s.player.inventory.filter(i => i.category === 'equipment' && i.id !== 'weapon-opening-blade' && i.id !== 'armor-bracing-coat').map(i => i.id);
 
 /** A new game on the Breakwater, its arrival played (the windmill's cutscene). */
 function newGame(): { state: GameState; event: ResolvedEvent } {
@@ -89,11 +90,11 @@ function expectGated(s: GameState, nodeId: string, reason: string): void {
     expect(() => moveToNode(s.world, nodeId)).toThrow(reason);
 }
 
-/** Every step's relic, by step. */
-const RELIC = BREAKWATER_CHAPTER_RELICS;
+/** Every step's reward by step: a relic, a weapon, a relic, an armor. */
+const RELIC = { ...BREAKWATER_CHAPTER_RELICS, ...BREAKWATER_CHAPTER_PIECES } as const;
 
 describe('the chapter, windmill to far bank', () => {
-    it('walks every gate, quest and passage in order, paying XP and one relic per quest', () => {
+    it('walks every gate, quest and passage in order, paying XP and one reward per quest', () => {
         // ── The windmill: the arrival gives quest 1 ─────────────────────
         const start = newGame();
         let s = start.state;
@@ -216,12 +217,12 @@ describe('the chapter, windmill to far bank', () => {
         expect(legal(s)).toContain('bw-b2');
         expect(spent(s, 'bw-b1')).toBe(true);
 
-        // Every quest paid once: its XP and its one relic, the last one a
-        // relic the elite drop also draws (A12).
+        // Every quest paid once: its XP and its one reward, alternating relic,
+        // weapon, relic, armor.
         expect(s.quests.active).toEqual([]);
         expect(s.quests.completed).toEqual([STEPS.fishermen, STEPS.lighthouse, STEPS.keep, STEPS.boss]);
         expect(relicsCarried(s)).toEqual([RELIC[1], RELIC[2], RELIC[3], RELIC[4]]);
-        expect(relicLibrary.find(r => r.id === RELIC[4])?.relicSource).toBe('elite');
+        expect(relicLibrary.find(r => r.id === RELIC[1])?.relicSource).toBe('quest');
         expect(s.player.experience).toBeGreaterThanOrEqual(xp0 + 4 * 40);
 
         // ── The far bank: on to the Charcoal Wood ───────────────────────

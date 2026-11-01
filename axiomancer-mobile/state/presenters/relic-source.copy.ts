@@ -8,6 +8,11 @@ export function questRewardSource(questName: string): string {
     return `QUEST REWARD: ${questName.toUpperCase()}`;
 }
 
+/** The eyebrow for the lane piece a befriended elite hands over. */
+export function eliteGiftSource(eliteName: string): string {
+    return `GIVEN BY ${eliteName.toUpperCase()}`;
+}
+
 /** The eyebrow for the relic a won elite fight drops. */
 export function eliteDropSource(eliteName: string): string {
     return `DROPPED BY ${eliteName.toUpperCase()}`;

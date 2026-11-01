@@ -13,7 +13,7 @@
 import { describe, expect, it } from '@jest/globals';
 
 import {
-    BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_RELICS, ENEMY_REGISTRY,
+    BREAKWATER_CHAPTER_GATES, BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_PIECES, ENEMY_REGISTRY,
     completeQuest, createStartingWorld, initializeCombatEncounter, legalMovesFrom, placeOnNode, startQuest,
     stepQuest, unblockMapRoute, type CombatOutcome, type GameState, type WorldState,
 } from '@mechanics';
@@ -26,7 +26,7 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 const LINE = BREAKWATER_CHAPTER_QUESTLINE;
 const LAST = LINE.steps[3]!;
-const CIRCLET = BREAKWATER_CHAPTER_RELICS[4];
+const ARMOR = BREAKWATER_CHAPTER_PIECES[4];
 
 function gs(store: AppStore): GameState {
     return store.getState() as unknown as GameState;
@@ -87,7 +87,7 @@ describe('the chapter boss fills step 4; the bridge turns it in', () => {
         expect(legalMovesFrom(bridged.currentMap)).not.toContain('bw-b2');
     });
 
-    it('TURN IN at the bridge queues the Circlet on /item-reward under the chain\'s name, and WEAR IT NOW puts it on', () => {
+    it('TURN IN at the bridge queues the armor on /item-reward under the chain\'s name, and WEAR IT NOW puts it on', () => {
         const { store, actions, boss } = atTheSeaKeep();
         winTheBoss(store, boss);
         atTheBridge(store, actions);
@@ -99,13 +99,13 @@ describe('the chapter boss fills step 4; the bridge turns it in', () => {
         expect(gs(store).player.experience).toBe(before.experience + 40);
 
         const queue = store.getState().itemReward.queue;
-        expect(queue.map((e) => e.item.id)).toEqual([CIRCLET]);
+        expect(queue.map((e) => e.item.id)).toEqual([ARMOR]);
         expect(queue[0]!.source).toContain(LINE.name!.toUpperCase());
         // Not in the satchel yet: the queue is the one grant.
-        expect(gs(store).player.inventory.some((i) => i.id === CIRCLET)).toBe(false);
+        expect(gs(store).player.inventory.some((i) => i.id === ARMOR)).toBe(false);
 
         equipItemRewardAction(store);
-        expect(gs(store).player.equipment.relics.flatMap((r) => (r ? [r.id] : []))).toContain(CIRCLET);
+        expect(gs(store).player.equipment.armor?.id).toBe(ARMOR);
         expect(store.getState().itemReward.queue).toEqual([]);
     });
 
