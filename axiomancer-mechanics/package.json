@@ -30,6 +30,7 @@
     "combat-playtest": "ts-node src/CLI/combat-playtest.cli.ts",
     "lane-pacing": "ts-node --transpile-only src/CLI/lane-pacing.cli.ts",
     "chapter1-enemies": "ts-node --transpile-only src/CLI/chapter1-enemies.cli.ts",
+    "chapter1-content": "ts-node --transpile-only src/CLI/chapter1-content.cli.ts",
     "perf-bench": "ts-node src/CLI/perf-bench.cli.ts",
     "agent-e2e": "node automation/agent-e2e.mjs",
     "catalog:export": "ts-node --transpile-only scripts/export-catalog.ts",
