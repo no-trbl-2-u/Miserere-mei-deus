@@ -97,9 +97,10 @@ const dropUnscheduled = (md, id) => md.replace(new RegExp(`^- ${id} — .*\\n`, 
 /**
  * A scratch bare origin and a clone of it holding the live plan files, the
  * scripts the merge needs and `.gitattributes`. `base(dir)` edits the base
- * commit; the clone is left on main.
+ * commit; the clone is left on main. `root` is the checkout the plan files are read from (the live
+ * one, or a fixture); the scripts always come from this checkout.
  */
-function scratch(base) {
+function scratch(base, root = ROOT) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-test-'))
   const origin = path.join(dir, 'origin.git')
   const work = path.join(dir, 'work')
@@ -110,12 +111,12 @@ function scratch(base) {
   git(work, 'switch', '-q', '-c', 'main')
   fs.mkdirSync(path.join(work, 'plan'), { recursive: true })
   fs.mkdirSync(path.join(work, 'scripts', 'plan'), { recursive: true })
-  const specs = fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => /^\d{2,}-[a-z0-9][a-z0-9-]*\.md$/.test(n)).map((n) => `plan/${n}`)
+  const specs = fs.readdirSync(path.join(root, 'plan')).filter((n) => /^\d{2,}-[a-z0-9][a-z0-9-]*\.md$/.test(n)).map((n) => `plan/${n}`)
   // The live plan includes its pending closes: a chunk closed by a pending file has already left deadlines.md's
   // Unscheduled list, so a copy without them reads it as open with no home (NX1g, the first pending close).
   fs.mkdirSync(path.join(work, 'plan', 'pending'), { recursive: true })
-  const pending = fs.readdirSync(path.join(ROOT, 'plan', 'pending')).filter((n) => n.endsWith('.md')).map((n) => `plan/pending/${n}`)
-  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', 'plan/README.md', ARCHIVE, DEADLINES, ...specs, ...pending]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+  const pending = fs.readdirSync(path.join(root, 'plan', 'pending')).filter((n) => n.endsWith('.md')).map((n) => `plan/pending/${n}`)
+  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', 'plan/README.md', ARCHIVE, DEADLINES, ...specs, ...pending]) write(work, f, fs.readFileSync(path.join(root, f), 'utf8'))
   for (const f of COPIED_SCRIPTS) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(work, 'scripts', f))
   write(work, 'notes.txt', 'one\n')
   base?.(work)
@@ -189,6 +190,29 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
     checkDeadlines(work) // throws when red
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the scratch repo carries the plan pending closes: without them a closed chunk reads open with no home', () => {
+  // A live plan with a pending close (133.8, alias NX1h) whose Unscheduled line went with it, as /next's close leaves it.
+  const live = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-live-'))
+  try {
+    fs.mkdirSync(path.join(live, 'plan', 'pending'), { recursive: true })
+    for (const n of ['.gitattributes', 'LIVE_DEADLINES.md']) fs.copyFileSync(path.join(ROOT, n), path.join(live, n))
+    for (const n of fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', n), path.join(live, 'plan', n))
+    write(live, DEADLINES, dropUnscheduled(read(live, DEADLINES), 'NX1h'))
+    write(live, 'plan/pending/133.8.md', ['---', 'close: 133.8', 'date: 2026-11-01', 'says: The weekly nexus sync opens one PR', '---', ''].join('\n'))
+    const { dir, work } = scratch(undefined, live)
+    try {
+      assert.ok(fs.existsSync(path.join(work, 'plan/pending/133.8.md')), 'the pending close is copied')
+      checkDeadlines(work) // throws when red
+      fs.rmSync(path.join(work, 'plan/pending/133.8.md'))
+      assert.throws(() => checkDeadlines(work), /open row NX1h \[ \] has no Item/, 'without the copy the close is lost')
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
+  } finally {
+    fs.rmSync(live, { recursive: true, force: true })
   }
 })
 
