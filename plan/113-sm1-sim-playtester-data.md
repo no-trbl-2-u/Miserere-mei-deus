@@ -224,20 +224,10 @@ Measure: A17, its output pasted into the PR.
   `source`, `build_commit`) and `run_events` (indexed on `run_id`, `kind`). An older APK posts the old shape and lands
   as `human` with a null run id. A breaking change would take `/v2/`; nothing here needs one.
 - **Caps:** a run-events batch at most 200 events and 256 KiB; a `play_runs` body at most 64 KiB; fights keep BE2's
-  1 MiB and 5000 events. One sim batch posts at most 25 MB (A13).
+  1 MiB and 5000 events. One sim batch posts at most 25 MB.
 
 ## Acceptance
 
-- **A13** `npm run sim:run -- --post` sends each run through the app's own posters with `source: 'sim'`: `solver` is
-  the policy id, `sessionId` is the batch (`GITHUB_RUN_ID`, or a local id), `buildCommit` is the checked-out sha,
-  `runId` is the run's `GameState.runId`, and the `play_runs` row carries `policy_id`. It reads `PUZZLE_API_URL` and
-  `PUZZLE_API_TOKEN` from the environment and, without them, prints what it would post and posts nothing. It prints
-  the rows and bytes posted, and stops before posting past 25 MB in one batch.
-- **A14** A workflow, `.github/workflows/sim-runs.yml`, runs the sim with `--post` at the commit of every successful
-  `preview-build` (`workflow_run`, at its `head_sha`) and by hand (`workflow_dispatch` with a ref and a run count):
-  four archetypes, 5 runs each by default [T to confirm #5]. It reads the existing repo secrets for the Worker URL and
-  token. It fails only when the driver crashes or a post is refused, never on a number, and is never a required check.
-  `measured-truth.yml` and `npm run measured:truth` are unchanged.
 - **A17** (attended) After a preview APK built from a commit carrying SM1a-SM1h, T plays at least one run (a fight and
   a reward) and `sim-runs` has run at that commit. `npm run api -- card-usage --build <sha>` counts only T's fights;
   `--source sim` shows the bots'; `card-vs-bot --build <sha>` sets T's column beside the four policies';
@@ -250,7 +240,6 @@ Measure: A17, its output pasted into the PR.
 
 ## Chunks
 
-Measure: 3 open · 14 closed · next A18
+Measure: 1 open · 16 closed · next A18
 
-- [ ] **113.7** The bot posts its own data · M · closes A13, A14 · needs — · alias: SM1g
-- [ ] **113.9** T's read of the comparison (attended) · S · closes A17 · needs 113.7 · alias: SM1i
+- [ ] **113.9** T's read of the comparison (attended) · S · closes A17 · needs — · alias: SM1i

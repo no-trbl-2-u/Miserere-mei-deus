@@ -293,6 +293,10 @@ test('A6: the real plan/deadlines.md is already what --write would write', () =>
     const { md, unmatched } = rewriteItemStatus(real, planRows(readPlanSources(ROOT)).phases)
     assert.deepEqual(unmatched, [])
     assert.equal(md, real)
+    // The PR's change: Status derives from the v2 sources, with no v1 build plan among them.
+    const sources = readPlanSources(ROOT)
+    assert.ok(!sources.buildPlan)
+    assert.ok(sources.specs.length > 0)
 })
 
 // Phase DL2a: the sixth column, `Waits on`.

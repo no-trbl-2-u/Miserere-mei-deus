@@ -810,7 +810,7 @@ test('pr-resolve keeps plot PRs mergeable too', async () => {
 // --- pr-resolve's union merge ------------------------------------------------
 
 test('union paths are the append-only files only', () => {
-  for (const p of ['telemetry/2026-10-12_abc.md', 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/PHASE_CANDIDATES.md', 'plan/lessons.md']) {
+  for (const p of ['telemetry/2026-10-12_abc.md', 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/CANDIDATES.md', 'plan/lessons.md']) {
     assert.ok(isUnionPath(p), p)
   }
   for (const p of ['plan/bearings.md', 'skills/march.md', 'axiomancer-mechanics/src/x.ts', 'telemetry/sub/x.md']) {
