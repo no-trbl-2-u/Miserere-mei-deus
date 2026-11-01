@@ -118,20 +118,13 @@ test('phaseRowCounts reads ticked, PR-numbered and pending rows', () => {
   assert.deepEqual(Object.fromEntries(counts), { IT1a: 1, ML1b: 2, B8: 1 })
 })
 
-test('phaseRowCounts finds no duplicate row in the live build plan', () => {
-  const counts = phaseRowCounts(fs.readFileSync(path.join(ROOT, 'plan', 'steps', '01_build_plan.md'), 'utf8'))
-  assert.ok(counts.size > 100)
-  assert.deepEqual([...counts].filter(([, n]) => n > 1), [])
-})
-
-test('registration: .gitattributes names the driver, and SessionStart registers it', () => {
+test('retired with the build plan (nexus v2 cut-over, NX1d): no attribute names it, and SessionStart registers no buildplan driver', () => {
+  assert.equal(fs.existsSync(path.join(ROOT, 'plan', 'steps', '01_build_plan.md')), false)
   const attrs = fs.readFileSync(path.join(ROOT, '.gitattributes'), 'utf8')
-  assert.match(attrs, /^plan\/steps\/01_build_plan\.md\s+.*\bmerge=buildplan\b/m)
+  assert.doesNotMatch(attrs, /merge=buildplan/)
   const settings = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude', 'settings.json'), 'utf8'))
   const commands = settings.hooks.SessionStart.flatMap((h) => h.hooks.map((x) => x.command))
-  const reg = commands.find((c) => /config merge\.buildplan\.driver /.test(c))
-  assert.ok(reg, 'a SessionStart command sets merge.buildplan.driver')
-  assert.match(reg, /scripts\/build-plan-merge\.mjs %O %A %B %P/)
+  assert.equal(commands.some((c) => /merge.buildplan./.test(c)), false)
 })
 
 test('the CLI writes the merge to <ours> and exits 0, or leaves markers and exits 1', () => {

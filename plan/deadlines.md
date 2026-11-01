@@ -94,7 +94,7 @@ left; otherwise after.
   Chapter 1's enemy art, a mid-MVP check on the preview build, the walk's `[content]` answers with the Breakwater's
   quest line, the R11 review, and the MVP run.
 - Nov 11: the R11 watch ends; the four held loop-doctrine candidates come up for review (the fifth, claims, was plotted as HW1b on Oct 30).
-- Nov 11: the cut-over to nexus v2 (NX1d, 2 h, attended), once the old queue has drained; `march` and `night` stay off until T turns them back on (NX1i, date not set).
+- Nov 1: the cut-over to nexus v2 (NX1d, 2 h, attended), moved up from Nov 11 (T, 2026-10-31: "cut over now"); the open queue is carried as v2 chunks rather than drained first; `march` and `night` stay off until T turns them back on (NX1i, date not set).
 
 ### W3 — Chapters 2-4 designed; hazards tuned (Nov 17 - Nov 30)
 
@@ -212,6 +212,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
 | [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e | - |
 | [ ] | 2026-11-01 | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | W1 | T | EN1i |
+| [x] | 2026-11-01 | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h; moved up from Nov 11, T: "cut over now") | W1 | NX1d | NX1a, NX1c |
 | [ ] | 2026-11-02 | Plot the sea keep's boss from enemy session 2; the normals and all six elites are plotted (EN1) (0.5 h) | W1 | B2 | - |
 | [ ] | 2026-11-02 | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | W1 | needs plot | - |
 | [ ] | 2026-11-03 | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | W2 | needs plot | - |
@@ -225,7 +226,6 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
-| [ ] | 2026-11-11 | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h) | W2 | NX1d | NX1a, NX1c |
 | [x] | 2026-11-12 | Event kind 4, quest: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the giver scene) and plotted as ET1d (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-12 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | W2 | DF1f | CA3a, CA3e |
 | [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | W2 | T | - |
@@ -270,6 +270,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
+- ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - NX1e — v2's landing after the cut-over; the T act after it, NX1i, has no date yet
 - NX1f — the workflows on v2's steps after the cut-over; the T act after it, NX1i, has no date yet
@@ -305,16 +306,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - B8 — blocked: owner-led; after v0.3 (The milestone).
 - B9 — blocked: owner-led; after v0.3 (The milestone).
 - B10 — blocked: owner-led; after v0.3 (The milestone).
-- 90 — pre-revamp partial (the multi-hit half shipped); the summoner half is not v0.3 work; date not set.
-- 52b — pre-revamp partial (the inn as a first-class rest); not v0.3 work; date not set.
-- 47c — pre-revamp partial (Expo decouple, assets); not v0.3 work; date not set.
-- 47d — pre-revamp partial (Expo decouple, device APIs); not v0.3 work; date not set.
-- 47e — pre-revamp partial (Expo decouple, build and CI); not v0.3 work; date not set.
-- V2 — pre-revamp partial (map scene remainders); not v0.3 work; date not set.
-- V3 — pre-revamp partial (menus and chrome remainders); not v0.3 work; date not set.
-- V6 — pre-revamp partial (glyph unification remainders); not v0.3 work; date not set.
-- V7 — pre-revamp partial (illustration upgrades); art is T's; not v0.3 work.
-- W5 — pre-revamp partial (map roster growth); enemies wait on T's B2 session; date not set.
 - AN1a — loop work; ships changing no pixel, needs no time from T; date not set.
 - AN1b — loop work; follows AN1a; date not set.
 - AN1c — loop work, but T sequenced it after seeing AN1b work; date not set.
@@ -367,6 +358,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-01** — **the cut-over to nexus v2 moved up, and the queue carried (NX1d)** (T, 2026-10-31: "cut over now", superseding the drain-to-Nov-11 plan). **Moved** the Item "Cut over to nexus v2" from Nov 11 (W2) to Nov 1 (W1), and its W2 note to a Nov 1 line. Every row id the Items name now resolves from a v2 spec chunk's `alias:` or an `ARCHIVE.md` line's `(alias: …)` (`plan/README.md`); the Status cells are re-derived from them. **Removed** the ten pre-revamp partials (90, 52b, 47c-47e, V2, V3, V6, V7, W5) from Unscheduled: archived as dropped (ruling R7), their live carry-overs filed as one AUDIT row. NX1d is ticked by its own PR; nothing else ticked.
 - **2026-10-31** — **the Breakwater's six hazards picked from a bot-measured curve, plotted (HP6)** (T, attended `/plot`: "run a reasonable amount of simulations of each hazard hidden in the devtools so we can get a rough difficulty curve. Then, pick n ... puzzles to add to the first map"; rulings: story route first, all thirty, the middle third, one puzzle per hazard). **Added** HP6a, HP6b and HP6c to the `Waits on` of the MVP demo (Nov 16), whose run plays puzzle hazards. **Edited** the Nov 3 routing plot (the eleven Act 1 hazard nodes to the other five; the Breakwater's six are HP6), its MVP-schedule row, the W2 note, and the Nov 19 swap (hand-pick the other five, and swap any of HP6's six). Nothing ticked; no date moved.
 - **2026-10-31** — **Miserere onto nexus v2, kept current with it, plotted (NX1)** (T, attended `/plot`, from the deviation map `docs/nexus-deviations.md`: "I would like to update Miserere with the latest of what's in nexus AND determine a means for it to remain up to date"; "Drain to Nov 11"). **Added** the Item "Cut over to nexus v2" on Nov 11 (W2) naming the attended NX1d, waiting on NX1a and NX1c; NX1b and NX1e-NX1i under `## Unscheduled`; a W2 line for the cut-over. The Nov 11 R11 review's premise still holds (v2's decisions log may answer one of the held candidates; the brief's Follow-ups say so). Nothing ticked; no date moved.
 - **2026-10-31** — **every foe befriendable (BUG1j)** (T on plot PR #1236, call 1: "let's make all the enemies befriendable so we can do some testing"). **Added** BUG1j to the `Waits on` of the Mid-MVP check (Nov 9), beside BUG1a and BUG1b: the check plays the Chosen, whose Open Hand now befriends any foe. Nothing ticked; no date moved.

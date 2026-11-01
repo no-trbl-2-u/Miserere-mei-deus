@@ -488,7 +488,10 @@ test('stranded telemetry rows push to the branch HEAD is on, never PR commits to
 
 // --- the PR body template ---------------------------------------------------
 
-const march = read('skills/march.md')
+// The v1 skills/march.md section 3 (landing, labels, the PR body, the retro) lives in
+// skills/march.lanes.md since the nexus v2 cut-over (NX1d), with the v1 ship-a-phase's
+// mirror, PR and close steps; the kit's march.md and next.md are kit text.
+const march = read('skills/march.lanes.md')
 
 test('the PR body template carries its sections in order and ends with Closes #', () => {
   const start = march.indexOf('**Body template**')
@@ -509,30 +512,30 @@ test('close-trailers reads the template trailer shape', () => {
   assert.deepEqual(parseCloseTrailers(body), [512])
 })
 
-test('ship-a-phase and iterate put Closes # in the PR\'s last commit', () => {
-  assert.match(read('skills/ship-a-phase.md'), /-m "Closes #<phase-issue-number>"/)
-  assert.match(read('skills/iterate.md'), /-m "Closes #<N>"/)
+test('a shipped chunk and iterate put Closes # in the PR\'s last commit', () => {
+  assert.match(read('skills/march.lanes.md'), /-m "Closes #<phase-issue-number>"/)
+  assert.match(read('skills/iterate.lanes.md'), /-m "Closes #<N>"/)
 })
 
 test('every loop:pr is opened with the label and against main', () => {
-  for (const f of ['skills/march.md', 'skills/ship-a-phase.md', 'skills/iterate.md']) {
+  for (const f of ['skills/march.lanes.md', 'skills/iterate.lanes.md']) {
     assert.match(read(f), /gh pr create[^\n]*\n?[^\n]*--label loop:pr|gh pr create --repo "\$GH_REPO" --base main/, f)
   }
 })
 
 test('every loop:pr carries one size label (T, 2026-10-14)', () => {
-  for (const f of ['skills/march.md', 'skills/ship-a-phase.md', 'skills/iterate.md']) {
+  for (const f of ['skills/march.lanes.md', 'skills/iterate.lanes.md']) {
     assert.match(read(f), /--label loop:pr --label "size:<S\|M\|L>"/, f)
   }
-  assert.match(read('skills/march.md'), /gh label create "size:/)
-  assert.match(read('skills/plan-a-phase.md'), /`Size: S`, `Size: M` or `Size: L`/)
+  assert.match(read('skills/march.lanes.md'), /gh label create "size:/)
+  assert.match(read('skills/plan-a-spec.md'), /S \(about an hour\), M \(a few hours\) or L/)
 })
 
 test('every loop:pr carries an area label; march defines the area/review scheme (T, 2026-10-14)', () => {
-  for (const f of ['skills/march.md', 'skills/ship-a-phase.md', 'skills/iterate.md']) {
+  for (const f of ['skills/march.lanes.md', 'skills/iterate.lanes.md']) {
     assert.match(read(f), /--label "size:<S\|M\|L>" --label "area:<area>"/, f)
   }
-  const march = read('skills/march.md')
+  const march = read('skills/march.lanes.md')
   for (const l of ['area:combat', 'area:cards', 'area:ui', 'area:mobile', 'area:ci', 'area:loop',
     'review:rules-change', 'review:plan-only', 'review:needs-T']) {
     assert.match(march, new RegExp(`gh label create[\\s\\S]*${l}:`), l)
@@ -740,23 +743,24 @@ test('/plot opens a plot-labelled PR, never loop:pr, never a push to main', () =
   assert.doesNotMatch(plot, /git push origin main|push origin HEAD:main/)
 })
 
-test('/plot decides the phase split, one tick per phase, every A-ID closed once', () => {
-  const plot = read('skills/plot.md')
-  assert.match(plot, /each\s+phase must ship as one `\/march`\s+tick/)
-  assert.match(plot, /every acceptance ID is closed by\s+exactly one phase/)
-  assert.match(read('skills/plan-a-phase.md'), /## Phases/)
+// Since the nexus v2 cut-over (NX1d) a plot writes a spec chunked S, M or L with every
+// A-ID covered, plan-check gates that shape in the root gate, and /next builds one
+// chunk per run.
+test('/plot chunks the task S, M or L, every A-ID covered; plan-check gates the shape', () => {
+  assert.match(read('skills/plan-a-spec.md'), /S \(about an hour\), M \(a few hours\) or L/)
+  assert.match(read('scripts/plan-check.mjs'), /is closed or partialed by no chunk/)
+  assert.match(read('package.json'), /node scripts\/plan-check\.mjs/)
 })
 
-test('a row pointing at a shared brief section is pickable and built alone', () => {
-  assert.match(read('skills/march.md'), /`§ <N>`/)
-  assert.match(read('skills/ship-a-phase.md'), /A row pointing at `§ <id>` of a shared brief/)
+test('a chunk is built alone: one chunk per /next run', () => {
+  assert.match(read("skills/next.md"), /one chunk, done fully/i)
 })
 
 // --- a plot PR reads for T, and T answers its calls by comment (2026-10-25) ---
 
 test("the plot body opens with What you'll see, then Your calls, then the engineering sections", () => {
   const plot = read('skills/plot.md')
-  const start = plot.indexOf('```markdown', plot.indexOf('### Step 5'))
+  const start = plot.indexOf('```markdown', plot.indexOf('### 7.3 The PR body'))
   const block = plot.slice(start, plot.indexOf('\n```\n', start + 3))
   const heads = block.split('\n').filter((l) => l.startsWith('## '))
   assert.deepEqual(heads.slice(0, 2), ["## What you'll see", '## Your calls'])
@@ -766,23 +770,23 @@ test("the plot body opens with What you'll see, then Your calls, then the engine
   assert.match(block, /^Cost: /m)
   assert.match(block, /1\. <[^>]+>\? Default: <[^>]+>\. Or: /)
   assert.match(block, /@claude 1: yes, 2: /)
-  assert.match(plot, /no\s+file paths, phase or acceptance IDs, D-numbers/)
+  assert.match(plot, /no\s+file paths, chunk or acceptance IDs, D-numbers/)
   assert.match(plot, /mark it `\[T to confirm #n\]`/)
 })
 
 test("plot.md carries the Answering T's calls procedure, and merge means agreement", () => {
   const plot = read('skills/plot.md')
-  const from = plot.indexOf("## 3. Answering T's calls")
-  const to = plot.indexOf('## 4. Merge means agreement')
-  assert.ok(from > 0 && to > from + 200, 'section 3 exists before section 4')
+  const from = plot.indexOf("### 7.4 Answering T's calls")
+  const to = plot.indexOf('### 7.5 Merge means agreement')
+  assert.ok(from > 0 && to > from + 200, 'section 7.4 exists before section 7.5')
   const ans = plot.slice(from, to)
   for (const re of [/Parse the answers/, /`Confirmed by T \(<YYYY-MM-DD>\): <answer/, /Regenerate the PR body/,
-    /check-deadlines|deadline lint/, /never force/, /reply on\s+the PR/, /plan\/steps\/01_build_plan\.md/]) {
+    /check-deadlines|deadline lint/, /never force/, /reply on\s+the PR/, /rewrite the spec to match/]) {
     assert.match(ans, re)
   }
-  assert.match(plot, /a call\s+still unanswered at merge is its default, accepted/)
+  assert.match(plot, /a call\s+still unanswered at merge is its default,\s+accepted/)
   assert.match(read('AGENTS.md'), /Rewrite each `\[T to confirm #n\]` still in the brief to `Accepted at\s+merge \(default\)`/)
-  assert.match(read('skills/march.md'), /`\[T to confirm #n\]` call left in a merged brief does not hold its\s+row/)
+  assert.match(plot, /It does not\s+hold the chunk/)
 })
 
 test("claude.yml routes T's comment on a plot PR to plot.md section 3, and changes nothing else", () => {
@@ -806,7 +810,7 @@ test('pr-resolve keeps plot PRs mergeable too', async () => {
 // --- pr-resolve's union merge ------------------------------------------------
 
 test('union paths are the append-only files only', () => {
-  for (const p of ['telemetry/2026-10-12_abc.md', 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/PHASE_CANDIDATES.md', 'plan/lessons.md']) {
+  for (const p of ['telemetry/2026-10-12_abc.md', 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/CANDIDATES.md', 'plan/lessons.md']) {
     assert.ok(isUnionPath(p), p)
   }
   for (const p of ['plan/bearings.md', 'skills/march.md', 'axiomancer-mechanics/src/x.ts', 'telemetry/sub/x.md']) {
@@ -873,8 +877,8 @@ test('hasMarker finds conflict markers and nothing else', () => {
 
 // --- every closing verb ends with a Retro ------------------------------------
 
-test('ship-a-phase, iterate, critique, fix-ci and plot each run the Retro', () => {
-  for (const f of ['ship-a-phase', 'iterate', 'critique', 'fix-ci', 'plot']) {
+test('a shipped chunk, iterate, critique, fix-ci and plot each run the Retro', () => {
+  for (const f of ['march.lanes', 'iterate.lanes', 'critique', 'fix-ci', 'plot']) {
     assert.match(read(`skills/${f}.md`), /skills\/march\.md` §3 "Retro"/, f)
   }
   assert.match(march, /### Retro\n/)

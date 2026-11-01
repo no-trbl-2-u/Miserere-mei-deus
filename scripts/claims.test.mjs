@@ -398,34 +398,19 @@ function section(text, heading) {
   return end === -1 ? rest : rest.slice(0, end)
 }
 
-test('march.md: a row claimed in claims.json by another owner is not pickable', () => {
-  const march = read('skills/march.md')
-  const pickable = section(march, '### Pickable phase')
-  assert.ok(pickable.includes(
-    '4. **is not claimed** by an open `loop:pr` PR or a live claim in\n   `claims.json` held by another owner',
-  ), 'Pickable phase rule 4')
-  const claims = section(march, '### Claims')
-  assert.equal(claims.includes('No `claims` branch is needed'), false)
-  for (const needle of ['scripts/claims.mjs', 'orphan `claims` branch', '24 h', 'node scripts/claims.mjs check']) {
-    assert.ok(claims.includes(needle), `Claims names ${needle}`)
-  }
+// Since the nexus v2 cut-over (NX1d) the v1 pick rule and ship-a-phase's claim steps are
+// v2's: /next claims a chunk before anything else and a PR'd claim ends at merge
+// (docs/nexus-deviations.md: "march: pick rules, gate rules, claims: TAKE"). Phase NX1f
+// replaces this claims.mjs with v2's and migrates the `claims` branch.
+test('next.md: a chunk is claimed before anything else, and a PR holds the claim', () => {
+  const next = read('skills/next.md')
+  assert.ok(next.includes('**Claim before anything else**: `node scripts/claims.mjs\n  claim <id>`'), 'claim first')
+  assert.ok(next.includes('a\n   PR\'d claim ends at merge'), 'a PR holds the claim')
 })
 
-test('ship-a-phase.md: Step 2 claims before reading the brief; Step 12.5 releases once the PR is open', () => {
-  const ship = read('skills/ship-a-phase.md')
-  const step2 = section(ship, '### Step 2 — Read the brief')
-  const claimAt = step2.indexOf('node scripts/claims.mjs claim')
-  assert.notEqual(claimAt, -1, 'Step 2 runs claims.mjs claim')
-  assert.ok(claimAt < step2.indexOf('plan/phases/phase_<N>_<topic>.md'), 'the claim comes before the brief read')
-  for (const needle of [
-    '$CLAIM_OWNER',
-    'tick:${GITHUB_RUN_ID:-<session id>}',
-    'A refused claim (exit 1) skips the row',
-    'falls back to the PR and mirror-issue checks',
-  ]) {
-    assert.ok(step2.includes(needle), `Step 2 says ${needle}`)
-  }
-  const step125 = section(ship, '### Step 12.5 — Phase mirror comment')
+test('the shipped-chunk notes release the claim once the PR is open', () => {
+  const lanes = read('skills/march.lanes.md')
+  const step125 = section(lanes, '#### Step 12.5 — Phase mirror comment')
   assert.ok(step125.includes('node scripts/claims.mjs release'), 'Step 12.5 releases')
   assert.ok(step125.includes('the PR is the claim'), 'Step 12.5 says why')
 })

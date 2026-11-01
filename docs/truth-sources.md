@@ -20,10 +20,11 @@ than execute stale information.
    durable decision records.
 3. **Central SomberSoft ledger** (`~/Workspace/SOMBERSOFT_COMMAND_LEDGER.md`) —
    company-wide doctrine and operating law.
-4. **Active build plan** (`plan/steps/01_build_plan.md`) — current execution
-   queue and shipped phase ledger. A phase brief's acceptance IDs (`A1…`)
-   are its definition of done.
-5. **Phase candidates** (`plan/PHASE_CANDIDATES.md`) — promotable work, not
+4. **Active roadmap and specs** (`plan/README.md`, `plan/<NN>-<slug>.md`;
+   shipped work in `plan/ARCHIVE.md`; nexus v2 since the NX1d cut-over) —
+   current execution queue. A spec's acceptance IDs (`A1…`) are its
+   definition of done; each chunk closes the ones it names.
+5. **Candidates** (`plan/CANDIDATES.md`) — promotable work, not
    marching authority until accepted.
 6. **Critique/audit logs** (`plan/CRITIQUE.md`, `plan/AUDIT.md`) — findings
    queues and evidence of known rot.

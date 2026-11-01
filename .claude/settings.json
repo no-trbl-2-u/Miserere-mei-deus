@@ -225,10 +225,6 @@
           },
           {
             "type": "command",
-            "command": "git -C \"$CLAUDE_PROJECT_DIR\" config merge.buildplan.name 'the build plan, insertions unioned' && git -C \"$CLAUDE_PROJECT_DIR\" config merge.buildplan.driver 'node scripts/build-plan-merge.mjs %O %A %B %P'"
-          },
-          {
-            "type": "command",
             "command": "git -C \"$CLAUDE_PROJECT_DIR\" config merge.deadlines.name 'plan/deadlines.md, insertions unioned and rows by cell' && git -C \"$CLAUDE_PROJECT_DIR\" config merge.deadlines.driver 'node scripts/deadlines-merge.mjs %O %A %B %P'"
           },
           {

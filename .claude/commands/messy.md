@@ -1,19 +1,21 @@
 ---
-description: T's intake for a loose or many-themed brain dump — save it (gitignored), cluster it into themes, check what exists, and refine it into a part plan plus [owner] PHASE_CANDIDATES rows that T promotes with /plot. Never builds; never fired by the loop.
+description: Dump messy thoughts; I save them raw (untracked), cluster them into themes, refine each into plan/ specs (one agent per theme for a big dump) and land them through a pending file. The GUI calls it explode
+argument-hint: "<anything: bullets, fragments, typos welcome> [plan only]"
 ---
 
-You are invoked under the `messy` skill. Read `skills/messy.md` end
-to end before touching anything else; it is the single source of
-truth.
+You are invoked under the `messy` skill. Read `skills/messy.md`
+end to end before touching anything else; it is the single
+source of truth.
 
 Argument handling:
-- The raw dump is the argument (or the text T pasted with it).
-- For one known task, tell T to use `/plot` instead.
+- The whole argument is the dump. Save it raw first, verbatim,
+  to the gitignored `plan/messy/`; never commit it or quote it.
+- "the important one is …" → weight that theme.
+- `plan only` → the new rows are marked plan only.
 
-Procedure: §2 of `skills/messy.md` (save the dump to
-`plan/messy/`, cluster, check what exists per theme — fan out one
-agent per theme for 3+ — refine into a part plan and `[owner]`
-candidates, commit to `main`). Hard rules: §3. Never commit the dump;
-never write a build-plan row or brief.
+Small dumps (1-2 themes) you refine yourself; 3+ themes get one
+background agent per theme, one file each. Everything shared
+lands through `plan/pending/messy-<slug>.md`, per owner mode.
+`/messy` plans; it never builds.
 
 Argument: $ARGUMENTS

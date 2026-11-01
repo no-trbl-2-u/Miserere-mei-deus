@@ -1,7 +1,7 @@
-name: ship-a-phase
+name: ship-a-chunk
 
 # Ship the next unchecked phase of the build plan end-to-end (see
-# skills/ship-a-phase.md). Dispatch-only — /march dispatches to it when a
+# skills/ship-a-chunk.md). Dispatch-only — /march dispatches to it when a
 # pending phase exists; run this directly to force a delivery tick.
 
 on:
@@ -26,5 +26,5 @@ jobs:
       extra_claude_args: |
         -p
         --dangerously-skip-permissions
-      prompt: '/ship-a-phase'
+      prompt: '/ship-a-chunk'
       timeout_minutes: 120

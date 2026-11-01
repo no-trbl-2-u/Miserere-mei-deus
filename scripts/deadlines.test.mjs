@@ -22,6 +22,7 @@ import {
     rewriteItemStatus,
     whenText,
 } from './deadlines-lib.mjs'
+import { readPlanSources } from './check-deadlines.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -168,6 +169,8 @@ const WRAPPED_PLAN = `## Status (at-a-glance)
 `
 
 const hp4eRow = () => {
+    // The v1 build plan left at the nexus v2 cut-over (NX1d): HP4e is a spec chunk now.
+    if (!fs.existsSync(path.join(ROOT, 'plan/steps/01_build_plan.md'))) return null
     const plan = fs.readFileSync(path.join(ROOT, 'plan/steps/01_build_plan.md'), 'utf8')
     const lines = plan.split('\n')
     const at = lines.findIndex((l) => /^- \[[^\]]*\]\s+(?:\(#\d+\)\s+)?Phase HP4e — /.test(l))
@@ -287,9 +290,13 @@ test('A6: --write is idempotent', () => {
 test('A6: the real plan/deadlines.md is already what --write would write', () => {
     const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
     const real = read('plan/deadlines.md')
-    const { md, unmatched } = rewriteItemStatus(real, parsePhaseRows(read('plan/steps/01_build_plan.md')))
+    const { md, unmatched } = rewriteItemStatus(real, planRows(readPlanSources(ROOT)).phases)
     assert.deepEqual(unmatched, [])
     assert.equal(md, real)
+    // The PR's change: Status derives from the v2 sources, with no v1 build plan among them.
+    const sources = readPlanSources(ROOT)
+    assert.ok(!sources.buildPlan)
+    assert.ok(sources.specs.length > 0)
 })
 
 // Phase DL2a: the sixth column, `Waits on`.

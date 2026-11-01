@@ -1,0 +1,20 @@
+# plan/nexus.lock: the nexus kit version this repo follows.
+# Skills read `shape:` before they read the plan. Upgrading is a
+# deliberate act: see nexus/playbooks/upgrade.md.
+#
+# Miserere moved onto v2 at the cut-over (phase NX1d) with
+# `npx @usenexus/cli@0.6.5 upgrade --write`, from a fresh fetch of origin
+# (fd21d04ab). `ref:` is the kit commit that CLI carries (nexus tag
+# cli-v0.6.5), so the next `upgrade` three-way merges from it.
+#
+# Landing is Miserere's own hybrid, not v2's owner mode (D119): every
+# change lands by PR; code as `loop:pr` PRs the review merges, and
+# `plot`, `review:rules-change` and `nexus-sync` PRs that T merges.
+# `NEXUS_LOOP_MODE` stays unset (pull-request mode). See the `Landing:`
+# knob in plan/bearings.md and docs/nexus-deviations.md § Carried.
+kit: nexus
+version: 2.0.0+51b70f4
+ref: 51b70f4d2125272bf4a66e080660c521fde13233
+shape: chunks
+adopted: 2026-11-01
+landing: pr (hybrid, D119)

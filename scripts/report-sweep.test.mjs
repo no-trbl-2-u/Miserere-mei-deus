@@ -125,9 +125,13 @@ test('the live tree has no unfiled reports', () => {
   assert.deepEqual(sweep(ROOT).map((f) => f.rel), [])
 })
 
-test('/march Step 1 runs the sweep with --file after triage', () => {
-  const march = fs.readFileSync(path.join(ROOT, 'skills/march.md'), 'utf8')
-  const step1 = march.slice(march.indexOf('### Step 1'), march.indexOf('### Step 2'))
-  assert.match(step1, /node scripts\/report-sweep\.mjs --file/)
-  assert.ok(step1.indexOf('report-sweep') > step1.indexOf('skills/triage.md'), 'the sweep comes after triage')
+// Since the nexus v2 cut-over (NX1d) the sweep is a `pre` lane of /march
+// (skills/march.lanes.md, which a kit sync never touches): it runs every tick and
+// lets the tick go on.
+test('/march runs the sweep with --file as a pre lane that continues the tick', () => {
+  const lanes = fs.readFileSync(path.join(ROOT, 'skills/march.lanes.md'), 'utf8').replace(/\r\n/g, '\n')
+  const lane = lanes.slice(lanes.indexOf('## lane: report-sweep'), lanes.indexOf('\n## ', lanes.indexOf('## lane: report-sweep') + 3))
+  assert.match(lane, /- hook: pre/)
+  assert.match(lane, /node scripts\/report-sweep\.mjs --file/)
+  assert.match(lane, /- return: continue/)
 })
