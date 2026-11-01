@@ -12,8 +12,10 @@ import {
 } from './combat.encounter.sim';
 import { upgradeLevel } from '../Cards/card-upgrades';
 import { getCardById } from '../Cards/cards.library';
+import { wearGreyPair } from '../Items/equipment.library';
 import {
-    HALF_UPGRADED_DECK_SUFFIX, MEASURED_DECK_LANES, MEASURED_HALF_UPGRADED_LANES, MEASURED_SAMPLED_FAMILIES,
+    BARE_DECK_SUFFIX, HALF_UPGRADED_DECK_SUFFIX, MEASURED_BARE_LANES, MEASURED_DECK_LANES,
+    MEASURED_HALF_UPGRADED_LANES, MEASURED_SAMPLED_FAMILIES,
     MEASURED_SPREADS, halfUpgradedDeck, measuredTruthCells, sampledFamilyDraws,
     type MeasuredTruthDeck, type MeasuredTruthFamily,
 } from './combat.measured-truth';
@@ -75,7 +77,7 @@ describe('measuredTruthCells (R12a A1, A2; EM1 A1)', () => {
     const report = measuredTruthCells({ runs: 5, seed: 1, sampleDraws: 2 });
 
     const deckCount = MEASURED_DECK_LANES.length + MEASURED_HALF_UPGRADED_LANES.length
-        + MEASURED_SAMPLED_FAMILIES.length;
+        + MEASURED_BARE_LANES.length + MEASURED_SAMPLED_FAMILIES.length;
 
     it('has one cell per ledger fight x spread x deck', () => {
         expect(report.cells).toHaveLength(ledger.length * MEASURED_SPREADS.length * deckCount);
@@ -109,7 +111,7 @@ describe('measuredTruthCells (R12a A1, A2; EM1 A1)', () => {
     it('orders the decks: lanes, half-upgraded decks, then the sampled families', () => {
         expect(Object.keys(report.decks)).toEqual([
             'grey', 'blood-price', 'elementalist', `blood-price${HALF_UPGRADED_DECK_SUFFIX}`,
-            'elementalist~20of30', 'mixed~20of60',
+            `grey${BARE_DECK_SUFFIX}`, 'elementalist~20of30', 'mixed~20of60',
         ]);
     });
 
@@ -134,7 +136,7 @@ describe('the half-upgraded Blood Price deck (UP1 A10)', () => {
 
     it('measures blood-price half-upgraded beside the plain deck', () => {
         expect(MEASURED_HALF_UPGRADED_LANES).toContain('blood-price');
-        expect(Object.keys(report.decks)).toEqual(['grey', 'blood-price', 'elementalist', id]);
+        expect(Object.keys(report.decks)).toEqual(['grey', 'blood-price', 'elementalist', id, `grey${BARE_DECK_SUFFIX}`]);
     });
 
     it('sits beside the plain deck in every ledger fight at every spread', () => {
@@ -202,10 +204,10 @@ describe('the sampled deck families (EM1 A2, A3)', () => {
         for (const spread of MEASURED_SPREADS) {
             const cell = report.cells.find(c => c.deck === family.id && c.spread === spread)!;
             const draws = entry.draws.map(cards => simulateHazardPatternCombatDetailed({
-                player: createCharacter({
+                player: wearGreyPair(createCharacter({
                     name: 'Measured', level: playerLevel,
                     baseStats: stageStats(playerLevel, spread), knownCards: [...new Set(cards)],
-                }),
+                })),
                 enemy, runs: 3, startSeed: 1, policy: 'greedy', deck: cards,
             }).stats);
             const r4 = (x: number) => Math.round(x * 10000) / 10000;
@@ -248,6 +250,61 @@ describe('the sampled deck families (EM1 A2, A3)', () => {
             .toThrow(/no card lane/);
         expect(() => sampledFamilyDraws({ id: 'grey~99', laneIds: ['grey'], drawSize: 99 }, 1, 1))
             .toThrow(/pool/);
+    });
+});
+
+describe('the worn loadout (EQ3 A16)', () => {
+    const fights = act1FightLedger().filter(f => f.nodeId === 'bw-w5' || f.nodeId === 'bw-k2');
+    const key = (c: { fight: string; spread: string; deck: string }) => `${c.fight}|${c.spread}|${c.deck}`;
+    const worn = measuredTruthCells({ runs: 40, seed: 1, fights, sampledFamilies: [] });
+
+    it('wears the grey pair by default and says so on every deck', () => {
+        for (const [id, deck] of Object.entries(worn.decks)) expect(deck.worn, id).toBe(id.endsWith(BARE_DECK_SUFFIX) ? 'none' : 'grey-pair');
+        const bare = worn.decks[`grey${BARE_DECK_SUFFIX}`]!;
+        expect(MEASURED_BARE_LANES).toEqual(['grey']);
+        expect(bare.worn).toBe('none');
+        expect((bare as MeasuredTruthDeck).deckCards).toEqual((worn.decks.grey as MeasuredTruthDeck).deckCards);
+    });
+
+    it('plays the worn column as a new run does, and the bare control as it did with nothing worn', () => {
+        for (const spread of MEASURED_SPREADS) {
+            for (const [deck, wears] of [['grey', true], [`grey${BARE_DECK_SUFFIX}`, false]] as const) {
+                for (const fight of fights) {
+                    const cell = worn.cells.find(c => c.deck === deck && c.spread === spread && c.nodeId === fight.nodeId)!;
+                    const playerLevel = cell.playerLevel;
+                    const fresh = createCharacter({
+                        name: 'Measured', level: playerLevel,
+                        baseStats: stageStats(playerLevel, spread),
+                        knownCards: [...new Set((worn.decks.grey as MeasuredTruthDeck).deckCards)],
+                    });
+                    const enemy = scaleEnemyToLevel(ENEMY_REGISTRY[fight.enemySlug], cell.enemyLevel);
+                    const stats = simulateHazardPatternCombatDetailed({
+                        player: wears ? wearGreyPair(fresh) : fresh, enemy, runs: 40, startSeed: 1, policy: 'greedy',
+                        deck: [...(worn.decks.grey as MeasuredTruthDeck).deckCards],
+                    }).stats;
+                    expect(cell.winRate, key(cell)).toBeCloseTo(stats.winRate, 4);
+                    expect(cell.lowestVitaeFractionP10, key(cell)).toBeCloseTo(stats.lowestVitaeFractionP10, 4);
+                }
+            }
+        }
+    });
+
+    it('the grey pair does not make the grey deck worse at either door-side fight', () => {
+        for (const spread of MEASURED_SPREADS) {
+            for (const fight of fights) {
+                const at = (deck: string) => worn.cells.find(c => c.deck === deck && c.spread === spread && c.nodeId === fight.nodeId)!;
+                expect(at('grey').lowestVitaeFractionP10, `${fight.nodeId} ${spread}`)
+                    .toBeGreaterThanOrEqual(at(`grey${BARE_DECK_SUFFIX}`).lowestVitaeFractionP10 - 0.05);
+            }
+        }
+    });
+
+    it('worn: none strips the pair from every deck, and a named bare lane must exist', () => {
+        const none = measuredTruthCells({ runs: 2, seed: 1, fights: fights.slice(0, 1), sampledFamilies: [], bareLanes: [], worn: 'none' });
+        for (const deck of Object.values(none.decks)) expect(deck.worn).toBe('none');
+        expect(Object.keys(none.decks)).not.toContain(`grey${BARE_DECK_SUFFIX}`);
+        expect(() => measuredTruthCells({ runs: 1, bareLanes: ['no-such-lane'], fights: fights.slice(0, 1) }))
+            .toThrow(/no card lane/);
     });
 });
 

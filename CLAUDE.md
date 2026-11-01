@@ -34,8 +34,10 @@ cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a reconc
 
 Answering a **balance/measurement** question (win rates, engagement)? Read
 `docs/reports/measured/latest.md` (phase R12a: the grey, Blood Price and Elementalist
-decks across the Act 1 ledger, plus Blood Price half-upgraded, UP1g, and EM1's two sampled
-families and self-burn column) and name the commit its stamp gives. It is a
+decks across the Act 1 ledger, every one wearing the grey weapon and armor a new run opens
+with (the "grey even, grey pair worn" column; `grey+bare` is the grey deck with nothing
+worn), plus Blood Price half-upgraded, UP1g, and EM1's two sampled families and self-burn
+column) and name the commit its stamp gives. It is a
 measurement, not a gated baseline (D57); a question it does not cover gets
 "not measured". Never cite the retired deck-matrix baseline (it lives only
 under the `archive-pre-revamp` tag) — see `docs/truth-sources.md` →

@@ -19,10 +19,17 @@
  * win rate and lowest-VITAE p10, so drift and the tables read it like a deck.
  * Every cell carries `selfBurnMean`, the VITAE lost to the player's own
  * INFERNO, beside `playerHpTakenMean` (VITAE lost to the foe's threats).
+ *
+ * The fighter wears what a new run wears, the grey weapon and armor
+ * ({@link MeasuredWorn}), so every column is "grey pair worn"; the grey
+ * weapon's special pays +2 Conviction and the grey armor changes a die. Each
+ * lane named in {@link MEASURED_BARE_LANES} is measured once more with nothing
+ * worn, under the deck id `<lane>+bare`, as the control the pair is read
+ * against.
  */
 
 import { createCharacter } from '../Character';
-import { wearGreySword } from './combat.grey-sword';
+import { wearGreyPair } from '../Items/equipment.library';
 import { getCardLane, laneRewardPool } from '../Cards/card.lanes';
 import { nextUpgradeId } from '../Cards/card-upgrades';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
@@ -43,6 +50,15 @@ export const MEASURED_HALF_UPGRADED_LANES: readonly string[] = ['blood-price'];
 
 /** The suffix on a half-upgraded deck's id: `blood-price+half`. */
 export const HALF_UPGRADED_DECK_SUFFIX = '+half';
+
+/** What the measured fighter wears: the grey pair a new run opens with, or nothing. */
+export type MeasuredWorn = 'grey-pair' | 'none';
+
+/** The lanes also measured with nothing worn, as the control for the grey pair. */
+export const MEASURED_BARE_LANES: readonly string[] = ['grey'];
+
+/** The suffix on a bare-handed deck's id: `grey+bare`. */
+export const BARE_DECK_SUFFIX = '+bare';
 
 /** A sampled deck family: `drawSize` distinct cards drawn from its lanes' pool. */
 export interface MeasuredSampledFamily {
@@ -96,6 +112,8 @@ export interface MeasuredTruthCell {
 
 /** One measured deck. */
 export interface MeasuredTruthDeck {
+    /** What the fighter wore in this deck's cells. */
+    worn: MeasuredWorn;
     /** The deck's card ids, copies kept. */
     deckCards: string[];
     /** Mean over the deck's cells of the share of its distinct cards that
@@ -106,6 +124,8 @@ export interface MeasuredTruthDeck {
 /** One measured sampled family. */
 export interface MeasuredTruthFamily {
     family: true;
+    /** What the fighter wore in this family's cells. */
+    worn: MeasuredWorn;
     laneIds: string[];
     poolSize: number;
     drawSize: number;
@@ -136,6 +156,10 @@ export interface MeasuredTruthOptions {
     deckLanes?: readonly string[];
     /** Lane ids also measured half-upgraded (default {@link MEASURED_HALF_UPGRADED_LANES}). */
     halfUpgradedLanes?: readonly string[];
+    /** What the fighter wears (default `'grey-pair'`, a new run's loadout); the bare lanes always wear nothing. */
+    worn?: MeasuredWorn;
+    /** Lane ids also measured with nothing worn (default {@link MEASURED_BARE_LANES}). */
+    bareLanes?: readonly string[];
     /** The sampled families (default {@link MEASURED_SAMPLED_FAMILIES}). */
     sampledFamilies?: readonly MeasuredSampledFamily[];
     /** Draws per sampled family (default {@link DEFAULT_SAMPLE_DRAWS}). */
@@ -246,15 +270,21 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
     const seed = options.seed ?? 1;
     const fights = options.fights ?? act1FightLedger();
     const laneIds = options.deckLanes ?? MEASURED_DECK_LANES;
-    const decks = laneIds.map(id => {
+    const worn: MeasuredWorn = options.worn ?? 'grey-pair';
+    const decks: { id: string; cards: string[]; worn: MeasuredWorn }[] = laneIds.map(id => {
         const lane = getCardLane(id);
         if (!lane) throw new Error(`measuredTruthCells: no card lane '${id}'`);
-        return { id, cards: [...lane.testDeck] };
+        return { id, cards: [...lane.testDeck], worn };
     });
     for (const id of options.halfUpgradedLanes ?? MEASURED_HALF_UPGRADED_LANES) {
         const lane = getCardLane(id);
         if (!lane) throw new Error(`measuredTruthCells: no card lane '${id}'`);
-        decks.push({ id: `${id}${HALF_UPGRADED_DECK_SUFFIX}`, cards: halfUpgradedDeck(lane.testDeck) });
+        decks.push({ id: `${id}${HALF_UPGRADED_DECK_SUFFIX}`, cards: halfUpgradedDeck(lane.testDeck), worn });
+    }
+    for (const id of options.bareLanes ?? MEASURED_BARE_LANES) {
+        const lane = getCardLane(id);
+        if (!lane) throw new Error(`measuredTruthCells: no card lane '${id}'`);
+        decks.push({ id: `${id}${BARE_DECK_SUFFIX}`, cards: [...lane.testDeck], worn: 'none' });
     }
     const sampleDraws = options.sampleDraws ?? DEFAULT_SAMPLE_DRAWS;
     const families = (options.sampledFamilies ?? MEASURED_SAMPLED_FAMILIES).map(family => ({
@@ -275,12 +305,13 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         const playerLevel = fightLevels[i]!;
         const enemyLevel = fightEnemyLevel(fight, playerLevel);
         const enemy = scaleEnemyToLevel(sourceAtTier(ENEMY_REGISTRY[fight.enemySlug], fight.difficulty), enemyLevel);
-        const play = (cards: readonly string[], spread: StatSpread) => {
-            // A special only pays when a weapon is worn: the fighter wears the grey sword's stand-in.
-            const player = wearGreySword(createCharacter({
+        const play = (cards: readonly string[], spread: StatSpread, wears: MeasuredWorn) => {
+            const fresh = createCharacter({
                 name: 'Measured', level: playerLevel,
                 baseStats: stageStats(playerLevel, spread), knownCards: [...new Set(cards)],
-            }));
+            });
+            // A new run wears the grey pair: its special pays +2 Conviction and its armor changes a die.
+            const player = wears === 'grey-pair' ? wearGreyPair(fresh) : fresh;
             return simulateHazardPatternCombatDetailed({
                 player, enemy, runs, startSeed: seed, policy: 'greedy', deck: [...cards],
             }).stats;
@@ -291,7 +322,7 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         });
         for (const spread of MEASURED_SPREADS) {
             for (const deck of decks) {
-                const stats = play(deck.cards, spread);
+                const stats = play(deck.cards, spread, deck.worn);
                 deadRates[deck.id]!.push(1 - stats.deckUtilization);
                 cells.push({
                     ...at(spread, deck.id),
@@ -305,7 +336,7 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
                 });
             }
             for (const { family, draws } of families) {
-                const all = draws.map(cards => play(cards, spread));
+                const all = draws.map(cards => play(cards, spread, worn));
                 for (const stats of all) deadRates[family.id]!.push(1 - stats.deckUtilization);
                 const med = (pick: (s: (typeof all)[number]) => number) => r4(median(all.map(pick)));
                 const wins = all.map(s => r4(s.winRate));
@@ -331,10 +362,10 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         return r4(rates.length ? rates.reduce((a, b) => a + b, 0) / rates.length : 0);
     };
     const deckReport: Record<string, MeasuredTruthDeck | MeasuredTruthFamily> = {};
-    for (const deck of decks) deckReport[deck.id] = { deckCards: deck.cards, deadCardRate: meanRate(deck.id) };
+    for (const deck of decks) deckReport[deck.id] = { worn: deck.worn, deckCards: deck.cards, deadCardRate: meanRate(deck.id) };
     for (const { family, pool, draws } of families) {
         deckReport[family.id] = {
-            family: true, laneIds: [...family.laneIds], poolSize: pool.length,
+            family: true, worn, laneIds: [...family.laneIds], poolSize: pool.length,
             drawSize: family.drawSize, draws, deadCardRate: meanRate(family.id),
         };
     }

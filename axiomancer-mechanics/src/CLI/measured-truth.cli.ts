@@ -4,7 +4,8 @@
  * Prints, per Act 1 fight, each measured deck's win rate and lowest-VITAE
  * p10 at every stat spread (greedy witness), each sampled family's median
  * with its win-rate range, and each deck's VITAE lost to foes against its own
- * INFERNO. `--json` prints the report and nothing else;
+ * INFERNO. The fighter wears the grey pair a new run opens with; the `grey+bare`
+ * column is the grey deck with nothing worn. `--json` prints the report and nothing else;
  * `scripts/measured-truth.mjs` reads it. A measurement, not a baseline.
  *
  * Usage:
@@ -46,7 +47,8 @@ function printTable(report: MeasuredTruthReport): void {
         const cells = report.cells.filter(c => c.deck === d);
         const mean = (pick: (c: (typeof cells)[number]) => number) =>
             (cells.reduce((a, c) => a + pick(c), 0) / Math.max(1, cells.length)).toFixed(1);
-        process.stdout.write(`${d}: ${size}, dead-card rate ${pct(deck.deadCardRate)}; `
+        const wore = deck.worn === 'none' ? 'nothing worn' : 'grey pair worn';
+        process.stdout.write(`${d}: ${size}, ${wore}, dead-card rate ${pct(deck.deadCardRate)}; `
             + `VITAE per fight from foes ${mean(c => c.playerHpTakenMean)}, self-burn ${mean(c => c.selfBurnMean)}\n`);
     }
 }

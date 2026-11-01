@@ -337,12 +337,14 @@ export function rewardLaneRows(line) {
  * @returns {string} the whole file.
  */
 export function renderLatest(line) {
+  const wornText = (d) => (d.worn === 'none' ? ' Nothing worn (the control).' : d.worn ? ' Grey pair worn.' : '')
   const deckLines = Object.entries(line.decks).map(([id, d]) => (d.family
     ? `- **${id}**: ${d.draws.length} draws of ${d.drawSize} distinct cards from a ${d.poolSize}-card pool `
       + `(${d.laneIds.join(' + ')}); mean dead-card rate ${Math.round(d.deadCardRate * 100)}% `
-      + '(every draw is in `history.jsonl`).'
+      + `(every draw is in \`history.jsonl\`).${wornText(d)}`
     : `- **${id}**: ${d.deckCards.length} cards; dead-card rate ${Math.round(d.deadCardRate * 100)}% `
-      + '(mean share of the deck never played in a cell).'))
+      + `(mean share of the deck never played in a cell).${wornText(d)}`))
+  const wearsPair = Object.values(line.decks).some((d) => d.worn === 'grey-pair')
   const familyRows = axes(line, { families: true }).decks.length
     ? [
         '## Sampled decks',
@@ -366,6 +368,16 @@ export function renderLatest(line) {
       + 'least this close to death, as a fraction of max VITAE). A measurement, not a gate (D57), and not a '
       + 'licence to tune (D88). Cite it with its commit.',
     '',
+    ...(wearsPair
+      ? [
+          'The fighter wears the grey weapon and armor a new run opens with, so the `grey even` column is the '
+            + '"grey even, grey pair worn" column'
+            + (line.decks['grey+bare']
+              ? '; `grey+bare` is the same deck with nothing worn, the control the pair is read against.'
+              : '.'),
+          '',
+        ]
+      : []),
     ...tableRows(line),
     '',
     ...familyRows,
