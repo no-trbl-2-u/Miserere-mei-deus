@@ -4,13 +4,14 @@ import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { useTooltip } from '@/hooks/useTooltip';
-import type { EquipmentDockSlot } from '@/state/presenters/inventory.engine';
+import type { DockRowId, EquipmentDockSlot } from '@/state/presenters/inventory.engine';
 
 interface EquipmentSlotProps {
     slot: EquipmentDockSlot | null;
     bareLabel: string;
     selected: boolean;
-    onPress: (key: EquipmentDockSlot['key'] | null) => void;
+    /** Picks this row (its id), or clears the pick when the row is already picked. */
+    onPress: (id: DockRowId | null) => void;
     /**
      * Long-press handler for a FILLED slot.
      * Receives the worn item's engine id; the screen resolves it into the
@@ -53,7 +54,7 @@ export function EquipmentSlot({
             accessibilityLabel={`${slot.label} slot${filled && slot.item ? `, ${slot.item.name}` : ', empty'}`}
             accessibilityHint={filled ? 'hold to inspect this item' : 'hold to read slot description'}
             accessibilityState={{ selected }}
-            onPress={() => onPress(selected ? null : slot.key)}
+            onPress={() => onPress(selected ? null : slot.id)}
             onLongPress={() => {
                 const wornId = slot.item?.id;
                 if (wornId !== undefined && onShowItemDetail !== undefined) {
@@ -101,13 +102,13 @@ const useStyles = makeStyles((AXM) => ({
     dockSlot: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
+        gap: 6,
         height: 64,
         borderWidth: 1,
         borderColor: AXM.divider,
         marginBottom: 6,
         backgroundColor: AXM.panelBg,
-        paddingHorizontal: 8,
+        paddingHorizontal: 6,
         paddingVertical: 6,
     },
     dockSlotFilled: {
@@ -123,8 +124,8 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.bone,
     },
     dockSlotGlyph: {
-        width: 40,
-        height: 40,
+        width: 34,
+        height: 34,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,

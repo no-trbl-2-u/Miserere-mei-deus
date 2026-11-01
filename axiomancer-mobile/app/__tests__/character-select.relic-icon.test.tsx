@@ -28,7 +28,7 @@ function def(id: string, relic: string): CharacterDefinition {
         startingRelicId: relic,
         baseStats: { heart: 5, body: 5, mind: 5 },
         startingLaneIds: ['elementalist', 'lane-y'],
-        startingCardIds: ['card-x', 'card-y'],
+        startingCardIds: ['card-x', 'card-y', 'card-z'],
         playstyle: 'x',
     };
 }

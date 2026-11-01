@@ -78,7 +78,7 @@ export const SLOT_CAPACITY: Record<EquipmentSlot, number> = {
  *                            either. Optional; read from the
  *                            relic library's entry by id, like `laneId`.
  * @property effect         - The piece's one fight effect (a weapon's or an
- *                            armor's; spec 136, A10): a trigger and a payoff,
+ *                            armor's): a trigger and a payoff,
  *                            or a condition and a DEAL bonus. Read from the
  *                            worn loadout at `initializeCombatEncounter` and
  *                            run by `Combat/combat.equipment-effects.ts`, so it
@@ -97,7 +97,7 @@ export interface Equipment extends BaseItem {
 }
 
 /**
- * When a worn piece's trigger effect fires (spec 136, A10). "A card's DEAL" is
+ * When a worn piece's trigger effect fires. "A card's DEAL" is
  * a DEAL a card line makes (RADIANCE and the MERCY burst included), never a
  * Global's, TETHER's, THORNS' or REFLECT's.
  *

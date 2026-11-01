@@ -522,7 +522,7 @@ export type CombatEvent =
     /** A Global entered play (`turnsLeft` null = rest of combat). */
     | { kind: 'global-entered'; cardId: string; paid: boolean; turnsLeft: number | null }
     | { kind: 'global-left'; cardId: string }
-    /** A worn piece's effect fired (spec 136, A10): its trigger or the condition that held, what it paid,
+    /** A worn piece's effect fired: its trigger or the condition that held, what it paid,
      *  and how much it gave (VITAE healed, GUARD gained, Conviction gained, cards drawn, or the DEAL's +n). */
     | { kind: 'equipment-fired'; itemId: string; itemName: string; slot: EquipmentSlot;
         trigger?: EquipmentTrigger; condition?: EquipmentCondition; payoff: EquipmentPayoffKind; amount: number }

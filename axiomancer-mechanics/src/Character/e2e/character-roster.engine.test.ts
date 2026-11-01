@@ -27,6 +27,7 @@ const playable = cardLibrary
     .map(c => c.id);
 const spellId = cardLibrary.find(c => c.cardType === 'spell' && !GREY_LANE.cardIds.includes(c.id))?.id ?? 'grey-word';
 const curseId = cardLibrary.find(c => c.cardType === 'curse')?.id;
+const globalId = cardLibrary.find(c => c.cardType === 'global' && !GREY_LANE.cardIds.includes(c.id))?.id;
 
 const [cardA, cardB, cardC, cardD] = playable as [string, string, string, string];
 
@@ -34,7 +35,7 @@ const lane = (id: string, cardIds: string[]): CardLane => ({ id, name: id, cardI
 
 const LANES: readonly CardLane[] = [
     GREY_LANE,
-    lane('lane-a', [cardA, spellId, ...(curseId ? [curseId] : [])]),
+    lane('lane-a', [cardA, spellId, ...(curseId ? [curseId] : []), ...(globalId ? [globalId] : [])]),
     lane('lane-b', [cardB]),
     lane('lane-c', [cardC, cardD]),
 ];
@@ -54,7 +55,7 @@ const SOUND: CharacterDefinition = {
     startingRelicId: 'relic-c',
     baseStats: { heart: 5, body: 7, mind: 3 },
     startingLaneIds: ['lane-a', 'lane-b'],
-    startingCardIds: [cardB, cardA],
+    startingCardIds: [cardB, cardA, cardC],
     playstyle: 'Hits hard.',
 };
 
@@ -80,11 +81,22 @@ describe('character roster (CH1 A1)', () => {
             startingRelicId: 'relic-disarming-plea',
             baseStats: { heart: 7, body: 3, mind: 5 },
             startingLaneIds: ['defender', 'blood-price'],
-            startingCardIds: ['df-e-04a', 'bp-p-02a'],
+            startingCardIds: ['df-e-09c', 'bp-m-01d', 'mc-e-07b'],
             playstyle: 'Fumbling Squire trying to hold the line',
         });
         expect(characterProblems(chosen)).toEqual([]);
         expect(characterDeck(chosen)).toHaveLength(10);
+    });
+
+    it('the Chosen\'s ten cards are exactly the seven grey plus Rose Wrap, Siphon and Draw the Fever (SD1a A2)', () => {
+        const deck = characterDeck(getCharacterDefinition('the-chosen')!);
+        expect(deck).toHaveLength(10);
+        const counts: Record<string, number> = {};
+        for (const id of deck) counts[id] = (counts[id] ?? 0) + 1;
+        expect(counts).toEqual({
+            'grey-strike': 3, 'grey-ward': 2, 'grey-word': 2,
+            'df-e-09c': 1, 'bp-m-01d': 1, 'mc-e-07b': 1,
+        });
     });
 
     it('the real roster ids are unique and resolve', () => {
@@ -100,11 +112,12 @@ describe('character roster (CH1 A1)', () => {
         expect(FRESH_RUN_STAT_BUDGET).toBe(15);
     });
 
-    it('the character deck is Blow 3, Ward 3, Word 2 plus the two lane cards', () => {
+    it('the character deck is Blow 3, Ward 2, Word 2 plus the three lane cards', () => {
         expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-strike')).toHaveLength(3);
-        expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-ward')).toHaveLength(3);
+        expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-ward')).toHaveLength(2);
+        expect(CHARACTER_GREY_DECK).toHaveLength(7);
         expect(CHARACTER_GREY_DECK.filter(id => id === 'grey-word')).toHaveLength(2);
-        expect(characterDeck(SOUND)).toEqual([...CHARACTER_GREY_DECK, cardB, cardA]);
+        expect(characterDeck(SOUND)).toEqual([...CHARACTER_GREY_DECK, cardB, cardA, cardC]);
         expect(characterDeck(SOUND)).toHaveLength(10);
     });
 
@@ -115,16 +128,19 @@ describe('character roster (CH1 A1)', () => {
     const broken: [string, Partial<CharacterDefinition>, CharacterProblemCode][] = [
         ['relic not in the library', { startingRelicId: 'relic-missing' }, 'relic-unknown'],
         ['relic with no lane', { startingRelicId: 'relic-none' }, 'relic-no-lane'],
-        ['a starting lane is grey', { startingLaneIds: ['grey', 'lane-b'], startingCardIds: ['grey-strike', cardB] }, 'lane-grey'],
+        ['a starting lane is grey', { startingLaneIds: ['grey', 'lane-b'], startingCardIds: ['grey-strike', cardB, cardC] }, 'lane-grey'],
         ['a starting lane is not registered', { startingLaneIds: ['lane-z', 'lane-b'] }, 'lane-unregistered'],
-        ['a starting lane is the relic\'s lane', { startingLaneIds: ['lane-c', 'lane-b'], startingCardIds: [cardD, cardB] }, 'lane-is-relic-lane'],
+        ['a starting lane is the relic\'s lane', { startingLaneIds: ['lane-c', 'lane-b'], startingCardIds: [cardD, cardB, cardC] }, 'lane-is-relic-lane'],
         ['the two starting lanes are equal', { startingLaneIds: ['lane-b', 'lane-b'] }, 'lanes-equal'],
         ['stats do not total the budget', { baseStats: { heart: 5, body: 7, mind: 5 } }, 'stats-budget'],
-        ['a card is not in the library', { startingCardIds: ['no-such-card', cardA] }, 'card-unknown'],
-        ['a card is a Spell', { startingCardIds: [spellId, cardB] }, 'card-forbidden-type'],
-        ['two cards from one starting lane', { startingCardIds: [cardA, spellId] }, 'cards-not-one-per-lane'],
-        ['a starting lane has no card', { startingCardIds: [cardA, cardA] }, 'cards-not-one-per-lane'],
-        ['a card is in the relic lane', { startingCardIds: [cardA, cardC] }, 'card-in-relic-lane'],
+        ['a card is not in the library', { startingCardIds: ['no-such-card', cardA, cardC] }, 'card-unknown'],
+        ['a card is a Spell', { startingCardIds: [spellId, cardB, cardC] }, 'card-forbidden-type'],
+        ['two cards from one starting lane', { startingCardIds: [cardA, cardA, cardC] }, 'cards-not-one-per-lane'],
+        ['a starting lane has no card', { startingCardIds: [cardA, cardC, cardC] }, 'cards-not-one-per-lane'],
+        ['the relic lane has no card', { startingCardIds: [cardB, cardA, cardA] }, 'cards-not-one-per-lane'],
+        ['two cards from the relic lane', { startingCardIds: [cardA, cardC, cardD] }, 'cards-not-one-per-lane'],
+        ['only two cards', { startingCardIds: [cardB, cardA] as unknown as CharacterDefinition['startingCardIds'] }, 'cards-not-one-per-lane'],
+        ['four cards', { startingCardIds: [cardB, cardA, cardC, cardD] as unknown as CharacterDefinition['startingCardIds'] }, 'cards-not-one-per-lane'],
     ];
 
     it.each(broken)('%s is caught', (_label, patch, code) => {
@@ -133,13 +149,21 @@ describe('character roster (CH1 A1)', () => {
 
     it('a Curse as a starting card is caught', () => {
         if (!curseId) return;
-        expect(codes({ ...SOUND, startingCardIds: [curseId, cardB] })).toContain('card-forbidden-type');
+        expect(codes({ ...SOUND, startingCardIds: [curseId, cardB, cardC] })).toContain('card-forbidden-type');
     });
 
     it('each broken rule is caught alone where it can be', () => {
         expect(codes({ ...SOUND, baseStats: { heart: 1, body: 1, mind: 1 } })).toEqual(['stats-budget']);
         expect(codes({ ...SOUND, startingRelicId: 'relic-missing' })).toEqual(['relic-unknown']);
-        expect(codes({ ...SOUND, startingCardIds: [cardA, cardC] })).toEqual(['cards-not-one-per-lane', 'card-in-relic-lane']);
+        expect(codes({ ...SOUND, startingCardIds: [cardA, cardC, cardD] })).toEqual(['cards-not-one-per-lane']);
+    });
+
+    it('a Global may start, and a card in the relic lane is the rule, not a fault (SD1a A3)', () => {
+        expect(globalId).toBeDefined();
+        expect(codes({ ...SOUND, startingCardIds: [cardB, globalId!, cardC] })).toEqual([]);
+        expect(codes({ ...SOUND, startingCardIds: [cardB, cardA, cardD] })).toEqual([]);
+        const all: string[] = characterProblems(SOUND, LANES, RELICS).map(p => p.code);
+        expect(all).not.toContain('card-in-relic-lane');
     });
 
     it('checks against the real registry and library by default', () => {
