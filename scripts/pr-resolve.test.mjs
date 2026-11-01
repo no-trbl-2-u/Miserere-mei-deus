@@ -88,7 +88,12 @@ function addUnscheduled(md, id) {
 }
 
 /** A line at the head of the Unscheduled list, away from the tail every plot appends to. */
-const addUnscheduledFirst = (md, id) => md.replace(/^- AD1a — /m, `- ${id} — fixture; date not set.\n- AD1a — `)
+const addUnscheduledFirst = (md, id) => {
+  const at = md.indexOf('\n## Unscheduled\n')
+  const head = md.slice(0, at)
+  const tail = md.slice(at).replace(/^- (\S+) — /m, `- ${id} — fixture; date not set.\n- $1 — `)
+  return head + tail
+}
 
 const addChangeLog = (md, what) => md.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **${what}** (T).\n`)
 
