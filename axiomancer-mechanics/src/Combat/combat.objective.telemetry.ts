@@ -68,7 +68,7 @@ export interface CombatObjectiveTelemetry {
     convictionSpent: number;
     /** `signature-cast` count. */
     signatureCasts: number;
-    /** `special-fired` count — the die-gear BOON payload paying ◆ on use. */
+    /** `special-fired` count: the worn weapon's special paying on use (Conviction, DEAL, HEAL, GUARD, INFERNO or VULNERABLE). */
     specialsFired: number;
 
     // ── LOCKED MECHANIC 2 — THE SURGE METER ──────────────────────────────────

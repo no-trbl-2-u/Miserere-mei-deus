@@ -4,8 +4,11 @@ import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { SectionLabel } from '@/components/SectionLabel';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
+import { GestureDetector } from 'react-native-gesture-handler';
 import { EquipmentSlot } from './EquipmentSlot';
+import type { DockDragController } from './useDockDrag';
 import type { DockRowId, EquipmentDockViewModel, EquipmentDockSlot } from '@/state/presenters/inventory.engine';
+import type { DockDragPayload } from '@/state/presenters/inventory.drag';
 
 /** Stable React key per dock slot (the 3 relic rows share a slot key, so
  *  fold in `relicIndex` to disambiguate — mirrors EquipmentSlot's testID). */
@@ -77,6 +80,57 @@ interface EquipmentDockProps {
     /** Long-press pass-through: a filled slot asks the screen to open the
      *  equipment detail card for the worn item's id. */
     onShowItemDetail?: (itemId: string) => void;
+    /**
+     * The screen's drag controller. With it, a filled row can be dragged, every
+     * row is a drop target, rows that would take the piece in flight are lit,
+     * and a refused drop flashes its row and shows the reason under the rows.
+     */
+    drag?: DockDragController;
+    /** The drag a filled row starts (read when the drag begins). */
+    getRowPayload?: (id: DockRowId) => DockDragPayload | null;
+}
+
+interface DockRowProps {
+    slot: EquipmentDockSlot;
+    bareLabel: string;
+    selected: boolean;
+    onSelectRow: (id: DockRowId | null) => void;
+    onShowItemDetail?: (itemId: string) => void;
+    drag?: DockDragController;
+    getRowPayload?: (id: DockRowId) => DockDragPayload | null;
+}
+
+/** One dock row: a drop target when a drag controller is given, and draggable when filled. */
+function DockRow({ slot, bareLabel, selected, onSelectRow, onShowItemDetail, drag, getRowPayload }: DockRowProps) {
+    // A press that is a drag's own release is not a tap.
+    const onPress = drag === undefined
+        ? onSelectRow
+        : (id: DockRowId | null) => { if (!drag.suppressTap()) onSelectRow(id); };
+    const onDetail = drag === undefined || onShowItemDetail === undefined
+        ? onShowItemDetail
+        : (itemId: string) => { if (!drag.suppressTap()) onShowItemDetail(itemId); };
+    const row = (
+        <EquipmentSlot
+            slot={slot}
+            bareLabel={bareLabel}
+            selected={selected}
+            onPress={onPress}
+            onShowItemDetail={onDetail}
+            lit={drag?.litRows.has(slot.id) ?? false}
+            refused={drag?.refusal?.row === slot.id}
+        />
+    );
+    if (drag === undefined) return row;
+    const register = (node: View | null) => drag.register(slot.id, node);
+    if (slot.item === null || getRowPayload === undefined) {
+        return <View ref={register} collapsable={false}>{row}</View>;
+    }
+    const gesture = drag.gestureFor(slot.id, () => getRowPayload(slot.id), 'row');
+    return (
+        <GestureDetector gesture={gesture}>
+            <View ref={register} collapsable={false}>{row}</View>
+        </GestureDetector>
+    );
 }
 
 /**
@@ -93,6 +147,8 @@ export function EquipmentDock({
     selectedRow,
     onSelectRow,
     onShowItemDetail,
+    drag,
+    getRowPayload,
 }: EquipmentDockProps) {
     const styles = useStyles();
     const AXM = usePalette();
@@ -141,17 +197,29 @@ export function EquipmentDock({
                     testID="equipment-dock-slots"
                 >
                     {vm.slots.map((slot) => (
-                        <EquipmentSlot
+                        <DockRow
                             key={dockSlotKey(slot)}
                             slot={slot}
                             bareLabel={vm.bareLabel}
                             selected={selectedRow === slot.id}
-                            onPress={onSelectRow}
+                            onSelectRow={onSelectRow}
                             onShowItemDetail={onShowItemDetail}
+                            drag={drag}
+                            getRowPayload={getRowPayload}
                         />
                     ))}
                 </View>
             </View>
+            {drag?.refusal ? (
+                <Text
+                    key={drag.refusal.n}
+                    style={styles.dockRefusal}
+                    accessibilityLiveRegion="assertive"
+                    testID="dock-drop-refusal"
+                >
+                    {drag.refusal.line}
+                </Text>
+            ) : null}
         </View>
     );
 }
@@ -200,6 +268,15 @@ const useStyles = makeStyles((AXM) => ({
         // Wide layout: the bust is a fixed square and the gear list takes the rest.
         flex: 1,
         flexShrink: 1,
+    },
+    // A refused drop's one-line reason, under the rows.
+    dockRefusal: {
+        fontFamily: FONTS.sans,
+        fontSize: 11,
+        color: AXM.blood,
+        letterSpacing: 0.6,
+        textAlign: 'right',
+        marginTop: 2,
     },
     dockPortrait: {
         // A fixed box instead of flex:1 — the bust never reclaims

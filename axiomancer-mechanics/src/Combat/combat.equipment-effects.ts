@@ -25,27 +25,47 @@
  * piece can never fire itself (or another piece) again. Each firing pushes an
  * `equipment-fired` event naming the piece.
  *
+ * The dice half of a piece (`initEquipmentDice`) is read at the same moment
+ * into `CombatEncounterState.equipmentDice`: the worn armor's die change
+ * (`applyDieChanges`, applied by `activeDieGear` on top of the character's die
+ * gear) and the worn weapon's special payload (paid where a special-face die
+ * is used to power a card). With no weapon worn a special only powers its card.
+ *
  * This module never imports the engine (the Conviction cap is stored in the
  * state at fight setup).
  */
 
 import type { EquipmentLoadout } from '../Character/types';
 import type {
-    Equipment, EquipmentCondition, EquipmentEffect, EquipmentPayoff, EquipmentSlot, EquipmentTrigger,
+    Equipment, EquipmentCondition, EquipmentConditionEffect, EquipmentDieChange, EquipmentEffect,
+    EquipmentPayoff, EquipmentSlot, EquipmentTrigger, EquipmentTriggerEffect, SpecialPayload,
 } from '../Items/types';
 import { getRng } from '../Utils/rng';
 import { drawCombatCards } from './combat.deck';
 import { elementsOnFoe, initElementState } from './combat.elements';
 import { cutGuardGain, veilHeal } from './combat.enemy-words';
 import { heal as healCombatant } from './health';
-import type { CombatEncounterState, CombatEvent } from './combat.encounter.types';
+import type { CombatEncounterState, CombatEvent, UpgradeableDieGear } from './combat.encounter.types';
 
 /** One worn piece that carries an effect, as read at fight setup. */
 export interface WornEquipmentEffect {
     itemId: string;
     itemName: string;
     slot: EquipmentSlot;
-    effect: EquipmentEffect;
+    /** The trigger or condition half; a piece whose only effect is on the dice is not listed. */
+    effect: EquipmentTriggerEffect | EquipmentConditionEffect;
+}
+
+/**
+ * The fight's dice effects, read at fight setup: the worn armor's die change
+ * and the worn weapon's special payload. `special` is absent when no weapon
+ * with a payload is worn: a special then only powers its card.
+ */
+export interface EquipmentDiceState {
+    dieChanges: EquipmentDieChange[];
+    special?: SpecialPayload;
+    /** The weapon that sets the special (for the event and the log). */
+    specialSource?: { itemId: string; itemName: string };
 }
 
 /** The fight's equipment-effect state (present only when the worn gear carries an effect). */
@@ -78,10 +98,21 @@ function isWorn(e: Equipment | null | undefined): e is Equipment {
 }
 
 /** A usable effect: a known shape with a positive number. */
-function liveEffect(e: EquipmentEffect | undefined): e is EquipmentEffect {
+function liveEffect(e: EquipmentEffect | undefined): e is EquipmentTriggerEffect | EquipmentConditionEffect {
     if (!e) return false;
     if (e.condition !== undefined) return (e.bonus ?? 0) > 0;
     return e.trigger !== undefined && !!e.payoff && e.payoff.amount > 0;
+}
+
+/** A usable die change: a known colour and change. */
+function liveDieChange(d: EquipmentDieChange | undefined): d is EquipmentDieChange {
+    return !!d && ['heart', 'body', 'mind', 'wild'].includes(d.color)
+        && (d.change === 'miss-to-mana' || d.change === 'mana-to-special');
+}
+
+/** A usable special payload: a positive amount. */
+function livePayload(p: SpecialPayload | undefined): p is SpecialPayload {
+    return !!p && p.amount > 0;
 }
 
 /**
@@ -94,8 +125,54 @@ export function wornEquipmentEffects(loadout: EquipmentLoadout | undefined | nul
     const pieces = [loadout.weapon, loadout.armor, ...relics].filter(isWorn);
     return pieces
         .filter(p => liveEffect(p.effect))
-        .map(p => ({ itemId: p.id, itemName: p.name, slot: p.slot, effect: p.effect as EquipmentEffect }));
+        .map(p => ({
+            itemId: p.id, itemName: p.name, slot: p.slot,
+            effect: p.effect as EquipmentTriggerEffect | EquipmentConditionEffect,
+        }));
 }
+
+/**
+ * The fight's dice effects, or undefined when nothing worn has one. The die
+ * change comes from the worn armor; the special payload from the worn weapon.
+ */
+export function initEquipmentDice(loadout: EquipmentLoadout | undefined | null): EquipmentDiceState | undefined {
+    if (!loadout) return undefined;
+    const die = loadout.armor?.effect?.die;
+    const dieChanges = liveDieChange(die) ? [die] : [];
+    const weapon = loadout.weapon;
+    const special = weapon?.effect?.special;
+    if (dieChanges.length === 0 && !livePayload(special)) return undefined;
+    return {
+        dieChanges,
+        ...(livePayload(special) && weapon
+            ? { special, specialSource: { itemId: weapon.id, itemName: weapon.name } }
+            : {}),
+    };
+}
+
+/**
+ * One die's gear with the worn armor's change applied on top of it. A
+ * `'miss-to-mana'` change needs a miss face left (special + mana below 6);
+ * a `'mana-to-special'` change needs a mana face. Otherwise the die gains nothing.
+ */
+export function applyDieChanges(
+    gear: UpgradeableDieGear,
+    changes: readonly EquipmentDieChange[] | undefined,
+): UpgradeableDieGear {
+    let out = gear;
+    for (const c of changes ?? []) {
+        if (c.color !== out.dieColor) continue;
+        if (c.change === 'miss-to-mana') {
+            if (out.specialFaces + out.manaFaces < DIE_FACE_COUNT) out = { ...out, manaFaces: out.manaFaces + 1 };
+        } else if (out.manaFaces > 0) {
+            out = { ...out, manaFaces: out.manaFaces - 1, specialFaces: out.specialFaces + 1 };
+        }
+    }
+    return out;
+}
+
+/** Faces on a die. */
+const DIE_FACE_COUNT = 6;
 
 /** The fight's equipment state, or undefined when nothing worn carries an effect. */
 export function initEquipmentEffects(

@@ -154,8 +154,11 @@ the Expo app (`axiomancer-mobile`) presents it.
   a second roll is refused (`startTurn`, `Combat/combat.engine.ts`).
 - **Faces** (`DEFAULT_DIE_GEAR`): a coloured die has 1 special, 2 mana and 3
   miss faces; the gold die has 1 special, 1 mana and 4 miss. A miss cannot
-  power a card. A special face pays `SPECIAL_CONVICTION_DEFAULT` = 2
-  Conviction when the die is used.
+  power a card. A special face pays what the worn weapon's `special` says
+  (`state.equipmentDice.special`) when the die is used: Conviction, DEAL, HEAL,
+  GUARD, INFERNO on the foe or VULNERABLE. With no weapon worn it only powers
+  its card; the grey sword's special is `SPECIAL_CONVICTION_DEFAULT` = 2
+  Conviction.
 - **The Color Law** (`dieSatisfiesColorLaw`): a die powers a card when the
   card is `any`, the die is gold, or the colours match. A mismatch fizzles.
   Powering is all a die does: PAID numbers land as printed (scaled by stats)

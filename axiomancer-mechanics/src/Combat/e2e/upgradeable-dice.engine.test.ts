@@ -20,6 +20,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
 import { Player } from '../../Character/characters.mock';
+import { wearGreySword } from '../combat.grey-sword';
 import type { Character } from '../../Character/types';
 import type { Enemy } from '../../Enemy/types';
 import { FloatEye } from '../../Enemy/enemy.library';
@@ -83,6 +84,7 @@ function makePlayer(cards: string[]): Character {
     p.knownCards = cards.slice();
     p.baseStats = { heart: 8, body: 8, mind: 8 };
     p.health = 400; p.maxHealth = 400;
+    wearGreySword(p);
     return p;
 }
 

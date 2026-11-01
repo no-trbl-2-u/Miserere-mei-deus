@@ -20,8 +20,10 @@ import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind } from '.
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
-import type { EquipmentEffectsState } from './combat.equipment-effects';
-import type { EquipmentCondition, EquipmentPayoffKind, EquipmentSlot, EquipmentTrigger } from '../Items/types';
+import type { EquipmentDiceState, EquipmentEffectsState } from './combat.equipment-effects';
+import type {
+    EquipmentCondition, EquipmentPayoffKind, EquipmentSlot, EquipmentTrigger, SpecialPayload,
+} from '../Items/types';
 
 // ---------------------------------------------------------------------------
 // Dice — the stance-color economy
@@ -613,7 +615,9 @@ export type CombatEvent =
     | { kind: 'momentum-surged'; dieId: string }
     // A BOON face fired its gear payload because its die was USED to power a
     // card (the owner-ratified use-triggered rule).
-    | { kind: 'special-fired'; dieId: string; conviction: number; total: number }
+    // `conviction` is the Conviction it paid (0 for any other payload, which
+    // names itself in `payload`); `total` is the Conviction after.
+    | { kind: 'special-fired'; dieId: string; conviction: number; total: number; payload?: SpecialPayload }
     // The 7-object table ceiling refused a die grant; it converted to +1◆.
     | { kind: 'die-overflowed'; source: 'surge' | 'kindle' | 'materialize' | 'coveted'; total: number }
     // An OVERHEAT push armed a second play but cracked the die: all-miss next
@@ -784,6 +788,10 @@ export interface CombatEncounterState {
      *  (`combat.equipment-effects.ts`). Present only when the worn gear carries an
      *  effect, whatever the deck. */
     equipmentEffects?: EquipmentEffectsState;
+    /** The worn armor's die change and the worn weapon's special payload
+     *  (`combat.equipment-effects.ts`), read at fight setup. Absent when
+     *  neither is worn; with no weapon a special only powers its card. */
+    equipmentDice?: EquipmentDiceState;
     /** The enemy words' state (WARD, BRINE, LEECH on you). Absent = none. */
     enemyWords?: EnemyWordsState;
     /** The move riders' state (`combat.enemy-riders.ts`). Absent = none. */
@@ -805,8 +813,9 @@ export interface UpgradeableDieGear {
     specialFaces: number;
     /** Number of mana faces on the driven die (default 2; gold default 1). */
     manaFaces: number;
-    /** The special payload: Conviction granted when a special-face die is USED
-     *  to power a card (default 2 — "powers this color AND grants 2◆"). */
+    /** No longer sets a payout: what a special pays is the worn weapon's
+     *  `special` (`CombatEncounterState.equipmentDice`). Kept on the rail for
+     *  the display and saves. */
     specialConviction: number;
 }
 

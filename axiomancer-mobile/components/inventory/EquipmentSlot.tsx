@@ -20,6 +20,10 @@ interface EquipmentSlotProps {
      * is the only information an EMPTY slot has to give.
      */
     onShowItemDetail?: (itemId: string) => void;
+    /** A dragged piece would be taken here if let go: the row is lit. */
+    lit?: boolean;
+    /** A drop here was just refused: the row flashes. */
+    refused?: boolean;
 }
 
 export function EquipmentSlot({
@@ -28,6 +32,8 @@ export function EquipmentSlot({
     selected,
     onPress,
     onShowItemDetail,
+    lit = false,
+    refused = false,
 }: EquipmentSlotProps) {
     // Long-press behaviour: on a FILLED slot
     // it opens the equipment detail card — the only place outside combat where
@@ -67,6 +73,8 @@ export function EquipmentSlot({
                 styles.dockSlot,
                 filled ? styles.dockSlotFilled : styles.dockSlotBare,
                 selected && styles.dockSlotSelected,
+                lit && styles.dockSlotLit,
+                refused && styles.dockSlotRefused,
             ]}
             testID={`dock-slot-${slotId}`}
         >
@@ -122,6 +130,19 @@ const useStyles = makeStyles((AXM) => ({
     dockSlotSelected: {
         borderWidth: 2,
         borderColor: AXM.bone,
+    },
+    // A row that would take the piece being dragged.
+    dockSlotLit: {
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderColor: AXM.sulfur,
+        backgroundColor: AXM.deepBg,
+    },
+    // A drop this row refused, said loudly.
+    dockSlotRefused: {
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderColor: AXM.blood,
     },
     dockSlotGlyph: {
         width: 34,

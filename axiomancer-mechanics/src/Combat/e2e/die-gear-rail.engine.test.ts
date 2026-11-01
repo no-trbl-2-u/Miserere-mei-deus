@@ -4,8 +4,8 @@
  * The SOLE engine wiring point is `initializeCombatEncounter` copying
  * `clonedPlayer.dieGear` onto the encounter state; `activeDieGear` does the
  * rest. This suite proves the persisted rail actually drives combat:
- *   - an upgraded special payload fires the rail's value (not the default 2◆);
- *   - a banked special spent from the Reserve fires the rail payload too
+ *   - the rail does not set the special payload: the worn weapon does;
+ *   - a banked special spent from the Reserve fires the weapon payload too
  *     (use-triggered timing — the trigger is USE, not roll);
  *   - a HONE'd rail rolls more mana faces than the default.
  * All rolls pinned via sequential rng closures.
@@ -14,6 +14,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 
 import { Player } from '../../Character/characters.mock';
+import { wearGreySword } from '../combat.grey-sword';
 import type { Character } from '../../Character/types';
 import type { Enemy } from '../../Enemy/types';
 import { FloatEye } from '../../Enemy/enemy.library';
@@ -24,6 +25,7 @@ import {
     CONVICTION_CAP,
 } from '../combat.engine';
 import { honeDieGear } from '../../Character/dieGear.reducer';
+import { SPECIAL_CONVICTION_DEFAULT } from '../combat.upgradeable-dice';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
 afterEach(() => {
@@ -54,6 +56,7 @@ function makePlayer(mutate?: (c: Character) => void): Character {
     p.knownCards = DECK.slice();
     p.baseStats = { heart: 8, body: 8, mind: 8 };
     p.health = 400; p.maxHealth = 400;
+    wearGreySword(p);
     if (mutate) mutate(p);
     return p;
 }
@@ -85,7 +88,7 @@ describe('die-gear rail → combat', () => {
         expect(s.dieGear?.body?.specialConviction).toBe(5);
     });
 
-    it('an upgraded special payload fires the rail value, not the default 2◆', () => {
+    it('the worn weapon sets the special payload; a rail with a richer specialConviction does not change it', () => {
         const player = makePlayer(c => {
             c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 5 } };
         });
@@ -94,10 +97,10 @@ describe('die-gear rail → combat', () => {
         const before = s.conviction;
         const res = paid(s, trayDie(s, 'body').id);
         expect(events(res, 'special-fired')).toHaveLength(1);
-        expect(res.state.conviction).toBe(Math.min(CONVICTION_CAP, before + 5));
+        expect(res.state.conviction).toBe(Math.min(CONVICTION_CAP, before + SPECIAL_CONVICTION_DEFAULT));
     });
 
-    it('a banked special spent from the Reserve fires the rail payload (use-triggered)', () => {
+    it('a banked special spent from the Reserve fires the weapon payload (use-triggered)', () => {
         const player = makePlayer(c => {
             c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 5 } };
         });
@@ -110,7 +113,7 @@ describe('die-gear rail → combat', () => {
         const before = s.conviction;
         const res = paid(s, reservedId);
         expect(events(res, 'special-fired')).toHaveLength(1);
-        expect(res.state.conviction).toBe(Math.min(CONVICTION_CAP, before + 5));
+        expect(res.state.conviction).toBe(Math.min(CONVICTION_CAP, before + SPECIAL_CONVICTION_DEFAULT));
     });
 
     it('a HONE\'d rail rolls more mana faces in combat than the default', () => {
