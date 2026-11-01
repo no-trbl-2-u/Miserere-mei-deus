@@ -49,7 +49,7 @@ import type {
     CombatMomentumV2VM,
 } from '@/state/presenters/combat-encounter.engine';
 import { armedValue, dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
-import { paidLineFit, paidLineRuns, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
+import { paidLineFit, paidLineGap, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
 import { glyphKeywordFor } from '@/state/presenters/keyword-glyph.engine';
 import { KeywordGlyph } from '@/components/keyword-glyphs';
 import { useSetting } from '@/state/settings';
@@ -1896,6 +1896,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     // The open card shows a keyword's glyph beside its word in both modes, so a glyph is learnt once.
     // Its word is the headline keyword, or the first word of the value when the headline is the whole line (`Deal 9`).
     const keywordGlyph = large ? (glyphKeywordFor(f.keyword) ?? glyphKeywordFor(paidValue.split(/\s+/)[0])) : null;
+    // The glyph shrinks on the narrower open cards (the reward preview, the detail card) so the word keeps its room.
+    const largeGlyph = Math.min(LARGE_GLYPH, Math.max(14, Math.round(width / 13)));
     const bandH = large ? 36 : 26;
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.
@@ -1995,17 +1997,18 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                     >
                         <StanceCube color={band} size={20} />
                         <View style={styles.paidColumn}>
+                            <View style={styles.paidLineRowLarge}>
+                            {keywordGlyph ? (
+                                <View style={styles.paidGlyphLarge}>
+                                    <KeywordGlyph keyword={keywordGlyph} size={largeGlyph} color={accent ?? undefined} />
+                                </View>
+                            ) : null}
                             <Text
                                 style={styles.paidLine}
                                 numberOfLines={1}
                                 allowFontScaling={false}
                                 testID="combat-card-face-paid-line"
                             >
-                                {keywordGlyph ? (
-                                    <View style={styles.paidGlyphLarge}>
-                                        <KeywordGlyph keyword={keywordGlyph} size={LARGE_GLYPH} color={accent ?? undefined} />
-                                    </View>
-                                ) : null}
                                 {keywordText ? (
                                     <Text
                                         style={[styles.paidKeyword, styles.paidKeywordLarge, { color: kwColor }]}
@@ -2023,6 +2026,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                                     </Text>
                                 ) : null}
                             </Text>
+                            </View>
                             {f.isGlobal ? (
                                 <Text style={styles.durationLine} allowFontScaling={false} testID="combat-card-face-duration">
                                     {globalDurationLine()}
@@ -2039,6 +2043,38 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         <View style={[styles.ledgerCube, { right: narrow ? 3 : 4 }]} testID="combat-card-face-cube">
                             <StanceCube color={band} size={narrow ? 12 : 14} />
                         </View>
+                        {cardText === 'glyphs' ? (
+                            // A glyph is a view, which a Text cannot hold: each word is a token in a wrapping row.
+                            <View
+                                style={[styles.paidLineSmall, styles.paidLineTokens, {
+                                    columnGap: paidLineGap(paidFit!.size),
+                                    maxHeight: Math.round(paidFit!.size * PAID_LINE_LEADING) * PAID_LINE_ROWS,
+                                }]}
+                                accessible
+                                accessibilityLabel={f.paidLine}
+                                testID="combat-card-face-paid-line"
+                            >
+                                {paidLineWords(f.paidLine, cardText).map((word, wi) => {
+                                    const tokenRuns = word.map((run, i) => run.glyph ? (
+                                        <View key={i} style={{ marginHorizontal: GLYPH_GAP }} testID="combat-card-face-glyph">
+                                            <KeywordGlyph keyword={run.glyph} size={Math.round(GLYPH_EM * paidFit!.size)} color={accent ?? undefined} />
+                                        </View>
+                                    ) : (
+                                        <Text
+                                            key={i}
+                                            style={[
+                                                run.caps ? styles.paidRunCaps : styles.paidRunSerif,
+                                                { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: accent ?? AXM.parchment },
+                                            ]}
+                                            allowFontScaling={false}
+                                        >
+                                            {run.text}
+                                        </Text>
+                                    ));
+                                    return <View key={wi} style={styles.paidToken}>{tokenRuns}</View>;
+                                })}
+                            </View>
+                        ) : (
                         <Text
                             style={[styles.paidLineSmall, { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING) }]}
                             numberOfLines={PAID_LINE_ROWS}
@@ -2046,11 +2082,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                             accessibilityLabel={f.paidLine}
                             testID="combat-card-face-paid-line"
                         >
-                            {paidLineRuns(f.paidLine, cardText).map((run, i) => run.glyph ? (
-                                <View key={i} style={{ marginHorizontal: GLYPH_GAP }} testID="combat-card-face-glyph">
-                                    <KeywordGlyph keyword={run.glyph} size={Math.round(GLYPH_EM * paidFit!.size)} color={accent ?? undefined} />
-                                </View>
-                            ) : (
+                            {paidLineRuns(f.paidLine).map((run, i) => (
                                 <Text
                                     key={i}
                                     style={[
@@ -2062,6 +2094,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                                 </Text>
                             ))}
                         </Text>
+                        )}
                     </View>
                 )}
                 {children}
@@ -2423,7 +2456,10 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     plateLedgerSmall: { paddingHorizontal: 5, justifyContent: 'center' },
     ledgerCube: { position: 'absolute', top: -8, zIndex: 3 },
     paidLineSmall: { alignSelf: 'stretch' },
-    paidGlyphLarge: { marginRight: 5 },
+    paidGlyphLarge: { marginRight: 5, flexShrink: 0 },
+    paidLineRowLarge: { flexDirection: 'row', alignItems: 'center' },
+    paidLineTokens: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', flexShrink: 1, overflow: 'hidden' },
+    paidToken: { flexDirection: 'row', alignItems: 'center' },
     paidRunCaps: { fontFamily: FONTS.sans, letterSpacing: PAID_CAPS_SPACING },
     paidRunSerif: { fontFamily: FONTS.serif },
     // The GLOBAL plate sits in the FREE pill's place and shape, text only.

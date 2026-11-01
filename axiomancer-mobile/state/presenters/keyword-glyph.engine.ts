@@ -9,13 +9,14 @@
  * keyword list, the category each wears, and the lookup. Pure.
  */
 
-/** Every keyword a card line prints in capitals, bar VITAE (a stat) and
- *  CONVICTION (a system word, `SYSTEM_GLOSSARY` in `state/combat/keywords.ts`,
- *  exempt from the keyword admission bar — `docs/card-spec.md` §8). Both read
- *  as plain text on every face, never a glyph badge. */
+/** Every keyword a card line prints in capitals, bar VITAE (a stat),
+ *  CONVICTION and HOLDS (system words, `SYSTEM_GLOSSARY` in
+ *  `state/combat/keywords.ts`, exempt from the keyword admission bar —
+ *  `docs/card-spec.md` §8). All three read as plain text on every face, never
+ *  a glyph badge. */
 export const GLYPH_KEYWORDS = [
     'DEAL', 'GUARD', 'HEAL', 'SACRIFICE', 'WAIVE', 'EXILE', 'TETHER', 'LEECH', 'VULNERABLE',
-    'INFERNO', 'BLIZZARD', 'STORM', 'FROZEN', 'DRAW', 'THORNS', 'REFLECT', 'RETRIEVE', 'DISCARD', 'HOLDS',
+    'INFERNO', 'BLIZZARD', 'STORM', 'FROZEN', 'DRAW', 'THORNS', 'REFLECT', 'RETRIEVE', 'DISCARD',
     'RADIANCE', 'MERCY', 'YIELDING',
 ] as const;
 
@@ -29,7 +30,6 @@ export const GLYPH_CATEGORY: Readonly<Record<GlyphKeyword, GlyphCategory>> = Obj
     DEAL: 'damage',
     THORNS: 'damage',
     GUARD: 'defence',
-    HOLDS: 'defence',
     REFLECT: 'defence',
     SACRIFICE: 'blood',
     HEAL: 'life',

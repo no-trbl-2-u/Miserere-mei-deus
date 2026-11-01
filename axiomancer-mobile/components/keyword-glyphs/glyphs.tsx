@@ -170,14 +170,6 @@ export const DiscardGlyph = (p: GlyphProps) => (
     </Frame>
 );
 
-/** A shield with a tick: the guard holds. */
-export const HoldsGlyph = (p: GlyphProps) => (
-    <Frame {...p}>
-        <Path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z" />
-        <Path d="M8.8 12l2.3 2.3 4.2-4.6" />
-    </Frame>
-);
-
 /** A sun. */
 export const RadianceGlyph = (p: GlyphProps) => (
     <Frame {...p}>

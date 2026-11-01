@@ -6,6 +6,8 @@
  */
 
 import React from 'react';
+import { Text } from 'react-native';
+import Svg from 'react-native-svg';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
@@ -27,19 +29,26 @@ function handCard(cardId: string): CombatCardVM {
     return card;
 }
 
-function renderFace(card: CombatCardVM, mode: CardTextMode, large = false) {
+function renderFace(card: CombatCardVM, mode: CardTextMode, large = false, largeW = 300) {
     const settings = createSettingsStore({ storage: NO_STORAGE, initial: { cardText: mode } });
-    const [w, h] = large ? [300, 440] : [HAND_CARD_W, HAND_CARD_H];
+    const [w, h] = large ? [largeW, Math.round(largeW * 1.43)] : [HAND_CARD_W, HAND_CARD_H];
     return render(withAllProviders(<CombatCardFace card={card} width={w} height={h} large={large} />, { settings }).tree);
 }
 
-/** The text runs of a small face's PAID line, and how many glyph views sit between them. */
+type Node = { type: unknown; props: Record<string, unknown>; children: unknown[] };
+const nodes = (n: unknown, out: Node[] = []): Node[] => {
+    if (n && typeof n === 'object' && 'type' in n) { out.push(n as Node); for (const c of (n as Node).children ?? []) nodes(c, out); }
+    return out;
+};
+const textOf = (n: unknown): string => (typeof n === 'string' ? n : n && typeof n === 'object' && 'children' in n ? ((n as Node).children ?? []).map(textOf).join('') : '');
+
+/** The words a small face's PAID line prints (one token each, glyph-only tokens empty), and how many glyph views sit in it. */
 function lineParts(): { text: string; glyphs: number } {
     const line = screen.getByTestId('combat-card-face-paid-line');
-    let text = '';
-    for (const k of React.Children.toArray(line.props.children as React.ReactNode) as React.ReactElement<{ children?: unknown }>[]) {
-        if (typeof k.props.children === 'string') text += k.props.children;
-    }
+    void line;
+    const json = screen.toJSON() as unknown;
+    const root = nodes(Array.isArray(json) ? { type: 'root', props: {}, children: json } : json).find((n) => n.props?.testID === 'combat-card-face-paid-line')!;
+    const text = (root.children as unknown[]).map(textOf).filter(Boolean).join(' ');
     return { text, glyphs: screen.queryAllByTestId('combat-card-face-glyph').length };
 }
 
@@ -60,7 +69,7 @@ describe('the small face', () => {
         expect(glyphs).toBe(keywords.length);
         for (const w of keywords) expect(screen.getAllByLabelText(w).length).toBeGreaterThan(0);
         // what is left is the printed line with each keyword taken out
-        expect(text).toBe(card.face.paidLine.replace(/\b[A-Z]{2,}\b/g, (w) => (glyphKeywordFor(w) ? '' : w)));
+        expect(text).toBe(card.face.paidLine.replace(/\b[A-Z]{2,}\b/g, (w) => (glyphKeywordFor(w) ? '' : w)).split(' ').filter(Boolean).join(' '));
         // a screen reader still hears the words
         expect(screen.getByTestId('combat-card-face-paid-line').props.accessibilityLabel).toBe(card.face.paidLine);
     });
@@ -90,5 +99,25 @@ describe('the open card', () => {
         renderFace(withKeyword('Bleed'), 'glyphs', true);
         expect(screen.queryByLabelText('BLEED')).toBeNull();
         expect(screen.getByTestId('combat-card-face-keyword')).toBeTruthy();
+    });
+});
+
+describe('a glyph is never a child of a Text (a native Text cannot host a view)', () => {
+    const glyphsInText = () => screen.UNSAFE_getAllByType(Text).flatMap((t) => t.findAllByType(Svg));
+
+    it.each(GREY)('the small face in glyph mode (%s)', (id) => {
+        renderFace(handCard(id), 'glyphs');
+        expect(screen.UNSAFE_getAllByType(Svg).length).toBeGreaterThan(0);
+        expect(glyphsInText()).toHaveLength(0);
+    });
+
+    it.each([208, 259, 264, 300])('the open card at %ipx, in both modes', (w) => {
+        for (const mode of ['words', 'glyphs'] as const) {
+            const card = handCard('grey-strike');
+            const { unmount } = renderFace({ ...card, face: { ...card.face, keyword: 'Deal' } }, mode, true, w);
+            expect(screen.getByLabelText('DEAL')).toBeTruthy();
+            expect(glyphsInText()).toHaveLength(0);
+            unmount();
+        }
     });
 });

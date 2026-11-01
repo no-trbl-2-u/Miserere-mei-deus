@@ -36,7 +36,6 @@ export const KEYWORD_GLYPH_COMPONENT: Readonly<Record<GlyphKeyword, (p: G.GlyphP
     REFLECT: G.ReflectGlyph,
     RETRIEVE: G.RetrieveGlyph,
     DISCARD: G.DiscardGlyph,
-    HOLDS: G.HoldsGlyph,
     RADIANCE: G.RadianceGlyph,
     MERCY: G.MercyGlyph,
     YIELDING: G.YieldingGlyph,

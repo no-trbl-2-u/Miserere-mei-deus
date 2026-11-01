@@ -32,8 +32,8 @@ const CAPS_EM = 0.4;
 const SERIF_EM = 0.41;
 /** A space, per px of size. */
 const SPACE_EM = 0.24;
-/** A glyph's edge per px of text size: a little taller than the capitals. */
-export const GLYPH_EM = 1.25;
+/** A glyph's edge per px of text size: one row of the line: 12px at 10px. */
+export const GLYPH_EM = 1.2;
 /** Air on each side of an inline glyph, in px. */
 export const GLYPH_GAP = 1;
 
@@ -64,6 +64,20 @@ export function paidLineRuns(line: string, mode: CardTextMode = 'words'): PaidRu
         runs.push(glyph ? { text, caps, glyph } : { text, caps });
     });
     return runs;
+}
+
+/**
+ * A line as its space-separated words, each a list of runs. Glyph mode lays
+ * these out as wrapping tokens (a glyph is a view, which a `<Text>` cannot
+ * hold); the gap between tokens is {@link paidLineGap}.
+ */
+export function paidLineWords(line: string, mode: CardTextMode = 'words'): PaidRun[][] {
+    return line.split(' ').filter(Boolean).map((word) => paidLineRuns(word, mode));
+}
+
+/** The gap between two words of a line, in px at `size`. */
+export function paidLineGap(size: number): number {
+    return SPACE_EM * size;
 }
 
 function wordWidth(word: string, size: number, mode: CardTextMode): number {
