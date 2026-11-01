@@ -231,9 +231,8 @@ test('never fails on a needs-plot Item, an overdue Item or an open T task', () =
     assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [])
 })
 
-test('the real plan/deadlines.md and build plan agree', () => {
-    const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
-    assert.deepEqual(checkDeadlines(read('plan/deadlines.md'), read('plan/steps/01_build_plan.md')), [])
+test('the real plan has no v1 build plan left (nexus v2 cut-over, NX1d); the NX1c test below reads it whole', () => {
+    assert.equal(fs.existsSync(path.join(ROOT, 'plan/steps/01_build_plan.md')), false)
 })
 
 test('NX1c: the real plan agrees when read through readPlanSources, specs and all', () => {
@@ -339,8 +338,9 @@ const section = (text, heading) => {
 }
 
 for (const [file, step, commitStep] of [
-    ['skills/plot.md', '### Step 4 — Slot', '### Step 5 — Open the PR'],
-    ['skills/messy.md', '### Step 4 — Refine', '### Step 5 — Commit'],
+    // Since the nexus v2 cut-over (NX1d) the reconcile is in each skill's Miserere section 7.
+    ['skills/plot.md', '### 7.2 Aliases, Held lines and the deadline plan', '### 7.1 Open the PR'],
+    ['skills/messy.md', '## 7. Miserere: kept on top of the kit', '## 7. Miserere: kept on top of the kit'],
 ]) {
     test(`A9: ${file} carries the deadline reconcile step in its queue step`, () => {
         const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
@@ -355,18 +355,18 @@ for (const [file, step, commitStep] of [
 }
 
 test('DL2b A7: /plot and /messy file a new loop row under the Waits on of a T act, never an Item of its own', () => {
-    const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')
+    const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
     assert.match(plot, /every Item is a T act/)
     assert.match(plot, /`Waits on` cell of the T act it\s+unblocks/)
     assert.match(plot, /is ticked `\[x\]` by hand/)
-    const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '### Step 4 — Refine')
+    const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '## 7. Miserere: kept on top of the kit')
     assert.match(messy, /Every Item is a T act/)
     assert.match(messy, /`Waits on` cell, never into an Item's\s+`Rows`/)
 })
 
-test('A9: /plot gives every row it adds an Item or an ## Unscheduled line', () => {
-    const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')
-    assert.match(body, /Every row the plot added/)
+test('A9: /plot gives every chunk it adds an Item or an ## Unscheduled line', () => {
+    const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
+    assert.match(body, /Every chunk the plot added/)
     assert.match(body, /## Unscheduled/)
     assert.match(body, /node scripts\/deadlines\.mjs --write/)
 })

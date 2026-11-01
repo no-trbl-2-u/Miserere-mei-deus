@@ -2,7 +2,7 @@ name: expand
 
 # Plan-expansion pass: /expand reads accumulated signals (audit, critique,
 # issues, spec drift) and proposes new phase candidates to
-# plan/PHASE_CANDIDATES.md (see skills/expand.md). Dispatch-only —
+# plan/CANDIDATES.md (see skills/expand.md). Dispatch-only —
 # /march runs it rate-limited and posture-gated; candidates are promoted
 # to real phases only via /oversight.
 

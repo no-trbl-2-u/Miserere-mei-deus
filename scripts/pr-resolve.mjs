@@ -57,7 +57,7 @@ export function isUnionPath(file) {
     [
       'plan/AUDIT.md',
       'plan/CRITIQUE.md',
-      'plan/PHASE_CANDIDATES.md',
+      'plan/CANDIDATES.md',
       'plan/lessons.md',
     ].includes(file)
   )
@@ -242,7 +242,6 @@ function stage(n, file, cwd = ROOT) {
  */
 export const MERGE_DRIVERS = [
   { key: 'lessons', name: 'lessons.md and NEEDS_T.md by slug', driver: 'node scripts/lessons-merge.mjs %O %A %B %P' },
-  { key: 'buildplan', name: 'the build plan, insertions unioned', driver: 'node scripts/build-plan-merge.mjs %O %A %B %P' },
   { key: 'deadlines', name: 'plan/deadlines.md, insertions unioned and rows by cell', driver: 'node scripts/deadlines-merge.mjs %O %A %B %P' },
 ]
 

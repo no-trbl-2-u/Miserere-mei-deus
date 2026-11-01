@@ -44,7 +44,7 @@ In parallel where independent:
 1. `git log --oneline -20` — recent shipping velocity.
 2. `git status --short` — uncommitted changes.
 3. `npm run deploy:check` — current deploy state.
-4. `plan/steps/01_build_plan.md` "Status" block — pending
+4. `plan/README.md` roadmap (lanes and spec table) — pending
    phases.
 5. `plan/AUDIT.md` — open `/iterate` findings.
 6. `plan/CRITIQUE.md` — critique pending.
@@ -54,7 +54,7 @@ In parallel where independent:
    and `axiomancer-mechanics/braindump/`, which is HISTORICAL.)
 9. **The loop-call sweep (standing).** Grep `\[loop-call\]` and
    the legacy `\[needs-user-call\]` across `plan/` (AUDIT,
-   CRITIQUE, PHASE_CANDIDATES). Since THE OPEN
+   CRITIQUE, CANDIDATES). Since THE OPEN
    GATE (2026-08-28) the loop no longer parks decisions — it
    decides, ships, and files `[loop-call]` rows. This sweep is
    AFTER-THE-FACT REVIEW: present the calls the loop made since
@@ -77,7 +77,7 @@ In parallel where independent:
 
     - **Ticks that picked nothing.** `npm run telemetry -- --since
       <date>`: march ticks whose `slash-prompt` was followed by a
-      `tick-end` with no `ship-a-phase`, `iterate` or `critique` verb-read,
+      `tick-end` with no `next`, `iterate` or `critique` verb-read,
       plus any tick output or AUDIT row saying "no pickable row" / "at the
       PR cap". A majority means the problem is intake, not the loop.
     - **PRs stuck.** `gh pr list --label loop:pr --state all --search
@@ -187,11 +187,11 @@ count that is furthest from healthy:
 >
 > - (recommended) Keep watching — change nothing until <2026-11-11>.
 > - Fix the weakest signal now — <the one-line fix the number implies:
->   "run /plot on the two ideas in PHASE_CANDIDATES marked [owner]",
+>   "run /plot on the two ideas in CANDIDATES marked [owner]",
 >   "raise the PR cap to 5", "pr-autofix is misfiring: file an AUDIT
 >   row", "the retro step is being skipped: tighten the verb">.
 > - End the watch early — remove §3 item 10 and this question now; the
->   five `[owner]` candidates in `plan/PHASE_CANDIDATES.md` become
+>   five `[owner]` candidates in `plan/CANDIDATES.md` become
 >   eligible for `/plot`.
 >
 > Applying "end the watch" or passing the date = delete §3 item 10 and
@@ -223,7 +223,7 @@ count that is furthest from healthy:
 > `axiomancer-mechanics/specs/<area>/` was updated <K> commits ago, after phase
 > <N> shipped. Refresh phase <N>'s brief and ship a follow-up?
 >
-> - (recommended) Yes — `/plan-a-phase phase <N>` then add
+> - (recommended) Yes — `/plan-a-spec <NN>` then add
 >   follow-up phase.
 > - No — note in `AUDIT.md`; let `/iterate` catch.
 > - Defer.
@@ -235,7 +235,7 @@ count that is furthest from healthy:
 > - (recommended) Investigate — open log; I'll diagnose, no
 >   commit yet.
 > - Roll back — revert to <last-green-sha>.
-> - Continue — next ship-a-phase will reach the right code.
+> - Continue — next next will reach the right code.
 
 **Uncommitted changes**
 
@@ -248,12 +248,12 @@ count that is furthest from healthy:
 
 **Phase candidates pending promotion**
 
-> `plan/PHASE_CANDIDATES.md` has <N> pending candidates. Top
+> `plan/CANDIDATES.md` has <N> pending candidates. Top
 > score [<X.Y>]: "<one-line>". Promote any?
 >
 > - (recommended) Review one — show me the candidate's
 >   rationale + signals; I'll decide.
-> - Promote top — append as a new phase row in the build plan,
+> - Promote top — append as a new spec through `/plot` (the loop never writes one),
 >   move the candidate to `## Promoted`.
 > - Reject top — move to `## Rejected` with a one-line reason.
 > - Defer — leave them; next expand pass re-evaluates.
@@ -293,11 +293,12 @@ Invoke `AskUserQuestion`.
 
 For each answer:
 
-- **"Refresh brief"** → spawn `/plan-a-phase phase <N>` flow
+- **"Refresh brief"** → spawn `/plan-a-spec <NN>` flow
   inline.
-- **"Abandon phase"** → flip `[ ]` to `[skipped]` in
-  `01_build_plan.md` with comment `(skipped via oversight
-  <date> — <reason>)`.
+- **"Abandon chunk"** → remove the chunk line (and the A-IDs only it
+  closes, the `Measure:` line updated) from its spec and append
+  `- <date> · <NN.k> (alias: <id>) · dropped: <reason> (via oversight) · (this commit)`
+  to `plan/ARCHIVE.md` (v2 has no `[skipped]` status).
 - **"Bias toward category X"** → write at top of
   `plan/AUDIT.md`: `> Bias: <category> (set via oversight
   <date>)`. `/iterate` reads this and weights 1.5x.
@@ -308,11 +309,10 @@ For each answer:
 - **"Investigate deploy"** → fetch latest deploy log; summarize;
   no patch yet.
 - **"Promote candidate"** → move row from
-  `plan/PHASE_CANDIDATES.md` `## Pending` to `## Promoted` (with
-  promotion date + assigned phase number). Append a new phase
-  row in `plan/steps/01_build_plan.md` Status block. Optionally
-  invoke `/plan-a-phase phase <N>` flow inline to draft the
-  brief.
+  `plan/CANDIDATES.md` `## Pending` to `## Promoted` (with
+  promotion date), then run `/plot` on it with T present: the
+  spec, its chunks and its roadmap row land as a `plot` PR T merges
+  (D93). Never a hand-written spec (`Promote: owner`).
 - **"Reject candidate"** → move row from `## Pending` to
   `## Rejected` with one-line reason.
 - **"Other" (free-form)** → interpret conservatively. If clear
@@ -321,7 +321,7 @@ For each answer:
 
 **Queue-mutation provenance** (adopted via /oversight 2026-07-30,
 issue #129): if any applied answer changes
-`plan/steps/01_build_plan.md`'s queue (abandon/promote a phase,
+`plan/README.md`'s queue (abandon/promote a phase,
 reorder, reprioritize, split/merge, block/unblock, or otherwise
 materially change a phase row), add a row to that file's
 `## Queue change log` section in the **same commit** — date,
@@ -379,7 +379,7 @@ oversight complete. <N> adjustments applied.
 
 ## 8. When `oversight` is NOT the right tool
 
-- **Mid-tick of `/ship-a-phase`** etc. Don't pre-empt.
+- **Mid-tick of `/next`** etc. Don't pre-empt.
 - **For trivia.** Read state files directly.
 - **As a way to ask permission mid-loop.** Decide instead.
 
@@ -397,10 +397,10 @@ oversight complete. <N> adjustments applied.
 # Read (parallel where possible)
 git log --oneline -20
 git status --short
-plan/steps/01_build_plan.md
+plan/README.md
 plan/AUDIT.md
 plan/CRITIQUE.md
-plan/phases/                       # last 3 modified
+plan/[0-9]*-*.md                       # last 3 modified
 axiomancer-mechanics/specs/        # for newer-than-sibling check
 grep -rnE "\[(loop-call|needs-user-call)\]" plan/   # standing question 0 sweep
 
@@ -408,9 +408,9 @@ grep -rnE "\[(loop-call|needs-user-call)\]" plan/   # standing question 0 sweep
 AskUserQuestion                    # only place this is allowed
 
 # Adjustment files
-plan/steps/01_build_plan.md
+plan/README.md
 plan/AUDIT.md
-plan/phases/phase_<N>_<topic>.md   # via /plan-a-phase
+plan/<NN>-<slug>.md   # via /plan-a-spec
 
 # Commit
 git commit -m "oversight: <one-line>"

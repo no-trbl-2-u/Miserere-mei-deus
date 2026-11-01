@@ -7,34 +7,35 @@ review checkpoint. Read `skills/jot.md` end to end before
 touching anything else; that file is the single source of
 truth for this command.
 
-The user has spotted something in the running expo-web build
-(or in the code, or in the game data) and wants to capture it before they
+The user has spotted something on the live site (or in the
+build, or in the data) and wants to capture it before they
 forget. Your job: file one row to `plan/CRITIQUE.md`, commit,
 push, exit. Target end-to-end <10 seconds.
 
 Argument handling:
 - Free-text observation is the body. Required.
-- `--url <path>` → route the user was on (default: `unspecified`).
+- `--url <path>` → URL the user was on (default: `unspecified`).
 - `--severity high|med|low` → severity (default: `med`).
 - `--category <cat>` → explicit category override (default:
-  inferred from observation text per the skill's §2 Step 1
-  heuristics).
+  inferred from observation text per §4 heuristics).
+- `--authenticated` → mark `auth_state: authenticated`
+  (default: `anonymous`).
 
 Hard rules:
 - **Never ask questions back.** The user provided the input;
-  decide the rest. Hard rule #6 (only `/oversight` asks)
-  stands.
+  decide the rest. Hard rule #6 (`AskUserQuestion` confined to
+  `/oversight` and `/bootstrap`) stands.
 - **No verify gate, no deploy gate.** No code change; nothing
   to verify or deploy.
-- **Atomic commit + push.** Otherwise the cloud loop can't
+- **Atomic commit + land.** Otherwise the cloud loop can't
   see the new finding.
 - **`source: user` on the row.** Never spoof for non-user
   entries.
 - **Commit subject is lowercase `jot:`** followed by a ≤70
   char summary.
 
-Procedure: §2 of `skills/jot.md`. Hard rules: §3. Failure
-modes: §4.
+Procedure: §4 of `skills/jot.md`. Failure modes: §7. Hard
+rules: §6.
 
 After the push, print one short confirmation line and exit.
 The next `/iterate` (or `/march`) tick will score the new

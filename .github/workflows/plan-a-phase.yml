@@ -1,7 +1,7 @@
-name: plan-a-phase
+name: plan-a-spec
 
 # Refine the next phase brief without shipping code (see
-# skills/plan-a-phase.md). Dispatch-only.
+# skills/plan-a-spec.md). Dispatch-only.
 
 on:
   workflow_dispatch:
@@ -25,5 +25,5 @@ jobs:
       extra_claude_args: |
         -p
         --dangerously-skip-permissions
-      prompt: '/plan-a-phase'
+      prompt: '/plan-a-spec'
       timeout_minutes: 45

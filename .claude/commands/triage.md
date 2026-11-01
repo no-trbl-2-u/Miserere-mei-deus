@@ -5,15 +5,11 @@ description: Review unlabeled open GitHub issues, classify, label, comment, rout
 You are invoked under the `triage` skill. Read `skills/triage.md`
 end to end before touching anything else.
 
-This skill reads issues from `no-trbl-2-u/Miserere-mei-deus` (or `$GH_REPO`),
+This skill reads issues from `<REPO_SLUG>` (or `$GH_REPO`),
 classifies, applies a `triage:*` label, posts a short comment,
 routes actionable issues into the right backlog (`plan/AUDIT.md`,
-a build-plan carry-over, or a `plan/PHASE_CANDIDATES.md` candidate).
-Already-labeled issues skipped — labels are the state. There is no
-`triage:needs-user` route (THE OPEN GATE). New-content requests route
-per surface (D88): cards, keywords and art wait for T's sessions;
-enemies, relics, maps, NPCs and events become `[content]` candidates T
-plots (§5 Step 2).
+`data/BACKLOG.md`, or a chunk in a spec). Already-labeled issues
+skipped — labels are the state.
 
 Argument handling:
 - No argument → process all unlabeled open issues.

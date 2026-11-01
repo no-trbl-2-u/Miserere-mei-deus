@@ -129,7 +129,7 @@ test('verify-gate runs the acceptance step on the PR head before it waits', () =
 })
 
 test('the march PR body template shows a proof on its acceptance line', () => {
-  const march = fs.readFileSync(path.join(ROOT, 'skills/march.md'), 'utf8')
+  const march = fs.readFileSync(path.join(ROOT, 'skills/march.lanes.md'), 'utf8')
   const block = march.slice(march.indexOf('**Body template**'))
   const ticked = block.slice(0, block.indexOf('## Verify')).split('\n').filter((l) => /- \[x\] A\d/.test(l))
   assert.ok(ticked.length >= 2, 'the template shows a proven line and an opt-out')
