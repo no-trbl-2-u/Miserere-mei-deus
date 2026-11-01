@@ -245,6 +245,7 @@ export function getSignaturesForLoadout(loadout: EquipmentLoadout): SignatureSki
     const out: SignatureSkillId[] = [];
     const seen = new Set<SignatureSkillId>();
     for (const piece of loadout.relics) {
+        if (!piece) continue;
         const sig = getRelicById(piece.id)?.grantsSignature ?? piece.grantsSignature;
         if (sig && !seen.has(sig)) {
             seen.add(sig);

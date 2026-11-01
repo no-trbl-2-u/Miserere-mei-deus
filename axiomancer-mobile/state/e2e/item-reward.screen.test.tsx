@@ -103,7 +103,7 @@ describe('/item-reward screen', () => {
 
     it('CONFIRM puts it in the satchel and changes nothing on the body', () => {
         const { store } = mount((s) => offerItemRewardAction(s, relic(BENCHED_ACCESSORY)));
-        const wornBefore = player(store).equipment.relics.map((a) => a.id);
+        const wornBefore = player(store).equipment.relics.flatMap((a) => (a ? [a.id] : []));
 
         act(() => {
             fireEvent.press(screen.getByTestId('item-reward-confirm'));
@@ -111,7 +111,7 @@ describe('/item-reward screen', () => {
 
         const after = player(store);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
-        expect(after.equipment.relics.map((a) => a.id)).toEqual(wornBefore);
+        expect(after.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(wornBefore);
         expect(store.getState().itemReward.queue).toHaveLength(0);
     });
 
@@ -124,7 +124,7 @@ describe('/item-reward screen', () => {
         });
 
         const after = player(store);
-        expect(after.equipment.relics.map((a) => a.id)).toContain(BENCHED_ACCESSORY);
+        expect(after.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toContain(BENCHED_ACCESSORY);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
         // Nothing is destroyed by a swap.
         expect(after.inventory.map((i) => i.id)).toContain(displaced.id);
@@ -133,7 +133,7 @@ describe('/item-reward screen', () => {
 
     it('D7 — unmounting the screen (back / swipe / hardware-back) behaves as CONFIRM', () => {
         const { store, view } = mount((s) => offerItemRewardAction(s, relic(BENCHED_ACCESSORY)));
-        const wornBefore = player(store).equipment.relics.map((a) => a.id);
+        const wornBefore = player(store).equipment.relics.flatMap((a) => (a ? [a.id] : []));
 
         act(() => {
             view.unmount();
@@ -141,7 +141,7 @@ describe('/item-reward screen', () => {
 
         const after = player(store);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
-        expect(after.equipment.relics.map((a) => a.id)).toEqual(wornBefore);
+        expect(after.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(wornBefore);
         expect(store.getState().itemReward.queue).toHaveLength(0);
     });
 

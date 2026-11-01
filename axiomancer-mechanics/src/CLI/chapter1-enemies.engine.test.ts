@@ -44,7 +44,7 @@ describe('chapter1-enemies tuning table', () => {
             });
             expect(kit.cards.some(isUpgradedCardId)).toBe(true);
             expect(kit.relics.length).toBe(lane === 'grey' ? 0 : 3);
-            expect(kittedPlayer(8, kit).equipment.relics.length).toBe(kit.relics.length);
+            expect(kittedPlayer(8, kit).equipment.relics.filter(Boolean).length).toBe(kit.relics.length);
         }
     });
 

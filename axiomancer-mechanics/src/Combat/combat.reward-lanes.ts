@@ -120,7 +120,7 @@ export function lateRelicPicks(
     relics: readonly Equipment[],
 ): Equipment[] {
     const present = new Set(unlockedLaneIds(player, lanes, relics));
-    const wornIds = new Set(player.equipment.relics.map(r => r.id));
+    const wornIds = new Set(player.equipment.relics.flatMap(r => (r ? [r.id] : [])));
     const open = relics.filter(r => !wornIds.has(r.id) && relicLaneId(r, lanes, relics) !== undefined);
     const picks: Equipment[] = [];
     while (picks.length < count && open.length > 0) {
@@ -159,7 +159,7 @@ function measureState(
         shares[lane] = r4(n / offered);
     }
     return {
-        worn: player.equipment.relics.map(r => r.id),
+        worn: player.equipment.relics.flatMap(r => (r ? [r.id] : [])),
         lanes: unlockedLaneIds(player, lanes, relics),
         offered,
         shares,
@@ -174,10 +174,14 @@ function measureRow(
     opts: Required<Omit<RewardLanesOptions, 'roster'>>,
 ): RewardLaneRow {
     const { lanes, relics, rolls, seed } = opts;
-    const extra = lateRelicPicks(start, LATE_WORN_RELICS - start.equipment.relics.length, lanes, relics);
+    const wornCount = start.equipment.relics.filter(r => r).length;
+    const extra = lateRelicPicks(start, LATE_WORN_RELICS - wornCount, lanes, relics);
     const late: Character = {
         ...start,
-        equipment: { ...start.equipment, relics: [...start.equipment.relics, ...extra.map(r => ({ ...r }))] },
+        equipment: {
+            ...start.equipment,
+            relics: [...start.equipment.relics.filter(r => r), ...extra.map(r => ({ ...r }))],
+        },
     };
     return {
         character, name,

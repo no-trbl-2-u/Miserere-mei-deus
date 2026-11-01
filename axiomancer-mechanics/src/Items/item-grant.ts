@@ -9,9 +9,10 @@
  *
  *   - **weapon / armor** — replace in place; the worn piece is dropped on the
  *     floor unless the caller rescued it first;
- *   - **relic** — fills the first free position of three, and when the row
- *     is FULL it is a **guarded no-op that returns the same character
- *     reference** unless an explicit `replaceIndex` is passed.
+ *   - **relic** — fills the first empty position of three (relics keep
+ *     their place, EQ3a), or the one named by `position`; when all three are
+ *     FULL it is a **guarded no-op that returns the same character
+ *     reference** unless an explicit `position` is passed.
  *
  * Both failure modes are silent. A naive `equipItem(character, relic)` either
  * destroys a worn relic or does nothing at all, and because the no-op returns
@@ -47,7 +48,7 @@
  */
 
 import { deepClone } from '../Utils';
-import { equipItem, unequipItem } from '../Character/equipment.reducer';
+import { equipItem, unequipItem, relicPositions, isRelicPosition } from '../Character/equipment.reducer';
 import { addItem, addItemStacking } from './item.reducer';
 import { isEquipment, SLOT_CAPACITY } from './types';
 import type { Character } from '../Character/types';
@@ -62,12 +63,16 @@ export interface GrantItemOptions {
      */
     equip?: boolean;
     /**
-     * Which of the three relic positions to displace when the row is
-     * already full. Ignored for weapon/armor (capacity 1 — the sole worn piece
-     * is the displaced one) and when the row has a free position. Out-of-range
-     * values fall back to the default. Default: the LAST worn relic, which
-     * mirrors `findEquippedInSlot`'s replace-preview.
+     * Which of the three relic positions to wear into (EQ3a: relics keep their
+     * place). An empty position takes the relic; a worn one is displaced.
+     * Ignored for weapon/armor (capacity 1 — the sole worn piece is the
+     * displaced one). Out-of-range values read as no position. With none and
+     * a free position the relic fills the first empty one; with none and all
+     * three full the default is the LAST position (RELIC III), which mirrors
+     * `findEquippedInSlot`'s replace-preview.
      */
+    position?: number;
+    /** The older name for `position`. */
     replaceIndex?: number;
     /**
      * Stack-aware inventory append: a consumable/material whose id is already
@@ -151,31 +156,27 @@ export function partitionGrantsForReward(
  * name the trade *before* the player commits, so nobody ever swaps blind.
  *
  *   - weapon / armor → the worn piece in that slot (capacity 1), index `null`.
- *   - relic with a free position → `{ item: null, index: null }`.
- *   - relic at capacity → the piece at `replaceIndex`, defaulting to the
- *     last worn relic.
+ *   - relic with a `position` (0-2) → the piece worn there (`null` when that
+ *     position is empty), index = the position.
+ *   - relic with no position and an empty position → `{ item: null, index: null }`.
+ *   - relic with no position and all three full → the piece at the last
+ *     position (RELIC III).
  */
 export function displacedBy(
     character: Character,
     item: Equipment,
-    opts?: { replaceIndex?: number },
+    opts?: { position?: number; replaceIndex?: number },
 ): { item: Equipment | null; index: number | null } {
     const loadout = character.equipment;
     if (item.slot === 'weapon') return { item: loadout.weapon, index: null };
     if (item.slot === 'armor') return { item: loadout.armor, index: null };
 
-    const acc = loadout.relics;
-    if (acc.length < SLOT_CAPACITY.relic) return { item: null, index: null };
-
-    const requested = opts?.replaceIndex;
-    const index =
-        requested !== undefined &&
-        Number.isInteger(requested) &&
-        requested >= 0 &&
-        requested < acc.length
-            ? requested
-            : acc.length - 1;
-    return { item: acc[index] ?? null, index };
+    const acc = relicPositions(loadout);
+    const requested = opts?.position ?? opts?.replaceIndex;
+    if (isRelicPosition(requested)) return { item: acc[requested], index: requested };
+    if (acc.includes(null)) return { item: null, index: null };
+    const last = SLOT_CAPACITY.relic - 1;
+    return { item: acc[last], index: last };
 }
 
 // ─── The grant path ───────────────────────────────────────────────────────────
@@ -189,7 +190,7 @@ function wearsId(character: Character, id: string): boolean {
     const { weapon, armor, relics } = character.equipment;
     if (weapon?.id === id) return true;
     if (armor?.id === id) return true;
-    return relics.some(a => a.id === id);
+    return relics.some(a => a?.id === id);
 }
 
 /**
@@ -207,7 +208,7 @@ export function grantItem(
     item: Item,
     options: GrantItemOptions = {},
 ): ItemGrantResult {
-    const { equip = false, replaceIndex, stack = true } = options;
+    const { equip = false, position, replaceIndex, stack = true } = options;
 
     const granted = deepClone(item) as Item;
     const inventory = stack
@@ -226,12 +227,14 @@ export function grantItem(
         };
     }
 
-    const { item: displaced, index } = displacedBy(withItem, granted, { replaceIndex });
+    const { item: displaced, index } = displacedBy(withItem, granted, { position: position ?? replaceIndex });
 
     // No worn sibling in the way — the slot has room, so a plain equip cannot
     // no-op and cannot drop anything.
     if (displaced === null) {
-        const worn = equipItem(withItem, granted);
+        const worn = equipItem(withItem, granted, {
+            position: granted.slot === 'relic' ? (index ?? undefined) : undefined,
+        });
         return {
             character: worn,
             granted,
@@ -254,7 +257,9 @@ export function grantItem(
         ? unequipped
         : { ...unequipped, inventory: addItem(unequipped.inventory, displaced) };
 
-    const worn = equipItem(rescued, granted);
+    const worn = equipItem(rescued, granted, {
+        position: granted.slot === 'relic' ? (index ?? undefined) : undefined,
+    });
 
     return {
         character: worn,
@@ -270,7 +275,7 @@ function hasFreePosition(character: Character, slot: Equipment['slot']): boolean
     const { weapon, armor, relics } = character.equipment;
     if (slot === 'weapon') return weapon === null;
     if (slot === 'armor') return armor === null;
-    return relics.length < SLOT_CAPACITY.relic;
+    return relicPositions({ relics }).includes(null);
 }
 
 /**

@@ -17,7 +17,7 @@ describe('createCharacter — no starting relic', () => {
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE });
         expect(c.equipment.weapon).toBeNull();
         expect(c.equipment.armor).toBeNull();
-        expect(c.equipment.relics).toEqual([]);
+        expect(c.equipment.relics).toEqual([null, null, null]);
         expect(c.inventory).toEqual([]);
         expect(getSignaturesForLoadout(c.equipment)).toEqual([]);
     });
@@ -25,7 +25,7 @@ describe('createCharacter — no starting relic', () => {
     it('wears the Suppliant\'s Ring when it is passed as equipment, at the base maxHealth', () => {
         const ring = getRelicById('relic-disarming-plea')!;
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [cloneRelic(ring)] });
-        expect(c.equipment.relics.map(a => a.id)).toEqual(['relic-disarming-plea']);
+        expect(c.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(['relic-disarming-plea']);
         expect(c.maxHealth).toBe(calculateMaxHealth(1, BASE));
         expect(c.health).toBe(c.maxHealth);
         expect(getSignaturesForLoadout(c.equipment)).toEqual(['sig-disarming-plea']);
@@ -34,7 +34,7 @@ describe('createCharacter — no starting relic', () => {
     it('wears an explicit equipment list as given', () => {
         const c = createCharacter({ name: 'T', level: 1, baseStats: BASE, equipment: [FIXTURE_WEAPON] });
         expect(c.equipment.weapon?.id).toBe(FIXTURE_WEAPON.id);
-        expect(c.equipment.relics).toEqual([]);
+        expect(c.equipment.relics).toEqual([null, null, null]);
         expect(c.inventory).toEqual([]);
     });
 
@@ -59,9 +59,9 @@ describe('equip reducers — every slot', () => {
         const c = createCharacter({ name: 'T', level: 3, baseStats: { heart: 6, body: 6, mind: 6 } });
         let next = c;
         for (const t of FIXTURE_TRINKETS) next = equipItem(next, t);
-        expect(next.equipment.relics.map(a => a.id)).toEqual(FIXTURE_TRINKETS.map(t => t.id));
+        expect(next.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(FIXTURE_TRINKETS.map(t => t.id));
         const removed = unequipItem(next, 'relic', 1);
-        expect(removed.equipment.relics.map(a => a.id))
+        expect(removed.equipment.relics.flatMap((a) => (a ? [a.id] : [])))
             .toEqual([FIXTURE_TRINKETS[0].id, FIXTURE_TRINKETS[2].id]);
     });
 

@@ -177,7 +177,7 @@ export function computeEquipDelta(
                           player,
                           candidate.slot,
                           candidate.slot === 'relic'
-                              ? player.equipment.relics.findIndex(a => a.id === candidate.id)
+                              ? player.equipment.relics.findIndex(a => a?.id === candidate.id)
                               : undefined,
                       ),
                       new Map(),
@@ -202,7 +202,7 @@ export function computeEquipDelta(
                       player,
                       candidate,
                       candidate.slot === 'relic'
-                          ? { replaceIndex: player.equipment.relics.findIndex(a => a.id === worn.id) }
+                          ? { replaceIndex: player.equipment.relics.findIndex(a => a?.id === worn.id) }
                           : undefined,
                   ),
                   aggregateStats(candidate),
