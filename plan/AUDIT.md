@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01)
+- category: debt
+- impact: 5
+- ease: 8
+- detail: `npm test`'s `check-comments.test.mjs` fails on `main` (HEAD `bc3a49000` at filing time) with 10 history-narrating comment lines, all from the EQ3d/136.4-136.5 equipment-effects work (`3f76fd9d4`, `c9ec5c21b`): `combat.card-program.ts:260,345`, `combat.encounter.types.ts:525`, `combat.engine.ts:320,834,1111`, `combat.equipment-effects.ts:2`, `e2e/equipment-effects.engine.test.ts:2`, `Items/types.ts:81,100` — each names "(spec 136, A10)" or similar. `verify-root` run 41295273531 reported a different failure first (`feature-map` staleness, fixed separately this same tick) because the npm script chain (`plan-check && feature-map --check && feature-map-render --check && node --test ...`) short-circuits before reaching `node --test`; this is the next thing that chain will hit once that earlier gate is green, so it will still block merges to `main` until fixed.
+- next: reword each flagged line to state what the code does, not its phase/spec history (git blame already keeps that); `check-comments.mjs`'s own docstring explains the two guarded kinds (history, retired lexicon terms) and the `lexicon-ok` escape hatch for a line that must legitimately name a deleted thing.
+
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5

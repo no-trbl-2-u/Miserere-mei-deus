@@ -11,7 +11,9 @@ import {
     CHARACTER_ROSTER,
     getRng,
     getHazardPuzzleLayout,
+    initializeCombatEncounter,
     COMBAT_REWARD_POOL,
+    ENEMY_REGISTRY,
     HAZARD_CRACK_CARD,
     PLAY_LOG_DECK_EVENTS_PATH,
     PLAY_RUNS_PATH,
@@ -43,6 +45,7 @@ import { claimCombatUpgradeAction } from '@/state/combat/store-actions';
 import { offerItemRewardAction, confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { startNewGameAction } from '@/state/menu/store-actions';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
+import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { beginRestAction, chooseRestChoiceOfferAction, claimRestChoiceOutcomeAction, pickRestChoiceUpgradeAction } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
@@ -273,6 +276,11 @@ describe('the fight', () => {
         expect(eventsOf('node-resolved').map((e) => e.payload.choice)).toEqual(['fight']);
         expect(eventsOf('xp-gained').map((e) => e.payload)).toEqual([{ amount: paid, from: 'fight' }]);
         expect(paid).toBeGreaterThan(0);
+        // The node-resolved event carries the player after the node (SM2a).
+        const { level, health } = gs(store).player;
+        expect(eventsOf('node-resolved').map((e) => e.payload)).toEqual([
+            expect.objectContaining({ choice: 'fight', level, vitae: health }),
+        ]);
         expect(posts<RunEventsPost>(RUN_EVENTS_PATH).every((b) => b.runId === runId)).toBe(true);
     });
 
@@ -550,6 +558,9 @@ describe('the quest', () => {
             expect(eventsOf('node-resolved').map((e) => e.payload)).toEqual([
                 expect.objectContaining({ nodeId: FIXTURE_NODES[0], choice: 'accept' }),
             ]);
+            expect(eventsOf('quest-step').map((e) => e.payload)).toEqual([
+                { questId: FIXTURE_LINE, stepId: '1', action: 'accept' },
+            ]);
         } finally {
             unregisterFixtureQuestline();
         }
@@ -567,6 +578,79 @@ describe('the quest', () => {
             await landed();
             expect(eventsOf('node-resolved').map((e) => e.payload.choice)).toEqual(['turn-in']);
             expect(eventsOf('xp-gained').map((e) => e.payload)).toEqual([{ amount: 40, from: 'quest' }]);
+            // The turn-in, then the quest it finished.
+            expect(eventsOf('quest-step').map((e) => e.payload)).toEqual([
+                { questId: FIXTURE_LINE, stepId: '1', action: 'turn-in' },
+                { questId: FIXTURE_LINE, stepId: '1', action: 'complete' },
+            ]);
+        } finally {
+            unregisterFixtureQuestline();
+        }
+    });
+
+    /** The boss step accepted on its node, with no level-up in reach, and the boss staged. */
+    const bossStep = (id: string) => {
+        const { store, actions } = fixtureOpen(id, 4);
+        acceptFixtureStep(store, 4);
+        const { player } = gs(store);
+        store.setState({ player: { ...player, experience: 0, experienceToNextLevel: 1_000_000 } } as never);
+        const boss = { ...ENEMY_REGISTRY['death-beholder']!, difficulty: 'boss' as const };
+        actions.startCombat(boss);
+        return { store, actions, boss };
+    };
+
+    it('logs a kill that completes a quest as the foe\'s XP from the fight, then the quest\'s XP from the quest', async () => {
+        registerFixtureQuestline();
+        try {
+            const { store, actions, boss } = bossStep('sm2a-quest-kill');
+            const finalState = initializeCombatEncounter(gs(store).player, boss, ['grey-strike'], 7);
+            applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, boss);
+            const paid = gs(store).player.experience;
+            actions.resetRun({ keepCharacter: true });
+            await landed();
+            const xp = eventsOf('xp-gained').map((e) => e.payload);
+            expect(xp).toHaveLength(2);
+            expect(xp[0]).toMatchObject({ from: 'fight' });
+            expect(xp[0]!.amount).toBeGreaterThan(0);
+            expect(xp[1]).toEqual({ amount: 40, from: 'quest' });
+            expect(xp[0]!.amount + xp[1]!.amount).toBe(paid);
+            expect(eventsOf('quest-step').map((e) => e.payload)).toEqual([
+                { questId: FIXTURE_LINE, stepId: '4', action: 'complete' },
+            ]);
+        } finally {
+            unregisterFixtureQuestline();
+        }
+    });
+
+    it('logs a befriend that completes a quest as the quest\'s XP alone', async () => {
+        registerFixtureQuestline();
+        try {
+            const { store, actions } = bossStep('sm2a-quest-befriend');
+            const report = actions.endCombat('friendship');
+            expect(report?.xpGained).toBe(0);
+            expect(gs(store).quests.completed).toContain('Fell the Warden');
+            actions.resetRun({ keepCharacter: true });
+            await landed();
+            expect(eventsOf('xp-gained').map((e) => e.payload)).toEqual([{ amount: 40, from: 'quest' }]);
+            expect(eventsOf('quest-step').map((e) => e.payload.action)).toEqual(['complete']);
+        } finally {
+            unregisterFixtureQuestline();
+        }
+    });
+
+    it('logs a quest finished by a dialogue or cutscene effect, through the one completion door', async () => {
+        registerFixtureQuestline();
+        try {
+            const { store, actions } = fixtureOpen('sm2a-quest-effect', 4);
+            acceptFixtureStep(store, 4);
+            const before = gs(store).quests;
+            store.setState({ quests: { ...before, active: [], completed: [...before.completed, 'Fell the Warden'] } } as never);
+            offerCompletedQuestExtrasAction(store, before);
+            actions.resetRun({ keepCharacter: true });
+            await landed();
+            expect(eventsOf('quest-step').map((e) => e.payload)).toEqual([
+                { questId: FIXTURE_LINE, stepId: '4', action: 'complete' },
+            ]);
         } finally {
             unregisterFixtureQuestline();
         }
