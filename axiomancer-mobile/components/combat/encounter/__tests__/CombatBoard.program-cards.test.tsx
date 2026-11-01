@@ -85,10 +85,11 @@ describe('CombatBoard — program cards', () => {
         fireEvent.press(screen.getByTestId('combat-x-more-h0'));
         fireEvent.press(screen.getByTestId('combat-x-more-h0'));
         expect(screen.getByTestId('combat-x-value-h0').props.children).toBe('SACRIFICE 3');
-        // The picker shows the chosen number; the card's own face reads "varies".
-        const faceValues = screen.getAllByTestId('combat-card-face-value').map((n) => String(n.props.children));
-        expect(faceValues.some((v) => /varies/.test(v))).toBe(true);
-        expect(faceValues.some((v) => /^X$/.test(v.trim()))).toBe(false);
+        // The picker shows the chosen number; the card's own face prints its
+        // whole line, X and its cap included, never a bare "X" value.
+        const faceLines = screen.getAllByTestId('combat-card-face-paid-line').map((n) => String(n.props.accessibilityLabel));
+        expect(faceLines.some((v) => /SACRIFICE X \(max/.test(v))).toBe(true);
+        expect(faceLines.some((v) => /^X$/.test(v.trim()))).toBe(false);
         fireEvent.press(screen.getByTestId('combat-apply-h0'));
         expect(cbs.onApply).toHaveBeenCalledWith('h0', 'w', true, 3);
     });

@@ -1,23 +1,24 @@
 /**
- * CombatCardFace — the PAID line and the free corner pill (one card face).
+ * CombatCardFace: the PAID line on the small face and the free corner pill
+ * (one card face).
  *
- * The ledger is ONE row: the stance die cube, then `[family glyph] KEYWORD
- * value` as a single line. The FREE line left the ledger for the pill on the
- * card's top-left corner, so nothing shares the row with the PAID text and the
- * ledger never stacks: every card's PAID line sits at the same height. A line
- * too long for 12pt shrinks to fit (react-native-web ignores
- * `adjustsFontSizeToFit`, so the size is computed) rather than wrapping.
+ * The small face prints the card's whole PAID line (`paidLine`, the card voice)
+ * at 10pt over at most three rows, with the stance die cube on the ledger's
+ * corner. The FREE line lives in the pill on the card's top-left corner; a
+ * Global wears a GLOBAL plate there instead and never prints a duration on the
+ * small face (the large face states it).
  */
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { render, screen, within } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
 import { cardLibrary, rollEncounterDice } from '@mechanics';
 import {
-    CombatCardFace, HAND_CARD_H, HAND_CARD_W, PAID_LINE_FLOOR, PAID_LINE_SIZE, paidLedgerFit,
+    CombatCardFace, HAND_CARD_H, HAND_CARD_W,
 } from '@/components/combat/encounter/CombatBoard';
+import { PAID_LINE_FLOOR, PAID_LINE_ROWS, PAID_LINE_SIZE } from '@/state/presenters/paid-line.engine';
 import { buildCombatViewModel, type CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -45,65 +46,29 @@ const flat = (node: { props: { style?: unknown } }) =>
 const renderFace = (card: CombatCardVM, width = HAND_CARD_W, height = HAND_CARD_H, large = false) =>
     render(withAllProviders(<CombatCardFace card={card} width={width} height={height} large={large} />).tree);
 
-describe('the PAID line is die : PAID on one row', () => {
-    it('has no FREE cell and no rule in the ledger', () => {
-        for (const id of GREY) {
-            const { unmount } = renderFace(handCard(id));
-            const ledger = screen.getByTestId('combat-card-face-ledger');
-            // The ledger holds the cube and the one line, nothing else.
-            expect(ledger.props.children.filter(Boolean)).toHaveLength(2);
-            expect(screen.queryByTestId('combat-card-face-ledger-stacked')).toBeNull();
-            unmount();
-        }
-    });
+/** The text a face's PAID line prints: its runs joined. */
+const printed = (line: { props: { children?: unknown } }): string => {
+    const kids = React.Children.toArray(line.props.children as React.ReactNode) as React.ReactElement<{ children?: string }>[];
+    return kids.map((k) => k.props.children ?? '').join('');
+};
 
-    it('prints keyword and value inside ONE single-line text, at one size', () => {
-        let sawKeyword = false;
+describe('the small face prints the whole PAID line', () => {
+    it('holds the die cube and the line, at 10pt in at most three rows', () => {
         for (const id of GREY) {
             const card = handCard(id);
             const { unmount } = renderFace(card);
+            expect(screen.getByTestId('combat-card-face-cube')).toBeTruthy();
             const line = screen.getByTestId('combat-card-face-paid-line');
-            expect(line.props.numberOfLines).toBe(1);
-            // Both halves sit inside the one line, never in sibling rows.
-            const val = within(line).getByTestId('combat-card-face-value');
-            const size = flat(val).fontSize as number;
-            expect(size).toBeLessThanOrEqual(PAID_LINE_SIZE);
-            expect(size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
-            const kw = within(line).queryByTestId('combat-card-face-keyword');
-            if (kw) {
-                sawKeyword = true;
-                expect(flat(kw).fontSize).toBe(size);
+            expect(line.props.numberOfLines).toBe(PAID_LINE_ROWS);
+            expect(printed(line)).toBe(card.face.paidLine);
+            for (const run of React.Children.toArray(line.props.children as React.ReactNode) as React.ReactElement<{ style: unknown }>[]) {
+                expect(flat({ props: { style: run.props.style } }).fontSize).toBe(PAID_LINE_SIZE);
             }
             unmount();
         }
-        // A Plain Word carries a keyword, so the one-size check is not vacuous.
-        expect(sawKeyword).toBe(true);
     });
 
-    it('a PAID headline with no keyword prints its value alone, at the full 12pt', () => {
-        const strike = handCard('grey-strike');
-        expect(strike.face.keyword).toBeFalsy();
-        renderFace(strike);
-        expect(screen.queryByTestId('combat-card-face-keyword')).toBeNull();
-        const val = screen.getByTestId('combat-card-face-value');
-        expect(String(val.props.children)).toMatch(/\d/);
-        expect(flat(val).fontSize).toBe(PAID_LINE_SIZE);
-    });
-
-    it('never stacks on the narrow faces either (reward offer 100, staged 92)', () => {
-        for (const width of [92, 100]) {
-            for (const id of GREY) {
-                const { unmount } = renderFace(handCard(id), width, Math.round(width * 1.47));
-                expect(screen.getByTestId('combat-card-face-ledger')).toBeTruthy();
-                expect(screen.queryByTestId('combat-card-face-ledger-stacked')).toBeNull();
-                unmount();
-            }
-        }
-    });
-});
-
-describe('an amount the card does not print reads "varies" on one line (GL1 A8)', () => {
-    it('every live program card whose PAID headline was a bare X renders varies, at hand size, on one line', () => {
+    it('has no keyword/value pair on the small face, and every card prints its own line', () => {
         const ids = cardLibrary.filter((c) => c.program).map((c) => c.id);
         const { combat } = startRealFight(REAL_FIGHT_FIXTURE, {
             player: { knownCards: ids.slice(0, 1), baseStats: { heart: 8, body: 8, mind: 8 } }, seed: 16,
@@ -112,47 +77,35 @@ describe('an amount the card does not print reads "varies" on one line (GL1 A8)'
         let seen = 0;
         for (const id of ids) {
             const vm = buildCombatViewModel({ ...base, hand: [{ uid: 'v0', cardId: id }] }).hand[0];
-            if (!vm || !/varies/.test(vm.face.heroText)) continue;
+            if (!vm) continue;
             seen += 1;
             const { unmount } = renderFace(vm);
+            expect(screen.queryByTestId('combat-card-face-keyword')).toBeNull();
+            expect(screen.queryByTestId('combat-card-face-value')).toBeNull();
             const line = screen.getByTestId('combat-card-face-paid-line');
-            expect(line.props.numberOfLines).toBe(1);
-            const val = screen.getByTestId('combat-card-face-value');
-            expect(String(val.props.children)).toMatch(/varies/);
-            expect(flat(val).fontSize as number).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
+            expect(printed(line)).toBe(vm.face.paidLine);
+            expect(vm.face.paidLine.length).toBeGreaterThan(0);
+            const size = flat({ props: { style: (React.Children.toArray(line.props.children as React.ReactNode)[0] as React.ReactElement<{ style: unknown }>).props.style } }).fontSize as number;
+            expect(size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
+            expect(size).toBeLessThanOrEqual(PAID_LINE_SIZE);
             unmount();
         }
-        expect(seen).toBeGreaterThan(0);
+        expect(seen).toBeGreaterThan(50);
     });
 
-    it('the longest headline ("Foe − varies" beside no keyword) still fits the hand face', () => {
-        expect(paidLedgerFit({ width: HAND_CARD_W, keyword: '', value: 'Foe − varies' }).size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
-        expect(paidLedgerFit({ width: HAND_CARD_W, keyword: '♥ SACRIFICE', value: 'varies' }).size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
-    });
-});
-
-describe('paidLedgerFit', () => {
-    it('keeps a short line at full size', () => {
-        expect(paidLedgerFit({ width: 120, keyword: '⚡ DEAL', value: '12' })).toEqual({ size: PAID_LINE_SIZE });
-    });
-
-    it('a value with no keyword fits alone', () => {
-        expect(paidLedgerFit({ width: 120, keyword: '', value: 'Deal 38' })).toEqual({ size: PAID_LINE_SIZE });
+    it('keeps the ledger one height on every card, and the narrow faces too', () => {
+        const heights = new Set<unknown>();
+        for (const width of [HAND_CARD_W, 100, 92]) {
+            for (const id of GREY) {
+                const { unmount } = renderFace(handCard(id), width, Math.round(width * 1.47));
+                heights.add(flat(screen.getByTestId('combat-card-face-ledger')).height);
+                unmount();
+            }
+        }
+        expect(heights.size).toBe(1);
     });
 
-    it('shrinks a long line to fit, floored', () => {
-        const fit = paidLedgerFit({ width: 120, keyword: '♥ VULNERABLE', value: '+60%' });
-        expect(fit.size).toBeLessThan(PAID_LINE_SIZE);
-        expect(fit.size).toBeGreaterThanOrEqual(PAID_LINE_FLOOR);
-        const freak = paidLedgerFit({ width: 92, keyword: '♥ VULNERABLE', value: '+160% · 2 turns' });
-        expect(freak.size).toBe(PAID_LINE_FLOOR);
-    });
-
-    it('does not depend on the FREE line — the same PAID line renders the same with or without one', () => {
-        // The old fit reserved room for a FREE cell, so A Plain Word's long
-        // PAID line sized differently beside its "+24%" FREE value. The pill
-        // moved off the ledger: strip the FREE line and the PAID line, its
-        // size and the ledger must not move.
+    it('does not depend on the FREE line: the same PAID line renders the same with or without one', () => {
         const word = handCard('grey-word');
         expect(word.face.freeGlyph).toBeTruthy();
         const bare: CombatCardVM = {
@@ -164,8 +117,7 @@ describe('paidLedgerFit', () => {
             const out = {
                 pill: screen.queryByTestId('combat-card-face-free-corner') !== null,
                 ledger: flat(screen.getByTestId('combat-card-face-ledger')),
-                size: flat(screen.getByTestId('combat-card-face-value')).fontSize,
-                keywordSize: flat(screen.getByTestId('combat-card-face-keyword')).fontSize,
+                text: printed(screen.getByTestId('combat-card-face-paid-line')),
             };
             unmount();
             return out;
@@ -174,11 +126,58 @@ describe('paidLedgerFit', () => {
         const without = read(bare);
         expect(withFree.pill).toBe(true);
         expect(without.pill).toBe(false);
-        // Non-vacuity: this PAID line is long enough to shrink below 12pt.
-        expect(withFree.size as number).toBeLessThan(PAID_LINE_SIZE);
-        expect(without.size).toBe(withFree.size);
-        expect(without.keywordSize).toBe(withFree.keywordSize);
+        expect(without.text).toBe(withFree.text);
         expect(without.ledger).toEqual(withFree.ledger);
+    });
+
+    it('prints the voice at neutral and at raised stats (the grey cards)', () => {
+        // Heart, body and mind are 8 in this hand: the scaled copy has no authored summary.
+        expect(handCard('grey-strike').face.paidLine).toBe('DEAL 8');
+        expect(handCard('grey-ward').face.paidLine).toBe('GUARD 8');
+        expect(handCard('grey-word').face.paidLine).toBe('VULNERABLE 40% for 2 turns');
+    });
+});
+
+describe('a Global wears GLOBAL, not FREE', () => {
+    const GLOBAL_IDS = cardLibrary.filter((c) => c.program?.global).map((c) => c.id);
+    const globalVM = (id: string): CombatCardVM => {
+        const { combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: GREY }, seed: 16 });
+        const base = rollEncounterDice(combat).state;
+        return buildCombatViewModel({ ...base, hand: [{ uid: 'g0', cardId: id }] }).hand[0];
+    };
+
+    it('the small face shows the plate, no FREE pill, and no duration', () => {
+        expect(GLOBAL_IDS.length).toBeGreaterThan(10);
+        for (const id of GLOBAL_IDS) {
+            const vm = globalVM(id);
+            const { unmount } = renderFace(vm);
+            expect(screen.getByTestId('combat-card-face-global-text').props.children).toBe('GLOBAL');
+            expect(screen.queryByTestId('combat-card-face-free-corner')).toBeNull();
+            expect(screen.queryByTestId('combat-card-face-duration')).toBeNull();
+            expect(printed(screen.getByTestId('combat-card-face-paid-line'))).not.toMatch(/rest of combat|in play|\bturns\b/i);
+            unmount();
+        }
+    });
+
+    it('the plate pads the name band like the pill does', () => {
+        const { unmount } = renderFace(globalVM(GLOBAL_IDS[0]));
+        expect(flat(screen.getByTestId('combat-card-face-band')).paddingTop).toBeGreaterThan(0);
+        unmount();
+    });
+
+    it('the large face states the duration, the small face never does', () => {
+        const vm = globalVM(GLOBAL_IDS[0]);
+        const large = renderFace(vm, 208, 305, true);
+        expect(screen.getByTestId('combat-card-face-duration').props.children).toBe('3 turns played FREE, the whole combat PAID');
+        expect(screen.getByTestId('combat-card-face-global-plate')).toBeTruthy();
+        large.unmount();
+    });
+
+    it('a plain card never wears the plate or states a duration', () => {
+        const { unmount } = renderFace(handCard('grey-strike'), 208, 305, true);
+        expect(screen.queryByTestId('combat-card-face-global-plate')).toBeNull();
+        expect(screen.queryByTestId('combat-card-face-duration')).toBeNull();
+        unmount();
     });
 });
 

@@ -138,18 +138,19 @@ describe('CombatCardFace — the reward-draft mini face (100x147) is readable', 
         expect(NARROW_FACE_W).toBeLessThanOrEqual(120);
     });
 
-    it('under NARROW_FACE_W the ledger is still one die : PAID line, sized not font-fit', () => {
+    it('under NARROW_FACE_W the ledger still prints the whole PAID line, sized not font-fit', () => {
         render(withAllProviders(<CombatCardFace card={withPaid!} width={100} height={147} />).tree);
         expect(screen.getByTestId('combat-card-face-ledger')).toBeTruthy();
         expect(screen.queryByTestId('combat-card-face-ledger-stacked')).toBeNull();
-        expect(screen.getByTestId('combat-card-face-paid-line').props.numberOfLines).toBe(1);
+        expect(screen.getByTestId('combat-card-face-paid-line').props.numberOfLines).toBe(3);
+        expect(screen.getByTestId('combat-card-face-paid-line').props.accessibilityLabel).toBe(withPaid!.face.paidLine);
         expect(screen.getByTestId('combat-card-face-name').props.numberOfLines).toBe(1);
-        for (const id of ['combat-card-face-name', 'combat-card-face-keyword', 'combat-card-face-value']) {
+        for (const id of ['combat-card-face-name', 'combat-card-face-paid-line']) {
             const t = screen.getByTestId(id);
             expect(t.props.adjustsFontSizeToFit).toBeUndefined();
-            const style = StyleSheet.flatten(t.props.style) as Record<string, unknown>;
-            expect(typeof style.lineHeight).toBe('number');
         }
+        const name = StyleSheet.flatten(screen.getByTestId('combat-card-face-name').props.style) as Record<string, unknown>;
+        expect(typeof name.lineHeight).toBe('number');
         // Full text present, not a stub.
         expect(screen.getByTestId('combat-card-face-name').props.children).toBe(withPaid!.name.toUpperCase());
     });

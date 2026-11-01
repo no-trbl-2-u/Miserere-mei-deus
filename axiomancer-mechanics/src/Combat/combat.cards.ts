@@ -205,8 +205,8 @@ export function riderText(r: CardRider, opts?: { selfTargetCard?: boolean }): st
 /** Human text for one special mechanic (PAID line clauses, real units). */
 export function mechanicText(m: CardSpecialMechanic): string | null {
     switch (m.kind) {
-        case 'guard': return `Guard ${m.amount}`;
-        case 'deal': return `Deal ${m.amount}`;
+        case 'guard': return `GUARD ${m.amount}`;
+        case 'deal': return `DEAL ${m.amount}`;
     }
 }
 
@@ -214,6 +214,22 @@ export function mechanicText(m: CardSpecialMechanic): string | null {
  *  Any OTHER DoT effect is card-local vocabulary and prints its per-turn bite
  *  inline. */
 export const REGISTRY_DOT_IDS: ReadonlySet<string> = new Set(['debuff_poison', 'debuff_bleed']);
+
+/**
+ * The head of one printed status clause. A damage-taken status prints in the
+ * card voice (`VULNERABLE 25% for 2 turns`, `docs/card-voice.md`), so a
+ * stat-scaled copy, which has no authored `paidSummary`, still reads like the
+ * library; any other status keeps the generated `name iN dM` shorthand.
+ * Shared by `paidText` and `paidClauses` so the two never drift.
+ */
+export function paidEffectHead(def: Effect, intensity: number, duration: number, clock: string): string {
+    const mult = def.payload.damageTakenMult ?? 1;
+    if (mult > 1 && !clock.includes('grows')) {
+        const pct = Math.round((mult - 1) * 100 * intensity);
+        return `VULNERABLE ${pct}% for ${duration} turn${duration === 1 ? '' : 's'}`;
+    }
+    return `${def.name.toLowerCase()} i${intensity}${clock}`;
+}
 
 /** Human text for a card's PAID payload: statuses + mechanics, real units.
  *  An effect names its side only when it crosses the card's printed target.
@@ -224,7 +240,6 @@ export function paidText(card: Card, lookupEffect: EffectLookup): string {
     for (const ce of card.combatEffects ?? []) {
         const def = lookupEffect(ce.effectId);
         if (!def) continue;
-        const label = def.name.toLowerCase();
         const i = ce.intensity ?? 1;
         const d = ce.duration ?? def.duration;
         const notes: string[] = [];
@@ -240,14 +255,19 @@ export function paidText(card: Card, lookupEffect: EffectLookup): string {
         const grows = def.payload.dotModifiers?.growth === 'per-enemy-action'
             && def.payload.dotModifiers?.calendarExpiry === false;
         const clock = grows ? ' (grows +1 each time the foe acts)' : ` d${d}`;
-        parts.push(`${label} i${i}${clock}${notes.length ? ` (${notes.join(', ')})` : ''}`);
+        parts.push(`${paidEffectHead(def, i, d, clock)}${notes.length ? ` (${notes.join(', ')})` : ''}`);
     }
     for (const m of card.specialMechanics ?? []) {
         const t = mechanicText(m);
         if (t) parts.push(t);
     }
-    const body = parts.join(' + ') || 'utility';
+    const body = parts.join(', ') || 'utility';
     return card.paidExile ? `${body}. EXILE` : body;
+}
+
+/** A printed line without its closing full stop, so a sentence added after it never doubles it. */
+function stripStop(line: string): string {
+    return line.replace(/\.\s*$/, '');
 }
 
 function rankLabel(card: Card): string {
@@ -291,7 +311,7 @@ export function toCombatCard(cardId: string, lookupCard: CardLookup, lookupEffec
     });
     const dotSuffix = authored ? '' : dotFace ? ` (${dotFace})` : preview > 0 && !speciesGlossed ? ` (${preview} over its run)` : '';
     const bottomActionText = programFace
-        ? `PAID — ${programFace.paid}. Costs 1 die.`
+        ? `PAID — ${stripStop(programFace.paid)}. Costs 1 die.`
         : authored
         ? `PAID — ${authored}. Costs 1 die.`
         : `PAID — ${paid}${dotSuffix}. Costs 1 die.`;
@@ -344,6 +364,31 @@ export function programFaceText(card: Card): { free: string; paid: string } {
         free: p.free ? programText(p.free.text, undefined) : 'no effect.',
         paid: p.paid ? programText(p.paid.text, undefined) + (p.onDiscard ? `. ${programText(p.onDiscard.text, undefined)}` : '') : 'no effect.',
     };
+}
+
+/** A Global's trigger as the small face prints it: the opener without its
+ *  glyph (`GLOBAL_TRIGGER_TEXT` keeps the glyphs for the large face). */
+export const GLOBAL_TRIGGER_FACE: Readonly<Record<'turn' | 'sac' | 'curse', string>> = Object.freeze({
+    turn: 'Start of your turn:',
+    sac: 'When you SACRIFICE X:',
+    curse: 'When you play a Curse:',
+});
+
+/**
+ * The PAID line the small face prints whole, in the card voice. A plain card
+ * prints its authored `paidSummary` (or the generated PAID text, which a
+ * stat-scaled copy falls back to); a program card prints its PAID line with a
+ * discard rider; a Global prints its trigger and its one effect, with no
+ * duration (the large face states it). No line-end full stop. Numbers are the
+ * card's own, so a stat-scaled copy prints its scaled numbers.
+ *
+ * @example paidFaceLine(callus, lookupEffect) // 'When you SACRIFICE X: DEAL X'
+ */
+export function paidFaceLine(card: Card, lookupEffect: EffectLookup): string {
+    const p = card.program;
+    if (p?.global) return `${GLOBAL_TRIGGER_FACE[p.global.trigger]} ${programText(p.global.text, undefined)}`;
+    if (p) return stripStop(programFaceText(card).paid);
+    return stripStop(card.paidSummary ?? paidText(card, lookupEffect));
 }
 
 /** Projects an entire deck (card ids) into card views, dropping unknown ids. */
