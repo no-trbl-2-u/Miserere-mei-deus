@@ -266,6 +266,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
+- CF1a — the card-face grammar lint (spec 137); no dated T act waits on it, only T's read of CF1b's rewrite, whose date T has not set
+- CF1b — every card line rewritten to T's grammar; T reads and merges its rules-change PR; date not set (T picks it).
+- CF1c — the small face prints the whole PAID line (spec 137); no dated T act waits on it
+- CF1d — the words or glyphs toggle in Settings (spec 137); no dated T act waits on it
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
 - OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
@@ -291,6 +295,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-01** — **Card faces you read without opening plotted as spec 137 (CF1a-CF1d)** (T, attended `/pitch` then "Plot it!"; pitch `braindump/2026-11-01-card-face-meaning.md`). **Added** CF1a-CF1d under `## Unscheduled`: no dated T act waits on them, and T sets the date for reading CF1b's rewrite. No Item edited, no date moved.
 - **2026-11-01** — **reconcile after the v2 cut-over** (T, in chat: "Update the deadlines stuff"). **Removed** 66 `## Unscheduled` lines whose rows have shipped (each has an `ARCHIVE.md` line; the lint does not flag a line for a shipped row, so they had piled up since Oct 21). **Marked done** in the MVP schedule table the first character (CH1e), the Oct 31 weapons-and-armor pitch and the Nov 2 weapons-and-armor plot, to match their ticked Items. **Not ticked, unconfirmed by T:** the Oct 30 hard candidates (HP4e part 1) and the Oct 31 sea-keep boss session; no ruling or boss design is on main. **Flagged, not fixed here:** HP6a merged as #1280 (Nov 1, 01:59 ET) after the NX1d carry, so spec 110 still lists 110.1 open. No date moved.
 - **2026-11-01** — **the Chosen's ten-card deck and a fifth less XP plotted as spec 138 (XP1a, SD1a)** (T, attended sim session then `/plot asap`: "Maybe cut it by 20%"; "Pick whichever deck (The 7 + 3) got ~6 rounds with the starting gear"). **Added** XP1a and SD1a to the `Waits on` of the Mid-MVP check (Nov 9): the check plays the Chosen on the preview build, and today its first fight runs about 18 turns. The stat-scaling Item (Nov 12) still holds; it now reads the new deck. Nothing ticked; no date moved.
 - **2026-11-01** — **Chapter 1's weapons and armor plotted into spec 136 (EQ3d-EQ3j)** (T, attended `/pitch` then "Yeah, plot this and integrate it into 1268"; pitch `braindump/2026-11-01-weapons-and-armor.md`, dice effects included). **Ticked** the Oct 31 pitch Item and the Nov 2 plot Item (plotted early). **Added** EQ3d-EQ3j to the `Waits on` of the MVP demo (Nov 16), which shows Chapter 1's weapons and armor. No date moved.

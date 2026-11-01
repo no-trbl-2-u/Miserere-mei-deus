@@ -421,9 +421,9 @@
         "source": "axiomancer-mobile/state/e2e/settings.screen.test.tsx"
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Settings\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-11-01-card-face-meaning.md"
       }
     },
     {
@@ -996,9 +996,9 @@
         "source": "axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/settings.screen.test.tsx"
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Settings\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-11-01-card-face-meaning.md"
       }
     },
     {
