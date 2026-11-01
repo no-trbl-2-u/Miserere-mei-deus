@@ -309,7 +309,10 @@ export function toCombatCard(cardId: string, lookupCard: CardLookup, lookupEffec
         const def = lookupEffect(ce.effectId);
         return !!def?.payload.damageOverTime && !REGISTRY_DOT_IDS.has(def.id);
     });
-    const dotSuffix = authored ? '' : dotFace ? ` (${dotFace})` : preview > 0 && !speciesGlossed ? ` (${preview} over its run)` : '';
+    // Only a card that lands a ticking status has a "run"; a plain DEAL prints
+    // as the voice does (`DEAL 47`), at every stat.
+    const hasDot = enemyEffects(card).some(ce => !!lookupEffect(ce.effectId)?.payload.damageOverTime);
+    const dotSuffix = authored ? '' : dotFace ? ` (${dotFace})` : hasDot && preview > 0 && !speciesGlossed ? ` (${preview} over its run)` : '';
     const bottomActionText = programFace
         ? `PAID — ${stripStop(programFace.paid)}. Costs 1 die.`
         : authored

@@ -2026,7 +2026,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                             <StanceCube color={band} size={narrow ? 12 : 14} />
                         </View>
                         <Text
-                            style={styles.paidLineSmall}
+                            style={[styles.paidLineSmall, { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING) }]}
                             numberOfLines={PAID_LINE_ROWS}
                             allowFontScaling={false}
                             accessibilityLabel={f.paidLine}
@@ -2398,7 +2398,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     paidLine: { flex: 1 },
     paidColumn: { flex: 1, justifyContent: 'center' },
     // A Global's duration, on the large face only.
-    durationLine: { fontFamily: FONTS.serif, fontSize: 12, lineHeight: 15, color: AXM.ash, marginTop: 2 },
+    durationLine: { fontFamily: FONTS.serif, fontSize: 12, lineHeight: 15, color: AXM.bone, marginTop: 2 },
     // The small face's ledger: the whole PAID line over up to three rows, at
     // `paidLineFit`'s size; the die cube rides its top-right corner, half over
     // the art, so the text keeps the full width.

@@ -217,7 +217,8 @@ describe('S3 — the hand prints final numbers (display only)', () => {
         const hand = (build: [number, number, number]) =>
             handCards(stateFor('grey-strike', build))[0].card.bottomActionText;
         expect(hand([5, 5, 5])).toMatch(/DEAL 5\./);
-        expect(hand([47, 5, 5])).toMatch(/Deal 47\b/);
+        // A raised stat prints the voice too (`DEAL 47`), with no generated "over its run".
+        expect(hand([47, 5, 5])).toMatch(/PAID — DEAL 47\. Costs 1 die\./);
     });
 
     it('scaleCardForStats is the identity at neutral stats and never mutates the library card', () => {
