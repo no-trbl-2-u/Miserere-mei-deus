@@ -4,12 +4,11 @@ group: "engine"
 reachable: "yes"
 driven: "yes"
 tested: "yes"
-needsPitch: "yes"
+needsPitch: "no"
 source: "axiomancer-mechanics/src/Effects"
 generated: feature-map
 tags:
   - feature-map/engine
-  - needs-pitch
 ---
 
 # Effects
@@ -31,4 +30,4 @@ Code it uses, as plain text so Graph view draws player flow only.
 
 ## Pitch
 
-Needs a pitch. Missing: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Effects")
+Has a pitch.

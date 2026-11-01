@@ -121,9 +121,9 @@
         "source": "axiomancer-mechanics/src/Cards/e2e/card-upgrades.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/cards-sandbox.engine.test.ts, axiomancer-mechanics/src/Character/e2e/equipment-loadout.engine.test.ts, ..."
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Effects\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-11-01-weapons-and-armor.md"
       }
     },
     {

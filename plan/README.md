@@ -29,6 +29,17 @@ needs are done):
 - **135.5** · SM2e: pacing and coverage on the server (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
 - **135.7** · SM2g: bot and harness rows leave D1 after 14 days (T, `/plot asap`, 2026-11-01)
+- **136.1** (EQ3a)
+- **136.2** (EQ3b)
+- **136.3** (EQ3c)
+- **136.4** (EQ3d)
+- **136.5** (EQ3e)
+- **136.6** (EQ3f)
+- **136.7** (EQ3g)
+- **136.8** (EQ3h)
+- **136.9** (EQ3i)
+- **136.10** (EQ3j)
+- **136.11** (EQ3k)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -97,6 +108,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 2 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
+| 136 | Equipment: the dock fixed with drag and drop, and Chapter 1's weapons and armor | [136-eq3-equipment-dock.md](136-eq3-equipment-dock.md) | planned | 11 left |
 
 ## How the loop reads this folder
 
