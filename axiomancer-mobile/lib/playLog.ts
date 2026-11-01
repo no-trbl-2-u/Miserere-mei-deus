@@ -12,7 +12,15 @@
  * poster keeps its own gate, untouched by the switch.
  */
 
-import type { DeckEventPost, FightPost, PlayLogSource, PlayLogSourceKind } from '@mechanics';
+import type {
+    DeckEventPost,
+    FightPost,
+    PlayLogSource,
+    PlayLogSourceKind,
+    PlayRunEndPost,
+    PlayRunPost,
+    RunEventsPost,
+} from '@mechanics';
 
 import { puzzleApiConfig, puzzleAppBuild, type PuzzleApiConfig, type PuzzleFetch } from '@/lib/puzzleAttempts';
 import { getBuildCommit, isDevToolsEnabled } from '@/lib/buildProfile';
@@ -86,7 +94,7 @@ function warnDropped(path: string, reason: string): void {
  */
 export async function postPlayLog(
     path: string,
-    body: FightPost | DeckEventPost,
+    body: FightPost | DeckEventPost | PlayRunPost | PlayRunEndPost | RunEventsPost,
     config: PuzzleApiConfig,
     fetcher: PuzzleFetch = fetch,
 ): Promise<boolean> {

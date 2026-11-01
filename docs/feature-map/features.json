@@ -3786,6 +3786,12 @@
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/run-log.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
       "to": "area:Combat",
       "file": "axiomancer-mobile/app/combat-encounter/index.tsx"
     },
@@ -3872,6 +3878,12 @@
       "from": "route:combat-encounter",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/quest/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/run-log.ts"
     },
     {
       "kind": "coupling",
@@ -4015,6 +4027,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-log.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -4052,6 +4070,18 @@
       "from": "route:combat-encounter",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/quest/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/run-log.ts"
     },
     {
       "kind": "coupling",
@@ -4190,6 +4220,12 @@
       "from": "route:combat-encounter",
       "to": "area:World",
       "file": "axiomancer-mobile/state/quest/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/run-log.ts"
     },
     {
       "kind": "coupling",

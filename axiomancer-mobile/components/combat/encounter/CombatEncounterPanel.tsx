@@ -60,6 +60,7 @@ import {
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
+import { recordFightSettled } from '@/state/run-log';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -239,7 +240,8 @@ export function applyHazardOutcome(
     // so the XP and loot are withheld and the card draft never opens.
     const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
     const questsBefore = (store.getState() as unknown as GameState).quests;
-    store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, {
+    const playerBefore = (store.getState() as unknown as GameState).player;
+    const report = store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, {
         withholdSpoils: relicOnly,
         // Every DANGER that fired is seen from now on, whoever won.
         seenDangers: firedDangerKeys(finalState),
@@ -264,6 +266,8 @@ export function applyHazardOutcome(
             levelUp();
         }
     }
+    // The run log: the node, the XP, the levels and the drops this fight paid.
+    recordFightSettled(store, playerBefore, report ?? null, outcome);
 }
 
 // Per-keyword type tag for the inspect-modal definition panels. The PRIMARY keyword

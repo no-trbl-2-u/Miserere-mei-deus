@@ -15,11 +15,13 @@ import {
     newlyCompletedQuests,
     payCompletedQuests,
     acceptQuestStep,
+    isEquipment,
     turnInQuestStep,
 } from '@mechanics';
 import type { GameState, PaidQuestReward, QuestLog, Reward } from '@mechanics';
 
 import { offerCompletedQuestItemsAction } from '../item-reward/relic-sources';
+import { recordItemGained, recordNodeResolved, recordProgress } from '../run-log';
 import { EMPTY_QUEST_SLICE, type AppStore, type MobileQuestPaid } from '../store';
 
 /** The resolved quest event the screen opens on. */
@@ -69,6 +71,8 @@ export function acceptQuestStepAction(store: AppStore): boolean {
     if (next === before) return false;
     store.setState({ quests: next.quests, world: next.world } as never);
     saveQuietly(store);
+    // The run log: the step taken on this quest node.
+    recordNodeResolved(store, 'accept');
     return true;
 }
 
@@ -106,6 +110,7 @@ export function turnInQuestStepAction(store: AppStore): boolean {
     const before = store.getState() as unknown as GameState;
     const result = turnInQuestStep(before, open.questline, open.node - 1);
     if (result.state === before) return false;
+    const playerBefore = before.player;
     store.setState({
         player: result.state.player,
         quests: result.state.quests,
@@ -118,6 +123,11 @@ export function turnInQuestStepAction(store: AppStore): boolean {
     // A relic the step paid goes to the reward screen, like any quest relic.
     offerCompletedQuestItemsAction(store, before.quests);
     saveQuietly(store);
+    // The run log: the step turned in, what it paid in XP and levels, and the items it handed over.
+    recordNodeResolved(store, 'turn-in');
+    recordProgress(store, playerBefore, 'quest');
+    // Equipment goes to the reward screen, which logs it when it is taken.
+    for (const item of result.paid.flatMap(p => p.items)) if (!isEquipment(item)) recordItemGained(store, item, 'quest');
     return true;
 }
 

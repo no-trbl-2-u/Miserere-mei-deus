@@ -227,12 +227,6 @@ Measure: A17, its output pasted into the PR.
 
 ## Acceptance
 
-- **A8** The app posts the whole run through the same gate: a `play_runs` open when a run starts (character select's
-  CONFIRM, a new game) and a close at its end (the run-over state, the Breakwater boss beaten, a `resetRun`); one
-  `node-entered` and one `node-resolved` per node, `hazard-ended`, `xp-gained`, `level-up` and `item-gained` at the
-  store actions that do each, and an `upgrade` deck event at the rest and blacksmith upgrade actions. Events are
-  batched per node, posted in order with a per-run `seq`, and dropped on failure (BE1). Each call site has a test
-  under a mocked fetch; the gate shut makes no call.
 - **A13** `npm run sim:run -- --post` sends each run through the app's own posters with `source: 'sim'`: `solver` is
   the policy id, `sessionId` is the batch (`GITHUB_RUN_ID`, or a local id), `buildCommit` is the checked-out sha,
   `runId` is the run's `GameState.runId`, and the `play_runs` row carries `policy_id`. It reads `PUZZLE_API_URL` and
@@ -255,9 +249,7 @@ Measure: A17, its output pasted into the PR.
 
 ## Chunks
 
-Measure: 4 open · 13 closed · next A18
+Measure: 3 open · 14 closed · next A18
 
-- [ ] **113.4** The app posts the whole run · M · closes A8 · needs — · alias: SM1d
-  - pr: #1272
-- [ ] **113.7** The bot posts its own data · M · closes A13, A14 · needs 113.4 · alias: SM1g
+- [ ] **113.7** The bot posts its own data · M · closes A13, A14 · needs — · alias: SM1g
 - [ ] **113.9** T's read of the comparison (attended) · S · closes A17 · needs 113.7 · alias: SM1i
