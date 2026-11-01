@@ -1,3 +1,4 @@
+// guard-test: pins SM1b's run id and source stamps (mutation survivors on #1251)
 /**
  * The stamps every play-log body carries (phase SM1b, A4 and A5), pinned
  * exactly: the source kind from the env value, the whole stamp object, and the

@@ -1,3 +1,4 @@
+// guard-test: pins SM1b's run id and source stamps (mutation survivors on #1251)
 /**
  * The run id and source on a posted puzzle attempt (phase SM1b, A4 and A5),
  * pinned at the hook: the title-screen shell (no character) posts a null run
