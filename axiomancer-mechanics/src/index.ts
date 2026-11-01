@@ -392,6 +392,12 @@ export {
 export type {
     HazardPuzzleBotKind, HazardPuzzleCurve, HazardPuzzleCurveOptions, HazardPuzzleCurveRow, HazardPuzzleSimRng,
 } from './World/Hazard';
+// Hazard puzzle chapter pick and the Breakwater six (HP6b).
+export { pickChapterHazardPuzzles, hazardPuzzleMiddleThird, hazardPuzzlePickRanks } from './World/Hazard';
+export type { HazardPuzzlePick } from './World/Hazard';
+export {
+    BREAKWATER_HAZARD_NODES, BREAKWATER_HAZARD_PUZZLES, formatBreakwaterHazardPuzzles,
+} from './World/Continents/Coastal-Village/breakwater-puzzles';
 // Hazard puzzle card report, the solve's difficulty features and its decision pressure.
 export {
     hazardPuzzleCardReport, formatHazardPuzzleCardReport, formatHazardPuzzleFeatures,
