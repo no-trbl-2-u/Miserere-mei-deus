@@ -14,6 +14,10 @@ export const VILLAGE_CARD_SHOP_LINE = '[content] Three cards laid out on the cou
 export const VILLAGE_CARD_BUY_LABEL = 'BUY';
 export const VILLAGE_CARD_SOLD_LABEL = 'SOLD';
 
+/** The equipment counter: weapons and armor. */
+export const VILLAGE_EQUIPMENT_LABEL = 'WEAPONS AND ARMOR';
+export const VILLAGE_EQUIPMENT_LINE = '[content] Gear laid out on the counter, whatever you do not already carry.';
+
 /** Card removal, the card shop's second service. */
 export const VILLAGE_REMOVE_LABEL = 'REMOVE A CARD';
 export const VILLAGE_REMOVE_LINE = 'One card, gone for the run. The price climbs every time.';

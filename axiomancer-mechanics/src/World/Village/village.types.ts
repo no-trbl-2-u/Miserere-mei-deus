@@ -29,12 +29,26 @@ export interface VillageCardShop {
     price: number;
 }
 
+/**
+ * The resolved equipment counter: the weapons and armor on offer and what each
+ * costs. Rolled once when the village opens, from the pieces the player does
+ * not carry (`villageEquipmentShopFor`).
+ */
+export interface VillageEquipmentShop {
+    /** Equipment ids on offer, distinct, at most `EQUIPMENT_DROP_TUNING.shopCount`. */
+    pieceIds: readonly string[];
+    /** Shillings each piece costs (`EQUIPMENT_DROP_TUNING.shopPrice`). */
+    price: number;
+}
+
 /** What the player has done at the village this visit. */
 export interface VillageVisit {
     /** The rest counter was used (a village rests once per visit). */
     rested: boolean;
     /** Card ids bought this visit; each offered card sells once per visit. */
     boughtCardIds: readonly string[];
+    /** Equipment ids bought this visit; each offered piece sells once. Absent on a fresh visit. */
+    boughtEquipmentIds?: readonly string[];
 }
 
 /** The slice of the game a counter reads and writes. */
@@ -77,6 +91,10 @@ export type VillageRestResult<S extends VillageHost> =
 
 export type VillageBuyResult<S extends VillageHost> =
     | (VillageAccepted<S> & { cardId: string })
+    | VillageRefused;
+
+export type VillageBuyEquipmentResult<S extends VillageHost> =
+    | (VillageAccepted<S> & { pieceId: string })
     | VillageRefused;
 
 export type VillageRemoveResult<S extends VillageHost> =

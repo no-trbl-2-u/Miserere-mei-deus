@@ -7,7 +7,7 @@
  * paid card removal) and the Anvil (opens `/blacksmith`; leaving it lands back
  * here, because the village stays the pending event). Every price and refusal
  * is the engine's (`World/Village`); a refused counter shows its reason. The
- * village sells no items and buys nothing back.
+ * village sells cards, weapons and armor, and buys nothing back.
  *
  * The screen owns ONE scroller — the house shape (`/rest`, `/blacksmith`,
  * the inventory page) — and TAKE THE ROAD is pinned below it, so the exit
@@ -21,8 +21,11 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { SCREEN_FRAME_INSET, ScreenBg } from '@/components/ScreenBg';
 import { AxmIcon } from '@/components/icons';
+import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
+    VILLAGE_EQUIPMENT_LABEL,
+    VILLAGE_EQUIPMENT_LINE,
     VILLAGE_CARD_BUY_LABEL,
     VILLAGE_CARD_SHOP_LABEL,
     VILLAGE_CARD_SHOP_LINE,
@@ -265,6 +268,47 @@ export default function VillageScreen() {
                         </>
                     )}
 
+                    {vm.equipmentShop && (
+                        <>
+                            <Text style={styles.sectionLabel}>{VILLAGE_EQUIPMENT_LABEL}</Text>
+                            <Text style={styles.wareDesc}>{VILLAGE_EQUIPMENT_LINE}</Text>
+                            <View style={styles.equipmentList} testID="village-equipment-shop">
+                                {vm.equipmentShop.map(piece => (
+                                    <View key={piece.pieceId}>
+                                        <TouchableOpacity
+                                            accessibilityRole="button"
+                                            accessibilityLabel={
+                                                piece.enabled
+                                                    ? `Buy ${piece.name} for ${piece.price} shillings`
+                                                    : `${piece.name} unavailable: ${piece.refusal}`
+                                            }
+                                            accessibilityState={{ disabled: !piece.enabled }}
+                                            disabled={!piece.enabled}
+                                            onPress={() => report(`Bought ${piece.name}`, actions.buyVillageEquipment(piece.pieceId))}
+                                            style={[styles.wareRow, !piece.enabled && styles.wareRowUnaffordable]}
+                                            testID={`village-equipment-${piece.pieceId}`}
+                                        >
+                                            <ItemGlyph category="equipment" sub={piece.sub} itemId={piece.pieceId} size={36} />
+                                            <View style={styles.flexOne}>
+                                                <Text style={styles.wareName}>{piece.name}</Text>
+                                                <Text style={styles.wareDesc}>{piece.sub}</Text>
+                                            </View>
+                                            <Text
+                                                style={[styles.warePrice, !piece.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
+                                                testID={`village-equipment-${piece.pieceId}-price`}
+                                            >
+                                                {piece.sold ? VILLAGE_CARD_SOLD_LABEL : `${piece.price} SHILLINGS`}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        {piece.refusal !== null && !piece.sold && (
+                                            <Text style={styles.refusal} testID={`village-equipment-${piece.pieceId}-refusal`}>{piece.refusal}</Text>
+                                        )}
+                                    </View>
+                                ))}
+                            </View>
+                        </>
+                    )}
+
                     {vm.anvil && (
                         <>
                             <Text style={styles.sectionLabel}>THE ANVIL</Text>
@@ -397,6 +441,7 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     buyText: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 0.5, color: AXM.sulfur, textAlign: 'center' },
+    equipmentList: { marginTop: 6 },
     removeRow: {
         borderWidth: 1,
         borderColor: AXM.ash,

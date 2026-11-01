@@ -2,7 +2,8 @@
  * Village counters — store action glue.
  *
  * The pure rules live in `axiomancer-mechanics` (`World/Village`): the paid
- * rest, buying one of the card shop's cards, and paying to remove a card.
+ * rest, buying one of the card shop's cards, buying a weapon or armor, and
+ * paying to remove a card.
  * These wrappers read the pending village event (the hub stays pending while
  * its counters are used) and this visit's record (`event.villageVisit`, absent
  * on a fresh arrival), apply the engine's result to the store, persist it, and
@@ -13,6 +14,7 @@
 import {
     FRESH_VILLAGE_VISIT,
     buyVillageCard,
+    buyVillageEquipment,
     removeVillageCard,
     restAtVillage,
     type GameState,
@@ -82,6 +84,17 @@ export function buyVillageCardAction(store: AppStore, cardId: string): VillageCo
     const at = villageAt(store);
     if (!at?.event.cardShop) return NO_VILLAGE;
     const result = buyVillageCard(host(store), at.visit, at.event.cardShop, cardId);
+    if (!result.ok) return { ok: false, refusal: result.refusal };
+    store.setState({ player: result.state.player, ...withVisit(store, result.visit) } as never);
+    persist(store);
+    return { ok: true, spent: result.spent };
+}
+
+/** Buys one of the equipment counter's pieces; it enters the satchel unworn. */
+export function buyVillageEquipmentAction(store: AppStore, pieceId: string): VillageCounterResult {
+    const at = villageAt(store);
+    if (!at?.event.equipmentShop) return NO_VILLAGE;
+    const result = buyVillageEquipment(host(store), at.visit, at.event.equipmentShop, pieceId);
     if (!result.ok) return { ok: false, refusal: result.refusal };
     store.setState({ player: result.state.player, ...withVisit(store, result.visit) } as never);
     persist(store);

@@ -8,7 +8,7 @@
 import type { ActiveEffect } from '../../Effects/types';
 import type { GameState } from '../../Game/types';
 import type { Item } from '../../Items/types';
-import type { VillageCardShop, VillageRestCounter } from '../Village/village.types';
+import type { VillageCardShop, VillageEquipmentShop, VillageRestCounter } from '../Village/village.types';
 import type { NPC } from '../../NPCs/types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { EnemyDifficulty } from '../../Enemy/types';
@@ -102,7 +102,7 @@ export interface VillagePayload {
     /**
      * The card shop counter, when this village has one: three cards from the
      * player's reward pool, the same three all run, and paid card removal
-     * (`World/Village`). The village sells cards only.
+     * (`World/Village`).
      */
     cardShop?: true;
     /** The Anvil counter, when this village has a smith. */
@@ -283,6 +283,7 @@ export type ResolvedEvent =
         merchants: NPC[];
         rest?: VillageRestCounter;
         cardShop?: VillageCardShop;
+        equipmentShop?: VillageEquipmentShop;
         anvil?: VillageAnvil;
         description?: string;
     }

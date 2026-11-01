@@ -117,6 +117,7 @@ import {
 } from './blacksmith/store-actions';
 import {
     buyVillageCardAction,
+    buyVillageEquipmentAction,
     removeVillageCardAction,
     restAtVillageAction,
     type VillageCounterResult,
@@ -617,6 +618,8 @@ export interface AppActions {
     restAtVillage: () => VillageCounterResult;
     /** Buy one of the village card shop's cards. */
     buyVillageCard: (cardId: string) => VillageCounterResult;
+    /** Buy one of the village's weapons or armor; it enters the satchel unworn. */
+    buyVillageEquipment: (pieceId: string) => VillageCounterResult;
     /** Pay to remove one copy of a card from the deck. */
     removeVillageCard: (cardId: string) => VillageCounterResult;
 }
@@ -959,6 +962,7 @@ export function createAppActions(store: AppStore): AppActions {
         abandonBlacksmith: () => abandonBlacksmithAction(store),
         restAtVillage: () => restAtVillageAction(store),
         buyVillageCard: (cardId) => buyVillageCardAction(store, cardId),
+        buyVillageEquipment: (pieceId) => buyVillageEquipmentAction(store, pieceId),
         removeVillageCard: (cardId) => removeVillageCardAction(store, cardId),
     };
     return wrapActionsWithLogging(actions);
