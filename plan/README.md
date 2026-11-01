@@ -22,11 +22,13 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
-- **135.1** · SM2a: the Merciful bot builds its lane (T, `/plot asap`, 2026-11-01)
-- **135.2** · SM2b: a quest's XP logged as the quest's, before the Nov 9 preview APK (T, `/plot asap`, 2026-11-01)
-- **135.3** · SM2c: where the runs end, as a report; the nightly report needs it (T, `/plot asap`, 2026-11-01)
-- **135.4** · SM2d: the nightly sim report (T, `/plot asap`, 2026-11-01)
-- **135.5** · SM2e: bot and harness rows leave D1 after 14 days (T, `/plot asap`, 2026-11-01)
+- **135.1** · SM2a: the run log carries pacing and coverage, and a quest's XP is the quest's, before the Nov 9 preview APK (T, `/plot asap`, 2026-11-01)
+- **135.2** · SM2b: what a player sees on the road, Chapter 1 as data, a witness that kills (T, `/plot asap`, 2026-11-01)
+- **135.3** · SM2c: the four personas (T, `/plot asap`, 2026-11-01)
+- **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
+- **135.5** · SM2e: pacing and coverage on the server (T, `/plot asap`, 2026-11-01)
+- **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
+- **135.7** · SM2g: bot and harness rows leave D1 after 14 days (T, `/plot asap`, 2026-11-01)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -94,7 +96,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 5 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
-| 135 | The sim follow-ups: a Merciful bot that grows, rows that expire, a nightly report T reads | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 5 left |
+| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
 
 ## How the loop reads this folder
 
@@ -217,12 +219,14 @@ adds a line here in the same commit. The v1 build plan's log, through
 2026-10-31, is in git: `git show fd21d04ab:plan/steps/01_build_plan.md`.
 
 - **2026-11-01** — actor: **T, in session** (`/plot asap`, run unattended on T's word, branch
-  `loop/plot-SM2-sim-followups-v2`). Action: **added spec 135 and chunks 135.1-135.5 (SM2a-SM2e)**, all five on the
-  Asap lane in that order. Confirmed T's request: the follow-up to SM1 in four parts (the Merciful bot kills to grow
-  and spares to play; 14-day retention of `sim` and `harness` rows by a cron on the Worker; a nightly sim report T
-  reads; a fight's quest XP logged as `quest`), with T's answers recorded in the spec as "Confirmed by T
-  (2026-11-01)". Reason: the Merciful and the wanderer die on every seed since BUG1j, so the bots' numbers say
-  nothing yet, and nightly batches add about 8 MB a day to D1. Spec `plan/135-sm2-sim-follow-ups.md`.
+  `loop/plot-SM2-sim-followups-v2`). Action: **added spec 135 and chunks 135.1-135.7 (SM2a-SM2g)**, all seven on the
+  Asap lane in that order. Confirmed T's request: the follow-up to SM1, redirected by T in the same session ("I would
+  much rather have sims where they play the actual game instead of testing the decks"): four player personas as the
+  main bots, breaks filed as issues, a nightly report of run health, pacing, difficulty and coverage, the lane bots by
+  hand only; kept from the first draft: 14-day retention of `sim` and `harness` rows by a cron on the Worker and a
+  fight's quest XP logged as `quest`; the first draft's Merciful kill-to-grow chunk dropped. T's answers are recorded
+  in the spec as "Confirmed by T (2026-11-01)". Reason (T): sims that play the game, not test the decks. Spec
+  `plan/135-sm2-sim-follow-ups.md`.
 
 - **2026-11-01** — actor: **T, in session** (`/heads-down`, phase NX1d, T's ruling of
   2026-10-31: "cut over now"). Action: **the v1 build plan carried to nexus v2**: every
