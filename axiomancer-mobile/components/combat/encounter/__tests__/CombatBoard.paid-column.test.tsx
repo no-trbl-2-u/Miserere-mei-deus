@@ -22,7 +22,7 @@ import { PAID_LINE_FLOOR, PAID_LINE_ROWS, PAID_LINE_SIZE } from '@/state/present
 import { buildCombatViewModel, type CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
-import { HUE } from '@/theme/axm';
+import { AXM, HUE } from '@/theme/axm';
 
 const GREY = ['grey-strike', 'grey-ward', 'grey-word'];
 
@@ -215,6 +215,23 @@ describe('the FREE corner pill', () => {
         ).tree);
         expect(flat(screen.getByTestId('combat-card-face-free-corner')).borderColor).toBe(accent);
         unmount();
+    });
+
+    it('prints the ledger in parchment on a staged card not armed yet (bone accent), and in the armed tint once armed', () => {
+        const card = hand()[0]!;
+        const inkOf = (accent?: string) => {
+            const { unmount } = render(withAllProviders(
+                <CombatCardFace card={card} width={HAND_CARD_W} height={HAND_CARD_H} accent={accent} />,
+            ).tree);
+            const line = screen.getByTestId('combat-card-face-paid-line');
+            const colours = line.findAll((n: { type: unknown; props: { style?: unknown } }) => typeof n.type === 'string' && n.props.style != null && flat(n).color != null)
+                .map((n: { props: { style?: unknown } }) => flat(n).color);
+            unmount();
+            return colours;
+        };
+        expect(new Set(inkOf())).toEqual(new Set([AXM.parchment]));
+        expect(new Set(inkOf(AXM.bone))).toEqual(new Set([AXM.parchment]));
+        expect(new Set(inkOf(HUE.white))).toEqual(new Set([HUE.white]));
     });
 
     it('pads the name band only when the pill is present', () => {
