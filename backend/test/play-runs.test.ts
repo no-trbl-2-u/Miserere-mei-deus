@@ -37,13 +37,14 @@ function end(over: Partial<PlayRunEndPost> = {}): PlayRunEndPost {
     return { outcome: 'run-over', endNodeId: 'n-9', level: 4, vitaeEnd: 0, nodesResolved: 11, endDeck: ['strike', 'guard+'], ...over };
 }
 
-const SIX_KINDS: RunEvent[] = [
+const ALL_KINDS: RunEvent[] = [
     { seq: 0, kind: 'node-entered', payload: { map: 'breakwater', nodeId: 'n-1', nodeKind: 'encounter' } },
-    { seq: 1, kind: 'node-resolved', payload: { nodeId: 'n-1', nodeKind: 'encounter', choice: 'fight' } },
+    { seq: 1, kind: 'node-resolved', payload: { nodeId: 'n-1', nodeKind: 'encounter', choice: 'fight', level: 2, vitae: 17 } },
     { seq: 2, kind: 'hazard-ended', payload: { hazardId: 'tide-pool', cleared: true, vitaeBefore: 20, vitaeAfter: 17 } },
     { seq: 3, kind: 'xp-gained', payload: { amount: 30, from: 'fight' } },
     { seq: 4, kind: 'level-up', payload: { level: 2, stat: 'might' } },
     { seq: 5, kind: 'item-gained', payload: { itemId: 'relic-a', slot: 'relic', from: 'cache' } },
+    { seq: 6, kind: 'quest-step', payload: { questId: 'breakwater-line', stepId: '2', action: 'turn-in' } },
 ];
 
 function post(path: string, body: unknown, headers: Record<string, string> = AUTH): Promise<Response> {
@@ -175,23 +176,23 @@ describe('POST /v1/play-runs/<runId>/end', () => {
 });
 
 describe('POST /v1/run-events', () => {
-    it('stores a batch of all six kinds (201), and lists them back in seq order with their payloads', async () => {
-        expect(RUN_EVENT_KINDS).toHaveLength(6);
-        const response = await post('/v1/run-events', { runId: 'ev-1', source: 'sim', events: SIX_KINDS } satisfies RunEventsPost);
+    it('stores a batch of all seven kinds (201), and lists them back in seq order with their payloads', async () => {
+        expect(RUN_EVENT_KINDS).toHaveLength(7);
+        const response = await post('/v1/run-events', { runId: 'ev-1', source: 'sim', events: ALL_KINDS } satisfies RunEventsPost);
         expect(response.status).toBe(201);
         const created = await response.json<RunEventsCreated>();
-        expect(created.count).toBe(6);
+        expect(created.count).toBe(7);
 
         const stored = await events('?run=ev-1');
-        expect(stored.map(e => [e.seq, e.kind])).toEqual(SIX_KINDS.map(e => [e.seq, e.kind]));
-        expect(stored.map(e => e.payload)).toEqual(SIX_KINDS.map(e => e.payload));
+        expect(stored.map(e => [e.seq, e.kind])).toEqual(ALL_KINDS.map(e => [e.seq, e.kind]));
+        expect(stored.map(e => e.payload)).toEqual(ALL_KINDS.map(e => e.payload));
         expect(stored.every(e => e.source === 'sim' && e.runId === 'ev-1' && e.receivedAt === created.receivedAt)).toBe(true);
     });
 
     it('keeps batches apart by run, orders across batches by seq, and stores an absent source as human', async () => {
-        await post('/v1/run-events', { runId: 'ev-2', events: [SIX_KINDS[3]] });
-        await post('/v1/run-events', { runId: 'ev-3', source: 'harness', events: [SIX_KINDS[0]] });
-        await post('/v1/run-events', { runId: 'ev-2', events: [{ ...SIX_KINDS[4], seq: 7 }, { ...SIX_KINDS[5], seq: 8 }] });
+        await post('/v1/run-events', { runId: 'ev-2', events: [ALL_KINDS[3]] });
+        await post('/v1/run-events', { runId: 'ev-3', source: 'harness', events: [ALL_KINDS[0]] });
+        await post('/v1/run-events', { runId: 'ev-2', events: [{ ...ALL_KINDS[4], seq: 7 }, { ...ALL_KINDS[5], seq: 8 }] });
         expect((await events('?run=ev-2')).map(e => [e.seq, e.kind, e.source])).toEqual([
             [3, 'xp-gained', 'human'], [7, 'level-up', 'human'], [8, 'item-gained', 'human'],
         ]);
@@ -213,7 +214,7 @@ describe('POST /v1/run-events', () => {
     it('400s an unknown kind or a bad payload, naming it, and stores none of the batch', async () => {
         const response = await post('/v1/run-events', {
             runId: 'ev-bad',
-            events: [SIX_KINDS[0], { seq: 1, kind: 'gold-gained', payload: {} }, { seq: 2, kind: 'xp-gained', payload: { amount: -1, from: 'x' } }],
+            events: [ALL_KINDS[0], { seq: 1, kind: 'gold-gained', payload: {} }, { seq: 2, kind: 'xp-gained', payload: { amount: -1, from: 'x' } }],
         });
         expect(response.status).toBe(400);
         expect(await response.json<PlayLogError>()).toEqual({
@@ -227,7 +228,7 @@ describe('POST /v1/run-events', () => {
     });
 
     it('401s without the token', async () => {
-        expect((await post('/v1/run-events', { runId: 'ev-auth', events: [SIX_KINDS[0]] }, {})).status).toBe(401);
+        expect((await post('/v1/run-events', { runId: 'ev-auth', events: [ALL_KINDS[0]] }, {})).status).toBe(401);
         expect(await events('?run=ev-auth')).toEqual([]);
     });
 
@@ -242,10 +243,10 @@ describe('POST /v1/run-events', () => {
 });
 
 describe('a fixture run', () => {
-    it('opens, logs six kinds of event and closes, and every list reads it back by source', async () => {
+    it('opens, logs every kind of event and closes, and every list reads it back by source', async () => {
         const runId = 'fixture-run';
         expect((await open(run({ runId, source: 'sim', policyId: 'blood-price' }))).status).toBe(201);
-        expect((await post('/v1/run-events', { runId, source: 'sim', events: SIX_KINDS })).status).toBe(201);
+        expect((await post('/v1/run-events', { runId, source: 'sim', events: ALL_KINDS })).status).toBe(201);
         expect((await close(runId, end({ outcome: 'chapter-clear', endNodeId: 'exit', nodesResolved: 6 }))).status).toBe(200);
 
         expect((await events(`?run=${runId}`)).map(e => e.kind)).toEqual([...RUN_EVENT_KINDS]);

@@ -108,3 +108,7 @@ test('wrangler.toml names the Worker and the real miserere database', () => {
   assert.match(id ?? '', /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
   assert.notEqual(id, '00000000-0000-0000-0000-000000000000', 'the placeholder id is gone')
 })
+
+test('wrangler.toml carries the retention cron after the 03:43 sim batch (SM2g)', () => {
+  assert.match(wrangler, /^\[triggers\]\ncrons = \["17 5 \* \* \*"\]$/m)
+})

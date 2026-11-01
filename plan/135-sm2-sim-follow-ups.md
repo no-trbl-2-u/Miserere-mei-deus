@@ -234,7 +234,7 @@ every `human` row.
   `received_at`. The cutoff is an ISO string the shape of the stored timestamps, never SQL `datetime()`. At most 200
   runs or 1000 rows per batch and 25 batches per cron run; the rest waits for the next night; one log line of counts.
   `0008` adds `(source, received_at)` on four tables and `(source, started_at)` on `play_runs`. Chunk 135.7 records
-  the rule as a D-entry (proposed name `D?play-log-retention`).
+  the rule as a D-entry (proposed name `D3`).
 - **Documentation follows the house pattern.** `docs/truth-sources.md` "Measured truth" gets a bullet for the sim
   report and the 14-day window; `.github/workflows/README.md` the triggers, the filing step and the report job;
   `CLAUDE.md` is unchanged (it names only `measured/latest.md`; the other measurements live in `truth-sources.md`).
@@ -422,15 +422,6 @@ Proof: <the chunk's proof and its result>.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A15** Migration `0008_retention_indexes.sql` adds `(source, received_at)` on `fights`, `deck_events`,
-  `puzzle_attempts` and `run_events` and `(source, started_at)` on `play_runs`; `0001`-`0007` are unchanged.
-- **A16** `wrangler.toml` carries `[triggers] crons = ["17 5 * * *"]` and the Worker exports `scheduled`, which deletes
-  every `sim` and `harness` row older than 14 days in the five tables as the Design states (whole runs, `play_runs`
-  last; run-less and orphan rows by `received_at`; capped batches), never a `human` row and never `ballot_verdicts`,
-  and logs its counts; the retention D-entry is recorded.
-- **A17** Worker tests run `scheduled` on a local D1 over fixtures of all three sources: no old `sim` or `harness` row
-  is left, every `human` and young row stays, no run is left part-deleted, a small injected batch size still empties
-  the old rows, and a second run deletes nothing.
 
 ## Open questions
 
@@ -438,7 +429,7 @@ Proof: <the chunk's proof and its result>.
 
 ## Chunks
 
-Measure: 17 open · 0 closed · next A18
+Measure: 14 open · 3 closed · next A18
 
 - [ ] **135.1** The run log carries pacing and coverage, and a quest's XP is the quest's · M · closes A1, A2, A3 · needs — · alias: SM2a
 - [ ] **135.2** What a player sees on the road, Chapter 1 as data, and a witness that kills · M · closes A4, A5, A6 · needs — · alias: SM2b
@@ -446,4 +437,3 @@ Measure: 17 open · 0 closed · next A18
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs 135.3 · alias: SM2d
 - [ ] **135.5** Pacing and coverage on the server · M · closes A12 · needs 135.1 · alias: SM2e
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4, 135.5 · alias: SM2f
-- [ ] **135.7** Bot and harness rows leave D1 after 14 days · M · closes A15, A16, A17 · needs — · alias: SM2g

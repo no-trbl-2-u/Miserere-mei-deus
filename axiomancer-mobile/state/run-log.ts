@@ -12,9 +12,11 @@
  *   recordRunOpened(state)                          the `play_runs` open, when a run starts
  *   recordRunClosed(state, outcome)                 the close, when it ends
  *   recordNodeEntered(store)                        a node was stepped onto (flushes the last node's batch)
- *   recordNodeResolved(store, choice)               the node underfoot was resolved, and how
- *   recordFightSettled(store, before, report, out)  a staged fight ended: node, XP, levels, drops
- *   recordProgress(store, before, from)             XP gained and levels reached since `before`
+ *   recordNodeResolved(store, choice)               the node underfoot was resolved, and how (with the level and VITAE after it)
+ *   recordFightSettled(store, before, report, out)  a staged fight ended: node, XP (the foe's, then the quest's), levels, drops
+ *   recordProgress(store, before, from, foeShare?)  XP gained and levels reached since `before`
+ *   recordQuestStep(store, ids, action)             a quest step was accepted, turned in or completed
+ *   recordQuestsCompleted(store, before)            a `quest-step` `complete` for each quest finished since `before`
  *   recordStatPoint(store, stat)                    a banked stat point was spent
  *   recordItemGained(store, item, from)             an item came into the pack
  *   recordHazardEnded(store, hazard)                a hazard ended
@@ -26,8 +28,12 @@ import {
     isEquipment,
     type Character,
     type GameState,
+    newlyCompletedQuests,
     type Item,
     type PlayRunOutcome,
+    type Quest,
+    type QuestLog,
+    type QuestStepAction,
     type RunEventPayloads,
     type WorldState,
 } from '@mechanics';
@@ -112,23 +118,68 @@ export function recordNodeEntered(store: AppStore): void {
     });
 }
 
-/** The node underfoot was resolved, and `choice` is what the player did there. */
+/**
+ * The node underfoot was resolved, and `choice` is what the player did there.
+ * The event carries the player's level and VITAE after the node (pacing reads them).
+ */
 export function recordNodeResolved(store: AppStore, choice: string): void {
     safely(() => {
         const state = stateOf(store);
         if (!state.world) return;
         const map = state.world.currentMap;
-        record(store, 'node-resolved', { nodeId: map.currentNode, nodeKind: nodeKindOf(state.world), choice });
+        const player = state.player;
+        record(store, 'node-resolved', {
+            nodeId: map.currentNode,
+            nodeKind: nodeKindOf(state.world),
+            choice,
+            ...(player ? { level: player.level, vitae: player.health } : {}),
+        });
     });
 }
 
-/** XP gained and levels reached between `before` and the player now. */
-export function recordProgress(store: AppStore, before: Character | undefined, from: string): void {
+/**
+ * The ids a `quest-step` carries for a quest: its questline's id and step number
+ * as text, or the quest's name and no step for a quest outside a questline.
+ */
+export function questStepIds(quest: Pick<Quest, 'name' | 'questline' | 'step'>): { questId: string; stepId: string | null } {
+    if (quest.questline === undefined) return { questId: quest.name, stepId: null };
+    return { questId: quest.questline, stepId: quest.step === undefined ? null : String(quest.step) };
+}
+
+/** A quest step was accepted, turned in, or its quest completed. */
+export function recordQuestStep(store: AppStore, ids: { questId: string; stepId: string | null }, action: QuestStepAction): void {
+    safely(() => {
+        record(store, 'quest-step', { questId: ids.questId, stepId: ids.stepId, action });
+    });
+}
+
+/** A `complete` for each quest that moved into the log's completed list since `before`, whatever finished it. */
+export function recordQuestsCompleted(store: AppStore, before: QuestLog | undefined): void {
+    safely(() => {
+        const after = stateOf(store).quests;
+        if (!before || !after) return;
+        for (const quest of newlyCompletedQuests(before, after)) recordQuestStep(store, questStepIds(quest), 'complete');
+    });
+}
+
+/**
+ * XP gained and levels reached between `before` and the player now. With a
+ * `foeShare` (a fight's own XP, `CombatEndReport.xpGained`) only that much is
+ * logged as `from`, capped at the gain; the rest, when positive, is the quest
+ * the kill completed and logs as `quest`.
+ */
+export function recordProgress(store: AppStore, before: Character | undefined, from: string, foeShare?: number): void {
     safely(() => {
         const after = stateOf(store).player;
         if (!before || !after) return;
         const amount = Math.round(after.experience - before.experience);
-        if (amount > 0) record(store, 'xp-gained', { amount, from });
+        if (foeShare === undefined) {
+            if (amount > 0) record(store, 'xp-gained', { amount, from });
+        } else {
+            const own = Math.max(0, Math.min(amount, Math.round(foeShare)));
+            if (own > 0) record(store, 'xp-gained', { amount: own, from });
+            if (amount - own > 0) record(store, 'xp-gained', { amount: amount - own, from: 'quest' });
+        }
         for (let level = before.level + 1; level <= after.level; level++) {
             record(store, 'level-up', { level, stat: null });
         }
@@ -138,17 +189,19 @@ export function recordProgress(store: AppStore, before: Character | undefined, f
 /**
  * A staged fight was settled by the engine's `endCombat`: the node is resolved
  * (`fight`, or `flee` for a withdrawal), the XP and levels it paid are logged
- * against the player as they stood `before`, and so is each item it dropped.
+ * against the player as they stood `before`, and so is each item it dropped. The
+ * foe's XP logs as `fight`; any more the same `endCombat` paid is the quest it
+ * completed, logged as `quest` (a befriend pays the foe no XP, so only the quest's).
  */
 export function recordFightSettled(
     store: AppStore,
     before: Character | undefined,
-    report: { loot?: readonly Item[] } | null,
+    report: { loot?: readonly Item[]; xpGained?: number } | null,
     outcome: string,
 ): void {
     safely(() => {
         recordNodeResolved(store, outcome === 'flee' ? 'flee' : 'fight');
-        recordProgress(store, before, 'fight');
+        recordProgress(store, before, 'fight', report?.xpGained);
         for (const item of report?.loot ?? []) recordItemGained(store, item, 'fight');
     });
 }

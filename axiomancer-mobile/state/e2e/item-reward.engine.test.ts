@@ -226,8 +226,8 @@ describe('committing the reward', () => {
         expect(result.outcome).toBe('inventory');
         expect(result.displaced).toBeNull();
         expect(player(store).inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
-        expect(player(store).equipment.relics.map((a) => a.id))
-            .toEqual(before.relics.map((a) => a.id));
+        expect(player(store).equipment.relics.flatMap((a) => (a ? [a.id] : [])))
+            .toEqual(before.relics.flatMap((a) => (a ? [a.id] : [])));
         expect(selectHasPendingItemReward(store.getState())).toBe(false);
     });
 
@@ -247,7 +247,7 @@ describe('committing the reward', () => {
         expect(player(store)).not.toBe(characterBefore);
 
         const after = player(store);
-        expect(after.equipment.relics.map((a) => a.id)).toContain(BENCHED_ACCESSORY);
+        expect(after.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toContain(BENCHED_ACCESSORY);
         expect(after.equipment.relics).toHaveLength(SLOT_CAPACITY.relic);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
 
@@ -270,7 +270,7 @@ describe('committing the reward', () => {
         const loadoutIds = [
             after.equipment.weapon?.id,
             after.equipment.armor?.id,
-            ...after.equipment.relics.map((a) => a.id),
+            ...after.equipment.relics.flatMap((a) => (a ? [a.id] : [])),
         ].filter((id): id is string => typeof id === 'string');
         expect([...wornRows].sort()).toEqual([...loadoutIds].sort());
         expect(wornRows).toContain(BENCHED_ACCESSORY);
@@ -284,7 +284,7 @@ describe('committing the reward', () => {
         confirmItemRewardAction(store);
 
         const after = player(store);
-        expect(after.equipment.relics.map((a) => a.id)).not.toContain(BENCHED_ACCESSORY);
+        expect(after.equipment.relics.flatMap((a) => (a ? [a.id] : []))).not.toContain(BENCHED_ACCESSORY);
         const row = selectInventoryViewModel(store.getState(), {}).items.find((r) => r.id === BENCHED_ACCESSORY);
         expect(row?.equipped).toBe(false);
     });
@@ -335,7 +335,7 @@ describe('committing the reward', () => {
 describe('D7 — leaving the screen keeps the item', () => {
     it('dismissal grants every queued item to the satchel and wears none', () => {
         const store = makeStore();
-        const wornBefore = player(store).equipment.relics.map((a) => a.id);
+        const wornBefore = player(store).equipment.relics.flatMap((a) => (a ? [a.id] : []));
         offerItemRewardAction(store, [relic(BENCHED_ACCESSORY), SPARE_ARMOR]);
 
         const result = dismissItemRewardAction(store);
@@ -344,7 +344,7 @@ describe('D7 — leaving the screen keeps the item', () => {
         const after = player(store);
         expect(after.inventory.map((i) => i.id)).toContain(BENCHED_ACCESSORY);
         expect(after.inventory.map((i) => i.id)).toContain(SPARE_ARMOR.id);
-        expect(after.equipment.relics.map((a) => a.id)).toEqual(wornBefore);
+        expect(after.equipment.relics.flatMap((a) => (a ? [a.id] : []))).toEqual(wornBefore);
         expect(selectHasPendingItemReward(store.getState())).toBe(false);
     });
 
@@ -373,7 +373,7 @@ describe('a pending piece queued with the old slot name', () => {
 
         expect(result.applied).toBe(true);
         const worn = player(store).equipment.relics;
-        expect(worn.map((r) => r.id)).toEqual([RING_ID]);
+        expect(worn.map((r) => r?.id)).toEqual([RING_ID]);
         expect(worn[0]!.slot).toBe('relic');
         expect('accessoryKind' in worn[0]!).toBe(false);
         expect(JSON.stringify(player(store))).not.toMatch(/accessoryKind|"accessory"/);

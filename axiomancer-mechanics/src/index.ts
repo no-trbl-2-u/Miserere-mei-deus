@@ -15,7 +15,7 @@
 // ─── Character ────────────────────────────────────────────────────────────────
 export {
     createCharacter,
-    equipItem, unequipItem, getEquippedItems,
+    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems,
     computeEquipDelta,
     validateDieGear, concreteDefaultRail,
     dieSpecialCap, dieGearMissFaces,
@@ -163,11 +163,11 @@ export type {
 } from './Combat';
 // The whole-run play-log contract (phase SM1c): a run opening, its events and its close.
 export {
-    PLAY_RUNS_PATH, RUN_EVENTS_PATH, PLAY_RUN_OUTCOMES, RUN_EVENT_KINDS, playRunEndPath, validatePlayRunPost,
+    PLAY_RUNS_PATH, RUN_EVENTS_PATH, PLAY_RUN_OUTCOMES, RUN_EVENT_KINDS, QUEST_STEP_ACTIONS, playRunEndPath, validatePlayRunPost,
     validatePlayRunEndPost, validateRunEventsPost,
 } from './Combat';
 export type {
-    PlayRunOutcome, RunEventPayloads, RunEventKind, RunEvent, PlayRunPost, PlayRunEndPost, RunEventsPost, PlayRunRow,
+    PlayRunOutcome, RunEventPayloads, RunEventKind, QuestStepAction, RunEvent, PlayRunPost, PlayRunEndPost, RunEventsPost, PlayRunRow,
     RunEventRow, PlayRunList, RunEventList, PlayRunOpened, PlayRunClosed, RunEventsCreated, PlayRunValidation,
     PlayRunEndValidation, RunEventsValidation,
 } from './Combat';
@@ -233,6 +233,7 @@ export {
 export type {
     Item, Equipment, Consumable, Material, QuestItem,
     EquipmentSlot,
+    EquipmentEffect, EquipmentTrigger, EquipmentCondition, EquipmentPayoff, EquipmentPayoffKind,
     CacheLootTier,
     GrantOutcome,
 } from './Items';

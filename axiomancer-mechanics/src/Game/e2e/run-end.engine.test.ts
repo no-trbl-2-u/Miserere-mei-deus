@@ -37,7 +37,7 @@ describe('the run-over state', () => {
         expect(outcome).toBe('run-over');
         expect(state.runOver).toBe(true);
         expect(state.player.characterId).toBeUndefined();
-        expect(state.player.equipment.relics).toEqual([]);
+        expect(state.player.equipment.relics).toEqual([null, null, null]);
         expect(state.player.level).toBe(1);
         expect(state.codex).toEqual(run.codex);
         expect(state.rngState).toBe(4242);
@@ -81,7 +81,7 @@ describe('the new-run entry', () => {
         expect(next.player.characterId).toBe(CHOSEN.id);
         expect(next.player.knownCards).toEqual(characterDeck(CHOSEN));
         expect(next.player.knownCards).toHaveLength(10);
-        expect(next.player.equipment.relics.map(e => e.id)).toEqual([CHOSEN.startingRelicId]);
+        expect(next.player.equipment.relics.flatMap((e) => (e ? [e.id] : []))).toEqual([CHOSEN.startingRelicId]);
         expect(next.codex.unlockedEntries).toEqual(['entry-a', 'entry-b']);
     });
 

@@ -50,6 +50,7 @@ const PAYLOADS: { [K in RunEventKind]: RunEventPayloads[K] } = {
     'xp-gained': { amount: 30, from: 'fight' },
     'level-up': { level: 2, stat: 'might' },
     'item-gained': { itemId: 'relic-a', slot: 'relic', from: 'cache' },
+    'quest-step': { questId: 'ql-line', stepId: '2', action: 'turn-in' },
 };
 
 function event(kind: RunEventKind, seq: number, over: Record<string, unknown> = {}): Record<string, unknown> {
@@ -74,13 +75,13 @@ const batchReasons = (body: unknown): string[] => {
 };
 
 describe('the run routes and kinds', () => {
-    it('names the routes, the outcomes and six event kinds, through the barrel', () => {
+    it('names the routes, the outcomes and seven event kinds, through the barrel', () => {
         expect(noKindMissing).toBe(true);
         expect(PLAY_RUNS_PATH).toBe('/v1/play-runs');
         expect(RUN_EVENTS_PATH).toBe('/v1/run-events');
         expect(playRunEndPath('run 1/x')).toBe('/v1/play-runs/run%201%2Fx/end');
         expect(PLAY_RUN_OUTCOMES).toEqual(['run-over', 'chapter-clear', 'reset']);
-        expect(RUN_EVENT_KINDS).toEqual(['node-entered', 'node-resolved', 'hazard-ended', 'xp-gained', 'level-up', 'item-gained']);
+        expect(RUN_EVENT_KINDS).toEqual(['node-entered', 'node-resolved', 'hazard-ended', 'xp-gained', 'level-up', 'item-gained', 'quest-step']);
         expect(new Set(RUN_EVENT_KINDS).size).toBe(RUN_EVENT_KINDS.length);
         expect(barrel.RUN_EVENT_KINDS).toBe(RUN_EVENT_KINDS);
         expect(barrel.PLAY_RUNS_PATH).toBe(PLAY_RUNS_PATH);
@@ -112,7 +113,7 @@ describe('every validator success carries no reasons, and the shared source fiel
 
     it('refuses an empty string in every text field of every kind, naming it', () => {
         for (const kind of RUN_EVENT_KINDS) {
-            const fields = Object.entries(PAYLOADS[kind]).filter(([, v]) => typeof v === 'string').map(([k]) => k);
+            const fields = Object.entries(PAYLOADS[kind]).filter(([k, v]) => typeof v === 'string' && k !== 'action').map(([k]) => k);
             expect(fields.length).toBeGreaterThan(0);
             for (const field of fields) {
                 const payload = { ...PAYLOADS[kind], [field]: '' };
@@ -221,6 +222,27 @@ describe('validateRunEventsPost', () => {
         expect(batchReasons(batch({ events }))).toEqual([]);
     });
 
+    it('accepts a node-resolved with or without level and VITAE, and a quest-step with a null step (SM2a)', () => {
+        const resolved = (extra: Record<string, unknown>) => [{ seq: 0, kind: 'node-resolved', payload: { ...PAYLOADS['node-resolved'], ...extra } }];
+        expect(batchReasons(batch({ events: resolved({}) }))).toEqual([]);
+        expect(batchReasons(batch({ events: resolved({ level: 3, vitae: 12.5 }) }))).toEqual([]);
+        expect(batchReasons(batch({ events: resolved({ vitae: -2 }) }))).toEqual([]);
+        const kept = validateRunEventsPost(batch({ events: resolved({ level: 3, vitae: 12, extra: 1 }) }));
+        expect(kept.ok && kept.batch.events[0]!.payload).toEqual({ ...PAYLOADS['node-resolved'], level: 3, vitae: 12 });
+        const quest = [{ seq: 0, kind: 'quest-step', payload: { questId: 'Fetch Quest', stepId: null, action: 'complete' } }];
+        expect(batchReasons(batch({ events: quest }))).toEqual([]);
+    });
+
+    it('refuses a wrong-typed level or VITAE on a node-resolved (SM2a)', () => {
+        const resolved = (extra: Record<string, unknown>) => [{ seq: 0, kind: 'node-resolved', payload: { ...PAYLOADS['node-resolved'], ...extra } }];
+        expect(batchReasons(batch({ events: resolved({ level: '3', vitae: 'full' }) }))).toEqual([
+            'events[0].payload.level: expected a whole number of at least 1', 'events[0].payload.vitae: expected a number',
+        ]);
+        expect(batchReasons(batch({ events: resolved({ level: 0 }) }))).toEqual(['events[0].payload.level: expected a whole number of at least 1']);
+        expect(batchReasons(batch({ events: resolved({ level: null }) }))).toEqual(['events[0].payload.level: expected a whole number of at least 1']);
+        expect(batchReasons(batch({ events: resolved({ vitae: null }) }))).toEqual(['events[0].payload.vitae: expected a number']);
+    });
+
     it('refuses an unknown kind, a missing payload and a bad seq, naming each', () => {
         expect(batchReasons(batch({
             events: [
@@ -252,6 +274,10 @@ describe('validateRunEventsPost', () => {
                 'events[0].payload.level: expected a whole number of at least 1', 'events[0].payload.stat: expected a string',
             ]],
             ['item-gained', { itemId: 'i' }, ['events[0].payload.slot: expected a string', 'events[0].payload.from: expected a string']],
+            ['quest-step', { questId: '', stepId: 2, action: 'abandon' }, [
+                'events[0].payload.questId: must not be empty', 'events[0].payload.stepId: expected a string',
+                'events[0].payload.action: expected one of accept, turn-in, complete',
+            ]],
         ];
         expect(cases.map(([kind]) => kind).sort()).toEqual([...RUN_EVENT_KINDS].sort());
         for (const [kind, payload, expected] of cases) {

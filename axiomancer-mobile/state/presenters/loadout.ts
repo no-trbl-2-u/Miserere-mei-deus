@@ -25,7 +25,7 @@ type EquipmentLoadout = Character['equipment'];
 export function wornInSlot(loadout: EquipmentLoadout, slot: EquipmentSlot): readonly Equipment[] {
     if (slot === 'weapon') return loadout.weapon ? [loadout.weapon] : [];
     if (slot === 'armor') return loadout.armor ? [loadout.armor] : [];
-    return loadout.relics;
+    return loadout.relics.flatMap((a) => (a ? [a] : []));
 }
 
 /** True iff the loadout wears a piece with this id. */
@@ -33,7 +33,7 @@ export function isWornId(loadout: EquipmentLoadout, id: string): boolean {
     return (
         loadout.weapon?.id === id
         || loadout.armor?.id === id
-        || loadout.relics.some((a) => a.id === id)
+        || loadout.relics.some((a) => a?.id === id)
     );
 }
 

@@ -23,7 +23,7 @@ describe('createNewGameState — the very start', () => {
         expect(s.player.inventory).toEqual([]);
         expect(s.player.equipment.weapon).toBeNull();
         expect(s.player.equipment.armor).toBeNull();
-        expect(s.player.equipment.relics).toEqual([]);
+        expect(s.player.equipment.relics).toEqual([null, null, null]);
         expect(s.player.currency).toBe(0);
         expect(s.player.experience).toBe(0);
         expect(s.player.level).toBe(1);
@@ -42,7 +42,7 @@ describe('createNewGameState — the very start', () => {
         const afterNode = gameReducer(s, { type: 'PROCESS_NODE' });
         const staged = gameReducer(afterNode, { type: 'START_COMBAT', payload: { target: deepClone(FloatEye) } });
         expect(staged.player.inventory.filter(i => i.category === 'equipment')).toEqual([]);
-        expect(staged.player.equipment.relics).toEqual([]);
+        expect(staged.player.equipment.relics).toEqual([null, null, null]);
         expect(staged.flags).not.toContain('first-node-relic-granted');
         const fight = initializeCombatEncounter(staged.player, deepClone(FloatEye), undefined, 3);
         expect(fight.signatures).toEqual([]);

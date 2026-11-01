@@ -28,7 +28,6 @@ needs are done):
 - **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
 - **135.5** · SM2e: pacing and coverage on the server (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
-- **135.7** · SM2g: bot and harness rows leave D1 after 14 days (T, `/plot asap`, 2026-11-01)
 - **136.1** (EQ3a)
 - **136.2** (EQ3b)
 - **136.3** (EQ3c)
@@ -40,6 +39,8 @@ needs are done):
 - **136.9** (EQ3i)
 - **136.10** (EQ3j)
 - **136.11** (EQ3k)
+- **138.1** · XP1a: a fifth less XP per kill (T, `/plot asap`, 2026-11-01)
+- **138.2** · SD1a: the Chosen's ten-card deck from all three of its lanes (T, `/plot asap`, 2026-11-01)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -107,8 +108,9 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
-| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
+| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 6 left |
 | 136 | Equipment: the dock fixed with drag and drop, and Chapter 1's weapons and armor | [136-eq3-equipment-dock.md](136-eq3-equipment-dock.md) | planned | 11 left |
+| 138 | The Chosen's ten-card deck from all three of its lanes, and a fifth less XP per kill | [138-sd1-chosen-deck-and-xp.md](138-sd1-chosen-deck-and-xp.md) | planned | 2 left |
 
 ## How the loop reads this folder
 
