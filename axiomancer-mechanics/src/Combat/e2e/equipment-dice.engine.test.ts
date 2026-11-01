@@ -306,6 +306,26 @@ describe.each(PATHS)('A18 — a worn weapon sets the special, on $path', ({ card
 });
 
 describe('A18 — what a payload does not do', () => {
+    it('a payload HEAL passes through the Merciful heal modifiers (times, then plus)', () => {
+        const s = fightWithSpecial(PROGRAM_CARD.id, { weapon: weapon({ kind: 'heal', amount: 4 }) });
+        const mods = { healed: 0, plus: 1, times: 2, nextRadiance: 0, allRadianceDouble: false };
+        const withMods = { ...s, program: { ...s.program!, heals: mods } };
+        // 4 x 2 + 1 = 9
+        expect(useSpecial(withMods).state.player.health).toBe(s.player.health + 9);
+    });
+
+    it('a payload DEAL is attributed to the weapon by its printed name', () => {
+        const s = fightWithSpecial(PROGRAM_CARD.id, { weapon: weapon({ kind: 'deal', amount: 6 }) });
+        const attribution = useSpecial(s).state.attribution;
+        expect(Object.values(attribution).some(a => a.name === 'Test weapon')).toBe(true);
+    });
+
+    it('a payload HEAL is halved by the foe\'s veil', () => {
+        const s = fightWithSpecial(PROGRAM_CARD.id, { weapon: weapon({ kind: 'heal', amount: 4 }) });
+        const veiled = { ...s, enemyRiders: { veil: true } };
+        expect(useSpecial(veiled).state.player.health).toBe(s.player.health + 2);
+    });
+
     it('the payload fires no worn trigger: a special HEAL does not fire a HEAL trigger', () => {
         const trigger = piece('armor', { trigger: 'heal', payoff: { kind: 'conviction', amount: 3 } }, 'ed-heal-trigger');
         const s = fightWithSpecial(PROGRAM_CARD.id, { weapon: weapon({ kind: 'heal', amount: 4 }), armor: trigger });

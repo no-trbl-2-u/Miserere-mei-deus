@@ -6,7 +6,10 @@
  * scales its HP by the live multiplier, is what `<CombatGate>` calls). The
  * fight then runs on the engine's encounter functions exactly as
  * `<CombatEncounterPanel>` runs them: `initializeCombatEncounter` from the
- * store's player and flags (the run's real deck, relics and level), the
+ * store's player and flags (the run's real deck, relics and level; a player
+ * with no weapon fights with the grey sword the new-run kit will provide, so
+ * the sim plays a fresh run as it is meant to play, where the live screen
+ * fights the player as they stand), the
  * reveal's `rollEncounterDice`, each phase played by the run policy's combat
  * witness (`upgradeablePlayPhase`, the sim's own phase player), the mercy
  * choice through `selectEncounterMercyChoice`, the foe's turn through

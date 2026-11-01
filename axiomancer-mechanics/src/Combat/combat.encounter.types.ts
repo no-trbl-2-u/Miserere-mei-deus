@@ -813,8 +813,9 @@ export interface UpgradeableDieGear {
     specialFaces: number;
     /** Number of mana faces on the driven die (default 2; gold default 1). */
     manaFaces: number;
-    /** The special payload: Conviction granted when a special-face die is USED
-     *  to power a card (default 2 — "powers this color AND grants 2◆"). */
+    /** No longer sets a payout: what a special pays is the worn weapon's
+     *  `special` (`CombatEncounterState.equipmentDice`). Kept on the rail for
+     *  the display and saves. */
     specialConviction: number;
 }
 

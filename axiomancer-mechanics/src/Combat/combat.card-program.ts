@@ -255,6 +255,8 @@ interface Work {
 
 interface Frame {
     cardId: string;
+    /** The printed name to attribute the line to when `cardId` is not a card (a worn weapon). */
+    cardName?: string;
     /** Who runs the line: a card ('line', the default; a Curse played by a card,
      *  a discard rider and the MERCY burst count too) or a Global in play
      *  ('global'). Only a card's DEAL and GUARD fire the worn gear's DEAL and
@@ -463,7 +465,7 @@ class LineCtx implements ProgramCtx {
             const clock = fireDotTrigger(enemy, 'damage-instance', w.s.round);
             if (clock.damage > 0) { enemy = clock.target; extra = clock.damage; }
         }
-        const cardName = getCardById(this.f.cardId)?.name
+        const cardName = this.f.cardName ?? getCardById(this.f.cardId)?.name
             ?? (this.f.cardId === w.l.tetherCardId ? w.l.tetherSourceName : null)
             ?? this.f.cardId;
         w.s = {
@@ -1823,7 +1825,7 @@ export function playSpecialPayload(
     const ledger = cloneLedger(state.program ?? initProgramLedger());
     const events: CombatEvent[] = [];
     const w: Work = { s: { ...state, program: ledger }, l: ledger, events, kit, cost: 0, value: 0 };
-    const ctx = new LineCtx(w, 'apply', { cardId: source.itemId, waived: false, source: 'special' });
+    const ctx = new LineCtx(w, 'apply', { cardId: source.itemId, cardName: source.itemName, waived: false, source: 'special' });
     const n = payload.amount;
     switch (payload.kind) {
         case 'deal': ctx.deal(n, { exact: true }); break;

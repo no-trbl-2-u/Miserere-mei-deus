@@ -5,6 +5,7 @@ import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../World/encounter';
 import { simulateHazardPatternCombat } from '../Combat/combat.encounter.sim';
 import { STARTING_CARD_IDS } from '../Combat/combat.rewards';
+import { wearGreySword } from '../Combat/combat.grey-sword';
 
 describe('the Act 1 XP ledger (LV1)', () => {
     const ledger = act1FightLedger();
@@ -59,10 +60,10 @@ describe('the Act 1 XP ledger (LV1)', () => {
 
     it('still finds each excused door free (drop it from the set once the retune lands)', () => {
         for (const door of walkAct1(ledger).doors.filter(d => FREE_UNTIL_RETUNED.has(d.nodeId))) {
-            const player = createCharacter({
+            const player = wearGreySword(createCharacter({
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
-            });
+            }));
             const foe = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], door.doorLevel!);
             expect(simulateHazardPatternCombat(player, foe, 100, 1).winRate, door.nodeId).toBeGreaterThanOrEqual(0.9);
         }
@@ -70,10 +71,10 @@ describe('the Act 1 XP ledger (LV1)', () => {
 
     it('each door is winnable, not free, at its expected stage (even spread, greedy witness)', () => {
         for (const door of walkAct1(ledger).doors) {
-            const player = createCharacter({
+            const player = wearGreySword(createCharacter({
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
-            });
+            }));
             const foe = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], door.doorLevel!);
             const { winRate } = simulateHazardPatternCombat(player, foe, 100, 1);
             expect(winRate, door.nodeId).toBeGreaterThan(0.1);
