@@ -3,6 +3,8 @@ export {
     type EquipmentSlot,
     type EquipmentEffect, type EquipmentTriggerEffect, type EquipmentConditionEffect,
     type EquipmentTrigger, type EquipmentCondition, type EquipmentPayoff, type EquipmentPayoffKind,
+    type EquipmentDiceEffect, type EquipmentDiceFields, type EquipmentDieChange, type EquipmentDieColor,
+    type SpecialPayload, type SpecialPayloadKind,
     SLOT_CAPACITY,
     isEquipment, isConsumable, isMaterial, isQuestItem,
 } from './types';

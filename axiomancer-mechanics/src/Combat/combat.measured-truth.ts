@@ -22,6 +22,7 @@
  */
 
 import { createCharacter } from '../Character';
+import { wearGreySword } from './combat.grey-sword';
 import { getCardLane, laneRewardPool } from '../Cards/card.lanes';
 import { nextUpgradeId } from '../Cards/card-upgrades';
 import { ENEMY_REGISTRY, type EnemySlug } from '../Enemy/enemy.library';
@@ -275,10 +276,11 @@ export function measuredTruthCells(options: MeasuredTruthOptions = {}): Measured
         const enemyLevel = fightEnemyLevel(fight, playerLevel);
         const enemy = scaleEnemyToLevel(sourceAtTier(ENEMY_REGISTRY[fight.enemySlug], fight.difficulty), enemyLevel);
         const play = (cards: readonly string[], spread: StatSpread) => {
-            const player = createCharacter({
+            // A special only pays when a weapon is worn: the fighter wears the grey sword's stand-in.
+            const player = wearGreySword(createCharacter({
                 name: 'Measured', level: playerLevel,
                 baseStats: stageStats(playerLevel, spread), knownCards: [...new Set(cards)],
-            });
+            }));
             return simulateHazardPatternCombatDetailed({
                 player, enemy, runs, startSeed: seed, policy: 'greedy', deck: [...cards],
             }).stats;

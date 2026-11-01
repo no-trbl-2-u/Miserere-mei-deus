@@ -1387,6 +1387,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Combat/combat.grey-sword.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Combat/combat.measured-truth.ts"
     },
     {
@@ -1633,6 +1639,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.card-program.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Combat/combat.encounter.types.ts"
     },
     {
@@ -1646,6 +1658,12 @@
       "from": "area:Combat",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Combat/combat.equipment-effects.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.grey-sword.ts"
     },
     {
       "kind": "coupling",

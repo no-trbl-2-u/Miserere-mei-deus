@@ -134,8 +134,42 @@ export interface EquipmentPayoff {
     amount: number;
 }
 
+/**
+ * A die colour as the dice name it: `body` is the red die, `mind` the blue,
+ * `heart` the purple, `wild` the gold.
+ */
+export type EquipmentDieColor = 'heart' | 'body' | 'mind' | 'wild';
+
+/**
+ * What a worn armor does to one die's faces for the fight: `'miss-to-mana'`
+ * turns one miss face into a mana face; `'mana-to-special'` turns one mana
+ * face into a special. A die with no face of the source kind left gains nothing.
+ */
+export interface EquipmentDieChange {
+    color: EquipmentDieColor;
+    change: 'miss-to-mana' | 'mana-to-special';
+}
+
+/**
+ * What a special does when a special-face die is used to power a card, set by
+ * the worn weapon: Conviction, a DEAL, a HEAL, GUARD, INFERNO laid on the foe
+ * only, or VULNERABLE on the foe (`amount` is the number of turns).
+ */
+export type SpecialPayloadKind = 'conviction' | 'deal' | 'heal' | 'guard' | 'inferno' | 'vulnerable';
+
+export interface SpecialPayload {
+    kind: SpecialPayloadKind;
+    amount: number;
+}
+
+/** The dice half of a piece's effect: an armor's die change, a weapon's special payload. */
+export interface EquipmentDiceFields {
+    die?: EquipmentDieChange;
+    special?: SpecialPayload;
+}
+
 /** A trigger effect: when `trigger` happens, `payoff` pays. */
-export interface EquipmentTriggerEffect {
+export interface EquipmentTriggerEffect extends EquipmentDiceFields {
     trigger: EquipmentTrigger;
     payoff: EquipmentPayoff;
     condition?: never;
@@ -143,19 +177,27 @@ export interface EquipmentTriggerEffect {
 }
 
 /** A condition effect: each card's DEAL deals `bonus` more (unscaled, before VULNERABLE) while `condition` holds. */
-export interface EquipmentConditionEffect {
+export interface EquipmentConditionEffect extends EquipmentDiceFields {
     condition: EquipmentCondition;
     bonus: number;
     trigger?: never;
     payoff?: never;
 }
 
+/** A piece whose only effect is on the dice: no trigger and no condition. */
+export interface EquipmentDiceEffect extends EquipmentDiceFields {
+    trigger?: never;
+    payoff?: never;
+    condition?: never;
+    bonus?: never;
+}
+
 /**
- * A piece's one fight effect: a trigger and a payoff, or a condition and a
- * DEAL bonus (A10). A closed union; the dice half (136.5) extends it with
- * optional members shared by both arms.
+ * A piece's fight effect: a trigger and a payoff, or a condition and a DEAL
+ * bonus (A10), and on either (or alone) the dice half: an armor's `die`
+ * change, a weapon's `special` payload (A17, A18). A closed union.
  */
-export type EquipmentEffect = EquipmentTriggerEffect | EquipmentConditionEffect;
+export type EquipmentEffect = EquipmentTriggerEffect | EquipmentConditionEffect | EquipmentDiceEffect;
 
 /** Where a relic is meant to come from: a quest's reward, or the elite drop's pool (a quest may pay either). */
 export type RelicSource = 'quest' | 'elite';
