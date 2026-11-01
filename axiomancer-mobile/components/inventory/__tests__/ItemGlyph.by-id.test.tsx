@@ -1,11 +1,11 @@
 /**
  * Hermetic component tests — ItemGlyph's id-keyed path.
  *
- * Pins the item glyph table (`components/icons/item-glyphs.ts`): an id with
- * an entry draws that registry icon; every other id draws the category glyph
- * it drew before the table existed. The library enumeration below is the
- * no-pixel-moved proof while the table is empty, and keeps covering items
- * added to the consumable and relic libraries later.
+ * Resolution order (EQ3k, spec 136): an id with a sprite (T's sheets,
+ * `item-sprites.ts`) draws it; else an id with an entry in the glyph table
+ * (`item-glyphs.ts`, empty in production, fed a fixture here) draws that
+ * registry icon; every other id draws the category glyph it drew before any
+ * table existed.
  */
 
 import { describe, expect, it } from '@jest/globals';
@@ -16,6 +16,7 @@ import { consumableLibrary, relicLibrary } from '@mechanics';
 import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { AXM_ICON_SPECS, isAxmIconName, type AxmIconName } from '@/components/icons/icon-registry';
 import { ITEM_GLYPH_BY_ID, getItemGlyph, type ItemGlyphTable } from '@/components/icons/item-glyphs';
+import { getItemSprite, getItemSpriteLabel } from '@/components/icons/item-sprites';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { InventoryCategory } from '@/state/presenters/inventory.engine';
 
@@ -69,52 +70,40 @@ describe('ItemGlyph: id-keyed resolution', () => {
         expect(relicLibrary.length).toBeGreaterThan(0);
     });
 
-    const withRow = (id: string) => Object.prototype.hasOwnProperty.call(ITEM_GLYPH_BY_ID, id);
-
-    it.each(LIBRARY_ITEMS.map((it) => [it.id] as const))('%s has its own table entry', (id) => {
-        expect(withRow(id)).toBe(true);
-    });
-
-    it('the three potions resolve to three distinct icons', () => {
-        const names = ['healing-potion', 'minor-healing-potion', 'greater-healing-potion'].map((id) => getItemGlyph(id));
-        expect(names.every((n) => n !== null)).toBe(true);
-        expect(new Set(names).size).toBe(3);
-    });
-
-    it.each(LIBRARY_ITEMS.filter((it) => withRow(it.id)).map((it) => [it.id, it] as const))(
-        '%s (picked) draws its own icon, not the category glyph',
+    it.each(LIBRARY_ITEMS.map((it) => [it.id, it] as const))(
+        '%s draws its sprite, read aloud by what it shows',
         (id, item) => {
-            const name = getItemGlyph(id);
-            expect(name).not.toBeNull();
+            expect(getItemSprite(id)).not.toBeNull();
+            const label = getItemSpriteLabel(id);
+            expect(label).not.toBeNull();
             const { tree } = withAllProviders(<ItemGlyph category={item.category} sub={item.sub} itemId={id} />);
             const rendered = render(tree);
-            expect(rendered.getByLabelText(AXM_ICON_SPECS[name as AxmIconName].label)).toBeTruthy();
+            expect(rendered.getByLabelText(label as string)).toBeTruthy();
             expect(rendered.queryByLabelText('Gem on a chain')).toBeNull();
+            expect(rendered.queryByLabelText('Bubbling flask')).toBeNull();
         },
     );
 
-    it('every table row names an item in the libraries', () => {
-        const ids = new Set(LIBRARY_ITEMS.map((it) => it.id));
-        for (const id of Object.keys(ITEM_GLYPH_BY_ID)) expect(ids.has(id)).toBe(true);
+    it('the three potions resolve to three distinct pictures', () => {
+        const labels = ['healing-potion', 'minor-healing-potion', 'greater-healing-potion'].map((id) =>
+            getItemSpriteLabel(id),
+        );
+        expect(labels).toEqual(['Heart flask', 'Vial', 'Perfume bottle']);
     });
 
-    it('an id with no entry draws the category mark, never nothing', () => {
+    it('an id with no sprite and no entry draws the category mark, never nothing', () => {
         const { tree } = withAllProviders(<ItemGlyph category="consumable" sub={null} itemId="not-in-the-table" />);
         expect(render(tree).getByLabelText('Bubbling flask')).toBeTruthy();
     });
 
-    it('picked items draw distinct icons', () => {
-        const names = Object.values(ITEM_GLYPH_BY_ID) as string[];
-        expect(new Set(names).size).toBe(names.length);
-    });
-
-    it('an id with a table entry draws that registry icon', () => {
+    it('an id with a table entry draws that registry icon (the fixture seam)', () => {
         const glyphs: ItemGlyphTable = { 'healing-potion': 'action-herbs' };
         const { tree } = withAllProviders(
             <ItemGlyph category="consumable" sub={null} itemId="healing-potion" glyphs={glyphs} />,
         );
         const rendered = render(tree);
         expect(rendered.getByLabelText(AXM_ICON_SPECS['action-herbs'].label)).toBeTruthy();
+        expect(rendered.queryByLabelText('Heart flask')).toBeNull();
         expect(rendered.queryByLabelText('Bubbling flask')).toBeNull();
     });
 
@@ -127,34 +116,13 @@ describe('ItemGlyph: id-keyed resolution', () => {
         expect(bogus).not.toBeNull();
         expect(bogus).toEqual(byCategory);
     });
-});
 
-describe("ItemGlyph: T's potion picks (IT2, 2026-10-29)", () => {
-    const PICKS: [string, AxmIconName, string][] = [
-        ['healing-potion', 'potion-heart-flask', 'Flask with a heart'],
-        ['minor-healing-potion', 'potion-vial', 'Slim vial'],
-        ['greater-healing-potion', 'potion-perfume-bottle', 'Stoppered crystal bottle'],
-    ];
-    it.each(PICKS)('%s draws %s, read aloud as "%s"', (id, icon, label) => {
-        expect(getItemGlyph(id)).toBe(icon);
-        expect(AXM_ICON_SPECS[icon].label).toBe(label);
-        const { tree } = withAllProviders(<ItemGlyph category="consumable" sub={null} itemId={id} />);
-        expect(render(tree).getByLabelText(label)).toBeTruthy();
-    });
-});
-
-describe("ItemGlyph: T's relic picks (IT2, 2026-10-30)", () => {
-    const PICKS: [string, AxmIconName, string][] = [
-        ['relic-disarming-plea', 'relic-engagement-ring', 'Hand holding a ring'],
-        ['relic-thornback-signet', 'relic-thorn-helix', 'Thorned vine'],
-        ['relic-mirror-brooch', 'relic-mirror-mirror', 'Framed mirror'],
-        ['relic-carapace-belt', 'relic-turtle-shell', 'Turtle shell'],
-    ];
-    it.each(PICKS)('%s draws %s, read aloud as "%s"', (id, icon, label) => {
-        expect(getItemGlyph(id)).toBe(icon);
-        expect(AXM_ICON_SPECS[icon].label).toBe(label);
-        const { tree } = withAllProviders(<ItemGlyph category="equipment" sub="Relic" itemId={id} />);
-        expect(render(tree).getByLabelText(label)).toBeTruthy();
+    it('a sprite draws at the size asked', () => {
+        const { tree } = withAllProviders(
+            <ItemGlyph category="equipment" sub="Relic" itemId="relic-ruby-signet" size={44} />,
+        );
+        const img = render(tree).getByLabelText('Ruby ring');
+        expect(img.props.style).toEqual({ width: 44, height: 44 });
     });
 });
 
