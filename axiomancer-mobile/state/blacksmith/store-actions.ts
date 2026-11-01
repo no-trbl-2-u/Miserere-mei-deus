@@ -44,6 +44,7 @@ import type {
     DieGearRail,
 } from '@mechanics';
 import { resolveMinigameSeed } from '../minigame-seeds';
+import { recordDeckUpgrade, recordNodeResolved } from '../run-log';
 import { EMPTY_BLACKSMITH_SLICE, type AppStore } from '../store';
 
 /**
@@ -231,6 +232,13 @@ export function claimBlacksmithOutcomeAction(store: AppStore): ClaimBlacksmithRe
         store.getState().save();
     } catch {
         // Persistence failures must not strand the player on the ledger.
+    }
+
+    // The run log: what the visit came to, and the card upgrade as a deck change.
+    const forged = outcome.honed + outcome.tempered + outcome.swapped > 0;
+    recordNodeResolved(store, upgradedToCardId !== null ? 'upgrade' : forged ? 'forge' : 'leave');
+    if (upgradedToCardId !== null && outcome.cardUpgrade) {
+        recordDeckUpgrade(store, outcome.cardUpgrade.fromCardId, upgradedToCardId, 'blacksmith');
     }
 
     return {

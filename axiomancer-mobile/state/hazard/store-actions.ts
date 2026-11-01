@@ -38,6 +38,7 @@ import { appendAcquiredCard, HAZARD_CARD_FLAG_PREFIX, hazardDeckBag } from '@mec
 import type { HazardRouteKey, HazardSessionState } from '@mechanics';
 import { resolveMinigameSeed, resolveMinigameString } from '../minigame-seeds';
 import { armDeathReturn } from '../death-return';
+import { recordHazardEnded, recordNodeResolved } from '../run-log';
 import type { AppStore } from '../store';
 
 export interface MobileHazardSlice {
@@ -370,6 +371,9 @@ export function claimHazardRewardsAction(
     // `setState` below.
     const nominalHealth = player.health + vitaeDelta;
     if (engineIsDefeated({ ...player, health: nominalHealth })) {
+        // The run log, before the death rule can end the run and change its id.
+        recordHazardEnded(store, { hazardId: s.hazardId, cleared: false, vitaeBefore: player.health, vitaeAfter: 0 });
+        recordNodeResolved(store, 'hazard-died');
         const outcomeKind = die('hazard');
         // Stamp the tombstone onto the post-death flags (a run over rebuilds
         // run flags, so it is appended after the death rule ran). `dying` is
@@ -421,6 +425,11 @@ export function claimHazardRewardsAction(
     } catch {
         // Persistence failures must not strand the player on the modal.
     }
+
+    // The run log: the crossing survived, and the VITAE on either side of it.
+    const cleared = outcome.tier !== 'failure';
+    recordHazardEnded(store, { hazardId: s.hazardId, cleared, vitaeBefore: player.health, vitaeAfter: newHealth });
+    recordNodeResolved(store, cleared ? 'hazard-cleared' : 'hazard-failed');
 
     return {
         applied: true,

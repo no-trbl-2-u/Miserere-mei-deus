@@ -16,6 +16,7 @@ import {
 } from '@mechanics';
 
 import { resolveMinigameSeed } from '../minigame-seeds';
+import { recordHazardEnded, recordItemGained, recordNodeResolved, recordProgress } from '../run-log';
 import type { AppStore } from '../store';
 
 export interface ClaimHazardPuzzleResult {
@@ -51,5 +52,15 @@ export function claimHazardPuzzleAction(
     } catch {
         // Persistence failures must not strand the player on the outcome panel.
     }
+    // The run log: the crossing, the VITAE on either side of it, and the XP, levels and items it paid.
+    recordHazardEnded(store, {
+        hazardId: layout.id,
+        cleared: outcome.completed,
+        vitaeBefore: state.player.health,
+        vitaeAfter: claim.state.player.health,
+    });
+    recordNodeResolved(store, outcome.completed ? 'hazard-cleared' : 'hazard-failed');
+    recordProgress(store, state.player, 'hazard');
+    for (const item of outcome.items) recordItemGained(store, item, 'hazard');
     return { outcome, vitaeLost: claim.vitaeLost, scarApplied: claim.scarApplied };
 }

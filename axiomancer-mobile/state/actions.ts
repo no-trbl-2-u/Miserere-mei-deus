@@ -163,6 +163,14 @@ import { closeTravelAction, openTravelScreenAction, takeTravelAction } from './t
 import { travelPayloadAt } from '@mechanics';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import {
+    recordFightSettled,
+    recordNodeEntered,
+    recordNodeResolved,
+    recordProgress,
+    recordRunClosed,
+    recordStatPoint,
+} from './run-log';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -677,9 +685,11 @@ function recordFightStart(store: AppStore, enemy: Enemy, enemyHpMultiplier: numb
  * with, read before the engine's reset clears it. A no-op with no player
  * loaded or the play-log gate shut.
  */
-function recordRunEnd(store: AppStore): void {
+function recordRunEnd(store: AppStore, outcome: 'run-over' | 'reset'): void {
     const state = store.getState() as unknown as DeckEventState;
     if (!state.player) return;
+    // The run log's close (phase SM1d): the run as it stands, before the reset drops it.
+    recordRunClosed(store.getState() as unknown as GameState, outcome);
     void deckEventPoster.post({
         kind: 'run-end',
         cardId: null,
@@ -766,9 +776,14 @@ export function createAppActions(store: AppStore): AppActions {
             // (no reward) when unspecified. It returns a stub 'flee' report
             // when called outside an encounter.
             const questsBefore = (store.getState() as unknown as GameState).quests;
+            const playerBefore = (store.getState() as unknown as GameState).player;
+            const staged = Boolean(store.getState().currentEncounter);
             const report = store.getState().endCombat(outcome ?? 'flee');
             // A kill that completed a quest: its relic goes to the reward screen.
             if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
+            // The run log: a staged fight ended here (a WITHDRAW; a fight the panel finished
+            // was settled, and logged, by `applyHazardOutcome`).
+            if (staged) recordFightSettled(store, playerBefore, report ?? null, outcome ?? 'flee');
             // The play log: posts a fight the panel never finished (a WITHDRAW);
             // one it finished has already posted, so this is a no-op then.
             void fightRecorder.end(endCombatOutcome(outcome ?? 'flee'));
@@ -798,7 +813,10 @@ export function createAppActions(store: AppStore): AppActions {
             const engineStore = store.getState() as unknown as {
                 allocateStatPoint?: (s: 'heart' | 'body' | 'mind') => void;
             };
+            const pointsBefore = store.getState().player?.availableStatPoints ?? 0;
             engineStore.allocateStatPoint?.(stat);
+            // The run log: a point was spent only when the bank went down.
+            if ((store.getState().player?.availableStatPoints ?? 0) < pointsBefore) recordStatPoint(store, stat);
             return store.getState().player?.availableStatPoints ?? 0;
         },
         resetRun: (opts) => {
@@ -809,7 +827,7 @@ export function createAppActions(store: AppStore): AppActions {
             const engineStore = store.getState() as unknown as {
                 resetRun?: (o: { keepCharacter: boolean }) => unknown;
             };
-            recordRunEnd(store);
+            recordRunEnd(store, 'reset');
             engineStore.resetRun?.(opts);
             clearRunScopedSessions(store);
         },
@@ -820,7 +838,7 @@ export function createAppActions(store: AppStore): AppActions {
             // A death while dying is a run over: post the run's end before
             // the engine drops it, as `resetRun` does.
             const runOver = store.getState().dying === true;
-            if (runOver) recordRunEnd(store);
+            if (runOver) recordRunEnd(store, 'run-over');
             const outcome = engineStore.playerDied?.(cause) ?? 'run-over';
             if (outcome === 'run-over') clearRunScopedSessions(store);
             // Mobile owns save timing: the engine's durable-action autosave is
@@ -842,7 +860,10 @@ export function createAppActions(store: AppStore): AppActions {
             const engineStore = store.getState() as unknown as {
                 levelUp?: () => void;
             };
+            const playerBefore = (store.getState() as unknown as GameState).player;
             engineStore.levelUp?.();
+            // The run log: any level this reached (XP already banked is no new XP).
+            recordProgress(store, playerBefore, 'level-up');
         },
         save: () => store.getState().save(),
         resolveCurrentMapEvent: (sourceNodeType?: string, staged?: MapEventPayload) =>
@@ -1118,6 +1139,7 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
         if (retried !== world) {
             store.setState({ world: retried });
             try { store.getState().save(); } catch { /* persistence must not block the road */ }
+            recordNodeEntered(store);
             return { moved: true, currentNodeId, locked: false };
         }
     }
@@ -1193,6 +1215,8 @@ function moveToAction(store: AppStore, nodeId: string): MoveToResult {
     // answered and fired its event on mount.
     try { store.getState().save(); } catch { /* persistence must not block the road */ }
 
+    // The run log: this node's events follow the entry, the last node's batch goes first.
+    recordNodeEntered(store);
     return { moved: true, currentNodeId: nodeId, locked: false };
 }
 
@@ -1674,6 +1698,8 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
                     clearEventSlice(store);
                 }
                 answerArrivalAction(store);
+                // The run log: the prelude's flee resolves the node without a fight.
+                recordNodeResolved(store, 'flee');
                 return;
             }
             // Unknown choice id on combat-prelude — defensive no-op.
