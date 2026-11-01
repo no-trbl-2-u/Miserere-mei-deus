@@ -2,7 +2,7 @@
 // scripts/pr-gate.mjs
 //
 // The decision behind the `verify-gate` check (phase RV1a,
-// `plan/phases/phase_RV1_pr_review_pipeline.md` A2). Path-filtered
+// `plan/README.md` A2). Path-filtered
 // `verify-*` workflows cannot be required checks: a required
 // `verify-mobile` that never runs on a mechanics-only PR blocks it forever.
 // `verify-gate` always reports instead: green only when every `verify-*`

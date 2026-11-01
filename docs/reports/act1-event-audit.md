@@ -1,6 +1,6 @@
 # Act 1 event audit: all thirteen kinds (2026-10-25; re-run 2026-10-28 for QL1d)
 
-> Phase AW1a (`plan/phases/phase_AW1_act1_walk.md`), run on branch `loop/ship-AW1a-act1-walk` off `main` at
+> Phase AW1a (`plan/README.md`), run on branch `loop/ship-AW1a-act1-walk` off `main` at
 > `b90dbf500`. The walk is `npm run e2e:act1-walk -w axiomancer-mobile` (static web export, headless Chromium,
 > 390x844); its route is `npm run act1-walk -w axiomancer-mechanics` (`planAct1Walk`, read off the map graph and
 > the registered pools, never hand-listed). Carrier counts are read from the same pools.

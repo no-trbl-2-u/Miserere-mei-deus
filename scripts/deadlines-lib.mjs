@@ -22,7 +22,7 @@
 // spec chunk's `alias:` (planRows below, phase NX1c); every rule above reads the same.
 
 export const HORIZON_DAYS = 14
-export const BUILD_PLAN_FILE = 'plan/steps/01_build_plan.md'
+export const BUILD_PLAN_FILE = 'plan/README.md'
 export const ARCHIVE_FILE = 'plan/ARCHIVE.md'
 
 // Group 6 is the optional `Waits on` cell: a five-column row still matches, with it undefined.

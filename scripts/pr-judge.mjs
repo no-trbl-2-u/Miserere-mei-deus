@@ -2,7 +2,7 @@
 // scripts/pr-judge.mjs
 //
 // The `judge` job of `pr-review.yml` (phase LG1f,
-// `plan/phases/phase_LG1_loop_gates.md` A6). The acceptance step (LG1c,
+// `plan/README.md` A6). The acceptance step (LG1c,
 // `scripts/pr-acceptance.mjs`) checks that every ticked `- [x] A<n>` line
 // names a proof; the judge runs each one on the PR head. A named test file
 // runs on its own runner (`node --test`, vitest or jest, as the parent

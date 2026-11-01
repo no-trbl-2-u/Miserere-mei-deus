@@ -1,5 +1,5 @@
 // scripts/pr-review-gate.test.mjs — fail-on-parent in `verify-gate`
-// (phase LG1d, `plan/phases/phase_LG1_loop_gates.md` A4): a test file a PR
+// (phase LG1d, `plan/README.md` A4): a test file a PR
 // adds must fail on the merge base with its own version laid over, unless
 // it carries a `guard-test: <reason>` comment. The replay runs on a fixture
 // repository history built in the system temp dir.

@@ -903,7 +903,7 @@ Chain Work: +3 when played first — adequate.
 
 H08, H12, and H15 include persistent map benefits that modify future hazards or block map routes. These require world-state tracking that does not exist yet. They are marked with ⚑ in the hazard descriptions. Until the world-state system ships, these rewards should either be skipped or replaced with equivalent one-time item/VITAE grants.
 
-See `plan/PHASE_CANDIDATES.md` — a high-priority candidate for hazard world-state tracking has been filed.
+See `plan/CANDIDATES.md` — a high-priority candidate for hazard world-state tracking has been filed.
 
 ### First Prototype Session Sequence
 

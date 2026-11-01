@@ -1,6 +1,6 @@
 # Vault bridge round trip (OV1d)
 
-Phase OV1d, brief `plan/phases/phase_OV1_obsidian_vault.md`. Run 2026-10-21 by
+Phase OV1d, brief `plan/README.md`. Run 2026-10-21 by
 T (phone, Android) and an attended Claude session on T's Windows desktop.
 Vault repo: `no-trbl-2-u/miserere-vault` (private). Times are local (UTC-4).
 

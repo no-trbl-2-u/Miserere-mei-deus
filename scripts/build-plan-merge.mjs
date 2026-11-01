@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/build-plan-merge.mjs — git merge driver for plan/steps/01_build_plan.md
+// scripts/build-plan-merge.mjs — git merge driver for plan/README.md
 // (Phase ML1b). Zero dependencies.
 //
 //   node scripts/build-plan-merge.mjs <base> <ours> <theirs> [<path>]

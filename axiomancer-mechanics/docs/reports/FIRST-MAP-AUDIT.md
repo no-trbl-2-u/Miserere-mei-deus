@@ -147,7 +147,7 @@ cross-package system (a `MapEventKind`, its payload and handler, a mobile
 route and presenter, unlock rules, save-shape implications) — it is a missing
 *feature*, not a broken one, and building it under an audit banner would be
 scope I was not asked for. The map's internal correctness is what an audit
-owes; this is filed to `plan/PHASE_CANDIDATES.md` as a phase candidate with
+owes; this is filed to `plan/CANDIDATES.md` as a phase candidate with
 the evidence above.
 
 ---

@@ -1,6 +1,6 @@
 /**
  * Hermetic E2E — the Defender trial set (Phase DF1d, acceptance A7, A8, A9 of
- * `plan/phases/phase_DF1_defender_trial_set.md`).
+ * `plan/README.md`).
  *
  * The set's own test (the only test that names its card ids). Pins:
  *   · the set: 30 cards (10 red / 10 blue / 10 purple) with T's names, one

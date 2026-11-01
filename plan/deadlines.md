@@ -77,16 +77,16 @@ left; otherwise after.
 
 - Rows: HP4f (the authoring patterns from the kept set) and HP4g (the band clocks from the kept set's times), as
   before. **Moved to W3:** HP2d-HP2f (calibration), which the MVP does not need; they are still amended once HP4e's
-  rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
+  rulings exist (`plan/README.md` Follow-ups).
 - To plot in W2: routing the live hazard nodes to the puzzle board. The Breakwater's six (D114) are plotted as HP6 (T, 2026-10-31): a
   bot-measured curve, six from its middle third rising along the story route. The other five Act 1 hazard nodes each draw a
   random puzzle from the thirty for now (T, 2026-10-24), and the cuts (RE-CAST cards, the saved hazard deck,
   `deadcard`; B3 Follow-ups). The hand-picked set, "the swap", moves to W3.
 - The MVP's loop work, which the reminder never names: Chapter 1's enemies and their art, from the B2 plot on Nov 2;
-  the lane relics RW1a, LR1a and LR1c-LR1e (`plan/phases/phase_LR1_lane_relics.md`); the Breakwater's questline
-  QL1a-QL1f (`plan/phases/phase_QL1_breakwater_questline.md`; LR1f skipped for it, D111; QL1g follows DY1b); the icons IT2b applies once T
+  the lane relics RW1a, LR1a and LR1c-LR1e (`plan/README.md`); the Breakwater's questline
+  QL1a-QL1f (`plan/README.md`; LR1f skipped for it, D111; QL1g follows DY1b); the icons IT2b applies once T
   picks (IT2a; the lane relics' icons shipped in IT1b, #989); AW1b; NK1a-NK1d (the node kinds cut to eight, D112); and the four MVP event kinds' treatments, ET1a-ET1d
-  (`plan/phases/phase_ET1_event_node_treatments.md`).
+  (`plan/README.md`).
 - The four MVP event kinds were pitched, settled and plotted early, on Oct 30 (ET1: encounter the ink curtain,
   hazard the stakes card, rest night passes, quest the giver scene), so their Nov 4, 5, 6 and 12 sittings are done. Travel, village, loot cache and cutscene follow in W3 (Nov 17, 20, 24 and 27).
 - T's time (about 12 h, Nov 2 - Nov 15): the B2 plot, the hazard plot,
@@ -98,7 +98,7 @@ left; otherwise after.
 
 ### W3 — Chapters 2-4 designed; hazards tuned (Nov 17 - Nov 30)
 
-- Plotted early (T, 2026-10-25) as AW1a-AW1b (`plan/phases/phase_AW1_act1_walk.md`); AW1a shipped (#918) and AW1b
+- Plotted early (T, 2026-10-25) as AW1a-AW1b (`plan/README.md`); AW1a shipped (#918) and AW1b
   moved to W2 with the MVP.
 - Enemy sessions 3 and 4 for Chapters 2-4 (normals and elites; bosses and the Act Boss), then their plot. The loop
   builds those enemies and their art through W4 and W5.

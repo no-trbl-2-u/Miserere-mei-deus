@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/check-devlog-not-served.mjs — guards against the DevLog's generated
 // HTML/data/art re-entering `git ls-files`, which is what Cloudflare Pages
-// serves from `main`'s tree. Phase 57 (archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/phases/phase_57_devlog_pages_scopedown.md)
+// serves from `main`'s tree. Phase 57 (archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/README.md)
 // untracked these paths because the built site's own header reads "A private
 // index of the game's content and the nightly development log" — the source
 // inputs (entries/*.md, dated screenshots) stay tracked; only the

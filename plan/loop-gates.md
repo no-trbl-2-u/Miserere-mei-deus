@@ -2,13 +2,13 @@
 
 > Created by `/messy` 2026-10-18 from the "For `/messy`" block of `docs/reports/eval/latest.md` (EV1d, stamp
 > `a712832a`), which ranks nine gate fixes by the measured misses each would have prevented. T ran `/messy` on it
-> in an attended session. Every candidate below is an `[owner]` row in `plan/PHASE_CANDIDATES.md`; T promotes one
+> in an attended session. Every candidate below is an `[owner]` row in `plan/CANDIDATES.md`; T promotes one
 > with `/plot`. Evidence for every number: `docs/reports/eval/latest.md` (EV1a-EV1d) and the JSON beside it.
 
 ## Status
 
-Plotted by T on 2026-10-18 as Phases LG1a-LG1h (`plan/phases/phase_LG1_loop_gates.md`); the candidates moved to
-PHASE_CANDIDATES "Promoted". Themes 1 and 8 stay as written (T's ruleset move; no candidate).
+Plotted by T on 2026-10-18 as Phases LG1a-LG1h (`plan/README.md`); the candidates moved to
+CANDIDATES "Promoted". Themes 1 and 8 stay as written (T's ruleset move; no candidate).
 
 ## T's rulings (2026-10-18)
 
@@ -39,7 +39,7 @@ PHASE_CANDIDATES "Promoted". Themes 1 and 8 stay as written (T's ruleset move; n
   the #526 and D4 shapes are now covered when the root tests catch them.
 - **What is missing:** nothing names the uncovered path or fails on it, so a new directory can stay unowned for
   good; push-to-`main` and plan-only pushes are not covered.
-- **Nearest row:** PHASE_CANDIDATES "root npm test runs in no workflow" (half closed by RV1a).
+- **Nearest row:** CANDIDATES "root npm test runs in no workflow" (half closed by RV1a).
 - **Candidate:** `verify-gate` fails when a changed path has no owning `verify-*` filter and isn't on the
   bookkeeping list, naming the path and the filter to extend.
 
@@ -56,7 +56,7 @@ PHASE_CANDIDATES "Promoted". Themes 1 and 8 stay as written (T's ruleset move; n
 
 ### 4. The plan queue files (rank 4, S, prevents 1: the `pr-resolve` row split, c95114a2 and 49829988)
 
-- **What exists:** `scripts/pr-resolve.mjs` union-merges AUDIT, CRITIQUE, PHASE_CANDIDATES and lessons.md, then
+- **What exists:** `scripts/pr-resolve.mjs` union-merges AUDIT, CRITIQUE, CANDIDATES and lessons.md, then
   checks only for conflict markers. `scripts/check-lessons.mjs` is the only plan-file format lint (lessons,
   reflexes, NEEDS_T) and the model to copy.
 - **Overlap:** the held `[owner]` row "Shard the AUDIT and CRITIQUE queues per writer"; the lint is still needed

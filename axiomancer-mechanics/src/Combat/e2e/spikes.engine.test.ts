@@ -2,7 +2,7 @@
  * Hermetic E2E — the spikes (Phase DF1a, acceptance A1 and A2).
  *
  * Pins the Defender's THORNS and REFLECT and the PAID random discard to T's
- * rulings of 2026-10-26 (`plan/phases/phase_DF1_defender_trial_set.md`,
+ * rulings of 2026-10-26 (`plan/README.md`,
  * Sources):
  *   · THORNS n: each foe strike deals n back, per strike; a DEAL (VULNERABLE
  *     applies, FROZEN doubles it); heart-scaled when applied; drops by 1 each

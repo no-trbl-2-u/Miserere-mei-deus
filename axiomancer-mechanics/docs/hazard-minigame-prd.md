@@ -128,7 +128,7 @@ Currently, hazard events in Axiomancer are passive damage popups. The player has
 
 ### FR-12 — Persistent Map Benefits (⚑ future phase)
 - H08, H12, and H15 specify persistent map benefits that modify future hazards or block/clear map routes.
-- These require world-state tracking not yet implemented (see `plan/PHASE_CANDIDATES.md`).
+- These require world-state tracking not yet implemented (see `plan/CANDIDATES.md`).
 - Until the world-state system ships, these outcomes are replaced with equivalent one-time VITAE/item grants.
 
 ### FR-13 — Dev Mode

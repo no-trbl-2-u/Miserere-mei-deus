@@ -16,7 +16,7 @@ Common shapes of task:
 
 - "Research prior art for <mechanic / phase brief>; return
   sources + what players liked and disliked." — for
-  `/ship-a-phase` design research.
+  `/ship-a-chunk` design research.
 - "How do published deckbuilders / roguelikes handle <mechanic>?"
   — for revamp phase briefs and the owner's rebuild sessions.
 - "Source the authoritative doc for <library / tool / platform

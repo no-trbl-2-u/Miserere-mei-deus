@@ -62,7 +62,7 @@ test('a plan that covers every open row passes', () => {
 test('A2: an open row with no Item and no Unscheduled line fails, naming the row', () => {
     const errors = checkDeadlines(deadlines(COVER_ALL, '- P1 — pre-revamp partial.'), BUILD_PLAN)
     assert.equal(errors.length, 1)
-    assert.match(errors[0], /01_build_plan\.md: open row X1 \[blocked: owner-led/)
+    assert.match(errors[0], /plan/README.md\.md: open row X1 \[blocked: owner-led/)
     assert.match(errors[0], /## Unscheduled/)
 })
 
@@ -97,7 +97,7 @@ test('A3: an Item naming an unknown id fails, naming the id and the Item', () =>
 
 test('A3: an Unscheduled line naming an unknown id fails', () => {
     const errors = checkDeadlines(deadlines(COVER_ALL, `${EXCUSE_REST}\n- Z9 — gone.`), BUILD_PLAN)
-    assert.deepEqual(errors, ['plan/deadlines.md: ## Unscheduled lists Z9, which has no row in plan/steps/01_build_plan.md; remove the line or fix the id.'])
+    assert.deepEqual(errors, ['plan/deadlines.md: ## Unscheduled lists Z9, which has no row in plan/README.md; remove the line or fix the id.'])
 })
 
 test('A3: one id in two Items fails, naming both', () => {
@@ -233,7 +233,7 @@ test('never fails on a needs-plot Item, an overdue Item or an open T task', () =
 
 test('the real plan/deadlines.md and build plan agree', () => {
     const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
-    assert.deepEqual(checkDeadlines(read('plan/deadlines.md'), read('plan/steps/01_build_plan.md')), [])
+    assert.deepEqual(checkDeadlines(read('plan/deadlines.md'), read('plan/README.md')), [])
 })
 
 test('NX1c: the real plan agrees when read through readPlanSources, specs and all', () => {
@@ -306,7 +306,7 @@ test('NX1c: an alias named twice fails the lint: on two chunks, on a chunk and a
     assert.match(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), { ...V2, archive: archived })[0],
         /P1 is named 2 times \(plan\/21-carried\.md chunk 21\.3, plan\/ARCHIVE\.md chunk 20\.4\)/)
     const both = checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), { ...V2, buildPlan: BUILD_PLAN })
-    assert.ok(both.some((e) => /A1 is named 2 times \(plan\/steps\/01_build_plan\.md, plan\/21-carried\.md chunk 21\.1\)/.test(e)), both.join('\n'))
+    assert.ok(both.some((e) => /A1 is named 2 times \(plan\/steps\/plan/README.md\.md, plan\/21-carried\.md chunk 21\.1\)/.test(e)), both.join('\n'))
 })
 
 test('NX1c: readPlanSources reads the build plan, every NN-<slug>.md spec, the roadmap and the archive', () => {
@@ -321,7 +321,7 @@ test('NX1c: readPlanSources reads the build plan, every NN-<slug>.md spec, the r
         assert.equal(v2.buildPlan, null)
         assert.deepEqual(v2.specs.map((s) => s.file), ['plan/21-carried.md'])
         assert.deepEqual(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), v2), [])
-        fs.writeFileSync(path.join(dir, 'plan', 'steps', '01_build_plan.md'), BUILD_PLAN)
+        fs.writeFileSync(path.join(dir, 'plan', 'steps', 'plan/README.md'), BUILD_PLAN)
         assert.equal(readPlanSources(dir).buildPlan, BUILD_PLAN)
     } finally {
         fs.rmSync(dir, { recursive: true, force: true })

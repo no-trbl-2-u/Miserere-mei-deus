@@ -112,7 +112,7 @@ Factor (no lateral ribs on this stub — a two-node tail doesn't need the
 - `src/World/Continents/Northern-Continent/maps.ts` — the existing
   `theCapital` `MapDefinition` and its own header comment (currently
   "No door onward yet," to be updated once this ships).
-- `plan/steps/01_build_plan.md` Phase 84 — this spec is that phase's
+- `plan/README.md` Phase 84 — this spec is that phase's
   output, re-scoped away from its original advisor-selection framing.
 - `content/story/story-overview.md` — NOT extended by this spec. Its
   pivot question 3 (where the seven shipped maps sit relative to the new

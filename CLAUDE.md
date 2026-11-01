@@ -3,7 +3,7 @@ rules.
 
 The autonomous **nexus** loop is live at the repo root: read
 [`plan/bearings.md`](./plan/bearings.md) for standing context and `skills/` for
-the loop verbs (`/ship-a-phase`, `/march`, `/iterate`, `/oversight`, …). Domain
+the loop verbs (`/ship-a-chunk`, `/march`, `/iterate`, `/oversight`, …). Domain
 **design** skills and tuning/playtest commands live in `.claude/`. The loop
 lands code as `loop:pr` pull requests (D84–D87); a PR merges when its
 adversarial review is green, and T merges only `plot` PRs by hand (D95, D101).
@@ -12,7 +12,7 @@ adversarial review is green, and T merges only `plot` PRs by hand (D95, D101).
 says they want something the loop should build ("let's add…", "the loop should
 build…", "make a phase for…", "queue this"), run `/plot` for one known task or
 `/messy` for a loose or many-themed dump, instead of hand-writing a build-plan
-row, brief or `PHASE_CANDIDATES` row; ask first if the request is ambiguous.
+row, brief or `CANDIDATES` row; ask first if the request is ambiguous.
 When a brainstorm or design conversation ends with buildable direction, offer
 it in one `AskUserQuestion`: "Want to use `/plot` to turn this into a phase?"
 or "Want to use `/messy` to file this dump?". The loop never fires either.

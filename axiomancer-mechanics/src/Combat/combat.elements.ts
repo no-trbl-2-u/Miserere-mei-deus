@@ -3,7 +3,7 @@
  *
  * The weather the Elementalist trial set puts on the foe, on T's rulings of
  * 2026-10-24 (`plan/card-ledger/rehearsal-elementalist.md`, "The weather";
- * `plan/phases/phase_EL1_elementalist_trial_set.md`):
+ * `plan/README.md`):
  *
  *   INFERNO n   both sides burn. At the start of each foe turn the foe loses
  *               its INFERNO in VITAE; at the start of each of your turns you

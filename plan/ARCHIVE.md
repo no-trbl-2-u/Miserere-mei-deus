@@ -1,0 +1,139 @@
+# Archive
+
+> Append-only: one line per finished chunk, added in the commit
+> that closes it. Never edited or reordered.
+
+---
+- 2026-07-03 · 00 · nexus methodology adoption · d300fdcba
+- 2026-07-06 · 01 · Combat test-coverage backfill · 0af106ff
+- 2026-07-06 · 02 · Projected-lethality readout API · 22bc8ab27
+- 2026-07-06 · 14 · First-map route audit and survivorship semantics · b469d69d5
+- 2026-07-07 · 03 · Enemy combat-phase progression / "rage mode" · f2d59a132
+- 2026-07-07 · 04 · Balance-sim population witnesses for the HP kill-paths still lacking pop-level · d9763659
+- 2026-07-07 · 05 · Village SELL tab: surface the engine's `sellItem` / `defaultSellPrice` · 98e7b2bc
+- 2026-07-07 · 06 · Memoir run-history surface: read-back of deaths · 48d2c802
+- 2026-07-08 · 07 · `combatMana` -> engine `combatResources` migration · 83e8292d5
+- 2026-07-08 · 08 · Northern Forest region content extension · d71b030da
+- 2026-07-08 · 09 · Author the first real character/story/world specs · 66eb69863
+- 2026-07-08 · 10 · Multi-screen integration test harness · 318173351
+- 2026-07-08 · 11 · Tutorial / onboarding flow · 7396093f3
+- 2026-07-08 · 12 · Doc-sync pass: reconcile `spec.md` / `docs/combat.md` with the shipped engine · b778a0c39
+- 2026-07-09 · 13 · Hazard v2 engine port · 9d279c139
+- 2026-07-09 · 15 · Hazard first-crossing tutorial · eaf5f4410
+- 2026-07-09 · 16 · Loot-Cache · 8f49f6120
+- 2026-07-09 · 18 · 5-slot equipment model · b87e7559b
+- 2026-07-09 · 22 · Mechanics CLI verify-gate coverage · 9e7d17c68
+- 2026-07-10 · 19 · Equipment-granted signatures + the 8 signet relics · 61f21824d
+- 2026-07-10 · 20 · Decouple equipment from effects · bdde71c88
+- 2026-07-10 · 21 · Retire the procedural equipment library · bbbe585c6
+- 2026-07-10 · 23 · Teardown of dead equipment machinery · 8d3503428
+- 2026-07-10 · 24 · axio-query: MCP surface over the live engine data · 6f4200b3c
+- 2026-07-10 · 25 · /consolidate memory curator + 2026-07-09 harness re-apply · f7868e2a
+- 2026-07-11 · 26 · The Turn Law · 83fec94f2
+- 2026-07-11 · 27 · Re-baseline · 2667f16ea
+- 2026-07-11 · 28 · Show the Engine · 3a77fe054
+- 2026-07-11 · 29 · The Language · 4aa931d8b
+- 2026-07-11 · 30 · FREE Lines · bf48c6c8b
+- 2026-07-13 · 31 · The Roll and the Read · 4efbdfd4d
+- 2026-07-16 · 32 · Theme Deep Work · 30a0d5119
+- 2026-07-16 · 34 · Non-MCP transport for unattended `/critique` · eab8429a8
+- 2026-07-17 · 33 · 33a: Reactive-verb core · 979030812
+- 2026-07-17 · 33 · 33b: Enemy archetypes + variable-rung telegraphs · 9d8152e32
+- 2026-07-17 · 35 · Reliable phase-issue auto-close · 3d00fb7fd
+- 2026-07-17 · 36 · 36a: Alt-win-aware card pricing · ff856f3e7
+- 2026-07-17 · 36 · 36b: Tempo-aware card pricing · ddb5457dc
+- 2026-07-20 · 33 · 33c: THE COVETED DIE · 345cb0a67
+- 2026-07-20 · 37 · Retire the fallacy/paradox card category + the dead `combatResources` token · 2129e927a
+- 2026-07-20 · 38 · Central juice/animation layer · c7e3a2aec
+- 2026-07-21 · 33 · 33d: GLYPHS pilot · 535b5117d
+- 2026-08-08 · 39 · Post-D8 flag-on curve repair + library theme-symmetry restoration · 8eb33fb89
+- 2026-08-08 · 41 · Constraint demolition · e24f9723b
+- 2026-08-08 · 42 · The Dark Fantasy campaign bible · 46b5a5df7
+- 2026-08-08 · 43 · Objective function v2 · 46b5a5df7
+- 2026-08-08 · 48 · Root-cause the `Closes #N` auto-close, for real · 46b5a5df7
+- 2026-08-08 · 52 · 52a: Deck-removal engine primitive + the escalating price · 46b5a5df7
+- 2026-08-09 · 44 · 44a: Rename infrastructure · 2d9f33853
+- 2026-08-09 · 44 · 44b: Keyword registry + glossary retheme · f96f0584b
+- 2026-08-09 · 44 · 44c: Card library retheme · abda11f27
+- 2026-08-10 · 44 · 44d: Themes + presets retheme · 2e1ffb7ed
+- 2026-08-10 · 44 · 44e: Enemies + threat sequences retheme · 1ad39196c
+- 2026-08-10 · 44 · 44f: World, maps and minigame naming · b81b73cef
+- 2026-08-11 · 44 · 44g: Characters, story, dialogue and quests · 4eb5aee41
+- 2026-08-12 · 44 · 44h: Morality + alignment retheme · 39aea51b8
+- 2026-08-13 · 44 · 44i: Product shell + docs · 2bfce5c90
+- 2026-08-13 · 52 · 52c: The rest-choice engine · 2ecdba6f6
+- 2026-08-13 · 52 · 52d: The rest-choice screen, and the anvil finally reaches players · dda3bf8d3
+- 2026-08-14 · 55 · Retire the dead "THE STRIKE IS DEAD" doctrine string from · bccf13522
+- 2026-08-15 · 52 · 52e: Retire the Night Watch · aca0f27bc
+- 2026-08-16 · 52 · 52f: Calibrate the shilling economy · aa5ae3519
+- 2026-08-16 · 53 · 53a: Narrative reachability: the guard, then the mismatches · c4f8d42b9
+- 2026-08-17 · 53 · 53b: The dialogue gate context, completed in the live path · e3bbcfd0a
+- 2026-08-17 · 53 · 53c: Placement: the quest-giver on the spine, and a coverage floor · bf39b3912
+- 2026-08-18 · 46 · 46a: Early-game rethink: design session · 125904d78
+- 2026-08-18 · 53 · 53d: Author S-01's four dilemmas · 87cfbd39d
+- 2026-08-18 · 53 · 53e: The read-back web: consequences that come back · 5844a20bb
+- 2026-08-19 · 46 · 46b: Early-game: canned preset-deck tutorial content · 24475f481
+- 2026-08-20 · 46 · 46c: Early-game: Quest Board tutorial re-derivation · 3ecf0434b
+- 2026-08-20 · 47 · 47a: Decouple inventory + shim layer · 379f986ec
+- 2026-08-20 · 47 · 47b: Navigation: `expo-router` → a bare-RN router · d8a31431d
+- 2026-08-21 · 49 · GLYPHS follow-up 1: completeness-critic touch-UX pass · 0aab723d4
+- 2026-08-22 · 50 · GLYPHS follow-up 2: mobile UI · f1aa50958
+- 2026-08-23 · 40 · Card-text grammar + full copy pass · 869ca9abf
+- 2026-08-23 · 51 · GLYPHS follow-up 3: sim `crackAt` policy heuristic + the A/B · 935b77586
+- 2026-08-24 · 54 · Route live combat through `endCombat` · 55bf273b0
+- 2026-08-24 · 56 · The dice valves under-sink: add the starter Press Fate grant · 962dc05a6
+- 2026-08-24 · 57 · Stop publishing the private DevLog: the in-repo half of the · ce65dd41a
+- 2026-08-24 · 58 · Carry authored narration to the player · 2c468bd60
+- 2026-08-25 · 59 · Rest is two offers: heal 25%, or cut a card · 1cea0eb7d
+- 2026-08-25 · 60 · Re-home the Anvil to its own map node · af6482eac
+- 2026-08-25 · 61 · Retire the Quest Board minigame · 0af78a132
+- 2026-08-25 · 76 · Retire the Gathering minigame · 252b85e09
+- 2026-08-26 · 62 · Ally cards · fc0e88e5f
+- 2026-08-26 · 63 · The loot cache becomes a three-way choice · fcef4d5fd
+- 2026-08-26 · 64 · The journal reads the goodwill back · a58940a51
+- 2026-08-27 · 65 · Village goodwill rewards · 016ad6533
+- 2026-08-27 · 66 · Lexicon lint: catch retired-doctrine prose, not just retired identifiers · fbaad0d40
+- 2026-08-27 · 67 · Title migration: "Axiomancer" → "Miserere Mei, Deus" · 363a2acb3
+- 2026-08-27 · 68 · Keyword-drift hardening · d6646f1f4
+- 2026-08-27 · 69 · Card-editor round-trip fidelity · 7b2a0f757
+- 2026-08-27 · 70 · Prose lint for shipped `.ts` content + naming law in · e3da58e51
+- 2026-08-27 · 71 · Art acquisition pipeline · afb6e9fa5
+- 2026-08-27 · 72 · Harness grants for content work · 35891e249
+- 2026-08-27 · 73 · Art generation pipeline · 8c066373d
+- 2026-08-27 · 74 · N-1: fold the ratified North Star into spec 34 · a3f740b55
+- 2026-08-27 · 75 · N-3: the re-voice pass · 4e594806e
+- 2026-09-02 · 77 · In-house crash capture · f391db7ba
+- 2026-09-03 · 78 · Art-pass: open-source art sourcing research for W5 portraits · 2afe17f10
+- 2026-09-15 · 79 · Doctrine lexicon · d7890b67d
+- 2026-09-15 · 80 · Naming pass: one concept, one word across player-facing surfaces · 17651600e
+- 2026-09-15 · 81 · Late-campaign difficulty cliff · e9b66f8f2
+- 2026-09-15 · 82 · Glossary reachability: mount tooltip targets on the hazard deck's 14 · 50313b8fe
+- 2026-09-15 · 83 · Combat arena backdrop · 50af2bcdf
+- 2026-09-15 · 85 · Equipment progression · 076c1ddf3
+- 2026-09-16 · 86 · Engine hook sweep: delete the 19 orphaned `zoneHas` sites in · e6e1df6fa
+- 2026-09-16 · 87 · Early-game encounter smoothing · ca36dc4a2
+- 2026-09-16 · 88 · W5 art adoption · 7c218bb12
+- 2026-09-17 · 89 · Art-direction coherence · 0e3a8df65
+- 2026-09-17 · 90 · Summoner / multi-hit enemy archetype: no roster enemy spawns adds · 39e2915e
+- 2026-09-18 · 91 · Amber-CI tick recovery · 3a9689d8c
+- 2026-09-18 · 92 · `march` workflow job ceiling · 84a062c2a
+- 2026-09-18 · 93 · Card-base reconciliation · ecbf2fc21
+- 2026-09-18 · 94 · `critique:drive` artifact scope · d8b4bebda
+- 2026-09-18 · 95 · UI fresh-eyes six: ship the six product decisions accepted via · d3cf5d593
+- 2026-09-19 · 96 · Consumable desperation band · 55aa6d45d
+- 2026-09-19 · 97 · Hand-fan name legibility: the mobile combat hand covered its own · 30fcf37a7
+- 2026-09-19 · 98 · Worklet guard in CI · 263cf96f6
+- 2026-09-19 · 99 · A returning player can actually return · b9acf4017
+- 2026-09-19 · 100 · The map tells the truth · a3b91f3cb
+- 2026-09-19 · 101 · Region arena plates · 13fac673f
+- 2026-09-19 · 102 · SUMMON, the add-spawning enemy archetype · e333fbbf6
+- 2026-09-19 · 103 · The last two arenas: the acquisition pipeline learns to crop · e333fbbf6
+- 2026-09-20 · 104 · The grey office and the keyword pull · a2a1c135e
+- 2026-09-23 · 84 · The Capital: attended `/world-spec` session · 5fad261ec
+- 2026-11-01 · 17 · dropped: Quest Board · (this commit)
+- 2026-11-01 · 45 · 45a: dropped: Re-home dice upgrades: design session · (this commit)
+- 2026-11-01 · 45 · 45b: dropped: Re-home dice upgrades: implementation · (this commit)
+- 2026-11-01 · 47 · 47c: Assets: `expo-image`, `expo-font` + `@expo-google-fonts/*` → bare-RN equivalents, preserving the · unknown
+- 2026-11-01 · 47 · 47d: Device APIs: `expo-haptics` · unknown
+- 2026-11-01 · 47 · 47e: Build + CI re-platform · unknown
+- 2026-11-01 · 52 · 52b: Make the inn a first-class thing · unknown

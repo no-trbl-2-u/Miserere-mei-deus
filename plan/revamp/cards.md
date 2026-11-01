@@ -152,7 +152,7 @@ relics. This replaces the stat-threshold idea.
   that lane's relics, all 3 are.
   **Amended by D104 (T, 2026-10-24):** a lane unlocks when one of its relics is carried (equipped or not),
   "random" draws from every unlocked lane (grey always), and the rule covers every card reward, the cache
-  included. Plotted as Phase RW1 (`plan/phases/phase_RW1_reward_rule.md`).
+  included. Plotted as Phase RW1 (`plan/README.md`).
   **Amended by D107 (T, 2026-10-26):** only worn relics put their lane in the pool (a carried, unworn relic does
   nothing); grey is not a lane and is offered only when the pool is empty; the character's two starting lanes join
   the pool once character selection exists.
@@ -285,14 +285,14 @@ bridge cards join sub-lanes within a family. Each slice builds one lane.
 ## Card-session queue
 
 Card-mechanic gaps the loop filed before D37/D58, moved here from
-`plan/PHASE_CANDIDATES.md` in R0 (2026-09-28). They are inputs for the
+`plan/CANDIDATES.md` in R0 (2026-09-28). They are inputs for the
 owner-led card sessions (B6), not loop work: the loop authors no card or
 keyword (D37, D58). The steward-era scoring and "ship small" language is
 kept verbatim as history; the card agent re-judges each row against the
 grey library.
 
 ### [score 3.0] No card grants an in-combat/temporary card upgrade — Slay the Spire's Armaments/Apotheosis niche has no analogue
-- origin: filed by `/adjust-cards` pass 17, 2026-09-23; moved from `plan/PHASE_CANDIDATES.md` in R0 (2026-09-28).
+- origin: filed by `/adjust-cards` pass 17, 2026-09-23; moved from `plan/CANDIDATES.md` in R0 (2026-09-28).
 - proposed: 2026-09-23, `/adjust-cards` pass 17 (Step 1b widened KB
   cross-reference; Step 1's own structural audit read zero-diff — same
   134 cards, `pricing.engine.test.ts` 263/263, `curated-library.engine
@@ -350,7 +350,7 @@ grey library.
   surviving big-numbers constraints or the LOCKED MECHANICS.
 
 ### [ ] [score 3.0] No mechanic lets a card offer the player a choice among revealed/generated options — Slay the Spire's Discovery / Dawncaster's Delve niche has no analogue
-- origin: filed by `/adjust-cards` pass 19, 2026-09-25; moved from `plan/PHASE_CANDIDATES.md` in R0 (2026-09-28).
+- origin: filed by `/adjust-cards` pass 19, 2026-09-25; moved from `plan/CANDIDATES.md` in R0 (2026-09-28).
 - proposed: 2026-09-25, `/adjust-cards` pass 19 (Step 1b widened KB
   cross-reference; Step 1's own structural audit read zero-diff — same
   134 cards / 8 themes / 72 keywords, `pricing.engine.test.ts` 263/263,
@@ -414,7 +414,7 @@ grey library.
   surviving big-numbers constraints or the LOCKED MECHANICS.
 
 ### [score 3.0] No card/effect pre-empts an incoming affliction — CLEANSE only removes one after the fact, nothing prevents the application
-- origin: filed by `/adjust-keywords` pass 17, 2026-09-23; moved from `plan/PHASE_CANDIDATES.md` in R0 (2026-09-28).
+- origin: filed by `/adjust-keywords` pass 17, 2026-09-23; moved from `plan/CANDIDATES.md` in R0 (2026-09-28).
 - proposed: 2026-09-23, `/adjust-keywords` pass 17 (Step 1b widened KB
   cross-reference; Step 1's own structural audit read zero-diff —
   `combat.cards.ts`'s `mechanicText` switch still matches every

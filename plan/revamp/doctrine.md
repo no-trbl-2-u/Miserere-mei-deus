@@ -20,7 +20,7 @@ places the reset does not touch:
    reading it, and live skills point into it (`skills/oversight.md:68`,
    `skills/digest.md:86`, `bearings.md:29, 37`, `specs/README.md:83`).
 3. **The live plan queues:** "preset" appears ~50 times across
-   `PHASE_CANDIDATES.md`, `CRITIQUE.md` and `AUDIT.md`.
+   `CANDIDATES.md`, `CRITIQUE.md` and `AUDIT.md`.
 4. **Code comments:** the 2026-09-23 comments/docs pass (#363, #364) fixed
    single facts in mechanics comments only. It skipped mobile comments,
    bannered six whole docs as Superseded instead of rewriting them
@@ -35,7 +35,7 @@ against the final tree.
 
 ## R10b — Doctrine rewrite (loop)
 
-> Split 2026-10-02 (brief `plan/phases/phase_R10b_doctrine_rewrite.md`):
+> Split 2026-10-02 (brief `plan/README.md`):
 > **R10b** ships items 1-4, **R10b2** items 5-7. R10c requires R10b2.
 
 1. **The game model.** Write `docs/game-model.md`: one page, the
@@ -52,7 +52,7 @@ against the final tree.
 4. **Specs 33 and 34** move out of the live set (the parts still true are
    folded into `docs/game-model.md` or the rules doc first); fix
    `specs/README.md` and `plan/README.md:49`.
-5. **Plan queues:** sweep `PHASE_CANDIDATES.md`, `CRITIQUE.md` and
+5. **Plan queues:** sweep `CANDIDATES.md`, `CRITIQUE.md` and
    `AUDIT.md` for rows about presets, the colour law as a deck rule, stances,
    pricing, themes and other deleted subjects; close them as moot with a
    one-line reason.
@@ -70,7 +70,7 @@ against the final tree.
 
 Tick 1 is `axiomancer-mechanics`, tick 2 is `axiomancer-mobile`.
 
-> Split 2026-10-02 (brief `plan/phases/phase_R10c_mechanics_docs_truth.md`):
+> Split 2026-10-02 (brief `plan/README.md`):
 > **R10c** ships items 1 and 3 for mechanics, **R10c2** items 2 and 4 for
 > mechanics, **R10c3** all four for mobile. RC requires all three.
 

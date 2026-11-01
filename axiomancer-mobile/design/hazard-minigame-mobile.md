@@ -17,7 +17,7 @@ Primary mechanics sources consumed for this brief:
 - `axiomancer-mechanics/docs/hazard-minigame-prd.md` — product requirements and success metrics.
 - `axiomancer-mechanics/docs/hazard-minigame-tdd.md` — target engine types, state machine, and integration points.
 - `axiomancer-mechanics/docs/hazard-minigame-bdd.md` — behavior-driven scenarios for deterministic tests.
-- `axiomancer-mechanics/plan/phases/phase_131_hazard_minigame.md` — implementation-unit breakdown and out-of-scope calls.
+- `axiomancer-mechanics/plan/README.md` — implementation-unit breakdown and out-of-scope calls.
 - Current local mechanics code under `src/World/Hazard/` — useful witness, but presently not fully aligned with doctrine.
 
 Mobile must treat the doctrine files as stronger than the current partial engine implementation. If package exports and doctrine conflict, preserve doctrine in UX language and file an engine/package follow-up rather than designing around the weakness.

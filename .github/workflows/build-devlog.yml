@@ -4,7 +4,7 @@ name: build-devlog
 # catalog data/HTML first, then renders the DevLog hub and every structured
 # digest entry. Generated output is uploaded as a workflow artifact only —
 # it is never committed to main (phase 57 —
-# archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/phases/phase_57_devlog_pages_scopedown.md); the reachable path is
+# archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/README.md); the reachable path is
 # `npm run site:build` run locally.
 
 on:

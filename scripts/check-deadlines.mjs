@@ -3,7 +3,7 @@
 //
 //   node scripts/check-deadlines.mjs     # exit 1 and list every disagreement
 //
-// Fails when plan/deadlines.md and the Status block of plan/steps/01_build_plan.md
+// Fails when plan/deadlines.md and the Status block of plan/README.md
 // disagree:
 //   - an open build-plan row (`[ ]`, `[-]`, `[blocked: …]`) that no Items row names
 //     and no `## Unscheduled` line excuses, or an `## Unscheduled` line with no reason;
@@ -39,7 +39,7 @@ import { fileURLToPath } from 'node:url'
 import { ARCHIVE_FILE, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
 
 const DEADLINES = 'plan/deadlines.md'
-const BUILD_PLAN = 'plan/steps/01_build_plan.md'
+const BUILD_PLAN = 'plan/README.md'
 
 /**
  * The files a row id resolves from, read from a repo root: the build plan (null once

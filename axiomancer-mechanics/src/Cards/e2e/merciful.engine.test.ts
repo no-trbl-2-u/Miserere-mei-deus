@@ -1,6 +1,6 @@
 /**
  * Hermetic E2E — the Merciful trial set (Phase MF1d, acceptance A8, A9, A10 and
- * A11 of `plan/phases/phase_MF1_merciful_trial_set.md`).
+ * A11 of `plan/README.md`).
  *
  * The set's own test (the only test that names its card ids). Pins:
  *   · the set: 29 cards (10 red / 10 blue / 9 purple) with the drafted names, one

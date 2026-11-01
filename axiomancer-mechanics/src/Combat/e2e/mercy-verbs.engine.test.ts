@@ -2,7 +2,7 @@
  * Hermetic E2E — the Merciful's verbs and reads (Phase MF1b, acceptance A4).
  *
  * On T's rulings of 2026-10-29 and 2026-10-30
- * (`plan/phases/phase_MF1_merciful_trial_set.md`, `plan/card-ledger/rehearsal-merciful.md`):
+ * (`plan/README.md`, `plan/card-ledger/rehearsal-merciful.md`):
  *   · burst the foe's MERCY now; tick its clock by n (a tick to 0 bursts at once);
  *   · the reads: the foe has MERCY, its total, all you healed this turn, the VITAE you
  *     are missing, you below half VITAE, the foe at max VITAE;

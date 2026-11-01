@@ -199,10 +199,10 @@ Axiomancer/
 ├── skills/                     # nexus LOOP verbs (this harness)
 ├── plan/                       # nexus state files (this dir)
 │   ├── bearings.md             # this file
-│   ├── AUDIT.md · CRITIQUE.md · PHASE_CANDIDATES.md
+│   ├── AUDIT.md · CRITIQUE.md · CANDIDATES.md
 │   ├── revamp/                 # THE REVAMP record + part plans (D46–D83)
 │   ├── reflexes.md · lessons.md (counted retro ladder) · north-star-mork-borg.md
-│   ├── steps/01_build_plan.md
+│   ├── plan/README.md
 │   ├── phases/                 # template, V masterplan, open/partial + recent briefs
 │   ├── ideas/ · labyrinth/     # art-pipeline options · Labyrinth design + acts
 │   └── <date>-<topic>.{prompt,decisions,spec}.md   # live dated records
@@ -244,7 +244,7 @@ session (B6).
 ## Plan expansion posture
 
 - **Mode: bold** (default) — `/expand` files candidates to
-  `plan/PHASE_CANDIDATES.md`; `/oversight` promotes them.
+  `plan/CANDIDATES.md`; `/oversight` promotes them.
 
 ## Decisions standing for the autonomous loop
 
@@ -306,7 +306,7 @@ ambiguity.)
 - **THE CARD HOLD IS LIFTED (T, attended session 2026-10-22, D99;
   supersedes D37).** Cards, keywords and art are ordinary content under
   D88: built only from a build-plan row whose brief T wrote or approved
-  (`/plot`, attended `/plan-a-phase`, `/oversight` promotion), proposed by
+  (`/plot`, attended `/plan-a-spec`, `/oversight` promotion), proposed by
   `/expand` as candidates, never invented unprompted.
   The card-rules inventory B4 required is merged
   (`plan/revamp/card-rules-inventory.md`). **The card process is Plan B
@@ -430,7 +430,7 @@ ambiguity.)
   surface it rather than double-shipping.
 - **Hermes-originated queue mutations get a provenance log entry**
   (adopted via /oversight 2026-07-30, issue #129): any time a
-  Hermes-originated instruction changes `plan/steps/01_build_plan.md`'s
+  Hermes-originated instruction changes `plan/README.md`'s
   queue (add/remove/reorder/reprioritize/split/merge/skip/block/
   unblock/material scope change to a phase row), the same commit adds
   a row to that file's `## Queue change log` section — date, actor
@@ -463,7 +463,7 @@ ambiguity.)
   for anything outside that set — a new enemy, a new creature, any other surface
   — is content that needs a brief T approved (D88, D99), and the generator
   refuses it rather than asking. Phase AN1d is what this ruling unblocks;
-  `plan/phases/phase_AN1_enemy_animation.md` carries the detail.
+  `plan/README.md` carries the detail.
 
 - **`art-department/` IS A TREE, NOT AN NPM WORKSPACE (T, attended session
   2026-10-21, D98).** Art tooling lives at the repo root in `art-department/`
@@ -477,7 +477,7 @@ ambiguity.)
   `npm --workspace`; it is excluded from the EAS archive; and nothing in the
   repository resolves a path into it — the same boundary rule 9 (D96) puts on
   `Potential Assets/`, and enforced the same way, by a test. Phases AD1a and
-  AD1b build it; `plan/phases/phase_AD1_art_department.md` carries the detail.
+  AD1b build it; `plan/README.md` carries the detail.
 
 ## AUDIT category taxonomy (this project)
 
@@ -636,3 +636,28 @@ node scripts/deadlines.mjs --today=YYYY-MM-DD     # the deadline reminder, pinne
 npm run game -- combat                            # play Hazard-Pattern Combat (CLI)
 npm run mobile -- start                           # expo dev server
 ```
+
+## Loop knobs
+
+Written by `nexus upgrade` (2026-11-01) at the values that keep the v1 loop's
+behaviour. Turn them up together with `Improve:` (off, gentle, steady, bold;
+the lines below override it), or each on its own, later: `Support:`
+(`nexus/customization/support.md`), `Promote:` and `stall_action`
+(aged promotion, the motion heartbeat), `loop:` (`/iterate` dimension
+I), `UI:` (the browser walk).
+
+- Improve: gentle
+- Support: triage-only
+- Promote: owner
+- stall_action: alert
+- loop: off
+
+**UI:** `none`
+
+## Generators
+
+When no chunk is ready, `/march`'s stock `refill` lane runs each
+generator listed here (`nexus/concepts/generators.md`). None listed
+means refill is a no-op.
+
+- (none)

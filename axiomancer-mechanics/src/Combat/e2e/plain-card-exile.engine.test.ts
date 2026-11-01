@@ -1,6 +1,6 @@
 /**
  * GUARD — a plain card's PAID play EXILEs when it says so (Phase SP1, brief
- * `plan/phases/phase_SP1_spell_law.md` A2).
+ * `plan/README.md` A2).
  *
  * A program card's line carries `exile`; a plain card carries `paidExile`.
  * The plain path sends the card to the program ledger's EXILE pile (opened

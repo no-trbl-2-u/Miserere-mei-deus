@@ -7,7 +7,7 @@
 // project. EAS Build is triggered manually via
 // `npm run deploy:preview` / `npm run deploy:production`. Until
 // the deploy gate is wired against the EAS Build API (queued as
-// phase 11 — see `plan/steps/01_build_plan.md`), this script
+// phase 11 — see `plan/README.md`), this script
 // exits 0 with a notice so the shipping skills' Step 12 doesn't
 // trip.
 //
@@ -41,7 +41,7 @@ if (PROVIDER === 'none') {
     'deploy-check: STUB — no auto-deploy provider configured.\n' +
       "          This repo's deploy contract is EAS Build (manual),\n" +
       '          not push-to-deploy. The gate is queued for wiring in\n' +
-      '          phase 11 (see plan/steps/01_build_plan.md). Until then\n' +
+      '          phase 11 (see plan/README.md). Until then\n' +
       '          this script exits 0 so the loop contract stays uniform.',
   )
   process.exit(0)

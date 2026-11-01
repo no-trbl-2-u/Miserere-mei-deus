@@ -1,0 +1,567 @@
+# March lanes
+
+> This project's own `/march` steps. The kit re-syncs
+> `skills/march.md` and never touches this file, so a step
+> that keeps your loop moving lives here, not there.
+
+---
+
+`skills/march.md` reads this file at two hooks, through
+`node scripts/plan/lanes.mjs march <hook>`:
+
+| Hook | Where in the tick | Yields to |
+|---|---|---|
+| `pre` | after Step 0 (sync, veto sweep), before triage | the Asap lane (and support rows): runs only when neither has a ready item |
+| `queue` | after 3a (no ready chunk), before the next queue step | nothing: 3a already found no ready chunk |
+
+One block per lane. `when` is prose (the agent judges it) or
+`script <path>` (exit 0 runs the lane); absent, the lane
+always runs. `return: end-tick` makes the lane the tick's
+work; `continue` (the default) lets the tick go on.
+`Lanes off: <name>, <name>` in `plan/bearings.md` turns a
+lane off by name. No lane blocks here means stock dispatch.
+
+The example below sits inside a comment, so it is no lane.
+Copy it out of the comment to make it one.
+
+<!--
+## lane: weekly-snapshot
+- hook: pre
+- when: script scripts/lanes/snapshot-due.mjs
+- run: node scripts/snapshot.mjs --write, then commit the snapshot
+- return: end-tick
+-->
+
+<!-- Moved from the v1 skills/march.md by nexus upgrade (2026-11-01): the text the kit never shipped, verbatim. Check each lane's hook and when. -->
+
+## lane: procedure
+- hook: pre
+- when: as the section below says (moved verbatim from the v1 skills/march.md)
+- run: the section below
+- return: section
+
+## 4. Procedure
+
+### Step 0 — Sync and load the token
+
+```bash
+git switch main 2>/dev/null; git pull --ff-only
+
+export GH_TOKEN=$(awk -F= '/^GH_TOKEN=/ {sub(/^GH_TOKEN=/, ""); print; exit}' .env)
+export GH_REPO=$(awk -F= '/^GH_REPO=/ {sub(/^GH_REPO=/, ""); print; exit}' .env)
+GH_REPO=${GH_REPO:-no-trbl-2-u/Miserere-mei-deus}
+```
+
+If divergence, stop per §6.
+
+### Step 1 — Triage (cheapest check)
+
+Count unlabeled open issues:
+
+```bash
+unlabeled=$(gh issue list --repo "$GH_REPO" --state open \
+  --search "-label:triage:loop-queued -label:triage:closed -label:triage:reviewed -label:loop:opened" \
+  --json number --jq 'length' 2>/dev/null || echo 0)
+
+# Concierge lane — loop:do outranks everything, even labeled
+# issues; the user said "this one, now".
+urgent=$(gh issue list --repo "$GH_REPO" --state open \
+  --label loop:do --json number --jq 'length' 2>/dev/null || echo 0)
+```
+
+If `urgent > 0` or `unlabeled > 0`:
+
+- Read `skills/triage.md`.
+- Execute its procedure end-to-end.
+- Run the report sweep (below), then return.
+
+Otherwise run the report sweep, then fall through to Step 2.
+
+**Report sweep (phase RS1).** A hand-written report saved under a
+package's `docs/reports/` reaches the loop here:
+
+```bash
+node scripts/report-sweep.mjs --file
+```
+
+It lists each `axiomancer-*/docs/reports/*.md` that is neither in
+`plan/report-sweep-baseline.json` nor cited by path in
+`plan/CRITIQUE.md` or `plan/AUDIT.md`, and adds one CRITIQUE Pending
+row for each: "`[MED]` unfiled report `<path>`: read it and file its
+findings", with the path as evidence. `/iterate` works that row like
+any other. The root `docs/reports/` is the loop's own output and is
+never swept. "no unfiled reports" changes nothing; filed rows are
+plan-only queue bookkeeping (§3 "Landing a change"). The sweep never
+dispatches a verb or ends the tick.
+
+### Step 2 — Critique due?
+
+Check §3 "Critique due". If due:
+
+- Read `skills/critique.md`.
+- Execute its procedure end-to-end (plan-only; it never opens a
+  PR, so the cap does not stop it).
+- Return.
+
+Otherwise fall through to Step 2.5.
+
+### Step 2.5 — PR cap reached?
+
+Check §3 "PR cap". At the cap: report `waiting on T: PRs #a, #b,
+#c`, plus any 7d+ or stuck PRs, and return.
+
+### Step 3 — Next phase
+
+Find the next pickable phase per §3 "Pickable phase". If there
+is one:
+
+- Read `skills/ship-a-chunk.md`.
+- Execute its procedure end-to-end on that phase. It lands by PR
+  (§3 "Landing a change").
+- Return.
+
+Otherwise, if a `[ ]` row exists but none is pickable, note in
+the tick's output which row is waiting and why (attended,
+`Requires` unmet, owner-led, no brief, claimed by PR #N), then fall
+through to Step 4.
+
+### Step 4 — Expand due?
+
+Check §3 "Expand due". If due:
+
+- Read `skills/expand.md`.
+- Execute its procedure end-to-end.
+- Return.
+
+Otherwise fall through to Step 5.
+
+### Step 5 — Iterate (default)
+
+- Read `skills/iterate.md`.
+- Execute its procedure end-to-end.
+- Return.
+
+## Notes from the v1 skills/march.md (reference, not lanes)
+
+The v1 skill's own words outside its procedure: what its loop did
+and why. No lane runs them; read them when a lane above needs the
+context.
+
+# Skill: march
+
+> **Outer dispatcher.** Reads project state and delegates to one
+> of the shipping skills. Designed for `/loop` and the `march`
+> workflow.
+
+## 1. Purpose
+
+`/loop /march` picks the right thing to do every tick. The chain is:
+
+```
+unlabeled or loop:do issues        →  /triage
+ELSE critique due (rate-limited)   →  /critique
+ELSE PR cap reached (§3)           →  report "waiting on T", end
+ELSE next pickable phase           →  /ship-a-chunk
+ELSE expand due + bold posture     →  /expand
+ELSE                               →  /iterate
+```
+
+Step 1 also runs the report sweep every tick, after triage: an
+unfiled package report becomes a CRITIQUE row (phase RS1).
+
+First match wins. Every "due", "pickable" and "cap" test lives in §3,
+the one home for gate logic; other verbs point here rather than
+repeating it. §3 also owns **Landing a change** (the PR flow,
+D84–D87) and the **Retro**, so every verb lands code and learns the
+same way.
+
+This is the upstream nexus chain (`daretodave/nexus`
+`templates/skills/march.md`) minus its `/ship-data` step, which this
+project never adopted. Red `main` is not a march step: the
+`ci-autofix` workflow runs `/fix-ci` on its own the moment a
+`verify-*` run fails on `main`, and `pr-autofix` does the same for a
+red `loop:pr` PR (D87).
+
+Standing rules the chain carries (Phase R11, 2026-10-12):
+
+- **Code lands by PR; T merges** (D84, D86). Plan-only and telemetry
+  commits still push `main` (§3 "Landing a change").
+- **The loop builds only briefed rows** (§3 "Pickable phase"). A row
+  with no brief is filed as "needs a brief: `/plot <N>`"; the loop
+  never authors a brief.
+- **Content per surface** (D88, D99). Cards, keywords, art, enemies,
+  relics, maps, NPCs and events are built only from a row whose brief
+  T wrote or approved; `/expand` may propose them as candidates (D89).
+- **`/plot` and `/messy` are T's intake.** No march step, cron,
+  workflow or loop verb fires them; they run only in a conversation
+  with T (AGENTS.md rule 8). `/plot` lands its rows and brief by a
+  `plot` PR (D93); they are pickable once T merges it.
+- **Every closing verb ends with a Retro** (§3 "Retro").
+
+## 3. Gates (the one home)
+
+Every rate limit and eligibility test the loop uses is defined
+here. `skills/critique.md`, `skills/expand.md` and
+`skills/iterate.md` cite this section instead of carrying copies.
+
+"N commits after `Last pass`" counts `main`'s own line:
+`git rev-list --count --first-parent <sha>..origin/main`. A merged
+PR's branch commits are not counted one by one, so a burst of merges
+does not make a pass due an hour after the last one (lesson
+`gate-commit-count`).
+
+`GH_TOKEN` / `GH_REPO` are loaded in §4 Step 0. If `gh` isn't
+installed or `GH_TOKEN` is missing, a `gh`-based gate reads as
+"not met": log a warning and fall through. **Don't fail the
+march** on a missing token. The PR cap is the exception: with no
+`gh`, nothing can land by PR, so the tick builds no code (report it;
+plan-only verbs still run).
+
+### Critique due
+
+Read the metadata header at the top of `plan/CRITIQUE.md`:
+
+```
+> Last pass: <ISO-date> at commit <sha>
+> Pass count: <N>
+```
+
+Due when **all three** hold:
+
+1. The current commit is at least **12 commits after** `Last
+   pass`, OR `Last pass` is more than **24 hours ago**, OR `Last
+   pass` is "never" and at least one phase has shipped.
+2. `npm run deploy:check` shows a green deploy.
+3. No pending HIGH critique row is already queued in
+   `plan/CRITIQUE.md` `## Pending`.
+
+### Expand due
+
+Decides whether `/march` dispatches `/expand` (§4 Step 4) and
+whether `/iterate` hands an empty tick to `/expand`
+(`skills/iterate.md` §6, failure mode 6).
+
+Read `plan/bearings.md` → "Plan expansion posture", then the
+metadata header at the top of `plan/CANDIDATES.md` (same
+shape as CRITIQUE's). Due when **all four** hold:
+
+1. Posture is not **strict**.
+2. The current commit is at least **20 commits after** `Last
+   pass`, OR `Last pass` is more than **48 hours ago**, OR `Last
+   pass` is "never" and at least **3 phases have shipped**.
+3. There is at least one signal worth examining: `plan/AUDIT.md`
+   has Pending rows, OR `plan/CRITIQUE.md` has Pending rows, OR
+   `git log -p --since="<last pass>" -- spec.md plan/revamp/
+   axiomancer-mechanics/specs/` shows changes (a spec marked
+   HISTORICAL is not a signal).
+4. No phase is pickable (below).
+
+### Pickable phase
+
+Open `plan/README.md` → "Status (at-a-glance)". The
+next pickable phase is the **first** `[ ]` row, in file order,
+that:
+
+1. is not marked **attended** — attended phases are shipped in a
+   session with T;
+2. has every phase named in its `Requires …` clause ticked `[x]`
+   on `main`;
+3. **has a brief**: `plan/README.md<N>_*.md`, the `### <N>`
+   block of the shared brief its row points to with `§ <N>` (a
+   phase `/plot` split out, D93), or the part-plan section its row
+   points to. A row with none is not pickable: file
+   one `plan/CANDIDATES.md` row "needs a brief: `/plot <N>`"
+   (once; skip if it exists) and move on. The loop never authors a
+   brief; `/plot` and attended `/plan-a-spec` do;
+4. **is not claimed** by an open `loop:pr` PR or a live claim in
+   `claims.json` held by another owner (below, "Claims");
+5. **is not held on another row's outcome.** A row can meet its
+   `Requires` and still wait: a brief (its own, or a sibling's
+   Follow-ups) may say it is amended or drawn from an open row's
+   result ("amended once HP4e's rulings exist"). Grep `plan/README.md`
+   for the row's id before building; a held row is skipped and named
+   in the tick's output, the same as a blocked one.
+
+A `[T to confirm #n]` call left in a merged brief does not hold its
+row: T merging the `plot` PR accepted its default (`skills/plot.md`
+§4), and `/ship-a-chunk` rewrites the marker when it picks the row.
+
+Rows marked `[x]`, `[-]`, `[skipped]` or `[blocked: …]` are
+never pickable. A blocked row (including every owner-led B-row)
+is a conversation for `/oversight` or T's session, not work for
+this tick.
+
+### PR cap (D85)
+
+```bash
+open_prs=$(gh pr list --repo "$GH_REPO" --state open --label loop:pr \
+  --json number,title,createdAt,labels 2>/dev/null || echo '[]')
+count=$(echo "$open_prs" | jq 'length')
+```
+
+At **5 or more** (D85, raised from 3 via /oversight 2026-10-17) the cap is reached: the tick runs triage (Step 1)
+and, if due, critique (it files findings only and pushes `main`),
+then reports
+`waiting on T: PRs #a, #b, #c` and ends. Every tick, capped or not,
+also lists in its output:
+
+- each open `loop:pr` PR older than **7 days** ("open 7d+, waiting
+  on T"); the loop never closes one (D86);
+- each PR labelled `loop:pr-stuck` (`pr-autofix` gave up after two
+  runs, D87), with its number and failing check;
+- each open row in `plan/NEEDS_T.md` (T's own moves, D94), one line
+  each: its slug, what T does, and `seen N×`.
+
+### Claims
+
+An open `loop:pr` PR is the claim on the work it carries. Its title
+names the claim: `phase <N>` for a build-plan row, the queue item's
+ID (`AUDIT <id>`, `CRITIQUE <id>`) for a fix. `/march`,
+`/ship-a-chunk` and `/iterate` skip any row or item an open PR's
+title names.
+
+Before its PR exists, a build-plan row is claimed in `claims.json`,
+which `scripts/claims.mjs` keeps on an orphan `claims` branch of
+origin (phase HW1b). `/ship-a-chunk` claims its row before it reads
+the brief (`skills/ship-a-chunk.md` Step 2) and releases it once the
+PR is open, so the record only holds pre-PR work and the PR stays the
+one long-lived claim. A `/heads-down` worker claims under the
+orchestrator's owner (`$CLAIM_OWNER`); every other run claims as
+`tick:<GITHUB_RUN_ID or session id>`. A claim lives 24 h past its last
+renewal; an expired one counts as free and drops on the next write.
+Every write is a compare-and-swap (a plumbing commit on the fetched
+tip, pushed without force, re-fetched and retried up to five times),
+and a push to `claims` fires no workflow (every `push:` trigger is
+`branches: [main]`). To see whether a row is free:
+
+```bash
+node scripts/claims.mjs check <N> --owner "$owner"   # 0 free or yours, 1 held (prints the holder), 3 tooling error
+```
+
+`/march` and `/iterate` do not claim: `/march` dispatches
+`/ship-a-chunk`, which claims, and `/iterate`'s queue items are
+claimed by their open PR. A `claims.mjs` tooling error (exit 3) never
+blocks a tick: it falls back to the PR and mirror-issue checks.
+
+### Landing a change (the PR flow, D84–D87)
+
+A diff is **plan-only** when every path is under `plan/`,
+`telemetry/`, `docs/reports/` or `devlog/entries/`. Plan-only commits (queue rows, pass
+counters, lessons, build-plan bookkeeping) commit and `git push
+origin main` as before. The one plan-only exception is `/plot`: it
+opens a `plot` PR so T reviews its recommendation first (D93,
+`skills/plot.md` Step 5); a `plot` PR is not a `loop:pr` PR, so it
+neither counts toward the cap nor claims a row. **Anything else
+lands by PR:**
+
+```bash
+git fetch origin main
+git switch -c "loop/<verb>-<slug>" origin/main     # before the first edit
+# edit, verify, commit (plain bodies, AGENTS.md rule 2)
+git push -u origin "loop/<verb>-<slug>"
+gh label create loop:pr --repo "$GH_REPO" --color 0E8A16 \
+  --description "Loop-opened PR; T merges (D84-D87)" 2>/dev/null || true
+for s in S:C2E0C6:"under an hour, one workspace" M:FBCA04:"one focused tick" \
+         L:D93F0B:"a full tick" multi-phase:5319E7:"a plot that splits into phases"; do
+  gh label create "size:${s%%:*}" --repo "$GH_REPO" --color "$(echo "$s" | cut -d: -f2)" \
+    --description "$(echo "$s" | cut -d: -f3-)" 2>/dev/null || true
+done
+# area:* (one or more) and review:* (zero or more): the rule below
+for l in area:combat:1D76DB:"Combat engine, dice, stances, hazards" \
+         area:cards:0052CC:"Card data, pricing, keywords, card-spec" \
+         area:ui:006B75:"Screens, dock, map, title, styling" \
+         area:mobile:5319E7:"Expo/mobile perf, gestures, native builds" \
+         area:ci:B60205:"Workflows, pr-autofix, verify-*, hooks" \
+         area:loop:0E8A16:"Loop skills, plan/ memory, telemetry, nexus docs" \
+         review:rules-change:E99695:"Changes game rules or balance; needs T's design eye" \
+         review:plan-only:EDEDED:"Only plan/, docs/, telemetry/ change; no code" \
+         review:needs-T:FBCA04:"Blocked on a decision only T can make"; do
+  gh label create "$(echo "$l" | cut -d: -f1-2)" --repo "$GH_REPO" \
+    --color "$(echo "$l" | cut -d: -f3)" --description "$(echo "$l" | cut -d: -f4-)" 2>/dev/null || true
+done
+gh pr create --repo "$GH_REPO" --base main --head "loop/<verb>-<slug>" \
+  --label loop:pr --label "size:<S|M|L>" --label "area:<area>" \
+  --title "<subject naming the claim>" --body-file "$body"
+gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fast
+```
+
+- **One size label per PR** (T, 2026-10-14), so T can spot the
+  estimate in the PR list: `size:S`, `size:M` or `size:L`, read from
+  the brief the tick ships (its `Size:` line, or the `###` header of
+  the `§ <id>` phase). A fix with no brief, or a brief from before
+  this rule, is sized by the tick on the same scale
+  (`skills/plot.md` Step 3) when it opens the PR. `size:multi-phase`
+  belongs to `plot` PRs only.
+- **Area and review labels (T, 2026-10-14)**, so T can tell at a
+  glance in the PR list what a PR touches and how to read it. Every
+  `loop:pr` and `plot` PR carries **at least one `area:*`** label,
+  chosen from the files the diff touches (several when it spans
+  areas): `area:combat` (`axiomancer-mechanics/src/Combat`, `Effects`,
+  `Enemy`, hazards, dice), `area:cards` (`Cards`, `Items`, pricing,
+  keywords, card-spec), `area:ui` (`axiomancer-mobile` screens, dock,
+  map, title, styling), `area:mobile` (Expo config, perf, gestures,
+  native builds), `area:ci` (`.github/`, `.claude/hooks`, `scripts/`
+  verify tooling), `area:loop` (`skills/`, `plan/`, `telemetry/`,
+  nexus docs). `review:*` labels are added only when they apply, any
+  number: `review:rules-change` when the diff changes a card, rule,
+  price, keyword or tuning value (T reads it with a design eye);
+  `review:plan-only` when nothing outside `plan/`, `docs/`,
+  `telemetry/` changes (a `plot` PR always carries it);
+  `review:needs-T` when the PR body asks T a question the merge
+  depends on. Add a label to an open PR with
+  `gh pr edit <n> --repo "$GH_REPO" --add-label <label>`.
+- **One PR per tick**, never one per fix. Each PR carries only this
+  session's telemetry shard, so two PRs never add the same file
+  (lesson `telemetry-add-add`). The plan-only commits that
+  record the PR's own work (the build-plan tick, the AUDIT or
+  CRITIQUE row it closes, the retro) ride in the PR; unrelated queue
+  bookkeeping pushes `main`.
+- **Body template** (`scripts/loop-pr.test.mjs` pins its shape):
+
+  ```markdown
+  ## What shipped
+  - <2-5 bullets>
+
+  ## What T can now do
+  - <1-3 bullets, player- or owner-facing>
+
+  ## Decisions
+  - <autonomous call: picked X over Y because ...>
+
+  ## Acceptance
+  - [x] A1 <the brief's text>, proven by `<path/to/x.test.ts>` or `npm run <script>`
+  - [x] A2 <a doc-only or attended line> (no test: <reason>)
+
+  ## Verify
+  - `<command>` -> <summary>
+
+  Closes #<mirror issue>
+  ```
+
+  `## Acceptance` lists the brief's IDs the PR closes; drop the
+  section for a fix with no brief. **Each ticked line names its
+  proof** (phase LG1c): a backticked test file or `verify:visual`
+  shot that exists on the PR head (a full path, or a bare file name
+  the head holds), or a backticked `npm`, `node` or `npx` command;
+  or it ends with `(no test: <reason>)`, which `verify-gate`'s
+  summary lists for T; the reason holds no parentheses of its own,
+  or the line reads as naming no proof (ship BV3). A ticked line with neither, or naming a file
+  the head lacks, turns `verify-gate` red. Check the body before
+  opening the PR: `node scripts/pr-acceptance.mjs --body-file
+  "$body"`. The step reads the body live, so after editing a red
+  body, re-run the failed `verify-gate` job (`gh run rerun <id>
+  --failed`). The `judge` job then **runs** each named test file and
+  command on the head (phase LG1f) and `verify-gate` fails when one
+  fails, so name a command that runs on a plain runner with no shell
+  and no token (no `&&`, pipes or `$VAR`; one proof per backtick);
+  anything else is `(no test: <reason>)`. Never write the bare root
+  `npm test` in a ticked line, even as prose: the judge runs it in a
+  shallow checkout, where the git-history tests
+  (`scripts/eval/worktree-root.test.mjs` needs `HEAD~1`) fail (ship
+  FM2b); name the one test file or `--check` that proves the line. Try a body's proofs before
+  opening the PR: `node scripts/pr-judge.mjs run --body-file
+  "$body"`. `Closes #<N>` is the last line, one
+  issue per line; `close-trailers` reads it from the commit range of
+  the merge push, so put the same trailer in the PR's last commit.
+- **`gh pr checks --watch` replaces `deploy:check`** for the branch
+  (the `verify-*` workflows run on `pull_request`). Red on this tick's
+  own change: fix on the branch (push, never force), up to 3
+  same-root-cause tries. Still red when the tick must end: leave it;
+  `pr-autofix` takes it (two runs, D87).
+- **A `visual: re-stamp` commit from CI on the PR** (phase VE1c) means
+  the PR changed pixels: read the image diff in Files changed (and the
+  `<!-- visual-smoke -->` comment) before merging; the merge approves the
+  new baselines. Pull before the next push to that branch.
+- **`verify-gate`** (`pr-review.yml`, phase RV1a) reports on every PR:
+  green only when every triggered `verify-*` is, and it applies the
+  derived `risk:*` label. The tick never sets a `risk:*` label itself;
+  T merges as before (D86).
+- **The adversarial review** (`skills/review.md`, phase RV1b, RV3)
+  posts after `verify-gate` on every same-repo PR: inline MED/HIGH
+  findings, one `## Review verdict` comment, and a `risk:*` raise with
+  a reason. On a `pass` the `merge` job merges any PR but a `plot` PR
+  (D95, D101); a `not-pass`, a `plot` PR or a hold label leaves it to T.
+- **Never** merge the PR, close it, or force-push its branch yourself
+  (D86): the `merge` job merges it on a green review, T merges the rest
+  (D95).
+- **Check the cap and claims before cutting the branch.**
+- Attended sessions with T may still push `main` at T's word.
+
+### Retro
+
+Closes `ship-a-chunk`, `iterate`, `critique`, `fix-ci` and `plot`,
+even a tick that shipped nothing. Lesson format and the ladder live
+in the `plan/lessons.md` header; `scripts/check-lessons.mjs` lints it.
+
+0. **Whose move is the fix? (D94)** For each thing that bit, ask who
+   can fix it. If only T can (rotate or renew a token or secret,
+   finish an OAuth, a console click, a tool on T's machine), it is
+   **not a lesson**: bump or add its row in `plan/NEEDS_T.md` (format
+   in that file's header), use its workaround, and say so in the
+   tick's output. It never climbs the ladder below, never becomes a
+   `CANDIDATES` automation row, and the loop ships no code to
+   work around it. What the loop itself can change (a step, a script,
+   a test) goes on to step 1. A mixed case splits: T's half to
+   `NEEDS_T.md`, the loop's half (if any stands on its own) a lesson.
+1. Did anything in this tick bite (a wrong assumption, a step that
+   misled, a red check, a retry)? If it matches a lesson, bump its
+   `seen N×` and `last` date; if not, add one under its `@domain:`.
+2. A lesson now **seen 2×** is automated in this tick (a guard check,
+   a test, a lint) and marked `guarded by <hook/test>`; if the
+   automation is a phase of its own, file a `CANDIDATES` row
+   naming it.
+3. A lesson seen **3× across verbs** may be promoted to
+   `plan/reflexes.md` directly; `/oversight` reviews promotions after
+   the fact (THE OPEN GATE).
+4. If one of the verb's own steps misled you, tighten that step (it
+   may only get safer or clearer).
+5. "retro: clean" is a valid outcome and needs no commit. Otherwise
+   commit `lessons: retro <verb> <N>` (plan-only: it rides the tick's
+   PR if there is one, else pushes `main`).
+
+## 5. Hand-off honesty
+
+When you dispatch into a child skill, **fully adopt its
+contract**. Hard rules, failure modes, commit conventions,
+verify gate. `/march` itself doesn't add rules; it inherits.
+
+A march tick succeeds iff the child tick succeeds.
+
+## 6. Failure modes
+
+`/march` itself only fails on:
+
+1. **`git pull` divergence.**
+2. **State files corrupted or missing** (build plan, AUDIT,
+   CRITIQUE). Stop and report — don't reconstruct silently.
+
+Otherwise inherited from the dispatched skill.
+
+## 7. Quick reference
+
+```bash
+# State files
+plan/README.md          # pending phases
+plan/revamp/README.md                # the revamp record; part plans beside it
+plan/CRITIQUE.md                     # critique queue + last-pass metadata
+plan/CANDIDATES.md             # expand last-pass metadata (§3 expand gate)
+plan/lessons.md                      # retro ladder (§3 "Retro")
+plan/NEEDS_T.md                      # T's own moves; never lessons (D94)
+
+# External signals
+gh issue list ...                    # unlabeled / loop:do count
+gh pr list --label loop:pr ...       # PR cap, claims, 7d+ and stuck PRs
+npm run deploy:check                 # green-deploy condition (main)
+
+# Skills it dispatches into
+skills/triage.md                     # Step 1 (cheapest)
+skills/critique.md                   # Step 2 (rate-limited)
+skills/ship-a-chunk.md               # Step 3 (next pickable phase)
+skills/plan-a-spec.md               # brief format (attended)
+skills/expand.md                     # Step 4 (rate-limited, posture-gated)
+skills/iterate.md                    # Step 5 (default)
+
+# Not march steps
+skills/fix-ci.md                     # ci-autofix (red main), pr-autofix (red loop:pr)
+skills/plot.md, skills/messy.md      # T's intake; only T fires them
+```

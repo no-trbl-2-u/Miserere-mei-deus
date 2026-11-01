@@ -5,9 +5,9 @@
 //   node scripts/check-plan-queues.mjs            # lint the four live queues
 //   node scripts/check-plan-queues.mjs <path>...  # lint other paths (tests); kind from the file name
 //
-// The queues are plan/AUDIT.md, plan/CRITIQUE.md, plan/PHASE_CANDIDATES.md
+// The queues are plan/AUDIT.md, plan/CRITIQUE.md, plan/CANDIDATES.md
 // (each a list of `### ` rows with `- key:` bodies) and the Status block of
-// plan/steps/01_build_plan.md (`- [<status>] Phase <id> — …` rows with
+// plan/README.md (`- [<status>] Phase <id> — …` rows with
 // six-space continuation lines). pr-resolve union-merges them, so a bad
 // merge can cut a row apart (c95114a2: a header left with one body line, its
 // observation and evidence glued under the next row; 49829988: a header left
@@ -55,7 +55,7 @@ export const QUEUES = {
     maxBlank: 2,
   },
   candidates: {
-    file: 'plan/PHASE_CANDIDATES.md',
+    file: 'plan/CANDIDATES.md',
     tag: String.raw`\[(?:owner|score \d+(?:\.\d+)?)\]`,
     shape: '### [ ]|[x] [owner]? [score N]? <title>',
     fields: ['proposed', 'source signals', 'rationale', 'proposed scope', 'conflicts', 'estimated phases'],
@@ -64,7 +64,7 @@ export const QUEUES = {
 }
 
 export const STATUS = {
-  file: 'plan/steps/01_build_plan.md',
+  file: 'plan/README.md',
   heading: '## Status (at-a-glance)',
   row: /^- \[( |x|-|skipped|blocked: [^\]]+)\] (?:\(#\d+\) )?Phase ([A-Za-z0-9.]+)\b/,
   maxBlank: 1,
@@ -75,7 +75,7 @@ export function kindOf(file) {
   const base = path.basename(file)
   if (base.includes('AUDIT')) return 'audit'
   if (base.includes('CRITIQUE')) return 'critique'
-  if (base.includes('PHASE_CANDIDATES')) return 'candidates'
+  if (base.includes('CANDIDATES')) return 'candidates'
   if (base.includes('build_plan')) return 'status'
   return null
 }
@@ -112,7 +112,7 @@ function blankRuns(lines, max, from = 0, to = lines.length) {
 }
 
 /**
- * Lint a `### `-row queue file (AUDIT, CRITIQUE, PHASE_CANDIDATES). Pure.
+ * Lint a `### `-row queue file (AUDIT, CRITIQUE, CANDIDATES). Pure.
  * @param {string} text
  * @param {keyof typeof QUEUES} kind
  * @returns {{ findings: string[], rows: number }}

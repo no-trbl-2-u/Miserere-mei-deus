@@ -4,7 +4,7 @@ T's Obsidian notes, shared with every Claude session. It exists for T's two
 named pains: "hard to see the whole" and "a hard time setting a clear goal".
 So it holds one goal sentence, checked at the start of every session, and one
 map of every open thread with its status. Brief:
-`plan/phases/phase_OV1_obsidian_vault.md`.
+`plan/README.md`.
 
 ## How it flows
 
@@ -40,8 +40,8 @@ phone <-> Obsidian Sync <-> desktop folder Miserere-mei-deus/vault/
 
 `Feature Map.canvas`, `02 Features.md` and the `Features/` folder are
 generated in the repo and copied in by `node scripts/vault.mjs features`
-(phases FM1e and FM2c; briefs `plan/phases/phase_FM1_feature_map.md` and
-`plan/phases/phase_FM2_modular_feature_map.md`). They are Claude-owned: T
+(phases FM1e and FM2c; briefs `plan/README.md` and
+`plan/README.md`). They are Claude-owned: T
 should not edit them, because every `/vault` session overwrites them. The copy
 touches those files and nothing else, and leaves a file alone when it already
 matches. To change what they say, change the code the map is generated from.

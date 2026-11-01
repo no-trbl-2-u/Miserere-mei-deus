@@ -158,17 +158,17 @@ test('the real plan parses: every Items row has a date, a window and rows', () =
 const WRAPPED_PLAN = `## Status (at-a-glance)
 
 - [ ] Phase HP4c — Author the thirty (plotted by T, 2026-10-19): ten easy, ten medium and ten hard candidates with
-      their labels. Brief \`plan/phases/phase_HP4_graded_puzzle_set.md\` § HP4c. Requires HP4b.
+      their labels. Brief \`plan/README.md\` § HP4c. Requires HP4b.
 - [ ] Phase HP4d — Thirty on the board (plotted by T, 2026-10-19): \`/devpuzzle\` lists the candidates in three
-      bands. Brief \`plan/phases/phase_HP4_graded_puzzle_set.md\` § HP4d. Requires HP4c.
+      bands. Brief \`plan/README.md\` § HP4d. Requires HP4c.
 - [ ] Phase HP2e — Calibration solves (plotted by T, 2026-10-18) (attended): B3f dropped from Requires when it was
-      cut (T, 2026-10-20). Brief \`plan/phases/phase_HP2_puzzle_card_audit_difficulty.md\` § HP2e. Requires HP4c, HP4d.
+      cut (T, 2026-10-20). Brief \`plan/README.md\` § HP2e. Requires HP4c, HP4d.
 
 ## Per-phase scope
 `
 
 const hp4eRow = () => {
-    const plan = fs.readFileSync(path.join(ROOT, 'plan/steps/01_build_plan.md'), 'utf8')
+    const plan = fs.readFileSync(path.join(ROOT, 'plan/README.md'), 'utf8')
     const lines = plan.split('\n')
     const at = lines.findIndex((l) => /^- \[[^\]]*\]\s+(?:\(#\d+\)\s+)?Phase HP4e — /.test(l))
     if (at < 0) return null
@@ -287,7 +287,7 @@ test('A6: --write is idempotent', () => {
 test('A6: the real plan/deadlines.md is already what --write would write', () => {
     const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
     const real = read('plan/deadlines.md')
-    const { md, unmatched } = rewriteItemStatus(real, parsePhaseRows(read('plan/steps/01_build_plan.md')))
+    const { md, unmatched } = rewriteItemStatus(real, parsePhaseRows(read('plan/README.md')))
     assert.deepEqual(unmatched, [])
     assert.equal(md, real)
 })
@@ -377,7 +377,7 @@ test('NX1c: an id resolves from the build plan and from a spec chunk alias', () 
     assert.deepEqual(fromPlan.errors, [])
     assert.deepEqual(fromSpec.errors, [])
     assert.deepEqual([...fromSpec.phases.keys()].sort(), [...fromPlan.phases.keys()].sort())
-    assert.equal(fromPlan.phases.get('A2').source, 'plan/steps/01_build_plan.md')
+    assert.equal(fromPlan.phases.get('A2').source, 'plan/README.md')
     assert.equal(fromSpec.phases.get('A2').source, 'plan/30-carried.md')
     assert.equal(fromSpec.phases.get('A0').source, 'plan/ARCHIVE.md')
     assert.deepEqual(fromSpec.phases.get('C1').requires, ['A2'])

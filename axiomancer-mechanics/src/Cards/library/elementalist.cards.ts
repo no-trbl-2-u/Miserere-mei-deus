@@ -7,7 +7,7 @@
  * DEAL and INFERNO halved, STORM trimmed, M-07's VULNERABLE per STORM doubled).
  * Three sub-lanes of ten: Payoff (P), Engine (E) and Misc (M). Ids are
  * `el-<slot><option>`; T's own M-10 is `el-m-10n`. Each card carries its action
- * name (phase CA3e; the names table in `plan/phases/phase_CA3_lane_card_art.md`).
+ * name (phase CA3e; the names table in `plan/README.md`).
  *
  * A removable trial set (plan/revamp/cards.md → "The trial set"): this file
  * is the whole set, and `cards.library.ts` registers it in one line. The

@@ -2,7 +2,7 @@
  * Hermetic E2E — MERCY and RADIANCE (Phase MF1a, acceptance A1, A2 and A3).
  *
  * Pins the Merciful's engine to T's rulings of 2026-10-29 and 2026-10-30
- * (`plan/phases/phase_MF1_merciful_trial_set.md`, Sources):
+ * (`plan/README.md`, Sources):
  *   · RADIANCE N: HEAL N (heart-scaled), then DEAL what that heal restored
  *     (0 at full VITAE); the hit is a DEAL (VULNERABLE, FROZEN apply).
  *   · MERCY N: heal the foe N, stopping at its max VITAE, and add N to its

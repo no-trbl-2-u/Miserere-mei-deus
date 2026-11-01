@@ -49,8 +49,8 @@ The dry run is green, but run as-is it would:
 3. **Overwrite customized skills wholesale.** Kit-named skills and commands
    are replaced, not merged. Only march and iterate have their custom
    sections moved to lanes; plot, messy, digest, heads-down, oversight,
-   critique, expand and triage lose ours silently, and ship-a-phase and
-   plan-a-phase are deleted with every rule they carry.
+   critique, expand and triage lose ours silently, and ship-a-chunk and
+   plan-a-spec are deleted with every rule they carry.
 4. **Leave `march.yml` alone**, because its Claude step lives in
    `_claude-skill.yml`. (Harmless: `/march` runs whatever the skill says.)
 5. **Turn on v2 defaults that break our rules** if their knobs move off the
@@ -74,16 +74,16 @@ The dry run is green, but run as-is it would:
 | march | Report sweep files unfiled `docs/reports/*.md` into CRITIQUE | RS1 | none | KEEP (pre lane) |
 | march | Pick rules, gate rules, claims, worktree discipline | various | v2-better | TAKE |
 | march | The loop never writes a brief; a briefless row is filed "needs `/plot <N>`" | R11 | conflicts | KEEP (`Promote: owner`) |
-| ship-a-phase | Builds one row from its brief | adoption | replaced by `/next` | TAKE the shape |
-| ship-a-phase | Deadlines rewrite on close (`deadlines.mjs --write`) | DL1b | none | KEEP (into close) |
-| ship-a-phase | axio-query for engine facts, kb-query for prior art, UNGROUNDED label | `0549fab82`, `60b82f575` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Truth sources first"), NX1c |
-| ship-a-phase | Playtests through the `playtester` agent, up to 4 | PH1b | none | KEEP: moved to `AGENTS.md` § Building a phase ("Playtests"), NX1c |
-| ship-a-phase | Monorepo verify per workspace; `check-comments` bans D-numbers in code | RH1 | partial | MERGE: the composition moved to `AGENTS.md` § Building a phase ("Verify per workspace"), NX1c |
-| ship-a-phase | Save migration with a test for anything removed from a save | revamp §5 rule 4 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Save compatibility"), NX1c |
-| ship-a-phase | Hard rule 9: title, VITAE the one bar, banned terms | D47, D63 | none | KEEP: moved to `identity/principles.md` P1 to P3, NX1c |
-| ship-a-phase | `[T to confirm #n]` accepted at merge | `0d5d9e4e4` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Calls left open"), NX1c |
-| plan-a-phase | Refresh a brief, attended only | R11, D93 | v2 spec format better | TAKE |
-| plan-a-phase | Cite the D-numbers; `docs/truth-sources.md` order of authority; HISTORICAL specs are background | trim T5, D88 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Order of authority", "Cite the D-numbers"), NX1c |
+| ship-a-chunk | Builds one row from its brief | adoption | replaced by `/next` | TAKE the shape |
+| ship-a-chunk | Deadlines rewrite on close (`deadlines.mjs --write`) | DL1b | none | KEEP (into close) |
+| ship-a-chunk | axio-query for engine facts, kb-query for prior art, UNGROUNDED label | `0549fab82`, `60b82f575` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Truth sources first"), NX1c |
+| ship-a-chunk | Playtests through the `playtester` agent, up to 4 | PH1b | none | KEEP: moved to `AGENTS.md` § Building a phase ("Playtests"), NX1c |
+| ship-a-chunk | Monorepo verify per workspace; `check-comments` bans D-numbers in code | RH1 | partial | MERGE: the composition moved to `AGENTS.md` § Building a phase ("Verify per workspace"), NX1c |
+| ship-a-chunk | Save migration with a test for anything removed from a save | revamp §5 rule 4 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Save compatibility"), NX1c |
+| ship-a-chunk | Hard rule 9: title, VITAE the one bar, banned terms | D47, D63 | none | KEEP: moved to `identity/principles.md` P1 to P3, NX1c |
+| ship-a-chunk | `[T to confirm #n]` accepted at merge | `0d5d9e4e4` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Calls left open"), NX1c |
+| plan-a-spec | Refresh a brief, attended only | R11, D93 | v2 spec format better | TAKE |
+| plan-a-spec | Cite the D-numbers; `docs/truth-sources.md` order of authority; HISTORICAL specs are background | trim T5, D88 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Order of authority", "Cite the D-numbers"), NX1c |
 | plot | Lands as a `plot` PR T merges; `What you'll see` / `Your calls` body; `@claude 1: yes` answering via claude.yml; merge = agreement | D93, D101, `0d5d9e4e4` | none | KEEP |
 | plot | Every new row gets a home in `plan/deadlines.md` | DL1c, DL2b | none | KEEP (most at risk) |
 | plot | Never fired by the loop (tested) | rule 8 | v2 can fire it | KEEP |
@@ -122,7 +122,7 @@ sessions and `/heads-down`.
 | `_claude-skill.yml` | The one runner: PAT checkout, guard self-test, kb probe, grants, pre/post run, telemetry commit | `d5dd4dcaa`, phase 72, R11 | none | KEEP (+ v2's `BASH_MAX_TIMEOUT_MS`) |
 | `march.yml` | Calls the runner with `/march`, every 2h, Opus, 75 min | `d5dd4dcaa`, `b11caaf24` | v2-better scheduling | MERGE (v2 quota/cadence/idle steps in front) |
 | `night.yml` | `/digest` odd days into the DevLog | `b53dac5d3` | partial | MERGE (own concurrency group) |
-| one-verb wrappers | iterate, critique, expand, ship-a-phase, plan-a-phase, triage, consolidate | adoption | equivalent (`verb` input) | MERGE (rename to v2 verbs) |
+| one-verb wrappers | iterate, critique, expand, ship-a-chunk, plan-a-spec, triage, consolidate | adoption | equivalent (`verb` input) | MERGE (rename to v2 verbs) |
 | `pr-review.yml` + `pr-*.mjs` | verify-gate, reviewer, merge job (`PR_AUTO_MERGE` kill switch), fixer, mutation | RV1-RV4, D95, D101, LG1 | none | KEEP |
 | `pr-autofix`, `ci-autofix`, `pr-resolve` | Red PR / red main / conflicts, with our three merge drivers | D87, MD1 | partial | KEEP |
 | `close-trailers.yml` | Closes issues from `Closes #N` (GitHub's parser is inert here) | phase 48 | none | KEEP |
@@ -164,7 +164,7 @@ upgrade either way.
 | NEEDS_T | Fixes only T can make | D94 | none | KEEP |
 | deadlines | W1-W5, every Item a T act | T 2026-10-19/28 | none | KEEP: the old-id alias map is the chunk line's `alias:` (shipped: the ARCHIVE line's `(alias: …)`), read by `deadlines.mjs` and `check-deadlines.mjs` since NX1c |
 | AUDIT / CRITIQUE | 178 KB / 320 KB; stale "revamp support" bias | accreted | v2 state diet (256 KB cap) | TAKE, compact |
-| PHASE_CANDIDATES | `[owner]` rows | R11 | `CANDIDATES.md` | TAKE (renamed by the upgrader) |
+| CANDIDATES | `[owner]` rows | R11 | `CANDIDATES.md` | TAKE (renamed by the upgrader) |
 | `[blocked: owner-led]` | 9 locks with no timeout | D46/D64 | Held lines with `max_age` | TAKE |
 | `(attended)` rows | 17 open rows T does himself | march §3 | no native type | ruling R2 |
 | asap | LIFO (newest asap first) | `skills/plot.md` | Asap lane, FIFO | TAKE (order flips; written in today's order) |
@@ -198,7 +198,7 @@ for the A-ID count).
 ## Rulings (T, 2026-10-31)
 
 Ruled in session; recorded as D119 and planned as Phase NX1
-(`plan/phases/phase_NX1_nexus_v2.md`).
+(`plan/README.md`).
 
 | # | Ruling | T ruled |
 |---|---|---|

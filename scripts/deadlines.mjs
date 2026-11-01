@@ -7,7 +7,7 @@
 //                                         # Status cell in plan/deadlines.md (the daily workflow)
 //   node scripts/deadlines.mjs --today=YYYY-MM-DD   # pin the date (tests, previews)
 //
-// Reads plan/deadlines.md (the whole plan) and the rows it names: plan/steps/01_build_plan.md
+// Reads plan/deadlines.md (the whole plan) and the rows it names: plan/README.md
 // and, from the nexus v2 cut-over, the specs' chunk aliases (check-deadlines.mjs
 // readPlanSources); the rules live in scripts/deadlines-lib.mjs. Never fails a session: a missing or
 // malformed file prints nothing under --remind.

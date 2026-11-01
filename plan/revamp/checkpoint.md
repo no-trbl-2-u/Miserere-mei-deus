@@ -20,7 +20,7 @@ the game again: every owner-led B-row, R11 (loop content phases) and R12
 
 ## R9a — Save checkpoint in fights (loop)
 
-Promoted from `plan/PHASE_CANDIDATES.md` ("No single owner for
+Promoted from `plan/CANDIDATES.md` ("No single owner for
 save/persistence policy", expand pass 19). A reload taken during a live
 encounter lands the player past the fight: `beginHazardEncounter` clears
 the event slice and consumes the node when the fight is entered, not when
@@ -124,7 +124,7 @@ removed (4f88a720).
 **Filed, not blocking:** thirteen copy/label/console rows in
 `plan/CRITIQUE.md` ("RC walk 2026-10-02"). **Accepted for the tag (T,
 2026-10-02):** the Chronicle empties on reload, and the victory/mercy panels
-do not show XP or loot. Both ship after the tag (`plan/PHASE_CANDIDATES.md`).
+do not show XP or loot. Both ship after the tag (`plan/CANDIDATES.md`).
 
 **Added before the tag (T, 2026-10-02): Phase R10d**, every tutorial window
 removed ("they're miserable"). RC requires it; the gate and CI re-run on the

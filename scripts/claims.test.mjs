@@ -411,12 +411,12 @@ test('march.md: a row claimed in claims.json by another owner is not pickable', 
   }
 })
 
-test('ship-a-phase.md: Step 2 claims before reading the brief; Step 12.5 releases once the PR is open', () => {
-  const ship = read('skills/ship-a-phase.md')
+test('ship-a-chunk.md: Step 2 claims before reading the brief; Step 12.5 releases once the PR is open', () => {
+  const ship = read('skills/ship-a-chunk.md')
   const step2 = section(ship, '### Step 2 — Read the brief')
   const claimAt = step2.indexOf('node scripts/claims.mjs claim')
   assert.notEqual(claimAt, -1, 'Step 2 runs claims.mjs claim')
-  assert.ok(claimAt < step2.indexOf('plan/phases/phase_<N>_<topic>.md'), 'the claim comes before the brief read')
+  assert.ok(claimAt < step2.indexOf('plan/README.md<N>_<topic>.md'), 'the claim comes before the brief read')
   for (const needle of [
     '$CLAIM_OWNER',
     'tick:${GITHUB_RUN_ID:-<session id>}',

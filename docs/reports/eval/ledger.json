@@ -90,7 +90,7 @@
         "package.json",
         "plan/lessons.md",
         "plan/revamp/loop.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/measured-compare.mjs",
         "scripts/measured-compare.test.mjs",
         "scripts/measured-truth.mjs",
@@ -174,11 +174,11 @@
         "axiomancer-mechanics/src/index.ts",
         "docs/game-model.md",
         "plan/AUDIT.md",
-        "plan/PHASE_CANDIDATES.md",
+        "plan/CANDIDATES.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "skills/iterate.md",
-        "skills/ship-a-phase.md",
+        "skills/ship-a-chunk.md",
         "telemetry/2026-10-13_34562966-c820-4e66-b55c-0a8a26946cdf.md"
       ],
       "ran": [
@@ -219,7 +219,7 @@
       "uncovered": [
         "docs/game-model.md",
         "skills/iterate.md",
-        "skills/ship-a-phase.md"
+        "skills/ship-a-chunk.md"
       ],
       "followUps": [],
       "antagonist": {
@@ -255,7 +255,7 @@
         "plan/AUDIT.md",
         "plan/lessons.md",
         "plan/revamp/cards.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/check-prose.mjs",
         "scripts/check-prose.test.mjs",
         "scripts/content-drift.mjs",
@@ -543,7 +543,7 @@
         "docs/game-model.md",
         "plan/lessons.md",
         "plan/revamp/cards.md",
-        "plan/steps/01_build_plan.md"
+        "plan/README.md"
       ],
       "ran": [
         {
@@ -653,7 +653,7 @@
         "axiomancer-mobile/screenshots/bt2a/2-blood-price-hand.jpg",
         "axiomancer-mobile/screenshots/bt2a/3-card-detail.jpg",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md"
+        "plan/README.md"
       ],
       "ran": [
         {
@@ -727,7 +727,7 @@
         "axiomancer-mobile/state/presenters/card-program.engine.ts",
         "axiomancer-mobile/state/presenters/combat-encounter.engine.ts",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/loop-issue.mjs",
         "scripts/loop-issue.test.mjs"
       ],
@@ -833,7 +833,7 @@
         ".github/workflows/README.md",
         ".github/workflows/pr-resolve.yml",
         "plan/AUDIT.md",
-        "plan/PHASE_CANDIDATES.md",
+        "plan/CANDIDATES.md",
         "plan/lessons.md",
         "scripts/loop-pr.test.mjs"
       ],
@@ -965,9 +965,9 @@
         "axiomancer-mobile/screenshots/bt2b/4-log-view.jpg",
         "axiomancer-mobile/state/presenters/combat-encounter.engine.ts",
         "plan/CRITIQUE.md",
-        "plan/PHASE_CANDIDATES.md",
+        "plan/CANDIDATES.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md"
+        "plan/README.md"
       ],
       "ran": [
         {
@@ -1600,7 +1600,7 @@
         "axiomancer-mobile/lib/monitoring.web.ts",
         "docs/logging.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "telemetry/2026-10-14_115f4096-06e2-4c4d-99d0-b76f051a21de.md",
         "telemetry/2026-10-14_78bdd139-7ed2-4d42-a6ee-f2857b6eb822.md",
         "telemetry/2026-10-15_a8a2f712-1aa7-4ed1-bae7-3973cf7c5b97.md"
@@ -1662,7 +1662,7 @@
         "axiomancer-mobile/state/e2e/map-under-combat-modes.engine.test.tsx",
         "axiomancer-mobile/state/e2e/map-under-combat.engine.test.tsx",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "telemetry/2026-10-14_875292b3-912e-4dec-b723-0fd0721eb69c.md"
       ],
       "ran": [
@@ -1968,7 +1968,7 @@
         "docs/reports/eval/ledger.json",
         "package.json",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/eval/escape-ledger.mjs",
         "scripts/eval/escape-ledger.test.mjs",
         "scripts/eval/fixtures/landings.json",
@@ -2069,7 +2069,7 @@
         "axiomancer-mobile/state/e2e/start-node-arrival.engine.test.tsx",
         "axiomancer-mobile/state/presenters/navigation.engine.ts",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/ci-e2e-scope.mjs"
       ],
       "ran": [
@@ -2155,7 +2155,7 @@
         "docs/reports/measured/history.jsonl",
         "docs/reports/measured/latest.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "telemetry/2026-10-15_fbe3f058-75ea-40db-9408-b32354bf1f92.md"
       ],
       "ran": [
@@ -2253,9 +2253,9 @@
         "axiomancer-mobile/state/presenters/event.engine.ts",
         "axiomancer-mobile/state/presenters/roman.ts",
         "axiomancer-mobile/test-utils/withAllProviders.tsx",
-        "plan/PHASE_CANDIDATES.md",
+        "plan/CANDIDATES.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/ci-e2e-scope.mjs",
         "telemetry/2026-10-15_79a36020-9739-455d-b066-113e6cad849a.md"
       ],
@@ -2320,7 +2320,7 @@
         "docs/reports/eval/parent-replay.json",
         "package.json",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/eval/parent-replay-lib.mjs",
         "scripts/eval/parent-replay.mjs",
         "scripts/eval/parent-replay.test.mjs",
@@ -2380,7 +2380,7 @@
         "package-lock.json",
         "package.json",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/eval/miss-rates-lib.mjs",
         "scripts/eval/miss-rates.mjs",
         "scripts/eval/miss-rates.test.mjs",
@@ -2390,7 +2390,7 @@
         "scripts/eval/seeded-replay.mjs",
         "scripts/eval/stryker/mechanics.config.mjs",
         "scripts/eval/stryker/mobile.config.mjs",
-        "skills/ship-a-phase.md",
+        "skills/ship-a-chunk.md",
         "telemetry/2026-10-16_bb451442-fa93-4133-a883-760f058b3a50.md"
       ],
       "ran": [
@@ -2439,7 +2439,7 @@
         "scripts/eval/seeded-replay.mjs",
         "scripts/eval/stryker/mechanics.config.mjs",
         "scripts/eval/stryker/mobile.config.mjs",
-        "skills/ship-a-phase.md"
+        "skills/ship-a-chunk.md"
       ],
       "followUps": [],
       "antagonist": {
@@ -2471,7 +2471,7 @@
         "axiomancer-mechanics/src/World/Hazard/puzzle/index.ts",
         "axiomancer-mechanics/src/index.ts",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "telemetry/2026-10-16_fbb710f8-ea59-406b-bbc9-e160738ade25.md"
       ],
       "ran": [
@@ -2537,7 +2537,7 @@
         "docs/truth-sources.md",
         "package.json",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/eval/fixes-lib.mjs",
         "scripts/eval/fixes.mjs",
         "scripts/eval/fixes.test.mjs",
@@ -2597,9 +2597,9 @@
         "axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.tuning.ts",
         "axiomancer-mechanics/src/World/Hazard/puzzle/index.ts",
         "axiomancer-mechanics/src/index.ts",
-        "plan/PHASE_CANDIDATES.md",
+        "plan/CANDIDATES.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md"
+        "plan/README.md"
       ],
       "ran": [
         {
@@ -2670,7 +2670,7 @@
         "axiomancer-mechanics/src/index.ts",
         "axiomancer-mobile/state/hazard/__tests__/scar-flag-prefix.test.ts",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "telemetry/2026-10-16_2f8f25eb-6cca-4ec3-9cec-783d75b677eb.md",
         "telemetry/2026-10-16_be5e920e-504d-482f-88f3-641a03310039.md"
       ],
@@ -2750,7 +2750,7 @@
         "axiomancer-mechanics/src/World/Hazard/puzzle/hazard-puzzle.validate.ts",
         "axiomancer-mechanics/src/World/Hazard/puzzle/index.ts",
         "axiomancer-mechanics/src/index.ts",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "telemetry/2026-10-16_d44c8303-ab3b-47fe-970d-2b0c3840e2c4.md"
       ],
       "ran": [
@@ -2842,9 +2842,9 @@
         "axiomancer-mobile/state/presenters/hazard-puzzle.engine.ts",
         "axiomancer-mobile/state/presenters/hazard.engine.ts",
         "docs/game-model.md",
-        "plan/PHASE_CANDIDATES.md",
+        "plan/CANDIDATES.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md"
+        "plan/README.md"
       ],
       "ran": [
         {
@@ -2995,7 +2995,7 @@
         "package.json",
         "plan/NEEDS_T.md",
         "plan/lessons.md",
-        "plan/steps/01_build_plan.md",
+        "plan/README.md",
         "scripts/loop-pr.test.mjs",
         "scripts/pr-gate.mjs",
         "scripts/pr-gate.test.mjs",
@@ -3231,7 +3231,7 @@
       "title": "SF1's brief asked for a `verify:visual` shot of the callout; none was taken",
       "evidence": [
         "PR #523",
-        "plan/phases/phase_SF1_sacrifice_floor_callout.md"
+        "plan/README.md"
       ],
       "gate": "the builder's own `[x]` (an acceptance-ID-to-test map)",
       "detail": "The PR body says `verify:visual` was not run locally.",

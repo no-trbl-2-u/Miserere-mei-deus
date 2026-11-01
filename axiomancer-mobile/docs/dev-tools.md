@@ -139,7 +139,7 @@ printed. Tests: `scripts/puzzle-times.test.mjs` (root `npm test`), over
 A preview build posts every fight T plays and every change to the run's deck
 to the same `miserere-api` Worker, so card tuning can read what was drawn,
 played, held and passed over (phases BE2a-BE2f,
-`plan/phases/phase_BE2_card_combat_logging.md`).
+`plan/README.md`).
 
 **The switch.** `/dev` → RUN & DIAGNOSTICS → "Card & combat logging"
 (`components/DebugPlayLogSwitch.tsx`) reads and flips `playLogging`, kept in

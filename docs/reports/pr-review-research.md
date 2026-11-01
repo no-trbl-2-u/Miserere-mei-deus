@@ -215,7 +215,7 @@ All pages read 2026-10-16. Quotes are under fifteen words.
 
 | Step | Who or what does it | Stage |
 |---|---|---|
-| Open the PR, label `loop:pr` + `size:*` + `area:*` + `review:*` | the tick (`skills/march.md` §3); a label-derivation script is already a `PHASE_CANDIDATES` row (score 4.5) | today |
+| Open the PR, label `loop:pr` + `size:*` + `area:*` + `review:*` | the tick (`skills/march.md` §3); a label-derivation script is already a `CANDIDATES` row (score 4.5) | today |
 | `verify-*` on the PR head | GitHub Actions, path-filtered | today |
 | Keep it green / mergeable | `pr-autofix` (Haiku, 2 runs), `pr-resolve` | today |
 | **Always-reporting gate check** (`verify-gate`): green when every triggered `verify-*` is green, and when the diff touches uncovered paths it runs the root `npm test` itself | one new job in a new `pr-review.yml` | Stage 0 |

@@ -1,7 +1,7 @@
 # THE REVAMP — tick-by-tick walkthrough
 
 > Written via `/oversight` 2026-09-28 for T, before `march` and `night` were
-> re-enabled. It restates the build plan (`plan/steps/01_build_plan.md`,
+> re-enabled. It restates the build plan (`plan/README.md`,
 > THE REVAMP block) and the part plans in this folder in the order the loop
 > will run them. The part plans stay the source of truth; if this file and a
 > part plan disagree, the part plan wins and this file is stale.
@@ -16,7 +16,7 @@ applies:
 2. `/critique`: when due (12 commits or 24 hours since the last pass,
    green deploy, no HIGH row pending). The playtester drives the web build
    and files what it sees to `plan/CRITIQUE.md`.
-3. `/ship-a-phase`: the first `[ ]` revamp row that is not attended and
+3. `/ship-a-chunk`: the first `[ ]` revamp row that is not attended and
    whose `Requires` are all `[x]`.
 4. `/expand`: only when no phase is pickable.
 5. `/iterate`: otherwise. One fix from `plan/AUDIT.md` or
@@ -25,10 +25,10 @@ applies:
 
 `night` runs `/digest` every other day (the day's briefing).
 
-**A phase tick** (`skills/ship-a-phase.md`):
+**A phase tick** (`skills/ship-a-chunk.md`):
 
 1. Sync main; pick the row; check that no other tick has claimed it.
-2. If the phase has no brief in `plan/phases/`, write one from the part plan
+2. If the phase has no brief in `plan/README.md`, write one from the part plan
    and commit it on its own (`phases: brief for phase R1`).
 3. Open (or reuse) a `loop:phase` GitHub issue as the phase mirror.
 4. Read the part plan, the decisions it cites and the nearest shipped

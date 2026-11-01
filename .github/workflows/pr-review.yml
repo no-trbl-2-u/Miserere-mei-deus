@@ -1,6 +1,6 @@
 name: pr-review
 
-# The PR review pipeline (phase RV1, `plan/phases/phase_RV1_pr_review_pipeline.md`;
+# The PR review pipeline (phase RV1, `plan/README.md`;
 # design in `docs/reports/pr-review-research.md` Part 3).
 #
 # Job `verify-gate` (RV1a) is the one always-reporting check on every

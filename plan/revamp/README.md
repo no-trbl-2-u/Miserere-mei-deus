@@ -15,7 +15,7 @@
 >
 > T ratified this plan on 2026-09-28, after ruling every open call
 > (decisions **D46–D64** in `plan/2026-09-25-refactor-strategy.decisions.md`).
-> The R-rows and B4 in `plan/steps/01_build_plan.md` are unblocked, in the
+> The R-rows and B4 in `plan/README.md` are unblocked, in the
 > order of §7; owner-led B-rows stay `[blocked: owner-led]` — the loop never
 > starts them. `/march` and `night` stay **disabled** until Phase R0
 > (attended) merges; then `gh workflow enable march night`.
@@ -203,7 +203,7 @@ The B-rows stay `[blocked: owner-led]` in the build plan.
 
 | Surface | Loop authority |
 |---|---|
-| Cards, keywords, art, enemies, relics, maps, NPCs, events (D99 lifted THE CARD HOLD, D37) | Propose as `/expand` candidates (D89); build only from a build-plan row whose brief T wrote or approved (`/plot`, attended `/plan-a-phase`, `/oversight` promotion) |
+| Cards, keywords, art, enemies, relics, maps, NPCs, events (D99 lifted THE CARD HOLD, D37) | Propose as `/expand` candidates (D89); build only from a build-plan row whose brief T wrote or approved (`/plot`, attended `/plan-a-spec`, `/oversight` promotion) |
 | Code, tooling, tests, docs, fixes | Yes, as briefed phases or `/iterate` fixes, landed by `loop:pr` PRs T merges (D84–D87) |
 
 | Step | Phase / decision | Ready after | Why here |

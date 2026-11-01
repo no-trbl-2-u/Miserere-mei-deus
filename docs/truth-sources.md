@@ -20,10 +20,10 @@ than execute stale information.
    durable decision records.
 3. **Central SomberSoft ledger** (`~/Workspace/SOMBERSOFT_COMMAND_LEDGER.md`) —
    company-wide doctrine and operating law.
-4. **Active build plan** (`plan/steps/01_build_plan.md`) — current execution
+4. **Active build plan** (`plan/README.md`) — current execution
    queue and shipped phase ledger. A phase brief's acceptance IDs (`A1…`)
    are its definition of done.
-5. **Phase candidates** (`plan/PHASE_CANDIDATES.md`) — promotable work, not
+5. **Phase candidates** (`plan/CANDIDATES.md`) — promotable work, not
    marching authority until accepted.
 6. **Critique/audit logs** (`plan/CRITIQUE.md`, `plan/AUDIT.md`) — findings
    queues and evidence of known rot.

@@ -220,9 +220,9 @@ store, and deep-links the web build (`?fixture=<id>` /
 ## Building a phase
 
 These rules bind every build and every brief, whatever verb runs it
-(`/ship-a-phase` and `/plan-a-phase` today, nexus v2's `/next` and `/plot`
+(`/ship-a-chunk` and `/plan-a-spec` today, nexus v2's `/next` and `/plot`
 after the cut-over, phase NX1d). They were carried here word for word from
-`skills/ship-a-phase.md` and `skills/plan-a-phase.md` (phase NX1c), which
+`skills/ship-a-chunk.md` and `skills/plan-a-spec.md` (phase NX1c), which
 now point at them. The game's canon (the title, VITAE the one bar, the cut
 terms; D47, D63) is `identity/principles.md` P1 to P3: a hard constraint
 on code, copy and briefs.
@@ -312,11 +312,11 @@ on code, copy and briefs.
 The unified **nexus** harness was re-onboarded onto the monorepo on
 2026-07-03 (`chore: adopt nexus methodology`). It is now live at the repo root:
 
-- `skills/` — the loop verbs: `ship-a-phase`, `plan-a-phase`, `iterate`,
+- `skills/` — the loop verbs: `ship-a-chunk`, `plan-a-spec`, `iterate`,
   `critique`, `triage`, `expand`, `march`, `oversight`, `jot`, `digest`,
   `consolidate`, `fix-ci`, T's intake `plot` and `messy` (never
   fired by the loop, rule 8), and T's attended `heads-down` (an
-  orchestrator that ships several rows in parallel, one `/ship-a-phase`
+  orchestrator that ships several rows in parallel, one `/ship-a-chunk`
   worker per row, in waves gated on merges; never fired by the loop). (Heavyweight source-of-truth files; the
   `.claude/commands/<verb>.md` pointers are the doorways.) `/march` runs
   the upstream chain (triage → critique → phase → expand → iterate) and
@@ -325,8 +325,8 @@ The unified **nexus** harness was re-onboarded onto the monorepo on
   NPCs and events are built only from a row whose brief T wrote or
   approved, and `/expand` may propose them.
 - `plan/` — the loop's durable memory: `bearings.md` (standing context —
-  **read this first**), `steps/01_build_plan.md` (the phase queue),
-  `AUDIT.md` + `CRITIQUE.md` (the drain queues), `PHASE_CANDIDATES.md`,
+  **read this first**), `plan/README.md` (the phase queue),
+  `AUDIT.md` + `CRITIQUE.md` (the drain queues), `CANDIDATES.md`,
   `revamp/` (THE REVAMP part plans, kept as the record),
   `reflexes.md`, `lessons.md` (the counted retro ladder, linted by
   `scripts/check-lessons.mjs`) and `phases/` (open + recent briefs).
@@ -350,7 +350,7 @@ Two gates wrap every shipping tick: the **verify gate**
 PR (`gh pr checks --watch`; `npm run deploy:check` for `main`). The loop
 **opens a PR** for code and pushes plan-only commits to `main`; T merges
 the PR. Every closing verb ends with a **Retro** (`skills/march.md` §3).
-Start at intervention level 0 (`/ship-a-phase` by hand, which opens its
+Start at intervention level 0 (`/ship-a-chunk` by hand, which opens its
 PR); ratchet up via `/march` then `/loop /march`.
 Full context lives in `plan/bearings.md` and the nexus kit
 (`../nexus/`).
@@ -398,7 +398,7 @@ them; update here first.
    `seen`, later `last`, unioned citations, `guarded by` over `open`. It
    refuses with conflict markers where the result would break a cap or the
    two sides rewrote the same text; a human resolves those.
-   `plan/steps/01_build_plan.md` merges through `scripts/build-plan-merge.mjs`
+   `plan/README.md` merges through `scripts/build-plan-merge.mjs`
    (`merge.buildplan.driver`, registered the same way): two plots inserting
    above the same row keep both sides' rows (ours first, each side's order
    kept) and both Queue change log entries, and neighbouring row ticks
@@ -434,14 +434,14 @@ them; update here first.
    work that produces direction beyond what it ships — decisions made,
    work discovered, design conclusions, side-findings — files that
    residue into the loop's queues before ending: buildable ideas to
-   `plan/PHASE_CANDIDATES.md`, findings and `[loop-call]`
+   `plan/CANDIDATES.md`, findings and `[loop-call]`
    decisions to `plan/AUDIT.md`, committed work as build-plan phase
    rows, observable defects to `plan/CRITIQUE.md` (jot-row format).
    Direction that lives only in a conversation is invisible to the
    loop. File only unshipped direction — not routine work the tick
    already committed, and not chit-chat. When T is present, buildable
    ideas go through `/plot` or `/messy` (rule 8), not a hand-written
-   `PHASE_CANDIDATES` row.
+   `CANDIDATES` row.
 8. **T's buildable direction goes through `/plot` or `/messy`.** When T,
    speaking plainly to any agent (an attended session, `@claude` on
    GitHub, a brainstorm), says they want work the loop should pick up

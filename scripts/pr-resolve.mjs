@@ -57,7 +57,7 @@ export function isUnionPath(file) {
     [
       'plan/AUDIT.md',
       'plan/CRITIQUE.md',
-      'plan/PHASE_CANDIDATES.md',
+      'plan/CANDIDATES.md',
       'plan/lessons.md',
     ].includes(file)
   )

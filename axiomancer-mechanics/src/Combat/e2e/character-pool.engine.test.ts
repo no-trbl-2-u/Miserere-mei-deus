@@ -1,6 +1,6 @@
 /**
  * The character's reward pool: starting lanes plus worn relics (Phase CH1b,
- * A3 of `plan/phases/phase_CH1_character_select.md`).
+ * A3 of `plan/README.md`).
  *
  * The contract this file pins, against fixture lanes, fixture relics and a
  * fixture character (the real roster is empty):

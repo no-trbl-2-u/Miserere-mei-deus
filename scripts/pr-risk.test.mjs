@@ -27,7 +27,7 @@ test('low: every path is plan, docs, telemetry, devlog entries, CLAUDE.md or AGE
 })
 
 test('low has no size cap: a 4000-line plot PR labelled size:L stays low', () => {
-  assert.equal(tier([f('plan/phases/phase_X.md', 4000)], ['plot', 'size:L', 'review:plan-only']), 'risk:low')
+  assert.equal(tier([f('plan/README.md', 4000)], ['plot', 'size:L', 'review:plan-only']), 'risk:low')
 })
 
 test('low drops to high on review:needs-T', () => {
@@ -92,13 +92,13 @@ test('every raise is named in the reasons', () => {
 
 const REPLAYED = [
   { pr: 567, tier: 'risk:low', labels: ['plot', 'size:multi-phase', 'area:combat', 'area:mobile', 'review:plan-only'],
-    files: [f('plan/phases/phase_CR1_combat_route.md', 262), f('plan/steps/01_build_plan.md', 4)] },
+    files: [f('plan/README.md', 262), f('plan/README.md', 4)] },
   { pr: 535, tier: 'risk:medium', labels: ['loop:pr'],
     files: [f('axiomancer-mobile/components/combat/encounter/CombatFooterDock.tsx', 13, 4), f('axiomancer-mobile/components/combat/encounter/__tests__/CombatBoard.footer-dock.test.tsx', 17, 1), f('plan/CRITIQUE.md', 38, 209), f('plan/lessons.md', 1), f('skills/march.md', 6)] },
   { pr: 553, tier: 'risk:medium', labels: ['loop:pr', 'size:S', 'area:ui', 'area:mobile'],
-    files: [f('axiomancer-mobile/app/(tabs)/exploration/index.tsx', 48, 31), f('axiomancer-mobile/components/event/EncounterModalOverlay.tsx', 10, 2), f('axiomancer-mobile/components/event/__tests__/EncounterModalOverlay.test.tsx', 80), f('axiomancer-mobile/state/e2e/map-under-combat-modes.engine.test.tsx', 101), f('axiomancer-mobile/state/e2e/map-under-combat.engine.test.tsx', 149), f('plan/lessons.md', 2), f('plan/steps/01_build_plan.md', 1, 1), f('telemetry/2026-10-14_875292b3.md', 18)] },
+    files: [f('axiomancer-mobile/app/(tabs)/exploration/index.tsx', 48, 31), f('axiomancer-mobile/components/event/EncounterModalOverlay.tsx', 10, 2), f('axiomancer-mobile/components/event/__tests__/EncounterModalOverlay.test.tsx', 80), f('axiomancer-mobile/state/e2e/map-under-combat-modes.engine.test.tsx', 101), f('axiomancer-mobile/state/e2e/map-under-combat.engine.test.tsx', 149), f('plan/lessons.md', 2), f('plan/README.md', 1, 1), f('telemetry/2026-10-14_875292b3.md', 18)] },
   { pr: 526, tier: 'risk:high', labels: ['loop:pr'],
-    files: [f('.github/workflows/README.md', 1, 1), f('.github/workflows/pr-resolve.yml', 46, 13), f('plan/AUDIT.md', 2, 1), f('plan/PHASE_CANDIDATES.md', 9), f('plan/lessons.md', 1, 2), f('scripts/loop-pr.test.mjs', 13)] },
+    files: [f('.github/workflows/README.md', 1, 1), f('.github/workflows/pr-resolve.yml', 46, 13), f('plan/AUDIT.md', 2, 1), f('plan/CANDIDATES.md', 9), f('plan/lessons.md', 1, 2), f('scripts/loop-pr.test.mjs', 13)] },
   { pr: 571, tier: 'risk:high', labels: ['loop:pr', 'size:M', 'area:combat', 'area:ui', 'area:loop', 'review:rules-change'],
     files: [f('axiomancer-mechanics/src/Character/experience.ts', 44, 9), f('axiomancer-mechanics/src/Game/game.migrate.ts', 47, 9), f('docs/game-model.md', 12, 5)] },
   { pr: 501, tier: 'risk:high', labels: [],

@@ -1,7 +1,7 @@
 # iPhone beta (TestFlight)
 
 The runbook for putting the game on iPhones: T's own phone and friends', through
-TestFlight only. Brief: `plan/phases/phase_IO1_iphone_beta.md`. IO1b follows
+TestFlight only. Brief: `plan/README.md`. IO1b follows
 steps 1-5 once; IO1d follows steps 6-8 for the first build. Every later beta
 round is steps 6-8 again.
 

@@ -79,7 +79,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - impact: 6
 - ease: 6
 - detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
-- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
+- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-chunk via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
 
 ### [ ] [content] measured drift: bw-w5/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.90 (even, 2026-10-30)
 - issue: #1141
@@ -419,7 +419,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - category: content
 - impact: 4
 - ease: -
-- source: Phase AW1b (A10); `plan/phases/phase_AW1_act1_walk.md` Sources; `plan/playtest-harness.md` "Where things stand".
+- source: Phase AW1b (A10); `plan/README.md` Sources; `plan/playtest-harness.md` "Where things stand".
 - detail: `kind: 'gathering'` is live, not minigame residue: it replaced the retired Gleaning minigame (save v18 to v19), grants one named material through the paced `/event` receipt, advances `collect` quest objectives and feeds the hazard puzzle outcome and the labyrinth pools. Seven Act 1 nodes carry it: bw-4, bw-11 (Breakwater), cw-4, cw-8, cw-14 (Charcoal Wood), bc-7 (Beacon Crags), ld-7 (Lantern Deep). But no code in mechanics or mobile spends a material, so every grant is a dead end for the player.
 - next: T's call (map content, D88), one of: (a) keep the nodes as they are; (b) give materials a use (a brief T approves: the Anvil, a quest, a shop); (c) re-point the seven nodes to another kind. The plot's leading option is (a) with (b) to follow.
 
@@ -503,7 +503,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - category: loop-call
 - impact: 3
 - ease: 9
-- detail: brief `plan/phases/phase_RV1_pr_review_pipeline.md` (Decisions, "A7 pushes seeded branches, as drafts,
+- detail: brief `plan/README.md` (Decisions, "A7 pushes seeded branches, as drafts,
   and deletes them") amends EV1's "planted defects never leave the machine" for the review judge and is marked
   `[T to confirm]`. RV1c shipped (#610). T's 2026-10-19 decision round confirmed every other open default but
   was not asked this one. The seeded replay row below depends on it, since it pushes eight `eval/*` branches.
@@ -532,7 +532,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - impact: 4
 - ease: 7
 - detail: editing `plan/revamp/loop.md`, `plan/revamp/README.md` and
-  `plan/steps/01_build_plan.md` from a `.claude/worktrees/*` session made
+  `plan/README.md` from a `.claude/worktrees/*` session made
   the `post-write` hook (`.claude/hooks/guard.mjs` `postWrite`) block with
   28 retired-term findings, all on lines the edit did not touch, printed as
   `../.claude/Axiomancer/<worktree>/plan/...`. `node
@@ -1409,7 +1409,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   engine's own docs (where `DURABLE_ACTIONS` is defined) so the next reader
   doesn't mistake the allowlist for live behavior on mobile. Ready to ship
   as a docs-only fix; routing to the next `/iterate` pass, tag dropped. The
-  companion mid-encounter persistence fix (`plan/PHASE_CANDIDATES.md`'s
+  companion mid-encounter persistence fix (`plan/CANDIDATES.md`'s
   "No single owner for save/persistence policy" row, second phase) stays
   open — this decision unblocks it but does not implement it.
 
@@ -1768,7 +1768,7 @@ present. Row stays open until that session runs.
 - issue: #449
 - impact: 6
 - ease: 9
-- detail: filed 2026-08-08 by Phase 48. `skills/ship-a-phase.md:325`,
+- detail: filed 2026-08-08 by Phase 48. `skills/ship-a-chunk.md:325`,
   `skills/iterate.md:315` and `scripts/loop-issue.mjs:10` describe the
   trailer as a "belt-and-suspenders backup", and `skills/iterate.md:193`'s
   issue-body template promises "this issue auto-closes when the commit
@@ -1921,7 +1921,7 @@ present. Row stays open until that session runs.
   gitignored and absent in remote containers. The session fell back to
   the GitHub MCP Actions API (which authenticates fine) to confirm
   CI-green, but nothing records that fallback, so every skill step that
-  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
+  says "run `npm run deploy:check`" (oversight §7, ship-a-chunk §10,
   bearings' deploy gate) silently dead-ends in web sessions. Fix
   options: teach `scripts/deploy-check.mjs` to fall back to a
   `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
@@ -1989,7 +1989,7 @@ present. Row stays open until that session runs.
   is canon; the 30 authored enemies need re-authoring to comply
   (reconstruct per-enemy gear-tier inputs so raw stats match the
   budget formula through level 50), then unskip the assertion.
-  Promoted to `plan/PHASE_CANDIDATES.md` as a real content phase —
+  Promoted to `plan/CANDIDATES.md` as a real content phase —
   see "Enemy stat rewrite to budget-curve compliance".
 - next: /oversight (promote candidate to a build-plan phase when
   queue has room)
@@ -2128,11 +2128,11 @@ present. Row stays open until that session runs.
   local tick noticed on its push rejection, yielded, and deleted its duplicate
   brief — but only because the push happened to race. Had both pushed cleanly,
   two agents would have edited spec 34 §2 concurrently.
-- root cause: `ship-a-phase` picks "the first `[ ]` row" with no notion of a
+- root cause: `ship-a-chunk` picks "the first `[ ]` row" with no notion of a
   claim. The mirror issue is a perfect claim token — it is opened at start and
   closed at ship — but it was only ever consulted as find-or-create, never as
   "is someone else already here?".
-- MITIGATED 2026-08-27: `skills/ship-a-phase.md` gains Step 2.4, a claim check
+- MITIGATED 2026-08-27: `skills/ship-a-chunk.md` gains Step 2.4, a claim check
   that reads the open mirror before building and dispatches past a phase
   another tick started in the last ~2 hours. An older open mirror is adopted
   rather than skipped, so a crashed tick still gets finished.
@@ -2293,7 +2293,7 @@ present. Row stays open until that session runs.
   `lexicon.json` rows in the same commit that performs its rename, and
   triages whatever `check-lexicon.mjs` then flags the normal way (fix
   wording / HISTORICAL banner / `<!-- lexicon-ok -->` pragma). See
-  `archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/phases/phase_44a_rename_infrastructure.md` "Decisions made upfront"
+  `archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/README.md` "Decisions made upfront"
   for the full reasoning.
 - update (verified via /oversight 2026-08-12): 44b and 44c followed the
   fix exactly — `lexicon.json` carries dated rows for all of R-1–R-14.
@@ -2344,7 +2344,7 @@ present. Row stays open until that session runs.
 
 ### [x] [docs] Trim-the-fat spec names `.claude/agents/mechanics-expert.md` as a delete candidate, but four live skills spawn it (2026-09-25) — CLOSED 2026-09-28 (R0)
 - **Found by:** T1 of `plan/2026-09-25-trim-the-fat.spec.md` (Tier 1 "Docs" list, last bullet: "Rewrite or delete").
-- **Consumer the audit missed:** `skills/ship-a-phase.md:68,536`, `skills/iterate.md:245,399`, `skills/adjust-cards.md:216`, `skills/adjust-keywords.md:192` all name `mechanics-expert` as the design-second-opinion subagent. Deleting the agent file breaks those spawns.
+- **Consumer the audit missed:** `skills/ship-a-chunk.md:68,536`, `skills/iterate.md:245,399`, `skills/adjust-cards.md:216`, `skills/adjust-keywords.md:192` all name `mechanics-expert` as the design-second-opinion subagent. Deleting the agent file breaks those spawns.
 - **Action taken:** kept (standing frame ¶1). Spec row stands corrected: this is a *rewrite* (its philosophy-theme / stance-proc doctrine is retired), not a delete. Rewrite is design work, out of T1 scope.
 - **CLOSED 2026-09-28 (R0):** addressed by R0. D58 archived `mechanics-expert` with the stewards, and R0 repointed the skills that spawned it, so there is no live consumer left to break.
 
@@ -2524,7 +2524,7 @@ present. Row stays open until that session runs.
   aggregation. Add `avgRoundsToVictory` (victory-only, null when ~0
   victories) to `CombatSimStats` + the stage summary so kill-speed is a
   first-class witness for /deck-tuning. Related: the "Doctrine-curve
-  check in the nightly baseline" candidate (PHASE_CANDIDATES.md) would
+  check in the nightly baseline" candidate (CANDIDATES.md) would
   absorb this harness's per-stage cells — this is the engine-side metric
   that check depends on. (The other residue of this session — the
   mid-collapse quartet foundry/standstill/grace/augury ≈0% mid, and the
@@ -2617,8 +2617,8 @@ present. Row stays open until that session runs.
 ### [x] Hazard v2 engine ownership (DIV-MECH-002) — RESOLVED (mislabeled header fixed via /oversight 2026-08-12)
 - resolved via `/oversight` 2026-07-03: mechanics absorbs
   mobile's duplicate `state/hazard/` engine. Promoted to
-  `plan/PHASE_CANDIDATES.md` -> build plan Phase 13, shipped
-  (re-verified live via /oversight 2026-08-12: `01_build_plan.md`
+  `plan/CANDIDATES.md` -> build plan Phase 13, shipped
+  (re-verified live via /oversight 2026-08-12: `plan/README.md`
   Phase 13 is `[x]`, mobile's local hazard engine is gone).
 
 ### [x] [2.0] `combatMana` slice deprecated but still load-bearing — RESOLVED (mislabeled header fixed via /oversight 2026-08-12)

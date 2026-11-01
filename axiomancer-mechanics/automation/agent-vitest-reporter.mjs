@@ -23,8 +23,8 @@
  * additive surface so the deploy gate's expectations stay stable.
  *
  * Schema details and design decisions live in
- * `plan/phases/phase_39_agent_verify_report.md` and
- * `plan/phases/phase_40_prior_run_diff.md`.
+ * `plan/README.md` and
+ * `plan/README.md`.
  */
 
 // @ts-check

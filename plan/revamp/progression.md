@@ -12,7 +12,7 @@
   scale every keyword family by `base × stat ÷ 5`; VITAE is
   `50 + 12·body + 6·mind + 6·heart`.
 - Card upgrades are no longer parked: D8 is resolved by the UP1 brief
-  (`plan/phases/phase_UP1_card_upgrades.md`); the law shipped in UP1b, the
+  (`plan/README.md`); the law shipped in UP1b, the
   grants follow in UP1d to UP1f.
 - Parked, by owner rulings — not touched by the revamp: die growth
   `bonusTurnDice` / `dieUpgradeLevel` (D20, set only by

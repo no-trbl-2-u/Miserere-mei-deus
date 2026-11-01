@@ -19,7 +19,7 @@ import { lintTree, treeVerdict } from './pr-merge.mjs'
 import { driverCommand, MERGE_DRIVERS, mergeMain, updateBranch } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const PLAN = 'plan/steps/01_build_plan.md'
+const PLAN = 'plan/README.md'
 const DEADLINES = 'plan/deadlines.md'
 const COPIED_SCRIPTS = [
   'build-plan-merge.mjs',
@@ -228,7 +228,7 @@ function insertRow(md, n, line) {
 /** A scratch repo with the live lessons file; the branch and main add one slug in different places. */
 function lessonsClash(branchRule, mainRule, extra) {
   const made = scratch((d) => {
-    for (const f of [LESSONS, 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/PHASE_CANDIDATES.md']) write(d, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+    for (const f of [LESSONS, 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/CANDIDATES.md']) write(d, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
   })
   const { work } = made
   assert.throws(() => git(work, 'config', 'merge.lessons.driver'), 'the scratch repo registers no driver, as GitHub has none')
