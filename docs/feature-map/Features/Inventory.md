@@ -24,6 +24,7 @@ route in Tabs, from `axiomancer-mobile/app/(tabs)/inventory/index.tsx`.
 - [[Features/Deck|Deck]]
 - [[Features/The map|The map]]
 - [[Features/Memoir|Memoir]]
+- [[Features/Settings|Settings]]
 
 ## Uses
 

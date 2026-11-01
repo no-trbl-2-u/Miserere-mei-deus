@@ -32,6 +32,7 @@ import type {
 import { bankedScarMagnitude, HAZARD_SCAR_FLAG_PREFIX } from '../hazard/store-actions';
 
 import { resolveMinigameSeed } from '../minigame-seeds';
+import { recordDeckUpgrade, recordNodeResolved } from '../run-log';
 import { EMPTY_REST_SLICE, type AppStore } from '../store';
 
 /**
@@ -193,6 +194,12 @@ export function claimRestChoiceOutcomeAction(store: AppStore): ClaimRestChoiceRe
         store.getState().save();
     } catch {
         // Persistence failures must not strand the player on the ledger.
+    }
+
+    // The run log: the node's choice, and the upgrade as a deck change (the card before, the card after).
+    recordNodeResolved(store, outcome.chosen);
+    if (upgradedToCardId !== null && outcome.upgradedCardId) {
+        recordDeckUpgrade(store, outcome.upgradedCardId, upgradedToCardId, 'rest');
     }
 
     return {

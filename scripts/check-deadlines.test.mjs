@@ -4,7 +4,8 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { checkDeadlines } from './check-deadlines.mjs'
+import os from 'node:os'
+import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -230,9 +231,100 @@ test('never fails on a needs-plot Item, an overdue Item or an open T task', () =
     assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [])
 })
 
-test('the real plan/deadlines.md and build plan agree', () => {
+test('the real plan has no v1 build plan left (nexus v2 cut-over, NX1d); the NX1c test below reads it whole', () => {
+    assert.equal(fs.existsSync(path.join(ROOT, 'plan/steps/01_build_plan.md')), false)
+})
+
+test('NX1c: the real plan agrees when read through readPlanSources, specs and all', () => {
     const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
-    assert.deepEqual(checkDeadlines(read('plan/deadlines.md'), read('plan/steps/01_build_plan.md')), [])
+    assert.deepEqual(checkDeadlines(read('plan/deadlines.md'), readPlanSources(ROOT)), [])
+})
+
+// NX1c: after the nexus v2 cut-over the open rows live as spec chunks with their old ids as aliases.
+// The same Items as COVER_ALL resolve: A1 and W1 wait on T (A1 says attended, W1 is on the Held lane),
+// P1 and X1 are chunks too, and A0 and K1 shipped (archive lines).
+const SPEC = [
+    '# Spec 21: carried rows',
+    '',
+    '## Chunks',
+    '',
+    'Measure: 4 open · 0 closed · next A5',
+    '',
+    '- [ ] **21.1** open work for T (attended) · S · closes A1 · needs — · alias: A1',
+    '- [ ] **21.2** a wrapped chunk whose header runs · M · closes A2',
+    '  · needs 21.1 · alias: W1',
+    '  - a sub-bullet, not a continuation',
+    '- [ ] **21.3** partial with carry-overs · S · closes A3 · needs — · alias: `P1`',
+    '- [ ] **21.4** owner work · S · closes A4 · needs — · alias: X1',
+    '',
+].join('\n')
+const README = [
+    '# Roadmap',
+    '',
+    '## Lanes',
+    '',
+    "**Held** (waits on a person's word):",
+    '',
+    '- **21.2** · T plays it · since: 2026-11-11 · until: 2026-11-20 · max_age: 14d',
+    "- **21.4** · owner-led · since: 2026-11-11 · until: T's word · max_age: 30d",
+    '',
+    '## Specs',
+    '',
+].join('\n')
+const ARCHIVE = [
+    '# Archive',
+    '',
+    '- 2026-10-01 · 20.1 (alias: A0) · shipped · a1b2c3d',
+    '- 2026-10-02 · 20.2 (alias: K1) · skipped by T · b2c3d4e',
+    '- 2026-10-03 · 20.3 · a chunk with no alias · c3d4e5f',
+    '',
+].join('\n')
+const V2 = { buildPlan: null, specs: [{ file: 'plan/21-carried.md', md: SPEC }], readme: README, archive: ARCHIVE }
+
+test('NX1c: a plan carried into a v2 spec passes the same Items through its aliases', () => {
+    assert.deepEqual(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), BUILD_PLAN), [])
+    assert.deepEqual(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), V2), [])
+})
+
+test('NX1c: an open alias with no Item is named in its spec file', () => {
+    const errors = checkDeadlines(deadlines(COVER_ALL, '- P1 — pre-revamp partial.'), V2)
+    assert.deepEqual(errors, ['plan/21-carried.md: open row X1 [ ] has no Item in plan/deadlines.md; give it an Items row with a date, or a "- X1 — <reason>" line under ## Unscheduled.'])
+})
+
+test('NX1c: an Item naming an alias that resolves nowhere has no row', () => {
+    const errors = checkDeadlines(deadlines([...COVER_ALL, '| [ ] | 2026-10-25 | Ghost | W1 | SM9z |'], EXCUSE_REST), V2)
+    assert.match(errors[0], /Item "Ghost" names SM9z, which has no row/)
+})
+
+test('NX1c: an alias named twice fails the lint: on two chunks, on a chunk and an archive line, beside a build-plan row', () => {
+    const twice = SPEC.replace('alias: X1', 'alias: X1, A1')
+    assert.deepEqual(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), { ...V2, specs: [{ file: 'plan/21-carried.md', md: twice }] }), [
+        'plan/deadlines.md: A1 is named 2 times (plan/21-carried.md chunk 21.1, plan/21-carried.md chunk 21.4); an id has one home: keep one alias.',
+    ])
+    const archived = `${ARCHIVE}- 2026-10-04 · 20.4 (alias: P1) · again · d4e5f6a\n`
+    assert.match(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), { ...V2, archive: archived })[0],
+        /P1 is named 2 times \(plan\/21-carried\.md chunk 21\.3, plan\/ARCHIVE\.md chunk 20\.4\)/)
+    const both = checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), { ...V2, buildPlan: BUILD_PLAN })
+    assert.ok(both.some((e) => /A1 is named 2 times \(plan\/steps\/01_build_plan\.md, plan\/21-carried\.md chunk 21\.1\)/.test(e)), both.join('\n'))
+})
+
+test('NX1c: readPlanSources reads the build plan, every NN-<slug>.md spec, the roadmap and the archive', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deadlines-sources-'))
+    try {
+        fs.mkdirSync(path.join(dir, 'plan', 'steps'), { recursive: true })
+        fs.writeFileSync(path.join(dir, 'plan', '21-carried.md'), SPEC)
+        fs.writeFileSync(path.join(dir, 'plan', '2026-09-25-notes.prompt.md'), '- [ ] **99.1** not a spec · S · closes A1 · needs — · alias: Z9\n')
+        fs.writeFileSync(path.join(dir, 'plan', 'README.md'), README)
+        fs.writeFileSync(path.join(dir, 'plan', 'ARCHIVE.md'), ARCHIVE)
+        const v2 = readPlanSources(dir)
+        assert.equal(v2.buildPlan, null)
+        assert.deepEqual(v2.specs.map((s) => s.file), ['plan/21-carried.md'])
+        assert.deepEqual(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), v2), [])
+        fs.writeFileSync(path.join(dir, 'plan', 'steps', '01_build_plan.md'), BUILD_PLAN)
+        assert.equal(readPlanSources(dir).buildPlan, BUILD_PLAN)
+    } finally {
+        fs.rmSync(dir, { recursive: true, force: true })
+    }
 })
 
 // A9 (phase DL1c): a superseded premise is the drift no rule above sees, so the guard is a procedure step in
@@ -246,8 +338,9 @@ const section = (text, heading) => {
 }
 
 for (const [file, step, commitStep] of [
-    ['skills/plot.md', '### Step 4 — Slot', '### Step 5 — Open the PR'],
-    ['skills/messy.md', '### Step 4 — Refine', '### Step 5 — Commit'],
+    // Since the nexus v2 cut-over (NX1d) the reconcile is in each skill's Miserere section 7.
+    ['skills/plot.md', '### 7.2 Aliases, Held lines and the deadline plan', '### 7.1 Open the PR'],
+    ['skills/messy.md', '## 7. Miserere: kept on top of the kit', '## 7. Miserere: kept on top of the kit'],
 ]) {
     test(`A9: ${file} carries the deadline reconcile step in its queue step`, () => {
         const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
@@ -262,18 +355,18 @@ for (const [file, step, commitStep] of [
 }
 
 test('DL2b A7: /plot and /messy file a new loop row under the Waits on of a T act, never an Item of its own', () => {
-    const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')
+    const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
     assert.match(plot, /every Item is a T act/)
     assert.match(plot, /`Waits on` cell of the T act it\s+unblocks/)
     assert.match(plot, /is ticked `\[x\]` by hand/)
-    const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '### Step 4 — Refine')
+    const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '## 7. Miserere: kept on top of the kit')
     assert.match(messy, /Every Item is a T act/)
     assert.match(messy, /`Waits on` cell, never into an Item's\s+`Rows`/)
 })
 
-test('A9: /plot gives every row it adds an Item or an ## Unscheduled line', () => {
-    const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### Step 4 — Slot')
-    assert.match(body, /Every row the plot added/)
+test('A9: /plot gives every chunk it adds an Item or an ## Unscheduled line', () => {
+    const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
+    assert.match(body, /Every chunk the plot added/)
     assert.match(body, /## Unscheduled/)
     assert.match(body, /node scripts\/deadlines\.mjs --write/)
 })

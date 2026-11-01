@@ -14,12 +14,11 @@ import {
     validateDeckEventPost,
     type DeckEventPost,
     type GameState,
-    type PlayLogSource,
 } from '@mechanics';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { createDeckEventPoster, deckEventWhere, runDeck, type DeckChange } from '@/lib/deckEvents';
-import { playSessionId } from '@/lib/playLog';
+import { createDeckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckChange } from '@/lib/deckEvents';
+import { playSessionId, type PlayLogStamps } from '@/lib/playLog';
 import type { PuzzleApiConfig, PuzzleFetch } from '@/lib/puzzleAttempts';
 import { createAppActions } from '@/state/actions';
 import {
@@ -47,7 +46,7 @@ jest.mock('@/lib/buildProfile', () => ({
 const devTools = isDevToolsEnabled as unknown as jest.Mock<() => boolean>;
 
 const CONFIG: PuzzleApiConfig = { url: 'https://miserere-api.example.workers.dev', token: 'dev-token' };
-const SOURCE: PlayLogSource = { solver: '', sessionId: 'session-1', buildCommit: 'abc1234', appBuild: '1.0.0 preview' };
+const SOURCE: PlayLogStamps = { solver: '', sessionId: 'session-1', buildCommit: 'abc1234', appBuild: '1.0.0 preview', source: 'harness' };
 
 type Call = { url: string; body: DeckEventPost };
 
@@ -57,6 +56,8 @@ const realFetch = global.fetch;
 
 function captureFetch(): PuzzleFetch {
     return async (url, init) => {
+        // Only deck events are pinned here; the run log's posts (open, events, close) are pinned in state/__tests__/run-log.test.ts.
+        if (!url.endsWith(PLAY_LOG_DECK_EVENTS_PATH)) return { ok: true, status: 201 };
         calls.push({ url, body: JSON.parse(init.body) as DeckEventPost });
         return { ok: fetchOk, status: fetchOk ? 201 : 500 };
     };
@@ -86,8 +87,12 @@ function onlyPost(): DeckEventPost {
     expect(verdict.reasons).toEqual([]);
     expect(calls[0]!.body.buildCommit).toBe('abc1234');
     expect(calls[0]!.body.sessionId).toBe(playSessionId());
+    // No jest run carries the human stamp (SM1b), so every call site posts as the harness.
+    expect(calls[0]!.body.source).toBe('harness');
     return calls[0]!.body;
 }
+
+const runIdOf = (store: AppStore): string => (store.getState() as unknown as GameState).runId;
 
 beforeEach(() => {
     calls = [];
@@ -107,7 +112,7 @@ afterEach(() => {
 
 describe('createDeckEventPoster', () => {
     const change: DeckChange = {
-        kind: 'remove', cardId: 'strike', offered: null, deck: ['guard'], where: { nodeId: 'n1', screen: 'rest' },
+        kind: 'remove', cardId: 'strike', offered: null, deck: ['guard'], where: { nodeId: 'n1', screen: 'rest' }, runId: 'run-1',
     };
 
     it('stamps the change with the source and posts it to /v1/deck-events', async () => {
@@ -138,6 +143,52 @@ describe('runDeck and deckEventWhere', () => {
         expect(deckEventWhere(state, 'rest')).toEqual({ nodeId: state.world.currentMap.currentNode, screen: 'rest' });
         expect(runDeck({})).toEqual([]);
         expect(deckEventWhere({}, 'cache')).toEqual({ nodeId: null, screen: 'cache' });
+    });
+
+    it('deckEventRunId reads the save run id, and is null when the state carries none', () => {
+        const state = storeWithDeck().getState() as unknown as GameState;
+        expect(deckEventRunId(state)).toBe(state.runId);
+        expect(deckEventRunId({})).toBeNull();
+        expect(deckEventRunId({ runId: '' })).toBeNull();
+    });
+});
+
+describe('the run id on every call site (SM1b, A5)', () => {
+    it('a reward and the cache claim after it share the store run id', async () => {
+        const store = storeWithDeck();
+        const runId = runIdOf(store);
+        claimCombatRewardAction(store, rollCombatRewardAction(store)[0]!);
+        beginLootCacheChoiceAction(store, { seed: 7 });
+        chooseLootCacheChoiceOfferAction(store, 'card');
+        claimLootCacheChoiceOutcomeAction(store);
+        await flush();
+        expect(calls.map((c) => c.body.runId)).toEqual([runId, runId]);
+        expect(runId.length).toBeGreaterThan(0);
+    });
+
+    it('a village removal carries the run id', async () => {
+        const store = storeWithDeck();
+        store.setState({
+            event: {
+                ...EMPTY_EVENT_SLICE,
+                pending: {
+                    state: undefined as never,
+                    event: { kind: 'village', villageName: 'V', merchants: [], cardShop: { cardIds: [], price: 6 } },
+                },
+            },
+        });
+        removeVillageCardAction(store, COMBAT_REWARD_POOL[0]!);
+        await flush();
+        expect(onlyPost().runId).toBe(runIdOf(store));
+    });
+
+    it('the run-end event carries the run that ended, and a reset then changes the id', async () => {
+        const store = storeWithDeck();
+        const before = runIdOf(store);
+        createAppActions(store).resetRun({ keepCharacter: true });
+        await flush();
+        expect(onlyPost().runId).toBe(before);
+        expect(runIdOf(store)).not.toBe(before);
     });
 });
 

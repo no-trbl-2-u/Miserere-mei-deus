@@ -8,6 +8,7 @@
 
 import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { Haptics } from '@/lib/platform/haptics';
 import Animated, {
     Easing,
@@ -271,17 +272,17 @@ export function CardDetailOverlay({ card, onClose }: { card: HazardCardVM; onClo
     return (
         <Pressable style={styles.detailRoot} onPress={onClose} testID="hazard-card-detail">
             <View style={{ paddingTop: 14, paddingHorizontal: 14 }}>
-                {card.keywords.map((kw) => (
-                    <View key={kw.id} style={styles.keyword}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                            <Text style={styles.keywordName}>{kw.name}</Text>
-                            <Text style={styles.keywordTag}>KEYWORD</Text>
-                        </View>
-                        <Text style={styles.keywordDesc}>{kw.desc}</Text>
-                    </View>
-                ))}
+                {/* Wrapped in its own Pressable so a tap landing on the ledger's
+                    rows still closes the overlay, matching CombatEncounterPanel's
+                    identical card-detail-over-backdrop case. */}
+                <Pressable onPress={onClose}>
+                    <CardKeywordLedger
+                        keywords={card.keywords.map((kw) => ({ name: kw.name, def: kw.desc }))}
+                        testID="hazard-card-detail-keywords"
+                    />
+                </Pressable>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} testID="hazard-card-detail-card">
                 <Animated.View entering={FadeIn.duration(180)}>
                     <HazardCard card={card} mode="detail" />
                 </Animated.View>
@@ -320,9 +321,5 @@ const useStyles = makeStyles((AXM) => ({
     outcomeCtaText: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 2.5 },
 
     detailRoot: { ...StyleSheet.absoluteFillObject, zIndex: 62, backgroundColor: 'rgba(5,4,3,0.96)' },
-    keyword: { paddingHorizontal: 11, paddingVertical: 8, backgroundColor: 'rgba(10,9,7,0.95)', borderWidth: 1, borderColor: AXM.ash, marginBottom: 6 },
-    keywordName: { fontFamily: FONTS.gothic, fontSize: 14, letterSpacing: 1, color: AXM.sulfur },
-    keywordTag: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 2, color: AXM.bone },
-    keywordDesc: { fontFamily: FONTS.serif, fontSize: 14, color: AXM.parchment, lineHeight: 18, marginTop: 3 },
 
 }));

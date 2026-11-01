@@ -49,6 +49,8 @@ export interface PlayerSettings {
     readonly reducedMotion: ReducedMotionPreference;
     readonly haptics: boolean;
     readonly textScale: TextScale;
+    /** The music switch. Off silences the theme; the volume below is kept for when it is switched back on. */
+    readonly musicOn: boolean;
     /** 0–100. The background music's volume (`components/BackgroundMusic.tsx`). */
     readonly musicVolume: number;
     /** 0–100. Persisted for the sound-effects build; no sound effect plays yet. */
@@ -59,6 +61,7 @@ export const DEFAULT_SETTINGS: PlayerSettings = Object.freeze({
     reducedMotion: 'system',
     haptics: true,
     textScale: 1,
+    musicOn: true,
     musicVolume: 70,
     sfxVolume: 80,
 });
@@ -82,6 +85,7 @@ export function sanitizeSettings(raw: unknown): PlayerSettings {
         reducedMotion: isReducedMotion(r.reducedMotion) ? r.reducedMotion : DEFAULT_SETTINGS.reducedMotion,
         haptics: typeof r.haptics === 'boolean' ? r.haptics : DEFAULT_SETTINGS.haptics,
         textScale: isTextScale(r.textScale) ? r.textScale : DEFAULT_SETTINGS.textScale,
+        musicOn: typeof r.musicOn === 'boolean' ? r.musicOn : DEFAULT_SETTINGS.musicOn,
         musicVolume: clampVolume(r.musicVolume, DEFAULT_SETTINGS.musicVolume),
         sfxVolume: clampVolume(r.sfxVolume, DEFAULT_SETTINGS.sfxVolume),
     };

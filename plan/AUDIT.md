@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [debt] Carry-overs of the ten pre-revamp partial rows, archived as dropped at the nexus v2 cut-over (NX1d, ruling R7, 2026-11-01)
+- category: debt
+- impact: 2
+- ease: 5
+- detail: the v1 build plan's `[-]` rows 90 (summoner half), 52b (the inn as a first-class rest), 47c-47e (Expo decouple: assets, device APIs, build and CI), V2 (map scene: torn frame, region-accent theming, legend refresh), V3 (shared eyebrow header, panel-furniture pass), V6 (glyph unification remainders), V7 (procedural illustrations; art is T's), W5 (per-map roster growth; enemies are T's B2) and the V1 residue bullet (the PixelHeartEmblem / PixelEmblem pair; the orphaned BodyDiagram, MindMark and FriendshipMeter) left the plan as `dropped` lines in `plan/ARCHIVE.md`. Most predate THE REVAMP and may be moot: verify each against current code before acting. Full text: `git show fd21d04ab:plan/steps/01_build_plan.md`.
+- next: /iterate checks the code-only ones (the emblem pair, the three orphans) and closes what the revamp already removed; anything that is content or art (V7, W5) is T's, filed only as a `/plot` candidate.
+
 ### [ ] [content] BUG1j's universal befriend collapses the greedy sim policy's chapter-clear rate from ~85% to ~12% (fix-ci, verify-mobile run 41245913757, 2026-10-31)
 - category: content
 - impact: 6

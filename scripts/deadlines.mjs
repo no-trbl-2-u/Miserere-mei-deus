@@ -7,14 +7,16 @@
 //                                         # Status cell in plan/deadlines.md (the daily workflow)
 //   node scripts/deadlines.mjs --today=YYYY-MM-DD   # pin the date (tests, previews)
 //
-// Reads plan/deadlines.md (the whole plan) and plan/steps/01_build_plan.md; the
-// rules live in scripts/deadlines-lib.mjs. Never fails a session: a missing or
+// Reads plan/deadlines.md (the whole plan) and the rows it names: plan/steps/01_build_plan.md
+// and, from the nexus v2 cut-over, the specs' chunk aliases (check-deadlines.mjs
+// readPlanSources); the rules live in scripts/deadlines-lib.mjs. Never fails a session: a missing or
 // malformed file prints nothing under --remind.
 
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { dueNeeds, liveMarkdown, nextNeed, parseItems, parsePhaseRows, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
+import { readPlanSources } from './check-deadlines.mjs'
+import { dueNeeds, liveMarkdown, nextNeed, parseItems, planRows, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -33,7 +35,7 @@ const main = () => {
     // Chats T starts only: the loop's runs in GitHub Actions stay clean.
     if (flag('remind') && (process.env.GITHUB_ACTIONS || process.env.CI)) return
     const today = todayArg ?? localToday()
-    const phases = parsePhaseRows(read('plan/steps/01_build_plan.md'))
+    const { phases } = planRows(readPlanSources(ROOT))
     let deadlinesMd = read('plan/deadlines.md')
     if (flag('write')) {
         const rewrite = rewriteItemStatus(deadlinesMd, phases)

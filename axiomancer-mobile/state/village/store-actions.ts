@@ -19,7 +19,7 @@ import {
     type VillageVisit,
 } from '@mechanics';
 
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
 import type { AppStore } from '../store';
 
@@ -112,5 +112,6 @@ function postRemoveEvent(store: AppStore, cardId: string): void {
         offered: null,
         deck: runDeck(state),
         where: deckEventWhere(state, 'village'),
+        runId: deckEventRunId(state),
     });
 }

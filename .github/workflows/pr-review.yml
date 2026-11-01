@@ -182,6 +182,11 @@ jobs:
       - name: Plan-queue lint
         run: node scripts/check-plan-queues.mjs
 
+      # The nexus v2 plan shape (specs, chunks, lanes, archive; phase NX1d)
+      # is bookkeeping too, so a plot PR reaches no verify-* job: gate it here.
+      - name: Plan shape (plan-check)
+        run: node scripts/plan-check.mjs
+
       - name: Classify the diff against the verify-* path filters
         id: classify
         run: node scripts/pr-gate.mjs classify --pr "$PR"

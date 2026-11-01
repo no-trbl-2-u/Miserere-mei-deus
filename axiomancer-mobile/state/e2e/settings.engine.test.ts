@@ -48,6 +48,22 @@ describe('sanitizeSettings', () => {
     });
 });
 
+describe('musicOn', () => {
+    it('reads as on in a save written before it existed, and keeps a stored off', () => {
+        expect(sanitizeSettings({ musicVolume: 30 }).musicOn).toBe(true);
+        expect(sanitizeSettings({ musicOn: false }).musicOn).toBe(false);
+        expect(sanitizeSettings({ musicOn: 'no' }).musicOn).toBe(true);
+    });
+
+    it('reset turns it back on', () => {
+        const store = createSettingsStore({ storage: fakeStorage() });
+        store.set({ musicOn: false });
+        expect(store.get().musicOn).toBe(false);
+        store.reset();
+        expect(store.get().musicOn).toBe(true);
+    });
+});
+
 describe('createSettingsStore', () => {
     it('set merges, notifies and persists; reset returns to the defaults', async () => {
         const storage = fakeStorage();

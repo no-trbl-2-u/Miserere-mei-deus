@@ -6,8 +6,8 @@
 // from the title screen; this drive checks it in a browser, from a fresh save.
 //
 //   1. PLAY: a new game the way a player starts one (title, save slot, the
-//      windmill arrival; a run starts with no relic), every tab, the hazard deck and
-//      settings from the SELF sheet, then the start map's first road: onto the
+//      windmill arrival; a run starts with no relic), every tab (SETTINGS among them), the hazard
+//      deck from the SELF sheet, then the start map's first road: onto the
 //      windmill's one neighbour, a fight, to its reveal.
 //   2. SEAMS: every reachable route play did not reach is provoked from the
 //      dev tools (the same `/dev` buttons the encounter-routing journey
@@ -322,13 +322,11 @@ async function shell(page) {
     await waitForPath(page, '/character', 'back from the hazard deck')
     log('play: the hazard deck and back')
 
-    await page.getByTestId('self-settings-link').first().scrollIntoViewIfNeeded().catch(() => {})
-    await tap(page, 'self-settings-link') || fail('the SELF sheet has no settings link')
-    await waitForPath(page, '/settings', 'settings')
+    await clickTab(page, 'Settings', '/settings-tab')
     await waitFor(page, 'settings-screen', 'the settings screen')
-    await tap(page, 'settings-back')
-    await waitForPath(page, '/character', 'back from settings')
-    log('play: settings and back')
+    if (await page.getByTestId('settings-back').count()) fail('the SETTINGS tab shows a close control')
+    await clickTab(page, 'Character', '/character')
+    log('play: the settings tab and back')
 
     await clickTab(page, 'Exploration', '/exploration')
     await settleOnMap(page, 'back to the map')
@@ -402,6 +400,9 @@ const SEAMS = {
     // A revive arms this screen in memory and a lost fight is not a seam, so the
     // forced-dev-tools leg opens its preview (`?preview=1`) directly.
     'route:death-return': { url: '/death-return?preview=1', landing: 'death-return' },
+    // The full-screen settings route is the title menu's SETTINGS (the SELF sheet no
+    // longer links to it); the SETTINGS tab is the play leg's. Open it by its path.
+    'route:settings': { url: '/settings', landing: 'settings-screen' },
     'route:character-select': { leaf: 'dev-open-character-select', landing: 'character-select-carousel' },
 }
 

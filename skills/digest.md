@@ -44,9 +44,9 @@ its own cadence.
      --json displayTitle,conclusion,createdAt,updatedAt
    ```
 
-   Plus queue states: build-plan `[ ]` / `[blocked:]` counts,
+   Plus queue states: open chunk / Held line counts,
    `plan/AUDIT.md` pending, `plan/CRITIQUE.md` pending + last
-   pass age, `plan/PHASE_CANDIDATES.md` pending, open
+   pass age, `plan/CANDIDATES.md` pending, open
    `loop:do` issues, deploy state (`npm run deploy:check`).
    Name the phase in flight (an open `loop:pr` PR) and the next
    pickable row (`skills/march.md` §3), and list open `loop:pr` PRs
@@ -247,7 +247,7 @@ its own cadence.
 5. **Meta-loop, within rails:** if the pulse shows a mistuned
    gate (critique never firing, the ceiling hibernating
    productive days, a starved queue), file the tuning as a
-   `plan/PHASE_CANDIDATES.md` candidate citing the pulse
+   `plan/CANDIDATES.md` candidate citing the pulse
    numbers. **Never edit gates, cadences, ceilings, or rules
    directly** — proposals only; `/oversight` promotes. The
    loop does not vote on its own constraints.
@@ -261,7 +261,7 @@ its own cadence.
     line carries at least one of these three triggers:
 
     1. **A major release**:
-       - a build-plan phase shipped (checked off in the window); or
+       - a chunk shipped (an `ARCHIVE.md` line in the window); or
        - a new game system, mechanic or feature a player uses: a
          new screen, a new way to play, a new enemy archetype, a
          new region.
@@ -380,7 +380,7 @@ npm run devlog:shots -- <ref> <date> # collect UI before/after/diff (if screens 
 npm run site:build                   # catalog (export+render) + entry HTML + hub (gitignored output)
 npm run site:public                  # the public build into dist/ (gitignored)
 plan/AUDIT.md                        # breadth failures land here
-plan/PHASE_CANDIDATES.md             # tuning proposals land here
+plan/CANDIDATES.md             # tuning proposals land here
 gh run list --workflow march -L 20   # the invisible no-ops
 npm --workspace axiomancer-mobile run e2e:minigames  # nightly breadth leg
 npm run verify

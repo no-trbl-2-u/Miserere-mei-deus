@@ -91,6 +91,32 @@ describe('CombatRewardsOverlay', () => {
         expect(screen.getByTestId('combat-reward-preview-flavor')).toBeTruthy();
     });
 
+    it('the preview floats the keyword ledger above and outside the card panel', () => {
+        renderOverlay();
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[2]}`));
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[2]}`));
+        const preview = screen.getByTestId('combat-reward-preview');
+        const ledger = screen.getByTestId('combat-reward-preview-keywords');
+        // Outside: the panel is not an ancestor of the ledger.
+        for (let p = ledger.parent; p; p = p.parent) {
+            expect(p.props?.testID).not.toBe('combat-reward-preview-panel');
+        }
+        // Above: the ledger precedes the panel in render order.
+        const order: string[] = [];
+        const walk = (n: unknown): void => {
+            if (n === null || typeof n !== 'object') return;
+            const el = n as { props?: Record<string, unknown>; children?: unknown[] };
+            if (typeof el.props?.testID === 'string') order.push(el.props.testID);
+            for (const c of el.children ?? []) walk(c);
+        };
+        walk(preview);
+        expect(order.indexOf('combat-reward-preview-keywords')).toBeGreaterThanOrEqual(0);
+        expect(order.indexOf('combat-reward-preview-keywords')).toBeLessThan(order.indexOf('combat-reward-preview-panel'));
+        // BACK and CHOOSE THIS stay inside the panel.
+        expect(screen.getByTestId('combat-reward-preview-close')).toBeTruthy();
+        expect(screen.getByTestId('combat-reward-preview-select')).toBeTruthy();
+    });
+
     it('each tile says how it answers a tap', () => {
         const { offers } = renderOverlay();
         for (const offer of offers) {

@@ -8,7 +8,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { canSendPlayLog, mintSessionId, playLogConfig, playSessionId } from '@/lib/playLog';
+import { canSendPlayLog, mintSessionId, playLogConfig, playLogSource, playLogSourceKind, playSessionId } from '@/lib/playLog';
 import { puzzleApiConfig } from '@/lib/puzzleAttempts';
 import { createDevSettingsStore, type DevSettingsStore } from '@/state/dev/dev-settings';
 
@@ -68,6 +68,33 @@ describe('canSendPlayLog', () => {
     it('leaves the puzzle poster gate alone: the switch off still lets a puzzle attempt post', () => {
         store.set({ playLogging: false });
         expect(puzzleApiConfig()).not.toBeNull();
+    });
+});
+
+describe('who played the build (SM1b, A4)', () => {
+    afterEach(() => {
+        delete process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE;
+    });
+
+    it('is the harness when the build carries no stamp: a web export, a dev server, a jest run', () => {
+        delete process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE;
+        expect(playLogSourceKind()).toBe('harness');
+        expect(playLogSource().source).toBe('harness');
+    });
+
+    it('is human only when the build carries exactly human', () => {
+        process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE = 'human';
+        expect(playLogSourceKind()).toBe('human');
+        expect(playLogSource()).toMatchObject({ source: 'human', solver: '', sessionId: playSessionId() });
+        process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE = ' human ';
+        expect(playLogSourceKind()).toBe('human');
+    });
+
+    it('never sends sim, and reads any other value as the harness', () => {
+        for (const value of ['sim', 'harness', 'Human', '', 'true']) {
+            process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE = value;
+            expect(playLogSourceKind()).toBe('harness');
+        }
     });
 });
 

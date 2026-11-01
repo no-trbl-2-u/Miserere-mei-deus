@@ -34,14 +34,16 @@
  * Every fight, deck event and puzzle attempt says who played it (phase SM1a): `source` is `human`,
  * `harness` or `sim`, stored `human` when a post leaves it out, and `runId` is the save's run id or
  * null. A list takes `?source=` (`human`, `harness`, `sim` or `all`; absent reads every source); a
- * report takes the same and reads `human` when it is absent. Any other value is a 400.
+ * report takes the same and reads `human` when it is absent, except `run-summary` (every source, one
+ * row group each) and `card-vs-bot` (always `human` beside `sim`; it reads `?build=` only). Any other
+ * value is a 400.
  *
  * A run (phase SM1c) is one `play_runs` row, opened when it starts and closed once when it ends; the
  * Worker stamps `startedAt` and `endedAt`. Its `run_events` (a node entered or resolved, a hazard
  * ended, XP, a level, an item) post in batches of at most 200 events and 256 KiB, each carrying a
  * per-run `seq`. An open body is capped at 64 KiB, as is a close. The run id is the save's.
  *
- * The reports are `card-usage`, `card-gaps` and `signature-usage` (`reports.ts`); their SQL is
+ * The reports are `card-usage`, `card-gaps`, `signature-usage`, `card-vs-bot` and `run-summary` (`reports.ts`); their SQL is
  * fixed on the Worker and the query string only binds values. Another name is
  * a 404 and any method but GET a 405.
  *
@@ -278,11 +280,12 @@ async function handleReport(request: Request, url: URL, env: Env): Promise<Respo
         return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
     }
     const name = url.pathname.slice(REPORTS_PATH_PREFIX.length);
-    if (!isReportName(name)) return error(404, 'not found', [`report: expected card-usage, card-gaps or signature-usage, got ${JSON.stringify(name)}`]);
+    if (!isReportName(name)) return error(404, 'not found', [`report: expected card-usage, card-gaps, signature-usage, card-vs-bot or run-summary, got ${JSON.stringify(name)}`]);
     if (request.method !== 'GET') return error(405, 'method not allowed', undefined, { Allow: 'GET' });
     const build = url.searchParams.get('build') || null;
     const card = url.searchParams.get('card') || null;
-    const asked = url.searchParams.get('source') || 'human';
+    // run-summary lists each source in its own rows, so an absent `?source=` reads them all (SM1h); every other report reads `human`.
+    const asked = url.searchParams.get('source') || (name === 'run-summary' ? 'all' : 'human');
     if (!isSourceFilter(asked)) return badSource(asked);
     return json(await runReport(name, env, { build, card, source: asked }));
 }

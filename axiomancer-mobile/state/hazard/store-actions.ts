@@ -38,6 +38,7 @@ import { appendAcquiredCard, HAZARD_CARD_FLAG_PREFIX, hazardDeckBag } from '@mec
 import type { HazardRouteKey, HazardSessionState } from '@mechanics';
 import { resolveMinigameSeed, resolveMinigameString } from '../minigame-seeds';
 import { armDeathReturn } from '../death-return';
+import { recordHazardEnded, recordNodeResolved } from '../run-log';
 import type { AppStore } from '../store';
 
 export interface MobileHazardSlice {
@@ -370,7 +371,14 @@ export function claimHazardRewardsAction(
     // `setState` below.
     const nominalHealth = player.health + vitaeDelta;
     if (engineIsDefeated({ ...player, health: nominalHealth })) {
+        // The run log: the node is named before the death rule moves the player, and the
+        // hazard is logged on the run it happened in (a run over gives the store a new id).
+        const hazardRun = state.runId;
+        recordNodeResolved(store, 'hazard-died');
         const outcomeKind = die('hazard');
+        // A revive leaves the player at the VITAE the death rule gave; a run over leaves none.
+        const vitaeAfter = outcomeKind === 'revived' ? (store.getState() as unknown as GameState).player.health : 0;
+        recordHazardEnded(store, { hazardId: s.hazardId, cleared: false, vitaeBefore: player.health, vitaeAfter }, hazardRun);
         // Stamp the tombstone onto the post-death flags (a run over rebuilds
         // run flags, so it is appended after the death rule ran). `dying` is
         // never written here: the death rule owns it.
@@ -421,6 +429,11 @@ export function claimHazardRewardsAction(
     } catch {
         // Persistence failures must not strand the player on the modal.
     }
+
+    // The run log: the crossing survived, and the VITAE on either side of it.
+    const cleared = outcome.tier !== 'failure';
+    recordHazardEnded(store, { hazardId: s.hazardId, cleared, vitaeBefore: player.health, vitaeAfter: newHealth });
+    recordNodeResolved(store, cleared ? 'hazard-cleared' : 'hazard-failed');
 
     return {
         applied: true,

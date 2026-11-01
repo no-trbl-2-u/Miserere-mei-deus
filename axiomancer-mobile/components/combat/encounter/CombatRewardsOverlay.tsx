@@ -32,6 +32,7 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -199,7 +200,12 @@ export function CombatRewardsOverlay({
                 nothing is committed to the run unread. */}
             {previewCard && (
                 <View style={styles.previewOverlay} testID="combat-reward-preview">
-                    <View style={[styles.previewPanel, { borderColor: previewCard.face.categoryColor }]}>
+                    <View style={styles.previewColumn}>
+                    <CardKeywordLedger
+                        keywords={previewCard.detail.keywords}
+                        testID="combat-reward-preview-keywords"
+                    />
+                    <View style={[styles.previewPanel, { borderColor: previewCard.face.categoryColor }]} testID="combat-reward-preview-panel">
                         <ScrollView contentContainerStyle={styles.previewScroll}>
                             <CombatCardFace card={previewCard} width={PREVIEW_W} height={PREVIEW_H} large />
                             {/* The face carries only KEYWORD · value, so the preview states the two plays itself —
@@ -214,16 +220,6 @@ export function CombatRewardsOverlay({
                                     {previewCard.detail.diePaidLine ?? previewCard.detail.outcomeLine}
                                 </Text>
                             </View>
-                            {previewCard.detail.keywords.length > 0 && (
-                                <View style={styles.previewKeywords}>
-                                    {previewCard.detail.keywords.map((kw) => (
-                                        <Text key={kw.name} style={styles.previewKeywordLine}>
-                                            <Text style={[styles.previewKeywordName, { color: previewCard.face.categoryColor }]}>{kw.name}</Text>
-                                            {' — ' + kw.def}
-                                        </Text>
-                                    ))}
-                                </View>
-                            )}
                             {previewCard.flavor ? (
                                 <Text style={styles.previewFlavor} testID="combat-reward-preview-flavor">{previewCard.flavor}</Text>
                             ) : null}
@@ -252,6 +248,7 @@ export function CombatRewardsOverlay({
                             </Pressable>
                         </View>
                     </View>
+                    </View>
                 </View>
             )}
         </View>
@@ -279,14 +276,12 @@ const useStyles = makeStyles((AXM) => ({
     upgradeBack: { flex: 0, marginTop: 12 },
     btnNote: { fontFamily: FONTS.sans, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
     previewOverlay: { ...StyleSheet.absoluteFillObject, zIndex: 70, backgroundColor: 'rgba(0,0,0,0.92)', alignItems: 'center', justifyContent: 'center', padding: 14 },
-    previewPanel: { width: '100%', maxWidth: 400, maxHeight: '92%', borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 14, paddingTop: 16, paddingBottom: 12 },
+    previewColumn: { width: '100%', maxWidth: 400, maxHeight: '100%' },
+    previewPanel: { width: '100%', maxWidth: 400, flexShrink: 1, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 14, paddingTop: 16, paddingBottom: 12 },
     previewScroll: { alignItems: 'center', paddingBottom: 10 },
     previewPlays: { marginTop: 12, alignSelf: 'stretch', paddingTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(255,255,255,0.16)' },
     previewPlayLine: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginBottom: 4 },
     previewPlayTag: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1, color: AXM.bone },
-    previewKeywords: { marginTop: 14, alignSelf: 'stretch' },
-    previewKeywordLine: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginBottom: 5 },
-    previewKeywordName: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.2 },
     previewFlavor: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.bone, textAlign: 'center', marginTop: 12, lineHeight: 18 },
     previewActions: { flexDirection: 'row', gap: 10, marginTop: 10 },
     previewBtn: { flex: 1, borderWidth: 2, paddingVertical: 11, alignItems: 'center' },

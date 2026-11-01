@@ -33,6 +33,7 @@ import {
 } from '@mechanics';
 
 import { resumeLabyrinthSession } from '../labyrinth/resume';
+import { recordRunOpened } from '../run-log';
 import type { SaveSlotId, SaveSlotStore } from '../persistence/saveSlots';
 import { mostRecentSlot } from '../persistence/saveSlots';
 import {
@@ -126,6 +127,8 @@ export function startNewGameAction(
         /* persistence must not block the start of a run */
     }
     getLogger().info('persistence', 'new-game', { slot, runId: fresh.runId, startMap: fresh.world.currentMap.name });
+    // The play log: the run opens as the character it was started as (a no-op with the gate shut).
+    recordRunOpened(fresh);
     return fresh;
 }
 

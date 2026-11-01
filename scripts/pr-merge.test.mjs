@@ -68,8 +68,15 @@ test('only a plot PR never merges: the plot label or a plot: title (D101)', () =
   assert.equal(mergeWanted(pr({ title: 'feat: plan the dock' })).go, true, 'the word inside a title is not a prefix')
 })
 
+test('a review:rules-change PR with a passing verdict is held for T (D119)', () => {
+  const d = mergeWanted(pr({ labels: ['loop:pr', 'review:rules-change', 'size:S', 'area:mechanics'] }))
+  assert.equal(d.go, false)
+  assert.match(d.reason, /label review:rules-change/)
+  assert.equal(mergeWanted(pr({ labels: ['loop:pr', 'size:S'] })).go, true, 'the same PR without the label merges')
+})
+
 test('holds: needs-T, stuck, eval seeds, no-auto-merge, drafts, forks, closed', () => {
-  assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge'])
+  assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
   for (const l of HOLD_LABELS) assert.equal(mergeWanted(pr({ labels: ['loop:pr', l] })).go, false, l)
   assert.match(mergeWanted(pr({ isDraft: true })).reason, /draft/)
   assert.match(mergeWanted(pr({ isCrossRepository: true })).reason, /fork/)

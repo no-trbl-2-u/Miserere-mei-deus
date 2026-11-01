@@ -12,14 +12,45 @@
  * poster keeps its own gate, untouched by the switch.
  */
 
-import type { DeckEventPost, FightPost, PlayLogSource } from '@mechanics';
+import type {
+    DeckEventPost,
+    FightPost,
+    PlayLogSource,
+    PlayLogSourceKind,
+    PlayRunEndPost,
+    PlayRunPost,
+    RunEventsPost,
+} from '@mechanics';
 
 import { puzzleApiConfig, puzzleAppBuild, type PuzzleApiConfig, type PuzzleFetch } from '@/lib/puzzleAttempts';
 import { getBuildCommit, isDevToolsEnabled } from '@/lib/buildProfile';
 import { devSettingsStore, type DevSettingsStore } from '@/state/dev/dev-settings';
 
+/**
+ * What the headless run driver swaps in for the app's gate and stamps (phase
+ * SM1g): a config that is always open, the `sim` stamps for the policy being
+ * played, and a fetcher that collects the posts instead of sending them. Only
+ * `axiomancer-mobile/sim/` sets it; the app never does, so a build sends what
+ * its gate and `EXPO_PUBLIC_PLAY_LOG_SOURCE` say and nothing else.
+ */
+export interface PlayLogOverride {
+    config: PuzzleApiConfig;
+    source: () => PlayLogStamps;
+    fetcher: PuzzleFetch;
+}
+
+let override: PlayLogOverride | null = null;
+
+/** Installs (or, with null, removes) the run driver's override. Returns the one it replaced. */
+export function setPlayLogOverride(next: PlayLogOverride | null): PlayLogOverride | null {
+    const previous = override;
+    override = next;
+    return previous;
+}
+
 /** Where and how to post the play log, or null when this build must send nothing. */
 export function playLogConfig(store: DevSettingsStore = devSettingsStore): PuzzleApiConfig | null {
+    if (override !== null) return override.config;
     if (!isDevToolsEnabled()) return null;
     if (!store.get().playLogging) return null;
     return puzzleApiConfig();
@@ -44,13 +75,36 @@ export function playSessionId(): string {
     return sessionId;
 }
 
+/** The stamps a play-log body carries: the build and session (`PlayLogSource`) plus who played it. */
+export type PlayLogStamps = PlayLogSource & { source: PlayLogSourceKind };
+
+/**
+ * Who played this build (phase SM1b, acceptance A4): `human` only when the
+ * build carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the committed
+ * `eas.json` preview profile sets; every other build (a web export, a dev
+ * server T opens by hand, a jest run) is `harness`, so a forgotten harness can
+ * never land in T's numbers. The app never sends `sim`: the headless run driver
+ * stamps that itself. The name is written out in full because Expo inlines an
+ * EXPO_PUBLIC_ value only where the literal `process.env.EXPO_PUBLIC_...` appears.
+ */
+export function playLogSourceKind(): PlayLogSourceKind {
+    return process.env.EXPO_PUBLIC_PLAY_LOG_SOURCE?.trim() === 'human' ? 'human' : 'harness';
+}
+
 /**
  * Who is posting, from which build: the stamps every play-log body carries.
- * The solver is blank: no solver name is kept outside the puzzle screen, and
- * T is the only player while the switch defaults to on.
+ * The solver is blank: no solver name is kept outside the puzzle screen. The
+ * run id is not here: it is the save's, read from the store at each call site.
  */
-export function playLogSource(): PlayLogSource {
-    return { solver: '', sessionId: playSessionId(), buildCommit: getBuildCommit(), appBuild: puzzleAppBuild() };
+export function playLogSource(): PlayLogStamps {
+    if (override !== null) return override.source();
+    return {
+        solver: '',
+        sessionId: playSessionId(),
+        buildCommit: getBuildCommit(),
+        appBuild: puzzleAppBuild(),
+        source: playLogSourceKind(),
+    };
 }
 
 function warnDropped(path: string, reason: string): void {
@@ -64,9 +118,9 @@ function warnDropped(path: string, reason: string): void {
  */
 export async function postPlayLog(
     path: string,
-    body: FightPost | DeckEventPost,
+    body: FightPost | DeckEventPost | PlayRunPost | PlayRunEndPost | RunEventsPost,
     config: PuzzleApiConfig,
-    fetcher: PuzzleFetch = fetch,
+    fetcher: PuzzleFetch = override?.fetcher ?? fetch,
 ): Promise<boolean> {
     try {
         const res = await fetcher(`${config.url}${path}`, {

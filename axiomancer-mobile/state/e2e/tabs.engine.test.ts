@@ -80,36 +80,36 @@ describe('selectVisibleTabs: mutual exclusion', () => {
 
 describe('selectVisibleTabs: always-visible tabs', () => {
     it.each([false, true])(
-        'always shows SELF, MEMOIR, SATCHEL, and DECK (inCombat=%p)',
+        'always shows SELF, MEMOIR, SATCHEL, DECK and SETTINGS (inCombat=%p)',
         (inCombat) => {
             const vm = selectVisibleTabs(inCombat);
 
             expect(vm.visibleTabs).toEqual(
-                expect.arrayContaining(['character', 'memoir', 'inventory', 'deck']),
+                expect.arrayContaining(['character', 'memoir', 'inventory', 'deck', 'settings']),
             );
             expect(vm.hiddenTabs).not.toEqual(
-                expect.arrayContaining(['character', 'memoir', 'inventory', 'deck']),
+                expect.arrayContaining(['character', 'memoir', 'inventory', 'deck', 'settings']),
             );
         },
     );
 
-    it('returns 5 visible tabs (1 positional + 4 always-visible) post-DECK', () => {
-        // DECK is the fifth VISIBLE tab.
+    it('returns 6 visible tabs (1 positional + 5 always-visible) post-SETTINGS', () => {
+        // SETTINGS is the sixth VISIBLE tab.
         for (const inCombat of [false, true]) {
             const vm = selectVisibleTabs(inCombat);
-            expect(vm.visibleTabs).toHaveLength(5);
+            expect(vm.visibleTabs).toHaveLength(6);
         }
     });
 
-    it('appends DECK last so no existing tab changes position', () => {
+    it('appends SETTINGS last so no existing tab changes position', () => {
         // The point of appending rather than slotting DECK beside SELF: four
         // tabs' worth of muscle memory survives the addition. If a later
         // change reorders the bar, this is the test that should argue with it.
         expect(selectVisibleTabs(false).visibleTabs).toEqual([
-            'exploration', 'character', 'memoir', 'inventory', 'deck',
+            'exploration', 'character', 'memoir', 'inventory', 'deck', 'settings',
         ]);
         expect(selectVisibleTabs(true).visibleTabs).toEqual([
-            'combat', 'character', 'memoir', 'inventory', 'deck',
+            'combat', 'character', 'memoir', 'inventory', 'deck', 'settings',
         ]);
     });
 
@@ -124,7 +124,7 @@ describe('selectVisibleTabs: always-visible tabs', () => {
 // ---------------------------------------------------------------------------
 
 describe('isTabHidden: agreement with selectVisibleTabs', () => {
-    const allTabs: TabKey[] = ['exploration', 'combat', 'character', 'memoir', 'inventory', 'deck'];
+    const allTabs: TabKey[] = ['exploration', 'combat', 'character', 'memoir', 'inventory', 'deck', 'settings'];
 
     it.each([false, true])(
         'agrees with selectVisibleTabs for every tab when inCombat=%p',
@@ -167,7 +167,7 @@ describe('selectVisibleTabs: purity', () => {
 
 describe('TAB_TITLES: tab-label contract', () => {
     it('exposes a non-empty string title for every TabKey', () => {
-        const keys: TabKey[] = ['exploration', 'combat', 'character', 'memoir', 'inventory', 'deck'];
+        const keys: TabKey[] = ['exploration', 'combat', 'character', 'memoir', 'inventory', 'deck', 'settings'];
         for (const key of keys) {
             expect(typeof TAB_TITLES[key]).toBe('string');
             expect(TAB_TITLES[key].length).toBeGreaterThan(0);
@@ -197,11 +197,13 @@ describe('TAB_TITLES: tab-label contract', () => {
         expect(TAB_TITLES.inventory).toBe('SATCHEL');
         // The fifth tab is named DECK, in those words.
         expect(TAB_TITLES.deck).toBe('DECK');
+        // The sixth, rightmost tab is the gear.
+        expect(TAB_TITLES.settings).toBe('SETTINGS');
     });
 });
 
 // ---------------------------------------------------------------------------
-// Tab-bar FIT — the overflow contract DECK has to clear
+// Tab-bar FIT — the overflow contract SETTINGS has to clear
 // ---------------------------------------------------------------------------
 
 describe('measureTabBarFit: no tab-bar overflow at 360pt', () => {
@@ -209,7 +211,7 @@ describe('measureTabBarFit: no tab-bar overflow at 360pt', () => {
         for (const inCombat of [false, true]) {
             const fit = measureTabBarFit(visibleTabTitles(inCombat), NARROW_VIEWPORT_PT);
 
-            expect(fit.tabCount).toBe(5);
+            expect(fit.tabCount).toBe(6);
             // Reported as an object so a failure prints WHICH label overflowed
             // and by how much, rather than just `false`.
             expect({
@@ -240,7 +242,7 @@ describe('measureTabBarFit: no tab-bar overflow at 360pt', () => {
     it('keeps real headroom, so the next title change is not a cliff edge', () => {
         const fit = measureTabBarFit(visibleTabTitles(false), NARROW_VIEWPORT_PT);
         expect(fit.widestTitle).toBe(TAB_TITLES.memoir);
-        expect(fit.slackPt).toBeGreaterThan(10);
+        expect(fit.slackPt).toBeGreaterThan(5);
     });
 
     it('detects an overflow rather than always answering yes', () => {

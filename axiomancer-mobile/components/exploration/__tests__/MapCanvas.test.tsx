@@ -5,8 +5,9 @@ import { GestureDetector, State } from 'react-native-gesture-handler';
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 import {
     MapCanvas, computeFocusTransform, focusKeyOf, edgeStroke, minScaleFor,
-    anchorAxis, clampScale, panAxis, MAX_SCALE,
+    anchorAxis, clampScale, panAxis, MAX_SCALE, recentreScale, panIntoFrame, RECENTRE_SPAN, INNER_FRAME,
 } from '../MapCanvas';
+import { clearCameraMemory } from '../mapCameraMemory';
 import type { ExplorationNode, ExplorationEdge } from '@/state/presenters/exploration.engine';
 
 // The stock reanimated mock builds a fresh `{ value }` box on EVERY render
@@ -437,157 +438,99 @@ describe('MapCanvas', () => {
     });
 });
 
-describe('computeFocusTransform', () => {
+describe('computeFocusTransform: the recentre framing (MC1b A5)', () => {
     const SPREAD = 2.6;
+    const curNode = (x: number, y: number): ExplorationNode =>
+        ({ id: 'a', label: 'A', kind: 'current', type: 'encounter', x, y, triggersCombat: false });
 
-    it('centres a single focus node at 1x — no zoom-out needed', () => {
-        const nodes: ExplorationNode[] = [
-            { id: 'a', label: 'A', kind: 'current', type: 'encounter', x: 200, y: 200, triggersCombat: false },
-        ];
-        const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        expect(fit.scale).toBe(1);
-        expect(fit.tx).toBeCloseTo(400 / 2 - 200 * SPREAD);
-        expect(fit.ty).toBeCloseTo(800 / 2 - 200 * SPREAD);
+    it('puts the current node at the pane centre', () => {
+        const fit = computeFocusTransform([curNode(200, 200)], { w: 400, h: 800 });
+        expect(200 * SPREAD * fit.scale + fit.tx).toBeCloseTo(200, 5);
+        expect(200 * SPREAD * fit.scale + fit.ty).toBeCloseTo(400, 5);
     });
 
-    // MC1a (T, 2026-10-31: stability over edge-clamping): a node near the
-    // plate's edge is centred as it is, with black past the edge, rather than
-    // the plate slid against the frame.
-    it('centres a node near the plate edge with no slide against the frame', () => {
+    it('spans about 40% of the sheet across the pane, with no 1x cap', () => {
+        const viewport = { w: 400, h: 800 };
+        const fit = computeFocusTransform([curNode(200, 200)], viewport);
+        expect(fit.scale).toBeCloseTo(400 / (RECENTRE_SPAN * 360 * SPREAD), 5);
+        expect(fit.scale).toBeGreaterThan(1);
+    });
+
+    it('frames the Breakwater sheet at 360x640 about 0.4x of its width across, whatever is open', () => {
+        const sheet = { width: 1000, height: 1000, scale: 2.4 };
+        const viewport = { w: 360, h: 640 };
         const nodes: ExplorationNode[] = [
-            { id: 'a', label: 'A', kind: 'current', type: 'encounter', x: 100, y: 100, triggersCombat: false },
+            { id: 'p', label: 'P', kind: 'current', type: 'rest', x: 500, y: 600, triggersCombat: false },
+            { id: 'q', label: 'Q', kind: 'available', type: 'encounter', x: 100, y: 100, triggersCombat: false },
+            { id: 'r', label: 'R', kind: 'available', type: 'encounter', x: 900, y: 950, triggersCombat: false },
         ];
-        const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        expect(fit.scale).toBe(1);
-        expect(fit.tx).toBeCloseTo(400 / 2 - 100 * SPREAD);
-        expect(fit.ty).toBeCloseTo(800 / 2 - 100 * SPREAD);
-        expect(fit.ty).toBeGreaterThan(0);
+        const fit = computeFocusTransform(nodes, viewport, sheet);
+        // 360 px across 400 of 1000 sheet units: 0.375x of the 2400 px canvas.
+        expect(fit.scale).toBeCloseTo(360 / (0.4 * 2400), 5);
+        expect(fit.scale).toBeLessThan(0.5);
+        expect(500 * 2.4 * fit.scale + fit.tx).toBeCloseTo(180, 5);
+        expect(600 * 2.4 * fit.scale + fit.ty).toBeCloseTo(320, 5);
+        // The same with no open moves: they are not framed.
+        expect(computeFocusTransform([nodes[0]], viewport, sheet)).toEqual(fit);
     });
 
     it('puts a corner node at the pane centre on every corner of the plate', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
         const viewport = { w: 355, h: 600 };
-        const corners: [number, number][] = [[60, 60], [2340, 60], [60, 2340], [2340, 2340]];
-        for (const [x, y] of corners) {
-            const nodes: ExplorationNode[] = [
-                { id: 'a', label: 'A', kind: 'current', type: 'encounter', x, y, triggersCombat: false },
-            ];
-            const fit = computeFocusTransform(nodes, viewport, sheet);
+        for (const [x, y] of [[60, 60], [2340, 60], [60, 2340], [2340, 2340]] as [number, number][]) {
+            const fit = computeFocusTransform([curNode(x, y)], viewport, sheet);
             expect(x * fit.scale + fit.tx).toBeCloseTo(viewport.w / 2, 5);
             expect(y * fit.scale + fit.ty).toBeCloseTo(viewport.h / 2, 5);
         }
     });
 
-    it('zooms a plate-wide focus out no further than the whole plate in the pane', () => {
+    it('never zooms in past the ceiling, and holds the contain floor', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
-        const viewport = { w: 394, h: 557 };
-        const nodes: ExplorationNode[] = [
-            { id: 'a', label: 'A', kind: 'available', type: 'encounter', x: 0, y: 0, triggersCombat: false },
-            { id: 'b', label: 'B', kind: 'available', type: 'encounter', x: 2400, y: 2400, triggersCombat: false },
-        ];
-        const fit = computeFocusTransform(nodes, viewport, sheet);
-        expect(fit.scale).toBe(minScaleFor(viewport, sheet));
-        expect(sheet.width * fit.scale).toBeCloseTo(viewport.w, 5);
-        expect(sheet.height * fit.scale).toBeLessThanOrEqual(viewport.h);
+        // A pane wider than 40% of a tiny sheet asks for more than 3x.
+        const tiny = { width: 100, height: 100, scale: 1 };
+        expect(recentreScale({ w: 400, h: 800 }, tiny)).toBe(MAX_SCALE);
+        expect(recentreScale({ w: 394, h: 557 }, sheet)).toBeGreaterThanOrEqual(minScaleFor({ w: 394, h: 557 }, sheet));
     });
 
-    it('with no focus nodes, holds the contain floor when it is above 1x', () => {
+    it('with no current node, frames the sheet centre', () => {
         const nodes: ExplorationNode[] = [
             { id: 'a', label: 'A', kind: 'locked', type: 'encounter', x: 100, y: 100, triggersCombat: false },
         ];
-        const viewport = { w: 1200, h: 1500 };
+        const viewport = { w: 400, h: 800 };
         const fit = computeFocusTransform(nodes, viewport);
-        const s = minScaleFor(viewport);
-        expect(s).toBeGreaterThan(1);
-        expect(fit.scale).toBe(s);
-        expect(fit.tx).toBeCloseTo((viewport.w - 360 * SPREAD * s) / 2, 5);
-        expect(fit.ty).toBeCloseTo((viewport.h - 400 * SPREAD * s) / 2, 5);
-    });
-
-    it('falls back to canvas centre at 1x when no focus nodes exist', () => {
-        const nodes: ExplorationNode[] = [
-            { id: 'a', label: 'A', kind: 'locked', type: 'encounter', x: 100, y: 100, triggersCombat: false },
-        ];
-        const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        const CANVAS_W = 360 * SPREAD;
-        const CANVAS_H = 400 * SPREAD;
-        expect(fit).toEqual({ scale: 1, tx: (400 - CANVAS_W) / 2, ty: (800 - CANVAS_H) / 2 });
-    });
-
-    // A wide branch of simultaneously-open nodes must all land
-    // inside the viewport on the initial fit, not just their centroid.
-    it('zooms out to fit a wide branch of open nodes fully in the viewport', () => {
-        const nodes: ExplorationNode[] = [
-            { id: 'left',  label: 'Left',  kind: 'available', type: 'encounter', x: 0,   y: 200, triggersCombat: false },
-            { id: 'right', label: 'Right', kind: 'available', type: 'encounter', x: 180, y: 200, triggersCombat: false },
-        ];
-        const viewport = { w: 420, h: 900 };
-        const fit = computeFocusTransform(nodes, viewport);
-
-        expect(fit.scale).toBeLessThan(1);
-
-        // Every focus node's projected screen position must land within
-        // [0, viewport] on both axes — the exact defect this fit prevents.
-        for (const n of nodes) {
-            const screenX = n.x * SPREAD * fit.scale + fit.tx;
-            const screenY = n.y * SPREAD * fit.scale + fit.ty;
-            expect(screenX).toBeGreaterThanOrEqual(0);
-            expect(screenX).toBeLessThanOrEqual(viewport.w);
-            expect(screenY).toBeGreaterThanOrEqual(0);
-            expect(screenY).toBeLessThanOrEqual(viewport.h);
-        }
-    });
-
-    it('never zooms in past 1x even when focus nodes sit close together', () => {
-        const nodes: ExplorationNode[] = [
-            { id: 'a', label: 'A', kind: 'current',   type: 'encounter', x: 100, y: 100, triggersCombat: false },
-            { id: 'b', label: 'B', kind: 'available', type: 'encounter', x: 102, y: 100, triggersCombat: false },
-        ];
-        const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        expect(fit.scale).toBe(1);
-    });
-
-    it('clamps to the contain floor rather than shrinking without bound', () => {
-        const nodes: ExplorationNode[] = [
-            { id: 'left',  label: 'Left',  kind: 'available', type: 'encounter', x: 0,   y: 0,   triggersCombat: false },
-            { id: 'right', label: 'Right', kind: 'available', type: 'encounter', x: 1000, y: 1000, triggersCombat: false },
-        ];
-        const fit = computeFocusTransform(nodes, { w: 400, h: 800 });
-        // The default sheet is 936x1040: the floor is the scale where it just fits inside 400x800.
-        expect(fit.scale).toBeCloseTo(400 / 936, 5);
-        expect(fit.scale).toBe(minScaleFor({ w: 400, h: 800 }));
-    });
-
-    it('fits the Breakwater start fan on a phone (2026-09-26 playthrough)', () => {
-        // A 2400px-square plate at 394x557: the windmill and its four exits
-        // span ~840x985 canvas px. A flat 0.6 floor would leave every exit
-        // off-screen; the fit must reach the ~0.37 it needs. (The old
-        // Breakwater's start fan, kept as geometry: the ids are neutral.)
-        const sheet = { width: 2400, height: 2400, scale: 1 };
-        const viewport = { w: 394, h: 557 };
-        const nodes: ExplorationNode[] = [
-            { id: 'fan-start', label: 'Windmill', kind: 'current',   type: 'rest',      x: 1150, y: 1130, triggersCombat: false },
-            { id: 'fan-quay', label: 'Quay',   kind: 'available', type: 'encounter', x: 1080, y: 770,  triggersCombat: false },
-            { id: 'fan-gallows', label: 'Gallows', kind: 'available', type: 'hazard',    x: 1630, y: 1270, triggersCombat: false },
-            { id: 'fan-pass', label: 'Pass',   kind: 'available', type: 'waypoint',  x: 1460, y: 1755, triggersCombat: false },
-            { id: 'fan-cove', label: 'Cove',   kind: 'available', type: 'treasure',  x: 790, y: 1400, triggersCombat: false },
-        ];
-        const fit = computeFocusTransform(nodes, viewport, sheet);
-        expect(fit.scale).toBeLessThan(0.6);
-        for (const n of nodes) {
-            const sx = n.x * fit.scale + fit.tx;
-            const sy = n.y * fit.scale + fit.ty;
-            expect(sx).toBeGreaterThanOrEqual(0);
-            expect(sx).toBeLessThanOrEqual(viewport.w);
-            expect(sy).toBeGreaterThanOrEqual(0);
-            expect(sy).toBeLessThanOrEqual(viewport.h);
-        }
+        expect(fit.tx).toBeCloseTo(viewport.w / 2 - (360 * SPREAD * fit.scale) / 2, 5);
+        expect(fit.ty).toBeCloseTo(viewport.h / 2 - (400 * SPREAD * fit.scale) / 2, 5);
     });
 
     it('floors at the scale where the whole plate just fits the pane (MC1a A3)', () => {
         const sheet = { width: 2400, height: 2400, scale: 1 };
         expect(minScaleFor({ w: 394, h: 557 }, sheet)).toBeCloseTo(394 / 2400, 5);
         expect(minScaleFor({ w: 1200, h: 900 })).toBeCloseTo(900 / 1040, 5);
+    });
+});
+
+describe('panIntoFrame: the move rule (MC1b A8)', () => {
+    const viewport = { w: 400, h: 800 };
+    const cam = { scale: 0.5, tx: 100, ty: 200 };
+
+    it('leaves the camera alone for a node inside the inner 80%', () => {
+        // Screen position (300, 500) is inside the inner box.
+        expect(panIntoFrame(cam, (300 - 100) / 0.5, (500 - 200) / 0.5, viewport)).toEqual(cam);
+    });
+
+    it('pans just enough to bring an off-screen node to the inner edge, never zooming', () => {
+        const out = panIntoFrame(cam, 2000, -300, viewport);
+        const mx = (viewport.w * (1 - INNER_FRAME)) / 2;
+        const my = (viewport.h * (1 - INNER_FRAME)) / 2;
+        expect(out.scale).toBe(cam.scale);
+        expect(out.tx + 2000 * cam.scale).toBeCloseTo(viewport.w - mx, 5);
+        expect(out.ty + -300 * cam.scale).toBeCloseTo(my, 5);
+    });
+
+    it('moves only the axis that is out', () => {
+        const out = panIntoFrame(cam, (300 - 100) / 0.5, -1000, viewport);
+        expect(out.tx).toBe(cam.tx);
+        expect(out.ty).not.toBe(cam.ty);
     });
 });
 
@@ -677,29 +620,144 @@ describe('MapCanvas re-frames on a focus change', () => {
         return { scale, tx, ty };
     };
 
-    it('fits the camera to the current focus set, and re-fits when the player moves', () => {
-        // The re-fit against a live component: the second fit must
-        // actually land, not merely "not throw".
+    const layoutIn = (getByTestId: (id: string) => unknown) =>
+        fireEvent(getByTestId('map-canvas-wrapper') as never, 'layout', {
+            nativeEvent: { layout: { width: VIEWPORT.w, height: VIEWPORT.h } },
+        });
+    const withKind = (current: string, available: string[]): ExplorationNode[] =>
+        [...mockNodes, { id: 'near', label: 'Near', kind: 'locked', type: 'encounter', x: 110, y: 210, triggersCombat: false } as ExplorationNode]
+            .map((n) => ({
+                ...n,
+                kind: n.id === current ? 'current' as const
+                    : available.includes(n.id) ? 'available' as const
+                    : n.kind === 'current' ? 'completed' as const : n.kind,
+            }));
+
+    it('opens a first visit at the recentre framing on the player', () => {
         const { getByTestId, rerender } = render(
             <MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>,
         );
-        fireEvent(getByTestId('map-canvas-wrapper'), 'layout', {
-            nativeEvent: { layout: { width: VIEWPORT.w, height: VIEWPORT.h } },
-        });
+        layoutIn(getByTestId);
         rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
-        const first = cameraOf(getByTestId);
-        expect(first).toEqual(computeFocusTransform(mockNodes, VIEWPORT));
+        expect(cameraOf(getByTestId)).toEqual(computeFocusTransform(mockNodes, VIEWPORT));
+    });
 
-        const moved: ExplorationNode[] = mockNodes.map((n) =>
-            n.id === 'node-1' ? { ...n, kind: 'completed' as const }
-            : n.id === 'node-2' ? { ...n, kind: 'current' as const }
-            : n.id === 'node-3' ? { ...n, kind: 'available' as const }
-            : n);
+    it('a move inside the inner frame keeps the camera as it is (A8)', () => {
+        const start = withKind('node-1', ['near']);
+        const { getByTestId, rerender } = render(
+            <MapCanvas nodes={start} edges={mockEdges}><MockChildren /></MapCanvas>,
+        );
+        layoutIn(getByTestId);
+        rerender(<MapCanvas nodes={[...start]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const before = cameraOf(getByTestId);
+        const moved = withKind('near', []);
         rerender(<MapCanvas nodes={moved} edges={mockEdges}><MockChildren /></MapCanvas>);
         rerender(<MapCanvas nodes={[...moved]} edges={mockEdges}><MockChildren /></MapCanvas>);
-        const second = cameraOf(getByTestId);
-        expect(second).toEqual(computeFocusTransform(moved, VIEWPORT));
-        expect(second).not.toEqual(first);
+        expect(cameraOf(getByTestId)).toEqual(before);
+    });
+
+    it('a move off the frame pans to bring the node inside and never zooms (A8)', () => {
+        const start = withKind('node-1', ['node-2']);
+        const { getByTestId, rerender } = render(
+            <MapCanvas nodes={start} edges={mockEdges}><MockChildren /></MapCanvas>,
+        );
+        layoutIn(getByTestId);
+        rerender(<MapCanvas nodes={[...start]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const before = cameraOf(getByTestId);
+        const moved = withKind('node-2', []);
+        rerender(<MapCanvas nodes={moved} edges={mockEdges}><MockChildren /></MapCanvas>);
+        rerender(<MapCanvas nodes={[...moved]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const after = cameraOf(getByTestId);
+        expect(after.scale).toBe(before.scale);
+        expect(after).not.toEqual(before);
+        const sx = 300 * 2.6 * after.scale + after.tx;
+        const sy = 400 * 2.6 * after.scale + after.ty;
+        expect(sx).toBeGreaterThanOrEqual(VIEWPORT.w * 0.1 - 0.001);
+        expect(sx).toBeLessThanOrEqual(VIEWPORT.w * 0.9 + 0.001);
+        expect(sy).toBeGreaterThanOrEqual(VIEWPORT.h * 0.1 - 0.001);
+        expect(sy).toBeLessThanOrEqual(VIEWPORT.h * 0.9 + 0.001);
+    });
+
+    it('remounting a map restores the zoom and place it was left at (A7)', () => {
+        clearCameraMemory();
+        const first = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>,
+        );
+        layoutIn(first.getByTestId);
+        first.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const fit = cameraOf(first.getByTestId);
+        const drag = { translationX: -60, translationY: 0 };
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, ...drag },
+            { state: State.END, ...drag },
+        ]);
+        first.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const left = cameraOf(first.getByTestId);
+        expect(left.tx).toBe(fit.tx - 60);
+        first.unmount();
+
+        const back = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>,
+        );
+        layoutIn(back.getByTestId);
+        back.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const restored = cameraOf(back.getByTestId);
+        expect(restored.scale).toBeCloseTo(left.scale, 8);
+        expect(restored.tx).toBeCloseTo(left.tx, 6);
+        expect(restored.ty).toBeCloseTo(left.ty, 6);
+        back.unmount();
+
+        // A different map opens at the recentre framing instead.
+        const other = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges} mapId="m-b"><MockChildren /></MapCanvas>,
+        );
+        layoutIn(other.getByTestId);
+        other.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-b"><MockChildren /></MapCanvas>);
+        expect(cameraOf(other.getByTestId)).toEqual(fit);
+    });
+
+    it('crossing to another map in place (no unmount) frames the new map, not a pan of the old one (A7)', () => {
+        clearCameraMemory();
+        const onA = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>,
+        );
+        layoutIn(onA.getByTestId);
+        onA.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const drag = { translationX: -60, translationY: 0 };
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, ...drag },
+            { state: State.END, ...drag },
+        ]);
+        onA.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} mapId="m-a"><MockChildren /></MapCanvas>);
+        const leftOnA = cameraOf(onA.getByTestId);
+
+        // `takeTravelAction` swaps `world.currentMap` under the same screen: the
+        // same `MapCanvas` instance gets a new `mapId` and a new current node,
+        // never an unmount.
+        const onB = withKind('node-2', []);
+        onA.rerender(<MapCanvas nodes={onB} edges={mockEdges} mapId="m-b"><MockChildren /></MapCanvas>);
+        onA.rerender(<MapCanvas nodes={[...onB]} edges={mockEdges} mapId="m-b"><MockChildren /></MapCanvas>);
+        const onCrossing = cameraOf(onA.getByTestId);
+        expect(onCrossing).toEqual(computeFocusTransform(onB, VIEWPORT));
+        expect(onCrossing).not.toEqual(leftOnA);
+    });
+
+    it('a pane re-measure does not re-frame the camera', () => {
+        const { getByTestId, rerender } = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>,
+        );
+        layoutIn(getByTestId);
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const before = cameraOf(getByTestId);
+        fireEvent(getByTestId('map-canvas-wrapper'), 'layout', {
+            nativeEvent: { layout: { width: VIEWPORT.w, height: VIEWPORT.h - 50 } },
+        });
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        expect(cameraOf(getByTestId)).toEqual(before);
     });
 
     it('does not undo a manual pan when a fresh nodes array describes the same focus (issue #294)', () => {
@@ -745,7 +803,9 @@ describe('MapCanvas re-frames on a focus change', () => {
             : n);
         rerender(<MapCanvas nodes={moved} edges={mockEdges}><MockChildren /></MapCanvas>);
         rerender(<MapCanvas nodes={[...moved]} edges={mockEdges}><MockChildren /></MapCanvas>);
-        expect(cameraOf(getByTestId)).toEqual(computeFocusTransform(moved, VIEWPORT));
+        const afterMove = cameraOf(getByTestId);
+        expect(afterMove).toEqual(panIntoFrame(panned, 300 * 2.6, 400 * 2.6, VIEWPORT));
+        expect(afterMove.scale).toBe(panned.scale);
     });
 
     /** Mount, lay out and flush the fit; returns the fitted camera. */

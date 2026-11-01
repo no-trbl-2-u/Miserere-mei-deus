@@ -19,7 +19,7 @@ import { lintTree, treeVerdict } from './pr-merge.mjs'
 import { driverCommand, MERGE_DRIVERS, mergeMain, updateBranch } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const PLAN = 'plan/steps/01_build_plan.md'
+const ARCHIVE = 'plan/ARCHIVE.md'
 const DEADLINES = 'plan/deadlines.md'
 const COPIED_SCRIPTS = [
   'build-plan-merge.mjs',
@@ -40,20 +40,31 @@ const git = (dir, ...args) => execFileSync('git', args, { cwd: dir, encoding: 'u
 
 // --- text edits shaped like a plot's own ------------------------------------
 
-/** An asap row above the first open row of the build plan, and a Queue change log entry. */
-function addPlanRow(md, id, extra = '') {
-  const lines = md.split('\n')
-  const open = lines.findIndex((l) => l.startsWith('- [ ] Phase '))
-  assert.ok(open > 0, 'the live build plan has an open row')
-  lines.splice(open, 0, `- [ ] Phase ${id} — fixture row ${id}${extra} (attended). Requires nothing.`)
-  const log = lines.findIndex((l) => l === '## Queue change log')
-  const entry = lines.findIndex((l, i) => i > log && l.startsWith('- **'))
-  lines.splice(entry, 0, `- **2026-10-28** — fixture entry **added Phase ${id}**.`, '')
-  return lines.join('\n')
+// Since the nexus v2 cut-over (NX1d) a plot adds a spec file of its own, whose chunks keep
+// family-style ids as their `alias:`; a new file conflicts with nothing. Its roadmap row is left
+// out here: two plots appending to plan/README.md's table meet at one spot, which phase NX1e's
+// pending files settle (the build-plan merge driver retired with the build plan).
+const SPEC_NUM = { ZA: 901, ZB: 902, ZS: 903, ZC: 904 }
+const specFile = (tag) => `plan/${SPEC_NUM[tag]}-fixture-${tag.toLowerCase()}.md`
+
+/** A spec with one attended chunk per id (aliases `ids`), so an Item's `Rows` may name them. */
+function addSpec(dir, tag, ids) {
+  const n = SPEC_NUM[tag]
+  const chunks = ids.map((id, i) => `- [ ] **${n}.${i + 1}** fixture chunk ${id} (attended) · S · closes A${i + 1} · needs — · alias: ${id}`)
+  const acc = ids.map((id, i) => `- **A${i + 1}** fixture ${id}.`)
+  write(dir, specFile(tag), [`# ${n} — fixture ${tag}`, '', '> fixture', '', '## Acceptance', '', ...acc, '', '## Chunks', '', `Measure: ${ids.length} open · 0 closed · next A${ids.length + 1}`, '', ...chunks, ''].join('\n'))
 }
 
-/** Close a build-plan row the way a shipped PR does. */
-const shipPlanRow = (md, id) => md.replace(`- [ ] Phase ${id} —`, `- [x] (#9001) Phase ${id} —`)
+/** Close a chunk the way a shipped PR does: its line leaves the spec, an archive line keeps its alias. */
+function shipChunk(dir, tag, id) {
+  const file = specFile(tag)
+  const md = read(dir, file)
+  const line = md.split('\n').find((l) => l.endsWith(`alias: ${id}`))
+  assert.ok(line, `${file} has a chunk aliased ${id}`)
+  const chunk = line.match(/\*\*(\S+)\*\*/)[1]
+  write(dir, file, md.replace(`${line}\n`, ''))
+  write(dir, ARCHIVE, `${read(dir, ARCHIVE).trimEnd()}\n- 2026-10-28 · ${chunk} (alias: ${id}) · fixture shipped · (#9001)\n`)
+}
 
 /** An Items row at the top of the table; its fixture rows are attended, so `Rows` may name them. */
 function addItem(md, name, due, rows) {
@@ -90,9 +101,10 @@ function scratch(base) {
   git(work, 'config', 'user.email', 't@example.com')
   git(work, 'config', 'user.name', 't')
   git(work, 'switch', '-q', '-c', 'main')
-  fs.mkdirSync(path.join(work, 'plan', 'steps'), { recursive: true })
+  fs.mkdirSync(path.join(work, 'plan'), { recursive: true })
   fs.mkdirSync(path.join(work, 'scripts'), { recursive: true })
-  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', PLAN, DEADLINES]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+  const specs = fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => /^\d{2,}-[a-z0-9][a-z0-9-]*\.md$/.test(n)).map((n) => `plan/${n}`)
+  for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', 'plan/README.md', ARCHIVE, DEADLINES, ...specs]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
   for (const f of COPIED_SCRIPTS) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(work, 'scripts', f))
   write(work, 'notes.txt', 'one\n')
   base?.(work)
@@ -113,7 +125,7 @@ function branchWith(work, branch, edit) {
 }
 
 const plot = (tag, due) => (dir) => {
-  write(dir, PLAN, addPlanRow(addPlanRow(read(dir, PLAN), `${tag}1`), `${tag}2`))
+  addSpec(dir, tag, [`${tag}1`, `${tag}2`])
   let d = addItem(read(dir, DEADLINES), `Item ${tag}`, due, `${tag}1`)
   d = addUnscheduled(d, `${tag}2`)
   write(dir, DEADLINES, addChangeLog(d, `plot ${tag}`))
@@ -125,7 +137,7 @@ const checkDeadlines = (dir) =>
 test('two plot branches settle through mergeMain: no Haiku entry, every added row once, Status re-derived, check-deadlines green', () => {
   // ZS1 is an open row under Unscheduled; plot B gives it an Item while main ships it.
   const { dir, work } = scratch((d) => {
-    write(d, PLAN, addPlanRow(read(d, PLAN), 'ZS1'))
+    addSpec(d, 'ZS', ['ZS1'])
     write(d, DEADLINES, addUnscheduledFirst(read(d, DEADLINES), 'ZS1'))
   })
   try {
@@ -137,7 +149,7 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
     })
     // main: plot A merges by the merge button, then ZS1 ships (its Unscheduled line goes).
     git(work, 'merge', '-q', '--no-edit', '--no-ff', 'plot-a')
-    write(work, PLAN, shipPlanRow(read(work, PLAN), 'ZS1'))
+    shipChunk(work, 'ZS', 'ZS1')
     write(work, DEADLINES, dropUnscheduled(read(work, DEADLINES), 'ZS1'))
     git(work, 'commit', '-q', '-am', 'ship ZS1')
     git(work, 'push', '-q', 'origin', 'main')
@@ -147,10 +159,10 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
 
     assert.equal(merged, true)
     assert.deepEqual(rest, [], 'nothing is left for a Haiku run')
-    const plan = read(work, PLAN)
+    const plan = ['ZA', 'ZB', 'ZS'].map((tag) => read(work, specFile(tag))).join('\n') + read(work, ARCHIVE)
     const dl = read(work, DEADLINES)
-    for (const needle of ['Phase ZA1 —', 'Phase ZA2 —', 'Phase ZB1 —', 'Phase ZB2 —', 'added Phase ZA1', 'added Phase ZB1']) {
-      assert.equal(count(plan, needle), 1, `build plan: ${needle}`)
+    for (const needle of ['alias: ZA1', 'alias: ZA2', 'alias: ZB1', 'alias: ZB2', '(alias: ZS1)']) {
+      assert.equal(count(plan, needle), 1, `plan: ${needle}`)
     }
     for (const needle of ['| Item ZA |', '| Item ZB |', '| Item ZS |', '- ZA2 —', '- ZB2 —', 'plot ZA**', 'plot ZB**']) {
       assert.equal(count(dl, needle), 1, `deadlines: ${needle}`)
@@ -190,7 +202,7 @@ test('a merge that touches neither deadline file adds no commit beyond the merge
 
 test('a cell both plots changed to different values is listed for Haiku, as before', () => {
   const { dir, work } = scratch((d) => {
-    write(d, PLAN, addPlanRow(addPlanRow(addPlanRow(read(d, PLAN), 'ZC1'), 'ZC2'), 'ZC3'))
+    addSpec(d, 'ZC', ['ZC1', 'ZC2', 'ZC3'])
     write(d, DEADLINES, addItem(read(d, DEADLINES), 'Item ZC', '2026-10-31', 'ZC1'))
     write(d, DEADLINES, addUnscheduled(addUnscheduled(read(d, DEADLINES), 'ZC2'), 'ZC3'))
   })
@@ -228,7 +240,7 @@ function insertRow(md, n, line) {
 /** A scratch repo with the live lessons file; the branch and main add one slug in different places. */
 function lessonsClash(branchRule, mainRule, extra) {
   const made = scratch((d) => {
-    for (const f of [LESSONS, 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/PHASE_CANDIDATES.md']) write(d, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
+    for (const f of [LESSONS, 'plan/AUDIT.md', 'plan/CRITIQUE.md', 'plan/CANDIDATES.md']) write(d, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
   })
   const { work } = made
   assert.throws(() => git(work, 'config', 'merge.lessons.driver'), 'the scratch repo registers no driver, as GitHub has none')

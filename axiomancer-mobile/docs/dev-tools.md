@@ -168,23 +168,81 @@ a local session that does not know it) and the app build.
 `GET /v1/fights[?enemy=]` and `GET /v1/deck-events[?card=]` return the stored
 rows, newest first, behind the same bearer token.
 
+### Who played it: `human`, `harness`, `sim` (phases SM1a-SM1h, 2026-10-31)
+
+Every fight, deck event and puzzle attempt carries a `source` and the run's id,
+so T's numbers are never mixed with a machine's.
+
+| Source | Who | Stamped by |
+|---|---|---|
+| `human` | T, on a **preview APK** | a build whose `EXPO_PUBLIC_PLAY_LOG_SOURCE` is `human`; only the committed `axiomancer-mobile/eas.json` preview profile sets it (`lib/playLog.ts`, `playLogSourceKind`) |
+| `harness` | any other build: every web export, a dev server T opens by hand, a jest run | the same function, as its default, so a forgotten harness can never land in T's numbers |
+| `sim` | the headless bots (`npm run sim:run`) | the run driver, through the `source` dep of the recorder and poster; the app itself never sends `sim` |
+
+What makes a build `human` is that one env value and nothing else: not the
+dev-tools switch, not the API URL, not who runs it. The BE2 gate above is
+unchanged (a source is a stamp, not a gate): production and beta builds still
+send nothing. A post that leaves `source` out (an older APK) is stored `human`.
+Migration `0006` relabelled every fight and deck event stored before it
+`harness`, whatever its build; old puzzle attempts stay `human`.
+
+**The run id** is the save's own `GameState.runId`, stamped on every fight,
+deck event and puzzle attempt of that run (null in the title-screen shell and
+on rows from an older APK). Nothing new is minted; the session id stays per
+launch, so one run can span several sessions.
+
+**Run events and runs.** Beside the per-fight and per-card rows, a whole run is
+a `play_runs` row (opened when it starts, closed once when it ends, the Worker
+stamping `startedAt` and `endedAt`; it carries the character, the sim's
+`policy_id`, the start and end decks, outcome, end node, level, VITAE and nodes
+resolved) and the `run_events` between: a node entered or resolved, a hazard
+ended, XP gained, a level, an item. They post to `POST /v1/play-runs`,
+`POST /v1/play-runs/<runId>/end` and `POST /v1/run-events` (at most 200 events
+and 256 KiB a batch, `seq` strictly rising); the contract is
+`axiomancer-mechanics/src/Combat/combat.play-run-contract.ts`. `GET /v1/play-runs`
+and `GET /v1/run-events` take `?source=`.
+
+**`npm run sim:run`** plays whole Chapter 1 runs headless, through the app's own
+store and actions (`axiomancer-mobile/sim/`), one per seed, as a run policy
+decides: `npm run sim:run -- --policy wanderer --runs 3 --seed 1 [--json]`.
+Each bot starts at character select, as a player does, never from a `/dev`
+preset, and reads lanes, keywords and intents from the card and enemy data.
+By default it prints one line per run and posts nothing. `sim:run --post` plays
+each run through the app's own posters (collected by `sim/run-post.ts`, so the
+rows are the ones a phone would send) and sends them to the Worker as `sim`:
+`solver` is the policy id, `sessionId` the batch (`GITHUB_RUN_ID`, or a local
+id), `buildCommit` the checked-out sha, and the run id is unique to the batch,
+policy and seed (`sim-<batch>-<policy>-<seed>`). It reads `PUZZLE_API_URL` and
+`PUZZLE_API_TOKEN`; without them it prints what it would post and sends nothing.
+It prints the rows and bytes posted, stops before a run that would take the
+batch past 25 MB, and exits 1 if a post is refused. The `sim-runs` workflow
+calls it for the four archetypes, 5 runs each, at every preview build, by hand
+and nightly. **Sim numbers
+from before BUG1j (`0afc538bf`) are not comparable with later ones:** from
+that commit every foe can be befriended and a befriend pays no XP and no card.
+
 ### Read the play log: `npm run api`
 
 From the repo root, `npm run api -- <report>` calls
 `GET /v1/reports/<report>` and prints tables (phase BE2f). The Worker serves
-exactly two reports whose SQL is fixed in `backend/src/reports.ts`; the
+exactly five reports whose SQL is fixed in `backend/src/reports.ts`; the
 script only names one and passes its flags as query values. Ad hoc questions
-go to `wrangler d1 execute miserere --remote`.
+go to `wrangler d1 execute miserere --remote`. A report reads `human` (T's own
+play) unless `--source` says otherwise, and its header names the source it
+read; `card-vs-bot` and `run-summary` are the two that differ (below).
 
 | Report | Prints |
 |---|---|
 | `card-usage` | per card: fights with it in the start deck, drawn, played (FREE and paid), held (turn ends it sat in hand unplayed), fizzled, offered, picked, skipped (shown and not taken), removed |
 | `card-gaps` | per enemy: the threats that overwhelmed a phase, live dice left unspent at turn end by colour beside those rolled, and the threat or DoT tick that ended each lost fight |
 | `signature-usage` | per signature (LR1g): fights it was worn in, fights it was cast in, casts, casts per fight worn, and taps the engine refused (`ui-signature-refused`); a fight post carries `relics` and `signatures` worn at its start |
+| `card-vs-bot` | per card at ONE build (SM1h): T's column (`human`) beside one column per sim policy, each with fights with the card in the deck, drawn, played, offered, picked and skipped, and the rates per fight (in deck, drawn, played) and per offer (picked, skipped). Without `--build` it reads the newest build holding both a `human` and a `sim` fight, and its header names that build. It always reads `human` beside `sim` (a `harness` row is never read), so `--source` does not apply |
+| `run-summary` | per source, and per policy for `sim` (SM1h), over the `play_runs` rows: runs, how many are still open, how each closed run ended (`run-over`, `chapter-clear`, `reset`), level and VITAE at the end, nodes resolved (average and highest) and where the furthest run ended. With no `--source` it reads every source, one row group each; `--source` narrows it |
 
 | Flag | Effect |
 |---|---|
-| `--build <sha>` | only fights and deck events from that build commit |
+| `--build <sha>` | only fights, deck events and runs from that build commit |
+| `--source <human, harness, sim or all>` | which source the report reads; absent is `human` (T), except `run-summary` (every source) and `card-vs-bot` (refused: it is always `human` beside `sim`) |
 | `--card <id>` | `card-usage` only: one card |
 | `--json` | the report body as JSON instead of the tables |
 | `--file <path>` | read a saved report body instead of calling the Worker |
@@ -196,7 +254,8 @@ with no event, so the fight recorder stamps it as the stream's first
 `hand-drawn` and `drawn` counts it (fights posted before that count later
 draws only), and a scrap names no card, so a scrapped card counts as held to the fight's end. Every number
 is a count for T to read; nothing in `npm test` asserts a play rate. Tests:
-`backend/test/reports.test.ts` (both reports over fixture rows in workerd),
+`backend/test/reports.test.ts` and `backend/test/reports-vs-bot.test.ts` (the
+reports over fixture rows of all three sources in workerd),
 `scripts/api.test.mjs` (root `npm test`).
 
 ## Layout

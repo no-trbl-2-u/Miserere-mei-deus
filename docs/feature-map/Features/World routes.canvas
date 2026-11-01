@@ -151,7 +151,7 @@
 		{
 			"id": "route:settings",
 			"type": "file",
-			"file": "Features/Settings.md",
+			"file": "Features/Settings (route-settings).md",
 			"x": 340,
 			"y": 560,
 			"width": 260,

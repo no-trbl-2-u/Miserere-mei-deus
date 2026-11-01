@@ -54,6 +54,7 @@ test('route ids map to the URL the web build serves them at', () => {
     assert.equal(routePathForId('route:(tabs)/ledger'), '/ledger')
     assert.equal(routePathForId('route:attic/rooms'), '/attic/rooms')
     assert.equal(routePathForId('route:long-name'), '/long-name')
+    assert.equal(routePathForId('route:(tabs)/settings'), '/settings-tab')
     assert.equal(normalisePath('/ledger/'), '/ledger')
     assert.equal(normalisePath('/'), '/')
     assert.equal(normalisePath('/well/index'), '/well')
