@@ -869,26 +869,26 @@ describe('selectInventoryViewModel: equipmentDock', () => {
 // ---------------------------------------------------------------------------
 
 describe('selectInventoryViewModel: equipmentDock slot-filter', () => {
-    it('echoes the picked slot + emits the banner chrome strings when selectedSlot is set', () => {
+    it('echoes the picked slot + emits the banner chrome strings when selectedRow is set', () => {
         const store = makeStore([sword('long-blade-1'), potion('phial-1')]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState(), {
-            selectedSlot: 'weapon',
+            selectedRow: 'weapon',
         });
 
-        expect(vm.equipmentDock.selectedSlot).toBe('weapon');
+        expect(vm.equipmentDock.selectedRow).toBe('weapon');
         expect(vm.equipmentDock.bannerEyebrow).toBe('FITTING SLOT');
         expect(vm.equipmentDock.bannerSlotLabel).toBe('WEAPON');
         expect(vm.equipmentDock.bannerClearLabel).toBe('CLEAR ✕');
     });
 
-    it('null selectedSlot ships empty bannerSlotLabel and null on the dock VM', () => {
+    it('null selectedRow ships empty bannerSlotLabel and null on the dock VM', () => {
         const store = createGameStore(createMemoryAdapter());
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
-        expect(vm.equipmentDock.selectedSlot).toBeNull();
+        expect(vm.equipmentDock.selectedRow).toBeNull();
         expect(vm.equipmentDock.bannerSlotLabel).toBe('');
     });
 
-    it('filters items to compatible equipment when selectedSlot is set, overriding the tab pick', () => {
+    it('filters items to compatible equipment when selectedRow is set, overriding the tab pick', () => {
         const store = makeStore([
             sword('long-blade-1'),
             dagger('bone-dagger-1'),
@@ -897,7 +897,7 @@ describe('selectInventoryViewModel: equipmentDock slot-filter', () => {
         ]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState(), {
             activeTab: 'consumable', // would normally show only the potion
-            selectedSlot: 'weapon',
+            selectedRow: 'weapon',
         });
 
         expect(vm.items).toHaveLength(2);
@@ -908,16 +908,16 @@ describe('selectInventoryViewModel: equipmentDock slot-filter', () => {
     it('ships zero items when the slot is empty and no compatible equipment is carried', () => {
         const store = makeStore([sword('long-blade-1'), potion('phial-1')]);
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState(), {
-            selectedSlot: 'armor', // no armor in inventory
+            selectedRow: 'armor', // no armor in inventory
         });
         expect(vm.items).toHaveLength(0);
     });
 
-    it('falls back to tab filter when selectedSlot is null', () => {
+    it('falls back to tab filter when selectedRow is null', () => {
         const store = makeStore([sword('long-blade-1'), potion('phial-1', 6, 2)]);
         const vmAll: InventoryViewModel = selectInventoryViewModel(store.getState(), {
             activeTab: 'consumable',
-            selectedSlot: null,
+            selectedRow: null,
         });
         expect(vmAll.items).toHaveLength(1);
         expect(vmAll.items[0].category).toBe('consumable');
