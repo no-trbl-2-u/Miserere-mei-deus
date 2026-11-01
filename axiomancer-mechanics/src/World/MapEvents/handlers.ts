@@ -32,7 +32,7 @@ import { ENEMY_REGISTRY, type EnemySlug } from '../../Enemy/enemy.library';
 import { sourceAtTier } from '../encounter-tier';
 import { validateDieGear, type DieGearColor } from '../../Character/dieGear.reducer';
 import { REST_PASSIVE_HEAL_FRACTION, restShelterOf } from './rest-shelter';
-import { villageCardShopFor, villageRestCounter } from '../Village/village.engine';
+import { villageCardShopFor, villageEquipmentShopFor, villageRestCounter } from '../Village/village.engine';
 import type {
     EncounterPayload, RestPayload,
     VillagePayload, CutscenePayload, HazardPayload, LootCachePayload,
@@ -113,6 +113,10 @@ export function resolveVillage(
             throw new Error(`MapEvents: illegal anvil variant '${v.id}': ${reason}`);
         }
     }
+    const shopNode = state.world?.currentMap?.currentNode || payload.villageName;
+    // The equipment counter stands beside the card shop, and only while the
+    // player lacks a lane piece to buy.
+    const equipmentShop = payload.cardShop ? villageEquipmentShopFor(state, shopNode) : null;
     return {
         state,
         event: {
@@ -120,9 +124,8 @@ export function resolveVillage(
             villageName: payload.villageName,
             merchants,
             ...(payload.rest ? { rest: villageRestCounter() } : {}),
-            ...(payload.cardShop
-                ? { cardShop: villageCardShopFor(state, state.world?.currentMap?.currentNode || payload.villageName) }
-                : {}),
+            ...(payload.cardShop ? { cardShop: villageCardShopFor(state, shopNode) } : {}),
+            ...(equipmentShop && equipmentShop.pieceIds.length > 0 ? { equipmentShop } : {}),
             anvil: payload.anvil,
             description: payload.description,
         },

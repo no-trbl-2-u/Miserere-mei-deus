@@ -6,8 +6,10 @@
 
 export type {
     VillageAccepted,
+    VillageBuyEquipmentResult,
     VillageBuyResult,
     VillageCardShop,
+    VillageEquipmentShop,
     VillageHost,
     VillageQuote,
     VillageRefused,
@@ -31,6 +33,10 @@ export {
     villageCardShopFor,
     villageCardQuote,
     buyVillageCard,
+    villageEquipmentShopSeed,
+    villageEquipmentShopFor,
+    villageEquipmentQuote,
+    buyVillageEquipment,
     villageRemovalQuote,
     removeVillageCard,
 } from './village.engine';

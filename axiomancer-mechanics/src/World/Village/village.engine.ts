@@ -9,6 +9,10 @@
  *    the node so the offer never re-rolls) for `VILLAGE_TUNING.cardPrice`; the
  *    card joins the deck the way a reward card does (`addRewardCard`). Each
  *    offered card sells once per visit.
+ *  - EQUIPMENT: up to `EQUIPMENT_DROP_TUNING.shopCount` weapons and armor the
+ *    player does not carry (`villageEquipmentShopFor`, seeded like the card
+ *    shop) for `EQUIPMENT_DROP_TUNING.shopPrice` each; a bought piece enters
+ *    the satchel unworn. The grey pair never sells.
  *  - REMOVE: one deck card for the escalating removal price
  *    (`cardRemovalPriceFor`), through `removeCardFromCombatDeck`, which owns
  *    the deck floor and bumps `Character.cardRemovals`.
@@ -22,12 +26,17 @@ import { addRewardCard, rewardPoolFor } from '../../Combat/combat.rewards';
 import { cardRemovalPrice, cardRemovalsOf, removeCardFromCombatDeck } from '../../Cards/card.removal';
 import type { GameState } from '../../Game/types';
 import type { Character } from '../../Character/types';
+import { EQUIPMENT_DROP_TUNING, carriedPieceIds, equipmentDropPool } from '../../Items/equipment-drop';
+import { equipmentLibrary } from '../../Items/equipment.library';
+import { grantItem } from '../../Items/item-grant';
 import { previewRestChoiceHeal } from '../RestChoice/restchoice.engine';
 import { seedInputToUint32 } from '../seed';
 import { VILLAGE_TUNING } from './village.content';
 import type {
     VillageBuyResult,
+    VillageBuyEquipmentResult,
     VillageCardShop,
+    VillageEquipmentShop,
     VillageHost,
     VillageQuote,
     VillageRemovalQuote,
@@ -42,6 +51,7 @@ import type {
 export const FRESH_VILLAGE_VISIT: VillageVisit = Object.freeze({
     rested: false,
     boughtCardIds: Object.freeze([]) as readonly string[],
+    boughtEquipmentIds: Object.freeze([]) as readonly string[],
 });
 
 /** The words a counter prints when the purse cannot cover it. */
@@ -210,6 +220,83 @@ export function buyVillageCard<S extends VillageHost>(
         visit: { ...visit, boughtCardIds: [...visit.boughtCardIds, cardId] },
         spent: quote.price,
         cardId,
+    };
+}
+
+// ---------------------------------------------------------------------------
+// The equipment counter
+// ---------------------------------------------------------------------------
+
+/** The seed a village's equipment counter rolls from: the run and the node. */
+export function villageEquipmentShopSeed(runId: string, nodeId: string): number {
+    return seedInputToUint32(`village-equipment-shop:${runId}:${nodeId}`);
+}
+
+/**
+ * The equipment counter a village offers this player: `shopCount` pieces of
+ * the lane the player does not carry (`equipmentDropPool`), seeded by the run
+ * and the village's node. Fewer when the pool is smaller, none when the player
+ * carries every lane piece.
+ *
+ * @param state  - the run id and the player (whose satchel and loadout are read).
+ * @param nodeId - the village's node.
+ */
+export function villageEquipmentShopFor(
+    state: Pick<GameState, 'runId' | 'player'>,
+    nodeId: string,
+): VillageEquipmentShop {
+    const pool = equipmentDropPool(state.player).map(piece => piece.id);
+    return {
+        pieceIds: rollVillageCardShop(
+            pool,
+            villageEquipmentShopSeed(state.runId, nodeId),
+            EQUIPMENT_DROP_TUNING.shopCount,
+        ),
+        price: EQUIPMENT_DROP_TUNING.shopPrice,
+    };
+}
+
+/**
+ * What one of the equipment counter's pieces costs, and why it is refused if it is.
+ *
+ * @returns the refusal: not on offer, sold this visit, already carried, or a short purse.
+ */
+export function villageEquipmentQuote(
+    player: Pick<Character, 'currency' | 'inventory' | 'equipment'>,
+    visit: VillageVisit,
+    shop: VillageEquipmentShop,
+    pieceId: string,
+): VillageQuote {
+    const price = shop.price;
+    let refusal: string | null = null;
+    if (!shop.pieceIds.includes(pieceId)) refusal = 'that piece is not on offer here';
+    else if ((visit.boughtEquipmentIds ?? []).includes(pieceId)) refusal = 'sold this visit';
+    else if (carriedPieceIds(player).has(pieceId)) refusal = 'you already carry it';
+    else if (player.currency < price) refusal = purseShort(price);
+    return { price, refusal };
+}
+
+/**
+ * Buys a piece from the equipment counter: takes the price and puts the piece
+ * in the satchel, unworn (the wearer decides from the dock).
+ */
+export function buyVillageEquipment<S extends VillageHost>(
+    state: S,
+    visit: VillageVisit,
+    shop: VillageEquipmentShop,
+    pieceId: string,
+): VillageBuyEquipmentResult<S> {
+    const quote = villageEquipmentQuote(state.player, visit, shop, pieceId);
+    if (quote.refusal !== null) return { ok: false, refusal: quote.refusal };
+    const piece = equipmentLibrary.find(candidate => candidate.id === pieceId);
+    if (!piece) return { ok: false, refusal: 'that piece is not on offer here' };
+    const paid: Character = { ...state.player, currency: state.player.currency - quote.price };
+    return {
+        ok: true,
+        state: { ...state, player: grantItem(paid, piece).character },
+        visit: { ...visit, boughtEquipmentIds: [...(visit.boughtEquipmentIds ?? []), pieceId] },
+        spent: quote.price,
+        pieceId,
     };
 }
 

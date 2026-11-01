@@ -2557,6 +2557,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/Village/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/breakwater-chapter.questline.ts"
     },
     {
@@ -6260,6 +6266,12 @@
       "from": "route:village",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
     },
     {
       "kind": "coupling",

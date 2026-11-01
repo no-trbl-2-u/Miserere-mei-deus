@@ -7,18 +7,22 @@
  *  - the card shop (`cardShop`): the three offered cards as real card faces,
  *    each with its price and refusal (sold this visit, a short purse), and
  *    card removal: the escalating price, its refusal, and the deck's cards;
+ *  - the equipment counter (`equipmentShop`): the weapons and armor on offer,
+ *    each with its price and refusal (sold this visit, a short purse);
  *  - the Anvil (`anvil`): opens the existing Anvil session.
  * Every price and refusal is the engine's (`World/Village`, the Anvil's
  * `ANVIL_VERB_PRICING`); a refused counter is shown with its reason, never
- * hidden. The village sells no items and buys nothing back.
+ * hidden. The village sells cards, weapons and armor, and buys nothing back.
  */
 
 import {
     ANVIL_VERB_PRICING,
     FRESH_VILLAGE_VISIT,
     buildCombatDeck,
+    equipmentLibrary,
     getCardById,
     villageCardQuote,
+    villageEquipmentQuote,
     villageRemovalQuote,
     villageRestQuote,
     type BlacksmithVariantOffer,
@@ -26,6 +30,7 @@ import {
 } from '@mechanics';
 import type { AppStoreState } from '@/state/store';
 import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
+import { equipmentEffectLine } from './equipment-effect-line';
 import { villageRestEffect } from './village.copy';
 
 export interface VillageMerchantVM {
@@ -54,6 +59,21 @@ export interface VillageShopCardVM {
     name: string;
     /** The card's own face, the one face the game draws a card with. */
     face: CombatCardVM;
+    price: number;
+    /** Bought this visit. */
+    sold: boolean;
+    enabled: boolean;
+    refusal: string | null;
+}
+
+/** One piece on the equipment counter. */
+export interface VillageShopPieceVM {
+    pieceId: string;
+    name: string;
+    /** The satchel's slot label: `Weapon` or `Armor`. */
+    sub: 'Weapon' | 'Armor';
+    /** What the piece does, the one effect line every surface shows; null for a piece with none. */
+    effect: string | null;
     price: number;
     /** Bought this visit. */
     sold: boolean;
@@ -105,6 +125,8 @@ export interface VillageVM {
     rest: VillageRestVM | null;
     /** The card shop, when this village has one; null otherwise. */
     cardShop: VillageCardShopVM | null;
+    /** The weapons and armor on offer, when the village stocks any; null otherwise. */
+    equipmentShop: readonly VillageShopPieceVM[] | null;
     /** The Anvil counter, when this village has a smith; null otherwise. */
     anvil: VillageAnvilVM | null;
 }
@@ -119,6 +141,7 @@ const EMPTY_VM: VillageVM = Object.freeze({
     maxHealth: 0,
     rest: null,
     cardShop: null,
+    equipmentShop: null,
     anvil: null,
 });
 
@@ -207,6 +230,26 @@ export function selectVillageVM(
         };
     }
 
+    let equipmentShop: VillageShopPieceVM[] | null = null;
+    if (event.equipmentShop && player) {
+        const shop = event.equipmentShop;
+        equipmentShop = shop.pieceIds.flatMap((pieceId): VillageShopPieceVM[] => {
+            const piece = equipmentLibrary.find(candidate => candidate.id === pieceId);
+            if (!piece || (piece.slot !== 'weapon' && piece.slot !== 'armor')) return [];
+            const quote = villageEquipmentQuote(player, visit, shop, pieceId);
+            return [{
+                pieceId,
+                name: piece.name,
+                sub: piece.slot === 'weapon' ? 'Weapon' : 'Armor',
+                effect: equipmentEffectLine(piece.effect),
+                price: quote.price,
+                sold: (visit.boughtEquipmentIds ?? []).includes(pieceId),
+                enabled: quote.refusal === null,
+                refusal: quote.refusal,
+            }];
+        });
+    }
+
     return {
         active: true,
         villageName: event.villageName,
@@ -221,6 +264,7 @@ export function selectVillageVM(
         maxHealth: player?.maxHealth ?? 0,
         rest,
         cardShop,
+        equipmentShop,
         anvil: event.anvil
             ? { variants: event.anvil.variants ?? [], cheapestWork: ANVIL_VERB_PRICING.hone }
             : null,

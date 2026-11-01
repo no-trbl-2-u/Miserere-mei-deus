@@ -462,10 +462,11 @@ export {
     VILLAGE_TUNING, FRESH_VILLAGE_VISIT,
     villageRestCounter, villageRestQuote, restAtVillage,
     villageCardShopSeed, rollVillageCardShop, villageCardShopFor, villageCardQuote, buyVillageCard,
+    villageEquipmentShopSeed, villageEquipmentShopFor, villageEquipmentQuote, buyVillageEquipment,
     villageRemovalQuote, removeVillageCard,
 } from './World/Village';
 export type {
-    VillageCardShop, VillageRestCounter, VillageVisit, VillageQuote, VillageRestQuote,
+    VillageCardShop, VillageEquipmentShop, VillageRestCounter, VillageVisit, VillageQuote, VillageRestQuote,
     VillageRemovalQuote, VillageHost,
 } from './World/Village';
 export type {
