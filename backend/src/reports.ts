@@ -47,6 +47,18 @@
  *   casts         `signature-cast` events naming it
  *   castsPerFight casts over fightsWorn, to two places; null when never worn
  *   refused       `ui-signature-refused` taps naming it
+ *
+ * card-vs-bot (phase SM1h), per card at ONE build, T's play beside each sim policy's. A column is `human` or a
+ * sim policy id (a sim fight's policy is its run's `play_runs.policy_id`, else its `solver`); `harness` rows
+ * and `?source=` are not read. Per column and card: fightsInDeck, drawn, played, offered, picked, skipped, and
+ * the rates fightsInDeck/drawn/played per fight in the column and picked/skipped per offer of the card. With no
+ * `?build=` the build is the newest one holding both a `human` and a `sim` fight, and the body names it.
+ *
+ * run-summary (phase SM1h), per source, and per policy for `sim`, over the `play_runs` rows (`?build=` and
+ * `?source=` narrow it; with no `?source=` every source is read, since each row group names its own source):
+ *   runs, open (not yet ended), runOver, chapterClear, reset (the outcomes), avgLevel and maxLevel,
+ *   avgVitaeEnd, avgNodesResolved and maxNodesResolved, and furthestNodeId (where the run that resolved the
+ *   most nodes ended).
  */
 
 import type { PlayLogSourceFilter } from './contract';
@@ -54,7 +66,7 @@ import type { Env } from './env';
 
 export const REPORTS_PATH_PREFIX = '/v1/reports/';
 
-export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage'] as const;
+export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage', 'card-vs-bot', 'run-summary'] as const;
 export type ReportName = (typeof REPORT_NAMES)[number];
 
 export function isReportName(value: string): value is ReportName {
@@ -132,7 +144,71 @@ export interface SignatureUsageReport {
     signatures: SignatureUsageRow[];
 }
 
-export type Report = CardUsageReport | CardGapsReport | SignatureUsageReport;
+/** One card's counts in one column of card-vs-bot; a rate is null when its denominator is 0. */
+export interface CardVsBotCounts {
+    fightsInDeck: number;
+    drawn: number;
+    played: number;
+    offered: number;
+    picked: number;
+    skipped: number;
+    inDeckPerFight: number | null;
+    drawnPerFight: number | null;
+    playedPerFight: number | null;
+    pickedPerOffer: number | null;
+    skippedPerOffer: number | null;
+}
+
+/** A column of card-vs-bot: `human`, or a sim policy id. */
+export interface CardVsBotColumn {
+    column: string;
+    source: 'human' | 'sim';
+    fights: number;
+}
+
+export interface CardVsBotRow {
+    cardId: string;
+    /** Every column's counts, keyed by column name; a column that never saw the card holds zeros. */
+    columns: Record<string, CardVsBotCounts>;
+}
+
+export interface CardVsBotReport {
+    report: 'card-vs-bot';
+    /** The build read: the asked one, or the newest holding both sources; null when no build holds both. */
+    build: string | null;
+    /** True when the build was chosen (no `?build=`). */
+    buildDefaulted: boolean;
+    sources: ['human', 'sim'];
+    columns: CardVsBotColumn[];
+    cards: CardVsBotRow[];
+}
+
+export interface RunSummaryRow {
+    source: string;
+    /** The sim's policy id; null for any other source, and for a sim run that named none. */
+    policyId: string | null;
+    runs: number;
+    open: number;
+    runOver: number;
+    chapterClear: number;
+    reset: number;
+    avgLevel: number | null;
+    maxLevel: number | null;
+    avgVitaeEnd: number | null;
+    avgNodesResolved: number | null;
+    maxNodesResolved: number | null;
+    furthestNodeId: string | null;
+}
+
+export interface RunSummaryReport {
+    report: 'run-summary';
+    build: string | null;
+    source: PlayLogSourceFilter;
+    runs: number;
+    summary: RunSummaryRow[];
+}
+
+export type Report = CardUsageReport | CardGapsReport | SignatureUsageReport | CardVsBotReport | RunSummaryReport;
 
 export interface ReportQuery {
     build: string | null;
@@ -326,6 +402,93 @@ LEFT JOIN refusals AS r ON r.sig = s.sig
 WHERE s.sig IS NOT NULL
 ORDER BY fightsWorn DESC, casts DESC, signatureId`;
 
+// card-vs-bot. `?1` is the build. A sim row's column is its run's policy, else its `solver`; T's rows are `human`.
+const COLUMN_OF_FIGHT = `CASE WHEN fights.source = 'sim'
+        THEN COALESCE((SELECT p.policy_id FROM play_runs AS p WHERE p.run_id = fights.run_id), fights.solver)
+        ELSE 'human' END`;
+const COLUMN_OF_DECK_EVENT = `CASE WHEN deck_events.source = 'sim'
+        THEN COALESCE((SELECT p.policy_id FROM play_runs AS p WHERE p.run_id = deck_events.run_id), deck_events.solver)
+        ELSE 'human' END`;
+
+const VS_BOT_BUILD_SQL = `
+SELECT build_commit AS build FROM fights
+WHERE build_commit IS NOT NULL AND source IN ('human', 'sim')
+GROUP BY build_commit
+HAVING SUM(source = 'human') > 0 AND SUM(source = 'sim') > 0
+ORDER BY MAX(id) DESC LIMIT 1`;
+
+const VS_BOT_COLUMNS_SQL = `
+SELECT ${COLUMN_OF_FIGHT} AS col, MAX(source) AS source, COUNT(*) AS fights FROM fights
+WHERE build_commit = ?1 AND source IN ('human', 'sim') GROUP BY col`;
+
+const VS_BOT_CARDS_SQL = `
+WITH f AS (
+        SELECT id, deck_json, events_json, ${COLUMN_OF_FIGHT} AS col FROM fights
+        WHERE build_commit = ?1 AND source IN ('human', 'sim')
+    ),
+    ev AS (
+        SELECT f.id AS fight_id, f.col, e.value AS v, json_extract(e.value, '$.kind') AS kind
+        FROM f, json_each(f.events_json) AS e
+    ),
+    in_deck AS (
+        SELECT f.col, d.value AS card_id, COUNT(DISTINCT f.id) AS n FROM f, json_each(f.deck_json) AS d GROUP BY 1, 2
+    ),
+    draws AS (
+        SELECT ev.col, c.value AS card_id, COUNT(*) AS n
+        FROM ev, json_each(ev.v, '$.cards') AS c WHERE ev.kind = 'hand-drawn' GROUP BY 1, 2
+    ),
+    plays AS (
+        SELECT col, json_extract(v, '$.cardId') AS card_id, COUNT(*) AS n FROM ev WHERE kind = 'card-played' GROUP BY 1, 2
+    ),
+    de AS (
+        SELECT deck_events.kind, deck_events.card_id, deck_events.offered_json, ${COLUMN_OF_DECK_EVENT} AS col
+        FROM deck_events WHERE build_commit = ?1 AND source IN ('human', 'sim')
+    ),
+    offers AS (
+        SELECT de.col, o.value AS card_id, COUNT(*) AS offered,
+               SUM(o.value = de.card_id) AS picked,
+               SUM(de.card_id IS NULL OR o.value <> de.card_id) AS skipped
+        FROM de, json_each(de.offered_json) AS o WHERE de.kind IN ('reward', 'cache-reward') GROUP BY 1, 2
+    ),
+    -- Four terms: D1 caps a compound SELECT at a few.
+    keys AS (
+        SELECT col, card_id FROM in_deck UNION SELECT col, card_id FROM draws
+        UNION SELECT col, card_id FROM plays UNION SELECT col, card_id FROM offers
+    )
+SELECT k.col AS col, k.card_id AS cardId,
+       COALESCE(i.n, 0) AS fightsInDeck, COALESCE(d.n, 0) AS drawn, COALESCE(p.n, 0) AS played,
+       COALESCE(o.offered, 0) AS offered, COALESCE(o.picked, 0) AS picked, COALESCE(o.skipped, 0) AS skipped
+FROM keys AS k
+LEFT JOIN in_deck AS i ON i.col = k.col AND i.card_id = k.card_id
+LEFT JOIN draws AS d ON d.col = k.col AND d.card_id = k.card_id
+LEFT JOIN plays AS p ON p.col = k.col AND p.card_id = k.card_id
+LEFT JOIN offers AS o ON o.col = k.col AND o.card_id = k.card_id
+WHERE k.card_id IS NOT NULL`;
+
+// run-summary. `?1` build, `?2` source (null for every source). A run's policy counts for `sim` only.
+const RUN_SUMMARY_SQL = `
+WITH r AS (
+    SELECT *, CASE WHEN source = 'sim' THEN policy_id END AS pol FROM play_runs
+    WHERE (?1 IS NULL OR build_commit = ?1) AND (?2 IS NULL OR source = ?2)
+)
+SELECT g.source AS source, g.pol AS policyId, g.runs, g.open, g.runOver, g.chapterClear, g.reset,
+       g.avgLevel, g.maxLevel, g.avgVitaeEnd, g.avgNodesResolved, g.maxNodesResolved,
+       (SELECT q.end_node_id FROM r AS q
+        WHERE q.source = g.source AND q.pol IS g.pol AND q.nodes_resolved IS NOT NULL
+        ORDER BY q.nodes_resolved DESC, q.id DESC LIMIT 1) AS furthestNodeId
+FROM (
+    SELECT source, pol, COUNT(*) AS runs,
+           COALESCE(SUM(ended_at IS NULL), 0) AS open,
+           COALESCE(SUM(outcome = 'run-over'), 0) AS runOver,
+           COALESCE(SUM(outcome = 'chapter-clear'), 0) AS chapterClear,
+           COALESCE(SUM(outcome = 'reset'), 0) AS reset,
+           ROUND(AVG(level), 1) AS avgLevel, MAX(level) AS maxLevel,
+           ROUND(AVG(vitae_end), 1) AS avgVitaeEnd,
+           ROUND(AVG(nodes_resolved), 1) AS avgNodesResolved, MAX(nodes_resolved) AS maxNodesResolved
+    FROM r GROUP BY source, pol
+) AS g
+ORDER BY CASE g.source WHEN 'human' THEN 0 WHEN 'harness' THEN 1 ELSE 2 END, g.pol`;
+
 async function fightCount(db: D1Database, query: ReportQuery): Promise<number> {
     const row = await db.prepare(FIGHT_COUNT_SQL).bind(query.build, sourceParam(query.source)).first<{ n: number }>();
     return row?.n ?? 0;
@@ -362,9 +525,70 @@ export async function signatureUsage(db: D1Database, query: ReportQuery): Promis
     };
 }
 
+const rate = (n: number, of: number): number | null => (of === 0 ? null : Math.round((100 * n) / of) / 100);
+
+const NO_COUNTS = { fightsInDeck: 0, drawn: 0, played: 0, offered: 0, picked: 0, skipped: 0 };
+
+function countsOf(raw: typeof NO_COUNTS, fights: number): CardVsBotCounts {
+    return {
+        ...raw,
+        inDeckPerFight: rate(raw.fightsInDeck, fights),
+        drawnPerFight: rate(raw.drawn, fights),
+        playedPerFight: rate(raw.played, fights),
+        pickedPerOffer: rate(raw.picked, raw.offered),
+        skippedPerOffer: rate(raw.skipped, raw.offered),
+    };
+}
+
+interface VsBotCardRow extends Record<string, string | number> {
+    col: string;
+    cardId: string;
+}
+
+/** `?source=` and `?card=` do not apply: the two sources are the report. Only `?build=` does. */
+export async function cardVsBot(db: D1Database, query: ReportQuery): Promise<CardVsBotReport> {
+    const defaulted = query.build === null;
+    const build = defaulted ? ((await db.prepare(VS_BOT_BUILD_SQL).first<{ build: string }>())?.build ?? null) : query.build;
+    const empty: CardVsBotReport = { report: 'card-vs-bot', build, buildDefaulted: defaulted, sources: ['human', 'sim'], columns: [], cards: [] };
+    if (build === null) return empty;
+
+    const [cols, cards] = await db.batch([db.prepare(VS_BOT_COLUMNS_SQL).bind(build), db.prepare(VS_BOT_CARDS_SQL).bind(build)]);
+    // T's column first, then the policies by name.
+    const columns = (cols.results as unknown as { col: string; source: 'human' | 'sim'; fights: number }[])
+        .map(c => ({ column: c.col, source: c.source, fights: c.fights }))
+        .sort((a, b) => (a.source === b.source ? a.column.localeCompare(b.column) : a.source === 'human' ? -1 : 1));
+    const fights = new Map(columns.map(c => [c.column, c.fights]));
+
+    const byCard = new Map<string, Map<string, typeof NO_COUNTS>>();
+    for (const row of cards.results as unknown as VsBotCardRow[]) {
+        const raw = { fightsInDeck: +row.fightsInDeck, drawn: +row.drawn, played: +row.played, offered: +row.offered, picked: +row.picked, skipped: +row.skipped };
+        const perCol = byCard.get(row.cardId) ?? new Map<string, typeof NO_COUNTS>();
+        perCol.set(row.col, raw);
+        byCard.set(row.cardId, perCol);
+    }
+    const rows: CardVsBotRow[] = [...byCard].map(([cardId, perCol]) => ({
+        cardId,
+        columns: Object.fromEntries(columns.map(c => [c.column, countsOf(perCol.get(c.column) ?? NO_COUNTS, fights.get(c.column) ?? 0)])),
+    }));
+    const lead = columns[0]?.column ?? 'human';
+    const total = (r: CardVsBotRow) => Object.values(r.columns).reduce((sum, c) => sum + c.played, 0);
+    rows.sort((a, b) => (b.columns[lead]?.fightsInDeck ?? 0) - (a.columns[lead]?.fightsInDeck ?? 0) || total(b) - total(a) || a.cardId.localeCompare(b.cardId));
+    return { ...empty, columns, cards: rows };
+}
+
+/** `?card=` does not apply. With no `?source=` the route reads every source (see `handleReport`). */
+export async function runSummary(db: D1Database, query: ReportQuery): Promise<RunSummaryReport> {
+    const { results } = await db.prepare(RUN_SUMMARY_SQL).bind(query.build, sourceParam(query.source)).all<RunSummaryRow>();
+    return {
+        report: 'run-summary', build: query.build, source: query.source, runs: results.reduce((sum, r) => sum + r.runs, 0), summary: results,
+    };
+}
+
 /** Runs one named report; `?card=` only narrows card-usage. */
 export function runReport(name: ReportName, env: Env, query: ReportQuery): Promise<Report> {
     if (name === 'card-usage') return cardUsage(env.DB, query);
     if (name === 'signature-usage') return signatureUsage(env.DB, query);
+    if (name === 'card-vs-bot') return cardVsBot(env.DB, query);
+    if (name === 'run-summary') return runSummary(env.DB, query);
     return cardGaps(env.DB, query);
 }

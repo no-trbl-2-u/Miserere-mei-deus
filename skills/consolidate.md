@@ -80,7 +80,7 @@ own loop shape with its own cadence.
      it after the fact. This pass checks the result: every lesson
      still matches the `plan/lessons.md` format
      (`node scripts/check-lessons.mjs`), no `seen 2×` lesson is still
-     `open` without a `PHASE_CANDIDATES` row naming its automation,
+     `open` without a `CANDIDATES` row naming its automation,
      and the open count stays ≤40.
    - Flag drained reflexes: a reflex that has become an
      enforced rule (guard hook, CI job, deny wall) no longer

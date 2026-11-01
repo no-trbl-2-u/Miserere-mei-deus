@@ -20,10 +20,11 @@ than execute stale information.
    durable decision records.
 3. **Central SomberSoft ledger** (`~/Workspace/SOMBERSOFT_COMMAND_LEDGER.md`) —
    company-wide doctrine and operating law.
-4. **Active build plan** (`plan/steps/01_build_plan.md`) — current execution
-   queue and shipped phase ledger. A phase brief's acceptance IDs (`A1…`)
-   are its definition of done.
-5. **Phase candidates** (`plan/PHASE_CANDIDATES.md`) — promotable work, not
+4. **Active roadmap and specs** (`plan/README.md`, `plan/<NN>-<slug>.md`;
+   shipped work in `plan/ARCHIVE.md`; nexus v2 since the NX1d cut-over) —
+   current execution queue. A spec's acceptance IDs (`A1…`) are its
+   definition of done; each chunk closes the ones it names.
+5. **Candidates** (`plan/CANDIDATES.md`) — promotable work, not
    marching authority until accepted.
 6. **Critique/audit logs** (`plan/CRITIQUE.md`, `plan/AUDIT.md`) — findings
    queues and evidence of known rot.
@@ -171,6 +172,17 @@ differently:
   runs it on every merge to `main` that touches `axiomancer-mechanics/src/`,
   on Sundays, and by hand. Engine: `npm run measured-truth -w
   axiomancer-mechanics` (`measuredTruthCells`).
+- **The play log's sim rows** (phases SM1a to SM1h) are measurements too,
+  and sit beside `measured/latest.md`, not in place of it. The headless
+  bots (`npm run sim:run`, source `sim`) post the same per-card counts and
+  whole-run rows as T's preview-APK play (`human`), read apart by
+  `npm run api` (`card-usage --source sim`, `card-vs-bot`, `run-summary`;
+  `axiomancer-mobile/docs/dev-tools.md`). They are a measurement, not a
+  baseline (D57): nothing fails on a number, and a claim citing them names
+  the build commit and the source it read. Sim numbers from before BUG1j
+  (`0afc538bf`) are not comparable with later ones, and `harness` rows (a
+  web export, a dev server, a jest run, and every row stored before
+  migration 0006) belong to neither T nor the bots.
 - **Chapter 1's enemies** (turns to kill and VITAE lost for every Breakwater
   foe at its node's level, all six elites included, against the four kitted
   lane decks at player levels 8 and 10, and the share of fights reaching each

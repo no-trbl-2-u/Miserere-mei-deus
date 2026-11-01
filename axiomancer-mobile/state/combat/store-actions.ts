@@ -26,8 +26,9 @@ import {
     type WorldState,
 } from '@mechanics';
 
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
+import { recordDeckUpgrade } from '../run-log';
 import { EMPTY_COMBAT_REWARD_SLICE, type AppStore } from '../store';
 import { offerEliteRelicAction } from '../item-reward/relic-sources';
 
@@ -153,6 +154,7 @@ function postRewardEvent(store: AppStore, offered: string[], cardId: string | nu
         offered,
         deck: runDeck(state),
         where: deckEventWhere(state, 'combat-reward'),
+        runId: deckEventRunId(state),
     });
 }
 
@@ -178,6 +180,8 @@ export function claimCombatUpgradeAction(store: AppStore, cardId: string): void 
     if (node) patch.world = markEliteUpgradeTaken(game.world, node);
     store.setState(patch as never);
     try { store.getState().save(); } catch { /* persistence must not strand the reward screen */ }
+    // The run log: the elite's upgrade is a deck change, the card before and the card after.
+    recordDeckUpgrade(store, upgrade.fromCardId, upgrade.toCardId, 'combat-reward');
 }
 
 /** Clears the draft for the next encounter (called when combat is left). */

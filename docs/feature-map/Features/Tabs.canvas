@@ -69,9 +69,19 @@
 			"color": "1"
 		},
 		{
-			"id": "elsewhere:route:settings",
+			"id": "route:(tabs)/settings",
 			"type": "file",
 			"file": "Features/Settings.md",
+			"x": 640,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "elsewhere:route:index",
+			"type": "file",
+			"file": "Features/Index.md",
 			"x": 1100,
 			"y": 40,
 			"width": 260,
@@ -113,12 +123,6 @@
 			"color": "5"
 		},
 		{
-			"id": "flow:route:(tabs)/character->elsewhere:route:settings",
-			"fromNode": "route:(tabs)/character",
-			"toNode": "elsewhere:route:settings",
-			"color": "5"
-		},
-		{
 			"id": "flow:route:(tabs)/character->route:(tabs)/deck",
 			"fromNode": "route:(tabs)/character",
 			"toNode": "route:(tabs)/deck",
@@ -147,6 +151,13 @@
 			"fromEnd": "arrow"
 		},
 		{
+			"id": "flow:route:(tabs)/character->route:(tabs)/settings",
+			"fromNode": "route:(tabs)/character",
+			"toNode": "route:(tabs)/settings",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
 			"id": "flow:route:(tabs)/deck->route:(tabs)/exploration",
 			"fromNode": "route:(tabs)/deck",
 			"toNode": "route:(tabs)/exploration",
@@ -168,6 +179,13 @@
 			"fromEnd": "arrow"
 		},
 		{
+			"id": "flow:route:(tabs)/deck->route:(tabs)/settings",
+			"fromNode": "route:(tabs)/deck",
+			"toNode": "route:(tabs)/settings",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
 			"id": "flow:route:(tabs)/exploration->route:(tabs)/inventory",
 			"fromNode": "route:(tabs)/exploration",
 			"toNode": "route:(tabs)/inventory",
@@ -182,11 +200,38 @@
 			"fromEnd": "arrow"
 		},
 		{
+			"id": "flow:route:(tabs)/exploration->route:(tabs)/settings",
+			"fromNode": "route:(tabs)/exploration",
+			"toNode": "route:(tabs)/settings",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
 			"id": "flow:route:(tabs)/inventory->route:(tabs)/memoir",
 			"fromNode": "route:(tabs)/inventory",
 			"toNode": "route:(tabs)/memoir",
 			"color": "5",
 			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/inventory->route:(tabs)/settings",
+			"fromNode": "route:(tabs)/inventory",
+			"toNode": "route:(tabs)/settings",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/memoir->route:(tabs)/settings",
+			"fromNode": "route:(tabs)/memoir",
+			"toNode": "route:(tabs)/settings",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/settings->elsewhere:route:index",
+			"fromNode": "route:(tabs)/settings",
+			"toNode": "elsewhere:route:index",
+			"color": "5"
 		}
 	]
 }

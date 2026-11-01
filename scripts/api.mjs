@@ -8,13 +8,19 @@
 //   npm run api -- card-gaps --build <sha>          # per enemy, one build
 //   npm run api -- card-usage --json                # the report body as JSON
 //   npm run api -- card-gaps --file report.json     # a saved GET body, no network
+//   npm run api -- card-vs-bot                      # T beside each sim policy, per card, at the newest shared build
+//   npm run api -- card-vs-bot --build <sha> --json # the same at one build, as JSON
+//   npm run api -- run-summary                      # runs per source, and per sim policy
+//   npm run api -- run-summary --source sim         # the bots' runs only
 //
 // Calls `GET /v1/reports/<name>` (`backend/src/reports.ts`, phase BE2f) and
 // prints it as plain-text tables. The Worker holds the SQL; this script only
 // names a report and passes `--build`, `--source` and `--card` as query values.
 // A report reads `human` (T's own play) unless `--source human|harness|sim|all`
 // says otherwise (phase SM1a); each table's header line names the source it read. Every
-// number is a count for T to read; nothing here grades the game.
+// number is a count for T to read; nothing here grades the game. Two reports differ (phase SM1h): `card-vs-bot`
+// always reads T (`human`) beside the sim, so it takes `--build` only, and `run-summary` reads every source unless
+// `--source` narrows it.
 //
 // The Worker URL and token are the solve-time API's: `PUZZLE_API_URL` and
 // `PUZZLE_API_TOKEN`, read from `~/.config/miserere/puzzle-api.env` for any
@@ -32,7 +38,7 @@ import { ENV_FILE, resolveConfig } from './puzzle-times.mjs'
 
 /** Mirrors `REPORTS_PATH_PREFIX` and `REPORT_NAMES` in `backend/src/reports.ts`. */
 export const REPORTS_PATH_PREFIX = '/v1/reports/'
-export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage']
+export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage', 'card-vs-bot', 'run-summary']
 /** Mirrors `PLAY_LOG_SOURCE_FILTERS` in the play-log contract. */
 export const SOURCE_FILTERS = ['human', 'harness', 'sim', 'all']
 
@@ -60,6 +66,7 @@ export function parseArgs(argv) {
     throw new Error(`--source expects ${SOURCE_FILTERS.join(', ')} (got ${opts.source})`)
   }
   if (opts.card !== undefined && opts.report !== 'card-usage') throw new Error('--card applies to card-usage only')
+  if (opts.source !== undefined && opts.report === 'card-vs-bot') throw new Error('--source does not apply to card-vs-bot (it reads human beside sim)')
   return opts
 }
 
@@ -144,7 +151,61 @@ export function formatSignatureUsage(body) {
   return out.join('\n')
 }
 
-const REPORT_LISTS = { 'card-usage': ['cards'], 'card-gaps': ['threats', 'unspentDice', 'defeats'], 'signature-usage': ['signatures'] }
+const dash = (v) => (v === null || v === undefined ? '-' : v)
+
+const VS_BOT_COLUMNS = [
+  ['card', null], ['column', null], ['decks', 'fightsInDeck'], ['drawn', 'drawn'], ['played', 'played'], ['offered', 'offered'],
+  ['picked', 'picked'], ['skipped', 'skipped'], ['deck/f', 'inDeckPerFight'], ['draw/f', 'drawnPerFight'], ['play/f', 'playedPerFight'],
+  ['pick/o', 'pickedPerOffer'], ['skip/o', 'skippedPerOffer'],
+]
+
+/** The card-vs-bot body as text: per card, one row for T and one for each sim policy. */
+export function formatCardVsBot(body) {
+  if (body.build === null) return 'Card vs bot: no build holds both a human and a sim fight yet.'
+  const columns = body.columns.map((c) => `${c.column} (${plural(c.fights, 'fight')})`).join(', ')
+  const out = [`Card vs bot: build ${body.build}${body.buildDefaulted ? ' (the newest holding both human and sim)' : ''}; ${columns || 'no fights'}.`]
+  if (body.cards.length === 0) {
+    out.push('No cards recorded.')
+    return out.join('\n')
+  }
+  out.push(
+    'decks = fights with the card in the start deck; /f = per fight in the column; /o = per offer of the card.',
+    'human is T on a preview build; every other column is a sim policy. Counts, not grades.',
+    '',
+    table(VS_BOT_COLUMNS.map(([h]) => h), body.cards.flatMap((card) => body.columns.map((c, i) => {
+      const counts = card.columns[c.column]
+      return [i === 0 ? card.cardId : '', c.column, ...VS_BOT_COLUMNS.slice(2).map(([, k]) => dash(counts[k]))]
+    }))),
+  )
+  return out.join('\n')
+}
+
+const RUN_COLUMNS = [
+  ['source', 'source'], ['policy', 'policyId'], ['runs', 'runs'], ['open', 'open'], ['run-over', 'runOver'], ['clear', 'chapterClear'],
+  ['reset', 'reset'], ['lvl avg', 'avgLevel'], ['lvl max', 'maxLevel'], ['vitae avg', 'avgVitaeEnd'], ['nodes avg', 'avgNodesResolved'],
+  ['nodes max', 'maxNodesResolved'], ['furthest', 'furthestNodeId'],
+]
+
+/** The run-summary body as text: one row per source, and per policy for the sim. */
+export function formatRunSummary(body) {
+  const out = [`Run summary: ${plural(body.runs, 'run')} (${scopeOf(body)}).`]
+  if (body.summary.length === 0) {
+    out.push('No runs recorded.')
+    return out.join('\n')
+  }
+  out.push(
+    'open = not yet ended; run-over, clear (chapter-clear) and reset are how the closed runs ended;',
+    'vitae and level are at the end of the run; furthest = where the run that resolved the most nodes ended.',
+    '',
+    table(RUN_COLUMNS.map(([h]) => h), body.summary.map((row) => RUN_COLUMNS.map(([, k]) => dash(row[k])))),
+  )
+  return out.join('\n')
+}
+
+const REPORT_LISTS = {
+  'card-usage': ['cards'], 'card-gaps': ['threats', 'unspentDice', 'defeats'], 'signature-usage': ['signatures'],
+  'card-vs-bot': ['columns', 'cards'], 'run-summary': ['summary'],
+}
 
 /** Checks the body is the named report. Throws a one-line Error otherwise. */
 export function checkBody(body, report) {
@@ -202,7 +263,10 @@ export async function main(argv, { env = process.env, envFile = ENV_FILE, fetchI
     return 1
   }
 
-  const format = { 'card-usage': formatCardUsage, 'card-gaps': formatCardGaps, 'signature-usage': formatSignatureUsage }[opts.report]
+  const format = {
+    'card-usage': formatCardUsage, 'card-gaps': formatCardGaps, 'signature-usage': formatSignatureUsage,
+    'card-vs-bot': formatCardVsBot, 'run-summary': formatRunSummary,
+  }[opts.report]
   const text = opts.json ? JSON.stringify(body, null, 2) : format(body)
   stdout.write(`${text}\n`)
   return 0

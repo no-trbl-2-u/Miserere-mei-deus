@@ -89,10 +89,11 @@ export function BackgroundMusic() {
     const { inCombat: onCombatScreen } = useCombatMode();
     const hasHazard = useGameState(selectHasActiveHazard);
     const musicVolume = useSetting('musicVolume');
+    const musicOn = useSetting('musicOn');
     const { active: appActive, wake } = useAppActive();
     const unlocked = useAudioUnlocked();
 
-    const directive = decideMusic({ inCombat, onCombatScreen, hasHazard, musicVolume, appActive });
+    const directive = decideMusic({ inCombat, onCombatScreen, hasHazard, musicVolume, musicOn, appActive });
 
     const playersRef = useRef<Partial<Record<MusicTrackId, LoopingPlayer>>>({});
     /** The track whose player is sounding or fading, if any. */

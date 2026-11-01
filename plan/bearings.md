@@ -199,11 +199,11 @@ Axiomancer/
 ├── skills/                     # nexus LOOP verbs (this harness)
 ├── plan/                       # nexus state files (this dir)
 │   ├── bearings.md             # this file
-│   ├── AUDIT.md · CRITIQUE.md · PHASE_CANDIDATES.md
+│   ├── AUDIT.md · CRITIQUE.md · CANDIDATES.md · NEEDS_T.md
 │   ├── revamp/                 # THE REVAMP record + part plans (D46–D83)
 │   ├── reflexes.md · lessons.md (counted retro ladder) · north-star-mork-borg.md
-│   ├── steps/01_build_plan.md
-│   ├── phases/                 # template, V masterplan, open/partial + recent briefs
+│   ├── README.md · NNN-<slug>.md · ARCHIVE.md   # nexus v2 roadmap, specs, archive (NX1d)
+│   ├── nexus.lock              # the kit ref this plan follows
 │   ├── ideas/ · labyrinth/     # art-pipeline options · Labyrinth design + acts
 │   └── <date>-<topic>.{prompt,decisions,spec}.md   # live dated records
 ├── docs/                       # truth-sources, asking-well, devlog deploy, reports/
@@ -244,7 +244,7 @@ session (B6).
 ## Plan expansion posture
 
 - **Mode: bold** (default) — `/expand` files candidates to
-  `plan/PHASE_CANDIDATES.md`; `/oversight` promotes them.
+  `plan/CANDIDATES.md`; `/oversight` promotes them.
 
 ## Decisions standing for the autonomous loop
 
@@ -306,7 +306,7 @@ ambiguity.)
 - **THE CARD HOLD IS LIFTED (T, attended session 2026-10-22, D99;
   supersedes D37).** Cards, keywords and art are ordinary content under
   D88: built only from a build-plan row whose brief T wrote or approved
-  (`/plot`, attended `/plan-a-phase`, `/oversight` promotion), proposed by
+  (`/plot`, attended `/plan-a-spec`, `/oversight` promotion), proposed by
   `/expand` as candidates, never invented unprompted.
   The card-rules inventory B4 required is merged
   (`plan/revamp/card-rules-inventory.md`). **The card process is Plan B
@@ -430,7 +430,8 @@ ambiguity.)
   surface it rather than double-shipping.
 - **Hermes-originated queue mutations get a provenance log entry**
   (adopted via /oversight 2026-07-30, issue #129): any time a
-  Hermes-originated instruction changes `plan/steps/01_build_plan.md`'s
+  Hermes-originated instruction changes the roadmap's (`plan/README.md`, the
+  v1 build plan's successor since the NX1d cut-over)
   queue (add/remove/reorder/reprioritize/split/merge/skip/block/
   unblock/material scope change to a phase row), the same commit adds
   a row to that file's `## Queue change log` section — date, actor
@@ -631,8 +632,42 @@ npm run deploy:check                              # post-push CI-green gate (mai
 gh pr checks <branch> --watch --fail-fast         # a loop PR's CI gate
 node scripts/check-lessons.mjs                    # the lessons ladder lint
 node scripts/check-plan-queues.mjs                # the queue-row structure lint (AUDIT, CRITIQUE, candidates, Status)
-node scripts/check-deadlines.mjs                  # deadline plan vs build plan lint (DL1a)
+node scripts/check-deadlines.mjs                  # deadline plan vs the specs' aliases lint (DL1a, NX1c)
+node scripts/plan-check.mjs                       # the v2 plan shape (specs, chunks, lanes, archive)
+node scripts/plan/order.mjs                       # what /next would pick, in order
 node scripts/deadlines.mjs --today=YYYY-MM-DD     # the deadline reminder, pinned to a date
 npm run game -- combat                            # play Hazard-Pattern Combat (CLI)
 npm run mobile -- start                           # expo dev server
 ```
+
+## Loop knobs
+
+Written by `nexus upgrade` (2026-11-01) at the values that keep the v1 loop's
+behaviour. Turn them up together with `Improve:` (off, gentle, steady, bold;
+the lines below override it), or each on its own, later: `Support:`
+(`nexus/customization/support.md`), `Promote:` and `stall_action`
+(aged promotion, the motion heartbeat), `loop:` (`/iterate` dimension
+I), `UI:` (the browser walk).
+
+- Improve: gentle
+- Support: triage-only
+- Promote: owner
+- stall_action: alert
+- loop: off
+- Landing: pr (hybrid, D119). Every change lands by PR: code as a `loop:pr`
+  PR on `loop/<verb>-<slug>` that the review merges (D84, D95), and `plot`,
+  `review:rules-change` and `nexus-sync` PRs that T merges (D93, D101,
+  D119). `NEXUS_LOOP_MODE` stays unset (v2's pull-request mode), never
+  `owner`, though the upgrader read three old `Cloud-Run` commits as
+  owner mode. v2's land step meets this in phase NX1e; until then the
+  loop is off (`march` and `night` disabled, NX1i turns them on).
+
+**UI:** `none`
+
+## Generators
+
+When no chunk is ready, `/march`'s stock `refill` lane runs each
+generator listed here (`nexus/concepts/generators.md`). None listed
+means refill is a no-op.
+
+- (none)

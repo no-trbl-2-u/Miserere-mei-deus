@@ -1,13 +1,13 @@
 # Skill: expand
 
 > **Plan-expansion pass.** Read accumulated signals and propose
-> new phase candidates to `plan/PHASE_CANDIDATES.md`. The build
+> new phase candidates to `plan/CANDIDATES.md`. The build
 > plan ships well; this skill is how it *grows* well.
 >
 > **Posture-controlled.** Default is **bold** — the skill runs
 > on schedule and surfaces candidates. Set to **strict** in
 > `bearings.md` to make `/expand` a no-op (build plan grows only
-> via manual `/plan-a-phase` or `/oversight`).
+> via manual `/plan-a-spec` or `/oversight`).
 
 ## 1. Purpose
 
@@ -55,13 +55,13 @@ actionable findings. Both gates live in one place: `skills/march.md`
 Two settings:
 
 - **bold** (default) — `/expand` runs when its gate is due.
-  Candidates land in `plan/PHASE_CANDIDATES.md`. `/oversight`
+  Candidates land in `plan/CANDIDATES.md`. `/oversight`
   promotes.
 - **strict** — `/expand` is a **no-op**. Print
   `"expand: strict posture — skipping"` and exit 0. The
   `/march` dispatcher skips the expand gate entirely.
 
-`/expand` never writes to `plan/steps/01_build_plan.md`; only
+`/expand` never writes to `plan/README.md`; only
 `/oversight` promotes a candidate to a phase.
 
 If the bearings section is missing, default to **bold** and add
@@ -136,7 +136,7 @@ Game content vs. when the plan was written:
 
 ### H. Existing plan gaps
 
-`plan/steps/01_build_plan.md` review:
+`plan/README.md` review:
 - Phases marked `[skipped]` — may now be ship-able if context
   changed.
 - Cross-cutting phases (polish, perf) sitting at the end with
@@ -230,7 +230,7 @@ For each top candidate, ask:
 After assessment, you should have **2–4 candidates**, not 3
 mechanically.
 
-### Step 4 — Write to `PHASE_CANDIDATES.md`
+### Step 4 — Write to `CANDIDATES.md`
 
 Append under `## Pending`. Update metadata header (last pass,
 pass count).
@@ -238,7 +238,7 @@ pass count).
 ### Step 5 — Commit + push
 
 ```bash
-git add plan/PHASE_CANDIDATES.md
+git add plan/CANDIDATES.md
 git commit -m "$(cat <<'EOF'
 expand: pass <N> — <K> candidates filed
 
@@ -271,7 +271,7 @@ Print 3-line summary:
 
 ```
 expand pass <N>: <K> candidates filed (<L> dropped below threshold).
-plan/PHASE_CANDIDATES.md updated.
+plan/CANDIDATES.md updated.
 oversight will review and promote.
 ```
 
@@ -325,8 +325,8 @@ check, and `/iterate`'s fall-through) live in `skills/march.md`
 plan/bearings.md                              # posture
 plan/AUDIT.md                                 # audit signals
 plan/CRITIQUE.md                              # critique signals
-plan/PHASE_CANDIDATES.md                      # current state
-plan/steps/01_build_plan.md                   # existing phases
+plan/CANDIDATES.md                      # current state
+plan/README.md                   # existing phases
 spec.md                                       # spec drift
 
 # Git diffs (signals)
@@ -338,7 +338,7 @@ git log --since="<last pass>" --pretty=format:'%s'
 gh issue list --repo $GH_REPO --label "triage:loop-queued" --json number,title
 
 # Write
-plan/PHASE_CANDIDATES.md                      # candidates (never the build plan)
+plan/CANDIDATES.md                      # candidates (never the build plan)
 
 # Commit + push + confirm
 git add <files>

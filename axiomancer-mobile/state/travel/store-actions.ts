@@ -8,10 +8,11 @@
  * no rule decisions of its own.
  */
 
-import { takeTravel } from '@mechanics';
+import { STARTING_MAP, takeTravel } from '@mechanics';
 import type { GameState, ResolvedEvent } from '@mechanics';
 
 import { getMapLayout } from '../exploration-maps';
+import { recordNodeResolved, recordRunClosed } from '../run-log';
 import { EMPTY_TRAVEL_SLICE, type AppStore } from '../store';
 import { TRAVEL_COPY } from '../presenters/travel.copy';
 
@@ -42,6 +43,12 @@ export function takeTravelAction(store: AppStore, toast: (text: string) => void)
     }
     const after = takeTravel(before);
     if (after === before) return false;
+    // The run log, while the player still stands on the travel node: the trip resolves it, and
+    // leaving the Breakwater (the Chapter 1 map) ends the run as a chapter clear.
+    recordNodeResolved(store, 'travel');
+    if (before.world.currentMap.name === STARTING_MAP && after.world.currentMap.name !== STARTING_MAP) {
+        recordRunClosed(before, 'chapter-clear');
+    }
     store.setState({ world: after.world, travel: EMPTY_TRAVEL_SLICE } as never);
     const destination = open.destination;
     if ('map' in destination) {

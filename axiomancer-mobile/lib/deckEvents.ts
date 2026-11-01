@@ -26,14 +26,23 @@ import {
     type PlayLogSource,
 } from '@mechanics';
 
-import { playLogConfig, playLogSource, postPlayLog } from '@/lib/playLog';
+import { playLogConfig, playLogSource, postPlayLog, type PlayLogStamps } from '@/lib/playLog';
 import type { PuzzleApiConfig, PuzzleFetch } from '@/lib/puzzleAttempts';
 
-/** One deck change, before the stamps. */
-export type DeckChange = Omit<DeckEventPost, keyof PlayLogSource>;
+/**
+ * One deck change, before the stamps. The run id is required (phase SM1b): a
+ * call site names the save's `runId` (`deckEventRunId(state)`), so a deck event
+ * cannot be posted without saying which run it belongs to.
+ */
+export type DeckChange = Omit<DeckEventPost, keyof PlayLogSource | 'source' | 'runId'> & { runId: string | null };
 
 /** The slice of the store a deck event reads. */
-export type DeckEventState = Partial<Pick<GameState, 'player' | 'flags' | 'world'>>;
+export type DeckEventState = Partial<Pick<GameState, 'player' | 'flags' | 'world' | 'runId'>>;
+
+/** The save's run id, or null when no run is in progress (the state carries none). */
+export function deckEventRunId(state: DeckEventState): string | null {
+    return typeof state.runId === 'string' && state.runId.length > 0 ? state.runId : null;
+}
 
 export interface DeckEventPoster {
     /** Posts one deck change; resolves false when the gate is shut or the post failed. */
@@ -42,7 +51,7 @@ export interface DeckEventPoster {
 
 export interface DeckEventPosterDeps {
     config?: () => PuzzleApiConfig | null;
-    source?: () => PlayLogSource;
+    source?: () => PlayLogStamps;
     fetcher?: PuzzleFetch;
 }
 

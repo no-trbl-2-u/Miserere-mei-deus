@@ -12,7 +12,7 @@
  * it out of production.
  */
 
-import { PUZZLE_ATTEMPTS_PATH, type HazardPuzzleBand, type PuzzleAttemptPost } from '@mechanics';
+import { PUZZLE_ATTEMPTS_PATH, type HazardPuzzleBand, type PlayLogSourceKind, type PuzzleAttemptPost } from '@mechanics';
 
 import { getBuildProfile, isDevToolsEnabled } from '@/lib/buildProfile';
 import Constants from '@/lib/platform/constants';
@@ -48,11 +48,22 @@ export function puzzleAttemptKey(attempt: HazardPuzzleLogAttempt): string {
     return `${attempt.layoutId}@${attempt.startedAt}`;
 }
 
+/**
+ * Who played the attempt and in which run (phase SM1b): the build's source
+ * (`playLogSourceKind()`) and the save's run id, null when no run is in
+ * progress (a `/devpuzzle` attempt from the title screen).
+ */
+export interface PuzzleAttemptOrigin {
+    source: PlayLogSourceKind;
+    runId: string | null;
+}
+
 /** The move-log attempt as the API's post body; null while it has not ended. */
 export function toPuzzleAttemptPost(
     attempt: HazardPuzzleLogAttempt,
     intendedBand: HazardPuzzleBand | null,
     appBuild: string,
+    origin: PuzzleAttemptOrigin,
 ): PuzzleAttemptPost | null {
     if (attempt.end === null) return null;
     return {
@@ -65,6 +76,8 @@ export function toPuzzleAttemptPost(
         endMs: attempt.end.ms,
         cleared: attempt.end.cleared,
         appBuild,
+        source: origin.source,
+        runId: origin.runId,
     };
 }
 

@@ -13,6 +13,8 @@ import {
     nextNeed,
     parseItems,
     parsePhaseRows,
+    parseSpecChunks,
+    planRows,
     parseUnscheduled,
     parseWindows,
     inWindow,
@@ -20,6 +22,7 @@ import {
     rewriteItemStatus,
     whenText,
 } from './deadlines-lib.mjs'
+import { readPlanSources } from './check-deadlines.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -166,6 +169,8 @@ const WRAPPED_PLAN = `## Status (at-a-glance)
 `
 
 const hp4eRow = () => {
+    // The v1 build plan left at the nexus v2 cut-over (NX1d): HP4e is a spec chunk now.
+    if (!fs.existsSync(path.join(ROOT, 'plan/steps/01_build_plan.md'))) return null
     const plan = fs.readFileSync(path.join(ROOT, 'plan/steps/01_build_plan.md'), 'utf8')
     const lines = plan.split('\n')
     const at = lines.findIndex((l) => /^- \[[^\]]*\]\s+(?:\(#\d+\)\s+)?Phase HP4e — /.test(l))
@@ -285,9 +290,13 @@ test('A6: --write is idempotent', () => {
 test('A6: the real plan/deadlines.md is already what --write would write', () => {
     const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8')
     const real = read('plan/deadlines.md')
-    const { md, unmatched } = rewriteItemStatus(real, parsePhaseRows(read('plan/steps/01_build_plan.md')))
+    const { md, unmatched } = rewriteItemStatus(real, planRows(readPlanSources(ROOT)).phases)
     assert.deepEqual(unmatched, [])
     assert.equal(md, real)
+    // The PR's change: Status derives from the v2 sources, with no v1 build plan among them.
+    const sources = readPlanSources(ROOT)
+    assert.ok(!sources.buildPlan)
+    assert.ok(sources.specs.length > 0)
 })
 
 // Phase DL2a: the sixth column, `Waits on`.
@@ -350,4 +359,67 @@ test('A5: a T act reads "the loop still owes" its open Waits on rows, and "your 
 test('A5: an attended row that is ready shows beside its open Waits on rows', () => {
     const item = { done: false, due: '2026-10-25', name: 'x', window: 'W1', rows: ['B1'], waitsOn: ['A1'] }
     assert.deepEqual(itemNeed(item, phases), { kind: 'needs you', detail: 'B1 ready for you; the loop still owes A1' })
+})
+
+// NX1c: the same plan carried into a nexus v2 spec, its old ids kept as chunk aliases. A0 shipped (its
+// archive line), A2 and C1 still need open chunks, B1 is attended, D1 waits on the Held lane.
+const V2_SPEC = `## Chunks
+
+- [ ] **30.1** loop work · S · closes A1 · needs — · alias: A1
+- [ ] **30.2** loop work · S · closes A2 · needs 30.1 · alias: A2
+- [ ] **30.3** solves (attended): T times them · S · closes A3 · needs — · alias: B1
+- [ ] **30.4** later solves (attended): waits · S · closes A4 · needs 30.2 · alias: C1
+- [ ] **30.5** owner work · S · closes A5 · needs — · alias: D1
+`
+const V2_SOURCES = {
+    buildPlan: null,
+    specs: [{ file: 'plan/30-carried.md', md: V2_SPEC }],
+    readme: "## Lanes\n\n**Held** (waits on a person's word):\n\n- **30.5** · owner work · since: 2026-11-11 · until: T's word · max_age: 30d\n\n## Specs\n",
+    archive: '- 2026-10-01 · 29.1 (alias: A0) · shipped · a1b2c3d\n',
+}
+
+test('NX1c: an id resolves from the build plan and from a spec chunk alias', () => {
+    const fromPlan = planRows({ buildPlan: BUILD_PLAN })
+    const fromSpec = planRows(V2_SOURCES)
+    assert.deepEqual(fromPlan.errors, [])
+    assert.deepEqual(fromSpec.errors, [])
+    assert.deepEqual([...fromSpec.phases.keys()].sort(), [...fromPlan.phases.keys()].sort())
+    assert.equal(fromPlan.phases.get('A2').source, 'plan/steps/01_build_plan.md')
+    assert.equal(fromSpec.phases.get('A2').source, 'plan/30-carried.md')
+    assert.equal(fromSpec.phases.get('A0').source, 'plan/ARCHIVE.md')
+    assert.deepEqual(fromSpec.phases.get('C1').requires, ['A2'])
+    assert.deepEqual(fromSpec.phases.get('A1').requires, [], 'a need whose chunk left every spec is met')
+})
+
+test('NX1c: status derives the same from either source', () => {
+    const fromPlan = planRows({ buildPlan: BUILD_PLAN }).phases
+    const fromSpec = planRows(V2_SOURCES).phases
+    for (const [id, row] of fromPlan) {
+        const got = fromSpec.get(id)
+        assert.deepEqual([got.shipped, got.open, got.waitsOnT], [row.shipped, row.open, row.waitsOnT], id)
+    }
+    for (const item of items) {
+        assert.deepEqual(derivedStatus(item, fromSpec), derivedStatus(item, fromPlan), item.name)
+        assert.deepEqual(itemNeed(item, fromSpec), itemNeed(item, fromPlan), item.name)
+    }
+    assert.deepEqual(dueNeeds(items, fromSpec, '2026-10-22'), dueNeeds(items, fromPlan, '2026-10-22'))
+    assert.deepEqual(rewriteItemStatus(DEADLINES, fromSpec), rewriteItemStatus(DEADLINES, fromPlan))
+})
+
+test('NX1c: a shipped alias ticks its Item; a spec with a whole-spec need waits on it', () => {
+    const shipped = planRows({ ...V2_SOURCES, archive: `${V2_SOURCES.archive}- 2026-10-02 · 30.3 (alias: B1) · solves · b2c3d4e\n`, specs: [{ file: 'plan/30-carried.md', md: V2_SPEC.replace(/^.*alias: B1\n/m, '') }] })
+    assert.equal(derivedStatus({ rows: ['A0', 'B1'] }, shipped.phases), '[x]')
+    const spec31 = '- [ ] **31.1** next spec · S · closes A1 · needs 30 · alias: E1\n'
+    const whole = planRows({ ...V2_SOURCES, specs: [...V2_SOURCES.specs, { file: 'plan/31-next.md', md: spec31 }] })
+    assert.equal(whole.phases.get('E1').requires.length, 1)
+    const done = planRows({ ...V2_SOURCES, specs: [{ file: 'plan/31-next.md', md: spec31 }] })
+    assert.deepEqual(done.phases.get('E1').requires, [])
+})
+
+test('NX1c: parseSpecChunks reads aliases from a comma list and skips fenced examples', () => {
+    const md = '```\n- [ ] **07.3** an example · S · closes A4 · needs 07.2 · alias: ZZ1\n```\n- [ ] **07.4** real · M · closes A5 · needs — · alias: `SM1a`, SM1b\n- [ ] **07.5** no alias · S · closes A6 · needs 07.4\n'
+    assert.deepEqual(parseSpecChunks(md).map((c) => [c.chunk, c.aliases, c.needs]), [
+        ['07.4', ['SM1a', 'SM1b'], []],
+        ['07.5', [], ['07.4']],
+    ])
 })

@@ -128,14 +128,15 @@ For each issue, decide:
 3. **Backlog target** (only `loop-queued`):
    - bug / a11y / perf / content / docs (including data-ish
      issues — game data, balance numbers) → `plan/AUDIT.md`
-   - small enhancement → `plan/steps/01_build_plan.md`
-     carry-overs section
+   - small enhancement → `plan/AUDIT.md` (a `[gap]` row; the roadmap
+     has no carry-overs section since the v2 cut-over, and the loop
+     never writes a spec)
    - large / off-strategy enhancement → a candidate in
-     `plan/PHASE_CANDIDATES.md` citing the issue (`/expand`
+     `plan/CANDIDATES.md` citing the issue (`/expand`
      and `/oversight` weigh it there)
 4. **Content filter (D88, D99).** A request for a new **card,
    keyword, art, enemy, relic, map, NPC or event** becomes a `[content]` candidate in
-   `plan/PHASE_CANDIDATES.md` citing the issue, labelled
+   `plan/CANDIDATES.md` citing the issue, labelled
    `triage:loop-queued`, with a comment that it is built only once
    T plots it. A fix to existing content (a wrong gloss, a broken
    foe) is a normal `content` bug and routes to `plan/AUDIT.md`.
@@ -172,12 +173,12 @@ gh issue close "$NUM" --repo "$GH_REPO" --reason "not planned"
 ### Step 5 — Commit + push (if any backlog changes)
 
 ```bash
-git add plan/AUDIT.md plan/steps/01_build_plan.md plan/PHASE_CANDIDATES.md
+git add plan/AUDIT.md plan/CANDIDATES.md
 git commit -m "$(cat <<'EOF'
 triage: <K> issues processed (<L> queued, <M> reviewed, <N> closed)
 
 - #<num> → loop-queued (bug, plan/AUDIT.md)
-- #<num> → loop-queued (enhancement, plan/PHASE_CANDIDATES.md)
+- #<num> → loop-queued (enhancement, plan/CANDIDATES.md)
 - #<num> → reviewed (content request, waits for an owner-led session)
 - #<num> → closed (duplicate of #X)
 
@@ -201,7 +202,7 @@ npm run deploy:check
 ```
 triage processed: <K>. queued: <L>. reviewed: <M>. closed: <N>.
 plan/AUDIT.md +<X> rows.
-loop next: <iterate | ship-a-phase | march>.
+loop next: <iterate | next | march>.
 ```
 
 ## 6. Closing the loop (when iterate ships a fix)
@@ -228,7 +229,7 @@ The richer deploy comment is `skills/iterate.md`'s job.
    one.
 7. **Content routing per surface (D88, D99).** Card, keyword, art,
    enemy, relic, map, NPC and event requests are `[content]`
-   candidates (Step 2 item 4); never a build-plan row.
+   candidates (Step 2 item 4); never a spec chunk.
 8. **No emojis. No attribution trailers** (AGENTS.md rule 2).
 9. **`gh` calls only.** No raw curl unless `gh` is unavailable.
 

@@ -2,6 +2,9 @@
   "cli": { "version": ">= 16.0.0", "appVersionSource": "remote" },
   "build": {
     "preview": {
+      "env": {
+        "EXPO_PUBLIC_PLAY_LOG_SOURCE": "human"
+      },
       "android": {
         "buildType": "apk",
         "distribution": "internal"

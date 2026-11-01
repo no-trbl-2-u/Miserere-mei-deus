@@ -99,7 +99,7 @@ jobs:
     with:
       extra_claude_args: |
         -p
-        --dangerously-skip-permissions
+        --permission-mode acceptEdits
       allowed_tools: 'Read,Edit'
       pre_run: |
         git config user.name 'claude[bot]'

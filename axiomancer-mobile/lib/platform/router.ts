@@ -77,6 +77,8 @@ export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   memoir: { screen: 'memoir/index', tab: true },
   inventory: { screen: 'inventory/index', tab: true },
   deck: { screen: 'deck/index', tab: true },
+  // The SETTINGS tab; `/settings` stays the main menu's full-screen route.
+  'settings-tab': { screen: 'settings/index', tab: true },
 };
 
 // `NavigationContainer`'s linking config — mirrors `ROUTE_TABLE`
@@ -128,6 +130,7 @@ export const linking = {
           'memoir/index': 'memoir',
           'inventory/index': 'inventory',
           'deck/index': 'deck',
+          'settings/index': 'settings-tab',
         },
       },
     },

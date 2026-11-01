@@ -34,6 +34,7 @@ import {
 } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
+import { fightRecorder } from '@/lib/fightRecorder';
 import type { AppActions } from '@/state/actions';
 import {
     claimCombatRewardAction,
@@ -82,18 +83,25 @@ function playToOutcome(store: AppStore, enemy: Enemy, policy: RunPolicy, ctx: Ru
     const rng = (): number => getRng().random();
     let live = initializeCombatEncounter(state.player, enemy, undefined, seed, flags);
     live = rollEncounterDice(live).state;
+    // The panel hands every state it renders to the fight recorder; so does the driver.
+    fightRecorder.observe(live);
     for (let phase = 0; phase < MAX_FIGHT_PHASES; phase++) {
         if (live.finalOutcome || live.phase === 'complete') return live;
         if (live.mercyChoiceActive) {
             live = selectEncounterMercyChoice(live, witness.mercyChoice).state;
+            fightRecorder.observe(live);
             continue;
         }
         if (live.phase !== 'phase-play') {
             throw new FightStuckError(`fight against ${enemy.name} sits in phase '${live.phase}' with no move`);
         }
         live = upgradeablePlayPhase(live, witness, rng, {}, {}).state;
+        fightRecorder.observe(live);
         if (live.finalOutcome || live.mercyChoiceActive) continue;
-        if (live.phase === 'phase-play') live = resolveThreatPhase(live).state;
+        if (live.phase === 'phase-play') {
+            live = resolveThreatPhase(live).state;
+            fightRecorder.observe(live);
+        }
     }
     if (live.finalOutcome) return live;
     throw new FightStuckError(`fight against ${enemy.name} did not end in ${MAX_FIGHT_PHASES} phases`);

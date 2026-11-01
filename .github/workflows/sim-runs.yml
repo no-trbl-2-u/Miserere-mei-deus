@@ -1,0 +1,99 @@
+name: sim-runs
+
+# The bots post their own data (phase SM1g). Plays whole Chapter 1 runs
+# headlessly through the app's own store actions, one archetype bot at a time
+# (blood-price, defender, merciful, elementalist), and posts each run to the
+# miserere-api Worker through the app's own posters, every row stamped
+# `source: sim` (`npm run sim:run -- --post`). T's reports read `human` unless
+# told otherwise, and `card-vs-bot` sets T beside these.
+#
+# Runs at the commit of every successful `preview-build` (its `head_sha`, so
+# every APK T plays has the bots' numbers at the same build), by hand
+# (`workflow_dispatch`, with a ref and a run count), and nightly on main. Four
+# archetypes x 5 runs by default. A measurement, not a gate (D57): it fails only
+# when the driver crashes, a run sticks, or a post is refused, never on a number,
+# and it is never a required check. `measured-truth` is unchanged and separate.
+#
+# Reads the repo secrets EXPO_PUBLIC_PUZZLE_API_URL (the Worker's origin, which
+# the preview build bakes into the APK) and PUZZLE_API_TOKEN (the shared bearer
+# the Worker holds). Without them it fails naming the missing one, since a
+# silent dry run would look like a green batch.
+
+on:
+  workflow_run:
+    workflows: [preview-build]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or sha to play (default: main)'
+        type: string
+        default: 'main'
+      runs:
+        description: 'Runs per archetype'
+        type: string
+        default: '5'
+  schedule:
+    - cron: '43 3 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sim-runs
+  cancel-in-progress: false
+
+jobs:
+  sim:
+    name: Play and post the archetype bots
+    # A scheduled run plays main; a workflow_run plays the commit the build was made from.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SIM_REF: ${{ github.event.workflow_run.head_sha || inputs.ref || 'main' }}
+      SIM_RUNS: ${{ inputs.runs || '5' }}
+      PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
+      PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
+    steps:
+      - name: Check the secrets and the run count
+        run: |
+          missing=""
+          [ -n "$PUZZLE_API_URL" ] || missing="$missing EXPO_PUBLIC_PUZZLE_API_URL"
+          [ -n "$PUZZLE_API_TOKEN" ] || missing="$missing PUZZLE_API_TOKEN"
+          if [ -n "$missing" ]; then
+            echo "::error::sim-runs needs the repo secret(s):$missing"
+            exit 1
+          fi
+          case "$SIM_RUNS" in
+            ''|*[!0-9]*|0) echo "::error::runs must be a positive integer, not '$SIM_RUNS'"; exit 1 ;;
+          esac
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SIM_REF }}
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      # One batch: every archetype shares this run's id as its session id. A
+      # failing archetype does not stop the others; the step fails at the end.
+      - name: Play and post the four archetypes
+        run: |
+          failed=""
+          for policy in blood-price defender merciful elementalist; do
+            echo "::group::$policy"
+            npm run sim:run -- --policy "$policy" --runs "$SIM_RUNS" --seed 1 --post || failed="$failed $policy"
+            echo "::endgroup::"
+          done
+          if [ -n "$failed" ]; then
+            echo "::error::sim:run failed for:$failed"
+            exit 1
+          fi

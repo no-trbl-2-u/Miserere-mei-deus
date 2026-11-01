@@ -24,9 +24,10 @@ import {
     rollCombatCardRewards,
 } from '@mechanics';
 import type { CacheLootTier, LootCacheChoiceOfferId, LootCacheChoiceOutcome, LootCacheChoiceSession } from '@mechanics';
-import { deckEventPoster, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
+import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
 import { resolveMinigameSeed } from '../minigame-seeds';
+import { recordItemGained, recordNodeResolved } from '../run-log';
 import { EMPTY_CACHE_SLICE, type AppStore } from '../store';
 
 /**
@@ -134,6 +135,9 @@ export function claimLootCacheChoiceOutcomeAction(store: AppStore): ClaimLootCac
     }
 
     postCacheRewardEvent(store, s.cardCandidate, outcome.chosen === 'card' ? outcome.rewardCardId : null);
+    // The run log: the offer taken, and each item of the haul.
+    recordNodeResolved(store, outcome.chosen);
+    if (outcome.chosen === 'item') for (const item of outcome.items as Item[]) recordItemGained(store, item, 'cache');
     return { applied: true, outcome };
 }
 
@@ -151,5 +155,6 @@ function postCacheRewardEvent(store: AppStore, cardCandidate: string | undefined
         offered: [cardCandidate],
         deck: runDeck(state),
         where: deckEventWhere(state, 'cache'),
+        runId: deckEventRunId(state),
     });
 }

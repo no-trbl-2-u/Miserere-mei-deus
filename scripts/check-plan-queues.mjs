@@ -5,10 +5,12 @@
 //   node scripts/check-plan-queues.mjs            # lint the four live queues
 //   node scripts/check-plan-queues.mjs <path>...  # lint other paths (tests); kind from the file name
 //
-// The queues are plan/AUDIT.md, plan/CRITIQUE.md, plan/PHASE_CANDIDATES.md
-// (each a list of `### ` rows with `- key:` bodies) and the Status block of
-// plan/steps/01_build_plan.md (`- [<status>] Phase <id> — …` rows with
-// six-space continuation lines). pr-resolve union-merges them, so a bad
+// The queues are plan/AUDIT.md, plan/CRITIQUE.md, plan/CANDIDATES.md
+// (each a list of `### ` rows with `- key:` bodies) and, while a repo still
+// has one, the Status block of a v1 build plan (`- [<status>] Phase <id> — …`
+// rows with six-space continuation lines). Since the nexus v2 cut-over (NX1d)
+// Miserere has no build plan: its specs and roadmap are linted by
+// scripts/plan-check.mjs, and the status lint runs only on a path given. pr-resolve union-merges them, so a bad
 // merge can cut a row apart (c95114a2: a header left with one body line, its
 // observation and evidence glued under the next row; 49829988: a header left
 // with its issue line, then eleven blank lines). The rules:
@@ -55,7 +57,7 @@ export const QUEUES = {
     maxBlank: 2,
   },
   candidates: {
-    file: 'plan/PHASE_CANDIDATES.md',
+    file: 'plan/CANDIDATES.md',
     tag: String.raw`\[(?:owner|score \d+(?:\.\d+)?)\]`,
     shape: '### [ ]|[x] [owner]? [score N]? <title>',
     fields: ['proposed', 'source signals', 'rationale', 'proposed scope', 'conflicts', 'estimated phases'],
@@ -75,7 +77,7 @@ export function kindOf(file) {
   const base = path.basename(file)
   if (base.includes('AUDIT')) return 'audit'
   if (base.includes('CRITIQUE')) return 'critique'
-  if (base.includes('PHASE_CANDIDATES')) return 'candidates'
+  if (base.includes('CANDIDATES')) return 'candidates'
   if (base.includes('build_plan')) return 'status'
   return null
 }
@@ -210,7 +212,7 @@ function main() {
   const args = process.argv.slice(2)
   const files = args.length
     ? args.map((a) => path.resolve(a))
-    : [...Object.values(QUEUES).map((q) => q.file), STATUS.file].map((f) => path.join(ROOT, f))
+    : [...Object.values(QUEUES).map((q) => q.file), STATUS.file].map((f) => path.join(ROOT, f)).filter((f) => f !== path.join(ROOT, STATUS.file) || fs.existsSync(f))
   const out = []
   const counts = []
   for (const file of files) {

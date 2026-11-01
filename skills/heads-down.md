@@ -1,5 +1,12 @@
 # Skill: heads-down
 
+> **Held at the nexus v2 cut-over (phase NX1d, 2026-11-01).** This is
+> Miserere's own orchestrator, kept as it was (`docs/nexus-deviations.md`,
+> "heads-down: KEEP, renamed"). Its workers run the v1 `/ship-a-phase`,
+> which the cut-over retired, so it is not run until phase NX1g rebuilds
+> it as `/pilot` on v2's `/next` (`plan/133-nx1-nexus-v2.md`). Read
+> "build-plan row" below as a chunk and its alias.
+
 > **T's orchestrated parallel shipping (2026-10-28).** T names some
 > build-plan rows or a goal ("finish the Defender lane"); the session
 > becomes an orchestrator. It maps which rows can ship in parallel

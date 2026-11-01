@@ -34,10 +34,10 @@ export interface MusicInputs {
     readonly hasHazard: boolean;
     /** The Settings music volume, 0 to 100. */
     readonly musicVolume: number;
+    /** The Settings music switch (master mute). Absent reads as on. */
+    readonly musicOn?: boolean;
     /** False while the OS has sent the app to the background. */
     readonly appActive: boolean;
-    /** A master mute (the Settings MUSIC switch, phase ST1a); absent means on. */
-    readonly musicOn?: boolean;
 }
 
 export interface MusicDirective {

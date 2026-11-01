@@ -76,12 +76,14 @@ The dry run is green, but run as-is it would:
 | march | The loop never writes a brief; a briefless row is filed "needs `/plot <N>`" | R11 | conflicts | KEEP (`Promote: owner`) |
 | ship-a-phase | Builds one row from its brief | adoption | replaced by `/next` | TAKE the shape |
 | ship-a-phase | Deadlines rewrite on close (`deadlines.mjs --write`) | DL1b | none | KEEP (into close) |
-| ship-a-phase | axio-query for engine facts, kb-query for prior art, UNGROUNDED label | `0549fab82`, `60b82f575` | none | KEEP (identity) |
-| ship-a-phase | Playtests through the `playtester` agent, up to 4 | PH1b | none | KEEP |
-| ship-a-phase | Monorepo verify per workspace; `check-comments` bans D-numbers in code | RH1 | partial | MERGE |
-| ship-a-phase | Hard rule 9: title, VITAE the one bar, banned terms | D47, D63 | none | KEEP (identity) |
-| ship-a-phase | `[T to confirm #n]` accepted at merge | `0d5d9e4e4` | none | KEEP |
+| ship-a-phase | axio-query for engine facts, kb-query for prior art, UNGROUNDED label | `0549fab82`, `60b82f575` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Truth sources first"), NX1c |
+| ship-a-phase | Playtests through the `playtester` agent, up to 4 | PH1b | none | KEEP: moved to `AGENTS.md` § Building a phase ("Playtests"), NX1c |
+| ship-a-phase | Monorepo verify per workspace; `check-comments` bans D-numbers in code | RH1 | partial | MERGE: the composition moved to `AGENTS.md` § Building a phase ("Verify per workspace"), NX1c |
+| ship-a-phase | Save migration with a test for anything removed from a save | revamp §5 rule 4 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Save compatibility"), NX1c |
+| ship-a-phase | Hard rule 9: title, VITAE the one bar, banned terms | D47, D63 | none | KEEP: moved to `identity/principles.md` P1 to P3, NX1c |
+| ship-a-phase | `[T to confirm #n]` accepted at merge | `0d5d9e4e4` | none | KEEP: moved to `AGENTS.md` § Building a phase ("Calls left open"), NX1c |
 | plan-a-phase | Refresh a brief, attended only | R11, D93 | v2 spec format better | TAKE |
+| plan-a-phase | Cite the D-numbers; `docs/truth-sources.md` order of authority; HISTORICAL specs are background | trim T5, D88 | none | KEEP: moved to `AGENTS.md` § Building a phase ("Order of authority", "Cite the D-numbers"), NX1c |
 | plot | Lands as a `plot` PR T merges; `What you'll see` / `Your calls` body; `@claude 1: yes` answering via claude.yml; merge = agreement | D93, D101, `0d5d9e4e4` | none | KEEP |
 | plot | Every new row gets a home in `plan/deadlines.md` | DL1c, DL2b | none | KEEP (most at risk) |
 | plot | Never fired by the loop (tested) | rule 8 | v2 can fire it | KEEP |
@@ -160,7 +162,7 @@ upgrade either way.
 | bearings knobs | march 2h, timeouts, digest odd days, `/expand` bold | as cited | v2 knob slots | KEEP values |
 | lessons / reflexes | Slug ladder, 2x automate, 3x reflex | R11, D94 | v2 footguns, better | TAKE (keep D94 split) |
 | NEEDS_T | Fixes only T can make | D94 | none | KEEP |
-| deadlines | W1-W5, every Item a T act | T 2026-10-19/28 | none | KEEP (needs an old-id alias map) |
+| deadlines | W1-W5, every Item a T act | T 2026-10-19/28 | none | KEEP: the old-id alias map is the chunk line's `alias:` (shipped: the ARCHIVE line's `(alias: …)`), read by `deadlines.mjs` and `check-deadlines.mjs` since NX1c |
 | AUDIT / CRITIQUE | 178 KB / 320 KB; stale "revamp support" bias | accreted | v2 state diet (256 KB cap) | TAKE, compact |
 | PHASE_CANDIDATES | `[owner]` rows | R11 | `CANDIDATES.md` | TAKE (renamed by the upgrader) |
 | `[blocked: owner-led]` | 9 locks with no timeout | D46/D64 | Held lines with `max_age` | TAKE |
@@ -213,3 +215,52 @@ Ruled in session; recorded as D119 and planned as Phase NX1
 | R11 | march and night back on | After the cut-over, on the merged YAML; T turns them on (NX1i). |
 | R12 | `/pitch` | Pull the global skill into the repo (NX1b). |
 | R13 | Staying current | A weekly sync PR (NX1h), held for T. |
+
+---
+
+## Carried
+
+Where each KEEP and MERGE row above lives since the cut-over (phase NX1d,
+2026-11-01, `npx @usenexus/cli@0.6.5 upgrade --write`, kit ref `51b70f4`,
+`plan/nexus.lock`). A sync reads this table: a file named here as ours is
+one a three-way merge should keep. "Deferred" names the NX1 phase that
+finishes the row.
+
+| Map row | Verdict | Lives now | State |
+|---|---|---|---|
+| march: landing split by path | MERGE | `skills/march.lanes.md` notes "Landing a change"; `plan/bearings.md` `Landing: pr` | carried as notes; v2's land step adapted in NX1e |
+| march: PR cap (D85) | KEEP | `skills/march.lanes.md` lane `pr-cap` (pre, end-tick) | carried |
+| march: 7d+ / stuck PRs / NEEDS_T every tick | KEEP | `skills/march.lanes.md` lane `pr-watch` (pre, continue) | carried |
+| march: size, area, review labels; PR body | KEEP | `skills/march.lanes.md` notes "Landing a change" (labels, Body template) | carried |
+| march: acceptance proofs and the judge | KEEP | the same notes; `scripts/pr-acceptance.mjs`, `scripts/pr-judge.mjs` unchanged | carried |
+| march: CI watch, 3 tries then pr-autofix | KEEP | `skills/march.lanes.md` notes "Shipping a chunk", Step 12 | carried |
+| march: gate distances on first-parent history | MERGE | `skills/march.lanes.md` notes "Gate distances (first-parent)" | carried as notes |
+| march: report sweep (RS1) | KEEP | `skills/march.lanes.md` lane `report-sweep` (pre, continue) | carried; now runs before triage, not after |
+| march: the loop never writes a brief | KEEP | `plan/bearings.md` `Promote: owner` | carried |
+| ship-a-phase: deadlines rewrite on close (DL1b) | KEEP | `skills/march.lanes.md` notes "Shipping a chunk", Step 11 | carried until NX1e folds it into the close |
+| ship-a-phase / plan-a-phase rules (truth sources, canon, playtests, verify, save, calls left open, D-numbers) | KEEP / MERGE | `AGENTS.md` § Building a phase; `identity/principles.md` P1-P3 (NX1c) | carried; both skills retired |
+| plot: `plot` PR T merges, the body, `@claude` answers, merge = agreement | KEEP | `skills/plot.md` §7.1, 7.3-7.5 (kit text above it) | carried |
+| plot: every new chunk gets a deadlines home | KEEP | `skills/plot.md` §7.2 (aliases, Held lines, the reconcile) | carried |
+| plot: never fired by the loop | KEEP | `skills/plot.md` §7.6; `scripts/loop-pr.test.mjs` | carried |
+| messy: `[owner]` candidates, deadlines reconcile | KEEP | `skills/messy.md` §7 | carried |
+| heads-down: parallel waves | KEEP, renamed | `skills/heads-down.md`, `.claude/commands/heads-down.md` (ours, unchanged) | kept; becomes `/pilot` in NX1g, nexus's `/heads-down` restored then |
+| oversight: `[loop-call]` ratify, NEEDS_T Q0, asking-well | MERGE | `skills/oversight.md` (ours, refs updated) | kept ours whole; v2's lock asks and audit mode not folded in yet (first sync) |
+| iterate: content gaps filed; in-tick defect commit; game audit categories | KEEP / MERGE | `skills/iterate.lanes.md` (19 lanes the upgrader moved, verbatim) | carried |
+| critique, digest, expand, triage (and R4's `[loop-call]`) | KEEP | `skills/critique.md`, `skills/digest.md`, `skills/expand.md`, `skills/triage.md` (ours, refs updated) | kept |
+| consolidate, fix-ci, review, review-fix, lane-creator, vault | KEEP | their own files (the upgrader kept them; vault's command body moved to `skills/vault.md`) | kept |
+| `_claude-skill.yml` | KEEP | unchanged | kept; v2's `BASH_MAX_TIMEOUT_MS` in NX1f |
+| `march.yml`, `night.yml`, one-verb wrappers | MERGE | prompts point at v2 verbs (`/ship-a-chunk`, `/plan-a-spec`); still disabled | deferred to NX1f |
+| `pr-review.yml` + `pr-*.mjs`, pr-autofix, ci-autofix, pr-resolve | KEEP | unchanged, but `pr-resolve` no longer registers the build-plan driver | kept |
+| close-trailers, claude.yml, deadlines.yml | KEEP | unchanged but claude.yml's route points at plot §7.4, deadlines.yml's paths at the specs | kept |
+| `loop-issue.mjs` | MERGE | ours (the kit's replacement reverted) | kept ours; merge at the first sync |
+| `deploy-check.mjs`, `guard.mjs` | MERGE | ours (the kit's copy list does not carry them) | kept |
+| `claims.mjs` | TAKE, migrate | ours (the kit's replacement reverted; `claims-codec.mjs` added, unused) | deferred to NX1f |
+| merge drivers | KEEP deadlines + lessons | `.gitattributes`, `.claude/settings.json`, `pr-resolve.mjs` `MERGE_DRIVERS` | build-plan driver retired; its module stays as `deadlines-merge.mjs`'s core |
+| lints and `loop-pr.test.mjs` | KEEP | pins repointed to the lanes, plot §7, `next.md`, `plan-a-spec.md` | carried |
+| `.claude/settings.json` `.env` reads (R9) | KEEP | unchanged | kept |
+| AGENTS rules 1, 5, 7, 8, 9; THE OPEN GATE | KEEP | `AGENTS.md` (rule 1 loses the build-plan driver; rule 7 files chunks through `/plot`) | kept |
+| CLAUDE.md | MERGE | refs updated in place | move to AGENTS left for a later chunk |
+| bearings: D-citing loop law; knob values | MERGE / KEEP | `plan/bearings.md` (unchanged values, `## Loop knobs` added) | `identity/decisions/` not adopted yet |
+| deadlines, NEEDS_T, DevLog, part plans, `card-ledger/` | KEEP | unchanged; aliases resolve through `deadlines-lib.mjs` (NX1c) | kept |
+| `[blocked: owner-led]`, `(attended)` rows (R2) | TAKE | Held lines in `plan/README.md` with `since`/`until`/`max_age` | carried |
+| the ten `[-]` rows (R7) | archive as dropped | `plan/ARCHIVE.md` dropped lines; one `plan/AUDIT.md` row for the carry-overs | carried |
