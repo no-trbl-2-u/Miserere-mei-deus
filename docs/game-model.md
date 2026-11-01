@@ -122,6 +122,14 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **The starting deck is ten cards:** Blow ×5, Ward ×3, Word ×2
   (`STARTING_CARD_IDS`, `Combat/combat.rewards.ts`). The deck never drops
   below `MIN_COMBAT_DECK_SIZE` = 10.
+- **A character's run opens with ten cards too, but not those:** the grey
+  part is `CHARACTER_GREY_DECK` (Blow ×3, Ward ×2, Word ×2, seven cards) plus
+  `startingCardIds`, three lane cards: one from each of the two starting
+  lanes and one from the starting relic's lane (`Character/roster.ts`,
+  `characterDeck`; `characterProblems` checks it: no Spell or Curse, a
+  Global may start). The Chosen's are Rose Wrap, Siphon and Draw the Fever.
+  `createNewRunPlayer` writes the deck into `knownCards` when the run
+  starts, so a run in progress keeps the deck it was dealt.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
   mobile) drawn from `rewardPoolFor`: the cards of every lane in
   `unlockedLaneIds`, which is the character's two starting lanes
