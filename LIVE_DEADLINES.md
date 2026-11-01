@@ -23,4 +23,4 @@
 | 2026-11-12 (in 11 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
 | 2026-11-12 (in 11 days) | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | needs you: your task | W2 |
 | 2026-11-13 (in 12 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
-| 2026-11-14 (in 13 days) | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | needs you: your task; the loop still owes SM2b, SM2c, SM2d, SM2f | W2 |
+| 2026-11-14 (in 13 days) | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | needs you: your task; the loop still owes SM2c, SM2d, SM2f | W2 |
