@@ -117,20 +117,37 @@ export function paidLineRows(line: string, size: number, room: number, mode: Car
     return rows;
 }
 
-/** The text room of a small face: its width less the border (1.5 each side) and
- *  the ledger padding (5 each side). */
-export function paidLineRoom(width: number): number {
-    return width - 3 - 10;
+/** The text room of a small face: its width less the border (1.5 each side),
+ *  the ledger padding (5 each side) and the lead (`paidLineLead`). */
+export function paidLineRoom(width: number, lead = 0): number {
+    return width - 3 - 10 - lead;
+}
+
+/** The die cube's edge on a small face: 12 on a narrow face, else 14. */
+export function paidLineCube(narrow: boolean): number {
+    return narrow ? 12 : 14;
+}
+
+/** What the lead adds after its cube: the colon (1 + about 4) and the ledger gap (5). */
+const LEAD_PAD = 10;
+
+/**
+ * The width of the line's lead on a small face: the stance die and its colon,
+ * `<die>: <PAID line>`, which the text sits beside (T, PR 1318).
+ */
+export function paidLineLead(cube: number): number {
+    return cube + LEAD_PAD;
 }
 
 /**
  * The size a small face prints `line` at: {@link PAID_LINE_SIZE} when it fits
  * {@link PAID_LINE_ROWS} rows, else the largest whole size down to
  * {@link PAID_LINE_FLOOR} that does (the floor when none does; the third row
- * then ends in an ellipsis and the large face prints the whole line).
+ * then ends in an ellipsis and the large face prints the whole line). `lead`
+ * is the die-and-colon width the line sits beside ({@link paidLineLead}).
  */
-export function paidLineFit({ width, line, mode = 'words' }: { width: number; line: string; mode?: CardTextMode }): { size: number; rows: number } {
-    const room = paidLineRoom(width);
+export function paidLineFit({ width, line, mode = 'words', lead = 0 }: { width: number; line: string; mode?: CardTextMode; lead?: number }): { size: number; rows: number } {
+    const room = paidLineRoom(width, lead);
     for (let size = PAID_LINE_SIZE; size >= PAID_LINE_FLOOR; size -= 1) {
         const rows = paidLineRows(line, size, room, mode);
         if (rows <= PAID_LINE_ROWS) return { size, rows };

@@ -49,7 +49,7 @@ import type {
     CombatMomentumV2VM,
 } from '@/state/presenters/combat-encounter.engine';
 import { armedValue, dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
-import { paidLineFit, paidLineGap, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
+import { paidLineCube, paidLineFit, paidLineGap, paidLineLead, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
 import { glyphKeywordFor } from '@/state/presenters/keyword-glyph.engine';
 import { KeywordGlyph } from '@/components/keyword-glyphs';
 import { useSetting } from '@/state/settings';
@@ -1892,7 +1892,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     // The small face prints the whole PAID line, wrapped to three rows at 10pt
     // (`paidLineFit` shrinks a line too long for that); the large face keeps its
     // own keyword-and-value ledger and states a Global's duration under it.
-    const paidFit = large ? null : paidLineFit({ width, line: f.paidLine, mode: cardText });
+    const ledgerCube = paidLineCube(!large && width < NARROW_FACE_W);
+    const paidFit = large ? null : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube) });
     // The open card shows a keyword's glyph beside its word in both modes, so a glyph is learnt once.
     // Its word is the headline keyword, or the first word of the value when the headline is the whole line (`Deal 9`).
     const keywordGlyph = large ? (glyphKeywordFor(f.keyword) ?? glyphKeywordFor(paidValue.split(/\s+/)[0])) : null;
@@ -1985,17 +1986,20 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                     </View>
                 </View>
                 {/* ③ PAID LINE. The SMALL face prints the whole line, wrapped to
-                    three rows at 10pt on solid ink, with the stance die cube
-                    on the ledger's corner (the die this line wants). The LARGE
-                    face keeps its one row: the die cube, then `[family glyph]
-                    KEYWORD value`, and a Global states how long it lasts. */}
+                    three rows at 10pt on solid ink, led by the stance die cube
+                    and a colon (`<die>: <line>`, the die this line wants). The
+                    LARGE face keeps its one row: the die cube and colon, then
+                    `[glyph] KEYWORD value`, and a Global states how long it lasts. */}
                 {large ? (
                     <View
                         style={[styles.plateLedger, { minHeight: ledgerH }]}
                         pointerEvents="none"
                         testID="combat-card-face-ledger"
                     >
-                        <StanceCube color={band} size={20} />
+                        <View style={styles.paidLead}>
+                            <StanceCube color={band} size={20} />
+                            <Text style={[styles.paidLeadColon, styles.paidLeadColonLarge]} allowFontScaling={false}>:</Text>
+                        </View>
                         <View style={styles.paidColumn}>
                             <View style={styles.paidLineRowLarge}>
                             {keywordGlyph ? (
@@ -2040,8 +2044,18 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         pointerEvents="none"
                         testID="combat-card-face-ledger"
                     >
-                        <View style={[styles.ledgerCube, { right: narrow ? 3 : 4 }]} testID="combat-card-face-cube">
-                            <StanceCube color={band} size={narrow ? 12 : 14} />
+                        {/* The die leads the line: `<die>: <PAID line>`, the text beside it. */}
+                        <View
+                            style={[styles.paidLead, styles.paidLeadSmall, { height: Math.round(paidFit!.size * PAID_LINE_LEADING) }]}
+                            testID="combat-card-face-cube"
+                        >
+                            <StanceCube color={band} size={ledgerCube} />
+                            <Text
+                                style={[styles.paidLeadColon, { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: accent ?? AXM.parchment }]}
+                                allowFontScaling={false}
+                            >
+                                :
+                            </Text>
                         </View>
                         {cardText === 'glyphs' ? (
                             // A glyph is a view, which a Text cannot hold: each word is a token in a wrapping row.
@@ -2451,11 +2465,15 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // A Global's duration, on the large face only.
     durationLine: { fontFamily: FONTS.serif, fontSize: 12, lineHeight: 15, color: AXM.bone, marginTop: 2 },
     // The small face's ledger: the whole PAID line over up to three rows, at
-    // `paidLineFit`'s size; the die cube rides its top-right corner, half over
-    // the art, so the text keeps the full width.
-    plateLedgerSmall: { paddingHorizontal: 5, justifyContent: 'center' },
-    ledgerCube: { position: 'absolute', top: -8, zIndex: 3 },
-    paidLineSmall: { alignSelf: 'stretch' },
+    // `paidLineFit`'s size, led by the stance die and a colon (`<die>: <line>`)
+    // level with its first row; the text wraps in the column beside the die.
+    plateLedgerSmall: { paddingHorizontal: 5, alignItems: 'stretch' },
+    // The die and its colon lead the line, level with its first row.
+    paidLead: { flexDirection: 'row', alignItems: 'center', flexShrink: 0 },
+    paidLeadSmall: { alignSelf: 'flex-start' },
+    paidLeadColon: { fontFamily: FONTS.serif, marginLeft: 1, color: AXM.parchment },
+    paidLeadColonLarge: { fontSize: 16, lineHeight: 20 },
+    paidLineSmall: { flex: 1, alignSelf: 'stretch' },
     paidGlyphLarge: { marginRight: 5, flexShrink: 0 },
     paidLineRowLarge: { flexDirection: 'row', alignItems: 'center' },
     paidLineTokens: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', flexShrink: 1, overflow: 'hidden' },

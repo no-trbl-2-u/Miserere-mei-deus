@@ -3,8 +3,8 @@
  * (one card face).
  *
  * The small face prints the card's whole PAID line (`paidLine`, the card voice)
- * at 10pt over at most three rows, with the stance die cube on the ledger's
- * corner. The FREE line lives in the pill on the card's top-left corner; a
+ * at 10pt over at most three rows, led by the stance die cube and a colon
+ * (`<die>: <PAID line>`). The FREE line lives in the pill on the card's top-left corner; a
  * Global wears a GLOBAL plate there instead and never prints a duration on the
  * small face (the large face states it).
  */
@@ -66,6 +66,18 @@ describe('the small face prints the whole PAID line', () => {
             }
             unmount();
         }
+    });
+
+    it('leads the line with the die and a colon, `<die>: <PAID line>`', () => {
+        const card = handCard('grey-strike');
+        const { unmount } = renderFace(card);
+        const ledger = screen.getByTestId('combat-card-face-ledger');
+        const kids = React.Children.toArray(ledger.props.children as React.ReactNode) as React.ReactElement<{ testID?: string }>[];
+        expect(kids.map((k) => k.props.testID)).toEqual(['combat-card-face-cube', 'combat-card-face-paid-line']);
+        const cube = screen.getByTestId('combat-card-face-cube');
+        expect(flat(cube).position).toBeUndefined();
+        expect(screen.getByText(':')).toBeTruthy();
+        unmount();
     });
 
     it('has no keyword/value pair on the small face, and every card prints its own line', () => {

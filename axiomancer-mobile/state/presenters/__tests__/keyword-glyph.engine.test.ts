@@ -10,7 +10,7 @@ import { cardLibrary, cardLinesText, lookupEffect, paidFaceLine } from '@mechani
 import {
     GLYPH_CATEGORY, GLYPH_KEYWORDS, glyphKeywordFor, glyphLabel,
 } from '@/state/presenters/keyword-glyph.engine';
-import { paidLineFit, paidLineRuns, PAID_LINE_ROWS, PAID_LINE_SIZE } from '@/state/presenters/paid-line.engine';
+import { paidLineCube, paidLineFit, paidLineLead, paidLineRuns, PAID_LINE_ROWS, PAID_LINE_SIZE } from '@/state/presenters/paid-line.engine';
 
 /** Capital words that are a stat or a system word, not a keyword: they print as they are. */
 const STAYS_A_WORD = new Set(['VITAE', 'CONVICTION', 'HOLDS']);
@@ -78,7 +78,7 @@ describe('the small face in glyph mode', () => {
     it.each(SAMPLE)('%s prints its whole PAID line at 10pt in at most three rows', (name) => {
         const card = cardLibrary.find((c) => c.name === name)!;
         const line = paidFaceLine(card, lookupEffect);
-        const fit = paidLineFit({ width: 120, line, mode: 'glyphs' });
+        const fit = paidLineFit({ width: 120, line, mode: 'glyphs', lead: paidLineLead(paidLineCube(false)) });
         expect(fit.size).toBe(PAID_LINE_SIZE);
         expect(fit.rows).toBeLessThanOrEqual(PAID_LINE_ROWS);
     });
@@ -86,8 +86,8 @@ describe('the small face in glyph mode', () => {
     it('fits every card in the library at 10pt in three rows or fewer, or shrinks no further than in words', () => {
         for (const card of cardLibrary) {
             const line = paidFaceLine(card, lookupEffect);
-            const words = paidLineFit({ width: 120, line });
-            const glyphs = paidLineFit({ width: 120, line, mode: 'glyphs' });
+            const words = paidLineFit({ width: 120, line, lead: paidLineLead(paidLineCube(false)) });
+            const glyphs = paidLineFit({ width: 120, line, mode: 'glyphs', lead: paidLineLead(paidLineCube(false)) });
             expect(glyphs.size).toBeGreaterThanOrEqual(words.size - 1);
         }
     });
