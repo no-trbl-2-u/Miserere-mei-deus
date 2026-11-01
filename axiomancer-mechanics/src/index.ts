@@ -223,6 +223,9 @@ export {
     SLOT_CAPACITY,
     consumableLibrary, getConsumableById,
     relicLibrary, getRelicById, relicLaneId, wornLaneCounts,
+    // The ten weapons and armor (the grey pair is worn from the start).
+    weaponLibrary, armorLibrary, equipmentLibrary, EQUIPMENT_LANE, GREY_WEAPON_ID, GREY_ARMOR_ID,
+    getEquipmentPieceById, cloneEquipmentPiece, equipmentLaneId, greyPair, wearGreyPair,
     // The shared grant/equip/swap path. `equipItem` never returns the displaced
     // piece (weapon/armor replace in place; a full relic row is a guarded
     // no-op), so every grant site routes through `grantItem` rather than

@@ -73,7 +73,7 @@ describe('startNewGameAction — NEW GAME', () => {
         expect(slots.readSlot(2)?.runId).toBe(fresh.runId);
         const player = store.getState().player;
         expect(player.level).toBe(1);
-        expect(player.inventory).toEqual([]);
+        expect(player.inventory.map(i => i.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat']);
         expect(player.currency).toBe(0);
         expect(player.experience).toBe(0);
         expect(slots.listSlots()[1]?.status).toBe('saved');
@@ -109,7 +109,7 @@ describe('startNewGameAction — NEW GAME', () => {
         expect(saved?.characterId).toBe('fixture-knight');
         expect(saved?.startingLaneIds).toEqual(['lane-x', 'lane-y']);
         expect(saved?.baseStats).toEqual({ heart: 5, body: 7, mind: 3 });
-        expect(getEquippedItems(saved!.equipment).map(p => p.id)).toEqual(['relic-bleeding-signet']);
+        expect(getEquippedItems(saved!.equipment).map(p => p.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat', 'relic-bleeding-signet']);
         expect(saved?.knownCards).toEqual([...CHARACTER_GREY_DECK, 'card-x', 'card-y', 'card-z']);
         expect(store.getState().player.characterId).toBe('fixture-knight');
     });
@@ -128,7 +128,7 @@ describe('startNewGameAction — NEW GAME', () => {
         const saved = slots.readSlot(1)!.player;
         expect(saved.characterId).toBe('the-chosen');
         expect(saved.startingLaneIds).toEqual(['defender', 'blood-price']);
-        expect(getEquippedItems(saved.equipment).map(p => p.id)).toEqual(['relic-disarming-plea']);
+        expect(getEquippedItems(saved.equipment).map(p => p.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat', 'relic-disarming-plea']);
     });
 
     it('a save made before characters is never loaded or continued', () => {

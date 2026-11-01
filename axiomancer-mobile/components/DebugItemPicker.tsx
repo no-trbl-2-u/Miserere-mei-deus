@@ -1,7 +1,7 @@
 /**
  * Dev-only ITEM PICKER.
  *
- * Every relic and every consumable in the engine registries is a chip,
+ * Every relic, every weapon and armor and every consumable in the engine registries is a chip,
  * so a tester never has to remember an id. A tap calls
  * `actions.addItemById` and prints the result on the sub line.
  *
@@ -9,16 +9,17 @@
  */
 
 import React, { useState } from 'react';
-import { consumableLibrary, relicLibrary } from '@mechanics';
+import { consumableLibrary, equipmentLibrary, relicLibrary } from '@mechanics';
 
 import { DevChip, DevChips, DevRow } from '@/components/dev/DevControls';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useGameActions } from '@/state/GameStoreProvider';
 
-/** `relic-disarming-plea` → `disarming plea`; `minor-healing-potion` → `minor healing potion`. */
-const chipLabel = (id: string): string => id.replace(/^relic-/, '').replace(/-/g, ' ');
+/** `relic-disarming-plea` → `disarming plea`; `weapon-opening-blade` → `opening blade`; `minor-healing-potion` → `minor healing potion`. */
+const chipLabel = (id: string): string => id.replace(/^(relic|weapon|armor)-/, '').replace(/-/g, ' ');
 
 const RELIC_IDS = relicLibrary.map((r) => r.id);
+const GEAR_IDS = equipmentLibrary.map((p) => p.id);
 const CONSUMABLE_IDS = consumableLibrary.map((c) => c.id);
 
 export function DebugItemPicker() {
@@ -39,7 +40,7 @@ export function DebugItemPicker() {
     return (
         <DevRow
             label="DEBUG · ADD ITEM"
-            sub={feedback?.text ?? `${RELIC_IDS.length} relics · ${CONSUMABLE_IDS.length} consumables`}
+            sub={feedback?.text ?? `${RELIC_IDS.length} relics · ${GEAR_IDS.length} weapons and armor · ${CONSUMABLE_IDS.length} consumables`}
             subTone={feedback ? (feedback.ok ? 'ok' : 'err') : null}
             stacked
             testID="debug-item-picker"
@@ -47,6 +48,11 @@ export function DebugItemPicker() {
             <DevChips testID="debug-item-relics">
                 {RELIC_IDS.map((id) => (
                     <DevChip key={id} label={chipLabel(id)} accent onPress={() => onPick(id)} a11y={`Add relic ${id} to the inventory`} testID={`debug-item-${id}`} />
+                ))}
+            </DevChips>
+            <DevChips testID="debug-item-gear">
+                {GEAR_IDS.map((id) => (
+                    <DevChip key={id} label={chipLabel(id)} accent onPress={() => onPick(id)} a11y={`Add gear ${id} to the inventory`} testID={`debug-item-${id}`} />
                 ))}
             </DevChips>
             <DevChips testID="debug-item-consumables">

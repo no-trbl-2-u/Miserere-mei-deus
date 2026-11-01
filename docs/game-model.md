@@ -157,8 +157,11 @@ the Expo app (`axiomancer-mobile`) presents it.
   power a card. A special face pays what the worn weapon's `special` says
   (`state.equipmentDice.special`) when the die is used: Conviction, DEAL, HEAL,
   GUARD, INFERNO on the foe or VULNERABLE. With no weapon worn it only powers
-  its card; the grey sword's special is `SPECIAL_CONVICTION_DEFAULT` = 2
-  Conviction.
+  its card; the grey sword's special (the Opening Blade, which every new run
+  wears with the Bracing Coat) is `SPECIAL_CONVICTION_DEFAULT` = 2 Conviction.
+  The ten weapons and armor (a grey pair and a pair per lane, one fight effect
+  and one dice effect each, no stats) are in
+  `axiomancer-mechanics/docs/equipment.md`.
 - **The Color Law** (`dieSatisfiesColorLaw`): a die powers a card when the
   card is `any`, the die is gold, or the colours match. A mismatch fizzles.
   Powering is all a die does: PAID numbers land as printed (scaled by stats)
@@ -381,7 +384,9 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   `/item-reward`); the dev menu's relic chips, which wear the relic while a
   position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
-  player taps WEAR. A character wears one weapon, one armor and up to three
+  player taps WEAR. A new run also wears the grey pair, the Opening Blade and
+  the Bracing Coat (`createNewGameState`; a save made before them is not
+  granted them). A character wears one weapon, one armor and up to three
   relics (`SLOT_CAPACITY.relic`); any relic fits any relic slot, a relic keeps
   the position it was worn in (taking one off leaves that position empty and
   moves no other, EQ3a), and the

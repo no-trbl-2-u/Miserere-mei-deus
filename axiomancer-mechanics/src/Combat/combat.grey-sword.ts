@@ -4,7 +4,10 @@
  *
  * With no weapon worn a special only powers its card, so a fixture or a sim
  * that models a fresh run wears this to play as that run does. It is a
- * stand-in, not a library piece: nothing grants it to a player.
+ * stand-in, not a library piece: nothing grants it to a player. The real grey
+ * sword is the Opening Blade (`Items/equipment.library.ts`), which every new
+ * run wears; only the measured-truth cells and the act-1 door fixtures still
+ * wear this one, until they wear the loadout a new run wears.
  */
 
 import type { Character } from '../Character/types';

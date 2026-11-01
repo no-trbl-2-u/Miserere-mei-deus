@@ -34,10 +34,11 @@ const ROSTER = [FIXTURE];
 describe('createNewGameState with a character (CH1 A2)', () => {
     const run = () => createNewGameState({ characterId: FIXTURE.id, roster: ROSTER });
 
-    it('wears the starting relic in the first relic position', () => {
-        const worn = getEquippedItems(run().player.equipment);
-        expect(worn.map(p => p.id)).toEqual([RELIC_ID]);
-        expect(worn[0]).not.toBe(getRelicById(RELIC_ID));
+    it('wears the starting relic in the first relic position, beside the grey pair', () => {
+        const { equipment } = run().player;
+        expect(equipment.relics[0]!.id).toBe(RELIC_ID);
+        expect(equipment.relics[0]).not.toBe(getRelicById(RELIC_ID));
+        expect(getEquippedItems(equipment).map(p => p.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat', RELIC_ID]);
     });
 
     it('takes the character\'s stats and the max VITAE they and the relic give', () => {

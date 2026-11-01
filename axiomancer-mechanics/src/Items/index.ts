@@ -33,5 +33,10 @@ export { consumableLibrary, getConsumableById } from './consumable.library';
 export {
     relicLibrary, getRelicById,
 } from './relic.library';
+// The ten weapons and armor: the grey pair every run starts in and a pair per lane.
+export {
+    weaponLibrary, armorLibrary, equipmentLibrary, EQUIPMENT_LANE, GREY_WEAPON_ID, GREY_ARMOR_ID,
+    getEquipmentPieceById, cloneEquipmentPiece, equipmentLaneId, greyPair, wearGreyPair,
+} from './equipment.library';
 // The lane a relic opens while worn (the card-reward rule reads it).
 export { relicLaneId, wornLaneCounts } from './relic-lanes';

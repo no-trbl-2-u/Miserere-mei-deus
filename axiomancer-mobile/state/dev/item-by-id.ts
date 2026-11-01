@@ -5,13 +5,15 @@
  * the player's inventory by its id, for evidence runs where the Kid
  * needs a known item present (e.g. a particular consumable or a
  * given relic). We resolve the id against engine truth in priority
- * order — signet relic (`getRelicById`) → consumable
- * (`getConsumableById`) — so no fake local items are minted. Unknown
+ * order — signet relic (`getRelicById`) → weapon or armor
+ * (`getEquipmentPieceById`) → consumable (`getConsumableById`) — so no fake local items are minted. Unknown
  * ids return a graceful failure the UI surfaces rather than a silent
  * no-op. Surfaced on `/dev` by `DebugItemPicker` (one chip per id).
  *
- * A relic is worn while its slot has a free position (`grantWearingIfFree`),
- * so its signature is on the next fight's board; a full row carries it.
+ * A relic, weapon or armor is worn while its slot has a free position
+ * (`grantWearingIfFree`), so its signature is on the next fight's board; a
+ * full row carries it (a weapon or armor is carried while the grey pair is
+ * worn).
  *
  * Component mount is `isDevToolsEnabled()`-guarded; production never
  * reaches this.
@@ -19,6 +21,7 @@
 
 import {
     getConsumableById,
+    getEquipmentPieceById,
     getRelicById,
     grantWearingIfFree,
 } from '@mechanics';
@@ -73,8 +76,8 @@ export function addItemByIdAction(
     try {
         const addItem = store.getState().addItem;
 
-        // The only equipment is the signet relics (resolve by id).
-        const relic = getRelicById(id);
+        // Equipment: the signet relics, then the weapons and armor (resolve by id).
+        const relic = getRelicById(id) ?? getEquipmentPieceById(id);
         if (relic) {
             devGrantItem(store, relic);
             return {
