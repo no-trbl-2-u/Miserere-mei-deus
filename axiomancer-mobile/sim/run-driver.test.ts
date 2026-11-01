@@ -7,6 +7,7 @@
  */
 
 import {
+    BREAKWATER_HAZARD_NODES,
     CHARACTER_ROSTER,
     WANDERER_POLICY,
     characterDeck,
@@ -65,8 +66,9 @@ describe('the headless run driver', () => {
         for (const screen of ['event:cutscene', 'event:encounter', 'event:village', 'rest', 'cache', 'hazard', 'quest', 'travel', 'item-reward']) {
             expect(screens).toContain(screen);
         }
-        // The seams a player is asked on the way.
-        for (const seam of ['chooseCharacter', 'chooseRoad', 'takeTravel', 'pickReward', 'chooseRest', 'chooseCacheOffer', 'visitVillage', 'hazardPolicy', 'fightPolicy', 'flee', 'raiseStat', 'takeItem']) {
+        // The seams a player is asked on the way. No `hazardPolicy`: every
+        // Breakwater hazard is a puzzle the `noisy-greedy` bot plays (HP6c).
+        for (const seam of ['chooseCharacter', 'chooseRoad', 'takeTravel', 'pickReward', 'chooseRest', 'chooseCacheOffer', 'visitVillage', 'fightPolicy', 'flee', 'raiseStat', 'takeItem']) {
             expect(asked.get(seam) ?? 0).toBeGreaterThan(0);
         }
         // The deck carried from node to node: the character's ten cards are still in it.
@@ -74,6 +76,27 @@ describe('the headless run driver', () => {
         expect(Object.values(result.deckByLane).reduce((a, b) => a + b, 0)).toBeGreaterThanOrEqual(dealt);
         // It posts nothing: the play-log gate is shut under the driver.
         expect(fetchSpy?.mock.calls.length ?? 0).toBe(0);
+    });
+
+    it('plays a Breakwater hazard as its puzzle with the noisy-greedy bot, never the three-round board', () => {
+        const { policy, asked } = spying();
+        const puzzles = new Set<string>();
+        let oldBoard = 0;
+        const result = playRun({
+            policy,
+            seed: 8,
+            onStep: (store) => {
+                const hazard = store.getState().hazard;
+                if (hazard?.puzzle) puzzles.add(hazard.puzzle.nodeId);
+                if (hazard?.session) oldBoard++;
+            },
+        });
+        expect(['run-over', 'chapter-clear']).toContain(result.outcome);
+        // The wreck is on the story route: every run that clears the chapter plays it.
+        expect(puzzles.size).toBeGreaterThan(0);
+        for (const nodeId of puzzles) expect(BREAKWATER_HAZARD_NODES as readonly string[]).toContain(nodeId);
+        expect(oldBoard).toBe(0);
+        expect(asked.get('hazardPolicy') ?? 0).toBe(0);
     });
 
     it('gives the same run for the same seed and policy', () => {

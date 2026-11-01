@@ -82,7 +82,13 @@ import {
     type HazardDeckPresetResult,
 } from './hazard/store-actions';
 import { claimHazardPuzzleAction, type ClaimHazardPuzzleResult } from './hazard/puzzle-store-actions';
-import type { HazardPuzzleLayout, HazardRouteKey } from '@mechanics';
+import {
+    confirmHazardPuzzleNodeAction,
+    leaveHazardPuzzleNodeAction,
+    moveHazardPuzzleNodeAction,
+    playHazardPuzzleNodeBotAction,
+} from './hazard/puzzle-node-actions';
+import type { HazardPuzzleLayout, HazardPuzzleSession, HazardRouteKey } from '@mechanics';
 import type { LootCacheChoiceOfferId, RestChoiceOfferId } from '@mechanics';
 import {
     beginRestAction,
@@ -480,6 +486,14 @@ export interface AppActions {
      * scar). The puzzle session itself is never stored.
      */
     claimHazardPuzzle: (layout: HazardPuzzleLayout, route: HazardRouteKey, p: number, seed?: number) => ClaimHazardPuzzleResult;
+    /** A puzzle hazard node (HP6c): one board move while its round is open. */
+    moveHazardPuzzleNode: (move: (session: HazardPuzzleSession) => HazardPuzzleSession) => void;
+    /** A puzzle hazard node: CONFIRM (or the clock out) resolves and claims the round. */
+    confirmHazardPuzzleNode: (options?: { timedOut?: boolean; seed?: number }) => ClaimHazardPuzzleResult | null;
+    /** A puzzle hazard node: the outcome panel's DONE closes the board. */
+    leaveHazardPuzzleNode: () => void;
+    /** A puzzle hazard node: the `noisy-greedy` bot plays the round and claims it (run driver, dev skip). */
+    playHazardPuzzleNodeBot: (seed: number) => ClaimHazardPuzzleResult | null;
     /**
      * Dev tool — replace the acquired-card flags with a random pull
      * from every defined hazard card (starter + reward pool). Returns
@@ -900,6 +914,10 @@ export function createAppActions(store: AppStore): AppActions {
             claimHazardRewardsAction(store, cardId, armingHazardDeath(actions.playerDied)),
         abandonHazard: () => abandonHazardAction(store),
         claimHazardPuzzle: (layout, route, p, seed) => claimHazardPuzzleAction(store, layout, route, p, seed),
+        moveHazardPuzzleNode: (move) => moveHazardPuzzleNodeAction(store, move),
+        confirmHazardPuzzleNode: (options) => confirmHazardPuzzleNodeAction(store, options),
+        leaveHazardPuzzleNode: () => leaveHazardPuzzleNodeAction(store),
+        playHazardPuzzleNodeBot: (seed) => playHazardPuzzleNodeBotAction(store, seed),
         randomizeHazardDeck: () => randomizeHazardDeckAction(store),
         applyHazardDeckPreset: (presetId) => applyHazardDeckPresetAction(store, presetId),
         // ── The Labyrinth (THE APORIA) ──

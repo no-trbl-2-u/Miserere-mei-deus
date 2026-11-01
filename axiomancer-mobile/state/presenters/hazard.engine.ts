@@ -658,5 +658,6 @@ export function selectHazardViewModel(state: Pick<AppStoreState, 'hazard'>): Haz
 
 /** True while a hazard session is active — drives `<HazardGate>`. */
 export function selectHasActiveHazard(state: Pick<AppStoreState, 'hazard'>): boolean {
-    return state.hazard?.session != null;
+    // A puzzle hazard node's board (HP6c) is a hazard too: the gate routes to /hazard for it.
+    return state.hazard?.session != null || state.hazard?.puzzle != null;
 }

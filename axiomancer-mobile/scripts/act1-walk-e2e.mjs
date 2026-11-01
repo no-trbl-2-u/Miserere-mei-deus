@@ -468,7 +468,10 @@ const RESOLVERS = {
         // The stakes card comes first (ET1b); Face it leads on to the route select.
         await waitFor(page, 'hazard-stakes', `${nodeId} hazard stakes card`)
         await tap(page, 'hazard-stakes-face') || fail(`${nodeId}: the stakes card has no Face it`)
-        await waitFor(page, 'hazard-route-select', `${nodeId} hazard`)
+        // A puzzle node (the Breakwater's six, HP6c) opens its board with no
+        // route select; every other hazard opens the three-round route select.
+        const board = await waitForAny(page, ['hazard-route-select', 'hazard-puzzle-node'], 15000)
+        if (!board) fail(`${nodeId}: the hazard opened neither the route select nor a puzzle board`)
         const r = await skipEvent(page, nodeId)
         if (r.kind !== 'hazard' || r.outcome === 'abandoned') fail(`${nodeId}: the skip did not cross the hazard (${r.kind} ${r.outcome})`)
         return 'skip'

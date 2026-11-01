@@ -36,6 +36,7 @@ export class RunStuckError extends Error {
 /** The open screen a store state shows, in the driver's words. */
 export function describeScreen(s: AppStoreState): string {
     if ((s.itemReward?.queue.length ?? 0) > 0) return 'item-reward';
+    if (s.hazard?.puzzle) return `hazard:puzzle-${s.hazard.puzzle.claim ? 'claimed' : s.hazard.puzzle.nodeId}`;
     if (s.hazard?.session) return `hazard:${s.hazard.session.phase}`;
     if (s.rest?.session) return `rest:${s.rest.session.phase}`;
     if (s.cache?.session) return `cache:${s.cache.session.phase}`;

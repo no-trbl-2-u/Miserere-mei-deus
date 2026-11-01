@@ -79,7 +79,15 @@ export const ROUTES = [
     // board: the fixture's arrival starts the hazard (seed pinned by the
     // minigame-seed injector), `hazardRoute` picks the route, and the shot
     // waits out the dice roll.
+    // The injector pins a hazard id, and a pinned id keeps the three-round
+    // board even on a Breakwater puzzle node (HP6c), so this shot is unchanged.
     { name: 'hazard-board', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', hazardRoute: 'risk' },
+    // A Breakwater hazard (bw-m2) plays its puzzle (HP6c): `puzzleNode` drops
+    // the injector's hazard-id pin so the node's own puzzle opens. The stakes
+    // card with its one goal, and the board after Face it (no route select),
+    // its dice at rest and its clock held.
+    { name: 'hazard-puzzle-stakes', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', puzzleNode: true, waitForTestId: 'hazard-stakes' },
+    { name: 'hazard-puzzle-node', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', puzzleNode: true, hazardPuzzle: true },
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
@@ -217,6 +225,18 @@ export async function pickHazardRoute(page, hazardRoute) {
     await page.getByTestId('hazard-stakes-face').click()
     await page.getByTestId(`hazard-route-${hazardRoute}`).click()
     await page.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+    await settleDiceRoll(page)
+}
+
+/**
+ * At a puzzle hazard node (HP6c): presses Face it on the stakes card, then
+ * waits for the puzzle board (no route select) and its opening dice roll.
+ *
+ * @param {import('playwright').Page} page the page, on `/hazard` at the stakes card.
+ */
+export async function faceHazardPuzzle(page) {
+    await page.getByTestId('hazard-stakes-face').click()
+    await page.getByTestId('hazard-puzzle-node').waitFor({ state: 'visible', timeout: 10_000 })
     await settleDiceRoll(page)
 }
 
@@ -413,19 +433,46 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
             : liveContext ? await liveContext.newPage()
             : page
         try {
+            // A puzzle node: drop the injector's hazard-id pin (it would draw the
+            // three-round board), and hold the puzzle clock for a stable shot.
+            if (route.puzzleNode) {
+                await target.addInitScript(() => {
+                    // Init scripts run in no set order, so strip the pin whenever the injector sets it.
+                    const strip = (seeds) => {
+                        if (!seeds?.hazard) return seeds
+                        const { hazardId: _pinned, ...hazard } = seeds.hazard
+                        return { ...seeds, hazard }
+                    }
+                    let seeds = strip(globalThis.__AXM_MINIGAME_SEEDS__)
+                    Object.defineProperty(globalThis, '__AXM_MINIGAME_SEEDS__', {
+                        configurable: true,
+                        get: () => seeds,
+                        set: (next) => { seeds = strip(next) },
+                    })
+                    // The injector's legacy global carries the same pin.
+                    Object.defineProperty(globalThis, '__AXM_HAZARD_ID__', {
+                        configurable: true,
+                        get: () => undefined,
+                        set: () => {},
+                    })
+                    globalThis.__AXM_HAZARD_CLOCK_PAUSED__ = true
+                })
+            }
             if (route.liveFight) await enterLiveFight(target, baseUrl, { seed: LIVE_FIGHT_SEED })
             else await target.goto(url, { waitUntil: 'networkidle', timeout: 30_000 })
             if (route.waitForPath) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
             await waitForReady(target)
+            if (route.waitForTestId) await target.getByTestId(route.waitForTestId).waitFor({ state: 'visible', timeout: 10_000 })
             if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
+            if (route.hazardPuzzle) await faceHazardPuzzle(target)
             if (route.settleRoll) {
                 await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
                 await settleDiceRoll(target)
             }
             // After a hazard step the board has re-rendered; let it paint.
-            if (route.hazardRoute || route.settleRoll) await waitForReady(target)
+            if (route.hazardRoute || route.settleRoll || route.hazardPuzzle || route.waitForTestId) await waitForReady(target)
             return await target.screenshot({ fullPage: false })
         } finally {
             if (target !== page) await target.close().catch(() => {})

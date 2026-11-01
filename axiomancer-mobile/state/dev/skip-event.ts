@@ -90,6 +90,7 @@ import {
     claimHazardRewardsAction,
     continueHazardAfterResolveAction,
 } from '@/state/hazard/store-actions';
+import { leaveHazardPuzzleNodeAction, playHazardPuzzleNodeBotAction } from '@/state/hazard/puzzle-node-actions';
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { selectHasActiveQuest } from '@/state/presenters/quest.engine';
 import { closeQuestAction, offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
@@ -281,6 +282,7 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
     if (state.currentEncounter) {
         return skipCombat(store, state.currentEncounter.enemies[0] ?? null, nodeId, options, 'live');
     }
+    if (state.hazard?.puzzle) return skipHazardPuzzle(store, nodeId);
     if (state.hazard?.session) return skipHazard(store, actions, nodeId);
     if (state.rest?.session) return skipRest(store, nodeId);
     if (state.cache?.session) return skipCache(store, nodeId);
@@ -461,6 +463,31 @@ function skipCombat(
             levelsGained: after.level - before.level,
             hpToll,
             witness: witness ? { policy: 'greedy', seed, ...witness } : null,
+        },
+    };
+}
+
+/** The bot seed a skipped puzzle plays with, so a skip is the same crossing every time. */
+export const SKIP_HAZARD_PUZZLE_SEED = 1;
+
+/**
+ * A puzzle hazard node (HP6c): the `noisy-greedy` bot plays the round (a
+ * fixed seed) and the claim applies, then the board closes as DONE does.
+ */
+function skipHazardPuzzle(store: AppStore, nodeId: string | null): SkipEventResult {
+    const play = store.getState().hazard.puzzle!;
+    const claim = play.claim ?? playHazardPuzzleNodeBotAction(store, SKIP_HAZARD_PUZZLE_SEED);
+    leaveHazardPuzzleNodeAction(store);
+    if (!claim) return { kind: 'hazard', nodeId, outcome: 'abandoned', detail: { candidateId: play.candidateId } };
+    return {
+        kind: 'hazard',
+        nodeId,
+        outcome: claim.outcome.completed ? 'puzzle:cleared' : 'puzzle:short',
+        detail: {
+            candidateId: play.candidateId,
+            route: play.session.route,
+            vitaeLost: claim.vitaeLost,
+            scarApplied: claim.scarApplied,
         },
     };
 }

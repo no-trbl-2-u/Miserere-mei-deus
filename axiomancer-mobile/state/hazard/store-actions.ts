@@ -38,11 +38,14 @@ import { appendAcquiredCard, HAZARD_CARD_FLAG_PREFIX, hazardDeckBag } from '@mec
 import type { HazardRouteKey, HazardSessionState } from '@mechanics';
 import { resolveMinigameSeed, resolveMinigameString } from '../minigame-seeds';
 import { armDeathReturn } from '../death-return';
+import { beginHazardPuzzleNodeAction, type HazardPuzzleNodePlay } from './puzzle-node-actions';
 import { recordHazardEnded, recordNodeResolved } from '../run-log';
 import type { AppStore } from '../store';
 
 export interface MobileHazardSlice {
     session: HazardSessionState | null;
+    /** A puzzle hazard node's one-round board (HP6c, `puzzle-node-actions.ts`). */
+    puzzle?: HazardPuzzleNodePlay | null;
 }
 
 export const EMPTY_HAZARD_SLICE: MobileHazardSlice = Object.freeze({ session: null });
@@ -168,19 +171,27 @@ function hazardDeckPresetById(presetId: HazardDeckPresetId): HazardDeckPreset {
     return preset;
 }
 
+/**
+ * Opens the hazard on the node underfoot. A node that names a puzzle (the
+ * Breakwater's six, `BREAKWATER_HAZARD_PUZZLES`) opens that puzzle's
+ * one-round board (HP6c); every other node draws a three-round hazard. A
+ * pinned hazard id (an option, the dev global or a URL param) always draws
+ * the three-round board, so the dev entries and the old-board tests keep it.
+ */
 export function beginHazardAction(store: AppStore, options: BeginHazardOptions = {}): boolean {
     const state = store.getState();
-    if (state.hazard?.session) return false; // one crisis at a time
-    const seed = resolveMinigameSeed(
-        'hazard',
-        options.seed,
-        globalThis.__AXM_HAZARD_SEED__,
-    );
+    if (state.hazard?.session || state.hazard?.puzzle) return false; // one crisis at a time
     let hazardId = resolveMinigameString(
         'hazard',
         ['hazardId', 'id'],
         options.hazardId,
         globalThis.__AXM_HAZARD_ID__,
+    );
+    if (!hazardId && beginHazardPuzzleNodeAction(store)) return true;
+    const seed = resolveMinigameSeed(
+        'hazard',
+        options.seed,
+        globalThis.__AXM_HAZARD_SEED__,
     );
     if (!hazardId) {
         hazardId = HAZARD_LIBRARY[Math.abs(seed) % HAZARD_LIBRARY.length].id;

@@ -177,8 +177,28 @@ export function resolvePacedEvent(store: AppStore, actions: AppActions): boolean
     return true;
 }
 
+/**
+ * `/hazard` on a puzzle node (HP6c, A8): the `noisy-greedy` bot plays the one
+ * round and confirms it (the claim), then DONE closes the board. The bot's
+ * seed is drawn from the run's seeded stream, so a run replays.
+ */
+export function resolveHazardPuzzle(store: AppStore, actions: AppActions): boolean {
+    const play = store.getState().hazard?.puzzle;
+    if (!play) return false;
+    if (play.claim === null) {
+        if (actions.playHazardPuzzleNodeBot(Math.floor(Math.random() * 0x7fffffff)) === null) {
+            throw new ScreenStuckError(`the puzzle at ${play.nodeId} would not resolve`);
+        }
+        return true;
+    }
+    actions.leaveHazardPuzzleNode();
+    if (store.getState().hazard?.puzzle) throw new ScreenStuckError(`the puzzle at ${play.nodeId} would not close`);
+    return true;
+}
+
 /** `/hazard`: pick the route, play each round tap by tap, take the outcome and its card. */
 export function resolveHazard(store: AppStore, actions: AppActions, policy: RunPolicy, chosen: { policy: HazardPolicyId | null }): boolean {
+    if (resolveHazardPuzzle(store, actions)) return true;
     const session = store.getState().hazard?.session;
     if (!session) {
         chosen.policy = null;

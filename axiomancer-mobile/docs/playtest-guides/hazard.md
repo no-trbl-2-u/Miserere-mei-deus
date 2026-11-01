@@ -6,7 +6,7 @@ A hazard node starts a hazard session (`state/actions.ts` → `beginHazardAction
 
 ## 2. Enter it directly
 
-- Fixture: `/exploration?fixture=l30-bw-hazard-arrive` — L30 kit on the Breakwater's bw-m2, `arrive: true` → lands on `/hazard`. `l30-bw-hazard` is the same spot without `arrive` (you are on the map; the node is already consumed as "here", so use a neighbour or the dev button).
+- Fixture: `/exploration?fixture=l30-cw-hazard-arrive` — L30 kit on the Charcoal Wood's cw-3, `arrive: true` → lands on `/hazard` with the three-round board. The Breakwater's six hazard nodes play one puzzle each instead (HP6c): `/exploration?fixture=l30-bw-hazard-arrive` (bw-m2) opens the stakes card with its one goal, then the puzzle board (`hazard-puzzle-node`) with no route select; CONFIRM claims and `hazard-puzzle-done` goes back to the map. `l30-bw-hazard` is the same spot without `arrive` (you are on the map; the node is already consumed as "here", so use a neighbour or the dev button).
 - `/dev` (every section starts closed; `dev-section-<key>-toggle` opens one): under MINIGAMES & REWARDS (`dev-section-rewards-toggle`) `debug-hazard-button` (BRAVE IT) or `debug-hazard-id-<id>` for a specific authored hazard; under ENCOUNTERS (`dev-section-encounters-toggle`) `debug-trigger-encounter-hazard`. To shape the deck first, boot a fixture (`?fixture=l30-bw-hazard`) — the deck-shaping leaf was cut on 2026-10-16.
 - Globals: `__AXM_MINIGAME_SEEDS__.hazard = { seed, hazardId }` or legacy `__AXM_HAZARD_SEED__` / `__AXM_HAZARD_ID__` (harness default `424242`, `cracked-cliff`); `__AXM_JUICE_INSTANT__`.
 
