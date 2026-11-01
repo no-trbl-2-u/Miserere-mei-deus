@@ -165,8 +165,9 @@ export interface NewGameOptions {
 /**
  * The level-1 player a run opens with. With a character: its stats (and the
  * max VITAE they give), its starting relic worn through the equip path, the
- * grey pair (the Opening Blade and the Bracing Coat) worn and carried in the
- * inventory too as every worn piece is, its ten-card deck, and its id and
+ * grey pair (the Opening Blade and the Bracing Coat) worn, and the pair and the
+ * relic all carried in the inventory too as every worn piece is, so taking one
+ * off keeps it in the satchel, its ten-card deck, and its id and
  * starting lanes recorded. Without one: the apprentice baseline, nothing
  * worn, no cards (the client deals the grey office on the first fight).
  * A save made before the pair existed is never granted it: only this path
@@ -192,7 +193,7 @@ function createNewRunPlayer(opts: NewGameOptions): Character {
         name: def.name,
         level: 1,
         baseStats: { ...def.baseStats },
-        inventory: [cloneEquipmentPiece(worn.weapon), cloneEquipmentPiece(worn.armor)],
+        inventory: [cloneEquipmentPiece(worn.weapon), cloneEquipmentPiece(worn.armor), cloneRelic(relic)],
         equipment: [cloneRelic(relic), worn.weapon, worn.armor],
         knownCards: characterDeck(def),
     });

@@ -31,10 +31,19 @@ describe('a new run wears the grey pair, for every roster character', () => {
             });
 
             it('carries the pair in the inventory too, as copies of the library pieces', () => {
-                expect(player.inventory.map(i => i.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat']);
+                expect(player.inventory.map(i => i.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat', def.startingRelicId]);
                 expect(player.equipment.weapon).toEqual(getEquipmentPieceById('weapon-opening-blade'));
                 expect(player.equipment.weapon).not.toBe(getEquipmentPieceById('weapon-opening-blade'));
                 expect(player.inventory[0]).not.toBe(player.equipment.weapon);
+            });
+
+            it('carries the starting relic in the inventory too, and taking it off keeps it there', () => {
+                expect(player.equipment.relics[0]?.id).toBe(def.startingRelicId);
+                expect(player.inventory.filter(i => i.id === def.startingRelicId)).toHaveLength(1);
+                expect(player.inventory[2]).not.toBe(player.equipment.relics[0]);
+                const off = unequipItem(player, 'relic', 0);
+                expect(off.equipment.relics.some(r => r?.id === def.startingRelicId)).toBe(false);
+                expect(off.inventory.map(i => i.id)).toContain(def.startingRelicId);
             });
 
             it('adds no stat: max VITAE is the stats and the relic alone', () => {
