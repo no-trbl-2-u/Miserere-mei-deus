@@ -511,6 +511,7 @@ function FogDrift({ viewport, tile, ms, opacity, still }: {
     return (
         <Animated.View
             pointerEvents="none"
+            testID="map-fog-drift"
             style={[{ position: 'absolute', left: 0, top: 0, width: cols * tile, height: rows * tile, flexDirection: 'row', flexWrap: 'wrap', opacity }, slide]}
         >
             {Array.from({ length: cols * rows }, (_, i) => (

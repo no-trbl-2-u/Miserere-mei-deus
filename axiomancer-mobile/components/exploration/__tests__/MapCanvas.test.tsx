@@ -268,6 +268,66 @@ describe('MapCanvas', () => {
         expect(discs.map((d) => [d.props.cx, d.props.cy])).toEqual(rest.map((n) => [n.x, n.y]));
     });
 
+    describe('the plate edge fades into the fog (T, 2026-11-01)', () => {
+        const plate = { width: 1000, height: 1000, scale: 2.4, backdrop: 1, plateOpacity: 0.85, chartTexture: false };
+        const flat = (el: { props: { style: unknown } }) => StyleSheet.flatten(el.props.style) as Record<string, unknown>;
+        const fitted = (sheet: typeof plate & { fadedBackdrop?: number }) => {
+            const utils = render(<MapCanvas nodes={mockNodes} edges={mockEdges} sheet={sheet}><MockChildren /></MapCanvas>);
+            fireEvent(utils.getByTestId('map-canvas-wrapper'), 'layout', { nativeEvent: { layout: { width: 414, height: 896 } } });
+            utils.rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges} sheet={sheet}><MockChildren /></MapCanvas>);
+            return utils;
+        };
+
+        it('draws a faded copy twice: a tinted ground at full strength, then the plate at its own opacity', () => {
+            const utils = fitted({ ...plate, fadedBackdrop: 2 });
+            // The outermost match is the `Image` element itself, before the
+            // image mock resolves its source to a URI.
+            const ground = utils.UNSAFE_getAllByProps({ testID: 'map-backdrop-ground' })[0]!;
+            expect(ground.props.source).toBe(2);
+            expect(ground.props.tintColor).toBeTruthy();
+            expect(flat(ground).opacity).toBeUndefined();
+            const drawn = utils.UNSAFE_getAllByProps({ testID: 'map-backdrop' })[0]!;
+            expect(drawn.props.source).toBe(2);
+            expect(flat(drawn).opacity).toBe(0.85);
+        });
+
+        it('keeps a plate with no faded copy on a solid ground, hard-edged', () => {
+            const utils = fitted(plate);
+            expect(utils.queryByTestId('map-backdrop-ground')).toBeNull();
+            const drawn = utils.UNSAFE_getAllByProps({ testID: 'map-backdrop' })[0]!;
+            expect(drawn.props.source).toBe(1);
+            expect(flat(drawn).opacity).toBe(0.85);
+        });
+
+        it('lays the still fog under the pane, and two drift layers that cover it while sliding right one tile a loop', () => {
+            const { getByTestId, getAllByTestId } = fitted({ ...plate, fadedBackdrop: 2 });
+            expect(getByTestId('map-fog')).toBeTruthy();
+            const layers = getAllByTestId('map-fog-drift');
+            expect(layers).toHaveLength(2);
+            for (const layer of layers) {
+                const s = flat(layer) as { width: number; height: number; transform: { translateX: number }[] };
+                const tiles = React.Children.toArray(layer.props.children) as React.ReactElement<{ style: { width: number } }>[];
+                const tile = tiles[0]!.props.style.width;
+                // A loop runs from one tile left of the pane to flush with it
+                // (the timing mock lands it at the end), so the layer must reach
+                // a tile past the pane's right edge to cover the start.
+                expect(s.transform[0]!.translateX).toBe(0);
+                expect(s.width - tile).toBeGreaterThanOrEqual(414);
+                expect(s.height).toBeGreaterThanOrEqual(896);
+                expect(tiles).toHaveLength((s.width / tile) * (s.height / tile));
+            }
+        });
+
+        it('mounts no drift before the pane is measured, or with no sheet', () => {
+            const unmeasured = render(<MapCanvas nodes={mockNodes} edges={mockEdges} sheet={plate}><MockChildren /></MapCanvas>);
+            expect(unmeasured.queryAllByTestId('map-fog-drift')).toHaveLength(0);
+            const bare = render(<MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>);
+            fireEvent(bare.getByTestId('map-canvas-wrapper'), 'layout', { nativeEvent: { layout: { width: 414, height: 896 } } });
+            expect(bare.queryAllByTestId('map-fog-drift')).toHaveLength(0);
+            expect(bare.getByTestId('map-fog')).toBeTruthy();
+        });
+    });
+
     it('handles nodes with mixed availability states', () => {
         const mixedNodes: ExplorationNode[] = [
             {
