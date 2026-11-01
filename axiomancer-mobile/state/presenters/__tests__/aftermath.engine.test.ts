@@ -141,8 +141,8 @@ describe('selectAftermathViewModel', () => {
         });
         // Every loot entry reports `common`; equipment has no rarity axis.
         expect(vm?.kind === 'victory' && vm.rewards.loot).toEqual([
-            { name: 'Rusted Cutlass', slot: 'weapon', rarity: 'common' },
-            { name: 'Minor Healing Potion', slot: 'consumable', rarity: 'common' },
+            { itemId: 'eq-1', name: 'Rusted Cutlass', slot: 'weapon', rarity: 'common' },
+            { itemId: 'con-1', name: 'Minor Healing Potion', slot: 'consumable', rarity: 'common' },
         ]);
     });
 

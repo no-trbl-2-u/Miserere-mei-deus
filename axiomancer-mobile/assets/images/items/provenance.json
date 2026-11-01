@@ -1,0 +1,38 @@
+[
+  {
+    "generated_by": "scripts/slice-item-sheet.mjs",
+    "date": "2026-11-01",
+    "tool": "sharp, blob slicing of owner-supplied item sheets (spec 136, EQ3k)",
+    "covers": [
+      "weapon-opening-blade.png",
+      "armor-bracing-coat.png",
+      "weapon-siphoning-blade.png",
+      "armor-bloodward-mail.png",
+      "weapon-stormcaller-staff.png",
+      "armor-flame-guard.png",
+      "weapon-bulwark-mace.png",
+      "armor-scavengers-coat.png",
+      "weapon-humbling-rod.png",
+      "armor-mending-vestments.png",
+      "relic-disarming-plea.png",
+      "relic-crimson-circlet.png",
+      "relic-ruby-signet.png",
+      "relic-bleeding-signet.png",
+      "relic-elementalist-signet.png",
+      "relic-elementalist-brooch.png",
+      "relic-elementalist-belt.png",
+      "relic-thornback-signet.png",
+      "relic-mirror-brooch.png",
+      "relic-carapace-belt.png",
+      "minor-healing-potion.png",
+      "healing-potion.png",
+      "greater-healing-potion.png"
+    ],
+    "source": "T's item sheets: sheet-a-cool-silver.png (every icon but two) and sheet-d-ivory-lavender.png (the hammer and the scepter). Each icon is one 6x6 cell found by blob, centred on a transparent square with 6 px padding, resized to 256 px.",
+    "license": "open source (T, 2026-10-29, D115)",
+    "used_by": [
+      "components/icons/item-sprites.ts (registry: ITEM_SPRITES)"
+    ],
+    "post_process": "node scripts/slice-item-sheet.mjs --sheet A=<sheet-a> --sheet D=<sheet-d>"
+  }
+]

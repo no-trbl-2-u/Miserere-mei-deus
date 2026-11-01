@@ -7,6 +7,8 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { AxmIcon } from '@/components/icons/AxmIcon';
 import { getItemGlyph, getItemGlyphAccents, type ItemGlyphTable } from '@/components/icons/item-glyphs';
+import { getItemSprite, getItemSpriteLabel } from '@/components/icons/item-sprites';
+import { Image } from '@/lib/platform/image';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { EquipDeltaPanel } from '@/components/inventory/EquipDeltaPanel';
 import { rarityAffordance, rarityColors } from '@/components/inventory/rarityAffordance';
@@ -40,8 +42,9 @@ export function groupByCategory(items: readonly InventoryItemRow[]): Record<Inve
 export interface ItemGlyphProps {
     category: InventoryCategory;
     sub: string | null;
-    /** Engine item id. An id with an entry in the item glyph table draws that
-     *  icon; any other id (or none) draws the category glyph below. */
+    /** Engine item id. An id with a sprite (`ITEM_SPRITES`) draws T's picture;
+     *  one with an entry in the item glyph table draws that icon; any other id
+     *  (or none) draws the category glyph below. */
     itemId?: string | null;
     /** Test seam: the table to resolve against (defaults to `ITEM_GLYPH_BY_ID`). */
     glyphs?: ItemGlyphTable;
@@ -51,6 +54,22 @@ export interface ItemGlyphProps {
 
 export function ItemGlyph({ category, sub, itemId, glyphs, size }: ItemGlyphProps) {
     const AXM = usePalette();
+    // T's sheet picture wins when the id has one. A test's fixture glyph table
+    // opts out: it names its own icons.
+    const sprite = glyphs === undefined ? getItemSprite(itemId) : null;
+    if (sprite !== null) {
+        const px = size ?? 28;
+        return (
+            <Image
+                source={sprite}
+                style={{ width: px, height: px }}
+                contentFit="contain"
+                transition={0}
+                accessibilityRole="image"
+                accessibilityLabel={getItemSpriteLabel(itemId) ?? 'Item icon'}
+            />
+        );
+    }
     const byId = getItemGlyph(itemId, glyphs);
     if (byId !== null) {
         // Accents only ride the production table: a test's fixture table names

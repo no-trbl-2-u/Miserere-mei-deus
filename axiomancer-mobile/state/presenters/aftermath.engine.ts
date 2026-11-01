@@ -28,6 +28,8 @@ import { getMapLayout } from '@/state/exploration-maps';
  * the design's `RarityRail` + `ItemGlyph` rendering.
  */
 export interface AftermathLootEntry {
+    /** Engine item id: lets the row draw the item's own sprite (EQ3k). */
+    itemId?: string;
     name: string;
     slot: string;
     rarity: 'common' | 'uncommon' | 'rare' | 'unique';
@@ -43,8 +45,8 @@ function toAftermathLootEntry(item: Item): AftermathLootEntry {
     // Equipment has no rarity axis; every item reports as `common` for the
     // aftermath loot list.
     return isEquipment(item)
-        ? { name: item.name, slot: item.slot, rarity: 'common' }
-        : { name: item.name, slot: item.category, rarity: 'common' };
+        ? { itemId: item.id, name: item.name, slot: item.slot, rarity: 'common' }
+        : { itemId: item.id, name: item.name, slot: item.category, rarity: 'common' };
 }
 
 /**
