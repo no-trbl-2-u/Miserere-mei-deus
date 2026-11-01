@@ -67,6 +67,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
+- category: process
+- impact: 5
+- ease: 5
+- detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
+- next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
+
 ### [ ] [debt] Carry-overs of the ten pre-revamp partial rows, archived as dropped at the nexus v2 cut-over (NX1d, ruling R7, 2026-11-01)
 - category: debt
 - impact: 2

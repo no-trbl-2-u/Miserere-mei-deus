@@ -29,6 +29,13 @@ const COPIED_SCRIPTS = [
   'deadlines-merge.mjs',
   'deadlines.mjs',
   'lessons-merge.mjs',
+  // check-deadlines reads plan/pending/ through the kit's plan modules (phase NX1e).
+  'owner.mjs',
+  'plan/config.mjs',
+  'plan/footguns.mjs',
+  'plan/pending.mjs',
+  'plan/settle.mjs',
+  'plan/settled.mjs',
 ]
 
 const read = (dir, rel) => fs.readFileSync(path.join(dir, rel), 'utf8')
@@ -102,7 +109,7 @@ function scratch(base) {
   git(work, 'config', 'user.name', 't')
   git(work, 'switch', '-q', '-c', 'main')
   fs.mkdirSync(path.join(work, 'plan'), { recursive: true })
-  fs.mkdirSync(path.join(work, 'scripts'), { recursive: true })
+  fs.mkdirSync(path.join(work, 'scripts', 'plan'), { recursive: true })
   const specs = fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => /^\d{2,}-[a-z0-9][a-z0-9-]*\.md$/.test(n)).map((n) => `plan/${n}`)
   for (const f of ['.gitattributes', 'LIVE_DEADLINES.md', 'plan/README.md', ARCHIVE, DEADLINES, ...specs]) write(work, f, fs.readFileSync(path.join(ROOT, f), 'utf8'))
   for (const f of COPIED_SCRIPTS) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(work, 'scripts', f))

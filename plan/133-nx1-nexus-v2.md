@@ -101,23 +101,6 @@ PR that the review merges, and the first nexus-sync PR opens (or reports nothing
 
 ### Chunk notes (the brief's phase blocks)
 
-#### NX1e (chunk 133.5)
-
-Closes A9. Requires NX1d. Size: L.
-
-Scope: `skills/next/land.md` (our branch, labels, pending files), `scripts/pr-merge.mjs` (settle a
-merged PR's `plan/pending/` files on main), `pr-autofix.yml`, `pr-resolve.yml` and the cap rule (the
-`loop/next-` branches), `scripts/loop-pr.test.mjs`.
-
-Consumers: `/next`, `/pilot`, the merge job.
-
-Tests: a scratch-repo run of land: the PR has the branch and labels; a merged PR's pending file is
-settled on main; the cap counts the PR.
-
-Verify gate: root `npm test`.
-
-Measure: the scratch-repo land and settle tests pass.
-
 #### NX1f (chunk 133.6)
 
 Closes A10. Requires NX1d. Size: M.
@@ -184,10 +167,6 @@ None. No game save, engine type or Worker route changes.
 
 ## Acceptance
 
-- **A9** v2's land step (`skills/next/land.md`) lands code as a `loop:pr` PR on `loop/next-<chunk>` with
-  the size, area and review labels; plan changes ride in the PR as `plan/pending/` files, never a push to
-  main; the merge job settles a merged PR's pending files on main; the PR cap, `pr-autofix` and
-  `pr-resolve` see these PRs as they see today's.
 - **A11** `/pilot` exists (`skills/pilot.md`, `.claude/commands/pilot.md`): nexus's heads-down frame
   (plan read from origin, the two question gates, claims, the ledger and `/reboot-resume`, the end gate,
   `progress.mjs`) around our wave scheduler (the dependency map, one background worker per chunk in its
@@ -230,7 +209,6 @@ None. No game save, engine type or Worker route changes.
 
 Measure: 5 open · 9 closed · next A15
 
-- [ ] **133.5** v2's landing, our PRs · L · closes A9 · needs — · alias: NX1e
-- [ ] **133.7** /pilot · L · closes A11 · needs 133.5 · alias: NX1g
+- [ ] **133.7** /pilot · L · closes A11 · needs — · alias: NX1g
 - [ ] **133.8** The weekly nexus sync · M · closes A12, A14 · needs — · alias: NX1h
-- [ ] **133.9** The loop back on (attended) · S · closes A13 · needs 133.5 · alias: NX1i
+- [ ] **133.9** The loop back on (attended) · S · closes A13 · needs — · alias: NX1i

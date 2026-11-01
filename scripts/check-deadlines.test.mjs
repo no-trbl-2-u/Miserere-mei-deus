@@ -327,6 +327,36 @@ test('NX1c: readPlanSources reads the build plan, every NN-<slug>.md spec, the r
     }
 })
 
+test('NX1e: a chunk closed in plan/pending/ counts as done, and a pending roadmap edit is read as settled', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deadlines-pending-'))
+    try {
+        fs.mkdirSync(path.join(dir, 'plan', 'pending'), { recursive: true })
+        fs.writeFileSync(path.join(dir, 'plan', '21-carried.md'), SPEC)
+        // 21.4's Held line arrives through a pending edit (a plot's), not on disk.
+        const held = "- **21.4** · owner-led · since: 2026-11-11 · until: T's word · max_age: 30d"
+        fs.writeFileSync(path.join(dir, 'plan', 'README.md'), README.replace(`${held}\n`, ''))
+        fs.writeFileSync(path.join(dir, 'plan', 'ARCHIVE.md'), ARCHIVE)
+        fs.writeFileSync(path.join(dir, 'plan', 'pending', 'plot-owner.md'), [
+            '---', 'date: 2026-11-01', '---', '## Edit plan/README.md', '~~~ old',
+            '- **21.2** · T plays it · since: 2026-11-11 · until: 2026-11-20 · max_age: 14d', '~~~', '~~~ new',
+            '- **21.2** · T plays it · since: 2026-11-11 · until: 2026-11-20 · max_age: 14d', held, '~~~', '',
+        ].join('\n'))
+        assert.deepEqual(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), readPlanSources(dir)), [])
+        // An Item may name 21.4 (X1) in Rows only while it waits on T: its pending Held line says so.
+        const ownerAct = [...COVER_ALL, '| [ ] | 2026-10-26 | Owner act | W1 | X1 |']
+        assert.deepEqual(checkDeadlines(deadlines(ownerAct, '- P1 — pre-revamp partial.'), readPlanSources(dir)), [])
+        // The close of 21.1 (alias A1) rides in the PR as a pending file: the Item it finishes must say so.
+        fs.writeFileSync(path.join(dir, 'plan', 'pending', '21.1.md'), '---\nclose: 21.1\ndate: 2026-11-01\nsays: the open work\n---\n')
+        const sources = readPlanSources(dir)
+        assert.deepEqual([...sources.pending], ['21.1'])
+        assert.match(checkDeadlines(deadlines(COVER_ALL, EXCUSE_REST), sources)[0], /Item "Loop work" has Status \[ \], but its rows say \[x\]/)
+        const ticked = [COVER_ALL[0].replace('| [ ] |', '| [x] |'), COVER_ALL[1]]
+        assert.deepEqual(checkDeadlines(deadlines(ticked, EXCUSE_REST), sources), [])
+    } finally {
+        fs.rmSync(dir, { recursive: true, force: true })
+    }
+})
+
 // A9 (phase DL1c): a superseded premise is the drift no rule above sees, so the guard is a procedure step in
 // the two skills that change the queue. Pin that the step is there, in the step that mutates the queue, and
 // that the commit stages the file it edits.

@@ -116,9 +116,10 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 3. **Land.** Every change lands by PR (D119): code as a
    `loop:pr` PR that the review merges, and `plot`,
    `review:rules-change` and `nexus-sync` PRs that T merges.
-   Until phase NX1e adapts v2's land step (`skills/next/land.md`)
-   to that, the loop stays off (`march` and `night` disabled) and
-   nobody runs `/next` unattended.
+   Plan changes ride in the PR as `plan/pending/` files, and the
+   merge job settles them here once it merges (phase NX1e,
+   `skills/next/land.md`'s local block). The loop stays off
+   (`march` and `night` disabled) until NX1i.
 4. **Bearings.** `bearings.md` holds stack pins, contracts,
    visual defaults, the sub-agent registry and standing
    decisions. Read once per session, with `docs/game-model.md`

@@ -204,10 +204,12 @@ export const parseArchiveAliases = (archive) =>
  * aliases, in the shape parsePhaseRows returns plus the file each came from.
  * `errors` names every id given two homes: an alias on two chunks (or twice on one),
  * on a chunk and an archive line, or an alias that is also a build-plan row.
- * @param {{buildPlan?: string | null, specs?: {file: string, md: string}[], readme?: string | null, archive?: string | null}} sources
+ * `pending` holds the chunk ids a `plan/pending/` file closes (phase NX1e): such a chunk
+ * reads as shipped while its line still waits in the spec for settle.
+ * @param {{buildPlan?: string | null, specs?: {file: string, md: string}[], readme?: string | null, archive?: string | null, pending?: Set<string>}} sources
  * @returns {{phases: Map<string, {status: string, shipped: boolean, open: boolean, waitsOnT: boolean, requires: string[], source: string}>, errors: string[]}}
  */
-export const planRows = ({ buildPlan = null, specs = [], readme = null, archive = null }) => {
+export const planRows = ({ buildPlan = null, specs = [], readme = null, archive = null, pending = new Set() }) => {
     const phases = new Map()
     const homes = new Map()
     const home = (id, where) => homes.set(id, [...(homes.get(id) ?? []), where])
@@ -219,15 +221,20 @@ export const planRows = ({ buildPlan = null, specs = [], readme = null, archive 
     }
     const held = parseHeld(readme)
     const chunks = specs.flatMap(({ file, md }) => parseSpecChunks(md).filter((c) => !c.ticked).map((c) => ({ ...c, file })))
-    const live = new Set(chunks.map((c) => c.chunk))
+    // A chunk closed by a plan/pending/ file is done from the moment the file is on the branch (v2's
+    // rule): its line stays in the spec until settle takes it out on main, but it is no longer live.
+    const closed = (c) => pending.has(c.chunk)
+    const live = new Set(chunks.filter((c) => !closed(c)).map((c) => c.chunk))
     const firstAlias = new Map(chunks.map((c) => [c.chunk, c.aliases[0] ?? c.chunk]))
-    const needOpen = (need) => (need.includes('.') ? live.has(need) : chunks.some((c) => c.chunk.startsWith(`${need}.`)))
+    const needOpen = (need) => (need.includes('.') ? live.has(need) : [...live].some((id) => id.startsWith(`${need}.`)))
     for (const c of chunks) {
         const requires = c.needs.filter(needOpen).map((need) => firstAlias.get(need) ?? need)
         for (const id of c.aliases) {
             home(id, `${c.file} chunk ${c.chunk}`)
             if (phases.has(id)) continue
-            phases.set(id, { status: ' ', shipped: false, open: true, waitsOnT: c.attended || held.has(c.chunk), requires, source: c.file })
+            phases.set(id, closed(c)
+                ? { status: 'x', shipped: true, open: false, waitsOnT: false, requires: [], source: `plan/pending/${c.chunk}.md` }
+                : { status: ' ', shipped: false, open: true, waitsOnT: c.attended || held.has(c.chunk), requires, source: c.file })
         }
     }
     for (const a of parseArchiveAliases(archive)) {

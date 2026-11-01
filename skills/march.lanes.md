@@ -59,9 +59,10 @@ cap, landing a change, the size, area and review labels, the PR body,
 acceptance proofs, the CI watch, gate distances and the retro. Every
 `skills/march.md` §3 "<name>" reference in the repo now means the
 section of that name below. No lane runs them; `/next` and the other
-committing skills read them when they land. Phase NX1e folds the
-landing pieces into `skills/next/land.md`; until then the loop is off
-(`march` and `night` disabled), so nothing lands by v2's owner path.
+committing skills read them when they land. Since phase NX1e,
+`skills/next/land.md` carries a marked local block that points here:
+v2's contributor path (its §2, §4 and §6) is the base, and these notes
+are what Miserere adds to it; v2's owner path (§1, §3) never runs.
 Superseded at the cut-over and left out: the v1 "Pickable phase" and
 "Claims" sections (v2's pick order, `scripts/plan/order.mjs`, and
 claims, `scripts/claims.mjs`; TAKE), and the v1 procedure (v2's
@@ -169,16 +170,49 @@ also lists in its output:
   each: its slug, what T does, and `seen N×`.
 
 
-### Landing a change (the PR flow, D84–D87)
+### Landing a change (the PR flow, D84–D87, D119)
 
-A diff is **plan-only** when every path is under `plan/`,
-`telemetry/`, `docs/reports/` or `devlog/entries/`. Plan-only commits (queue rows, pass
-counters, lessons, build-plan bookkeeping) commit and `git push
-origin main` as before. The one plan-only exception is `/plot`: it
-opens a `plot` PR so T reviews its recommendation first (D93,
-`skills/plot.md` Step 5); a `plot` PR is not a `loop:pr` PR, so it
-neither counts toward the cap nor claims a row. **Anything else
-lands by PR:**
+**Every change lands by PR** (D119, which ended D84's path split).
+Code, and the plan changes that record it, go on a
+`loop/<verb>-<slug>` branch (`loop/next-<chunk id>` for `/next`) as a
+`loop:pr` PR the review merges (D95). `plot`, `review:rules-change` and
+`nexus-sync` PRs wait for T (D93, D101, D119). `/plot` opens a `plot`
+PR, not a `loop:pr` one (`skills/plot.md` §7.1), so it neither counts
+toward the cap nor claims a row.
+
+**Plan changes ride in the PR as `plan/pending/` files** (phase NX1e;
+`plan/pending/README.md`, `skills/next/land.md` §2): a branch never
+edits `plan/README.md`, a spec's chunk list or `ARCHIVE.md`. A chunk's
+close is `plan/pending/<chunk id>.md`; a plot's roadmap row, Held lines
+and new work for an open spec are `plan/pending/plot-<slug>.md`. After
+the merge, the push to main runs `pr-resolve`'s scan, which settles
+first (`node scripts/pr-merge.mjs settle`, `scripts/pr-settle.mjs`):
+the kit's settle folds every pending file in, the archive line gets
+the chunk's `(alias: …)` and `(#<PR>)`, and one `plan: settle <ids>`
+commit is pushed to main. So two PRs never collide in the roadmap or a
+spec. Until it settles, every reader (plan-check, `order.mjs`, the
+deadline tools) counts a pending close as closed. What a Miserere
+pending file leaves out: `footguns:` and `## Footguns` (no footgun list
+here: a trap is a `plan/lessons.md` row), `## Decisions` (D-entries go
+in the decisions log in the PR) and `## Notes`. A close of a Held chunk
+carries an `## Edit plan/README.md` that takes its Held line out
+(settle tidies only the Asap lane and the table). Files with a merge of
+their own are still edited in the PR: a new file (a spec, a part plan),
+the union queues, `plan/lessons.md`, `plan/NEEDS_T.md`,
+`plan/deadlines.md` and the telemetry shard.
+
+`node scripts/loop-land.mjs open` does the push and the `gh pr create`
+below in one step: it refuses a HEAD off the named branch, pushes to an
+open PR for it instead of opening a second, stops at the cap (exit 3,
+"waiting on T") and hands the claim to the PR:
+
+```bash
+node scripts/loop-land.mjs open --verb <verb> --slug <slug> --size <S|M|L> \
+  --area <area> [--area <area>] [--review <rules-change|plan-only|needs-T>] \
+  --title "<subject naming the claim>" --body-file "$body" [--chunk <id>]
+```
+
+By hand, the same steps:
 
 ```bash
 git fetch origin main
@@ -239,9 +273,9 @@ gh pr checks "loop/<verb>-<slug>" --repo "$GH_REPO" --required --watch --fail-fa
 - **One PR per tick**, never one per fix. Each PR carries only this
   session's telemetry shard, so two PRs never add the same file
   (lesson `telemetry-add-add`). The plan-only commits that
-  record the PR's own work (the build-plan tick, the AUDIT or
+  record the PR's own work (the pending close, the AUDIT or
   CRITIQUE row it closes, the retro) ride in the PR; unrelated queue
-  bookkeeping pushes `main`.
+  bookkeeping is not this PR's.
 - **Body template** (`scripts/loop-pr.test.mjs` pins its shape):
 
   ```markdown
@@ -351,16 +385,15 @@ in the `plan/lessons.md` header; `scripts/check-lessons.mjs` lints it.
 The v1 `skills/ship-a-phase.md` retired at the cut-over (v2's `/next`
 and `/ship-a-chunk` build a chunk; `docs/nexus-deviations.md` row
 "ship-a-phase: TAKE the shape"). What it carried that the kit's land
-step does not is kept here, word for word, until phase NX1e folds it
-into `skills/next/land.md`: the phase mirror issue, the PR with its
+step does not is kept here, and `skills/next/land.md`'s local block
+points at it (phase NX1e): the phase mirror issue, the PR with its
 labels and `Closes #N`, the deadlines rewrite on close (DL1b), the
 check watch, the claim release and the retro. Read "phase" and "row" as
-the chunk (its alias names it in titles), the row's `- pr:` field as
-the chunk's `pr:` sub-bullet, and "flip the row to `[x]`" as v2's close
-(the chunk line out of its spec, an `ARCHIVE.md` line carrying its
-alias, the spec's `Measure:` updated). The truth-source, order of
-authority, save and verify rules it pointed at are AGENTS.md §
-Building a phase.
+the chunk (its alias names it in titles). The close is v2's pending
+file (Step 11), never an edit of the spec or `ARCHIVE.md`: settle takes
+the chunk line out on main after the merge and writes the archive line
+with its alias and PR. The truth-source, order of authority, save and
+verify rules it pointed at are AGENTS.md § Building a phase.
 
 #### Step 2.5 — Mirror the phase to GitHub
 
@@ -416,8 +449,9 @@ If the open succeeded, capture `$PHASE_ISSUE` for use in Step 10
 #### Step 10 — Branch, commit, open the PR
 
 Land it per `skills/march.md` §3 "Landing a change". The branch
-`loop/ship-<N>-<slug>` is cut from a fresh `origin/main` before
-Step 4's first edit (do it there; it is described here once).
+`loop/next-<chunk id>` (`/next`, `/ship-a-chunk`) is cut from a fresh
+`origin/main` before the first edit (`skills/next/build.md` §1 with
+`--branch loop/next-<id>`; it is described here once).
 
 Stage explicitly. Conventional subject; body in 4–8 bullets
 describing what shipped + what the user can now do, plus a
@@ -430,25 +464,27 @@ git commit -m "<type>: <one-line summary> — phase <N>" -m "<bullets + Decision
 
 **No attribution trailers. No emojis** (AGENTS.md rule 2).
 
-#### Step 11 — Tick the DoD (inside the PR)
+#### Step 11 — Close the chunk (inside the PR)
 
-The build-plan row stays `[ ]` with a `- pr: #<PR>` field (the
-`- issue:` field's shape) while the PR is open. The PR's **last
-commit** flips it to `[x] (#<PR>)` so T's merge ticks it, and in the
-same commit re-derives the deadline Items' Status cells: if the flip
-finishes an Item, `scripts/check-deadlines.mjs` fails the root `npm
-test` until `plan/deadlines.md` says so (phase DL1b). A row listed under
-`## Unscheduled` instead loses that line in the same commit; the check
-reads a closed row's line as naming no row:
+The PR's **last commit** is the close: `plan/pending/<chunk id>.md`
+(`skills/next/land.md` §2; `close`, `date`, `says`), which counts the
+chunk closed from that commit on and which the merge job settles on
+main once the PR merges. The chunk's spec, `plan/README.md` and
+`ARCHIVE.md` are not touched. In the same commit re-derive the deadline
+Items' Status cells: the deadline tools read a pending close as done, so
+if it finishes an Item, `scripts/check-deadlines.mjs` fails the root
+`npm test` until `plan/deadlines.md` says so (phase DL1b). A chunk listed
+under `## Unscheduled` loses that line in the same commit:
 
 ```bash
 node scripts/deadlines.mjs --write && git checkout -- LIVE_DEADLINES.md
-git add plan/steps/01_build_plan.md plan/deadlines.md
-git commit -m "plan: phase <N> shipped — <one-line>" -m "Closes #<phase-issue-number>"
-git push -u origin "loop/ship-<N>-<slug>"
-gh pr create --repo "$GH_REPO" --base main --head "loop/ship-<N>-<slug>" \
+git add plan/pending/<chunk id>.md plan/deadlines.md
+git commit -m "plan: close <chunk id> — <one-line>" -m "Closes #<phase-issue-number>"
+git push -u origin "loop/next-<chunk id>"
+gh pr create --repo "$GH_REPO" --base main --head "loop/next-<chunk id>" \
   --label loop:pr --label "size:<S|M|L>" --label "area:<area>" \
-  --title "<type>: <summary> — phase <N>" --body-file "$body"
+  --title "<type>: <summary> (<alias>)" --body-file "$body"
+# or both lines at once: node scripts/loop-land.mjs open --verb next --slug <chunk id> ...
 # area:* from the files touched (several if the phase spans areas), from the
 # closed list in skills/march.md §3: combat, cards, ui, mobile, ci, loop; add
 # --label review:rules-change when the phase changes cards, rules, prices
@@ -459,13 +495,10 @@ The body follows the template in `skills/march.md` §3: What shipped,
 What T can now do, Decisions, Acceptance (the brief's `A1…` IDs this
 phase closes, ticked, each naming its proof or `(no test: <reason>)`;
 `verify-gate` fails an unproven line, phase LG1c, and the `judge` job runs every named proof, phase LG1f), Verify (the Step 9 commands and results), and
-`Closes #<phase-issue-number>` as the last line. Record the PR number
-on the row in the same commit if you know it, or leave `- pr:` for
-the next tick to fill. Never predict it: the pre-push hook makes the
-row commit land before `gh pr create`, and issues and other sessions
-share the number sequence (ship RW1b guessed #946 and got #947). Fill
-the number in a follow-up commit, carrying the same `Closes` trailer,
-once `gh pr create` prints it.
+`Closes #<phase-issue-number>` as the last line. The PR number is
+never written by hand: settle reads it from the merge commit for the
+archive line. Never predict it either (issues and other sessions share
+the number sequence; ship RW1b guessed #946 and got #947).
 
 #### Step 12 — Watch the PR's checks
 

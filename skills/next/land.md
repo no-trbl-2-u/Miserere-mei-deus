@@ -4,6 +4,18 @@ The core procedure is `skills/next.md`. Owner mode is a switch
 on the checkout (`scripts/owner.mjs`): it decides how work
 lands, never which verbs run. Budget: 120 lines.
 
+<!-- miserere:local: Miserere's own landing (D119), kept by every sync; docs/nexus-deviations.md § Carried -->
+**Miserere.** No checkout is the owner's, so every run takes
+§4 and §6 and never §1 or §3; detail in `skills/march.lanes.md`
+notes "Landing a change". The branch is `loop/next-<id>`
+(`loop/<verb>-<slug>` elsewhere); `scripts/loop-land.mjs open`
+pushes it and opens the `loop:pr` PR with its size, area and
+review labels, stopping at the cap (5). The pending close
+rides in the PR; the merge job settles it on main
+(`node scripts/pr-merge.mjs settle`, from `pr-resolve`'s scan).
+`plot`, `review:rules-change` and `nexus-sync` PRs wait for T.
+<!-- /miserere:local -->
+
 ## 1. Settle at orient (owner only)
 
 ```bash
