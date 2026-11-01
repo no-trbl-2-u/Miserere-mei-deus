@@ -7,8 +7,13 @@
  * The line is the card's own wording (`paidFaceLine`, `docs/card-voice.md`):
  * keywords in capitals, numbers, and a few lowercase logic words. Keywords
  * and numbers print in the condensed capital face, the logic words in the
- * serif, so a reader tells `DEAL` from `or` at a glance. Pure.
+ * serif, so a reader tells `DEAL` from `or` at a glance. In glyph mode
+ * (`Settings > Card text`) each keyword that has a glyph becomes a glyph run
+ * and nothing else changes. Pure.
  */
+
+import type { CardTextMode } from '../settings';
+import { glyphKeywordFor, type GlyphKeyword } from './keyword-glyph.engine';
 
 /** The PAID line's size on a small face. */
 export const PAID_LINE_SIZE = 10;
@@ -27,12 +32,18 @@ const CAPS_EM = 0.4;
 const SERIF_EM = 0.41;
 /** A space, per px of size. */
 const SPACE_EM = 0.24;
+/** A glyph's edge per px of text size: a little taller than the capitals. */
+export const GLYPH_EM = 1.25;
+/** Air on each side of an inline glyph, in px. */
+export const GLYPH_GAP = 1;
 
 /** One typeface run of a line. */
 export interface PaidRun {
     text: string;
     /** True for a keyword, number or `X` (condensed capitals). */
     caps: boolean;
+    /** Set in glyph mode on a keyword that has a glyph: draw it instead of `text`. */
+    glyph?: GlyphKeyword;
 }
 
 const CAPS_RUN = /([A-Z]{2,}|[+−]?\d+[%×]?|\bX\b)/;
@@ -43,18 +54,25 @@ const CAPS_RUN = /([A-Z]{2,}|[+−]?\d+[%×]?|\bX\b)/;
  *
  * @example paidLineRuns('DEAL 6 or 14') // DEAL, ' ', 6, ' or ', 14
  */
-export function paidLineRuns(line: string): PaidRun[] {
+export function paidLineRuns(line: string, mode: CardTextMode = 'words'): PaidRun[] {
     const runs: PaidRun[] = [];
     // `split` with one capture group alternates serif, caps, serif, caps, ...
     line.split(CAPS_RUN).forEach((text, i) => {
-        if (text !== '') runs.push({ text, caps: i % 2 === 1 });
+        if (text === '') return;
+        const caps = i % 2 === 1;
+        const glyph = caps && mode === 'glyphs' ? glyphKeywordFor(text) : null;
+        runs.push(glyph ? { text, caps, glyph } : { text, caps });
     });
     return runs;
 }
 
-function wordWidth(word: string, size: number): number {
+function wordWidth(word: string, size: number, mode: CardTextMode): number {
     let w = 0;
-    for (const run of paidLineRuns(word)) {
+    for (const run of paidLineRuns(word, mode)) {
+        if (run.glyph) {
+            w += GLYPH_EM * size + 2 * GLYPH_GAP;
+            continue;
+        }
         const n = [...run.text].length;
         w += run.caps ? n * (CAPS_EM * size + PAID_CAPS_SPACING) : n * SERIF_EM * size;
     }
@@ -65,12 +83,12 @@ function wordWidth(word: string, size: number): number {
  * How many rows `line` takes at `size` in `room` px, wrapping at spaces. A
  * word wider than the room counts the rows it would break across.
  */
-export function paidLineRows(line: string, size: number, room: number): number {
+export function paidLineRows(line: string, size: number, room: number, mode: CardTextMode = 'words'): number {
     const space = SPACE_EM * size;
     let rows = 1;
     let used = 0;
     for (const word of line.split(' ').filter(Boolean)) {
-        const w = wordWidth(word, size);
+        const w = wordWidth(word, size, mode);
         if (used > 0 && used + space + w > room) {
             rows += 1;
             used = 0;
@@ -97,11 +115,11 @@ export function paidLineRoom(width: number): number {
  * {@link PAID_LINE_FLOOR} that does (the floor when none does; the third row
  * then ends in an ellipsis and the large face prints the whole line).
  */
-export function paidLineFit({ width, line }: { width: number; line: string }): { size: number; rows: number } {
+export function paidLineFit({ width, line, mode = 'words' }: { width: number; line: string; mode?: CardTextMode }): { size: number; rows: number } {
     const room = paidLineRoom(width);
     for (let size = PAID_LINE_SIZE; size >= PAID_LINE_FLOOR; size -= 1) {
-        const rows = paidLineRows(line, size, room);
+        const rows = paidLineRows(line, size, room, mode);
         if (rows <= PAID_LINE_ROWS) return { size, rows };
     }
-    return { size: PAID_LINE_FLOOR, rows: paidLineRows(line, PAID_LINE_FLOOR, room) };
+    return { size: PAID_LINE_FLOOR, rows: paidLineRows(line, PAID_LINE_FLOOR, room, mode) };
 }

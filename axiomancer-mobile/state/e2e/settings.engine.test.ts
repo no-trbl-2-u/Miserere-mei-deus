@@ -48,6 +48,26 @@ describe('sanitizeSettings', () => {
     });
 });
 
+describe('cardText', () => {
+    it('defaults to words, and a save written before it existed reads as words', () => {
+        expect(DEFAULT_SETTINGS.cardText).toBe('words');
+        expect(sanitizeSettings({ musicVolume: 30 }).cardText).toBe('words');
+        expect(sanitizeSettings({ cardText: 'pictures' }).cardText).toBe('words');
+        expect(sanitizeSettings({ cardText: 'glyphs' }).cardText).toBe('glyphs');
+    });
+
+    it('is kept across a restart: written by set, read back by hydrate, and reset returns to words', async () => {
+        const storage = fakeStorage();
+        const first = createSettingsStore({ storage });
+        first.set({ cardText: 'glyphs' });
+        const restarted = createSettingsStore({ storage });
+        await restarted.hydrate();
+        expect(restarted.get().cardText).toBe('glyphs');
+        restarted.reset();
+        expect(restarted.get().cardText).toBe('words');
+    });
+});
+
 describe('musicOn', () => {
     it('reads as on in a save written before it existed, and keeps a stored off', () => {
         expect(sanitizeSettings({ musicVolume: 30 }).musicOn).toBe(true);

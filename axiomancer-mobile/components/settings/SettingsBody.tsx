@@ -26,6 +26,7 @@ import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { useRouter } from '@/lib/platform/router';
 import { useSaveSlots, useSaveSlotSummaries } from '@/state/SaveSlotsProvider';
 import {
+    CARD_TEXT_OPTIONS,
     FEEDBACK_COPY,
     REDUCED_MOTION_OPTIONS,
     SETTINGS_COPY,
@@ -97,6 +98,14 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     value={vm.textScale}
                     onChange={(textScale) => settingsStore.set({ textScale })}
                     testID="settings-text-scale"
+                />
+                <OptionRow
+                    label={SETTINGS_COPY.cardText}
+                    hint={SETTINGS_COPY.cardTextHint}
+                    options={CARD_TEXT_OPTIONS}
+                    value={vm.cardText}
+                    onChange={(cardText) => settingsStore.set({ cardText })}
+                    testID="settings-card-text"
                 />
 
                 <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.motion}</SectionLabel>

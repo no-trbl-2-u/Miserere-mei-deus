@@ -44,7 +44,7 @@ describe('/settings', () => {
         mount(false);
         expect(screen.getByTestId('theme-switcher')).toBeTruthy();
         expect(screen.getByTestId('theme-ashen-gold')).toBeTruthy();
-        for (const id of ['settings-text-scale', 'settings-reduced-motion', 'settings-haptics', 'settings-music-on', 'settings-music', 'settings-feedback', 'settings-sfx', 'settings-story-mode', 'settings-reset']) {
+        for (const id of ['settings-text-scale', 'settings-card-text', 'settings-reduced-motion', 'settings-haptics', 'settings-music-on', 'settings-music', 'settings-feedback', 'settings-sfx', 'settings-story-mode', 'settings-reset']) {
             expect(screen.getByTestId(id)).toBeTruthy();
         }
         // Story mode is listed but not yet a choice.
@@ -59,6 +59,15 @@ describe('/settings', () => {
         act(() => { fireEvent.press(screen.getByTestId('settings-reduced-motion-on')); });
         act(() => { fireEvent.press(screen.getByTestId('settings-haptics-false')); });
         expect(settings.get()).toEqual({ ...DEFAULT_SETTINGS, textScale: 1.3, reducedMotion: 'on', haptics: false });
+    });
+
+    it('Card text is Words until Glyphs is pressed, and writes the store', () => {
+        const { settings } = mount(false);
+        expect(settings.get().cardText).toBe('words');
+        act(() => { fireEvent.press(screen.getByTestId('settings-card-text-glyphs')); });
+        expect(settings.get().cardText).toBe('glyphs');
+        act(() => { fireEvent.press(screen.getByTestId('settings-card-text-words')); });
+        expect(settings.get().cardText).toBe('words');
     });
 
     it('volume steppers move by 10 and clamp', () => {

@@ -49,7 +49,10 @@ import type {
     CombatMomentumV2VM,
 } from '@/state/presenters/combat-encounter.engine';
 import { armedValue, dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
-import { paidLineFit, paidLineRuns, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
+import { paidLineFit, paidLineRuns, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
+import { glyphKeywordFor } from '@/state/presenters/keyword-glyph.engine';
+import { KeywordGlyph } from '@/components/keyword-glyphs';
+import { useSetting } from '@/state/settings';
 import { globalDurationLine } from '@/state/presenters/card-program.engine';
 // The ONE mobile source for the rarity band. The face never
 // re-bands a rank and never re-types a rarity hue; see `card-rarity.engine.ts`.
@@ -1844,6 +1847,8 @@ const FREE_PILL_GLYPH_LARGE = 20;
 /** Extra top padding the name band takes when the pill sits over it. */
 const FREE_PILL_BAND_PAD = 12;
 const FREE_PILL_BAND_PAD_LARGE = 16;
+/** The keyword glyph beside the word on the large face. */
+const LARGE_GLYPH = 20;
 
 export const CombatCardFace = React.memo(function CombatCardFace({
     card, width, height, large = false, accent = null, heroOverride, children,
@@ -1860,6 +1865,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
 }) {
     const AXM = usePalette();
     const styles = useStyles();
+    const cardText = useSetting('cardText');
     const f = card.face;
     // STANCE colours the frame, the free pill and the die cube; the stat
     // family (or CATEGORY) colours the keyword. Inert cards grey both honestly.
@@ -1886,7 +1892,9 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     // The small face prints the whole PAID line, wrapped to three rows at 10pt
     // (`paidLineFit` shrinks a line too long for that); the large face keeps its
     // own keyword-and-value ledger and states a Global's duration under it.
-    const paidFit = large ? null : paidLineFit({ width, line: f.paidLine });
+    const paidFit = large ? null : paidLineFit({ width, line: f.paidLine, mode: cardText });
+    // The open card shows a keyword's glyph beside its word in both modes, so a glyph is learnt once.
+    const keywordGlyph = glyphKeywordFor(f.keyword);
     const bandH = large ? 36 : 26;
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.
@@ -1992,6 +2000,11 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                                 allowFontScaling={false}
                                 testID="combat-card-face-paid-line"
                             >
+                                {keywordGlyph ? (
+                                    <View style={styles.paidGlyphLarge}>
+                                        <KeywordGlyph keyword={keywordGlyph} size={LARGE_GLYPH} color={accent ?? undefined} />
+                                    </View>
+                                ) : null}
                                 {keywordText ? (
                                     <Text
                                         style={[styles.paidKeyword, styles.paidKeywordLarge, { color: kwColor }]}
@@ -2032,7 +2045,11 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                             accessibilityLabel={f.paidLine}
                             testID="combat-card-face-paid-line"
                         >
-                            {paidLineRuns(f.paidLine).map((run, i) => (
+                            {paidLineRuns(f.paidLine, cardText).map((run, i) => run.glyph ? (
+                                <View key={i} style={{ marginHorizontal: GLYPH_GAP }} testID="combat-card-face-glyph">
+                                    <KeywordGlyph keyword={run.glyph} size={Math.round(GLYPH_EM * paidFit!.size)} color={accent ?? undefined} />
+                                </View>
+                            ) : (
                                 <Text
                                     key={i}
                                     style={[
@@ -2405,6 +2422,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     plateLedgerSmall: { paddingHorizontal: 5, justifyContent: 'center' },
     ledgerCube: { position: 'absolute', top: -8, zIndex: 3 },
     paidLineSmall: { alignSelf: 'stretch' },
+    paidGlyphLarge: { marginRight: 5 },
     paidRunCaps: { fontFamily: FONTS.sans, letterSpacing: PAID_CAPS_SPACING },
     paidRunSerif: { fontFamily: FONTS.serif },
     // The GLOBAL plate sits in the FREE pill's place and shape, text only.

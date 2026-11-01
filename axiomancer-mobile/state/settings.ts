@@ -4,8 +4,8 @@
  *
  * ## What lives here, and what does not
  *
- * - HERE: reduced motion, haptics, text size, music and sound-effect
- *   volume. A UX preference: it survives a new game, a slot
+ * - HERE: reduced motion, haptics, text size, card text (words or glyphs),
+ *   music and sound-effect volume. A UX preference: it survives a new game, a slot
  *   change and a corrupt save, and it is never part of a `GameState`.
  * - NOT here: the colour THEME. It already has its own live store
  *   (`theme/runtime.tsx`) that every stylesheet subscribes to; the SETTINGS
@@ -45,10 +45,17 @@ export type TextScale = 0.9 | 1 | 1.15 | 1.3;
 
 export const TEXT_SCALES: readonly TextScale[] = Object.freeze([0.9, 1, 1.15, 1.3]) as readonly TextScale[];
 
+/** How a card face prints its keywords: capital words, or an icon each. */
+export type CardTextMode = 'words' | 'glyphs';
+
+export const CARD_TEXT_MODES: readonly CardTextMode[] = Object.freeze(['words', 'glyphs']) as readonly CardTextMode[];
+
 export interface PlayerSettings {
     readonly reducedMotion: ReducedMotionPreference;
     readonly haptics: boolean;
     readonly textScale: TextScale;
+    /** Words (default) or glyphs for the keywords on every card face. Older saves without it read `words`. */
+    readonly cardText: CardTextMode;
     /** The music switch. Off silences the theme; the volume below is kept for when it is switched back on. */
     readonly musicOn: boolean;
     /** 0–100. The background music's volume (`components/BackgroundMusic.tsx`). */
@@ -61,6 +68,7 @@ export const DEFAULT_SETTINGS: PlayerSettings = Object.freeze({
     reducedMotion: 'system',
     haptics: true,
     textScale: 1,
+    cardText: 'words',
     musicOn: true,
     musicVolume: 70,
     sfxVolume: 80,
@@ -71,6 +79,7 @@ export const SETTINGS_STORAGE_KEY = '@axiomancer/settings:v1';
 
 const isReducedMotion = (v: unknown): v is ReducedMotionPreference => v === 'system' || v === 'on' || v === 'off';
 const isTextScale = (v: unknown): v is TextScale => typeof v === 'number' && (TEXT_SCALES as readonly number[]).includes(v);
+const isCardText = (v: unknown): v is CardTextMode => v === 'words' || v === 'glyphs';
 const clampVolume = (v: unknown, fallback: number): number =>
     typeof v === 'number' && Number.isFinite(v) ? Math.max(0, Math.min(100, Math.round(v))) : fallback;
 
@@ -85,6 +94,7 @@ export function sanitizeSettings(raw: unknown): PlayerSettings {
         reducedMotion: isReducedMotion(r.reducedMotion) ? r.reducedMotion : DEFAULT_SETTINGS.reducedMotion,
         haptics: typeof r.haptics === 'boolean' ? r.haptics : DEFAULT_SETTINGS.haptics,
         textScale: isTextScale(r.textScale) ? r.textScale : DEFAULT_SETTINGS.textScale,
+        cardText: isCardText(r.cardText) ? r.cardText : DEFAULT_SETTINGS.cardText,
         musicOn: typeof r.musicOn === 'boolean' ? r.musicOn : DEFAULT_SETTINGS.musicOn,
         musicVolume: clampVolume(r.musicVolume, DEFAULT_SETTINGS.musicVolume),
         sfxVolume: clampVolume(r.sfxVolume, DEFAULT_SETTINGS.sfxVolume),

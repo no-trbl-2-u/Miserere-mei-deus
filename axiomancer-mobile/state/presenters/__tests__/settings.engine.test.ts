@@ -6,6 +6,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { DEFAULT_SETTINGS, TEXT_SCALES } from '@/state/settings';
 import {
+    CARD_TEXT_OPTIONS,
     REDUCED_MOTION_OPTIONS,
     TEXT_SCALE_OPTIONS,
     TOGGLE_OPTIONS,
@@ -19,6 +20,8 @@ describe('option lists', () => {
     it('offer exactly the store\'s legal values', () => {
         expect(TEXT_SCALE_OPTIONS.map((o) => o.value)).toEqual([...TEXT_SCALES]);
         expect(TEXT_SCALE_OPTIONS.map((o) => o.label)).toEqual(['SMALL', 'DEFAULT', 'LARGE', 'LARGER']);
+        expect(CARD_TEXT_OPTIONS.map((o) => [o.value, o.label])).toEqual([['words', 'WORDS'], ['glyphs', 'GLYPHS']]);
+        expect(selectSettingsViewModel(DEFAULT_SETTINGS, false).cardText).toBe('words');
         expect(REDUCED_MOTION_OPTIONS.map((o) => o.value)).toEqual(['system', 'on', 'off']);
         expect(TOGGLE_OPTIONS.map((o) => o.value)).toEqual([true, false]);
     });

@@ -8,6 +8,7 @@
  * What a NEW PLAYER can change, and why each row exists:
  *   - COLOUR THEME   the five palettes (moved here from the SELF tab);
  *   - TEXT SIZE      four steps; scales every stylesheet's type;
+ *   - CARD TEXT      keywords on a card face as words (default) or glyphs;
  *   - REDUCED MOTION follow the OS, or force on / off;
  *   - HAPTICS        the pulses on drags and dice;
  *   - MUSIC / SOUND  volumes kept for the audio build (nothing plays yet);
@@ -18,7 +19,7 @@
  *   selectSettingsViewModel(settings, inRun)  the rows
  */
 
-import { TEXT_SCALES, type PlayerSettings, type ReducedMotionPreference, type TextScale } from '../settings';
+import { CARD_TEXT_MODES, TEXT_SCALES, type CardTextMode, type PlayerSettings, type ReducedMotionPreference, type TextScale } from '../settings';
 
 export const SETTINGS_COPY = Object.freeze({
     eyebrow: 'THE PILGRIM’S PREFERENCES',
@@ -36,6 +37,8 @@ export const SETTINGS_COPY = Object.freeze({
     }),
     textSize: 'TEXT SIZE',
     textSizeHint: 'grows every line of type; the chrome holds',
+    cardText: 'CARD TEXT',
+    cardTextHint: 'keywords on a card face as words or as glyphs; the open card shows both',
     reducedMotion: 'REDUCED MOTION',
     reducedMotionHint: 'skip the dice ritual, fades and pops',
     haptics: 'HAPTICS',
@@ -131,6 +134,10 @@ export const TEXT_SCALE_OPTIONS: readonly OptionVM<TextScale>[] = Object.freeze(
     })),
 );
 
+export const CARD_TEXT_OPTIONS: readonly OptionVM<CardTextMode>[] = Object.freeze(
+    CARD_TEXT_MODES.map((value) => ({ value, label: value === 'words' ? 'WORDS' : 'GLYPHS' })),
+);
+
 export const REDUCED_MOTION_OPTIONS: readonly OptionVM<ReducedMotionPreference>[] = Object.freeze([
     { value: 'system', label: 'SYSTEM' },
     { value: 'on', label: 'ON' },
@@ -152,6 +159,7 @@ export function volumeStep(value: number, delta: number): number {
 
 export interface SettingsViewModel {
     readonly textScale: TextScale;
+    readonly cardText: CardTextMode;
     readonly reducedMotion: ReducedMotionPreference;
     readonly haptics: boolean;
     readonly musicOn: boolean;
@@ -168,6 +176,7 @@ export interface SettingsViewModel {
 export function selectSettingsViewModel(settings: PlayerSettings, inRun: boolean): SettingsViewModel {
     return {
         textScale: settings.textScale,
+        cardText: settings.cardText,
         reducedMotion: settings.reducedMotion,
         haptics: settings.haptics,
         musicOn: settings.musicOn,
