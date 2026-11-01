@@ -122,6 +122,14 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **The starting deck is ten cards:** Blow ×5, Ward ×3, Word ×2
   (`STARTING_CARD_IDS`, `Combat/combat.rewards.ts`). The deck never drops
   below `MIN_COMBAT_DECK_SIZE` = 10.
+- **A character's run opens with ten cards too, but not those:** the grey
+  part is `CHARACTER_GREY_DECK` (Blow ×3, Ward ×2, Word ×2, seven cards) plus
+  `startingCardIds`, three lane cards: one from each of the two starting
+  lanes and one from the starting relic's lane (`Character/roster.ts`,
+  `characterDeck`; `characterProblems` checks it: no Spell or Curse, a
+  Global may start). The Chosen's are Rose Wrap, Siphon and Draw the Fever.
+  `createNewRunPlayer` writes the deck into `knownCards` when the run
+  starts, so a run in progress keeps the deck it was dealt.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
   mobile) drawn from `rewardPoolFor`: the cards of every lane in
   `unlockedLaneIds`, which is the character's two starting lanes
@@ -146,8 +154,11 @@ the Expo app (`axiomancer-mobile`) presents it.
   a second roll is refused (`startTurn`, `Combat/combat.engine.ts`).
 - **Faces** (`DEFAULT_DIE_GEAR`): a coloured die has 1 special, 2 mana and 3
   miss faces; the gold die has 1 special, 1 mana and 4 miss. A miss cannot
-  power a card. A special face pays `SPECIAL_CONVICTION_DEFAULT` = 2
-  Conviction when the die is used.
+  power a card. A special face pays what the worn weapon's `special` says
+  (`state.equipmentDice.special`) when the die is used: Conviction, DEAL, HEAL,
+  GUARD, INFERNO on the foe or VULNERABLE. With no weapon worn it only powers
+  its card; the grey sword's special is `SPECIAL_CONVICTION_DEFAULT` = 2
+  Conviction.
 - **The Color Law** (`dieSatisfiesColorLaw`): a die powers a card when the
   card is `any`, the die is gold, or the colours match. A mismatch fizzles.
   Powering is all a die does: PAID numbers land as printed (scaled by stats)
@@ -281,9 +292,9 @@ the Expo app (`axiomancer-mobile`) presents it.
   `Character/experience.ts`). Levels 5, 10 and 20 sit at 325, 950 and
   3,582 total; level 40 at 47,440. A level gives `STAT_POINTS_PER_LEVEL`
   = 1 stat point and does not refill VITAE (healing comes from rest and
-  items). A kill gives level × `DEFAULT_XP_BY_DIFFICULTY` (normal 20, elite
-  50, boss 200). A full Act 1 clear ends at level 20, meeting the four
-  doors at levels 4, 9, 14 and 18 (`npm run act1-progression`). Level 50
+  items). A kill gives level × `DEFAULT_XP_BY_DIFFICULTY` (simple 8, normal 16,
+  elite 40, boss 160, unique 400; a fifth below the old table, T 2026-11-01). A full Act 1 clear
+  ends at level 21, meeting the four doors at levels 8, 15, 18 and 20 (`npm run act1-progression`). Level 50
   costs 229,326 XP in total, about 63 times Act 1's income: a projection
   for Acts 2 and 3, which do not exist yet.
   How each door and fight measures at the level a full clear brings:

@@ -23,7 +23,7 @@ const FIXTURE_ROSTER: CharacterDefinition[] = [
         startingRelicId: 'relic-bleeding-signet',
         baseStats: { heart: 5, body: 7, mind: 3 },
         startingLaneIds: ['elementalist', 'lane-y'],
-        startingCardIds: ['card-x', 'card-y'],
+        startingCardIds: ['card-x', 'card-y', 'card-z'],
         playstyle: 'Bleeds to win.',
     },
     {
@@ -33,7 +33,7 @@ const FIXTURE_ROSTER: CharacterDefinition[] = [
         startingRelicId: 'relic-disarming-plea',
         baseStats: { heart: 7, body: 3, mind: 5 },
         startingLaneIds: ['elementalist', 'lane-y'],
-        startingCardIds: ['card-x', 'card-y'],
+        startingCardIds: ['card-x', 'card-y', 'card-z'],
         playstyle: 'Talks first.',
     },
 ];

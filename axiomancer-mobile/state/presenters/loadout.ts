@@ -56,9 +56,18 @@ export function findOwnedEquipment(player: Character, id: string): Equipment | n
  * free (or `item` is already worn). A full relic row gives up its last-worn
  * piece, the engine's `displacedBy` default.
  */
-export function replacedByEquip(player: Character, item: Equipment): Equipment | null {
+export function replacedByEquip(
+    player: Character,
+    item: Equipment,
+    row?: DockRowId | null,
+): Equipment | null {
     if (isWornId(player.equipment, item.id)) return null;
-    const { item: displaced } = displacedBy(player, item);
+    const position = equipPositionFor(item, row);
+    const { item: displaced } = displacedBy(
+        player,
+        item,
+        position === undefined ? undefined : { position },
+    );
     return displaced !== null && displaced.id !== item.id ? displaced : null;
 }
 
@@ -74,12 +83,20 @@ export interface LoadoutAction {
     replacing: Equipment | null;
 }
 
-/** Worn → UNEQUIP; unworn → WEAR (a relic) or EQUIP, naming the piece it replaces when the slot is full. */
-export function loadoutActionFor(player: Character, item: Equipment): LoadoutAction {
+/**
+ * Worn → UNEQUIP; unworn → WEAR (a relic) or EQUIP, naming the piece it
+ * replaces: the piece in the picked row when one is picked, else the piece a
+ * full slot gives up.
+ */
+export function loadoutActionFor(
+    player: Character,
+    item: Equipment,
+    row?: DockRowId | null,
+): LoadoutAction {
     if (isWornId(player.equipment, item.id)) {
         return { mode: 'unequip', label: 'UNEQUIP', replacing: null };
     }
-    const replacing = replacedByEquip(player, item);
+    const replacing = replacedByEquip(player, item, row);
     const verb = item.grantsSignature ? 'WEAR' : 'EQUIP';
     return {
         mode: 'equip',
@@ -88,8 +105,13 @@ export function loadoutActionFor(player: Character, item: Equipment): LoadoutAct
     };
 }
 
+/** Which dock row is meant: the weapon, the armor, or one of the three relic positions. */
+export type DockRowId = 'weapon' | 'armor' | 'relic-0' | 'relic-1' | 'relic-2';
+
 /** One row of the loadout as the player reads it: the dock and the SELF sheet map over these. */
 export interface LoadoutRow {
+    /** The row's identity; the three relic rows never share one. */
+    readonly id: DockRowId;
     /** Engine slot kind. */
     readonly key: EquipmentSlot;
     /** Which relic position this row is (0-2); absent on weapon and armor. */
@@ -105,12 +127,39 @@ export interface LoadoutRow {
  * positions. A weapon or armor row stays on screen bare when nothing is worn.
  */
 export const LOADOUT_ROWS: readonly LoadoutRow[] = [
-    { key: 'weapon', dockLabel: 'WEAPON', selfLabel: 'Weapon' },
-    { key: 'armor', dockLabel: 'ARMOR', selfLabel: 'Armor' },
-    { key: 'relic', relicIndex: 0, dockLabel: 'RELIC I', selfLabel: 'Relic' },
-    { key: 'relic', relicIndex: 1, dockLabel: 'RELIC II', selfLabel: 'Relic' },
-    { key: 'relic', relicIndex: 2, dockLabel: 'RELIC III', selfLabel: 'Relic' },
+    { id: 'weapon', key: 'weapon', dockLabel: 'WEAPON', selfLabel: 'Weapon' },
+    { id: 'armor', key: 'armor', dockLabel: 'ARMOR', selfLabel: 'Armor' },
+    { id: 'relic-0', key: 'relic', relicIndex: 0, dockLabel: 'RELIC I', selfLabel: 'Relic' },
+    { id: 'relic-1', key: 'relic', relicIndex: 1, dockLabel: 'RELIC II', selfLabel: 'Relic' },
+    { id: 'relic-2', key: 'relic', relicIndex: 2, dockLabel: 'RELIC III', selfLabel: 'Relic' },
 ];
+
+/** The loadout row with this id. */
+export function loadoutRowById(id: DockRowId): LoadoutRow {
+    return LOADOUT_ROWS.find((row) => row.id === id) ?? LOADOUT_ROWS[0];
+}
+
+/** The engine slot kind a dock row holds (what its satchel filter shows). */
+export function rowSlotKind(id: DockRowId): EquipmentSlot {
+    return loadoutRowById(id).key;
+}
+
+/** The relic position (0-2) a row stands for; `undefined` for the weapon and armor rows. */
+export function rowRelicPosition(id: DockRowId | null | undefined): 0 | 1 | 2 | undefined {
+    return id == null ? undefined : loadoutRowById(id).relicIndex;
+}
+
+/**
+ * The relic position that wearing `item` should fill because a row is picked,
+ * or `undefined` for the engine's default (first empty position, else the last):
+ * no row picked, a weapon or armor row picked, or a piece that is not a relic.
+ */
+export function equipPositionFor(
+    item: Equipment,
+    row: DockRowId | null | undefined,
+): number | undefined {
+    return item.slot === 'relic' ? rowRelicPosition(row) : undefined;
+}
 
 /** The piece worn in a loadout row, or `null` when the position is empty. */
 export function wornAtRow(loadout: EquipmentLoadout, row: LoadoutRow): Equipment | null {

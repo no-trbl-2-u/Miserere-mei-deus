@@ -13,9 +13,10 @@ import { EquipmentDetailModal } from '@/components/inventory/EquipmentDetailModa
 import { ItemModal } from '@/components/inventory/ItemModal';
 import { SlotBanner } from '@/components/inventory/SlotBanner';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
+import { rowRelicPosition } from '@/state/presenters/loadout';
 import {
     selectInventoryViewModel,
-    type EquipmentDockSlot,
+    type DockRowId,
     type InventoryTab,
 } from '@/state/presenters/inventory.engine';
 import {
@@ -37,15 +38,15 @@ export default function InventoryScreen() {
     // one button equips or takes off the piece. Separate from `modalItemId`,
     // which drives the ACTION modal (use / equip / unequip).
     const [detailItemId, setDetailItemId] = useState<string | null>(null);
-    // Tap a dock slot to filter the sack
-    // to compatible items. selectedSlot === null when no filter active;
-    // selecting filter clears the tab pick (mirrors design — slot filter
-    // and tab filter are mutually exclusive). Re-tapping the same slot
-    // clears the filter.
-    const [selectedSlot, setSelectedSlot] = useState<EquipmentDockSlot['key'] | null>(null);
-    const onSelectSlot = useCallback((key: EquipmentDockSlot['key'] | null) => {
-        setSelectedSlot(key);
-        if (key !== null) setActiveTab('all');
+    // Tap a dock row (weapon, armor or one relic position) to filter the sack
+    // to pieces that fit it. selectedRow === null when no row is picked;
+    // picking a row clears the tab pick (mirrors design — row filter
+    // and tab filter are mutually exclusive). Re-tapping the same row
+    // clears the pick. Wearing from the sack goes into the picked row.
+    const [selectedRow, setSelectedRow] = useState<DockRowId | null>(null);
+    const onSelectRow = useCallback((id: DockRowId | null) => {
+        setSelectedRow(id);
+        if (id !== null) setActiveTab('all');
     }, []);
 
     // Subscribe to `player` so the screen re-renders on inventory changes.
@@ -58,16 +59,16 @@ export default function InventoryScreen() {
     const actions = useGameActions();
 
     const vm = useMemo(
-        () => selectInventoryViewModel(store.getState(), { activeTab, expandedItemId, selectedSlot }),
+        () => selectInventoryViewModel(store.getState(), { activeTab, expandedItemId, selectedRow }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [store, activeTab, expandedItemId, selectedSlot, player],
+        [store, activeTab, expandedItemId, selectedRow, player],
     );
 
     const modalVm = useMemo<ItemModalViewModel | null>(() => {
         if (modalItemId === null) return null;
-        return selectItemModalViewModel(store.getState(), modalItemId);
+        return selectItemModalViewModel(store.getState(), modalItemId, selectedRow);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [modalItemId, store, player]);
+    }, [modalItemId, store, selectedRow, player]);
 
     const detailVm = useMemo<EquipmentDetailViewModel | null>(() => {
         if (detailItemId === null) return null;
@@ -83,7 +84,10 @@ export default function InventoryScreen() {
         if (modalVm.mode === 'use') {
             actions.useItem(modalVm.itemId);
         } else if (modalVm.mode === 'equip') {
-            actions.equipItem(modalVm.itemId);
+            // With a relic row picked the piece goes into that row; the actions
+            // layer ignores the position for a weapon or armor.
+            actions.equipItem(modalVm.itemId, rowRelicPosition(selectedRow));
+            setSelectedRow(null);
         } else if (modalVm.mode === 'unequip') {
             // Takes the piece off `player.equipment`; its position stays empty.
             actions.unequipItem(modalVm.itemId);
@@ -91,7 +95,7 @@ export default function InventoryScreen() {
         // mode === 'view' → no dispatch; just dismiss the modal.
         setModalItemId(null);
         setExpandedItemId(null);
-    }, [actions, modalVm]);
+    }, [actions, modalVm, selectedRow]);
 
     // The detail card's button: wear or take off the piece, then close the card.
     const onDetailEquip = useCallback((itemId: string) => {
@@ -155,17 +159,17 @@ export default function InventoryScreen() {
 
             <EquipmentDock
                 vm={vm.equipmentDock}
-                selectedSlot={selectedSlot}
-                onSelectSlot={onSelectSlot}
+                selectedRow={selectedRow}
+                onSelectRow={onSelectRow}
                 onShowItemDetail={setDetailItemId}
             />
 
-            {vm.equipmentDock.selectedSlot !== null && (
+            {vm.equipmentDock.selectedRow !== null && (
                 <SlotBanner
                     bannerEyebrow={vm.equipmentDock.bannerEyebrow}
                     bannerSlotLabel={vm.equipmentDock.bannerSlotLabel}
                     bannerClearLabel={vm.equipmentDock.bannerClearLabel}
-                    onClear={() => setSelectedSlot(null)}
+                    onClear={() => setSelectedRow(null)}
                 />
             )}
 
@@ -173,7 +177,7 @@ export default function InventoryScreen() {
                 tabs={vm.tabs}
                 activeTab={activeTab}
                 onTabPress={setActiveTab}
-                dimmed={selectedSlot !== null}
+                dimmed={selectedRow !== null}
             />
 
             <ItemGrid

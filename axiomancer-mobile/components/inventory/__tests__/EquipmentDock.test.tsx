@@ -53,7 +53,7 @@ jest.mock('../EquipmentSlot', () => {
                 {
                     testID: `equipment-slot-${slotId}`,
                     accessibilityState: { selected },
-                    onPress: () => onPress(slot.key),
+                    onPress: () => onPress(slot.id),
                 },
                 slot.item
                     ? React.createElement(ItemGlyph, {
@@ -73,16 +73,16 @@ jest.mock('../EquipmentSlot', () => {
 // `key: 'relic'` and disambiguate via `relicIndex`.
 const mockEquippedSlots: EquipmentDockViewModel = {
     slots: [
-        { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
-        { key: 'armor', label: 'ARMOR', item: { id: 'armor-1', name: 'Leather Armor', sub: 'Armor' } },
-        { key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
-        { key: 'relic', relicIndex: 1, label: 'RELIC II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Relic' } },
-        { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
+        { id: 'weapon', key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
+        { id: 'armor', key: 'armor', label: 'ARMOR', item: { id: 'armor-1', name: 'Leather Armor', sub: 'Armor' } },
+        { id: 'relic-0', key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
+        { id: 'relic-1', key: 'relic', relicIndex: 1, label: 'RELIC II', item: { id: 'ring-1', name: 'Bone Ring', sub: 'Relic' } },
+        { id: 'relic-2', key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
     bareLabel: '— unequipped —',
-    selectedSlot: null,
+    selectedRow: null,
     bannerEyebrow: '',
     bannerSlotLabel: '',
     bannerClearLabel: '',
@@ -90,22 +90,22 @@ const mockEquippedSlots: EquipmentDockViewModel = {
 
 const mockEmptySlots: EquipmentDockViewModel = {
     slots: [
-        { key: 'weapon', label: 'WEAPON', item: null },
-        { key: 'armor', label: 'ARMOR', item: null },
-        { key: 'relic', relicIndex: 0, label: 'RELIC I', item: null },
-        { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
-        { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
+        { id: 'weapon', key: 'weapon', label: 'WEAPON', item: null },
+        { id: 'armor', key: 'armor', label: 'ARMOR', item: null },
+        { id: 'relic-0', key: 'relic', relicIndex: 0, label: 'RELIC I', item: null },
+        { id: 'relic-1', key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+        { id: 'relic-2', key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
     ],
     headerLabel: 'equipment dock',
     hintLabel: 'worn vs unworn at a glance',
     bareLabel: '— unequipped —',
-    selectedSlot: null,
+    selectedRow: null,
     bannerEyebrow: '',
     bannerSlotLabel: '',
     bannerClearLabel: '',
 };
 
-const mockOnSelectSlot = jest.fn();
+const mockOnSelectRow = jest.fn();
 
 describe('EquipmentDock', () => {
     beforeEach(() => {
@@ -117,8 +117,8 @@ describe('EquipmentDock', () => {
             const { toJSON } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
             expect(toJSON()).toBeTruthy();
@@ -128,8 +128,8 @@ describe('EquipmentDock', () => {
             const { toJSON } = render(
                 <EquipmentDock
                     vm={mockEmptySlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
             expect(toJSON()).toBeTruthy();
@@ -139,8 +139,8 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
             expect(getByTestId('equipment-dock')).toBeDefined();
@@ -152,8 +152,8 @@ describe('EquipmentDock', () => {
             const { getByText } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
             expect(getByText('equipment dock')).toBeDefined();
@@ -163,8 +163,8 @@ describe('EquipmentDock', () => {
             const { getByText } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
             expect(getByText('worn vs unworn at a glance')).toBeDefined();
@@ -176,8 +176,8 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -192,8 +192,8 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEmptySlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -206,8 +206,8 @@ describe('EquipmentDock', () => {
             const { queryByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -220,8 +220,8 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot="weapon"
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow="weapon"
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -232,29 +232,27 @@ describe('EquipmentDock', () => {
             expect(armorSlot.props.accessibilityState.selected).toBe(false);
         });
 
-        it('highlights every relic position when the relic slot is selected', () => {
-            // The 3 relic positions are interchangeable and share the
-            // `relic` slot key, so selecting one lights all three.
+        it('highlights only the picked relic position, not its siblings', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot="relic"
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow="relic-0"
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
             expect(getByTestId('equipment-slot-relic-0').props.accessibilityState.selected).toBe(true);
-            expect(getByTestId('equipment-slot-relic-1').props.accessibilityState.selected).toBe(true);
-            expect(getByTestId('equipment-slot-relic-2').props.accessibilityState.selected).toBe(true);
+            expect(getByTestId('equipment-slot-relic-1').props.accessibilityState.selected).toBe(false);
+            expect(getByTestId('equipment-slot-relic-2').props.accessibilityState.selected).toBe(false);
             expect(getByTestId('equipment-slot-weapon').props.accessibilityState.selected).toBe(false);
         });
 
-        it('handles null selectedSlot correctly', () => {
+        it('handles null selectedRow correctly', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -266,28 +264,28 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
             const weaponSlot = getByTestId('equipment-slot-weapon');
             fireEvent.press(weaponSlot);
 
-            expect(mockOnSelectSlot).toHaveBeenCalledWith('weapon');
+            expect(mockOnSelectRow).toHaveBeenCalledWith('weapon');
         });
 
-        it('forwards the relic slot key when a relic position is pressed', () => {
+        it('forwards the relic row id when a relic position is pressed', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
             fireEvent.press(getByTestId('equipment-slot-relic-1'));
-            expect(mockOnSelectSlot).toHaveBeenCalledWith('relic');
+            expect(mockOnSelectRow).toHaveBeenCalledWith('relic-1');
         });
     });
 
@@ -296,8 +294,8 @@ describe('EquipmentDock', () => {
             const { getByTestId, getByText } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -315,8 +313,8 @@ describe('EquipmentDock', () => {
             const { UNSAFE_getAllByType } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -331,8 +329,8 @@ describe('EquipmentDock', () => {
             const { getByTestId, getByText } = render(
                 <EquipmentDock
                     vm={mockEmptySlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -351,8 +349,8 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot="relic"
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow="relic-0"
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -364,8 +362,8 @@ describe('EquipmentDock', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -374,10 +372,10 @@ describe('EquipmentDock', () => {
             fireEvent.press(getByTestId('equipment-slot-armor'));
             fireEvent.press(getByTestId('equipment-slot-relic-0'));
 
-            expect(mockOnSelectSlot).toHaveBeenCalledTimes(3);
-            expect(mockOnSelectSlot).toHaveBeenNthCalledWith(1, 'weapon');
-            expect(mockOnSelectSlot).toHaveBeenNthCalledWith(2, 'armor');
-            expect(mockOnSelectSlot).toHaveBeenNthCalledWith(3, 'relic');
+            expect(mockOnSelectRow).toHaveBeenCalledTimes(3);
+            expect(mockOnSelectRow).toHaveBeenNthCalledWith(1, 'weapon');
+            expect(mockOnSelectRow).toHaveBeenNthCalledWith(2, 'armor');
+            expect(mockOnSelectRow).toHaveBeenNthCalledWith(3, 'relic-0');
         });
     });
 
@@ -386,7 +384,7 @@ describe('EquipmentDock', () => {
             const updatedSlots: EquipmentDockViewModel = {
                 ...mockEmptySlots,
                 slots: [
-                    { key: 'weapon', label: 'WEAPON', item: { id: 'new-sword', name: 'Steel Sword', sub: 'Weapon' } },
+                    { id: 'weapon', key: 'weapon', label: 'WEAPON', item: { id: 'new-sword', name: 'Steel Sword', sub: 'Weapon' } },
                     ...mockEmptySlots.slots.slice(1),
                 ],
             };
@@ -394,16 +392,16 @@ describe('EquipmentDock', () => {
             const { getByText, rerender } = render(
                 <EquipmentDock
                     vm={mockEmptySlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
             rerender(
                 <EquipmentDock
                     vm={updatedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -411,20 +409,20 @@ describe('EquipmentDock', () => {
             expect(getByText('WEAPON - Steel Sword')).toBeDefined();
         });
 
-        it('handles selectedSlot changes correctly', () => {
+        it('handles selectedRow changes correctly', () => {
             const { getByTestId, rerender } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
             rerender(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot="weapon"
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow="weapon"
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -438,19 +436,19 @@ describe('EquipmentDock', () => {
             const mixedSlots: EquipmentDockViewModel = {
                 ...mockEquippedSlots,
                 slots: [
-                    { key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
-                    { key: 'armor', label: 'ARMOR', item: null },
-                    { key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
-                    { key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
-                    { key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
+                    { id: 'weapon', key: 'weapon', label: 'WEAPON', item: { id: 'sword-1', name: 'Iron Sword', sub: 'Weapon' } },
+                    { id: 'armor', key: 'armor', label: 'ARMOR', item: null },
+                    { id: 'relic-0', key: 'relic', relicIndex: 0, label: 'RELIC I', item: { id: 'helm-1', name: 'Iron Helm', sub: 'Relic' } },
+                    { id: 'relic-1', key: 'relic', relicIndex: 1, label: 'RELIC II', item: null },
+                    { id: 'relic-2', key: 'relic', relicIndex: 2, label: 'RELIC III', item: null },
                 ],
             };
 
             const { getByTestId, getByText } = render(
                 <EquipmentDock
                     vm={mixedSlots}
-                    selectedSlot={null}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={null}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
@@ -465,16 +463,16 @@ describe('EquipmentDock', () => {
             expect(getByText('ARMOR - empty')).toBeDefined();
         });
 
-        it('handles selection of non-existent slot keys gracefully', () => {
+        it('handles selection of non-existent row ids gracefully', () => {
             const { getByTestId } = render(
                 <EquipmentDock
                     vm={mockEquippedSlots}
-                    selectedSlot={'invalid-key' as any}
-                    onSelectSlot={mockOnSelectSlot}
+                    selectedRow={'invalid-row' as any}
+                    onSelectRow={mockOnSelectRow}
                 />
             );
 
-            // All slots should be unselected when selectedSlot doesn't match any
+            // All slots should be unselected when selectedRow doesn't match any
             const weaponSlot = getByTestId('equipment-slot-weapon');
             expect(weaponSlot.props.accessibilityState.selected).toBe(false);
         });

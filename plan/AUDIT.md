@@ -67,7 +67,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
-### [ ] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01)
+### [x] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01) — CLOSED 2026-11-01 (fix-ci, verify-root run 41298604682: reworded all ten lines in `combat.card-program.ts`, `combat.encounter.types.ts`, `combat.engine.ts`, `combat.equipment-effects.ts`, `e2e/equipment-effects.engine.test.ts` and `Items/types.ts` to drop the "spec 136"/"A10"/"chunk 136.4" narration; `check-comments.mjs` reports clean, root `npm test` and mobile `npm run verify` both pass)
 - category: debt
 - impact: 5
 - ease: 8
@@ -201,6 +201,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: the measured-truth run moved lowestVitaeFractionP10 for ld-16/death-beholder with the grey deck (body-mind spread) from 0.31 at 368f4f2 to 0.50 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
 - next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
 - evidence 2026-10-31: even 0.07 -> 0.28 at cf431a4
+- evidence 2026-11-01: even 0.28 -> 0.05 at 431ed71
 
 ### [ ] [content] measured drift: cw-12/green-jelly grey lowestVitaeFractionP10 0.55 -> 0.78 (even, 2026-10-29)
 - issue: #1081
@@ -232,6 +233,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - evidence 2026-10-29: body 0.37 -> 0.60 at 3993f2a
 - evidence 2026-10-30: even 0.00 -> 0.35 at 00e0876
 - evidence 2026-10-30: body-mind 0.45 -> 0.61 at 00e0876
+- evidence 2026-11-01: even 0.55 -> 0.35 at 431ed71
 
 ### [ ] [content] measured drift: bc-15/death-beholder grey lowestVitaeFractionP10 0.23 -> 0.48 (body-mind, 2026-10-29)
 - issue: #1084

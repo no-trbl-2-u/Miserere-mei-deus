@@ -22,6 +22,7 @@ import { cardLibrary } from '../Cards/cards.library';
 import { canUpgrade, UPGRADE_SUFFIX } from '../Cards/card-upgrades';
 import { Player } from '../Character/characters.mock';
 import { deepClone, calculateMaxHealth } from '../Utils';
+import { wearGreySword } from './combat.grey-sword';
 
 /**
  * Deck-MATURITY level implied by a card's RANK (the quality ladder Ash 1 …
@@ -217,5 +218,7 @@ export function buildStagePlayer(stage: CombatStageProfile): Character {
     // consumed by `stageEligibleCardIds` (the `knownCards` pool above), not here.
     player.bonusTurnDice = stage.bonusBaseDice;
     player.dieUpgradeLevel = stage.dieUpgradeLevel;
+    // A special only pays when a weapon is worn; the stage player plays as a fresh run does.
+    wearGreySword(player);
     return player;
 }

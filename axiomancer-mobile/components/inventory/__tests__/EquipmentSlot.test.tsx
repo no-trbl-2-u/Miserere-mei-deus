@@ -3,7 +3,9 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { EquipmentSlot } from '../EquipmentSlot';
 
 const mockSlot = {
+    id: 'relic-0' as const,
     key: 'relic' as const,
+    relicIndex: 0 as const,
     label: 'Relic',
     item: {
         id: 'item-1',
@@ -13,6 +15,7 @@ const mockSlot = {
 };
 
 const mockEmptySlot = {
+    id: 'weapon' as const,
     key: 'weapon' as const,
     label: 'Weapon',
     item: null,
@@ -37,7 +40,7 @@ describe('EquipmentSlot', () => {
 
         expect(getByText('Relic')).toBeDefined();
         expect(getByText('Iron Helm')).toBeDefined();
-        expect(getByTestId('dock-slot-relic')).toBeDefined();
+        expect(getByTestId('dock-slot-relic-0')).toBeDefined();
     });
 
     it('renders empty slot correctly', () => {
@@ -69,7 +72,7 @@ describe('EquipmentSlot', () => {
         expect(toJSON()).toBeTruthy();
     });
 
-    it('calls onPress when pressed', () => {
+    it('calls onPress with the row id when pressed', () => {
         const { getByTestId } = render(
             <EquipmentSlot
                 slot={mockSlot}
@@ -79,12 +82,13 @@ describe('EquipmentSlot', () => {
             />
         );
 
-        fireEvent.press(getByTestId('dock-slot-relic'));
-        expect(mockOnPress).toHaveBeenCalledWith('relic');
+        fireEvent.press(getByTestId('dock-slot-relic-0'));
+        expect(mockOnPress).toHaveBeenCalledWith('relic-0');
     });
 
-    it('disambiguates the testID by relic position', () => {
+    it('presses each relic position by its own row id, not the shared slot kind', () => {
         const positioned = {
+            id: 'relic-1' as const,
             key: 'relic' as const,
             relicIndex: 1 as const,
             label: 'Relic II',
@@ -99,11 +103,24 @@ describe('EquipmentSlot', () => {
             />
         );
 
-        // Per-position testID, but the press still forwards the shared slot key.
         const button = getByTestId('dock-slot-relic-1');
         expect(button).toBeDefined();
         fireEvent.press(button);
-        expect(mockOnPress).toHaveBeenCalledWith('relic');
+        expect(mockOnPress).toHaveBeenCalledWith('relic-1');
+    });
+
+    it('clears the pick when the picked row is pressed again', () => {
+        const { getByTestId } = render(
+            <EquipmentSlot
+                slot={mockSlot}
+                bareLabel="empty"
+                selected={true}
+                onPress={mockOnPress}
+            />
+        );
+
+        fireEvent.press(getByTestId('dock-slot-relic-0'));
+        expect(mockOnPress).toHaveBeenCalledWith(null);
     });
 
     it('shows selected state correctly', () => {
@@ -116,7 +133,7 @@ describe('EquipmentSlot', () => {
             />
         );
 
-        const button = getByTestId('dock-slot-relic');
+        const button = getByTestId('dock-slot-relic-0');
         expect(button.props.accessibilityState).toEqual({ selected: true });
     });
 });

@@ -63,6 +63,7 @@ import { getRng } from '../Utils/rng';
 import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
 import type { Enemy } from '../Enemy/types';
+import type { SpecialPayload } from '../Items/types';
 import { isEnemyBefriendable } from '../Enemy/befriend';
 import { applyDamage, heal as healCombatant, isDefeated } from './health';
 import { fireDotTrigger, getDamageTakenMultiplier } from './effects';
@@ -254,11 +255,14 @@ interface Work {
 
 interface Frame {
     cardId: string;
+    /** The printed name to attribute the line to when `cardId` is not a card (a worn weapon). */
+    cardName?: string;
     /** Who runs the line: a card ('line', the default; a Curse played by a card,
      *  a discard rider and the MERCY burst count too) or a Global in play
      *  ('global'). Only a card's DEAL and GUARD fire the worn gear's DEAL and
-     *  first-GUARD triggers (spec 136, A10). */
-    source?: 'line' | 'global';
+     *  first-GUARD triggers. A worn weapon's special payload runs
+     *  as 'special': it fires no gear trigger at all, so a piece never fires itself. */
+    source?: 'line' | 'global' | 'special';
     /** The Curse is being played with its SACRIFICE WAIVED. */
     waived: boolean;
     /** MERCY applications the line has made (a card whose line added MERCY is a MERCY card). */
@@ -339,15 +343,15 @@ class LineCtx implements ProgramCtx {
     private incoming(): number { return this.w.kit.incomingNet(this.w.s); }
 
     /** A card line, not a Global in play. */
-    private byCard(): boolean { return this.f.source !== 'global'; }
+    private byCard(): boolean { return this.f.source !== 'global' && this.f.source !== 'special'; }
 
     /**
-     * The worn gear's hook (spec 136, A10), on a real play only: fires what
+     * The worn gear's hook, on a real play only: fires what
      * `hook` reaches and returns a DEAL's +n. A gear HEAL counts toward the
      * VITAE you healed this turn.
      */
     private fireGear(hook: EquipmentHook): number {
-        if (this.mode !== 'apply' || !this.w.s.equipmentEffects) return 0;
+        if (this.mode !== 'apply' || !this.w.s.equipmentEffects || this.f.source === 'special') return 0;
         const before = this.w.s.player.health;
         const fired = fireEquipment(hook, { ...this.w.s, program: this.w.l }, this.w.events);
         this.w.s = fired.state;
@@ -461,7 +465,7 @@ class LineCtx implements ProgramCtx {
             const clock = fireDotTrigger(enemy, 'damage-instance', w.s.round);
             if (clock.damage > 0) { enemy = clock.target; extra = clock.damage; }
         }
-        const cardName = getCardById(this.f.cardId)?.name
+        const cardName = this.f.cardName ?? getCardById(this.f.cardId)?.name
             ?? (this.f.cardId === w.l.tetherCardId ? w.l.tetherSourceName : null)
             ?? this.f.cardId;
         w.s = {
@@ -1800,6 +1804,41 @@ export function playProgramCard(
     w.events.push(...weatherEvents(ledgerIn.el, w.l.el));
     w.events.push(...spikeEvents(ledgerIn.spikes, w.l.spikes));
     return { state: { ...w.s, program: w.l }, events: w.events };
+}
+
+/** The VULNERABLE a weapon's special lays on the foe, in percent (the turns come from the payload). */
+export const SPECIAL_VULNERABLE_PCT = 25;
+
+/**
+ * A worn weapon's special payload, paid when a special-face die powers a
+ * card: a DEAL, HEAL or GUARD of exactly `amount`, INFERNO laid on the foe
+ * only, or VULNERABLE for `amount` turns. It is not a card's DEAL or GUARD and
+ * not a Global's, so it fires no gear trigger and takes no gear DEAL bonus.
+ * The program ledger is made for the call and kept only when the fight had
+ * one already or the payload is INFERNO (the one that writes to it).
+ * A Conviction payload is paid by the engine, not here.
+ */
+export function playSpecialPayload(
+    state: CombatEncounterState, payload: SpecialPayload, source: { itemId: string; itemName: string },
+    kit: ProgramKit,
+): ProgramPlayResult {
+    const ledger = cloneLedger(state.program ?? initProgramLedger());
+    const events: CombatEvent[] = [];
+    const w: Work = { s: { ...state, program: ledger }, l: ledger, events, kit, cost: 0, value: 0 };
+    const ctx = new LineCtx(w, 'apply', { cardId: source.itemId, cardName: source.itemName, waived: false, source: 'special' });
+    const n = payload.amount;
+    switch (payload.kind) {
+        case 'deal': ctx.deal(n, { exact: true }); break;
+        case 'heal': ctx.heal(n, { exact: true }); break;
+        case 'guard': ctx.guard(n, { exact: true }); break;
+        case 'inferno': ctx.inferno(n, 'foe'); break;
+        case 'vulnerable': ctx.vulnerable(SPECIAL_VULNERABLE_PCT, n); break;
+        case 'conviction': break;
+    }
+    events.push(...weatherEvents(state.program?.el ?? initElementState(), ledger.el));
+    const keep = state.program !== undefined || payload.kind === 'inferno';
+    const next = keep ? { ...w.s, program: ledger } : { ...w.s, program: state.program };
+    return { state: next, events };
 }
 
 /**
