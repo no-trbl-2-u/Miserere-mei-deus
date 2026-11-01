@@ -45,8 +45,6 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { settleMain } from './pr-settle.mjs'
-
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const FILES_LIST = path.join(ROOT, '.git', 'pr-resolve-files.txt')
 
@@ -420,13 +418,16 @@ function arg(name) {
   return i === -1 ? undefined : process.argv[i + 1]
 }
 
-function main() {
+async function main() {
   const mode = process.argv[2]
   if (mode === 'scan') {
     // Settle first (phase NX1e): the push that started this run may be a merged PR whose
     // plan/pending/ files fold into the plan now. Never in the way of the scan: a refusal or an
     // error is a warning, and the pending files keep counting as closed until a later push settles.
+    // Imported here, not at the top: the other modes (and the merge job, which imports this
+    // file) need none of the plan scripts it loads.
     try {
+      const { settleMain } = await import('./pr-settle.mjs')
       const s = settleMain({ root: ROOT })
       if (s.state === 'settled') console.log(`settle: pushed the settle of ${s.ids.join(', ')}`)
       else if (s.state !== 'nothing') console.log(`::warning::pr-resolve: settle ${s.state}: ${s.reason}`)
@@ -496,4 +497,9 @@ function main() {
   process.exit(2)
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) main()
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  main().catch((err) => {
+    console.error(err)
+    process.exitCode = 1
+  })
+}
