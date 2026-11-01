@@ -12,6 +12,9 @@
 //   npm run api -- card-vs-bot --build <sha> --json # the same at one build, as JSON
 //   npm run api -- run-summary                      # runs per source, and per sim policy
 //   npm run api -- run-summary --source sim         # the bots' runs only
+//   npm run api -- run-ends --source sim            # where the bots' closed runs ended, per policy
+//   npm run api -- run-pacing --source sim          # per node: nodes resolved before it, level and VITAE after it, rests, withdrawals
+//   npm run api -- coverage --source sim            # which nodes, quest steps, enemies, hazards and items the runs reached
 //
 // Calls `GET /v1/reports/<name>` (`backend/src/reports.ts`, phase BE2f) and
 // prints it as plain-text tables. The Worker holds the SQL; this script only
@@ -19,8 +22,8 @@
 // A report reads `human` (T's own play) unless `--source human|harness|sim|all`
 // says otherwise (phase SM1a); each table's header line names the source it read. Every
 // number is a count for T to read; nothing here grades the game. Two reports differ (phase SM1h): `card-vs-bot`
-// always reads T (`human`) beside the sim, so it takes `--build` only, and `run-summary` reads every source unless
-// `--source` narrows it.
+// always reads T (`human`) beside the sim, so it takes `--build` only, and `run-summary`, `run-ends`, `run-pacing` and
+// `coverage` (phase SM2e) read every source unless `--source` narrows them.
 //
 // The Worker URL and token are the solve-time API's: `PUZZLE_API_URL` and
 // `PUZZLE_API_TOKEN`, read from `~/.config/miserere/puzzle-api.env` for any
@@ -38,7 +41,7 @@ import { ENV_FILE, resolveConfig } from './puzzle-times.mjs'
 
 /** Mirrors `REPORTS_PATH_PREFIX` and `REPORT_NAMES` in `backend/src/reports.ts`. */
 export const REPORTS_PATH_PREFIX = '/v1/reports/'
-export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage', 'card-vs-bot', 'run-summary']
+export const REPORT_NAMES = ['card-usage', 'card-gaps', 'signature-usage', 'card-vs-bot', 'run-summary', 'run-ends', 'run-pacing', 'coverage']
 /** Mirrors `PLAY_LOG_SOURCE_FILTERS` in the play-log contract. */
 export const SOURCE_FILTERS = ['human', 'harness', 'sim', 'all']
 
@@ -202,9 +205,70 @@ export function formatRunSummary(body) {
   return out.join('\n')
 }
 
+const ENDS_COLUMNS = [
+  ['source', 'source'], ['policy', 'policyId'], ['ended at', 'endNodeId'], ['runs', 'runs'], ['run-over', 'runOver'],
+  ['clear', 'chapterClear'], ['lvl avg', 'avgLevel'], ['vitae avg', 'avgVitaeEnd'],
+]
+
+/** The run-ends body as text: one row per source, policy and end node. */
+export function formatRunEnds(body) {
+  const out = [`Run ends: ${plural(body.runs, 'closed run')} (${scopeOf(body)}).`]
+  if (body.ends.length === 0) {
+    out.push('No closed runs recorded.')
+    return out.join('\n')
+  }
+  out.push(
+    'only runs that have ended; run-over and clear (chapter-clear) are how they ended; level and vitae are at the end.',
+    '',
+    table(ENDS_COLUMNS.map(([h]) => h), body.ends.map((row) => ENDS_COLUMNS.map(([, k]) => dash(row[k])))),
+  )
+  return out.join('\n')
+}
+
+const PACING_COLUMNS = [
+  ['source', 'source'], ['policy', 'policyId'], ['node', 'nodeId'], ['runs', 'runs'], ['resolved before', 'avgResolvedBefore'],
+  ['lvl', 'avgLevel'], ['vitae', 'avgVitae'], ['rests', 'rests'], ['withdrawals', 'withdrawals'],
+]
+
+/** The run-pacing body as text: one row per source, policy and node entered. */
+export function formatRunPacing(body) {
+  const out = [`Run pacing: ${plural(body.runs, 'run')} (${scopeOf(body)}).`]
+  if (body.pacing.length === 0) {
+    out.push('No nodes entered.')
+    return out.join('\n')
+  }
+  out.push(
+    'runs = runs that entered the node; resolved before = nodes resolved before first entering it (time is nodes, not a clock);',
+    'lvl and vitae = the player after resolving it, a build that did not log them leaves a dash; rests and withdrawals are taken there.',
+    '',
+    table(PACING_COLUMNS.map(([h]) => h), body.pacing.map((row) => PACING_COLUMNS.map(([, k]) => dash(row[k])))),
+  )
+  return out.join('\n')
+}
+
+const COVERAGE_COLUMNS = [
+  ['source', 'source'], ['policy', 'policyId'], ['kind', 'kind'], ['id', 'id'], ['runs', 'runs'], ['count', 'count'], ['cleared', 'cleared'],
+]
+
+/** The coverage body as text: one row per source, policy, kind and id reached. */
+export function formatCoverage(body) {
+  const out = [`Coverage: ${plural(body.runs, 'run')} (${scopeOf(body)}).`]
+  if (body.coverage.length === 0) {
+    out.push('Nothing reached.')
+    return out.join('\n')
+  }
+  out.push(
+    'count = nodes entered, quest steps taken, fights, hazards crossed, items gained; cleared = nodes resolved, steps turned in or completed,',
+    'fights won, hazards cleared (items have none). A quest step is questId/stepId. Ids are the raw ids the game logged.',
+    '',
+    table(COVERAGE_COLUMNS.map(([h]) => h), body.coverage.map((row) => COVERAGE_COLUMNS.map(([, k]) => dash(row[k])))),
+  )
+  return out.join('\n')
+}
+
 const REPORT_LISTS = {
   'card-usage': ['cards'], 'card-gaps': ['threats', 'unspentDice', 'defeats'], 'signature-usage': ['signatures'],
-  'card-vs-bot': ['columns', 'cards'], 'run-summary': ['summary'],
+  'card-vs-bot': ['columns', 'cards'], 'run-summary': ['summary'], 'run-ends': ['ends'], 'run-pacing': ['pacing'], coverage: ['coverage'],
 }
 
 /** Checks the body is the named report. Throws a one-line Error otherwise. */
@@ -265,7 +329,8 @@ export async function main(argv, { env = process.env, envFile = ENV_FILE, fetchI
 
   const format = {
     'card-usage': formatCardUsage, 'card-gaps': formatCardGaps, 'signature-usage': formatSignatureUsage,
-    'card-vs-bot': formatCardVsBot, 'run-summary': formatRunSummary,
+    'card-vs-bot': formatCardVsBot, 'run-summary': formatRunSummary, 'run-ends': formatRunEnds, 'run-pacing': formatRunPacing,
+    coverage: formatCoverage,
   }[opts.report]
   const text = opts.json ? JSON.stringify(body, null, 2) : format(body)
   stdout.write(`${text}\n`)

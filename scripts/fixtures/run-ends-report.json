@@ -1,0 +1,11 @@
+{
+  "report": "run-ends",
+  "build": "sm2e01",
+  "source": "sim",
+  "runs": 3,
+  "ends": [
+    { "source": "sim", "policyId": "cautious", "endNodeId": "n-b", "runs": 1, "runOver": 1, "chapterClear": 0, "avgLevel": 1, "avgVitaeEnd": 0 },
+    { "source": "sim", "policyId": "cautious", "endNodeId": "n-c", "runs": 1, "runOver": 0, "chapterClear": 1, "avgLevel": 3, "avgVitaeEnd": 25 },
+    { "source": "sim", "policyId": "rusher", "endNodeId": null, "runs": 1, "runOver": 1, "chapterClear": 0, "avgLevel": 4, "avgVitaeEnd": 0 }
+  ]
+}

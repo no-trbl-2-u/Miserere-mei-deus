@@ -1,0 +1,11 @@
+{
+  "report": "run-pacing",
+  "build": "sm2e01",
+  "source": "sim",
+  "runs": 3,
+  "pacing": [
+    { "source": "sim", "policyId": "cautious", "nodeId": "n-a", "runs": 2, "avgResolvedBefore": 0, "avgLevel": 1, "avgVitae": 20, "rests": 0, "withdrawals": 1 },
+    { "source": "sim", "policyId": "cautious", "nodeId": "n-b", "runs": 2, "avgResolvedBefore": 1, "avgLevel": 2.5, "avgVitae": 29, "rests": 2, "withdrawals": 0 },
+    { "source": "sim", "policyId": "rusher", "nodeId": "n-z", "runs": 1, "avgResolvedBefore": 2, "avgLevel": null, "avgVitae": null, "rests": 0, "withdrawals": 0 }
+  ]
+}
