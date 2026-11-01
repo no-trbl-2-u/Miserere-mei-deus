@@ -194,20 +194,21 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
 })
 
 test('the scratch repo carries the plan pending closes: without them a closed chunk reads open with no home', () => {
-  // A live plan with a pending close (133.8, alias NX1h) whose Unscheduled line went with it, as /next's close leaves it.
+  // A live plan with a fixture chunk (904.1, alias ZC1) closed by a pending file and carrying no Unscheduled line, as /next's close
+  // leaves it. A fixture, not a real chunk, so the test does not depend on which chunks the live plan has settled.
   const live = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-live-'))
   try {
     fs.mkdirSync(path.join(live, 'plan', 'pending'), { recursive: true })
     for (const n of ['.gitattributes', 'LIVE_DEADLINES.md']) fs.copyFileSync(path.join(ROOT, n), path.join(live, n))
     for (const n of fs.readdirSync(path.join(ROOT, 'plan')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', n), path.join(live, 'plan', n))
-    write(live, DEADLINES, dropUnscheduled(read(live, DEADLINES), 'NX1h'))
-    write(live, 'plan/pending/133.8.md', ['---', 'close: 133.8', 'date: 2026-11-01', 'says: The weekly nexus sync opens one PR', '---', ''].join('\n'))
+    addSpec(live, 'ZC', ['ZC1'])
+    write(live, 'plan/pending/904.1.md', ['---', 'close: 904.1', 'date: 2026-11-01', 'says: fixture chunk ZC1 shipped', '---', ''].join('\n'))
     const { dir, work } = scratch(undefined, live)
     try {
-      assert.ok(fs.existsSync(path.join(work, 'plan/pending/133.8.md')), 'the pending close is copied')
+      assert.ok(fs.existsSync(path.join(work, 'plan/pending/904.1.md')), 'the pending close is copied')
       checkDeadlines(work) // throws when red
-      fs.rmSync(path.join(work, 'plan/pending/133.8.md'))
-      assert.throws(() => checkDeadlines(work), /open row NX1h \[ \] has no Item/, 'without the copy the close is lost')
+      fs.rmSync(path.join(work, 'plan/pending/904.1.md'))
+      assert.throws(() => checkDeadlines(work), /open row ZC1 \[ \] has no Item/, 'without the copy the close is lost')
     } finally {
       fs.rmSync(dir, { recursive: true, force: true })
     }
