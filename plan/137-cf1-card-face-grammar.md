@@ -60,6 +60,10 @@ confident wrong readings at a mean confidence of 3.5 or more.
 
 ### The grammar (T's rulings, 2026-11-01)
 
+The whole voice, with the retired forms, the patterns the blind reads found and the examples, is
+[`docs/card-voice.md`](../docs/card-voice.md), written in this plot; it is what 137.2 writes every line from and what
+137.1's lint enforces. The summary:
+
 A printed line names only entities (you, the foe, your hand), keywords, numbers and the closed list of logic words
 below. It never points at its other line, another card or an undefined state.
 
@@ -86,7 +90,7 @@ The twelve sample cards, as they print after this spec (base level; FREE · PAID
 | Burn Together | `DEAL 3` | `DEAL 9, INFERNO 4` |
 | Encase in Ice | `BLIZZARD 3` | `BLIZZARD 5, GUARD = foe's BLIZZARD` |
 | Strike the Burning | `DEAL 3` | `DEAL 4 or 8 if the foe has INFERNO` |
-| Shatter the Frost | `DEAL 2, BLIZZARD 2` | `Spend all foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent` |
+| Shatter the Frost | `DEAL 2, BLIZZARD 2` | `Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent` |
 | Weight of Grace | `DEAL = foe's MERCY` | `DEAL 2× foe's MERCY` |
 | Shield Bash | `GUARD 4` | `DISCARD 1. GUARD 8, DEAL = your GUARD` |
 | Cracking Swing | `VULNERABLE 25% for 1 turn, DEAL 2` | `DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8` |
@@ -114,24 +118,27 @@ The twelve sample cards, as they print after this spec (base level; FREE · PAID
 - Two faces, words and glyphs, chosen by a Settings toggle (T, t11). Logic words, numbers and possessives are the same
   in both modes; only the keyword changes form.
 - Cornered prints `DEAL 6 or 14 at half your VITAE`; Burn Together prints `DEAL 9, INFERNO 4` (T, t8).
-- **Numbers and effects do not change.** Only the printed text, the face that prints it and the glossary change;
-  every card's program body (`run`) stays byte-for-byte as it is, and the measured report needs no rerun.
-- **The rewrite is T's content, drafted by the loop.** 137.2 applies T's grammar mechanically to every printed line
-  and lands as a `review:rules-change` PR that T merges after reading the lines (D37, D88); the loop invents no
-  wording beyond the grammar. [T to confirm #1]
+- **Numbers and effects do not change**, with one exception (Callus, below). Only the printed text, the face that
+  prints it and the glossary change; every other card's program body (`run`) stays byte-for-byte as it is.
+- **The rewrite follows the voice guide.** 137.2 writes every printed line from `docs/card-voice.md`, T's rules
+  from the pitch, and lands as a `review:rules-change` PR that T merges (D37, D88); the loop invents no wording
+  beyond the guide. Confirmed by T (2026-11-01): the rules are settled, so write them down and write every card in
+  that voice.
 - FREE lines get the same cuts and nothing more; making every FREE line glyph-only (35 of 104 need a real rewrite)
   is T's later session, under Follow-ups.
-- The small face keeps the 120 by 176 hand card. The PAID band grows to as many as three lines at 11 to 12 px and
-  the art shrinks to make room; the name and the FREE pill keep their place. [T to confirm #2]
-- The default text mode is Words: words read higher blind (PAID 4.0 against 3.4). [T to confirm #3]
+- The small face keeps the 120 by 176 hand card. The PAID band grows to as many as three lines at 10 px and the art
+  shrinks to make room; the name and the FREE pill keep their place. Confirmed by T (2026-11-01): 10 px. T runs a
+  card-size test after this plot; its result may change the card's size, not this grammar.
+- The default text mode is Words: words read higher blind (PAID 4.0 against 3.4). Confirmed by T (2026-11-01).
 - The glyph set is new and sits beside the family glyphs: one glyph per printed keyword, drawn as inline icons at
   text size and coloured by what the keyword is (damage, defence, blood, hex, resource, weather). The mock's set is
-  the starting point, with two redraws: VULNERABLE must not twin GUARD's shield, and VITAE must not reuse the heart
-  die's mark. MERCY is a laurel, never an hourglass (read as a timer twice). [T to confirm #4]
-- Callus stays FREE GUARD X, PAID DEAL X: its face prints the PAID line under GLOBAL, the large face shows both, and
-  the one-Global-whose-FREE-differs mismatch is left for T. [T to confirm #5]
-- "Possessive" means `foe's` with no `the` after `=` and after `Spend all`, and `the foe` elsewhere (`if the foe has
-  INFERNO`). [T to confirm #6]
+  used as drawn (MERCY a laurel, never the hourglass). Confirmed by T (2026-11-01): use these for now; T may bring
+  generated images later, and DEAL and VULNERABLE are keepers.
+- **A Global has one effect.** Played FREE it lasts 3 turns, PAID the whole combat, and nothing else differs; no
+  Global carries a FREE body or a PAID change. Callus's FREE GUARD X goes, so Callus deals X either way (the one
+  effect change in this spec). Confirmed by T (2026-11-01): drop the FREE section entirely from all Globals.
+- The foe's possessive drops `the` only after `=` (`= foe's MERCY`); everywhere else it keeps it (`Spend all the
+  foe's BLIZZARD`, `if the foe has INFERNO`). Confirmed by T (2026-11-01).
 
 ### Chunk notes
 
@@ -142,12 +149,16 @@ a word that is neither a keyword (the atlas set the carrier rule reads), a numbe
 A word list that is honestly content (a card's own noun, such as `BLIZZARD spent`) is part of the closed list, named
 in the function's header. `checkTextOrder(cards)` compares each line's printed keyword order with `recordVerbs`'s
 call order under the probe queries, where both can be read, and fails a mismatch. Both run over the library in
-`card-rules.test.ts` with a per-card allow-list of today's violators, so `main` stays green; the allow-list is a
-ratchet (a test fails if it grows or names a card that now passes). Unit tests pin one failing line per retired form.
-No card text changes in this chunk.
+`card-rules.engine.test.ts` as two more rules beside the others, reading the existing exemptions fixture
+(`Cards/e2e/card-rules.exemptions.json`, seeded with today's offenders, so `main` stays green; a listed offender that
+now passes fails as stale). Unit tests in `card-rules.test.ts` pin one failing line per retired form.
+`docs/card-spec.md` gains a §6 pointer to `docs/card-voice.md` and two §17 rows. No card text changes in this chunk.
 
 **137.2, every line rewritten.** Apply the grammar to every FREE, PAID and Global line in the six library files,
-keeping each `run` untouched, and empty 137.1's allow-list. Add to `KEYWORD_GLOSS` and the systems glossary:
+from `docs/card-voice.md`, keeping each `run` untouched, and empty 137.1's exemptions for the two rules. Globals
+collapse to one effect: the Global program keeps a single body (`free`, `paid` and `paidDelta` become one `run`,
+`turnGlobal` already has that shape), `checkGlobalTemplate` drops its PAID-change clause, and Callus loses its FREE
+GUARD. Add to `KEYWORD_GLOSS` and the systems glossary:
 steps resolve left to right; debuffs land on the foe; `VULNERABLE n%` means n% more damage from every hit; DISCARD
 is random; `at half your VITAE` means half or less; GLOBAL lasts 3 turns played FREE and the whole combat PAID.
 The PR carries `review:rules-change` and a table of every changed line (old, new), so T reads it in one pass.
@@ -179,30 +190,33 @@ blind cold read (the Measure) over the twelve sample cards in both modes and rec
   keywords, numbers, entities and closed logic words; a unit test pins one failing line per retired form.
 - **A2** `checkTextOrder` fails a line whose printed keyword order differs from its program's call order, pinned by a
   unit test on a reordered line.
-- **A3** Both checks run over the whole library in `npm test`, with an allow-list that may only shrink.
-- **A4** Every printed FREE, PAID and Global line in the library passes both checks with the allow-list empty, and no
-  card's program body changed.
+- **A3** Both checks run over the whole library in `npm test`, reading the card-rules exemptions fixture, where a
+  listed card that now passes fails as stale; `docs/card-spec.md` §17 lists both.
+- **A4** Every printed FREE, PAID and Global line in the library passes both checks with no exemption, and no card's
+  program body changed except Callus's (A10).
 - **A5** The glossary teaches: steps resolve left to right; debuffs land on the foe; `VULNERABLE n%` is n% more
   damage; DISCARD is random; `at half your VITAE` is half or less; GLOBAL is 3 turns FREE and the whole combat PAID.
 - **A6** On a 360 by 640 phone viewport, the hand's small face prints each of the twelve sample cards' whole PAID
-  line in at most three lines with nothing clipped, in both modes (before and after screenshots in the PR).
+  line at 10 px in at most three lines with nothing clipped, in both modes (before and after screenshots in the PR).
 - **A7** A Global's small face shows GLOBAL where the FREE pill sits, no FREE line and no duration; its large face
   states the duration.
 - **A8** Settings has a "Card text: Words / Glyphs" control, default Words, kept across a restart; glyph mode
   changes only the keywords' form on every face.
-- **A9** Every printed keyword has a glyph with an accessibility label; VULNERABLE's glyph is not GUARD's shield with a
-  mark, and VITAE's glyph is not the heart die's mark.
+- **A9** Every printed keyword has a glyph from the mock's set (MERCY a laurel) with an accessibility label naming the
+  keyword.
+- **A10** Every Global has one effect body: played FREE it lasts 3 turns, PAID the whole combat; no Global program
+  carries a separate FREE body or a PAID change, and Callus deals X when you SACRIFICE X either way.
 
 ## Open questions
 
-- None that block a build; T's six calls are marked in Design with their defaults.
+- None: T answered all six calls on 2026-11-01.
 
 ## Chunks
 
-Measure: 9 open · 0 closed · next A10
+Measure: 10 open · 0 closed · next A11
 
 - [ ] **137.1** The grammar lint and the order test · M · closes A1, A2, A3 · needs — · alias: CF1a
-- [ ] **137.2** Every printed line in the grammar, and the glossary's rules · L · closes A4, A5 · needs 137.1 · alias: CF1b
+- [ ] **137.2** Every printed line in the grammar, and the glossary's rules · L · closes A4, A5, A10 · needs 137.1 · alias: CF1b
 - [ ] **137.3** The small face prints the whole PAID line; Globals say GLOBAL · M · closes A6, A7 · needs 137.2 · alias: CF1c
 - [ ] **137.4** Words or glyphs, chosen in Settings · M · closes A8, A9 · needs 137.3 · alias: CF1d
 
