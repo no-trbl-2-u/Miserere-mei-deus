@@ -6,7 +6,7 @@
  * It lives beside `icon-registry.ts` rather than in `assets/images/`
  * because its values are registry names, not bundled files.
  *
- * Since EQ3k (spec 136) T's own item sheets draw every item that has a row in
+ * T's own item sheets draw every item that has a row in
  * `item-sprites.ts`, so the table is empty today: the rows IT1b and IT2 held
  * (T's game-icons picks) were replaced by sprites, and their colours are in
  * the art. The table and its accents stay as the fallback for an item with no

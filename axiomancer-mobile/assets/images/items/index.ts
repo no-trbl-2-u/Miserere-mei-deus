@@ -1,9 +1,9 @@
 /**
  * Item sprites: T's own item sheets, cut by blob into one 256 px PNG per item
- * (`scripts/slice-item-sheet.mjs`, spec 136 EQ3k). Metro needs static
+ * (`scripts/slice-item-sheet.mjs`). Metro needs static
  * require literals, so this map is the one place an item id meets a file;
  * `components/icons/item-sprites.ts` re-exports it. The ten weapons and
- * armors (spec 136.6) have a sprite ahead of their content.
+ * armors have a sprite ahead of their content.
  */
 
 export const ITEM_SPRITE_FILES = {

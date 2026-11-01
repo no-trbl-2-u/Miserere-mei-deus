@@ -1,7 +1,7 @@
 /**
  * Hermetic component tests — ItemGlyph's id-keyed path.
  *
- * Resolution order (EQ3k, spec 136): an id with a sprite (T's sheets,
+ * Resolution order an id with a sprite (T's sheets,
  * `item-sprites.ts`) draws it; else an id with an entry in the glyph table
  * (`item-glyphs.ts`, empty in production, fed a fixture here) draws that
  * registry icon; every other id draws the category glyph it drew before any

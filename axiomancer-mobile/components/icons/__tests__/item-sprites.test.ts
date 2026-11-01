@@ -1,8 +1,8 @@
 /**
- * EQ3k (A20): every item draws its picture. `ITEM_SPRITES` holds the 23 ids of
- * spec 136 "The icons" (the ten pieces' ids included, ahead of 136.6), each
+ * Every item draws its picture. `ITEM_SPRITES` holds the 23 ids of
+ * the item icon table (the ten weapon and armor ids included, ahead of their content), each
  * with a label, and a relic or consumable in the libraries without a sprite
- * fails here. Once 136.6 lands, the weapon and armor libraries join the check
+ * fails here. Once weapons and armors exist, the weapon and armor libraries join the check
  * (the `LIBRARIES` list below is the one place to add them).
  */
 
@@ -22,7 +22,7 @@ const SPEC_IDS = [
     'minor-healing-potion', 'healing-potion', 'greater-healing-potion',
 ];
 
-/** Weapon and armor libraries, once 136.6 exports them. */
+/** Weapon and armor libraries, once they are exported. */
 const optional = (name: string): readonly { id: string }[] => {
     const lib = (mechanics as unknown as Record<string, unknown>)[name];
     return Array.isArray(lib) ? (lib as { id: string }[]) : [];

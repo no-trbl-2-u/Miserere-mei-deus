@@ -1,6 +1,6 @@
 /**
- * Item sprites: the picture an item wears, from T's own item sheets (spec 136,
- * EQ3k). The files and their `require` literals live in
+ * Item sprites: the picture an item wears, from T's own item sheets.
+ * The files and their `require` literals live in
  * `assets/images/items/index.ts` (Metro needs static literals, and the asset
  * check walks a category's registry); this module is the lookup the glyph
  * reads. An id with a sprite draws it; any other id draws the glyph chain in
@@ -24,7 +24,7 @@ export function getItemSprite(
     return table[itemId];
 }
 
-/** What each sprite shows, read aloud (T's table, spec 136 "The icons"). */
+/** What each sprite shows, read aloud (T's picture table). */
 export const ITEM_SPRITE_LABELS: Readonly<Record<keyof typeof ITEM_SPRITE_FILES, string>> = {
     'weapon-opening-blade': 'Longsword',
     'armor-bracing-coat': 'Steel breastplate',
