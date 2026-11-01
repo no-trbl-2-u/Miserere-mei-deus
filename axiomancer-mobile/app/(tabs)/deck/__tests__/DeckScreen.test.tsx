@@ -119,7 +119,12 @@ describe('DeckScreen: the detail is flavor\'s new home', () => {
         const free = order.indexOf('deck-card-detail-free');
         const flavor = order.indexOf('deck-card-detail-flavor');
 
+        const cardAt = order.indexOf('deck-card-detail-card');
+
         expect(keywords).toBeGreaterThanOrEqual(0);
+        // The shared ledger sits ahead of the card and outside its frame.
+        expect(cardAt).toBeGreaterThan(keywords);
+        expect(order.slice(cardAt + 1)).not.toContain('deck-card-detail-keywords');
         expect(free).toBeGreaterThan(keywords);
         // And flavour sits last — it is the reward for reading, not the lede.
         expect(flavor).toBeGreaterThan(free);

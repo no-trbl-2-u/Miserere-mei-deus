@@ -53,7 +53,7 @@ describe('combat card detail — overlay shape', () => {
 
     it('renders keyword definitions above the card face (finding 5)', () => {
         const overlay = detailOverlaySource();
-        const keywords = overlay.indexOf('detailCard.detail.keywords.map');
+        const keywords = overlay.indexOf('<CardKeywordLedger');
         const face = overlay.indexOf('<CombatCardFace');
         expect(keywords).toBeGreaterThan(-1);
         expect(face).toBeGreaterThan(-1);

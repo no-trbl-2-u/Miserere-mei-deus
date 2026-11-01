@@ -37,6 +37,7 @@ import {
     type Equipment, type GameState, type PlayLogUiEventKind,
 } from '@mechanics';
 
+import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { CombatBoard, CombatCardFace, OutcomeText, HAND_CARD_W, HAND_CARD_H, type DragController, type DragPayload, type Rect } from '@/components/combat/encounter/CombatBoard';
 import { useDragInterruptRecovery } from '@/components/combat/encounter/useDragInterruptRecovery';
 import { startDragSpan, type DragSpanEnd, type DragSpanKind, type DragSpanOutcome } from '@/lib/monitoring';
@@ -278,13 +279,6 @@ function keywordTypeTag(kind: string, index: number): string {
         default: return 'EFFECT';
     }
 }
-
-// Reference-style coloured type tags (right-aligned on the keyword panels).
-const TAG_COLORS: Record<string, string> = {
-    DOT: HUE.damageRed, CONTROL: HUE.tickPurple, GUARD: HUE.guardSteel,
-    MERCY: HUE.boonGreen, EFFECT: HUE.stoneGrey,
-    DICE: HUE.markGold,
-};
 
 // Category plaque for the status tooltip — glyph kind → badge label + colour.
 function effectCategory(kind: string, color: string): { label: string; color: string } {
@@ -985,22 +979,11 @@ export function CombatEncounterPanel({
                             {/* (1) keyword DEFINITIONS at the top — ONE compact ledger,
                                 not a box per keyword, so the card stays visible.
                                 Hairline-separated rows, terse type. */}
-                            {detailCard.detail.keywords.length > 0 && (
-                                <View style={styles.detailKeywords}>
-                                    {detailCard.detail.keywords.map((k, i) => {
-                                        const tag = keywordTypeTag(detailCard.face.kind, i);
-                                        return (
-                                            <View key={k.name} style={[styles.detailKeywordRow, i > 0 ? styles.detailKeywordRowSep : null]}>
-                                                <View style={styles.detailKeywordHead}>
-                                                    <Text style={[styles.detailKeywordName, k.minor ? { color: AXM.ash } : null]}>{k.name}</Text>
-                                                    <Text style={[styles.detailKeywordTag, { color: TAG_COLORS[tag] ?? AXM.bone }]}>{tag}</Text>
-                                                </View>
-                                                <Text style={styles.detailKeywordDef}>{k.def}{k.minor ? ' (minor right now)' : ''}</Text>
-                                            </View>
-                                        );
-                                    })}
-                                </View>
-                            )}
+                            <CardKeywordLedger
+                                keywords={detailCard.detail.keywords}
+                                typeTagFor={(i) => keywordTypeTag(detailCard.face.kind, i)}
+                                testID="combat-card-detail-keywords"
+                            />
 
                             {/* (2) the LARGE rendered card over a stance-coloured radial halo.
                                 The face is the glance read only (name · free glyph · KEYWORD ·
@@ -1420,8 +1403,6 @@ const useStyles = makeStyles((AXM) => ({
     detailCardWrap: { marginTop: 16, marginBottom: 6, alignItems: 'center', justifyContent: 'center', shadowColor: HUE.black, shadowOpacity: 0.8, shadowRadius: 20, shadowOffset: { width: 0, height: 8 }, elevation: 10 },
     detailHalo: { position: 'absolute' },
     detailBold: { fontFamily: FONTS.gothic, color: AXM.parchment },
-    detailKeywordHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2, gap: 8 },
-    detailKeywordTag: { fontFamily: FONTS.sans, fontSize: 8.5, letterSpacing: 1.2, flexShrink: 0 },
     // Close ✕ — bottom-right of the BACKDROP (never overlaps the keyword tags,
     // never falls below the fold).
     detailClose: { position: 'absolute', bottom: 26, right: 18, zIndex: 10, width: 50, height: 50, borderRadius: 25, borderWidth: 2, alignItems: 'center', justifyContent: 'center', backgroundColor: AXM.panelBg },
@@ -1457,13 +1438,6 @@ const useStyles = makeStyles((AXM) => ({
     systemsGlossaryTerm: { fontFamily: FONTS.sans, fontSize: 9.5, letterSpacing: 1, color: AXM.ash, opacity: 1 },
     detailReadNote: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 11, color: AXM.bone, lineHeight: 15 },
     detailLine: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment, lineHeight: 18 },
-    // ONE compact ledger, not a box per keyword.
-    detailKeywords: { alignSelf: 'stretch', marginBottom: 8, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.65)', overflow: 'hidden' },
-    detailKeywordsHead: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.5, color: AXM.bone, opacity: 0.7, marginBottom: 7 },
-    detailKeywordRow: { alignSelf: 'stretch', paddingHorizontal: 10, paddingVertical: 6 },
-    detailKeywordRowSep: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(255,255,255,0.14)' },
-    detailKeywordName: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.2, color: AXM.sulfur, flexShrink: 1 },
-    detailKeywordDef: { fontFamily: FONTS.serif, fontSize: 11.5, color: AXM.parchment, lineHeight: 16 },
     detailMath: { alignSelf: 'stretch', fontFamily: FONTS.mono, fontSize: 10.5, color: AXM.bone, opacity: 0.85, lineHeight: 15, marginBottom: 8 },
     detailTipGloss: { fontFamily: FONTS.serif, fontSize: 12, color: AXM.parchment, textAlign: 'center', marginTop: 6, lineHeight: 16 },
     detailHint: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 11, color: AXM.bone, marginTop: 4, textAlign: 'center' },
