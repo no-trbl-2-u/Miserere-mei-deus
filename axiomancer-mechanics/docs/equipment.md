@@ -6,12 +6,42 @@ engine's equipment code.
 
 ## What Act 1 holds
 
-One piece of equipment exists: the **Suppliant's Ring**
-(`relic-disarming-plea`, [`src/Items/relic.library.ts`](../src/Items/relic.library.ts)),
-a relic (its slot is `relic`; that it is a ring is its name alone). It has no stat line and grants one signature,
-The Open Hand (`sig-disarming-plea`). Nothing else in Act 1 grants
-equipment: caches never yield it (`src/Items/cache-reward.ts` rolls
-consumables only) and Act 1 has no shops.
+The ten relics of [`src/Items/relic.library.ts`](../src/Items/relic.library.ts)
+(the **Suppliant's Ring**, `relic-disarming-plea`, is the first: a relic whose
+slot is `relic`, a ring by its name alone, no stat line, granting The Open Hand,
+`sig-disarming-plea`), and the ten weapons and armor of
+[`src/Items/equipment.library.ts`](../src/Items/equipment.library.ts) below.
+Caches yield consumables (`src/Items/cache-reward.ts`).
+
+## The weapons and armor
+
+A weapon or armor has one fight effect and one dice effect and nothing else:
+no `statModifiers`, no `laneId`, no `grantsSignature`. A lane piece covers where
+its lane struggles; `EQUIPMENT_LANE` names that lane for the drop tables only
+(a worn weapon or armor opens no card lane). `weaponLibrary`, `armorLibrary`
+and `equipmentLibrary` (both) are exported from `@mechanics`; ids are
+`weapon-*` and `armor-*`.
+
+| Lane | Weapon | Armor |
+|---|---|---|
+| Grey | Opening Blade: your first DEAL each turn deals +2; special +2 Conviction | Bracing Coat: your first GUARD each turn gives +2; +1 hit on the gold die |
+| Blood Price | Siphoning Blade: HEAL 3 on each card DEAL; special heals 4 | Bloodward Mail: each SACRIFICE gives GUARD 2; one hit on the red die becomes a special |
+| Elementalist | Stormcaller Staff: DEALs +2 while the foe has weather; special lays INFERNO 2 on the foe | Flame Guard: +1 Conviction each time you lay INFERNO; +1 hit on the blue die |
+| Defender | Bulwark Mace: DEALs +2 while your GUARD holds; special gives GUARD 6 | Scavenger's Coat: draw 1 each time you pay by discarding; +1 hit on the purple die |
+| Merciful | Humbling Rod: DEALs +2 while the foe is above half VITAE; special lays VULNERABLE for a turn | Mending Vestments: each HEAL gives GUARD 2; one hit on the blue die becomes a special |
+
+The fight effect is `Equipment.effect` (a trigger and a payoff, or a condition
+and a DEAL bonus), run by `Combat/combat.equipment-effects.ts`; the dice half
+is `effect.die` (armor) and `effect.special` (weapon). The numbers are tuned
+later against the sims and play.
+
+**The grey pair is worn from the start.** `createNewGameState` opens every roster
+character wearing the Opening Blade and the Bracing Coat beside its starting
+relic, and carries copies of both in the inventory as every worn piece is. With
+no weapon worn a special only powers its card; the Opening Blade's special is the
++2 Conviction every special paid before a weapon set it. A save made before the
+pair existed loads with its slots as they were: nothing is granted to it. The
+pre-run shell (no character) wears nothing.
 
 ## The slots
 

@@ -34,6 +34,7 @@ import {
 } from '../Character/roster';
 import type { Equipment } from '../Items/types';
 import { cloneRelic, relicLibrary } from '../Items/relic.library';
+import { cloneEquipmentPiece, greyPair } from '../Items/equipment.library';
 import { learnCard, replaceCard } from '../Cards';
 import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
@@ -163,10 +164,13 @@ export interface NewGameOptions {
 
 /**
  * The level-1 player a run opens with. With a character: its stats (and the
- * max VITAE they give), its starting relic worn through the equip path, its
- * ten-card deck, and its id and starting lanes recorded. Without one: the
- * apprentice baseline, nothing worn, no cards (the client deals the grey
- * office on the first fight).
+ * max VITAE they give), its starting relic worn through the equip path, the
+ * grey pair (the Opening Blade and the Bracing Coat) worn and carried in the
+ * inventory too as every worn piece is, its ten-card deck, and its id and
+ * starting lanes recorded. Without one: the apprentice baseline, nothing
+ * worn, no cards (the client deals the grey office on the first fight).
+ * A save made before the pair existed is never granted it: only this path
+ * wears it.
  *
  * @throws When `characterId` names no roster character, or its relic is not
  *         in the relic library.
@@ -183,11 +187,13 @@ function createNewRunPlayer(opts: NewGameOptions): Character {
     if (!relic) {
         throw new Error(`createNewGameState: character "${def.id}" names relic "${def.startingRelicId}", which is not in the relic library.`);
     }
+    const worn = greyPair();
     const player = createCharacter({
         name: def.name,
         level: 1,
         baseStats: { ...def.baseStats },
-        equipment: [cloneRelic(relic)],
+        inventory: [cloneEquipmentPiece(worn.weapon), cloneEquipmentPiece(worn.armor)],
+        equipment: [cloneRelic(relic), worn.weapon, worn.armor],
         knownCards: characterDeck(def),
     });
     return { ...player, characterId: def.id, startingLaneIds: [...def.startingLaneIds] };

@@ -10,7 +10,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
-import { consumableLibrary, relicLibrary } from '@mechanics';
+import { consumableLibrary, equipmentLibrary, relicLibrary } from '@mechanics';
 
 import { DebugItemPicker } from '@/components/DebugItemPicker';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -25,10 +25,19 @@ const makeStore = (): AppStore => createAppStore({ adapter: createMemoryAdapter(
 const withProvider = (store: AppStore, child: React.ReactNode) => <GameStoreProvider store={store}>{child}</GameStoreProvider>;
 
 describe('DebugItemPicker', () => {
-    it('renders a chip per relic and consumable', () => {
+    it('renders a chip per relic, weapon, armor and consumable', () => {
         const tree = render(withProvider(makeStore(), <DebugItemPicker />));
         for (const r of relicLibrary) expect(tree.queryByTestId(`debug-item-${r.id}`)).not.toBeNull();
+        for (const g of equipmentLibrary) expect(tree.queryByTestId(`debug-item-${g.id}`)).not.toBeNull();
         for (const c of consumableLibrary) expect(tree.queryByTestId(`debug-item-${c.id}`)).not.toBeNull();
+    });
+
+    it('a weapon chip carries the piece (the slot is taken or free) and reports it', () => {
+        const store = makeStore();
+        const tree = render(withProvider(store, <DebugItemPicker />));
+        fireEvent.press(tree.getByTestId('debug-item-weapon-siphoning-blade'));
+        expect(store.getState().player.inventory.some((i) => i.id === 'weapon-siphoning-blade')).toBe(true);
+        expect(tree.getByTestId('debug-item-picker-sub').props.children).toContain('Siphoning Blade');
     });
 
     it('renders null when __DEV__ is false (production build simulation)', () => {

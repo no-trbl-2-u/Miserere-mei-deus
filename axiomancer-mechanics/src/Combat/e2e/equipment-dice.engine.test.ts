@@ -34,7 +34,6 @@ import { applyDieChanges } from '../combat.equipment-effects';
 import {
     DEFAULT_DIE_GEAR, activeDieGear, honedDieGear, rollUpgradeableDice, rollUpgradeableFace,
 } from '../combat.upgradeable-dice';
-import { wearGreySword } from '../combat.grey-sword';
 
 // ── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -79,7 +78,6 @@ function wearer(cardId: string, gear: Gear, mutate?: (c: Character) => void): Ch
     p.knownCards = Array(6).fill(cardId);
     p.baseStats = { heart: 5, body: 5, mind: 5 };
     p.health = 100; p.maxHealth = 400;
-    wearGreySword(p);
     p.equipment = { ...p.equipment, weapon: gear.weapon ?? null, armor: gear.armor ?? null };
     mutate?.(p);
     return p;

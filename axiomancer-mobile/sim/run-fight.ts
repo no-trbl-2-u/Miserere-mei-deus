@@ -6,10 +6,9 @@
  * scales its HP by the live multiplier, is what `<CombatGate>` calls). The
  * fight then runs on the engine's encounter functions exactly as
  * `<CombatEncounterPanel>` runs them: `initializeCombatEncounter` from the
- * store's player and flags (the run's real deck, relics and level; a player
- * with no weapon fights with the grey sword the new-run kit will provide, so
- * the sim plays a fresh run as it is meant to play, where the live screen
- * fights the player as they stand), the
+ * store's player and flags (the run's real deck, relics, worn gear and level:
+ * a new run wears the grey pair, so the sim plays a fresh run as the live
+ * screen does), the
  * reveal's `rollEncounterDice`, each phase played by the run policy's combat
  * witness (`upgradeablePlayPhase`, the sim's own phase player), the mercy
  * choice through `selectEncounterMercyChoice`, the foe's turn through
@@ -28,7 +27,6 @@ import {
     rollEncounterDice,
     selectEncounterMercyChoice,
     upgradeablePlayPhase,
-    wearGreySword,
     type CombatEncounterState,
     type CombatOutcome,
     type Enemy,
@@ -85,10 +83,8 @@ function playToOutcome(store: AppStore, enemy: Enemy, policy: RunPolicy, ctx: Ru
     const seed = Math.floor(Math.random() * 0xffffffff);
     const witness = policy.fightPolicy(ctx);
     const rng = (): number => getRng().random();
-    // A special only pays when a weapon is worn, and a new game gives none yet: the run fights
-    // with the grey sword's stand-in so it plays as a fresh run is meant to.
-    const fighter = state.player.equipment.weapon ? state.player : wearGreySword({ ...state.player });
-    let live = initializeCombatEncounter(fighter, enemy, undefined, seed, flags);
+    // The player fights as they stand: a new run wears the grey pair, so the sim plays a fresh run as it is.
+    let live = initializeCombatEncounter(state.player, enemy, undefined, seed, flags);
     live = rollEncounterDice(live).state;
     // The panel hands every state it renders to the fight recorder; so does the driver.
     fightRecorder.observe(live);

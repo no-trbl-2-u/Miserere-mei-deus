@@ -64,7 +64,7 @@ describe('/character-select with the live roster', () => {
         expect(saved.characterId).toBe('the-chosen');
         expect(saved.startingLaneIds).toEqual(['defender', 'blood-price']);
         expect(saved.baseStats).toEqual({ heart: 7, body: 3, mind: 5 });
-        expect(getEquippedItems(saved.equipment).map((p) => p.id)).toEqual(['relic-disarming-plea']);
+        expect(getEquippedItems(saved.equipment).map((p) => p.id)).toEqual(['weapon-opening-blade', 'armor-bracing-coat', 'relic-disarming-plea']);
         expect(saved.knownCards).toHaveLength(10);
         expect(rewardPoolFor(store.getState().player).length).toBeGreaterThan(0);
         expect(mockReplace).toHaveBeenCalledWith('/exploration');
