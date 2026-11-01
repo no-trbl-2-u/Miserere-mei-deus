@@ -196,6 +196,21 @@ test('--owner and CLAIM_OWNER: one claimant across sessions, aliases claimed as 
   assert.deepEqual(Object.keys(w.record()), ['136'])
 })
 
+test('/pilot as written: a wave claimed as a package by its session, renewed and PR-recorded by a worker of that session', () => {
+  const w = makeWorld(2)
+  const [a, b] = w.clones
+  const pilot = { NEXUS_SESSION: '747f1213' }
+  assert.equal(w.cli(a, ['claim', '133.5', '133.6']).code, 1, 'a contributor names one chunk without --package')
+  assert.equal(w.cli(a, ['claim', '133.5', '133.6', '--package'], pilot).code, 0)
+  assert.match(w.cli(b, ['claim', '133.6'], pilot).stdout, /^133\.6: yours$/m)
+  assert.equal(w.cli(b, ['pr', '133.6', '1300'], pilot).code, 0)
+  assert.match(w.cli(a, ['renew'], pilot).stdout, /^renewed: 133\.5, 133\.6$/m)
+  assert.equal(w.cli(a, ['release', '133.5'], { NEXUS_SESSION: 'other' }).code, 1, 'another session cannot release it')
+  assert.match(w.cli(a, ['release', '133.5'], pilot).stdout, /^released: 133\.5$/m)
+  // A PR'd claim is also its author's on that machine in any session (the kit's rule), so a later session carries it.
+  assert.equal(parse(w.record()['133.6']).pr, 1300)
+})
+
 test('the migration on a fixture branch: v1 entries become v2 under their chunks, every claim kept', () => {
   const w = makeWorld(2)
   const [a, b] = w.clones

@@ -167,12 +167,6 @@ None. No game save, engine type or Worker route changes.
 
 ## Acceptance
 
-- **A11** `/pilot` exists (`skills/pilot.md`, `.claude/commands/pilot.md`): nexus's heads-down frame
-  (plan read from origin, the two question gates, claims, the ledger and `/reboot-resume`, the end gate,
-  `progress.mjs`) around our wave scheduler (the dependency map, one background worker per chunk in its
-  own worktree running `/next`, the next wave once its prerequisite PR merges, a model per worker, the
-  callout bus, push-once during review, one plot PR merging at a time, PR screenshots). `/pilot peek`
-  launches nothing. Our `skills/heads-down.md` is retired; nexus's stays as the kit ships it.
 - **A12** `.github/workflows/nexus-sync.yml` runs `npx @usenexus/cli upgrade --pr --no-assist` on a weekly
   schedule and by hand: one PR, updated in place, labelled `nexus-sync`, which only T merges: the merge
   job never merges it, and no loop verb, `/pilot` worker, `pr-autofix` or `pr-resolve` run merges it
@@ -207,8 +201,7 @@ None. No game save, engine type or Worker route changes.
 
 ## Chunks
 
-Measure: 4 open · 10 closed · next A15
+Measure: 3 open · 11 closed · next A15
 
-- [ ] **133.7** /pilot · L · closes A11 · needs — · alias: NX1g
 - [ ] **133.8** The weekly nexus sync · M · closes A12, A14 · needs — · alias: NX1h
 - [ ] **133.9** The loop back on (attended) · S · closes A13 · needs — · alias: NX1i

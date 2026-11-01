@@ -680,11 +680,11 @@ test('the land step names Miserere\'s landing in a marked local block; kit text 
 // @claude comment on a plot PR (T answering its calls, 2026-10-25). T fires it.
 const routeStep = (text) => text.slice(text.indexOf("- name: Route T's answers on a plot PR"), text.indexOf('- name: Run Claude Code'))
 
-test('no workflow fires /plot, /messy, /lane-creator or /heads-down', () => {
+test('no workflow fires /plot, /messy, /lane-creator, /pilot or /heads-down', () => {
   for (const f of fs.readdirSync(path.join(ROOT, WF)).filter((f) => f.endsWith('.yml'))) {
     let text = read(`${WF}/${f}`)
     if (f === 'claude.yml') text = text.replace(routeStep(text), '')
-    assert.doesNotMatch(text, /\/(plot|messy|lane-creator|heads-down)\b|skills\/(plot|messy|heads-down)\.md/, f)
+    assert.doesNotMatch(text, /\/(plot|messy|lane-creator|pilot|heads-down)\b|skills\/(plot|messy|pilot|heads-down)\.md|pilot-waves/, f)
   }
 })
 
@@ -727,136 +727,162 @@ test('/pitch lives in the repo, picks the game-design lens and never fires from 
   assert.match(read('AGENTS.md'), /`AskUserQuestion` only in `\/oversight`[\s\S]{0,200}`\/pitch`/)
 })
 
-test('the two intake skills and /heads-down say the loop never fires them', () => {
-  for (const f of ['skills/plot.md', 'skills/messy.md', 'skills/heads-down.md']) {
+test('the two intake skills and /pilot say the loop never fires them', () => {
+  for (const f of ['skills/plot.md', 'skills/messy.md', 'skills/pilot.md']) {
     assert.match(read(f), /Never fired by the loop/, f)
   }
 })
 
-// --- /heads-down: T's attended parallel shipping (2026-10-28) ---------------
+// --- /pilot: T's attended parallel orchestrator (NX1g, R5) ------------------
 
-test('no other skill dispatches /heads-down, and it has a doorway', () => {
-  const dispatch = /(Read|Execute|dispatch(es)? (to|into)|run) `?skills\/heads-down\.md|Skill\(\s*['"]?heads-down/i
+test('no other skill dispatches /pilot, and it has a doorway', () => {
+  const dispatch = /(Read|Execute|dispatch(es)? (to|into)|run) `?skills\/pilot\.md|Skill\(\s*['"]?pilot/i
   for (const f of fs.readdirSync(path.join(ROOT, 'skills')).filter((f) => f.endsWith('.md'))) {
-    if (f === 'heads-down.md') continue
+    if (f === 'pilot.md') continue
     assert.doesNotMatch(read(`skills/${f}`), dispatch, f)
   }
-  const door = read('.claude/commands/heads-down.md')
+  for (const f of fs.readdirSync(path.join(ROOT, '.claude/commands')).filter((f) => f.endsWith('.md'))) {
+    if (f === 'pilot.md') continue
+    assert.doesNotMatch(read(`.claude/commands/${f}`), /\/pilot\b|skills\/pilot\.md/, f)
+  }
+  const door = read('.claude/commands/pilot.md')
   assert.match(door, /^---\ndescription: /)
-  assert.match(door, /skills\/heads-down\.md/)
+  assert.match(door, /skills\/pilot\.md/)
+  assert.match(door, /- `peek \[<scope>\]` → [^\n]*launch nothing/)
+  assert.match(door, /- `resume` →/)
   assert.match(door, /Argument: \$ARGUMENTS/)
 })
 
-test('/heads-down workers run /ship-a-phase per row, never /march, and waves wait on merges', () => {
+test("/heads-down is the kit's, stock; ours is retired into /pilot", () => {
   const hd = read('skills/heads-down.md')
-  assert.match(hd, /`\/ship-a-phase phase <id>`/)
-  assert.match(hd, /Never `\/march`/)
-  assert.match(hd, /\*\*merged on\s+`main`\*\*/)
-  assert.match(hd, /The orchestrator never builds/)
-  assert.match(hd, /\*\*push once\*\*/)
+  assert.match(hd, /^# Skill: heads-down \(nexus\)$/m)
+  assert.match(hd, /loop `\/next` through/)
+  assert.doesNotMatch(hd, /ship-a-phase|heads-down-ledger|Miserere/)
+  assert.doesNotMatch(read('.claude/commands/heads-down.md'), /ship-a-phase|heads-down-ledger/)
 })
 
-test('/heads-down UI workers show before/after shots in the PR body, never in the repo', () => {
-  const hd = read('skills/heads-down.md')
-  assert.match(hd, /^SHOTS: /m)
-  assert.match(hd, /UI shots live in the PR description, never in the repo/)
-  assert.match(hd, /\/tmp\/pr-shots\//)
-  assert.match(hd, /gh release upload pr-shots/)
-  assert.match(hd, /user-attachments\/assets/)
-  assert.match(hd, /## Screenshots/)
+test('/pilot workers run /next per chunk, never /march, and waves wait on merges', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /`\/next <id>`/)
+  assert.match(p, /Never `\/march`/)
+  assert.match(p, /\*\*merged on\s+`main`\*\*/)
+  assert.match(p, /The orchestrator never builds/)
+  assert.match(p, /\*\*push once\*\*/)
+  assert.match(p, /`loop\/next-<id>`/)
 })
 
-// --- /heads-down asks at two gates and workers park (HW1a) ------------------
+test('/pilot peek prints the waves from the chunks\' needs and launches nothing', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /`peek` launches nothing, claims nothing and writes no ledger/)
+  assert.match(p, /node scripts\/pilot-waves\.mjs <scope>/)
+  assert.ok(fs.existsSync(path.join(ROOT, 'scripts/pilot-waves.mjs')))
+  assert.doesNotMatch(read('scripts/pilot-waves.mjs'), /claims\.mjs (claim|renew|release)|ledger\.mjs beat|writeFileSync|spawn\(/)
+})
 
-test('/heads-down asks every question at a gate before "Launch the wave"', () => {
-  const hd = read('skills/heads-down.md')
-  const gate = hd.indexOf('### Step 3 — The question gate')
-  const launch = hd.indexOf('### Step 4 — Launch the wave')
-  assert.ok(gate > 0 && launch > gate, 'the question gate precedes Launch the wave')
-  const body = hd.slice(gate, launch)
+test('/pilot UI workers show before/after shots in the PR body, never in the repo', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /^SHOTS: /m)
+  assert.match(p, /UI shots live in the PR description, never in the repo/)
+  assert.match(p, /\/tmp\/pr-shots\//)
+  assert.match(p, /gh release upload pr-shots/)
+  assert.match(p, /user-attachments\/assets/)
+  assert.match(p, /## Screenshots/)
+})
+
+test('/pilot asks every question at a gate before the launch', () => {
+  const p = read('skills/pilot.md')
+  const gate = p.indexOf('### Step 3 — The question gate')
+  const launch = p.indexOf('### Step 4 — Open the ledger, claim the wave, launch it')
+  assert.ok(gate > 0 && launch > gate, 'the question gate precedes the launch')
+  const body = p.slice(gate, launch)
   assert.match(body, /\[T to confirm #n\]/)
   assert.match(body, /## Your calls/)
   assert.match(body, /plan\/NEEDS_T\.md/)
+  assert.match(body, /## Open questions/)
   assert.match(body, /at most four\s+questions/)
   assert.match(body, /before the first launch/)
   assert.match(body, /T's answers/)
   assert.match(body, /calls\s+worker/)
+  assert.match(body, /progress\.mjs/)
 })
 
-test('/heads-down workers never ask T and report DEFAULTS and PARKED lines', () => {
-  const hd = read('skills/heads-down.md')
-  assert.match(hd, /\*\*the park rule\*\*: never ask T/)
-  assert.match(hd, /^DEFAULTS:\n- <call> \| took: <option> \| why: <reason>$/m)
-  assert.match(
-    hd,
-    /^PARKED:\n- q: <whole question> \| alts: <a; b> \| default taken: <x> \| why: <reason>$/m,
-  )
-  assert.match(hd, /neither a `DEFAULTS:` nor a `PARKED:` line goes back/)
+test('/pilot workers never ask T and report DEFAULTS and PARKED lines', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /\*\*the park rule\*\*: never ask T/)
+  assert.match(p, /^DEFAULTS:\n- <call> \| took: <option> \| why: <reason>$/m)
+  assert.match(p, /^PARKED:\n- q: <whole question> \| alts: <a; b> \| default taken: <x> \| why: <reason>$/m)
+  assert.match(p, /^CALLOUTS:\n- footgun: /m)
+  assert.match(p, /neither a `DEFAULTS:` nor a `PARKED:` line goes back/)
 })
 
-test('/heads-down end gate asks the parked questions and routes contradicting answers', () => {
-  const hd = read('skills/heads-down.md')
-  const end = hd.slice(hd.indexOf('### Step 8 — The end gate'), hd.indexOf('## 3. Hard rules'))
+test('/pilot end gate asks the parked questions and routes contradicting answers', () => {
+  const p = read('skills/pilot.md')
+  const end = p.slice(p.indexOf('### Step 8 — The end gate'), p.indexOf('### Resume'))
   assert.match(end, /every parked question of the run/)
   assert.match(end, /`SendMessage`/)
-  assert.match(end, /follow-up commit[^.]*after the review verdict/)
+  assert.match(end, /follow-up commit[^.]*after the review\s+verdict/)
   assert.match(end, /push-once rule holds/)
   assert.match(end, /`\/plot`/)
   assert.match(end, /every default taken/)
-  assert.match(hd, /\*\*Questions only at the two gates\.\*\*/)
+  assert.match(end, /node scripts\/claims\.mjs release <chunk>/)
+  assert.match(end, /node scripts\/ledger\.mjs end/)
+  assert.match(p, /\*\*Questions only at the two gates\.\*\*/)
 })
 
-// --- /heads-down claims its waves, keeps a ledger, resumes (HW1c) -----------
-
-test('/heads-down claims each wave before launching and carries CLAIM_OWNER', () => {
-  const hd = read('skills/heads-down.md')
-  const launch = hd.slice(
-    hd.indexOf('### Step 4 — Launch the wave'),
-    hd.indexOf('### Step 5 — The callout bus'),
-  )
-  const claim = launch.indexOf('node scripts/claims.mjs claim <row>')
-  const spawn = launch.indexOf('Then launch: one background subagent')
-  assert.ok(claim > 0 && spawn > claim, 'the wave is claimed before any worker starts')
-  assert.match(launch, /--owner heads-down:<id>/)
-  assert.match(launch, /<chunk>: refused, held by <holder>/)
-  assert.match(launch, /as the chunk that carries it as its `alias:`/)
-  assert.match(launch, /Drop those rows from the wave/)
-  assert.match(launch, /\*\*the claim owner\*\*: `CLAIM_OWNER=heads-down:<session id>`/)
-  assert.match(hd, /heads-down:<session id>`\./)
-  const react = hd.slice(hd.indexOf('### Step 6'), hd.indexOf('### Step 7'))
+test('/pilot claims each wave before launching, renews, and never releases on a crash', () => {
+  const p = read('skills/pilot.md')
+  const launch = p.slice(p.indexOf('### Step 4 — Open the ledger'), p.indexOf('### Step 5 — The callout bus'))
+  const ledger = launch.indexOf('node scripts/ledger.mjs beat --step gate --set kind=pilot')
+  const claim = launch.indexOf('node scripts/claims.mjs claim <chunk>')
+  const spawn = launch.indexOf('**Then launch**: one background subagent')
+  assert.ok(ledger > 0 && claim > ledger && spawn > claim, 'ledger, then claim, then launch')
+  assert.match(launch, /Drop those chunks from the wave/i)
+  assert.match(launch, /\*\*the claim session\*\*: `NEXUS_SESSION=<claims id>`/)
+  assert.match(launch, /keeps that owner to its end/)
+  const react = p.slice(p.indexOf('### Step 6'), p.indexOf('### Step 7'))
   assert.match(react, /Renew at every worker report and every wave start/)
-  assert.match(react, /claims\.mjs renew --owner heads-down:<id>/)
-  const end = hd.slice(hd.indexOf('### Step 8 — The end gate'), hd.indexOf('### Resume'))
-  assert.match(end, /claims\.mjs release <row> \.\.\. --owner heads-down:<id>/)
-  assert.match(hd, /\*\*A crash never releases claims\.\*\*/)
+  assert.match(react, /node scripts\/claims\.mjs renew/)
+  assert.match(p, /\*\*A crash never releases claims\.\*\*/)
 })
 
-test('/heads-down keeps an untracked ledger in the primary checkout and beats it', () => {
-  const hd = read('skills/heads-down.md')
-  assert.match(hd, /scripts\/heads-down-ledger\.mjs/)
-  assert.match(hd, /untracked\s+`\.heads-down\/<session id>\.json`/)
-  assert.match(hd, /\*\*primary checkout\*\*/)
-  assert.match(hd, /\*\*Beat it at every\s+step\*\*/)
-  assert.match(hd, /\.heads-down\/<id>\/prompts\/<row>\.md/)
-  assert.match(hd, /heads-down-ledger\.mjs end --session <id>/)
-  assert.match(read('.gitignore'), /^\.heads-down\/$/m)
-  assert.ok(fs.existsSync(path.join(ROOT, 'scripts/heads-down-ledger.mjs')))
+// NX1f: v2's claims are on main, so /pilot's calls run as written (a wave is a --package claim) with no bridge.
+test('/pilot claims its wave as a v2 package and carries no pre-NX1f bridge', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /node scripts\/claims\.mjs claim <chunk> <chunk> \.\.\. --package/)
+  assert.doesNotMatch(p, /until NX1f|Until NX1f/)
 })
 
-test('/heads-down resume has a doorway and replaces the manual restart check', () => {
-  const hd = read('skills/heads-down.md')
-  assert.match(hd, /^\/heads-down resume /m)
-  assert.match(read('.claude/commands/heads-down.md'), /- `resume` →/)
-  const resume = hd.slice(hd.indexOf('### Resume'), hd.indexOf('## 3. Hard rules'))
-  assert.match(resume, /heads-down-ledger\.mjs latest/)
-  assert.match(resume, /claims\.mjs renew --owner\s+heads-down:<ledger id>/)
+test('/pilot keeps the kit ledger in the primary checkout and beats it; the old one is a shim', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /untracked `\.nexus\/sessions\/<session id>\.json` in the \*\*primary\s+checkout\*\*/)
+  assert.match(p, /\*\*Beat it at every step\*\*/)
+  assert.match(p, /--set-file workers\.<chunk>\.prompt=<file>/)
+  assert.match(read('.gitignore'), /^\.nexus\/$/m)
+  assert.match(read('scripts/heads-down-ledger.mjs'), /RETIRED \(phase NX1g\)\. A thin shim\./)
+})
+
+test('/pilot resume takes the ledger and relaunches dead workers', () => {
+  const p = read('skills/pilot.md')
+  assert.match(p, /^\/pilot resume /m)
+  const resume = p.slice(p.indexOf('### Resume'), p.indexOf('## 3. Hard rules'))
+  assert.match(resume, /node scripts\/ledger\.mjs\s+take <star \| id>/)
+  assert.match(resume, /`\/reboot-resume`/)
   assert.match(resume, /git ls-remote --heads origin <branch>/)
   assert.match(resume, /gh pr list --head\s+<branch>/)
   assert.match(resume, /`fix-ci --branch`/)
   assert.match(resume, /relaunch it from its saved prompt/)
   assert.match(resume, /first\s+unfinished wave/)
-  assert.doesNotMatch(hd, /check each worker's transcript mtime/)
-  assert.match(hd, /run `\/heads-down resume`/)
+  assert.match(p, /run `\/pilot resume`/)
+})
+
+test('/pilot says which parts came from nexus /heads-down and which are ours', () => {
+  const p = read('skills/pilot.md')
+  const map = p.slice(p.indexOf('## 6. Where each part comes from'))
+  assert.match(map, /^\| Part of `\/pilot` \| From \| nexus `\/heads-down` section it tracks \|$/m)
+  assert.ok((map.match(/^\| [^|]+ \| nexus \|/gm) ?? []).length >= 5, 'nexus rows')
+  assert.ok((map.match(/^\| [^|]+ \| ours/gm) ?? []).length >= 5, 'ours rows')
+  const lock = /^ref: ([0-9a-f]{7})/m.exec(read('plan/nexus.lock'))[1]
+  assert.match(map, new RegExp('`' + lock + '`'), 'the kit ref the rows were matched to')
 })
 
 // --- /plot splits into phases and lands by a `plot` PR (D93) ----------------
