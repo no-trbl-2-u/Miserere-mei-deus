@@ -66,11 +66,11 @@ HISTORICAL. Owner action (not the repo): remove the globally installed
 
 | Verb / file | Fixes |
 |---|---|
-| All verbs | a **revamp-mode banner**: ratified revamp phases only, no content creation (D58), THE CARD HOLD (D37); strip `card-expert` / `/adjust-*` routing (`iterate.md:243-248, 398`; `ship-a-chunk.md:66-67`; `digest.md:79-83`) |
+| All verbs | a **revamp-mode banner**: ratified revamp phases only, no content creation (D58), THE CARD HOLD (D37); strip `card-expert` / `/adjust-*` routing (`iterate.md:243-248, 398`; `ship-a-phase.md:66-67`; `digest.md:79-83`) |
 | `march.md` + stub | drop the steward rotation; one home for gate logic (critique §9, expand §9, iterate §6.6 repeat it); stub lists paused stewards and calls a 320-line skill "short" |
 | `iterate.md` + stub | cut web-template audit categories (pillars, word counts, `alt`, unused CSS); focus list matches the skill; no content fixes |
-| `ship-a-chunk.md` | cut web-template text (Next.js/Express, 375px, page families, cross-link retrofit, `:84-122, 266-293, 412-413, 460-466`); "HP is sole win condition" (`:416`) → VITAE + befriend; dated incidents → archive |
-| `plan-a-spec.md` | drop "specs win over bearings" (`:35, 118-123`) and the web brief format (`:61-73`); briefs cite `plan/revamp/` |
+| `ship-a-phase.md` | cut web-template text (Next.js/Express, 375px, page families, cross-link retrofit, `:84-122, 266-293, 412-413, 460-466`); "HP is sole win condition" (`:416`) → VITAE + befriend; dated incidents → archive |
+| `plan-a-phase.md` | drop "specs win over bearings" (`:35, 118-123`) and the web brief format (`:61-73`); briefs cite `plan/revamp/` |
 | `expand.md` | D37/D58 filter; exclude `braindump/` and HISTORICAL specs from signal E; drop the dead autonomous-posture branch; "Axiomancer" → product name |
 | `oversight.md` | drop the dead `audit` mode (no callers) and the retired `[needs-user-call]` outputs |
 | `critique.md` + stub | drop the dead auth dual-pass; stub must not say "delegate to playtester" (the skill forbids it unattended) |
@@ -103,7 +103,7 @@ stay as they are.
 - `plan/bearings.md`: supersede `:283-285` (aspect thirds survive), `:338-345`
   (THE UNSHACKLING's full card authority), `:386-393` (open keyword growth)
   with D36/D37/D58 notes; reconcile `:691-700` CQI with digest.
-- `plan/CANDIDATES.md`: move moot rows to Rejected citing D36/D37/D48/
+- `plan/PHASE_CANDIDATES.md`: move moot rows to Rejected citing D36/D37/D48/
   D50/T6 — card-face parity (`:297`), `PRESET_LINEAGE` (`:347`), 27 damned
   exemplars (`:354`), enchant hooks (`:425`), pricing-lint credit (`:437`),
   starter-library trim (`:448`), swap-pool authoring (`:495`),
@@ -116,7 +116,7 @@ stay as they are.
   :1081, :1127, :1292`, `:326` mechanics-expert, `:1091` combat-playtest).
 - `plan/CRITIQUE.md`: close `:413, :423, :433, :546, :560, :627`; re-verify
   `:228, :597` against the grey cards.
-- `plan/README.md`: archive shipped briefs 102, 103, 104, M4, M5, T6.
+- `plan/phases/`: archive shipped briefs 102, 103, 104, M4, M5, T6.
 - `plan/CONTENT_LEDGER.md`: drop steward rows (above).
 
 ## R11 — Reopen the loop (attended, closes the revamp)
@@ -183,7 +183,7 @@ Recorded as the next free D-numbers (D84 onward; D83 went to RC2) in
   one sentence in `skills/march.md` §3 and `plan/bearings.md`, not a banner.
 - `skills/march.md` §3 "Pickable phase": the first `[ ]` row, not attended,
   `Requires` ticked, **and not covered by an open loop PR** (item 3). Drop
-  rule 1 (THE REVAMP block). `ship-a-chunk.md:125-130` says the same
+  rule 1 (THE REVAMP block). `ship-a-phase.md:125-130` says the same
   (today it omits the attended exclusion; fix it).
 - `plan/bearings.md:248-262` THE REVAMP entry → one historical paragraph:
   what it was, D46–D82, the tag, "ended at RC; R11 removed revamp mode".
@@ -198,7 +198,7 @@ Recorded as the next free D-numbers (D84 onward; D83 went to RC2) in
 §Rebuild track. The B-rows stay `[blocked: owner-led]`.
 
 **3. The loop opens PRs** (decisions a–d).
-- `skills/ship-a-chunk.md` Steps 10–12: branch `loop/<verb>-<slug>` cut
+- `skills/ship-a-phase.md` Steps 10–12: branch `loop/<verb>-<slug>` cut
   from a fresh `origin/main`; commit; `git push -u origin <branch>`;
   `gh pr create` with a body template (what shipped, what T can now do,
   Decisions, `Closes #<mirror>` trailer, the brief's acceptance IDs
@@ -264,8 +264,8 @@ Recorded as the next free D-numbers (D84 onward; D83 went to RC2) in
   `.claude/commands/plot.md`: `/plot asap|anytime|peek "<task>"`. Orient
   (bearings, reflexes, the build plan, AUDIT/CRITIQUE heads); research
   (what exists in code and plan, which D-numbers it touches, which
-  surfaces per item 2); shape (a brief in `plan/README.md` in the §4 format
-  of `plan-a-spec.md`, **with acceptance IDs `A1…` and a `Measure:`
+  surfaces per item 2); shape (a brief in `plan/phases/` in the §4 format
+  of `plan-a-phase.md`, **with acceptance IDs `A1…` and a `Measure:`
   line**); slot (an `asap` row goes to the top of the build plan's "Next
   up", `anytime` at its end, no word → the command picks and says why);
   commit `phases: plot <N> — <title>` and push `main` (plan-only). Never
@@ -273,16 +273,16 @@ Recorded as the next free D-numbers (D84 onward; D83 went to RC2) in
 - `skills/messy.md` + `.claude/commands/messy.md`: a raw dump to a
   gitignored `plan/messy/YYYY-MM-DD-<slug>.md`; cluster; for each theme
   check what exists; refine into a part plan under `plan/revamp/` or a
-  new `plan/<topic>.md` and `CANDIDATES` rows marked
+  new `plan/<topic>.md` and `PHASE_CANDIDATES` rows marked
   `[owner]`; fan out one agent per theme for 3+ themes. Never commits the
   dump. Never builds.
-- `skills/plan-a-spec.md` §4: acceptance IDs and `Measure:` become part
-  of the brief format; `ship-a-chunk.md` ticks the IDs it closes in the PR
+- `skills/plan-a-phase.md` §4: acceptance IDs and `Measure:` become part
+  of the brief format; `ship-a-phase.md` ticks the IDs it closes in the PR
   body.
-- **The loop stops authoring briefs.** `ship-a-chunk.md:132-136` and
+- **The loop stops authoring briefs.** `ship-a-phase.md:132-136` and
   `march.md` Step 3: a `[ ]` row with no brief is not pickable; the tick
-  files a `CANDIDATES` row "needs a brief: `/plot <N>`" and moves
-  on. `/plan-a-spec` stays as the attended way to write or refresh one.
+  files a `PHASE_CANDIDATES` row "needs a brief: `/plot <N>`" and moves
+  on. `/plan-a-phase` stays as the attended way to write or refresh one.
 - `/jot` stays as the CRITIQUE quickfire; `/plot` is to the build plan what
   `/jot` is to CRITIQUE. Say so in bearings.
 - `/expand` posture per decision f.
@@ -309,17 +309,17 @@ Recorded as the next free D-numbers (D84 onward; D83 went to RC2) in
     attended sessions read it first; each skill's frontmatter
     `description` names its triggers so the harness surfaces it; rule 7
     points at the two skills for "buildable ideas" instead of writing
-    `CANDIDATES` rows directly when T is present.
+    `PHASE_CANDIDATES` rows directly when T is present.
   - A test in `scripts/loop-pr.test.mjs` (or its own) fails if any file
     under `skills/` other than `plot.md`/`messy.md`, or any workflow,
     invokes `/plot` or `/messy`.
 
 **5. The loop learns: retro and a counted lessons ladder.**
-- A **Retro** step closes `ship-a-chunk`, `iterate`, `critique`, `fix-ci`
+- A **Retro** step closes `ship-a-phase`, `iterate`, `critique`, `fix-ci`
   and `plot` (even a tick that shipped nothing): bump or add a lesson in
   `plan/lessons.md`; a lesson **seen twice** is automated in the same tick
   (a guard check, a test, a lint) or, if that is a phase of its own, a
-  `CANDIDATES` row naming the automation; tighten the skill's own
+  `PHASE_CANDIDATES` row naming the automation; tighten the skill's own
   file if one of its steps misled you (it may only get safer or clearer);
   "retro: clean" is a valid outcome. Commit `lessons: retro <verb> <N>`.
 - `plan/lessons.md` format: one bullet per lesson,
@@ -384,7 +384,7 @@ returns. `/march` picks the first unattended `[ ]` row with a brief and no
 open PR. Code lands only by `loop:pr` PRs; `pr-autofix` and `pr-resolve`
 exist, are tested, and have run at least once each (by `workflow_dispatch`
 on a throwaway branch if no real red or conflict occurred). `/plot`,
-`/messy` exist, no loop verb or workflow fires them, and AGENTS.md and CLAUDE.md tell agents to run or offer them when T asks for loop work or ends a brainstorm; `ship-a-chunk` refuses a missing brief. Every closing verb
+`/messy` exist, no loop verb or workflow fires them, and AGENTS.md and CLAUDE.md tell agents to run or offer them when T asks for loop work or ends a brainstorm; `ship-a-phase` refuses a missing brief. Every closing verb
 has a Retro step; `check-lessons` is in the root test. D83+ recorded.
 bearings, AGENTS.md and the workflows README describe the loop as it now
 runs.

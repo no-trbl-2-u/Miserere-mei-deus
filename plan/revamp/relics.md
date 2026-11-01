@@ -98,7 +98,7 @@ Inputs for that session:
   in the 3-card combat reward; 3-4 give 2; all 5 relic slots give 3.
   Only three relic slots exist (D105), so the 3-of-3 row is reached, if at
   all, by a set bonus: T's design session SB1
-  (`plan/README.md`), not B1.
+  (`plan/phases/phase_SB1_set_bonuses.md`), not B1.
 - **Relic sources (D71), for now:** quests give designated relics;
   elites have a low chance of dropping a random relic. There is no starting relic:
   the first lane opens with the first lane relic (D71).
@@ -108,7 +108,7 @@ Inputs for that session:
   by T in session (LR1b, done 2026-10-25) and recorded in "The lane relics
   (LR1b)" below; quests are the primary source, elites drop at a lower
   chance, and each lane's third relic comes only from an elite. Crimson
-  Covenant is retired. Brief `plan/README.md`. B1
+  Covenant is retired. Brief `plan/phases/phase_LR1_lane_relics.md`. B1
   keeps the rest of the pass.
 - Relic reward sources: the hazard deck's "Bonus Relic"/"Shrine Cache" lie
   (they pay shillings) and go in R6; B1 can give relics a real source.
@@ -119,7 +119,7 @@ Authored by T in session, 2026-10-25, verbatim. Signature costs (in
 Conviction) are T's starting pitch, to revisit after playthroughs. Built by
 LR1d (Blood Price) and LR1e (Elementalist). Quests (T, 2026-10-27, D111; LR1f
 skipped): the Elementalist's Belt is the reward of Chapter 1's questline
-(`plan/README.md`); the Ruby Signet, the Bleeding
+(`plan/phases/phase_QL1_breakwater_questline.md`); the Ruby Signet, the Bleeding
 Signet and the Brooch wait for Chapters 2-4's quest lines.
 
 | Relic | Lane | Signature (cost in Conviction) | Stats | Source |

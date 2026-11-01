@@ -85,4 +85,4 @@
 
 - Phases 1-2 were plotted on 2026-10-25 as PH1a (the session tool), PH1b (the
   agent switches to it) and PH1c (guides tested for truth). Brief
-  `plan/README.md`. Phase 3 is a separate candidate.
+  `plan/phases/phase_PH1_playtest_harness.md`. Phase 3 is a separate candidate.

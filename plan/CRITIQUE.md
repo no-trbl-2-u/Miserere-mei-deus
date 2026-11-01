@@ -1112,7 +1112,7 @@
 - viewport: mobile (375x812) and desktop (1280x800)
 - category: comprehension
 - observation: since WR1 (D113) the hub's footer teaches "walk back" as a real verb ("choose a glowing node, or tap a trodden one to walk back"). The rest and cache screens still say "Pick one — there is no walking back out." It means "you must choose before you leave", but after WR1 a first-time player can read it as "you cannot walk back to this node", which is now false (they can; a revisited rest heals nothing, WR1 brief rule 5). The same verb now says yes on one screen and no on the next.
-- evidence: `.critique-artifacts/mobile/09-rest.png` and `mobile/05-exploration-hub.txt` (footer); `axiomancer-mobile/state/presenters/rest.copy.ts:12` and `cache.copy.ts:10`; `plan/README.md` rule 5.
+- evidence: `.critique-artifacts/mobile/09-rest.png` and `mobile/05-exploration-hub.txt` (footer); `axiomancer-mobile/state/presenters/rest.copy.ts:12` and `cache.copy.ts:10`; `plan/phases/phase_WR1_walk_the_roads.md` rule 5.
 - suggested fix: reword both lines so they do not reuse the hub's verb, e.g. "The node is spent the moment you stop here. Pick one before you go; it will not offer again."; copy only, pinned where the presenter tests read the line.
 - source: critique:drive (unattended)
 
@@ -1142,7 +1142,7 @@
 - observation: on the opening Float-Eye board the five-card hand overlaps so much that every covered card's name band shows only "A PLAIN" and the first letter of the second word ("A PLAIN W", "A PLAIN U", "A PLAIN B"), and the effect rows are cut too ("Deal", "♥ VULN", "★ GU"). The starter deck's three grey cards differ only by that second word, so a first-time player cannot tell Blow from Word from Ward by name; only the right-end card prints whole. Phase 97 (2026-09-19) had the covered names wrap inside their visible strip; at 1280 the fan no longer overlaps and every name prints.
 - evidence: `.critique-artifacts/mobile/04-combat-board.png` (hand row) against `desktop/04-combat-board.png`; `axiomancer-mobile/components/combat/encounter/CombatBoard.tsx:428` `handFanLayout` (`HAND_FAN_MIN_STEP` 28).
 - suggested fix: size a covered card's name to the strip it shows, as `handNameFontSize` does for hazard hand cards, or print the name's last word first, so the distinguishing word (BLOW / WORD / WARD) is always readable; presentation only, pinned in a CombatBoard hand-fan test at 375.
-- loop note (iterate 2026-10-25): not picked. Both suggested fixes cap or reorder the covered name, which reverses T's ruling in `plan/README.md` A3 (one uncapped line that runs on under its neighbour; T 2026-10-13, itself reversing the old wrap-in-the-sliver fix). The loop does not overturn a T call; this row waits on T's word.
+- loop note (iterate 2026-10-25): not picked. Both suggested fixes cap or reorder the covered name, which reverses T's ruling in `plan/phases/phase_BT2a_card_face.md` A3 (one uncapped line that runs on under its neighbour; T 2026-10-13, itself reversing the old wrap-in-the-sliver fix). The loop does not overturn a T call; this row waits on T's word.
 - source: critique:drive (unattended)
 
 
@@ -1459,13 +1459,13 @@
 - issue: #1047
 
 ### [x] [LOW] play log / fight recorder — the opening hand never reaches the fight's event stream — RESOLVED 2026-10-28 (branch loop/iterate-opening-hand-drawn, 13312468d: the recorder stamps the first observed state's hand as one `hand-drawn` ahead of the engine's events, so card-usage counts it as drawn at turn end 0; no engine or contract change; pinned in `fightRecorder.test.ts`)
-- pass: ship-a-chunk BE2f (PR #877)
+- pass: ship-a-phase BE2f (PR #877)
 - viewport: n/a
 - category: infra
 - observation: `initializeCombatEncounter` deals the opening hand without a `hand-drawn` event (the engine's only `hand-drawn` emitters are the between-phase refill and a draw effect), and `lib/fightRecorder.ts` stamps log entries only. So `npm run api -- card-usage` counts `drawn` from turn end 1 onward, and a card played from the opening hand looks like a play with no draw. The report header and `docs/dev-tools.md` state the caveat, but the draw counts for a short fight are mostly missing.
 - evidence: `axiomancer-mechanics/src/Combat/combat.engine.ts` (`initializeCombatEncounter`, `log: []`); `axiomancer-mobile/lib/fightRecorder.ts` `observe`; `backend/src/reports.ts` header.
 - suggested fix: have the recorder push one stamped `hand-drawn` event with the first observed state's hand (`state.hand.map(h => h.cardId)`, adding `hand` to `ObservedFight`) at `ms` 0, so no engine or contract change is needed; the held formula already treats it as a draw at turn end 0.
-- source: ship-a-chunk BE2f
+- source: ship-a-phase BE2f
 - issue: #1044
 
 ### [x] [LOW] combat preview — WITHDRAW's "forfeit the path" line prints at 8.5px in `AXM.ash`, about 1.95:1 against the page — RESOLVED 2026-10-28 (branch loop/iterate-withdraw-sub-contrast, d420c2e30: `withdrawSub` draws in `AXM.bone` at 10px under the 12px WITHDRAW label; pinned in CombatEncounterPanel.withdraw-sub.test.ts)
@@ -1483,7 +1483,7 @@
 - viewport: both (375x812, 1280x800)
 - category: comprehension
 - observation: the intro warns "Pick one — there is no walking back out." The card offer shows its rolled card face (A Plain Word, RW1b); the goods offer shows "WHATEVER'S INSIDE, PLUS WHAT IT'S WORTH." and nothing else, though the session already holds the rolled items and the shilling sum (`itemCandidates`, `currencyCandidate`) before the player picks. A first-time player cannot tell whether the goods are a potion and 10 shillings or a relic and 60, so the choice is a guess. RW1b's brief left TAKE THE GOODS unchanged; it did not rule the goods must stay hidden.
-- evidence: `.critique-artifacts/mobile/12-cache.png`, `desktop/12-cache.png`; `axiomancer-mobile/state/presenters/cache.copy.ts:19`; `axiomancer-mechanics/src/World/LootCacheChoice/lootcachechoice.types.ts:40-43` (candidates rolled before the choice); `plan/README.md:78`.
+- evidence: `.critique-artifacts/mobile/12-cache.png`, `desktop/12-cache.png`; `axiomancer-mobile/state/presenters/cache.copy.ts:19`; `axiomancer-mechanics/src/World/LootCacheChoice/lootcachechoice.types.ts:40-43` (candidates rolled before the choice); `plan/phases/phase_RW1_reward_rule.md:78`.
 - suggested fix: print the rolled goods under the goods offer as chips, reusing the outcome's `cacheOutcomeItemChip` and `cacheOutcomeCurrencyChip` (e.g. "+ HEALING POTION · +10 SHILLINGS"), and add them to its accessibility label; presentation only. If the blind box is meant, the loop leaves the reveal alone and instead makes the copy say so ("sight unseen"), which is T's copy call.
 - source: critique:drive (unattended)
 - issue: #1041
@@ -2459,7 +2459,7 @@
 - evidence: `axiomancer-mechanics/src/Game/fixtures/state-fixture.registry.ts:34,43,53,67,78,90,99,109,118,128`;
   `.critique-artifacts/mobile/06-dialogue.txt` (Old Marrow),
   `11-late-game-hub.txt` ("the Drowned Parish"), `10-hazard.txt`
-  (caverns' Flooded Undercroft); `plan/README.md`
+  (caverns' Flooded Undercroft); `plan/phases/phase_R3_world_reset.md`
   (no fixture item in R3a-R3c).
 - suggested fix: re-point the fixtures at Act 1 nodes carrying the same
   screen kinds, including one on a sealed door (`ld-15` or `ld-18`). Do it
@@ -2633,7 +2633,7 @@
 - observation: `combat.engine.ts` (~lines 4011/4059) still keys the telegraph-forcing hook on `fated-course`, retired from the library in D8's ten-in/ten-out ledger. Unreachable in live play (no preset/reward fields the card), but `oracle-omen-v2.engine.test.ts` depends on it as its deterministic telegraph harness — swapping the id would destroy the guaranteed-hit assertions.
 - evidence: fixture-sweep report, 2026-07-18; archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/tuning/2026-07-18-d8-preset-dice-valves.md §Residue
 - suggested fix: next oracle pass ports the harness onto a live card or a test-only hook id, then deletes the dead engine branch.
-- source: ship-a-chunk D8
+- source: ship-a-phase D8
 - **CLOSED 2026-09-28 (R0):** moot as a standalone row. R7 deletes every carrier-less engine hook and the tests that load them (D50, `plan/revamp/engine.md`).
 
 ### [x] [LOW] data — Card Ledger dashboard + preset-metrics exports measure the PRE-D8 decks — CLOSED 2026-09-28 (R0)
@@ -2644,7 +2644,7 @@
 - observation: `docs/reports/preset-metrics/2026-07-18-*.json` and the Card Ledger dashboard were measured on the pre-valve flag-on decks (and a 70-card library that no longer exists — the dead ten are retired, ten valves are live). Their triage verdicts remain historically valid but the preset rollups no longer describe the shipped decks.
 - evidence: D8 gate rerun already shows different curves (standstill 50→59 blind-early).
 - suggested fix: re-run the accumulation (both arms, two seeds) + republish the dashboard after the post-D8 curve-repair phase lands, so the next triage reads the real game.
-- source: ship-a-chunk D8
+- source: ship-a-phase D8
 - **CLOSED 2026-09-28 (R0):** moot. The presets are gone (D36) and the deck-matrix baseline, the tuning-lab pages and preset readings are retired until the retune (D57, R1).
 
 ### [x] [LOW] card-editor cannot edit the three new mechanic fields — CLOSED 2026-09-28 (R0)
@@ -2906,7 +2906,7 @@
   FOUR root-caused, reproducible bugs — one of them critical (every returning
   player with a save got a permanently blank screen on launch). `grep -rn
   'PLAYTEST_BUGS' plan/ .claude/` returned **zero hits**: no CRITIQUE row, no
-  AUDIT row, no `CANDIDATES.md` row, no build-plan row. No loop verb
+  AUDIT row, no `PHASE_CANDIDATES.md` row, no build-plan row. No loop verb
   reads `axiomancer-mobile/docs/reports/`, so nothing in the autonomous loop
   could ever have picked this up. All four bugs were still live at HEAD a day
   later, and would have stayed live indefinitely.
@@ -3232,8 +3232,8 @@
   10 presets 0.00 late" has not been true since THE PATH (commit
   `515ac4d9`, 2026-09-02) moved the late band 9% -> 44% via card
   upgrades/deck tiers/CONDEMN rescale — a fourth lever, not any of the
-  three this row's CANDIDATES successor named and declined to
-  pick. Full writeup: `archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/README.md`.
+  three this row's PHASE_CANDIDATES successor named and declined to
+  pick. Full writeup: `archive-pre-revamp:plan/archive/2026-09-25-trim-t4/plan/phases/phase_81_late_campaign_difficulty_cliff.md`.
   Residual: the three weakest late cells (13-23%, all passive-policy
   shaped) are a legitimate small follow-up, not a design-level cliff —
   filed as a Follow-up in the phase brief, not a new HIGH.
@@ -4042,8 +4042,8 @@
   keyword glosses (and the actual trigger, per the finding above) are
   event-triggered — per-card-played for poison, per-damage-instance
   for bleed. The face text describes a mechanic the card doesn't run.
-  Same root cause as Phase 29's keyword-honesty doctrine (`plan/README.md
-  plan/README.md` Phase 29, KW-2/5/6/7 still open) and squarely in
+  Same root cause as Phase 29's keyword-honesty doctrine (`plan/steps/
+  01_build_plan.md` Phase 29, KW-2/5/6/7 still open) and squarely in
   Phase 32's DoT-clock scope.
 - evidence: card-face aria-labels captured during the same Playwright
   session read round-clock phrasing on cards whose keyword definition

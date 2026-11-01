@@ -5,7 +5,7 @@
 > T's move, not the loop's: rotate or renew a token or secret, finish
 > an OAuth, a console click, a tool on T's machine. These are never
 > lessons: they don't climb the `plan/lessons.md` ladder, never become
-> a `CANDIDATES` automation row, and the loop ships no code to
+> a `PHASE_CANDIDATES` automation row, and the loop ships no code to
 > work around them. Plan-only: a tick pushes its row to `main` (or it
 > rides the tick's PR).
 >

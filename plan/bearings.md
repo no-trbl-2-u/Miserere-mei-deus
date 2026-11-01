@@ -199,11 +199,11 @@ Axiomancer/
 ├── skills/                     # nexus LOOP verbs (this harness)
 ├── plan/                       # nexus state files (this dir)
 │   ├── bearings.md             # this file
-│   ├── AUDIT.md · CRITIQUE.md · CANDIDATES.md
+│   ├── AUDIT.md · CRITIQUE.md · CANDIDATES.md · NEEDS_T.md
 │   ├── revamp/                 # THE REVAMP record + part plans (D46–D83)
 │   ├── reflexes.md · lessons.md (counted retro ladder) · north-star-mork-borg.md
-│   ├── plan/README.md
-│   ├── phases/                 # template, V masterplan, open/partial + recent briefs
+│   ├── README.md · NNN-<slug>.md · ARCHIVE.md   # nexus v2 roadmap, specs, archive (NX1d)
+│   ├── nexus.lock              # the kit ref this plan follows
 │   ├── ideas/ · labyrinth/     # art-pipeline options · Labyrinth design + acts
 │   └── <date>-<topic>.{prompt,decisions,spec}.md   # live dated records
 ├── docs/                       # truth-sources, asking-well, devlog deploy, reports/
@@ -430,7 +430,8 @@ ambiguity.)
   surface it rather than double-shipping.
 - **Hermes-originated queue mutations get a provenance log entry**
   (adopted via /oversight 2026-07-30, issue #129): any time a
-  Hermes-originated instruction changes `plan/README.md`'s
+  Hermes-originated instruction changes the roadmap's (`plan/README.md`, the
+  v1 build plan's successor since the NX1d cut-over)
   queue (add/remove/reorder/reprioritize/split/merge/skip/block/
   unblock/material scope change to a phase row), the same commit adds
   a row to that file's `## Queue change log` section — date, actor
@@ -463,7 +464,7 @@ ambiguity.)
   for anything outside that set — a new enemy, a new creature, any other surface
   — is content that needs a brief T approved (D88, D99), and the generator
   refuses it rather than asking. Phase AN1d is what this ruling unblocks;
-  `plan/README.md` carries the detail.
+  `plan/phases/phase_AN1_enemy_animation.md` carries the detail.
 
 - **`art-department/` IS A TREE, NOT AN NPM WORKSPACE (T, attended session
   2026-10-21, D98).** Art tooling lives at the repo root in `art-department/`
@@ -477,7 +478,7 @@ ambiguity.)
   `npm --workspace`; it is excluded from the EAS archive; and nothing in the
   repository resolves a path into it — the same boundary rule 9 (D96) puts on
   `Potential Assets/`, and enforced the same way, by a test. Phases AD1a and
-  AD1b build it; `plan/README.md` carries the detail.
+  AD1b build it; `plan/phases/phase_AD1_art_department.md` carries the detail.
 
 ## AUDIT category taxonomy (this project)
 
@@ -631,7 +632,9 @@ npm run deploy:check                              # post-push CI-green gate (mai
 gh pr checks <branch> --watch --fail-fast         # a loop PR's CI gate
 node scripts/check-lessons.mjs                    # the lessons ladder lint
 node scripts/check-plan-queues.mjs                # the queue-row structure lint (AUDIT, CRITIQUE, candidates, Status)
-node scripts/check-deadlines.mjs                  # deadline plan vs build plan lint (DL1a)
+node scripts/check-deadlines.mjs                  # deadline plan vs the specs' aliases lint (DL1a, NX1c)
+node scripts/plan-check.mjs                       # the v2 plan shape (specs, chunks, lanes, archive)
+node scripts/plan/order.mjs                       # what /next would pick, in order
 node scripts/deadlines.mjs --today=YYYY-MM-DD     # the deadline reminder, pinned to a date
 npm run game -- combat                            # play Hazard-Pattern Combat (CLI)
 npm run mobile -- start                           # expo dev server
@@ -651,6 +654,13 @@ I), `UI:` (the browser walk).
 - Promote: owner
 - stall_action: alert
 - loop: off
+- Landing: pr (hybrid, D119). Every change lands by PR: code as a `loop:pr`
+  PR on `loop/<verb>-<slug>` that the review merges (D84, D95), and `plot`,
+  `review:rules-change` and `nexus-sync` PRs that T merges (D93, D101,
+  D119). `NEXUS_LOOP_MODE` stays unset (v2's pull-request mode), never
+  `owner`, though the upgrader read three old `Cloud-Run` commits as
+  owner mode. v2's land step meets this in phase NX1e; until then the
+  loop is off (`march` and `night` disabled, NX1i turns them on).
 
 **UI:** `none`
 

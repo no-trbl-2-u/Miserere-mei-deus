@@ -437,7 +437,7 @@ structure questions the sims raised wait for the enemy revision and T's play of 
 
 ### Into the build
 
-The trial set is plotted as Phase MF1 (`plan/README.md`); the ballot index marks the
+The trial set is plotted as Phase MF1 (`plan/phases/phase_MF1_merciful_trial_set.md`); the ballot index marks the
 lane complete (T, 2026-10-30).
 
-- **2026-10-31, action names (Phase CA3e, T's CA3 plot):** three cards renamed to verbs: Shelter of Grace to Spread the Mantle (mc-p-06c), Morning Absolution to Absolve at Dawn (mc-p-10c), Remembered Kindness to Call Back a Kindness (mc-m-09c); What Grace Owes keeps its name. Source: T, 2026-10-30, "rename the card itself so that the card is a verb"; names table in `plan/README.md`. Names only.
+- **2026-10-31, action names (Phase CA3e, T's CA3 plot):** three cards renamed to verbs: Shelter of Grace to Spread the Mantle (mc-p-06c), Morning Absolution to Absolve at Dawn (mc-p-10c), Remembered Kindness to Call Back a Kindness (mc-m-09c); What Grace Owes keeps its name. Source: T, 2026-10-30, "rename the card itself so that the card is a verb"; names table in `plan/phases/phase_CA3_lane_card_art.md`. Names only.

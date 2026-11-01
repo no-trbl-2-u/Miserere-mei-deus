@@ -114,7 +114,7 @@
 - 2026-09-16 · 87 · Early-game encounter smoothing · ca36dc4a2
 - 2026-09-16 · 88 · W5 art adoption · 7c218bb12
 - 2026-09-17 · 89 · Art-direction coherence · 0e3a8df65
-- 2026-09-17 · 90 · Summoner / multi-hit enemy archetype: no roster enemy spawns adds · 39e2915e
+- 2026-09-17 · 90 · shipped in part, the rest dropped (ruling R7): Summoner / multi-hit enemy archetype: no roster enemy spawns adds · 39e2915e
 - 2026-09-18 · 91 · Amber-CI tick recovery · 3a9689d8c
 - 2026-09-18 · 92 · `march` workflow job ceiling · 84a062c2a
 - 2026-09-18 · 93 · Card-base reconciliation · ecbf2fc21
@@ -133,7 +133,333 @@
 - 2026-11-01 · 17 · dropped: Quest Board · (this commit)
 - 2026-11-01 · 45 · 45a: dropped: Re-home dice upgrades: design session · (this commit)
 - 2026-11-01 · 45 · 45b: dropped: Re-home dice upgrades: implementation · (this commit)
-- 2026-11-01 · 47 · 47c: Assets: `expo-image`, `expo-font` + `@expo-google-fonts/*` → bare-RN equivalents, preserving the · unknown
-- 2026-11-01 · 47 · 47d: Device APIs: `expo-haptics` · unknown
-- 2026-11-01 · 47 · 47e: Build + CI re-platform · unknown
-- 2026-11-01 · 52 · 52b: Make the inn a first-class thing · unknown
+- 2026-11-01 · 47 · 47c: dropped (a pre-revamp partial, ruling R7): Assets: `expo-image`, `expo-font` + `@expo-google-fonts/*` → bare-RN equivalents, preserving the · (this commit)
+- 2026-11-01 · 47 · 47d: dropped (a pre-revamp partial, ruling R7): Device APIs: `expo-haptics` · (this commit)
+- 2026-11-01 · 47 · 47e: dropped (a pre-revamp partial, ruling R7): Build + CI re-platform · (this commit)
+- 2026-11-01 · 52 · 52b: dropped (a pre-revamp partial, ruling R7): Make the inn a first-class thing · (this commit)
+- 2026-09-26 · 200.1 (alias: M3b) · The Charcoal Wood · 3136aacfe (#389)
+- 2026-09-26 · 200.2 (alias: M3c) · The Beacon Crags · 0cfcd310d (#392)
+- 2026-11-01 · 200.3 (alias: M3d) · The Lantern Deep · #396
+- 2026-09-26 · 200.4 (alias: M3e) · Retune fishing-village for its place after Act 1 · 425525ce
+- 2026-09-27 · 201.1 (alias: M4) · The Labyrinth door · 571d5b3f
+- 2026-09-27 · 202.1 (alias: M5) · Map docs · 1ec11390
+- 2026-09-27 · 203.1 (alias: T6) · Remove alignment, philosophy and GRACE · 67fd0106
+- 2026-09-27 · 204.1 (alias: S3) · Stat scaling · unknown
+- 2026-09-26 · 205.1 (alias: P1) · The card purge · unknown
+- 2026-09-28 · 206.1 (alias: R0) · Loop doctrine reset · ba658cba
+- 2026-09-29 · 207.1 (alias: R1) · Tooling reset · 0cfea70c
+- 2026-09-29 · 208.1 (alias: R2a) · Enemy reset 1/2, the data · c20ebe14
+- 2026-09-29 · 208.2 (alias: R2b) · Enemy reset 2/2, the code · 872de5a7
+- 2026-09-29 · 209.1 (alias: R3a) · World reset 1/3, seal and park · f47fb4c9
+- 2026-09-29 · 209.2 (alias: R3b) · World reset 2/3, purge fishing-village and re-home the Anvil · 25a6c5e7
+- 2026-09-29 · 209.3 (alias: R3c) · World reset 3/3, hygiene · b901c094
+- 2026-09-29 · 210.1 (alias: R4) · Relic placeholders · 9110c7be
+- 2026-09-30 · 211.1 (alias: R5) · Items reset · b2f91e00
+- 2026-09-30 · 212.1 (alias: R6a) · Hazard reset 1/2, honest rewards · ab9e5378
+- 2026-09-30 · 212.2 (alias: R6b) · Hazard reset 2/2, the minimal deck · 11e937f2
+- 2026-09-30 · 213.1 (alias: R7a) · Engine purge 1/3 · b7f74606
+- 2026-09-30 · 213.2 (alias: R7b) · Engine purge 2/3 · 56b0cba7
+- 2026-09-30 · 213.3 (alias: R7c) · Engine purge 3/3 · 00277f40
+- 2026-09-30 · 213.4 (alias: R7c2) · Engine purge 3b · 7a463a04
+- 2026-09-30 · 213.5 (alias: R7c3) · Engine purge 3c · c7d0ce6b
+- 2026-10-01 · 213.6 (alias: R7d) · Stance removal · 2a727668
+- 2026-10-01 · 213.7 (alias: R7d2) · Stance residue and the carrier sweep · 1802385a
+- 2026-10-01 · 213.8 (alias: R7e) · Content strip, the world · 1017c8d5
+- 2026-10-01 · 213.9 (alias: R7e2) · Content strip, the relics · 37e77313
+- 2026-10-01 · 134.1 (alias: B4) · Card-rules inventory · 383a331f
+- 2026-10-01 · 214.1 (alias: R8) · Mobile cleanup · 049174f2
+- 2026-10-01 · 215.1 (alias: R9) · Progression retune · 61d16fcf
+- 2026-10-02 · 215.2 (alias: R9a) · Save checkpoint in fights · 1bad8fce
+- 2026-10-02 · 216.1 (alias: R10) · Theme colours · 349c2ea7
+- 2026-10-02 · 216.2 (alias: R10b) · Doctrine rewrite 1/2 · 2a79e596
+- 2026-10-02 · 216.3 (alias: R10b2) · Doctrine rewrite 2/2 · 29f3b174
+- 2026-10-02 · 216.4 (alias: R10c) · Comments and docs truth pass 1/3, mechanics docs · 6f9a74aa
+- 2026-10-02 · 216.5 (alias: R10c2) · Comments and docs truth pass 2/3, mechanics comments · 22f4e41f
+- 2026-10-02 · 216.6 (alias: R10c3) · Comments and docs truth pass 3/3, mobile · 6bbca8a6
+- 2026-10-02 · 216.7 (alias: R10d) · Tutorial removal · 859cef19
+- 2026-10-02 · 217.1 (alias: RC) · Act 1 checkpoint release · in session (no PR)
+- 2026-10-11 · 218.1 (alias: BT) · Blood Price trial set · 76c52ef4
+- 2026-10-11 · 219.1 (alias: BT1) · Blood Price revision 2 · aa1d98ab
+- 2026-10-11 · 220.1 (alias: RC2) · v0.2.0 release · in session (no PR)
+- 2026-10-13 · 122.1 (alias: R12a) · Measured-truth baseline · be6e827dc (#505)
+- 2026-10-14 · 221.1 (alias: BT2a) · One card face · 3b0fcfb1e (#521)
+- 2026-10-14 · 221.2 (alias: BT2b) · The combat board layout · 93f05dfe2 (#529)
+- 2026-10-12 · 222.1 (alias: R11) · Reopen the loop · c640f1c55 (#503)
+- 2026-10-15 · 223.1 (alias: PF4) · No exploration map under live combat · 1df5499ed (#553)
+- 2026-10-15 · 224.1 (alias: PF3) · Sentry performance on preview builds · 48aa808f2 (#549)
+- 2026-10-15 · 225.1 (alias: LV1) · The level curve · 2f2a6c695 (#571)
+- 2026-10-17 · 226.1 (alias: RV1a) · The gate · 68aa1c73f (#596)
+- 2026-10-17 · 226.2 (alias: RV1b) · The reviewer · b07a7dd20 (#602)
+- 2026-10-18 · 226.3 (alias: RV1c) · Three lenses, then the seeded replay · fe32b28da (#610)
+- 2026-10-18 · 227.1 (alias: HP1a) · No bin, an honest count, the card report, demos back · 98f18e148 (#628)
+- 2026-10-19 · 227.2 (alias: HP1b) · The puzzle board loses its bin · f72d83ec0 (#631)
+- 2026-10-19 · 228.1 (alias: HP3a) · The puzzle rolls and draws like a live hazard · 3f0467743 (#637)
+- 2026-10-21 · 229.1 (alias: DL1a) · The deadline lint · 17b9473af (#686)
+- 2026-10-21 · 230.1 (alias: ML1a) · Merging lessons.md stops duplicating slugs · f0b4706ce (#695)
+- 2026-10-21 · 231.1 (alias: BE1a) · The attempt contract and the Worker · 39c171ae8 (#723)
+- 2026-10-21 · 232.1 (alias: RV4) · The daily merge cap goes · 10b5daac2 (#738)
+- 2026-10-21 · 231.2 (alias: BE1b) · Live on Cloudflare · 9b8233c89 (#741)
+- 2026-10-21 · 231.3 (alias: BE1c) · Preview builds post each attempt · be23b266e (#732)
+- 2026-10-21 · 231.4 (alias: BE1d) · npm run puzzle:times · b14cea8bc (#742)
+- 2026-10-21 · 233.1 (alias: AN1a) · The enemy frame engine, the fallback and the dev route · 63ed20469 (#727)
+- 2026-10-21 · 233.2 (alias: AN1b) · The enemy's turn is animated · 885af201e (#735)
+- 2026-10-21 · 233.3 (alias: AN1c) · Idle, struck, attacking · 148254cd4 (#757)
+- 2026-10-21 · 233.4 (alias: AN1d) · Sheets generated for used enemies only · c6c7fedc8 (#761)
+- 2026-10-21 · 230.2 (alias: ML1b) · The build plan's rows and queue log · 694384d87 (#705)
+- 2026-10-21 · 229.2 (alias: DL1b) · The derived Status column · a60daf0fb (#707)
+- 2026-10-21 · 229.3 (alias: DL1c) · The reconcile step in /plot and /messy · a90d76584 (#710)
+- 2026-10-20 · 234.1 (alias: IT1a) · Item glyphs resolve by item id · fd94c7f08 (#683)
+- 2026-10-27 · 234.2 (alias: IT1b) · T's icon picks for the six lane relics, with colour · df0e45eb8 (#989)
+- 2026-10-21 · 120.1 (alias: HP4a) · Decision pressure in the report · 03d891e86 (#697)
+- 2026-10-21 · 120.2 (alias: HP4b) · The candidate library shape · e59b587aa (#696)
+- 2026-10-21 · 120.3 (alias: HP4c) · Author the thirty · 02f94d076 (#701)
+- 2026-10-21 · 120.4 (alias: HP4d) · Thirty on the board · 58801a370 (#699)
+- 2026-10-22 · 235.1 (alias: AN4a) · The Beholder takes the Doorwarden's place · 8f03d8130 (#782)
+- 2026-10-22 · 235.2 (alias: AN4b) · The Beholder animates · fd07988a3 (#784)
+- 2026-10-22 · 236.1 (alias: AN3a) · The Jelly takes the Hag's place · 079c18f5a (#787)
+- 2026-10-22 · 236.2 (alias: AN3b) · The Jelly animates · c0026d9e8 (#793)
+- 2026-10-22 · 237.1 (alias: HP5a) · Five cost cards · bcf4b0909 (#771)
+- 2026-10-22 · 237.2 (alias: HP5b) · Costs on the board · 2ed66fa6b (#789)
+- 2026-10-22 · 237.3 (alias: HP5c) · The twenty easy and medium candidates go · b7204ab65 (#773)
+- 2026-10-22 · 237.4 (alias: HP5d) · Twenty cost-card puzzles · 6475d46c5 (#792)
+- 2026-10-22 · 238.1 (alias: AN2a) · The enemy action card goes · c94303050 (#778)
+- 2026-10-22 · 238.2 (alias: AN2b) · The flinch waits for the board to clear · 6226aee0d (#798)
+- 2026-10-23 · 128.1 (alias: BE2a) · The play-log contract and the Worker routes · adc96e067 (#829)
+- 2026-10-23 · 119.1 (alias: BV1a) · The verdict routes · c34b10edd (#831)
+- 2026-10-23 · 119.2 (alias: BV1b) · The ballot kit and the index · db0cb8ae6 (#834)
+- 2026-10-23 · 239.1 (alias: BV2a) · Status on the verdict rows · 530a9e4e9 (#842)
+- 2026-10-24 · 239.2 (alias: BV2b) · Save, and load from the save · 5ce20edc0 (#844)
+- 2026-10-24 · 118.1 (alias: EL1a) · The weather engine · 8bcb8b43c (#860)
+- 2026-10-24 · 118.2 (alias: EL1b) · The weather on the board · 56b1bce00 (#864)
+- 2026-10-24 · 118.3 (alias: EL1c) · The Elementalist cards and lane · f88dc36ca (#868)
+- 2026-10-24 · 240.1 (alias: SP1) · The Spell law · d609d0e9a (#882)
+- 2026-10-26 · 241.1 (alias: SG1) · No starting ring; every relic grant is worn, and its · 9986652d9 (#928)
+- 2026-10-26 · 242.1 (alias: BC1) · The board says what it does · cae8982be (#925)
+- 2026-10-26 · 243.1 (alias: PH1a) · The session tool · c199c8330 (#937)
+- 2026-10-26 · 243.2 (alias: PH1b) · The playtester uses its own browser · 25b45d610 (#939)
+- 2026-10-26 · 243.3 (alias: PH1c) · Guides tested for truth · 15fdb1b2a (#941)
+- 2026-10-27 · 117.1 (alias: DF1a) · The spikes engine · 2b374ac14 (#991)
+- 2026-10-27 · 117.2 (alias: DF1b) · The Defender's verbs and keywords · f170cae94 (#996)
+- 2026-10-27 · 117.3 (alias: DF1c) · The spikes on the board · b03f8fb4a (#998)
+- 2026-10-28 · 244.1 (alias: QL1a) · The quest kind and the step contract · 04de28949 (#1014)
+- 2026-10-28 · 244.2 (alias: QL1b) · The step rules · c1700aa8d (#1017)
+- 2026-10-28 · 245.1 (alias: DL2a) · The Waits on column and the reminder · beca24d7a (#1026)
+- 2026-10-28 · 245.2 (alias: DL2b) · The deadline table converted, every Item a T act · ba71ae1a0 (#1027)
+- 2026-10-28 · 244.3 (alias: QL1c) · The quest screen, the quest node on the map and · 160385b75 (#1023)
+- 2026-10-28 · 244.4 (alias: QL1d) · The Breakwater's questline · 6ba3c3497 (#1025)
+- 2026-10-29 · 246.1 (alias: MQ1a) · Several quests and quest gates in the engine · 69afb5bfa (#1054)
+- 2026-10-29 · 246.2 (alias: MQ1b) · Given anywhere, done on arrival, carry the key · c1ea42c6e (#1056)
+- 2026-10-29 · 246.3 (alias: MQ1c) · The tracker and the shut road on screen · a2bdb8ae4 (#1061)
+- 2026-10-29 · 247.1 (alias: NK1a) · Three node kinds removed, the waypoint drawn, the labyrinth hidden · e04d50c26 (#1059)
+- 2026-10-29 · 247.2 (alias: NK1b) · The Anvil inside the village · e5f578e1d (#1065)
+- 2026-10-29 · 247.3 (alias: NK1c) · Paid rest and the card shop · 6363fe144 (#1069)
+- 2026-10-29 · 247.4 (alias: NK1d) · Travel · fb0a85ff9 (#1073)
+- 2026-10-29 · 116.1 (alias: BW1a) · The new Breakwater, built and walked · 62912e3d5 (#1077)
+- 2026-10-30 · 115.1 (alias: MF1a) · MERCY and RADIANCE · c9a90ff2a (#1110)
+- 2026-10-30 · 115.2 (alias: MF1b) · The Merciful's verbs and keywords · 1b45bfae2 (#1116)
+- 2026-10-30 · 115.3 (alias: MF1c) · Mercy on the board · a8295b008 (#1115)
+- 2026-10-31 · 248.1 (alias: TF1) · Ticked plot Items leave the reminder; truth runs keep one · 3803898e7 (#1175)
+- 2026-10-31 · 249.1 (alias: CH1h) · A run end drops the character · 640dfd3b2 (#1208)
+- 2026-10-31 · 249.2 (alias: CH1i) · After a run end, character select · c0e6f8e47 (#1219)
+- 2026-10-31 · 249.3 (alias: CH1j) · The Game Over screen · 5f888b815 (#1227)
+- 2026-10-31 · 250.1 (alias: EN2a) · The fight-or-flee screen shows only the DANGER · a8a79aa20 (#1185)
+- 2026-10-31 · 250.2 (alias: EN2b) · The combat telegraph · 6b44e65d4 (#1189)
+- 2026-10-31 · 249.4 (alias: CH1g) · The character deck rule, amended · ebf8d47b1 (#1171)
+- 2026-10-31 · 251.1 (alias: CA3a) · The card cutter and the Defender's paintings · b0fa344a8 (#1169)
+- 2026-10-31 · 251.2 (alias: CA3b) · The Merciful's paintings · e5a9729b8 (#1191)
+- 2026-10-31 · 251.3 (alias: CA3c) · The Elementalist's paintings · 636788890 (#1193)
+- 2026-10-31 · 251.4 (alias: CA3d) · Blood Price's new paintings · f109205bc (#1195)
+- 2026-10-31 · 251.5 (alias: CA3e) · Action names for all four lanes · 37da531a5 (#1166)
+- 2026-10-31 · 252.1 (alias: HW1a) · Ask up front, park mid-run, ask at the end · ef96a63ac (#1163)
+- 2026-10-31 · 252.2 (alias: HW1b) · The claims record, honoured by the loop · ac77a1883 (#1172)
+- 2026-10-31 · 252.3 (alias: HW1c) · /heads-down claims its waves, keeps a ledger, resumes · b67db5489 (#1176)
+- 2026-10-31 · 253.1 (alias: ET1a) · Encounter · 5baebe536 (#1197)
+- 2026-10-31 · 253.2 (alias: ET1b) · Hazard · be9d2c9df (#1199)
+- 2026-10-31 · 253.3 (alias: ET1c) · Rest · a434ace41 (#1201)
+- 2026-10-31 · 253.4 (alias: ET1d) · Quest · b4b059c07 (#1206)
+- 2026-10-30 · 254.1 (alias: MU1) · Background music · b73b47fca (#1138)
+- 2026-10-30 · 115.4 (alias: MF1d) · The Merciful cards and lane · 591621c04 (#1123)
+- 2026-10-31 · 255.1 (alias: CD1a) · The character-select relic wears the satchel's icon · 07f58ffcf (#1257)
+- 2026-11-01 · 255.2 (alias: CD1b) · Keyword explanations above the card detail · d9931330b (#1246)
+- 2026-10-31 · 111.1 (alias: MC1a) · The pinch holds under the fingers; black past the edges · 1711175e2 (#1248)
+- 2026-11-01 · 111.2 (alias: MC1b) · The camera remembers; RECENTRE centres on the player · 2b8c84343 (#1260)
+- 2026-10-31 · 112.1 (alias: CX1a) · The music steps aside for the whole fight · 702d8df1f (#1244)
+- 2026-10-31 · 113.1 (alias: SM1a) · Every row says who played it · eb7ed15bc (#1238)
+- 2026-11-01 · 113.2 (alias: SM1b) · The app tags what it sends · a3cbf5c04 (#1251)
+- 2026-10-31 · 113.3 (alias: SM1c) · The whole run, in the contract and the Worker · 546e84aa1 (#1253)
+- 2026-10-31 · 113.5 (alias: SM1e) · The headless run driver · 950074f58 (#1239)
+- 2026-10-31 · 113.6 (alias: SM1f) · Bots that know the game · e6ecbaf2f (#1259)
+- 2026-11-01 · 113.8 (alias: SM1h) · T beside the bots · fd21d04ab (#1270)
+- 2026-10-31 · 114.3 (alias: BUG1b) · The play log takes today's fights · 7395d3d37 (#1241)
+- 2026-10-30 · 256.1 (alias: EN1a) · Enemy phases · 448b5c73a (#1108)
+- 2026-10-30 · 256.2 (alias: EN1b) · The defeat ledger · d74a61757 (#1105)
+- 2026-10-30 · 256.3 (alias: EN1c) · The telegraph shows a kind · c06178974 (#1114)
+- 2026-10-30 · 256.4 (alias: EN1d) · Enemy words, part 1 · d0cf78a7f (#1118)
+- 2026-10-30 · 256.5 (alias: EN1e) · Enemy words, part 2 · 196e357fc (#1119)
+- 2026-10-30 · 256.6 (alias: EN1f) · Fields and quays · 79c58995f (#1122)
+- 2026-10-30 · 256.7 (alias: EN1g) · Long pier and town · 00e087686 (#1134)
+- 2026-10-30 · 256.8 (alias: EN1h) · Cliffs and the sea cave · 0dc6549ac (#1148)
+- 2026-10-30 · 256.9 (alias: EN1j) · The sea cave's second elite · 59fc38313 (#1150)
+- 2026-10-31 · 256.10 (alias: EN1k) · The lighthouse path · cf431a465 (#1155)
+- 2026-10-30 · 256.11 (alias: EN1l) · The keep causeway · d5ae67858 (#1156)
+- 2026-10-31 · 256.12 (alias: EN1i) · The tuning table · 26162cd05 (#1167)
+- 2026-10-29 · 257.1 (alias: IT2a) · T picks the rest of the item icons · 24c3d6e5b (#1088)
+- 2026-10-31 · 257.2 (alias: IT2b) · The picks applied, the inline glyphs gone · 0b53fe22b (#1221)
+- 2026-10-29 · 116.2 (alias: BW1b) · The new Breakwater goes live · 3993f2a59 (#1080)
+- 2026-10-29 · 116.3 (alias: BW1c) · Every node wears its kind · 0fe0692bf (#1071)
+- 2026-11-01 · 244.5 (alias: QL1e) · dropped: T writes the Breakwater's quest line · (this commit)
+- 2026-11-01 · 244.6 (alias: QL1f) · dropped: T's quest line in the game · (this commit)
+- 2026-10-28 · 244.7 (alias: QL1g) · The boss fought again · a48b211b5 (#1028)
+- 2026-10-27 · 117.4 (alias: DF1d) · The Defender cards and lane · 51a70b36d (#1000)
+- 2026-10-28 · 258.1 (alias: DY1a) · The death rule in the engine, and the save · 77ecc5be2 (#1015)
+- 2026-10-28 · 258.2 (alias: DY1b) · A lost fight in the app · e7773e45d (#1018)
+- 2026-10-28 · 258.3 (alias: DY1c) · A lethal hazard in the app · a5c01dad3 (#1024)
+- 2026-10-28 · 258.4 (alias: DY1d) · The skull in the fight · 45b9411b4 (#1022)
+- 2026-10-28 · 117.5 (alias: DF1e) · The Defender's relics · 6188ced33 (#1002)
+- 2026-10-27 · 249.5 (alias: CH1a) · The character in the engine, and the save · a623c9dff (#974)
+- 2026-10-27 · 249.6 (alias: CH1b) · The pool · b1197e6da (#978)
+- 2026-10-27 · 249.7 (alias: CH1c) · The select screen · 67b029976 (#979)
+- 2026-10-27 · 249.8 (alias: CH1d) · The report column · 1d84ddcf7 (#981)
+- 2026-10-26 · 249.9 (alias: CH1e) · T authors the first character · in session (no PR)
+- 2026-10-31 · 249.10 (alias: CH1f) · The first character, selectable · c7ea29a44 (#1180)
+- 2026-10-24 · 259.1 (alias: EQ1a) · The loadout is the truth, and relics come off · 19a210adc (#862)
+- 2026-10-24 · 259.2 (alias: EQ1b) · The refused rune says why · f370e67a0 (#866)
+- 2026-10-20 · 260.1 (alias: VE1a) · One export, stamped, everywhere · 14a5cb1b0 (#661)
+- 2026-10-20 · 260.2 (alias: VE1b) · Ready signal, determinism check, run record · 96d2be3df (#663)
+- 2026-10-21 · 260.3 (alias: VE1c) · The report-only CI step with the evidence in the PR · 48a529198 (#713)
+- 2026-10-21 · 260.4 (alias: VE1d) · Routes from the diff · fc1114287 (#756)
+- 2026-10-19 · 261.1 (alias: RV2) · The reviewer skips a head whose diff did not change · 9f3984acb (#650)
+- 2026-10-20 · 121.1 (alias: TP1a) · Title plate legibility gate · b974c8c80 (#655)
+- 2026-10-19 · 228.2 (alias: HP3b) · Rerolls and gained dice animate · dbcd81ded (#643)
+- 2026-10-19 · 227.3 (alias: HP1c) · Signed costs, +1 die, reroll to set faces · cf27e84eb (#633)
+- 2026-10-19 · 227.4 (alias: HP1c2) · T's cost-card rules on the shipped engine · b14757ecf (#639)
+- 2026-10-19 · 227.5 (alias: HP1d) · The worse-copy test · 7a6ef2bbc (#647)
+- 2026-10-18 · 262.1 (alias: B3e2) · The hazard puzzle on the live hazard board · c6b7638a5 (#623)
+- 2026-10-15 · 263.1 (alias: EV1a) · The escape ledger · 4893340fc (#565)
+- 2026-10-16 · 263.2 (alias: EV1b) · Do the tests fail on the parent? · 6b5e2b6d8 (#576)
+- 2026-10-16 · 263.3 (alias: EV1c) · Planted defects and mutation scores · a3df0db62 (#579)
+- 2026-10-16 · 263.4 (alias: EV1d) · Ranked fixes, success evidence and the /messy dump · 8cbdf1404 (#583)
+- 2026-10-16 · 262.2 (alias: B3a) · Puzzle layout and one-round session · 4f29f34ef (#581)
+- 2026-10-16 · 262.3 (alias: B3b) · The solver and the band check · 2547f33d3 (#584)
+- 2026-10-16 · 262.4 (alias: B3c) · Outcome · 9c0e3a7f5 (#587)
+- 2026-10-16 · 262.5 (alias: B3d) · Stat unlocks · 8c8d3578a (#588)
+- 2026-10-16 · 262.6 (alias: B3e) · Three demos and the dev-menu board · 8d89b0c4b (#592)
+- 2026-10-20 · 124.1 (alias: HP2c) · The dev-only move log · e7acb60bd (#658)
+- 2026-10-19 · 124.2 (alias: HP2a) · Card audit and the puzzle card pool · e535b5fbe (#641)
+- 2026-10-20 · 124.3 (alias: HP2b) · Five difficulty features in the solver · 97869839d (#665)
+- 2026-10-22 · 125.1 (alias: LG1a) · Plan-queue lint · 259c223d2 (#765)
+- 2026-10-22 · 125.2 (alias: LG1b) · Path coverage in verify-gate · 01b955b08 (#767)
+- 2026-10-22 · 125.3 (alias: LG1c) · Acceptance proof in verify-gate · 22da9e072 (#802)
+- 2026-10-23 · 125.4 (alias: LG1d) · Fail-on-parent in verify-gate · f1d458f9d (#806)
+- 2026-10-23 · 125.5 (alias: LG1e) · The critique pass record · 44ddbde09 (#808)
+- 2026-10-23 · 125.6 (alias: LG1f) · The judge job · 2dd71f4ec (#811)
+- 2026-10-24 · 125.7 (alias: LG1g) · Report-only mutation on changed lines · 58ee1d06d (#813)
+- 2026-10-23 · 264.1 (alias: CT1a) · Real-fight helper and the state tests · bb3741836 (#817)
+- 2026-10-23 · 264.2 (alias: CT1b) · Combat board tests and the mock deleted · 8fdf1fcfb (#820)
+- 2026-10-23 · 265.1 (alias: RS1) · The loop sweeps hand-written reports · ad8813734 (#822)
+- 2026-10-20 · 126.1 (alias: OV1a) · The vault repo and its skeleton · in session (no PR)
+- 2026-10-21 · 126.2 (alias: OV1b) · Miserere wiring · 3a4fb1250 (#691)
+- 2026-10-20 · 126.3 (alias: OV1c) · The desktop bridge · in session (no PR)
+- 2026-10-22 · 127.1 (alias: UP1a) · Blood Price names · 8df05745e (#795)
+- 2026-10-23 · 127.2 (alias: UP1b) · The upgrade law and program scaling · e1f8cb62f (#824)
+- 2026-10-23 · 127.3 (alias: UP1c) · Blood for Blood, the first rare · 9a1d95f60 (#826)
+- 2026-10-23 · 127.4 (alias: UP1d) · The upgrade screen and the rest-site upgrade · 35c451da9 (#836)
+- 2026-10-23 · 127.5 (alias: UP1e) · The blacksmith card upgrade · 2fd95147a (#840)
+- 2026-10-24 · 127.6 (alias: UP1f) · The elite reward · 61d7affe0 (#848)
+- 2026-10-24 · 127.7 (alias: UP1g) · Upgraded decks in the measured report · 238002d75 (#850)
+- 2026-10-24 · 128.2 (alias: BE2b) · The switch and the stamps · 6dcfd91bd (#853)
+- 2026-10-24 · 128.3 (alias: BE2c) · Each fight posts at its end · 730af1c41 (#870)
+- 2026-10-24 · 128.4 (alias: BE2d) · Screen events · 3cc113ad9 (#872)
+- 2026-10-24 · 128.5 (alias: BE2e) · Deck changes post · fca0a87a2 (#875)
+- 2026-10-24 · 128.6 (alias: BE2f) · The reports and npm run api · f98bb0c17 (#877)
+- 2026-10-26 · 129.1 (alias: IO1a) · iOS build config and the runbook · 3d70cfa09 (#943)
+- 2026-10-26 · 129.3 (alias: IO1c) · The workflow builds and submits · 459c7e9e8 (#949)
+- 2026-10-24 · 130.1 (alias: FM2a) · A note per feature · aad2ebf0e (#879)
+- 2026-10-24 · 130.2 (alias: FM2b) · The nested canvases · 1fb78ac87 (#884)
+- 2026-10-25 · 130.3 (alias: FM2c) · Into the vault · e10e069af (#886)
+- 2026-10-27 · 266.1 (alias: RW1a) · The reward rule in the engine · 43cd0b7c8 (#967)
+- 2026-10-26 · 266.2 (alias: RW1b) · The cache shows its card · 1d2028c2f (#947)
+- 2026-10-26 · 267.1 (alias: TQ1) · The spoils pick in two taps, the purse on the · 819668e0a (#951)
+- 2026-10-25 · 268.1 (alias: AW1a) · The four-door walk and the twelve-kind audit · 839750109 (#918)
+- 2026-10-26 · 268.2 (alias: AW1b) · Node blurbs matched to their events · 81807b225 (#957)
+- 2026-10-27 · 269.1 (alias: GL1) · A glossary a sighted player can reach · eb84d078d (#968)
+- 2026-10-27 · 270.1 (alias: LR1a) · The Signet names Blood Price, and every lane relic says · f6cfa1921 (#970)
+- 2026-10-25 · 270.2 (alias: LR1b) · T writes the lane relics · in session (no PR)
+- 2026-10-27 · 270.3 (alias: LR1c) · Relic sources in the engine · f9c3db0a1 (#972)
+- 2026-10-27 · 270.4 (alias: LR1d) · Blood Price's three relics, per-signature costs, Crimson Covenant retired · 7291f0226 (#984)
+- 2026-10-27 · 270.5 (alias: LR1e) · The Elementalist's three relics · 1e546d5dc (#985)
+- 2026-11-01 · 270.6 (alias: LR1f) · dropped: The quests in Act 1 and the elite's pool · (this commit)
+- 2026-10-27 · 270.7 (alias: LR1g) · Signature tracking · ac7b174ad (#965)
+- 2026-10-27 · 271.1 (alias: EQ2a) · The relic slot in the engine, and old saves carried · 256237534 (#969)
+- 2026-10-27 · 271.2 (alias: EQ2b) · Every screen says Weapon, Armor, Relic · d80823049 (#977)
+- 2026-10-27 · 272.1 (alias: ER1) · Elites come back after a night's rest · c674974c6 (#982)
+- 2026-10-30 · 273.1 (alias: HD1a) · Mechanics cleanup after the Breakwater run · 03e2d4e84 (#1097)
+- 2026-10-31 · 273.2 (alias: HD1b) · Mobile and scripts cleanup after the Breakwater run · e2043b3c6 (#1210)
+- 2026-10-31 · 274.1 (alias: AT1a) · The atlas data · c0eabf6f0 (#1213)
+- 2026-10-31 · 274.2 (alias: AT1b) · The atlas page · 2be455860 (#1217)
+- 2026-10-31 · 274.3 (alias: AT1c) · The drift plate · 53ed85658 (#1225)
+- 2026-10-31 · 275.1 (alias: AN5a) · The cleanup tool, and the Gallows Crow animates · 94b1d23bf (#1187)
+- 2026-10-31 · 275.2 (alias: AN5b) · The first five normals animate · a7391bf7d (#1204)
+- 2026-10-31 · 275.3 (alias: AN5c) · The Wreck-Picker and the Tithe-Collector animate · c592a6333 (#1215)
+- 2026-10-31 · 275.4 (alias: AN5d) · Four elites animate · 896091074 (#1223)
+- 2026-10-31 · 275.5 (alias: AN5e) · The Smokehouse Gutter and the Tide-Gate animate, and every portrait · 8f876ec1b (#1229)
+- 2026-10-31 · 133.1 (alias: NX1a) · Rules-change PRs wait for T; the resolver loses its bypass · 6e0e7e0a4 (#1261)
+- 2026-10-31 · 133.2 (alias: NX1b) · /pitch lives in the repo · 6b7e1ee33 (#1263)
+- 2026-11-01 · 133.3 (alias: NX1c) · Ready for the cut-over · e3909da8e (#1266)
+- 2026-11-01 · 133.4 (alias: NX1d) · Miserere runs on nexus v2, the queue carried · (this commit)
+- 2026-10-29 · 276.1 (alias: AL1) · The art licence question is closed, and the DevLog shows · 0c46c74f5 (#1075)
+- 2026-10-29 · 277.1 (alias: WR1a) · Move along roads · b862ff8df (#1063)
+- 2026-10-29 · 277.2 (alias: WR1b) · Revisit completed nodes · 3dd03474b (#1067)
+- 2026-10-28 · 278.1 (alias: MD1a) · A merge driver for plan/deadlines.md · a5b654a94 (#1013)
+- 2026-10-28 · 278.2 (alias: MD1b) · pr-resolve settles a plot-on-plot merge on its own · 3c67e8e05 (#1016)
+- 2026-10-28 · 278.3 (alias: MD1c) · The merge job checks the merged tree before it merges · df988c706 (#1019)
+- 2026-10-27 · 279.1 (alias: NC1) · No caps on the live cards · c461f9e6f (#961)
+- 2026-10-27 · 280.1 (alias: CL1) · Ballots pitch no colour; colours are split after T picks · 1398f8d14 (#964)
+- 2026-10-25 · 281.1 (alias: EM1) · The Elementalist in measured truth, with a self-burn metric · 455e38fbe (#914)
+- 2026-10-25 · 282.1 (alias: BV3) · Every ballot candidate pitched in a colour · cc1e81d88 (#894)
+- 2026-10-21 · 283.1 (alias: AD1a) · The art-department tree, its toolchain rule and the rig tool's · 14c5478c8 (#725)
+- 2026-10-21 · 283.2 (alias: AD1b) · The masters move, and the boundary becomes a test · e715c23d9 (#733)
+- 2026-10-21 · 284.1 (alias: FM1a) · The inventory and the edges · e85a0385c (#746)
+- 2026-10-21 · 284.2 (alias: FM1b) · Evidence, names and the pitch flag · afb4cd1f4 (#751)
+- 2026-10-21 · 284.3 (alias: FM1c) · The README and the canvas · 7d80fb00e (#749)
+- 2026-10-21 · 284.4 (alias: FM1d) · The reachability drive · 1750046b1 (#753)
+- 2026-10-21 · 284.5 (alias: FM1e) · Into the vault · 08fdd783d (#744)
+- 2026-10-21 · 233.5 (alias: AN1e) · The float-eye is installed, and animates · ae67c8f19 (#759)
+- 2026-10-15 · 285.1 (alias: CR1a) · The combat route and its gate, map and labyrinth · 71fc062ea (#569)
+- 2026-10-16 · 285.2 (alias: CR1b) · Delete the overlay era, labyrinth round-trip e2e · eec2e4236 (#573)
+- 2026-11-01 · 285.3 (alias: CR1c) · dropped: Combat drag numbers before and after the route · (this commit)
+- 2026-10-14 · 286.1 (alias: SF1) · The SACRIFICE floor points at the VITAE bar · 9b661291d (#523)
+- 2026-10-14 · 287.1 (alias: GS1) · Globals stack, experimental · 23899c907 (#520)
+- 2026-10-13 · 288.1 (alias: RH1) · Roster-health lenses · ae21c03f3 (#507)
+- 2026-10-13 · 289.1 (alias: CS1) · Card-spec scaffold and card-rules lint · 3f9b44e5f (#509)
+- 2026-10-10 · 290.1 (alias: PF1) · Weekly performance audit · ca2e13db
+- 2026-10-10 · 291.1 (alias: DC1) · Dev menu CARDS section · b7e977c9
+- 2026-07-17 · 292.1 (alias: D1) · Upgradeable-Dice spec review-and-land · 4adf7266
+- 2026-07-17 · 293.1 (alias: D2) · Engine core, flagged · 18cf5e3b
+- 2026-07-17 · 294.1 (alias: D3) · Sim harness + economy derivation · 61bbc8ca
+- 2026-07-17 · 295.1 (alias: D4) · Pricing re-derivation + card re-authoring · 0e3bd2bb
+- 2026-07-17 · 296.1 (alias: D5) · Die gear + blacksmith · a25373be
+- 2026-07-18 · 297.1 (alias: D6a) · Flag-on combat render core · 311e2c3c
+- 2026-07-18 · 297.2 (alias: D6b) · Momentum/stance chips + stance-check telegraph + gear rail · 4cf7b752
+- 2026-07-18 · 297.3 (alias: D6c) · Blacksmith screen · 7c315d5f
+- 2026-07-18 · 297.4 (alias: D6d) · Flag-on combat e2e · 7af8dbc8
+- 2026-07-17 · 297.5 (alias: D6e) · Enemy stanceCheck telegraphs · 0b29ff42
+- 2026-07-18 · 297.6 (alias: D6f) · The Roll Ritual · 10ffe174
+- 2026-07-18 · 298.1 (alias: D7) · Tuning, ratification + honest re-baseline · 701762bd
+- 2026-07-18 · 299.1 (alias: D8) · One dice valve in every starter preset · 10ec4fe8
+- 2026-07-19 · 300.1 (alias: D9) · Authored stance-check variety · 2848fb6a
+- 2026-08-08 · 301.1 (alias: V1) · Iconography canon · a69eab56
+- 2026-11-01 · 302.1 (alias: V2) · dropped (a pre-revamp partial, ruling R7): The map as an artifact · (this commit)
+- 2026-11-01 · 303.1 (alias: V3) · dropped (a pre-revamp partial, ruling R7): Menus & chrome · (this commit)
+- 2026-08-28 · 304.1 (alias: V4) · Background acquisition pipeline · 4e93450d
+- 2026-08-28 · 305.1 (alias: V5) · Backgrounds wired · 15ef285f
+- 2026-11-01 · 306.1 (alias: V6) · dropped (a pre-revamp partial, ruling R7): Combat & minigame glyph unification · (this commit)
+- 2026-11-01 · 307.1 (alias: V7) · dropped (a pre-revamp partial, ruling R7): Illustration upgrades · (this commit)
+- 2026-08-31 · 308.1 (alias: V8) · Closure · 04fe2f46
+- 2026-08-28 · 309.1 (alias: W1) · The Door · 62008ebf
+- 2026-08-28 · 310.1 (alias: W2) · The Caverns · 62008ebf
+- 2026-08-28 · 311.1 (alias: W3) · Northern City · 3b16305a
+- 2026-08-31 · 312.1 (alias: W4) · The Connecting River + Town Across the River · b8546a59
+- 2026-11-01 · 313.1 (alias: W5) · dropped (a pre-revamp partial, ruling R7): New blood · (this commit)
+- 2026-08-31 · 314.1 (alias: G1) · .claude/** OPEN GATE doc sync · 61376b82
+- 2026-09-10 · 315.1 (alias: W6) · The Capital · f56fa198

@@ -281,7 +281,7 @@ Ten per colour, split within each sub-lane:
 ### The family relics (drafted by the session on LR1's pattern, approved by T)
 
 One elite-only relic and two quest relics, as LR1 gives Blood Price and the Elementalist
-(`plan/README.md`). Signature names and descriptions are plain, for T to rewrite.
+(`plan/phases/phase_LR1_lane_relics.md`). Signature names and descriptions are plain, for T to rewrite.
 
 | Relic | Signature (cost in Conviction) | Stats | Source |
 |---|---|---|---|
@@ -350,4 +350,4 @@ T chose the sims' suggested changes 1, 2, 3, 4, 6 and 7 for the trial set; THORN
 - Structure: M-07 PAID rarely has an exiled card to return; M-09 FREE loses to scrapping it; M-02 and M-05 PAID are
   rarely worth paying.
 
-- **2026-10-31, action names (Phase CA3e, T's CA3 plot):** five cards renamed to verbs: Mirrorhide to Turn the Blow, Turtle Up to Draw In, Bramble Carapace to Don the Brambles, Lacquered Shell to Lacquer the Plate, Loose Spine to Loose the Barbs. Source: T, 2026-10-30, "rename the card itself so that the card is a verb"; names table in `plan/README.md`. Names only.
+- **2026-10-31, action names (Phase CA3e, T's CA3 plot):** five cards renamed to verbs: Mirrorhide to Turn the Blow, Turtle Up to Draw In, Bramble Carapace to Don the Brambles, Lacquered Shell to Lacquer the Plate, Loose Spine to Loose the Barbs. Source: T, 2026-10-30, "rename the card itself so that the card is a verb"; names table in `plan/phases/phase_CA3_lane_card_art.md`. Names only.
