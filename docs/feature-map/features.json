@@ -989,7 +989,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/theme-switch-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/theme-switch-e2e.mjs"
       },
       "tested": {
         "value": true,
