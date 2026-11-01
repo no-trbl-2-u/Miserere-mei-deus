@@ -14,7 +14,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | The map | route | yes | yes | yes | no |
 | Inventory | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Inventory") |
 | Memoir | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Memoir") |
-| Settings | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
+| Settings | route | yes | no | yes | no |
 | The Anvil | route | yes | yes | yes | no |
 | Loot cache | route | yes | yes | yes | no |
 | Character Select | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Character Select") |
@@ -28,7 +28,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Quest | route | yes | yes | yes | no |
 | Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |
 | Saves | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Saves") |
-| Settings | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
+| Settings | route | yes | yes | yes | no |
 | Travel | route | yes | yes | yes | no |
 | Village | route | yes | yes | yes | no |
 | The hazard minigame | route | yes | yes | yes | no |
