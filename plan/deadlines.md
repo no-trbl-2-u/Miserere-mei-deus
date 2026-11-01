@@ -231,7 +231,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | W2 | T | - |
 | [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | W2 | T | SM2b, SM2c, SM2d, SM2e, SM2f |
-| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d, HP6a, HP6b, HP6c, EQ3d, EQ3e, EQ3f, EQ3g, EQ3h, EQ3i, EQ3j, EQ3k |
+| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d, HP6a, HP6b, HP6c, EQ3d, EQ3e, EQ3f, EQ3g, EQ3h, EQ3i, EQ3j, EQ3k, EQ4a, EQ4b |
 | [x] | 2026-11-18 | Upgrade grant call | W3 | T | - |
 | [ ] | 2026-11-17 | Event kind 5, village (paid rest, card shop, Anvil): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | W3 | needs plot | NK1b, NK1c |
 | [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the five other Act 1 hazard puzzles (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2), and swap any of HP6's Breakwater six you want, after playing the thirty in `/dev` (1 h) | W3 | T | HP4f, HP4g |
@@ -240,7 +240,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-22 | Enemy session 4: Chapters 2-4's bosses and the Act Boss, at the end of Chapter 4 (2 h) | W3 | T | - |
 | [ ] | 2026-11-23 | Plot Chapters 2-4's enemies and their art brief (1 h) | W3 | needs plot | - |
 | [ ] | 2026-11-24 | Event kind 7, loot cache: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | W3 | needs plot | - |
-| [ ] | 2026-11-25 | Write Chapters 2-4's quest lines, on Chapter 1's chain (BW1): every quest pays a relic, any lane relic not already paid by Chapter 1 (D114) (1 h) | W3 | T | - |
+| [ ] | 2026-11-25 | Write Chapters 2-4's quest lines, on Chapter 1's chain (BW1): quests alternate a relic, then a weapon or armor (D114 as amended by EQ3h), and a relic quest pays any lane relic not already paid by Chapter 1 (1 h) | W3 | T | - |
 | [ ] | 2026-11-27 | Event kind 8, cutscene: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | W3 | needs plot | - |
 | [ ] | 2026-11-28 | Calibration solves (2 h) | W3 | HP2e | HP2d |
 | [ ] | 2026-11-30 | W3 demo: a four-chapter walk, every node resolves (2 h) | W3 | T | HP2f |
@@ -295,6 +295,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-01** — **Equipment follow-ups plotted as spec 139 (EQ4a, EQ4b)** (T, pilot run `/plot anytime`; T answered every call in the session). **Edited** the Nov 25 Item for Chapters 2-4's quest lines: it said every quest pays a relic, and quests now alternate a relic, then a weapon or armor (D114 as amended by EQ3h). **Added** EQ4a and EQ4b to the `Waits on` of the Nov 16 MVP demo Item (the demo plays the Blacksmith and the gear card). Ticked nothing.
 - **2026-11-01** — **Card faces you read without opening plotted as spec 137 (CF1a-CF1d)** (T, attended `/pitch` then "Plot it!"; pitch `braindump/2026-11-01-card-face-meaning.md`). **Added** CF1a-CF1d under `## Unscheduled`: no dated T act waits on them, and T sets the date for reading CF1b's rewrite. No Item edited, no date moved.
 - **2026-11-01** — **reconcile after the v2 cut-over** (T, in chat: "Update the deadlines stuff"). **Removed** 66 `## Unscheduled` lines whose rows have shipped (each has an `ARCHIVE.md` line; the lint does not flag a line for a shipped row, so they had piled up since Oct 21). **Marked done** in the MVP schedule table the first character (CH1e), the Oct 31 weapons-and-armor pitch and the Nov 2 weapons-and-armor plot, to match their ticked Items. **Not ticked, unconfirmed by T:** the Oct 30 hard candidates (HP4e part 1) and the Oct 31 sea-keep boss session; no ruling or boss design is on main. **Flagged, not fixed here:** HP6a merged as #1280 (Nov 1, 01:59 ET) after the NX1d carry, so spec 110 still lists 110.1 open. No date moved.
 - **2026-11-01** — **the Chosen's ten-card deck and a fifth less XP plotted as spec 138 (XP1a, SD1a)** (T, attended sim session then `/plot asap`: "Maybe cut it by 20%"; "Pick whichever deck (The 7 + 3) got ~6 rounds with the starting gear"). **Added** XP1a and SD1a to the `Waits on` of the Mid-MVP check (Nov 9): the check plays the Chosen on the preview build, and today its first fight runs about 18 turns. The stat-scaling Item (Nov 12) still holds; it now reads the new deck. Nothing ticked; no date moved.
