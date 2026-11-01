@@ -2557,6 +2557,12 @@
       "kind": "coupling",
       "from": "area:World",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/Village/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/breakwater-chapter.questline.ts"
     },
     {
@@ -6031,7 +6037,25 @@
       "kind": "coupling",
       "from": "route:village",
       "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -6067,6 +6091,12 @@
       "kind": "coupling",
       "from": "route:village",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/village.engine.ts"
     },
     {
@@ -6084,6 +6114,12 @@
     {
       "kind": "coupling",
       "from": "route:village",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
       "to": "area:Enemy",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
@@ -6092,6 +6128,12 @@
       "from": "route:village",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6110,6 +6152,24 @@
       "from": "route:village",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6134,6 +6194,12 @@
       "from": "route:village",
       "to": "area:NPCs",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
