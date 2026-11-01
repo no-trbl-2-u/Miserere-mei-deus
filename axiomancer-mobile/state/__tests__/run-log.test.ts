@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 import {
     CHARACTER_ROSTER,
     getRng,
+    getHazardPuzzleLayout,
     COMBAT_REWARD_POOL,
     HAZARD_CRACK_CARD,
     PLAY_LOG_DECK_EVENTS_PATH,
@@ -495,6 +496,36 @@ describe('the hazard', () => {
         expect(closes).toHaveLength(1);
         expect((closes[0]!.body as PlayRunEndPost).outcome).toBe('run-over');
         expect(gs(store).runId).not.toBe(runId);
+    });
+});
+
+describe('the hazard puzzle', () => {
+    const LAYOUT = getHazardPuzzleLayout('demo-cliff-easy');
+
+    it('logs a completed puzzle: the VITAE either side of it, the clear and the loot', async () => {
+        const { store, actions } = richStore();
+        const p = gs(store).player;
+        store.setState({ player: { ...p, health: 40, maxHealth: 40 } } as never);
+        actions.claimHazardPuzzle(LAYOUT, 'safe', 1, 11);
+        actions.resetRun({ keepCharacter: true });
+        await landed();
+        const ended = eventsOf('hazard-ended')[0]!.payload;
+        expect(ended).toMatchObject({ hazardId: LAYOUT.id, cleared: true, vitaeBefore: 40, vitaeAfter: 40 });
+        expect(eventsOf('node-resolved').map((e) => e.payload.choice)).toEqual(['hazard-cleared']);
+        expect(eventsOf('item-gained').every((e) => e.payload.from === 'hazard')).toBe(true);
+    });
+
+    it('logs a short crossing: VITAE lost and the failed resolution', async () => {
+        const { store, actions } = richStore();
+        const p = gs(store).player;
+        store.setState({ player: { ...p, health: 40, maxHealth: 40 } } as never);
+        actions.claimHazardPuzzle(LAYOUT, 'safe', 0.2, 11);
+        actions.resetRun({ keepCharacter: true });
+        await landed();
+        const ended = eventsOf('hazard-ended')[0]!.payload;
+        expect(ended).toMatchObject({ hazardId: LAYOUT.id, cleared: false, vitaeBefore: 40 });
+        expect(ended.vitaeAfter).toBeLessThan(40);
+        expect(eventsOf('node-resolved').map((e) => e.payload.choice)).toEqual(['hazard-failed']);
     });
 });
 
