@@ -9,16 +9,14 @@
 |---|---|---|---|
 | 2026-10-30 (2 days overdue) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
 | 2026-10-31 (1 day overdue) | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | needs you: your task | W1 |
-| 2026-10-31 (1 day overdue) | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | needs you: your task | W1 |
 | 2026-11-01 (today) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |
 | 2026-11-01 (today) | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | needs you: your task | W1 |
 | 2026-11-02 (tomorrow) | Plot the sea keep's boss from enemy session 2; the normals and all six elites are plotted (EN1) (0.5 h) | needs you: B2 ready for you | W1 |
-| 2026-11-02 (tomorrow) | Plot Chapter 1's weapons and armor from the pitch (0.5 h) | needs a plot: no build-plan rows yet | W1 |
 | 2026-11-03 (in 2 days) | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-07 (in 6 days) | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | needs you: TP1b ready for you | W2 |
 | 2026-11-07 (in 6 days) | Plot the arena-background swap from your picks (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (in 7 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task | W2 |
-| 2026-11-09 (in 8 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes BUG1j, BUG1a, MC1c, CX1b, SM2a | W2 |
+| 2026-11-09 (in 8 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes BUG1j, BUG1a, MC1c, CX1b, SM2a, EQ3a, EQ3b, EQ3c | W2 |
 | 2026-11-10 (in 9 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 9 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-11 (in 10 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
