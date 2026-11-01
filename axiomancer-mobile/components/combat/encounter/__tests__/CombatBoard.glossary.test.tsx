@@ -17,7 +17,7 @@ import { State } from 'react-native-gesture-handler';
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
-import { rollEncounterDice, SPECIAL_CONVICTION_DEFAULT } from '@mechanics';
+import { rollEncounterDice } from '@mechanics';
 import {
     CombatBoard, dieGlossTerms, type CombatBoardProps, type DragController,
 } from '@/components/combat/encounter/CombatBoard';
@@ -103,12 +103,12 @@ describe('A3 — the Conviction chip', () => {
 });
 
 describe('A4 — long-press a die to read it', () => {
-    it('BOON opens its face with the gear payload', async () => {
-        const { dice, onGloss } = renderBoard();
+    it('BOON opens its face with what the worn weapon special does', async () => {
+        const { vm, dice, onGloss } = renderBoard();
         await holdDie(dice.boon.id);
-        const [ids, live] = onGloss.mock.calls[0] as [string[], { boon: number }];
+        const [ids, live] = onGloss.mock.calls[0] as [string[], { special: string }];
         expect(ids).toEqual(['boon']);
-        expect(live.boon).toBeGreaterThanOrEqual(SPECIAL_CONVICTION_DEFAULT);
+        expect(live.special).toBe(vm.specialGloss);
     });
 
     it('MANA, MISS (not draggable), BANKED with its pips and GHOST each open their gloss', async () => {

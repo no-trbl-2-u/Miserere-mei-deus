@@ -46,7 +46,7 @@ function tick() {
 
 export const RollingDie = React.memo(function RollingDie({
     die, size = 54, dimmed = false, mode, plan, skipNonce = 0, onTumbleChange,
-    assigned = false, specialConviction,
+    assigned = false, specialText,
 }: {
     die: CombatDieVM;
     size?: number;
@@ -62,7 +62,7 @@ export const RollingDie = React.memo(function RollingDie({
     /** Forwarded to `CombatDie`'s a11y label — socketed on a staged card. */
     assigned?: boolean;
     /** Forwarded to `CombatDie`'s a11y label — the special die face's real (gear-scaled) payload. */
-    specialConviction?: number;
+    specialText?: string;
 }) {
     // The single fall driver (the hazard `TumblingDie` mapping):
     //   0 → above the tray, rotated hard · 1 → seated · >1 → the micro-bounce.
@@ -143,7 +143,7 @@ export const RollingDie = React.memo(function RollingDie({
 
     return (
         <Animated.View style={animStyle}>
-            <CombatDie die={die} size={size} dimmed={dimmed} assigned={assigned} specialConviction={specialConviction} />
+            <CombatDie die={die} size={size} dimmed={dimmed} assigned={assigned} specialText={specialText} />
         </Animated.View>
     );
 });

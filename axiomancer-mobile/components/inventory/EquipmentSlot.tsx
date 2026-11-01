@@ -97,6 +97,10 @@ export function EquipmentSlot({
                     <Text numberOfLines={1} style={styles.dockSlotSignature}>
                         grants {slot.item.grantsSignature}
                     </Text>
+                ) : filled && slot.item?.effectLine ? (
+                    <Text numberOfLines={2} style={styles.dockSlotEffect} testID={`dock-slot-effect-${slotId}`}>
+                        {slot.item.effectLine}
+                    </Text>
                 ) : null}
             </View>
         </TouchableOpacity>
@@ -196,5 +200,13 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.sulfur,
         letterSpacing: 0.6,
         lineHeight: 13,
+    },
+    // A weapon or armor's effect: the payload only, two short lines at most.
+    dockSlotEffect: {
+        fontFamily: FONTS.sans,
+        fontSize: 9,
+        color: AXM.sulfur,
+        letterSpacing: 0.2,
+        lineHeight: 11,
     },
 }));

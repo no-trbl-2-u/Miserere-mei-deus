@@ -43,6 +43,7 @@ import {
     type GameStore,
 } from '@mechanics';
 
+import { equipmentEffectParts } from './equipment-effect-line';
 import { freezeViewModel } from './freeze';
 import { findOwnedEquipment, loadoutActionFor } from './loadout';
 
@@ -89,6 +90,8 @@ export interface EquipmentSignatureInfo {
  * @property sub       - ItemGlyph discriminator for the placeholder art.
  * @property statLines - Stat modifiers the item grants. May be empty.
  * @property signature - Granted signature, or `null` for non-relic equipment.
+ * @property effect    - What the piece does in a fight, one terse line per part
+ *                       (`equipmentEffectParts`), or `null` when it has no effect.
  * @property lane      - `Lane: <lane name> (while worn)` for a relic whose
  *                       resolved lane is registered, else `null`.
  * @property flavor    - The item's engine description (flavour prose).
@@ -101,6 +104,7 @@ export interface EquipmentDetailViewModel {
     sub: string | null;
     statLines: readonly EquipmentStatLine[];
     signature: EquipmentSignatureInfo | null;
+    effect: readonly string[] | null;
     lane: string | null;
     flavor: string;
     action: EquipmentDetailAction;
@@ -217,6 +221,12 @@ function buildSignature(eq: Equipment): EquipmentSignatureInfo | null {
     };
 }
 
+/** The piece's fight effect as display lines, or `null` when it has none. */
+function buildEffect(eq: Equipment): readonly string[] | null {
+    const parts = equipmentEffectParts(eq.effect);
+    return parts.length === 0 ? null : parts;
+}
+
 /**
  * The "Lane:" line for a relic that opens a card lane while worn. The lane is
  * resolved by the engine (`relicLaneId`, library first) and named from the
@@ -261,6 +271,7 @@ export function selectEquipmentDetailViewModel(
         sub: SLOT_LABELS[item.slot] ?? null,
         statLines: buildStatLines(item) as readonly EquipmentStatLine[],
         signature: buildSignature(item),
+        effect: buildEffect(item),
         lane: buildLaneLine(item),
         flavor: item.description,
         action: { mode, label },

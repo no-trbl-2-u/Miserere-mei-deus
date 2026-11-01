@@ -29,10 +29,10 @@ const SETTLED_PLAN: DieRollPlan = {
 };
 
 describe('RollingDie — forwards a11y opts to the real CombatDie', () => {
-    it('speaks the gear-scaled BOON Conviction payload, not the stock default', () => {
-        render(<RollingDie die={HEART} mode="instant" plan={SETTLED_PLAN} specialConviction={5} />);
+    it('speaks the worn weapon special on the BOON line', () => {
+        render(<RollingDie die={HEART} mode="instant" plan={SETTLED_PLAN} specialText="Special: GUARD 6." />);
         expect(screen.getByTestId(`combat-die-${HEART.id}`).props.accessibilityLabel)
-            .toBe(combatDieA11yLabel(HEART, { specialConviction: 5 }));
+            .toBe(combatDieA11yLabel(HEART, { specialText: "Special: GUARD 6." }));
     });
 
     it('speaks "assigned" once the tray die is socketed on a staged card', () => {

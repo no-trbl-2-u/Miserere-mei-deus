@@ -9,8 +9,12 @@
 
 import { afterEach, describe, it, expect, jest } from '@jest/globals';
 import {
+    armorLibrary,
     createCharacter,
     createGameStore,
+    GREY_ARMOR_ID,
+    GREY_WEAPON_ID,
+    weaponLibrary,
     getRelicById,
     type Consumable,
     type Equipment,
@@ -843,6 +847,7 @@ describe('selectInventoryViewModel: equipmentDock', () => {
             name: 'Long Blade',
             sub: 'Weapon',
             grantsSignature: null, // non-relic gear grants no signature
+            effectLine: null, // and this one carries no effect
         });
     });
 
@@ -1129,5 +1134,28 @@ describe('a save carrying a relic the loadout lacks (EQ1 A5)', () => {
         actions.equipItem(signet.id);
         expect(store.getState().player.equipment.relics.filter((a) => a?.id === signet.id)).toHaveLength(1);
         expect(store.getState().player.maxHealth).toBe(player.maxHealth + 20);
+    });
+});
+
+describe('selectInventoryViewModel: what a piece does (EQ3 A15)', () => {
+    const blade = weaponLibrary.find((w) => w.id === GREY_WEAPON_ID)!;
+    const coat = armorLibrary.find((a) => a.id === GREY_ARMOR_ID)!;
+
+    it('a satchel row and a dock row for the grey pair carry the same effect line', () => {
+        const vm = selectInventoryViewModel(makeStore([blade, coat], [blade, coat]).getState());
+        expect(vm.items.find((r) => r.id === blade.id)?.effectLine).toBe('First DEAL +2 · Special: +2 Conviction');
+        expect(vm.items.find((r) => r.id === coat.id)?.effectLine).toBe('First GUARD: GUARD 2 · Gold die: +1 hit');
+        const weapon = vm.equipmentDock.slots.find((d) => d.key === 'weapon')!;
+        const armor = vm.equipmentDock.slots.find((d) => d.key === 'armor')!;
+        expect(weapon.item?.effectLine).toBe(vm.items.find((r) => r.id === blade.id)?.effectLine);
+        expect(armor.item?.effectLine).toBe(vm.items.find((r) => r.id === coat.id)?.effectLine);
+    });
+
+    it('a piece with no effect, a relic and a consumable have a null line', () => {
+        const relic = getRelicById('relic-disarming-plea')!;
+        const vm = selectInventoryViewModel(makeStore([sword(), relic, potion()], [relic]).getState());
+        expect(vm.items.find((r) => r.id === 'long-blade')?.effectLine).toBeNull();
+        expect(vm.items.find((r) => r.id === relic.id)?.effectLine).toBeNull();
+        expect(vm.items.find((r) => r.id === 'potion-of-heart')?.effectLine).toBeNull();
     });
 });

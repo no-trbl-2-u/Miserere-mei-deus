@@ -11,7 +11,9 @@
 
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { createCharacter, getRelicById, type Equipment } from '@mechanics';
+import {
+    armorLibrary, createCharacter, getRelicById, GREY_ARMOR_ID, GREY_WEAPON_ID, weaponLibrary, type Equipment,
+} from '@mechanics';
 
 import { EquipmentDetailModal } from '@/components/inventory/EquipmentDetailModal';
 import { selectEquipmentDetailViewModel } from '@/state/presenters/equipment-detail.engine';
@@ -101,5 +103,32 @@ describe('EquipmentDetailModal — the loadout button (EQ1 A2)', () => {
         expect(queryByTestId('equip-detail-unequip')).toBeNull();
         fireEvent.press(getByTestId('equip-detail-close'));
         expect(onClose).toHaveBeenCalled();
+    });
+});
+
+describe('EquipmentDetailModal — the effect block (EQ3 A15)', () => {
+    const BLADE = weaponLibrary.find((w) => w.id === GREY_WEAPON_ID)!;
+    const COAT = armorLibrary.find((a) => a.id === GREY_ARMOR_ID)!;
+
+    it('the worn grey weapon shows an EFFECT block of terse lines and drops the empty stat block', () => {
+        const vm = selectEquipmentDetailViewModel(stateWith([BLADE], [BLADE]), BLADE.id)!;
+        expect(vm.effect).toEqual(['First DEAL +2', 'Special: +2 Conviction']);
+        const { getByTestId, queryByTestId } = render(<EquipmentDetailModal vm={vm} onClose={jest.fn()} />);
+        expect(getByTestId('equip-detail-effect-0').props.children).toBe('First DEAL +2');
+        expect(getByTestId('equip-detail-effect-1').props.children).toBe('Special: +2 Conviction');
+        expect(queryByTestId('equip-detail-stats')).toBeNull();
+    });
+
+    it('the grey armor names its trigger and its die', () => {
+        const vm = selectEquipmentDetailViewModel(stateWith([COAT], [COAT]), COAT.id)!;
+        expect(vm.effect).toEqual(['First GUARD: GUARD 2', 'Gold die: +1 hit']);
+    });
+
+    it('a relic has no effect block and keeps its stat block', () => {
+        const vm = selectEquipmentDetailViewModel(stateWith([SIGNET], [SIGNET]), SIGNET.id)!;
+        expect(vm.effect).toBeNull();
+        const { queryByTestId, getByTestId } = render(<EquipmentDetailModal vm={vm} onClose={jest.fn()} />);
+        expect(queryByTestId('equip-detail-effect')).toBeNull();
+        expect(getByTestId('equip-detail-stats')).toBeTruthy();
     });
 });

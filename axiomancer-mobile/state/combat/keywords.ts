@@ -139,7 +139,7 @@ const KEYWORD_GLOSS: Record<string, string> = {
         + 'Each pip spent adds +2 intensity, or +5 Guard on a defend card.',
     // ── Die gear — BOON is the face payload; HONE/TEMPER are the blacksmith
     // upgrade verbs. ──
-    Boon: "A die's BOON face powers a card of its color and grants Conviction. Its equipped gear sets how much (2 by default).",
+    Boon: "A die's BOON face powers a card of its color. Your worn weapon sets what its special also does.",
     Hone: "A blacksmith upgrade: adds a mana face to a die's gear, so more of its rolls power a card.",
     Temper: "A blacksmith upgrade: turns a mana face into a BOON face. A colored die caps at 2 boon and 1 miss, gold at 1.",
 };
@@ -341,8 +341,8 @@ export const BOARD_GLOSSARY: Readonly<Record<BoardTermId, BoardGlossEntry>> = {
 export interface BoardGlossLive {
     /** Conviction in hand (the chip). */
     conviction?: number;
-    /** The Conviction this die's BOON face grants (the gear's payload). */
-    boon?: number;
+    /** What a BOON (special) face does this fight: the worn weapon's payload, or that it only powers its card. */
+    special?: string;
     /** A banked die's ripening pips. */
     pips?: number;
     deck?: number;
@@ -365,7 +365,7 @@ function liveLine(id: BoardTermId, live: BoardGlossLive | undefined): string | n
         case 'conviction':
             return live.conviction === undefined ? null : `You hold ◆ ${live.conviction}.`;
         case 'boon':
-            return live.boon === undefined ? null : `This die grants +${live.boon} ◆ when it powers a card.`;
+            return live.special ?? null;
         case 'banked':
             return live.pips === undefined ? null : `This die holds ${live.pips} of ${RESERVE_PIP_CAP} pips.`;
         case 'piles':

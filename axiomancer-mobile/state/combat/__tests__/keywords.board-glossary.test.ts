@@ -58,8 +58,8 @@ describe('A1 — one board glossary source', () => {
     });
 
     it('states the numbers the engine constants hold', () => {
-        // The BOON default payload.
-        expect(BOARD_GLOSSARY.boon.def).toContain(`${SPECIAL_CONVICTION_DEFAULT} by default`);
+        // The BOON names the weapon as what sets its payload, and no figure of its own.
+        expect(BOARD_GLOSSARY.boon.def).toContain('worn weapon');
         // The pip cap and the Reserve size.
         expect(BOARD_GLOSSARY.banked.more).toContain(`up to ${RESERVE_PIP_CAP}`);
         expect(BOARD_GLOSSARY.banked.more).toContain(`holds ${RESERVE_MAX}`);
@@ -85,10 +85,10 @@ describe('A1 — one board glossary source', () => {
         expect(boardGlossView(['piles'], { deck: 9, discard: 2 }).live).toBe('Deck 9, discard 2.');
         expect(boardGlossView(['ledger'], { ledger: { clear: 1, overwhelmed: 2, pending: 3 } }).live)
             .toBe('1 cleared, 2 overwhelmed, 3 ahead.');
-        const die = boardGlossView(['boon', 'banked'], { boon: 3, pips: 1 });
+        const die = boardGlossView(['boon', 'banked'], { special: "Your weapon's special: +2 Conviction when it powers a card.", pips: 1 });
         expect(die.title).toBe('BOON');
         expect(die.sections[1].title).toBe('BANKED DIE');
-        expect(die.live).toBe(`This die grants +3 ◆ when it powers a card. This die holds 1 of ${RESERVE_PIP_CAP} pips.`);
+        expect(die.live).toBe(`Your weapon's special: +2 Conviction when it powers a card. This die holds 1 of ${RESERVE_PIP_CAP} pips.`);
         expect(boardGlossView(['mana']).live).toBeNull();
     });
 });

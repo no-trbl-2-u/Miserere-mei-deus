@@ -13,7 +13,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
-import { SPECIAL_CONVICTION_DEFAULT } from '@mechanics';
 import { CombatDie, combatDieA11yLabel } from '@/components/combat/encounter/CombatDie';
 import type { CombatDieVM } from '@/state/presenters/combat-encounter.engine';
 
@@ -35,14 +34,14 @@ describe('combatDieA11yLabel — spec 33 faces', () => {
         }
     });
 
-    it('BOON: drag onto a staged card of its colour, powers it AND pays Conviction', () => {
+    it('BOON: drag onto a staged card of its colour and power it', () => {
         const label = combatDieA11yLabel({ ...HEART, face: 'special' });
-        expect(label).toBe(`HEART die, BOON face: drag onto a staged HEART card to power it and gain ${SPECIAL_CONVICTION_DEFAULT} Conviction`);
+        expect(label).toBe(`HEART die, BOON face: drag onto a staged HEART card to power it`);
     });
 
-    it('BOON payload follows the gear slot, not the stock default', () => {
-        const label = combatDieA11yLabel({ ...HEART, face: 'special' }, { specialConviction: 3 });
-        expect(label).toContain('gain 3 Conviction');
+    it('BOON says what the worn weapon special does', () => {
+        const label = combatDieA11yLabel({ ...HEART, face: 'special' }, { specialText: "Your weapon's special: HEAL 4 when it powers a card." });
+        expect(label).toContain("to power it. Your weapon's special: HEAL 4");
     });
 
     it('MANA: drag onto a staged card of its colour to power its paid line', () => {
@@ -91,11 +90,11 @@ describe('combatDieA11yLabel — spec 33 faces', () => {
 });
 
 describe('CombatDie — the rendered label is the pure label', () => {
-    it('speaks the BOON line, honouring the gear payload', () => {
+    it('speaks the BOON line, honouring the weapon special', () => {
         const die: CombatDieVM = { ...HEART, face: 'special' };
-        render(<CombatDie die={die} specialConviction={4} />);
+        render(<CombatDie die={die} specialText="Special: GUARD 6." />);
         expect(screen.getByTestId(`combat-die-${die.id}`).props.accessibilityLabel)
-            .toBe(combatDieA11yLabel(die, { specialConviction: 4 }));
+            .toBe(combatDieA11yLabel(die, { specialText: "Special: GUARD 6." }));
     });
 
     it('the socket copy on a staged card is not its own button', () => {
