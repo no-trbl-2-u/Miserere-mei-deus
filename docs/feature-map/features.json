@@ -1381,6 +1381,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Combat/combat.equipment-effects.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Combat/combat.measured-truth.ts"
     },
     {
@@ -1627,7 +1633,19 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.encounter.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.equipment-effects.ts"
     },
     {
       "kind": "coupling",
