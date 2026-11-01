@@ -22,6 +22,7 @@ import {
     createMapState,
     equipItem as engineEquipItem,
     unequipItem as engineUnequipItem,
+    moveRelic as engineMoveRelic,
     displacedBy,
     getDialogueNode,
     getMapDefinition,
@@ -290,6 +291,13 @@ export interface AppActions {
      * The item stays in the satchel. No-op when the item isn't worn.
      */
     unequipItem: (itemId: string) => void;
+    /**
+     * Move the worn relic at position `from` (0-2) to position `to`: an empty
+     * position takes it, a full one swaps the two. The worn set is unchanged.
+     * No-op when `from` is empty, the two are the same, or either is not a
+     * relic position.
+     */
+    moveRelic: (from: number, to: number) => void;
     /** Discard an item — wraps `removeItem` with a quest-item guard. */
     dropItem: (itemId: string) => void;
     /**
@@ -797,6 +805,7 @@ export function createAppActions(store: AppStore): AppActions {
         useItem: (itemId) => useItemAction(store, itemId),
         equipItem: (itemId, position) => equipItemAction(store, itemId, position),
         unequipItem: (itemId) => unequipItemAction(store, itemId),
+        moveRelic: (from, to) => moveRelicAction(store, from, to),
         dropItem: (itemId) => dropItemAction(store, itemId),
         moveTo: (nodeId) => moveToAction(store, nodeId),
         changeMap: (mapName) => changeMapAction(store, mapName),
@@ -1088,6 +1097,15 @@ function unequipItemAction(store: AppStore, itemId: string): void {
             ? loadout.relics.findIndex((a) => a?.id === itemId)
             : undefined;
     const nextPlayer = engineUnequipItem(state.player, target.slot, relicIndex);
+    if (nextPlayer === state.player) return;
+    store.setState({ player: nextPlayer });
+}
+
+function moveRelicAction(store: AppStore, from: number, to: number): void {
+    // The engine swaps on a full position and returns the same reference on
+    // any no-op, so an unchanged player writes nothing.
+    const state = store.getState();
+    const nextPlayer = engineMoveRelic(state.player, from, to);
     if (nextPlayer === state.player) return;
     store.setState({ player: nextPlayer });
 }

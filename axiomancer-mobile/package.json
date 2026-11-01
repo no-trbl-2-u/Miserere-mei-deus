@@ -35,6 +35,7 @@
     "e2e:combat-round:withdraw": "node scripts/env-run.mjs WITHDRAW=1 node scripts/combat-round-e2e.mjs",
     "e2e:combat-round:levelup": "node scripts/env-run.mjs LEVEL_UP=1 PRESET=sage node scripts/combat-round-e2e.mjs",
     "e2e:fixture": "node scripts/fixture-e2e.mjs",
+    "e2e:dock-drag": "node scripts/equipment-dock-drag-e2e.mjs",
     "critique:drive": "node scripts/critique-drive.mjs",
     "perf:combat-drag": "node scripts/combat-drag-perf.mjs",
     "e2e:minigames": "node scripts/hazard-e2e.mjs && node scripts/encounter-routing-e2e.mjs && node scripts/exploration-combat-roundtrip-e2e.mjs && node scripts/combat-round-e2e.mjs",

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
+import { GestureDetector, type GestureType } from 'react-native-gesture-handler';
 import { AxmIcon } from '@/components/icons/AxmIcon';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -31,6 +32,11 @@ interface ItemGridProps {
     onItemTap: (itemId: string) => void;
     onUseOrEquip: (itemId: string) => void;
     onDiscard: (itemId: string) => void;
+    /**
+     * The drag gesture for a tile, or `undefined` for none (only equipment
+     * drags onto the dock). The tile's tap and its buttons keep working beside it.
+     */
+    itemGesture?: (item: InventoryItemRow) => GestureType | undefined;
 }
 
 export function ItemGrid({
@@ -42,6 +48,7 @@ export function ItemGrid({
     onItemTap,
     onUseOrEquip,
     onDiscard,
+    itemGesture,
 }: ItemGridProps) {
     // vm.items already accounts for slot-filter vs tab-filter on the
     // presenter side (sub-tick F lifted the inline SLOT_KEY_TO_SUB map
@@ -72,16 +79,22 @@ export function ItemGrid({
                     <View key={cat} style={styles.categorySection}>
                         <SectionLabel size={11}>{categoryHeaders[cat]}</SectionLabel>
                         <View style={styles.grid}>
-                            {grouped[cat].map((it) => (
-                                <ItemCard
-                                    key={it.id}
-                                    item={it}
-                                    expanded={expandedItemId === it.id}
-                                    onTap={() => onItemTap(it.id)}
-                                    onUseOrEquip={() => onUseOrEquip(it.id)}
-                                    onDiscard={() => onDiscard(it.id)}
-                                />
-                            ))}
+                            {grouped[cat].map((it) => {
+                                const card = (
+                                    <ItemCard
+                                        key={it.id}
+                                        item={it}
+                                        expanded={expandedItemId === it.id}
+                                        onTap={() => onItemTap(it.id)}
+                                        onUseOrEquip={() => onUseOrEquip(it.id)}
+                                        onDiscard={() => onDiscard(it.id)}
+                                    />
+                                );
+                                const gesture = itemGesture?.(it);
+                                return gesture === undefined ? card : (
+                                    <GestureDetector key={it.id} gesture={gesture}>{card}</GestureDetector>
+                                );
+                            })}
                         </View>
                     </View>
                 ))}
