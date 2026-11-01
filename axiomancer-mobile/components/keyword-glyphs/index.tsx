@@ -27,7 +27,6 @@ export const KEYWORD_GLYPH_COMPONENT: Readonly<Record<GlyphKeyword, (p: G.GlyphP
     TETHER: G.TetherGlyph,
     LEECH: G.LeechGlyph,
     VULNERABLE: G.VulnerableGlyph,
-    CONVICTION: G.ConvictionGlyph,
     INFERNO: G.InfernoGlyph,
     BLIZZARD: G.BlizzardGlyph,
     STORM: G.StormGlyph,

@@ -1,9 +1,9 @@
 /**
  * One glyph per printed keyword: 24-unit line icons, single stroke weight,
  * round caps, drawn to read at text size. DEAL, GUARD, VULNERABLE, SACRIFICE,
- * TETHER, LEECH, MERCY (a laurel), CONVICTION, INFERNO, BLIZZARD, DISCARD and
- * EXILE are the mock set T chose; the other eleven are drawn in the same
- * hand and each differs from every other glyph in its silhouette.
+ * TETHER, LEECH, MERCY (a laurel), INFERNO, BLIZZARD, DISCARD and EXILE are
+ * the mock set T chose; the other ten are drawn in the same hand and each
+ * differs from every other glyph in its silhouette.
  *
  * A glyph never picks its own colour: the caller passes one (the keyword's
  * category colour, `KeywordGlyph`). Swapping a glyph for a generated image
@@ -99,12 +99,6 @@ export const VulnerableGlyph = (p: GlyphProps) => (
     <Frame {...p}>
         <Path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z" />
         <Path d="M12 6l-2 5 3 2-2 5" />
-    </Frame>
-);
-
-export const ConvictionGlyph = (p: GlyphProps) => (
-    <Frame {...p}>
-        <Path d="M12 3l7 9-7 9-7-9z" />
     </Frame>
 );
 

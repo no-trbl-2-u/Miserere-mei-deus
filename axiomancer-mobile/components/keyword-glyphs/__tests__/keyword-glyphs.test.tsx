@@ -24,7 +24,7 @@ function geometry(node: unknown, out: string[] = []): string[] {
 }
 
 describe('KEYWORD_GLYPH_COMPONENT', () => {
-    it('has one component for each of the 23 keywords and no more', () => {
+    it('has one component for each of the 22 keywords and no more', () => {
         expect(Object.keys(KEYWORD_GLYPH_COMPONENT).sort()).toEqual([...GLYPH_KEYWORDS].sort());
         expect(new Set(Object.values(KEYWORD_GLYPH_COMPONENT)).size).toBe(GLYPH_KEYWORDS.length);
     });
