@@ -57,3 +57,6 @@ Added by hand from the upstream repository (github.com/game-icons/icons),
 not by the extraction script: the map's elite, travel and start marks.
 Each is CC BY 3.0, icons made by Lorc (lorc/horned-helm) and by
 Delapouite (delapouite/exit-door, delapouite/windmill).
+
+The settings tab's gear (action-settings) is likewise added by hand: CC BY 3.0,
+icons made by Lorc (lorc/cog).

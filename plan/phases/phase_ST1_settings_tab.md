@@ -49,7 +49,7 @@ six labels unclipped, every e2e script that opens `/dev` passes through the new 
   remove it from the Character tab.
 - **A3** The SOUND section has a MUSIC on/off row above the volume, a new persisted setting `musicOn`
   (default on; an old save without it reads as on). Off silences the theme through MU1's music director,
-  as volume 0 does; switching back on resumes at the kept volume. `[T to confirm #2]` The reset-settings
+  as volume 0 does; switching back on resumes at the kept volume. Confirmed by T (2026-10-31): yes, reset turns music on. The reset-settings
   button restores it to on.
 - **A4** A FEEDBACK section holds one SEND FEEDBACK button. It opens a modal with a two-way pick, BUG or
   PROPOSAL, a multi-line text box capped at 1000 characters with a live count, and SUBMIT and CANCEL.

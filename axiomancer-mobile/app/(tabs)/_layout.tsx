@@ -16,6 +16,7 @@ import CharacterScreen from './character/index';
 import MemoirScreen from './memoir/index';
 import InventoryScreen from './inventory/index';
 import DeckScreen from './deck/index';
+import SettingsTabScreen from './settings/index';
 
 function TabBadge({ text, kind }: { text: string; kind: 'event' | 'levelup' }) {
   const AXM = usePalette();
@@ -47,6 +48,7 @@ const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {
   // is literally what the combat deck is a stack of. Its a11y label is
   // overridden here, as every tab's is.
   cards: { name: 'action-arcane', label: 'Deck tab' },
+  gear: { name: 'action-settings', label: 'Settings tab' },
 };
 
 function TabIconWithBadge({
@@ -80,7 +82,7 @@ export default function TabLayout() {
   const styles = useStyles();
   // Tab configuration: a fight runs on its own full-screen route
   // (/combat-encounter) that covers this bar, so there is no combat tab and
-  // no tab lock; the five tabs are registered below.
+  // no tab lock; the six tabs are registered below.
   // Subscribe to the slim slices `selectTabBadges` reads, then memo
   // the badges object. The presenter returns a stable `EMPTY_BADGES`
   // reference in the no-event / no-levelup steady state but a fresh
@@ -198,6 +200,18 @@ export default function TabLayout() {
               focused={focused}
               badge={badges.deck}
             />
+          ),
+        }}
+      />
+      {/* SETTINGS is the sixth tab, rightmost; /settings stays the main menu's route. */}
+      <Tabs.Screen
+        name="settings/index"
+        component={SettingsTabScreen}
+        options={{
+          title: TAB_TITLES.settings,
+          tabBarLabel: TAB_TITLES.settings,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabIconWithBadge kind="gear" color={color} size={size} focused={focused} badge={null} />
           ),
         }}
       />

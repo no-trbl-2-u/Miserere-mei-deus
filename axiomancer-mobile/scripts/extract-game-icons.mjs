@@ -89,6 +89,7 @@ const MANIFEST = {
     'category-relic': 'lorc/gem-chain',
     'category-quest': 'lorc/key',
     'mark-unknown': 'sbed/help',
+    'action-settings': 'lorc/cog',
 };
 
 const rows = Object.entries(MANIFEST).map(([name, source]) => {

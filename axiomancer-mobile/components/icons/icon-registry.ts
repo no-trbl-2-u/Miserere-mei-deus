@@ -127,6 +127,7 @@ const ICON_LABELS: Record<GameIconName, string> = {
     'category-relic': 'Gem on a chain',
     'category-quest': 'Key',
     'mark-unknown': 'Question mark',
+    'action-settings': 'Cog or settings',
 };
 
 function buildSpecs(): Record<GameIconName, AxmIconSpec> {

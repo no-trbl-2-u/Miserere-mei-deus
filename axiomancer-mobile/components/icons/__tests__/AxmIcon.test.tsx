@@ -63,6 +63,7 @@ describe('icon registry: spec well-formedness', () => {
         ['action-elite', 'lorc/horned-helm'],
         ['action-door', 'delapouite/exit-door'],
         ['action-start', 'delapouite/windmill'],
+        ['action-settings', 'lorc/cog'],
     ];
     it.each(MAP_MARKS)('the map mark %s draws the chosen silhouette, %s', (name, source) => {
         expect(isAxmIconName(name)).toBe(true);

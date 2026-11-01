@@ -14,6 +14,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | The map | route | yes | yes | yes | no |
 | Inventory | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Inventory") |
 | Memoir | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Memoir") |
+| Settings | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Settings") |
 | The Anvil | route | yes | yes | yes | no |
 | Loot cache | route | yes | yes | yes | no |
 | Character Select | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Character Select") |
@@ -90,6 +91,7 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Character (`route:(tabs)/character`)
 - Inventory (`route:(tabs)/inventory`)
 - Memoir (`route:(tabs)/memoir`)
+- Settings (`route:(tabs)/settings`)
 - Character Select (`route:character-select`)
 - Death Return (`route:death-return`)
 - Game Over (`route:game-over`)
