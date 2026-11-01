@@ -1,8 +1,10 @@
 name: ship-a-chunk
 
-# Ship the next unchecked phase of the build plan end-to-end (see
-# skills/ship-a-chunk.md). Dispatch-only — /march dispatches to it when a
-# pending phase exists; run this directly to force a delivery tick.
+# Ship the next ready chunk of the plan end-to-end (see
+# skills/ship-a-chunk.md; v2's own chunk step is /next, which /march
+# runs as /next top). Dispatch-only; run this directly to force a
+# delivery tick. The file was ship-a-phase.yml until v2's verb names
+# (phase NX1f).
 
 on:
   workflow_dispatch:

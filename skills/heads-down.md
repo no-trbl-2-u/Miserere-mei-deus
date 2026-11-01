@@ -151,15 +151,20 @@ call, all or nothing:
 node scripts/claims.mjs claim <row> <row> ... --owner heads-down:<id>
 ```
 
-- **Exit 0** (`claimed <row> by ...`): launch the wave. Beat
-  `--push claims=<row>` for each.
-- **Exit 1** prints `held <row> by <holder> until <time>` for each
-  refused row and writes nothing. Drop those rows from the wave, name
+A row id is claimed as the chunk that carries it as its `alias:`
+(v2's claims, NX1f: `scripts/claims-local.mjs`), so the output names
+chunk ids (`133.6` for `NX1f`).
+
+- **Exit 0** (`<chunk>: free` or `<chunk>: yours`): launch the wave.
+  Beat `--push claims=<row>` for each.
+- **Exit 1** with a `<chunk>: refused, held by <holder> ...` line
+  for each refused row writes nothing. Drop those rows from the wave, name
   each holder in the wave note and the final report (never a
   mid-run question), and claim the rest again.
-- **Exit 3** is a tooling error: log its stderr and launch anyway.
-  The worker's own claim and the PR and mirror checks are the
-  fallback (best-effort, like the mirror).
+- **Exit 1 with no `refused` line** is a tooling error (the reason
+  on stderr): log it and launch anyway. The worker's own claim and
+  the PR and mirror checks are the fallback (best-effort, like the
+  mirror).
 
 Each worker runs `/ship-a-phase`, whose Step 2 claims its row again
 under the same owner (a renewal), and whose Step 12.5 releases that

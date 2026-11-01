@@ -1,7 +1,9 @@
 name: plan-a-spec
 
-# Refine the next phase brief without shipping code (see
-# skills/plan-a-spec.md). Dispatch-only.
+# Write, refine or chunk one spec without shipping code (see
+# skills/plan-a-spec.md). Dispatch-only: since R11 only T runs it (by
+# hand or this button), and the loop never writes a brief. The file was
+# plan-a-phase.yml until v2's verb names (phase NX1f).
 
 on:
   workflow_dispatch:

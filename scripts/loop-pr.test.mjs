@@ -693,7 +693,8 @@ test('/heads-down claims each wave before launching and carries CLAIM_OWNER', ()
   const spawn = launch.indexOf('Then launch: one background subagent')
   assert.ok(claim > 0 && spawn > claim, 'the wave is claimed before any worker starts')
   assert.match(launch, /--owner heads-down:<id>/)
-  assert.match(launch, /held <row> by <holder> until <time>/)
+  assert.match(launch, /<chunk>: refused, held by <holder>/)
+  assert.match(launch, /as the chunk that carries it as its `alias:`/)
   assert.match(launch, /Drop those rows from the wave/)
   assert.match(launch, /\*\*the claim owner\*\*: `CLAIM_OWNER=heads-down:<session id>`/)
   assert.match(hd, /heads-down:<session id>`\./)
@@ -944,4 +945,68 @@ test('the mutation job never fails a check and runs Stryker with no token in rea
   for (const s of steps.slice(2)) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
   const withToken = steps.filter((s) => /GH_TOKEN/.test(s))
   assert.deepEqual(withToken.map((s) => s.split('\n')[0]), ['Post the score and survivors'])
+})
+
+// --- the loop workflows on v2's steps (phase NX1f, A10) ----------------------
+
+const loopWf = (name) => read(`${WF}/${name}`)
+
+test('march runs v2 cadence, dispatch ceiling, quota and idle gates in a gate job before the runner call', () => {
+  const march = loopWf('march.yml')
+  const gate = job(march, 'gate')
+  assert.ok(gate, 'gate job present')
+  for (const step of ['scripts/cloud/cadence.mjs resolve', 'scripts/cloud/quota.mjs dispatch', 'scripts/cloud/quota.mjs gate', 'scripts/cloud/idle.mjs probe']) {
+    assert.ok(gate.includes(step), step)
+  }
+  assert.doesNotMatch(code(gate), /claude-code-action|_claude-skill/, 'no model in the gate')
+  const tick = job(march, 'march')
+  assert.match(tick, /^ {4}needs: gate$/m)
+  assert.match(tick, /^ {4}if: needs\.gate\.outputs\.skip != 'true'$/m)
+  assert.match(tick, /uses: \.\/\.github\/workflows\/_claude-skill\.yml/)
+  assert.match(tick, /^ {6}loop_gates: march$/m)
+  assert.match(tick, /format\('\/next \{0\}', github\.event\.inputs\.chunk\)/)
+  assert.match(march, /^ {2}group: nexus-loop$/m)
+})
+
+test('night runs v2 quota gate first, in its own concurrency group', () => {
+  const night = loopWf('night.yml')
+  assert.match(night, /^concurrency:\n {2}group: night\n/m)
+  assert.ok(job(night, 'gate').includes('scripts/cloud/quota.mjs gate'))
+  const digest = job(night, 'digest')
+  assert.match(digest, /^ {4}needs: gate$/m)
+  assert.match(digest, /^ {4}if: needs\.gate\.outputs\.skip != 'true'$/m)
+  assert.match(digest, /^ {6}loop_gates: night$/m)
+})
+
+test('the shared runner reads the quota and records idle after the model, with no secret in its job env', () => {
+  const skill = loopWf('_claude-skill.yml')
+  assert.match(skill, /^ {6}loop_gates:\n/m)
+  for (const step of ['scripts/cloud/quota.mjs read', 'scripts/cloud/quota.mjs pause', 'scripts/cloud/idle.mjs record', 'scripts/cloud/idle.mjs noop']) {
+    assert.ok(skill.includes(step), step)
+  }
+  assert.ok(code(skill).indexOf('scripts/cloud/quota.mjs read') > code(skill).indexOf('name: Run Claude Code'), 'after the model')
+  assert.doesNotMatch(job(skill, 'run'), /^ {4}env:/m, 'no job-level env')
+  assert.match(skill, /NEXUS_SESSION: cloud-\$\{\{ github\.run_id \}\}/)
+})
+
+test('the one-verb wrappers carry v2 verb names, and no workflow runs a retired verb', () => {
+  const files = fs.readdirSync(path.join(ROOT, WF))
+  for (const gone of ['ship-a-phase.yml', 'plan-a-phase.yml']) assert.ok(!files.includes(gone), gone)
+  assert.match(loopWf('ship-a-chunk.yml'), /^name: ship-a-chunk$/m)
+  assert.match(loopWf('ship-a-chunk.yml'), /prompt: '\/ship-a-chunk'/)
+  assert.match(loopWf('plan-a-spec.yml'), /^name: plan-a-spec$/m)
+  assert.match(loopWf('plan-a-spec.yml'), /prompt: '\/plan-a-spec'/)
+  for (const f of files.filter((f) => f.endsWith('.yml'))) {
+    assert.doesNotMatch(code(loopWf(f)), /\/ship-a-phase|\/plan-a-phase|focus_phase|BUILD_PLAN/, f)
+  }
+})
+
+test('heartbeat watches march and night with no model, and the loop workflows lint clean', async () => {
+  const hb = loopWf('heartbeat.yml')
+  assert.doesNotMatch(code(hb), /claude-code-action|_claude-skill/)
+  assert.match(hb, /vars\.NEXUS_HEARTBEAT_WATCH \|\| 'march night'/)
+  const { lintWorkflow } = await import('./workflow-lint.mjs')
+  for (const f of ['march.yml', 'night.yml', 'heartbeat.yml', '_claude-skill.yml', 'ship-a-chunk.yml', 'plan-a-spec.yml']) {
+    assert.deepEqual(lintWorkflow(`${WF}/${f}`, loopWf(f)), [], f)
+  }
 })
