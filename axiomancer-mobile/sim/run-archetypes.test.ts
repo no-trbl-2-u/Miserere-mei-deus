@@ -55,10 +55,7 @@ describe.each(ARCHETYPE_POLICIES.map((p) => [p.id, p] as [string, RunPolicy]))('
     // merciful card of its own (SD1a), so the Merciful's end deck leads again.
     const leadCheck = !inLane ? it.skip : it;
     leadCheck(`ends every run with more ${laneId} cards than of any other card lane (it starts in-lane)`, () => {
-        // A run that died early (XP1a: a fifth less XP) was cut off before it could draft; hold the lead to the runs that cleared the chapter.
-        const cleared = runs.filter((run) => run.outcome === 'chapter-clear');
-        expect(cleared.length).toBeGreaterThan(0);
-        for (const run of cleared) {
+        for (const run of runs) {
             const own = run.deckByLane[laneId] ?? 0;
             for (const [lane, n] of rivals(run, laneId)) {
                 if (own <= n) throw new Error(`seed ${run.seed}: ${laneId}=${own} does not lead ${lane}=${n}`);
