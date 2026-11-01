@@ -468,3 +468,4 @@
 - 2026-11-01 · 133.5 (alias: NX1e) · Loop PRs land; pending files settle on merge · 3e238c69b (#1284)
 - 2026-11-01 · 133.6 (alias: NX1f) · The workflows on v2's steps; claims migrated · (#1282)
 - 2026-11-01 · 133.7 (alias: NX1g) · /pilot runs parallel /next waves; nexus /heads-down is stock · 5961e4fb..202d0f37 (#1286)
+- 2026-11-01 · 133.8 (alias: NX1h) · A weekly nexus sync PR only T merges · 6682cfee..6682cfee (#1287)

@@ -167,33 +167,8 @@ None. No game save, engine type or Worker route changes.
 
 ## Acceptance
 
-- **A12** `.github/workflows/nexus-sync.yml` runs `npx @usenexus/cli upgrade --pr --no-assist` on a weekly
-  schedule and by hand: one PR, updated in place, labelled `nexus-sync`, which only T merges: the merge
-  job never merges it, and no loop verb, `/pilot` worker, `pr-autofix` or `pr-resolve` run merges it
-  (`scripts/loop-pr.test.mjs` pins each). With nothing to sync it opens nothing. When nexus's
-  `skills/heads-down.md` changed since the lock's ref, the body's first line is: "nexus changed
-  /heads-down: walk the diff with T and bring /pilot up to date".
 - **A13** T turns `march` and `night` back on and watches the first v2 tick; T's line on it goes in the
   run's report. (Attended.)
-- **A14** The sync PR's body (written by `scripts/nexus-sync-body.mjs`) says plainly, and in pictures,
-  what we are getting from nexus, in this order:
-  1. a banner: "Only T merges this PR", the nexus version and kit ref we are on and the one this brings
-     (`0.6.5 @ abc1234 → 0.7.0 @ def5678`), and the count of files by outcome;
-  2. **What nexus is giving us**: one plain-words line per upstream change (from nexus's commit
-     subjects and changelog between the two refs), grouped by the loop part it touches (picking work,
-     landing, review, planning, workflows), each saying what changes for Miserere, not what changed in
-     the file;
-  3. a Mermaid flow diagram (GitHub draws it in the PR): nexus old ref → new ref → the three-way merge →
-     Miserere, with one node per changed file coloured by outcome: taken as nexus wrote it (green), merged
-     with our lanes (amber), conflict kept as ours (red);
-  4. a file table: file, what nexus changed in plain words, what happens here (taken, merged, kept as
-     ours), and the `docs/nexus-deviations.md` row it touches, if any;
-  5. a before/after table for each changed skill or workflow whose behaviour moves (today the loop does
-     X; after merge it does Y);
-  6. **What we are not getting**: each conflict kept as ours, why (its map row), and what T can do about
-     it (take nexus's version, or keep ours and say so in the map).
-  Fixtures pin every section, the diagram's colour per outcome, and that a sync with no behaviour change
-  says so in one line instead of an empty table.
 
 ## Open questions
 
@@ -201,7 +176,6 @@ None. No game save, engine type or Worker route changes.
 
 ## Chunks
 
-Measure: 3 open · 11 closed · next A15
+Measure: 1 open · 13 closed · next A15
 
-- [ ] **133.8** The weekly nexus sync · M · closes A12, A14 · needs — · alias: NX1h
 - [ ] **133.9** The loop back on (attended) · S · closes A13 · needs — · alias: NX1i
