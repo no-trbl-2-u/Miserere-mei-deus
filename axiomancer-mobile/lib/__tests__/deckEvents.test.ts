@@ -56,6 +56,8 @@ const realFetch = global.fetch;
 
 function captureFetch(): PuzzleFetch {
     return async (url, init) => {
+        // Only deck events are pinned here; the run log's posts (open, events, close) are pinned in state/__tests__/run-log.test.ts.
+        if (!url.endsWith(PLAY_LOG_DECK_EVENTS_PATH)) return { ok: true, status: 201 };
         calls.push({ url, body: JSON.parse(init.body) as DeckEventPost });
         return { ok: fetchOk, status: fetchOk ? 201 : 500 };
     };

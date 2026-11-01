@@ -40,6 +40,7 @@ import type {
     Item,
 } from '@mechanics';
 
+import { recordItemGained } from '../run-log';
 import { EMPTY_ITEM_REWARD_SLICE, type AppStore, type PendingItemReward } from '../store';
 
 // ---------------------------------------------------------------------------
@@ -195,6 +196,9 @@ export function commitItemRewardAction(
 
     store.setState(patch as never);
     persist(store);
+
+    // The run log: the item that came into the pack, and what handed it over.
+    recordItemGained(store, result.granted ?? head.item, head.source ?? 'reward');
 
     return {
         applied: true,
