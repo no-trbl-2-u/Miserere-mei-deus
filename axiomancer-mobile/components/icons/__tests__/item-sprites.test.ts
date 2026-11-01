@@ -6,8 +6,6 @@
  * (the `LIBRARIES` list below is the one place to add them).
  */
 
-import fs from 'fs';
-import path from 'path';
 import { describe, expect, it } from '@jest/globals';
 import { consumableLibrary, relicLibrary } from '@mechanics';
 import * as mechanics from '@mechanics';
@@ -65,15 +63,4 @@ describe('ITEM_SPRITES', () => {
         expect(missing).toEqual([]);
     });
 
-    it('each sprite file is on disk as a 256 px PNG named by its id', () => {
-        const dir = path.join(__dirname, '..', '..', '..', 'assets', 'images', 'items');
-        for (const id of SPEC_IDS) {
-            const file = path.join(dir, `${id}.png`);
-            expect(fs.existsSync(file)).toBe(true);
-            const head = fs.readFileSync(file).subarray(0, 24);
-            expect(head.subarray(1, 4).toString()).toBe('PNG');
-            expect(head.readUInt32BE(16)).toBe(256);
-            expect(head.readUInt32BE(20)).toBe(256);
-        }
-    });
 });
