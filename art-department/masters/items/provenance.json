@@ -9,6 +9,6 @@
   ],
   "source": "T's item sheets, 1254 px squares, a 6x6 grid of 209 px cells. T picked sheet A (cool silver) for every item, plus sheet D's hammer and scepter for the Bulwark Mace and the Humbling Rod (spec 136, The icons).",
   "used_by": [
-    "scripts/slice-item-sheet.mjs (136.11, EQ3k) cuts the per-item icons from these"
+    "scripts/slice-item-sheet.mjs (136.11, EQ3k) cuts the per-item icons from these into axiomancer-mobile/assets/images/items/"
   ]
 }

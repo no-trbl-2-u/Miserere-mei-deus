@@ -196,7 +196,7 @@ Ids: `weapon-opening-blade`, `armor-bracing-coat`, `weapon-siphoning-blade`, `ar
 T's own item sheets replace the game-icons glyphs for every item (T: "Everything on the sheet"). T picked sheet A, the
 cool-silver finish ("A is fine"), and the hammer and scepter from sheet D for the two pieces A lacks ("why can't you use
 the mace I provided in the other sheet?"). The sheets are 1254 px squares, a 6x6 grid of 209 px cells, committed on this
-branch as `axiomancer-mobile/assets/images/items/sheet-a-cool-silver.png` and `sheet-d-ivory-lavender.png` (T's art, open
+branch as `art-department/masters/items/sheet-a-cool-silver.png` and `sheet-d-ivory-lavender.png` (masters, outside the bundle; the asset check refuses unregistered art under `assets/images`) (T's art, open
 source per D115). Cells are row,col from the top left.
 
 | Item id | Sheet, cell | Picture |
@@ -469,7 +469,8 @@ commit stamp, and the Outcome Measure reads off it.
 Measure: the slice script writes the 23 icons; the sprite-map test and the glyph tests pass; 360x640 shots of the satchel,
 the dock and an item reward with sprites in the PR.
 
-- Scope: a new `scripts/slice-item-sheet.mjs` (sharp, the blob method of "The icons"; args: sheet, cells, out dir) and
+- Scope: a new `scripts/slice-item-sheet.mjs` (sharp, the blob method of "The icons"; args: sheet, cells, out dir; reuse
+  `art-department/tools`' spritesheet splitter instead if it already cuts by blob) and
   its test; the 23 icons written to `axiomancer-mobile/assets/images/items/<item-id>.png` with an
   `items/provenance.json` (T's sheets, derived by the script, open source per D115); a new
   `components/icons/item-sprites.ts` mapping item id to its `require`d PNG; `ItemGlyph` (`ItemCard.tsx`) draws the sprite
