@@ -96,11 +96,11 @@ export function enemyVitae(
  * per-enemy with `xpReward`.
  */
 export const DEFAULT_XP_BY_DIFFICULTY: Record<EnemyDifficulty, number> = {
-    simple: 10,
-    normal: 20,
-    elite:  50,
-    boss:   200,
-    unique: 500,
+    simple: 8,
+    normal: 16,
+    elite:  40,
+    boss:   160,
+    unique: 400,
 };
 
 /**
