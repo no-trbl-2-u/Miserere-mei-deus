@@ -145,7 +145,6 @@ describe('A9 — the four foes play exactly the Appendix', () => {
         expect(BW_ENCOUNTER_FOES['bw-w2']).toEqual({ slug: 'float-eye', level: 2 });
         expect(BW_ENCOUNTER_FOES['bw-w3']).toEqual({ slug: 'gallows-crow', level: 2 });
         expect(BW_ENCOUNTER_FOES['bw-m1']).toEqual({ slug: 'float-eye', level: 2 });
-        expect(BW_ENCOUNTER_FOES['bw-p2']).toEqual({ slug: 'gallows-crow', level: 2 });
         expect(BW_ENCOUNTER_FOES['bw-h1']).toEqual({ slug: 'net-mender', level: 3 });
         expect(BW_ENCOUNTER_FOES['bw-h2']).toEqual({ slug: 'crane-hook', level: 3 });
         expect(BW_ENCOUNTER_FOES['bw-h3']).toEqual({ slug: 'net-mender', level: 3 });

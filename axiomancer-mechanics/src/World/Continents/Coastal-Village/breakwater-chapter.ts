@@ -1,7 +1,7 @@
 /**
  * The Breakwater, Act 1's first map and the new-game start, rebuilt to T's
- * Chapter 1 vision: 44 nodes on the coast plate, 42 roads and one same-map
- * travel pair. Its 44 event pools are `MapEvents/content.ts`'s Breakwater
+ * Chapter 1 vision: 43 nodes on the coast plate, 41 roads and one same-map
+ * travel pair. Its 43 event pools are `MapEvents/content.ts`'s Breakwater
  * section; its quest chain is `breakwater-chapter.questline.ts`.
  *
  * Node ids are T's board codes in lower case (`bw-w1` .. `bw-p3`, plus the
@@ -95,9 +95,11 @@ const NODES: MapNode[] = [
     { id: 'bw-m4', location: [4, 4],  connectedNodes: ['bw-m5'] },
     { id: 'bw-m5', location: [5, 3],  connectedNodes: [] },
     // ── The pass ───────────────────────────────────────────────────────
-    { id: 'bw-p1', location: [3, 3],  connectedNodes: ['bw-p2'] },
-    { id: 'bw-p2', location: [4, 5],  connectedNodes: ['bw-p3'] },
-    { id: 'bw-p3', location: [5, 4],  connectedNodes: [] },
+    // The high pass sits on the mountain-path mark: T cut the mountain path
+    // node (2026-11-01) when the plate's faded rim swallowed the high pass's
+    // own mark, so the foothills lead straight to it.
+    { id: 'bw-p1', location: [3, 3],  connectedNodes: ['bw-p3'] },
+    { id: 'bw-p3', location: [4, 5],  connectedNodes: [] },
 ];
 
 /** The keep gate's reason (`[content]` until T's lines, BW1e). */

@@ -43,8 +43,7 @@
     {"id": "manor-road", "x": 0.777, "y": 0.645, "what": "T's Chapter 1 board (v4), node M4: manor road"},
     {"id": "walled-manor", "x": 0.74, "y": 0.571, "what": "T's Chapter 1 board (v4), node M5: walled manor"},
     {"id": "foothills", "x": 0.561, "y": 0.894, "what": "T's Chapter 1 board (v4), node P1: foothills"},
-    {"id": "mountain-path", "x": 0.45, "y": 0.924, "what": "T's Chapter 1 board (v4), node P2: mountain path"},
-    {"id": "high-pass", "x": 0.277, "y": 0.994, "what": "T's Chapter 1 board (v4), node P3: high pass"}
+    {"id": "mountain-path", "x": 0.45, "y": 0.924, "what": "T's Chapter 1 board (v4), node P2: mountain path; since 2026-11-01 node P3 (high pass) sits here, P2 cut and the high-pass mark dropped"}
   ],
   "act1-forest": [
     {"id": "ruined-tower", "x": 0.27, "y": 0.1, "what": "ruined tower on a rocky knoll"},

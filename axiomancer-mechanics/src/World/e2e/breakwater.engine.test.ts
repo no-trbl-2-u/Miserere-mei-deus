@@ -4,7 +4,7 @@
  * Pins the first Act 1 map:
  * - a new game starts here, and any campaign map can be started on
  *   instead (the dev "start on any map" tools);
- * - the map is T's 44-node Chapter 1 board (phase BW1b), with one authored
+ * - the map is T's 43-node Chapter 1 board (phase BW1b), with one authored
  *   event on every node, an Anvil in each of its two villages and a door on
  *   to the Charcoal Wood at the far bank (`bw-b2`);
  * - the run leaves by the river bridge (`bw-b1`), which opens only when the
@@ -91,8 +91,8 @@ describe('starting on any map (dev tools)', () => {
 });
 
 describe('the Breakwater map', () => {
-    it('carries T\'s 44 board nodes, from the windmill (bw-w1) out', () => {
-        expect(breakwater.nodes).toHaveLength(44);
+    it('carries T\'s 43 board nodes, from the windmill (bw-w1) out', () => {
+        expect(breakwater.nodes).toHaveLength(43);
         expect(breakwater.startingNode.id).toBe('bw-w1');
         for (const n of breakwater.nodes) expect(n.id, n.id).toMatch(/^bw-[a-z]\d$/);
     });
@@ -124,16 +124,16 @@ describe('the Breakwater\'s events (D29)', () => {
     );
 
     it('resolves an authored event on every node: no waypoint, nothing empty', () => {
-        expect(Object.keys(kinds)).toHaveLength(44);
+        expect(Object.keys(kinds)).toHaveLength(43);
         expect(Object.values(kinds)).not.toContain('empty');
         expect(Object.values(kinds)).not.toContain('none');
     });
 
-    it('spreads 19 fights, 3 camps, 3 loot caches, 6 hazards, 2 villages, 4 cutscenes, 3 travels and 4 quest nodes', () => {
+    it('spreads 18 fights, 3 camps, 3 loot caches, 6 hazards, 2 villages, 4 cutscenes, 3 travels and 4 quest nodes', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 19, rest: 3, 'loot-cache': 3, hazard: 6, village: 2, cutscene: 4, travel: 3, quest: 4,
+            encounter: 18, rest: 3, 'loot-cache': 3, hazard: 6, village: 2, cutscene: 4, travel: 3, quest: 4,
         });
     });
 

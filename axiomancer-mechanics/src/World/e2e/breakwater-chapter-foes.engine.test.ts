@@ -45,7 +45,7 @@ const fired = (events: readonly CombatEvent[]) =>
     events.filter((e): e is Extract<CombatEvent, { kind: 'threat-fired' }> => e.kind === 'threat-fired').map(e => e.description);
 
 const NODES = [
-    'bw-w2', 'bw-w3', 'bw-m1', 'bw-p2', 'bw-h1', 'bw-h2', 'bw-h3',
+    'bw-w2', 'bw-w3', 'bw-m1', 'bw-h1', 'bw-h2', 'bw-h3',
     'bw-h7', 'bw-t1', 'bw-t2', 'bw-t3', 'bw-t6', 'bw-l1', 'bw-d1', 'bw-d3',
 ] as const;
 

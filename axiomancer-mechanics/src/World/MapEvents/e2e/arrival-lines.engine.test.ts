@@ -7,8 +7,8 @@ import {
 } from '../arrival-lines';
 
 describe('ET1a: arrival lines', () => {
-    it('holds a line for each of the 19 Breakwater encounter nodes', () => {
-        expect(BREAKWATER_ENCOUNTER_NODES).toHaveLength(19);
+    it('holds a line for each of the 18 Breakwater encounter nodes', () => {
+        expect(BREAKWATER_ENCOUNTER_NODES).toHaveLength(18);
         for (const id of BREAKWATER_ENCOUNTER_NODES) {
             expect(BREAKWATER_ARRIVAL_LINES[id], id).toBeTruthy();
             expect(BREAKWATER_ARRIVAL_LINES[id]).toMatch(/^\[content\]/);

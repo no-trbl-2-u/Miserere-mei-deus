@@ -161,9 +161,9 @@ describe('unfinishedReachable (phase SM2b)', () => {
     it('counts the unfinished nodes the open roads reach, leaving out the node underfoot', () => {
         // From the windmill: every unspent node short of the holds and the shut gates,
         // less the bridge (a quest node with no business yet).
-        expect(unfinishedReachable(stateAt())).toBe(31);
+        expect(unfinishedReachable(stateAt())).toBe(30);
         // Standing on the crossroads, unspent, it is not counted.
-        expect(unfinishedReachable(stateAt('bw-w2'))).toBe(30);
+        expect(unfinishedReachable(stateAt('bw-w2'))).toBe(29);
     });
 
     it('counts nothing when every road is walled off', () => {

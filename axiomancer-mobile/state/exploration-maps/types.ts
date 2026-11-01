@@ -39,6 +39,12 @@ export interface MapSheet {
      */
     plateOpacity: number;
     /**
+     * The same plate with its rim faded to transparent, so the map pane draws
+     * the chart dissolving into the fog past its edge. Omitted, the plate
+     * keeps its hard edge on the near-black ground.
+     */
+    fadedBackdrop?: number;
+    /**
      * Draw the procedural chart texture (diagonal hatch + contour hills) over
      * the plate. True for the atmosphere-plate maps; false where the plate is
      * the map, since invented hills over drawn mountains would contradict it.

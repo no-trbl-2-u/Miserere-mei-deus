@@ -6,7 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { migrate } from './game.migrate';
+import { migrate, dropCutNodes } from './game.migrate';
 import { GAME_STATE_VERSION, createNewGameState } from './game.reducer';
 import { defeatedEnemies } from './defeat-ledger';
 
@@ -36,5 +36,39 @@ describe('the optional defeat ledger (EN1b)', () => {
         const state = createNewGameState();
         const saved = { ...state, codex: { ...state.codex, defeatedEnemies: ['float-eye' as const] } };
         expect(defeatedEnemies(migrate(saved, GAME_STATE_VERSION))).toEqual(['float-eye']);
+    });
+});
+
+describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
+    const onPass = () => {
+        const state = createNewGameState();
+        const map = state.world.currentMap;
+        return {
+            ...state,
+            world: {
+                ...state.world,
+                currentMap: {
+                    ...map,
+                    currentNode: 'bw-p2',
+                    arrivedFrom: 'bw-p1',
+                    completedNodes: ['bw-w1', 'bw-w2', 'bw-m1', 'bw-p1', 'bw-p2'],
+                    discoveredNodes: ['bw-p1', 'bw-p2', 'bw-p3'],
+                    consumedNodes: ['bw-p2'],
+                },
+            },
+        };
+    };
+
+    it('moves a player standing on it back to the foothills and drops the id everywhere', () => {
+        const map = dropCutNodes(onPass()).world.currentMap;
+        expect(map.currentNode).toBe('bw-p1');
+        expect(map.completedNodes).toEqual(['bw-w1', 'bw-w2', 'bw-m1', 'bw-p1']);
+        expect(map.discoveredNodes).toEqual(['bw-p1', 'bw-p3']);
+        expect(map.consumedNodes).toEqual([]);
+    });
+
+    it('returns the state itself when the save never named it', () => {
+        const state = createNewGameState();
+        expect(dropCutNodes(state)).toBe(state);
     });
 });

@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 describe('Phase 14 — route survivorship vs coverage-audit classification', () => {
-    it('--route-audit reports all 44 Breakwater nodes without mutating a single life', async () => {
+    it('--route-audit reports all 43 Breakwater nodes without mutating a single life', async () => {
         const logPath = tmpPath('coverage');
 
         await runGameCli(['--route-audit', 'breakwater', '--state-log', logPath]);
@@ -44,8 +44,8 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect(summary.classification).toBe('coverage-audit');
         expect(summary.survived).toBe(true);
         expect(summary.unvisitedNodeIds).toEqual([]);
-        expect((summary.visitedNodeIds as string[]).length).toBe(44);
-        expect((summary.resolvedNodeIds as string[]).length).toBe(44);
+        expect((summary.visitedNodeIds as string[]).length).toBe(43);
+        expect((summary.resolvedNodeIds as string[]).length).toBe(43);
         expect(summary.combatOutcomes).toEqual({});
 
         // bw-k2 is the Death Beholder's chapter-boss fight; bw-w1 is the
@@ -209,6 +209,6 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect(summary.visitedNodeIds).toEqual(['bw-w1', 'bw-w2', 'bw-w4']);
         const unvisited = summary.unvisitedNodeIds as string[];
         expect(unvisited).toContain('bw-b2');
-        expect(unvisited.length).toBe(41); // 44 nodes − the 3 visited
+        expect(unvisited.length).toBe(40); // 43 nodes − the 3 visited
     });
 });

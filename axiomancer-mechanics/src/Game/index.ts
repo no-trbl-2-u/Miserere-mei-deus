@@ -15,7 +15,7 @@ export type { DeathCause, DeathResult } from './death';
 export type { NewGameOptions } from './game.reducer';
 export type { GameState, CodexEntry } from './types';
 
-export { migrate, dropUnknownCardIds, dropRetiredFlags } from './game.migrate';
+export { migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes } from './game.migrate';
 
 export { claimHazardPuzzleOutcome, HAZARD_SCAR_FLAG_PREFIX } from './hazard-puzzle.claim';
 export type { HazardPuzzleClaim } from './hazard-puzzle.claim';

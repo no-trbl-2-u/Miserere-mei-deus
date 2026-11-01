@@ -2,14 +2,17 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+    cancelAnimation,
     Easing,
     useAnimatedProps,
     useAnimatedStyle,
     useSharedValue,
+    withRepeat,
     withTiming,
 } from 'react-native-reanimated';
 import Svg, { Path, Circle, G, Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { Image } from '@/lib/platform/image';
+import { MAP_FOG } from '@/assets/images/map-fog';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type { ExplorationNode, ExplorationEdge } from '@/state/presenters/exploration.engine';
@@ -443,6 +446,80 @@ function NodeHalo({ cx, cy, r, scale, color, counterScale }: {
     );
 }
 
+/**
+ * The engraving plate. With a faded copy (`sheet.fadedBackdrop`) its rim
+ * dissolves into the fog behind it (T, 2026-11-01): the copy is drawn twice,
+ * once tinted to the old near-black ground at full strength and once at the
+ * plate's own opacity over it, so a dimmed plate keeps its contrast in the
+ * middle and only the rim gives way to fog. Without one, the plate keeps its
+ * hard edge on a solid ground. Plain images, not an SVG mask: a mask across
+ * the 2400dp sheet would rasterise to hundreds of MB on Android (see
+ * `MapCanvas.raster.test.tsx`).
+ */
+function Plate({ sheet, ground }: { sheet: MapSheet; ground: string }) {
+    if (sheet.fadedBackdrop == null) {
+        return (
+            <>
+                <View style={[StyleSheet.absoluteFillObject, { backgroundColor: ground }]} />
+                <Image
+                    source={sheet.backdrop}
+                    style={[StyleSheet.absoluteFillObject, { opacity: sheet.plateOpacity }]}
+                    contentFit="cover"
+                    testID="map-backdrop"
+                />
+            </>
+        );
+    }
+    return (
+        <>
+            <Image source={sheet.fadedBackdrop} style={StyleSheet.absoluteFillObject} contentFit="cover" tintColor={ground} testID="map-backdrop-ground" />
+            <Image
+                source={sheet.fadedBackdrop}
+                style={[StyleSheet.absoluteFillObject, { opacity: sheet.plateOpacity }]}
+                contentFit="cover"
+                testID="map-backdrop"
+            />
+        </>
+    );
+}
+
+/** One fog tile's side, in pane px. */
+const FOG_TILE = 512;
+
+/**
+ * One drifting fog layer: a grid of tiles one tile wider than the pane, slid
+ * one whole tile to the right per loop, starting a tile left of the pane, so
+ * the wrap is seamless and the layer always covers the pane (T, 2026-11-01:
+ * always moving, never a gap). It sits under the plate, so it drifts only
+ * past the plate's edge. Only a transform animates, on the UI thread;
+ * nothing is redrawn per frame.
+ */
+function FogDrift({ viewport, tile, ms, opacity, still }: {
+    viewport: { w: number; h: number }; tile: number; ms: number; opacity: number; still: boolean;
+}) {
+    const t = useSharedValue(0);
+    React.useEffect(() => {
+        if (still) return;
+        t.value = withRepeat(withTiming(1, { duration: ms, easing: Easing.linear }), -1, false);
+        return () => cancelAnimation(t);
+    }, [still, ms, t]);
+    const slide = useAnimatedStyle(() => ({
+        transform: [{ translateX: (t.value - 1) * tile }],
+    }));
+    const cols = Math.ceil(viewport.w / tile) + 1;
+    const rows = Math.ceil(viewport.h / tile);
+    return (
+        <Animated.View
+            pointerEvents="none"
+            style={[{ position: 'absolute', left: 0, top: 0, width: cols * tile, height: rows * tile, flexDirection: 'row', flexWrap: 'wrap', opacity }, slide]}
+        >
+            {Array.from({ length: cols * rows }, (_, i) => (
+                <Image key={i} source={MAP_FOG.drift} style={{ width: tile, height: tile }} contentFit="fill" />
+            ))}
+        </Animated.View>
+    );
+}
+
 export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: MapCanvasProps) {
     const styles = useStyles();
     const AXM = usePalette();
@@ -741,7 +818,19 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
 
     return (
         <View ref={wrapRef} style={styles.graphWrap} onLayout={onWrapLayout} testID="map-canvas-wrapper">
-            <View style={[StyleSheet.absoluteFillObject, styles.graphBackground]} />
+            {/* The fog past the plate's edge, fixed to the screen: a still fog
+                plate, and over a sheet two drift layers sliding right, the
+                larger, nearer one faster (stopped under reduced motion). The
+                plate covers them, so the drift shows only past its rim. */}
+            <View style={[StyleSheet.absoluteFillObject, styles.graphBackground]} pointerEvents="none">
+                <Image source={MAP_FOG.still} style={StyleSheet.absoluteFillObject} contentFit="cover" testID="map-fog" />
+                {sheet != null && viewport != null && (
+                    <>
+                        <FogDrift viewport={viewport} tile={FOG_TILE} ms={100000} opacity={0.5} still={instant} />
+                        <FogDrift viewport={viewport} tile={FOG_TILE * 1.6} ms={80000} opacity={0.35} still={instant} />
+                    </>
+                )}
+            </View>
 
             {/* The gesture pane: an UNTRANSFORMED layer that fills the
                 wrapper and holds the canvas. The detector is attached here,
@@ -766,19 +855,15 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
                         {/* The engraving plate — pans and zooms with the chart so the
                             wood feels painted onto the page. An atmosphere plate is
                             dimmed so roads and nodes keep contrast (dim, never blur);
-                            a plate that is the map itself reads near full.
-                            Wrapped pointerEvents="none": on web `expo-image` is a
-                            native <img>, and a mouse drag that starts on it fires
-                            the browser's image drag-and-drop, which cancels the
-                            pan's pointer stream — the map would not move. */}
+                            a plate that is the map itself reads near full. Its rim
+                            fades into the fog (`Plate`).
+                            Wrapped pointerEvents="none" so a mouse drag that starts
+                            on the plate's image never fires the browser's image
+                            drag-and-drop, which would cancel the pan's pointer
+                            stream — the map would not move. */}
                         {sheet != null && (
                             <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
-                                <Image
-                                    source={sheet.backdrop}
-                                    style={[styles.backdropPlate, { opacity: sheet.plateOpacity }]}
-                                    contentFit="cover"
-                                    testID="map-backdrop"
-                                />
+                                <Plate sheet={sheet} ground={AXM.deepBg} />
                             </View>
                         )}
                         {/* The chart sheet: diagonal hatch + contour hills under the
@@ -984,9 +1069,6 @@ const useStyles = makeStyles((AXM) => ({
         fontSize: 15,
         lineHeight: 18,
         color: AXM.bone,
-    },
-    backdropPlate: {
-        ...StyleSheet.absoluteFillObject,
     },
     edgeStrip: {
         position: 'absolute',
