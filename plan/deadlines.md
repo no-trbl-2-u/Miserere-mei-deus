@@ -137,14 +137,14 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 | Tue Oct 27 | 1 | Pick the rest of the item icons (IT2a); the six lane relics are done (IT1b, #989) | Real item icons | Claude renders candidates at 28 px beside each item, the 2026-10-19 sheet plus fresh ones for the Defender's relics, the unknown mark and the bag; you pick (art is yours, D88) |
 | Wed Oct 28 | 0.5 | Design the Breakwater map before enemy session 1: the total node count and how many of each kind, drop the two gathering nodes, and check on the coast art (`act1-coast.webp`) whether more keep nodes fit | Chapter 1's real enemies; event-node UX | Claude brings the current count from `plan/revamp/breakwater-map.md` (22 nodes since QL1d) and the coast art beside it; you decide the kinds and counts |
 | Wed Oct 28 | 1 | Enemy session 1: Chapter 1's normal roster (the Breakwater's 15 fight nodes on T's new map, D114; B2) | Chapter 1's real enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
-| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line | First character playable | Claude lays out the Defender's and the other lanes' cards and relics against the stats you set; you decide (D88) |
+| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line | First character playable | Done (CH1e; CH1f, the first character selectable, shipped Oct 31) |
 | Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
 | Sat Oct 31 | 1 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l) (B2) | Chapter 1's real enemies | Claude drafts the boss's four phases under D116 |
-| Sat Oct 31 | 1 | Pitch Chapter 1's weapons and armor: how many of each, what each does in a fight, where each drops, and settle them | Chapter 1's weapons and armor | Claude brings the empty weapon and armor slots (one of each is worn beside three relics) and two or three directions per slot to react to; you decide each piece |
+| Sat Oct 31 | 1 | Pitch Chapter 1's weapons and armor: how many of each, what each does in a fight, where each drops, and settle them | Chapter 1's weapons and armor | Claude brings the empty weapon and armor slots (one of each is worn beside three relics) and two or three directions per slot to react to; Done Nov 1 (T's attended `/pitch`) |
 | Sun Nov 1 | 2 | Play the twenty cost-card candidates; rule keep or cut (HP4e, part 2) | Hazard puzzles locked | Claude records your rulings in your words |
 | Sun Nov 1 | 1 | Tune Chapter 1's enemies: levels (all under 10), how often each normal repeats, VITAE | Chapter 1's real enemies | Claude brings EN1i's turns-to-kill table and the lines each foe reaches, or the current defaults if EN1i has not shipped |
 | Mon Nov 2 | 0.5 | `/plot` Chapter 1's sea keep boss (B2); the normals and all six elites are plotted (EN1) | Chapter 1's real enemies | `/plot` adds them to EN1's brief as new rows; you confirm the slot |
-| Mon Nov 2 | 0.5 | `/plot` Chapter 1's weapons and armor from Saturday's pitch | Chapter 1's weapons and armor | `/plot` writes the rows; you confirm the slot |
+| Mon Nov 2 | 0.5 | `/plot` Chapter 1's weapons and armor from Saturday's pitch | Chapter 1's weapons and armor | Done early, Nov 1 (EQ3d-EQ3j, spec 136) |
 | Tue Nov 3 | 1 | `/plot` live hazard routing for the other five and the cuts | Every hazard a puzzle | `/plot` |
 | Wed Nov 4 | 0 | Event kind 1, encounter: settled early (Oct 30, the ink curtain) and plotted (ET1a) | Event-node UX | Done Oct 30 |
 | Thu Nov 5 | 0 | Event kind 2, hazard: settled early (Oct 30, the stakes card) and plotted (ET1b) | Event-node UX | Done Oct 30 |
@@ -262,92 +262,26 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
-- HW1c — loop tooling for T's `/heads-down` runs; no T act waits on it
-- TF1 — loop tooling fix (the reminder and the AUDIT blank line); no T act waits on it
-- AN5b — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
-- AN5c — enemy animation (AN5); no T act waits on it, and a portrait swapped on Nov 8 retires its set
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
-- SM1g — the sim posts its own data (SM1); no dated T act waits on it, only SM1i, whose date T has not set
-- SM1h — the T-beside-the-bots reports (SM1); no dated T act waits on it, only SM1i, whose date T has not set
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
-- SM2g — 14-day retention of bot and harness rows (SM2); loop housekeeping, no T act waits on it
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
-- NX1f — the workflows on v2's steps after the cut-over; the T act after it, NX1i, has no date yet
-- NX1h — the weekly nexus sync; no dated T act waits on it (T reads each sync PR as it comes)
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
-- CA3b — the Merciful's paintings; T sees them at MF1e, whose date is not set
-- CA3c — the Elementalist's paintings; no T act scheduled to view them yet (date not set)
-- CA3d — Blood Price's new paintings; no T act scheduled to view them yet (date not set)
-- AT1b — plotted 2026-10-29; the DevLog atlas page, loop work; date not set.
-- AT1c — plotted 2026-10-29; the atlas's drift plate, loop work; date not set.
-- AD1a — plotted 2026-10-21 (#716) without a deadline line; date not set.
-- AD1b — plotted 2026-10-21 (#716) without a deadline line; date not set.
-- EQ1a — a live defect T hit on device; loop work, needs no time from T; date not set.
-- DF1e — the Defender's relics; loop work, waits on LR1d; blocks no window's goal; date not set.
-- EQ1b — loop work, needs no time from T; date not set.
-- CL1 — plotted 2026-10-26 (ballots pitch no colour, D110); loop work, needs no time from T; date not set.
-- NC1 — plotted 2026-10-26 (no caps, D109); loop work, needs no time from T; date not set.
-- FM1a — loop work, needs no time from T beyond confirming the pitch rule; date not set.
-- FM1b — loop work, needs no time from T beyond confirming the pitch rule; date not set.
-- FM1c — loop work, needs no time from T beyond confirming the pitch rule; date not set.
-- FM1d — loop work, needs no time from T beyond confirming the pitch rule; date not set.
-- FM1e — loop work, needs no time from T beyond confirming the pitch rule; date not set.
 - OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
-- VE1c — loop work listed alongside W1, needing no time from T; date not set.
-- VE1d — loop work listed alongside W1, needing no time from T; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
-- ML1a — loop work; fixes a live merge defect, needs no time from T; date not set.
-- ML1b — loop work; follows ML1a, and the brief asks for a comparison before building it; date not set.
 - B5 — blocked: owner-led; the card-creator workflow is v0.3 stretch, in only if a window has time left.
 - B6 — blocked: owner-led; card sessions are v0.3 stretch, in only if a window has time left.
 - B7 — blocked: owner-led; after v0.3 (The milestone).
 - B8 — blocked: owner-led; after v0.3 (The milestone).
 - B9 — blocked: owner-led; after v0.3 (The milestone).
 - B10 — blocked: owner-led; after v0.3 (The milestone).
-- AN1a — loop work; ships changing no pixel, needs no time from T; date not set.
-- AN1b — loop work; follows AN1a; date not set.
-- AN1c — loop work, but T sequenced it after seeing AN1b work; date not set.
-- AN1d — loop work under D97 (used enemies only); follows AN1c; date not set.
-- AN1e — loop work; the row that actually installs the float-eye, requires AN1c and AD1a; date not set.
-- AN2a — loop work; removes the overlay covering the enemy animation; date not set.
-- AN2b — loop work; delays the flinch until the played card clears; date not set.
-- AN3a — loop work; the Hag becomes the Green Jelly, fight unchanged; date not set.
-- AN3b — loop work; the Jelly's frame set; follows AN3a; date not set.
-- AN4a — loop work; the Act 1 boss stops being a placeholder; date not set.
-- AN4b — loop work; the Beholder's frame set; follows AN4a; date not set.
-- RV4 — loop plumbing; removes the merge cap that is blocking today's chain; date not set.
-- BE2a — loop work; T's card-logging request, blocks nothing in a window; date not set.
-- BE2b — loop work; follows the same request; date not set.
-- BE2c — loop work; follows BE2a and BE2b; date not set.
-- BE2d — loop work; follows BE2c; date not set.
-- BE2e — loop work; follows BE2a and BE2b; date not set.
-- BE2f — loop work; follows BE2a; date not set.
 - BE2g — attended; T's check on a preview APK once BE2c-BE2f and BUG1b ship (until BUG1b, the Worker refuses every fight post); date not set.
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
-- BV1a — loop work, slotted asap (T); waits on BE2a; blocks no window's goal; date not set.
-- BV1b — loop work; follows BV1a; date not set.
 - BV1c — attended; T creates the ballot Pages project and submits the first verdict from the phone; date not set.
-- BV2a — loop work, slotted asap (T); blocks no window's goal; date not set.
-- BV2b — loop work; follows BV2a; date not set.
-- BV3 — loop work; serves the next family's ballot, blocks no window's goal; date not set.
-- EL1a — loop work, slotted asap (T); card lanes are v0.3 stretch; date not set.
-- EL1b — loop work; follows EL1a; date not set.
-- EL1c — loop work; follows EL1a and EL1b; date not set.
 - EL1d — attended; T's check on the preview APK after EL1c; date not set.
-- SP1 — loop work, slotted asap (T); a card rule, blocks no window's goal; date not set.
-- FM2a — loop work; T slotted it anytime; date not set.
-- FM2b — loop work; follows FM2a; date not set.
-- FM2c — loop work; follows FM2a; date not set.
 - FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
-- EM1 — loop work; a measurement (D57) that blocks no window's goal; R12's Item (2026-12-11) still decides what the matrix measures; date not set.
-- GL1 — loop work; the board glossary from the Elementalist swarm, blocks no window's goal; date not set.
-- LR1g — loop work; signature tracking, blocks no window's goal; date not set.
-- EQ2b — loop work; follows EQ2a, the slot words on screen; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
-- QL1g — loop work; the boss fought again, follows QL1d and DY1b (the death rule, due Nov 8); no date of its own; not needed for the Nov 16 run unless a lost boss fight must be retryable by then.
-- MD1c — plotted 2026-10-28 (the merge job checks the merged tree); loop work, but a pipeline PR T merges by hand; date not set.
 
 ## How a window closes
 
@@ -357,6 +291,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-01** — **reconcile after the v2 cut-over** (T, in chat: "Update the deadlines stuff"). **Removed** 66 `## Unscheduled` lines whose rows have shipped (each has an `ARCHIVE.md` line; the lint does not flag a line for a shipped row, so they had piled up since Oct 21). **Marked done** in the MVP schedule table the first character (CH1e), the Oct 31 weapons-and-armor pitch and the Nov 2 weapons-and-armor plot, to match their ticked Items. **Not ticked, unconfirmed by T:** the Oct 30 hard candidates (HP4e part 1) and the Oct 31 sea-keep boss session; no ruling or boss design is on main. **Flagged, not fixed here:** HP6a merged as #1280 (Nov 1, 01:59 ET) after the NX1d carry, so spec 110 still lists 110.1 open. No date moved.
 - **2026-11-01** — **the Chosen's ten-card deck and a fifth less XP plotted as spec 138 (XP1a, SD1a)** (T, attended sim session then `/plot asap`: "Maybe cut it by 20%"; "Pick whichever deck (The 7 + 3) got ~6 rounds with the starting gear"). **Added** XP1a and SD1a to the `Waits on` of the Mid-MVP check (Nov 9): the check plays the Chosen on the preview build, and today its first fight runs about 18 turns. The stat-scaling Item (Nov 12) still holds; it now reads the new deck. Nothing ticked; no date moved.
 - **2026-11-01** — **Chapter 1's weapons and armor plotted into spec 136 (EQ3d-EQ3j)** (T, attended `/pitch` then "Yeah, plot this and integrate it into 1268"; pitch `braindump/2026-11-01-weapons-and-armor.md`, dice effects included). **Ticked** the Oct 31 pitch Item and the Nov 2 plot Item (plotted early). **Added** EQ3d-EQ3j to the `Waits on` of the MVP demo (Nov 16), which shows Chapter 1's weapons and armor. No date moved.
 - **2026-11-01** — **Item icons plotted into spec 136 (EQ3k)** (T: "Yes, add it", after picking sheet A plus sheet D's hammer and scepter). **Added** EQ3k to the `Waits on` of the MVP demo (Nov 16), which lists icons. No date moved.
