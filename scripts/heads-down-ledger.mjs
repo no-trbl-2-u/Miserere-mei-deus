@@ -29,11 +29,32 @@ import { DIR, LOCK, fresh, main as ledger, nextStar, readAll, withLock } from '.
 import { primaryRoot } from './owner.mjs'
 
 export const OLD_DIR = '.heads-down'
+
+// The old script's guards, kept: a session id names a file, so it is one plain token (no separators, no `..`);
+// a row and every dotted key segment reach into the ledger through ledger.mjs `apply()`, so none may be a
+// prototype key (`--worker __proto__` would otherwise write onto Object.prototype).
+export const SESSION_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
+export const ROW_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
+export const FORBIDDEN = new Set(['__proto__', 'constructor', 'prototype'])
+
+export class UsageError extends Error {}
+
+/** `id` as a session id, or a UsageError. */
+export function checkSession(id) {
+  if (!SESSION_RE.test(id ?? '') || id.includes('..')) throw new UsageError(`heads-down-ledger: bad session id: ${id}`)
+  return id
+}
+
+/** A dotted key path with no empty or prototype segment, or a UsageError. */
+export function checkPath(p) {
+  if (!p || p.split('.').some((s) => !s || FORBIDDEN.has(s))) throw new UsageError(`heads-down-ledger: bad key: ${p}`)
+  return p
+}
 const RUN_KINDS = new Set(['pilot', 'heads-down'])
 
 /** Move the old ledger for `id` into ledger.mjs's store, once. Returns true when it moved one now. */
 export function migrate(root, id) {
-  const old = path.join(root, OLD_DIR, `${id}.json`)
+  const old = path.join(root, OLD_DIR, `${checkSession(id)}.json`)
   if (!fs.existsSync(old)) return false
   const dir = path.join(root, DIR)
   return withLock(path.join(dir, LOCK), () => {
@@ -69,15 +90,24 @@ export function latest(root) {
 
 /** The old verb's flags as ledger.mjs beat arguments. */
 export function translate(flags) {
+  if (flags.worker && (!ROW_RE.test(flags.worker) || FORBIDDEN.has(flags.worker))) throw new UsageError(`heads-down-ledger: bad row id: ${flags.worker}`)
   const out = []
   const at = (k) => (flags.worker ? `workers.${flags.worker}.${k}` : k)
-  for (const kv of flags.set) out.push('--set', at(kv))
+  const split = (kv) => {
+    const i = kv.indexOf('=')
+    if (i < 1) throw new UsageError(`heads-down-ledger: "${kv}" is not key=value`)
+    return [checkPath(kv.slice(0, i)), kv.slice(i + 1)]
+  }
+  for (const kv of flags.set) {
+    const [k, v] = split(kv)
+    out.push('--set', `${at(k)}=${v}`)
+  }
   for (const kv of flags.push) {
-    const [k, ...v] = kv.split('=')
-    out.push('--add', `${k === 'claims' && !flags.worker ? 'claimed' : at(k)}=${v.join('=')}`)
+    const [k, v] = split(kv)
+    out.push('--add', `${k === 'claims' && !flags.worker ? 'claimed' : at(k)}=${v}`)
   }
   if (flags.promptFile) {
-    if (!flags.worker) throw new Error('heads-down-ledger: --prompt-file needs --worker <row>')
+    if (!flags.worker) throw new UsageError('heads-down-ledger: --prompt-file needs --worker <row>')
     out.push('--set-file', `workers.${flags.worker}.prompt=${flags.promptFile}`)
   }
   if (flags.note) out.push('--add', `beats=${JSON.stringify({ at: new Date().toISOString(), note: flags.note })}`)
@@ -89,7 +119,7 @@ export function parse(argv) {
   for (let i = 1; i < argv.length; i++) {
     const a = argv[i]
     const v = argv[i + 1]
-    if (v === undefined && a.startsWith('--')) throw new Error(`heads-down-ledger: ${a} needs a value`)
+    if (v === undefined && a.startsWith('--')) throw new UsageError(`heads-down-ledger: ${a} needs a value`)
     if (a === '--session') f.session = v
     else if (a === '--root') f.root = v
     else if (a === '--worker') f.worker = v
@@ -97,14 +127,24 @@ export function parse(argv) {
     else if (a === '--push') f.push.push(v)
     else if (a === '--prompt-file') f.promptFile = v
     else if (a === '--note') f.note = v
-    else if (a === '--json') throw new Error('heads-down-ledger: --json is retired; use --set k=<json> per key')
-    else throw new Error(`heads-down-ledger: unknown argument ${a}`)
+    else if (a === '--json') throw new UsageError('heads-down-ledger: --json is retired; use --set k=<json> per key')
+    else throw new UsageError(`heads-down-ledger: unknown argument ${a}`)
     i++
   }
   return f
 }
 
 export function run(argv, { out = console.log, err = console.error } = {}) {
+  try {
+    return dispatch(argv, { out, err })
+  } catch (e) {
+    if (!(e instanceof UsageError)) throw e
+    err(e.message)
+    return 2
+  }
+}
+
+function dispatch(argv, { out, err }) {
   if (argv[0] === 'start') {
     err('heads-down-ledger: retired (phase NX1g). Start a run with /pilot; it opens its ledger with `node scripts/ledger.mjs beat`.')
     return 2
@@ -119,6 +159,7 @@ export function run(argv, { out = console.log, err = console.error } = {}) {
     out(l.id)
     return 0
   }
+  if (f.session) checkSession(f.session)
   if (f.cmd === 'show' && !f.session) {
     const l = latest(root)
     if (!l) {
@@ -135,10 +176,13 @@ export function run(argv, { out = console.log, err = console.error } = {}) {
     err(`heads-down-ledger: ${f.cmd} needs --session <id>`)
     return 2
   }
+  checkSession(f.session)
+  // Every flag is checked before anything is written: a refused beat neither migrates nor forwards.
+  const args = f.cmd === 'beat' ? translate(f) : []
   migrate(root, f.session)
   if (f.cmd === 'show') return ledger(['show', f.session, '--json'], opts)
   if (f.cmd === 'end') return ledger(['end'], opts)
-  return ledger(['beat', ...translate(f)], opts)
+  return ledger(['beat', ...args], opts)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

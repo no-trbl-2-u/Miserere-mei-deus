@@ -96,3 +96,50 @@ test('start is refused: a new run is /pilot', () => {
   assert.match(s.err, /\/pilot/)
   assert.ok(!fs.existsSync(path.join(r, '.heads-down', 'new12345.json')))
 })
+
+// --- the old script's guards, kept in the shim (review of #1286) -------------
+
+test('a prototype key as --worker or in a --set/--push path is refused before it reaches ledger.mjs', () => {
+  const r = seed()
+  for (const args of [
+    ['--worker', '__proto__', '--set', 'polluted=yes'],
+    ['--worker', 'constructor', '--set', 'polluted=yes'],
+    ['--set', '__proto__.polluted=yes'],
+    ['--set', 'workers.NX1a.constructor.prototype.polluted=yes'],
+    ['--push', 'gate.__proto__=yes'],
+    ['--worker', 'NX1a', '--set', 'prototype=yes'],
+  ]) {
+    const b = call(r, ['beat', '--session', 'abcd1234', ...args])
+    assert.equal(b.code, 2, `${args.join(' ')} -> ${b.err}`)
+    assert.match(b.err, /^heads-down-ledger: bad (row id|key): /, args.join(' '))
+  }
+  assert.ok(!fs.existsSync(path.join(r, '.nexus', 'sessions', 'abcd1234.json')), 'nothing was forwarded')
+})
+
+test('translate() itself never hands ledger.mjs a prototype path', async () => {
+  const { translate, UsageError } = await import('./heads-down-ledger.mjs')
+  const flags = (o) => ({ worker: '', set: [], push: [], promptFile: '', note: '', ...o })
+  assert.throws(() => translate(flags({ worker: '__proto__', set: ['x=1'] })), UsageError)
+  assert.throws(() => translate(flags({ set: ['a.__proto__.x=1'] })), UsageError)
+  assert.throws(() => translate(flags({ push: ['constructor=1'] })), UsageError)
+  assert.deepEqual(translate(flags({ worker: 'NX1g', set: ['status=pr-open'], push: ['claims=NX1h'] })), ['--set', 'workers.NX1g.status=pr-open', '--add', 'workers.NX1g.claims=NX1h'])
+  assert.equal({}.polluted, undefined)
+})
+
+test('a --session that is not one plain token is a usage error, and no file outside .heads-down/ is touched', () => {
+  const r = seed()
+  const outside = path.join(r, 'outside.json')
+  fs.writeFileSync(outside, JSON.stringify(OLD))
+  const before = fs.readFileSync(outside, 'utf8')
+  for (const bad of ['../outside', '..', 'a/b', 'a\b', '.hidden', '']) {
+    // An empty `show --session` is `show` with no id (the latest run), so only beat and end take ''.
+    for (const cmd of bad ? ['beat', 'show', 'end'] : ['beat', 'end']) {
+      const c = call(r, [cmd, '--session', bad])
+      assert.equal(c.code, 2, `${cmd} --session "${bad}" -> ${c.err}`)
+      assert.match(c.err, bad ? /^heads-down-ledger: bad session id: / : /needs --session <id>/, `${cmd} "${bad}"`)
+    }
+  }
+  assert.equal(fs.readFileSync(outside, 'utf8'), before, 'the file outside .heads-down/ was never migrated or rewritten')
+  assert.ok(!fs.existsSync(path.join(r, '.nexus', 'sessions')), 'nothing was forwarded')
+  assert.equal(call(r, ['beat', '--session', 'abcd1234', '--set', 'step=ok']).code, 0, 'a plain id still works')
+})
