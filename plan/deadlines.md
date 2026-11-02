@@ -272,6 +272,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CF1d — the words or glyphs toggle in Settings (spec 137); no dated T act waits on it
 - CF1e — the 49 pending card-voice words approved into the closed lists (spec 137); no dated T act waits on it
 - CF1f — the three long PAID lines reworded to fit the small face; T reads and merges its rules-change PR; date not set (T picks it).
+- CF1i — the Rules Glossary button in Settings (spec 137); no dated T act waits on it
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
 - OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
 - PF2 — attended; after v0.3 (The milestone), and waits on T's Android baseline numbers.
@@ -297,6 +298,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-02** — **The Rules Glossary button in Settings plotted into spec 137 (CF1i)** (T, attended `/plot`: "Yeah have a Rules Glossary button in settings", the home for the rules PR #1328 takes off opened cards). **Added** CF1i under `## Unscheduled`: no dated T act waits on it. No Item edited, no date moved.
 - **2026-11-01** — **Card faces: the pending words and the long PAID lines plotted into spec 137 (CF1e, CF1f)** (T, attended `/plot`: "For now, approve them all" on 137.2's 49 pending words, and "/plot both" on the PAID lines too long for the small face). **Added** CF1e and CF1f under `## Unscheduled`: no dated T act waits on them, and T sets the date for reading CF1f's rules-change PR. No Item edited, no date moved.
 - **2026-11-01** — **Equipment follow-ups plotted as spec 139 (EQ4a, EQ4b)** (T, pilot run `/plot anytime`; T answered every call in the session). **Edited** the Nov 25 Item for Chapters 2-4's quest lines: it said every quest pays a relic, and quests now alternate a relic, then a weapon or armor (D114 as amended by EQ3h). **Added** EQ4a and EQ4b to the `Waits on` of the Nov 16 MVP demo Item (the demo plays the Blacksmith and the gear card). Ticked nothing.
 - **2026-11-01** — **Card faces you read without opening plotted as spec 137 (CF1a-CF1d)** (T, attended `/pitch` then "Plot it!"; pitch `braindump/2026-11-01-card-face-meaning.md`). **Added** CF1a-CF1d under `## Unscheduled`: no dated T act waits on them, and T sets the date for reading CF1b's rewrite. No Item edited, no date moved.
