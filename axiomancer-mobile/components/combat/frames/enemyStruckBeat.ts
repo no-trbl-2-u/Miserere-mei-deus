@@ -1,12 +1,12 @@
 /**
  * WHEN THE ENEMY IS HIT — the other half of the beat vocabulary.
  *
- * `enemyAttackBeat` answers "was that the enemy acting on the player?"; this
+ * `enemyAttackBeat` answers "was that the enemy taking its turn?"; this
  * answers the mirror question, "was that the player's blow landing?". They are
  * deliberately separate signals rather than one three-way verdict: both can be
  * true of a single resolution (the player strikes, the enemy's threat fires),
  * and a function that had to pick one of them would be making a presentation
- * decision inside what is meant to be arithmetic. Which clip wins is
+ * decision inside what is meant to be arithmetic. Which clip goes first is
  * `useEnemyClipSelection`'s call, and it has the timing to make it with.
  *
  * Like its sibling it does NOT walk `fx.events`. The pane walks the stream once
