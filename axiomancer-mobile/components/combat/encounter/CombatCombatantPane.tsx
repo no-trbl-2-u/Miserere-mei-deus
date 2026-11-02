@@ -284,10 +284,9 @@ export function EffectChips({ effects, onChip, align = 'flex-start', testID }: {
  * would hide under the hand).
  */
 export const PlayerMedallion = React.memo(function PlayerMedallion({
-    player, enemyIntentDamage, onPress, fx, sacrificeCallout = null,
+    player, onPress, fx, sacrificeCallout = null,
 }: {
     player: CombatPlayerPaneVM;
-    enemyIntentDamage: number;
     /** Tap the avatar → inspect the pilgrim (stats, effects, combat log). */
     onPress?: () => void;
     fx?: CombatFx;
@@ -323,9 +322,9 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         setFloats((p) => [...p, { id, text, color, dx, dy, delayMs }]);
     }, []);
     const drop = useCallback((id: number) => setFloats((p) => p.filter((f) => f.id !== id)), []);
-    const landHit = useCallback((dmg: number, blocked: number, fired: boolean) => {
+    const landHit = useCallback((dmg: number, blocked: number) => {
         if (dmg > 0) push(`-${dmg}`, HIT_FLOAT_COLOR, 0);
-        if (fired && blocked > 0) push(`BLOCKED ${blocked}`, HUE.guardSteel, 40);
+        if (blocked > 0) push(`BLOCKED ${blocked}`, HUE.guardSteel, 40);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => undefined);
     }, [push]);
 
@@ -333,7 +332,8 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         if (!fx || fx.seq === 0 || fx.seq === lastSeq.current) return;
         lastSeq.current = fx.seq;
         let dmg = 0;
-        let threatFired = false;
+        // What the wall took off the hits that got through, as the engine reports it.
+        let blocked = 0;
         const ticks: { effectId: string; label: string; amount: number }[] = [];
         const statuses: { text: string; color: string }[] = [];
         // SACRIFICE costs and heals float on the medallion too, so a card's
@@ -343,9 +343,10 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         for (const e of fx.events) {
             if (e.kind === 'vitae-sacrificed') paid += e.amount;
             else if (e.kind === 'player-healed') healed += e.amount;
-            else if (e.kind === 'damage-dealt' && e.target === 'self') dmg += e.amount;
-            else if (e.kind === 'dot-tick' && e.target === 'self') ticks.push(e);
-            else if (e.kind === 'threat-fired') threatFired = true;
+            else if (e.kind === 'damage-dealt' && e.target === 'self') {
+                dmg += e.amount;
+                blocked += e.blocked ?? 0;
+            } else if (e.kind === 'dot-tick' && e.target === 'self') ticks.push(e);
             else if (e.kind === 'effect-landed' && e.target === 'self') {
                 const kw = (keywordForEffect(e.effectId) ?? e.effectKind ?? 'effect').toUpperCase();
                 const color = e.effect ? effectGlyph(e.effect as Parameters<typeof effectGlyph>[0]).color : HUE.tickPurple;
@@ -358,7 +359,6 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         const IMPACT = ENEMY_ATTACK_IMPACT_MS;
         if (dmg > 0) {
             const norm = Math.min(1, dmg / Math.max(1, player.maxHp));
-            const blocked = enemyIntentDamage - dmg;
             if (!reduceMotion.current) {
                 const recoil = 4 + norm * 8;
                 const fl = 0.35 + norm * 0.4;
@@ -369,7 +369,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                 contact.value = withDelay(IMPACT, withSequence(withTiming(1, { duration: 40 }), withTiming(0, { duration: 200 })));
             }
             impact.value = 0;
-            impact.value = withDelay(IMPACT, withTiming(1, { duration: 1 }, (fin) => { if (fin) runOnJS(landHit)(dmg, blocked, threatFired); }));
+            impact.value = withDelay(IMPACT, withTiming(1, { duration: 1 }, (fin) => { if (fin) runOnJS(landHit)(dmg, blocked); }));
         }
         // Each tick is its own labelled float in its element's colour, stacked
         // upward off the medallion (the hand is above, the screen edge left)
@@ -383,7 +383,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
         const hadFloat = dmg > 0 || ticks.length > 0;
         statuses.forEach((s, k) => { if (!hadFloat) push(s.text, s.color, (k % 2 === 0 ? 1 : -1) * 30); });
         if (statuses.length > 0) setStatusPulseKey((k) => k + 1);
-    }, [fx, player.maxHp, enemyIntentDamage, shift, flash, squash, contact, impact, landHit, push]);
+    }, [fx, player.maxHp, shift, flash, squash, contact, impact, landHit, push]);
 
     const anim = useAnimatedStyle(() => ({ transform: [{ translateX: shift.value }, { scale: squash.value }] }));
     const flashAnim = useAnimatedStyle(() => ({ opacity: flash.value }));
@@ -395,7 +395,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                 a style array can't merge two `transform` arrays, so each juice
                 primitive gets its own Animated.View and they compose via nesting. */}
             <Animated.View style={statusPulseStyle}>
-            <Animated.View style={anim}>
+            <Animated.View style={anim} testID="combat-player-recoil">
                 <Pressable
                     onPress={onPress}
                     style={styles.medallion}
@@ -410,7 +410,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                 >
                     <View style={styles.medallionClip}>
                         <PlayerPortraitImage width={44} height={52} fit="cover" skullWhenDying />
-                        <Animated.View style={[styles.medallionFlash, flashAnim]} pointerEvents="none" />
+                        <Animated.View style={[styles.medallionFlash, flashAnim]} pointerEvents="none" testID="combat-player-flash" />
                     </View>
                     <Svg width={PLAYER_AVATAR_SIZE} height={PLAYER_AVATAR_SIZE} viewBox="0 0 92 92" style={StyleSheet.absoluteFill} pointerEvents="none">
                         <Circle cx={46} cy={46} r={44.5} stroke={AXM.sulfur} strokeWidth={3.6} fill="none" opacity={0.9} />
@@ -425,7 +425,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                         />
                     ) : null}
                     {/* one-frame contact slash at the moment of impact */}
-                    <Animated.View style={[styles.contactSlash, contactStyle]} pointerEvents="none">
+                    <Animated.View style={[styles.contactSlash, contactStyle]} pointerEvents="none" testID="combat-player-slash">
                         <Text style={styles.contactSlashText}>✦</Text>
                     </Animated.View>
                 </Pressable>
@@ -520,6 +520,8 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         let spikeDmg = 0;
         let denied = false;
         let threatFired = false;
+        // The fired move's own hits, read off the event: by now `enemy.intent` is the next move's.
+        let firedMoveHits = false;
         const ticks: { side: 'enemy' | 'player'; effectId: string; label: string; amount: number }[] = [];
         // (d) status applications the engine already emits — zero-damage
         // control/buff/debuff intents that must never be silent.
@@ -527,9 +529,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         for (const e of fx.events) {
             if (e.kind === 'damage-dealt') {
                 if (e.target === 'self') playerDmg += e.amount; else enemyDmg += e.amount;
-            } else if (e.kind === 'spike-struck') {
-                // THORNS and REFLECT float their own number (the log line's
-                // float); they still make the foe flinch.
+            } else if (e.kind === 'spike-struck' || e.kind === 'riposte-fired') {
+                // THORNS, REFLECT and RIPOSTE float their own number (the log
+                // line's float); they still make the foe flinch.
                 spikeDmg += e.amount;
             } else if (e.kind === 'dot-tick') {
                 ticks.push({ side: e.target === 'self' ? 'player' : 'enemy', effectId: e.effectId, label: e.label, amount: e.amount });
@@ -537,6 +539,8 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 denied = true;
             } else if (e.kind === 'threat-fired') {
                 threatFired = true;
+                // Optional only for the pane suites' hand-written `threat-fired`.
+                firedMoveHits = e.effects?.some((eff) => (eff.damage ?? 0) > 0) ?? false;
             } else if (e.kind === 'effect-landed') {
                 const side = e.target === 'self' ? 'player' : 'enemy';
                 const kw = (keywordForEffect(e.effectId) ?? e.effectKind ?? 'effect').toUpperCase();
@@ -581,9 +585,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
             // gate their own reduced-motion internally, so this call is
             // unconditional (the hook no-ops when appropriate).
             setDamageTick((prev) => ({ key: prev.key + 1, norm }));
-        } else if (denied || (threatFired && enemy.intent.damage > 0)) {
-            // (b) the turn resolved with no damage to the player at all → DENIED
-            //     flourish over the enemy (teaches "variety / guard denies the turn").
+        } else if (denied || firedMoveHits) {
+            // (b) the foe was stopped, or its move had hits and none got through →
+            //     DENIED flourish over the enemy (teaches "variety / guard denies the
+            //     turn"). A heal or a buff was never stopped, so it floats nothing.
             pushEnemy('DENIED', HUE.goldAccent, 0);
         }
         // (d-symmetric) the player's APPLY landed on the enemy → flinch + float.
@@ -604,7 +609,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         statusFloats.forEach((s, k) => {
             if (s.side === 'enemy' && !enemyHadFloat) pushEnemy(s.text, s.color, (k % 2 === 0 ? 1 : -1) * 30);
         });
-    }, [fx, enemy.intent.damage, player.maxHp, enemyScale, enemyShift, pushEnemy]);
+    }, [fx, player.maxHp, enemyScale, enemyShift, pushEnemy]);
 
     const enemyAnim = useAnimatedStyle(() => ({ transform: [{ translateX: enemyShift.value }, { scale: enemyScale.value }] }));
 
@@ -668,7 +673,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                         testID="combat-arena-backdrop"
                     />
                 )}
-                <Animated.View style={[StyleSheet.absoluteFillObject, enemyAnim]}>
+                <Animated.View style={[StyleSheet.absoluteFillObject, enemyAnim]} testID="combat-enemy-lunge">
                     <View
                         style={[
                             styles.enemyFigureWrap,
@@ -776,7 +781,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmCombatDockScrim)" />
             </Svg>
             {/* damage-scaled red vignette flash (pointer-transparent; gated by reduce-motion) */}
-            <Animated.View pointerEvents="none" style={[styles.vignette, flashStyle]} />
+            <Animated.View pointerEvents="none" style={[styles.vignette, flashStyle]} testID="combat-hit-flash" />
 
             {/* ── layer 2: top HUD ── */}
             <View

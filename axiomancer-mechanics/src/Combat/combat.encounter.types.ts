@@ -516,7 +516,9 @@ export type CombatEvent =
     | { kind: 'effect-landed'; cardId: string; effectId: string; target: 'self' | 'enemy';
         effectKind: CardEffectKind; intensity: number; effect: Effect }
     | { kind: 'effect-fizzled'; cardId: string; effectId: string; message: string }
-    | { kind: 'damage-dealt'; cardId: string; target: 'self' | 'enemy'; amount: number }
+    /** A foe's hit that got through names the foe as `cardId`, and `blocked` is what the
+     *  parry, GUARD and BARRIER took off that hit before it landed. */
+    | { kind: 'damage-dealt'; cardId: string; target: 'self' | 'enemy'; amount: number; blocked?: number }
     /** A SACRIFICE: `amount` VITAE paid (0 when WAIVED), `counted` the amount it counts as. */
     | { kind: 'vitae-sacrificed'; cardId: string; amount: number; counted: number }
     /** A card, Global, LEECH or delayed heal restored `amount` VITAE. */

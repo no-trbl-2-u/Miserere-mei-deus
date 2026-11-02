@@ -1614,7 +1614,6 @@ export const CombatBoard = React.memo(function CombatBoard({
                     avatar={(
                         <PlayerMedallion
                             player={vm.player}
-                            enemyIntentDamage={vm.enemy.intent.damage}
                             onPress={onPlayerInspect}
                             fx={fx}
                             sacrificeCallout={vitaeCallout}

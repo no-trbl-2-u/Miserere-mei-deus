@@ -845,6 +845,15 @@ export function selectCombatLogLines(events: readonly CombatEvent[]): CombatLogL
                     float: `${SPIKE_WORD[e.spike].name} −${e.amount}`,
                 });
                 break;
+            // The riposte's counter reads the same way, in THORNS' red: both are a
+            // wound the foe's own swing earned.
+            case 'riposte-fired':
+                out.push({
+                    kind: e.kind, side: 'enemy', color: SPIKE_WORD.thorns.color,
+                    text: `RIPOSTE deals ${e.amount} back to the foe.`,
+                    float: `RIPOSTE −${e.amount}`,
+                });
+                break;
             case 'spikes-changed': {
                 const line = spikeLine(e);
                 if (line) out.push(line);

@@ -89,7 +89,7 @@ describe('the medallion label while dying and on the sacrifice floor', () => {
         const { store } = startRealFight(REAL_FIGHT_FIXTURE, {});
         if (dying) store.setState({ dying: true } as never);
         const { tree } = withAllProviders(
-            <PlayerMedallion player={PLAYER} enemyIntentDamage={0} sacrificeCallout={{ cost: 5, vitae: 3, n: 1 }} />,
+            <PlayerMedallion player={PLAYER} sacrificeCallout={{ cost: 5, vitae: 3, n: 1 }} />,
             { store },
         );
         render(tree);

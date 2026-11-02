@@ -79,7 +79,7 @@ describe('your INFERNO chip (A1)', () => {
 describe('the self tick names its cause (A2)', () => {
     it('floats "INFERNO −4", not a bare "-4", in INFERNO red', () => {
         const events: CombatEvent[] = [{ kind: 'dot-tick', effectId: 'inferno', label: 'INFERNO', amount: 4, target: 'self' }];
-        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} enemyIntentDamage={0} fx={fx(events)} />);
+        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} fx={fx(events)} />);
         render(tree);
         expect(screen.getByText('INFERNO −4')).toBeTruthy();
         expect(screen.queryByText('-4')).toBeNull();
@@ -128,7 +128,7 @@ describe('one float per tick, in its colour, staggered; plain hits white (A10, A
             { kind: 'dot-tick', effectId: 'inferno', label: 'INFERNO', amount: 2, target: 'self' },
         ] as unknown as CombatEvent[];
         jest.useFakeTimers();
-        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} enemyIntentDamage={9} fx={fx(events)} />);
+        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} fx={fx(events)} />);
         render(tree);
         // The hit floats on the impact beat.
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS + 50); });
