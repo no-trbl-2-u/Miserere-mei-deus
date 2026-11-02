@@ -744,7 +744,12 @@ export const StagedCard = React.memo(function StagedCard({
                     <Pressable onPress={() => onX?.(card.uid, -1)} hitSlop={6} accessibilityRole="button" accessibilityLabel={PROGRAM_COPY.xLess} testID={`combat-x-less-${card.uid}`}>
                         <Text style={styles.xStep}>−</Text>
                     </Pressable>
-                    <Text style={styles.xValue} numberOfLines={1} testID={`combat-x-value-${card.uid}`}>{`${PROGRAM_COPY.xLabel} ${x}`}</Text>
+                    {/* The label gives way first; the amount never shrinks, so a
+                        two-digit amount is never the part that is cut. */}
+                    <View style={styles.xMiddle}>
+                        <Text style={styles.xLabel} numberOfLines={1} testID={`combat-x-label-${card.uid}`}>{PROGRAM_COPY.xLabel}</Text>
+                        <Text style={styles.xAmount} numberOfLines={1} testID={`combat-x-value-${card.uid}`}>{String(x)}</Text>
+                    </View>
                     <Pressable onPress={() => onX?.(card.uid, 1)} hitSlop={6} accessibilityRole="button" accessibilityLabel={PROGRAM_COPY.xMore} testID={`combat-x-more-${card.uid}`}>
                         <Text style={styles.xStep}>+</Text>
                     </Pressable>
@@ -2312,7 +2317,11 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         paddingHorizontal: 8, paddingVertical: 2, backgroundColor: 'rgba(0,0,0,0.65)', borderRadius: 4,
     },
     xStep: { fontFamily: FONTS.sans, fontSize: 16, lineHeight: 18, color: AXM.sulfur, paddingHorizontal: 4 },
-    xValue: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment },
+    // The middle: label then amount, centred between the buttons. `minWidth: 0`
+    // lets the label shrink inside the row; the amount keeps its own width.
+    xMiddle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexShrink: 1, minWidth: 0 },
+    xLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment, flexShrink: 1, minWidth: 0, marginRight: 4 },
+    xAmount: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment, flexShrink: 0 },
     globalsRow: {
         flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end',
         gap: 6, paddingHorizontal: 12, paddingBottom: 4,

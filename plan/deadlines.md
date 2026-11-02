@@ -222,7 +222,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -300,6 +300,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-02** — **the X amount on a staged card always shows its number, plotted as spec 143 (XR1a)** (T, `/bug` with a screenshot: "These set X areas are truncated above 9"). **Added** XR1a to the `Waits on` of the Mid-MVP check (Nov 9), beside the other combat-board chunks: the check plays the fights. Nothing ticked; no date moved.
 - **2026-11-02** — **a dropped card with no die plays on landing, plotted as spec 142 (CP1a)** (T, attended `/pitch` then `/plot asap`: "If you drag a card onto the board and you currently don't have a die that could power it, then just accept the card once it lands"). **Added** CP1a to the `Waits on` of the Mid-MVP check (Nov 9), beside AN6a and AN6b: the check plays the fights. Nothing ticked; no date moved.
 - **2026-11-02** — **the landed enemy hit plotted as spec 141 (AN6b)** (T, attended `/plot`, on spec 140's follow-ups: "Yes, plot them"). **Added** AN6b to the `Waits on` of the Mid-MVP check (Nov 9), right after AN6a, which it needs: the check plays these fights. Nothing ticked; no date moved.
 - **2026-11-02** — **the enemy action clip plotted as spec 140 (AN6a)** (T, attended `/pitch` then `/plot asap`: "I just want to see their action animation"). **Added** AN6a to the `Waits on` of the Mid-MVP check (Nov 9), the first T act that plays the fight screens on a preview build. Nothing ticked; no date moved.
