@@ -25,7 +25,7 @@ import {
 } from '../combat-encounter.engine';
 import { programFreeCell, programHeadline, programPlayVM } from '../card-program.engine';
 import { glyphShapeFor } from '@/components/combat/glyphShapes';
-import { keywordGloss, keywordsInText, systemTermsForCard } from '@/state/combat/keywords';
+import { keywordGloss, keywordsInText } from '@/state/combat/keywords';
 import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 function card(id: string, free: (c: ProgramCtx) => void, paid: (c: ProgramCtx) => void = free): Card {
@@ -171,8 +171,6 @@ describe('the spikes on card faces and in the glossary', () => {
     it('glosses THORNS, REFLECT and RETRIEVE, finds them in printed text, and explains "GUARD holds"', () => {
         for (const kw of ['Thorns', 'Reflect', 'Retrieve']) expect(keywordGloss(kw)).toBeTruthy();
         expect(keywordsInText('THORNS 2, REFLECT 25%. RETRIEVE 1.')).toEqual(['Thorns', 'Reflect', 'Retrieve']);
-        expect(systemTermsForCard('your THORNS hit 2× while GUARD HOLDS', []).map((t) => t.term)).toEqual(['HOLDS']);
-        expect(systemTermsForCard('GUARD 6', [])).toEqual([]);
     });
 
     it('headlines and FREE cells print the spike tokens, each with a silhouette', () => {

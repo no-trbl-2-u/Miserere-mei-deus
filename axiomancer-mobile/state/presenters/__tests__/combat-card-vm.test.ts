@@ -214,12 +214,10 @@ describe('detailStats — same numbers as the face', () => {
         expect(d.outcomeLine).toBe('Gain Guard 5.');
         expect(d.stacksText).toBeNull();
     });
-    it('systemTerms is the PER-CARD glossary slice, not the KW-7 dump (owner, 2026-07-12)', () => {
-        // The grey office's printed lines reference no dice-system token → NO
-        // entries — never the dump.
+    it('carries no systems-glossary slice at all (T, 2026-11-01)', () => {
         for (const id of ['grey-strike', 'grey-ward', 'grey-word']) {
             const { card, sourceCard } = cardOf(id);
-            expect(detailStats(card, sourceCard).systemTerms.map(s => s.term)).toEqual([]);
+            expect(detailStats(card, sourceCard)).not.toHaveProperty('systemTerms');
         }
     });
 });
@@ -228,13 +226,6 @@ describe('card-wording audit (2026-07-12) — the +DIE row carries only what the
     it('the +DIE row prints the full paid line', () => {
         expect(detailStats(cardOf('grey-ward').card, cardOf('grey-ward').sourceCard).diePaidLine).toContain('GUARD 5');
         expect(detailStats(cardOf('grey-strike').card, cardOf('grey-strike').sourceCard).diePaidLine).toContain('DEAL 5');
-    });
-    it('INTENSITY and FREE never render as system terms (retired, owner 2026-07-18)', () => {
-        // Both read plainly enough in context; their rows padded every inspect.
-        const { card, sourceCard } = cardOf('grey-word');
-        const terms = detailStats(card, sourceCard).systemTerms.map(s => s.term);
-        expect(terms).not.toContain('INTENSITY');
-        expect(terms).not.toContain('FREE');
     });
 });
 

@@ -52,7 +52,6 @@ import { dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGR
 import { largePaidLineSize, paidLineCube, paidLineFit, paidLineGap, paidLineLead, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
 import { KeywordGlyph } from '@/components/keyword-glyphs';
 import { useSetting, type CardTextMode } from '@/state/settings';
-import { globalDurationLine } from '@/state/presenters/card-program.engine';
 // The ONE mobile source for the rarity band. The face never
 // re-bands a rank and never re-types a rarity hue; see `card-rarity.engine.ts`.
 import { rarityFor, RARITY_LABEL, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
@@ -1727,7 +1726,7 @@ function StanceCube({ color, size }: { color: string; size: number }) {
  *     card voice), led by the stance die cube and a colon. Settings picks all
  *     words or all glyphs for its keywords, never both. The SMALL face holds it
  *     to at most three rows at 10pt; the LARGE face prints it bigger and lets it
- *     wrap as far as it needs, with a Global's duration under it;
+ *     wrap as far as it needs;
  *   · a Global has no FREE line: the word GLOBAL sits where the pill does.
  *
  * Rarity is not drawn on the face. The large face prints the WORD, and every
@@ -2021,7 +2020,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                 </View>
                 {/* ③ PAID LINE: `<die>: <line>`, the die this line wants, level with
                     the line's first row. The LARGE face's line wraps as far as it
-                    needs and a Global states how long it lasts under it. */}
+                    needs. A Global's duration is not on the face (137.8). */}
                 {large ? (
                     <View
                         style={[styles.plateLedger, styles.plateLedgerLarge, { minHeight: ledgerH }]}
@@ -2035,11 +2034,6 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                             </View>
                             <View style={styles.paidColumn}>
                                 <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} style={styles.paidLineLarge} testID="combat-card-face-paid-line" />
-                                {f.isGlobal ? (
-                                    <Text style={styles.durationLine} allowFontScaling={false} testID="combat-card-face-duration">
-                                        {globalDurationLine()}
-                                    </Text>
-                                ) : null}
                             </View>
                         </View>
                     </View>
@@ -2409,8 +2403,6 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.deepBg,
     },
     paidColumn: { flex: 1, justifyContent: 'center' },
-    // A Global's duration, on the large face only.
-    durationLine: { fontFamily: FONTS.serif, fontSize: 12, lineHeight: 15, color: AXM.bone, marginTop: 2 },
     // The small face's ledger: the whole PAID line over up to three rows, at
     // `paidLineFit`'s size, led by the stance die and a colon (`<die>: <line>`)
     // level with its first row; the text wraps in the column beside the die.

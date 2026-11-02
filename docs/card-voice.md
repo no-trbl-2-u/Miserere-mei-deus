@@ -109,8 +109,8 @@ A word outside every list here is still a lint failure, and a new word is T's ca
 - The face says **GLOBAL** where the FREE pill sits.
 - A Global has **one effect**. Played FREE it lasts 3 turns, played PAID the whole combat; that is the only
   difference, for every Global. A Global never has a FREE line of its own.
-- The face line is the trigger and the effect, with no duration: `When you SACRIFICE X: DEAL X`. The large face says
-  "3 turns played FREE, the whole combat PAID".
+- The face line is the trigger and the effect, with no duration, on the small face and the large:
+  `When you SACRIFICE X: DEAL X`. The opened card's NO DIE / +DIE rows say how long it lasts (T, 2026-11-01).
 
 ## 7. FREE lines
 
@@ -119,7 +119,9 @@ rest wait for T's FREE session (spec 137, Follow-ups).
 
 ## 8. What the glossary carries
 
-A short line leans on a few rules the glossary states once, so the line never has to:
+A short line leans on a few rules the glossary states once, so the line never has to. The opened card prints no
+system notes under its NO DIE / +DIE rows (T, 2026-11-01), so these sit in the systems glossary
+(`SYSTEM_GLOSSARY`) and show on no card until T places them:
 
 - steps resolve left to right;
 - debuffs land on the foe;

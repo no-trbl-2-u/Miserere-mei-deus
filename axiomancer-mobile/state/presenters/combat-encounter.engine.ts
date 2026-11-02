@@ -54,12 +54,12 @@ import { momentumV2A11y } from '@/state/combat/momentum';
 import { equipmentEffectLine, equipmentFiredText, specialFaceText } from '@/state/presenters/equipment-effect-line';
 // The single mobile source for the rarity band. Never re-band a rank here;
 // `rarityFor` owns that question for every surface.
-import { rarityFor, RARITY_LABEL, RARITY_PIPS, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
+import { rarityFor, RARITY_LABEL } from '@/state/presenters/card-rarity.engine';
 
 /** The barrel doesn't re-export the union, so derive it from Card. */
 type CardSpecialMechanic = NonNullable<Card['specialMechanics']>[number];
 import { effectGlyph, GLYPH_COLORS, type StatusGlyph, type StatusGlyphKind } from '@/components/combat/statusGlyphs';
-import { keywordForEffect, keywordForVerb, keywordForMechanic, keywordGloss, keywordsInText, systemTermsForCard } from '@/state/combat/keywords';
+import { keywordForEffect, keywordForVerb, keywordForMechanic, keywordGloss, keywordsInText } from '@/state/combat/keywords';
 import { AXM, HUE } from '@/theme/axm';
 import {
     programFreeCell, programHeadline, programLinesFor, programLifecycle, programPlayVM, programTypeTag,
@@ -496,17 +496,6 @@ export interface CombatCardDetailVM {
     /** The Color Law — which dice can power this card — rendered ONCE per
      *  modal (not per powerLine). */
     colorLawHint: string;
-    /** The per-card slice of the systems glossary: ONLY the system terms this
-     *  card's printed lines reference (and that no keyword chip already
-     *  explains). */
-    systemTerms: { term: string; def: string }[];
-    /** The rarity band's player-facing name ('Common' / 'Uncommon' /
-     *  'Rare'), from the `card-rarity.engine` module. */
-    rarityLabel: string;
-    /** How many pips to draw. The COUNT is the greyscale-safe signal. */
-    rarityPips: number;
-    /** The band's hue. Never render it as the only rarity cue. */
-    rarityColor: string;
     /** The ◇ row's tag. */
     freeTag: string;
     /** The ◆ row's tag, carrying the fact the row's own decision needs — the
@@ -516,8 +505,7 @@ export interface CombatCardDetailVM {
 
 /** detailStats' switch builds everything BUT the pill fields; the wrapper appends them. */
 type DetailCore = Omit<CombatCardDetailVM,
-    'freePill' | 'diePaidLine' | 'colorLawHint' | 'systemTerms'
-    | 'rarityLabel' | 'rarityPips' | 'rarityColor' | 'freeTag' | 'paidTag'>;
+    'freePill' | 'diePaidLine' | 'colorLawHint' | 'freeTag' | 'paidTag'>;
 
 export interface CombatCardVM {
     uid: string; cardId: string; name: string; stance: string; stanceColor: string;
@@ -1914,25 +1902,11 @@ export function detailStats(card: CombatCard, sourceCard?: Card): CombatCardDeta
     const colorLawHint = card.stance === 'any'
         ? 'Any die can power this card.'
         : `Only a ${STANCE} or WILD die can power this card.`;
-    // The per-card systems-glossary slice: scan the card's OWN
-    // printed lines plus its overlay free/stacks lines (colorLawHint excluded
-    // — its WILD is the global colour law, not a card reference) and drop
-    // terms a keyword chip already covers.
-    const typeWord = card.cardType === 'global' ? 'Global' : card.cardType === 'curse' ? 'Curse' : '';
-    const systemTerms = systemTermsForCard(
-        [card.topActionText, card.bottomActionText, core.freeLine, core.stacksText ?? '', typeWord].join(' '),
-        core.keywords.map(k => k.name),
-    );
-    // The rarity band, derived ONCE by `rarityFor`. Named label +
-    // pip count + hue; the panel renders label and pips so the signal survives
-    // greyscale and colour blindness, and the hue is decoration on top.
-    const band = rarityFor(card);
     // The colour law rides the ◆ row's tag, the row whose decision it changes.
     const freeTag = 'NO DIE';
     const paidTag = `+DIE · ${STANCE}/WILD`;
     return {
-        ...core, freePill, diePaidLine, colorLawHint, systemTerms,
-        rarityLabel: RARITY_LABEL[band], rarityPips: RARITY_PIPS[band], rarityColor: RARITY_COLOR[band],
+        ...core, freePill, diePaidLine, colorLawHint,
         freeTag, paidTag,
     };
 }

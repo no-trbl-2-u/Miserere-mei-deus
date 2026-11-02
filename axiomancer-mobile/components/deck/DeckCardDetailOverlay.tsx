@@ -61,7 +61,6 @@ export function DeckCardDetailOverlay({ card, onClose }: DeckCardDetailOverlayPr
                             </Text>
                         )}
                     </View>
-                    <Text style={styles.meta}>{card.metaChip}</Text>
                     <View style={styles.rarityRow}>
                         <RarityMark
                             label={card.rarity.label}
@@ -130,7 +129,6 @@ const useStyles = makeStyles((AXM) => ({
     titleRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 },
     name: { flexShrink: 1, fontFamily: FONTS.gothic, fontSize: 22, letterSpacing: 0.5, color: AXM.parchment },
     copies: { fontFamily: FONTS.mono, fontSize: 11 },
-    meta: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 0.5, color: AXM.bone },
     rarityRow: { marginTop: 2 },
     outcome: { fontFamily: FONTS.serif, fontSize: 15, lineHeight: 20, color: AXM.parchment, marginTop: 4 },
     line: { gap: 2 },
