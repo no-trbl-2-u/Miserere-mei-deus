@@ -193,6 +193,34 @@ export function resolveDieDropTarget(
 }
 
 /**
+ * What a card dropped on the play area does (phase CP1a; spec 142). Pure, so a
+ * test can ask it for every row of the spec's table.
+ *   · 'refuse' — neither line can be played now (the engine would refuse both).
+ *   · 'stage'  — at least one unspent die in the tray could power the card, so
+ *     it waits for APPLY or END TURN and the player may still drag that die on.
+ *     A die another staged card holds still counts, hence no pending-die input.
+ *     A card with a blocked free line and a playable paid line and no die also
+ *     stages, as it did before: only the player can give it a die.
+ *   · 'play'   — nothing in the tray could power it and its free line is open,
+ *     so staging buys nothing: it plays FREE on landing (the APPLY-with-no-die
+ *     call). A die that matches in colour but cannot go on the card because
+ *     its paid line is blocked does not count (T open call #1).
+ * "Could power it" is `dieCanPowerCardVM` over the UNSPENT dice, the same rule
+ * `resolveDieDropTarget` applies; a grey card takes every die.
+ */
+export type CardDropVerdict = 'refuse' | 'stage' | 'play';
+export function resolveCardDrop(
+    card: { stance: string; play?: { freeBlock: string | null; paidBlock: string | null } | null },
+    dice: readonly { color: string; isX?: boolean; face?: 'special' | 'mana' | 'miss'; spent: boolean }[],
+): CardDropVerdict {
+    const freeBlock = card.play?.freeBlock ?? null;
+    const paidBlock = card.play?.paidBlock ?? null;
+    if (freeBlock && paidBlock) return 'refuse';
+    const hasDie = !paidBlock && dice.some((d) => !d.spent && dieCanPowerCardVM(d, card.stance));
+    return hasDie || freeBlock ? 'stage' : 'play';
+}
+
+/**
  * Keep only the pending die picks whose card is still staged — returning the
  * SAME object when nothing was dropped.
  *
@@ -1075,15 +1103,21 @@ export const CombatBoard = React.memo(function CombatBoard({
             if (rectContains(playRect, x, y)) {
                 // A card neither of whose lines can be played now is refused
                 // loudly at the stage, so it cannot sit staged holding a die.
-                const play = vm.hand.find((c) => c.uid === payload.uid)?.play;
-                if (play?.freeBlock && play.paidBlock) {
+                const handCard = vm.hand.find((c) => c.uid === payload.uid);
+                const play = handCard?.play;
+                const verdict = handCard ? resolveCardDrop(handCard, vm.dice) : 'stage';
+                if (verdict === 'refuse') {
                     juiceHaptics.notify(Haptics.NotificationFeedbackType.Error);
-                    setDropReject((prev) => ({ uid: '', reason: PROGRAM_COPY.blocked(payload.card.name, play.freeBlock!), n: prev.n + 1 }));
-                    flagShortfall(play.freeShortfall);
+                    setDropReject((prev) => ({ uid: '', reason: PROGRAM_COPY.blocked(payload.card.name, play!.freeBlock!), n: prev.n + 1 }));
+                    flagShortfall(play!.freeShortfall);
                     return;
                 }
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
-                onStage(payload.uid);
+                // No die in the tray could power it: staging would only park the
+                // card on the enemy until END TURN. Play it now, the way APPLY
+                // plays a card with no die (FREE, so no X amount, as APPLY).
+                if (verdict === 'play') onApply(payload.uid, null, false);
+                else onStage(payload.uid);
             }
             // Drag that misses the play area is a no-op — the pan gesture already
             // fired, so the Exclusive tap handler is suppressed. Inspect is tap-only.
@@ -1093,8 +1127,10 @@ export const CombatBoard = React.memo(function CombatBoard({
             const playRect = await measureRect(playAreaRef);
             if (!rectContains(playRect, x, y)) onUnstage(payload.uid);
         }
+        // `vm.hand` / `vm.dice`: the drop reads the tray and each card's play read at
+        // release, so a closure from before a die was spent would stage a dieless card.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [onDiscard, onStage, onUnstage, onInspect, stagedKey, pendingDieByUid]);
+    }, [onDiscard, onStage, onApply, onUnstage, onInspect, stagedKey, pendingDieByUid, vm.hand, vm.dice]);
 
     (drag as DragController & { resolveDrop?: typeof resolveDrop }).resolveDrop = resolveDrop;
 
