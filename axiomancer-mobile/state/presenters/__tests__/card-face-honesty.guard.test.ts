@@ -17,7 +17,7 @@
 import { describe, it, expect } from '@jest/globals';
 import { getCard, getCardById, cardLibrary, lookupEffect } from '@mechanics';
 import { faceStats, detailStats } from '@/state/presenters/combat-encounter.engine';
-import { keywordsInText, keywordForEffect, keywordForVerb, keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
+import { keywordsInText, keywordForEffect, keywordForVerb, keywordGloss } from '@/state/combat/keywords';
 import { glyphShapeFor } from '@/components/combat/glyphShapes';
 
 describe('card-face honesty guard', () => {
@@ -40,31 +40,21 @@ describe('card-face honesty guard', () => {
         expect(offenders).toEqual([]);
     });
 
-    it('every explainer term renders at most once per overlay (no dump, no double-gloss)', () => {
-        // The inspect overlay may explain each
-        // term at most once: keyword chips are deduped, and the per-card
-        // systems slice may not restate a chip (e.g. GHOST beside FORGE) or
-        // repeat a term. Also pins the dump eviction: a card whose printed
-        // lines reference no system token gets NO systems entries at all.
+    it('every keyword chip renders at most once per overlay (no double-gloss), and no system notes ride the VM', () => {
+        // The inspect overlay may explain each keyword at most once. The
+        // per-card systems slice is gone (T, 2026-11-01): no card carries one.
         const offenders: string[] = [];
         for (const { id } of cardLibrary) {
             const card = getCard(id);
             if (!card) continue;
             const d = detailStats(card, getCardById(id));
-            const names = [...d.keywords.map(k => k.name), ...d.systemTerms.map(s => s.term)];
+            const names = d.keywords.map(k => k.name);
             const seen = new Set<string>();
             for (const n of names) {
                 if (seen.has(n)) offenders.push(`${id} → '${n}' explained twice`);
                 seen.add(n);
             }
-            // The presenter scans the printed
-            // lines PLUS the overlay's own free/stacks lines (INTENSITY/FREE
-            // live there); this reference check mirrors that scan basis.
-            const printed = [card.topActionText, card.bottomActionText, d.freeLine, d.stacksText ?? ''].join(' ');
-            if (d.systemTerms.length === SYSTEM_GLOSSARY.length) offenders.push(`${id} → full systems dump rendered`);
-            if (d.systemTerms.length > 0 && !/conviction|⬡|resonance|reserve|pip|floating|rung|wild|X die|peroration|concede|free|intensit|×\d|\bi\d\b/i.test(printed)) {
-                offenders.push(`${id} → systems entries without any printed reference`);
-            }
+            if ('systemTerms' in d) offenders.push(`${id} → a systems slice rides the detail VM`);
         }
         expect(offenders).toEqual([]);
     });

@@ -318,7 +318,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/state/presenters/__tests__/deck.engine.test.ts"
+        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardDetailOverlay.test.tsx, axiomancer-mobile/state/presenters/__tests__/deck.engine.test.ts"
       },
       "needsPitch": {
         "value": false,
@@ -3463,12 +3463,6 @@
       "kind": "coupling",
       "from": "route:cache",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -3512,12 +3506,6 @@
       "from": "route:cache",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/combat/keywords.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3895,12 +3883,6 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:combat-encounter",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -4040,12 +4022,6 @@
       "from": "route:combat-encounter",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:combat-encounter",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5731,12 +5707,6 @@
       "kind": "coupling",
       "from": "route:quest",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:quest",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -5792,12 +5762,6 @@
       "from": "route:quest",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/combat/keywords.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:quest",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6199,12 +6163,6 @@
       "kind": "coupling",
       "from": "route:village",
       "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
@@ -6254,12 +6212,6 @@
       "from": "route:village",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/combat/keywords.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/card-program.engine.ts"
     },
     {
       "kind": "coupling",
