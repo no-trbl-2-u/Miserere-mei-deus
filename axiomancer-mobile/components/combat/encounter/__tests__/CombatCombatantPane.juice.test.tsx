@@ -40,7 +40,7 @@ describe('PlayerMedallion — combat adoption of lib/juice primitives', () => {
         const events = [{
             kind: 'dot-tick', effectId: 'burn', label: 'Burn', amount: 4, target: 'self',
         }] as unknown as CombatEvent[];
-        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} enemyIntentDamage={0} fx={fx(events)} />);
+        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} fx={fx(events)} />);
         render(tree);
         // FloatNum (the "-4" pop) mounts through useJuiceNumberPop.
         expect(Juice.useJuiceNumberPop).toHaveBeenCalled();
@@ -51,7 +51,7 @@ describe('PlayerMedallion — combat adoption of lib/juice primitives', () => {
             kind: 'effect-landed', cardId: 'x', effectId: 'burn', target: 'self',
             effectKind: 'dot', intensity: 1, effect: { id: 'burn', name: 'Burn' },
         }] as unknown as CombatEvent[];
-        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} enemyIntentDamage={0} fx={fx(events)} />);
+        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} fx={fx(events)} />);
         render(tree);
         // useJuicePulse is called every render (triggerKey=0 baseline) — the
         // proof is that it's called with a RISEN key once the status lands.
@@ -62,7 +62,7 @@ describe('PlayerMedallion — combat adoption of lib/juice primitives', () => {
 
     it('a quiet render (no fx) never bumps the status pulse above 0', () => {
         (Juice.useJuicePulse as jest.Mock).mockClear();
-        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} enemyIntentDamage={0} />);
+        const { tree } = withAllProviders(<PlayerMedallion player={PLAYER} />);
         render(tree);
         const calls = (Juice.useJuicePulse as jest.Mock).mock.calls as [number, number][];
         expect(calls.every(([key]) => key === 0)).toBe(true);
