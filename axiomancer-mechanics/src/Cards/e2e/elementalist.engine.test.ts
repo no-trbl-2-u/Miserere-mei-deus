@@ -112,7 +112,9 @@ describe('the Elementalist set', () => {
         expect(paid('E-01')).toBe('INFERNO 6, GUARD {guard:7}. EXILE');
         expect(paid('E-05')).toBe('STORM 4, DRAW 3. EXILE');
         expect(free('M-07')).toBe('STORM 1');
-        expect(paid('M-07')).toBe('VULNERABLE {vuln:14}% for each STORM the foe has, for 2 turns. EXILE');
+        expect(paid('M-07')).toBe('VULNERABLE {vuln:14}% for 2 turns, for each STORM the foe has. EXILE');
+        expect(free('E-08')).toBe('BLIZZARD 2, INFERNO 1');
+        expect(paid('E-08')).toBe('Spend all your INFERNO. For each: BLIZZARD 2, INFERNO 2. EXILE');
         expect(getCardById(idOf('P-10'))!.program!.global!.text).toBe('DEAL {deal:3} if the foe has 2 or more elements');
     });
 
@@ -202,9 +204,10 @@ describe('the cards play the weather', () => {
         expect(weather(s).storm).toBe(3);
     });
 
-    it('E-08 PAID turns your INFERNO into twice that much of the foe\'s BLIZZARD and INFERNO', () => {
+    it('E-08 PAID spends your INFERNO for twice that much BLIZZARD and ordinary INFERNO (T, 2026-11-01)', () => {
         const s = play(withWeather(fight([idOf('E-08')]), { infSelf: 3, upSelf: true }), 't0', true);
-        expect(weather(s)).toMatchObject({ 'your-inferno': 0, blizzard: 6, 'foe-inferno': 6 });
+        // The 6 INFERNO is ordinary: it burns both sides by its own rule, so you carry half of it.
+        expect(weather(s)).toMatchObject({ 'your-inferno': 3, blizzard: 6, 'foe-inferno': 6 });
     });
 });
 
