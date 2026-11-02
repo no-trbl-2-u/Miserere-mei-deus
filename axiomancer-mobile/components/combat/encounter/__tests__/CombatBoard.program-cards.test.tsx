@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
@@ -81,10 +82,12 @@ describe('CombatBoard — program cards', () => {
         const cbs = mount(vm, ['h0'], store);
         expect(screen.queryByTestId('combat-x-h0')).toBeNull();
         await tapCombatDie('w');
-        expect(screen.getByTestId('combat-x-value-h0').props.children).toBe('SACRIFICE 1');
+        expect(screen.getByTestId('combat-x-value-h0').props.children).toBe('1');
+        expect(screen.getByTestId('combat-x-label-h0').props.children).toBe('SACRIFICE');
         fireEvent.press(screen.getByTestId('combat-x-more-h0'));
         fireEvent.press(screen.getByTestId('combat-x-more-h0'));
-        expect(screen.getByTestId('combat-x-value-h0').props.children).toBe('SACRIFICE 3');
+        expect(screen.getByTestId('combat-x-value-h0').props.children).toBe('3');
+        expect(screen.getByTestId('combat-x-label-h0').props.children).toBe('SACRIFICE');
         // The picker shows the chosen number; the card's own face prints its
         // whole line, X and its cap included, never a bare "X" value.
         const faceLines = screen.getAllByTestId('combat-card-face-paid-line').map((n) => String(n.props.accessibilityLabel));
@@ -92,6 +95,33 @@ describe('CombatBoard — program cards', () => {
         expect(faceLines.some((v) => /^X$/.test(v.trim()))).toBe(false);
         fireEvent.press(screen.getByTestId('combat-apply-h0'));
         expect(cbs.onApply).toHaveBeenCalledWith('h0', 'w', true, 3);
+    });
+
+    // 12 is the largest base amount this fixture's X line reaches (its cap);
+    // the harness cannot step to 21, so 21 is not pinned here.
+    it('the stepper keeps a two-digit amount (12) whole: the amount never shrinks, the label gives way', async () => {
+        const target = 12;
+        const { store, s: opened } = open([X_LINE.id], 100);
+        mount(buildCombatViewModel(opened), ['h0'], store);
+        await tapCombatDie('w');
+        for (let n = 1; n < target; n++) fireEvent.press(screen.getByTestId('combat-x-more-h0'));
+        const amount = screen.getByTestId('combat-x-value-h0');
+        const label = screen.getByTestId('combat-x-label-h0');
+        expect(amount.props.children).toBe(String(target));
+        expect(label.props.children).toBe('SACRIFICE');
+        // A1: the amount cannot shrink. A2: the label can, and cuts itself short.
+        expect(StyleSheet.flatten(amount.props.style).flexShrink).toBe(0);
+        expect(StyleSheet.flatten(label.props.style).flexShrink).toBe(1);
+        expect(label.props.numberOfLines).toBe(1);
+        // A2: the label is the left sibling of the amount, in one row.
+        const row = screen.getByTestId('combat-x-h0');
+        const ids: string[] = [];
+        const walk = (n: any) => { if (typeof n === 'string') return; if (n.props?.testID?.startsWith('combat-x-label') || n.props?.testID?.startsWith('combat-x-value')) ids.push(n.props.testID); n.children.forEach(walk); };
+        walk(row);
+        expect([...new Set(ids)]).toEqual(['combat-x-label-h0', 'combat-x-value-h0']);
+        let middle = label.parent!;
+        while (!StyleSheet.flatten(middle.props.style)?.flexDirection) middle = middle.parent!;
+        expect(StyleSheet.flatten(middle.props.style).flexDirection).toBe('row');
     });
 
     it('lists a Global in play and opens its card', () => {
