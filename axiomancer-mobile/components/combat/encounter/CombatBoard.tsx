@@ -29,7 +29,7 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AccessibilityInfo, Platform, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import type { LayoutChangeEvent, StyleProp, TextStyle } from 'react-native';
+import type { LayoutChangeEvent, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { Image } from '@/lib/platform/image';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Haptics } from '@/lib/platform/haptics';
@@ -48,11 +48,10 @@ import type {
     CombatSignatureVM, CombatEffectChipVM,
     CombatMomentumV2VM,
 } from '@/state/presenters/combat-encounter.engine';
-import { armedValue, dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
-import { paidLineCube, paidLineFit, paidLineGap, paidLineLead, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
-import { glyphKeywordFor } from '@/state/presenters/keyword-glyph.engine';
+import { dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
+import { largePaidLineSize, paidLineCube, paidLineFit, paidLineGap, paidLineLead, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
 import { KeywordGlyph } from '@/components/keyword-glyphs';
-import { useSetting } from '@/state/settings';
+import { useSetting, type CardTextMode } from '@/state/settings';
 import { globalDurationLine } from '@/state/presenters/card-program.engine';
 // The ONE mobile source for the rarity band. The face never
 // re-bands a rank and never re-types a rarity hue; see `card-rarity.engine.ts`.
@@ -673,14 +672,6 @@ export const StagedCard = React.memo(function StagedCard({
     // Staged faces track the hand-card proportion.
     const cardW = compact ? 92 : 112;
     const cardH = compact ? 135 : 164;
-    // The keyword line shows the POWER value the play will land at commit —
-    // the printed number; the armed die adds nothing.
-    let heroOverride: string | undefined;
-    if (armed && f.armable) {
-        const g = armedValue(f);
-        // Commit value: Guard NN / +NN% Vulnerable / NN DoT total.
-        if (g != null) heroOverride = f.kind === 'guard' ? `Guard ${g}` : f.kind === 'vulnerable' ? `+${g}%` : `${g}`;
-    }
     // The APPLY suffix: a powered play names the die color; the dieless out
     // reads FREE.
     // A program line the engine says cannot be played now: the ribbon names
@@ -726,7 +717,6 @@ export const StagedCard = React.memo(function StagedCard({
                         width={cardW}
                         height={cardH}
                         accent={armed ? armedColor : null}
-                        heroOverride={heroOverride}
                     />
                     {/* die socket notched into the top-right corner: dashed target while
                         empty (highlighted during a die drag), the assigned die once armed. */}
@@ -1719,17 +1709,6 @@ function StanceCube({ color, size }: { color: string; size: number }) {
     );
 }
 
-// The PAID value beside the face's keyword — the presenter's honest number
-// (`heroText`), or its qualitative word (`heroSub`) for the kinds that have no
-// number. A leading repeat of the keyword is stripped so the two slots never
-// print the same word twice ('GUARD' + 'Guard 12' → 'GUARD' + '12').
-function paidValueFor(f: CombatCardVM['face'], override?: string): string {
-    const raw = (override ?? f.heroText ?? '').trim() || (f.heroSub ?? '').trim();
-    if (!raw || !f.keyword) return raw;
-    const kw = f.keyword.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return raw.replace(new RegExp(`^${kw}\\s+`, 'i'), '').trim() || raw;
-}
-
 /**
  * The shared card FACE — ONE FACE, EVERYWHERE. Cards read as pages of the
  * codex, in line with the Woodcut Codex direction:
@@ -1744,19 +1723,20 @@ function paidValueFor(f: CombatCardVM['face'], override?: string): string {
  *     The large face adds the rarity WORD at the band's tail;
  *   · ② ART PLATE — seamless: no mat, no frame, no rules above or below it,
  *     so name, art and PAID line read as one surface;
- *   · ③ PAID LINE, bottom. The SMALL face prints the card's whole PAID line
- *     (the card voice) at 10pt over at most three rows, the stance die cube
- *     riding the ledger's corner. The LARGE face keeps one row: the die cube,
- *     then `[family glyph] KEYWORD value`, with a Global's duration under it;
+ *   · ③ PAID LINE, bottom. Every face prints the card's whole PAID line (the
+ *     card voice), led by the stance die cube and a colon. Settings picks all
+ *     words or all glyphs for its keywords, never both. The SMALL face holds it
+ *     to at most three rows at 10pt; the LARGE face prints it bigger and lets it
+ *     wrap as far as it needs, with a Global's duration under it;
  *   · a Global has no FREE line: the word GLOBAL sits where the pill does.
  *
  * Rarity is not drawn on the face. The large face prints the WORD, and every
  * face says it to a screen reader through a 5pt spacer at the band's head
  * (which also keeps {@link NAME_BAND_LEFT_CHROME} true).
  *
- * Stance colours the frame, the pill and the die cube; the stat family (or
- * category) colours the keyword. Instanced small in the hand and LARGE in the
- * inspect modal so the two can never drift.
+ * Stance colours the frame, the pill and the die cube; the PAID line is
+ * parchment. Instanced small in the hand and LARGE in the inspect modal so the
+ * two can never drift.
  *
  * The face carries no prose beyond the PAID line itself. The type strip and
  * the projected action text live in the inspect overlay. The face is the
@@ -1844,49 +1824,94 @@ function GlobalPlate({ ink, large }: { ink: string; large: boolean }) {
     );
 }
 
+/**
+ * The PAID line as the card's text mode prints it: all words, or a glyph for
+ * every keyword that has one. `rows` caps it (the small face); left out, it
+ * wraps as far as it needs (the large face).
+ */
+function PaidLineText({ line, mode, size, ink, glyphInk, rows, style, testID }: {
+    line: string;
+    mode: CardTextMode;
+    size: number;
+    ink: string;
+    /** Overrides each glyph's own colour. */
+    glyphInk?: string;
+    rows?: number;
+    style: StyleProp<ViewStyle>;
+    testID: string;
+}) {
+    const styles = useStyles();
+    const rowH = Math.round(size * PAID_LINE_LEADING);
+    const runStyle = (caps: boolean) => [
+        caps ? styles.paidRunCaps : styles.paidRunSerif,
+        { fontSize: size, lineHeight: rowH, color: ink },
+    ];
+    if (mode === 'glyphs') {
+        // A glyph is a view, which a Text cannot hold: each word is a token in a wrapping row.
+        return (
+            <View
+                style={[style, styles.paidLineTokens, { columnGap: paidLineGap(size), maxHeight: rows ? rowH * rows : undefined }]}
+                accessible
+                accessibilityLabel={line}
+                testID={testID}
+            >
+                {paidLineWords(line, mode).map((word, wi) => (
+                    <View key={wi} style={styles.paidToken}>
+                        {word.map((run, i) => run.glyph ? (
+                            <View key={i} style={{ marginHorizontal: GLYPH_GAP }} testID="combat-card-face-glyph">
+                                <KeywordGlyph keyword={run.glyph} size={Math.round(GLYPH_EM * size)} color={glyphInk} />
+                            </View>
+                        ) : (
+                            <Text key={i} style={runStyle(run.caps)} allowFontScaling={false}>{run.text}</Text>
+                        ))}
+                    </View>
+                ))}
+            </View>
+        );
+    }
+    return (
+        <Text
+            style={[style as StyleProp<TextStyle>, { fontSize: size, lineHeight: rowH }]}
+            numberOfLines={rows}
+            allowFontScaling={false}
+            accessibilityLabel={line}
+            testID={testID}
+        >
+            {paidLineRuns(line).map((run, i) => <Text key={i} style={runStyle(run.caps)}>{run.text}</Text>)}
+        </Text>
+    );
+}
+
 /** The small face's ledger height: three rows of the PAID line and its padding.
  *  Fixed, so every card's art is the same size however long its line. */
 const SMALL_LEDGER_H = 42;
 
+/** The die cube's edge on the large face. */
+const LARGE_CUBE = 20;
 /** The free pill's glyph size, small and large face. */
 const FREE_PILL_GLYPH = 15;
 const FREE_PILL_GLYPH_LARGE = 20;
 /** Extra top padding the name band takes when the pill sits over it. */
 const FREE_PILL_BAND_PAD = 12;
 const FREE_PILL_BAND_PAD_LARGE = 16;
-/** The keyword glyph beside the word on the large face. */
-const LARGE_GLYPH = 20;
 
 export const CombatCardFace = React.memo(function CombatCardFace({
-    card, width, height, large = false, accent = null, heroOverride, children,
+    card, width, height, large = false, accent = null, children,
 }: {
     card: CombatCardVM;
     width: number;
     height: number;
     large?: boolean;
-    /** Override the keyword/value/border colour (the armed staged-card read tint). */
+    /** Override the border and PAID line colour (the armed staged-card read tint). */
     accent?: string | null;
-    /** Override the hero value text (e.g. the live-recomputed Guard number). */
-    heroOverride?: string;
     children?: React.ReactNode;
 }) {
     const AXM = usePalette();
     const styles = useStyles();
     const cardText = useSetting('cardText');
     const f = card.face;
-    // STANCE colours the frame, the free pill and the die cube; the stat
-    // family (or CATEGORY) colours the keyword. Inert cards grey both honestly.
+    // STANCE colours the frame, the free pill and the die cube.
     const band = f.stanceColor;
-    // A keyword wears its STAT FAMILY's dice colour and glyph
-    // (body ⚡, mind ★, heart ♥) on the live hand; elsewhere, its category.
-    const baseKw = f.inert ? AXM.ash : (f.familyColor ?? f.categoryColor);
-    const kwColor = accent ?? baseKw;
-    // The number the player's stat raised is tinted in the family colour; a
-    // lowered one reads muted. The face always shows the FINAL number.
-    const tintFor = (dir: 'up' | 'down' | null | undefined) => f.inert || !dir ? null
-        : dir === 'up' ? (f.familyColor ?? AXM.sulfur) : AXM.ash;
-    const scaledTint = tintFor(f.statScaled);
-    const paidValue = paidValueFor(f, heroOverride);
     const freeInner = compactFree(f.freeValue ?? (f.freeHeroText || null));
     const hasFree = !!f.freeGlyph;
     // Effect-shaped silhouette for the FREE glyph;
@@ -1894,23 +1919,20 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     const freeShape = glyphShapeFor(f.freeGlyphKey);
     // The card's own colour: the pill's ring and glyph match the frame.
     const cardInk = f.inert ? AXM.ash : (accent ?? band);
-    const narrow = !large && width < NARROW_FACE_W;
-    const keywordText = f.keyword ? `${f.familyGlyph ? `${f.familyGlyph} ` : ''}${f.keyword.toUpperCase()}` : '';
     // The ledger ink: the armed read tint, else parchment. The one armed
     // tint (`ARMED_ACCENT`/`HUE.stoneGrey`) and the unarmed frame's
     // `AXM.bone` are both greys that read near-illegible as the PAID line's
     // body text (plain "DEAL 5" at 10px); neither may reach the words.
-    const ledgerInk = accent && accent !== AXM.bone && accent !== HUE.stoneGrey ? accent : AXM.parchment;
-    // The small face prints the whole PAID line, wrapped to three rows at 10pt
-    // (`paidLineFit` shrinks a line too long for that); the large face keeps its
-    // own keyword-and-value ledger and states a Global's duration under it.
-    const ledgerCube = paidLineCube(!large && width < NARROW_FACE_W);
-    const paidFit = large ? null : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube) });
-    // The open card shows a keyword's glyph beside its word in both modes, so a glyph is learnt once.
-    // Its word is the headline keyword, or the first word of the value when the headline is the whole line (`Deal 9`).
-    const keywordGlyph = large ? (glyphKeywordFor(f.keyword) ?? glyphKeywordFor(paidValue.split(/\s+/)[0])) : null;
-    // The glyph shrinks on the narrower open cards (the reward preview, the detail card) so the word keeps its room.
-    const largeGlyph = Math.min(LARGE_GLYPH, Math.max(14, Math.round(width / 13)));
+    const legibleAccent = accent && accent !== AXM.bone && accent !== HUE.stoneGrey ? accent : undefined;
+    const ledgerInk = legibleAccent ?? AXM.parchment;
+    // Every face prints the whole PAID line. The small face wraps it to three rows
+    // at 10pt (`paidLineFit` shrinks a line too long for that); the large face
+    // prints it bigger and lets it wrap.
+    const ledgerCube = large ? LARGE_CUBE : paidLineCube(width < NARROW_FACE_W);
+    const paidSize = large
+        ? largePaidLineSize(width)
+        : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube) }).size;
+    const paidRowH = Math.round(paidSize * PAID_LINE_LEADING);
     const bandH = large ? 36 : 26;
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.
@@ -1997,57 +2019,28 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         ) : null}
                     </View>
                 </View>
-                {/* ③ PAID LINE. The SMALL face prints the whole line, wrapped to
-                    three rows at 10pt on solid ink, led by the stance die cube
-                    and a colon (`<die>: <line>`, the die this line wants). The
-                    LARGE face keeps its one row: the die cube and colon, then
-                    `[glyph] KEYWORD value`, and a Global states how long it lasts. */}
+                {/* ③ PAID LINE: `<die>: <line>`, the die this line wants, level with
+                    the line's first row. The LARGE face's line wraps as far as it
+                    needs and a Global states how long it lasts under it. */}
                 {large ? (
                     <View
-                        style={[styles.plateLedger, { minHeight: ledgerH }]}
+                        style={[styles.plateLedger, styles.plateLedgerLarge, { minHeight: ledgerH }]}
                         pointerEvents="none"
                         testID="combat-card-face-ledger"
                     >
-                        <View style={styles.paidLead}>
-                            <StanceCube color={band} size={20} />
-                            <Text style={[styles.paidLeadColon, styles.paidLeadColonLarge]} allowFontScaling={false}>:</Text>
-                        </View>
-                        <View style={styles.paidColumn}>
-                            <View style={styles.paidLineRowLarge}>
-                            {keywordGlyph ? (
-                                <View style={styles.paidGlyphLarge}>
-                                    <KeywordGlyph keyword={keywordGlyph} size={largeGlyph} color={accent ?? undefined} />
-                                </View>
-                            ) : null}
-                            <Text
-                                style={styles.paidLine}
-                                numberOfLines={1}
-                                allowFontScaling={false}
-                                testID="combat-card-face-paid-line"
-                            >
-                                {keywordText ? (
-                                    <Text
-                                        style={[styles.paidKeyword, styles.paidKeywordLarge, { color: kwColor }]}
-                                        testID="combat-card-face-keyword"
-                                    >
-                                        {keywordText}{paidValue ? ' ' : ''}
-                                    </Text>
-                                ) : null}
-                                {paidValue ? (
-                                    <Text
-                                        style={[styles.paidValue, styles.paidValueLarge, scaledTint ? { color: scaledTint } : null]}
-                                        testID="combat-card-face-value"
-                                    >
-                                        {paidValue}
-                                    </Text>
-                                ) : null}
-                            </Text>
+                        <View style={styles.paidGroupLarge}>
+                            <View style={[styles.paidLead, { height: paidRowH }]} testID="combat-card-face-cube">
+                                <StanceCube color={band} size={ledgerCube} />
+                                <Text style={[styles.paidLeadColon, { fontSize: paidSize, lineHeight: paidRowH, color: ledgerInk }]} allowFontScaling={false}>:</Text>
                             </View>
-                            {f.isGlobal ? (
-                                <Text style={styles.durationLine} allowFontScaling={false} testID="combat-card-face-duration">
-                                    {globalDurationLine()}
-                                </Text>
-                            ) : null}
+                            <View style={styles.paidColumn}>
+                                <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} style={styles.paidLineLarge} testID="combat-card-face-paid-line" />
+                                {f.isGlobal ? (
+                                    <Text style={styles.durationLine} allowFontScaling={false} testID="combat-card-face-duration">
+                                        {globalDurationLine()}
+                                    </Text>
+                                ) : null}
+                            </View>
                         </View>
                     </View>
                 ) : (
@@ -2057,70 +2050,13 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         testID="combat-card-face-ledger"
                     >
                         {/* The die leads the line: `<die>: <PAID line>`, the text beside it. */}
-                        <View
-                            style={[styles.paidLead, styles.paidLeadSmall, { height: Math.round(paidFit!.size * PAID_LINE_LEADING) }]}
-                            testID="combat-card-face-cube"
-                        >
+                        <View style={[styles.paidLead, styles.paidLeadSmall, { height: paidRowH }]} testID="combat-card-face-cube">
                             <StanceCube color={band} size={ledgerCube} />
-                            <Text
-                                style={[styles.paidLeadColon, { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: accent ?? AXM.parchment }]}
-                                allowFontScaling={false}
-                            >
+                            <Text style={[styles.paidLeadColon, { fontSize: paidSize, lineHeight: paidRowH, color: ledgerInk }]} allowFontScaling={false}>
                                 :
                             </Text>
                         </View>
-                        {cardText === 'glyphs' ? (
-                            // A glyph is a view, which a Text cannot hold: each word is a token in a wrapping row.
-                            <View
-                                style={[styles.paidLineSmall, styles.paidLineTokens, {
-                                    columnGap: paidLineGap(paidFit!.size),
-                                    maxHeight: Math.round(paidFit!.size * PAID_LINE_LEADING) * PAID_LINE_ROWS,
-                                }]}
-                                accessible
-                                accessibilityLabel={f.paidLine}
-                                testID="combat-card-face-paid-line"
-                            >
-                                {paidLineWords(f.paidLine, cardText).map((word, wi) => {
-                                    const tokenRuns = word.map((run, i) => run.glyph ? (
-                                        <View key={i} style={{ marginHorizontal: GLYPH_GAP }} testID="combat-card-face-glyph">
-                                            <KeywordGlyph keyword={run.glyph} size={Math.round(GLYPH_EM * paidFit!.size)} color={accent ?? undefined} />
-                                        </View>
-                                    ) : (
-                                        <Text
-                                            key={i}
-                                            style={[
-                                                run.caps ? styles.paidRunCaps : styles.paidRunSerif,
-                                                { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: accent ?? AXM.parchment },
-                                            ]}
-                                            allowFontScaling={false}
-                                        >
-                                            {run.text}
-                                        </Text>
-                                    ));
-                                    return <View key={wi} style={styles.paidToken}>{tokenRuns}</View>;
-                                })}
-                            </View>
-                        ) : (
-                        <Text
-                            style={[styles.paidLineSmall, { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING) }]}
-                            numberOfLines={PAID_LINE_ROWS}
-                            allowFontScaling={false}
-                            accessibilityLabel={f.paidLine}
-                            testID="combat-card-face-paid-line"
-                        >
-                            {paidLineRuns(f.paidLine).map((run, i) => (
-                                <Text
-                                    key={i}
-                                    style={[
-                                        run.caps ? styles.paidRunCaps : styles.paidRunSerif,
-                                        { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: ledgerInk },
-                                    ]}
-                                >
-                                    {run.text}
-                                </Text>
-                            ))}
-                        </Text>
-                        )}
+                        <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} rows={PAID_LINE_ROWS} style={styles.paidLineSmall} testID="combat-card-face-paid-line" />
                     </View>
                 )}
                 {children}
@@ -2472,7 +2408,6 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, gap: 5,
         backgroundColor: AXM.deepBg,
     },
-    paidLine: { flex: 1 },
     paidColumn: { flex: 1, justifyContent: 'center' },
     // A Global's duration, on the large face only.
     durationLine: { fontFamily: FONTS.serif, fontSize: 12, lineHeight: 15, color: AXM.bone, marginTop: 2 },
@@ -2484,10 +2419,11 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     paidLead: { flexDirection: 'row', alignItems: 'center', flexShrink: 0 },
     paidLeadSmall: { alignSelf: 'flex-start' },
     paidLeadColon: { fontFamily: FONTS.serif, marginLeft: 1, color: AXM.parchment },
-    paidLeadColonLarge: { fontSize: 16, lineHeight: 20 },
     paidLineSmall: { flex: 1, alignSelf: 'stretch' },
-    paidGlyphLarge: { marginRight: 5, flexShrink: 0 },
-    paidLineRowLarge: { flexDirection: 'row', alignItems: 'center' },
+    // The large face's ledger: the die and colon level with the line's first row, the group centred in the ledger.
+    plateLedgerLarge: { paddingVertical: 6 },
+    paidGroupLarge: { flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 5 },
+    paidLineLarge: { alignSelf: 'stretch' },
     paidLineTokens: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', flexShrink: 1, overflow: 'hidden' },
     paidToken: { flexDirection: 'row', alignItems: 'center' },
     paidRunCaps: { fontFamily: FONTS.sans, letterSpacing: PAID_CAPS_SPACING },
@@ -2497,11 +2433,6 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     globalPlateLarge: { paddingHorizontal: 11 },
     globalPlateText: { fontFamily: FONTS.sans, fontSize: 12, lineHeight: 14, letterSpacing: 1 },
     globalPlateTextLarge: { fontSize: 17, lineHeight: 20, letterSpacing: 1.4 },
-    // The keyword is the loudest word on the face — it is the whole read.
-    paidKeyword: { fontFamily: FONTS.sans, fontSize: 12, lineHeight: 15, letterSpacing: 0.8 },
-    paidKeywordLarge: { fontSize: 17, lineHeight: 20, letterSpacing: 1.2 },
-    paidValue: { fontFamily: FONTS.mono, fontSize: 12, lineHeight: 15, color: AXM.parchment },
-    paidValueLarge: { fontSize: 15, lineHeight: 20 },
 }));
 
 /** In-file alias read by every `const styles = useStyles()` call site. */

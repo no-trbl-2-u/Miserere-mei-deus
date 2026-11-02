@@ -1,8 +1,9 @@
 /**
- * The small face's PAID line: how it is split into the two typefaces it is
- * printed in, and how many rows it takes at a size, so the face can size it
+ * A card face's PAID line: how it is split into the two typefaces it is printed
+ * in, and how many rows it takes at a size, so the small face can size it
  * (10 px, three rows at most) without measuring text at render time
- * (`adjustsFontSizeToFit` is ignored by react-native-web).
+ * (`adjustsFontSizeToFit` is ignored by react-native-web). The large face prints
+ * the same runs bigger ({@link largePaidLineSize}) and lets them wrap.
  *
  * The line is the card's own wording (`paidFaceLine`, `docs/card-voice.md`):
  * keywords in capitals, numbers, and a few lowercase logic words. Keywords
@@ -32,6 +33,10 @@ const CAPS_EM = 0.4;
 const SERIF_EM = 0.41;
 /** A space, per px of size. */
 const SPACE_EM = 0.24;
+/** The PAID line's size on the large face, by width: 15 on the 208 reward preview, 17 from about 264. */
+export function largePaidLineSize(width: number): number {
+    return Math.min(17, Math.max(15, Math.round(width / 16)));
+}
 /** A glyph's edge per px of text size: one row of the line: 12px at 10px. */
 export const GLYPH_EM = 1.2;
 /** Air on each side of an inline glyph, in px. */
