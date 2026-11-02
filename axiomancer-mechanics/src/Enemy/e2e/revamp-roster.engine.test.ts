@@ -194,10 +194,11 @@ describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4
         expect(DeathBeholder.baseStats).toEqual(enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }));
     });
 
-    it('keeps its two stages, its loot and its tiered deck', () => {
+    it('keeps its three boss-line stages, its loot and its tiered deck', () => {
         expect(DeathBeholder.stages?.map(st => ({ at: st.at, threatBonus: st.threatBonus, heal: st.heal })))
             .toEqual([
-                { at: { vitaePct: 0.6 }, threatBonus: 0.3, heal: undefined },
+                { at: { vitaePct: 0.75 }, threatBonus: 0.3, heal: undefined },
+                { at: { vitaePct: 0.5 }, threatBonus: 0.2, heal: undefined },
                 { at: { vitaePct: 0.25 }, threatBonus: 0.5, heal: { pct: 0.15 } },
             ]);
         expect(DeathBeholder.loot?.map(l => [l.item?.id ?? null, l.weight])).toEqual([

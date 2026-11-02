@@ -615,12 +615,22 @@ export const DeathBeholder = createEnemy({
     difficulty: 'boss',
     logic: 'boss',
     vitae: 320,
+    // A boss has four phases (T, 2026-10-29): three stage breaks at the boss
+    // lines, 75%, 50% and 25% (`PHASE_LINES.boss`). The 50% stage is a DRAFT
+    // for T to rewrite.
     stages: [
         {
-            at: { vitaePct: 0.6 },
+            at: { vitaePct: 0.75 },
             name: 'EVERY DOOR HE REMEMBERS',
             text: 'He shuts one more. You did not know it was open until you heard it.',
             threatBonus: 0.3,
+        },
+        {
+            at: { vitaePct: 0.5 },
+            // DRAFT (Claude): name, text and number for T to rewrite.
+            name: 'THE HINGES TURN INWARD',
+            text: 'He turns the room on its pins. Every way out now opens toward him.',
+            threatBonus: 0.2,
         },
         {
             at: { vitaePct: 0.25 },

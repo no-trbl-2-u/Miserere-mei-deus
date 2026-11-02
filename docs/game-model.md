@@ -358,8 +358,8 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   every card Distrain took. It is not a card play. The Tide-Gate's TIDE (0 to
   5) rises 1 each foe turn, 2 in its third phase, and at TIDE 0-1 the gate is
   VULNERABLE 25%; its two DANGERs set the TIDE to 5 and to 0.
-- **The Death Beholder:** boss, 320 VITAE at level 8, two stages (at 60% and
-  25% VITAE). It holds every region's door, pinned at level 1, 2, 3 and 4
+- **The Death Beholder:** boss, 320 VITAE at level 8, three stages (at 75%,
+  50% and 25% VITAE: the boss lines, so four phases). It holds every region's door, pinned at level 1, 2, 3 and 4
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to
   the pin. Its deck opens tier 2 on round 4 and tier 3 on round 7 (the
   default gates are 3 and 6) and its card weights sit at 0.8-1.15, so its
