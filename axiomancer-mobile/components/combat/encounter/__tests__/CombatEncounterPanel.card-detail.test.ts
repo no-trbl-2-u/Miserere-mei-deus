@@ -109,6 +109,32 @@ describe('combat card detail — overlay shape', () => {
     });
 });
 
+describe('a Global states its duration in the NO DIE / +DIE rows, never on the face', () => {
+    const GLOBALS = cardLibrary.filter((c) => c.program?.global);
+
+    it('the overlay prints the two row texts the duration rides on', () => {
+        const overlay = detailOverlaySource();
+        expect(overlay).toContain('detailCard.detail.freePill');
+        expect(overlay).toContain('detailCard.detail.diePaidLine');
+    });
+
+    it("Rose Wrap's rows read `In play 3 turns` (NO DIE) and `In play for the rest of combat` (+DIE)", () => {
+        const rose = cardLibrary.find((c) => c.name === 'Rose Wrap')!;
+        const d = detailFor(rose.id);
+        expect(d.freePill).toMatch(/In play 3 turns\.?$/);
+        expect(d.diePaidLine).toMatch(/In play for the rest of combat\.?$/);
+    });
+
+    it('so does every Global in the library', () => {
+        expect(GLOBALS.length).toBeGreaterThan(10);
+        for (const g of GLOBALS) {
+            const d = detailFor(g.id);
+            expect(`${g.id}: ${d.freePill}`).toMatch(/In play 3 turns/);
+            expect(`${g.id}: ${d.diePaidLine}`).toMatch(/In play for the rest of combat/);
+        }
+    });
+});
+
 describe('combat card detail — the VM behind the shape', () => {
     it('takes its rarity band from the wave-0 module, never a local re-band', () => {
         for (const authored of cardLibrary) {

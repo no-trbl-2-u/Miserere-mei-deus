@@ -1801,7 +1801,7 @@ function FreeCornerPill({ shape, glyph, value, ink, large }: {
 /**
  * The GLOBAL plate: a Global has no FREE line, so the word GLOBAL sits where
  * the FREE pill does, in the card's colour. It says nothing about how long the
- * Global lasts; the large face does.
+ * Global lasts; no face does. The opened card's NO DIE / +DIE rows carry it.
  */
 function GlobalPlate({ ink, large }: { ink: string; large: boolean }) {
     const styles = useStyles();
@@ -2020,7 +2020,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                 </View>
                 {/* ③ PAID LINE: `<die>: <line>`, the die this line wants, level with
                     the line's first row. The LARGE face's line wraps as far as it
-                    needs. A Global's duration is not on the face (137.8). */}
+                    needs. A Global's duration is not on the face. */}
                 {large ? (
                     <View
                         style={[styles.plateLedger, styles.plateLedgerLarge, { minHeight: ledgerH }]}

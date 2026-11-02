@@ -23,8 +23,9 @@ export function programTypeTag(card: Pick<Card, 'cardType'>): string | null {
     return null;
 }
 
-/** How long a Global lasts: the same for every Global. It rides the lifecycle
- *  sentence below and the opened card's NO DIE / +DIE rows; no card face prints it. */
+/** How long a Global lasts: the same for every Global. The lifecycle sentence
+ *  below uses it; the opened card's NO DIE / +DIE rows state it through the
+ *  engine's printed "In play ..." sentences. No card face prints it. */
 export function globalDurationLine(): string {
     return `${GLOBAL_FREE_TURNS} turns played FREE, the whole combat PAID`;
 }

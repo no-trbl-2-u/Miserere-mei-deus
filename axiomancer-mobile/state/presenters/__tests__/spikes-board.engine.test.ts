@@ -25,6 +25,7 @@ import {
 } from '../combat-encounter.engine';
 import { programFreeCell, programHeadline, programPlayVM } from '../card-program.engine';
 import { glyphShapeFor } from '@/components/combat/glyphShapes';
+import * as keywordsModule from '@/state/combat/keywords';
 import { keywordGloss, keywordsInText } from '@/state/combat/keywords';
 import { realFightFixture, startRealFight } from '@/test-utils/realFight';
 
@@ -168,7 +169,8 @@ describe('the spikes in the log', () => {
 });
 
 describe('the spikes on card faces and in the glossary', () => {
-    it('glosses THORNS, REFLECT and RETRIEVE, finds them in printed text, and explains "GUARD holds"', () => {
+    it('glosses THORNS, REFLECT and RETRIEVE and finds them in printed text; no per-card system slice exists', () => {
+        expect(keywordsModule).not.toHaveProperty('systemTermsForCard');
         for (const kw of ['Thorns', 'Reflect', 'Retrieve']) expect(keywordGloss(kw)).toBeTruthy();
         expect(keywordsInText('THORNS 2, REFLECT 25%. RETRIEVE 1.')).toEqual(['Thorns', 'Reflect', 'Retrieve']);
     });
