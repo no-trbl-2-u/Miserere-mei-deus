@@ -164,21 +164,17 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
         expect(mockFramePlayerProps.at(-1)?.startKey).toBe(1);
     });
 
-    it('does not swing when the threat that fired was never an attack', () => {
-        // The PANE's wiring of `enemy.intent.damage` into the beat, not the
-        // pure function in isolation: a mending or buffing foe takes its turn
-        // without miming a blow it never telegraphed.
+    it('plays the action clip when the threat that fired was never an attack', () => {
+        // Every fired move plays it, heals and buffs included, so the pane must
+        // not read `enemy.intent.damage` into the beat: a mending foe still acts.
         frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
         renderPane({ seq: 1, events: THREAT_ONLY }, MENDING_ENEMY);
-        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
-        expect(mockFramePlayerProps.length).toBeGreaterThan(0);
-        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
-        expect(mockFramePlayerProps.at(-1)?.startKey).toBe(0);
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('attacking');
     });
 
-    it('does swing when the same threat-only resolution came from an attack intent', () => {
-        // The other side of that gate, so "never swings" cannot pass by
-        // accident: an attack the player guarded is still a swing.
+    it('plays it too when the same threat-only resolution came from an attack intent', () => {
+        // An attack the player guarded is still the enemy's action.
         frames.getEnemyFrameSet.mockReturnValue(SYNTHETIC_FRAME_SET);
         renderPane({ seq: 1, events: THREAT_ONLY });
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
@@ -306,10 +302,11 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
         // comparison below is proving nothing about either of them. Advanced
         // one beat at a time: a single long jump batches every pending timer
         // into one render and only the last clip is ever observed.
-        expect(mockFramePlayerProps.map((p) => p.clipName)).toContain('struck');
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
         expect(mockFramePlayerProps.at(-1)?.clipName).toBe('attacking');
         act(() => { jest.advanceTimersByTime(clipDurationMs(SYNTHETIC_FRAME_SET.manifest.clips.attacking)); });
+        expect(mockFramePlayerProps.at(-1)?.clipName).toBe('struck');
+        act(() => { jest.advanceTimersByTime(clipDurationMs(SYNTHETIC_FRAME_SET.manifest.clips.struck)); });
         expect(mockFramePlayerProps.at(-1)?.clipName).toBe('idle');
         const framedEnemy = juiceCalls();
 

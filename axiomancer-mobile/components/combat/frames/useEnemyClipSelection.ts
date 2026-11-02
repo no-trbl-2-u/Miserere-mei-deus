@@ -14,15 +14,16 @@
  * flinch is held until that motion has settled (`CARD_MOTION_SETTLE_MS`, the
  * board's own card durations, not a copy of them) and plays on a clear board.
  *
- * THE ORDER OF THE TWO is not arbitrated by a priority table, because the
- * timing already arbitrates it. The swing starts at the pane's existing impact
- * offset. When a single resolution contains both (the enemy's threat fires and
- * it also took damage, a damage-over-time tick say) the flinch keeps its place
- * on the beat itself, ahead of the swing, and the swing takes over from it at
- * the beat it was always going to land on; a flinch held past the impact would
- * cut the swing off instead. Whoever started last owns the return to rest —
- * that is what the play token below is for, so an earlier clip's expiry cannot
- * drop a later clip back to idle halfway through.
+ * THE ORDER OF THE TWO is the action, then the flinch, and a flinch never
+ * interrupts the action. The action clip starts at the pane's existing impact
+ * offset and runs its whole length. A struck beat in the same resolution, or
+ * one that arrives while an action clip is pending or playing, is held, and the
+ * flinch starts in the same callback that ends the action, so no idle frame
+ * falls between them. However many beats were held, one flinch plays. With no
+ * action to wait behind (a stunned turn's tick, the player's own card) the
+ * flinch keeps the board's wait above. Whoever started last owns the return to
+ * rest: that is what the play token below is for, so an earlier clip's expiry
+ * cannot drop a later clip back to idle halfway through.
  *
  * It owns nothing but its own state. The pane's recoil / flash / squash /
  * contact shared values are not read here and not written here — this hook
@@ -49,9 +50,9 @@ export interface EnemyClipSelectionInput {
     /** The enemy's frame set, or null when it is a static painting. */
     frameSet: EnemyFrameSet | null;
     /**
-     * A counter the pane bumps once per enemy ATTACK beat. 0 means the enemy
-     * has not acted yet; a counter rather than a boolean so two beats in a row
-     * are two beats rather than one.
+     * A counter the pane bumps once per enemy ACTION beat, any move it fired.
+     * 0 means the enemy has not acted yet; a counter rather than a boolean so
+     * two beats in a row are two beats rather than one.
      */
     attackBeat: number;
     /** The same, for the resolutions in which the enemy TOOK damage. */
@@ -90,81 +91,95 @@ export function useEnemyClipSelection({
     // holding the current token is allowed to hand the enemy back to rest.
     const playToken = useRef(0);
 
+    // True from the action beat until its clip has run; a struck beat seen in
+    // that span raises `flinchOwed` instead of starting anything.
+    const actionInFlight = useRef(false);
+    const flinchOwed = useRef(false);
+
     /**
-     * Start a one-shot and schedule the return to rest. Returns the timer so
-     * the caller's effect cleanup can drop it on unmount; the token check means
-     * a surviving timer still cannot clobber a newer clip.
+     * Start a one-shot and schedule what follows it: the return to rest, or
+     * `then` in its place. Returns the timer so the caller's effect cleanup can
+     * drop it on unmount; the token check means a surviving timer still cannot
+     * clobber a newer clip.
      */
-    const play = useCallback((clipName: string, durationMs: number) => {
+    const play = useCallback((clipName: string, durationMs: number, then?: () => void) => {
         const token = (playToken.current += 1);
         setState((prev) => ({ clipName, startKey: prev.startKey + 1 }));
         // A one-shot holds its last cell rather than snapping back, so the
         // return to resting is this timer's job, not the player's.
         return setTimeout(() => {
             if (playToken.current !== token) return;
-            setState((prev) => ({ ...prev, clipName: RESTING_CLIP }));
+            if (then) then();
+            else setState((prev) => ({ ...prev, clipName: RESTING_CLIP }));
         }, durationMs);
     }, []);
 
-    /** Back to the resting clip now, outranking any return still pending. */
+    /**
+     * Back to the resting clip now, outranking any return still pending. The
+     * token bump means an action cut here never reaches its end, so what that
+     * end would have settled is settled here.
+     */
     const rest = useCallback(() => {
         playToken.current += 1;
+        actionInFlight.current = false;
+        flinchOwed.current = false;
         setState((prev) => (prev.clipName === RESTING_CLIP ? prev : { ...prev, clipName: RESTING_CLIP }));
     }, []);
 
-    // THE SWING. Delayed to the pane's impact offset so it lands with the
-    // recoil, the shake and the flash rather than ahead of them.
+    // THE ACTION. Delayed to the pane's impact offset so it lands with the
+    // recoil, the shake and the flash rather than ahead of them. Declared before
+    // the flinch: effects run in declaration order, so in the commit that bumped
+    // both counters the flinch below already sees this one in flight.
     useEffect(() => {
         // Beat 0 is "the enemy has not acted"; a set with no attack clip has
         // nothing to select. Reduced motion selects nothing either, but it is
         // asked at the impact beat below rather than here.
         if (attackBeat === 0 || !attackClip) return undefined;
 
+        actionInFlight.current = true;
         const timers: ReturnType<typeof setTimeout>[] = [];
         timers.push(setTimeout(() => {
             // Sampled HERE, not when the effect ran: the preference is read at
-            // the moment the swing would start, so a toggle inside the impact
-            // window is honoured rather than a stale answer from 100ms ago.
-            if (readReducedMotion(reducedMotion)) return;
-            timers.push(play(ATTACK_CLIP, clipDurationMs(attackClip)));
+            // the moment the action would start, so a toggle inside the impact
+            // window is honoured rather than a stale answer from the beat.
+            if (readReducedMotion(reducedMotion)) { rest(); return; }
+            timers.push(play(ATTACK_CLIP, clipDurationMs(attackClip), () => {
+                const owed = flinchOwed.current;
+                if (owed && struckClip && !readReducedMotion(reducedMotion)) {
+                    actionInFlight.current = false;
+                    flinchOwed.current = false;
+                    timers.push(play(STRUCK_CLIP, clipDurationMs(struckClip)));
+                } else {
+                    rest();
+                }
+            }));
         }, impactMs));
 
-        return () => { timers.forEach(clearTimeout); };
-    }, [attackBeat, attackClip, reducedMotion, impactMs, play]);
+        return () => {
+            timers.forEach(clearTimeout);
+            actionInFlight.current = false;
+        };
+    }, [attackBeat, attackClip, struckClip, reducedMotion, impactMs, play, rest]);
 
-    // The attack beat as of the last commit, written by the effect declared
-    // last below. Effects run in declaration order, so the flinch's effect
-    // still sees the previous value in the commit that bumped both counters,
-    // and that is how it knows the swing is from its own resolution.
-    const seenAttackBeat = useRef(attackBeat);
-
-    // THE FLINCH. Held for the board's card motion, unless a swing from the
-    // same resolution is due at the impact offset: then it plays now, ahead of
-    // the swing, as it always did.
+    // THE FLINCH. Owed to the action's end when one is in flight, and otherwise
+    // held for the board's card motion.
     useEffect(() => {
         if (struckBeat === 0 || !struckClip) return undefined;
         // This beat's cleanup dropped the previous flinch's return timer, so
         // a beat that selects nothing hands the enemy back to rest itself.
         if (readReducedMotion(reducedMotion)) { rest(); return undefined; }
+        if (actionInFlight.current) { flinchOwed.current = true; return undefined; }
 
-        const swingToo = !!attackClip && attackBeat !== seenAttackBeat.current;
         const timers: ReturnType<typeof setTimeout>[] = [];
-        if (swingToo) {
+        timers.push(setTimeout(() => {
+            // Sampled at the moment the flinch would start, like the action.
+            if (readReducedMotion(reducedMotion)) { rest(); return; }
+            // An action beat arrived during the wait: go behind it, not through it.
+            if (actionInFlight.current) { flinchOwed.current = true; return; }
             timers.push(play(STRUCK_CLIP, clipDurationMs(struckClip)));
-        } else {
-            timers.push(setTimeout(() => {
-                // Sampled at the moment the flinch would start, like the swing.
-                if (readReducedMotion(reducedMotion)) { rest(); return; }
-                timers.push(play(STRUCK_CLIP, clipDurationMs(struckClip)));
-            }, struckDelayMs));
-        }
+        }, struckDelayMs));
         return () => { timers.forEach(clearTimeout); };
-        // attackBeat and attackClip are read, not watched: a swing on its own
-        // is the effect above's business and must not replay a flinch.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [struckBeat, struckClip, reducedMotion, play, struckDelayMs, rest]);
-
-    useEffect(() => { seenAttackBeat.current = attackBeat; }, [attackBeat]);
 
     return {
         clipName: state.clipName,

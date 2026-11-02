@@ -5,9 +5,9 @@
  * by never ending, struck is wrong by never starting (its signal is a
  * different one from the swing's), and attacking is wrong by starting on the
  * frame the events arrived rather than on the beat. The last two describes are
- * the ones that only exist because there are now three: what happens when a
- * single resolution is both the player's blow and the enemy's swing, and what
- * happens to a set that names fewer than three clips.
+ * the ones that only exist because there are now three: what happens when the
+ * enemy's action and a flinch fall in one turn, and what happens to a set that
+ * names fewer than three clips.
  */
 import React from 'react';
 import { act, render, screen } from '@testing-library/react-native';
@@ -256,25 +256,168 @@ describe('attacking — the one-shot on the enemy\'s beat', () => {
     });
 });
 
-describe('a resolution that is both — the player strikes and the enemy swings', () => {
+describe('the action clip and the flinch — the action first, always whole', () => {
     beforeEach(() => { jest.useFakeTimers(); });
     afterEach(() => { jest.useRealTimers(); });
 
-    it('flinches first, then swings on the beat, and the flinch does not cut the swing short', () => {
+    /** The moment the action ends in one resolution, off the fixture's own length. */
+    const ACTION_ENDS = ENEMY_ATTACK_IMPACT_MS + clipDurationMs(ATTACK);
+
+    it('plays the action whole, then the flinch whole, then rests, for one resolution', () => {
         const { beat } = renderProbe();
         act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
-        // The blow has already landed, so the flinch is on screen immediately.
+        // Nothing on the frame the events arrived: not the flinch either.
+        expect(readClip()).toBe('idle:0:false:false');
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        expect(readClip()).toBe(`${ATTACK_CLIP}:1:true:false`);
+        // To the last millisecond of its own length, the action holds.
+        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK) - 1); });
+        expect(readClip()).toBe(`${ATTACK_CLIP}:1:true:false`);
+        act(() => { jest.advanceTimersByTime(1); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK) - 1); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+        act(() => { jest.advanceTimersByTime(1); });
+        expect(readClip()).toBe('idle:2:false:false');
+    });
+
+    it('holds a flinch that arrives while the action is waiting on its impact beat', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ attackBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS - 1); });
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(1); });
+        expect(readClip()).toBe(`${ATTACK_CLIP}:1:true:false`);
+        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK)); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+    });
+
+    it('holds a flinch that arrives while the action is playing', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ attackBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS + 1); });
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        // Well past the board's wait, which must not start a flinch of its own.
+        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK) - 2); });
+        expect(readClip()).toBe(`${ATTACK_CLIP}:1:true:false`);
+        act(() => { jest.advanceTimersByTime(1); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+    });
+
+    it('holds a flinch still on the board\'s wait when an action beat arrives under it', () => {
+        // A card played, then the turn ended inside the wait: the flinch had
+        // not started, so it goes behind the action rather than through it.
+        const { beat } = renderProbe({ struckDelayMs: ENEMY_ATTACK_IMPACT_MS * 2 });
+        act(() => { beat({ struckBeat: 1 }); });
+        act(() => { beat({ struckBeat: 1, attackBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 2); });
+        expect(readClip()).toBe(`${ATTACK_CLIP}:1:true:false`);
+        act(() => { jest.advanceTimersByTime(ACTION_ENDS - ENEMY_ATTACK_IMPACT_MS * 2); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+    });
+
+    it('gives several held beats one flinch, and one return to rest', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS + 10); });
+        act(() => { beat({ attackBeat: 1, struckBeat: 2 }); });
+        act(() => { jest.advanceTimersByTime(10); });
+        act(() => { beat({ attackBeat: 1, struckBeat: 3 }); });
+        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK) - 20); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK)); });
+        expect(readClip()).toBe('idle:2:false:false');
+        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK) * 4); });
+        expect(readClip()).toBe('idle:2:false:false');
+    });
+
+    it('owes no flinch to the next action once it has paid the last one', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ACTION_ENDS + clipDurationMs(STRUCK)); });
+        expect(readClip()).toBe('idle:2:false:false');
+        act(() => { beat({ attackBeat: 2, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ACTION_ENDS); });
+        expect(readClip()).toBe('idle:3:false:false');
+    });
+
+    it('plays the flinch alone, on the board\'s wait, when the enemy did not act', () => {
+        // A stunned turn with a tick: no action beat, so nothing to hold behind.
+        const { beat } = renderProbe();
+        act(() => { beat({ struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS - 1); });
+        expect(readClip()).toBe('idle:0:false:false');
+        act(() => { jest.advanceTimersByTime(1); });
         expect(readClip()).toBe(`${STRUCK_CLIP}:1:false:true`);
+    });
+
+    it('goes back to the board\'s wait once the action is done', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ attackBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ACTION_ENDS); });
+        expect(readClip()).toBe('idle:1:false:false');
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS - 1); });
+        expect(readClip()).toBe('idle:1:false:false');
+        act(() => { jest.advanceTimersByTime(1); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
+    });
+
+    it('lets the action take over a flinch already playing, whose return cannot end it', () => {
+        const { beat } = renderProbe();
+        act(() => { beat({ struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:1:false:true`);
+        act(() => { beat({ struckBeat: 1, attackBeat: 1 }); });
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
         expect(readClip()).toBe(`${ATTACK_CLIP}:2:true:false`);
-        // The flinch's own return-to-rest timer is still pending and expires
-        // mid-swing. It must not drop the enemy back to idle: whoever started
-        // last owns the return.
-        act(() => { jest.advanceTimersByTime(clipDurationMs(STRUCK)); });
+        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK) - 1); });
         expect(readClip()).toBe(`${ATTACK_CLIP}:2:true:false`);
-        // And the swing still ends on its own schedule.
-        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK)); });
+        act(() => { jest.advanceTimersByTime(1); });
         expect(readClip()).toBe('idle:2:false:false');
+    });
+
+    it('selects neither clip when motion is reduced', () => {
+        const paneRef = { current: true };
+        const { beat } = renderProbe({ reducedMotion: paneRef });
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ACTION_ENDS + clipDurationMs(STRUCK) * 2); });
+        expect(readClip()).toBe('idle:0:false:false');
+    });
+
+    it('drops the held flinch when motion turns reduced at the impact beat', () => {
+        const paneRef = { current: false };
+        const { beat } = renderProbe({ reducedMotion: paneRef });
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        paneRef.current = true;
+        act(() => { jest.advanceTimersByTime(ACTION_ENDS + clipDurationMs(STRUCK) * 2); });
+        expect(readClip()).toBe('idle:0:false:false');
+    });
+
+    it('drops the held flinch when motion turns reduced during the action', () => {
+        const paneRef = { current: false };
+        const { beat } = renderProbe({ reducedMotion: paneRef });
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        paneRef.current = true;
+        act(() => { jest.advanceTimersByTime(clipDurationMs(ATTACK)); });
+        expect(readClip()).toBe('idle:1:false:false');
+    });
+
+    it('recovers when a beat under reduced motion ends the action early', () => {
+        // The rest that cut the action also cancels what the action was owed,
+        // or the next flinch would wait behind an action that is never ending.
+        const paneRef = { current: false };
+        const { beat } = renderProbe({ reducedMotion: paneRef });
+        act(() => { beat({ attackBeat: 1 }); });
+        act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS); });
+        paneRef.current = true;
+        act(() => { beat({ attackBeat: 1, struckBeat: 1 }); });
+        expect(readClip()).toBe('idle:1:false:false');
+        paneRef.current = false;
+        act(() => { beat({ attackBeat: 1, struckBeat: 2 }); });
+        act(() => { jest.advanceTimersByTime(CARD_MOTION_SETTLE_MS); });
+        expect(readClip()).toBe(`${STRUCK_CLIP}:2:false:true`);
     });
 });
 

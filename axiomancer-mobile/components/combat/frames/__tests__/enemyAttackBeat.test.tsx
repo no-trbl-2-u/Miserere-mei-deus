@@ -1,37 +1,24 @@
 /**
- * The attack beat, away from the pane: what counts as the enemy acting.
+ * The action beat, away from the pane: what counts as the enemy acting.
  *
  * What is then PLAYED, and for how long, is `useEnemyClipSelection`'s and has
  * its own suite — these two questions were one file while there was only one
  * clip to select.
  */
 import {
-    ATTACK_CLIP, attackClipOf, isEnemyAttackBeat,
+    ATTACK_CLIP, attackClipOf, isEnemyActionBeat,
 } from '../enemyAttackBeat';
 import { SYNTHETIC_FRAME_SET } from '../syntheticFrameSet';
 
-describe('isEnemyAttackBeat', () => {
-    it('is the beat when the enemy damaged the player', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 7, threatFired: false, intentDamage: 7 })).toBe(true);
+describe('isEnemyActionBeat', () => {
+    it('is the beat when the threat fired, whatever the move did', () => {
+        // A blow, a denied blow, a heal, a buff: the engine fires the same
+        // event for each, and every one of them is the enemy's action.
+        expect(isEnemyActionBeat({ threatFired: true })).toBe(true);
     });
 
-    it('is the beat when the threat fired and was denied — the swing still happened', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: true, intentDamage: 6 })).toBe(true);
-    });
-
-    it('is NOT the beat when the threat that fired was never an attack', () => {
-        // A heal, a buff, a cleanse: the enemy's turn, but not its swing. The
-        // same gate the pane's DENIED flourish already uses, so the two cannot
-        // disagree about what an attack is.
-        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: true, intentDamage: 0 })).toBe(false);
-    });
-
-    it('is the beat when the player took damage from something that fired no threat', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 3, threatFired: false, intentDamage: 0 })).toBe(true);
-    });
-
-    it('is not the beat when the resolution was the player\'s own', () => {
-        expect(isEnemyAttackBeat({ playerDamage: 0, threatFired: false, intentDamage: 6 })).toBe(false);
+    it('is not the beat when no threat fired: a hindered turn, or the player\'s own', () => {
+        expect(isEnemyActionBeat({ threatFired: false })).toBe(false);
     });
 });
 
