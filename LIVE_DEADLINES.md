@@ -7,7 +7,6 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-10-30 (3 days overdue) | W1 demo part 1: T plays the ten hard candidates (1 h) | needs you: your task | W1 |
 | 2026-10-31 (2 days overdue) | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | needs you: your task | W1 |
 | 2026-11-01 (1 day overdue) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |
 | 2026-11-01 (1 day overdue) | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | needs you: your task | W1 |

@@ -207,7 +207,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
 | [x] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
 | [x] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
-| [ ] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
+| [x] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
 | [ ] | 2026-10-31 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | W1 | T | - |
 | [x] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
 | [ ] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | HP4e | - |
@@ -300,6 +300,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-02** — **the ten hard candidates played** (T, in chat: "I've actually got most of that done except I need to tune the enemies and determine the boss"). **Ticked** the Oct 30 Item (HP4e part 1). The Nov 1 Item (part 2, the twenty cost-card candidates) names HP4e, so its Status is derived and stays open until HP4e closes. HP4e closes on A9, the report of T's keep-or-cut rulings and rough times, and no such report is on main yet. Chapter 1's enemy tuning (Nov 1) and the sea keep boss (Oct 31, Nov 2) stay open. No date moved.
 - **2026-11-02** — **The opened card drops its extras, plotted into spec 137 (CF1h)** (T, attended, from a preview-APK scribble on Rose Wrap: "get rid of this stuff. In all places for all cards."). **Added** CF1h under `## Unscheduled`: no dated T act waits on it. No Item edited, no date moved.
 - **2026-11-02** — **The Rules Glossary button in Settings plotted into spec 137 (CF1i)** (T, attended `/plot`: "Yeah have a Rules Glossary button in settings", the home for the rules PR #1328 takes off opened cards). **Added** CF1i under `## Unscheduled`: no dated T act waits on it. No Item edited, no date moved.
 - **2026-11-01** — **Card faces: the open card prints the hand's line (CF1g)** (T, `/bug`, fix now, on the preview APK at `dab4c03b0`). **Added** CF1g under Unscheduled, plotted and closed in one PR; no Item's premise moves.
