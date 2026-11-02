@@ -131,6 +131,8 @@ describe('the Merciful set', () => {
         const paid = (id: string) => getCardById(id)!.program!.paid!.text;
         expect(free('mc-p-01a')).toBe('RADIANCE {radiance:3}');
         expect(paid('mc-p-01a')).toBe('RADIANCE {radiance:7}');
+        expect(free('mc-m-09c')).toBe('Return the last MERCY card you played to your hand');
+        expect(paid('mc-m-09c')).toBe('Return the last 2 MERCY cards you played to your hand');
         expect(paid('mc-p-03b')).toBe("MERCY {mercy:8}, the foe's MERCY bursts. EXILE");
         expect(paid('mc-p-05a')).toBe("The foe's MERCY bursts. EXILE");
         expect(free('mc-p-08b')).toBe('HEAL {heal:3}, MERCY half all you healed this turn');

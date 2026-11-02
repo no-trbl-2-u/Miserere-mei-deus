@@ -206,7 +206,7 @@ const ENTRIES: Entry[] = [
         paid: L(`GUARD {guard:${u.m(9)}} or {guard:${2 * u.m(9)}} if the foe is FROZEN`, c => { c.guard(u.m(9) * (c.q.frozen ? 2 : 1)); }) }) },
     { slot: 'M-07', option: 'b', name: 'Pin with Lightning', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 40 }, program: u => ({
         free: L(`STORM ${u.i(1)}`, c => { c.storm(u.i(1)); }),
-        paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for 2 turns for each STORM the foe has. EXILE`, c => {
+        paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for 2 turns, for each STORM the foe has. EXILE`, c => {
             c.vulnerable(S(u).m(10) * c.q.storm, 2);
         }, EX) }) },
     { slot: 'M-08', option: 'c', name: 'Turn with the Wind', type: 'global', color: PURPLE, program: u => turnGlobal(

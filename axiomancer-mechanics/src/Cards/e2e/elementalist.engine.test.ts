@@ -112,7 +112,7 @@ describe('the Elementalist set', () => {
         expect(paid('E-01')).toBe('INFERNO 6, GUARD {guard:7}. EXILE');
         expect(paid('E-05')).toBe('STORM 4, DRAW 3. EXILE');
         expect(free('M-07')).toBe('STORM 1');
-        expect(paid('M-07')).toBe('VULNERABLE {vuln:14}% for 2 turns for each STORM the foe has. EXILE');
+        expect(paid('M-07')).toBe('VULNERABLE {vuln:14}% for 2 turns, for each STORM the foe has. EXILE');
         expect(getCardById(idOf('P-10'))!.program!.global!.text).toBe('DEAL {deal:3} if the foe has 2 or more elements');
     });
 

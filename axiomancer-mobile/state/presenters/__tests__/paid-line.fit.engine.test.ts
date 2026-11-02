@@ -63,7 +63,8 @@ function overRows(): Map<string, string> {
 
 describe('every PAID face line fits the small face', () => {
     it('covers the whole library', () => {
-        expect(printedLines().length).toBeGreaterThanOrEqual(cardLibrary.length);
+        const expected = cardLibrary.reduce((n, card) => n + upgradeLimit(card) + 1, 0);
+        expect(printedLines().length).toBe(expected);
     });
 
     it(`takes at most ${PAID_LINE_ROWS} rows at ${PAID_LINE_SIZE}px, at every level and in both modes`, () => {
