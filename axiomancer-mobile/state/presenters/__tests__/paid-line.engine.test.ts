@@ -52,14 +52,12 @@ describe('paidLineFit', () => {
         expect(paidLineRoom(HAND_W, paidLineLead(paidLineCube(false)))).toBe(83);
     });
 
-    // Beside the die, Shatter the Frost's line takes four rows at 10pt, so it prints at 9.
-    const SHRUNK: Record<string, number> = { 'Shatter the Frost': 9 };
 
     it.each(SAMPLE)('%s prints its whole PAID line beside the die in at most three rows', (name) => {
         const card = cardLibrary.find((c) => c.name === name)!;
         const line = paidFaceLine(card, lookupEffect);
         const fit = paidLineFit({ width: HAND_W, line, lead: LEAD });
-        expect(fit.size).toBe(SHRUNK[name] ?? PAID_LINE_SIZE);
+        expect(fit.size).toBe(PAID_LINE_SIZE);
         expect(fit.rows).toBeLessThanOrEqual(PAID_LINE_ROWS);
     });
 

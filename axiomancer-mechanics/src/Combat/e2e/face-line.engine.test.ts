@@ -30,7 +30,7 @@ describe('paidFaceLine', () => {
         ['Burn Together', 'DEAL 9, INFERNO 4'],
         ['Encase in Ice', "BLIZZARD 5, GUARD = foe's BLIZZARD"],
         ['Strike the Burning', 'DEAL 4 or 8 if the foe has INFERNO'],
-        ['Shatter the Frost', "Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent"],
+        ['Shatter the Frost', "Spend all the foe's BLIZZARD, DEAL 3 +2 for each spent"],
         ['Weight of Grace', "DEAL 2× foe's MERCY"],
         ['Shield Bash', 'DISCARD 1. GUARD 8, DEAL = your GUARD'],
         ['Cracking Swing', 'DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8'],

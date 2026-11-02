@@ -747,8 +747,10 @@ describe('Blood Price upgrades (Phase UP1b)', () => {
         expect(getCardById('bp-p-07b+')?.program?.free?.text).toBe('DEAL half the VITAE you lost this combat +2');
         expect(getCardById('bp-p-06d+')?.program?.paid?.text).toBe('LEECH 1 for each 10 VITAE missing, +1');
         expect(getCardById('bp-m-10a+')?.program?.paid?.text)
-            .toBe('The foe loses VITAE = 2× the damage you took last turn +2. EXILE');
+            .toBe('The foe loses VITAE = 2× damage you took last turn +2. EXILE');
         expect(getCardById('bp-e-01n+')?.program?.paid?.text).toBe('SACRIFICE 6, CONVICTION 6. EXILE');
+        expect(getCardById('bp-m-06c')?.program?.paid?.text)
+            .toBe('VITAE cannot go below 1 this turn, HEAL {heal:5} next turn. EXILE');
     });
 
     it('a Global adds to its trigger amount', () => {

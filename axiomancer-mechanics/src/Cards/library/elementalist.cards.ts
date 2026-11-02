@@ -95,7 +95,7 @@ const ENTRIES: Entry[] = [
         paid: L("GUARD 2× foe's BLIZZARD", c => { c.guard(0, { plus: 2 * c.q.blizzard }); }) }) },
     { slot: 'P-04', option: 'a', name: 'Shatter the Frost', type: 'attack', color: RED, program: u => ({
         free: L(`DEAL {deal:${u.m(2)}}, BLIZZARD ${u.i(2)}`, c => { c.deal(u.m(2)); c.blizzard(u.i(2)); }),
-        paid: L(`Spend all the foe's BLIZZARD, DEAL {deal:${u.m(3)}} +2 for each BLIZZARD spent`, c => {
+        paid: L(`Spend all the foe's BLIZZARD, DEAL {deal:${u.m(3)}} +2 for each spent`, c => {
             const b = c.spendBlizzard(); c.deal(u.m(3), { plus: 2 * b });
         }) }) },
     // The trigger does not grow the STORM (the sims' reading).
@@ -162,11 +162,11 @@ const ENTRIES: Entry[] = [
             const h = c.q.handSize > h0 ? c.q.handSize : h0 + 2;
             c.storm(h);
         }) }) },
-    // The Spell law (T, 2026-10-24): the foe gains twice your INFERNO, not once.
+    // The Spell law (T, 2026-10-24): twice your INFERNO comes back as BLIZZARD and INFERNO. T, 2026-11-01: the INFERNO is ordinary, burning both sides by its own rule.
     { slot: 'E-08', option: 'c', name: 'Boil to Steam', type: 'spell', color: PURPLE, spellLaw: { blizzard: 4, inferno: 4 }, program: u => ({
-        free: L(`BLIZZARD ${u.i(2)}, INFERNO ${u.i(1)} (foe only)`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1), 'foe'); }),
-        paid: L('Spend all your INFERNO, BLIZZARD 2 for each INFERNO spent, INFERNO 2 for each INFERNO spent (foe only). EXILE', c => {
-            const y = c.removeYourInferno(); c.blizzard(2 * y); c.inferno(2 * y, 'foe');
+        free: L(`BLIZZARD ${u.i(2)}, INFERNO ${u.i(1)}`, c => { c.blizzard(u.i(2)); c.inferno(u.i(1)); }),
+        paid: L('Spend all your INFERNO. For each: BLIZZARD 2, INFERNO 2. EXILE', c => {
+            const y = c.removeYourInferno(); c.blizzard(2 * y); c.inferno(2 * y);
         }, EX) }) },
     { slot: 'E-09', option: 'b', name: 'Bring the Hail', type: 'global', color: PURPLE, program: () => turnGlobal(
         "BLIZZARD half the foe's STORM",
@@ -206,7 +206,7 @@ const ENTRIES: Entry[] = [
         paid: L(`GUARD {guard:${u.m(9)}} or {guard:${2 * u.m(9)}} if the foe is FROZEN`, c => { c.guard(u.m(9) * (c.q.frozen ? 2 : 1)); }) }) },
     { slot: 'M-07', option: 'b', name: 'Pin with Lightning', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 40 }, program: u => ({
         free: L(`STORM ${u.i(1)}`, c => { c.storm(u.i(1)); }),
-        paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for each STORM the foe has, for 2 turns. EXILE`, c => {
+        paid: L(`VULNERABLE {vuln:${S(u).m(10)}}% for 2 turns, for each STORM the foe has. EXILE`, c => {
             c.vulnerable(S(u).m(10) * c.q.storm, 2);
         }, EX) }) },
     { slot: 'M-08', option: 'c', name: 'Turn with the Wind', type: 'global', color: PURPLE, program: u => turnGlobal(

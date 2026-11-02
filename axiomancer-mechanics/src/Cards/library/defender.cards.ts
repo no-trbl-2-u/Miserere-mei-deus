@@ -127,7 +127,7 @@ const ENTRIES: Entry[] = [
     // T: PAID is refused with no other card in hand, as every PAID discard line.
     { slot: 'P-07', option: 'c', name: 'Shed the Shell', type: 'spell', color: PURPLE, spellLaw: { thorns: 8 }, program: u => ({
         free: L(`GUARD {guard:${u.m(4)}}`, c => { c.guard(u.m(4)); }),
-        paid: L(`DISCARD your hand. THORNS {thorns:${u.i(3)}} for each card discarded. EXILE`, c => {
+        paid: L(`DISCARD your hand. THORNS {thorns:${u.i(3)}} for each card. EXILE`, c => {
             const k = c.discardHand();
             for (let i = 0; i < k; i++) c.thorns(u.i(3));
         }, EX) }) },

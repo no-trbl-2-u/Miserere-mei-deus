@@ -550,7 +550,7 @@ const FACE_LOGIC_WORDS: ReadonlySet<string> = new Set([
     'or', 'at', 'if', 'has', 'half', 'for', 'each', 'twice', 'after', 'turn', 'turns',
     'when', 'start', 'of', 'spend', 'all',
     'this', 'next', 'last', 'is', 'not', 'while', 'to', 'from', 'in', 'with', 'only', 'more', 'less',
-    'over', 'below', 'max', '+',
+    'over', 'below', 'max', 'go', 'its', 'deals', '+',
 ]);
 
 /** Content words honestly part of a card's own wording, closed like the
@@ -610,7 +610,7 @@ function faceLineIssues(line: FaceLine, keywords: ReadonlySet<string>): string[]
  * `2×`, `X`, `=`), the entities (you, your, the, foe, foe's, hand, VITAE) and
  * the closed logic words (or, at, if, has, half, for, each, twice, after,
  * turn, turns, when, start, of, spend, all, this, next, last, is, not, while,
- * to, from, in, with, only, more, less, over, below, max, `+` between two
+ * to, from, in, with, only, more, less, over, below, max, go, its, deals, `+` between two
  * values, and `,` `;` `:` `.`), plus the closed content list (`FACE_CONTENT_WORDS`:
  * `spent` and the card nouns and verbs T approved on 2026-11-01). A line fails on any
  * retired form (`RETIRED_FORMS`, and a duration on a Global's line) and on

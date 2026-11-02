@@ -203,15 +203,15 @@ const ENTRIES: Entry[] = [
         paid: L(`DEAL {deal:${u.m(2)}}, MERCY {mercy:${u.i(2)}}, DRAW 1`, c => { c.deal(u.m(2)); c.mercy(u.i(2)); c.draw(1); }) }) },
     // T: "Otherwise, mercy 3/5."
     { slot: 'M-08', option: 'a', name: 'Stay the Hand', type: 'skill', color: PURPLE, program: u => ({
-        free: L(`If the foe has MERCY, the foe's next attack is ${u.m(2)} less; if not, MERCY {mercy:${u.i(3)}}`, c => {
+        free: L(`If the foe has MERCY, its next attack deals ${u.m(2)} less; if not, MERCY {mercy:${u.i(3)}}`, c => {
             if (c.q.foeHasMercy) c.weakenNextAttack(u.m(2)); else c.mercy(u.i(3));
         }),
-        paid: L(`If the foe has MERCY, the foe's next attack is ${u.m(5)} less; if not, MERCY {mercy:${u.i(5)}}`, c => {
+        paid: L(`If the foe has MERCY, its next attack deals ${u.m(5)} less; if not, MERCY {mercy:${u.i(5)}}`, c => {
             if (c.q.foeHasMercy) c.weakenNextAttack(u.m(5)); else c.mercy(u.i(5));
         }) }) },
     { slot: 'M-09', option: 'c', name: 'Call Back a Kindness', type: 'skill', color: BLUE, program: () => ({
-        free: L('Return the last MERCY card you played this combat to your hand', c => { c.returnMercyCards(1); }),
-        paid: L('Return the last 2 MERCY cards you played this combat to your hand', c => { c.returnMercyCards(2); }) }) },
+        free: L('Return the last MERCY card you played to your hand', c => { c.returnMercyCards(1); }),
+        paid: L('Return the last 2 MERCY cards you played to your hand', c => { c.returnMercyCards(2); }) }) },
     { slot: 'M-10', option: 'c', name: 'Overflowing Cup', type: 'attack', color: RED, program: u => ({
         free: L(`If the foe is at max VITAE, DEAL {deal:${u.m(4)}}; if not, MERCY {mercy:${u.i(2)}}`, c => {
             if (c.q.foeAtMax) c.deal(u.m(4)); else c.mercy(u.i(2));

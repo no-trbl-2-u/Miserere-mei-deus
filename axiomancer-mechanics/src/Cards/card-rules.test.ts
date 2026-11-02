@@ -180,7 +180,7 @@ describe('checkFaceGrammar', () => {
     it("passes every example line in the voice guide", () => {
         const lines = [
             'DEAL 9, INFERNO 4', 'BLIZZARD 5, GUARD = foe\'s BLIZZARD', 'DEAL 4 or 8 if the foe has INFERNO',
-            'Spend all the foe\'s BLIZZARD, DEAL 3 +2 for each BLIZZARD spent', 'DEAL 2× foe\'s MERCY',
+            'Spend all the foe\'s BLIZZARD, DEAL 3 +2 for each spent', 'DEAL 2× foe\'s MERCY',
             'DISCARD 1. GUARD 8, DEAL = your GUARD', 'DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8',
             'VULNERABLE 25% for 1 turn, DEAL 2', 'TETHER 3, SACRIFICE 4, LEECH 2',
             'DEAL 9, twice; SACRIFICE 2 after each', 'SACRIFICE 6, CONVICTION 5. EXILE',

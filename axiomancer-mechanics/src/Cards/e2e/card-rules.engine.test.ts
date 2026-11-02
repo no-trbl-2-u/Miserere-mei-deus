@@ -293,7 +293,7 @@ describe('the card voice prints its worked examples as written (docs/card-voice.
         ['Burn Together', 'DEAL 3', 'DEAL 9, INFERNO 4'],
         ['Encase in Ice', 'BLIZZARD 3', "BLIZZARD 5, GUARD = foe's BLIZZARD"],
         ['Strike the Burning', 'DEAL 3', 'DEAL 4 or 8 if the foe has INFERNO'],
-        ['Shatter the Frost', 'DEAL 2, BLIZZARD 2', "Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent"],
+        ['Shatter the Frost', 'DEAL 2, BLIZZARD 2', "Spend all the foe's BLIZZARD, DEAL 3 +2 for each spent"],
         ['Weight of Grace', "DEAL = foe's MERCY", "DEAL 2× foe's MERCY"],
         ['Shield Bash', 'GUARD 4', 'DISCARD 1. GUARD 8, DEAL = your GUARD'],
         ['Cracking Swing', 'VULNERABLE 25% for 1 turn, DEAL 2', 'DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8'],

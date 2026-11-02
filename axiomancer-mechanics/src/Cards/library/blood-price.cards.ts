@@ -183,7 +183,7 @@ const ENTRIES: Entry[] = [
         paid: L(`CONVICTION ${u.i(2)} or ${u.i(4)} at half your VITAE`, c => { c.conviction(c.q.atHalf ? u.i(4) : u.i(2)); }) }) },
     { slot: 'm-06c', name: 'Not Yet', type: 'skill', color: BLUE, program: u => ({
         free: L(`HEAL {heal:${u.m(2)}}`, c => { c.heal(u.m(2)); }),
-        paid: L(`Damage cannot take you below 1 VITAE this turn, HEAL {heal:${u.m(5)}} at the start of your next turn. EXILE`, c => { c.deathWard(); c.healNextTurn(u.m(5)); }, { exile: true }) }) },
+        paid: L(`VITAE cannot go below 1 this turn, HEAL {heal:${u.m(5)}} next turn. EXILE`, c => { c.deathWard(); c.healNextTurn(u.m(5)); }, { exile: true }) }) },
     { slot: 'm-07a', name: 'Feeding Mark', type: 'spell', color: PURPLE, spellLaw: { vulnerable: 25, drain: 2 }, program: u => ({
         free: L(`VULNERABLE {vuln:${u.m(10)}}% for 1 turn`, c => { c.vulnerable(u.m(10), 1); }),
         paid: L(`VULNERABLE {vuln:${S(u).m(25)}}% for 2 turns, HEAL {heal:${S(u).m(2)}} each time the foe loses VITAE for 2 turns. EXILE`, c => { c.vulnerable(S(u).m(25), 2); c.drain(S(u).m(2), 2); }, EX) }) },
@@ -197,7 +197,7 @@ const ENTRIES: Entry[] = [
     // discard card it would read the damage once (30 at the Spell law probe).
     { slot: 'm-10a', name: 'Repaid in Kind', type: 'spell', color: RED, spellLaw: { foeLoses: 30 }, program: u => ({
         free: L(`The foe loses VITAE = the damage you took last turn${mPlus(u)}`, c => { c.foeLoses(c.q.takenLastTurn + u.plus); }),
-        paid: L(`The foe loses VITAE = 2× the damage you took last turn${mPlus(u)}. EXILE`, c => { c.foeLoses(2 * c.q.takenLastTurn + u.plus); }, EX) }) },
+        paid: L(`The foe loses VITAE = 2× damage you took last turn${mPlus(u)}. EXILE`, c => { c.foeLoses(2 * c.q.takenLastTurn + u.plus); }, EX) }) },
 ];
 
 function toCard(e: Entry): Card {
