@@ -48,21 +48,23 @@ somewhere else ("instead of what?"), so it is never printed. `burning` is not a 
 | `.` (mid-line) | parts a cost or setup from the payoff | `DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8` |
 | `or N at …` | N replaces the first number when a threshold holds | `DEAL 6 or 14 at half your VITAE` |
 | `or N if …` | N replaces the first number when something is present | `DEAL 4 or 8 if the foe has INFERNO` |
-| `+N for each …` | adds N per unit | `DEAL 3 +2 for each BLIZZARD spent` |
+| `+N for each …` | adds N per unit | `DEAL 3 +2 for each spent` |
 | `=` | copies a value when the step resolves | `DEAL = foe's MERCY`, `GUARD = your THORNS` |
 | `2×` | multiplies a value; never a repeat | `DEAL 2× foe's MERCY` |
 | `twice` · `after each` | repeats the action; `after each` hangs a rider on every repeat | `DEAL 9, twice; SACRIFICE 2 after each` |
-| `Spend all …` | uses up a stack before the step that counts it | `Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent` |
+| `Spend all …` | uses up a stack before the step that counts it | `Spend all the foe's BLIZZARD, DEAL 3 +2 for each spent` |
+| `Spend all …. For each:` | `For each:` after a spent stack hangs a list of steps that each scale by the amount spent (T, 2026-11-01) | `Spend all your INFERNO. For each: BLIZZARD 2, INFERNO 2` |
 | `When you … :` / `Start of your turn:` | a Global's trigger (the closed trigger set) | `When you SACRIFICE X: DEAL X` |
 | `for N turns` | how long a status lasts | `VULNERABLE 25% for 1 turn` |
 | `+` between two values | adds the second value to the first | `DEAL 2 + half your THORNS` |
 | `this` · `next` · `last` | which turn or card: now, the one after, the one before | `2× your next SACRIFICE this turn`, `Return the last MERCY card you played to your hand` |
 | `is` · `not` · `while` | a state, its negation, and a state that must still hold | `If the foe is at max VITAE, DEAL 4; if not, MERCY 2`, `your THORNS hit 2× while GUARD HOLDS` |
 | `to` · `from` · `in` · `with` | a target, a source, a place, an attachment | `Move half your INFERNO to the foe`, `Return 1 random card from EXILE to your deck`, `STORM = cards in your hand`, `Each HEAL this turn is RADIANCE with 2× DEAL` |
-| `only` | limits a step to one case; no library line uses it now (Boil to Steam's `(foe only)` was reworded away, §4, §5) | none |
+| `only` | limits a step to one case; no library line uses it now (Boil to Steam's `(foe only)` was dropped, §4) | none |
 | `more` · `less` | a count or amount above or below another | `DEAL 3 if the foe has 2 or more elements`, `the foe's next attack is 2 less` |
 | `over` · `below` · `max` | a limit on a bar | `GUARD = HEAL over max VITAE`, `VITAE cannot go below 1 this turn`, `+4 max VITAE this combat` |
 | `go` | a floor on a bar (T, 2026-11-01) | `VITAE cannot go below 1 this turn` |
+| `its` · `deals` | the foe's own attack, and what it does (T, 2026-11-01) | `If the foe has MERCY, its next attack deals 5 less; if not, MERCY 5` |
 
 A word outside this list, the content list below, the keywords and the entities is a lint failure. A new logic word
 is T's call and is added here first.
@@ -75,7 +77,7 @@ returned from EXILE). T approved them on 2026-11-01 ("For now, approve them all"
 
 | Words | Used for | Example |
 |---|---|---|
-| `spent` | the units a `Spend all` used up | `DEAL 3 +2 for each BLIZZARD spent` |
+| `spent` | the units a `Spend all` used up | `DEAL 3 +2 for each spent` |
 | `combat`, `time` | how long, how often | `DEAL half the VITAE you lost this combat`, `HEAL 2 each time the foe loses VITAE` |
 | `damage`, `dealt`, `took`, `lost`, `healed`, `missing` | an amount the board already counted | `THORNS = the damage you dealt this turn`, `DEAL = all you healed this turn`, `GUARD = your missing VITAE` |
 | `lose`, `loses` | a plain VITAE loss | `SACRIFICE 4, the foe loses 6 VITAE` |
@@ -87,7 +89,7 @@ returned from EXILE). T approved them on 2026-11-01 ("For now, approve them all"
 | `attack`, `attacks`, `hit` | the foe's attack and what hits | `REFLECT 50% if the foe attacks`, `your THORNS hit 2× while GUARD HOLDS` |
 | `move`, `keep` | relocating or retaining a stack | `Move half your INFERNO to the foe`, `keep your GUARD after the foe's turn` |
 | `bursts`, `sooner`, `grows` | a MERCY or STORM timer | `The foe's MERCY bursts 1 turn sooner`, `the foe's STORM grows +1 more` |
-| `take`, `cannot` | a floor on damage | none: no library line uses them now |
+| `take`, `cannot` | a floor on damage | `VITAE cannot go below 1 this turn` (`cannot`; no line prints `take` now) |
 
 A word outside every list here is still a lint failure, and a new word is T's call: it is added to this file first.
 
@@ -104,8 +106,6 @@ A word outside every list here is still a lint failure, and a new word is T's ca
 - `your GUARD`, `your VITAE`, `your hand`.
 - After `=`, the foe's possessive drops its `the`: `= foe's MERCY`.
 - Everywhere else it keeps it: `if the foe has INFERNO`, `Spend all the foe's BLIZZARD`.
-- **Named exception (T, 2026-11-01):** Boil to Steam prints `foe's INFERNO 2 for each spent` without `the`, because
-  `the foe's` costs it a fifth row on the small face. No other line drops it.
 
 ## 6. Globals
 
@@ -181,7 +181,7 @@ doubt it.
 | Burn Together | `DEAL 3` | `DEAL 9, INFERNO 4` |
 | Encase in Ice | `BLIZZARD 3` | `BLIZZARD 5, GUARD = foe's BLIZZARD` |
 | Strike the Burning | `DEAL 3` | `DEAL 4 or 8 if the foe has INFERNO` |
-| Shatter the Frost | `DEAL 2, BLIZZARD 2` | `Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent` |
+| Shatter the Frost | `DEAL 2, BLIZZARD 2` | `Spend all the foe's BLIZZARD, DEAL 3 +2 for each spent` |
 | Weight of Grace | `DEAL = foe's MERCY` | `DEAL 2× foe's MERCY` |
 | Shield Bash | `GUARD 4` | `DISCARD 1. GUARD 8, DEAL = your GUARD` |
 | Cracking Swing | `VULNERABLE 25% for 1 turn, DEAL 2` | `DISCARD 2. VULNERABLE 75% for 2 turns, DEAL 8` |

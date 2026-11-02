@@ -29,11 +29,10 @@ const MODES: readonly CardTextMode[] = ['words', 'glyphs'];
  * it fails once a listed card fits, so the list only shrinks.
  */
 const PARKED_FOR_T: Readonly<Record<string, string>> = {
-    'Shatter the Frost': 'its wording is one of T\'s pinned examples (card-voice section 11); T decides a shorter one',
-    'Boil to Steam': 'four rows; T keeps this line as shipped (2026-11-01), allowed exception (card-voice section 5)',
-    'Feeding Mark': 'four or more rows; T picks one of the candidates in PR 1326 (T to pick)',
+    'Boil to Steam': 'over three rows in words; T picked this wording (2026-11-01) and allows it',
+    'Feeding Mark': 'over three rows; waits on the keyword T is designing for the foe-loses-VITAE heal',
     'Uneven Trade': 'four rows; T allowed it as it is (2026-11-01)',
-    'Stay the Hand': 'four rows; T picks one of the candidates in PR 1326 (T to pick)',
+    'Stay the Hand': 'four rows at 10px (three at 9px); T picked this wording (2026-11-01) and allows it',
 };
 
 interface Printed { name: string; level: number; line: string }
