@@ -30,11 +30,10 @@ const MODES: readonly CardTextMode[] = ['words', 'glyphs'];
  */
 const PARKED_FOR_T: Readonly<Record<string, string>> = {
     'Shatter the Frost': 'its wording is one of T\'s pinned examples (card-voice section 11); T decides a shorter one',
-    'Boil to Steam': 'four rows even without "(foe only)"; needs a shorter way to say the foe gains the INFERNO',
-    'Not Yet': 'four or more rows; "VITAE cannot go below 1 this turn" would fit but "go" is not in the closed lists',
-    'Feeding Mark': 'four rows; the drain\'s "each time the foe loses VITAE" needs a shorter phrase T approves',
-    'Uneven Trade': 'four rows; the foe\'s plain VITAE loss has no short form in the closed lists',
-    'Stay the Hand': 'four rows; "the foe\'s next attack" cannot shorten without dropping "the" (card-voice section 5)',
+    'Boil to Steam': 'four rows; T keeps this line as shipped (2026-11-01), allowed exception (card-voice section 5)',
+    'Feeding Mark': 'four or more rows; T picks one of the candidates in PR 1326 (T to pick)',
+    'Uneven Trade': 'four rows; T allowed it as it is (2026-11-01)',
+    'Stay the Hand': 'four rows; T picks one of the candidates in PR 1326 (T to pick)',
 };
 
 interface Printed { name: string; level: number; line: string }

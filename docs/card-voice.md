@@ -56,12 +56,13 @@ somewhere else ("instead of what?"), so it is never printed. `burning` is not a 
 | `When you … :` / `Start of your turn:` | a Global's trigger (the closed trigger set) | `When you SACRIFICE X: DEAL X` |
 | `for N turns` | how long a status lasts | `VULNERABLE 25% for 1 turn` |
 | `+` between two values | adds the second value to the first | `DEAL 2 + half your THORNS` |
-| `this` · `next` · `last` | which turn or card: now, the one after, the one before | `2× your next SACRIFICE this turn`, `Return the last MERCY card you played this combat to your hand` |
+| `this` · `next` · `last` | which turn or card: now, the one after, the one before | `2× your next SACRIFICE this turn`, `Return the last MERCY card you played to your hand` |
 | `is` · `not` · `while` | a state, its negation, and a state that must still hold | `If the foe is at max VITAE, DEAL 4; if not, MERCY 2`, `your THORNS hit 2× while GUARD HOLDS` |
 | `to` · `from` · `in` · `with` | a target, a source, a place, an attachment | `Move half your INFERNO to the foe`, `Return 1 random card from EXILE to your deck`, `STORM = cards in your hand`, `Each HEAL this turn is RADIANCE with 2× DEAL` |
-| `only` | limits a step to one case; today only in `INFERNO 1 (foe only)`, which spec 137's CF1f rewords away (§4) | `BLIZZARD 2, INFERNO 1 (foe only)` |
+| `only` | limits a step to one case; no library line uses it now (Boil to Steam's `(foe only)` was reworded away, §4, §5) | none |
 | `more` · `less` | a count or amount above or below another | `DEAL 3 if the foe has 2 or more elements`, `the foe's next attack is 2 less` |
-| `over` · `below` · `max` | a limit on a bar | `GUARD = HEAL over max VITAE`, `Damage cannot take you below 1 VITAE this turn`, `+4 max VITAE this combat` |
+| `over` · `below` · `max` | a limit on a bar | `GUARD = HEAL over max VITAE`, `VITAE cannot go below 1 this turn`, `+4 max VITAE this combat` |
+| `go` | a floor on a bar (T, 2026-11-01) | `VITAE cannot go below 1 this turn` |
 
 A word outside this list, the content list below, the keywords and the entities is a lint failure. A new logic word
 is T's call and is added here first.
@@ -78,7 +79,7 @@ returned from EXILE). T approved them on 2026-11-01 ("For now, approve them all"
 | `combat`, `time` | how long, how often | `DEAL half the VITAE you lost this combat`, `HEAL 2 each time the foe loses VITAE` |
 | `damage`, `dealt`, `took`, `lost`, `healed`, `missing` | an amount the board already counted | `THORNS = the damage you dealt this turn`, `DEAL = all you healed this turn`, `GUARD = your missing VITAE` |
 | `lose`, `loses` | a plain VITAE loss | `SACRIFICE 4, the foe loses 6 VITAE` |
-| `played`, `discarded` | a card's past action | `Return the last MERCY card you played this combat to your hand`, `THORNS 3 for each card discarded` |
+| `played`, `discarded` | a card's past action | `Return the last MERCY card you played to your hand`, `If discarded, THORNS 2` |
 | `card`, `cards`, `deck`, `return` | cards and where they go | `Return 1 random card from EXILE to your deck`, `STORM = cards in your hand` |
 | `random` | a random pick (DISCARD is random without saying so) | `Return 1 random card from EXILE to your deck` |
 | `debuffs`, `remove` | clearing statuses | `Remove all your debuffs, RADIANCE 5`, `Remove your INFERNO` |
@@ -86,7 +87,7 @@ returned from EXILE). T approved them on 2026-11-01 ("For now, approve them all"
 | `attack`, `attacks`, `hit` | the foe's attack and what hits | `REFLECT 50% if the foe attacks`, `your THORNS hit 2× while GUARD HOLDS` |
 | `move`, `keep` | relocating or retaining a stack | `Move half your INFERNO to the foe`, `keep your GUARD after the foe's turn` |
 | `bursts`, `sooner`, `grows` | a MERCY or STORM timer | `The foe's MERCY bursts 1 turn sooner`, `the foe's STORM grows +1 more` |
-| `take`, `cannot` | a floor on damage | `Damage cannot take you below 1 VITAE this turn` |
+| `take`, `cannot` | a floor on damage | none: no library line uses them now |
 
 A word outside every list here is still a lint failure, and a new word is T's call: it is added to this file first.
 
@@ -103,6 +104,8 @@ A word outside every list here is still a lint failure, and a new word is T's ca
 - `your GUARD`, `your VITAE`, `your hand`.
 - After `=`, the foe's possessive drops its `the`: `= foe's MERCY`.
 - Everywhere else it keeps it: `if the foe has INFERNO`, `Spend all the foe's BLIZZARD`.
+- **Named exception (T, 2026-11-01):** Boil to Steam prints `foe's INFERNO 2 for each spent` without `the`, because
+  `the foe's` costs it a fifth row on the small face. No other line drops it.
 
 ## 6. Globals
 
