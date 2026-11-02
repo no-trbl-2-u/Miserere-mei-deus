@@ -3,7 +3,7 @@ import { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withSequence, wit
 
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
-import { resolveJuiceMode } from './instant';
+import { shouldInstantSettleJuice } from './instant';
 import { JUICE_TIMING } from './juice.timing';
 
 export interface NumberPopTimeline {
@@ -21,10 +21,10 @@ export function numberPopTimeline(timing = JUICE_TIMING): NumberPopTimeline {
 /**
  * A rising, fading damage/heal/currency delta pop. Mounts once and plays
  * once — calls `onDone` when the rise completes so the caller can unmount
- * it. Reduced-motion / the escape hatch land the pop at its final state
- * immediately; `onDone` still fires so the float never dangles on screen.
- * `delayMs` holds the pop hidden before it plays, so a batch of pops can
- * stagger.
+ * it. Reduced motion keeps the number readable: it shows still, for as long
+ * as the rise would have run, then `onDone` fires. The e2e escape hatch lands
+ * the pop at its final state immediately. `delayMs` holds the pop hidden before
+ * it plays, so a batch of pops can stagger.
  */
 export function useJuiceNumberPop(onDone: () => void, delayMs = 0) {
     const reducedMotion = useReducedMotion();
@@ -32,11 +32,16 @@ export function useJuiceNumberPop(onDone: () => void, delayMs = 0) {
     const opacity = useSharedValue(delayMs > 0 ? 0 : 1);
     useEffect(() => {
         const t = numberPopTimeline();
-        if (resolveJuiceMode({ reducedMotion }) === 'instant') {
+        if (shouldInstantSettleJuice()) {
             translateY.value = -t.riseDistancePx;
             opacity.value = 0;
             onDone();
             return;
+        }
+        if (reducedMotion) {
+            const shown = setTimeout(() => { opacity.value = 1; }, delayMs);
+            const done = setTimeout(onDone, delayMs + t.riseDurationMs);
+            return () => { clearTimeout(shown); clearTimeout(done); };
         }
         opacity.value = delayMs > 0
             ? withDelay(delayMs, withSequence(
