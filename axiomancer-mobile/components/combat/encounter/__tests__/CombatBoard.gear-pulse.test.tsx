@@ -1,8 +1,10 @@
 /**
- * CombatBoard — the worn gear shows itself.
+ * CombatBoard — the worn gear shows itself (when it is mounted).
  *
- * A worn piece whose effect can fire has a glyph chip by the signature
- * column. Each `equipment-fired` event in a transition lands on its piece's
+ * The board does not mount the chips for now (T, 2026-11-01: SHOW_COMBAT_GEAR is
+ * false); the pulse tests below drive `CombatGear` and `useGearFired` directly,
+ * so restoring the mount is the flag and the first test. A worn piece whose
+ * effect can fire has a glyph chip by the signature column. Each `equipment-fired` event in a transition lands on its piece's
  * chip (the chip's label counts the firings and its glyph pulses), and the
  * combat log reads the same event as a line.
  */
@@ -13,8 +15,9 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import { armorLibrary, GREY_ARMOR_ID, GREY_WEAPON_ID, weaponLibrary, type CombatEvent } from '@mechanics';
+import { CombatGear, useGearFired } from '@/components/combat/encounter/CombatGear';
 import {
-    CombatBoard, type CombatBoardProps, type DragController,
+    CombatBoard, SHOW_COMBAT_GEAR, type CombatBoardProps, type DragController,
 } from '@/components/combat/encounter/CombatBoard';
 import {
     buildCombatViewModel, selectCombatLogHistory, selectCombatLogLines,
@@ -47,14 +50,26 @@ function boardWith(fx?: CombatBoardProps['fx']) {
         onApply: jest.fn(), onStage: jest.fn(), onUnstage: jest.fn(), onDiscard: jest.fn(),
         onSignature: jest.fn(), onEndPhase: jest.fn(), onInspect: jest.fn(),
     };
-    const ui = (p: CombatBoardProps) => withAllProviders(
+    const board = (p: CombatBoardProps) => withAllProviders(
         <SafeAreaInsetsContext.Provider value={INSETS}><CombatBoard {...p} /></SafeAreaInsetsContext.Provider>,
         { store },
     ).tree;
-    return { vm, props, ui, combat };
+    // The chips alone, fed the same fx the board would feed them.
+    const Chips = ({ fx: f }: { fx?: CombatBoardProps['fx'] }) => <CombatGear gear={vm.gear} fired={useGearFired(f)} />;
+    const ui = (p: CombatBoardProps) => withAllProviders(<Chips fx={p.fx} />, { store }).tree;
+    return { vm, props, ui, board, combat };
 }
 
 describe('the worn gear chips', () => {
+    it('the board hides the chips for now, while vm.gear still carries the pair', () => {
+        const { vm, props, board } = boardWith();
+        expect(SHOW_COMBAT_GEAR).toBe(false);
+        expect(vm.gear).toHaveLength(2);
+        render(board(props));
+        expect(screen.queryByTestId(`combat-gear-${GREY_WEAPON_ID}`)).toBeNull();
+        expect(screen.queryByTestId(`combat-gear-${GREY_ARMOR_ID}`)).toBeNull();
+    });
+
     it('the grey pair worn gives one chip each, unfired, with its effect in the label', () => {
         const { vm, props, ui } = boardWith();
         expect(vm.gear.map((g) => g.itemId)).toEqual([GREY_WEAPON_ID, GREY_ARMOR_ID]);
