@@ -13,7 +13,8 @@
  *   hint) do not render as rows. They are VM fields for the out-of-combat DECK
  *   screen; the combat overlay folds their content into the row each one
  *   qualifies.
- * - The rarity band renders: pips, frame colour, and a named label.
+ * - The rarity is named on the large face; the overlay adds no meta strip, pip
+ *   row or system notes under the card.
  *
  * Reading the source is deliberate. Every claim above is about what the
  * overlay's JSX contains and in what order — mounting the whole encounter
@@ -26,7 +27,7 @@ import { join } from 'node:path';
 
 import { getCard, getCardById, cardLibrary } from '@mechanics';
 import { detailStats } from '@/state/presenters/combat-encounter.engine';
-import { RARITY_LABEL, RARITY_PIPS, rarityFor } from '@/state/presenters/card-rarity.engine';
+import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
 
 const SOURCE = readFileSync(join(__dirname, '..', 'CombatEncounterPanel.tsx'), 'utf8');
 
@@ -37,6 +38,13 @@ function detailOverlaySource(): string {
     expect(start).toBeGreaterThan(-1);
     expect(end).toBeGreaterThan(start);
     return SOURCE.slice(start, end);
+}
+
+function detailFor(id: string) {
+    const projected = getCard(id);
+    const authored = getCardById(id);
+    expect(projected).toBeTruthy();
+    return detailStats(projected!, authored);
 }
 
 describe('combat card detail — overlay shape', () => {
@@ -70,13 +78,26 @@ describe('combat card detail — overlay shape', () => {
         expect(overlay).toContain('detailCard.detail.paidTag');
     });
 
-    it('renders the rarity band (D4)', () => {
+    it('names the rarity on the large face alone: no meta strip, no pip row under the card', () => {
         const overlay = detailOverlaySource();
-        expect(overlay).toContain('combat-card-detail-rarity');
-        expect(overlay).toContain('detailCard.detail.rarityPips');
-        expect(overlay).toContain('detailCard.detail.rarityColor');
-        // Never colour alone: the named band is in the meta strip beside it.
-        expect(overlay).toContain('detailCard.detail.rarityLabel');
+        // The large face prints the rarity WORD (CombatCardFace.rarity-D4.test.tsx);
+        // the strip under it (stance, rank, band, type) and the pip row beside it are gone.
+        expect(overlay).not.toContain('combat-card-detail-meta');
+        expect(overlay).not.toContain('detail.metaChip');
+        expect(overlay).not.toContain('combat-card-detail-rarity');
+        expect(overlay).not.toContain('detail.rarityPips');
+        expect(overlay).not.toContain('detail.rarityColor');
+    });
+
+    it('prints no system notes under the NO DIE / +DIE rows (T, 2026-11-01)', () => {
+        const overlay = detailOverlaySource();
+        expect(overlay).not.toContain('systemTerms');
+        expect(overlay).not.toContain('systemsGlossary');
+        expect(SOURCE).not.toContain('systemsGlossary');
+        // The VM carries no per-card system slice either, for any card.
+        for (const authored of cardLibrary) {
+            expect(detailFor(authored.id)).not.toHaveProperty('systemTerms');
+        }
     });
 
     it('renders the FULL paid line as the ◆ row', () => {
@@ -88,21 +109,39 @@ describe('combat card detail — overlay shape', () => {
     });
 });
 
-describe('combat card detail — the VM behind the shape', () => {
-    function detailFor(id: string) {
-        const projected = getCard(id);
-        const authored = getCardById(id);
-        expect(projected).toBeTruthy();
-        return detailStats(projected!, authored);
-    }
+describe('a Global states its duration in the NO DIE / +DIE rows, never on the face', () => {
+    const GLOBALS = cardLibrary.filter((c) => c.program?.global);
 
+    it('the overlay prints the two row texts the duration rides on', () => {
+        const overlay = detailOverlaySource();
+        expect(overlay).toContain('detailCard.detail.freePill');
+        expect(overlay).toContain('detailCard.detail.diePaidLine');
+    });
+
+    it("Rose Wrap's rows read `In play 3 turns` (NO DIE) and `In play for the rest of combat` (+DIE)", () => {
+        const rose = cardLibrary.find((c) => c.name === 'Rose Wrap')!;
+        const d = detailFor(rose.id);
+        expect(d.freePill).toMatch(/In play 3 turns\.?$/);
+        expect(d.diePaidLine).toMatch(/In play for the rest of combat\.?$/);
+    });
+
+    it('so does every Global in the library', () => {
+        expect(GLOBALS.length).toBeGreaterThan(10);
+        for (const g of GLOBALS) {
+            const d = detailFor(g.id);
+            expect(`${g.id}: ${d.freePill}`).toMatch(/In play 3 turns/);
+            expect(`${g.id}: ${d.diePaidLine}`).toMatch(/In play for the rest of combat/);
+        }
+    });
+});
+
+describe('combat card detail — the VM behind the shape', () => {
     it('takes its rarity band from the wave-0 module, never a local re-band', () => {
         for (const authored of cardLibrary) {
             const d = detailFor(authored.id);
             const band = rarityFor(authored);
-            expect(d.rarityLabel).toBe(RARITY_LABEL[band]);
-            expect(d.rarityPips).toBe(RARITY_PIPS[band]);
-            expect(d.metaChip).toContain(RARITY_LABEL[band].toUpperCase());
+            expect(d).not.toHaveProperty('rarityPips');
+            expect(d).not.toHaveProperty('metaChip');
         }
     });
 

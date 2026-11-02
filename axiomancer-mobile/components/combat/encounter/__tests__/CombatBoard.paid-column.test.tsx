@@ -177,12 +177,14 @@ describe('a Global wears GLOBAL, not FREE', () => {
         unmount();
     });
 
-    it('the large face states the duration, the small face never does', () => {
-        const vm = globalVM(GLOBAL_IDS[0]);
-        const large = renderFace(vm, 208, 305, true);
-        expect(screen.getByTestId('combat-card-face-duration').props.children).toBe('3 turns played FREE, the whole combat PAID');
-        expect(screen.getByTestId('combat-card-face-global-plate')).toBeTruthy();
-        large.unmount();
+    it('the large face wears the plate and states no duration either: that lives in the NO DIE / +DIE rows', () => {
+        for (const id of GLOBAL_IDS) {
+            const large = renderFace(globalVM(id), 208, 305, true);
+            expect(screen.getByTestId('combat-card-face-global-plate')).toBeTruthy();
+            expect(screen.queryByTestId('combat-card-face-duration')).toBeNull();
+            expect(screen.queryByText(/turns played FREE|the whole combat PAID/)).toBeNull();
+            large.unmount();
+        }
     });
 
     it('a plain card never wears the plate or states a duration', () => {

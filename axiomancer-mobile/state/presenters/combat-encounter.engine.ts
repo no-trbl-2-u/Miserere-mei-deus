@@ -52,14 +52,11 @@ import {
 import { paidClauses, type CardClause } from '@mechanics/Combat/combat.card-text';
 import { momentumV2A11y } from '@/state/combat/momentum';
 import { equipmentEffectLine, equipmentFiredText, specialFaceText } from '@/state/presenters/equipment-effect-line';
-// The single mobile source for the rarity band. Never re-band a rank here;
-// `rarityFor` owns that question for every surface.
-import { rarityFor, RARITY_LABEL, RARITY_PIPS, RARITY_COLOR } from '@/state/presenters/card-rarity.engine';
 
 /** The barrel doesn't re-export the union, so derive it from Card. */
 type CardSpecialMechanic = NonNullable<Card['specialMechanics']>[number];
 import { effectGlyph, GLYPH_COLORS, type StatusGlyph, type StatusGlyphKind } from '@/components/combat/statusGlyphs';
-import { keywordForEffect, keywordForVerb, keywordForMechanic, keywordGloss, keywordsInText, systemTermsForCard } from '@/state/combat/keywords';
+import { keywordForEffect, keywordForVerb, keywordForMechanic, keywordGloss, keywordsInText } from '@/state/combat/keywords';
 import { AXM, HUE } from '@/theme/axm';
 import {
     programFreeCell, programHeadline, programLinesFor, programLifecycle, programPlayVM, programTypeTag,
@@ -475,7 +472,6 @@ export interface CombatCardFaceVM {
 /** Render-ready card DETAIL (the inspect modal) — the SAME numbers as the face. */
 export interface CombatCardDetailVM {
     subtitle: string;
-    metaChip: string;
     outcomeLine: string;
     outcomeStats: { label: string; value: string }[];
     stacksText: string | null;
@@ -496,17 +492,6 @@ export interface CombatCardDetailVM {
     /** The Color Law — which dice can power this card — rendered ONCE per
      *  modal (not per powerLine). */
     colorLawHint: string;
-    /** The per-card slice of the systems glossary: ONLY the system terms this
-     *  card's printed lines reference (and that no keyword chip already
-     *  explains). */
-    systemTerms: { term: string; def: string }[];
-    /** The rarity band's player-facing name ('Common' / 'Uncommon' /
-     *  'Rare'), from the `card-rarity.engine` module. */
-    rarityLabel: string;
-    /** How many pips to draw. The COUNT is the greyscale-safe signal. */
-    rarityPips: number;
-    /** The band's hue. Never render it as the only rarity cue. */
-    rarityColor: string;
     /** The ◇ row's tag. */
     freeTag: string;
     /** The ◆ row's tag, carrying the fact the row's own decision needs — the
@@ -516,8 +501,7 @@ export interface CombatCardDetailVM {
 
 /** detailStats' switch builds everything BUT the pill fields; the wrapper appends them. */
 type DetailCore = Omit<CombatCardDetailVM,
-    'freePill' | 'diePaidLine' | 'colorLawHint' | 'systemTerms'
-    | 'rarityLabel' | 'rarityPips' | 'rarityColor' | 'freeTag' | 'paidTag'>;
+    'freePill' | 'diePaidLine' | 'colorLawHint' | 'freeTag' | 'paidTag'>;
 
 export interface CombatCardVM {
     uid: string; cardId: string; name: string; stance: string; stanceColor: string;
@@ -1671,20 +1655,13 @@ function programFaceStats(card: CombatCard, sourceCard: Card): Omit<CombatCardFa
  *  and a keyword chip for every registry word they print. */
 function programDetailCore(card: CombatCard, sourceCard: Card): DetailCore {
     const lines = programLinesFor(sourceCard);
-    const rankName = card.rank ? RANK_NAMES[card.rank] : null;
-    const metaChip = [
-        card.stance.toUpperCase(),
-        rankName ? rankName.toUpperCase() : `TIER ${card.tier}`,
-        RARITY_LABEL[rarityFor(card)].toUpperCase(),
-        ...(card.cardType ? [card.cardType.toUpperCase()] : []),
-    ].join(' · ');
     const keywords = keywordsInText(`${lines.free} ${lines.paid}`)
         .map((kw) => ({ name: kw.toUpperCase(), def: keywordGloss(kw) ?? '', minor: false }));
     const global = sourceCard.cardType === 'global';
     const sacrifices = /\bSACRIFICE\b/.test(`${lines.free} ${lines.paid}`);
     return {
         subtitle: programLifecycle(sourceCard),
-        metaChip,
+       
         outcomeLine: `${lines.paid}.`,
         outcomeStats: global
             ? [{ label: 'FREE', value: '⏳3 turns' }, { label: 'PAID', value: '∞ rest of combat' }]
@@ -1775,17 +1752,6 @@ function detailCore(card: CombatCard, sourceCard?: Card): DetailCore {
     if (sourceCard?.program) return programDetailCore(card, sourceCard);
     const c = cardCalc(card, sourceCard);
     const Title = c.keyword ?? '';
-    // The meta chip: stance, rank name (or tier), rarity band, card type —
-    // e.g. 'BODY · ASH · COMMON · SPELL'. No engine-jargon verb class: the
-    // keyword ledger and the ◆ +DIE row already say what the card does.
-    const rankName = card.rank ? RANK_NAMES[card.rank] : null;
-    const typeLabel = card.cardType ? card.cardType.toUpperCase() : null;
-    const metaChip = [
-        card.stance.toUpperCase(),
-        rankName ? rankName.toUpperCase() : `TIER ${card.tier}`,
-        RARITY_LABEL[rarityFor(card)].toUpperCase(),
-        ...(typeLabel ? [typeLabel] : []),
-    ].join(' · ');
     const keywords = buildDetailKeywords(card, c, sourceCard);
     // The authored FREE line (engine riderText).
     const free = freeLineText(card, sourceCard);
@@ -1801,7 +1767,7 @@ function detailCore(card: CombatCard, sourceCard?: Card): DetailCore {
                     : c.dotTrigger === 'damage-instance' ? { noun: 'time it is struck', trig: 'per hit taken', dur: { label: 'STACKS', value: `${c.intensity}` } }
                         : { noun: 'payoff you detonate', trig: 'per payoff', dur: { label: 'DURATION', value: `${c.turns}t` } };
                 return {
-                    subtitle: `${Title} the enemy — ticks ${evt.trig}.`, metaChip,
+                    subtitle: `${Title} the enemy — ticks ${evt.trig}.`,
                     outcomeLine: `Apply ${Title} — ${c.perTurn} VITAE each ${evt.noun}.`,
                     outcomeStats: [{ label: 'PER TICK', value: `${c.perTurn}` }, { label: 'TRIGGER', value: evt.trig }, evt.dur],
                     stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine,
@@ -1811,21 +1777,21 @@ function detailCore(card: CombatCard, sourceCard?: Card): DetailCore {
                     keywords,
                 };
             }
-            return { subtitle: `${Title} the enemy — damage over time.`, metaChip, outcomeLine: `Apply ${Title} ${c.total} over ${c.turns} turns.`, outcomeStats: [{ label: 'PER TURN', value: `${c.perTurn}` }, { label: 'TURNS', value: `${c.turns}` }, { label: 'TOTAL', value: `${c.total}` }], stacksText: c.stacks ? 'Stacks up to 10×.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — ${c.perTurn} VITAE/turn for ${c.turns} turns (${c.total} total).`, readNote: `Lands as printed: ${c.total} VITAE over ${c.turns} turns.`, mathLine: `${c.perTurn}/turn = ${c.dpr} base × ${c.intensity} intensity · ${c.turns} turns · ${c.total} VITAE total${c.stacks ? ' · stacks to 10×' : ''}.`, keywords };
+            return { subtitle: `${Title} the enemy — damage over time.`, outcomeLine: `Apply ${Title} ${c.total} over ${c.turns} turns.`, outcomeStats: [{ label: 'PER TURN', value: `${c.perTurn}` }, { label: 'TURNS', value: `${c.turns}` }, { label: 'TOTAL', value: `${c.total}` }], stacksText: c.stacks ? 'Stacks up to 10×.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — ${c.perTurn} VITAE/turn for ${c.turns} turns (${c.total} total).`, readNote: `Lands as printed: ${c.total} VITAE over ${c.turns} turns.`, mathLine: `${c.perTurn}/turn = ${c.dpr} base × ${c.intensity} intensity · ${c.turns} turns · ${c.total} VITAE total${c.stacks ? ' · stacks to 10×' : ''}.`, keywords };
         }
-        case 'stun': return { subtitle: `${Title} the enemy — it loses its turns.`, metaChip, outcomeLine: `Apply ${Title} ${c.skips} turn${c.skips === 1 ? '' : 's'}.`, outcomeStats: [{ label: 'SKIPS', value: `${c.skips} turns` }], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: ${Title} — the foe skips its next ${c.skips} actions.`, readNote: `Lands as printed: the foe skips ${c.skips} turn${c.skips === 1 ? '' : 's'}.`, mathLine: `skip ${c.skips}t = ${Title.toLowerCase()} duration ${c.skips} (each turn it would act is cancelled).`, keywords };
-        case 'weaken': return { subtitle: `${Title} the enemy — its attacks hit softer.`, metaChip, outcomeLine: c.turns > 0 ? `Apply ${Title} · ${c.turns} turns.` : `Apply ${Title}.`, outcomeStats: c.turns > 0 ? [{ label: 'TURNS', value: `${c.turns}` }] : [], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — the foe's hits land softer while it holds.`, readNote: `${Title} weakens the enemy's blows.`, mathLine: `${Title} reduces the enemy's outgoing damage while active (real engine units).`, keywords };
-        case 'mark': return { subtitle: `${Title} the enemy — the flaw is named.`, metaChip, outcomeLine: `Apply ${Title} +${c.markAmp}/tick · ${c.turns} turns.`, outcomeStats: [{ label: 'PER TICK', value: `+${c.markAmp}` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — every DoT tick and payoff hit on the foe deals +${c.markAmp} while it holds.`, readNote: `${Title} counts as an affliction — RUPTURE, SOUL, and REAP all feed on it.`, mathLine: `+${c.markAmp}/tick = tickAmplifyFlat × intensity, for ${c.turns} turns.`, keywords };
-        case 'guard': { const b = c.guardAmount ?? 0; return { subtitle: 'Guard yourself — soak the next hit.', metaChip, outcomeLine: `Gain ${Title} ${b}.`, outcomeStats: [{ label: 'GUARD', value: `${b}` }], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: Guard ${b}.`, readNote: `Lands as printed: Guard ${b}.`, mathLine: `POWER = ${b}, the printed Guard.`, keywords }; }
-        case 'befriend': return { subtitle: 'Spare a near-dead foe.', metaChip, outcomeLine: 'Spare a near-dead foe — end combat peacefully.', outcomeStats: [], stacksText: null, freeLine, powerLine: '◆ WITH A DIE: if the enemy VITAE is low, end combat peacefully (befriend).', readNote: 'Watch the enemy VITAE bar — befriend lands only when it is low.', mathLine: 'No fixed number — a conditional outcome gated on low enemy VITAE.', keywords };
-        case 'vulnerable': { return { subtitle: `${Title} the enemy — it takes more damage.`, metaChip, outcomeLine: `Apply ${Title} +${c.vulnPct}% · ${c.turns} turns.`, outcomeStats: [{ label: 'DMG TAKEN', value: `+${c.vulnPct}%` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: 'Stacks without limit.', freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — +${c.vulnPct}% damage taken for ${c.turns} turns.`, readNote: `Lands as printed: +${c.vulnPct}% damage taken for ${c.turns} turns.`, mathLine: `+${c.vulnPct}% = (damageTakenMult − 1) × 100 × intensity; combined Vulnerable is uncapped.`, keywords }; }
-        case 'resolute': return { subtitle: `${Title} — you take less damage.`, metaChip, outcomeLine: `Gain ${Title} ${c.resolutePct}% · ${c.turns} turns.`, outcomeStats: [{ label: 'DMG TAKEN', value: `${c.resolutePct}%` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: gain ${Title} — ${c.resolutePct}% damage taken for ${c.turns} turns.`, readNote: `Lands as printed: ${Title} is a self-buff.`, mathLine: `${c.resolutePct}% = (damageTakenMult − 1) × 100${c.stacks ? '; stacks by intensity' : ''}.`, keywords };
+        case 'stun': return { subtitle: `${Title} the enemy — it loses its turns.`, outcomeLine: `Apply ${Title} ${c.skips} turn${c.skips === 1 ? '' : 's'}.`, outcomeStats: [{ label: 'SKIPS', value: `${c.skips} turns` }], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: ${Title} — the foe skips its next ${c.skips} actions.`, readNote: `Lands as printed: the foe skips ${c.skips} turn${c.skips === 1 ? '' : 's'}.`, mathLine: `skip ${c.skips}t = ${Title.toLowerCase()} duration ${c.skips} (each turn it would act is cancelled).`, keywords };
+        case 'weaken': return { subtitle: `${Title} the enemy — its attacks hit softer.`, outcomeLine: c.turns > 0 ? `Apply ${Title} · ${c.turns} turns.` : `Apply ${Title}.`, outcomeStats: c.turns > 0 ? [{ label: 'TURNS', value: `${c.turns}` }] : [], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — the foe's hits land softer while it holds.`, readNote: `${Title} weakens the enemy's blows.`, mathLine: `${Title} reduces the enemy's outgoing damage while active (real engine units).`, keywords };
+        case 'mark': return { subtitle: `${Title} the enemy — the flaw is named.`, outcomeLine: `Apply ${Title} +${c.markAmp}/tick · ${c.turns} turns.`, outcomeStats: [{ label: 'PER TICK', value: `+${c.markAmp}` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — every DoT tick and payoff hit on the foe deals +${c.markAmp} while it holds.`, readNote: `${Title} counts as an affliction — RUPTURE, SOUL, and REAP all feed on it.`, mathLine: `+${c.markAmp}/tick = tickAmplifyFlat × intensity, for ${c.turns} turns.`, keywords };
+        case 'guard': { const b = c.guardAmount ?? 0; return { subtitle: 'Guard yourself — soak the next hit.', outcomeLine: `Gain ${Title} ${b}.`, outcomeStats: [{ label: 'GUARD', value: `${b}` }], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: Guard ${b}.`, readNote: `Lands as printed: Guard ${b}.`, mathLine: `POWER = ${b}, the printed Guard.`, keywords }; }
+        case 'befriend': return { subtitle: 'Spare a near-dead foe.', outcomeLine: 'Spare a near-dead foe — end combat peacefully.', outcomeStats: [], stacksText: null, freeLine, powerLine: '◆ WITH A DIE: if the enemy VITAE is low, end combat peacefully (befriend).', readNote: 'Watch the enemy VITAE bar — befriend lands only when it is low.', mathLine: 'No fixed number — a conditional outcome gated on low enemy VITAE.', keywords };
+        case 'vulnerable': { return { subtitle: `${Title} the enemy — it takes more damage.`, outcomeLine: `Apply ${Title} +${c.vulnPct}% · ${c.turns} turns.`, outcomeStats: [{ label: 'DMG TAKEN', value: `+${c.vulnPct}%` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: 'Stacks without limit.', freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — +${c.vulnPct}% damage taken for ${c.turns} turns.`, readNote: `Lands as printed: +${c.vulnPct}% damage taken for ${c.turns} turns.`, mathLine: `+${c.vulnPct}% = (damageTakenMult − 1) × 100 × intensity; combined Vulnerable is uncapped.`, keywords }; }
+        case 'resolute': return { subtitle: `${Title} — you take less damage.`, outcomeLine: `Gain ${Title} ${c.resolutePct}% · ${c.turns} turns.`, outcomeStats: [{ label: 'DMG TAKEN', value: `${c.resolutePct}%` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: gain ${Title} — ${c.resolutePct}% damage taken for ${c.turns} turns.`, readNote: `Lands as printed: ${Title} is a self-buff.`, mathLine: `${c.resolutePct}% = (damageTakenMult − 1) × 100${c.stacks ? '; stacks by intensity' : ''}.`, keywords };
         // A keyword-less mechanic headline (DEAL) has no Title to lead with —
         // every line below falls back to the headline's own words rather than
         // opening with a dangling dash or an empty stat label.
-        case 'mechanic': { const h = mechanicHeadline(c.mech); const verb = h?.verbLine ?? 'a special mechanic'; const val = [h?.heroText, h?.heroSub].filter(Boolean).join(' '); const lead = Title || h?.heroText || 'This card'; const statLabel = (Title || 'PAID').toUpperCase(); return { subtitle: Title ? `${Title} — ${verb}.` : `${verb.charAt(0).toUpperCase()}${verb.slice(1)}.`, metaChip, outcomeLine: Title ? (val ? `${Title} ${val}.` : `${Title}.`) : `${val || verb}.`, outcomeStats: h?.heroText ? [{ label: statLabel, value: h.heroText }] : [], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: ${vitaeCopy(card.bottomActionText)}`, readNote: `${lead} lands as printed — the printed line is the applied effect.`, mathLine: `${lead}: ${vitaeCopy(h?.verbLine ?? card.bottomActionText)}.`, keywords }; }
+        case 'mechanic': { const h = mechanicHeadline(c.mech); const verb = h?.verbLine ?? 'a special mechanic'; const val = [h?.heroText, h?.heroSub].filter(Boolean).join(' '); const lead = Title || h?.heroText || 'This card'; const statLabel = (Title || 'PAID').toUpperCase(); return { subtitle: Title ? `${Title} — ${verb}.` : `${verb.charAt(0).toUpperCase()}${verb.slice(1)}.`, outcomeLine: Title ? (val ? `${Title} ${val}.` : `${Title}.`) : `${val || verb}.`, outcomeStats: h?.heroText ? [{ label: statLabel, value: h.heroText }] : [], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: ${vitaeCopy(card.bottomActionText)}`, readNote: `${lead} lands as printed — the printed line is the applied effect.`, mathLine: `${lead}: ${vitaeCopy(h?.verbLine ?? card.bottomActionText)}.`, keywords }; }
         case 'inert':
-        default: return { subtitle: `${Title || 'Effect'} — minor right now.`, metaChip, outcomeLine: `${Title || 'This effect'} — minor for now.`, outcomeStats: [], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: ${vitaeCopy(card.bottomActionText)}`, readNote: 'The engine text above is the whole truth for this card.', mathLine: `${Title || 'This effect'} carries no headline number — the printed line is the applied effect.`, keywords };
+        default: return { subtitle: `${Title || 'Effect'} — minor right now.`, outcomeLine: `${Title || 'This effect'} — minor for now.`, outcomeStats: [], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: ${vitaeCopy(card.bottomActionText)}`, readNote: 'The engine text above is the whole truth for this card.', mathLine: `${Title || 'This effect'} carries no headline number — the printed line is the applied effect.`, keywords };
     }
 }
 
@@ -1914,25 +1880,11 @@ export function detailStats(card: CombatCard, sourceCard?: Card): CombatCardDeta
     const colorLawHint = card.stance === 'any'
         ? 'Any die can power this card.'
         : `Only a ${STANCE} or WILD die can power this card.`;
-    // The per-card systems-glossary slice: scan the card's OWN
-    // printed lines plus its overlay free/stacks lines (colorLawHint excluded
-    // — its WILD is the global colour law, not a card reference) and drop
-    // terms a keyword chip already covers.
-    const typeWord = card.cardType === 'global' ? 'Global' : card.cardType === 'curse' ? 'Curse' : '';
-    const systemTerms = systemTermsForCard(
-        [card.topActionText, card.bottomActionText, core.freeLine, core.stacksText ?? '', typeWord].join(' '),
-        core.keywords.map(k => k.name),
-    );
-    // The rarity band, derived ONCE by `rarityFor`. Named label +
-    // pip count + hue; the panel renders label and pips so the signal survives
-    // greyscale and colour blindness, and the hue is decoration on top.
-    const band = rarityFor(card);
     // The colour law rides the ◆ row's tag, the row whose decision it changes.
     const freeTag = 'NO DIE';
     const paidTag = `+DIE · ${STANCE}/WILD`;
     return {
-        ...core, freePill, diePaidLine, colorLawHint, systemTerms,
-        rarityLabel: RARITY_LABEL[band], rarityPips: RARITY_PIPS[band], rarityColor: RARITY_COLOR[band],
+        ...core, freePill, diePaidLine, colorLawHint,
         freeTag, paidTag,
     };
 }

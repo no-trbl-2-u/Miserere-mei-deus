@@ -1009,27 +1009,6 @@ export function CombatEncounterPanel({
                                 </Svg>
                                 <CombatCardFace card={detailCard} width={detailCardW} height={Math.round(detailCardW * 1.43)} large />
                             </View>
-                            {/* the card's own metadata strip — not printed on the face,
-                                so it reads here instead. */}
-                            <View style={styles.detailMetaRow}>
-                                <Text style={styles.detailMetaStrip} testID="combat-card-detail-meta">{detailCard.detail.metaChip}</Text>
-                                {/* Rarity as a PIP ROW beside the named band already in
-                                    the meta strip. The count is what survives greyscale
-                                    and colour blindness; the hue is decoration on top of
-                                    it, never the signal by itself. Both come from the
-                                    `card-rarity.engine` module — no local banding. */}
-                                <View
-                                    style={styles.detailRarityPips}
-                                    testID="combat-card-detail-rarity"
-                                    accessibilityRole="text"
-                                    accessibilityLabel={`${detailCard.detail.rarityLabel} card`}
-                                >
-                                    {Array.from({ length: detailCard.detail.rarityPips }).map((_, i) => (
-                                        <View key={i} style={[styles.detailRarityPip, { backgroundColor: detailCard.detail.rarityColor }]} />
-                                    ))}
-                                </View>
-                            </View>
-
                             {/* (3) the NO-DIE / +DIE fork. The face is bare, so this is the
                                 only place a player can read what the card actually does. Keywords bold out of the sentence and are defined
                                 in the ledger at the top. */}
@@ -1057,21 +1036,6 @@ export function CombatEncounterPanel({
                                 The VM still carries both for the DECK screen, which is
                                 read out of combat and can afford full sentences. */}
                             {detailCard.detail.stacksText ? <Text style={styles.detailStacks}>{detailCard.detail.stacksText}</Text> : null}
-
-                            {/* System-term definitions (Conviction, Resonance,
-                                Reserve/Pips, Floating, WILD/X): ONLY the entries THIS
-                                card's printed lines reference, derived per-card by the
-                                presenter (systemTermsForCard), each term at most once. */}
-                            {detailCard.detail.systemTerms.length > 0 && (
-                                <View style={styles.systemsGlossary}>
-                                    {detailCard.detail.systemTerms.map(s => (
-                                        <Text key={s.term} style={styles.systemsGlossaryLine}>
-                                            <Text style={styles.systemsGlossaryTerm}>{s.term}</Text>
-                                            {' — ' + s.def}
-                                        </Text>
-                                    ))}
-                                </View>
-                            )}
 
                             {/* No flavor text here: mid-fight the player is deciding which
                                 die to spend. `card.flavor` still rides the VM; the DECK
@@ -1422,13 +1386,6 @@ const useStyles = makeStyles((AXM) => ({
     detailStatLabel: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 0.8, color: AXM.bone },
     detailStatValue: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment },
     detailStacks: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 11, color: AXM.bone, marginTop: 6 },
-    // Everything the bare face does not print reads here.
-    detailMetaStrip: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.6, color: AXM.bone, opacity: 0.7, marginBottom: 8 },
-    // The rarity pip row sits on the meta strip's own line, so the band
-    // costs no extra row in a panel that must fit one 360pt screen.
-    detailMetaRow: { alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-    detailRarityPips: { flexDirection: 'row', alignItems: 'center', gap: 3, marginBottom: 8 },
-    detailRarityPip: { width: 5, height: 5, borderRadius: 2.5 },
     detailPlays: { alignSelf: 'stretch', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.65)', overflow: 'hidden' },
     detailPlayRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingHorizontal: 10, paddingVertical: 7 },
     detailPlayRowSep: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(255,255,255,0.14)' },
@@ -1439,10 +1396,6 @@ const useStyles = makeStyles((AXM) => ({
     detailFreeBox: { alignSelf: 'stretch', marginBottom: 8 },
     detailFreeLine: { fontFamily: FONTS.serif, fontSize: 12.5, color: AXM.bone, lineHeight: 17, marginBottom: 5 },
     detailPowerLine: { fontFamily: FONTS.serif, fontSize: 12.5, lineHeight: 17, marginBottom: 5 },
-    // Systems glossary (Conviction/Resonance/Reserve+Pips/Floating/WILD-X).
-    systemsGlossary: { alignSelf: 'stretch', marginTop: 6, marginBottom: 4, paddingTop: 6, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.08)' },
-    systemsGlossaryLine: { fontFamily: FONTS.sans, fontSize: 9.5, color: AXM.bone, opacity: 0.65, lineHeight: 15, marginBottom: 3 },
-    systemsGlossaryTerm: { fontFamily: FONTS.sans, fontSize: 9.5, letterSpacing: 1, color: AXM.ash, opacity: 1 },
     detailReadNote: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 11, color: AXM.bone, lineHeight: 15 },
     detailLine: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment, lineHeight: 18 },
     detailMath: { alignSelf: 'stretch', fontFamily: FONTS.mono, fontSize: 10.5, color: AXM.bone, opacity: 0.85, lineHeight: 15, marginBottom: 8 },

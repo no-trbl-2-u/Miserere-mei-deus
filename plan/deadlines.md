@@ -272,6 +272,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CF1d — the words or glyphs toggle in Settings (spec 137); no dated T act waits on it
 - CF1e — the 49 pending card-voice words approved into the closed lists (spec 137); no dated T act waits on it
 - CF1f — the three long PAID lines reworded to fit the small face; T reads and merges its rules-change PR; date not set (T picks it).
+- CF1h — the opened card drops the duration line, the meta strip and the system notes (spec 137); no dated T act waits on it
 - CF1i — the Rules Glossary button in Settings (spec 137); no dated T act waits on it
 - CF1g — the open card prints the hand's whole line, in words or in glyphs (spec 137); no dated T act waits on it
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
@@ -299,6 +300,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-02** — **The opened card drops its extras, plotted into spec 137 (CF1h)** (T, attended, from a preview-APK scribble on Rose Wrap: "get rid of this stuff. In all places for all cards."). **Added** CF1h under `## Unscheduled`: no dated T act waits on it. No Item edited, no date moved.
 - **2026-11-02** — **The Rules Glossary button in Settings plotted into spec 137 (CF1i)** (T, attended `/plot`: "Yeah have a Rules Glossary button in settings", the home for the rules PR #1328 takes off opened cards). **Added** CF1i under `## Unscheduled`: no dated T act waits on it. No Item edited, no date moved.
 - **2026-11-01** — **Card faces: the open card prints the hand's line (CF1g)** (T, `/bug`, fix now, on the preview APK at `dab4c03b0`). **Added** CF1g under Unscheduled, plotted and closed in one PR; no Item's premise moves.
 - **2026-11-01** — **Card faces: the pending words and the long PAID lines plotted into spec 137 (CF1e, CF1f)** (T, attended `/plot`: "For now, approve them all" on 137.2's 49 pending words, and "/plot both" on the PAID lines too long for the small face). **Added** CF1e and CF1f under `## Unscheduled`: no dated T act waits on them, and T sets the date for reading CF1f's rules-change PR. No Item edited, no date moved.

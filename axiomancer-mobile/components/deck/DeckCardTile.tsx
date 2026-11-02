@@ -49,10 +49,6 @@ export function DeckCardTile({ card, onPress }: DeckCardTileProps) {
                     )}
                 </View>
                 <Text style={styles.outcome} numberOfLines={2}>{card.outcomeLine}</Text>
-                <View style={styles.metaRow}>
-                    <View style={[styles.stanceDot, { backgroundColor: card.stanceColor }]} />
-                    <Text style={styles.meta} numberOfLines={1}>{card.metaChip}</Text>
-                </View>
             </View>
             <RarityMark
                 label={card.rarity.label}
@@ -83,7 +79,4 @@ const useStyles = makeStyles((AXM) => ({
     name: { flexShrink: 1, fontFamily: FONTS.gothic, fontSize: 16, letterSpacing: 0.5, color: AXM.parchment },
     count: { fontFamily: FONTS.mono, fontSize: 12 },
     outcome: { fontFamily: FONTS.serif, fontSize: 13, lineHeight: 17, color: AXM.parchmentDim },
-    metaRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 1 },
-    stanceDot: { width: 7, height: 7, borderRadius: 4 },
-    meta: { flexShrink: 1, fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.5, color: AXM.bone },
 }));

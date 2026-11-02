@@ -209,9 +209,9 @@ export function allRegistryKeywords(): readonly string[] {
  * keywords (Conviction, Reserve/Pips, WILD/X), but that the player still
  * reads on cards and threshold lines.
  *
- * A card's inspect overlay shows only the entries its OWN printed lines
- * reference ({@link systemTermsForCard}); the full list stays exported as the
- * single source of truth.
+ * No opened card prints these (T, 2026-11-01); they are read by the board
+ * glossary below and by the keyword atlas and its drift check
+ * (`scripts/content-drift.mjs`), the single source of truth for system terms.
  */
 export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
     { term: 'CONVICTION ◆', def: 'A spend-anytime resource banked from unspent dice and overflow. It never decays.' },
@@ -224,46 +224,6 @@ export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
     { term: 'CURSE', def: 'A dead card that holds a hand slot until played. It cannot be scrapped.' },
     { term: 'HOLDS', def: 'GUARD holds: you have taken no damage this turn. A card that works "while GUARD holds" stops the moment a hit gets through.' },
 ];
-
-/** How a card's PRINTED lines reference each system term. Matched against the
- *  card's own engine text (top/bottom action lines + die lines) — never against
- *  keyword glosses, which would drag the whole dump back in. */
-const SYSTEM_TERM_MATCH: Record<string, RegExp> = {
-    'CONVICTION ◆': /\bconviction\b/i,
-    'RESERVE & PIPS': /\breserve\b|\bpips?\b/i,
-    'WILD / X': /\bwild\b|\bX die\b/,
-    'GLOBAL': /\bGlobal\b/,
-    'CURSE': /\bCurses?\b/,
-    'HOLDS': /\bGUARD holds\b/i,
-    'READING A LINE': /,/,
-    'HALF YOUR VITAE': /\bhalf your VITAE\b/,
-    'ELEMENTS': /\belements?\b/,
-};
-
-/** Keyword chips whose own gloss already explains a system term — when such a
- *  chip renders on the card, the system entry is a duplicate and is skipped
- *  (each term is explained at most once per overlay). */
-const SYSTEM_TERM_COVERED_BY: Record<string, readonly string[]> = {
-    'RESERVE & PIPS': ['PIP'],  // the Pip gloss defines the Reserve
-};
-
-/**
- * The per-card slice of the systems glossary:
- * only the entries the card's printed text actually references, minus any
- * already explained by one of its keyword chips. `printedText` is the joined
- * engine lines; `chipNames` the UPPERCASE keyword-panel names already shown.
- */
-export function systemTermsForCard(
-    printedText: string,
-    chipNames: readonly string[],
-): { term: string; def: string }[] {
-    const chips = new Set(chipNames.map(n => n.toUpperCase()));
-    return SYSTEM_GLOSSARY.filter(({ term }) => {
-        const rx = SYSTEM_TERM_MATCH[term];
-        if (!rx || !rx.test(printedText)) return false;
-        return !(SYSTEM_TERM_COVERED_BY[term] ?? []).some(kw => chips.has(kw));
-    });
-}
 
 // ── The board glossary ───────────────────────────────────────────────────────
 //

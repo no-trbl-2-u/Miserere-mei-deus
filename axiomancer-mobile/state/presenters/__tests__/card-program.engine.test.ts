@@ -79,7 +79,7 @@ describe('program faces', () => {
         expect(curse.play?.unscrappable).toBe(true);
         expect(global.play?.unscrappable).toBe(false);
         expect(global.detail.subtitle).toMatch(/^Global:/);
-        expect(curse.detail.systemTerms.map((t) => t.term)).toContain('CURSE');
+        expect(curse.detail).not.toHaveProperty('systemTerms');
     });
 });
 
