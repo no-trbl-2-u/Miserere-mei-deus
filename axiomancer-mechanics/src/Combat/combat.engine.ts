@@ -1469,9 +1469,14 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     events.push({ kind: 'barrier-absorbed', amount: barrierAbsorbed });
                 }
                 if (dmg > 0) {
+                    // What the wall took, read before the ward can shrink the hit further.
+                    const blocked = preSoakDmg - dmg;
                     // A death ward keeps the player at 1 VITAE this turn.
                     dmg = programClampDamage(state, player.health, dmg);
                     player = applyDamage(player, dmg);
+                    // The board's hit effects and the log's line wait on this. A hit the
+                    // ward stopped whole took nothing, so it says nothing.
+                    if (dmg > 0) events.push({ kind: 'damage-dealt', cardId: enemy.id, target: 'self', amount: dmg, blocked });
                     enemyDamageDealt += dmg;
                     convictionStolen += riderStealPerHit(rider);
                     // The 'damage-instance' clock, player bearer — a threat
