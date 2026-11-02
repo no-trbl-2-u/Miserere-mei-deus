@@ -318,7 +318,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardDetailOverlay.test.tsx, axiomancer-mobile/state/presenters/__tests__/deck.engine.test.ts"
+        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardDetailOverlay.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardTile.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,

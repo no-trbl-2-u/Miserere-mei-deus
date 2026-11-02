@@ -89,8 +89,6 @@ export interface DeckCardVM {
     /** Rank ladder position, 1 (Ash) .. 6 (Saint); null on a card with none. */
     rank: number | null;
     rarity: DeckRarityVM;
-    /** 'BODY · ASH · SPELL · DOT' — the combat detail's own meta chip. */
-    metaChip: string;
     /** One plain sentence: what playing this card does. */
     outcomeLine: string;
     /** The ◇ NO DIE value. */
@@ -278,7 +276,6 @@ function deckCardVM(cardId: string, count: number): DeckCardVM | null {
         cardType,
         rank: projected.rank ?? null,
         rarity,
-        metaChip: detail.metaChip,
         outcomeLine: detail.outcomeLine,
         freeText: detail.freePill,
         paidText: detail.diePaidLine,

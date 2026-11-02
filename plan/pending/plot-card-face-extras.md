@@ -27,7 +27,7 @@ glossary holds the three rules the short lines lean on, with no opened card prin
 
 T looked at an opened Global (Rose Wrap) on the preview APK and scribbled out three things, then said: "get rid of
 this stuff. In all places for all cards." They are gone from every opened card (the combat detail, the reward preview
-and the deck detail):
+the deck detail and the deck list tile):
 
 - **The duration line inside the large face** ("3 turns played FREE, the whole combat PAID", under the PAID line of a
   Global). Where the older text above says the large face states the duration (the Global decision, 137.3's notes,
@@ -43,7 +43,7 @@ and the deck detail):
 Only the rendering goes: card text, `run` bodies and the keyword panel above the card do not change.
 ~~~
 ~~~ acceptance
-- **A?openbare** An opened card (combat detail, reward preview, deck detail) shows no Global duration line on its face,
+- **A?openbare** An opened card (combat detail, reward preview, deck detail), and a deck list tile, shows no Global duration line on its face,
   no meta strip (stance, rank, rarity, type) under it and no system notes under its NO DIE / +DIE rows, for any card;
   the rarity word, the PAID line, the FREE pill or GLOBAL plate, the NO DIE / +DIE rows and the keyword panel stay.
   Render tests fail on the old build and pass now.
@@ -51,6 +51,6 @@ Only the rendering goes: card text, `run` bodies and the keyword panel above the
 ~~~ chunks
 - [ ] **137.?openbare** The opened card drops the duration line, the meta strip and the system notes · S · closes A?openbare · needs — · alias: CF1h
   - Removes `combat-card-face-duration` from `CombatCardFace`'s large branch, the meta strip and pip row from the
-    combat detail, the meta line from the deck detail, and the system-notes block with its `systemTerms` plumbing.
+    combat detail, the meta line from the deck detail and the deck list tile, and the system-notes block with its `systemTerms` plumbing.
     `SYSTEM_GLOSSARY` stays (the board glossary and the atlas read it).
 ~~~

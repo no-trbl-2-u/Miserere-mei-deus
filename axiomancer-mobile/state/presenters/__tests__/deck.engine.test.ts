@@ -202,7 +202,7 @@ describe('selectDeckViewModel: printed text is shared, not forked', () => {
             const card = findCard(vm, id);
 
             expect(card.name).toBe(projected!.name);
-            expect(card.metaChip).toBe(detail.metaChip);
+            expect(card).not.toHaveProperty('metaChip');
             expect(card.outcomeLine).toBe(detail.outcomeLine);
             expect(card.freeText).toBe(detail.freePill);
             expect(card.paidText).toBe(detail.diePaidLine);

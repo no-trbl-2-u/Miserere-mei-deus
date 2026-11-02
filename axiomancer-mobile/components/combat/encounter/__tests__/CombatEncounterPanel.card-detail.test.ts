@@ -115,7 +115,7 @@ describe('combat card detail — the VM behind the shape', () => {
             const d = detailFor(authored.id);
             const band = rarityFor(authored);
             expect(d).not.toHaveProperty('rarityPips');
-            expect(d.metaChip).toContain(RARITY_LABEL[band].toUpperCase());
+            expect(d).not.toHaveProperty('metaChip');
         }
     });
 

@@ -204,9 +204,8 @@ describe('detailStats — same numbers as the face', () => {
         // The FREE-line rider renders its keyword panel.
         expect(d.keywords.map(k => k.name)).toContain('VULNERABLE');
         expect(d.keywords.every(k => k.def.length > 0)).toBe(true);
-        // The meta chip surfaces the rank name + card type.
-        expect(d.metaChip).toContain('ASH');
-        expect(d.metaChip).toContain('SPELL');
+        // No meta chip rides the detail: no screen prints one (T, 2026-11-02).
+        expect(d).not.toHaveProperty('metaChip');
     });
     it('A Plain Ward (Guard) → terse "Gain Guard 5."', () => {
         const { card, sourceCard } = cardOf('grey-ward');

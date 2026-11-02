@@ -27,9 +27,9 @@ describe('DeckCardDetailOverlay: no meta strip', () => {
     for (const [label, id] of [['a plain card', 'grey-strike'], ['a Global', GLOBAL_ID]] as const) {
         it(`${label} shows its name, rarity and both lines but not the meta strip`, () => {
             const card = deckCard(id);
-            expect(card.metaChip.length).toBeGreaterThan(0);
+            expect(card).not.toHaveProperty('metaChip');
             const { unmount } = render(withAllProviders(<DeckCardDetailOverlay card={card} onClose={() => {}} />).tree);
-            expect(screen.queryByText(card.metaChip)).toBeNull();
+            expect(screen.queryByText(/\u00b7 (ASH|COMMON)/)).toBeNull();
             expect(screen.getByText(card.name)).toBeTruthy();
             expect(screen.getByTestId('deck-card-detail-rarity')).toBeTruthy();
             expect(screen.getByTestId('deck-card-detail-free')).toBeTruthy();
