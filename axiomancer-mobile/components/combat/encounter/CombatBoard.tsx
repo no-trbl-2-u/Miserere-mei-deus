@@ -94,6 +94,9 @@ import { getCardArt } from '@/assets/images/cards';
 export const FAN_CARD_ENTERING = FadeIn.duration(CARD_ENTER_MS);
 export const FAN_CARD_LAYOUT = LinearTransition.duration(CARD_LAYOUT_MS);
 
+/** Worn-gear chips on the board: hidden for now at T's request (2026-11-01). */
+export const SHOW_COMBAT_GEAR = false;
+
 /**
  * The fan's slide-together transition, per platform.
  *
@@ -1579,7 +1582,11 @@ export const CombatBoard = React.memo(function CombatBoard({
                     onConviction={openConvictionGloss}
                     top={sigTop} onMeasureHeight={setSigH}
                 />
-                <CombatGear gear={vm.gear} fired={gearFired} top={sigTop} />
+                {/* The worn weapon and armor icons are hidden at T's request (2026-11-01).
+                    To restore, set SHOW_COMBAT_GEAR to true (and flip the absence test in
+                    CombatBoard.gear-pulse.test.tsx). The component, vm.gear and the
+                    equipment-fired log line are all kept. */}
+                {SHOW_COMBAT_GEAR ? <CombatGear gear={vm.gear} fired={gearFired} top={sigTop} /> : null}
 
                 {/* the hand dock — the fan across the full board width, with room
                     above the cards for the FREE corner pill. No tap hint: the
@@ -1889,6 +1896,11 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     const cardInk = f.inert ? AXM.ash : (accent ?? band);
     const narrow = !large && width < NARROW_FACE_W;
     const keywordText = f.keyword ? `${f.familyGlyph ? `${f.familyGlyph} ` : ''}${f.keyword.toUpperCase()}` : '';
+    // The ledger ink: the armed read tint, else parchment. The one armed
+    // tint (`ARMED_ACCENT`/`HUE.stoneGrey`) and the unarmed frame's
+    // `AXM.bone` are both greys that read near-illegible as the PAID line's
+    // body text (plain "DEAL 5" at 10px); neither may reach the words.
+    const ledgerInk = accent && accent !== AXM.bone && accent !== HUE.stoneGrey ? accent : AXM.parchment;
     // The small face prints the whole PAID line, wrapped to three rows at 10pt
     // (`paidLineFit` shrinks a line too long for that); the large face keeps its
     // own keyword-and-value ledger and states a Global's duration under it.
@@ -2101,7 +2113,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                                     key={i}
                                     style={[
                                         run.caps ? styles.paidRunCaps : styles.paidRunSerif,
-                                        { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: accent ?? AXM.parchment },
+                                        { fontSize: paidFit!.size, lineHeight: Math.round(paidFit!.size * PAID_LINE_LEADING), color: ledgerInk },
                                     ]}
                                 >
                                     {run.text}
