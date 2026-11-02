@@ -216,6 +216,13 @@ describe('checkFaceGrammar', () => {
         expect(fails('DEAL 3X')).toMatch(/outside the grammar \(3X\)/);
     });
 
+    it('passes the words T approved (2026-11-01): a logic word, a content word, `+`, and still fails a stranger', () => {
+        expect(checkFaceGrammar([paid('DEAL 2 + your INFERNO')], VOICE_KWS)).toEqual([]);
+        expect(checkFaceGrammar([paid('Remove all your debuffs, GUARD 4 this turn')], VOICE_KWS)).toEqual([]);
+        expect(fails('DEAL 2 + your INFERNO, then rest')).toMatch(/"then"/);
+        expect(fails('DEAL 6, ignore the foe')).toMatch(/outside the grammar \(ignore\)/);
+    });
+
     it('fails a duration on a Global, and reads its one effect, not the face stand-in', () => {
         const g = (text: string): Card => ({ ...base, cardType: 'global', program: {
             global: { trigger: 'sac', text, run: noop } } });

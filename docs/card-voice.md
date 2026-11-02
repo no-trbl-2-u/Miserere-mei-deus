@@ -55,22 +55,40 @@ somewhere else ("instead of what?"), so it is never printed. `burning` is not a 
 | `Spend all …` | uses up a stack before the step that counts it | `Spend all the foe's BLIZZARD, DEAL 3 +2 for each BLIZZARD spent` |
 | `When you … :` / `Start of your turn:` | a Global's trigger (the closed trigger set) | `When you SACRIFICE X: DEAL X` |
 | `for N turns` | how long a status lasts | `VULNERABLE 25% for 1 turn` |
+| `+` between two values | adds the second value to the first | `DEAL 2 + half your THORNS` |
+| `this` · `next` · `last` | which turn or card: now, the one after, the one before | `2× your next SACRIFICE this turn`, `Return the last MERCY card you played this combat to your hand` |
+| `is` · `not` · `while` | a state, its negation, and a state that must still hold | `If the foe is at max VITAE, DEAL 4; if not, MERCY 2`, `your THORNS hit 2× while GUARD HOLDS` |
+| `to` · `from` · `in` · `with` | a target, a source, a place, an attachment | `Move half your INFERNO to the foe`, `Return 1 random card from EXILE to your deck`, `STORM = cards in your hand`, `Each HEAL this turn is RADIANCE with 2× DEAL` |
+| `only` | limits a step to one case; today only in `INFERNO 1 (foe only)`, which spec 137's CF1f rewords away (§4) | `BLIZZARD 2, INFERNO 1 (foe only)` |
+| `more` · `less` | a count or amount above or below another | `DEAL 3 if the foe has 2 or more elements`, `the foe's next attack is 2 less` |
+| `over` · `below` · `max` | a limit on a bar | `GUARD = HEAL over max VITAE`, `Damage cannot take you below 1 VITAE this turn`, `+4 max VITAE this combat` |
 
-A word outside this list, the keywords and the entities is a lint failure. A new logic word is T's call and is
-added here first.
+A word outside this list, the content list below, the keywords and the entities is a lint failure. A new logic word
+is T's call and is added here first.
 
-### Pending T
+### The content list (a closed list)
 
-The library rewrite met effects this list cannot say (a plain VITAE loss, a cut to the foe's next attack, a card
-returned from EXILE). Each line below took the fewest new words it could, and the lint accepts them
-(`FACE_PENDING_LOGIC_WORDS`, `FACE_PENDING_CONTENT_WORDS` in `card-rules.ts`) until T rules: keep a word (it moves
-up into the table) or reword its cards (it goes).
+Words that name a thing or an action no keyword covers (a plain VITAE loss, a cut to the foe's next attack, a card
+returned from EXILE). T approved them on 2026-11-01 ("For now, approve them all"); they are `FACE_CONTENT_WORDS` in
+`card-rules.ts`, with `spent` (`+2 for each BLIZZARD spent`).
 
-- Logic: `this`, `next`, `last`, `is`, `not`, `while`, `to`, `from`, `in`, `with`, `only`, `more`, `less`, `over`,
-  `below`, `max`, and `+` between two values (`DEAL 2 + your INFERNO`); `+X` is a number.
-- Content: `combat`, `damage`, `dealt`, `took`, `lost`, `healed`, `played`, `missing`, `lose`, `loses`, `card`,
-  `cards`, `deck`, `discarded`, `debuffs`, `element`, `elements`, `attack`, `attacks`, `hit`, `time`, `bursts`,
-  `sooner`, `grows`, `return`, `remove`, `move`, `swap`, `keep`, `take`, `cannot`, `random`.
+| Words | Used for | Example |
+|---|---|---|
+| `spent` | the units a `Spend all` used up | `DEAL 3 +2 for each BLIZZARD spent` |
+| `combat`, `time` | how long, how often | `DEAL half the VITAE you lost this combat`, `HEAL 2 each time the foe loses VITAE` |
+| `damage`, `dealt`, `took`, `lost`, `healed`, `missing` | an amount the board already counted | `THORNS = the damage you dealt this turn`, `DEAL = all you healed this turn`, `GUARD = your missing VITAE` |
+| `lose`, `loses` | a plain VITAE loss | `SACRIFICE 4, the foe loses 6 VITAE` |
+| `played`, `discarded` | a card's past action | `Return the last MERCY card you played this combat to your hand`, `THORNS 3 for each card discarded` |
+| `card`, `cards`, `deck`, `return` | cards and where they go | `Return 1 random card from EXILE to your deck`, `STORM = cards in your hand` |
+| `random` | a random pick (DISCARD is random without saying so) | `Return 1 random card from EXILE to your deck` |
+| `debuffs`, `remove` | clearing statuses | `Remove all your debuffs, RADIANCE 5`, `Remove your INFERNO` |
+| `element`, `elements`, `swap` | the foe's elemental stacks | `DRAW 1, CONVICTION 2 for each element the foe has`, `Swap 2 of the foe's elements, DRAW 2` |
+| `attack`, `attacks`, `hit` | the foe's attack and what hits | `REFLECT 50% if the foe attacks`, `your THORNS hit 2× while GUARD HOLDS` |
+| `move`, `keep` | relocating or retaining a stack | `Move half your INFERNO to the foe`, `keep your GUARD after the foe's turn` |
+| `bursts`, `sooner`, `grows` | a MERCY or STORM timer | `The foe's MERCY bursts 1 turn sooner`, `the foe's STORM grows +1 more` |
+| `take`, `cannot` | a floor on damage | `Damage cannot take you below 1 VITAE this turn` |
+
+A word outside every list here is still a lint failure, and a new word is T's call: it is added to this file first.
 
 ## 4. Who it lands on
 
