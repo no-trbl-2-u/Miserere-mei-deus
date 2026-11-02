@@ -21,7 +21,7 @@ import { CARD_MOTION_SETTLE_MS } from '@/components/combat/encounter/cardMotion'
 import { ENEMY_ATTACK_IMPACT_MS, clipDurationMs, isEnemyActionBeat } from '@/components/combat/frames';
 import { ENEMY_FRAME_SETS, type EnemyFrameSet } from '@/assets/images/enemies/frames';
 import {
-    CRANE_HOOK, FRAMED, PLAYER, afterPlaying, enemyTurn, enemyVM, fight, stunned,
+    CRANE_HOOK, FRAMED, PLAYER, afterPlaying, cardIdNamed, enemyTurn, enemyVM, fight, stunned,
 } from '@/test-utils/enemyTurnStreams';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { CombatEvent, Enemy } from '@mechanics';
@@ -29,9 +29,9 @@ import type { CombatEvent, Enemy } from '@mechanics';
 const TURNS = 24;
 
 /** Sear the Frozen's free line: a DEAL now, and INFERNO on the foe for its turn start. */
-const SEAR = 'el-p-07a';
+const SEAR = cardIdNamed('Sear the Frozen');
 /** Thornwall's free line: THORNS, for the foe's strikes to meet. */
-const THORNWALL = 'df-p-05c';
+const THORNWALL = cardIdNamed('Thornwall');
 
 const fired = (events: readonly CombatEvent[]) => events.some((e) => e.kind === 'threat-fired');
 const ticked = (events: readonly CombatEvent[]) =>

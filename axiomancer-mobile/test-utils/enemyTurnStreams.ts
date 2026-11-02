@@ -7,7 +7,7 @@
 import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import {
-    EnemyLibrary, applyEffect, endTurn, initializeCombatEncounter, lookupEffect, playCombatCard,
+    EnemyLibrary, applyEffect, cardLibrary, endTurn, initializeCombatEncounter, lookupEffect, playCombatCard,
     resolveThreatPhase, rollEncounterDice, startTurn,
     type CombatEncounterState, type CombatEvent, type Enemy,
 } from '@mechanics';
@@ -19,6 +19,16 @@ export const rng = () => 0.5;
 export const FRAMED = EnemyLibrary.filter((e) => getEnemyFrameSet(e.portraitAsset) !== null);
 
 export const CRANE_HOOK = EnemyLibrary.find((e) => e.id === 'enemy-crane-hook') as Enemy;
+
+/**
+ * A trial card's id, found by its name: only a set's own files may quote an id
+ * (`trial-set-removal.engine.test.ts`), so a set can come out cleanly.
+ */
+export function cardIdNamed(name: string): string {
+    const named = cardLibrary.filter((c) => c.name === name);
+    if (named.length !== 1) throw new Error(`expected one card named "${name}", found ${named.length}`);
+    return named[0].id;
+}
 
 /** A fight neither side can end, opened the way the live route opens one. */
 export function fight(enemy: Enemy, cards: readonly string[] = ['grey-blow']): CombatEncounterState {

@@ -21,7 +21,7 @@ import { CombatCombatantPane, PlayerMedallion } from '@/components/combat/encoun
 import { ENEMY_ATTACK_IMPACT_MS, clipDurationMs } from '@/components/combat/frames';
 import { ENEMY_FRAME_SETS } from '@/assets/images/enemies/frames';
 import { selectCombatLogHistory, selectCombatLogLines } from '@/state/presenters/combat-encounter.engine';
-import { CRANE_HOOK, FRAMED, PLAYER, afterPlaying, enemyTurn, enemyVM, fight, stunned } from '@/test-utils/enemyTurnStreams';
+import { CRANE_HOOK, FRAMED, PLAYER, afterPlaying, cardIdNamed, enemyTurn, enemyVM, fight, stunned } from '@/test-utils/enemyTurnStreams';
 import { numberPopTimeline } from '@/lib/juice';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import type { CombatEncounterState, CombatEvent, Enemy } from '@mechanics';
@@ -35,7 +35,7 @@ const FLOAT_EYE = FRAMED.find((e) => e.portraitAsset === 'float-eye') as Enemy;
 const SETTLED_MS = ENEMY_ATTACK_IMPACT_MS + 600;
 
 /** The Defender's Riposte card (P-09 b): its free line is GUARD and REFLECT. */
-const RIPOSTE_CARD = 'df-p-09b';
+const RIPOSTE_CARD = cardIdNamed('Riposte');
 
 /** A next move that would hit hard, for the readers that used to look at the intent. */
 const BIG_NEXT_MOVE = 99;
