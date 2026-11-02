@@ -1890,10 +1890,11 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     const cardInk = f.inert ? AXM.ash : (accent ?? band);
     const narrow = !large && width < NARROW_FACE_W;
     const keywordText = f.keyword ? `${f.familyGlyph ? `${f.familyGlyph} ` : ''}${f.keyword.toUpperCase()}` : '';
-    // The ledger ink: the armed read tint, else parchment. A staged card that
-    // is not yet armed passes AXM.bone as its frame accent; that grey must
-    // not reach the words (plain "DEAL 5" read near-illegible at 10px).
-    const ledgerInk = accent && accent !== AXM.bone ? accent : AXM.parchment;
+    // The ledger ink: the armed read tint, else parchment. The one armed
+    // tint (`ARMED_ACCENT`/`HUE.stoneGrey`) and the unarmed frame's
+    // `AXM.bone` are both greys that read near-illegible as the PAID line's
+    // body text (plain "DEAL 5" at 10px); neither may reach the words.
+    const ledgerInk = accent && accent !== AXM.bone && accent !== HUE.stoneGrey ? accent : AXM.parchment;
     // The small face prints the whole PAID line, wrapped to three rows at 10pt
     // (`paidLineFit` shrinks a line too long for that); the large face keeps its
     // own keyword-and-value ledger and states a Global's duration under it.

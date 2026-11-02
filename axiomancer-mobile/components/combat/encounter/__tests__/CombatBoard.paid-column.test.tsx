@@ -217,7 +217,7 @@ describe('the FREE corner pill', () => {
         unmount();
     });
 
-    it('prints the ledger in parchment on a staged card not armed yet (bone accent), and in the armed tint once armed', () => {
+    it('prints the ledger in parchment on a staged card not armed yet (bone accent) or once armed (the grey armed tint), and in a legible accent otherwise', () => {
         const card = hand()[0]!;
         const inkOf = (accent?: string) => {
             const { unmount } = render(withAllProviders(
@@ -231,6 +231,9 @@ describe('the FREE corner pill', () => {
         };
         expect(new Set(inkOf())).toEqual(new Set([AXM.parchment]));
         expect(new Set(inkOf(AXM.bone))).toEqual(new Set([AXM.parchment]));
+        // The real armed accent (`ARMED_ACCENT`/`HUE.stoneGrey`) is as illegible
+        // as bone at ledger size, so it must fall back to parchment too.
+        expect(new Set(inkOf(HUE.stoneGrey))).toEqual(new Set([AXM.parchment]));
         expect(new Set(inkOf(HUE.white))).toEqual(new Set([HUE.white]));
     });
 
