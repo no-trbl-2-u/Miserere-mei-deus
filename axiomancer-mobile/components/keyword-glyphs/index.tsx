@@ -1,6 +1,6 @@
 /**
- * `KeywordGlyph`: the icon a keyword wears on a card face in glyph mode (and
- * beside its word on the open card).
+ * `KeywordGlyph`: the icon that replaces a keyword's word on every card face,
+ * open or not, in glyph mode. Words mode draws none.
  *
  * `KEYWORD_GLYPH_COMPONENT` is the one place that says which component draws
  * which keyword; to swap a glyph for another drawing (a generated image), point
