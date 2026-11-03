@@ -222,7 +222,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | W2 | TP1b | - |
 | [ ] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | W2 | needs plot | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1j, BUG1a, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a, MR1a, MR1b, MR1c, MR1d |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | W2 | T | - |
@@ -263,6 +263,8 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- MR1e — T writes the Suppliant's Ring's new signature and M-02b's new text; date not set (T picks it).
+- MR1f — befriending leaves the game once MR1e's text exists; date not set (it waits on MR1e).
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
@@ -305,6 +307,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-03** — **the mercy check plotted as spec 144 (MR1a-MR1f)** (T, attended `/pitch` then `/plot asap`: "remove the befriending system and replace it with a 'mercy check' event"). **Added** MR1a, MR1b, MR1c and MR1d to the `Waits on` of the Mid-MVP check (Nov 9), and MR1e and MR1f under Unscheduled, since T set no date for the signature and M-02b text. **Edited** no Item's premise: the Open Hand stays until MR1f, so BUG1j and BUG1a still hold on that check. Nothing ticked; no date moved.
 - **2026-11-02** — **the sim's tuning tools plotted into spec 135 (SM2h-SM2k)** (T, attended sim session then `/plot`: "Do it", of the kept list: the no-stat Elementalist relic, the guard logic, no befriend, the anvil logic, plus run options, report columns and mix-and-match). **Added** SM2h, SM2i, SM2j and SM2k under `## Unscheduled`: no dated T act needs them. No Item edited.
 - **2026-11-02** — **the Merciful's two quest relics plotted into spec 115 (MF1f)** (T, attended pitch then pick: "let's create 2 relics for the merciful lane", pitches 3 and 8). **Added** an Unscheduled line for MF1f: no dated T act waits on it, and the MVP's relic list is unchanged. Nothing ticked; no date moved.
 - **2026-11-02** — **the X amount on a staged card always shows its number, plotted as spec 143 (XR1a)** (T, `/bug` with a screenshot: "These set X areas are truncated above 9"). **Added** XR1a to the `Waits on` of the Mid-MVP check (Nov 9), beside the other combat-board chunks: the check plays the fights. Nothing ticked; no date moved.
