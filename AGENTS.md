@@ -354,8 +354,9 @@ where each kept deviation lives). It is live at the repo root:
   archive-pre-revamp:plan/archive/<path>`, and only when T asks about
   history. Never read it to learn how the game works.
 - **Deadlines** (T, 2026-10-19): `plan/deadlines.md` is the whole deadline plan (the v0.3 milestone, the
-  two-week windows, and the Items table with every deadline item, done or open, its due date and the ids
-  (chunk aliases) that finish it or `needs plot`). `LIVE_DEADLINES.md` at the root is the next two weeks of
+  two-week windows, and the Items table with every deadline item, done or open, its due date, its goal,
+  how AI helps, and the ids (chunk aliases) that finish it or `needs plot`). The Items table is the one dated
+  list: T ticks a piece there and nowhere else (T, 2026-11-03; the lint fails a dated row outside it). `LIVE_DEADLINES.md` at the root is the next two weeks of
   items that need T, generated from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A
   `/plot` of a deadline item replaces its `needs plot` with the new chunks' aliases. The loop is not
   restricted to the current window.

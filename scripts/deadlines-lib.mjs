@@ -25,14 +25,18 @@ export const HORIZON_DAYS = 14
 export const BUILD_PLAN_FILE = 'plan/steps/01_build_plan.md'
 export const ARCHIVE_FILE = 'plan/ARCHIVE.md'
 
-// Group 6 is the optional `Waits on` cell: a five-column row still matches, with it undefined.
-export const ITEM_ROW = /^\|\s*(\[[ x]\])\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(.+?)\s*\|\s*(W\d+)\s*\|\s*(.+?)\s*(?:\|\s*(.*?)\s*)?\|\s*$/
+// Cells, by group: 1 Status, 2 Due, 3 Item, 4 Goal and 5 How AI helps (both optional, together:
+// T, 2026-11-03, when the MVP schedule merged into this table; prose for T and the digests that
+// no rule reads), 6 Window, 7 Rows, 8 the optional `Waits on`. A six-column row (no Goal, no How AI
+// helps) and a five-column one (no Waits on) still match. Goal and How AI helps sit before Window
+// so a parser that predates them reads them into the Item's name and Rows stay where they were.
+export const ITEM_ROW = /^\|\s*(\[[ x]\])\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*([^|]+?)\s*(?:\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*)?\|\s*(W\d+)\s*\|\s*([^|]+?)\s*(?:\|\s*([^|]*?)\s*)?\|\s*$/
 const PHASE_ROW = /^- \[([^\]]*)\]\s+(?:\(#\d+\)\s+)?Phase\s+([A-Za-z0-9]+)\s+—\s+(.*)$/
 
 /**
  * Parse the Items table of plan/deadlines.md.
  * @param {string} md
- * @returns {{done: boolean, due: string, name: string, window: string, rows: string[] | 'needs plot' | 'T', waitsOn: string[]}[]}
+ * @returns {{done: boolean, due: string, name: string, window: string, rows: string[] | 'needs plot' | 'T', waitsOn: string[], goal: string, aiHelp: string}[]}
  */
 export const parseItems = (md) => {
     const start = md.indexOf('\n## Items')
@@ -43,14 +47,31 @@ export const parseItems = (md) => {
         .split('\n')
         .map((line) => line.match(ITEM_ROW))
         .filter(Boolean)
-        .map(([, status, due, name, window, rowsCell, waitsCell]) => ({
+        .map(([, status, due, name, goalCell, aiCell, window, rowsCell, waitsCell]) => ({
             done: status === '[x]',
             due,
             name,
             window,
             rows: parseRowsCell(rowsCell),
             waitsOn: parseWaitsCell(waitsCell),
+            goal: goalCell ?? '',
+            aiHelp: aiCell ?? '',
         }))
+}
+
+// One list (T, 2026-11-03): a table row dated in its first cell, outside ## Items, is a
+// second schedule (the MVP schedule's lesson); check-deadlines.mjs fails on one.
+const DATED_CELL = /^\|\s*(?:\d{4}-\d{2}-\d{2}|(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)\w*\s+[A-Z][a-z]{2,}\s+\d{1,2})\s*\|/
+
+/** Table rows outside the `## Items` section whose first cell is a date: a second dated list. */
+export const datedRowsOutsideItems = (md) => {
+    let section = ''
+    const rows = []
+    for (const line of md.split('\n')) {
+        if (line.startsWith('## ')) section = line.slice(3).trim()
+        else if (section !== 'Items' && DATED_CELL.test(line)) rows.push(line.split('|')[1].trim())
+    }
+    return rows
 }
 
 /** The `Waits on` cell: comma-separated phase ids; `-`, empty or absent means none. */
@@ -349,7 +370,7 @@ export const rewriteItemStatus = (md, phases) => {
             unmatched.push(line)
             return line
         }
-        const [, status, due, name, window, rowsCell, waitsCell] = m
+        const [, status, due, name, , , window, rowsCell, waitsCell] = m
         const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell), waitsOn: parseWaitsCell(waitsCell) }, phases)
         if (!want || want === status) return line
         changed.push(`${name}: ${status} -> ${want}`)
