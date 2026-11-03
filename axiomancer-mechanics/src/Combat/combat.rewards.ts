@@ -397,10 +397,9 @@ export function rollEliteRelicDrop(
 }
 
 /**
- * A won (or befriended) elite fight's lane piece: one weapon or armor the
+ * A won elite fight's lane piece: one weapon or armor the
  * player does not carry, drawn on top of the relic roll and the card reward.
- * A win drops it at `EQUIPMENT_DROP_TUNING.elite`; a befriended elite always
- * hands one (`befriendedElite`, 1). Pure and seeded like
+ * A win drops it at `EQUIPMENT_DROP_TUNING.elite`. Pure and seeded like
  * {@link rollEliteRelicDrop}: the chance first, then the pick. The grey pair
  * is never in the pool; with every lane piece carried it drops nothing.
  *
@@ -409,10 +408,8 @@ export function rollEliteRelicDrop(
 export function rollEliteEquipmentDrop(
     player: EquipmentCarrier,
     rng: () => number,
-    opts: { befriended?: boolean } = {},
 ): Equipment | null {
-    const chance = opts.befriended ? EQUIPMENT_DROP_TUNING.befriendedElite : EQUIPMENT_DROP_TUNING.elite;
-    return rollEquipmentDrop(player, rng, chance);
+    return rollEquipmentDrop(player, rng, EQUIPMENT_DROP_TUNING.elite);
 }
 
 /** Appends a chosen reward card to the player's persistent deck collection. */

@@ -84,14 +84,15 @@ describe('the lane fight rankings', () => {
         expect(rank('defender', hit, guard) - rank('defender', quiet, guard)).toBeGreaterThan(1e10);
     });
 
-    it('the Merciful plays a mercy line before a stronger blow, and spares', () => {
+    it('the Merciful plays a mercy line before a stronger blow, casts The Open Hand, and spares', () => {
         const probe = board(laneCards('merciful').slice(0, 1));
         const mercy = laneCards('merciful').find(id => [...cardVerbs(probe, id)].some(v => v.toLowerCase().includes('mercy')))!;
         expect(mercy).toBeDefined();
         const s = board([GREY, mercy]);
         expect(rank('merciful', s, mercy)).toBeGreaterThan(rank('merciful', s, GREY));
-        expect(laneFightPolicy('merciful').mercyChoice).toBe('spare');
         expect(laneFightPolicy('merciful').signatureKinds).toContain('mercy');
+        expect(laneFightPolicy('merciful').mercyCheck).toBe('spare');
+        expect(laneFightPolicy('defender').mercyCheck).toBe('finish');
         expect(laneFightPolicy('defender').signatureKinds).not.toContain('mercy');
     });
 

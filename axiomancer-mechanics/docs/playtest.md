@@ -44,7 +44,7 @@ threshold.
 | `aggro-brute` | yes | Raw bottom-damage preview, no payoff timing. The doctrine's weak baseline — its underperformance IS the design. |
 | `turtle` | yes | Guard/barrier/defend first, DoT second; hoards Conviction (high signature threshold). |
 | `chaos` | no | Uniform-random card play and random affordable signatures (seeded rng) — the noise floor. |
-| `mercy-seeker` | yes | Controls to survive, befriends as soon as the HP gate opens, always spares. |
+| `mercy-seeker` | yes | Controls to survive, funds every signature early. |
 
 Tune player-facing difficulty against `blind`; ceilings against `greedy`;
 doctrine assertions against the archetype pairs (e.g. `dot-weaver` must beat

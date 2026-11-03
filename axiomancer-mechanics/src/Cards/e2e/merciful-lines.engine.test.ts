@@ -45,7 +45,7 @@ function fight(hand: string[], sc: Scenario): CombatEncounterState {
         ...s,
         hand: hand.map((cardId, i) => ({ uid: `t${i}`, cardId })),
         player: { ...s.player, health: sc.vitae, maxHealth: 100, effects: sc.mercy ? [debuff] : [] },
-        program: sc.mercy ? { ...s.program!, mercy: { total: 6, clock: 2, yielding: false } } : s.program,
+        program: sc.mercy ? { ...s.program!, mercy: { total: 6, clock: 2 } } : s.program,
         dice: [{ ...WILD }], reserve: [], guard: 0, conviction: 0,
     };
 }
@@ -163,7 +163,7 @@ describe('exact numbers on the lines that read the fight', () => {
         expect(delta('mc-e-02c', true, A).mercy).toBe(4);
         expect(delta('mc-m-07c', false, A).mercy).toBe(1);
         expect(delta('mc-m-07c', true, A).mercy).toBe(2);
-        expect(delta('mc-m-02b', false, A).mercy).toBe(2);
+        expect(delta('mc-m-02b', false, A).mercy).toBe(3);
         expect(delta('mc-m-08a', false, A).mercy).toBe(3);
         expect(delta('mc-m-08a', false, B).atkLess).toBe(2);
         expect(delta('mc-m-08a', true, B).atkLess).toBe(5);
@@ -190,9 +190,9 @@ describe('exact numbers on the lines that read the fight', () => {
         expect(delta('mc-m-05c', true, A).hp).toBe(66);
     });
 
-    it('M-02 makes the foe YIELDING; M-04 clears the debuff; E-04 pays SACRIFICE and draws; E-07 LEECHes', () => {
+    it('M-02 is MERCY 3 or 7; M-04 clears the debuff; E-04 pays SACRIFICE and draws; E-07 LEECHes', () => {
         for (const paid of [false, true]) {
-            expect(run('mc-m-02b', paid, A).mid.mercy.yielding).toBe(true);
+            expect(run('mc-m-02b', paid, A).mid.mercy.total).toBe(paid ? 7 : 3);
             expect(run('mc-m-04b', paid, B).mid.debuffs).toBe(0);
         }
         expect(run(null, false, B).mid.debuffs).toBe(1);

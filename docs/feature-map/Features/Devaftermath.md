@@ -27,7 +27,6 @@ No player-flow edge leads out of it.
 Code it uses, as plain text so Graph view draws player flow only.
 
 - Items
-- Log
 
 ## Pitch
 

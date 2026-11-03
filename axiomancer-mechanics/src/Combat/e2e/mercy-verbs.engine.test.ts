@@ -9,7 +9,7 @@
  *   · heals this turn +n and times n; the next HEAL is RADIANCE; your HEALs this turn are
  *     RADIANCE and deal double; +n max VITAE; HEAL to full;
  *   · return the last n MERCY cards you played; the foe's next attack deals n less; clear
- *     one or every debuff on you; the foe is YIELDING while it has MERCY;
+ *     one or every debuff on you;
  *   · the sim witness values them, and ranks a card that opts in by what its lines are worth.
  *
  * The cards here are synthetic test cards in the sandbox registry; the Merciful trial set
@@ -27,18 +27,16 @@ import type { ProgramCtx, ProgramQuery } from '../../Cards/card-program.types';
 import type { ActiveEffect } from '../../Effects/types';
 import { deepClone } from '../../Utils';
 import {
-    initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase, startTurn, playSignatureSkill,
+    initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase, startTurn,
     PROGRAM_KIT,
 } from '../combat.engine';
-import { getSignatureSkill, signatureCastBlock } from '../combat.signature';
-import { programFoeYielding, programIllegalReason, programLineValue } from '../combat.card-program';
+import { programIllegalReason, programLineValue } from '../combat.card-program';
 import { playSimPhase, type CombatCardUsage } from '../combat.encounter.sim';
 import { getDamageTakenMultiplier } from '../effects';
-import { clearMercy, initMercyState, tickMercyClock, yieldWhileMercy, type MercyState } from '../combat.mercy';
+import { clearMercy, initMercyState, tickMercyClock, type MercyState } from '../combat.mercy';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
 const WILD = { id: 'w', color: 'wild' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
-const OPEN_HAND = 'sig-disarming-plea';
 
 /** What the last read-card saw. */
 let seen: ProgramQuery[] = [];
@@ -64,8 +62,6 @@ const CARDS: Card[] = [
     card('mv-burst-3', c => c.burstMercy(3)),
     card('mv-tick-1', c => c.tickMercy(1)),
     card('mv-tick-5', c => c.tickMercy(5)),
-    card('mv-yield', c => { c.mercy(2); c.yieldWhileMercy(); }),
-    card('mv-yield-only', c => c.yieldWhileMercy()),
     card('mv-read', c => { seen.push({ ...c.q }); }),
     card('mv-mercy-then-read', c => { c.mercy(6); seen.push({ ...c.q }); }),
     card('mv-heal-then-read', c => { c.heal(5, { exact: true }); seen.push({ ...c.q }); }),
@@ -215,9 +211,9 @@ describe('tick the MERCY clock by n', () => {
     });
 
     it('tickMercyClock ticks by n and reports the burst', () => {
-        const m: MercyState = { total: 7, clock: 3, yielding: true };
-        expect(tickMercyClock(m, 2)).toEqual({ next: { total: 7, clock: 1, yielding: true }, burst: 0 });
-        expect(tickMercyClock(m, 3)).toEqual({ next: { total: 0, clock: 0, yielding: false }, burst: 7 });
+        const m: MercyState = { total: 7, clock: 3 };
+        expect(tickMercyClock(m, 2)).toEqual({ next: { total: 7, clock: 1 }, burst: 0 });
+        expect(tickMercyClock(m, 3)).toEqual({ next: { total: 0, clock: 0 }, burst: 7 });
         expect(tickMercyClock(m, 9).burst).toBe(7);
         expect(tickMercyClock(initMercyState(), 2)).toEqual({ next: initMercyState(), burst: 0 });
     });
@@ -523,61 +519,9 @@ describe('clear debuffs from yourself', () => {
     });
 });
 
-describe('the foe is YIELDING while it has MERCY', () => {
-    function jellyAtFull(hand: string[]): CombatEncounterState {
-        return fight(hand, { foe: GreenJelly, foeVitae: 40, foeMax: 40, vitae: 100 });
-    }
-
-    it('the verb makes a foe with MERCY YIELDING: The Open Hand then spares it above its gate', () => {
-        const s0 = { ...jellyAtFull(['mv-yield']), };
-        const before = { ...s0, conviction: getSignatureSkill(OPEN_HAND)!.cost };
-        expect(signatureCastBlock(before, getSignatureSkill(OPEN_HAND)!)).toMatch(/not yet low enough/);
-        const s = play(s0, 't0');
-        expect(mercyOf(s)).toMatchObject({ total: 2, yielding: true });
-        expect(programFoeYielding(s)).toBe(true);
-        const armed = { ...s, conviction: getSignatureSkill(OPEN_HAND)!.cost };
-        expect(signatureCastBlock(armed, getSignatureSkill(OPEN_HAND)!)).toBeNull();
-        expect(playSignatureSkill(armed, OPEN_HAND).state.mercyChoiceActive).toBe(true);
-    });
-
-    it('MERCY from another card does not make the foe YIELDING', () => {
-        const s = play(jellyAtFull(['mv-mercy-5']), 't0');
-        expect(programFoeYielding(s)).toBe(false);
-    });
-
-    it('the verb does nothing without MERCY', () => {
-        const s = play(jellyAtFull(['mv-yield-only']), 't0');
-        expect(programFoeYielding(s)).toBe(false);
-    });
-
-    it('stays while the foe has MERCY across its turns, and ends when the MERCY bursts', () => {
-        let s = play(jellyAtFull(['mv-yield']), 't0');
-        s = startTurn(resolveThreatPhase(s).state).state;
-        expect(programFoeYielding(s)).toBe(true);
-        s = startTurn(resolveThreatPhase(s).state).state;
-        expect(programFoeYielding(s)).toBe(true);
-        const burst = resolveThreatPhase(s);
-        expect(ofKind(burst.events, 'mercy-burst')).toHaveLength(1);
-        expect(programFoeYielding(burst.state)).toBe(false);
-    });
-
-    it('ends when a card bursts the MERCY now', () => {
-        const s = play(jellyAtFull(['mv-yield', 'mv-burst']), 't0');
-        expect(programFoeYielding(s)).toBe(true);
-        expect(programFoeYielding(play(s, 't1'))).toBe(false);
-    });
-
-    it('yieldWhileMercy and clearMercy are the pure halves', () => {
-        expect(yieldWhileMercy(initMercyState())).toEqual(initMercyState());
-        const m: MercyState = { total: 3, clock: 2, yielding: false };
-        expect(yieldWhileMercy(m)).toEqual({ total: 3, clock: 2, yielding: true });
-        expect(clearMercy({ total: 3, clock: 2, yielding: true })).toEqual(initMercyState());
-    });
-
-    it('the witness values it only against a foe that can be befriended', () => {
-        const befriendable = programLineValue(jellyAtFull(['mv-yield']), 't0', false, PROGRAM_KIT);
-        const plain = programLineValue(fight(['mv-yield'], { foeVitae: 200 }), 't0', false, PROGRAM_KIT);
-        expect(befriendable).toBeGreaterThan(plain);
+describe('clearMercy', () => {
+    it('takes the total and the clock back to nothing', () => {
+        expect(clearMercy({ total: 3, clock: 2 })).toEqual(initMercyState());
     });
 });
 
@@ -610,7 +554,7 @@ describe('the sim witness ranks a card that opts in by what its lines are worth'
 });
 
 describe('probes leave the fight untouched, and the no-op edges hold', () => {
-    const PROBED = ['mv-burst', 'mv-tick-5', 'mv-yield', 'mv-plus-3', 'mv-times-2', 'mv-next-radiance', 'mv-all-radiance',
+    const PROBED = ['mv-burst', 'mv-tick-5', 'mv-plus-3', 'mv-times-2', 'mv-next-radiance', 'mv-all-radiance',
         'mv-max-4', 'mv-full', 'mv-weaken-3', 'mv-return-2', 'mv-heal-5', 'mv-radiance-2'];
 
     it('valuing or legality-checking a line never changes the state it reads', () => {

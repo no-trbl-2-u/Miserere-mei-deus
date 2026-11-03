@@ -221,8 +221,7 @@ async function gatePrompt(store: StoreHandle, act: LabyrinthActDef, roomId: stri
 
 /** The act's boss room: acts I-II fight straight away; the finale
  *  (act III) first shows the debt reckoning and offers the naming fork
- *  (ADR-0007: the fork rides the standard Befriend mercy path — the CLI
- *  surfaces it as the pre-fight rite for the headless driver). */
+ *  (the CLI surfaces it as the pre-fight rite for the headless driver). */
 async function bossRoomSequence(
     store: StoreHandle,
     act: LabyrinthActDef,
@@ -257,9 +256,7 @@ async function bossRoomSequence(
 
     const { combatOutcome } = await arrive(store, act, flags, presetId);
     if (combatOutcome === 'defeat') return 'lost';
-    // A befriend (the mercy outcome) in the boss fight IS the mercy fork.
-    const outcome = combatOutcome === 'mercy' ? 'spared' : 'slain';
-    setProgress(store, recordBossOutcome(getProgress(store), act.id, outcome));
+    setProgress(store, recordBossOutcome(getProgress(store), act.id, 'slain'));
     return 'won';
 }
 

@@ -84,10 +84,9 @@ afterEach(() => {
 });
 
 describe('endCombatOutcome', () => {
-    it('reads a befriending as mercy and a flee as retreat', () => {
+    it('reads a flee as retreat', () => {
         expect(endCombatOutcome('victory')).toBe('victory');
         expect(endCombatOutcome('defeat')).toBe('defeat');
-        expect(endCombatOutcome('friendship')).toBe('mercy');
         expect(endCombatOutcome('flee')).toBe('retreat');
     });
 });

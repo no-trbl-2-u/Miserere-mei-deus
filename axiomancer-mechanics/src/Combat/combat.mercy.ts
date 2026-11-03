@@ -1,5 +1,5 @@
 /**
- * MERCY on the foe, and YIELDING — the Merciful's foe-side status (Phase MF1a).
+ * MERCY on the foe — the Merciful's foe-side status (Phase MF1a).
  *
  * On T's rulings of 2026-10-29 and 2026-10-30 (`plan/card-ledger/rehearsal-merciful.md`,
  * "Rulings after the vote" and "Revisions"; `plan/phases/phase_MF1_merciful_trial_set.md`):
@@ -11,19 +11,11 @@
  *             the clock. When the clock runs out, at the start of the foe's
  *             turn, the MERCY bursts: a DEAL of twice the total. Then the
  *             total clears to 0 and the next MERCY starts a fresh clock.
- *   YIELDING  while the foe is YIELDING you can befriend it whatever its
- *             VITAE: its befriend gate reads open.
  *
  * The clock counts the foe-turn starts left until the burst, the coming one
  * included: a MERCY played on your turn with no clock sets it to 3, and it
  * bursts at the start of the third foe turn from then. "1 turn left" means the
  * very next foe turn.
- *
- * A foe is YIELDING because a card made it so (M-02b: "while the foe has
- * MERCY, it is YIELDING"): its verb sets the flag ({@link yieldWhileMercy}),
- * and the flag clears with the total when the MERCY bursts. It is a flag the
- * card sets, not a reading of the total: MERCY from any other card leaves the
- * foe as it was.
  *
  * MERCY lives on the combat's program ledger only; it is never saved between
  * fights.
@@ -43,12 +35,10 @@ export interface MercyState {
     total: number;
     /** Foe-turn starts left until the burst, the coming one included (0 = no clock). */
     clock: number;
-    /** The foe is YIELDING: its befriend gate reads open whatever its VITAE. */
-    yielding: boolean;
 }
 
 export function initMercyState(): MercyState {
-    return { total: 0, clock: 0, yielding: false };
+    return { total: 0, clock: 0 };
 }
 
 /**
@@ -61,9 +51,9 @@ export function addMercy(m: MercyState, n: number): MercyState {
     return { ...m, total: m.total + n, clock: m.clock > 0 ? m.clock : MERCY_CLOCK_TURNS };
 }
 
-/** The total clears with its clock and the YIELDING it gave (a burst). */
+/** The total clears with its clock (a burst). */
 export function clearMercy(m: MercyState): MercyState {
-    return { ...m, total: 0, clock: 0, yielding: false };
+    return { ...m, total: 0, clock: 0 };
 }
 
 /**
@@ -77,11 +67,6 @@ export function tickMercyClock(m: MercyState, by = 1): { next: MercyState; burst
     const clock = m.clock - by;
     if (clock > 0) return { next: { ...m, clock }, burst: 0 };
     return { next: clearMercy(m), burst: m.total };
-}
-
-/** The foe is YIELDING while it has MERCY (M-02b): no MERCY, no change. */
-export function yieldWhileMercy(m: MercyState): MercyState {
-    return m.total > 0 && !m.yielding ? { ...m, yielding: true } : m;
 }
 
 /**
@@ -110,15 +95,10 @@ export function modifiedHeal(h: HealMods, base: number): number {
     return base * h.times + h.plus;
 }
 
-/** True when the foe is YIELDING (its befriend gate reads open). */
-export function mercyYielding(m: MercyState | undefined): boolean {
-    return m?.yielding === true;
-}
-
 /** The numbers the board shows: the foe's MERCY total and the clock's turns left. */
-export function mercyReading(m: MercyState | undefined): { mercy: number; 'mercy-turns': number; yielding: boolean } {
+export function mercyReading(m: MercyState | undefined): { mercy: number; 'mercy-turns': number } {
     const s = m ?? initMercyState();
-    return { mercy: s.total, 'mercy-turns': s.clock, yielding: s.yielding };
+    return { mercy: s.total, 'mercy-turns': s.clock };
 }
 
 /** The `mercy-ticked` event for a clock tick that did not burst (null when nothing ticked or it burst). */

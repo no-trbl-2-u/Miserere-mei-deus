@@ -155,8 +155,8 @@ export interface MemoirViewModel {
  * runs forward in time, then emits the newest
  * `CHRONICLE_VISIBLE_CAP` entries, newest first.
  *
- * - `combat:ended` → "FELLED" for 'victory', "ROUTED BY" for 'defeat',
- *   "SPARED" for 'friendship' (the mercy ending), "FLED" for 'flee'.
+ * - `combat:ended` → "FELLED" for 'victory', "SPARED" for a 'victory' spared at
+ *   the mercy check, "ROUTED BY" for 'defeat', "FLED" for 'flee'.
  *   Enemy name is lost from the event payload after END_COMBAT (the
  *   reducer clears `state.combat`), so the body line carries the
  *   outcome flavour + xp grant rather than naming the foe.
@@ -184,32 +184,29 @@ function buildChronicle(rawEvents: unknown): ReadonlyArray<ChronicleEntry> {
         ordinal += 1;
         if (isCombatEndedEvent(e)) {
             // Engine `EnginePayload.report?: CombatEndReport` with
-            // `{outcome: 'victory'|'defeat'|'friendship'|'flee',
+            // `{outcome: 'victory'|'defeat'|'flee', spared?: boolean,
             // xpGained: number, loot: Item[]}`.
             const report = e.payload.report;
             const outcome = report?.outcome;
             if (!outcome) continue;
             const xp: number = typeof report?.xpGained === 'number' ? report.xpGained : 0;
-            const label =
-                outcome === 'victory'
-                    ? 'FELLED'
-                    : outcome === 'defeat'
-                      ? 'ROUTED BY'
-                      : outcome === 'friendship'
-                        ? 'SPARED'
-                        : 'FLED';
-            const body =
-                outcome === 'victory'
-                    ? xp > 0
-                        ? `a foe falls. +${xp} xp.`
-                        : 'a foe falls.'
-                    : outcome === 'defeat'
-                      ? 'the path turns dark.'
-                      : outcome === 'friendship'
-                        ? xp > 0
-                            ? `mercy, and it was owed. +${xp} xp.`
-                            : 'mercy, and it was owed.'
-                        : 'the path bends away.';
+            const spared = outcome === 'victory' && report?.spared === true;
+            const label = spared
+                ? 'SPARED'
+                : outcome === 'victory'
+                  ? 'FELLED'
+                  : outcome === 'defeat'
+                    ? 'ROUTED BY'
+                    : 'FLED';
+            const body = spared
+                ? 'mercy, and it was owed.'
+                : outcome === 'victory'
+                  ? xp > 0
+                      ? `a foe falls. +${xp} xp.`
+                      : 'a foe falls.'
+                  : outcome === 'defeat'
+                    ? 'the path turns dark.'
+                    : 'the path bends away.';
             entries.push(
                 Object.freeze({
                     id: `combat-${ordinal}`,

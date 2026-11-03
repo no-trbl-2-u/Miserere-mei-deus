@@ -46,7 +46,7 @@ for a JSONL trace. The full flag list is in [`cli.md`](./cli.md).
 npm test                 # vitest, every src/**/*.test.ts once
 npm run test:watch       # watch mode
 npx vitest run src/Combat                 # one directory
-npx vitest run -t "befriend"              # tests whose name matches
+npx vitest run -t "mercy check"              # tests whose name matches
 npm run verify           # type-checks (library, tests, CLI), lint, tests, build
 ```
 

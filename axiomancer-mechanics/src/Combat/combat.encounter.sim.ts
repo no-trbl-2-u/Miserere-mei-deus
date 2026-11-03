@@ -20,7 +20,7 @@ import type { Enemy } from '../Enemy/types';
 import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, startTurn, endTurn,
-    playSignatureSkill, handCards, selectMercyChoice, getSignatureSkill,
+    playSignatureSkill, handCards, getSignatureSkill,
     signatureCastBlock, PROGRAM_KIT,
 } from './combat.engine';
 import { programIllegalReason, programLineValue } from './combat.card-program';
@@ -48,20 +48,18 @@ export type { CombatSimPolicyId } from './combat.sim-policies';
 
 /**
  * The UN-COLLAPSED win-path distribution: a raw count per `CombatOutcome`
- * across the sim's runs. Sums to the run count; `mercies` is its
- * `mercy` cell (a Befriend through The Open Hand).
+ * across the sim's runs. Sums to the run count.
  */
 export type WinPathCounts = Record<CombatOutcome, number>;
 
 export interface CombatSimStats {
     runs: number;
     victories: number;       // enemy HP → 0
-    mercies: number;         // spared a low-HP foe via Befriend
     defeats: number;
     retreats: number;
-    /** Win rate = (victories + mercies) / runs. */
+    /** Win rate = victories / runs. */
     winRate: number;
-    /** Win-path mix (victory / mercy / defeat / retreat). Sums to `runs`. */
+    /** Win-path mix (victory / defeat / retreat). Sums to `runs`. */
     winPathCounts: WinPathCounts;
     avgRounds: number;
     /** Population std-dev of rounds across the runs:
@@ -163,8 +161,7 @@ export interface CombatCardUsage {
     drawsSeen?: number;
     /** Runs in which this card entered the hand at least once. */
     runsDrawn?: number;
-    /** Of `runsDrawn`, runs that ended in a win (victory or any merciful
-     *  resolution). With the cell's total runs/wins this yields the
+    /** Of `runsDrawn`, runs that ended in a win. With the cell's total runs/wins this yields the
      *  win-rate-when-drawn delta — the "does drawing this card help?" witness. */
     winsWhenDrawn?: number;
 }
@@ -417,7 +414,7 @@ export function upgradeablePlayPhase(
     // ── Powered plays: iterate the live dice, momentum-steered. ──────────────
     while (working.phase === 'phase-play' && guard < 60) {
         guard++;
-        if (working.finalOutcome || working.mercyChoiceActive) break;
+        if (working.finalOutcome) break;
 
         if (working.conviction >= policy.convictionThreshold) {
             const sigId = bestSignature(working, policy, rng);
@@ -467,7 +464,7 @@ export function upgradeablePlayPhase(
     // is held for the rest of the phase, so the rest of the hand still drains.
     let drain = 0;
     const heldUids = new Set<string>();
-    while (working.phase === 'phase-play' && !working.finalOutcome && !working.mercyChoiceActive && drain < 30) {
+    while (working.phase === 'phase-play' && !working.finalOutcome && drain < 30) {
         drain++;
         let resT = handCards(working).find(c => c.card.verbClass !== 'retreat' && !heldUids.has(c.uid));
         if (!resT) break;
@@ -624,11 +621,6 @@ export function runOneEncounter(
 
     while (state.phase !== 'complete' && loopGuard < 200) {
         loopGuard++;
-        if (state.mercyChoiceActive) {
-            state = selectMercyChoice(state, policyObj.mercyChoice).state;
-            if (state.phase === 'complete' || state.finalOutcome) break;
-            continue;
-        }
         if (state.phase === 'phase-play') {
             enemyHpSamples.push(state.enemy.health);
             const r = upgradeablePlayPhase(state, policyObj, rng, cardUsage, cardLineTelemetry, focusIds);
@@ -638,11 +630,6 @@ export function runOneEncounter(
             decisionPoints += r.decisionPoints;
             liveOptions += r.liveOptions;
             if (state.finalOutcome) break;
-            if (state.mercyChoiceActive) {
-                state = selectMercyChoice(state, policyObj.mercyChoice).state;
-                if (state.phase === 'complete' || state.finalOutcome) break;
-                continue;
-            }
             if (state.phase === 'phase-play') {
                 // Every hand entry still here is about to be discarded
                 // un-played by the engine's draw-fresh site in
@@ -784,7 +771,7 @@ function aggUsageRow(cardUsage: Record<string, CombatCardUsage>, cardId: string)
 
 /** A zeroed win-path tally with every `CombatOutcome` key present. */
 function emptyWinPathCounts(): WinPathCounts {
-    return { victory: 0, mercy: 0, defeat: 0, retreat: 0 };
+    return { victory: 0, defeat: 0, retreat: 0 };
 }
 
 /** The card with the largest share of total attributed enemy-HP damage. */
@@ -831,7 +818,7 @@ function normalizedPlayEntropy(usage: readonly CombatCardUsage[]): number {
 
 /**
  * Monte-Carlo simulation with per-card telemetry: runs `runs` seeded
- * encounters and reports the win/mercy/defeat distribution + engagement
+ * encounters and reports the win/defeat distribution + engagement
  * witnesses, plus a per-card usage table aggregated over all runs.
  */
 export function simulateHazardPatternCombatDetailed(
@@ -841,7 +828,7 @@ export function simulateHazardPatternCombatDetailed(
     const startSeed = options.startSeed ?? 1;
     const policy = options.policy ?? 'greedy';
 
-    let victories = 0, mercies = 0, defeats = 0, retreats = 0;
+    let victories = 0, defeats = 0, retreats = 0;
     let totalRounds = 0, totalRoundsSq = 0, totalPlays = 0, totalStatusPlays = 0, totalConviction = 0;
     let totalDotHp = 0, totalMechanicBurst = 0, totalDirectHp = 0;
     let totalGuardOnAttack = 0, totalPlayerHpTaken = 0, totalSelfBurn = 0;
@@ -864,10 +851,9 @@ export function simulateHazardPatternCombatDetailed(
         winPathCounts[r.outcome]++;
         addObjectiveTelemetry(objectiveTelemetry, r.objective);
         if (r.outcome === 'victory') victories++;
-        else if (r.outcome === 'mercy') mercies++;
         else if (r.outcome === 'retreat') retreats++;
         else defeats++;
-        const won = r.outcome === 'victory' || r.outcome === 'mercy';
+        const won = r.outcome === 'victory';
         // Metrics slate — fold the run's draw ledger into the aggregated rows.
         // With an explicit deck, restrict to its cards so a synthetic/conjured
         // id can never violate the "usage ⊆ deck" matrix invariant.
@@ -934,10 +920,9 @@ export function simulateHazardPatternCombatDetailed(
     const stats: CombatSimStats = {
         runs: count,
         victories,
-        mercies,
         defeats,
         retreats,
-        winRate: (victories + mercies) / count,
+        winRate: victories / count,
         winPathCounts,
         avgRounds: totalRounds / count,
         // Population σ; the max(0, …) guards float error on a zero-variance set.
@@ -967,7 +952,7 @@ export function simulateHazardPatternCombatDetailed(
 
 /**
  * Monte-Carlo simulation: runs `count` seeded encounters and reports the
- * win/mercy/defeat distribution + engagement witnesses.
+ * win/defeat distribution + engagement witnesses.
  */
 export function simulateHazardPatternCombat(
     player: Character,

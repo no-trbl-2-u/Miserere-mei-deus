@@ -17,15 +17,6 @@ date: 2026-11-03
 
 ## Edit plan/README.md
 ~~~ old
-- **115.5** · attended: T does this one (MF1e) · since: 2026-11-01 · until: T's word · max_age: 30d
-~~~
-~~~ new
-- **115.5** · attended: T does this one (MF1e) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **144.5** · attended: T does this one (MR1e) · since: 2026-11-03 · until: T's word · max_age: 30d
-~~~
-
-## Edit plan/README.md
-~~~ old
 | 138 | The Chosen's ten-card deck from all three of its lanes, and a fifth less XP per kill | [138-sd1-chosen-deck-and-xp.md](138-sd1-chosen-deck-and-xp.md) | planned | 2 left |
 ~~~
 ~~~ new

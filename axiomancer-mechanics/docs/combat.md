@@ -17,8 +17,8 @@ the same functions. The public surface is re-exported through
 | What | Where |
 | --- | --- |
 | The fight state, `CombatEncounterState` | `Combat/combat.encounter.types.ts` |
-| Phases (`CombatEncounterPhase`): `reveal`, `phase-play`, `mercy-choice`, `complete`, … | same file |
-| Outcomes (`CombatOutcome`): `victory`, `mercy`, `defeat` | same file |
+| Phases (`CombatEncounterPhase`): `reveal`, `phase-play`, `complete`, … | same file |
+| Outcomes (`CombatOutcome`): `victory`, `defeat`, `retreat` | same file |
 | The typed event stream (`CombatEvent`) the UI renders | same file |
 | Dice (`CombatManaDie`, `CombatDieColor`) and die gear (`UpgradeableDieGear`) | same file |
 | Enemy intent (`CombatThreatPhase`, `CombatThreatAction`, `CombatIntentType`) | same file |
@@ -27,7 +27,7 @@ The fields a reader needs first: `player` and `enemy` (deep clones; VITAE is
 `health` / `maxHealth`), `hand`, `drawPile`, `discard`, `deck`, `dice` (this
 turn's tray), `reserve` (banked dice), `floatingDice`, `conviction`, `guard`,
 `momentumV2`, `threatPhases` and `currentPhaseIndex` (the enemy deck),
-`round`, `turnTakenThisPhase`, `mercyChoiceActive`, `finalOutcome` and `log`.
+`round`, `turnTakenThisPhase`, `finalOutcome` and `log`.
 
 ## Starting a fight
 
@@ -158,15 +158,13 @@ holds other entries that no live card or enemy card applies.
   and between-phases steps.
 - **Defeat:** the player's VITAE reaches 0, or the round passes
   `MAX_PHASES` (a private constant in `combat.engine.ts`).
-- **Mercy:** The Open Hand casts only on a foe with a `friendshipReward`
-  under its `befriendabilityConfig.hpGate` (`isEnemyBefriendable`,
-  `befriendHpGateOpen`, `Enemy/befriend.ts`). It sets `phase` to `mercy-choice`, and
-  `selectMercyChoice(state, 'spare' | 'exploit')` ends the fight as `mercy`
-  or strikes the foe and lets the fight go on if it survives.
+- **The mercy check:** a win over a `normal` foe may then ask spare or finish
+  (`rollMercyCheck`, `chooseMercyCheck`, `Combat/combat.mercy-check.ts`). The
+  outcome stays `victory`; only what it pays differs.
 
 `buildCombatSummary` (`Combat/combat.attribution.ts`) turns the finished
 state into a `CombatSummary`. Rules:
-[Befriend and mercy](../../docs/game-model.md#befriend-and-mercy).
+[The mercy check](../../docs/game-model.md#cards).
 
 ## Simulation and tools
 

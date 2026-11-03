@@ -181,13 +181,13 @@ function arrive(state: GameState, nodeId: string, rng = seededRng(7)) {
 }
 
 /** Arrives at a fight node and plays the fight to `outcome` through the reducer. */
-function fightAt(state: GameState, nodeId: string, outcome: 'victory' | 'friendship' | 'flee' | 'defeat'): GameState {
+function fightAt(state: GameState, nodeId: string, outcome: 'victory' | 'flee' | 'defeat'): GameState {
     const { state: owed, event } = arrive(state, nodeId);
     if (event.kind !== 'encounter') throw new Error(`expected a fight at ${nodeId}, got ${event.kind}`);
     return endFight(owed, event.encounter, outcome);
 }
 
-function endFight(state: GameState, target: Enemy | Encounter, outcome: 'victory' | 'friendship' | 'flee' | 'defeat'): GameState {
+function endFight(state: GameState, target: Enemy | Encounter, outcome: 'victory' | 'flee' | 'defeat'): GameState {
     const fighting = gameReducer(state, { type: 'START_COMBAT', payload: { target } });
     // The fight's own wage set aside: these tests read the steps' rewards.
     return gameReducer(fighting, { type: 'END_COMBAT', payload: { outcome, grantedLoot: [], grantedXp: 0, grantedShillings: 0 } });
@@ -480,8 +480,8 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
         },
     );
 
-    it.each(['victory', 'friendship'] as const)('a %s at the boss puts the bridge on the frontier', (outcome) => {
-        const s = fightAt(atTheWatchtower(), 'boss', outcome);
+    it('a victory at the boss puts the bridge on the frontier', () => {
+        const s = fightAt(atTheWatchtower(), 'boss', 'victory');
         expect(map(s).consumedNodes).toContain('boss');
         expect(roadReachable(map(s))).toContain('bridge');
     });

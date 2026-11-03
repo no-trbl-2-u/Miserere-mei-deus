@@ -201,7 +201,7 @@ describe('the lane', () => {
             for (const foe of [FloatEye, GreenJelly, DeathBeholder]) {
                 const player = { ...deepClone(Player), knownCards: deck };
                 const run = runOneEncounter(player, deepClone(foe), 3, 'greedy', { deck });
-                expect(['victory', 'mercy', 'defeat'], `${foe.name}`).toContain(run.outcome);
+                expect(['victory', 'defeat'], `${foe.name}`).toContain(run.outcome);
                 expect(run.plays).toBeGreaterThan(0);
             }
         }

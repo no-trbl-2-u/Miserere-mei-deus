@@ -94,7 +94,7 @@ describe('policy roster — every id resolves', () => {
             expect(policy!.name.length).toBeGreaterThan(0);
             expect(policy!.description.length).toBeGreaterThan(0);
             expect(policy!.convictionThreshold).toBeGreaterThanOrEqual(1);
-            expect(['spare', 'exploit']).toContain(policy!.mercyChoice);
+            expect(['spare', 'finish']).toContain(policy!.mercyCheck);
         }
     });
 
@@ -111,7 +111,7 @@ describe('policy roster — every id resolves', () => {
                 'clear-yours-trigger-storm', 'foe-inferno-to-storm', 'blizzard-to-storm',
             ]);
             expect(policy.convictionThreshold).toBe(7);
-            expect(policy.mercyChoice).toBe('spare');
+            expect(policy.mercyCheck).toBe('finish');
             expect(policy.rankSignature).toBeUndefined();
         }
     });
@@ -205,7 +205,7 @@ describe('chaos — randomness flows only through the injected seeded rng', () =
         const spy = vi.spyOn(Math, 'random');
         const r = runOneEncounter(loadout(MIX), FloatEye, 9, 'chaos');
         expect(spy).not.toHaveBeenCalled();
-        expect(['victory', 'mercy', 'defeat', 'retreat']).toContain(r.outcome);
+        expect(['victory', 'defeat', 'retreat']).toContain(r.outcome);
     }, 30_000);
 
     it('chaos runs are seed-deterministic', () => {

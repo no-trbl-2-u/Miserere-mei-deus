@@ -186,10 +186,3 @@ export const MercyGlyph = (p: GlyphProps) => (
     </Frame>
 );
 
-/** A flag on a staff, struck: the foe gives way. */
-export const YieldingGlyph = (p: GlyphProps) => (
-    <Frame {...p}>
-        <Path d="M6 3v18" />
-        <Path d="M6 4h12l-3 4 3 4H6" />
-    </Frame>
-);

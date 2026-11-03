@@ -1,7 +1,7 @@
 /**
  * The mercy check as a policy field: every witness answers it, the two
- * comparison policies differ in nothing else, and the existing witnesses keep
- * paying Finish, as every sim did before the check could be answered.
+ * comparison policies differ in nothing else, and the witnesses pay Finish but
+ * for the Merciful lane bot, which spares.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -18,11 +18,12 @@ const CTX: RunFightContext = {
 };
 
 describe('the mercy check policy field', () => {
-    it('every existing witness finishes, so no sim changes its pay', () => {
+    it('every witness finishes but the Merciful lane bot, which spares', () => {
         for (const policy of Object.values(COMBAT_SIM_POLICIES)) expect(policy.mercyCheck).toBe('finish');
-        for (const lane of ['blood-price', 'defender', 'merciful', 'elementalist', 'other']) {
+        for (const lane of ['blood-price', 'defender', 'elementalist', 'other']) {
             expect(laneFightPolicy(lane).mercyCheck).toBe('finish');
         }
+        expect(laneFightPolicy('merciful').mercyCheck).toBe('spare');
         expect(PLAYER_WITNESS.mercyCheck).toBe('finish');
     });
 
@@ -32,12 +33,11 @@ describe('the mercy check policy field', () => {
         expect(getRunPolicy('finish-all')?.fightPolicy(CTX).mercyCheck).toBe('finish');
     });
 
-    it('the Open Hand is treated alike in both arms: off, and exploited if it ever opens', () => {
+    it('the Open Hand is treated alike in both arms: off', () => {
         const { mercyCheck: spareAnswer, name: _n, description: _d, ...spare } = SPARE_ALL_WITNESS;
         const { mercyCheck: finishAnswer, name: _n2, description: _d2, ...finish } = PLAYER_WITNESS;
         expect(spare).toEqual(finish);
         expect([spareAnswer, finishAnswer]).toEqual(['spare', 'finish']);
         expect(PLAYER_WITNESS.signatureKinds).not.toContain('mercy');
-        expect(PLAYER_WITNESS.mercyChoice).toBe('exploit');
     });
 });

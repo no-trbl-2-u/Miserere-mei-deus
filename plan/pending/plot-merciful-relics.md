@@ -13,15 +13,16 @@ date: 2026-11-02
 ~~~ section The Merciful's two quest relics
 T, 2026-11-02, in session: "let's create 2 relics for the merciful lane. With a caveat, none of the rings should
 interact with 'befriending'." T then picked pitches 3 and 8 of eight. The names, stat lines, costs and numbers are the
-pitches'. The Suppliant's Ring keeps The Open Hand and stays the lane's elite drop; both new relics are quest relics.
+pitches'. The Suppliant's Ring stays the lane's elite drop, under its new The Open Hand (MERCY 6 on the foe; befriending
+left the game with spec 144); both new relics are quest relics.
 
 | Relic | Id | Stat line | Signature | Id, kind | Cost | Printed effect |
 |---|---|---|---|---|---|---|
 | Brimming Locket | `relic-brimming-locket` | +5 Mind | Brim Over | `sig-merciful-locket`, `overheal-guard` | 3 | This turn, healing past your max VITAE becomes GUARD. |
 | Penitent's Brooch | `relic-penitents-brooch` | +5 Mind | Absolution | `sig-merciful-brooch`, `absolve` | 3 | Remove all your debuffs, then HEAL 2 for each. |
 
-**Neither touches befriending (T's caveat).** Neither opens mercy, adds MERCY, sets or clears YIELDING, or reads the
-befriend gate. A test pins this for both.
+**Neither touches mercy (T's caveat, from when befriending was in the game).** Neither adds MERCY or reads the mercy
+check. A test pins this for both.
 
 **Brim Over.** [T to confirm #1] Default: every VITAE heal you make while it is armed counts: HEAL, RADIANCE, the
 signature heals (`programSignatureHeal`) and a LEECH you trigger on your turn. The GUARD is the heal's amount after its
@@ -53,7 +54,7 @@ and the elite drop pool is unchanged. `/dev`'s relic chips hand them over, as fo
 ~~~ acceptance
 - **A?brim** Brim Over (◆3, Brimming Locket): armed, a heal past max VITAE gives GUARD equal to the overflow; a heal that fits gives none; RADIANCE's DEAL stays what it restored; BRINE cuts the GUARD; it ends with your turn; casting it armed is refused and spends nothing.
 - **A?absolve** Absolution (◆3, Penitent's Brooch): removes each debuff in `player.effects` and BRINE, TANGLE, UNDERTOW and LEECH on you, leaves BARNACLE, HEALs 2 per condition (mind-scaled), and the HEAL counts toward "all you healed this turn"; with nothing to remove it is refused and spends nothing.
-- **A?relics** Both relics are in the library with `laneId: 'merciful'`, `relicSource: 'quest'` and +5 Mind; the Merciful has one elite relic and two quest relics; the elite pool is unchanged; both draw a sprite, read on the signature bar, and neither relic's signature touches mercy, MERCY, YIELDING or the befriend gate.
+- **A?relics** Both relics are in the library with `laneId: 'merciful'`, `relicSource: 'quest'` and +5 Mind; the Merciful has one elite relic and two quest relics; the elite pool is unchanged; both draw a sprite, read on the signature bar, and neither relic's signature touches MERCY or the mercy check.
 ~~~
 ~~~ chunks
 - [ ] **115.?relics** The Merciful's two quest relics · M · closes A?brim, A?absolve, A?relics · needs — · alias: MF1f

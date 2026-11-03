@@ -114,7 +114,7 @@ describe('A2 — the upgrade law', () => {
         for (const id of deck) expect(getCardById(id)?.id).toBe(id);
         const player = { ...deepClone(Player), knownCards: deck };
         const run = runOneEncounter(player, deepClone(FloatEye), 3, 'greedy', { deck });
-        expect(['victory', 'mercy', 'defeat']).toContain(run.outcome);
+        expect(['victory', 'defeat']).toContain(run.outcome);
         expect(run.plays).toBeGreaterThan(0);
     });
 });

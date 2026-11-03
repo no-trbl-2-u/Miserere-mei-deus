@@ -14,8 +14,7 @@ Combat must make its interacting systems legible and consequential. The
 rules as they stand, with their constants, are in
 [`docs/game-model.md`](../docs/game-model.md).
 
-**The enemy has ONE bar, VITAE.** Emptying it is the main win; befriending
-through The Open Hand into the mercy choice is the only other ending. There
+**The enemy has ONE bar, VITAE.** Emptying it is the only way to win. There
 is no second track.
 
 The intended mastery path is:
@@ -46,29 +45,22 @@ target curve.
 The player should use defend only when:
 
 - they fear a large attack is coming;
-- they want to generate resource;
-- they want to befriend an enemy.
+- they want to generate resource.
 
 Defend should not be an always-correct bunker action.
 
-## Friendship / mercy vision
+## Mercy vision
 
-Befriending should be difficult. It should come with consequences.
+As built: now and then a normal foe falls and the player must spare it or finish
+it, not knowing what mercy pays (`docs/game-model.md`, The mercy check). T removed
+befriending on 2026-11-03: "Reward feels flat and there's an entire mechanism for
+one relic".
 
-As built: The Open Hand (the Suppliant's Ring's signature, 4 Conviction)
-befriends a foe below its VITAE gate, and a successful befriend opens a
-choice: spare the foe, or exploit the opening for a heavy free strike.
+Wants from the befriending days, not built, and in need of a fresh ruling from T
+before any of them comes back:
 
-Wants not yet built (the rebuild sessions decide them; do not implement by
-default):
-
-- befriending certain bosses unlocks content found no other way;
-- spare and exploit change later world, boss or region state: exploiting an
-  elite closes the region boss's mercy path; sparing it lets the boss start
-  `open-minded`, a status that only counts toward befriending;
-- status effects modify befriend cost or success;
-- boss-specific befriend rites;
-- different rewards for spare and exploit.
+- a spared foe changes later world, boss or region state;
+- different rewards from foe to foe, or boss-specific rites.
 
 ## Worker law
 

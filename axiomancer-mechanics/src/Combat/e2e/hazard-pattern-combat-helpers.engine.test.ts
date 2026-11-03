@@ -8,7 +8,6 @@
  *
  *   - the self-reinforcing status-loop dice primitives (`combatDieCanPower` /
  *     `refreshOneDie`) — HP is the sole win condition;
- *   - the Befriend mercy entry (`selectEncounterMercyChoice`);
  *   - the deck / threat / card-adapter / UI-preview helpers.
  *
  * Pure math + an explicit fixed RNG only; no disk / network / TTY.
@@ -30,7 +29,6 @@ import type { Effect } from '../../Effects/types';
 import {
     initializeCombatEncounter, rollEncounterDice,
     availableDice,
-    selectMercyChoice as selectEncounterMercyChoice,
     handCards, resolveThreatPhase,
 } from '../combat.engine';
 import { recordAttribution, buildCombatSummary } from '../combat.attribution';
@@ -214,37 +212,6 @@ describe('Spec 25 §7 — presenter previews', () => {
         expect(availableDice(state)).toBe(expected);
     });
 
-});
-
-// ── Mercy choice (§7.6) — Befriend opening ──────────────────────────────────
-
-describe('Spec 25 §7.6 — selectEncounterMercyChoice', () => {
-    it('is a no-op when no mercy choice is active', () => {
-        const state = initializeCombatEncounter(makePlayer([CONTROL_HEART]), makeEnemy(80), undefined, SEED);
-        expect(state.mercyChoiceActive).toBeFalsy();
-        const res = selectEncounterMercyChoice(state, 'spare');
-        expect(res.state).toBe(state);
-        expect(res.events).toEqual([]);
-    });
-
-    it('spare resolves the encounter to a mercy outcome when the choice is open', () => {
-        const base = initializeCombatEncounter(makePlayer([CONTROL_HEART]), makeEnemy(80), undefined, SEED);
-        const open = { ...base, mercyChoiceActive: true };
-        const res = selectEncounterMercyChoice(open, 'spare');
-        expect(res.state.finalOutcome).toBe('mercy');
-        expect(res.state.phase).toBe('complete');
-        expect(res.state.mercyChoiceActive).toBe(false);
-        expect(res.events.some((e: CombatEvent) => e.kind === 'combat-ended')).toBe(true);
-    });
-
-    it('exploit deals a heavy strike and can resolve to victory on a kill', () => {
-        const base = initializeCombatEncounter(makePlayer([CONTROL_HEART]), makeEnemy(1), undefined, SEED);
-        const open = { ...base, mercyChoiceActive: true };
-        const res = selectEncounterMercyChoice(open, 'exploit');
-        expect(res.state.mercyChoiceActive).toBe(false);
-        expect(res.events.some((e: CombatEvent) => e.kind === 'damage-dealt')).toBe(true);
-        expect(res.state.finalOutcome).toBe('victory');
-    });
 });
 
 // ── Press Fate partial re-roll ──────────────────────────────────────────────

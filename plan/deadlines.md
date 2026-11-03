@@ -226,8 +226,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 
 - B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21.
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
-- MR1e — T writes the Suppliant's Ring's new signature and M-02b's new text; date not set (T picks it).
-- MR1f — befriending leaves the game once MR1e's text exists; date not set (it waits on MR1e).
+- MR1e — T's text for the Suppliant's Ring's new signature and M-02b is written into spec 144; it closes with MR1f's PR, no T act waits on it.
+- MR1f — befriending leaves the game; its PR is open, no T act waits on it.
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
@@ -270,6 +270,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-03** — **T's text for spec 144 settled at the pilot's gate; befriending leaves (MR1e, MR1f)** (T, at `/pilot`'s gate: "A: The Open Hand (Recommended)" and "Bigger MERCY (Recommended)"). **Edited** the Unscheduled lines of MR1e and MR1f: their text is in the spec and no T act waits on them. Nothing ticked; no date moved.
 - **2026-11-03** — **Chapters 2-4's maps and their weapons and armor added** (T, in chat, picking from the gap list: "D And F, that's it"). **Added** four Items to W3: design Chapters 2-4's maps (Nov 18) and plot them (Nov 19), before enemy session 3, as the Breakwater's map came before session 1 (T, 2026-10-28); pitch Chapters 2-4's weapons and armor (Nov 24) and plot them (Nov 26), as Chapter 1's were (spec 136). The dates are drafts. W3's hours rise from about 12 to about 15.5. Nothing ticked; no date moved.
 - **2026-11-03** — **one list: the MVP schedule merged into the Items table** (T, in chat: "Yes, do that", to merging the schedule and the Items into one list so there is a single place to tick). Ticking an Item never updated the day-by-day schedule, so done pieces kept reading as overdue in the digests. **Removed** `## MVP schedule`; its pace notes are now `## T's pace`. **Added** two cells to every Item, `Goal` (the schedule's high-level task) and `How AI helps` (the schedule's column; `/plot` or `/pitch`, then `/plot` on plot and pitch Items after the MVP, `-` where nothing was written), placed before `Window` so main's parser still reads `Rows` and `Waits on`. **Added** a lint: a dated table row outside `## Items` fails `check-deadlines`. Nothing ticked; no date moved.
 - **2026-11-03** — **every pre-Nov 3 piece removed** (T, in chat: "OMG, this is the third time I'm saying it, remove the overdue items from the deadlines"; earlier the same day: "Everything you said that's overdue is done"). **Removed** the twelve MVP schedule rows dated Oct 26 to Nov 2 (several lacked a Done mark, so digests read them as overdue) and the thirteen Items dated before Nov 3 (all ticked; every row they named has shipped). **Closed** HP4e (chunk 120.5) on T's word: T played the thirty; no per-candidate report was written, and nothing asks T for one. **Reworded** B2's Unscheduled line and moved its Held lock's `until:` to Nov 23, so it waits on enemy sessions 3 and 4 and asks nothing before them. Kept the Nov 3 hazard-routing Item and everything after. No date moved.

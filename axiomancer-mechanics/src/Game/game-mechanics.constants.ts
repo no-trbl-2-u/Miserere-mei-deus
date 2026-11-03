@@ -84,7 +84,7 @@ export const ENEMY_CARD_ANSWER_CHANCE = 0.10;
 export const ELITE_RELIC_DROP_CHANCE = 0.08;
 
 // Effects-driven resolution thresholds
-// Combined intensity of control/debuff effects needed to force saturation yield (friendship route)
+// Combined intensity of control/debuff effects needed to force saturation yield
 export const EFFECTS_RESOLUTION_DEBUFF_INTENSITY_THRESHOLD = 3;
 // Minimum DoT damage per round needed to force erosion victory route
 export const EFFECTS_RESOLUTION_DOT_DAMAGE_THRESHOLD = 2;
@@ -125,7 +125,7 @@ export const ENEMY_GEAR_TIER_PER_LEVEL = 0.02;
 // ENEMY — VITAE
 // ============================================================================
 // Enemy VITAE does not ride the player's per-stat formula. `baseStats` still
-// drives stance procs, derived combat stats and befriend logic; the pool a
+// drives stance procs and derived combat stats; the pool a
 // player has to chew through is its own authored/derived number, so difficulty
 // bands separate cleanly and a boss can be a wall without a grotesque stat
 // budget.

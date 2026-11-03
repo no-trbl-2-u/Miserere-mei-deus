@@ -228,7 +228,8 @@ batch past 25 MB, and exits 1 if a post is refused. The `sim-runs` workflow
 calls it for the four archetypes, 5 runs each, at every preview build, by hand
 and nightly. **Sim numbers
 from before BUG1j (`0afc538bf`) are not comparable with later ones:** from
-that commit every foe can be befriended and a befriend pays no XP and no card.
+that commit every foe could be befriended, with no XP and no card; befriending left
+the game with spec 144.
 
 ### Read the play log: `npm run api`
 

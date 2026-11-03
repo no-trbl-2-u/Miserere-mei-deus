@@ -33,7 +33,7 @@
  *   --stdin              JSONL answers (shared io.ts layer)
  *   --json-events        machine-clean stdout event stream; --auto runs emit
  *                        the full per-play transcript (turnStart /
- *                        signature / card / turnEnd / resolvedPhase / mercy)
+ *                        signature / card / turnEnd / resolvedPhase)
  *   --state-log <path>   JSONL state mutation log
  *
  * Logic stays in the engine modules. This file only parses flags, prompts,
@@ -56,7 +56,6 @@ import {
     firstLegalPoweringDie,
     buildCombatSummary,
     getSignatureSkill, signatureCastBlock,
-    selectMercyChoice,
 } from '../Combat/combat.engine';
 import type {
     CombatEncounterState,
@@ -276,7 +275,7 @@ function autoPlayPhase(
     }
 
     // Paid plays: each one spends one live die on a colour-legal card.
-    while (s.phase === 'phase-play' && !s.finalOutcome && !s.mercyChoiceActive && safety < phaseTurnLimit * 6) {
+    while (s.phase === 'phase-play' && !s.finalOutcome && safety < phaseTurnLimit * 6) {
         safety++;
 
         const current = s;
@@ -305,7 +304,7 @@ function autoPlayPhase(
 
     // Wind-down: drain the leftover hand via the FREE tops, then end the turn.
     let drain = 0;
-    while (s.phase === 'phase-play' && !s.finalOutcome && !s.mercyChoiceActive && drain < 30) {
+    while (s.phase === 'phase-play' && !s.finalOutcome && drain < 30) {
         drain++;
         const topCard = handCards(s).find(c => c.card.verbClass !== 'retreat');
         if (!topCard) break;
@@ -433,22 +432,6 @@ async function interactiveHazardCombatLoop(
 
         if (s.finalOutcome) break;
 
-        // Mercy choice.
-        if (s.mercyChoiceActive) {
-            const { choice } = await prompt<{ choice: 'spare' | 'exploit' }>([{
-                type: 'rawlist', name: 'choice', message: 'Mercy choice:',
-                choices: [
-                    { name: 'spare (befriend)', value: 'spare' },
-                    { name: 'exploit (free strike)', value: 'exploit' },
-                ],
-            }]);
-            const beforeMercy = s;
-            const mercyRes = selectMercyChoice(s, choice);
-            s = mercyRes.state;
-            logState('hazardCombat:mercy', beforeMercy, s, { choice });
-            if (s.finalOutcome) break;
-        }
-
         // Resolve threat phase + between-phases.
         const beforeResolve = s;
         const resolved = resolveThreatPhase(s);
@@ -488,14 +471,6 @@ async function autoHazardCombatLoop(
         });
 
         if (s.finalOutcome) break;
-        if (s.mercyChoiceActive) {
-            const beforeMercy = s;
-            const mercyRes = selectMercyChoice(s, 'spare');
-            s = mercyRes.state;
-            logState('hazardCombat:mercy', beforeMercy, s, { choice: 'spare' });
-            emit({ type: 'hazardCombat:mercy', payload: { choice: 'spare', events: mercyRes.events } });
-            break;
-        }
         if (s.phase === 'phase-play') {
             const beforeResolve = s;
             const resolved = resolveThreatPhase(s);
@@ -570,7 +545,6 @@ export async function runHazardCombatCliEncounter(
     const summary = buildCombatSummary(final);
     const outcomeLabel: Record<CombatOutcome, string> = {
         victory: 'Victory',
-        mercy: 'Mercy / Befriended',
         defeat: 'Defeat',
         retreat: 'Retreated',
     };

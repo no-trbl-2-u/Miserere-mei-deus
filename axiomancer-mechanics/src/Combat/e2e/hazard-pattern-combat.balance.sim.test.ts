@@ -40,20 +40,20 @@ describe('HP combat — combats terminate for every loadout family (structural, 
         it(`${name}: a DoT loadout terminates every run with exact outcome accounting`, () => {
             const s = simulateHazardPatternCombat(loadout(DOT), enemy, RUNS, SEED);
             expect(s.runs).toBe(RUNS);
-            expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(RUNS);
+            expect(s.victories + s.defeats + s.retreats).toBe(RUNS);
             expect(s.avgRounds).toBeGreaterThan(0);
         });
     }
 
     it('the boss fight terminates without crashing (win ratio NOT a constraint)', () => {
         const s = simulateHazardPatternCombat(loadout(DOT), DeathBeholder, RUNS, SEED);
-        expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(RUNS);
+        expect(s.victories + s.defeats + s.retreats).toBe(RUNS);
         expect(s.avgRounds).toBeGreaterThan(0);
     });
 
     it('a CONTROL loadout terminates every run', () => {
         const s = simulateHazardPatternCombat(loadout(CONTROL), FloatEye, RUNS, SEED);
-        expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(RUNS);
+        expect(s.victories + s.defeats + s.retreats).toBe(RUNS);
     });
 
 });
@@ -73,7 +73,7 @@ describe('HP combat — no degenerate stalemates (the safety cap never binds in 
     it('a wall-heavy TURTLE loadout still terminates every seeded boss run within the round cap', () => {
         for (let i = 0; i < 25; i++) {
             const r = runOneEncounter(loadout(TURTLE), DeathBeholder, SEED + i, 'turtle');
-            expect(['victory', 'mercy', 'defeat', 'retreat']).toContain(r.outcome);
+            expect(['victory', 'defeat', 'retreat']).toContain(r.outcome);
             expect(r.rounds).toBeLessThanOrEqual(61);
         }
     });

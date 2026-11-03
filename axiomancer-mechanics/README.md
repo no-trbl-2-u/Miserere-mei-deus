@@ -26,7 +26,7 @@ describe the code, not the rules.
 | `src/Character/` | `Character` types, experience and levels, worn equipment and dice gear reducers, character presets used by the CLIs and tests. |
 | `src/Combat/` | The combat engine (`combat.engine.ts`): encounter state, dice, the turn loop, enemy decks and threats, signatures, rewards, plus the simulation and playtest harnesses (`combat.encounter.sim.ts`, `combat.playtest.ts`). |
 | `src/Effects/` | Status effects: the buff and debuff libraries and the pure functions that apply and tick them. |
-| `src/Enemy/` | The enemy library (`ENEMY_REGISTRY` in `enemy.library.ts`), befriend, and loot. |
+| `src/Enemy/` | The enemy library (`ENEMY_REGISTRY` in `enemy.library.ts`) and its loot tables (data only). |
 | `src/Game/` | The game store, reducer, actions and events, save migration and persistence adapters, state fixtures (`src/Game/fixtures/`), and the Act 1 progression ledger. |
 | `src/Items/` | Consumables, relics, equipment, item grants, the shop and loot caches. |
 | `src/Log/` | The structured logger the CLIs attach with `--log-level` and `--log-file`. |

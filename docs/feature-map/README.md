@@ -82,7 +82,7 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 
 ### game-model.md sections that match no feature
 
-- none
+- Relics and The Open Hand
 
 ## Unnamed features
 

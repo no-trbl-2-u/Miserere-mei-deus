@@ -1,6 +1,6 @@
 # ADR-0003 — Difficult befriending requires HP pressure
 
-Status: Accepted  
+Status: Superseded by spec 144 (`plan/144-mr1-mercy-check.md`), 2026-11-03: befriending left the game  
 Date: 2026-06-01  
 Scope: axiomancer-mechanics
 

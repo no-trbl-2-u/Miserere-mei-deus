@@ -5,8 +5,8 @@
  * Conviction (◆) and granted only by worn signet relics. Each signature pays
  * its own Conviction price (`SignatureSkill.cost`); nothing assumes one price.
  *
- *   The Open Hand (the Suppliant's Ring, ◆4) — the befriend: it opens the
- *     mercy choice on a foe that is low enough (every foe can be befriended).
+ *   The Open Hand (the Suppliant's Ring, ◆4) — MERCY 6 on the foe, on the
+ *     MERCY rules (`combat.mercy.ts`). It always casts when you can pay.
  *   Crimson Return (the Crimson Circlet, ◆5) — your next SACRIFICE HEALs
  *     you by the VITAE it would have cost instead of costing it; it still
  *     counts as a SACRIFICE.
@@ -30,24 +30,28 @@
  * `combat.engine` (no cycle).
  */
 
-import { befriendHpGateOpen } from '../Enemy/befriend';
 import {
-    programArmSacrifice, programFoeYielding, programSacrificeArmed, programSignatureHeal, programTriggerLeech,
+    programArmSacrifice, programSacrificeArmed, programSignatureHeal, programSignatureMercy, programTriggerLeech,
     programSpikeSignature, programSpikeSignatureLive, programWeatherSignature, programWeatherSignatureLive,
 } from './combat.card-program';
+import { programText } from './stat-scaling';
+import type { BaseStats } from '../Character/types';
 import type {
-    CombatEncounterState, CombatEvent, CombatTransition, SignatureSkill,
+    CombatEncounterState, CombatTransition, SignatureSkill,
     SignatureSkillId, PlayerArchetype,
 } from './combat.encounter.types';
 
 /** Open Vein's HEAL (mind-scaled, as a card's HEAL). */
 export const OPEN_VEIN_HEAL = 5;
 
+/** The Open Hand's MERCY on the foe (heart-scaled, as a card's MERCY). */
+export const OPEN_HAND_MERCY = 6;
+
 /** The signatures, keyed by id. */
 export const SIGNATURE_SKILLS: Record<SignatureSkillId, SignatureSkill> = {
     'sig-disarming-plea': {
         id: 'sig-disarming-plea', name: 'The Open Hand', kind: 'mercy', cost: 4,
-        description: 'Offer the foe mercy. A foe that can be befriended, once low enough, may be spared.',
+        description: `MERCY {mercy:${OPEN_HAND_MERCY}} on the foe: it heals {mercy:${OPEN_HAND_MERCY}}, and its MERCY grows by {mercy:${OPEN_HAND_MERCY}}. When the clock runs out, MERCY bursts for twice its total.`,
     },
     'sig-crimson-circlet': {
         id: 'sig-crimson-circlet', name: 'Crimson Return', kind: 'sacrifice-heals', cost: 5,
@@ -103,6 +107,14 @@ export function getSignatureSkill(id: string): SignatureSkill | undefined {
 }
 
 /**
+ * A signature's words at these stats, its `{mercy:n}` tokens read as a card's are.
+ * Worn stats join a fight's, so pass `statsWithWorn` out of a fight.
+ */
+export function signatureText(skill: SignatureSkill, stats: BaseStats | undefined): string {
+    return programText(skill.description, stats);
+}
+
+/**
  * Why this signature can't be cast right now, or null when it can. The engine
  * refuses on it and the signature bar prints it, so the two never disagree.
  * A refused cast spends nothing. A signature that would do nothing is refused
@@ -112,9 +124,6 @@ export function signatureCastBlock(state: CombatEncounterState, skill: Signature
     if (state.conviction < skill.cost) return `Need ${skill.cost} ◆ Conviction`;
     switch (skill.kind) {
         case 'mercy':
-            if (state.mercyChoiceActive) return 'Mercy is already offered';
-            // A YIELDING foe can be spared whatever its VITAE.
-            if (!programFoeYielding(state) && !befriendHpGateOpen(state.enemy)) return `${state.enemy.name} is not yet low enough to spare`;
             return null;
         case 'sacrifice-heals':
             return programSacrificeArmed(state, 'heals') ? 'Your next SACRIFICE already heals you' : null;
@@ -146,14 +155,8 @@ export function applySignatureSkill(
     skill: SignatureSkill,
 ): CombatTransition {
     switch (skill.kind) {
-        case 'mercy': {
-            const events: CombatEvent[] = [
-                { kind: 'mercy-opened', message: `${state.enemy.name} falters — spare or exploit?` },
-            ];
-            // `mercy-choice` is the phase the board opens the spare/exploit
-            // modal on; `selectMercyChoice` resolves it.
-            return { state: { ...state, phase: 'mercy-choice', mercyChoiceActive: true }, events };
-        }
+        case 'mercy':
+            return programSignatureMercy(state, OPEN_HAND_MERCY, skill.id);
         case 'sacrifice-heals':
             return { state: programArmSacrifice(state, 'heals'), events: [] };
         case 'sacrifice-leech':

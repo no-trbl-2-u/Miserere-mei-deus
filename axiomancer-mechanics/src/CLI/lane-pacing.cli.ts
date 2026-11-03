@@ -90,7 +90,7 @@ function main(): void {
                 });
                 rows.push({
                     policy: maxPlaysPerTurn ? `${policy} ≤${maxPlaysPerTurn}/turn` : policy, foe: base.name, level, foeLevel: enemy.level, foeVitae: Math.round(enemy.maxHealth * hp),
-                    win: +(s.winRate * 100).toFixed(1), mercy: +(s.mercyRate * 100).toFixed(1), turns: +s.meanTurns.toFixed(2), turnsWon: +s.meanTurnsWon.toFixed(2),
+                    win: +(s.winRate * 100).toFixed(1), turns: +s.meanTurns.toFixed(2), turnsWon: +s.meanTurnsWon.toFixed(2),
                     vitaeLeft: +s.meanVitaeLeft.toFixed(1), sacrifices: +s.meanSacrifices.toFixed(1),
                     leechPeak: +s.meanLeechPeak.toFixed(1), leechMax: s.maxLeechPeak,
                 });

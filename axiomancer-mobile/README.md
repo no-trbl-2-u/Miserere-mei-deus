@@ -43,7 +43,7 @@ The boundaries, stated plainly:
   `archive-pre-revamp:plan/archive/2026-09-25-trim-t5/axiomancer-mobile/specs/`.
   New work is planned through the root loop (`plan/`, `skills/`).
 - **[`VISION.md`](./VISION.md)** is **doctrine** — T's game vision and UX
-  guardrails. Read before major mobile UX, combat, or mercy/friendship
+  guardrails. Read before major mobile UX, combat, or mercy check
   work.
 
 ---
@@ -295,7 +295,7 @@ values below are the default `ashen-gold` theme from `theme/palette.ts`):
 | `AXM.parchment` | `#ece0c8`  | main text / inactive icon        |
 | `AXM.blood`     | `#e05a45`  | HP, danger, bleed                |
 | `AXM.sulfur`    | `#dcb04a`  | mana, selected, active           |
-| `AXM.rust`      | `#c36431`  | friendship, rust accents         |
+| `AXM.rust`      | `#c36431`  | rust accents                     |
 | `AXM.bone`      | `#9c937f`  | secondary text, inactive tabs    |
 | `AXM.ash`       | `#46403a`  | borders, disabled                |
 

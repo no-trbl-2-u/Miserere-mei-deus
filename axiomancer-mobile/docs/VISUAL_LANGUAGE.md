@@ -48,7 +48,7 @@ a **frozen snapshot of the active theme**, resolved once at module-load
 > left as they are — the accents were meant to sit back. One token did not:
 > `rust` fell below 4.5:1 against both `bg` and `panelBg` on ashen-gold (the
 > default), coastal-verdant and ember-depths, and `rust` is read as text
-> (error codes, crash labels, the friendship panel, difficulty badges).
+> (error codes, crash labels, difficulty badges).
 > On coastal-verdant that was a clean crossing of AA, 5.07 -> 4.26; on
 > ashen-gold and ember-depths the retune deepened a deficit that predated
 > it. `rust` has been lifted back over the line on those three themes by
@@ -76,7 +76,7 @@ AXM.bg        near-black background
 AXM.parchment main text / inactive icon
 AXM.blood     HP, danger, bleed
 AXM.sulfur    mana, selected, active
-AXM.rust      friendship, rust accents
+AXM.rust      rust accents
 AXM.bone      secondary text, inactive tabs, hints
 AXM.ash       borders, disabled — NOT body/hint text (too low-contrast
               against `AXM.bg`; see Phase V8 critic-loop finding, the

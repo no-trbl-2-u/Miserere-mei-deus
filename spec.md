@@ -32,9 +32,9 @@ Undertale.
   it must be the card's colour unless the card is grey or the die is gold).
 - **VITAE is the one bar.** Emptying the foe's VITAE wins. There is no
   second track and no objective function grading a fight from above.
-- **Mercy is earned.** Befriending a foe through The Open Hand opens the
-  mercy choice: spare it, or exploit the opening. It is the only
-  non-lethal ending.
+- **Mercy is a blind choice.** Now and then a normal foe falls and the
+  player must spare it or finish it, not knowing what mercy pays. It decides
+  what the win pays; it is not a second ending.
 - **The enemy telegraphs.** The foe's next card is shown before the player
   acts; enemy damage escalates the longer a fight runs.
 - **Legibility without safety.** The app makes every number on a card face

@@ -42,7 +42,7 @@ describe('profane canon — the payoff-loadout sim machinery survives the rework
         it(`the ${name} loadout terminates and accounts for every run`, () => {
             const s = simulateHazardPatternCombat(loadout(cards), FloatEye, RUNS, SEED);
             expect(s.runs).toBe(RUNS);
-            expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(RUNS);
+            expect(s.victories + s.defeats + s.retreats).toBe(RUNS);
         });
     }
 });

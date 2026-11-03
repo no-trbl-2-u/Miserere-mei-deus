@@ -25,7 +25,8 @@ export const PLAY_LOG_DECK_EVENTS_PATH = '/v1/deck-events';
 /**
  * Every `CombatEvent['kind']`. The `satisfies` clause rejects a kind the
  * engine does not emit; the contract test rejects a kind the engine emits and
- * this list lacks, so the validator never refuses a real fight.
+ * this list lacks, so the validator never refuses a real fight. `mercy-opened`
+ * is no event now, but an older APK may still post one.
  */
 export const COMBAT_EVENT_KINDS = [
     'dice-rolled', 'turn-dice-rolled', 'turn-law-blocked', 'conviction-gained', 'signature-cast',
@@ -38,7 +39,7 @@ export const COMBAT_EVENT_KINDS = [
     'threat-fired', 'threat-branch', 'threat-cleansed', 'enemy-word', 'enemy-rider', 'hand-drawn', 'mercy-opened', 'momentum-advanced',
     'momentum-broken', 'momentum-surged', 'special-fired', 'die-overflowed', 'die-cracked',
     'coveted-die-stolen', 'combat-ended',
-] as const satisfies readonly CombatEvent['kind'][];
+] as const satisfies readonly (CombatEvent['kind'] | 'mercy-opened')[];
 
 /**
  * The screen events the combat panel adds to a fight's stream. The first three
@@ -47,7 +48,8 @@ export const COMBAT_EVENT_KINDS = [
  */
 export const PLAY_LOG_UI_EVENT_KINDS = ['ui-staged', 'ui-unstaged', 'ui-detail-opened', 'ui-signature-refused'] as const;
 
-export const PLAY_LOG_FIGHT_OUTCOMES = ['victory', 'mercy', 'defeat', 'retreat'] as const satisfies readonly CombatOutcome[];
+/** `mercy` is no engine outcome now: rows already stored hold it, and an older APK may still post it. */
+export const PLAY_LOG_FIGHT_OUTCOMES = ['victory', 'mercy', 'defeat', 'retreat'] as const satisfies readonly (CombatOutcome | 'mercy')[];
 
 /**
  * Who played a row (phase SM1a): T on a preview APK (`human`), a local harness
@@ -147,7 +149,8 @@ export interface FightPost extends PlayLogSource, PlayLogOrigin {
     playerLevel: number;
     /** The live HP multiplier the fight ran under, so its length compares to the measured report. */
     enemyHpMultiplier: number;
-    outcome: CombatOutcome;
+    /** `mercy` is stored rows and older APKs only (see PLAY_LOG_FIGHT_OUTCOMES). */
+    outcome: CombatOutcome | 'mercy';
     turns: number;
     vitaeStart: number;
     vitaeEnd: number;

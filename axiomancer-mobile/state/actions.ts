@@ -268,7 +268,7 @@ export interface AppActions {
      * own spoils; this store-level action forwards an outcome to the
      * engine's `endCombat` method (which requires an explicit outcome)
      * and surfaces the resulting `CombatEndReport`
-     * (XP, loot, friendship codex unlock) for callers that need post-combat
+     * (XP, shillings, a spared foe's codex unlock) for callers that need post-combat
      * metadata. Defaults to `'flee'` (no reward) when called with no
      * argument.
      */
@@ -682,7 +682,7 @@ export const ENCOUNTER_ENEMY_HP_MULTIPLIER = LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER;
 /**
  * Returns a copy of `enemy` with `health` and `maxHealth` scaled by `mult`
  * (rounded, floored at 1). Both scale together so HP-ratio mechanics
- * (befriend `hpGate`, execute thresholds) keep their proportions. A `mult` of 1
+ * (execute thresholds) keep their proportions. A `mult` of 1
  * returns an equivalent (un-scaled) enemy.
  */
 export function withScaledEnemyHp(enemy: Enemy, mult: number): Enemy {

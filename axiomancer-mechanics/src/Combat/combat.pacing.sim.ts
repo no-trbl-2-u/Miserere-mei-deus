@@ -25,7 +25,7 @@ import type { Enemy } from '../Enemy/types';
 import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase,
     startTurn, endTurn, playSignatureSkill, signatureCastBlock, getSignatureSkill,
-    selectMercyChoice, handCards, PROGRAM_KIT,
+    handCards, PROGRAM_KIT,
 } from './combat.engine';
 import { programLineValue, programLineCost, programIllegalReason, isProgramCard } from './combat.card-program';
 import { OPEN_VEIN_HEAL } from './combat.signature';
@@ -50,7 +50,7 @@ export type PacingPolicy = 'witness' | 'human-like';
 
 /** One fight's pacing read-out. */
 export interface PacingRun {
-    outcome: 'victory' | 'mercy' | 'defeat' | 'retreat';
+    outcome: 'victory' | 'defeat' | 'retreat';
     /** Player turns taken (tray rolls). */
     turns: number;
     /** The player's VITAE when the fight ended. */
@@ -63,7 +63,7 @@ export interface PacingRun {
     phaseReached: number;
 }
 
-/** The human-like signature step: The Open Hand when it can open mercy (and
+/** The human-like signature step: The Open Hand whenever it can be paid (and
  *  `mercy` is on); the Circlet's and the Ruby Signet's when the hand holds a
  *  SACRIFICE to arm; Open Vein when the foe carries LEECH or the HEAL would
  *  land in full. */
@@ -85,7 +85,7 @@ function castSignatures(s: CombatEncounterState, mercy: boolean): CombatEncounte
         }
         if (sig.kind === 'clear-yours-trigger-storm' && (state.program?.el?.storm ?? 0) <= 0) continue;
         state = playSignatureSkill(state, id).state;
-        if (state.finalOutcome || state.mercyChoiceActive) return state;
+        if (state.finalOutcome) return state;
     }
     return state;
 }
@@ -127,7 +127,7 @@ function humanLikePhase(stateIn: CombatEncounterState, maxPlays: number, mercy: 
         if (s.phase !== 'phase-play') return s;
     }
     s = castSignatures(s, mercy);
-    if (s.finalOutcome || s.mercyChoiceActive) return s;
+    if (s.finalOutcome) return s;
 
     // Each die, in tray order, on the best-reading PAID line it can power.
     const used = new Set<string>();
@@ -185,14 +185,12 @@ export function runPacingEncounter(
         phaseReached = Math.max(phaseReached, s.threatPhases[s.currentPhaseIndex]?.enemyMove?.phase ?? 0);
     };
     for (let guard = 0; guard < 200 && s.phase !== 'complete' && !s.finalOutcome; guard++) {
-        if (s.mercyChoiceActive) { s = selectMercyChoice(s, 'spare').state; continue; }
         if (s.phase !== 'phase-play') break;
         s = policy === 'witness'
             ? upgradeablePlayPhase(s, witness, rng, {}, {}).state
             : humanLikePhase(s, opts.maxPlaysPerTurn ?? Infinity, mercy);
         sample();
         if (s.finalOutcome) break;
-        if (s.mercyChoiceActive) { s = selectMercyChoice(s, 'spare').state; continue; }
         if (s.phase === 'phase-play') s = resolveThreatPhase(s).state;
         sample();
     }
@@ -214,8 +212,6 @@ export interface PacingSummary {
     meanTurns: number;
     /** Mean player turns over the won fights (NaN when none). */
     meanTurnsWon: number;
-    /** Share of fights won by sparing the foe (The Open Hand). */
-    mercyRate: number;
     meanVitaeLeft: number;
     meanSacrifices: number;
     meanLeechPeak: number;
@@ -235,7 +231,7 @@ export interface PacingOptions {
     enemyHpMultiplier?: number;
     /** Human-like only: the most cards played per turn (default: no cap). */
     maxPlaysPerTurn?: number;
-    /** Cast The Open Hand when it can spare the foe (default true). Off: every win is a kill. */
+    /** Cast The Open Hand when it can be paid (default true). Off: no MERCY comes from the signature. */
     mercy?: boolean;
 }
 
@@ -249,13 +245,12 @@ export function simulatePacing(o: PacingOptions): PacingSummary {
         all.push(runPacingEncounter(o.player, enemy, o.deck, start + i, o.policy, { maxPlaysPerTurn: o.maxPlaysPerTurn, mercy: o.mercy }));
     }
     const mean = (xs: number[]): number => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
-    const won = all.filter(r => r.outcome === 'victory' || r.outcome === 'mercy');
+    const won = all.filter(r => r.outcome === 'victory');
     return {
         runs,
         winRate: won.length / runs,
         meanTurns: mean(all.map(r => r.turns)),
         meanTurnsWon: mean(won.map(r => r.turns)),
-        mercyRate: all.filter(r => r.outcome === 'mercy').length / runs,
         meanVitaeLeft: mean(all.map(r => r.vitaeLeft)),
         meanSacrifices: mean(all.map(r => r.sacrifices)),
         meanLeechPeak: mean(all.map(r => r.leechPeak)),

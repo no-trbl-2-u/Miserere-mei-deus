@@ -52,8 +52,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   each) under drafted names at the numbers T chose to ship (the sims' fixes):
   RADIANCE heals you and hits the foe for what it restored; MERCY heals the foe,
   adds to its MERCY total, and bursts for twice the total when its 3-turn clock
-  runs out (`Combat/combat.mercy.ts`); YIELDING lets you befriend a foe whatever
-  its VITAE. Its lane `merciful` holds all 29 and deals the sims' 20-card test
+  runs out (`Combat/combat.mercy.ts`). Its lane `merciful` holds all 29 and deals the sims' 20-card test
   deck (every Global and every Spell); it comes out by its file and its
   `TRIAL_SETS` line. The Suppliant's Ring is its family relic (an elite drop).
 - **Card types** (`CardType`) are lifecycle rules. Attack and Skill play
@@ -143,7 +142,8 @@ the Expo app (`axiomancer-mobile`) presents it.
   table (`MERCY_TUNING.spareTable`, `Combat/combat.spare-reward.ts`), revealed on
   the end screen. A spared foe is still a `victory`: it counts for quests, the
   defeat ledger and the node, and it alone grants the foe's story flag and journal
-  entry without a befriend. Sims do not roll the check yet, so they pay as Finish.
+  entry (`Enemy.spareStory`, `Enemy.journalEntry`). Sims answer the check through
+  `mercyCheck` on their policies.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
   mobile) drawn from `rewardPoolFor`: the cards of every lane in
   `unlockedLaneIds`, which is the character's two starting lanes
@@ -179,7 +179,7 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **Where the lane pieces come from** (`EQUIPMENT_DROP_TUNING`, `Items/equipment-drop.ts`,
   the one table of rates and shop numbers): a won elite fight drops one the
   player does not carry at 25%, on top of its relic roll and never the whole
-  reward; a befriended elite always hands one; a loot cache's item bundle holds
+  reward; a loot cache's item bundle holds
   one at 33% (`rollCacheReward` with a `carrier`); the Breakwater's quests
   alternate relic, weapon, relic, armor, an equipment step paying the lane of the
   relic the step before paid; the village shop stocks two at 40 shillings. The
@@ -247,7 +247,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   intent is ATTACK, DEFEND, STATUS, DANGER or UNKNOWN, with the move's name
   and no damage, WARD or stack number anywhere on the board. A DANGER move's
   name shows only once the foe is in the defeat ledger
-  (`codex.defeatedEnemies`, written on a win or a befriend); before that the
+  (`codex.defeatedEnemies`, written on a win, spared or finished); before that the
   DANGER icon shows with no name, and it stays unnamed when it fires.
 - **Enemy words (D116).** A foe's move may carry the five enemy words (WARD,
   MEND and SCOUR count as one, then BRINE, TANGLE, UNDERTOW, BARNACLE), and
@@ -291,8 +291,8 @@ the Expo app (`axiomancer-mobile`) presents it.
   the authored VITAE. The pacing sim (`Combat/combat.pacing.sim.ts`,
   `npm run lane-pacing`) applies the same knob so its turn counts compare
   with play.
-- **Ending:** the player wins when the foe's VITAE reaches 0, or by sparing
-  a befriended foe. The player loses a fight at 0 VITAE or after `MAX_PHASES`
+- **Ending:** the player wins when the foe's VITAE reaches 0, and only then. The
+  player loses a fight at 0 VITAE or after `MAX_PHASES`
   = 60. A first loss does not end the run; the next one does (see Death under
   The world).
 
@@ -336,8 +336,7 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
 - **Green Jelly:** level 5, a normal with HP phases (EN1g): it holds the
   next cards you play inside it, shows you your own face and throws your last
   status back. Placed on the town's nodes; an elite slot stages it at the elite
-  tier until its own foe lands. Its own befriend gate is below 30%
-  VITAE, which is also where its second phase begins.
+  tier until its own foe lands. Its second phase begins at 30% VITAE.
 - **Wreck-Picker and Smokehouse Gutter:** level 6 normals with HP phases (EN1h), on the cliffs
   and the hamlet. The Wreck-Picker takes cards from your discard into its hoard
   (shown on its pane; its Hurl Flotsam and Hide in the Hoard grow with it, and its
@@ -379,12 +378,13 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   default gates are 3 and 6) and its card weights sit at 0.8-1.15, so its
   damage steps up at rounds 7-8 and the fight runs about seven turns.
 
-## Befriend and mercy
+## Relics and The Open Hand
 
 - **Ten relics** (`relicLibrary`, `Items/relic.library.ts`), and a run
   starts with none: no relic is handed over at the first node (phase
   SG1). The Suppliant's Ring's signature is The Open Hand; old saves keep
-  the ring they were given. Blood Price's three (phase LR1d), all opening the
+  the ring they were given, and a save's copy of a relic takes the library's words on
+  load (`refreshRelicText`). Blood Price's three (phase LR1d), all opening the
   `blood-price` lane while worn: the Crimson Circlet (the elite drop's; +5 Body,
   +20 max VITAE; Crimson Return), the Ruby Signet (a quest's; +5 Heart; Ruby
   Tithe) and the Bleeding Signet (a quest's; +5 Mind; Open Vein: HEAL 5,
@@ -413,15 +413,11 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   the position it was worn in (taking one off leaves that position empty and
   moves no other, EQ3a), and the
   signature bar lists every signature the worn relics grant.
-- **The Open Hand** befriends any foe (every foe can be befriended, T
-  2026-10-31, for testing) that sits under its `hpGate`, else under
-  `BEFRIEND_TUNING.defaultHpGate` (30% VITAE; `Enemy/befriend.ts`).
-- **The mercy choice** (`selectMercyChoice`) follows. Spare ends the fight
-  as mercy and pays no XP: either 3 shillings x the foe's level or one healing
-  potion by level (minor below 5, normal 5-9, greater 10+), even odds from the
-  combat rng (`BEFRIEND_TUNING`). Exploit strikes for max(10, 50%
-  of the foe's maximum VITAE); the fight goes on if the foe survives.
-  Befriending is the only non-lethal ending.
+- **The Open Hand** (the Suppliant's Ring, ◆4) is MERCY 6 on the foe,
+  printed after Heart scaling (`OPEN_HAND_MERCY`, `signatureText`, `Combat/combat.signature.ts`), on the MERCY rules above: it
+  heals the foe, adds to its total, starts the 3-turn clock if none runs and bursts
+  for twice the total, heart-scaled. It always casts when you can pay. The fight goes
+  on.
 
 ## The world
 
@@ -595,7 +591,7 @@ without a ruling from T.
   card from the deck's lanes (UP1f).
 - No enemy keywords beyond D116's five enemy words and the player's VULNERABLE
   and LEECH landing on you (see A fight), and no summons.
-- No alternate wins beyond befriend: no RELENT, no CONDEMN, no capitulation.
+- No alternate wins: no befriending, no Exploit, no RELENT, no CONDEMN, no capitulation. Emptying VITAE is the only win.
 - No alignment, GRACE or faction reputation.
 - No bonus for paying with the card's own colour: the die powers the card
   and adds nothing (D79). The gold die stays wild.

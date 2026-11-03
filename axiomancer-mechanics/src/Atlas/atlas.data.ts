@@ -13,7 +13,7 @@ import { cardLibrary } from '../Cards/cards.library';
 import { CARD_LANES } from '../Cards/card.lanes';
 import { printedKeywords } from '../Cards/card-rules';
 import { relicLibrary } from '../Items/relic.library';
-import { SIGNATURE_SKILLS } from '../Combat/combat.signature';
+import { SIGNATURE_SKILLS, signatureText } from '../Combat/combat.signature';
 import { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from '../Combat/live-encounter';
 import { scaleAmount } from '../Combat/stat-scaling';
 import { EnemyLibrary } from '../Enemy/enemy.library';
@@ -126,7 +126,7 @@ export function buildAtlasData(meta: AtlasMeta = { commit: 'unknown', generatedA
     }
 
     const signatures = Object.values(SIGNATURE_SKILLS).map(s => ({
-        id: s.id, name: s.name, cost: s.cost, description: s.description,
+        id: s.id, name: s.name, cost: s.cost, description: signatureText(s, undefined),
     }));
 
     const act1Maps = new Set<string>(planAct1Walk().regions.map(r => r.map));

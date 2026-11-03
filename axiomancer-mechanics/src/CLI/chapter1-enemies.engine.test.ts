@@ -57,7 +57,7 @@ describe('chapter1-enemies tuning table', () => {
                 out.push({
                     policy, lane, level, foe, playerMaxVitae: 100,
                     summary: {
-                        runs: 1, winRate: 1, meanTurns: 0, mercyRate: 0, meanSacrifices: 0, meanLeechPeak: 0, maxLeechPeak: 0,
+                        runs: 1, winRate: 1, meanTurns: 0, meanSacrifices: 0, meanLeechPeak: 0, maxLeechPeak: 0,
                         meanTurnsWon: (policy === 'witness' ? 500 : 0) + fi * 10 + li * 2 + vi + 1,
                         meanVitaeLeft: 100,
                         phaseShares: shares(fi, foe.enemy.phases?.length ?? 1),

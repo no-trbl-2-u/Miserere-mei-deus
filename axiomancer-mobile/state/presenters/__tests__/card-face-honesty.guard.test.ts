@@ -197,7 +197,7 @@ describe('card-face honesty guard', () => {
             const card = getCard(id);
             if (!card) continue;
             const kw = faceStats(card, getCardById(id)).keyword;
-            if (!kw) continue; // guard/befriend etc. legitimately headline without a keyword word
+            if (!kw) continue; // guard etc. legitimately headline without a keyword word
             const defs = detailStats(card, getCardById(id)).keywords;
             const hit = defs.find(k => k.name === kw);
             if (!hit || !hit.def) missing.push(`${id} → ${kw}`);

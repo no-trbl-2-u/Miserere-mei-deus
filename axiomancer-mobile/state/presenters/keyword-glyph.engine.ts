@@ -17,7 +17,7 @@
 export const GLYPH_KEYWORDS = [
     'DEAL', 'GUARD', 'HEAL', 'SACRIFICE', 'WAIVE', 'EXILE', 'TETHER', 'LEECH', 'VULNERABLE',
     'INFERNO', 'BLIZZARD', 'STORM', 'FROZEN', 'DRAW', 'THORNS', 'REFLECT', 'RETRIEVE', 'DISCARD',
-    'RADIANCE', 'MERCY', 'YIELDING',
+    'RADIANCE', 'MERCY',
 ] as const;
 
 export type GlyphKeyword = (typeof GLYPH_KEYWORDS)[number];
@@ -38,7 +38,6 @@ export const GLYPH_CATEGORY: Readonly<Record<GlyphKeyword, GlyphCategory>> = Obj
     LEECH: 'hex',
     MERCY: 'gold',
     RADIANCE: 'gold',
-    YIELDING: 'gold',
     WAIVE: 'gold',
     INFERNO: 'fire',
     BLIZZARD: 'ice',

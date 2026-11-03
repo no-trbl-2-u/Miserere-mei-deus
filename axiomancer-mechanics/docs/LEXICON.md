@@ -14,7 +14,7 @@
 | Sense | Status | Say instead / notes |
 |---|---|---|
 | The old player-ability data layer (`src/Skills/`, `Skill*` type family, skill trees, `skill.library.ts`) | **RETIRED** (PR #48; de-conflation rename) | `src/Cards/` and the `Card*` type family — cards are the actions played in combat |
-| **Signature skills** (`SignatureSkill` family — token-activated abilities: Second Wind, signatures; the Befriend alt-win path; equipment-granted per the phase 18-23 signet epic) | **CANONICAL** | Keep calling them signature skills / signatures |
+| **Signature skills** (`SignatureSkill` family — token-activated abilities: Second Wind, signatures; equipment-granted per the phase 18-23 signet epic) | **CANONICAL** | Keep calling them signature skills / signatures |
 | AI-harness skills (`skills/` loop verbs, `.claude/skills/` design skills) | out of scope | Harness vocabulary, not game vocabulary — the registry never flags it |
 
 ## Other load-bearing canon (quick disambiguation)

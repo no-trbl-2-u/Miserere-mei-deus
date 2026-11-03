@@ -2,14 +2,14 @@
  * Aftermath presenter.
  *
  * Composes the view model that `<CombatVictoryPanel>`,
- * `<CombatFriendshipPanel>` and `<CombatDefeatPanel>` consume
+ * and `<CombatDefeatPanel>` consume
  * to render the in-encounter-modal aftermath. The combat slice is
  * cleared at the moment combat exits (`actions.endCombat()` fires
  * before this VM is built), so the presenter reads from the
  * `AftermathData` snapshot stashed on the `combat-mode` provider
  * instead — see `state/combat-mode.tsx`.
  *
- * Discriminated-union VM keyed by `kind` (victory, parley, defeat).
+ * Discriminated-union VM keyed by `kind` (victory, defeat).
  * The view-side mount only renders the panel matching the VM's `kind`.
  *
  * Per Hard Rule #8 — no display literals at the view layer. The
@@ -77,38 +77,6 @@ export interface AftermathVictoryViewModel {
     rewards: AftermathRewards;
 }
 
-/**
- * Optional journal-entry card surfaced under the reward strip on
- * the friendship panel, read from the aftermath snapshot. Null
- * collapses the section.
- */
-export interface AftermathJournalEntry {
-    bookName: string;
-    entryTitle: string;
-    /** First sentence-or-so of the entry, no trailing ellipsis (the
-     *  panel adds it). */
-    preview: string;
-}
-
-export interface AftermathParleyViewModel {
-    kind: 'parley';
-    enemyName: string;
-    enemyEpithet: string | null;
-    /**
-     * One-line chronicle phrase rendered in italic under the pixel
-     * emblem. Presenter-selected from a small variant table keyed
-     * off enemy level (`derivePactPhrase`). Prefers the foe's engine
-     * `pactLines`; falls back to a presenter-local phrase.
-     */
-    pactPhrase: string;
-    /** A befriend pays no XP: shillings (null when none) or a potion in `loot`. */
-    rewards: {
-        currency: AftermathCurrency | null;
-        loot: AftermathLootEntry[];
-    };
-    journalEntry: AftermathJournalEntry | null;
-}
-
 export interface AftermathDefeatViewModel {
     kind: 'defeat';
     /** Display name of the player character ("WORM-EATEN PILGRIM"
@@ -136,7 +104,6 @@ export interface AftermathDefeatViewModel {
 
 export type AftermathViewModel =
     | AftermathVictoryViewModel
-    | AftermathParleyViewModel
     | AftermathDefeatViewModel;
 
 /**
@@ -159,7 +126,7 @@ function resolveNodeIdToHumanName(nodeId: string | null, mapId: string | null): 
 /**
  * Build the aftermath VM from the snapshot stashed at combat-exit
  * time. Returns `null` when the snapshot is null (no aftermath to
- * render). Victory, parley and defeat each return a populated VM;
+ * render). Victory and defeat each return a populated VM;
  * flee never lands here (the seal dismisses without an aftermath
  * render).
  */
@@ -179,19 +146,6 @@ export function selectAftermathViewModel(
                 currency: (data.shillings ?? 0) > 0 ? { shillings: data.shillings! } : null,
                 loot: (data.loot ?? []).map(toAftermathLootEntry),
             },
-        };
-    }
-    if (data.variant === 'parley') {
-        return {
-            kind: 'parley',
-            enemyName: data.enemy.name.toUpperCase(),
-            enemyEpithet: deriveEpithet(data.enemy.description),
-            pactPhrase: derivePactPhrase(data),
-            rewards: {
-                currency: (data.shillings ?? 0) > 0 ? { shillings: data.shillings! } : null,
-                loot: (data.loot ?? []).map(toAftermathLootEntry),
-            },
-            journalEntry: data.journalEntry,
         };
     }
     // Defeat.
@@ -264,19 +218,13 @@ function deriveFinalBlow(
  * Tier-key extraction helpers shared by the three
  * narrative selectors. Engine line keys differ per kind
  * (`brutal | quiet | ironic` for victory; `brutal | broken | quiet`
- * for defeat; `quiet | setDown | heavy` for parley), so each kind
+ * for defeat), so each kind
  * passes its own key set in.
  */
 function damageTier3<K extends string>(damage: number, high: K, mid: K, low: K): K {
     if (damage >= 20) return high;
     if (damage >= 10) return mid;
     return low;
-}
-
-function levelTier3<K extends string>(level: number, low: K, mid: K, high: K): K {
-    if (level <= 2) return low;
-    if (level <= 5) return mid;
-    return high;
 }
 
 /**
@@ -325,24 +273,4 @@ function deriveCausePhrase(
         return `It came in pieces. First the breath, then the legs, then a long silence that did not break. The ${killerName.toLowerCase()} looked once, then looked away.`;
     }
     return `Not a great wound; a steady one. The pilgrim sat down to rest, and did not stand up. The page closed without ceremony.`;
-}
-
-/**
- * Pick a chronicle pact phrase. Prefers per-foe lines from the
- * engine (`Enemy.pactLines`); falls back to a presenter-local
- * per-tier phrase keyed off enemy level when absent.
- */
-function derivePactPhrase(
-    data: Extract<AftermathData, { variant: 'parley' }>,
-): string {
-    const tier = levelTier3(data.enemy.level, 'quiet', 'setDown', 'heavy');
-    const engineLine = data.enemy.pactLines?.[tier];
-    if (engineLine !== undefined) return engineLine;
-    if (tier === 'quiet') {
-        return `it stopped, then lowered its long face against the wet ground.`;
-    }
-    if (tier === 'setDown') {
-        return `it set down the bell, slow, and laid its long face against the wet ground.`;
-    }
-    return `it held out the bell, mouth-down, so it would not sound. then it knelt.`;
 }

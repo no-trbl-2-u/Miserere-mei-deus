@@ -3,7 +3,7 @@
 This doc describes what the mobile combat screen renders and how it drives
 the engine. The rules of a fight live in
 [`docs/game-model.md`](../../docs/game-model.md) (§ Dice, § A fight,
-§ Befriend and mercy); the engine side, with its files and functions, in
+§ Relics and The Open Hand); the engine side, with its files and functions, in
 [`axiomancer-mechanics/docs/combat.md`](../../axiomancer-mechanics/docs/combat.md).
 
 ## Entry points
@@ -54,7 +54,6 @@ The engine's `CombatEncounterState.phase` (`CombatEncounterPhase` in
 | `phase-play` | Player plays cards (`playCombatCard` with the chosen die; `endTurn` banks one unspent die). |
 | `phase-resolve` | Effect kinds compared, enemy threat action fires, phase graded Clear/Overwhelmed (`resolveThreatPhase`). |
 | `between-phases` | DoT ticks, durations tick, hand draws back to 5. |
-| `mercy-choice` | A successful befriend opened the spare/exploit modal (`selectMercyChoice`). |
 | `complete` | Combat over, `finalOutcome` determined. |
 
 ## Turn flow

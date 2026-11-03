@@ -10,7 +10,6 @@ import {
     handCards,
     firstLegalPoweringDie,
     buildCombatSummary,
-    selectMercyChoice,
 } from '../Combat/combat.engine';
 import type { CombatCard, CombatEncounterState, CombatOutcome } from '../Combat/combat.encounter.types';
 
@@ -74,7 +73,7 @@ const playAutoPhase = (state: CombatEncounterState, policy: HazardAutoPolicyId, 
     }
 
     // Paid plays: each spends one live die on a colour-legal card.
-    while (s.phase === 'phase-play' && !s.finalOutcome && !s.mercyChoiceActive && safety < phaseTurnLimit * 6) {
+    while (s.phase === 'phase-play' && !s.finalOutcome && safety < phaseTurnLimit * 6) {
         safety++;
         const current = s;
         const want = rankedAutoCards(current, policy)
@@ -91,7 +90,7 @@ const playAutoPhase = (state: CombatEncounterState, policy: HazardAutoPolicyId, 
 
     // Wind-down: drain the leftover hand via the FREE tops, then end the turn.
     let drain = 0;
-    while (s.phase === 'phase-play' && !s.finalOutcome && !s.mercyChoiceActive && drain < 30) {
+    while (s.phase === 'phase-play' && !s.finalOutcome && drain < 30) {
         drain++;
         const topCard = handCards(s).find(c => c.card.verbClass !== 'retreat');
         if (!topCard) break;
@@ -114,10 +113,6 @@ export function runHazardCombatAutoEncounter(
         phaseCount++;
         state = playAutoPhase(state, policy, maxTurns);
         if (state.finalOutcome) break;
-        if (state.mercyChoiceActive) {
-            state = selectMercyChoice(state, 'spare').state;
-            break;
-        }
         if (state.phase === 'phase-play') state = resolveThreatPhase(state).state;
     }
     return { state, outcome: state.finalOutcome ?? null, summary: buildCombatSummary(state), phaseCount };

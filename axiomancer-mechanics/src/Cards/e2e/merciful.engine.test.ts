@@ -196,7 +196,7 @@ describe('the lane', () => {
             for (const foe of [FloatEye, GreenJelly, DeathBeholder]) {
                 const player = { ...deepClone(Player), knownCards: deck };
                 const run = runOneEncounter(player, deepClone(foe), 3, 'greedy', { deck });
-                expect(['victory', 'mercy', 'defeat'], `${foe.name}`).toContain(run.outcome);
+                expect(['victory', 'defeat'], `${foe.name}`).toContain(run.outcome);
                 expect(run.plays).toBeGreaterThan(0);
             }
         }
@@ -266,10 +266,18 @@ describe('the cards play RADIANCE and MERCY', () => {
         expect(mercy(play(fight(['mc-p-08b'], { foeVitae: 300 }), 't0')).total).toBe(0);
     });
 
-    it('M-02 makes the foe YIELDING while it has MERCY (the program ledger marks it)', () => {
-        const s = play(fight(['mc-m-02b'], { foeVitae: 300 }), 't0');
-        expect(mercy(s).total).toBe(2);
-        expect(mercy(s).yielding).toBe(true);
+    it('M-02 is MERCY 3 FREE or MERCY 7 PAID, one step more upgraded, and the foe heals that', () => {
+        const free = play(fight(['mc-m-02b'], { foeVitae: 300 }), 't0');
+        expect(mercy(free).total).toBe(3);
+        expect(mercy(free).clock).toBe(3);
+        const paid = play(fight(['mc-m-02b'], { foeVitae: 300 }), 't0', true);
+        expect(mercy(paid).total).toBe(7);
+        expect(mercy(play(fight(['mc-m-02b+'], { foeVitae: 300 }), 't0')).total).toBe(4);
+        expect(mercy(play(fight(['mc-m-02b+'], { foeVitae: 300 }), 't0', true)).total).toBe(8);
+        const card = getCardById('mc-m-02b')!;
+        expect(card.name).toBe('Offer of Peace');
+        expect(card.cardType).toBe('skill');
+        expect(card.color).toBe('heart');
     });
 
     it('M-05 PAID: +6 max VITAE then HEAL to full; FREE +4 and a card', () => {

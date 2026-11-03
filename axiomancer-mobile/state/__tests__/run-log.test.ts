@@ -622,12 +622,13 @@ describe('the quest', () => {
         }
     });
 
-    it('logs a befriend that completes a quest as the quest\'s XP alone', async () => {
+    it('logs a Spare that completes a quest as the quest\'s XP alone', async () => {
         registerFixtureQuestline();
         try {
-            const { store, actions } = bossStep('sm2a-quest-befriend');
-            const report = actions.endCombat('friendship');
-            expect(report?.xpGained).toBe(0);
+            const { store, actions, boss } = bossStep('sm2a-quest-spare');
+            const finalState = { ...initializeCombatEncounter(gs(store).player, boss, ['grey-strike'], 7), mercyCheck: 'spared' as const };
+            applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, boss);
+            expect(gs(store).player.experience).toBe(40);
             expect(gs(store).quests.completed).toContain('Fell the Warden');
             actions.resetRun({ keepCharacter: true });
             await landed();

@@ -1,6 +1,6 @@
 /**
  * The defeat ledger (EN1b, A6): END_COMBAT records the lead foe's slug on
- * `codex.defeatedEnemies` for a win or a befriend, de-duped, and nothing
+ * `codex.defeatedEnemies` for a win, spared or finished, de-duped, and nothing
  * else (defeat and flee record nothing).
  */
 import { describe, it, expect } from 'vitest';
@@ -25,12 +25,12 @@ describe('EN1b — the defeat ledger', () => {
         expect(hasDefeatedEnemy(store.getState(), 'float-eye')).toBe(true);
     });
 
-    it('a befriend adds the foe slug', () => {
+    it('a spared foe adds the foe slug', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(GreenJelly);
-        store.getState().endCombat('friendship');
+        store.getState().endCombat('victory', undefined, { spared: true });
         expect(store.getState().codex.defeatedEnemies).toEqual(['green-jelly']);
-        // The befriend codex unlock is untouched by the ledger.
+        // The spared foe's codex unlock is untouched by the ledger.
         expect(store.getState().codex.unlockedEntries).toContain('codex-green-jelly');
     });
 

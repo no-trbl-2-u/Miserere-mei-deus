@@ -15,7 +15,7 @@
 // ─── Character ────────────────────────────────────────────────────────────────
 export {
     createCharacter,
-    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems,
+    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems, statsWithWorn,
     computeEquipDelta,
     validateDieGear, concreteDefaultRail,
     dieSpecialCap, dieGearMissFaces,
@@ -40,7 +40,7 @@ export type {
 
 // ─── Enemy ────────────────────────────────────────────────────────────────────
 export {
-    createEnemy, isEnemyBefriendable, hasEnemyPhases,
+    createEnemy, hasEnemyPhases,
 } from './Enemy';
 export { hasDefeatedEnemy, defeatedEnemies, enemySlugOf } from './Game/defeat-ledger';
 export { dangerKey, seenDangers, hasSeenDanger, seenDangerNames, firedDangerKeys } from './Game/seen-dangers';
@@ -67,13 +67,12 @@ export type {
 } from './Combat';
 
 // ─── Hazard-pattern combat ────────────────────────────────────────────────────
-// Card-and-dice combat: emptying the foe's VITAE (`isDefeated`) wins; a
-// befriend through The Open Hand opens the mercy choice, the only non-lethal
-// ending.
+// Card-and-dice combat: emptying the foe's VITAE (`isDefeated`) is the only win;
+// the mercy check decides what the win pays.
 export {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, processBetweenPhases,
-    selectEncounterMercyChoice, getCard,
+    getCard,
     handCards, buildCombatSummary,
     combatDieCanPower,
     toCombatCard, buildCombatDeck,
@@ -82,7 +81,7 @@ export {
     // Turn lifecycle, Conviction, Signature Skills
     startTurn, endTurn, discardCombatCard,
     playSignatureSkill,
-    getSignatureSkill, signatureCastBlock,
+    getSignatureSkill, signatureCastBlock, signatureText,
     // Incoming-threat readout
     projectIncomingThreat,
     // Projected-lethality readout
@@ -144,7 +143,7 @@ export type {
 } from './Combat';
 export {
     foeInferno, yourInferno, elementsOnFoe, weatherReading, spikeReading, REFLECT_TURNS,
-    mercyReading, programFoeYielding, MERCY_CLOCK_TURNS, MERCY_BURST_MULT,
+    mercyReading, MERCY_CLOCK_TURNS, MERCY_BURST_MULT,
 } from './Combat';
 // The lighthouse path's board reads (phase EN1k).
 export { lampOf, intentsInTheDark, baitSet } from './Combat';
@@ -287,7 +286,7 @@ export {
 // ─── Game (state, store, persistence, constants) ──────────────────────────────
 export {
     createGameStore, createNewGameState, GAME_STATE_VERSION,
-    migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes, createEventEmitter,
+    migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes, refreshRelicText, createEventEmitter,
     selectPlayer, selectIsInCombat,
     selectVersion,
     nullAdapter,

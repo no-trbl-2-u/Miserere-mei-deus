@@ -42,7 +42,7 @@ Examples of e2e entry points by module:
 | ---------------- | ------------------------------------------------------------------------------------- |
 | `Combat`         | The Hazard-Pattern engine transitions (`initializeCombatEncounter` / `playCombatCard` / `resolveThreatPhase` in `Combat/combat.engine.ts`) + the `createGameStore` lifecycle |
 | `Effects`        | `applyEffect` / `tickAllEffects` driving an effect to expiry; Phase 88 coverage sweep: `advantage-effects.engine.test.ts` |
-| `Enemy`          | `createEnemy` + AI / strategy assertions in `enemy.engine.test.ts`; per-enemy content pins in `befriendability-config.engine.test.ts` (Phase 68), `aftermath-lines.engine.test.ts` (Phase 71) |
+| `Enemy`          | `createEnemy` + AI / strategy assertions in `enemy.engine.test.ts`; per-enemy content pins in `aftermath-lines.engine.test.ts` (Phase 71) |
 | `Game`           | `createGameStore(nullAdapter, …)` driven through `startCombat` / `updateCombat` / `endCombat`; run-loop semantics in `run-loop.engine.test.ts` (Phase 72); codex unlocks in `codex.engine.test.ts` (Phase 73) |
 | `World`          | World reducer chained through map → node → continent transitions                      |
 | `Items`          | Item reducer chained through `addItem` → `useConsumable` → `removeItem`               |

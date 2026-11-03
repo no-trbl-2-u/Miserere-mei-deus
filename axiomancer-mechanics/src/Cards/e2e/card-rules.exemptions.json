@@ -36,12 +36,6 @@
     "filed": "2026-10-13"
   },
   {
-    "rule": "carrier-rule",
-    "id": "YIELDING",
-    "reason": "admission bar: the Merciful trial set carries YIELDING on one card (M-02b, as kept); the keyword is for every lane, so a second carrier is T's call after play",
-    "filed": "2026-10-30"
-  },
-  {
     "rule": "complexity-budget",
     "id": "bp-e-02d",
     "reason": "pinned at CS1, awaits T's card session",
@@ -374,12 +368,6 @@
   {
     "rule": "complexity-budget",
     "id": "mc-m-01b",
-    "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
-    "filed": "2026-10-30"
-  },
-  {
-    "rule": "complexity-budget",
-    "id": "mc-m-02b",
     "reason": "the Merciful trial set as kept and revised (MF1d), awaits T's play (lane-creator step 8)",
     "filed": "2026-10-30"
   },

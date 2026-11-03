@@ -94,7 +94,6 @@ export type CombatVerbClass =
     | 'stat-debuff'       // applies exposure debuffs (MARK / QUARTER) → soft control
     | 'buff-self'         // buffs the player / engine verbs → utility
     | 'direct-damage'     // status-payoff bursts (RUPTURE / REAP) — never raw strikes
-    | 'befriend'          // Befriend card → opens the mercy choice
     | 'defend'            // Guard/defense card → shields against the enemy's next threat
     | 'retreat';          // dead — no card ever produces this verb class any more.
                            // No in-combat retreat exists; combat resolves only
@@ -166,7 +165,7 @@ export interface CardPlay {
 
 /** What a signature skill does (drives the engine dispatch + the UI icon). */
 export type SignatureSkillKind =
-    | 'mercy'               // The Open Hand: open the mercy choice on a befriendable foe
+    | 'mercy'               // The Open Hand: MERCY on the foe
     | 'sacrifice-heals'     // the Crimson Circlet: the next SACRIFICE heals instead of costing
     | 'sacrifice-leech'     // the Ruby Signet: the next SACRIFICE adds LEECH equal to the VITAE paid
     | 'heal-trigger-leech'  // the Bleeding Signet: HEAL 5, then trigger the foe's LEECH
@@ -198,6 +197,7 @@ export type PlayerArchetype = 'heart' | 'body' | 'mind';
 export interface SignatureSkill {
     id: SignatureSkillId;
     name: string;
+    /** May hold card tokens (`{mercy:6}`): print it through `signatureText`. */
     description: string;
     /** Conviction (◆) cost. */
     cost: number;
@@ -463,7 +463,8 @@ export interface CombatAttributionRow {
 }
 
 export interface CombatSummary {
-    outcome: CombatOutcome;
+    /** How the summary reads the ending: a foe spared at the mercy check is `mercy`, though the fight is a `victory`. */
+    outcome: CombatOutcome | 'mercy';
     /** e.g. 'Victory — the enemy falls'. */
     headline: string;
     rows: CombatAttributionRow[];
@@ -479,7 +480,6 @@ export interface CombatSummary {
 
 export type CombatOutcome =
     | 'victory'    // enemy HP → 0 (DoT erosion + status payoffs)
-    | 'mercy'      // spared a low-HP foe via Befriend (the friendship path)
     | 'defeat'     // player HP → 0
     | 'retreat';   // dead — no in-combat retreat exists; combat resolves only
                    // by winning or losing. Kept in the union (see
@@ -491,7 +491,6 @@ export type CombatEncounterPhase =
     | 'phase-play'     // player plays cards
     | 'phase-resolve'  // effect kinds compared, enemy action fires, Clear/Overwhelmed
     | 'between-phases' // DoT ticks, durations tick, draw 5
-    | 'mercy-choice'   // a successful Befriend opened the spare/exploit modal
     | 'complete';      // combat over, outcome determined
 
 // ---------------------------------------------------------------------------
@@ -605,7 +604,6 @@ export type CombatEvent =
      *  took, added or dealt (Conviction stolen, WARD copied, the delayed hit, ...). */
     | { kind: 'enemy-rider'; rider: EnemyMoveRiderKind; amount: number }
     | { kind: 'hand-drawn'; cards: string[] }
-    | { kind: 'mercy-opened'; message: string }
     // ── Upgradeable-dice events ────────────────────────────────────────────
     // Momentum chain advanced (length grew) or started (length 1).
     | { kind: 'momentum-advanced'; color: WheelStance; length: number }
@@ -751,9 +749,6 @@ export interface CombatEncounterState {
     directDamageDealt: number;             // raw HP damage (for the summary)
     log: CombatEvent[];                    // event stream for UI rendering
     finalOutcome: CombatOutcome | null;    // null until combat ends
-    /** Set when a successful Befriend opens the spare/exploit
-     *  mercy choice. */
-    mercyChoiceActive?: boolean;
     /**
      * The mercy check on a won fight (`rollMercyCheck`): absent until it is
      * rolled, `none` when it did not fire, `offered` while the prompt waits, then

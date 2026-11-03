@@ -39,6 +39,9 @@ import {
     getCardLane,
     getSignatureSkill,
     relicLaneId,
+    signatureText,
+    statsWithWorn,
+    type BaseStats,
     type Equipment,
     type GameStore,
 } from '@mechanics';
@@ -206,10 +209,11 @@ function buildStatLines(eq: Equipment): EquipmentStatLine[] {
  * Resolve the signature an item grants into its display record.
  *
  * @param eq - The equipment item.
+ * @param stats - The stats a fight would read, so its number is the one it applies.
  * @returns The signature info, or `null` when the item grants none (or the id
  *          does not resolve against the engine's kit — a content drift guard).
  */
-function buildSignature(eq: Equipment): EquipmentSignatureInfo | null {
+function buildSignature(eq: Equipment, stats: BaseStats | undefined): EquipmentSignatureInfo | null {
     if (!eq.grantsSignature) return null;
     const skill = getSignatureSkill(eq.grantsSignature);
     if (!skill) return null;
@@ -217,7 +221,7 @@ function buildSignature(eq: Equipment): EquipmentSignatureInfo | null {
         id: skill.id,
         name: skill.name,
         cost: skill.cost,
-        description: skill.description,
+        description: signatureText(skill, stats),
     };
 }
 
@@ -270,7 +274,7 @@ export function selectEquipmentDetailViewModel(
         slotLabel: SLOT_LABELS[item.slot] ?? item.slot,
         sub: SLOT_LABELS[item.slot] ?? null,
         statLines: buildStatLines(item) as readonly EquipmentStatLine[],
-        signature: buildSignature(item),
+        signature: buildSignature(item, player.baseStats ? statsWithWorn(player) : undefined),
         effect: buildEffect(item),
         lane: buildLaneLine(item),
         flavor: item.description,

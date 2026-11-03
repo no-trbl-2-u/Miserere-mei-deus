@@ -45,7 +45,7 @@ import {
 import type { CodexEntry } from '../Game/types';
 import { createGameStore } from '../Game/store';
 import { GAME_STATE_VERSION } from '../Game/game.reducer';
-import { migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes } from '../Game/game.migrate';
+import { migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes, refreshRelicText } from '../Game/game.migrate';
 import { buildStateFromFixture } from '../Game/fixtures';
 import type { GameState } from '../Game/types';
 import { createStartingWorld, STARTABLE_MAPS } from '../World';
@@ -141,7 +141,7 @@ async function pickTab(): Promise<Tab> {
         { name: 'Map             — travel + resolve node events', value: 'map' },
         { name: 'Journal    — quests + flags', value: 'journal' },
         { name: 'Cards     — known/unlocked', value: 'cards' },
-        { name: 'Codex      — unlocked journal entries from befriended foes (Phase 73)', value: 'codex' },
+        { name: 'Codex      — unlocked journal entries from spared foes (Phase 73)', value: 'codex' },
         { name: 'Inventory  — items in pack', value: 'inventory' },
         { name: 'Character  — full stats + equipment + effects sheet', value: 'character' },
         { name: 'DEV        — manipulate character, grant items/cards, spawn enemies', value: 'dev' },
@@ -577,7 +577,7 @@ function codexTab(store: GameStoreHandle): void {
     const { codex } = store.getState();
     log('\n— Codex —');
     if (codex.unlockedEntries.length === 0) {
-        log('Your codex is empty — befriend a foe with a journal entry to start filling it.');
+        log('Your codex is empty — spare a foe with a journal entry to start filling it.');
         return;
     }
     for (const entryId of codex.unlockedEntries) {
@@ -773,7 +773,7 @@ function loadTab(store: GameStoreHandle, snapshotAdapter: PersistenceAdapter | n
     const before = store.getState();
     // Restore EVERY persisted slice and bring an older save up to date through `migrate` first;
     // `currentEncounter` is transient and never saved.
-    const loaded = dropCutNodes(dropRetiredFlags(dropUnknownCardIds(saved.version < GAME_STATE_VERSION ? migrate(saved, saved.version) : saved)));
+    const loaded = refreshRelicText(dropCutNodes(dropRetiredFlags(dropUnknownCardIds(saved.version < GAME_STATE_VERSION ? migrate(saved, saved.version) : saved))));
     // A save written under the frontier rule carries the frontier in its
     // move lists: rewrite them by the road rule from where the player stands.
     const syncedWorld = loaded.world ? syncWorldMoveLists(loaded.world) : loaded.world;

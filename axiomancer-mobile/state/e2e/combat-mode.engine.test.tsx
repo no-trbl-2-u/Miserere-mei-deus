@@ -43,7 +43,7 @@ describe('combat-mode: lastOutcome signal', () => {
     });
 
     it('exitCombatWith works for every CombatOutcome variant', () => {
-        for (const outcome of ['victory', 'defeat', 'flee', 'parley'] as const) {
+        for (const outcome of ['victory', 'defeat', 'flee'] as const) {
             const { result } = renderHook(() => useCombatMode(), { wrapper });
             act(() => result.current.enterCombat());
             act(() => result.current.exitCombatWith(outcome));
@@ -120,8 +120,8 @@ describe('combat-mode: aftermathData + dismissAftermath', () => {
     it('exitCombatWith without a payload leaves aftermathData null (back-compat)', () => {
         const { result } = renderHook(() => useCombatMode(), { wrapper });
         act(() => result.current.enterCombat());
-        act(() => result.current.exitCombatWith('parley'));
-        expect(result.current.lastOutcome).toBe('parley');
+        act(() => result.current.exitCombatWith('flee'));
+        expect(result.current.lastOutcome).toBe('flee');
         expect(result.current.aftermathData).toBeNull();
     });
 

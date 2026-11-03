@@ -2,7 +2,7 @@
 
 This file preserves T's fundamental wants for Axiomancer as they affect the mobile client. Mobile does not invent mechanics; it makes engine truth legible, weighty, and playable.
 
-Read this before major UX proposals, combat-screen work, mercy/friendship modals, alignment surfaces, or `/march` phase execution.
+Read this before major UX proposals, combat-screen work, the mercy check, alignment surfaces, or `/march` phase execution.
 
 ## Game identity
 
@@ -35,38 +35,21 @@ always-correct answer.
 The player should use defend only when:
 
 - they fear a large attack is coming;
-- they want to generate resource;
-- they want to befriend an enemy.
+- they want to generate resource.
 
 The UI should make those reasons clear where engine truth permits.
 
-## Friendship / mercy vision
+## Mercy vision
 
-Befriending should be difficult and consequential.
-
-Current doctrine from mechanics/company vision:
-
-- keep the HP gate;
-- Befriend is a heart-based skill;
-- every player starts with Befriend;
-- Befriend requires 5 heart tokens to attempt;
-- successful Befriend opens a choice:
-  - spare / befriend / preserve the enemy;
-  - exploit the opening for a free guaranteed critical hit.
+VITAE is the one bar and emptying it is the only way to win. Now and then a normal
+foe falls and the player must spare it or finish it, not knowing what mercy pays
+(T, 2026-11-03; `docs/game-model.md`, The mercy check).
 
 Mobile obligation:
 
-- present the post-Befriend choice to the player when the moment arises;
-- spare/befriend language may later vary by player philosophical alignment;
-- exploit/free-critical language must be clear and morally charged, not a neutral attack;
-- consequence paths should be visible when they emerge: alignment shifts, faction standing, boss encounters, regional changes, reward alterations, or future opportunities.
-
-Anti-exploit doctrine mobile must represent when revealed:
-
-- exploiting an elite/miniboss Befriend opening prevents the region boss from gathering friendship counters;
-- sparing that elite/miniboss grants the region boss the `open-minded` condition;
-- `open-minded` may be a condition whose sole purpose is enabling future Befriend attempts;
-- befriending a boss can shift reputation: lose standing with one faction, gain with another.
+- present the prompt as the foe falls, with no reward and no hint of one;
+- reveal what Spare paid on the end screen, and nowhere before it;
+- spare and finish language is morally charged, never neutral.
 
 ## Worker law
 

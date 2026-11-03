@@ -3,8 +3,7 @@
  *
  * Pins: the chance lands near `MERCY_CHECK_CHANCE` over seeded fights; only a
  * `normal` foe can ask, and any other difficulty draws nothing from the rng; a
- * check rolls once and answers once; the win stays a win; and the Open Hand's
- * own choice, Exploit included, never asks again.
+ * check rolls once and answers once; and the win stays a win.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -12,7 +11,7 @@ import { describe, it, expect } from 'vitest';
 import {
     MERCY_CHECK_CHANCE, chooseMercyCheck, mercyCheckSettled, rollMercyCheck,
 } from './combat.mercy-check';
-import { buildCombatSummary, initializeCombatEncounter, selectMercyChoice } from './combat.engine';
+import { buildCombatSummary, initializeCombatEncounter } from './combat.engine';
 import type { CombatEncounterState } from './combat.encounter.types';
 import { createCharacter } from '../Character';
 import { FloatEye } from '../Enemy/enemy.library';
@@ -73,7 +72,7 @@ describe('rollMercyCheck', () => {
         expect(rollMercyCheck(none, () => 0)).toBe(none);
     });
 
-    it.each(['defeat', 'mercy', null] as const)('rolls nothing on a %s ending', (finalOutcome) => {
+    it.each(['defeat', null] as const)('rolls nothing on a %s ending', (finalOutcome) => {
         const fight = { ...won('normal'), finalOutcome };
         expect(rollMercyCheck(fight, () => 0)).toBe(fight);
     });
@@ -117,31 +116,6 @@ describe('mercyCheckSettled', () => {
 
     it('holds nothing on any other end, and a fight still going is not settled', () => {
         expect(mercyCheckSettled({ ...won('normal'), finalOutcome: 'defeat' })).toBe(true);
-        expect(mercyCheckSettled({ ...won('normal'), finalOutcome: 'mercy' })).toBe(true);
         expect(mercyCheckSettled({ ...won('normal'), finalOutcome: null })).toBe(false);
-    });
-});
-
-describe('the Open Hand beside the check', () => {
-    it('an Exploit that kills is a win the check does not roll', () => {
-        const player = createCharacter({ name: 'Pilgrim', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-        const fight = initializeCombatEncounter(player, { ...FloatEye, difficulty: 'normal' }, ['the-gleaners-due'], 7);
-        const open: CombatEncounterState = {
-            ...fight, enemy: { ...fight.enemy, health: 1 }, phase: 'mercy-choice', mercyChoiceActive: true,
-        };
-        const after = selectMercyChoice(open, 'exploit').state;
-        expect(after.finalOutcome).toBe('victory');
-        expect(rollMercyCheck(after, () => 0).mercyCheck).toBe('none');
-        expect(mercyCheckSettled(after)).toBe(true);
-    });
-
-    it('a spare through the Open Hand stays a mercy ending, with no check', () => {
-        const player = createCharacter({ name: 'Pilgrim', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
-        const fight = initializeCombatEncounter(player, { ...FloatEye, difficulty: 'normal' }, ['the-gleaners-due'], 7);
-        const open: CombatEncounterState = { ...fight, phase: 'mercy-choice', mercyChoiceActive: true };
-        const after = selectMercyChoice(open, 'spare').state;
-        expect(after.finalOutcome).toBe('mercy');
-        expect(after.mercyCheck).toBeUndefined();
-        expect(mercyCheckSettled(after)).toBe(true);
     });
 });

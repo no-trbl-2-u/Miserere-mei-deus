@@ -9,13 +9,15 @@
  * NEW GAME starts on the windmill (`bw-w1`). There is no hop chain: the
  * earlier hops (v11 .. v40) went with the saves they served.
  *
- * Three load-time cleanups run on every load after `migrate`, at any version:
- * `dropUnknownCardIds`, `dropRetiredFlags` and `dropCutNodes`.
+ * Four load-time cleanups run on every load after `migrate`, at any version:
+ * `dropUnknownCardIds`, `dropRetiredFlags`, `dropCutNodes` and `refreshRelicText`.
  */
 
 import { GameState } from './types';
 import type { MapState, NodeId } from '../World/types';
 import type { MapName } from '../World/map.library';
+import { getRelicById } from '../Items/relic.library';
+import type { Item } from '../Items/types';
 import { getCardById } from '../Cards/cards.library';
 import { STARTING_CARD_IDS } from '../Combat/combat.rewards';
 import { GAME_STATE_VERSION } from './game.reducer';
@@ -91,7 +93,16 @@ const RETIRED_FLAGS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * Drop the `RETIRED_FLAGS` entries from `state.flags`, on every load.
+ * Flags a save may hold under an old name, each with the name it goes by now. A
+ * foe's story flag was written as `befriended-<foe>` before the mercy check.
+ */
+const RENAMED_FLAGS: Readonly<Record<string, string>> = {
+    'befriended-green-jelly': 'spared-green-jelly',
+};
+
+/**
+ * Drop the `RETIRED_FLAGS` entries from `state.flags` and carry `RENAMED_FLAGS`
+ * to their new names, on every load.
  *
  * Like `dropUnknownCardIds` this is not a version hop: a save at the current
  * version can still carry them, so the load paths call it after
@@ -99,8 +110,44 @@ const RETIRED_FLAGS: ReadonlySet<string> = new Set([
  */
 export function dropRetiredFlags(state: GameState): GameState {
     const flags = state.flags;
-    if (!Array.isArray(flags) || !flags.some(f => RETIRED_FLAGS.has(f))) return state;
-    return { ...state, flags: flags.filter(f => !RETIRED_FLAGS.has(f)) };
+    if (!Array.isArray(flags) || !flags.some(f => RETIRED_FLAGS.has(f) || f in RENAMED_FLAGS)) return state;
+    const kept = flags.filter(f => !RETIRED_FLAGS.has(f)).map(f => RENAMED_FLAGS[f] ?? f);
+    return { ...state, flags: kept.filter((f, i) => kept.indexOf(f) === i) };
+}
+
+/** A carried relic's words as the library has them now; anything else as it is. */
+function withLibraryText<T extends Item>(item: T): T {
+    const relic = getRelicById(item.id);
+    return relic && relic.description !== item.description ? { ...item, description: relic.description } : item;
+}
+
+/**
+ * Give every relic the player carries the library's current description, on
+ * every load.
+ *
+ * A save holds its own copy of each item, and a worn relic's stat lines and
+ * signature are already read from the library by id (`relicStatLines`,
+ * `getSignaturesForLoadout`), but the screens print the copy's words. Not a
+ * version hop: the shape is unchanged, and a save at any version can hold old
+ * words. Returns `state` itself when nothing changes.
+ */
+export function refreshRelicText(state: GameState): GameState {
+    const player = state.player;
+    if (!player || typeof player !== 'object') return state;
+    const inventory = player.inventory ?? [];
+    const relics = player.equipment?.relics ?? [];
+    const nextInventory = inventory.map(withLibraryText);
+    const nextRelics = relics.map(r => (r ? withLibraryText(r) : r));
+    const changed = nextInventory.some((it, i) => it !== inventory[i]) || nextRelics.some((r, i) => r !== relics[i]);
+    if (!changed) return state;
+    return {
+        ...state,
+        player: {
+            ...player,
+            inventory: nextInventory,
+            ...(player.equipment ? { equipment: { ...player.equipment, relics: nextRelics } } : {}),
+        },
+    };
 }
 
 /**

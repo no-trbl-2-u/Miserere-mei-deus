@@ -38,7 +38,6 @@ export const KEYWORD_GLYPH_COMPONENT: Readonly<Record<GlyphKeyword, (p: G.GlyphP
     DISCARD: G.DiscardGlyph,
     RADIANCE: G.RadianceGlyph,
     MERCY: G.MercyGlyph,
-    YIELDING: G.YieldingGlyph,
 });
 
 /** The colour each category draws in. */

@@ -1,6 +1,6 @@
 # ADR-0007 — Befriend mercy choice is a modal consumer of engine truth
 
-- Status: Accepted; modal surface shipped in Phase 103, pending full engine-truth consumption once mechanics contract upgrade lands
+- Status: Superseded by spec 144 (`plan/144-mr1-mercy-check.md`), 2026-11-03: befriending, the mercy choice and Exploit left the game. The mercy check keeps the modal's shape. Kept as the record.
 - Date: 2026-06-02
 - Related: `~/Workspace/decisions/CDR-0005-axiomancer-befriend-skill-and-mercy-choice.md`
 
@@ -42,7 +42,7 @@ The mercy check (`rollMercyCheck`) uses this modal too, with Spare and Finish.
 It deliberately breaks "surface consequence language" above: T's ruling is that
 the player does not see the reward before choosing, so the prompt names no
 reward, no consequence category and no hint of one. The result shows only on the
-end screen. The Open Hand's choice keeps its own copy until befriending leaves.
+end screen.
 
 ## Open questions
 

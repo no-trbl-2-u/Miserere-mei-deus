@@ -11,6 +11,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import {
+    getSignatureSkill, signatureText,
     rollEncounterDice,
 } from '@mechanics';
 import type { CombatEncounterState, CombatManaDie } from '@mechanics';
@@ -75,43 +76,26 @@ describe('signature runes (the engine cast gate)', () => {
     }
     const rune = (s: CombatEncounterState, id: string) =>
         buildCombatViewModel(s).signatures.find(x => x.id === id)!;
-    /** A befriendable foe inside The Open Hand's HP gate. */
-    function spareable(s: CombatEncounterState): CombatEncounterState {
-        s.enemy = {
-            ...s.enemy, health: 1, befriendabilityConfig: { hpGate: { belowPct: 0.3 } },
-            friendshipReward: { narrative: 'spared' },
-        };
-        return s;
-    }
-
     it('The Open Hand rune prints the flat cost and its one line', () => {
-        const r = rune(withRunes(4), 'sig-disarming-plea');
+        const s = withRunes(4);
+        const r = rune(s, 'sig-disarming-plea');
         expect(r.cost).toBe(4);
-        expect(r.description).toBe('Offer the foe mercy. A foe that can be befriended, once low enough, may be spared.');
+        expect(r.description).toBe(signatureText(getSignatureSkill('sig-disarming-plea')!, s.player.baseStats));
+        expect(r.description).toMatch(/^MERCY 7 on the foe/);
     });
 
     it('a rune is refused with the reason when Conviction is short', () => {
-        const r = rune(spareable(withRunes(3)), 'sig-disarming-plea');
+        const r = rune(withRunes(3), 'sig-disarming-plea');
         expect(r.affordable).toBe(false);
         expect(r.reason).toMatch(/Need 4/);
     });
 
-    it('The Open Hand is refused, with the reason, on a foe above its gate', () => {
+    it('The Open Hand is castable whatever the foe\'s VITAE', () => {
         const s = withRunes(4);
         s.enemy = { ...s.enemy, health: s.enemy.maxHealth };
         const r = rune(s, 'sig-disarming-plea');
-        expect(r.affordable).toBe(false);
-        expect(r.reason).toMatch(/not yet low enough/);
-    });
-
-    it('The Open Hand is castable on a befriendable foe inside its gate', () => {
-        const s = withRunes(4);
-        s.enemy = {
-            ...s.enemy, health: 1, befriendabilityConfig: { hpGate: { belowPct: 0.3 } },
-            friendshipReward: { narrative: 'spared' },
-        };
-        const r = rune(s, 'sig-disarming-plea');
         expect(r.affordable).toBe(true);
+        expect(r.refused).toBe(false);
         expect(r.reason).toBeNull();
     });
 });

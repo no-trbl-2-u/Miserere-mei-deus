@@ -94,7 +94,7 @@
     {
       "id": "mechanics-fidelity",
       "name": "Mechanics-to-UI fidelity path",
-      "goal": "Compare visible HP, stance, action, reward, friendship, inventory, and aftermath information against what the UI claims the mechanics are doing.",
+      "goal": "Compare visible HP, stance, action, reward, mercy check, inventory, and aftermath information against what the UI claims the mechanics are doing.",
       "minimumEvidence": [
         "before/after values for any changed stat",
         "battle log text compared with visible panels",

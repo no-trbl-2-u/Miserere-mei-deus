@@ -10,9 +10,8 @@
  * a new run wears the grey pair, so the sim plays a fresh run as the live
  * screen does), the
  * reveal's `rollEncounterDice`, each phase played by the run policy's combat
- * witness (`upgradeablePlayPhase`, the sim's own phase player), the mercy
- * choice through `selectEncounterMercyChoice`, the foe's turn through
- * `resolveThreatPhase`. At the outcome the panel's own write-back
+ * witness (`upgradeablePlayPhase`, the sim's own phase player), the foe's turn
+ * through `resolveThreatPhase`. At the outcome the panel's own write-back
  * (`applyHazardOutcome`, which dispatches the engine's `endCombat`) settles
  * it, the victory draft is rolled and claimed through the panel's store
  * actions, and a defeat runs the death rule as the fight screen's exit does.
@@ -27,7 +26,6 @@ import {
     resolveThreatPhase,
     rollEncounterDice,
     rollMercyCheck,
-    selectEncounterMercyChoice,
     upgradeablePlayPhase,
     type CombatEncounterState,
     type CombatOutcome,
@@ -133,17 +131,12 @@ function playToVictory(store: AppStore, enemy: Enemy, witness: CombatSimPolicy):
     fightRecorder.observe(live);
     for (let phase = 0; phase < MAX_FIGHT_PHASES; phase++) {
         if (live.finalOutcome || live.phase === 'complete') return live;
-        if (live.mercyChoiceActive) {
-            live = selectEncounterMercyChoice(live, witness.mercyChoice).state;
-            fightRecorder.observe(live);
-            continue;
-        }
         if (live.phase !== 'phase-play') {
             throw new FightStuckError(`fight against ${enemy.name} sits in phase '${live.phase}' with no move`);
         }
         live = upgradeablePlayPhase(live, witness, rng, {}, {}).state;
         fightRecorder.observe(live);
-        if (live.finalOutcome || live.mercyChoiceActive) continue;
+        if (live.finalOutcome) continue;
         if (live.phase === 'phase-play') {
             live = resolveThreatPhase(live).state;
             fightRecorder.observe(live);
@@ -235,5 +228,5 @@ export function playFight(
         actions.playerDied('fight');
         return 'lost';
     }
-    return outcome === 'mercy' || spared ? 'spared' : 'won';
+    return spared ? 'spared' : 'won';
 }

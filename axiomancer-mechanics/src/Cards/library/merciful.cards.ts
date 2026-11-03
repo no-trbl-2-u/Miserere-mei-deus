@@ -12,7 +12,7 @@
  *
  * A removable trial set (plan/revamp/cards.md → "The trial set"): this file is
  * the whole set, and `cards.library.ts` registers it in one line. RADIANCE,
- * MERCY, YIELDING and the heal modifiers are general systems in
+ * MERCY and the heal modifiers are general systems in
  * `Combat/combat.mercy.ts` and `Combat/combat.card-program.ts`; nothing outside
  * this file and its own test names a card here.
  *
@@ -177,10 +177,10 @@ const ENTRIES: Entry[] = [
         paid: L(`GUARD {guard:${u.m(7)}} or {guard:${u.m(11)}} if the foe has MERCY`, c => {
             c.guard(c.q.foeHasMercy ? u.m(11) : u.m(7));
         }) }) },
-    // T: YIELDING replaces "counts as under its befriend gate".
+    // T, 2026-11-03: bigger MERCY.
     { slot: 'M-02', option: 'b', name: 'Offer of Peace', type: 'skill', color: PURPLE, program: u => ({
-        free: L(`MERCY {mercy:${u.i(2)}}, YIELDING while the foe has MERCY`, c => { c.mercy(u.i(2)); c.yieldWhileMercy(); }),
-        paid: L(`MERCY {mercy:${u.i(5)}}, YIELDING while the foe has MERCY`, c => { c.mercy(u.i(5)); c.yieldWhileMercy(); }) }) },
+        free: L(`MERCY {mercy:${u.i(3)}}`, c => { c.mercy(u.i(3)); }),
+        paid: L(`MERCY {mercy:${u.i(7)}}`, c => { c.mercy(u.i(7)); }) }) },
     { slot: 'M-04', option: 'b', name: 'Purifying Light', type: 'skill', color: RED, program: u => ({
         free: L(`Remove 1 of your debuffs, RADIANCE {radiance:${u.i(2)}}`, c => {
             c.clearDebuffs(1); c.radiance(u.i(2));

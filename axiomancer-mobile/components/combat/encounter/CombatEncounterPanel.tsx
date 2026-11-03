@@ -14,9 +14,8 @@
  * Live play (`persistOutcome`) hand-rolls only the write-backs that have no
  * engine equivalent — floating dice, banked Souls, and final HP →
  * player.health — then routes the outcome through the engine's real `endCombat` reducer for everything else
- * (XP, shillings, quest kill-objective advancement + completion rewards, and, on
- * a merciful win, the authored `friendshipReward` payload: flags, codex
- * unlocks, faction deltas). `beginHazardEncounter`
+ * (XP, shillings, quest kill-objective advancement + completion rewards, and, for
+ * a spared foe, its story flag and codex unlock). `beginHazardEncounter`
  * stages `state.currentEncounter` via `startCombat` so `endCombat` has a real
  * encounter to resolve against. The deckbuilder reward card is rolled into
  * the store on victory whether or not `persistOutcome` is set. Defeat HP /
@@ -31,7 +30,7 @@ import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase,
     startTurn, endTurn, discardCombatCard, playSignatureSkill, payTheToll,
     getFloatingDiceColors,
-    selectEncounterMercyChoice, buildCombatSummary,
+    buildCombatSummary,
     getLogger, enemySlugOf, firedDangerKeys, rollMercyCheck, chooseMercyCheck, mercyCheckSettled,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
     type Equipment, type GameState, type PlayLogUiEventKind,
@@ -59,7 +58,7 @@ import {
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
-import { MERCY_CHECK_PROMPT, OPEN_HAND_MERCY_PROMPT } from '@/state/presenters/mercy-check.copy';
+import { MERCY_CHECK_PROMPT } from '@/state/presenters/mercy-check.copy';
 import { spareSummaryLines } from '@/state/presenters/spare-reward.engine';
 import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { devSettingsStore } from '@/state/dev/dev-settings';
@@ -165,26 +164,17 @@ export interface CombatEncounterPanelProps {
 
 type StoreLike = ReturnType<typeof useGameStore>;
 
-/** The merciful win: a befriend through The Open Hand, spared. It
- *  rewards like mercy: XP flows, no corpse loot. */
-function isMercifulWin(outcome: CombatOutcome): boolean {
-    return outcome === 'mercy';
-}
-
 /**
  * Translate the hazard-pattern engine's `CombatOutcome` into the
- * vocabulary `game.reducer.ts`'s `END_COMBAT` case understands. The merciful
- * win (mercy — "won without killing") maps onto the reducer's `'friendship'`
- * outcome, the "spared the foe" branch that `Enemy.friendshipReward` data
- * targets. `'retreat'` is dead (`combat.encounter.types.ts` — no in-combat
- * retreat exists) and maps to `'flee'` only so this function stays total.
+ * vocabulary `game.reducer.ts`'s `END_COMBAT` case understands. `'retreat'` is
+ * dead (`combat.encounter.types.ts` — no in-combat retreat exists) and maps to
+ * `'flee'` only so this function stays total.
  */
 function mapHazardOutcomeToEndCombat(
     outcome: CombatOutcome,
-): 'victory' | 'defeat' | 'friendship' | 'flee' {
+): 'victory' | 'defeat' | 'flee' {
     if (outcome === 'victory') return 'victory';
     if (outcome === 'defeat') return 'defeat';
-    if (isMercifulWin(outcome)) return 'friendship';
     return 'flee';
 }
 
@@ -197,8 +187,7 @@ function mapHazardOutcomeToEndCombat(
  * outcome except defeat — the host's run-reset full-heals there) — then
  * dispatches the real `game.reducer.ts` `endCombat` for
  * everything else: XP, shillings, quest kill-objective advancement + completion
- * rewards, and — on a merciful win — the authored `friendshipReward`
- * payload (flags, codex unlock, faction deltas). `endCombat` reads its own `Enemy` off the `currentEncounter`
+ * rewards. `endCombat` reads its own `Enemy` off the `currentEncounter`
  * `beginHazardEncounter` staged via `startCombat`, so no `finalPlayer` is
  * passed here — the write-back below already lands HP/floatingDice/
  * bankedSouls on `state.player` first, and `endCombat` builds its grant on
@@ -239,16 +228,16 @@ export function applyHazardOutcome(
     });
     // Resolve the staged encounter through the engine's real
     // endCombat reducer: XP, shillings, quest kill-objective advancement +
-    // completion rewards, and (on 'friendship') flags/codex/faction
-    // deltas, all read off Enemy.xpReward / .level /
-    // .friendshipReward / .journalEntry via state.currentEncounter.
+    // completion rewards, and for a spared foe its flag and codex entry, all
+    // read off Enemy.xpReward / .level / .spareStory / .journalEntry via
+    // state.currentEncounter.
     // A won elite fight rolls its relic FIRST: on a drop the XP is withheld
     // and the card draft never opens; the shillings stand.
     const spared = outcome === 'victory' && finalState.mercyCheck === 'spared';
     const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
-    // A beaten elite may also drop a lane piece, a befriended one always hands
-    // one: on top of the relic roll, never the whole reward.
-    if (outcome === 'victory' || isMercifulWin(outcome)) settleEliteEquipmentAction(store, enemy, isMercifulWin(outcome));
+    // A beaten elite may also drop a lane piece: on top of the relic roll, never
+    // the whole reward.
+    if (outcome === 'victory') settleEliteEquipmentAction(store, enemy);
     const questsBefore = (store.getState() as unknown as GameState).quests;
     const playerBefore = (store.getState() as unknown as GameState).player;
     const report = store.getState().endCombat(mapHazardOutcomeToEndCombat(outcome), undefined, {
@@ -265,7 +254,7 @@ export function applyHazardOutcome(
     // so the LEVEL_UP reducer is the only public path). applyLevelUps already
     // loops internally; the guarded while-loop is belt-and-braces. Runs after
     // endCombat since that's what grants the XP.
-    if (outcome === 'victory' || isMercifulWin(outcome)) {
+    if (outcome === 'victory') {
         const levelUp = (store.getState() as { levelUp?: () => void }).levelUp;
         let guard = 0;
         while (
@@ -292,7 +281,6 @@ function keywordTypeTag(kind: string, index: number): string {
         case 'stun':
         case 'weaken': return 'CONTROL';
         case 'guard': return 'GUARD';
-        case 'befriend': return 'MERCY';
         default: return 'EFFECT';
     }
 }
@@ -687,7 +675,6 @@ export function CombatEncounterPanel({
         if (resolveTimer.current) clearTimeout(resolveTimer.current);
         resolveTimer.current = setTimeout(endResolving, RESOLVE_LOCK_MS);
     }, [apply, endResolving]);
-    const onMercy = useCallback((choice: 'spare' | 'exploit') => apply((s) => selectEncounterMercyChoice(s, choice).state), [apply]);
     const onMercyCheck = useCallback((choice: 'spare' | 'finish') => apply((s) => chooseMercyCheck(s, choice)), [apply]);
 
     // The mercy check rolls as the foe falls, once, before anything is paid. A
@@ -800,7 +787,6 @@ export function CombatEncounterPanel({
     }
 
     const summary = live.finalOutcome ? buildCombatSummary(live) : null;
-    const mercy = live.phase === 'mercy-choice' && !live.finalOutcome;
     const mercyCheckOpen = live.mercyCheck === 'offered';
     const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
     const showReveal = live.phase === 'reveal';
@@ -979,21 +965,7 @@ export function CombatEncounterPanel({
                 </View>
             )}
 
-            {/* mercy choice */}
-            {mercy && (
-                <View style={styles.backdrop} testID="combat-mercy">
-                    <View style={[styles.modal, { borderColor: HUE.tickPurple }]}>
-                        <Text style={styles.modalTitle}>{OPEN_HAND_MERCY_PROMPT.title(live.enemy.name)}</Text>
-                        <Text style={styles.modalSub}>{OPEN_HAND_MERCY_PROMPT.sub}</Text>
-                        <View style={styles.modalBtns}>
-                            <Pressable onPress={() => onMercy('spare')} testID="combat-mercy-spare" accessibilityRole="button" accessibilityLabel="Spare" style={[styles.modalBtn, { borderColor: HUE.boonGreen }]}><Text style={[styles.modalBtnText, { color: HUE.boonGreen }]}>{OPEN_HAND_MERCY_PROMPT.spare}</Text></Pressable>
-                            <Pressable onPress={() => onMercy('exploit')} testID="combat-mercy-exploit" accessibilityRole="button" accessibilityLabel="Exploit" style={[styles.modalBtn, { borderColor: AXM.blood }]}><Text style={[styles.modalBtnText, { color: AXM.blood }]}>{OPEN_HAND_MERCY_PROMPT.exploit}</Text></Pressable>
-                        </View>
-                    </View>
-                </View>
-            )}
-
-            {/* the mercy check: the same modal, as a normal foe falls. No reward shows here. */}
+            {/* the mercy check, as a normal foe falls. No reward shows here. */}
             {mercyCheckOpen && (
                 <View style={styles.backdrop} testID="combat-mercy">
                     <View style={[styles.modal, { borderColor: HUE.tickPurple }]}>
