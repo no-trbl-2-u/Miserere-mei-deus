@@ -452,7 +452,7 @@ describe('Spec 25 §11 — victory by HP depletion via status play, card-sourced
         let state = initializeCombatEncounter(player, enemy, [DOT_BODY, DOT_BODY, DOT_BODY], 9);
 
         let guard = 0;
-        while (state.phase !== 'complete' && state.phase !== 'mercy-choice' && guard < 40) {
+        while (state.phase !== 'complete' && guard < 40) {
             guard++;
             // Each play names a die from the rolled tray that can power it.
             const res = batchRound(state, DOT_BODY, 2);
@@ -521,7 +521,7 @@ describe('Hazard combat — Monte-Carlo sim', () => {
         const enemy = makeEnemy(40);
         const stats = simulateHazardPatternCombat(player, enemy, 300, 1);
         expect(stats.runs).toBe(300);
-        expect(stats.victories + stats.mercies + stats.defeats + stats.retreats).toBe(300);
+        expect(stats.victories + stats.defeats + stats.retreats).toBe(300);
         expect(stats.winRate).toBeGreaterThan(0);
         expect(stats.winRate).toBeLessThanOrEqual(1);
         expect(stats.statusEngagement).toBeGreaterThan(0);

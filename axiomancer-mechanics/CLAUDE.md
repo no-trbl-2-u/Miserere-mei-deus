@@ -28,7 +28,7 @@ Full ruling: `plan/bearings.md` → Story canon.
 ## Load-bearing doctrine
 
 The game as built is [`../docs/game-model.md`](../docs/game-model.md): three
-grey cards, four dice, three foes, Act 1, befriend and mercy. Read it before
+grey cards, four dice, three foes, Act 1, the mercy check. Read it before
 any mechanics work.
 
 - **Content per surface (D88, D99).** Cards, keywords, art, enemies,
@@ -41,8 +41,8 @@ any mechanics work.
   endTurn→startTurn Conviction farm; it keeps its test
   (`src/Combat/e2e/turn-law.engine.test.ts`).
 - **VITAE is the one bar.** Hazard-Pattern Combat is the only combat engine
-  (witness: `simulateHazardPatternCombat`); `isDefeated(enemy)` is the main
-  win; befriend → mercy is the only other ending.
+  (witness: `simulateHazardPatternCombat`); `isDefeated(enemy)` is the only
+  win, and a blind spare-or-finish check on some normal foes decides what it pays.
 - **Nothing grades the game from above.** No win-rate curve, quality index,
   rank band or count pin. Sims keep bug detectors (a printed number that
   isn't the applied number, a keyword with no popup, a card that can never

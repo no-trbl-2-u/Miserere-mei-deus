@@ -64,12 +64,6 @@ const SCREENS = [
         },
     },
     {
-        id: 'aftermath-parley', file: '27-aftermath-parley.png', drive: async (p) => {
-            await goto(p, '/devaftermath?panel=parley')
-            await settle(p, 800)
-        },
-    },
-    {
         id: 'combat-prelude', file: '06-combat-prelude.png', drive: async (p) => {
             await triggerEncounter(p, 'encounter')
         },

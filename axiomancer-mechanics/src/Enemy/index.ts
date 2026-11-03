@@ -8,7 +8,7 @@ import {
 } from '../Game/game-mechanics.constants';
 import {
     Enemy, EnemyLogic, EnemyDifficulty, LootTableEntry,
-    FriendshipReward, BefriendabilityConfig,
+    SpareStory,
     FinalBlowLines, PactLines, CauseLines,
     CodexEntry, EnemyPhase,
 } from './types';
@@ -30,16 +30,11 @@ export interface CreateEnemyOptions {
     loot?: LootTableEntry[];
     xpReward?: number;
     effects?: ActiveEffect[];
-    /** Optional per-enemy friendship-resolution content. */
-    friendshipReward?: FriendshipReward;
-    /**
-     * Optional per-enemy override of the friendship-eligibility predicate.
-     * When undefined, the default eligibility rule applies.
-     */
-    befriendabilityConfig?: BefriendabilityConfig;
+    /** The story a spared foe grants. */
+    spareStory?: SpareStory;
     /** Optional per-foe victory final-blow chronicle prose. */
     finalBlowLines?: FinalBlowLines;
-    /** Optional per-foe friendship-pact chronicle prose. */
+    /** Optional per-foe chronicle prose. Data only. */
     pactLines?: PactLines;
     /** Optional per-foe defeat / cause-of-loss chronicle prose. */
     causeLines?: CauseLines;
@@ -68,7 +63,7 @@ export interface CreateEnemyOptions {
  * The VITAE pool a player has to chew through.
  *
  * Enemies do not use the player's per-stat health formula: `baseStats`
- * drives derived combat stats and befriend logic, but the
+ * drives derived combat stats, but the
  * pool is its own number so the difficulty bands separate cleanly and a boss
  * can be a wall without a grotesque stat budget.
  *
@@ -211,7 +206,7 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         id, name, description, level, baseStats, mapName, logic,
         difficulty,
         cards, loot, xpReward, effects = [],
-        friendshipReward, befriendabilityConfig,
+        spareStory,
         finalBlowLines, pactLines, causeLines,
         journalEntry, addedIn, tags,
         portraitAsset,
@@ -233,8 +228,7 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         loot,
         xpReward: resolvedXp,
         effects,
-        friendshipReward,
-        befriendabilityConfig,
+        spareStory,
         finalBlowLines,
         pactLines,
         causeLines,
@@ -250,8 +244,6 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
     };
 }
 
-export { isEnemyBefriendable, befriendHpGateOpen, BEFRIEND_TUNING, rollBefriendPayout, befriendPotionFor } from './befriend';
-export type { BefriendPayout } from './befriend';
 export type { EnemyKeyword } from './enemy-keywords';
 export { ENEMY_KEYWORDS, moveKeywords, enemyPhaseKeywords } from './enemy-keywords';
 

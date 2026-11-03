@@ -98,14 +98,13 @@ describe('the Spare ending', () => {
         looksPaid(before, saved.player, report.spareReward!, spareWage(GreenJelly.level));
     });
 
-    it('grants the story flag and journal entry, once, without a friendship', () => {
+    it('grants the story flag and journal entry, once', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(GreenJelly);
         const first = store.getState().endCombat('victory', undefined, { spared: true });
-        const flag = GreenJelly.friendshipReward!.flagSet!;
+        const flag = GreenJelly.spareStory!.flagSet!;
 
         expect(first.outcome).toBe('victory');
-        expect(first.friendshipReward).toBeUndefined();
         expect(store.getState().flags).toContain(flag);
         expect(store.getState().codex.unlockedEntries).toContain(GreenJelly.journalEntry!.id);
         expect(first.journalEntryUnlocked).toEqual({
@@ -134,13 +133,13 @@ describe('the Spare ending', () => {
             expect(report.spareReward).toBeUndefined();
             expect(report.xpGained).toBe(GreenJelly.xpReward ?? 0);
             expect(report.shillings).toBe(fightWage(GreenJelly.level));
-            expect(store.getState().flags).not.toContain(GreenJelly.friendshipReward!.flagSet!);
+            expect(store.getState().flags).not.toContain(GreenJelly.spareStory!.flagSet!);
             expect(store.getState().codex.unlockedEntries).not.toContain(GreenJelly.journalEntry!.id);
         }
     });
 
     it('`spared` on any other outcome pays nothing of a Spare', () => {
-        for (const outcome of ['defeat', 'flee', 'friendship'] as const) {
+        for (const outcome of ['defeat', 'flee'] as const) {
             const store = createGameStore(nullAdapter);
             store.getState().startCombat(FloatEye);
             const report = store.getState().endCombat(outcome, undefined, { spared: true });

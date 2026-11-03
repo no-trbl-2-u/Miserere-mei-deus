@@ -60,7 +60,7 @@ if (require.main === module) {
     const names = only ? [only] : Object.keys(ENEMIES);
     process.stdout.write(
         `\nHazard combat sim — policy=${policy} runs=${runs} seed=${seed} loadout=[${loadout.join(', ')}]\n`
-        + `(win = enemy HP→0 or a befriend's mercy ending; `
+        + `(win = enemy HP→0; `
         + `V/M/D/R = victory/merciful/defeat/retreat)\n`
         + '(cqi = OBJECTIVE FUNCTION v2, Combat/combat.objective.ts: spine = the LOCKED systems\n'
         + '  con/sur/dic = Conviction / Surge meter / Dice; arc = per-turn shape; wid = decision\n'
@@ -75,7 +75,7 @@ if (require.main === module) {
         const s = simulateHazardPatternCombat(player(loadout), enemy, runs, seed, policy);
         process.stdout.write(
             `  ${name.padEnd(16)} win=${(s.winRate * 100).toFixed(0).padStart(3)}%`
-            + `  V/M/D/R=${s.victories}/${s.mercies}/${s.defeats}/${s.retreats}`
+            + `  V/D/R=${s.victories}/${s.defeats}/${s.retreats}`
             + `  rounds=${s.avgRounds.toFixed(1).padStart(4)}`
             + `  statusEng=${(s.statusEngagement * 100).toFixed(0).padStart(3)}%`
             // The Combat Quality Index, beside the warning light.

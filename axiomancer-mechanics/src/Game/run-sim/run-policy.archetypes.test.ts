@@ -187,7 +187,7 @@ describe('the archetype bots', () => {
         for (const [name, p] of Object.entries(names)) {
             expect(p.fightPolicy(fight()).name).toContain(name);
         }
-        expect(MERCIFUL_POLICY.fightPolicy(fight()).mercyChoice).toBe('spare');
-        expect(DEFENDER_POLICY.fightPolicy(fight()).mercyChoice).toBe('exploit');
+        expect(MERCIFUL_POLICY.fightPolicy(fight()).signatureKinds).toContain('mercy');
+        expect(DEFENDER_POLICY.fightPolicy(fight()).signatureKinds).not.toContain('mercy');
     });
 });

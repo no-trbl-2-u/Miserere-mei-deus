@@ -1253,8 +1253,7 @@ function playBottomAction(
 /** Checks for a global threshold crossing mid-phase (immediate outcome). */
 function checkImmediateOutcome(state: CombatEncounterState, events: CombatEvent[]): CombatTransition {
     if (state.finalOutcome) return { state, events };
-    // HP model: the enemy's only bar is HP. A successful Befriend opens the
-    // spare/exploit mercy choice (handled via `mercyChoiceActive`), not here.
+    // HP model: the enemy's only bar is HP. Emptying it is the only win.
     if (isDefeated(state.enemy)) return endCombat(state, 'victory', events);
     return { state, events };
 }
@@ -2034,46 +2033,13 @@ export function resolveCombatPhase(
     return { state: resolved.state, events: [...allEvents, ...resolved.events] };
 }
 
-// ── Mercy choice ─────────────────────────────────────────────────────────────
-
-/**
- * Resolves the spare/exploit mercy choice opened by a successful Befriend
- * (`checkImmediateOutcome`). `spare` confirms the friendship (mercy) end; `exploit`
- * trades the opening for a heavy strike that may finish the enemy.
- */
-export function selectMercyChoice(
-    state: CombatEncounterState,
-    choice: 'spare' | 'exploit',
-): CombatTransition {
-    if (!state.mercyChoiceActive) return { state, events: [] };
-    if (choice === 'spare') {
-        const ended: CombatEncounterState = { ...state, phase: 'complete', finalOutcome: 'mercy', mercyChoiceActive: false };
-        const ev: CombatEvent = { kind: 'combat-ended', outcome: 'mercy' };
-        return { state: withLog(ended, [ev]), events: [ev] };
-    }
-    // Exploit — a free heavy strike. Resolve to victory if it kills.
-    const strike = Math.max(10, Math.round(state.enemy.maxHealth * 0.5));
-    const enemy = applyDamage(state.enemy, strike);
-    const events: CombatEvent[] = [
-        { kind: 'damage-dealt', cardId: 'mercy-exploit', target: 'enemy', amount: strike },
-    ];
-    let next: CombatEncounterState = { ...state, enemy, mercyChoiceActive: false, phase: 'phase-play' };
-    if (isDefeated(enemy)) {
-        // The Open Hand's own choice was the mercy: the check does not ask again.
-        return endCombat(withLog({ ...next, mercyCheck: 'none' }, events), 'victory', events);
-    }
-    // Survived the exploit — combat continues from phase-play.
-    next = withLog(next, events);
-    return { state: next, events };
-}
-
 // ── Signature Skills ─────────────────────────────────────────────────────────
 
 /**
  * Casts a signature skill, spending Conviction (◆). Always available regardless
  * of the hand. Refused (no-op + a fizzle event, nothing spent) when
- * `signatureCastBlock` names a reason: too little Conviction, or The Open Hand
- * on a foe that can't be befriended yet.
+ * `signatureCastBlock` names a reason: too little Conviction, or a signature
+ * that would do nothing.
  */
 export function playSignatureSkill(
     state: CombatEncounterState,

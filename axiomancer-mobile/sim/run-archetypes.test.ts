@@ -11,7 +11,7 @@
  *   of any other card lane. The grey office is not a lane a bot builds: it is
  *   the dealt starting deck and is never offered, so it is not counted. A
  *   lane no roster character opens skips this check until one does.
- * - The Merciful ends at least one fight by befriending.
+ * - The Merciful spares at least one foe at the mercy check.
  * - No run sticks: a stuck step throws out of `playRun`.
  */
 
@@ -50,9 +50,8 @@ describe.each(ARCHETYPE_POLICIES.map((p) => [p.id, p] as [string, RunPolicy]))('
         }
     });
 
-    // The Merciful once never drafted its lane (a befriend paid shillings or a
-    // potion and no card draft; phase BUG1j). The Chosen now starts with a
-    // merciful card of its own (SD1a), so the Merciful's end deck leads again.
+    // The Chosen starts with a merciful card of its own (SD1a), so the Merciful's
+    // end deck leads.
     const leadCheck = !inLane ? it.skip : it;
     leadCheck(`ends every run with more ${laneId} cards than of any other card lane (it starts in-lane)`, () => {
         for (const run of runs) {
@@ -65,7 +64,7 @@ describe.each(ARCHETYPE_POLICIES.map((p) => [p.id, p] as [string, RunPolicy]))('
     });
 
     if (policy === MERCIFUL_POLICY) {
-        it('ends at least one fight by befriending', () => {
+        it('spares at least one foe at the mercy check', () => {
             expect(runs.reduce((sum, run) => sum + run.fights.spared, 0)).toBeGreaterThan(0);
         });
     }

@@ -35,7 +35,6 @@
 import { createStore, StoreApi } from 'zustand/vanilla';
 import { Character } from '../Character/types';
 import { Enemy } from '../Enemy/types';
-import { rollBefriendPayout } from '../Enemy/befriend';
 import { Encounter } from '../World/types';
 import {
     Item, Equipment, EquipmentSlot,
@@ -92,24 +91,21 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
  * Returned from `endCombat()` so the CLI / UI can render an after-action
  * report.
  *
- * - `outcome` — `'victory'` when the player killed the enemy, `'defeat'`
- *   when the player went down first, `'friendship'` when the
- *   spared (no XP: it pays shillings or a potion),
- *   `'flee'` when combat ended without any of the above (manual escape).
+ * - `outcome` — `'victory'` when the player emptied the foe's VITAE, `'defeat'`
+ *   when the player went down first, `'flee'` when combat ended without either
+ *   (manual escape).
  * - `xpGained` — flat XP added to `player.experience` this turn (enemy XP
  *   only; quest reward XP is folded directly into `player.experience`).
- *   Zero on `'friendship'`; full XP on `'victory'`; zero on `'defeat'` /
- *   `'flee'`.
- * - `loot` — items added to `player.inventory` (pre stack-merge). A
- *   friendship's potion, if it paid one; empty on every other outcome (a foe's
- *   loot table pays nothing).
+ *   Full XP on `'victory'`; zero on `'defeat'` / `'flee'`, and on a spared foe.
+ * - `loot` — items added to `player.inventory` (pre stack-merge). Always empty:
+ *   a foe's loot table pays nothing.
  * - `spared` — set on a `'victory'` spared at the mercy check: no XP, the spare
  *   wage in `shillings`, and the one roll in `spareReward`.
  */
 export interface CombatEndReport {
-    outcome: 'victory' | 'defeat' | 'friendship' | 'flee';
+    outcome: 'victory' | 'defeat' | 'flee';
     xpGained: number;
-    /** Shillings paid (a win's wage, or a befriend's shilling payout; 0 when none). Added to `player.currency`. */
+    /** Shillings paid (a win's wage; 0 when none). Added to `player.currency`. */
     shillings: number;
     loot: Item[];
     /** The foe was spared at the mercy check. */
@@ -118,26 +114,6 @@ export interface CombatEndReport {
     spareReward?: SpareReward;
     /** The journal entry a spared foe unlocked, when it was not already known. */
     journalEntryUnlocked?: { id: string; title: string };
-    /**
-     * Per-enemy friendship-reward content. Only present on
-     * `outcome === 'friendship'` when the befriended enemy carries a
-     * `friendshipReward` or a codex entry to unlock. The payout (shillings or
-     * a potion, no XP) is in `shillings` / `loot`; `narrative` is here for the
-     * CLI / UI to render.
-     */
-    friendshipReward?: {
-        narrative?: string;
-        /**
-         * When the befriended enemy carries a `journalEntry`
-         * and the entry wasn't already unlocked, the engine appends its
-         * id to `state.codex.unlockedEntries` and surfaces
-         * `{ id, title }` here for the consumer's after-action UI
-         * (mobile `<CombatFriendshipPanel>` NEW ENTRY card). Body is
-         * recovered via lookup against the source `Enemy` (or a future
-         * `CodexLibrary` registry).
-         */
-        codexEntryUnlocked?: { id: string; title: string };
-    };
 }
 
 /**
@@ -162,7 +138,7 @@ export interface GameActions {
     /**
      * Resolves the staged encounter. The Hazard-Pattern combat driver reports
      * the `outcome` and (optionally) the post-fight `finalPlayer` snapshot.
-     * Grants XP / shillings / quest progress / friendship rewards accordingly
+     * Grants XP / shillings / quest progress accordingly
      * and returns the after-action `CombatEndReport`. `options.withholdSpoils`
      * grants no XP and no items (an elite whose relic dropped: the relic takes
      * their place); the shillings, quest progress and the arrival still settle.
@@ -222,8 +198,8 @@ export interface GameActions {
     // ── Codex ────────────────────────────────────────────────────────────────
     /**
      * Append a codex entry id to `state.codex.unlockedEntries`
-     * (de-duped). Friendship outcomes auto-fire the
-     * unlock when the befriended enemy carries a `journalEntry`; this
+     * (de-duped). A spared foe auto-fires the
+     * unlock when it carries a `journalEntry`; this
      * method exists so future dialogue / map-event content can grant
      * codex entries directly. Dispatches `UNLOCK_CODEX_ENTRY` through the
      * standard DURABLE_ACTIONS pipeline.
@@ -412,7 +388,7 @@ export function createGameStore(
 
                 let xpGained = 0;
                 let shillings = 0;
-                let loot: Item[] = [];
+                const loot: Item[] = [];
                 const spared = outcome === 'victory' && options?.spared === true;
                 if (spared) {
                     // No XP and no card reward: more shillings, then the one roll below.
@@ -421,50 +397,14 @@ export function createGameStore(
                     // The wage, on every difficulty. A foe's loot table pays nothing.
                     xpGained = totalEncounterXp(encounter);
                     shillings = encounterWage(encounter);
-                } else if (outcome === 'friendship') {
-                    // A befriend pays no XP and rolls no loot table: it pays
-                    // shillings or the foe's level's potion, from the combat rng
-                    // (`BEFRIEND_TUNING`, Enemy/befriend.ts).
-                    const payout = rollBefriendPayout(foe.level, () => getRng().random());
-                    shillings = payout.shillings;
-                    loot = payout.items;
                 }
 
                 // An elite's relic takes the XP's place; the wage still stands.
                 if (options?.withholdSpoils) {
                     xpGained = 0;
-                    loot = [];
                 }
 
                 const report: CombatEndReport = { outcome, xpGained, shillings, loot };
-                // Surface the narrative on the report so the CLI /
-                // UI can render it. The payout reaches the consumer
-                // through report.loot / report.shillings.
-                if (outcome === 'friendship') {
-                    const fr = foe.friendshipReward;
-                    const entry = foe.journalEntry;
-                    const codexAlreadyKnown = entry
-                        ? pre.codex.unlockedEntries.includes(entry.id)
-                        : true;
-                    const willUnlockCodex = entry && !codexAlreadyKnown;
-                    if (fr?.narrative || willUnlockCodex) {
-                        const friendshipReport: {
-                            narrative?: string;
-                            codexEntryUnlocked?: { id: string; title: string };
-                        } = {};
-                        if (fr?.narrative) friendshipReport.narrative = fr.narrative;
-                        if (willUnlockCodex && entry) {
-                            // Surface the unlocked entry's id +
-                            // title on the report (the END_COMBAT reducer
-                            // has appended the id to state.codex.unlockedEntries).
-                            friendshipReport.codexEntryUnlocked = {
-                                id: entry.id,
-                                title: entry.title,
-                            };
-                        }
-                        report.friendshipReward = friendshipReport;
-                    }
-                }
                 if (spared) {
                     report.spared = true;
                     const entry = foe.journalEntry;

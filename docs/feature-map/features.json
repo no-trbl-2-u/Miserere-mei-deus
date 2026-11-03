@@ -618,7 +618,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/DebugRunControls.test.tsx, axiomancer-mobile/components/art/__tests__/art-components.test.tsx, axiomancer-mobile/components/event/aftermath/__tests__/CombatDefeatPanel.test.tsx, ..."
+        "source": "axiomancer-mobile/components/art/__tests__/art-components.test.tsx, axiomancer-mobile/components/event/aftermath/__tests__/CombatDefeatPanel.test.tsx, axiomancer-mobile/components/event/aftermath/__tests__/CombatVictoryPanel.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -1585,12 +1585,6 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Enemy",
-      "file": "axiomancer-mechanics/src/Combat/combat.signature.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Combat",
-      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.threat.ts"
     },
     {
@@ -1766,12 +1760,6 @@
       "from": "area:Enemy",
       "to": "area:Game",
       "file": "axiomancer-mechanics/src/Enemy/types.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Enemy",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/Enemy/befriend.ts"
     },
     {
       "kind": "coupling",
@@ -2030,6 +2018,12 @@
       "from": "area:Game",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/Game/fixtures/quest-chain-long.fixture.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
     },
     {
       "kind": "coupling",
@@ -4922,12 +4916,6 @@
       "from": "route:devaftermath",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/aftermath.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:devaftermath",
-      "to": "area:Log",
-      "file": "axiomancer-mobile/lib/platform/router.ts"
     },
     {
       "kind": "coupling",

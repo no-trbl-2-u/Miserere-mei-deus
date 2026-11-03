@@ -250,7 +250,7 @@ function summarizeStage(stage: CombatStageId, cells: readonly PlaytestCellResult
     const mine = cells.filter(c => c.spec.stage === stage);
     let runs = 0, win = 0, engagement = 0, dot = 0, rounds = 0, roundsSd = 0, util = 0, entropy = 0;
     const winPathCounts: WinPathCounts = {
-        victory: 0, mercy: 0, defeat: 0, retreat: 0,
+        victory: 0, defeat: 0, retreat: 0,
     };
     // Dominant card at the stage level: the biggest per-card share seen in any
     // of the stage's cells (the worst-case single-card concentration).
@@ -321,7 +321,7 @@ function summarizeDecks(cells: readonly PlaytestCellResult[]): PlaytestDeckSumma
             if (stageCells.length === 0) continue;
             let runs = 0, win = 0, engagement = 0, rounds = 0, roundsSd = 0, util = 0, entropy = 0;
             const winPathCounts: WinPathCounts = {
-                victory: 0, mercy: 0, defeat: 0, retreat: 0,
+                victory: 0, defeat: 0, retreat: 0,
             };
             const policyRuns = new Map<string, number>();
             const policyWins = new Map<string, number>();
@@ -481,7 +481,7 @@ const pct = (n: number): string => `${(n * 100).toFixed(0).padStart(3)}%`;
 export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: boolean }): string {
     const lines: string[] = [];
     lines.push('Hazard combat playtest matrix');
-    lines.push('(win = enemy HP→0 or befriend-spare; V/M/D/R = victory/mercy/defeat/retreat;');
+    lines.push('(win = enemy HP→0; V/D/R = victory/defeat/retreat;');
     lines.push(' statusEng + dotFrac are LEGACY warning lights — the status-dominance doctrine they');
     lines.push('   enforced was voided by THE UNSHACKLING; they are informational, not the target;');
     lines.push(' util=deck utilization, H=play entropy, dom=dominant-card HP share (>70% = spam))');
@@ -520,7 +520,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
         lines.push(
             `  ${cell.spec.stage.padEnd(11)}${cell.spec.enemySlug.padEnd(26)}${cell.spec.policyId.padEnd(13)}`
             + `${deckLabel(cell.spec.deck).padEnd(22)}`
-            + `${pct(s.winRate)}  ${`${s.victories}/${s.mercies}/${s.defeats}/${s.retreats}`.padEnd(12)}`
+            + `${pct(s.winRate)}  ${`${s.victories}/${s.defeats}/${s.retreats}`.padEnd(12)}`
             + `${s.avgRounds.toFixed(1).padStart(6)}`
             + `${pct(s.statusEngagement).padStart(10)}${pct(s.dotHpFraction).padStart(8)}${pct(s.strikeFraction).padStart(7)}`
             + `${pct(s.deckUtilization).padStart(6)}${s.usageEntropy.toFixed(2).padStart(5)}${pct(s.dominantCardShare).padStart(6)}`
@@ -536,7 +536,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
         lines.push(
             `  ${cell.spec.stage.padEnd(11)}${cell.spec.enemySlug.padEnd(26)}${cell.spec.policyId.padEnd(13)}`
             + `${deckLabel(cell.spec.deck).padEnd(22)}`
-            + `vic=${String(w.victory).padStart(3)} mer=${String(w.mercy).padStart(3)} `
+            + `vic=${String(w.victory).padStart(3)} `
             + `def=${String(w.defeat).padStart(3)}`,
         );
     }
@@ -553,7 +553,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
             + `  dom=${pct(summary.dominantCardShare)}${summary.dominantCardId ? `(${summary.dominantCardId})` : ''}`,
         );
         lines.push(
-            `             win-path: vic=${w.victory} mer=${w.mercy} def=${w.defeat}`,
+            `             win-path: vic=${w.victory} def=${w.defeat}`,
         );
         lines.push(`             ${formatCombatQuality(summary.combatQuality)}`);
     }
@@ -609,7 +609,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
         const inDeckRuns = new Map<string, number>();
         const inDeckWins = new Map<string, number>();
         for (const cell of report.cells) {
-            const wins = cell.stats.victories + cell.stats.mercies;
+            const wins = cell.stats.victories;
             for (const cardId of new Set(cell.deckCardIds)) {
                 inDeckRuns.set(cardId, (inDeckRuns.get(cardId) ?? 0) + cell.stats.runs);
                 inDeckWins.set(cardId, (inDeckWins.get(cardId) ?? 0) + wins);

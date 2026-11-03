@@ -71,9 +71,6 @@ export default function LabyrinthScreen() {
         if (lastOutcome === 'victory') {
             bossOutcomeRecorded.current = true;
             actions.labyrinthRecordBossOutcome('slain');
-        } else if (lastOutcome === 'parley') {
-            bossOutcomeRecorded.current = true;
-            actions.labyrinthRecordBossOutcome('spared');
         }
     }, [inBossRoom, lastOutcome, actions]);
 

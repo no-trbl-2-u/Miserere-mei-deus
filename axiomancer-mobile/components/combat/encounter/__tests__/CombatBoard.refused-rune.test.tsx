@@ -3,15 +3,15 @@
  *
  * A rune that cannot fire shows its reason on the column, not only in its
  * a11y label. Short of Conviction it reads "◆n" as before; refused by
- * `signatureCastBlock` for any other reason (Float-Eye not yet low enough to spare,
+ * `signatureCastBlock` for any other reason (no GUARD to turn into THORNS,
  * a SACRIFICE already armed) it carries a distinct
  * refused mark, and a tap opens the info popup, whose lines
  * (`signatureInfoLines`) put the reason first.
  *
- * The fight is the real one: the default fixture is bw-w2's Float-Eye at full
- * VITAE, above the default befriend gate, so The Open Hand is refused there
- * once the player holds the Conviction for it (every foe can be befriended). Each rune prints its own cost: Ruby Tithe ◆3,
- * The Open Hand ◆4 (LR1d A11).
+ * The fight is the real one: the default fixture is bw-w2's Float-Eye, with no
+ * GUARD up, so Thorn Mantle is refused there whatever the Conviction; The Open
+ * Hand is never refused for a reason of its own. Each rune prints its own cost:
+ * Ruby Tithe ◆3, The Open Hand ◆4, Thorn Mantle ◆5 (LR1d A11).
  */
 
 import React from 'react';
@@ -30,14 +30,18 @@ import { withAllProviders } from '@/test-utils/withAllProviders';
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike'];
 const noopDrag = (): DragController =>
     ({ begin: () => undefined, end: () => undefined, active: null, x: { value: 0 }, y: { value: 0 } } as unknown as DragController);
-const WORN: CombatEncounterState['signatures'] = ['sig-disarming-plea', 'sig-ruby-signet'];
 const RUBY = 'sig-ruby-signet';
-const HAND_COST = getSignatureSkill('sig-disarming-plea')!.cost;
+const THORN = 'sig-defender-signet';
+const HAND = 'sig-disarming-plea';
+const WORN: CombatEncounterState['signatures'] = [HAND, RUBY, THORN];
+const NO_GUARD = 'No GUARD to turn into THORNS';
+const HAND_COST = getSignatureSkill(HAND)!.cost;
+const THORN_COST = getSignatureSkill(THORN)!.cost;
 const RUBY_COST = getSignatureSkill(RUBY)!.cost;
 
 function fight(conviction: number) {
     const real = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS }, seed: 16 });
-    const combat = { ...rollEncounterDice(real.combat).state, signatures: WORN, conviction };
+    const combat = { ...rollEncounterDice(real.combat).state, signatures: WORN, conviction, guard: 0 };
     return { ...real, combat };
 }
 
@@ -45,23 +49,20 @@ const sig = (combat: CombatEncounterState, id: string): CombatSignatureVM =>
     buildCombatViewModel(combat).signatures.find(s => s.id === id)!;
 
 describe('A6 — the signature VM splits short-of-Conviction from refused', () => {
-    it('with Conviction to spare, Ruby Tithe is castable and The Open Hand is refused', () => {
+    it('with Conviction to spare, Ruby Tithe and The Open Hand are castable and Thorn Mantle is refused', () => {
         const { combat } = fight(9);
         expect(combat.enemy.name).toMatch(/float-eye/i);
         expect(sig(combat, RUBY)).toMatchObject({ affordable: true, refused: false, reason: null });
-        expect(sig(combat, 'sig-disarming-plea')).toMatchObject({
-            affordable: false, refused: true, reason: `${combat.enemy.name} is not yet low enough to spare`,
-        });
+        expect(sig(combat, HAND)).toMatchObject({ affordable: true, refused: false, reason: null });
+        expect(sig(combat, THORN)).toMatchObject({ affordable: false, refused: true, reason: NO_GUARD });
     });
 
-    it('short of Conviction, Ruby Tithe reads short while The Open Hand still reads refused', () => {
+    it('short of Conviction, The Open Hand reads short while Thorn Mantle still reads refused', () => {
         const { combat } = fight(0);
-        expect(sig(combat, RUBY)).toMatchObject({ affordable: false, refused: false });
-        expect(sig(combat, RUBY).reason).toMatch(/Conviction/);
+        expect(sig(combat, HAND)).toMatchObject({ affordable: false, refused: false });
+        expect(sig(combat, HAND).reason).toMatch(/Conviction/);
         // More Conviction would not lift the refusal, so the refusal is the reason.
-        expect(sig(combat, 'sig-disarming-plea')).toMatchObject({
-            affordable: false, refused: true, reason: `${combat.enemy.name} is not yet low enough to spare`,
-        });
+        expect(sig(combat, THORN)).toMatchObject({ affordable: false, refused: true, reason: NO_GUARD });
     });
 
     it('a Ruby Tithe whose next SACRIFICE is already armed is refused, not short', () => {
@@ -107,19 +108,20 @@ describe('A6 — the column shows the three states', () => {
         expect(ring(RUBY).borderStyle).toBe('solid');
         expect(screen.getAllByText(`◆${RUBY_COST}`).length).toBe(1);
         expect(screen.getAllByText(`◆${HAND_COST}`).length).toBe(1);
+        expect(screen.queryByTestId(`combat-signature-refused-${HAND}`)).toBeNull();
         expect(label(RUBY)).toMatch(/Conviction/);
         expect(label(RUBY)).not.toMatch(/refused/);
     });
 
     it('refused: a dashed ring and the refused mark, even short of Conviction, and a tap opens the info', () => {
-        const { combat, onSignature, onSignatureInfo } = renderBoard(0);
-        expect(screen.getByTestId('combat-signature-refused-sig-disarming-plea')).toBeTruthy();
-        expect(ring('sig-disarming-plea').borderStyle).toBe('dashed');
-        expect(label('sig-disarming-plea')).toMatch(/refused: .*not yet low enough to spare/);
-        fireEvent.press(screen.getByTestId('combat-signature-sig-disarming-plea'));
+        const { onSignature, onSignatureInfo } = renderBoard(0);
+        expect(screen.getByTestId(`combat-signature-refused-${THORN}`)).toBeTruthy();
+        expect(ring(THORN).borderStyle).toBe('dashed');
+        expect(label(THORN)).toMatch(/refused: .*No GUARD/);
+        fireEvent.press(screen.getByTestId(`combat-signature-${THORN}`));
         expect(onSignature).not.toHaveBeenCalled();
         expect(onSignatureInfo).toHaveBeenCalledWith(expect.objectContaining({
-            id: 'sig-disarming-plea', refused: true, reason: `${combat.enemy.name} is not yet low enough to spare`,
+            id: THORN, refused: true, reason: NO_GUARD,
         }), true); // `true`: a tap, not a long-press (LR1g logs it)
     });
 });
@@ -127,9 +129,9 @@ describe('A6 — the column shows the three states', () => {
 describe('A6 — the info popup leads with the refusal', () => {
     it('a refused rune: the reason first, the cost line plain', () => {
         const { combat } = fight(9);
-        expect(signatureInfoLines(sig(combat, 'sig-disarming-plea'))).toEqual({
-            lead: `${combat.enemy.name} is not yet low enough to spare`,
-            meta: `consumes ◆ ${HAND_COST} conviction`,
+        expect(signatureInfoLines(sig(combat, THORN))).toEqual({
+            lead: NO_GUARD,
+            meta: `consumes ◆ ${THORN_COST} conviction`,
         });
     });
 

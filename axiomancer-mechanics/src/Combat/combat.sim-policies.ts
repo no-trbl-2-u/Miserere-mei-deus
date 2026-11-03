@@ -3,8 +3,8 @@
  *
  * A `CombatSimPolicy` bundles every decision seam of the encounter sim
  * (`combat.encounter.sim.ts`): how to rank candidate powered plays, which
- * Signature Skills to fund, when to spend Conviction, and how a mercy choice
- * resolves. The sim driver stays
+ * Signature Skills to fund, when to spend Conviction, and how a mercy check
+ * answers. The sim driver stays
  * one loop; the policies make it a matrix.
  *
  * HP is the sole win condition. The roster was built to witness status play: `dot-weaver` and `control-lock` play the doctrinal game,
@@ -13,8 +13,7 @@
  * balance witnesses.
  *
  * Behavior guarantee: `greedy` and `blind`'s `rankCard`/`bestSignature`
- * ordering encodes EXACTLY the per-card score (Befriend-at-lowHp,
- * new-status-first,
+ * ordering encodes EXACTLY the per-card score (new-status-first,
  * status-over-strike, damage preview) — never consumes rng, so the seeded
  * engine stream is untouched there. `greedy` and `blind` play identically;
  * `blind` is kept so the playtest matrix keeps its column.
@@ -47,12 +46,9 @@ export interface CombatSimPolicy {
     signatureKinds: readonly SignatureSkillKind[];
     /** Cast a signature when `conviction >= this`. */
     convictionThreshold: number;
-    /** How a Befriend-opened mercy choice resolves. */
-    mercyChoice: 'spare' | 'exploit';
     /**
      * How the mercy check answers when a normal foe falls and it fires
-     * (`rollMercyCheck`). Independent of `mercyChoice`, the Open Hand's old
-     * opening: a policy can exploit there and still spare at the check.
+     * (`rollMercyCheck`).
      */
     mercyCheck: 'spare' | 'finish';
     /**
@@ -68,19 +64,11 @@ export interface CombatSimPolicy {
 // Additive bands keep the per-card score a faithful encoding of a lexicographic
 // sort: each band dwarfs everything below it (bottomDamagePreview stays well
 // under BAND_EFFECT).
-const BAND_BEFRIEND_LOW_HP = 1e12;
 const BAND_PRIMARY = 2e8;
 const BAND_SECONDARY = 1e7;
 const BAND_NEW_STATUS = 1e8;
 const BAND_EFFECT = 1e4;
 const BAND_UTILITY_LIVE = 1e6;
-
-/** Low-HP gate for the Befriend/mercy turn. */
-const LOW_HP_FRACTION = 0.30;
-
-function enemyLowHp(s: CombatEncounterState): boolean {
-    return s.enemy.health <= s.enemy.maxHealth * LOW_HP_FRACTION;
-}
 
 function isNewStatus(s: CombatEncounterState, card: CombatCard): boolean {
     if (!card.primaryEffectId) return false;
@@ -96,12 +84,11 @@ function isUtilityClass(card: CombatCard): boolean {
 }
 
 /**
- * The greedy ordering as a pure per-card score (an argmax): Befriend when the foe is low, then new-status > any-status >
+ * The greedy ordering as a pure per-card score (an argmax): new-status > any-status >
  * damage preview.
  */
 function greedyRankCard(s: CombatEncounterState, card: CombatCard): number {
     let score = card.bottomDamagePreview;
-    if (enemyLowHp(s) && card.verbClass === 'befriend') score += BAND_BEFRIEND_LOW_HP;
     if (isNewStatus(s, card)) score += BAND_NEW_STATUS;
     if (card.effectKind !== 'none') score += BAND_EFFECT;
     return score;
@@ -113,7 +100,7 @@ const ALL_SIGNATURE_KINDS: readonly SignatureSkillKind[] = Object.freeze([
     'clear-yours-trigger-storm', 'foe-inferno-to-storm', 'blizzard-to-storm',
 ]);
 
-/** The killers never offer mercy, and no other signature is left to cast. */
+/** The killers cast nothing: The Open Hand heals the foe, and no other signature is left to cast. */
 const NO_SIGNATURES: readonly SignatureSkillKind[] = Object.freeze([]);
 
 /** The scripted witness roster. */
@@ -125,7 +112,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         rankCard: (s, card) => greedyRankCard(s, card),
         signatureKinds: ALL_SIGNATURE_KINDS,
         convictionThreshold: 7,
-        mercyChoice: 'spare',
         mercyCheck: 'finish',
     },
     blind: {
@@ -135,7 +121,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         rankCard: (s, card) => greedyRankCard(s, card),
         signatureKinds: ALL_SIGNATURE_KINDS,
         convictionThreshold: 7,
-        mercyChoice: 'spare',
         mercyCheck: 'finish',
     },
     'dot-weaver': {
@@ -154,7 +139,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         },
         signatureKinds: NO_SIGNATURES,
         convictionThreshold: 7,
-        mercyChoice: 'exploit',
         mercyCheck: 'finish',
     },
     'control-lock': {
@@ -172,7 +156,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         },
         signatureKinds: NO_SIGNATURES,
         convictionThreshold: 8,
-        mercyChoice: 'spare',
         mercyCheck: 'finish',
     },
     'aggro-brute': {
@@ -182,7 +165,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         rankCard: (_s, card) => card.bottomDamagePreview,
         signatureKinds: NO_SIGNATURES,
         convictionThreshold: 7,
-        mercyChoice: 'exploit',
         mercyCheck: 'finish',
     },
     turtle: {
@@ -200,7 +182,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         },
         signatureKinds: NO_SIGNATURES,
         convictionThreshold: 9,
-        mercyChoice: 'spare',
         mercyCheck: 'finish',
     },
     chaos: {
@@ -210,16 +191,14 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         rankCard: (_s, _card, rng) => rng(),
         signatureKinds: ALL_SIGNATURE_KINDS,
         convictionThreshold: 7,
-        mercyChoice: 'exploit',
         mercyCheck: 'finish',
         rankSignature: (_s, _sig, rng) => rng(),
     },
     'mercy-seeker': {
         id: 'mercy-seeker',
         name: 'Mercy Seeker',
-        description: 'The spare path: control status to survive, Befriend at the first opening, and always choose mercy over the kill.',
+        description: 'The mercy path: control status to survive, and every signature funded early.',
         rankCard: (s, card) => {
-            if (card.verbClass === 'befriend') return BAND_BEFRIEND_LOW_HP;
             if (isControlClass(card)) {
                 return (isNewStatus(s, card) ? BAND_PRIMARY : BAND_SECONDARY) + card.bottomDamagePreview;
             }
@@ -228,7 +207,6 @@ export const COMBAT_SIM_POLICIES: Record<CombatSimPolicyId, CombatSimPolicy> = {
         },
         signatureKinds: ALL_SIGNATURE_KINDS,
         convictionThreshold: 6,
-        mercyChoice: 'spare',
         mercyCheck: 'finish',
     },
 };

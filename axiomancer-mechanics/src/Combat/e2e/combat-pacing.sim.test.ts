@@ -37,7 +37,7 @@ describe('the pacing sim', () => {
         const declared = FloatEye.phases?.length ?? 0;
         expect(declared).toBeGreaterThan(1);
         const base = { player: deepClone(Player), enemy: deepClone(FloatEye), deck, runs: 20, policy: 'witness' as const, mercy: false };
-        // Every foe can be befriended now, so the phase reading turns the bot's mercy off.
+        // The phase reading turns the bot's Open Hand off: it heals the foe it means to read.
         // A foe far past the deck's reach is beaten through every phase: each share is 1.
         const long = simulatePacing({ ...base, enemyHpMultiplier: 8 });
         expect(long.winRate).toBe(1);
@@ -68,6 +68,5 @@ describe('the pacing sim', () => {
         expect(live.runs).toBe(20);
         expect(live.meanTurns).toBeGreaterThan(authored.meanTurns);
         expect(live.winRate).toBeGreaterThanOrEqual(0);
-        expect(live.mercyRate).toBe(0);
     });
 });

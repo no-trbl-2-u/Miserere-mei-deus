@@ -22,7 +22,7 @@ describe('EN2a — the seen record', () => {
         expect(seenDangerNames(old, 'float-eye').size).toBe(0);
     });
 
-    for (const outcome of ['victory', 'friendship', 'defeat', 'flee'] as const) {
+    for (const outcome of ['victory', 'defeat', 'flee'] as const) {
         it(`a DANGER that fired is recorded on a ${outcome}`, () => {
             const store = createGameStore(nullAdapter);
             store.getState().startCombat(FloatEye);

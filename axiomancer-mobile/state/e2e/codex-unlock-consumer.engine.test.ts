@@ -3,9 +3,8 @@
  *
  * Asserts:
  * - `actions.endCombat(outcome)` returns the engine `CombatEndReport`.
- * - The report's `friendshipReward.codexEntryUnlocked` field populates on
- *   first friendship with an enemy that has `journalEntry`; absent on repeat
- *   friendships and on non-friendship outcomes.
+ * - The report's `journalEntryUnlocked` field populates the first time a foe
+ *   with a `journalEntry` is spared; absent on a repeat, and on a finish.
  *
  * The engine's `endCombat` takes an explicit outcome and reads the recorded
  * `currentEncounter` (set by `startCombat`) — so these pins drive the
@@ -19,7 +18,7 @@ import { createAppActions } from '@/state/actions';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
-function makeFriendlyEnemy(journalEntryBody?: string) {
+function makeSpareableEnemy(journalEntryBody?: string) {
     return {
         id: 'test-foe',
         name: 'Test Foe',
@@ -31,7 +30,7 @@ function makeFriendlyEnemy(journalEntryBody?: string) {
         mapName: 'home-bay',
         logic: 'aggressive' as const,
         effects: [],
-        friendshipReward: { narrative: 'a thing happened.' },
+        spareStory: { narrative: 'a thing happened.' },
         journalEntry: journalEntryBody !== undefined
             ? {
                 id: 'codex-test-foe',
@@ -44,48 +43,48 @@ function makeFriendlyEnemy(journalEntryBody?: string) {
 }
 
 describe('actions.endCombat: returns engine CombatEndReport (Phase 78)', () => {
-    it('returns a friendship report that unlocks the foe codex entry on first friendship', () => {
+    it('returns a report that unlocks the foe codex entry the first time it is spared', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
 
-        actions.startCombat(makeFriendlyEnemy('a long body about the test foe.'));
-        const report = actions.endCombat('friendship');
+        actions.startCombat(makeSpareableEnemy('a long body about the test foe.'));
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
 
         expect(report).not.toBeNull();
-        expect(report?.outcome).toBe('friendship');
-        expect(report?.friendshipReward?.codexEntryUnlocked?.id).toBe('codex-test-foe');
+        expect(report?.outcome).toBe('victory');
+        expect(report?.journalEntryUnlocked?.id).toBe('codex-test-foe');
         expect(store.getState().codex.unlockedEntries).toContain('codex-test-foe');
     });
 
-    it('no codexEntryUnlocked on a repeat friendship (already unlocked)', () => {
+    it('no journalEntryUnlocked on a repeat Spare (already unlocked)', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
 
-        // First friendship unlocks the entry.
-        actions.startCombat(makeFriendlyEnemy('first body.'));
-        actions.endCombat('friendship');
+        // The first Spare unlocks the entry.
+        actions.startCombat(makeSpareableEnemy('first body.'));
+        store.getState().endCombat('victory', undefined, { spared: true });
         expect(store.getState().codex.unlockedEntries).toContain('codex-test-foe');
 
-        // Second friendship with the same journal entry — no fresh unlock.
-        actions.startCombat(makeFriendlyEnemy('second body.'));
-        const report = actions.endCombat('friendship');
-        expect(report?.friendshipReward?.codexEntryUnlocked).toBeUndefined();
+        // A second Spare with the same journal entry — no fresh unlock.
+        actions.startCombat(makeSpareableEnemy('second body.'));
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
+        expect(report?.journalEntryUnlocked).toBeUndefined();
     });
 
-    it('foe with no journalEntry never gets codexEntryUnlocked', () => {
+    it('foe with no journalEntry never gets journalEntryUnlocked', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
 
-        actions.startCombat(makeFriendlyEnemy(undefined));
-        const report = actions.endCombat('friendship');
-        expect(report?.friendshipReward?.codexEntryUnlocked).toBeUndefined();
+        actions.startCombat(makeSpareableEnemy(undefined));
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
+        expect(report?.journalEntryUnlocked).toBeUndefined();
     });
 
     it('a victory outcome returns a report and does not unlock the codex', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
 
-        actions.startCombat(makeFriendlyEnemy('body.'));
+        actions.startCombat(makeSpareableEnemy('body.'));
         const report = actions.endCombat('victory');
         expect(report?.outcome).toBe('victory');
         expect(store.getState().codex.unlockedEntries).not.toContain('codex-test-foe');
@@ -95,9 +94,9 @@ describe('actions.endCombat: returns engine CombatEndReport (Phase 78)', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const actions = createAppActions(store);
 
-        const report = actions.endCombat('friendship');
+        const report = actions.endCombat('victory');
         expect(report?.outcome).toBe('flee');
-        expect(report?.friendshipReward?.codexEntryUnlocked).toBeUndefined();
+        expect(report?.journalEntryUnlocked).toBeUndefined();
     });
 
     // Smoke pin — `applyEffect` import keeps the engine-effect surface

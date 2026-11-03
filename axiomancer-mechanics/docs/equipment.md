@@ -24,7 +24,7 @@ and `equipmentLibrary` (both) are exported from `@mechanics`; ids are
 
 Drops: every rate and the shop's stock live in `EQUIPMENT_DROP_TUNING`
 (`src/Items/equipment-drop.ts`): elite 25% (on top of its relic roll),
-cache 33%, a befriended elite 100%, the shop two pieces at 40 shillings. A
+cache 33%, the shop two pieces at 40 shillings. A
 source draws only from the lane pieces the player does not carry, never the
 grey pair. The Breakwater quests alternate relic, weapon, relic, armor; an
 equipment step pays the lane of the relic the step before paid.

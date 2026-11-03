@@ -2,7 +2,7 @@
  * Combat retrigger lock fix — hermetic e2e test.
  *
  * Reproduces and verifies the fix for playtest jot #89(a): after WIN or
- * FRIENDSHIP outcomes, players cannot trigger new combat encounters. Only
+ * a spared foe, players cannot trigger new combat encounters. Only
  * DEFEAT/restart properly clears the encounter lock.
  *
  * Each terminal combat outcome should allow re-triggering new encounters.
@@ -43,7 +43,7 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(store.getState().currentEncounter!.enemies[0]!.name).toBe('Green Jelly');
     });
 
-    it('friendship outcome allows new combat trigger', () => {
+    it('a spared foe allows new combat trigger', () => {
         const character = createCharacter({
             name: 'TestPlayer',
             level: 10,
@@ -55,8 +55,8 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         store.getState().startCombat(GreenJelly);
         expect(store.getState().currentEncounter).toBeTruthy();
 
-        const report = store.getState().endCombat('friendship');
-        expect(report.outcome).toBe('friendship');
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
+        expect(report.spared).toBe(true);
         expect(store.getState().currentEncounter).toBeUndefined();
 
         store.getState().startCombat(FloatEye);
@@ -105,9 +105,9 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(store.getState().currentEncounter).toBeTruthy();
         expect(store.getState().currentEncounter?.origin).toBe('test-node-2');
 
-        // Friendship → new encounter sequence.
-        const report2 = store.getState().endCombat('friendship');
-        expect(report2.outcome).toBe('friendship');
+        // Spared → new encounter sequence.
+        const report2 = store.getState().endCombat('victory', undefined, { spared: true });
+        expect(report2.spared).toBe(true);
 
         store.getState().startCombat({ enemies: [FloatEye], origin: 'test-node-3' });
         expect(store.getState().currentEncounter).toBeTruthy();
@@ -128,9 +128,9 @@ describe('Phase 103 — Combat retrigger lock fix', () => {
         expect(store.getState().endCombat('victory').outcome).toBe('victory');
         expect(store.getState().currentEncounter).toBeUndefined();
 
-        // Second encounter: friendship.
+        // Second encounter: spared.
         store.getState().startCombat({ enemies: [GreenJelly], origin: 'encounter-2' });
-        expect(store.getState().endCombat('friendship').outcome).toBe('friendship');
+        expect(store.getState().endCombat('victory', undefined, { spared: true }).spared).toBe(true);
         expect(store.getState().currentEncounter).toBeUndefined();
 
         // Third encounter: defeat.

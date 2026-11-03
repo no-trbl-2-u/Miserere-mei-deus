@@ -3,10 +3,9 @@
  * reducer rather than hand-rolling XP/loot/quest-advancement itself. These
  * tests stage `state.currentEncounter` through a real fight (the
  * Breakwater's bw-w2, entered by `beginHazardEncounter`), or via
- * `startCombat` for an authored foe the mercy path needs, then assert `endCombat`'s full grant lands
- * live: quest kill-objective advancement + completion reward, and — on a
- * merciful win — the authored `friendshipReward` payload (flags, codex
- * unlock, faction deltas).
+ * `startCombat` for an authored foe a Spare needs, then assert `endCombat`'s full grant lands
+ * live: quest kill-objective advancement + completion reward, and — for a
+ * spared foe — its story flag and codex unlock.
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
@@ -105,27 +104,24 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
         expect(store.getState().player!.experience).toBe(before);
     });
 
-    it('a merciful win maps to the reducer\'s friendship outcome and activates authored friendshipReward content', () => {
+    it('a foe spared at the check grants its authored story flag and journal entry, and no XP', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
-        // Green Jelly: friendshipReward carries items, xpBonus, flagSet
-        // and journalEntry — real authored content, not a test
-        // fixture, reached from live hazard combat.
+        // Green Jelly: real authored content, not a test fixture.
         const greenJelly = ENEMY_REGISTRY['green-jelly'];
         store.getState().startCombat(greenJelly);
-        const finalState = openEncounter(greenJelly);
+        const finalState = { ...openEncounter(greenJelly), mercyCheck: 'spared' as const };
 
         const xpBefore = store.getState().player!.experience;
-        applyHazardOutcome(store, 'mercy' as CombatOutcome, finalState, greenJelly);
+        applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, greenJelly);
 
         const state = store.getState();
         expect(state.currentEncounter).toBeUndefined();
-        expect(state.flags).toContain(greenJelly.friendshipReward!.flagSet);
+        expect(state.flags).toContain(greenJelly.spareStory!.flagSet);
         expect(state.codex.unlockedEntries).toContain(greenJelly.journalEntry!.id);
-        // A befriend pays no XP: shillings or a potion.
         expect(state.player!.experience).toBe(xpBefore);
     });
 
-    it('befriending a kill-objective target completes its quest and grants the quest reward', () => {
+    it('sparing a kill-objective target completes its quest and grants the quest reward', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const boss = ENEMY_REGISTRY['green-jelly'];
         // The fixture quest (no quest is authored), its objective
@@ -141,15 +137,15 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
         }
         store.setState({ quests: startQuest(emptyQuestLog(), startingQuest) });
         store.getState().startCombat(boss);
-        const finalState = openEncounter(boss);
+        const finalState = { ...openEncounter(boss), mercyCheck: 'spared' as const };
         const currencyBefore = store.getState().player!.currency;
 
-        // The merciful win must advance kill objectives too.
-        applyHazardOutcome(store, 'mercy' as CombatOutcome, finalState, boss);
+        // A Spare must advance kill objectives too.
+        applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, boss);
 
         const state = store.getState();
         expect(state.quests.completed).toContain(FIXTURE_QUEST.name);
-        expect(state.player!.currency).toBe(currencyBefore + reward.amount);
-        expect(state.flags).toContain(boss.friendshipReward!.flagSet);
+        expect(state.player!.currency).toBeGreaterThanOrEqual(currencyBefore + reward.amount + spareWage(boss.level));
+        expect(state.flags).toContain(boss.spareStory!.flagSet);
     });
 });

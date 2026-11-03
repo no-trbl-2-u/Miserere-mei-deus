@@ -694,7 +694,7 @@ async function playSeed(browser, baseUrl, seed, mode) {
         if (MERCY_CHECK) {
             await answerMercyCheck(page, sink, tag, mode, seed)
         } else if (await has(page.getByTestId('combat-mercy'))) {
-            // Any prompt, the Open Hand's or the check's, on the plain walk.
+            // The check's prompt, on the plain walk.
             await page.getByTestId('combat-mercy-spare').click({ timeout: 3000, force: true }).catch(() => {})
             await page.waitForTimeout(300)
             await assertAlive(page, sink, `${tag}, taking the mercy branch`)
@@ -734,7 +734,7 @@ async function playSeed(browser, baseUrl, seed, mode) {
                 }
             }
             // Walk whichever aftermath panel the outcome produced, in the order
-            // they stack: summary → victory/defeat/friendship → reward pick.
+            // they stack: summary → victory/defeat → reward pick.
             // These are the REAL testIDs (CombatSummaryModal / CombatRewardsOverlay
             // / components/event/aftermath) — grep them if the panels are renamed,
             // because a silently-missing id turns this whole block into a no-op.
@@ -742,7 +742,6 @@ async function playSeed(browser, baseUrl, seed, mode) {
                 'combat-summary-close',
                 'combat-victory-panel-carry-on',
                 'combat-defeat-panel-begin-again',
-                'combat-friendship-panel-part-as-friends',
                 'combat-reward-confirm',
                 'combat-reward-skip',
             ]

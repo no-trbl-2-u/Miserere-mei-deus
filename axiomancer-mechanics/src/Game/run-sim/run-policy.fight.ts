@@ -9,7 +9,7 @@
  *   back or while it is above its VITAE threshold, and holds it otherwise.
  * - The Defender guards first against an ATTACK or DANGER intent (or any
  *   telegraphed hit).
- * - The Merciful drives to befriend: mercy lines first, and it spares.
+ * - The Merciful plays its mercy lines first, casts The Open Hand, and spares.
  * - The Elementalist chains its elements (a line that puts a new element on
  *   the foe first) and refuses a PAID line whose self-burn would end it.
  *
@@ -39,8 +39,8 @@ const BAND_LANE = 5e3;
 const BAND_RULE = 2e8;
 /** The lane's first call (a guard against a hit, a mercy line): above everything else. */
 const BAND_FIRST = 5e11;
-/** The greedy witness's befriend-when-low band, which a mercy line matches. */
-const BAND_BEFRIEND = 1e12;
+/** The Merciful's mercy lines: above every other band. */
+const BAND_MERCY = 1e12;
 
 /** The intents a Defender guards against. */
 const HIT_INTENTS: ReadonlySet<CombatIntentType> = new Set(['attack', 'danger', 'damage', 'combo']);
@@ -48,7 +48,7 @@ const HIT_INTENTS: ReadonlySet<CombatIntentType> = new Set(['attack', 'danger', 
 /** Every signature kind the game defines, read from the signature list. */
 const EVERY_SIGNATURE: readonly SignatureSkillKind[] = Object.freeze([...new Set(SIGNATURE_SKILL_LIST.map(sig => sig.kind))]);
 
-/** Every signature kind but the mercy one: the killers do not open mercy. */
+/** Every signature kind but the mercy one: the killers do not heal the foe. */
 const KILLER_SIGNATURES: readonly SignatureSkillKind[] = Object.freeze(EVERY_SIGNATURE.filter(kind => kind !== 'mercy'));
 
 /** The signatures that pay a SACRIFICE back (heal it, or turn it into LEECH). */
@@ -178,7 +178,6 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
                     return sacrificePaysBack(s) || afford ? score + BAND_RULE : -Infinity;
                 },
                 signatureKinds: KILLER_SIGNATURES,
-                mercyChoice: 'exploit',
             };
         case 'defender':
             return {
@@ -192,21 +191,20 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
                     return guards && foeMeansToHit(s) ? score + BAND_FIRST : score;
                 },
                 signatureKinds: KILLER_SIGNATURES,
-                mercyChoice: 'exploit',
             };
         case 'merciful':
             return {
                 ...COMBAT_SIM_POLICIES['mercy-seeker'],
                 name: 'Merciful (lane bot)',
-                description: 'Drives to befriend: mercy lines first, its own lane next, and it spares.',
+                description: 'Mercy lines first, its own lane next, every signature cast, and it spares.',
                 rankCard: (s, card) => {
                     const score = laneScore(s, card, laneId, keywords);
                     const verbs = cardVerbs(s, card.id);
-                    const mercy = card.verbClass === 'befriend' || [...verbs].some(v => v.toLowerCase().includes('mercy'));
-                    return mercy ? score + BAND_BEFRIEND : score;
+                    const mercy = [...verbs].some(v => v.toLowerCase().includes('mercy'));
+                    return mercy ? score + BAND_MERCY : score;
                 },
                 signatureKinds: EVERY_SIGNATURE,
-                mercyChoice: 'spare',
+                mercyCheck: 'spare',
             };
         case 'elementalist':
             return {
@@ -220,7 +218,6 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
                     return adds > 0 ? score + BAND_RULE * adds : score;
                 },
                 signatureKinds: KILLER_SIGNATURES,
-                mercyChoice: 'exploit',
             };
         default:
             return {

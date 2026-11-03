@@ -127,7 +127,7 @@ describe('Combat CLI — deterministic auto playthrough', () => {
         expect(a.outcome).toEqual(b.outcome);
         expect(a.start).toBeDefined();
         expect(a.end).toBeDefined();
-        expect(['victory', 'defeat', 'mercy', 'retreat']).toContain(a.outcome);
+        expect(['victory', 'defeat', 'retreat']).toContain(a.outcome);
     });
 
     it('records at least one phase record per run', async () => {

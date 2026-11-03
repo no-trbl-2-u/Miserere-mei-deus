@@ -86,7 +86,6 @@ const RANK_NAMES: Record<number, string> = Object.freeze({
 // Verb-class card colours (these map to verbs, not Effects, so they aren't in GLYPH_COLORS).
 const GUARD_COLOR = HUE.guardSteel;
 const PAYOFF_COLOR = HUE.payoffGold;
-const BEFRIEND_COLOR = HUE.boonGreen;
 const INERT_COLOR = HUE.inertGrey;
 
 // A single gold accent (matches `STANCE_COLORS.wild`, the existing "charged
@@ -401,7 +400,7 @@ export const DEAD_TRAY_COPY = {
 } as const;
 
 export type CombatCardKind =
-    | 'dot' | 'stun' | 'guard' | 'weaken' | 'inert' | 'befriend'
+    | 'dot' | 'stun' | 'guard' | 'weaken' | 'inert'
     | 'vulnerable'   // debuff_vulnerable / debuff_vulnerability_* — foe takes +N% damage
     | 'mark'         // universal exposure: +N per DoT tick per stack
     | 'resolute'      // buff_resolute → real -N% damage-taken reduction (the inverse of vulnerable)
@@ -414,7 +413,7 @@ export type CombatCardKind =
 
 /** Render-ready, HONEST card FACE. Every number is a real unit derived from the
  *  card's AUTHORED effect (never the abstract "impact"). `heroText` is '' when the
- *  kind has no honest number (strike/weaken/inert/befriend) — the face renders a
+ *  kind has no honest number (strike/weaken/inert) — the face renders a
  *  qualitative word there instead. Real-units-or-no-number: never a fabricated value. */
 export interface CombatCardFaceVM {
     kind: CombatCardKind;
@@ -567,12 +566,11 @@ export const PROGRAM_COPY = Object.freeze({
 export interface CombatSignatureVM {
     id: string; name: string; description: string; cost: number; affordable: boolean; icon: string;
     /** The refusal reason while the rune can't fire (null when castable):
-     *  the engine's `signatureCastBlock` — Conviction short, or The Open Hand
-     *  on a foe that can't be befriended yet. A refusal outranks a Conviction
+     *  the engine's `signatureCastBlock` — Conviction short, or a signature
+     *  that would do nothing. A refusal outranks a Conviction
      *  shortfall, so the reason names what more Conviction would not fix. */
     reason?: string | null;
-    /** Refused for a reason other than Conviction (Float-Eye will not be
-     *  befriended, not yet low enough to spare, already counts twice): the
+    /** Refused for a reason other than Conviction (already counts twice): the
      *  column marks it apart from a rune that is merely short of ◆. */
     refused?: boolean;
 }
@@ -1363,7 +1361,6 @@ export function resolvePrimary(card: CombatCard, sourceCard: Card | undefined): 
         const g = findMech('guard');
         return { kind: 'guard', ce: null, guardAmount: g?.amount ?? 0, riders: [], mech: null };
     }
-    if (vc === 'befriend') return { kind: 'befriend', ce: null, guardAmount: null, riders: [], mech: null };
     if (vc === 'direct-damage') {
         // DEAL is the card's paid identity: headline the mechanic.
         const led = headlineMechanic(mechs);
@@ -1528,8 +1525,6 @@ function cardCalc(card: CombatCard, sourceCard: Card | undefined): CardCalc {
         }
         case 'guard':
             out.keyword = 'Guard'; out.glyph = '🛡'; out.categoryColor = GUARD_COLOR; break;
-        case 'befriend':
-            out.keyword = null; out.glyph = '🕊'; out.categoryColor = BEFRIEND_COLOR; break;
         case 'mechanic': {
             const h = mechanicHeadline(pr.mech);
             out.keyword = h?.keyword ?? null;
@@ -1744,7 +1739,6 @@ function faceCore(card: CombatCard, sourceCard?: Card): FaceCore {
         case 'weaken': return { ...base, kind: 'weaken', keyword: kw, heroText: '', heroSub: c.turns > 0 ? `hits softer · ${c.turns} turns` : 'weakens its hits', freeHeroText: free, freeHeroSub: null, verbLine: "weakens the foe's hits", powerRail: c.keyword ?? 'Weaken', armable: false, inert: false, guardBase: null };
         case 'mark': return { ...base, kind: 'mark', keyword: kw, heroText: `+${c.markAmp}/tick`, heroSub: `${c.turns} turns`, freeHeroText: free, freeHeroSub: null, verbLine: 'every DoT tick on the foe bites harder', powerRail: c.keyword ?? 'Mark', armable: false, inert: false, guardBase: null };
         case 'guard': { const b = c.guardAmount ?? 0; return { ...base, kind: 'guard', keyword: 'GUARD', heroText: `Guard ${b}`, heroSub: null, freeHeroText: free, freeHeroSub: null, verbLine: 'block the next hit', powerRail: `${b}`, armable: true, inert: false, guardBase: b }; }
-        case 'befriend': return { ...base, kind: 'befriend', keyword: 'SPARE', heroText: '', heroSub: 'spare a near-dead foe', freeHeroText: 'mercy', freeHeroSub: null, verbLine: 'spare a near-dead foe', powerRail: 'mercy', armable: false, inert: false, guardBase: null };
         case 'vulnerable': return { ...base, kind: 'vulnerable', keyword: kw, heroText: `+${c.vulnPct}%`, heroSub: `dmg taken · ${c.turns} turns`, freeHeroText: free, freeHeroSub: null, verbLine: 'foe takes more damage', powerRail: c.keyword ?? 'Vulnerable', armable: true, inert: false, guardBase: null, statusBase: c.vulnPct };
         case 'resolute': return { ...base, kind: 'resolute', keyword: kw, heroText: `${c.resolutePct}%`, heroSub: `dmg taken · ${c.turns} turns`, freeHeroText: free, freeHeroSub: null, verbLine: 'you take less damage', powerRail: c.keyword ?? 'Resolute', armable: false, inert: false, guardBase: null, statusBase: c.resolutePct };
         // A keyword-less headline (DEAL — "Deal 24" needs no badge) leaves the
@@ -1792,7 +1786,6 @@ function detailCore(card: CombatCard, sourceCard?: Card): DetailCore {
         case 'weaken': return { subtitle: `${Title} the enemy — its attacks hit softer.`, outcomeLine: c.turns > 0 ? `Apply ${Title} · ${c.turns} turns.` : `Apply ${Title}.`, outcomeStats: c.turns > 0 ? [{ label: 'TURNS', value: `${c.turns}` }] : [], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — the foe's hits land softer while it holds.`, readNote: `${Title} weakens the enemy's blows.`, mathLine: `${Title} reduces the enemy's outgoing damage while active (real engine units).`, keywords };
         case 'mark': return { subtitle: `${Title} the enemy — the flaw is named.`, outcomeLine: `Apply ${Title} +${c.markAmp}/tick · ${c.turns} turns.`, outcomeStats: [{ label: 'PER TICK', value: `+${c.markAmp}` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — every DoT tick and payoff hit on the foe deals +${c.markAmp} while it holds.`, readNote: `${Title} counts as an affliction — RUPTURE, SOUL, and REAP all feed on it.`, mathLine: `+${c.markAmp}/tick = tickAmplifyFlat × intensity, for ${c.turns} turns.`, keywords };
         case 'guard': { const b = c.guardAmount ?? 0; return { subtitle: 'Guard yourself — soak the next hit.', outcomeLine: `Gain ${Title} ${b}.`, outcomeStats: [{ label: 'GUARD', value: `${b}` }], stacksText: null, freeLine, powerLine: `◆ WITH A DIE: Guard ${b}.`, readNote: `Lands as printed: Guard ${b}.`, mathLine: `POWER = ${b}, the printed Guard.`, keywords }; }
-        case 'befriend': return { subtitle: 'Spare a near-dead foe.', outcomeLine: 'Spare a near-dead foe — end combat peacefully.', outcomeStats: [], stacksText: null, freeLine, powerLine: '◆ WITH A DIE: if the enemy VITAE is low, end combat peacefully (befriend).', readNote: 'Watch the enemy VITAE bar — befriend lands only when it is low.', mathLine: 'No fixed number — a conditional outcome gated on low enemy VITAE.', keywords };
         case 'vulnerable': { return { subtitle: `${Title} the enemy — it takes more damage.`, outcomeLine: `Apply ${Title} +${c.vulnPct}% · ${c.turns} turns.`, outcomeStats: [{ label: 'DMG TAKEN', value: `+${c.vulnPct}%` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: 'Stacks without limit.', freeLine, powerLine: `◆ WITH A DIE: apply ${Title} — +${c.vulnPct}% damage taken for ${c.turns} turns.`, readNote: `Lands as printed: +${c.vulnPct}% damage taken for ${c.turns} turns.`, mathLine: `+${c.vulnPct}% = (damageTakenMult − 1) × 100 × intensity; combined Vulnerable is uncapped.`, keywords }; }
         case 'resolute': return { subtitle: `${Title} — you take less damage.`, outcomeLine: `Gain ${Title} ${c.resolutePct}% · ${c.turns} turns.`, outcomeStats: [{ label: 'DMG TAKEN', value: `${c.resolutePct}%` }, { label: 'TURNS', value: `${c.turns}` }], stacksText: c.stacks ? 'Stacks by intensity.' : null, freeLine, powerLine: `◆ WITH A DIE: gain ${Title} — ${c.resolutePct}% damage taken for ${c.turns} turns.`, readNote: `Lands as printed: ${Title} is a self-buff.`, mathLine: `${c.resolutePct}% = (damageTakenMult − 1) × 100${c.stacks ? '; stacks by intensity' : ''}.`, keywords };
         // A keyword-less mechanic headline (DEAL) has no Title to lead with —
@@ -1879,8 +1872,7 @@ export function detailStats(card: CombatCard, sourceCard?: Card): CombatCardDeta
     const core = detailCore(card, sourceCard);
     const STANCE = STANCE_LABELS[card.stance] ?? card.stance.toUpperCase();
     // The free (die-optional) value — the ENGINE's own free line, not the
-    // face's hero slot (the face hard-codes 'mercy' on a befriend card, which
-    // would disagree with its authored rider). `freeLineText` is `riderText`
+    // face's hero slot. `freeLineText` is `riderText`
     // from mechanics, de-abbreviated — nothing else.
     const freePill = freeLineText(card, sourceCard);
     const diePaidLine = paidLine(sourceCard);
@@ -2027,21 +2019,13 @@ function programChips(state: CombatEncounterState): CombatEffectChipVM[] {
             gloss: keywordGloss('Tether'),
         });
     }
-    // MERCY on the foe: its total and the foe turns left until it bursts; YIELDING
-    // while the foe holds it.
+    // MERCY on the foe: its total and the foe turns left until it bursts.
     const mercy = mercyReading(l.mercy);
     if (mercy.mercy > 0) {
         out.push({
             effectId: 'program-mercy', intensity: mercy.mercy, duration: mercy['mercy-turns'],
             glyph: { glyph: '☮', color: GLYPH_COLORS.dot, kind: 'dot', label: 'Mercy' },
             gloss: keywordGloss('Mercy'),
-        });
-    }
-    if (mercy.yielding) {
-        out.push({
-            effectId: 'program-yielding', intensity: 1, duration: 0,
-            glyph: { glyph: '☉', color: HUE.goldAccent, kind: 'control', label: 'Yielding' },
-            gloss: keywordGloss('Yielding'),
         });
     }
     return out;
@@ -2344,7 +2328,6 @@ function lampSpan(e: CombatEffectChipVM): string {
 export function effectChipA11y(e: CombatEffectChipVM): string {
     const span = e.effectId.startsWith('weather-') ? 'lasts the combat'
         : e.effectId === 'spike-thorns' ? 'drops by 1 each round'
-        : e.effectId === 'program-yielding' ? 'while it holds'
         : e.effectId === 'program-mercy' ? `bursts in ${e.duration} turn${e.duration === 1 ? '' : 's'}`
         : e.effectId === 'enemy-counter-curfew' ? "until the foe's next turn"
         : e.effectId === 'enemy-counter-verse' ? 'until the Amen spends it'

@@ -28,10 +28,10 @@ import type { EnemySlug } from '../Enemy/enemy.library';
  */
 /**
  * Per-foe codex / journal entry unlocked when the player
- * befriends an enemy (`outcome === 'friendship'`). The engine
+ * spares the foe at the mercy check. The engine
  * auto-appends `journalEntry.id` to `state.codex.unlockedEntries`
  * (de-duped) and surfaces `{ id, title }` on
- * `CombatEndReport.friendshipReward.codexEntryUnlocked`; the consumer
+ * `CombatEndReport.journalEntryUnlocked`; the consumer
  * (mobile Codex tab, future CLI surface) looks up the entry body via
  * the source `Enemy` (or a future `CodexLibrary` registry).
  *
@@ -64,7 +64,7 @@ export interface CodexEntry {
 export interface CodexState {
     unlockedEntries: string[];
     /**
-     * Slugs of the foes the player has beaten (a win or a befriend), written by
+     * Slugs of the foes the player has beaten (spared or finished), written by
      * the END_COMBAT reducer, de-duped. Optional: a save written before it reads
      * as none beaten (`defeatedEnemies` in `defeat-ledger.ts`).
      */

@@ -21,8 +21,8 @@ const SAMPLE = [
 ];
 
 describe('the glyph keywords', () => {
-    it('are the 21 keywords the library prints, each with a category and its own word as the label', () => {
-        expect(GLYPH_KEYWORDS).toHaveLength(21);
+    it('are the 20 keywords the library prints, each with a category and its own word as the label', () => {
+        expect(GLYPH_KEYWORDS).toHaveLength(20);
         for (const k of GLYPH_KEYWORDS) {
             expect(GLYPH_CATEGORY[k]).toBeTruthy();
             expect(glyphLabel(k)).toBe(k);

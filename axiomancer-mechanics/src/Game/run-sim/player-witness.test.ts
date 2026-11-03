@@ -12,9 +12,9 @@ import { WANDERER_POLICY } from './run-policy.wanderer';
 const greedy = COMBAT_SIM_POLICIES.greedy;
 
 describe('PLAYER_WITNESS', () => {
-    it('never funds the mercy signature and exploits every opening', () => {
+    it('never funds the mercy signature and finishes at the check', () => {
         expect(PLAYER_WITNESS.signatureKinds).not.toContain('mercy');
-        expect(PLAYER_WITNESS.mercyChoice).toBe('exploit');
+        expect(PLAYER_WITNESS.mercyCheck).toBe('finish');
     });
 
     it('is greedy otherwise: the same card ranking, threshold and every other signature', () => {
@@ -24,7 +24,6 @@ describe('PLAYER_WITNESS', () => {
     });
 
     it('leaves the greedy witness as measured truth plays it', () => {
-        expect(greedy.mercyChoice).toBe('spare');
         expect(greedy.signatureKinds).toContain('mercy');
         expect(PLAYER_WITNESS).not.toBe(greedy);
     });

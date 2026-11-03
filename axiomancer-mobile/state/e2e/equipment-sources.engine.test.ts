@@ -1,9 +1,8 @@
 /**
- * Lane weapons and armor reach the player from an elite, a befriended elite
- * and a loot cache (A13 of the equipment-dock spec). The elite's piece queues
- * on `/item-reward` as a relic does, on top of the relic roll and never the
- * whole reward; a befriended elite always hands one; a cache's item bundle
- * can hold one. Every chance reads `EQUIPMENT_DROP_TUNING`.
+ * Lane weapons and armor reach the player from an elite and a loot cache
+ * (A13 of the equipment-dock spec). The elite's piece queues on `/item-reward`
+ * as a relic does, on top of the relic roll and never the whole reward; a
+ * cache's item bundle can hold one. Every chance reads `EQUIPMENT_DROP_TUNING`.
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
@@ -12,7 +11,7 @@ import type { GameState } from '@mechanics';
 
 import { createAppActions } from '@/state/actions';
 import { rollCombatRewardAction, settleEliteEquipmentAction } from '@/state/combat/store-actions';
-import { eliteDropSource, eliteGiftSource } from '@/state/presenters/relic-source.copy';
+import { eliteDropSource } from '@/state/presenters/relic-source.copy';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
@@ -59,28 +58,18 @@ describe("an elite's lane piece reaches the item-reward screen", () => {
         expect(normal.getState().itemReward.queue).toHaveLength(0);
     });
 
-    it('a befriended elite always hands one, under a gift eyebrow', () => {
-        const store = freshStore();
-        jest.spyOn(Math, 'random').mockReturnValue(0.999);
-        const piece = settleEliteEquipmentAction(store, ELITE, true);
-        expect(piece).not.toBeNull();
-        const queue = store.getState().itemReward.queue;
-        expect(queue.map(e => e.item.id)).toEqual([piece!.id]);
-        expect(queue[0]!.source).toBe(eliteGiftSource(ELITE.name));
-    });
-
     it('never hands a piece the player carries, or the grey pair', () => {
         const store = freshStore();
         const player = gs(store).player;
         const carried = equipmentLibrary.filter(p => EQUIPMENT_LANE[p.id] && p.id !== 'armor-flame-guard');
         store.setState({ player: { ...player, inventory: [...player.inventory, ...carried] } } as never);
         jest.spyOn(Math, 'random').mockReturnValue(0);
-        expect(settleEliteEquipmentAction(store, ELITE, true)?.id).toBe('armor-flame-guard');
+        expect(settleEliteEquipmentAction(store, ELITE)?.id).toBe('armor-flame-guard');
         const full = freshStore();
         full.setState({
             player: { ...gs(full).player, inventory: [...gs(full).player.inventory, ...equipmentLibrary] },
         } as never);
-        expect(settleEliteEquipmentAction(full, ELITE, true)).toBeNull();
+        expect(settleEliteEquipmentAction(full, ELITE)).toBeNull();
     });
 });
 

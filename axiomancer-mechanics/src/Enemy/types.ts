@@ -13,20 +13,6 @@ import type { EnemyKeyword, EnemyStage } from './enemy-keywords';
 export type { EnemyKeyword, EnemyStage };
 
 /**
- * Per-enemy befriend gate, read by The Open Hand (`befriendHpGateOpen`,
- * `Enemy/befriend.ts`). Absent = the foe is always open to a befriend.
- */
-export interface BefriendabilityConfig {
-    /**
-     * Friendship eligibility requires `enemy.health / enemy.maxHealth`
-     * to be at or below `belowPct` at the eligibility check. Pure
-     * snapshot — healing back above the threshold un-qualifies
-     * eligibility. Range [0, 1].
-     */
-    hpGate?: { belowPct: number };
-}
-
-/**
  * Decision-making label an enemy carries. Data only: nothing reads it. The
  * Hazard-Pattern engine drives every foe through its authored threat
  * sequence.
@@ -40,23 +26,17 @@ export type EnemyLogic =
 export type EnemyDifficulty = 'simple' | 'normal' | 'elite' | 'boss' | 'unique';
 
 /**
- * Per-enemy content awarded when combat resolves via friendship (the
- * `outcome === 'friendship'` path).
- *
- * What a befriend pays (shillings or a potion, no XP) is one rule for every
- * foe, `BEFRIEND_TUNING` in `Enemy/befriend.ts`; a foe's own entry holds only
- * its story: the narrative, the world flag.
+ * A foe's own story, granted when it is spared at the mercy check.
  */
-export interface FriendshipReward {
-    /** Optional flavour text for the CLI / UI to render after combat-end. */
+export interface SpareStory {
+    /** Optional flavour text, for a screen that wants it. Nothing reads it yet. */
     narrative?: string;
     /**
-     * Optional world-flag appended to `state.flags` when combat
-     * resolves via friendship. Reuses the existing flag-gate machinery
-     * (`DialogueChoice.requires.flag`, `visibleChoices`); downstream content
-     * (dialogue branches, quest objectives) can gate on the flag without
-     * extending the engine. Convention: `befriended-<enemy-id-stem>`
-     * (e.g. `'befriended-mournful-gull'`). De-duplicated on append.
+     * Optional world-flag appended to `state.flags` when the foe is spared.
+     * Reuses the existing flag-gate machinery (`DialogueChoice.requires.flag`,
+     * `visibleChoices`); downstream content (dialogue branches, quest objectives)
+     * can gate on the flag without extending the engine. Convention:
+     * `spared-<enemy-id-stem>`. De-duplicated on append.
      */
     flagSet?: string;
 }
@@ -96,12 +76,10 @@ export interface FinalBlowLines {
 }
 
 /**
- * Chronicle-voice prose for the friendship-pact
- * aftermath panel. Three variants matching how the parley landed
- * (quiet = mutual silence, setDown = enemy lays down its weapon
- * literally, heavy = recognition under weight). Only meaningful
- * when the enemy also carries a `friendshipReward`; un-befriendable
- * enemies leave this undefined.
+ * Chronicle-voice prose written for the panel a spared foe used to open. Three
+ * variants (quiet = mutual silence, setDown = enemy lays down its weapon
+ * literally, heavy = recognition under weight). Data only: nothing reads it
+ * since that panel left the game.
  *
  * Naming note: the prose variant is "set-down"; this field is
  * `setDown` (TS-identifier convention).
@@ -132,9 +110,8 @@ export interface CauseLines {
  * @property logic        - AI strategy.
  * @property difficulty   - Optional encounter classification.
  * @property cards        - Optional card rotation the enemy can use.
- * @property loot         - Optional weighted drop table. Each
- *                          successful kill rolls the table once. May be empty
- *                          / undefined for enemies that don't drop anything.
+ * @property loot         - Optional weighted drop table. Data only: a won fight
+ *                          pays its wage and rolls no table (`fightWage`).
  * @property effects      - Active status effects on the enemy.
  */
 export interface Enemy {
@@ -154,15 +131,8 @@ export interface Enemy {
     /** Flat experience-point award on kill. Defaults computed by difficulty. */
     xpReward?: number;
     effects: ActiveEffect[];
-    /**
-     * Optional per-enemy reward content surfaced on
-     * `outcome === 'friendship'`. See {@link FriendshipReward}.
-     * When undefined, the enemy's friendship resolution is purely
-     * mechanical (a befriend pays by `BEFRIEND_TUNING`).
-     */
-    friendshipReward?: FriendshipReward;
-    /** The befriend gate The Open Hand reads. See {@link BefriendabilityConfig}. */
-    befriendabilityConfig?: BefriendabilityConfig;
+    /** The story a spared foe grants. See {@link SpareStory}. */
+    spareStory?: SpareStory;
     /**
      * Optional per-foe victory final-blow chronicle
      * prose. See {@link FinalBlowLines}. Three variants; consumer
@@ -172,10 +142,7 @@ export interface Enemy {
      */
     finalBlowLines?: FinalBlowLines;
     /**
-     * Optional per-foe friendship-pact chronicle prose.
-     * See {@link PactLines}. Three variants matching parley
-     * posture. Only meaningful when the enemy also carries a
-     * `friendshipReward`.
+     * Optional per-foe chronicle prose. Data only. See {@link PactLines}.
      */
     pactLines?: PactLines;
     /**
@@ -185,12 +152,10 @@ export interface Enemy {
      */
     causeLines?: CauseLines;
     /**
-     * Optional per-foe codex / journal entry. Auto-fires
-     * on `outcome === 'friendship'`: the engine appends the entry's
-     * id to `state.codex.unlockedEntries` (de-duped) and surfaces
-     * `{ id, title }` on
-     * `CombatEndReport.friendshipReward.codexEntryUnlocked`. See
-     * {@link CodexEntry}.
+     * Optional per-foe codex / journal entry. Auto-fires when the foe is
+     * spared: the engine appends the entry's id to
+     * `state.codex.unlockedEntries` (de-duped) and surfaces `{ id, title }` on
+     * `CombatEndReport.journalEntryUnlocked`. See {@link CodexEntry}.
      */
     journalEntry?: CodexEntry;
     /**

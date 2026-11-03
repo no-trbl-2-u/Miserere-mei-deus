@@ -3,7 +3,7 @@
  *
  * Every chance and count lives in {@link EQUIPMENT_DROP_TUNING}, the one table
  * to experiment with. A lane piece comes from an elite's drop, a quest step,
- * a loot cache, the village shop, and a befriended elite; the grey pair never
+ * a loot cache and the village shop; the grey pair never
  * drops (every run starts wearing it). A source draws only from pieces the
  * player does not carry, so no source hands over a duplicate.
  */
@@ -22,8 +22,6 @@ export const EQUIPMENT_DROP_TUNING = Object.freeze({
     elite: 0.25,
     /** A loot cache's item bundle also holds a lane piece. */
     cache: 0.33,
-    /** Befriending an elite always hands one. */
-    befriendedElite: 1,
     /** Pieces the village shop stocks per visit. */
     shopCount: 2,
     /** Shillings a shop piece costs. */

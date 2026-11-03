@@ -26,15 +26,15 @@ export type GameAction =
           payload?: {
               /**
                * Outcome reported by the Hazard-Pattern combat driver. Defaults
-               * to `'flee'` when omitted. `'victory'` / `'friendship'` grant
-               * XP, shillings, quest progress, and per-foe friendship rewards;
+               * to `'flee'` when omitted. `'victory'` grants XP, shillings and
+               * quest progress, and a spared foe's story;
                * `'defeat'` / `'flee'` grant nothing.
                */
-              outcome?: 'victory' | 'defeat' | 'friendship' | 'flee';
+              outcome?: 'victory' | 'defeat' | 'flee';
               /**
                * Final player snapshot from the combat driver (post-fight HP /
-               * effects). Promoted to the root player on `'victory'` /
-               * `'friendship'`; on `'defeat'` / `'flee'` the root inventory is
+               * effects). Promoted to the root player on
+               * `'victory'`; on `'defeat'` / `'flee'` the root inventory is
                * preserved so combat-side inventory mutations don't leak. When
                * omitted, the root player is left untouched.
                */

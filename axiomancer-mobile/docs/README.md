@@ -53,7 +53,7 @@ product decisions. Each ADR documents a significant architectural choice:
 | [`adr/ADR-0006-nexus-state-reconciliation-precedes-ui-polish.md`](./adr/ADR-0006-nexus-state-reconciliation-precedes-ui-polish.md) | Development priority guidance | **HELPFUL** |
 | [`adr/ADR-0004-combat-terminology-prefers-player-language.md`](./adr/ADR-0004-combat-terminology-prefers-player-language.md) | Combat UI terminology decisions | **REFERENCE** |
 | [`adr/ADR-0005-reference-screenshots-and-generated-smoke-baselines-are-distinct.md`](./adr/ADR-0005-reference-screenshots-and-generated-smoke-baselines-are-distinct.md) | Testing baseline methodology | **REFERENCE** |
-| [`adr/ADR-0007-befriend-mercy-choice-modal.md`](./adr/ADR-0007-befriend-mercy-choice-modal.md) | Combat mercy choice interaction | **REFERENCE** |
+| [`adr/ADR-0007-befriend-mercy-choice-modal.md`](./adr/ADR-0007-befriend-mercy-choice-modal.md) | Combat mercy choice interaction (superseded by spec 144) | **REFERENCE** |
 
 See [`adr/README.md`](./adr/README.md) for ADR process and templates.
 

@@ -223,32 +223,22 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
         expect(gs(store).world.currentMap.retiredEliteNodes ?? []).toEqual([]);
     });
 
-    it('a flee or a spare retires nothing either', () => {
-        for (const outcome of ['flee', 'mercy'] as const) {
-            const store = makeStore();
-            walkOnto(store, 'bw-w5');
-            const actions = createAppActions(store);
-            actions.resolveCurrentMapEvent();
-            const enemy = actions.beginHazardEncounter()!;
-            const finalState = initializeCombatEncounter(gs(store).player, enemy, ['grey-strike'], 7);
-            jest.spyOn(Math, 'random').mockReturnValue(0);
-            applyHazardOutcome(store, outcome as CombatOutcome, finalState, enemy, FIXTURE_ELITE_RELICS);
-            jest.restoreAllMocks();
-            // A spare is a befriend: it hands a lane piece (and only that), never a relic.
-            expect(store.getState().itemReward.queue).toHaveLength(outcome === 'mercy' ? 1 : 0);
-            for (const entry of store.getState().itemReward.queue) expect(EQUIPMENT_LANE[entry.item.id]).toBeDefined();
-            expect(gs(store).world.currentMap.retiredEliteNodes ?? []).toEqual([]);
-            if (outcome === 'flee') {
-                // A fled fight leaves its node unspent (phase QL1b): the
-                // elite is still there, so the rest has nothing to bring back.
-                expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-w5');
-                expect(restAndClaim(store).respawnedElites).toEqual([]);
-            } else {
-                // A spare is a won fight (friendship): the node is spent, and
-                // the rest brings the elite back.
-                expect(restAndClaim(store).respawnedElites).toEqual([{ map: 'breakwater', node: 'bw-w5' }]);
-            }
-        }
+    it('a flee retires nothing either', () => {
+        const store = makeStore();
+        walkOnto(store, 'bw-w5');
+        const actions = createAppActions(store);
+        actions.resolveCurrentMapEvent();
+        const enemy = actions.beginHazardEncounter()!;
+        const finalState = initializeCombatEncounter(gs(store).player, enemy, ['grey-strike'], 7);
+        jest.spyOn(Math, 'random').mockReturnValue(0);
+        applyHazardOutcome(store, 'flee' as CombatOutcome, finalState, enemy, FIXTURE_ELITE_RELICS);
+        jest.restoreAllMocks();
+        expect(store.getState().itemReward.queue).toHaveLength(0);
+        expect(gs(store).world.currentMap.retiredEliteNodes ?? []).toEqual([]);
+        // A fled fight leaves its node unspent (phase QL1b): the
+        // elite is still there, so the rest has nothing to bring back.
+        expect(gs(store).world.currentMap.consumedNodes).not.toContain('bw-w5');
+        expect(restAndClaim(store).respawnedElites).toEqual([]);
     });
 });
 

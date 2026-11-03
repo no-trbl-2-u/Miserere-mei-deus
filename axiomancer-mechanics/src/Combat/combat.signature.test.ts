@@ -1,6 +1,6 @@
 /**
- * The signature kit (`plan/revamp/relics.md`): The Open Hand opens the mercy
- * choice on a foe that can be befriended once it is low enough; the three
+ * The signature kit (`plan/revamp/relics.md`): The Open Hand is MERCY 6 on the
+ * foe, always cast when you can pay; the three
  * Blood Price signatures (phase LR1d): Crimson Return (the Crimson Circlet)
  * makes the next SACRIFICE heal instead of cost, Ruby Tithe (the Ruby Signet)
  * makes it add LEECH equal to the VITAE paid, and Open Vein (the Bleeding
@@ -13,10 +13,10 @@ import { Player } from '../Character/characters.mock';
 import { GreenJelly, FloatEye, DeathBeholder, Sandbag_01 } from '../Enemy/enemy.library';
 import type { Enemy } from '../Enemy/types';
 import {
-    initializeCombatEncounter, rollEncounterDice, playSignatureSkill, selectMercyChoice, playCombatCard, PROGRAM_KIT,
+    initializeCombatEncounter, rollEncounterDice, playSignatureSkill, playCombatCard, resolveThreatPhase, startTurn, PROGRAM_KIT,
 } from './combat.engine';
 import {
-    SIGNATURE_SKILL_LIST, getSignatureSkill, signatureCastBlock, OPEN_VEIN_HEAL,
+    SIGNATURE_SKILL_LIST, getSignatureSkill, signatureCastBlock, OPEN_HAND_MERCY, OPEN_VEIN_HEAL,
 } from './combat.signature';
 import { LEECH_TURNS_PER_APPLICATION, initProgramLedger, programTurnStart, programHoldsGuard } from './combat.card-program';
 import { weatherReading, foeInferno, yourInferno, type ElementState } from './combat.elements';
@@ -105,48 +105,86 @@ describe('A11 · each signature is gated and paid at its own cost', () => {
     });
 });
 
-describe('The Open Hand is the befriend', () => {
-    it('opens the mercy choice on the Green Jelly at or below 30% VITAE', () => {
-        const s = encounter(GreenJelly, 0.3);
+describe('The Open Hand is MERCY 6 on the foe', () => {
+    const hand = getSignatureSkill(OPEN_HAND)!;
+    /** What MERCY 6 comes to for this fight's Heart, as a card's MERCY scales. */
+    const amount = (s: CombatEncounterState): number => scaleFor(OPEN_HAND_MERCY, s.player.baseStats, 'heart', 'repeating');
+
+    it('reads as ◆4 and MERCY 6, and the ring says the same', () => {
+        expect(OPEN_HAND_MERCY).toBe(6);
+        expect(hand.name).toBe('The Open Hand');
+        expect(hand.cost).toBe(4);
+        expect(hand.description).toMatch(/^MERCY 6 on the foe/);
+        expect(getRelicById('relic-disarming-plea')!.description).toBe(hand.description);
+        expect(hand.description).not.toMatch(/spare|exploit/i);
+    });
+
+    it('heals the foe, adds to its total and starts the 3-turn clock, and the fight goes on', () => {
+        const s = encounter(GreenJelly, 0.5);
         const r = playSignatureSkill(s, OPEN_HAND);
-        expect(r.events.some(e => e.kind === 'signature-cast')).toBe(true);
-        expect(r.events.some(e => e.kind === 'mercy-opened')).toBe(true);
-        expect(r.state.mercyChoiceActive).toBe(true);
-        expect(r.state.phase).toBe('mercy-choice');
+        const n = amount(s);
+        expect(r.events).toContainEqual(expect.objectContaining({ kind: 'signature-cast', signatureId: OPEN_HAND, cost: 4 }));
+        expect(r.events).toContainEqual({
+            kind: 'mercy-added', cardId: OPEN_HAND, healed: n, amount: n, total: n, turnsLeft: 3,
+        });
+        expect(r.state.enemy.health).toBe(s.enemy.health + n);
+        expect(r.state.program!.mercy).toEqual({ total: n, clock: 3 });
         expect(r.state.conviction).toBe(0);
-        expect(r.state.enemy.health).toBe(s.enemy.health); // no damage, no QUARTER
-        expect(r.state.enemy.effects).toEqual(s.enemy.effects);
+        expect(r.state.phase).toBe('phase-play');
+        expect(r.state.finalOutcome).toBeNull();
     });
 
-    it('sparing the befriended Green Jelly ends the fight in mercy', () => {
-        const opened = playSignatureSkill(encounter(GreenJelly, 0.2), OPEN_HAND).state;
-        const spared = selectMercyChoice(opened, 'spare');
-        expect(spared.state.finalOutcome).toBe('mercy');
+    it('scales with Heart as a card\'s MERCY does', () => {
+        const s = encounter(GreenJelly, 0.5);
+        const hearty = { ...s, player: { ...s.player, baseStats: { ...s.player.baseStats, heart: 25 } } };
+        const r = playSignatureSkill(hearty, OPEN_HAND);
+        expect(r.state.program!.mercy!.total).toBe(scaleFor(6, hearty.player.baseStats, 'heart', 'repeating'));
+        expect(r.state.program!.mercy!.total).toBeGreaterThan(playSignatureSkill(s, OPEN_HAND).state.program!.mercy!.total);
     });
 
-    it('refuses above the Green Jelly\'s gate and spends nothing', () => {
-        const s = encounter(GreenJelly, 0.9);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/not yet low enough/);
-        const r = playSignatureSkill(s, OPEN_HAND);
-        expect(r.state.conviction).toBe(cost(OPEN_HAND));
-        expect(r.state.mercyChoiceActive).toBeFalsy();
-        expect(r.events.some(e => e.kind === 'effect-fizzled')).toBe(true);
+    it('a second cast adds to the total and leaves the clock where it is', () => {
+        const once = playSignatureSkill(encounter(GreenJelly, 0.5), OPEN_HAND).state;
+        const n = once.program!.mercy!.total;
+        const ticked = { ...once, program: { ...once.program!, mercy: { total: n, clock: 2 } }, conviction: 4 };
+        expect(playSignatureSkill(ticked, OPEN_HAND).state.program!.mercy).toEqual({ total: 2 * n, clock: 2 });
+    });
+
+    it('bursts for twice the total on the third foe turn, on a deck with no trial card', () => {
+        const big = { ...deepClone(Sandbag_01), health: 500, maxHealth: 500 };
+        const s = encounter(big, 0.5);
+        expect(s.program).toBeUndefined();
+        let live = playSignatureSkill(s, OPEN_HAND).state;
+        const total = live.program!.mercy!.total;
+        for (const left of [2, 1]) {
+            live = startTurn(resolveThreatPhase(live).state).state;
+            expect(live.program!.mercy).toEqual({ total, clock: left });
+        }
+        const before = live.enemy.health;
+        const burst = resolveThreatPhase(live);
+        expect(burst.events).toContainEqual(expect.objectContaining({ kind: 'mercy-burst', total, onClock: true }));
+        expect(burst.state.program!.mercy).toEqual({ total: 0, clock: 0 });
+        expect(burst.state.enemy.health).toBeLessThanOrEqual(before - 2 * total);
     });
 
     it.each([
-        ['Float-Eye', FloatEye],
-        ['the Death Beholder', DeathBeholder],
-    ])('casts on %s inside the default gate: every foe can be befriended', (_name, enemy) => {
-        const s = encounter(enemy, 0.05);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBeNull();
+        ['at full VITAE', GreenJelly, 1],
+        ['a boss near death', DeathBeholder, 0.05],
+        ['a normal at its old line', FloatEye, 0.3],
+    ])('always casts when you can pay: %s', (_name, enemy, frac) => {
+        const s = encounter(enemy, frac);
+        expect(signatureCastBlock(s, hand)).toBeNull();
         const r = playSignatureSkill(s, OPEN_HAND);
         expect(r.state.conviction).toBe(0);
-        expect(r.state.mercyChoiceActive).toBe(true);
+        expect(r.state.program!.mercy!.total).toBe(amount(s));
     });
 
-    it('names the Conviction shortfall first', () => {
+    it('the one refusal is the Conviction, and it spends nothing', () => {
         const s = encounter(GreenJelly, 0.1, cost(OPEN_HAND) - 1);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBe('Need 4 ◆ Conviction');
+        expect(signatureCastBlock(s, hand)).toBe('Need 4 ◆ Conviction');
+        const r = playSignatureSkill(s, OPEN_HAND);
+        expect(r.state.conviction).toBe(cost(OPEN_HAND) - 1);
+        expect(r.state.enemy.health).toBe(s.enemy.health);
+        expect(r.events.some(e => e.kind === 'effect-fizzled')).toBe(true);
     });
 });
 

@@ -65,7 +65,7 @@ export type ObservedFight = Pick<CombatEncounterState, 'log' | 'player' | 'enemy
 };
 
 /** The outcome the store's `endCombat` takes. */
-export type EndCombatOutcome = 'victory' | 'defeat' | 'friendship' | 'flee';
+export type EndCombatOutcome = 'victory' | 'defeat' | 'flee';
 
 export interface FightRecorder {
     /** Opens a recording (replacing any left open) when the gate is open; otherwise records nothing. */
@@ -88,9 +88,8 @@ export interface FightRecorderDeps {
     fetcher?: PuzzleFetch;
 }
 
-/** The store's end outcome as a fight outcome: a befriending is mercy, a flee a retreat. */
+/** The store's end outcome as a fight outcome: a flee is a retreat. */
 export function endCombatOutcome(outcome: EndCombatOutcome): CombatOutcome {
-    if (outcome === 'friendship') return 'mercy';
     if (outcome === 'flee') return 'retreat';
     return outcome;
 }

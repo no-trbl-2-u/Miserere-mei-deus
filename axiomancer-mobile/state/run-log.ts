@@ -191,7 +191,7 @@ export function recordProgress(store: AppStore, before: Character | undefined, f
  * (`fight`, or `flee` for a withdrawal), the XP and levels it paid are logged
  * against the player as they stood `before`, and so is each item it dropped. The
  * foe's XP logs as `fight`; any more the same `endCombat` paid is the quest it
- * completed, logged as `quest` (a befriend pays the foe no XP, so only the quest's).
+ * completed, logged as `quest` (a spared foe pays no XP, so only the quest's).
  */
 export function recordFightSettled(
     store: AppStore,

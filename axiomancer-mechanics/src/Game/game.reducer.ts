@@ -317,10 +317,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
             // The Hazard-Pattern combat driver reports the outcome. Default to
             // `'flee'` (no grants) when the caller omits it.
-            const outcome: 'victory' | 'defeat' | 'flee' | 'friendship' =
+            const outcome: 'victory' | 'defeat' | 'flee' =
                 action.payload?.outcome ?? 'flee';
 
-            // The befriended / defeated foe is the encounter's lead enemy.
+            // The fallen foe is the encounter's lead enemy.
             const foe: Enemy = encounter.enemies[0]!;
             // A foe spared at the mercy check is a won fight: quests, the defeat
             // ledger and the node settle as any victory, and only the pay differs.
@@ -332,24 +332,20 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             // caller omits `finalPlayer`, the root player is left untouched.
             const finalPlayer = action.payload?.finalPlayer;
             let nextPlayer: Character = finalPlayer
-                ? ((outcome === 'victory' || outcome === 'friendship')
+                ? (outcome === 'victory'
                     ? finalPlayer
                     : { ...finalPlayer, inventory: state.player.inventory })
                 : state.player;
 
             let nextQuests: QuestLog = state.quests;
 
-            if (outcome === 'victory' || outcome === 'friendship') {
+            if (outcome === 'victory') {
                 // A win pays XP and the wage; a foe's loot table pays nothing.
-                // A befriend pays no XP (shillings or a potion arrive
-                // pre-rolled by the store).
-                const befriended = outcome === 'friendship';
-                const noXp = befriended || spared;
                 const grantedLoot = action.payload?.grantedLoot ?? [];
                 const grantedXp = action.payload?.grantedXp
-                    ?? (noXp ? 0 : totalEncounterXp(encounter));
+                    ?? (spared ? 0 : totalEncounterXp(encounter));
                 const grantedShillings = action.payload?.grantedShillings
-                    ?? (befriended ? 0 : spared ? spareWage(foe.level) : encounterWage(encounter));
+                    ?? (spared ? spareWage(foe.level) : encounterWage(encounter));
 
                 let nextInventory = nextPlayer.inventory;
                 for (const drop of grantedLoot) {
@@ -374,25 +370,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 }
             }
 
-            // Friendship resolutions and spared foes append the per-enemy
-            // `flagSet` to state.flags (de-duped). Reuses the existing
+            // A spared foe appends its `flagSet` to state.flags (de-duped). Reuses the existing
             // requires.flag machinery so downstream dialogue / quest
             // content can gate on the flag without engine work.
             let nextFlags = state.flags;
-            if (outcome === 'friendship' || spared) {
-                const flag = foe.friendshipReward?.flagSet;
+            if (spared) {
+                const flag = foe.spareStory?.flagSet;
                 if (flag && !nextFlags.includes(flag)) {
                     nextFlags = [...nextFlags, flag];
                 }
             }
 
-            // Friendship resolutions and spared foes auto-fire the per-enemy
-            // codex unlock. The entry's id is appended to
-            // state.codex.unlockedEntries (de-duped); the store layer
-            // surfaces { id, title } on
-            // CombatEndReport.friendshipReward.codexEntryUnlocked.
+            // A spared foe auto-fires its codex unlock. The entry's id is
+            // appended to state.codex.unlockedEntries (de-duped); the store layer
+            // surfaces { id, title } on CombatEndReport.journalEntryUnlocked.
             let nextCodex = state.codex;
-            if (outcome === 'friendship' || spared) {
+            if (spared) {
                 const entry = foe.journalEntry;
                 if (entry && !nextCodex.unlockedEntries.includes(entry.id)) {
                     nextCodex = {
@@ -402,9 +395,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 }
             }
 
-            // The defeat ledger: a win or a befriend records the lead foe's slug
-            // (de-duped). A foe the registry does not hold has no slug to record.
-            if (outcome === 'victory' || outcome === 'friendship') {
+            // The defeat ledger: a win records the lead foe's slug (de-duped),
+            // spared or finished. A foe the registry does not hold has no slug to record.
+            if (outcome === 'victory') {
                 const slug = enemySlugOf(foe);
                 if (slug && !(nextCodex.defeatedEnemies ?? []).includes(slug)) {
                     nextCodex = {
@@ -430,12 +423,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 currentEncounter: undefined,
             }, nextQuests).state;
 
-            // A won fight (victory or friendship) settles the node it was
+            // A won fight settles the node it was
             // fought on: `resolveMapEvent` left the arrival owed so a save
             // taken mid-fight re-offers it. A flee or a defeat only answers
             // the arrival: the node stays unspent, opens nothing it holds,
             // and can be tried again.
-            return (outcome === 'victory' || outcome === 'friendship')
+            return outcome === 'victory'
                 ? settleArrival(over)
                 : answerUnsettledArrival(over);
         }

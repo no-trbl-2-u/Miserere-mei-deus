@@ -2,8 +2,8 @@
  * Per-foe aftermath narrative lines.
  *
  * Pins the registration shape (`finalBlowLines` + `causeLines` on the
- * authored set; `pactLines` only on befriendable enemies that carry a
- * `friendshipReward`); voice signatures spot-checked on the Green Jelly;
+ * authored set; `pactLines`, data only, on the foes with a spare story);
+ * voice signatures spot-checked on the Green Jelly;
  * the Sandbag_01 regression pins that the fields stay strictly undefined
  * for the un-authored test sandbox so the consumer-side fallback path
  * stays intact.
@@ -15,7 +15,7 @@
 import { describe, it, expect } from 'vitest';
 import { EnemyLibrary } from '../enemy.library';
 import {
-    // Befriendable — full line set incl. pactLines.
+    // A spare story: full line set incl. pactLines.
     GreenJelly,
     // Sweep — finalBlowLines + causeLines (no pactLines).
     FloatEye,
@@ -25,9 +25,9 @@ import {
 } from '../enemy.library';
 
 describe('per-foe aftermath narrative lines (art-driven roster)', () => {
-    const befriendable = [GreenJelly];
+    const withStory = [GreenJelly];
     const sweepOnly = [FloatEye, DeathBeholder];
-    const authored = [...befriendable, ...sweepOnly];
+    const authored = [...withStory, ...sweepOnly];
 
     it('all authored enemies carry finalBlowLines + causeLines shape', () => {
         for (const enemy of authored) {
@@ -75,11 +75,10 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
             expect(enemy.causeLines!.broken).toMatch(/\S/);
             expect(enemy.causeLines!.quiet).toMatch(/\S/);
 
-            // pactLines is only meaningful alongside a friendshipReward — assert
-            // presence/shape when carried, but don't require it (most enemies
-            // are not befriendable).
-            if (enemy.friendshipReward) {
-                expect(enemy.pactLines, `${enemy.id} pactLines (has friendshipReward)`).toBeDefined();
+            // pactLines rides with a spare story — assert presence/shape when
+            // carried, but don't require it (most enemies have none).
+            if (enemy.spareStory) {
+                expect(enemy.pactLines, `${enemy.id} pactLines (has spareStory)`).toBeDefined();
                 expect(enemy.pactLines!.quiet).toMatch(/\S/);
                 expect(enemy.pactLines!.setDown).toMatch(/\S/);
                 expect(enemy.pactLines!.heavy).toMatch(/\S/);
@@ -101,8 +100,8 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         }
     });
 
-    it('pactLines only on the befriendable enemies', () => {
-        for (const enemy of befriendable) {
+    it('pactLines only on the foes with a spare story', () => {
+        for (const enemy of withStory) {
             expect(enemy.pactLines, `${enemy.id} pactLines`).toBeDefined();
             expect(enemy.pactLines!.quiet).toMatch(/\S/);
             expect(enemy.pactLines!.setDown).toMatch(/\S/);
@@ -113,7 +112,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         }
     });
 
-    it('befriendable enemies carry pactLines + journalEntry voice pairs', () => {
+    it('a foe with a spare story carries pactLines + journalEntry voice pairs', () => {
         expect(GreenJelly.pactLines!.heavy).toMatch(/sold my face/);
         expect(GreenJelly.journalEntry!.title).toMatch(/Face Broker/);
     });

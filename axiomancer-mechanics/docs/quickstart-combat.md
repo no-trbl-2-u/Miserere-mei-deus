@@ -66,7 +66,6 @@ When `state.phase === 'complete'`, `state.outcome` is one of:
 | Outcome | Meaning |
 |---------|---------|
 | `victory` | Enemy HP reached 0 (DoT erosion + strikes) |
-| `mercy` | Spared a low-HP foe via Befriend + `spare` (the friendship path) |
 | `defeat` | Player HP reached 0 |
 
 There is no in-combat retreat — once a fight is joined it resolves only by

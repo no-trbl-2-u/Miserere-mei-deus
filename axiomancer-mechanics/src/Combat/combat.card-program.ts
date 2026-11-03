@@ -53,8 +53,7 @@ import {
     spikeEvents, spikeReturns, REFLECT_TURNS, type SpikeState,
 } from './combat.spikes';
 import {
-    addMercy, clearMercy, initHealMods, initMercyState, mercyTickEvent, mercyYielding, modifiedHeal, tickMercyClock,
-    yieldWhileMercy, MERCY_BURST_MULT, type HealMods, type MercyState,
+    addMercy, clearMercy, initHealMods, initMercyState, mercyTickEvent, modifiedHeal, tickMercyClock, MERCY_BURST_MULT, type HealMods, type MercyState,
 } from './combat.mercy';
 import {
     equipmentDealBonusPreview, equipmentTurnStart, fireEquipment, type EquipmentHook,
@@ -64,7 +63,6 @@ import { getCardById } from '../Cards/cards.library';
 import { lookupEffect, applyEffect } from '../Effects';
 import type { Enemy } from '../Enemy/types';
 import type { SpecialPayload } from '../Items/types';
-import { isEnemyBefriendable } from '../Enemy/befriend';
 import { applyDamage, heal as healCombatant, isDefeated } from './health';
 import { fireDotTrigger, getDamageTakenMultiplier } from './effects';
 import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
@@ -153,7 +151,7 @@ export interface ProgramLedger {
     spikes: SpikeState;
     /** VITAE your DEALs took off the foe this turn (reset at your turn start). */
     dealtThisTurn?: number;
-    /** The Merciful's MERCY on the foe and YIELDING (`combat.mercy.ts`). */
+    /** The Merciful's MERCY on the foe (`combat.mercy.ts`). */
     mercy: MercyState;
     /** Your heals this turn, as the Merciful's cards change them (reset at your turn start). */
     heals?: HealMods;
@@ -231,6 +229,9 @@ export interface ProgramKit {
     incomingNet(state: CombatEncounterState): number;
 }
 
+/** For a program step that reads neither the Conviction cap nor the telegraph. */
+const NO_KIT: ProgramKit = { convictionCap: 0, incomingNet: () => 0 };
+
 // ── The line context ────────────────────────────────────────────────────────
 
 type Mode = 'cost' | 'value' | 'apply';
@@ -269,8 +270,7 @@ interface Frame {
     mercyApps?: number;
 }
 
-const BEFRIEND_CONVICTION_VALUE = 1.5;
-const PLAIN_CONVICTION_VALUE = 0.3;
+const CONVICTION_VALUE = 1.5;
 const SAC_COST_VALUE = 0.6;
 const CURSE_ADDED_VALUE = -4;
 const CURSE_CLEARED_VALUE = 5;
@@ -300,8 +300,6 @@ const HELD_GUARD_VALUE = 0.6;
 const UNEXILE_VALUE = 6;
 /** The witness's MERCY: a burst one more foe turn away is worth this much less (the fight may be over). */
 const MERCY_LATER_TURN_WEIGHT = 0.8;
-/** The witness's worth of a foe made YIELDING, when it can be befriended. */
-const YIELDING_VALUE = 3;
 /** The witness's worth of one extra VITAE healed by a heal modifier (a heal is worth 0.9, and RADIANCE hits for it too). */
 const HEAL_MOD_VALUE = 1.5;
 /** What a plain heal restores in the witness's eyes, for a modifier that has no number of its own. */
@@ -570,9 +568,8 @@ class LineCtx implements ProgramCtx {
     conviction(n: number): void {
         if (n <= 0) return;
         if (this.mode === 'value') {
-            const befriendable = isEnemyBefriendable(this.w.s.enemy);
             const room = Math.max(0, this.w.kit.convictionCap - this.w.s.conviction);
-            this.w.value += Math.min(n, room) * (befriendable ? BEFRIEND_CONVICTION_VALUE : PLAIN_CONVICTION_VALUE);
+            this.w.value += Math.min(n, room) * CONVICTION_VALUE;
             return;
         }
         if (this.mode !== 'apply') return;
@@ -1315,17 +1312,6 @@ class LineCtx implements ProgramCtx {
         if (tick) this.w.events.push(tick);
     }
 
-    yieldWhileMercy(): void {
-        if (this.mode === 'cost') return;
-        const l = this.w.l;
-        const m = l.mercy ?? initMercyState();
-        const next = yieldWhileMercy(m);
-        if (next === m) return;
-        l.mercy = next;
-        // Worth a little: the befriend gate opens for as long as the MERCY lasts.
-        if (this.mode === 'value') this.w.value += isEnemyBefriendable(this.w.s.enemy) ? YIELDING_VALUE : 0;
-    }
-
     healsPlus(n: number): void {
         if (n <= 0 || this.mode === 'cost') return;
         if (this.mode === 'value') {
@@ -1977,6 +1963,20 @@ export function programSignatureHeal(
     return { state: fired.state, events };
 }
 
+/**
+ * A signature's MERCY on the foe: exactly a card's MERCY (heart-scaled, heals the
+ * foe, adds to its total, starts the clock if none runs). A fight whose deck holds
+ * no trial card has no ledger yet, so the first one opens it.
+ */
+export function programSignatureMercy(
+    state: CombatEncounterState, n: number, sourceId: string,
+): ProgramPlayResult {
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    const w: Work = { s: { ...state, program: l }, l, events: [], kit: NO_KIT, cost: 0, value: 0 };
+    new LineCtx(w, 'apply', { cardId: sourceId, waived: false }).mercy(n);
+    return { state: { ...w.s, program: w.l }, events: w.events };
+}
+
 /** One LEECH tick: the foe loses the potency, you HEAL what it lost, and a
  *  turn ticks off only when `tick` (a foe turn), never on a trigger. */
 function leechTick(state: CombatEncounterState, tick: boolean): ProgramPlayResult {
@@ -2131,11 +2131,6 @@ export function programMercyFoeTurnStart(state: CombatEncounterState, kit: Progr
     if (burst > 0) new LineCtx(w, 'apply', { cardId: 'mercy', waived: false }).burstMercyTotal(burst, MERCY_BURST_MULT, true);
     w.events.push(...weatherEvents(state.program!.el, w.l.el));
     return { state: { ...w.s, program: w.l }, events: w.events };
-}
-
-/** True when the foe is YIELDING: The Open Hand reads its befriend gate as open whatever its VITAE. */
-export function programFoeYielding(state: CombatEncounterState): boolean {
-    return mercyYielding(state.program?.mercy);
 }
 
 /**

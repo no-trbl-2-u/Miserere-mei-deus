@@ -76,14 +76,14 @@ describe('playtest matrix — determinism', () => {
 });
 
 describe('playtest matrix — cell invariants', () => {
-    it('every cell: victories + mercies + defeats + retreats === runs; winRate consistent', () => {
+    it('every cell: victories + defeats + retreats === runs; winRate consistent', () => {
         const report = smallReport();
         expect(report.cells.length).toBe(4); // 2 stages x 1 enemy x 2 policies x 1 deck
         for (const cell of report.cells) {
             const s = cell.stats;
             expect(s.runs).toBe(SMALL.runsPerCell);
-            expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(s.runs);
-            expect(s.winRate).toBeCloseTo((s.victories + s.mercies) / s.runs, 10);
+            expect(s.victories + s.defeats + s.retreats).toBe(s.runs);
+            expect(s.winRate).toBeCloseTo(s.victories / s.runs, 10);
             for (const key of FRACTION_KEYS) {
                 expect(s[key], `${key} out of [0,1]`).toBeGreaterThanOrEqual(0);
                 expect(s[key], `${key} out of [0,1]`).toBeLessThanOrEqual(1);

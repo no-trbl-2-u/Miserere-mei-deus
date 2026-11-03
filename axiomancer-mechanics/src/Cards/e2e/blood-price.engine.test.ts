@@ -353,7 +353,7 @@ describe('Globals stack as independent instances (experimental, T 2026-10-14)', 
         const player = { ...deepClone(Player), knownCards: [...new Set(deck)] };
         for (const seed of [1, 2, 3]) {
             const run = runOneEncounter(deepClone(player), deepClone(FloatEye), seed, 'greedy', { deck });
-            expect(['victory', 'mercy', 'defeat']).toContain(run.outcome);
+            expect(['victory', 'defeat']).toContain(run.outcome);
         }
     });
 });

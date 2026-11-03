@@ -18,7 +18,6 @@
 import { setSeed } from '../Utils/rng';
 import {
     initializeCombatEncounter, rollEncounterDice, resolveThreatPhase,
-    selectMercyChoice,
 } from './combat.engine';
 import { playSimPhase } from './combat.encounter.sim';
 import {
@@ -28,8 +27,8 @@ import {
     COMBAT_STAGE_PROFILES, COMBAT_STAGE_ORDER, buildStagePlayer, type CombatStageId,
 } from './combat.stage-profiles';
 import { STARTING_CARD_IDS } from './combat.rewards';
+import type { CombatSimPolicyId } from './combat.sim-policies';
 import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
-import { COMBAT_SIM_POLICIES, type CombatSimPolicyId } from './combat.sim-policies';
 import type {
     CombatEncounterState, CombatManaDie, CombatOutcome,
 } from './combat.encounter.types';
@@ -160,7 +159,7 @@ function emptyAcc(): EconomyAccumulator {
 }
 
 function isWin(outcome: CombatOutcome | null): boolean {
-    return outcome === 'victory' || outcome === 'mercy';
+    return outcome === 'victory';
 }
 
 /** Folds a slice of transcript events into `acc`. The `turn-dice-rolled` in the
@@ -208,7 +207,6 @@ function accumulateEncounter(
     const deck = [...STARTING_CARD_IDS];
     const player = buildStagePlayer(stage);
     player.knownCards = deck.slice();
-    const policy = COMBAT_SIM_POLICIES[policyId];
 
     setSeed(seed);
     const init = initializeCombatEncounter(player, enemy, deck, seed);
@@ -228,11 +226,6 @@ function accumulateEncounter(
     let loopGuard = 0;
     while (state.phase !== 'complete' && !state.finalOutcome && loopGuard < 200) {
         loopGuard++;
-        if (state.mercyChoiceActive) {
-            state = selectMercyChoice(state, policy.mercyChoice).state;
-            if (state.phase === 'complete' || state.finalOutcome) break;
-            continue;
-        }
         if (state.phase !== 'phase-play') break;
 
         const convBefore = state.conviction;
@@ -241,11 +234,6 @@ function accumulateEncounter(
         cursor = state.log.length;
 
         if (state.finalOutcome) break;
-        if (state.mercyChoiceActive) {
-            state = selectMercyChoice(state, policy.mercyChoice).state;
-            if (state.phase === 'complete' || state.finalOutcome) break;
-            continue;
-        }
         if (state.phase === 'phase-play') {
             state = resolveThreatPhase(state).state;
             // The resolve slice has no roll — pass convBefore through unused.

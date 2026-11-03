@@ -12,11 +12,11 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 
 import type { Item } from '@mechanics';
 
-export type CombatOutcome = 'victory' | 'defeat' | 'flee' | 'parley';
+export type CombatOutcome = 'victory' | 'defeat' | 'flee';
 
 /**
- * Snapshot captured at the moment combat exits with `victory`,
- * `parley` or `defeat`. The
+ * Snapshot captured at the moment combat exits with `victory`
+ * or `defeat`. The
  * combat slice is cleared as part of `actions.endCombat()`, so the
  * aftermath panel can't read live state — the calling site snapshots
  * the fields the panel needs and stashes them here for the modal
@@ -41,7 +41,6 @@ export type AftermathData =
                * per-tier phrase when the field is absent.
                */
               finalBlowLines?: { brutal: string; quiet: string; ironic: string };
-              pactLines?: { quiet: string; setDown: string; heavy: string };
               causeLines?: { brutal: string; broken: string; quiet: string };
           };
           finalBlow: { cardName: string | null; damage: number; descriptor: string | null } | null;
@@ -60,31 +59,6 @@ export type AftermathData =
           loot?: Item[];
       }
     | {
-          variant: 'parley';
-          enemy: {
-              name: string;
-              description: string;
-              level: number;
-              /**
-               * Per-foe chronicle lines from the engine. All optional; the
-               * aftermath presenter falls back to the generic
-               * per-tier phrase when the field is absent.
-               */
-              finalBlowLines?: { brutal: string; quiet: string; ironic: string };
-              pactLines?: { quiet: string; setDown: string; heavy: string };
-              causeLines?: { brutal: string; broken: string; quiet: string };
-          };
-          /** Shillings the befriend paid (`CombatEndReport.shillings`); 0 when it paid a potion. */
-          shillings?: number;
-          /** The potion a befriend paid (`CombatEndReport.loot`); empty when it paid shillings. A befriend pays no XP. */
-          loot?: Item[];
-          /**
-           * Optional journal entry unlocked by the pact. When null the
-           * panel collapses the "A NEW ENTRY" section.
-           */
-          journalEntry: { bookName: string; entryTitle: string; preview: string } | null;
-      }
-    | {
           variant: 'defeat';
           /** The killer — the foe that delivered the final blow. */
           enemy: {
@@ -97,7 +71,6 @@ export type AftermathData =
                * per-tier phrase when the field is absent.
                */
               finalBlowLines?: { brutal: string; quiet: string; ironic: string };
-              pactLines?: { quiet: string; setDown: string; heavy: string };
               causeLines?: { brutal: string; broken: string; quiet: string };
           };
           /** Character name snapshot (the fallen pilgrim). Uppercased

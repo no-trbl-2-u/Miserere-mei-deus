@@ -209,7 +209,7 @@ export const DEFENDER_POLICY = archetypePolicy({
     restBelow: 0.35,
 });
 
-/** The Merciful: drives every fight to befriending, and spares. */
+/** The Merciful: plays its mercy lines first, casts The Open Hand, and spares. */
 export const MERCIFUL_POLICY = archetypePolicy({
     laneId: 'merciful',
     description: 'Builds the Merciful: its lane\'s cards first, mercy lines first in a fight, and it spares.',

@@ -28,7 +28,7 @@ it. A cell appends `win N%` when the deck did not win every fight. Foe VITAE is 
 
 - 200 seeded fights per cell, seeds 1 to 200; rider rolls are seeded by the fight seed, so a rerun reproduces the table.
 - The sim never pays the Toll-Keeper's toll: "Pay the toll" is a player board action, not a card, so the Toll-Keeper rows are the cost of refusing it.
-- Mercy is off, so every win is a kill. No lane here opens The Open Hand.
+- Mercy is off: no lane here casts The Open Hand.
 - Sim drivers are not players: `human-like` is the headline (one best line, no chaining), `witness` plays the whole hand and reads as a ceiling.
 
 ## Human-like driver

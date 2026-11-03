@@ -23,7 +23,7 @@ Two-package npm-workspaces monorepo: a pure rules **engine**
 (`axiomancer-mechanics`) and an Expo/React-Native **app**
 (`axiomancer-mobile`) that consumes the engine as local source. The game
 is the Act 1 core the revamp left: three grey cards, four dice, three foes,
-four regions, befriend and mercy. There is no governing combat objective
+four regions, and the mercy check. There is no governing combat objective
 function; simulations keep bug detectors only.
 
 **Product name: "Miserere Mei, Deus".** Player- and doc-facing prose uses
@@ -319,10 +319,10 @@ ambiguity.)
 - **Combat:** Hazard-Pattern Combat (`initializeCombatEncounter`,
   `simulateHazardPatternCombat`) is the only combat engine. The rules are
   in `docs/game-model.md`.
-- **Win condition:** VITAE is the one bar and emptying it is the main
-  win. The only other ending is befriending, entered through The Open Hand
-  into the mercy choice (D47, D63). Never reintroduce RELENT, CONDEMN,
-  Pressure Tracks or `CombatPressureTracks`.
+- **Win condition:** VITAE is the one bar and emptying it is the only way
+  to win (D47, D63, spec 144). A blind spare-or-finish check on some normal
+  foes decides what the win pays; it is no second ending. Never reintroduce
+  RELENT, CONDEMN, Pressure Tracks or `CombatPressureTracks`.
   <!-- lexicon-ok: pressure-tracks -->
 - **No governing objective function.** Combat is not graded against a
   win-rate curve, a quality index or rank bands. There is no measured
@@ -360,7 +360,7 @@ ambiguity.)
   (`state/combat/keywords.ts`). Real-units-or-no-number on card
   faces.
 - **Voice:** terse, archaic-flavoured, "cold and old" — but **no
-  thee/thou/thy/thine/ye**. Mercy/exploit language reads as
+  thee/thou/thy/thine/ye**. Spare/finish language reads as
   morally charged, never neutral. The full register (the V-bans,
   sentence form, the six lexicons, the delivery rules MB-1 to MB-8) is
   `axiomancer-mechanics/docs/narrative/DELIVERY_REGISTER.md`, enforced in

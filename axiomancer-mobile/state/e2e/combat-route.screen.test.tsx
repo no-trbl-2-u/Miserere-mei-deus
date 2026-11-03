@@ -37,7 +37,7 @@ jest.mock('@/components/combat/encounter/CombatEncounterPanel', () => {
     const { Text, View } = require('react-native');
     function StubPanel({ enemy, onExit, onWithdraw }: StubProps) {
         return ReactMock.createElement(View, { testID: `stub-panel-${enemy.id}` }, [
-            ...['victory', 'defeat', 'friendship'].map((o: string) => ReactMock.createElement(
+            ...['victory', 'defeat'].map((o: string) => ReactMock.createElement(
                 Text, { key: o, testID: `stub-exit-${o}`, onPress: () => onExit(o) }, o,
             )),
             onWithdraw
@@ -106,12 +106,12 @@ describe('the live combat route', () => {
         expect(combat.inCombat).toBe(true);
     });
 
-    it.each(['victory', 'friendship'])('%s: lowers the combat flag and leaves', (outcome) => {
+    it('victory: lowers the combat flag and leaves', () => {
         const store = stagedStore();
         const runId = store.getState().runId;
         const tree = mount(store);
 
-        fireEvent.press(tree.getByTestId(`stub-exit-${outcome}`));
+        fireEvent.press(tree.getByTestId('stub-exit-victory'));
 
         expect(combat.inCombat).toBe(false);
         expect(mockBack).toHaveBeenCalledTimes(1);

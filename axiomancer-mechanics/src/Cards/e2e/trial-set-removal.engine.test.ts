@@ -56,7 +56,7 @@ describe('the game without the trial sets', () => {
         const player = { ...deepClone(Player), knownCards: [...STARTING_CARD_IDS] };
         expect(initializeCombatEncounter(player, deepClone(FloatEye), [...STARTING_CARD_IDS], 3).program).toBeUndefined();
         const run = runOneEncounter(player, deepClone(FloatEye), 3);
-        expect(['victory', 'mercy', 'defeat']).toContain(run.outcome);
+        expect(['victory', 'defeat']).toContain(run.outcome);
         expect(run.plays).toBeGreaterThan(0);
     });
 

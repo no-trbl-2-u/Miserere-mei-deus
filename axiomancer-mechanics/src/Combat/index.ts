@@ -48,7 +48,7 @@ export type {
 export {
     initializeCombatEncounter, rollEncounterDice, playCombatCard,
     resolveThreatPhase, processBetweenPhases,
-    selectMercyChoice as selectEncounterMercyChoice, getCard,
+    getCard,
     handCards, buildCombatSummary,
     // Turn lifecycle + Conviction + Signature Skills
     startTurn, endTurn, discardCombatCard,
@@ -83,10 +83,9 @@ export type { WeatherElement } from './combat.encounter.types';
 export { spikeReading, initSpikeState, REFLECT_TURNS } from './combat.spikes';
 export type { SpikeState } from './combat.spikes';
 export type { SpikeReading } from './combat.encounter.types';
-// The Merciful's MERCY on the foe (its total and clock) and YIELDING.
+// The Merciful's MERCY on the foe (its total and clock).
 export { mercyReading, initMercyState, MERCY_CLOCK_TURNS, MERCY_BURST_MULT } from './combat.mercy';
 export type { MercyState } from './combat.mercy';
-export { programFoeYielding } from './combat.card-program';
 // The lighthouse path's board reads (phase EN1k): the Lamplighter's lamp and the Wrecker's Bait.
 export { lampOf, intentsInTheDark, baitSet } from './combat.enemy-riders';
 export type { LampState } from './combat.enemy-riders';

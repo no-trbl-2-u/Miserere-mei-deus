@@ -41,7 +41,7 @@ describe('playtest matrix smoke test — the harness runs and accounts exactly',
         for (const cell of report.cells) {
             const s = cell.stats;
             expect(s.runs).toBe(RUNS_PER_CELL);
-            expect(s.victories + s.mercies + s.defeats + s.retreats).toBe(s.runs);
+            expect(s.victories + s.defeats + s.retreats).toBe(s.runs);
             expect(Number.isFinite(s.winRate)).toBe(true);
             expect(s.winRate).toBeGreaterThanOrEqual(0);
             expect(s.winRate).toBeLessThanOrEqual(1);

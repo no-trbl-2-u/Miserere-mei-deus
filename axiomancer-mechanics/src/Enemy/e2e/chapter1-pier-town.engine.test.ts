@@ -17,7 +17,6 @@ import type { Character } from '../../Character/types';
 import type { Enemy } from '../types';
 import { BrineWidow, CurfewRinger, ENEMY_REGISTRY, GreenJelly, LampreyKnot } from '../enemy.library';
 import { enemyPhaseTarget, PHASES_AUTHORED_LEVEL } from '../enemy-phases';
-import { befriendHpGateOpen } from '../befriend';
 import { enemyVitae } from '../index';
 import { moveKeywords } from '../enemy-keywords';
 import { deepClone } from '../../Utils';
@@ -376,12 +375,9 @@ describe('the Green Jelly\'s riders (level 5)', () => {
         expect(res.next.enemyRiders?.held).toBeUndefined();
     });
 
-    it('is still befriendable at its 30% line, which is also where its second phase begins', () => {
-        expect(jelly.befriendabilityConfig).toEqual({ hpGate: { belowPct: 0.3 } });
+    it('begins its second phase at its 30% line', () => {
         const at40 = { ...jelly, health: Math.ceil(jelly.maxHealth * 0.4) };
         const at29 = { ...jelly, health: Math.floor(jelly.maxHealth * 0.29) };
-        expect(befriendHpGateOpen(at40)).toBe(false);
-        expect(befriendHpGateOpen(at29)).toBe(true);
         expect(enemyPhaseTarget(at40)).toBe(0);
         expect(enemyPhaseTarget(at29)).toBe(1);
     });

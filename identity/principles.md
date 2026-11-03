@@ -18,9 +18,8 @@ Format: `- **P# · Short title.** One or two sentences, ≤ 40 words.`
 - **P1 · The title.** Product title is "Miserere Mei, Deus" in
   player/doc-facing prose (the `axiomancer-*` workspaces, repo and scheme
   keep the former title as internal identifiers); VITAE copy canon.
-- **P2 · VITAE is the one bar.** Emptying the foe's VITAE wins; befriending
-  through The Open Hand (the Suppliant's Ring signature, made a real
-  befriend in R4) opens the mercy choice, the only non-lethal ending.
-  *(D47, D63)*
+- **P2 · VITAE is the one bar.** Emptying the foe's VITAE is the only way to
+  win; a blind spare-or-finish check on some normal foes decides what the win
+  pays. *(D47, D63, spec 144)*
 - **P3 · The cut terms stay cut.** RELENT and CONDEMN are cut (R7 deletes
   their engine code); never reintroduce them or Pressure Tracks.

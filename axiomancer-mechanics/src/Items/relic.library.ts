@@ -43,13 +43,13 @@ import type { EquipmentLoadout } from '../Character/types';
 import type { SignatureSkillId } from '../Combat/combat.encounter.types';
 
 /**
- * The Suppliant's Ring. It carries no stat line; it grants The Open Hand (the
- * befriend) and nothing else.
+ * The Suppliant's Ring. It carries no stat line; it grants The Open Hand (◆4,
+ * MERCY 6 on the foe) and nothing else.
  */
 const SUPPLIANTS_RING: Equipment = {
     id: 'relic-disarming-plea',
     name: "Suppliant's Ring",
-    description: 'Offer a foe that can be befriended the choice of mercy, once it is low enough.',
+    description: 'MERCY 6 on the foe: it heals 6, and its MERCY grows by 6. When the clock runs out, MERCY bursts for twice its total.',
     category: 'equipment',
     slot: 'relic',
     statModifiers: [],

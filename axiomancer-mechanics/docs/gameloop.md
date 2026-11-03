@@ -138,7 +138,7 @@ engine-only path, for the CLI and the hermetic tests.
 the arrival debt instead. `resolveMapEvent` leaves an `encounter` arrival
 owed: `pendingArrival` stays on the node, the node is not consumed, and its
 adjacents stay locked. `END_COMBAT` settles it for every outcome (victory,
-friendship, flee, defeat) through `settleArrival`. A client that fights
+flee, defeat) through `settleArrival`. A client that fights
 outside the store calls `settleArrival` itself: the CLI does, and so do the
 mobile flee paths. A save taken mid-fight therefore reloads onto the node
 with the fight owed, and resolving the arrival again offers the same fight
@@ -351,7 +351,7 @@ all math lives in the resolvers/reducers. Tabs:
 | Combat     | Hazard-Pattern Combat runs as a subcommand (`npm run combat` / `npm run game -- combat`, `src/CLI/combat.cli.ts`): power cards with the round's four dice, resolve the enemy threat phase. |
 | Journal    | Read-only: active / completed quests + flags.                 |
 | Cards     | Read-only: learned/unlocked cards; legacy equipped view is removed by Phase 99. |
-| Codex      | **(Phase 82)** Read-only render of `state.codex.unlockedEntries` (Phase 73). Looks up each entry id via a one-time `EnemyLibrary` walk (`codexLookup` at module load); renders title + body per entry. Empty-state copy: "Your codex is empty — befriend a foe with a journal entry to start filling it." |
+| Codex      | **(Phase 82)** Read-only render of `state.codex.unlockedEntries` (Phase 73). Looks up each entry id via a one-time `EnemyLibrary` walk (`codexLookup` at module load); renders title + body per entry. Empty-state copy: "Your codex is empty — spare a foe with a journal entry to start filling it." |
 | Inventory  | Read-only listing of carried items.                              |
 | Character  | Full stats + equipment + effects sheet (Phase 26 unit 3). When `availableStatPoints > 0`, prompts the player to spend points into heart / body / mind via `allocateStatPoint` (Phase 29). |
 | Debug      | Spawns any enemy from `ENEMY_REGISTRY` directly into combat (Phase 19). |

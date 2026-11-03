@@ -4,7 +4,7 @@
  * Pins, against the REAL engine with test cards in the sandbox registry (the
  * Merciful trial set itself lands in MF1d, so no trial id is named):
  *   · the foe wears a MERCY chip carrying its total and the turns left, which
- *     follows the engine as MERCY stacks, and a YIELDING chip while it holds,
+ *     follows the engine as MERCY stacks,
  *     each with its keyword's popup gloss;
  *   · the log narrates a RADIANCE hit, each MERCY add and tick, and the
  *     burst (the hit named, not a raw pseudo card id);
@@ -67,9 +67,9 @@ const mercyChip = (s: CombatEncounterState) =>
     buildCombatViewModel(s).enemy.effects.find((c) => c.effectId === 'program-mercy');
 
 describe('MERCY on the foe', () => {
-    it('shows no MERCY or YIELDING chip before any MERCY', () => {
+    it('shows no MERCY chip before any MERCY', () => {
         const vm = buildCombatViewModel(encounter(['mb-mercy']));
-        expect(vm.enemy.effects.some((c) => c.effectId === 'program-mercy' || c.effectId === 'program-yielding')).toBe(false);
+        expect(vm.enemy.effects.some((c) => c.effectId === 'program-mercy')).toBe(false);
     });
 
     it('shows its total and turns left, and follows both as MERCY stacks', () => {
@@ -86,21 +86,18 @@ describe('MERCY on the foe', () => {
         expect(effectChipA11y(chip!)).toBe('Mercy, intensity 10, bursts in 3 turns');
     });
 
-    it('reads the clock singular at one turn left, and shows YIELDING while it holds', () => {
+    it('reads the clock singular at one turn left', () => {
         let s = encounter(['mb-mercy']);
         s = free(s, 'h0');
         const program = s.program!;
         const held = {
-            ...s, program: { ...program, mercy: { ...program.mercy!, clock: 1, yielding: true } },
+            ...s, program: { ...program, mercy: { ...program.mercy!, clock: 1 } },
         };
         const vm = buildCombatViewModel(held);
         const mercy = vm.enemy.effects.find((c) => c.effectId === 'program-mercy');
-        const yielding = vm.enemy.effects.find((c) => c.effectId === 'program-yielding');
         expect(effectChipA11y(mercy!)).toBe('Mercy, intensity 5, bursts in 1 turn');
-        expect(yielding?.gloss).toBe(keywordGloss('Yielding'));
-        expect(effectChipA11y(yielding!)).toBe('Yielding, intensity 1, while it holds');
         // Gone with the clock: no chip for a cleared total.
-        const burst = { ...s, program: { ...program, mercy: { total: 0, clock: 0, yielding: false } } };
+        const burst = { ...s, program: { ...program, mercy: { total: 0, clock: 0 } } };
         expect(buildCombatViewModel(burst).enemy.effects.some((c) => c.effectId.startsWith('program-mercy'))).toBe(false);
     });
 });
@@ -152,8 +149,8 @@ describe('MERCY and RADIANCE in the log', () => {
 });
 
 describe('MERCY on card faces and in the glossary', () => {
-    it('glosses RADIANCE, MERCY and YIELDING, and finds them in printed text', () => {
-        for (const kw of ['Radiance', 'Mercy', 'Yielding']) expect(keywordGloss(kw)).toBeTruthy();
+    it('glosses RADIANCE and MERCY, and finds them in printed text', () => {
+        for (const kw of ['Radiance', 'Mercy']) expect(keywordGloss(kw)).toBeTruthy();
         expect(keywordsInText('RADIANCE 4. MERCY 5.')).toEqual(['Radiance', 'Mercy']);
         expect(keywordGloss('Mercy')).toMatch(/bursts/);
         expect(keywordGloss('Mercy')).not.toMatch(/trigger/i);

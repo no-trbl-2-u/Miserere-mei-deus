@@ -10,7 +10,6 @@
  *     clock; a new MERCY never resets it. When it runs out, at the start of the
  *     foe's turn, the MERCY bursts: a DEAL of twice the total. Then the total
  *     clears and the next MERCY starts a fresh clock.
- *   · YIELDING: the foe's befriend gate reads open whatever its VITAE.
  * And the events (each RADIANCE, add, tick and burst) and the witness's values.
  *
  * The cards here are synthetic test cards in the sandbox registry; the
@@ -22,18 +21,16 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { Player } from '../../Character/characters.mock';
-import { FloatEye, GreenJelly, Sandbag_01 } from '../../Enemy/enemy.library';
-import type { Enemy } from '../../Enemy/types';
+import { Sandbag_01 } from '../../Enemy/enemy.library';
 import { clearSandboxCards, registerSandboxCards } from '../../Cards/cards.sandbox';
 import type { Card } from '../../Cards/types';
 import type { ProgramCtx } from '../../Cards/card-program.types';
 import { deepClone } from '../../Utils';
 import {
-    initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase, startTurn, playSignatureSkill,
+    initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase, startTurn,
     PROGRAM_KIT,
 } from '../combat.engine';
-import { getSignatureSkill, signatureCastBlock } from '../combat.signature';
-import { initProgramLedger, programFoeYielding, programLineValue, programMercyFoeTurnStart } from '../combat.card-program';
+import { programLineValue, programMercyFoeTurnStart } from '../combat.card-program';
 import { getDamageTakenMultiplier } from '../effects';
 import { scaleFor } from '../stat-scaling';
 import { buildCombatSummary } from '../combat.attribution';
@@ -43,7 +40,6 @@ import {
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
 const WILD = { id: 'w', color: 'wild' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
-const OPEN_HAND = 'sig-disarming-plea';
 
 function card(id: string, free: (c: ProgramCtx) => void, paid: (c: ProgramCtx) => void = free): Card {
     return {
@@ -305,39 +301,8 @@ describe('the mercy module', () => {
     });
 
     it('reads the board numbers', () => {
-        expect(mercyReading({ total: 12, clock: 2, yielding: true })).toEqual({ mercy: 12, 'mercy-turns': 2, yielding: true });
-        expect(mercyReading(undefined)).toEqual({ mercy: 0, 'mercy-turns': 0, yielding: false });
-    });
-});
-
-describe('A3 YIELDING', () => {
-    function encounter(enemy: Enemy, hpFrac: number, yielding: boolean): CombatEncounterState {
-        let s = initializeCombatEncounter(Player, deepClone(enemy), ['grey-strike', 'grey-ward', 'grey-word'], 1);
-        s = rollEncounterDice(s).state;
-        const program = { ...initProgramLedger(), mercy: { ...initMercyState(), yielding } };
-        return {
-            ...s, program, conviction: getSignatureSkill(OPEN_HAND)!.cost,
-            enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * hpFrac) },
-        };
-    }
-
-    it('a YIELDING foe above its befriend gate can be spared: The Open Hand opens the mercy choice', () => {
-        const s = encounter(GreenJelly, 1, true);
-        expect(programFoeYielding(s)).toBe(true);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBeNull();
-        const r = playSignatureSkill(s, OPEN_HAND);
-        expect(r.state.mercyChoiceActive).toBe(true);
-    });
-
-    it('the same foe not YIELDING is still refused above its gate', () => {
-        const s = encounter(GreenJelly, 1, false);
-        expect(programFoeYielding(s)).toBe(false);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toMatch(/not yet low enough/);
-    });
-
-    it('a YIELDING foe without a friendshipReward can be spared too: every foe can be befriended', () => {
-        const s = encounter(FloatEye, 1, true);
-        expect(signatureCastBlock(s, getSignatureSkill(OPEN_HAND)!)).toBeNull();
+        expect(mercyReading({ total: 12, clock: 2 })).toEqual({ mercy: 12, 'mercy-turns': 2 });
+        expect(mercyReading(undefined)).toEqual({ mercy: 0, 'mercy-turns': 0 });
     });
 });
 
@@ -414,10 +379,10 @@ describe('edges', () => {
 
     it('the module: a 0 MERCY changes nothing; no clock never bursts; no tick event from or to no clock', () => {
         expect(addMercy(initMercyState(), 0)).toEqual(initMercyState());
-        expect(tickMercyClock({ total: 5, clock: 0, yielding: false })).toEqual({ next: { total: 5, clock: 0, yielding: false }, burst: 0 });
-        expect(mercyTickEvent({ total: 5, clock: 0, yielding: false }, { total: 5, clock: 2, yielding: false })).toBeNull();
-        expect(mercyTickEvent({ total: 5, clock: 1, yielding: false }, { total: 0, clock: 0, yielding: false })).toBeNull();
-        expect(mercyTickEvent({ total: 5, clock: 3, yielding: false }, { total: 5, clock: 2, yielding: false }))
+        expect(tickMercyClock({ total: 5, clock: 0 })).toEqual({ next: { total: 5, clock: 0 }, burst: 0 });
+        expect(mercyTickEvent({ total: 5, clock: 0 }, { total: 5, clock: 2 })).toBeNull();
+        expect(mercyTickEvent({ total: 5, clock: 1 }, { total: 0, clock: 0 })).toBeNull();
+        expect(mercyTickEvent({ total: 5, clock: 3 }, { total: 5, clock: 2 }))
             .toEqual({ kind: 'mercy-ticked', total: 5, turnsLeft: 2 });
     });
 });

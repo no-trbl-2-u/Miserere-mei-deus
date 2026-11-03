@@ -38,9 +38,8 @@ describe('free-metrics — win-path mix reconciles', () => {
         for (const cell of report.cells) {
             const s = cell.stats;
             const w = s.winPathCounts;
-            const sum = w.victory + w.mercy + w.defeat + w.retreat;
+            const sum = w.victory + w.defeat + w.retreat;
             expect(sum).toBe(s.runs);
-            expect(w.mercy).toBe(s.mercies);
             expect(w.victory).toBe(s.victories);
             expect(w.defeat).toBe(s.defeats);
             expect(w.retreat).toBe(s.retreats);
@@ -50,7 +49,7 @@ describe('free-metrics — win-path mix reconciles', () => {
     it('the stage summary sums the cells\' win paths', () => {
         const summary = report.stageSummaries.find(s => s.stage === STAGE)!;
         const cells = report.cells.filter(c => c.spec.stage === STAGE);
-        for (const key of ['victory', 'mercy', 'defeat', 'retreat'] as const) {
+        for (const key of ['victory', 'defeat', 'retreat'] as const) {
             const expected = cells.reduce((n, c) => n + c.stats.winPathCounts[key], 0);
             expect(summary.winPathCounts[key]).toBe(expected);
         }

@@ -1,6 +1,6 @@
 /**
- * The defeat ledger: the foe slugs the player has beaten, by a win or a
- * befriend. It lives on `codex.defeatedEnemies`, an optional field, so a
+ * The defeat ledger: the foe slugs the player has beaten, spared or
+ * finished. It lives on `codex.defeatedEnemies`, an optional field, so a
  * save written before it loads and reads as "none beaten".
  */
 

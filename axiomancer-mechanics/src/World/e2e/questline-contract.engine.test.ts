@@ -25,6 +25,7 @@ import { migrate } from '../../Game/game.migrate';
 import type { GameState } from '../../Game/types';
 import { FIXTURE_QUEST } from '../../Game/fixtures/fixture-content';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
+import { spareWage } from '../../Combat/combat.mercy-check';
 import { getRelicById } from '../../Items/relic.library';
 import type { Quest, QuestObjective, Reward } from '../types';
 import type { QuestPayload } from '../MapEvents/types';
@@ -72,7 +73,7 @@ function stateWith(q: Quest, nodeId = 'bw-w1'): GameState {
 function fight(
     state: GameState,
     foe: typeof BOSS,
-    outcome: 'victory' | 'friendship' | 'defeat' | 'flee',
+    outcome: 'victory' | 'defeat' | 'flee',
     spared = false,
 ): GameState {
     const staged = gameReducer(state, { type: 'START_COMBAT', payload: { target: foe } });
@@ -186,16 +187,15 @@ describe('A3: kills by foe class and hazards, on the quest map only', () => {
         expect(counts('boss', BOSS)).toBe(1);
     });
 
-    it('a friendship counts as a won fight', () => {
+    it('a foe spared at the mercy check counts as a won fight, and pays as a Spare', () => {
         const q = quest([{ foeClass: 'any', requiredCount: 9 }]);
-        const out = fight(stateWith(q), FLOAT_EYE, 'friendship');
+        const start = stateWith(q);
+        const staged = gameReducer(start, { type: 'START_COMBAT', payload: { target: FLOAT_EYE } });
+        const out = gameReducer(staged, { type: 'END_COMBAT', payload: { outcome: 'victory', spared: true } });
         expect(out.quests.active[0]!.objectives[0]!.currentCount).toBe(1);
-    });
-
-    it('a foe spared at the mercy check counts as a won fight', () => {
-        const q = quest([{ foeClass: 'any', requiredCount: 9 }]);
-        const out = fight(stateWith(q), FLOAT_EYE, 'victory', true);
-        expect(out.quests.active[0]!.objectives[0]!.currentCount).toBe(1);
+        expect(out.player.experience).toBe(start.player.experience);
+        expect(out.player.currency).toBe(start.player.currency + spareWage(FLOAT_EYE.level));
+        expect(out.codex.defeatedEnemies).toContain('float-eye');
     });
 
     it('a flee and a defeat count nothing', () => {

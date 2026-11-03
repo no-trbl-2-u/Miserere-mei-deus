@@ -8,7 +8,7 @@
  *     HP phases.
  *   - The Brine-Widow, the Lamprey-Knot and the Curfew-Ringer (normals) —
  *     the long pier and the town; HP phases.
- *   - The Green Jelly (L5, normal, reworked) — the town's befriendable fight;
+ *   - The Green Jelly (L5, normal, reworked) — the town's fight;
  *     HP phases.
  *   - The Wreck-Picker and the Smokehouse Gutter (normals) — the cliffs and
  *     the hamlet; the Tithe-Collector (elite) — one of the sea cave's two
@@ -547,7 +547,7 @@ export const GreenJelly = createEnemy({
     logic: 'strategic',
     loot: [none(80), drop('healing-potion', 20)],
     // Reworked (T, 2026-10-30): a town normal that keeps what it eats. Its
-    // befriend window is the 30% line, where the second phase begins.
+    // second phase begins at the 30% line.
     phases: [
         { moves: [engulf(1), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION] },
         {
@@ -556,19 +556,16 @@ export const GreenJelly = createEnemy({
                 text: 'Every HELD card drops into your discard, 4 damage per card.',
                 rider: { kind: 'spit-held', damage: 4 },
             },
-            // Engulf holds 2 cards; the Open Hand can now befriend it.
+            // Engulf holds 2 cards.
             moves: [engulf(2), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION],
         },
     ],
-    befriendabilityConfig: {
-        hpGate: { belowPct: 0.3 },
-    },
-    friendshipReward: {
+    spareStory: {
         narrative:
             'The jelly settles, slow as cooling wax, and goes still on the stone. Through it, ' +
             'the things it kept drift loose and sink, one by one, until it holds only light. ' +
             'It does not follow when you go. It lets you take the whole of yourself away.',
-        flagSet: 'befriended-green-jelly',
+        flagSet: 'spared-green-jelly',
     },
     pactLines: {
         quiet:   'She stops reaching for your reflection. The rock pools go still and honest.',

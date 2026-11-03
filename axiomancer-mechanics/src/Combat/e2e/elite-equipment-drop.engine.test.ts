@@ -1,14 +1,12 @@
 /**
  * The elite's lane piece: a won elite fight can hand a weapon or armor the
- * player does not carry, on top of its relic roll, and a befriended elite
- * always hands one. Every chance reads `EQUIPMENT_DROP_TUNING`.
+ * player does not carry, on top of its relic roll. Every chance reads `EQUIPMENT_DROP_TUNING`.
  *
  * The contract this file pins:
  *   · the pool is the eight lane pieces the player lacks (satchel or worn);
  *     the grey pair is never in it;
  *   · a win drops at `EQUIPMENT_DROP_TUNING.elite`, seeded: the first draw is
  *     the chance, the second the pick;
- *   · a befriended elite drops on every seed, until the player has all eight;
  *   · the table carries T's starting numbers, shop fields included.
  */
 
@@ -53,7 +51,7 @@ const LANE_IDS = equipmentLibrary.map(p => p.id).filter(id => EQUIPMENT_LANE[id]
 describe('EQUIPMENT_DROP_TUNING', () => {
     it('holds T\'s starting numbers in one table', () => {
         expect(EQUIPMENT_DROP_TUNING).toEqual({
-            elite: 0.25, cache: 0.33, befriendedElite: 1, shopCount: 2, shopPrice: 40,
+            elite: 0.25, cache: 0.33, shopCount: 2, shopPrice: 40,
         });
     });
 });
@@ -118,30 +116,5 @@ describe('a won elite fight', () => {
         expect(piece).toEqual(library);
         expect(piece).not.toBe(library);
         expect(piece.effect).not.toBe(library.effect);
-    });
-});
-
-describe('a befriended elite', () => {
-    it('always hands a lane piece the player does not carry', () => {
-        const player = freshRun();
-        for (let i = 0; i < SEED_COUNT; i++) {
-            const piece = rollEliteEquipmentDrop(player, seededRng(spread(i)), { befriended: true });
-            expect(piece, `seed ${i}`).not.toBeNull();
-            expect(LANE_IDS).toContain(piece!.id);
-        }
-    });
-
-    it('hands the last missing piece, then nothing once all eight are carried', () => {
-        let player = freshRun();
-        const seen = new Set<string>();
-        for (let n = 0; n < LANE_IDS.length; n++) {
-            const piece = rollEliteEquipmentDrop(player, () => 0.999, { befriended: true });
-            expect(piece).not.toBeNull();
-            expect(seen.has(piece!.id)).toBe(false);
-            seen.add(piece!.id);
-            player = { ...player, inventory: [...player.inventory, piece!] };
-        }
-        expect([...seen].sort()).toEqual([...LANE_IDS].sort());
-        expect(rollEliteEquipmentDrop(player, () => 0, { befriended: true })).toBeNull();
     });
 });

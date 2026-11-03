@@ -2,8 +2,7 @@
  * CombatDefeatPanel — the "the page closes" panel rendered inside
  * the encounter modal seal once `lastOutcome === 'defeat'`.
  *
- * Sibling of `<CombatVictoryPanel>` /
- * `<CombatFriendshipPanel>` but tuned darker — no splatter, no
+ * Sibling of `<CombatVictoryPanel>` but tuned darker — no splatter, no
  * pixel emblem, no celebration. A spent-wick hairline above the
  * title, gothic character name, italic fell-to line, mono damage
  * ledger, chronicle paragraph with drop-cap, run-summary ledger

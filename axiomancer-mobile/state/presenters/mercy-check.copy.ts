@@ -12,14 +12,6 @@ export const MERCY_CHECK_PROMPT = {
     finish: 'Finish',
 } as const;
 
-/** The Open Hand's own mercy choice, shown in the same modal. */
-export const OPEN_HAND_MERCY_PROMPT = {
-    title: (foeName: string): string => `${foeName} is overwhelmed.`,
-    sub: 'The will to fight has drained away.',
-    spare: 'SPARE',
-    exploit: 'EXPLOIT',
-} as const;
-
 /** The end-screen label beside the one table roll a spared foe paid. */
 export const spareRewardLabel = 'Mercy pays:';
 

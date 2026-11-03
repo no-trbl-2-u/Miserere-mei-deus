@@ -92,9 +92,8 @@ export function settleEliteRelicAction(
 }
 
 /**
- * A beaten or befriended elite's lane piece, rolled on top of the relic roll
- * (`rollEliteEquipmentDrop`: `EQUIPMENT_DROP_TUNING.elite` for a win, always
- * for a befriended elite) from the weapons and armor the player does not
+ * A beaten elite's lane piece, rolled on top of the relic roll
+ * (`rollEliteEquipmentDrop`: `EQUIPMENT_DROP_TUNING.elite`) from the weapons and armor the player does not
  * carry, and queued on the item-reward screen as a relic is. Unlike a relic it
  * is not the whole reward: the XP, shillings and card draft stand. A foe that is no
  * elite rolls nothing. Returns the piece queued, or null.
@@ -102,14 +101,13 @@ export function settleEliteRelicAction(
 export function settleEliteEquipmentAction(
     store: AppStore,
     enemy: Pick<Enemy, 'difficulty'> & Partial<Pick<Enemy, 'name'>>,
-    befriended = false,
 ): Equipment | null {
     if (!isEliteEnemy(enemy)) return null;
     const state = store.getState() as unknown as GameState;
     if (!state.player) return null;
-    const piece = rollEliteEquipmentDrop(state.player, Math.random, { befriended });
+    const piece = rollEliteEquipmentDrop(state.player, Math.random);
     if (!piece) return null;
-    offerElitePieceAction(store, piece, enemy.name ?? '', befriended);
+    offerElitePieceAction(store, piece, enemy.name ?? '');
     return piece;
 }
 

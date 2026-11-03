@@ -42,12 +42,10 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-player-medallion` | The player avatar at the left of the footer dock; tap opens `combat-pilgrim-modal` |
 | `combat-pilgrim-log` / `combat-log` / `combat-pilgrim-log-back` / `combat-pilgrim-close` | Combat log, inside the pilgrim modal: LOG opens it, BACK returns to the stats |
 | `combat-card-detail` / `combat-card-detail-close` | Card detail modal (deliberate; has a dismiss) |
-| `combat-mercy` / `combat-mercy-spare` / `combat-mercy-exploit` | Mercy choice when the foe breaks (The Open Hand) |
 | `combat-mercy` / `combat-mercy-spare` / `combat-mercy-finish` | The mercy check: now and then a normal foe, falling, asks spare or finish. `/dev` ENCOUNTERS, `debug-mercy-check-toggle`, forces it |
 | `combat-summary-spare-reward` / `combat-summary-spare-journal` | A spared foe's one table roll, and the journal entry it opened, on the summary |
 | `combat-rewards` / `combat-reward-<cardId>` / `combat-reward-preview` / `combat-reward-preview-select` / `combat-reward-preview-close` / `combat-reward-confirm` / `combat-reward-skip` | SPOILS card pick |
 | `combat-summary` / `combat-summary-close` | Post-fight summary; Continue ends the fight and the route leaves for the map (`app/combat-encounter/index.tsx` `onExit`; after a defeat the run resets first, keeping the character) |
-| `combat-friendship-panel` / `combat-friendship-panel-part-as-friends` | Parley seal; only `/devaftermath?panel=parley` mounts it, not the live fight |
 | `combat-defeat-panel` / `combat-defeat-panel-begin-again` | Defeat seal; only `/devaftermath?panel=defeat` mounts it, not the live fight |
 | `combat-encounter-empty` | The route opened with no staged fight (it leaves at once) |
 

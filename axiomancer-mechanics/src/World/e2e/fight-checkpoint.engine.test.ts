@@ -132,30 +132,32 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
         expect(event.encounter.enemies[0]?.level).toBe(foe.level);
     });
 
-    it.each(['victory', 'friendship'] as const)(
-        'the fight ending in %s settles the node',
-        (outcome) => {
-            const { store } = saveMidFight(approach(), node);
-
-            store.getState().endCombat(outcome);
-            const map = store.getState().world.currentMap;
-
-            expect(map.pendingArrival ?? null).toBeNull();
-            expect(map.consumedNodes).toContain(node);
-            if (onward) expect(map.availableNodes).toContain(onward);
-            if (onward) expect(legalMovesFrom(map)).toContain(onward);
-        },
-    );
-
-    it('the fight ending in a spared foe settles the node', () => {
+    it('the fight ending in victory settles the node', () => {
         const { store } = saveMidFight(approach(), node);
 
-        store.getState().endCombat('victory', undefined, { spared: true });
+        store.getState().endCombat('victory');
         const map = store.getState().world.currentMap;
 
         expect(map.pendingArrival ?? null).toBeNull();
         expect(map.consumedNodes).toContain(node);
         if (onward) expect(map.availableNodes).toContain(onward);
+        if (onward) expect(legalMovesFrom(map)).toContain(onward);
+    });
+
+    it('the fight ending in a spared foe settles the node, as a Spare and not a finish', () => {
+        const { store } = saveMidFight(approach(), node);
+
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
+        const map = store.getState().world.currentMap;
+
+        // It really went down the Spare's road: no XP, the one roll.
+        expect(report.spared).toBe(true);
+        expect(report.spareReward).toBeDefined();
+        expect(report.xpGained).toBe(0);
+        expect(map.pendingArrival ?? null).toBeNull();
+        expect(map.consumedNodes).toContain(node);
+        if (onward) expect(map.availableNodes).toContain(onward);
+        if (onward) expect(legalMovesFrom(map)).toContain(onward);
     });
 
     // A fight that was fled or lost answers the arrival but leaves its node

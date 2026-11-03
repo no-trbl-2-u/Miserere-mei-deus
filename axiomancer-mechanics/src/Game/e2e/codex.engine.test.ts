@@ -1,7 +1,7 @@
 /**
  * Codex / journal-entry surface.
  *
- * Pins the auto-firing unlock matrix on friendship outcomes + the
+ * Pins the auto-firing unlock matrix on a spared foe + the
  * dispatchable `unlockCodexEntry` surface.
  */
 import { describe, it, expect } from 'vitest';
@@ -16,15 +16,15 @@ describe('Phase 73 — codex / journal-entry surface', () => {
         expect(state.codex).toEqual({ unlockedEntries: [] });
     });
 
-    it('befriending GreenJelly unlocks codex entry + surfaces { id, title } on report', () => {
+    it('sparing GreenJelly unlocks codex entry + surfaces { id, title } on report', () => {
         const store = createGameStore(nullAdapter);
-        // Drive a friendship outcome directly — combat resolution lives outside
+        // Drive the ending directly — combat resolution lives outside
         // the store now, so endCombat takes the resolved outcome.
         store.getState().startCombat(GreenJelly);
-        const report = store.getState().endCombat('friendship');
-        expect(report.outcome).toBe('friendship');
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
+        expect(report.outcome).toBe('victory');
         expect(store.getState().codex.unlockedEntries).toContain('codex-green-jelly');
-        expect(report.friendshipReward?.codexEntryUnlocked).toEqual({
+        expect(report.journalEntryUnlocked).toEqual({
             id: 'codex-green-jelly',
             title: 'The Face Broker',
         });
@@ -37,22 +37,22 @@ describe('Phase 73 — codex / journal-entry surface', () => {
         expect(store.getState().codex.unlockedEntries).toEqual(['codex-test']);
     });
 
-    it('FloatEye (no journalEntry) friendship leaves codex empty + no report field', () => {
+    it('sparing FloatEye (no journalEntry) leaves codex empty + no report field', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(FloatEye);
-        const report = store.getState().endCombat('friendship');
-        expect(report.outcome).toBe('friendship');
+        const report = store.getState().endCombat('victory', undefined, { spared: true });
+        expect(report.spared).toBe(true);
         expect(store.getState().codex.unlockedEntries).toEqual([]);
-        expect(report.friendshipReward?.codexEntryUnlocked).toBeUndefined();
+        expect(report.journalEntryUnlocked).toBeUndefined();
     });
 
-    it('victory outcome against GreenJelly does NOT unlock the codex entry', () => {
+    it('a finish against GreenJelly does NOT unlock the codex entry', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat(GreenJelly);
         const report = store.getState().endCombat('victory');
         expect(report.outcome).toBe('victory');
         expect(store.getState().codex.unlockedEntries).toEqual([]);
-        expect(report.friendshipReward).toBeUndefined();
+        expect(report.journalEntryUnlocked).toBeUndefined();
     });
 
 });

@@ -2,12 +2,11 @@
  * Hermetic engine test — items are the healing potions.
  *
  * The consumable library holds minor, normal and greater healing potions and
- * nothing else. Every grant surface (enemy loot, friendship rewards, debug
+ * nothing else. Every grant surface (enemy loot, debug
  * presets, shops including the parked maps', loot caches) may only name an id
  * the library has, so no surface hands out an item that does not exist.
  */
 
-import { BEFRIEND_TUNING } from '../../Enemy/befriend';
 import { describe, it, expect } from 'vitest';
 import { EnemiesByMap } from '../../Enemy/enemy.library';
 import { characterPresets, levelLadderPresets } from '../../Character/presets';
@@ -43,11 +42,6 @@ describe('R5 — the consumable library is the healing potions', () => {
         const hits = allEnemies().flatMap(e => (e.loot ?? [])
             .filter(entry => entry.item && entry.item.category === 'consumable' && !isPotion(entry.item.id))
             .map(entry => `${e.id}: ${entry.item!.id}`));
-        expect(hits).toEqual([]);
-    });
-
-    it('no befriend payout grants anything else', () => {
-        const hits = BEFRIEND_TUNING.potionTiers.filter(t => !isPotion(t.itemId)).map(t => t.itemId);
         expect(hits).toEqual([]);
     });
 

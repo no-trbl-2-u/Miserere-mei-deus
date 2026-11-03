@@ -213,8 +213,8 @@ describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4
         });
     });
 
-    it('cannot be befriended, so no save ever unlocks its codex entry', () => {
-        expect(DeathBeholder.friendshipReward).toBeUndefined();
+    it('carries no spare story: a boss is never spared', () => {
+        expect(DeathBeholder.spareStory).toBeUndefined();
     });
 });
 
@@ -240,9 +240,8 @@ describe('the Green Jelly is the Brine Hag\'s fight, reworked into a town normal
         expect(ENEMY_DECKS['enemy-green-jelly']).toBeUndefined();
     });
 
-    it('keeps the befriend gate below 30%, its flag and no authored payout', () => {
-        expect(GreenJelly.befriendabilityConfig).toEqual({ hpGate: { belowPct: 0.3 } });
-        expect(GreenJelly.friendshipReward?.flagSet).toBe('befriended-green-jelly');
+    it('keeps its story flag and journal entry for a Spare', () => {
+        expect(GreenJelly.spareStory?.flagSet).toBe('spared-green-jelly');
         expect(GreenJelly.journalEntry?.id).toBe('codex-green-jelly');
     });
 });

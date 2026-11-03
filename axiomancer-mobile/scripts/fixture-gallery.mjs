@@ -95,7 +95,6 @@ export const GALLERY = [
 
     // ── Dev-only panels that have no organic capture path ────────────────
     { name: 'aftermath-defeat', why: 'The DEFEAT aftermath panel.', fixture: 'fresh-start', path: '/devaftermath?panel=defeat', waitFor: 'devaftermath-panel' },
-    { name: 'aftermath-parley', why: 'The PARLEY aftermath panel.', fixture: 'fresh-start', path: '/devaftermath?panel=parley', waitFor: 'devaftermath-panel' },
     { name: 'dev-menu', why: 'The /dev route.', fixture: 'sage-bw-door-gate', path: '/dev' },
 ]
 

@@ -72,7 +72,7 @@ const ring: Equipment = {
 
 // Live foes with their loot stripped, so only planted items are named.
 const FloatEye = { ...LiveFloatEye, loot: [] };
-const GreenJelly = { ...LiveGreenJelly, loot: [], friendshipReward: undefined };
+const GreenJelly = { ...LiveGreenJelly, loot: [], spareStory: undefined };
 
 function mapDef(over: Partial<MapDefinition>): MapDefinition {
     return { name: 'test-map', continent: 'test-continent', nodes: [], ...over } as unknown as MapDefinition;

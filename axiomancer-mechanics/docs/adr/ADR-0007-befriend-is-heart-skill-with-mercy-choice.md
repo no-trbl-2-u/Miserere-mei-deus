@@ -1,6 +1,6 @@
 # ADR-0007 — Befriend is a heart skill with a mercy choice
 
-- Status: Accepted; implemented across mechanics Phases 108–110, with follow-up needed to remove legacy passive friendship bypasses
+- Status: Superseded by spec 144 (`plan/144-mr1-mercy-check.md`), 2026-11-03: befriending left the game
 - Date: 2026-06-02
 - Supersedes: none
 - Related: `~/Workspace/decisions/CDR-0005-axiomancer-befriend-skill-and-mercy-choice.md`, ADR-0003 difficult befriending requires HP pressure

@@ -217,9 +217,6 @@ export interface ProgramCtx {
     /** The foe's MERCY clock ticks down n. A tick that takes it to 0 bursts the
      *  MERCY at once (twice the total). Nothing happens without MERCY. */
     tickMercy(n: number): void;
-    /** While the foe has MERCY it is YIELDING: you can befriend it whatever its
-     *  VITAE. Clears when the MERCY does. Nothing happens without MERCY. */
-    yieldWhileMercy(): void;
     /** Your HEALs and RADIANCEs this turn heal +n (unscaled). Stacks. */
     healsPlus(n: number): void;
     /** Your HEALs and RADIANCEs this turn heal k times as much. Stacks. */

@@ -132,7 +132,7 @@ D1 (2026-09-21) replaced Spec 08's linear, no-back-travel rule.
   `pendingArrival`, which `resolveMapEvent` clears. `placeOnNode` and
   `teleportToNode` stand the player on a node without owing an arrival.
 - **Fights settle on a win.** An encounter leaves its arrival owed until
-  `END_COMBAT`. A victory or a friendship settles the node (`settleArrival`:
+  `END_COMBAT`. A victory settles the node (`settleArrival`:
   consumed, its roads open). A flee or a defeat only answers the arrival
   (`answerUnsettledArrival`): the node stays unspent, counts nothing, and is
   a fresh fight on the next arrival.

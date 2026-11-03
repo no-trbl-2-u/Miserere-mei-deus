@@ -26,8 +26,8 @@
  *
  * An `encounter` is the exception to 0 and 5. Its arrival stays
  * owed and its node unconsumed, with the way on still shut, until the fight
- * settles: `settleArrival` below, which `END_COMBAT` runs on a victory or a
- * friendship. A flee or a defeat only answers the arrival
+ * settles: `settleArrival` below, which `END_COMBAT` runs on a victory.
+ * A flee or a defeat only answers the arrival
  * (`answerUnsettledArrival`): the node stays unspent, to be tried again.
  * The fight itself is never saved (`currentEncounter` is transient), so a
  * save taken mid-fight must still say what the player owes, or a reload
@@ -329,8 +329,8 @@ function answerArrival(state: GameState, nodeId: NodeId): GameState {
 /**
  * Settles the arrival at the node under the player: clears the debt, reveals
  * and unlocks the adjacents, and marks the node consumed. This is the second
- * half of resolving an `encounter`, run once the fight is won (a victory or a
- * friendship). Identity-stable when nothing is owed at the current
+ * half of resolving an `encounter`, run once the fight is won.
+ * Identity-stable when nothing is owed at the current
  * node, so calling it after a fight that never came from the map (a dev
  * pick, a test) changes nothing.
  */
