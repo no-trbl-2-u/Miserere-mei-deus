@@ -34,6 +34,8 @@ import {
     programArmSacrifice, programSacrificeArmed, programSignatureHeal, programSignatureMercy, programTriggerLeech,
     programSpikeSignature, programSpikeSignatureLive, programWeatherSignature, programWeatherSignatureLive,
 } from './combat.card-program';
+import { programText } from './stat-scaling';
+import type { BaseStats } from '../Character/types';
 import type {
     CombatEncounterState, CombatTransition, SignatureSkill,
     SignatureSkillId, PlayerArchetype,
@@ -49,7 +51,7 @@ export const OPEN_HAND_MERCY = 6;
 export const SIGNATURE_SKILLS: Record<SignatureSkillId, SignatureSkill> = {
     'sig-disarming-plea': {
         id: 'sig-disarming-plea', name: 'The Open Hand', kind: 'mercy', cost: 4,
-        description: `MERCY ${OPEN_HAND_MERCY} on the foe: it heals ${OPEN_HAND_MERCY}, and its MERCY grows by ${OPEN_HAND_MERCY}. When the clock runs out, MERCY bursts for twice its total.`,
+        description: `MERCY {mercy:${OPEN_HAND_MERCY}} on the foe: it heals {mercy:${OPEN_HAND_MERCY}}, and its MERCY grows by {mercy:${OPEN_HAND_MERCY}}. When the clock runs out, MERCY bursts for twice its total.`,
     },
     'sig-crimson-circlet': {
         id: 'sig-crimson-circlet', name: 'Crimson Return', kind: 'sacrifice-heals', cost: 5,
@@ -102,6 +104,14 @@ export const SIGNATURE_SKILL_LIST: readonly SignatureSkill[] = Object.freeze(Obj
 
 export function getSignatureSkill(id: string): SignatureSkill | undefined {
     return SIGNATURE_SKILLS[id as SignatureSkillId];
+}
+
+/**
+ * A signature's words at these stats, its `{mercy:n}` tokens read as a card's are.
+ * Worn stats join a fight's, so pass `statsWithWorn` out of a fight.
+ */
+export function signatureText(skill: SignatureSkill, stats: BaseStats | undefined): string {
+    return programText(skill.description, stats);
 }
 
 /**

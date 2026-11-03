@@ -16,7 +16,7 @@ import {
     initializeCombatEncounter, rollEncounterDice, playSignatureSkill, playCombatCard, resolveThreatPhase, startTurn, PROGRAM_KIT,
 } from './combat.engine';
 import {
-    SIGNATURE_SKILL_LIST, getSignatureSkill, signatureCastBlock, OPEN_HAND_MERCY, OPEN_VEIN_HEAL,
+    SIGNATURE_SKILL_LIST, getSignatureSkill, signatureCastBlock, signatureText, OPEN_HAND_MERCY, OPEN_VEIN_HEAL,
 } from './combat.signature';
 import { LEECH_TURNS_PER_APPLICATION, initProgramLedger, programTurnStart, programHoldsGuard } from './combat.card-program';
 import { weatherReading, foeInferno, yourInferno, type ElementState } from './combat.elements';
@@ -110,13 +110,24 @@ describe('The Open Hand is MERCY 6 on the foe', () => {
     /** What MERCY 6 comes to for this fight's Heart, as a card's MERCY scales. */
     const amount = (s: CombatEncounterState): number => scaleFor(OPEN_HAND_MERCY, s.player.baseStats, 'heart', 'repeating');
 
-    it('reads as ◆4 and MERCY 6, and the ring says the same', () => {
+    it('is ◆4 and base MERCY 6, and the ring names no number to go stale', () => {
         expect(OPEN_HAND_MERCY).toBe(6);
         expect(hand.name).toBe('The Open Hand');
         expect(hand.cost).toBe(4);
-        expect(hand.description).toMatch(/^MERCY 6 on the foe/);
-        expect(getRelicById('relic-disarming-plea')!.description).toBe(hand.description);
+        expect(signatureText(hand, undefined)).toMatch(/^MERCY 6 on the foe/);
+        expect(getRelicById('relic-disarming-plea')!.description).toMatch(/^Grants The Open Hand/);
+        expect(getRelicById('relic-disarming-plea')!.description).not.toMatch(/\d/);
         expect(hand.description).not.toMatch(/spare|exploit/i);
+    });
+
+    it('prints the number it applies: at Heart 8 it reads 7, heals 7 and adds 7', () => {
+        const base = encounter(GreenJelly, 0.5);
+        const s = { ...base, player: { ...base.player, baseStats: { ...base.player.baseStats, heart: 8 } } };
+        const added = playSignatureSkill(s, OPEN_HAND).events.find(e => e.kind === 'mercy-added');
+        expect(added).toMatchObject({ amount: 7, healed: 7, total: 7 });
+        expect(signatureText(hand, s.player.baseStats)).toBe(
+            'MERCY 7 on the foe: it heals 7, and its MERCY grows by 7. When the clock runs out, MERCY bursts for twice its total.',
+        );
     });
 
     it('heals the foe, adds to its total and starts the 3-turn clock, and the fight goes on', () => {

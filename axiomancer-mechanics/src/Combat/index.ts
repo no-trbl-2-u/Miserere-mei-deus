@@ -53,7 +53,7 @@ export {
     // Turn lifecycle + Conviction + Signature Skills
     startTurn, endTurn, discardCombatCard,
     playSignatureSkill,
-    getSignatureSkill, signatureCastBlock,
+    getSignatureSkill, signatureCastBlock, signatureText,
     // The dice get a second read
     riderText,
     // Legibility: the incoming-threat projection

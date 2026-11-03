@@ -15,7 +15,7 @@
 // ─── Character ────────────────────────────────────────────────────────────────
 export {
     createCharacter,
-    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems,
+    equipItem, unequipItem, moveRelic, relicPositions, getEquippedItems, statsWithWorn,
     computeEquipDelta,
     validateDieGear, concreteDefaultRail,
     dieSpecialCap, dieGearMissFaces,
@@ -81,7 +81,7 @@ export {
     // Turn lifecycle, Conviction, Signature Skills
     startTurn, endTurn, discardCombatCard,
     playSignatureSkill,
-    getSignatureSkill, signatureCastBlock,
+    getSignatureSkill, signatureCastBlock, signatureText,
     // Incoming-threat readout
     projectIncomingThreat,
     // Projected-lethality readout

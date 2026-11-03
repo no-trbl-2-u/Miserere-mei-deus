@@ -8,7 +8,7 @@
 import { describe, expect, it } from '@jest/globals';
 import {
     createNewGameState, GAME_STATE_VERSION, getRelicById, getSignatureSkill, initializeCombatEncounter,
-    playSignatureSkill, rollEncounterDice, ENEMY_REGISTRY,
+    playSignatureSkill, rollEncounterDice, signatureText, ENEMY_REGISTRY,
 } from '@mechanics';
 
 import { CURRENT_SCHEMA_VERSION, unwrap } from '@/state/persistence/migrations';
@@ -43,9 +43,10 @@ describe('a save from before the mercy check, through the app load path', () => 
     });
 
     it('the ring on its long-press card reads the new signature and the new words', () => {
-        const vm = selectEquipmentDetailViewModel(unwrap(oldEnvelope()) as never, RING_ID);
+        const state = unwrap(oldEnvelope());
+        const vm = selectEquipmentDetailViewModel(state as never, RING_ID);
         expect(vm?.signature?.id).toBe(SIG_ID);
-        expect(vm?.signature?.description).toBe(getSignatureSkill(SIG_ID)!.description);
+        expect(vm?.signature?.description).toBe(signatureText(getSignatureSkill(SIG_ID)!, state.player.baseStats));
         expect(vm?.flavor).toBe(getRelicById(RING_ID)!.description);
         expect(vm?.flavor).not.toContain('befriended');
     });

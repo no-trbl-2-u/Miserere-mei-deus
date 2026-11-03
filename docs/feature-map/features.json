@@ -1423,6 +1423,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Combat/combat.signature.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Character",
       "file": "axiomancer-mechanics/src/Combat/combat.spare-reward.ts"
     },
     {
@@ -3110,6 +3116,12 @@
       "from": "route:(tabs)/inventory",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/inventory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/equipment-detail.engine.ts"
     },
     {
       "kind": "coupling",

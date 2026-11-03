@@ -2115,7 +2115,7 @@ export function payTheToll(state: CombatEncounterState): CombatTransition {
 /** The baseline signature kit (for the presenter / UI bar). */
 export {
     SIGNATURE_SKILLS, SIGNATURE_SKILL_LIST, getSignatureSkill,
-    signatureCastBlock,
+    signatureCastBlock, signatureText,
 } from './combat.signature';
 
 // ── Summary ──────────────────────────────────────────────────────────────────

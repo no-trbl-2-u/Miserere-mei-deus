@@ -413,8 +413,8 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   the position it was worn in (taking one off leaves that position empty and
   moves no other, EQ3a), and the
   signature bar lists every signature the worn relics grant.
-- **The Open Hand** (the Suppliant's Ring, ◆4) is MERCY 6 on the foe
-  (`OPEN_HAND_MERCY`, `Combat/combat.signature.ts`), on the MERCY rules above: it
+- **The Open Hand** (the Suppliant's Ring, ◆4) is MERCY 6 on the foe,
+  printed after Heart scaling (`OPEN_HAND_MERCY`, `signatureText`, `Combat/combat.signature.ts`), on the MERCY rules above: it
   heals the foe, adds to its total, starts the 3-turn clock if none runs and bursts
   for twice the total, heart-scaled. It always casts when you can pay. The fight goes
   on.

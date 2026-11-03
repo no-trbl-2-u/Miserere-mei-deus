@@ -34,7 +34,7 @@
  * Pure: state in, view-model out. No store writes, no rolls, no rule decisions.
  */
 
-import { computeEquipDelta, displacedBy, isEquipment } from '@mechanics';
+import { computeEquipDelta, displacedBy, isEquipment, statsWithWorn } from '@mechanics';
 import type { Equipment, EquipDelta, GameStore, Item } from '@mechanics';
 
 import type { AppStoreState } from '@/state/store';
@@ -167,9 +167,13 @@ export function selectHasPendingItemReward(
  * verbatim instead of forking a second copy of the stat/signature/slot
  * formatting — the rule about where those strings come from stays in one file.
  */
-function detailOf(item: Equipment) {
+function detailOf(item: Equipment, player: AppStoreState['player']) {
     const projection = {
-        player: { inventory: [item as Item], equipment: { weapon: null, armor: null, relics: [] } },
+        player: {
+            baseStats: player?.baseStats ? statsWithWorn(player) : undefined,
+            inventory: [item as Item],
+            equipment: { weapon: null, armor: null, relics: [] },
+        },
     } as unknown as GameStore;
     return selectEquipmentDetailViewModel(projection, item.id);
 }
@@ -220,7 +224,7 @@ export function selectItemRewardVM(
     if (!isEquipment(item)) return nameOnly();
 
     const equipment: Equipment = item;
-    const detail = detailOf(equipment);
+    const detail = detailOf(equipment, state.player);
     if (detail === null) return nameOnly();
 
     const player = state.player;

@@ -11,6 +11,7 @@
 import {
     handCards as engineHandCards, getCard, getCardById, toCombatCard,
     getSignatureSkill,
+    signatureText,
     lookupEffect, paidFaceLine,
     RESERVE_MAX,
     riderText,
@@ -2445,7 +2446,7 @@ function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {
             // met finds a refusal that more Conviction would not lift.
             const refusal = signatureCastBlock({ ...state, conviction: Math.max(state.conviction, s.cost) }, s);
             return {
-                id: s.id, name: s.name, description: s.description, cost: s.cost,
+                id: s.id, name: s.name, description: signatureText(s, state.player.baseStats), cost: s.cost,
                 affordable: reason === null,
                 icon: SIG_ICON[s.kind] ?? '◆',
                 reason: refusal ?? reason,

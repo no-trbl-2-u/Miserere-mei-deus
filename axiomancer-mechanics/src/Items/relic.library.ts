@@ -49,7 +49,7 @@ import type { SignatureSkillId } from '../Combat/combat.encounter.types';
 const SUPPLIANTS_RING: Equipment = {
     id: 'relic-disarming-plea',
     name: "Suppliant's Ring",
-    description: 'MERCY 6 on the foe: it heals 6, and its MERCY grows by 6. When the clock runs out, MERCY bursts for twice its total.',
+    description: 'Grants The Open Hand: MERCY on the foe. It heals that much, and its MERCY grows by that much. When the clock runs out, MERCY bursts for twice its total.',
     category: 'equipment',
     slot: 'relic',
     statModifiers: [],

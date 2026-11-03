@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import {
-    getSignatureSkill,
+    getSignatureSkill, signatureText,
     rollEncounterDice,
 } from '@mechanics';
 import type { CombatEncounterState, CombatManaDie } from '@mechanics';
@@ -77,10 +77,11 @@ describe('signature runes (the engine cast gate)', () => {
     const rune = (s: CombatEncounterState, id: string) =>
         buildCombatViewModel(s).signatures.find(x => x.id === id)!;
     it('The Open Hand rune prints the flat cost and its one line', () => {
-        const r = rune(withRunes(4), 'sig-disarming-plea');
+        const s = withRunes(4);
+        const r = rune(s, 'sig-disarming-plea');
         expect(r.cost).toBe(4);
-        expect(r.description).toBe(getSignatureSkill('sig-disarming-plea')!.description);
-        expect(r.description).toMatch(/^MERCY 6 on the foe/);
+        expect(r.description).toBe(signatureText(getSignatureSkill('sig-disarming-plea')!, s.player.baseStats));
+        expect(r.description).toMatch(/^MERCY 7 on the foe/);
     });
 
     it('a rune is refused with the reason when Conviction is short', () => {

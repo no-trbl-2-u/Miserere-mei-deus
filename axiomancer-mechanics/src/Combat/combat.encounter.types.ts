@@ -197,6 +197,7 @@ export type PlayerArchetype = 'heart' | 'body' | 'mind';
 export interface SignatureSkill {
     id: SignatureSkillId;
     name: string;
+    /** May hold card tokens (`{mercy:6}`): print it through `signatureText`. */
     description: string;
     /** Conviction (◆) cost. */
     cost: number;
