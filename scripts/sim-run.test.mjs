@@ -12,7 +12,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, formatLanes, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, tally } from './sim-run.mjs'
+import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally } from './sim-run.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURE = JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', 'sim-runs.json'), 'utf-8'))
@@ -203,4 +203,46 @@ test('the batch cap stops sending before the run that would pass it', async () =
     fetchImpl: async () => { throw new Error('must not send') },
   })
   assert.equal(code, 1)
+})
+
+const armRun = (over) => ({ policy: 'x', seed: 1, outcome: 'chapter-clear', level: 4, currency: 50, mercy: { checks: 2, spared: 2, finished: 0, table: { shillings: 1, relic: 1 }, xp: 100, shillings: 90 }, ...over })
+
+test('parseArgs reads --compare and leaves the other defaults alone', () => {
+  assert.equal(parseArgs(['--compare', '--runs', '4']).compare, true)
+  assert.equal(parseArgs([]).compare, undefined)
+})
+
+test('summarizeArm means the runs, counts checks and table results, and keeps the dead and the stuck apart', () => {
+  const arm = summarizeArm('spare-all', [
+    armRun({}),
+    armRun({ level: 2, outcome: 'run-over', mercy: { checks: 0, spared: 0, finished: 0, table: {}, xp: 20, shillings: 30 } }),
+    { policy: 'x', seed: 3, stuck: true, node: 'n', error: 'e' },
+  ])
+  assert.deepEqual([arm.runs, arm.cleared, arm.died, arm.stuck], [3, 1, 1, 1])
+  assert.deepEqual([arm.xp, arm.level, arm.wages, arm.checksTotal, arm.spared], [60, 3, 60, 2, 2])
+  assert.deepEqual(arm.table, { shillings: 1, consumable: 0, upgrade: 0, transform: 0, gear: 0, relic: 1 })
+})
+
+test('formatComparison prints both arms and says plainly when a run fell short of the end of Act 1', () => {
+  const full = summarizeArm('spare-all', [armRun({})])
+  const short = summarizeArm('finish-all', [armRun({ outcome: 'run-over' })])
+  const text = formatComparison(full, short, { seed: 5, runs: 1 })
+  assert.match(text, /seeds 5\.\.5 \(1 runs per arm\)/)
+  assert.match(text, /runs reaching the end of Act 1\s+1\/1\s+0\/1/)
+  assert.match(text, /shillings 1 \(50%\), consumable 0 \(0%\)/)
+  assert.match(text, /PARTIAL/)
+  assert.doesNotMatch(formatComparison(full, full, { seed: 5, runs: 1 }), /PARTIAL/)
+})
+
+test('--compare plays both arms on the same seeds and prints one table', async () => {
+  const asked = []
+  const out = sink()
+  const code = await main(['--compare', '--runs', '2', '--seed', '9'], {
+    stdout: out,
+    stderr: sink(),
+    play: (opts) => { asked.push([opts.policy, opts.runs, opts.seed]); return { runs: [armRun({}), armRun({})] } },
+  })
+  assert.equal(code, 0)
+  assert.deepEqual(asked, [['spare-all', 2, 9], ['finish-all', 2, 9]])
+  assert.match(out.text, /spare-all\s+finish-all/)
 })

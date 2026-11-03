@@ -20,19 +20,23 @@
 
 import {
     buildCombatDeck,
+    chooseMercyCheck,
     getRng,
     initializeCombatEncounter,
     isEliteEnemy,
     resolveThreatPhase,
     rollEncounterDice,
+    rollMercyCheck,
     selectEncounterMercyChoice,
     upgradeablePlayPhase,
     type CombatEncounterState,
     type CombatOutcome,
+    type CombatSimPolicy,
     type Enemy,
     type GameState,
     type RunFightContext,
     type RunPolicy,
+    type SpareResultKind,
 } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
@@ -49,6 +53,28 @@ import type { AppStore } from '@/state/store';
 
 /** How a fight ended for the run's tally. */
 export type RunFightResult = 'won' | 'spared' | 'lost' | 'fled';
+
+/** What `endCombat` reports (the engine does not export the type). */
+type CombatEndReport = ReturnType<ReturnType<AppStore['getState']>['endCombat']>;
+
+/** What a run's won fights paid and what its mercy checks did, for the comparison. */
+export interface MercyLedger {
+    /** Checks that fired (a normal foe fell and asked spare or finish). */
+    checks: number;
+    spared: number;
+    finished: number;
+    /** The Spare table's results, by kind. */
+    table: Partial<Record<SpareResultKind, number>>;
+    /** XP the won fights paid (quest XP is not counted). */
+    xp: number;
+    /** Shillings the won fights paid (the table's extra shillings result is not counted). */
+    shillings: number;
+}
+
+/** A ledger with nothing in it. */
+export function emptyMercyLedger(): MercyLedger {
+    return { checks: 0, spared: 0, finished: 0, table: {}, xp: 0, shillings: 0 };
+}
 
 /** Phases a fight may take before the driver calls it stuck. */
 export const MAX_FIGHT_PHASES = 200;
@@ -78,10 +104,27 @@ export function fightContext(store: AppStore, enemy: Enemy, fleeAllowed: boolean
 
 /** Play the live fight to its outcome on the engine's encounter functions. */
 function playToOutcome(store: AppStore, enemy: Enemy, policy: RunPolicy, ctx: RunFightContext): CombatEncounterState {
+    const witness = policy.fightPolicy(ctx);
+    return answerMercyCheck(playToVictory(store, enemy, witness), witness);
+}
+
+/**
+ * The panel's mercy check, on a fight just won: rolled from the combat rng once
+ * the foe has fallen, answered as the policy's `mercyCheck` says. Any other
+ * ending comes back as it is. The engine's turn loop draws nothing for it, so a
+ * seeded stream reads as before.
+ */
+export function answerMercyCheck(live: CombatEncounterState, witness: CombatSimPolicy): CombatEncounterState {
+    const answered = chooseMercyCheck(rollMercyCheck(live), witness.mercyCheck);
+    if (answered !== live) fightRecorder.observe(answered);
+    return answered;
+}
+
+/** Play the fight until the foe falls, or the player does. */
+function playToVictory(store: AppStore, enemy: Enemy, witness: CombatSimPolicy): CombatEncounterState {
     const state = store.getState();
     const flags = (state as unknown as GameState).flags;
     const seed = Math.floor(Math.random() * 0xffffffff);
-    const witness = policy.fightPolicy(ctx);
     const rng = (): number => getRng().random();
     // The player fights as they stand: a new run wears the grey pair, so the sim plays a fresh run as it is.
     let live = initializeCombatEncounter(state.player, enemy, undefined, seed, flags);
@@ -141,6 +184,7 @@ export function playFight(
     actions: AppActions,
     policy: RunPolicy,
     fled: Map<string, number> = new Map(),
+    ledger?: MercyLedger,
 ): RunFightResult | null {
     if (!store.getState().currentEncounter) {
         // The gate's engage: stage the foe from the pending prelude.
@@ -160,12 +204,36 @@ export function playFight(
     }
     const final = playToOutcome(store, enemy, policy, ctx);
     const outcome = final.finalOutcome as CombatOutcome;
-    applyHazardOutcome(store, outcome, final, enemy);
-    if (outcome === 'victory') claimDraft(store, enemy, policy);
+    const spared = outcome === 'victory' && final.mercyCheck === 'spared';
+    // The ledger reads what `endCombat` paid off its own report: the panel's write-back drops it.
+    let report: CombatEndReport | null = null;
+    const endCombat = store.getState().endCombat;
+    if (ledger) {
+        store.setState({
+            endCombat: (...args: Parameters<typeof endCombat>) => (report = endCombat(...args)),
+        } as never);
+    }
+    try {
+        applyHazardOutcome(store, outcome, final, enemy);
+    } finally {
+        if (ledger) store.setState({ endCombat } as never);
+    }
+    if (ledger && outcome === 'victory') {
+        const paid = report as CombatEndReport | null;
+        if (final.mercyCheck === 'spared' || final.mercyCheck === 'finished') ledger.checks++;
+        if (final.mercyCheck === 'spared') ledger.spared++;
+        if (final.mercyCheck === 'finished') ledger.finished++;
+        ledger.xp += paid?.xpGained ?? 0;
+        ledger.shillings += paid?.shillings ?? 0;
+        const kind = paid?.spareReward?.kind;
+        if (kind) ledger.table[kind] = (ledger.table[kind] ?? 0) + 1;
+    }
+    // A Spare pays no card reward: the panel opens no draft for it.
+    if (outcome === 'victory' && !spared) claimDraft(store, enemy, policy);
     resetCombatRewardAction(store);
     if (outcome === 'defeat') {
         actions.playerDied('fight');
         return 'lost';
     }
-    return outcome === 'mercy' ? 'spared' : 'won';
+    return outcome === 'mercy' || spared ? 'spared' : 'won';
 }

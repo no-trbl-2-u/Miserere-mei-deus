@@ -11,7 +11,7 @@ export type {
     RunVillageContext, RunVillageDecision, RunHazardContext, RunHazardCardContext,
     RunFightContext, RunLevelUpContext, RunItemContext, RunStat,
 } from './run-policy.types';
-export { WANDERER_POLICY, nearestRoad } from './run-policy.wanderer';
+export { WANDERER_POLICY, FINISH_ALL_POLICY, SPARE_ALL_POLICY, nearestRoad } from './run-policy.wanderer';
 export { RUN_POLICIES, RUN_POLICY_IDS, getRunPolicy } from './run-policy.registry';
 export {
     ARCHETYPE_POLICIES, BLOOD_PRICE_POLICY, DEFENDER_POLICY, MERCIFUL_POLICY, ELEMENTALIST_POLICY,
@@ -26,5 +26,5 @@ export {
     runRoadOptions, isNodeUnfinished, isReachTarget, distanceToUnfinished, travelPassageTarget,
     isEliteNode, isStoryNode, distanceToStory, distanceToExit, unfinishedReachable,
 } from './run-roads';
-export { PLAYER_WITNESS } from './player-witness';
+export { PLAYER_WITNESS, SPARE_ALL_WITNESS } from './player-witness';
 export { nextHazardStep, hazardRouteFor, type HazardStep } from './run-hazard';

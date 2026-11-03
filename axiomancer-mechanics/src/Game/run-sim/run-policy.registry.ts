@@ -10,7 +10,7 @@ import {
     MERCIFUL_POLICY,
 } from './run-policy.archetypes';
 import type { RunPolicy } from './run-policy.types';
-import { WANDERER_POLICY } from './run-policy.wanderer';
+import { FINISH_ALL_POLICY, SPARE_ALL_POLICY, WANDERER_POLICY } from './run-policy.wanderer';
 
 /** Every run policy, keyed by id, in listing order. */
 export const RUN_POLICIES: Readonly<Record<string, RunPolicy>> = Object.freeze({
@@ -19,6 +19,8 @@ export const RUN_POLICIES: Readonly<Record<string, RunPolicy>> = Object.freeze({
     defender: DEFENDER_POLICY,
     merciful: MERCIFUL_POLICY,
     elementalist: ELEMENTALIST_POLICY,
+    'finish-all': FINISH_ALL_POLICY,
+    'spare-all': SPARE_ALL_POLICY,
 });
 
 /** The policy ids, in listing order. */

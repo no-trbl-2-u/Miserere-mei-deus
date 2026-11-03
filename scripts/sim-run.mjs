@@ -37,7 +37,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const MOBILE = path.join(ROOT, 'axiomancer-mobile')
 
-export const USAGE = 'usage: npm run sim:run -- --policy <id> [--runs <n>] [--seed <s>] [--json] [--post]'
+export const USAGE = 'usage: npm run sim:run -- --policy <id> [--runs <n>] [--seed <s>] [--json] [--post]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
 
 /** One batch posts at most this many bytes (A13). */
 export const POST_BATCH_CAP_BYTES = 25 * 1024 * 1024
@@ -49,6 +49,7 @@ export function parseArgs(argv) {
     const arg = argv[i]
     if (arg === '--json') { opts.json = true; continue }
     if (arg === '--post') { opts.post = true; continue }
+    if (arg === '--compare') { opts.compare = true; continue }
     if (arg === '--help' || arg === '-h') { opts.help = true; continue }
     const m = /^--(policy|runs|seed)(?:=(.*))?$/.exec(arg)
     if (!m) throw new Error(`unknown argument '${arg}'`)
@@ -83,6 +84,67 @@ export function formatRunLine(run) {
     `fights won=${f.won} lost=${f.lost} spared=${f.spared}`,
     `deck ${formatLanes(run.deckByLane)}`,
   ].join(' | ')
+}
+
+/** The Spare table's results, in table order. */
+export const SPARE_TABLE_KINDS = ['shillings', 'consumable', 'upgrade', 'transform', 'gear', 'relic']
+
+const mean = (xs) => (xs.length === 0 ? null : xs.reduce((a, b) => a + b, 0) / xs.length)
+const fmt = (n, digits = 1) => (n === null ? 'n/a' : n.toFixed(digits))
+
+/**
+ * What one arm of the comparison came to, from its runs. A run that ended
+ * short of the chapter's end (`run-over`) or stuck is counted as such, and its
+ * numbers still go in the means: they are partial, and the line says so.
+ */
+export function summarizeArm(policy, runs) {
+  const played = runs.filter((r) => !r.stuck)
+  const cleared = played.filter((r) => r.outcome === 'chapter-clear')
+  const table = Object.fromEntries(SPARE_TABLE_KINDS.map((k) => [k, played.reduce((n, r) => n + (r.mercy?.table?.[k] ?? 0), 0)]))
+  const checks = played.map((r) => r.mercy?.checks ?? 0)
+  return {
+    policy,
+    runs: runs.length,
+    cleared: cleared.length,
+    died: played.length - cleared.length,
+    stuck: runs.length - played.length,
+    xp: mean(played.map((r) => r.mercy?.xp ?? 0)),
+    level: mean(played.map((r) => r.level)),
+    wages: mean(played.map((r) => r.mercy?.shillings ?? 0)),
+    held: mean(played.map((r) => r.currency ?? 0)),
+    checks: mean(checks),
+    checksTotal: checks.reduce((a, b) => a + b, 0),
+    spared: played.reduce((n, r) => n + (r.mercy?.spared ?? 0), 0),
+    table,
+  }
+}
+
+/**
+ * The comparison as text: spare-all against finish-all at the end of Act 1
+ * (means per run), how many checks fired and the spread of table results.
+ * A measurement, never a gate: nothing here judges a number.
+ */
+export function formatComparison(spare, finish, { seed, runs }) {
+  const partial = [spare, finish].some((a) => a.cleared < a.runs)
+  const row = (label, a, b) => `${label.padEnd(34)}${String(a).padStart(12)}${String(b).padStart(12)}`
+  const lines = [
+    `mercy check comparison: seeds ${seed}..${seed + runs - 1} (${runs} runs per arm), means per run`,
+    row('', 'spare-all', 'finish-all'),
+    row('runs reaching the end of Act 1', `${spare.cleared}/${spare.runs}`, `${finish.cleared}/${finish.runs}`),
+    row('runs that died', spare.died, finish.died),
+    row('runs stuck (RunStuckError)', spare.stuck, finish.stuck),
+    row('XP from won fights', fmt(spare.xp), fmt(finish.xp)),
+    row('level at the end', fmt(spare.level), fmt(finish.level)),
+    row('shillings paid by won fights', fmt(spare.wages), fmt(finish.wages)),
+    row('shillings held at the end', fmt(spare.held), fmt(finish.held)),
+    row('checks fired per run', fmt(spare.checks, 2), fmt(finish.checks, 2)),
+    row('checks fired in all', spare.checksTotal, finish.checksTotal),
+    row('checks answered Spare in all', spare.spared, finish.spared),
+  ]
+  const rolled = SPARE_TABLE_KINDS.reduce((n, k) => n + spare.table[k], 0)
+  lines.push(`spare-all table results (${rolled} rolls): ${SPARE_TABLE_KINDS.map((k) => `${k} ${spare.table[k]}${rolled > 0 ? ` (${Math.round((100 * spare.table[k]) / rolled)}%)` : ''}`).join(', ')}`)
+  if (partial) lines.push('PARTIAL: not every run reached the end of Act 1; those numbers are the run up to where it stopped.')
+  return lines.join('\n')
 }
 
 /** Run the driver under jest; returns `{ runs }` or throws with jest's output. */
@@ -215,6 +277,21 @@ export async function main(argv, {
   }
   if (opts.help) {
     stdout.write(`${USAGE}\n`)
+    return 0
+  }
+  if (opts.compare) {
+    if (opts.post || opts.json) {
+      stderr.write(`sim-run: --compare prints the table only; it takes no --post or --json\n${USAGE}\n`)
+      return 2
+    }
+    let arms
+    try {
+      arms = ['spare-all', 'finish-all'].map((policy) => summarizeArm(policy, play({ ...opts, policy }).runs))
+    } catch (err) {
+      stderr.write(`sim-run: ${err.message}\n`)
+      return 1
+    }
+    stdout.write(`${formatComparison(arms[0], arms[1], opts)}\n`)
     return 0
   }
   const run = opts.post ? { ...opts, post: { batchId: batchIdOf(env, now), buildCommit: sha() } } : opts
