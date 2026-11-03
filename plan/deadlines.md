@@ -265,8 +265,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - B2 — the enemy revamp stays open for Chapters 2-4's bosses and the Act Boss (the Nov 22 session); Chapter 1's boss is plotted (T, 2026-11-03).
 - HP4e — T called the cost-card candidates done (2026-11-03); the chunk closes on A9, the report of T's keep-or-cut calls and rough times, not yet written.
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
-- MR1e — T writes the Suppliant's Ring's new signature and M-02b's new text; date not set (T picks it).
-- MR1f — befriending leaves the game once MR1e's text exists; date not set (it waits on MR1e).
+- MR1e — T's text for the Suppliant's Ring's new signature and M-02b is written into spec 144; it closes with MR1f's PR, no T act waits on it.
+- MR1f — befriending leaves the game; its PR is open, no T act waits on it.
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
@@ -309,6 +309,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-03** — **T's text for spec 144 settled at the pilot's gate; befriending leaves (MR1e, MR1f)** (T, at `/pilot`'s gate: "A: The Open Hand (Recommended)" and "Bigger MERCY (Recommended)"). **Edited** the Unscheduled lines of MR1e and MR1f: their text is in the spec and no T act waits on them. Nothing ticked; no date moved.
 - **2026-11-03** — **week 1's overdue T items done** (T, in chat: "Everything you said that's overdue is done, please update the deadlines accordingly", of the sea keep boss design, the boss plot, the cost-card keep-or-cut and Chapter 1's enemy tuning). **Ticked** the Oct 31, Nov 1 (both) and Nov 2 Items. The Nov 1 cost-card Item and the Nov 2 boss-plot Item named HP4e and B2, whose chunks stay open (HP4e closes on A9, a report of T's rulings not yet written; B2 also holds Chapters 2-4 and the Act Boss), so both Items now name T and both chunks moved to `## Unscheduled`. No date moved.
 - **2026-11-03** — **the mercy check plotted as spec 144 (MR1a-MR1f)** (T, attended `/pitch` then `/plot asap`: "remove the befriending system and replace it with a 'mercy check' event"). **Added** MR1a, MR1b, MR1c and MR1d to the `Waits on` of the Mid-MVP check (Nov 9), and MR1e and MR1f under Unscheduled, since T set no date for the signature and M-02b text. **Edited** no Item's premise: the Open Hand stays until MR1f, so BUG1j and BUG1a still hold on that check. Nothing ticked; no date moved.
 - **2026-11-02** — **the sim's tuning tools plotted into spec 135 (SM2h-SM2k)** (T, attended sim session then `/plot`: "Do it", of the kept list: the no-stat Elementalist relic, the guard logic, no befriend, the anvil logic, plus run options, report columns and mix-and-match). **Added** SM2h, SM2i, SM2j and SM2k under `## Unscheduled`: no dated T act needs them. No Item edited.
