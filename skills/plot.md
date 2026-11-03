@@ -269,7 +269,10 @@ it except the Status cells:
   Window. A `needs plot` Item this plot answers is ticked `[x]` by hand.
   A chunk with no T act after it gets a `- <alias> — <reason>` line
   under `## Unscheduled` ("date not set" when the date is T's to pick
-  and T is not here to pick it). Never guess a date for T.
+  and T is not here to pick it). Never guess a date for T. A new Item
+  fills `Goal` (the high-level task it serves) and `How AI helps` (`-`
+  when nothing is known), and lives only in the Items table: the lint
+  fails a dated table row anywhere else (T, 2026-11-03, one list).
 - **Every Item the plot supersedes, re-scopes or completes** is edited
   itself, not only its Rows cell. Read each open Item in the plot's
   window and ask whether its premise still holds once these chunks

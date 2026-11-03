@@ -399,4 +399,32 @@ test('A9: /plot gives every chunk it adds an Item or an ## Unscheduled line', ()
     assert.match(body, /Every chunk the plot added/)
     assert.match(body, /## Unscheduled/)
     assert.match(body, /node scripts\/deadlines\.mjs --write/)
+    // One list (T, 2026-11-03): a new Item carries its Goal and How AI helps cells and lives only in the Items table.
+    assert.match(body, /A new Item\s+fills `Goal`/)
+    assert.match(body, /`How AI helps` \(`-`\s+when nothing is known\)/)
+    assert.match(body, /lives only in the Items table/)
+})
+
+// One list (T, 2026-11-03): a dated table outside ## Items is a second schedule that ticking an Item never updates.
+test('a dated table row outside ## Items fails, naming its date', () => {
+    const md = deadlines(COVER_ALL, EXCUSE_REST).replace('## Items', `## MVP schedule
+
+| Date | Hours | Piece |
+|---|---|---|
+| Tue Nov 3 | 1 | A piece |
+| 2026-11-04 | 1 | Another piece |
+
+## Items`)
+    assert.deepEqual(checkDeadlines(md, BUILD_PLAN), [
+        'plan/deadlines.md: a dated table row sits outside ## Items ("Tue Nov 3"); every dated piece is one Items row, with its Goal and How AI helps cells, so the table there is the only list to tick.',
+        'plan/deadlines.md: a dated table row sits outside ## Items ("2026-11-04"); every dated piece is one Items row, with its Goal and How AI helps cells, so the table there is the only list to tick.',
+    ])
+})
+
+test('an eight-column Items table names each Item by its own cell, and the Windows table passes the one-list check', () => {
+    // Before Goal and How AI helps, the parser read them into the name ("Play it | A goal | /plot").
+    const rows = ['| [ ] | 2026-10-24 | Play it | A goal | `/plot` | W2 | T | A1 |', '| [ ] | 2026-11-05 | Wrapped | - | - | W2 | W1 | - |']
+    assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [
+        'plan/deadlines.md: Item "Play it" is due 2026-10-24, outside W2; move the date into the window or change the window.',
+    ])
 })
