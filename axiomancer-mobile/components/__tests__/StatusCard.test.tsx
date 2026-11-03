@@ -119,4 +119,10 @@ describe('StatusCard: structural landmarks', () => {
     it('draws no map line off the map', () => {
         expect(mount(<StatusCard />).queryByTestId('status-card-map-name')).toBeNull();
     });
+
+    it('draws no map line for a nameless map either, rather than an empty slot', () => {
+        // A map with no name must not print a blank line that pushes the
+        // VITAE bar down a row.
+        expect(mount(<StatusCard mapName="" />).queryByTestId('status-card-map-name')).toBeNull();
+    });
 });
