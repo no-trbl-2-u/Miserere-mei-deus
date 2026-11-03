@@ -263,6 +263,7 @@ async function settleOnMap(page, what) {
         }
         await sleep(400)
         if (await tap(page, 'combat-mercy-finish')) continue
+        if (await tap(page, 'combat-reward-skip')) continue
         if (await tap(page, 'combat-summary-close')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
         if (await tap(page, 'death-return-continue')) continue
