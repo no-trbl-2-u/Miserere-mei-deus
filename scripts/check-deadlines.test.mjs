@@ -399,6 +399,10 @@ test('A9: /plot gives every chunk it adds an Item or an ## Unscheduled line', ()
     assert.match(body, /Every chunk the plot added/)
     assert.match(body, /## Unscheduled/)
     assert.match(body, /node scripts\/deadlines\.mjs --write/)
+    // One list (T, 2026-11-03): a new Item carries its Goal and How AI helps cells and lives only in the Items table.
+    assert.match(body, /A new Item\s+fills `Goal`/)
+    assert.match(body, /`How AI helps` \(`-`\s+when nothing is known\)/)
+    assert.match(body, /lives only in the Items table/)
 })
 
 // One list (T, 2026-11-03): a dated table outside ## Items is a second schedule that ticking an Item never updates.
