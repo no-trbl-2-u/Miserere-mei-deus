@@ -15,8 +15,9 @@ interface NodeConfirmPanelProps {
      * travel. Wins over `selected` when both are set.
      */
     shut?: ExplorationNode | null;
-    onConfirm: () => void;
-    onCancel: () => void;
+    /** Only reached with a node selected, so the empty slot passes neither. */
+    onConfirm?: () => void;
+    onCancel?: () => void;
     /** Shown when no node is selected (the drawer's empty-state line). */
     emptyMessage: string;
 }

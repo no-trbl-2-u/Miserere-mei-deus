@@ -209,14 +209,7 @@ export default function ExplorationScreen() {
                 />
             ) : (
                 <QuestTracker
-                    fallback={(
-                        <NodeConfirmPanel
-                            selected={null}
-                            onConfirm={onConfirmMove}
-                            onCancel={() => setSelectedNodeId(null)}
-                            emptyMessage={vm.drawerCopy.emptyMessage}
-                        />
-                    )}
+                    fallback={<NodeConfirmPanel selected={null} emptyMessage={vm.drawerCopy.emptyMessage} />}
                 />
             )}
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
-import { ExplorationNode, NODE_MIN_SCREEN, NODE_SIZE, nodeCounterScale } from '../ExplorationNode';
+import { CURRENT_NODE_SIZE, ExplorationNode, NODE_MIN_SCREEN, NODE_SIZE, nodeCounterScale } from '../ExplorationNode';
 import { MapCameraContext } from '../mapSheetContext';
 import { canvasSizeOf, minScaleFor } from '../MapCanvas';
 import { ALL_MAP_LAYOUTS } from '@/state/exploration-maps';
@@ -162,6 +162,72 @@ describe('node marks at any zoom (critique pass 75)', () => {
         );
         const style = StyleSheet.flatten(getByTestId('node-node-1').props.style);
         expect(style.transform).toEqual([{ scale: nodeCounterScale(0.148) }]);
+    });
+});
+
+/**
+ * THE NODE UNDERFOOT IS A PORTRAIT, AND ITS GEOMETRY IS LOAD-BEARING.
+ *
+ * The mark is centred on its point by a percentage position plus a half-mark
+ * negative margin, so the margins, the width and the transform origin all
+ * have to follow the mark's OWN size — otherwise the bigger portrait sits
+ * off the node it is supposed to name, which is the very confusion it was
+ * added to end (T, 2026-11-02). The round clip and the ring are what make it
+ * read as a medallion rather than a pasted square.
+ */
+describe('the portrait mark on the node underfoot', () => {
+    const renderHere = () => {
+        const { tree } = withAllProviders(
+            <ExplorationNode
+                node={{ ...mockNode, id: 'here', kind: 'current' as const }}
+                onNodePress={mockOnNodePress}
+                isSelected={false}
+            />,
+        );
+        return render(tree);
+    };
+
+    it('draws larger than every other mark', () => {
+        expect(CURRENT_NODE_SIZE).toBeGreaterThan(NODE_SIZE);
+        const wrap = StyleSheet.flatten(renderHere().getByTestId('node-here').props.style);
+        expect(wrap.width).toBe(CURRENT_NODE_SIZE);
+    });
+
+    it('stays centred on its own point: half its size back, on both axes', () => {
+        const wrap = StyleSheet.flatten(renderHere().getByTestId('node-here').props.style);
+        expect(wrap.marginLeft).toBe(-CURRENT_NODE_SIZE / 2);
+        expect(wrap.marginTop).toBe(-CURRENT_NODE_SIZE / 2);
+        // And it scales about that same centre, not the wrap's corner.
+        expect(wrap.transformOrigin).toBe(`${CURRENT_NODE_SIZE / 2}px ${CURRENT_NODE_SIZE / 2}px`);
+    });
+
+    it('draws over its neighbours, so a crowded node cannot cut the face', () => {
+        const here = StyleSheet.flatten(renderHere().getByTestId('node-here').props.style);
+        const other = StyleSheet.flatten(
+            render(<ExplorationNode node={mockNode} onNodePress={mockOnNodePress} isSelected={false} />)
+                .getByTestId('node-node-1').props.style,
+        );
+        expect(here.zIndex).toBeGreaterThan(other.zIndex);
+    });
+
+    it('clips the portrait to a ringed disc', () => {
+        const clip = StyleSheet.flatten(renderHere().getByTestId('node-here-portrait').props.style);
+        expect(clip.width).toBe(CURRENT_NODE_SIZE);
+        expect(clip.height).toBe(CURRENT_NODE_SIZE);
+        expect(clip.borderRadius).toBe(CURRENT_NODE_SIZE / 2);
+        expect(clip.overflow).toBe('hidden');
+        expect(clip.borderWidth).toBeGreaterThan(0);
+        expect(clip.borderColor).toBe(paletteFor(DEFAULT_THEME_ID).sulfur);
+    });
+
+    it('leaves every other node at the ordinary mark size', () => {
+        const { getByTestId } = render(
+            <ExplorationNode node={mockNode} onNodePress={mockOnNodePress} isSelected={false} />,
+        );
+        const wrap = StyleSheet.flatten(getByTestId('node-node-1').props.style);
+        expect(wrap.width).toBe(NODE_SIZE);
+        expect(wrap.marginLeft).toBe(-NODE_SIZE / 2);
+        expect(getByTestId('node-node-1').findAllByProps({ testID: 'node-node-1-portrait' })).toHaveLength(0);
     });
 });
 
