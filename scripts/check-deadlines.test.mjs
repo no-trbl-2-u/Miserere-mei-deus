@@ -417,7 +417,10 @@ test('a dated table row outside ## Items fails, naming its date', () => {
     ])
 })
 
-test('the Windows table and an eight-column Items table pass the one-list check', () => {
-    const rows = ['| [ ] | 2026-10-24 | Play it | A goal | `/plot` | W1 | T | A1 |', '| [ ] | 2026-11-05 | Wrapped | - | - | W2 | W1 | - |']
-    assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [])
+test('an eight-column Items table names each Item by its own cell, and the Windows table passes the one-list check', () => {
+    // Before Goal and How AI helps, the parser read them into the name ("Play it | A goal | /plot").
+    const rows = ['| [ ] | 2026-10-24 | Play it | A goal | `/plot` | W2 | T | A1 |', '| [ ] | 2026-11-05 | Wrapped | - | - | W2 | W1 | - |']
+    assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [
+        'plan/deadlines.md: Item "Play it" is due 2026-10-24, outside W2; move the date into the window or change the window.',
+    ])
 })
