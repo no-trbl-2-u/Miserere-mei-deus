@@ -18,7 +18,7 @@
 | `map-canvas-wrapper` / `map-canvas` | The viewport and the pannable canvas (pan gesture id `map-pan`) |
 | `map-backdrop` / `map-vignette` | Art plate and vignette |
 | `map-recenter` | RECENTRE — re-fit the camera on current + available nodes |
-| `map-overlays-fixed` / `map-legend` / `map-legend-keys` / `map-legend-count` | Viewport-fixed legend |
+| `map-overlays-fixed` / `map-gesture-line` | Viewport-fixed chart furniture: the gesture line (wheel on a mouse, pinch on touch). No legend |
 | `node-<id>` | A map node; accessibility label says sealed / walked / here |
 | `node-confirm-panel` | Selected-node sheet |
 | `node-confirm-go` | TRAVEL HERE |
@@ -29,7 +29,7 @@
 
 ## 4. A correct play, step by step
 
-1. Read `map-legend-count` / node labels; find a `node-<id>` that is `available` (glowing, pulsing).
+1. Read the node labels; find a `node-<id>` that is `available` (glowing, pulsing).
 2. Tap it → `node-confirm-panel` shows its name and kind.
 3. `node-confirm-go`. The move commits (`game/world:moved`), then the node's event fires — follow the matching guide. A `travel` door just toasts and redraws the next map.
 4. After the event, you are back here with new `available` nodes. If they are off-screen, `map-recenter`.
@@ -50,7 +50,7 @@
 - `node-confirm-go` pressed, `action/moveTo` logged with `moved:false`, no toast.
 - `game/world:moved` logged but the node's event never fires and the map never draws new options.
 - `travel` door toast never appears and `vm.region` does not change.
-Record: map id + node id (`node-<id>`), the set of node ids visible, `map-legend-count`, last 30 `action`+`game`+`nav` lines, screenshot of the whole canvas after `map-recenter`. `globalThis.__AXM_SKIP_EVENT__()` is for a stuck *event*, not a stuck map — if the map itself has no move, that is the finding.
+Record: map id + node id (`node-<id>`), the set of node ids visible, last 30 `action`+`game`+`nav` lines, screenshot of the whole canvas after `map-recenter`. `globalThis.__AXM_SKIP_EVENT__()` is for a stuck *event*, not a stuck map — if the map itself has no move, that is the finding.
 
 ## 7. Read the log
 

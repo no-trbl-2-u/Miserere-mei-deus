@@ -193,7 +193,7 @@ export function resolveDieDropTarget(
 }
 
 /**
- * What a card dropped on the play area does (phase CP1a; spec 142). Pure, so a
+ * What a card dropped on the play area does. Pure, so a
  * test can ask it for every row of the spec's table.
  *   · 'refuse' — neither line can be played now (the engine would refuse both).
  *   · 'stage'  — at least one unspent die in the tray could power the card, so
