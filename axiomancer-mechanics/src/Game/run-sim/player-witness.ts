@@ -28,3 +28,15 @@ export const PLAYER_WITNESS: CombatSimPolicy = Object.freeze<CombatSimPolicy>({
     signatureKinds: Object.freeze(greedy.signatureKinds.filter(kind => kind !== 'mercy')),
     mercyChoice: 'exploit',
 });
+
+/**
+ * The player witness that spares at every mercy check that fires. Identical to
+ * `PLAYER_WITNESS` in every other seam, the Open Hand included (off for both),
+ * so a spare-all against finish-all run differs only in the check's answer.
+ */
+export const SPARE_ALL_WITNESS: CombatSimPolicy = Object.freeze<CombatSimPolicy>({
+    ...PLAYER_WITNESS,
+    name: 'Player (greedy, spares at every mercy check)',
+    description: 'The player witness that answers every mercy check that fires with Spare.',
+    mercyCheck: 'spare',
+});

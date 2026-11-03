@@ -13,7 +13,7 @@
  * removes nothing, and wears every item it can.
  */
 
-import { PLAYER_WITNESS } from './player-witness';
+import { PLAYER_WITNESS, SPARE_ALL_WITNESS } from './player-witness';
 import type { RunPolicy, RunRoadOption } from './run-policy.types';
 
 /** The first option among the nearest to something unfinished, or null when none leads anywhere. */
@@ -60,4 +60,19 @@ export const WANDERER_POLICY: RunPolicy = Object.freeze<RunPolicy>({
     flee: () => false,
     raiseStat: () => 'heart',
     takeItem: (ctx) => (ctx.wearable ? 'equip' : 'keep'),
+});
+
+/** The wanderer, named for what it answers at the mercy check: Finish, every time. */
+export const FINISH_ALL_POLICY: RunPolicy = Object.freeze<RunPolicy>({
+    ...WANDERER_POLICY,
+    id: 'finish-all',
+    description: 'The wanderer, named for the mercy check comparison: Finish at every check that fires.',
+});
+
+/** The wanderer that spares at every mercy check that fires. */
+export const SPARE_ALL_POLICY: RunPolicy = Object.freeze<RunPolicy>({
+    ...WANDERER_POLICY,
+    id: 'spare-all',
+    description: 'The wanderer, but Spare at every mercy check that fires: the other arm of the comparison.',
+    fightPolicy: () => SPARE_ALL_WITNESS,
 });

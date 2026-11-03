@@ -38,7 +38,7 @@ import { createAppStore, type AppStore, type AppStoreState } from '@/state/store
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 import { withSeededRun } from './run-env';
-import { FightStuckError, playFight, type RunFightResult } from './run-fight';
+import { emptyMercyLedger, FightStuckError, playFight, type MercyLedger, type RunFightResult } from './run-fight';
 import {
     ScreenStuckError,
     resolveCache,
@@ -71,6 +71,11 @@ export interface RunResult {
     readonly vitae: number;
     readonly maxVitae: number;
     readonly fights: Readonly<Record<RunFightResult, number>>;
+    /** The mercy checks that fired, their answers and what the won fights paid. */
+    readonly mercy: MercyLedger;
+    /** The XP into the level at the end, and the shillings held then. */
+    readonly experience: number;
+    readonly currency: number;
     /** Node arrivals the run resolved. */
     readonly nodesResolved: number;
     readonly steps: number;
@@ -104,6 +109,8 @@ interface Tally {
     hazard: { policy: HazardPolicyId | null };
     /** Withdrawals from a fight this run, by node id. */
     fled: Map<string, number>;
+    /** What the won fights paid and what the mercy checks did. */
+    mercy: MercyLedger;
     /** The last state seen alive, for a run-over's summary. */
     alive: AppStoreState;
 }
@@ -194,7 +201,7 @@ function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Ta
     if (s.labyrinthUi?.session) throw stuck('the run entered the Aporia, which the driver does not walk', s, n);
     const pending = s.event?.pending ?? null;
     if ((pending && pending.event.kind === 'encounter') || s.currentEncounter) {
-        const result = playFight(store, actions, policy, tally.fled);
+        const result = playFight(store, actions, policy, tally.fled, tally.mercy);
         if (result === null) throw stuck('a fight was offered but would not stage', s, n);
         tally.fights[result]++;
         return;
@@ -237,6 +244,9 @@ function summarize(
         vitae: outcome === 'run-over' ? 0 : Math.max(0, game.player.health),
         maxVitae: game.player.maxHealth,
         fights: { ...tally.fights },
+        mercy: { ...tally.mercy, table: { ...tally.mercy.table } },
+        experience: game.player.experience,
+        currency: game.player.currency,
         nodesResolved: tally.nodesResolved,
         steps,
         deckByLane: deckByLane(end),
@@ -270,6 +280,7 @@ export function playRun(options: PlayRunOptions): RunResult {
             furthest: { nodeId: store.getState().world.currentMap.currentNode, depth: -1 },
             hazard: { policy: null },
             fled: new Map(),
+            mercy: emptyMercyLedger(),
             alive: store.getState(),
         };
         for (let n = 0; n < maxSteps; n++) {
