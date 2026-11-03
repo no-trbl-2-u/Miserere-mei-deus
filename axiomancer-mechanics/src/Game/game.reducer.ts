@@ -48,6 +48,7 @@ import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
 import { addItemStacking, encounterWage, totalEncounterXp } from './combat-grants';
+import { applySpareReward } from '../Combat/combat.spare-reward';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
 import { enemySlugOf } from './defeat-ledger';
@@ -503,6 +504,11 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         case 'REPLACE_CARD': {
             const { cardId, withCardId } = action.payload;
             const player = replaceCard(state.player, cardId, withCardId);
+            return player === state.player ? state : { ...state, player };
+        }
+
+        case 'APPLY_SPARE_REWARD': {
+            const player = applySpareReward(state.player, action.payload.reward);
             return player === state.player ? state : { ...state, player };
         }
 

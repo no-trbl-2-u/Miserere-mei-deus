@@ -11,6 +11,7 @@
  * dispatch.
  */
 
+import type { SpareReward } from '../Combat/combat.spare-reward';
 import { Enemy } from '../Enemy/types';
 import { Encounter } from '../World/types';
 import type { QuestlineId } from '../World/questline';
@@ -70,6 +71,8 @@ export type GameAction =
     | { type: 'LEARN_CARD';    payload: { cardId: string } }
     /** Swaps one owned copy of `cardId` for `withCardId` (an upgrade). */
     | { type: 'REPLACE_CARD';  payload: { cardId: string; withCardId: string } }
+    /** Puts a Spare table result on the player (`applySpareReward`). */
+    | { type: 'APPLY_SPARE_REWARD'; payload: { reward: SpareReward } }
     | { type: 'SAVE_GAME';      payload?: undefined }
     | { type: 'LOAD_GAME';      payload?: undefined }
     | { type: 'RESET_RUN';      payload: { keepCharacter: boolean } }

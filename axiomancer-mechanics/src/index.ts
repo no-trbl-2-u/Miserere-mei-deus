@@ -246,7 +246,11 @@ export type {
 } from './Items';
 
 // What a won fight pays.
-export { MERCY_TUNING, fightWage } from './Combat/combat.mercy-check';
+export { MERCY_TUNING, fightWage, spareWage } from './Combat/combat.mercy-check';
+export {
+    rollSpareReward, applySpareReward, transformCard, transformResultPool,
+} from './Combat/combat.spare-reward';
+export type { SpareReward, SpareResultKind } from './Combat/combat.spare-reward';
 
 // ─── Cards ───────────────────────────────────────────────────────────────────
 export type {
