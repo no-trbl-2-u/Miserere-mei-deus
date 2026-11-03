@@ -9,8 +9,7 @@
  * button below.
  *
  * An empty loot list shows the "no spoils. only quiet." fallback, and
- * a null reward field (the VM's currency is always null) shows a
- * single em-dash.
+ * a null reward field shows a single em-dash.
  */
 
 import React from 'react';

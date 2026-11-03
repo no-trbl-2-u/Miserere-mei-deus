@@ -11,7 +11,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-import { completeQuest, initializeCombatEncounter, ENEMY_REGISTRY, placeOnNode, type CombatOutcome, type GameState } from '@mechanics';
+import { completeQuest, fightWage, initializeCombatEncounter, ENEMY_REGISTRY, placeOnNode, type CombatOutcome, type GameState } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
 import { claimQuestCardAction, offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
@@ -190,7 +190,8 @@ describe('the boss victory pays step 4 (A11)', () => {
         applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, boss);
 
         expect(gs(store).quests.completed).toContain('Fell the Warden');
-        expect(gs(store).player.currency).toBe(before.currency + 15);
+        // The step's own 15, on top of the fight's wage.
+        expect(gs(store).player.currency).toBe(before.currency + 15 + fightWage(boss.level));
         const queue = store.getState().itemReward.queue;
         expect(queue.map(e => e.item.id)).toEqual(['relic-elementalist-belt']);
         expect(queue[0]!.source).toContain(FIXTURE_LINE_NAME.toUpperCase());

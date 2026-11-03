@@ -62,7 +62,8 @@ export interface FriendshipReward {
 }
 
 /**
- * Weighted drop entry on an `Enemy.loot` table.
+ * Weighted drop entry on an `Enemy.loot` table. A won fight rolls no table: it
+ * pays its wage (`fightWage`), so these are data only and nothing is dropped.
  *
  * Each entry contributes its `weight` to the roll; the rolled bucket spawns
  * the entry's `item` (or, if `item` is `null`, nothing — that bucket is the
@@ -71,9 +72,7 @@ export interface FriendshipReward {
  * { item: potion, weight: 10 } ]`. Weights are unitless integers; the runtime
  * normalises them at roll time.
  *
- * `loot` on the `Enemy` is intentionally a runtime-mutable variable: encounters
- * can splice in extra entries (e.g. quest-driven guaranteed drops, biome
- * tables) before combat starts. See `rollLoot` in `Enemy/loot.ts`.
+ * See `rollLoot` in `Enemy/loot.ts`.
  */
 export interface LootTableEntry {
     /** Item to drop when this bucket rolls. `null` represents a no-drop slot. */

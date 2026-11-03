@@ -40,7 +40,7 @@ the engine → view-model mapping; the board owns all UI/interaction.
 `persistOutcome` (live play only) hand-rolls the economy write-back the
 engine intentionally omits (it has no economy layer): final HP →
 `player.health`, `enemy.xpReward` → experience (+ level-ups),
-`rollLoot(enemy.loot)` → inventory, plus the deckbuilder reward card.
+`fightWage(enemy.level)` → shillings, plus the deckbuilder reward card.
 
 ## Phases
 

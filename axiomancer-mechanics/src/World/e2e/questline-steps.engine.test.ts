@@ -189,7 +189,8 @@ function fightAt(state: GameState, nodeId: string, outcome: 'victory' | 'friends
 
 function endFight(state: GameState, target: Enemy | Encounter, outcome: 'victory' | 'friendship' | 'flee' | 'defeat'): GameState {
     const fighting = gameReducer(state, { type: 'START_COMBAT', payload: { target } });
-    return gameReducer(fighting, { type: 'END_COMBAT', payload: { outcome, grantedLoot: [], grantedXp: 0 } });
+    // The fight's own wage set aside: these tests read the steps' rewards.
+    return gameReducer(fighting, { type: 'END_COMBAT', payload: { outcome, grantedLoot: [], grantedXp: 0, grantedShillings: 0 } });
 }
 
 function stageAt(state: GameState, nodeId: string) {

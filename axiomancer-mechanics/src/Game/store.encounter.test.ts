@@ -3,9 +3,8 @@
  *
  * Verifies the Encounter ↔ store contract:
  *   - startCombat accepts Enemy | Encounter (back-compat).
- *   - endCombat grants XP + loot only on victory.
- *   - Loot drops merge into existing inventory stacks.
- *   - Defeat / flee outcomes don't leak loot.
+ *   - endCombat grants XP and shillings only on victory.
+ *   - Defeat / flee outcomes don't leak grants.
  */
 
 import { describe, it, expect, afterEach, vi } from 'vitest';
@@ -14,8 +13,6 @@ import { nullAdapter } from './persistence/null.adapter';
 import { Player } from '../Character/characters.mock';
 import { FloatEye, DeathBeholder } from '../Enemy/enemy.library';
 import { Encounter } from '../World/types';
-import { Item } from '../Items/types';
-import { mockSequentialRng } from '../test-utils/rng';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -40,13 +37,8 @@ describe('store.startCombat — accepts Enemy or Encounter', () => {
     });
 });
 
-describe('store.endCombat — grants XP + loot on victory', () => {
-    it('victory grants xpReward and adds rolled loot to inventory', () => {
-        // Fix the RNG so the loot table always lands on a non-null bucket.
-        // FloatEye's table: [none(70), minor-healing-potion(25), healing-potion(5)].
-        // A roll of 0.8 lands in the second (minor-healing-potion) bucket.
-        mockSequentialRng(0.8);
-
+describe('store.endCombat — grants XP + shillings on victory', () => {
+    it('victory grants xpReward and the wage, and no loot', () => {
         const store = createGameStore(nullAdapter, { player: Player });
         store.getState().startCombat(FloatEye);
 
@@ -54,13 +46,13 @@ describe('store.endCombat — grants XP + loot on victory', () => {
         const report = store.getState().endCombat('victory');
         expect(report.outcome).toBe('victory');
         expect(report.xpGained).toBe(FloatEye.xpReward);
-        expect(report.loot.length).toBeGreaterThan(0);
+        expect(report.shillings).toBe(3 * FloatEye.level);
+        expect(report.loot).toEqual([]);
 
-        // Player got the XP and the item.
         const player = store.getState().player;
         expect(player.experience).toBe(Player.experience + FloatEye.xpReward!);
-        const got = player.inventory.find(i => i.id === 'minor-healing-potion');
-        expect(got).toBeDefined();
+        expect(player.currency).toBe(Player.currency + 3 * FloatEye.level);
+        expect(player.inventory).toEqual(Player.inventory);
     });
 
     it('defeat grants nothing', () => {
@@ -81,28 +73,6 @@ describe('store.endCombat — grants XP + loot on victory', () => {
         const report = store.getState().endCombat('flee');
         expect(report.outcome).toBe('flee');
         expect(report.xpGained).toBe(0);
-    });
-
-    it('victory loot stacks into an existing inventory entry', () => {
-        mockSequentialRng(0.8);
-
-        const seededInventory: Item[] = [
-            { id: 'minor-healing-potion', name: 'Minor Healing Potion',
-              description: 'x', category: 'consumable', quantity: 2,
-              healAmount: 10 },
-        ];
-        const store = createGameStore(nullAdapter, {
-            player: { ...Player, inventory: seededInventory },
-        });
-
-        store.getState().startCombat(FloatEye);
-        store.getState().endCombat('victory');
-
-        const stack = store.getState().player.inventory.find(i => i.id === 'minor-healing-potion');
-        expect(stack && 'quantity' in stack ? stack.quantity : 0).toBe(3);
-        // No duplicate entry.
-        expect(
-            store.getState().player.inventory.filter(i => i.id === 'minor-healing-potion'),
-        ).toHaveLength(1);
+        expect(report.shillings).toBe(0);
     });
 });

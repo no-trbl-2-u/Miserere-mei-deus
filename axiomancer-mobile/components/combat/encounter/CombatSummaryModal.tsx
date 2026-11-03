@@ -9,6 +9,7 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { CombatSummary } from '@mechanics';
+import { summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
@@ -22,7 +23,7 @@ const OUTCOME_COLOR: Record<string, string> = {
     defeat: HUE.defeatRed, retreat: HUE.retreatBone,
 };
 
-export function CombatSummaryModal({ summary, onClose }: { summary: CombatSummary; onClose: () => void }) {
+export function CombatSummaryModal({ summary, shillings = 0, onClose }: { summary: CombatSummary; shillings?: number; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
     const color = OUTCOME_COLOR[summary.outcome] ?? AXM.parchment;
@@ -55,6 +56,9 @@ export function CombatSummaryModal({ summary, onClose }: { summary: CombatSummar
                         <Text style={styles.total} testID="combat-summary-dot-total">Total DoT damage: <Text style={{ color: AXM.parchment }}>{summary.totalDotDamage}</Text></Text>
                     )}
                     <Text style={styles.total}>Direct damage: <Text style={{ color: AXM.parchment }}>{summary.directDamage}</Text></Text>
+                    {shillings > 0 && (
+                        <Text style={styles.total} testID="combat-summary-shillings">{summaryShillingsLabel} <Text style={{ color: AXM.sulfur }}>{summaryShillingsValue(shillings)}</Text></Text>
+                    )}
                 </View>
 
                 {summary.bestCard.length > 0 && (

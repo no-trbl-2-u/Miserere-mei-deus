@@ -117,6 +117,11 @@ describe('selectAftermathViewModel', () => {
         expect(vm?.kind === 'victory' && vm.rewards.currency).toBeNull();
     });
 
+    it('victory: the shillings the engine paid fill the currency cell', () => {
+        const vm = selectAftermathViewModel({ ...VICTORY_SNAPSHOT, shillings: 15 });
+        expect(vm?.kind === 'victory' && vm.rewards.currency).toEqual({ shillings: 15 });
+    });
+
     it('maps engine loot items into spoils tiles (equipment slot/rarity; other items by category)', () => {
         const vm = selectAftermathViewModel({
             ...VICTORY_SNAPSHOT,

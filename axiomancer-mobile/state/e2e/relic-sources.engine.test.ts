@@ -20,6 +20,7 @@ import {
     FIXTURE_QUEST,
     FIXTURE_QUEST_RELIC,
     emptyQuestLog,
+    fightWage,
     startQuest,
 } from '@mechanics';
 import type { DialogueTree, GameState, Quest, QuestObjective } from '@mechanics';
@@ -93,7 +94,8 @@ describe('a quest relic reaches the item-reward screen', () => {
         actions.startCombat(FOE);
         actions.endCombat('victory');
         expect(gs(store).quests.completed).toContain(q.name);
-        expect(gs(store).player.currency).toBe(before.currency + 15);
+        // The quest's own 15, on top of the fight's wage.
+        expect(gs(store).player.currency).toBe(before.currency + 15 + fightWage(FOE.level));
         expectQuestRelicQueued(store, q);
     });
 

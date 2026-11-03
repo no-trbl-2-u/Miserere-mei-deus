@@ -22,9 +22,9 @@ export type CombatOutcome = 'victory' | 'defeat' | 'flee' | 'parley';
  * the fields the panel needs and stashes them here for the modal
  * mode swap to consume.
  *
- * Victory carries the engine `CombatEndReport` spoils (`xpGained`
- * + rolled `loot`); the presenter maps the loot into the panel's
- * spoils list and collapses the item-based currency cell.
+ * Victory carries the engine `CombatEndReport` spoils (`xpGained`,
+ * `shillings` and `loot`); the presenter maps them onto the panel's
+ * reward strip and spoils list.
  *
  * Discriminated union — the `variant` field keys off the outcome class.
  */
@@ -47,6 +47,8 @@ export type AftermathData =
           finalBlow: { cardName: string | null; damage: number; descriptor: string | null } | null;
           /** Engine-granted XP (`CombatEndReport.xpGained`). */
           xpReward: number | null;
+          /** Engine-granted shillings (`CombatEndReport.shillings`). Absent reads as none. */
+          shillings?: number;
           /**
            * Engine-granted loot from the combat-end report
            * (`CombatEndReport.loot`) — rolled and already applied to

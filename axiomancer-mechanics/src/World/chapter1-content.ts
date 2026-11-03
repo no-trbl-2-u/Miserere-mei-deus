@@ -132,7 +132,7 @@ export interface ChapterHazard {
 }
 
 /** Where an item can come from. */
-export type ChapterItemSource = 'loot-cache' | 'foe-drop' | 'elite-drop' | 'quest' | 'village';
+export type ChapterItemSource = 'loot-cache' | 'elite-drop' | 'quest' | 'village';
 
 /** One item the chapter can pay, with every source and node that pays it. */
 export interface ChapterItem {
@@ -333,8 +333,6 @@ function chapterItems(def: MapDefinition, questlines: readonly Questline[]): Cha
             if (p.kind === 'loot-cache') for (const item of p.items ?? []) add(item, 'loot-cache', n.id);
             if (p.kind === 'village') for (const v of p.anvil?.variants ?? []) add({ id: v.id, name: v.name, category: 'die-gear' }, 'village', n.id);
             if (p.kind !== 'encounter') continue;
-            const foe = p.enemySlug !== undefined ? ENEMY_REGISTRY[p.enemySlug as EnemySlug] : undefined;
-            for (const drop of foe?.loot ?? []) if (drop.item) add(drop.item, 'foe-drop', n.id);
             if (payloadDifficulty(p) !== 'elite') continue;
             const relics = p.eliteRelicDrops
                 ? relicLibrary.filter(r => p.eliteRelicDrops!.includes(r.id))

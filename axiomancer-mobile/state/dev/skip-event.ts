@@ -423,7 +423,7 @@ function skipCombat(
     const seed = options.seed ?? (Date.now() % 1_000_003);
     const witness = runCombatWitness(before, enemy, seed);
 
-    // The engine's real END_COMBAT: XP, loot, quest objectives, codex. A
+    // The engine's real END_COMBAT: XP, shillings, quest objectives, codex. A
     // kill that completed a quest routes its relic to `/item-reward` and its
     // card pick to the spoils tiles, as the combat host does, once the
     // combat screen has heard the skip and left (`deferQuestExtras`).

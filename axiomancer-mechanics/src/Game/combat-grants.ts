@@ -1,17 +1,15 @@
 /**
  * Victory-grant helpers shared by `gameReducer` and `createGameStore`.
  *
- * The store rolls loot and tallies XP before dispatching `END_COMBAT` so that
+ * The store tallies XP and shillings before dispatching `END_COMBAT` so that
  * `endCombat()` can return a populated `CombatEndReport` referring to the
- * exact same drops the reducer then applies. The reducer falls back to these
- * helpers when no pre-rolled grants are supplied (callers that dispatch
- * `END_COMBAT` directly without going through the store).
+ * exact same grants the reducer then applies. The reducer falls back to these
+ * helpers when no grants are supplied (callers that dispatch `END_COMBAT`
+ * directly without going through the store).
  */
 
-import { Item } from '../Items/types';
 import { Encounter } from '../World/types';
-import { LootTableEntry } from '../Enemy/types';
-import { rollLoot } from '../Enemy/loot';
+import { fightWage } from '../Combat/combat.mercy-check';
 
 /**
  * Stack-aware inventory append.
@@ -24,17 +22,9 @@ import { rollLoot } from '../Enemy/loot';
  */
 export { addItemStacking } from '../Items/item.reducer';
 
-/** Roll one drop per enemy in the encounter. */
-export function rollEncounterLoot(
-    encounter: Encounter,
-    rng: () => number = Math.random,
-): Item[] {
-    const drops: Item[] = [];
-    for (const enemy of encounter.enemies) {
-        const drop = rollLoot(enemy.loot as LootTableEntry[] | undefined, rng);
-        if (drop) drops.push(drop);
-    }
-    return drops;
+/** The shillings a win over this encounter pays, on its lead foe's level. */
+export function encounterWage(encounter: Encounter): number {
+    return fightWage(encounter.enemies[0]?.level ?? 0);
 }
 
 /** Total XP across every enemy in the encounter (missing values = 0). */
