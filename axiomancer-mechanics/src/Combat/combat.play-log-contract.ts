@@ -149,7 +149,8 @@ export interface FightPost extends PlayLogSource, PlayLogOrigin {
     playerLevel: number;
     /** The live HP multiplier the fight ran under, so its length compares to the measured report. */
     enemyHpMultiplier: number;
-    outcome: CombatOutcome;
+    /** `mercy` is stored rows and older APKs only (see PLAY_LOG_FIGHT_OUTCOMES). */
+    outcome: CombatOutcome | 'mercy';
     turns: number;
     vitaeStart: number;
     vitaeEnd: number;
