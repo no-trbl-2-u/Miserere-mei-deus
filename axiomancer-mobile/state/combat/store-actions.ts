@@ -64,8 +64,8 @@ function eliteFightNode(world: WorldState | undefined): string | null {
  * reward: the draft is closed as claimed (no cards, no upgrade), the fight's
  * node is retired so it never returns from a rest, and the relic is queued on
  * the item-reward screen. Returns true on a drop, so the caller withholds the
- * XP and loot (`endCombat(..., { withholdSpoils: true })`). A non-elite foe
- * rolls nothing.
+ * XP (`endCombat(..., { withholdSpoils: true })`); the shillings stand. A
+ * non-elite foe rolls nothing.
  */
 export function settleEliteRelicAction(
     store: AppStore,
@@ -95,7 +95,7 @@ export function settleEliteRelicAction(
  * (`rollEliteEquipmentDrop`: `EQUIPMENT_DROP_TUNING.elite` for a win, always
  * for a befriended elite) from the weapons and armor the player does not
  * carry, and queued on the item-reward screen as a relic is. Unlike a relic it
- * is not the whole reward: the XP, loot and card draft stand. A foe that is no
+ * is not the whole reward: the XP, shillings and card draft stand. A foe that is no
  * elite rolls nothing. Returns the piece queued, or null.
  */
 export function settleEliteEquipmentAction(

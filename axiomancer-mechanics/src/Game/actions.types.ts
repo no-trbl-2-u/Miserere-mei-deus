@@ -26,7 +26,7 @@ export type GameAction =
               /**
                * Outcome reported by the Hazard-Pattern combat driver. Defaults
                * to `'flee'` when omitted. `'victory'` / `'friendship'` grant
-               * loot, XP, quest progress, and per-foe friendship rewards;
+               * XP, shillings, quest progress, and per-foe friendship rewards;
                * `'defeat'` / `'flee'` grant nothing.
                */
               outcome?: 'victory' | 'defeat' | 'friendship' | 'flee';
@@ -40,7 +40,7 @@ export type GameAction =
               finalPlayer?: Character;
               grantedLoot?: Item[];
               grantedXp?: number;
-              /** Shillings added to `player.currency` (a befriend's payout). */
+              /** Shillings added to `player.currency`. Omitted, a victory pays its wage. */
               grantedShillings?: number;
               /** The `<enemy slug>:<move name>` keys of the DANGER moves that fired in the fight. */
               seenDangers?: string[];

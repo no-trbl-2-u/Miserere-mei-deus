@@ -47,7 +47,7 @@ import { acceptQuestStep, settleQuestLog, turnInQuestStep } from '../World/quest
 import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
-import { addItemStacking, rollEncounterLoot, totalEncounterXp } from './combat-grants';
+import { addItemStacking, encounterWage, totalEncounterXp } from './combat-grants';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
 import { enemySlugOf } from './defeat-ledger';
@@ -335,14 +335,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             let nextQuests: QuestLog = state.quests;
 
             if (outcome === 'victory' || outcome === 'friendship') {
-                // A befriend pays no XP and no loot table (shillings or a
-                // potion arrive pre-rolled by the store).
+                // A win pays XP and the wage; a foe's loot table pays nothing.
+                // A befriend pays no XP (shillings or a potion arrive
+                // pre-rolled by the store).
                 const befriended = outcome === 'friendship';
-                const grantedLoot = action.payload?.grantedLoot
-                    ?? (befriended ? [] : rollEncounterLoot(encounter, () => getRng().random()));
+                const grantedLoot = action.payload?.grantedLoot ?? [];
                 const grantedXp = action.payload?.grantedXp
                     ?? (befriended ? 0 : totalEncounterXp(encounter));
-                const grantedShillings = action.payload?.grantedShillings ?? 0;
+                const grantedShillings = action.payload?.grantedShillings
+                    ?? (befriended ? 0 : encounterWage(encounter));
 
                 let nextInventory = nextPlayer.inventory;
                 for (const drop of grantedLoot) {

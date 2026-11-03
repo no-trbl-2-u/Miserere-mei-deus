@@ -46,7 +46,7 @@ import { GameAction } from './actions.types';
 import { gameReducer, createNewGameState } from './game.reducer';
 import { GameEventEmitter, GameEvent, GameEventType } from './events';
 import { PersistenceAdapter } from './persistence/types';
-import { rollEncounterLoot, totalEncounterXp } from './combat-grants';
+import { encounterWage, totalEncounterXp } from './combat-grants';
 import { getRng } from '../Utils/rng';
 import { getLogger, isLoggingEnabled } from '../Log';
 import { getAvailableCards } from '../Cards';
@@ -97,13 +97,14 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
  *   only; quest reward XP is folded directly into `player.experience`).
  *   Zero on `'friendship'`; full XP on `'victory'`; zero on `'defeat'` /
  *   `'flee'`.
- * - `loot` — items added to `player.inventory` (pre stack-merge). Granted
- *   on victory and friendship; empty on defeat / flee.
+ * - `loot` — items added to `player.inventory` (pre stack-merge). A
+ *   friendship's potion, if it paid one; empty on every other outcome (a foe's
+ *   loot table pays nothing).
  */
 export interface CombatEndReport {
     outcome: 'victory' | 'defeat' | 'friendship' | 'flee';
     xpGained: number;
-    /** Shillings paid (a befriend's shilling payout; 0 when none). Added to `player.currency`. */
+    /** Shillings paid (a win's wage, or a befriend's shilling payout; 0 when none). Added to `player.currency`. */
     shillings: number;
     loot: Item[];
     /**
@@ -150,10 +151,10 @@ export interface GameActions {
     /**
      * Resolves the staged encounter. The Hazard-Pattern combat driver reports
      * the `outcome` and (optionally) the post-fight `finalPlayer` snapshot.
-     * Grants loot / XP / quest progress / friendship rewards accordingly and
-     * returns the after-action `CombatEndReport`. `options.withholdSpoils`
-     * grants no XP and no loot (an elite whose relic dropped: the relic is
-     * the whole reward); quest progress and the arrival still settle.
+     * Grants XP / shillings / quest progress / friendship rewards accordingly
+     * and returns the after-action `CombatEndReport`. `options.withholdSpoils`
+     * grants no XP and no items (an elite whose relic dropped: the relic takes
+     * their place); the shillings, quest progress and the arrival still settle.
      */
     endCombat: (
         outcome: CombatEndReport['outcome'],
@@ -399,8 +400,9 @@ export function createGameStore(
                 let shillings = 0;
                 let loot: Item[] = [];
                 if (outcome === 'victory') {
+                    // The wage, on every difficulty. A foe's loot table pays nothing.
                     xpGained = totalEncounterXp(encounter);
-                    loot = rollEncounterLoot(encounter, () => getRng().random());
+                    shillings = encounterWage(encounter);
                 } else if (outcome === 'friendship') {
                     // A befriend pays no XP and rolls no loot table: it pays
                     // shillings or the foe's level's potion, from the combat rng
@@ -410,9 +412,9 @@ export function createGameStore(
                     loot = payout.items;
                 }
 
+                // An elite's relic takes the XP's place; the wage still stands.
                 if (options?.withholdSpoils) {
                     xpGained = 0;
-                    shillings = 0;
                     loot = [];
                 }
 

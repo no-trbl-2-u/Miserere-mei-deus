@@ -130,6 +130,10 @@ the Expo app (`axiomancer-mobile`) presents it.
   Global may start). The Chosen's are Rose Wrap, Siphon and Draw the Fever.
   `createNewRunPlayer` writes the deck into `knownCards` when the run
   starts, so a run in progress keeps the deck it was dealt.
+- **The wage:** a won fight pays `MERCY_TUNING.shillingsPerLevel` = 3 shillings x
+  the lead foe's level (`fightWage`, `Combat/combat.mercy-check.ts`), on every
+  difficulty, even when an elite's relic drop withholds the XP. It rolls no foe
+  loot: `Enemy.loot` tables are data only and pay nothing.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
   mobile) drawn from `rewardPoolFor`: the cards of every lane in
   `unlockedLaneIds`, which is the character's two starting lanes

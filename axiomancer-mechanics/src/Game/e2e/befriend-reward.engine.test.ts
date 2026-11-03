@@ -58,13 +58,9 @@ describe('a befriend pays shillings or a potion, never XP', () => {
         expect(befriendPotionFor(10).id).toBe('greater-healing-potion');
     });
 
-    it('victory and flee are unchanged and pay no shillings', () => {
+    it('a flee pays no shillings', () => {
         setSeed(3);
         const store = createGameStore(nullAdapter);
-        store.getState().startCombat({ ...FloatEye, level: 2 });
-        const win = store.getState().endCombat('victory');
-        expect(win.shillings).toBe(0);
-        expect(win.xpGained).toBeGreaterThan(0);
         store.getState().startCombat({ ...FloatEye, level: 2 });
         expect(store.getState().endCombat('flee').shillings).toBe(0);
     });

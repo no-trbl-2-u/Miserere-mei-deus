@@ -50,9 +50,8 @@ function toAftermathLootEntry(item: Item): AftermathLootEntry {
 }
 
 /**
- * Currency reward strip cell. Combat spoils are engine-owned and
- * item-based (`CombatEndReport.loot`), so victories pay no separate
- * purse; the cell is nullable and collapses when absent.
+ * Currency reward strip cell: the shillings the engine paid
+ * (`CombatEndReport.shillings`). Nullable; the cell collapses when absent.
  */
 export interface AftermathCurrency {
     shillings: number;
@@ -177,7 +176,7 @@ export function selectAftermathViewModel(
             finalBlowPhrase: deriveFinalBlowPhrase(data),
             rewards: {
                 xp: data.xpReward,
-                currency: null,
+                currency: (data.shillings ?? 0) > 0 ? { shillings: data.shillings! } : null,
                 loot: (data.loot ?? []).map(toAftermathLootEntry),
             },
         };

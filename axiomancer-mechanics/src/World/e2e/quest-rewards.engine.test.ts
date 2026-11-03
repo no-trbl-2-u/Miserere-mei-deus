@@ -110,8 +110,9 @@ describe('every completion path pays the quest reward', () => {
         const goldQuest = quest({ id: 'kill-foe', type: 'kill', target: FOE.name }, { kind: 'currency', amount: 5 });
         const start = stateWith(goldQuest);
         const staged = gameReducer(start, { type: 'START_COMBAT', payload: { target: FOE } });
+        // The fight's own wage set aside: the quest's reward alone is under test.
         const won = gameReducer(staged, {
-            type: 'END_COMBAT', payload: { outcome: 'victory', grantedLoot: [], grantedXp: 0 },
+            type: 'END_COMBAT', payload: { outcome: 'victory', grantedLoot: [], grantedXp: 0, grantedShillings: 0 },
         });
         expect(won.player.currency).toBe(start.player.currency + 5);
     });

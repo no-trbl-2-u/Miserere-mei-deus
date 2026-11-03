@@ -98,7 +98,6 @@ describe('chapter1Content', () => {
         for (const piece of Object.values(BREAKWATER_CHAPTER_PIECES)) expect(item(piece)?.sources).toContain('quest');
         expect(item('relic-crimson-circlet')?.sources).toEqual(['elite-drop']);
         expect(c.items.some((i) => i.sources.includes('village'))).toBe(true);
-        expect(c.items.some((i) => i.sources.includes('foe-drop'))).toBe(true);
     });
 
     it('prints a readable listing with every region', () => {

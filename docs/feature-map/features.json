@@ -1891,6 +1891,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/combat-grants.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
     },
     {
@@ -1940,12 +1946,6 @@
       "from": "area:Game",
       "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Game/actions.types.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Game",
-      "to": "area:Enemy",
-      "file": "axiomancer-mechanics/src/Game/combat-grants.ts"
     },
     {
       "kind": "coupling",

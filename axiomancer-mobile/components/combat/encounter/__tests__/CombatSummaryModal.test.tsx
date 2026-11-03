@@ -97,6 +97,15 @@ describe('CombatSummaryModal', () => {
         expect(screen.queryByTestId('combat-summary-row-card-6')).toBeNull();
     });
 
+    it('prints the shillings the fight paid, and no line when it paid none', () => {
+        render(withAllProviders(<CombatSummaryModal summary={SUMMARY} shillings={15} onClose={() => undefined} />).tree);
+        expect(screen.getByTestId('combat-summary-shillings')).toBeTruthy();
+        expect(screen.getByText('+15')).toBeTruthy();
+        screen.unmount();
+        renderSummary(SUMMARY);
+        expect(screen.queryByTestId('combat-summary-shillings')).toBeNull();
+    });
+
     it('CONTINUE closes, on every outcome', () => {
         for (const outcome of ['victory', 'defeat', 'mercy'] as const) {
             const onClose = jest.fn();

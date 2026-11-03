@@ -52,6 +52,21 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
         expect(store.getState().player!.experience).toBe(before + (enemy.xpReward ?? 0));
     });
 
+    it('victory returns the wage it paid, the number the summary prints', () => {
+        const { store, enemy, combat: finalState } = realFight();
+        const before = store.getState().player!.currency;
+
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
+
+        expect(paid).toBe(3 * enemy.level);
+        expect(store.getState().player!.currency).toBe(before + paid);
+    });
+
+    it('defeat returns no wage', () => {
+        const { store, enemy, combat: finalState } = realFight();
+        expect(applyHazardOutcome(store, 'defeat' as CombatOutcome, finalState, enemy)).toBe(0);
+    });
+
     it('defeat routes through endCombat too (no XP, encounter still clears)', () => {
         const { store, enemy, combat: finalState } = realFight();
 

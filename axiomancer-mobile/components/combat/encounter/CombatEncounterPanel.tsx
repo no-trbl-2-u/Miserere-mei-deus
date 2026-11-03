@@ -14,7 +14,7 @@
  * Live play (`persistOutcome`) hand-rolls only the write-backs that have no
  * engine equivalent — floating dice, banked Souls, and final HP →
  * player.health — then routes the outcome through the engine's real `endCombat` reducer for everything else
- * (XP, loot, quest kill-objective advancement + completion rewards, and, on
+ * (XP, shillings, quest kill-objective advancement + completion rewards, and, on
  * a merciful win, the authored `friendshipReward` payload: flags, codex
  * unlocks, faction deltas). `beginHazardEncounter`
  * stages `state.currentEncounter` via `startCombat` so `endCombat` has a real
@@ -133,7 +133,7 @@ export interface CombatEncounterPanelProps {
     /** Deterministic seed. */
     seed?: number;
     /**
-     * Live play: hand-roll HP/XP/loot/level-up back onto the persistent
+     * Live play: hand-roll HP/XP/shillings/level-up back onto the persistent
      * player on combat end. Dev sandbox passes false so test runs don't
      * mutate the player's real progression.
      */
@@ -192,7 +192,7 @@ function mapHazardOutcomeToEndCombat(
  * regardless of how the fight ended), and final HP (persists for every
  * outcome except defeat — the host's run-reset full-heals there) — then
  * dispatches the real `game.reducer.ts` `endCombat` for
- * everything else: XP, loot, quest kill-objective advancement + completion
+ * everything else: XP, shillings, quest kill-objective advancement + completion
  * rewards, and — on a merciful win — the authored `friendshipReward`
  * payload (flags, codex unlock, faction deltas). `endCombat` reads its own `Enemy` off the `currentEncounter`
  * `beginHazardEncounter` staged via `startCombat`, so no `finalPlayer` is
@@ -202,8 +202,8 @@ function mapHazardOutcomeToEndCombat(
  * separately (rolled into the store on victory, claimed via
  * `claimCombatRewardAction`). A won elite fight rolls its relic first
  * (`settleEliteRelicAction`, from `relics`, the relic library by default):
- * on a drop the relic is the whole reward and `endCombat` withholds the XP
- * and loot.
+ * on a drop the relic takes the XP's place and `endCombat` withholds it; the
+ * shillings stand. Returns the shillings the fight paid, for the summary.
  */
 export function applyHazardOutcome(
     store: StoreLike,
@@ -211,7 +211,7 @@ export function applyHazardOutcome(
     finalState: CombatEncounterState,
     enemy: Enemy,
     relics?: readonly Equipment[],
-): void {
+): number {
     const finalHp = finalState.player.health;
     // The surviving floating dice, in engine truth (spent dice
     // are gone forever; unspent ones arrive in the next battle's opening tray).
@@ -232,12 +232,12 @@ export function applyHazardOutcome(
         return { player };
     });
     // Resolve the staged encounter through the engine's real
-    // endCombat reducer: XP, loot, quest kill-objective advancement +
+    // endCombat reducer: XP, shillings, quest kill-objective advancement +
     // completion rewards, and (on 'friendship') flags/codex/faction
-    // deltas, all read off Enemy.xpReward / .loot /
+    // deltas, all read off Enemy.xpReward / .level /
     // .friendshipReward / .journalEntry via state.currentEncounter.
-    // A won elite fight rolls its relic FIRST: a drop is the whole reward,
-    // so the XP and loot are withheld and the card draft never opens.
+    // A won elite fight rolls its relic FIRST: on a drop the XP is withheld
+    // and the card draft never opens; the shillings stand.
     const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
     // A beaten elite may also drop a lane piece, a befriended one always hands
     // one: on top of the relic roll, never the whole reward.
@@ -271,6 +271,7 @@ export function applyHazardOutcome(
     }
     // The run log: the node, the XP, the levels and the drops this fight paid.
     recordFightSettled(store, playerBefore, report ?? null, outcome);
+    return report?.shillings ?? 0;
 }
 
 // Per-keyword type tag for the inspect-modal definition panels. The PRIMARY keyword
@@ -364,6 +365,8 @@ export function CombatEncounterPanel({
     const rewardOffers = useGameState((s) => s.combatReward?.offers ?? EMPTY_OFFERS);
     const rewardsClaimed = useGameState((s) => s.combatReward?.claimed ?? false);
     const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
+    // What the engine paid for this fight, printed on the summary.
+    const [shillingsPaid, setShillingsPaid] = useState(0);
 
     const [state, setState] = useState<CombatEncounterState | null>(null);
     // Multi-card staging (hazard model): several cards can be staged at once; each
@@ -699,7 +702,7 @@ export function CombatEncounterPanel({
     useEffect(() => {
         if (!live.finalOutcome || wroteBackRef.current) return;
         wroteBackRef.current = true;
-        if (persistOutcome) applyHazardOutcome(store, live.finalOutcome, live, enemy);
+        if (persistOutcome) setShillingsPaid(applyHazardOutcome(store, live.finalOutcome, live, enemy));
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
 
     // The play log (phase BE2c): every live state goes to the fight recorder,
@@ -1306,7 +1309,7 @@ export function CombatEncounterPanel({
             )}
 
             {summary && (rewardsClaimed || live.finalOutcome !== 'victory') && (
-                <CombatSummaryModal summary={summary} onClose={handleExit} />
+                <CombatSummaryModal summary={summary} shillings={shillingsPaid} onClose={handleExit} />
             )}
 
             {/* drag ghost — persistently mounted after the first drag; dragShown

@@ -7,7 +7,7 @@
  *   1. createGameStore + createEventEmitter
  *   2. START_COMBAT against FloatEye (low-HP enemy → cheap victory)
  *   3. the Hazard-Pattern driver decides the fight outside the store
- *   4. endCombat('victory') — loot + XP applied
+ *   4. endCombat('victory') — XP + shillings applied
  *   5. LEVEL_UP — confirms the placeholder level-up reducer
  *   6. MOVE_TO_NODE to bw-w2
  *   7. SAVE_GAME (via the memory adapter)
@@ -70,7 +70,7 @@ describe('Game loop — full transcript through gameReducer', () => {
         expect(store.getState().currentEncounter!.enemies[0]!.id).toBe(FloatEye.id);
 
         // 2. END_COMBAT — combat resolution lives outside the store, so we
-        //    report the victory outcome; it grants enemy XP and rolls loot.
+        //    report the victory outcome; it grants enemy XP and the wage.
         const report = store.getState().endCombat('victory');
         expect(report.outcome).toBe('victory');
         expect(report.xpGained).toBe(FloatEye.xpReward);

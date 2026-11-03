@@ -245,6 +245,9 @@ export type {
     GrantOutcome,
 } from './Items';
 
+// What a won fight pays.
+export { MERCY_TUNING, fightWage } from './Combat/combat.mercy-check';
+
 // ─── Cards ───────────────────────────────────────────────────────────────────
 export type {
     Card, CardAspect, CardTier, CardTarget,
