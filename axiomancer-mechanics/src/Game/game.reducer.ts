@@ -49,6 +49,7 @@ import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
 import { addItemStacking, encounterWage, totalEncounterXp } from './combat-grants';
 import { applySpareReward } from '../Combat/combat.spare-reward';
+import { spareWage } from '../Combat/combat.mercy-check';
 import { getRng } from '../Utils/rng';
 import { generateRunId } from './run-loop';
 import { enemySlugOf } from './defeat-ledger';
@@ -321,6 +322,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
             // The befriended / defeated foe is the encounter's lead enemy.
             const foe: Enemy = encounter.enemies[0]!;
+            // A foe spared at the mercy check is a won fight: quests, the defeat
+            // ledger and the node settle as any victory, and only the pay differs.
+            const spared = outcome === 'victory' && action.payload?.spared === true;
 
             // Promote the driver's final player snapshot (post-fight HP /
             // effects) when provided; restore the root inventory on defeat /
@@ -340,11 +344,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // A befriend pays no XP (shillings or a potion arrive
                 // pre-rolled by the store).
                 const befriended = outcome === 'friendship';
+                const noXp = befriended || spared;
                 const grantedLoot = action.payload?.grantedLoot ?? [];
                 const grantedXp = action.payload?.grantedXp
-                    ?? (befriended ? 0 : totalEncounterXp(encounter));
+                    ?? (noXp ? 0 : totalEncounterXp(encounter));
                 const grantedShillings = action.payload?.grantedShillings
-                    ?? (befriended ? 0 : encounterWage(encounter));
+                    ?? (befriended ? 0 : spared ? spareWage(foe.level) : encounterWage(encounter));
 
                 let nextInventory = nextPlayer.inventory;
                 for (const drop of grantedLoot) {
@@ -369,25 +374,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 }
             }
 
-            // Friendship resolutions append the per-enemy
+            // Friendship resolutions and spared foes append the per-enemy
             // `flagSet` to state.flags (de-duped). Reuses the existing
             // requires.flag machinery so downstream dialogue / quest
             // content can gate on the flag without engine work.
             let nextFlags = state.flags;
-            if (outcome === 'friendship') {
+            if (outcome === 'friendship' || spared) {
                 const flag = foe.friendshipReward?.flagSet;
                 if (flag && !nextFlags.includes(flag)) {
                     nextFlags = [...nextFlags, flag];
                 }
             }
 
-            // Friendship resolutions auto-fire the per-enemy
+            // Friendship resolutions and spared foes auto-fire the per-enemy
             // codex unlock. The entry's id is appended to
             // state.codex.unlockedEntries (de-duped); the store layer
             // surfaces { id, title } on
             // CombatEndReport.friendshipReward.codexEntryUnlocked.
             let nextCodex = state.codex;
-            if (outcome === 'friendship') {
+            if (outcome === 'friendship' || spared) {
                 const entry = foe.journalEntry;
                 if (entry && !nextCodex.unlockedEntries.includes(entry.id)) {
                     nextCodex = {

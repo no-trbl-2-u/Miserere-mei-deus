@@ -136,7 +136,7 @@ export function buildCombatSummary(state: CombatEncounterState): CombatSummary {
         .sort((a, b) => (b.dotDamage + b.damageDealt) - (a.dotDamage + a.damageDealt))[0];
     return {
         outcome,
-        headline: HEADLINES[outcome],
+        headline: state.mercyCheck === 'spared' ? HEADLINES.mercy : HEADLINES[outcome],
         rows: sorted,
         totalDotDamage,
         directDamage,

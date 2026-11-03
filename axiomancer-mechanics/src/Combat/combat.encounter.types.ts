@@ -755,6 +755,12 @@ export interface CombatEncounterState {
      *  mercy choice. */
     mercyChoiceActive?: boolean;
     /**
+     * The mercy check on a won fight (`rollMercyCheck`): absent until it is
+     * rolled, `none` when it did not fire, `offered` while the prompt waits, then
+     * `spared` or `finished`. The outcome stays `victory` either way.
+     */
+    mercyCheck?: 'none' | 'offered' | 'spared' | 'finished';
+    /**
      * Permanent wild-die pool growth. Unlike `dice` (rolled
      * fresh each round), these persist for the REST of the encounter once
      * granted by a `grant_permanent_wild_die` card special mechanic. Any
