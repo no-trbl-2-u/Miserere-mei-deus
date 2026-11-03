@@ -1339,6 +1339,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Cards",
+      "file": "axiomancer-mechanics/src/Combat/combat.spare-reward.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Cards",
       "file": "axiomancer-mechanics/src/Combat/combat.stage-profiles.ts"
     },
     {
@@ -1412,6 +1418,12 @@
       "from": "area:Combat",
       "to": "area:Character",
       "file": "axiomancer-mechanics/src/Combat/combat.rewards.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Combat/combat.spare-reward.ts"
     },
     {
       "kind": "coupling",
@@ -1675,6 +1687,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Combat/combat.spare-reward.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Combat/combat.stage-profiles.ts"
     },
     {
@@ -1891,6 +1909,12 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/actions.types.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/combat-grants.ts"
     },
     {
@@ -1898,6 +1922,12 @@
       "from": "area:Game",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/game.reducer.ts"
     },
     {
       "kind": "coupling",
