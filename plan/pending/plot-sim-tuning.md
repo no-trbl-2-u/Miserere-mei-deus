@@ -22,9 +22,11 @@ keeping the starting weapon barely moved one (24 to 22): neither is built.
   (`KILLER_SIGNATURES`) and takes `mercyChoice: 'exploit'`, keeping its mercy lines first. T is taking sparing out of
   the game in a separate plot, and this change stands either way.
 - **Guard when hit.** The Defender's rule (`card.verbClass === 'defend'` or a `guard`/`holdGuard` verb, while
-  `foeMeansToHit`, scores `BAND_FIRST`) becomes one shared helper, and the Blood Price, Merciful and Elementalist
-  rankings use it. A ranking's `-Infinity` refusals stay refusals. [T to confirm #1] The Wanderer and the personas keep
-  `PLAYER_WITNESS` as A6 and A7 state, because the rule cost the Wanderer clears (7 to 4).
+  `foeMeansToHit`, scores `BAND_FIRST`) becomes one shared helper, and every fighter but the Wanderer uses it: the
+  Blood Price, Merciful and Elementalist rankings, and the four personas. A ranking's `-Infinity` refusals stay
+  refusals. Confirmed by T (2026-11-02): "Every one except wanderer which should be our floor". The Wanderer keeps
+  plain `PLAYER_WITNESS`, which stays unchanged as A6 states; the personas ship with it (A7) and this chunk then moves
+  them to the witness plus the helper, so it waits on 135.3.
 
 **SM2i, the anvil.** `RunVillageDecision` has no anvil today. `RunPolicy` gains `visitAnvil(ctx)`, asked when the
 village has one, before the rest and shop steps. Its context carries VITAE, the purse, the bed's price, the prices and
@@ -33,8 +35,9 @@ order. The driver carries that out through the app's own `state/blacksmith/store
 session runs, and a refused step ends that colour rather than the run. One shared greedy helper reads everything from
 data: it keeps back the bed's price when under half VITAE, upgrades one card first (the bot's own lane's when it has
 one) when the budget reaches the upgrade's price, then hones and tempers its lane's stat colour before the others.
-Prices come from the blacksmith code, never retyped here. [T to confirm #2] Every bot uses it, the Wanderer and the
-personas included, because T's complaint was that none of them did.
+Prices come from the blacksmith code, never retyped here. Confirmed by T (2026-11-02): "Every one except wanderer
+which should be our floor". Every lane bot and persona uses the helper, which changes what the nightly report measures;
+the Wanderer's `visitAnvil` spends nothing, so it stays the floor the others are read against.
 
 **SM2j, run options.** New `sim:run` flags, all carried on `SimRunRequest` and applied only inside
 `axiomancer-mobile/sim/`:
@@ -66,12 +69,13 @@ no exit code depends on it.
 - **A?simfight** No lane bot spares: `laneFightPolicy('merciful')` has `mercyChoice: 'exploit'` and no mercy signature,
   and a Merciful batch through the driver spares no foe. Its rule test and `run-archetypes.test.ts` say so.
 - **A?simguard** One shared helper holds the guard-when-hit rule; the Defender, Blood Price, Merciful and Elementalist
-  rankings use it, seam tests over a hitting and a non-hitting foe cover each, and a card ranked `-Infinity` stays
-  `-Infinity`. `PLAYER_WITNESS` and `combat.sim-policies.ts` are unchanged.
+  rankings and the four personas use it, seam tests over a hitting and a non-hitting foe cover each, and a card ranked
+  `-Infinity` stays `-Infinity`. The Wanderer still fights with `PLAYER_WITNESS`, and `PLAYER_WITNESS` and
+  `combat.sim-policies.ts` are unchanged.
 - **A?simanvil** `RunPolicy` has a `visitAnvil` seam, the driver carries its answer out through the blacksmith store
   actions before the village's other steps, an illegal answer throws as other seams do, and the no-id guard covers the
-  helper. A driver test shows a bot with shillings at an anvil spends them there and owns the result; another shows it
-  keeps back the bed's price when under half VITAE.
+  helper. A driver test shows a lane bot and a persona with shillings at an anvil spend them there and own the result;
+  another shows the helper keeps back the bed's price when under half VITAE; another shows the Wanderer spends nothing.
 - **A?simoptions** `sim:run` takes `--shillings`, `--boss-level`, `--start-relic`, `--no-relic-stats`, `--fight`,
   `--no-anvil`, `--no-guard` and a list for `--policy`. Tests show each changes the run as named, and that with
   `--no-relic-stats` the worn relic adds no stat while `relicLibrary`'s entry and the library's own tests are unchanged.
@@ -81,15 +85,8 @@ no exit code depends on it.
   policy: clears, average level, average boss damage, average deck by lane and where failed runs ended. Tests cover a
   run that never met the boss (null, left out of the average). No exit code depends on these numbers.
 ~~~
-~~~ questions
-- [T to confirm #1] Which bots use guard when hit? Default: Blood Price, Merciful and Elementalist, joining the Defender;
-  the Wanderer and personas stay as they are, since the rule cost the Wanderer clears. Or: every sim fighter, as first
-  asked on 2026-11-02.
-- [T to confirm #2] Which bots use the anvil? Default: every bot, the personas and Wanderer included, which also changes
-  what the nightly report measures. Or: only when a batch asks for it.
-~~~
 ~~~ chunks
-- [ ] **135.?simfight** The lane bots never spare, and guard when hit · S · closes A?simfight, A?simguard · needs — · alias: SM2h
+- [ ] **135.?simfight** The lane bots never spare, and guard when hit · S · closes A?simfight, A?simguard · needs 135.3 · alias: SM2h
 - [ ] **135.?simanvil** The bots use the anvil · M · closes A?simanvil · needs 135.3 · alias: SM2i
 - [ ] **135.?simoptions** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A?simoptions · needs 135.?simfight, 135.?simanvil · alias: SM2j
 - [ ] **135.?simreport** Boss damage, where runs ended and a batch table in the sim's output · S · closes A?simreport · needs 135.?simoptions · alias: SM2k
