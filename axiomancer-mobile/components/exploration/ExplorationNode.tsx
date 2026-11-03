@@ -4,6 +4,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, w
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { NodeMark } from '@/components/NodeMark';
+import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useTooltip } from '@/hooks/useTooltip';
 import { MapCameraContext, MapSheetContext } from './mapSheetContext';
 import { KindToken } from './KindToken';
@@ -32,6 +33,18 @@ interface ExplorationNodeProps {
 // margin (px), so centring is correct regardless of the canvas size the
 // map is spread across (see MapCanvas's per-sheet scale).
 export const NODE_SIZE = 44;
+
+/**
+ * The node the player is STANDING on, in device px before the camera's
+ * counter-scale.
+ *
+ * It is not a glyph: it wears the same pilgrim portrait the combat dock
+ * shows, inside a sulfur ring, and it draws larger than every other mark
+ * (T, 2026-11-02 — "it's too hard to know which node you're on"). One face
+ * in both places is the one-card-face rule applied to the chart: the thing
+ * that is YOU looks the same wherever you meet it.
+ */
+export const CURRENT_NODE_SIZE = 66;
 
 /**
  * The smallest a node mark draws on screen, in device px. A phone fits a whole
@@ -94,6 +107,10 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
     // with business).
     const roadBack = n.kind === 'completed' && n.walkable === true;
     const actsAgain = roadBack && n.actsAgain === true;
+    // The node underfoot wears the player's own face, drawn bigger than any
+    // other mark; every other node keeps its `<NodeMark>` glyph.
+    const here = n.kind === 'current';
+    const size = here ? CURRENT_NODE_SIZE : NODE_SIZE;
 
     return (
         <AnimatedTouchable
@@ -122,7 +139,14 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
             testID={`node-${n.id}`}
             style={[
                 styles.nodeWrap,
+                {
+                    width: size,
+                    marginLeft: -size / 2,
+                    marginTop: -size / 2,
+                    transformOrigin: `${size / 2}px ${size / 2}px`,
+                },
                 { left: `${left}%` as unknown as number, top: `${top}%` as unknown as number },
+                here && styles.hereWrap,
                 counterScale,
             ]}
         >
@@ -130,13 +154,26 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
                 testID={roadBack ? `node-${n.id}-road-back` : undefined}
                 style={[
                     styles.glyphWrap,
+                    { width: size, height: size, borderRadius: size / 2 },
                     roadBack && [styles.roadBack, { borderColor: actsAgain ? AXM.sulfur : AXM.parchment, backgroundColor: AXM.nodeBg }],
                     isSelected && { borderColor: AXM.sulfur, borderWidth: 2, borderStyle: 'solid' as const },
                     n.kind === 'available' && pulseStyle,
                 ]}
             >
-                <NodeMark kind={n.kind} size={NODE_SIZE} />
-                {n.showKind === true && (
+                {here ? (
+                    <View
+                        testID={`node-${n.id}-portrait`}
+                        style={[
+                            styles.hereClip,
+                            { width: size, height: size, borderRadius: size / 2, borderColor: AXM.sulfur, backgroundColor: AXM.nodeBg },
+                        ]}
+                    >
+                        <PlayerPortraitImage width={size} height={size} fit="cover" />
+                    </View>
+                ) : (
+                    <NodeMark kind={n.kind} size={NODE_SIZE} />
+                )}
+                {n.showKind === true && !here && (
                     <KindToken type={n.type} state={n.kind} size={NODE_SIZE} testID={`node-${n.id}-kind`} />
                 )}
             </Animated.View>
@@ -163,6 +200,17 @@ const useStyles = makeStyles((AXM) => ({
         // selected label hanging below cannot pull the mark off it.
         transformOrigin: `${NODE_SIZE / 2}px ${NODE_SIZE / 2}px`,
         zIndex: 3,
+    },
+    // The portrait mark draws OVER its neighbours, so a node crowded in
+    // beside it can never cut the player's own face.
+    hereWrap: {
+        zIndex: 5,
+    },
+    hereClip: {
+        overflow: 'hidden',
+        borderWidth: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     glyphWrap: {
         width: NODE_SIZE,

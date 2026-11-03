@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { StatBar } from './StatBar';
-import { SectionLabel } from './SectionLabel';
 import { useGameState } from '@/state/GameStoreProvider';
 
 interface StatusCardProps {
@@ -16,6 +15,12 @@ interface StatusCardProps {
   level?: number;
   hp?: number;
   hpMax?: number;
+  /**
+   * The place the pilgrim stands in — the map's name, printed beside the
+   * character's and larger than it, since where you are changes and who you
+   * are does not (T, 2026-11-02). Omitted off the map.
+   */
+  mapName?: string;
 }
 
 export function StatusCard(props: StatusCardProps = {}) {
@@ -44,9 +49,17 @@ export function StatusCard(props: StatusCardProps = {}) {
         </View>
         <View style={styles.nameCol}>
           <Text style={styles.name} numberOfLines={1}>{name}</Text>
-          <SectionLabel size={9} style={styles.levelSubtitle}>
-            LVL {level} · PILGRIM
-          </SectionLabel>
+          {props.mapName !== undefined && props.mapName.length > 0 && (
+            <Text
+              style={styles.mapName}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.6}
+              testID="status-card-map-name"
+            >
+              {props.mapName}
+            </Text>
+          )}
         </View>
       </View>
       <View style={styles.barsCol}>
@@ -93,7 +106,7 @@ const useStyles = makeStyles((AXM) => ({
   },
   name: {
     fontFamily: FONTS.gothic,
-    fontSize: 15,
+    fontSize: 13,
     lineHeight: 18,
     color: AXM.parchment,
     letterSpacing: 1,
@@ -102,8 +115,11 @@ const useStyles = makeStyles((AXM) => ({
     marginTop: 6,
     gap: 6,
   },
-  levelSubtitle: {
-    color: AXM.bone,
-    marginTop: 2,
+  mapName: {
+    fontFamily: FONTS.gothic,
+    fontSize: 24,
+    lineHeight: 27,
+    color: AXM.parchment,
+    marginTop: 1,
   },
 }));

@@ -12,11 +12,15 @@ import { TRACKER_HEAD, trackerMoreLine } from '@/state/presenters/quest.copy';
  * name and its next unmet objective with its count, three rows then `+n more`.
  * Tapping it opens the memoir's quest list. Draws nothing for an empty log.
  * Reads the log through `selectQuestTrackerVM`; decides no rule.
+ *
+ * It sits at the FOOT of the exploration screen (T, 2026-11-02), in the slot
+ * the map's flavour line used to hold, so `fallback` is what that slot shows
+ * for a pilgrim with no active quest.
  */
-export function QuestTracker() {
+export function QuestTracker({ fallback = null }: { fallback?: React.ReactNode } = {}) {
     const quests = useGameState((s) => s.quests);
     const vm = React.useMemo(() => selectQuestTrackerVM({ quests }), [quests]);
-    if (vm.rows.length === 0) return null;
+    if (vm.rows.length === 0) return <>{fallback}</>;
     return <QuestTrackerBody vm={vm} />;
 }
 
@@ -49,7 +53,7 @@ function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> 
 const useStyles = makeStyles((AXM) => ({
     box: {
         marginHorizontal: 10,
-        marginBottom: 4,
+        marginBottom: 8,
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderWidth: 1,

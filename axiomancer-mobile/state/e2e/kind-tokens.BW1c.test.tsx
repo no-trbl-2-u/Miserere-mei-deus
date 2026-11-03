@@ -113,7 +113,7 @@ describe('A8: which nodes wear their kind token', () => {
         expect(shownTokens(vm)).toEqual(expectedTokens(vm));
     });
 
-    it('the map screen draws a token on exactly those nodes', () => {
+    it('the map screen draws a token on exactly those nodes but the one underfoot', () => {
         const store = freshBreakwater();
         const vm = selectExplorationViewModel(store.getState());
         const tree = render(
@@ -125,7 +125,11 @@ describe('A8: which nodes wear their kind token', () => {
         );
         act(() => { jest.advanceTimersByTime(1); });
         const drawn = vm.nodes.filter((n) => tree.queryByTestId(`node-${n.id}-kind`) !== null).map((n) => n.id).sort();
-        expect(drawn).toEqual(shownTokens(vm));
+        // The node underfoot wears the pilgrim's PORTRAIT instead of a glyph
+        // (T, 2026-11-02), so it is the one `showKind` node with no token: a
+        // kind disc over the player's own face would be noise.
+        expect(drawn).toEqual(shownTokens(vm).filter((id) => id !== vm.currentNodeId));
+        expect(tree.queryByTestId(`node-${vm.currentNodeId}-portrait`)).not.toBeNull();
     });
 });
 

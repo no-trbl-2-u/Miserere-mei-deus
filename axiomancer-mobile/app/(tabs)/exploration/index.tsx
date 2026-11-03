@@ -1,10 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text } from 'react-native';
-import { FONTS } from '@/theme/axm';
-import { makeStyles } from '@/theme/runtime';
 import { ScreenBg } from '@/components/ScreenBg';
 import { StatusCard } from '@/components/StatusCard';
-import { SectionLabel } from '@/components/SectionLabel';
 import { MapCanvas } from '@/components/exploration/MapCanvas';
 import { NodeGrid } from '@/components/exploration/NodeGrid';
 import { NodeConfirmPanel } from '@/components/exploration/NodeConfirmPanel';
@@ -23,7 +19,6 @@ import { selectHasAnyActiveSession } from '@/state/presenters/navigation.engine'
 import { selectIsInCombat } from '@mechanics';
 
 export default function ExplorationScreen() {
-    const styles = useStyles();
     const { inCombat, recordDeepestNode } = useCombatMode();
     const [nodeTip, setNodeTip] = useState<string | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -182,23 +177,12 @@ export default function ExplorationScreen() {
 
     return (
         <ScreenBg scrollable={false}>
-            <StatusCard />
-
-            {/* Region Header */}
-            <View style={styles.regionHeader}>
-                <View style={styles.regionHeadText}>
-                    <SectionLabel size={9} style={styles.continentLabel}>{vm.continent}</SectionLabel>
-                    <Text style={styles.regionTitle} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{vm.region}</Text>
-                    <Text style={styles.regionSub}>{vm.regionProgress}</Text>
-                </View>
-            </View>
-
-            <QuestTracker />
+            <StatusCard mapName={vm.region} />
 
             {/* Node Graph */}
-            {/* Legend/compass copy ride the `overlays` slot (viewport-fixed),
+            {/* The compass copy rides the `overlays` slot (viewport-fixed),
                 not `children` (the pannable canvas) — CRITIQUE pass 20. */}
-            <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays legend={vm.legend} />}>
+            <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />}>
                 <NodeGrid
                     nodes={vm.nodes}
                     onNodePress={onNodePress}
@@ -210,47 +194,33 @@ export default function ExplorationScreen() {
                 <EventBadge eventCallout={vm.eventCallout} />
             )}
 
-            {/* Select a node on the map → name + brief explanation + confirm. */}
-            <NodeConfirmPanel
-                selected={selectedOption}
-                shut={shutNode}
-                onConfirm={onConfirmMove}
-                onCancel={() => setSelectedNodeId(null)}
-                emptyMessage={vm.drawerCopy.emptyMessage}
-            />
+            {/* Select a node on the map → name + brief explanation + confirm.
+                With nothing selected the slot belongs to the ACTIVE QUEST
+                (T, 2026-11-02): the quest tracker stands where the map's
+                flavour line used to, and that line is only the fallback for
+                a pilgrim with an empty quest log. */}
+            {selectedOption !== null || shutNode !== null ? (
+                <NodeConfirmPanel
+                    selected={selectedOption}
+                    shut={shutNode}
+                    onConfirm={onConfirmMove}
+                    onCancel={() => setSelectedNodeId(null)}
+                    emptyMessage={vm.drawerCopy.emptyMessage}
+                />
+            ) : (
+                <QuestTracker
+                    fallback={(
+                        <NodeConfirmPanel
+                            selected={null}
+                            onConfirm={onConfirmMove}
+                            onCancel={() => setSelectedNodeId(null)}
+                            emptyMessage={vm.drawerCopy.emptyMessage}
+                        />
+                    )}
+                />
+            )}
 
             {nodeTip !== null && <NodeToast tip={nodeTip} />}
         </ScreenBg>
     );
 }
-
-const useStyles = makeStyles((AXM) => ({
-    regionHeader: {
-        paddingHorizontal: 14,
-        paddingTop: 12,
-        paddingBottom: 4,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
-    },
-    // Takes the row's full width so the title never wraps; a name too
-    // long for one line shrinks (native) or truncates (web) instead.
-    regionHeadText: { flex: 1, minWidth: 0 },
-    regionTitle: {
-        fontFamily: FONTS.gothic,
-        fontSize: 26,
-        lineHeight: 28,
-        color: AXM.parchment,
-        marginTop: 2,
-    },
-    regionSub: {
-        fontFamily: FONTS.serif,
-        fontSize: 11,
-        color: AXM.bone,
-        fontStyle: 'italic',
-        marginTop: 1,
-    },
-    continentLabel: {
-        color: AXM.bone,
-    },
-}));
