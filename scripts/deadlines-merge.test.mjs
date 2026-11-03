@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url'
 
 import { mergeBuildPlan } from './build-plan-merge.mjs'
 import { dupCounts, mergeDeadlines, mergeRow, tidyItems } from './deadlines-merge.mjs'
+import { ITEM_ROW } from './deadlines-lib.mjs'
 import { rederiveStatus } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -335,7 +336,10 @@ test('a real git merge with the driver registered keeps both plots, and the live
       const lines = text.split('\n')
       const at = lines.indexOf('| Status | Due | Item | Goal | How AI helps | Window | Rows | Waits on |')
       assert.ok(at > 0)
-      lines.splice(at + 2, 0, `| [ ] | ${due} | Item ${tag} | W1 | T | ${tag} | - | - |`)
+      const row = `| [ ] | ${due} | Item ${tag} | - | - | W1 | T | ${tag} |`
+      // tidyItems sorts only when every row of the block parses, so an unparsed row would pass on insertion order.
+      assert.ok(ITEM_ROW.test(row))
+      lines.splice(at + 2, 0, row)
       return lines.join('\n')
     }
     git('switch', '-q', '-c', 'plot-t')
