@@ -33,7 +33,7 @@
  *   --stdin              JSONL answers (shared io.ts layer)
  *   --json-events        machine-clean stdout event stream; --auto runs emit
  *                        the full per-play transcript (turnStart /
- *                        signature / card / turnEnd / resolvedPhase / mercy)
+ *                        signature / card / turnEnd / resolvedPhase)
  *   --state-log <path>   JSONL state mutation log
  *
  * Logic stays in the engine modules. This file only parses flags, prompts,

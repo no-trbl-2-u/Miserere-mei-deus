@@ -227,12 +227,6 @@ function damageTier3<K extends string>(damage: number, high: K, mid: K, low: K):
     return low;
 }
 
-function levelTier3<K extends string>(level: number, low: K, mid: K, high: K): K {
-    if (level <= 2) return low;
-    if (level <= 5) return mid;
-    return high;
-}
-
 /**
  * Pick a chronicle-flavour final-blow phrase. Prefers per-foe
  * lines from the engine (`Enemy.finalBlowLines`); falls back to a

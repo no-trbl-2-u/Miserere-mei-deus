@@ -18,7 +18,7 @@ the same functions. The public surface is re-exported through
 | --- | --- |
 | The fight state, `CombatEncounterState` | `Combat/combat.encounter.types.ts` |
 | Phases (`CombatEncounterPhase`): `reveal`, `phase-play`, `complete`, … | same file |
-| Outcomes (`CombatOutcome`): `victory`, `mercy`, `defeat` | same file |
+| Outcomes (`CombatOutcome`): `victory`, `defeat`, `retreat` | same file |
 | The typed event stream (`CombatEvent`) the UI renders | same file |
 | Dice (`CombatManaDie`, `CombatDieColor`) and die gear (`UpgradeableDieGear`) | same file |
 | Enemy intent (`CombatThreatPhase`, `CombatThreatAction`, `CombatIntentType`) | same file |
@@ -27,7 +27,7 @@ The fields a reader needs first: `player` and `enemy` (deep clones; VITAE is
 `health` / `maxHealth`), `hand`, `drawPile`, `discard`, `deck`, `dice` (this
 turn's tray), `reserve` (banked dice), `floatingDice`, `conviction`, `guard`,
 `momentumV2`, `threatPhases` and `currentPhaseIndex` (the enemy deck),
-`round`, `turnTakenThisPhase`, `mercyChoiceActive`, `finalOutcome` and `log`.
+`round`, `turnTakenThisPhase`, `finalOutcome` and `log`.
 
 ## Starting a fight
 

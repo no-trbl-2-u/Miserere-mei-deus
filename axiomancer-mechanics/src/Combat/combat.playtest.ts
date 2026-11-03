@@ -511,7 +511,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
     lines.push('');
 
     const header = `  ${'stage'.padEnd(11)}${'enemy'.padEnd(26)}${'policy'.padEnd(13)}${'deck'.padEnd(22)}`
-        + `${'win'.padStart(5)}  ${'V/M/D/R'.padEnd(12)}${'rounds'.padStart(6)}`
+        + `${'win'.padStart(5)}  ${'V/D/R'.padEnd(12)}${'rounds'.padStart(6)}`
         + `${'statusEng'.padStart(10)}${'dotFrac'.padStart(8)}${'strike'.padStart(7)}`
         + `${'util'.padStart(6)}${'H'.padStart(5)}${'dom'.padStart(6)}${'cqi'.padStart(6)}`;
     lines.push(header);
@@ -530,7 +530,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
 
     // Win-path mix per cell.
     lines.push('');
-    lines.push('Win-path mix (per cell — victory/mercy/defeat):');
+    lines.push('Win-path mix (per cell — victory/defeat):');
     for (const cell of report.cells) {
         const w = cell.stats.winPathCounts;
         lines.push(

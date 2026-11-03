@@ -61,7 +61,7 @@ if (require.main === module) {
     process.stdout.write(
         `\nHazard combat sim — policy=${policy} runs=${runs} seed=${seed} loadout=[${loadout.join(', ')}]\n`
         + `(win = enemy HP→0; `
-        + `V/M/D/R = victory/merciful/defeat/retreat)\n`
+        + `V/D/R = victory/defeat/retreat)\n`
         + '(cqi = OBJECTIVE FUNCTION v2, Combat/combat.objective.ts: spine = the LOCKED systems\n'
         + '  con/sur/dic = Conviction / Surge meter / Dice; arc = per-turn shape; wid = decision\n'
         + '  width; idn = deck identity. statusEng is the legacy doctrine warning light.)\n\n',
