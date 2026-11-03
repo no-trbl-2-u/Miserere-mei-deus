@@ -85,7 +85,7 @@ test('parseItems reads an eight-column row: Goal and How AI helps, with Rows and
     assert.equal(six.aiHelp, '')
 })
 
-test('rewriteItemStatus re-derives an eight-column row and keeps its Goal and How AI helps cells', () => {
+test('rewriteItemStatus re-derives an eight-column row, keeps its Goal and How AI helps cells, and names the Item alone', () => {
     const md = `# Deadlines
 
 ## Items
@@ -96,6 +96,8 @@ test('rewriteItemStatus re-derives an eight-column row and keeps its Goal and Ho
 `
     const out = rewriteItemStatus(md, parsePhaseRows(BUILD_PLAN))
     assert.deepEqual(out.unmatched, [])
+    // The parser before Goal and How AI helps read them into the name ("Ship it | The MVP | /plot").
+    assert.deepEqual(out.changed, ['Ship it: [ ] -> [x]'])
     assert.equal(out.md, md.replace('| [ ] | 2026-11-09', '| [x] | 2026-11-09'))
 })
 
