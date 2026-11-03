@@ -102,7 +102,11 @@ left; otherwise after.
 - Enemy sessions 3 and 4 for Chapters 2-4 (normals and elites; bosses and the Act Boss), then their plot. The loop
   builds those enemies and their art through W4 and W5.
 - Rows: UP1a-UP1g shipped; UP1h, the boss check, moves here from W4. HP2d-HP2f (calibration) move here from W2.
-- T's time (about 9 h): the hazard swap plot, two enemy sessions and their plot, Chapters 2-4's quest lines,
+- Chapters 2-4's maps are designed and plotted first (Nov 18, 19), before the enemy sessions, as the Breakwater's was
+  before session 1 (T, 2026-10-28); their weapons and armor are pitched after the sessions (Nov 24), the day before
+  the quest lines that pay them (Nov 25), and plotted on Nov 26.
+- T's time (about 12.5 h): Chapters 2-4's maps and their plot, the hazard swap plot, two enemy sessions and their plot,
+  Chapters 2-4's weapons and armor and their plot, Chapters 2-4's quest lines,
   calibration solves (HP2e), and the four-chapter walk at the end.
 
 ### W4 — The rest of the relic pass, combat proven, an Act 1 clear (Dec 1 - Dec 14)
@@ -133,8 +137,8 @@ here was merged into it, since ticking one list never updated the other and done
 piece there and nowhere else.
 
 The MVP pieces (Nov 3 to Nov 15) total about 11.5 hours; Nov 4, 5 and 6 are free, since the four MVP event kinds were
-settled and plotted early on Oct 30 (ET1). After the MVP: W3 about 12 hours (Chapters 2-4's enemy sessions on Nov 21
-and 22, and the travel, village, loot-cache and cutscene sittings), W4 about 10.5 (B1, the cost-card session, R12,
+settled and plotted early on Oct 30 (ET1). After the MVP: W3 about 15.5 hours (Chapters 2-4's maps on Nov 18 and 19, their enemy sessions on Nov 21
+and 22, their weapons and armor on Nov 24 and 26, and the travel, village, loot-cache and cutscene sittings), W4 about 10.5 (B1, the cost-card session, R12,
 Chapters 2-4's art on Dec 13), W5 about 3.
 
 ## Items
@@ -188,13 +192,17 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d, HP6a, HP6b, HP6c, EQ3d, EQ3e, EQ3f, EQ3g, EQ3h, EQ3i, EQ3j, EQ3k, EQ4a, EQ4b |
 | [x] | 2026-11-18 | Upgrade grant call | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-11-17 | Event kind 5, village (paid rest, card shop, Anvil): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | NK1b, NK1c |
+| [ ] | 2026-11-18 | Design Chapters 2-4's maps before enemy session 3, as the Breakwater's was before session 1: each chapter's node list (total and count per kind), its quest route and travel pairs, and room on its plate for the marks (1.5 h) | Chapters 2-4 designed; hazards tuned | `/pitch` per chapter, on the Breakwater's 44-node pitch | W3 | T | - |
 | [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the five other Act 1 hazard puzzles (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2), and swap any of HP6's Breakwater six you want, after playing the thirty in `/dev` (1 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | T | HP4f, HP4g |
+| [ ] | 2026-11-19 | Plot Chapters 2-4's maps from the design (0.5 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | needs plot | - |
 | [ ] | 2026-11-20 | Event kind 6, travel ("move to X?", secret paths): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | NK1d |
 | [ ] | 2026-11-21 | Enemy session 3: Chapters 2-4's normal rosters and elites (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-11-22 | Enemy session 4: Chapters 2-4's bosses and the Act Boss, at the end of Chapter 4 (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-11-23 | Plot Chapters 2-4's enemies and their art brief (1 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | needs plot | - |
 | [ ] | 2026-11-24 | Event kind 7, loot cache: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | - |
+| [ ] | 2026-11-24 | Pitch Chapters 2-4's weapons and armor, after the enemy sessions: how many of each, what each does, where each drops, and settle them (1 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, on Chapter 1's ten (spec 136) | W3 | T | - |
 | [ ] | 2026-11-25 | Write Chapters 2-4's quest lines, on Chapter 1's chain (BW1): quests alternate a relic, then a weapon or armor (D114 as amended by EQ3h), and a relic quest pays any lane relic not already paid by Chapter 1 (1 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
+| [ ] | 2026-11-26 | Plot Chapters 2-4's weapons and armor from the pitch (0.5 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | needs plot | - |
 | [ ] | 2026-11-27 | Event kind 8, cutscene: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | - |
 | [ ] | 2026-11-28 | Calibration solves (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | HP2e | HP2d |
 | [ ] | 2026-11-30 | W3 demo: a four-chapter walk, every node resolves (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | HP2f |
@@ -263,6 +271,7 @@ attended session.
 ## Change log
 
 - **2026-11-03** — **T's text for spec 144 settled at the pilot's gate; befriending leaves (MR1e, MR1f)** (T, at `/pilot`'s gate: "A: The Open Hand (Recommended)" and "Bigger MERCY (Recommended)"). **Edited** the Unscheduled lines of MR1e and MR1f: their text is in the spec and no T act waits on them. Nothing ticked; no date moved.
+- **2026-11-03** — **Chapters 2-4's maps and their weapons and armor added** (T, in chat, picking from the gap list: "D And F, that's it"). **Added** four Items to W3: design Chapters 2-4's maps (Nov 18) and plot them (Nov 19), before enemy session 3, as the Breakwater's map came before session 1 (T, 2026-10-28); pitch Chapters 2-4's weapons and armor (Nov 24) and plot them (Nov 26), as Chapter 1's were (spec 136). The dates are drafts. W3's hours rise from about 12 to about 15.5. Nothing ticked; no date moved.
 - **2026-11-03** — **one list: the MVP schedule merged into the Items table** (T, in chat: "Yes, do that", to merging the schedule and the Items into one list so there is a single place to tick). Ticking an Item never updated the day-by-day schedule, so done pieces kept reading as overdue in the digests. **Removed** `## MVP schedule`; its pace notes are now `## T's pace`. **Added** two cells to every Item, `Goal` (the schedule's high-level task) and `How AI helps` (the schedule's column; `/plot` or `/pitch`, then `/plot` on plot and pitch Items after the MVP, `-` where nothing was written), placed before `Window` so main's parser still reads `Rows` and `Waits on`. **Added** a lint: a dated table row outside `## Items` fails `check-deadlines`. Nothing ticked; no date moved.
 - **2026-11-03** — **every pre-Nov 3 piece removed** (T, in chat: "OMG, this is the third time I'm saying it, remove the overdue items from the deadlines"; earlier the same day: "Everything you said that's overdue is done"). **Removed** the twelve MVP schedule rows dated Oct 26 to Nov 2 (several lacked a Done mark, so digests read them as overdue) and the thirteen Items dated before Nov 3 (all ticked; every row they named has shipped). **Closed** HP4e (chunk 120.5) on T's word: T played the thirty; no per-candidate report was written, and nothing asks T for one. **Reworded** B2's Unscheduled line and moved its Held lock's `until:` to Nov 23, so it waits on enemy sessions 3 and 4 and asks nothing before them. Kept the Nov 3 hazard-routing Item and everything after. No date moved.
 - **2026-11-03** — **week 1's overdue T items done** (T, in chat: "Everything you said that's overdue is done, please update the deadlines accordingly", of the sea keep boss design, the boss plot, the cost-card keep-or-cut and Chapter 1's enemy tuning). **Ticked** the Oct 31, Nov 1 (both) and Nov 2 Items. The Nov 1 cost-card Item and the Nov 2 boss-plot Item named HP4e and B2, whose chunks stay open (HP4e closes on A9, a report of T's rulings not yet written; B2 also holds Chapters 2-4 and the Act Boss), so both Items now name T and both chunks moved to `## Unscheduled`. No date moved.
