@@ -8,6 +8,9 @@
  *   On by default only while T is the only player; before a preview build
  *   reaches anyone else the default flips to off (BE2 brief, DoD).
  *
+ * - `forceMercyCheck`: every normal foe asks spare or finish as it falls, so the
+ *   prompt can be seen without waiting on the chance. Off by default.
+ *
  * Same tiny external-store shape as `state/settings.ts`, so the poster in
  * `lib/playLog.ts` reads it synchronously and the dev row subscribes with
  * `useDevSetting`.
@@ -25,10 +28,12 @@ import { getLogger } from '@mechanics';
 
 export interface DevSettings {
     readonly playLogging: boolean;
+    readonly forceMercyCheck: boolean;
 }
 
 export const DEFAULT_DEV_SETTINGS: DevSettings = Object.freeze({
     playLogging: true,
+    forceMercyCheck: false,
 });
 
 /** Its own key, never the player settings key. `:v1` so a shape change can migrate. */
@@ -39,6 +44,7 @@ export function sanitizeDevSettings(raw: unknown): DevSettings {
     const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
     return {
         playLogging: typeof r.playLogging === 'boolean' ? r.playLogging : DEFAULT_DEV_SETTINGS.playLogging,
+        forceMercyCheck: typeof r.forceMercyCheck === 'boolean' ? r.forceMercyCheck : DEFAULT_DEV_SETTINGS.forceMercyCheck,
     };
 }
 
@@ -73,7 +79,7 @@ export function createDevSettingsStore(options: DevSettingsStoreOptions = {}): D
         get: () => current,
         set: (patch) => {
             const next = sanitizeDevSettings({ ...current, ...patch });
-            if (next.playLogging === current.playLogging) return;
+            if (next.playLogging === current.playLogging && next.forceMercyCheck === current.forceMercyCheck) return;
             current = next;
             emit();
             storage.setItem(DEV_SETTINGS_STORAGE_KEY, JSON.stringify(current)).catch((err: unknown) => {

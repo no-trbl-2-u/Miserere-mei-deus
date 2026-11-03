@@ -47,6 +47,8 @@ import { gameReducer, createNewGameState } from './game.reducer';
 import { GameEventEmitter, GameEvent, GameEventType } from './events';
 import { PersistenceAdapter } from './persistence/types';
 import { encounterWage, totalEncounterXp } from './combat-grants';
+import { spareWage } from '../Combat/combat.mercy-check';
+import { rollSpareReward, type SpareReward } from '../Combat/combat.spare-reward';
 import { getRng } from '../Utils/rng';
 import { getLogger, isLoggingEnabled } from '../Log';
 import { getAvailableCards } from '../Cards';
@@ -73,6 +75,7 @@ import {
 const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['type']>([
     'LEVEL_UP',
     'END_COMBAT',
+    'APPLY_SPARE_REWARD', // The roll lands after END_COMBAT and must reach the save.
     'MOVE_TO_NODE',
     'APPLY_DIALOGUE',
     'SAVE_GAME',
@@ -100,6 +103,8 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
  * - `loot` — items added to `player.inventory` (pre stack-merge). A
  *   friendship's potion, if it paid one; empty on every other outcome (a foe's
  *   loot table pays nothing).
+ * - `spared` — set on a `'victory'` spared at the mercy check: no XP, the spare
+ *   wage in `shillings`, and the one roll in `spareReward`.
  */
 export interface CombatEndReport {
     outcome: 'victory' | 'defeat' | 'friendship' | 'flee';
@@ -107,6 +112,12 @@ export interface CombatEndReport {
     /** Shillings paid (a win's wage, or a befriend's shilling payout; 0 when none). Added to `player.currency`. */
     shillings: number;
     loot: Item[];
+    /** The foe was spared at the mercy check. */
+    spared?: boolean;
+    /** The Spare table's one roll, already on the player. */
+    spareReward?: SpareReward;
+    /** The journal entry a spared foe unlocked, when it was not already known. */
+    journalEntryUnlocked?: { id: string; title: string };
     /**
      * Per-enemy friendship-reward content. Only present on
      * `outcome === 'friendship'` when the befriended enemy carries a
@@ -155,11 +166,14 @@ export interface GameActions {
      * and returns the after-action `CombatEndReport`. `options.withholdSpoils`
      * grants no XP and no items (an elite whose relic dropped: the relic takes
      * their place); the shillings, quest progress and the arrival still settle.
+     * `options.spared` on a `'victory'` pays the Spare ending: no XP, the spare
+     * wage and one roll on the Spare table, and it grants the foe's story flag
+     * and journal entry.
      */
     endCombat: (
         outcome: CombatEndReport['outcome'],
         finalPlayer?: Character,
-        options?: { withholdSpoils?: boolean; seenDangers?: readonly string[] },
+        options?: { withholdSpoils?: boolean; seenDangers?: readonly string[]; spared?: boolean },
     ) => CombatEndReport;
 
     // ── World / dialogue ─────────────────────────────────────────────────────
@@ -399,7 +413,11 @@ export function createGameStore(
                 let xpGained = 0;
                 let shillings = 0;
                 let loot: Item[] = [];
-                if (outcome === 'victory') {
+                const spared = outcome === 'victory' && options?.spared === true;
+                if (spared) {
+                    // No XP and no card reward: more shillings, then the one roll below.
+                    shillings = spareWage(foe.level);
+                } else if (outcome === 'victory') {
                     // The wage, on every difficulty. A foe's loot table pays nothing.
                     xpGained = totalEncounterXp(encounter);
                     shillings = encounterWage(encounter);
@@ -447,16 +465,31 @@ export function createGameStore(
                         report.friendshipReward = friendshipReport;
                     }
                 }
+                if (spared) {
+                    report.spared = true;
+                    const entry = foe.journalEntry;
+                    if (entry && !pre.codex.unlockedEntries.includes(entry.id)) {
+                        report.journalEntryUnlocked = { id: entry.id, title: entry.title };
+                    }
+                }
                 dispatch(
                     {
                         type: 'END_COMBAT',
                         payload: {
                             outcome, finalPlayer, grantedLoot: loot, grantedXp: xpGained, grantedShillings: shillings,
+                            ...(spared ? { spared } : {}),
                             ...(options?.seenDangers ? { seenDangers: [...options.seenDangers] } : {}),
                         },
                     },
                     { report },
                 );
+                // The roll reads the player as the fight left them (a quest the
+                // kill completed may have paid a relic it must not offer again).
+                if (spared) {
+                    const reward = rollSpareReward(get().player, () => getRng().random(), encounterWage(encounter));
+                    report.spareReward = reward;
+                    dispatch({ type: 'APPLY_SPARE_REWARD', payload: { reward } });
+                }
                 return report;
             },
 

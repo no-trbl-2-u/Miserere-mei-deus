@@ -57,6 +57,7 @@ export const CONTENT_SURFACES = [
   'axiomancer-mechanics/src/Cards/library/blood-price.cards.ts',
   'axiomancer-mobile/state/presenters/rest.copy.ts',
   'axiomancer-mobile/state/presenters/cache.copy.ts',
+  'axiomancer-mobile/state/presenters/mercy-check.copy.ts',
 ]
 
 /**

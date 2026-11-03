@@ -134,6 +134,16 @@ the Expo app (`axiomancer-mobile`) presents it.
   the lead foe's level (`fightWage`, `Combat/combat.mercy-check.ts`), on every
   difficulty, even when an elite's relic drop withholds the XP. It rolls no foe
   loot: `Enemy.loot` tables are data only and pay nothing.
+- **The mercy check:** when a foe of `difficulty: 'normal'` falls to 0 VITAE, the
+  combat rng rolls `MERCY_CHECK_CHANCE` = 15% (`rollMercyCheck`,
+  `Combat/combat.mercy-check.ts`). On a hit the fight asks spare or finish and
+  shows no reward; on a miss it pays as Finish. Elites, bosses and every other
+  difficulty are always finished. Finish pays as any win. Spare pays no XP and no
+  card reward: `spareWage` (1.5 x the wage, rounded up) and one roll on the Spare
+  table (`MERCY_TUNING.spareTable`, `Combat/combat.spare-reward.ts`), revealed on
+  the end screen. A spared foe is still a `victory`: it counts for quests, the
+  defeat ledger and the node, and it alone grants the foe's story flag and journal
+  entry without a befriend. Sims do not roll the check yet, so they pay as Finish.
 - **Rewards:** a won fight offers 3 cards (`COMBAT_REWARD_OFFER_COUNT`,
   mobile) drawn from `rewardPoolFor`: the cards of every lane in
   `unlockedLaneIds`, which is the character's two starting lanes

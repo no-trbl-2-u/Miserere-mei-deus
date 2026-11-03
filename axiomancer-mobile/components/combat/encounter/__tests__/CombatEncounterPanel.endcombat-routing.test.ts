@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import {
     createCharacter, initializeCombatEncounter, type CombatEncounterState, type CombatOutcome,
-    ENEMY_REGISTRY, FIXTURE_QUEST, emptyQuestLog, startQuest, type Enemy,
+    ENEMY_REGISTRY, FIXTURE_QUEST, emptyQuestLog, fightWage, spareWage, startQuest, type Enemy,
 } from '@mechanics';
 
 import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
@@ -38,6 +38,33 @@ function openEncounter(enemy: Enemy): CombatEncounterState {
     const player = createCharacter({ name: 'Reaper', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
     return initializeCombatEncounter(player, enemy, ['the-gleaners-due'], 7);
 }
+
+describe('applyHazardOutcome: the mercy check', () => {
+    it('a spared fight pays no XP and the spare wage, closes the draft and reaches the save', () => {
+        const { store, enemy, combat } = realFight();
+        const before = store.getState().player!;
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, { ...combat, mercyCheck: 'spared' }, enemy);
+
+        const after = store.getState();
+        expect(paid).toBe(spareWage(enemy.level));
+        expect(after.player!.experience).toBe(before.experience);
+        expect(after.currentEncounter).toBeUndefined();
+        expect(after.codex.defeatedEnemies).toContain('float-eye');
+        expect(after.combatReward).toMatchObject({ offers: [], claimed: true });
+        expect(after.combatReward?.spare?.reward).toBeDefined();
+    });
+
+    it('a finished fight pays as any win, and leaves the draft open', () => {
+        const { store, enemy, combat } = realFight();
+        const before = store.getState().player!;
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, { ...combat, mercyCheck: 'finished' }, enemy);
+
+        expect(paid).toBe(fightWage(enemy.level));
+        expect(store.getState().player!.experience).toBe(before.experience + (enemy.xpReward ?? 0));
+        expect(store.getState().combatReward?.claimed).toBe(false);
+        expect(store.getState().combatReward?.spare ?? null).toBeNull();
+    });
+});
 
 describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
     it('victory grants endCombat-derived XP and clears the staged encounter', () => {

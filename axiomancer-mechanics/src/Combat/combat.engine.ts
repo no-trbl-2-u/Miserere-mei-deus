@@ -2059,7 +2059,8 @@ export function selectMercyChoice(
     ];
     let next: CombatEncounterState = { ...state, enemy, mercyChoiceActive: false, phase: 'phase-play' };
     if (isDefeated(enemy)) {
-        return endCombat(withLog(next, events), 'victory', events);
+        // The Open Hand's own choice was the mercy: the check does not ask again.
+        return endCombat(withLog({ ...next, mercyCheck: 'none' }, events), 'victory', events);
     }
     // Survived the exploit — combat continues from phase-play.
     next = withLog(next, events);

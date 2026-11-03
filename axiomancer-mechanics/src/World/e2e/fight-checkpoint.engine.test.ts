@@ -147,6 +147,17 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
         },
     );
 
+    it('the fight ending in a spared foe settles the node', () => {
+        const { store } = saveMidFight(approach(), node);
+
+        store.getState().endCombat('victory', undefined, { spared: true });
+        const map = store.getState().world.currentMap;
+
+        expect(map.pendingArrival ?? null).toBeNull();
+        expect(map.consumedNodes).toContain(node);
+        if (onward) expect(map.availableNodes).toContain(onward);
+    });
+
     // A fight that was fled or lost answers the arrival but leaves its node
     // unspent (phase QL1b). A held elite holds its road
     // (`holdRoadsUntilSettled`), so an unspent elite keeps its far road

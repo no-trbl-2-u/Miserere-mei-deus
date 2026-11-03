@@ -1962,6 +1962,12 @@
     {
       "kind": "coupling",
       "from": "area:Game",
+      "to": "area:Combat",
+      "file": "axiomancer-mechanics/src/Game/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
       "to": "area:Effects",
       "file": "axiomancer-mechanics/src/Game/game.reducer.ts"
     },
@@ -4087,6 +4093,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/spare-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/quest/store-actions.ts"
     },
     {
@@ -4346,6 +4358,12 @@
       "from": "route:combat-encounter",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/dev/dev-settings.ts"
     },
     {
       "kind": "coupling",

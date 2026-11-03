@@ -100,7 +100,11 @@ function enemyHpLost(state: CombatEncounterState): number {
  * the ledger can never credit HP the fight didn't contain.
  */
 export function buildCombatSummary(state: CombatEncounterState): CombatSummary {
-    const outcome = state.finalOutcome ?? 'defeat';
+    // A mercy-check spare keeps `finalOutcome: 'victory'` (the win itself is
+    // real — XP, shillings, the kill objective), but the summary screen reads
+    // it as a mercy ending: same headline branch, same `OUTCOME_COLOR` purple
+    // the Open Hand's befriend win already gets.
+    const outcome = state.mercyCheck === 'spared' ? 'mercy' : (state.finalOutcome ?? 'defeat');
     // Work on clones — dotDamage is (re)derived from the log, not from state.
     const rows = Object.values(state.attribution).map(r => ({ ...r, dotDamage: 0 }));
     const byCard = new Map(rows.map(r => [r.cardId, r]));

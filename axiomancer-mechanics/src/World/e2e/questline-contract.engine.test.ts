@@ -69,10 +69,15 @@ function stateWith(q: Quest, nodeId = 'bw-w1'): GameState {
 }
 
 /** Fights `foe` to a verdict from `state` through the real reducer. */
-function fight(state: GameState, foe: typeof BOSS, outcome: 'victory' | 'friendship' | 'defeat' | 'flee'): GameState {
+function fight(
+    state: GameState,
+    foe: typeof BOSS,
+    outcome: 'victory' | 'friendship' | 'defeat' | 'flee',
+    spared = false,
+): GameState {
     const staged = gameReducer(state, { type: 'START_COMBAT', payload: { target: foe } });
     return gameReducer(staged, {
-        type: 'END_COMBAT', payload: { outcome, grantedLoot: [], grantedXp: 0 },
+        type: 'END_COMBAT', payload: { outcome, grantedLoot: [], grantedXp: 0, spared },
     });
 }
 
@@ -184,6 +189,12 @@ describe('A3: kills by foe class and hazards, on the quest map only', () => {
     it('a friendship counts as a won fight', () => {
         const q = quest([{ foeClass: 'any', requiredCount: 9 }]);
         const out = fight(stateWith(q), FLOAT_EYE, 'friendship');
+        expect(out.quests.active[0]!.objectives[0]!.currentCount).toBe(1);
+    });
+
+    it('a foe spared at the mercy check counts as a won fight', () => {
+        const q = quest([{ foeClass: 'any', requiredCount: 9 }]);
+        const out = fight(stateWith(q), FLOAT_EYE, 'victory', true);
         expect(out.quests.active[0]!.objectives[0]!.currentCount).toBe(1);
     });
 

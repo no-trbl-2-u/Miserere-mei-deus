@@ -24,12 +24,13 @@ import {
     type Enemy,
     type Equipment,
     type GameState,
+    type SpareReward,
     type WorldState,
 } from '@mechanics';
 
 import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
-import { recordDeckUpgrade } from '../run-log';
+import { recordDeckUpgrade, recordItemGained } from '../run-log';
 import { EMPTY_COMBAT_REWARD_SLICE, type AppStore } from '../store';
 import { offerEliteRelicAction, offerElitePieceAction } from '../item-reward/relic-sources';
 
@@ -110,6 +111,32 @@ export function settleEliteEquipmentAction(
     if (!piece) return null;
     offerElitePieceAction(store, piece, enemy.name ?? '', befriended);
     return piece;
+}
+
+/**
+ * A foe spared at the mercy check, after `endCombat` paid it: the draft closes as
+ * claimed (a Spare pays no card reward), the roll goes on the slice for the end
+ * screen to reveal, the run log hears of it and the save is written, since no
+ * draft claim will write it. Does nothing for any other ending.
+ */
+export function settleSpareAction(
+    store: AppStore,
+    report: { spareReward?: SpareReward; journalEntryUnlocked?: { title: string } } | null | undefined,
+): void {
+    const reward = report?.spareReward;
+    if (!reward) return;
+    const journalTitle = report.journalEntryUnlocked?.title;
+    store.setState({
+        combatReward: {
+            offers: [], claimed: true, upgrade: null, relicDrop: null,
+            spare: journalTitle ? { reward, journalTitle } : { reward },
+        },
+    } as never);
+    if (reward.kind === 'consumable' || reward.kind === 'gear' || reward.kind === 'relic') {
+        recordItemGained(store, reward.item, 'spare');
+    }
+    if (reward.kind === 'upgrade') recordDeckUpgrade(store, reward.fromCardId, reward.toCardId, 'spare');
+    try { store.getState().save(); } catch { /* persistence must not strand the end screen */ }
 }
 
 /**

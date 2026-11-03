@@ -43,6 +43,12 @@ export type GameAction =
               grantedXp?: number;
               /** Shillings added to `player.currency`. Omitted, a victory pays its wage. */
               grantedShillings?: number;
+              /**
+               * A won fight the player spared at the mercy check: omitted XP and
+               * shillings default to none and `spareWage`, and the foe's story
+               * flag and journal entry are granted. Only read on `'victory'`.
+               */
+              spared?: boolean;
               /** The `<enemy slug>:<move name>` keys of the DANGER moves that fired in the fight. */
               seenDangers?: string[];
           };
