@@ -17,6 +17,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import React from 'react';
 
 import { StatusCard } from '@/components/StatusCard';
@@ -43,7 +44,10 @@ describe('StatusCard: store-driven defaults (no props)', () => {
 
         const rendered = render(tree);
         expect(rendered.queryByText(expectedName)).not.toBeNull();
-        expect(rendered.queryByText(new RegExp(`LVL ${expectedLevel}`))).not.toBeNull();
+        // The level reads from the badge alone; the "LVL n · PILGRIM"
+        // subtitle was cut on 2026-11-02 (T: noise).
+        expect(rendered.queryByText(String(expectedLevel))).not.toBeNull();
+        expect(rendered.queryByText(/PILGRIM/)).toBeNull();
     });
 
     it('reads HP / maxHealth from `state.player.health` via the provider', () => {
@@ -70,10 +74,9 @@ describe('StatusCard: explicit prop overrides', () => {
         expect(tree.queryByText('ASHEN WAYFARER')).not.toBeNull();
     });
 
-    it('level prop wins over the store-read level (badge + label)', () => {
+    it('level prop wins over the store-read level (badge)', () => {
         const tree = mount(<StatusCard level={42} />);
         expect(tree.queryByText('42')).not.toBeNull();
-        expect(tree.queryByText(/LVL 42/)).not.toBeNull();
     });
 
     it('hp/hpMax props win over the store-read HP', () => {
@@ -86,7 +89,6 @@ describe('StatusCard: explicit prop overrides', () => {
             <StatusCard name="STILLED WALKER" level={1} hp={1} hpMax={1} />,
         );
         expect(tree.queryByText('STILLED WALKER')).not.toBeNull();
-        expect(tree.queryByText(/LVL 1/)).not.toBeNull();
         expect(tree.queryByText('1/1')).not.toBeNull();
     });
 });
@@ -99,13 +101,22 @@ describe('StatusCard: structural landmarks', () => {
         expect(tree.queryByText('MANA')).toBeNull();
     });
 
-    it('renders the LEVEL section label without doubling the label (#157)', () => {
+    it('carries no level subtitle at all — the badge says it once (T, 2026-11-02)', () => {
         const tree = mount(<StatusCard />);
-        // Match the SectionLabel's text content; the LEVEL chip
-        // composes the formatted level number into a "LVL N · PILGRIM"
-        // string. Regression guard: must not read the level word twice
-        // back-to-back ("LEVEL · LVL N"), the critique pass 14 finding.
-        expect(tree.queryByText(/^LVL \d+ · PILGRIM$/)).not.toBeNull();
-        expect(tree.queryByText(/^LEVEL · LVL/)).toBeNull();
+        expect(tree.queryByText(/LVL/)).toBeNull();
+        expect(tree.queryByText(/PILGRIM/)).toBeNull();
+    });
+
+    it('prints the map beside the pilgrim, larger than the pilgrim (T, 2026-11-02)', () => {
+        const tree = mount(<StatusCard name="THE CHOSEN" mapName="The Breakwater" />);
+        const map = tree.getByTestId('status-card-map-name');
+        expect(map.props.children).toBe('The Breakwater');
+        const mapSize = StyleSheet.flatten(map.props.style).fontSize;
+        const nameSize = StyleSheet.flatten(tree.getByText('THE CHOSEN').props.style).fontSize;
+        expect(mapSize).toBeGreaterThan(nameSize);
+    });
+
+    it('draws no map line off the map', () => {
+        expect(mount(<StatusCard />).queryByTestId('status-card-map-name')).toBeNull();
     });
 });

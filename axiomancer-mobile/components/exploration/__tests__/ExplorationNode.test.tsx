@@ -10,6 +10,7 @@ import { NODE_MARK_RADIUS, SEALED_MARK_OPACITY } from '@/components/NodeMark';
 import { KIND_TOKEN_COLOR, KIND_TOKEN_RADIUS, kindTokenRadius } from '../KindToken';
 import { DEFAULT_THEME_ID, paletteFor } from '@/theme/palette';
 import type { NodeType } from '@/state/presenters/exploration.engine';
+import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const mockNode = {
     id: 'node-1',
@@ -168,7 +169,10 @@ describe('the kind token (BW1c A8)', () => {
     const STATES = ['available', 'current', 'completed', 'locked'] as const;
     const TYPES = Object.keys(KIND_TOKEN_COLOR) as NodeType[];
 
-    it.each(STATES)('a %s node draws its token only when the presenter says so', (kind) => {
+    // The node underfoot is not a glyph any more (T, 2026-11-02): it wears
+    // the pilgrim's portrait, and a kind token over the player's own face
+    // would be noise, so `current` is excluded from the token's states.
+    it.each(STATES.filter((k) => k !== 'current'))('a %s node draws its token only when the presenter says so', (kind) => {
         const node = { ...mockNode, id: 'k', kind };
         const { queryByTestId, rerender } = render(
             <ExplorationNode node={{ ...node, showKind: true }} onNodePress={mockOnNodePress} isSelected={false} />,
@@ -217,6 +221,16 @@ describe('the kind token (BW1c A8)', () => {
                 expect(kindTokenRadius(state, 'quest')).toBeGreaterThan(kindTokenRadius(state, type));
             }
         }
+    });
+
+    it('the node underfoot wears the portrait and no kind token (T, 2026-11-02)', () => {
+        const node = { ...mockNode, id: 'k', kind: 'current' as const, showKind: true };
+        const { tree } = withAllProviders(
+            <ExplorationNode node={node} onNodePress={mockOnNodePress} isSelected={false} />,
+        );
+        const { queryByTestId } = render(tree);
+        expect(queryByTestId('node-k-portrait')).not.toBeNull();
+        expect(queryByTestId('node-k-kind')).toBeNull();
     });
 
     it('a walked node a road back keeps its look and label with its token (WR1b)', () => {

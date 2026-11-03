@@ -1,8 +1,8 @@
 /**
  * MapOverlays component — hermetic test suite.
- * Tests the gesture line + bottom-legend chrome layered over the
- * exploration map. The component is prop-driven on `legend` (left/right
- * strings).
+ * Tests the gesture line layered over the exploration map. The legend strip
+ * was cut on 2026-11-02 (T: the marks read for themselves), so the suite
+ * also pins that nothing draws it any more.
  */
 
 import React from 'react';
@@ -12,18 +12,17 @@ import { render, screen } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
 import { MapOverlays, detectMapPointer } from '../MapOverlays';
-import { MAP_GESTURE_LINE, MAP_LEGEND_LEFT } from '@/state/presenters/exploration.engine';
+import { MAP_GESTURE_LINE } from '@/state/presenters/exploration.engine';
 
 describe('MapOverlays', () => {
-    const legend = { left: 'visited', right: 'sealed' };
 
     it('renders without crashing', () => {
-        const { root } = render(<MapOverlays legend={legend} />);
+        const { root } = render(<MapOverlays />);
         expect(root).toBeTruthy();
     });
 
     it('renders the fixed gesture line, naming the pan/pinch gesture', () => {
-        render(<MapOverlays legend={legend} />);
+        render(<MapOverlays />);
         // The chart pans and zooms behind a much smaller
         // window, so the always-on furniture has to say so.
         expect(screen.getByText(MAP_GESTURE_LINE.touch)).toBeTruthy();
@@ -31,7 +30,7 @@ describe('MapOverlays', () => {
     });
 
     it('tells a mouse to scroll, since a mouse cannot pinch (critique pass 91)', () => {
-        render(<MapOverlays legend={legend} pointer="mouse" />);
+        render(<MapOverlays pointer="mouse" />);
         expect(screen.getByTestId('map-gesture-line').props.children).toBe('drag · scroll to zoom');
         expect(screen.queryByText(/pinch/)).toBeNull();
     });
@@ -72,102 +71,23 @@ describe('MapOverlays', () => {
     });
 
     it('carries no compass and no NODE GRAPH label (T, 2026-10-02)', () => {
-        render(<MapOverlays legend={legend} />);
+        render(<MapOverlays />);
         expect(screen.queryByText('NODE GRAPH')).toBeNull();
         expect(screen.queryByText(/N ↑|leagues/)).toBeNull();
     });
 
-    it('renders both legend strings from props', () => {
-        render(<MapOverlays legend={legend} />);
-        expect(screen.getByText('visited')).toBeTruthy();
-        expect(screen.getByText('sealed')).toBeTruthy();
+    it('draws no legend strip at all (T, 2026-11-02)', () => {
+        render(<MapOverlays />);
+        expect(screen.queryByTestId('map-legend')).toBeNull();
+        expect(screen.queryByTestId('map-legend-plate')).toBeNull();
+        expect(screen.queryByText(/TRODDEN|OPEN|SEALED/)).toBeNull();
+        expect(screen.queryByText(/nodes ·/)).toBeNull();
     });
 
-    it('reflects updated legend props on re-render', () => {
-        const { rerender } = render(<MapOverlays legend={legend} />);
-        expect(screen.getByText('visited')).toBeTruthy();
-
-        rerender(<MapOverlays legend={{ left: 'explored', right: 'locked' }} />);
-        expect(screen.getByText('explored')).toBeTruthy();
-        expect(screen.getByText('locked')).toBeTruthy();
-        expect(screen.queryByText('visited')).toBeNull();
-    });
-
-    /**
-     * THE LEGEND MUST NOT CLIP.
-     *
-     * The strip can be cut off for two independent reasons, and guarding
-     * either alone leaves the other live, so both are pinned:
-     *
-     *   1. running under `<MapCanvas>`'s recentre button (32x32, pinned at
-     *      `right: 10, bottom: 10` — a 42px corner reaching up from the
-     *      chart's foot) while the legend sits at `bottom: 8`;
-     *   2. a row whose `Text`s cannot give way, inside `graphWrap`'s
-     *      `overflow: 'hidden'`, so strings that exceed the strip are
-     *      clipped rather than wrapped.
-     *
-     * These assertions are geometric on purpose: the collision is geometric,
-     * and shortening the copy would hide it rather than fix it.
-     */
-    describe('owner finding 9: the legend cannot be clipped', () => {
-        // MapCanvas: 32px recentre button pinned 10px off the chart's right edge.
-        const BUTTON_FOOTPRINT = 42;
-
-        const legendBox = () => {
-            render(<MapOverlays legend={legend} />);
-            return StyleSheet.flatten(screen.getByTestId('map-legend').props.style);
-        };
-
-        it('leaves the recentre button its corner instead of drawing across it', () => {
-            expect(legendBox().right).toBeGreaterThan(BUTTON_FOOTPRINT);
-        });
-
-        it('stacks the keys and the counter, so neither has to share a line', () => {
-            // As a row they competed for one strip's width; as a column each
-            // line owns the full remaining width.
-            expect(legendBox().flexDirection).toBe('column');
-        });
-
-        it('BOUNDS each line to the strip, so long copy wraps instead of running off', () => {
-            // This is the assertion that actually closes the clipping. The
-            // plate may hug short copy but is capped at the strip's width,
-            // and inside it `alignItems: 'stretch'` hands each Text the
-            // plate's width as its wrap bound; `flexShrink` governs HEIGHT
-            // on this axis, not width.
-            legendBox();
-            const plate = StyleSheet.flatten(screen.getByTestId('map-legend-plate').props.style);
-            expect(plate.maxWidth).toBe('100%');
-            expect(plate.flexDirection).toBe('column');
-            expect(plate.alignItems).toBe('stretch');
-            for (const id of ['map-legend-keys', 'map-legend-count']) {
-                const flat = StyleSheet.flatten(screen.getByTestId(id).props.style);
-                // Belt and braces: Yoga defaults flexShrink to 0.
-                expect(flat.flexShrink).toBe(1);
-                // And nothing may clamp a wrapped line back to one row.
-                expect(screen.getByTestId(id).props.numberOfLines).toBeUndefined();
-            }
-        });
-
-        it('sets the keys on a backed plate, legible over light engraving (critique pass 69)', () => {
-            legendBox();
-            const plate = StyleSheet.flatten(screen.getByTestId('map-legend-plate').props.style);
-            expect(plate.backgroundColor).toBeTruthy();
-            for (const id of ['map-legend-keys', 'map-legend-count']) {
-                const flat = StyleSheet.flatten(screen.getByTestId(id).props.style);
-                expect(flat.fontSize).toBeGreaterThanOrEqual(9);
-            }
-        });
-
-        it('holds the real legend copy, not just the short test fixture', () => {
-            render(<MapOverlays legend={{ left: MAP_LEGEND_LEFT, right: '28 nodes · 23 sealed' }} />);
-            expect(screen.getByText(MAP_LEGEND_LEFT)).toBeTruthy();
-            expect(screen.getByText('28 nodes · 23 sealed')).toBeTruthy();
-        });
-    });
-
-    it('renders empty legend strings without crashing', () => {
-        const { root } = render(<MapOverlays legend={{ left: '', right: '' }} />);
-        expect(root).toBeTruthy();
-        expect(screen.getByText(MAP_GESTURE_LINE.touch)).toBeTruthy();
+    it('keeps the gesture line, the one piece of furniture left', () => {
+        render(<MapOverlays />);
+        const flat = StyleSheet.flatten(screen.getByTestId('map-gesture-line').props.style);
+        expect(flat.position).toBe('absolute');
+        expect(flat.fontSize).toBeGreaterThanOrEqual(9);
     });
 });
