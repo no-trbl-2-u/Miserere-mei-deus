@@ -70,8 +70,7 @@ left; otherwise after.
   reports), VE1c-VE1d, IT1a.
 - **Pulled forward for the MVP (2026-10-26):** the item-icon pick (IT1b) and Chapter 1's two enemy sessions (B2),
   so the loop can build Chapter 1's enemies and icons from Nov 2.
-- T's time (about 8 h, Oct 26 - Nov 1; see "MVP schedule" below): the icon pick, the Breakwater map design, two enemy sessions, the thirty
-  candidates in two sittings (HP4e), and Chapter 1's enemy tuning (moved from Nov 13, T 2026-10-30).
+- T's time (about 8 h, Oct 26 - Nov 1): all done (T, 2026-11-03); nothing from W1 waits on T.
 
 ### W2 — MVP: Act 1, Chapter 1 complete (Nov 3 - Nov 16)
 
@@ -89,7 +88,7 @@ left; otherwise after.
   (`plan/phases/phase_ET1_event_node_treatments.md`).
 - The four MVP event kinds were pitched, settled and plotted early, on Oct 30 (ET1: encounter the ink curtain,
   hazard the stakes card, rest night passes, quest the giver scene), so their Nov 4, 5, 6 and 12 sittings are done. Travel, village, loot cache and cutscene follow in W3 (Nov 17, 20, 24 and 27).
-- T's time (about 12 h, Nov 2 - Nov 15): the B2 plot, the hazard plot,
+- T's time (about 12 h, Nov 3 - Nov 15): the hazard plot,
   the title plate and arena backgrounds, the Defender check, a quest-line play, the pre-run triage,
   Chapter 1's enemy art, a mid-MVP check on the preview build, the walk's `[content]` answers with the Breakwater's
   quest line, the R11 review, and the MVP run.
@@ -125,7 +124,7 @@ left; otherwise after.
 
 ## MVP schedule
 
-T's human-in-the-loop work from 2026-10-26 to the MVP, in pieces of one to two hours (T works 9-5 on weekdays,
+T's human-in-the-loop work from 2026-11-03 to the MVP (every piece before Nov 3 is done and removed, T 2026-11-03), in pieces of one to two hours (T works 9-5 on weekdays,
 so weekday pieces are evenings and weekends carry the longer sessions). No weekday is held free: T works on
 Miserere every day, Thursdays included (T, 2026-10-27). Each piece is a
 Item in the Items table below, on the same date; every Item is T's act, and loop work appears only as the `Waits on` of the act it unblocks. The daily reminder
@@ -133,18 +132,6 @@ reads this table for the day's piece, the high-level task it serves, how AI can 
 
 | Date | Hours | Piece | High-level task | How AI helps |
 |---|---|---|---|---|
-| Mon Oct 26 | 0.5 | Merge the lane-relic plot (#922), then this plan's PR | Lock the MVP plan | Done (#922 merged) |
-| Tue Oct 27 | 1 | Pick the rest of the item icons (IT2a); the six lane relics are done (IT1b, #989) | Real item icons | Claude renders candidates at 28 px beside each item, the 2026-10-19 sheet plus fresh ones for the Defender's relics, the unknown mark and the bag; you pick (art is yours, D88) |
-| Wed Oct 28 | 0.5 | Design the Breakwater map before enemy session 1: the total node count and how many of each kind, drop the two gathering nodes, and check on the coast art (`act1-coast.webp`) whether more keep nodes fit | Chapter 1's real enemies; event-node UX | Claude brings the current count from `plan/revamp/breakwater-map.md` (22 nodes since QL1d) and the coast art beside it; you decide the kinds and counts |
-| Wed Oct 28 | 1 | Enemy session 1: Chapter 1's normal roster (the Breakwater's 15 fight nodes on T's new map, D114; B2) | Chapter 1's real enemies | Claude drafts stat blocks and decks against measured truth and the S3 curve; you decide each foe |
-| Thu Oct 29 | 1 | Author the first character (CH1e): portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line | First character playable | Done (CH1e; CH1f, the first character selectable, shipped Oct 31) |
-| Fri Oct 30 | 1 | Play the ten hard candidates (HP4e, part 1) | Hazard puzzles locked | None while you play (no labels shown); afterwards Claude writes the rows from the move log |
-| Sat Oct 31 | 1 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l) (B2) | Chapter 1's real enemies | Claude drafts the boss's four phases under D116 |
-| Sat Oct 31 | 1 | Pitch Chapter 1's weapons and armor: how many of each, what each does in a fight, where each drops, and settle them | Chapter 1's weapons and armor | Claude brings the empty weapon and armor slots (one of each is worn beside three relics) and two or three directions per slot to react to; Done Nov 1 (T's attended `/pitch`) |
-| Sun Nov 1 | 2 | Play the twenty cost-card candidates; rule keep or cut (HP4e, part 2) | Hazard puzzles locked | Claude records your rulings in your words |
-| Sun Nov 1 | 1 | Tune Chapter 1's enemies: levels (all under 10), how often each normal repeats, VITAE | Chapter 1's real enemies | Claude brings EN1i's turns-to-kill table and the lines each foe reaches, or the current defaults if EN1i has not shipped |
-| Mon Nov 2 | 0.5 | `/plot` Chapter 1's sea keep boss (B2); the normals and all six elites are plotted (EN1) | Chapter 1's real enemies | `/plot` adds them to EN1's brief as new rows; you confirm the slot |
-| Mon Nov 2 | 0.5 | `/plot` Chapter 1's weapons and armor from Saturday's pitch | Chapter 1's weapons and armor | Done early, Nov 1 (EQ3d-EQ3j, spec 136) |
 | Tue Nov 3 | 1 | `/plot` live hazard routing for the other five and the cuts | Every hazard a puzzle | `/plot` |
 | Wed Nov 4 | 0 | Event kind 1, encounter: settled early (Oct 30, the ink curtain) and plotted (ET1a) | Event-node UX | Done Oct 30 |
 | Thu Nov 5 | 0 | Event kind 2, hazard: settled early (Oct 30, the stakes card) and plotted (ET1b) | Event-node UX | Done Oct 30 |
@@ -202,19 +189,6 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 
 | Status | Due | Item | Window | Rows | Waits on |
 |---|---|---|---|---|---|
-| [x] | 2026-10-26 | Merge the lane-relic plot (#922), then the MVP plan PR (0.5 h) | W1 | T | - |
-| [x] | 2026-10-27 | Pick the rest of the item icons: four relics, the category glyphs, the unknown mark and the empty bag (the six lane relics and the three potions are done) (1 h) | W1 | IT2a | - |
-| [x] | 2026-10-28 | Design the Breakwater map before enemy session 1: total node count and count per kind, drop the gathering nodes, check the coast art for room for more keep nodes (0.5 h) | W1 | T | - |
-| [x] | 2026-10-28 | Enemy session 1: Chapter 1's normal roster, the Breakwater's 15 fight nodes (1 h) | W1 | T | - |
-| [x] | 2026-10-29 | Author the first character: portrait, starting relic and its lane, two starting lanes, the starting lane cards, the playstyle line (1 h) | W1 | CH1e | MF1a, MF1b, MF1c, MF1d |
-| [x] | 2026-10-30 | W1 demo part 1: T plays the ten hard candidates (1 h) | W1 | T | - |
-| [x] | 2026-10-31 | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | W1 | T | - |
-| [x] | 2026-10-31 | Pitch Chapter 1's weapons and armor: how many of each, what each does, where each drops, and settle them (1 h) | W1 | T | - |
-| [x] | 2026-11-01 | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | W1 | T | - |
-| [x] | 2026-11-01 | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | W1 | T | EN1i |
-| [x] | 2026-11-01 | Cut over to nexus v2: sit with the upgrade report and the carried deviations, rule on what it asks, merge it (2 h; moved up from Nov 11, T: "cut over now") | W1 | NX1d | NX1a, NX1c |
-| [x] | 2026-11-02 | Plot the sea keep's boss from enemy session 2; the normals and all six elites are plotted (EN1) (0.5 h) | W1 | T | - |
-| [x] | 2026-11-02 | Plot Chapter 1's weapons and armor from the pitch; plotted early on Nov 1 into spec 136 as EQ3d-EQ3j (0.5 h) | W1 | needs plot | - |
 | [ ] | 2026-11-03 | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | W2 | needs plot | - |
 | [x] | 2026-11-04 | Event kind 1, encounter: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the ink curtain) and plotted as ET1a (1 h) | W2 | needs plot | - |
 | [x] | 2026-11-05 | Event kind 2, hazard: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it; settled early on Oct 30 (the stakes card) and plotted as ET1b (1 h) | W2 | needs plot | - |
@@ -262,8 +236,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
-- B2 — the enemy revamp stays open for Chapters 2-4's bosses and the Act Boss (the Nov 22 session); Chapter 1's boss is plotted (T, 2026-11-03).
-- HP4e — T called the cost-card candidates done (2026-11-03); the chunk closes on A9, the report of T's keep-or-cut calls and rough times, not yet written.
+- B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21.
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - MR1e — T's text for the Suppliant's Ring's new signature and M-02b is written into spec 144; it closes with MR1f's PR, no T act waits on it.
 - MR1f — befriending leaves the game; its PR is open, no T act waits on it.
@@ -310,6 +283,7 @@ attended session.
 ## Change log
 
 - **2026-11-03** — **T's text for spec 144 settled at the pilot's gate; befriending leaves (MR1e, MR1f)** (T, at `/pilot`'s gate: "A: The Open Hand (Recommended)" and "Bigger MERCY (Recommended)"). **Edited** the Unscheduled lines of MR1e and MR1f: their text is in the spec and no T act waits on them. Nothing ticked; no date moved.
+- **2026-11-03** — **every pre-Nov 3 piece removed** (T, in chat: "OMG, this is the third time I'm saying it, remove the overdue items from the deadlines"; earlier the same day: "Everything you said that's overdue is done"). **Removed** the twelve MVP schedule rows dated Oct 26 to Nov 2 (several lacked a Done mark, so digests read them as overdue) and the thirteen Items dated before Nov 3 (all ticked; every row they named has shipped). **Closed** HP4e (chunk 120.5) on T's word: T played the thirty; no per-candidate report was written, and nothing asks T for one. **Reworded** B2's Unscheduled line and moved its Held lock's `until:` to Nov 23, so it waits on enemy sessions 3 and 4 and asks nothing before them. Kept the Nov 3 hazard-routing Item and everything after. No date moved.
 - **2026-11-03** — **week 1's overdue T items done** (T, in chat: "Everything you said that's overdue is done, please update the deadlines accordingly", of the sea keep boss design, the boss plot, the cost-card keep-or-cut and Chapter 1's enemy tuning). **Ticked** the Oct 31, Nov 1 (both) and Nov 2 Items. The Nov 1 cost-card Item and the Nov 2 boss-plot Item named HP4e and B2, whose chunks stay open (HP4e closes on A9, a report of T's rulings not yet written; B2 also holds Chapters 2-4 and the Act Boss), so both Items now name T and both chunks moved to `## Unscheduled`. No date moved.
 - **2026-11-03** — **the mercy check plotted as spec 144 (MR1a-MR1f)** (T, attended `/pitch` then `/plot asap`: "remove the befriending system and replace it with a 'mercy check' event"). **Added** MR1a, MR1b, MR1c and MR1d to the `Waits on` of the Mid-MVP check (Nov 9), and MR1e and MR1f under Unscheduled, since T set no date for the signature and M-02b text. **Edited** no Item's premise: the Open Hand stays until MR1f, so BUG1j and BUG1a still hold on that check. Nothing ticked; no date moved.
 - **2026-11-02** — **the sim's tuning tools plotted into spec 135 (SM2h-SM2k)** (T, attended sim session then `/plot`: "Do it", of the kept list: the no-stat Elementalist relic, the guard logic, no befriend, the anvil logic, plus run options, report columns and mix-and-match). **Added** SM2h, SM2i, SM2j and SM2k under `## Unscheduled`: no dated T act needs them. No Item edited.

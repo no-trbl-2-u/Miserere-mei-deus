@@ -57,7 +57,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **117.6** · attended: T does this one (DF1f) · since: 2026-11-01 · until: 2026-11-12 · max_age: 18d
 - **118.4** · attended: T does this one (EL1d) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **119.3** · attended: T does this one (BV1c) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **120.5** · attended: T does this one (HP4e) · since: 2026-11-01 · until: 2026-11-01 · max_age: 14d
 - **121.2** · owner-led: art is owner-only (D88) (TP1b) · since: 2026-11-01 · until: 2026-11-07 · max_age: 14d
 - **122.2** · attended: T does this one (R12) · since: 2026-11-01 · until: 2026-12-12 · max_age: 48d
 - **123.1** · attended: T does this one (PF2) · since: 2026-11-01 · until: T's word · max_age: 30d
@@ -73,7 +72,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **134.2** · owner-led: T's session 2026-09-28 (B1) · since: 2026-11-01 · until: 2026-12-05 · max_age: 41d
 - **134.3** · owner-led: T's session 2026-09-28 (B5) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.4** · owner-led: T's session 2026-09-28 (B6) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **134.5** · owner-led: T's session 2026-09-28 (B2) · since: 2026-11-01 · until: 2026-11-02 · max_age: 14d
+- **134.5** · owner-led: T's session 2026-09-28 (B2) · since: 2026-11-03 · until: 2026-11-23 · max_age: 21d
 - **134.6** · owner-led: T's session 2026-09-28 (B10) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.7** · owner-led: T's session 2026-09-28 (B7) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.8** · owner-led: T's session 2026-09-28 (B8) · since: 2026-11-01 · until: T's word · max_age: 30d
