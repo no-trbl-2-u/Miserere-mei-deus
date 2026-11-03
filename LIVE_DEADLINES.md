@@ -7,10 +7,6 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-10-31 (3 days overdue) | Enemy session 2: design the sea keep's boss; all six drafted elites are plotted (EN1j-EN1l), so there is no elite pick (1 h) | needs you: your task | W1 |
-| 2026-11-01 (2 days overdue) | W1 demo part 2: T plays the twenty cost-card candidates and rules keep or cut (2 h) | needs you: HP4e ready for you | W1 |
-| 2026-11-01 (2 days overdue) | Tune Chapter 1's enemies from EN1i's table: levels (all under 10), how often each normal repeats, VITAE (1 h) | needs you: your task | W1 |
-| 2026-11-02 (1 day overdue) | Plot the sea keep's boss from enemy session 2; the normals and all six elites are plotted (EN1) (0.5 h) | needs you: B2 ready for you | W1 |
 | 2026-11-03 (today) | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-07 (in 4 days) | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | needs you: TP1b ready for you | W2 |
 | 2026-11-07 (in 4 days) | Plot the arena-background swap from your picks (0.5 h) | needs a plot: no build-plan rows yet | W2 |
