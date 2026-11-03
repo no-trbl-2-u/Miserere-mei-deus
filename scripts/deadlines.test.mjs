@@ -64,6 +64,41 @@ test('parseItems reads every table row and its rows cell', () => {
     assert.equal(byName('A done task').done, true)
 })
 
+// One list (T, 2026-11-03): the MVP schedule merged into the Items table, which gains `Goal` and `How AI helps`.
+test('parseItems reads an eight-column row: Goal and How AI helps, with Rows and Waits on unchanged', () => {
+    const md = `# Deadlines
+
+## Items
+
+| Status | Due | Item | Goal | How AI helps | Window | Rows | Waits on |
+|---|---|---|---|---|---|---|---|
+| [ ] | 2026-11-09 | Mid-MVP check (1 h) | The MVP run | Claude turns your notes into \`/plot\` rows | W2 | T | A1, B1 |
+| [x] | 2026-11-04 | A six-column act | W2 | needs plot | - |
+`
+    const [eight, six] = parseItems(md)
+    assert.deepEqual(eight.rows, 'T')
+    assert.deepEqual(eight.waitsOn, ['A1', 'B1'])
+    assert.equal(eight.goal, 'The MVP run')
+    assert.equal(eight.aiHelp, 'Claude turns your notes into `/plot` rows')
+    assert.deepEqual(six.waitsOn, [])
+    assert.equal(six.goal, '')
+    assert.equal(six.aiHelp, '')
+})
+
+test('rewriteItemStatus re-derives an eight-column row and keeps its Goal and How AI helps cells', () => {
+    const md = `# Deadlines
+
+## Items
+
+| Status | Due | Item | Goal | How AI helps | Window | Rows | Waits on |
+|---|---|---|---|---|---|---|---|
+| [ ] | 2026-11-09 | Ship it | The MVP | \`/plot\` | W2 | A0 | - |
+`
+    const out = rewriteItemStatus(md, parsePhaseRows(BUILD_PLAN))
+    assert.deepEqual(out.unmatched, [])
+    assert.equal(out.md, md.replace('| [ ] | 2026-11-09', '| [x] | 2026-11-09'))
+})
+
 test('parsePhaseRows reads shipped, attended, owner-led and Requires', () => {
     assert.equal(phases.get('A0').shipped, true)
     assert.deepEqual(phases.get('A2').requires, ['A1'])

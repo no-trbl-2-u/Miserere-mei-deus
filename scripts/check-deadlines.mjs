@@ -14,6 +14,8 @@
 //     or by an Items row and `## Unscheduled`;
 //   - an Item whose `Rows` names an open loop row (not attended, not owner-led): every Item is
 //     a T act, and a loop row goes in the `Waits on` of the act it unblocks (phase DL2b);
+//   - a dated table row outside `## Items`: a second schedule that ticking an Item
+//     never updates (T, 2026-11-03, when the MVP schedule merged into the Items table);
 //   - an Items row whose due date falls outside its window in the `## Windows` table,
 //     or whose window has no row there;
 //   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
@@ -36,7 +38,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, datedRowsOutsideItems, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -126,6 +128,12 @@ export const checkDeadlines = (deadlinesMd, plan) => {
         if (namedBy.has(id)) errors.push(`${DEADLINES}: ${id} is both under ## Unscheduled and named by Item "${namedBy.get(id)[0].item}"; keep one.`)
         if (excused.has(id)) errors.push(`${DEADLINES}: ## Unscheduled lists ${id} twice; keep one line.`)
         excused.set(id, reason)
+    }
+
+    // One list (T, 2026-11-03): a dated table row outside ## Items is a second schedule, which
+    // ticking an Item never updates, so done work reads as overdue (the MVP schedule's lesson).
+    for (const row of datedRowsOutsideItems(deadlinesMd)) {
+        errors.push(`${DEADLINES}: a dated table row sits outside ## Items ("${row}"); every dated piece is one Items row, with its Goal and How AI helps cells, so the table there is the only list to tick.`)
     }
 
     for (const [id, row] of phases) {

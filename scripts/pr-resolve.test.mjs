@@ -76,9 +76,9 @@ function shipChunk(dir, tag, id) {
 /** An Items row at the top of the table; its fixture rows are attended, so `Rows` may name them. */
 function addItem(md, name, due, rows) {
   const lines = md.split('\n')
-  const head = lines.indexOf('| Status | Due | Item | Window | Rows | Waits on |')
+  const head = lines.indexOf('| Status | Due | Item | Goal | How AI helps | Window | Rows | Waits on |')
   assert.ok(head > 0)
-  lines.splice(head + 2, 0, `| [ ] | ${due} | ${name} | W1 | ${rows} | - |`)
+  lines.splice(head + 2, 0, `| [ ] | ${due} | ${name} | - | - | W1 | ${rows} | - |`)
   return lines.join('\n')
 }
 
@@ -250,7 +250,7 @@ test('a cell both plots changed to different values is listed for Haiku, as befo
     write(d, DEADLINES, addUnscheduled(addUnscheduled(read(d, DEADLINES), 'ZC2'), 'ZC3'))
   })
   try {
-    const setRows = (rows) => (d) => write(d, DEADLINES, read(d, DEADLINES).replace('| Item ZC | W1 | ZC1 | - |', `| Item ZC | W1 | ${rows} | - |`))
+    const setRows = (rows) => (d) => write(d, DEADLINES, read(d, DEADLINES).replace('| Item ZC | - | - | W1 | ZC1 | - |', `| Item ZC | - | - | W1 | ${rows} | - |`))
     branchWith(work, 'plot-c', setRows('ZC1, ZC2'))
     branchWith(work, 'plot-d', setRows('ZC1, ZC3'))
     setRows('ZC1, ZC2')(work)
