@@ -274,6 +274,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CF1f — the three long PAID lines reworded to fit the small face; T reads and merges its rules-change PR; date not set (T picks it).
 - CF1h — the opened card drops the duration line, the meta strip and the system notes (spec 137); no dated T act waits on it
 - CF1i — the Rules Glossary button in Settings (spec 137); no dated T act waits on it
+- SM2h — the lane bots never spare and guard when hit (spec 135); a tuning tool, no dated T act waits on it
+- SM2i — the bots use the anvil (spec 135); a tuning tool, no dated T act waits on it
+- SM2j — tuning flags on the sim (spec 135); a tuning tool, no dated T act waits on it
+- SM2k — boss damage and a batch table in the sim output (spec 135); a tuning tool, no dated T act waits on it
 - CF1g — the open card prints the hand's whole line, in words or in glyphs (spec 137); no dated T act waits on it
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
 - OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
@@ -300,6 +304,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-02** — **the sim's tuning tools plotted into spec 135 (SM2h-SM2k)** (T, attended sim session then `/plot`: "Do it", of the kept list: the no-stat Elementalist relic, the guard logic, no befriend, the anvil logic, plus run options, report columns and mix-and-match). **Added** SM2h, SM2i, SM2j and SM2k under `## Unscheduled`: no dated T act needs them. No Item edited.
 - **2026-11-02** — **the X amount on a staged card always shows its number, plotted as spec 143 (XR1a)** (T, `/bug` with a screenshot: "These set X areas are truncated above 9"). **Added** XR1a to the `Waits on` of the Mid-MVP check (Nov 9), beside the other combat-board chunks: the check plays the fights. Nothing ticked; no date moved.
 - **2026-11-02** — **a dropped card with no die plays on landing, plotted as spec 142 (CP1a)** (T, attended `/pitch` then `/plot asap`: "If you drag a card onto the board and you currently don't have a die that could power it, then just accept the card once it lands"). **Added** CP1a to the `Waits on` of the Mid-MVP check (Nov 9), beside AN6a and AN6b: the check plays the fights. Nothing ticked; no date moved.
 - **2026-11-02** — **the landed enemy hit plotted as spec 141 (AN6b)** (T, attended `/plot`, on spec 140's follow-ups: "Yes, plot them"). **Added** AN6b to the `Waits on` of the Mid-MVP check (Nov 9), right after AN6a, which it needs: the check plays these fights. Nothing ticked; no date moved.
