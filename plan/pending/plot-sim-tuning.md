@@ -35,9 +35,16 @@ order. The driver carries that out through the app's own `state/blacksmith/store
 session runs, and a refused step ends that colour rather than the run. One shared greedy helper reads everything from
 data: it keeps back the bed's price when under half VITAE, upgrades one card first (the bot's own lane's when it has
 one) when the budget reaches the upgrade's price, then hones and tempers its lane's stat colour before the others.
-Prices come from the blacksmith code, never retyped here. Confirmed by T (2026-11-02): "Every one except wanderer
-which should be our floor". Every lane bot and persona uses the helper, which changes what the nightly report measures;
-the Wanderer's `visitAnvil` spends nothing, so it stays the floor the others are read against.
+Prices come from the blacksmith code, never retyped here. Every lane bot and persona uses the helper, which changes
+what the nightly report measures.
+
+Confirmed by T (2026-11-02): "All bots use anvils, wanderer chooses randomly what to spend money on". So the Wanderer
+stays the floor by spending without a plan, not by skipping the anvil. Its `visitAnvil` draws a random share of the
+purse as the budget, then a random card or none and a random colour order. Its `visitVillage` then picks at random
+from what the rest of the purse can afford (the bed, shop cards, a removal) until it stops or nothing is affordable.
+The anvil and village contexts gain `rng`, filled by the driver from the engine's seeded stream, so a seed replays the
+same spending and no policy calls `Math.random`. This replaces the Wanderer's bed rule and its buy-nothing answer in
+`run-policy.wanderer.ts`; its other seams keep taking the first legal choice.
 
 **SM2j, run options.** New `sim:run` flags, all carried on `SimRunRequest` and applied only inside
 `axiomancer-mobile/sim/`:
@@ -75,7 +82,9 @@ no exit code depends on it.
 - **A?simanvil** `RunPolicy` has a `visitAnvil` seam, the driver carries its answer out through the blacksmith store
   actions before the village's other steps, an illegal answer throws as other seams do, and the no-id guard covers the
   helper. A driver test shows a lane bot and a persona with shillings at an anvil spend them there and own the result;
-  another shows the helper keeps back the bed's price when under half VITAE; another shows the Wanderer spends nothing.
+  another shows the helper keeps back the bed's price when under half VITAE. The Wanderer's anvil and village answers
+  are legal over fixture contexts, the same seed gives the same spending, different seeds give different spending, and
+  a guard test finds no `Math.random` in the policy files.
 - **A?simoptions** `sim:run` takes `--shillings`, `--boss-level`, `--start-relic`, `--no-relic-stats`, `--fight`,
   `--no-anvil`, `--no-guard` and a list for `--policy`. Tests show each changes the run as named, and that with
   `--no-relic-stats` the worn relic adds no stat while `relicLibrary`'s entry and the library's own tests are unchanged.
