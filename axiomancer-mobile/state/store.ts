@@ -17,7 +17,7 @@ import {
 
 import type { HazardSessionState } from '@mechanics';
 import type { HazardPuzzleNodePlay } from './hazard/puzzle-node-actions';
-import type { BlacksmithSession, EliteRewardUpgrade, LootCacheChoiceSession, RestChoiceSession } from '@mechanics';
+import type { BlacksmithSession, EliteRewardUpgrade, LootCacheChoiceSession, RestChoiceSession, SpareReward } from '@mechanics';
 import type { LabyrinthActId, ResolvedEvent, VillageVisit, WorldState } from '@mechanics';
 
 import { resumeLabyrinthSession } from './labyrinth/resume';
@@ -224,6 +224,12 @@ export interface MobileCombatRewardSlice {
      * is claimed. Absent or null when nothing dropped.
      */
     relicDrop?: { item: Equipment; eliteName: string } | null;
+    /**
+     * After a foe spared at the mercy check: the one table roll it paid (already
+     * on the player) and the journal entry it opened, for the end screen. The
+     * draft is closed as claimed: a Spare pays no card reward.
+     */
+    spare?: { reward: SpareReward; journalTitle?: string } | null;
 }
 
 /**

@@ -141,6 +141,12 @@ to the same `miserere-api` Worker, so card tuning can read what was drawn,
 played, held and passed over (phases BE2a-BE2f,
 `plan/phases/phase_BE2_card_combat_logging.md`).
 
+**The mercy check.** `/dev` → ENCOUNTERS → "Force the mercy check"
+(`components/DebugMercyCheckSwitch.tsx`) makes every normal foe ask spare or
+finish as it falls, so the prompt can be seen without waiting on the chance. An
+elite or a boss still never asks. It lives in the dev settings beside the switch
+below.
+
 **The switch.** `/dev` → RUN & DIAGNOSTICS → "Card & combat logging"
 (`components/DebugPlayLogSwitch.tsx`) reads and flips `playLogging`, kept in
 the dev-settings store (`state/dev/dev-settings.ts`) under its own

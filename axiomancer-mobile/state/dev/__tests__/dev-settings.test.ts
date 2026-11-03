@@ -30,11 +30,26 @@ describe('sanitizeDevSettings', () => {
     it('defaults a missing or malformed field and drops junk', () => {
         expect(sanitizeDevSettings(null)).toEqual(DEFAULT_DEV_SETTINGS);
         expect(sanitizeDevSettings({ playLogging: 'no', extra: 1 })).toEqual(DEFAULT_DEV_SETTINGS);
-        expect(sanitizeDevSettings({ playLogging: false })).toEqual({ playLogging: false });
+        expect(sanitizeDevSettings({ playLogging: false })).toEqual({ playLogging: false, forceMercyCheck: false });
+        expect(sanitizeDevSettings({ forceMercyCheck: 'yes' }).forceMercyCheck).toBe(false);
+        expect(sanitizeDevSettings({ forceMercyCheck: true }).forceMercyCheck).toBe(true);
     });
 });
 
 describe('createDevSettingsStore', () => {
+    it('keeps the mercy check off until flipped, and persists a flip', async () => {
+        const storage = fakeStorage();
+        const store = createDevSettingsStore({ storage });
+        await store.hydrate();
+        expect(store.get().forceMercyCheck).toBe(false);
+        store.set({ forceMercyCheck: true });
+        expect(store.get().forceMercyCheck).toBe(true);
+        await flush();
+        const reborn = createDevSettingsStore({ storage });
+        await reborn.hydrate();
+        expect(reborn.get().forceMercyCheck).toBe(true);
+    });
+
     it('starts with play logging on', async () => {
         const store = createDevSettingsStore({ storage: fakeStorage() });
         await store.hydrate();
@@ -52,7 +67,7 @@ describe('createDevSettingsStore', () => {
         expect(notified).toBe(1);
         expect(DEV_SETTINGS_STORAGE_KEY).not.toBe(SETTINGS_STORAGE_KEY);
         expect([...storage.bag.keys()]).toEqual([DEV_SETTINGS_STORAGE_KEY]);
-        expect(JSON.parse(storage.bag.get(DEV_SETTINGS_STORAGE_KEY)!)).toEqual({ playLogging: false });
+        expect(JSON.parse(storage.bag.get(DEV_SETTINGS_STORAGE_KEY)!)).toEqual({ playLogging: false, forceMercyCheck: false });
     });
 
     it('survives a restart: a fresh store hydrates the flipped value', async () => {

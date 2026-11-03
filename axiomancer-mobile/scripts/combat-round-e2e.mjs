@@ -66,6 +66,14 @@
 //     (`CombatEncounterPanel.tsx`) runs mid-aftermath, the exact code path
 //     the crash report implicated.
 //
+//   MERCY_CHECK=spare|finish PRESET=l30 PLAYS_PER_ROUND=5 ROUNDS=59 node scripts/combat-round-e2e.mjs
+//     — the mercy check's journey (spec 144). Flips the /dev "Force the mercy
+//     check" switch, wins a normal fight and answers the prompt. It FAILS when a
+//     win shows no prompt, when the prompt names a reward, or when the answer
+//     pays the wrong ending: Spare must reach the summary with the roll revealed
+//     and no card reward, Finish must open the card reward with no roll. A seed
+//     that loses never reached the prompt and is only noted.
+//
 // THE SIGNET (phase SG1). Before arming the fight the harness opens /dev
 // DECKS & ITEMS and presses the Bleeding Signet chip, which wears the relic
 // while a position is free. A run whose round-1 board draws no
@@ -97,6 +105,11 @@ const MODES = ['live']
 const ENCOUNTER_KIND = (process.env.ENCOUNTER_KIND ?? 'encounter').toLowerCase()
 const WITHDRAW = process.env.WITHDRAW === '1'
 const LEVEL_UP = process.env.LEVEL_UP === '1'
+const MERCY_CHECK = (process.env.MERCY_CHECK ?? '').toLowerCase()
+if (MERCY_CHECK && MERCY_CHECK !== 'spare' && MERCY_CHECK !== 'finish') {
+    console.error(`combat-round-e2e: MERCY_CHECK="${MERCY_CHECK}": use spare or finish`)
+    process.exit(2)
+}
 // `Character/index.ts`'s `buildCharacterFromPreset`: experience = (level-1) *
 // EXPERIENCE_PER_LEVEL, experienceToNextLevel = level * EXPERIENCE_PER_LEVEL.
 // The gap is always exactly EXPERIENCE_PER_LEVEL, regardless of preset level.
@@ -540,10 +553,61 @@ async function enterLive(page, baseUrl, seed) {
     await page.waitForTimeout(150)
     log(`live: pressed the ${SIGNET_RELIC} chip before arming the fight`)
     await openDevSection(page, 'encounters', `debug-trigger-encounter-${ENCOUNTER_KIND}`)
+    if (MERCY_CHECK) {
+        await page.getByTestId('debug-mercy-check-toggle').click({ force: true, timeout: 5000 })
+        await page.waitForTimeout(150)
+        log('live: forced the mercy check from /dev')
+    }
     const trigger = page.getByTestId(`debug-trigger-encounter-${ENCOUNTER_KIND}`)
     await trigger.waitFor({ state: 'visible', timeout: 15000 })
     await trigger.click({ force: true })
     await page.waitForURL((url) => url.pathname.endsWith('/combat-encounter'), { timeout: 15000 })
+}
+
+/**
+ * The mercy check's journey: the forced prompt is up, shows no reward, and the
+ * answer pays its own ending. A defeat never reached it, so it is only noted.
+ */
+async function answerMercyCheck(page, sink, tag, mode, seed) {
+    const check = (ok, what) => {
+        if (!ok) throw new CombatCrash(`${tag} — mercy check: ${what}`, { kind: 'mercy-check', message: what })
+    }
+    const prompt = page.getByTestId('combat-mercy')
+    if (!(await has(prompt))) {
+        const line = (await page.getByTestId('combat-summary').innerText().catch(() => '')).split('\n')[0]
+        if (/defeat/i.test(line)) { note(`${tag} — lost the fight, so the prompt never came`); return }
+        check(!(await has(page.getByTestId('combat-rewards'))), 'a forced win opened the card reward with no prompt')
+        check(!line, `a forced win reached the summary with no prompt (${line})`)
+        note(`${tag} — the fight did not resolve by the round cap, so the prompt never came`)
+        return
+    }
+    const words = await prompt.innerText()
+    check(!/shilling|xp\b|card|relic|reward|pays/i.test(words), `the prompt names a reward: ${words}`)
+    check(!(await has(page.getByTestId('combat-summary'))), 'the summary is up behind the prompt')
+    check(!(await has(page.getByTestId('combat-rewards'))), 'the card reward is up behind the prompt')
+    await shot(page, `${mode}-seed-${seed}-mercy-prompt`)
+
+    await page.getByTestId(`combat-mercy-${MERCY_CHECK}`).click({ timeout: 3000, force: true })
+    await page.waitForTimeout(500)
+    await assertAlive(page, sink, `${tag}, answering the mercy check`)
+    if (MERCY_CHECK === 'spare') {
+        check(!(await has(page.getByTestId('combat-rewards'))), 'Spare opened a card reward')
+        check(await has(page.getByTestId('combat-summary')), 'Spare did not reach the summary')
+        check(await has(page.getByTestId('combat-summary-spare-reward')), 'the summary reveals no roll')
+        check(await has(page.getByTestId('combat-summary-shillings')), 'the summary shows no shillings')
+        log(`${tag} — spared: ${await page.getByTestId('combat-summary-spare-reward').innerText()}`)
+        await shot(page, `${mode}-seed-${seed}-mercy-spared`)
+    } else {
+        check(await has(page.getByTestId('combat-rewards')), 'Finish opened no card reward')
+        check(!(await has(page.getByTestId('combat-summary-spare-reward'))), 'Finish revealed a roll')
+        await shot(page, `${mode}-seed-${seed}-mercy-finished`)
+        await page.getByTestId('combat-reward-skip').click({ timeout: 3000, force: true })
+        await page.waitForTimeout(500)
+        await assertAlive(page, sink, `${tag}, skipping the card after a finish`)
+        check(await has(page.getByTestId('combat-summary')), 'Finish did not reach the summary')
+        check(!(await has(page.getByTestId('combat-summary-spare-reward'))), 'the finished summary reveals a roll')
+        await shot(page, `${mode}-seed-${seed}-mercy-finished-summary`)
+    }
 }
 
 async function playSeed(browser, baseUrl, seed, mode) {
@@ -627,7 +691,10 @@ async function playSeed(browser, baseUrl, seed, mode) {
             }
         }
 
-        if (await has(page.getByTestId('combat-mercy'))) {
+        if (MERCY_CHECK) {
+            await answerMercyCheck(page, sink, tag, mode, seed)
+        } else if (await has(page.getByTestId('combat-mercy'))) {
+            // Any prompt, the Open Hand's or the check's, on the plain walk.
             await page.getByTestId('combat-mercy-spare').click({ timeout: 3000, force: true }).catch(() => {})
             await page.waitForTimeout(300)
             await assertAlive(page, sink, `${tag}, taking the mercy branch`)

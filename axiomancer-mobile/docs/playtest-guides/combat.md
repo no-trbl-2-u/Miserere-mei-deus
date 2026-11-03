@@ -42,7 +42,9 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-player-medallion` | The player avatar at the left of the footer dock; tap opens `combat-pilgrim-modal` |
 | `combat-pilgrim-log` / `combat-log` / `combat-pilgrim-log-back` / `combat-pilgrim-close` | Combat log, inside the pilgrim modal: LOG opens it, BACK returns to the stats |
 | `combat-card-detail` / `combat-card-detail-close` | Card detail modal (deliberate; has a dismiss) |
-| `combat-mercy` / `combat-mercy-spare` / `combat-mercy-exploit` | Mercy choice when the foe breaks |
+| `combat-mercy` / `combat-mercy-spare` / `combat-mercy-exploit` | Mercy choice when the foe breaks (The Open Hand) |
+| `combat-mercy` / `combat-mercy-spare` / `combat-mercy-finish` | The mercy check: now and then a normal foe, falling, asks spare or finish. `/dev` ENCOUNTERS, `debug-mercy-check-toggle`, forces it |
+| `combat-summary-spare-reward` / `combat-summary-spare-journal` | A spared foe's one table roll, and the journal entry it opened, on the summary |
 | `combat-rewards` / `combat-reward-<cardId>` / `combat-reward-preview` / `combat-reward-preview-select` / `combat-reward-preview-close` / `combat-reward-confirm` / `combat-reward-skip` | SPOILS card pick |
 | `combat-summary` / `combat-summary-close` | Post-fight summary; Continue ends the fight and the route leaves for the map (`app/combat-encounter/index.tsx` `onExit`; after a defeat the run resets first, keeping the character) |
 | `combat-friendship-panel` / `combat-friendship-panel-part-as-friends` | Parley seal; only `/devaftermath?panel=parley` mounts it, not the live fight |
@@ -56,7 +58,7 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 3. **Drag** a `combat-die-<id>` whose colour matches the card onto `combat-staged-<uid>`; success shows `combat-staged-die`. A die whose aria-label says `MISS face` powers nothing — pick another. A wrong colour flashes `combat-drop-reject`. Use real pointer moves (down → several moves → up); `scripts/combat-round-e2e.mjs` `dragTo` is the reference.
 4. Press `combat-apply-<uid>`. Repeat 2–4 while dice remain, or discard via `combat-trash`.
 5. Press `combat-end-phase`; the enemy acts (its lunge plays and the damage floats rise), the tray re-rolls.
-6. Repeat until the foe breaks. Answer `combat-mercy-spare`/`-exploit` if asked.
+6. Repeat until the foe breaks. Answer `combat-mercy-spare`/`-exploit` or `combat-mercy-spare`/`-finish` if asked. A Spare goes straight to the summary: no card reward.
 7. Pick a reward: one tap on `combat-reward-<cardId>` selects it, then `combat-reward-confirm` takes it (a second tap on the selected tile opens `combat-reward-preview` to read it in full; its `combat-reward-preview-select` keeps the pick and closes); or `combat-reward-skip`; press `combat-summary-close`. The route leaves at once and you are back on the map; no seal or carry-on panel follows.
 
 ## 5. Looks stuck but isn't

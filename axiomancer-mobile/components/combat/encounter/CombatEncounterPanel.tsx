@@ -32,7 +32,7 @@ import {
     startTurn, endTurn, discardCombatCard, playSignatureSkill, payTheToll,
     getFloatingDiceColors,
     selectEncounterMercyChoice, buildCombatSummary,
-    getLogger, enemySlugOf, firedDangerKeys,
+    getLogger, enemySlugOf, firedDangerKeys, rollMercyCheck, chooseMercyCheck, mercyCheckSettled,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
     type Equipment, type GameState, type PlayLogUiEventKind,
 } from '@mechanics';
@@ -59,13 +59,17 @@ import {
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
+import { MERCY_CHECK_PROMPT, OPEN_HAND_MERCY_PROMPT } from '@/state/presenters/mercy-check.copy';
+import { spareSummaryLines } from '@/state/presenters/spare-reward.engine';
 import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
+import { devSettingsStore } from '@/state/dev/dev-settings';
+import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { recordFightSettled } from '@/state/run-log';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
     claimCombatRewardAction, claimCombatUpgradeAction, resetCombatRewardAction, rollCombatRewardAction,
-    settleEliteEquipmentAction, settleEliteRelicAction,
+    settleEliteEquipmentAction, settleEliteRelicAction, settleSpareAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -203,7 +207,9 @@ function mapHazardOutcomeToEndCombat(
  * `claimCombatRewardAction`). A won elite fight rolls its relic first
  * (`settleEliteRelicAction`, from `relics`, the relic library by default):
  * on a drop the relic takes the XP's place and `endCombat` withholds it; the
- * shillings stand. Returns the shillings the fight paid, for the summary.
+ * shillings stand. A foe spared at the mercy check (`finalState.mercyCheck`) pays
+ * the Spare ending instead: no XP, no card reward, the spare wage and one table
+ * roll. Returns the shillings the fight paid, for the summary.
  */
 export function applyHazardOutcome(
     store: StoreLike,
@@ -238,6 +244,7 @@ export function applyHazardOutcome(
     // .friendshipReward / .journalEntry via state.currentEncounter.
     // A won elite fight rolls its relic FIRST: on a drop the XP is withheld
     // and the card draft never opens; the shillings stand.
+    const spared = outcome === 'victory' && finalState.mercyCheck === 'spared';
     const relicOnly = outcome === 'victory' && settleEliteRelicAction(store, enemy, relics);
     // A beaten elite may also drop a lane piece, a befriended one always hands
     // one: on top of the relic roll, never the whole reward.
@@ -248,7 +255,9 @@ export function applyHazardOutcome(
         withholdSpoils: relicOnly,
         // Every DANGER that fired is seen from now on, whoever won.
         seenDangers: firedDangerKeys(finalState),
+        ...(spared ? { spared } : {}),
     });
+    if (spared) settleSpareAction(store, report);
     // A kill that completed a quest (the questline's boss step pays here): its
     // relic goes to the item-reward screen and a card pick to the spoils tiles.
     if (questsBefore) offerCompletedQuestExtrasAction(store, questsBefore);
@@ -365,6 +374,7 @@ export function CombatEncounterPanel({
     const rewardOffers = useGameState((s) => s.combatReward?.offers ?? EMPTY_OFFERS);
     const rewardsClaimed = useGameState((s) => s.combatReward?.claimed ?? false);
     const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
+    const spare = useGameState((s) => s.combatReward?.spare ?? null);
     // What the engine paid for this fight, printed on the summary.
     const [shillingsPaid, setShillingsPaid] = useState(0);
 
@@ -678,6 +688,16 @@ export function CombatEncounterPanel({
         resolveTimer.current = setTimeout(endResolving, RESOLVE_LOCK_MS);
     }, [apply, endResolving]);
     const onMercy = useCallback((choice: 'spare' | 'exploit') => apply((s) => selectEncounterMercyChoice(s, choice).state), [apply]);
+    const onMercyCheck = useCallback((choice: 'spare' | 'finish') => apply((s) => chooseMercyCheck(s, choice)), [apply]);
+
+    // The mercy check rolls as the foe falls, once, before anything is paid. A
+    // fight that writes nothing back (`persistOutcome` off) has nothing to spare
+    // for, and the dev switch makes every normal foe ask.
+    useEffect(() => {
+        if (live.finalOutcome !== 'victory' || live.mercyCheck) return;
+        const forced = isDevToolsEnabled() && devSettingsStore.get().forceMercyCheck;
+        setState(rollMercyCheck(live, !persistOutcome ? () => 1 : forced ? () => 0 : undefined));
+    }, [live, persistOutcome]);
     // Stable resolution-feedback payload — recomputed only when a new resolve bumps
     // the seq (captures the events stashed in fxRef just before).
     const fx = useMemo<CombatFx>(() => ({ seq: fxSeq, events: fxRef.current }), [fxSeq]);
@@ -700,7 +720,7 @@ export function CombatEncounterPanel({
     // Economy write-back — fires once, the instant combat reaches a terminal
     // outcome (so spoils land even if the player lingers on the summary).
     useEffect(() => {
-        if (!live.finalOutcome || wroteBackRef.current) return;
+        if (!live.finalOutcome || wroteBackRef.current || !mercyCheckSettled(live)) return;
         wroteBackRef.current = true;
         if (persistOutcome) setShillingsPaid(applyHazardOutcome(store, live.finalOutcome, live, enemy));
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
@@ -716,8 +736,10 @@ export function CombatEncounterPanel({
     // the action is idempotent, so a remount re-reads the SAME offer rather
     // than rerolling it.
     useEffect(() => {
-        if (live.finalOutcome === 'victory') rollCombatRewardAction(store, enemy);
-    }, [live.finalOutcome, store, enemy]);
+        if (live.finalOutcome === 'victory' && mercyCheckSettled(live) && live.mercyCheck !== 'spared') {
+            rollCombatRewardAction(store, enemy);
+        }
+    }, [live, store, enemy]);
 
     // Claim (or skip) — the action appends the card AND persists, so the pick
     // does not wait on some unrelated save() to happen along.
@@ -779,6 +801,8 @@ export function CombatEncounterPanel({
 
     const summary = live.finalOutcome ? buildCombatSummary(live) : null;
     const mercy = live.phase === 'mercy-choice' && !live.finalOutcome;
+    const mercyCheckOpen = live.mercyCheck === 'offered';
+    const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
     const showReveal = live.phase === 'reveal';
     // A `phases` foe's reveal shows its DANGER lines and nothing else.
     const revealDangerLines = showReveal ? revealDangers(live, seen) : null;
@@ -959,11 +983,25 @@ export function CombatEncounterPanel({
             {mercy && (
                 <View style={styles.backdrop} testID="combat-mercy">
                     <View style={[styles.modal, { borderColor: HUE.tickPurple }]}>
-                        <Text style={styles.modalTitle}>{live.enemy.name} is overwhelmed.</Text>
-                        <Text style={styles.modalSub}>The will to fight has drained away.</Text>
+                        <Text style={styles.modalTitle}>{OPEN_HAND_MERCY_PROMPT.title(live.enemy.name)}</Text>
+                        <Text style={styles.modalSub}>{OPEN_HAND_MERCY_PROMPT.sub}</Text>
                         <View style={styles.modalBtns}>
-                            <Pressable onPress={() => onMercy('spare')} testID="combat-mercy-spare" accessibilityRole="button" accessibilityLabel="Spare" style={[styles.modalBtn, { borderColor: HUE.boonGreen }]}><Text style={[styles.modalBtnText, { color: HUE.boonGreen }]}>SPARE</Text></Pressable>
-                            <Pressable onPress={() => onMercy('exploit')} testID="combat-mercy-exploit" accessibilityRole="button" accessibilityLabel="Exploit" style={[styles.modalBtn, { borderColor: AXM.blood }]}><Text style={[styles.modalBtnText, { color: AXM.blood }]}>EXPLOIT</Text></Pressable>
+                            <Pressable onPress={() => onMercy('spare')} testID="combat-mercy-spare" accessibilityRole="button" accessibilityLabel="Spare" style={[styles.modalBtn, { borderColor: HUE.boonGreen }]}><Text style={[styles.modalBtnText, { color: HUE.boonGreen }]}>{OPEN_HAND_MERCY_PROMPT.spare}</Text></Pressable>
+                            <Pressable onPress={() => onMercy('exploit')} testID="combat-mercy-exploit" accessibilityRole="button" accessibilityLabel="Exploit" style={[styles.modalBtn, { borderColor: AXM.blood }]}><Text style={[styles.modalBtnText, { color: AXM.blood }]}>{OPEN_HAND_MERCY_PROMPT.exploit}</Text></Pressable>
+                        </View>
+                    </View>
+                </View>
+            )}
+
+            {/* the mercy check: the same modal, as a normal foe falls. No reward shows here. */}
+            {mercyCheckOpen && (
+                <View style={styles.backdrop} testID="combat-mercy">
+                    <View style={[styles.modal, { borderColor: HUE.tickPurple }]}>
+                        <Text style={styles.modalTitle}>{MERCY_CHECK_PROMPT.title}</Text>
+                        <Text style={styles.modalSub}>{MERCY_CHECK_PROMPT.sub}</Text>
+                        <View style={styles.modalBtns}>
+                            <Pressable onPress={() => onMercyCheck('spare')} testID="combat-mercy-spare" accessibilityRole="button" accessibilityLabel={MERCY_CHECK_PROMPT.spare} style={[styles.modalBtn, { borderColor: HUE.boonGreen }]}><Text style={[styles.modalBtnText, { color: HUE.boonGreen }]}>{MERCY_CHECK_PROMPT.spare}</Text></Pressable>
+                            <Pressable onPress={() => onMercyCheck('finish')} testID="combat-mercy-finish" accessibilityRole="button" accessibilityLabel={MERCY_CHECK_PROMPT.finish} style={[styles.modalBtn, { borderColor: AXM.blood }]}><Text style={[styles.modalBtnText, { color: AXM.blood }]}>{MERCY_CHECK_PROMPT.finish}</Text></Pressable>
                         </View>
                     </View>
                 </View>
@@ -1299,7 +1337,7 @@ export function CombatEncounterPanel({
             })()}
 
             {/* deckbuilder reward — claimed before the summary on a win */}
-            {live.finalOutcome === 'victory' && !rewardsClaimed && rewardOffers.length > 0 && (
+            {live.finalOutcome === 'victory' && mercyCheckSettled(live) && !rewardsClaimed && rewardOffers.length > 0 && (
                 <CombatRewardsOverlay
                     offers={rewardCardVMs(rewardOffers, live.player.baseStats)}
                     onPick={onRewardPick}
@@ -1308,8 +1346,8 @@ export function CombatEncounterPanel({
                 />
             )}
 
-            {summary && (rewardsClaimed || live.finalOutcome !== 'victory') && (
-                <CombatSummaryModal summary={summary} shillings={shillingsPaid} onClose={handleExit} />
+            {summary && mercyCheckSettled(live) && (rewardsClaimed || live.finalOutcome !== 'victory') && (
+                <CombatSummaryModal summary={summary} shillings={shillingsPaid} spareLines={spareLines} onClose={handleExit} />
             )}
 
             {/* drag ghost — persistently mounted after the first drag; dragShown

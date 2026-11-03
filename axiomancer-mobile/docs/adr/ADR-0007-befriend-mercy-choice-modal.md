@@ -36,6 +36,14 @@ When mechanics exposes them, mobile should make these consequences legible:
 - Surface consequence language when mechanics exposes it: alignment shift, boss content, lost/altered reward, future flag, or narrative burden.
 - Preserve accessibility: modal labels must explain both actions and the consequence category.
 
+## The mercy check shares the modal (spec 144, 2026-11-03)
+
+The mercy check (`rollMercyCheck`) uses this modal too, with Spare and Finish.
+It deliberately breaks "surface consequence language" above: T's ruling is that
+the player does not see the reward before choosing, so the prompt names no
+reward, no consequence category and no hint of one. The result shows only on the
+end screen. The Open Hand's choice keeps its own copy until befriending leaves.
+
 ## Open questions
 
 - What exact mechanics state/action names will represent the choice?

@@ -10,6 +10,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { CombatSummary } from '@mechanics';
 import { summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
+import type { SpareSummaryLine } from '@/state/presenters/spare-reward.engine';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
@@ -23,7 +24,7 @@ const OUTCOME_COLOR: Record<string, string> = {
     defeat: HUE.defeatRed, retreat: HUE.retreatBone,
 };
 
-export function CombatSummaryModal({ summary, shillings = 0, onClose }: { summary: CombatSummary; shillings?: number; onClose: () => void }) {
+export function CombatSummaryModal({ summary, shillings = 0, spareLines, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
     const color = OUTCOME_COLOR[summary.outcome] ?? AXM.parchment;
@@ -59,6 +60,9 @@ export function CombatSummaryModal({ summary, shillings = 0, onClose }: { summar
                     {shillings > 0 && (
                         <Text style={styles.total} testID="combat-summary-shillings">{summaryShillingsLabel} <Text style={{ color: AXM.sulfur }}>{summaryShillingsValue(shillings)}</Text></Text>
                     )}
+                    {spareLines?.map(line => (
+                        <Text key={line.key} style={styles.total} testID={`combat-summary-spare-${line.key}`}>{line.label} <Text style={{ color: AXM.sulfur }}>{line.value}</Text></Text>
+                    ))}
                 </View>
 
                 {summary.bestCard.length > 0 && (
