@@ -263,6 +263,7 @@ names, and on a line here with no reason. **A row listed here is work the loop m
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
+- MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
@@ -305,6 +306,7 @@ attended session.
 ## Change log
 
 - **2026-11-02** — **the sim's tuning tools plotted into spec 135 (SM2h-SM2k)** (T, attended sim session then `/plot`: "Do it", of the kept list: the no-stat Elementalist relic, the guard logic, no befriend, the anvil logic, plus run options, report columns and mix-and-match). **Added** SM2h, SM2i, SM2j and SM2k under `## Unscheduled`: no dated T act needs them. No Item edited.
+- **2026-11-02** — **the Merciful's two quest relics plotted into spec 115 (MF1f)** (T, attended pitch then pick: "let's create 2 relics for the merciful lane", pitches 3 and 8). **Added** an Unscheduled line for MF1f: no dated T act waits on it, and the MVP's relic list is unchanged. Nothing ticked; no date moved.
 - **2026-11-02** — **the X amount on a staged card always shows its number, plotted as spec 143 (XR1a)** (T, `/bug` with a screenshot: "These set X areas are truncated above 9"). **Added** XR1a to the `Waits on` of the Mid-MVP check (Nov 9), beside the other combat-board chunks: the check plays the fights. Nothing ticked; no date moved.
 - **2026-11-02** — **a dropped card with no die plays on landing, plotted as spec 142 (CP1a)** (T, attended `/pitch` then `/plot asap`: "If you drag a card onto the board and you currently don't have a die that could power it, then just accept the card once it lands"). **Added** CP1a to the `Waits on` of the Mid-MVP check (Nov 9), beside AN6a and AN6b: the check plays the fights. Nothing ticked; no date moved.
 - **2026-11-02** — **the landed enemy hit plotted as spec 141 (AN6b)** (T, attended `/plot`, on spec 140's follow-ups: "Yes, plot them"). **Added** AN6b to the `Waits on` of the Mid-MVP check (Nov 9), right after AN6a, which it needs: the check plays these fights. Nothing ticked; no date moved.
