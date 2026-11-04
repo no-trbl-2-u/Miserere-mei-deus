@@ -3,7 +3,7 @@
  * depend on a renderer or a running animation driver.
  */
 import {
-    clipDurationMs, clipFinishedAt, frameIndexAt, frameIndexFromProgress, framePeriodMs, sheetIndexFor,
+    backingForCell, clipDurationMs, clipFinishedAt, frameIndexAt, frameIndexFromProgress, framePeriodMs, sheetIndexFor,
 } from '../framePlayback';
 import type { FrameClip, FrameSetManifest } from '@/assets/images/enemies/frames';
 
@@ -82,5 +82,21 @@ describe('sheetIndexFor', () => {
     it('clamps rather than reaching into the next clip\'s row', () => {
         expect(sheetIndexFor(manifest, struck, 99)).toBe(15);
         expect(sheetIndexFor(manifest, struck, -4)).toBe(8);
+    });
+});
+
+describe('backingForCell (146.8)', () => {
+    const backings = [{ uri: 'b0' }, { uri: 'b1' }, { uri: 'b2' }];
+
+    it('answers the backing cut from that cell', () => {
+        expect(backingForCell(backings, 3, 0)).toBe(backings[0]);
+        expect(backingForCell(backings, 3, 2)).toBe(backings[2]);
+    });
+
+    it('answers null for no list, a list that does not match the cells, or a cell past the end', () => {
+        expect(backingForCell(null, 3, 0)).toBeNull();
+        expect(backingForCell(undefined, 3, 0)).toBeNull();
+        expect(backingForCell(backings, 4, 0)).toBeNull();
+        expect(backingForCell(backings.slice(0, 1), 1, 1)).toBeNull();
     });
 });

@@ -32,7 +32,7 @@ import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { getEncounterEnemyArt, getEnemyBacking } from '@/assets/images/enemies';
 import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
 import {
-    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, cellContentPosition, isEnemyActionBeat, isEnemyStruckBeat,
+    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, isEnemyActionBeat, isEnemyStruckBeat,
     useEnemyClipSelection,
 } from '@/components/combat/frames';
 import { nodeArenaFor } from '@/state/exploration-maps';
@@ -632,7 +632,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // `AccessibilityInfo` a second time, because two answers to one question
     // drift and one of them is wrong.
     const enemyFrameSet = getEnemyFrameSet(enemy.artKey);
-    const enemyBacking = getEnemyBacking(enemy.artKey);
+    // One backing per drawn cell (146.8), and only over a plate: the plain
+    // black scene (plates off) has nothing to hide, and web's tint filter
+    // shifts a near-black, so a backing there would show.
+    const enemyBackings = ARENA_PLATES_SHOWN ? getEnemyBacking(enemy.artKey) : null;
     // One label for the figure, whichever way it is drawn: a screen reader
     // must not be able to tell that an enemy animates.
     const enemyFigureLabel = `${enemy.name} bars the way`;
@@ -704,7 +707,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                             wrapper because RN cannot merge two `transform` arrays from a
                             style list, and the lunge above owns the outer one. */}
                         <Animated.View style={[styles.enemyIdleWrap, idleStyle]} testID="combat-enemy-figure">
-                            {/* One box for the foe and its backing, so a matte the size of
+                            {/* One box for the foe and its backing, so a backing the size of
                                 the cells lands on exactly the figure's pixels. */}
                             <View
                                 style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
@@ -713,23 +716,11 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                 {/* THE BACKING. The art is alpha-matted by keying BLACK out
                                     of a painting, so every dark stroke of a creature is a
                                     hole and an arena plate would read straight through its
-                                    body. A soft dark shape cut from the foe's own cells fills
-                                    those holes, and rides in here so it breathes and lunges
-                                    with the foe. Only over a plate: the plain black scene (plates
-                                    off) has nothing to hide, and web's tint filter shifts a
-                                    near-black, so a matte there would show. See
+                                    body. Each cell has its own dark shape, cut from that cell
+                                    alone, and the frame player draws it under that cell, so
+                                    the black stays inside the foe's shape on every frame and
+                                    breathes and lunges with it (146.8). See
                                     assets/images/enemies/backing. */}
-                                {ARENA_PLATES_SHOWN && enemyBacking ? (
-                                    <Image
-                                        source={enemyBacking}
-                                        style={StyleSheet.absoluteFill}
-                                        contentFit="contain"
-                                        contentPosition={enemyFrameSet ? cellContentPosition(enemyFrameSet.manifest) : 'bottom center'}
-                                        tintColor={AXM.bg}
-                                        transition={0}
-                                        testID="combat-enemy-backing"
-                                    />
-                                ) : null}
                                 {enemyFrameSet ? (
                                     <EnemyFramePlayer
                                         artKey={enemy.artKey}
@@ -737,19 +728,36 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                         clipName={enemyClip.clipName}
                                         startKey={enemyClip.startKey}
                                         reducedMotion={reduceMotion}
+                                        backings={enemyBackings}
+                                        backingTint={AXM.bg}
                                         style={StyleSheet.absoluteFill}
                                         accessibilityLabel={enemyFigureLabel}
                                         testID="combat-enemy-frames"
                                     />
                                 ) : (
-                                    <Image
-                                        source={enemyArt}
-                                        style={StyleSheet.absoluteFill}
-                                        contentFit="contain"
-                                        contentPosition="bottom center"
-                                        transition={0}
-                                        accessibilityLabel={enemyFigureLabel}
-                                    />
+                                    <>
+                                        {/* A foe with no cell set draws its still, and its one
+                                            backing is cut from that still. */}
+                                        {enemyBackings?.length === 1 ? (
+                                            <Image
+                                                source={enemyBackings[0]}
+                                                style={StyleSheet.absoluteFill}
+                                                contentFit="contain"
+                                                contentPosition="bottom center"
+                                                tintColor={AXM.bg}
+                                                transition={0}
+                                                testID="combat-enemy-backing"
+                                            />
+                                        ) : null}
+                                        <Image
+                                            source={enemyArt}
+                                            style={StyleSheet.absoluteFill}
+                                            contentFit="contain"
+                                            contentPosition="bottom center"
+                                            transition={0}
+                                            accessibilityLabel={enemyFigureLabel}
+                                        />
+                                    </>
                                 )}
                             </View>
                         </Animated.View>

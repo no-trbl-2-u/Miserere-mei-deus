@@ -1,0 +1,39 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "open source (T, 2026-10-29, D115)",
+    "source": "anim/lamprey-knot/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "lamprey-knot-00.backing.webp",
+      "lamprey-knot-01.backing.webp",
+      "lamprey-knot-02.backing.webp",
+      "lamprey-knot-03.backing.webp",
+      "lamprey-knot-04.backing.webp",
+      "lamprey-knot-05.backing.webp",
+      "lamprey-knot-06.backing.webp",
+      "lamprey-knot-07.backing.webp",
+      "lamprey-knot-08.backing.webp",
+      "lamprey-knot-09.backing.webp",
+      "lamprey-knot-10.backing.webp",
+      "lamprey-knot-11.backing.webp",
+      "lamprey-knot-12.backing.webp",
+      "lamprey-knot-13.backing.webp",
+      "lamprey-knot-14.backing.webp",
+      "lamprey-knot-15.backing.webp",
+      "lamprey-knot-16.backing.webp",
+      "lamprey-knot-17.backing.webp",
+      "lamprey-knot-18.backing.webp",
+      "lamprey-knot-19.backing.webp",
+      "lamprey-knot-20.backing.webp",
+      "lamprey-knot-21.backing.webp",
+      "lamprey-knot-22.backing.webp",
+      "lamprey-knot-23.backing.webp"
+    ],
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait lamprey-knot.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\""
+  }
+]

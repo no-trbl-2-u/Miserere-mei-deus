@@ -1,12 +1,12 @@
 # Arena separation: every foe on its region's three plates
 
-Measured at commit `911b145d0` (the tree the plates, mattes and cells below are read from). Regenerate with `node axiomancer-mobile/scripts/measure-arena-separation.mjs`.
+Measured at commit `3958b4d14` (the tree the plates, mattes and cells below are read from). Regenerate with `node axiomancer-mobile/scripts/measure-arena-separation.mjs`.
 
 This is a measurement (D57), not a gate. It rejects nothing and carries no verdict on any plate or pick.
 
 ## How it is measured
 
-- Composite, bottom to top: the plate (`cover`, bottom centre, in the scene band: 390x523 of a 390x844 phone), the foe's matte tinted to `AXM.bg` (#0b0a09, the `ashen-gold` theme, read from `theme/palette.ts`), the foe's cell.
+- Composite, bottom to top: the plate (`cover`, bottom centre, in the scene band: 390x523 of a 390x844 phone), the resting cell's own backing tinted to `AXM.bg` (#0b0a09, the `ashen-gold` theme, read from `theme/palette.ts`), the foe's cell.
 - Figure position and size are the pane's own: wrap top 134, bottom 9% of the band, box 78% of the width (92% for the boss) by 96% of the wrap, the square cell 'contain'ed at the bottom centre for a foot-line foe and the centre for a floating one. The pane's HUD-measured `top` and the idle breath, lunge, grounding shadow and top/floor scrims are not modelled.
 - Cell used for the main figure: the resting cell of the idle clip, `<key>-00.webp` (idle row 0, `rest: 0`) for every foe.
 - Separation = alpha-weighted mean luminance of the foe's cell minus the alpha-weighted mean luminance of what is behind it, over the cell's own pixels. Luminance is Rec. 709 on the stored sRGB values, 0 to 255. Positive: the foe is lighter than what is behind it.
@@ -34,7 +34,7 @@ Over the scene band (390x523), no foe. `dark` is the share of pixels under lumin
 
 ### Reading the separation tables
 
-- With a backing every pixel of the foe sits on its own matte, so the first number in a cell is the same on all three plates of a region. The plate shows only in the aura past the matte and through its feather, which is not measured here. The plate-dependent number is the one in brackets (no backing) and the `plate Y behind` column.
+- With a backing every pixel of the foe sits on its own matte, so the first number in a cell is the same on all three plates of a region. The plate shows only through the backing edge feather (about a pixel), which is not measured here. The plate-dependent number is the one in brackets (no backing) and the `plate Y behind` column.
 
 ### arena-beacon-crags-riesengebirge
 
@@ -44,71 +44,69 @@ Mean Y 59.0, sd Y 23.4, dark share 11%, detail 0.4. By detail it ranks 12 of 12 
 
 | Foe | northern-sea (default) | kuste-bei-mondschein | mondscheinnacht-ruegen | plate Y behind (northern-sea / kuste-bei-mondschein / mondscheinnacht-ruegen) |
 |---|---|---|---|---|
-| float-eye | +68.2 (+37.9) | +68.2 (+42.5) | +68.2 (+23.3) | 40.4 / 35.8 / 55.1 |
-| gallows-crow | +161.1 (+135.7) | +161.1 (+136.8) | +161.0 (+120.3) | 35.5 / 34.4 / 50.9 |
-| toll-keeper | +53.6 (+45.3) | +53.6 (+44.1) | +53.6 (+21.5) | 18.5 / 19.7 / 42.2 |
-| tide-gate | +52.3 (+23.5) | +52.3 (+25.0) | +52.3 (+9.5) | 39.1 / 37.6 / 53.0 |
-| death-beholder | +39.3 (+12.8) | +39.3 (+17.9) | +39.3 (-3.3) | 36.7 / 31.5 / 52.8 |
-| net-mender | +54.9 (+29.9) | +54.9 (+34.4) | +54.8 (+12.7) | 35.2 / 30.6 / 52.4 |
-| crane-hook | +65.0 (+49.3) | +65.0 (+50.5) | +65.0 (+30.0) | 25.9 / 24.7 / 45.2 |
-| brine-widow | +142.8 (+122.3) | +142.8 (+124.8) | +142.8 (+106.9) | 30.6 / 28.2 / 46.1 |
-| cave-choir | +74.8 (+55.4) | +74.8 (+57.4) | +74.8 (+38.4) | 29.6 / 27.6 / 46.6 |
-| tithe-collector | +53.5 (+33.5) | +53.5 (+36.5) | +53.5 (+15.9) | 30.2 / 27.2 / 47.8 |
-| lamprey-knot | +58.6 (+38.5) | +58.6 (+41.0) | +58.6 (+16.3) | 30.2 / 27.7 / 52.4 |
-| green-jelly | +116.1 (+98.5) | +116.1 (+99.6) | +116.1 (+76.6) | 27.7 / 26.7 / 49.6 |
-| curfew-ringer | +74.1 (+54.2) | +74.1 (+57.2) | +74.1 (+35.2) | 30.1 / 27.1 / 49.0 |
-| wreck-picker | +75.5 (+54.9) | +75.5 (+56.3) | +75.5 (+34.1) | 30.7 / 29.3 / 51.5 |
-| lamplighter | +79.0 (+73.2) | +79.0 (+73.8) | +79.0 (+46.2) | 15.9 / 15.3 / 42.9 |
-| wrecker | +116.9 (+107.2) | +116.9 (+107.2) | +116.9 (+87.4) | 19.8 / 19.8 / 39.7 |
-| smokehouse-gutter | +79.6 (+67.5) | +79.6 (+68.2) | +79.6 (+45.9) | 22.3 / 21.5 / 43.8 |
+| float-eye | +68.1 (+37.9) | +68.1 (+42.5) | +68.0 (+23.3) | 40.4 / 35.8 / 55.1 |
+| gallows-crow | +160.9 (+135.7) | +161.0 (+136.8) | +160.7 (+120.3) | 35.5 / 34.4 / 50.9 |
+| toll-keeper | +53.6 (+45.3) | +53.6 (+44.1) | +53.4 (+21.5) | 18.5 / 19.7 / 42.2 |
+| tide-gate | +51.5 (+23.5) | +51.6 (+25.0) | +50.7 (+9.5) | 39.1 / 37.6 / 53.0 |
+| death-beholder | +39.1 (+12.8) | +39.2 (+17.9) | +38.9 (-3.3) | 36.7 / 31.5 / 52.8 |
+| net-mender | +53.7 (+29.9) | +54.0 (+34.4) | +52.5 (+12.7) | 35.2 / 30.6 / 52.4 |
+| crane-hook | +64.9 (+49.3) | +64.9 (+50.5) | +64.9 (+30.0) | 25.9 / 24.7 / 45.2 |
+| brine-widow | +142.5 (+122.3) | +142.6 (+124.8) | +142.1 (+106.9) | 30.6 / 28.2 / 46.1 |
+| cave-choir | +74.6 (+55.4) | +74.7 (+57.4) | +74.5 (+38.4) | 29.6 / 27.6 / 46.6 |
+| tithe-collector | +53.4 (+33.5) | +53.4 (+36.5) | +53.2 (+15.9) | 30.2 / 27.2 / 47.8 |
+| lamprey-knot | +58.4 (+38.5) | +58.4 (+41.0) | +58.0 (+16.3) | 30.2 / 27.7 / 52.4 |
+| green-jelly | +116.0 (+98.5) | +116.0 (+99.6) | +115.9 (+76.6) | 27.7 / 26.7 / 49.6 |
+| curfew-ringer | +73.9 (+54.2) | +74.0 (+57.2) | +73.7 (+35.2) | 30.1 / 27.1 / 49.0 |
+| wreck-picker | +75.4 (+54.9) | +75.4 (+56.3) | +75.2 (+34.1) | 30.7 / 29.3 / 51.5 |
+| lamplighter | +78.9 (+73.2) | +78.9 (+73.8) | +78.7 (+46.2) | 15.9 / 15.3 / 42.9 |
+| wrecker | +116.7 (+107.2) | +116.7 (+107.2) | +116.4 (+87.4) | 19.8 / 19.8 / 39.7 |
+| smokehouse-gutter | +79.5 (+67.5) | +79.5 (+68.2) | +79.3 (+45.9) | 22.3 / 21.5 / 43.8 |
 
 ## The Charcoal Wood
 
 | Foe | sacred-grove (default) | pheasantry | eldena | plate Y behind (sacred-grove / pheasantry / eldena) |
 |---|---|---|---|---|
-| float-eye | +68.2 (+68.6) | +68.2 (+40.6) | +68.2 (+22.6) | 9.7 / 37.8 / 55.7 |
-| green-jelly | +116.1 (+106.6) | +116.1 (+97.4) | +116.1 (+72.3) | 19.6 / 28.8 / 53.9 |
-| death-beholder | +39.3 (+33.3) | +39.3 (+18.9) | +39.3 (-5.2) | 16.2 / 30.5 / 54.7 |
+| float-eye | +68.2 (+68.6) | +68.2 (+40.6) | +68.0 (+22.6) | 9.7 / 37.8 / 55.7 |
+| green-jelly | +116.0 (+106.6) | +116.0 (+97.4) | +115.9 (+72.3) | 19.6 / 28.8 / 53.9 |
+| death-beholder | +39.1 (+33.3) | +39.2 (+18.9) | +38.8 (-5.2) | 16.2 / 30.5 / 54.7 |
 
 ## The Beacon Crags
 
 | Foe | storm-mountains (default) | rocky-mountains-storm | riesengebirge | plate Y behind (storm-mountains / rocky-mountains-storm / riesengebirge) |
 |---|---|---|---|---|
-| float-eye | +68.2 (+43.0) | +68.2 (+37.6) | +68.2 (+9.2) | 35.4 / 40.7 / 69.1 |
-| green-jelly | +116.1 (+96.8) | +116.1 (+84.3) | +116.1 (+65.8) | 29.4 / 41.9 / 60.5 |
-| death-beholder | +39.3 (+14.0) | +39.3 (+12.6) | +39.3 (-17.4) | 35.4 / 36.9 / 66.9 |
+| float-eye | +68.1 (+43.0) | +68.1 (+37.6) | +68.0 (+9.2) | 35.4 / 40.7 / 69.1 |
+| green-jelly | +116.0 (+96.8) | +116.0 (+84.3) | +115.9 (+65.8) | 29.4 / 41.9 / 60.5 |
+| death-beholder | +39.0 (+14.0) | +39.1 (+12.6) | +38.7 (-17.4) | 35.4 / 36.9 / 66.9 |
 
 ## The Lantern Deep
 
 | Foe | toteninsel (default) | pandemonium | great-day-of-wrath | plate Y behind (toteninsel / pandemonium / great-day-of-wrath) |
 |---|---|---|---|---|
-| float-eye | +68.2 (+71.1) | +68.2 (+41.3) | +68.2 (+60.2) | 7.3 / 37.1 / 18.1 |
-| green-jelly | +116.1 (+109.7) | +116.1 (+93.1) | +116.1 (+114.8) | 16.5 / 33.2 / 11.4 |
-| death-beholder | +39.3 (+38.3) | +39.3 (+13.2) | +39.3 (+31.6) | 11.1 / 36.2 / 17.9 |
+| float-eye | +68.2 (+71.1) | +68.1 (+41.3) | +68.2 (+60.2) | 7.3 / 37.1 / 18.1 |
+| green-jelly | +116.0 (+109.7) | +115.9 (+93.1) | +116.1 (+114.8) | 16.5 / 33.2 / 11.4 |
+| death-beholder | +39.3 (+38.3) | +39.0 (+13.2) | +39.2 (+31.6) | 11.1 / 36.2 / 17.9 |
 
-## Matte coverage at the rendered size
+## Backing coverage at the rendered size
 
-The shipped matte (all cells) against the foe it sits behind, drawn at the size combat draws it. `figure` is the resting cell's pixels at alpha 64 or more; `matte` is the matte's alpha summed; both as a share of the foe's square. `ratio` is matte over figure. The last three columns re-bake the matte from one resting cell, from the idle clip's cells, and from all cells with the shipped tuning, as a share of the cell.
+The resting cell's own backing (one per cell since 146.8) against the cell it sits behind, drawn at the size combat draws it. `figure` is the resting cell's pixels at alpha 64 or more; `backing` is the backing's alpha summed; both as a share of the foe's square. `ratio` is backing over figure: a little over 1 is the keyed-away strokes and enclosed holes the backing fills, and its edge feather.
 
-| Foe | rendered square | figure | matte | ratio | one cell | idle cells | all cells |
-|---|---|---|---|---|---|---|---|
-| brine-widow | 304px | 18% | 59% | 3.27x | 23% | 26% | 59% |
-| tide-gate | 304px | 15% | 49% | 3.21x | 19% | 22% | 49% |
-| curfew-ringer | 304px | 18% | 52% | 2.91x | 22% | 25% | 52% |
-| lamplighter | 304px | 14% | 40% | 2.83x | 17% | 19% | 40% |
-| gallows-crow | 304px | 20% | 53% | 2.67x | 24% | 29% | 53% |
-| smokehouse-gutter | 304px | 19% | 51% | 2.63x | 23% | 25% | 51% |
-| toll-keeper | 304px | 15% | 39% | 2.62x | 18% | 20% | 39% |
-| net-mender | 304px | 22% | 52% | 2.36x | 28% | 32% | 52% |
-| wreck-picker | 304px | 26% | 59% | 2.28x | 31% | 37% | 59% |
-| tithe-collector | 304px | 27% | 62% | 2.28x | 32% | 36% | 62% |
-| cave-choir | 304px | 30% | 68% | 2.26x | 36% | 37% | 68% |
-| lamprey-knot | 304px | 28% | 58% | 2.06x | 35% | 42% | 58% |
-| wrecker | 304px | 31% | 54% | 1.74x | 35% | 40% | 54% |
-| float-eye | 304px | 28% | 48% | 1.70x | 32% | 33% | 48% |
-| crane-hook | 304px | 34% | 58% | 1.70x | 37% | 39% | 58% |
-| green-jelly | 304px | 33% | 52% | 1.58x | 37% | 39% | 52% |
-| death-beholder | 328px | 42% | 60% | 1.44x | 46% | 49% | 60% |
-
-The all-cells column is the shipped matte re-baked here, so it should match the file; the one-cell and idle-cell columns are for comparison only and nothing in the tree uses them.
+| Foe | rendered square | figure | backing | ratio |
+|---|---|---|---|---|
+| toll-keeper | 304px | 15% | 16% | 1.06x |
+| lamplighter | 304px | 14% | 15% | 1.04x |
+| gallows-crow | 304px | 20% | 20% | 1.03x |
+| lamprey-knot | 304px | 28% | 29% | 1.03x |
+| wreck-picker | 304px | 26% | 27% | 1.03x |
+| tide-gate | 304px | 15% | 16% | 1.03x |
+| net-mender | 304px | 22% | 23% | 1.03x |
+| brine-widow | 304px | 18% | 19% | 1.02x |
+| cave-choir | 304px | 30% | 31% | 1.02x |
+| tithe-collector | 304px | 27% | 28% | 1.02x |
+| death-beholder | 328px | 42% | 43% | 1.02x |
+| smokehouse-gutter | 304px | 19% | 20% | 1.02x |
+| curfew-ringer | 304px | 18% | 18% | 1.02x |
+| wrecker | 304px | 31% | 32% | 1.02x |
+| crane-hook | 304px | 34% | 34% | 1.01x |
+| float-eye | 304px | 28% | 29% | 1.00x |
+| green-jelly | 304px | 33% | 33% | 1.00x |
 

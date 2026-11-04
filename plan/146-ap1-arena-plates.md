@@ -19,6 +19,9 @@
     for others. So let's have all of them and change them based on where they are within the region of the map they're
     on with defaults based on my picks. I like all your recommendations except for the underworld. I like the second one"
   - "Yes please" to plotting the seven draft rows.
+- T, 2026-11-04, from the v0.4.0 preview APK (Float-Eye fight), overriding the "slight aura" line above:
+  - "The black overlay is WAY too much. We just needed a little black BEHIND the enemy since it's transparent."
+  - "It should also only be within the shape of the enemy."
 
 ### What exists today (read 2026-11-04, at 33050d3)
 
@@ -86,6 +89,8 @@ is no foe, and it is judged by alpha values, never the file's flag.
 ## Acceptance
 
 - **A7** T's node plate picks are in the map layouts.
+- **A8** Every cell a foe draws has its own backing, cut from that cell alone with no grow, drawn under that cell by the
+  frame player; a test fails when a backing reaches past its cell's own filled shape by more than a pixel or two.
 
 ## Open questions
 
@@ -95,9 +100,10 @@ is no foe, and it is judged by alpha values, never the file's flag.
 
 ## Chunks
 
-Measure: 1 open · 6 closed · next A8
+Measure: 2 open · 6 closed · next A9
 
 - [ ] **146.7** T picks node plates (owner-led) · S · closes A7 · needs — · alias: AP1g
+- [ ] **146.8** The backing sits inside the foe's shape, frame by frame · S · closes A8 · needs — · alias: AP1h
 
 ### 146.1 (AP1a) — Pull in the twelve arena plates · M · closes A1 · requires —
 
@@ -144,3 +150,13 @@ Measure: 1 open · 6 closed · next A8
 
 - T reads the report and names a plate on the nodes T wants changed; every other node keeps its region default. The loop
   writes only what T names.
+
+### 146.8 (AP1h) — The backing sits inside the foe's shape, frame by frame · S · closes A8 · requires —
+
+- T's bug from the v0.4.0 preview: a huge soft black blob around the Float-Eye. Root cause: 146.4 baked one matte per
+  foe from the UNION of all 24 cells, then grew and feathered it, and drew it under every frame; a foe that moves (the
+  eye bobs) got a matte far wider than the frame on screen.
+- `scripts/bake-backings.mjs` bakes one backing per cell from that cell alone (threshold, close, fill holes, drop specks,
+  no grow, a sub-pixel feather) into `backing/<key>/`, with a generated registry; `EnemyFramePlayer` draws backing `i`
+  under cell `i`, so it swaps, breathes and lunges with the frame. Plates-only gate and the `AXM.bg` tint kept.
+- Measure: `node --test scripts/enemy-backings.test.mjs` (the overreach test), then `npm run verify -w axiomancer-mobile`.
