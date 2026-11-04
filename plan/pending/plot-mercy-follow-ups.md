@@ -8,7 +8,7 @@ date: 2026-11-03
 ~~~ new
 - **145.1** · MR2a: the words the removal left behind, and the tests that could not fail (T, `/pilot 144` end gate then `/plot asap`, 2026-11-03)
 - **145.2** · MR2b: gear won by sparing opens the item reward screen (T, `/pilot 144` end gate then `/plot asap`, 2026-11-03)
-- **145.3** · MR2c: sparing the Green Jelly shows its story (T, `/pilot 144` end gate then `/plot asap`, 2026-11-03)
+- **145.3** · MR2c: every normal foe says a line at the mercy check (T, `/pilot 144` end gate then `/plot asap`, 2026-11-03)
 - **145.4** · MR2d: a card transform reaches the card reports (T, `/pilot 144` end gate then `/plot asap`, 2026-11-03)
 - **145.5** · MR2e: foes lose their dead loot tables (T, `/pilot 144` end gate then `/plot asap`, 2026-11-03)
 
