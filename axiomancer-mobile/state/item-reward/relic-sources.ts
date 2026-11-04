@@ -24,10 +24,20 @@ import type { AppStore } from '../store';
 import { eliteDropSource, questRewardSource, spareGearSource } from '../presenters/relic-source.copy';
 import { offerItemRewardAction } from './store-actions';
 
-/** True when a carried entry for `id` already covers every satchel row of it. */
-function carriedCovers(store: AppStore, id: string, rows: number): boolean {
+/**
+ * True when carried entries for `id` from this `source` already cover `rows`.
+ * Counted per source as well as per id: a quest reward and an elite drop of the
+ * same item are two offers, so one must never read as covered by the other.
+ */
+function carriedCovers(store: AppStore, id: string, source: string, rows: number): boolean {
     const waiting = store.getState().itemReward?.queue ?? [];
-    return waiting.filter(entry => entry.carried && entry.item.id === id).length >= rows;
+    return waiting.filter(entry => entry.carried && entry.item.id === id && entry.source === source).length >= rows;
+}
+
+/** Carried entries waiting for `id`, whatever their source: each holds one satchel row. */
+function carriedHeld(store: AppStore, id: string): number {
+    const waiting = store.getState().itemReward?.queue ?? [];
+    return waiting.filter(entry => entry.carried && entry.item.id === id).length;
 }
 
 function saveQuietly(store: AppStore): void {
@@ -60,10 +70,11 @@ export function offerCompletedQuestItemsAction(store: AppStore, before: QuestLog
             // A second look at the same completion offers nothing more.
             const seen = (counted.get(item.id) ?? 0) + 1;
             counted.set(item.id, seen);
-            if (carriedCovers(store, item.id, Math.min(rows, seen))) continue;
             // A questline step names its questline; any other quest names itself.
             const line = quest.questline ? getQuestline(quest.questline) : undefined;
-            offers.push({ item, source: questRewardSource(line?.name ?? quest.name) });
+            const source = questRewardSource(line?.name ?? quest.name);
+            if (carriedCovers(store, item.id, source, Math.min(rows, seen))) continue;
+            offers.push({ item, source });
         }
     }
     if (offers.length === 0) return [];
@@ -82,11 +93,15 @@ export function offerCompletedQuestItemsAction(store: AppStore, before: QuestLog
 function carryAndOffer(store: AppStore, item: Equipment, eliteName: string): void {
     const state = store.getState() as unknown as GameState;
     if (!state.player) return;
-    if (carriedCovers(store, item.id, 1)) return;
-    if (!state.player.inventory.some(row => row.id === item.id)) {
+    const source = eliteDropSource(eliteName);
+    if (carriedCovers(store, item.id, source, 1)) return;
+    // Each carried entry swaps one satchel row on its answer, so an entry from
+    // another source (a quest reward of the same item) needs a row of its own.
+    const rows = state.player.inventory.filter(row => row.id === item.id).length;
+    if (rows <= carriedHeld(store, item.id)) {
         store.setState({ player: { ...state.player, inventory: [...state.player.inventory, item] } } as never);
     }
-    offerItemRewardAction(store, item, { source: eliteDropSource(eliteName), includeInline: true, carried: true });
+    offerItemRewardAction(store, item, { source, includeInline: true, carried: true });
     saveQuietly(store);
 }
 
