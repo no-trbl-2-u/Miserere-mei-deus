@@ -6,6 +6,8 @@
  * its own, so this fails if either stops being rendered.
  */
 
+// guard-test: pins dialogue copy that already renders on the base; A4 asks for this render test, and this PR changes only the memoir tooltip
+
 import { describe, expect, it, jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import React from 'react';
