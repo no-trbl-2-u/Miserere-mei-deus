@@ -6,7 +6,9 @@ name: pr-resolve
 # append-only files (telemetry shards, plan queues, lessons) settle by a
 # union of rows; anything else goes to a Haiku run with Read and Edit only
 # (skills/fix-ci.md §3.6), between a scripted prepare and finish. Push,
-# never force. The loop never merges a PR (D86).
+# never force. The loop never merges a PR (D86). The scan settles main's
+# plan/pending/ first, and a settle that refuses or leaves a file pending
+# turns this run red (scripts/pr-settle.mjs `settleFailure`).
 #
 # Two event shapes, one file:
 #   - push / bare workflow_dispatch -> `scan`. For each PR it cannot settle
@@ -73,9 +75,10 @@ jobs:
         run: node scripts/pr-resolve.mjs scan
       # One dispatched run per conflicted PR: workflow_dispatch is an event
       # claude-code-action accepts, and a dispatch made with GITHUB_TOKEN
-      # still starts a run (it is exempt from the no-recursion rule).
+      # still starts a run (it is exempt from the no-recursion rule). A refused settle fails the
+      # scan step on purpose, and the conflicted PRs it found still get their resolve.
       - name: Dispatch a Claude resolve per conflicted PR
-        if: steps.scan.outputs.claude != '' && steps.scan.outputs.claude != '[]'
+        if: ${{ !cancelled() && steps.scan.outputs.claude != '' && steps.scan.outputs.claude != '[]' }}
         env:
           ITEMS: ${{ steps.scan.outputs.claude }}
         run: |

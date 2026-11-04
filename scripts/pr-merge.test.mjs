@@ -18,7 +18,10 @@ import { fileURLToPath } from 'node:url'
 import * as policy from './pr-policy.mjs'
 import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, treeCheckSafe, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
-import { settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
+import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
+import { loadConfig } from './plan/config.mjs'
+import { lintFootguns } from './plan/footguns.mjs'
+import { pendingFiles } from './plan/pending.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -425,7 +428,7 @@ test('settle on merge: a merged PR\'s pending close settles on origin/main, with
     assert.match(archive, /^- 2026-10-01 · 06\.1 \(alias: OLD1\) · Old work · 1234567 \(#7\)$/m, 'older lines untouched')
     const spec = g(work, 'show', 'origin/main:plan/07-search.md')
     assert.doesNotMatch(spec, /\*\*07\.1\*\*/)
-    assert.match(spec, /\*\*07\.2\*\* Zip/)
+    assert.match(spec, /\*\*07\.2\*\* Zip · S · closes A2 · needs — · alias: XY1b/, 'the closed need left, past the alias the kit reads as part of it')
     assert.doesNotMatch(g(work, 'ls-tree', '-r', '--name-only', 'origin/main', 'plan/'), /plan\/pending\/07\.1\.md/)
     assert.match(g(work, 'show', 'origin/main:plan/README.md'), /\| 1 left \|/)
     // The settle commit's own push settles nothing.
@@ -453,6 +456,143 @@ test('settle on merge: a settle that adds a lint failure, or a dry run, pushes n
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+/** Commit `files` (path → text) straight on main and push: what a merged PR leaves there. */
+function landOnMain(work, g, files) {
+  for (const [file, text] of Object.entries(files)) {
+    fs.mkdirSync(path.dirname(path.join(work, file)), { recursive: true })
+    fs.writeFileSync(path.join(work, file), text)
+    g(work, 'add', '--', file)
+  }
+  g(work, 'commit', '-q', '-m', 'test: land on main')
+  g(work, 'push', '-q', 'origin', 'main')
+}
+
+test('settle on merge: a pending file with a footgun settles into the list this repo keeps', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const list = loadConfig(root).footguns
+  assert.ok(fs.existsSync(path.join(root, list)), `settle's footgun list, ${list}, is on main: without it every pending file with a footgun is skipped`)
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const line = '- **new-trap** · a trap → a rule · seen 1× · last 2026-11-01 · open'
+    landOnMain(work, g, {
+      [list]: fs.readFileSync(path.join(root, list), 'utf8'),
+      'plan/pending/07.1.md': `${PENDING}## Footguns\n${line}\n`,
+    })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.left, [])
+    assert.equal(settleFailure(r), null)
+    g(work, 'fetch', '-q', 'origin')
+    const open = g(work, 'show', `origin/main:${list}`).split('## Watch')[0]
+    assert.ok(open.split('\n').includes(line), open)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('dropClosedNeeds: a closed id leaves a needs list that an alias follows, and nothing else moves', () => {
+  const closed = new Set(['146.1', '146.4'])
+  const line = (needs) => `- [ ] **146.6** Every foe · S · closes A6 · needs ${needs} · alias: AP1f`
+  assert.equal(dropClosedNeeds(line('146.1, 146.4'), closed), line('—'))
+  assert.equal(dropClosedNeeds(line('146.1, 146.2'), closed), line('146.2'))
+  assert.equal(dropClosedNeeds(line('146.2'), closed), line('146.2'))
+  const prose = '- **A1** It · needs 146.1 · says so'
+  assert.equal(dropClosedNeeds(prose, closed), prose)
+})
+
+test('no pending file names a bare dash as a footgun: settle reads it as a slug and skips the file', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const dashed = pendingFiles(root).filter((f) => /^footguns:\s*-\s*$/m.test(f.text)).map((f) => f.file)
+  assert.deepEqual(dashed, [], 'leave the footguns line empty, or out')
+})
+
+test('the footgun list passes its lint, and a trap has one home across it and the lessons', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const cfg = loadConfig(root)
+  const text = fs.readFileSync(path.join(root, cfg.footguns), 'utf8')
+  assert.deepEqual(lintFootguns(text, cfg.footguns, cfg.limits), [])
+  const slugs = (t) => [...t.matchAll(/^- \*\*([a-z0-9-]+)\*\* · /gm)].map((m) => m[1])
+  const lessons = new Set(slugs(fs.readFileSync(path.join(root, 'plan/lessons.md'), 'utf8')))
+  assert.deepEqual(slugs(text).filter((s) => lessons.has(s)), [])
+})
+
+test('a refused settle is a failure someone sees, and names why', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    // A close that empties its spec needs a hand: nothing lands.
+    landOnMain(work, g, {
+      'plan/07-search.md': SPEC.replace('- **A2** A zip finds them too.\n', '').replace(/^- \[ \] \*\*07\.2\*\*.*\n/m, ''),
+      'plan/pending/07.1.md': PENDING,
+    })
+    const tip = g(work, 'rev-parse', 'origin/main')
+    const refused = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(refused.state, 'refused')
+    assert.match(settleFailure(refused), /plan\/07-search\.md lists no chunk now/)
+    const lines = []
+    assert.match(reportSettle(() => refused, (s) => lines.push(s)), /lists no chunk now/)
+    assert.match(lines[0], /^::error::pr-settle: .*lists no chunk now/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'rev-parse', 'origin/main'), tip, 'a refusal pushes nothing')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a settle that skips a file lands the rest and still fails, naming what stays', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const stale = ['---', 'date: 2026-11-01', '---', '## Edit plan/README.md', '~~~ old', 'text main has moved past', '~~~', '~~~ new', 'x', '~~~', ''].join('\n')
+    landOnMain(work, g, { 'plan/pending/07.1.md': PENDING, 'plan/pending/stale.md': stale })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.ids, ['07.1'])
+    assert.deepEqual(r.left, ['plan/pending/stale.md'])
+    assert.match(settleFailure(r), /settled 1 files, but 1 stay pending.*plan\/pending\/stale\.md/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'log', '-1', '--format=%s', 'origin/main'), /^plan: settle 07\.1$/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('reportSettle: only a clean settle or nothing to do stays quiet, and a throw is a failure', () => {
+  const lines = []
+  const log = (s) => lines.push(s)
+  assert.equal(reportSettle(() => ({ state: 'nothing' }), log), null)
+  assert.equal(reportSettle(() => ({ state: 'settled', ids: ['07.1'], left: [] }), log), null)
+  assert.deepEqual(lines, ['settle: pushed the settle of 07.1'])
+  assert.match(reportSettle(() => ({ state: 'lost', reason: 'rejected 3 times' }), log), /rejected 3 times/)
+  assert.match(reportSettle(() => { throw new Error('no git\nstack') }, log), /^settle errored: no git$/)
+  assert.ok(lines.at(-1).startsWith('::error::pr-settle: settle errored'))
+})
+
+test('a dry run rehearses another commit by --ref and refuses to push one', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    g(work, 'switch', '-q', '-c', 'side')
+    fs.mkdirSync(path.join(work, 'plan/pending'), { recursive: true })
+    fs.writeFileSync(path.join(work, 'plan/pending/07.1.md'), PENDING)
+    g(work, 'add', '-A')
+    g(work, 'commit', '-q', '-m', 'plan: close 07.1')
+    // origin/main holds nothing pending; the branch does.
+    assert.equal(settleMain({ root: work, lint: () => [], dryRun: true, log: () => {} }).state, 'nothing')
+    assert.equal(settleMain({ root: work, lint: () => [], dryRun: true, ref: 'HEAD', log: () => {} }).state, 'settled')
+    assert.throws(() => settleMain({ root: work, lint: () => [], ref: 'HEAD', log: () => {} }), /dry run only/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a red scan still dispatches its resolves, and pr-resolve fails the step on a settle failure', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const yml = fs.readFileSync(path.join(root, '.github/workflows/pr-resolve.yml'), 'utf8').replace(/\r\n/g, '\n')
+  assert.match(yml, /name: Dispatch a Claude resolve per conflicted PR\n\s+if: \$\{\{ !cancelled\(\) && /)
+  const resolve = fs.readFileSync(path.join(root, 'scripts/pr-resolve.mjs'), 'utf8')
+  assert.match(resolve, /if \(reportSettle\(\(\) => settleMain\(\{ root: ROOT \}\)\)\) process\.exitCode = 1/)
+  // Nothing after the scan clears it: the mode ends by returning.
+  assert.doesNotMatch(resolve, /process\.exitCode = 0/)
 })
 
 test('shapeArchive: only the lines settle added gain the alias and the PR', () => {

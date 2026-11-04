@@ -20,9 +20,13 @@
 //      fetches and starts again, three times at most.
 // Nothing pending is a quiet no-op, so the settle commit's own push settles nothing.
 // A settle that needs a hand (settle's exit 2) or turns the lints red pushes nothing and says
-// why: the pending files stay, and every reader still counts their closes as closed.
+// why: the pending files stay, and every reader still counts their closes as closed. A settle
+// that lands but skips a file (settle's exit 1) leaves that file pending. Either is a failure
+// someone has to see: settleFailure names it, and `pr-resolve.yml`'s scan goes red on it.
 //
-//   node scripts/pr-settle.mjs [--dry-run]     # exit 0 settled or nothing to do, 1 refused, 3 push lost 3x
+//   node scripts/pr-settle.mjs [--dry-run [--ref <rev>]]
+//     exit 0 settled or nothing to do, 1 refused or a file left pending, 3 push lost 3x.
+//     --ref rehearses another commit (a branch's HEAD) in place of origin/main; it never pushes.
 
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -33,7 +37,7 @@ import { fileURLToPath } from 'node:url'
 import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
 import { parseSpecChunks, SPEC_FILE } from './deadlines-lib.mjs'
 import { runCheck } from './plan-check.mjs'
-import { parsePending, pendingFiles } from './plan/pending.mjs'
+import { CLOSE_ID, parsePending, pendingFiles } from './plan/pending.mjs'
 import { main as settle } from './plan/settle.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -94,6 +98,27 @@ export function shapeArchive(archive, added, aliases, prs) {
     .join('\n')
 }
 
+/**
+ * A spec with `closed` chunks out of every chunk line's needs. The kit's settle reads a needs
+ * clause to the line's end, so it misses an id followed by Miserere's `· alias: …`, and
+ * plan-check then refuses the settle for a need no spec lists.
+ *
+ * @param {string} spec  @param {Set<string>} closed chunk ids.
+ * @returns {string}
+ */
+export function dropClosedNeeds(spec, closed) {
+  return spec
+    .split('\n')
+    .map((line) => {
+      const m = /^(- \[ \] \*\*.*· needs )([^·]*?)(\s*·.*)$/.exec(line)
+      if (!m) return line
+      const needs = m[2].split(/,\s*/).map((s) => s.trim())
+      const kept = needs.filter((id) => !closed.has(id))
+      return kept.length === needs.length ? line : `${m[1]}${kept.join(', ') || '—'}${m[3]}`
+    })
+    .join('\n')
+}
+
 /** The plan lints the settle is held to, run in-process on `root`'s plan: failure messages. */
 export function planLints(root) {
   const failures = []
@@ -143,11 +168,23 @@ export function settleOnce(wt, { lint = planLints, log = console.log } = {}) {
   const before = lint(wt)
   const archiveFile = path.join(wt, 'plan', 'ARCHIVE.md')
   const archiveBefore = fs.existsSync(archiveFile) ? fs.readFileSync(archiveFile, 'utf8').replace(/\r\n/g, '\n') : ''
-  const code = settle(['--no-commit'], { cwd: wt, owner: true })
-  if (code === 2) return { state: 'refused', reason: 'settle left lines for a hand (exit 2); the pending files stay' }
+  const said = []
+  const print = console.log
+  console.log = (...line) => {
+    said.push(line.join(' '))
+    print(...line)
+  }
+  let code
+  try {
+    code = settle(['--no-commit'], { cwd: wt, owner: true })
+  } finally {
+    console.log = print
+  }
+  if (code === 2) return { state: 'refused', reason: `settle left lines for a hand (exit 2); the pending files stay: ${handLines(said).join('; ')}` }
   if (code !== 0 && code !== 1) return { state: 'refused', reason: `settle exited ${code}` }
   const ids = files.filter((f) => !fs.existsSync(path.join(wt, f.file))).map((f) => idOf.get(f.file))
-  if (!ids.length) return { state: 'refused', reason: 'settle settled nothing (each file it skipped is named above)' }
+  const left = files.filter((f) => fs.existsSync(path.join(wt, f.file))).map((f) => f.file)
+  if (!ids.length) return { state: 'refused', reason: `settle settled nothing; these stay pending, each skip named above: ${left.join(', ')}` }
   if (fs.existsSync(archiveFile)) {
     const after = fs.readFileSync(archiveFile, 'utf8').replace(/\r\n/g, '\n')
     const seen = new Set(archiveBefore.split('\n'))
@@ -158,27 +195,78 @@ export function settleOnce(wt, { lint = planLints, log = console.log } = {}) {
       git(['add', '--', 'plan/ARCHIVE.md'], wt)
     }
   }
+  const closed = new Set(ids.filter((id) => CLOSE_ID.test(id)))
+  const planDir = path.join(wt, 'plan')
+  for (const name of fs.readdirSync(planDir).filter((n) => SPEC_FILE.test(n))) {
+    const file = path.join(planDir, name)
+    const spec = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
+    const tidied = dropClosedNeeds(spec, closed)
+    if (tidied !== spec) {
+      fs.writeFileSync(file, tidied)
+      git(['add', '--', `plan/${name}`], wt)
+    }
+  }
   const was = new Set(before)
   const worse = lint(wt).filter((f) => !was.has(f))
   if (worse.length) return { state: 'refused', ids, reason: `the settle turns the plan lints red: ${worse[0].slice(0, 300)}` }
   git(['commit', '-q', ...settleMessage(ids)], wt)
   log(`pr-settle: settled ${ids.join(', ')}${prs.size ? ` (PRs ${[...new Set(prs.values())].map((n) => `#${n}`).join(', ')})` : ''}`)
-  return { state: 'settled', ids }
+  return { state: 'settled', ids, left }
+}
+
+/** Settle's lines that stopped it for a hand, shortened to what a reader acts on. */
+function handLines(said) {
+  return said.flatMap((l) => /^settle: (\S+ lists no chunk now|\S+ still names \S+?):/.exec(l)?.[1] ?? [])
+}
+
+/**
+ * What about a settle's result someone has to see, or null when it all went through.
+ *
+ * @param {{ state: string, ids?: string[], left?: string[], reason?: string }} r
+ * @returns {string | null}
+ */
+export function settleFailure(r) {
+  if (r.state === 'refused' || r.state === 'lost') return r.reason
+  if (r.state === 'settled' && r.left?.length) return `settled ${r.ids.length} files, but ${r.left.length} stay pending, each skip named in the log: ${r.left.join(', ')}`
+  return null
+}
+
+/**
+ * Run a settle and report it for a workflow run: an `::error::` annotation on a failure, an
+ * error thrown by the settle counting as one. Returns the failure, for the caller's exit code.
+ *
+ * @param {() => { state: string, ids?: string[], left?: string[], reason?: string }} run
+ * @param {(s: string) => void} [log]
+ * @returns {string | null}
+ */
+export function reportSettle(run, log = console.log) {
+  let failure
+  try {
+    const r = run()
+    if (r.state === 'settled') log(`settle: pushed the settle of ${r.ids.join(', ')}`)
+    failure = settleFailure(r)
+  } catch (err) {
+    failure = `settle errored: ${String(err?.message ?? err).split('\n')[0]}`
+  }
+  if (failure) log(`::error::pr-settle: ${failure.replace(/\s*\n\s*/g, ' ')}`)
+  return failure
 }
 
 /**
  * Settle origin/`branch`'s pending files and push the result, in a throwaway worktree of
- * `root`. `dryRun` reports and pushes nothing.
+ * `root`. `dryRun` reports and pushes nothing. `ref` (dry runs only) rehearses that commit in
+ * place of origin/`branch`.
  *
- * @param {{ root?: string, branch?: string, dryRun?: boolean, lint?: (root: string) => string[], log?: (s: string) => void }} [opts]
- * @returns {{ state: 'nothing' | 'settled' | 'refused' | 'lost', ids?: string[], reason?: string }}
+ * @param {{ root?: string, branch?: string, dryRun?: boolean, ref?: string, lint?: (root: string) => string[], log?: (s: string) => void }} [opts]
+ * @returns {{ state: 'nothing' | 'settled' | 'refused' | 'lost', ids?: string[], left?: string[], reason?: string }}
  */
-export function settleMain({ root = ROOT, branch = 'main', dryRun = false, lint = planLints, log = console.log } = {}) {
+export function settleMain({ root = ROOT, branch = 'main', dryRun = false, ref, lint = planLints, log = console.log } = {}) {
+  if (ref && !dryRun) throw new Error('pr-settle: --ref is for a dry run only')
   for (let i = 0; i < MAX_TRIES; i++) {
     git(['fetch', '-q', 'origin', branch], root)
     const wt = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-settle-wt-'))
     try {
-      git(['worktree', 'add', '-q', '--detach', wt, `origin/${branch}`], root)
+      git(['worktree', 'add', '-q', '--detach', wt, ref ?? `origin/${branch}`], root)
       const r = settleOnce(wt, { lint, log })
       if (r.state !== 'settled' || dryRun) return r
       try {
@@ -205,11 +293,13 @@ export function settleMain({ root = ROOT, branch = 'main', dryRun = false, lint 
 
 function cli() {
   const dryRun = process.argv.includes('--dry-run')
-  const r = settleMain({ dryRun })
+  const at = process.argv.indexOf('--ref')
+  const r = settleMain({ dryRun, ref: at < 0 ? undefined : process.argv[at + 1] })
   if (r.state === 'nothing') console.log('pr-settle: nothing pending')
-  else if (r.state === 'settled') console.log(`pr-settle: ${dryRun ? '(dry run) would push' : 'pushed'} the settle of ${r.ids.join(', ')}`)
-  else console.log(`::warning::pr-settle: ${r.reason}`)
-  process.exitCode = r.state === 'refused' ? 1 : r.state === 'lost' ? 3 : 0
+  else if (r.state === 'settled') console.log(`pr-settle: ${dryRun ? '(dry run) would push' : 'pushed'} the settle of ${r.ids.length} files: ${r.ids.join(', ')}`)
+  const failure = settleFailure(r)
+  if (failure) console.log(`::error::pr-settle: ${failure}`)
+  process.exitCode = r.state === 'lost' ? 3 : failure ? 1 : 0
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) cli()

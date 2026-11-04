@@ -422,18 +422,13 @@ async function main() {
   const mode = process.argv[2]
   if (mode === 'scan') {
     // Settle first (phase NX1e): the push that started this run may be a merged PR whose
-    // plan/pending/ files fold into the plan now. Never in the way of the scan: a refusal or an
-    // error is a warning, and the pending files keep counting as closed until a later push settles.
+    // plan/pending/ files fold into the plan now. Never in the way of the scan, which runs to its
+    // end, but a settle that refuses, errors or leaves a file pending fails this step, so the run
+    // goes red; the pending files keep counting as closed until a later push settles.
     // Imported here, not at the top: the other modes (and the merge job, which imports this
     // file) need none of the plan scripts it loads.
-    try {
-      const { settleMain } = await import('./pr-settle.mjs')
-      const s = settleMain({ root: ROOT })
-      if (s.state === 'settled') console.log(`settle: pushed the settle of ${s.ids.join(', ')}`)
-      else if (s.state !== 'nothing') console.log(`::warning::pr-resolve: settle ${s.state}: ${s.reason}`)
-    } catch (err) {
-      console.log(`::warning::pr-resolve: settle errored: ${String(err?.message ?? err).split('\n')[0]}`)
-    }
+    const { settleMain, reportSettle } = await import('./pr-settle.mjs')
+    if (reportSettle(() => settleMain({ root: ROOT }))) process.exitCode = 1
     const needClaude = []
     for (const pr of openLoopPrs()) {
       if (pr.mergeable !== 'CONFLICTING') continue

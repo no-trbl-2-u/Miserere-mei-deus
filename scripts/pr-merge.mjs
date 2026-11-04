@@ -57,7 +57,7 @@ import { fileURLToPath } from 'node:url'
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { updateBranchIsolated } from './pr-resolve.mjs'
-import { settleMain } from './pr-settle.mjs'
+import { settleFailure, settleMain } from './pr-settle.mjs'
 import { markedHeads } from './pr-review.mjs'
 
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
@@ -381,8 +381,11 @@ async function main() {
   if (mode === 'tree' && ok) return treeCheckSafe(repo, pr, head)
   if (mode === 'settle') {
     const r = settleMain({ dryRun: process.argv.includes('--dry-run') })
-    console.log(r.state === 'settled' ? `pr-merge settle: ${r.ids.join(', ')}` : r.state === 'nothing' ? 'pr-merge settle: nothing pending' : `::warning::pr-merge settle: ${r.reason}`)
-    process.exitCode = r.state === 'refused' ? 1 : r.state === 'lost' ? 3 : 0
+    if (r.state === 'settled') console.log(`pr-merge settle: ${r.ids.join(', ')}`)
+    else if (r.state === 'nothing') console.log('pr-merge settle: nothing pending')
+    const failure = settleFailure(r)
+    if (failure) console.log(`::error::pr-merge settle: ${failure}`)
+    process.exitCode = r.state === 'lost' ? 3 : failure ? 1 : 0
     return
   }
   if (mode === 'since' && /^\d+$/.test(arg('--run') ?? '')) {
