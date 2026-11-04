@@ -4075,6 +4075,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
     },
     {

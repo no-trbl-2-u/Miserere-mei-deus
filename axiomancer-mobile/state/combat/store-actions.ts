@@ -115,7 +115,8 @@ export function settleEliteEquipmentAction(
  * A foe spared at the mercy check, after `endCombat` paid it: the draft closes as
  * claimed (a Spare pays no card reward), the roll goes on the slice for the end
  * screen to reveal, the run log hears of it and the save is written, since no
- * draft claim will write it. Does nothing for any other ending.
+ * draft claim will write it. Gear stays in the satchel, saved, until the end
+ * screen closes and `offerSpareGearAction` offers it. Does nothing for any other ending.
  */
 export function settleSpareAction(
     store: AppStore,
@@ -130,9 +131,8 @@ export function settleSpareAction(
             spare: journalTitle ? { reward, journalTitle } : { reward },
         },
     } as never);
-    if (reward.kind === 'consumable' || reward.kind === 'gear' || reward.kind === 'relic') {
-        recordItemGained(store, reward.item, 'spare');
-    }
+    // A piece of gear is logged when the item-reward screen hands it over.
+    if (reward.kind === 'consumable') recordItemGained(store, reward.item, 'spare');
     if (reward.kind === 'upgrade') recordDeckUpgrade(store, reward.fromCardId, reward.toCardId, 'spare');
     try { store.getState().save(); } catch { /* persistence must not strand the end screen */ }
 }
