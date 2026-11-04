@@ -46,6 +46,16 @@ export function frameIndexFromProgress(clip: FrameClip, progress: number): numbe
     return Math.min(raw, clip.frames - 1);
 }
 
+/**
+ * Where a set's cells sit in their box. `foot-line` pins the bottom edge so a
+ * standing figure never lifts off its own feet; `centre` keeps the cell centred,
+ * because for a floater the hover IS the clip. One answer, because the foe's
+ * backing sits in the same box and must land on exactly the same pixels.
+ */
+export function cellContentPosition(manifest: FrameSetManifest): 'bottom center' | 'center' {
+    return manifest.anchor.kind === 'foot-line' ? 'bottom center' : 'center';
+}
+
 /** The absolute cell in a row-major sheet for clip-relative frame `i`. */
 export function sheetIndexFor(manifest: FrameSetManifest, clip: FrameClip, i: number): number {
     return clip.row * manifest.columns + Math.max(0, Math.min(clip.frames - 1, i));
