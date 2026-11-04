@@ -2,7 +2,6 @@ import { Card } from '../Cards/types';
 import { MapName } from '../World/map.library';
 import { BaseStats } from '../Character/types';
 import { ActiveEffect } from '../Effects/types';
-import { Item } from '../Items/types';
 // CodexEntry's semantic home is src/Game/types.ts (alongside CodexState +
 // the Game-loop persistence surface). It's re-exported here so
 // `Enemy.journalEntry?: CodexEntry` decoration works at the per-foe content
@@ -39,26 +38,6 @@ export interface SpareStory {
      * `spared-<enemy-id-stem>`. De-duplicated on append.
      */
     flagSet?: string;
-}
-
-/**
- * Weighted drop entry on an `Enemy.loot` table. A won fight rolls no table: it
- * pays its wage (`fightWage`), so these are data only and nothing is dropped.
- *
- * Each entry contributes its `weight` to the roll; the rolled bucket spawns
- * the entry's `item` (or, if `item` is `null`, nothing — that bucket is the
- * empty / no-drop slot). Library authors can express "nothing 60%, herb 30%,
- * potion 10%" with `[ { item: null, weight: 60 }, { item: herb, weight: 30 },
- * { item: potion, weight: 10 } ]`. Weights are unitless integers; the runtime
- * normalises them at roll time.
- *
- * See `rollLoot` in `Enemy/loot.ts`.
- */
-export interface LootTableEntry {
-    /** Item to drop when this bucket rolls. `null` represents a no-drop slot. */
-    item: Item | null;
-    /** Positive integer weight; normalised across the table at roll time. */
-    weight: number;
 }
 
 /**
@@ -110,8 +89,6 @@ export interface CauseLines {
  * @property logic        - AI strategy.
  * @property difficulty   - Optional encounter classification.
  * @property cards        - Optional card rotation the enemy can use.
- * @property loot         - Optional weighted drop table. Data only: a won fight
- *                          pays its wage and rolls no table (`fightWage`).
  * @property effects      - Active status effects on the enemy.
  */
 export interface Enemy {
@@ -126,8 +103,6 @@ export interface Enemy {
     logic: EnemyLogic;
     difficulty?: EnemyDifficulty;
     cards?: Card[];
-    /** Weighted drop table — see {@link LootTableEntry}. */
-    loot?: LootTableEntry[];
     /** Flat experience-point award on kill. Defaults computed by difficulty. */
     xpReward?: number;
     effects: ActiveEffect[];

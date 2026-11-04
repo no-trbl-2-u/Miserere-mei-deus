@@ -194,16 +194,13 @@ describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4
         expect(DeathBeholder.baseStats).toEqual(enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }));
     });
 
-    it('keeps its three boss-line stages, its loot and its tiered deck', () => {
+    it('keeps its three boss-line stages and its tiered deck', () => {
         expect(DeathBeholder.stages?.map(st => ({ at: st.at, threatBonus: st.threatBonus, heal: st.heal })))
             .toEqual([
                 { at: { vitaePct: 0.75 }, threatBonus: 0.3, heal: undefined },
                 { at: { vitaePct: 0.5 }, threatBonus: 0.2, heal: undefined },
                 { at: { vitaePct: 0.25 }, threatBonus: 0.5, heal: { pct: 0.15 } },
             ]);
-        expect(DeathBeholder.loot?.map(l => [l.item?.id ?? null, l.weight])).toEqual([
-            ['healing-potion', 40], ['greater-healing-potion', 25], ['minor-healing-potion', 20],
-        ]);
         expect(ENEMY_DECKS['enemy-death-beholder']).toEqual({
             tier1: ['litany-of-thresholds', 'the-door-kept-open'],
             tier2: ['the-bronze-frame', 'ap-the-margin-note'],
@@ -233,10 +230,7 @@ describe('the Green Jelly is the Brine Hag\'s fight, reworked into a town normal
         expect(GreenJelly.stages).toEqual([]);
     });
 
-    it('keeps its loot and drops its old deck', () => {
-        expect(GreenJelly.loot?.map(l => [l.item?.id ?? null, l.weight])).toEqual([
-            [null, 80], ['healing-potion', 20],
-        ]);
+    it('drops its old deck', () => {
         expect(ENEMY_DECKS['enemy-green-jelly']).toBeUndefined();
     });
 

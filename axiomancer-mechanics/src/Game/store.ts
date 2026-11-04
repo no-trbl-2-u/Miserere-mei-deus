@@ -98,7 +98,7 @@ const DURABLE_ACTIONS: ReadonlySet<GameAction['type']> = new Set<GameAction['typ
  *   only; quest reward XP is folded directly into `player.experience`).
  *   Full XP on `'victory'`; zero on `'defeat'` / `'flee'`, and on a spared foe.
  * - `loot` — items added to `player.inventory` (pre stack-merge). Always empty:
- *   a foe's loot table pays nothing.
+ *   a foe pays no loot.
  * - `spared` — set on a `'victory'` spared at the mercy check: no XP, the spare
  *   wage in `shillings`, and the one roll in `spareReward`.
  */
@@ -394,7 +394,7 @@ export function createGameStore(
                     // No XP and no card reward: more shillings, then the one roll below.
                     shillings = spareWage(foe.level);
                 } else if (outcome === 'victory') {
-                    // The wage, on every difficulty. A foe's loot table pays nothing.
+                    // The wage, on every difficulty. A foe pays no loot.
                     xpGained = totalEncounterXp(encounter);
                     shillings = encounterWage(encounter);
                 }

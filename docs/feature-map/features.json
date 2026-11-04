@@ -1770,24 +1770,6 @@
     {
       "kind": "coupling",
       "from": "area:Enemy",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/Enemy/enemy.library.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Enemy",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/Enemy/loot.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Enemy",
-      "to": "area:Items",
-      "file": "axiomancer-mechanics/src/Enemy/types.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "area:Enemy",
       "to": "area:World",
       "file": "axiomancer-mechanics/src/Enemy/index.ts"
     },
