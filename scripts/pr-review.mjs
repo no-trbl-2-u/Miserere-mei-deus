@@ -60,7 +60,7 @@ import { fileURLToPath } from 'node:url'
 
 import { newTitles, runnerFor, verdictFor } from './eval/parent-replay-lib.mjs'
 import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/worktree.mjs'
-import { prFiles } from './pr-files.mjs'
+import { ghApi, prSnapshot } from './pr-files.mjs'
 import { HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 
 /**
@@ -165,6 +165,17 @@ export function reviewWanted({ state, isDraft, isCrossRepository, labels, title 
   if (strikes >= MAX_PASSES) return { go: false, exhausted: true, reason: `${strikes} not-pass verdicts already: the cap is ${MAX_PASSES} passes, T reviews from here (${EXHAUSTED_LABEL})` }
   if (!digest) return { go: true, reason: `review head ${head.slice(0, 8)} (diff digest unavailable: SHA rule only)` }
   return { go: true, reason: `review head ${head.slice(0, 8)} (diff ${digest.slice(0, 8)})` }
+}
+
+/**
+ * The fixer's PR view with its whole file list and the head that list belongs
+ * to (`gh pr view --json files` stops at 100, and a pipeline path past the
+ * cut would skip the hold): the view's head is replaced by the snapshot's.
+ */
+export function fixView(pr, repo, readView, api = ghApi) {
+  const view = readView()
+  const snap = prSnapshot(pr, repo, api)
+  return { ...view, files: snap.files, headRefOid: snap.head }
 }
 
 /**
@@ -367,9 +378,8 @@ async function main() {
   }
   if (mode === 'parent-tests') return parentTests(pr)
   if (mode === 'fix-wanted') {
-    const v = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
-      '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,headRefName,comments,commits'], { cwd: ROOT, encoding: 'utf8' }))
-    v.files = prFiles(pr, repo)
+    const v = fixView(pr, repo, () => JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
+      '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,headRefName,comments,commits'], { cwd: ROOT, encoding: 'utf8' })))
     const d = fixWanted({
       state: v.state, isDraft: v.isDraft, isCrossRepository: v.isCrossRepository, labels: v.labels.map((l) => l.name), title: v.title,
       files: (v.files ?? []).map((f) => f.path), head: v.headRefOid,
