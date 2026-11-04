@@ -65,17 +65,18 @@ Commons file titles: `File:Caspar_David_Friedrich_-_Northern_Sea_in_the_Moonligh
 plate). Combat resolves a fight's plate as: the node's own plate, if its layout names one; else the region's default;
 else the fallback (The New Zealander, unchanged). The Drowned Parish rule stays.
 
-**The backing.** Each foe that draws transparent cells gets one baked matte (T: "One per foe, all cells"): the union of
-alpha across every cell, thresholded, holes closed, grown a few pixels and feathered, drawn in `AXM.bg` directly under the
-figure and moving with it. It replaces the radial figure plate (T: "Remove it") as the thing that keeps keyed-away strokes
-dark. A foe that moves a lot gets a looser aura, which T accepted. A foe that draws no transparency gets none; today that
-is no foe, and it is judged by alpha values, never the file's flag.
+**The backing.** Every cell a foe draws gets its own baked backing, cut from that cell alone: thresholded, gaps between
+strokes closed, holes filled, specks dropped, no grow, a sub-pixel feather. The frame player draws backing `i` in
+`AXM.bg` directly under cell `i`, so the black stays inside the foe's shape on every frame (T, 2026-11-04: "It should
+also only be within the shape of the enemy", which overrode 146.4's one union matte per foe and its looser aura). It
+replaces the radial figure plate (T: "Remove it") as the thing that keeps keyed-away strokes dark. A foe that draws no
+transparency gets none; today that is no foe, and it is judged by alpha values, never the file's flag.
 
 ### Decisions made upfront (do not ask)
 
 - The twelve plates and the four defaults are T's picks (T, 2026-11-03, D88).
 - All twelve are kept; none is dropped for being weaker (T, 2026-11-03).
-- The backing need not fit exactly; a slight aura is fine (T, 2026-11-03).
+- The backing stays inside the foe's own shape, frame by frame (T, 2026-11-04, overriding "a slight aura is fine").
 - Turning plates on ends D32 (T's plain-black rule) once the backing ships; a new decision records it.
 - The loop assigns no node plates. Which node gets which plate is T's art call (D88), its own attended chunk.
 - Separation and luminance figures are measurements to help T pick, never a gate that rejects T's pick (D57).
@@ -89,8 +90,6 @@ is no foe, and it is judged by alpha values, never the file's flag.
 ## Acceptance
 
 - **A7** T's node plate picks are in the map layouts.
-- **A8** Every cell a foe draws has its own backing, cut from that cell alone with no grow, drawn under that cell by the
-  frame player; a test fails when a backing reaches past its cell's own filled shape by more than a pixel or two.
 
 ## Open questions
 
@@ -100,10 +99,9 @@ is no foe, and it is judged by alpha values, never the file's flag.
 
 ## Chunks
 
-Measure: 2 open · 6 closed · next A9
+Measure: 1 open · 7 closed · next A9
 
 - [ ] **146.7** T picks node plates (owner-led) · S · closes A7 · needs — · alias: AP1g
-- [ ] **146.8** The backing sits inside the foe's shape, frame by frame · S · closes A8 · needs — · alias: AP1h
 
 ### 146.1 (AP1a) — Pull in the twelve arena plates · M · closes A1 · requires —
 

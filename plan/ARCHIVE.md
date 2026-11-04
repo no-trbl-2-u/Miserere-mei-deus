@@ -544,3 +544,4 @@
 - 2026-11-04 · 149.5 (alias: MR4b) · Quest and elite offers of one item both reach the screen · 17dc7434..c67c26f2 (#1379)
 - 2026-11-04 · 149.1 (alias: TL2a) · Review pipeline holds its file reader; reads pair files with head · 6b30c978..6b30c978 (#1381)
 - 2026-11-04 · 149.3 (alias: TL2c) · Settle holds back only the file that empties a spec · d7815331..8bdca2a9 (#1380)
+- 2026-11-04 · 146.8 (alias: AP1h) · The black behind a foe stays inside its shape · eb3bb32d..eb3bb32d (#1383)
