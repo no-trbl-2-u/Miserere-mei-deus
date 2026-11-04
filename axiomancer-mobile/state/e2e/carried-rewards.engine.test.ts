@@ -68,14 +68,19 @@ describe("an elite's relic survives an app close before the screen is answered",
         expect(count(adapter.load(), id)).toBe(1);
     });
 
-    it('EQUIP wears the one row and leaves no second copy', () => {
-        const { store } = fresh();
+    it('EQUIP wears the one row, saved once, and a reopened app has it once', () => {
+        const { store, adapter } = fresh();
         jest.spyOn(Math, 'random').mockReturnValue(0);
         settleEliteRelicAction(store, ELITE, FIXTURE_ELITE_RELICS);
         const id = FIXTURE_ELITE_RELICS[0]!.id;
+        const worn = (s: GameState | null) => JSON.stringify(s?.player.equipment ?? {}).includes(`"${id}"`);
+        expect(worn(gs(store))).toBe(false);
         equipItemRewardAction(store);
+        expect(worn(gs(store))).toBe(true);
         expect(count(gs(store), id)).toBe(1);
         expect(store.getState().itemReward.queue).toHaveLength(0);
+        expect(count(adapter.load(), id)).toBe(1);
+        expect(worn(adapter.load())).toBe(true);
     });
 });
 
@@ -125,15 +130,18 @@ describe("a quest's item survives an app close before the screen is answered", (
         expect(count(adapter.load(), id)).toBe(1);
     });
 
-    it('a second look at the same completion queues nothing more', () => {
+    it('a second look at the same completion queues nothing more, even with another source waiting', () => {
         const { store, q } = questStore();
         const before = gs(store).quests;
+        // An elite entry for the same item is already waiting: it must not
+        // stand in for the quest's offer, nor let the quest be offered twice.
+        offerEliteRelicAction(store, FIXTURE_QUEST_RELIC as Equipment, ELITE.name);
         const actions = createAppActions(store);
         actions.startCombat(FOE);
         actions.endCombat('victory');
         expect(offerCompletedQuestItemsAction(store, before)).toHaveLength(0);
-        const queue = store.getState().itemReward.queue;
-        expect(queue.map(e => e.source)).toEqual([questRewardSource(q.name)]);
+        const sources = store.getState().itemReward.queue.map(e => e.source);
+        expect([...sources].sort()).toEqual([eliteDropSource(ELITE.name), questRewardSource(q.name)].sort());
     });
 });
 
@@ -165,6 +173,13 @@ describe('the same item from a quest and from an elite keeps both offers', () =>
         expect([...queue.map(e => e.source)].sort()).toEqual([ELITE_SOURCE, questRewardSource(q.name)].sort());
         // The app closes before the answer: both rows are already on disk.
         expect(savedCounts(store, adapter, ID)).toEqual([2, 2]);
+        // Reopen the app from that save. FINDING (149.5): the item-reward queue
+        // is not saved (the store boots it empty), so a reopened app shows no
+        // screen for either offer. The player keeps both copies in the satchel,
+        // which is what the carried rows are for.
+        const reopened = createAppStore({ adapter });
+        expect(count(gs(reopened), ID)).toBe(2);
+        expect(reopened.getState().itemReward.queue).toHaveLength(0);
         // Each answer swaps its own row: two screens, two items, never three.
         confirmItemRewardAction(store);
         expect(store.getState().itemReward.queue).toHaveLength(1);
