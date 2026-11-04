@@ -540,3 +540,4 @@
 - 2026-11-04 · 146.5 (alias: AP1e) · Combat fights open on their region's engraved plate again · 43ef90b3..43ef90b3 (#1371)
 - 2026-11-04 · 147.2 (alias: MR3b) · Quest and elite rewards survive an app close. · b92966fc..b92966fc (#1370)
 - 2026-11-04 · 147.4 (alias: MR3d) · The flagged mercy tests fail when the behaviour they name is gone. · f2fcaee0..f2fcaee0 (#1372)
+- 2026-11-04 · 149.4 (alias: MR4a) · Memoir tooltip names only what its combat entry holds · 0a3d8e46..a7eb4b6e (#1378)
