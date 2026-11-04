@@ -3,10 +3,10 @@
   "_meta": {
     "generated": "2026-09-19",
     "purpose": "Input for authoring a new story outline. Each entry pairs what is literally depicted with the narrative hooks it offers, so a story pass can be written against the art the game already has rather than against art it would need commissioned.",
-    "scope": "The eleven world plates only. Excluded: enemy/character portraits (the engine already carries authored `description` and `causeLines` prose per enemy in axiomancer-mechanics/src/Enemy/enemy.library.ts — read that directly rather than duplicating it here), card faces, treasure icons, UI motifs, and app icons.",
-    "plateCount": 11,
+    "scope": "The world plates only (the original eleven plus the twelve arena plates of plan 146). Excluded: enemy/character portraits (the engine already carries authored `description` and `causeLines` prose per enemy in axiomancer-mechanics/src/Enemy/enemy.library.ts — read that directly rather than duplicating it here), card faces, treasure icons, UI motifs, and app icons.",
+    "plateCount": 23,
     "surfaceCounts": {
-      "combat-arena": 2,
+      "combat-arena": 14,
       "map-backdrop": 9
     },
     "house_register": "The Woodcut Codex (axiomancer-mobile/docs/VISUAL_LANGUAGE.md): FromSoftware x Inscryption x illuminated manuscript. Twelve plates are 19th-century wood engravings by Gustave Doré, graded toward the void (grayscale, brightness 0.62 / contrast 1.08). Ten are from London: A Pilgrimage (1872); two — the Caverns and the Capital arenas — are Dante plates, a deliberate break recorded in archive-pre-revamp:plan/archive/2026-09-28-revamp-r0/plan/phases/phase_103_the_last_two_arenas.md. The pixel-art outlier this catalogue previously flagged was retired in phase 103; the `coherenceFlag`s that remain record legible 1872 text on `ludgate-hill` and `arena-desolation`. The four `act1-*` map plates (2026-09-25, D21) are the exception: machine-generated Doré-style engravings (ChatGPT, run by the owner), tinted to one parchment ramp instead of graded toward the void, because they are the map itself rather than atmosphere under it.",
@@ -368,6 +368,174 @@
         "A giant sleeps above the skeleton of another giant. The underworld keeps its dead where the living can see them.",
         "A sealed vault door among the ruins: the only thing down here still shut."
       ]
+    },
+    {
+      "id": "arena-breakwater-northern-sea",
+      "file": "axiomancer-mobile/assets/images/combat/arena-breakwater-northern-sea.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Breakwater (T's default pick; plan 146)"
+      ],
+      "artist": "Caspar David Friedrich",
+      "work": "Northern Sea in the Moonlight (c. 1823-24)",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A heavy cloud bank over a dark sea, a pale band of moonlit water along the horizon and a low headland at the right.",
+      "mood": "Cold, empty and patient.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-breakwater-kuste-bei-mondschein",
+      "file": "axiomancer-mobile/assets/images/combat/arena-breakwater-kuste-bei-mondschein.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Breakwater (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "Caspar David Friedrich",
+      "work": "Küste bei Mondschein (1835-36)",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A black shore under a banded cloud sky, a thin line of light on the water and two dark sails standing on the sea.",
+      "mood": "A watch kept at night on an empty coast.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-breakwater-mondscheinnacht-ruegen",
+      "file": "axiomancer-mobile/assets/images/combat/arena-breakwater-mondscheinnacht-ruegen.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Breakwater (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "Johann Friedrich Boeck",
+      "work": "Mondscheinnacht auf Rügen",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A small moon in streaked cloud above a distant headland and a glittering sea; a wind-bent tree leans in from the left foreground slope.",
+      "mood": "Quiet, with weather coming.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-charcoal-wood-sacred-grove",
+      "file": "axiomancer-mobile/assets/images/combat/arena-charcoal-wood-sacred-grove.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Charcoal Wood (T's default pick; plan 146)"
+      ],
+      "artist": "Arnold Böcklin",
+      "work": "Sacred Grove (1882, Kunstmuseum Basel)",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A grove of pale birches and dark trees behind a low wall; white-robed figures gather at a lit altar at the lower right while a few kneel.",
+      "mood": "A rite performed in a place that is older than the rite.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-charcoal-wood-pheasantry",
+      "file": "axiomancer-mobile/assets/images/combat/arena-charcoal-wood-pheasantry.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Charcoal Wood (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "Théodore Rousseau",
+      "work": "Pheasantry in the Forest of Compiègne",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "Thick-trunked trees against a pale glade, a low fence at the right edge and dense undergrowth below. The scan's pale mount is trimmed by the plate-page recipe.",
+      "mood": "Close, shaded woodland.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-charcoal-wood-eldena",
+      "file": "axiomancer-mobile/assets/images/combat/arena-charcoal-wood-eldena.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Charcoal Wood (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "Caspar David Friedrich",
+      "work": "Klosterruine Eldena (1824-25)",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A roofless Gothic abbey wall with an empty pointed window, overgrown with trees and ivy, a small cottage built in at its foot.",
+      "mood": "Ruin reclaimed by growth.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-beacon-crags-storm-mountains",
+      "file": "axiomancer-mobile/assets/images/combat/arena-beacon-crags-storm-mountains.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Beacon Crags (T's default pick; plan 146)"
+      ],
+      "artist": "Hermann Ottomar Herzog",
+      "work": "Storm in the Mountains",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "Jagged cliffs and wind-torn trees under heavy cloud, a lit torrent and mist in the gorge.",
+      "mood": "A narrow pass in bad weather.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-beacon-crags-rocky-mountains-storm",
+      "file": "axiomancer-mobile/assets/images/combat/arena-beacon-crags-rocky-mountains-storm.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Beacon Crags (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "Albert Bierstadt",
+      "work": "A Storm in the Rocky Mountains",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A vast cliff face at the right under a churning storm, a waterfall and a lake below, a few tiny figures at the shore.",
+      "mood": "Scale that makes the people small.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-beacon-crags-riesengebirge",
+      "file": "axiomancer-mobile/assets/images/combat/arena-beacon-crags-riesengebirge.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Beacon Crags (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "Caspar David Friedrich",
+      "work": "Riesengebirge 3",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "Receding ridges of dark hills under a wide, almost featureless sky; very low contrast.",
+      "mood": "Distance and stillness. The faintest of the twelve.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-lantern-deep-toteninsel",
+      "file": "axiomancer-mobile/assets/images/combat/arena-lantern-deep-toteninsel.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Lantern Deep (T's default pick; plan 146)"
+      ],
+      "artist": "Arnold Böcklin",
+      "work": "Die Toteninsel III (Alte Nationalgalerie, Berlin)",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A rock island of tomb-cut cliffs and tall cypresses on still water; a boatman rows a white-robed figure and a coffin toward it.",
+      "mood": "A one-way crossing.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-lantern-deep-pandemonium",
+      "file": "axiomancer-mobile/assets/images/combat/arena-lantern-deep-pandemonium.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Lantern Deep (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "John Martin",
+      "work": "Pandemonium (Louvre, without frame)",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "A colonnaded hall lit from within across dark broken water, a figure on a rock in the foreground, smoke and flame at the left.",
+      "mood": "A great house built by the damned.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
+    },
+    {
+      "id": "arena-lantern-deep-great-day-of-wrath",
+      "file": "axiomancer-mobile/assets/images/combat/arena-lantern-deep-great-day-of-wrath.webp",
+      "surface": "combat-arena",
+      "boundTo": [
+        "The Lantern Deep (kept alternate, nameable by a map node; plan 146)"
+      ],
+      "artist": "John Martin",
+      "work": "The Great Day of His Wrath",
+      "licence": "Public domain (read from Commons imageinfo extmetadata at acquisition)",
+      "description": "Mountains split and falling into a storm-lit chasm; a huge cloud mass over broken rock.",
+      "mood": "The end of the world, seen from underneath.",
+      "notes": "Added by plan 146 chunk 146.1. Not yet wired into the region rules (146.2) or the node override (146.3). Graded toward the void by the shared recipe, so it is far dimmer than the painting."
     }
   ],
   "crossCutting": {
