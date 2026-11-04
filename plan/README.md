@@ -26,10 +26,6 @@ needs are done):
 - **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
 - **121.2** · TP1b: the title plate is Doré's *Inferno* Plate 3, the lion (T's pick, `/plot asap`, 2026-11-04)
-- **146.5** · AP1e: combat plates back on (T, `/plot asap`, 2026-11-04)
-- **146.3** · AP1c: a node may name its plate (T, `/plot asap`, 2026-11-04)
-- **147.2** · MR3b: a quest or elite reward survives an app close (T, `/plot`, 2026-11-04)
-- **147.4** · MR3d: the flagged tests prove what they claim (T, `/plot`, 2026-11-04)
 - **99.1** · automate footgun `card-voice-stale-rows` (seen 2×), spec 99's ladder chunk.
 - **99.2** · automate footgun `face-text-parsers` (seen 2×), spec 99's ladder chunk.
 - **99.3** · automate footgun `small-face-line-fit` (seen 2×), spec 99's ladder chunk.
@@ -102,8 +98,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
 | 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
-| 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 3 left |
-| 147 | The mercy check's loose ends | [147-mr3-mercy-loose-ends.md](147-mr3-mercy-loose-ends.md) | planned | 2 left |
+| 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
 
 ## How the loop reads this folder
