@@ -23,6 +23,7 @@ import { LeaveRow } from '@/components/LeaveRow';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useGameActions, useGameEvents, useGameState } from '@/state/GameStoreProvider';
 import { consequenceLabel, visibleConsequences } from '@/state/presenters/consequence-copy';
+import { DIALOGUE_EYEBROW, DIALOGUE_INACTIVE_TEXT } from '@/state/presenters/dialogue.copy';
 import {
     selectEventViewModel,
     selectHasActiveEvent,
@@ -35,7 +36,7 @@ import { makeStyles } from '@/theme/runtime';
 const DIALOGUE_CONFIRM_TTL_MS = 500;
 
 /**
- * Widest the parley column is allowed to get.
+ * Widest the words column is allowed to get.
  *
  * Purpose: keep the spoken text at a readable line length on a desktop
  * viewport. Input: none (a constant). Output: the cap applied to the
@@ -187,7 +188,7 @@ export default function DialogueScreen() {
         return (
             <ScreenBg scrollable={false} art="dialogue">
                 <View style={styles.inactiveWrap} testID="dialogue-inactive">
-                    <Text style={styles.inactiveText}>No one is waiting. The parley is done.</Text>
+                    <Text style={styles.inactiveText}>{DIALOGUE_INACTIVE_TEXT}</Text>
                 </View>
             </ScreenBg>
         );
@@ -200,7 +201,7 @@ export default function DialogueScreen() {
                 contentContainerStyle={styles.scroll}
                 testID="dialogue-scroll"
             >
-                <Text style={styles.eyebrow}>◉ PARLEY</Text>
+                <Text style={styles.eyebrow}>{DIALOGUE_EYEBROW}</Text>
                 <View style={styles.nameplate} testID="dialogue-nameplate">
                     <Text style={styles.name}>{vm.title}</Text>
                     {vm.subtitle.length > 0 && <Text style={styles.subtitle}>{vm.subtitle}</Text>}
