@@ -216,11 +216,8 @@ describe('an elite roll goes around what a quest pays in that same fight (D166)'
     });
 
     it('the piece roll picks another: one copy of each, and the quest still offers its own', () => {
-        const { store, q } = (() => {
-            const pool = equipmentDropPool(gs(fresh().store).player);
-            return questPaying(pool[0]!);
-        })();
-        const [paid, next] = equipmentDropPool(gs(store).player);
+        const [paid, next] = equipmentDropPool(gs(fresh().store).player);
+        const { store, q } = questPaying(paid!);
         winElite(store, []);
         expect(count(gs(store), paid!.id)).toBe(1);
         expect(count(gs(store), next!.id)).toBe(1);

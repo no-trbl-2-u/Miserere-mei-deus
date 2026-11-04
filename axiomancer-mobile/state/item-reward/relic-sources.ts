@@ -12,8 +12,8 @@
  * paid twice and an app closed before the answer keeps it. The queue is not
  * saved: a reopened app holds the item and misses only its screen.
  *
- * An elite's or a Spare's roll goes around whatever a quest pays in that fight
- * (D166), so those offers treat a waiting entry for the item as the one copy.
+ * An elite's or a Spare's roll goes around whatever a quest pays in that fight,
+ * so those offers treat a waiting entry for the item as the one copy.
  * Quests alone are the exception: two quests paying one item pay two copies,
  * each with its own offer.
  */
