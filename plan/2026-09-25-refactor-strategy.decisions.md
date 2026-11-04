@@ -1088,7 +1088,7 @@ satisfied for exactly these.)
 - The gate stays: a third-party file added after D115 still records its own licence (a traced grant, or this ruling written into its record by a session T runs). The torio Wizardry carve-out (`docs/licences/torio-javardry.md`) is a separate per-monster rule and stays.
 - Built by Phase AL1 (`plan/phases/phase_AL1_art_licence_closed.md`).
 
-**D114 — Chapter 1 is T's 44-node Breakwater, told by gates; every quest pays a relic.** (T, 2026-10-28, attended, a `/pitch` then `/plot`; recorded by the BW1 plot. Supersedes D111's four-step questline and its pocket routing; D112 and D113 are taken by the open NK1 and WR1 plots. T: "I REALLY need you to take this down as an important note in terms of the VISION I have for chapter 1".)
+**D114 — Chapter 1 is T's 44-node Breakwater, told by gates; every quest pays a relic (amended 2026-11-01 by D124: the rewards alternate, relic, weapon or armor, relic).** (T, 2026-10-28, attended, a `/pitch` then `/plot`; recorded by the BW1 plot. Supersedes D111's four-step questline and its pocket routing; D112 and D113 are taken by the open NK1 and WR1 plots. T: "I REALLY need you to take this down as an important note in terms of the VISION I have for chapter 1".)
 
 - The Breakwater is the 44 nodes, 42 roads and one travel pair (the sea cave mouth and the cave face) T drew on the coast plate (the board and `braindump/2026-10-28-breakwater-chapter-1-map.md`); node ids are the board's codes (`bw-w1` .. `bw-p3`).
 - The chain: the windmill gives the fishermen quest; the wreck hazard opens the sea; the sea cave travels to the cove, where an elite guards the quest node that turns it in and gives the next; an elite guards the lighthouse, where arriving completes the quest and pays a key; the keep's quest node needs the key and opens the chapter boss; with the boss dead the bridge quest completes and the next node travels out.
@@ -1157,6 +1157,7 @@ satisfied for exactly these.)
 - At most three relics are worn, so D100's "all 5 relics of a lane" row is out of reach unless weapon and armor can be lane pieces (the EQ2 plot's call 2 and 3, defaults: they cannot, and D100 is left as written).
 - T, 2026-10-26, on call 3: weapons and armor still grant no lane, "but they could still help by completing a set, which could help the player with set bonuses including but not limited to increasing the 2 lane-specific rewards to 3 lane-specific rewards". How the top row becomes reachable is Phase SB1's (set bonuses, T's attended design session, `plan/phases/phase_SB1_set_bonuses.md`), not B1's.
 - Built by Phase EQ2 (`plan/phases/phase_EQ2_equipment_slots.md`).
+- T, 2026-10-31 ("Stay put"), amended by EQ3a: the three relic slots have an identity. A relic keeps the position it was worn in, taking one off leaves that position empty and the others do not slide up, and `moveRelic` moves one between positions. This reverses EQ2's "positions keep no identity" (the brief that carried it is archived and not editable). The saved shape is still `relics` with no version change: a packed list written before EQ3a reads as positions 0..n-1.
 
 **D104 — Every card reward follows the relic lanes; a carried lane relic unlocks its lane.** (T, 2026-10-24, the Elementalist swarm `/messy`; recorded by the RW1 plot, 2026-10-25. Amends D68 and D71; D100's table stands.)
 

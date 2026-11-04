@@ -81,7 +81,7 @@ plate that is too pale fails the check and a dark fixture passes.
 
 ### Follow-ups (not in this phase)
 
-- **TP1b — the plate itself** (owner-led, D88). Candidates already tried and rejected in T's 2026-10-18 pass, all
+- **TP1b — the plate itself** (T picked Doré's lion, 2026-11-03; now chunk 121.2). Candidates already tried and rejected in T's 2026-10-18 pass, all
   confirmed Public domain by `acquire-art.mjs`'s own check but too pale after the ingest recipe
   (brightness 0.62, contrast 1.08): Hiroshige daylight landscapes (print borders, light fields) and three
   Turners — *Sun Setting over a Lake*, *The Fighting Temeraire*, *Sunrise with Sea Monsters*. The look that
@@ -108,4 +108,15 @@ None. The report is a generated record, not save data.
 
 Measure: 1 open · 7 closed · next A9
 
-- [ ] **121.2** The title plate itself (owner-led) · M · closes A8 · needs — · alias: TP1b
+- [ ] **121.2** The title plate: Doré's *Inferno* Plate 3, the lion (T's pick) · M · closes A8 · needs — · alias: TP1b
+
+### 121.2 (TP1b) — The title plate: Doré's *Inferno* Plate 3, the lion · M · closes A8 · requires —
+
+- T's pick (2026-11-03): "I pick the title plate with the lion. It's got a huge area at the top we could put The title
+  in". Source `File:Gustave_Doré_-_Dante_Alighieri_-_Inferno_-_Plate_3_(The_lion).jpg`, licence proven by
+  `acquire-art.mjs`.
+- A new `category: title` key in `scripts/art-sources.json` for the lion; the title screen points to it. Trim the scan's
+  grey border in the recipe. The wordmark sits in the dark upper band; the psalm stays clear of the pale sky slit under it.
+- `shore-at-dawn` stays as the launcher icon's source (the icon is not in this chunk).
+- Measure: `npm run art:legibility -w axiomancer-mobile -- --write` passes (wordmark 3:1, psalm 4.5:1 after scrims at
+  1280x800); scrims may be tuned, the plate may not be swapped. Then `npm run verify -w axiomancer-mobile`.

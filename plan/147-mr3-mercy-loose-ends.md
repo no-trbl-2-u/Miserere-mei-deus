@@ -36,22 +36,18 @@
 
 ## Acceptance
 
-- **A1** No player-facing text says parley, and the `combat:ended` tooltip names only reachable outcomes. [T to confirm #1]
 - **A2** An elite relic, an elite piece and a quest item each survive an app close before the item reward screen is answered, granted exactly once, with a test per source that fails on today's code where the bug is real.
-- **A3** The card reports show transformed, transformed-into and upgraded counts per card, with a backend test over stored rows.
 - **A4** Each test the reviews flagged either fails without the behaviour it names or is deleted because a type now enforces it, and the sim test asserts `mercy.xp` and `mercy.shillings`.
 
 ## Open questions
 
-1. What replaces "parley" on the dialogue screen? Default: "◉ WORDS" and "No one is waiting. The words are done." [T to confirm #1]
+1. What replaces "parley" on the dialogue screen? Default: "◉ WORDS" and "No one is waiting. The words are done." Accepted at merge (default)
 
 ## Chunks
 
-Measure: 4 open · 0 closed · next A5
+Measure: 2 open · 2 closed · next A5
 
-- [ ] **147.1** Text names only what the game has · S · closes A1 · needs — · alias: MR3a
 - [ ] **147.2** A quest or elite reward survives an app close · M · closes A2 · needs — · alias: MR3b
-- [ ] **147.3** Card reports count transforms and upgrades · S · closes A3 · needs — · alias: MR3c
 - [ ] **147.4** The flagged tests prove what they claim · S · closes A4 · needs — · alias: MR3d
 
 ### 147.1 (MR3a) — Text names only what the game has · S · closes A1 · requires —

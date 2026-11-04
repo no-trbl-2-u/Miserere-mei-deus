@@ -204,6 +204,11 @@ with T's time, whether T solved it, and T's keep-or-cut ruling quoted.
 - Note: a first-time solve survives one exposure, so each candidate is played
   once and its label is not described to T beforehand. HP2c's move log times
   the session.
+- Closed on T's word, 2026-11-03 ("Everything you said that's overdue is
+  done"; "remove the overdue items from the deadlines"): T played all thirty.
+  No per-candidate report was written, and nothing asks T for one. HP4f and
+  HP4g read whatever kept/cut data exists; with none, A10 says no pattern
+  separates them and A11 keeps the placeholder clocks, as each already allows.
 
 #### HP4f (chunk 120.6)
 
@@ -240,9 +245,6 @@ and no migration is needed. `/devpuzzle` is dev-gated by `isDevToolsEnabled`.
 
 ## Acceptance
 
-- **A9** `docs/reports/hazard-puzzle-candidates.md` records T's play of every
-  candidate: the label, its intended band, T's rough solve time, whether T
-  solved it, and T's keep-or-cut ruling in T's words.
 - **A10** `docs/reports/hazard-puzzle-patterns.md` sets the kept candidates
   against the cut ones on the A1 numbers and names the authoring patterns that
   separate them, each as a rule a future puzzle can be built to and checked
@@ -263,8 +265,7 @@ and no migration is needed. `/devpuzzle` is dev-gated by `isDevToolsEnabled`.
 
 ## Chunks
 
-Measure: 3 open · 8 closed · next A12
+Measure: 2 open · 9 closed · next A12
 
-- [ ] **120.5** T plays the thirty (attended) · S · closes A9 · needs — · alias: HP4e
-- [ ] **120.6** The patterns · M · closes A10 · needs 120.5 · alias: HP4f
+- [ ] **120.6** The patterns · M · closes A10 · needs — · alias: HP4f
 - [ ] **120.7** The clocks, from the kept set · S · closes A11 · needs 120.6 · alias: HP4g
