@@ -6,7 +6,13 @@
 
 import { describe, expect, it } from '@jest/globals';
 
-import { arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
+import {
+    ARENA_PLATES,
+    ARENA_PLATE_IDS,
+    arenaAltTextFor,
+    arenaBackdropFor,
+    type ArenaPlateId,
+} from '@/assets/images/combat';
 import { ALL_MAP_LAYOUTS } from '@/state/exploration-maps';
 
 /**
@@ -27,15 +33,53 @@ const LIVE_REGIONS: readonly string[] = ALL_MAP_LAYOUTS.map((l) => l.region);
  * and a region falling back that is not here fails. So the day a plate ships,
  * the case goes red and points at this entry.
  */
-// The Breakwater (Act 1's coast), the Charcoal Wood (Act 1's forest), the
-// Beacon Crags (Act 1's mountains) and the Lantern Deep (Act 1's underworld)
-// have no arena plates yet; their fights fall back until one is chosen.
-const AWAITING_PLATE: readonly string[] = [
-    'The Breakwater', 'The Charcoal Wood', 'The Beacon Crags', 'The Lantern Deep',
-];
+// Empty since plan 146.2: all four Act 1 regions default to a plate of their
+// own. A new live region with no rule is named here until its plate ships.
+const AWAITING_PLATE: readonly string[] = [];
+
+/**
+ * T's four defaults, by stable plate id. Hand-written on purpose: this is
+ * the pick itself, so it must not be derived from the rule table it checks.
+ */
+const REGION_DEFAULTS: Readonly<Record<string, ArenaPlateId>> = {
+    'The Breakwater': 'arena-breakwater-northern-sea',
+    'The Charcoal Wood': 'arena-charcoal-wood-sacred-grove',
+    'The Beacon Crags': 'arena-beacon-crags-storm-mountains',
+    'The Lantern Deep': 'arena-lantern-deep-toteninsel',
+};
 
 /** The live regions that are meant to have a plate of their own. */
 const PLATED_REGIONS: readonly string[] = LIVE_REGIONS.filter((r) => !AWAITING_PLATE.includes(r));
+
+describe('the plate library', () => {
+    it('keeps all twelve plates under stable arena-<region>-<subject> ids', () => {
+        expect(ARENA_PLATE_IDS).toHaveLength(12);
+        for (const id of ARENA_PLATE_IDS) expect(id).toMatch(/^arena-[a-z]+(-[a-z]+)+$/);
+    });
+
+    it('gives every plate its own art and its own description', () => {
+        const arts = ARENA_PLATE_IDS.map((id) => ARENA_PLATES[id].art);
+        const alts = ARENA_PLATE_IDS.map((id) => ARENA_PLATES[id].alt);
+        expect(new Set(arts).size).toBe(ARENA_PLATE_IDS.length);
+        expect(new Set(alts).size).toBe(ARENA_PLATE_IDS.length);
+        for (const alt of alts) expect(alt.length).toBeGreaterThan(20);
+    });
+
+    it('resolves each live region to the default T picked, art and words together', () => {
+        for (const [region, id] of Object.entries(REGION_DEFAULTS)) {
+            expect(LIVE_REGIONS).toContain(region);
+            expect(arenaBackdropFor(region)).toEqual(ARENA_PLATES[id].art);
+            expect(arenaAltTextFor(region)).toEqual(ARENA_PLATES[id].alt);
+        }
+        expect(Object.keys(REGION_DEFAULTS).sort()).toEqual([...LIVE_REGIONS].sort());
+    });
+
+    it('leaves the fallback and the Drowned Parish out of the twelve', () => {
+        const arts: readonly number[] = ARENA_PLATE_IDS.map((id) => ARENA_PLATES[id].art);
+        expect(arts).not.toContain(arenaBackdropFor(undefined));
+        expect(arts).not.toContain(arenaBackdropFor('the Drowned Parish'));
+    });
+});
 
 describe('arenaBackdropFor', () => {
     it('resolves the coastal village (the Drowned Parish) to its own plate', () => {
@@ -84,8 +128,8 @@ describe('arenaBackdropFor', () => {
         expect(new Set(plates).size).toBe(PLATED_REGIONS.length);
         // Pinned as two numbers, not one: a dropped plate and a dropped map are
         // different failures and neither may hide behind the other.
-        // No live region has a plate yet.
-        expect(PLATED_REGIONS).toHaveLength(0);
+        // Every live region has a plate of its own.
+        expect(PLATED_REGIONS).toHaveLength(4);
         // The four Act 1 maps are the whole world.
         expect(LIVE_REGIONS).toHaveLength(4);
     });
