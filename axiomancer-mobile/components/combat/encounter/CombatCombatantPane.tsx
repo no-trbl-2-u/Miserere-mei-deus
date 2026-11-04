@@ -35,6 +35,7 @@ import {
     ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, cellContentPosition, isEnemyActionBeat, isEnemyStruckBeat,
     useEnemyClipSelection,
 } from '@/components/combat/frames';
+import { nodeArenaFor } from '@/state/exploration-maps';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -443,7 +444,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
 // ── The overlay ──────────────────────────────────────────────────────────────
 
 export const CombatCombatantPane = React.memo(function CombatCombatantPane({
-    enemy, player, onChip, fx, topInset = 0, metaLine, onHudLayout, region, onPayToll,
+    enemy, player, onChip, fx, topInset = 0, metaLine, onHudLayout, region, nodeId, onPayToll,
 }: {
     enemy: CombatEnemyPaneVM;
     player: CombatPlayerPaneVM;
@@ -459,6 +460,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
      *  arena backdrop plate. Omitted by the dev-only sandbox route, which gets
      *  the fallback plate — same as every region with no rule of its own. */
     region?: string;
+    /** The map node the fight was walked to; a node may name its own plate.
+     *  Omitted where a fight has no node (the labyrinth, the dev sandbox). */
+    nodeId?: string;
     /** Reports the HUD's real rendered height (top of screen to its bottom
      *  edge, `topInset` already included via the HUD's own padding) on every
      *  layout pass. The alt-win meters make this
@@ -645,12 +649,13 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // its test, which pins the live regions that still fall back). While
     // `ARENA_PLATES_SHOWN` is off, every fight gets a plain black scene instead
     // (the palette's darkest ink, `deepBg`) and no foe backing is drawn.
-    const arenaBg = arenaBackdropFor(region);
+    const nodePlate = nodeArenaFor(region, nodeId);
+    const arenaBg = arenaBackdropFor(region, nodePlate);
     // Live anchor: 14pt tucked under the HUD's measured full-width block. The
     // static top in the stylesheet is only the pre-layout fallback. The figure
     // and its float layer share it.
     const figureTop = hudBlockH > 0 ? { top: topInset + COMBAT_HUD_PAD_TOP + hudBlockH - 14 } : null;
-    const arenaAlt = arenaAltTextFor(region);
+    const arenaAlt = arenaAltTextFor(region, nodePlate);
 
     return (
         <Animated.View style={[StyleSheet.absoluteFillObject, shakeStyle]} pointerEvents="box-none" testID="combat-combatant-pane">

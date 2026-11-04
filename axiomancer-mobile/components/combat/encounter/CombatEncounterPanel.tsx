@@ -824,6 +824,7 @@ export function CombatEncounterPanel({
                     onMomentumInfo={onMomentumInfo}
                     fx={fx}
                     region={region}
+                    nodeId={nodeId}
                     onPayToll={onPayToll}
                 />
             )}

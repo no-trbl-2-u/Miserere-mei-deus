@@ -2,6 +2,7 @@ import { breakwaterLayout } from './breakwater.layout';
 import { charcoalWoodLayout } from './charcoal-wood.layout';
 import { beaconCragsLayout } from './beacon-crags.layout';
 import { lanternDeepLayout } from './lantern-deep.layout';
+import type { ArenaPlateId } from '@/assets/images/combat';
 import type { MapLayout } from './types';
 
 export type { MapLayout, MapSheet, NodeLayout } from './types';
@@ -31,6 +32,25 @@ export function getMapLayout(mapId: string): MapLayout | null {
 export function mapBackdropFor(mapId: string | null | undefined): number | null {
     if (!mapId) return null;
     return getMapLayout(mapId)?.sheet.backdrop ?? null;
+}
+
+/**
+ * The arena plate a node names for its fights, if its layout names one.
+ *
+ * Keyed on the region as well as the node id, so two maps could never answer
+ * for each other's nodes.
+ *
+ * @param region - the layout's region display string (`vm.region`).
+ * @param nodeId - the engine node id the fight was walked to.
+ * @returns the plate id, or undefined (no map, no node, or a node that names none).
+ */
+export function nodeArenaFor(
+    region: string | undefined,
+    nodeId: string | undefined,
+): ArenaPlateId | undefined {
+    if (!region || !nodeId) return undefined;
+    const layout = Object.values(REGISTRY).find((l) => l.region === region);
+    return layout?.nodes.find((n) => n.id === nodeId)?.arena;
 }
 
 /**
