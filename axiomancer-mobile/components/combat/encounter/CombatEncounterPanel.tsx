@@ -59,7 +59,7 @@ import {
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { MERCY_CHECK_PROMPT } from '@/state/presenters/mercy-check.copy';
-import { spareSummaryLines } from '@/state/presenters/spare-reward.engine';
+import { mercyLineFor, spareSummaryLines } from '@/state/presenters/spare-reward.engine';
 import { offerSpareGearAction } from '@/state/item-reward/relic-sources';
 import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { devSettingsStore } from '@/state/dev/dev-settings';
@@ -793,6 +793,7 @@ export function CombatEncounterPanel({
     const summary = live.finalOutcome ? buildCombatSummary(live) : null;
     const mercyCheckOpen = live.mercyCheck === 'offered';
     const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
+    const mercyLine = mercyLineFor(enemy.mercyLines, live.mercyCheck);
     const showReveal = live.phase === 'reveal';
     // A `phases` foe's reveal shows its DANGER lines and nothing else.
     const revealDangerLines = showReveal ? revealDangers(live, seen) : null;
@@ -1323,7 +1324,7 @@ export function CombatEncounterPanel({
             )}
 
             {summary && mercyCheckSettled(live) && (rewardsClaimed || live.finalOutcome !== 'victory') && (
-                <CombatSummaryModal summary={summary} shillings={shillingsPaid} spareLines={spareLines} onClose={handleExit} />
+                <CombatSummaryModal summary={summary} shillings={shillingsPaid} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
             )}
 
             {/* drag ghost — persistently mounted after the first drag; dragShown

@@ -5,9 +5,10 @@
 
 import { describe, expect, it } from '@jest/globals';
 import { getCard, relicLibrary, type Equipment, type SpareReward } from '@mechanics';
+import { FloatEye } from '@mechanics/Enemy/enemy.library';
 
 import { spareRewardLabel, spareJournalLabel } from '@/state/presenters/mercy-check.copy';
-import { spareRewardValue, spareSummaryLines } from '@/state/presenters/spare-reward.engine';
+import { mercyLineFor, spareRewardValue, spareSummaryLines } from '@/state/presenters/spare-reward.engine';
 
 const RELIC = relicLibrary[0] as Equipment;
 
@@ -40,5 +41,26 @@ describe('spareSummaryLines', () => {
         expect(spareSummaryLines(reward, 'The Green Jelly')[1]).toEqual({
             key: 'journal', label: spareJournalLabel, value: 'The Green Jelly',
         });
+    });
+});
+
+describe('mercyLineFor', () => {
+    const lines = FloatEye.mercyLines;
+
+    it('gives the Spare line for a spare and the Finish line for a finish', () => {
+        expect(lines).toBeDefined();
+        expect(mercyLineFor(lines, 'spared')).toBe(lines!.spare);
+        expect(mercyLineFor(lines, 'finished')).toBe(lines!.finish);
+        expect(lines!.spare).not.toBe(lines!.finish);
+    });
+
+    it('gives none when the check was never answered', () => {
+        expect(mercyLineFor(lines, undefined)).toBeUndefined();
+        expect(mercyLineFor(lines, 'none')).toBeUndefined();
+        expect(mercyLineFor(lines, 'offered')).toBeUndefined();
+    });
+
+    it('gives none for a foe with no lines', () => {
+        expect(mercyLineFor(undefined, 'spared')).toBeUndefined();
     });
 });

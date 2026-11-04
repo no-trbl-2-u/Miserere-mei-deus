@@ -30,7 +30,7 @@ function makeSpareableEnemy(journalEntryBody?: string) {
         mapName: 'home-bay',
         logic: 'aggressive' as const,
         effects: [],
-        spareStory: { narrative: 'a thing happened.' },
+        spareStory: { flagSet: 'spared-test-foe' },
         journalEntry: journalEntryBody !== undefined
             ? {
                 id: 'codex-test-foe',
