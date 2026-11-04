@@ -1,7 +1,7 @@
 /**
- * Combat arena backdrops (the Woodcut Codex). No live region has a plate of
- * its own yet. The count is pinned by this module's test against the map
- * registry, never restated here.
+ * Combat arena backdrops (the Woodcut Codex): a library of plates by stable id,
+ * and a default plate per Act 1 region. Which live regions have a default is
+ * pinned by this module's test against the map registry, never restated here.
  *
  * `CombatCombatantPane`'s full-bleed battlefield scene, region-keyed the same
  * way `assets/images/maps/index.ts` keys the exploration-map backdrop: an
@@ -18,7 +18,7 @@
  *
  * ## The register
  *
- * Every plate is a 19th-century engraving in the public domain, acquired and
+ * Every plate is a 19th-century painting or engraving in the public domain, acquired and
  * licence-proven by `scripts/acquire-art.mjs` (which reads Commons' own
  * `imageinfo` extmetadata and refuses anything it cannot prove is PD/CC0), then
  * graded toward the void by the shared recipe in `scripts/ingest-art.mjs`. See
@@ -39,42 +39,98 @@ const ARENA_DESOLATION = require('./arena-desolation.webp');
 const ARENA_COASTAL_VILLAGE = require('./coastal-village.webp');
 
 /**
- * The twelve arena plates kept by plan 146 (chunk 146.1), by file. Not yet
- * resolved by any region rule: 146.2 turns this into the plate library and the
- * region defaults, 146.3 lets a map node name one. It exists here only so the
- * provenance gate's "reachable from a registry" check sees the files.
+ * One arena plate in the library: what a screen-reader user is told they are
+ * looking at, and the art. The id is the record's key in {@link ARENA_PLATES}
+ * and is stable: plan 146.3 lets a map node name a plate by it.
+ *
+ * @property art - the `require()`d asset module id.
+ * @property alt - what is actually IN the plate (looked at, not inferred from
+ *   its title). Not the region's name: a user who cannot see the image gains
+ *   nothing from being told the name of the place they already know they are
+ *   standing in.
  */
-export const KEPT_ARENA_PLATE_ART = {
-    'arena-breakwater-northern-sea': require('./arena-breakwater-northern-sea.webp'),
-    'arena-breakwater-kuste-bei-mondschein': require('./arena-breakwater-kuste-bei-mondschein.webp'),
-    'arena-breakwater-mondscheinnacht-ruegen': require('./arena-breakwater-mondscheinnacht-ruegen.webp'),
-    'arena-charcoal-wood-sacred-grove': require('./arena-charcoal-wood-sacred-grove.webp'),
-    'arena-charcoal-wood-pheasantry': require('./arena-charcoal-wood-pheasantry.webp'),
-    'arena-charcoal-wood-eldena': require('./arena-charcoal-wood-eldena.webp'),
-    'arena-beacon-crags-storm-mountains': require('./arena-beacon-crags-storm-mountains.webp'),
-    'arena-beacon-crags-rocky-mountains-storm': require('./arena-beacon-crags-rocky-mountains-storm.webp'),
-    'arena-beacon-crags-riesengebirge': require('./arena-beacon-crags-riesengebirge.webp'),
-    'arena-lantern-deep-toteninsel': require('./arena-lantern-deep-toteninsel.webp'),
-    'arena-lantern-deep-pandemonium': require('./arena-lantern-deep-pandemonium.webp'),
-    'arena-lantern-deep-great-day-of-wrath': require('./arena-lantern-deep-great-day-of-wrath.webp'),
-} as const;
+interface ArenaPlateRecord {
+    readonly art: number;
+    readonly alt: string;
+}
 
 /**
- * One arena: the region it answers, the plate, and what a screen-reader user is
- * told they are looking at.
+ * The twelve arena plates kept by plan 146 (T's picks): one library, every plate
+ * kept whether or not a region defaults to it, because some suit a foe better
+ * than the region's pick. Keys are `arena-<region>-<subject>`; the first of each
+ * region's three is T's default for it (see {@link REGION_ARENAS}).
+ *
+ * The plates are graded toward the void, so most of each is dark; the alt text
+ * names what a player can pick out in it.
+ */
+export const ARENA_PLATES = {
+    'arena-breakwater-northern-sea': {
+        art: require('./arena-breakwater-northern-sea.webp'),
+        alt: 'A moonlit northern sea under torn, churning clouds, a dark headland with a ruined tower on the right and a lone ship’s mast leaning in the black shallows below',
+    },
+    'arena-breakwater-kuste-bei-mondschein': {
+        art: require('./arena-breakwater-kuste-bei-mondschein.webp'),
+        alt: 'A flat tidal shore at night under heavy banked clouds, two tall dark stones standing against a thin bright line of horizon, moonlight glinting on a wet channel between them',
+    },
+    'arena-breakwater-mondscheinnacht-ruegen': {
+        art: require('./arena-breakwater-mondscheinnacht-ruegen.webp'),
+        alt: 'A full moon in a streaked sky above a wide flat-topped cliff across the water, wind-bent trees on a dark grassy slope at left and boulders strewn along the shore',
+    },
+    'arena-charcoal-wood-sacred-grove': {
+        art: require('./arena-charcoal-wood-sacred-grove.webp'),
+        alt: 'A still pool before a dark grove, two figures bowed at a small altar with a flame, a file of pale robed figures standing among the tree trunks behind them, white birches at the left',
+    },
+    'arena-charcoal-wood-pheasantry': {
+        art: require('./arena-charcoal-wood-pheasantry.webp'),
+        alt: 'The inside of a thick forest, huge gnarled trunks leaning together around a small glade where sunlight falls in dappled patches on the ground, a fence just visible at the right',
+    },
+    'arena-charcoal-wood-eldena': {
+        art: require('./arena-charcoal-wood-eldena.webp'),
+        alt: 'The roofless ruin of an abbey church, a tall pointed arch and broken walls rising through overgrown trees, a small cottage built into its base and a pale sky behind',
+    },
+    'arena-beacon-crags-storm-mountains': {
+        art: require('./arena-beacon-crags-storm-mountains.webp'),
+        alt: 'A mountain gorge in a storm, mist hanging between steep rock walls, a small fire or lightning-lit glow burning in the middle distance behind a dead, bare tree and leafy undergrowth in the foreground',
+    },
+    'arena-beacon-crags-rocky-mountains-storm': {
+        art: require('./arena-beacon-crags-rocky-mountains-storm.webp'),
+        alt: 'A great storm cloud boiling over a mountain valley, light breaking through its edges onto distant peaks, a dark cliff wall at the right and a few small trees by a lake in the shadowed centre',
+    },
+    'arena-beacon-crags-riesengebirge': {
+        art: require('./arena-beacon-crags-riesengebirge.webp'),
+        alt: 'A wide, pale, nearly empty sky of faint streaked cloud over layers of soft grey mountain ridges fading into haze, with a darker foreground slope rising in the lower right corner',
+    },
+    'arena-lantern-deep-toteninsel': {
+        art: require('./arena-lantern-deep-toteninsel.webp'),
+        alt: 'A small island of tall sheer rock faces with tomb openings carved in them, a dense black stand of cypress trees between them, and a small boat with a white-robed figure rowing toward the water gate over dark still water',
+    },
+    'arena-lantern-deep-pandemonium': {
+        art: require('./arena-lantern-deep-pandemonium.webp'),
+        alt: 'A vast colonnaded palace blazing with rows of lights across a black, stormy lake, fire breaking through the rocks in the foreground and a helmeted figure with a round shield standing on a crag at the right',
+    },
+    'arena-lantern-deep-great-day-of-wrath': {
+        art: require('./arena-lantern-deep-great-day-of-wrath.webp'),
+        alt: 'A cataclysm: mountains and enormous boulders torn apart and falling around a blinding bright gap in the sky, a dark chasm below, and tiny figures struggling on the rocks at the bottom right',
+    },
+} as const satisfies Record<string, ArenaPlateRecord>;
+
+/** A stable plate id: the key of a plate in {@link ARENA_PLATES}. */
+export type ArenaPlateId = keyof typeof ARENA_PLATES;
+
+/** Every plate id, in library order. */
+export const ARENA_PLATE_IDS = Object.keys(ARENA_PLATES) as ArenaPlateId[];
+
+/**
+ * One region rule: the region it answers and the plate that region defaults to.
  *
  * @property pattern - matched case-insensitively against the region's live
  *   display string (e.g. `'the Drowned Parish'`). Deliberately narrow — see the
  *   ordering note on {@link REGION_ARENAS}.
- * @property art     - the `require()`d asset module id.
- * @property alt     - what is actually IN the plate. Not the region's name: a
- *   user who cannot see the image gains nothing from being told the name of the
- *   place they already know they are standing in.
+ * @property plate   - the id of the region's default plate in the library.
  */
-interface ArenaPlate {
+interface RegionRule {
     readonly pattern: RegExp;
-    readonly art: number;
-    readonly alt: string;
+    readonly plate: ArenaPlateId;
 }
 
 /**
@@ -88,15 +144,27 @@ interface ArenaPlate {
  * Because the patterns are disjoint, order is not currently load-bearing — but
  * it is still first-match-wins, so a future broad rule must be appended AFTER
  * the narrow ones, never before.
+ *
+ * The four Act 1 defaults are T's picks: do not reorder or swap them.
+ * The Drowned Parish is handled apart, by {@link DROWNED_PARISH_ARENA}.
  */
-const REGION_ARENAS: readonly ArenaPlate[] = [
-    // The coastal village (the Drowned Parish). No live map names this region.
-    {
-        pattern: /drowned parish/i,
-        art: ARENA_COASTAL_VILLAGE,
-        alt: 'Fishermen crowd a moored boat’s rigging, masts forested against a backlit dockside sky',
-    },
+const REGION_ARENAS: readonly RegionRule[] = [
+    { pattern: /the breakwater/i, plate: 'arena-breakwater-northern-sea' },
+    { pattern: /the charcoal wood/i, plate: 'arena-charcoal-wood-sacred-grove' },
+    { pattern: /the beacon crags/i, plate: 'arena-beacon-crags-storm-mountains' },
+    { pattern: /the lantern deep/i, plate: 'arena-lantern-deep-toteninsel' },
 ];
+
+/**
+ * The coastal village (the Drowned Parish). No live map names this region. Its
+ * rule is unchanged from before the library and sits outside it: it is not one
+ * of the twelve plates a node may name.
+ */
+const DROWNED_PARISH_ARENA: ArenaPlateRecord & { readonly pattern: RegExp } = {
+    pattern: /drowned parish/i,
+    art: ARENA_COASTAL_VILLAGE,
+    alt: 'Fishermen crowd a moored boat’s rigging, masts forested against a backlit dockside sky',
+};
 
 /**
  * The arena shown wherever no rule matches.
@@ -104,7 +172,7 @@ const REGION_ARENAS: readonly ArenaPlate[] = [
  * Kept OUT of the table on purpose: it is not a region rule, it is the absence
  * of one.
  */
-const FALLBACK_ARENA: Omit<ArenaPlate, 'pattern'> = {
+const FALLBACK_ARENA: ArenaPlateRecord = {
     art: ARENA_DESOLATION,
     alt: 'A cloaked figure sits on a broken wharf sketching the ruins of a dead city across black water under a clouded moon',
 };
@@ -123,10 +191,11 @@ export const ARENA_PLATES_SHOWN = false;
 export const BLACK_ARENA_ALT = 'A plain black backdrop behind the foe';
 
 /** The matching plate for a region display string, or the fallback. */
-function plateFor(region: string | undefined): Omit<ArenaPlate, 'pattern'> {
+function plateFor(region: string | undefined): ArenaPlateRecord {
     if (region) {
-        for (const plate of REGION_ARENAS) {
-            if (plate.pattern.test(region)) return plate;
+        if (DROWNED_PARISH_ARENA.pattern.test(region)) return DROWNED_PARISH_ARENA;
+        for (const rule of REGION_ARENAS) {
+            if (rule.pattern.test(region)) return ARENA_PLATES[rule.plate];
         }
     }
     return FALLBACK_ARENA;
