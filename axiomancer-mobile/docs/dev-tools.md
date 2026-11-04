@@ -169,7 +169,7 @@ a local session that does not know it) and the app build.
 | Route | When | Fields |
 |---|---|---|
 | `POST /v1/fights` | once per fight, at its end (`lib/fightRecorder.ts`) | enemy id, player level, the enemy HP multiplier, outcome, turns, VITAE at start, end and lowest, the start deck (an upgraded card keeps its `+` id), and every engine combat event stamped with `ms` since the fight began and the player's VITAE then, plus the panel's `ui-staged`, `ui-unstaged` and `ui-detail-opened` events |
-| `POST /v1/deck-events` | a combat reward claimed or skipped, a cache card taken or passed, a rest-site removal, a run's end (`lib/deckEvents.ts`) | `kind` (`reward`, `cache-reward`, `remove`, `run-end`), the card picked or removed, the cards offered, the deck after the change, the node and screen |
+| `POST /v1/deck-events` | a combat reward claimed or skipped, a cache card taken or passed, a rest-site removal, a run's end (`lib/deckEvents.ts`) | `kind` (`reward`, `cache-reward`, `remove`, `upgrade`, `transform`, `run-end`), the card picked or removed, the cards offered, the deck after the change, the node and screen |
 
 `GET /v1/fights[?enemy=]` and `GET /v1/deck-events[?card=]` return the stored
 rows, newest first, behind the same bearer token.

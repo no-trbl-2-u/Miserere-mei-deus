@@ -188,6 +188,8 @@ describe('POST /v1/deck-events', () => {
             deckEvent(),
             deckEvent({ kind: 'cache-reward', cardId: null, where: { nodeId: null, screen: 'cache' } }),
             deckEvent({ kind: 'remove', cardId: 'card-1', offered: null, deck: ['card-2'] }),
+            deckEvent({ kind: 'upgrade', cardId: 'card-1', offered: ['card-1+'], where: { nodeId: null, screen: 'spare' } }),
+            deckEvent({ kind: 'transform', cardId: 'card-1', offered: ['card-7'], where: { nodeId: null, screen: 'spare' } }),
             deckEvent({ kind: 'run-end', cardId: null, offered: null }),
         ];
         const ids: number[] = [];

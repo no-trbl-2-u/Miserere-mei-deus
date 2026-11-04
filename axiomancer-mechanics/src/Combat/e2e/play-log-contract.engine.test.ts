@@ -216,8 +216,18 @@ describe('validateDeckEventPost', () => {
         expect(deckReasons(deckEvent({ cardId: 'card-9' }))).toEqual(['cardId: expected one of the offered cards']);
         expect(deckReasons(deckEvent({ cardId: null, offered: [] }))).toEqual(['offered: expected at least one card']);
         expect(deckReasons(deckEvent({ kind: 'forge' }))).toEqual([
-            'kind: expected one of reward, cache-reward, remove, upgrade, run-end',
+            'kind: expected one of reward, cache-reward, remove, upgrade, transform, run-end',
         ]);
+    });
+
+    it('holds a transform to the shape of an upgrade: the card replaced and the one card it became', () => {
+        expect(deckReasons(deckEvent({ kind: 'transform', cardId: 'card-1', offered: ['card-7'] }))).toEqual([]);
+        const kept = validateDeckEventPost(deckEvent({ kind: 'transform', cardId: 'card-1', offered: ['card-7'] }));
+        expect(kept.ok && kept.deckEvent).toMatchObject({ kind: 'transform', cardId: 'card-1', offered: ['card-7'] });
+        expect(deckReasons(deckEvent({ kind: 'transform', cardId: null, offered: ['card-7'] }))).toEqual(['cardId: expected a string']);
+        expect(deckReasons(deckEvent({ kind: 'transform', cardId: 'card-1', offered: null }))).toEqual(['offered: expected an array']);
+        expect(deckReasons(deckEvent({ kind: 'transform', cardId: 'card-1', offered: [] }))).toEqual(['offered: expected the transformed card']);
+        expect(deckReasons(deckEvent({ kind: 'transform', cardId: 'card-1', offered: ['a', 'b'] }))).toEqual(['offered: more than 1 entries']);
     });
 
     it('holds a removal and a run end to their shapes', () => {

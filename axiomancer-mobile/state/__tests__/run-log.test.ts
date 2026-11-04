@@ -41,7 +41,7 @@ import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounte
 import { createAppActions, type AppActions } from '@/state/actions';
 import { beginBlacksmithAction } from '@/state/blacksmith/store-actions';
 import { beginLootCacheChoiceAction, chooseLootCacheChoiceOfferAction, claimLootCacheChoiceOutcomeAction } from '@/state/cache/store-actions';
-import { claimCombatUpgradeAction } from '@/state/combat/store-actions';
+import { claimCombatUpgradeAction, settleSpareAction } from '@/state/combat/store-actions';
 import { offerItemRewardAction, confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { startNewGameAction } from '@/state/menu/store-actions';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
@@ -429,6 +429,22 @@ describe('the elite upgrade', () => {
         await landed();
         const upgrade = posts<DeckEventPost>(PLAY_LOG_DECK_EVENTS_PATH).find((d) => d.kind === 'upgrade')!;
         expect(upgrade).toMatchObject({ cardId: from, offered: [`${from}+`], where: { screen: 'combat-reward' } });
+    });
+});
+
+describe('the spare table transform', () => {
+    it('logs the card replaced and the card it became, and a spare upgrade stays an upgrade', async () => {
+        const { store, actions } = richStore();
+        const [from, to] = gs(store).player.knownCards;
+        settleSpareAction(store, { spareReward: { kind: 'transform', fromCardId: from!, toCardId: to! } });
+        settleSpareAction(store, { spareReward: { kind: 'upgrade', fromCardId: from!, toCardId: `${from}+` } });
+        actions.resetRun({ keepCharacter: true });
+        await landed();
+        const posted = posts<DeckEventPost>(PLAY_LOG_DECK_EVENTS_PATH);
+        const transform = posted.find((d) => d.kind === 'transform')!;
+        expect(validateDeckEventPost(transform).reasons).toEqual([]);
+        expect(transform).toMatchObject({ cardId: from, offered: [to], where: { screen: 'spare' } });
+        expect(posted.filter((d) => d.kind === 'upgrade')).toHaveLength(1);
     });
 });
 
