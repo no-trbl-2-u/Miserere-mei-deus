@@ -11,6 +11,10 @@ plan/NEEDS_T.md merge=lessons
 # back to its line merge.
 plan/deadlines.md merge=deadlines
 
+# The footgun list merges as the kit ships it; settle writes it and its lint
+# names any line a union leaves doubled.
+identity/footguns.md merge=union
+
 # The art-department masters are compared byte for byte against a fresh
 # regeneration (art-department/tests/test_rig_spritesheet.py), so git must
 # never rewrite their line endings on checkout.
