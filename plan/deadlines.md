@@ -226,6 +226,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 
 - AP1g — T picks which map nodes show a plate other than their region's default, after AP1f's report; date not set (T picks it).
 - B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21.
+- MR5a — elite rolls go around a same-fight quest's item; no T act waits on it, since no shipped quest pays on an elite or spared kill, so the Mid-MVP check (Nov 9) can't hit the overlap. T merges its `review:rules-change` PR.
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
@@ -283,6 +284,7 @@ attended session.
 ## Change log
 
 - **2026-11-04** — **the open rows checked against the code, plotted as spec 150 (PC1a-PC1e)** (T, attended: "Can you check to see if they're all still relevant?", then "plot those asap"). **Added** PC1a-PC1e under Unscheduled. The Items they will reconcile (the Nov 28 calibration solves, the Dec 12 combat playtest, the Dec 23 Android smoke test, and the v0.3 ship name now that v0.4.0 is tagged) are edited by those chunks, not here. Nothing ticked; no date moved.
+- **2026-11-04** — **elite and spare rolls skip a same-fight quest's item, plotted as spec 151 (MR5a)** (T, `/pilot 149`: "Roll around the quest"). **Added** MR5a under Unscheduled: no shipped quest pays on an elite or spared kill, so the Mid-MVP check (Nov 9) can't hit it. MR4b stays on that check's `Waits on`: it shipped, and its extra copy is unreachable in Chapter 1. Nothing ticked; no date moved.
 - **2026-11-04** — **the black behind a foe kept inside its shape, fixed now as 146.8 (AP1h)** (T, `/bug` from the v0.4.0 preview APK: "It should also only be within the shape of the enemy"). **Added** AP1h to the `Waits on` of the Mid-MVP check (Nov 9), beside AP1a-AP1f: the check plays the fights over the plates. Nothing ticked; no date moved.
 - **2026-11-04** — **the fix-ups left by specs 147 and 148 plotted as spec 149 (TL2a-TL2c, MR4a, MR4b)** (T, end gate of `/pilot 147 148`: "/plot asap, one spec"). **Added** MR4a and MR4b to the `Waits on` of the Mid-MVP check (Nov 9), since the tooltip and a lost offer touch that play, and TL2a-TL2c under Unscheduled. Nothing ticked; no date moved.
 - **2026-11-04** — **plots settling and wide-PR review coverage plotted as spec 148 (TL1a-TL1c)** (T, attended, `/bug plot`: "Do it"). **Added** all three under Unscheduled, since no T act waits on them. Nothing ticked; no date moved.

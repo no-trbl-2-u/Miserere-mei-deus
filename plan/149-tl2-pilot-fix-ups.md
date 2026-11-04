@@ -1,6 +1,6 @@
 # 149 — The fix-ups left by specs 147 and 148
 
-> The review pipeline holds a change to its own file reader and reads every PR whole, settle holds back only the file that would empty a spec, the memoir tooltip says only what its entry holds, and a quest and an elite drop of the same item each keep their offer.
+> The review pipeline holds a change to its own file reader and reads every PR whole, settle holds back only the file that would empty a spec, the memoir tooltip says only what its entry holds, and an item waiting on the reward screen survives an app close.
 
 ## Why
 
@@ -26,7 +26,7 @@
 
 **Text.** Land `0bf8b5085` after both verify gates.
 
-**Rewards.** `carriedCovers` counts per source as well as per id, with tests that fail on today's code.
+**Rewards.** `carriedCovers` counts per source as well as per id, with tests that fail on today's code. **A5, corrected (T, 2026-11-04: "Reword A5 only"):** it left this spec when 149.5 settled, reading "each reach the item reward screen once, through an app close". The close half was wrong, as #1379 found. A5 reads: an item waiting on the reward screen survives an app close, once, in the saved satchel; only the ceremony is missed, since the queue is not saved. Saved games don't change. Its other half goes under spec 151: an elite's drop rolls around a same-fight quest's item, so the two no longer make two offers or two copies.
 
 ### Decisions made upfront (do not ask)
 
