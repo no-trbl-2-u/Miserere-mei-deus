@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadConfig } from './config.mjs';
 import { parsePending, pendingFiles } from './pending.mjs';
-import { applyPlanChanges, settleOrder } from './settle.mjs';
+import { applyPlanChanges, holdBack, settleOrder, tookLastChunk } from './settle.mjs';
 
 /**
  * The settled view of the checkout at `root`: `read(rel)` gives a repo-relative file's text (\r\n read as \n) with
@@ -17,7 +17,9 @@ import { applyPlanChanges, settleOrder } from './settle.mjs';
  * settle (one that doesn't parse, an edit whose old text isn't there once or is there twice, an add to a spec with no
  * Measure line), as settle would skip it whole. `numbers` is what each `## Add` placeholder becomes (`07.?strip` →
  * `07.10`). `only(path)` limits the changes applied to the files it accepts (a copy of plan/ alone has no root
- * README.md).
+ * README.md). `held` is each file whose changes would leave a spec with no chunk at the end, file → why: as settle
+ * holds it back, its changes stay out of the view and it is no problem, so a file waiting on a hand keeps every other
+ * branch's plan checks green. A close that would empty a spec needs no holding here: the view never applies a close.
  */
 export function settledView(root, { only = () => true, cfg = loadConfig(root) } = {}) {
   const changed = new Map();
@@ -36,21 +38,32 @@ export function settledView(root, { only = () => true, cfg = loadConfig(root) } 
       problems.push(e.message);
     }
   }
-  for (const p of settleOrder(parsed)) {
-    // One file's changes land together or not at all, as settle's transaction does.
-    const tx = new Map();
-    try {
-      const given = applyPlanChanges(
-        p,
-        (q) => (tx.has(q) ? tx.get(q) : read(q)),
-        (q, t) => tx.set(q, t),
-        only,
-      );
-      for (const [q, t] of tx) changed.set(q, t);
-      for (const [k, v] of given) numbers.set(k, v);
-    } catch (e) {
-      problems.push(`${p.file}: ${e.message}`);
+  const unparsed = problems.length;
+  const held = holdBack((out) => {
+    changed.clear();
+    numbers.clear();
+    problems.length = unparsed;
+    const emptiedBy = new Map();
+    for (const p of settleOrder(parsed).filter((x) => !out.has(x.file))) {
+      // One file's changes land together or not at all, as settle's transaction does.
+      const tx = new Map();
+      try {
+        const given = applyPlanChanges(
+          p,
+          (q) => (tx.has(q) ? tx.get(q) : read(q)),
+          (q, t) => tx.set(q, t),
+          only,
+        );
+        for (const [q, t] of tx) {
+          if (tookLastChunk(q, read(q), t, cfg)) emptiedBy.set(q, p);
+          changed.set(q, t);
+        }
+        for (const [k, v] of given) numbers.set(k, v);
+      } catch (e) {
+        problems.push(`${p.file}: ${e.message}`);
+      }
     }
-  }
-  return { read, problems, pending: parsed.length, changed: [...changed.keys()], numbers };
+    return { emptiedBy, read };
+  });
+  return { read, problems, pending: parsed.length, changed: [...changed.keys()], numbers, held };
 }

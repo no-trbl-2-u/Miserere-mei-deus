@@ -8,7 +8,7 @@
 //   node --test scripts/pr-merge.test.mjs
 
 import assert from 'node:assert/strict'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -22,6 +22,10 @@ import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
 import { pendingFiles } from './plan/pending.mjs'
+import { listedChunks } from './plan/settle.mjs'
+import { settledView } from './plan/settled.mjs'
+import { readPlanSources } from './check-deadlines.mjs'
+import { runCheck } from './plan-check.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -521,7 +525,7 @@ test('the footgun list passes its lint, and a trap has one home across it and th
 test('a refused settle is a failure someone sees, and names why', () => {
   const { dir, work, g } = scratchOrigin()
   try {
-    // A close that empties its spec needs a hand: nothing lands.
+    // The one file there is would empty its spec: it is held back, so nothing settles and nothing lands.
     landOnMain(work, g, {
       'plan/07-search.md': SPEC.replace('- **A2** A zip finds them too.\n', '').replace(/^- \[ \] \*\*07\.2\*\*.*\n/m, ''),
       'plan/pending/07.1.md': PENDING,
@@ -529,14 +533,230 @@ test('a refused settle is a failure someone sees, and names why', () => {
     const tip = g(work, 'rev-parse', 'origin/main')
     const refused = settleMain({ root: work, lint: () => [], log: () => {} })
     assert.equal(refused.state, 'refused')
-    assert.match(settleFailure(refused), /plan\/07-search\.md lists no chunk now/)
+    const why = /held back plan\/pending\/07\.1\.md: it would leave plan\/07-search\.md with no chunk/
+    assert.match(settleFailure(refused), why)
     const lines = []
-    assert.match(reportSettle(() => refused, (s) => lines.push(s)), /lists no chunk now/)
-    assert.match(lines[0], /^::error::pr-settle: .*lists no chunk now/)
+    assert.match(reportSettle(() => refused, (s) => lines.push(s)), why)
+    assert.match(lines[0], /^::error::pr-settle: .*held back/)
     g(work, 'fetch', '-q', 'origin')
     assert.equal(g(work, 'rev-parse', 'origin/main'), tip, 'a refusal pushes nothing')
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+/** Spec 08 with one chunk, its roadmap row beside 07's: a close of 08.1 would empty it. */
+const SPEC_ONE = ['# 08 · Maps', '', '## Acceptance', '', '- **A1** A map.', '', '## Chunks', '', 'Measure: 1 open · 0 closed · next A2', '', '- [ ] **08.1** Map · S · closes A1 · needs — · alias: XY2a', ''].join('\n')
+const README_TWO = README.replace('| 2 left |\n', '| 2 left |\n| 08 | Maps | [08-maps.md](08-maps.md) | planned | 1 left |\n')
+const closeOf = (id, says = 'It works', date = '2026-11-01') => ['---', `close: ${id}`, `date: ${date}`, `says: ${says}`, '---', ''].join('\n')
+const PLOT_MORE = ['---', 'date: 2026-11-03', '---', '## Add plan/08-maps.md', '~~~ acceptance', '- **A?more** More maps.', '~~~', '~~~ chunks', '- [ ] **08.?more** More · S · closes A?more · needs — · alias: XY2b', '~~~', ''].join('\n')
+
+test('a settle with one file that empties a spec settles the rest, and names the held file and why', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.ids, ['07.1'])
+    assert.deepEqual(r.left, ['plan/pending/08.1.md'])
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk: absorb the spec by hand/)
+    const lines = []
+    reportSettle(() => r, (s) => lines.push(s))
+    assert.match(lines.at(-1), /^::error::pr-settle: .*held back plan\/pending\/08\.1\.md/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'log', '-1', '--format=%s', 'origin/main'), 'plan: settle 07.1')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'the spec it would empty is as it was')
+    assert.equal(g(work, 'show', 'origin/main:plan/pending/08.1.md'), closeOf('08.1').trim(), 'the held file stays pending')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /08\.1/)
+    assert.match(g(work, 'show', 'origin/main:plan/README.md'), /08-maps\.md\) \| planned \| 1 left \|/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('two closes that together empty a spec: only the last is held, and alone it settles nothing', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/pending/07.1.md': PENDING, 'plan/pending/07.2.md': closeOf('07.2', 'A zip finds them') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
+    assert.deepEqual(r.left, ['plan/pending/07.2.md'])
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/07-search.md'), /\*\*07\.2\*\* Zip · S · closes A2 · needs — · alias: XY1b/)
+    const tip = g(work, 'rev-parse', 'origin/main')
+    const refused = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(refused.state, 'refused')
+    assert.match(settleFailure(refused), /held back plan\/pending\/07\.2\.md: it would leave plan\/07-search\.md with no chunk/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'rev-parse', 'origin/main'), tip, 'a refusal pushes nothing')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a spec emptied mid-run and refilled later in the run settles whole', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/08.1.md': closeOf('08.1'), 'plan/pending/plot-more.md': PLOT_MORE })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.left, [])
+    assert.equal(settleFailure(r), null)
+    g(work, 'fetch', '-q', 'origin')
+    const spec = g(work, 'show', 'origin/main:plan/08-maps.md')
+    assert.doesNotMatch(spec, /\*\*08\.1\*\*/)
+    assert.match(spec, /\*\*08\.2\*\* More · S · closes A2/)
+    assert.match(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /· 08\.1 \(alias: XY2a\) · It works ·/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a refill whose own chunk also closes in the run holds back that last close, not the first', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, {
+      'plan/08-maps.md': SPEC_ONE,
+      'plan/README.md': README_TWO,
+      'plan/pending/08.1.md': closeOf('08.1'),
+      'plan/pending/plot-more.md': PLOT_MORE,
+      'plan/pending/08.2.md': closeOf('08.2', 'More maps', '2026-11-04'),
+    })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.left, ['plan/pending/08.2.md'], JSON.stringify(r))
+    assert.deepEqual(r.ids.sort(), ['08.1', 'plot-more'])
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.2\*\*/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a held file leaves nothing of itself behind: the decision numbers go to the files that settle', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const deciding = (text, slug) => `${text}## Decisions\n- **D?${slug}** · 2026-11-01 · A call. *Why:* a reason.\n`
+    landOnMain(work, g, {
+      'plan/08-maps.md': SPEC_ONE,
+      'plan/README.md': README_TWO,
+      'identity/decisions/2026.md': '# 2026\n\n- **D5** · 2026-01-01 · Old.\n',
+      // Taken first, so a run that kept the emptying pass would have spent D6 on it.
+      'plan/pending/08.1.md': deciding(closeOf('08.1', 'It works', '2026-10-30'), 'held-one'),
+      'plan/pending/07.1.md': deciding(PENDING, 'kept-one'),
+    })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
+    g(work, 'fetch', '-q', 'origin')
+    const decisions = g(work, 'show', 'origin/main:identity/decisions/2026.md')
+    assert.match(decisions, /\*\*D6\*\* · 2026-11-01 · A call/)
+    assert.doesNotMatch(decisions, /D7|held-one/)
+    assert.match(g(work, 'show', 'origin/main:plan/pending/08.1.md'), /D\?held-one/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a close that leaves open acceptance and no chunk is held too, and asks for chunks instead of an absorb', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const partial = SPEC_ONE.replace('closes A1 ·', 'closes A1 (partial) ·')
+    landOnMain(work, g, { 'plan/08-maps.md': partial, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk under open acceptance: chunk the spec/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// While a file waits, every other PR's root `npm test` reads the plan through plan-check and check-deadlines.
+const lintsOf = (root) => {
+  const sources = readPlanSources(root)
+  return [...runCheck({ repoAbs: root }).failures, ...sources.specs.filter((s) => !listedChunks(s.md).length).map((s) => `${s.file}: empty in the deadline view`)]
+}
+const EDIT_EMPTIES = ['---', 'date: 2026-11-01', '---', '## Edit plan/08-maps.md', '~~~ old', '- [ ] **08.1** Map · S · closes A1 · needs — · alias: XY2a', '~~~', '~~~ new', '~~~', ''].join('\n')
+
+test('a held close leaves the plan lints green for every other PR: closes wait for settle in the view', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    assert.deepEqual(settleMain({ root: work, lint: () => [], log: () => {} }).left, ['plan/pending/08.1.md'])
+    g(work, 'pull', '-q', 'origin', 'main')
+    assert.deepEqual(lintsOf(work), [])
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a held edit that empties a spec leaves the plan lints green too: the view holds back what settle would', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/empties.md': EDIT_EMPTIES })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.left, ['plan/pending/empties.md'], JSON.stringify(r))
+    g(work, 'pull', '-q', 'origin', 'main')
+    assert.deepEqual(lintsOf(work), [])
+    const view = settledView(work)
+    assert.deepEqual(view.problems, [])
+    assert.deepEqual([...view.held.keys()], ['plan/pending/empties.md'])
+    assert.match(view.read('plan/08-maps.md'), /\*\*08\.1\*\*/, 'the spec reads as settle would leave it')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the view judges on the end state as settle does: an edit that empties a spec a later plot refills is not held', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/empties.md': EDIT_EMPTIES, 'plan/pending/plot-more.md': PLOT_MORE })
+    const view = settledView(work)
+    assert.deepEqual([...view.held.keys()], [])
+    assert.doesNotMatch(view.read('plan/08-maps.md'), /\*\* Map ·/, 'the edit stands')
+    assert.match(view.read('plan/08-maps.md'), /\*\* More ·/, 'and the plot refills')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// The CLI itself, spawned. Its root is its own file's parent, so a scratch repo gets a copy of the script and what it imports.
+function copyScript(from, toRoot, rel, seen = new Set()) {
+  if (seen.has(rel)) return
+  seen.add(rel)
+  const text = fs.readFileSync(path.join(from, rel), 'utf8')
+  fs.mkdirSync(path.dirname(path.join(toRoot, rel)), { recursive: true })
+  fs.writeFileSync(path.join(toRoot, rel), text)
+  for (const m of text.matchAll(/^\s*(?:import|export)\b[^'"\n]*?from\s+['"](\.[^'"]+)['"]/gm)) {
+    copyScript(from, toRoot, path.posix.join(path.posix.dirname(rel), m[1]), seen)
+  }
+}
+
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const settleCli = (root, ...args) => spawnSync(process.execPath, [path.join(root, 'scripts/pr-settle.mjs'), ...args], { cwd: root, encoding: 'utf8' })
+
+test('the CLI red path: a held file lands the rest, prints the visible ::error:: and exits 1', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    copyScript(REPO, work, 'scripts/pr-settle.mjs')
+    const run = settleCli(work)
+    assert.equal(run.status, 1, run.stdout + run.stderr)
+    assert.match(run.stdout, /^settle: held back plan\/pending\/08\.1\.md: /m)
+    assert.match(run.stdout, /^::error::pr-settle: settled 1 files, but 1 stay pending.*held back plan\/pending\/08\.1\.md/m)
+    assert.doesNotMatch(run.stderr, /\n\s+at /, 'no stack')
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'log', '-1', '--format=%s', 'origin/main'), 'plan: settle 07.1')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the CLI on --ref misuse: one plain line and a usage exit, nothing run', () => {
+  for (const args of [['--ref', 'HEAD'], ['--dry-run', '--ref'], ['--dry-run', '--ref', '--no-such']]) {
+    const run = settleCli(REPO, ...args)
+    assert.equal(run.status, 64, args.join(' '))
+    assert.equal(run.stdout, '')
+    assert.equal(run.stderr.trim().split('\n').length, 1, run.stderr)
+    assert.match(run.stderr, /^pr-settle: --ref is for a dry run only/)
   }
 })
 
