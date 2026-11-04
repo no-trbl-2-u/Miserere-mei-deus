@@ -19,6 +19,7 @@
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { SPEC_FILE } from '../plan-check.mjs';
+import { prFiles } from '../pr-files.mjs';
 import { pendingSpecs } from './pending.mjs';
 import { planReader } from './progress.mjs';
 
@@ -123,11 +124,15 @@ export function pendingDiffText(diff) {
   return out.join('\n');
 }
 
-/** Open pull requests with pending files, read through gh (read only): [{ number, text }]. */
-export function ghPendingPrs(gh = ghRead) {
-  const prs = JSON.parse(gh(['pr', 'list', '--state', 'open', '--json', 'number,files', '--limit', '100']) || '[]');
+/**
+ * Open pull requests with pending files, read through gh (read only): [{ number, text }]. The list comes without
+ * files (`pr list --json files` stops at 100, so a wide PR would hide its pending file); each PR's whole file list
+ * is then read from the REST files endpoint, a GET like the rest of this script.
+ */
+export function ghPendingPrs(gh = ghRead, { repo = process.env.GH_REPO || 'no-trbl-2-u/Miserere-mei-deus', api } = {}) {
+  const prs = JSON.parse(gh(['pr', 'list', '--state', 'open', '--json', 'number', '--limit', '100']) || '[]');
   return prs
-    .filter((p) => (p.files ?? []).some((f) => String(f.path).startsWith('plan/pending/')))
+    .filter((p) => prFiles(p.number, repo, api).some((f) => String(f.path).startsWith('plan/pending/')))
     .map((p) => ({ number: p.number, text: pendingDiffText(gh(['pr', 'diff', String(p.number)])) }));
 }
 

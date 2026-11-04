@@ -9,11 +9,12 @@ import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
 import { API_FILE_CAP, prFiles, prSnapshot, SNAPSHOT_TRIES } from './pr-files.mjs'
-import { mergeWanted } from './pr-merge.mjs'
+import { mergeView, mergeWanted } from './pr-merge.mjs'
 import { changedFromPr, partition, renderManifest } from './pr-partition.mjs'
 import { PIPELINE_PATHS } from './pr-policy.mjs'
 import { fixView, fixWanted } from './pr-review.mjs'
-import { riskView } from './pr-risk.mjs'
+import { replayRows, riskView } from './pr-risk.mjs'
+import { ghPendingPrs } from './plan/triage-match.mjs'
 
 /** A fake GitHub holding `n` files; `cap` mimics a list that stops early. */
 function fakeApi(n, { cap = Infinity, reported = n } = {}) {
@@ -140,4 +141,37 @@ test('the manifest prints the head its file list belongs to, and the review read
   assert.doesNotMatch(renderManifest(partition({ changed: [{ path: 'axiomancer-mobile/a.ts' }], tier: 'risk:low', reverse: new Map() })), /^Head /m)
   const skill = readFileSync(new URL('../skills/review.md', import.meta.url), 'utf8')
   assert.doesNotMatch(skill, /gh pr view[^\n]*--json[^\n]*\bfiles\b/, 'that read stops at 100 without failing')
+})
+
+/** A fake GitHub whose one PR has 100 mobile files and `last` as the 101st. */
+function wideApi(last) {
+  const rows = Array.from({ length: 100 }, (_, i) => ({ filename: `axiomancer-mobile/f${i}.ts`, additions: 1, deletions: 0 }))
+  rows.push({ filename: last, additions: 1, deletions: 0 })
+  return (endpoint) => {
+    if (/\/pulls\/\d+$/.test(endpoint)) return { changed_files: 101, labels: [], head: { sha: 'abc' } }
+    const page = Number(/&page=(\d+)/.exec(endpoint)[1])
+    return rows.slice((page - 1) * 100, page * 100)
+  }
+}
+
+test('the merge decision reads all 101 files and the snapshot head, not the view\'s first 100', async () => {
+  const view = { state: 'OPEN', mergeStateStatus: 'CLEAN', headRefOid: 'stale', labels: [], comments: [], files: [{ path: 'only-the-first.ts' }] }
+  const v = await mergeView('7', 'o/r', { gh: () => JSON.stringify(view), api: wideApi('scripts/pr-merge.mjs') })
+  assert.equal(v.files.length, 101)
+  assert.equal(v.files[100].path, 'scripts/pr-merge.mjs')
+  assert.equal(v.headRefOid, 'abc')
+})
+
+test('replay tiers a merged 101-file PR by its 101st file', () => {
+  const rows = replayRows([{ number: 7, labels: [], mergeCommit: null }], 'o/r', { api: wideApi('scripts/loop-issue.mjs'), newDeps: () => [] })
+  assert.equal(rows[0].tier, 'risk:high')
+  assert.ok(rows[0].reasons.some((r) => r.includes('scripts/loop-issue.mjs')))
+})
+
+test('triage-match finds the pending file that is the 101st file of an open PR', () => {
+  const gh = (args) => (args[1] === 'list'
+    ? JSON.stringify([{ number: 7 }])
+    : 'diff --git a/plan/pending/9.9.md b/plan/pending/9.9.md\n+++ b/plan/pending/9.9.md\n+hello')
+  const prs = ghPendingPrs(gh, { repo: 'o/r', api: wideApi('plan/pending/9.9.md') })
+  assert.deepEqual(prs.map((p) => p.number), [7])
 })

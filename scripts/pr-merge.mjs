@@ -58,6 +58,7 @@ import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { updateBranchIsolated } from './pr-resolve.mjs'
 import { settleFailure, settleMain } from './pr-settle.mjs'
+import { ghApi, prSnapshot } from './pr-files.mjs'
 import { markedHeads } from './pr-review.mjs'
 
 // The policy constants live in `pr-policy.mjs` so `pr-review.mjs` can read
@@ -290,6 +291,28 @@ function gh(args) {
   return execFileSync('gh', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
 }
 
+const VIEW_FIELDS = 'state,isDraft,isCrossRepository,labels,title,headRefName,headRefOid,mergeStateStatus,comments'
+
+/**
+ * The PR as the merge decision reads it: the view, then the whole file list
+ * and the head it belongs to from `prSnapshot` (`gh pr view --json files`
+ * stops at 100 without failing, so a wide PR hid its pipeline files from the
+ * hold). `headRefOid` is the snapshot's head, so files and live head agree.
+ * @param {string} pr  @param {string} repo
+ * @param {{ gh?: (args: string[]) => string, api?: (endpoint: string) => any, sleep?: (ms: number) => Promise<void> }} [deps] seams for the test
+ */
+export async function mergeView(pr, repo, { gh: read = gh, api = ghApi, sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
+  const readView = () => JSON.parse(read(['pr', 'view', pr, '--repo', repo, '--json', VIEW_FIELDS]))
+  let view = readView()
+  // GitHub computes mergeability lazily; UNKNOWN right after a push is not an answer.
+  for (let i = 0; i < 6 && view.mergeStateStatus === 'UNKNOWN'; i++) {
+    await sleep(20_000)
+    view = readView()
+  }
+  const snap = prSnapshot(pr, repo, api)
+  return { ...view, files: snap.files, headRefOid: snap.head }
+}
+
 const BRANCH = /^[A-Za-z0-9][\w./-]*$/
 
 function setOutput(go, reason) {
@@ -401,12 +424,7 @@ async function main() {
     console.error('usage: pr-merge.mjs decide --pr <n> --head <40-hex sha> --since <ISO> | audit --pr <n> --head <sha> --run <id> | since --run <id> | tree --pr <n> --head <sha> | settle [--dry-run]')
     process.exit(2)
   }
-  let view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefName,headRefOid,mergeStateStatus,comments,files']))
-  // GitHub computes mergeability lazily; UNKNOWN right after a push is not an answer.
-  for (let i = 0; i < 6 && view.mergeStateStatus === 'UNKNOWN'; i++) {
-    await new Promise((r) => setTimeout(r, 20_000))
-    view = JSON.parse(gh(['pr', 'view', pr, '--repo', repo, '--json', 'state,isDraft,isCrossRepository,labels,title,headRefName,headRefOid,mergeStateStatus,comments,files']))
-  }
+  const view = await mergeView(pr, repo)
   const merged = JSON.parse(gh(['pr', 'list', '--repo', repo, '--state', 'merged', '--limit', '50', '--json', 'mergedAt,comments']))
   const checkRuns = JSON.parse(gh(['api', `repos/${repo}/commits/${head}/check-runs?per_page=100`])).check_runs ?? []
   const checks = checkRuns
@@ -424,7 +442,7 @@ async function main() {
     mergeStateStatus: view.mergeStateStatus,
     checks,
     digest: /^[0-9a-f]{40}$/.test(arg('--digest') ?? '') ? arg('--digest') : null,
-    files: (view.files ?? []).map((f) => f.path),
+    files: view.files.map((f) => f.path),
     comments: view.comments.map((c) => ({ body: c.body ?? '', createdAt: c.createdAt, author: c.author?.login ?? '' })),
     since,
     killSwitch: (process.env.PR_AUTO_MERGE ?? '').toLowerCase() === 'off',

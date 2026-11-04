@@ -20,7 +20,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { ghApi, prSnapshot } from './pr-files.mjs'
+import { ghApi, prFiles, prSnapshot } from './pr-files.mjs'
 
 /**
  * A PR's view with its whole file list and the head that list belongs to
@@ -145,6 +145,19 @@ export const REPLAY_START = '<!-- pr-risk:replay:start -->'
 export const REPLAY_END = '<!-- pr-risk:replay:end -->'
 
 /**
+ * Each merged PR tiered from its whole file list (`pr list --json files` stops at 100).
+ * @param {{ number: number, labels: { name: string }[], mergeCommit?: { oid: string } }[]} prs
+ */
+export function replayRows(prs, repo, { newDeps, api = ghApi }) {
+  return prs.map((p) => {
+    const merge = p.mergeCommit?.oid
+    const files = prFiles(p.number, repo, api)
+    const deps = merge ? newDeps(`${merge}^1`, merge, files.map((f) => f.path)) : []
+    return { number: p.number, ...deriveRisk({ files, labels: p.labels.map((l) => l.name), newDependencies: deps }) }
+  })
+}
+
+/**
  * The replay block for the research report, markers included.
  *
  * @param {{ stamp: { commit: string, date: string }, before: string, rows: { number: number, tier: string, reasons: string[] }[] }} replay the tiered PRs.
@@ -235,16 +248,11 @@ function main() {
     const before = arg('--before', sh('git', ['show', '-s', '--format=%cI', stampCommit]))
     const limit = Number(arg('--limit', '60'))
     const prs = gh(['pr', 'list', '--repo', repo, '--state', 'merged', '--limit', '300',
-      '--json', 'number,mergedAt,labels,files,mergeCommit'])
+      '--json', 'number,mergedAt,labels,mergeCommit'])
       .filter((p) => Date.parse(p.mergedAt) <= Date.parse(before))
       .sort((a, b) => Date.parse(b.mergedAt) - Date.parse(a.mergedAt))
       .slice(0, limit)
-    const rows = prs.map((p) => {
-      const merge = p.mergeCommit?.oid
-      const files = p.files ?? []
-      const deps = merge ? newDeps(`${merge}^1`, merge, files.map((f) => f.path)) : []
-      return { number: p.number, ...deriveRisk({ files, labels: p.labels.map((l) => l.name), newDependencies: deps }) }
-    })
+    const rows = replayRows(prs, repo, { newDeps })
     const stamp = { commit: sh('git', ['rev-parse', '--short=9', 'HEAD']), date: new Date().toISOString().slice(0, 10) }
     const block = renderReplay({ stamp, before, rows })
     for (const t of TIERS) console.log(`${t}: ${rows.filter((r) => r.tier === t).length}`)
