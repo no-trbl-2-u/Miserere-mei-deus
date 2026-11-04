@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import { cardLibrary } from '@mechanics';
+import { cardLibrary, createGameStore } from '@mechanics';
 
 import {
     accentForStat,
@@ -14,7 +14,9 @@ import {
     selectTooltipContentFor,
     type TooltipKind,
 } from '@/state/presenters/tooltip.engine';
+import { selectMemoirViewModel } from '@/state/presenters/memoir.engine';
 import type { AppStoreState } from '@/state/store';
+import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 const EMPTY_STATE = {} as AppStoreState;
 
@@ -85,10 +87,25 @@ describe('selectTooltipContentFor', () => {
             expect(content?.footnote).toMatch(/^engine: /);
         });
 
-        it('names only the outcomes a fight can reach', () => {
+        it.each([
+            ['victory', false],
+            ['victory', true],
+            ['defeat', false],
+            ['flee', false],
+        ] as Array<[string, boolean]>)('names the label a real combat:ended entry carries (%s, spared %s)', (outcome, spared) => {
+            const store = createGameStore(createMemoryAdapter());
+            store.setState({
+                _recentEvents: [{ type: 'combat:ended', payload: { report: { outcome, spared, xpGained: 0, loot: [] } } }],
+            } as unknown as Partial<AppStoreState>);
+            const entry = selectMemoirViewModel(store.getState()).chronicle[0];
+            expect(entry?.kind).toBe('combat:ended');
+            const body = selectTooltipContentFor('chronicle-entry', entry?.kind ?? '', EMPTY_STATE)?.body ?? '';
+            expect(body).toContain(entry?.label.toLowerCase());
+        });
+
+        it('claims nothing the entry lacks: no foe name, no retreat', () => {
             const body = selectTooltipContentFor('chronicle-entry', 'combat:ended', EMPTY_STATE)?.body ?? '';
-            expect(body).toContain('victory, defeat, or flight');
-            expect(body).not.toContain('retreat');
+            expect(body).not.toMatch(/foe who|retreat/);
         });
 
         it('returns null for an unknown chronicle id', () => {
