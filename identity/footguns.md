@@ -43,7 +43,8 @@ One line each, at most 500 bytes, never wrapped:
 - **version-bump-deletes-saves** · `migrate` has no hop chain and refuses any version but the current one, so bumping `GAME_STATE_VERSION` for a cleanup makes every old save unreadable → change a save's text or flags in a load-time cleanup (`game.migrate.ts`), and bump only when T has ruled the old saves deleted · seen 1× · last 2026-11-03 · open
 - **item-queue-unsaved** · `itemReward.queue` is never persisted, so an item taken out of the satchel to be offered is lost on an app close → offer a piece that is already saved with `carried: true` · seen 1× · last 2026-11-03 · open
 - **settle-dry-run-reads-main** · `pr-settle --dry-run` settles origin/main's tree in a throwaway worktree, so it never sees a branch's own plan changes → rehearse a branch with `--dry-run --ref HEAD` · seen 1× · last 2026-11-03 · open
-- **settle-order-false-empty** · Settle applies each date's closes before a later date's plots, so a spec can read empty mid-run (137 did) and settle refuses for a hand though the plot later in the run refills it → judge a "lists no chunk now" by plan-check's "nothing left" on the end state, never by settle's line alone · seen 1× · last 2026-11-04 · open
 ## Watch (seen once: searched before adding a line, not read before building)
 
 ## Guarded (automated: the line says by what)
+
+- **settle-order-false-empty** · Settle applies each date's closes before a later date's plots, so a spec can read empty mid-run (137 did) though a later plot refills it → settle judges an emptied spec on the run's end state, and holds back only the file that leaves it empty · seen 1× · last 2026-11-04 · guarded by scripts/pr-merge.test.mjs ("a spec emptied mid-run and refilled later")
