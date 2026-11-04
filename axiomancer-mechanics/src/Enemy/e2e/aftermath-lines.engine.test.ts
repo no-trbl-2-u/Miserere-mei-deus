@@ -14,6 +14,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { EnemyLibrary } from '../enemy.library';
+import { createGameStore } from '../../Game/store';
+import { nullAdapter } from '../../Game/persistence/null.adapter';
 import {
     // A spare story: its flag and a journal entry.
     GreenJelly,
@@ -110,13 +112,25 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         expect(GreenJelly.journalEntry!.title).toMatch(/Face Broker/);
     });
 
-    it('a spare story keeps its flag and a journal entry, across the whole library', () => {
+    it('sparing a foe with a spare story sets its flag and unlocks its journal entry, and finishing it does neither', () => {
         const withSpareStory = EnemyLibrary.filter(e => e.spareStory);
         expect(withSpareStory.map(e => e.id)).toContain(GreenJelly.id);
         for (const enemy of withSpareStory) {
-            expect(enemy.spareStory!.flagSet, `${enemy.id} flagSet`).toMatch(/\S/);
+            const fight = (spared: boolean) => {
+                const store = createGameStore(nullAdapter);
+                store.getState().startCombat({ ...enemy, difficulty: 'normal' });
+                const report = store.getState().endCombat('victory', undefined, { spared });
+                return { state: store.getState(), report };
+            };
+            const spared = fight(true);
+            expect(spared.state.flags, `${enemy.id} flag`).toContain(enemy.spareStory!.flagSet);
             expect(enemy.journalEntry, `${enemy.id} journalEntry`).toBeDefined();
-            expect(enemy.journalEntry!.title, `${enemy.id} journal title`).toMatch(/\S/);
+            expect(spared.state.codex.unlockedEntries, `${enemy.id} entry`).toContain(enemy.journalEntry!.id);
+            expect(spared.report.journalEntryUnlocked?.title, `${enemy.id} title`).toBe(enemy.journalEntry!.title);
+
+            const finished = fight(false);
+            expect(finished.state.flags, `${enemy.id} flag on finish`).not.toContain(enemy.spareStory!.flagSet);
+            expect(finished.state.codex.unlockedEntries).not.toContain(enemy.journalEntry!.id);
         }
     });
 

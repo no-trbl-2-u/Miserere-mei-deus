@@ -47,6 +47,13 @@ describe('a won fight pays the wage', () => {
         expect(after.inventory).toEqual(before.inventory);
     });
 
+    it('a foe still carrying a dead loot table pays none of it', () => {
+        const stale = { ...foe('normal', 5), loot: [{ item: { id: 'healing-potion' }, weight: 100 }] } as unknown as Enemy;
+        const { report, before, after } = win(stale);
+        expect(report.loot).toEqual([]);
+        expect(after.inventory).toEqual(before.inventory);
+    });
+
     it('pays on the lead foe alone', () => {
         const store = createGameStore(nullAdapter);
         store.getState().startCombat({ enemies: [foe('normal', 2), { ...GreenJelly, level: 9 }] });

@@ -63,6 +63,10 @@ describe('a run with the check answered', () => {
         expect(finish.mercy.spared).toBe(0);
         expect(finish.mercy.checks).toBe(finish.mercy.finished);
         expect(finish.fights.spared).toBe(0);
+        // The ledger behind the spare-all / finish-all comparison: both pay shillings, and a Spare forgoes its fight's XP.
+        expect(spare.mercy.shillings).toBeGreaterThan(0);
+        expect(finish.mercy.shillings).toBeGreaterThan(0);
+        expect(finish.mercy.xp).toBeGreaterThan(spare.mercy.xp);
     });
 });
 

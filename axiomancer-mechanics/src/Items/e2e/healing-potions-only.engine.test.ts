@@ -10,6 +10,7 @@
 import { describe, it, expect } from 'vitest';
 import { characterPresets, levelLadderPresets } from '../../Character/presets';
 import { consumableLibrary } from '../consumable.library';
+import { EnemyLibrary } from '../../Enemy/enemy.library';
 import { rollCacheReward, type CacheLootTier } from '../cache-reward';
 
 const POTIONS = ['healing-potion', 'minor-healing-potion', 'greater-healing-potion'];
@@ -35,6 +36,11 @@ describe('R5 — the consumable library is the healing potions', () => {
             .filter(c => !isPotion(c.id))
             .map(c => `${p.id}: ${c.id}`));
         expect(hits).toEqual([]);
+    });
+
+    it('no foe carries a loot table, so no foe hands out an item', () => {
+        const carrying = EnemyLibrary.filter(e => 'loot' in e).map(e => e.id);
+        expect(carrying).toEqual([]);
     });
 
     it('a loot cache only rolls potions', () => {

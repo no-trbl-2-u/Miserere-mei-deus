@@ -192,6 +192,7 @@ describe('the Death Beholder is the Doorwarden\'s fight, carried over whole (AN4
             maxHealth: 320,
         });
         expect(DeathBeholder.baseStats).toEqual(enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }));
+        expect(DeathBeholder).not.toHaveProperty('loot');
     });
 
     it('keeps its three boss-line stages and its tiered deck', () => {
@@ -230,7 +231,8 @@ describe('the Green Jelly is the Brine Hag\'s fight, reworked into a town normal
         expect(GreenJelly.stages).toEqual([]);
     });
 
-    it('drops its old deck', () => {
+    it('drops its old deck and its loot table', () => {
+        expect(GreenJelly).not.toHaveProperty('loot');
         expect(ENEMY_DECKS['enemy-green-jelly']).toBeUndefined();
     });
 
