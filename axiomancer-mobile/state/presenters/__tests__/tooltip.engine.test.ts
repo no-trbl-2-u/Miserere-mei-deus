@@ -87,7 +87,7 @@ describe('selectTooltipContentFor', () => {
 
         it('names only the outcomes a fight can reach', () => {
             const body = selectTooltipContentFor('chronicle-entry', 'combat:ended', EMPTY_STATE)?.body ?? '';
-            expect(body).toContain('victory or defeat');
+            expect(body).toContain('victory, defeat, or flight');
             expect(body).not.toContain('retreat');
         });
 
