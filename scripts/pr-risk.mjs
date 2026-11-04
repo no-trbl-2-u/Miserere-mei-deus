@@ -20,6 +20,8 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { prFiles } from './pr-files.mjs'
+
 export const TIERS = Object.freeze(['risk:low', 'risk:medium', 'risk:high'])
 
 /** Paths whose changes are plan, docs or loop records only. */
@@ -245,7 +247,8 @@ function main() {
 
   const pr = arg('--pr')
   if (pr) {
-    const view = gh(['pr', 'view', pr, '--repo', repo, '--json', 'labels,files,baseRefOid,headRefOid,comments'])
+    const view = gh(['pr', 'view', pr, '--repo', repo, '--json', 'labels,baseRefOid,headRefOid,comments'])
+    view.files = prFiles(pr, repo)
     const paths = view.files.map((f) => f.path)
     let base = view.baseRefOid
     try { base = sh('git', ['merge-base', view.baseRefOid, view.headRefOid]) } catch { /* shallow: fall back to the base tip */ }

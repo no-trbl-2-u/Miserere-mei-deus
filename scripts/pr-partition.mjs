@@ -31,6 +31,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, posix, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { ghApi, prFiles } from './pr-files.mjs'
 import { isLowPath } from './pr-risk.mjs'
 
 /**
@@ -454,12 +455,13 @@ function readLedger() {
   }
 }
 
-function changedFromPr(pr, repo) {
-  const view = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo, '--json', 'files,labels,headRefOid'], { cwd: ROOT, encoding: 'utf8' }))
+/** The PR's whole file list (paginated, count-checked: `pr view --json files` stops at 100 silently), labels and head. */
+export function changedFromPr(pr, repo, api = ghApi) {
+  const view = api(`repos/${repo}/pulls/${pr}`)
   return {
-    changed: view.files.map((f) => ({ path: f.path, additions: f.additions, deletions: f.deletions })),
+    changed: prFiles(pr, repo, api),
     labels: view.labels.map((l) => l.name),
-    head: view.headRefOid,
+    head: view.head.sha,
   }
 }
 
