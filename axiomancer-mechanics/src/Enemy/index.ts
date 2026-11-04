@@ -9,7 +9,7 @@ import {
 import {
     Enemy, EnemyLogic, EnemyDifficulty,
     SpareStory,
-    FinalBlowLines, PactLines, CauseLines,
+    FinalBlowLines, MercyLines, CauseLines,
     CodexEntry, EnemyPhase,
 } from './types';
 import type { EnemyKeyword, EnemyStage } from './enemy-keywords';
@@ -33,8 +33,8 @@ export interface CreateEnemyOptions {
     spareStory?: SpareStory;
     /** Optional per-foe victory final-blow chronicle prose. */
     finalBlowLines?: FinalBlowLines;
-    /** Optional per-foe chronicle prose. Data only. */
-    pactLines?: PactLines;
+    /** What a normal foe says at the mercy check. */
+    mercyLines?: MercyLines;
     /** Optional per-foe defeat / cause-of-loss chronicle prose. */
     causeLines?: CauseLines;
     /** Optional per-foe codex / journal entry. */
@@ -206,7 +206,7 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         difficulty,
         cards, xpReward, effects = [],
         spareStory,
-        finalBlowLines, pactLines, causeLines,
+        finalBlowLines, mercyLines, causeLines,
         journalEntry, addedIn, tags,
         portraitAsset,
         vitae, keywords, stages, phases,
@@ -228,7 +228,7 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         effects,
         spareStory,
         finalBlowLines,
-        pactLines,
+        mercyLines,
         causeLines,
         journalEntry,
         addedIn,
@@ -246,7 +246,7 @@ export type { EnemyKeyword } from './enemy-keywords';
 export { ENEMY_KEYWORDS, moveKeywords, enemyPhaseKeywords } from './enemy-keywords';
 
 export type {
-    Enemy, EnemyDifficulty, EnemyMove, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind, EnemyPhase,
+    Enemy, EnemyDifficulty, EnemyMove, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind, EnemyPhase, MercyLines,
 } from './types';
 export {
     PHASE_LINES, PHASES_AUTHORED_LEVEL, enemyPhaseTier, hasEnemyPhases,

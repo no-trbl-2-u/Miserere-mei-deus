@@ -478,6 +478,10 @@ export const FloatEye = createEnemy({
     baseStats: { body: 1, mind: 1, heart: 1 },
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'It closes. Its opinion of you stays open.',
+        finish: 'The eye goes dull, still looking at you.',
+    },
     logic: 'balanced',
     // Reworked (T, 2026-10-30): it punishes a full hand and a big final blow.
     phases: [
@@ -520,6 +524,10 @@ export const GreenJelly = createEnemy({
     baseStats: enemyStatBudget(5, { heart: 4, body: 1, mind: 2 }),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'It settles, slow as cooling wax, and lets you go.',
+        finish: 'It runs out across the stone and keeps nothing.',
+    },
     logic: 'strategic',
     // Reworked (T, 2026-10-30): a town normal that keeps what it eats. Its
     // second phase begins at the 30% line.
@@ -536,16 +544,7 @@ export const GreenJelly = createEnemy({
         },
     ],
     spareStory: {
-        narrative:
-            'The jelly settles, slow as cooling wax, and goes still on the stone. Through it, ' +
-            'the things it kept drift loose and sink, one by one, until it holds only light. ' +
-            'It does not follow when you go. It lets you take the whole of yourself away.',
         flagSet: 'spared-green-jelly',
-    },
-    pactLines: {
-        quiet:   'She stops reaching for your reflection. The rock pools go still and honest.',
-        setDown: 'She sets a small mirror of pooled brine between you. It shows you, unedited. It is a gift.',
-        heavy:   '"I sold my face for leverage over the drowning. You are the first to stand in front of me and stay one person."',
     },
     journalEntry: {
         id: 'codex-green-jelly',
@@ -646,6 +645,10 @@ export const GallowsCrow = createEnemy({
     baseStats: enemyStatBudget(2),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'It flies back to the gibbet. You still owe.',
+        finish: 'Feathers settle at the crossroads. Nothing is collected.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [PECK_THE_DEBT, CARRION_DIVE, TAKE_WING, SHINY_THING] },
@@ -676,6 +679,10 @@ export const NetMender = createEnemy({
     baseStats: enemyStatBudget(3),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'He goes back to his net. It will not hold.',
+        finish: 'The net comes loose at last, and he goes with it.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [CAST_NET, HAUL_IN, MEND_THE_NET, GILL_HOOK] },
@@ -703,6 +710,10 @@ export const CraneHook = createEnemy({
     baseStats: enemyStatBudget(3),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'The hook swings away, empty.',
+        finish: 'The iron stops. What it was lifting comes down.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [SWING, counterweight(6), LOCK_THE_BRAKE, HOIST] },
@@ -730,6 +741,10 @@ export const BrineWidow = createEnemy({
     baseStats: enemyStatBudget(4),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'She opens her fist. The salt falls, and she waits on.',
+        finish: 'Her fist stays shut. No one comes back for her.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [SALT_THE_WOUND, keening(3), BLACK_VEIL, MOURNING] },
@@ -757,6 +772,10 @@ export const LampreyKnot = createEnemy({
     baseStats: enemyStatBudget(4),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'The knot slides off the pile and waits for the tide.',
+        finish: 'It comes undone, mouth by mouth.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [LATCH, writhe(3), KNOT_UP, MOUTHFUL] },
@@ -784,6 +803,10 @@ export const CurfewRinger = createEnemy({
     baseStats: enemyStatBudget(5),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'The bell stays quiet. Tonight you may walk.',
+        finish: 'The rope goes slack. The town is not told to sleep.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [TOLL, CLAPPER, BAR_THE_DOOR, HUSH] },
@@ -811,6 +834,10 @@ export const WreckPicker = createEnemy({
     baseStats: enemyStatBudget(6),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'They drop what they took and go back to the rocks.',
+        finish: 'The sea will strip this one too.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [pickOver(1), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL] },
@@ -838,6 +865,10 @@ export const SmokehouseGutter = createEnemy({
     baseStats: enemyStatBudget(6),
     mapName: 'breakwater',
     difficulty: 'normal',
+    mercyLines: {
+        spare: 'It goes back up on its rack, still working.',
+        finish: 'The racks hold one less. The smoke does not notice.',
+    },
     logic: 'balanced',
     phases: [
         { moves: [SMOKE_LASH, GUT_HOOK, HANG_TO_CURE, CHOKING_SMOKE] },

@@ -28,8 +28,6 @@ export type EnemyDifficulty = 'simple' | 'normal' | 'elite' | 'boss' | 'unique';
  * A foe's own story, granted when it is spared at the mercy check.
  */
 export interface SpareStory {
-    /** Optional flavour text, for a screen that wants it. Nothing reads it yet. */
-    narrative?: string;
     /**
      * Optional world-flag appended to `state.flags` when the foe is spared.
      * Reuses the existing flag-gate machinery (`DialogueChoice.requires.flag`,
@@ -55,18 +53,13 @@ export interface FinalBlowLines {
 }
 
 /**
- * Chronicle-voice prose written for the panel a spared foe used to open. Three
- * variants (quiet = mutual silence, setDown = enemy lays down its weapon
- * literally, heavy = recognition under weight). Data only: nothing reads it
- * since that panel left the game.
- *
- * Naming note: the prose variant is "set-down"; this field is
- * `setDown` (TS-identifier convention).
+ * The two lines a normal foe says at the mercy check: one for Spare, one for
+ * Finish. The end screen shows the one for the choice made, and only when the
+ * check was answered; the prompt shows neither, so the choice stays blind.
  */
-export interface PactLines {
-    quiet: string;
-    setDown: string;
-    heavy: string;
+export interface MercyLines {
+    spare: string;
+    finish: string;
 }
 
 /**
@@ -116,10 +109,8 @@ export interface Enemy {
      * derive*Phrase helpers).
      */
     finalBlowLines?: FinalBlowLines;
-    /**
-     * Optional per-foe chronicle prose. Data only. See {@link PactLines}.
-     */
-    pactLines?: PactLines;
+    /** What a normal foe says at the mercy check. See {@link MercyLines}. */
+    mercyLines?: MercyLines;
     /**
      * Optional per-foe defeat / cause-of-loss chronicle
      * prose. See {@link CauseLines}. Three variants matching the

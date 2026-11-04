@@ -45,7 +45,7 @@ export {
 export { hasDefeatedEnemy, defeatedEnemies, enemySlugOf } from './Game/defeat-ledger';
 export { dangerKey, seenDangers, hasSeenDanger, seenDangerNames, firedDangerKeys } from './Game/seen-dangers';
 export type {
-    Enemy, EnemyDifficulty,
+    Enemy, EnemyDifficulty, MercyLines,
     // CodexEntry's semantic home is the Game-loop persistence surface; the
     // Enemy module re-exports it via `src/Enemy/types.ts` for the per-foe
     // content site, but the top-level barrel pulls from Game alongside

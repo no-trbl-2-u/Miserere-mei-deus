@@ -2,7 +2,7 @@
  * Per-foe aftermath narrative lines.
  *
  * Pins the registration shape (`finalBlowLines` + `causeLines` on the
- * authored set; `pactLines`, data only, on the foes with a spare story);
+ * authored set; `mercyLines` on every normal foe);
  * voice signatures spot-checked on the Green Jelly;
  * the Sandbag_01 regression pins that the fields stay strictly undefined
  * for the un-authored test sandbox so the consumer-side fallback path
@@ -15,9 +15,9 @@
 import { describe, it, expect } from 'vitest';
 import { EnemyLibrary } from '../enemy.library';
 import {
-    // A spare story: full line set incl. pactLines.
+    // A spare story: its flag and a journal entry.
     GreenJelly,
-    // Sweep — finalBlowLines + causeLines (no pactLines).
+    // Sweep — finalBlowLines + causeLines.
     FloatEye,
     DeathBeholder,
     // Un-authored regression — test sandbox.
@@ -74,15 +74,6 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
             expect(enemy.causeLines!.brutal).toMatch(/\S/);
             expect(enemy.causeLines!.broken).toMatch(/\S/);
             expect(enemy.causeLines!.quiet).toMatch(/\S/);
-
-            // pactLines rides with a spare story — assert presence/shape when
-            // carried, but don't require it (most enemies have none).
-            if (enemy.spareStory) {
-                expect(enemy.pactLines, `${enemy.id} pactLines (has spareStory)`).toBeDefined();
-                expect(enemy.pactLines!.quiet).toMatch(/\S/);
-                expect(enemy.pactLines!.setDown).toMatch(/\S/);
-                expect(enemy.pactLines!.heavy).toMatch(/\S/);
-            }
         }
     });
 
@@ -92,7 +83,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
             const lines = [
                 ...(enemy.finalBlowLines ? Object.values(enemy.finalBlowLines) : []),
                 ...(enemy.causeLines ? Object.values(enemy.causeLines) : []),
-                ...(enemy.pactLines ? Object.values(enemy.pactLines) : []),
+                ...(enemy.mercyLines ? Object.values(enemy.mercyLines) : []),
             ];
             for (const line of lines) {
                 expect(line, `${enemy.id}: "${line}"`).not.toMatch(archaic);
@@ -100,20 +91,22 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         }
     });
 
-    it('pactLines only on the foes with a spare story', () => {
-        for (const enemy of withStory) {
-            expect(enemy.pactLines, `${enemy.id} pactLines`).toBeDefined();
-            expect(enemy.pactLines!.quiet).toMatch(/\S/);
-            expect(enemy.pactLines!.setDown).toMatch(/\S/);
-            expect(enemy.pactLines!.heavy).toMatch(/\S/);
+    it('every difficulty normal foe has a Spare and a Finish line, and no other foe has either', () => {
+        // The library has no normal foe outside the approved table, so none is exempt.
+        // A new normal foe without both lines fails here.
+        const NO_APPROVED_LINE = new Set<string>();
+        const normals = EnemyLibrary.filter(e => e.difficulty === 'normal' && !NO_APPROVED_LINE.has(e.id));
+        expect(normals.length).toBeGreaterThan(0);
+        for (const enemy of normals) {
+            expect(enemy.mercyLines?.spare, `${enemy.id} Spare line`).toMatch(/\S/);
+            expect(enemy.mercyLines?.finish, `${enemy.id} Finish line`).toMatch(/\S/);
         }
-        for (const enemy of sweepOnly) {
-            expect(enemy.pactLines, `${enemy.id} pactLines should be absent`).toBeUndefined();
+        for (const enemy of EnemyLibrary.filter(e => e.difficulty !== 'normal')) {
+            expect(enemy.mercyLines, `${enemy.id} mercyLines should be absent`).toBeUndefined();
         }
     });
 
-    it('a foe with a spare story carries pactLines + journalEntry voice pairs', () => {
-        expect(GreenJelly.pactLines!.heavy).toMatch(/sold my face/);
+    it('a foe with a spare story carries its journal entry voice', () => {
         expect(GreenJelly.journalEntry!.title).toMatch(/Face Broker/);
     });
 
@@ -129,7 +122,7 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
 
     it('un-authored enemies (Sandbag_01 — test sandbox per Phase 74 D1) have all three fields undefined', () => {
         expect(Sandbag_01.finalBlowLines).toBeUndefined();
-        expect(Sandbag_01.pactLines).toBeUndefined();
+        expect(Sandbag_01.mercyLines).toBeUndefined();
         expect(Sandbag_01.causeLines).toBeUndefined();
     });
 

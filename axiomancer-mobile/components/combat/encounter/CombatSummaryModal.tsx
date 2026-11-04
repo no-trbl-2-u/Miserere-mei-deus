@@ -24,7 +24,7 @@ const OUTCOME_COLOR: Record<string, string> = {
     defeat: HUE.defeatRed, retreat: HUE.retreatBone,
 };
 
-export function CombatSummaryModal({ summary, shillings = 0, spareLines, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; onClose: () => void }) {
+export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLine, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; mercyLine?: string; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
     const color = OUTCOME_COLOR[summary.outcome] ?? AXM.parchment;
@@ -65,6 +65,10 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, onClose
                     ))}
                 </View>
 
+                {mercyLine && (
+                    <Text style={styles.mercyLine} testID="combat-summary-mercy-line">{mercyLine}</Text>
+                )}
+
                 {summary.bestCard.length > 0 && (
                     <Text style={[styles.best, { color }]} testID="combat-summary-best">★ Best card: {summary.bestCard}</Text>
                 )}
@@ -90,6 +94,7 @@ const useStyles = makeStyles((AXM) => ({
     coach: { fontFamily: FONTS.sans, fontSize: 11, color: HUE.payoffGold, textAlign: 'center', lineHeight: 15, marginTop: 6, paddingHorizontal: 4, letterSpacing: 0.2 },
     totals: { gap: 2, marginBottom: 8 },
     total: { fontFamily: FONTS.sans, fontSize: 12, color: AXM.bone },
+    mercyLine: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.parchment, textAlign: 'center', lineHeight: 18, marginBottom: 10 },
     best: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 0.6, textAlign: 'center', marginBottom: 12 },
     btn: { borderWidth: 2, paddingVertical: 9, alignItems: 'center' },
     btnText: { fontFamily: FONTS.gothic, fontSize: 16, letterSpacing: 1 },

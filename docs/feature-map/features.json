@@ -4170,6 +4170,12 @@
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/spare-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
       "to": "area:Game",
       "file": "axiomancer-mobile/components/combat/encounter/CombatEncounterPanel.tsx"
     },
