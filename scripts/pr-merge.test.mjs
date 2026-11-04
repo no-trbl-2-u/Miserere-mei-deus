@@ -22,6 +22,10 @@ import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
 import { pendingFiles } from './plan/pending.mjs'
+import { listedChunks } from './plan/settle.mjs'
+import { settledView } from './plan/settled.mjs'
+import { readPlanSources } from './check-deadlines.mjs'
+import { runCheck } from './plan-check.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -660,6 +664,55 @@ test('a close that leaves open acceptance and no chunk is held too, and asks for
     const r = settleMain({ root: work, lint: () => [], log: () => {} })
     assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
     assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk under open acceptance: chunk the spec/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// While a file waits, every other PR's root `npm test` reads the plan through plan-check and check-deadlines.
+const lintsOf = (root) => {
+  const sources = readPlanSources(root)
+  return [...runCheck({ repoAbs: root }).failures, ...sources.specs.filter((s) => !listedChunks(s.md).length).map((s) => `${s.file}: empty in the deadline view`)]
+}
+const EDIT_EMPTIES = ['---', 'date: 2026-11-01', '---', '## Edit plan/08-maps.md', '~~~ old', '- [ ] **08.1** Map · S · closes A1 · needs — · alias: XY2a', '~~~', '~~~ new', '~~~', ''].join('\n')
+
+test('a held close leaves the plan lints green for every other PR: closes wait for settle in the view', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    assert.deepEqual(settleMain({ root: work, lint: () => [], log: () => {} }).left, ['plan/pending/08.1.md'])
+    g(work, 'pull', '-q', 'origin', 'main')
+    assert.deepEqual(lintsOf(work), [])
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a held edit that empties a spec leaves the plan lints green too: the view holds back what settle would', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/empties.md': EDIT_EMPTIES })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.left, ['plan/pending/empties.md'], JSON.stringify(r))
+    g(work, 'pull', '-q', 'origin', 'main')
+    assert.deepEqual(lintsOf(work), [])
+    const view = settledView(work)
+    assert.deepEqual(view.problems, [])
+    assert.deepEqual([...view.held.keys()], ['plan/pending/empties.md'])
+    assert.match(view.read('plan/08-maps.md'), /\*\*08\.1\*\*/, 'the spec reads as settle would leave it')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the view judges on the end state as settle does: an edit that empties a spec a later plot refills is not held', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/empties.md': EDIT_EMPTIES, 'plan/pending/plot-more.md': PLOT_MORE })
+    const view = settledView(work)
+    assert.deepEqual([...view.held.keys()], [])
+    assert.doesNotMatch(view.read('plan/08-maps.md'), /\*\* Map ·/, 'the edit stands')
+    assert.match(view.read('plan/08-maps.md'), /\*\* More ·/, 'and the plot refills')
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }

@@ -1026,6 +1026,32 @@ export function holdReason(p, spec, text) {
   return `it would leave ${spec} with no chunk: absorb the spec by hand (its lasting rules into identity/ or bearings.md, the file deleted, its plan/README.md row dropped, "· ${num} · spec complete: …" archived${close}, this pending file deleted)`;
 }
 
+/** Whether writing `after` over `before` takes a spec's last chunk. The ladder spec empties by design: settle removes it. */
+export function tookLastChunk(file, before, after, cfg = DEFAULTS) {
+  return after !== null && file !== `plan/${cfg.ladder.file}` && SPEC_PATH.test(file) && !listedChunks(after).length && listedChunks(before ?? '').length > 0;
+}
+
+/**
+ * The files held back, file → why. `pass(held)` plays the pending files not in `held` from the tree as it stands and
+ * returns `read` (a file as that pass leaves it) and `emptiedBy` (spec → the file that last took its last chunk). The
+ * end state judges an emptied spec: one a later file refilled stands. One still empty holds back the file that emptied
+ * it, alone, and the run starts over without it. Each new pass holds at least one more file, so it ends.
+ */
+export function holdBack(pass) {
+  const held = new Map();
+  for (let holding = true; holding; ) {
+    const { emptiedBy, read } = pass(held);
+    holding = false;
+    for (const [spec, p] of emptiedBy) {
+      const why = holdReason(p, spec, read(spec));
+      if (!why) continue;
+      held.set(p.file, held.has(p.file) ? `${held.get(p.file)}; ${why}` : why);
+      holding = true;
+    }
+  }
+  return held;
+}
+
 /** Why this checkout may not settle (not the owner, or on a branch other than the config's), or null. */
 export function settleRefusal(root, cfg, { owner = isOwner(root) } = {}) {
   if (!owner) return 'settle: only the owner settles (an untracked .owner at the primary checkout, owner mode on); a contributor lands pending files through a pull request';
@@ -1101,8 +1127,6 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
   const renumbers = new Map();
   // Spec → the pending file that last took its last chunk, this pass.
   const emptiedBy = new Map();
-  // Pending file → why it waits: it stays out of the run, which starts over without it.
-  const held = new Map();
   const unparsed = skipped.length;
   // A close whose chunk isn't listed (yet): a file still to settle may add it.
   const unlisted = (message) => Object.assign(new Error(message), { unlisted: true });
@@ -1217,7 +1241,7 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
     }
     for (const [q, t] of tx) {
       // The file that took a spec's last chunk. Whether that holds is for the run's end state to say.
-      if (t !== null && q !== ladderFile && SPEC_PATH.test(q) && !listedChunks(t).length && listedChunks(read(q) ?? '').length) emptiedBy.set(q, p);
+      if (tookLastChunk(q, read(q), t, cfg)) emptiedBy.set(q, p);
       cache.set(q, t);
     }
     notes.push(...said);
@@ -1230,7 +1254,7 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
     skipped.push(e.message);
   };
   // One pass over the files not held back, from the tree as it stands, with nothing of an earlier pass kept.
-  const settleAll = () => {
+  const settleAll = (held) => {
     cache.clear();
     settled.length = 0;
     notes.length = 0;
@@ -1268,19 +1292,9 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
         skip(e);
       }
     }
+    return { emptiedBy, read };
   };
-  // The end state judges an emptied spec: one a later file refilled settles whole. One still empty holds back the file
-  // that emptied it, alone, and the run starts over without it. Each new pass holds at least one more file, so it ends.
-  for (let holding = true; holding; ) {
-    settleAll();
-    holding = false;
-    for (const [spec, p] of emptiedBy) {
-      const why = holdReason(p, spec, read(spec));
-      if (!why) continue;
-      held.set(p.file, held.has(p.file) ? `${held.get(p.file)}; ${why}` : why);
-      holding = true;
-    }
-  }
+  const held = holdBack(settleAll);
 
   // D?slug wherever the repo says it (a spec, a code comment), once every decision has its number.
   if (renumbers.size) {
