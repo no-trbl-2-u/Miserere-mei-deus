@@ -92,6 +92,94 @@
       "maxEdge": 1600,
       "darkRatio": 0.95,
       "darkRatioWhy": "the dawn sky (luminance ~145) is lighter than the default cut-off (0.82 x mean), so the detector dropped it; 0.95 finds the printed border at 17.4% of the page height, measured 17.8%"
+    },
+    {
+      "key": "arena-breakwater-northern-sea",
+      "category": "combat",
+      "title": "File:Caspar_David_Friedrich_-_Northern_Sea_in_the_Moonlight_-_Google_Art_Project.jpg",
+      "region": "The Breakwater",
+      "why": "Friedrich, Northern Sea in the Moonlight. T's default pick for the Breakwater. One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-breakwater-kuste-bei-mondschein",
+      "category": "combat",
+      "title": "File:Caspar_David_Friedrich_-_Küste_bei_Mondschein.jpg",
+      "region": "The Breakwater",
+      "why": "Friedrich, Küste bei Mondschein. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-breakwater-mondscheinnacht-ruegen",
+      "category": "combat",
+      "title": "File:Johann_Friedrich_Boeck_-_Mondscheinnacht_auf_Rügen.jpg",
+      "region": "The Breakwater",
+      "why": "Boeck, Mondscheinnacht auf Rügen. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-charcoal-wood-sacred-grove",
+      "category": "combat",
+      "title": "File:Sacred_Grove_(1882)_-_Arnold_Böcklin_(Kunstmuseum_Basel).jpg",
+      "region": "The Charcoal Wood",
+      "why": "Böcklin, Sacred Grove (1882, Basel). T's default pick for the Charcoal Wood. One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-charcoal-wood-pheasantry",
+      "category": "combat",
+      "title": "File:Théodore_Rousseau_-_Pheasantry_in_the_Forest_of_Compiègne_-_33-2016_-_Saint_Louis_Art_Museum.jpg",
+      "region": "The Charcoal Wood",
+      "recipe": "plate-page",
+      "why": "Rousseau, Pheasantry in the Forest of Compiègne. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default.",
+      "inset": 0.02
+    },
+    {
+      "key": "arena-charcoal-wood-eldena",
+      "category": "combat",
+      "title": "File:Caspar_David_Friedrich_Klosterruine_Eldena_1824-25.jpg",
+      "region": "The Charcoal Wood",
+      "why": "Friedrich, Klosterruine Eldena. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-beacon-crags-storm-mountains",
+      "category": "combat",
+      "title": "File:Hermann_Herzog_-_Storm_in_the_mountains.jpg",
+      "region": "The Beacon Crags",
+      "why": "Herzog, Storm in the Mountains. T's default pick for the Beacon Crags. One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-beacon-crags-rocky-mountains-storm",
+      "category": "combat",
+      "title": "File:Albert_Bierstadt_-_A_Storm_in_the_Rocky_Mountains.jpg",
+      "region": "The Beacon Crags",
+      "recipe": "plate-page",
+      "why": "Bierstadt, A Storm in the Rocky Mountains. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default.",
+      "inset": 0.02
+    },
+    {
+      "key": "arena-beacon-crags-riesengebirge",
+      "category": "combat",
+      "title": "File:Friedrich_Riesengebirge_3.jpg",
+      "region": "The Beacon Crags",
+      "why": "Friedrich, Riesengebirge 3. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-lantern-deep-toteninsel",
+      "category": "combat",
+      "title": "File:Arnold_Böcklin_-_Die_Toteninsel_III_(Alte_Nationalgalerie,_Berlin).jpg",
+      "region": "The Lantern Deep",
+      "why": "Böcklin, Die Toteninsel III (Berlin). T's default pick for the Lantern Deep. One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-lantern-deep-pandemonium",
+      "category": "combat",
+      "title": "File:Le_Pandemonium_-_John_Martin_-_Musée_du_Louvre_Peintures_RF_2006_21_-_sans_cadre.jpg",
+      "region": "The Lantern Deep",
+      "why": "Martin, Le Pandemonium (Louvre, sans cadre). Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "arena-lantern-deep-great-day-of-wrath",
+      "category": "combat",
+      "title": "File:John_Martin_-_Great_Day_of_His_Wrath_-_WGA14150.jpg",
+      "region": "The Lantern Deep",
+      "why": "Martin, The Great Day of His Wrath. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
     }
   ]
 }
