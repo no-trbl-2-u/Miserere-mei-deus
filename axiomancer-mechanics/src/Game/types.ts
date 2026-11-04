@@ -11,7 +11,7 @@ import type { EnemySlug } from '../Enemy/enemy.library';
  *                              so save files can be migrated.
  * @property currentEncounter - The full encounter the player is
  *                              fighting. Carries multi-enemy info plus the
- *                              origin tag so `END_COMBAT` can roll loot and
+ *                              origin tag so `END_COMBAT` can pay the wage and
  *                              advance kill objectives. Combat itself is driven
  *                              by the Hazard-Pattern engine outside the store;
  *                              `START_COMBAT` only stages this encounter and

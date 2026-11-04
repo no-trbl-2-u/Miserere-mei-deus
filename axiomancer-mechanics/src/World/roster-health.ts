@@ -171,26 +171,12 @@ function rewardItem(reward: Reward): Item | undefined {
     return undefined;
 }
 
-function playEnemies(src: RosterSources): Enemy[] {
-    const dev = new Set(src.devOnlyEnemyIds);
-    const seen = new Map<string, Enemy>();
-    for (const e of [...src.enemyLibrary, ...Object.values(src.enemyRegistry)]) {
-        if (!dev.has(e.id) && !seen.has(e.id)) seen.set(e.id, e);
-    }
-    return [...seen.values()];
-}
-
 /** Every place an item can be granted in play, with where it is named. */
 function itemRefs(src: RosterSources): ItemRef[] {
     const refs: ItemRef[] = [];
     const push = (item: Item, where: string): void => {
         refs.push({ id: item.id, kind: itemKind(item), where, lens: 'loot-item' });
     };
-    for (const enemy of playEnemies(src)) {
-        for (const entry of enemy.loot ?? []) {
-            if (entry.item) push(entry.item, `${enemy.id}.loot`);
-        }
-    }
     for (const pool of src.pools) {
         for (const { payload } of pool.entries) {
             if (payload.kind === 'loot-cache') {
@@ -258,7 +244,7 @@ export function danglingEnemySlugs(src: RosterSources): RosterFinding[] {
     return out;
 }
 
-/** A loot table, reward or cache naming a consumable or relic id no library has. */
+/** A reward or cache naming a consumable or relic id no library has. */
 export function danglingItems(src: RosterSources): RosterFinding[] {
     const consumableIds = new Set(src.consumables.map(c => c.id));
     const relicIds = new Set(src.relics.map(r => r.id));
@@ -350,18 +336,18 @@ export function orphanEnemies(src: RosterSources): RosterFinding[] {
         }));
 }
 
-/** A consumable or relic no cache, shop, loot table, starting loadout or reward grants. */
+/** A consumable or relic no cache, shop, starting loadout or reward grants. */
 export function orphanItems(src: RosterSources): RosterFinding[] {
     const granted = new Set<string>([...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id)]);
     const out: RosterFinding[] = [];
     for (const c of src.consumables) {
         if (!granted.has(c.id)) {
-            out.push({ lens: 'item-ungranted', subject: 'consumable', id: c.id, where: 'consumableLibrary', detail: 'no cache, shop, loot table, starting loadout or reward grants it' });
+            out.push({ lens: 'item-ungranted', subject: 'consumable', id: c.id, where: 'consumableLibrary', detail: 'no cache, shop, starting loadout or reward grants it' });
         }
     }
     for (const r of src.relics) {
         if (!granted.has(r.id)) {
-            out.push({ lens: 'item-ungranted', subject: 'relic', id: r.id, where: 'relicLibrary', detail: 'no cache, shop, loot table, starting loadout or reward grants it' });
+            out.push({ lens: 'item-ungranted', subject: 'relic', id: r.id, where: 'relicLibrary', detail: 'no cache, shop, starting loadout or reward grants it' });
         }
     }
     return out;

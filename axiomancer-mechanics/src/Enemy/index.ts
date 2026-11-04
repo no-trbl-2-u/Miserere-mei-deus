@@ -7,7 +7,7 @@ import {
     ENEMY_VITAE_BASE, ENEMY_VITAE_PER_LEVEL, ENEMY_VITAE_MULT,
 } from '../Game/game-mechanics.constants';
 import {
-    Enemy, EnemyLogic, EnemyDifficulty, LootTableEntry,
+    Enemy, EnemyLogic, EnemyDifficulty,
     SpareStory,
     FinalBlowLines, PactLines, CauseLines,
     CodexEntry, EnemyPhase,
@@ -27,7 +27,6 @@ export interface CreateEnemyOptions {
     logic: EnemyLogic;
     difficulty?: EnemyDifficulty;
     cards?: Card[];
-    loot?: LootTableEntry[];
     xpReward?: number;
     effects?: ActiveEffect[];
     /** The story a spared foe grants. */
@@ -205,7 +204,7 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
     const {
         id, name, description, level, baseStats, mapName, logic,
         difficulty,
-        cards, loot, xpReward, effects = [],
+        cards, xpReward, effects = [],
         spareStory,
         finalBlowLines, pactLines, causeLines,
         journalEntry, addedIn, tags,
@@ -225,7 +224,6 @@ export function createEnemy(options: CreateEnemyOptions): Enemy {
         mapName, logic,
         difficulty,
         cards,
-        loot,
         xpReward: resolvedXp,
         effects,
         spareStory,

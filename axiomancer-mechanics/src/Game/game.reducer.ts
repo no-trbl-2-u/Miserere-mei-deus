@@ -340,7 +340,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             let nextQuests: QuestLog = state.quests;
 
             if (outcome === 'victory') {
-                // A win pays XP and the wage; a foe's loot table pays nothing.
+                // A win pays XP and the wage; a foe pays no loot.
                 const grantedLoot = action.payload?.grantedLoot ?? [];
                 const grantedXp = action.payload?.grantedXp
                     ?? (spared ? 0 : totalEncounterXp(encounter));

@@ -70,9 +70,8 @@ const ring: Equipment = {
     statModifiers: [], grantsSignature: 'sig-disarming-plea',
 } as Equipment;
 
-// Live foes with their loot stripped, so only planted items are named.
-const FloatEye = { ...LiveFloatEye, loot: [] };
-const GreenJelly = { ...LiveGreenJelly, loot: [], spareStory: undefined };
+const FloatEye = LiveFloatEye;
+const GreenJelly = { ...LiveGreenJelly, spareStory: undefined };
 
 function mapDef(over: Partial<MapDefinition>): MapDefinition {
     return { name: 'test-map', continent: 'test-continent', nodes: [], ...over } as unknown as MapDefinition;
@@ -125,12 +124,6 @@ describe('roster health — each dangling lens fires', () => {
         }];
         expect(danglingEnemySlugs(sources({ pools })).map(f => [f.lens, f.id, f.where]))
             .toEqual([['enemy-slug', 'no-such-foe', 'x-1.encounter']]);
-    });
-
-    it('loot-item: a loot table names an unknown consumable', () => {
-        const foe = { ...FloatEye, loot: [{ item: { ...potion, id: 'ghost-potion' }, weight: 1 }] };
-        const found = danglingItems(sources({ enemyLibrary: [foe], enemiesByMap: { m: [foe] } }));
-        expect(found.map(f => [f.lens, f.subject, f.id])).toEqual([['loot-item', 'consumable', 'ghost-potion']]);
     });
 
     it('loot-item: a cache names an unknown relic', () => {

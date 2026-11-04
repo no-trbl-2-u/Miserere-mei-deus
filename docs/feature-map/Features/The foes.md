@@ -29,7 +29,6 @@ Code it uses, as plain text so Graph view draws player flow only.
 - VITAE and stats
 - Effects
 - Game
-- Items
 - The world
 
 ## Pitch

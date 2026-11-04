@@ -1,6 +1,6 @@
 /**
  * Every win pays shillings, and foe loot stops (MR1a, A2): a victory pays XP
- * and 3 x the lead foe's level, on every difficulty, and rolls no loot table.
+ * and 3 x the lead foe's level, on every difficulty, and no foe loot.
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -11,15 +11,11 @@ import { createGameStore } from '../store';
 import { gameReducer } from '../game.reducer';
 import { nullAdapter } from '../persistence/null.adapter';
 import { setSeed } from '../../Utils/rng';
-import { mockSequentialRng } from '../../test-utils/rng';
-import { getConsumableById } from '../../Items/consumable.library';
 
 afterEach(() => vi.restoreAllMocks());
 
-const SURE_DROP = [{ item: getConsumableById('healing-potion')!, weight: 1 }];
-
 function foe(difficulty: Enemy['difficulty'], level: number): Enemy {
-    return { ...FloatEye, difficulty, level, xpReward: 40, loot: SURE_DROP };
+    return { ...FloatEye, difficulty, level, xpReward: 40 };
 }
 
 function win(enemy: Enemy, options?: { withholdSpoils?: boolean }) {
@@ -49,15 +45,6 @@ describe('a won fight pays the wage', () => {
         expect(after.experience).toBe(before.experience + 40);
         expect(after.currency).toBe(before.currency + shillings);
         expect(after.inventory).toEqual(before.inventory);
-    });
-
-    it('a sure drop on the table still pays nothing, whatever the roll', () => {
-        for (const roll of [0, 0.5, 0.99]) {
-            mockSequentialRng(roll);
-            const { report, before, after } = win(foe('normal', 2));
-            expect(report.loot).toEqual([]);
-            expect(after.inventory).toEqual(before.inventory);
-        }
     });
 
     it('pays on the lead foe alone', () => {

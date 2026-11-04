@@ -2,26 +2,18 @@
  * Hermetic engine test — items are the healing potions.
  *
  * The consumable library holds minor, normal and greater healing potions and
- * nothing else. Every grant surface (enemy loot, debug
+ * nothing else. Every grant surface (debug
  * presets, shops including the parked maps', loot caches) may only name an id
  * the library has, so no surface hands out an item that does not exist.
  */
 
 import { describe, it, expect } from 'vitest';
-import { EnemiesByMap } from '../../Enemy/enemy.library';
 import { characterPresets, levelLadderPresets } from '../../Character/presets';
 import { consumableLibrary } from '../consumable.library';
 import { rollCacheReward, type CacheLootTier } from '../cache-reward';
 
 const POTIONS = ['healing-potion', 'minor-healing-potion', 'greater-healing-potion'];
 const isPotion = (id: string): boolean => POTIONS.includes(id);
-
-/** Every enemy on every map, deduplicated by id. */
-function allEnemies() {
-    const byId = new Map<string, (typeof EnemiesByMap)[keyof typeof EnemiesByMap][number]>();
-    for (const list of Object.values(EnemiesByMap)) for (const e of list) byId.set(e.id, e);
-    return [...byId.values()];
-}
 
 /** Every item id a registered map-event pool sells (village shop wares). */
 describe('R5 — the consumable library is the healing potions', () => {
@@ -36,13 +28,6 @@ describe('R5 — the consumable library is the healing potions', () => {
             expect(c.description, c.id).toMatch(/VITAE/);
             expect(c.description, c.id).not.toMatch(/\bHP\b/);
         }
-    });
-
-    it('no enemy loot table drops anything else', () => {
-        const hits = allEnemies().flatMap(e => (e.loot ?? [])
-            .filter(entry => entry.item && entry.item.category === 'consumable' && !isPotion(entry.item.id))
-            .map(entry => `${e.id}: ${entry.item!.id}`));
-        expect(hits).toEqual([]);
     });
 
     it('no preset starts with anything else', () => {

@@ -35,30 +35,7 @@
  */
 
 import { createEnemy, enemyStatBudget } from './index';
-import { EnemyMove, LootTableEntry } from './types';
-import { consumableLibrary, getConsumableById } from '../Items/consumable.library';
-import { Consumable } from '../Items/types';
-
-// ─── Loot helpers ─────────────────────────────────────────────────────────────
-
-/** Returns a fresh copy of the named consumable from the library, q=1. */
-function consumable(id: string): Consumable {
-    const found = getConsumableById(id);
-    if (!found) {
-        throw new Error(`enemy.library: unknown consumable id '${id}'.`);
-    }
-    return { ...found, quantity: 1 };
-}
-
-/** No-drop bucket helper — readability sugar over `{ item: null, weight }`. */
-function none(weight: number): LootTableEntry {
-    return { item: null, weight };
-}
-
-/** Drop bucket helper — wraps a consumable id with its weight. */
-function drop(id: string, weight: number): LootTableEntry {
-    return { item: consumable(id), weight };
-}
+import { EnemyMove } from './types';
 
 const ADDED = '2026-07-06';
 
@@ -502,7 +479,6 @@ export const FloatEye = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     // Reworked (T, 2026-10-30): it punishes a full hand and a big final blow.
     phases: [
         { moves: [LONG_LOOK, AFTERIMAGE, SHUT_LID, STARE] },
@@ -545,7 +521,6 @@ export const GreenJelly = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'strategic',
-    loot: [none(80), drop('healing-potion', 20)],
     // Reworked (T, 2026-10-30): a town normal that keeps what it eats. Its
     // second phase begins at the 30% line.
     phases: [
@@ -637,11 +612,6 @@ export const DeathBeholder = createEnemy({
             threatBonus: 0.5,
         },
     ],
-    loot: [
-        drop('healing-potion', 40),
-        drop('greater-healing-potion', 25),
-        drop('minor-healing-potion', 20),
-    ],
     finalBlowLines: {
         brutal: 'The hinge-priest comes apart at every joint at once. Ten thousand doors, unheld, swing open somewhere.',
         quiet:  'He folds shut along his own seams, the way a door closes on an empty room, and stays closed.',
@@ -677,7 +647,6 @@ export const GallowsCrow = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [PECK_THE_DEBT, CARRION_DIVE, TAKE_WING, SHINY_THING] },
         {
@@ -708,7 +677,6 @@ export const NetMender = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [CAST_NET, HAUL_IN, MEND_THE_NET, GILL_HOOK] },
         {
@@ -736,7 +704,6 @@ export const CraneHook = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [SWING, counterweight(6), LOCK_THE_BRAKE, HOIST] },
         {
@@ -764,7 +731,6 @@ export const BrineWidow = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [SALT_THE_WOUND, keening(3), BLACK_VEIL, MOURNING] },
         {
@@ -792,7 +758,6 @@ export const LampreyKnot = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [LATCH, writhe(3), KNOT_UP, MOUTHFUL] },
         {
@@ -820,7 +785,6 @@ export const CurfewRinger = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [TOLL, CLAPPER, BAR_THE_DOOR, HUSH] },
         {
@@ -848,7 +812,6 @@ export const WreckPicker = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [pickOver(1), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL] },
         {
@@ -876,7 +839,6 @@ export const SmokehouseGutter = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     logic: 'balanced',
-    loot: [none(70), drop('minor-healing-potion', 25), drop('healing-potion', 5)],
     phases: [
         { moves: [SMOKE_LASH, GUT_HOOK, HANG_TO_CURE, CHOKING_SMOKE] },
         {
@@ -908,7 +870,6 @@ export const TitheCollector = createEnemy({
     mapName: 'breakwater',
     difficulty: 'elite',
     logic: 'balanced',
-    loot: [none(50), drop('healing-potion', 35), drop('greater-healing-potion', 15)],
     phases: [
         {
             moves: [assess(false), garnish(false), LEDGER_SHIELD],
@@ -945,7 +906,6 @@ export const CaveChoir = createEnemy({
     mapName: 'breakwater',
     difficulty: 'elite',
     logic: 'strategic',
-    loot: [none(80), drop('healing-potion', 20)],
     phases: [
         { moves: [HYMN, THE_PEWS, HUSH] },
         {
@@ -981,7 +941,6 @@ export const TollKeeper = createEnemy({
     mapName: 'breakwater',
     difficulty: 'elite',
     logic: 'strategic',
-    loot: [none(80), drop('healing-potion', 20)],
     phases: [
         { moves: [LEVY, STRONGBOX, WRIT] },
         {
@@ -1016,7 +975,6 @@ export const TideGate = createEnemy({
     mapName: 'breakwater',
     difficulty: 'elite',
     logic: 'strategic',
-    loot: [none(80), drop('healing-potion', 20)],
     phases: [
         { moves: [WASH_OVER, SLUICE, GATE_UNDERTOW] },
         {
@@ -1051,7 +1009,6 @@ export const Lamplighter = createEnemy({
     mapName: 'breakwater',
     difficulty: 'elite',
     logic: 'strategic',
-    loot: [none(80), drop('healing-potion', 20)],
     phases: [
         { moves: [WICK_LASH, SHUTTER, GLARE] },
         {
@@ -1086,7 +1043,6 @@ export const Wrecker = createEnemy({
     mapName: 'breakwater',
     difficulty: 'elite',
     logic: 'strategic',
-    loot: [none(80), drop('healing-potion', 20)],
     phases: [
         { moves: [WRECKERS_BAIT, CUDGEL, ROPE] },
         {
@@ -1195,7 +1151,3 @@ export type EnemySlug = keyof typeof ENEMY_REGISTRY;
 export const LIVE_ENEMY_IDS: ReadonlySet<string> = new Set(
     Object.values(ENEMY_REGISTRY).map(e => e.id),
 );
-
-// Re-export the consumable library so test runners that import this file
-// don't accidentally tree-shake the dependency.
-void consumableLibrary;

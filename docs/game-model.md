@@ -131,8 +131,8 @@ the Expo app (`axiomancer-mobile`) presents it.
   starts, so a run in progress keeps the deck it was dealt.
 - **The wage:** a won fight pays `MERCY_TUNING.shillingsPerLevel` = 3 shillings x
   the lead foe's level (`fightWage`, `Combat/combat.mercy-check.ts`), on every
-  difficulty, even when an elite's relic drop withholds the XP. It rolls no foe
-  loot: `Enemy.loot` tables are data only and pay nothing.
+  difficulty, even when an elite's relic drop withholds the XP. A foe carries no
+  loot table and pays no loot.
 - **The mercy check:** when a foe of `difficulty: 'normal'` falls to 0 VITAE, the
   combat rng rolls `MERCY_CHECK_CHANCE` = 15% (`rollMercyCheck`,
   `Combat/combat.mercy-check.ts`). On a hit the fight asks spare or finish and
