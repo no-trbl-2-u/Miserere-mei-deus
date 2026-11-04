@@ -22,25 +22,19 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
-- **135.1** · SM2a: the run log carries pacing and coverage, and a quest's XP is the quest's, before the Nov 9 preview APK (T, `/plot asap`, 2026-11-01)
-- **135.2** · SM2b: what a player sees on the road, Chapter 1 as data, a witness that kills (T, `/plot asap`, 2026-11-01)
 - **135.3** · SM2c: the four personas (T, `/plot asap`, 2026-11-01)
 - **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
-- **135.5** · SM2e: pacing and coverage on the server (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
-- **136.1** (EQ3a)
-- **136.2** (EQ3b)
-- **136.3** (EQ3c)
-- **136.4** (EQ3d)
-- **136.5** (EQ3e)
-- **136.6** (EQ3f)
-- **136.7** (EQ3g)
-- **136.8** (EQ3h)
-- **136.9** (EQ3i)
-- **136.10** (EQ3j)
-- **136.11** (EQ3k)
-- **138.1** · XP1a: a fifth less XP per kill (T, `/plot asap`, 2026-11-01)
-- **138.2** · SD1a: the Chosen's ten-card deck from all three of its lanes (T, `/plot asap`, 2026-11-01)
+- **121.2** · TP1b: the title plate is Doré's *Inferno* Plate 3, the lion (T's pick, `/plot asap`, 2026-11-04)
+- **146.5** · AP1e: combat plates back on (T, `/plot asap`, 2026-11-04)
+- **146.3** · AP1c: a node may name its plate (T, `/plot asap`, 2026-11-04)
+- **147.2** · MR3b: a quest or elite reward survives an app close (T, `/plot`, 2026-11-04)
+- **147.4** · MR3d: the flagged tests prove what they claim (T, `/plot`, 2026-11-04)
+- **99.1** · automate footgun `card-voice-stale-rows` (seen 2×), spec 99's ladder chunk.
+- **99.2** · automate footgun `face-text-parsers` (seen 2×), spec 99's ladder chunk.
+- **99.3** · automate footgun `small-face-line-fit` (seen 2×), spec 99's ladder chunk.
+- **99.4** · automate footgun `glyph-in-text` (seen 2×), spec 99's ladder chunk.
+- **99.5** · automate footgun `spare-table-unreached` (seen 2×), spec 99's ladder chunk.
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -57,9 +51,9 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **117.6** · attended: T does this one (DF1f) · since: 2026-11-01 · until: 2026-11-12 · max_age: 18d
 - **118.4** · attended: T does this one (EL1d) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **119.3** · attended: T does this one (BV1c) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **121.2** · owner-led: art is owner-only (D88) (TP1b) · since: 2026-11-01 · until: 2026-11-07 · max_age: 14d
 - **122.2** · attended: T does this one (R12) · since: 2026-11-01 · until: 2026-12-12 · max_age: 48d
 - **123.1** · attended: T does this one (PF2) · since: 2026-11-01 · until: T's word · max_age: 30d
+- **146.7** · owner-led: art is owner-only (D88) (AP1g) · since: 2026-11-04 · until: T's word · max_age: 30d
 - **124.5** · attended: T does this one (HP2e) · since: 2026-11-01 · until: 2026-11-28 · max_age: 34d
 - **125.8** · attended: T does this one (LG1h) · since: 2026-11-01 · until: 2026-12-23 · max_age: 59d
 - **126.4** · attended: T does this one (OV1d) · since: 2026-11-01 · until: T's word · max_age: 30d
@@ -82,17 +76,15 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 110 | A difficulty curve from bot plays, and the Breakwater's six hazards on it | [110-hp6-breakwater-puzzle-curve.md](110-hp6-breakwater-puzzle-curve.md) | planned | 3 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
 | 112 | Combat entry and exit: the music steps aside for the whole fight, and the ink really spreads | [112-cx1-combat-entry-exit.md](112-cx1-combat-entry-exit.md) | planned | 1 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
-| 114 | The Chosen's signature says why it will not fire, and the play log takes fights again | [114-sk1-signature-skills.md](114-sk1-signature-skills.md) | planned | 2 left |
-| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 1 left |
+| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 2 left |
 | 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 2 left |
 | 117 | The Defender trial set (the turtle with spikes) | [117-df1-defender-trial-set.md](117-df1-defender-trial-set.md) | planned | 1 left |
 | 118 | The Elementalist trial set (the weather in play) | [118-el1-elementalist-trial-set.md](118-el1-elementalist-trial-set.md) | planned | 1 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
-| 120 | A graded hazard-puzzle set, played and pattern-mined | [120-hp4-graded-puzzle-set.md](120-hp4-graded-puzzle-set.md) | planned | 3 left |
+| 120 | A graded hazard-puzzle set, played and pattern-mined | [120-hp4-graded-puzzle-set.md](120-hp4-graded-puzzle-set.md) | planned | 2 left |
 | 121 | Title plate legibility: prove the plate, then replace it | [121-tp1-title-plate-legibility.md](121-tp1-title-plate-legibility.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
@@ -107,9 +99,12 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
-| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 6 left |
-| 136 | Equipment: the dock fixed with drag and drop, and Chapter 1's weapons and armor | [136-eq3-equipment-dock.md](136-eq3-equipment-dock.md) | planned | 11 left |
-| 138 | The Chosen's ten-card deck from all three of its lanes, and a fifth less XP per kill | [138-sd1-chosen-deck-and-xp.md](138-sd1-chosen-deck-and-xp.md) | planned | 2 left |
+| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
+| 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
+| 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
+| 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 3 left |
+| 147 | The mercy check's loose ends | [147-mr3-mercy-loose-ends.md](147-mr3-mercy-loose-ends.md) | planned | 2 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
 
 ## How the loop reads this folder
 
