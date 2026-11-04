@@ -23,7 +23,7 @@
 //      playing that board is `hazard-e2e.mjs`'s job);
 //   6. bw-m3, a loot cache: take a card, move on, back on the map;
 //   7. bw-w3, a fight (walked back through bw-m2, bw-m1 and bw-w2): the
-//      reveal, the board on the plain black scene (D32), played to its end by
+//      reveal, the board on the region's plate, played to its end by
 //      ending phases. A defeat is the death rule: the full-screen return
 //      moment, then the map on bw-w2 (the node walked from) at 1 VITAE,
 //      dying, with bw-w3 still open.
@@ -309,13 +309,13 @@ async function fight(page) {
     await tap(page, 'combat-enter') || fail('bw-w3: the reveal has no ENTER COMBAT')
     await waitFor(page, 'combat-arena-backdrop', 'bw-w3 combat board')
 
-    // D32: combat draws a plain black scene, never a plate image.
+    // Combat draws the region's arena plate: an image under the foe, not a flat colour.
     const backdrop = await page.getByTestId('combat-arena-backdrop').first().evaluate((el) => ({
         img: el.tagName === 'IMG' || !!el.querySelector('img'),
         bgImage: getComputedStyle(el).backgroundImage,
     }))
-    if (backdrop.img || backdrop.bgImage !== 'none') fail(`bw-w3: the combat scene draws a plate (${JSON.stringify(backdrop)})`)
-    log('bw-w3 fight: on the board, plain black scene')
+    if (!backdrop.img && backdrop.bgImage === 'none') fail(`bw-w3: the combat scene draws no plate (${JSON.stringify(backdrop)})`)
+    log('bw-w3 fight: on the board, on the Breakwater plate')
 
     // Play it to its end by ending phases (no cards staged), then close out.
     // The budget covers a foe that never takes damage from ending phases

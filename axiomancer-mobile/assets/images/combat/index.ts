@@ -180,12 +180,13 @@ const FALLBACK_ARENA: ArenaPlateRecord = {
 /**
  * Whether combat shows its arena plates at all.
  *
- * While this is off, `CombatCombatantPane` paints the scene band plain black
- * for every region and never draws a plate. The plates, their descriptions and
- * the resolver below stay as they are (and stay tested), so turning combat art
- * back on is this one line.
+ * On: every fight opens on its region's plate (or a node's, or the fallback),
+ * with each foe on its own backing matte. Off, `CombatCombatantPane` paints the
+ * scene band plain black and draws no plate and no matte. The plates, their
+ * descriptions and the resolver below are tested either way, so switching combat
+ * back to plain black is this one line.
  */
-export const ARENA_PLATES_SHOWN = false;
+export const ARENA_PLATES_SHOWN = true;
 
 /** The screen-reader label for the plain black scene while plates are off. */
 export const BLACK_ARENA_ALT = 'A plain black backdrop behind the foe';

@@ -4,10 +4,10 @@
  * `CombatBoard.S1-board.test.tsx`: a real engine-initialized `CombatViewModel`
  * mounted through `withAllProviders`.
  *
- * Combat shows a plain black scene while `ARENA_PLATES_SHOWN` is off: the
- * first block pins that every region gets the same black backdrop; the
- * region-threading block runs instead when the switch is on. The plates themselves stay pinned at the unit level in
- * `assets/images/combat/__tests__/index.test.ts`.
+ * Plates are on (`ARENA_PLATES_SHOWN`): the region-threading block runs. The
+ * plain-black block runs instead if the switch is ever turned off, and pins that
+ * every region then gets the same black backdrop. The plates themselves stay
+ * pinned at the unit level in `assets/images/combat/__tests__/index.test.ts`.
  */
 
 import React from 'react';
@@ -51,7 +51,7 @@ function renderBoard(region: string | undefined) {
     return render(tree);
 }
 
-(ARENA_PLATES_SHOWN ? describe.skip : describe)('CombatBoard: plain black arena while plates are off (D32)', () => {
+(ARENA_PLATES_SHOWN ? describe.skip : describe)('CombatBoard: plain black arena while plates are off', () => {
     it('draws the same black scene, and no plate, for a plated region, an unplated one and none', () => {
         for (const region of ['the Drowned Parish', 'The Breakwater', undefined]) {
             const backdrop = renderBoard(region).getByTestId('combat-arena-backdrop');
