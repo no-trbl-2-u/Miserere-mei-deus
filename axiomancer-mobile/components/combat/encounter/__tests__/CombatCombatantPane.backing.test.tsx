@@ -18,12 +18,11 @@ import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // The flag's real value is another chunk's to flip, so both states are set here.
 let mockPlatesShown = true;
-jest.mock('@/assets/images/combat', () => ({
-    ...jest.requireActual('@/assets/images/combat'),
-    get ARENA_PLATES_SHOWN() {
-        return mockPlatesShown;
-    },
-}));
+jest.mock('@/assets/images/combat', () => Object.defineProperty(
+    { ...jest.requireActual('@/assets/images/combat') },
+    'ARENA_PLATES_SHOWN',
+    { get: () => mockPlatesShown },
+));
 
 beforeEach(() => {
     mockPlatesShown = true;
