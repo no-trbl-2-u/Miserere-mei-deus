@@ -1,7 +1,7 @@
 /**
  * Phase AP1d - THE FOE STANDS ON A BACKING CUT FROM ITS OWN CELLS.
  *
- * The pane's half of spec 146's A4. `scripts/enemy-backings.test.mjs` proves
+ * The pane's half of the backing law. `scripts/enemy-backings.test.mjs` proves
  * every matte exists and covers its foe; this proves the pane draws it: under
  * the figure, inside the wrappers that breathe and lunge, in the theme's ground
  * colour, in the same box and at the same position as the cells, and that the
@@ -74,7 +74,7 @@ describe('the pane draws the backing', () => {
         const backing = within(box).getByTestId('combat-enemy-backing');
         const frames = within(box).getByTestId('combat-enemy-frames');
         // A cell as drawn: the host image, with its props as they reach the native side.
-        const [drawn] = frames.findAll((n) => typeof n.type === 'string' && n.props.contentFit !== undefined);
+        const [drawn] = frames.findAll((n: { type: unknown; props: Record<string, unknown> }) => typeof n.type === 'string' && n.props.contentFit !== undefined);
         expect(drawn).toBeDefined();
         expect(backing.props.contentFit).toBe(drawn.props.contentFit);
         expect(backing.props.contentPosition).toEqual(drawn.props.contentPosition);

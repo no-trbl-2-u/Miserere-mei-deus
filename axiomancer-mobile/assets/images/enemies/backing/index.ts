@@ -1,6 +1,5 @@
 /**
- * Enemy BACKINGS: one soft dark shape per foe, drawn directly under it (phase
- * AP1d, spec 146).
+ * Enemy BACKINGS: one soft dark shape per foe, drawn directly under it.
  *
  * A foe's art was alpha-matted by keying black out of a painting, so its dark
  * strokes are holes and an arena plate would read straight through them. The
