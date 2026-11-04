@@ -11,8 +11,7 @@ The loop's own moves, the counted retro ladder, stay in
 `plan/lessons.md`, and its always-read core in `plan/reflexes.md`. A
 trap has one home: search both lists before adding a line.
 
-One line each, at most 500 bytes, never wrapped (this file merges with
-git's `union` driver):
+One line each, at most 500 bytes, never wrapped:
 `- **slug** · trap → rule · seen N× · last YYYY-MM-DD · open | watch | guarded by <test/hook/file>`
 
 ## Open (a rule, not yet automated)

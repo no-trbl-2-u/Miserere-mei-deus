@@ -192,9 +192,12 @@ the chunk's `(alias: …)` and `(#<PR>)`, and one `plan: settle <ids>`
 commit is pushed to main. So two PRs never collide in the roadmap or a
 spec. Until it settles, every reader (plan-check, `order.mjs`, the
 deadline tools) counts a pending close as closed. What a Miserere
-pending file leaves out: `footguns:` and `## Footguns` (no footgun list
-here: a trap is a `plan/lessons.md` row), `## Decisions` (D-entries go
-in the decisions log in the PR) and `## Notes`. A close of a Held chunk
+pending file leaves out: `## Decisions` (D-entries go in the decisions
+log in the PR) and `## Notes`. A trap in what was built goes in
+`footguns:` or `## Footguns` (settle writes `identity/footguns.md`); a
+trap in the loop's own moves is a `plan/lessons.md` row, never both. A
+settle that refuses, or that leaves a file pending, turns the
+`pr-resolve` run red, naming why. A close of a Held chunk
 carries an `## Edit plan/README.md` that takes its Held line out
 (settle tidies only the Asap lane and the table). Files with a merge of
 their own are still edited in the PR: a new file (a spec, a part plan),
