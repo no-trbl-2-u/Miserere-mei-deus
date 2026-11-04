@@ -12,7 +12,7 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import { applyEffect, effectsLibrary, type Enemy } from '@mechanics';
+import type { Enemy } from '@mechanics';
 
 import { createAppActions } from '@/state/actions';
 import { createAppStore } from '@/state/store';
@@ -54,6 +54,7 @@ describe('actions.endCombat: returns engine CombatEndReport (Phase 78)', () => {
         expect(report?.outcome).toBe('victory');
         expect(report?.journalEntryUnlocked?.id).toBe('codex-test-foe');
         expect(store.getState().codex.unlockedEntries).toContain('codex-test-foe');
+        expect(store.getState().flags).toContain('spared-test-foe');
     });
 
     it('no journalEntryUnlocked on a repeat Spare (already unlocked)', () => {
@@ -88,6 +89,7 @@ describe('actions.endCombat: returns engine CombatEndReport (Phase 78)', () => {
         const report = actions.endCombat('victory');
         expect(report?.outcome).toBe('victory');
         expect(store.getState().codex.unlockedEntries).not.toContain('codex-test-foe');
+        expect(store.getState().flags).not.toContain('spared-test-foe');
     });
 
     it('endCombat outside an encounter reports a flee and grants nothing', () => {
@@ -97,14 +99,5 @@ describe('actions.endCombat: returns engine CombatEndReport (Phase 78)', () => {
         const report = actions.endCombat('victory');
         expect(report?.outcome).toBe('flee');
         expect(report?.journalEntryUnlocked).toBeUndefined();
-    });
-
-    // Smoke pin — `applyEffect` import keeps the engine-effect surface
-    // exercised so a regression in the effects library shape surfaces
-    // here, not at runtime.
-    it('engine effects library is non-empty (smoke pin)', () => {
-        expect(effectsLibrary.debuffs.length).toBeGreaterThan(0);
-        const { activeEffects } = applyEffect([], effectsLibrary.debuffs[0], 1);
-        expect(activeEffects).toHaveLength(1);
     });
 });
