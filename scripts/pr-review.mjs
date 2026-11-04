@@ -60,6 +60,7 @@ import { fileURLToPath } from 'node:url'
 
 import { newTitles, runnerFor, verdictFor } from './eval/parent-replay-lib.mjs'
 import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/worktree.mjs'
+import { prFiles } from './pr-files.mjs'
 import { HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 
 /**
@@ -367,7 +368,8 @@ async function main() {
   if (mode === 'parent-tests') return parentTests(pr)
   if (mode === 'fix-wanted') {
     const v = JSON.parse(execFileSync('gh', ['pr', 'view', pr, '--repo', repo,
-      '--json', 'state,isDraft,isCrossRepository,labels,title,files,headRefOid,headRefName,comments,commits'], { cwd: ROOT, encoding: 'utf8' }))
+      '--json', 'state,isDraft,isCrossRepository,labels,title,headRefOid,headRefName,comments,commits'], { cwd: ROOT, encoding: 'utf8' }))
+    v.files = prFiles(pr, repo)
     const d = fixWanted({
       state: v.state, isDraft: v.isDraft, isCrossRepository: v.isCrossRepository, labels: v.labels.map((l) => l.name), title: v.title,
       files: (v.files ?? []).map((f) => f.path), head: v.headRefOid,
