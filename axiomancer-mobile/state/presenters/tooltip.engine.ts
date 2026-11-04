@@ -98,7 +98,7 @@ const DISABLED_ACTION_CONTENT: Record<string, TooltipContent> = {
 const CHRONICLE_CONTENT: Record<string, TooltipContent> = {
     'combat:ended': {
         title: 'COMBAT · ENDED',
-        body: 'a fight resolved one way or another. the body records the outcome — victory, parley, defeat — and the foe who delivered it.',
+        body: 'a fight resolved one way or another. the body records the outcome — victory, defeat, retreat — and the foe who delivered it.',
         footnote: 'engine: combat:ended',
     },
     'character:levelup': {
@@ -146,7 +146,7 @@ const QUEST_OBJECTIVE_CONTENT: Record<string, TooltipContent> = {
 const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     encounter: {
         title: 'ENCOUNTER',
-        body: 'a hostile presence stands between you and the next step. step in and the seal closes; fight, parley, or fall.',
+        body: 'a hostile presence stands between you and the next step. step in and the seal closes; fight or fall.',
         footnote: 'commits combat',
     },
     elite: {

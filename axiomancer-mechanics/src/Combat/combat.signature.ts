@@ -63,7 +63,7 @@ export const SIGNATURE_SKILLS: Record<SignatureSkillId, SignatureSkill> = {
     },
     'sig-bleeding-signet': {
         id: 'sig-bleeding-signet', name: 'Open Vein', kind: 'heal-trigger-leech', cost: 4,
-        description: `HEAL ${OPEN_VEIN_HEAL}. Trigger the foe's LEECH: it loses its LEECH now and you HEAL what it lost.`,
+        description: `HEAL {heal:${OPEN_VEIN_HEAL}}. Trigger the foe's LEECH: it loses its LEECH now and you HEAL what it lost.`,
     },
     'sig-elementalist-signet': {
         id: 'sig-elementalist-signet', name: 'Eye of the Storm', kind: 'clear-yours-trigger-storm', cost: 6,

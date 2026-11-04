@@ -17,7 +17,7 @@ import { fightWage, spareWage, type EnemyDifficulty } from '@mechanics';
 import type { CombatBoardProps } from '@/components/combat/encounter/CombatBoard';
 import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
 import { fightRecorder } from '@/lib/fightRecorder';
-import { recordItemGained } from '@/state/run-log';
+import { runLogPoster } from '@/lib/runLog';
 import { mockFixedRng } from '@/test-utils/rng';
 import { devSettingsStore } from '@/state/dev/dev-settings';
 import { MERCY_CHECK_PROMPT, spareRewardLabel } from '@/state/presenters/mercy-check.copy';
@@ -28,11 +28,6 @@ jest.mock('@/lib/buildProfile', () => ({
     isDevToolsEnabled: jest.fn(() => true),
     getBuildProfile: jest.fn(() => 'preview'),
     getBuildCommit: jest.fn(() => 'abc1234'),
-}));
-
-jest.mock('@/state/run-log', () => ({
-    ...(jest.requireActual('@/state/run-log') as object),
-    recordItemGained: jest.fn(),
 }));
 
 const CARDS = ['grey-strike', 'grey-strike', 'grey-strike', 'grey-strike', 'grey-strike'];
@@ -47,7 +42,6 @@ afterEach(() => {
     void fightRecorder.end('retreat');
     jest.useRealTimers();
     jest.restoreAllMocks();
-    (recordItemGained as jest.Mock).mockClear();
 });
 
 /** The board's props, read fresh after each commit. */
@@ -155,13 +149,15 @@ describe('Spare', () => {
     });
 
     it('the rolled item reaches the run log, tagged spare', () => {
+        const posted = jest.spyOn(runLogPoster, 'event').mockImplementation(() => undefined);
         const { store } = fellTheFoe('normal');
         // Past the table's shillings, into its consumable.
         mockFixedRng(0.45);
         act(() => { fireEvent.press(screen.getByTestId('combat-mercy-spare')); });
         const reward = store.getState().combatReward?.spare?.reward;
         expect(reward?.kind).toBe('consumable');
-        expect(recordItemGained).toHaveBeenCalledWith(store, (reward as { item: unknown }).item, 'spare');
+        const gained = posted.mock.calls.filter(([, kind]) => kind === 'item-gained').map(([, , payload]) => payload);
+        expect(gained).toEqual([expect.objectContaining({ itemId: (reward as { item: { id: string } }).item.id, from: 'spare' })]);
     });
 });
 

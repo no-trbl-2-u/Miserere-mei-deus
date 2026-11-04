@@ -110,9 +110,9 @@ Combat, the only engine — `axiomancer-mobile/docs/combat.md`):
    threat phase resolve. Do the dice colours, card costs and the
    VITAE / status numbers tell a story you can follow?
 5. **Combat — resolution.** Play on until the outcome (VITAE is
-   the win condition; befriending may be offered).
+   the win condition; a win over an ordinary foe may ask spare or finish).
    Is it clear why the fight ended the way it did?
-6. **Aftermath.** The victory / parley / defeat panel, then CARRY
+6. **Aftermath.** The victory / defeat panel, then CARRY
    ON. Are the spoils and the card draft understandable? Is the
    player returned to a sensible state on the map?
 
