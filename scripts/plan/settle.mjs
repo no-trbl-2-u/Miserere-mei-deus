@@ -18,13 +18,15 @@
 //     is a sighting; a new open one at 2× or more gets the same chunk); past the open budget the coldest single
 //     sightings move to Watch, and Watch drops lines unseen for `watchDays` or past its cap (makeRoom);
 //   - the pending file is deleted.
-// One file's error skips that file whole (said, with why) and settles the rest. A chunk the tidy can't take out of a
-// line (prose it doesn't parse) is named: the run then leaves its edits staged, uncommitted, for a hand (exit 2).
+// One file's error skips that file whole (said, with why) and settles the rest. A file that would leave a spec with no
+// chunk, judged on the run's end state and never mid-run (a later file may refill it), is held back alone: it stays
+// pending, said with why, and the rest settle as if it weren't there. A chunk the tidy can't take out of a line (prose
+// it doesn't parse) is named: the run then leaves its edits staged, uncommitted, for a hand (exit 2).
 // What differs between repos (paths, the ladder's spec number, the budgets) is in plan/settle.json (plan/config.mjs).
 //
 //   node scripts/plan/settle.mjs [--dry-run | --no-commit]
 //
-// Exit 0 = settled (or nothing pending), 1 = a file was skipped, 2 = staged for a hand, 3 = not the owner or not on
+// Exit 0 = settled (or nothing pending), 1 = a file was skipped or held back, 2 = staged for a hand, 3 = not the owner or not on
 // the settle branch, 64 = a bad argument. --dry-run says what it would write, and anyone may run it. --no-commit
 // writes and stages the edits and prints the commit to make once the gate is green. NEXUS_DEBUG=1 prints the stack
 // of each skipped file's error.
@@ -1009,6 +1011,21 @@ export function commitRange(cwd, file, { branch = 'main' } = {}) {
 
 const USAGE = 'usage: node scripts/plan/settle.mjs [--dry-run | --no-commit]';
 
+const SPEC_PATH = /^plan\/\d{2,}-[^/]*\.md$/;
+
+/**
+ * Why pending file `p` is held back for leaving `spec` (its path) as `text` at the run's end, or null when the spec
+ * stands: it lists a chunk again, or says "Not chunked yet.", or the run removed it. The same two cases plan-check
+ * refuses: "nothing left" waits for a hand absorb, "no chunks" under open acceptance for more chunks.
+ */
+export function holdReason(p, spec, text) {
+  if (text === null || listedChunks(text).length || /not chunked yet/i.test(text)) return null;
+  if (/^## Acceptance\b/m.test(text)) return `it would leave ${spec} with no chunk under open acceptance: chunk the spec, then re-run settle`;
+  const num = path.basename(spec).split('-')[0];
+  const close = p.close ? `, this close's line archived` : '';
+  return `it would leave ${spec} with no chunk: absorb the spec by hand (its lasting rules into identity/ or bearings.md, the file deleted, its plan/README.md row dropped, "· ${num} · spec complete: …" archived${close}, this pending file deleted)`;
+}
+
 /** Why this checkout may not settle (not the owner, or on a branch other than the config's), or null. */
 export function settleRefusal(root, cfg, { owner = isOwner(root) } = {}) {
   if (!owner) return 'settle: only the owner settles (an untracked .owner at the primary checkout, owner mode on); a contributor lands pending files through a pull request';
@@ -1056,7 +1073,7 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
   const read = (p) => (cache.has(p) ? cache.get(p) : fs.existsSync(abs(p)) ? fs.readFileSync(abs(p), 'utf8').replace(/\r\n/g, '\n') : null);
   // The specs as this run leaves them: on disk or written by an earlier pending file, less any it removed (null).
   const specFiles = () =>
-    [...new Set([...fs.readdirSync(abs('plan')).map((f) => `plan/${f}`), ...cache.keys()])].filter((f) => /^plan\/\d{2,}-[^/]*\.md$/.test(f) && read(f) !== null).sort();
+    [...new Set([...fs.readdirSync(abs('plan')).map((f) => `plan/${f}`), ...cache.keys()])].filter((f) => SPEC_PATH.test(f) && read(f) !== null).sort();
   const specOf = (id) => specFiles().find((f) => f.startsWith(`plan/${specNum(id)}-`)) ?? null;
   const allListed = () => specFiles().flatMap((f) => listedChunks(read(f)));
   const decisionMax = () =>
@@ -1082,6 +1099,11 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
   const notes = [];
   const leftovers = [];
   const renumbers = new Map();
+  // Spec → the pending file that last took its last chunk, this pass.
+  const emptiedBy = new Map();
+  // Pending file → why it waits: it stays out of the run, which starts over without it.
+  const held = new Map();
+  const unparsed = skipped.length;
   // A close whose chunk isn't listed (yet): a file still to settle may add it.
   const unlisted = (message) => Object.assign(new Error(message), { unlisted: true });
   // One pending file into the cache, or an error and nothing written: its notes and numbers count only once it settles.
@@ -1141,14 +1163,6 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
             if (file && text !== null && text !== r(file)) w(file, text);
           }
           said.push(`spec ${cfg.ladder.spec} lists no chunk now: settle removed it and its rows (the next trap seen twice opens it again)`);
-        } else if (/^## Acceptance\b/m.test(done.text)) {
-          // Chunks closed out, but acceptance bullets remain uncovered: plan-check's own "no chunks" rule
-          // carries it from here (needs more chunks, not an absorb) — nothing for settle to do.
-          said.push(`spec ${specNum(p.close)} has no chunks left but open acceptance: chunk it next`);
-        } else {
-          // Nothing left at all: plan-check refuses to commit an empty spec by design (its own "nothing left"
-          // rule), so settle stops here instead of attempting the commit and dying on that refusal.
-          left.push(`${specFile} lists no chunk now: absorb its lasting rules into identity/ (or bearings.md), delete the file, drop its plan/README.md row, and archive "· ${specNum(p.close)} · spec complete: …" by hand, then re-run settle`);
         }
         const range = p.commits ?? commitRange(root, p.file, { branch: cfg.branch }) ?? 'plan only';
         w('plan/ARCHIVE.md', `${archive.replace(/\n*$/, '\n')}- ${p.date} · ${p.close} · ${p.says} · ${range}\n`);
@@ -1201,7 +1215,11 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
       said.push(...fg.notes);
       if (footguns !== fgBefore) w(cfg.footguns, footguns);
     }
-    for (const [q, t] of tx) cache.set(q, t);
+    for (const [q, t] of tx) {
+      // The file that took a spec's last chunk. Whether that holds is for the run's end state to say.
+      if (t !== null && q !== ladderFile && SPEC_PATH.test(q) && !listedChunks(t).length && listedChunks(read(q) ?? '').length) emptiedBy.set(q, p);
+      cache.set(q, t);
+    }
     notes.push(...said);
     leftovers.push(...left);
     for (const [k, v] of gave) renumbers.set(k, v);
@@ -1211,32 +1229,56 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
     if (process.env.NEXUS_DEBUG) console.error(e.stack);
     skipped.push(e.message);
   };
-  // Date order, adds before closes within a date (settleOrder). A close whose chunk isn't listed waits while a file
-  // that adds work is still to settle, and tries again after each one: a plot dated after the close numbers it first.
-  let waiting = [];
-  for (let i = 0; i < order.length; i++) {
-    const more = order.slice(i + 1).some(addsWork);
-    const attempt = (p, held) => {
+  // One pass over the files not held back, from the tree as it stands, with nothing of an earlier pass kept.
+  const settleAll = () => {
+    cache.clear();
+    settled.length = 0;
+    notes.length = 0;
+    leftovers.length = 0;
+    renumbers.clear();
+    emptiedBy.clear();
+    skipped.length = unparsed;
+    // Copies: settleOne writes a pass's numbers into a file's notes and decisions.
+    const run = order.filter((p) => !held.has(p.file)).map((p) => ({ ...p }));
+    // Date order, adds before closes within a date (settleOrder). A close whose chunk isn't listed waits while a file
+    // that adds work is still to settle, and tries again after each one: a plot dated after the close numbers it first.
+    let waiting = [];
+    for (let i = 0; i < run.length; i++) {
+      const more = run.slice(i + 1).some(addsWork);
+      const attempt = (p, later) => {
+        try {
+          settleOne(p);
+          return true;
+        } catch (e) {
+          if (e.unlisted && more) later.push(p);
+          else skip(e);
+          return false;
+        }
+      };
+      if (!attempt(run[i], waiting) || !addsWork(run[i])) continue;
+      const again = waiting;
+      waiting = [];
+      for (const p of again) attempt(p, waiting);
+    }
+    // Waiting for an adding file that then failed to settle: the close's own error says why.
+    for (const p of waiting) {
       try {
         settleOne(p);
-        return true;
       } catch (e) {
-        if (e.unlisted && more) held.push(p);
-        else skip(e);
-        return false;
+        skip(e);
       }
-    };
-    if (!attempt(order[i], waiting) || !addsWork(order[i])) continue;
-    const again = waiting;
-    waiting = [];
-    for (const p of again) attempt(p, waiting);
-  }
-  // Held for an adding file that then failed to settle: the close's own error says why.
-  for (const p of waiting) {
-    try {
-      settleOne(p);
-    } catch (e) {
-      skip(e);
+    }
+  };
+  // The end state judges an emptied spec: one a later file refilled settles whole. One still empty holds back the file
+  // that emptied it, alone, and the run starts over without it. Each new pass holds at least one more file, so it ends.
+  for (let holding = true; holding; ) {
+    settleAll();
+    holding = false;
+    for (const [spec, p] of emptiedBy) {
+      const why = holdReason(p, spec, read(spec));
+      if (!why) continue;
+      held.set(p.file, held.has(p.file) ? `${held.get(p.file)}; ${why}` : why);
+      holding = true;
     }
   }
 
@@ -1255,11 +1297,13 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
   }
 
   for (const s of skipped) console.log(`settle: skipped ${s}`);
+  for (const [file, why] of held) console.log(`settle: held back ${file}: ${why}`);
   for (const n of notes) console.log(`settle: ${n}`);
   for (const l of leftovers) console.log(`settle: ${l}`);
+  const notSettled = skipped.length || held.size ? 1 : 0;
   if (!settled.length) {
     console.log('settle: nothing settled');
-    return skipped.length ? 1 : 0;
+    return notSettled;
   }
   const ids = settled.map((p) => p.close ?? path.basename(p.file, '.md'));
   const message = `plan: settle ${ids.join(', ')}`;
@@ -1287,11 +1331,11 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
   if (leftovers.length || noCommit) {
     const how = `git ${commitArgs.map((a) => (/\s/.test(a) ? `"${a}"` : a)).join(' ')} -- ${paths.join(' ')}`;
     console.log(leftovers.length ? `settle: staged, not committed. Fix the lines above, then: ${how}` : `settle: staged, not committed (--no-commit). Run the gate, then: ${how}`);
-    return leftovers.length ? 2 : skipped.length ? 1 : 0;
+    return leftovers.length ? 2 : notSettled;
   }
   git([...commitArgs, '--', ...paths], root);
   console.log(`settle: committed ${git(['log', '-1', '--format=%h %s'], root)}`);
-  return skipped.length ? 1 : 0;
+  return notSettled;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) process.exitCode = main(process.argv.slice(2));
