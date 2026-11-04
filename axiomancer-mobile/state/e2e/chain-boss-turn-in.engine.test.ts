@@ -101,10 +101,11 @@ describe('the chapter boss fills step 4; the bridge turns it in', () => {
         const queue = store.getState().itemReward.queue;
         expect(queue.map((e) => e.item.id)).toEqual([ARMOR]);
         expect(queue[0]!.source).toContain(LINE.name!.toUpperCase());
-        // Not in the satchel yet: the queue is the one grant.
-        expect(gs(store).player.inventory.some((i) => i.id === ARMOR)).toBe(false);
+        // Carried, saved: the answer swaps that one row for the grant.
+        expect(gs(store).player.inventory.filter((i) => i.id === ARMOR)).toHaveLength(1);
 
         equipItemRewardAction(store);
+        expect(gs(store).player.inventory.filter((i) => i.id === ARMOR)).toHaveLength(1);
         expect(gs(store).player.equipment.armor?.id).toBe(ARMOR);
         expect(store.getState().itemReward.queue).toEqual([]);
     });
