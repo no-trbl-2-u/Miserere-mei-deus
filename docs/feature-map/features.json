@@ -743,7 +743,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/dev/__tests__/story-catalog.test.ts, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, axiomancer-mobile/state/e2e/scene-measure.S5-talk-C13.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/dialogue.screen.test.tsx, axiomancer-mobile/state/dev/__tests__/story-catalog.test.ts, axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
