@@ -180,7 +180,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [x] | 2026-11-07 | Pick the title plate and the four arena backgrounds (coast, forest, mountains, underworld) from your art dossier (0.5 h) | Title screen and combat backgrounds | The dossier already grades each candidate against the wordmark and a real sprite; you pick one per slot (art is yours, D88) | W2 | T | - |
 | [x] | 2026-11-07 | Plot the arena-background swap from your picks (0.5 h) | Title screen and combat backgrounds | `/plot` | W2 | T | - |
 | [ ] | 2026-11-08 | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | Chapter 1's real enemies | Claude lays your set out beside each foe's moves; you pick (art is yours, D88) | W2 | T | EN1a, EN1b, EN1c, EN1d, EN1e, EN1f, EN1g, EN1h, EN1j, EN1k, EN1l |
-| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | The MVP run | Claude turns your notes into `/plot` or `/messy` rows | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a, MR1a, MR1b, MR1c, MR1d, MR2a, MR2b, MR2c, MR2d, MR2e, TP1b, AP1a, AP1b, AP1c, AP1d, AP1e, AP1f |
+| [ ] | 2026-11-09 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | The MVP run | Claude turns your notes into `/plot` or `/messy` rows | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a, MR1a, MR1b, MR1c, MR1d, MR2a, MR2b, MR2c, MR2d, MR2e, TP1b, AP1a, AP1b, AP1c, AP1d, AP1e, AP1f, MR3a, MR3b |
 | [ ] | 2026-11-10 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | Event-node UX | Claude drafts copy options per row; you pick and rewrite | W2 | T | - |
 | [ ] | 2026-11-10 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | The Breakwater's questline | Claude drafts giver lines in the game's voice; you pick and rewrite | W2 | BW1d | BW1a, BW1b |
 | [ ] | 2026-11-11 | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | Loop health | Claude summarises each candidate's evidence since Oct 12 | W2 | T | - |
@@ -260,6 +260,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - EL1d — attended; T's check on the preview APK after EL1c; date not set.
 - FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
+- MR3c — card reports count transforms and upgrades; no T act waits on it.
+- MR3d — the flagged tests prove what they claim; no T act waits on it.
 
 ## How a window closes
 
@@ -269,6 +271,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-04** — **the mercy check's loose ends plotted as spec 147 (MR3a-MR3d)** (T, attended: "Do it"). **Added** MR3a and MR3b to the `Waits on` of the Mid-MVP check (Nov 9), since the tooltip and a lost reward touch that play, and MR3c and MR3d under Unscheduled. Nothing ticked; no date moved.
 - **2026-11-04** — **the title plate and arena plates picked and plotted (TP1b, spec 146 AP1a-AP1g)** (T, in a thread, early on the Nov 7 Items: "I pick the title plate with the lion"; "let's have all of them and change them based on where they are within the region of the map they're on with defaults based on my picks"; "Yes please" to the plot). **Ticked** both Nov 7 Items; each now names T, since TP1b became loop work with the pick made. **Added** TP1b and AP1a-AP1f to the `Waits on` of the Mid-MVP check (Nov 9), so the preview build shows the new title and plates; AP1g under `## Unscheduled`. No date moved.
 - **2026-11-03** — **the mercy check's follow-ups plotted as spec 145 (MR2a-MR2e), and spec 114's chunks retired** (T, end gate of `/pilot 144` then `/plot asap`: "Retire both"). **Added** MR2a-MR2e to the `Waits on` of the Mid-MVP check (Nov 9). **Edited** that Item: BUG1j and BUG1a leave its `Waits on`, since BUG1j shipped in #1242 and BUG1a's caption explained a gate spec 144 removed; the check still plays the Chosen, now with the new Open Hand. **Removed** the MR1e and MR1f Unscheduled lines: both closed in #1350. Nothing ticked; no date moved.
 - **2026-11-03** — **T's text for spec 144 settled at the pilot's gate; befriending leaves (MR1e, MR1f)** (T, at `/pilot`'s gate: "A: The Open Hand (Recommended)" and "Bigger MERCY (Recommended)"). **Edited** the Unscheduled lines of MR1e and MR1f: their text is in the spec and no T act waits on them. Nothing ticked; no date moved.
