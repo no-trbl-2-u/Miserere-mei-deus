@@ -37,7 +37,7 @@ import { fileURLToPath } from 'node:url'
 import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
 import { parseSpecChunks, SPEC_FILE } from './deadlines-lib.mjs'
 import { runCheck } from './plan-check.mjs'
-import { parsePending, pendingFiles } from './plan/pending.mjs'
+import { CLOSE_ID, parsePending, pendingFiles } from './plan/pending.mjs'
 import { main as settle } from './plan/settle.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -94,6 +94,27 @@ export function shapeArchive(archive, added, aliases, prs) {
       const alias = aliases.get(id)?.length ? ` (alias: ${aliases.get(id).join(', ')})` : ''
       const pr = prs.get(id) && !/\(#\d+\)\s*$/.test(rest) ? ` (#${prs.get(id)})` : ''
       return `- ${date} · ${id}${alias} · ${rest}${pr}`
+    })
+    .join('\n')
+}
+
+/**
+ * A spec with `closed` chunks out of every chunk line's needs. The kit's settle reads a needs
+ * clause to the line's end, so it misses an id followed by Miserere's `· alias: …`, and
+ * plan-check then refuses the settle for a need no spec lists.
+ *
+ * @param {string} spec  @param {Set<string>} closed chunk ids.
+ * @returns {string}
+ */
+export function dropClosedNeeds(spec, closed) {
+  return spec
+    .split('\n')
+    .map((line) => {
+      const m = /^(- \[ \] \*\*.*· needs )([^·]*?)(\s*·.*)$/.exec(line)
+      if (!m) return line
+      const needs = m[2].split(/,\s*/).map((s) => s.trim())
+      const kept = needs.filter((id) => !closed.has(id))
+      return kept.length === needs.length ? line : `${m[1]}${kept.join(', ') || '—'}${m[3]}`
     })
     .join('\n')
 }
@@ -172,6 +193,17 @@ export function settleOnce(wt, { lint = planLints, log = console.log } = {}) {
     if (shaped !== after) {
       fs.writeFileSync(archiveFile, shaped)
       git(['add', '--', 'plan/ARCHIVE.md'], wt)
+    }
+  }
+  const closed = new Set(ids.filter((id) => CLOSE_ID.test(id)))
+  const planDir = path.join(wt, 'plan')
+  for (const name of fs.readdirSync(planDir).filter((n) => SPEC_FILE.test(n))) {
+    const file = path.join(planDir, name)
+    const spec = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
+    const tidied = dropClosedNeeds(spec, closed)
+    if (tidied !== spec) {
+      fs.writeFileSync(file, tidied)
+      git(['add', '--', `plan/${name}`], wt)
     }
   }
   const was = new Set(before)

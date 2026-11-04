@@ -18,9 +18,10 @@ import { fileURLToPath } from 'node:url'
 import * as policy from './pr-policy.mjs'
 import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, treeCheckSafe, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
 import { headMarker } from './pr-review.mjs'
-import { reportSettle, settleFailure, settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
+import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
+import { pendingFiles } from './plan/pending.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -427,7 +428,7 @@ test('settle on merge: a merged PR\'s pending close settles on origin/main, with
     assert.match(archive, /^- 2026-10-01 · 06\.1 \(alias: OLD1\) · Old work · 1234567 \(#7\)$/m, 'older lines untouched')
     const spec = g(work, 'show', 'origin/main:plan/07-search.md')
     assert.doesNotMatch(spec, /\*\*07\.1\*\*/)
-    assert.match(spec, /\*\*07\.2\*\* Zip/)
+    assert.match(spec, /\*\*07\.2\*\* Zip · S · closes A2 · needs — · alias: XY1b/, 'the closed need left, past the alias the kit reads as part of it')
     assert.doesNotMatch(g(work, 'ls-tree', '-r', '--name-only', 'origin/main', 'plan/'), /plan\/pending\/07\.1\.md/)
     assert.match(g(work, 'show', 'origin/main:plan/README.md'), /\| 1 left \|/)
     // The settle commit's own push settles nothing.
@@ -489,6 +490,22 @@ test('settle on merge: a pending file with a footgun settles into the list this 
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+test('dropClosedNeeds: a closed id leaves a needs list that an alias follows, and nothing else moves', () => {
+  const closed = new Set(['146.1', '146.4'])
+  const line = (needs) => `- [ ] **146.6** Every foe · S · closes A6 · needs ${needs} · alias: AP1f`
+  assert.equal(dropClosedNeeds(line('146.1, 146.4'), closed), line('—'))
+  assert.equal(dropClosedNeeds(line('146.1, 146.2'), closed), line('146.2'))
+  assert.equal(dropClosedNeeds(line('146.2'), closed), line('146.2'))
+  const prose = '- **A1** It · needs 146.1 · says so'
+  assert.equal(dropClosedNeeds(prose, closed), prose)
+})
+
+test('no pending file names a bare dash as a footgun: settle reads it as a slug and skips the file', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const dashed = pendingFiles(root).filter((f) => /^footguns:\s*-\s*$/m.test(f.text)).map((f) => f.file)
+  assert.deepEqual(dashed, [], 'leave the footguns line empty, or out')
 })
 
 test('the footgun list passes its lint, and a trap has one home across it and the lessons', () => {
