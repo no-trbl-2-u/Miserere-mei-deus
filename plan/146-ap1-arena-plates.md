@@ -85,24 +85,19 @@ is no foe, and it is judged by alpha values, never the file's flag.
 
 ## Acceptance
 
-- **A3** A map node may name a plate by id; combat shows it, else the region default, else the fallback; a test fails on a
-  node naming an id that does not exist. [T to confirm #2]
-- **A5** `ARENA_PLATES_SHOWN` is true; a new decision supersedes D32; the combat suites pass with plates on.
 - **A7** T's node plate picks are in the map layouts.
 
 ## Open questions
 
 1. When does T pick node plates? Default: date not set, after the report (146.6). [T to confirm #1]
-2. Which plates may a node name? Default: any of the twelve. [T to confirm #2]
+2. Which plates may a node name? Any of the twelve (T, 2026-11-04): the only check is that the plate id exists, so a node may name a plate from another region.
 3. Does the radial figure plate stay under the new matte? No: T ruled "Remove it" at the 146 gate; the matte replaces it.
 
 ## Chunks
 
-Measure: 3 open · 4 closed · next A8
+Measure: 1 open · 6 closed · next A8
 
-- [ ] **146.3** A node may name its plate · M · closes A3 · needs — · alias: AP1c
-- [ ] **146.5** Combat plates back on · S · closes A5 · needs — · alias: AP1e
-- [ ] **146.7** T picks node plates (owner-led) · S · closes A7 · needs 146.3 · alias: AP1g
+- [ ] **146.7** T picks node plates (owner-led) · S · closes A7 · needs — · alias: AP1g
 
 ### 146.1 (AP1a) — Pull in the twelve arena plates · M · closes A1 · requires —
 

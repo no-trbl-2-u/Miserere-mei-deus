@@ -121,3 +121,10 @@ Defaults taken: the library is `ARENA_PLATES` keyed by plate id (exported with `
 - Region membership is read from `mapContent(def).enemies` per Act 1 map: the Breakwater stages all 17 foes, each other region stages Float-Eye, Green Jelly and Death Beholder. No foe is regionless.
 - With the backing on, separation is the same on every plate of a region by construction (the foe sits wholly on its matte); the report says so and tables the no-backing figure beside it. The aura is not measured.
 - Regenerate with `node axiomancer-mobile/scripts/measure-arena-separation.mjs`. A measurement, never a gate (D57).
+
+Defaults taken: `NodeLayout.arena?: ArenaPlateId` is a type-only import from assets (state layouts already import assets, assets import nothing from state). The resolver cannot look up layouts without a cycle, so `arenaBackdropFor` and `arenaAltTextFor` take `(region, nodePlate?)` and `nodeArenaFor(region, nodeId)` in `state/exploration-maps` turns the node into its plate; the pane calls both, and art and words follow one choice. The route already held `nodeId`; the panel now passes it to the board and the board to the pane. A fight with no node (labyrinth, dev sandbox) passes none. No layout names a plate yet.
+
+- A5's "a new decision supersedes D32" is met once, by `D?combat-plates-on` in `plan/pending/plot-arena-plates.md`, which already supersedes D32. This close files no second copy; it relies on that plot settling.
+- The pane's figure geometry is unchanged.
+- With plates on, a hard dark edge and a lighter rectangle showed under the HUD on web. Cause: the pane's three scrim `Svg`s named no size, and web draws that as the browser's default 300x150 box. They now say `width="100%" height="100%"`; native is unchanged.
+- `map-walk-e2e.mjs` asserted the black scene (no image); it now asserts the plate is drawn.
