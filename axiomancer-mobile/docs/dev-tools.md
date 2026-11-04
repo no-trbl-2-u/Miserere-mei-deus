@@ -357,7 +357,7 @@ shaping who the player is.
 | Leaf | What it does | Test ids |
 |---|---|---|
 | `DebugCurrencyControl` | +50S, +500S, BROKE (wallet to zero). Lived under PLAYER until 2026-10-16 | `debug-currency-{small-grant,large-grant,broke}` |
-| `DebugRunControls` | SAVE, RESET RUN (keep character), NEW RUN; gallery links to `/devart`, `/devart/rooms`, `/devaftermath?panel=defeat|parley` | `debug-run-{save,reset,new}`, `debug-gallery-{enemy-art,rooms,defeat,parley}` |
+| `DebugRunControls` | SAVE, RESET RUN (keep character), NEW RUN; gallery links to `/devart`, `/devart/rooms`, `/devaftermath?panel=defeat` | `debug-run-{save,reset,new}`, `debug-gallery-{enemy-art,rooms,defeat}` |
 | `DebugLogViewer` | AXM Log ring buffer with level / domain filters and the previous-session tail | `debug-log-viewer`, … |
 
 ## Retired in the 2026-09 audit

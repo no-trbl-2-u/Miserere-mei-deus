@@ -67,7 +67,7 @@ function check(cond, msg) {
 // The three relics the walk uses, as the engine's relic library defines them.
 const RING = {
     id: 'relic-disarming-plea', name: "Suppliant's Ring", category: 'equipment', slot: 'relic',
-    description: 'MERCY 6 on the foe: it heals 6, and its MERCY grows by 6. When the clock runs out, MERCY bursts for twice its total.',
+    description: 'Grants The Open Hand: MERCY on the foe. It heals that much, and its MERCY grows by that much. When the clock runs out, MERCY bursts for twice its total.',
     statModifiers: [], grantsSignature: 'sig-disarming-plea', laneId: 'merciful', relicSource: 'elite',
 }
 const BROOCH = {

@@ -117,6 +117,16 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         expect(GreenJelly.journalEntry!.title).toMatch(/Face Broker/);
     });
 
+    it('a spare story keeps its flag and a journal entry, across the whole library', () => {
+        const withSpareStory = EnemyLibrary.filter(e => e.spareStory);
+        expect(withSpareStory.map(e => e.id)).toContain(GreenJelly.id);
+        for (const enemy of withSpareStory) {
+            expect(enemy.spareStory!.flagSet, `${enemy.id} flagSet`).toMatch(/\S/);
+            expect(enemy.journalEntry, `${enemy.id} journalEntry`).toBeDefined();
+            expect(enemy.journalEntry!.title, `${enemy.id} journal title`).toMatch(/\S/);
+        }
+    });
+
     it('un-authored enemies (Sandbag_01 — test sandbox per Phase 74 D1) have all three fields undefined', () => {
         expect(Sandbag_01.finalBlowLines).toBeUndefined();
         expect(Sandbag_01.pactLines).toBeUndefined();

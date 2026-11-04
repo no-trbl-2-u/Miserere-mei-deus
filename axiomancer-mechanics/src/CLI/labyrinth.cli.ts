@@ -222,7 +222,7 @@ async function gatePrompt(store: StoreHandle, act: LabyrinthActDef, roomId: stri
 /** The act's boss room: acts I-II fight straight away; the finale
  *  (act III) first shows the debt reckoning and offers the naming fork
  *  (the CLI surfaces it as the pre-fight rite for the headless driver). */
-async function bossRoomSequence(
+export async function bossRoomSequence(
     store: StoreHandle,
     act: LabyrinthActDef,
     flags: CliFlags,

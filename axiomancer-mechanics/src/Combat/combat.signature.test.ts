@@ -272,6 +272,15 @@ describe('A10 · Open Vein (the Bleeding Signet)', () => {
         expect(r.state.conviction).toBe(0);
     });
 
+    it('prints the HEAL the engine applies, Mind-scaled', () => {
+        const s = sacFight(60, 4);
+        const minded = { ...s, player: { ...s.player, baseStats: { ...s.player.baseStats, mind: 25 } } };
+        const skill = getSignatureSkill(VEIN)!;
+        const applied = playSignatureSkill(minded, VEIN).state.player.health - 60;
+        expect(applied).toBeGreaterThan(OPEN_VEIN_HEAL);
+        expect(signatureText(skill, minded.player.baseStats)).toContain(`HEAL ${applied}.`);
+    });
+
     it('triggers the foe\'s LEECH: it loses its potency now, you HEAL that, and no turn ticks off', () => {
         const base = sacFight(60, 4);
         const s = { ...base, program: { ...(base.program ?? initProgramLedger()), leechTurns: 2, leechPotency: 6 } };

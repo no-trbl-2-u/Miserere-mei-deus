@@ -68,7 +68,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/Cards/e2e/blood-price.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/Atlas/atlas.data.test.ts, axiomancer-mechanics/src/CLI/e2e/dev-tools.engine.test.ts, axiomancer-mechanics/src/CLI/e2e/labyrinth.cli.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
