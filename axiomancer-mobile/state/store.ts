@@ -255,6 +255,14 @@ export interface PendingItemReward {
      * Omitted means the engine default (the last worn relic).
      */
     replaceIndex?: number;
+    /**
+     * The item is already in the satchel, saved there. The commit takes that
+     * row out and grants it afresh, so the hand-over is one grant and a
+     * closed app keeps the item. Omitted: the item is not carried yet.
+     */
+    carried?: boolean;
+    /** What the run log records the grant as coming from, when it differs from the eyebrow `source`. */
+    logFrom?: string;
 }
 
 /**

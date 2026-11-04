@@ -18,18 +18,11 @@ import {
     qualifiesForItemRewardScreen,
     questRewardItem,
 } from '@mechanics';
-import type { Equipment, GameState, Item, QuestLog } from '@mechanics';
+import type { Equipment, GameState, Item, QuestLog, SpareReward } from '@mechanics';
 
 import type { AppStore } from '../store';
-import { eliteDropSource, questRewardSource } from '../presenters/relic-source.copy';
-import { offerItemRewardAction } from './store-actions';
-
-/** Drops the LAST inventory row with `id` (the clone a grant just appended). */
-function withoutLastRow(inventory: readonly Item[], id: string): Item[] {
-    const index = inventory.map(item => item.id).lastIndexOf(id);
-    if (index === -1) return [...inventory];
-    return [...inventory.slice(0, index), ...inventory.slice(index + 1)];
-}
+import { eliteDropSource, questRewardSource, spareGearSource } from '../presenters/relic-source.copy';
+import { offerItemRewardAction, withoutLastRow } from './store-actions';
 
 /**
  * After any step that can complete a quest: every quest completed since
@@ -85,4 +78,23 @@ export function offerElitePieceAction(
     eliteName: string,
 ): void {
     offerItemRewardAction(store, piece, { source: eliteDropSource(eliteName), includeInline: true });
+}
+
+/**
+ * Queues the weapon, armor or relic a Spare paid on the item-reward screen,
+ * once the spared end screen is closed. The piece is already in the satchel
+ * (`endCombat` paid it and the settle saved it), so the entry is `carried`: the
+ * answer swaps that row for the grant, and a closed app keeps the item. A
+ * result that is not gear (shillings, a potion, a card) queues nothing, and a
+ * second call for the same piece queues nothing. Returns the piece queued.
+ */
+export function offerSpareGearAction(store: AppStore, reward: SpareReward | undefined, foeName: string): Item | null {
+    if (!reward || (reward.kind !== 'gear' && reward.kind !== 'relic')) return null;
+    const state = store.getState();
+    const item = reward.item;
+    if (!(state as unknown as GameState).player?.inventory.some(row => row.id === item.id)) return null;
+    const waiting = state.itemReward?.queue ?? [];
+    if (waiting.some(entry => entry.carried && entry.item.id === item.id)) return null;
+    offerItemRewardAction(store, item, { source: spareGearSource(foeName), includeInline: true, carried: true, logFrom: 'spare' });
+    return item;
 }

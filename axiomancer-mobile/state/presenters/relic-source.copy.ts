@@ -8,6 +8,11 @@ export function questRewardSource(questName: string): string {
     return `QUEST REWARD: ${questName.toUpperCase()}`;
 }
 
+/** The eyebrow for the piece a spared foe's mercy pays. */
+export function spareGearSource(foeName: string): string {
+    return `SPARED: ${foeName.toUpperCase()}`;
+}
+
 /** The eyebrow for the relic a won elite fight drops. */
 export function eliteDropSource(eliteName: string): string {
     return `DROPPED BY ${eliteName.toUpperCase()}`;

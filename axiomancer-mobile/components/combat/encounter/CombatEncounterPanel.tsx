@@ -60,6 +60,7 @@ import {
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { MERCY_CHECK_PROMPT } from '@/state/presenters/mercy-check.copy';
 import { spareSummaryLines } from '@/state/presenters/spare-reward.engine';
+import { offerSpareGearAction } from '@/state/item-reward/relic-sources';
 import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { devSettingsStore } from '@/state/dev/dev-settings';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
@@ -702,7 +703,10 @@ export function CombatEncounterPanel({
             });
         } catch { /* logging never breaks play */ }
         onExit(live.finalOutcome ?? null);
-    }, [onExit, live.finalOutcome, store]);
+        // The spared end screen is closed: a piece of gear it paid goes to the
+        // item-reward screen (queued after the exit, so the push lands last).
+        offerSpareGearAction(store, spare?.reward, enemy.name ?? '');
+    }, [onExit, live.finalOutcome, store, spare, enemy.name]);
 
     // Economy write-back — fires once, the instant combat reaches a terminal
     // outcome (so spoils land even if the player lingers on the summary).

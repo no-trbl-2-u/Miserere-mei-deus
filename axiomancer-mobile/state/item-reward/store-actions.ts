@@ -59,6 +59,14 @@ export interface OfferItemRewardOptions {
      * Default `false`: the predicate partitions them out and the caller keeps its existing inline grant for them.
      */
     includeInline?: boolean;
+    /**
+     * The item is already in the satchel (a Spare's gear, paid and saved at
+     * the end of the fight). The commit swaps that row for the grant, so it
+     * is never granted twice and an app closed before the answer keeps it.
+     */
+    carried?: boolean;
+    /** The run log's `from` for the grant; omitted, the eyebrow `source` stands. */
+    logFrom?: string;
 }
 
 export interface OfferItemRewardResult {
@@ -69,6 +77,13 @@ export interface OfferItemRewardResult {
      * NOT granted here — the caller still owns them.
      */
     inline: readonly Item[];
+}
+
+/** Drops the LAST inventory row with `id` (the clone a grant just appended). */
+export function withoutLastRow(inventory: readonly Item[], id: string): Item[] {
+    const index = inventory.map(item => item.id).lastIndexOf(id);
+    if (index === -1) return [...inventory];
+    return [...inventory.slice(0, index), ...inventory.slice(index + 1)];
 }
 
 function setQueue(store: AppStore, queue: readonly PendingItemReward[]): void {
@@ -118,6 +133,8 @@ export function offerItemRewardAction(
         source: options.source ?? null,
         settleFlags: options.settleFlags ?? [],
         ...(options.replaceIndex === undefined ? {} : { replaceIndex: options.replaceIndex }),
+        ...(options.carried ? { carried: true } : {}),
+        ...(options.logFrom ? { logFrom: options.logFrom } : {}),
     }));
 
     setQueue(store, [...currentQueue(store), ...entries]);
@@ -175,7 +192,11 @@ export function commitItemRewardAction(
     const state = store.getState() as unknown as GameState;
     const equip = mode === 'equip' && isEquipment(head.item);
 
-    const result = grantItem(state.player, head.item, {
+    // A carried item is swapped for its grant: one row either way.
+    const holder = head.carried
+        ? { ...state.player, inventory: withoutLastRow(state.player.inventory, head.item.id) }
+        : state.player;
+    const result = grantItem(holder, head.item, {
         equip,
         ...(head.replaceIndex === undefined ? {} : { replaceIndex: head.replaceIndex }),
     });
@@ -198,7 +219,7 @@ export function commitItemRewardAction(
     persist(store);
 
     // The run log: the item that came into the pack, and what handed it over.
-    recordItemGained(store, result.granted ?? head.item, head.source ?? 'reward');
+    recordItemGained(store, result.granted ?? head.item, head.logFrom ?? head.source ?? 'reward');
 
     return {
         applied: true,
