@@ -98,7 +98,7 @@ const DISABLED_ACTION_CONTENT: Record<string, TooltipContent> = {
 const CHRONICLE_CONTENT: Record<string, TooltipContent> = {
     'combat:ended': {
         title: 'COMBAT · ENDED',
-        body: 'a fight resolved one way or another. the body records the outcome — victory, defeat, retreat — and the foe who delivered it.',
+        body: 'a fight resolved one way or another. the body records the outcome — victory or defeat — and the foe who delivered it.',
         footnote: 'engine: combat:ended',
     },
     'character:levelup': {

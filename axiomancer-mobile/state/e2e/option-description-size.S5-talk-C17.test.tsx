@@ -62,7 +62,7 @@ function villageStore(): AppStore {
     return store;
 }
 
-/** A parley whose only reply previews a coin consequence. */
+/** A dialogue whose only reply previews a coin consequence. */
 function dialogueStore(): AppStore {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     store.setState({

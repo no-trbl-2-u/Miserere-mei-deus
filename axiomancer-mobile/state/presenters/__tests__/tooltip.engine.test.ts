@@ -85,6 +85,12 @@ describe('selectTooltipContentFor', () => {
             expect(content?.footnote).toMatch(/^engine: /);
         });
 
+        it('names only the outcomes a fight can reach', () => {
+            const body = selectTooltipContentFor('chronicle-entry', 'combat:ended', EMPTY_STATE)?.body ?? '';
+            expect(body).toContain('victory or defeat');
+            expect(body).not.toContain('retreat');
+        });
+
         it('returns null for an unknown chronicle id', () => {
             expect(selectTooltipContentFor('chronicle-entry', 'whatever', EMPTY_STATE)).toBeNull();
         });
