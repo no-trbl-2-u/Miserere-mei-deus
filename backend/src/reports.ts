@@ -22,6 +22,9 @@
  *   picked        times it was the reward taken
  *   skipped       times a reward showed it and another card, or none, was taken
  *   removed       times the rest site removed it
+ *   transformed   times a Spare table result replaced it (the card before)
+ *   transformedInto  times a Spare table result made it (the card after)
+ *   upgraded      times an upgrade changed it (the card before)
  *
  * `held` pairs draws and plays without tracking copies. A copy drawn after
  * `d` turn ends and played after `p` sat through `p - d` of them; a copy never
@@ -50,7 +53,8 @@
  *
  * card-vs-bot (phase SM1h), per card at ONE build, T's play beside each sim policy's. A column is `human` or a
  * sim policy id (a sim fight's policy is its run's `play_runs.policy_id`, else its `solver`); `harness` rows
- * and `?source=` are not read. Per column and card: fightsInDeck, drawn, played, offered, picked, skipped, and
+ * and `?source=` are not read. Per column and card: fightsInDeck, drawn, played, offered, picked, skipped,
+ * transformed, transformedInto and upgraded (as in card-usage), and
  * the rates fightsInDeck/drawn/played per fight in the column and picked/skipped per offer of the card. With no
  * `?build=` the build is the newest one holding both a `human` and a `sim` fight, and the body names it.
  *
@@ -111,6 +115,9 @@ export interface CardUsageRow {
     picked: number;
     skipped: number;
     removed: number;
+    transformed: number;
+    transformedInto: number;
+    upgraded: number;
 }
 
 export interface CardUsageReport {
@@ -177,6 +184,9 @@ export interface CardVsBotCounts {
     offered: number;
     picked: number;
     skipped: number;
+    transformed: number;
+    transformedInto: number;
+    upgraded: number;
     inDeckPerFight: number | null;
     drawnPerFight: number | null;
     playedPerFight: number | null;
@@ -383,15 +393,27 @@ WITH ${FIGHTS_CTE},
         FROM de, json_each(de.offered_json) AS o
         WHERE de.kind IN ('reward', 'cache-reward') GROUP BY o.value
     ),
-    removals AS (
-        SELECT card_id, COUNT(*) AS n FROM de WHERE kind = 'remove' AND card_id IS NOT NULL GROUP BY card_id
+    -- A transform counts for the card it replaced (card_id) and for the one it became (the one entry of
+    -- offered_json), so a card that only ever appears as a result still gets a row. The union is inside this
+    -- CTE, so the cards CTE below keeps its four terms.
+    changes AS (
+        SELECT card_id, SUM(removed) AS removed, SUM(transformed) AS transformed, SUM(upgraded) AS upgraded,
+               SUM(became) AS became
+        FROM (
+            SELECT card_id, kind = 'remove' AS removed, kind = 'transform' AS transformed, kind = 'upgrade' AS upgraded,
+                   0 AS became
+            FROM de WHERE kind IN ('remove', 'transform', 'upgrade')
+            UNION ALL
+            SELECT json_extract(offered_json, '$[0]'), 0, 0, 0, 1 FROM de WHERE kind = 'transform'
+        )
+        WHERE card_id IS NOT NULL GROUP BY card_id
     ),
     -- D1 caps a compound SELECT at a few terms. A fizzle always follows a
     -- play of its card and a pick is always among the cards offered, so
     -- neither adds a card the four below lack.
     cards AS (
         SELECT card_id FROM in_deck UNION SELECT card_id FROM hand
-        UNION SELECT card_id FROM offers UNION SELECT card_id FROM removals
+        UNION SELECT card_id FROM offers UNION SELECT card_id FROM changes
     )
 SELECT c.card_id AS cardId,
        COALESCE(i.n, 0) AS fightsInDeck,
@@ -404,13 +426,16 @@ SELECT c.card_id AS cardId,
        COALESCE(o.offered, 0) AS offered,
        COALESCE(o.picked, 0) AS picked,
        COALESCE(o.skipped, 0) AS skipped,
-       COALESCE(r.n, 0) AS removed
+       COALESCE(r.removed, 0) AS removed,
+       COALESCE(r.transformed, 0) AS transformed,
+       COALESCE(r.became, 0) AS transformedInto,
+       COALESCE(r.upgraded, 0) AS upgraded
 FROM cards AS c
 LEFT JOIN in_deck AS i ON i.card_id = c.card_id
 LEFT JOIN hand AS h ON h.card_id = c.card_id
 LEFT JOIN fizzles AS z ON z.card_id = c.card_id
 LEFT JOIN offers AS o ON o.card_id = c.card_id
-LEFT JOIN removals AS r ON r.card_id = c.card_id
+LEFT JOIN changes AS r ON r.card_id = c.card_id
 WHERE c.card_id IS NOT NULL AND (?3 IS NULL OR c.card_id = ?3)
 ORDER BY fightsInDeck DESC, played DESC, cardId`;
 
@@ -532,12 +557,14 @@ WITH f AS (
     in_deck AS (
         SELECT f.col, d.value AS card_id, COUNT(DISTINCT f.id) AS n FROM f, json_each(f.deck_json) AS d GROUP BY 1, 2
     ),
-    draws AS (
-        SELECT ev.col, c.value AS card_id, COUNT(*) AS n
-        FROM ev, json_each(ev.v, '$.cards') AS c WHERE ev.kind = 'hand-drawn' GROUP BY 1, 2
-    ),
-    plays AS (
-        SELECT col, json_extract(v, '$.cardId') AS card_id, COUNT(*) AS n FROM ev WHERE kind = 'card-played' GROUP BY 1, 2
+    -- Draws and plays share one CTE, so keys keeps four terms with the card changes below.
+    hand AS (
+        SELECT col, card_id, SUM(drawn) AS drawn, SUM(played) AS played FROM (
+            SELECT ev.col, c.value AS card_id, 1 AS drawn, 0 AS played
+            FROM ev, json_each(ev.v, '$.cards') AS c WHERE ev.kind = 'hand-drawn'
+            UNION ALL
+            SELECT col, json_extract(v, '$.cardId'), 0, 1 FROM ev WHERE kind = 'card-played'
+        ) GROUP BY col, card_id
     ),
     de AS (
         SELECT deck_events.kind, deck_events.card_id, deck_events.offered_json, ${COLUMN_OF_DECK_EVENT} AS col
@@ -549,19 +576,31 @@ WITH f AS (
                SUM(de.card_id IS NULL OR o.value <> de.card_id) AS skipped
         FROM de, json_each(de.offered_json) AS o WHERE de.kind IN ('reward', 'cache-reward') GROUP BY 1, 2
     ),
+    -- A transform counts for the card it replaced and for the one it became, as in card-usage.
+    changes AS (
+        SELECT col, card_id, SUM(transformed) AS transformed, SUM(upgraded) AS upgraded, SUM(became) AS became
+        FROM (
+            SELECT col, card_id, kind = 'transform' AS transformed, kind = 'upgrade' AS upgraded, 0 AS became
+            FROM de WHERE kind IN ('transform', 'upgrade')
+            UNION ALL
+            SELECT col, json_extract(offered_json, '$[0]'), 0, 0, 1 FROM de WHERE kind = 'transform'
+        )
+        WHERE card_id IS NOT NULL GROUP BY col, card_id
+    ),
     -- Four terms: D1 caps a compound SELECT at a few.
     keys AS (
-        SELECT col, card_id FROM in_deck UNION SELECT col, card_id FROM draws
-        UNION SELECT col, card_id FROM plays UNION SELECT col, card_id FROM offers
+        SELECT col, card_id FROM in_deck UNION SELECT col, card_id FROM hand
+        UNION SELECT col, card_id FROM offers UNION SELECT col, card_id FROM changes
     )
 SELECT k.col AS col, k.card_id AS cardId,
-       COALESCE(i.n, 0) AS fightsInDeck, COALESCE(d.n, 0) AS drawn, COALESCE(p.n, 0) AS played,
-       COALESCE(o.offered, 0) AS offered, COALESCE(o.picked, 0) AS picked, COALESCE(o.skipped, 0) AS skipped
+       COALESCE(i.n, 0) AS fightsInDeck, COALESCE(h.drawn, 0) AS drawn, COALESCE(h.played, 0) AS played,
+       COALESCE(o.offered, 0) AS offered, COALESCE(o.picked, 0) AS picked, COALESCE(o.skipped, 0) AS skipped,
+       COALESCE(x.transformed, 0) AS transformed, COALESCE(x.became, 0) AS transformedInto, COALESCE(x.upgraded, 0) AS upgraded
 FROM keys AS k
 LEFT JOIN in_deck AS i ON i.col = k.col AND i.card_id = k.card_id
-LEFT JOIN draws AS d ON d.col = k.col AND d.card_id = k.card_id
-LEFT JOIN plays AS p ON p.col = k.col AND p.card_id = k.card_id
+LEFT JOIN hand AS h ON h.col = k.col AND h.card_id = k.card_id
 LEFT JOIN offers AS o ON o.col = k.col AND o.card_id = k.card_id
+LEFT JOIN changes AS x ON x.col = k.col AND x.card_id = k.card_id
 WHERE k.card_id IS NOT NULL`;
 
 // run-summary. `?1` build, `?2` source (null for every source). A run's policy counts for `sim` only.
@@ -727,7 +766,7 @@ export async function signatureUsage(db: D1Database, query: ReportQuery): Promis
 
 const rate = (n: number, of: number): number | null => (of === 0 ? null : Math.round((100 * n) / of) / 100);
 
-const NO_COUNTS = { fightsInDeck: 0, drawn: 0, played: 0, offered: 0, picked: 0, skipped: 0 };
+const NO_COUNTS = { fightsInDeck: 0, drawn: 0, played: 0, offered: 0, picked: 0, skipped: 0, transformed: 0, transformedInto: 0, upgraded: 0 };
 
 function countsOf(raw: typeof NO_COUNTS, fights: number): CardVsBotCounts {
     return {
@@ -761,7 +800,8 @@ export async function cardVsBot(db: D1Database, query: ReportQuery): Promise<Car
 
     const byCard = new Map<string, Map<string, typeof NO_COUNTS>>();
     for (const row of cards.results as unknown as VsBotCardRow[]) {
-        const raw = { fightsInDeck: +row.fightsInDeck, drawn: +row.drawn, played: +row.played, offered: +row.offered, picked: +row.picked, skipped: +row.skipped };
+        const raw = { fightsInDeck: +row.fightsInDeck, drawn: +row.drawn, played: +row.played, offered: +row.offered, picked: +row.picked, skipped: +row.skipped,
+            transformed: +row.transformed, transformedInto: +row.transformedInto, upgraded: +row.upgraded };
         const perCol = byCard.get(row.cardId) ?? new Map<string, typeof NO_COUNTS>();
         perCol.set(row.col, raw);
         byCard.set(row.cardId, perCol);

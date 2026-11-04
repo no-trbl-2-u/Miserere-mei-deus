@@ -88,6 +88,10 @@ beforeAll(async () => {
     await post('/v1/deck-events', reward({ source: 'sim', solver: 'bot', runId: 'run-d', cardId: 'guard', offered: ['guard', 'spark'] }));
     await post('/v1/deck-events', reward({ source: 'sim', solver: 'merciful', cardId: null, offered: ['ember'] }));
     await post('/v1/deck-events', reward({ source: 'harness', solver: 'harness', cardId: 'ghost', offered: ['ghost'] }));
+    // T transforms strike into cinder (a card seen nowhere else) and upgrades guard; the defender upgrades guard too.
+    await post('/v1/deck-events', reward({ kind: 'transform', cardId: 'strike', offered: ['cinder'] }));
+    await post('/v1/deck-events', reward({ kind: 'upgrade', cardId: 'guard', offered: ['guard+'] }));
+    await post('/v1/deck-events', reward({ kind: 'upgrade', source: 'sim', solver: 'bot', runId: 'run-d', cardId: 'guard', offered: ['guard+'] }));
 
     // The newest build by row, but T alone played it.
     await post('/v1/fights', fight({ buildCommit: HUMAN_ONLY, deck: ['solo'], events: stamp([played('solo')]) }));
@@ -102,7 +106,7 @@ beforeAll(async () => {
     await playRun('rs-h2', 'human', { buildCommit: 'runsum2' });
 });
 
-const ZERO = { fightsInDeck: 0, drawn: 0, played: 0, offered: 0, picked: 0, skipped: 0 };
+const ZERO = { fightsInDeck: 0, drawn: 0, played: 0, offered: 0, picked: 0, skipped: 0, transformed: 0, transformedInto: 0, upgraded: 0 };
 const NO_RATES = { inDeckPerFight: null, drawnPerFight: null, playedPerFight: null, pickedPerOffer: null, skippedPerOffer: null };
 
 describe('card-vs-bot', () => {
@@ -114,7 +118,7 @@ describe('card-vs-bot', () => {
             { column: 'defender', source: 'sim', fights: 1 },
             { column: 'merciful', source: 'sim', fights: 1 },
         ]);
-        expect(body.cards.map(c => c.cardId)).toEqual(['strike', 'guard', 'ember', 'spark']);
+        expect(body.cards.map(c => c.cardId)).toEqual(['strike', 'guard', 'cinder', 'ember', 'spark']);
     });
 
     it('counts per column and gives each rate per fight or per offer', async () => {
@@ -122,7 +126,7 @@ describe('card-vs-bot', () => {
         const card = (id: string) => cards.find(c => c.cardId === id)!.columns;
 
         expect(card('strike')).toEqual({
-            human: { ...ZERO, fightsInDeck: 2, drawn: 1, played: 2, inDeckPerFight: 1, drawnPerFight: 0.5, playedPerFight: 1, pickedPerOffer: null, skippedPerOffer: null },
+            human: { ...ZERO, fightsInDeck: 2, drawn: 1, played: 2, transformed: 1, inDeckPerFight: 1, drawnPerFight: 0.5, playedPerFight: 1, pickedPerOffer: null, skippedPerOffer: null },
             defender: { ...ZERO, ...NO_RATES, inDeckPerFight: 0, drawnPerFight: 0, playedPerFight: 0 },
             merciful: { ...ZERO, fightsInDeck: 1, drawn: 2, played: 1, inDeckPerFight: 1, drawnPerFight: 2, playedPerFight: 1, pickedPerOffer: null, skippedPerOffer: null },
         });
@@ -133,6 +137,17 @@ describe('card-vs-bot', () => {
         expect(card('ember').human).toMatchObject({ offered: 2, picked: 1, skipped: 1, pickedPerOffer: 0.5, skippedPerOffer: 0.5 });
         expect(card('ember').merciful).toMatchObject({ offered: 1, picked: 0, skipped: 1, skippedPerOffer: 1 });
         expect(card('spark').defender).toMatchObject({ offered: 1, skipped: 1 });
+    });
+
+    it('counts transforms and upgrades per column, a transform result getting its own row', async () => {
+        const { cards } = await report<CardVsBotReport>(`/v1/reports/card-vs-bot?build=${NEW}`);
+        const card = (id: string) => cards.find(c => c.cardId === id)!.columns;
+        expect(card('strike').human).toMatchObject({ transformed: 1, transformedInto: 0, upgraded: 0 });
+        expect(card('cinder').human).toMatchObject({ transformed: 0, transformedInto: 1, upgraded: 0, fightsInDeck: 0 });
+        expect(card('cinder').defender).toMatchObject({ transformedInto: 0 });
+        expect(card('guard').human).toMatchObject({ upgraded: 1 });
+        expect(card('guard').defender).toMatchObject({ upgraded: 1 });
+        expect(card('guard').merciful).toMatchObject({ upgraded: 0 });
     });
 
     it('never reads a harness row', async () => {
