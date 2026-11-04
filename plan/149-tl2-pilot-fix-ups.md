@@ -44,16 +44,14 @@
 - **A1** A PR changing `scripts/pr-files.mjs` is held as pipeline; every review and merge read of a PR's files covers past 100 files and pairs them with the head they belong to, with tests for a moved head and a 101-file PR.
 - **A2** `pr-merge`, `pr-risk --replay` and `triage-match` read whole file lists, each with a test past 100 files.
 - **A3** A run where one pending file would empty a spec settles every other file and names the held one; a spec emptied mid-run and refilled later settles whole; the CLI's red path and the `--ref` misuse are tested.
-- **A5** A quest reward and an elite drop of the same item each reach the item reward screen once, through an app close, with tests that fail on today's code.
 
 ## Chunks
 
-Measure: 4 open · 1 closed · next A6
+Measure: 3 open · 2 closed · next A6
 
 - [ ] **149.1** The pipeline holds its file reader and reads PRs whole and consistent · M · closes A1 · needs — · alias: TL2a
 - [ ] **149.2** The last 100-file readers read whole lists · S · closes A2 · needs 149.1 · alias: TL2b
 - [ ] **149.3** Settle holds back only the file that empties a spec · M · closes A3 · needs — · alias: TL2c
-- [ ] **149.5** Same item from a quest and an elite keeps both offers · S · closes A5 · needs — · alias: MR4b
 
 ### 149.1 (TL2a) — The pipeline holds its file reader and reads PRs whole and consistent · M · closes A1 · requires —
 

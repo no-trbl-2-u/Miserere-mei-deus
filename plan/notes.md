@@ -128,3 +128,5 @@ Defaults taken: `NodeLayout.arena?: ArenaPlateId` is a type-only import from ass
 - The pane's figure geometry is unchanged.
 - With plates on, a hard dark edge and a lighter rectangle showed under the HUD on web. Cause: the pane's three scrim `Svg`s named no size, and web draws that as the browser's default 300x150 box. They now say `width="100%" height="100%"`; native is unchanged.
 - `map-walk-e2e.mjs` asserted the black scene (no image); it now asserts the plate is drawn.
+
+Defaults taken: an elite drop adds its own satchel row when carried entries already hold the existing ones; spare-gear dedupe left id-only (not in this chunk's files).
