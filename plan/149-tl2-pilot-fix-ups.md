@@ -42,14 +42,12 @@
 ## Acceptance
 
 - **A2** `pr-merge`, `pr-risk --replay` and `triage-match` read whole file lists, each with a test past 100 files.
-- **A3** A run where one pending file would empty a spec settles every other file and names the held one; a spec emptied mid-run and refilled later settles whole; the CLI's red path and the `--ref` misuse are tested.
 
 ## Chunks
 
-Measure: 2 open · 3 closed · next A6
+Measure: 1 open · 4 closed · next A6
 
 - [ ] **149.2** The last 100-file readers read whole lists · S · closes A2 · needs — · alias: TL2b
-- [ ] **149.3** Settle holds back only the file that empties a spec · M · closes A3 · needs — · alias: TL2c
 
 ### 149.1 (TL2a) — The pipeline holds its file reader and reads PRs whole and consistent · M · closes A1 · requires —
 
