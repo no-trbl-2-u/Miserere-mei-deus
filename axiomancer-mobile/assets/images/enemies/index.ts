@@ -95,6 +95,7 @@ export const ENEMY_ART_COUNT = ENEMY_ART_POOL.length;
 /** Every bound `portraitAsset` key, in registry order. */
 export const ENEMY_ART_KEYS: readonly string[] = Object.keys(ENEMY_ART_BY_KEY);
 
+export { ENEMY_BACKINGS, getEnemyBacking } from './backing';
 export {
     ENEMY_FRAME_SETS,
     FRAME_CELL_MAX_BYTES,

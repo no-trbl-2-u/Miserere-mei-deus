@@ -97,6 +97,15 @@ art directory has a provenance record, every record carries date / tool
 / license / covers, every `require()` resolves, and every file is
 reachable from a registry. It runs inside the mobile verify gate.
 
+## Enemy backings
+
+Every foe that draws transparent art stands on a soft dark matte, so its
+keyed-away strokes stay dark over an arena plate. A matte lives at
+`assets/images/enemies/backing/<key>.backing.webp`, is the same square as
+the foe's cells, and is one shape for every frame. After changing a foe's
+cells, run `node scripts/bake-backings.mjs`: `scripts/enemy-backings.test.mjs`
+fails on a foe with no matte, judging by alpha values, and on a stale one.
+
 ## Enemy frame sets (the animated art contract)
 
 An enemy may carry one asset or several. The old "1:1 art law" is

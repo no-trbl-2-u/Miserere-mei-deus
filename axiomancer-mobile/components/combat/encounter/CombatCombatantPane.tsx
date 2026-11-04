@@ -29,10 +29,10 @@ import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, RadialGradient, Rect,
 
 import { useGameState } from '@/state/GameStoreProvider';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
-import { getEncounterEnemyArt } from '@/assets/images/enemies';
+import { getEncounterEnemyArt, getEnemyBacking } from '@/assets/images/enemies';
 import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
 import {
-    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, isEnemyActionBeat, isEnemyStruckBeat,
+    ENEMY_ATTACK_IMPACT_MS, EnemyFramePlayer, cellContentPosition, isEnemyActionBeat, isEnemyStruckBeat,
     useEnemyClipSelection,
 } from '@/components/combat/frames';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
@@ -628,6 +628,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // `AccessibilityInfo` a second time, because two answers to one question
     // drift and one of them is wrong.
     const enemyFrameSet = getEnemyFrameSet(enemy.artKey);
+    const enemyBacking = getEnemyBacking(enemy.artKey);
     // One label for the figure, whichever way it is drawn: a screen reader
     // must not be able to tell that an enemy animates.
     const enemyFigureLabel = `${enemy.name} bars the way`;
@@ -681,26 +682,6 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                         ]}
                         testID="combat-enemy-figure-wrap"
                     >
-                        {/* FIGURE PLATE. The roster art is
-                            alpha-matted by keying BLACK out of a painting, so every dark
-                            interior stroke of a creature is partly transparent and the
-                            engraved arena backdrop would read straight through its body.
-                            A soft dark radial plate
-                            sits between the backdrop and the figure: where the art is
-                            opaque nothing changes; where its shading was keyed away, the
-                            hole shows the plate's ink instead of the engraving. Same
-                            layer as the ground shadow (outside the breath wrapper) so the
-                            plate is the scene's, not the creature's. */}
-                        <Svg style={StyleSheet.absoluteFill} pointerEvents="none" testID="combat-enemy-figure-plate">
-                            <Defs>
-                                <RadialGradient id="axmEnemyFigurePlate" cx="50%" cy="58%" rx="50%" ry="50%">
-                                    <Stop offset="0" stopColor={AXM.bg} stopOpacity={0.92} />
-                                    <Stop offset="0.55" stopColor={AXM.bg} stopOpacity={0.7} />
-                                    <Stop offset="1" stopColor={AXM.bg} stopOpacity={0} />
-                                </RadialGradient>
-                            </Defs>
-                            <Ellipse cx="50%" cy="58%" rx="42%" ry="46%" fill="url(#axmEnemyFigurePlate)" />
-                        </Svg>
                         {/* grounding shadow so the alpha-matted figure sits ON the floor.
                             It stays OUTSIDE the idle wrapper: the shadow is the floor's,
                             not the creature's, so the figure breathes over a planted
@@ -719,27 +700,51 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                             wrapper because RN cannot merge two `transform` arrays from a
                             style list, and the lunge above owns the outer one. */}
                         <Animated.View style={[styles.enemyIdleWrap, idleStyle]} testID="combat-enemy-figure">
-                            {enemyFrameSet ? (
-                                <EnemyFramePlayer
-                                    artKey={enemy.artKey}
-                                    frameSet={enemyFrameSet}
-                                    clipName={enemyClip.clipName}
-                                    startKey={enemyClip.startKey}
-                                    reducedMotion={reduceMotion}
-                                    style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
-                                    accessibilityLabel={enemyFigureLabel}
-                                    testID="combat-enemy-frames"
-                                />
-                            ) : (
-                                <Image
-                                    source={enemyArt}
-                                    style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
-                                    contentFit="contain"
-                                    contentPosition="bottom center"
-                                    transition={0}
-                                    accessibilityLabel={enemyFigureLabel}
-                                />
-                            )}
+                            {/* One box for the foe and its backing, so a matte the size of
+                                the cells lands on exactly the figure's pixels. */}
+                            <View
+                                style={[styles.enemyFigureImg, enemy.isBoss && styles.enemyFigureImgBoss]}
+                                testID="combat-enemy-figure-box"
+                            >
+                                {/* THE BACKING. The art is alpha-matted by keying BLACK out
+                                    of a painting, so every dark stroke of a creature is a
+                                    hole and an arena plate would read straight through its
+                                    body. A soft dark shape cut from the foe's own cells fills
+                                    those holes, and rides in here so it breathes and lunges
+                                    with the foe. See assets/images/enemies/backing. */}
+                                {enemyBacking ? (
+                                    <Image
+                                        source={enemyBacking}
+                                        style={StyleSheet.absoluteFill}
+                                        contentFit="contain"
+                                        contentPosition={enemyFrameSet ? cellContentPosition(enemyFrameSet.manifest) : 'bottom center'}
+                                        tintColor={AXM.bg}
+                                        transition={0}
+                                        testID="combat-enemy-backing"
+                                    />
+                                ) : null}
+                                {enemyFrameSet ? (
+                                    <EnemyFramePlayer
+                                        artKey={enemy.artKey}
+                                        frameSet={enemyFrameSet}
+                                        clipName={enemyClip.clipName}
+                                        startKey={enemyClip.startKey}
+                                        reducedMotion={reduceMotion}
+                                        style={StyleSheet.absoluteFill}
+                                        accessibilityLabel={enemyFigureLabel}
+                                        testID="combat-enemy-frames"
+                                    />
+                                ) : (
+                                    <Image
+                                        source={enemyArt}
+                                        style={StyleSheet.absoluteFill}
+                                        contentFit="contain"
+                                        contentPosition="bottom center"
+                                        transition={0}
+                                        accessibilityLabel={enemyFigureLabel}
+                                    />
+                                )}
+                            </View>
                         </Animated.View>
                     </View>
                 </Animated.View>

@@ -19,7 +19,7 @@ import {
     RESTING_CLIP, validateFrameSet, type EnemyFrameSet,
 } from '@/assets/images/enemies/frames';
 
-import { sheetIndexFor } from './framePlayback';
+import { cellContentPosition, sheetIndexFor } from './framePlayback';
 import { useFramePlayback, type ReducedMotionLike } from './useFramePlayback';
 
 export interface EnemyFramePlayerProps {
@@ -79,7 +79,6 @@ export function EnemyFramePlayer({
         ? index
         : ((frameOverride % clip.frames) + clip.frames) % clip.frames;
     const active = sheetIndexFor(frameSet.manifest, clip, shown);
-    const footed = frameSet.manifest.anchor.kind === 'foot-line';
 
     return (
         <View
@@ -99,10 +98,7 @@ export function EnemyFramePlayer({
                         source={source}
                         style={StyleSheet.absoluteFillObject}
                         contentFit="contain"
-                        // `foot-line` pins the bottom edge so a standing figure
-                        // never lifts off its own feet; `centre` keeps the cell
-                        // centred, because for a floater the hover IS the clip.
-                        contentPosition={footed ? 'bottom center' : 'center'}
+                        contentPosition={cellContentPosition(frameSet.manifest)}
                     />
                 </Animated.View>
             ))}
