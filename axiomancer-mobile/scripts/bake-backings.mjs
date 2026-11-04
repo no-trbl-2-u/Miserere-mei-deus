@@ -17,7 +17,7 @@
 //
 // A matte is the same square as the foe's cells and is drawn in the same box
 // with the same fit and position, so it registers with the figure by
-// construction. It bakes black; the pane tints it to the theme's `AXM.bg`.
+// construction. It bakes black; the pane tints it to the theme's `AXM.deepBg`.
 
 import fs from 'node:fs'
 import path from 'node:path'

@@ -3,8 +3,8 @@
  *
  * The pane's half of the backing law. `scripts/enemy-backings.test.mjs` proves
  * every matte exists and covers its foe; this proves the pane draws it: under
- * the figure, inside the wrappers that breathe and lunge, in the theme's ground
- * colour, in the same box and at the same position as the cells, and that the
+ * the figure, inside the wrappers that breathe and lunge, in the ink of the black
+ * scene, in the same box and at the same position as the cells, and that the
  * round figure plate it replaced is gone.
  */
 import React from 'react';
