@@ -44,7 +44,7 @@ The read lives in the engine, since rules and RNG do. It works out the payout wi
 
 ### Decisions made upfront (do not ask)
 
-- The rule: D?roll-around-quest (proposed).
+- The rule: D166 (proposed).
 - No save version moves and the item-reward queue is not persisted (T, 2026-11-04).
 - No tuning value moves. The rule changes which items can drop, never how often a roll fires.
 

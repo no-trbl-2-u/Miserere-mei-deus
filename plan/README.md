@@ -102,6 +102,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
+| 151 | Elite and spare rewards give only what you don't own | [151-mr5-owned-rolls.md](151-mr5-owned-rolls.md) | planned | 1 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
 
 ## How the loop reads this folder
