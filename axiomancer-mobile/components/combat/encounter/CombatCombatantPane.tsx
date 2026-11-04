@@ -711,16 +711,16 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                     hole and an arena plate would read straight through its
                                     body. A soft dark shape cut from the foe's own cells fills
                                     those holes, and rides in here so it breathes and lunges
-                                    with the foe. It takes the black scene's own ink, so on the
-                                    black scene it cannot be seen. See
-                                    assets/images/enemies/backing. */}
-                                {enemyBacking ? (
+                                    with the foe. Only over a plate: the black scene has nothing
+                                    to hide, and web's tint filter shifts a near-black, so a matte
+                                    there would show. See assets/images/enemies/backing. */}
+                                {ARENA_PLATES_SHOWN && enemyBacking ? (
                                     <Image
                                         source={enemyBacking}
                                         style={StyleSheet.absoluteFill}
                                         contentFit="contain"
                                         contentPosition={enemyFrameSet ? cellContentPosition(enemyFrameSet.manifest) : 'bottom center'}
-                                        tintColor={AXM.deepBg}
+                                        tintColor={AXM.bg}
                                         transition={0}
                                         testID="combat-enemy-backing"
                                     />

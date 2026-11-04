@@ -5,7 +5,8 @@
  * strokes are holes and an arena plate would read straight through them. The
  * backing fills them. `scripts/bake-backings.mjs` cuts each matte from every
  * cell the foe animates through, overlaid into one shape, so one file serves
- * every frame. It bakes black; the pane tints it to the theme's `AXM.deepBg`.
+ * every frame. It bakes black; the pane tints it to the theme's `AXM.bg`, and
+ * draws it only while arena plates are shown.
  *
  * `scripts/enemy-backings.test.mjs` fails when a foe that draws transparent art
  * has no entry here, judged by the alpha values on disk.

@@ -3,9 +3,9 @@
  *
  * The pane's half of the backing law. `scripts/enemy-backings.test.mjs` proves
  * every matte exists and covers its foe; this proves the pane draws it: under
- * the figure, inside the wrappers that breathe and lunge, in the ink of the black
- * scene, in the same box and at the same position as the cells, and that the
- * round figure plate it replaced is gone.
+ * the figure, inside the wrappers that breathe and lunge, in the theme's ground
+ * colour, in the same box and at the same position as the cells, only while
+ * plates are shown, and that the round figure plate it replaced is gone.
  */
 import React from 'react';
 import { render, within, type RenderResult } from '@testing-library/react-native';
@@ -15,6 +15,19 @@ import { ENEMY_BACKINGS, ENEMY_FRAME_SETS, getEnemyBacking } from '@/assets/imag
 import { cellContentPosition } from '@/components/combat/frames';
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+
+// The flag's real value is another chunk's to flip, so both states are set here.
+let mockPlatesShown = true;
+jest.mock('@/assets/images/combat', () => ({
+    ...jest.requireActual('@/assets/images/combat'),
+    get ARENA_PLATES_SHOWN() {
+        return mockPlatesShown;
+    },
+}));
+
+beforeEach(() => {
+    mockPlatesShown = true;
+});
 
 const PLAYER: CombatPlayerPaneVM = {
     name: 'You', hp: 30, maxHp: 30, hpPct: 1, classLine: '', effects: [], pendingDot: 0,
@@ -81,6 +94,13 @@ describe('the pane draws the backing', () => {
         // Later siblings paint on top: the matte must come first.
         const painted = (box.children as unknown as { props: { testID?: string } }[]).map((c) => c.props.testID);
         expect(painted).toEqual(['combat-enemy-backing', 'combat-enemy-frames']);
+    });
+
+    it('the black scene draws no matte, and the figure keeps its box', () => {
+        mockPlatesShown = false;
+        const view = renderPane('float-eye');
+        expect(view.queryByTestId('combat-enemy-backing')).toBeNull();
+        expect(within(view.getByTestId('combat-enemy-figure-box')).getByTestId('combat-enemy-frames')).toBeTruthy();
     });
 
     it('the round figure plate is gone', () => {
