@@ -17,9 +17,9 @@ date: 2026-11-04
 
 ## Edit plan/README.md
 ~~~ old
-| 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 5 left |
+| 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
 ~~~
 ~~~ new
-| 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 5 left |
+| 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
 | 150 | The open rows, checked against the code | [150-pc1-plan-cleanup.md](150-pc1-plan-cleanup.md) | planned | 5 left |
 ~~~
