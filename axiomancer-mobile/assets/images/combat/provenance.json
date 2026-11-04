@@ -41,5 +41,218 @@
       "inset": 0.01
     },
     "replaces": "arena-ruined-city.jpg — owner-supplied pixel art, licence UNRESOLVED and untraced. Retired in phase 103 under THE OPEN GATE ¶6 (2026-08-28), which makes replacing an untraceable asset from the licensed trove a loop call. Its record was removed with the file; the retirement rationale lives in archive-pre-revamp:plan/archive/2026-09-28-revamp-r0/plan/phases/phase_103_the_last_two_arenas.md."
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_Northern_Sea_in_the_Moonlight_-_Google_Art_Project.jpg",
+    "artist": "Caspar David Friedrich",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-breakwater-northern-sea.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_K%C3%BCste_bei_Mondschein.jpg",
+    "artist": "Caspar David Friedrich",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-breakwater-kuste-bei-mondschein.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Johann_Friedrich_Boeck_-_Mondscheinnacht_auf_R%C3%BCgen.jpg",
+    "artist": "Johann Friedrich Boeck",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-breakwater-mondscheinnacht-ruegen.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Sacred_Grove_(1882)_-_Arnold_B%C3%B6cklin_(Kunstmuseum_Basel).jpg",
+    "artist": "Arnold Böcklin",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-charcoal-wood-sacred-grove.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Th%C3%A9odore_Rousseau_-_Pheasantry_in_the_Forest_of_Compi%C3%A8gne_-_33-2016_-_Saint_Louis_Art_Museum.jpg",
+    "artist": "Théodore Rousseau",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "plate detected on the scanned page and extracted to 5171x4234 at (381,336) of 5951x4912 (inset 0.02), then grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-charcoal-wood-pheasantry.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ],
+    "crop": {
+      "left": 381,
+      "top": 336,
+      "width": 5171,
+      "height": 4234,
+      "sourceWidth": 5951,
+      "sourceHeight": 4912,
+      "inset": 0.02,
+      "darkRatio": 0.82
+    }
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_Klosterruine_Eldena_1824-25.jpg",
+    "artist": "Caspar David Friedrich",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-charcoal-wood-eldena.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Hermann_Herzog_-_Storm_in_the_mountains.jpg",
+    "artist": "Hermann Ottomar Herzog",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-beacon-crags-storm-mountains.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Albert_Bierstadt_-_A_Storm_in_the_Rocky_Mountains.jpg",
+    "artist": "Albert Bierstadt",
+    "artist_note": "Commons' Artist field for this file names the uploader (\"Ismoon (talk) 13:09, 7 June 2022 (UTC)\"), not the painter; corrected by hand to the painter of A Storm in the Rocky Mountains. The licence line below is still the one read from extmetadata.",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "plate detected on the scanned page and extracted to 1450x846 at (45,28) of 1536x915 (inset 0.02), then grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-beacon-crags-rocky-mountains-storm.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ],
+    "crop": {
+      "left": 45,
+      "top": 28,
+      "width": 1450,
+      "height": 846,
+      "sourceWidth": 1536,
+      "sourceHeight": 915,
+      "inset": 0.02,
+      "darkRatio": 0.82
+    }
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Friedrich_Riesengebirge_3.jpg",
+    "artist": "Caspar David Friedrich",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-beacon-crags-riesengebirge.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Arnold_B%C3%B6cklin_-_Die_Toteninsel_III_(Alte_Nationalgalerie,_Berlin).jpg",
+    "artist": "Arnold Böcklin",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-lantern-deep-toteninsel.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Le_Pandemonium_-_John_Martin_-_Mus%C3%A9e_du_Louvre_Peintures_RF_2006_21_-_sans_cadre.jpg",
+    "artist": "John Martin",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-lantern-deep-pandemonium.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-04",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:John_Martin_-_Great_Day_of_His_Wrath_-_WGA14150.jpg",
+    "artist": "John Martin",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "arena-lantern-deep-great-day-of-wrath.webp"
+    ],
+    "used_by": [
+      "assets/images/combat/index.ts"
+    ]
   }
 ]

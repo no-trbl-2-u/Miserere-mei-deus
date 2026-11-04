@@ -39,6 +39,27 @@ const ARENA_DESOLATION = require('./arena-desolation.webp');
 const ARENA_COASTAL_VILLAGE = require('./coastal-village.webp');
 
 /**
+ * The twelve arena plates kept by plan 146 (chunk 146.1), by file. Not yet
+ * resolved by any region rule: 146.2 turns this into the plate library and the
+ * region defaults, 146.3 lets a map node name one. It exists here only so the
+ * provenance gate's "reachable from a registry" check sees the files.
+ */
+export const KEPT_ARENA_PLATE_ART = {
+    'arena-breakwater-northern-sea': require('./arena-breakwater-northern-sea.webp'),
+    'arena-breakwater-kuste-bei-mondschein': require('./arena-breakwater-kuste-bei-mondschein.webp'),
+    'arena-breakwater-mondscheinnacht-ruegen': require('./arena-breakwater-mondscheinnacht-ruegen.webp'),
+    'arena-charcoal-wood-sacred-grove': require('./arena-charcoal-wood-sacred-grove.webp'),
+    'arena-charcoal-wood-pheasantry': require('./arena-charcoal-wood-pheasantry.webp'),
+    'arena-charcoal-wood-eldena': require('./arena-charcoal-wood-eldena.webp'),
+    'arena-beacon-crags-storm-mountains': require('./arena-beacon-crags-storm-mountains.webp'),
+    'arena-beacon-crags-rocky-mountains-storm': require('./arena-beacon-crags-rocky-mountains-storm.webp'),
+    'arena-beacon-crags-riesengebirge': require('./arena-beacon-crags-riesengebirge.webp'),
+    'arena-lantern-deep-toteninsel': require('./arena-lantern-deep-toteninsel.webp'),
+    'arena-lantern-deep-pandemonium': require('./arena-lantern-deep-pandemonium.webp'),
+    'arena-lantern-deep-great-day-of-wrath': require('./arena-lantern-deep-great-day-of-wrath.webp'),
+} as const;
+
+/**
  * One arena: the region it answers, the plate, and what a screen-reader user is
  * told they are looking at.
  *
