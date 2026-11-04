@@ -332,6 +332,8 @@ reads node 1 as `offer` and every later node as `locked`.
 | `acceptQuestStep(state, questline, step)` | At the step's own node, with the step before turned in: starts the step's quest with every count at 0 (nothing before acceptance counts) and spends the node, which opens its held roads. |
 | `turnInQuestStep(state, questline, step, rng?)` | At the NEXT quest node, a ready `settle: 'turn-in'` step: completes it and pays it once; the node then offers the next step. Returns `{ state, paid }` (`paid` carries items and card offers). |
 | `settleQuestLog(state, quests, rng?)` | THE settle seam: pays what completed (`payCompletedQuests`) and opens the `opensOnReady` roads of a step that became ready. `END_COMBAT`, the hazard, reach and collect branches of `resolveMapEvent`, the dialogue effects and the turn-in all go through it. |
+| `winQuestItems(state)` | The items a win over `state.currentEncounter` would pay through its quests: the kills `END_COMBAT` advances, settled with a constant rng. Draws nothing and changes no state. |
+| `playerWithWinQuestItems(state)` | The player with those items in the satchel, for an elite's relic and piece rolls to read (D166). Never stored. |
 
 The last step (`settle: 'on-victory'`) is never turned in: its quest is not
 held, so the boss kill completes and pays it through the same seam.

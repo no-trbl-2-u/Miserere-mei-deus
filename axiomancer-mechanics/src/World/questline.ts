@@ -24,10 +24,12 @@
 
 import type { MapName } from './map.library';
 import type { MapState, NodeId, Quest, QuestLog, Reward } from './types';
+import type { Character } from '../Character/types';
 import type { GameState } from '../Game/types';
+import type { Item } from '../Items/types';
 import type { QuestPayload, ResolvedEvent } from './MapEvents/types';
 import {
-    isQuestComplete, findActiveQuest, startQuest, completeQuest, payCompletedQuests,
+    advanceKillObjectives, isQuestComplete, findActiveQuest, startQuest, completeQuest, payCompletedQuests,
     syncCarryObjectives, type PaidQuestReward,
 } from './quest.engine';
 import { markNodeConsumed, revealAdjacent, syncMoveLists, unblockMapRoute } from './world.reducer';
@@ -278,6 +280,49 @@ export function settleQuestLog(
     }
     const moved: GameState = { ...state, player, quests: log };
     return { state: openReadyQuestRoutes(moved), paid };
+}
+
+// ─── What a win would pay ─────────────────────────────────────────────────────
+
+/**
+ * The quest log after a won fight's kills: every foe of `encounter` advances
+ * the `kill` objectives that count it on `mapName`. `END_COMBAT` and
+ * `winQuestItems` both read this, so what a win is worked out to pay is what
+ * it pays.
+ */
+export function advanceEncounterKills(
+    log: QuestLog,
+    encounter: Pick<NonNullable<GameState['currentEncounter']>, 'enemies'>,
+    mapName: MapName,
+): QuestLog {
+    let next = log;
+    for (const enemy of encounter.enemies) next = advanceKillObjectives(next, enemy, mapName).log;
+    return next;
+}
+
+/**
+ * The items a win over `state.currentEncounter` would pay through its quests,
+ * read before the fight is settled. Draws nothing from the seeded rng (a
+ * constant rng stands in, and the card offers it rolls are thrown away) and
+ * changes no state. Nothing staged, or no quest paid: an empty list.
+ */
+export function winQuestItems(state: GameState): readonly Item[] {
+    const encounter = state.currentEncounter;
+    if (!encounter) return [];
+    const log = advanceEncounterKills(state.quests, encounter, state.world.currentMap.name);
+    return settleQuestLog(state, log, () => 0).paid.flatMap(paid => paid.items);
+}
+
+/**
+ * The player an elite's roll reads: the root player with what the win's quests
+ * would pay (`winQuestItems`) already in the satchel, so the pool skips it.
+ * For rolling only, never stored. The same player comes back when no quest
+ * pays an item.
+ */
+export function playerWithWinQuestItems(state: GameState): Character {
+    const items = winQuestItems(state);
+    if (items.length === 0) return state.player;
+    return { ...state.player, inventory: [...state.player.inventory, ...items] };
 }
 
 // ─── Accept and turn in ───────────────────────────────────────────────────────

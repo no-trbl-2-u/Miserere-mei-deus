@@ -2,7 +2,10 @@
  * A quest's item, an elite's relic and an elite's lane piece survive an app
  * close before the item-reward screen is answered: each is in the saved
  * satchel once the offer is made, stays once through the answer, and keeps the
- * run-log tag its source always had.
+ * run-log tag its source always had. The queue is not saved, so a reopened app
+ * holds the item and misses only its screen. An elite's roll goes around what a
+ * quest pays in that same fight, so the player ends with one copy; two quests
+ * paying one item still pay two.
  */
 
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
@@ -13,14 +16,17 @@ import {
     FIXTURE_QUEST,
     FIXTURE_QUEST_RELIC,
     emptyQuestLog,
+    equipmentDropPool,
+    initializeCombatEncounter,
     startQuest,
 } from '@mechanics';
-import type { Equipment, GameState, Quest } from '@mechanics';
+import type { CombatOutcome, Equipment, GameState, Quest } from '@mechanics';
 
+import { applyHazardOutcome } from '@/components/combat/encounter/CombatEncounterPanel';
 import { createAppActions } from '@/state/actions';
-import { settleEliteEquipmentAction, settleEliteRelicAction } from '@/state/combat/store-actions';
-import { offerCompletedQuestItemsAction, offerEliteRelicAction } from '@/state/item-reward/relic-sources';
-import { confirmItemRewardAction, equipItemRewardAction } from '@/state/item-reward/store-actions';
+import { rollCombatRewardAction, settleEliteEquipmentAction, settleEliteRelicAction } from '@/state/combat/store-actions';
+import { offerCompletedQuestItemsAction, offerElitePieceAction, offerEliteRelicAction } from '@/state/item-reward/relic-sources';
+import { confirmItemRewardAction, equipItemRewardAction, offerItemRewardAction } from '@/state/item-reward/store-actions';
 import { eliteDropSource, questRewardSource } from '@/state/presenters/relic-source.copy';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -50,6 +56,13 @@ function savedCounts(store: AppStore, adapter: ReturnType<typeof createMemoryAda
     return [closedNow, count(adapter.load(), id)];
 }
 
+/** A store reopened from the save: the item once, and no screen waiting. */
+function expectReopenedOnce(adapter: ReturnType<typeof createMemoryAdapter>, id: string) {
+    const reopened = createAppStore({ adapter });
+    expect(count(gs(reopened), id)).toBe(1);
+    expect(reopened.getState().itemReward.queue).toHaveLength(0);
+}
+
 describe("an elite's relic survives an app close before the screen is answered", () => {
     it('is in the saved satchel once, and still once after CONFIRM', () => {
         const { store, adapter } = fresh();
@@ -62,6 +75,7 @@ describe("an elite's relic survives an app close before the screen is answered",
         // The run log keeps the eyebrow as the tag: no `logFrom`.
         expect(queue[0]!.logFrom).toBeUndefined();
         expect(savedCounts(store, adapter, id)).toEqual([1, 1]);
+        expectReopenedOnce(adapter, id);
         expect(count(gs(store), id)).toBe(1);
         confirmItemRewardAction(store);
         expect(count(gs(store), id)).toBe(1);
@@ -96,6 +110,7 @@ describe("an elite's lane piece survives an app close before the screen is answe
         expect(queue[0]!.source).toBe(eliteDropSource(ELITE.name));
         expect(queue[0]!.logFrom).toBeUndefined();
         expect(savedCounts(store, adapter, id)).toEqual([1, 1]);
+        expectReopenedOnce(adapter, id);
         confirmItemRewardAction(store);
         expect(count(gs(store), id)).toBe(1);
         expect(count(adapter.load(), id)).toBe(1);
@@ -125,6 +140,7 @@ describe("a quest's item survives an app close before the screen is answered", (
         expect(queue[0]!.source).toBe(questRewardSource(q.name));
         expect(queue[0]!.logFrom).toBeUndefined();
         expect(savedCounts(store, adapter, id)).toEqual([1, 1]);
+        expectReopenedOnce(adapter, id);
         confirmItemRewardAction(store);
         expect(count(gs(store), id)).toBe(1);
         expect(count(adapter.load(), id)).toBe(1);
@@ -133,23 +149,101 @@ describe("a quest's item survives an app close before the screen is answered", (
     it('a second look at the same completion queues nothing more, even with another source waiting', () => {
         const { store, q } = questStore();
         const before = gs(store).quests;
-        // An elite entry for the same item is already waiting: it must not
-        // stand in for the quest's offer, nor let the quest be offered twice.
-        offerEliteRelicAction(store, FIXTURE_QUEST_RELIC as Equipment, ELITE.name);
+        // Another quest's entry for the same item is already waiting: it must
+        // not stand in for this quest's offer, nor let it be offered twice.
+        const other = questRewardSource('Another Quest');
+        const { player } = gs(store);
+        store.setState({ player: { ...player, inventory: [...player.inventory, FIXTURE_QUEST_RELIC] } } as never);
+        offerItemRewardAction(store, FIXTURE_QUEST_RELIC, { source: other, includeInline: true, carried: true });
         const actions = createAppActions(store);
         actions.startCombat(FOE);
         actions.endCombat('victory');
         expect(offerCompletedQuestItemsAction(store, before)).toHaveLength(0);
         const sources = store.getState().itemReward.queue.map(e => e.source);
-        expect([...sources].sort()).toEqual([eliteDropSource(ELITE.name), questRewardSource(q.name)].sort());
+        expect([...sources].sort()).toEqual([other, questRewardSource(q.name)].sort());
     });
 });
 
-describe('the same item from a quest and from an elite keeps both offers', () => {
-    const ID = FIXTURE_QUEST_RELIC.id;
-    const ELITE_SOURCE = eliteDropSource(ELITE.name);
+describe('an elite roll goes around what a quest pays in that same fight (D166)', () => {
+    const X = FIXTURE_ELITE_RELICS[0]!;
+    const Y = FIXTURE_ELITE_RELICS[1]!;
+    const elite = { ...FOE, difficulty: 'elite' as const };
 
-    function questStore() {
+    function questPaying(item: Equipment) {
+        const { store, adapter } = fresh();
+        const q: Quest = {
+            ...FIXTURE_QUEST,
+            objectives: [{ ...FIXTURE_QUEST.objectives[0]!, id: 'kill-foe', type: 'kill', target: FOE.name }],
+            reward: { kind: 'item', item },
+        };
+        const { player } = gs(store);
+        store.setState({
+            quests: startQuest(emptyQuestLog(), q),
+            player: { ...player, experience: 0, experienceToNextLevel: 1_000_000 },
+        } as never);
+        createAppActions(store).startCombat(elite);
+        return { store, adapter, q };
+    }
+
+    /** Wins the staged elite fight with every roll landing on its first pick. */
+    function winElite(store: AppStore, relics: readonly Equipment[]) {
+        jest.spyOn(Math, 'random').mockReturnValue(0);
+        const finalState = initializeCombatEncounter(gs(store).player, elite, ['grey-strike'], 7);
+        applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, elite, relics);
+    }
+
+    const sourcesOf = (store: AppStore, id: string) =>
+        store.getState().itemReward.queue.filter(e => e.item.id === id).map(e => e.source);
+
+    it('the relic roll picks another: one copy of each, and the quest still offers its own', () => {
+        const { store, q } = questPaying(X);
+        winElite(store, FIXTURE_ELITE_RELICS);
+        expect(count(gs(store), X.id)).toBe(1);
+        expect(count(gs(store), Y.id)).toBe(1);
+        expect(sourcesOf(store, X.id)).toEqual([questRewardSource(q.name)]);
+        expect(sourcesOf(store, Y.id)).toEqual([eliteDropSource(elite.name)]);
+        expect(store.getState().combatReward.relicDrop?.item.id).toBe(Y.id);
+    });
+
+    it('with the quest item the only relic left, no relic drops: the XP and the card draft stand', () => {
+        const { store, q } = questPaying(X);
+        winElite(store, [X]);
+        expect(count(gs(store), X.id)).toBe(1);
+        expect(sourcesOf(store, X.id)).toEqual([questRewardSource(q.name)]);
+        expect(store.getState().combatReward.relicDrop ?? null).toBeNull();
+        expect(gs(store).player.experience).toBe(FOE.xpReward);
+        expect(rollCombatRewardAction(store, elite).length).toBeGreaterThan(0);
+    });
+
+    it('the piece roll picks another: one copy of each, and the quest still offers its own', () => {
+        const { store, q } = (() => {
+            const pool = equipmentDropPool(gs(fresh().store).player);
+            return questPaying(pool[0]!);
+        })();
+        const [paid, next] = equipmentDropPool(gs(store).player);
+        winElite(store, []);
+        expect(count(gs(store), paid!.id)).toBe(1);
+        expect(count(gs(store), next!.id)).toBe(1);
+        expect(sourcesOf(store, paid!.id)).toEqual([questRewardSource(q.name)]);
+        expect(sourcesOf(store, next!.id)).toEqual([eliteDropSource(elite.name)]);
+    });
+
+    it('with the quest item the only piece left, no piece drops', () => {
+        const pool = equipmentDropPool(gs(fresh().store).player);
+        const last = pool[pool.length - 1]!;
+        const { store, q } = questPaying(last);
+        const { player } = gs(store);
+        store.setState({ player: { ...player, inventory: [...player.inventory, ...pool.slice(0, -1)] } } as never);
+        winElite(store, []);
+        expect(count(gs(store), last.id)).toBe(1);
+        expect(store.getState().itemReward.queue.map(e => [e.item.id, e.source])).toEqual([[last.id, questRewardSource(q.name)]]);
+    });
+});
+
+describe('an offer never makes a second copy', () => {
+    const ID = FIXTURE_QUEST_RELIC.id;
+
+    function questEntryWaiting() {
         const { store, adapter } = fresh();
         const q: Quest = {
             ...FIXTURE_QUEST,
@@ -157,61 +251,55 @@ describe('the same item from a quest and from an elite keeps both offers', () =>
             reward: { kind: 'item', item: FIXTURE_QUEST_RELIC },
         };
         store.setState({ quests: startQuest(emptyQuestLog(), q) } as never);
-        return { store, adapter, q };
-    }
-
-    const completeQuest = (store: AppStore) => {
         const actions = createAppActions(store);
         actions.startCombat(FOE);
         actions.endCombat('victory');
-    };
-    const eliteDrops = (store: AppStore) => offerEliteRelicAction(store, FIXTURE_QUEST_RELIC as Equipment, ELITE.name);
+        return { store, adapter, q };
+    }
 
-    function expectBothOffers(store: AppStore, adapter: ReturnType<typeof createMemoryAdapter>, q: Quest) {
-        const queue = store.getState().itemReward.queue;
-        expect(queue.map(e => e.item.id)).toEqual([ID, ID]);
-        expect([...queue.map(e => e.source)].sort()).toEqual([ELITE_SOURCE, questRewardSource(q.name)].sort());
-        // The app closes before the answer: both rows are already on disk.
-        expect(savedCounts(store, adapter, ID)).toEqual([2, 2]);
-        // Reopen the app from that save. FINDING (149.5): the item-reward queue
-        // is not saved (the store boots it empty), so a reopened app shows no
-        // screen for either offer. The player keeps both copies in the satchel,
-        // which is what the carried rows are for.
-        const reopened = createAppStore({ adapter });
-        expect(count(gs(reopened), ID)).toBe(2);
-        expect(reopened.getState().itemReward.queue).toHaveLength(0);
-        // Each answer swaps its own row: two screens, two items, never three.
-        confirmItemRewardAction(store);
+    it.each([
+        ['relic', offerEliteRelicAction],
+        ['piece', offerElitePieceAction],
+    ])('an elite %s offered beside a waiting entry adds no row and no entry', (_kind, offer) => {
+        const { store, adapter, q } = questEntryWaiting();
+        offer(store, FIXTURE_QUEST_RELIC, ELITE.name);
+        expect(store.getState().itemReward.queue.map(e => e.source)).toEqual([questRewardSource(q.name)]);
+        expect(count(gs(store), ID)).toBe(1);
+        expect(savedCounts(store, adapter, ID)).toEqual([1, 1]);
+    });
+
+    it('a piece the satchel already holds with nothing waiting takes the row it has', () => {
+        const { store } = fresh();
+        const { player } = gs(store);
+        store.setState({ player: { ...player, inventory: [...player.inventory, FIXTURE_QUEST_RELIC] } } as never);
+        offerEliteRelicAction(store, FIXTURE_QUEST_RELIC, ELITE.name);
         expect(store.getState().itemReward.queue).toHaveLength(1);
+        expect(count(gs(store), ID)).toBe(1);
+    });
+});
+
+describe('quests are untouched: two quests paying one item pay two copies', () => {
+    const ID = FIXTURE_QUEST_RELIC.id;
+
+    it('each has its own offer, and each answer swaps its own row', () => {
+        const { store, adapter } = fresh();
+        const quest = (name: string): Quest => ({
+            ...FIXTURE_QUEST,
+            name,
+            objectives: [{ ...FIXTURE_QUEST.objectives[0]!, id: 'kill-foe', type: 'kill', target: FOE.name }],
+            reward: { kind: 'item', item: FIXTURE_QUEST_RELIC },
+        });
+        store.setState({ quests: startQuest(startQuest(emptyQuestLog(), quest('One')), quest('Other')) } as never);
+        const actions = createAppActions(store);
+        actions.startCombat(FOE);
+        actions.endCombat('victory');
+        const sources = store.getState().itemReward.queue.map(e => e.source);
+        expect([...sources].sort()).toEqual([questRewardSource('One'), questRewardSource('Other')].sort());
+        expect(savedCounts(store, adapter, ID)).toEqual([2, 2]);
+        confirmItemRewardAction(store);
         confirmItemRewardAction(store);
         expect(store.getState().itemReward.queue).toHaveLength(0);
         expect(count(gs(store), ID)).toBe(2);
         expect(count(adapter.load(), ID)).toBe(2);
-    }
-
-    it('quest first, then the elite drop', () => {
-        const { store, adapter, q } = questStore();
-        completeQuest(store);
-        eliteDrops(store);
-        expectBothOffers(store, adapter, q);
-    });
-
-    it('elite drop first, then the quest completes', () => {
-        const { store, adapter, q } = questStore();
-        eliteDrops(store);
-        completeQuest(store);
-        expectBothOffers(store, adapter, q);
-    });
-
-    it('a repeat of either source still queues nothing more', () => {
-        const { store, q } = questStore();
-        const before = gs(store).quests;
-        eliteDrops(store);
-        completeQuest(store);
-        eliteDrops(store);
-        expect(offerCompletedQuestItemsAction(store, before)).toHaveLength(0);
-        expect(store.getState().itemReward.queue).toHaveLength(2);
-        expect(count(gs(store), ID)).toBe(2);
-        expect(q.name).toBeTruthy();
     });
 });

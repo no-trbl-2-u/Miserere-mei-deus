@@ -16,6 +16,8 @@ import {
     payCompletedQuests, payQuestReward, settleKill, startQuest, emptyQuestLog, newlyCompletedQuests,
 } from '../quest.engine';
 import { resolveMapEvent, applyDialogueChoice, getMapDefinition, createMapState } from '../index';
+import { playerWithWinQuestItems, winQuestItems } from '../questline';
+import { getRng } from '../../Utils/rng';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import { mockSequentialRng } from '../../test-utils/rng';
@@ -157,5 +159,53 @@ describe('every completion path pays the quest reward', () => {
         expect(relicCount(step.gameState)).toBe(1);
         const repeat = applyDialogueChoice(step.gameState, tree, choice);
         expect(relicCount(repeat.gameState)).toBe(1);
+    });
+});
+
+describe('what a win would pay, worked out before the fight settles', () => {
+    /** Pays an item, a card pick and shillings, so the read has a card roll to throw away. */
+    const PAYING: Quest = {
+        ...KILL,
+        rewards: [{ kind: 'card-pick', count: 3 }, { kind: 'currency', amount: 5 }],
+    };
+    const stage = (q: Quest) => gameReducer(stateWith(q), { type: 'START_COMBAT', payload: { target: FOE } });
+    const won = (state: GameState) => gameReducer(state, {
+        type: 'END_COMBAT', payload: { outcome: 'victory', grantedLoot: [], grantedXp: 0 },
+    });
+
+    it('names exactly the items the real END_COMBAT then pays', () => {
+        const staged = stage(PAYING);
+        const named = winQuestItems(staged).map(i => i.id);
+        expect(named).toEqual([FIXTURE_QUEST_RELIC.id]);
+        const before = staged.player.inventory.map(i => i.id);
+        const after = won(staged).player.inventory.map(i => i.id);
+        expect(after).toEqual([...before, ...named]);
+    });
+
+    it('draws nothing from the seeded rng and changes no state', () => {
+        const staged = stage(PAYING);
+        const frozen = JSON.stringify(staged);
+        const rng = vi.spyOn(getRng(), 'random');
+        const player = playerWithWinQuestItems(staged);
+        expect(rng).not.toHaveBeenCalled();
+        expect(JSON.stringify(staged)).toBe(frozen);
+        expect(player.inventory.filter(i => i.id === FIXTURE_QUEST_RELIC.id)).toHaveLength(1);
+    });
+
+    it('a step held for its turn-in pays nothing on the kill', () => {
+        const staged = stage({ ...KILL, holdForTurnIn: true });
+        expect(winQuestItems(staged)).toEqual([]);
+        expect(playerWithWinQuestItems(staged)).toBe(staged.player);
+    });
+
+    it('with no encounter staged the player comes back unchanged', () => {
+        const state = stateWith(KILL);
+        expect(winQuestItems(state)).toEqual([]);
+        expect(playerWithWinQuestItems(state)).toBe(state.player);
+    });
+
+    it('a foe no objective counts pays nothing', () => {
+        const staged = stage(quest({ id: 'kill-other', type: 'kill', target: 'Nobody' }));
+        expect(winQuestItems(staged)).toEqual([]);
     });
 });

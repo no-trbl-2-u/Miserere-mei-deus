@@ -15,6 +15,7 @@ import {
     isEliteNode,
     isEliteUpgradeTaken,
     markEliteUpgradeTaken,
+    playerWithWinQuestItems,
     replaceCard,
     retireEliteNode,
     rollCombatCardRewards,
@@ -66,7 +67,9 @@ function eliteFightNode(world: WorldState | undefined): string | null {
  * node is retired so it never returns from a rest, and the relic is queued on
  * the item-reward screen. Returns true on a drop, so the caller withholds the
  * XP (`endCombat(..., { withholdSpoils: true })`); the shillings stand. A
- * non-elite foe rolls nothing.
+ * non-elite foe rolls nothing. The roll comes before `endCombat` pays the
+ * fight's quests, so it reads a player already holding what they will pay
+ * (`playerWithWinQuestItems`) and goes around it.
  */
 export function settleEliteRelicAction(
     store: AppStore,
@@ -79,7 +82,7 @@ export function settleEliteRelicAction(
     const map = state.world?.currentMap;
     const node = eliteFightNode(state.world);
     const dropList = map && node ? eliteRelicDropsAt(map.continent, map.name, node) : undefined;
-    const relic = rollEliteRelicDrop(state.player, Math.random, relics, dropList);
+    const relic = rollEliteRelicDrop(playerWithWinQuestItems(state), Math.random, relics, dropList);
     if (!relic) return false;
     const eliteName = enemy.name ?? '';
     const patch: Record<string, unknown> = {
@@ -96,7 +99,8 @@ export function settleEliteRelicAction(
  * (`rollEliteEquipmentDrop`: `EQUIPMENT_DROP_TUNING.elite`) from the weapons and armor the player does not
  * carry, and queued on the item-reward screen as a relic is. Unlike a relic it
  * is not the whole reward: the XP, shillings and card draft stand. A foe that is no
- * elite rolls nothing. Returns the piece queued, or null.
+ * elite rolls nothing. Like the relic it goes around what the fight's quests will
+ * pay. Returns the piece queued, or null.
  */
 export function settleEliteEquipmentAction(
     store: AppStore,
@@ -105,7 +109,7 @@ export function settleEliteEquipmentAction(
     if (!isEliteEnemy(enemy)) return null;
     const state = store.getState() as unknown as GameState;
     if (!state.player) return null;
-    const piece = rollEliteEquipmentDrop(state.player, Math.random);
+    const piece = rollEliteEquipmentDrop(playerWithWinQuestItems(state), Math.random);
     if (!piece) return null;
     offerElitePieceAction(store, piece, enemy.name ?? '');
     return piece;

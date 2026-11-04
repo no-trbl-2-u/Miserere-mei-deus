@@ -9,7 +9,13 @@
  * `itemReward` queue: an item that deserves the screen
  * (`qualifiesForItemRewardScreen`) is kept in the satchel, saved, and offered
  * as `carried`, so CONFIRM / EQUIP swaps that row for the grant, nothing is
- * paid twice and an app closed before the answer keeps it.
+ * paid twice and an app closed before the answer keeps it. The queue is not
+ * saved: a reopened app holds the item and misses only its screen.
+ *
+ * An elite's or a Spare's roll goes around whatever a quest pays in that fight
+ * (D166), so those offers treat a waiting entry for the item as the one copy.
+ * Quests alone are the exception: two quests paying one item pay two copies,
+ * each with its own offer.
  */
 
 import {
@@ -26,18 +32,12 @@ import { offerItemRewardAction } from './store-actions';
 
 /**
  * True when carried entries for `id` from this `source` already cover `rows`.
- * Counted per source as well as per id: a quest reward and an elite drop of the
- * same item are two offers, so one must never read as covered by the other.
+ * Counted per source as well as per id: two quests paying the same item are two
+ * offers, so one must never read as covered by the other.
  */
 function carriedCovers(store: AppStore, id: string, source: string, rows: number): boolean {
     const waiting = store.getState().itemReward?.queue ?? [];
     return waiting.filter(entry => entry.carried && entry.item.id === id && entry.source === source).length >= rows;
-}
-
-/** Carried entries waiting for `id`, whatever their source: each holds one satchel row. */
-function carriedHeld(store: AppStore, id: string): number {
-    const waiting = store.getState().itemReward?.queue ?? [];
-    return waiting.filter(entry => entry.carried && entry.item.id === id).length;
 }
 
 function saveQuietly(store: AppStore): void {
@@ -88,20 +88,18 @@ export function offerCompletedQuestItemsAction(store: AppStore, before: QuestLog
 /**
  * Puts an elite's drop in the satchel, saves, and queues it as carried: the
  * answer swaps that row for the grant, so an app closed before the answer
- * keeps the item once. A second call for the same piece queues nothing.
+ * keeps the item once. A carried entry for the piece, from any source, is the
+ * one copy: nothing is added and nothing queued.
  */
 function carryAndOffer(store: AppStore, item: Equipment, eliteName: string): void {
     const state = store.getState() as unknown as GameState;
     if (!state.player) return;
-    const source = eliteDropSource(eliteName);
-    if (carriedCovers(store, item.id, source, 1)) return;
-    // Each carried entry swaps one satchel row on its answer, so an entry from
-    // another source (a quest reward of the same item) needs a row of its own.
-    const rows = state.player.inventory.filter(row => row.id === item.id).length;
-    if (rows <= carriedHeld(store, item.id)) {
+    const waiting = store.getState().itemReward?.queue ?? [];
+    if (waiting.some(entry => entry.carried && entry.item.id === item.id)) return;
+    if (!state.player.inventory.some(row => row.id === item.id)) {
         store.setState({ player: { ...state.player, inventory: [...state.player.inventory, item] } } as never);
     }
-    offerItemRewardAction(store, item, { source, includeInline: true, carried: true });
+    offerItemRewardAction(store, item, { source: eliteDropSource(eliteName), includeInline: true, carried: true });
     saveQuietly(store);
 }
 
@@ -134,6 +132,11 @@ export function offerElitePieceAction(
  * answer swaps that row for the grant, and a closed app keeps the item. A
  * result that is not gear (shillings, a potion, a card) queues nothing, and a
  * second call for the same piece queues nothing. Returns the piece queued.
+ *
+ * The dedupe can't lose a Spare's screen to another source: a carried entry holds
+ * a satchel row, the Spare's roll has already skipped every row (it runs after
+ * `END_COMBAT` paid the fight's quests), and the queue is drained before a fight
+ * can start (`ItemRewardGate`). So only a repeat of this offer ever meets it.
  */
 export function offerSpareGearAction(store: AppStore, reward: SpareReward | undefined, foeName: string): Item | null {
     if (!reward || (reward.kind !== 'gear' && reward.kind !== 'relic')) return null;

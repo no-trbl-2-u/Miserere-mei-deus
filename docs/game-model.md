@@ -178,8 +178,8 @@ the Expo app (`axiomancer-mobile`) presents it.
   `axiomancer-mechanics/docs/equipment.md`.
 - **Where the lane pieces come from** (`EQUIPMENT_DROP_TUNING`, `Items/equipment-drop.ts`,
   the one table of rates and shop numbers): a won elite fight drops one the
-  player does not carry at 25%, on top of its relic roll and never the whole
-  reward; a loot cache's item bundle holds
+  player does not carry, and that a quest does not pay in that same fight, at 25%,
+  on top of its relic roll and never the whole reward; a loot cache's item bundle holds
   one at 33% (`rollCacheReward` with a `carrier`); the Breakwater's quests
   alternate relic, weapon, relic, armor, an equipment step paying the lane of the
   relic the step before paid; the village shop stocks two at 40 shillings. The
@@ -402,7 +402,7 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) draws from the
   three elite-drop relics (the Circlet and the two Signets) the player does
-  not carry, unless the fight lists drops of its own; no relic is elite-only: a quest may pay any of them; the Breakwater questline's last step pays the Belt (through
+  not carry and no quest pays in that same fight, unless the fight lists drops of its own; no relic is elite-only: a quest may pay any of them; the Breakwater questline's last step pays the Belt (through
   `/item-reward`); the dev menu's relic chips, which wear the relic while a
   position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
