@@ -9,7 +9,7 @@
 |---|---|---|---|
 | 2026-11-03 (1 day overdue) | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (in 4 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task | W2 |
-| 2026-11-09 (in 5 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b, TP1b, AP1b, AP1c, AP1d, AP1e, AP1f, MR3a, MR3b | W2 |
+| 2026-11-09 (in 5 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b, TP1b | W2 |
 | 2026-11-10 (in 6 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 6 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-11 (in 7 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
