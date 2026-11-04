@@ -639,13 +639,12 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         reducedMotion: reduceMotion,
     });
 
-    // Region-keyed arena backdrop — falls back to the neutral
-    // desolation plate for a region with no rule of its own. The Northern
-    // Forest is the one live region still on that path: it has no plate yet.
-    // See `assets/images/combat/index.ts` and the AWAITING_PLATE list in its
-    // test, which pins that count in both directions.
-    // While `ARENA_PLATES_SHOWN` is off, every fight gets
-    // a plain black scene instead (the palette's darkest ink, `deepBg`).
+    // Region-keyed arena backdrop: each Act 1 region opens on T's default
+    // plate, and a region with no rule falls back to the neutral desolation
+    // plate (see `assets/images/combat/index.ts` and the AWAITING_PLATE list in
+    // its test, which pins the live regions that still fall back). While
+    // `ARENA_PLATES_SHOWN` is off, every fight gets a plain black scene instead
+    // (the palette's darkest ink, `deepBg`) and no foe backing is drawn.
     const arenaBg = arenaBackdropFor(region);
     // Live anchor: 14pt tucked under the HUD's measured full-width block. The
     // static top in the stylesheet is only the pre-layout fallback. The figure
@@ -657,7 +656,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
         <Animated.View style={[StyleSheet.absoluteFillObject, shakeStyle]} pointerEvents="box-none" testID="combat-combatant-pane">
             {/* ── layer 0: the battlefield scene, enemy figure LARGE ── */}
             <View style={styles.sceneBand} pointerEvents="none">
-                {/* raster arena backdrop — full-bleed behind the foe (or plain black) */}
+                {/* raster arena backdrop — full-bleed behind the foe (plain black only while plates are off) */}
                 {ARENA_PLATES_SHOWN ? (
                     <Image
                         source={arenaBg}
@@ -711,9 +710,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                                     hole and an arena plate would read straight through its
                                     body. A soft dark shape cut from the foe's own cells fills
                                     those holes, and rides in here so it breathes and lunges
-                                    with the foe. Only over a plate: the black scene has nothing
-                                    to hide, and web's tint filter shifts a near-black, so a matte
-                                    there would show. See assets/images/enemies/backing. */}
+                                    with the foe. Only over a plate: the plain black scene (plates
+                                    off) has nothing to hide, and web's tint filter shifts a
+                                    near-black, so a matte there would show. See
+                                    assets/images/enemies/backing. */}
                                 {ARENA_PLATES_SHOWN && enemyBacking ? (
                                     <Image
                                         source={enemyBacking}
@@ -750,8 +750,10 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                         </Animated.View>
                     </View>
                 </Animated.View>
-                {/* top scrim — HUD legibility over the scene */}
-                <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+                {/* top scrim — HUD legibility over the scene. Every scrim Svg here
+                    names its size: on web an Svg with none is the browser's default
+                    300x150 box, which cut this scrim off as a hard edge over a plate. */}
+                <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
                     <Defs>
                         <LinearGradient id="axmCombatTopScrim" x1="0" y1="0" x2="0" y2="1">
                             {/* The tail meets the board ground, so the
@@ -766,7 +768,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
             </View>
             {/* arena-floor glow — a faint blood radial that fills the lower half so the
                 void between battlefield and hand reads as ground, not dead pixels */}
-            <Svg style={styles.floorGlow} pointerEvents="none">
+            <Svg width="100%" height="100%" style={styles.floorGlow} pointerEvents="none">
                 <Defs>
                     <RadialGradient id="axmFloorGlow" cx="50%" cy="30%" rx="75%" ry="60%">
                         <Stop offset="0" stopColor={AXM.blood} stopOpacity={0.13} />
@@ -777,7 +779,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmFloorGlow)" />
             </Svg>
             {/* bottom scrim — shelves the dice + hand over the arena floor */}
-            <Svg style={styles.bottomScrim} pointerEvents="none">
+            <Svg width="100%" height="100%" style={styles.bottomScrim} pointerEvents="none">
                 <Defs>
                     <LinearGradient id="axmCombatDockScrim" x1="0" y1="0" x2="0" y2="1">
                         <Stop offset="0" stopColor={AXM.bg} stopOpacity={0} />
