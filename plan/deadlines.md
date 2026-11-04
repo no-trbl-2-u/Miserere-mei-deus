@@ -268,6 +268,11 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TL2a — the review pipeline reads PRs whole and holds its file reader; no T act waits on it.
 - TL2b — the last 100-file readers read whole lists; no T act waits on it.
 - TL2c — settle holds back only the file that empties a spec; no T act waits on it.
+- PC1a — shipped and moot rows close (spec 150); no T act waits on it.
+- PC1b — half-done rows name only what is left (spec 150); no T act waits on it.
+- PC1c — the hazard calibration rows retire (spec 150); no T act waits on it.
+- PC1d — attended rows split from the loop work they hide, and the ship renamed (spec 150); no T act waits on it.
+- PC1e — finished briefs leave plan/ (spec 150); no T act waits on it.
 
 ## How a window closes
 
@@ -277,6 +282,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-04** — **the open rows checked against the code, plotted as spec 150 (PC1a-PC1e)** (T, attended: "Can you check to see if they're all still relevant?", then "plot those asap"). **Added** PC1a-PC1e under Unscheduled. The Items they will reconcile (the Nov 28 calibration solves, the Dec 12 combat playtest, the Dec 23 Android smoke test, and the v0.3 ship name now that v0.4.0 is tagged) are edited by those chunks, not here. Nothing ticked; no date moved.
 - **2026-11-04** — **the fix-ups left by specs 147 and 148 plotted as spec 149 (TL2a-TL2c, MR4a, MR4b)** (T, end gate of `/pilot 147 148`: "/plot asap, one spec"). **Added** MR4a and MR4b to the `Waits on` of the Mid-MVP check (Nov 9), since the tooltip and a lost offer touch that play, and TL2a-TL2c under Unscheduled. Nothing ticked; no date moved.
 - **2026-11-04** — **plots settling and wide-PR review coverage plotted as spec 148 (TL1a-TL1c)** (T, attended, `/bug plot`: "Do it"). **Added** all three under Unscheduled, since no T act waits on them. Nothing ticked; no date moved.
 - **2026-11-04** — **the mercy check's loose ends plotted as spec 147 (MR3a-MR3d)** (T, attended: "Do it"). **Added** MR3a and MR3b to the `Waits on` of the Mid-MVP check (Nov 9), since the tooltip and a lost reward touch that play, and MR3c and MR3d under Unscheduled. Nothing ticked; no date moved.
