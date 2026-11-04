@@ -98,6 +98,7 @@ const USAGE_COLUMNS = [
   ['card', 'cardId'], ['decks', 'fightsInDeck'], ['drawn', 'drawn'], ['played', 'played'], ['free', 'free'],
   ['paid', 'paid'], ['held', 'held'], ['fizzled', 'fizzled'], ['offered', 'offered'], ['picked', 'picked'],
   ['skipped', 'skipped'], ['removed', 'removed'],
+  ['xform', 'transformed'], ['into', 'transformedInto'], ['upgr', 'upgraded'],
 ]
 
 /** The card-usage body as text: one row per card. */

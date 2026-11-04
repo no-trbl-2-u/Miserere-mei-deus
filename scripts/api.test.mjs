@@ -84,9 +84,9 @@ test('formatCardUsage: a header naming the scope and one row per card in the ord
   assert.match(text, /^Card usage: 2 fights \(build rep1234, source human\)\./)
   const lines = text.split('\n')
   const head = lines.findIndex((l) => l.startsWith('card '))
-  assert.match(lines[head], /^card\s+decks\s+drawn\s+played\s+free\s+paid\s+held\s+fizzled\s+offered\s+picked\s+skipped\s+removed$/)
+  assert.match(lines[head], /^card\s+decks\s+drawn\s+played\s+free\s+paid\s+held\s+fizzled\s+offered\s+picked\s+skipped\s+removed\s+xform\s+into\s+upgr$/)
   assert.deepEqual(lines.slice(head + 1).map((l) => l.split(/\s+/)[0]), ['strike', 'spark', 'ember'])
-  assert.deepEqual(lines[head + 2].split(/\s+/), ['spark', '1', '1', '0', '0', '0', '1', '0', '2', '0', '2', '0'])
+  assert.deepEqual(lines[head + 2].split(/\s+/), ['spark', '1', '1', '0', '0', '0', '1', '0', '2', '0', '2', '0', '0', '0', '0'])
 })
 
 test('formatCardGaps: three sections, (none) for an empty one', () => {

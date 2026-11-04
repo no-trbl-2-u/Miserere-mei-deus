@@ -111,6 +111,9 @@ beforeAll(async () => {
     await post('/v1/deck-events', deckEvent({ cardId: null, offered: ['spark', 'ember'] }));
     await post('/v1/deck-events', deckEvent({ kind: 'remove', cardId: 'guard' }));
     await post('/v1/deck-events', deckEvent({ kind: 'cache-reward', cardId: 'ash', offered: ['ash'] }));
+    // A Spare table result replaces strike with cinder (a card seen nowhere else); a spark is upgraded.
+    await post('/v1/deck-events', deckEvent({ kind: 'transform', cardId: 'strike', offered: ['cinder'] }));
+    await post('/v1/deck-events', deckEvent({ kind: 'upgrade', cardId: 'spark', offered: ['spark+'] }));
     await post('/v1/deck-events', deckEvent({ buildCommit: OTHER, kind: 'remove', cardId: 'strike' }));
 });
 
@@ -132,14 +135,16 @@ describe('card-usage', () => {
     it('counts each card across the build\'s fights and deck events', async () => {
         const body = await report<CardUsageReport>(`/v1/reports/card-usage?build=${BUILD}`);
         expect(body).toMatchObject({ report: 'card-usage', build: BUILD, card: null, fights: 2 });
-        const zero = { drawn: 0, played: 0, free: 0, paid: 0, held: 0, fizzled: 0, offered: 0, picked: 0, skipped: 0, removed: 0 };
+        const zero = { drawn: 0, played: 0, free: 0, paid: 0, held: 0, fizzled: 0, offered: 0, picked: 0, skipped: 0, removed: 0, transformed: 0, transformedInto: 0, upgraded: 0 };
         expect(body.cards).toEqual([
             // Played from the opening hand, then drawn and played the turn it came: never held.
-            { ...zero, cardId: 'strike', fightsInDeck: 2, drawn: 1, played: 2, free: 1, paid: 1, fizzled: 1 },
+            { ...zero, cardId: 'strike', fightsInDeck: 2, drawn: 1, played: 2, free: 1, paid: 1, fizzled: 1, transformed: 1 },
             { ...zero, cardId: 'guard', fightsInDeck: 1, played: 1, free: 1, offered: 1, skipped: 1, removed: 1 },
             // Drawn after turn end 1, never played: sat through turn end 2.
-            { ...zero, cardId: 'spark', fightsInDeck: 1, drawn: 1, held: 1, offered: 2, skipped: 2 },
+            { ...zero, cardId: 'spark', fightsInDeck: 1, drawn: 1, held: 1, offered: 2, skipped: 2, upgraded: 1 },
             { ...zero, cardId: 'ash', fightsInDeck: 0, offered: 1, picked: 1 },
+            // Only ever a transform result: it still gets a row.
+            { ...zero, cardId: 'cinder', fightsInDeck: 0, transformedInto: 1 },
             { ...zero, cardId: 'ember', fightsInDeck: 0, offered: 2, picked: 1, skipped: 1 },
         ]);
     });
