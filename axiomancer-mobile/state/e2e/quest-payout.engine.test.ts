@@ -195,8 +195,8 @@ describe('the boss victory pays step 4 (A11)', () => {
         const queue = store.getState().itemReward.queue;
         expect(queue.map(e => e.item.id)).toEqual(['relic-elementalist-belt']);
         expect(queue[0]!.source).toContain(FIXTURE_LINE_NAME.toUpperCase());
-        // Not also in the satchel: CONFIRM / EQUIP is the one grant.
-        expect(gs(store).player.inventory.some(i => i.id === 'relic-elementalist-belt')).toBe(false);
+        // Carried, saved: CONFIRM / EQUIP swaps that one row for the grant.
+        expect(gs(store).player.inventory.filter(i => i.id === 'relic-elementalist-belt')).toHaveLength(1);
     });
 
     it('a fled boss fight pays nothing and queues nothing', () => {

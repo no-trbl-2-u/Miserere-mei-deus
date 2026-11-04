@@ -3,8 +3,8 @@
  *
  * A relic a completed quest pays, and the relic a won elite fight drops, are
  * queued on `state.itemReward` (TO THE SATCHEL / WEAR IT NOW) with an eyebrow
- * naming the source, and are not ALSO left in the satchel: the screen's
- * commit is the one grant. One store test per source path: a kill
+ * naming the source, carried in the saved satchel: the screen's commit swaps
+ * that row, so it is never granted twice. One store test per source path: a kill
  * (`endCombat`), a reach on arrival (`resolveCurrentMapEvent`, including a
  * host that restores the pre-event player), a dialogue choice
  * (`pickEventChoice`), and the elite drop (rolled first and, on a drop, the
@@ -68,8 +68,8 @@ function expectQuestRelicQueued(store: AppStore, q: Quest): void {
     const queue = store.getState().itemReward.queue;
     expect(queue.map(e => e.item.id)).toEqual([FIXTURE_QUEST_RELIC.id]);
     expect(queue[0]!.source).toBe(questRewardSource(q.name));
-    // Not also paid inline: CONFIRM is the one grant.
-    expect(relicsInSatchel(store)).toBe(0);
+    // Carried: already in the saved satchel, and CONFIRM swaps that row, never adds one.
+    expect(relicsInSatchel(store)).toBe(1);
     confirmItemRewardAction(store);
     expect(relicsInSatchel(store)).toBe(1);
 }
