@@ -64,9 +64,11 @@ export const PLAY_LOG_SOURCE_FILTERS = [...PLAY_LOG_SOURCES, 'all'] as const;
 
 /**
  * What changed the deck. An `upgrade` (phase SM1c; reserved by BE2, so no migration) names the card
- * before it in `cardId` and the single card it became in `offered`.
+ * before it in `cardId` and the single card it became in `offered`. A `transform` (a Spare table result)
+ * is shaped the same way: the card it replaced in `cardId`, the one card it became in `offered`. The kind is
+ * plain `TEXT` in `deck_events`, so neither needed a migration.
  */
-export const DECK_EVENT_KINDS = ['reward', 'cache-reward', 'remove', 'upgrade', 'run-end'] as const;
+export const DECK_EVENT_KINDS = ['reward', 'cache-reward', 'remove', 'upgrade', 'transform', 'run-end'] as const;
 
 /**
  * Upper bounds that keep one malformed or hostile post from filling a table.
@@ -401,6 +403,7 @@ const DECK_EVENT_SHAPE: Record<DeckEventKind, { card: 'required' | 'optional' | 
     'cache-reward': { card: 'optional', offered: 'list' },
     'remove': { card: 'required', offered: 'none' },
     'upgrade': { card: 'required', offered: 'one' },
+    'transform': { card: 'required', offered: 'one' },
     'run-end': { card: 'none', offered: 'none' },
 };
 
@@ -408,7 +411,7 @@ const DECK_EVENT_SHAPE: Record<DeckEventKind, { card: 'required' | 'optional' | 
  * Checks an untrusted `POST /v1/deck-events` body. A reward names what it
  * offered and the card picked from it (null for a skip); a removal names its
  * card and offers nothing; an upgrade names the card before in `cardId` and
- * the card after as the one entry of `offered`; a run's end names neither.
+ * the card after as the one entry of `offered`, and a transform is shaped alike; a run's end names neither.
  */
 export function validateDeckEventPost(body: unknown): DeckEventValidation {
     if (!isRecord(body)) return { ok: false, reasons: ['body: expected a JSON object'] };
@@ -436,10 +439,10 @@ export function validateDeckEventPost(body: unknown): DeckEventValidation {
         if (shape.offered === 'none') {
             if (body.offered !== null) reasons.push(`offered: expected null for ${body.kind}`);
         } else if (shape.offered === 'one') {
-            // An upgrade offers nothing: `offered` holds the one card the upgrade made.
+            // An upgrade or a transform offers nothing: `offered` holds the one card it made.
             checkCardIds(body.offered, 'offered', 1, reasons);
             if (Array.isArray(body.offered) && body.offered.length === 0) {
-                reasons.push('offered: expected the upgraded card');
+                reasons.push(`offered: expected the ${body.kind === 'transform' ? 'transformed' : 'upgraded'} card`);
             }
         } else {
             checkCardIds(body.offered, 'offered', PLAY_LOG_LIMITS.offered, reasons);

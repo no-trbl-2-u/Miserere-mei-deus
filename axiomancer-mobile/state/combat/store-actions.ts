@@ -30,7 +30,7 @@ import {
 
 import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
 
-import { recordDeckUpgrade, recordItemGained } from '../run-log';
+import { recordDeckTransform, recordDeckUpgrade, recordItemGained } from '../run-log';
 import { EMPTY_COMBAT_REWARD_SLICE, type AppStore } from '../store';
 import { offerEliteRelicAction, offerElitePieceAction } from '../item-reward/relic-sources';
 
@@ -134,6 +134,7 @@ export function settleSpareAction(
         recordItemGained(store, reward.item, 'spare');
     }
     if (reward.kind === 'upgrade') recordDeckUpgrade(store, reward.fromCardId, reward.toCardId, 'spare');
+    if (reward.kind === 'transform') recordDeckTransform(store, reward.fromCardId, reward.toCardId, 'spare');
     try { store.getState().save(); } catch { /* persistence must not strand the end screen */ }
 }
 

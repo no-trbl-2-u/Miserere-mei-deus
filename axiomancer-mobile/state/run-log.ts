@@ -21,6 +21,7 @@
  *   recordItemGained(store, item, from)             an item came into the pack
  *   recordHazardEnded(store, hazard)                a hazard ended
  *   recordDeckUpgrade(store, fromId, toId, screen)  an `upgrade` deck event
+ *   recordDeckTransform(store, fromId, toId, screen)  a `transform` deck event
  */
 
 import {
@@ -232,10 +233,19 @@ export function recordHazardEnded(store: AppStore, hazard: RunEventPayloads['haz
 
 /** An upgrade at a rest, the anvil or an elite's reward: the card before in `cardId`, the card after in `offered`. */
 export function recordDeckUpgrade(store: AppStore, fromCardId: string, toCardId: string, screen: string): void {
+    postCardChange(store, 'upgrade', fromCardId, toCardId, screen);
+}
+
+/** A Spare table transform: the card it replaced in `cardId`, the one card it became in `offered`. */
+export function recordDeckTransform(store: AppStore, fromCardId: string, toCardId: string, screen: string): void {
+    postCardChange(store, 'transform', fromCardId, toCardId, screen);
+}
+
+function postCardChange(store: AppStore, kind: 'upgrade' | 'transform', fromCardId: string, toCardId: string, screen: string): void {
     safely(() => {
         const state = stateOf(store) as unknown as DeckEventState;
         void deckEventPoster.post({
-            kind: 'upgrade',
+            kind,
             cardId: fromCardId,
             offered: [toCardId],
             deck: runDeck(state),
