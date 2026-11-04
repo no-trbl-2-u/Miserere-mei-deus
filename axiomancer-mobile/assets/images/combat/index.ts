@@ -191,8 +191,17 @@ export const ARENA_PLATES_SHOWN = true;
 /** The screen-reader label for the plain black scene while plates are off. */
 export const BLACK_ARENA_ALT = 'A plain black backdrop behind the foe';
 
-/** The matching plate for a region display string, or the fallback. */
-function plateFor(region: string | undefined): ArenaPlateRecord {
+/**
+ * The plate a fight stands on: the node's own plate if its layout names one,
+ * else the region's default, else the fallback. Art and words both go through
+ * here, so a node's plate never carries another plate's description.
+ */
+function plateFor(region: string | undefined, nodePlate?: ArenaPlateId): ArenaPlateRecord {
+    // An id outside the library (a bad cast) is ignored, never trusted: the
+    // layout test keeps layouts honest, this keeps combat on a real plate.
+    if (nodePlate && Object.prototype.hasOwnProperty.call(ARENA_PLATES, nodePlate)) {
+        return ARENA_PLATES[nodePlate];
+    }
     if (region) {
         if (DROWNED_PARISH_ARENA.pattern.test(region)) return DROWNED_PARISH_ARENA;
         for (const rule of REGION_ARENAS) {
@@ -202,15 +211,19 @@ function plateFor(region: string | undefined): ArenaPlateRecord {
     return FALLBACK_ARENA;
 }
 
-/** Resolve the arena backdrop for a region display string. */
-export function arenaBackdropFor(region: string | undefined): number {
-    return plateFor(region).art;
+/**
+ * Resolve the arena backdrop for a region display string, and the plate the
+ * fight's map node names (`nodeArenaFor` in the exploration layouts), if any.
+ * It takes the plate id, not the node id, because the layouts import this module.
+ */
+export function arenaBackdropFor(region: string | undefined, nodePlate?: ArenaPlateId): number {
+    return plateFor(region, nodePlate).art;
 }
 
 /**
  * The scene's accessibility label, kept in step with the plate BY CONSTRUCTION —
  * both read the same record, so a plate cannot ship with another plate's words.
  */
-export function arenaAltTextFor(region: string | undefined): string {
-    return plateFor(region).alt;
+export function arenaAltTextFor(region: string | undefined, nodePlate?: ArenaPlateId): string {
+    return plateFor(region, nodePlate).alt;
 }

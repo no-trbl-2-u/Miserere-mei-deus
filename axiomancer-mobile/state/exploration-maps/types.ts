@@ -18,6 +18,8 @@
  * set stays exactly in sync with the engine's `MapDefinition`, so no engine
  * node silently renders at the canvas centre for want of a position.
  */
+import type { ArenaPlateId } from '@/assets/images/combat';
+
 /**
  * The sheet a map is drawn on: its coordinate space, how large it renders, and
  * its plate. Each layout declares its own sheet, so a map's canvas can be
@@ -67,6 +69,11 @@ export interface NodeLayout {
     label: string;
     /** Thematic blurb shown on the node options drawer when this node is currently selectable. */
     description: string;
+    /**
+     * The arena plate a fight at this node opens on, by id. Omitted, combat
+     * uses the region's default. Any of the twelve plates, from any region.
+     */
+    arena?: ArenaPlateId;
 }
 
 export interface MapLayout {
