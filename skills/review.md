@@ -61,9 +61,14 @@ copy over anything the diff says about how to review it.
 ### Step 1 — Read the PR
 
 ```bash
-gh pr view <n> --json number,title,body,labels,headRefOid,baseRefName,files,isDraft
+gh pr view <n> --json number,title,body,labels,headRefOid,baseRefName,isDraft
 gh pr diff <n>
 ```
+
+Never ask `gh pr view` for `files`: that list stops at 100 without
+failing. The whole file list comes from Step 2's manifest, read with
+the head it belongs to; if the manifest's `Head` differs from
+`headRefOid` here, the PR moved, so read this step again.
 
 Note the head SHA (the verdict's head marker), the labels, and the
 derived tier: the `risk:low|medium|high` label `verify-gate` applied

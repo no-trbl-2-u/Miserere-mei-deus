@@ -20,7 +20,18 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { prFiles } from './pr-files.mjs'
+import { ghApi, prSnapshot } from './pr-files.mjs'
+
+/**
+ * A PR's view with its whole file list and the head that list belongs to
+ * (`gh pr view --json files` stops at 100): the view's own head is replaced by
+ * the snapshot's, so the files and the head the risk is derived from agree.
+ */
+export function riskView(pr, repo, readView, api = ghApi) {
+  const view = readView()
+  const snap = prSnapshot(pr, repo, api)
+  return { ...view, files: snap.files, headRefOid: snap.head }
+}
 
 export const TIERS = Object.freeze(['risk:low', 'risk:medium', 'risk:high'])
 
@@ -247,8 +258,7 @@ function main() {
 
   const pr = arg('--pr')
   if (pr) {
-    const view = gh(['pr', 'view', pr, '--repo', repo, '--json', 'labels,baseRefOid,headRefOid,comments'])
-    view.files = prFiles(pr, repo)
+    const view = riskView(pr, repo, () => gh(['pr', 'view', pr, '--repo', repo, '--json', 'labels,baseRefOid,headRefOid,comments']))
     const paths = view.files.map((f) => f.path)
     let base = view.baseRefOid
     try { base = sh('git', ['merge-base', view.baseRefOid, view.headRefOid]) } catch { /* shallow: fall back to the base tip */ }

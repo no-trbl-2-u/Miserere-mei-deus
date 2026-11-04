@@ -31,7 +31,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, posix, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { ghApi, prFiles } from './pr-files.mjs'
+import { ghApi, prSnapshot } from './pr-files.mjs'
 import { isLowPath } from './pr-risk.mjs'
 
 /**
@@ -381,6 +381,7 @@ export function renderManifest(m) {
   const head = [
     `# Review manifest${m.pr ? ` for PR #${m.pr}` : ''}`,
     '',
+    m.head ? `Head ${m.head}: the file list below belongs to this head.` : '',
     `Tier ${m.tier}: up to ${m.max} assignments; ${m.agents.length} spawned, each read by ${READERS_PER_ASSIGNMENT.length} readers (${READERS_PER_ASSIGNMENT.join(', ')}), plus the Tests lens${m.control ? ' and the control adversary' : ''}: ${m.agents.length * READERS_PER_ASSIGNMENT.length + 1 + (m.control ? 1 : 0)} sub-agents.`,
     m.records.length ? `Plan, docs and loop records left to no agent: ${m.records.length} file(s).` : '',
     m.unpartitioned.length ? `Changed non-source files (every assignment may read, none owns): ${m.unpartitioned.join(', ')}.` : '',
@@ -457,12 +458,8 @@ function readLedger() {
 
 /** The PR's whole file list (paginated, count-checked: `pr view --json files` stops at 100 silently), labels and head. */
 export function changedFromPr(pr, repo, api = ghApi) {
-  const view = api(`repos/${repo}/pulls/${pr}`)
-  return {
-    changed: prFiles(pr, repo, api),
-    labels: view.labels.map((l) => l.name),
-    head: view.head.sha,
-  }
+  const { files, labels, head } = prSnapshot(pr, repo, api)
+  return { changed: files, labels, head }
 }
 
 async function main() {
