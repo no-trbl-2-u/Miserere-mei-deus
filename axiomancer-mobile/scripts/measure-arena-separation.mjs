@@ -8,7 +8,7 @@
 // A MEASUREMENT, never a gate (D57): it rejects nothing and T's picks stand.
 //
 // What is composited is what combat draws: the arena plate (`cover`, bottom
-// centre, in the scene band), then the foe's matte tinted to the theme's
+// centre, in the scene band), then the resting cell's own backing tinted to the theme's
 // `AXM.bg`, then the foe's resting animation cell, at the pane's own figure
 // position and size (CombatCombatantPane + components/combat/frames). The tint
 // is done here in sharp, with the hex read from theme/palette.ts, because the
@@ -18,7 +18,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { BACKING_TUNING, BACKINGS, ENEMIES, backingFile, bakeAlpha, readAlpha } from './bake-backings.mjs'
+import { BACKING_TUNING, ENEMIES, backingDir, backingFile } from './bake-backings.mjs'
 
 const MOBILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const REPO = path.resolve(MOBILE, '..')
@@ -96,6 +96,8 @@ function manifests() {
 }
 
 const cellName = (key, n) => `${key}-${String(n).padStart(2, '0')}.webp`
+/** The backing drawn under that cell: one per cell since 146.8. */
+const backingPath = (key, n) => path.join(backingDir(key), backingFile(cellName(key, n)))
 
 async function rgba(sharp, file, side) {
   const { data, info } = await sharp(fs.readFileSync(file)).ensureAlpha().resize(side, side, { fit: 'fill' })
@@ -194,7 +196,7 @@ async function main() {
   L.push('')
   L.push('## How it is measured')
   L.push('')
-  L.push(`- Composite, bottom to top: the plate (\`cover\`, bottom centre, in the scene band: ${VIEW.w}x${sceneH} of a ${VIEW.w}x${VIEW.h} phone), the foe's matte tinted to \`AXM.bg\` (${bg.hex}, the \`${bg.id}\` theme, read from \`theme/palette.ts\`), the foe's cell.`)
+  L.push(`- Composite, bottom to top: the plate (\`cover\`, bottom centre, in the scene band: ${VIEW.w}x${sceneH} of a ${VIEW.w}x${VIEW.h} phone), the resting cell's own backing tinted to \`AXM.bg\` (${bg.hex}, the \`${bg.id}\` theme, read from \`theme/palette.ts\`), the foe's cell.`)
   L.push('- Figure position and size are the pane\'s own: wrap top 134, bottom 9% of the band, box 78% of the width (92% for the boss) by 96% of the wrap, the square cell \'contain\'ed at the bottom centre for a foot-line foe and the centre for a floating one. The pane\'s HUD-measured `top` and the idle breath, lunge, grounding shadow and top/floor scrims are not modelled.')
   L.push('- Cell used for the main figure: the resting cell of the idle clip, `<key>-00.webp` (idle row 0, `rest: 0`) for every foe.')
   L.push('- Separation = alpha-weighted mean luminance of the foe\'s cell minus the alpha-weighted mean luminance of what is behind it, over the cell\'s own pixels. Luminance is Rec. 709 on the stored sRGB values, 0 to 255. Positive: the foe is lighter than what is behind it.')
@@ -223,7 +225,7 @@ async function main() {
   const rg = stats.riesengebirge
   L.push('### Reading the separation tables')
   L.push('')
-  L.push('- With a backing every pixel of the foe sits on its own matte, so the first number in a cell is the same on all three plates of a region. The plate shows only in the aura past the matte and through its feather, which is not measured here. The plate-dependent number is the one in brackets (no backing) and the `plate Y behind` column.')
+  L.push('- With a backing every pixel of the foe sits on its own matte, so the first number in a cell is the same on all three plates of a region. The plate shows only through the backing edge feather (about a pixel), which is not measured here. The plate-dependent number is the one in brackets (no backing) and the `plate Y behind` column.')
   L.push('')
   L.push('### arena-beacon-crags-riesengebirge')
   L.push('')
@@ -242,7 +244,7 @@ async function main() {
       const man = mans[key]
       const sq = figureSquare(key, man.kind)
       const sprite = await rgba(sharp, path.join(ENEMIES, 'anim', key, cellName(key, man.idleRow * man.cols + man.rest)), sq.side)
-      const matte = await rgba(sharp, path.join(BACKINGS, backingFile(key)), sq.side)
+      const matte = await rgba(sharp, backingPath(key, man.idleRow * man.cols + man.rest), sq.side)
       const cells = []
       const behinds = []
       for (const id of r.plates) {
@@ -255,45 +257,31 @@ async function main() {
     L.push('')
   }
 
-  // Matte coverage at the rendered size, and the three matte sources.
-  L.push('## Matte coverage at the rendered size')
+  // Backing coverage at the rendered size.
+  L.push('## Backing coverage at the rendered size')
   L.push('')
-  L.push('The shipped matte (all cells) against the foe it sits behind, drawn at the size combat draws it. `figure` is the resting cell\'s pixels at alpha 64 or more; `matte` is the matte\'s alpha summed; both as a share of the foe\'s square. `ratio` is matte over figure. The last three columns re-bake the matte from one resting cell, from the idle clip\'s cells, and from all cells with the shipped tuning, as a share of the cell.')
+  L.push('The resting cell\'s own backing (one per cell since 146.8) against the cell it sits behind, drawn at the size combat draws it. `figure` is the resting cell\'s pixels at alpha 64 or more; `backing` is the backing\'s alpha summed; both as a share of the foe\'s square. `ratio` is backing over figure: a little over 1 is the keyed-away strokes and enclosed holes the backing fills, and its edge feather.')
   L.push('')
-  L.push('| Foe | rendered square | figure | matte | ratio | one cell | idle cells | all cells |')
-  L.push('|---|---|---|---|---|---|---|---|')
+  L.push('| Foe | rendered square | figure | backing | ratio |')
+  L.push('|---|---|---|---|---|')
   const rows = []
   for (const key of Object.keys(mans).sort()) {
     const man = mans[key]
     const sq = figureSquare(key, man.kind)
     const sprite = await rgba(sharp, path.join(ENEMIES, 'anim', key, cellName(key, man.idleRow * man.cols + man.rest)), sq.side)
-    const matte = await rgba(sharp, path.join(BACKINGS, backingFile(key)), sq.side)
+    const matte = await rgba(sharp, backingPath(key, man.idleRow * man.cols + man.rest), sq.side)
     let solid = 0, ma = 0
     for (let i = 0; i < sq.side * sq.side; i++) {
       if (sprite.data[i * sprite.ch + 3] >= SOLID) solid++
       ma += matte.data[i * matte.ch + 3] / 255
     }
-    const files = (idxs) => idxs.map((n) => path.join(ENEMIES, 'anim', key, cellName(key, n)))
-    const all = fs.readdirSync(path.join(ENEMIES, 'anim', key)).filter((f) => f.endsWith('.webp')).length
-    const share = async (idxs) => {
-      const planes = await Promise.all(files(idxs).map((f) => readAlpha(sharp, f)))
-      const m = await bakeAlpha(sharp, planes)
-      return m.alpha.reduce((s, a) => s + a / 255, 0) / m.alpha.length
-    }
-    const one = await share([man.idleRow * man.cols + man.rest])
-    const idle = await share(Array.from({ length: man.idleFrames }, (_, i) => man.idleRow * man.cols + i))
-    const allShare = await share(Array.from({ length: all }, (_, i) => i))
-    const fig = solid / (sq.side * sq.side)
-    const mat = ma / (sq.side * sq.side)
-    rows.push({ key, sq, fig, mat, one, idle, allShare })
+    rows.push({ key, sq, fig: solid / (sq.side * sq.side), mat: ma / (sq.side * sq.side) })
   }
   rows.sort((a, b) => b.mat / b.fig - a.mat / a.fig)
   for (const r of rows) {
-    L.push(`| ${r.key} | ${r.sq.side}px | ${pct(r.fig)} | ${pct(r.mat)} | ${(r.mat / r.fig).toFixed(2)}x | ${pct(r.one)} | ${pct(r.idle)} | ${pct(r.allShare)} |`)
+    L.push(`| ${r.key} | ${r.sq.side}px | ${pct(r.fig)} | ${pct(r.mat)} | ${(r.mat / r.fig).toFixed(2)}x |`)
   }
   coverage.push(rows)
-  L.push('')
-  L.push('The all-cells column is the shipped matte re-baked here, so it should match the file; the one-cell and idle-cell columns are for comparison only and nothing in the tree uses them.')
   L.push('')
 
   const text = `${L.join('\n')}\n`
@@ -315,7 +303,7 @@ async function main() {
     const sq = figureSquare(key, man.kind)
     const plate = await loadPlate(sharp, plateId, VIEW.w, sceneH)
     const sprite = await rgba(sharp, path.join(ENEMIES, 'anim', key, cellName(key, man.idleRow * man.cols + man.rest)), sq.side)
-    const matte = await rgba(sharp, path.join(BACKINGS, backingFile(key)), sq.side)
+    const matte = await rgba(sharp, backingPath(key, man.idleRow * man.cols + man.rest), sq.side)
     const out = Buffer.from(plate.data)
     for (let y = 0; y < sq.side; y++) {
       for (let x = 0; x < sq.side; x++) {

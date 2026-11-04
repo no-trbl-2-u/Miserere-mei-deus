@@ -1,23 +1,26 @@
 #!/usr/bin/env node
-// axiomancer-mobile/scripts/bake-backings.mjs — one soft backing per foe
-// (phase AP1d, spec 146).
+// axiomancer-mobile/scripts/bake-backings.mjs — a dark backing for every cell a
+// foe draws (phase AP1d, spec 146; cut per cell by 146.8, AP1h).
 //
-//   node scripts/bake-backings.mjs            # bake every foe, write provenance
+//   node scripts/bake-backings.mjs            # bake every foe, write registry + provenance
 //   node scripts/bake-backings.mjs --dry-run  # report sizes, write nothing
 //
 // A foe's art was alpha-matted by keying black out of a painting, so its dark
 // strokes are holes: over an engraved arena plate they show the plate. A
 // backing is a dark shape drawn directly under the foe that fills them.
 //
-// Combat draws animation CELLS, not the roster still, so the backing is cut
-// from the cells: T's ruling, "One per foe, all cells". Every cell of a foe is
-// overlaid into one matte, so one file serves every frame and the frame engine
-// does not change. A foe that moves a lot gets a looser aura, which T accepted:
-// "slight aura around is okay so you don't have to make it fit perfectly".
+// ONE BACKING PER CELL, cut from that cell alone, and drawn under that cell by
+// the frame player, so it changes with the frame. 146.4 cut one matte per foe
+// from the union of all its cells, grown and feathered; a foe that moves (the
+// float-eye bobs) got a matte far wider than any single frame, and T saw a
+// huge soft black blob around it in the v0.4.0 preview (2026-11-04): "It
+// should also only be within the shape of the enemy." So nothing here grows the
+// shape: threshold, close the gaps between strokes, fill the holes, drop specks,
+// and at most a pixel of feather on the edge.
 //
-// A matte is the same square as the foe's cells and is drawn in the same box
-// with the same fit and position, so it registers with the figure by
-// construction. It bakes black; the pane tints it to the theme's `AXM.bg`.
+// A backing is the same square as its cell and is drawn in the same box with
+// the same fit and position, so it registers with the figure by construction.
+// It bakes black; the frame player tints it to the theme's `AXM.bg`.
 
 import fs from 'node:fs'
 import path from 'node:path'
@@ -28,27 +31,26 @@ export const ENEMIES = path.join(MOBILE, 'assets', 'images', 'enemies')
 export const BACKINGS = path.join(ENEMIES, 'backing')
 
 /**
- * The one tuning block. Distances are fractions of the cell's edge, so the aura
- * is the same size on screen whichever edge a foe's set was cut at (152 to 256).
+ * The one tuning block. The close is a fraction of the cell's edge, so it seals
+ * the same on-screen gap whichever edge a foe's set was cut at (152 to 256).
+ * There is no grow: the backing stays inside the foe's own shape (146.8).
  */
 export const BACKING_TUNING = {
-  /** A pixel at or above this alpha, in any cell, is part of the foe. */
+  /** A pixel at or above this alpha, in the cell, is part of the foe. */
   threshold: 64,
   /** Morphological close: seals gaps between strokes narrower than twice this. */
-  closeFrac: 0.016,
-  /** A detached island smaller than this share of the cell (a stray spark) is dropped. */
-  islandFrac: 0.004,
-  /** How far the closed, hole-filled shape grows past the figure: the aura. */
-  growFrac: 0.016,
-  /** Gaussian feather on the grown edge. */
-  featherFrac: 0.009,
-  /** WebP terms. The alpha plane is all a matte holds, so it stays lossless. */
-  quality: 30,
-  alphaQuality: 100,
+  closeFrac: 0.012,
+  /** A detached island smaller than this share of the cell (a speck of keying noise) is dropped. */
+  islandFrac: 0.0005,
+  /** Gaussian feather on the edge, in pixels: antialiasing, not an aura. */
+  featherPx: 0.6,
 }
 
-/** `key.backing.webp`, as near the spec's `<sprite>.backing.webp` as a folder allows. */
-export const backingFile = (key) => `${key}.backing.webp`
+/** The backing for one drawn file: `float-eye-07.webp` -> `float-eye-07.backing.webp`. */
+export const backingFile = (drawn) => `${path.basename(drawn).replace(/\.webp$/i, '')}.backing.webp`
+
+/** Where a foe's backings live: one folder per foe. */
+export const backingDir = (key, backingsDir = BACKINGS) => path.join(backingsDir, key)
 
 /** What a foe draws in combat: its cells when it has a set, else its still. */
 export function drawnFiles(key, enemiesDir = ENEMIES) {
@@ -85,19 +87,6 @@ export async function readAlpha(sharp, file) {
  * that is 255 almost everywhere, and an encoder can drop a plane it found flat.
  */
 export const hasTransparency = (alpha) => alpha.some((a) => a < 255)
-
-/** The per-pixel maximum across planes of one size. Refuses mixed sizes. */
-export function unionAlpha(planes) {
-  const [{ width, height }] = planes
-  const out = new Uint8Array(width * height)
-  for (const plane of planes) {
-    if (plane.width !== width || plane.height !== height) {
-      throw new Error(`bake-backings: cells differ in size (${plane.width}x${plane.height} against ${width}x${height})`)
-    }
-    for (let i = 0; i < out.length; i++) if (plane.alpha[i] > out[i]) out[i] = plane.alpha[i]
-  }
-  return { alpha: out, width, height }
-}
 
 /** The pixel offsets of a disc, for dilate and erode. */
 function discOffsets(radius) {
@@ -185,24 +174,29 @@ export function dropIslands(mask, width, minPixels) {
   return out
 }
 
+/** The figure's own filled shape: the cell above threshold, its holes filled. No close, no grow. */
+export function figureShape({ alpha, width, height }, tuning = BACKING_TUNING) {
+  return fillHoles(alpha.map((a) => (a >= tuning.threshold ? 1 : 0)), width, height)
+}
+
 /**
- * The matte's alpha from a foe's cells: union, threshold, close holes, drop
- * islands, grow, feather. The closed shape is held at full opacity through the feather, so the
- * blur can only soften the aura and never thin the backing under the figure.
+ * One cell's backing alpha: threshold, close the gaps between strokes, fill
+ * holes, drop islands, and a sub-pixel feather. The shape is held at full
+ * opacity through the feather, so the blur only antialiases the edge outward
+ * by about a pixel and never thins the backing under the figure. Nothing grows it.
  */
-export async function bakeAlpha(sharp, planes, tuning = BACKING_TUNING) {
-  const { alpha, width, height } = unionAlpha(planes)
+export async function bakeAlpha(sharp, plane, tuning = BACKING_TUNING) {
+  const { alpha, width, height } = plane
   const mask = alpha.map((a) => (a >= tuning.threshold ? 1 : 0))
   const closeR = Math.max(1, width * tuning.closeFrac)
   const closed = erode(dilate(mask, width, height, closeR), width, height, closeR)
   // A close can only erode back what its dilate added, so the figure stays in.
   for (let i = 0; i < closed.length; i++) if (mask[i]) closed[i] = 1
   const filled = dropIslands(fillHoles(closed, width, height), width, width * height * tuning.islandFrac)
-  const grown = dilate(filled, width, height, Math.max(1, width * tuning.growFrac))
   // sharp hands a one-channel input back with three channels, so step by the
   // count it reports: reading it as one channel smears the matte into stripes.
-  const { data: blurred, info } = await sharp(Buffer.from(grown.map((v) => v * 255)), { raw: { width, height, channels: 1 } })
-    .blur(Math.max(0.3, width * tuning.featherFrac))
+  const { data: blurred, info } = await sharp(Buffer.from(filled.map((v) => v * 255)), { raw: { width, height, channels: 1 } })
+    .blur(Math.max(0.3, tuning.featherPx))
     .raw()
     .toBuffer({ resolveWithObject: true })
   const out = new Uint8Array(width * height)
@@ -210,58 +204,117 @@ export async function bakeAlpha(sharp, planes, tuning = BACKING_TUNING) {
   return { alpha: out, width, height }
 }
 
-/** A black image carrying that alpha, as WebP bytes. */
-export function encodeMatte(sharp, { alpha, width, height }, tuning = BACKING_TUNING) {
+/** A black image carrying that alpha, as lossless WebP bytes (a flat colour costs almost nothing). */
+export function encodeMatte(sharp, { alpha, width, height }) {
   const rgba = Buffer.alloc(width * height * 4)
   for (let i = 0; i < alpha.length; i++) rgba[i * 4 + 3] = alpha[i]
   return sharp(rgba, { raw: { width, height, channels: 4 } })
-    .webp({ quality: tuning.quality, alphaQuality: tuning.alphaQuality, effort: 6 })
+    .webp({ lossless: true, effort: 6 })
     .toBuffer()
 }
 
-/** One foe's provenance entry: its licence is the cells' own. */
-export function provenanceEntry(key, enemiesDir, date) {
-  const recordPath = path.join(enemiesDir, 'anim', key, 'provenance.json')
-  const [cells] = JSON.parse(fs.readFileSync(recordPath, 'utf-8'))
+const asList = (record) => (Array.isArray(record) ? record : [record])
+
+/** One foe's provenance entry: its licence is the cells' own (or the still's, for a foe with no set). */
+export function provenanceEntry(key, files, enemiesDir, date) {
+  const cellRecord = path.join(enemiesDir, 'anim', key, 'provenance.json')
+  const source = fs.existsSync(cellRecord)
+    ? asList(JSON.parse(fs.readFileSync(cellRecord, 'utf-8')))[0]
+    : asList(JSON.parse(fs.readFileSync(path.join(enemiesDir, 'provenance.json'), 'utf-8')))[0]
   const t = BACKING_TUNING
   const entry = {
     generated_by: 'derived',
     date,
     tool: 'scripts/bake-backings.mjs (sharp)',
     model: 'none - no image model was called and nothing was spent',
-    post_process: `union of alpha across every cell, threshold ${t.threshold}, close ${t.closeFrac}, `
-      + `fill holes, drop islands under ${t.islandFrac} of the cell, grow ${t.growFrac}, feather ${t.featherFrac} (fractions of the cell edge), black, `
-      + `WebP q${t.quality}, lossless alpha`,
+    post_process: `one backing per cell, from that cell alone: threshold ${t.threshold}, close ${t.closeFrac} of the cell edge, `
+      + `fill holes, drop islands under ${t.islandFrac} of the cell, no grow, feather ${t.featherPx}px, black, lossless WebP`,
     graded: false,
-    license: cells.license,
-    source: `anim/${key}/, every cell. Holds only their silhouette: no pixel of colour survives.`,
-    covers: [backingFile(key)],
+    license: source.license,
+    source: `anim/${key}/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.`,
+    covers: files.map((f) => backingFile(f)),
   }
-  if (cells.license_note) entry.license_note = cells.license_note
+  if (source.license_note) entry.license_note = source.license_note
   return entry
+}
+
+/** The registry, generated: Metro resolves `require()` statically, so every literal is spelled out. */
+export function registrySource(foes) {
+  const L = [
+    '/**',
+    ' * Enemy BACKINGS: a dark shape under every cell a foe draws. GENERATED by',
+    ' * `node scripts/bake-backings.mjs`; do not edit by hand.',
+    ' *',
+    " * A foe's art was alpha-matted by keying BLACK out of a painting, so its dark",
+    ' * strokes are holes and an arena plate would read straight through them. Each',
+    ' * cell has its own backing, cut from that cell alone (threshold, close, fill',
+    ' * holes, no grow), in the same order as the cells, so the frame player draws',
+    " * backing `i` under cell `i` and the black stays inside the foe's shape on",
+    ' * every frame (146.8; the one matte per foe of 146.4, a union of every cell,',
+    " * drew a blob around a foe that moves). It bakes black; the player tints it to",
+    " * the theme's `AXM.bg`, and the pane passes it only while arena plates show.",
+    ' *',
+    ' * `scripts/enemy-backings.test.mjs` fails when a foe that draws transparent art',
+    " * lacks a backing for any cell, or when a backing reaches past its cell's shape.",
+    ' */',
+    "import type { ImageSourcePropType } from 'react-native';",
+    '',
+    'export const ENEMY_BACKINGS: Readonly<Record<string, readonly ImageSourcePropType[]>> = {',
+  ]
+  for (const { key, files } of foes) {
+    L.push(`    '${key}': [`)
+    for (const f of files) L.push(`        require('./${key}/${backingFile(f)}'),`)
+    L.push('    ],')
+  }
+  L.push(
+    '};',
+    '',
+    "/** The foe's backings, one per drawn cell in cell order, or null for a key with none. */",
+    'export function getEnemyBacking(artKey: string | null | undefined): readonly ImageSourcePropType[] | null {',
+    '    if (!artKey || !Object.prototype.hasOwnProperty.call(ENEMY_BACKINGS, artKey)) return null;',
+    '    return ENEMY_BACKINGS[artKey];',
+    '}',
+  )
+  return `${L.join('\n')}\n`
 }
 
 async function main() {
   const dryRun = process.argv.includes('--dry-run')
   const { default: sharp } = await import('sharp')
   const date = new Date().toISOString().slice(0, 10)
-  if (!dryRun) fs.mkdirSync(BACKINGS, { recursive: true })
-  const records = []
+  const foes = []
   let total = 0
-  for (const key of rosterKeys()) {
-    const planes = await Promise.all(drawnFiles(key).map((f) => readAlpha(sharp, f)))
-    const matte = await bakeAlpha(sharp, planes)
-    const bytes = await encodeMatte(sharp, matte)
-    total += bytes.length
-    const covered = matte.alpha.reduce((n, a) => n + (a > 0 ? 1 : 0), 0) / matte.alpha.length
-    console.log(`${key.padEnd(18)} ${matte.width}px  ${String(bytes.length).padStart(5)} B  ${(covered * 100).toFixed(1)}% of the cell`)
-    if (!dryRun) fs.writeFileSync(path.join(BACKINGS, backingFile(key)), bytes)
-    records.push(provenanceEntry(key, ENEMIES, date))
-  }
+  let count = 0
   if (!dryRun) {
-    fs.writeFileSync(path.join(BACKINGS, 'provenance.json'), `${JSON.stringify(records, null, 2)}\n`)
+    // Retire whatever was baked before (146.4's flat one-per-foe mattes included).
+    for (const e of fs.readdirSync(BACKINGS, { withFileTypes: true })) {
+      if (e.isDirectory() || /\.webp$/i.test(e.name) || e.name === 'provenance.json') {
+        fs.rmSync(path.join(BACKINGS, e.name), { recursive: true, force: true })
+      }
+    }
   }
-  console.log(`\nbake-backings: ${records.length} matte(s), ${total} B${dryRun ? ' (dry run)' : ''}`)
+  for (const key of rosterKeys()) {
+    const files = drawnFiles(key)
+    const planes = await Promise.all(files.map((f) => readAlpha(sharp, f)))
+    if (!planes.some((p) => hasTransparency(p.alpha))) continue
+    const dir = backingDir(key)
+    if (!dryRun) fs.mkdirSync(dir, { recursive: true })
+    let bytesForFoe = 0
+    for (const [i, plane] of planes.entries()) {
+      const bytes = await encodeMatte(sharp, await bakeAlpha(sharp, plane))
+      bytesForFoe += bytes.length
+      if (!dryRun) fs.writeFileSync(path.join(dir, backingFile(files[i])), bytes)
+    }
+    total += bytesForFoe
+    count += files.length
+    console.log(`${key.padEnd(18)} ${planes[0].width}px  ${files.length} backing(s)  ${String(bytesForFoe).padStart(6)} B`)
+    if (!dryRun) {
+      fs.writeFileSync(path.join(dir, 'provenance.json'), `${JSON.stringify([provenanceEntry(key, files, ENEMIES, date)], null, 2)}\n`)
+    }
+    foes.push({ key, files })
+  }
+  if (!dryRun) fs.writeFileSync(path.join(BACKINGS, 'index.ts'), registrySource(foes))
+  console.log(`\nbake-backings: ${foes.length} foe(s), ${count} backing(s), ${total} B${dryRun ? ' (dry run)' : ''}`)
 }
 
 // pathToFileURL, not a `file://` prefix: on Windows `argv[1]` is `C:\...`.

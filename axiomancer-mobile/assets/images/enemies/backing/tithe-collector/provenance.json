@@ -1,0 +1,39 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "open source (T, 2026-10-29, D115)",
+    "source": "anim/tithe-collector/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "tithe-collector-00.backing.webp",
+      "tithe-collector-01.backing.webp",
+      "tithe-collector-02.backing.webp",
+      "tithe-collector-03.backing.webp",
+      "tithe-collector-04.backing.webp",
+      "tithe-collector-05.backing.webp",
+      "tithe-collector-06.backing.webp",
+      "tithe-collector-07.backing.webp",
+      "tithe-collector-08.backing.webp",
+      "tithe-collector-09.backing.webp",
+      "tithe-collector-10.backing.webp",
+      "tithe-collector-11.backing.webp",
+      "tithe-collector-12.backing.webp",
+      "tithe-collector-13.backing.webp",
+      "tithe-collector-14.backing.webp",
+      "tithe-collector-15.backing.webp",
+      "tithe-collector-16.backing.webp",
+      "tithe-collector-17.backing.webp",
+      "tithe-collector-18.backing.webp",
+      "tithe-collector-19.backing.webp",
+      "tithe-collector-20.backing.webp",
+      "tithe-collector-21.backing.webp",
+      "tithe-collector-22.backing.webp",
+      "tithe-collector-23.backing.webp"
+    ],
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait tithe-collector.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\""
+  }
+]

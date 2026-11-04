@@ -1,18 +1,19 @@
 /**
- * Phase AP1d - THE FOE STANDS ON A BACKING CUT FROM ITS OWN CELLS.
+ * Phase AP1d - THE FOE STANDS ON A BACKING CUT FROM ITS OWN CELLS; per cell
+ * since 146.8 (AP1h).
  *
  * The pane's half of the backing law. `scripts/enemy-backings.test.mjs` proves
- * every matte exists and covers its foe; this proves the pane draws it: under
- * the figure, inside the wrappers that breathe and lunge, in the theme's ground
- * colour, in the same box and at the same position as the cells, only while
- * plates are shown, and that the round figure plate it replaced is gone.
+ * every cell's backing exists, covers it and stays inside its shape; this
+ * proves the pane draws it: the backing of the cell on screen, under that cell,
+ * inside the wrappers that breathe and lunge, in the theme's ground colour,
+ * only while plates are shown, and that the round figure plate is gone.
  */
 import React from 'react';
 import { render, within, type RenderResult } from '@testing-library/react-native';
 
 import { CombatCombatantPane } from '@/components/combat/encounter/CombatCombatantPane';
 import { ENEMY_BACKINGS, ENEMY_FRAME_SETS, getEnemyBacking } from '@/assets/images/enemies';
-import { cellContentPosition } from '@/components/combat/frames';
+import { cellContentPosition, sheetIndexFor } from '@/components/combat/frames';
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
@@ -53,9 +54,9 @@ describe('the backing registry', () => {
         expect(FRAMED.length).toBeGreaterThanOrEqual(17);
     });
 
-    it.each(FRAMED)('%s has a backing', (key) => {
+    it.each(FRAMED)('%s has one backing per cell', (key) => {
         expect(getEnemyBacking(key)).toBe(ENEMY_BACKINGS[key]);
-        expect(getEnemyBacking(key)).not.toBeNull();
+        expect(getEnemyBacking(key)).toHaveLength(ENEMY_FRAME_SETS[key].frames.length);
     });
 
     it('answers null for a key with none, including an inherited property name', () => {
@@ -65,40 +66,42 @@ describe('the backing registry', () => {
     });
 });
 
+/** The backing the frame player draws under the cell on screen. */
+const shownBacking = (view: RenderResult) =>
+    view.getByTestId(/^combat-enemy-frames-backing-\d+$/);
+
 describe('the pane draws the backing', () => {
-    it.each(['death-beholder', 'green-jelly', 'gallows-crow'])('%s stands on its matte', (key) => {
+    it.each(['death-beholder', 'green-jelly', 'gallows-crow'])('%s stands on the backing of the cell it shows', (key) => {
         const view = renderPane(key);
         const figure = within(view.getByTestId('combat-enemy-figure'));
-        const backing = figure.getByTestId('combat-enemy-backing');
-        expect(backing.props.source).toEqual([ENEMY_BACKINGS[key]]);
+        const backing = figure.getByTestId(/^combat-enemy-frames-backing-\d+$/);
+        const shown = Number(String(backing.props.testID).split('-').pop());
+        const set = ENEMY_FRAME_SETS[key];
+        const cell = sheetIndexFor(set.manifest, set.manifest.clips.idle, shown);
+        expect(backing.props.source).toEqual([ENEMY_BACKINGS[key][cell]]);
         expect(backing.props.tintColor).toBeTruthy();
     });
 
     it('rides in the wrappers that breathe and lunge', () => {
         const view = renderPane('float-eye');
         const lunge = within(view.getByTestId('combat-enemy-lunge'));
-        expect(within(lunge.getByTestId('combat-enemy-figure')).getByTestId('combat-enemy-backing')).toBeTruthy();
+        expect(within(lunge.getByTestId('combat-enemy-figure')).getByTestId(/^combat-enemy-frames-backing-\d+$/)).toBeTruthy();
     });
 
-    it.each(['float-eye', 'green-jelly'])('%s: backing is under the figure, in one box, placed as the cells are', (key) => {
+    it.each(['float-eye', 'green-jelly'])('%s: the backing is drawn by the frame player, under its own cell', (key) => {
         const view = renderPane(key);
         const box = view.getByTestId('combat-enemy-figure-box');
-        const backing = within(box).getByTestId('combat-enemy-backing');
         const frames = within(box).getByTestId('combat-enemy-frames');
-        // A cell as drawn: the host image, with its props as they reach the native side.
-        const [drawn] = frames.findAll((n: { type: unknown; props: Record<string, unknown> }) => typeof n.type === 'string' && n.props.contentFit !== undefined);
-        expect(drawn).toBeDefined();
-        expect(backing.props.contentFit).toBe(drawn.props.contentFit);
-        expect(backing.props.contentPosition).toEqual(drawn.props.contentPosition);
-        // Later siblings paint on top: the matte must come first.
-        const painted = (box.children as unknown as { props: { testID?: string } }[]).map((c) => c.props.testID);
-        expect(painted).toEqual(['combat-enemy-backing', 'combat-enemy-frames']);
+        expect(within(frames).getByTestId(/^combat-enemy-frames-backing-\d+$/)).toBeTruthy();
+        // No separate one-per-foe matte beside the player any more.
+        expect(within(box).queryByTestId('combat-enemy-backing')).toBeNull();
+        expect(shownBacking(view)).toBeTruthy();
     });
 
-    it('the black scene draws no matte, and the figure keeps its box', () => {
+    it('the black scene draws no backing, and the figure keeps its box', () => {
         mockPlatesShown = false;
         const view = renderPane('float-eye');
-        expect(view.queryByTestId('combat-enemy-backing')).toBeNull();
+        expect(view.queryByTestId(/^combat-enemy-frames-backing-\d+$/)).toBeNull();
         expect(within(view.getByTestId('combat-enemy-figure-box')).getByTestId('combat-enemy-frames')).toBeTruthy();
     });
 

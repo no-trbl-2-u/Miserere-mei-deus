@@ -6,12 +6,17 @@
  * `source` would flash the first time each cell is reached, which on an attack
  * beat is the one moment it must not.
  *
+ * A foe's BACKING rides in the same layer as its cell (146.8): backing `i` is
+ * cut from cell `i` alone and drawn directly under it, so the dark shape that
+ * fills the keyed-away strokes is the current frame's shape, swapped on the
+ * same opacity beat, never a union of every pose.
+ *
  * It refuses to render a set that does not validate. A truncated animation is a
  * failure, not a shrug: a bad set falls back to the resting cell when it has
  * one and to nothing at all when it does not, and says why in dev.
  */
 import React from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { Image } from '@/lib/platform/image';
@@ -19,7 +24,7 @@ import {
     RESTING_CLIP, validateFrameSet, type EnemyFrameSet,
 } from '@/assets/images/enemies/frames';
 
-import { cellContentPosition, sheetIndexFor } from './framePlayback';
+import { backingForCell, cellContentPosition, sheetIndexFor } from './framePlayback';
 import { useFramePlayback, type ReducedMotionLike } from './useFramePlayback';
 
 export interface EnemyFramePlayerProps {
@@ -38,6 +43,14 @@ export interface EnemyFramePlayerProps {
      * uses it to step by hand while paused; live combat never passes it.
      */
     frameOverride?: number | null;
+    /**
+     * One backing per cell, in cell order (`assets/images/enemies/backing`),
+     * drawn under its own cell in `backingTint`. Absent: no backing (the pane
+     * passes none while arena plates are off). A list that does not match the
+     * set cell for cell draws none rather than a misregistered shape.
+     */
+    backings?: readonly ImageSourcePropType[] | null;
+    backingTint?: string;
     style?: StyleProp<ViewStyle>;
     accessibilityLabel?: string;
     testID?: string;
@@ -52,6 +65,8 @@ export function EnemyFramePlayer({
     instant,
     startKey = 0,
     frameOverride = null,
+    backings = null,
+    backingTint,
     style,
     accessibilityLabel,
     testID = 'enemy-frame-player',
@@ -79,6 +94,10 @@ export function EnemyFramePlayer({
         ? index
         : ((frameOverride % clip.frames) + clip.frames) % clip.frames;
     const active = sheetIndexFor(frameSet.manifest, clip, shown);
+    const position = cellContentPosition(frameSet.manifest);
+    if (__DEV__ && backings && backings.length !== frameSet.frames.length) {
+        console.warn(`[frames] ${artKey}: ${backings.length} backing(s) for ${frameSet.frames.length} cells; drawing none`);
+    }
 
     return (
         <View
@@ -87,21 +106,35 @@ export function EnemyFramePlayer({
             accessible={accessibilityLabel !== undefined}
             accessibilityLabel={accessibilityLabel}
         >
-            {frameSet.frames.map((source, i) => (
-                <Animated.View
-                    key={i}
-                    style={[StyleSheet.absoluteFillObject, { opacity: i === active ? 1 : 0 }]}
-                    pointerEvents="none"
-                    testID={i === active ? `${testID}-cell-${shown}` : undefined}
-                >
-                    <Image
-                        source={source}
-                        style={StyleSheet.absoluteFillObject}
-                        contentFit="contain"
-                        contentPosition={cellContentPosition(frameSet.manifest)}
-                    />
-                </Animated.View>
-            ))}
+            {frameSet.frames.map((source, i) => {
+                const backing = backingForCell(backings, frameSet.frames.length, i);
+                return (
+                    <Animated.View
+                        key={i}
+                        style={[StyleSheet.absoluteFillObject, { opacity: i === active ? 1 : 0 }]}
+                        pointerEvents="none"
+                        testID={i === active ? `${testID}-cell-${shown}` : undefined}
+                    >
+                        {backing ? (
+                            <Image
+                                source={backing}
+                                style={StyleSheet.absoluteFillObject}
+                                contentFit="contain"
+                                contentPosition={position}
+                                tintColor={backingTint}
+                                transition={0}
+                                testID={i === active ? `${testID}-backing-${shown}` : undefined}
+                            />
+                        ) : null}
+                        <Image
+                            source={source}
+                            style={StyleSheet.absoluteFillObject}
+                            contentFit="contain"
+                            contentPosition={position}
+                        />
+                    </Animated.View>
+                );
+            })}
             {/* A zero-size marker so a test can ask "is it holding still?"
                 without reaching into the hook. */}
             {still ? <View testID={`${testID}-still`} pointerEvents="none" /> : null}

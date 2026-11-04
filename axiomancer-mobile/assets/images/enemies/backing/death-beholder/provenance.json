@@ -1,0 +1,38 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "torio Javardry free material: free for any use including commercial, modification and redistribution; no attribution required",
+    "source": "anim/death-beholder/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "death-beholder-00.backing.webp",
+      "death-beholder-01.backing.webp",
+      "death-beholder-02.backing.webp",
+      "death-beholder-03.backing.webp",
+      "death-beholder-04.backing.webp",
+      "death-beholder-05.backing.webp",
+      "death-beholder-06.backing.webp",
+      "death-beholder-07.backing.webp",
+      "death-beholder-08.backing.webp",
+      "death-beholder-09.backing.webp",
+      "death-beholder-10.backing.webp",
+      "death-beholder-11.backing.webp",
+      "death-beholder-12.backing.webp",
+      "death-beholder-13.backing.webp",
+      "death-beholder-14.backing.webp",
+      "death-beholder-15.backing.webp",
+      "death-beholder-16.backing.webp",
+      "death-beholder-17.backing.webp",
+      "death-beholder-18.backing.webp",
+      "death-beholder-19.backing.webp",
+      "death-beholder-20.backing.webp",
+      "death-beholder-21.backing.webp",
+      "death-beholder-22.backing.webp",
+      "death-beholder-23.backing.webp"
+    ]
+  }
+]

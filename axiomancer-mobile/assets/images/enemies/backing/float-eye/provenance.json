@@ -1,0 +1,39 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "open source (T, 2026-10-29, D115)",
+    "source": "anim/float-eye/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "float-eye-00.backing.webp",
+      "float-eye-01.backing.webp",
+      "float-eye-02.backing.webp",
+      "float-eye-03.backing.webp",
+      "float-eye-04.backing.webp",
+      "float-eye-05.backing.webp",
+      "float-eye-06.backing.webp",
+      "float-eye-07.backing.webp",
+      "float-eye-08.backing.webp",
+      "float-eye-09.backing.webp",
+      "float-eye-10.backing.webp",
+      "float-eye-11.backing.webp",
+      "float-eye-12.backing.webp",
+      "float-eye-13.backing.webp",
+      "float-eye-14.backing.webp",
+      "float-eye-15.backing.webp",
+      "float-eye-16.backing.webp",
+      "float-eye-17.backing.webp",
+      "float-eye-18.backing.webp",
+      "float-eye-19.backing.webp",
+      "float-eye-20.backing.webp",
+      "float-eye-21.backing.webp",
+      "float-eye-22.backing.webp",
+      "float-eye-23.backing.webp"
+    ],
+    "license_note": "Derived from float-eye.webp, an owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\""
+  }
+]
