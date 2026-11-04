@@ -99,12 +99,16 @@ reachable from a registry. It runs inside the mobile verify gate.
 
 ## Enemy backings
 
-Every foe that draws transparent art stands on a soft dark matte, so its
-keyed-away strokes stay dark over an arena plate. A matte lives at
-`assets/images/enemies/backing/<key>.backing.webp`, is the same square as
-the foe's cells, and is one shape for every frame. After changing a foe's
-cells, run `node scripts/bake-backings.mjs`: `scripts/enemy-backings.test.mjs`
-fails on a foe with no matte, judging by alpha values, and on a stale one.
+Every foe that draws transparent art stands on a dark backing, so its
+keyed-away strokes stay dark over an arena plate. Each CELL has its own
+backing, cut from that cell alone (no grow, a pixel of feather), at
+`assets/images/enemies/backing/<key>/<cell>.backing.webp`, the same square
+as the cell; the frame player draws backing `i` under cell `i`, so the black
+stays inside the foe's shape on every frame (146.8). After changing a foe's
+cells, run `node scripts/bake-backings.mjs` (it writes the backings, their
+provenance and the generated `backing/index.ts`): `scripts/enemy-backings.test.mjs`
+fails on a cell with no backing, judging by alpha values, on a stale one, and
+on a backing that reaches past its cell's own shape.
 
 ## Enemy frame sets (the animated art contract)
 

@@ -1,0 +1,38 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "torio Javardry free material: free for any use including commercial, modification and redistribution; no attribution required",
+    "source": "anim/green-jelly/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "green-jelly-00.backing.webp",
+      "green-jelly-01.backing.webp",
+      "green-jelly-02.backing.webp",
+      "green-jelly-03.backing.webp",
+      "green-jelly-04.backing.webp",
+      "green-jelly-05.backing.webp",
+      "green-jelly-06.backing.webp",
+      "green-jelly-07.backing.webp",
+      "green-jelly-08.backing.webp",
+      "green-jelly-09.backing.webp",
+      "green-jelly-10.backing.webp",
+      "green-jelly-11.backing.webp",
+      "green-jelly-12.backing.webp",
+      "green-jelly-13.backing.webp",
+      "green-jelly-14.backing.webp",
+      "green-jelly-15.backing.webp",
+      "green-jelly-16.backing.webp",
+      "green-jelly-17.backing.webp",
+      "green-jelly-18.backing.webp",
+      "green-jelly-19.backing.webp",
+      "green-jelly-20.backing.webp",
+      "green-jelly-21.backing.webp",
+      "green-jelly-22.backing.webp",
+      "green-jelly-23.backing.webp"
+    ]
+  }
+]

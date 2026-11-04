@@ -1,0 +1,39 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "open source (T, 2026-10-29, D115)",
+    "source": "anim/brine-widow/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "brine-widow-00.backing.webp",
+      "brine-widow-01.backing.webp",
+      "brine-widow-02.backing.webp",
+      "brine-widow-03.backing.webp",
+      "brine-widow-04.backing.webp",
+      "brine-widow-05.backing.webp",
+      "brine-widow-06.backing.webp",
+      "brine-widow-07.backing.webp",
+      "brine-widow-08.backing.webp",
+      "brine-widow-09.backing.webp",
+      "brine-widow-10.backing.webp",
+      "brine-widow-11.backing.webp",
+      "brine-widow-12.backing.webp",
+      "brine-widow-13.backing.webp",
+      "brine-widow-14.backing.webp",
+      "brine-widow-15.backing.webp",
+      "brine-widow-16.backing.webp",
+      "brine-widow-17.backing.webp",
+      "brine-widow-18.backing.webp",
+      "brine-widow-19.backing.webp",
+      "brine-widow-20.backing.webp",
+      "brine-widow-21.backing.webp",
+      "brine-widow-22.backing.webp",
+      "brine-widow-23.backing.webp"
+    ],
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait brine-widow.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\""
+  }
+]

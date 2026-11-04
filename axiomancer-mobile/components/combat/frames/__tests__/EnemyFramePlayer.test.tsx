@@ -138,3 +138,78 @@ describe('EnemyFramePlayer', () => {
         warn.mockRestore();
     });
 });
+
+/**
+ * 146.8 — the backing is per cell. Backing `i` is cut from cell `i` alone, so
+ * the player draws it inside cell `i`'s own layer, under the cell, on the same
+ * opacity swap: the dark shape on screen is always the current frame's shape.
+ */
+describe("EnemyFramePlayer draws each cell's own backing", () => {
+    const backings = SYNTHETIC_FRAME_SET.frames.map((_, i) => ({ uri: `backing-${i}` }));
+    type Node = { type: unknown; props: Record<string, unknown>; children: unknown[] };
+    /** The host image may hand its source on wrapped in a list. */
+    const src = (value: unknown) => [value].flat()[0];
+
+    it('draws backing i under cell i, in the tint, placed as the cell is', () => {
+        render(
+            <EnemyFramePlayer
+                artKey={SYNTHETIC_FRAME_KEY}
+                frameSet={SYNTHETIC_FRAME_SET}
+                playing={false}
+                frameOverride={2}
+                backings={backings}
+                backingTint="black"
+            />,
+        );
+        const backing = screen.getByTestId('enemy-frame-player-backing-2');
+        const cell = screen.getByTestId('enemy-frame-player-cell-2');
+        expect(src(backing.props.source)).toEqual(backings[2]);
+        expect(backing.props.tintColor).toBeTruthy();
+        // The backing rides in the active cell's own layer, painted first.
+        const images = cell.findAll((n: Node) => typeof n.type === 'string' && n.props.contentFit !== undefined);
+        expect(images).toHaveLength(2);
+        expect(src(images[0].props.source)).toEqual(backings[2]);
+        expect(src(images[1].props.source)).not.toEqual(backings[2]);
+        expect(images[0].props.contentFit).toBe(images[1].props.contentFit);
+        expect(images[0].props.contentPosition).toEqual(images[1].props.contentPosition);
+    });
+
+    it('changes with the frame', () => {
+        const at = (frame: number) => {
+            const view = render(
+                <EnemyFramePlayer
+                    artKey={SYNTHETIC_FRAME_KEY}
+                    frameSet={SYNTHETIC_FRAME_SET}
+                    playing={false}
+                    frameOverride={frame}
+                    backings={backings}
+                />,
+            );
+            const source = src(view.getByTestId(`enemy-frame-player-backing-${frame}`).props.source);
+            view.unmount();
+            return source;
+        };
+        expect(at(0)).toEqual(backings[0]);
+        expect(at(1)).toEqual(backings[1]);
+    });
+
+    it('draws no backing when none is passed', () => {
+        render(<EnemyFramePlayer artKey={SYNTHETIC_FRAME_KEY} frameSet={SYNTHETIC_FRAME_SET} frameOverride={0} />);
+        expect(screen.queryByTestId('enemy-frame-player-backing-0')).toBeNull();
+    });
+
+    it('draws none rather than a misregistered one when the list does not match the cells', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        render(
+            <EnemyFramePlayer
+                artKey={SYNTHETIC_FRAME_KEY}
+                frameSet={SYNTHETIC_FRAME_SET}
+                frameOverride={0}
+                backings={backings.slice(1)}
+            />,
+        );
+        expect(screen.queryByTestId('enemy-frame-player-backing-0')).toBeNull();
+        expect(screen.getByTestId('enemy-frame-player-cell-0')).toBeTruthy();
+        warn.mockRestore();
+    });
+});

@@ -32,11 +32,7 @@ needs are done):
 - **99.4** · automate footgun `glyph-in-text` (seen 2×), spec 99's ladder chunk.
 - **99.5** · automate footgun `spare-table-unreached` (seen 2×), spec 99's ladder chunk.
 
-- **149.1** · TL2a: the pipeline holds its file reader and reads PRs whole and consistent (T, `/plot asap`, 2026-11-04)
 - **149.2** · TL2b: the last 100-file readers read whole lists (T, `/plot asap`, 2026-11-04)
-- **149.3** · TL2c: settle holds back only the file that empties a spec (T, `/plot asap`, 2026-11-04)
-- **149.4** · MR4a: the memoir tooltip says only what its entry holds (T, `/plot asap`, 2026-11-04)
-- **149.5** · MR4b: same item from a quest and an elite keeps both offers (T, `/plot asap`, 2026-11-04)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -105,7 +101,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
-| 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 5 left |
+| 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
 
 ## How the loop reads this folder

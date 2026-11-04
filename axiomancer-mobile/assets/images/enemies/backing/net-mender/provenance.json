@@ -1,0 +1,39 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "open source (T, 2026-10-29, D115)",
+    "source": "anim/net-mender/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "net-mender-00.backing.webp",
+      "net-mender-01.backing.webp",
+      "net-mender-02.backing.webp",
+      "net-mender-03.backing.webp",
+      "net-mender-04.backing.webp",
+      "net-mender-05.backing.webp",
+      "net-mender-06.backing.webp",
+      "net-mender-07.backing.webp",
+      "net-mender-08.backing.webp",
+      "net-mender-09.backing.webp",
+      "net-mender-10.backing.webp",
+      "net-mender-11.backing.webp",
+      "net-mender-12.backing.webp",
+      "net-mender-13.backing.webp",
+      "net-mender-14.backing.webp",
+      "net-mender-15.backing.webp",
+      "net-mender-16.backing.webp",
+      "net-mender-17.backing.webp",
+      "net-mender-18.backing.webp",
+      "net-mender-19.backing.webp",
+      "net-mender-20.backing.webp",
+      "net-mender-21.backing.webp",
+      "net-mender-22.backing.webp",
+      "net-mender-23.backing.webp"
+    ],
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait net-mender.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\""
+  }
+]

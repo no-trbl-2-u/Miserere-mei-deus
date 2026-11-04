@@ -1,0 +1,39 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-04",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "open source (T, 2026-10-29, D115)",
+    "source": "anim/wreck-picker/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "wreck-picker-00.backing.webp",
+      "wreck-picker-01.backing.webp",
+      "wreck-picker-02.backing.webp",
+      "wreck-picker-03.backing.webp",
+      "wreck-picker-04.backing.webp",
+      "wreck-picker-05.backing.webp",
+      "wreck-picker-06.backing.webp",
+      "wreck-picker-07.backing.webp",
+      "wreck-picker-08.backing.webp",
+      "wreck-picker-09.backing.webp",
+      "wreck-picker-10.backing.webp",
+      "wreck-picker-11.backing.webp",
+      "wreck-picker-12.backing.webp",
+      "wreck-picker-13.backing.webp",
+      "wreck-picker-14.backing.webp",
+      "wreck-picker-15.backing.webp",
+      "wreck-picker-16.backing.webp",
+      "wreck-picker-17.backing.webp",
+      "wreck-picker-18.backing.webp",
+      "wreck-picker-19.backing.webp",
+      "wreck-picker-20.backing.webp",
+      "wreck-picker-21.backing.webp",
+      "wreck-picker-22.backing.webp",
+      "wreck-picker-23.backing.webp"
+    ],
+    "license_note": "Derived from T's image-model sheet, itself drawn from the stand-in portrait wreck-picker.webp. T, 2026-10-29, D115: \"The images we use for everything are open source.\""
+  }
+]

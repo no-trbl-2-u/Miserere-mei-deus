@@ -3,6 +3,8 @@
  * question "which cell is on screen at t?" has one answer that a test can ask
  * directly, and the component below it is only wiring.
  */
+import type { ImageSourcePropType } from 'react-native';
+
 import type { FrameClip, FrameSetManifest } from '@/assets/images/enemies/frames';
 
 /** Milliseconds one cell is held. */
@@ -50,7 +52,7 @@ export function frameIndexFromProgress(clip: FrameClip, progress: number): numbe
  * Where a set's cells sit in their box. `foot-line` pins the bottom edge so a
  * standing figure never lifts off its own feet; `centre` keeps the cell centred,
  * because for a floater the hover IS the clip. One answer, because the foe's
- * backing sits in the same box and must land on exactly the same pixels.
+ * backing cell sits in the same box and must land on exactly the same pixels.
  */
 export function cellContentPosition(manifest: FrameSetManifest): 'bottom center' | 'center' {
     return manifest.anchor.kind === 'foot-line' ? 'bottom center' : 'center';
@@ -59,4 +61,20 @@ export function cellContentPosition(manifest: FrameSetManifest): 'bottom center'
 /** The absolute cell in a row-major sheet for clip-relative frame `i`. */
 export function sheetIndexFor(manifest: FrameSetManifest, clip: FrameClip, i: number): number {
     return clip.row * manifest.columns + Math.max(0, Math.min(clip.frames - 1, i));
+}
+
+/**
+ * The backing drawn under sheet cell `cell` (146.8): backing `i` is cut from
+ * cell `i` alone, so it is only ever drawn under that cell. A backing list that
+ * does not match the set cell for cell answers null for every cell: a backing
+ * under the wrong frame is a dark shape where the foe is not, which is the very
+ * blob 146.8 removed, so no backing beats a misregistered one.
+ */
+export function backingForCell(
+    backings: readonly ImageSourcePropType[] | null | undefined,
+    cellCount: number,
+    cell: number,
+): ImageSourcePropType | null {
+    if (!backings || backings.length !== cellCount) return null;
+    return backings[cell] ?? null;
 }

@@ -128,3 +128,9 @@ Defaults taken: `NodeLayout.arena?: ArenaPlateId` is a type-only import from ass
 - The pane's figure geometry is unchanged.
 - With plates on, a hard dark edge and a lighter rectangle showed under the HUD on web. Cause: the pane's three scrim `Svg`s named no size, and web draws that as the browser's default 300x150 box. They now say `width="100%" height="100%"`; native is unchanged.
 - `map-walk-e2e.mjs` asserted the black scene (no image); it now asserts the plate is drawn.
+
+Defaults taken: an elite drop adds its own satchel row when carried entries already hold the existing ones; spare-gear dedupe left id-only (not in this chunk's files).
+
+- T's bug from the v0.4.0 preview APK (Float-Eye fight): "It should also only be within the shape of the enemy." Root cause: `scripts/bake-backings.mjs` (146.4) cut one matte per foe from the union of all 24 cells, grew it and feathered it, and the pane drew that one matte under every frame; measured against the cell on screen it reached past the foe's own filled shape by 45% to 227% of the foe's area (mean per foe).
+- Fixed per cell, not by T's fallback: 408 backings (one per cell, lossless WebP, 331 KB in all against 96 KB for the 17 union mattes and 3.0 MB for the cells), drawn by `EnemyFramePlayer` inside each cell's own opacity layer, so no new sync was needed. The overreach is now at most 0.4% of the foe's area per foe on average, and nothing lies past the close radius plus the feather.
+- Defaults taken under the run: islands under 0.05% of the cell are dropped (specks of keying noise), down from 146.4's 0.4%, since a per-cell backing has no stray spark from another frame to hang in the air; a dark object enclosed between a foe's strokes (what the Brine-Widow holds in one pose) is backed, as a hole of the foe's own shape. `docs/reports/arena-separation.md` was re-measured with the resting cell's own backing.
