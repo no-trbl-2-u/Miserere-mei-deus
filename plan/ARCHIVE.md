@@ -542,3 +542,4 @@
 - 2026-11-04 · 147.4 (alias: MR3d) · The flagged mercy tests fail when the behaviour they name is gone. · f2fcaee0..f2fcaee0 (#1372)
 - 2026-11-04 · 149.4 (alias: MR4a) · Memoir tooltip names only what its combat entry holds · 0a3d8e46..a7eb4b6e (#1378)
 - 2026-11-04 · 149.5 (alias: MR4b) · Quest and elite offers of one item both reach the screen · 17dc7434..c67c26f2 (#1379)
+- 2026-11-04 · 149.1 (alias: TL2a) · Review pipeline holds its file reader; reads pair files with head · 6b30c978..6b30c978 (#1381)
