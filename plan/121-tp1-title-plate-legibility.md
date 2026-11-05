@@ -134,6 +134,6 @@ Measure: 2 open · 7 closed · next A10
 - `scripts/cut-embark-button.mjs` cuts it from the sheet's own alpha matte (the brown vignette is colour under zero
   alpha), trims it, caps it at 640px; record in `assets/images/title/provenance.json`.
 - The main menu's NEW GAME row draws the scroll (`EmbarkButton`); LOAD GAME and SETTINGS stay text rows; the title
-  phase's own EMBARK call to action is unchanged.
+  phase's own EMBARK call to action is unchanged, and the title plate shows undimmed: no menu dim, no foot or side fade (T, 2026-11-04: 'no overlays').
 - Measure: `npm run verify -w axiomancer-mobile`, `npm run art:legibility -w axiomancer-mobile`, and
   `node --test scripts/asset-provenance.test.mjs` pass.

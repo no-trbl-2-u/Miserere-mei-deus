@@ -9,14 +9,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { TITLE_PLATE } from '@/assets/images/title';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
 import { Image } from '@/lib/platform/image';
 import {
-  MENU_PLATE_OPACITY,
   TITLE_COPY,
   TITLE_TIMING,
   WORDMARK_EM_WIDTH,
@@ -24,7 +22,7 @@ import {
   titleWordmarkFrames,
 } from '@/state/presenters/title.engine';
 import { FONTS } from '@/theme/axm';
-import { makeStyles, usePalette } from '@/theme/runtime';
+import { makeStyles } from '@/theme/runtime';
 
 interface TitleScreenProps {
   /** The main menu, shown beneath the same wordmark once EMBARK is pressed. */
@@ -48,7 +46,6 @@ interface TitleScreenProps {
  */
 export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
   const styles = useStyles();
-  const AXM = usePalette();
   const { width, height } = useWindowDimensions();
   const insets = useContext(SafeAreaInsetsContext);
   const layout = titleLayout({ width, height, topInset: insets?.top ?? 0 });
@@ -99,8 +96,7 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
     ],
   }), [splash.translateY, splash.scale]);
   const plateStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(lift.value, [0.15, 1], [0, 1], 'clamp')
-      * interpolate(toMenu.value, [0, 1], [1, MENU_PLATE_OPACITY]),
+    opacity: interpolate(lift.value, [0.15, 1], [0, 1], 'clamp'),
   }));
   const ctaStyle = useAnimatedStyle(() => ({ opacity: cta.value * (1 - toMenu.value) }));
   const menuStyle = useAnimatedStyle(() => ({ opacity: toMenu.value }));
@@ -112,7 +108,6 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
     if (w > 0 && Math.abs(w - measuredWidth) > 0.5) setMeasuredWidth(w);
   };
   const plate = layout.plate;
-  const sideFeather = plate.left > 0;
 
   return (
     <View style={styles.container} testID="title-screen">
@@ -127,27 +122,6 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
           contentFit="cover"
           accessibilityLabel={TITLE_COPY.plateLabel}
         />
-        {/* The plate dissolves into the ground at its foot, and at its sides
-            when a wide window leaves ground beside it, so it has no edge. */}
-        <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
-          <Defs>
-            <LinearGradient id="axmTitleFoot" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset={0.55} stopColor={AXM.bg} stopOpacity={0} />
-              <Stop offset={0.72} stopColor={AXM.bg} stopOpacity={0.35} />
-              <Stop offset={0.84} stopColor={AXM.bg} stopOpacity={0.78} />
-              <Stop offset={0.93} stopColor={AXM.bg} stopOpacity={1} />
-              <Stop offset={1} stopColor={AXM.bg} stopOpacity={1} />
-            </LinearGradient>
-            <LinearGradient id="axmTitleSides" x1="0" y1="0" x2="1" y2="0">
-              <Stop offset={0} stopColor={AXM.bg} stopOpacity={sideFeather ? 1 : 0} />
-              <Stop offset={0.12} stopColor={AXM.bg} stopOpacity={0} />
-              <Stop offset={0.88} stopColor={AXM.bg} stopOpacity={0} />
-              <Stop offset={1} stopColor={AXM.bg} stopOpacity={sideFeather ? 1 : 0} />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmTitleSides)" />
-          <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmTitleFoot)" />
-        </Svg>
       </Animated.View>
 
       {phase === 'menu' ? (

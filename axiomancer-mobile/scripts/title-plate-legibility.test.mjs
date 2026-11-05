@@ -3,9 +3,9 @@
 //
 //   node --test axiomancer-mobile/scripts/title-plate-legibility.test.mjs
 //
-// The compositor, the four figures on fixture plates, the baseline-and-arm
+// The compositor, the two figures on fixture plates, the baseline-and-arm
 // verdict, and the installed plate against its recorded baseline. The
-// mirrored scrim stops and stack numbers are pinned to TitleScreen.tsx's
+// mirrored stack numbers, and the absence of any overlay, are pinned to TitleScreen.tsx's
 // source so a style change there fails here instead of silently moving the
 // sampled region.
 
@@ -16,9 +16,8 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { DEFAULT_THEME_ID, paletteFor } from '../theme/palette.ts'
-import { MENU_PLATE_OPACITY, TITLE_COPY, titleLayout } from '../state/presenters/title.engine.ts'
+import { TITLE_COPY, titleLayout } from '../state/presenters/title.engine.ts'
 import {
-  FOOT_STOPS,
   PLATE_FILE,
   REFERENCE_VIEWPORT,
   REPORT_FILE,
@@ -33,7 +32,6 @@ import {
   readReport,
   regionLuminance,
   sha256,
-  sideStops,
   textRegions,
   writeBaseline,
 } from './title-plate-legibility.mjs'
@@ -52,43 +50,21 @@ function flatPlate(level, width = 1290, height = 1600) {
 
 const close = (a, b, eps = 1e-6) => a.every((v, i) => Math.abs(v - b[i]) < eps)
 
-test('the foot scrim turns a white plate to the ground at its foot and leaves its top white', () => {
+test('the plate fades in over the ground and nothing else changes it', () => {
   const white = [1, 1, 1]
-  const at = (v) => compositePixel(white, { u: 0.5, v, sideFeather: false, opacity: 1, bg: BG })
-  assert.ok(close(at(0.99), BG), `foot reads ${at(0.99)}, not the ground ${BG}`)
-  assert.ok(close(at(0.01), white), `top reads ${at(0.01)}, not white`)
-  // Half-way down the feather it is neither.
-  const mid = at(0.78)
-  assert.ok(mid[0] < 1 && mid[0] > BG[0])
+  assert.ok(close(compositePixel(white, { opacity: 1, bg: BG }), white))
+  const half = compositePixel(white, { opacity: 0.5, bg: BG })
+  assert.ok(close(half, BG.map((b) => b + (1 - b) * 0.5)))
 })
 
-test('the sides scrim feathers only when the window leaves ground beside the plate', () => {
-  const white = [1, 1, 1]
-  const edge = (sideFeather) => compositePixel(white, { u: 0, v: 0.1, sideFeather, opacity: 1, bg: BG })
-  assert.ok(close(edge(true), BG))
-  assert.ok(close(edge(false), white))
-})
-
-test('the phase opacity fades the composited plate over the ground', () => {
-  const white = [1, 1, 1]
-  const dim = compositePixel(white, { u: 0.5, v: 0.1, sideFeather: false, opacity: MENU_PLATE_OPACITY, bg: BG })
-  assert.ok(close(dim, BG.map((b) => b + (1 - b) * MENU_PLATE_OPACITY)))
-})
-
-test('the mirrored scrim stops match TitleScreen.tsx', () => {
-  const foot = SCREEN.slice(SCREEN.indexOf('id="axmTitleFoot"'), SCREEN.indexOf('</LinearGradient>', SCREEN.indexOf('id="axmTitleFoot"')))
-  const stops = [...foot.matchAll(/offset=\{([\d.]+)\} stopColor=\{AXM\.bg\} stopOpacity=\{([\d.]+)\}/g)]
-    .map((m) => [Number(m[1]), Number(m[2])])
-  assert.deepEqual(stops, FOOT_STOPS)
-
-  const sides = SCREEN.slice(SCREEN.indexOf('id="axmTitleSides"'), SCREEN.indexOf('</LinearGradient>', SCREEN.indexOf('id="axmTitleSides"')))
-  const offsets = [...sides.matchAll(/offset=\{([\d.]+)\}/g)].map((m) => Number(m[1]))
-  assert.deepEqual(offsets, sideStops(true).map(([o]) => o))
-  // The edge stops follow sideFeather; the inner two are clear.
-  assert.equal((sides.match(/stopOpacity=\{sideFeather \? 1 : 0\}/g) ?? []).length, 2)
-  assert.equal((sides.match(/stopOpacity=\{0\}/g) ?? []).length, 2)
-  // Sides drawn first, then the foot: the order compositePixel applies them.
-  assert.ok(SCREEN.indexOf('url(#axmTitleSides)') < SCREEN.indexOf('url(#axmTitleFoot)'))
+test('TitleScreen.tsx draws nothing over the plate: no scrim, no menu dim (T, 2026-11-04: "no overlays")', () => {
+  assert.ok(!/axmTitleFoot|axmTitleSides|react-native-svg|MENU_PLATE_OPACITY/.test(SCREEN))
+  const plate = SCREEN.slice(SCREEN.indexOf('testID="title-plate"'), SCREEN.indexOf('</Animated.View>', SCREEN.indexOf('testID="title-plate"')))
+  assert.equal((plate.match(/<Image/g) ?? []).length, 1)
+  assert.ok(!/<(Svg|View|LinearGradient)/.test(plate))
+  // The plate's opacity is its fade-in alone: it is not tied to the menu phase.
+  const style = SCREEN.slice(SCREEN.indexOf('const plateStyle'), SCREEN.indexOf('const ctaStyle'))
+  assert.ok(!/toMenu/.test(style))
 })
 
 test('the mirrored stack numbers match TitleScreen.tsx', () => {
@@ -148,8 +124,7 @@ test('a region off the plate reads as the ground', () => {
 test('a pale plate fails and a dark plate passes', () => {
   const pale = measurePlate(flatPlate(225), { copy: TITLE_COPY })
   const dark = measurePlate(flatPlate(10), { copy: TITLE_COPY })
-  assert.equal(Object.keys(pale).length, 4)
-  assert.deepEqual(Object.keys(pale).sort(), ['psalm.menu', 'psalm.title', 'wordmark.menu', 'wordmark.title'])
+  assert.deepEqual(Object.keys(pale).sort(), ['psalm.title', 'wordmark.title'])
   const verdict = (figures) => judgePlate({ figures, sha256: 'candidate', baseline: { sha256: 'shipped' }, thresholds: THRESHOLDS })
   const paleVerdict = verdict(pale)
   assert.equal(paleVerdict.ok, false)
@@ -167,7 +142,7 @@ test('a plate equal to the baseline passes even below the threshold', () => {
 })
 
 test('a changed plate below the threshold fails, naming the figure, the threshold and the measurement', () => {
-  const figures = { 'wordmark.title': 2.1, 'psalm.title': 9, 'wordmark.menu': 6, 'psalm.menu': 9 }
+  const figures = { 'wordmark.title': 2.1, 'psalm.title': 9 }
   const v = judgePlate({ figures, sha256: 'new', baseline: { sha256: 'old' }, thresholds: THRESHOLDS })
   assert.equal(v.ok, false)
   assert.deepEqual(v.failures, [`wordmark.title contrast 2.1:1 is below the ${THRESHOLDS.wordmark}:1 threshold`])
@@ -188,7 +163,7 @@ test('writeBaseline replaces only the generated block', () => {
   const text = 'intro\n<!-- legibility:baseline:begin -->\nold\n<!-- legibility:baseline:end -->\noutro\n'
   const out = writeBaseline(text, {
     plate: PLATE_FILE, sha256: 'abc', viewport: REFERENCE_VIEWPORT, theme: DEFAULT_THEME_ID,
-    figures: { 'wordmark.title': 1, 'psalm.title': 2, 'wordmark.menu': 3, 'psalm.menu': 4 },
+    figures: { 'wordmark.title': 1, 'psalm.title': 2 },
   })
   assert.ok(out.startsWith('intro\n') && out.endsWith('outro\n'))
   assert.ok(!out.includes('\nold\n'))
@@ -202,7 +177,7 @@ test('the installed plate clears the gate and matches its recorded figures', asy
   const { baseline } = readReport(REPORT)
   if (baseline.sha256 === sha256(fs.readFileSync(file))) {
     // Same plate, so the figures must be the recorded ones; a drift means the
-    // layout or the scrims moved and the report is stale.
+    // layout moved and the report is stale.
     for (const [key, value] of Object.entries(result.figures)) {
       assert.ok(Math.abs(value - baseline.figures[key]) <= 0.05,
         `${key} measures ${value}:1 but the report records ${baseline.figures[key]}:1; run npm run art:legibility -- --write`)

@@ -58,9 +58,6 @@ export const TITLE_TIMING = Object.freeze({
     menuMs: 650,
 });
 
-/** How far the plate dims under the menu (its opacity there). */
-export const MENU_PLATE_OPACITY = 0.3;
-
 export interface Viewport {
     width: number;
     height: number;

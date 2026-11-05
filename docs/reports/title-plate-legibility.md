@@ -8,9 +8,8 @@
 
 The contrast ratio (WCAG 2.x formula) between the text colour (`parchment`, both texts) and the **mean
 relative luminance of the plate region the text sits on, as the player sees it**: the plate fitted to its
-box, then the `axmTitleSides` scrim, then the `axmTitleFoot` scrim, then faded to the phase's opacity over
-the ground colour (`bg`). Four figures: the wordmark and the psalm line, at the `title` phase (plate at 1)
-and the `menu` phase (plate at `MENU_PLATE_OPACITY`).
+box, with nothing drawn over it (no scrim, no menu dim; T, 2026-11-04: "no overlays"). Two figures: the
+wordmark and the psalm line.
 
 - **Regions.** The wordmark's box is its rest frame from `titleLayout` and `titleWordmarkFrames`
   (`state/presenters/title.engine.ts`, imported). The psalm line is laid out by flex from the window's foot,
@@ -20,10 +19,10 @@ and the `menu` phase (plate at `MENU_PLATE_OPACITY`).
   width-dependent, so one fixed size keeps the figures comparable between runs.
 - **What it does not see.** The text shadows (they only help), local bright spots inside the region (a mean
   hides them), and any viewport but the reference one.
-- At the reference viewport the psalm line sits on the plate's last few percent, where the foot scrim has
-  already reached the ground colour, so its figure is the text against `bg`. On a phone the plate ends above
-  the psalm line altogether. Under the menu the psalm line is faded out; its `menu` figure is kept for
-  symmetry and is gated like the rest.
+- At the reference viewport the psalm line sits on the plate's last few percent, so its figure is the text
+  against the plate's own foot. On a phone the plate ends above the psalm line altogether. Before 2026-11-04
+  a foot scrim and a menu dim were also measured (wordmark 14.9:1 and 15.2:1, psalm line 15.13:1 and
+  15.13:1); both were removed from the screen, so only the undimmed figures remain.
 
 ## Thresholds
 
@@ -43,7 +42,7 @@ editing this block and saying why in a sentence here; no code change is needed.
 `npm run art:test` (in `npm run verify -w axiomancer-mobile`) measures the installed plate. A plate whose
 bytes match the baseline below passes whatever its figures, so a plate already shipped never turns `main`
 red; a plate that differs from it fails for each figure under its threshold, and the failure names the
-figure, the threshold and which of the four measurements missed. To try a candidate before installing it:
+figure, the threshold and which measurement missed. To try a candidate before installing it:
 `npm run art:legibility -w axiomancer-mobile -- --plate <file>`. After installing a plate that clears it,
 re-record the baseline with `--write`.
 
@@ -64,10 +63,10 @@ under `combat/` and `maps/`.
 <!-- legibility:baseline:begin -->
 Plate `assets/images/title/lion-in-the-wood.webp` at desktop 1280x800 (1280x800), theme `ashen-gold`:
 
-| Text | `title` phase (plate at 1) | `menu` phase (plate at 0.3) |
-| --- | --- | --- |
-| Wordmark | 14.9:1 | 15.2:1 |
-| Psalm line | 15.13:1 | 15.13:1 |
+| Text | Contrast (plate undimmed, no overlay) |
+| --- | --- |
+| Wordmark | 14.87:1 |
+| Psalm line | 13.5:1 |
 
 ```json legibility-baseline
 {
@@ -81,10 +80,8 @@ Plate `assets/images/title/lion-in-the-wood.webp` at desktop 1280x800 (1280x800)
   },
   "theme": "ashen-gold",
   "figures": {
-    "wordmark.title": 14.9,
-    "psalm.title": 15.13,
-    "wordmark.menu": 15.2,
-    "psalm.menu": 15.13
+    "wordmark.title": 14.87,
+    "psalm.title": 13.5
   }
 }
 ```
