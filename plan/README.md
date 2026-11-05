@@ -28,8 +28,6 @@ needs are done):
 - **121.2** · TP1b: the title plate is Doré's *Inferno* Plate 3, the lion (T's pick, `/plot asap`, 2026-11-04)
 - **99.1** · automate footgun `card-voice-stale-rows` (seen 2×), spec 99's ladder chunk.
 - **99.2** · automate footgun `face-text-parsers` (seen 2×), spec 99's ladder chunk.
-- **99.3** · automate footgun `small-face-line-fit` (seen 2×), spec 99's ladder chunk.
-- **99.4** · automate footgun `glyph-in-text` (seen 2×), spec 99's ladder chunk.
 - **99.5** · automate footgun `spare-table-unreached` (seen 2×), spec 99's ladder chunk.
 
 - **149.2** · TL2b: the last 100-file readers read whole lists (T, `/plot asap`, 2026-11-04)
@@ -99,7 +97,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 129 | iPhone beta builds | [129-io1-iphone-beta.md](129-io1-iphone-beta.md) | planned | 2 left |
 | 130 | The modular feature map: a note per feature, canvases you zoom into | [130-fm2-modular-feature-map.md](130-fm2-modular-feature-map.md) | planned | 1 left |
 | 131 | Set bonuses: T's design session | [131-sb1-set-bonuses.md](131-sb1-set-bonuses.md) | planned | 1 left |
-| 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 2 left |
+| 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 1 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
@@ -109,7 +107,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
 | 150 | The open rows, checked against the code | [150-pc1-plan-cleanup.md](150-pc1-plan-cleanup.md) | planned | 4 left |
 | 151 | Elite and spare rewards give only what you don't own | [151-mr5-owned-rolls.md](151-mr5-owned-rolls.md) | planned | 1 left |
-| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 3 left |
 
 ## How the loop reads this folder
 

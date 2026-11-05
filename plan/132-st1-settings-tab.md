@@ -129,26 +129,6 @@ before ST1a loads unchanged. Nothing else is saved; `FeedbackDraft` is in memory
 
 ## Acceptance
 
-- **A1** The tab bar has a sixth tab, SETTINGS, rightmost, with a gear icon. The gear is the game-icons.net
-  `cog` glyph added to the icon canon (`components/icons/game-icon-paths.ts` and the registry) with its
-  credit in `LICENSE-game-icons.txt`. `TabKey` and `TAB_TITLES` carry it; the tabs-engine tests pin the
-  order.
-- **A2** The SETTINGS tab renders the same settings body as `/settings` (one component, two hosts). In the
-  tab it has no ✕ close button; on the `/settings` route, reached from the main menu, it keeps it.
-  The SELF tab's Settings link is removed, since the tab replaces it. Confirmed by T (2026-10-31): yes,
-  remove it from the Character tab.
-- **A3** The SOUND section has a MUSIC on/off row above the volume, a new persisted setting `musicOn`
-  (default on; an old save without it reads as on). Off silences the theme through MU1's music director,
-  as volume 0 does; switching back on resumes at the kept volume. Confirmed by T (2026-10-31): yes, reset turns music on. The reset-settings
-  button restores it to on.
-- **A4** A FEEDBACK section holds one SEND FEEDBACK button. It opens a modal with a two-way pick, BUG or
-  PROPOSAL, a multi-line text box capped at 1000 characters with a live count, and SUBMIT and CANCEL.
-  SUBMIT is disabled until a kind is picked and the text is not blank. CANCEL, the back gesture and a tap
-  outside close it and discard the text.
-- **A5** SUBMIT, for now, sends and saves nothing. It closes the modal and shows one line: "Thanks. This
-  build doesn't send feedback yet." Confirmed by T (2026-10-31): yes, close and say so. The form's state
-  is one typed value, `FeedbackDraft { kind: 'bug' | 'proposal'; text: string }`, built by a pure presenter function with its
-  own tests, so the build that stores feedback replaces only the submit handler.
 - **A6** The DEV TOOLS link moves from the SELF tab into Settings, in a DEV section at the bottom, under the
   same `isDevToolsEnabled()` gate: present in dev and preview builds, absent (section and all) in
   production. The SELF tab no longer mounts it. Its testID becomes `settings-dev-tools-link`.
@@ -162,8 +142,6 @@ before ST1a loads unchanged. Nothing else is saved; `FeedbackDraft` is in memory
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 2 open · 5 closed · next A8
 
-- [ ] **132.1** The SETTINGS tab, the music switch and the feedback form · M · closes A1, A2, A3, A4, A5 · needs — · alias: ST1a
-  - pr: #1249
-- [ ] **132.2** The dev menu moves into Settings · S · closes A6, A7 · needs 132.1 · alias: ST1b
+- [ ] **132.2** The dev menu moves into Settings · S · closes A6, A7 · needs — · alias: ST1b

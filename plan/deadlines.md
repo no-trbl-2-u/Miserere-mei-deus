@@ -230,7 +230,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
-- ST1a — shipped on main (PR #1249) before the cut-over; the v2 chunk stays open until the owner settles it, no T act waits on it
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - CF1a — the card-face grammar lint (spec 137); no dated T act waits on it, only T's read of CF1b's rewrite, whose date T has not set
 - CF1b — every card line rewritten to T's grammar; T reads and merges its rules-change PR; date not set (T picks it).

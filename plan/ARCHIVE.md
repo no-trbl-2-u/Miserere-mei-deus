@@ -546,3 +546,6 @@
 - 2026-11-04 · 149.3 (alias: TL2c) · Settle holds back only the file that empties a spec · d7815331..8bdca2a9 (#1380)
 - 2026-11-04 · 146.8 (alias: AP1h) · The black behind a foe stays inside its shape · eb3bb32d..eb3bb32d (#1383)
 - 2026-11-05 · 150.2 (alias: PC1b) · Half-done rows name only what is left · 36c66e88..36c66e88 (#1386)
+- 2026-11-04 · 132.1 (alias: ST1a) · Settings tab, music switch and feedback form closed · 9e6243d3..9e6243d3 (#1387)
+- 2026-11-04 · 99.3 · Small-face line-fit footgun guarded, shown failing · 9e6243d3..9e6243d3 (#1387)
+- 2026-11-04 · 99.4 · Glyph-in-text footgun guarded, shown failing · 9e6243d3..9e6243d3 (#1387)
