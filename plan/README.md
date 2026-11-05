@@ -28,11 +28,9 @@ needs are done):
 - **121.2** · TP1b: the title plate is Doré's *Inferno* Plate 3, the lion (T's pick, `/plot asap`, 2026-11-04)
 - **99.1** · automate footgun `card-voice-stale-rows` (seen 2×), spec 99's ladder chunk.
 - **99.2** · automate footgun `face-text-parsers` (seen 2×), spec 99's ladder chunk.
-- **99.5** · automate footgun `spare-table-unreached` (seen 2×), spec 99's ladder chunk.
 
 - **149.2** · TL2b: the last 100-file readers read whole lists (T, `/plot asap`, 2026-11-04)
 
-- **150.1** · PC1a: shipped and moot rows close, guarded footguns say so (T, `/plot asap`, 2026-11-04)
 - **150.4** · PC1d: attended rows split from the loop work they hide, and the ship renamed (T, `/plot asap`, 2026-11-04)
 - **150.5** · PC1e: finished briefs leave `plan/` (T, `/plot asap`, 2026-11-04)
 
@@ -103,9 +101,9 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
-| 150 | The open rows, checked against the code | [150-pc1-plan-cleanup.md](150-pc1-plan-cleanup.md) | planned | 3 left |
+| 150 | The open rows, checked against the code | [150-pc1-plan-cleanup.md](150-pc1-plan-cleanup.md) | planned | 2 left |
 | 151 | Elite and spare rewards give only what you don't own | [151-mr5-owned-rolls.md](151-mr5-owned-rolls.md) | planned | 1 left |
-| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 3 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 2 left |
 
 ## How the loop reads this folder
 
