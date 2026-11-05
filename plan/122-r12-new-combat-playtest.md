@@ -6,11 +6,11 @@ Carried from the v1 build plan row at the nexus v2 cut-over (phase NX1d, 2026-11
 
 ## Why
 
-- R12: New combat-playtest (attended): design and write a new `/combat-playtest` command for the rebuilt game (the old one was archived in R0), around the real questions after the reset: does stat growth track the Act 1 curve, are the survivors winnable and dangerous, what the matrix should measure (lowest VITAE included). Keeps the engine matrix CLI; designs the command on top of R12a's `measuredTruthCells`. `plan/revamp/loop.md`. Requires RC, R11, R12a.
+- R12: New combat-playtest (attended): design and write a new `/combat-playtest` command for the rebuilt game (the old one was archived in R0), around the two questions only T's play can answer: are the survivors winnable, and are they dangerous (T's judgement, played). The number for "how hard is Chapter 1" (win rates, how long a run takes, where it breaks) is SM2f's nightly report (spec 135, `docs/reports/sim/latest.md`), not this command's; the command reads that report and R12a's `measuredTruthCells` for the numbers and does not recompute them. T also decides what the matrix should measure (lowest VITAE included). Keeps the engine matrix CLI. `plan/revamp/loop.md`. Requires RC, R11, R12a.
 
 ## Design
 
-New combat-playtest (attended): design and write a new `/combat-playtest` command for the rebuilt game (the old one was archived in R0), around the real questions after the reset: does stat growth track the Act 1 curve, are the survivors winnable and dangerous, what the matrix should measure (lowest VITAE included). Keeps the engine matrix CLI; designs the command on top of R12a's `measuredTruthCells`. `plan/revamp/loop.md`. Requires RC, R11, R12a.
+New combat-playtest (attended): design and write a new `/combat-playtest` command for the rebuilt game (the old one was archived in R0), around the two questions only T's play can answer: are the survivors winnable, and are they dangerous (T's judgement, played). The number for "how hard is Chapter 1" (win rates, how long a run takes, where it breaks) is SM2f's nightly report (spec 135, `docs/reports/sim/latest.md`), not this command's; the command reads that report and R12a's `measuredTruthCells` for the numbers and does not recompute them. T also decides what the matrix should measure (lowest VITAE included). Keeps the engine matrix CLI. `plan/revamp/loop.md`. Requires RC, R11, R12a.
 
 ## Contracts
 
@@ -18,7 +18,7 @@ None beyond Design.
 
 ## Acceptance
 
-- **A1** New combat-playtest (attended): design and write a new `/combat-playtest` command for the rebuilt game (the old one was archived in R0), around the real questions after the reset: does stat growth track the Act 1 curve, are the survivors winnable and dangerous, what the matrix should measure (lowest VITAE included). Keeps the engine matrix CLI; designs the command on top of R12a's `measuredTruthCells`. `plan/revamp/loop.md`.
+- **A1** New combat-playtest (attended): design and write a new `/combat-playtest` command for the rebuilt game (the old one was archived in R0), around the two questions only T's play can answer: are the survivors winnable, and are they dangerous (T's judgement, played). The number for "how hard is Chapter 1" (win rates, how long a run takes, where it breaks) is SM2f's nightly report (spec 135, `docs/reports/sim/latest.md`), not this command's; the command reads that report and R12a's `measuredTruthCells` for the numbers and does not recompute them. T also decides what the matrix should measure (lowest VITAE included). Keeps the engine matrix CLI. `plan/revamp/loop.md`.
 
 ## Open questions
 
