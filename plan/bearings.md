@@ -31,8 +31,9 @@ it. Internal identifiers keep the former title: the npm workspaces
 (`axiomancer-mechanics`, `axiomancer-mobile`), the repo and folder name,
 `GH_REPO`, the `axiomancer` URL scheme and `com.axiomancer.mobile`. The
 splash, title screen and main menu share one typeset wordmark over Doré's
-Purgatorio I plate, and the launcher icon is cropped from that plate
-(2026-10-11; `state/presenters/title.engine.ts`).
+Inferno Plate 3, the lion (T's pick, 2026-11-04, plan 121.2;
+`state/presenters/title.engine.ts`); the launcher icon is still cropped
+from the earlier Purgatorio I plate (`assets/images/icon.provenance.json`).
 
 **One hosted web surface: the public DevLog.** The product ships as
 a mobile app via manual EAS builds; the app itself does not

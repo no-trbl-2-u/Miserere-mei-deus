@@ -100,7 +100,6 @@ None. The report is a generated record, not save data.
 
 ## Acceptance
 
-- **A8** The title plate itself (carried from row TP1b, whose brief named no A-ID left open for it).
 - **A9** The title screen's EMBARK button is T's parchment "Embark" scroll, cut from T's sheet with a clean torn-edge
   alpha, at most 320 wide with its aspect kept; it keeps EMBARK's press (and its lockout during the lift), reads to a
   screen reader as "Embark on your journey", dips when pressed and rings on web keyboard focus. The main menu's NEW
@@ -112,9 +111,8 @@ None. The report is a generated record, not save data.
 
 ## Chunks
 
-Measure: 2 open · 7 closed · next A10
+Measure: 1 open · 8 closed · next A10
 
-- [ ] **121.2** The title plate: Doré's *Inferno* Plate 3, the lion (T's pick) · M · closes A8 · needs — · alias: TP1b
 - [ ] **121.3** The title screen's EMBARK button is T's parchment Embark scroll · S · closes A9 · needs — · alias: TP1c
 
 ### 121.2 (TP1b) — The title plate: Doré's *Inferno* Plate 3, the lion · M · closes A8 · requires —
