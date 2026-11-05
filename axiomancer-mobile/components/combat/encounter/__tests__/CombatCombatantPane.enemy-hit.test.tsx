@@ -6,7 +6,7 @@
  *
  * Reanimated runs for real under Jest, on the fake clock, so each effect is read
  * off the style it drives (`getAnimatedStyle`): the lunge's translate, the board
- * shake's translate, the wound flash's opacity, the medallion's recoil, flash
+ * shake's translate, the medallion's recoil, flash
  * and contact slash. Nothing stands in for them. The one stand-in is the OS
  * reduced-motion switch, mocked where `lib/juice` asks it (`useReducedMotion`)
  * and where the pane asks it (`AccessibilityInfo`).
@@ -78,7 +78,6 @@ const opacity = (testID: string) => styleOf(testID).opacity ?? 0;
 const READS = {
     lunge: () => translateX('combat-enemy-lunge'),
     shake: () => translateX('combat-combatant-pane'),
-    flash: () => opacity('combat-hit-flash'),
     recoil: () => translateX('combat-player-recoil'),
     medallionFlash: () => opacity('combat-player-flash'),
     slash: () => opacity('combat-player-slash'),
@@ -133,7 +132,7 @@ afterEach(() => {
 });
 
 describe('a hit that gets through (A2)', () => {
-    it('lunges the foe, shakes and flashes the board, and the medallion reacts, on the impact beat', () => {
+    it('lunges the foe, shakes the board, and the medallion reacts, on the impact beat', () => {
         const haptic = jest.spyOn(Haptics, 'impactAsync').mockResolvedValue(undefined);
         const t = enemyTurn(atFirstTurn(CRANE_HOOK, (e) => hitsOf(e).length > 0)!);
         const dealt = hitsOf(t.events).reduce((sum, e) => sum + e.amount, 0);
@@ -144,7 +143,7 @@ describe('a hit that gets through (A2)', () => {
 
         // The lunge's anticipation starts on the trigger; its apex is at least the 8px floor.
         expect(widest.lunge).toBeGreaterThanOrEqual(8);
-        for (const k of ['shake', 'flash', 'recoil', 'medallionFlash', 'slash'] as const) {
+        for (const k of ['shake', 'recoil', 'medallionFlash', 'slash'] as const) {
             expect(widest[k]).toBeGreaterThan(0);
             // None of these beats the swing to its impact.
             expect(firstMoved[k]!).toBeGreaterThan(ENEMY_ATTACK_IMPACT_MS);
@@ -161,7 +160,6 @@ describe('a hit that gets through (A2)', () => {
         const { widest } = watchEffects();
         expect(widest.lunge).toBeGreaterThan(0);
         expect(widest.shake).toBeGreaterThan(0);
-        expect(widest.flash).toBeGreaterThan(0);
         expect(widest.recoil).toBeGreaterThan(0);
         expect(screen.getByText(`-${dealt}`)).toBeTruthy();
     });
@@ -227,7 +225,7 @@ describe('DENIED means the move was really stopped (A4)', () => {
         render(boardTree(CRANE_HOOK, t.events, 1, nextDamage));
         expect(enemyFloats()).toContain('DENIED');
         const { widest } = watchEffects();
-        expect(widest).toEqual({ lunge: 0, shake: 0, flash: 0, recoil: 0, medallionFlash: 0, slash: 0 });
+        expect(widest).toEqual({ lunge: 0, shake: 0, recoil: 0, medallionFlash: 0, slash: 0 });
     });
 
     it.each([[0], [BIG_NEXT_MOVE]])('stays down on a hit that landed, next move %i', (nextDamage) => {
@@ -244,7 +242,7 @@ describe('DENIED means the move was really stopped (A4)', () => {
         render(boardTree(quiet.enemy, t.events, 1, nextDamage));
         expect(enemyFloats()).not.toContain('DENIED');
         const { widest } = watchEffects();
-        expect(widest).toEqual({ lunge: 0, shake: 0, flash: 0, recoil: 0, medallionFlash: 0, slash: 0 });
+        expect(widest).toEqual({ lunge: 0, shake: 0, recoil: 0, medallionFlash: 0, slash: 0 });
     });
 });
 
@@ -322,14 +320,14 @@ describe('reduced motion (A7)', () => {
         view.rerender(boardTree(FLOAT_EYE, events, 1));
     }
 
-    it('selects no lunge, shake or flash, and the floats and log line still show', async () => {
+    it('selects no lunge or shake, and the floats and log line still show', async () => {
         const state = atFirstTurn(FLOAT_EYE, (e) => hitsOf(e).length > 0)!;
         const t = enemyTurn({ ...state, guard: 1 });
         const dealt = hitsOf(t.events).reduce((sum, e) => sum + e.amount, 0);
         await reducedBoard(t.events);
 
         const { widest } = watchEffects();
-        expect(widest).toEqual({ lunge: 0, shake: 0, flash: 0, recoil: 0, medallionFlash: 0, slash: 0 });
+        expect(widest).toEqual({ lunge: 0, shake: 0, recoil: 0, medallionFlash: 0, slash: 0 });
         expect(screen.getByText(`-${dealt}`)).toBeTruthy();
         expect(screen.getByText('BLOCKED 1')).toBeTruthy();
         expect(selectCombatLogHistory(t.state).map((l) => l.text)).toContain(`It deals ${hitsOf(t.events)[0].amount} to you.`);
