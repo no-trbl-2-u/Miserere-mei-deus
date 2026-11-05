@@ -10,7 +10,10 @@ Carried from the v1 brief `phase_PF2_combat_svg_raster.md` at the nexus v2 cut-o
 
 - T's request, 2026-10-13: "turn those svgs into images so it doesn't
   have to be drawn so many times", after PR #510 reported 30 `<Svg>`
-  roots and 330 paths on the combat board.
+  roots and 330 paths on the combat board. Counted again on 2026-11-04 (main at 945edcd5f, a jest render of
+  `CombatBoard` with a five-card hand and four dice, `Svg` and `Path` elements from `react-native-svg`):
+  31 `<Svg>` roots and 267 `<Path>` elements. The 330 included other primitives and one staged card, so it is
+  not the figure to compare against; PF2a's before and after use this count.
 - PR #510 (`ccr-9327878f-vn0e49`): `axiomancer-mobile/docs/perf/combat-drag-baseline.md`
   (the three drags a/b/c, the web numbers, the blank Android tables) and
   `axiomancer-mobile/scripts/android-drag-perf.sh` (gfxinfo + Perfetto per
@@ -81,8 +84,9 @@ Not an R-phase. None.
   horizontal stretch is lossless.
 - **Stance cube per colour, not tinted.** It uses three shades of one
   colour; a single tint would flatten it.
-- **Attended.** The device numbers are T's; the loop does not start this
-  row.
+- **Split (spec 150, PC1d).** Step 1 is code, so the loop builds it as 123.2 (PF2a). The device numbers
+  are T's, so 123.1 (PF2) is only T's measurement and the gate call that follows it. `renderToHardwareTextureAndroid`
+  is not in the code yet (checked 2026-11-04), so 123.2 has real work to do.
 
 ### Tests matrix
 
@@ -123,11 +127,11 @@ None.
 - **A1** Step 1 shipped: `renderToHardwareTextureAndroid` (and
   `shouldRasterizeIOS`) on a wrapper `View` around each static SVG layer
   listed in Scope and around each `CombatDie`; no visual change on web
-  or in the jest snapshots.
-- **A2** T records step 1's numbers for drags a/b/c in
+  or in the jest snapshots. The loop builds this (123.2, PF2a).
+- **A2** (attended) T records step 1's numbers for drags a/b/c in
   `combat-drag-baseline.md` beside the PR #510 baseline, same device,
   same APK profile.
-- **A3** Gate: step 2 starts only if A2 shows the static layers still
+- **A3** (attended) Gate: step 2 starts only if A2 shows the static layers still
   cost frames (Perfetto slices naming SVG draw on the RenderThread, or
   "Show GPU overdraw" red over the scrims). Otherwise steps 2 and 3 are
   recorded as not needed and the phase closes on A1, A2.
@@ -154,6 +158,9 @@ None.
 
 Measure: 8 open · 0 closed · next A9
 
-- [ ] **123.1** Combat SVG rasterisation (attended) · S · closes A1, A2, A3, A4, A5, A6, A7, A8 · needs — · alias: PF2
-  - also waits on: PR #510 merged
+- [ ] **123.1** Combat SVG rasterisation: T's Android measurement and the gate call (attended) · S · closes A2, A3, A4, A5, A6, A7 · needs 123.2 · alias: PF2
+  - A4-A7 (steps 2 and 3) are code that runs only if A3 says so; if it does, a `/plot` splits them into a loop chunk and keeps A2/A7 with T.
   - also waits on: its Android baseline tables filled by T
+- [ ] **123.2** Combat SVG rasterisation, step 1: texture caching on the static layers and dice · S · closes A1, A8 · needs — · alias: PF2a
+  - Wrap each static SVG layer in Scope and each `CombatDie` in a `View` with `renderToHardwareTextureAndroid` and `shouldRasterizeIOS`; no visual change.
+  - Measure: `npm run verify -w axiomancer-mobile`, `node scripts/combat-round-e2e.mjs`, `node scripts/combat-encounter-e2e.mjs`.

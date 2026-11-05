@@ -97,12 +97,17 @@ Verify: <commands run, results>
 
 ### Chunk notes (the brief's phase blocks)
 
-#### LG1h (chunk 125.8)
+#### LG1i (chunk 125.9): the loop's half
 
-Measure: one `android-smoke` run, approved by T, recorded in `docs/reports/android-smoke.md` with its result.
-- Scope: `.github/workflows/android-smoke.yml`, a Maestro flow and test ids in `axiomancer-mobile`, the report.
+Measure: one `android-smoke` `workflow_dispatch`, given an existing EAS build id (so no new build minutes), green and recorded in `docs/reports/android-smoke.md`.
+- Scope: `.github/workflows/android-smoke.yml`, a Maestro flow and test ids in `axiomancer-mobile`, the report. Neither the workflow nor a flow exists on main (checked 2026-11-04), so this builds both.
 - Tests: the flow itself; `npm run verify -w axiomancer-mobile` for any test ids.
-- Verify gate: mobile verify, the workflow parse check, and the recorded run.
+- Verify gate: mobile verify, the workflow parse check, and the dispatch run's link in the report. If no runner in the repo's plan supports KVM, record that in the report and stop at the `adb` variant, as the decision above says.
+
+#### LG1h (chunk 125.8): T's half
+
+Measure: one `android-smoke` run that builds a fresh preview APK, approved and watched by T, recorded in `docs/reports/android-smoke.md` with its result.
+- Scope: T's approval and read of the run; nothing is built here. LG1i builds the workflow and flow first.
 
 ## Contracts
 
@@ -110,11 +115,14 @@ None. `docs/reports/critique/passes.jsonl` is a new append-only report file, not
 
 ## Acceptance
 
-- **A8** (attended) `.github/workflows/android-smoke.yml`, run by hand: build the preview APK with `EXPO_TOKEN`
-  (or take a given EAS build id), boot an Android emulator on a KVM runner, install the APK, and run a Maestro
-  flow that reaches the title and finishes one combat round. A pass, a failure screenshot and the flow log are
-  uploaded. T approves and watches the first run, since each run spends EAS build minutes; the run's result is in
-  `docs/reports/android-smoke.md`.
+- **A8** (attended) T runs `.github/workflows/android-smoke.yml` by hand with a fresh preview APK built from
+  `EXPO_TOKEN`, approves and watches the first such run, since each one spends EAS build minutes, and the result
+  is added to `docs/reports/android-smoke.md`.
+- **A9** `.github/workflows/android-smoke.yml` takes `workflow_dispatch` with an optional given EAS build id (else
+  it builds the preview APK with `EXPO_TOKEN`), boots an Android emulator on a KVM runner, installs the APK, and
+  runs a Maestro flow that reaches the title and finishes one combat round. A pass, a failure screenshot and the
+  flow log are uploaded. It is green on a dispatch given an existing build id, and the run is recorded in
+  `docs/reports/android-smoke.md`. The loop does this part; T's first fresh-build run is A8.
 
 ## Open questions
 
@@ -122,6 +130,7 @@ None. `docs/reports/critique/passes.jsonl` is a new append-only report file, not
 
 ## Chunks
 
-Measure: 1 open · 7 closed · next A9
+Measure: 2 open · 7 closed · next A10
 
-- [ ] **125.8** Android smoke test (attended) · L · closes A8 · needs — · alias: LG1h
+- [ ] **125.8** Android smoke test: T's watched run (attended) · S · closes A8 · needs 125.9 · alias: LG1h
+- [ ] **125.9** Android smoke workflow and Maestro flow, green on a dispatch · L · closes A9 · needs — · alias: LG1i

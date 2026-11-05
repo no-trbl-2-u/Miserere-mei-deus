@@ -86,9 +86,9 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 120 | A graded hazard-puzzle set, played and pattern-mined | [120-hp4-graded-puzzle-set.md](120-hp4-graded-puzzle-set.md) | planned | 1 left |
 | 121 | Title plate legibility: prove the plate, then replace it | [121-tp1-title-plate-legibility.md](121-tp1-title-plate-legibility.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
-| 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
+| 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 2 left |
 | 124 | Hazard puzzle card audit and difficulty calibration | [124-hp2-puzzle-card-audit-difficulty.md](124-hp2-puzzle-card-audit-difficulty.md) | planned | 1 left |
-| 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 1 left |
+| 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 2 left |
 | 126 | The Obsidian vault: brainstorm and plot from the phone | [126-ov1-obsidian-vault.md](126-ov1-obsidian-vault.md) | planned | 1 left |
 | 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
 | 128 | Card and combat logging (the play log) | [128-be2-card-combat-logging.md](128-be2-card-combat-logging.md) | planned | 1 left |
