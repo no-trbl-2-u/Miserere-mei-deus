@@ -92,7 +92,6 @@ transparency gets none; today that is no foe, and it is judged by alpha values, 
 ## Acceptance
 
 - **A7** T's node plate picks are in the map layouts.
-- **A9** The fight draws no overlay over the plate or the foe: no top scrim, floor glow, dock scrim or hit-flash vignette.
 
 ## Open questions
 
@@ -102,10 +101,9 @@ transparency gets none; today that is no foe, and it is judged by alpha values, 
 
 ## Chunks
 
-Measure: 2 open · 7 closed · next A10
+Measure: 1 open · 8 closed · next A10
 
 - [ ] **146.7** T picks node plates (owner-led) · S · closes A7 · needs — · alias: AP1g
-- [ ] **146.9** The fight draws no overlay over the plate or the foe · S · closes A9 · needs — · alias: AP1i
 
 ### 146.1 (AP1a) — Pull in the twelve arena plates · M · closes A1 · requires —
 

@@ -566,3 +566,4 @@
 - 2026-11-04 · 149.2 (alias: TL2b) · The merge, replay and triage readers read whole file lists · d20e0e1e..d20e0e1e (#1382)
 - 2026-11-04 · 150.4 (alias: PC1d) · Attended rows split from loop work; ship named v0.5 · db93bcfc..db93bcfc (#1391)
 - 2026-11-04 · 151.1 (alias: MR5a) · Elite rolls skip a same-fight quest's item; one copy · cf08d2ab..cf08d2ab (#1385)
+- 2026-11-04 · 146.9 (alias: AP1i) · The fight draws no overlay over plate or foe · 37a11877..f7da7170 (#1396)

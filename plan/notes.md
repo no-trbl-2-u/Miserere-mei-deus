@@ -136,3 +136,6 @@ Defaults taken: an elite drop adds its own satchel row when carried entries alre
 - Defaults taken under the run: islands under 0.05% of the cell are dropped (specks of keying noise), down from 146.4's 0.4%, since a per-cell backing has no stray spark from another frame to hang in the air; a dark object enclosed between a foe's strokes (what the Brine-Widow holds in one pose) is backed, as a hole of the foe's own shape. `docs/reports/arena-separation.md` was re-measured with the resting cell's own backing.
 
 - BV1c: D1 `ballot_verdicts` returned 0 rows on 2026-11-04, so BV1c stays as written.
+
+- T, after the combat-overlay experiment: "Enemy looks great ... the worktree can open a PR now since it fixed the combat screen", on top of the earlier "The black overlay is WAY too much." Removed from `CombatCombatantPane`: the top scrim (`axmCombatTopScrim`, with `combatTopScrimStops`), the floor glow (`axmFloorGlow`), the dock scrim (`axmCombatDockScrim`) and the red hit-flash vignette (`combat-hit-flash`), plus their styles, the `woundVignette` colour and the tests that pinned them. The red flash on a hit is gone too; that is part of "remove any combat overlay". The title screen is untouched.
+- The dimming T saw was on Android and the web build never showed it, so T's phone is the real check. The likely cause is 43ef90b3c's resized scrims.
