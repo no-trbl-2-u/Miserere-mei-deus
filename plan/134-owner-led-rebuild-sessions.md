@@ -9,7 +9,7 @@ Carried from the v1 build plan's `[blocked: owner-led]` rows at the nexus v2 cut
 - B1: The relic pass. `plan/revamp/relics.md`. Requires R4, RC.
 - B5: Card-creator workflow. `plan/revamp/cards.md`. Requires B4, RC.
 - B6: Card sessions. Plan B, one slice per lane; families of sub-lanes and bridge cards within a family (D73). `plan/revamp/cards.md`. Requires B4, B5, RC.
-- B2: Enemy revamp: normal / elite / region boss / act boss. `plan/revamp/enemies.md`. Requires R9, RC.
+- B2: Enemy revamp, what is left: Chapters 2-4's enemies and the Act Boss (Chapter 1's part is done, T, 2026-11-03). `plan/revamp/enemies.md`. Requires R9, RC.
 - B10: Dev menu revamp (the reset leaves the dev menu alone except compile fixes). `plan/revamp/mobile.md`. Requires R8, RC.
 - B7: Deck tab UI revamp. `plan/revamp/mobile.md`. Requires R8, RC.
 - B8: Card art revamp. `plan/revamp/mobile.md`. Requires R8, RC.
@@ -28,7 +28,7 @@ None beyond Design.
 - **A1** The relic pass. `plan/revamp/relics.md`.
 - **A2** Card-creator workflow. `plan/revamp/cards.md`.
 - **A3** Card sessions. Plan B, one slice per lane; families of sub-lanes and bridge cards within a family (D73). `plan/revamp/cards.md`.
-- **A4** Enemy revamp: normal / elite / region boss / act boss. `plan/revamp/enemies.md`.
+- **A4** Enemy revamp, what is left: Chapters 2-4's enemies and the Act Boss (Chapter 1's part is done). `plan/revamp/enemies.md`.
 - **A5** Dev menu revamp (the reset leaves the dev menu alone except compile fixes). `plan/revamp/mobile.md`.
 - **A6** Deck tab UI revamp. `plan/revamp/mobile.md`.
 - **A7** Card art revamp. `plan/revamp/mobile.md`.
@@ -45,8 +45,10 @@ Measure: 8 open · 0 closed · next A9
 - [ ] **134.2** The relic pass (owner-led) · M · closes A1 · needs — · alias: B1
 - [ ] **134.3** Card-creator workflow (owner-led) · M · closes A2 · needs — · alias: B5
 - [ ] **134.4** Card sessions (owner-led) · M · closes A3 · needs 134.3 · alias: B6
-- [ ] **134.5** Enemy revamp (owner-led) · M · closes A4 · needs — · alias: B2
+- [ ] **134.5** Enemy revamp: Chapters 2-4 and the Act Boss (owner-led) · M · closes A4 · needs — · alias: B2
 - [ ] **134.6** Dev menu revamp (owner-led) · M · closes A5 · needs — · alias: B10
+  - Note for T's next owner-led session (150.2): ST1b (132.2) moves the dev menu into Settings, so this row may shrink. Check ST1b first.
 - [ ] **134.7** Deck tab UI revamp (owner-led) · M · closes A6 · needs — · alias: B7
 - [ ] **134.8** Card art revamp (owner-led) · M · closes A7 · needs — · alias: B8
+  - Note for T's next owner-led session (150.2): CA3a-e painted all four lanes' cards, so this row may be down to the title wordmark. Check CA3 first.
 - [ ] **134.9** Labyrinth re-theme (owner-led) · M · closes A8 · needs 134.5 · alias: B9

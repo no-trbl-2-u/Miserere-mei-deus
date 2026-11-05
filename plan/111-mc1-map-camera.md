@@ -174,11 +174,14 @@ MC1b; `e2e:map-walk` and `e2e:exploration-roundtrip` test ids if the furniture m
 
 #### MC1c (chunk 111.3)
 
+Left to do (checked against main on 2026-11-05; the legend and step count are already cut, f5158a132): the
+viewport relayout, the gesture line's place, and the map's foot reachable.
+
 Measure: on the web build at 360x800 the Breakwater's bottom-most node pans fully into view above
-the tab bar, and the legend, step count and gesture line sit in a strip under the frame.
-- Scope: the viewport tracks every layout (confirm the stale-layout cause first by logging the
-  wrapper's layouts); the furniture strip under the frame (`MapOverlays.tsx`, the exploration
-  screen); baselines.
+the tab bar, and the gesture line sits in a strip under the frame, not over the map.
+- Scope: the viewport tracks every layout (`MapCanvas.tsx` `onWrapLayout` keeps the first measure only,
+  `prev ?? {...}`; confirm the stale-layout cause first by logging the wrapper's layouts); the gesture line
+  (`MapOverlays.tsx`, still absolute at the frame's top-left) moves to a strip under the frame; baselines.
 - Tests: A9 relayout case; `MapOverlays.test.tsx` updated; the two `verify:visual` baselines.
 - Verify: `npm run verify -w axiomancer-mobile`, root `npm test`, `verify:visual` on the WILDS tab,
   `e2e:map-walk`.
@@ -195,8 +198,8 @@ None. The camera memory is in-memory only (A7) and never written to the save.
 - **A10** (the whole region is reachable) On the web build at 360x800 the Breakwater's bottom-most
   node and the plate's bottom edge can be panned fully into view above the tab bar; a
   `verify:visual` baseline of the WILDS tab panned to the plate's foot shows it.
-- **A11** (nothing over the map but RECENTRE) The legend, the step count and the gesture line leave
-  the map frame and sit in one strip directly under it, above the hint, so no furniture covers a
+- **A11** (nothing over the map but RECENTRE) The gesture line (the legend and step count are already
+  cut) leaves the map frame and sits directly under it, above the hint, so no furniture covers a
   node `[T to confirm #1]`; the recentre button stays bottom-right inside the frame. A
   `verify:visual` baseline of the WILDS tab.
 
@@ -208,4 +211,4 @@ None. The camera memory is in-memory only (A7) and never written to the save.
 
 Measure: 3 open · 8 closed · next A12
 
-- [ ] **111.3** The map's foot in view, nothing over the map · S · closes A9, A10, A11 · needs — · alias: MC1c
+- [ ] **111.3** The map's foot in view, the gesture line off the map · S · closes A9, A10, A11 · needs — · alias: MC1c
