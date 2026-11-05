@@ -74,9 +74,9 @@ left; otherwise after.
 
 ### W2 — MVP: Act 1, Chapter 1 complete (Nov 3 - Nov 16)
 
-- Rows: HP4f (the authoring patterns from the kept set) and HP4g (the band clocks from the kept set's times), as
-  before. **Moved to W3:** HP2d-HP2f (calibration), which the MVP does not need; they are still amended once HP4e's
-  rulings exist (`plan/phases/phase_HP4_graded_puzzle_set.md` Follow-ups).
+- Rows: HP4f (the authoring patterns) and HP4g (the band clocks) were here; both retired on 2026-11-04 (spec 150, PC1c),
+  with HP2d-HP2f (calibration): HP4e recorded no per-candidate solve times, so there is nothing to mine or to calibrate
+  on, and the hazard clocks keep their placeholders.
 - To plot in W2: routing the live hazard nodes to the puzzle board. The Breakwater's six (D114) are plotted as HP6 (T, 2026-10-31): a
   bot-measured curve, six from its middle third rising along the story route. The other five Act 1 hazard nodes each draw a
   random puzzle from the thirty for now (T, 2026-10-24), and the cuts (RE-CAST cards, the saved hazard deck,
@@ -101,13 +101,13 @@ left; otherwise after.
   moved to W2 with the MVP.
 - Enemy sessions 3 and 4 for Chapters 2-4 (normals and elites; bosses and the Act Boss), then their plot. The loop
   builds those enemies and their art through W4 and W5.
-- Rows: UP1a-UP1g shipped; UP1h, the boss check, moves here from W4. HP2d-HP2f (calibration) move here from W2.
+- Rows: UP1a-UP1g shipped; UP1h, the boss check, moves here from W4. HP2d-HP2f (calibration) retired on 2026-11-04 (spec 150, PC1c).
 - Chapters 2-4's maps are designed and plotted first (Nov 18, 19), before the enemy sessions, as the Breakwater's was
   before session 1 (T, 2026-10-28); their weapons and armor are pitched after the sessions (Nov 24), the day before
   the quest lines that pay them (Nov 25), and plotted on Nov 26.
-- T's time (about 12.5 h): Chapters 2-4's maps and their plot, the hazard swap plot, two enemy sessions and their plot,
+- T's time (about 10.5 h): Chapters 2-4's maps and their plot, the hazard swap plot, two enemy sessions and their plot,
   Chapters 2-4's weapons and armor and their plot, Chapters 2-4's quest lines,
-  calibration solves (HP2e), and the four-chapter walk at the end.
+  and the four-chapter walk at the end.
 
 ### W4 — The rest of the relic pass, combat proven, an Act 1 clear (Dec 1 - Dec 14)
 
@@ -193,7 +193,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [x] | 2026-11-18 | Upgrade grant call | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-11-17 | Event kind 5, village (paid rest, card shop, Anvil): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | NK1b, NK1c |
 | [ ] | 2026-11-18 | Design Chapters 2-4's maps before enemy session 3, as the Breakwater's was before session 1: each chapter's node list (total and count per kind), its quest route and travel pairs, and room on its plate for the marks (1.5 h) | Chapters 2-4 designed; hazards tuned | `/pitch` per chapter, on the Breakwater's 44-node pitch | W3 | T | - |
-| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the five other Act 1 hazard puzzles (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2), and swap any of HP6's Breakwater six you want, after playing the thirty in `/dev` (1 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | T | HP4f, HP4g |
+| [ ] | 2026-11-19 | Plot the hazard swap: hand-pick the five other Act 1 hazard puzzles (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2), and swap any of HP6's Breakwater six you want, after playing the thirty in `/dev` (1 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | T | - |
 | [ ] | 2026-11-19 | Plot Chapters 2-4's maps from the design (0.5 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | needs plot | - |
 | [ ] | 2026-11-20 | Event kind 6, travel ("move to X?", secret paths): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | NK1d |
 | [ ] | 2026-11-21 | Enemy session 3: Chapters 2-4's normal rosters and elites (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
@@ -204,8 +204,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-25 | Write Chapters 2-4's quest lines, on Chapter 1's chain (BW1): quests alternate a relic, then a weapon or armor (D114 as amended by EQ3h), and a relic quest pays any lane relic not already paid by Chapter 1 (1 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-11-26 | Plot Chapters 2-4's weapons and armor from the pitch (0.5 h) | Chapters 2-4 designed; hazards tuned | `/plot` | W3 | needs plot | - |
 | [ ] | 2026-11-27 | Event kind 8, cutscene: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | - |
-| [ ] | 2026-11-28 | Calibration solves (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | HP2e | HP2d |
-| [ ] | 2026-11-30 | W3 demo: a four-chapter walk, every node resolves (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | HP2f |
+| [ ] | 2026-11-30 | W3 demo: a four-chapter walk, every node resolves (2 h) | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-12-05 | Relic pass session (the rest of B1: the starting ring, stat-only relics; the six lane relics are LR1's, in the MVP) (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | B1 | - |
 | [ ] | 2026-12-06 | Cost-card design session: Toll, Debt, Overdrive (1.5 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | T | - |
 | [ ] | 2026-12-07 | Tune the cards: a numbers pass across the lanes against Chapter 1's new enemies, after the enemy tuning (1.5 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | T | - |
@@ -270,7 +269,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TL2c — settle holds back only the file that empties a spec; no T act waits on it.
 - PC1a — shipped and moot rows close (spec 150); no T act waits on it.
 - PC1b — half-done rows name only what is left (spec 150); no T act waits on it.
-- PC1c — the hazard calibration rows retire (spec 150); no T act waits on it.
 - PC1d — attended rows split from the loop work they hide, and the ship renamed (spec 150); no T act waits on it.
 - PC1e — finished briefs leave plan/ (spec 150); no T act waits on it.
 
@@ -282,6 +280,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-04** — **the hazard calibration rows retire, spec 150 (PC1c)** (T, `/pilot 150` call 2: "Retire only"). **Retired** HP4f, HP4g, HP2d, HP2e and HP2f (120.6, 120.7, 124.4 to 124.6): HP4e closed with no per-candidate solve times, there is no `HAZARD_PUZZLE_CALIBRATION`, and the clocks (`HAZARD_PUZZLE_CLOCK_SECONDS`) keep their placeholders with nothing planned to tune them. **Removed** the Item "Calibration solves" (Nov 28, 2 h, T): its rows retired and its premise with them; W3's T time drops from about 12.5 h to 10.5 h. **Edited** two Items' `Waits on` to `-`: the Nov 19 hazard swap plot (was HP4f, HP4g; T still hand-picks from the thirty) and the Nov 30 W3 demo (was HP2f). Dropped PC1c's Unscheduled line. No date moved.
 - **2026-11-04** — **the open rows checked against the code, plotted as spec 150 (PC1a-PC1e)** (T, attended: "Can you check to see if they're all still relevant?", then "plot those asap"). **Added** PC1a-PC1e under Unscheduled. The Items they will reconcile (the Nov 28 calibration solves, the Dec 12 combat playtest, the Dec 23 Android smoke test, and the v0.3 ship name now that v0.4.0 is tagged) are edited by those chunks, not here. Nothing ticked; no date moved.
 - **2026-11-04** — **elite and spare rolls skip a same-fight quest's item, plotted as spec 151 (MR5a)** (T, `/pilot 149`: "Roll around the quest"). **Added** MR5a under Unscheduled: no shipped quest pays on an elite or spared kill, so the Mid-MVP check (Nov 9) can't hit it. MR4b stays on that check's `Waits on`: it shipped, and its extra copy is unreachable in Chapter 1. Nothing ticked; no date moved.
 - **2026-11-04** — **the black behind a foe kept inside its shape, fixed now as 146.8 (AP1h)** (T, `/bug` from the v0.4.0 preview APK: "It should also only be within the shape of the enemy"). **Added** AP1h to the `Waits on` of the Mid-MVP check (Nov 9), beside AP1a-AP1f: the check plays the fights over the plates. Nothing ticked; no date moved.
