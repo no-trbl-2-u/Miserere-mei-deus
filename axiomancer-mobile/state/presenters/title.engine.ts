@@ -25,7 +25,6 @@ export const TITLE_COPY = Object.freeze({
     psalm: 'Have mercy upon me, O God, according to thy lovingkindness.',
     psalmSource: 'psalm 51',
     footer: 'Your path begins on the coast, at a windmill above the breakwater.',
-    embark: 'EMBARK…',
     embarkHint: 'begin the pilgrimage',
     embarkLabel: 'Embark on your journey',
     plateLabel: 'Dante alone in a dark wood, a lion on the rock before him, an engraving by Gustave Doré',

@@ -51,7 +51,7 @@ export const PHASES = Object.freeze({ title: 1 })
  * The style numbers that place the psalm line, mirrored from
  * `components/TitleScreen.tsx` (pinned by the test). The line is laid out by
  * flex from the window's foot, so its box is not in `title.engine.ts`: it is
- * rebuilt here from the stack beneath it (footer, EMBARK, the gaps).
+ * rebuilt here from the stack beneath it (footer, the Embark scroll, the gaps).
  */
 export const TITLE_STACK = Object.freeze({
   paddingBottom: 48,
@@ -63,10 +63,9 @@ export const TITLE_STACK = Object.freeze({
   footerFontSize: 12,
   footerLineHeight: 17,
   footerMaxWidth: 320,
-  embarkPaddingVertical: 16,
-  embarkFontSize: 20,
-  embarkHintFontSize: 11,
-  embarkHintMarginTop: 4,
+  embarkMaxWidth: 320,
+  /** Width over height of the Embark scroll (`EMBARK_SCROLL_ASPECT`). */
+  embarkAspect: 640 / 176,
 })
 
 /**
@@ -102,8 +101,7 @@ export function textRegions(viewport, copy) {
   const blockWidth = Math.min(s.psalmMaxWidth, viewport.width - 2 * s.paddingHorizontal)
   const footerWidth = Math.min(s.footerMaxWidth, viewport.width - 2 * s.paddingHorizontal)
   const footerHeight = wrappedLines(copy.footer, s.footerFontSize, footerWidth) * s.footerLineHeight
-  const embarkHeight = 2 + 2 * s.embarkPaddingVertical + s.embarkFontSize * DEFAULT_LINE_HEIGHT
-    + s.embarkHintMarginTop + s.embarkHintFontSize * DEFAULT_LINE_HEIGHT
+  const embarkHeight = Math.min(s.embarkMaxWidth, viewport.width - 2 * s.paddingHorizontal) / s.embarkAspect
   const psalmLines = wrappedLines(copy.psalm, s.psalmFontSize, blockWidth)
   const psalmHeight = psalmLines * s.psalmLineHeight
   const psalmSourceHeight = 6 + 9 * DEFAULT_LINE_HEIGHT

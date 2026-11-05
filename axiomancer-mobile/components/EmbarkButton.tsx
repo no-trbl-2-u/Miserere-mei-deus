@@ -1,16 +1,17 @@
 /**
- * EmbarkButton — the main menu's NEW GAME button: T's torn parchment scroll
- * lettered "Embark" (plan 121.3), drawn at the menu column's width with its
- * aspect kept. The lettering is part of the art, so the screen-reader label
- * says what the press does.
+ * EmbarkButton — the title screen's EMBARK call to action: T's torn parchment
+ * scroll lettered "Embark" (plan 121.3), drawn at its container's width (capped
+ * by `style`) with its aspect kept. The lettering is part of the art, so the
+ * screen-reader label says what the press does.
  *
- * Inputs: `onPress`, `accessibilityLabel`, `accessibilityHint`, `testID`.
+ * Inputs: `onPress`, `disabled`, `accessibilityLabel`, `accessibilityHint`,
+ * `style` (the root's box, e.g. a max width), `testID`.
  * Output: a pressable image. Pressing dips it (a slight shrink and fade);
  * keyboard focus on web rings it, so a keyboard player can see where they are.
  */
 
 import React, { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { EMBARK_SCROLL, EMBARK_SCROLL_ASPECT } from '@/assets/images/title';
 import { Image } from '@/lib/platform/image';
@@ -18,8 +19,10 @@ import { makeStyles } from '@/theme/runtime';
 
 export interface EmbarkButtonProps {
     onPress: () => void;
+    disabled?: boolean;
     accessibilityLabel: string;
     accessibilityHint?: string;
+    style?: StyleProp<ViewStyle>;
     testID?: string;
     /** Render as held, for tests (Pressable's `testOnly_pressed`). */
     testOnlyPressed?: boolean;
@@ -28,13 +31,14 @@ export interface EmbarkButtonProps {
 /** How far a press dips the scroll: scale and opacity while held. */
 export const EMBARK_PRESSED = Object.freeze({ scale: 0.97, opacity: 0.85 });
 
-export function EmbarkButton({ onPress, accessibilityLabel, accessibilityHint, testID, testOnlyPressed }: EmbarkButtonProps) {
+export function EmbarkButton({ onPress, disabled, accessibilityLabel, accessibilityHint, style, testID, testOnlyPressed }: EmbarkButtonProps) {
     const styles = useStyles();
     const [focused, setFocused] = useState(false);
     return (
         <Pressable
-            style={({ pressed }) => [styles.root, pressed && styles.pressed]}
+            style={({ pressed }) => [styles.root, style, pressed && styles.pressed]}
             onPress={onPress}
+            disabled={disabled}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             accessibilityRole="button"

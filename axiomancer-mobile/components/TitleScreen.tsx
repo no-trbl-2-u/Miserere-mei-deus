@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, Pressable, StyleSheet, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
 import Animated, {
   Easing,
   interpolate,
@@ -11,6 +11,7 @@ import Animated, {
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import { TITLE_PLATE } from '@/assets/images/title';
+import { EmbarkButton } from '@/components/EmbarkButton';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
 import { Image } from '@/lib/platform/image';
@@ -149,16 +150,15 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
           <Text style={styles.psalmSource}>{TITLE_COPY.psalmSource}</Text>
         </View>
 
-        <Pressable
-          style={({ pressed }) => [styles.embarkButton, pressed && styles.embarkButtonPressed]}
+        {/* T's parchment "Embark" scroll (plan 121.3) is the call to action. */}
+        <EmbarkButton
           onPress={handleEmbark}
           disabled={phase !== 'title' || !ctaLive}
-          accessibilityRole="button"
           accessibilityLabel={TITLE_COPY.embarkLabel}
-        >
-          <Text style={styles.embarkButtonText}>{TITLE_COPY.embark}</Text>
-          <Text style={styles.embarkHint}>{TITLE_COPY.embarkHint}</Text>
-        </Pressable>
+          accessibilityHint={TITLE_COPY.embarkHint}
+          style={styles.embark}
+          testID="title-embark"
+        />
 
         <Text style={styles.footerText}>{TITLE_COPY.footer}</Text>
       </Animated.View>
@@ -243,38 +243,9 @@ const useStyles = makeStyles((AXM) => ({
     color: AXM.bone,
     textTransform: 'uppercase',
   },
-  embarkButton: {
-    backgroundColor: AXM.sulfur,
-    paddingVertical: 16,
-    paddingHorizontal: 56,
-    borderWidth: 1,
-    borderColor: AXM.parchment,
-    // Lift the CTA off the dark field with an accent glow.
-    shadowColor: AXM.sulfur,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  embarkButtonPressed: {
-    backgroundColor: AXM.rust,
-    borderColor: AXM.parchment,
-  },
-  embarkButtonText: {
-    fontFamily: FONTS.sans,
-    fontSize: 20,
-    color: AXM.bg,
-    letterSpacing: 4,
-    textAlign: 'center',
-  },
-  embarkHint: {
-    fontFamily: FONTS.serifItalic,
-    fontSize: 11,
-    color: AXM.bg,
-    letterSpacing: 0.5,
-    textAlign: 'center',
-    opacity: 0.7,
-    marginTop: 4,
+  // The scroll's width; its height follows the art's aspect.
+  embark: {
+    maxWidth: 320,
   },
   footerText: {
     fontFamily: FONTS.serifItalic,

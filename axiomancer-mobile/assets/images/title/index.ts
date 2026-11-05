@@ -15,7 +15,7 @@ export const TITLE_PLATE = require('./lion-in-the-wood.webp');
 export const TITLE_PLATE_ASPECT = 1308 / 1600;
 
 /**
- * T's parchment "Embark" scroll, the main menu's NEW GAME button (plan
+ * T's parchment "Embark" scroll, the title screen's EMBARK button (plan
  * 121.3): cut from T's sheet of button plates by `scripts/cut-embark-button.mjs`
  * (record in `provenance.json`), 640x176 with its own torn-edge alpha.
  */
