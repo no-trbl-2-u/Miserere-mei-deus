@@ -35,7 +35,7 @@ import {
 
 const MOBILE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 export const ROOT = path.resolve(MOBILE, '..')
-export const PLATE_FILE = 'assets/images/title/shore-at-dawn.webp'
+export const PLATE_FILE = 'assets/images/title/lion-in-the-wood.webp'
 export const REPORT_FILE = 'docs/reports/title-plate-legibility.md'
 
 /**

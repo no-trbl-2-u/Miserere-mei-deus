@@ -51,22 +51,28 @@ re-record the baseline with `--write`.
 
 The plate's licence record is
 [`axiomancer-mobile/assets/images/title/provenance.json`](../../axiomancer-mobile/assets/images/title/provenance.json)
-(Doré, Purgatorio Canto I, public domain, read from Commons by `scripts/acquire-art.mjs`). The title plate has
+(Doré, Inferno Plate 3, the lion: T's pick, installed by plan 121.2; public domain, read from Commons by
+`scripts/acquire-art.mjs`). It replaced Purgatorio Canto I (`shore-at-dawn`, wordmark 5.43:1 at the `title`
+phase), whose record moved to `axiomancer-mobile/assets/images/icon.provenance.json` as the launcher icon's
+source. The wordmark rests in the plate's darkest band, under its slit of sky (`WORDMARK_REST_Y` in
+`title.engine.ts`), which is why its `title` figure sits near the ground's own. Off the reference viewport,
+measured by hand on 2026-11-04 with `measurePlate`: a 412x915 phone (inset 24) and 450x1000 read 14.85:1 and
+14.89:1 for the wordmark, 15.11:1 and 15.13:1 for the psalm line. The title plate has
 no entry in [`docs/art-catalog.json`](../art-catalog.json): that catalogue's scope is the eleven world plates
 under `combat/` and `maps/`.
 
 <!-- legibility:baseline:begin -->
-Plate `assets/images/title/shore-at-dawn.webp` at desktop 1280x800 (1280x800), theme `ashen-gold`:
+Plate `assets/images/title/lion-in-the-wood.webp` at desktop 1280x800 (1280x800), theme `ashen-gold`:
 
 | Text | `title` phase (plate at 1) | `menu` phase (plate at 0.3) |
 | --- | --- | --- |
-| Wordmark | 5.43:1 | 12.26:1 |
+| Wordmark | 14.9:1 | 15.2:1 |
 | Psalm line | 15.13:1 | 15.13:1 |
 
 ```json legibility-baseline
 {
-  "plate": "assets/images/title/shore-at-dawn.webp",
-  "sha256": "7513f95cb98b9104e020d89e9e210df104101745adc0e0bf8edba20eb978865e",
+  "plate": "assets/images/title/lion-in-the-wood.webp",
+  "sha256": "2540f0206ef7b144e365b3adf5041064a0d641a2e933c93bdff840680407e495",
   "viewport": {
     "name": "desktop 1280x800",
     "width": 1280,
@@ -75,9 +81,9 @@ Plate `assets/images/title/shore-at-dawn.webp` at desktop 1280x800 (1280x800), t
   },
   "theme": "ashen-gold",
   "figures": {
-    "wordmark.title": 5.43,
+    "wordmark.title": 14.9,
     "psalm.title": 15.13,
-    "wordmark.menu": 12.26,
+    "wordmark.menu": 15.2,
     "psalm.menu": 15.13
   }
 }

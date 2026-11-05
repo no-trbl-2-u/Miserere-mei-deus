@@ -7,6 +7,7 @@ import { describe, expect, it } from '@jest/globals';
 import {
     SPLASH_WORDMARK_WIDTH,
     TITLE_COPY,
+    WORDMARK_REST_Y,
     titleLayout,
     titleWordmarkFrames,
 } from '../title.engine';
@@ -34,18 +35,35 @@ describe('title.engine', () => {
     });
 
     it('keeps the layout aspect in step with the plate registry', () => {
-        const l = titleLayout({ width: 400, height: 2000, topInset: 0 });
-        expect(l.plate.width / l.plate.height).toBeCloseTo(TITLE_PLATE_ASPECT, 5);
+        // A wide window shows the plate at its own aspect.
+        const wide = titleLayout({ width: 1280, height: 800, topInset: 0 });
+        expect(wide.plate.width / wide.plate.height).toBeCloseTo(TITLE_PLATE_ASPECT, 5);
+        // A phone too short to stretch it does too.
+        const short = titleLayout({ width: 400, height: 560, topInset: 0 });
+        expect(short.plate.width / short.plate.height).toBeCloseTo(TITLE_PLATE_ASPECT, 5);
     });
 
-    it('spans a phone with the plate and rests the wordmark in its sky', () => {
+    // T's phone, 2026-11-04: the plate ended a little past half the screen and
+    // left a bare black band above the menu. On a tall phone the plate's box
+    // reaches 80% of the height (the foot scrim fades its lower part), never
+    // narrower than 0.55 so the cover crop keeps Dante and the lion.
+    it('stretches the plate down a tall phone without cropping it past 0.55', () => {
+        const tall = titleLayout({ width: 412, height: 915, topInset: 24 });
+        expect(tall.plate.width).toBe(412);
+        expect(tall.plate.height).toBeCloseTo(915 * 0.8, 5);
+        const veryTall = titleLayout({ width: 400, height: 2000, topInset: 0 });
+        expect(veryTall.plate.width / veryTall.plate.height).toBeCloseTo(0.55, 5);
+    });
+
+    it('spans a phone with the plate and rests the wordmark in its dark upper band', () => {
         const l = titleLayout({ width: 390, height: 844, topInset: 47 });
         expect(l.plate.left).toBe(0);
         expect(l.plate.width).toBe(390);
-        expect(l.plate.height).toBeLessThan(844 * 0.72);
-        // In the sky: the upper fifth of the plate, below the notch.
+        // Below the notch, under the plate's slit of sky (7%-20% of its height).
         expect(l.wordmark.centerY).toBeGreaterThan(47);
-        expect(l.wordmark.centerY).toBeLessThan(l.plate.height * 0.2);
+        expect(l.wordmark.centerY).toBeCloseTo(l.plate.height * WORDMARK_REST_Y, 5);
+        expect(WORDMARK_REST_Y).toBeGreaterThan(0.2);
+        expect(WORDMARK_REST_Y).toBeLessThan(0.35);
         expect(l.wordmark.width).toBeCloseTo(390 * 0.86, 5);
         expect(l.splashCenter).toEqual({ x: 195, y: 422 });
     });

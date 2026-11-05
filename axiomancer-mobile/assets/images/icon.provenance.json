@@ -11,9 +11,30 @@
     "android/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
     "android/res/mipmap-xxxhdpi/ic_launcher_monochrome.png"
   ],
-  "source": "icon.png, favicon.png and the Android layers: a square crop of the title plate around its three figures (title/provenance.json, shore-at-dawn), taken from the full-resolution Commons original and mapped onto the game's ground-to-parchment duotone. splash-icon.png: the 'Miserere Mei, Deus' wordmark set in Pirata One (assets/fonts/PirataOne_400Regular.ttf, OFL; see assets/fonts/LICENSES).",
+  "source": "icon.png, favicon.png and the Android layers: a square crop of Doré's Purgatorio, Canto I around its three figures (source_plate below, shore-at-dawn), taken from the full-resolution Commons original and mapped onto the game's ground-to-parchment duotone. splash-icon.png: the 'Miserere Mei, Deus' wordmark set in Pirata One (assets/fonts/PirataOne_400Regular.ttf, OFL; see assets/fonts/LICENSES).",
   "replaces": "the owner-supplied 'AxiomanceR' throne-room key art (title-embark.jpg, licence UNRESOLVED), retired from the title screen and every launcher icon on 2026-10-11 at T's request",
   "used_by": [
     "app.json (icon, web favicon, android adaptiveIcon, expo-splash-screen image)"
-  ]
+  ],
+  "source_plate": {
+    "date": "2026-10-11",
+    "source": "https://commons.wikimedia.org/wiki/File:Gottliche_Komodie._T._2,_Das_Fegefeuer_1871_(148974123).jpg",
+    "artist": "Gustave Doré (1832-1883), engraver; text by Dante Alighieri",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "plate detected on the scanned page and extracted to 2954x3663 at (699,1148) of 4660x6248 (inset 0.01), then grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 1600px, WebP q44",
+    "crop": {
+      "left": 699,
+      "top": 1148,
+      "width": 2954,
+      "height": 3663,
+      "sourceWidth": 4660,
+      "sourceHeight": 6248,
+      "inset": 0.01,
+      "darkRatio": 0.95
+    },
+    "artist_note": "Commons' extmetadata names Dante (the book's author); the plate is Doré's Purgatorio, Canto I, from the 1871 German edition (Göttliche Komödie, T. 2, Das Fegefeuer).",
+    "key": "shore-at-dawn",
+    "note": "The title plate until 2026-11-04 (plan 121.2). Its graded WebP left the tree with it; the icons are cut from the Commons original by this record's crop."
+  }
 }

@@ -86,12 +86,21 @@
       "key": "shore-at-dawn",
       "category": "title",
       "title": "File:Gottliche Komodie. T. 2, Das Fegefeuer 1871 (148974123).jpg",
-      "region": "title screen + launcher icon",
+      "region": "launcher icon (the title plate until plan 121.2)",
       "why": "Purgatorio, Canto I: Dante and Virgil meet Cato on an empty shore before dawn, under a wide low sky. Chosen by T (2026-10-11) as serene but unsettling and not busy; the open sky carries the wordmark, and Purgatorio is the canticle of penance, as the psalm is.",
       "recipe": "plate-page",
       "maxEdge": 1600,
       "darkRatio": 0.95,
       "darkRatioWhy": "the dawn sky (luminance ~145) is lighter than the default cut-off (0.82 x mean), so the detector dropped it; 0.95 finds the printed border at 17.4% of the page height, measured 17.8%"
+    },
+    {
+      "key": "lion-in-the-wood",
+      "category": "title",
+      "title": "File:Gustave Doré - Dante Alighieri - Inferno - Plate 3 (The lion).jpg",
+      "region": "title screen",
+      "why": "Inferno, Canto I: Dante alone in the dark wood, the lion on the rock before him, one pale slit of sky between the cliffs. Picked by T (2026-11-03): \"It's got a huge area at the top we could put the title in\". The dark upper band carries the wordmark; the slit sits under it. The launcher icon stays on shore-at-dawn.",
+      "recipe": "plate-page",
+      "maxEdge": 1600
     },
     {
       "key": "arena-breakwater-northern-sea",
