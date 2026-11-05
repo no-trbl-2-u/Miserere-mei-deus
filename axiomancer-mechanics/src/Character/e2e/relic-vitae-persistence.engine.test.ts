@@ -1,6 +1,6 @@
 /**
  * Hermetic engine test — TRIM THE FAT Tier 0 item 4
- * (`plan/2026-09-25-trim-the-fat.spec.md`): a worn armor's +max VITAE must
+ * (the Trim the Fat spec (deleted; see history)): a worn armor's +max VITAE must
  * survive stat allocation and level-up.
  *
  * Both paths used to rebuild `maxHealth` from `calculateMaxHealth(level,

@@ -1171,7 +1171,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
 
 ### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
-- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: `plan/2026-09-25-trim-t2a-handoff.prompt.md`.
+- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
 - **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
 - **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
 
@@ -2366,7 +2366,7 @@ present. Row stays open until that session runs.
   check `git show --stat HEAD` before pushing.
 
 ### [x] [docs] Trim-the-fat spec names `.claude/agents/mechanics-expert.md` as a delete candidate, but four live skills spawn it (2026-09-25) — CLOSED 2026-09-28 (R0)
-- **Found by:** T1 of `plan/2026-09-25-trim-the-fat.spec.md` (Tier 1 "Docs" list, last bullet: "Rewrite or delete").
+- **Found by:** T1 of the Trim the Fat spec (deleted; see history) (Tier 1 "Docs" list, last bullet: "Rewrite or delete").
 - **Consumer the audit missed:** `skills/ship-a-phase.md:68,536`, `skills/iterate.md:245,399`, `skills/adjust-cards.md:216`, `skills/adjust-keywords.md:192` all name `mechanics-expert` as the design-second-opinion subagent. Deleting the agent file breaks those spawns.
 - **Action taken:** kept (standing frame ¶1). Spec row stands corrected: this is a *rewrite* (its philosophy-theme / stance-proc doctrine is retired), not a delete. Rewrite is design work, out of T1 scope.
 - **CLOSED 2026-09-28 (R0):** addressed by R0. D58 archived `mechanics-expert` with the stewards, and R0 repointed the skills that spawned it, so there is no live consumer left to break.

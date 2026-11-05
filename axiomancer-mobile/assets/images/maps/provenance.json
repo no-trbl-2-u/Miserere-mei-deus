@@ -92,7 +92,7 @@
     "artist": "Machine-generated in the manner of Gustave Doré; not a Doré plate",
     "license": "Owner-generated for this project (OpenAI's terms assign output rights to the user)",
     "post_process": "D22 plain resize, no AI upscaler: act1-mountains had a 24px pale strip taken off its top edge before the resize; every plate was converted to greyscale, auto-contrasted (1% cutoff), tinted to one shared parchment ramp (black 28,20,12 / mid 168,150,122 / white 246,234,212) so the underworld's orange lava and torchlight match the other three, Lanczos-resized to 2400x2400 (sources were 1125px for coast and forest, 1254px for mountains and underworld), and saved as WebP q60 method 6. No void grade: these plates are the map itself (D15), not dimmed atmosphere.",
-    "spec_section": "map revamp M1 (plan/2026-09-25-map-revamp-kickoff.prompt.md), decisions D21-D25",
+    "spec_section": "map revamp M1 (the map revamp kickoff brief, deleted; see history), decisions D21-D25",
     "covers": [
       "act1-coast.webp",
       "act1-forest.webp",
