@@ -24,6 +24,7 @@
   - "It should also only be within the shape of the enemy."
 - T, 2026-11-04, after the combat-overlay experiment (a build with every overlay stripped from the fight):
   - "Enemy looks great ... the worktree can open a PR now since it fixed the combat screen."
+- T, 2026-11-05, on PR #1396: "Put it back, just don't let it come up too high. I don't want it covering the enemy." (the dock scrim)
 
 ### What exists today (read 2026-11-04, at 33050d3)
 
@@ -92,7 +93,7 @@ transparency gets none; today that is no foe, and it is judged by alpha values, 
 ## Acceptance
 
 - **A7** T's node plate picks are in the map layouts.
-- **A9** The fight draws no overlay over the plate or the foe: no top scrim, floor glow, dock scrim or hit-flash vignette.
+- **A9** The fight draws no overlay over the plate or the foe: no top scrim, floor glow or hit-flash vignette, and the dock scrim (which shelves the dice + hand) never rises above the scene band.
 
 ## Open questions
 
@@ -169,4 +170,7 @@ Measure: 2 open · 7 closed · next A10
   and the foe, the top scrim, the floor glow, the dock scrim and the red hit-flash vignette; 43ef90b3c had resized the
   scrims, the likely cause of the Android dimming that the web build never showed. All four are removed with their stop
   table, styles and the wound-vignette colour; the board shake and the medallion's own flash stay.
+- T then asked for the dock scrim back, held below the foe. It returns on a wrapping View sized 250px with a 38% cap (the
+  space under the 62% scene band). The Svg inside only fills that View: on native, react-native-svg lets an Svg's
+  `height="100%"` prop override its style, so the old styled scrim was the whole pane tall, which is the real Android cause.
 - Measure: the combat pane tests, then `npm run verify -w axiomancer-mobile`. T's phone is the real check.

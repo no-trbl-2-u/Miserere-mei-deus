@@ -4,6 +4,8 @@
  *   · layer 0 — the arena backdrop with a LARGE alpha-matted enemy painting
  *     (random per encounter — see assets/images/enemies) filling the upper
  *     band of the screen (the enemy IS the screen);
+ *   · the dock scrim — a gradient that shelves the dice + hand, held below
+ *     the scene band so it never reaches up over the foe;
  *   · layer 1 — floating chrome: enemy name, a full-width HP bar anchored by a
  *     central crest carrying the big HP number, the intent badge, glowing
  *     status tiles, and the player medallion with an HP arc ring in the bottom-left corner.
@@ -24,7 +26,7 @@ import { Haptics } from '@/lib/platform/haptics';
 import Animated, {
     runOnJS, useAnimatedStyle, useSharedValue, withDelay, withSequence, withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, Ellipse, Path, RadialGradient, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { useGameState } from '@/state/GameStoreProvider';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
@@ -59,6 +61,14 @@ import { useJuiceIdleBreath, useJuiceNumberPop, useJuicePulse, useJuiceShake } f
 /** A bump of resolved engine events the pane animates. `seq` rises on each new
  *  resolution so the effect fires exactly once per APPLY / END PHASE. */
 export interface CombatFx { seq: number; events: CombatEvent[]; }
+
+/** The scene band's share of the pane, top down: the foe stands in it. */
+export const SCENE_BAND_HEIGHT = '62%' as const;
+/** The dock scrim's height (it shelves the dice + hand). */
+export const DOCK_SCRIM_HEIGHT = 250;
+/** The dock scrim's ceiling: the space under the scene band, so the scrim
+ *  can never rise over the foe (T, 146.9). */
+export const DOCK_SCRIM_MAX_HEIGHT = '38%' as const;
 
 /** Height of the floating top HUD (under the safe-area inset) — the board's
  *  content column leaves this much clearance before the play region. */
@@ -732,6 +742,24 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     </View>
                 </Animated.View>
             </View>
+            {/* dock scrim — shelves the dice + hand over the arena floor. Capped at
+                DOCK_SCRIM_MAX_HEIGHT (the space under the scene band) so on a short
+                phone it never climbs up over the foe (146.9, T). The size lives on a
+                wrapping View: on native, react-native-svg lets the Svg's own
+                width/height props override its style, so `height="100%"` on a styled
+                Svg made the old scrim the whole pane tall, dimming the foe on Android. */}
+            <View style={styles.dockScrim} pointerEvents="none" testID="combat-dock-scrim">
+                <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
+                    <Defs>
+                        <LinearGradient id="axmCombatDockScrim" x1="0" y1="0" x2="0" y2="1">
+                            <Stop offset="0" stopColor={AXM.bg} stopOpacity={0} />
+                            <Stop offset="0.45" stopColor={AXM.bg} stopOpacity={0.9} />
+                            <Stop offset="1" stopColor={AXM.bg} stopOpacity={1} />
+                        </LinearGradient>
+                    </Defs>
+                    <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmCombatDockScrim)" />
+                </Svg>
+            </View>
 
             {/* ── layer 1: top HUD ── */}
             <View
@@ -844,7 +872,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
 
 const useStyles = makeStyles((AXM) => ({
     // Battlefield band — the scene fills the top ~62% and fades into the floor.
-    sceneBand: { position: 'absolute', top: 0, left: 0, right: 0, height: '62%', backgroundColor: AXM.bg },
+    sceneBand: { position: 'absolute', top: 0, left: 0, right: 0, height: SCENE_BAND_HEIGHT, backgroundColor: AXM.bg },
     // Enemy painting — anchored to the band's lower half, clear of the HUD; the
     // grounding shadow hugs its feet. This `top` is the PRE-LAYOUT FALLBACK
     // only: once the HUD's full-width block reports its height the wrap
@@ -860,6 +888,9 @@ const useStyles = makeStyles((AXM) => ({
     enemyIdleWrap: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'flex-end', transformOrigin: 'center bottom' },
     enemyFigureImg: { width: '78%', height: '96%', maxWidth: 380 },
     enemyFigureImgBoss: { width: '92%', maxWidth: 460 },
+    // The dock scrim: 250px tall, but never taller than the space under the
+    // scene band, so its top edge stays at or below the foe's feet.
+    dockScrim: { position: 'absolute', left: 0, right: 0, bottom: 0, height: DOCK_SCRIM_HEIGHT, maxHeight: DOCK_SCRIM_MAX_HEIGHT },
 
     // ── top HUD ──
     hud: { position: 'absolute', top: 0, left: 0, right: 0, paddingHorizontal: 12 },
@@ -948,7 +979,7 @@ const useStyles = makeStyles((AXM) => ({
     // Floats.
     // The float band mirrors `sceneBand`'s geometry (no paint) so the anchor
     // inside it lands exactly on `enemyFigureWrap`.
-    floatBand: { position: 'absolute', top: 0, left: 0, right: 0, height: '62%', zIndex: 20 },
+    floatBand: { position: 'absolute', top: 0, left: 0, right: 0, height: SCENE_BAND_HEIGHT, zIndex: 20 },
     // The figure fills ~96% of the wrap from its feet up (both sizes share the
     // height), so 22% down the wrap is the upper third of the drawn foe.
     enemyFloatLayer: { position: 'absolute', top: '22%', left: 0, right: 0, alignItems: 'center', zIndex: 20 },
