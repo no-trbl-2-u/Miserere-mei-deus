@@ -42,8 +42,7 @@ import { moveToNode as moveWorld } from '../World/world.reducer';
 import { resolveMapEvent, settleArrival } from '../World';
 import { answerUnsettledArrival } from '../World/MapEvents/resolve-map-event';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
-import { advanceKillObjectives } from '../World/quest.engine';
-import { acceptQuestStep, settleQuestLog, turnInQuestStep } from '../World/questline';
+import { acceptQuestStep, advanceEncounterKills, settleQuestLog, turnInQuestStep } from '../World/questline';
 import { calculateMaxHealth } from '../Utils';
 import { STAT_POINTS_PER_LEVEL } from './game-mechanics.constants';
 import { experienceForLevel } from '../Character/experience';
@@ -365,9 +364,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
                 // The kills go through the settle seam (`settleQuestLog`),
                 // which also opens the roads of a questline step they made
                 // ready, in this same END_COMBAT.
-                for (const enemy of encounter.enemies) {
-                    nextQuests = advanceKillObjectives(nextQuests, enemy, state.world.currentMap.name).log;
-                }
+                nextQuests = advanceEncounterKills(nextQuests, encounter, state.world.currentMap.name);
             }
 
             // A spared foe appends its `flagSet` to state.flags (de-duped). Reuses the existing

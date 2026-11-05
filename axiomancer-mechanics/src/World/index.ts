@@ -95,7 +95,7 @@ export { questGatesOn, questGateProblems } from './quest-gates';
 export {
     registerQuestline, getQuestline, listQuestlines, questlineStep,
     questStepState, stepQuest, questStepView, questNodeStage, resolveQuestNodeEvent,
-    openReadyQuestRoutes, settleQuestLog, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
+    openReadyQuestRoutes, settleQuestLog, winQuestItems, playerWithWinQuestItems, acceptQuestStep, giveQuestStep, turnInQuestStep, turnInNodeOf,
 } from './questline';
 // Rest shelter classification. Mobile words an inn night as a bed.
 export type { RestShelter } from './MapEvents/types';

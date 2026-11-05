@@ -2370,6 +2370,12 @@
     {
       "kind": "coupling",
       "from": "area:World",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/World/questline.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
       "to": "area:Combat",
       "file": "axiomancer-mechanics/src/World/Blacksmith/blacksmith.engine.ts"
     },
@@ -2600,6 +2606,12 @@
       "from": "area:World",
       "to": "area:Items",
       "file": "axiomancer-mechanics/src/World/quest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:World",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/World/questline.ts"
     },
     {
       "kind": "coupling",
