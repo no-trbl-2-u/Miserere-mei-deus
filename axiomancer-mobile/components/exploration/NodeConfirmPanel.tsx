@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, nodePurseLines, type ExplorationNode, type ExplorationOption } from '@/state/presenters/exploration.engine';
@@ -37,6 +38,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
     if (shut !== null) {
         return (
             <View style={styles.panel} testID="node-confirm-panel">
+            <KitBackdrop piece="menu-panel-dark" />
                 <View style={styles.body}>
                     <View style={styles.iconWrap}>
                         <ActionIcon kind={ACTION_ICON_BY_TYPE[shut.type] ?? 'sword'} size={22} color={AXM.bone} />
@@ -58,6 +60,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
                         testID="node-confirm-cancel"
                         style={styles.cancel}
                     >
+                        <KitBackdrop piece="action-button-idle" />
                         <Text style={styles.cancelText}>BACK</Text>
                     </Pressable>
                 </View>
@@ -68,6 +71,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
     if (selected === null) {
         return (
             <View style={styles.panel}>
+                <KitBackdrop piece="menu-panel-dark" />
                 <Text style={styles.hint}>{emptyMessage}</Text>
             </View>
         );
@@ -79,6 +83,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
 
     return (
         <View style={styles.panel} testID="node-confirm-panel">
+            <KitBackdrop piece="menu-panel-dark" />
             <View style={styles.body}>
                 <View style={styles.iconWrap}>
                     <ActionIcon kind={iconKey} size={22} color={AXM.parchment} />
@@ -107,6 +112,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
                     testID="node-confirm-cancel"
                     style={styles.cancel}
                 >
+                    <KitBackdrop piece="action-button-idle" />
                     <Text style={styles.cancelText}>BACK</Text>
                 </Pressable>
                 <Pressable
@@ -116,6 +122,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
                     testID="node-confirm-go"
                     style={styles.confirm}
                 >
+                    <KitBackdrop piece="action-button-selected" />
                     <Text style={styles.confirmText}>TRAVEL HERE</Text>
                 </Pressable>
             </View>
@@ -125,13 +132,10 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
 
 const useStyles = makeStyles((AXM) => ({
     panel: {
-        marginHorizontal: 10,
-        marginBottom: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
+        marginHorizontal: 6,
+        marginBottom: 6,
+        paddingHorizontal: 52,
+        paddingVertical: 20,
     },
     hint: {
         fontFamily: FONTS.serifItalic,
@@ -185,10 +189,8 @@ const useStyles = makeStyles((AXM) => ({
         marginTop: 10,
     },
     cancel: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderWidth: 1,
-        borderColor: AXM.ash,
+        paddingHorizontal: 18,
+        paddingVertical: 11,
     },
     cancelText: {
         fontFamily: FONTS.mono,
@@ -197,16 +199,13 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.bone,
     },
     confirm: {
-        paddingHorizontal: 14,
-        paddingVertical: 6,
-        borderWidth: 1,
-        borderColor: AXM.sulfur,
-        backgroundColor: AXM.selectFill,
+        paddingHorizontal: 18,
+        paddingVertical: 11,
     },
     confirmText: {
         fontFamily: FONTS.mono,
         fontSize: 11,
         letterSpacing: 1.5,
-        color: AXM.sulfur,
+        color: AXM.bg,
     },
 }));

@@ -11,6 +11,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles } from '@/theme/runtime';
 
 export interface StepperRowProps {
@@ -21,9 +22,12 @@ export interface StepperRowProps {
     atMin?: boolean;
     atMax?: boolean;
     testID: string;
+    /** The level as a share of its range, drawn on a kit slider between the verbs. */
+    level?: number;
+    track?: 'diamond' | 'quatrefoil';
 }
 
-export function StepperRow({ label, valueLabel, onDecrement, onIncrement, atMin, atMax, testID }: StepperRowProps) {
+export function StepperRow({ label, valueLabel, onDecrement, onIncrement, atMin, atMax, testID, level, track = 'diamond' }: StepperRowProps) {
     const styles = useStyles();
     return (
         <View style={styles.root} testID={testID}>
@@ -37,8 +41,18 @@ export function StepperRow({ label, valueLabel, onDecrement, onIncrement, atMin,
                     accessibilityLabel={`${label} down`}
                     testID={`${testID}-down`}
                 >
+                    <KitBackdrop piece="icon-button-square" />
                     <Text style={styles.stepLabel}>−</Text>
                 </Pressable>
+                {level !== undefined ? (
+                    <View style={styles.slider} pointerEvents="none">
+                        <KitImage piece={track === 'diamond' ? 'slider-track-diamond' : 'slider-track-quatrefoil'} style={styles.sliderTrack} />
+                        <KitImage
+                            piece={track === 'diamond' ? 'slider-knob-diamond' : 'slider-knob-round'}
+                            style={[styles.sliderKnob, { left: `${Math.round(level * 100)}%` }]}
+                        />
+                    </View>
+                ) : null}
                 <Text style={styles.value} testID={`${testID}-value`}>{valueLabel}</Text>
                 <Pressable
                     style={[styles.step, atMax && styles.stepOff]}
@@ -48,6 +62,7 @@ export function StepperRow({ label, valueLabel, onDecrement, onIncrement, atMin,
                     accessibilityLabel={`${label} up`}
                     testID={`${testID}-up`}
                 >
+                    <KitBackdrop piece="icon-button-square" />
                     <Text style={styles.stepLabel}>+</Text>
                 </Pressable>
             </View>
@@ -67,17 +82,17 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.panelBg,
     },
     label: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.parchment },
-    controls: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    controls: { flexDirection: 'row', alignItems: 'center', gap: 6 },
     step: {
         width: 34,
-        height: 30,
-        borderWidth: 1,
-        borderColor: AXM.sulfur,
-        backgroundColor: AXM.selectFill,
+        height: 34,
         alignItems: 'center',
         justifyContent: 'center',
     },
     stepOff: { opacity: 0.35 },
     stepLabel: { fontFamily: FONTS.mono, fontSize: 16, color: AXM.sulfur },
-    value: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.parchment, minWidth: 40, textAlign: 'center' },
+    slider: { width: 96, height: 22, justifyContent: 'center' },
+    sliderTrack: { width: '100%', height: 8 },
+    sliderKnob: { position: 'absolute', top: 2, width: 18, height: 18, marginLeft: -9 },
+    value: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.parchment, minWidth: 32, textAlign: 'center' },
 }));

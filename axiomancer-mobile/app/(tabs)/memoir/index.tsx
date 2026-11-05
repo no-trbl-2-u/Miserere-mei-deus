@@ -2,8 +2,8 @@ import React, { useEffect, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
-import { AxmIcon } from '@/components/icons';
 import { SectionLabel } from '@/components/SectionLabel';
+import { KitBackdrop, KitDivider, KitHeader } from '@/components/experience/KitBackdrop';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -34,6 +34,7 @@ function QuestCard({ quest }: { quest: MemoirQuestRow }) {
                 ]}
                 testID={`memoir-quest-${quest.id}`}
             >
+                <KitBackdrop piece="quest-row-dark" scale={0.34} />
                 <Text style={styles.questName}>{quest.name}</Text>
                 {quest.description.length > 0 && (
                     <Text style={styles.questDescription}>{quest.description}</Text>
@@ -115,7 +116,7 @@ export default function MemoirScreen() {
 
                 {/* Chronicle */}
                 <View style={styles.section} testID="memoir-chronicle">
-                    <SectionLabel size={10}>{vm.chronicleEyebrow}</SectionLabel>
+                    <KitHeader>{vm.chronicleEyebrow}</KitHeader>
                     {vm.chronicle.length === 0 ? (
                         <Text style={styles.emptyLine}>{vm.emptyChronicle}</Text>
                     ) : (
@@ -147,7 +148,8 @@ export default function MemoirScreen() {
 
                 {/* Errands */}
                 <View style={styles.section} testID="memoir-quests">
-                    <SectionLabel size={10}>{vm.questsEyebrow}</SectionLabel>
+                    <KitDivider piece="divider-ornate-brass" />
+                    <KitHeader variant="quatrefoil">{vm.questsEyebrow}</KitHeader>
                     {vm.quests.active.length === 0 &&
                     vm.quests.completed.length === 0 &&
                     vm.quests.forgotten.length === 0 ? (
@@ -190,10 +192,8 @@ export default function MemoirScreen() {
 
                 {/* Remains */}
                 <View style={styles.section} testID="memoir-remains">
-                    <View style={styles.remainsEyebrowRow}>
-                        <AxmIcon name="action-tombstone" size={14} color={AXM.bone} />
-                        <SectionLabel size={10}>{vm.remainsEyebrow}</SectionLabel>
-                    </View>
+                    <KitDivider piece="divider-plain-brass" />
+                    <KitHeader>{vm.remainsEyebrow}</KitHeader>
                     <Text style={styles.remainsLine} testID="memoir-death-line">
                         {vm.remains.deathLine}
                     </Text>
@@ -235,11 +235,6 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.bone,
         marginTop: 2,
     },
-    remainsEyebrowRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-    },
     section: { padding: 14, paddingTop: 12 },
     emptyLine: {
         fontFamily: FONTS.mono,
@@ -271,11 +266,8 @@ const useStyles = makeStyles((AXM) => ({
     questGroup: { marginTop: 6 },
     questCard: {
         marginTop: 4,
-        padding: 6,
-        paddingHorizontal: 8,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
+        paddingVertical: 16,
+        paddingHorizontal: 40,
     },
     questCardCompleted: { opacity: 0.55 },
     questName: {

@@ -12,6 +12,7 @@ import type { CombatSummary } from '@mechanics';
 import { summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
 import type { SpareSummaryLine } from '@/state/presenters/spare-reward.engine';
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** "1 play", "12 plays". */
@@ -31,6 +32,7 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLi
     return (
         <View style={styles.backdrop} testID="combat-summary">
             <View style={[styles.panel, { borderColor: color }]}>
+                <KitBackdrop piece="modal-panel-dark" />
                 <Text style={[styles.headline, { color }]}>{summary.headline}</Text>
 
                 {summary.rows.length > 0 && <Text style={styles.rowsHead}>DAMAGE BY CARD</Text>}
@@ -74,6 +76,7 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLi
                 )}
 
                 <Pressable onPress={onClose} testID="combat-summary-close" accessibilityRole="button" accessibilityLabel="Continue" style={[styles.btn, { borderColor: color }]}>
+                    <KitBackdrop piece="action-button-idle" />
                     <Text style={[styles.btnText, { color }]}>CONTINUE</Text>
                 </Pressable>
             </View>
@@ -83,7 +86,7 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLi
 
 const useStyles = makeStyles((AXM) => ({
     backdrop: { ...({ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 } as const), backgroundColor: 'rgba(0,0,0,0.82)', alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 50 },
-    panel: { width: '100%', maxWidth: 420, borderWidth: 2, backgroundColor: AXM.panelBg, padding: 16 },
+    panel: { width: '100%', maxWidth: 420, paddingHorizontal: 48, paddingVertical: 28 },
     headline: { fontFamily: FONTS.gothic, fontSize: 20, letterSpacing: 0.5, textAlign: 'center', marginBottom: 12 },
     rowsHead: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1, color: AXM.bone, marginBottom: 4 },
     rows: { gap: 5, marginBottom: 10 },

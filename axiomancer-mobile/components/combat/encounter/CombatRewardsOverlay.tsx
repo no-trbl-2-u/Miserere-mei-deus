@@ -35,6 +35,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
@@ -85,6 +86,7 @@ export function CombatRewardsOverlay({
         return (
             <View style={styles.backdrop} testID="combat-rewards">
                 <View style={[styles.panel, styles.upgradePanel, { borderColor: AXM.sulfur }]} testID="combat-reward-upgrade-sheet">
+                    <KitBackdrop piece="modal-panel-dark" />
                     <CardUpgradePicker rows={[upgradeRow]} onConfirm={onUpgrade} />
                     <Pressable
                         onPress={() => setUpgrading(false)}
@@ -103,6 +105,7 @@ export function CombatRewardsOverlay({
     return (
         <View style={styles.backdrop} testID="combat-rewards">
             <View style={[styles.panel, { borderColor: AXM.sulfur }]}>
+                <KitBackdrop piece="modal-panel-dark" />
                 <Text style={styles.eyebrow}>✦ SPOILS</Text>
                 <Text style={styles.title}>Add a card to your deck</Text>
                 <Text style={styles.sub}>{upgradeRow ? ELITE_REWARD_SUB : SPOILS_SUB}</Text>
@@ -165,6 +168,7 @@ export function CombatRewardsOverlay({
                         accessibilityLabel="Take nothing — keep the deck lean"
                         style={[styles.btn, { borderColor: AXM.bone }]}
                     >
+                        <KitBackdrop piece="action-button-idle" />
                         <Text style={[styles.btnText, { color: AXM.parchment }]}>TAKE NOTHING</Text>
                         <Text style={styles.btnNote}>a lean deck draws its best more often</Text>
                     </Pressable>
@@ -175,9 +179,10 @@ export function CombatRewardsOverlay({
                         accessibilityRole="button"
                         accessibilityState={{ disabled: !picked }}
                         accessibilityLabel="Take the selected card"
-                        style={[styles.btn, { borderColor: picked ? AXM.sulfur : AXM.ash, opacity: picked ? 1 : 0.55 }]}
+                        style={[styles.btn, { borderColor: picked ? AXM.sulfur : AXM.ash, opacity: picked ? 1 : 0.8 }]}
                     >
-                        <Text style={[styles.btnText, { color: picked ? AXM.sulfur : AXM.bone }]}>TAKE CARD</Text>
+                        <KitBackdrop piece={picked ? 'action-button-selected' : 'action-button-disabled'} />
+                        <Text style={[styles.btnText, { color: picked ? AXM.bg : AXM.bone }]}>TAKE CARD</Text>
                         <Text style={styles.btnNote}>{picked ? 'it joins your deck for the run' : 'choose a card first'}</Text>
                     </Pressable>
                 </View>
@@ -257,7 +262,7 @@ export function CombatRewardsOverlay({
 
 const useStyles = makeStyles((AXM) => ({
     backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 60 },
-    panel: { width: '100%', maxWidth: 420, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 12, paddingVertical: 16, alignItems: 'center' },
+    panel: { width: '100%', maxWidth: 420, paddingHorizontal: 30, paddingVertical: 26, alignItems: 'center' },
     eyebrow: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.sulfur, marginBottom: 4 },
     title: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, textAlign: 'center' },
     sub: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12, color: AXM.bone, textAlign: 'center', marginTop: 3, marginBottom: 14 },
@@ -269,7 +274,7 @@ const useStyles = makeStyles((AXM) => ({
     pickedBadge: { position: 'absolute', top: -9, right: -9, width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
     pickedBadgeText: { fontFamily: FONTS.gothic, fontSize: 14, color: HUE.badgeInk },
     btnRow: { flexDirection: 'row', gap: 10, marginTop: 18 },
-    btn: { flex: 1, borderWidth: 2, paddingHorizontal: 10, paddingVertical: 9, alignItems: 'center' },
+    btn: { flex: 1, paddingHorizontal: 14, paddingVertical: 13, alignItems: 'center' },
     btnText: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1 },
     upgradeOpen: { flex: 0, alignSelf: 'stretch', marginTop: 10 },
     upgradePanel: { alignItems: 'stretch' },

@@ -11,6 +11,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles } from '@/theme/runtime';
 import type { CombatIntentVM } from '@/state/presenters/combat-encounter.engine';
 import {
@@ -77,11 +78,13 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
             accessibilityLabel={a11y}
             onTouchEnd={onPress}
         >
-            <View style={[styles.disc, { borderColor: intent.color, backgroundColor: `${intent.color}2e` }]}>
+            <View style={[styles.disc, { borderColor: intent.color }]}>
+                <KitBackdrop piece={intent.damage > 0 ? 'combat-intent-oxblood' : 'combat-intent-brass'} />
                 <Text style={[styles.icon, { color: intent.color, textShadowColor: intent.color }]}>{intent.icon}</Text>
             </View>
             {(intent.damage > 0 || intent.debuffs || intent.branch) && (
                 <View style={styles.pill}>
+                    <KitBackdrop piece="combat-badge" scale={0.14} />
                     {/* A minus, not a heart. This pill is the ENEMY's telegraph:
                       * the number is damage it will deal to the player. ♥ means
                       * only the player's VITAE; a minus means something is
@@ -109,7 +112,7 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
 const useStyles = makeStyles((AXM) => ({
     wrap: { alignItems: 'center' },
     disc: {
-        width: 36, height: 36, borderRadius: 18, borderWidth: 2,
+        width: 44, height: 44,
         alignItems: 'center', justifyContent: 'center',
     },
     // The telegraph kinds: 56 against the badge's 36, over half again.
@@ -121,8 +124,7 @@ const useStyles = makeStyles((AXM) => ({
     icon: { fontSize: 17, lineHeight: 20, textShadowRadius: 6, textShadowOffset: { width: 0, height: 0 } },
     pill: {
         flexDirection: 'row', alignItems: 'center', gap: 2, marginTop: -6,
-        backgroundColor: 'rgba(0,0,0,0.88)', borderRadius: 7, paddingHorizontal: 5, paddingVertical: 1,
-        borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)',
+        paddingHorizontal: 9, paddingVertical: 3,
     },
     pillText: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.3 },
     debuffMark: { fontFamily: FONTS.sans, fontSize: 10, color: HUE.tickPurple },

@@ -216,9 +216,9 @@ describe('A5 — the VITAE bar', () => {
         expect(fill.backgroundColor).toBe(currentPalette()[tone]);
     });
 
-    it('is an 8pt bar announced as VITAE', () => {
+    it('is a 12pt bar announced as VITAE', () => {
         const { vm } = renderBoard();
-        expect(VITAE_BAR_H).toBe(8);
+        expect(VITAE_BAR_H).toBe(12);
         expect(flat('combat-rail-vitae-bar').height).toBe(VITAE_BAR_H);
         expect(screen.getByTestId('combat-rail-vitae-bar').props.accessibilityLabel)
             .toBe(`VITAE ${vm.player.hp} of ${vm.player.maxHp}`);

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles } from '@/theme/runtime';
 import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { useTooltip } from '@/hooks/useTooltip';
@@ -78,6 +79,7 @@ export function EquipmentSlot({
             ]}
             testID={`dock-slot-${slotId}`}
         >
+            <KitBackdrop piece={selected || lit ? 'equipment-slot-selected' : 'equipment-slot-dark'} />
             <View style={[styles.dockSlotGlyph, filled ? styles.dockSlotGlyphFilled : styles.dockSlotGlyphBare]}>
                 {filled && slot.item !== null ? (
                     <ItemGlyph category="equipment" sub={slot.item.sub} itemId={slot.item.id} />
@@ -114,27 +116,16 @@ const useStyles = makeStyles((AXM) => ({
     dockSlot: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
+        gap: 8,
         height: 64,
-        borderWidth: 1,
-        borderColor: AXM.divider,
         marginBottom: 6,
-        backgroundColor: AXM.panelBg,
-        paddingHorizontal: 6,
+        paddingLeft: 24,
+        paddingRight: 14,
         paddingVertical: 6,
     },
-    dockSlotFilled: {
-        borderColor: AXM.sulfur,
-        backgroundColor: AXM.bg,
-    },
-    dockSlotBare: {
-        backgroundColor: AXM.panelBg,
-        borderStyle: 'dashed',
-    },
-    dockSlotSelected: {
-        borderWidth: 2,
-        borderColor: AXM.bone,
-    },
+    dockSlotFilled: {},
+    dockSlotBare: {},
+    dockSlotSelected: {},
     // A row that would take the piece being dragged.
     dockSlotLit: {
         borderWidth: 2,
@@ -149,20 +140,13 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.blood,
     },
     dockSlotGlyph: {
-        width: 34,
+        width: 32,
         height: 34,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
     },
-    dockSlotGlyphFilled: {
-        borderColor: AXM.bone,
-        backgroundColor: AXM.panelBg,
-    },
-    dockSlotGlyphBare: {
-        borderColor: AXM.ash,
-        backgroundColor: AXM.bg,
-    },
+    dockSlotGlyphFilled: {},
+    dockSlotGlyphBare: {},
     dockSlotEmptyMark: {
         fontFamily: FONTS.mono,
         fontSize: 20,

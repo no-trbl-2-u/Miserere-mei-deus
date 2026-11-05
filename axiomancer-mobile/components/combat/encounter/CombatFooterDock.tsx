@@ -16,15 +16,16 @@
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 
-import { FONTS, HUE } from '@/theme/axm';
+import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ledgerA11y } from '@/state/presenters/combat-encounter.engine';
 import type { CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 import { LedgerMark } from '@/components/hazard/glyphs';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 
 /** The ledger's marks tallied, for the gloss's live line. */
 function ledgerCounts(ledger: CombatViewModel['ledger']): { clear: number; overwhelmed: number; pending: number } {
@@ -38,13 +39,13 @@ export const DOCK_ROW_H = 56;
 /** The dock's top and bottom padding (the bottom one sits above the inset). */
 export const DOCK_PAD_V = 8;
 /** Side padding and the gap between the dock's three cells. */
-export const DOCK_PAD_H = 10;
+export const DOCK_PAD_H = 18;
 export const DOCK_GAP = 10;
 /** The wide END button: a thumb target, not a corner disc. */
 export const END_BTN_W = 116;
 export const END_BTN_H = DOCK_ROW_H;
 /** The VITAE fill bar's height. */
-export const VITAE_BAR_H = 8;
+export const VITAE_BAR_H = 12;
 /** Below this share of max VITAE the bar turns blood (presentation only). */
 export const VITAE_LOW_RATIO = 0.25;
 export const DOCK_LEDGER_MARK = 14;
@@ -87,10 +88,13 @@ export const VitaeBar = React.memo(function VitaeBar({ hp, maxHp }: { hp: number
             accessibilityLabel={`VITAE ${hp} of ${maxHp}`}
             accessibilityValue={{ min: 0, max: maxHp, now: hp }}
         >
+            <KitBackdrop piece="combat-player-track" />
             <View
                 style={[styles.barFill, { width: `${pct}%`, backgroundColor: low ? AXM.blood : AXM.heal }]}
                 testID="combat-rail-vitae-fill"
-            />
+            >
+                <KitImage piece={low ? 'combat-vitae-fill' : 'combat-player-fill'} style={StyleSheet.absoluteFill} />
+            </View>
         </View>
     );
 });
@@ -117,8 +121,13 @@ export const EndPhaseButton = React.memo(function EndPhaseButton({ onPress, cons
                 accessibilityLabel={`End phase — the enemy acts, then the next phase begins.${consequence ? ` ${consequence}.` : ''}`}
                 style={[styles.endBtn, { borderColor: AXM.sulfur }, disabled && styles.endBtnDisabled]}
             >
-                <Text style={[styles.endGlyph, { color: AXM.sulfur }]} allowFontScaling={false}>⧗</Text>
-                <Text style={[styles.endLabel, { color: AXM.sulfur }]} allowFontScaling={false}>END</Text>
+                {({ pressed }) => (
+                    <>
+                        <KitBackdrop piece={disabled ? 'end-turn-disabled' : pressed ? 'end-turn-selected' : 'end-turn-idle'} />
+                        <Text style={[styles.endGlyph, { color: pressed ? AXM.bg : AXM.parchment }]} allowFontScaling={false}>⧗</Text>
+                        <Text style={[styles.endLabel, { color: pressed ? AXM.bg : AXM.parchment }]} allowFontScaling={false}>END</Text>
+                    </>
+                )}
             </Pressable>
             {consequence ? (
                 <View style={styles.endConsequenceWrap} pointerEvents="none" testID="combat-end-consequence-wrap">
@@ -152,6 +161,7 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
             testID="combat-rail"
             onLayout={onLayout}
         >
+            <KitBackdrop piece="nav-dock-dark" />
             {avatar}
             <View style={styles.vitaeCol} testID="combat-rail-vitae-col">
                 <View style={styles.vitaeRow}>
@@ -195,7 +205,9 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                     accessibilityHint="Tap to read what the marks mean"
                     hitSlop={4}
                 >
-                    {vm.ledger.map((m, i) => <LedgerMark key={i} kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />)}
+                    {vm.ledger.map((m, i) => (m === 'pending'
+                        ? <KitImage key={i} piece="combat-pip" style={{ width: DOCK_LEDGER_MARK, height: DOCK_LEDGER_MARK }} />
+                        : <LedgerMark key={i} kind={m === 'clear' ? 'O' : 'X'} size={DOCK_LEDGER_MARK} />))}
                 </Pressable>
             </View>
             <EndPhaseButton onPress={onEndPhase} consequence={endConsequence} disabled={resolving} />
@@ -207,20 +219,18 @@ const useStyles = makeStyles((AXM) => ({
     dock: {
         flexDirection: 'row', alignItems: 'center', gap: DOCK_GAP,
         paddingHorizontal: DOCK_PAD_H, paddingTop: DOCK_PAD_V,
-        backgroundColor: 'rgba(7,5,9,0.9)', borderTopWidth: 1, borderTopColor: AXM.divider,
     },
     // The VITAE column takes what the avatar and END leave, up to a cap on wide
     // windows; its cells never wrap.
-    vitaeCol: { flex: 1, minWidth: 0, maxWidth: DOCK_VITAE_MAX_WIDTH, gap: 4 },
+    vitaeCol: { flex: 1, minWidth: 0, maxWidth: DOCK_VITAE_MAX_WIDTH, gap: 2 },
     vitaeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6 },
     vitaeText: { fontFamily: FONTS.mono, fontSize: 14, lineHeight: 18, color: AXM.parchment, letterSpacing: 0.5, flexShrink: 0 },
     // The maximum rides quieter than the live value.
     vitaeMax: { color: AXM.bone, fontSize: 11 },
     barTrack: {
-        height: VITAE_BAR_H, borderRadius: VITAE_BAR_H / 2, overflow: 'hidden',
-        backgroundColor: 'rgba(0,0,0,0.6)', borderWidth: 1, borderColor: AXM.divider,
+        height: VITAE_BAR_H, borderRadius: VITAE_BAR_H / 2, overflow: 'hidden', padding: 3,
     },
-    barFill: { height: '100%' },
+    barFill: { height: '100%', borderRadius: 3, overflow: 'hidden' },
     ledger: { flexDirection: 'row', gap: DOCK_LEDGER_GAP, alignItems: 'center' },
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
@@ -232,7 +242,7 @@ const useStyles = makeStyles((AXM) => ({
     // already fills that room, so nothing moves there.
     endWrap: { width: END_BTN_W, height: END_BTN_H, marginLeft: 'auto' },
     endBtn: {
-        width: END_BTN_W, height: END_BTN_H, borderRadius: 10, borderWidth: 2.5, backgroundColor: HUE.medallionBg,
+        width: END_BTN_W, height: END_BTN_H,
         flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
     },
     // Dimmed while a phase resolves (double-tap guard); every other disabled

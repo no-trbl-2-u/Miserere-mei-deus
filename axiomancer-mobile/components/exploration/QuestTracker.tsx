@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useRouter } from '@/lib/platform/router';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles } from '@/theme/runtime';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectQuestTrackerVM } from '@/state/presenters/quest-tracker.engine';
@@ -35,7 +36,11 @@ function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> 
             testID="quest-tracker"
             style={styles.box}
         >
-            <Text style={styles.head}>{TRACKER_HEAD}</Text>
+            <KitBackdrop piece="quest-row-dark" />
+            <View style={styles.headRow}>
+                <KitImage piece="nav-marker-star" style={styles.headMark} />
+                <Text style={styles.head}>{TRACKER_HEAD}</Text>
+            </View>
             {vm.rows.map((row) => (
                 <View key={row.id} style={styles.row} testID={`quest-tracker-row-${row.id}`}>
                     <View style={styles.text}>
@@ -52,14 +57,13 @@ function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> 
 
 const useStyles = makeStyles((AXM) => ({
     box: {
-        marginHorizontal: 10,
-        marginBottom: 8,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
+        marginHorizontal: 6,
+        marginBottom: 6,
+        paddingHorizontal: 50,
+        paddingVertical: 14,
     },
+    headRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    headMark: { width: 11, height: 11 },
     head: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 1.5, color: AXM.sulfur },
     row: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, marginTop: 3 },
     text: { flex: 1 },

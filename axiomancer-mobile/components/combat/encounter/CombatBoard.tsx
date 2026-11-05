@@ -42,6 +42,7 @@ import Animated, {
 import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
 
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type {
     CombatViewModel, CombatCardVM, CombatDieVM,
@@ -335,6 +336,7 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
                 accessibilityLabel={`${conviction} conviction`}
                 accessibilityHint="Tap to read what Conviction is"
             >
+                <KitBackdrop piece="combat-badge" scale={0.2} />
                 <Text style={[styles.convictionText, { color: AXM.sulfur }]} allowFontScaling={false}>◆ {conviction}</Text>
                 {/* Name the economy: every rune below is priced in ◆ and the
                   * enemy telegraph offers '+1◆', so the chip prints the word
@@ -851,6 +853,7 @@ const MomentumChainChip = React.memo(function MomentumChainChip({ vm, onPress }:
             accessibilityLabel={a11y}
             accessibilityHint="Tap for how momentum works"
         >
+            <KitBackdrop piece="nav-count-plate-dark" scale={0.22} />
             {/* The tap mark's mirror: an empty box of the mark's own
                 footprint, so the readout stays on the centre line. */}
             <View style={styles.chipInfoGutter} testID="combat-momentum-info-gutter" />
@@ -2260,8 +2263,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // 40, the topmost board chrome while a card drag is live.
     trayLayer: { zIndex: 31 },
     convictionChip: {
-        borderWidth: 1, borderColor: AXM.sulfur, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.6)',
-        paddingHorizontal: 7, paddingVertical: 3,
+        borderWidth: 1, borderColor: 'transparent', paddingHorizontal: 10, paddingVertical: 3,
     },
     convictionText: { fontFamily: FONTS.sans, fontSize: 15, lineHeight: 18, letterSpacing: 0.5, textAlign: 'center' },
     // The CONVICTION caption — small enough to stay chrome, large enough to

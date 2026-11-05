@@ -16,6 +16,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { RarityMark } from '@/components/deck/RarityMark';
 import type { DeckCardVM } from '@/state/presenters/deck.engine';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export interface DeckCardTileProps {
@@ -36,6 +37,7 @@ export function DeckCardTile({ card, onPress }: DeckCardTileProps) {
             accessibilityHint="Opens the card's full text and flavour"
             testID={`deck-card-${card.cardId}`}
         >
+            <KitBackdrop piece="quest-row-dark" scale={0.3} />
             <View style={styles.main}>
                 <View style={styles.nameRow}>
                     <Text style={styles.name} numberOfLines={1}>{card.name}</Text>
@@ -66,12 +68,8 @@ const useStyles = makeStyles((AXM) => ({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: AXM.divider,
-        borderLeftWidth: 3,
-        backgroundColor: AXM.panelBg,
-        paddingVertical: 9,
-        paddingHorizontal: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 36,
         marginBottom: 6,
     },
     main: { flex: 1, gap: 2 },

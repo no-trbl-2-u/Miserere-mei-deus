@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { StatBar } from './StatBar';
 import { useGameState } from '@/state/GameStoreProvider';
@@ -43,8 +44,10 @@ export function StatusCard(props: StatusCardProps = {}) {
 
   return (
     <View style={styles.card}>
+      <KitBackdrop piece="menu-panel-dark" scale={0.3} />
       <View style={styles.row}>
         <View style={styles.levelBox}>
+          <KitBackdrop piece="level-badge-dark" />
           <Text style={styles.levelText}>{level}</Text>
         </View>
         <View style={styles.nameCol}>
@@ -76,10 +79,8 @@ const useStyles = makeStyles((AXM) => ({
   card: {
     margin: 8,
     marginBottom: 0,
-    padding: 8,
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-    backgroundColor: AXM.panelBg,
+    paddingVertical: 14,
+    paddingHorizontal: 46,
   },
   row: {
     flexDirection: 'row',
@@ -87,11 +88,8 @@ const useStyles = makeStyles((AXM) => ({
     gap: 8,
   },
   levelBox: {
-    width: 36,
+    width: 40,
     height: 36,
-    borderWidth: 2,
-    borderColor: AXM.parchment,
-    backgroundColor: AXM.deepBg,
     alignItems: 'center',
     justifyContent: 'center',
   },

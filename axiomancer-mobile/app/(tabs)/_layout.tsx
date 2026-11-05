@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { AxmIcon, type AxmIconName } from '@/components/icons';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import {
   TAB_BAR_LABEL_FONT_SIZE,
   TAB_BAR_LABEL_LETTER_SPACING,
@@ -21,11 +22,11 @@ import SettingsTabScreen from './settings/index';
 function TabBadge({ text, kind }: { text: string; kind: 'event' | 'levelup' }) {
   const AXM = usePalette();
   const styles = useStyles();
-  const badgeColor = kind === 'levelup' ? AXM.sulfur : AXM.blood;
 
   return (
-    <View style={[styles.badge, { backgroundColor: badgeColor }]}>
-      <Text style={styles.badgeText}>{text}</Text>
+    <View style={[styles.badge, { backgroundColor: 'transparent' }]}>
+      <KitBackdrop piece={kind === 'levelup' ? 'nav-count-shield-gold' : 'nav-count-round-gold'} />
+      <Text style={[styles.badgeText, { color: AXM.bg }]}>{text}</Text>
     </View>
   );
 }
@@ -70,8 +71,10 @@ function TabIconWithBadge({
   if (!icon) return null;
   return (
     <View style={styles.iconContainer}>
-      <View style={[styles.activeTick, focused && { backgroundColor: AXM.sulfur }]} />
-      <AxmIcon name={icon.name} size={size} color={color} label={icon.label} />
+      <View style={styles.tabFrame}>
+        <KitBackdrop piece={focused ? 'nav-tab-selected' : 'nav-tab-idle'} />
+        <View><AxmIcon name={icon.name} size={Math.min(size, 17)} color={focused ? AXM.bg : color} label={icon.label} /></View>
+      </View>
       {badge && <TabBadge text={badge.text} kind={badge.kind} />}
     </View>
   );
@@ -109,6 +112,8 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: styles.tabBar,
+        tabBarBackground: () => <KitBackdrop piece="nav-dock-dark" />,
+        tabBarIconStyle: styles.tabIconSlot,
         tabBarActiveTintColor: AXM.sulfur,
         tabBarInactiveTintColor: AXM.bone,
         tabBarLabelStyle: styles.tabLabel,
@@ -221,12 +226,15 @@ export default function TabLayout() {
 
 const useStyles = makeStyles((AXM) => ({
   tabBar: {
-    backgroundColor: AXM.panelBg,
-    borderTopColor: AXM.ash,
-    borderTopWidth: 1,
-    height: 60,
-    paddingBottom: 8,
+    backgroundColor: AXM.bg,
+    borderTopWidth: 0,
+    height: 72,
+    paddingTop: 7,
+    paddingBottom: 9,
+    paddingHorizontal: 20,
   },
+  tabIconSlot: { width: 50, height: 36 },
+  tabFrame: { width: 50, height: 36, alignItems: 'center', justifyContent: 'center' },
   // Type size and tracking come from the presenter so the tab-bar FIT
   // contract in `state/e2e/tabs.engine.test.ts` measures the label the bar
   // actually draws. Tracking is 1 because the bar is five tabs
@@ -242,18 +250,10 @@ const useStyles = makeStyles((AXM) => ({
     position: 'relative',
     alignItems: 'center',
   },
-  // The handoff tab contract's active tick — a short bar above the
-  // icon; transparent when the tab is at rest so layout never shifts.
-  activeTick: {
-    width: 14,
-    height: 2,
-    marginBottom: 2,
-    backgroundColor: 'transparent',
-  },
   badge: {
     position: 'absolute',
-    top: -4,
-    right: -6,
+    top: -2,
+    right: -4,
     minWidth: 16,
     height: 16,
     borderRadius: 8,

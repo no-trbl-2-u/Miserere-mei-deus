@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View, Text } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop, KitDivider } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
@@ -167,6 +168,7 @@ export default function InventoryScreen() {
                 <View style={styles.headerRow}>
                     <Text style={styles.title}>INVENTORY</Text>
                     <View style={styles.shillingBox}>
+                        <KitBackdrop piece="purse-bezel-dark" />
                         <Text style={styles.shillingLabel}>PURSE</Text>
                         <Text style={styles.shillingVal}>⚜ {vm.shilling}</Text>
                     </View>
@@ -213,6 +215,7 @@ export default function InventoryScreen() {
             />
 
             {/* The satchel list is a drop target: a worn piece let go here comes off. */}
+            <KitDivider piece="divider-plain-brass" style={styles.satchelRule} />
             <View style={styles.satchel} ref={registerSatchel} collapsable={false} testID="satchel-drop-zone">
                 <ItemGrid
                     items={vm.items}
@@ -265,9 +268,10 @@ const useStyles = makeStyles((AXM) => ({
     header: { padding: 14, paddingBottom: 0 },
     headerRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
     title: { fontFamily: FONTS.gothic, fontSize: 28, lineHeight: 30, color: AXM.parchment, marginTop: 2 },
-    shillingBox: { alignItems: 'flex-end' },
-    shillingLabel: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, letterSpacing: 1 },
-    shillingVal: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.sulfur, lineHeight: 24 },
+    shillingBox: { width: 66, height: 66, alignItems: 'center', justifyContent: 'center' },
+    satchelRule: { marginVertical: 0 },
+    shillingLabel: { fontFamily: FONTS.mono, fontSize: 8, color: AXM.bone, letterSpacing: 0.5 },
+    shillingVal: { fontFamily: FONTS.sans, fontSize: 18, color: AXM.sulfur, lineHeight: 20 },
     burdenSection: {
         marginTop: 8,
     },

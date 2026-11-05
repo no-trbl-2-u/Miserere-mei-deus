@@ -13,6 +13,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles } from '@/theme/runtime';
 
 export interface MenuButtonProps {
@@ -49,6 +50,9 @@ export function MenuButton({
             accessibilityHint={hint}
             testID={testID}
         >
+            {({ pressed }) => (
+                <>
+            <KitBackdrop piece={disabled ? 'action-button-disabled' : primary || pressed ? 'action-button-selected' : 'action-button-idle'} />
             <View style={styles.text}>
                 <Text style={[styles.label, primary && styles.labelPrimary, danger && styles.labelDanger]}>
                     {label}
@@ -60,6 +64,8 @@ export function MenuButton({
                 ) : null}
             </View>
             <Text style={[styles.chevron, primary && styles.labelPrimary]}>›</Text>
+                </>
+            )}
         </Pressable>
     );
 }
@@ -69,25 +75,15 @@ const useStyles = makeStyles((AXM) => ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 12,
-        paddingHorizontal: 14,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
+        paddingVertical: 16,
+        paddingHorizontal: 26,
     },
-    primary: {
-        backgroundColor: AXM.sulfur,
-        borderColor: AXM.parchment,
-    },
-    danger: {
-        borderColor: AXM.blood,
-    },
+    primary: {},
+    danger: {},
     disabled: {
-        opacity: 0.45,
+        opacity: 0.8,
     },
-    pressed: {
-        backgroundColor: AXM.selectFill,
-    },
+    pressed: {},
     text: { flex: 1 },
     label: {
         fontFamily: FONTS.sans,

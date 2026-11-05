@@ -23,6 +23,7 @@ import {
   titleLayout,
   titleWordmarkFrames,
 } from '@/state/presenters/title.engine';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
@@ -182,6 +183,7 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
           accessibilityRole="button"
           accessibilityLabel={TITLE_COPY.embarkLabel}
         >
+          <KitBackdrop piece="action-button-selected" />
           <Text style={styles.embarkButtonText}>{TITLE_COPY.embark}</Text>
           <Text style={styles.embarkHint}>{TITLE_COPY.embarkHint}</Text>
         </Pressable>
@@ -270,11 +272,8 @@ const useStyles = makeStyles((AXM) => ({
     textTransform: 'uppercase',
   },
   embarkButton: {
-    backgroundColor: AXM.sulfur,
-    paddingVertical: 16,
+    paddingVertical: 20,
     paddingHorizontal: 56,
-    borderWidth: 1,
-    borderColor: AXM.parchment,
     // Lift the CTA off the dark field with an accent glow.
     shadowColor: AXM.sulfur,
     shadowOffset: { width: 0, height: 0 },

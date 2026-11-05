@@ -72,6 +72,7 @@ import {
     settleEliteEquipmentAction, settleEliteRelicAction, settleSpareAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { boardGlossView, MOMENTUM_GLOSS } from '@/state/combat/keywords';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
@@ -951,7 +952,8 @@ export function CombatEncounterPanel({
                         })}
                         </>)}
                         <Pressable onPress={onEnter} testID="combat-enter" accessibilityRole="button" accessibilityLabel="Enter combat and roll your first dice" style={[styles.revealBtn, { borderColor: AXM.sulfur }]}>
-                            <Text style={[styles.revealBtnText, { color: AXM.sulfur }]}>ENTER COMBAT ›</Text>
+                            <KitBackdrop piece="action-button-selected" />
+                            <Text style={[styles.revealBtnText, { color: AXM.bg }]}>ENTER COMBAT ›</Text>
                         </Pressable>
                         {/* The retreat: the reveal is the commit gate, so the choice
                             sits beside the commit. Absent when retreat is sealed. */}
@@ -963,6 +965,7 @@ export function CombatEncounterPanel({
                                 accessibilityLabel="Withdraw from this encounter"
                                 style={styles.withdrawBtn}
                             >
+                                <KitBackdrop piece="action-button-idle" />
                                 <Text style={[styles.withdrawBtnText, { color: AXM.bone }]}>WITHDRAW</Text>
                                 <Text style={styles.withdrawSub}>forfeit the path</Text>
                             </Pressable>
@@ -1501,11 +1504,11 @@ const useStyles = makeStyles((AXM) => ({
     // Branch fork rows in the threat sequence
     revealBranchCond: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 0.6, color: AXM.sulfur, marginTop: 2 },
     revealBranchTaken: { color: AXM.parchment },
-    revealBtn: { borderWidth: 2, paddingHorizontal: 30, paddingVertical: 12, marginTop: 22, backgroundColor: 'rgba(212,192,38,0.12)' },
+    revealBtn: { paddingHorizontal: 34, paddingVertical: 16, marginTop: 22 },
     revealBtnText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 1 },
     // Retreat reads QUIETER than the commit — it is the lesser road, not the
     // symmetric other half of a fight-or-flight binary.
-    withdrawBtn: { borderWidth: 1, borderColor: AXM.ash, paddingHorizontal: 20, paddingVertical: 8, marginTop: 12, alignItems: 'center' },
+    withdrawBtn: { paddingHorizontal: 26, paddingVertical: 14, marginTop: 12, alignItems: 'center' },
     withdrawBtnText: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2 },
     // The only line that says what withdrawing costs: readable bone (AA on
     // every theme's bg), kept under WITHDRAW by size alone. Never `ash`.

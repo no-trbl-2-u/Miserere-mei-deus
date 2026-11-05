@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { FONTS } from '@/theme/axm';
+import { KitImage } from '@/components/experience/KitBackdrop';
 import { THEME_ORDER, THEME_SPECS, paletteFor } from '@/theme/palette';
 import { makeStyles, usePalette, useThemeId } from '@/theme/runtime';
 import { setActiveTheme } from '@/theme/theme-switch';
@@ -75,6 +76,7 @@ export function ThemeSwitcher({ initialExpanded = false }: ThemeSwitcherProps) {
                                 accessibilityLabel={`Theme ${def.name}${active ? ', active' : ''}`}
                                 testID={`theme-${id}`}
                             >
+                                <KitImage piece="checkbox-frame" style={[styles.themeCheck, !active && styles.themeCheckOff]} />
                                 <View style={styles.dots}>
                                     <View style={[styles.dot, { backgroundColor: pal.blood }]} />
                                     <View style={[styles.dot, { backgroundColor: pal.sulfur }]} />
@@ -96,6 +98,8 @@ export function ThemeSwitcher({ initialExpanded = false }: ThemeSwitcherProps) {
 }
 
 const useStyles = makeStyles((AXM) => ({
+    themeCheck: { position: 'absolute', top: 3, right: 3, width: 12, height: 12 },
+    themeCheckOff: { opacity: 0.35 },
     row: {
         marginTop: 0,
         marginHorizontal: 0,

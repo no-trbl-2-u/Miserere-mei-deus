@@ -24,7 +24,7 @@ import { Haptics } from '@/lib/platform/haptics';
 import Animated, {
     runOnJS, useAnimatedStyle, useSharedValue, withDelay, withSequence, withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, Ellipse, Path, RadialGradient, Stop } from 'react-native-svg';
+import Svg, { Defs, Ellipse, RadialGradient, Stop } from 'react-native-svg';
 
 import { useGameState } from '@/state/GameStoreProvider';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
@@ -37,6 +37,7 @@ import {
 import { nodeArenaFor } from '@/state/exploration-maps';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type {
     CombatEnemyPaneVM, CombatPlayerPaneVM, CombatEffectChipVM,
@@ -87,7 +88,7 @@ const TICK_ROW_GAP_PX = 30;
 /** Full-width HP bar anchored by a central shield crest carrying the big HP
  *  number (reference: emblem-anchored enemy bar). Keeps the animated ghost
  *  trail + progressbar semantics of the old HpBar. */
-function EnemyHpBar({ pct, value, max }: { pct: number; value: number; max: number }) {
+function EnemyHpBar({ pct, value, max, guarded }: { pct: number; value: number; max: number; guarded: boolean }) {
     const AXM = usePalette();
     const styles = useStyles();
     const w = useSharedValue(pct);
@@ -108,27 +109,17 @@ function EnemyHpBar({ pct, value, max }: { pct: number; value: number; max: numb
             accessibilityValue={{ min: 0, max, now: value }}
         >
             <View style={styles.hpTrack}>
-                <Animated.View style={[styles.hpGhost, ghostStyle]} />
-                <Animated.View style={[styles.hpFill, { backgroundColor: AXM.blood }, fillStyle]}>
-                    <View style={styles.hpSheen} />
-                </Animated.View>
+                <KitBackdrop piece="combat-vitae-track" />
+                <View style={styles.hpInner}>
+                    <Animated.View style={[styles.hpGhost, ghostStyle]} />
+                    <Animated.View style={[styles.hpFill, { backgroundColor: AXM.blood }, fillStyle]}>
+                        <KitImage piece="combat-vitae-fill" style={StyleSheet.absoluteFill} />
+                    </Animated.View>
+                </View>
             </View>
             {/* central crest — the ONE big enemy HP number lives here */}
             <View style={styles.crest} pointerEvents="none">
-                <Svg width={62} height={70} viewBox="0 0 62 70">
-                    <Path
-                        d="M5 3 H57 V38 Q57 48 31 66 Q5 48 5 38 Z"
-                        fill={AXM.panelBg}
-                        stroke={AXM.sulfur}
-                        strokeWidth={1.6}
-                    />
-                    <Path
-                        d="M9 7 H53 V37 Q53 45 31 61 Q9 45 9 37 Z"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.18)"
-                        strokeWidth={1}
-                    />
-                </Svg>
+                <KitBackdrop piece={guarded ? 'combat-vitae-shield-dark' : 'combat-vitae-shield-gold'} />
                 <View style={styles.crestInner}>
                     <Text style={styles.crestHp} allowFontScaling={false}>{value}</Text>
                     <Text style={styles.crestMax} allowFontScaling={false}>/{max}</Text>
@@ -267,7 +258,6 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
      *  (`n` restarts the callout on a repeat refusal). */
     sacrificeCallout?: { cost: number; vitae: number; n: number } | null;
 }) {
-    const AXM = usePalette();
     const styles = useStyles();
     const dying = useGameState((st) => st.dying === true);
     const [floats, setFloats] = useState<Float[]>([]);
@@ -385,9 +375,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                         <PlayerPortraitImage width={44} height={52} fit="cover" skullWhenDying />
                         <Animated.View style={[styles.medallionFlash, flashAnim]} pointerEvents="none" testID="combat-player-flash" />
                     </View>
-                    <Svg width={PLAYER_AVATAR_SIZE} height={PLAYER_AVATAR_SIZE} viewBox="0 0 92 92" style={StyleSheet.absoluteFill} pointerEvents="none">
-                        <Circle cx={46} cy={46} r={44.5} stroke={AXM.sulfur} strokeWidth={3.6} fill="none" opacity={0.9} />
-                    </Svg>
+                    <KitBackdrop piece="combat-portrait-ring" />
                     {sacrificeCallout ? (
                         <VitaeSacrificeCallout
                             key={sacrificeCallout.n}
@@ -756,10 +744,11 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     testID="combat-hud-block"
                 >
                     <View style={styles.hudNameRow} pointerEvents="box-none">
+                        <KitBackdrop piece="combat-rail-dark" />
                         <Text style={styles.enemyName} numberOfLines={1}>{enemy.name}</Text>
                         {metaLine ? <Text style={styles.hudMeta}>{metaLine}</Text> : null}
                     </View>
-                    <EnemyHpBar pct={enemy.hpPct} value={enemy.hp} max={enemy.maxHp} />
+                    <EnemyHpBar pct={enemy.hpPct} value={enemy.hp} max={enemy.maxHp} guarded={enemy.intent.damage === 0} />
                     {/* The status kill-path foresight. Makes the DoT win path
                         foreseeable instead of invisible accumulation: a plain
                         pending tally once stacks land, a "LETHAL IN N" call once
@@ -865,7 +854,7 @@ const useStyles = makeStyles((AXM) => ({
     hud: { position: 'absolute', top: 0, left: 0, right: 0, paddingHorizontal: 12 },
     // Wraps so a long name and the full clock line both stay whole on a
     // phone; the clock keeps to the right edge on either line.
-    hudNameRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 8 },
+    hudNameRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 8, marginHorizontal: -12, paddingHorizontal: 34, paddingVertical: 9 },
     enemyName: {
         flexGrow: 1, flexShrink: 1, fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur, letterSpacing: 0.6,
         textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 4, textShadowOffset: { width: 0, height: 1 },
@@ -875,11 +864,10 @@ const useStyles = makeStyles((AXM) => ({
     // Emblem-anchored HP bar.
     hpBlock: { marginTop: 4, height: 58, justifyContent: 'flex-start' },
     hpTrack: {
-        marginTop: 10, height: 12, borderRadius: 4, backgroundColor: 'rgba(0,0,0,0.6)',
-        borderWidth: 1, borderColor: 'rgba(0,0,0,0.9)', overflow: 'hidden',
+        marginTop: 10, height: 14,
     },
+    hpInner: { ...StyleSheet.absoluteFillObject, margin: 3, borderRadius: 4, overflow: 'hidden' },
     hpFill: { height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 3 },
-    hpSheen: { position: 'absolute', left: 0, right: 0, top: 0, height: 4, backgroundColor: 'rgba(255,255,255,0.28)' },
     hpGhost: { height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.22)' },
     crest: { position: 'absolute', top: -14, left: '50%', marginLeft: -31, width: 62, height: 70, alignItems: 'center' },
     crestInner: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 },

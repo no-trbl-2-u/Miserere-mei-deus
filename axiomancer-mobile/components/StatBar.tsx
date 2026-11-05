@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import type { DimensionValue } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 interface StatBarProps {
@@ -33,12 +34,12 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
   // reads as a plain grey rail and a player one hit from death gets no
   // warning at all.
   const alarmed = typeof alarmAt === 'number' && pct <= alarmAt;
-  const accessibilityLabel = label ? 
-    `${label}: ${value} out of ${max}, ${percentage} percent` : 
+  const accessibilityLabel = label ?
+    `${label}: ${value} out of ${max}, ${percentage} percent` :
     `Progress bar: ${value} out of ${max}, ${percentage} percent`;
 
   return (
-    <View 
+    <View
       style={styles.container}
       accessibilityRole="progressbar"
       accessibilityLabel={accessibilityLabel}
@@ -46,7 +47,7 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
     >
       {label && (
         <View style={styles.labelRow}>
-          <Text 
+          <Text
             style={styles.label}
             accessibilityRole="text"
             importantForAccessibility="no"
@@ -54,7 +55,7 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
             {label}
           </Text>
           {showText && (
-            <Text 
+            <Text
               style={[styles.value, alarmed && { color: barColor, opacity: 1, fontWeight: '700' }]}
               accessibilityRole="text"
               importantForAccessibility="no"
@@ -65,19 +66,18 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
           )}
         </View>
       )}
-      <View 
-        style={[styles.track, { height }, alarmed && { borderColor: barColor }]}
+      <View
+        style={[styles.track, { height: height + 6 }, alarmed && { borderColor: barColor, borderWidth: 1 }]}
         importantForAccessibility="no"
         testID={alarmed ? 'statbar-track-alarmed' : 'statbar-track'}
       >
-        <View 
+        <KitBackdrop piece="combat-vitae-track" />
+        <View
           style={[styles.fill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue, backgroundColor: barColor }]}
           importantForAccessibility="no"
-        />
-        <View 
-          style={styles.topLine}
-          importantForAccessibility="no"
-        />
+        >
+          <KitImage piece={barColor === AXM.blood ? 'combat-vitae-fill' : 'combat-player-fill'} style={StyleSheet.absoluteFill} />
+        </View>
       </View>
     </View>
   );
@@ -105,24 +105,15 @@ const useStyles = makeStyles((AXM) => ({
   },
   track: {
     width: '100%',
-    backgroundColor: AXM.ash,
-    borderWidth: 1,
-    borderColor: AXM.parchmentMed,
     overflow: 'hidden',
     position: 'relative',
   },
   fill: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-  },
-  topLine: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 1,
-    backgroundColor: AXM.parchmentMed,
+    top: 3,
+    left: 3,
+    bottom: 3,
+    borderRadius: 3,
+    overflow: 'hidden',
   },
 }));

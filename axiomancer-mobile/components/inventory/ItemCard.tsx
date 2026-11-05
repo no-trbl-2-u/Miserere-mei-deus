@@ -5,6 +5,7 @@ import Svg, { Path } from 'react-native-svg';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { AxmIcon } from '@/components/icons/AxmIcon';
 import { getItemGlyph, getItemGlyphAccents, type ItemGlyphTable } from '@/components/icons/item-glyphs';
 import { getItemSprite, getItemSpriteLabel } from '@/components/icons/item-sprites';
@@ -174,14 +175,15 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
                 styles.itemCard,
                 expanded && styles.itemCardExpanded,
                 isFocused && styles.itemCardFocused,
-                {
+                affordance.isOutline ? {
                     borderColor: rarityBorderColor,
                     borderWidth: rarityBorderWidth,
-                },
+                } : null,
                 shineStyle,
             ]}
             testID={`item-card-${item.id}`}
         >
+            <KitBackdrop piece={item.equipped ? 'item-card-equipped' : 'item-card-dark'} />
             {affordance.isShine && (
                 <View
                     pointerEvents="none"
@@ -206,7 +208,8 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
                 testID={`item-${item.id}`}
             >
                 <View style={styles.itemIcon}>
-                    <ItemGlyph category={item.category} sub={item.sub} itemId={item.id} />
+                    <KitBackdrop piece="item-icon-well" />
+                    <View><ItemGlyph category={item.category} sub={item.sub} itemId={item.id} /></View>
                 </View>
                 <Text style={styles.itemName} numberOfLines={expanded ? undefined : 2}>
                     {item.name}
@@ -224,6 +227,7 @@ export function ItemCard({ item, expanded, onTap, onUseOrEquip, onDiscard }: Ite
             </TouchableOpacity>
             {item.quantity > 1 && (
                 <View style={styles.qtyBadge} pointerEvents="none">
+                    <KitBackdrop piece="nav-count-plate-gold" scale={0.14} />
                     <Text style={styles.qtyText}>{'×'}{item.quantity}</Text>
                 </View>
             )}
@@ -326,8 +330,9 @@ const useStyles = makeStyles((AXM) => ({
     itemCard: {
         width: '31.5%',
         maxWidth: ITEM_CARD_MAX_WIDTH,
-        backgroundColor: AXM.panelBg,
-        padding: 6,
+        paddingHorizontal: 12,
+        paddingTop: 22,
+        paddingBottom: 12,
         minHeight: 92,
         position: 'relative',
     },
@@ -335,14 +340,11 @@ const useStyles = makeStyles((AXM) => ({
     itemIcon: {
         width: '100%',
         height: 50,
-        backgroundColor: AXM.deepBg,
-        borderWidth: 1,
-        borderColor: AXM.ash,
         alignItems: 'center',
         justifyContent: 'center',
     },
     itemName: { fontFamily: FONTS.gothic, fontSize: 13, color: AXM.parchment, lineHeight: 16, marginTop: 4 },
-    qtyBadge: { position: 'absolute', top: 2, right: 2, backgroundColor: AXM.parchment, paddingHorizontal: 4 },
+    qtyBadge: { position: 'absolute', top: 2, right: 2, paddingHorizontal: 4 },
     qtyText: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bg },
     wornBadge: { position: 'absolute', top: 2, left: 2, backgroundColor: AXM.sulfur, paddingHorizontal: 3 },
     wornText: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.bg },

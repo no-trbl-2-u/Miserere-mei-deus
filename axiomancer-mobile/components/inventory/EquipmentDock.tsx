@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, useWindowDimensions } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { SectionLabel } from '@/components/SectionLabel';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
@@ -158,22 +159,9 @@ export function EquipmentDock({
 
     return (
         <View style={styles.dock} testID="equipment-dock">
-            {/* iron rivets in each corner */}
-            {[
-                [4, 4],
-                [undefined, 4],
-                [4, undefined],
-                [undefined, undefined],
-            ].map(([left, top], i) => (
-                <View
-                    key={i}
-                    style={[
-                        styles.dockRivet,
-                        left !== undefined ? { left } : { right: 4 },
-                        top !== undefined ? { top } : { bottom: 4 },
-                    ]}
-                />
-            ))}
+            {/* brass corners at the head of the frame */}
+            <KitImage piece="corner-brass-left" style={[styles.dockCorner, styles.dockCornerLeft]} />
+            <KitImage piece="corner-brass-right" style={[styles.dockCorner, styles.dockCornerRight]} />
             <View style={styles.dockHeaderRow}>
                 <SectionLabel size={9} color={AXM.bone}>{vm.headerLabel}</SectionLabel>
                 <Text style={styles.dockHint}>{vm.hintLabel}</Text>
@@ -234,13 +222,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.deepBg,
         padding: 10,
     },
-    dockRivet: {
-        position: 'absolute',
-        width: 6,
-        height: 6,
-        backgroundColor: AXM.ash,
-        borderRadius: 3,
-    },
+    dockCorner: { position: 'absolute', top: 1, width: 30, height: 32 },
+    dockCornerLeft: { left: 1 },
+    dockCornerRight: { right: 1 },
     dockHeaderRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',

@@ -21,6 +21,7 @@ import { MenuButton } from '@/components/menu/MenuButton';
 import { OptionRow } from '@/components/menu/OptionRow';
 import { StepperRow } from '@/components/menu/StepperRow';
 import { ScreenBg } from '@/components/ScreenBg';
+import { KitDivider, KitHeader } from '@/components/experience/KitBackdrop';
 import { SectionLabel } from '@/components/SectionLabel';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { useRouter } from '@/lib/platform/router';
@@ -89,7 +90,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
             </View>
 
             <View style={styles.body} testID="settings-screen">
-                <SectionLabel size={10} color={AXM.sulfur}>{SETTINGS_COPY.sections.appearance}</SectionLabel>
+                <KitHeader>{SETTINGS_COPY.sections.appearance}</KitHeader>
                 <ThemeSwitcher initialExpanded />
                 <OptionRow
                     label={SETTINGS_COPY.textSize}
@@ -108,7 +109,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     testID="settings-card-text"
                 />
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.motion}</SectionLabel>
+                <KitDivider piece="divider-ornate-brass" /><KitHeader variant="quatrefoil">{SETTINGS_COPY.sections.motion}</KitHeader>
                 <OptionRow
                     label={SETTINGS_COPY.reducedMotion}
                     hint={SETTINGS_COPY.reducedMotionHint}
@@ -116,6 +117,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     value={vm.reducedMotion}
                     onChange={(reducedMotion) => settingsStore.set({ reducedMotion })}
                     testID="settings-reduced-motion"
+                    radio
                 />
                 <OptionRow
                     label={SETTINGS_COPY.haptics}
@@ -126,7 +128,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     testID="settings-haptics"
                 />
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.sound}</SectionLabel>
+                <KitDivider piece="divider-plain-brass" /><KitHeader>{SETTINGS_COPY.sections.sound}</KitHeader>
                 <OptionRow
                     label={SETTINGS_COPY.musicSwitch}
                     hint={SETTINGS_COPY.musicSwitchHint}
@@ -143,6 +145,8 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     atMin={vm.musicVolume <= 0}
                     atMax={vm.musicVolume >= 100}
                     testID="settings-music"
+                    level={vm.musicVolume / 100}
+                    track="diamond"
                 />
                 <StepperRow
                     label={SETTINGS_COPY.sfx}
@@ -152,10 +156,12 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     atMin={vm.sfxVolume <= 0}
                     atMax={vm.sfxVolume >= 100}
                     testID="settings-sfx"
+                    level={vm.sfxVolume / 100}
+                    track="quatrefoil"
                 />
                 <Text style={styles.note}>{SETTINGS_COPY.soundNote}</Text>
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.story}</SectionLabel>
+                <KitDivider piece="divider-short-brass" /><KitHeader variant="quatrefoil">{SETTINGS_COPY.sections.story}</KitHeader>
                 <MenuButton
                     label={`${SETTINGS_COPY.storyMode} · ${SETTINGS_COPY.comingSoon}`}
                     hint={SETTINGS_COPY.storyModeHint}
@@ -166,7 +172,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
 
                 {vm.inRun ? (
                     <>
-                        <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.run}</SectionLabel>
+                        <KitHeader>{SETTINGS_COPY.sections.run}</KitHeader>
                         <MenuButton
                             label={SETTINGS_COPY.returnToTitle}
                             hint={SETTINGS_COPY.returnToTitleHint}
@@ -176,7 +182,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     </>
                 ) : null}
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.feedback}</SectionLabel>
+                <KitHeader variant="quatrefoil">{SETTINGS_COPY.sections.feedback}</KitHeader>
                 <MenuButton
                     label={FEEDBACK_COPY.open}
                     hint={SETTINGS_COPY.feedbackHint}
@@ -185,7 +191,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                 />
                 {thanks ? <Text style={styles.note} testID="settings-feedback-thanks">{FEEDBACK_COPY.thanks}</Text> : null}
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.device}</SectionLabel>
+                <KitHeader>{SETTINGS_COPY.sections.device}</KitHeader>
                 <MenuButton
                     label={SETTINGS_COPY.resetSettings}
                     hint={SETTINGS_COPY.resetSettingsHint}

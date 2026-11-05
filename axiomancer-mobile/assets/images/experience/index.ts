@@ -1,10 +1,13 @@
 /**
  * Experience kit registry: T's UI kit (panels, buttons, tabs, badges,
  * dividers, combat HUD and nav pieces), dropped in as delivered PNGs on
- * 2026-11-04 (licence and source in `provenance.json`). Nothing imports it
- * yet, so none of it is bundled; whoever wires a piece in converts it per
- * docs/asset-conventions.md.
+ * 2026-11-04 (licence and source in `provenance.json`). Nothing imports this
+ * map, so these PNGs are not bundled; the app draws the converted Brass Gothic
+ * pieces in `./brass`, re-exported below. Whoever wires a vellum piece in
+ * converts it per docs/asset-conventions.md.
  */
+
+export { BRASS } from './brass';
 
 export const EXPERIENCE = {
     'action-button-disabled': require('./action-button-disabled.png'),

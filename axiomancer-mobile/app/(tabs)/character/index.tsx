@@ -9,6 +9,7 @@ import { LevelReadyStrip } from '@/components/levelup/LevelReadyStrip';
 import { LevelUpModal } from '@/components/levelup/LevelUpModal';
 import { DevToolsLink } from '@/components/dev/DevToolsLink';
 import { ScreenBg } from '@/components/ScreenBg';
+import { KitBackdrop, KitDivider, KitHeader } from '@/components/experience/KitBackdrop';
 import { SectionLabel } from '@/components/SectionLabel';
 import { StanceGlyph } from '@/components/StanceGlyph';
 import { EffectGlyph } from '@/components/EffectGlyph';
@@ -105,7 +106,8 @@ export default function CharacterScreen() {
         <View style={styles.sheetHeaderTopRow}>
           {portraitLocked ? (
             <View style={styles.portraitFrame} testID="self-portrait">
-              <PlayerPortraitImage width={176} height={212} />
+              <PlayerPortraitImage width={136} height={170} />
+              <KitBackdrop piece="character-portrait-frame" />
             </View>
           ) : (
             <Pressable
@@ -116,7 +118,8 @@ export default function CharacterScreen() {
               accessibilityHint="cycles through the portrait gallery"
               testID="self-portrait-cycle"
             >
-              <PlayerPortraitImage width={176} height={212} />
+              <PlayerPortraitImage width={136} height={170} />
+              <KitBackdrop piece="character-portrait-frame" />
             </Pressable>
           )}
           <View style={styles.identityCol}>
@@ -134,6 +137,7 @@ export default function CharacterScreen() {
             <XpChain value={vm.xp} max={vm.xpMax} />
           </View>
           <View style={styles.levelBox}>
+            <KitBackdrop piece="level-badge-dark" />
             <Text style={styles.levelText}>{vm.level}</Text>
             <Text style={styles.levelCaption}>LVL</Text>
           </View>
@@ -149,7 +153,8 @@ export default function CharacterScreen() {
               testID={`self-base-${r.stanceKey}`}
             >
               <View style={styles.baseCard}>
-                <StanceGlyph kind={r.stanceKey} size={28} color={AXM.parchment} />
+                <KitBackdrop piece="stat-tile" />
+                <View><StanceGlyph kind={r.stanceKey} size={18} color={AXM.parchment} /></View>
                 <Text style={styles.baseStatLabel}>{r.label}</Text>
                 <Text style={styles.baseStatValue}>{r.value}</Text>
               </View>
@@ -206,6 +211,7 @@ export default function CharacterScreen() {
         accessibilityHint="study the cards you carry and thin the deck"
         testID="self-hazard-deck-link"
       >
+        <KitBackdrop piece="rivet-tab-dark-selected" />
         <View style={styles.deckLinkText}>
           <Text style={styles.deckLinkLabel}>✠ HAZARD DECK</Text>
           <Text style={styles.deckLinkSub}>study the cards you carry</Text>
@@ -215,7 +221,7 @@ export default function CharacterScreen() {
 
       {/* Pools — VITAE (Problem 6 design) */}
       <View style={styles.section}>
-        <SectionLabel size={13}>✠ POOLS</SectionLabel>
+        <KitHeader variant="quatrefoil">✠ POOLS</KitHeader>
         <View style={styles.poolsCard}>
           {[
             { label: 'VITAE', value: player?.health ?? 0, max: player?.maxHealth ?? 1, color: AXM.blood, gloss: 'flesh holds' },
@@ -229,6 +235,7 @@ export default function CharacterScreen() {
                 <Text style={styles.poolValue}>{pool.value}<Text style={styles.boneText}> / {pool.max}</Text></Text>
               </View>
               <View style={styles.poolTrack}>
+                <KitBackdrop piece="combat-vitae-track" />
                 <View style={[styles.poolFill, { width: `${(pool.value / pool.max) * 100}%`, backgroundColor: pool.color }]} />
               </View>
             </View>
@@ -238,7 +245,17 @@ export default function CharacterScreen() {
 
       {/* Afflictions & Blessings */}
       <View style={styles.section} accessible accessibilityLabel={vm.a11y.effects}>
-        <SectionLabel size={13}>✠ AFFLICTIONS &amp; BLESSINGS</SectionLabel>
+        <KitDivider piece="divider-ornate-brass" />
+        <KitHeader
+          right={(
+            <View style={styles.effectsCount}>
+              <KitBackdrop piece="nav-count-shield-dark" />
+              <Text style={styles.effectsCountText}>{vm.effects.length}</Text>
+            </View>
+          )}
+        >
+          ✠ AFFLICTIONS &amp; BLESSINGS
+        </KitHeader>
         <View style={styles.effectsList}>
           {vm.effects.length === 0 ? (
             <Text style={styles.emptyLabel}>{vm.emptyEffectsMessage}</Text>
@@ -265,7 +282,10 @@ export default function CharacterScreen() {
                     },
                   ]}
                 >
-                  <EffectGlyph kind={e.kind} size={20} color={e.tint === 'buff' ? AXM.sulfur : AXM.blood} />
+                  <View style={styles.effectWell}>
+                    <KitBackdrop piece="item-icon-well" />
+                    <View><EffectGlyph kind={e.kind} size={18} color={e.tint === 'buff' ? AXM.sulfur : AXM.blood} /></View>
+                  </View>
                   <View style={styles.flexOne}>
                     <View style={styles.effectTopRow}>
                       <Text style={styles.effectName}>{e.name}</Text>
@@ -288,7 +308,7 @@ export default function CharacterScreen() {
       {/* Cards */}
       {vm.cards.length > 0 && (
         <View style={styles.section}>
-          <SectionLabel size={13}>✠ FALLACIES &amp; PARADOXES</SectionLabel>
+          <KitHeader variant="quatrefoil">✠ FALLACIES &amp; PARADOXES</KitHeader>
           <View style={styles.cardsGrid}>
             {vm.cards.map((s) => (
               // Wrap each card in a TooltipTarget pointing at the
@@ -330,25 +350,28 @@ const useStyles = makeStyles((AXM) => ({
   // D&D character-sheet header: portrait bust + identity + level box.
   sheetHeader: { flexDirection: 'column', paddingHorizontal: 12, paddingTop: 4, paddingBottom: 0 },
   sheetHeaderTopRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  portraitFrame: { width: 180, height: 216, borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.deepBg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  portraitFrame: { width: 180, height: 228, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   identityCol: { flex: 1, paddingTop: 2 },
   characterName: { fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 24, color: AXM.parchment, marginTop: 1 },
-  levelBox: { width: 60, height: 66, borderWidth: 2, borderColor: AXM.parchment, backgroundColor: AXM.deepBg, alignItems: 'center', justifyContent: 'center' },
+  levelBox: { width: 68, height: 62, alignItems: 'center', justifyContent: 'center' },
   levelText: { fontFamily: FONTS.sans, fontSize: 34, lineHeight: 36, color: AXM.sulfur },
   levelCaption: { fontFamily: FONTS.sans, fontSize: 8, letterSpacing: 2, color: AXM.bone },
   xpRow: { flexDirection: 'column', marginBottom: 2 },
   xpLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
   xpValue: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.sulfur },
   section: { paddingTop: 4, paddingHorizontal: 12, paddingBottom: 0 },
-  deckLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 12, marginTop: 6, paddingVertical: 10, paddingHorizontal: 14, borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.panelBg },
+  deckLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 12, marginTop: 6, paddingVertical: 12, paddingHorizontal: 28 },
   deckLinkText: { flex: 1 },
-  deckLinkLabel: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1, color: AXM.parchment },
-  deckLinkSub: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 0.5, color: AXM.bone, marginTop: 2 },
-  deckLinkChevron: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.bone },
+  deckLinkLabel: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1, color: AXM.bg },
+  effectWell: { width: 30, height: 36, alignItems: 'center', justifyContent: 'center' },
+  effectsCount: { width: 22, height: 26, alignItems: 'center', justifyContent: 'center' },
+  effectsCountText: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment },
+  deckLinkSub: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 0.5, color: AXM.bg, marginTop: 2 },
+  deckLinkChevron: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.bg },
   baseRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: -52, justifyContent: 'flex-end' },
   baseCard: { flex: 1, paddingVertical: 10, paddingHorizontal: 6, backgroundColor: AXM.panelBg, borderWidth: 1, borderColor: AXM.ash, alignItems: 'center' },
-  baseStatLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2, color: AXM.bone, marginTop: 3 },
-  baseStatValue: { fontFamily: FONTS.sans, fontSize: 32, color: AXM.sulfur, lineHeight: 34, marginTop: 2 },
+  baseStatLabel: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1, color: AXM.bone, marginTop: 3 },
+  baseStatValue: { fontFamily: FONTS.sans, fontSize: 24, color: AXM.sulfur, lineHeight: 26, marginTop: 2 },
   effectsList: { marginTop: 4, gap: 4 },
   emptyLabel: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, letterSpacing: 1, textTransform: 'uppercase' },
   effectRow: { flexDirection: 'row', gap: 8, alignItems: 'center', borderWidth: 1, padding: 5, paddingHorizontal: 7 },
@@ -368,7 +391,7 @@ const useStyles = makeStyles((AXM) => ({
   marginTop8: { marginTop: 5 },
   cardTile: { width: '48%', borderWidth: 2, padding: 4, paddingHorizontal: 6, backgroundColor: AXM.bg, flexDirection: 'row', alignItems: 'center', gap: 6 },
   cardName: { fontFamily: FONTS.gothic, fontSize: 12, color: AXM.parchment, lineHeight: 14 },
-  poolsCard: { marginTop: 3, backgroundColor: AXM.panelBg, borderWidth: 1, borderColor: AXM.ash, paddingVertical: 5, paddingHorizontal: 12, gap: 4 },
+  poolsCard: { marginTop: 3, paddingVertical: 5, paddingHorizontal: 12, gap: 4 },
   poolRow: {},
   poolHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 2 },
   // `flexShrink` so the label row yields to the value instead of overflowing
@@ -378,6 +401,6 @@ const useStyles = makeStyles((AXM) => ({
   poolNewBadge: { fontFamily: FONTS.mono, fontSize: 8, color: AXM.bg, backgroundColor: AXM.sulfur, paddingHorizontal: 4, paddingVertical: 1, letterSpacing: 1, overflow: 'hidden' },
   poolGloss: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone },
   poolValue: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment },
-  poolTrack: { position: 'relative' as const, height: 10, backgroundColor: AXM.deepBg, borderWidth: 1, borderColor: AXM.ash },
-  poolFill: { position: 'absolute' as const, top: 1, bottom: 1, left: 1 },
+  poolTrack: { position: 'relative' as const, height: 14 },
+  poolFill: { position: 'absolute' as const, top: 3, bottom: 3, left: 3, borderRadius: 3, overflow: 'hidden' as const },
 }));

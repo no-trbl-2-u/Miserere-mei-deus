@@ -2,8 +2,9 @@ import React, { useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import { FONTS } from '@/theme/axm';
-import { makeStyles, usePalette } from '@/theme/runtime';
+import { KitImage } from '@/components/experience/KitBackdrop';
 import { NodeMark } from '@/components/NodeMark';
+import { makeStyles, usePalette } from '@/theme/runtime';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useTooltip } from '@/hooks/useTooltip';
 import { MapCameraContext, MapSheetContext } from './mapSheetContext';
@@ -171,7 +172,12 @@ export function ExplorationNode({ node: n, onNodePress, isSelected }: Exploratio
                         <PlayerPortraitImage width={size} height={size} fit="cover" />
                     </View>
                 ) : (
-                    <NodeMark kind={n.kind} size={NODE_SIZE} />
+                    n.kind === 'locked' ? <NodeMark kind={n.kind} size={NODE_SIZE} /> : (
+                        <KitImage
+                            piece={n.kind === 'available' ? 'nav-marker-quatrefoil-filled' : 'nav-marker-quatrefoil-outline'}
+                            style={{ width: NODE_SIZE, height: NODE_SIZE }}
+                        />
+                    )
                 )}
                 {n.showKind === true && !here && (
                     <KindToken type={n.type} state={n.kind} size={NODE_SIZE} testID={`node-${n.id}-kind`} />

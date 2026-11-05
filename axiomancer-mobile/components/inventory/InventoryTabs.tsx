@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { makeStyles } from '@/theme/runtime';
 import type { InventoryTab, InventoryTabRow } from '@/state/presenters/inventory.engine';
 
@@ -25,6 +26,7 @@ export function InventoryTabs({ tabs, activeTab, onTabPress, dimmed = false }: I
                     style={[styles.tab, activeTab === t.key && styles.tabActive]}
                     testID={`tab-${t.key}`}
                 >
+                    <KitBackdrop piece={activeTab === t.key ? 'filter-tab-dark-selected' : 'filter-tab-dark-idle'} />
                     <Text style={[styles.tabText, activeTab === t.key && styles.tabTextActive]}>
                         {t.label}
                     </Text>
@@ -32,6 +34,8 @@ export function InventoryTabs({ tabs, activeTab, onTabPress, dimmed = false }: I
                       * that carry numbers reads as a tab that failed to load
                       * rather than one that is empty. A zero renders dimmed so
                       * "empty" still looks different from "has things in it". */}
+                    <View style={styles.tabCountWell}>
+                        <KitBackdrop piece="nav-count-round-dark" />
                     <Text
                         numberOfLines={1}
                         allowFontScaling={false}
@@ -43,6 +47,7 @@ export function InventoryTabs({ tabs, activeTab, onTabPress, dimmed = false }: I
                     >
                         {t.count}
                     </Text>
+                    </View>
                 </TouchableOpacity>
             ))}
         </View>
@@ -68,15 +73,9 @@ const useStyles = makeStyles((AXM) => ({
         gap: 4,
         paddingVertical: 8,
         paddingHorizontal: 8,
-        backgroundColor: AXM.panelBg,
-        borderWidth: 1,
-        borderColor: AXM.divider,
-        borderBottomWidth: 2,
     },
-    tabActive: {
-        backgroundColor: AXM.bg,
-        borderBottomColor: AXM.sulfur,
-    },
+    tabActive: {},
+    tabCountWell: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center' },
     tabText: {
         fontFamily: FONTS.sans,
         fontSize: 11,
@@ -92,18 +91,12 @@ const useStyles = makeStyles((AXM) => ({
     tabCount: {
         fontFamily: FONTS.mono,
         fontSize: 10,
-        color: AXM.ash,
-        backgroundColor: AXM.deepBg,
-        borderRadius: 6,
-        paddingHorizontal: 4,
-        paddingVertical: 1,
-        minWidth: 16,
+        color: AXM.bone,
         flexShrink: 0,
         textAlign: 'center',
     },
     tabCountActive: {
-        color: AXM.bone,
-        backgroundColor: AXM.panelBg,
+        color: AXM.parchment,
     },
     // An empty tab still shows its 0, just quietly.
     tabCountEmpty: {
