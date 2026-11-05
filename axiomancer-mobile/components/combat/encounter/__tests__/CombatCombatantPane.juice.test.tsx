@@ -23,7 +23,6 @@ jest.mock('@/lib/juice', () => {
         useJuicePulse: jest.fn(actual.useJuicePulse),
         useJuiceNumberPop: jest.fn(actual.useJuiceNumberPop),
         useJuiceShake: jest.fn(actual.useJuiceShake),
-        useJuiceFlash: jest.fn(actual.useJuiceFlash),
     };
 });
 
