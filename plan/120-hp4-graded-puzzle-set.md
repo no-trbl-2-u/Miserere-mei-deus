@@ -245,11 +245,6 @@ and no migration is needed. `/devpuzzle` is dev-gated by `isDevToolsEnabled`.
 
 ## Acceptance
 
-- **A10** `docs/reports/hazard-puzzle-patterns.md` sets the kept candidates
-  against the cut ones on the A1 numbers and names the authoring patterns that
-  separate them, each as a rule a future puzzle can be built to and checked
-  against. Where no pattern separates them it says so rather than inventing
-  one.
 - **A11** (added 2026-10-20, carried from cut Phase B3f's A17)
   `HAZARD_PUZZLE_CLOCK_SECONDS` is set from the kept candidates' real solve
   times: `docs/reports/hazard-puzzle-clocks.md` lists, per kept candidate, its
@@ -265,7 +260,6 @@ and no migration is needed. `/devpuzzle` is dev-gated by `isDevToolsEnabled`.
 
 ## Chunks
 
-Measure: 2 open · 9 closed · next A12
+Measure: 1 open · 10 closed · next A12
 
-- [ ] **120.6** The patterns · M · closes A10 · needs — · alias: HP4f
-- [ ] **120.7** The clocks, from the kept set · S · closes A11 · needs 120.6 · alias: HP4g
+- [ ] **120.7** The clocks, from the kept set · S · closes A11 · needs — · alias: HP4g

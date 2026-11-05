@@ -549,3 +549,7 @@
 - 2026-11-04 · 132.1 (alias: ST1a) · Settings tab, music switch and feedback form closed · 9e6243d3..9e6243d3 (#1387)
 - 2026-11-04 · 99.3 · Small-face line-fit footgun guarded, shown failing · 9e6243d3..9e6243d3 (#1387)
 - 2026-11-04 · 99.4 · Glyph-in-text footgun guarded, shown failing · 9e6243d3..9e6243d3 (#1387)
+- 2026-11-04 · 124.5 (alias: HP2e) · Retired by spec 150: no solve times to calibrate on · 2886a047..2886a047 (#1390)
+- 2026-11-04 · 120.6 (alias: HP4f) · Retired by spec 150: no solve times recorded · 2886a047..2886a047 (#1390)
+- 2026-11-04 · 124.4 (alias: HP2d) · Retired by spec 150: no solve times to calibrate on · 2886a047..2886a047 (#1390)
+- 2026-11-04 · 150.3 (alias: PC1c) · The five hazard calibration rows retire; Items reconciled · 2886a047..2886a047 (#1390)

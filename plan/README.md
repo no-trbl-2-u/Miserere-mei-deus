@@ -33,7 +33,6 @@ needs are done):
 - **149.2** · TL2b: the last 100-file readers read whole lists (T, `/plot asap`, 2026-11-04)
 
 - **150.1** · PC1a: shipped and moot rows close, guarded footguns say so (T, `/plot asap`, 2026-11-04)
-- **150.3** · PC1c: the hazard calibration rows retire (T, `/plot asap`, 2026-11-04)
 - **150.4** · PC1d: attended rows split from the loop work they hide, and the ship renamed (T, `/plot asap`, 2026-11-04)
 - **150.5** · PC1e: finished briefs leave `plan/` (T, `/plot asap`, 2026-11-04)
 
@@ -55,7 +54,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **122.2** · attended: T does this one (R12) · since: 2026-11-01 · until: 2026-12-12 · max_age: 48d
 - **123.1** · attended: T does this one (PF2) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **146.7** · owner-led: art is owner-only (D88) (AP1g) · since: 2026-11-04 · until: T's word · max_age: 30d
-- **124.5** · attended: T does this one (HP2e) · since: 2026-11-01 · until: 2026-11-28 · max_age: 34d
 - **125.8** · attended: T does this one (LG1h) · since: 2026-11-01 · until: 2026-12-23 · max_age: 59d
 - **126.4** · attended: T does this one (OV1d) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **128.7** · attended: T does this one (BE2g) · since: 2026-11-01 · until: T's word · max_age: 30d
@@ -85,11 +83,11 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 117 | The Defender trial set (the turtle with spikes) | [117-df1-defender-trial-set.md](117-df1-defender-trial-set.md) | planned | 1 left |
 | 118 | The Elementalist trial set (the weather in play) | [118-el1-elementalist-trial-set.md](118-el1-elementalist-trial-set.md) | planned | 1 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
-| 120 | A graded hazard-puzzle set, played and pattern-mined | [120-hp4-graded-puzzle-set.md](120-hp4-graded-puzzle-set.md) | planned | 2 left |
+| 120 | A graded hazard-puzzle set, played and pattern-mined | [120-hp4-graded-puzzle-set.md](120-hp4-graded-puzzle-set.md) | planned | 1 left |
 | 121 | Title plate legibility: prove the plate, then replace it | [121-tp1-title-plate-legibility.md](121-tp1-title-plate-legibility.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
-| 124 | Hazard puzzle card audit and difficulty calibration | [124-hp2-puzzle-card-audit-difficulty.md](124-hp2-puzzle-card-audit-difficulty.md) | planned | 3 left |
+| 124 | Hazard puzzle card audit and difficulty calibration | [124-hp2-puzzle-card-audit-difficulty.md](124-hp2-puzzle-card-audit-difficulty.md) | planned | 1 left |
 | 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 1 left |
 | 126 | The Obsidian vault: brainstorm and plot from the phone | [126-ov1-obsidian-vault.md](126-ov1-obsidian-vault.md) | planned | 1 left |
 | 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
@@ -105,7 +103,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 149 | The fix-ups left by specs 147 and 148 | [149-tl2-pilot-fix-ups.md](149-tl2-pilot-fix-ups.md) | planned | 1 left |
-| 150 | The open rows, checked against the code | [150-pc1-plan-cleanup.md](150-pc1-plan-cleanup.md) | planned | 4 left |
+| 150 | The open rows, checked against the code | [150-pc1-plan-cleanup.md](150-pc1-plan-cleanup.md) | planned | 3 left |
 | 151 | Elite and spare rewards give only what you don't own | [151-mr5-owned-rolls.md](151-mr5-owned-rolls.md) | planned | 1 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 3 left |
 

@@ -134,23 +134,6 @@ None. Logs are files in `docs/reports/`, not save data.
 
 ## Acceptance
 
-- **A5** `HAZARD_PUZZLE_CALIBRATION` holds 13 to 20 calibration entries, each a layout, the one route it is
-  solved on, and a `heldOut` flag (3 to 5 held out). Every layout uses only pool cards, is Act 1, and is solvable
-  on its route. Across the set each A3 feature takes at least four distinct values. Calibration entries are not
-  in `HAZARD_PUZZLE_LIBRARY` and carry no band. A test checks all of this.
-- **A6** (attended) Every calibration entry is solved first-time by T and by the `playtester` agent on
-  `/devpuzzle`, the clock hidden or set to 300 s. The A4 logs are committed under
-  `docs/reports/hazard-puzzle-calibration/`. `npm run puzzle:calibrate -w axiomancer-mechanics` reads them and
-  computes, on the non-held-out entries with T's and the agent's times pooled:
-  - each solver's time and success per entry, and the pooled median time;
-  - Spearman ρ between the median time and each A3 feature, and the mean of each pair of features' ranks.
-- **A7** (attended) `docs/reports/hazard-puzzle-difficulty.md` records:
-  - the ρ table and the chosen measure (the highest ρ);
-  - the verdict against the bar, ρ ≥ 0.7;
-  - band thresholds on the chosen measure, set so the training entries' median times split where T rules in the
-    session;
-  - the held-out check: each held-out entry's predicted band against its measured median time's band;
-  - T's verdict, in T's words.
 - **A8** If A7 adopts a measure (ρ ≥ 0.7 and every held-out band predicted), `HAZARD_PUZZLE_BANDS` is replaced
   by the measure and its thresholds, the B3 library band test uses it, and every demo sits in its declared band
   (re-authored with pool cards if not). If A7 adopts none, the count bands stay, and the report says so and why;
@@ -162,8 +145,6 @@ None. Logs are files in `docs/reports/`, not save data.
 
 ## Chunks
 
-Measure: 4 open · 4 closed · next A9
+Measure: 1 open · 7 closed · next A9
 
-- [ ] **124.4** The calibration set · M · closes A5 · needs — · alias: HP2d
-- [ ] **124.5** Calibration solves and the difficulty report (attended) · M · closes A6, A7 · needs 124.4 · alias: HP2e
-- [ ] **124.6** Bands on the calibrated measure · S · closes A8 · needs 124.5 · alias: HP2f
+- [ ] **124.6** Bands on the calibrated measure · S · closes A8 · needs — · alias: HP2f
