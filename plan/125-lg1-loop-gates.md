@@ -37,7 +37,7 @@ lines; and an attended Android smoke test can run the preview APK on an emulator
 - `.github/workflows/`: `pr-review.yml` (verify-gate steps, the judge and mutation jobs), `android-smoke.yml`
   (new), `README.md`.
 - `skills/march.md` (the acceptance format), `skills/critique.md` (the pass record).
-- `axiomancer-mobile`: a Maestro flow and any test ids the flow needs (LG1h only).
+- `axiomancer-mobile`: a Maestro flow and any test ids the flow needs (LG1i only).
 - Not touched: repository settings and the ruleset (T's, NEEDS_T); the RV1 review's advisory verdicts (D86);
   game rules and content.
 
@@ -71,12 +71,12 @@ lines; and an attended Android smoke test can run the preview APK on an emulator
 - Root `node --test`: the queue lint on fixtures and the real files; the path-coverage decision; the acceptance
   parser; fail-on-parent on a fixture history; the critique-record matcher; the judge's per-line runner; mutation
   diff scoping.
-- No Jest or Vitest changes except LG1h's Maestro flow and any test ids.
+- No Jest or Vitest changes except LG1i's Maestro flow and any test ids.
 
 ### Verify gate
 
 The root `npm test`. Phases that touch `.github/workflows/` also check the workflow parses (`actionlint` if
-present, else a YAML parse test). LG1h also runs `npm run verify -w axiomancer-mobile`.
+present, else a YAML parse test). LG1i also runs `npm run verify -w axiomancer-mobile`.
 
 ### Commit body template
 
