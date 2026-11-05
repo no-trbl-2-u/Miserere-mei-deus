@@ -18,10 +18,11 @@
 // 2. The launcher icons (`icon.png`, `favicon.png` and the three Android
 //    adaptive layers): a square crop of the title plate around its three
 //    figures, in a duotone from the game's ground to its parchment. The crop is
-//    taken from the full-resolution Commons original, not from the graded WebP
-//    the title screen ships, because the WebP is dimmed for text and is too
-//    small to upscale cleanly. The plate box comes from the plate's own
-//    provenance record (`assets/images/title/provenance.json` → `crop`), so the
+//    taken from the full-resolution Commons original, because a graded WebP is
+//    dimmed for text and too small to upscale cleanly. The plate is Doré's
+//    Purgatorio, Canto I (`shore-at-dawn`), the title plate until plan 121.2
+//    moved the title screen to the Inferno lion; its record, with the plate
+//    box, is `assets/images/icon.provenance.json` → `source_plate`, so the
 //    icon is reproducible from the record and this file alone.
 //
 // The source is the Commons original named in that provenance record. The
@@ -129,9 +130,9 @@ async function main() {
     console.error('build-title-assets: --source <path> is required for the icons (see the header).')
     process.exit(1)
   }
-  const record = JSON.parse(fs.readFileSync(path.join(IMAGES, 'title', 'provenance.json'), 'utf-8'))
-  const plate = record.find((r) => r.covers?.includes('shore-at-dawn.webp'))
-  if (!plate?.crop) throw new Error('build-title-assets: the title plate has no recorded crop')
+  const record = JSON.parse(fs.readFileSync(path.join(IMAGES, 'icon.provenance.json'), 'utf-8'))
+  const plate = record.source_plate
+  if (!plate?.crop) throw new Error('build-title-assets: the icon source plate has no recorded crop')
   const raw = fs.readFileSync(sourceArg)
   const meta = await sharp(raw).metadata()
   if (meta.width !== plate.crop.sourceWidth || meta.height !== plate.crop.sourceHeight) {

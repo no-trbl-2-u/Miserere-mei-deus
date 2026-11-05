@@ -35,7 +35,7 @@ interface TitleScreenProps {
 
 /**
  * TitleScreen — the launch sequence: the splash's wordmark, lifted into the
- * sky of Doré's shore at dawn, the psalm line and EMBARK, then the main menu
+ * dark band of Doré's wood under its slit of sky, the psalm line and EMBARK, then the main menu
  * under the same wordmark (`state/presenters/title.engine.ts` has the beats
  * and the layout).
  *
@@ -190,7 +190,7 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
       </Animated.View>
 
       {/* The wordmark, last so it draws over the menu's fade. Its resting
-          frame sits in the plate's sky; the lift starts it at the splash's
+          frame sits in the plate's dark upper band; the lift starts it at the splash's
           frame. */}
       <Animated.View
         style={[styles.wordmarkRow, { top: layout.wordmark.centerY - lineHeight / 2 }, wordmarkStyle]}

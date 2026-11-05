@@ -2,7 +2,7 @@
  * The launch route — `/`.
  *
  * One screen, two phases (`<TitleScreen>`):
- *   1. TITLE  — the splash's wordmark lifts into the title plate's sky, then
+ *   1. TITLE  — the splash's wordmark lifts into the title plate's dark upper band, then
  *               the psalm line and EMBARK. Shown on every cold launch.
  *   2. MENU   — CONTINUE / NEW GAME / LOAD GAME / SETTINGS (`<MainMenu>`),
  *               beneath the same wordmark over the dimmed plate. CONTINUE

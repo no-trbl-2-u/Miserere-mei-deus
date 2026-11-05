@@ -369,7 +369,7 @@ permission.
 
 ## The title plate must stay legible (phase TP1a)
 
-A new title plate (`assets/images/title/shore-at-dawn.webp`) must clear
+A new title plate (`assets/images/title/lion-in-the-wood.webp` today) must clear
 the legibility gate before it ships. `scripts/title-plate-legibility.mjs`
 measures the wordmark's and the psalm line's contrast against the plate
 as the player sees it (through the screen's scrims, at the title and menu

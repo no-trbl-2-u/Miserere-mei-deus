@@ -210,6 +210,6 @@ test('the installed plate clears the gate and matches its recorded figures', asy
   }
   // The decoded plate is the installed one, not a stand-in.
   const plate = await loadPlate(file)
-  assert.equal(plate.width, 1290)
+  assert.equal(plate.width, 1308)
   assert.equal(plate.height, 1600)
 })
