@@ -4,7 +4,7 @@ Traps actually stepped in while building Miserere Mei, Deus, and the
 rule that keeps us out. Read the **Open** lines before building.
 **Watch** holds single sightings settle moved out to keep Open in
 budget: search it before adding a line, don't read it before building.
-**Guarded** lines are automated. A run adds or bumps a line only through
+**Guarded** lines are automated, and a line is marked guarded only after its test is run failing with the trap put back (spec 150, 2026-11-04). A run adds or bumps a line only through
 a pending file (`plan/pending/README.md`); settle writes this file.
 
 The loop's own moves, the counted retro ladder, stay in

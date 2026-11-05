@@ -225,7 +225,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 
 - AP1g — T picks which map nodes show a plate other than their region's default, after AP1f's report; date not set (T picks it).
 - B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21.
-- MR5a — elite rolls go around a same-fight quest's item; no T act waits on it, since no shipped quest pays on an elite or spared kill, so the Mid-MVP check (Nov 9) can't hit the overlap. T merges its `review:rules-change` PR.
 - MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
 - SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
@@ -266,7 +265,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - MR3c — card reports count transforms and upgrades; no T act waits on it.
 - MR3d — the flagged tests prove what they claim; no T act waits on it.
 - TL2a — the review pipeline reads PRs whole and holds its file reader; no T act waits on it.
-- TL2b — the last 100-file readers read whole lists; no T act waits on it.
 - TL2c — settle holds back only the file that empties a spec; no T act waits on it.
 - PC1a — shipped and moot rows close (spec 150); no T act waits on it.
 - PC1b — half-done rows name only what is left (spec 150); no T act waits on it.
