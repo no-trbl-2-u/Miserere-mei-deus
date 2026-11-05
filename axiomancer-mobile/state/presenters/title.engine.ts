@@ -7,8 +7,8 @@
  *   title   the title screen opens on that exact frame, holds, then lifts the
  *           wordmark into the plate's dark upper band while the engraving fades in, then
  *           shows the psalm line and EMBARK.
- *   menu    EMBARK dims the plate and brings up the menu beneath the same
- *           wordmark; nothing else moves.
+ *   menu    the title phase's EMBARK (T's parchment scroll) brings up the menu
+ *           beneath the same wordmark; the plate does not dim, nothing else moves.
  *
  * Copy lives here, not in the component (package rule). The psalm line is
  * Psalm 51:1 in the King James text (public domain): its Latin incipit is the

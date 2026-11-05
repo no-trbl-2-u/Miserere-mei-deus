@@ -135,8 +135,8 @@ export async function cut(sharp, sheetPath) {
       minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y)
     }
   }
-  if (minX === 0 || minY === 0 || maxX === W - 1 || maxY === H - 1) {
-    throw new Error('cut-embark-button: the plate touches the search box edge; the box is wrong')
+  if (minX < MARGIN || minY < MARGIN || maxX > W - 1 - MARGIN || maxY > H - 1 - MARGIN) {
+    throw new Error('cut-embark-button: the plate is within MARGIN of the search box edge; the box is wrong')
   }
 
   const box = {
