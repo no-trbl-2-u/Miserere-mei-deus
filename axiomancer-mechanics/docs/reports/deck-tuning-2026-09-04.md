@@ -86,7 +86,7 @@ not allow doing responsibly. Recorded here as the top-priority follow-up.
 doctrine curve, per-rank pricing bands, count pins, and a 70%
 dominant-card-share cap. **All of these were repealed by THE BIG NUMBERS
 REWRITE** (T direct, 2026-09-02 —
-`plan/2026-09-02-big-numbers-overhaul.prompt.md`, echoed in
+the Big Numbers brief (deleted; see history), echoed in
 `axiomancer-mechanics/CLAUDE.md`): *"Nothing older than 2026-09-02 governs
 combat... no win-rate curve, no CQI, no rank bands, no count pins, no
 status-engagement floor."* Confirmed live in-repo, not just doctrinally:

@@ -1,6 +1,6 @@
 # THE BIG NUMBERS REWRITE — record of decisions
 
-> Every choice `plan/2026-09-02-big-numbers-overhaul.prompt.md` left open, and
+> Every choice the Big Numbers brief (deleted; see history) left open, and
 > what was actually decided while executing it on 2026-09-02. Written as the
 > work happened, in execution order.
 
@@ -370,3 +370,19 @@ Note also that the sim's greedy policy reports `dom=100%` on a SIGNATURE SKILL
 at every stage, and exercises only 28 of 112 cards. The matrix is currently a
 better measure of the signature economy than of the library, so its late-stage
 verdict should be read with that caveat.
+
+## Open follow-ups, checked 2026-11-04 (plan 150.5)
+
+Each "open follow-up" above was read against main. None is live, so none is
+carried to a spec; this record is the close.
+
+- **D1 (card-editor scan of the library directory):** moot. The card-editor
+  package and `cardCodegen` no longer exist.
+- **D8 (FLAY has no status chip):** moot. The engine purge (`plan/revamp/engine.md`,
+  R7) removes the flay state with the rest of the carrier-less encounter fields.
+- **D14 (mid-fight tier swap):** moot. The enemy revamp (spec 134) replaces the
+  staged-deck model this was asked of.
+- **D18 (cumulative concede ladder via `premiseMilestoneTotal`):** moot.
+  `premiseMilestoneTotal` is gone with the premises machinery.
+- **Gaps 1-12 and "The late campaign is still too hard":** superseded by the
+  revamp; the numbers they cite predate the round-turn-law fix and THE PATH.

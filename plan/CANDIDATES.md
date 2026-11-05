@@ -936,7 +936,7 @@ Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_
 - **THE MAP REVAMP** [score 8.0] (proposed 2026-09-25, T5 residue). The owner
   ballots are answered (D21–D29), M0–M3a merged (#382–#385), and M3b–M5 were
   promoted to `plan/steps/01_build_plan.md` on 2026-09-26 at T's request
-  (brief `plan/2026-09-25-map-revamp-m3.prompt.md`).
+  (the map revamp M3 brief, deleted; see history).
 
 - **[score 6.0] No single owner for save/persistence policy — a mid-encounter reload still lands the player past the fight** — promoted via /oversight 2026-09-28 as Phase **R9a** (save checkpoint in fights), a gate item for RC. Brief: `plan/revamp/checkpoint.md` (decided: mobile stays the save owner, documented; a node is consumed when its encounter settles).
 

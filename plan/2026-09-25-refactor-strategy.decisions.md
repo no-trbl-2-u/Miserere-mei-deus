@@ -217,7 +217,7 @@ the same PR. *Rejected:* T naming all four up front; placeholder names.
 *Picks:* coast **The Breakwater** (2026-09-25); forest **The Charcoal
 Wood**, mountains **The Beacon Crags**, underworld **The Lantern Deep**
 (2026-09-26, all three at once so the loop could build them unattended).
-The descriptions are in `plan/2026-09-25-map-revamp-m3.prompt.md` §1.
+The descriptions are in the map revamp M3 brief (deleted; see history) §1.
 
 **D27 — A new game starts on the coast as soon as it ships.** (T,
 2026-09-25; amended by D106: the coast is Act 1, Chapter 1.) `createStartingWorld()` moves from fishing-village to the
@@ -331,7 +331,7 @@ after M5.
 The next four came from the stats conversation (T, attended, 2026-09-26/27).
 T asked for prior art on stat-scaling deckbuilders, then for high-number RPG
 formulas; each call below was a ballot with worked late-game numbers.
-Research sources and the full model: `plan/2026-09-27-stat-scaling.prompt.md`.
+Research sources and the full model: the stat scaling brief (deleted; see history).
 
 **D39 — Remove alignment, philosophy and GRACE; keep card colour.** (T,
 2026-09-27: "remove everything that has to do with alignment and philosophy.
@@ -1235,7 +1235,7 @@ creation are excluded here: a separate card agent owns them (D37).
    attended story session with T; nothing here is loop-shippable first.
 
 - Audit tick (D1 step 1, D3 scope) — DONE 2026-09-25; keep/cut list and
-  sequencing in `plan/2026-09-25-trim-the-fat.spec.md`. **T1–T4 merged
+  sequencing in the Trim the Fat spec (deleted; see history). **T1–T4 merged
   2026-09-25** (T1 #369, T2a #370 + fix `e073bb6e`, T2a baselines #371,
   T2a residue #372, T2b #373, T3 #374, T4 #375). **T5 merged 2026-09-25**:
   GLYPHS cut #376 (D8), eight commands retired #378 (D10; rebuild `/jot`
@@ -1245,7 +1245,7 @@ creation are excluded here: a separate card agent owns them (D37).
   the top of `plan/AUDIT.md` Pending (profane-canon, specs 10/35).
 - Map re-authoring brief (D2) — parameters set by D16 (4 regions, ~20
   nodes/map, spread in all directions). Graph first, backdrop second (D15).
-  **Kickoff prompt:** `plan/2026-09-25-map-revamp-kickoff.prompt.md` (phases
+  **Kickoff prompt:** the map revamp kickoff brief (deleted; see history) (phases
   M0–M5; opens with a four-question owner ballot). **Ballot answered
   2026-09-25 as D21–D24.** M0's CI gap was already closed on 2026-08-22
   (`plan/AUDIT.md` contract row, RESOLVED): all of `src/World/**` runs the
@@ -1257,7 +1257,7 @@ creation are excluded here: a separate card agent owns them (D37).
   2026-09-26 (#389), M3c the same day (#392). The agent calls M3a and M3b
   filed were answered as D30–D35 (#394). **Next:** M3b–M5 are rows
   in `plan/steps/01_build_plan.md` (brief
-  `plan/2026-09-25-map-revamp-m3.prompt.md`).
+  the map revamp M3 brief (deleted; see history)).
 - Backdrop-anchored map renderer (D15) — nodes in image coordinates,
   art pans/zooms with the node layer. Its own phase, after D2 — or folded
   into D2, since D16's per-map canvas is the same change.
@@ -1278,6 +1278,6 @@ creation are excluded here: a separate card agent owns them (D37).
   hooks); the exact stat-to-quantity mapping is designed with the hook.
   **2026-09-26:** attended with T (D38), build-plan row S3; the card purge
   (D36, row P1) follows it. **2026-09-27:** the model is decided (D40–D42),
-  brief `plan/2026-09-27-stat-scaling.prompt.md`; T6 (D39) ships first.
+  brief the stat scaling brief (deleted; see history); T6 (D39) ships first.
 - Trim spec §5.3 / §5.6 / §5.7 answered 2026-09-25 as D8 / D9 / D10.
   Nothing in §5 remains open.
