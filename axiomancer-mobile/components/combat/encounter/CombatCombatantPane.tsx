@@ -763,47 +763,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                         </Animated.View>
                     </View>
                 </Animated.View>
-                {/* top scrim — HUD legibility over the scene. Every scrim Svg here
-                    names its size: on web an Svg with none is the browser's default
-                    300x150 box, which cut this scrim off as a hard edge over a plate. */}
-                <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
-                    <Defs>
-                        <LinearGradient id="axmCombatTopScrim" x1="0" y1="0" x2="0" y2="1">
-                            {/* The tail meets the board ground, so the
-                                scene band has no visible bottom edge. */}
-                            {combatTopScrimStops(AXM.deepBg, AXM.bg).map((st) => (
-                                <Stop key={st.offset} offset={st.offset} stopColor={st.color} stopOpacity={st.opacity} />
-                            ))}
-                        </LinearGradient>
-                    </Defs>
-                    <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmCombatTopScrim)" />
-                </Svg>
+                {/* EXPERIMENT: top scrim removed */}
             </View>
-            {/* arena-floor glow — a faint blood radial that fills the lower half so the
-                void between battlefield and hand reads as ground, not dead pixels */}
-            <Svg width="100%" height="100%" style={styles.floorGlow} pointerEvents="none">
-                <Defs>
-                    <RadialGradient id="axmFloorGlow" cx="50%" cy="30%" rx="75%" ry="60%">
-                        <Stop offset="0" stopColor={AXM.blood} stopOpacity={0.13} />
-                        <Stop offset="0.7" stopColor={AXM.blood} stopOpacity={0.04} />
-                        <Stop offset="1" stopColor={AXM.blood} stopOpacity={0} />
-                    </RadialGradient>
-                </Defs>
-                <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmFloorGlow)" />
-            </Svg>
-            {/* bottom scrim — shelves the dice + hand over the arena floor */}
-            <Svg width="100%" height="100%" style={styles.bottomScrim} pointerEvents="none">
-                <Defs>
-                    <LinearGradient id="axmCombatDockScrim" x1="0" y1="0" x2="0" y2="1">
-                        <Stop offset="0" stopColor={AXM.bg} stopOpacity={0} />
-                        <Stop offset="0.45" stopColor={AXM.bg} stopOpacity={0.9} />
-                        <Stop offset="1" stopColor={AXM.bg} stopOpacity={1} />
-                    </LinearGradient>
-                </Defs>
-                <Rect x="0" y="0" width="100%" height="100%" fill="url(#axmCombatDockScrim)" />
-            </Svg>
-            {/* damage-scaled red vignette flash (pointer-transparent; gated by reduce-motion) */}
-            <Animated.View pointerEvents="none" style={[styles.vignette, flashStyle]} testID="combat-hit-flash" />
+            {/* EXPERIMENT: floor glow, bottom scrim and hit-flash vignette removed */}
 
             {/* ── layer 2: top HUD ── */}
             <View
