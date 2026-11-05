@@ -57,7 +57,6 @@ Plan edits only. No game code, rule, card, price or tuning value changes, except
 ## Acceptance
 
 - **A1** 132.1 is closed, 99.5 retired, and 99.3 and 99.4 closed with their footguns guarded, each proven by a failing run with the trap restored. A row whose test does not fail stays open with a line saying why.
-- **A2** 111.3, 126.4 and 135.7 name only what is left. Spec 135 has no befriending text and a true Measure line, and 134.5 names Chapters 2–4 and the Act Boss.
 - **A3** 120.6, 120.7 and 124.4–124.6 are retired or rewritten per #2, and their deadline Items are reconciled (the Nov 28 calibration Item among them).
 - **A4** LG1h, PF2 and R12 are each split so the loop's part is its own unattended chunk and T's part stays attended, with R12 and SM2f owning distinct questions per #3, and the deadline plan names the Dec 28 ship per #4.
 - **A5** The nine finished briefs are deleted, every inbound link is repointed or removed (`git grep` finds none), and the big-numbers follow-up line is checked, then folded into a live spec or recorded as done.
@@ -72,10 +71,9 @@ Plan edits only. No game code, rule, card, price or tuning value changes, except
 
 ## Chunks
 
-Measure: 5 open · 0 closed · next A6
+Measure: 4 open · 1 closed · next A6
 
 - [ ] **150.1** Shipped and moot rows close, guarded footguns say so · S · closes A1 · needs — · alias: PC1a
-- [ ] **150.2** Half-done rows name only what is left · S · closes A2 · needs — · alias: PC1b
 - [ ] **150.3** The hazard calibration rows retire · S · closes A3 · needs — · alias: PC1c
 - [ ] **150.4** Attended rows split from the loop work they hide, and the ship renamed · M · closes A4 · needs — · alias: PC1d
 - [ ] **150.5** Finished briefs leave `plan/` · S · closes A5 · needs — · alias: PC1e
