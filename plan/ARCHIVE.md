@@ -555,3 +555,4 @@
 - 2026-11-04 · 150.3 (alias: PC1c) · The five hazard calibration rows retire; Items reconciled · 2886a047..2886a047 (#1390)
 - 2026-11-04 · 150.1 (alias: PC1a) · Shipped rows closed, moot row retired, footguns guarded · 2204ff86..2204ff86 (#1389)
 - 2026-11-04 · 99.5 · Retired: spare roll wired in 144.3 (spec 150) · 9e6243d3..9e6243d3 (#1387)
+- 2026-11-04 · 150.5 (alias: PC1e) · Nine finished briefs deleted, their links removed · 2d941408..2d941408 (#1388)

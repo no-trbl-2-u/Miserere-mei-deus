@@ -31,10 +31,7 @@
   - 134.5 B2 still reads as the whole enemy revamp, but only Chapters 2–4 and the Act Boss are left (deadlines, Unscheduled).
   - `plan/deadlines.md` names "v0.3" as the Dec 28 ship.
 - **Finished briefs in `plan/`.** These nine are executed and done. D66 says history is deleted and read from git, never kept in a `plan/archive/` folder.
-  - The three Trim the Fat files (`2026-09-25-trim-the-fat.prompt.md`, `.spec.md` and `trim-t2a-handoff`), plus `trim-t5-handoff`.
-  - `2026-09-27-stat-scaling.prompt.md` and `2026-10-12-r11-reopen-loop.prompt.md`.
-  - Both map-revamp briefs (`2026-09-25-map-revamp-kickoff`, `-m3`).
-  - `2026-09-02-big-numbers-overhaul.prompt.md`.
+  - The three Trim the Fat files, the T5 hand-off, the stat scaling and R11 reopen briefs, both map-revamp briefs and the big-numbers brief (deleted in 150.5; read them from history).
 
   Inbound links to repoint: `axiomancer-mobile/assets/images/maps/provenance.json`, `plan/AUDIT.md`, a comment in `relic-vitae-persistence.engine.test.ts`, `plan/revamp/engine.md:10`, `axiomancer-mechanics/docs/reports/deck-tuning-2026-09-04.md` and `plan/CANDIDATES.md:939`. Three files stay. `2026-09-25-refactor-strategy.decisions.md` is the live D1–D83 log. `2026-09-27-keyword-card-revamp.plans.md` stays while B5 and B6 are open. `2026-09-02-big-numbers-overhaul.decisions.md` has one "open follow-up" line still unchecked.
 
@@ -57,7 +54,6 @@ Plan edits only. No game code, rule, card, price or tuning value changes, except
 ## Acceptance
 
 - **A4** LG1h, PF2 and R12 are each split so the loop's part is its own unattended chunk and T's part stays attended, with R12 and SM2f owning distinct questions per #3, and the deadline plan names the Dec 28 ship per #4.
-- **A5** The nine finished briefs are deleted, every inbound link is repointed or removed (`git grep` finds none), and the big-numbers follow-up line is checked, then folded into a live spec or recorded as done.
 
 ## Open questions
 
@@ -69,10 +65,9 @@ Plan edits only. No game code, rule, card, price or tuning value changes, except
 
 ## Chunks
 
-Measure: 2 open · 3 closed · next A6
+Measure: 1 open · 4 closed · next A6
 
 - [ ] **150.4** Attended rows split from the loop work they hide, and the ship renamed · M · closes A4 · needs — · alias: PC1d
-- [ ] **150.5** Finished briefs leave `plan/` · S · closes A5 · needs — · alias: PC1e
 
 ### 150.1 (PC1a) — Shipped and moot rows close, guarded footguns say so · S · closes A1 · requires —
 
