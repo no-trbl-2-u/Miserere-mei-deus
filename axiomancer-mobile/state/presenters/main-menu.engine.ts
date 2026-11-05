@@ -34,6 +34,9 @@ export const MAIN_MENU_COPY = Object.freeze({
     continueHint: 'resume where the page was left',
     newGame: 'NEW GAME',
     newGameHint: 'begin at the very start — nothing in hand',
+    // The NEW GAME button is T's "Embark" scroll; its lettering is art, so
+    // a screen reader hears this instead.
+    newGameLabel: 'Embark, start a new game',
     loadGame: 'LOAD GAME',
     loadGameHint: 'three chronicles to keep',
     loadGameEmptyHint: 'no chronicle written yet',

@@ -1,6 +1,8 @@
 /**
  * MainMenu — the first screen after the title:
  * CONTINUE (most recent slot) · NEW GAME · LOAD GAME · SETTINGS.
+ * NEW GAME is T's parchment "Embark" scroll (`EmbarkButton`, plan 121.3);
+ * the other rows are text rows.
  *
  * Presentation only. The view-model comes from `selectMainMenuViewModel`
  * over the live slot summaries; the verbs are the callbacks the index
@@ -13,6 +15,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import { EmbarkButton } from '@/components/menu/EmbarkButton';
 import { MenuButton } from '@/components/menu/MenuButton';
 import { useSaveSlotSummaries } from '@/state/SaveSlotsProvider';
 import { MAIN_MENU_COPY, selectMainMenuViewModel } from '@/state/presenters/main-menu.engine';
@@ -56,11 +59,10 @@ export function MainMenu({ onContinue, onNewGame, onLoadGame, onSettings, now = 
                             testID="main-menu-continue"
                         />
                     ) : null}
-                    <MenuButton
-                        label={MAIN_MENU_COPY.newGame}
-                        hint={vm.newGame.hint}
+                    <EmbarkButton
                         onPress={onNewGame}
-                        primary={!vm.continue.enabled}
+                        accessibilityLabel={MAIN_MENU_COPY.newGameLabel}
+                        accessibilityHint={vm.newGame.hint}
                         testID="main-menu-new-game"
                     />
                     <MenuButton

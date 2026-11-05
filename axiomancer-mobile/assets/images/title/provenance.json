@@ -26,5 +26,22 @@
       "darkRatio": 0.82
     },
     "artist_note": "Doré's Inferno, Canto I (Plate 3): Dante in the dark wood, the lion before him. T's pick for the title plate (2026-11-04, plan 121.2); it replaced shore-at-dawn, whose record now lives in ../icon.provenance.json as the launcher icon's source."
+  },
+  {
+    "generated_by": "owner",
+    "date": "2026-11-04",
+    "tool": "scripts/cut-embark-button.mjs (sharp): the sheet's own alpha matte, largest solid piece grown 3 px, alpha rescaled from its 254 peak, trimmed with a 4 px margin",
+    "source": "T's upload, 2026-11-04: the second row's lettered plate (torn cream parchment, black blackletter \"Embark\", vine corners) of T's eight-plate button sheet. Owner-authored art; the sheet is kept as a build-time master (art-department/masters/title/embark-sheet.png, with its own provenance).",
+    "artist": "T (owner)",
+    "license": "Open source (T, 2026-10-29; D115)",
+    "post_process": "node scripts/cut-embark-button.mjs --sheet <embark-sheet.png>: paper at x 800-1502, y 326-512 of the 1536x1024 sheet, cut 711x195 at (796,322), resized to 640x176 (the 640px cap), WebP q86 with lossless-quality alpha. No grade: the plate carries its own styling.",
+    "covers": [
+      "embark-scroll.webp"
+    ],
+    "used_by": [
+      "assets/images/title/index.ts (EMBARK_SCROLL)",
+      "components/menu/EmbarkButton.tsx (the main menu's NEW GAME button)"
+    ],
+    "artist_note": "T: \"For now, I want the second one with the text in it already (whiteish scroll).\" (2026-11-04, plan 121.3). Only this plate ships; the other seven stay on the master sheet as candidates."
   }
 ]

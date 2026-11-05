@@ -27,6 +27,8 @@ Carried from the v1 brief `phase_TP1_title_plate_legibility.md` at the nexus v2 
   `plateCount` and `surfaceCounts` true, no `UNRESOLVED` without a note).
 - **D88 / bearings "Content per surface": art is owner-only.** Picking the image is therefore not loop work and
   is not planned here; it is row TP1b, `[blocked: owner-led]`.
+- T, 2026-11-04, sending a sheet of eight "Embark" button plates for the title screen: "For now, I want the second
+  one with the text in it already (whiteish scroll)." That is chunk 121.3 (TP1c), T's own art (D88).
 
 ### Outcome
 
@@ -99,6 +101,9 @@ None. The report is a generated record, not save data.
 ## Acceptance
 
 - **A8** The title plate itself (carried from row TP1b, whose brief named no A-ID left open for it).
+- **A9** The main menu's NEW GAME button is T's parchment "Embark" scroll, cut from T's sheet with a clean torn-edge
+  alpha, at the menu's width with its aspect kept; it keeps its test id and press, reads to a screen reader as a
+  button that starts a new game, dips when pressed and rings on web keyboard focus.
 
 ## Open questions
 
@@ -106,9 +111,10 @@ None. The report is a generated record, not save data.
 
 ## Chunks
 
-Measure: 1 open · 7 closed · next A9
+Measure: 2 open · 7 closed · next A10
 
 - [ ] **121.2** The title plate: Doré's *Inferno* Plate 3, the lion (T's pick) · M · closes A8 · needs — · alias: TP1b
+- [ ] **121.3** The NEW GAME button is T's parchment Embark scroll · S · closes A9 · needs — · alias: TP1c
 
 ### 121.2 (TP1b) — The title plate: Doré's *Inferno* Plate 3, the lion · M · closes A8 · requires —
 
@@ -120,3 +126,14 @@ Measure: 1 open · 7 closed · next A9
 - `shore-at-dawn` stays as the launcher icon's source (the icon is not in this chunk).
 - Measure: `npm run art:legibility -w axiomancer-mobile -- --write` passes (wordmark 3:1, psalm 4.5:1 after scrims at
   1280x800); scrims may be tuned, the plate may not be swapped. Then `npm run verify -w axiomancer-mobile`.
+
+### 121.3 (TP1c) — The NEW GAME button is T's parchment Embark scroll · S · closes A9 · requires —
+
+- T's sheet (2026-11-04): eight plates, four styles, each blank and lettered "Embark". T picked the second row's
+  lettered plate, the torn cream parchment. Only that cut ships; the sheet is a build-time master.
+- `scripts/cut-embark-button.mjs` cuts it from the sheet's own alpha matte (the brown vignette is colour under zero
+  alpha), trims it, caps it at 640px; record in `assets/images/title/provenance.json`.
+- The main menu's NEW GAME row draws the scroll (`EmbarkButton`); LOAD GAME and SETTINGS stay text rows; the title
+  phase's own EMBARK call to action is unchanged.
+- Measure: `npm run verify -w axiomancer-mobile`, `npm run art:legibility -w axiomancer-mobile`, and
+  `node --test scripts/asset-provenance.test.mjs` pass.

@@ -1,0 +1,13 @@
+{
+  "generated_by": "owner",
+  "date": "2026-11-04",
+  "tool": "owner-supplied button sheet",
+  "license": "Open source (T, 2026-10-29; D115)",
+  "covers": [
+    "embark-sheet.png"
+  ],
+  "source": "T's upload, 2026-11-04: a 1536x1024 RGBA sheet of eight button plates in four styles (gothic gilt, torn parchment, thorn-wreathed slate, scalloped brass), each blank on the left and lettered \"Embark\" on the right. Owner-authored. The brown vignette is colour under zero alpha; the sheet carries its own matte.",
+  "used_by": [
+    "axiomancer-mobile/scripts/cut-embark-button.mjs (121.3, TP1c) cuts the second row's lettered parchment scroll into axiomancer-mobile/assets/images/title/embark-scroll.webp; the other seven plates are not shipped"
+  ]
+}
