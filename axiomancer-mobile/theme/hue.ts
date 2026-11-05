@@ -41,7 +41,6 @@ export const HUE = {
     blockBlue: '#6b8eb0',
     defeatRed: '#e01f33',
     retreatBone: '#9c937f',
-    woundVignette: '#7a1410',
     guardBlue: '#6fb3e0',
     guardBlueEdge: '#6fb3e055',
 

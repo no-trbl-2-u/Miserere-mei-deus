@@ -4,15 +4,14 @@
  *   · layer 0 — the arena backdrop with a LARGE alpha-matted enemy painting
  *     (random per encounter — see assets/images/enemies) filling the upper
  *     band of the screen (the enemy IS the screen);
- *   · layer 1 — scrim gradients keep the HUD legible + shelf the hand;
- *   · layer 2 — floating chrome: enemy name, a full-width HP bar anchored by a
+ *   · layer 1 — floating chrome: enemy name, a full-width HP bar anchored by a
  *     central crest carrying the big HP number, the intent badge, glowing
  *     status tiles, and the player medallion with an HP arc ring in the bottom-left corner.
  *
  * Resolution FEEDBACK (driven off the engine's typed `CombatEvent` stream via
  * `fx`): the enemy scene lunges, the player medallion
  * recoils + flashes, floating "-N" numbers rise, DENIED flourishes, and the
- * board shakes behind a damage-scaled red vignette.
+ * board shakes, scaled to the damage.
  *
  * The overlay mounts absolute-fill UNDER the board's interactive column; every
  * wrapper is pointerEvents box-none so only the chips/intent stay tappable.
@@ -25,7 +24,7 @@ import { Haptics } from '@/lib/platform/haptics';
 import Animated, {
     runOnJS, useAnimatedStyle, useSharedValue, withDelay, withSequence, withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, Ellipse, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, Ellipse, Path, RadialGradient, Stop } from 'react-native-svg';
 
 import { useGameState } from '@/state/GameStoreProvider';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
@@ -50,7 +49,7 @@ import { effectGlyph } from '@/components/combat/statusGlyphs';
 import { keywordForEffect } from '@/state/combat/keywords';
 import { IntentIcon } from './IntentIcon';
 import { VitaeSacrificeCallout } from './VitaeSacrificeCallout';
-import { useJuiceFlash, useJuiceIdleBreath, useJuiceNumberPop, useJuicePulse, useJuiceShake } from '@/lib/juice';
+import { useJuiceIdleBreath, useJuiceNumberPop, useJuicePulse, useJuiceShake } from '@/lib/juice';
 
 /** Full-bleed battlefield backdrop — region-keyed, falling back to a neutral
  *  desolation plate for a region with no rule. Sits behind the enemy figure;
@@ -60,33 +59,6 @@ import { useJuiceFlash, useJuiceIdleBreath, useJuiceNumberPop, useJuicePulse, us
 /** A bump of resolved engine events the pane animates. `seq` rises on each new
  *  resolution so the effect fires exactly once per APPLY / END PHASE. */
 export interface CombatFx { seq: number; events: CombatEvent[]; }
-
-/** One stop of the top-HUD scrim's vertical gradient. */
-export interface CombatScrimStop { offset: number; color: string; opacity: number; }
-
-/**
- * The top-HUD scrim's gradient stop table.
- *
- * Purpose: the tail runs all the way to the board's OWN ground colour at full
- * opacity, so the band's last row of pixels already IS the ground behind it:
- * the scrim fades out instead of ending in a visible seam across the arena.
- *
- * Inputs: `deepBg` — the HUD-legibility ink; `groundBg` — the colour the pane
- * sits on below the scene band (the board root's `AXM.bg`).
- * Output: the ordered stop table for the scrim's LinearGradient.
- */
-export function combatTopScrimStops(deepBg: string, groundBg: string): readonly CombatScrimStop[] {
-    return [
-        { offset: 0, color: deepBg, opacity: 0.88 },
-        { offset: 0.22, color: deepBg, opacity: 0.42 },
-        { offset: 0.5, color: deepBg, opacity: 0.1 },
-        { offset: 0.78, color: deepBg, opacity: 0.04 },
-        // Past the figure's feet the scene dissolves INTO the board ground —
-        // the band's bottom edge and what lies under it are the same paint.
-        { offset: 0.9, color: groundBg, opacity: 0.38 },
-        { offset: 1, color: groundBg, opacity: 1 },
-    ];
-}
 
 /** Height of the floating top HUD (under the safe-area inset) — the board's
  *  content column leaves this much clearance before the play region. */
@@ -493,13 +465,11 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     // and the frame engine needs to see both to order them.
     const [attackBeat, setAttackBeat] = useState(0);
     const [struckBeat, setStruckBeat] = useState(0);
-    // Board-level feedback: a damage-scaled screen shake + a red vignette
-    // flash — lib/juice primitives, synced to the IMPACT beat
-    // below via each hook's own `delayMs` so they still land with the enemy
-    // lunge apex instead of firing on the trigger frame.
+    // Board-level feedback: a damage-scaled screen shake (a lib/juice primitive),
+    // synced to the IMPACT beat below via its `delayMs` so it lands with the
+    // enemy lunge apex instead of firing on the trigger frame.
     const [damageTick, setDamageTick] = useState({ key: 0, norm: 0 });
     const shakeStyle = useJuiceShake(damageTick.key, damageTick.norm > 0.66 ? 'high' : damageTick.norm > 0.33 ? 'medium' : 'low', ENEMY_ATTACK_IMPACT_MS);
-    const flashStyle = useJuiceFlash(damageTick.key, damageTick.norm, ENEMY_ATTACK_IMPACT_MS);
     // Reduce-motion gate (recommended) — suppresses the shake + lunge
     // (the HP tween + floats still fire so the hit is never silent).
     const reduceMotion = useRef(false);
@@ -572,9 +542,8 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
             if (line.float) pushEnemy(line.float, line.color, (k % 2 === 0 ? 1 : -1) * 24);
         });
         // (a) the player took damage → enemy ANTICIPATION (pull back) → scale-led
-        //     lunge; a damage-scaled board shake + red vignette at the impact apex
-        //     (100ms — the shared delay baked into the shake/flash hook calls
-        //     below). The medallion-side beats (recoil/flash/squash/slash/
+        //     lunge; a damage-scaled board shake at the impact apex
+        //     (100ms — the delay baked into the shake hook call above). The medallion-side beats (recoil/flash/squash/slash/
         //     float/haptic) fire in `PlayerMedallion` off the same event stream.
         if (playerDmg > 0) {
             // Normalise the hit to its share of max HP so a 4-dmg chip and a 40-dmg
@@ -585,9 +554,8 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 enemyScale.value = withSequence(withTiming(0.97, { duration: 90 }), withTiming(1 + norm * 0.08, { duration: 120 }), withTiming(1, { duration: 200 }));
                 enemyShift.value = withSequence(withTiming(-6, { duration: 90 }), withTiming(lunge, { duration: 120 }), withTiming(0, { duration: 220 }));
             }
-            // The screen shake + impact flash are lib/juice primitives — they
-            // gate their own reduced-motion internally, so this call is
-            // unconditional (the hook no-ops when appropriate).
+            // The screen shake is a lib/juice primitive — it gates its own
+            // reduced-motion internally, so this call is unconditional.
             setDamageTick((prev) => ({ key: prev.key + 1, norm }));
         } else if (denied || firedMoveHits) {
             // (b) the foe was stopped, or its move had hits and none got through →
@@ -763,11 +731,9 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                         </Animated.View>
                     </View>
                 </Animated.View>
-                {/* EXPERIMENT: top scrim removed */}
             </View>
-            {/* EXPERIMENT: floor glow, bottom scrim and hit-flash vignette removed */}
 
-            {/* ── layer 2: top HUD ── */}
+            {/* ── layer 1: top HUD ── */}
             <View
                 style={[styles.hud, { paddingTop: topInset + COMBAT_HUD_PAD_TOP }]}
                 pointerEvents="box-none"
@@ -894,9 +860,6 @@ const useStyles = makeStyles((AXM) => ({
     enemyIdleWrap: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'flex-end', transformOrigin: 'center bottom' },
     enemyFigureImg: { width: '78%', height: '96%', maxWidth: 380 },
     enemyFigureImgBoss: { width: '92%', maxWidth: 460 },
-    floorGlow: { position: 'absolute', left: 0, right: 0, top: '46%', bottom: 0 },
-    bottomScrim: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 250 },
-    vignette: { ...StyleSheet.absoluteFillObject, backgroundColor: HUE.woundVignette, zIndex: 30 },
 
     // ── top HUD ──
     hud: { position: 'absolute', top: 0, left: 0, right: 0, paddingHorizontal: 12 },

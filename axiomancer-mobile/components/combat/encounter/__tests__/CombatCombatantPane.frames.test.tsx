@@ -7,8 +7,8 @@
  *      already uses, the STRUCK clip when the damage was the enemy's own, and
  *      idle when the resolution was neither; an enemy with no frame set
  *      renders its single painting through none of it;
- *   2. the pane's EXISTING feedback — the damage-scaled shake and the impact
- *      flash — is handed exactly the same arguments whether the enemy has
+ *   2. the pane's EXISTING feedback, the damage-scaled shake, is handed
+ *      exactly the same arguments whether the enemy has
  *      frames or not. The frame engine is additive or it is a regression.
  *
  * The registry ships empty (A2), so the frame set here is injected at
@@ -55,7 +55,6 @@ jest.mock('@/lib/juice', () => {
     return {
         ...actual,
         useJuiceShake: jest.fn(actual.useJuiceShake),
-        useJuiceFlash: jest.fn(actual.useJuiceFlash),
     };
 });
 
@@ -121,14 +120,12 @@ function distinctCalls(fn: jest.Mock): unknown[][] {
 function juiceCalls() {
     return {
         shake: distinctCalls(Juice.useJuiceShake as jest.Mock),
-        flash: distinctCalls(Juice.useJuiceFlash as jest.Mock),
     };
 }
 
 function resetSpies() {
     mockFramePlayerProps.length = 0;
     (Juice.useJuiceShake as jest.Mock).mockClear();
-    (Juice.useJuiceFlash as jest.Mock).mockClear();
 }
 
 describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c)', () => {
@@ -249,7 +246,7 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
         expect(mockFramePlayerProps.at(-1)?.startKey).toBe(0);
     });
 
-    it('leaves the existing shake and flash beats byte-for-byte unchanged (A3)', () => {
+    it('leaves the existing shake beat byte-for-byte unchanged (A3)', () => {
         frames.getEnemyFrameSet.mockReturnValue(null);
         renderPane({ seq: 1, events: ENEMY_BEAT });
         act(() => { jest.advanceTimersByTime(ENEMY_ATTACK_IMPACT_MS * 4); });
@@ -263,17 +260,15 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
 
         // The comparison below is only a guard if the frame engine actually
         // ran on this second render — otherwise an enemy that never wires in
-        // `getEnemyFrameSet` at all would "preserve" shake/flash trivially.
+        // `getEnemyFrameSet` at all would "preserve" the shake trivially.
         expect(mockFramePlayerProps.length).toBeGreaterThan(0);
 
         // Same keys, same severities, same 100ms delay: the frame engine added
         // an animation, it did not retune one.
         expect(framedEnemy.shake).toEqual(staticEnemy.shake);
-        expect(framedEnemy.flash).toEqual(staticEnemy.flash);
         // And the hit still registered at all, so the comparison is not two
         // sets of nothing.
         expect(staticEnemy.shake.some(([key]) => (key as number) > 0)).toBe(true);
-        expect(staticEnemy.flash.some(([, norm]) => (norm as number) > 0)).toBe(true);
     });
 
     it('leaves them unchanged on a resolution that now also plays the STRUCK clip (A3, AN1c)', () => {
@@ -311,8 +306,6 @@ describe('CombatCombatantPane — the enemy\'s states animate (phases AN1b, AN1c
         const framedEnemy = juiceCalls();
 
         expect(framedEnemy.shake).toEqual(staticEnemy.shake);
-        expect(framedEnemy.flash).toEqual(staticEnemy.flash);
         expect(staticEnemy.shake.some(([key]) => (key as number) > 0)).toBe(true);
-        expect(staticEnemy.flash.some(([, norm]) => (norm as number) > 0)).toBe(true);
     });
 });

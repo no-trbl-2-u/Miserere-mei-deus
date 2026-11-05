@@ -22,6 +22,8 @@
 - T, 2026-11-04, from the v0.4.0 preview APK (Float-Eye fight), overriding the "slight aura" line above:
   - "The black overlay is WAY too much. We just needed a little black BEHIND the enemy since it's transparent."
   - "It should also only be within the shape of the enemy."
+- T, 2026-11-04, after the combat-overlay experiment (a build with every overlay stripped from the fight):
+  - "Enemy looks great ... the worktree can open a PR now since it fixed the combat screen."
 
 ### What exists today (read 2026-11-04, at 33050d3)
 
@@ -90,6 +92,7 @@ transparency gets none; today that is no foe, and it is judged by alpha values, 
 ## Acceptance
 
 - **A7** T's node plate picks are in the map layouts.
+- **A9** The fight draws no overlay over the plate or the foe: no top scrim, floor glow, dock scrim or hit-flash vignette.
 
 ## Open questions
 
@@ -99,9 +102,10 @@ transparency gets none; today that is no foe, and it is judged by alpha values, 
 
 ## Chunks
 
-Measure: 1 open · 7 closed · next A9
+Measure: 2 open · 7 closed · next A10
 
 - [ ] **146.7** T picks node plates (owner-led) · S · closes A7 · needs — · alias: AP1g
+- [ ] **146.9** The fight draws no overlay over the plate or the foe · S · closes A9 · needs — · alias: AP1i
 
 ### 146.1 (AP1a) — Pull in the twelve arena plates · M · closes A1 · requires —
 
@@ -158,3 +162,11 @@ Measure: 1 open · 7 closed · next A9
   no grow, a sub-pixel feather) into `backing/<key>/`, with a generated registry; `EnemyFramePlayer` draws backing `i`
   under cell `i`, so it swaps, breathes and lunges with the frame. Plates-only gate and the `AXM.bg` tint kept.
 - Measure: `node --test scripts/enemy-backings.test.mjs` (the overreach test), then `npm run verify -w axiomancer-mobile`.
+
+### 146.9 (AP1i) — The fight draws no overlay over the plate or the foe · S · closes A9 · requires —
+
+- T's call from the v0.4.0 preview ("The black overlay is WAY too much"): the combat pane laid four layers over the plate
+  and the foe, the top scrim, the floor glow, the dock scrim and the red hit-flash vignette; 43ef90b3c had resized the
+  scrims, the likely cause of the Android dimming that the web build never showed. All four are removed with their stop
+  table, styles and the wound-vignette colour; the board shake and the medallion's own flash stay.
+- Measure: the combat pane tests, then `npm run verify -w axiomancer-mobile`. T's phone is the real check.

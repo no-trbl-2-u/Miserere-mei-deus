@@ -94,7 +94,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 7 left |
 | 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
-| 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
+| 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 2 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 2 left |
 
 ## How the loop reads this folder
