@@ -8,6 +8,10 @@
 | Due | Item | What it needs | Window |
 |---|---|---|---|
 | 2026-11-03 (2 days overdue) | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
+| 2026-11-04 (1 day overdue) | Rework the quest UX | needs you: your task | W2 |
+| 2026-11-04 (1 day overdue) | Add NPC art to the quest UX | needs you: your task | W2 |
+| 2026-11-05 (today) | Rework the village UX and its sub-menus | needs you: your task | W2 |
+| 2026-11-05 (today) | Add NPCs to the village UX and its sub-menus | needs you: your task | W2 |
 | 2026-11-08 (in 3 days) | Swap Chapter 1's enemy portraits: replace each stand-in with the most thematic portrait from your set (2 h) | needs you: your task | W2 |
 | 2026-11-09 (in 4 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b, TP1b | W2 |
 | 2026-11-10 (in 5 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
