@@ -7,8 +7,8 @@
  *   title   the title screen opens on that exact frame, holds, then lifts the
  *           wordmark into the plate's dark upper band while the engraving fades in, then
  *           shows the psalm line and EMBARK.
- *   menu    EMBARK dims the plate and brings up the menu beneath the same
- *           wordmark; nothing else moves.
+ *   menu    the title phase's EMBARK (T's parchment scroll) brings up the menu
+ *           beneath the same wordmark; the plate does not dim, nothing else moves.
  *
  * Copy lives here, not in the component (package rule). The psalm line is
  * Psalm 51:1 in the King James text (public domain): its Latin incipit is the
@@ -25,7 +25,6 @@ export const TITLE_COPY = Object.freeze({
     psalm: 'Have mercy upon me, O God, according to thy lovingkindness.',
     psalmSource: 'psalm 51',
     footer: 'Your path begins on the coast, at a windmill above the breakwater.',
-    embark: 'EMBARK…',
     embarkHint: 'begin the pilgrimage',
     embarkLabel: 'Embark on your journey',
     plateLabel: 'Dante alone in a dark wood, a lion on the rock before him, an engraving by Gustave Doré',
@@ -57,9 +56,6 @@ export const TITLE_TIMING = Object.freeze({
     /** EMBARK → menu. */
     menuMs: 650,
 });
-
-/** How far the plate dims under the menu (its opacity there). */
-export const MENU_PLATE_OPACITY = 0.3;
 
 export interface Viewport {
     width: number;

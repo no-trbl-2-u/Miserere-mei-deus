@@ -6,7 +6,9 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { render, fireEvent, act } from '@testing-library/react-native';
+import { EMBARK_PRESSED, EmbarkButton } from '../EmbarkButton';
 import { TitleScreen } from '../TitleScreen';
+import { EMBARK_SCROLL, EMBARK_SCROLL_ASPECT } from '@/assets/images/title';
 import { createAppStore } from '@/state/store';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { TITLE_COPY, TITLE_TIMING } from '@/state/presenters/title.engine';
@@ -57,10 +59,9 @@ describe('TitleScreen', () => {
    * to describe what EMBARK does, not give map instructions.
    */
   it('labels EMBARK with what it does', () => {
-    const { getByRole, getByText, queryByText } = mount();
+    const { getByRole, queryByText } = mount();
     expect(getByRole('button').props.accessibilityLabel).toBe(TITLE_COPY.embarkLabel);
-    expect(getByText(TITLE_COPY.embark)).toBeTruthy();
-    expect(getByText(TITLE_COPY.embarkHint)).toBeTruthy();
+    expect(getByRole('button').props.accessibilityHint).toBe(TITLE_COPY.embarkHint);
     expect(queryByText(/glowing node/i)).toBeNull();
   });
 
@@ -124,12 +125,30 @@ describe('TitleScreen', () => {
     expect(flat('title-menu')).toMatchObject({ left: plate.left, width: plate.width });
   });
 
-  it('keeps the EMBARK label in the button face style', () => {
-    const { getByText } = mount();
-    expect(getByText(TITLE_COPY.embark).props.style).toMatchObject({
-      fontFamily: expect.any(String),
-      fontSize: 20,
-      color: expect.any(String),
-    });
+  /** Plan 121.3: EMBARK is T's parchment "Embark" scroll, not a text button. */
+  it('draws EMBARK as the Embark scroll at its aspect, ringed on focus', () => {
+    const { getByTestId, queryByTestId, queryByText } = mount();
+    const scroll = getByTestId('title-embark-scroll');
+    expect([scroll.props.source].flat()).toEqual([EMBARK_SCROLL]);
+    const art = StyleSheet.flatten(scroll.props.style);
+    expect(art.width).toBe('100%');
+    expect(art.aspectRatio).toBeCloseTo(EMBARK_SCROLL_ASPECT);
+    expect(queryByText(/EMBARK/)).toBeNull();
+    playIntro();
+    const button = getByTestId('title-embark');
+    expect(queryByTestId('title-embark-focus')).toBeNull();
+    fireEvent(button, 'focus');
+    expect(getByTestId('title-embark-focus')).toBeTruthy();
+    fireEvent(button, 'blur');
+    expect(queryByTestId('title-embark-focus')).toBeNull();
+  });
+
+  it('dips the Embark scroll while it is held', () => {
+    const { getByTestId } = render(
+      <EmbarkButton onPress={jest.fn()} accessibilityLabel={TITLE_COPY.embarkLabel} testID="embark" testOnlyPressed />,
+    );
+    const held = StyleSheet.flatten(getByTestId('embark').props.style);
+    expect(held.opacity).toBe(EMBARK_PRESSED.opacity);
+    expect(held.transform).toEqual([{ scale: EMBARK_PRESSED.scale }]);
   });
 });

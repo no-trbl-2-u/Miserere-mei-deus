@@ -8,11 +8,10 @@
 //
 // What it measures is what the player sees, not the file: the plate is
 // sampled where the text sits (from `titleLayout` and `titleWordmarkFrames`,
-// imported), passed through the `axmTitleSides` then `axmTitleFoot` scrims,
-// then faded to the phase's opacity over the ground colour. The mean
-// luminance of that region is compared with the text colour as a contrast
-// ratio, at the `title` phase (plate at full) and the `menu` phase (plate at
-// MENU_PLATE_OPACITY): four figures in all.
+// imported), with nothing drawn over the plate (T, 2026-11-04: "no
+// overlays"), so the plate's own pixels. The mean luminance of that region is
+// compared with the text colour as a contrast ratio: two figures, the
+// wordmark and the psalm line.
 //
 // Baseline-and-arm. The thresholds and the baseline live in
 // `docs/reports/title-plate-legibility.md`, not here. A plate whose bytes
@@ -27,7 +26,6 @@ import { fileURLToPath } from 'node:url'
 
 import { DEFAULT_THEME_ID, paletteFor } from '../theme/palette.ts'
 import {
-  MENU_PLATE_OPACITY,
   WORDMARK_EM_WIDTH,
   titleLayout,
   titleWordmarkFrames,
@@ -46,26 +44,14 @@ export const REPORT_FILE = 'docs/reports/title-plate-legibility.md'
  */
 export const REFERENCE_VIEWPORT = Object.freeze({ name: 'desktop 1280x800', width: 1280, height: 800, topInset: 0 })
 
-/** The phases measured, and the plate's opacity in each. */
-export const PHASES = Object.freeze({ title: 1, menu: MENU_PLATE_OPACITY })
-
-/**
- * The `axmTitleFoot` and `axmTitleSides` gradient stops in
- * `components/TitleScreen.tsx`, as [offset, opacity of the ground colour].
- * The component's JSX cannot be imported into node, so these are mirrored and
- * `title-plate-legibility.test.mjs` pins them to the component's source.
- */
-export const FOOT_STOPS = Object.freeze([[0.55, 0], [0.72, 0.35], [0.84, 0.78], [0.93, 1], [1, 1]])
-export function sideStops(sideFeather) {
-  const edge = sideFeather ? 1 : 0
-  return [[0, edge], [0.12, 0], [0.88, 0], [1, edge]]
-}
+/** The phase measured, and the plate's opacity in it (the plate shows undimmed in every phase). */
+export const PHASES = Object.freeze({ title: 1 })
 
 /**
  * The style numbers that place the psalm line, mirrored from
  * `components/TitleScreen.tsx` (pinned by the test). The line is laid out by
  * flex from the window's foot, so its box is not in `title.engine.ts`: it is
- * rebuilt here from the stack beneath it (footer, EMBARK, the gaps).
+ * rebuilt here from the stack beneath it (footer, the Embark scroll, the gaps).
  */
 export const TITLE_STACK = Object.freeze({
   paddingBottom: 48,
@@ -77,10 +63,9 @@ export const TITLE_STACK = Object.freeze({
   footerFontSize: 12,
   footerLineHeight: 17,
   footerMaxWidth: 320,
-  embarkPaddingVertical: 16,
-  embarkFontSize: 20,
-  embarkHintFontSize: 11,
-  embarkHintMarginTop: 4,
+  embarkMaxWidth: 320,
+  /** Width over height of the Embark scroll (`EMBARK_SCROLL_ASPECT`). */
+  embarkAspect: 640 / 176,
 })
 
 /**
@@ -116,8 +101,7 @@ export function textRegions(viewport, copy) {
   const blockWidth = Math.min(s.psalmMaxWidth, viewport.width - 2 * s.paddingHorizontal)
   const footerWidth = Math.min(s.footerMaxWidth, viewport.width - 2 * s.paddingHorizontal)
   const footerHeight = wrappedLines(copy.footer, s.footerFontSize, footerWidth) * s.footerLineHeight
-  const embarkHeight = 2 + 2 * s.embarkPaddingVertical + s.embarkFontSize * DEFAULT_LINE_HEIGHT
-    + s.embarkHintMarginTop + s.embarkHintFontSize * DEFAULT_LINE_HEIGHT
+  const embarkHeight = Math.min(s.embarkMaxWidth, viewport.width - 2 * s.paddingHorizontal) / s.embarkAspect
   const psalmLines = wrappedLines(copy.psalm, s.psalmFontSize, blockWidth)
   const psalmHeight = psalmLines * s.psalmLineHeight
   const psalmSourceHeight = 6 + 9 * DEFAULT_LINE_HEIGHT
@@ -149,30 +133,14 @@ export function contrastRatio(a, b) {
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
 }
 
-/** A gradient's opacity at `t` in 0..1, linear between stops, flat outside them. */
-export function stopOpacity(stops, t) {
-  if (t <= stops[0][0]) return stops[0][1]
-  for (let i = 1; i < stops.length; i++) {
-    const [o1, a1] = stops[i]
-    if (t <= o1) {
-      const [o0, a0] = stops[i - 1]
-      return o1 === o0 ? a1 : a0 + ((a1 - a0) * (t - o0)) / (o1 - o0)
-    }
-  }
-  return stops[stops.length - 1][1]
-}
-
 const mix = (under, over, alpha) => under.map((u, i) => u + (over[i] - u) * alpha)
 
 /**
- * One plate pixel as the player sees it: the sides scrim, then the foot
- * scrim (the component's draw order), then the plate's opacity over the
- * ground. `u`, `v` are the point's position across and down the plate box.
+ * One plate pixel as the player sees it: the plate's opacity over the ground.
+ * Nothing is drawn over the plate, so at full opacity this is the pixel itself.
  */
-export function compositePixel(rgb, { u, v, sideFeather, opacity, bg }) {
-  let c = mix(rgb, bg, stopOpacity(sideStops(sideFeather), u))
-  c = mix(c, bg, stopOpacity(FOOT_STOPS, v))
-  return mix(bg, c, opacity)
+export function compositePixel(rgb, { opacity, bg }) {
+  return mix(bg, rgb, opacity)
 }
 
 /**
@@ -182,7 +150,6 @@ export function compositePixel(rgb, { u, v, sideFeather, opacity, bg }) {
  */
 export function regionLuminance(plate, region, { layout, opacity, bg, step = 1 }) {
   const box = layout.plate
-  const sideFeather = box.left > 0
   const scale = Math.max(box.width / plate.width, box.height / plate.height)
   const offX = (box.width - plate.width * scale) / 2
   const offY = (box.height - plate.height * scale) / 2
@@ -204,7 +171,7 @@ export function regionLuminance(plate, region, { layout, opacity, bg, step = 1 }
       const rgb = plate.channels >= 3
         ? [plate.data[i] / 255, plate.data[i + 1] / 255, plate.data[i + 2] / 255]
         : [plate.data[i] / 255, plate.data[i] / 255, plate.data[i] / 255]
-      sum += luminance(compositePixel(rgb, { u, v, sideFeather, opacity, bg }))
+      sum += luminance(compositePixel(rgb, { opacity, bg }))
     }
   }
   return n ? sum / n : bgLum
@@ -213,7 +180,7 @@ export function regionLuminance(plate, region, { layout, opacity, bg, step = 1 }
 const round2 = (x) => Math.round(x * 100) / 100
 
 /**
- * The four figures for a plate: wordmark and psalm line, at each phase, as
+ * The two figures for a plate: wordmark and psalm line, as
  * contrast ratios against the text colour (both are `parchment`).
  */
 export function measurePlate(plate, { viewport = REFERENCE_VIEWPORT, palette = paletteFor(DEFAULT_THEME_ID), copy } = {}) {
@@ -266,10 +233,10 @@ export function writeBaseline(text, baseline) {
     '<!-- legibility:baseline:begin -->',
     `Plate \`${baseline.plate}\` at ${baseline.viewport.name} (${baseline.viewport.width}x${baseline.viewport.height}), theme \`${baseline.theme}\`:`,
     '',
-    '| Text | `title` phase (plate at 1) | `menu` phase (plate at ' + MENU_PLATE_OPACITY + ') |',
-    '| --- | --- | --- |',
-    `| Wordmark | ${f['wordmark.title']}:1 | ${f['wordmark.menu']}:1 |`,
-    `| Psalm line | ${f['psalm.title']}:1 | ${f['psalm.menu']}:1 |`,
+    '| Text | Contrast (plate undimmed, no overlay) |',
+    '| --- | --- |',
+    `| Wordmark | ${f['wordmark.title']}:1 |`,
+    `| Psalm line | ${f['psalm.title']}:1 |`,
     '',
     '```json legibility-baseline',
     JSON.stringify(baseline, null, 2),

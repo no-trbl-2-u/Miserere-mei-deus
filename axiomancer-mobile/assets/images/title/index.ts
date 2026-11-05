@@ -13,3 +13,13 @@ export const TITLE_PLATE = require('./lion-in-the-wood.webp');
 
 /** Width over height of `TITLE_PLATE`, for layout before the image loads. */
 export const TITLE_PLATE_ASPECT = 1308 / 1600;
+
+/**
+ * T's parchment "Embark" scroll, the title screen's EMBARK button (plan
+ * 121.3): cut from T's sheet of button plates by `scripts/cut-embark-button.mjs`
+ * (record in `provenance.json`), 640x176 with its own torn-edge alpha.
+ */
+export const EMBARK_SCROLL = require('./embark-scroll.webp');
+
+/** Width over height of `EMBARK_SCROLL`, so the button can size before it loads. */
+export const EMBARK_SCROLL_ASPECT = 640 / 176;
