@@ -77,7 +77,7 @@ export const TITLE_STACK = Object.freeze({
   footerFontSize: 12,
   footerLineHeight: 17,
   footerMaxWidth: 320,
-  embarkPaddingVertical: 16,
+  embarkPaddingVertical: 20,
   embarkFontSize: 20,
   embarkHintFontSize: 11,
   embarkHintMarginTop: 4,
