@@ -240,7 +240,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CF1f — the three long PAID lines reworded to fit the small face; T reads and merges its rules-change PR; date not set (T picks it).
 - CF1h — the opened card drops the duration line, the meta strip and the system notes (spec 137); no dated T act waits on it
 - CF1i — the Rules Glossary button in Settings (spec 137); no dated T act waits on it
-- SM2h — the lane bots never spare and guard when hit (spec 135); a tuning tool, no dated T act waits on it
+- SM2h — the lane bots guard when hit (spec 135); a tuning tool, no dated T act waits on it
 - SM2i — the bots use the anvil (spec 135); a tuning tool, no dated T act waits on it
 - SM2j — tuning flags on the sim (spec 135); a tuning tool, no dated T act waits on it
 - SM2k — boss damage and a batch table in the sim output (spec 135); a tuning tool, no dated T act waits on it

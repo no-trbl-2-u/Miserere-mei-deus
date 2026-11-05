@@ -78,11 +78,14 @@ Four phases: OV1a S, OV1b M, OV1c S (attended), OV1d S (attended).
 
 #### OV1d (chunk 126.4)
 
-Measure: `docs/reports/vault-bridge.md` records A9 and A10 passing with
-timestamps.
+Left to do: A11 only (the desktop-off conflict test). A9, A10 and A12 pass in
+`docs/reports/vault-bridge.md`.
 
-Scope: run A9 to A12 with T holding the phone; write the report. Verify gate:
-the report.
+Measure: `docs/reports/vault-bridge.md` records A11 passing with a timestamp,
+with desktop Obsidian closed.
+
+Scope: run A11 with T holding the phone and the desktop closed; add its row to
+the report. Verify gate: the report.
 
 ## Contracts
 
@@ -90,15 +93,9 @@ None beyond Design.
 
 ## Acceptance
 
-- **A9** A note created on the phone appears in `git log origin/main` of the
-  vault repo within 10 minutes with no manual step.
-- **A10** A commit pushed by a Claude session appears on the phone within 10
-  minutes with no manual step on the desktop.
 - **A11** With desktop Obsidian closed, a phone edit and a Claude push to the
   same note produce a visible conflict on the next desktop pull; neither edit
   is lost.
-- **A12** Obsidian Sync's version history lists no `.git/` file, and the vault
-  repo's Actions tab lists zero runs.
 
 ## Open questions
 
@@ -106,6 +103,6 @@ None beyond Design.
 
 ## Chunks
 
-Measure: 4 open · 8 closed · next A13
+Measure: 1 open · 11 closed · next A13
 
-- [ ] **126.4** The round trip, proved (attended) · S · closes A9, A10, A11, A12 · needs — · alias: OV1d
+- [ ] **126.4** The conflict test, proved (attended) · S · closes A11 · needs — · alias: OV1d

@@ -46,9 +46,8 @@
     unspent or while a quest has business there. `World/types.ts` `holdRoadsUntilSettled`: the nodes (elites, gates)
     that hold the road on. `World/breakwater-chapter.questline.ts`: the chapter's main questline, as data.
   - `run-policy.wanderer.ts` fights `COMBAT_SIM_POLICIES.greedy`, whose `signatureKinds` include `mercy` and whose
-    `mercyChoice` is `spare`. Since BUG1j (#1242, `Enemy/befriend.ts`) every foe can be befriended and a befriend pays
-    no XP and no card, and the Chosen's Suppliant's Ring opens mercy on every foe: a bot that spares stays at level 1
-    and dies in two or three fights. `measured-truth` plays `greedy` from `combat.sim-policies.ts` directly, never the
+    `mercyCheck` is `spare` (spec 144's mercy check). A bot that spares at the check earns no XP and no card, so it
+    stays at level 1 and dies in two or three fights. `measured-truth` plays `greedy` from `combat.sim-policies.ts` directly, never the
     wanderer.
   - `axiomancer-mobile/sim/run-driver.ts` `playRun` throws `RunStuckError` (`run-stuck.ts`: map, node, step, screen)
     on a step with no legal move or past the step cap, and `run-fight.ts` throws `FightStuckError`; `sim-runs.ts`
@@ -136,7 +135,7 @@ every `human` row.
     (the pool is already the character's lanes, D108) and the elite upgrade when it improves a card; wear every item
     they can; raise the character's highest stat; fight with the player witness.
 - **The player witness** (from the first draft's wanderer idea; confirmed as fitting by T): the greedy witness with
-  the mercy signature off and `mercyChoice: 'exploit'`, built in `run-sim/` (`PLAYER_WITNESS`). It kills every foe, so
+  the mercy signature off and `mercyCheck: 'finish'`, built in `run-sim/` (`PLAYER_WITNESS`). It kills every foe, so
   a persona earns XP and drafts. The wanderer fights with it too. `COMBAT_SIM_POLICIES.greedy` is untouched, because
   `measured-truth` plays it (Follow-ups).
 - **What a road says** (new context, filled by the driver from data): `RunRoadOption` gains `elite` (the node's pool
@@ -158,7 +157,7 @@ every `human` row.
   lands. The app and the driver post the same events, since the driver runs the app's store actions.
 - **The quest's XP is the quest's** (Confirmed by T (2026-11-01)): `recordFightSettled` logs `xp-gained` `from:
   'fight'` for the report's `xpGained` (capped at the delta) and the rest, when positive, as `from: 'quest'`; a
-  befriend that completes a quest logs only the quest's. It touches the same file as the run-log contract work, so it
+  spared foe that completes a quest logs only the quest's. It touches the same file as the run-log contract work, so it
   rides that chunk.
 - **Coverage is counted on the server** (BE2: raw events, stats on the server). A `coverage` report counts, per source
   and policy at a build, the nodes entered and resolved, the quest steps taken, the enemies fought (from `fights`) by
@@ -249,7 +248,7 @@ every `human` row.
   `chapter1Content()` lists every Breakwater node, quest, foe, hazard and item source exactly once and its gates in
   story order; each persona's seams over fixture contexts; `PLAYER_WITNESS` never spares and `greedy` is unchanged;
   the no-id guard over the persona files.
-- Mobile: `run-log.test.ts` (a quest-completing kill logs `fight` then `quest` XP; a plain kill one; a befriend
+- Mobile: `run-log.test.ts` (a quest-completing kill logs `fight` then `quest` XP; a plain kill one; a spare
   completing a quest only `quest`; each quest action logs a `quest-step`; `node-resolved` carries level and VITAE);
   a persona behaviour test over 10 seeds each (the explorer never leaves with reachable work; the rusher resolves no
   node that is neither story nor on its way and resolves fewer nodes than the explorer on each seed; the reckless
@@ -282,8 +281,8 @@ Proof: <the chunk's proof and its result>.
 - **The Merciful lane bot kills to grow** (the first draft's chunk, dropped by T, 2026-11-01): its lane-lead check in
   `axiomancer-mobile/sim/run-archetypes.test.ts` stays `it.failing` until a later plot, or until the game lets a
   sparing run build.
-- **The greedy witness stops sparing**: it is what `measured-truth` plays, so changing it moves measured truth and
-  needs its own plot.
+- **The greedy witness**: it is what `measured-truth` plays and it already finishes at the mercy check, so changing it
+  moves measured truth and needs its own plot.
 - **Cards in the nightly report**, if T wants them back: a `card-vs-bot` section at the newest build holding T's and
   the bots' rows.
 - **The sim report and the filing on D119's PR path** once NX1e changes how generated data lands.
@@ -360,7 +359,7 @@ Proof: <the chunk's proof and its result>.
 
 T spent 2026-11-02 running `sim:run` as The Chosen to tune enemies against cards and stats, patching each experiment
 in by hand from scratch files. T then picked what to keep ("the no stat elementist relic / the guard logic / no
-befriend / And the anvil logic") and accepted three extras ("Do it"). Nothing from that session is in the repo. These
+sparing / And the anvil logic") and accepted three extras ("Do it"). Nothing from that session is in the repo. These
 are measurement tools: nothing here grades a number, and no engine constant or game data file moves.
 
 **What the session measured** (boss at level 8, 10 seeds per bot, clears of 50; readings, not bars): baseline 24;
@@ -371,9 +370,9 @@ keeping the starting weapon barely moved one (24 to 22): neither is built.
 
 **SM2h, how the bots fight.**
 
-- **No bot spares.** Only the Merciful lane bot still does; `laneFightPolicy('merciful')` drops the mercy signature
-  (`KILLER_SIGNATURES`) and takes `mercyChoice: 'exploit'`, keeping its mercy lines first. T is taking sparing out of
-  the game in a separate plot, and this change stands either way.
+- **The Merciful lane bot keeps sparing.** Dropped from this chunk (150.2): spec 144's mercy check made sparing a
+  real choice, and `laneFightPolicy('merciful')` has `mercyCheck: 'spare'` on purpose. The Wanderer and the personas
+  finish at the check through `PLAYER_WITNESS`.
 - **Guard when hit.** The Defender's rule (`card.verbClass === 'defend'` or a `guard`/`holdGuard` verb, while
   `foeMeansToHit`, scores `BAND_FIRST`) becomes one shared helper, and every fighter but the Wanderer uses it: the
   Blood Price, Merciful and Elementalist rankings, and the four personas. A ranking's `-Infinity` refusals stay
@@ -471,8 +470,6 @@ no exit code depends on it.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A18** No lane bot spares: `laneFightPolicy('merciful')` has `mercyChoice: 'exploit'` and no mercy signature,
-  and a Merciful batch through the driver spares no foe. Its rule test and `run-archetypes.test.ts` say so.
 - **A19** One shared helper holds the guard-when-hit rule; the Defender, Blood Price, Merciful and Elementalist
   rankings and the four personas use it, seam tests over a hitting and a non-hitting foe cover each, and a card ranked
   `-Infinity` stays `-Infinity`. The Wanderer still fights with `PLAYER_WITNESS`, and `PLAYER_WITNESS` and
@@ -498,12 +495,12 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 12 open · 10 closed · next A23
+Measure: 11 open · 11 closed · next A23
 
 - [ ] **135.3** The four personas · M · closes A7, A8 · needs — · alias: SM2c
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs 135.3 · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.7** The lane bots never spare, and guard when hit · S · closes A18, A19 · needs 135.3 · alias: SM2h
+- [ ] **135.7** The lane bots guard when hit · S · closes A19 · needs 135.3 · alias: SM2h
 - [ ] **135.8** The bots use the anvil · M · closes A20 · needs 135.3 · alias: SM2i
 - [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.7, 135.8 · alias: SM2j
 - [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k
