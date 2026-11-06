@@ -253,7 +253,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - B5 — blocked: owner-led; the card-creator workflow is v0.5 stretch, in only if a window has time left.
 - B6 — blocked: owner-led; card sessions are v0.5 stretch, in only if a window has time left.
 - B7 — blocked: owner-led; after v0.5 (The milestone).
-- UX1g — the three Deck directions B7 starts from (spec 153); no T act waits on it before B7, after v0.5.
+- UX1g — the three Deck directions B7 starts from (spec 153); no T act waits on it before B7, after Act 1 complete.
 - B8 — blocked: owner-led; after v0.5 (The milestone).
 - B9 — blocked: owner-led; after v0.5 (The milestone).
 - B10 — blocked: owner-led; after v0.5 (The milestone).

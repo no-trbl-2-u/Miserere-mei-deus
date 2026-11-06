@@ -38,7 +38,7 @@
   - `state/presenters/inventory.engine.ts` sums it (`BURDEN_MAX = 50`).
   - The Satchel draws it as "BURDEN · STONE" with a tooltip about going over the cap, and the section header reads "SATCHEL · PURSE · BURDEN".
   - No rule in `axiomancer-mechanics` reads it: nothing slows, blocks or costs the player for carrying.
-- **Deck.** Chunk 134.7 (B7), "Deck tab UI revamp (owner-led)", is held for T's own session after v0.5 (`plan/deadlines.md`).
+- **Deck.** Chunk 134.7 (B7), "Deck tab UI revamp (owner-led)", is held for T's own session after Act 1 is complete (`plan/deadlines.md`).
 
 ## Design
 
@@ -82,7 +82,7 @@
 1. When should a quest row hide its counter? Default: when the quest has a single step (it could only read 0/1 or 1/1). Or: whenever nothing is done yet (any 0/N); or never show a counter. [T to confirm #1]
 2. Where do the phase-ledger marks go? These are the circles: one per phase, O cleared, X overwhelmed. Default: off the board entirely, since the rail's "PHASE 1/8" keeps the count. Or: a small row under the enemy's name rail. [T to confirm #2]
 3. What happens to the hazard deck screen with its link? Default: the route and screen go too, since nothing else reaches it. Or: keep the screen and reach it from the dev menu. [T to confirm #3]
-4. When should the Deck directions be mocked? Default: table order now, ready for B7 after v0.5. Or: pull B7 itself ahead of v0.5. [T to confirm #4]
+4. When should the Deck directions be mocked? Default: table order now, ready for B7 after Act 1 is complete. Or: pull B7 itself ahead of it. [T to confirm #4]
 
 ## Chunks
 
