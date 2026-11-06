@@ -19,11 +19,17 @@ const LOOK_VALUES: readonly Look[] = ['normal', 'brass', 'vellum'];
 const of = (look: Look) => PLACES.filter((p) => LOOKS[p] === look);
 
 describe('the look table (A1)', () => {
+    // Containment, not equality: round 2 of the mixer (spec 154) adds its own
+    // places to the same table, and that must not have to edit round 1's
+    // pinned record. What A1 asks is that no place of round 1 goes missing.
     it('names all 44 places, in LOOKS and in PLACE_PIECES', () => {
         expect(PLACES).toHaveLength(44);
         expect(new Set(PLACES).size).toBe(44);
-        expect(Object.keys(LOOKS).sort()).toEqual([...PLACES].sort());
-        expect(Object.keys(PLACE_PIECES).sort()).toEqual([...PLACES].sort());
+        const missingLook = PLACES.filter((p) => LOOKS[p] === undefined);
+        const missingPieces = PLACES.filter((p) => PLACE_PIECES[p] === undefined);
+        expect(missingLook).toEqual([]);
+        expect(missingPieces).toEqual([]);
+        expect(Object.keys(LOOKS).sort()).toEqual(Object.keys(PLACE_PIECES).sort());
     });
 
     it('gives every place a valid look', () => {
@@ -52,7 +58,9 @@ describe('the look table (A1)', () => {
 });
 
 describe('the bundle the table names (A1)', () => {
-    const named = new Set<KitPiece>(PLACES.flatMap((p) => [...PLACE_PIECES[p]]));
+    // Every place in the table, not only round 1's, so a piece round 2 converts
+    // for a place of its own does not read as dead weight here.
+    const named = new Set<KitPiece>(Object.values(PLACE_PIECES).flatMap((pieces) => [...pieces]));
 
     it('names only pieces that are keys of KIT', () => {
         const missing = [...named].filter((piece) => !(piece in KIT));
