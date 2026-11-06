@@ -1590,6 +1590,8 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
                 tier: 'modest',
                 currency: result.event.currency,
                 description: result.event.description,
+                // The node's two action lines, authored or `[content]` (spec 154, A7).
+                actions: result.event.actions,
             });
             return true;
         }

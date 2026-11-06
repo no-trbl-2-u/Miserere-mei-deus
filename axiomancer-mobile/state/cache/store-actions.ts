@@ -12,7 +12,7 @@
  * `RestChoiceSession`.
  */
 
-import type { Character, GameState, Item } from '@mechanics';
+import type { Character, GameState, Item, LootCacheActionLines } from '@mechanics';
 
 import {
     addRewardCard,
@@ -56,6 +56,8 @@ export interface BeginLootCacheChoiceOptions {
     currency?: number;
     /** The authored MapEvent one-liner. */
     description?: string | null;
+    /** The cache's two action lines (spec 154, A7). Absent falls back to the `[content]` placeholder. */
+    actions?: LootCacheActionLines | null;
     /** Reward depth for the `item` offer's roll — caller derives from the current map. */
     tier?: CacheLootTier;
     seed?: number;
@@ -77,6 +79,7 @@ export function beginLootCacheChoiceAction(store: AppStore, options: BeginLootCa
         itemCandidates,
         currencyCandidate: options.currency ?? 0,
         description: options.description,
+        actions: options.actions,
     }));
     return true;
 }

@@ -551,6 +551,9 @@ export type { RestShelter } from './World';
 export {
     DEFAULT_REST_SHELTER, isInnShelter,
 } from './World';
+// A cache's two action lines: what you do for each choice, never the reward (spec 154, A7).
+export type { LootCacheActionLines, LootCachePayload } from './World';
+export { CACHE_ACTION_PLACEHOLDER, PLACEHOLDER_CACHE_ACTIONS } from './World';
 // The Labyrinth (THE APORIA). Additive surface for the mobile
 // dev-menu entry + labyrinth presenters.
 export {

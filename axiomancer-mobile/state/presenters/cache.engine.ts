@@ -5,23 +5,20 @@
  *
  * Both offers are always enabled — unlike `RestChoiceOffer`, nothing
  * here can be unaffordable or capped, so there is no `disabledReason` to
- * shape. The card offer carries the rolled candidate's face (the same
- * `rewardCardVMs` the combat reward draws), so the player sees the card
- * before choosing it. The goods offer carries the rolled goods as the same
- * chips the outcome ledger prints, so neither side of the one-way pick is
- * blind (CRITIQUE pass 108).
+ * shape.
+ *
+ * Each offer carries its ACTION line — what you do on the adventure to earn
+ * that side — and nothing about the reward (spec 154, A7): no card face, no
+ * goods chips, no generic "straight into the deck" blurb. The line is the
+ * cache node's own data; a cache T has not written yet carries the
+ * `[content]` placeholder. The rewards are unchanged and still paid, and the
+ * outcome ledger after the pick still names them.
  */
 
-import { getCardById } from '@mechanics';
+import { CACHE_ACTION_PLACEHOLDER, getCardById } from '@mechanics';
 import type { LootCacheChoiceOfferId, LootCacheChoiceSession } from '@mechanics';
 import type { AppStoreState } from '@/state/store';
-import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
-import {
-    CACHE_CHOICE_OFFER_DESC,
-    CACHE_CHOICE_OFFER_LABEL,
-    cacheOutcomeCurrencyChip,
-    cacheOutcomeItemChip,
-} from './cache.copy';
+import { CACHE_CHOICE_OFFER_LABEL } from './cache.copy';
 
 // ---------------------------------------------------------------------------
 // VM shapes
@@ -30,11 +27,8 @@ import {
 export interface CacheChoiceOfferVM {
     id: LootCacheChoiceOfferId;
     label: string;
-    desc: string;
-    /** The rolled card's face, scaled to the player's stats. Set iff `id === 'card'` and the id resolves. */
-    card: CombatCardVM | null;
-    /** The rolled goods as ledger chips ("+ HEALING POTION", "+10 SHILLINGS"). Empty unless `id === 'item'`. */
-    goods: readonly string[];
+    /** What you do to earn this side, from the node's data; `[content]` when unwritten. */
+    action: string;
 }
 
 export interface CacheChoiceOutcomeVM {
@@ -53,7 +47,7 @@ export interface CacheChoiceVM {
     phase: LootCacheChoiceSession['phase'] | 'none';
     offers: readonly CacheChoiceOfferVM[];
     outcome: CacheChoiceOutcomeVM | null;
-    /** The authored MapEvent one-liner; `null` falls back to the placeholder intro. */
+    /** The authored MapEvent one-liner — the cache's flavour line; `null` when the node authored none. */
     description: string | null;
 }
 
@@ -63,21 +57,12 @@ export interface CacheChoiceVM {
 
 const OFFER_IDS: readonly LootCacheChoiceOfferId[] = Object.freeze(['card', 'item']);
 
-type PlayerStats = Parameters<typeof rewardCardVMs>[1];
-
-/** The chips the outcome ledger prints for the goods, built before the pick from the same candidates. */
-function goodsChips(s: LootCacheChoiceSession): readonly string[] {
-    const chips = s.itemCandidates.map(i => cacheOutcomeItemChip(i.name));
-    return s.currencyCandidate > 0 ? [...chips, cacheOutcomeCurrencyChip(s.currencyCandidate)] : chips;
-}
-
-function offersFor(s: LootCacheChoiceSession, stats: PlayerStats): readonly CacheChoiceOfferVM[] {
+function offersFor(s: LootCacheChoiceSession): readonly CacheChoiceOfferVM[] {
     return OFFER_IDS.map(id => ({
         id,
         label: CACHE_CHOICE_OFFER_LABEL[id],
-        desc: CACHE_CHOICE_OFFER_DESC[id],
-        card: id === 'card' ? (rewardCardVMs([s.cardCandidate], stats)[0] ?? null) : null,
-        goods: id === 'item' ? goodsChips(s) : [],
+        // A session persisted before spec 154 carries no lines; the placeholder stands in.
+        action: s.actions?.[id]?.trim() || CACHE_ACTION_PLACEHOLDER,
     }));
 }
 
@@ -93,11 +78,7 @@ export function selectHasActiveCache(state: Pick<AppStoreState, 'cache'>): boole
     return state.cache?.session != null;
 }
 
-/** `stats` are the player's base stats, so the card face's numbers match the combat reward's. */
-export function selectCacheVM(
-    state: Pick<AppStoreState, 'cache'>,
-    stats?: PlayerStats,
-): CacheChoiceVM {
+export function selectCacheVM(state: Pick<AppStoreState, 'cache'>): CacheChoiceVM {
     const s = state.cache?.session;
     if (!s) return EMPTY_VM;
 
@@ -112,7 +93,7 @@ export function selectCacheVM(
     return {
         active: true,
         phase: s.phase,
-        offers: offersFor(s, stats),
+        offers: offersFor(s),
         outcome,
         description: s.description,
     };

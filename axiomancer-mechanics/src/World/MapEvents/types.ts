@@ -137,11 +137,33 @@ export interface HazardPayload {
     description?: string;
 }
 
+/**
+ * The two action lines a cache carries, one per choice: what you DO on the
+ * adventure to earn that side, never what you get (T, spec 154). Plain data
+ * keyed by the choice: `card` is TAKE A CARD, `item` is TAKE THE GOODS.
+ * `CACHE_ACTION_PLACEHOLDER` stands in until T writes a cache's lines.
+ */
+export interface LootCacheActionLines {
+    card: string;
+    item: string;
+}
+
+/** The only legal stand-in for an unwritten cache action line (the `[content]` rule). */
+export const CACHE_ACTION_PLACEHOLDER = '[content]';
+
+/** Both action lines unwritten. Lives here, not in `content.ts`, so importing it registers no pools. */
+export const PLACEHOLDER_CACHE_ACTIONS: LootCacheActionLines = Object.freeze({
+    card: CACHE_ACTION_PLACEHOLDER,
+    item: CACHE_ACTION_PLACEHOLDER,
+});
+
 export interface LootCachePayload {
     kind: 'loot-cache';
     items?: readonly Item[];
     currency?: number;
     description?: string;
+    /** What you do for each choice. Absent falls back to the placeholder on both. */
+    actions?: LootCacheActionLines;
 }
 
 /**
@@ -289,7 +311,7 @@ export type ResolvedEvent =
     }
     | { kind: 'cutscene';    lines: readonly string[] }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
-    | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string }
+    | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string; actions?: LootCacheActionLines }
     // The OFFER: the state has not moved. `open` is false while the
     // payload's `opensAfter` node is unspent (the way is shut). Taking the
     // trip is `takeTravel`'s.

@@ -51,6 +51,7 @@ function setActiveSession(store: AppStore) {
         itemCandidates: [],
         currencyCandidate: 0,
         description: null,
+        actions: { card: '[content]', item: '[content]' },
         outcome: null,
         seed: 1,
     };

@@ -468,7 +468,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/cache-card-preview.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/CacheGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/cache-action-lines.screen.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -3510,128 +3510,14 @@
     {
       "kind": "coupling",
       "from": "route:cache",
-      "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/combat/keywords.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Effects",
-      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Effects",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Enemy",
-      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
     },
     {
       "kind": "coupling",
       "from": "route:cache",
-      "to": "area:Game",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:Log",
-      "file": "axiomancer-mobile/state/settings.ts"
     },
     {
       "kind": "coupling",
@@ -3644,12 +3530,6 @@
       "from": "route:cache",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:cache",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",

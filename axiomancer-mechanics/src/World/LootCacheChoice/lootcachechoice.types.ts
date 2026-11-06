@@ -13,6 +13,7 @@
 
 import type { SeedInput } from '../seed';
 import type { Item } from '../../Items/types';
+import type { LootCacheActionLines } from '../MapEvents/types';
 
 /** The two offers on the table. Exactly one may be committed; both are always live. */
 export type LootCacheChoiceOfferId = 'card' | 'item';
@@ -43,6 +44,11 @@ export interface LootCacheChoiceSession {
     currencyCandidate: number;
     /** The authored MapEvent one-liner, preferred over a placeholder intro when present. */
     description: string | null;
+    /**
+     * What you DO for each choice, never what you get (spec 154, A7). Always
+     * both lines: an authored cache's own, else `CACHE_ACTION_PLACEHOLDER`.
+     */
+    actions: LootCacheActionLines;
     outcome: LootCacheChoiceOutcome | null;
     seed: SeedInput;
 }

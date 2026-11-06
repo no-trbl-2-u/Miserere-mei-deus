@@ -3,8 +3,13 @@
  *
  * One irreversible choice of two: TAKE A CARD (a rolled reward card) or
  * TAKE THE GOODS (a tier-scaled consumable haul + the node's currency).
- * Both offers show what they hold before the pick: the card's face, and
- * the goods as the outcome ledger's chips.
+ *
+ * The screen says what you DO, never what you get (spec 154, A7): the
+ * cache's title, its flavour line, and the two choices, each under its own
+ * action line from the node's data. No eyebrow, no "node is spent" line, no
+ * card face, no goods list. The rewards are unchanged and still paid; the
+ * outcome ledger after the pick still names them.
+ *
  * `resolveMapEvent` consumes the node on entry,
  * before any choice — there is no back-out: no header back, no
  * swipe-dismiss (`gestureEnabled: false` in the root layout), no Android
@@ -18,7 +23,6 @@ import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
-import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { mapBackdropFor } from '@/state/exploration-maps';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
@@ -26,8 +30,6 @@ import {
     type CacheChoiceOfferVM,
 } from '@/state/presenters/cache.engine';
 import {
-    CACHE_CHOICE_EYEBROW,
-    CACHE_CHOICE_INTRO,
     CACHE_CHOICE_TITLE,
     CACHE_OUTCOME_CLAIM_LABEL,
     CACHE_OUTCOME_EYEBROW,
@@ -38,44 +40,26 @@ import {
 import { FONTS, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
-/** The card offer's face, the combat reward tile's size. */
-export const CACHE_OFFER_CARD_W = 100;
-export const CACHE_OFFER_CARD_H = 147;
-
 /** The cache column's widest extent, in points (the rest column's width). */
 export const CACHE_COLUMN_MAX_WIDTH = 520;
 
+/** One choice: its label, and under it the action line the node authored. */
 function OfferCard({ offer, onPress }: { offer: CacheChoiceOfferVM; onPress: () => void }) {
     const styles = useStyles();
-    const label = offer.card
-        ? `${offer.label}: ${offer.card.name}. ${offer.card.detail.outcomeLine}. ${offer.desc}`
-        : offer.goods.length > 0
-            ? `${offer.label}: ${offer.goods.join(', ')}. ${offer.desc}`
-            : `${offer.label}. ${offer.desc}`;
     return (
         <View style={styles.offerCol}>
             <TouchableOpacity
                 accessibilityRole="button"
-                accessibilityLabel={label}
+                accessibilityLabel={`${offer.label}. ${offer.action}`}
                 onPress={onPress}
-                style={[styles.offerButton, offer.card ? styles.offerButtonWithCard : null]}
+                style={styles.offerButton}
                 testID={`cache-choice-offer-${offer.id}`}
             >
-                {offer.card ? (
-                    <View testID={`cache-choice-card-face-${offer.card.cardId}`}>
-                        <CombatCardFace card={offer.card} width={CACHE_OFFER_CARD_W} height={CACHE_OFFER_CARD_H} />
-                    </View>
-                ) : null}
                 <View style={styles.offerText}>
                     <Text style={styles.offerLabel}>{offer.label}</Text>
-                    <Text style={styles.offerDesc}>{offer.desc}</Text>
-                    {offer.goods.length > 0 ? (
-                        <View style={styles.chipRow} testID={`cache-choice-goods-${offer.id}`}>
-                            {offer.goods.map((chip, i) => (
-                                <Text key={`${chip}:${i}`} style={styles.chip}>{chip}</Text>
-                            ))}
-                        </View>
-                    ) : null}
+                    <Text style={styles.offerAction} testID={`cache-choice-action-${offer.id}`}>
+                        {offer.action}
+                    </Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -86,9 +70,8 @@ export default function CacheScreen() {
     const styles = useStyles();
     const AXM = usePalette();
     const slice = useGameState((s) => s.cache);
-    const stats = useGameState((s) => s.player?.baseStats);
     const regionPlate = useGameState((s) => mapBackdropFor(s.world?.currentMap?.name));
-    const vm = useMemo(() => selectCacheVM({ cache: slice }, stats), [slice, stats]);
+    const vm = useMemo(() => selectCacheVM({ cache: slice }), [slice]);
     const actions = useGameActions();
     const router = useRouter();
 
@@ -112,23 +95,17 @@ export default function CacheScreen() {
         <ScreenBg scrollable={false} art="cache" regionPlate={regionPlate}>
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
                 <View style={styles.column} testID="cache-column">
-                    <Text style={styles.eyebrow}>{CACHE_CHOICE_EYEBROW}</Text>
                     <Text style={styles.title}>{CACHE_CHOICE_TITLE}</Text>
 
                     {vm.phase === 'offer' && (
                         <View testID="cache-choice-offers">
-                            {/* The authored node line sits ABOVE the one-way warning;
-                              * the warning always shows, so the player is always told
-                              * the node is spent and there is no leaving without
-                              * choosing. */}
+                            {/* The cache's own flavour line, then the two choices.
+                              * Nothing on this screen names a reward. */}
                             {vm.description ? (
                                 <Text style={styles.body} testID="cache-choice-intro">
                                     {vm.description}
                                 </Text>
                             ) : null}
-                            <Text style={styles.oneWayNote} testID="cache-choice-intro-one-way">
-                                {CACHE_CHOICE_INTRO}
-                            </Text>
                             {vm.offers.map((offer) => (
                                 <OfferCard
                                     key={offer.id}
@@ -198,8 +175,6 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
         marginBottom: 8,
     },
-    // The irreversibility line, quieter than the scene but always there.
-    oneWayNote: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, lineHeight: 16, marginTop: 6, marginBottom: 2 },
     offerCol: { marginBottom: 8 },
     offerButton: {
         borderWidth: 2,
@@ -207,17 +182,16 @@ const useStyles = makeStyles((AXM) => ({
         padding: 10,
         backgroundColor: AXM.bg,
     },
-    // The card offer prints its face beside the label, so the pick is seen before it is made.
-    // The top pad keeps the face's free corner pill inside the frame.
-    offerButtonWithCard: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingTop: 16 },
     offerText: { flexShrink: 1 },
     offerLabel: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 1.2, color: AXM.sulfur },
-    offerDesc: {
-        fontFamily: FONTS.mono,
-        fontSize: 12,
-        color: AXM.bone,
-        marginTop: 2,
-        textTransform: 'uppercase',
+    // What you do for this choice, in the scene's own voice — not a reward, so
+    // not the uppercase ledger face.
+    offerAction: {
+        fontFamily: FONTS.serif,
+        fontSize: 13,
+        lineHeight: 18,
+        color: AXM.parchment,
+        marginTop: 3,
     },
     card: {
         borderWidth: 2,
