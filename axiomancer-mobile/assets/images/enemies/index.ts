@@ -12,9 +12,8 @@
  * There is no "one asset per enemy" law. An enemy may carry a single
  * painting, or a painting plus an animated FRAME SET — see `./frames.ts`. The
  * float-eye carries both: its painting below, and the 24 cells under
- * `anim/float-eye/` that phase AN1e installed, and since phase AN5e every
- * key below carries both: seventeen paintings, seventeen frame sets. The
- * bindings below hold either way: a frame set is additional art for an enemy,
+ * `anim/float-eye/` that phase AN1e installed. Every registered painting now
+ * has a frame set. The bindings below hold either way: a frame set is additional art for an enemy,
  * never a replacement for its key, and an enemy with no set (one exempted in
  * `FRAME_SET_EXEMPTIONS`, say after a portrait swap retires its set) renders
  * through `getEncounterEnemyArt` exactly as it always did.
@@ -25,11 +24,7 @@
  * duration of its encounter).
  */
 
-/**
- * The bindings. Exported so a test can ENUMERATE them rather than name the
- * enemies that happen to exist today.
- */
-export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
+const CHAPTER_ONE_PORTRAITS: Readonly<Record<string, number>> = {
     'float-eye':         require('./float-eye.webp'),
     // The Act 1 elite (phase AN3a) and boss (phase AN4a): torio's Javardry
     // free material - free for any use including commercial and
@@ -64,7 +59,19 @@ export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
     'tide-gate':         require('./tide-gate.webp'),
 };
 
-const ENEMY_ART_POOL: number[] = Object.values(ENEMY_ART_BY_KEY);
+// Keep the fallback pool stable as we register portraits for future encounters.
+const ENEMY_ART_POOL: number[] = Object.values(CHAPTER_ONE_PORTRAITS);
+
+/** Every directly addressable portrait, including the Breakwater sets. */
+export const ENEMY_ART_BY_KEY: Readonly<Record<string, number>> = {
+    ...CHAPTER_ONE_PORTRAITS,
+    'bilge-stalker': require('./bilge-stalker.webp'),
+    'coralback': require('./coralback.webp'),
+    'quay-crab': require('./quay-crab.webp'),
+    'saint-beneath': require('./saint-beneath.webp'),
+    'saltwick-swarm': require('./saltwick-swarm.webp'),
+    'wreckmaster': require('./wreckmaster.webp'),
+};
 
 /**
  * Resolve an enemy's painting. `artKey` should be the engine's
@@ -90,7 +97,7 @@ export function hasEnemyArt(artKey: string | null | undefined): boolean {
     return !!artKey && ENEMY_ART_BY_KEY[artKey] !== undefined;
 }
 
-export const ENEMY_ART_COUNT = ENEMY_ART_POOL.length;
+export const ENEMY_ART_COUNT = Object.keys(ENEMY_ART_BY_KEY).length;
 
 /** Every bound `portraitAsset` key, in registry order. */
 export const ENEMY_ART_KEYS: readonly string[] = Object.keys(ENEMY_ART_BY_KEY);

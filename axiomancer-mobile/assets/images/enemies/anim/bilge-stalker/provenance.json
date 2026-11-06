@@ -1,0 +1,46 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "Built-in image generator, Pillow grid registration, split-spritesheet.py, ingest-art.mjs --no-grade",
+    "source": "art-department/masters/enemies/bilge-stalker.sheet.png and art-department/masters/enemies/bilge-stalker.prompt.txt",
+    "model": "Built-in image generator",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "portrait": "bilge-stalker.webp",
+    "portrait_sha256": "22f92d8a1d7d906e521b2a817bfe5ea04242063432506237f8a2ac44c1a0fd75",
+    "master_sha256": "e27d6f19c26921cd58be8f93915a073ce1534d5f76d84339d3a23ba89bddf862",
+    "graded": false,
+    "graded_in_this_run": false,
+    "method": "Generator returned 1774x887. Extracted the 24 poses, aligned them on a 2048x768 grid with one scale and copied the first idle pose into both recovery endpoints. Scaled to 160px cells for the WebP byte budget.",
+    "measured": "118258 B total, 4927 B mean, 5494 B max against 32422 B static.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (registry for bilge-stalker)"
+    ],
+    "covers": [
+      "bilge-stalker-00.webp",
+      "bilge-stalker-01.webp",
+      "bilge-stalker-02.webp",
+      "bilge-stalker-03.webp",
+      "bilge-stalker-04.webp",
+      "bilge-stalker-05.webp",
+      "bilge-stalker-06.webp",
+      "bilge-stalker-07.webp",
+      "bilge-stalker-08.webp",
+      "bilge-stalker-09.webp",
+      "bilge-stalker-10.webp",
+      "bilge-stalker-11.webp",
+      "bilge-stalker-12.webp",
+      "bilge-stalker-13.webp",
+      "bilge-stalker-14.webp",
+      "bilge-stalker-15.webp",
+      "bilge-stalker-16.webp",
+      "bilge-stalker-17.webp",
+      "bilge-stalker-18.webp",
+      "bilge-stalker-19.webp",
+      "bilge-stalker-20.webp",
+      "bilge-stalker-21.webp",
+      "bilge-stalker-22.webp",
+      "bilge-stalker-23.webp"
+    ]
+  }
+]

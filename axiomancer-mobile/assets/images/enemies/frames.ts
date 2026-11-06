@@ -16,7 +16,7 @@
  * (cleaned by the art department's `clean-ai-sheet.py` before the split);
  * AN5b installed the Net-Mender, Crane-Hook, Brine-Widow, Lamprey-Knot and Curfew-Ringer (three of them cut at 168px, the ceiling's answer); AN5c the Wreck-Picker (176px) and the Tithe-Collector (168px, its 2043x770 master resampled first); AN5d the four elites, the Lamplighter, the Wrecker and the Toll-Keeper at 176px and the Cave-Choir at 152px (the busiest sheet yet: over the ceiling at 176, 168 and 160); AN5e the last two, the Smokehouse Gutter and the Tide-Gate, both at 176px (the worst
  * drifters, held still by the same tool). Every enemy with a portrait now has
- * a set: seventeen of seventeen. The static path is still real (a key absent
+ * a set, including the six Breakwater portraits. The static path is still real (a key absent
  * from here renders exactly its single image), but it is no longer a quiet
  * default: a portrait without a set fails `portraitsWithoutAValidSet` unless
  * `FRAME_SET_EXEMPTIONS` names it with a reason.
@@ -61,11 +61,9 @@
  * The gallows crow (AN5a) overshot at 256px (max 16760 B: an image-model
  * drawing is busier than a rig's pose) and was cut at 176px like the
  * beholder: 24 cells, 177768 B, max 9548 B, against 45124 B static.
- * THE WHOLE ROSTER (AN5e, the seventeenth set): 17 sets, 408 cells,
- * 3040824 B (2969.6 KB) in total, against 730602 B for the seventeen static
- * portraits beside them (4.2x, +2256.1 KB). The heaviest single cell is
- * 11700 B (`lamprey-knot-19.webp`), 300 B under the ceiling; the last two sets
- * weigh 159326 B (smokehouse-gutter) and 180928 B (tide-gate), both at 176px.
+ * THE WHOLE ROSTER: 23 sets, 552 cells,
+ * 4026512 B (3932.1 KB) in total, against 941120 B for the static
+ * portraits. The heaviest cell is 11754 B (`coralback-08.webp`).
  * Each set's own numbers are in its `anim/<key>/provenance.json`, and
  * `scripts/frame-cells.test.mjs` checks the roster total here against disk.
  * `FRAME_CELL_MAX_BYTES` below is that ceiling, and
@@ -92,6 +90,12 @@ import { TOLL_KEEPER_CELLS } from './anim/toll-keeper';
 import { SMOKEHOUSE_GUTTER_CELLS } from './anim/smokehouse-gutter';
 import { TIDE_GATE_CELLS } from './anim/tide-gate';
 import { GREEN_JELLY_CELLS } from './anim/green-jelly';
+import { BILGE_STALKER_CELLS } from './anim/bilge-stalker';
+import { CORALBACK_CELLS } from './anim/coralback';
+import { QUAY_CRAB_CELLS } from './anim/quay-crab';
+import { SAINT_BENEATH_CELLS } from './anim/saint-beneath';
+import { SALTWICK_SWARM_CELLS } from './anim/saltwick-swarm';
+import { WRECKMASTER_CELLS } from './anim/wreckmaster';
 
 /** How a cell is registered against the frame beneath it. */
 export type FrameAnchorKind = 'foot-line' | 'centre';
@@ -722,6 +726,138 @@ const TIDE_GATE_FRAME_SET: EnemyFrameSet = {
     frames: TIDE_GATE_CELLS,
 };
 
+const BILGE_STALKER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 160,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 80,
+            y: 136.2,
+            why: 'Grounded silhouette aligned to the foot line.',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 7 },
+        },
+        graded: false,
+        source: 'see anim/bilge-stalker/provenance.json',
+    },
+    frames: BILGE_STALKER_CELLS,
+};
+
+const CORALBACK_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 256,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 128,
+            y: 218,
+            why: 'Grounded silhouette aligned to the foot line.',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 7 },
+        },
+        graded: false,
+        source: 'see anim/coralback/provenance.json',
+    },
+    frames: CORALBACK_CELLS,
+};
+
+const QUAY_CRAB_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 256,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 128,
+            y: 218,
+            why: 'Grounded silhouette aligned to the foot line.',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 7 },
+        },
+        graded: false,
+        source: 'see anim/quay-crab/provenance.json',
+    },
+    frames: QUAY_CRAB_CELLS,
+};
+
+const SAINT_BENEATH_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 256,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'centre',
+            x: 128,
+            y: 128,
+            why: 'Floating body centred with a small vertical bob.',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 7 },
+        },
+        graded: false,
+        source: 'see anim/saint-beneath/provenance.json',
+    },
+    frames: SAINT_BENEATH_CELLS,
+};
+
+const SALTWICK_SWARM_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 160,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'centre',
+            x: 80,
+            y: 80,
+            why: 'Floating body centred with a small vertical bob.',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 7 },
+        },
+        graded: false,
+        source: 'see anim/saltwick-swarm/provenance.json',
+    },
+    frames: SALTWICK_SWARM_CELLS,
+};
+
+const WRECKMASTER_FRAME_SET: EnemyFrameSet = {
+    manifest: {
+        frame: 256,
+        columns: 8,
+        rows: 3,
+        anchor: {
+            kind: 'foot-line',
+            x: 128,
+            y: 218,
+            why: 'Grounded silhouette aligned to the foot line.',
+        },
+        clips: {
+            idle: { row: 0, frames: 8, fps: 12, loop: true, rest: 0 },
+            struck: { row: 1, frames: 8, fps: 16, loop: false, rest: 7 },
+            attacking: { row: 2, frames: 8, fps: 12, loop: false, rest: 7 },
+        },
+        graded: false,
+        source: 'see anim/wreckmaster/provenance.json',
+    },
+    frames: WRECKMASTER_CELLS,
+};
+
 /**
  * THE REGISTRY. An enemy absent from here resolves through
  * `getEncounterEnemyArt` exactly as it always has. AN1a shipped this empty on
@@ -750,6 +886,12 @@ export const ENEMY_FRAME_SETS: Readonly<Record<string, EnemyFrameSet>> = {
     'smokehouse-gutter': SMOKEHOUSE_GUTTER_FRAME_SET,
     'tide-gate': TIDE_GATE_FRAME_SET,
     'green-jelly': GREEN_JELLY_FRAME_SET,
+    'bilge-stalker': BILGE_STALKER_FRAME_SET,
+    'coralback': CORALBACK_FRAME_SET,
+    'quay-crab': QUAY_CRAB_FRAME_SET,
+    'saint-beneath': SAINT_BENEATH_FRAME_SET,
+    'saltwick-swarm': SALTWICK_SWARM_FRAME_SET,
+    'wreckmaster': WRECKMASTER_FRAME_SET,
 };
 
 /**
@@ -764,7 +906,7 @@ export const FRAME_SET_EXEMPTIONS: Readonly<Record<string, string>> = {};
  * AN5e: every portrait has a set. Given the static registry's keys, names each
  * key that has no valid frame set and no exemption, and each exemption that
  * no longer names a portrait (a stale exemption hides nothing, but it lies).
- * An empty array is the Measure: 17 of 17.
+ * An empty array means the entire portrait roster passes.
  */
 export function portraitsWithoutAValidSet(
     portraitKeys: readonly string[],

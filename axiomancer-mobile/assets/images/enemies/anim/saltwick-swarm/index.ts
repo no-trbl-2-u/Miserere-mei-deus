@@ -1,0 +1,28 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export const SALTWICK_SWARM_CELLS: readonly ImageSourcePropType[] = [
+    require('./saltwick-swarm-00.webp'),
+    require('./saltwick-swarm-01.webp'),
+    require('./saltwick-swarm-02.webp'),
+    require('./saltwick-swarm-03.webp'),
+    require('./saltwick-swarm-04.webp'),
+    require('./saltwick-swarm-05.webp'),
+    require('./saltwick-swarm-06.webp'),
+    require('./saltwick-swarm-07.webp'),
+    require('./saltwick-swarm-08.webp'),
+    require('./saltwick-swarm-09.webp'),
+    require('./saltwick-swarm-10.webp'),
+    require('./saltwick-swarm-11.webp'),
+    require('./saltwick-swarm-12.webp'),
+    require('./saltwick-swarm-13.webp'),
+    require('./saltwick-swarm-14.webp'),
+    require('./saltwick-swarm-15.webp'),
+    require('./saltwick-swarm-16.webp'),
+    require('./saltwick-swarm-17.webp'),
+    require('./saltwick-swarm-18.webp'),
+    require('./saltwick-swarm-19.webp'),
+    require('./saltwick-swarm-20.webp'),
+    require('./saltwick-swarm-21.webp'),
+    require('./saltwick-swarm-22.webp'),
+    require('./saltwick-swarm-23.webp'),
+];

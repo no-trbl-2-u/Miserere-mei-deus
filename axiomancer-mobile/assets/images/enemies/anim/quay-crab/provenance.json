@@ -1,0 +1,46 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "Built-in image generator, Pillow grid registration, split-spritesheet.py, ingest-art.mjs --no-grade",
+    "source": "art-department/masters/enemies/quay-crab.sheet.png and art-department/masters/enemies/quay-crab.prompt.txt",
+    "model": "Built-in image generator",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "portrait": "quay-crab.webp",
+    "portrait_sha256": "f44a3e835314290b5b37ed08728005604feb48f5bd980c4431699096ccfbc6e4",
+    "master_sha256": "cc2cbd159a4c927787ae62d4b71e0adf4ec1f15e665fd5b8716aed6032c96844",
+    "graded": false,
+    "graded_in_this_run": false,
+    "method": "Generator returned 2048x768. Extracted the 24 poses, aligned them on a 2048x768 grid with one scale and copied the first idle pose into both recovery endpoints. Encoded 256px cells within the WebP byte budget.",
+    "measured": "167620 B total, 6984 B mean, 7704 B max against 25226 B static.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (registry for quay-crab)"
+    ],
+    "covers": [
+      "quay-crab-00.webp",
+      "quay-crab-01.webp",
+      "quay-crab-02.webp",
+      "quay-crab-03.webp",
+      "quay-crab-04.webp",
+      "quay-crab-05.webp",
+      "quay-crab-06.webp",
+      "quay-crab-07.webp",
+      "quay-crab-08.webp",
+      "quay-crab-09.webp",
+      "quay-crab-10.webp",
+      "quay-crab-11.webp",
+      "quay-crab-12.webp",
+      "quay-crab-13.webp",
+      "quay-crab-14.webp",
+      "quay-crab-15.webp",
+      "quay-crab-16.webp",
+      "quay-crab-17.webp",
+      "quay-crab-18.webp",
+      "quay-crab-19.webp",
+      "quay-crab-20.webp",
+      "quay-crab-21.webp",
+      "quay-crab-22.webp",
+      "quay-crab-23.webp"
+    ]
+  }
+]
