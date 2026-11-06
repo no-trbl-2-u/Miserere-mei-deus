@@ -1,4 +1,4 @@
-# Deadlines — MVP Nov 16, then v0.5 "Act 1 complete, playable"
+# Deadlines — MVP Nov 16, then "Act 1 complete, playable"
 
 > Set by T in an attended session, 2026-10-19, to focus the work. Five two-week windows from Monday 2026-10-20
 > to 2026-12-28. Each window has one goal and a demo T checks at its end. T's attended time is 5-8 hours a week
@@ -20,10 +20,12 @@ hazard, rest, loot cache, cutscene, quest, village, travel); each is pitched, se
 spread out so T is never researching or plotting them all at once (T, 2026-10-28), and the other four (travel,
 village, loot cache, cutscene) get theirs in W3. The MVP pulls the
 enemy revamp for Chapter 1 (B2, was W4), the lane relics (LR1, was undated), the item icons (IT1b, was undated) and
-the event-node UX (was after v0.5) into W2. The MVP is a run, not a tuned run: hazard calibration, the hand-picked
-hazard swap, the cost-card session and the combat playtest come after it.
+the event-node UX (was after Act 1) into W2. The MVP is a run, not a tuned run: hazard calibration, the hand-picked
+hazard swap, the cost-card session and the combat playtest come after it. **When Chapter 1 is complete, the version is set
+to v0.9.0**, the last minor before v1 (T, 2026-11-06). That is the only version this plan names: no other milestone,
+window or Item carries a version number (T: "The deadline plan should not have versions").
 
-**v0.5, Dec 28: all of Act 1 complete and playable on a phone** (T: "All 4 regions combined is Act 1 and the
+**Act 1 complete, Dec 28: all of Act 1 complete and playable on a phone** (T: "All 4 regions combined is Act 1 and the
 deadline is the end of the year"), a build T would hand a tester. T's bar: with Blood Price, upgraded cards and a
 levelled-up player, Act 1 can be cleared. In scope:
 
@@ -40,10 +42,10 @@ levelled-up player, Act 1 can be cleared. In scope:
 **The watchtower fight (bw-17) is Chapter 1's boss** (T, 2026-10-26: "Chapter 1 boss"), and **the Act Boss sits at
 the end of the Lantern Deep, Chapter 4** (T: "Yes, end of Ch4"; D106). It is designed in enemy session 4, Nov 22.
 
-**Lowest priority (stretch):** new cards and the card-creator workflow (B5, B6). In v0.5 only if a window has time
+**Lowest priority (stretch):** new cards and the card-creator workflow (B5, B6). In Act 1 complete only if a window has time
 left; otherwise after.
 
-**After v0.5:** B7 deck tab UI, B8 card art, B10 dev menu, B9 Labyrinth re-theme, PF2.
+**After Act 1 complete:** B7 deck tab UI, B8 card art, B10 dev menu, B9 Labyrinth re-theme, PF2.
 
 ## Windows
 
@@ -53,7 +55,7 @@ left; otherwise after.
 | W2 | Nov 3 - Nov 16 | MVP: Act 1, Chapter 1 complete | A full Breakwater run on T's phone: both hazards puzzles, Chapter 1's real enemies and art, the six lane relics, real item icons, every Breakwater node in its new UI |
 | W3 | Nov 17 - Nov 30 | Chapters 2-4 designed; hazards tuned | A walk of all four chapters where every node resolves; Chapters 2-4's enemy sessions held and plotted; calibrated hazard bands |
 | W4 | Dec 1 - Dec 14 | The rest of the relic pass, combat proven, an Act 1 clear | An Act 1 clear with Blood Price, upgrades and a levelled player, ending at the Act Boss; the combat playtest's verdict |
-| W5 | Dec 15 - Dec 28 | Ship | The v0.5 APK on T's device; a playtester walk; T tags v0.5 |
+| W5 | Dec 15 - Dec 28 | Ship | The Act 1 APK on T's device; a playtester walk |
 
 ### W1 — Hazard puzzles locked; Chapter 1's sessions held (Oct 20 - Nov 2)
 
@@ -123,12 +125,12 @@ left; otherwise after.
 ### W5 — Ship (Dec 15 - Dec 28)
 
 - LG1h (attended): the Android smoke test on the preview APK, once the loop has built the workflow and flow (LG1i).
-- Ship: a playtester walk of all four chapters, the full gate, T tags v0.5 and the APK is built.
-- T's time (about 3 h): the device check; the walk's plot; the tag.
+- Ship: a playtester walk of all four chapters, the full gate, and the APK is built.
+- T's time (about 3 h): the device check; the walk's plot; the build.
 
 ## T's pace
 
-T's human-in-the-loop work runs from 2026-11-03 to v0.5 (every piece before Nov 3 is done and removed, T 2026-11-03), in
+T's human-in-the-loop work runs from 2026-11-03 to Act 1 complete (every piece before Nov 3 is done and removed, T 2026-11-03), in
 pieces of one to two hours (T works 9-5 on weekdays, so weekday pieces are evenings and weekends carry the longer
 sessions). No weekday is held free: T works on Miserere every day, Thursdays included (T, 2026-10-27). Every piece is
 one row of the Items table below, with its hours in its name, the high-level task it serves in `Goal`, and how AI can
@@ -216,9 +218,9 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-12-12 | Combat playtest part 2: winnable and dangerous (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | R12 | - |
 | [ ] | 2026-12-13 | Chapters 2-4's enemy art: pick from the loop's candidates (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | T | - |
 | [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | T | UP1h |
-| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | Ship v0.5 | - | W5 | LG1h | LG1i |
-| [ ] | 2026-12-26 | Playtester walk of all four chapters (plot, 1 h) | Ship v0.5 | `/plot` | W5 | needs plot | - |
-| [ ] | 2026-12-28 | Tag v0.5 and build the APK (1 h) | Ship v0.5 | - | W5 | T | - |
+| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | Ship Act 1 | - | W5 | LG1h | LG1i |
+| [ ] | 2026-12-26 | Playtester walk of all four chapters (plot, 1 h) | Ship Act 1 | `/plot` | W5 | needs plot | - |
+| [ ] | 2026-12-28 | Build the Act 1 APK (1 h) | Ship Act 1 | - | W5 | T | - |
 
 ## Unscheduled
 
@@ -248,15 +250,14 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CF1g — the open card prints the hand's whole line, in words or in glyphs (spec 137); no dated T act waits on it
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
 - OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
-- PF2 — attended; after v0.5 (The milestone), and waits on PF2a and then on T's Android baseline numbers.
+- PF2 — attended; after Act 1 complete (The milestone), and waits on PF2a and then on T's Android baseline numbers.
 - PF2a — step 1 of the combat SVG rasterisation, texture caching on the static layers and dice (spec 123); no dated T act waits on it, only PF2's measurement, which has no date set.
-- B5 — blocked: owner-led; the card-creator workflow is v0.5 stretch, in only if a window has time left.
-- B6 — blocked: owner-led; card sessions are v0.5 stretch, in only if a window has time left.
-- B7 — blocked: owner-led; after v0.5 (The milestone).
-- UX1g — the three Deck directions B7 starts from (spec 153); no T act waits on it before B7, after Act 1 complete.
-- B8 — blocked: owner-led; after v0.5 (The milestone).
-- B9 — blocked: owner-led; after v0.5 (The milestone).
-- B10 — blocked: owner-led; after v0.5 (The milestone).
+- B5 — blocked: owner-led; the card-creator workflow is Act 1 stretch, in only if a window has time left.
+- B6 — blocked: owner-led; card sessions are Act 1 stretch, in only if a window has time left.
+- B7 — blocked: owner-led; after Act 1 complete (The milestone).
+- B8 — blocked: owner-led; after Act 1 complete (The milestone).
+- B9 — blocked: owner-led; after Act 1 complete (The milestone).
+- B10 — blocked: owner-led; after Act 1 complete (The milestone).
 - BE2g — attended; T's check on a preview APK once BE2c-BE2f and BUG1b ship (until BUG1b, the Worker refuses every fight post); date not set.
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
@@ -283,6 +284,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-06** — **the deadline plan names no versions** (T, attended, tagging v0.5.0 on main: "The deadline plan should not have versions. That's dumb. At most, it can have a 'When chapter 1 is complete, set to v0.9.0' since that's right before v1"). **Edited** the Dec 28 milestone from "v0.5" to "Act 1 complete" everywhere it was named (title, milestones, W5, T's pace, the Unscheduled reasons, the three W5 Items' goal, and the Dec 28 Item from "Tag v0.5 and build the APK" to "Build the Act 1 APK"); **added** one line to the MVP milestone: Chapter 1 complete sets the version to v0.9.0. Change-log history keeps its old names. No date moved; nothing ticked.
 - **2026-11-06** — **the kit mixer's layout notes plotted as spec 153 (UX1a-UX1g)** (T, attended: "then we'll plot the other things I mentioned"). **Added** UX1a-UX1f to the `Waits on` of the MVP demo (Nov 16), beside UK1a-UK1f, and UX1g under Unscheduled beside B7, whose session it feeds. **Edited** no Item: UX1e removes only the hazard deck screen and its link, so the Nov 3 Item's cut of the saved hazard deck still stands. Nothing ticked; no date moved.
 - **2026-11-06** — **the UI kit plotted place by place as spec 152 (UK1a-UK1f)** (T, attended, from the kit mixer: the 44 picks pasted, then "Plot this, open the PR"). **Added** UK1a-UK1f to the `Waits on` of the MVP demo (Nov 16), since that run is where T first sees the new look. No Item's premise changes; the layout notes in the same paste are the next plot (spec 153). Nothing ticked; no date moved.
 - **2026-11-04** — **the title screen's EMBARK button becomes T's parchment Embark scroll, chunk 121.3 (TP1c)** (T, sending a sheet of eight button plates: "For now, I want the second one with the text in it already (whiteish scroll). Add that, then open a PR"). **Added** TP1c to the `Waits on` of the Mid-MVP check (Nov 9), beside TP1b: the check opens on the title screen. Nothing ticked; no date moved.
