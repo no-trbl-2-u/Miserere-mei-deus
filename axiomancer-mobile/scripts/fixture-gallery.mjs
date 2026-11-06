@@ -94,7 +94,6 @@ export const GALLERY = [
     { name: 'memoir-l15', why: 'THE LEDGER for a mid-campaign Sage.', fixture: { id: 'g-memoir', seed: 'g15', ...SAGE, world: coastal('charcoal-wood', 'cw-5') }, path: '/memoir' },
 
     // ── Dev-only panels that have no organic capture path ────────────────
-    { name: 'aftermath-defeat', why: 'The DEFEAT aftermath panel.', fixture: 'fresh-start', path: '/devaftermath?panel=defeat', waitFor: 'devaftermath-panel' },
     { name: 'dev-menu', why: 'The /dev route.', fixture: 'sage-bw-door-gate', path: '/dev' },
 ]
 

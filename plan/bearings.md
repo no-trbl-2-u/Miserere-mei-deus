@@ -170,7 +170,7 @@ references them.
 `settings`, `combat-encounter`, `hazard`, `hazard-deck`,
 `item-reward`, `rest`, `cache`, `blacksmith`, `labyrinth`,
 `dialogue`, `event`, `cutscene`, `village`, and dev routes (`dev`,
-`devaftermath`, `devart`). The `gathering` and `quest` routes are
+`devart`). The `gathering` and `quest` routes are
 retired; `app/_layout.tsx` + `lib/platform/router.ts` are the
 registration truth.
 Canon combat copy: **VITAE** (not HEALTH) — copy regressions are

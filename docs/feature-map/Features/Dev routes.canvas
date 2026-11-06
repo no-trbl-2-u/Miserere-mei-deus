@@ -29,20 +29,10 @@
 			"color": "4"
 		},
 		{
-			"id": "route:devaftermath",
-			"type": "file",
-			"file": "Features/Devaftermath.md",
-			"x": 340,
-			"y": 40,
-			"width": 260,
-			"height": 90,
-			"color": "1"
-		},
-		{
 			"id": "route:devart",
 			"type": "file",
 			"file": "Features/Devart.md",
-			"x": 640,
+			"x": 340,
 			"y": 40,
 			"width": 260,
 			"height": 90,
@@ -52,8 +42,8 @@
 			"id": "route:devart/rooms",
 			"type": "file",
 			"file": "Features/Devart Rooms.md",
-			"x": 40,
-			"y": 170,
+			"x": 640,
+			"y": 40,
 			"width": 260,
 			"height": 90,
 			"color": "1"
@@ -62,7 +52,7 @@
 			"id": "route:devframes",
 			"type": "file",
 			"file": "Features/Devframes.md",
-			"x": 340,
+			"x": 40,
 			"y": 170,
 			"width": 260,
 			"height": 90,
@@ -72,7 +62,7 @@
 			"id": "route:devpuzzle",
 			"type": "file",
 			"file": "Features/The hazard puzzle demos.md",
-			"x": 640,
+			"x": 340,
 			"y": 170,
 			"width": 260,
 			"height": 90,
@@ -142,12 +132,6 @@
 			"id": "flow:route:dev->elsewhere:route:saves",
 			"fromNode": "route:dev",
 			"toNode": "elsewhere:route:saves",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:dev->route:devaftermath",
-			"fromNode": "route:dev",
-			"toNode": "route:devaftermath",
 			"color": "5"
 		},
 		{

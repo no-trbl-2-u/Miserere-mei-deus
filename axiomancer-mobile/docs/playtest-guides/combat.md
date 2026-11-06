@@ -9,7 +9,6 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 - Fixture: `/exploration?fixture=sage-bw-door-gate` — Sage L15 on the keep gate bw-k1 (quest nodes settled), chapter boss **bw-k2** one step away. No `arrive`, so you land on the map; tap `node-bw-k2` → `node-confirm-go`. `fresh-start` gives the first fight (tap the first glowing node).
 - `/dev` → open ENCOUNTERS (`dev-section-encounters-toggle`; every `/dev` section starts closed, `dev-section-<key>-toggle` opens it) → `debug-trigger-encounter-encounter` (gentlest foe) or `debug-trigger-encounter-boss`; `debug-enemy-map-<map>` then `debug-enemy-<enemyId>` for a specific foe. Both push `/(tabs)/exploration` and fire the prelude; `<CombatGate>` engages it and pushes `/combat-encounter`.
 - `/combat-encounter` is the live fight and holds only a staged fight: opened cold it leaves for the map (`combat-encounter-empty` for that frame). Scripts enter a fight through `scripts/live-fight-entry.mjs`.
-- Aftermath panels alone: `/devaftermath?panel=defeat` (`devaftermath-panel`).
 - Globals: `__AXM_COMBAT_SEED__` (the live fight's engine seed, dev builds only), `__AXM_DICE_INSTANT_SETTLE__` and `__AXM_JUICE_INSTANT__` (skip roll/juice animations).
 
 ## 3. Test IDs
@@ -46,7 +45,6 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-summary-spare-reward` / `combat-summary-spare-journal` | A spared foe's one table roll, and the journal entry it opened, on the summary |
 | `combat-rewards` / `combat-reward-<cardId>` / `combat-reward-preview` / `combat-reward-preview-select` / `combat-reward-preview-close` / `combat-reward-confirm` / `combat-reward-skip` | SPOILS card pick |
 | `combat-summary` / `combat-summary-close` | Post-fight summary; Continue ends the fight and the route leaves for the map (`app/combat-encounter/index.tsx` `onExit`; after a defeat the run resets first, keeping the character) |
-| `combat-defeat-panel` / `combat-defeat-panel-begin-again` | Defeat seal; only `/devaftermath?panel=defeat` mounts it, not the live fight |
 | `combat-encounter-empty` | The route opened with no staged fight (it leaves at once) |
 
 ## 4. A correct play, step by step

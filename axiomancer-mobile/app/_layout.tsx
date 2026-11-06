@@ -67,7 +67,6 @@ import DevToolsScreen from './dev/index';
 import LabyrinthScreen from './labyrinth/index';
 import DevArtGallery from './devart/index';
 import DevRoomGallery from './devart/rooms';
-import DevAftermathPanel from './devaftermath/index';
 import DevHazardPuzzles from './devpuzzle/index';
 import DevFrameHarness from './devframes/index';
 
@@ -420,11 +419,6 @@ function RootLayout() {
             <Stack.Screen
               name="devart/rooms"
               component={DevRoomGallery}
-              options={{ headerShown: false, presentation: 'fullScreenModal' }}
-            />
-            <Stack.Screen
-              name="devaftermath/index"
-              component={DevAftermathPanel}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen
