@@ -1,0 +1,36 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "OpenAI ImageGen and Pillow",
+    "license": "AI-generated artwork from user-provided visual references",
+    "source": "Campfire concept 05 from the generated 12-campfire selection sheet. ImageGen isolated and redrew it as a square master.",
+    "method": "Periodic flame deformation above a fixed base with independently rising embers. 24 full-color 320 x 320 WebP frames, 80 ms per frame, wrap from 23 to 00.",
+    "covers": [
+      "campfire-05-00.webp",
+      "campfire-05-01.webp",
+      "campfire-05-02.webp",
+      "campfire-05-03.webp",
+      "campfire-05-04.webp",
+      "campfire-05-05.webp",
+      "campfire-05-06.webp",
+      "campfire-05-07.webp",
+      "campfire-05-08.webp",
+      "campfire-05-09.webp",
+      "campfire-05-10.webp",
+      "campfire-05-11.webp",
+      "campfire-05-12.webp",
+      "campfire-05-13.webp",
+      "campfire-05-14.webp",
+      "campfire-05-15.webp",
+      "campfire-05-16.webp",
+      "campfire-05-17.webp",
+      "campfire-05-18.webp",
+      "campfire-05-19.webp",
+      "campfire-05-20.webp",
+      "campfire-05-21.webp",
+      "campfire-05-22.webp",
+      "campfire-05-23.webp"
+    ]
+  }
+]

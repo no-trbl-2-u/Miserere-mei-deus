@@ -63,3 +63,5 @@ export function screenBackdropFor(key: ScreenArtKey | undefined | null): number 
 
 /** Every wired key — the drift test asserts each resolves. */
 export const SCREEN_ART_KEYS = Object.keys(PLATES) as ScreenArtKey[];
+
+export { CAMPFIRE_05_FRAME_MS, CAMPFIRE_05_FRAMES } from './animated-fixtures/campfire-05';
