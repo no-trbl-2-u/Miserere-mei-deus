@@ -568,3 +568,4 @@
 - 2026-11-04 · 151.1 (alias: MR5a) · Elite rolls skip a same-fight quest's item; one copy · cf08d2ab..cf08d2ab (#1385)
 - 2026-11-04 · 146.9 (alias: AP1i) · The fight draws no overlay over plate or foe · 37a11877..f7da7170 (#1396)
 - 2026-11-04 · 121.2 (alias: TP1b) · Title screen shows Doré's lion; plate fills tall phones · 348da77f..2a84a14b (#1394)
+- 2026-11-06 · 153.7 (alias: UX1g) · Deck directions mock page lets T pick one of three · 618f0d73..618f0d73 (#1405)
