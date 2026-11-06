@@ -121,3 +121,58 @@ O-07 Menu row buttons: BRASS GOTHIC
 Tally: Brass Gothic 19, Vellum & Ink 12, Normal 13. B-02 is marked **remove** (T: "Mark this as 'remove'").
 
 T, same message: "Plot this, open the PR, then we'll plot the other things I mentioned." The looks are plotted as spec 152 (UK1); the layout and feature changes in the notes (shorter labels, the quest tracker hiding, the tab bar's labels, the hazard deck link, no burden, the Deck treatment) are the follow-up plot, spec 153.
+
+## Round 2 verdicts
+
+Decided 2026-11-06 by T in the second kit mixer (`ui-kit-mixer-2.html`: the node screens, new game and the endings), pasted with "Copy picks + notes". Plotted as spec 154 (UK2). Verbatim:
+
+```
+ui-kit mixer round 2 picks (2026-11-06)
+-- Village --
+V-01 Header (kicker, title, flavour, purse line): NORMAL | Okay, so the Village actually needs a full adjustment. The player, when entering the village, will have options: 'Rest', 'Card Shop', 'Blacksmith', any other options Village offers, the 'Exit'. Then, each of those options show a different screen with an NPC/Image for each, then what they offer. Each screen inside of these will need to be plotted on their own with pitches for the design and NPC image. So until we know what all these screens look like, let's not swap anything out.
+V-02 Section labels (A BED FOR THE NIGHT, THE CARD SHOP...): NORMAL
+V-03 Offer panels (Rest, Remove a card): NORMAL
+V-04 BUY buttons under the shop cards: NORMAL
+V-05 TAKE THE ROAD button: NORMAL
+V-06 Speaker row (Voices of the place): NORMAL
+-- Dialogue --
+E-01 Title and its underline: NORMAL
+E-02 Spoken-line box: VELLUM & INK
+E-03 Choice rows: BRASS GOTHIC | Inside "Take the quest", it should not have the errand text inside the button. The "placeholder line" will have all the information the player will need.
+E-04 Tip-your-cap secondary button: NORMAL | What does this offer? There should only be two options. Remove this.
+-- Cutscene --
+C-01 Omen panel: NORMAL | This shouldn't even have a border. Just raw text on the background
+C-02 SKIP button: NORMAL
+-- Travel --
+T-01 THE WAY ON tag: NORMAL | Add to deadlines that I need to find an image for the chapter 1 to chapter 2 traveling and an image for the chapter 1 cave shortcut travelling.
+T-02 YES · MOVE / NO · STAY buttons: VELLUM & INK
+-- Hazard --
+H-01 Stakes card (goal, costs, pay): VELLUM & INK | Again, we'll need to figure out text here. 1) We should break down only what we need. (<Name of place>) (Goal: Force: 18 | Escape 10) (Time: 60 secs) No other information outside of that. Also, make sure the text is legible and not so thin and hard to read.
+H-02 FACE IT button: NORMAL
+-- Labyrinth --
+X-01 Act rows: BRASS GOTHIC
+X-02 LEAVE button: BRASS GOTHIC
+-- Rest --
+R-01 Purse and VITAE strip: NORMAL | Show the hp bar here. I want to move everything but the options up, put an animated campfire in the middle. When we plot this, pause and ask me to point to where we have an animated fire for this screen. Also, let's make the background black
+R-02 Rest / Upgrade choice panels: NORMAL | Remove the "The node is spent the moment you stop here..." text. Also remove "A moment to stop".
+-- Cache --
+A-01 Take a card / Take the goods panels: NORMAL | Remove "The node is spent the moment you...." text. Remove the image of the Card. Remove "A find unclaimed", So leave title, flavor text underneath and then only provide the two options. BUT do not show what the reward is. Either Take a Card or Take the Goods. Only flavor text for both and that flavor text should be what you're doing on the adventure to earn it. (ie. (Take the Card) "Read the runes inside the cave" --- (Take the Goods) "Plunder the corpses left by the previous patrons" ) And then that'll be the pattern for all caches.
+A-02 Reward chips (+ HEALING POTION, +6 SHILLINGS): NORMAL
+-- Quest --
+Q-01 Quest panel (next work, pay): VELLUM & INK | Don't show any rewards. Furthermore, for all quests that are "0/1" just don't track the number for it. It'll always just be one.
+Q-02 ACCEPT / LEAVE buttons: NORMAL
+-- New game --
+N-01 Save slot rows: VELLUM & INK
+N-02 BEGIN buttons: VELLUM & INK
+N-03 Close (x) buttons: NORMAL
+N-04 Portrait and relic cards (character select): BRASS GOTHIC
+N-05 HEART / BODY / MIND tiles: VELLUM & INK
+N-06 CONFIRM button: VELLUM & INK
+N-07 Roster grid tiles: NORMAL
+-- Endings --
+G-01 CONTINUE / NEW CHARACTER button (death and game over): VELLUM & INK
+G-02 Aftermath ledger rows: VELLUM & INK
+G-03 BEGIN AGAIN band: VELLUM & INK | I don't even know when this page shows o.o!
+```
+
+T, same message: "For the ones that say to stop, do those last. Good luck". The aftermath panel (G-02, G-03) is shown by no game flow, only by the dev page `/devaftermath` (spec 154, call 2).
