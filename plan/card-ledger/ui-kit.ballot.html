@@ -20,7 +20,6 @@
   "no answer". The title screen's EMBARK button is not on the ballot: it stays
   as it is (T, 2026-11-05).
 -->
-<script src="ballot-kit.js"></script>
 <style>
   :root { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#e0b54a; --btn:#ece4d6; --btn-ink:#141110; }
   * { box-sizing: border-box; }
@@ -276,7 +275,8 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Complete: T decided in the kit mixer (2026-11-06), so this ballot no longer saves or submits. */
+refresh();
 </script>
 </body>
 </html>

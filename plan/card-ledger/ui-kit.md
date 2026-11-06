@@ -57,4 +57,67 @@ Standing call: the title screen's EMBARK stays as it is on main (T, 2026-11-05).
 
 ## Verdicts
 
-Not voted yet.
+Decided 2026-11-06 by T, in the kit mixer (`ui-kit-mixer.html`, a live mock where each place switches look), pasted into the session with "Copy picks". T's picks and notes, verbatim:
+
+Open T's exact mix: https://miserere-mei-deus.pages.dev/ui-kit-mixer#s=wilds&p=bccccacbabbabaabccccbbbabbcaaabcaaaaababbbbb
+
+```
+ui-kit mixer picks (2026-11-06)
+-- Main menu --
+M-01 Main menu buttons: BRASS GOTHIC | Remove any text below each option so we can make space. They should each only say "New Game" /  "Load Game" /  "Settings"
+-- Wilds & tabs --
+W-01 Status card (place, level, VITAE): VELLUM & INK | Let's tighten everything up so it all fits inside the oval. Furthermore, when we make this change, let's try it with and without a black background behind the whole top part so minimize the chaotic lines
+W-02 Node panel: VELLUM & INK | Let's adjust the UX experience to where, when a user clicks a node and this pops up,  the "quests" section disappears.
+W-03 BACK / TRAVEL HERE buttons: VELLUM & INK
+W-04 Quest tracker: VELLUM & INK | We can remove the "QUESTS" text at the top. And if the quest ends up being tracked as "0/1", then just don't have it there.
+W-05 Map node marks: NORMAL
+W-06 Bottom tab bar: VELLUM & INK | Let's not have the Gold wrapper around the current selection. The red text is enough. Furthermore, remove the text from underneath each option and make the icons bigger.
+-- Strife --
+S-01 ENTER COMBAT / WITHDRAW: BRASS GOTHIC | I do love the screen looking like this, so when we do the UI treatment work, refer to this screen. Also, remove "A FOE RISES"
+S-02 Enemy name rail and VITAE bar: NORMAL
+S-03 Enemy intent badge: BRASS GOTHIC | For this screen, while yes, we're swapping out these images, make sure the layout is maintained. (ie. keep intent in the upper right and momentum in the bottom-middle center)
+S-04 Conviction chip: BRASS GOTHIC
+S-05 Momentum chip: NORMAL
+S-06 Player dock (whole): BRASS GOTHIC
+S-07 END button: NORMAL
+S-08 Player portrait ring: NORMAL
+S-09 Player VITAE bar and phase marks: BRASS GOTHIC | We can remove the little circles underneath the VITAE to make room and make the END button smaller and this image at the bottom taller.
+-- Spoils --
+P-01 Fight summary panel: VELLUM & INK | We'll need to adjust the font to be easier to read (and change the yellow font to be readable)
+P-02 CONTINUE button: VELLUM & INK
+P-03 Card offer panel: VELLUM & INK
+P-04 TAKE NOTHING / TAKE CARD buttons: VELLUM & INK
+-- Self --
+F-01 Portrait frame: BRASS GOTHIC
+F-02 Level badge: BRASS GOTHIC
+F-03 HEART / BODY / MIND tiles: BRASS GOTHIC
+F-04 HAZARD DECK link: NORMAL | We can actually remove this entirely since it's no longer relevant as the hazard puzzle has changed
+F-05 Section headings and divider: BRASS GOTHIC
+F-06 VITAE pool bar: BRASS GOTHIC
+-- The Ledger --
+L-01 Section headings and dividers: VELLUM & INK
+-- Satchel --
+B-01 Purse: NORMAL
+B-02 Burden bar: NORMAL | This shouldn't exist. Mark this as "remove" and make sure we have no "burden" or weight. The player can hold anything and everything
+B-03 Worn-gear panel and corners: NORMAL
+B-04 Gear slot rows: BRASS GOTHIC
+B-05 ALL / GEAR / PHIALS tabs: VELLUM & INK
+B-06 Item cards: NORMAL
+-- Deck --
+D-01 CARDS / DISTINCT / RARE tallies: NORMAL | This whole screen needs an adjusted UX treatment. When we discuss plotting all these changes, suggest that we plot a UX treatment for "Deck" to provoke a feeling of minimalist order while still providing images.
+D-02 Rarity and colour chips: NORMAL
+D-03 Card-type heading and divider: NORMAL
+D-04 Card rows: NORMAL
+-- Settings --
+O-01 Section headings: BRASS GOTHIC
+O-02 Colour theme list: NORMAL | Make sure this still shows what the theme changes the colors to (as it is today)
+O-03 Segmented choices: BRASS GOTHIC
+O-04 Radio choices: BRASS GOTHIC
+O-05 On / off toggles: BRASS GOTHIC
+O-06 Volume steppers: BRASS GOTHIC
+O-07 Menu row buttons: BRASS GOTHIC
+```
+
+Tally: Brass Gothic 19, Vellum & Ink 12, Normal 13. B-02 is marked **remove** (T: "Mark this as 'remove'").
+
+T, same message: "Plot this, open the PR, then we'll plot the other things I mentioned." The looks are plotted as spec 152 (UK1); the layout and feature changes in the notes (shorter labels, the quest tracker hiding, the tab bar's labels, the hazard deck link, no burden, the Deck treatment) are the follow-up plot, spec 153.
