@@ -8,7 +8,7 @@
 > - Quest: no rewards shown and no 1-of-1 counter.
 > - Cache: two choices that tell you what you do, never what you get.
 >
-> The rest screen's rework waits on one answer from T (`[T to confirm #1]`). The village is left alone until its own rework is pitched.
+> The rest screen goes black, with T's animated campfire in the middle. The village is left alone until its own rework is pitched.
 
 ## Why
 
@@ -65,12 +65,12 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
   - The rewards themselves are unchanged and still paid after the choice.
   - "That'll be the pattern for all caches" (T). Each cache carries its two action lines as data, and a cache with no lines yet shows a `[content]` placeholder (`[T to confirm #3]`).
 - **The aftermath panel:** removed with its dev page, since nothing in the game shows it (`[T to confirm #2]`).
-- **Rest** (asked last, `[T to confirm #1]`):
-  - The background is black (T).
+- **Rest** (asked last; T pointed to the fire, 2026-11-06):
+  - The background is black (T). The fire's frames are drawn on black, so they sit on it with no seam.
   - The eyebrow "A MOMENT TO STOP" and the "node is spent" line go.
   - The purse and VITAE strip shows the VITAE bar.
-  - Everything but the two choices moves up, with an animated campfire in the middle.
-  - Its chunk is written once T says which animated fire to use.
+  - Everything but the two choices moves up, and T's animated campfire plays in the middle: `campfire-05`, 24 frames of 320×320 at 80 ms, looping (`assets/images/screens/animated-fixtures/campfire-05/`, added by PR #1404).
+  - Reduced motion holds one frame.
 - **Village:** nothing changes here. T's direction for its rework (a hub of options, each its own screen with an NPC image) goes to the village Item in `plan/deadlines.md`, where it will be pitched and plotted, each screen on its own (T).
 - **Travel art:** T finds two images, Chapter 1 to Chapter 2 travel and the Chapter 1 cave shortcut. That is a new `T` Item, not a chunk.
 
@@ -99,16 +99,17 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
 - **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
 - **A7** A cache shows its title, its flavour line and two choices, each with an action line and no reward shown. The eyebrow, the "node is spent" line, the card image and the goods list are gone, and the rewards paid are unchanged.
 - **A8** The aftermath panel and its dev page are gone, and no test or route names them.
+- **A9** The rest screen is black. It has no "A MOMENT TO STOP" and no "node is spent" line, its purse and VITAE strip shows the VITAE bar, everything but the two choices sits higher, and T's campfire loops in the middle (one still frame under reduced motion).
 
 ## Open questions
 
-1. Which animated fire does the rest screen use? T points to it. This is asked last, and the rest chunk is written from the answer. [T to confirm #1]
+1. Which animated fire does the rest screen use? Confirmed by T (2026-11-06): `campfire-05`, copied from T's checkout into `assets/images/screens/animated-fixtures/campfire-05/` (PR #1404).
 2. Should the aftermath panel ("the page closes", BEGIN AGAIN) be deleted, since no game flow shows it? Default: delete it and its dev page. Or: wire it into the death flow and skin it in vellum, per T's round-2 pick. [T to confirm #2]
 3. What do the caches without T's action lines show? Default: `[content]` placeholders until T writes them, with T's two lines on the cave cache. Or: the loop drafts every cache's lines in T's pattern for T to edit in the PR. [T to confirm #3]
 
 ## Chunks
 
-Measure: 8 open · 0 closed · next A9
+Measure: 9 open · 0 closed · next A10
 
 - [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs 152.1 · alias: UK2a
 - [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs 152.1 · alias: UK2b
@@ -118,6 +119,7 @@ Measure: 8 open · 0 closed · next A9
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 154.1, 153.2 · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
 - [ ] **154.8** The unused aftermath panel goes · S · closes A8 · needs — · alias: UK2h
+- [ ] **154.9** The rest screen: black, the campfire in the middle, the words cut · M · closes A9 · needs — · alias: UK2i
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
 
@@ -166,3 +168,14 @@ Measure: 8 open · 0 closed · next A9
 
 - Per #2, delete `CombatDefeatPanel` and `/devaftermath` (with their `_layout.tsx` registration and the `DebugRunControls` link), plus the aftermath presenter's defeat half if nothing else reads it.
 - Measure: `git grep -i "devaftermath\|CombatDefeatPanel"` finds nothing, then `npm run verify -w axiomancer-mobile`.
+
+### 154.9 (UK2i) — The rest screen: black, the campfire in the middle, the words cut · M · closes A9 · requires —
+
+- Needs the campfire frames on main (PR #1404). Merge that first; if they are missing, stop and say so.
+- `app/rest/index.tsx` drops its painted background for black.
+- `rest.copy.ts` loses the eyebrow and the "node is spent" line.
+- The purse and VITAE strip gains a VITAE bar (the same `StatBar` as elsewhere).
+- The header and strip move up. A frame player (`CAMPFIRE_05_FRAMES`, `CAMPFIRE_05_FRAME_MS`) loops the fire centred between them and the two choices.
+- Reduced motion shows frame 00.
+- The night-passing sequence (ET1c) still plays after a choice.
+- Measure: a screen test (no eyebrow, no spent line, the bar present, the frame player mounted, a still frame under reduced motion), then `npm run verify -w axiomancer-mobile`. The PR carries a rest screenshot.

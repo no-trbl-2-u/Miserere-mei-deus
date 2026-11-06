@@ -14,6 +14,7 @@ date: 2026-11-06
 - **154.6** · UK2f: the quest shows no pay and no lone counter (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.7** · UK2g: the cache says what you do, not what you get (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.8** · UK2h: the unused aftermath panel goes (T's mixer round 2, `/plot`, 2026-11-06)
+- **154.9** · UK2i: the rest screen: black, the campfire in the middle, the words cut (T's mixer round 2, `/plot`, 2026-11-06)
 
 **Held** (waits on a person's word; never picked until the
 ~~~
@@ -26,7 +27,7 @@ date: 2026-11-06
 ~~~ new
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 8 left |
+| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 9 left |
 ~~~
 
 ## Decisions
