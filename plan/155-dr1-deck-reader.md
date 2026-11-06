@@ -71,7 +71,7 @@ T's note is the one behaviour change. Keywords leave the ledger and move into th
 - **Tap** a keyword run: the existing tooltip provider shows its gloss, anchored to the word, dismissed by tap-outside or its own timeout. This needs one new `TooltipKind`, `card-keyword`, resolved from the registry the same way `hazard-keyword` is.
 - **Hold** a keyword run: the same gloss, **pinned** — it does not time out, and it stays until it is tapped away or another keyword is pressed. This is the "and held" half of T's note, and it needs `TooltipTarget` to take a long-press and the provider to take a `pinned` flag that skips its 6 s timer.
 - A keyword run keeps the word as its accessibility label and its gloss as its accessibility hint, so a screen reader reads what a press would show.
-- The ledger component itself is untouched: combat, the rewards preview and the hazard deck keep it. Only the Deck screen stops drawing one. [D?deck-keywords-in-text]
+- The ledger component itself is untouched: combat, the rewards preview and the hazard deck keep it. Only the Deck screen stops drawing one. [D173]
 
 ### The detail overlay, and where flavour goes
 
