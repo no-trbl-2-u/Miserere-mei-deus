@@ -229,9 +229,23 @@ function resolveModule(fromFile, spec) {
 }
 
 /**
- * Every module of a category's registry, as one string: its `index.ts` plus
- * the local modules reachable from it, transitively, without leaving the
- * category directory. The `seen` set makes a cycle terminate rather than hang.
+ * Categories whose registry has a second root beside `index.ts`.
+ *
+ * PHASE UK1a — `experience/index.ts` registers all 86 delivered PNGs and must
+ * stay importable by nothing: one import pulls every one of those `require()`
+ * literals into the bundle. So the registry the bundle actually sees is
+ * `experience/kit.ts`, which merges `./brass` and `./vellum`. Both roots are
+ * walked: `index.ts` accounts for the unconverted PNGs, `kit.ts` for the
+ * converted WebPs. This is reachability, not an exemption — a webp under
+ * `brass/` or `vellum/` that `kit.ts` cannot reach is still an orphan.
+ */
+const EXTRA_REGISTRY_ROOTS = { experience: ['kit.ts'] }
+
+/**
+ * Every module of a category's registry, as one string: its `index.ts` (plus
+ * any extra root above) and the local modules reachable from them,
+ * transitively, without leaving the category directory. The `seen` set makes a
+ * cycle terminate rather than hang.
  */
 function registrySourceFor(category) {
   const entry = path.join(IMAGES, category, 'index.ts')
@@ -240,6 +254,11 @@ function registrySourceFor(category) {
   const seen = new Set()
   const parts = []
   const queue = [entry]
+  for (const extra of EXTRA_REGISTRY_ROOTS[category] ?? []) {
+    const root = path.join(home, extra)
+    assert.ok(fs.existsSync(root), `${category}: extra registry root ${extra} is gone`)
+    queue.push(root)
+  }
   while (queue.length) {
     const file = queue.shift()
     if (seen.has(file)) continue

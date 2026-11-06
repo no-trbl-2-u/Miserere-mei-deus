@@ -1,0 +1,25 @@
+[
+  {
+    "generated_by": "owner-supplied",
+    "date": "2026-11-06",
+    "tool": "Pillow: crop the 2px gutter, LANCZOS to at most 800px wide, WebP q84 alpha q90",
+    "source": "T's experience kit (../provenance.json), the Vellum & Ink set",
+    "artist": "T (owner)",
+    "license": "Open source (T, 2026-10-29; D115)",
+    "post_process": "Only the 12 pieces T's vellum picks name (T, 2026-11-06, in the kit mixer) are converted: the Wilds, the Spoils, the Ledger's headings and dividers, and the Satchel's filter tabs. A vellum piece no place uses stays an unbundled PNG one level up. Same recipe as the brass set, so a vellum piece slices against the same percentages as its brass twin; nav-dock-vellum is the only one that hits the 800px cap, because the dock spans a phone at 3x.",
+    "covers": [
+      "action-button-vellum.webp",
+      "divider-ornate-ink.webp",
+      "divider-plain-ink.webp",
+      "divider-short-ink.webp",
+      "filter-tab-vellum.webp",
+      "menu-panel-vellum.webp",
+      "modal-panel-vellum.webp",
+      "nav-dock-vellum.webp",
+      "quest-row-vellum.webp",
+      "section-header-vellum-leaf.webp",
+      "section-header-vellum-star.webp",
+      "vellum-chip.webp"
+    ]
+  }
+]

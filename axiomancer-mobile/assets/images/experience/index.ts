@@ -1,8 +1,14 @@
 /**
  * Experience kit registry: T's UI kit (panels, buttons, tabs, badges,
  * dividers, combat HUD and nav pieces), dropped in as delivered PNGs on
- * 2026-11-04 (licence and source in `provenance.json`). Nothing imports it
- * yet, so none of it is bundled; whoever wires a piece in converts it per
+ * 2026-11-04 (licence and source in `provenance.json`).
+ *
+ * NOTHING IMPORTS THIS MAP, and nothing should: its 86 `require()` literals
+ * would all enter the Metro bundle, so the PNGs stay unbundled only while it
+ * has no importer. The app draws the converted pieces from `./brass` and
+ * `./vellum` through `./kit`, which is the registry the bundle sees. A piece
+ * no place in `components/experience/looks.ts` uses stays a PNG here,
+ * unconverted and unbundled; whoever wires one in converts it per
  * docs/asset-conventions.md.
  */
 
