@@ -193,7 +193,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-12 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | Stat scaling (`Combat/stat-scaling.ts`) | Claude brings a table of each lane's printed numbers at stats 3, 5, 7 and 9 beside the first character's spread (H7 / B3 / M5); you set the rates | W2 | T | - |
 | [ ] | 2026-11-13 | Play your quest line on the preview build and rule on its lines (0.5 h) | The Breakwater's questline | Claude turns your notes into fixes for BW1e | W2 | T | BW1e |
 | [ ] | 2026-11-14 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | The MVP run | Claude lists what the mid-MVP check filed and what has shipped since; you cut or keep | W2 | T | SM2b, SM2c, SM2d, SM2e, SM2f |
-| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d, HP6a, HP6b, HP6c, EQ3d, EQ3e, EQ3f, EQ3g, EQ3h, EQ3i, EQ3j, EQ3k, EQ4a, EQ4b, UK1a, UK1b, UK1c, UK1d, UK1e, UK1f |
+| [ ] | 2026-11-16 | MVP demo: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h, Sun Nov 15) | The MVP | Afterwards Claude reads the play log and lists what broke; `/messy` the dump | W2 | T | IT2b, ET1a, ET1b, ET1c, ET1d, HP6a, HP6b, HP6c, EQ3d, EQ3e, EQ3f, EQ3g, EQ3h, EQ3i, EQ3j, EQ3k, EQ4a, EQ4b, UK1a, UK1b, UK1c, UK1d, UK1e, UK1f, UX1a, UX1b, UX1c, UX1d, UX1e, UX1f |
 | [x] | 2026-11-18 | Upgrade grant call | Chapters 2-4 designed; hazards tuned | - | W3 | T | - |
 | [ ] | 2026-11-17 | Event kind 5, village (paid rest, card shop, Anvil): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | Chapters 2-4 designed; hazards tuned | `/pitch`, then `/plot` | W3 | needs plot | NK1b, NK1c |
 | [ ] | 2026-11-18 | Design Chapters 2-4's maps before enemy session 3, as the Breakwater's was before session 1: each chapter's node list (total and count per kind), its quest route and travel pairs, and room on its plate for the marks (1.5 h) | Chapters 2-4 designed; hazards tuned | `/pitch` per chapter, on the Breakwater's 44-node pitch | W3 | T | - |
@@ -253,6 +253,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - B5 — blocked: owner-led; the card-creator workflow is v0.5 stretch, in only if a window has time left.
 - B6 — blocked: owner-led; card sessions are v0.5 stretch, in only if a window has time left.
 - B7 — blocked: owner-led; after v0.5 (The milestone).
+- UX1g — the three Deck directions B7 starts from (spec 153); no T act waits on it before B7, after v0.5.
 - B8 — blocked: owner-led; after v0.5 (The milestone).
 - B9 — blocked: owner-led; after v0.5 (The milestone).
 - B10 — blocked: owner-led; after v0.5 (The milestone).
@@ -282,6 +283,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-06** — **the kit mixer's layout notes plotted as spec 153 (UX1a-UX1g)** (T, attended: "then we'll plot the other things I mentioned"). **Added** UX1a-UX1f to the `Waits on` of the MVP demo (Nov 16), beside UK1a-UK1f, and UX1g under Unscheduled beside B7, whose session it feeds. **Edited** no Item: UX1e removes only the hazard deck screen and its link, so the Nov 3 Item's cut of the saved hazard deck still stands. Nothing ticked; no date moved.
 - **2026-11-06** — **the UI kit plotted place by place as spec 152 (UK1a-UK1f)** (T, attended, from the kit mixer: the 44 picks pasted, then "Plot this, open the PR"). **Added** UK1a-UK1f to the `Waits on` of the MVP demo (Nov 16), since that run is where T first sees the new look. No Item's premise changes; the layout notes in the same paste are the next plot (spec 153). Nothing ticked; no date moved.
 - **2026-11-04** — **the title screen's EMBARK button becomes T's parchment Embark scroll, chunk 121.3 (TP1c)** (T, sending a sheet of eight button plates: "For now, I want the second one with the text in it already (whiteish scroll). Add that, then open a PR"). **Added** TP1c to the `Waits on` of the Mid-MVP check (Nov 9), beside TP1b: the check opens on the title screen. Nothing ticked; no date moved.
 - **2026-11-04** — **the quest and village UX reworks added as T's next two days** (T, in session: "that'll be what I work on today and tomorrow"). **Added** four T Items in W2: rework the quest UX and add NPC art to it (Nov 4), rework the village UX and its sub-menus and add NPCs to them (Nov 5). The art comes from `Potential Assets/sorted-entity-library-base`. Nothing ticked; no date moved. The Nov 17 village Item stays as it was.
