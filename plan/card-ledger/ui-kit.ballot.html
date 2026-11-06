@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI kit ballot</title>
+<!--
+  The experience-kit ballot (2026-11-05). T closed the Brass Gothic PR (#1398)
+  liking some placements and not others; this ballot asks, for each place the
+  kit could go, which of three looks to keep.
+
+  Each slot shows the same element three ways, cropped from the running web
+  build at 390 x 844:
+    a  Normal: main as it stands.
+    b  Brass Gothic: the closed PR's branch.
+    c  Vellum & Ink: the same branch with the vellum pieces served in place of
+       their brass twins, and the text on parchment inked dark. The kit has no
+       vellum bars, rings, END button or toggles, so those stay brass.
+  Tick one per slot (ticking another moves the tick). An unticked slot reads as
+  "no answer". The title screen's EMBARK button is not on the ballot: it stays
+  as it is (T, 2026-11-05).
+-->
+<style>
+  :root { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#e0b54a; --btn:#ece4d6; --btn-ink:#141110; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:14px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.95rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  [role=tablist] { display:flex; flex-wrap:wrap; gap:6px; position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0; border-bottom:1px solid var(--edge); }
+  [role=tab] { font:inherit; font-size:.92rem; padding:8px 12px; min-height:40px; border:1px solid var(--edge); background:var(--card); color:var(--ink); border-radius:6px; cursor:pointer; }
+  [role=tab][aria-selected=true] { background:var(--sel); color:#1b1408; border-color:var(--sel); }
+  [role=tab] .n { margin-left:6px; font-size:.8rem; opacity:.8; }
+  .slot { margin:20px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.08rem; margin:0 0 8px; }
+  .slot h2 small { color:var(--muted); font-weight:normal; margin-left:6px; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:10px; }
+  label.card { position:relative; display:block; background:var(--card); border:1px solid var(--edge); border-radius:8px; padding:8px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 3px var(--sel); border-color:var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .name { font-size:.95rem; margin:0 36px 6px 2px; }
+  .name b { letter-spacing:.04em; }
+  .shot { display:flex; justify-content:center; background:#0a0908; border-radius:4px; padding:4px; }
+  .shot img { display:block; max-width:100%; max-height:340px; height:auto; }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; font-size:.95rem; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  footer { margin-top:28px; padding-top:14px; border-top:2px solid var(--edge); display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  footer label, footer textarea { flex-basis:100%; }
+  footer textarea { min-height:70px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  footer button { font:inherit; padding:9px 16px; min-height:42px; background:var(--btn); color:var(--btn-ink); border:0; border-radius:6px; cursor:pointer; }
+  .count { color:var(--muted); }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>UI kit: keep which look?</h1>
+  <p class="sub">44 places the kit can go. For each, tick the one look to keep: <b>Normal</b> (as it is now), <b>Brass Gothic</b>, or <b>Vellum &amp; Ink</b>.</p>
+  <p class="legend">Ticking another look in the same place moves the tick. Use the note box when it's "this one, but…" (a different piece, smaller, no frame, only on one screen).<br>
+  Vellum is a preview: the vellum pieces swapped onto the brass build, text inked dark on parchment. It has no bars, rings, END button or toggles, so those stay brass.<br>
+  The title screen's EMBARK is not on here: it stays as it is.</p>
+  <nav role="tablist" id="tabs" aria-label="Screens"></nav>
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the kit as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'ui-kit-2026-11-05';
+const TABS = [{"key": "W", "name": "Wilds & tabs"}, {"key": "S", "name": "Strife"}, {"key": "P", "name": "Spoils"}, {"key": "F", "name": "Self"}, {"key": "B", "name": "Satchel"}, {"key": "D", "name": "Deck"}, {"key": "L", "name": "The Ledger"}, {"key": "O", "name": "Settings"}, {"key": "M", "name": "Main menu"}];
+const SLOTS = [{"slot": "M-01", "label": "Main menu buttons"}, {"slot": "W-01", "label": "Status card (place, level, VITAE)"}, {"slot": "W-02", "label": "Node panel"}, {"slot": "W-03", "label": "BACK / TRAVEL HERE buttons"}, {"slot": "W-04", "label": "Quest tracker"}, {"slot": "W-05", "label": "Map node marks"}, {"slot": "W-06", "label": "Bottom tab bar"}, {"slot": "S-01", "label": "ENTER COMBAT / WITHDRAW"}, {"slot": "S-02", "label": "Enemy name rail and VITAE bar"}, {"slot": "S-03", "label": "Enemy intent badge"}, {"slot": "S-04", "label": "Conviction chip"}, {"slot": "S-05", "label": "Momentum chip"}, {"slot": "S-06", "label": "Player dock (whole)"}, {"slot": "S-07", "label": "END button"}, {"slot": "S-08", "label": "Player portrait ring"}, {"slot": "S-09", "label": "Player VITAE bar and phase marks"}, {"slot": "P-01", "label": "Fight summary panel"}, {"slot": "P-02", "label": "CONTINUE button"}, {"slot": "P-03", "label": "Card offer panel"}, {"slot": "P-04", "label": "TAKE NOTHING / TAKE CARD buttons"}, {"slot": "F-01", "label": "Portrait frame"}, {"slot": "F-02", "label": "Level badge"}, {"slot": "F-03", "label": "HEART / BODY / MIND tiles"}, {"slot": "F-04", "label": "HAZARD DECK link"}, {"slot": "F-05", "label": "Section headings and divider"}, {"slot": "F-06", "label": "VITAE pool bar"}, {"slot": "L-01", "label": "Section headings and dividers"}, {"slot": "B-01", "label": "Purse"}, {"slot": "B-02", "label": "Burden bar"}, {"slot": "B-03", "label": "Worn-gear panel and corners"}, {"slot": "B-04", "label": "Gear slot rows"}, {"slot": "B-05", "label": "ALL / GEAR / PHIALS tabs"}, {"slot": "B-06", "label": "Item cards"}, {"slot": "D-01", "label": "CARDS / DISTINCT / RARE tallies"}, {"slot": "D-02", "label": "Rarity and colour chips"}, {"slot": "D-03", "label": "Card-type heading and divider"}, {"slot": "D-04", "label": "Card rows"}, {"slot": "O-01", "label": "Section headings"}, {"slot": "O-02", "label": "Colour theme list"}, {"slot": "O-03", "label": "Segmented choices"}, {"slot": "O-04", "label": "Radio choices"}, {"slot": "O-05", "label": "On / off toggles"}, {"slot": "O-06", "label": "Volume steppers"}, {"slot": "O-07", "label": "Menu row buttons"}];
+const LOOKS = [['a', 'Normal'], ['b', 'Brass Gothic'], ['c', 'Vellum & Ink']];
+/* One candidate per look per place; the kit reads the ticks by id. */
+const CARDS = [
+  { id: 'M-01a', look: 'Normal' },
+  { id: 'M-01b', look: 'Brass Gothic' },
+  { id: 'M-01c', look: 'Vellum & Ink' },
+  { id: 'W-01a', look: 'Normal' },
+  { id: 'W-01b', look: 'Brass Gothic' },
+  { id: 'W-01c', look: 'Vellum & Ink' },
+  { id: 'W-02a', look: 'Normal' },
+  { id: 'W-02b', look: 'Brass Gothic' },
+  { id: 'W-02c', look: 'Vellum & Ink' },
+  { id: 'W-03a', look: 'Normal' },
+  { id: 'W-03b', look: 'Brass Gothic' },
+  { id: 'W-03c', look: 'Vellum & Ink' },
+  { id: 'W-04a', look: 'Normal' },
+  { id: 'W-04b', look: 'Brass Gothic' },
+  { id: 'W-04c', look: 'Vellum & Ink' },
+  { id: 'W-05a', look: 'Normal' },
+  { id: 'W-05b', look: 'Brass Gothic' },
+  { id: 'W-05c', look: 'Vellum & Ink' },
+  { id: 'W-06a', look: 'Normal' },
+  { id: 'W-06b', look: 'Brass Gothic' },
+  { id: 'W-06c', look: 'Vellum & Ink' },
+  { id: 'S-01a', look: 'Normal' },
+  { id: 'S-01b', look: 'Brass Gothic' },
+  { id: 'S-01c', look: 'Vellum & Ink' },
+  { id: 'S-02a', look: 'Normal' },
+  { id: 'S-02b', look: 'Brass Gothic' },
+  { id: 'S-02c', look: 'Vellum & Ink' },
+  { id: 'S-03a', look: 'Normal' },
+  { id: 'S-03b', look: 'Brass Gothic' },
+  { id: 'S-03c', look: 'Vellum & Ink' },
+  { id: 'S-04a', look: 'Normal' },
+  { id: 'S-04b', look: 'Brass Gothic' },
+  { id: 'S-04c', look: 'Vellum & Ink' },
+  { id: 'S-05a', look: 'Normal' },
+  { id: 'S-05b', look: 'Brass Gothic' },
+  { id: 'S-05c', look: 'Vellum & Ink' },
+  { id: 'S-06a', look: 'Normal' },
+  { id: 'S-06b', look: 'Brass Gothic' },
+  { id: 'S-06c', look: 'Vellum & Ink' },
+  { id: 'S-07a', look: 'Normal' },
+  { id: 'S-07b', look: 'Brass Gothic' },
+  { id: 'S-07c', look: 'Vellum & Ink' },
+  { id: 'S-08a', look: 'Normal' },
+  { id: 'S-08b', look: 'Brass Gothic' },
+  { id: 'S-08c', look: 'Vellum & Ink' },
+  { id: 'S-09a', look: 'Normal' },
+  { id: 'S-09b', look: 'Brass Gothic' },
+  { id: 'S-09c', look: 'Vellum & Ink' },
+  { id: 'P-01a', look: 'Normal' },
+  { id: 'P-01b', look: 'Brass Gothic' },
+  { id: 'P-01c', look: 'Vellum & Ink' },
+  { id: 'P-02a', look: 'Normal' },
+  { id: 'P-02b', look: 'Brass Gothic' },
+  { id: 'P-02c', look: 'Vellum & Ink' },
+  { id: 'P-03a', look: 'Normal' },
+  { id: 'P-03b', look: 'Brass Gothic' },
+  { id: 'P-03c', look: 'Vellum & Ink' },
+  { id: 'P-04a', look: 'Normal' },
+  { id: 'P-04b', look: 'Brass Gothic' },
+  { id: 'P-04c', look: 'Vellum & Ink' },
+  { id: 'F-01a', look: 'Normal' },
+  { id: 'F-01b', look: 'Brass Gothic' },
+  { id: 'F-01c', look: 'Vellum & Ink' },
+  { id: 'F-02a', look: 'Normal' },
+  { id: 'F-02b', look: 'Brass Gothic' },
+  { id: 'F-02c', look: 'Vellum & Ink' },
+  { id: 'F-03a', look: 'Normal' },
+  { id: 'F-03b', look: 'Brass Gothic' },
+  { id: 'F-03c', look: 'Vellum & Ink' },
+  { id: 'F-04a', look: 'Normal' },
+  { id: 'F-04b', look: 'Brass Gothic' },
+  { id: 'F-04c', look: 'Vellum & Ink' },
+  { id: 'F-05a', look: 'Normal' },
+  { id: 'F-05b', look: 'Brass Gothic' },
+  { id: 'F-05c', look: 'Vellum & Ink' },
+  { id: 'F-06a', look: 'Normal' },
+  { id: 'F-06b', look: 'Brass Gothic' },
+  { id: 'F-06c', look: 'Vellum & Ink' },
+  { id: 'L-01a', look: 'Normal' },
+  { id: 'L-01b', look: 'Brass Gothic' },
+  { id: 'L-01c', look: 'Vellum & Ink' },
+  { id: 'B-01a', look: 'Normal' },
+  { id: 'B-01b', look: 'Brass Gothic' },
+  { id: 'B-01c', look: 'Vellum & Ink' },
+  { id: 'B-02a', look: 'Normal' },
+  { id: 'B-02b', look: 'Brass Gothic' },
+  { id: 'B-02c', look: 'Vellum & Ink' },
+  { id: 'B-03a', look: 'Normal' },
+  { id: 'B-03b', look: 'Brass Gothic' },
+  { id: 'B-03c', look: 'Vellum & Ink' },
+  { id: 'B-04a', look: 'Normal' },
+  { id: 'B-04b', look: 'Brass Gothic' },
+  { id: 'B-04c', look: 'Vellum & Ink' },
+  { id: 'B-05a', look: 'Normal' },
+  { id: 'B-05b', look: 'Brass Gothic' },
+  { id: 'B-05c', look: 'Vellum & Ink' },
+  { id: 'B-06a', look: 'Normal' },
+  { id: 'B-06b', look: 'Brass Gothic' },
+  { id: 'B-06c', look: 'Vellum & Ink' },
+  { id: 'D-01a', look: 'Normal' },
+  { id: 'D-01b', look: 'Brass Gothic' },
+  { id: 'D-01c', look: 'Vellum & Ink' },
+  { id: 'D-02a', look: 'Normal' },
+  { id: 'D-02b', look: 'Brass Gothic' },
+  { id: 'D-02c', look: 'Vellum & Ink' },
+  { id: 'D-03a', look: 'Normal' },
+  { id: 'D-03b', look: 'Brass Gothic' },
+  { id: 'D-03c', look: 'Vellum & Ink' },
+  { id: 'D-04a', look: 'Normal' },
+  { id: 'D-04b', look: 'Brass Gothic' },
+  { id: 'D-04c', look: 'Vellum & Ink' },
+  { id: 'O-01a', look: 'Normal' },
+  { id: 'O-01b', look: 'Brass Gothic' },
+  { id: 'O-01c', look: 'Vellum & Ink' },
+  { id: 'O-02a', look: 'Normal' },
+  { id: 'O-02b', look: 'Brass Gothic' },
+  { id: 'O-02c', look: 'Vellum & Ink' },
+  { id: 'O-03a', look: 'Normal' },
+  { id: 'O-03b', look: 'Brass Gothic' },
+  { id: 'O-03c', look: 'Vellum & Ink' },
+  { id: 'O-04a', look: 'Normal' },
+  { id: 'O-04b', look: 'Brass Gothic' },
+  { id: 'O-04c', look: 'Vellum & Ink' },
+  { id: 'O-05a', look: 'Normal' },
+  { id: 'O-05b', look: 'Brass Gothic' },
+  { id: 'O-05c', look: 'Vellum & Ink' },
+  { id: 'O-06a', look: 'Normal' },
+  { id: 'O-06b', look: 'Brass Gothic' },
+  { id: 'O-06c', look: 'Vellum & Ink' },
+  { id: 'O-07a', look: 'Normal' },
+  { id: 'O-07b', look: 'Brass Gothic' },
+  { id: 'O-07c', look: 'Vellum & Ink' },
+];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cardHtml = (s, [v, name]) => `
+  <label class="card" data-id="${s.slot}${v}">
+    <input class="pick" type="checkbox" value="${s.slot}${v}" aria-label="${esc(s.label)}: keep ${name}">
+    <p class="name"><b>${name}</b></p>
+    <div class="shot"><img src="ui-kit/${s.slot}${v}.jpg" alt="${esc(s.label)}, ${name}" loading="lazy"></div>
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)}<small>${s.slot}</small></h2>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(s, LOOKS.find(([v]) => v === c.id.slice(-1)))).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot} (optional)">
+  </section>`;
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map((t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${esc(t.name)}<span class="n" data-n="${t.key}"></span></button>`).join('');
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+  window.scrollTo(0, 0);
+};
+document.getElementById('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) showTab(b.dataset.tab); });
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered`;
+  TABS.forEach((t) => {
+    const all = SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).length;
+    const done = new Set(k.filter((id) => id.startsWith(t.key + '-')).map((id) => id.slice(0, 4))).size;
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${done}/${all}`;
+  });
+};
+// One look per place: a new tick clears the other two in its slot.
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) {
+    box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  }
+  refresh();
+});
+refresh();
+
+const lookName = (id) => (LOOKS.find(([v]) => id.endsWith(v)) || [, '?'])[1];
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'BALLOT: UI kit, keep which look (ui-kit-2026-11-05)',
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}`,
+    ...TABS.flatMap((t) => [`-- ${t.name} --`, ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      return `${s.slot} ${s.label}: ${pick ? lookName(pick).toUpperCase() : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    })]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Complete: T decided in the kit mixer (2026-11-06), so this ballot no longer saves or submits. */
+refresh();
+</script>
+</body>
+</html>
