@@ -1,0 +1,28 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export const BILGE_STALKER_CELLS: readonly ImageSourcePropType[] = [
+    require('./bilge-stalker-00.webp'),
+    require('./bilge-stalker-01.webp'),
+    require('./bilge-stalker-02.webp'),
+    require('./bilge-stalker-03.webp'),
+    require('./bilge-stalker-04.webp'),
+    require('./bilge-stalker-05.webp'),
+    require('./bilge-stalker-06.webp'),
+    require('./bilge-stalker-07.webp'),
+    require('./bilge-stalker-08.webp'),
+    require('./bilge-stalker-09.webp'),
+    require('./bilge-stalker-10.webp'),
+    require('./bilge-stalker-11.webp'),
+    require('./bilge-stalker-12.webp'),
+    require('./bilge-stalker-13.webp'),
+    require('./bilge-stalker-14.webp'),
+    require('./bilge-stalker-15.webp'),
+    require('./bilge-stalker-16.webp'),
+    require('./bilge-stalker-17.webp'),
+    require('./bilge-stalker-18.webp'),
+    require('./bilge-stalker-19.webp'),
+    require('./bilge-stalker-20.webp'),
+    require('./bilge-stalker-21.webp'),
+    require('./bilge-stalker-22.webp'),
+    require('./bilge-stalker-23.webp'),
+];
