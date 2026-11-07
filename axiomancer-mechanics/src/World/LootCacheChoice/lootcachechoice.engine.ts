@@ -23,6 +23,8 @@ import type {
 } from './lootcachechoice.types';
 import type { SeedInput } from '../seed';
 import type { Item } from '../../Items/types';
+import { CACHE_ACTION_PLACEHOLDER } from '../MapEvents/types';
+import type { LootCacheActionLines } from '../MapEvents/types';
 
 // ---------------------------------------------------------------------------
 // Lifecycle
@@ -37,6 +39,16 @@ export interface CreateLootCacheChoiceOptions {
     currencyCandidate: number;
     /** The authored MapEvent one-liner. `null`/absent falls back to the presenter's placeholder intro. */
     description?: string | null;
+    /** The cache's two action lines. A missing or blank line falls back to `CACHE_ACTION_PLACEHOLDER`. */
+    actions?: LootCacheActionLines | null;
+}
+
+/** Both lines, always filled: the authored line, else the `[content]` placeholder. */
+function actionLines(actions: LootCacheActionLines | null | undefined): LootCacheActionLines {
+    return {
+        card: actions?.card?.trim() || CACHE_ACTION_PLACEHOLDER,
+        item: actions?.item?.trim() || CACHE_ACTION_PLACEHOLDER,
+    };
 }
 
 /** Builds the offer session from the host-rolled candidates. Nothing is read from `GameState`. */
@@ -50,6 +62,7 @@ export function createLootCacheChoiceSession(
         itemCandidates: opts.itemCandidates.slice(),
         currencyCandidate: opts.currencyCandidate,
         description: opts.description?.trim() || null,
+        actions: actionLines(opts.actions),
         outcome: null,
         seed,
     };

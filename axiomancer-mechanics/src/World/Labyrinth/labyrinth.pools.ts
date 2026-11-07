@@ -18,6 +18,7 @@ import {
     setNodeEventPoolOverride,
 } from '../MapEvents/resolve-map-event';
 import { applyPayload } from '../MapEvents/handlers';
+import { PLACEHOLDER_CACHE_ACTIONS } from '../MapEvents/types';
 import type { MapEventPool, ResolveMapEventResult } from '../MapEvents/types';
 import type { GameState } from '../../Game/types';
 import { getRng } from '../../Utils/rng';
@@ -90,7 +91,11 @@ function buildDefaultPool(act: LabyrinthActDef): MapEventPool {
             },
             {
                 kind: 'loot-cache', weight: t.weights.lootCache,
-                payload: { kind: 'loot-cache', currency: t.cacheCurrency, description: 'Something a previous walker will not be coming back for.' },
+                payload: {
+                    kind: 'loot-cache', currency: t.cacheCurrency,
+                    description: 'Something a previous walker will not be coming back for.',
+                    actions: PLACEHOLDER_CACHE_ACTIONS,
+                },
             },
             {
                 // The act's material, found loose: a cache holding one item.
@@ -99,6 +104,7 @@ function buildDefaultPool(act: LabyrinthActDef): MapEventPool {
                     kind: 'loot-cache',
                     items: [{ ...t.gatherItem, category: 'material', quantity: 1 }],
                     description: 'The maze grows little. Take what it grows.',
+                    actions: PLACEHOLDER_CACHE_ACTIONS,
                 },
             },
             {

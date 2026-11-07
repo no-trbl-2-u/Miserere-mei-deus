@@ -99,6 +99,9 @@ export {
 } from './questline';
 // Rest shelter classification. Mobile words an inn night as a bed.
 export type { RestShelter } from './MapEvents/types';
+// A cache's two action lines: what you do for each choice, never the reward.
+export type { LootCacheActionLines, LootCachePayload } from './MapEvents/types';
+export { CACHE_ACTION_PLACEHOLDER, PLACEHOLDER_CACHE_ACTIONS } from './MapEvents/types';
 export {
     DEFAULT_REST_SHELTER, isInnShelter,
 } from './MapEvents/rest-shelter';
