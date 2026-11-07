@@ -2746,12 +2746,6 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/deck",
-      "to": "area:Effects",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
       "to": "area:Enemy",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
@@ -2784,12 +2778,6 @@
       "from": "route:(tabs)/deck",
       "to": "area:NPCs",
       "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",

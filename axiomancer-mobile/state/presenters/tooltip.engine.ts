@@ -18,7 +18,7 @@
  *   for free.
  * - `'card-keyword'` — a keyword printed in a card's own text, resolved
  *   from the keyword registry by its Title-Case name.
- * - `'slot'`, `'burden'`, `'map-node'`, `'chronicle-entry'`,
+ * - `'slot'`, `'map-node'`, `'chronicle-entry'`,
  *   `'quest-objective'`, `'item-stat'`, `'disabled-action'` — static
  *   tables below.
  *

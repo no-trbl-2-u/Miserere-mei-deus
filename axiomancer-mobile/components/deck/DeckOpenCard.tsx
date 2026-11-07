@@ -15,10 +15,10 @@
  * for the gloss, hold to pin it.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
+import { useTooltip } from '@/hooks/useTooltip';
 import { Image } from '@/lib/platform/image';
 import type { DeckCardVM, DeckLineVM, DeckRunVM } from '@/state/presenters/deck.engine';
 import { TYPE_ROLES } from '@/theme/axm';
@@ -73,12 +73,15 @@ export function DeckOpenCard({ card }: DeckOpenCardProps) {
 
 function Line({ line, index }: { line: DeckLineVM; index: number }) {
     const styles = useStyles();
+    // A nested Text cannot be measured reliably on native, so the gloss is
+    // anchored to the line's own block.
+    const anchorRef = useRef<View | null>(null);
     return (
-        <View style={styles.line} testID={`deck-open-card-line-${index}`}>
+        <View ref={anchorRef} style={styles.line} testID={`deck-open-card-line-${index}`}>
             {line.label !== null && <Text style={styles.lineLabel}>{line.label}</Text>}
             <Text style={styles.lineText}>
                 {line.runs.map((run, i) => (
-                    <RunText key={i} run={run} />
+                    <RunText key={i} run={run} anchorRef={anchorRef} />
                 ))}
             </Text>
         </View>
@@ -86,23 +89,27 @@ function Line({ line, index }: { line: DeckLineVM; index: number }) {
 }
 
 /**
- * One run, in order. A keyword run is a pressable span in the keyword's ink:
- * a tap shows its gloss anchored to the word, a hold pins it.
+ * One run, in order. A keyword run is a nested Text in the keyword's ink: a
+ * tap shows its gloss over the line, a hold pins it.
  */
-function RunText({ run }: { run: DeckRunVM }) {
+function RunText({ run, anchorRef }: { run: DeckRunVM; anchorRef: React.RefObject<View | null> }) {
     const styles = useStyles();
+    const tooltip = useTooltip();
     if (run.kind === 'text') return <Text>{run.text}</Text>;
+    const show = (pinned: boolean) =>
+        tooltip.show({ kind: 'card-keyword', id: run.keyword, anchorRef, pinned });
     return (
-        <TooltipTarget
-            kind="card-keyword"
-            id={run.keyword}
-            pinOnLongPress
+        <Text
+            style={[styles.keyword, run.minor ? styles.keywordMinor : null]}
+            onPress={() => show(false)}
+            onLongPress={() => show(true)}
+            accessibilityRole="link"
             accessibilityLabel={run.word}
             accessibilityHint={run.minor ? `${run.gloss} (minor right now)` : run.gloss}
             testID={`deck-keyword-${run.keyword}`}
         >
-            <Text style={[styles.keyword, run.minor ? styles.keywordMinor : null]}>{run.word}</Text>
-        </TooltipTarget>
+            {run.word}
+        </Text>
     );
 }
 
