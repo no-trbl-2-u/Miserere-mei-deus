@@ -141,12 +141,12 @@ describe('A9 — the four foes play exactly the Appendix', () => {
         expect([...words(CraneHook)].sort()).toEqual(['undertow', 'ward']);
     });
 
-    it('every Breakwater node binds its foe under level 10', () => {
-        expect(BW_ENCOUNTER_FOES['bw-w2']).toEqual({ slug: 'float-eye', level: 2 });
-        expect(BW_ENCOUNTER_FOES['bw-w3']).toEqual({ slug: 'gallows-crow', level: 2 });
-        expect(BW_ENCOUNTER_FOES['bw-m1']).toEqual({ slug: 'float-eye', level: 2 });
+    it('every Breakwater node binds its foe under level 10 (the recast faces hold the cut foes\' nodes, EN3b)', () => {
+        expect(BW_ENCOUNTER_FOES['bw-w2']).toEqual({ slug: 'quay-crab', level: 2 });
+        expect(BW_ENCOUNTER_FOES['bw-w3']).toEqual({ slug: 'coralback', level: 2 });
+        expect(BW_ENCOUNTER_FOES['bw-m1']).toEqual({ slug: 'quay-crab', level: 2 });
         expect(BW_ENCOUNTER_FOES['bw-h1']).toEqual({ slug: 'net-mender', level: 3 });
-        expect(BW_ENCOUNTER_FOES['bw-h2']).toEqual({ slug: 'crane-hook', level: 3 });
+        expect(BW_ENCOUNTER_FOES['bw-h2']).toEqual({ slug: 'quay-crab', level: 3 });
         expect(BW_ENCOUNTER_FOES['bw-h3']).toEqual({ slug: 'net-mender', level: 3 });
         for (const row of Object.values(BW_ENCOUNTER_FOES)) expect(row.level).toBeLessThan(10);
     });

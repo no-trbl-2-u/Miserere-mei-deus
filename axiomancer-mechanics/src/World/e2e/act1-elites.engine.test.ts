@@ -3,10 +3,10 @@
  *
  * Every later Act 1 region's door fight — the map's last fight
  * column — is the Death Beholder as a boss; each keeps one mid-region
- * node pinned to its one elite, the Green Jelly. The Breakwater's Death
- * Beholder is its chapter boss in the sea keep (`bw-k2`), a dead end behind
- * the keep gate, and it stages three Green Jellies, each holding the road
- * past it. Every other Breakwater fight binds the foe and level its
+ * node pinned to its one elite, the Green Jelly. The Breakwater's Saint
+ * Beneath (EN3b, the Death Beholder's recast) is its chapter boss in the sea
+ * keep (`bw-k2`), a dead end behind the keep gate, and it stages three
+ * elite nodes, each holding the road past it. Every other Breakwater fight binds the foe and level its
  * `BW_ENCOUNTER_FOES` row names (T's Breakwater table); every other fight
  * elsewhere is Float-Eye.
  *
@@ -45,9 +45,9 @@ describe.each(ACT1_MAPS)('Act 1 fights on %s / %s (D30, D61)', (continent, mapNa
         return [{ node, payload, foe: roster.get(payload.enemySlug!), difficulty: payloadDifficulty(payload) }];
     });
 
-    it('has exactly one boss — the Death Beholder, on the last fight column or where the map stages it (D61)', () => {
+    it('has exactly one boss — the Saint Beneath on the Breakwater (EN3b), the Death Beholder elsewhere, on the last fight column or where the map stages it (D61)', () => {
         const bosses = fights.filter(f => f.payload.isBoss);
-        expect(bosses.map(f => f.payload.enemySlug)).toEqual(['death-beholder']);
+        expect(bosses.map(f => f.payload.enemySlug)).toEqual([mapName === 'breakwater' ? 'saint-beneath' : 'death-beholder']);
         if (staged) {
             expect(bosses[0]!.node.id).toBe(staged.boss);
             expect(bosses[0]!.node.connectedNodes).toEqual([]);

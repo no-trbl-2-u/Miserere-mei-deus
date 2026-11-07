@@ -95,8 +95,11 @@ describe('generateEncounter', () => {
     it('picks an enemy from the resolved map and stamps origin', () => {
         const enc = generateEncounter(coastNode, 1);
         expect(enc.enemies).toHaveLength(1);
-        // The Act 1 pool is Float-Eye only.
-        expect(enc.enemies[0].id).toBe(FloatEye.id);
+        // The Act 1 pool is the six Chapter 1 normals (EN3b), named by hand.
+        expect([
+            'enemy-quay-crab', 'enemy-net-mender', 'enemy-coralback',
+            'enemy-brine-widow', 'enemy-saltwick-swarm', 'enemy-bilge-stalker',
+        ]).toContain(enc.enemies[0].id);
         expect(enc.origin).toBe('breakwater:bw-w2');
     });
 
