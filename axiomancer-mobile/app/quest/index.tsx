@@ -39,26 +39,31 @@ import {
     questShillingsLine,
     questXpLine,
 } from '@/state/presenters/quest.copy';
-import { FONTS, TYPE } from '@/theme/axm';
+import { KitSurface } from '@/components/experience/KitSurface';
+import { PLACE_PIECES } from '@/components/experience/looks';
+import { FONTS, HUE, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+
+/** The vellum panel the quest's cards wear (Q-01). */
+const [PANEL] = PLACE_PIECES['Q-01'];
 
 function StepBlock({ head, step, testID }: { head: string; step: QuestStepVM; testID: string }) {
     const styles = useStyles();
     return (
-        <View style={styles.card} testID={testID}>
-            <Text style={styles.eyebrow}>{head}</Text>
+        <KitSurface piece={PANEL} style={styles.card} testID={testID}>
+            <Text style={styles.cardEyebrow}>{head}</Text>
             <Text style={styles.cardTitle}>{step.name}</Text>
             {step.objectives.map(o => (
                 <View key={o.id} style={styles.objectiveRow} testID={`${testID}-objective-${o.id}`}>
-                    <Text style={styles.body}>{o.description}</Text>
+                    <Text style={styles.cardBody}>{o.description}</Text>
                     <Text style={[styles.progress, o.done && styles.progressDone]}>{o.progress}</Text>
                 </View>
             ))}
-            <Text style={styles.eyebrow}>{QUEST_REWARDS_HEAD}</Text>
+            <Text style={styles.cardEyebrow}>{QUEST_REWARDS_HEAD}</Text>
             {step.rewards.map(line => (
                 <Text key={line} style={styles.rewardLine}>{line}</Text>
             ))}
-        </View>
+        </KitSurface>
     );
 }
 
@@ -114,9 +119,9 @@ export default function QuestScreen() {
                         )}
 
                         {vm.paid && (
-                            <View style={styles.card} testID="quest-paid">
-                                <Text style={styles.eyebrow}>{QUEST_PAID_HEAD}</Text>
-                                <Text style={[styles.cardTitle, { color: AXM.sulfur }]}>{vm.paid.questName}</Text>
+                            <KitSurface piece={PANEL} style={styles.card} testID="quest-paid">
+                                <Text style={styles.cardEyebrow}>{QUEST_PAID_HEAD}</Text>
+                                <Text style={[styles.cardTitle, { color: HUE.hzForceInk }]}>{vm.paid.questName}</Text>
                                 <View style={styles.chipRow}>
                                     {vm.paid.experience > 0 && (
                                         <Text style={styles.chip}>{questXpLine(vm.paid.experience)}</Text>
@@ -129,7 +134,7 @@ export default function QuestScreen() {
                                         <Text key={name} style={styles.chip}>{name}</Text>
                                     ))}
                                 </View>
-                            </View>
+                            </KitSurface>
                         )}
 
                         {vm.stage === 'locked' && (
@@ -227,32 +232,47 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
         marginBottom: 8,
     },
+    // Clears the vellum panel's drawn corners (about 26 high, 42 wide).
     card: {
-        borderWidth: 2,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
-        padding: 12,
+        paddingVertical: 30,
+        paddingHorizontal: 44,
         marginBottom: 10,
+    },
+    cardEyebrow: {
+        fontFamily: FONTS.sans,
+        fontSize: 12,
+        letterSpacing: 2.2,
+        color: HUE.hzCardInk2,
+        marginTop: 6,
+        marginBottom: 4,
+    },
+    cardBody: {
+        flex: 1,
+        fontFamily: FONTS.serif,
+        fontSize: 13,
+        lineHeight: 19,
+        color: HUE.hzCardInk,
+        marginBottom: 8,
     },
     cardTitle: {
         fontFamily: FONTS.gothic,
         fontSize: 20,
         lineHeight: 24,
-        color: AXM.parchment,
+        color: HUE.hzCardInk,
         marginBottom: 6,
     },
     objectiveRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 },
-    progress: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 1, color: AXM.bone },
-    progressDone: { color: AXM.sulfur },
-    rewardLine: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.sulfur, marginBottom: 2 },
+    progress: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 1, color: HUE.hzCardInk2 },
+    progressDone: { color: HUE.hzForceInk },
+    rewardLine: { fontFamily: FONTS.mono, fontSize: 13, color: HUE.hzForceInk, marginBottom: 2 },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
         fontFamily: FONTS.mono,
         fontSize: 12,
         letterSpacing: 1,
-        color: AXM.parchment,
+        color: HUE.hzCardInk,
         borderWidth: 1,
-        borderColor: AXM.ash,
+        borderColor: HUE.hzCardEdge,
         paddingHorizontal: 5,
         paddingVertical: 2,
     },

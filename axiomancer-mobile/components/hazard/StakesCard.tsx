@@ -8,8 +8,13 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import type { HazardStakesVM } from '@/state/presenters/hazard-stakes.engine';
+import { KitSurface } from '@/components/experience/KitSurface';
+import { PLACE_PIECES } from '@/components/experience/looks';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+
+/** The vellum panel the stakes card wears (H-01). */
+const [PANEL] = PLACE_PIECES['H-01'];
 
 export function StakesCard({ stakes, onFace }: { stakes: HazardStakesVM; onFace: () => void }) {
     const AXM = usePalette();
@@ -17,14 +22,14 @@ export function StakesCard({ stakes, onFace }: { stakes: HazardStakesVM; onFace:
     return (
         <View style={styles.root} testID="hazard-stakes">
             <ScrollView contentContainerStyle={styles.scroll}>
-                <View style={[styles.card, { borderColor: AXM.blood }]}>
-                    <Text style={[styles.kind, { color: AXM.blood }]} testID="hazard-stakes-kind">
+                <KitSurface piece={PANEL} style={styles.card}>
+                    <Text style={[styles.kind, { color: HUE.hzForceInk }]} testID="hazard-stakes-kind">
                         {stakes.kindLine.toUpperCase()}
                     </Text>
                     <Text style={styles.place} testID="hazard-stakes-place">{stakes.place}</Text>
                     {stakes.lines.map((line) =>
                         line.key === 'opens' ? (
-                            <Text key={line.key} style={[styles.opens, { color: AXM.sulfur }]} testID="hazard-stakes-opens">
+                            <Text key={line.key} style={[styles.opens, { color: HUE.hzForceInk }]} testID="hazard-stakes-opens">
                                 {line.label}: {line.values.join(', ')}
                             </Text>
                         ) : (
@@ -36,7 +41,7 @@ export function StakesCard({ stakes, onFace }: { stakes: HazardStakesVM; onFace:
                             </View>
                         ),
                     )}
-                </View>
+                </KitSurface>
                 <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={stakes.cta}
@@ -54,12 +59,13 @@ export function StakesCard({ stakes, onFace }: { stakes: HazardStakesVM; onFace:
 const useStyles = makeStyles((AXM) => ({
     root: { flex: 1, backgroundColor: HUE.routeBg },
     scroll: { flexGrow: 1, justifyContent: 'center', padding: 20, gap: 16, maxWidth: 520, width: '100%', alignSelf: 'center' },
-    card: { borderWidth: 1, padding: 18, gap: 14, backgroundColor: HUE.hzRouteRiskBg },
+    // Clears the vellum panel's drawn corners (about 26 high, 42 wide).
+    card: { paddingVertical: 32, paddingHorizontal: 44, gap: 14 },
     kind: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 2 },
-    place: { fontFamily: FONTS.gothic, fontSize: 28, color: AXM.parchment },
+    place: { fontFamily: FONTS.gothic, fontSize: 28, color: HUE.hzCardInk },
     group: { gap: 3 },
-    eyebrow: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 2, color: AXM.bone },
-    value: { fontFamily: FONTS.sans, fontSize: 15, color: AXM.parchment },
+    eyebrow: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 2, color: HUE.hzCardInk2 },
+    value: { fontFamily: FONTS.sans, fontSize: 15, color: HUE.hzCardInk },
     opens: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 1 },
     cta: { borderWidth: 1, paddingVertical: 14, alignItems: 'center' },
     ctaText: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 2 },

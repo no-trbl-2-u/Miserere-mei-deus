@@ -30,8 +30,13 @@ import {
     selectLabyrinthFinaleViewModel,
     selectLabyrinthViewModel,
 } from '@/state/presenters/labyrinth.engine';
+import { KitPressable } from '@/components/experience/KitSurface';
+import { PLACE_PIECES } from '@/components/experience/looks';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+
+/** The brass button the act rows (X-01) and LEAVE (X-02) wear, idle then held. */
+const [BUTTON, BUTTON_PRESSED] = PLACE_PIECES['X-01'];
 
 /**
  * The /labyrinth route. Purpose: render THE APORIA's three states — act
@@ -118,8 +123,10 @@ export default function LabyrinthScreen() {
                     <Text style={styles.sub}>{vm.sub}</Text>
                     <Text style={styles.warning}>{vm.warning}</Text>
                     {vm.acts.map((act) => (
-                        <Pressable
+                        <KitPressable
                             key={act.id}
+                            piece={BUTTON}
+                            pressedPiece={BUTTON_PRESSED}
                             onPress={() => actions.enterLabyrinth(act.id)}
                             style={styles.actCard}
                             accessibilityRole="button"
@@ -131,9 +138,11 @@ export default function LabyrinthScreen() {
                             <Text style={styles.actEnter}>
                                 {act.completed ? LABYRINTH_COPY.actDone : LABYRINTH_COPY.enterAct}
                             </Text>
-                        </Pressable>
+                        </KitPressable>
                     ))}
-                    <Pressable
+                    <KitPressable
+                        piece={BUTTON}
+                        pressedPiece={BUTTON_PRESSED}
                         onPress={leave}
                         style={styles.leaveButton}
                         accessibilityRole="button"
@@ -141,7 +150,7 @@ export default function LabyrinthScreen() {
                         testID="labyrinth-leave"
                     >
                         <Text style={styles.leaveText}>{LABYRINTH_COPY.leave}</Text>
-                    </Pressable>
+                    </KitPressable>
                 </View>
             </ScreenBg>
         );
@@ -155,7 +164,9 @@ export default function LabyrinthScreen() {
                     <Text style={styles.title}>{vm.title}</Text>
                     <Text style={styles.sub}>{vm.body}</Text>
                     <Text style={styles.warning}>{vm.lastLine}</Text>
-                    <Pressable
+                    <KitPressable
+                        piece={BUTTON}
+                        pressedPiece={BUTTON_PRESSED}
                         onPress={leave}
                         style={styles.leaveButton}
                         accessibilityRole="button"
@@ -163,7 +174,7 @@ export default function LabyrinthScreen() {
                         testID="labyrinth-leave"
                     >
                         <Text style={styles.leaveText}>{LABYRINTH_COPY.leave}</Text>
-                    </Pressable>
+                    </KitPressable>
                 </View>
             </ScreenBg>
         );
@@ -364,10 +375,10 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
         marginBottom: 8,
     },
+    // Clears the brass button's drawn corners (about 16 high, 13 wide).
     actCard: {
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        padding: 14,
+        paddingVertical: 22,
+        paddingHorizontal: 22,
         gap: 4,
     },
     actTitle: {
@@ -390,10 +401,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     leaveButton: {
         alignSelf: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 24,
-        borderWidth: 1,
-        borderColor: AXM.ash,
+        paddingVertical: 20,
+        paddingHorizontal: 40,
         marginTop: 8,
     },
     leaveText: {
