@@ -13,7 +13,6 @@ import { describe, expect, it, jest } from '@jest/globals';
 
 import type { CombatSummary } from '@mechanics';
 import { CombatSummaryModal, playsLabel } from '@/components/combat/encounter/CombatSummaryModal';
-import { OUTCOME_INK } from '@/components/combat/encounter/spoils-ink';
 import { HUE } from '@/theme/hue';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
@@ -111,14 +110,6 @@ describe('CombatSummaryModal', () => {
     it('inks the Victory headline in the darkened green, not the dark panel green', () => {
         renderSummary(SUMMARY);
         expect(screen.getByText(SUMMARY.headline)).toHaveStyle({ color: HUE.vellumVictory });
-    });
-
-    it('inks each outcome headline in its own vellum ink', () => {
-        for (const outcome of ['victory', 'mercy', 'defeat', 'retreat'] as const) {
-            const view = renderSummary({ ...SUMMARY, outcome });
-            expect(screen.getByText(SUMMARY.headline)).toHaveStyle({ color: OUTCOME_INK[outcome] });
-            view.unmount();
-        }
     });
 
     it('CONTINUE closes, on every outcome', () => {

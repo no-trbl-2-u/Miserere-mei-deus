@@ -40,7 +40,7 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
-import { SPOILS_INK, VELLUM_OFFER_H, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
+import { OFFER_FRAME_BORDER, OFFER_FRAME_PAD, SPOILS_INK, VELLUM_OFFER_H, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
@@ -282,7 +282,7 @@ const useStyles = makeStyles((AXM) => ({
     title: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, textAlign: 'center' },
     sub: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12, color: AXM.bone, textAlign: 'center', marginTop: 3, marginBottom: 14 },
     offerRow: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
-    offerFrame: { borderWidth: 2, padding: 3, alignItems: 'center' },
+    offerFrame: { borderWidth: OFFER_FRAME_BORDER, padding: OFFER_FRAME_PAD, alignItems: 'center' },
     // The rarity word under each offer face. Hue matches the frame it sits in,
     // but the WORD is the signal — the colour is never asked to carry it alone.
     offerRarity: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.4, marginTop: 3 },

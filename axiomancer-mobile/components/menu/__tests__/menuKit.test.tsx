@@ -5,9 +5,11 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
+import { StyleSheet, View } from 'react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
+import { AXM } from '@/theme/axm';
 import { FeedbackSheet } from '@/components/menu/FeedbackSheet';
 import { MenuButton } from '@/components/menu/MenuButton';
 import { OptionRow } from '@/components/menu/OptionRow';
@@ -21,6 +23,8 @@ jest.mock('@/components/experience/KitBackdrop', () => {
 });
 
 const noop = () => undefined;
+/** A touch event as the responder system hands it to a Pressable. */
+const GRANT = { nativeEvent: { touches: [], changedTouches: [], identifier: 1, timestamp: 0, pageX: 0, pageY: 0 }, persist: () => undefined, currentTarget: 1, target: 1 };
 const SEG = [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] as const;
 const BOOL = [{ value: true, label: 'ON' }, { value: false, label: 'OFF' }] as const;
 
@@ -37,8 +41,15 @@ describe('MenuButton', () => {
     });
     it('keeps a danger row off the red label under brass', () => {
         render(<MenuButton label="RESET" onPress={noop} place="O-07" danger />);
-        expect(JSON.stringify(screen.getByText('RESET').props.style)).not.toMatch(/"color":"#?[a-z0-9]*blood/i);
+        expect(StyleSheet.flatten(screen.getByText('RESET').props.style).color).not.toBe(AXM.blood);
         expect(screen.getByTestId('piece-action-button-idle')).toBeTruthy();
+    });
+    it('turns the label dark on the gold plate while a non-primary row is pressed', () => {
+        render(<MenuButton label="LOAD" onPress={noop} place="O-07" testID="b" />);
+        expect(StyleSheet.flatten(screen.getByText('LOAD').props.style).color).not.toBe(AXM.bg);
+        act(() => { fireEvent(screen.getByTestId('b'), 'responderGrant', GRANT); });
+        expect(screen.getByTestId('piece-action-button-selected')).toBeTruthy();
+        expect(StyleSheet.flatten(screen.getByText('LOAD').props.style).color).toBe(AXM.bg);
     });
 });
 
@@ -69,6 +80,12 @@ describe('StepperRow', () => {
         render(<StepperRow label="V" valueLabel="70%" onDecrement={noop} onIncrement={noop} testID="s" level={0.7} />);
         expect(screen.getByTestId('piece-slider-track-diamond')).toBeTruthy();
         expect(screen.getByTestId('piece-slider-knob-diamond')).toBeTruthy();
+    });
+    it('lets the row wrap and keeps the slider at 64pt so the controls fit a 360 screen', () => {
+        render(<StepperRow label="V" valueLabel="70%" onDecrement={noop} onIncrement={noop} testID="s" level={0.7} />);
+        expect(StyleSheet.flatten(screen.getByTestId('s').props.style).flexWrap).toBe('wrap');
+        const widths = screen.UNSAFE_getAllByType(View).map((n) => (StyleSheet.flatten(n.props.style) as { width?: number } | undefined)?.width);
+        expect(widths).toContain(64);
     });
     it('draws no slider without a level', () => {
         render(<StepperRow label="V" valueLabel="70%" onDecrement={noop} onIncrement={noop} testID="s" />);

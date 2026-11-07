@@ -69,4 +69,7 @@ export function blend(fg: string, bg: string, opacity: number): string {
 export const VELLUM_PANEL_PAD = 40;
 export const VELLUM_OFFER_W = 80;
 export const VELLUM_OFFER_H = 118;
-export const OFFER_TILE_CHROME = 10;
+/** The offer tile's frame: border and padding per side, shared with `CombatRewardsOverlay`'s `offerFrame`. */
+export const OFFER_FRAME_BORDER = 2;
+export const OFFER_FRAME_PAD = 3;
+export const OFFER_TILE_CHROME = 2 * (OFFER_FRAME_BORDER + OFFER_FRAME_PAD);
