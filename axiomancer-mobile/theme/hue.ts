@@ -125,4 +125,6 @@ export const HUE = {
     vellumOxblood: '#6e1a10',
     vellumVitaeRed: '#8a2418',
     vellumShadow: '#c0a47d',
+    // Kept from this branch (UK1e, spec 152.5): the vellum looks' quiet ink
+    vellumInkQuiet: '#4a3826',
 } as const;
