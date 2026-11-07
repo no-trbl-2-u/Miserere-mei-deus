@@ -4,11 +4,7 @@ import { View, Text } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { AxmIcon, type AxmIconName } from '@/components/icons';
-import {
-  TAB_BAR_LABEL_FONT_SIZE,
-  TAB_BAR_LABEL_LETTER_SPACING,
-  TAB_TITLES,
-} from '@/state/presenters/tabs.engine';
+import { TAB_ICON_SIZE, TAB_TITLES } from '@/state/presenters/tabs.engine';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectTabBadges } from '@/state/presenters/navigation.engine';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
@@ -60,13 +56,11 @@ const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {
 function TabIconWithBadge({
   kind,
   color,
-  size,
   focused,
   badge,
 }: {
   kind: string;
   color: string;
-  size: number;
   focused: boolean;
   badge: { text: string; kind: 'event' | 'levelup' } | null;
 }) {
@@ -79,7 +73,7 @@ function TabIconWithBadge({
       {/* W-06: on the vellum dock the selected tab is marked by its oxblood ink
           alone (T, 2026-11-06), so the tick above the icon is not drawn. */}
       <View style={[styles.activeTick, focused && !VELLUM_DOCK && { backgroundColor: AXM.sulfur }]} />
-      <AxmIcon name={icon.name} size={size} color={color} label={icon.label} />
+      <AxmIcon name={icon.name} size={TAB_ICON_SIZE} color={color} label={icon.label} />
       {badge && <TabBadge text={badge.text} kind={badge.kind} />}
     </View>
   );
@@ -121,7 +115,8 @@ export default function TabLayout() {
         // brown for the rest. Nothing is drawn behind the selection.
         tabBarActiveTintColor: VELLUM_DOCK ? VELLUM_OXBLOOD : AXM.sulfur,
         tabBarInactiveTintColor: VELLUM_DOCK ? INK_SOFT : AXM.bone,
-        tabBarLabelStyle: styles.tabLabel,
+        // T (W-06): icons only. Each screen sets tabBarAccessibilityLabel to its name.
+        tabBarShowLabel: false,
         ...(VELLUM_DOCK ? { tabBarBackground: () => <KitBackdrop piece="nav-dock-vellum" /> } : {}),
       }}
     >
@@ -130,12 +125,11 @@ export default function TabLayout() {
         component={ExplorationScreen}
         options={{
           title: TAB_TITLES.exploration,
-          tabBarLabel: TAB_TITLES.exploration,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarAccessibilityLabel: TAB_TITLES.exploration,
+          tabBarIcon: ({ color, focused }) => (
             <TabIconWithBadge
               kind="eye"
               color={color}
-              size={size}
               focused={focused}
               badge={badges.exploration}
             />
@@ -148,12 +142,11 @@ export default function TabLayout() {
         component={CharacterScreen}
         options={{
           title: TAB_TITLES.character,
-          tabBarLabel: TAB_TITLES.character,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarAccessibilityLabel: TAB_TITLES.character,
+          tabBarIcon: ({ color, focused }) => (
             <TabIconWithBadge
               kind="crown"
               color={color}
-              size={size}
               focused={focused}
               badge={badges.character}
             />
@@ -165,12 +158,11 @@ export default function TabLayout() {
         component={MemoirScreen}
         options={{
           title: TAB_TITLES.memoir,
-          tabBarLabel: TAB_TITLES.memoir,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarAccessibilityLabel: TAB_TITLES.memoir,
+          tabBarIcon: ({ color, focused }) => (
             <TabIconWithBadge
               kind="quill"
               color={color}
-              size={size}
               focused={focused}
               badge={badges.memoir}
             />
@@ -182,12 +174,11 @@ export default function TabLayout() {
         component={InventoryScreen}
         options={{
           title: TAB_TITLES.inventory,
-          tabBarLabel: TAB_TITLES.inventory,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarAccessibilityLabel: TAB_TITLES.inventory,
+          tabBarIcon: ({ color, focused }) => (
             <TabIconWithBadge
               kind="bag"
               color={color}
-              size={size}
               focused={focused}
               badge={badges.inventory}
             />
@@ -202,12 +193,11 @@ export default function TabLayout() {
         component={DeckScreen}
         options={{
           title: TAB_TITLES.deck,
-          tabBarLabel: TAB_TITLES.deck,
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarAccessibilityLabel: TAB_TITLES.deck,
+          tabBarIcon: ({ color, focused }) => (
             <TabIconWithBadge
               kind="cards"
               color={color}
-              size={size}
               focused={focused}
               badge={badges.deck}
             />
@@ -220,9 +210,9 @@ export default function TabLayout() {
         component={SettingsTabScreen}
         options={{
           title: TAB_TITLES.settings,
-          tabBarLabel: TAB_TITLES.settings,
-          tabBarIcon: ({ color, size, focused }) => (
-            <TabIconWithBadge kind="gear" color={color} size={size} focused={focused} badge={null} />
+          tabBarAccessibilityLabel: TAB_TITLES.settings,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIconWithBadge kind="gear" color={color} focused={focused} badge={null} />
           ),
         }}
       />
@@ -242,18 +232,6 @@ const useStyles = makeStyles((AXM) => ({
   tabBarVellum: {
     backgroundColor: 'transparent',
     borderTopWidth: 0,
-  },
-  // Type size and tracking come from the presenter so the tab-bar FIT
-  // contract in `state/e2e/tabs.engine.test.ts` measures the label the bar
-  // actually draws. Size and tracking are both pinned to the presenter's
-  // measured minimum: Uncial Antiqua is wide enough that THE LEDGER barely
-  // clears a 320pt phone even at size 6, tracking 0, and a clipped label is
-  // silent (the navigator's Label is `numberOfLines: 1`, so it ellipsises
-  // rather than breaking the layout).
-  tabLabel: {
-    fontFamily: FONTS.sans,
-    fontSize: TAB_BAR_LABEL_FONT_SIZE,
-    letterSpacing: TAB_BAR_LABEL_LETTER_SPACING,
   },
   iconContainer: {
     position: 'relative',
