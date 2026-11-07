@@ -1,0 +1,28 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export const SAINT_BENEATH_CELLS: readonly ImageSourcePropType[] = [
+    require('./saint-beneath-00.webp'),
+    require('./saint-beneath-01.webp'),
+    require('./saint-beneath-02.webp'),
+    require('./saint-beneath-03.webp'),
+    require('./saint-beneath-04.webp'),
+    require('./saint-beneath-05.webp'),
+    require('./saint-beneath-06.webp'),
+    require('./saint-beneath-07.webp'),
+    require('./saint-beneath-08.webp'),
+    require('./saint-beneath-09.webp'),
+    require('./saint-beneath-10.webp'),
+    require('./saint-beneath-11.webp'),
+    require('./saint-beneath-12.webp'),
+    require('./saint-beneath-13.webp'),
+    require('./saint-beneath-14.webp'),
+    require('./saint-beneath-15.webp'),
+    require('./saint-beneath-16.webp'),
+    require('./saint-beneath-17.webp'),
+    require('./saint-beneath-18.webp'),
+    require('./saint-beneath-19.webp'),
+    require('./saint-beneath-20.webp'),
+    require('./saint-beneath-21.webp'),
+    require('./saint-beneath-22.webp'),
+    require('./saint-beneath-23.webp'),
+];

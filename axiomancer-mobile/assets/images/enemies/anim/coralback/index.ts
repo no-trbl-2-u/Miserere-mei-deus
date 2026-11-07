@@ -1,0 +1,28 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export const CORALBACK_CELLS: readonly ImageSourcePropType[] = [
+    require('./coralback-00.webp'),
+    require('./coralback-01.webp'),
+    require('./coralback-02.webp'),
+    require('./coralback-03.webp'),
+    require('./coralback-04.webp'),
+    require('./coralback-05.webp'),
+    require('./coralback-06.webp'),
+    require('./coralback-07.webp'),
+    require('./coralback-08.webp'),
+    require('./coralback-09.webp'),
+    require('./coralback-10.webp'),
+    require('./coralback-11.webp'),
+    require('./coralback-12.webp'),
+    require('./coralback-13.webp'),
+    require('./coralback-14.webp'),
+    require('./coralback-15.webp'),
+    require('./coralback-16.webp'),
+    require('./coralback-17.webp'),
+    require('./coralback-18.webp'),
+    require('./coralback-19.webp'),
+    require('./coralback-20.webp'),
+    require('./coralback-21.webp'),
+    require('./coralback-22.webp'),
+    require('./coralback-23.webp'),
+];

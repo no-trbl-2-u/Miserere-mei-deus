@@ -94,14 +94,18 @@ export function rosterPortraitKeys(librarySource) {
   return new Set([...librarySource.matchAll(/portraitAsset:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]))
 }
 
-/** Every key of the `ENEMY_ART_BY_KEY` object literal in the art index source. */
+/**
+ * Every key the art index binds to a `require(`. `ENEMY_ART_BY_KEY` may be
+ * composed from more than one literal (a spread of a base table plus its own
+ * entries), so the sweep reads every `'slug': require(` binding in the file
+ * rather than the body of one object literal; the first literal alone would
+ * miss the spread-in half and refuse every enemy.
+ */
 export function artRegistryKeys(indexSource) {
-  const start = indexSource.indexOf('ENEMY_ART_BY_KEY')
-  if (start < 0) throw new Error('sheet: ENEMY_ART_BY_KEY not found in the enemy art index')
-  const open = indexSource.indexOf('{', indexSource.indexOf('=', start))
-  const close = indexSource.indexOf('};', open)
-  const body = indexSource.slice(open + 1, close)
-  return new Set([...body.matchAll(/['"]([a-z0-9-]+)['"]\s*:\s*require\(/g)].map((m) => m[1]))
+  if (!indexSource.includes('ENEMY_ART_BY_KEY')) {
+    throw new Error('sheet: ENEMY_ART_BY_KEY not found in the enemy art index')
+  }
+  return new Set([...indexSource.matchAll(/['"]([a-z0-9-]+)['"]\s*:\s*require\(/g)].map((m) => m[1]))
 }
 
 /** The keys that pass the used-enemy test: in the roster with a portrait, and bound to art. */

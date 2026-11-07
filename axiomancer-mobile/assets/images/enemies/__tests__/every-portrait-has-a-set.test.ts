@@ -16,10 +16,9 @@ import {
 } from '../frames';
 
 describe('every portrait has a valid frame set', () => {
-    it('enumerates the real registries, and all seventeen keys pass', () => {
-        // The parse-free guard against a vacuous pass: the roster is the one
-        // AN5 was planned against.
-        expect(ENEMY_ART_KEYS.length).toBe(17);
+    it('enumerates the real registries, and all 23 keys pass', () => {
+        // The parse-free guard against a vacuous pass: keep the registered portrait count explicit.
+        expect(ENEMY_ART_KEYS.length).toBe(23);
         expect(portraitsWithoutAValidSet(ENEMY_ART_KEYS)).toEqual([]);
     });
 

@@ -1,0 +1,46 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "Built-in image generator, Pillow grid registration, split-spritesheet.py, ingest-art.mjs --no-grade",
+    "source": "art-department/masters/enemies/saltwick-swarm.sheet.png and art-department/masters/enemies/saltwick-swarm.prompt.txt",
+    "model": "Built-in image generator",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "portrait": "saltwick-swarm.webp",
+    "portrait_sha256": "5c61ba30f6a6199c48a89066e5369dd13314eaa54b5ac601d8ff8e1374d2c0b1",
+    "master_sha256": "65ebecb99ecc9fe17b70c6b7e526a2cf02b8ca82d2a56b50ef58dfff2ff661c8",
+    "graded": false,
+    "graded_in_this_run": false,
+    "method": "Generator returned 1774x887. Extracted the 24 poses, aligned them on a 2048x768 grid with one scale and copied the first idle pose into both recovery endpoints. Scaled to 160px cells for the WebP byte budget.",
+    "measured": "106058 B total, 4419 B mean, 5710 B max against 27662 B static.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (registry for saltwick-swarm)"
+    ],
+    "covers": [
+      "saltwick-swarm-00.webp",
+      "saltwick-swarm-01.webp",
+      "saltwick-swarm-02.webp",
+      "saltwick-swarm-03.webp",
+      "saltwick-swarm-04.webp",
+      "saltwick-swarm-05.webp",
+      "saltwick-swarm-06.webp",
+      "saltwick-swarm-07.webp",
+      "saltwick-swarm-08.webp",
+      "saltwick-swarm-09.webp",
+      "saltwick-swarm-10.webp",
+      "saltwick-swarm-11.webp",
+      "saltwick-swarm-12.webp",
+      "saltwick-swarm-13.webp",
+      "saltwick-swarm-14.webp",
+      "saltwick-swarm-15.webp",
+      "saltwick-swarm-16.webp",
+      "saltwick-swarm-17.webp",
+      "saltwick-swarm-18.webp",
+      "saltwick-swarm-19.webp",
+      "saltwick-swarm-20.webp",
+      "saltwick-swarm-21.webp",
+      "saltwick-swarm-22.webp",
+      "saltwick-swarm-23.webp"
+    ]
+  }
+]
