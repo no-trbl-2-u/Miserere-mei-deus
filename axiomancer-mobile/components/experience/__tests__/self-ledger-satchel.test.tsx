@@ -1,5 +1,5 @@
 /**
- * UK1e (spec 152.5): Self in brass, the Ledger on vellum and ink, the Satchel's
+ * Self in brass, the Ledger on vellum and ink, the Satchel's
  * gear rows in brass and its filter tabs on vellum. Each place reads its look
  * from `LOOKS`; the places T kept Normal keep today's code.
  */
