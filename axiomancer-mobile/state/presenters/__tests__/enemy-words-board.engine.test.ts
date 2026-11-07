@@ -116,7 +116,7 @@ describe('a WARD-only move telegraphs DEFEND, with no number', () => {
     });
 
     // The benched Float-Eye and Gallows Crow stage at no Chapter 1 node, and still telegraph DEFEND without a number.
-    it.each([['float-eye', 'Shut Lid'], ['gallows-crow', 'Take Wing']] as const)('benched %s: %s', (slug, move) => {
+    it.each<[slug: 'float-eye' | 'gallows-crow', move: 'Shut Lid' | 'Take Wing']>([['float-eye', 'Shut Lid'], ['gallows-crow', 'Take Wing']])('benched %s: %s', (slug, move) => {
         const intent = buildCombatViewModel(at(asFoe(fightAt('bw-w2'), slug), move)).enemy.intent;
         expect([intent.type, intent.label, intent.moveName]).toEqual(['defend', 'DEFEND', move]);
         expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
