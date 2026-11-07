@@ -21,7 +21,7 @@
  *   dice row                   → free-floating gem dice above the hand
  *   hand fan                   → full board width, no corner chrome
  *   footer dock                → avatar (tap = pilgrim modal) · VITAE column
- *                                (value, piles, fill bar, phase ledger) · END
+ *                                (value, piles, fill bar) · END
  *                                (`CombatFooterDock`)
  *
  * The drag ghost renders at screen level in `CombatEncounterPanel`.
@@ -77,7 +77,7 @@ import { juiceHaptics, useJuicePulse, useJuiceShake } from '@/lib/juice';
 
 // Per-card art registry (temp art pass) — keyed by cardId, falls back to the
 // circe placeholder for unmapped ids. Stance tint + glyph still ride on top.
-import { getCardArt } from '@/assets/images/cards';
+import { cardArtFor } from '@/assets/images/cards';
 
 // ── Layout-animation builders (hoisted, identity-stable) ─────────────────────
 // Reanimated compares an Animated component's `layout` / `exiting` prop by
@@ -931,7 +931,7 @@ export interface CombatBoardProps {
     onInspect: (card: CombatCardVM) => void;
     onChip?: (e: CombatEffectChipVM) => void;
     /** A touch on a board word or mark (the Conviction chip, a die, the piles,
-     *  the phase ledger, `IN PLAY`) asks the glossary to open. The board drops
+     *  `IN PLAY`) asks the glossary to open. The board drops
      *  the touch while a drag is live or a phase resolves. */
     onGloss?: BoardGlossOpen;
     /** Long-press (or tap while unaffordable) on a signature rune → info popup. */
@@ -2057,7 +2057,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                 <View style={styles.plateArtWrap} pointerEvents="none" testID="combat-card-face-art">
                     <View style={styles.plateArtFrame} testID="combat-card-face-art-frame">
                         <Image
-                            source={getCardArt(card.cardId)}
+                            source={cardArtFor(card.cardId)}
                             style={[StyleSheet.absoluteFill, artMirrored(card.cardId) && { transform: [{ scaleX: -1 }] }]}
                             contentFit="cover"
                             transition={0}

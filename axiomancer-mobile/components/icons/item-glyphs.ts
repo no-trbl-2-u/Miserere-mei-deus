@@ -1,7 +1,7 @@
 /**
  * Per-item glyph table. An item's glyph is a property of the item, not of
  * its category: this map is the one place an item id meets a registry icon,
- * the same shape as `getCardArt` (`assets/images/cards/index.ts`).
+ * the same shape as `cardArtFor` (`assets/images/cards/index.ts`).
  *
  * It lives beside `icon-registry.ts` rather than in `assets/images/`
  * because its values are registry names, not bundled files.

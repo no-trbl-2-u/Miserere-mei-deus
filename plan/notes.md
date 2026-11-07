@@ -195,3 +195,41 @@ bundle.
 - Self's VITAE bar is drawn by `StatBar look="brass"` (default `normal`, so the burden bar and every other consumer are untouched).
 - `KitHeader` with `look="vellum"` now inks its label in oxblood (`VELLUM_OXBLOOD`); `VELLUM_INK` and `VELLUM_OXBLOOD` live in `KitBackdrop.tsx` for the other vellum places to reuse.
 - Vellum tabs' zero count is `#4a3826` at 90% opacity, because today's 45% fade measures under 4.5:1 on parchment.
+
+- **157.1 (EN3a) landed.** Six `createEnemy` entries in
+  `axiomancer-mechanics/src/Enemy/enemy.library.ts` — The Saint Beneath (boss,
+  the Death Beholder's), Saltwick Swarm (the Green Jelly's), The Wreckmaster
+  (the Toll-Keeper's), Quay-Crab (the Crane-Hook's), Bilge-Stalker (the
+  Wreck-Picker's) and Coralback (the Lamprey-Knot's). Every mechanical field is
+  copied verbatim: `level`, `baseStats`, `difficulty`, `logic`, `phases`, and
+  for the boss `vitae: 320` and the three stages at 0.75 / 0.5 / 0.25. New
+  `id`, `name`, `description`, `portraitAsset`, `mapName: 'breakwater'`.
+  Nothing designed, retuned or removed; all ten cut foes stay in the library
+  with their entries, portraits and frame sets, and `FRAME_SET_EXEMPTIONS` is
+  untouched. `ENEMY_DECKS` gains `enemy-saint-beneath` with the Death
+  Beholder's three tiers and round gates 4 / 7; the Death Beholder keeps its
+  own. `EnemyLibrary`, `ENEMY_REGISTRY`, `EnemySlug` and `LIVE_ENEMY_IDS` all
+  gain the six and lose nothing. No node table touched: the six are in the
+  library and placed nowhere, which 157.2 fixes.
+- **Defaults taken under the loop.** The five non-boss names are the spec's,
+  verbatim (T, 157 Q1). The six descriptions are one drafted line each, read
+  off the portrait in the game's voice and marked `DRAFT (Claude)` for T to
+  rewrite (T, 157 Q4). The boss's `journalEntry` body is the Death Beholder's,
+  carried over with the title on this foe's own name, as T's answer says.
+  No number moved, `BW_DOOR_LEVEL` included (T, 157 Q5).
+- **The one place T's answer and the gate disagreed.** T's Q4 answer says the
+  six carry no `mercyLines`. But `aftermath-lines.engine.test.ts` requires a
+  Spare and a Finish line of **every** normal foe and of no other foe, and the
+  fourteen stand-ins the answer compares them to ("exactly as the stand-ins
+  are today") all carry one. So the four new normals plus Saltwick Swarm carry
+  a drafted Spare/Finish pair, also marked DRAFT; The Wreckmaster (elite) and
+  The Saint Beneath (boss) carry none. The mercy check is gameplay, not voice,
+  so this keeps the guard rather than exempting five normals from it.
+
+- **157.3 (EN3c) defaults, taken under the loop.** Found on arrival: most of A4's wiring was already on `main`. PR #1409 landed not only the six 24-cell `anim/<key>/` directories but their `ENEMY_ART_BY_KEY` requires, their six `ENEMY_FRAME_SETS` literals with the anchors T settled (centre for `saint-beneath` and `saltwick-swarm`, foot-line for the other four), the baked `backing/<key>/` sets and `backing/index.ts`, the six `provenance.json` records, and the count and prose fixtures the spec named (`ENEMY_ART_KEYS.length` 23, the BUNDLE COST sentence at 23 sets / 552 cells). So `asset-provenance.test.mjs`, `enemy-backings.test.mjs` and `CombatCombatantPane.action-clip.test.tsx` were all green on `main` before this chunk committed anything, and `frame-cells.test.mjs` derives its key list rather than hard-coding 17, so it needed nothing either. `FRAME_SET_EXEMPTIONS` is still `{}`, as the spec requires, and `scripts/frame-set-portraits.test.mjs` passes, so the six sheets are genuinely cut from the six portraits as committed — no hash mismatch to report. What this chunk added was the part nothing had done: a per-foe pane suite for each of the six, matching the 17 that exist, so each face is proved to animate in a live encounter rather than merely to be registered. The suites are modelled on the Wreck-Picker's, the spec's own stated model; the floating pair's anchor test asserts `anchor.kind` is `centre` and that no cell is pinned to a foot line, rather than pinning expo-image's normalised centre form, which nothing else in the tree asserts. `CombatCombatantPane.backing.test.tsx`'s floor moved 17 -> 23 as the spec asks, kept as `toBeGreaterThanOrEqual`. This chunk also swept the two standing `main` reds it was handed: `docs/feature-map/features.json` regenerated against the self-ledger-satchel suite, and the two comment lines naming a spec number (`self-ledger-satchel.test.tsx:2`, `theme/hue.ts:131`) rewritten to name their alias only.
+
+- **154.3 (UK2c) defaults, taken under the loop.** The dialogue screen drops its `LeaveRow` ("TIP YOUR CAP AND GO", `dialogue-leave`); `LeaveRow` stays for the blacksmith. The "starts an errand" chip is filtered from a reply's consequences by kind (`quest-start`); the reply's own words tell the errand.
+- **Live data.** No map NPC in play carries a `dialogueTree` today (only the fixtures do), so the exits test passes on the live rosters with no content change; it guards trees added later. The fixture tree's closing node gained a "Leave." reply.
+- **Scripts.** `fixture-gallery.mjs` and `labyrinth-combat-roundtrip-e2e.mjs` no longer press `dialogue-leave`; the entrance is a cutscene, so they skip and advance it. `narrative.md` drops the `dialogue-leave` id.
+
+- **153.1 (UX1a) defaults, taken under the loop.** `MainMenu` passes each view-model hint to `MenuButton` as the new optional `accessibilityHint` prop instead of `hint`, so nothing is drawn under CONTINUE, NEW GAME, LOAD GAME and SETTINGS. `MenuButton` keeps `hint` (Settings rows unchanged) and falls back to it for the spoken hint. The copy strings and the view-model `hint` fields stay in `main-menu.engine.ts`, since they are now the spoken text. `MainMenu.test.tsx` asserts the hints are absent from the tree and present as `accessibilityHint`.

@@ -227,8 +227,8 @@ export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
 // ── The board glossary ───────────────────────────────────────────────────────
 //
 // Words and marks the combat board shows with no text of their own (the
-// Conviction chip, the dice faces, the piles, the phase ledger, the globals
-// row). A sighted player touches one and the shared plaque opens its entry.
+// Conviction chip, the dice faces, the piles, the globals row). A sighted
+// player touches one and the shared plaque opens its entry.
 // ONE source: an entry the systems glossary or the keyword registry already
 // defines is looked up here, never copied, so the card detail and the board
 // cannot drift. The numbers an entry states come from the engine constants.
@@ -236,7 +236,7 @@ export const SYSTEM_GLOSSARY: readonly { term: string; def: string }[] = [
 /** Every term the board can open. */
 export type BoardTermId =
     | 'conviction' | 'boon' | 'mana' | 'miss' | 'banked' | 'ghost'
-    | 'xdie' | 'xvaries' | 'piles' | 'ledger' | 'global';
+    | 'xdie' | 'xvaries' | 'piles' | 'global';
 
 export interface BoardGlossEntry {
     /** The plaque's heading, uppercase. */
@@ -291,11 +291,6 @@ export const BOARD_GLOSSARY: Readonly<Record<BoardTermId, BoardGlossEntry>> = {
         def: 'The first pile is the cards you will draw. The second is the cards you have played.',
         more: 'An empty deck shuffles the discard back in.',
     },
-    ledger: {
-        title: 'PHASE LEDGER',
-        def: 'One mark per threat phase. O means cleared (the foe was hindered), X means overwhelmed (the foe acted).',
-        more: 'A dim mark is a phase still ahead.',
-    },
     global: {
         title: 'GLOBAL',
         def: systemDef('GLOBAL'),
@@ -313,7 +308,6 @@ export interface BoardGlossLive {
     pips?: number;
     deck?: number;
     discard?: number;
-    ledger?: { clear: number; overwhelmed: number; pending: number };
 }
 
 /** What the plaque prints for a set of terms: the first term is the heading,
@@ -337,10 +331,6 @@ function liveLine(id: BoardTermId, live: BoardGlossLive | undefined): string | n
         case 'piles':
             return live.deck === undefined || live.discard === undefined
                 ? null : `Deck ${live.deck}, discard ${live.discard}.`;
-        case 'ledger': {
-            const l = live.ledger;
-            return l ? `${l.clear} cleared, ${l.overwhelmed} overwhelmed, ${l.pending} ahead.` : null;
-        }
         default:
             return null;
     }

@@ -27,7 +27,7 @@ const sentenceCount = (s: string) => s.split(/[.!?](?:\s+|$)/).filter((t) => t.t
 const systemDef = (term: string) => SYSTEM_GLOSSARY.find((s) => s.term === term)?.def;
 
 const REQUIRED: BoardTermId[] = [
-    'conviction', 'boon', 'mana', 'miss', 'banked', 'ghost', 'xdie', 'xvaries', 'piles', 'ledger', 'global',
+    'conviction', 'boon', 'mana', 'miss', 'banked', 'ghost', 'xdie', 'xvaries', 'piles', 'global',
 ];
 
 describe('A1 — one board glossary source', () => {
@@ -83,8 +83,6 @@ describe('A1 — one board glossary source', () => {
     it('prints the live numbers a touch carries', () => {
         expect(boardGlossView(['conviction'], { conviction: 4 }).live).toBe('You hold ◆ 4.');
         expect(boardGlossView(['piles'], { deck: 9, discard: 2 }).live).toBe('Deck 9, discard 2.');
-        expect(boardGlossView(['ledger'], { ledger: { clear: 1, overwhelmed: 2, pending: 3 } }).live)
-            .toBe('1 cleared, 2 overwhelmed, 3 ahead.');
         const die = boardGlossView(['boon', 'banked'], { special: "Your weapon's special: +2 Conviction when it powers a card.", pips: 1 });
         expect(die.title).toBe('BOON');
         expect(die.sections[1].title).toBe('BANKED DIE');
