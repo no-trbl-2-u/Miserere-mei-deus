@@ -1,3 +1,4 @@
+// guard-test: pins SpoilsButton, which #1423 shipped with no test of its own, so it passes on the parent by design
 /**
  * The vellum action plate: it sits the plate art behind its children, pads the
  * sides clear of the ornament, and fades when disabled by the same opacity the
