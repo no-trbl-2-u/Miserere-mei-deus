@@ -97,7 +97,8 @@ const HUD_BOTTOM_812 = 143;
 const TRAY_H = 74;
 /** The tray's top edge at a given screen height: the screen less the footer
  *  dock (its minimum plus the 1pt top rule), the hand dock and the tray. At
- *  812 this is the 453 the web build measures. */
+ *  812 this is 443 (the web build measured 453 with a 56pt dock row; the
+ *  row is 66 now). */
 const trayTopAt = (screenH: number) =>
     screenH - (dockMinHeight(0) + 1) - (HAND_CARD_H + HAND_FAN_PAD_BOTTOM + HAND_PILL_OVERHANG) - TRAY_H;
 
@@ -132,13 +133,18 @@ describe('A7 — the signature column starts under the intent block', () => {
 
     it('five runes fit between the intent block and the tray at 375x812', () => {
         const trayTop = trayTopAt(812);
-        expect(trayTop).toBe(453);
+        expect(trayTop).toBe(443);
         const h = signatureColumnHeight(5);
         const top = signatureColumnTop(HUD_BOTTOM_812, trayTop, h)!;
-        // Anchored under the intent block, not clamped.
-        expect(top).toBe(HUD_BOTTOM_812 + SIG_HUD_GAP);
+        // UX1d's taller dock lifts the tray 10pt, so five runes ride up a
+        // little (the tray clamp, 6pt inside SIG_HUD_GAP) but the column
+        // still starts below the intent block, never over it.
+        expect(top).toBeGreaterThanOrEqual(HUD_BOTTOM_812);
+        expect(top).toBeLessThanOrEqual(HUD_BOTTOM_812 + SIG_HUD_GAP);
         // And the last rune still clears the tray.
         expect(top + h).toBeLessThanOrEqual(trayTop - SIG_TRAY_CLEARANCE);
+        // Four runes still anchor under the intent block, unclamped.
+        expect(signatureColumnTop(HUD_BOTTOM_812, trayTop, signatureColumnHeight(4))).toBe(HUD_BOTTOM_812 + SIG_HUD_GAP);
     });
 
     it('on a shorter screen the tray clamp wins and the column rises', () => {

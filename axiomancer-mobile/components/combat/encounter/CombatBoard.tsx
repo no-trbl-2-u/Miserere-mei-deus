@@ -21,7 +21,7 @@
  *   dice row                   → free-floating gem dice above the hand
  *   hand fan                   → full board width, no corner chrome
  *   footer dock                → avatar (tap = pilgrim modal) · VITAE column
- *                                (value, piles, fill bar, phase ledger) · END
+ *                                (value, piles, fill bar) · END
  *                                (`CombatFooterDock`)
  *
  * The drag ghost renders at screen level in `CombatEncounterPanel`.
@@ -931,7 +931,7 @@ export interface CombatBoardProps {
     onInspect: (card: CombatCardVM) => void;
     onChip?: (e: CombatEffectChipVM) => void;
     /** A touch on a board word or mark (the Conviction chip, a die, the piles,
-     *  the phase ledger, `IN PLAY`) asks the glossary to open. The board drops
+     *  `IN PLAY`) asks the glossary to open. The board drops
      *  the touch while a drag is live or a phase resolves. */
     onGloss?: BoardGlossOpen;
     /** Long-press (or tap while unaffordable) on a signature rune → info popup. */
