@@ -191,3 +191,7 @@ bundle.
   - The splash image is still drawn in Pirata One (`build-title-assets.mjs`), so the lift from splash to title now swaps lettering. 156.3 or the type's follow-up decides whether to redraw it.
 
 - **152.6 (UK1f) defaults, taken under the loop.** `MenuButton` gained a `place` prop (`M-01` on the main menu, `O-07` in Settings rows) so each reads its own look from the table; `OptionRow` reads O-03 (segments), O-04 (rings, via a new `radio` prop) and O-05 (a plain ON / OFF pair of booleans draws as the toggle); `StepperRow` reads O-06 and draws a slider between its verbs when given a `level`. Settings' REDUCED MOTION row is the radio group, the two volume rows take the diamond and quatrefoil sliders, and each heading is a `KitHeader` with a brass divider above all but the first. The row panels themselves (OptionRow and StepperRow roots) keep their plain border; only the controls are brass. `ThemeSwitcher`, the title screen and the hints are untouched, and a primary button keeps its dark label and hint on the gold plate. Shots at 360 and 390: the title screen is byte-identical to main's.
+
+- Self's VITAE bar is drawn by `StatBar look="brass"` (default `normal`, so the burden bar and every other consumer are untouched).
+- `KitHeader` with `look="vellum"` now inks its label in oxblood (`VELLUM_OXBLOOD`); `VELLUM_INK` and `VELLUM_OXBLOOD` live in `KitBackdrop.tsx` for the other vellum places to reuse.
+- Vellum tabs' zero count is `#4a3826` at 90% opacity, because today's 45% fade measures under 4.5:1 on parchment.
