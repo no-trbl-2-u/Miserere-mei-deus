@@ -13,6 +13,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 
 import type { CombatSummary } from '@mechanics';
 import { CombatSummaryModal, playsLabel } from '@/components/combat/encounter/CombatSummaryModal';
+import { HUE } from '@/theme/hue';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const SUMMARY: CombatSummary = {
@@ -104,6 +105,11 @@ describe('CombatSummaryModal', () => {
         screen.unmount();
         renderSummary(SUMMARY);
         expect(screen.queryByTestId('combat-summary-shillings')).toBeNull();
+    });
+
+    it('inks the Victory headline in the darkened green, not the dark panel green', () => {
+        renderSummary(SUMMARY);
+        expect(screen.getByText(SUMMARY.headline)).toHaveStyle({ color: HUE.vellumVictory });
     });
 
     it('CONTINUE closes, on every outcome', () => {

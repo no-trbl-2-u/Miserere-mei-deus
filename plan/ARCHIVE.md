@@ -579,3 +579,4 @@
 - 2026-11-07 · 156.2 (alias: TY1b) · Screens now show T's font picks; TYPE_ROLES holds the 15 roles · d6bc9bc7..d6bc9bc7 (#1424)
 - 2026-11-06 · 152.6 (alias: UK1f) · Main menu and Settings controls wear brass · 8a585b4f..2c2ed7bb (#1420)
 - 2026-11-06 · 152.5 (alias: UK1e) · Self wears brass, the Ledger vellum; Satchel rows brass, tabs vellum · 1e68c5b2..4632b6a9 (#1417)
+- 2026-11-07 · 157.1 (alias: EN3a) · Chapter 1's six recast faces exist on their cut foes' numbers · 1322491f..f7e78c83 (#1428)
