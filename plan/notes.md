@@ -195,3 +195,33 @@ bundle.
 - Self's VITAE bar is drawn by `StatBar look="brass"` (default `normal`, so the burden bar and every other consumer are untouched).
 - `KitHeader` with `look="vellum"` now inks its label in oxblood (`VELLUM_OXBLOOD`); `VELLUM_INK` and `VELLUM_OXBLOOD` live in `KitBackdrop.tsx` for the other vellum places to reuse.
 - Vellum tabs' zero count is `#4a3826` at 90% opacity, because today's 45% fade measures under 4.5:1 on parchment.
+
+- **157.1 (EN3a) landed.** Six `createEnemy` entries in
+  `axiomancer-mechanics/src/Enemy/enemy.library.ts` — The Saint Beneath (boss,
+  the Death Beholder's), Saltwick Swarm (the Green Jelly's), The Wreckmaster
+  (the Toll-Keeper's), Quay-Crab (the Crane-Hook's), Bilge-Stalker (the
+  Wreck-Picker's) and Coralback (the Lamprey-Knot's). Every mechanical field is
+  copied verbatim: `level`, `baseStats`, `difficulty`, `logic`, `phases`, and
+  for the boss `vitae: 320` and the three stages at 0.75 / 0.5 / 0.25. New
+  `id`, `name`, `description`, `portraitAsset`, `mapName: 'breakwater'`.
+  Nothing designed, retuned or removed; all ten cut foes stay in the library
+  with their entries, portraits and frame sets, and `FRAME_SET_EXEMPTIONS` is
+  untouched. `ENEMY_DECKS` gains `enemy-saint-beneath` with the Death
+  Beholder's three tiers and round gates 4 / 7; the Death Beholder keeps its
+  own. `EnemyLibrary`, `ENEMY_REGISTRY`, `EnemySlug` and `LIVE_ENEMY_IDS` all
+  gain the six and lose nothing. No node table touched: the six are in the
+  library and placed nowhere, which 157.2 fixes.
+- **Defaults taken under the loop.** The five non-boss names are the spec's,
+  verbatim (T, 157 Q1). The six descriptions are one drafted line each, read
+  off the portrait in the game's voice and marked `DRAFT (Claude)` for T to
+  rewrite (T, 157 Q4). The boss's `journalEntry` body is the Death Beholder's,
+  carried over with the title on this foe's own name, as T's answer says.
+  No number moved, `BW_DOOR_LEVEL` included (T, 157 Q5).
+- **The one place T's answer and the gate disagreed.** T's Q4 answer says the
+  six carry no `mercyLines`. But `aftermath-lines.engine.test.ts` requires a
+  Spare and a Finish line of **every** normal foe and of no other foe, and the
+  fourteen stand-ins the answer compares them to ("exactly as the stand-ins
+  are today") all carry one. So the four new normals plus Saltwick Swarm carry
+  a drafted Spare/Finish pair, also marked DRAFT; The Wreckmaster (elite) and
+  The Saint Beneath (boss) carry none. The mercy check is gameplay, not voice,
+  so this keeps the guard rather than exempting five normals from it.
