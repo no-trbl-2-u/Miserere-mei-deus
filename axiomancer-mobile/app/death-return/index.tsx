@@ -11,8 +11,11 @@
  */
 
 import React, { useCallback, useEffect } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { VELLUM_INK } from '@/components/experience/KitBackdrop';
+import { KitPressable } from '@/components/experience/KitSurface';
+import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { ScreenBg } from '@/components/ScreenBg';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useLocalSearchParams, useRouter } from '@/lib/platform/router';
@@ -20,6 +23,10 @@ import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { selectDeathReturnVM } from '@/state/presenters/death-return.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+
+/** The vellum button (G-01). */
+const [BUTTON] = PLACE_PIECES['G-01'];
+const WEAR_BUTTON = lookOf('G-01') !== 'normal';
 
 export default function DeathReturnScreen() {
     const styles = useStyles();
@@ -51,15 +58,18 @@ export default function DeathReturnScreen() {
                     {vm.title}
                 </Text>
                 <Text style={styles.body} testID="death-return-body">{vm.body}</Text>
-                <TouchableOpacity
+                <KitPressable
+                    wear={WEAR_BUTTON}
+                    plainOpacity
+                    piece={BUTTON}
                     accessibilityRole="button"
                     accessibilityLabel={vm.continueA11yLabel}
                     onPress={toMap}
-                    style={styles.button}
+                    style={[styles.button, WEAR_BUTTON ? styles.buttonKit : styles.buttonPlain]}
                     testID="death-return-continue"
                 >
-                    <Text style={styles.buttonText}>{vm.continueLabel}</Text>
-                </TouchableOpacity>
+                    <Text style={[styles.buttonText, WEAR_BUTTON && styles.buttonTextKit]}>{vm.continueLabel}</Text>
+                </KitPressable>
             </View>
         </ScreenBg>
     );
@@ -83,17 +93,22 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
     },
     button: {
-        borderWidth: 2,
-        borderColor: AXM.sulfur,
         marginTop: 12,
         minHeight: 44,
         minWidth: 200,
-        paddingVertical: 10,
-        paddingHorizontal: 24,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    buttonPlain: {
+        borderWidth: 2,
+        borderColor: AXM.sulfur,
+        paddingVertical: 10,
+        paddingHorizontal: 24,
         backgroundColor: AXM.bg,
     },
+    // Clears the vellum button's drawn corners (about 16 high, 13 wide).
+    buttonKit: { minHeight: 56, paddingVertical: 18, paddingHorizontal: 28 },
+    buttonTextKit: { color: VELLUM_INK },
     buttonText: {
         fontFamily: FONTS.gothic,
         fontSize: 18,
