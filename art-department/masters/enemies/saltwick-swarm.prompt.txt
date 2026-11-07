@@ -1,0 +1,36 @@
+I'm attaching a painting of an enemy from my game. Turn it into a sprite sheet so I can animate it in three states: idle, attacking, and getting struck.
+
+THE ONE HARD RULE: DO NOT CHANGE THE ART STYLE.
+The attached image is the reference for every frame. Keep its exact rendering style: same linework, brushwork, shading, palette, lighting direction, level of detail, proportions and silhouette. Don't redesign, restyle, "clean up", smooth, add detail, or make it look more modern, 3D, anime or pixel art. Each frame should look like the original artist drew it. Keep it the same creature: no new limbs, colours, accessories or features, except effects the action calls for (see below).
+
+WHERE YOU CAN BE CREATIVE: THE ACTION.
+Choose how this creature moves, attacks and reacts, based on what it is. A jelly might squash and lunge; an eye might widen and fire a beam; a beast might rear back and slam. Make the motion feel alive and specific to this enemy. Short effects tied to an action are fine (a flash, a spray, a glow, motion smears) as long as they're painted in the same style as the creature.
+
+SHEET LAYOUT (exact; a script slices this automatically):
+- One PNG, 2048 × 768 pixels.
+- A grid of 8 columns × 3 rows. Every cell is exactly 256 × 256 pixels, with no gutters, borders, labels, numbers or text anywhere.
+- Fully transparent background (real alpha, not a checkerboard pattern or a solid colour).
+- Read left to right; each row is one animation:
+  Row 1 = IDLE (8 frames, loops). A subtle, continuous breathing, bobbing or pulsing motion. Frame 8 must flow straight back into frame 1 with no pop.
+  Row 2 = GETTING STRUCK (8 frames, plays once). Frame 1 is the moment of impact: a sharp recoil or flinch (a brief bright flash is fine). Frames 2–7 recover. Frame 8 is back in a neutral pose that matches idle frame 1, because the game holds on that frame afterwards.
+  Row 3 = ATTACKING (8 frames, plays once). Roughly: frames 1–2 wind up or anticipate, 3–4 strike (the most dramatic frames), 5–7 follow through, and frame 8 returns to the neutral idle pose.
+
+CONSISTENCY ACROSS FRAMES (most important after style):
+- Same size and scale in every cell. Don't let the creature grow or shrink between frames unless the motion calls for it (a squash or a lunge).
+- Same anchor in every cell. If the creature stands on the ground, its feet/base sit on the same baseline in every frame, about 85% of the way down the cell. If it floats or hovers, its body stays centred in the cell, and the bob comes from the motion, not from drift.
+- Leave a margin: nothing touches or crosses a cell edge, not even the attack's furthest reach or an effect. If the attack is big, shrink the creature slightly so the whole sheet fits, but use the same scale in all 24 frames.
+- Face the same direction as the reference image in every frame. Attacks lunge toward the viewer or forward in that facing, never off-screen.
+- Adjacent frames should change only a little, so it plays smoothly at 12–16 fps.
+
+BEFORE YOU GENERATE: in 2–3 sentences, describe the idle, struck and attack motions you've chosen for this creature, then produce the sheet. If you can't hit the exact 2048 × 768 size or the 8 × 3 grid in one image, say so, and don't quietly change the layout.
+
+Reference clarification: the reference is already on a plain white/transparent background — that background is NOT part of the creature and the sheet must use real alpha, not white. Preserve original internal dark colours, coloured accents, distressed edges and linework. Render all 24 complete figures, one per cell, with consistent scale and safe transparent cell margins. Do not add any written description into the image; motion description has already been provided in chat.
+Strict cell safety: reserve at least 16px of genuinely transparent padding at ALL FOUR edges of EVERY 256px cell. Make the character small enough to leave room for the widest attack. Never crop head, limbs, shell, effects, or appendages. Each cell is an isolated complete sprite.
+The swarm floats: the whole cluster stays centred at local x=128, y=128 in every frame as one unit, and the bob comes from the motion, never from drift.
+
+ENEMY: saltwick-swarm
+CHOSEN MOTION AND IDENTITY: Idle: the five glowing jellyfish drift as a loose cluster, each bell pulsing open and closed at a slightly different phase while the tendrils trail and curl beneath, the whole group bobbing gently as one. Struck: every bell contracts hard at once and flares white, the cluster scatters outward a few pixels and the tendrils snap straight, then they drift back into the same arrangement; attack: the bells draw up tight and the cluster compresses, then all five jet forward together in a stinging surge with tendrils streaming out ahead and the glow spiking brightest, before easing back into the resting spread. Preserve the exact cyan and electric-blue bells, the dark navy rims and stippled edges, the white ring markings and glowing cores, the five different sizes and their relative positions; no added water, no new jellyfish.
+
+CRITICAL FRAMING OVERRIDE: This must be a sheet of SMALL FULL FIGURES with generous EMPTY TRANSPARENT SPACE in every cell. Do NOT fill the 256px cell. The creature is at most 160px tall and at most 160px wide, including every limb, claw, weapon and trailing part. ALL weapons, hands, motion, effects stay between local x=30..226, y=30..226, with 30px transparent safety margins. Use short subtle motions if necessary to fit. All 24 figures at SAME SMALL SCALE. NO CROPPING, no closeups, no partial bodies, no ghost/duplicate body parts, no huge effects. Every full figure must be completely visible with blank space below it and between rows. Exactly 2048x768, 8 columns of 256 by 3 rows of 256. Transparent canvas.
+
+Technical correction: ensure every blank pixel is exactly alpha 0, including all gaps between individual jellyfish. The entire canvas must be clear around the hard outlines; do not draw any white haze, vapor, paper, background texture, checkerboard, aura, or lighting outside the cutouts. Keep the light inside the bells. The previous output had an opaque-looking pale background. Evenly distribute 8 clusters across each row, and 3 rows over the whole sheet.

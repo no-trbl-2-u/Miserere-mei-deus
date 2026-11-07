@@ -1,0 +1,46 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "Built-in image generator, Pillow grid registration, split-spritesheet.py, ingest-art.mjs --no-grade",
+    "source": "art-department/masters/enemies/coralback.sheet.png and art-department/masters/enemies/coralback.prompt.txt",
+    "model": "Built-in image generator",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "portrait": "coralback.webp",
+    "portrait_sha256": "5535ab110834732531389c02e05362133b216d8d4f9ee36b227661498cb6c1b2",
+    "master_sha256": "499eb9bef672a79cf5fc58149166c7465140c68de955017c582ff9ef80f99485",
+    "graded": false,
+    "graded_in_this_run": false,
+    "method": "Generator returned 1774x887. Extracted the 24 poses, aligned them on a 2048x768 grid with one scale and copied the first idle pose into both recovery endpoints. Encoded 256px cells within the WebP byte budget.",
+    "measured": "237804 B total, 9909 B mean, 11754 B max against 48470 B static.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (registry for coralback)"
+    ],
+    "covers": [
+      "coralback-00.webp",
+      "coralback-01.webp",
+      "coralback-02.webp",
+      "coralback-03.webp",
+      "coralback-04.webp",
+      "coralback-05.webp",
+      "coralback-06.webp",
+      "coralback-07.webp",
+      "coralback-08.webp",
+      "coralback-09.webp",
+      "coralback-10.webp",
+      "coralback-11.webp",
+      "coralback-12.webp",
+      "coralback-13.webp",
+      "coralback-14.webp",
+      "coralback-15.webp",
+      "coralback-16.webp",
+      "coralback-17.webp",
+      "coralback-18.webp",
+      "coralback-19.webp",
+      "coralback-20.webp",
+      "coralback-21.webp",
+      "coralback-22.webp",
+      "coralback-23.webp"
+    ]
+  }
+]

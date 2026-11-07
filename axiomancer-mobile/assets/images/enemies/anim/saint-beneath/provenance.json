@@ -1,0 +1,46 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "Built-in image generator, Pillow grid registration, split-spritesheet.py, ingest-art.mjs --no-grade",
+    "source": "art-department/masters/enemies/saint-beneath.sheet.png and art-department/masters/enemies/saint-beneath.prompt.txt",
+    "model": "Built-in image generator",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "portrait": "saint-beneath.webp",
+    "portrait_sha256": "856ccce7300f70d1ef5d18331bb7526d36facad444f7988b063e74cf4f290d3f",
+    "master_sha256": "ce8dee014fbcb5321e90cf6e501b0bda784396a43799fa449eec63655d666791",
+    "graded": false,
+    "graded_in_this_run": false,
+    "method": "Generator returned 1774x887. Extracted the 24 poses, aligned them on a 2048x768 grid with one scale and copied the first idle pose into both recovery endpoints. Encoded 256px cells within the WebP byte budget.",
+    "measured": "187756 B total, 7823 B mean, 8294 B max against 43478 B static.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (registry for saint-beneath)"
+    ],
+    "covers": [
+      "saint-beneath-00.webp",
+      "saint-beneath-01.webp",
+      "saint-beneath-02.webp",
+      "saint-beneath-03.webp",
+      "saint-beneath-04.webp",
+      "saint-beneath-05.webp",
+      "saint-beneath-06.webp",
+      "saint-beneath-07.webp",
+      "saint-beneath-08.webp",
+      "saint-beneath-09.webp",
+      "saint-beneath-10.webp",
+      "saint-beneath-11.webp",
+      "saint-beneath-12.webp",
+      "saint-beneath-13.webp",
+      "saint-beneath-14.webp",
+      "saint-beneath-15.webp",
+      "saint-beneath-16.webp",
+      "saint-beneath-17.webp",
+      "saint-beneath-18.webp",
+      "saint-beneath-19.webp",
+      "saint-beneath-20.webp",
+      "saint-beneath-21.webp",
+      "saint-beneath-22.webp",
+      "saint-beneath-23.webp"
+    ]
+  }
+]

@@ -54,9 +54,10 @@ describe('installing a frame set took nothing away from the static registry', ()
     // line has to be edited for.
     it('the framed and the static enemies are exact lists', () => {
         expect(keys.filter((k) => hasEnemyFrames(k)).sort()).toEqual([
-            'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye',
-            'gallows-crow', 'green-jelly', 'lamplighter', 'lamprey-knot', 'net-mender', 'smokehouse-gutter',
-            'tide-gate', 'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker',
+            'bilge-stalker', 'brine-widow', 'cave-choir', 'coralback', 'crane-hook', 'curfew-ringer',
+            'death-beholder', 'float-eye', 'gallows-crow', 'green-jelly', 'lamplighter', 'lamprey-knot',
+            'net-mender', 'quay-crab', 'saint-beneath', 'saltwick-swarm', 'smokehouse-gutter', 'tide-gate',
+            'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker', 'wreckmaster',
         ]);
         // Chapter 1's stand-in portraits animated one AN5 phase at a time; the
         // Gallows Crow went first (AN5a), five normals followed (AN5b), then
