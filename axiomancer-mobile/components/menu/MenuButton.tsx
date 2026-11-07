@@ -66,7 +66,7 @@ export function MenuButton({
                         />
                     ) : null}
                     <View style={styles.text}>
-                        <Text style={[styles.label, primary && styles.labelPrimary, danger && styles.labelDanger]}>
+                        <Text style={[styles.label, primary && styles.labelPrimary, !kit && danger && styles.labelDanger]}>
                             {label}
                         </Text>
                         {hint ? (
