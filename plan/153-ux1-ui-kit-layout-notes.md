@@ -45,7 +45,7 @@
 - **Main menu.** Each main-menu row shows only its label: New Game, Load Game, Settings. The hints leave the main menu's presenter. `MenuButton` keeps its optional `hint` for other callers, so Settings' rows are unchanged. Screen readers keep the hint as the accessibility hint.
 - **Quest tracker.** While a node is chosen (the node panel is up), the quest tracker is not drawn, and it returns when the panel closes.
   - The tracker drops its "QUESTS" head.
-  - A row's counter is hidden when the quest has a single step, so it would only ever read 0/1 or 1/1 (`[T to confirm #1]`).
+  - A row's counter is hidden when the quest has a single step, so it would only ever read 0/1 or 1/1 (Confirmed by T (2026-11-07): single-step quests).
 - **Tab bar.** Six icons and no words, each icon larger (about 30 pt, from today's smaller size) and centred in its slot. Each tab keeps its name as its accessibility label, so nothing is lost to a screen reader.
 - **Reveal.** No "A FOE RISES". Everything else on the reveal screen stays, since it is T's reference screen ("I do love the screen looking like this").
 - **Dock.** The phase ledger's marks leave the dock (`[T to confirm #2]`). The END button narrows, and the dock grows taller so the brass dock art (spec 152) reads. VITAE, the piles and the portrait keep their order.
@@ -69,8 +69,6 @@
 
 ## Acceptance
 
-- **A1** The main menu's three rows read only New Game, Load Game and Settings. Settings' rows are unchanged.
-- **A2** While a node is chosen, the quest tracker is not on screen. The tracker has no "QUESTS" head, and a single-step quest shows no counter.
 - **A3** The tab bar shows six larger icons with no words, each with its tab's name as its accessibility label.
 - **A4** The reveal screen has no "A FOE RISES". The dock has no phase-ledger marks, a narrower END and a taller dock, and VITAE, the piles and the portrait keep their order.
 - **A5** Self has no hazard deck link, and the `/hazard-deck` route and screen are gone. No test or e2e flow names them.
@@ -78,17 +76,15 @@
 
 ## Open questions
 
-1. When should a quest row hide its counter? Default: when the quest has a single step (it could only read 0/1 or 1/1). Or: whenever nothing is done yet (any 0/N); or never show a counter. [T to confirm #1]
+1. When should a quest row hide its counter? Confirmed by T (2026-11-07): single-step quests. The rule is `questCounterText` in `quest.copy.ts`.
 2. Where do the phase-ledger marks go? These are the circles: one per phase, O cleared, X overwhelmed. Default: off the board entirely, since the rail's "PHASE 1/8" keeps the count. Or: a small row under the enemy's name rail. [T to confirm #2]
 3. What happens to the hazard deck screen with its link? Default: the route and screen go too, since nothing else reaches it. Or: keep the screen and reach it from the dev menu. [T to confirm #3]
 4. When should the Deck directions be mocked? Default: table order now, ready for B7 after Act 1 is complete. Or: pull B7 itself ahead of it. [T to confirm #4]
 
 ## Chunks
 
-Measure: 6 open · 1 closed · next A8
+Measure: 4 open · 3 closed · next A8
 
-- [ ] **153.1** The main menu says only its three words · S · closes A1 · needs — · alias: UX1a
-- [ ] **153.2** The quest tracker steps aside, and loses its label and a lone 0/1 · S · closes A2 · needs — · alias: UX1b
 - [ ] **153.3** The tab bar is bigger icons, no words · S · closes A3 · needs — · alias: UX1c
 - [ ] **153.4** No "A FOE RISES"; the dock trades its circles for room · M · closes A4 · needs — · alias: UX1d
 - [ ] **153.5** The hazard deck link and screen go · S · closes A5 · needs — · alias: UX1e

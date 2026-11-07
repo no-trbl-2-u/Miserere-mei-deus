@@ -66,7 +66,16 @@ export function questBringLine(itemName: string): string {
 
 /** The tracker row of a quest whose objectives are all filled. */
 export const TRACKER_READY_LINE = 'Ready to turn in';
-export const TRACKER_HEAD = 'QUESTS';
+
+/**
+ * A tracker row's counter ("2/3"), or '' when the objective has a single step
+ * (it could only ever read 0/1 or 1/1). T, 2026-11-07: hide it for
+ * single-step quests only. The one place this rule lives; the quest panel
+ * (154.6) reuses it.
+ */
+export function questCounterText(current: number, required: number): string {
+    return required <= 1 ? '' : questProgressShort(current, required);
+}
 
 /** "+2 more". */
 export function trackerMoreLine(n: number): string {

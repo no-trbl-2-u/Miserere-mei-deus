@@ -4,7 +4,7 @@
  * The player-facing view of the COMBAT deck, the one they build all run, as a
  * READER (DR1): one card open at the top (`DeckOpenCard`: its painting
  * as a banner, its lines under it), the deck below it. No header, no tallies.
- * Tapping a row opens that card above; 155.2 turns the rows into thumbnails.
+ * Below it, the cards as square art thumbnails, four to a row; the ones not open are dimmed and a tap opens one above.
  *
  * Composition is engine truth (`buildCombatDeck`), the presenter maps it
  * (`selectDeckViewModel`), this screen renders the view-model. It reads no
@@ -15,16 +15,18 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, type LayoutChangeEvent } from 'react-native';
 
 import { DeckCardTile } from '@/components/deck/DeckCardTile';
 import { DeckOpenCard } from '@/components/deck/DeckOpenCard';
 import { ScreenBg } from '@/components/ScreenBg';
-import { SectionLabel } from '@/components/SectionLabel';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectDeckViewModel, type DeckCardVM } from '@/state/presenters/deck.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+
+const GRID_COLUMNS = 4;
+const GRID_GAP = 6;
 
 export default function DeckScreen() {
     const styles = useStyles();
@@ -53,6 +55,11 @@ export default function DeckScreen() {
     const allCards = useMemo(() => vm.groups.flatMap((g) => g.cards), [vm]);
     const open = allCards.find((c) => c.cardId === openId) ?? allCards[0] ?? null;
 
+    // Four square thumbnails to a row; the side is measured from the grid.
+    const [gridW, setGridW] = useState(0);
+    const onGridLayout = useCallback((e: LayoutChangeEvent) => setGridW(e.nativeEvent.layout.width), []);
+    const tile = gridW > 0 ? (gridW - GRID_GAP * (GRID_COLUMNS - 1)) / GRID_COLUMNS : undefined;
+
     return (
         <View style={styles.fill}>
             <ScreenBg>
@@ -64,18 +71,23 @@ export default function DeckScreen() {
                     <>
                         {open !== null && <DeckOpenCard card={open} />}
 
-                        {/* The deck itself, grouped by card type. */}
+                        {/* The deck, one grid per card type (155.3 shows only the active one). */}
                         {vm.groups.map((group) => (
-                            <View key={group.key} style={styles.section} testID={`deck-group-${group.key}`}>
-                                <View style={styles.groupHead}>
-                                    <SectionLabel size={10}>{`✠ ${group.label}`}</SectionLabel>
-                                    <Text style={styles.groupCount}>{group.count}</Text>
-                                </View>
-                                <View style={styles.groupList}>
-                                    {group.cards.map((card) => (
-                                        <DeckCardTile key={card.cardId} card={card} onPress={pick} />
-                                    ))}
-                                </View>
+                            <View
+                                key={group.key}
+                                style={styles.grid}
+                                onLayout={onGridLayout}
+                                testID={`deck-group-${group.key}`}
+                            >
+                                {group.cards.map((card) => (
+                                    <DeckCardTile
+                                        key={card.cardId}
+                                        card={card}
+                                        onPress={pick}
+                                        open={card.cardId === open?.cardId}
+                                        size={tile}
+                                    />
+                                ))}
                             </View>
                         ))}
                     </>
@@ -89,8 +101,5 @@ const useStyles = makeStyles((AXM) => ({
     fill: { flex: 1 },
     emptyPanel: { borderWidth: 1, borderColor: AXM.divider, padding: 18 },
     emptyText: { fontFamily: FONTS.serif, fontSize: 14, lineHeight: 20, color: AXM.bone },
-    section: { marginBottom: 18 },
-    groupHead: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
-    groupCount: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone },
-    groupList: { marginTop: 8 },
+    grid: { flexDirection: 'row', flexWrap: 'wrap', gap: GRID_GAP, marginTop: 12 },
 }));
