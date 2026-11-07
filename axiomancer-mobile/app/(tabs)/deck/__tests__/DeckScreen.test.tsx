@@ -1,5 +1,5 @@
 /**
- * DECK — the fifth tab, rendered as a reader (spec 155.1).
+ * DECK — the fifth tab, rendered as a reader (DR1a).
  *
  * The presenter is pinned separately in
  * `state/presenters/__tests__/deck.engine.test.ts`. What this file pins:
