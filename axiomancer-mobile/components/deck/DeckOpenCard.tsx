@@ -11,13 +11,14 @@
  * open card (the type tabs, 155.3) is at the same place whichever card is open.
  *
  * Lines arrive as `DeckLineVM`s (an optional label, then ordered runs); this
- * component assembles no card text. 155.4 adds keyword runs to `DeckRunVM`
- * and renders them as pressable spans in `RunText`.
+ * component assembles no card text. Keyword runs are pressable spans: tap
+ * for the gloss, hold to pin it.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useTooltip } from '@/hooks/useTooltip';
 import { Image } from '@/lib/platform/image';
 import type { DeckCardVM, DeckLineVM, DeckRunVM } from '@/state/presenters/deck.engine';
 import { TYPE_ROLES } from '@/theme/axm';
@@ -72,21 +73,44 @@ export function DeckOpenCard({ card }: DeckOpenCardProps) {
 
 function Line({ line, index }: { line: DeckLineVM; index: number }) {
     const styles = useStyles();
+    // A nested Text cannot be measured reliably on native, so the gloss is
+    // anchored to the line's own block.
+    const anchorRef = useRef<View | null>(null);
     return (
-        <View style={styles.line} testID={`deck-open-card-line-${index}`}>
+        <View ref={anchorRef} style={styles.line} testID={`deck-open-card-line-${index}`}>
             {line.label !== null && <Text style={styles.lineLabel}>{line.label}</Text>}
             <Text style={styles.lineText}>
                 {line.runs.map((run, i) => (
-                    <RunText key={i} run={run} />
+                    <RunText key={i} run={run} anchorRef={anchorRef} />
                 ))}
             </Text>
         </View>
     );
 }
 
-/** One run, in order. 155.4 branches here on `run.kind === 'keyword'`. */
-function RunText({ run }: { run: DeckRunVM }) {
-    return <Text>{run.text}</Text>;
+/**
+ * One run, in order. A keyword run is a nested Text in the keyword's ink: a
+ * tap shows its gloss over the line, a hold pins it.
+ */
+function RunText({ run, anchorRef }: { run: DeckRunVM; anchorRef: React.RefObject<View | null> }) {
+    const styles = useStyles();
+    const tooltip = useTooltip();
+    if (run.kind === 'text') return <Text>{run.text}</Text>;
+    const show = (pinned: boolean) =>
+        tooltip.show({ kind: 'card-keyword', id: run.keyword, anchorRef, pinned });
+    return (
+        <Text
+            style={[styles.keyword, run.minor ? styles.keywordMinor : null]}
+            onPress={() => show(false)}
+            onLongPress={() => show(true)}
+            accessibilityRole="link"
+            accessibilityLabel={run.word}
+            accessibilityHint={run.minor ? `${run.gloss} (minor right now)` : run.gloss}
+            testID={`deck-keyword-${run.keyword}`}
+        >
+            {run.word}
+        </Text>
+    );
 }
 
 const useStyles = makeStyles((AXM) => ({
@@ -118,5 +142,13 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 23,
         color: AXM.parchment,
     },
+    keyword: {
+        fontFamily: TYPE_ROLES.rules.fontFamily,
+        fontSize: 16.5,
+        lineHeight: 23,
+        color: AXM.sulfur,
+        textDecorationLine: 'underline',
+    },
+    keywordMinor: { color: AXM.bone },
     footnote: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, lineHeight: 18, color: AXM.bone },
 }));

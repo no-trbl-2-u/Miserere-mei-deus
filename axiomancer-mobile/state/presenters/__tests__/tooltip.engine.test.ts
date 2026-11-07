@@ -262,6 +262,19 @@ describe('selectTooltipContentFor', () => {
         });
     });
 
+    describe('kind: card-keyword', () => {
+        it('returns the registry gloss for a registry keyword', () => {
+            const content = selectTooltipContentFor('card-keyword', 'Guard', EMPTY_STATE);
+            expect(content?.title).toBe('GUARD');
+            expect(content?.body).toContain('Unused Guard is lost');
+        });
+
+        it('returns null for an unknown or empty keyword', () => {
+            expect(selectTooltipContentFor('card-keyword', 'Nonesuch', EMPTY_STATE)).toBeNull();
+            expect(selectTooltipContentFor('card-keyword', '', EMPTY_STATE)).toBeNull();
+        });
+    });
+
     describe('kind: disabled-action (Phase 95)', () => {
         it('returns content for item action', () => {
             const content = selectTooltipContentFor('disabled-action', 'item', EMPTY_STATE);

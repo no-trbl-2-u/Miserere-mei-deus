@@ -52,6 +52,7 @@ import {
     RARITY_PIPS,
     rarityFor,
 } from '@/state/presenters/card-rarity.engine';
+import { keywordGloss, keywordsInText } from '@/state/combat/keywords';
 import { detailStats, STANCE_COLORS } from '@/state/presenters/combat-encounter.engine';
 import { freezeViewModel } from '@/state/presenters/freeze';
 import type { AppStoreState } from '@/state/store';
@@ -72,12 +73,14 @@ export interface DeckRarityVM {
 }
 
 /**
- * One piece of a printed line. 155.1 hands the component text runs only;
- * 155.4 adds a keyword run (`{ kind: 'keyword'; word; gloss; minor }`) to this
- * union and splits lines with `keywordsInText`. The component renders runs in
- * order and assembles no card text.
+ * One piece of a printed line: plain text, or a keyword the line prints. A
+ * keyword run carries the printed word, its registry name (the tooltip id),
+ * its gloss, and whether the card's own ledger entry calls it minor. The
+ * component renders runs in order and assembles no card text.
  */
-export type DeckRunVM = { kind: 'text'; text: string };
+export type DeckRunVM =
+    | { kind: 'text'; text: string }
+    | { kind: 'keyword'; word: string; keyword: string; gloss: string; minor: boolean };
 
 /** One printed line of the open card: an optional shorthand label, then runs. */
 export interface DeckLineVM {
@@ -263,6 +266,31 @@ function tallyInc<K extends string>(map: Map<K, number>, key: K, by = 1): void {
 }
 
 /**
+ * Split one printed line into runs. A keyword run is an UPPERCASE word that
+ * `keywordsInText` finds in the line; its gloss is the card's own keyword
+ * entry when it has one (so `minor` is kept), else the registry's.
+ */
+export function runsFor(text: string, own: readonly { name: string; def: string; minor: boolean }[]): DeckRunVM[] {
+    const found = new Set(keywordsInText(text));
+    if (found.size === 0) return [{ kind: 'text', text }];
+    const runs: DeckRunVM[] = [];
+    let last = 0;
+    for (const m of text.matchAll(/[A-Z]{2,}/g)) {
+        const word = m[0];
+        const keyword = word.charAt(0) + word.slice(1).toLowerCase();
+        if (!found.has(keyword)) continue;
+        const card = own.find((k) => k.name === word.toUpperCase());
+        const gloss = card?.def || keywordGloss(keyword) || '';
+        const at = m.index ?? 0;
+        if (at > last) runs.push({ kind: 'text', text: text.slice(last, at) });
+        runs.push({ kind: 'keyword', word, keyword, gloss, minor: card?.minor ?? false });
+        last = at + word.length;
+    }
+    if (last < text.length) runs.push({ kind: 'text', text: text.slice(last) });
+    return runs;
+}
+
+/**
  * Build one card's VM from the engine projection plus the SHARED combat
  * detail presenter. Returns null for an id the card library does not know
  * (e.g. a save holding a card the library lacks), so an unknown id drops out of the list
@@ -286,12 +314,13 @@ function deckCardVM(cardId: string, count: number): DeckCardVM | null {
     const cardType = projected.cardType ?? sourceCard.cardType;
     const copies = count > 1 ? `, ${count} copies` : '';
 
+    const own = detail.keywords;
     const lines: DeckLineVM[] = [
-        { label: null, runs: [{ kind: 'text', text: detail.outcomeLine }] },
-        { label: FREE_LINE_LABEL, runs: [{ kind: 'text', text: detail.freePill }] },
+        { label: null, runs: runsFor(detail.outcomeLine, own) },
+        { label: FREE_LINE_LABEL, runs: runsFor(detail.freePill, own) },
     ];
     if (detail.diePaidLine !== null) {
-        lines.push({ label: PAID_LINE_LABEL, runs: [{ kind: 'text', text: detail.diePaidLine }] });
+        lines.push({ label: PAID_LINE_LABEL, runs: runsFor(detail.diePaidLine, own) });
     }
 
     return {

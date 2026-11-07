@@ -26,6 +26,8 @@ export interface TooltipTargetProps {
     accessibilityLabel?: string;
     accessibilityHint?: string;
     testID?: string;
+    /** A hold shows the same tooltip pinned (no auto-dismiss). */
+    pinOnLongPress?: boolean;
 }
 
 export function TooltipTarget({
@@ -36,6 +38,7 @@ export function TooltipTarget({
     accessibilityLabel,
     accessibilityHint,
     testID,
+    pinOnLongPress = false,
 }: TooltipTargetProps) {
     const tooltip = useTooltip();
     const ref = useRef<View | null>(null);
@@ -47,6 +50,14 @@ export function TooltipTarget({
                 if (!id) return;
                 tooltip.show({ kind, id, anchorRef: ref });
             }}
+            onLongPress={
+                pinOnLongPress
+                    ? () => {
+                          if (!id) return;
+                          tooltip.show({ kind, id, anchorRef: ref, pinned: true });
+                      }
+                    : undefined
+            }
             accessibilityRole="button"
             accessibilityLabel={accessibilityLabel}
             accessibilityHint={accessibilityHint}

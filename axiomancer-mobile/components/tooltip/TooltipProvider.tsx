@@ -10,7 +10,9 @@
  *
  * Dismiss triggers:
  * - Tap-outside (transparent backdrop captures the press).
- * - 6s auto-timeout (cleared on hide / re-show).
+ * - 6s auto-timeout (cleared on hide / re-show), skipped when the
+ *   show is `pinned` (a held press): a pinned tooltip stays until it is
+ *   tapped away or another press replaces it.
  * - `show` called with the same anchor toggles the tooltip off.
  * - Programmatic `hide()`.
  *
@@ -62,6 +64,8 @@ interface ShowArgs {
     kind: TooltipKind;
     id: string;
     anchorRef: React.RefObject<MeasurableRef | null>;
+    /** Skip the auto-dismiss timer; the tooltip stays until dismissed. */
+    pinned?: boolean;
 }
 
 interface TooltipContextValue {
@@ -106,6 +110,7 @@ export function TooltipProvider({ children, windowSize }: TooltipProviderProps) 
     const [active, setActive] = useState<ActiveTooltip | null>(null);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const activeKeyRef = useRef<string | null>(null);
+    const pinnedRef = useRef(false);
 
     const clearTimer = useCallback(() => {
         if (timerRef.current !== null) {
@@ -117,6 +122,7 @@ export function TooltipProvider({ children, windowSize }: TooltipProviderProps) 
     const hide = useCallback(() => {
         clearTimer();
         activeKeyRef.current = null;
+        pinnedRef.current = false;
         setActive(null);
     }, [clearTimer]);
 
@@ -149,7 +155,7 @@ export function TooltipProvider({ children, windowSize }: TooltipProviderProps) 
     );
 
     const show = useCallback(
-        ({ kind, id, anchorRef }: ShowArgs) => {
+        ({ kind, id, anchorRef, pinned = false }: ShowArgs) => {
             const content = selectTooltipContentFor(kind, id, store.getState());
             if (content === null) {
                 // Nothing to render — clear any prior tooltip but
@@ -162,6 +168,13 @@ export function TooltipProvider({ children, windowSize }: TooltipProviderProps) 
             const anchorKey = `${kind}::${id}`;
             // Same anchor tapped twice — toggle off.
             if (activeKeyRef.current === anchorKey) {
+                // A hold on a word whose tooltip is already up (timed) pins it
+                // in place rather than closing it.
+                if (pinned && !pinnedRef.current) {
+                    clearTimer();
+                    pinnedRef.current = true;
+                    return;
+                }
                 hide();
                 return;
             }
@@ -187,6 +200,7 @@ export function TooltipProvider({ children, windowSize }: TooltipProviderProps) 
                 const { left, top } = positionTooltip(x, y, h);
                 clearTimer();
                 activeKeyRef.current = anchorKey;
+                pinnedRef.current = pinned;
                 setActive({
                     title: content.title,
                     body: content.body,
@@ -196,9 +210,11 @@ export function TooltipProvider({ children, windowSize }: TooltipProviderProps) 
                     top,
                     anchorKey,
                 });
-                timerRef.current = setTimeout(() => {
-                    hide();
-                }, AUTO_DISMISS_MS);
+                if (!pinned) {
+                    timerRef.current = setTimeout(() => {
+                        hide();
+                    }, AUTO_DISMISS_MS);
+                }
             };
 
             ref.measureInWindow((x, y, w, h) => measure(x, y, w, h, false));

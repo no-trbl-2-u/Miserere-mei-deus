@@ -32,10 +32,12 @@ import {
     type Character,
 } from '@mechanics';
 
+import { keywordGloss } from '@/state/combat/keywords';
 import { rarityFor } from '@/state/presenters/card-rarity.engine';
 import { detailStats } from '@/state/presenters/combat-encounter.engine';
 import {
     DECK_SOURCE_NOTE,
+    runsFor,
     selectDeckViewModel,
     type DeckCardVM,
 } from '@/state/presenters/deck.engine';
@@ -329,9 +331,34 @@ describe('selectDeckViewModel: the open card (155.1)', () => {
         const card = findCard(selectDeckViewModel(runWith([BLOW])), BLOW);
         const detail = detailStats(toCombatCard(BLOW, getCardById, lookupEffect)!, getCardById(BLOW)!);
 
-        expect(card.lines[0]).toEqual({ label: null, runs: [{ kind: 'text', text: detail.outcomeLine }] });
+        const joined = (i: number) =>
+            card.lines[i].runs.map((r) => (r.kind === 'text' ? r.text : r.word)).join('');
+        expect(card.lines[0].label).toBeNull();
+        expect(joined(0)).toBe(detail.outcomeLine);
         expect(card.lines[1].label).toBe('◇ NO DIE');
-        expect(card.lines[1].runs).toEqual([{ kind: 'text', text: detail.freePill }]);
+        expect(joined(1)).toBe(detail.freePill);
         expect(card.lines.length).toBe(detail.diePaidLine === null ? 2 : 3);
+    });
+});
+
+describe('runsFor: keywords in a printed line', () => {
+    it('splits a line with two keywords into ordered text and keyword runs', () => {
+        const runs = runsFor('Gain GUARD, then a BOON face.', []);
+        expect(runs).toEqual([
+            { kind: 'text', text: 'Gain ' },
+            { kind: 'keyword', word: 'GUARD', keyword: 'Guard', gloss: keywordGloss('Guard'), minor: false },
+            { kind: 'text', text: ', then a ' },
+            { kind: 'keyword', word: 'BOON', keyword: 'Boon', gloss: keywordGloss('Boon'), minor: false },
+            { kind: 'text', text: ' face.' },
+        ]);
+    });
+
+    it('returns one text run for a line with no keyword', () => {
+        expect(runsFor('Deal 5 VITAE.', [])).toEqual([{ kind: 'text', text: 'Deal 5 VITAE.' }]);
+    });
+
+    it("prefers the card's own entry over the registry's, keeping minor", () => {
+        const runs = runsFor('Gain GUARD.', [{ name: 'GUARD', def: 'Own words.', minor: true }]);
+        expect(runs[1]).toEqual({ kind: 'keyword', word: 'GUARD', keyword: 'Guard', gloss: 'Own words.', minor: true });
     });
 });

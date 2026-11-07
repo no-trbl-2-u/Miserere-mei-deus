@@ -318,7 +318,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardTile.test.tsx, axiomancer-mobile/state/presenters/__tests__/deck.engine.test.ts"
+        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardTile.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckOpenCard.keywords.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -2706,6 +2706,12 @@
       "from": "route:(tabs)/deck",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/deck.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",
