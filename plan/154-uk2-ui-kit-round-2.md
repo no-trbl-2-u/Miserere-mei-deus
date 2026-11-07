@@ -94,7 +94,6 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
   - every Normal place is unchanged.
 - **A2** The save slots, BEGIN, the character select's HEART / BODY / MIND and CONFIRM, and the death and game-over buttons are on vellum. The character select's portrait and relic cards wear brass.
 - **A3** The dialogue offers exactly its choices, with no tip-your-cap row, and "Take the quest." shows no errand chip. The blacksmith's leave row is unchanged.
-- **A4** The cutscene's omen is text on the background, with no border or panel.
 - **A5** The hazard stakes card shows only the place's name, the goal and the time, in legible type. The hazard's rules are unchanged.
 - **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
 - **A7** A cache shows its title, its flavour line and two choices, each with an action line and no reward shown. The eyebrow, the "node is spent" line, the card image and the goods list are gone, and the rewards paid are unchanged.
@@ -109,12 +108,11 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
 
 ## Chunks
 
-Measure: 9 open · 0 closed · next A10
+Measure: 8 open · 1 closed · next A10
 
 - [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs 152.1 · alias: UK2a
 - [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs 152.1 · alias: UK2b
 - [ ] **154.3** The dialogue offers two choices · S · closes A3 · needs 154.1 · alias: UK2c
-- [ ] **154.4** The cutscene's omen, unboxed · S · closes A4 · needs — · alias: UK2d
 - [ ] **154.5** The stakes card says three things · S · closes A5 · needs 154.1 · alias: UK2e
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 154.1, 153.2 · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
