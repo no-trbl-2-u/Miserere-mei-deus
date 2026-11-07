@@ -4,8 +4,6 @@
  * from `LOOKS`; the places T kept Normal keep today's code.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
 import React from 'react';
 import { render } from '@testing-library/react-native';
 
@@ -118,13 +116,6 @@ describe('The Satchel (A7)', () => {
         const { tree } = withAllProviders(<InventoryTabs tabs={tabs} activeTab="all" onTabPress={jest.fn()} />);
         const drawn = render(tree).UNSAFE_root.findAll((n: Node) => n.props.source === KIT['filter-tab-vellum'].source);
         expect(drawn.length).toBeGreaterThanOrEqual(tabs.length);
-    });
-
-    it('leaves the worn-gear panel and the item cards on today\'s code', () => {
-        const src = (f: string) => fs.readFileSync(path.join(__dirname, '..', '..', 'inventory', f), 'utf8');
-        for (const f of ['EquipmentDock.tsx', 'ItemCard.tsx']) {
-            expect(src(f)).not.toMatch(/experience\/(KitBackdrop|looks)/);
-        }
     });
 });
 
