@@ -587,3 +587,4 @@
 - 2026-11-07 · 153.3 (alias: UX1c) · the tab bar is large icons alone, clear of the dock flourishes · 93fa450e..acd6340f (#1441)
 - 2026-11-07 · 153.6 (alias: UX1f) · The Satchel has no burden: no bar, no tooltip, no number, no word, and the presenter computes none · b48d3cee..8224c1cd (#1442)
 - 2026-11-07 · 153.5 (alias: UX1e) · Self has no hazard deck link and the hazard deck screen is gone · f02a34dd..f02a34dd (#1443)
+- 2026-11-07 · 154.5 (alias: UK2e) · the hazard stakes card shows only the place, Goal: Force N | Escape M and Time: S secs, in legible type · 4f1de5d6..4f1de5d6 (#1430)

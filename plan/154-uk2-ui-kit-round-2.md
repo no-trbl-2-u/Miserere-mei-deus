@@ -89,7 +89,6 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 ## Acceptance
 
 - **A2** The save slots, BEGIN, the character select's HEART / BODY / MIND and CONFIRM, and the death and game-over buttons are on vellum. The character select's portrait and relic cards wear brass.
-- **A5** The hazard stakes card shows only the place's name, the goal and the time, in legible type. The hazard's rules are unchanged.
 - **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
 - **A7** A cache shows its title, its flavour line and two choices, each with an action line and no reward shown. The eyebrow, the "node is spent" line, the card image and the goods list are gone, and the rewards paid are unchanged.
 
@@ -101,10 +100,9 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 
 ## Chunks
 
-Measure: 4 open · 5 closed · next A10
+Measure: 3 open · 6 closed · next A10
 
 - [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
-- [ ] **154.5** The stakes card says three things · S · closes A5 · needs — · alias: UK2e
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs — · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
 
