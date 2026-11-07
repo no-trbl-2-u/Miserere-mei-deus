@@ -117,4 +117,15 @@ export const HUE = {
     artWater: '#0f1416',
     artWaterLine: '#27353a',
     artMoss: '#10150f',
+
+    // Ink on vellum (the parchment kit pieces): each measures 4.5:1 or more
+    // on the darkest parchment tone, `vellumShadow`.
+    vellumInk: '#2b1f14',
+    vellumInkSoft: '#4a3624',
+    vellumOxblood: '#6e1a10',
+    vellumVitaeRed: '#8a2418',
+    vellumShadow: '#c0a47d',
+    // The Spoils' two outcome inks: boonGreen and tickPurple darkened to read.
+    vellumVictory: '#16401c',
+    vellumMercy: '#3a2557',
 } as const;
