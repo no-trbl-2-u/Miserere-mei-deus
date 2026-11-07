@@ -24,7 +24,6 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
-import { EnemiesByMap } from '@mechanics';
 
 import { DebugTriggerEncounter } from '@/components/DebugTriggerEncounter';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -97,8 +96,8 @@ describe('DebugTriggerEncounter: combat triggers', () => {
         const event = slice.pending!.event as { kind: string; isBoss: boolean; encounter: { enemies: { level: number }[] } };
         expect(event.kind).toBe('encounter');
         expect(event.isBoss).toBe(false);
-        // The gentlest foe of the Breakwater's wandering pool (the six Chapter 1 normals, EN3b).
-        expect(event.encounter.enemies[0].level).toBe(Math.min(...EnemiesByMap.breakwater.map(e => e.level)));
+        // The gentlest foe of the Breakwater's wandering pool is the Quay-Crab, level 3 (EN3b; it was the Float-Eye, level 1).
+        expect(event.encounter.enemies[0].level).toBe(3);
         expect(selectHasActiveEvent(store.getState())).toBe(true);
     });
 
