@@ -277,7 +277,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     relicBoxPlain: { borderWidth: 1, borderColor: AXM.sulfur, backgroundColor: AXM.panelBg, padding: 8 },
-    relicBoxKit: { paddingVertical: 22, paddingHorizontal: 24 },
+    relicBoxKit: { paddingVertical: 22, paddingHorizontal: 28 },
     relicLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
     relicName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, textAlign: 'center' },
     relicLocked: { fontFamily: FONTS.gothic, fontSize: 44, color: AXM.ash },

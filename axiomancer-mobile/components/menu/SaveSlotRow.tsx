@@ -51,7 +51,7 @@ export function SaveSlotRow({ row, onAction, onClear }: SaveSlotRowProps) {
             testID={`save-slot-${row.id}`}
             accessibilityLabel={`Chronicle ${row.numeral}: ${row.detail}${row.stamp ? `, ${row.stamp}` : ''}`}
         >
-            <View style={[styles.numeralBox, WEAR_ROW && styles.numeralBoxKit]}>
+            <View testID={`save-slot-${row.id}-numeral`} style={[styles.numeralBox, WEAR_ROW && styles.numeralBoxKit, WEAR_ROW && row.mostRecent && styles.numeralBoxRecentKit, WEAR_ROW && torn && styles.numeralBoxTornKit]}>
                 <Text style={[styles.numeral, WEAR_ROW && styles.inkAccent]}>{row.numeral}</Text>
             </View>
             <View style={styles.text}>
@@ -137,7 +137,7 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.selectFill,
         alignItems: 'center',
     },
-    verbKit: { paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center' },
+    verbKit: { paddingVertical: 18, paddingHorizontal: 16, alignItems: 'center' },
     verbDanger: { borderColor: AXM.blood, backgroundColor: AXM.bg },
     verbGhost: { borderColor: AXM.ash, borderStyle: 'dashed', backgroundColor: 'transparent' },
     verbPressed: { opacity: 0.7 },
@@ -147,5 +147,8 @@ const useStyles = makeStyles((AXM) => ({
     inkBody: { color: VELLUM_INK },
     inkAccent: { color: VELLUM_OXBLOOD },
     numeralBoxKit: { borderColor: VELLUM_INK, backgroundColor: 'transparent' },
+    // On vellum the most-recent slot inks its numeral box in oxblood, and a torn save dashes it.
+    numeralBoxRecentKit: { borderColor: VELLUM_OXBLOOD, borderWidth: 2 },
+    numeralBoxTornKit: { borderColor: VELLUM_OXBLOOD, borderStyle: 'dashed' },
     verbLabelGhost: { fontFamily: FONTS.gothic, fontSize: 11, letterSpacing: 1.5, color: AXM.bone },
 }));
