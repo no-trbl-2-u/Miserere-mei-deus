@@ -34,7 +34,6 @@ needs are done):
 
 
 
-- **152.1** · UK1a: the look table, the kit primitives and the pieces it names (T's mixer picks, `/plot`, 2026-11-06; before the MVP demo)
 - **152.2** · UK1b: the Wilds on vellum, and the tab bar (T's mixer picks, `/plot`, 2026-11-06)
 - **152.3** · UK1c: the fight in brass where T kept it, layout held (T's mixer picks, `/plot`, 2026-11-06)
 - **152.4** · UK1d: the Spoils on vellum, inked to read (T's mixer picks, `/plot`, 2026-11-06)
@@ -51,12 +50,9 @@ needs are done):
 - **154.1** · UK2a: round 2's looks: dialogue, travel, hazard, quest, labyrinth (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.2** · UK2b: round 2's looks: new game and the endings (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.3** · UK2c: the dialogue offers two choices (T's mixer round 2, `/plot`, 2026-11-06)
-- **154.4** · UK2d: the cutscene's omen, unboxed (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.5** · UK2e: the stakes card says three things (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.6** · UK2f: the quest shows no pay and no lone counter (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.7** · UK2g: the cache says what you do, not what you get (T's mixer round 2, `/plot`, 2026-11-06)
-- **154.8** · UK2h: the unused aftermath panel goes (T's mixer round 2, `/plot`, 2026-11-06)
-- **154.9** · UK2i: the rest screen: black, the campfire in the middle, the words cut (T's mixer round 2, `/plot`, 2026-11-06)
 
 - **155.1** · DR1a: the open card, its painting as a banner, its lines under it (T's Deck session, `/plot`, 2026-11-06; B7's output)
 - **155.2** · DR1b: the deck below it, art thumbnails, dimmed when not open (T's Deck session, `/plot`, 2026-11-06)
@@ -104,7 +100,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 |---|---|---|---|---|
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 3 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 4 left |
-| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 9 left |
+| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 6 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
 | 112 | Combat entry and exit: the music steps aside for the whole fight, and the ink really spreads | [112-cx1-combat-entry-exit.md](112-cx1-combat-entry-exit.md) | planned | 1 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
@@ -131,7 +127,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 153 | The kit mixer's layout notes: fewer words, a calmer map, no burden, and a Deck to pick | [153-ux1-ui-kit-layout-notes.md](153-ux1-ui-kit-layout-notes.md) | planned | 6 left |
-| 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 6 left |
+| 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 5 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 2 left |
 
 ## How the loop reads this folder

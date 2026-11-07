@@ -55,15 +55,6 @@ const SCREENS = [
         },
     },
     {
-        // Aftermath panels with no organic capture path — rendered
-        // standalone in /devaftermath, one panel per viewport (RN-Web
-        // ScrollView content past the fold isn't captured by fullPage).
-        id: 'aftermath-defeat', file: '26-aftermath-defeat.png', drive: async (p) => {
-            await goto(p, '/devaftermath?panel=defeat')
-            await settle(p, 800)
-        },
-    },
-    {
         id: 'combat-prelude', file: '06-combat-prelude.png', drive: async (p) => {
             await triggerEncounter(p, 'encounter')
         },

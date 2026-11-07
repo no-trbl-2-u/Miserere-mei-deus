@@ -57,44 +57,6 @@ export type AftermathData =
            * an empty drop.
            */
           loot?: Item[];
-      }
-    | {
-          variant: 'defeat';
-          /** The killer — the foe that delivered the final blow. */
-          enemy: {
-              name: string;
-              description: string;
-              level: number;
-              /**
-               * Per-foe chronicle lines from the engine. All optional; the
-               * aftermath presenter falls back to the generic
-               * per-tier phrase when the field is absent.
-               */
-              finalBlowLines?: { brutal: string; quiet: string; ironic: string };
-              causeLines?: { brutal: string; broken: string; quiet: string };
-          };
-          /** Character name snapshot (the fallen pilgrim). Uppercased
-           *  by the presenter; raw form here. */
-          characterName: string;
-          /**
-           * Final-blow data captured before `actions.endCombat()`
-           * cleared the slice (mirror of the victory branch's
-           * field). The damage figure here is the damage taken by
-           * the player on the killing round, not damage dealt.
-           */
-          finalBlow: { cardName: string | null; damage: number; descriptor: string | null } | null;
-          /**
-           * Run summary snapshot — `roundsEndured` comes from the
-           * combat slice; `encountersFaced` + `deepestNodeId` come
-           * from the mobile-side run-stats counter (engine doesn't
-           * yet expose run-level progression).
-           */
-          runSummary: {
-              roundsEndured: number;
-              encountersFaced: number;
-              deepestNodeId: string | null;
-              currentMapId: string | null;
-          };
       };
 
 export interface CombatModeApi {

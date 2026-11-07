@@ -17,7 +17,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import { ScreenBg } from '@/components/ScreenBg';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { StatBar } from '@/components/StatBar';
+import { CampfireFrames } from '@/components/rest/CampfireFrames';
 import { NightPassing } from '@/components/rest/NightPassing';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -28,9 +31,7 @@ import {
     type RestChoiceOfferVM,
 } from '@/state/presenters/rest.engine';
 import {
-    REST_CHOICE_EYEBROW,
     REST_CHOICE_FREE_LABEL,
-    REST_CHOICE_INTRO,
     REST_CHOICE_PURSE_LABEL,
     REST_CHOICE_TITLE,
     REST_OUTCOME_CLAIM_LABEL,
@@ -38,7 +39,7 @@ import {
     restOutcomeHealChip,
     restDawnUpgradedChip,
 } from '@/state/presenters/rest.copy';
-import { FONTS, TYPE } from '@/theme/axm';
+import { FONTS, HUE, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 function OfferCard({ offer, onPress }: { offer: RestChoiceOfferVM; onPress: () => void }) {
@@ -103,48 +104,56 @@ export default function RestScreen() {
     // blank screen.
     if (!vm.active) {
         return (
-            <ScreenBg scrollable={false} art="rest">
+            <SafeAreaView style={styles.safe} edges={['top']}>
                 <View style={styles.inactiveWrap} testID="rest-inactive">
                     <Text style={styles.inactiveText}>No fire here. The night moved on.</Text>
                 </View>
-            </ScreenBg>
+            </SafeAreaView>
         );
     }
 
     return (
-        <ScreenBg scrollable={false} art="rest">
+        <SafeAreaView style={styles.safe} edges={['top']}>
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
                 <View style={styles.column} testID="rest-column">
-                    <Text style={styles.eyebrow}>{REST_CHOICE_EYEBROW}</Text>
                     <Text style={styles.title}>{REST_CHOICE_TITLE}</Text>
 
                     <View style={styles.purseRow} testID="rest-purse">
                         <Text style={styles.purseLabel}>{REST_CHOICE_PURSE_LABEL}</Text>
                         <Text style={styles.purseValue}>{vm.currency}</Text>
-                        <Text style={styles.purseLabel}>VITAE {vm.health}/{vm.maxHealth}</Text>
+                        <View style={styles.vitae}>
+                            <StatBar
+                                value={vm.health}
+                                max={Math.max(1, vm.maxHealth)}
+                                color={AXM.blood}
+                                label="VITAE"
+                                height={8}
+                                alarmAt={0.25}
+                            />
+                        </View>
                     </View>
 
                     {vm.phase === 'offer' && (
-                        <View testID="rest-choice-offers">
-                            {/* The authored node line sits ABOVE the one-way warning;
-                              * the warning always shows, so the player is always told
-                              * the node is spent and there is no leaving without
-                              * choosing. */}
+                        <View style={styles.offerPhase}>
+                            {/* Everything but the two choices sits high; the fire
+                              * fills the middle and the choices rest below it. */}
                             {vm.description ? (
                                 <Text style={styles.body} testID="rest-choice-intro">
                                     {vm.description}
                                 </Text>
                             ) : null}
-                            <Text style={styles.oneWayNote} testID="rest-choice-intro-one-way">
-                                {REST_CHOICE_INTRO}
-                            </Text>
-                            {vm.offers.map((offer) => (
-                                <OfferCard
-                                    key={offer.id}
-                                    offer={offer}
-                                    onPress={() => actions.chooseRestChoiceOffer(offer.id)}
-                                />
-                            ))}
+                            <View style={styles.fireWrap}>
+                                <CampfireFrames />
+                            </View>
+                            <View testID="rest-choice-offers">
+                                {vm.offers.map((offer) => (
+                                    <OfferCard
+                                        key={offer.id}
+                                        offer={offer}
+                                        onPress={() => actions.chooseRestChoiceOffer(offer.id)}
+                                    />
+                                ))}
+                            </View>
                         </View>
                     )}
 
@@ -191,7 +200,7 @@ export default function RestScreen() {
                     )}
                 </View>
             </ScrollView>
-        </ScreenBg>
+        </SafeAreaView>
     );
 }
 
@@ -199,11 +208,15 @@ export default function RestScreen() {
 export const REST_COLUMN_MAX_WIDTH = 520;
 
 const useStyles = makeStyles((AXM) => ({
-    scrollOuter: { flex: 1 },
-    scroll: { padding: 14, paddingBottom: 24, flexGrow: 1, justifyContent: 'center' },
+    safe: { flex: 1, backgroundColor: HUE.black },
+    scrollOuter: { flex: 1, backgroundColor: HUE.black },
+    scroll: { padding: 14, paddingBottom: 24, flexGrow: 1 },
+    offerPhase: { flexGrow: 1 },
+    fireWrap: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 12 },
+    vitae: { flex: 1 },
     // A phone fills the column edge to edge; a wide window keeps each
     // offer's name beside its price instead of across the screen.
-    column: { width: '100%', maxWidth: REST_COLUMN_MAX_WIDTH, alignSelf: 'center' },
+    column: { width: '100%', maxWidth: REST_COLUMN_MAX_WIDTH, alignSelf: 'center', flexGrow: 1 },
     eyebrow: {
         fontFamily: FONTS.sans,
         fontSize: 12,
@@ -224,7 +237,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 10,
         borderWidth: 1,
         borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
+        backgroundColor: HUE.black,
         padding: 8,
         marginBottom: 10,
     },
@@ -239,8 +252,6 @@ const useStyles = makeStyles((AXM) => ({
     },
     // The night brings a fought elite back: one quiet line per foe.
     eliteReturn: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginTop: 8 },
-    // The irreversibility line, quieter than the scene but always there.
-    oneWayNote: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, lineHeight: 16, marginTop: 6, marginBottom: 2 },
     offerCol: { marginBottom: 8 },
     offerButton: {
         borderWidth: 2,

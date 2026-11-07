@@ -48,7 +48,7 @@
 | Brass Gothic | E-03 dialogue choice rows; X-01 labyrinth act rows; X-02 LEAVE (labyrinth); N-04 portrait and relic cards (character select) |
 | Normal (unchanged) | V-01 to V-06 (the whole village, T: "until we know what all these screens look like, let's not swap anything out"); E-01; E-04 (removed below); C-01 and C-02; T-01; H-02; R-01, R-02 (reworked, see Rest); A-01, A-02 (reworked); Q-02; N-03; N-07 |
 
-G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to confirm #2]`).
+G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-11-06, #2).
 
 **T's notes:**
 
@@ -64,7 +64,7 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
   - The eyebrow, the "node is spent" line, the card image and the goods list all go.
   - The rewards themselves are unchanged and still paid after the choice.
   - "That'll be the pattern for all caches" (T). Each cache carries its two action lines as data, and a cache with no lines yet shows a `[content]` placeholder (`[T to confirm #3]`).
-- **The aftermath panel:** removed with its dev page, since nothing in the game shows it (`[T to confirm #2]`).
+- **The aftermath panel:** removed with its dev page, since nothing in the game shows it (T, 2026-11-06, #2).
 - **Rest** (asked last; T pointed to the fire, 2026-11-06):
   - The background is black (T). The fire's frames are drawn on black, so they sit on it with no seam.
   - The eyebrow "A MOMENT TO STOP" and the "node is spent" line go.
@@ -94,32 +94,26 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
   - every Normal place is unchanged.
 - **A2** The save slots, BEGIN, the character select's HEART / BODY / MIND and CONFIRM, and the death and game-over buttons are on vellum. The character select's portrait and relic cards wear brass.
 - **A3** The dialogue offers exactly its choices, with no tip-your-cap row, and "Take the quest." shows no errand chip. The blacksmith's leave row is unchanged.
-- **A4** The cutscene's omen is text on the background, with no border or panel.
 - **A5** The hazard stakes card shows only the place's name, the goal and the time, in legible type. The hazard's rules are unchanged.
 - **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
 - **A7** A cache shows its title, its flavour line and two choices, each with an action line and no reward shown. The eyebrow, the "node is spent" line, the card image and the goods list are gone, and the rewards paid are unchanged.
-- **A8** The aftermath panel and its dev page are gone, and no test or route names them.
-- **A9** The rest screen is black. It has no "A MOMENT TO STOP" and no "node is spent" line, its purse and VITAE strip shows the VITAE bar, everything but the two choices sits higher, and T's campfire loops in the middle (one still frame under reduced motion).
 
 ## Open questions
 
 1. Which animated fire does the rest screen use? Confirmed by T (2026-11-06): `campfire-05`, copied from T's checkout into `assets/images/screens/animated-fixtures/campfire-05/` (PR #1404).
-2. Should the aftermath panel ("the page closes", BEGIN AGAIN) be deleted, since no game flow shows it? Default: delete it and its dev page. Or: wire it into the death flow and skin it in vellum, per T's round-2 pick. [T to confirm #2]
+2. Should the aftermath panel ("the page closes", BEGIN AGAIN) be deleted, since no game flow shows it? Confirmed by T (2026-11-06): "Delete it. Delete `CombatDefeatPanel`, `/devaftermath`, its `_layout.tsx` registration and the `DebugRunControls` link, plus the aftermath presenter's defeat half if nothing else reads it. A lost fight already goes to death-return and game-over since DY1." Done in 154.8.
 3. What do the caches without T's action lines show? Default: `[content]` placeholders until T writes them, with T's two lines on the cave cache. Or: the loop drafts every cache's lines in T's pattern for T to edit in the PR. [T to confirm #3]
 
 ## Chunks
 
-Measure: 9 open · 0 closed · next A10
+Measure: 6 open · 3 closed · next A10
 
-- [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs 152.1 · alias: UK2a
-- [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs 152.1 · alias: UK2b
+- [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs — · alias: UK2a
+- [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
 - [ ] **154.3** The dialogue offers two choices · S · closes A3 · needs 154.1 · alias: UK2c
-- [ ] **154.4** The cutscene's omen, unboxed · S · closes A4 · needs — · alias: UK2d
 - [ ] **154.5** The stakes card says three things · S · closes A5 · needs 154.1 · alias: UK2e
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 154.1, 153.2 · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
-- [ ] **154.8** The unused aftermath panel goes · S · closes A8 · needs — · alias: UK2h
-- [ ] **154.9** The rest screen: black, the campfire in the middle, the words cut · M · closes A9 · needs — · alias: UK2i
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
 
