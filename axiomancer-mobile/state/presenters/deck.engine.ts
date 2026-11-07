@@ -118,7 +118,7 @@ export interface DeckCardVM {
     keywords: { name: string; def: string; minor: boolean }[];
     /**
      * Authored prose (`Card.description`). No screen draws it since the Reader
-     * (spec 155); kept here so a later screen can pick it up without a data change.
+     * (DR1); kept here so a later screen can pick it up without a data change.
      */
     flavor: string | null;
     /** Screen-reader sentence for the tile (rarity named, never colour-only). */
