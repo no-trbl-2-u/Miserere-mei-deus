@@ -33,7 +33,7 @@ export function DeckCardTile({ card, onPress }: DeckCardTileProps) {
             onPress={() => onPress(card)}
             accessibilityRole="button"
             accessibilityLabel={card.a11yLabel}
-            accessibilityHint="Opens the card's full text and flavour"
+            accessibilityHint="Opens this card at the top of the screen"
             testID={`deck-card-${card.cardId}`}
         >
             <View style={styles.main}>
