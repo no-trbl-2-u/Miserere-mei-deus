@@ -30,7 +30,10 @@ Google Fonts families. Every one has an `@expo-google-fonts` package, so
 any pick can be built. A Browse tab sets every font the same way with one
 line on what it is. Each place with backdrop art in the game is set over
 that screen's own plate (`fonts/`, resized from `assets/images/maps` and
-`combat`), dimmed as `ScreenBg` dims it; a toggle shows them flat. One tick per place; the footer counts how many
+`combat`), dimmed as `ScreenBg` dims it. Six places sit inside T's own kit
+piece where T's kit-mixer picks put it (the brass section header and
+HEART / BODY / MIND tile, the vellum panel, button and tab); cards carry
+no kit piece (T, 2026-11-05). A toggle shows every specimen flat. One tick per place; the footer counts how many
 families the picks add up to.
 
 ## Verdicts

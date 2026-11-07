@@ -63,6 +63,11 @@
   body.dark .spec { background-image:none !important; min-height:64px; }
   body.dark .spec.vel .txt, body.vellum .spec .txt { background:none; box-shadow:none; padding:0; color:inherit; }
   body.vellum .spec { background-image:none !important; background-color:var(--vellum); color:var(--vellum-ink); min-height:64px; }
+  .piece { width:100%; margin:0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background-size:100% 100%; background-repeat:no-repeat; white-space:pre-line; overflow-wrap:normal; }
+  .piece.ink-dark { color:var(--vellum-ink); }
+  .piece.ink-light { color:var(--dark-ink); }
+  .spec.haspiece { display:flex; flex-direction:column; justify-content:center; }
+  body.dark .piece, body.vellum .piece { background-image:none !important; aspect-ratio:auto !important; padding:0 !important; max-width:none !important; color:inherit; text-align:left; align-items:flex-start; }
   .artname { color:var(--muted); font-size:.75rem; margin:4px 2px 0; }
   .about { color:var(--muted); font-size:.85rem; margin:6px 2px 0; }
   .note { width:100%; margin-top:8px; padding:8px; font:inherit; font-size:.95rem; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
@@ -167,23 +172,23 @@ const SLOTS = [
     fonts: ['pirata', 'maguntia', 'grenzeg', 'jacq24', 'cook', 'almendrad', 'fellcanon', 'cormuni', 'uncial', 'cinzel'] },
   { slot: 'H-02', art: 'ludgate-hill', label: 'Small labels above titles', where: 'The line over a title, like "A FIND, UNCLAIMED" or "THE WAY ON".', sample: 'A find, unclaimed', size: 17, ground: 'dark', now: 'bebas', caps: true,
     fonts: ['bebas', 'fellsc', 'cormsc', 'spectralsc', 'alegreyasc', 'almendrasc', 'marcellus', 'grenze', 'felldw'] },
-  { slot: 'H-03', label: 'Section headings inside panels', where: 'Self, the Ledger, the Satchel and Settings: "Worn gear", "Colour theme".', sample: 'Worn gear', size: 24, ground: 'dark', now: 'pirata',
+  { slot: 'H-03', piece: 'section-header-dark-star', label: 'Section headings inside panels', where: 'Self, the Ledger, the Satchel and Settings: "Worn gear", "Colour theme".', sample: 'Worn gear', size: 20, ground: 'dark', now: 'pirata',
     fonts: ['pirata', 'grenzeg', 'felldouble', 'almendra', 'cormorant', 'caudex', 'bastarda', 'medsharp', 'metamorph'] },
   { slot: 'W-01', art: 'charon-crossing', label: 'Omens and narration', where: 'The cutscene omen and a node\'s flavour line, raw on the background.', sample: 'The bell rang once before dawn, and no one in the village would say who pulled the rope.', size: 19, ground: 'dark', now: 'fell', italic: true,
     fonts: ['fell', 'felldw', 'garamond', 'cormorant', 'goudysorts', 'alegreya', 'fondamento', 'eaglelake', 'linden'] },
-  { slot: 'W-02', art: 'charon-crossing', label: 'The spoken line in dialogue', where: 'What a character says, on the parchment box.', sample: '"You carry a debt you have not named. Sit, and we will name it together."', size: 18, ground: 'vellum', now: 'fell',
+  { slot: 'W-02', art: 'charon-crossing', piece: 'modal-panel-vellum', label: 'The spoken line in dialogue', where: 'What a character says, on the parchment box.', sample: '"You carry a debt you have not named. Sit, and we will name it together."', size: 18, ground: 'vellum', now: 'fell',
     fonts: ['fell', 'felldw', 'garamond', 'goudybook', 'rosarivo', 'cardo', 'alegreya', 'spectral', 'caudex'] },
   { slot: 'W-03', art: 'ludgate-hill', label: 'Rules and explanations', where: 'Small text that tells you how something works: settings lines, the stakes card, prompts.', sample: 'The node is spent the moment you stop here. Pick one; there is no walking back out.', size: 15, ground: 'dark', now: 'fell',
     fonts: ['fell', 'spectral', 'alegreya', 'garamond', 'crimson', 'cardo', 'rosarivo', 'caudex', 'bebas'] },
-  { slot: 'B-01', art: 'charon-crossing', label: 'Buttons', where: 'YES · MOVE, CONTINUE, BEGIN, CONFIRM, LEAVE.', sample: 'Yes · Move', size: 22, ground: 'vellum', now: 'bebas', caps: true,
+  { slot: 'B-01', art: 'charon-crossing', piece: 'action-button-vellum', label: 'Buttons', where: 'YES · MOVE, CONTINUE, BEGIN, CONFIRM, LEAVE.', sample: 'Yes · Move', size: 22, ground: 'vellum', now: 'bebas', caps: true,
     fonts: ['bebas', 'fellsc', 'cormsc', 'grenzeg', 'pirata', 'almendrasc', 'marcellus', 'alegreyasc', 'uncial'] },
-  { slot: 'B-02', label: 'Chips, tabs and tags', where: 'Rarity and colour chips, ALL / GEAR / PHIALS, the enemy intent badge.', sample: 'Rare · Gear · Phials', size: 14, ground: 'dark', now: 'bebas', caps: true,
+  { slot: 'B-02', label: 'Chips, tabs and tags', where: 'Rarity and colour chips, ALL / GEAR / PHIALS, the enemy intent badge.', piece: 'filter-tab-vellum', sample: 'Phials', size: 16, ground: 'dark', now: 'bebas', caps: true,
     fonts: ['bebas', 'jetbrains', 'spectralsc', 'alegreyasc', 'fellsc', 'grenze', 'cutive', 'cormsc'] },
   { slot: 'B-03', art: 'act1-coast', label: 'Map node names', where: 'The names on the Wilds map.', sample: 'River meadow', size: 16, ground: 'dark', now: null,
     fonts: ['fellsc', 'cormsc', 'almendrasc', 'marcellus', 'uncial', 'felldw', 'linden', 'spectralsc'] },
   { slot: 'N-01', art: 'arena-desolation', label: 'Big numbers', where: 'VITAE, damage, block, level: the numbers you read in a fight.', sample: '24 / 30', size: 34, ground: 'dark', now: 'jetbrains',
     fonts: ['jetbrains', 'bebas', 'grenzeg', 'pirata', 'felldw', 'garamond', 'cormorant', 'alegreya', 'maguntia', 'spectral'] },
-  { slot: 'N-02', art: 'forest-dark', label: 'Small counts and stats', where: 'The purse, card counts, HEART 4, 3 of 5.', sample: '12 shillings · Heart 4 · 3 of 5', size: 15, ground: 'dark', now: 'jetbrains',
+  { slot: 'N-02', piece: 'stat-tile', label: 'Small counts and stats', where: 'The purse, card counts, HEART 4, 3 of 5.', sample: 'Heart\n4', size: 18, ground: 'dark', now: 'jetbrains',
     fonts: ['jetbrains', 'spectral', 'alegreya', 'garamond', 'fell', 'grenze', 'cutive', 'cardo'] },
   { slot: 'C-01', label: 'Card names', where: 'The name on a card, in the hand, the Deck tab and rewards.', sample: 'The Second Cut', size: 22, ground: 'dark', now: null,
     fonts: ['pirata', 'grenzeg', 'fellsc', 'almendra', 'bastarda', 'cormorant', 'caudex', 'medsharp', 'uncial'] },
@@ -191,7 +196,7 @@ const SLOTS = [
     fonts: ['fell', 'spectral', 'alegreya', 'garamond', 'cardo', 'rosarivo', 'crimson', 'goudybook'] },
   { slot: 'C-03', art: 'arena-desolation', label: 'Foe names', where: 'The enemy\'s name on its rail in a fight.', sample: 'Amen', size: 28, ground: 'dark', now: null,
     fonts: ['pirata', 'maguntia', 'grenzeg', 'fruktur', 'rocker', 'germania', 'jacq24', 'almendrad'] },
-  { slot: 'C-04', art: 'wentworth-street', label: 'Quest and ledger entries', where: 'The quest panel\'s goal and the Ledger\'s written lines.', sample: 'Bring the choir\'s hymnal back to the chapel before the frost.', size: 16, ground: 'vellum', now: 'fell',
+  { slot: 'C-04', art: 'wentworth-street', piece: 'modal-panel-vellum', label: 'Quest and ledger entries', where: 'The quest panel\'s goal and the Ledger\'s written lines.', sample: 'Bring the choir\'s hymnal back to the chapel before the frost.', size: 16, ground: 'vellum', now: 'fell',
     fonts: ['fell', 'felldw', 'cutive', 'garamond', 'goudysorts', 'caudex', 'fondamento', 'alegreya'] },
 ];
 
@@ -352,6 +357,18 @@ const css = (f, s) => [
 /* The screen's own backdrop, dimmed the way ScreenBg dims it (the plate at 0.2 over the ground). */
 const ART_NAMES = { 'charon-crossing': 'the event, dialogue and cutscene backdrop', 'ludgate-hill': 'the cache backdrop', 'forest-dark': 'the rest backdrop',
   'wentworth-street': 'the village backdrop', 'act1-coast': 'the Act 1 coast map', 'arena-desolation': 'the fight arena' };
+/* T's kit pieces (assets/images/experience), where T's look picks put them; text sits inside the piece's frame. */
+const PIECES = {
+  'section-header-dark-star': { ratio: '728/72', pad: '0 14%', ink: 'light', name: 'the Brass Gothic section header (Self, Settings)' },
+  'modal-panel-vellum': { ratio: '745/441', pad: '9% 11%', ink: 'dark', name: 'the Vellum & Ink panel' },
+  'action-button-vellum': { ratio: '370/141', pad: '0 14%', ink: 'dark', maxw: '300px', name: 'the Vellum & Ink button' },
+  'filter-tab-vellum': { ratio: '362/95', pad: '0 12%', ink: 'dark', maxw: '200px', name: 'the Vellum & Ink tab (ALL / GEAR / PHIALS)' },
+  'stat-tile': { ratio: '176/299', pad: '16% 6%', ink: 'light', maxw: '150px', name: 'the Brass Gothic HEART / BODY / MIND tile' },
+};
+const pieceCss = (s) => {
+  const p = PIECES[s.piece];
+  return `background-image:url(fonts/${s.piece}.webp);aspect-ratio:${p.ratio};padding:${p.pad};max-width:${p.maxw || '100%'}`;
+};
 const artCss = (s) => s.art ? `;background-image:linear-gradient(rgba(11,10,9,.8),rgba(11,10,9,.8)),url(fonts/${s.art}.webp)` : '';
 const tags = (key, s) => {
   const f = FONTS[key];
@@ -364,13 +381,13 @@ const cardHtml = (s, key, i) => {
   <label class="card" data-id="${id}">
     <input class="pick" type="checkbox" value="${id}" aria-label="${esc(s.label)}: ${esc(f.family)}">
     <p class="name"><b>${esc(f.family)}</b>${tags(key, s)}</p>
-    <div class="spec${s.ground === 'vellum' ? ' vel' : ''}${s.art ? ' art' : ''}" style="${esc(css(f, s) + artCss(s))}"><span class="txt">${esc(s.sample)}</span></div>
+    <div class="spec${s.ground === 'vellum' && !s.piece ? ' vel' : ''}${s.art ? ' art' : ''}${s.piece ? ' haspiece' : ''}" style="${esc(css(f, s) + artCss(s))}">${s.piece ? `<div class="piece ink-${PIECES[s.piece].ink}" style="${pieceCss(s)}"><span class="txt">${esc(s.sample)}</span></div>` : `<span class="txt">${esc(s.sample)}</span>`}</div>
   </label>`;
 };
 const slotHtml = (s) => `
   <section class="slot" data-slot="${s.slot}">
     <h2>${esc(s.label)}<small>${s.slot}</small></h2>
-    <p class="where">${esc(s.where)}${s.art ? ` Shown over ${ART_NAMES[s.art]}, dimmed as in the game.` : ' This screen has no backdrop art; shown on its flat ground.'}</p>
+    <p class="where">${esc(s.where)}${s.art ? ` Shown over ${ART_NAMES[s.art]}, dimmed as in the game.` : ' No backdrop art here.'}${s.piece ? ` Set in ${PIECES[s.piece].name}, as you picked it in the kit mixer.` : ''}</p>
     <div class="row">${s.fonts.map((k, i) => cardHtml(s, k, i)).join('')}</div>
     <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}, or name another font (optional)">
   </section>`;
