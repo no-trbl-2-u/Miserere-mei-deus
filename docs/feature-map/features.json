@@ -943,7 +943,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-night.ET1c.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-campfire.UK2i.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
