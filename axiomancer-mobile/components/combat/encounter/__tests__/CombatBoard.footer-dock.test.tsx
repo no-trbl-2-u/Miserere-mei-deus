@@ -3,9 +3,12 @@
  *
  * The bottom rail is the dock, left to right: the 48pt player avatar (tap
  * opens the pilgrim modal), the VITAE column (value / max with the piles at
- * its right, an 8pt fill bar, the phase ledger under the bar) and a wide END
- * button. No corner medallion floats over the hand any more: the avatar and
- * END both sit inside the dock. The VITAE bar turns blood below 25%.
+ * its right, then an 8pt fill bar) and the END button. No corner medallion
+ * floats over the hand any more: the avatar and END both sit inside the dock.
+ * The VITAE bar turns blood below 25%.
+ *
+ * UX1d (spec 153): the phase ledger's marks are gone from the dock, END is
+ * narrower, and the dock row is taller than END so the dock art reads.
  */
 
 import React from 'react';
@@ -17,10 +20,10 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
 import {
-    DOCK_GAP, DOCK_PAD_H, DOCK_PAD_V, DOCK_VITAE_MAX_WIDTH, END_BTN_W, END_BTN_H, VITAE_BAR_H, VITAE_LOW_RATIO, dockMinHeight, vitaeBarFill,
+    DOCK_GAP, DOCK_PAD_H, DOCK_PAD_V, DOCK_ROW_H, DOCK_VITAE_MAX_WIDTH, END_BTN_W, END_BTN_H, VITAE_BAR_H, VITAE_LOW_RATIO, dockMinHeight, vitaeBarFill,
 } from '@/components/combat/encounter/CombatFooterDock';
 import { PLAYER_AVATAR_SIZE } from '@/components/combat/encounter/CombatCombatantPane';
-import { buildCombatViewModel, ledgerA11y, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
+import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { currentPalette } from '@/theme/runtime';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -106,29 +109,30 @@ describe('A4 — the footer dock', () => {
         expect(at('combat-end-phase')).toBeGreaterThan(at('combat-rail-vitae-col'));
     });
 
-    it('stacks the VITAE line, the fill bar and the phase ledger, in that order', () => {
+    it('stacks the VITAE line over the fill bar, the piles at its right', () => {
         renderBoard();
         const ids = testIdOrder();
         const at = (id: string) => ids.indexOf(id);
-        expect(at('combat-rail-vitae')).toBeLessThan(at('combat-rail-vitae-bar'));
-        expect(at('combat-rail-vitae-bar')).toBeLessThan(at('combat-ledger'));
+        expect(at('combat-rail-vitae')).toBeLessThan(at('combat-piles'));
+        expect(at('combat-piles')).toBeLessThan(at('combat-rail-vitae-bar'));
         const col = within(screen.getByTestId('combat-rail-vitae-col'));
-        expect(col.getByTestId('combat-ledger')).toBeTruthy();
-        // The ledger reads as one row of five marks.
-        expect(flat('combat-ledger').flexDirection).toBe('row');
-        expect(flat('combat-ledger').flexWrap).toBeUndefined();
         // The piles sit on the VITAE line, at its right.
         expect(col.getByLabelText(/^Deck \d+ cards, discard \d+$/)).toBeTruthy();
     });
 
-    it('speaks the phase ledger as one line, run by run (CRITIQUE pass 85)', () => {
+    it('draws no phase-ledger marks (UX1d: off the board, T 2026-11-07)', () => {
         renderBoard({ shape: (vm) => ({ ...vm, ledger: ['clear', 'overwhelmed', 'pending', 'pending', 'pending'] }) });
-        const ledger = screen.getByTestId('combat-ledger');
-        expect(ledger.props.accessible).toBe(true);
-        expect(ledger.props.accessibilityLabel).toBe('Phases: 1 cleared, 2 overwhelmed, 3 to 5 ahead');
-        // A pair joins with "and"; a lone phase stands alone; none is said so.
-        expect(ledgerA11y(['clear', 'clear', 'overwhelmed', 'clear', 'pending'])).toBe('Phases: 1 and 2 cleared, 3 overwhelmed, 4 cleared, 5 ahead');
-        expect(ledgerA11y([])).toBe('Phases: none');
+        expect(screen.queryByTestId('combat-ledger')).toBeNull();
+        expect(screen.queryByLabelText(/^Phases:/)).toBeNull();
+    });
+
+    it('END is narrower than before and the dock row is taller than END (UX1d)', () => {
+        renderBoard();
+        // Was 116 wide, and the row was END's own 56.
+        expect(END_BTN_W).toBeLessThan(116);
+        expect(DOCK_ROW_H).toBeGreaterThan(END_BTN_H);
+        expect(flat('combat-rail').minHeight).toBe(DOCK_ROW_H + DOCK_PAD_V * 2 + INSETS.bottom);
+        expect(flat('combat-rail').alignItems).toBe('center');
     });
 
     it('caps the VITAE column on a wide window, never on a phone (CRITIQUE pass 85)', () => {
@@ -162,12 +166,13 @@ describe('A4 — the footer dock', () => {
         expect(cbs.onPlayerInspect).toHaveBeenCalledTimes(1);
     });
 
-    it('END is a wide thumb button that still ends the phase', () => {
+    it('END is a thumb button that still ends the phase', () => {
         const { cbs } = renderBoard();
         const end = flat('combat-end-phase');
         expect(end.width).toBe(END_BTN_W);
         expect(end.height).toBe(END_BTN_H);
-        expect(END_BTN_W).toBeGreaterThan(END_BTN_H * 2 - 1);
+        // Still wider than tall: a thumb target, not a corner disc.
+        expect(END_BTN_W).toBeGreaterThan(END_BTN_H);
         expect(within(screen.getByTestId('combat-end-phase')).getByText('END')).toBeTruthy();
         expect(within(screen.getByTestId('combat-end-phase')).getByText('⧗')).toBeTruthy();
         fireEvent.press(screen.getByTestId('combat-end-phase'));

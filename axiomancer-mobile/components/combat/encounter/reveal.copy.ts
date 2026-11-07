@@ -1,8 +1,8 @@
 /** Words on the encounter reveal's tier frame (phase ET1a). */
 
-export const REVEAL_EYEBROW_FIGHT = '⚔ A FOE BARS THE WAY';
-export const REVEAL_EYEBROW_ELITE = '⚔ A CHAMPION HOLDS THE WAY';
-export const REVEAL_EYEBROW_BOSS = '⚔ THE WAY ENDS HERE';
+// The reveal has no kicker line above the foe (T, S-01: remove "A FOE
+// RISES"; spec 153, UX1d). The tier reads off the portrait's frame and,
+// for the boss, the held title card.
 
 /** The held title card's second line, under the place. */
 export const BOSS_CARD_SUBTITLE = 'Chapter 1 boss';

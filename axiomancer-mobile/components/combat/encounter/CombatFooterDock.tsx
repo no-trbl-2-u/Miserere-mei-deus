@@ -5,12 +5,17 @@
  *                 The board passes it in as a slot, so the portrait's own
  *                 resolution FX stay in `PlayerMedallion`.
  *   VITAE column  ♥ value / max with the deck and discard piles at its right,
- *                 a fill bar under it (blood below a quarter), and the phase
- *                 ledger under the bar. Capped at `DOCK_VITAE_MAX_WIDTH`, so
- *                 a wide window keeps the piles beside the VITAE figure.
- *   END          a wide thumb button: hourglass + END, the dead-tray
- *                 consequence line above it, dimmed while a phase resolves.
- *                 Pushed to the right edge however wide the window is.
+ *                 and a fill bar under it (blood below a quarter). Capped at
+ *                 `DOCK_VITAE_MAX_WIDTH`, so a wide window keeps the piles
+ *                 beside the VITAE figure.
+ *   END          a thumb button: hourglass + END, the dead-tray consequence
+ *                 line above it, dimmed while a phase resolves. Pushed to the
+ *                 right edge however wide the window is.
+ *
+ * No phase ledger: its marks left the dock (spec 153, UX1d; T, 2026-11-07,
+ * "off the board"), and the name rail's "PHASE n/N" keeps the count. END is
+ * narrower and the dock taller than END, so the brass dock art reads (T's
+ * S-09 note).
  *
  * The dock respects the bottom safe-area inset and grows rather than clips.
  */
@@ -23,33 +28,26 @@ import { FONTS, HUE } from '@/theme/axm';
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
-import { ledgerA11y } from '@/state/presenters/combat-encounter.engine';
 import type { CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
-import { LedgerMark } from '@/components/hazard/glyphs';
 
-/** The ledger's marks tallied, for the gloss's live line. */
-function ledgerCounts(ledger: CombatViewModel['ledger']): { clear: number; overwhelmed: number; pending: number } {
-    const n = { clear: 0, overwhelmed: 0, pending: 0 };
-    for (const m of ledger) n[m] += 1;
-    return n;
-}
-
-/** The dock's tallest cell (the END button); the row's height before padding. */
-export const DOCK_ROW_H = 56;
+/**
+ * The dock's row height before padding. Taller than END (spec 153, UX1d), so
+ * the dock frame shows above and below the button; every cell is centred in it.
+ */
+export const DOCK_ROW_H = 72;
 /** The dock's top and bottom padding (the bottom one sits above the inset). */
 export const DOCK_PAD_V = 8;
 /** Side padding and the gap between the dock's three cells. */
 export const DOCK_PAD_H = 10;
 export const DOCK_GAP = 10;
-/** The wide END button: a thumb target, not a corner disc. */
-export const END_BTN_W = 116;
-export const END_BTN_H = DOCK_ROW_H;
+/** The END button: a thumb target, not a corner disc, narrowed by UX1d. */
+export const END_BTN_W = 88;
+export const END_BTN_H = 56;
 /** The VITAE fill bar's height. */
 export const VITAE_BAR_H = 8;
 /** Below this share of max VITAE the bar turns blood (presentation only). */
 export const VITAE_LOW_RATIO = 0.25;
-export const DOCK_LEDGER_MARK = 14;
 /**
  * The VITAE column's widest extent. A phone never reaches it (the column gets
  * what the avatar and END leave, about 160pt at 375 wide). On a desktop or
@@ -57,7 +55,6 @@ export const DOCK_LEDGER_MARK = 14;
  * and discard counts beside the VITAE figure; END stays at the right edge.
  */
 export const DOCK_VITAE_MAX_WIDTH = 360;
-const DOCK_LEDGER_GAP = 3;
 
 /** The dock's minimum height for a given bottom inset. */
 export function dockMinHeight(bottomInset: number): number {
@@ -143,14 +140,14 @@ export const EndPhaseButton = React.memo(function EndPhaseButton({ onPress, cons
 export const CombatFooterDock = React.memo(function CombatFooterDock({
     vm, avatar, bottomInset, onEndPhase, endConsequence, resolving, onGloss, onLayout,
 }: {
-    vm: Pick<CombatViewModel, 'player' | 'ledger' | 'deckCount' | 'discardCount'>;
+    vm: Pick<CombatViewModel, 'player' | 'deckCount' | 'discardCount'>;
     /** The player's portrait, rendered by the board (it owns the hit FX). */
     avatar: React.ReactNode;
     bottomInset: number;
     onEndPhase: () => void;
     endConsequence: string | null;
     resolving: boolean;
-    /** Tap the piles or the phase ledger: opens that word's gloss. */
+    /** Tap the piles: opens their gloss. */
     onGloss?: (ids: readonly BoardTermId[], live?: BoardGlossLive) => void;
     onLayout?: (e: LayoutChangeEvent) => void;
 }) {
@@ -205,27 +202,6 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                     </Pressable>
                 </View>
                 <VitaeBar hp={vm.player.hp} maxHp={vm.player.maxHp} />
-                <Pressable
-                    style={styles.ledger}
-                    testID="combat-ledger"
-                    onPress={() => onGloss?.(['ledger'], { ledger: ledgerCounts(vm.ledger) })}
-                    accessibilityRole="button"
-                    accessibilityLabel={ledgerA11y(vm.ledger)}
-                    accessibilityHint="Tap to read what the marks mean"
-                    hitSlop={4}
-                >
-                    {/* Each mark is wrapped in a View. `LedgerMark` is a bare
-                      * `Svg`, and on RN-web a bare svg is not a positioned box,
-                      * so the dock's absolutely positioned backdrop paints over
-                      * it and the marks vanish. The wrapper is the mark's own
-                      * size, so the row measures exactly as it did. The marks
-                      * themselves are untouched. */}
-                    {vm.ledger.map((m, i) => (
-                        <View key={i} style={styles.ledgerMark}>
-                            <LedgerMark kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />
-                        </View>
-                    ))}
-                </Pressable>
             </View>
             <EndPhaseButton onPress={onEndPhase} consequence={endConsequence} disabled={resolving} />
         </View>
@@ -264,8 +240,6 @@ const useStyles = makeStyles((AXM) => ({
         borderBottomColor: 'transparent', borderLeftColor: 'transparent',
     },
     barFill: { height: '100%' },
-    ledger: { flexDirection: 'row', gap: DOCK_LEDGER_GAP, alignItems: 'center' },
-    ledgerMark: { width: DOCK_LEDGER_MARK, height: DOCK_LEDGER_MARK },
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
     pileGlyphText: { fontFamily: FONTS.sans, fontSize: 7, color: AXM.ash, lineHeight: 9 },
