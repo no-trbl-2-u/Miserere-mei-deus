@@ -29,13 +29,12 @@ import type { CombatEvent, Enemy } from '@mechanics';
 const TURNS = 24;
 
 /**
- * Frame sets installed before any enemy in the library wears their portrait
- * (the six Breakwater foes of the portrait swap). They have no enemy to take a
- * turn, so the roster sweep below cannot cover them yet.
+ * Frame sets installed before any enemy in the library wears their portrait.
+ * Such a set has no enemy to take a turn, so the roster sweep below cannot
+ * cover it. Empty: EN3a seated the six Breakwater portraits on library foes
+ * (2026-11-07), so every installed set now has an enemy wearing it.
  */
-const STAGED_SETS = [
-    'bilge-stalker', 'coralback', 'quay-crab', 'saint-beneath', 'saltwick-swarm', 'wreckmaster',
-]
+const STAGED_SETS: readonly string[] = []
 
 /** Sear the Frozen's free line: a DEAL now, and INFERNO on the foe for its turn start. */
 const SEAR = cardIdNamed('Sear the Frozen');

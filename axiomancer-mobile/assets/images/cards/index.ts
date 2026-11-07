@@ -171,6 +171,6 @@ const CARD_ART_BY_ID: Record<string, number> = {
     'el-m-10n': require('./el-m-10n.webp'),
 };
 
-export function getCardArt(cardId: string): number {
+export function cardArtFor(cardId: string): number {
     return CARD_ART_BY_ID[cardId] ?? FALLBACK_CARD_ART;
 }
