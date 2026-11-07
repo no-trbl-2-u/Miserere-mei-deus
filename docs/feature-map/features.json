@@ -568,7 +568,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, ..."
+        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/components/experience/__tests__/lookGate.newgame.normal.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -743,7 +743,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, axiomancer-mobile/state/e2e/combat-route.screen.test.tsx, axiomancer-mobile/state/e2e/hazard-death-return.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, axiomancer-mobile/components/experience/__tests__/lookGate.newgame.normal.test.tsx, axiomancer-mobile/components/experience/__tests__/lookGate.newgame.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -918,7 +918,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/game-over.screen.test.tsx, axiomancer-mobile/components/experience/__tests__/lookGate.newgame.normal.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,

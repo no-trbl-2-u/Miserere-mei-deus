@@ -23,17 +23,18 @@ import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 import type { KitPiece } from '@/assets/images/experience/kit';
 import { KitBackdrop } from './KitBackdrop';
 
-export function KitSurface({ piece, scale, style, children, testID, wear = true }: {
+export function KitSurface({ piece, scale, style, children, testID, wear = true, accessibilityLabel }: {
     piece: KitPiece;
     scale?: number;
     style?: StyleProp<ViewStyle>;
     children?: React.ReactNode;
     testID?: string;
     wear?: boolean;
+    accessibilityLabel?: string;
 }) {
-    if (!wear) return <View style={style} testID={testID}>{children}</View>;
+    if (!wear) return <View style={style} testID={testID} accessibilityLabel={accessibilityLabel}>{children}</View>;
     return (
-        <View style={[{ position: 'relative' }, style]} testID={testID}>
+        <View style={[{ position: 'relative' }, style]} testID={testID} accessibilityLabel={accessibilityLabel}>
             <KitBackdrop piece={piece} scale={scale} />
             {children}
         </View>

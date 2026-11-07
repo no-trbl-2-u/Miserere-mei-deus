@@ -18,6 +18,9 @@
 import React, { useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { VELLUM_INK } from '@/components/experience/KitBackdrop';
+import { KitPressable, KitSurface } from '@/components/experience/KitSurface';
+import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { getPlayerPortrait } from '@/assets/images/portraits';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
@@ -37,6 +40,16 @@ import { RUN_END_PARAM } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+
+/** The brass card (N-04), the vellum stat tile (N-05) and the vellum CONFIRM (N-06). */
+const [CARD] = PLACE_PIECES['N-04'];
+const [TILE] = PLACE_PIECES['N-05'];
+const [CONFIRM] = PLACE_PIECES['N-06'];
+const WEAR_CARD = lookOf('N-04') !== 'normal';
+const WEAR_TILE = lookOf('N-05') !== 'normal';
+const WEAR_CONFIRM = lookOf('N-06') !== 'normal';
+/** The brass card is drawn smaller than its default so the portrait keeps most of its box. */
+const CARD_SCALE = 0.2;
 
 /** The starting relic's mark, in points. */
 const RELIC_MARK_SIZE = 44;
@@ -128,7 +141,13 @@ export default function CharacterSelectScreen() {
                 </View>
 
                 <View style={styles.focal}>
-                    <View style={styles.portraitFrame} testID="character-select-portrait">
+                    <KitSurface
+                        wear={WEAR_CARD}
+                        piece={CARD}
+                        scale={CARD_SCALE}
+                        style={[styles.portraitFrame, WEAR_CARD ? styles.portraitFrameKit : styles.portraitFramePlain]}
+                        testID="character-select-portrait"
+                    >
                         {selected !== null ? (
                             <Image
                                 source={getPlayerPortrait(selected.portraitKey).source}
@@ -141,20 +160,26 @@ export default function CharacterSelectScreen() {
                         ) : (
                             <Text style={styles.portraitLocked}>?</Text>
                         )}
-                    </View>
-                    <View style={styles.relicBox} testID="character-select-relic">
+                    </KitSurface>
+                    <KitSurface
+                        wear={WEAR_CARD}
+                        piece={CARD}
+                        scale={CARD_SCALE}
+                        style={[styles.relicBox, WEAR_CARD ? styles.relicBoxKit : styles.relicBoxPlain]}
+                        testID="character-select-relic"
+                    >
                         <Text style={styles.relicLabel}>{COPY.relicLabel}</Text>
                         {selected !== null ? (
                             <>
                                 <ItemGlyph category="equipment" sub="Relic" itemId={selected.relicId} size={RELIC_MARK_SIZE} />
-                                <Text style={styles.relicName} testID="character-select-relic-name">
+                                <Text style={styles.relicName} numberOfLines={3} adjustsFontSizeToFit minimumFontScale={0.7} testID="character-select-relic-name">
                                     {selected.relicName}
                                 </Text>
                             </>
                         ) : (
                             <Text style={styles.relicLocked}>?</Text>
                         )}
-                    </View>
+                    </KitSurface>
                 </View>
 
                 {selected !== null ? (
@@ -162,10 +187,16 @@ export default function CharacterSelectScreen() {
                         <Text style={styles.name} testID="character-select-name">{selected.name}</Text>
                         <View style={styles.statsRow} testID="character-select-stats">
                             {selected.stats.map((stat) => (
-                                <View key={stat.key} style={styles.stat} testID={`character-select-stat-${stat.key}`}>
-                                    <Text style={styles.statLabel}>{stat.label}</Text>
-                                    <Text style={styles.statValue}>{stat.value}</Text>
-                                </View>
+                                <KitSurface
+                                    key={stat.key}
+                                    wear={WEAR_TILE}
+                                    piece={TILE}
+                                    style={[styles.stat, WEAR_TILE ? styles.statKit : styles.statPlain]}
+                                    testID={`character-select-stat-${stat.key}`}
+                                >
+                                    <Text style={[styles.statLabel, WEAR_TILE && styles.inkText]}>{stat.label}</Text>
+                                    <Text style={[styles.statValue, WEAR_TILE && styles.inkText]}>{stat.value}</Text>
+                                </KitSurface>
                             ))}
                         </View>
                         <Text style={styles.playstyle} testID="character-select-playstyle">{selected.playstyle}</Text>
@@ -177,8 +208,11 @@ export default function CharacterSelectScreen() {
                     </View>
                 )}
 
-                <Pressable
-                    style={[styles.confirm, !canConfirm && styles.confirmOff]}
+                <KitPressable
+                    wear={WEAR_CONFIRM}
+                    plainOpacity
+                    piece={CONFIRM}
+                    style={[styles.confirm, WEAR_CONFIRM ? styles.confirmKit : styles.confirmPlain, !canConfirm && styles.confirmOff, !canConfirm && !WEAR_CONFIRM && styles.confirmOffPlain]}
                     onPress={onConfirm}
                     disabled={!canConfirm}
                     accessibilityRole="button"
@@ -186,8 +220,8 @@ export default function CharacterSelectScreen() {
                     accessibilityState={{ disabled: !canConfirm }}
                     testID="character-select-confirm"
                 >
-                    <Text style={styles.confirmLabel}>{COPY.confirm}</Text>
-                </Pressable>
+                    <Text style={[styles.confirmLabel, WEAR_CONFIRM && styles.inkText]}>{COPY.confirm}</Text>
+                </KitPressable>
 
                 <View style={styles.spacer} />
 
@@ -227,25 +261,23 @@ const useStyles = makeStyles((AXM) => ({
     focal: { flexDirection: 'row', gap: 10, height: 220 },
     portraitFrame: {
         flex: 3,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.deepBg,
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
     },
+    portraitFramePlain: { borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.deepBg },
+    // Clears the brass card's drawn corners at CARD_SCALE (about 19 high, 27 wide).
+    portraitFrameKit: { paddingVertical: 22, paddingHorizontal: 28 },
     portraitImage: { width: '100%', height: '100%' },
     portraitLocked: { fontFamily: FONTS.gothic, fontSize: 72, color: AXM.ash },
     relicBox: {
         flex: 2,
-        borderWidth: 1,
-        borderColor: AXM.sulfur,
-        backgroundColor: AXM.panelBg,
         alignItems: 'center',
         justifyContent: 'center',
         gap: 8,
-        padding: 8,
     },
+    relicBoxPlain: { borderWidth: 1, borderColor: AXM.sulfur, backgroundColor: AXM.panelBg, padding: 8 },
+    relicBoxKit: { paddingVertical: 22, paddingHorizontal: 28 },
     relicLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
     relicName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, textAlign: 'center' },
     relicLocked: { fontFamily: FONTS.gothic, fontSize: 44, color: AXM.ash },
@@ -253,25 +285,27 @@ const useStyles = makeStyles((AXM) => ({
     statsRow: { flexDirection: 'row', gap: 8, marginTop: 8 },
     stat: {
         flex: 1,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
         alignItems: 'center',
-        paddingVertical: 6,
+        paddingVertical: 10,
     },
+    // Clears the vellum chip's drawn corners (about 9.5 wide).
+    statKit: { paddingHorizontal: 10 },
+    statPlain: { borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.panelBg, paddingVertical: 6 },
+    inkText: { color: VELLUM_INK },
     statLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
     statValue: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.parchment },
     playstyle: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 8 },
     confirm: {
         marginTop: 12,
         height: 46,
-        borderWidth: 1,
-        borderColor: AXM.sulfur,
-        backgroundColor: AXM.selectFill,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    confirmOff: { borderColor: AXM.ash, opacity: 0.5 },
+    confirmPlain: { borderWidth: 1, borderColor: AXM.sulfur, backgroundColor: AXM.selectFill },
+    // Clears the vellum button's drawn corners (about 16 high, 13 wide).
+    confirmKit: { height: 54, paddingVertical: 16, paddingHorizontal: 16 },
+    confirmOff: { opacity: 0.5 },
+    confirmOffPlain: { borderColor: AXM.ash },
     confirmLabel: { fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur, letterSpacing: 2 },
     spacer: { flex: 1, minHeight: 8 },
     carousel: { gap: 8 },

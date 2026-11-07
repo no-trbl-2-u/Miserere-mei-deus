@@ -123,3 +123,22 @@ describe("round 2's node screens (A1)", () => {
         }
     });
 });
+
+/** Round 2's new-game and ending screens, written out so a dropped row fails. */
+const NEW_GAME: readonly PlaceId[] = ['N-01', 'N-02', 'N-03', 'N-04', 'N-05', 'N-06', 'N-07', 'G-01'];
+
+describe("round 2's new game and endings (A2)", () => {
+    it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM and the ending button; brass for the cards", () => {
+        const picked = (look: Look) => NEW_GAME.filter((p) => LOOKS[p] === look);
+        expect(picked('vellum')).toEqual(['N-01', 'N-02', 'N-05', 'N-06', 'G-01']);
+        expect(picked('brass')).toEqual(['N-04']);
+        expect(picked('normal')).toEqual(['N-03', 'N-07']);
+    });
+
+    it('draws a piece on every worn place and none on a normal one', () => {
+        for (const place of NEW_GAME) {
+            if (LOOKS[place] === 'normal') expect(PLACE_PIECES[place]).toEqual([]);
+            else expect(PLACE_PIECES[place].length).toBeGreaterThan(0);
+        }
+    });
+});

@@ -11,8 +11,11 @@
  */
 
 import React, { useCallback, useEffect } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { VELLUM_INK } from '@/components/experience/KitBackdrop';
+import { KitPressable } from '@/components/experience/KitSurface';
+import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { ScreenBg } from '@/components/ScreenBg';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useLocalSearchParams, useRouter } from '@/lib/platform/router';
@@ -27,6 +30,10 @@ function readSlot(raw: unknown): SaveSlotId | null {
     const n = Number(raw);
     return n === 1 || n === 2 || n === 3 ? n : null;
 }
+
+/** The vellum button (G-01). */
+const [BUTTON] = PLACE_PIECES['G-01'];
+const WEAR_BUTTON = lookOf('G-01') !== 'normal';
 
 export default function GameOverScreen() {
     const styles = useStyles();
@@ -56,15 +63,18 @@ export default function GameOverScreen() {
                     {vm.title}
                 </Text>
                 <Text style={styles.body} testID="game-over-body">{vm.body}</Text>
-                <TouchableOpacity
+                <KitPressable
+                    wear={WEAR_BUTTON}
+                    plainOpacity
+                    piece={BUTTON}
                     accessibilityRole="button"
                     accessibilityLabel={vm.buttonA11yLabel}
                     onPress={toCharacterSelect}
-                    style={styles.button}
+                    style={[styles.button, WEAR_BUTTON ? styles.buttonKit : styles.buttonPlain]}
                     testID="game-over-new-character"
                 >
-                    <Text style={styles.buttonText}>{vm.buttonLabel}</Text>
-                </TouchableOpacity>
+                    <Text style={[styles.buttonText, WEAR_BUTTON && styles.buttonTextKit]}>{vm.buttonLabel}</Text>
+                </KitPressable>
             </View>
         </ScreenBg>
     );
@@ -88,17 +98,22 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
     },
     button: {
-        borderWidth: 2,
-        borderColor: AXM.sulfur,
         marginTop: 12,
         minHeight: 44,
         minWidth: 200,
-        paddingVertical: 10,
-        paddingHorizontal: 24,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    buttonPlain: {
+        borderWidth: 2,
+        borderColor: AXM.sulfur,
+        paddingVertical: 10,
+        paddingHorizontal: 24,
         backgroundColor: AXM.bg,
     },
+    // Clears the vellum button's drawn corners (about 16 high, 13 wide).
+    buttonKit: { minHeight: 56, paddingVertical: 18, paddingHorizontal: 28 },
+    buttonTextKit: { color: VELLUM_INK },
     buttonText: {
         fontFamily: FONTS.gothic,
         fontSize: 18,
