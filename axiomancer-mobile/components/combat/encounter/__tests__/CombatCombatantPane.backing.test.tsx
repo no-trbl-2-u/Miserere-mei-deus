@@ -51,7 +51,7 @@ const FRAMED = Object.keys(ENEMY_FRAME_SETS);
 
 describe('the backing registry', () => {
     it('has a foe to check', () => {
-        expect(FRAMED.length).toBeGreaterThanOrEqual(17);
+        expect(FRAMED.length).toBeGreaterThanOrEqual(23);
     });
 
     it.each(FRAMED)('%s has one backing per cell', (key) => {
