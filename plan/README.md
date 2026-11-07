@@ -69,6 +69,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 `max_age`, the loop asks T once (an issue), never releases it:
 
 - **113.9** · attended: T does this one (SM1i) · since: 2026-11-01 · until: T's word · max_age: 30d
+- **156.7** · waits on T's colour ballot verdict (TY1g; built by TY1f) · since: 2026-11-06 · until: T's word · max_age: 60d
 - **115.5** · attended: T does this one (MF1e) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **116.4** · attended: T does this one (BW1d) · since: 2026-11-01 · until: 2026-11-10 · max_age: 16d
 - **117.6** · attended: T does this one (DF1f) · since: 2026-11-01 · until: 2026-11-12 · max_age: 18d
@@ -99,6 +100,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 3 left |
+| 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 7 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 4 left |
 | 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 6 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |

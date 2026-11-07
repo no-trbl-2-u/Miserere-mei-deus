@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Font ballot</title>
+<!--
+  The font ballot (2026-11-06). A friend said the screens read as AI-made; the
+  type is a large part of that (monospace labels, tracked-out condensed caps
+  everywhere). This ballot asks, for each job type does in the game, which
+  font should do it.
+
+  Every specimen is live text in a Google Font (every one ships as an
+  @expo-google-fonts package, so any pick can be built). The sample words are
+  the game's own where they exist. "now" marks roughly what the game uses for
+  that job today; "common in AI UI" marks a face the research found in lists
+  of AI-design tells.
+
+  Tick one font per place (ticking another moves the tick). The same font can
+  win as many places as you like; the footer counts how many families your
+  picks add up to. The note box takes "this one, but bigger", or the name of
+  a font not shown. The title screen's EMBARK is not on here: it stays.
+
+  Verdicts are read back by the session that plots spec 156 (chunk TY1a).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  :root { --bg:#0b0a09; --ink:#ece0c8; --muted:#a39887; --card:#1a1613; --edge:#4a3f33; --sel:#dcb04a; --btn:#ece0c8; --btn-ink:#141110;
+          --dark:#0b0a09; --dark-ink:#ece0c8; --vellum:#e6d6b4; --vellum-ink:#2a1d12; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:14px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.95rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  .ground { display:flex; gap:6px; align-items:center; margin:0 0 8px; font-size:.92rem; color:var(--muted); }
+  .ground button { font:inherit; font-size:.9rem; padding:6px 10px; min-height:36px; border:1px solid var(--edge); background:var(--card); color:var(--ink); border-radius:6px; cursor:pointer; }
+  .ground button[aria-pressed=true] { background:var(--sel); color:#1b1408; border-color:var(--sel); }
+  [role=tablist] { display:flex; flex-wrap:wrap; gap:6px; position:sticky; top:0; z-index:5; background:var(--bg); padding:8px 0; border-bottom:1px solid var(--edge); }
+  [role=tab] { font:inherit; font-size:.92rem; padding:8px 12px; min-height:40px; border:1px solid var(--edge); background:var(--card); color:var(--ink); border-radius:6px; cursor:pointer; }
+  [role=tab][aria-selected=true] { background:var(--sel); color:#1b1408; border-color:var(--sel); }
+  [role=tab] .n { margin-left:6px; font-size:.8rem; opacity:.8; }
+  .slot { margin:20px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.08rem; margin:0 0 2px; }
+  .slot h2 small { color:var(--muted); font-weight:normal; margin-left:6px; }
+  .where { color:var(--muted); font-size:.9rem; margin:0 0 8px; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:10px; }
+  label.card { position:relative; display:block; background:var(--card); border:1px solid var(--edge); border-radius:8px; padding:8px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 3px var(--sel); border-color:var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .name { font-size:.9rem; margin:0 36px 6px 2px; }
+  .name b { letter-spacing:.02em; }
+  .tag { display:inline-block; font-size:.72rem; padding:0 5px; margin-left:4px; border-radius:3px; border:1px solid var(--muted); color:var(--muted); }
+  .tag.now { border-color:var(--sel); color:var(--sel); }
+  .spec { padding:14px 12px; border-radius:4px; min-height:64px; overflow-wrap:anywhere; background-color:var(--dark); color:var(--dark-ink); }
+  /* On the art: the plate at the game's own dim (ScreenBg: opacity 0.2 over the ground). */
+  .spec.art { min-height:150px; display:flex; flex-direction:column; justify-content:center; background-size:cover; background-position:center; }
+  .spec .txt { display:block; }
+  .spec.vel .txt { background:var(--vellum); color:var(--vellum-ink); padding:12px 14px; border-radius:3px; box-shadow:0 2px 10px #000a; }
+  body.dark .spec { background-image:none !important; min-height:64px; }
+  body.dark .spec.vel .txt, body.vellum .spec .txt { background:none; box-shadow:none; padding:0; color:inherit; }
+  body.vellum .spec { background-image:none !important; background-color:var(--vellum); color:var(--vellum-ink); min-height:64px; }
+  .piece { width:100%; margin:0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background-size:100% 100%; background-repeat:no-repeat; white-space:pre-line; overflow-wrap:normal; }
+  .piece.ink-dark { color:var(--vellum-ink); }
+  .piece.ink-light { color:var(--dark-ink); }
+  .spec.haspiece { display:flex; flex-direction:column; justify-content:center; }
+  body.dark .piece, body.vellum .piece { background-image:none !important; aspect-ratio:auto !important; padding:0 !important; max-width:none !important; color:inherit; text-align:left; align-items:flex-start; }
+  .artname { color:var(--muted); font-size:.75rem; margin:4px 2px 0; }
+  .about { color:var(--muted); font-size:.85rem; margin:6px 2px 0; }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; font-size:.95rem; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  .browse { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap:10px; margin-top:14px; }
+  .browse div.f { background:var(--card); border:1px solid var(--edge); border-radius:8px; padding:8px; }
+  footer { margin-top:28px; padding-top:14px; border-top:2px solid var(--edge); display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  footer label, footer textarea { flex-basis:100%; }
+  footer textarea { min-height:70px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  footer button { font:inherit; padding:9px 16px; min-height:42px; background:var(--btn); color:var(--btn-ink); border:0; border-radius:6px; cursor:pointer; }
+  .count { color:var(--muted); }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Fonts: which type does which job?</h1>
+  <p class="sub"><b>Closed:</b> voted 2026-11-06; the verdict is in fonts.md.</p>
+  <p class="sub">15 places type does a job in the game. For each, tick the one font to use. Every specimen is the real font, set in the game's own words where they exist, over the screen's own backdrop art where it has one.</p>
+  <p class="legend"><b>now</b> marks roughly what the game uses for that job today. <b>common in AI UI</b> marks a face that shows up in lists of AI-design tells.<br>
+  The same font can win many places, and fewer families usually look less generated: the footer counts how many your picks add up to (two or three is typical for a game).<br>
+  Use the note box for "this one, but bigger", or to name a font not shown. "Browse" lists every font with a line on what it is. The title screen's EMBARK is not on here: it stays.</p>
+  <p class="ground">Show on:
+    <button type="button" data-ground="auto" aria-pressed="true">As in the game (art)</button>
+    <button type="button" data-ground="dark" aria-pressed="false">Flat dark</button>
+    <button type="button" data-ground="vellum" aria-pressed="false">All parchment</button>
+  </p>
+  <nav role="tablist" id="tabs" aria-label="Groups"></nav>
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the type as a whole: how many fonts, what to avoid…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'fonts-2026-11-06';
+
+/* Every font on the ballot: the Google Fonts family, the axes to load, the CSS
+   it is set with, and one line on what it is. */
+const FONTS = {
+  pirata:      { family: 'Pirata One', load: 'Pirata+One', about: 'Blackletter cut for screens; sharp, readable at title sizes.' },
+  maguntia:    { family: 'UnifrakturMaguntia', load: 'UnifrakturMaguntia', about: 'A true Fraktur from the 1500s tradition; dense and ornate.' },
+  cook:        { family: 'UnifrakturCook', load: 'UnifrakturCook:wght@700', weight: 700, about: 'Heavy, dark textura; a church-door blackletter.' },
+  grenzeg:     { family: 'Grenze Gotisch', load: 'Grenze+Gotisch:wght@400;600', weight: 600, about: 'Blackletter crossed with a modern serif; gothic but easy to read.' },
+  jacq24:      { family: 'Jacquard 24', load: 'Jacquard+24', about: 'Pixel blackletter, like a woven tapestry; strange and memorable.' },
+  bastarda:    { family: 'Jacquarda Bastarda 9', load: 'Jacquarda+Bastarda+9', about: 'Pixel bastarda (a looser gothic hand); crude, hand-stitched feel.' },
+  fruktur:     { family: 'Fruktur', load: 'Fruktur', about: 'Fat, playful Fraktur; loud.' },
+  rocker:      { family: 'New Rocker', load: 'New+Rocker', about: 'Blackletter with metal-album swagger.' },
+  germania:    { family: 'Germania One', load: 'Germania+One', about: 'Condensed, blunt gothic; war-poster feel.' },
+  uncial:      { family: 'Uncial Antiqua', load: 'Uncial+Antiqua', about: 'Insular uncial, the hand of early monastery books.' },
+  medsharp:    { family: 'MedievalSharp', load: 'MedievalSharp', about: 'Chisel-cut medieval caps and lowercase; folkish.' },
+  almendra:    { family: 'Almendra', load: 'Almendra:ital@0;1', about: 'Calligraphic book face with a gothic hand underneath.' },
+  almendrasc:  { family: 'Almendra SC', load: 'Almendra+SC', about: 'Almendra in small capitals; labels with a pen edge.' },
+  almendrad:   { family: 'Almendra Display', load: 'Almendra+Display', about: 'Almendra with ornamented capitals.' },
+  metamorph:   { family: 'Metamorphous', load: 'Metamorphous', about: 'Gothic-roman hybrid; carved-stone heading feel.' },
+  fondamento:  { family: 'Fondamento', load: 'Fondamento:ital@0;1', about: 'Broad-nib italic hand; looks written, not typed.' },
+  eaglelake:   { family: 'Eagle Lake', load: 'Eagle+Lake', about: 'Calligraphic flourish; a scribe in a hurry.' },
+  fell:        { family: 'IM Fell English', load: 'IM+Fell+English:ital@0;1', about: 'Revival of 1670s Oxford types, ink spread and all.' },
+  fellsc:      { family: 'IM Fell English SC', load: 'IM+Fell+English+SC', about: 'IM Fell in small capitals; old-book labels.' },
+  felldw:      { family: 'IM Fell DW Pica', load: 'IM+Fell+DW+Pica:ital@0;1', about: 'A rougher Fell cut; more ink, more wear.' },
+  felldouble:  { family: 'IM Fell Double Pica', load: 'IM+Fell+Double+Pica:ital@0;1', about: 'A larger Fell size; heavier strokes for headings.' },
+  fellcanon:   { family: 'IM Fell French Canon SC', load: 'IM+Fell+French+Canon+SC', about: 'The big Fell titling capitals.' },
+  garamond:    { family: 'EB Garamond', load: 'EB+Garamond:ital,wght@0,400;0,600;1,400', about: 'Renaissance book face; calm and classical.' },
+  cormorant:   { family: 'Cormorant Garamond', load: 'Cormorant+Garamond:ital,wght@0,500;0,600;1,500', weight: 500, about: 'Garamond drawn for display; tall and elegant, thin at small sizes.' },
+  cormsc:      { family: 'Cormorant SC', load: 'Cormorant+SC:wght@500;600', weight: 600, about: 'Cormorant small capitals.' },
+  cormuni:     { family: 'Cormorant Unicase', load: 'Cormorant+Unicase:wght@500;600', weight: 600, about: 'Capitals and lowercase on one height; uncanny, liturgical.' },
+  goudysorts:  { family: 'Sorts Mill Goudy', load: 'Sorts+Mill+Goudy:ital@0;1', about: 'Goudy Old Style revival; warm private-press book.' },
+  goudybook:   { family: 'Goudy Bookletter 1911', load: 'Goudy+Bookletter+1911', about: 'Goudy\'s Kennerley; sturdy, a little rustic.' },
+  rosarivo:    { family: 'Rosarivo', load: 'Rosarivo:ital@0;1', about: 'Wide old-style text face; open and readable.' },
+  spectral:    { family: 'Spectral', load: 'Spectral:ital,wght@0,400;0,600;1,400', about: 'Sharp modern serif built for screens.' },
+  spectralsc:  { family: 'Spectral SC', load: 'Spectral+SC:wght@500;600', weight: 600, about: 'Spectral small capitals; crisp labels.' },
+  alegreya:    { family: 'Alegreya', load: 'Alegreya:ital,wght@0,400;0,700;1,400', about: 'Calligraphic serif for long reading; lively rhythm.' },
+  alegreyasc:  { family: 'Alegreya SC', load: 'Alegreya+SC:wght@500;700', weight: 500, about: 'Alegreya small capitals.' },
+  crimson:     { family: 'Crimson Pro', load: 'Crimson+Pro:ital,wght@0,400;0,600;1,400', about: 'Garamond-like text face; neutral and very readable.' },
+  caudex:      { family: 'Caudex', load: 'Caudex:ital,wght@0,400;0,700;1,400', about: 'Medieval-flavoured book face; slightly carved.' },
+  cardo:       { family: 'Cardo', load: 'Cardo:ital,wght@0,400;0,700;1,400', about: 'Scholar\'s face, made for medieval texts.' },
+  linden:      { family: 'Linden Hill', load: 'Linden+Hill:ital@0;1', about: 'Delicate Goudy revival; antique and light.' },
+  cinzel:      { family: 'Cinzel', load: 'Cinzel:wght@500;700', weight: 600, tag: 'ai', about: 'Roman inscription capitals; the default "epic fantasy" font.' },
+  marcellus:   { family: 'Marcellus SC', load: 'Marcellus+SC', about: 'Flared Roman small capitals; quieter than Cinzel.' },
+  grenze:      { family: 'Grenze', load: 'Grenze:wght@500;700', weight: 500, about: 'Narrow serif cousin of Grenze Gotisch; tight labels without the tracked caps.' },
+  bebas:       { family: 'Bebas Neue', load: 'Bebas+Neue', tag: 'ai', spacing: '0.12em', about: 'Condensed poster capitals; the game\'s current label face.' },
+  jetbrains:   { family: 'JetBrains Mono', load: 'JetBrains+Mono:wght@400;700', tag: 'ai', about: 'Programmer\'s monospace; the game\'s current number face.' },
+  cutive:      { family: 'Cutive Mono', load: 'Cutive+Mono', about: 'Typewriter monospace; a clerk\'s ledger.' },
+};
+
+const TABS = [
+  { key: 'H', name: 'Headings' },
+  { key: 'W', name: 'Words' },
+  { key: 'B', name: 'Buttons & labels' },
+  { key: 'N', name: 'Numbers' },
+  { key: 'C', name: 'Cards & foes' },
+  { key: 'X', name: 'Browse' },
+];
+
+/* One place type does a job. `now` is the font key it uses today (roughly);
+   `ground` is what it sits on in the game; `size` is the specimen's size;
+   `caps` sets the sample in capitals; `italic` sets it in italic. */
+const SLOTS = [
+  { slot: 'H-01', art: 'charon-crossing', label: 'Screen titles and place names', where: 'The big name at the top: a place, a screen, a node.', sample: 'The Cave Choir', size: 34, ground: 'dark', now: 'pirata',
+    fonts: ['pirata', 'maguntia', 'grenzeg', 'jacq24', 'cook', 'almendrad', 'fellcanon', 'cormuni', 'uncial', 'cinzel'] },
+  { slot: 'H-02', art: 'ludgate-hill', label: 'Small labels above titles', where: 'The line over a title, like "A FIND, UNCLAIMED" or "THE WAY ON".', sample: 'A find, unclaimed', size: 17, ground: 'dark', now: 'bebas', caps: true,
+    fonts: ['bebas', 'fellsc', 'cormsc', 'spectralsc', 'alegreyasc', 'almendrasc', 'marcellus', 'grenze', 'felldw'] },
+  { slot: 'H-03', piece: 'section-header-dark-star', label: 'Section headings inside panels', where: 'Self, the Ledger, the Satchel and Settings: "Worn gear", "Colour theme".', sample: 'Worn gear', size: 20, ground: 'dark', now: 'pirata',
+    fonts: ['pirata', 'grenzeg', 'felldouble', 'almendra', 'cormorant', 'caudex', 'bastarda', 'medsharp', 'metamorph'] },
+  { slot: 'W-01', art: 'charon-crossing', label: 'Omens and narration', where: 'The cutscene omen and a node\'s flavour line, raw on the background.', sample: 'The bell rang once before dawn, and no one in the village would say who pulled the rope.', size: 19, ground: 'dark', now: 'fell', italic: true,
+    fonts: ['fell', 'felldw', 'garamond', 'cormorant', 'goudysorts', 'alegreya', 'fondamento', 'eaglelake', 'linden'] },
+  { slot: 'W-02', art: 'charon-crossing', piece: 'modal-panel-vellum', label: 'The spoken line in dialogue', where: 'What a character says, on the parchment box.', sample: '"You carry a debt you have not named. Sit, and we will name it together."', size: 18, ground: 'vellum', now: 'fell',
+    fonts: ['fell', 'felldw', 'garamond', 'goudybook', 'rosarivo', 'cardo', 'alegreya', 'spectral', 'caudex'] },
+  { slot: 'W-03', art: 'ludgate-hill', label: 'Rules and explanations', where: 'Small text that tells you how something works: settings lines, the stakes card, prompts.', sample: 'The node is spent the moment you stop here. Pick one; there is no walking back out.', size: 15, ground: 'dark', now: 'fell',
+    fonts: ['fell', 'spectral', 'alegreya', 'garamond', 'crimson', 'cardo', 'rosarivo', 'caudex', 'bebas'] },
+  { slot: 'B-01', art: 'charon-crossing', piece: 'action-button-vellum', label: 'Buttons', where: 'YES · MOVE, CONTINUE, BEGIN, CONFIRM, LEAVE.', sample: 'Yes · Move', size: 22, ground: 'vellum', now: 'bebas', caps: true,
+    fonts: ['bebas', 'fellsc', 'cormsc', 'grenzeg', 'pirata', 'almendrasc', 'marcellus', 'alegreyasc', 'uncial'] },
+  { slot: 'B-02', label: 'Chips, tabs and tags', where: 'Rarity and colour chips, ALL / GEAR / PHIALS, the enemy intent badge.', piece: 'filter-tab-vellum', sample: 'Phials', size: 16, ground: 'dark', now: 'bebas', caps: true,
+    fonts: ['bebas', 'jetbrains', 'spectralsc', 'alegreyasc', 'fellsc', 'grenze', 'cutive', 'cormsc'] },
+  { slot: 'B-03', art: 'act1-coast', label: 'Map node names', where: 'The names on the Wilds map.', sample: 'River meadow', size: 16, ground: 'dark', now: null,
+    fonts: ['fellsc', 'cormsc', 'almendrasc', 'marcellus', 'uncial', 'felldw', 'linden', 'spectralsc'] },
+  { slot: 'N-01', art: 'arena-desolation', label: 'Big numbers', where: 'VITAE, damage, block, level: the numbers you read in a fight.', sample: '24 / 30', size: 34, ground: 'dark', now: 'jetbrains',
+    fonts: ['jetbrains', 'bebas', 'grenzeg', 'pirata', 'felldw', 'garamond', 'cormorant', 'alegreya', 'maguntia', 'spectral'] },
+  { slot: 'N-02', piece: 'stat-tile', label: 'Small counts and stats', where: 'The purse, card counts, HEART 4, 3 of 5.', sample: 'Heart\n4', size: 18, ground: 'dark', now: 'jetbrains',
+    fonts: ['jetbrains', 'spectral', 'alegreya', 'garamond', 'fell', 'grenze', 'cutive', 'cardo'] },
+  { slot: 'C-01', label: 'Card names', where: 'The name on a card, in the hand, the Deck tab and rewards.', sample: 'The Second Cut', size: 22, ground: 'dark', now: null,
+    fonts: ['pirata', 'grenzeg', 'fellsc', 'almendra', 'bastarda', 'cormorant', 'caudex', 'medsharp', 'uncial'] },
+  { slot: 'C-02', label: 'Card rules text', where: 'What a card does, in small type under its art.', sample: 'A dead card that holds a hand slot until played. It cannot be scrapped.', size: 14, ground: 'dark', now: 'fell',
+    fonts: ['fell', 'spectral', 'alegreya', 'garamond', 'cardo', 'rosarivo', 'crimson', 'goudybook'] },
+  { slot: 'C-03', art: 'arena-desolation', label: 'Foe names', where: 'The enemy\'s name on its rail in a fight.', sample: 'Amen', size: 28, ground: 'dark', now: null,
+    fonts: ['pirata', 'maguntia', 'grenzeg', 'fruktur', 'rocker', 'germania', 'jacq24', 'almendrad'] },
+  { slot: 'C-04', art: 'wentworth-street', piece: 'modal-panel-vellum', label: 'Quest and ledger entries', where: 'The quest panel\'s goal and the Ledger\'s written lines.', sample: 'Bring the choir\'s hymnal back to the chapel before the frost.', size: 16, ground: 'vellum', now: 'fell',
+    fonts: ['fell', 'felldw', 'cutive', 'garamond', 'goudysorts', 'caudex', 'fondamento', 'alegreya'] },
+];
+
+/* One candidate per font per place; the kit reads the ticks by id. */
+const LETTERS = 'abcdefghij';
+const CARDS = [
+  { id: 'H-01a', font: 'Pirata One' },
+  { id: 'H-01b', font: 'UnifrakturMaguntia' },
+  { id: 'H-01c', font: 'Grenze Gotisch' },
+  { id: 'H-01d', font: 'Jacquard 24' },
+  { id: 'H-01e', font: 'UnifrakturCook' },
+  { id: 'H-01f', font: 'Almendra Display' },
+  { id: 'H-01g', font: 'IM Fell French Canon SC' },
+  { id: 'H-01h', font: 'Cormorant Unicase' },
+  { id: 'H-01i', font: 'Uncial Antiqua' },
+  { id: 'H-01j', font: 'Cinzel' },
+  { id: 'H-02a', font: 'Bebas Neue' },
+  { id: 'H-02b', font: 'IM Fell English SC' },
+  { id: 'H-02c', font: 'Cormorant SC' },
+  { id: 'H-02d', font: 'Spectral SC' },
+  { id: 'H-02e', font: 'Alegreya SC' },
+  { id: 'H-02f', font: 'Almendra SC' },
+  { id: 'H-02g', font: 'Marcellus SC' },
+  { id: 'H-02h', font: 'Grenze' },
+  { id: 'H-02i', font: 'IM Fell DW Pica' },
+  { id: 'H-03a', font: 'Pirata One' },
+  { id: 'H-03b', font: 'Grenze Gotisch' },
+  { id: 'H-03c', font: 'IM Fell Double Pica' },
+  { id: 'H-03d', font: 'Almendra' },
+  { id: 'H-03e', font: 'Cormorant Garamond' },
+  { id: 'H-03f', font: 'Caudex' },
+  { id: 'H-03g', font: 'Jacquarda Bastarda 9' },
+  { id: 'H-03h', font: 'MedievalSharp' },
+  { id: 'H-03i', font: 'Metamorphous' },
+  { id: 'W-01a', font: 'IM Fell English' },
+  { id: 'W-01b', font: 'IM Fell DW Pica' },
+  { id: 'W-01c', font: 'EB Garamond' },
+  { id: 'W-01d', font: 'Cormorant Garamond' },
+  { id: 'W-01e', font: 'Sorts Mill Goudy' },
+  { id: 'W-01f', font: 'Alegreya' },
+  { id: 'W-01g', font: 'Fondamento' },
+  { id: 'W-01h', font: 'Eagle Lake' },
+  { id: 'W-01i', font: 'Linden Hill' },
+  { id: 'W-02a', font: 'IM Fell English' },
+  { id: 'W-02b', font: 'IM Fell DW Pica' },
+  { id: 'W-02c', font: 'EB Garamond' },
+  { id: 'W-02d', font: 'Goudy Bookletter 1911' },
+  { id: 'W-02e', font: 'Rosarivo' },
+  { id: 'W-02f', font: 'Cardo' },
+  { id: 'W-02g', font: 'Alegreya' },
+  { id: 'W-02h', font: 'Spectral' },
+  { id: 'W-02i', font: 'Caudex' },
+  { id: 'W-03a', font: 'IM Fell English' },
+  { id: 'W-03b', font: 'Spectral' },
+  { id: 'W-03c', font: 'Alegreya' },
+  { id: 'W-03d', font: 'EB Garamond' },
+  { id: 'W-03e', font: 'Crimson Pro' },
+  { id: 'W-03f', font: 'Cardo' },
+  { id: 'W-03g', font: 'Rosarivo' },
+  { id: 'W-03h', font: 'Caudex' },
+  { id: 'W-03i', font: 'Bebas Neue' },
+  { id: 'B-01a', font: 'Bebas Neue' },
+  { id: 'B-01b', font: 'IM Fell English SC' },
+  { id: 'B-01c', font: 'Cormorant SC' },
+  { id: 'B-01d', font: 'Grenze Gotisch' },
+  { id: 'B-01e', font: 'Pirata One' },
+  { id: 'B-01f', font: 'Almendra SC' },
+  { id: 'B-01g', font: 'Marcellus SC' },
+  { id: 'B-01h', font: 'Alegreya SC' },
+  { id: 'B-01i', font: 'Uncial Antiqua' },
+  { id: 'B-02a', font: 'Bebas Neue' },
+  { id: 'B-02b', font: 'JetBrains Mono' },
+  { id: 'B-02c', font: 'Spectral SC' },
+  { id: 'B-02d', font: 'Alegreya SC' },
+  { id: 'B-02e', font: 'IM Fell English SC' },
+  { id: 'B-02f', font: 'Grenze' },
+  { id: 'B-02g', font: 'Cutive Mono' },
+  { id: 'B-02h', font: 'Cormorant SC' },
+  { id: 'B-03a', font: 'IM Fell English SC' },
+  { id: 'B-03b', font: 'Cormorant SC' },
+  { id: 'B-03c', font: 'Almendra SC' },
+  { id: 'B-03d', font: 'Marcellus SC' },
+  { id: 'B-03e', font: 'Uncial Antiqua' },
+  { id: 'B-03f', font: 'IM Fell DW Pica' },
+  { id: 'B-03g', font: 'Linden Hill' },
+  { id: 'B-03h', font: 'Spectral SC' },
+  { id: 'N-01a', font: 'JetBrains Mono' },
+  { id: 'N-01b', font: 'Bebas Neue' },
+  { id: 'N-01c', font: 'Grenze Gotisch' },
+  { id: 'N-01d', font: 'Pirata One' },
+  { id: 'N-01e', font: 'IM Fell DW Pica' },
+  { id: 'N-01f', font: 'EB Garamond' },
+  { id: 'N-01g', font: 'Cormorant Garamond' },
+  { id: 'N-01h', font: 'Alegreya' },
+  { id: 'N-01i', font: 'UnifrakturMaguntia' },
+  { id: 'N-01j', font: 'Spectral' },
+  { id: 'N-02a', font: 'JetBrains Mono' },
+  { id: 'N-02b', font: 'Spectral' },
+  { id: 'N-02c', font: 'Alegreya' },
+  { id: 'N-02d', font: 'EB Garamond' },
+  { id: 'N-02e', font: 'IM Fell English' },
+  { id: 'N-02f', font: 'Grenze' },
+  { id: 'N-02g', font: 'Cutive Mono' },
+  { id: 'N-02h', font: 'Cardo' },
+  { id: 'C-01a', font: 'Pirata One' },
+  { id: 'C-01b', font: 'Grenze Gotisch' },
+  { id: 'C-01c', font: 'IM Fell English SC' },
+  { id: 'C-01d', font: 'Almendra' },
+  { id: 'C-01e', font: 'Jacquarda Bastarda 9' },
+  { id: 'C-01f', font: 'Cormorant Garamond' },
+  { id: 'C-01g', font: 'Caudex' },
+  { id: 'C-01h', font: 'MedievalSharp' },
+  { id: 'C-01i', font: 'Uncial Antiqua' },
+  { id: 'C-02a', font: 'IM Fell English' },
+  { id: 'C-02b', font: 'Spectral' },
+  { id: 'C-02c', font: 'Alegreya' },
+  { id: 'C-02d', font: 'EB Garamond' },
+  { id: 'C-02e', font: 'Cardo' },
+  { id: 'C-02f', font: 'Rosarivo' },
+  { id: 'C-02g', font: 'Crimson Pro' },
+  { id: 'C-02h', font: 'Goudy Bookletter 1911' },
+  { id: 'C-03a', font: 'Pirata One' },
+  { id: 'C-03b', font: 'UnifrakturMaguntia' },
+  { id: 'C-03c', font: 'Grenze Gotisch' },
+  { id: 'C-03d', font: 'Fruktur' },
+  { id: 'C-03e', font: 'New Rocker' },
+  { id: 'C-03f', font: 'Germania One' },
+  { id: 'C-03g', font: 'Jacquard 24' },
+  { id: 'C-03h', font: 'Almendra Display' },
+  { id: 'C-04a', font: 'IM Fell English' },
+  { id: 'C-04b', font: 'IM Fell DW Pica' },
+  { id: 'C-04c', font: 'Cutive Mono' },
+  { id: 'C-04d', font: 'EB Garamond' },
+  { id: 'C-04e', font: 'Sorts Mill Goudy' },
+  { id: 'C-04f', font: 'Caudex' },
+  { id: 'C-04g', font: 'Fondamento' },
+  { id: 'C-04h', font: 'Alegreya' },
+];
+
+/* Load every font once, one stylesheet per family, so one bad name loses one font, not all. */
+Object.values(FONTS).forEach((f) => {
+  const l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = `https://fonts.googleapis.com/css2?family=${f.load}&display=swap`;
+  document.head.appendChild(l);
+});
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const css = (f, s) => [
+  `font-family:'${f.family}', Georgia, serif`,
+  `font-size:${s.size}px`,
+  `line-height:1.3`,
+  f.weight ? `font-weight:${f.weight}` : '',
+  s.italic && /ital/.test(f.load) ? 'font-style:italic' : '',
+  s.caps ? 'text-transform:uppercase' : '',
+  s.caps && f.spacing ? `letter-spacing:${f.spacing}` : '',
+].filter(Boolean).join(';');
+/* The screen's own backdrop, dimmed the way ScreenBg dims it (the plate at 0.2 over the ground). */
+const ART_NAMES = { 'charon-crossing': 'the event, dialogue and cutscene backdrop', 'ludgate-hill': 'the cache backdrop', 'forest-dark': 'the rest backdrop',
+  'wentworth-street': 'the village backdrop', 'act1-coast': 'the Act 1 coast map', 'arena-desolation': 'the fight arena' };
+/* T's kit pieces (assets/images/experience), where T's look picks put them; text sits inside the piece's frame. */
+const PIECES = {
+  'section-header-dark-star': { ratio: '728/72', pad: '0 14%', ink: 'light', name: 'the Brass Gothic section header (Self, Settings)' },
+  'modal-panel-vellum': { ratio: '745/441', pad: '9% 11%', ink: 'dark', name: 'the Vellum & Ink panel' },
+  'action-button-vellum': { ratio: '370/141', pad: '0 14%', ink: 'dark', maxw: '300px', name: 'the Vellum & Ink button' },
+  'filter-tab-vellum': { ratio: '362/95', pad: '0 12%', ink: 'dark', maxw: '200px', name: 'the Vellum & Ink tab (ALL / GEAR / PHIALS)' },
+  'stat-tile': { ratio: '176/299', pad: '16% 6%', ink: 'light', maxw: '150px', name: 'the Brass Gothic HEART / BODY / MIND tile' },
+};
+const pieceCss = (s) => {
+  const p = PIECES[s.piece];
+  return `background-image:url(fonts/${s.piece}.webp);aspect-ratio:${p.ratio};padding:${p.pad};max-width:${p.maxw || '100%'}`;
+};
+const artCss = (s) => s.art ? `;background-image:linear-gradient(rgba(11,10,9,.8),rgba(11,10,9,.8)),url(fonts/${s.art}.webp)` : '';
+const tags = (key, s) => {
+  const f = FONTS[key];
+  return (s && s.now === key ? '<span class="tag now">now</span>' : '') + (f.tag === 'ai' ? '<span class="tag">common in AI UI</span>' : '');
+};
+const cardHtml = (s, key, i) => {
+  const f = FONTS[key];
+  const id = s.slot + LETTERS[i];
+  return `
+  <label class="card" data-id="${id}">
+    <input class="pick" type="checkbox" value="${id}" aria-label="${esc(s.label)}: ${esc(f.family)}">
+    <p class="name"><b>${esc(f.family)}</b>${tags(key, s)}</p>
+    <div class="spec${s.ground === 'vellum' && !s.piece ? ' vel' : ''}${s.art ? ' art' : ''}${s.piece ? ' haspiece' : ''}" style="${esc(css(f, s) + artCss(s))}">${s.piece ? `<div class="piece ink-${PIECES[s.piece].ink}" style="${pieceCss(s)}"><span class="txt">${esc(s.sample)}</span></div>` : `<span class="txt">${esc(s.sample)}</span>`}</div>
+  </label>`;
+};
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)}<small>${s.slot}</small></h2>
+    <p class="where">${esc(s.where)}${s.art ? ` Shown over ${ART_NAMES[s.art]}, dimmed as in the game.` : ' No backdrop art here.'}${s.piece ? ` Set in ${PIECES[s.piece].name}, as you picked it in the kit mixer.` : ''}</p>
+    <div class="row">${s.fonts.map((k, i) => cardHtml(s, k, i)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}, or name another font (optional)">
+  </section>`;
+const browseHtml = () => `
+  <p class="where">Every font on the ballot, A to Z, set the same way so you can compare. Nothing to tick here: pick in the other tabs, or name one in a note.</p>
+  <div class="browse">${Object.entries(FONTS).sort((a, b) => a[1].family.localeCompare(b[1].family)).map(([k, f]) => `
+    <div class="f">
+      <p class="name"><b>${esc(f.family)}</b>${tags(k)}</p>
+      <div class="spec" style="${esc(css(f, { size: 22 }))}">Miserere mei, Deus · 0123456789</div>
+      <p class="about">${esc(f.about)}</p>
+    </div>`).join('')}</div>`;
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    ${t.key === 'X' ? browseHtml() : SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map((t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${esc(t.name)}<span class="n" data-n="${t.key}"></span></button>`).join('');
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+  window.scrollTo(0, 0);
+};
+document.getElementById('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) showTab(b.dataset.tab); });
+document.querySelector('.ground').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-ground]');
+  if (!b) return;
+  document.querySelectorAll('[data-ground]').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+  document.body.classList.toggle('dark', b.dataset.ground === 'dark');
+  document.body.classList.toggle('vellum', b.dataset.ground === 'vellum');
+});
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const fontOf = (id) => (CARDS.find((c) => c.id === id) || {}).font || '?';
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  const families = new Set(k.map(fontOf));
+  document.getElementById('count').textContent =
+    `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered · ${families.size} font famil${families.size === 1 ? 'y' : 'ies'}`;
+  TABS.filter((t) => t.key !== 'X').forEach((t) => {
+    const all = SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).length;
+    const done = new Set(k.filter((id) => id.startsWith(t.key + '-')).map((id) => id.slice(0, 4))).size;
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${done}/${all}`;
+  });
+};
+// One font per place: a new tick clears the others in its slot.
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) {
+    box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  }
+  refresh();
+});
+refresh();
+
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  const families = [...new Set(k.map(fontOf))];
+  return [
+    `BALLOT: Fonts, which type does which job (${BALLOT_ID})`,
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}; ${families.length} families: ${families.join(', ') || 'none'}`,
+    ...TABS.filter((t) => t.key !== 'X').flatMap((t) => [`-- ${t.name} --`, ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      return `${s.slot} ${s.label}: ${pick ? fontOf(pick) : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    })]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Closed: T voted 2026-11-06 (verdict in fonts.md), so this ballot no longer saves or submits. */
+refresh();
+</script>
+</body>
+</html>
