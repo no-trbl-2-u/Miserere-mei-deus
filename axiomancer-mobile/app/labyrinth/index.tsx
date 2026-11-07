@@ -30,8 +30,15 @@ import {
     selectLabyrinthFinaleViewModel,
     selectLabyrinthViewModel,
 } from '@/state/presenters/labyrinth.engine';
+import { KitPressable } from '@/components/experience/KitSurface';
+import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+
+/** The brass button the act rows (X-01) and LEAVE (X-02) wear, idle then held. */
+const [BUTTON, BUTTON_PRESSED] = PLACE_PIECES['X-01'];
+const WANTS_ACT_KIT = lookOf('X-01') !== 'normal';
+const WANTS_LEAVE_KIT = lookOf('X-02') !== 'normal';
 
 /**
  * The /labyrinth route. Purpose: render THE APORIA's three states — act
@@ -118,10 +125,13 @@ export default function LabyrinthScreen() {
                     <Text style={styles.sub}>{vm.sub}</Text>
                     <Text style={styles.warning}>{vm.warning}</Text>
                     {vm.acts.map((act) => (
-                        <Pressable
+                        <KitPressable
                             key={act.id}
+                            wear={WANTS_ACT_KIT}
+                            piece={BUTTON}
+                            pressedPiece={BUTTON_PRESSED}
                             onPress={() => actions.enterLabyrinth(act.id)}
-                            style={styles.actCard}
+                            style={[styles.actCard, WANTS_ACT_KIT ? styles.actCardKit : styles.actCardPlain]}
                             accessibilityRole="button"
                             accessibilityLabel={LABYRINTH_COPY.a11y.actOption(act.title, act.completed)}
                             testID={`labyrinth-act-${act.id}`}
@@ -131,17 +141,20 @@ export default function LabyrinthScreen() {
                             <Text style={styles.actEnter}>
                                 {act.completed ? LABYRINTH_COPY.actDone : LABYRINTH_COPY.enterAct}
                             </Text>
-                        </Pressable>
+                        </KitPressable>
                     ))}
-                    <Pressable
+                    <KitPressable
+                        wear={WANTS_LEAVE_KIT}
+                        piece={BUTTON}
+                        pressedPiece={BUTTON_PRESSED}
                         onPress={leave}
-                        style={styles.leaveButton}
+                        style={WANTS_LEAVE_KIT ? [styles.leaveButton, styles.leaveButtonKit] : [styles.leaveButton, styles.leaveButtonPlain]}
                         accessibilityRole="button"
                         accessibilityLabel={LABYRINTH_COPY.a11y.leave}
                         testID="labyrinth-leave"
                     >
                         <Text style={styles.leaveText}>{LABYRINTH_COPY.leave}</Text>
-                    </Pressable>
+                    </KitPressable>
                 </View>
             </ScreenBg>
         );
@@ -155,15 +168,18 @@ export default function LabyrinthScreen() {
                     <Text style={styles.title}>{vm.title}</Text>
                     <Text style={styles.sub}>{vm.body}</Text>
                     <Text style={styles.warning}>{vm.lastLine}</Text>
-                    <Pressable
+                    <KitPressable
+                        wear={WANTS_LEAVE_KIT}
+                        piece={BUTTON}
+                        pressedPiece={BUTTON_PRESSED}
                         onPress={leave}
-                        style={styles.leaveButton}
+                        style={WANTS_LEAVE_KIT ? [styles.leaveButton, styles.leaveButtonKit] : [styles.leaveButton, styles.leaveButtonPlain]}
                         accessibilityRole="button"
                         accessibilityLabel={LABYRINTH_COPY.a11y.leave}
                         testID="labyrinth-leave"
                     >
                         <Text style={styles.leaveText}>{LABYRINTH_COPY.leave}</Text>
-                    </Pressable>
+                    </KitPressable>
                 </View>
             </ScreenBg>
         );
@@ -364,12 +380,10 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
         marginBottom: 8,
     },
-    actCard: {
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        padding: 14,
-        gap: 4,
-    },
+    actCard: { gap: 4 },
+    actCardPlain: { borderWidth: 1, borderColor: AXM.ash, padding: 14 },
+    // Clears the brass button's drawn corners (about 16 high, 13 wide).
+    actCardKit: { paddingVertical: 22, paddingHorizontal: 22 },
     actTitle: {
         fontFamily: FONTS.gothic,
         fontSize: 20,
@@ -388,14 +402,9 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.sulfur,
         marginTop: 4,
     },
-    leaveButton: {
-        alignSelf: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 24,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        marginTop: 8,
-    },
+    leaveButton: { alignSelf: 'center', marginTop: 8 },
+    leaveButtonPlain: { paddingVertical: 8, paddingHorizontal: 24, borderWidth: 1, borderColor: AXM.ash },
+    leaveButtonKit: { paddingVertical: 20, paddingHorizontal: 40 },
     leaveText: {
         fontFamily: FONTS.sans,
         fontSize: 12,
