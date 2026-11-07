@@ -11,7 +11,22 @@ date: 2026-11-07
 ~~~ new
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned | 2 left |
+| 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned (**Asap**: 158.1) | 2 left |
+~~~
+
+## Edit plan/README.md
+
+~~~ old
+**Asap** (built before the table, in this order, once their
+needs are done):
+
+~~~
+~~~ new
+**Asap** (built before the table, in this order, once their
+needs are done):
+
+- **158.1** · VR1a: the combat board's CI visual route, before 153.4 changes the dock (T, `/plot`, 2026-11-07; needs 152.3)
+
 ~~~
 
 ## Decisions

@@ -118,7 +118,7 @@ Checked against `app/` and the 19 `ROUTES` (2026-11-07). Not expanded here excep
 2. Should a second board state be stamped now? Default: no. The opening board shows every place unless the first chunk's wait finds one missing, and the second state needs a drag that can flake. Or: add "one card staged and applied" now. [T to confirm #2]
 3. Which foe? Default: the same lowest-level standard foe as the reveal route, so a roster change (spec 157 is one) re-stamps both together and honestly. Or: pin a named Chapter 1 keeper by id through the dev menu's per-foe buttons, so a roster change cannot move the board. [T to confirm #3]
 4. Should the other uncovered node screens (rest, loot cache, quest, blacksmith, item-reward) get routes too? Default: no, only named here; the two tabs are the only extra rows. Or: add them in 158.2, a fixture row each, about 3 s of CI apiece. [T to confirm #4]
-5. Where does it sit in line? Default: table order, so it follows the Asap lane. Or: the Asap lane, after 152.3, so the board has a net before 153.4 changes the dock. [T to confirm #5]
+5. Where does it sit in line? Answered by T (2026-11-07): the Asap lane, so 158.1 lands before 153.4 changes the dock. The guard only works if it exists first: in table order, 153.4's dock change would be stamped as the new baseline instead of diffed against the old one, losing the one comparison that shows what 153.4 did. 158.1 waits on 152.3 either way, so the lane costs a line and no extra waiting. The lane line heads the lane, since its `needs 152.3` already holds it back and the lane's other chunks are not blocked by it. 158.2 stays in table order.
 
 ## Chunks
 
