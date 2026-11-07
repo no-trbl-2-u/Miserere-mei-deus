@@ -98,7 +98,6 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
 - **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
 - **A7** A cache shows its title, its flavour line and two choices, each with an action line and no reward shown. The eyebrow, the "node is spent" line, the card image and the goods list are gone, and the rewards paid are unchanged.
 - **A8** The aftermath panel and its dev page are gone, and no test or route names them.
-- **A9** The rest screen is black. It has no "A MOMENT TO STOP" and no "node is spent" line, its purse and VITAE strip shows the VITAE bar, everything but the two choices sits higher, and T's campfire loops in the middle (one still frame under reduced motion).
 
 ## Open questions
 
@@ -108,7 +107,7 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
 
 ## Chunks
 
-Measure: 8 open · 1 closed · next A10
+Measure: 7 open · 2 closed · next A10
 
 - [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs — · alias: UK2a
 - [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
@@ -117,7 +116,6 @@ Measure: 8 open · 1 closed · next A10
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 154.1, 153.2 · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
 - [ ] **154.8** The unused aftermath panel goes · S · closes A8 · needs — · alias: UK2h
-- [ ] **154.9** The rest screen: black, the campfire in the middle, the words cut · M · closes A9 · needs — · alias: UK2i
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
 

@@ -166,3 +166,5 @@ because it now covers both looks. `scripts/asset-provenance.test.mjs` grew an
 `experience/kit.ts` as well as `index.ts`; the reference build instead
 re-exported `BRASS` from `index.ts`, which would pull all 86 PNGs into the
 bundle.
+
+- **154.9 (UK2i) defaults, taken under the loop.** The fire is 240pt square, centred in the free space between the header and the two choices, shown in the offer phase only; the VITAE bar sits beside the purse on one strip line; the node's own line stays above the fire; the node-spent constant was only read by rest, so it is deleted from rest.copy.ts.

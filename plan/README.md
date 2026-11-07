@@ -54,7 +54,6 @@ needs are done):
 - **154.6** · UK2f: the quest shows no pay and no lone counter (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.7** · UK2g: the cache says what you do, not what you get (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.8** · UK2h: the unused aftermath panel goes (T's mixer round 2, `/plot`, 2026-11-06)
-- **154.9** · UK2i: the rest screen: black, the campfire in the middle, the words cut (T's mixer round 2, `/plot`, 2026-11-06)
 
 - **155.1** · DR1a: the open card, its painting as a banner, its lines under it (T's Deck session, `/plot`, 2026-11-06; B7's output)
 - **155.2** · DR1b: the deck below it, art thumbnails, dimmed when not open (T's Deck session, `/plot`, 2026-11-06)
@@ -102,7 +101,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 |---|---|---|---|---|
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 3 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 4 left |
-| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 8 left |
+| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 7 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
 | 112 | Combat entry and exit: the music steps aside for the whole fight, and the ink really spreads | [112-cx1-combat-entry-exit.md](112-cx1-combat-entry-exit.md) | planned | 1 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
