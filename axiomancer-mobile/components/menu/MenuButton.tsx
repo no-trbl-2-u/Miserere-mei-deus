@@ -5,13 +5,18 @@
  * before there is anything to load.
  *
  * Inputs: `label`, `hint`, `onPress`, `disabled`, `primary` (the sulfur
- * fill CONTINUE / NEW GAME wear), `testID`.
+ * fill CONTINUE / NEW GAME wear), `place` (which look-table place the row
+ * belongs to: M-01 on the main menu, O-07 in Settings), `testID`.
+ * The row wears the kit's brass button when its place's look is brass;
+ * 'normal' keeps the bordered row.
  * Output: a pressable row; no state of its own.
  */
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { LOOKS } from '@/components/experience/looks';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
@@ -24,22 +29,26 @@ export interface MenuButtonProps {
     primary?: boolean;
     /** The blood-bordered variant (destructive rows). */
     danger?: boolean;
+    /** The look-table place this row is: the main menu's, or Settings'. */
+    place?: 'M-01' | 'O-07';
     testID?: string;
     accessibilityLabel?: string;
 }
 
 export function MenuButton({
-    label, hint, onPress, disabled = false, primary = false, danger = false, testID, accessibilityLabel,
+    label, hint, onPress, disabled = false, primary = false, danger = false, place = 'M-01', testID, accessibilityLabel,
 }: MenuButtonProps) {
     const styles = useStyles();
+    const kit = LOOKS[place] === 'brass';
     return (
         <Pressable
             style={({ pressed }) => [
                 styles.root,
-                primary && styles.primary,
-                danger && styles.danger,
-                disabled && styles.disabled,
-                pressed && !disabled && styles.pressed,
+                kit && styles.rootKit,
+                !kit && primary && styles.primary,
+                !kit && danger && styles.danger,
+                disabled && (kit ? styles.disabledKit : styles.disabled),
+                !kit && pressed && !disabled && styles.pressed,
             ]}
             onPress={disabled ? undefined : onPress}
             disabled={disabled}
@@ -49,17 +58,26 @@ export function MenuButton({
             accessibilityHint={hint}
             testID={testID}
         >
-            <View style={styles.text}>
-                <Text style={[styles.label, primary && styles.labelPrimary, danger && styles.labelDanger]}>
-                    {label}
-                </Text>
-                {hint ? (
-                    <Text style={[styles.hint, primary && styles.hintPrimary]} numberOfLines={2}>
-                        {hint}
-                    </Text>
-                ) : null}
-            </View>
-            <Text style={[styles.chevron, primary && styles.labelPrimary]}>›</Text>
+            {({ pressed }) => (
+                <>
+                    {kit ? (
+                        <KitBackdrop
+                            piece={disabled ? 'action-button-disabled' : primary || pressed ? 'action-button-selected' : 'action-button-idle'}
+                        />
+                    ) : null}
+                    <View style={styles.text}>
+                        <Text style={[styles.label, primary && styles.labelPrimary, !kit && danger && styles.labelDanger]}>
+                            {label}
+                        </Text>
+                        {hint ? (
+                            <Text style={[styles.hint, primary && styles.hintPrimary]} numberOfLines={2}>
+                                {hint}
+                            </Text>
+                        ) : null}
+                    </View>
+                    <Text style={[styles.chevron, primary && styles.labelPrimary]}>›</Text>
+                </>
+            )}
         </Pressable>
     );
 }
@@ -75,6 +93,16 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
         backgroundColor: AXM.panelBg,
     },
+    // The brass button's corner ornaments eat room at each end, so the text
+    // keeps clear of them. No border: the art is the frame.
+    rootKit: {
+        paddingVertical: 16,
+        paddingHorizontal: 30,
+        borderWidth: 0,
+        borderBottomWidth: 0,
+        backgroundColor: 'transparent',
+    },
+    disabledKit: { opacity: 0.8 },
     primary: {
         backgroundColor: AXM.sulfur,
         borderColor: AXM.parchment,
