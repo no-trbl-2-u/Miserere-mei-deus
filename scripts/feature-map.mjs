@@ -47,7 +47,7 @@ export const ENGINE_DIR = 'axiomancer-mechanics/src'
 export const ENGINE_AREA_EXCLUDE = ['CLI', 'Utils', 'test-utils']
 
 /** Non-tab, non-dev routes that are minigames rather than world screens. */
-export const MINIGAME_ROUTES = ['hazard', 'hazard-deck', 'labyrinth']
+export const MINIGAME_ROUTES = ['hazard', 'labyrinth']
 
 const CODE_EXT = ['.ts', '.tsx', '.js', '.jsx', '.mjs']
 const NAV_METHODS = new Set(['push', 'replace', 'navigate', 'dismissTo'])

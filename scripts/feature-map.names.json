@@ -15,7 +15,6 @@
   "route:devpuzzle": { "name": "The hazard puzzle demos", "aliases": ["hazard puzzle", "hazard puzzles", "HAZARD PUZZLES"] },
   "route:dialogue": { "name": "Dialogue", "aliases": ["dialogue"] },
   "route:hazard": { "name": "The hazard minigame", "aliases": ["hazard", "hazards", "Hazard"] },
-  "route:hazard-deck": { "name": "The hazard deck", "aliases": ["hazard deck", "HAZARD_DECK"] },
   "route:item-reward": { "name": "Reward", "aliases": ["reward", "rewards"] },
   "route:labyrinth": { "name": "The Labyrinth", "aliases": ["Labyrinth", "Aporia"] },
   "route:rest": { "name": "Rest", "aliases": ["RestChoice", "rest node", "rest site"] }

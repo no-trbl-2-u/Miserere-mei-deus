@@ -7,7 +7,7 @@
  *
  * ## Prior art it deliberately copies
  *
- * `state/presenters/hazard-deck.engine.ts` + `app/hazard-deck/index.tsx` are
+ * `state/presenters/hazard-deck.engine.ts` is
  * the house idiom for exactly this screen — a durable, out-of-encounter deck
  * listing with tallies and a tap-to-inspect detail. This file mirrors its
  * shape (group + count distinct ids, tally the axes, sort for display, hand

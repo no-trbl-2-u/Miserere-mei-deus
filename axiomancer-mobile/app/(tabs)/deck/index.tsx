@@ -29,7 +29,7 @@ import { makeStyles } from '@/theme/runtime';
 export default function DeckScreen() {
     const styles = useStyles();
 
-    // Slim slices + memo, the house pattern (see MemoirScreen / HazardDeckScreen):
+    // Slim slices + memo, the house pattern (see MemoirScreen):
     // `useGameState(selectDeckViewModel)` would churn `useSyncExternalStore`
     // because the VM is a freshly frozen object on every call.
     //

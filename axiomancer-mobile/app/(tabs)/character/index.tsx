@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { useRouter } from '@/lib/platform/router';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
@@ -57,7 +56,6 @@ export default function CharacterScreen() {
   const vm = useMemo(() => selectCharacterViewModel({ player } as never), [player]);
   const store = useGameStore();
   const actions = useGameActions();
-  const router = useRouter();
 
   // Acknowledge any pending level-up the moment the
   // character screen renders. The tab badge clears via
@@ -217,22 +215,6 @@ export default function CharacterScreen() {
         />
       )}
 
-      {/* Hazard deck — persistent library / remove-card surface.
-          Always available outside an encounter. */}
-      <Pressable
-        style={styles.deckLink}
-        onPress={() => router.push('/hazard-deck')}
-        accessibilityRole="button"
-        accessibilityLabel="Open your Hazard deck"
-        accessibilityHint="study the cards you carry and thin the deck"
-        testID="self-hazard-deck-link"
-      >
-        <View style={styles.deckLinkText}>
-          <Text style={styles.deckLinkLabel}>✠ HAZARD DECK</Text>
-          <Text style={styles.deckLinkSub}>study the cards you carry</Text>
-        </View>
-        <Text style={styles.deckLinkChevron}>›</Text>
-      </Pressable>
 
       {/* Pools — VITAE (Problem 6 design) */}
       <View style={styles.section}>
@@ -368,11 +350,6 @@ const useStyles = makeStyles((AXM) => ({
   xpLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
   xpValue: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.sulfur },
   section: { paddingTop: 4, paddingHorizontal: 12, paddingBottom: 0 },
-  deckLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 12, marginTop: 6, paddingVertical: 10, paddingHorizontal: 14, borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.panelBg },
-  deckLinkText: { flex: 1 },
-  deckLinkLabel: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1, color: AXM.parchment },
-  deckLinkSub: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 0.5, color: AXM.bone, marginTop: 2 },
-  deckLinkChevron: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.bone },
   baseRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: -52, justifyContent: 'flex-end' },
   baseCard: { flex: 1, paddingVertical: 10, paddingHorizontal: 6, backgroundColor: AXM.panelBg, borderWidth: 1, borderColor: AXM.ash, alignItems: 'center' },
   baseStatLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2, color: AXM.bone, marginTop: 3 },
