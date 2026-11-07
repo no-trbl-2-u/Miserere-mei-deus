@@ -17,7 +17,7 @@
 | 2026-11-09 (in 2 days) | Event kind 8, cutscene: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-10 (in 3 days) | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | needs you: your task | W2 |
 | 2026-11-10 (in 3 days) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
-| 2026-11-10 (in 3 days) | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | needs you: your task; the loop still owes UK2e | W2 |
+| 2026-11-10 (in 3 days) | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | needs you: your task | W2 |
 | 2026-11-11 (in 4 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
 | 2026-11-11 (in 4 days) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task | W2 |
 | 2026-11-12 (in 5 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task | W2 |

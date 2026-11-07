@@ -768,7 +768,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/HazardGate.test.tsx, axiomancer-mobile/components/hazard/__tests__/RewardsOverlay.test.tsx, axiomancer-mobile/scripts/smoke-screens.test.mjs, ..."
+        "source": "axiomancer-mobile/components/__tests__/HazardGate.test.tsx, axiomancer-mobile/components/hazard/__tests__/RewardsOverlay.test.tsx, axiomancer-mobile/components/hazard/__tests__/StakesCard.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
