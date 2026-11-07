@@ -1,6 +1,6 @@
 /**
  * THE LOOK TABLE — the single source for which look each place in the app
- * wears. Spec 152 (UK1) and spec 153 both read it.
+ * wears. The components that draw a place read its look from here.
  *
  * Forty-four places, the ledger's ids, each with one of three looks: Brass
  * Gothic, Vellum & Ink, or Normal (today's code path, untouched). The values
