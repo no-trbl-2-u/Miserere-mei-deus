@@ -320,7 +320,7 @@ describe('the rest screen names each returning foe (A5)', () => {
         );
         const lines = r.getAllByTestId('rest-elite-respawn').map(n => String(n.props.children));
         expect(lines).toEqual([
-            'The Toll-Keeper is back at The Keep Causeway.',
+            'The Wreckmaster is back at The Keep Causeway.',
             'The Green Jelly is back at The Root Graveyard.',
         ]);
         fireEvent.press(r.getByTestId('rest-claim'));

@@ -176,8 +176,8 @@ const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOI
 //
 // Each fight node binds one foe at one level (`BW_ENCOUNTER_FOES`, T's
 // Breakwater table). Placeholders until T's sessions: the elites are the
-// Green Jelly, the Death Beholder is the chapter boss at the door fight's
-// level, and a fight whose foe has not landed yet is the Float-Eye at level 2;
+// Green Jelly, the Saint Beneath is the chapter boss at the door fight's
+// level (EN3b, 2026-11-07);
 // hazards are the shared damage hazard; rests, loot caches, villages and
 // cutscenes come from the shared builders. Every new line is `[content]`.
 
@@ -316,28 +316,35 @@ function single(nodeId: string, payload: MapEventPayload): MapEventPool {
  * The foe and level each Breakwater fight node binds (T's Breakwater table,
  * every foe under level 10; a zone's two foes alternate across its nodes).
  * Every `fight` node has a row; the sea cave's elite draws are in
- * `BW_ELITE_DRAWS`. The Float-Eye at level 2 holds a node until its own foe lands.
+ * `BW_ELITE_DRAWS`. EN3b (2026-11-07) recast the chapter: six new faces hold
+ * six cut foes' nodes at their levels, and the five nodes of the four benched
+ * with no face (Float-Eye, Gallows Crow, Curfew-Ringer, Smokehouse Gutter) are
+ * refilled by duplication: `bw-t3` takes a Brine-Widow and `bw-d1` a
+ * Net-Mender (keepers), while `bw-w2` and `bw-m1` take a Quay-Crab and
+ * `bw-w3` a Coralback (repeats of new recast faces). The ten foes cut from the
+ * chapter stay in the library but are placed in none of these tables (T,
+ * 2026-11-06: "they're just not in chapter 1").
  */
 export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     // Fields & south road, level 2.
-    'bw-w2': { slug: 'float-eye', level: 2 },
-    'bw-w3': { slug: 'gallows-crow', level: 2 },
-    'bw-m1': { slug: 'float-eye', level: 2 },
+    'bw-w2': { slug: 'quay-crab', level: 2 },
+    'bw-w3': { slug: 'coralback', level: 2 },
+    'bw-m1': { slug: 'quay-crab', level: 2 },
     // The quays, level 3.
     'bw-h1': { slug: 'net-mender', level: 3 },
-    'bw-h2': { slug: 'crane-hook', level: 3 },
+    'bw-h2': { slug: 'quay-crab', level: 3 },
     'bw-h3': { slug: 'net-mender', level: 3 },
     // The long pier and harbour steps, level 4.
     'bw-h7': { slug: 'brine-widow', level: 4 },
-    'bw-t1': { slug: 'lamprey-knot', level: 4 },
+    'bw-t1': { slug: 'coralback', level: 4 },
     // The town, level 5.
-    'bw-t2': { slug: 'green-jelly', level: 5 },
-    'bw-t3': { slug: 'curfew-ringer', level: 5 },
-    'bw-t6': { slug: 'green-jelly', level: 5 },
+    'bw-t2': { slug: 'saltwick-swarm', level: 5 },
+    'bw-t3': { slug: 'brine-widow', level: 5 },
+    'bw-t6': { slug: 'saltwick-swarm', level: 5 },
     // The cliffs and the hamlet, level 6.
-    'bw-l1': { slug: 'wreck-picker', level: 6 },
-    'bw-d1': { slug: 'smokehouse-gutter', level: 6 },
-    'bw-d3': { slug: 'wreck-picker', level: 6 },
+    'bw-l1': { slug: 'bilge-stalker', level: 6 },
+    'bw-d1': { slug: 'net-mender', level: 6 },
+    'bw-d3': { slug: 'bilge-stalker', level: 6 },
 };
 
 /**
@@ -352,8 +359,8 @@ export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
     'bw-c1': [{ slug: 'cave-choir', level: 5 }, { slug: 'tithe-collector', level: 5, difficulty: 'elite' }],
     // The lighthouse path, level 7: the Lamplighter or the Wrecker (EN1k).
     'bw-l4': [{ slug: 'lamplighter', level: 7 }, { slug: 'wrecker', level: 7 }],
-    // The keep causeway, level 8 (phase EN1l): the Toll-Keeper or the Tide-Gate.
-    'bw-w5': [{ slug: 'toll-keeper', level: 8 }, { slug: 'tide-gate', level: 8 }],
+    // The keep causeway, level 8 (phase EN1l): the Wreckmaster or the Tide-Gate.
+    'bw-w5': [{ slug: 'wreckmaster', level: 8 }, { slug: 'tide-gate', level: 8 }],
 };
 
 /**
@@ -383,7 +390,7 @@ function poolFor(nodeId: string): MapEventPool {
             if (draw) return eliteDrawPool(nodeId, draw);
             return cwEncounterPool(nodeId, { slug: 'green-jelly', level: BW_ELITE_LEVEL, difficulty: 'elite' });
         }
-        case 'boss':     return cwEncounterPool(nodeId, { slug: 'death-beholder', level: BW_DOOR_LEVEL, isBoss: true });
+        case 'boss':     return cwEncounterPool(nodeId, { slug: 'saint-beneath', level: BW_DOOR_LEVEL, isBoss: true });
         case 'hazard':   return hazardPool(nodeId, `[content] ${place}.`);
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`, BREAKWATER_REST_DREAMS[nodeId]);
         case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
