@@ -30,7 +30,7 @@ onto the screen — no sub-flows, no picker sheets:
 
 | Engine phase | Screen state |
 |---|---|
-| `offer` | Three offer buttons: TAKE A CARD / TAKE THE GOODS / LEAVE IT FOR THE VILLAGE |
+| `offer` | The title, the cache's flavour line, and two offer buttons: TAKE A CARD / TAKE THE GOODS |
 | `outcome` | Outcome panel with the settled grant (none for sacrifice) + a claim button |
 | `done` | *(auto-exit)* |
 
@@ -38,20 +38,26 @@ onto the screen — no sub-flows, no picker sheets:
 
 ## Offer buttons
 
-Shown at the `offer` phase. All three are always enabled — nothing here can
+Shown at the `offer` phase. Both are always enabled — nothing here can
 be unaffordable or capped, unlike `RestChoice`'s `cut`. Tapping one commits
 straight to `outcome` (the card/item candidates were already rolled when the
 session opened).
 
-| Offer | testID | Label | Desc |
-|---|---|---|---|
-| `card` | `cache-choice-offer-card` | TAKE A CARD | One card, straight into the deck. |
-| `item` | `cache-choice-offer-item` | TAKE THE GOODS | Whatever's inside, plus what it's worth. |
-| `sacrifice` | `cache-choice-offer-sacrifice` | LEAVE IT FOR THE VILLAGE | Take nothing. It's noted. |
+Each button carries an **action line**: what you do on the adventure to earn
+that side, never what you get. The line is the cache node's own data
+(`LootCachePayload.actions`), not copy, and it reaches the screen through the
+session. A cache whose lines T has not written yet shows `[content]` on both.
+Nothing on this screen names a reward: no card face, no goods chips, no
+eyebrow and no "node is spent" line.
 
-Copy lives in `state/presenters/cache.copy.ts` (`CACHE_CHOICE_OFFER_LABEL`
-/ `CACHE_CHOICE_OFFER_DESC`), same placeholder-voice doctrine as
-`rest.copy.ts`.
+| Offer | testID | Action line testID | Label |
+|---|---|---|---|
+| `card` | `cache-choice-offer-card` | `cache-choice-action-card` | TAKE A CARD |
+| `item` | `cache-choice-offer-item` | `cache-choice-action-item` | TAKE THE GOODS |
+
+The labels live in `state/presenters/cache.copy.ts`
+(`CACHE_CHOICE_OFFER_LABEL`); the action lines live with the node, in
+`axiomancer-mechanics/src/World/MapEvents/content.ts`.
 
 ---
 
@@ -76,8 +82,9 @@ Entry: `selectCacheVM({ cache })` in
 
 ```typescript
 CacheChoiceOfferVM {
-  id                           // 'card' | 'item' | 'sacrifice'
-  label, desc
+  id                           // 'card' | 'item'
+  label                        // TAKE A CARD / TAKE THE GOODS
+  action                       // the node's action line, or '[content]'
 }
 
 CacheChoiceOutcomeVM {
@@ -90,7 +97,7 @@ CacheChoiceOutcomeVM {
 
 CacheChoiceVM {
   active, phase
-  offers                        // readonly CacheChoiceOfferVM[] — always all 3
+  offers                        // readonly CacheChoiceOfferVM[] — always both
   outcome                       // CacheChoiceOutcomeVM | null
   description                   // the authored MapEvent one-liner, or null
 }
@@ -103,7 +110,7 @@ CacheChoiceVM {
 `state/cache/store-actions.ts`:
 
 ```
-beginLootCacheChoiceAction(currency?, description?, tier?, seed?)  ← called by resolveCurrentMapEvent; rolls both candidates, seeds session
+beginLootCacheChoiceAction(currency?, description?, actions?, tier?, seed?)  ← called by resolveCurrentMapEvent; rolls both candidates, seeds session
 chooseLootCacheChoiceOfferAction(offer)                            ← offer -> outcome
 claimLootCacheChoiceOutcomeAction()                                ← apply the grant (if any), clear session, persist
 ```

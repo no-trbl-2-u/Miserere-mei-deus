@@ -46,7 +46,6 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | NPCs | engine area | yes | yes | yes | no |
 | The world | engine area | yes | yes | yes | no |
 | The dev menu | dev route | yes | yes | yes | no |
-| Devaftermath | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devaftermath") |
 | Devart | dev route | yes | no | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
 | Devart Rooms | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart Rooms") |
 | Devframes | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devframes") |
@@ -74,7 +73,6 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Village (`route:village`)
 - The hazard deck (`route:hazard-deck`)
 - The Labyrinth (`route:labyrinth`)
-- Devaftermath (`route:devaftermath`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
 - Devframes (`route:devframes`)
@@ -106,7 +104,6 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Game (`area:Game`)
 - Log (`area:Log`)
 - NPCs (`area:NPCs`)
-- Devaftermath (`route:devaftermath`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
 - Devframes (`route:devframes`)

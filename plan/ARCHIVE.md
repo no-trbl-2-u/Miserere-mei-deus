@@ -572,3 +572,4 @@
 - 2026-11-06 · 154.4 (alias: UK2d) · the cutscene omen is bare text on the background, no border or panel · 7b2436bd..b7154690 (#1408)
 - 2026-11-06 · 152.1 (alias: UK1a) · The look table, the kit primitives and 48 converted pieces · f7ace151..6463dbf2 (#1407)
 - 2026-11-06 · 154.9 (alias: UK2i) · Rest screen is black with a looping campfire · 0370604f..0370604f (#1411)
+- 2026-11-06 · 154.8 (alias: UK2h) · The unused defeat aftermath panel, its dev page and presenter half are gone · 54d9e2c0..54d9e2c0 (#1412)

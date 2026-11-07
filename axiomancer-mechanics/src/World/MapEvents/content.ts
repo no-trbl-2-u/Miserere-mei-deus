@@ -18,7 +18,8 @@ import {
     registerMapEventPool,
     setNodeEventPoolOverride,
 } from './resolve-map-event';
-import type { MapEventPayload, MapEventPool, QuestGiver } from './types';
+import { PLACEHOLDER_CACHE_ACTIONS } from './types';
+import type { LootCacheActionLines, MapEventPayload, MapEventPool, QuestGiver } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { EnemyDifficulty } from '../../Enemy/types';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
@@ -36,16 +37,40 @@ export function hazardPool(nodeId: string, description: string): MapEventPool {
     };
 }
 
+/**
+ * One cache's authored content: its one-liner, its currency and its two
+ * action lines. A cache T has not written yet carries
+ * `PLACEHOLDER_CACHE_ACTIONS` (`./types`) on both choices, never invented flavour;
+ * `cache-action-lines.engine.test.ts` fails a cache carrying neither.
+ */
+export interface AuthoredLootCache {
+    currency: number;
+    description: string;
+    actions: LootCacheActionLines;
+}
+
+/**
+ * T's two action lines, for the cave cache (`cw-6`), verbatim (T, 2026-11-06).
+ * The card choice reads the runes; the goods choice loots the dead.
+ */
+export const CAVE_CACHE_ACTIONS: LootCacheActionLines = Object.freeze({
+    card: 'Read the runes inside the cave',
+    item: 'Plunder the corpses left by the previous patrons',
+});
+
 // Low-risk coastal scavenging — a few shillings the tide or a dead sailor left.
-export const COAST_LOOT_CACHES: ReadonlyArray<{ currency: number; description: string }> = [
-    { currency: 8,  description: 'A purse of shillings snagged in the netting, its owner long gone.' },
-    { currency: 12, description: 'A waterlogged strongbox wedged under the pilings.' },
-    { currency: 6,  description: 'Loose shillings spill from a cracked jar in the rocks.' },
+export const COAST_LOOT_CACHES: ReadonlyArray<AuthoredLootCache> = [
+    { currency: 8,  description: 'A purse of shillings snagged in the netting, its owner long gone.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    { currency: 12, description: 'A waterlogged strongbox wedged under the pilings.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    { currency: 6,  description: 'Loose shillings spill from a cracked jar in the rocks.', actions: PLACEHOLDER_CACHE_ACTIONS },
 ];
-export function lootCachePool(nodeId: string, cache: { currency: number; description: string }): MapEventPool {
+export function lootCachePool(nodeId: string, cache: AuthoredLootCache): MapEventPool {
     return {
         id: `${nodeId}.loot-cache`,
-        entries: [{ kind: 'loot-cache', weight: 1, payload: { kind: 'loot-cache', currency: cache.currency, description: cache.description } }],
+        entries: [{
+            kind: 'loot-cache', weight: 1,
+            payload: { kind: 'loot-cache', currency: cache.currency, description: cache.description, actions: cache.actions },
+        }],
     };
 }
 
@@ -96,12 +121,12 @@ function damageHazardPool(nodeId: string, damage: number, description: string): 
     };
 }
 
-function currencyLootPool(nodeId: string, currency: number, description: string): MapEventPool {
+function currencyLootPool(nodeId: string, currency: number, description: string, actions: LootCacheActionLines): MapEventPool {
     return {
         id: `${nodeId}.loot-cache`,
         entries: [{
             kind: 'loot-cache', weight: 1,
-            payload: { kind: 'loot-cache', currency, description },
+            payload: { kind: 'loot-cache', currency, description, actions },
         }],
     };
 }
@@ -482,10 +507,11 @@ const CW_HAZARD_NODES: Record<string, string> = {
     'cw-3':  'The shrine floor is rotten over the crypt. It gives under you.',
 };
 
-const CW_LOOT_NODES: Record<string, { currency: number; description: string }> = {
-    'cw-2':  { currency: 8,  description: 'A strongbox under the tower\'s fallen stair. The lock rusted before its owner came back.' },
-    'cw-6':  { currency: 6,  description: 'Shillings in a niche at the cave mouth. Someone paid the dark and left.' },
-    'cw-13': { currency: 12, description: 'The hermit is gone. His purse is under the hearthstone, where they all keep it.' },
+const CW_LOOT_NODES: Record<string, AuthoredLootCache> = {
+    'cw-2':  { currency: 8,  description: 'A strongbox under the tower\'s fallen stair. The lock rusted before its owner came back.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    // The cave cache — the one cache whose action lines T has written.
+    'cw-6':  { currency: 6,  description: 'Shillings in a niche at the cave mouth. Someone paid the dark and left.', actions: CAVE_CACHE_ACTIONS },
+    'cw-13': { currency: 12, description: 'The hermit is gone. His purse is under the hearthstone, where they all keep it.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };
 
 /**
@@ -592,9 +618,9 @@ const BC_HAZARD_NODES: Record<string, { damage: number; description: string }> =
     'bc-9':  { damage: 3, description: 'The rope bridge charges for the crossing. Halfway over, a plank charges again.' },
 };
 
-const BC_LOOT_NODES: Record<string, { currency: number; description: string }> = {
-    'bc-5':  { currency: 12, description: 'A strongbox in the castle gatehouse. The garrison left in a hurry and paid nobody.' },
-    'bc-16': { currency: 14, description: 'A toll-box at the tunnel mouth, pried open. Whoever pried it did not come back out.' },
+const BC_LOOT_NODES: Record<string, AuthoredLootCache> = {
+    'bc-5':  { currency: 12, description: 'A strongbox in the castle gatehouse. The garrison left in a hurry and paid nobody.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    'bc-16': { currency: 14, description: 'A toll-box at the tunnel mouth, pried open. Whoever pried it did not come back out.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };
 
 /**
@@ -634,7 +660,7 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
                 out.push({ nodeId, pool: damageHazardPool(nodeId, h.damage, h.description) });
             } else if (BC_LOOT_NODES[nodeId]) {
                 const l = BC_LOOT_NODES[nodeId]!;
-                out.push({ nodeId, pool: currencyLootPool(nodeId, l.currency, l.description) });
+                out.push({ nodeId, pool: currencyLootPool(nodeId, l.currency, l.description, l.actions) });
             } else {
                 const foe = BC_ENCOUNTER_FOES[nodeId];
                 if (!foe) throw new Error(`beacon-crags: ${nodeId} has no authored event kind or foe.`);
@@ -706,8 +732,8 @@ const LD_HAZARD_NODES: Record<string, { damage: number; description: string }> =
     'ld-9':  { damage: 3, description: 'The giant turns in its sleep. The dais is not wide enough for the both of you.' },
 };
 
-const LD_LOOT_NODES: Record<string, { currency: number; description: string }> = {
-    'ld-6':  { currency: 12, description: 'A torch-bearer\'s purse, dropped in the west tunnel. The torches are still lit.' },
+const LD_LOOT_NODES: Record<string, AuthoredLootCache> = {
+    'ld-6':  { currency: 12, description: 'A torch-bearer\'s purse, dropped in the west tunnel. The torches are still lit.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };
 
 /**
@@ -764,7 +790,7 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
                 out.push({ nodeId, pool: damageHazardPool(nodeId, h.damage, h.description) });
             } else if (LD_LOOT_NODES[nodeId]) {
                 const l = LD_LOOT_NODES[nodeId]!;
-                out.push({ nodeId, pool: currencyLootPool(nodeId, l.currency, l.description) });
+                out.push({ nodeId, pool: currencyLootPool(nodeId, l.currency, l.description, l.actions) });
             } else {
                 const foe = LD_ENCOUNTER_FOES[nodeId];
                 if (!foe) throw new Error(`lantern-deep: ${nodeId} has no authored event kind or foe.`);

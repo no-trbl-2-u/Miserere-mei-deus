@@ -2,8 +2,7 @@
  * CombatVictoryPanel — the "the foe falls" panel for a won fight.
  *
  * The component is a pure render of the VM produced
- * by `selectAftermathViewModel`; the host wires the dismiss handler
- * (today only the `/devaftermath` gallery mounts it).
+ * by `selectAftermathViewModel`; the host wires the dismiss handler.
  *
  * Non-dismissible by tap-outside — the only release is the CARRY ON
  * button below.

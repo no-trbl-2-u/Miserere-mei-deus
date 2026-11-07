@@ -69,7 +69,6 @@ export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   labyrinth: { screen: 'labyrinth/index', tab: false },
   devart: { screen: 'devart/index', tab: false },
   'devart/rooms': { screen: 'devart/rooms', tab: false },
-  devaftermath: { screen: 'devaftermath/index', tab: false },
   devpuzzle: { screen: 'devpuzzle/index', tab: false },
   devframes: { screen: 'devframes/index', tab: false },
   exploration: { screen: 'exploration/index', tab: true },
@@ -120,7 +119,6 @@ export const linking = {
       'labyrinth/index': 'labyrinth',
       'devart/index': 'devart',
       'devart/rooms': 'devart/rooms',
-      'devaftermath/index': 'devaftermath',
       'devpuzzle/index': 'devpuzzle',
       'devframes/index': 'devframes',
       '(tabs)': {
