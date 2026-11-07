@@ -56,7 +56,7 @@ export interface BeginLootCacheChoiceOptions {
     currency?: number;
     /** The authored MapEvent one-liner. */
     description?: string | null;
-    /** The cache's two action lines (spec 154, A7). Absent falls back to the `[content]` placeholder. */
+    /** The cache's two action lines. Absent falls back to the `[content]` placeholder. */
     actions?: LootCacheActionLines | null;
     /** Reward depth for the `item` offer's roll — caller derives from the current map. */
     tier?: CacheLootTier;

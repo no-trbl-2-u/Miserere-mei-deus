@@ -39,7 +39,7 @@ export function hazardPool(nodeId: string, description: string): MapEventPool {
 
 /**
  * One cache's authored content: its one-liner, its currency and its two
- * action lines (spec 154, A7). A cache T has not written yet carries
+ * action lines. A cache T has not written yet carries
  * `PLACEHOLDER_CACHE_ACTIONS` (`./types`) on both choices, never invented flavour;
  * `cache-action-lines.engine.test.ts` fails a cache carrying neither.
  */
@@ -509,7 +509,7 @@ const CW_HAZARD_NODES: Record<string, string> = {
 
 const CW_LOOT_NODES: Record<string, AuthoredLootCache> = {
     'cw-2':  { currency: 8,  description: 'A strongbox under the tower\'s fallen stair. The lock rusted before its owner came back.', actions: PLACEHOLDER_CACHE_ACTIONS },
-    // The cave cache — the one cache T has written (spec 154, open question 3).
+    // The cave cache — the one cache whose action lines T has written.
     'cw-6':  { currency: 6,  description: 'Shillings in a niche at the cave mouth. Someone paid the dark and left.', actions: CAVE_CACHE_ACTIONS },
     'cw-13': { currency: 12, description: 'The hermit is gone. His purse is under the hearthstone, where they all keep it.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };

@@ -8,7 +8,7 @@
  * shape.
  *
  * Each offer carries its ACTION line — what you do on the adventure to earn
- * that side — and nothing about the reward (spec 154, A7): no card face, no
+ * that side — and nothing about the reward: no card face, no
  * goods chips, no generic "straight into the deck" blurb. The line is the
  * cache node's own data; a cache T has not written yet carries the
  * `[content]` placeholder. The rewards are unchanged and still paid, and the
@@ -61,7 +61,7 @@ function offersFor(s: LootCacheChoiceSession): readonly CacheChoiceOfferVM[] {
     return OFFER_IDS.map(id => ({
         id,
         label: CACHE_CHOICE_OFFER_LABEL[id],
-        // A session persisted before spec 154 carries no lines; the placeholder stands in.
+        // A session persisted without action lines falls back to the placeholder.
         action: s.actions?.[id]?.trim() || CACHE_ACTION_PLACEHOLDER,
     }));
 }

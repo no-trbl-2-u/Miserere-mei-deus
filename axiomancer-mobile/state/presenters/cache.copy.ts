@@ -1,7 +1,7 @@
 /**
  * Loot-cache-choice screen copy. Neutral register on purpose, same doctrine as `rest.copy.ts`.
  *
- * The choice screen says what you DO, never what you get (spec 154, A7): no
+ * The choice screen says what you DO, never what you get: no
  * eyebrow, no "node is spent" line, no reward words. Each choice's own line
  * is the cache node's data, not copy — it lives on the MapEvent payload and
  * arrives through the session (`CacheChoiceOfferVM.action`).

@@ -23,8 +23,8 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 | `card-upgrade-row-<cardId>` / `card-upgrade-preview` / `card-upgrade-confirm` | The upgrade sheet (`components/upgrade/CardUpgradePicker.tsx`, opened by the rest site's upgrade offer and by the blacksmith): a row only previews the card before and after; UPGRADE IT commits it |
 | `rest-outcome` / `rest-claim` | Outcome card; CLAIM returns to the map |
 | `cache-inactive` | `/cache` with no session |
-| `cache-choice-offers` / `cache-choice-intro` / `cache-choice-intro-one-way` | Offer list |
-| `cache-choice-offer-<id>` | One offer |
+| `cache-choice-offers` / `cache-choice-intro` | Offer list |
+| `cache-choice-offer-<id>` / `cache-choice-action-<id>` | One offer, and its action line |
 | `cache-outcome` / `cache-claim` | Outcome; CLAIM |
 | `blacksmith-inactive` | `/blacksmith` with no session |
 | `blacksmith-scroll` | The scroll view |

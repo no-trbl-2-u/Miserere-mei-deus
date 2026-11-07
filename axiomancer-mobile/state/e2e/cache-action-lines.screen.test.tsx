@@ -1,6 +1,5 @@
 /**
- * Hermetic screen test — `/cache` shows what you DO, not what you get
- * (spec 154, A7).
+ * Hermetic screen test — `/cache` shows what you DO, not what you get.
  *
  * Contract asserted here: the offer phase shows the title, the cache's
  * flavour line and the two choices, each with the node's own action line.

@@ -1,5 +1,5 @@
 /**
- * Hermetic e2e — every cache node carries its two action lines (spec 154, A7).
+ * Hermetic e2e — every cache node carries its two action lines.
  *
  * A cache says what you DO for each choice, never what you get. Each line is
  * the node's own data, so this sweeps every registered `loot-cache` pool entry

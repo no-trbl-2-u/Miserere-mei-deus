@@ -1,10 +1,10 @@
 /**
- * The cache presenter says what you DO, never what you get (spec 154, A7).
+ * The cache presenter says what you DO, never what you get.
  *
  * Contract asserted here: each offer carries the node's own action line and
  * nothing else — no card face, no goods chips. An unwritten cache falls back
- * to the `[content]` placeholder, and a session persisted before spec 154
- * (no `actions` at all) does too rather than throwing. The outcome ledger,
+ * to the `[content]` placeholder, and a session with no `actions` at all does
+ * too rather than throwing. The outcome ledger,
  * which runs after the pick, still names the rewards.
  *
  * Hermetic = self-contained + deterministic + isolated.

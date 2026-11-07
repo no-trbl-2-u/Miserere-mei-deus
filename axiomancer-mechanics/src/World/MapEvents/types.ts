@@ -139,7 +139,7 @@ export interface HazardPayload {
 
 /**
  * The two action lines a cache carries, one per choice: what you DO on the
- * adventure to earn that side, never what you get (T, spec 154). Plain data
+ * adventure to earn that side, never what you get (T). Plain data
  * keyed by the choice: `card` is TAKE A CARD, `item` is TAKE THE GOODS.
  * `CACHE_ACTION_PLACEHOLDER` stands in until T writes a cache's lines.
  */

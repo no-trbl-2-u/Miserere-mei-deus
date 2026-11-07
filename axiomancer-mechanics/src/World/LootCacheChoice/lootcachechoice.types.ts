@@ -45,8 +45,8 @@ export interface LootCacheChoiceSession {
     /** The authored MapEvent one-liner, preferred over a placeholder intro when present. */
     description: string | null;
     /**
-     * What you DO for each choice, never what you get (spec 154, A7). Always
-     * both lines: an authored cache's own, else `CACHE_ACTION_PLACEHOLDER`.
+     * What you DO for each choice, never what you get. Always both lines: an
+     * authored cache's own, else `CACHE_ACTION_PLACEHOLDER`.
      */
     actions: LootCacheActionLines;
     outcome: LootCacheChoiceOutcome | null;

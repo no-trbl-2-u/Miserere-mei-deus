@@ -4,7 +4,7 @@
  * One irreversible choice of two: TAKE A CARD (a rolled reward card) or
  * TAKE THE GOODS (a tier-scaled consumable haul + the node's currency).
  *
- * The screen says what you DO, never what you get (spec 154, A7): the
+ * The screen says what you DO, never what you get: the
  * cache's title, its flavour line, and the two choices, each under its own
  * action line from the node's data. No eyebrow, no "node is spent" line, no
  * card face, no goods list. The rewards are unchanged and still paid; the
