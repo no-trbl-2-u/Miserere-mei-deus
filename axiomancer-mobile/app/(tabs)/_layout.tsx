@@ -7,7 +7,7 @@ import { AxmIcon, type AxmIconName } from '@/components/icons';
 import { TAB_ICON_SIZE, TAB_TITLES } from '@/state/presenters/tabs.engine';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectTabBadges } from '@/state/presenters/navigation.engine';
-import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { KitBackdrop, kitScale } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { INK_SOFT, VELLUM_OXBLOOD } from '@/components/exploration/wildsInk';
 import ExplorationScreen from './exploration/index';
@@ -36,6 +36,17 @@ function TabBadge({ text, kind }: { text: string; kind: 'event' | 'levelup' }) {
 // sulfur bar above the icon (the handoff tab contract).
 // W-06: the tab bar is on the vellum dock when T's pick says so.
 const VELLUM_DOCK = lookOf('W-06') === 'vellum';
+
+/** The tab bar shows icons alone, so each one is drawn large (30pt). */
+export { TAB_ICON_SIZE };
+
+/**
+ * How far the vellum dock's end flourishes reach in from each edge, in the
+ * art's own pixels (profiled off the 800x74 webp). The bar pads its tabs past
+ * the flourish so the first and last icons never sit on the ink.
+ */
+export const DOCK_FLOURISH_PX = 66;
+export const DOCK_END_PADDING = Math.ceil(DOCK_FLOURISH_PX * kitScale('nav-dock-vellum')) + 1;
 
 const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {
   eye: { name: 'action-eye', label: 'Exploration tab' },
@@ -232,6 +243,7 @@ const useStyles = makeStyles((AXM) => ({
   tabBarVellum: {
     backgroundColor: 'transparent',
     borderTopWidth: 0,
+    paddingHorizontal: DOCK_END_PADDING,
   },
   iconContainer: {
     position: 'relative',
