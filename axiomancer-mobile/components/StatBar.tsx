@@ -138,7 +138,11 @@ const useStyles = makeStyles((AXM) => ({
     position: 'relative',
   },
   brassTrack: { width: '100%', overflow: 'hidden', position: 'relative' },
-  brassFillSlot: { position: 'absolute', top: 3, left: 3, right: 3, bottom: 3 },
+  // Matches the combat-vitae-track 9-slice end caps (KitBackdrop.tsx:66:
+  // 800x28 art at scale 0.5, slice [0.35, 0.03, 0.35, 0.03] -> 12pt sides,
+  // 4.9pt top/bottom), so the fill sits in the frame's groove instead of
+  // painting over its ornament.
+  brassFillSlot: { position: 'absolute', top: 4.9, left: 12, right: 12, bottom: 4.9 },
   brassFill: { height: '100%', borderRadius: 3, overflow: 'hidden' },
   fill: {
     position: 'absolute',
