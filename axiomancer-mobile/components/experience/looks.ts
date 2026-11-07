@@ -46,9 +46,12 @@ export type PlaceId =
     | 'T-01' | 'T-02'
     | 'H-01' | 'H-02'
     | 'Q-01' | 'Q-02'
-    | 'X-01' | 'X-02';
+    | 'X-01' | 'X-02'
+    // Round 2: new game (saves, character select) and the endings (death, game over).
+    | 'N-01' | 'N-02' | 'N-03' | 'N-04' | 'N-05' | 'N-06' | 'N-07'
+    | 'G-01';
 
-/** T's pick for every place (18 brass, 11 vellum, 15 normal). */
+/** T's pick for every place. */
 export const LOOKS: Record<PlaceId, Look> = {
     'M-01': 'brass', // main menu buttons
     'W-01': 'vellum', // Wilds: status card
@@ -109,6 +112,14 @@ export const LOOKS: Record<PlaceId, Look> = {
     'Q-02': 'normal', // Quest: ACCEPT / LEAVE
     'X-01': 'brass', // Labyrinth: act rows
     'X-02': 'brass', // Labyrinth: LEAVE
+    'N-01': 'vellum', // Saves: slot rows
+    'N-02': 'vellum', // Saves: BEGIN
+    'N-03': 'normal', // Saves and character select: close (x)
+    'N-04': 'brass', // Character select: portrait and relic cards
+    'N-05': 'vellum', // Character select: HEART / BODY / MIND tiles
+    'N-06': 'vellum', // Character select: CONFIRM
+    'N-07': 'normal', // Character select: roster grid tiles
+    'G-01': 'vellum', // Death and game over: CONTINUE / NEW CHARACTER
 };
 
 /** The converted pieces each place draws. A `normal` place draws none. */
@@ -171,6 +182,14 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'Q-02': [],
     'X-01': ['action-button-idle', 'action-button-selected'],
     'X-02': ['action-button-idle', 'action-button-selected'],
+    'N-01': ['quest-row-vellum'],
+    'N-02': ['action-button-vellum'],
+    'N-03': [],
+    'N-04': ['modal-panel-dark'],
+    'N-05': ['vellum-chip'],
+    'N-06': ['action-button-vellum'],
+    'N-07': [],
+    'G-01': ['action-button-vellum'],
 };
 
 /** The look a place wears. */
