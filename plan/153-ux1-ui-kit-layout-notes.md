@@ -69,7 +69,6 @@
 
 ## Acceptance
 
-- **A1** The main menu's three rows read only New Game, Load Game and Settings. Settings' rows are unchanged.
 - **A2** While a node is chosen, the quest tracker is not on screen. The tracker has no "QUESTS" head, and a single-step quest shows no counter.
 - **A3** The tab bar shows six larger icons with no words, each with its tab's name as its accessibility label.
 - **A4** The reveal screen has no "A FOE RISES". The dock has no phase-ledger marks, a narrower END and a taller dock, and VITAE, the piles and the portrait keep their order.
@@ -85,9 +84,8 @@
 
 ## Chunks
 
-Measure: 6 open · 1 closed · next A8
+Measure: 5 open · 2 closed · next A8
 
-- [ ] **153.1** The main menu says only its three words · S · closes A1 · needs — · alias: UX1a
 - [ ] **153.2** The quest tracker steps aside, and loses its label and a lone 0/1 · S · closes A2 · needs — · alias: UX1b
 - [ ] **153.3** The tab bar is bigger icons, no words · S · closes A3 · needs — · alias: UX1c
 - [ ] **153.4** No "A FOE RISES"; the dock trades its circles for room · M · closes A4 · needs — · alias: UX1d
