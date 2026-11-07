@@ -81,7 +81,6 @@ const SCREENS = [
     },
   },
   { name: 'hazard', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitFor: '/hazard' },
-  { name: 'hazard-deck', path: '/hazard-deck', fixture: 'l30-bw-hazard' },
   { name: 'labyrinth', path: '/labyrinth', fixture: 'sage-bw-door-gate' },
   { name: 'dev', path: '/dev', fixture: 'fresh-start' },
   { name: 'devart', path: '/devart', fixture: 'fresh-start' },

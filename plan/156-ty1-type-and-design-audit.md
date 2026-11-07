@@ -121,7 +121,7 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 Measure: 6 open · 1 closed · next A8
 
 - [ ] **156.1** The design direction, written down · S · closes A1 · needs — · alias: TY1a
-- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 152.4, 153.4, 153.5, 154.2, 154.5, 154.6, 154.7, 155.3, 155.4 · alias: TY1c
+- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 152.4, 153.4, 154.2, 154.6, 154.7, 155.3, 155.4 · alias: TY1c
 - [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.1, 156.7 · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
 - [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs 156.3 · alias: TY1f

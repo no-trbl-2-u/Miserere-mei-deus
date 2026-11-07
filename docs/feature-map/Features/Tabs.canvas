@@ -15,7 +15,7 @@
 			"x": 1060,
 			"y": 0,
 			"width": 340,
-			"height": 430,
+			"height": 300,
 			"label": "Elsewhere"
 		},
 		{
@@ -89,21 +89,11 @@
 			"color": "1"
 		},
 		{
-			"id": "elsewhere:route:hazard-deck",
-			"type": "file",
-			"file": "Features/The hazard deck.md",
-			"x": 1100,
-			"y": 170,
-			"width": 260,
-			"height": 90,
-			"color": "4"
-		},
-		{
 			"id": "elsewhere:route:dev",
 			"type": "file",
 			"file": "Features/The dev menu.md",
 			"x": 1100,
-			"y": 300,
+			"y": 170,
 			"width": 260,
 			"height": 90,
 			"color": "4"
@@ -114,12 +104,6 @@
 			"id": "flow:route:(tabs)/character->elsewhere:route:dev",
 			"fromNode": "route:(tabs)/character",
 			"toNode": "elsewhere:route:dev",
-			"color": "5"
-		},
-		{
-			"id": "flow:route:(tabs)/character->elsewhere:route:hazard-deck",
-			"fromNode": "route:(tabs)/character",
-			"toNode": "elsewhere:route:hazard-deck",
 			"color": "5"
 		},
 		{

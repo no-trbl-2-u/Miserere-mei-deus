@@ -25,6 +25,8 @@ import {
     hazardPuzzleStakesClock,
     hazardPuzzleStakesFail,
     hazardPuzzleStakesGoal,
+    hazardPuzzleStakesGoalLine,
+    hazardPuzzleStakesTimeLine,
 } from './hazard-puzzle.copy';
 
 export interface HazardStakesLine {
@@ -39,6 +41,13 @@ export interface HazardStakesVM {
     place: string;
     /** "Hazard", or "Hazard · holds the road" for a held hazard. */
     kindLine: string;
+    /**
+     * What the card draws (T, 154.5): the place, this goal and this time, and
+     * nothing else. Null on a hazard with no puzzle clock. `kindLine` and
+     * `lines` stay computed for the rules and the tests, and are not drawn.
+     */
+    goalLine: string | null;
+    timeLine: string | null;
     lines: HazardStakesLine[];
     cta: string;
 }
@@ -107,6 +116,8 @@ export function selectHazardPuzzleStakes(
     return {
         place,
         kindLine: opens.length > 0 ? 'Hazard · holds the road' : 'Hazard',
+        goalLine: hazardPuzzleStakesGoalLine(goal),
+        timeLine: hazardPuzzleStakesTimeLine(hazardPuzzleClockFor(layout, route)),
         lines,
         cta: HAZARD_STAKES_CTA,
     };
@@ -142,6 +153,8 @@ export function selectHazardStakes(
     return {
         place,
         kindLine: opens.length > 0 ? 'Hazard · holds the road' : 'Hazard',
+        goalLine: null,
+        timeLine: null,
         lines,
         cta: HAZARD_STAKES_CTA,
     };
