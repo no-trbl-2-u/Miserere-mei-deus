@@ -79,7 +79,9 @@ export function mountStakes(): RenderAPI {
             stakes={{
                 place: 'River meadow',
                 kindLine: 'Hazard',
-                lines: [{ key: 'goal', label: 'Goal', values: ['Force 18'] }],
+                goalLine: 'Goal: Force 18 | Escape 10',
+                timeLine: 'Time: 60 secs',
+                lines: [],
                 cta: 'Face it',
             } as never}
             onFace={() => undefined}

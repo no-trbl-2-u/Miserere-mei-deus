@@ -41,6 +41,12 @@ describe('the hazard stakes card', () => {
         expect(line(vm, 'routes')!.values).toHaveLength(2);
     });
 
+    it('a plain hazard has no goal or time line to draw', () => {
+        const vm = selectHazardStakes(stateAt('bw-t5'))!;
+        expect(vm.goalLine).toBeNull();
+        expect(vm.timeLine).toBeNull();
+    });
+
     it('falls back to the hazard title off the Breakwater, and is null with no session', () => {
         const off = { hazard: { session: { hazardId: 'cracked-cliff' } }, world: { currentMap: null } } as never;
         expect(selectHazardStakes(off)!.place).toBeTruthy();
