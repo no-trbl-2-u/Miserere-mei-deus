@@ -175,6 +175,10 @@ export function selectSaveSlotRows(
     return summaries.map((s) => slotRowVM(s, mode, now, recent));
 }
 
+/**
+ * The main menu prints only its verbs. Every `hint` below is read aloud as the
+ * button's accessibility hint and is never drawn on screen.
+ */
 export interface MainMenuViewModel {
     /** CONTINUE is shown only when a slot is saved. */
     readonly continue: { readonly enabled: boolean; readonly slot: SaveSlotId | null; readonly hint: string };
