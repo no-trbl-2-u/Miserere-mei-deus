@@ -5,7 +5,7 @@
  * Death Beholder), Chapter 1's normals as they land (EN1f: the Gallows Crow,
  * the Net-Mender, the Crane-Hook) and the `sandbag` fixture; no foe carries a
  * keyword or a stage `gain` list; no enemy card carries an affliction; every
- * Act 1 map draws Float-Eye; each Act 1 region pins the Green Jelly mid-region
+ * Act 1 map wanders the six Chapter 1 normals (EN3b); each region pins the Green Jelly mid-region
  * and the Death Beholder as its door boss. The keyword, rider, curse and
  * SUMMON code stays gone from the engine's surface. lexicon-ok: guard pins the deleted surface stays gone
  */
@@ -13,7 +13,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    DeathBeholder, ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary, FloatEye, GreenJelly, LIVE_ENEMY_IDS,
+    DeathBeholder, ENEMY_REGISTRY, EnemiesByMap, EnemyLibrary, GreenJelly, LIVE_ENEMY_IDS,
 } from '../enemy.library';
 import { enemyStatBudget } from '../index';
 import type { Enemy } from '../types';
@@ -135,13 +135,16 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         return payload as { kind: 'encounter'; enemySlug?: string; isBoss?: boolean };
     };
 
-    it.each(ACT1)('$map draws Float-Eye and nothing else', ({ map }) => {
-        expect(EnemiesByMap[map]).toEqual([FloatEye]);
+    it.each(ACT1)('$map wanders the six Chapter 1 normals and nothing else (EN3b)', ({ map }) => {
+        expect(EnemiesByMap[map].map(e => e.id)).toEqual([
+            'enemy-quay-crab', 'enemy-net-mender', 'enemy-coralback',
+            'enemy-brine-widow', 'enemy-saltwick-swarm', 'enemy-bilge-stalker',
+        ]);
     });
 
-    it.each(ACT1)('$map pins the Death Beholder as its door boss ($door)', ({ continent, map, door }) => {
+    it.each(ACT1)('$map pins its boss at the door ($door): the Saint Beneath on the Breakwater, the Death Beholder elsewhere', ({ continent, map, door }) => {
         const payload = encounterAt(continent, map, door);
-        expect(payload.enemySlug).toBe('death-beholder');
+        expect(payload.enemySlug).toBe(map === 'breakwater' ? 'saint-beneath' : 'death-beholder');
         expect(payload.isBoss).toBe(true);
         expect(ENEMY_REGISTRY[payload.enemySlug as keyof typeof ENEMY_REGISTRY].difficulty).toBe('boss');
     });

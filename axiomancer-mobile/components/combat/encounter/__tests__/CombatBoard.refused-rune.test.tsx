@@ -8,7 +8,7 @@
  * refused mark, and a tap opens the info popup, whose lines
  * (`signatureInfoLines`) put the reason first.
  *
- * The fight is the real one: the default fixture is bw-w2's Float-Eye, with no
+ * The fight is the real one: the default fixture is bw-w2's Quay-Crab, with no
  * GUARD up, so Thorn Mantle is refused there whatever the Conviction; The Open
  * Hand is never refused for a reason of its own. Each rune prints its own cost:
  * Ruby Tithe ◆3, The Open Hand ◆4, Thorn Mantle ◆5 (LR1d A11).
@@ -51,7 +51,7 @@ const sig = (combat: CombatEncounterState, id: string): CombatSignatureVM =>
 describe('A6 — the signature VM splits short-of-Conviction from refused', () => {
     it('with Conviction to spare, Ruby Tithe and The Open Hand are castable and Thorn Mantle is refused', () => {
         const { combat } = fight(9);
-        expect(combat.enemy.name).toMatch(/float-eye/i);
+        expect(combat.enemy.name).toMatch(/quay-crab/i);
         expect(sig(combat, RUBY)).toMatchObject({ affordable: true, refused: false, reason: null });
         expect(sig(combat, HAND)).toMatchObject({ affordable: true, refused: false, reason: null });
         expect(sig(combat, THORN)).toMatchObject({ affordable: false, refused: true, reason: NO_GUARD });
