@@ -99,14 +99,14 @@ const SANS_ADVANCE_EM_FALLBACK = 0.557;
 /** Tab label type size. `_layout.tsx` styles the label from this constant, so
  *  the fit contract below measures what the bar actually renders. */
 // One step down from 10: the sixth tab (SETTINGS) leaves THE LEDGER no headroom at 10.
-export const TAB_BAR_LABEL_FONT_SIZE = 9;
+export const TAB_BAR_LABEL_FONT_SIZE = 7;
 
 /**
  * Tab label letter-spacing. With five tabs, THE LEDGER at spacing 2 measures
  * 55.8pt, which overflows a 320pt phone (iPhone SE, 54pt budget). Spacing 1
  * measures 45.8pt and fits both 320pt and 360pt phones.
  */
-export const TAB_BAR_LABEL_LETTER_SPACING = 1;
+export const TAB_BAR_LABEL_LETTER_SPACING = 0;
 
 /**
  * Horizontal padding `@react-navigation/bottom-tabs` puts inside each tab item

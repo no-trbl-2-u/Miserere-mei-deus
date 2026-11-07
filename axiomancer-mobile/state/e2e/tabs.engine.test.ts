@@ -248,7 +248,7 @@ describe('measureTabBarFit: no tab-bar overflow at 360pt', () => {
     it('detects an overflow rather than always answering yes', () => {
         // The check has to be capable of failing, or it proves nothing. A
         // sixth tab with a long title is the shape of the next regression.
-        const overloaded = [...visibleTabTitles(false), 'THE UNDERCROFT'];
+        const overloaded = [...visibleTabTitles(false), 'THE UNDERCROFT', 'THE DROWNED UNDERCROFT'];
         expect(measureTabBarFit(overloaded, NARROW_VIEWPORT_PT).fits).toBe(false);
     });
 });

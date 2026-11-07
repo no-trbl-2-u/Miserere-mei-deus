@@ -22,15 +22,41 @@ export const AXM: Palette = currentPalette();
 export { HUE } from './hue';
 
 export const FONTS = {
-  gothic: 'PirataOne_400Regular',
-  serif: 'IMFellEnglish_400Regular',
-  serifItalic: 'IMFellEnglish_400Regular_Italic',
-  sans: 'BebasNeue_400Regular',
-  mono: 'JetBrainsMono_400Regular',
+  gothic: 'UncialAntiqua_400Regular',
+  serif: 'Rosarivo_400Regular',
+  serifItalic: 'EagleLake_400Regular',
+  sans: 'UncialAntiqua_400Regular',
+  mono: 'Grenze_400Regular',
   // Fallback fonts for progressive loading
   sansFallback: 'System',
-  monoFallback: 'Courier',
+  monoFallback: 'serif',
 };
+
+/**
+ * The 15 jobs type does, one per ballot place (T's verdict in `plan/card-ledger/fonts.md`).
+ * A component names the job, never a face. None of T's faces is a
+ * condensed capital face, so no role tracks out; Marcellus SC is small caps
+ * already. `fontFamily` must name a face in `theme/fontFaces.ts`.
+ */
+export const TYPE_ROLES = {
+  title: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 30, lineHeight: 36, letterSpacing: 0.3, textTransform: 'none' },
+  eyebrow: { fontFamily: 'MarcellusSC_400Regular', fontSize: 13, lineHeight: 17, letterSpacing: 0.2, textTransform: 'none' },
+  sectionHead: { fontFamily: 'MedievalSharp_400Regular', fontSize: 18, lineHeight: 23, letterSpacing: 0, textTransform: 'none' },
+  narration: { fontFamily: 'EagleLake_400Regular', fontSize: 17, lineHeight: 25, letterSpacing: 0, textTransform: 'none' },
+  spoken: { fontFamily: 'EagleLake_400Regular', fontSize: 18, lineHeight: 26, letterSpacing: 0, textTransform: 'none' },
+  rules: { fontFamily: 'Rosarivo_400Regular', fontSize: 15, lineHeight: 22, letterSpacing: 0, textTransform: 'none' },
+  button: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 16, lineHeight: 20, letterSpacing: 0.2, textTransform: 'none' },
+  chip: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 13, lineHeight: 16, letterSpacing: 0, textTransform: 'none' },
+  mapName: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 14, lineHeight: 18, letterSpacing: 0, textTransform: 'none' },
+  bigNumber: { fontFamily: 'Spectral_600SemiBold', fontSize: 34, lineHeight: 38, letterSpacing: 0, textTransform: 'none' },
+  count: { fontFamily: 'Grenze_400Regular', fontSize: 14, lineHeight: 18, letterSpacing: 0, textTransform: 'none' },
+  cardName: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 13, lineHeight: 16, letterSpacing: 0, textTransform: 'none' },
+  cardRules: { fontFamily: 'Rosarivo_400Regular', fontSize: 11, lineHeight: 14, letterSpacing: 0, textTransform: 'none' },
+  foeName: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 20, lineHeight: 24, letterSpacing: 0.2, textTransform: 'none' },
+  entry: { fontFamily: 'Fondamento_400Regular', fontSize: 15, lineHeight: 22, letterSpacing: 0, textTransform: 'none' },
+} as const;
+
+export type TypeRoleId = keyof typeof TYPE_ROLES;
 
 export const TYPE = {
   display: { fontFamily: FONTS.gothic, fontSize: 32, lineHeight: 38, letterSpacing: 0.5 },
