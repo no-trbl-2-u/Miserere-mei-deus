@@ -2,9 +2,14 @@ import React, { useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { useTooltip } from '@/hooks/useTooltip';
 import type { DockRowId, EquipmentDockSlot } from '@/state/presenters/inventory.engine';
+
+/** B-04: the gear rows wear brass where T kept the kit; otherwise today's code. */
+const BRASS_ROWS = lookOf('B-04') === 'brass';
 
 interface EquipmentSlotProps {
     slot: EquipmentDockSlot | null;
@@ -75,10 +80,14 @@ export function EquipmentSlot({
                 selected && styles.dockSlotSelected,
                 lit && styles.dockSlotLit,
                 refused && styles.dockSlotRefused,
+                BRASS_ROWS && styles.brassRow,
+                BRASS_ROWS && lit && styles.brassRowLit,
+                BRASS_ROWS && refused && styles.brassRowRefused,
             ]}
             testID={`dock-slot-${slotId}`}
         >
-            <View style={[styles.dockSlotGlyph, filled ? styles.dockSlotGlyphFilled : styles.dockSlotGlyphBare]}>
+            {BRASS_ROWS && <KitBackdrop piece={selected || lit ? 'equipment-slot-selected' : 'equipment-slot-dark'} />}
+            <View style={[styles.dockSlotGlyph, filled ? styles.dockSlotGlyphFilled : styles.dockSlotGlyphBare, BRASS_ROWS && styles.brassGlyph]}>
                 {filled && slot.item !== null ? (
                     <ItemGlyph category="equipment" sub={slot.item.sub} itemId={slot.item.id} />
                 ) : (
@@ -148,6 +157,19 @@ const useStyles = makeStyles((AXM) => ({
         borderStyle: 'solid',
         borderColor: AXM.blood,
     },
+    // Brass: the piece draws the edge, the ground and the glyph's well, so the
+    // row's own border, fill and glyph box go; the padding seats the glyph in
+    // the piece's well and keeps the text off its spires.
+    brassRow: {
+        borderWidth: 0,
+        backgroundColor: 'transparent',
+        paddingLeft: 24,
+        paddingRight: 14,
+    },
+    // A lit or refused row still says so, loudly, over the brass.
+    brassRowLit: { borderWidth: 2, borderColor: AXM.sulfur },
+    brassRowRefused: { borderWidth: 2, borderColor: AXM.blood },
+    brassGlyph: { width: 32, borderWidth: 0, backgroundColor: 'transparent' },
     dockSlotGlyph: {
         width: 34,
         height: 34,

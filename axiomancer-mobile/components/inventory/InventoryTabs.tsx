@@ -2,7 +2,20 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+import { KitBackdrop, VELLUM_INK, VELLUM_OXBLOOD } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import type { InventoryTab, InventoryTabRow } from '@/state/presenters/inventory.engine';
+
+/** B-05: the filter tabs sit on vellum, inked, where T kept the kit; otherwise today's code. */
+const VELLUM_TABS = lookOf('B-05') === 'vellum';
+
+/**
+ * A zero count on vellum: a lighter ink at 90% opacity. Today's 45% fade would
+ * drop it under 4.5:1 on the parchment, so it is told apart by a lighter brown
+ * and kept readable (the vellum-ink test measures the blended colour).
+ */
+export const VELLUM_INK_QUIET = '#4a3826';
+export const VELLUM_EMPTY_OPACITY = 0.9;
 
 interface InventoryTabsProps {
     tabs: readonly InventoryTabRow[];
@@ -22,10 +35,11 @@ export function InventoryTabs({ tabs, activeTab, onTabPress, dimmed = false }: I
                     accessibilityLabel={`${t.label}, ${t.count === 0 ? 'empty' : `${t.count} ${t.count === 1 ? 'item' : 'items'}`}`}
                     accessibilityState={{ selected: activeTab === t.key }}
                     onPress={() => onTabPress(t.key)}
-                    style={[styles.tab, activeTab === t.key && styles.tabActive]}
+                    style={[styles.tab, activeTab === t.key && styles.tabActive, VELLUM_TABS && styles.tabVellum]}
                     testID={`tab-${t.key}`}
                 >
-                    <Text style={[styles.tabText, activeTab === t.key && styles.tabTextActive]}>
+                    {VELLUM_TABS && <KitBackdrop piece="filter-tab-vellum" />}
+                    <Text style={[styles.tabText, activeTab === t.key && styles.tabTextActive, VELLUM_TABS && styles.inkText, VELLUM_TABS && activeTab === t.key && styles.inkTextActive]}>
                         {t.label}
                     </Text>
                     {/* Always show the count. A tab with a bare word beside tabs
@@ -39,6 +53,9 @@ export function InventoryTabs({ tabs, activeTab, onTabPress, dimmed = false }: I
                             styles.tabCount,
                             activeTab === t.key && styles.tabCountActive,
                             t.count === 0 && styles.tabCountEmpty,
+                            VELLUM_TABS && styles.inkCount,
+                            VELLUM_TABS && activeTab === t.key && styles.inkTextActive,
+                            VELLUM_TABS && t.count === 0 && styles.inkCountEmpty,
                         ]}
                     >
                         {t.count}
@@ -77,6 +94,13 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
         borderBottomColor: AXM.sulfur,
     },
+    // Vellum: the piece draws the tab; the label is inked and the picked tab is
+    // told by oxblood ink and a rule under its words.
+    tabVellum: { backgroundColor: 'transparent', borderWidth: 0, paddingVertical: 10 },
+    inkText: { color: VELLUM_INK },
+    inkTextActive: { color: VELLUM_OXBLOOD },
+    inkCount: { color: VELLUM_INK, backgroundColor: 'transparent' },
+    inkCountEmpty: { color: VELLUM_INK_QUIET, opacity: VELLUM_EMPTY_OPACITY },
     tabText: {
         fontFamily: FONTS.sans,
         fontSize: 11,

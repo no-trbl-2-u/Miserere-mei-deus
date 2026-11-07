@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import type { DimensionValue } from 'react-native';
 import { FONTS } from '@/theme/axm';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 interface StatBarProps {
@@ -21,14 +22,21 @@ interface StatBarProps {
    * bar, where a full bar is the problem, not an empty one — is unchanged.
    */
   alarmAt?: number;
+  /**
+   * 'brass' draws the bar on the Brass Gothic VITAE rail and fill (the kit's
+   * combat-vitae pieces) instead of the flat track. The rail is 6 points
+   * taller than `height`, to hold its frame. Omitted, the bar is today's.
+   */
+  look?: 'normal' | 'brass';
 }
 
-export const StatBar = React.memo(function StatBar({ value, max, color, label, height = 14, showText = true, alarmAt }: StatBarProps) {
+export const StatBar = React.memo(function StatBar({ value, max, color, label, height = 14, showText = true, alarmAt, look = 'normal' }: StatBarProps) {
   const AXM = usePalette();
   const styles = useStyles();
   const barColor = color ?? AXM.blood;
   const pct = Math.max(0, Math.min(1, value / max));
   const percentage = Math.round(pct * 100);
+  const brass = look === 'brass';
   // At 1/175 the fill is half a pixel wide, so without the alarm the bar
   // reads as a plain grey rail and a player one hit from death gets no
   // warning at all.
@@ -65,20 +73,36 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
           )}
         </View>
       )}
-      <View 
+      {brass ? (
+        <View
+          style={[styles.brassTrack, { height: height + 6 }]}
+          importantForAccessibility="no"
+          testID={alarmed ? 'statbar-track-alarmed' : 'statbar-track'}
+        >
+          <KitBackdrop piece="combat-vitae-track" />
+          <View
+            style={[styles.brassFill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue }]}
+            importantForAccessibility="no"
+          >
+            <KitImage piece="combat-vitae-fill" style={StyleSheet.absoluteFill} />
+          </View>
+        </View>
+      ) : (
+      <View
         style={[styles.track, { height }, alarmed && { borderColor: barColor }]}
         importantForAccessibility="no"
         testID={alarmed ? 'statbar-track-alarmed' : 'statbar-track'}
       >
-        <View 
+        <View
           style={[styles.fill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue, backgroundColor: barColor }]}
           importantForAccessibility="no"
         />
-        <View 
+        <View
           style={styles.topLine}
           importantForAccessibility="no"
         />
       </View>
+      )}
     </View>
   );
 });
@@ -111,6 +135,8 @@ const useStyles = makeStyles((AXM) => ({
     overflow: 'hidden',
     position: 'relative',
   },
+  brassTrack: { width: '100%', overflow: 'hidden', position: 'relative' },
+  brassFill: { position: 'absolute', top: 3, left: 3, bottom: 3, borderRadius: 3, overflow: 'hidden' },
   fill: {
     position: 'absolute',
     top: 0,
