@@ -201,7 +201,7 @@ export function resolveLootCache(
     };
     return {
         state: withPlayer(state, player),
-        event: { kind: 'loot-cache', items, currency, description: payload.description },
+        event: { kind: 'loot-cache', items, currency, description: payload.description, actions: payload.actions },
     };
 }
 

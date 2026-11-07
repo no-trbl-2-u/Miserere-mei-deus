@@ -197,7 +197,7 @@ app/                       expo-router routes
   event/                   paced narrative events
   cutscene/                cutscenes
   village/                 village hub
-  dev/ devart/ devaftermath/  dev-only tooling routes
+  dev/ devart/  dev-only tooling routes
 components/                reusable presentational components
   StanceGlyph.tsx          heart / body / mind glyphs (SVG placeholders)
   EffectGlyph.tsx          buff / debuff glyphs

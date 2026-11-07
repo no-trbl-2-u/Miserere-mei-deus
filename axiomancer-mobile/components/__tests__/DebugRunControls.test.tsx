@@ -32,7 +32,7 @@ const withProvider = (store: AppStore, child: React.ReactNode) => <GameStoreProv
 describe('DebugRunControls', () => {
     it('renders run + gallery buttons in dev', () => {
         const tree = render(withProvider(createAppStore({ adapter: createMemoryAdapter() }), <DebugRunControls />));
-        for (const id of ['debug-run-save', 'debug-run-reset', 'debug-run-new', 'debug-gallery-enemy-art', 'debug-gallery-rooms', 'debug-gallery-defeat', 'debug-gallery-frames']) {
+        for (const id of ['debug-run-save', 'debug-run-reset', 'debug-run-new', 'debug-gallery-enemy-art', 'debug-gallery-rooms', 'debug-gallery-frames']) {
             expect(tree.queryByTestId(id)).not.toBeNull();
         }
     });

@@ -1,55 +1,90 @@
 /**
- * The cache presenter's card offer carries the rolled card's face (phase
- * RW1b, A8): the same `rewardCardVMs` face the combat reward prints, scaled
- * to the player's stats, so TAKE A CARD shows what it offers before the pick.
- * TAKE THE GOODS carries no face; it carries the rolled goods as the
- * outcome ledger's chips, so its side of the pick is not blind either
- * (CRITIQUE pass 108).
+ * The cache presenter says what you DO, never what you get.
+ *
+ * Contract asserted here: each offer carries the node's own action line and
+ * nothing else — no card face, no goods chips. An unwritten cache falls back
+ * to the `[content]` placeholder, and a session with no `actions` at all does
+ * too rather than throwing. The outcome ledger,
+ * which runs after the pick, still names the rewards.
+ *
+ * Hermetic = self-contained + deterministic + isolated.
+ * See docs/testing.md for the full standard.
  */
 import { describe, expect, it } from '@jest/globals';
-import { createLootCacheChoiceSession, getCardById, getConsumableById } from '@mechanics';
+import {
+    CACHE_ACTION_PLACEHOLDER,
+    createLootCacheChoiceSession,
+    getCardById,
+    getConsumableById,
+    type LootCacheActionLines,
+    type LootCacheChoiceSession,
+} from '@mechanics';
 import { selectCacheVM } from '@/state/presenters/cache.engine';
-import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
 
-const STATS = { body: 10, mind: 10, heart: 10 };
+const CAVE_ACTIONS: LootCacheActionLines = {
+    card: 'Read the runes inside the cave',
+    item: 'Plunder the corpses left by the previous patrons',
+};
 
-function cacheState(cardCandidate: string) {
+function cacheState(opts: { actions?: LootCacheActionLines; cardCandidate?: string } = {}) {
     return {
         cache: {
-            session: createLootCacheChoiceSession(7, { cardCandidate, itemCandidates: [], currencyCandidate: 5 }),
+            session: createLootCacheChoiceSession(7, {
+                cardCandidate: opts.cardCandidate ?? 'grey-strike',
+                itemCandidates: [getConsumableById('healing-potion')!],
+                currencyCandidate: 5,
+                ...(opts.actions ? { actions: opts.actions } : {}),
+            }),
         },
     };
 }
 
-describe('selectCacheVM — the card offer shows its card', () => {
-    it('the card offer carries the candidate face, name and scaled numbers', () => {
-        const vm = selectCacheVM(cacheState('grey-strike'), STATS);
-        const card = vm.offers.find(o => o.id === 'card')!.card!;
-        const [expected] = rewardCardVMs(['grey-strike'], STATS);
-        expect(card.cardId).toBe('grey-strike');
-        expect(card.name).toBe(getCardById('grey-strike')!.name);
-        expect(card.face.heroText).toBe(expected.face.heroText);
-        expect(card.face.statScaled).toBe('up');
+describe('selectCacheVM — each offer carries its action line', () => {
+    it('an authored cache prints its two lines, one per choice', () => {
+        const offers = selectCacheVM(cacheState({ actions: CAVE_ACTIONS })).offers;
+        expect(offers.map(o => [o.id, o.label, o.action])).toEqual([
+            ['card', 'TAKE A CARD', 'Read the runes inside the cave'],
+            ['item', 'TAKE THE GOODS', 'Plunder the corpses left by the previous patrons'],
+        ]);
     });
 
-    it('without stats the face prints the authored numbers', () => {
-        const card = selectCacheVM(cacheState('grey-strike')).offers.find(o => o.id === 'card')!.card!;
-        expect(card.face.statScaled).toBeNull();
+    it('a cache with no lines yet shows the [content] placeholder on both', () => {
+        const offers = selectCacheVM(cacheState()).offers;
+        expect(offers.map(o => o.action)).toEqual([CACHE_ACTION_PLACEHOLDER, CACHE_ACTION_PLACEHOLDER]);
     });
 
-    it('the goods offer carries no card, and labels are unchanged', () => {
-        const vm = selectCacheVM(cacheState('grey-strike'), STATS);
-        expect(vm.offers.map(o => o.label)).toEqual(['TAKE A CARD', 'TAKE THE GOODS']);
-        expect(vm.offers.find(o => o.id === 'item')!.card).toBeNull();
+    it('a blank line falls back to the placeholder rather than printing nothing', () => {
+        const offers = selectCacheVM(cacheState({ actions: { card: '   ', item: 'Pry the lid' } })).offers;
+        expect(offers.map(o => o.action)).toEqual([CACHE_ACTION_PLACEHOLDER, 'Pry the lid']);
     });
 
-    it('a candidate id the library lacks leaves the card offer faceless rather than throwing', () => {
-        const vm = selectCacheVM(cacheState('no-such-card'), STATS);
-        expect(vm.offers.find(o => o.id === 'card')!.card).toBeNull();
+    it('a session persisted before spec 154 carries no lines and still renders', () => {
+        const { session } = cacheState().cache;
+        const legacy = { ...session } as Partial<LootCacheChoiceSession>;
+        delete legacy.actions;
+        const offers = selectCacheVM({ cache: { session: legacy as LootCacheChoiceSession } }).offers;
+        expect(offers.map(o => o.action)).toEqual([CACHE_ACTION_PLACEHOLDER, CACHE_ACTION_PLACEHOLDER]);
     });
 
-    it('the card offer carries no goods', () => {
-        expect(selectCacheVM(cacheState('grey-strike'), STATS).offers.find(o => o.id === 'card')!.goods).toEqual([]);
+    it('no offer carries a reward: no card face, no goods chips', () => {
+        for (const offer of selectCacheVM(cacheState({ actions: CAVE_ACTIONS })).offers) {
+            expect(Object.keys(offer).sort()).toEqual(['action', 'id', 'label']);
+        }
+    });
+
+    it('the authored flavour line is the cache description', () => {
+        const state = {
+            cache: {
+                session: createLootCacheChoiceSession(7, {
+                    cardCandidate: 'grey-strike',
+                    itemCandidates: [],
+                    currencyCandidate: 0,
+                    description: 'Shillings in a niche at the cave mouth.',
+                    actions: CAVE_ACTIONS,
+                }),
+            },
+        };
+        expect(selectCacheVM(state).description).toBe('Shillings in a niche at the cave mouth.');
     });
 
     it('no session is the empty VM', () => {
@@ -57,43 +92,37 @@ describe('selectCacheVM — the card offer shows its card', () => {
     });
 });
 
-describe('selectCacheVM — the goods offer shows its goods', () => {
-    function goodsState(itemIds: readonly string[], currencyCandidate: number) {
-        const itemCandidates = itemIds.map(id => getConsumableById(id)!);
-        return {
-            cache: {
-                session: createLootCacheChoiceSession(7, { cardCandidate: 'grey-strike', itemCandidates, currencyCandidate }),
-            },
-        };
-    }
-
-    it('lists each rolled item, then the shillings, as the ledger chips', () => {
-        const goods = selectCacheVM(goodsState(['healing-potion', 'minor-healing-potion'], 10), STATS)
-            .offers.find(o => o.id === 'item')!.goods;
-        expect(goods).toEqual(['+ HEALING POTION', '+ MINOR HEALING POTION', '+10 SHILLINGS']);
-    });
-
-    it('a node with no currency prints no shillings chip', () => {
-        const goods = selectCacheVM(goodsState(['healing-potion'], 0), STATS).offers.find(o => o.id === 'item')!.goods;
-        expect(goods).toEqual(['+ HEALING POTION']);
-    });
-
-    it('the offer chips match the ledger the pick settles to', () => {
-        const state = goodsState(['healing-potion'], 12);
-        const offered = selectCacheVM(state, STATS).offers.find(o => o.id === 'item')!.goods;
-        const s = state.cache.session;
-        const settled = selectCacheVM({
+describe('selectCacheVM — the outcome ledger still names the rewards', () => {
+    it('the card choice settles to the card name', () => {
+        const { session } = cacheState({ actions: CAVE_ACTIONS }).cache;
+        const outcome = selectCacheVM({
             cache: {
                 session: {
-                    ...s,
+                    ...session,
                     phase: 'outcome',
-                    outcome: { chosen: 'item', rewardCardId: null, items: s.itemCandidates, currency: s.currencyCandidate },
+                    outcome: { chosen: 'card', rewardCardId: 'grey-strike', items: [], currency: 0 },
                 },
             },
-        }, STATS).outcome!;
-        expect(offered).toEqual([
-            ...settled.itemNames.map(n => `+ ${n.toUpperCase()}`),
-            `+${settled.currency} SHILLINGS`,
-        ]);
+        }).outcome!;
+        expect(outcome.label).toBe('TAKE A CARD');
+        expect(outcome.cardName).toBe(getCardById('grey-strike')!.name);
+    });
+
+    it('the goods choice settles to its items and shillings', () => {
+        const { session } = cacheState({ actions: CAVE_ACTIONS }).cache;
+        const outcome = selectCacheVM({
+            cache: {
+                session: {
+                    ...session,
+                    phase: 'outcome',
+                    outcome: {
+                        chosen: 'item', rewardCardId: null,
+                        items: session.itemCandidates, currency: session.currencyCandidate,
+                    },
+                },
+            },
+        }).outcome!;
+        expect(outcome.itemNames).toEqual([getConsumableById('healing-potion')!.name]);
+        expect(outcome.currency).toBe(5);
     });
 });

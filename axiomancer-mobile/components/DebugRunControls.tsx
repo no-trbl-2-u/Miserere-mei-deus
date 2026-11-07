@@ -7,9 +7,8 @@
  *   NEW RUN    — `resetRun({ keepCharacter: false })`: a run end, as in play;
  *                saved, then character select for the slot.
  *   GALLERIES  — the dev-only visual routes: enemy art (`/devart`),
- *                Aporia rooms (`/devart/rooms`), the DEFEAT
- *                aftermath panel (`/devaftermath?panel=defeat`), and the
- *                frame-engine harness (`/devframes`).
+ *                Aporia rooms (`/devart/rooms`),
+ *                and the frame-engine harness (`/devframes`).
  *
  * Renders null outside dev builds.
  */
@@ -27,7 +26,6 @@ import { useActiveSlot } from '@/state/SaveSlotsProvider';
 const GALLERIES: readonly { label: string; route: string; testID: string }[] = [
     { label: 'ENEMY ART', route: '/devart', testID: 'debug-gallery-enemy-art' },
     { label: 'APORIA ROOMS', route: '/devart/rooms', testID: 'debug-gallery-rooms' },
-    { label: 'DEFEAT PANEL', route: '/devaftermath?panel=defeat', testID: 'debug-gallery-defeat' },
     { label: 'FRAME ENGINE', route: '/devframes', testID: 'debug-gallery-frames' },
 ];
 

@@ -1,16 +1,15 @@
 /**
  * Aftermath presenter.
  *
- * Composes the view model that `<CombatVictoryPanel>`,
- * and `<CombatDefeatPanel>` consume
+ * Composes the view model that `<CombatVictoryPanel>` consumes
  * to render the in-encounter-modal aftermath. The combat slice is
  * cleared at the moment combat exits (`actions.endCombat()` fires
  * before this VM is built), so the presenter reads from the
  * `AftermathData` snapshot stashed on the `combat-mode` provider
  * instead — see `state/combat-mode.tsx`.
  *
- * Discriminated-union VM keyed by `kind` (victory, defeat).
- * The view-side mount only renders the panel matching the VM's `kind`.
+ * VM keyed by `kind` (victory only: a lost fight goes to the
+ * death-return and game-over screens, not an aftermath panel).
  *
  * Per Hard Rule #8 — no display literals at the view layer. The
  * chronicle flavour lines are selected here, keyed off a tier: the
@@ -21,7 +20,6 @@
 import { isEquipment, type Item } from '@mechanics';
 
 import type { AftermathData } from '@/state/combat-mode';
-import { getMapLayout } from '@/state/exploration-maps';
 
 /**
  * Loot tile rendered in the spoils list. Name + slot + rarity cover
@@ -77,56 +75,12 @@ export interface AftermathVictoryViewModel {
     rewards: AftermathRewards;
 }
 
-export interface AftermathDefeatViewModel {
-    kind: 'defeat';
-    /** Display name of the player character ("WORM-EATEN PILGRIM"
-     *  in the design's exemplar). Sourced from engine player.name
-     *  (uppercased) at snapshot time. */
-    characterName: string;
-    /** The killer — the foe that took the final blow. */
-    killer: {
-        name: string;
-        epithet: string | null;
-        finalCard: string;
-        damage: number;
-    } | null;
-    /** Chronicle paragraph rendered with the `axm-dropcap` rule.
-     *  Presenter-selected from a small variant table. */
-    causePhrase: string;
-    /** Run summary ledger — three rows. `deepestNodeId` may be
-     *  null when the player died on their first node. */
-    runSummary: {
-        rounds: number;
-        encountersFaced: number;
-        deepestNodeId: string | null;
-    };
-}
-
-export type AftermathViewModel =
-    | AftermathVictoryViewModel
-    | AftermathDefeatViewModel;
-
-/**
- * Resolve a node ID to human-readable name via map layout lookup.
- * Fallback to the original node ID if map layout or node lookup fails.
- */
-function resolveNodeIdToHumanName(nodeId: string | null, mapId: string | null): string {
-    if (nodeId === null) return '·';
-    if (mapId === null) return nodeId; // fallback to ID
-
-    const layout = getMapLayout(mapId);
-    if (layout === null) return nodeId; // fallback to ID
-
-    const node = layout.nodes.find(n => n.id === nodeId);
-    if (node === undefined) return nodeId; // fallback to ID
-
-    return node.label;
-}
+export type AftermathViewModel = AftermathVictoryViewModel;
 
 /**
  * Build the aftermath VM from the snapshot stashed at combat-exit
  * time. Returns `null` when the snapshot is null (no aftermath to
- * render). Victory and defeat each return a populated VM;
+ * render). Only victory carries a VM;
  * flee never lands here (the seal dismisses without an aftermath
  * render).
  */
@@ -134,44 +88,16 @@ export function selectAftermathViewModel(
     data: AftermathData | null,
 ): AftermathViewModel | null {
     if (data === null) return null;
-    if (data.variant === 'victory') {
-        return {
-            kind: 'victory',
-            enemyName: data.enemy.name.toUpperCase(),
-            enemyEpithet: deriveEpithet(data.enemy.description),
-            finalBlow: deriveFinalBlow(data),
-            finalBlowPhrase: deriveFinalBlowPhrase(data),
-            rewards: {
-                xp: data.xpReward,
-                currency: (data.shillings ?? 0) > 0 ? { shillings: data.shillings! } : null,
-                loot: (data.loot ?? []).map(toAftermathLootEntry),
-            },
-        };
-    }
-    // Defeat.
     return {
-        kind: 'defeat',
-        characterName: data.characterName.toUpperCase(),
-        killer: data.finalBlow !== null
-            ? {
-                  name: data.enemy.name.toUpperCase(),
-                  epithet: deriveEpithet(data.enemy.description),
-                  finalCard: data.finalBlow.cardName ?? 'STRIKE',
-                  damage: data.finalBlow.damage,
-              }
-            : {
-                  name: data.enemy.name.toUpperCase(),
-                  epithet: deriveEpithet(data.enemy.description),
-                  finalCard: 'STRIKE',
-                  damage: 0,
-              },
-        causePhrase: deriveCausePhrase(data),
-        runSummary: {
-            rounds: data.runSummary.roundsEndured,
-            // The fatal encounter is not counted as survived; clamp at 0.
-            encountersFaced: Math.max(0, data.runSummary.encountersFaced - 1),
-            // Resolve node ID to its human-readable name.
-            deepestNodeId: resolveNodeIdToHumanName(data.runSummary.deepestNodeId, data.runSummary.currentMapId),
+        kind: 'victory',
+        enemyName: data.enemy.name.toUpperCase(),
+        enemyEpithet: deriveEpithet(data.enemy.description),
+        finalBlow: deriveFinalBlow(data),
+        finalBlowPhrase: deriveFinalBlowPhrase(data),
+        rewards: {
+            xp: data.xpReward,
+            currency: (data.shillings ?? 0) > 0 ? { shillings: data.shillings! } : null,
+            loot: (data.loot ?? []).map(toAftermathLootEntry),
         },
     };
 }
@@ -215,11 +141,8 @@ function deriveFinalBlow(
 }
 
 /**
- * Tier-key extraction helpers shared by the three
- * narrative selectors. Engine line keys differ per kind
- * (`brutal | quiet | ironic` for victory; `brutal | broken | quiet`
- * for defeat), so each kind
- * passes its own key set in.
+ * Tier-key extraction helper for the final-blow narrative
+ * selector. Engine line keys are `brutal | quiet | ironic`.
  */
 function damageTier3<K extends string>(damage: number, high: K, mid: K, low: K): K {
     if (damage >= 20) return high;
@@ -247,30 +170,4 @@ function deriveFinalBlowPhrase(
         return `it folded into itself, twice, the way a wet rag folds.`;
     }
     return `it set the bell down, slow. the bell did not ring. the wet ground took the rest.`;
-}
-
-/**
- * Pick a chronicle cause-of-death paragraph. Prefers per-foe
- * lines from the engine (`Enemy.causeLines`); falls back to a
- * presenter-local per-tier phrase when absent.
- *
- * Engine tier names diverge from the victory branch — the
- * mid-damage key is `'broken'`, not `'quiet'`. The presenter
- * does not normalize; each kind uses its own key set.
- */
-function deriveCausePhrase(
-    data: Extract<AftermathData, { variant: 'defeat' }>,
-): string {
-    const damage = data.finalBlow?.damage ?? 0;
-    const tier = damageTier3(damage, 'brutal', 'broken', 'quiet');
-    const engineLine = data.enemy.causeLines?.[tier];
-    if (engineLine !== undefined) return engineLine;
-    const killerName = data.enemy.name;
-    if (tier === 'brutal') {
-        return `And so the pilgrim laid down where it stood, while the ${killerName.toLowerCase()}'s blade learned its ribs by name. The journey had been short. The journey had been kept.`;
-    }
-    if (tier === 'broken') {
-        return `It came in pieces. First the breath, then the legs, then a long silence that did not break. The ${killerName.toLowerCase()} looked once, then looked away.`;
-    }
-    return `Not a great wound; a steady one. The pilgrim sat down to rest, and did not stand up. The page closed without ceremony.`;
 }
