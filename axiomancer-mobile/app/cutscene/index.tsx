@@ -141,9 +141,8 @@ export default function CutsceneScreen() {
                 style={styles.tapField}
                 testID="cutscene-advance"
             >
-                {/* The centred plate. Its border is deliberately near-invisible
-                    (`AXM.divider` — parchment at 12% alpha) so it frames the
-                    prose without competing with it. */}
+                {/* The centred omen: bare text on the background, no border or
+                    panel. A soft text shadow keeps it legible over art. */}
                 <Animated.View style={[styles.plate, { opacity }]} testID="cutscene-plate">
                     <Text style={styles.eyebrow}>▶ OMEN</Text>
                     <Text style={styles.line} testID={`cutscene-line-${index}`}>
@@ -184,9 +183,6 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         paddingVertical: 28,
         paddingHorizontal: 24,
-        borderWidth: 1,
-        borderRadius: 14,
-        borderColor: AXM.divider,
     },
     eyebrow: {
         fontFamily: FONTS.sans,
@@ -195,6 +191,9 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.sulfur,
         marginBottom: 18,
         textAlign: 'center',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 6,
     },
     line: {
         fontFamily: FONTS.serif,
@@ -202,6 +201,9 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 27,
         color: AXM.parchment,
         textAlign: 'center',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 6,
     },
     hint: {
         fontFamily: FONTS.mono,
@@ -210,6 +212,9 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.bone,
         textAlign: 'center',
         marginTop: 22,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 6,
     },
     // SKIP has a bordered plate, a legible label, and a 44pt minimum box,
     // so it looks pressable and can be hit.
