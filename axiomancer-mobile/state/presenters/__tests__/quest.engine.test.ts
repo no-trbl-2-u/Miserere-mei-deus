@@ -5,7 +5,7 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-import { completeQuest, emptyQuestLog, progressQuest, type Reward } from '@mechanics';
+import { completeQuest, emptyQuestLog, getQuestline, progressQuest, questlineStep, type Reward } from '@mechanics';
 
 import { selectHasActiveQuest, selectQuestVM, questRewardLine } from '@/state/presenters/quest.engine';
 import {
@@ -34,7 +34,7 @@ describe('selectQuestVM', () => {
         expect(selectHasActiveQuest({ quest: EMPTY_QUEST_SLICE })).toBe(false);
     });
 
-    it('node 1 offers step 1: the requirement, a 0 count, the pay in order, ACCEPT', () => {
+    it('node 1 offers step 1: the requirement, a 0 count, no counter on a single step, no pay lines, ACCEPT', () => {
         const vm = selectQuestVM({ quest: slice(1), quests: base.quests });
         expect(vm.stage).toBe('offer');
         expect(vm.eyebrow).toBe('STEP 1 OF 4');
@@ -43,9 +43,13 @@ describe('selectQuestVM', () => {
         expect(vm.behind).toBeNull();
         expect(vm.ahead?.name).toBe('Cross the Gallows');
         expect(vm.ahead?.objectives).toEqual([
-            { id: 'goal', description: 'Cross a hazard', progress: '0 of 1', done: false },
+            { id: 'goal', description: 'Cross a hazard', progress: '', done: false },
         ]);
-        expect(vm.ahead?.rewards).toEqual(['+40 XP', '+10 shillings']);
+        // The panel carries no pay, but the step still owes it.
+        expect(vm.ahead).not.toHaveProperty('rewards');
+        const owed = questlineStep(getQuestline(FIXTURE_LINE)!, 1)!.rewards;
+        expect(owed.length).toBeGreaterThan(0);
+        expect(questRewardLine(owed[0]!)).toBe('+40 XP');
     });
 
     it('the giver line is the node payload line, else a placeholder', () => {
@@ -85,7 +89,7 @@ describe('selectQuestVM', () => {
         expect(offered.stage).toBe('offer');
         expect(offered.canAccept).toBe(true);
         expect(offered.ahead?.name).toBe('Thin the Quay');
-        expect(offered.ahead?.rewards).toEqual(['+40 XP', 'A pick of 3 cards']);
+        expect(offered.ahead).not.toHaveProperty('rewards');
     });
 
     it('a later node reads locked while the step before it is not accepted', () => {

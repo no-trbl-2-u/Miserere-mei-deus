@@ -32,7 +32,6 @@ import {
     QUEST_LEAVE_LABEL,
     QUEST_OFFER_HEAD,
     QUEST_PAID_HEAD,
-    QUEST_REWARDS_HEAD,
     QUEST_TURN_IN_HEAD,
     QUEST_TURN_IN_LABEL,
     QUEST_WAITING_HEAD,
@@ -57,21 +56,19 @@ function StepBlock({ head, step, testID }: { head: string; step: QuestStepVM; te
             {step.objectives.map(o => (
                 <View key={o.id} style={styles.objectiveRow} testID={`${testID}-objective-${o.id}`}>
                     <Text style={[styles.body, WANTS_KIT && styles.bodyKit]}>{o.description}</Text>
-                    <Text
-                        style={[
-                            styles.progress,
-                            WANTS_KIT && styles.progressKit,
-                            o.done && styles.progressDone,
-                            o.done && WANTS_KIT && styles.progressDoneKit,
-                        ]}
-                    >
-                        {o.progress}
-                    </Text>
+                    {o.progress !== '' && (
+                        <Text
+                            style={[
+                                styles.progress,
+                                WANTS_KIT && styles.progressKit,
+                                o.done && styles.progressDone,
+                                o.done && WANTS_KIT && styles.progressDoneKit,
+                            ]}
+                        >
+                            {o.progress}
+                        </Text>
+                    )}
                 </View>
-            ))}
-            <Text style={[styles.eyebrow, WANTS_KIT && styles.eyebrowKit]}>{QUEST_REWARDS_HEAD}</Text>
-            {step.rewards.map(line => (
-                <Text key={line} style={[styles.rewardLine, WANTS_KIT && styles.rewardLineKit]}>{line}</Text>
             ))}
         </KitSurface>
     );
@@ -271,8 +268,6 @@ const useStyles = makeStyles((AXM) => ({
     progressKit: { color: HUE.hzCardInk2 },
     progressDone: { color: AXM.sulfur },
     progressDoneKit: { color: HUE.hzForceInk },
-    rewardLine: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.sulfur, marginBottom: 2 },
-    rewardLineKit: { color: HUE.hzForceInk },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
         fontFamily: FONTS.mono,
