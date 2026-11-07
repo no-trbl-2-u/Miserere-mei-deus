@@ -186,7 +186,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
 
                 {vm.inRun ? (
                     <>
-                        {heading(SETTINGS_COPY.sections.run, 'star')}
+                        {heading(SETTINGS_COPY.sections.run, 'star', 'divider-short-brass')}
                         <MenuButton
                             label={SETTINGS_COPY.returnToTitle}
                             hint={SETTINGS_COPY.returnToTitleHint}
@@ -197,7 +197,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     </>
                 ) : null}
 
-                {heading(SETTINGS_COPY.sections.feedback, 'quatrefoil')}
+                {heading(SETTINGS_COPY.sections.feedback, 'quatrefoil', 'divider-plain-brass')}
                 <MenuButton
                     label={FEEDBACK_COPY.open}
                     hint={SETTINGS_COPY.feedbackHint}
@@ -207,7 +207,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                 />
                 {thanks ? <Text style={styles.note} testID="settings-feedback-thanks">{FEEDBACK_COPY.thanks}</Text> : null}
 
-                {heading(SETTINGS_COPY.sections.device, 'star')}
+                {heading(SETTINGS_COPY.sections.device, 'star', 'divider-ornate-brass')}
                 <MenuButton
                     label={SETTINGS_COPY.resetSettings}
                     hint={SETTINGS_COPY.resetSettingsHint}

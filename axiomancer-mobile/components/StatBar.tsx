@@ -5,6 +5,10 @@ import { FONTS } from '@/theme/axm';
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
+/** The brass track's nine-slice end caps (`combat-vitae-track` in KitBackdrop): the fill sits inside them. */
+export const BRASS_CAP_X = 12;
+export const BRASS_CAP_Y = 5;
+
 interface StatBarProps {
   value: number;
   max: number;
@@ -24,8 +28,8 @@ interface StatBarProps {
   alarmAt?: number;
   /**
    * 'brass' draws the bar on the Brass Gothic VITAE rail and fill (the kit's
-   * combat-vitae pieces) instead of the flat track. The rail is 6 points
-   * taller than `height`, to hold its frame. Omitted, the bar is today's.
+   * combat-vitae pieces) instead of the flat track. The rail is 10 points
+   * taller than `height`, to hold its end caps. Omitted, the bar is today's.
    */
   look?: 'normal' | 'brass';
 }
@@ -75,16 +79,18 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
       )}
       {brass ? (
         <View
-          style={[styles.brassTrack, { height: height + 6 }]}
+          style={[styles.brassTrack, { height: height + BRASS_CAP_Y * 2 }]}
           importantForAccessibility="no"
           testID={alarmed ? 'statbar-track-alarmed' : 'statbar-track'}
         >
           <KitBackdrop piece="combat-vitae-track" />
-          <View
-            style={[styles.brassFill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue }]}
-            importantForAccessibility="no"
-          >
-            <KitImage piece="combat-vitae-fill" style={StyleSheet.absoluteFill} />
+          <View style={styles.brassFillSlot} importantForAccessibility="no">
+            <View
+              style={[styles.brassFill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue }]}
+              importantForAccessibility="no"
+            >
+              <KitImage piece="combat-vitae-fill" style={StyleSheet.absoluteFill} />
+            </View>
           </View>
         </View>
       ) : (
@@ -136,7 +142,8 @@ const useStyles = makeStyles((AXM) => ({
     position: 'relative',
   },
   brassTrack: { width: '100%', overflow: 'hidden', position: 'relative' },
-  brassFill: { position: 'absolute', top: 3, left: 3, bottom: 3, borderRadius: 3, overflow: 'hidden' },
+  brassFillSlot: { position: 'absolute', top: BRASS_CAP_Y, left: BRASS_CAP_X, right: BRASS_CAP_X, bottom: BRASS_CAP_Y },
+  brassFill: { height: '100%', borderRadius: 3, overflow: 'hidden' },
   fill: {
     position: 'absolute',
     top: 0,

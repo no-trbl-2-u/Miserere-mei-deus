@@ -58,6 +58,15 @@ const SLICED: Partial<Record<KitPiece, { slice: Slice; scale: number }>> = {
     'combat-badge': { slice: [0.3, 0.2, 0.3, 0.2], scale: 0.3 },
     'nav-count-plate-dark': { slice: [0.3, 0.2, 0.3, 0.2], scale: 0.32 },
 
+    // Self and Satchel pieces. Each ornament sits mid-edge, so the middle
+    // band is held to a sliver at the ornament's centre and the corners keep the rest.
+    'stat-tile': { slice: [0.16, 0.45, 0.14, 0.45], scale: 0.6 },
+    'equipment-slot-dark': { slice: [0.3, 0.46, 0.3, 0.46], scale: 0.35 },
+    'equipment-slot-selected': { slice: [0.3, 0.46, 0.3, 0.46], scale: 0.35 },
+    'combat-vitae-track': { slice: [0.35, 0.03, 0.35, 0.03], scale: 0.5 },
+    'character-portrait-frame': { slice: [0.25, 0.3, 0.2, 0.3], scale: 0.48 },
+    'level-badge-dark': { slice: [0.3, 0.3, 0.3, 0.3], scale: 0.4 },
+
     // Vellum & Ink: each on its brass twin's slices and scale.
     'menu-panel-vellum': { slice: [0.22, 0.17, 0.22, 0.17], scale: 0.42 },
     'modal-panel-vellum': { slice: [0.2, 0.19, 0.2, 0.19], scale: 0.3 },
