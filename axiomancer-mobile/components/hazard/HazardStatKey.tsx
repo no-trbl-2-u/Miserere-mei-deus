@@ -6,7 +6,7 @@
  * Renders two glyph+name chips over the caption from `HAZARD_STAT_KEY`.
  * Reads no store state — the key is static presenter copy.
  *
- * Mounted on the hazard-deck screen (above ALL CARDS) and under the card
+ * Mounted under the card
  * in `CardDetailOverlay` — the two places a card is studied away from
  * the board's already-labelled FORCE / ESCAPE meters.
  */

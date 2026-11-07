@@ -37,7 +37,6 @@ A hazard node starts a hazard session (`state/actions.ts` → `beginHazardAction
 | `hazard-rewards` / `hazard-offer-<cardId>` / `hazard-card-preview` / `hazard-preview-confirm` / `hazard-preview-cancel` / `hazard-rewards-confirm` / `hazard-rewards-skip` | Reward pick |
 | `hazard-reward-<id>` / `hazard-consequence-<id>` / `hazard-rewards-penalty` | Reward / consequence rows, route-penalty line |
 | `hazard-stat-key` | Stat key legend |
-| `hazard-remove-grid` / `hazard-remove-tile-<cardId>` / `hazard-remove-confirm` / `hazard-remove-close` / `hazard-remove-blocked` / `hazard-remove-blocked-dismiss` | Deck-thinning grid (from `/hazard-deck`, `hazard-deck-open-remove`) |
 
 ## 4. A correct play, step by step
 
@@ -54,7 +53,6 @@ A hazard node starts a hazard session (`state/actions.ts` → `beginHazardAction
 - `hazard-resolve-flash` has no timer: it waits for a press (`components/hazard/HazardOverlays.tsx` `ResolveFlashOverlay`). Press it to move on.
 - `hazard-play-button` disabled: nothing applied yet, or a staged card still needs a die. Apply or trash it.
 - A die refusing a card: colour mismatch. Use another die.
-- `hazard-remove-blocked`: the deck is at its floor; dismiss it.
 - `hazard-empty` for a frame while the gate pops back to the map is normal after `claimHazardRewards`.
 - `setPointerCapture` console errors: synthetic-pointer artefacts.
 

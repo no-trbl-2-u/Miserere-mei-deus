@@ -29,20 +29,10 @@
 			"color": "4"
 		},
 		{
-			"id": "route:hazard-deck",
-			"type": "file",
-			"file": "Features/The hazard deck.md",
-			"x": 340,
-			"y": 40,
-			"width": 260,
-			"height": 90,
-			"color": "4"
-		},
-		{
 			"id": "route:labyrinth",
 			"type": "file",
 			"file": "Features/The Labyrinth.md",
-			"x": 640,
+			"x": 340,
 			"y": 40,
 			"width": 260,
 			"height": 90,

@@ -90,7 +90,6 @@ export const GALLERY = [
     // ── Late-game tabs ───────────────────────────────────────────────────
     { name: 'self-l50', why: 'SELF at L50 — every stat and relic slot filled.', fixture: { id: 'g-self-l50', seed: 'g13', preset: 'kid-l50' }, path: '/character' },
     { name: 'satchel-l50', why: 'SATCHEL at L50.', fixture: { id: 'g-satchel-l50', seed: 'g13', preset: 'kid-l50' }, path: '/inventory' },
-    { name: 'hazard-deck-l30', why: 'The hazard deck sheet with a late kit.', fixture: { id: 'g-hdeck-l30', seed: 'g14', preset: 'kid-l30' }, path: '/hazard-deck' },
     { name: 'memoir-l15', why: 'THE LEDGER for a mid-campaign Sage.', fixture: { id: 'g-memoir', seed: 'g15', ...SAGE, world: coastal('charcoal-wood', 'cw-5') }, path: '/memoir' },
 
     // ── Dev-only panels that have no organic capture path ────────────────

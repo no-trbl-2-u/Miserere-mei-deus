@@ -777,31 +777,6 @@
       }
     },
     {
-      "id": "route:hazard-deck",
-      "name": "The hazard deck",
-      "kind": "route",
-      "group": "minigames",
-      "source": "axiomancer-mobile/app/hazard-deck/index.tsx",
-      "named": true,
-      "reachable": {
-        "value": true,
-        "source": "flow path from route:index: route:index -> route:(tabs)/character -> route:hazard-deck"
-      },
-      "driven": {
-        "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
-      },
-      "tested": {
-        "value": true,
-        "source": "axiomancer-mobile/components/hazard/__tests__/HazardRemoveGrid.test.tsx, axiomancer-mobile/state/e2e/hazard-deck.screen.test.tsx, axiomancer-mobile/state/e2e/hazard-stat-key.S7-hazard-C04.test.tsx, ..."
-      },
-      "needsPitch": {
-        "value": false,
-        "missing": null,
-        "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
-      }
-    },
-    {
       "id": "route:index",
       "name": "Index",
       "kind": "route",
@@ -5152,96 +5127,6 @@
     },
     {
       "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Effects",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Game",
-      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Game",
-      "file": "axiomancer-mobile/state/presenters/hazard-deck.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Game",
-      "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Log",
-      "file": "axiomancer-mobile/lib/platform/router.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:Log",
-      "file": "axiomancer-mobile/state/settings.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:NPCs",
-      "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/components/hazard/HazardDie.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/components/hazard/palette.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/hazard-deck.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/hazard.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:hazard-deck",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
       "from": "route:index",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
@@ -6343,12 +6228,6 @@
       "from": "route:(tabs)/character",
       "to": "route:hazard",
       "file": "axiomancer-mobile/components/HazardGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:(tabs)/character",
-      "to": "route:hazard-deck",
-      "file": "axiomancer-mobile/app/(tabs)/character/index.tsx"
     },
     {
       "kind": "flow",
@@ -8021,78 +7900,6 @@
     {
       "kind": "flow",
       "from": "route:hazard",
-      "to": "route:village",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:blacksmith",
-      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:cache",
-      "file": "axiomancer-mobile/components/CacheGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:combat-encounter",
-      "file": "axiomancer-mobile/components/CombatGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:cutscene",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:dialogue",
-      "file": "axiomancer-mobile/components/EventGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:hazard",
-      "file": "axiomancer-mobile/components/HazardGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:item-reward",
-      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:labyrinth",
-      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:quest",
-      "file": "axiomancer-mobile/components/QuestGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:rest",
-      "file": "axiomancer-mobile/components/RestGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
-      "to": "route:travel",
-      "file": "axiomancer-mobile/components/TravelGate.tsx"
-    },
-    {
-      "kind": "flow",
-      "from": "route:hazard-deck",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
