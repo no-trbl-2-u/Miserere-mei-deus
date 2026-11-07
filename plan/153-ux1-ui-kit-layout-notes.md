@@ -87,7 +87,7 @@
 
 Measure: 6 open · 1 closed · next A8
 
-- [ ] **153.1** The main menu says only its three words · S · closes A1 · needs 152.6 · alias: UX1a
+- [ ] **153.1** The main menu says only its three words · S · closes A1 · needs — · alias: UX1a
 - [ ] **153.2** The quest tracker steps aside, and loses its label and a lone 0/1 · S · closes A2 · needs — · alias: UX1b
 - [ ] **153.3** The tab bar is bigger icons, no words · S · closes A3 · needs — · alias: UX1c
 - [ ] **153.4** No "A FOE RISES"; the dock trades its circles for room · M · closes A4 · needs — · alias: UX1d

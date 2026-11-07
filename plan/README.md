@@ -38,7 +38,6 @@ needs are done):
 
 - **152.4** · UK1d: the Spoils on vellum, inked to read (T's mixer picks, `/plot`, 2026-11-06)
 - **152.5** · UK1e: Self in brass; the Ledger and Satchel pieces (T's mixer picks, `/plot`, 2026-11-06)
-- **152.6** · UK1f: the main menu and Settings in brass (T's mixer picks, `/plot`, 2026-11-06)
 
 - **153.1** · UX1a: the main menu says only its three words (T's mixer notes, `/plot`, 2026-11-06)
 - **153.2** · UX1b: the quest tracker steps aside, and loses its label and a lone 0/1 (T's mixer notes, `/plot`, 2026-11-06)
@@ -130,7 +129,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 153 | The kit mixer's layout notes: fewer words, a calmer map, no burden, and a Deck to pick | [153-ux1-ui-kit-layout-notes.md](153-ux1-ui-kit-layout-notes.md) | planned | 6 left |
-| 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 3 left |
+| 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 2 left |
 | 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 3 left |
 
 ## How the loop reads this folder
