@@ -67,13 +67,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
-### [ ] [tests] EN3b's Breakwater roster recast left eight mobile suites pinned to the old foes: 25 red tests in `verify-mechanics` (fix-ci, verify-mechanics run 42381271806, PR #1433 on `loop/next-157.2`, 2026-11-07)
-- category: tests
-- impact: 8
-- ease: 4
-- detail: run 42381271806 (`verify-mechanics`, job "mechanics + affected consumers", head `4d6745ca`) fails in `axiomancer-mobile`'s `npm run verify` jest step: 8 suites, 25 tests, all asserting the pre-EN3b Chapter 1 roster (commit `de0628add` and the PR's `content.ts` / `enemy.library.ts` changes: `bw-w2` Float-Eye to Quay-Crab, `bw-w3` Gallows Crow to Coralback, `bw-h2` Crane-Hook to Quay-Crab, `bw-t1` Lamprey-Knot to Coralback, `bw-t2` Green Jelly to Saltwick Swarm, `bw-t3` Curfew-Ringer to Brine-Widow, `bw-l1` Wreck-Picker to Bilge-Stalker, `bw-d1` Smokehouse Gutter to Net-Mender, `bw-w5` Toll-Keeper to Wreckmaster, `ACT1_POOL` to the six normals). Failing suites: `state/presenters/__tests__/enemy-words-board.engine.test.ts` (node-to-foe table, plus WARD-only telegraphs at `bw-w2`/`bw-w3`), `keep-causeway-board.engine.test.ts` (Toll-Keeper walk), `telegraph-kind.engine.test.ts` (DANGER at `bw-w2`, Toll ATTACK), `rest-elite-return.ER1.test.ts` (A5 return lines), `state/e2e/elite-respawn.ER1.test.tsx`, `CombatEncounterPanel.mercy-check.test.tsx` and `CombatEncounterPanel.endcombat-routing.test.ts` (codex `float-eye`), `CombatBoard.refused-rune.test.tsx` (`/float-eye/` at `bw-w2`). `main` at `24baa774c` is green on `verify-mobile` and `verify-mechanics`, so this is the PR's, not `main`'s. The 157.2 spec's footgun names only `DebugTriggerEncounter`; it does not name these suites.
-- next: re-point each assertion at its survivor on the new roster, or move a cut foe's mechanic test (Toll walk, Float-Eye WARD telegraph, DANGER naming) onto a fixture that builds the foe directly instead of through a node table. The foe-specific mechanics need a design call per test (which survivor carries a WARD-only move or a DANGER), so this is not a one-line CI patch. Run `npm run verify -w axiomancer-mobile` and `npm run verify -w axiomancer-mechanics` on the branch after the re-pin.
-
 ### [ ] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06)
 - category: content
 - impact: 9
