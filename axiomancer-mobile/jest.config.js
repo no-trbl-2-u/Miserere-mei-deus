@@ -12,7 +12,7 @@ module.exports = {
         // axiomancer-mechanics is sibling source now (mapped below), not a
         // node_modules dep; sibling source is transformed by default.
         'node_modules/(?!(\\.pnpm|' +
-            'expo|expo-.*|@expo/.*|' +
+            'expo|expo-.*|@expo/.*|@expo-google-fonts/.*|' +
             'react-native|react-native-.*|@react-native/.*|' +
             'react-native-reanimated|' +
             '@react-navigation/.*' +

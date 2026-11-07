@@ -11,6 +11,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { makeStyles } from '@/theme/runtime';
 import type { CombatIntentVM } from '@/state/presenters/combat-encounter.engine';
 import {
@@ -25,6 +27,8 @@ function branchA11y(branch: NonNullable<CombatIntentVM['branch']>): string {
 
 export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPress?: () => void }) {
     const styles = useStyles();
+    // The badge's look is the place's, never hard-coded here.
+    const brass = lookOf('S-03') === 'brass';
     // A `phases` foe's five kinds draw as one large icon with no name, pill or
     // number (phase EN2b). The label names the kind only, so a DANGER the
     // player has not seen is not spoiled for a screen reader either.
@@ -77,11 +81,22 @@ export function IntentIcon({ intent, onPress }: { intent: CombatIntentVM; onPres
             accessibilityLabel={a11y}
             onTouchEnd={onPress}
         >
-            <View style={[styles.disc, { borderColor: intent.color, backgroundColor: `${intent.color}2e` }]}>
+            <View
+                style={[styles.disc, brass ? styles.discBare : { borderColor: intent.color, backgroundColor: `${intent.color}2e` }]}
+                testID="combat-intent-ring"
+            >
+                {/* The ring carries the threat's kind, not decoration: oxblood
+                  * for a hit, brass for a guard or a buff — today's colour
+                  * split, in the kit's two rings (T, 2026-11-06). */}
+                {brass ? <KitBackdrop piece={intent.damage > 0 ? 'combat-intent-oxblood' : 'combat-intent-brass'} /> : null}
                 <Text style={[styles.icon, { color: intent.color, textShadowColor: intent.color }]}>{intent.icon}</Text>
             </View>
             {(intent.damage > 0 || intent.debuffs || intent.branch) && (
-                <View style={styles.pill}>
+                <View style={[styles.pill, brass ? styles.pillBare : null]}>
+                    {/* 0.12 keeps the plate's end ornaments inside the pill's
+                      * own 5pt side padding, so the art fits the box rather
+                      * than the box growing to fit the art. */}
+                    {brass ? <KitBackdrop piece="combat-badge" scale={0.12} /> : null}
                     {/* A minus, not a heart. This pill is the ENEMY's telegraph:
                       * the number is damage it will deal to the player. ♥ means
                       * only the player's VITAE; a minus means something is
@@ -112,6 +127,15 @@ const useStyles = makeStyles((AXM) => ({
         width: 36, height: 36, borderRadius: 18, borderWidth: 2,
         alignItems: 'center', justifyContent: 'center',
     },
+    // The ring art replaces the drawn ring and tinted disc. The border's WIDTH
+    // stays so the badge measures the same 36 either way; only its colour goes,
+    // and each side's own colour goes with it, since a surviving
+    // `borderTopColor` would still rule a line across the art.
+    discBare: {
+        borderColor: 'transparent', backgroundColor: 'transparent',
+        borderTopColor: 'transparent', borderRightColor: 'transparent',
+        borderBottomColor: 'transparent', borderLeftColor: 'transparent',
+    },
     // The telegraph kinds: 56 against the badge's 36, over half again.
     bigDisc: {
         width: 56, height: 56, borderRadius: 28, borderWidth: 3,
@@ -123,6 +147,14 @@ const useStyles = makeStyles((AXM) => ({
         flexDirection: 'row', alignItems: 'center', gap: 2, marginTop: -6,
         backgroundColor: 'rgba(0,0,0,0.88)', borderRadius: 7, paddingHorizontal: 5, paddingVertical: 1,
         borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)',
+    },
+    // Same bargain as `discBare`: the 1pt border's width is kept (the pill has
+    // no explicit size, so dropping it would shrink the box by 2pt each way)
+    // and only the ink is cleared.
+    pillBare: {
+        backgroundColor: 'transparent', borderColor: 'transparent',
+        borderTopColor: 'transparent', borderRightColor: 'transparent',
+        borderBottomColor: 'transparent', borderLeftColor: 'transparent',
     },
     pillText: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.3 },
     debuffMark: { fontFamily: FONTS.sans, fontSize: 10, color: HUE.tickPurple },

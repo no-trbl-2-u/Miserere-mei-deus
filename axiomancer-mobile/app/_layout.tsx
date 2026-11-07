@@ -11,6 +11,7 @@ import { TooltipProvider } from '@/components/tooltip/TooltipProvider';
 import { CombatModeProvider } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { FontProvider } from '@/hooks/useFontFallbacks';
+import { CORE_FACES, SECONDARY_FACES } from '@/theme/fontFaces';
 // Map event pools are authored and self-registered by the engine
 // (axiomancer-mechanics → World/MapEvents/content); the client registers
 // none of its own.
@@ -70,15 +71,8 @@ import DevRoomGallery from './devart/rooms';
 import DevHazardPuzzles from './devpuzzle/index';
 import DevFrameHarness from './devframes/index';
 
-// Vendored locally (OFL-licensed .ttf files, sourced under
-// assets/fonts/LICENSES/). Keys are the exact fontFamily strings
-// `theme/axm.ts` references; `expo-font`'s loader keys a font by
-// this object's property name, not the file name.
-const PirataOne_400Regular = require('@/assets/fonts/PirataOne_400Regular.ttf');
-const IMFellEnglish_400Regular = require('@/assets/fonts/IMFellEnglish_400Regular.ttf');
-const IMFellEnglish_400Regular_Italic = require('@/assets/fonts/IMFellEnglish_400Regular_Italic.ttf');
-const BebasNeue_400Regular = require('@/assets/fonts/BebasNeue_400Regular.ttf');
-const JetBrainsMono_400Regular = require('@/assets/fonts/JetBrainsMono_400Regular.ttf');
+// Faces come from the @expo-google-fonts packages, registered in theme/fontFaces.ts under the exact
+// fontFamily strings theme/axm.ts references. The old vendored faces (assets/fonts/) are no longer loaded.
 
 SplashScreen.preventAutoHideAsync();
 
@@ -142,11 +136,7 @@ const DevSkipBridge = lazy(() =>
 
 function RootLayout() {
   // Load core fonts only - reduces initial font bundle by ~40%
-  const [fontsLoaded] = useFonts({
-    PirataOne_400Regular,
-    IMFellEnglish_400Regular,
-    IMFellEnglish_400Regular_Italic,
-  });
+  const [fontsLoaded] = useFonts(CORE_FACES);
   
   // Asynchronously load decorative fonts after app starts
   const [secondaryFontsLoaded, setSecondaryFontsLoaded] = useState(false);
@@ -206,10 +196,7 @@ function RootLayout() {
 
       // Load decorative fonts asynchronously after startup
       import('expo-font').then(({ loadAsync }) => {
-        loadAsync({
-          BebasNeue_400Regular,
-          JetBrainsMono_400Regular,
-        }).then(() => {
+        loadAsync(SECONDARY_FACES).then(() => {
           setSecondaryFontsLoaded(true);
           markWebReady();
         }).catch((err) => {
