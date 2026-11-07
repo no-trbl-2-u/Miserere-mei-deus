@@ -142,7 +142,7 @@ export default function CutsceneScreen() {
                 testID="cutscene-advance"
             >
                 {/* The centred omen: bare text on the background, no border or
-                    panel (UK2d). A soft text shadow keeps it legible over art. */}
+                    panel. A soft text shadow keeps it legible over art. */}
                 <Animated.View style={[styles.plate, { opacity }]} testID="cutscene-plate">
                     <Text style={styles.eyebrow}>▶ OMEN</Text>
                     <Text style={styles.line} testID={`cutscene-line-${index}`}>
