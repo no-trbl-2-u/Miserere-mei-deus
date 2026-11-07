@@ -48,6 +48,7 @@ import {
     type GameState,
 } from '@mechanics';
 
+import { cardArtFor } from '@/assets/images/cards';
 import {
     RARITY_COLOR,
     RARITY_LABEL,
@@ -73,11 +74,30 @@ export interface DeckRarityVM {
     color: string;
 }
 
+/**
+ * One piece of a printed line. 155.1 hands the component text runs only;
+ * 155.4 adds a keyword run (`{ kind: 'keyword'; word; gloss; minor }`) to this
+ * union and splits lines with `keywordsInText`. The component renders runs in
+ * order and assembles no card text.
+ */
+export type DeckRunVM = { kind: 'text'; text: string };
+
+/** One printed line of the open card: an optional shorthand label, then runs. */
+export interface DeckLineVM {
+    /** '◇ NO DIE' / '◆ +DIE'; null on the outcome line. */
+    label: string | null;
+    runs: DeckRunVM[];
+}
+
 /** One distinct card in the run deck, with how many copies are carried. */
 export interface DeckCardVM {
     /** Engine card id. */
     cardId: string;
     name: string;
+    /** The card's painting (required asset id; the fallback when unmapped). */
+    art: number;
+    /** Outcome line, then the two play lines, as label + runs. */
+    lines: DeckLineVM[];
     /** Copies of this card in the deck the next fight deals. */
     count: number;
     /** Colour identity (heart / body / mind / any). */
@@ -99,7 +119,10 @@ export interface DeckCardVM {
     stacksText: string | null;
     /** Keyword ledger — FIRST in the detail, per finding 5. */
     keywords: { name: string; def: string; minor: boolean }[];
-    /** Authored prose (`Card.description`). The reason this screen exists. */
+    /**
+     * Authored prose (`Card.description`). No screen draws it since the Reader
+     * (spec 155); kept here so a later screen can pick it up without a data change.
+     */
     flavor: string | null;
     /** Screen-reader sentence for the tile (rarity named, never colour-only). */
     a11yLabel: string;
@@ -266,9 +289,19 @@ function deckCardVM(cardId: string, count: number): DeckCardVM | null {
     const cardType = projected.cardType ?? sourceCard.cardType;
     const copies = count > 1 ? `, ${count} copies` : '';
 
+    const lines: DeckLineVM[] = [
+        { label: null, runs: [{ kind: 'text', text: detail.outcomeLine }] },
+        { label: FREE_LINE_LABEL, runs: [{ kind: 'text', text: detail.freePill }] },
+    ];
+    if (detail.diePaidLine !== null) {
+        lines.push({ label: PAID_LINE_LABEL, runs: [{ kind: 'text', text: detail.diePaidLine }] });
+    }
+
     return {
         cardId,
         name: projected.name,
+        art: cardArtFor(cardId),
+        lines,
         count,
         stance,
         stanceLabel,
