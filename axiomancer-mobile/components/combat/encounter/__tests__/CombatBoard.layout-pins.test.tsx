@@ -112,6 +112,10 @@ describe('UK1c — a brass place keeps the box it has today', () => {
         // the disc is the element T named when he asked for intent to stay put.
         pin('combat-intent-ring', { width: 36, height: 36, borderRadius: 18, borderWidth: 2 });
         pin('combat-intent', { alignItems: 'center' });
+        // The swap really happened: the drawn ring and its tint are cleared so
+        // the kit's ring is what shows, while the 2pt width above still holds
+        // the box at 36. Clearing the colour without the width would shrink it.
+        pin('combat-intent-ring', { borderColor: 'transparent', backgroundColor: 'transparent' });
         // The block the badge sits in, and the HUD that positions it: the
         // badge is in the upper right because of these, so they are pinned too.
         pin('combat-hud-intent', { alignItems: 'flex-start', gap: 6, flexShrink: 1 });
@@ -140,11 +144,18 @@ describe('UK1c — a brass place keeps the box it has today', () => {
         });
         pin('combat-rail-vitae-col', { flex: 1, minWidth: 0, maxWidth: 360, gap: 4 });
         pin('combat-piles', { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 });
+        // The phase ledger's row, and the per-mark wrapper that keeps each mark
+        // painted above the dock's backdrop on RN-web at exactly its own size.
+        pin('combat-ledger', { flexDirection: 'row', alignItems: 'center', gap: 3 });
+        expect(DOCK_LEDGER_MARK).toBe(14);
         // The dock's exported geometry, by name: the brass frame is drawn at
         // its own scale precisely so none of these has to grow for it.
         expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([56, 8, 10, 10]);
         expect([END_BTN_W, END_BTN_H, DOCK_VITAE_MAX_WIDTH]).toEqual([116, 56, 360]);
         expect(dockMinHeight(INSETS.bottom)).toBe(106);
+        // The dock's drawn fill and top rule are cleared for the frame, but the
+        // rule's WIDTH stays: it counts toward the dock's height.
+        pin('combat-rail', { backgroundColor: 'transparent', borderTopColor: 'transparent', borderTopWidth: 1 });
     });
 
     it('the player VITAE bar stays 8pt tall and its fill still spans the live share', () => {
@@ -217,8 +228,8 @@ describe('UK1c — no kit piece goes on a card in combat', () => {
         expect(screen.getAllByTestId('combat-card-face-name').length).toBeGreaterThan(0);
         const drawn = screen.getByTestId('combat-hand')
             .findAll(() => true)
-            .map((node) => (node.props as { source?: unknown })?.source)
-            .filter((src) => src !== undefined && sources.has(src));
+            .map((node: { props?: { source?: unknown } }) => node.props?.source)
+            .filter((src: unknown) => src !== undefined && sources.has(src));
         expect(drawn).toEqual([]);
     });
 });

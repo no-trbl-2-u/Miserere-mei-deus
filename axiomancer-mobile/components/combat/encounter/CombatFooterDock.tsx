@@ -214,7 +214,17 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                     accessibilityHint="Tap to read what the marks mean"
                     hitSlop={4}
                 >
-                    {vm.ledger.map((m, i) => <LedgerMark key={i} kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />)}
+                    {/* Each mark is wrapped in a View. `LedgerMark` is a bare
+                      * `Svg`, and on RN-web a bare svg is not a positioned box,
+                      * so the dock's absolutely positioned backdrop paints over
+                      * it and the marks vanish. The wrapper is the mark's own
+                      * size, so the row measures exactly as it did. The marks
+                      * themselves are untouched. */}
+                    {vm.ledger.map((m, i) => (
+                        <View key={i} style={styles.ledgerMark}>
+                            <LedgerMark kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />
+                        </View>
+                    ))}
                 </Pressable>
             </View>
             <EndPhaseButton onPress={onEndPhase} consequence={endConsequence} disabled={resolving} />
@@ -255,6 +265,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     barFill: { height: '100%' },
     ledger: { flexDirection: 'row', gap: DOCK_LEDGER_GAP, alignItems: 'center' },
+    ledgerMark: { width: DOCK_LEDGER_MARK, height: DOCK_LEDGER_MARK },
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
     pileGlyphText: { fontFamily: FONTS.sans, fontSize: 7, color: AXM.ash, lineHeight: 9 },
