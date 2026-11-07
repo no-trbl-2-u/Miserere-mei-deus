@@ -317,9 +317,11 @@ function single(nodeId: string, payload: MapEventPayload): MapEventPool {
  * every foe under level 10; a zone's two foes alternate across its nodes).
  * Every `fight` node has a row; the sea cave's elite draws are in
  * `BW_ELITE_DRAWS`. EN3b (2026-11-07) recast the chapter: six new faces hold
- * six cut foes' nodes at their levels, and the nodes of the four benched with
- * no face (Float-Eye, Gallows Crow, Curfew-Ringer, Smokehouse Gutter) are
- * refilled with duplicates of the thematic keepers. The ten foes cut from the
+ * six cut foes' nodes at their levels, and the five nodes of the four benched
+ * with no face (Float-Eye, Gallows Crow, Curfew-Ringer, Smokehouse Gutter) are
+ * refilled by duplication: `bw-t3` takes a Brine-Widow and `bw-d1` a
+ * Net-Mender (keepers), while `bw-w2` and `bw-m1` take a Quay-Crab and
+ * `bw-w3` a Coralback (repeats of new recast faces). The ten foes cut from the
  * chapter stay in the library but are placed in none of these tables (T,
  * 2026-11-06: "they're just not in chapter 1").
  */

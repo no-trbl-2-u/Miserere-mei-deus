@@ -1392,10 +1392,14 @@ export const EnemyLibrary = [
  * Ten of Chapter 1's seventeen foes are deliberately out of the chapter (T,
  * 2026-11-06: "they're just not in chapter 1"): Float-Eye, Gallows Crow,
  * Crane-Hook, Lamprey-Knot, Green Jelly, Curfew-Ringer, Wreck-Picker,
- * Smokehouse Gutter, Toll-Keeper and Death Beholder. They stay in the
- * library with their art and frame sets, drawn by no Breakwater node and no
- * wandering pool, so `orphanEnemies` reporting them as unpooled is intent,
- * not a defect.
+ * Smokehouse Gutter, Toll-Keeper and Death Beholder. All ten stay in the
+ * library with their art and frame sets and are drawn by no Breakwater node
+ * and no wandering pool. Seven of them (Gallows Crow, Crane-Hook,
+ * Lamprey-Knot, Curfew-Ringer, Wreck-Picker, Smokehouse Gutter, Toll-Keeper)
+ * are staged by no map at all, so `orphanEnemies` reporting those seven as
+ * unpooled is intent, not a defect. Float-Eye, Green Jelly and Death Beholder
+ * are out of Chapter 1 only: the Charcoal Wood, Beacon Crags and Lantern Deep
+ * still stage them, so they are live content and must not be deleted.
  */
 const ACT1_POOL = [QuayCrab, NetMender, Coralback, BrineWidow, SaltwickSwarm, BilgeStalker];
 
