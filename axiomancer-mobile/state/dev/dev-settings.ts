@@ -11,6 +11,12 @@
  * - `forceMercyCheck`: every normal foe asks spare or finish as it falls, so the
  *   prompt can be seen without waiting on the chance. Off by default.
  *
+ * - `wildsBlackBand`: the Wilds' status card sits on a solid black band, to
+ *   quiet the map's lines (T, 2026-11-06, W-01). On by default: T chose the
+ *   band as what ships. Off, the map runs up under the card as in the kit
+ *   mixer, so T can compare the two. Not a debugging aid, so a production
+ *   build reads the default and never shows the switch.
+ *
  * Same tiny external-store shape as `state/settings.ts`, so the poster in
  * `lib/playLog.ts` reads it synchronously and the dev row subscribes with
  * `useDevSetting`.
@@ -29,11 +35,13 @@ import { getLogger } from '@mechanics';
 export interface DevSettings {
     readonly playLogging: boolean;
     readonly forceMercyCheck: boolean;
+    readonly wildsBlackBand: boolean;
 }
 
 export const DEFAULT_DEV_SETTINGS: DevSettings = Object.freeze({
     playLogging: true,
     forceMercyCheck: false,
+    wildsBlackBand: true,
 });
 
 /** Its own key, never the player settings key. `:v1` so a shape change can migrate. */
@@ -45,6 +53,7 @@ export function sanitizeDevSettings(raw: unknown): DevSettings {
     return {
         playLogging: typeof r.playLogging === 'boolean' ? r.playLogging : DEFAULT_DEV_SETTINGS.playLogging,
         forceMercyCheck: typeof r.forceMercyCheck === 'boolean' ? r.forceMercyCheck : DEFAULT_DEV_SETTINGS.forceMercyCheck,
+        wildsBlackBand: typeof r.wildsBlackBand === 'boolean' ? r.wildsBlackBand : DEFAULT_DEV_SETTINGS.wildsBlackBand,
     };
 }
 
@@ -79,7 +88,11 @@ export function createDevSettingsStore(options: DevSettingsStoreOptions = {}): D
         get: () => current,
         set: (patch) => {
             const next = sanitizeDevSettings({ ...current, ...patch });
-            if (next.playLogging === current.playLogging && next.forceMercyCheck === current.forceMercyCheck) return;
+            if (
+                next.playLogging === current.playLogging
+                && next.forceMercyCheck === current.forceMercyCheck
+                && next.wildsBlackBand === current.wildsBlackBand
+            ) return;
             current = next;
             emit();
             storage.setItem(DEV_SETTINGS_STORAGE_KEY, JSON.stringify(current)).catch((err: unknown) => {

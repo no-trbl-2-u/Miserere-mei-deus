@@ -118,8 +118,13 @@ export const HUE = {
     artWaterLine: '#27353a',
     artMoss: '#10150f',
 
-    // Ink on parchment (UK1e, spec 152.5): the vellum looks' fixed inks
+    // Ink on vellum (the parchment kit pieces): each measures 4.5:1 or more
+    // on the darkest parchment tone, `vellumShadow`.
     vellumInk: '#2b1f14',
-    vellumOxblood: '#7a1f14',
+    vellumInkSoft: '#4a3624',
+    vellumOxblood: '#6e1a10',
+    vellumVitaeRed: '#8a2418',
+    vellumShadow: '#c0a47d',
+    // Kept from this branch (UK1e, spec 152.5): the vellum looks' quiet ink
     vellumInkQuiet: '#4a3826',
 } as const;

@@ -78,8 +78,6 @@
 
 ## Acceptance
 
-- **A2** The Wilds' status card, node panel, BACK / TRAVEL HERE and quest tracker are on vellum with inked text. The status card's contents sit inside its oval at 360 and 390 widths, and the top of the Wilds ships with and without a black band behind it, switched by a dev toggle. The map node marks are unchanged.
-- **A3** The bottom tab bar sits on the vellum dock. The selected tab is marked only by oxblood ink, with nothing drawn behind it.
 - **A4** In the fight:
   - ENTER COMBAT / WITHDRAW, the intent badge, the conviction chip, the player dock and the player VITAE bar wear brass.
   - The name rail, momentum chip, END and portrait ring are unchanged.
@@ -93,15 +91,14 @@
 ## Open questions
 
 1. When should this be built? Default: the Asap lane, after the entries already there, so T sees it at the MVP demo on Nov 16. Or: table order. [T to confirm #1]
-2. Which top of the Wilds ships by default while T compares the two? Default: no black band, which is closest to the mixer. Or: the black band. [T to confirm #2]
+2. **Answered** (T, 2026-11-06): the black band ships as the default. Both tops stay built behind the dev toggle (without the band the map runs up under the status card, as in the mixer).
 3. **Answered** (T, 2026-11-06): gold and amber accents on parchment become oxblood red, as in the mixer, not the dark-brown body ink.
 4. **Answered** (T, 2026-11-06): the intent badge uses the oxblood ring for an attack and the brass ring for anything else (guard, buff), matching today's colour split. Both rings are converted and registered (152.1).
 
 ## Chunks
 
-Measure: 7 open · 1 closed · next A9
+Measure: 5 open · 3 closed · next A9
 
-- [ ] **152.2** The Wilds on vellum, and the tab bar · M · closes A2, A3 · needs — · alias: UK1b
 - [ ] **152.3** The fight in brass where T kept it, layout held · M · closes A4 · needs — · alias: UK1c
 - [ ] **152.4** The Spoils on vellum, inked to read · S · closes A5 · needs — · alias: UK1d
 - [ ] **152.5** Self in brass; the Ledger and Satchel pieces · M · closes A6, A7 · needs — · alias: UK1e
