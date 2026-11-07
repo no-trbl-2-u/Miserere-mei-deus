@@ -16,7 +16,7 @@ import {
     QUEST_LOCKED_LINE,
     questCardLine,
     questCardPickLine,
-    questProgressLine,
+    questCounterText,
     questShillingsLine,
     questStepEyebrow,
     questXpLine,
@@ -25,7 +25,7 @@ import {
 export interface QuestObjectiveVM {
     id: string;
     description: string;
-    /** "1 of 2". */
+    /** "1/2"; '' for a single-step objective (it has no counter). */
     progress: string;
     done: boolean;
 }
@@ -34,8 +34,6 @@ export interface QuestStepVM {
     step: number;
     name: string;
     objectives: readonly QuestObjectiveVM[];
-    /** One line per reward, in the order the engine pays them. */
-    rewards: readonly string[];
     /** Where the step stands in the log. */
     status: 'unaccepted' | 'active' | 'ready' | 'completed';
 }
@@ -106,15 +104,6 @@ export function questRewardLine(reward: Reward): string | null {
     return reward.name;
 }
 
-function rewardLines(quest: Quest): string[] {
-    const lines: string[] = [];
-    for (const reward of [quest.reward, ...(quest.rewards ?? [])]) {
-        const line = questRewardLine(reward);
-        if (line) lines.push(line);
-    }
-    return lines;
-}
-
 function stepVM(
     quest: Quest,
     step: number,
@@ -126,10 +115,9 @@ function stepVM(
         objectives: quest.objectives.map(o => ({
             id: o.id,
             description: objectiveText(o),
-            progress: questProgressLine(o.currentCount, o.requiredCount),
+            progress: questCounterText(o.currentCount, o.requiredCount),
             done: o.currentCount >= o.requiredCount,
         })),
-        rewards: rewardLines(quest),
         status,
     };
 }
