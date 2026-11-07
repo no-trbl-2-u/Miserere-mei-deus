@@ -94,6 +94,7 @@ describe('DeckScreen: the reader', () => {
 
     it('draws a printed keyword as a pressable word in the open card, not in a ledger', () => {
         mount([BLOW, WARD]);
+        fireEvent.press(screen.getByTestId('deck-tab-skill'));
         fireEvent.press(screen.getByTestId(`deck-card-${WARD}`));
 
         expect(screen.getByTestId('deck-keyword-Guard').props.accessibilityLabel).toBe('GUARD');
