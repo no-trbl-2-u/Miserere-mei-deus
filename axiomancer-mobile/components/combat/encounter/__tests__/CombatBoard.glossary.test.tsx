@@ -157,12 +157,9 @@ describe('A5 — the footer dock', () => {
         expect(onGloss).toHaveBeenCalledWith(['piles'], { deck: vm.deckCount, discard: vm.discardCount });
     });
 
-    it('the phase ledger opens PHASE LEDGER with its tally', () => {
-        const { vm, onGloss } = renderBoard();
-        fireEvent.press(screen.getByTestId('combat-ledger'));
-        const tally = { clear: 0, overwhelmed: 0, pending: 0 };
-        for (const m of vm.ledger) tally[m] += 1;
-        expect(onGloss).toHaveBeenCalledWith(['ledger'], { ledger: tally });
+    it('there is no phase ledger on the dock to open (153.4)', () => {
+        renderBoard();
+        expect(screen.queryByTestId('combat-ledger')).toBeNull();
     });
 });
 
@@ -182,7 +179,6 @@ describe('A9 — nothing opens over a drag or a resolving phase', () => {
         const { dice, onGloss } = renderBoard({ drag: noopDrag({ type: 'die', dieId: 'g-mana', die: {} }) });
         fireEvent.press(screen.getByTestId('combat-conviction'));
         fireEvent.press(screen.getByTestId('combat-piles'));
-        fireEvent.press(screen.getByTestId('combat-ledger'));
         fireEvent.press(screen.getByTestId('combat-globals-label'));
         await holdDie(dice.mana.id);
         expect(onGloss).not.toHaveBeenCalled();
@@ -212,7 +208,7 @@ describe('A3-A7, A9 — the panel shows each gloss in the shared plaque', () => 
         act(() => { jest.advanceTimersByTime(5000); });
     }
 
-    it('Conviction, the piles and the ledger open in the plaque and close on a backdrop tap', () => {
+    it('Conviction and the piles open in the plaque and close on a backdrop tap', () => {
         jest.useFakeTimers();
         try {
             mountPanel();
@@ -229,10 +225,6 @@ describe('A3-A7, A9 — the panel shows each gloss in the shared plaque', () => 
             expect(screen.getByTestId('combat-gloss-title').props.children).toBe('DECK & DISCARD');
             expect(screen.getByTestId('combat-gloss-live').props.children).toMatch(/^Deck \d+, discard \d+\.$/);
             fireEvent.press(screen.getByTestId('combat-gloss'));
-
-            fireEvent.press(screen.getByTestId('combat-ledger'));
-            expect(screen.getByTestId('combat-gloss-title').props.children).toBe('PHASE LEDGER');
-            expect(screen.getByTestId('combat-gloss-live').props.children).toMatch(/cleared, \d+ overwhelmed, \d+ ahead\.$/);
         } finally {
             jest.useRealTimers();
         }

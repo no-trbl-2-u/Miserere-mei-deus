@@ -17,15 +17,26 @@
  * Nothing here reads the baseline from disk at run time. The capture ran
  * outside the suite; the pins are literals.
  *
- * WHOEVER CHANGES THE FIGHT'S LAYOUT ON PURPOSE EDITS THIS FILE. The dock's
- * phase-ledger circles and the reveal's "A FOE RISES" line are both due to
- * change, and the pins for the dock and its ledger row are expected to move
- * with them. Re-measure, do not guess: render the board and read the boxes.
+ * WHOEVER CHANGES THE FIGHT'S LAYOUT ON PURPOSE EDITS THIS FILE.
+ *
+ * 153.4 (UX1d) DID, KNOWINGLY, and these are the boxes it moved:
+ *   - the dock's phase-ledger row is gone (T: off the board entirely), so its
+ *     pin is now an absence;
+ *   - END narrows 116 -> 84 (its height, 56, and its face are untouched);
+ *   - the dock grows: paddingTop 8 -> 18 and paddingHorizontal 10 -> 26, so
+ *     minHeight 106 -> 126 and paddingBottom 42 -> 52. The numbers are not
+ *     taste: 18pt is what clears the brass frame's 17.4pt top rail and 26pt
+ *     its 25.3pt end caps, so the art reads instead of running under the
+ *     cells. The 32pt END gave up pays for the wider side padding, so the
+ *     VITAE column is the width it was;
+ *   - the reveal lost its kicker line, so the column's first child is now
+ *     the foe's portrait (the reveal has no pin here; its test is below).
+ * Re-measure, do not guess: render the board and read the boxes.
  */
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { render, screen } from '@testing-library/react-native';
+import { render, screen, act, fireEvent } from '@testing-library/react-native';
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
@@ -33,9 +44,11 @@ import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, SIG_CONVICTION_CHIP_H, SIG_RUNE_SIZE, SIG_COLUMN_GAP, type DragController } from '@/components/combat/encounter/CombatBoard';
 import {
     DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP, END_BTN_W, END_BTN_H,
-    VITAE_BAR_H, DOCK_LEDGER_MARK, DOCK_VITAE_MAX_WIDTH, dockMinHeight,
+    VITAE_BAR_H, DOCK_VITAE_MAX_WIDTH, dockMinHeight,
 } from '@/components/combat/encounter/CombatFooterDock';
-import { KIT } from '@/assets/images/experience/kit';
+import { KIT, type KitPiece } from '@/assets/images/experience/kit';
+import { KitBackdrop, ornamentInsets } from '@/components/experience/KitBackdrop';
+import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
 import { LOOKS } from '@/components/experience/looks';
 import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
@@ -134,25 +147,23 @@ describe('UK1c — a brass place keeps the box it has today', () => {
         expect(SIG_COLUMN_GAP).toBe(6);
     });
 
-    it('the player dock keeps its three cells where they are', () => {
+    it('the player dock keeps its three cells in order', () => {
         renderBoard();
         pin('combat-rail', {
             flexDirection: 'row', alignItems: 'center',
-            gap: 10, paddingHorizontal: 10, paddingTop: 8,
+            gap: 10, paddingHorizontal: 26, paddingTop: 18,
             // The bottom inset plus the dock's own padding.
-            paddingBottom: 42, minHeight: 106,
+            paddingBottom: 52, minHeight: 126,
         });
         pin('combat-rail-vitae-col', { flex: 1, minWidth: 0, maxWidth: 360, gap: 4 });
         pin('combat-piles', { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 });
-        // The phase ledger's row, and the per-mark wrapper that keeps each mark
-        // painted above the dock's backdrop on RN-web at exactly its own size.
-        pin('combat-ledger', { flexDirection: 'row', alignItems: 'center', gap: 3 });
-        expect(DOCK_LEDGER_MARK).toBe(14);
-        // The dock's exported geometry, by name: the brass frame is drawn at
-        // its own scale precisely so none of these has to grow for it.
-        expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([56, 8, 10, 10]);
-        expect([END_BTN_W, END_BTN_H, DOCK_VITAE_MAX_WIDTH]).toEqual([116, 56, 360]);
-        expect(dockMinHeight(INSETS.bottom)).toBe(106);
+        // The phase ledger's row is gone, with its marks and gloss target.
+        expect(screen.queryByTestId('combat-ledger')).toBeNull();
+        // The dock's exported geometry, by name (153.4 moved the padding and
+        // END's width, see the header).
+        expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([56, 18, 26, 10]);
+        expect([END_BTN_W, END_BTN_H, DOCK_VITAE_MAX_WIDTH]).toEqual([84, 56, 360]);
+        expect(dockMinHeight(INSETS.bottom)).toBe(126);
         // The dock's drawn fill and top rule are cleared for the frame, but the
         // rule's WIDTH stays: it counts toward the dock's height.
         pin('combat-rail', { backgroundColor: 'transparent', borderTopColor: 'transparent', borderTopWidth: 1 });
@@ -185,10 +196,10 @@ describe('UK1c — a place T kept plain is not re-skinned', () => {
 
     it('END keeps its drawn button, borders and all', () => {
         renderBoard();
-        pin('combat-end-wrap', { width: 116, height: 56, marginLeft: 'auto' });
+        pin('combat-end-wrap', { width: 84, height: 56, marginLeft: 'auto' });
         // Still a drawn button: a kit plate would have cleared these.
         const end = flat('combat-end-phase');
-        expect(end).toMatchObject({ width: 116, height: 56, borderRadius: 10, borderWidth: 2.5 });
+        expect(end).toMatchObject({ width: 84, height: 56, borderRadius: 10, borderWidth: 2.5 });
         expect(end.backgroundColor).toBeTruthy();
         expect(end.borderColor).not.toBe('transparent');
     });
@@ -231,5 +242,129 @@ describe('UK1c — no kit piece goes on a card in combat', () => {
             .map((node: { props?: { source?: unknown } }) => node.props?.source)
             .filter((src: unknown) => src !== undefined && sources.has(src));
         expect(drawn).toEqual([]);
+    });
+});
+
+// ── The kit's pieces: each place draws its own, and fits its box ──────────
+
+/** Every kit piece drawn anywhere under `node`, by key, found by image source. */
+function piecesUnder(node: { findAll: (p: () => boolean) => Array<{ props?: { source?: unknown } }> }): KitPiece[] {
+    const byKey = new Map<unknown, KitPiece>((Object.keys(KIT) as KitPiece[]).map((k) => [KIT[k].source, k]));
+    const out = new Set<KitPiece>();
+    for (const n of node.findAll(() => true)) {
+        const piece = byKey.get(n.props?.source);
+        if (piece) out.add(piece);
+    }
+    return [...out];
+}
+
+const withDamage = (damage: number) => (vm: CombatViewModel): CombatViewModel => ({
+    ...vm,
+    enemy: { ...vm.enemy, intent: { ...vm.enemy.intent, type: damage > 0 ? 'damage' : 'defend', damage, debuffs: false, branch: undefined } },
+});
+
+describe('UK1c — the intent ring says what kind of threat it is (T, spec 152 question 4)', () => {
+    it('an attack wears the oxblood ring', () => {
+        renderBoard(withDamage(10));
+        const drawn = piecesUnder(screen.getByTestId('combat-intent-ring'));
+        expect(drawn).toContain('combat-intent-oxblood');
+        expect(drawn).not.toContain('combat-intent-brass');
+    });
+
+    it('anything that deals no damage wears the brass ring', () => {
+        renderBoard(withDamage(0));
+        const drawn = piecesUnder(screen.getByTestId('combat-intent-ring'));
+        expect(drawn).toContain('combat-intent-brass');
+        expect(drawn).not.toContain('combat-intent-oxblood');
+    });
+});
+
+describe('UK1c — every brass place draws its piece', () => {
+    it('the board: dock frame, VITAE track and both fills, conviction plate, damage pill', () => {
+        renderBoard(withDamage(10));
+        expect(piecesUnder(screen.getByTestId('combat-rail'))).toEqual(expect.arrayContaining(['nav-dock-dark']));
+        expect(piecesUnder(screen.getByTestId('combat-rail-vitae-bar'))).toEqual(expect.arrayContaining(['combat-player-track']));
+        // The fill is the heal fill at this VITAE (129 of 200).
+        expect(piecesUnder(screen.getByTestId('combat-rail-vitae-fill'))).toEqual(['combat-player-fill']);
+        expect(piecesUnder(screen.getByTestId('combat-conviction'))).toEqual(['combat-badge']);
+        expect(piecesUnder(screen.getByTestId('combat-intent'))).toEqual(expect.arrayContaining(['combat-badge']));
+    });
+
+    it('the reveal: the commit takes the struck button and the retreat the plain one', () => {
+        const { store, enemy } = startRealFight(REAL_FIGHT_FIXTURE, {
+            player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 160, maxHealth: 160 },
+        });
+        const { tree } = withAllProviders(
+            <CombatEncounterPanel enemy={enemy} bootstrapPlayer={store.getState().player} deck={CARDS} seed={7} onExit={() => undefined} onWithdraw={() => undefined} />,
+            { store },
+        );
+        render(tree);
+        expect(piecesUnder(screen.getByTestId('combat-enter'))).toEqual(['action-button-selected']);
+        expect(piecesUnder(screen.getByTestId('combat-withdraw'))).toEqual(['action-button-idle']);
+        // 153.4: the reveal prints no kicker line above the foe.
+        expect(screen.queryByTestId('combat-reveal-eyebrow')).toBeNull();
+        expect(screen.queryByText(/A FOE|THE WAY ENDS|CHAMPION HOLDS/)).toBeNull();
+        act(() => { fireEvent.press(screen.getByTestId('combat-enter')); });
+    });
+});
+
+/** The padding a host view gives one side, as the layout engine reads it. */
+function padding(style: Record<string, unknown>, side: 'Top' | 'Right' | 'Bottom' | 'Left'): number {
+    const axis = side === 'Top' || side === 'Bottom' ? 'paddingVertical' : 'paddingHorizontal';
+    return (style[`padding${side}`] ?? style[axis] ?? style.padding ?? 0) as number;
+}
+
+describe('UK1c — a piece\'s unstretched ornaments fit inside the padding of the box behind it', () => {
+    // The rule, not the slice literals: the corners a nine-slice keeps
+    // (`ornamentInsets`) must sit inside the host's padding, or the art runs
+    // under the content. Slice tuples are retuned with the art; this holds.
+    const hostOf = (node: { parent: unknown }) => {
+        let cur = node.parent as { type: unknown; props: { style?: unknown }; parent: unknown } | null;
+        while (cur && typeof cur.type !== 'string') cur = cur.parent as typeof cur | null;
+        return cur;
+    };
+
+    function checkEvery(): number {
+        let checked = 0;
+        const backdrops = screen.UNSAFE_root.findAll((n) => n.type === KitBackdrop);
+        for (const b of backdrops) {
+            const piece = b.props.piece as KitPiece;
+            const host = hostOf(b);
+            expect(host).toBeTruthy();
+            const style = StyleSheet.flatten(host!.props.style as never) as Record<string, unknown>;
+            const inset = ornamentInsets(piece, b.props.scale as number | undefined);
+            for (const [side, key] of [['top', 'Top'], ['right', 'Right'], ['bottom', 'Bottom'], ['left', 'Left']] as const) {
+                const room = padding(style, key);
+                expect({ piece, side, fits: inset[side] <= room + 1e-6, inset: inset[side], room })
+                    .toMatchObject({ piece, side, fits: true });
+            }
+            checked += 1;
+        }
+        return checked;
+    }
+
+    it('on the board', () => {
+        renderBoard(withDamage(10));
+        // dock, VITAE track, conviction plate, damage pill (the fill is a bare image).
+        expect(checkEvery()).toBeGreaterThanOrEqual(4);
+    });
+
+    it('on the reveal', () => {
+        const { store, enemy } = startRealFight(REAL_FIGHT_FIXTURE, {
+            player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 160, maxHealth: 160 },
+        });
+        const { tree } = withAllProviders(
+            <CombatEncounterPanel enemy={enemy} bootstrapPlayer={store.getState().player} deck={CARDS} seed={7} onExit={() => undefined} onWithdraw={() => undefined} />,
+            { store },
+        );
+        render(tree);
+        expect(checkEvery()).toBe(2);
+    });
+
+    it('catches a piece whose ornaments are wider than the padding (the nav-dock-dark defect)', () => {
+        // The dock frame's end caps are 25.3pt; the old 10pt side padding is
+        // the violation this rule exists to catch.
+        expect(ornamentInsets('nav-dock-dark').left).toBeGreaterThan(10);
+        expect(ornamentInsets('nav-dock-dark').left).toBeLessThanOrEqual(DOCK_PAD_H);
     });
 });

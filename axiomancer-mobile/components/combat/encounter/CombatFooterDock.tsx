@@ -5,14 +5,17 @@
  *                 The board passes it in as a slot, so the portrait's own
  *                 resolution FX stay in `PlayerMedallion`.
  *   VITAE column  ♥ value / max with the deck and discard piles at its right,
- *                 a fill bar under it (blood below a quarter), and the phase
- *                 ledger under the bar. Capped at `DOCK_VITAE_MAX_WIDTH`, so
- *                 a wide window keeps the piles beside the VITAE figure.
- *   END          a wide thumb button: hourglass + END, the dead-tray
- *                 consequence line above it, dimmed while a phase resolves.
- *                 Pushed to the right edge however wide the window is.
+ *                 a fill bar under it (blood below a quarter). Capped at
+ *                 `DOCK_VITAE_MAX_WIDTH`, so a wide window keeps the piles
+ *                 beside the VITAE figure.
+ *   END          a thumb button: hourglass + END, the dead-tray consequence
+ *                 line above it, dimmed while a phase resolves. Pushed to the
+ *                 right edge however wide the window is.
  *
- * The dock respects the bottom safe-area inset and grows rather than clips.
+ * There is no phase ledger here (T, 2026-11-07): the enemy's name rail already
+ * reads "PHASE n/m", and the room the O/X marks took went to the brass frame,
+ * which needs its end caps and rails clear of the cells. The dock respects the
+ * bottom safe-area inset and grows rather than clips.
  */
 
 import React from 'react';
@@ -23,33 +26,32 @@ import { FONTS, HUE } from '@/theme/axm';
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
-import { ledgerA11y } from '@/state/presenters/combat-encounter.engine';
 import type { CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
-import { LedgerMark } from '@/components/hazard/glyphs';
-
-/** The ledger's marks tallied, for the gloss's live line. */
-function ledgerCounts(ledger: CombatViewModel['ledger']): { clear: number; overwhelmed: number; pending: number } {
-    const n = { clear: 0, overwhelmed: 0, pending: 0 };
-    for (const m of ledger) n[m] += 1;
-    return n;
-}
 
 /** The dock's tallest cell (the END button); the row's height before padding. */
 export const DOCK_ROW_H = 56;
-/** The dock's top and bottom padding (the bottom one sits above the inset). */
-export const DOCK_PAD_V = 8;
-/** Side padding and the gap between the dock's three cells. */
-export const DOCK_PAD_H = 10;
+/**
+ * The dock's top and bottom padding (the bottom one sits above the inset).
+ * 18pt holds the brass frame's top rail (17.4pt unstretched) clear of the
+ * cells; the inset test pins that rule, not this number.
+ */
+export const DOCK_PAD_V = 18;
+/**
+ * Side padding and the gap between the dock's three cells. 26pt holds the
+ * frame's end caps (25.3pt unstretched) inside the padding rather than behind
+ * the portrait and END. END's 32pt of narrowing pays for it, so the VITAE
+ * column is as wide as it was.
+ */
+export const DOCK_PAD_H = 26;
 export const DOCK_GAP = 10;
-/** The wide END button: a thumb target, not a corner disc. */
-export const END_BTN_W = 116;
+/** The END button: a thumb target, not a corner disc. */
+export const END_BTN_W = 84;
 export const END_BTN_H = DOCK_ROW_H;
 /** The VITAE fill bar's height. */
 export const VITAE_BAR_H = 8;
 /** Below this share of max VITAE the bar turns blood (presentation only). */
 export const VITAE_LOW_RATIO = 0.25;
-export const DOCK_LEDGER_MARK = 14;
 /**
  * The VITAE column's widest extent. A phone never reaches it (the column gets
  * what the avatar and END leave, about 160pt at 375 wide). On a desktop or
@@ -57,7 +59,6 @@ export const DOCK_LEDGER_MARK = 14;
  * and discard counts beside the VITAE figure; END stays at the right edge.
  */
 export const DOCK_VITAE_MAX_WIDTH = 360;
-const DOCK_LEDGER_GAP = 3;
 
 /** The dock's minimum height for a given bottom inset. */
 export function dockMinHeight(bottomInset: number): number {
@@ -143,14 +144,14 @@ export const EndPhaseButton = React.memo(function EndPhaseButton({ onPress, cons
 export const CombatFooterDock = React.memo(function CombatFooterDock({
     vm, avatar, bottomInset, onEndPhase, endConsequence, resolving, onGloss, onLayout,
 }: {
-    vm: Pick<CombatViewModel, 'player' | 'ledger' | 'deckCount' | 'discardCount'>;
+    vm: Pick<CombatViewModel, 'player' | 'deckCount' | 'discardCount'>;
     /** The player's portrait, rendered by the board (it owns the hit FX). */
     avatar: React.ReactNode;
     bottomInset: number;
     onEndPhase: () => void;
     endConsequence: string | null;
     resolving: boolean;
-    /** Tap the piles or the phase ledger: opens that word's gloss. */
+    /** Tap the piles: opens that word's gloss. */
     onGloss?: (ids: readonly BoardTermId[], live?: BoardGlossLive) => void;
     onLayout?: (e: LayoutChangeEvent) => void;
 }) {
@@ -166,10 +167,8 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
             testID="combat-rail"
             onLayout={onLayout}
         >
-            {/* The dock frame is drawn at its own scale, so its end caps run
-              * wider than the dock's 10pt side padding and sit behind the
-              * portrait and END rather than pushing them inward. The padding is
-              * what holds every cell where it is today. */}
+            {/* The dock frame is drawn at its own scale; its end caps and rails
+              * fit inside the dock's own padding, so no cell sits on the art. */}
             {brass ? <KitBackdrop piece="nav-dock-dark" /> : null}
             {avatar}
             <View style={styles.vitaeCol} testID="combat-rail-vitae-col">
@@ -205,27 +204,6 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                     </Pressable>
                 </View>
                 <VitaeBar hp={vm.player.hp} maxHp={vm.player.maxHp} />
-                <Pressable
-                    style={styles.ledger}
-                    testID="combat-ledger"
-                    onPress={() => onGloss?.(['ledger'], { ledger: ledgerCounts(vm.ledger) })}
-                    accessibilityRole="button"
-                    accessibilityLabel={ledgerA11y(vm.ledger)}
-                    accessibilityHint="Tap to read what the marks mean"
-                    hitSlop={4}
-                >
-                    {/* Each mark is wrapped in a View. `LedgerMark` is a bare
-                      * `Svg`, and on RN-web a bare svg is not a positioned box,
-                      * so the dock's absolutely positioned backdrop paints over
-                      * it and the marks vanish. The wrapper is the mark's own
-                      * size, so the row measures exactly as it did. The marks
-                      * themselves are untouched. */}
-                    {vm.ledger.map((m, i) => (
-                        <View key={i} style={styles.ledgerMark}>
-                            <LedgerMark kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />
-                        </View>
-                    ))}
-                </Pressable>
             </View>
             <EndPhaseButton onPress={onEndPhase} consequence={endConsequence} disabled={resolving} />
         </View>
@@ -264,8 +242,6 @@ const useStyles = makeStyles((AXM) => ({
         borderBottomColor: 'transparent', borderLeftColor: 'transparent',
     },
     barFill: { height: '100%' },
-    ledger: { flexDirection: 'row', gap: DOCK_LEDGER_GAP, alignItems: 'center' },
-    ledgerMark: { width: DOCK_LEDGER_MARK, height: DOCK_LEDGER_MARK },
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
     pileGlyphText: { fontFamily: FONTS.sans, fontSize: 7, color: AXM.ash, lineHeight: 9 },

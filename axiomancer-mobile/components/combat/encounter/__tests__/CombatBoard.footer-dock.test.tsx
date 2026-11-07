@@ -3,8 +3,9 @@
  *
  * The bottom rail is the dock, left to right: the 48pt player avatar (tap
  * opens the pilgrim modal), the VITAE column (value / max with the piles at
- * its right, an 8pt fill bar, the phase ledger under the bar) and a wide END
- * button. No corner medallion floats over the hand any more: the avatar and
+ * its right, an 8pt fill bar) and a narrower END button. The phase-ledger
+ * marks are gone (153.4, T: off the board entirely; the enemy rail reads
+ * "PHASE n/m"). No corner medallion floats over the hand any more: the avatar and
  * END both sit inside the dock. The VITAE bar turns blood below 25%.
  */
 
@@ -20,7 +21,7 @@ import {
     DOCK_GAP, DOCK_PAD_H, DOCK_PAD_V, DOCK_VITAE_MAX_WIDTH, END_BTN_W, END_BTN_H, VITAE_BAR_H, VITAE_LOW_RATIO, dockMinHeight, vitaeBarFill,
 } from '@/components/combat/encounter/CombatFooterDock';
 import { PLAYER_AVATAR_SIZE } from '@/components/combat/encounter/CombatCombatantPane';
-import { buildCombatViewModel, ledgerA11y, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
+import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { currentPalette } from '@/theme/runtime';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -28,7 +29,6 @@ import { withAllProviders } from '@/test-utils/withAllProviders';
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike'];
 const PHONE = { width: 375, height: 812, scale: 3, fontScale: 1 };
 const INSETS = { top: 47, bottom: 34, left: 0, right: 0 };
-const FIVE_PHASES: CombatViewModel['ledger'] = ['clear', 'pending', 'pending', 'pending', 'pending'];
 
 // Same pin as the sibling suites: `useWindowDimensions` is read off the module
 // object at call time, so overriding the export pins the viewport.
@@ -47,7 +47,7 @@ function renderBoard(opts: { shape?: (vm: CombatViewModel) => CombatViewModel; r
     const { store, combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: CARDS }, seed: 16 });
     let s = combat;
     s = rollEncounterDice(s).state;
-    const base = { ...buildCombatViewModel(s), ledger: FIVE_PHASES };
+    const base = buildCombatViewModel(s);
     const vm = opts.shape ? opts.shape(base) : base;
     const cbs = { onEndPhase: jest.fn(), onPlayerInspect: jest.fn() };
     const { tree } = withAllProviders(
@@ -106,29 +106,21 @@ describe('A4 — the footer dock', () => {
         expect(at('combat-end-phase')).toBeGreaterThan(at('combat-rail-vitae-col'));
     });
 
-    it('stacks the VITAE line, the fill bar and the phase ledger, in that order', () => {
+    it('stacks the VITAE line and the fill bar, with the piles at the line\'s right', () => {
         renderBoard();
         const ids = testIdOrder();
         const at = (id: string) => ids.indexOf(id);
         expect(at('combat-rail-vitae')).toBeLessThan(at('combat-rail-vitae-bar'));
-        expect(at('combat-rail-vitae-bar')).toBeLessThan(at('combat-ledger'));
         const col = within(screen.getByTestId('combat-rail-vitae-col'));
-        expect(col.getByTestId('combat-ledger')).toBeTruthy();
-        // The ledger reads as one row of five marks.
-        expect(flat('combat-ledger').flexDirection).toBe('row');
-        expect(flat('combat-ledger').flexWrap).toBeUndefined();
-        // The piles sit on the VITAE line, at its right.
         expect(col.getByLabelText(/^Deck \d+ cards, discard \d+$/)).toBeTruthy();
     });
 
-    it('speaks the phase ledger as one line, run by run (CRITIQUE pass 85)', () => {
-        renderBoard({ shape: (vm) => ({ ...vm, ledger: ['clear', 'overwhelmed', 'pending', 'pending', 'pending'] }) });
-        const ledger = screen.getByTestId('combat-ledger');
-        expect(ledger.props.accessible).toBe(true);
-        expect(ledger.props.accessibilityLabel).toBe('Phases: 1 cleared, 2 overwhelmed, 3 to 5 ahead');
-        // A pair joins with "and"; a lone phase stands alone; none is said so.
-        expect(ledgerA11y(['clear', 'clear', 'overwhelmed', 'clear', 'pending'])).toBe('Phases: 1 and 2 cleared, 3 overwhelmed, 4 cleared, 5 ahead');
-        expect(ledgerA11y([])).toBe('Phases: none');
+    it('draws no phase ledger: no marks, no gloss target, no per-phase history (153.4)', () => {
+        renderBoard();
+        expect(screen.queryByTestId('combat-ledger')).toBeNull();
+        expect(screen.queryByLabelText(/^Phases:/)).toBeNull();
+        // The count is not lost: the enemy's name rail still reads PHASE n/m.
+        expect(screen.queryAllByText(/PHASE \d+\/\d+ · ROUND/).length).toBeGreaterThan(0);
     });
 
     it('caps the VITAE column on a wide window, never on a phone (CRITIQUE pass 85)', () => {
@@ -162,12 +154,14 @@ describe('A4 — the footer dock', () => {
         expect(cbs.onPlayerInspect).toHaveBeenCalledTimes(1);
     });
 
-    it('END is a wide thumb button that still ends the phase', () => {
+    it('END is a narrower thumb button that still ends the phase', () => {
         const { cbs } = renderBoard();
         const end = flat('combat-end-phase');
         expect(end.width).toBe(END_BTN_W);
         expect(end.height).toBe(END_BTN_H);
-        expect(END_BTN_W).toBeGreaterThan(END_BTN_H * 2 - 1);
+        // Narrower than the 116pt it was, and still a thumb target.
+        expect(END_BTN_W).toBeLessThan(116);
+        expect(END_BTN_W).toBeGreaterThanOrEqual(44);
         expect(within(screen.getByTestId('combat-end-phase')).getByText('END')).toBeTruthy();
         expect(within(screen.getByTestId('combat-end-phase')).getByText('⧗')).toBeTruthy();
         fireEvent.press(screen.getByTestId('combat-end-phase'));

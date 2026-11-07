@@ -70,6 +70,27 @@ const SLICED: Partial<Record<KitPiece, { slice: Slice; scale: number }>> = {
     'vellum-chip': { slice: [0.3, 0.2, 0.3, 0.2], scale: 0.3 },
 };
 
+/**
+ * How far a piece's unstretched corners reach into the box behind it, in
+ * points, as `{ top, right, bottom, left }`. This is the size of the rim that
+ * keeps its drawn shape; everything beyond it stretches. A piece that is not
+ * sliced is one image stretched whole, so it reports zero on every side.
+ *
+ * The rule the kit rests on: these four numbers must fit inside the padding of
+ * the element the piece sits behind, or the ornament runs under the content
+ * (or, tuned the other way, the box grows to fit the art). Tests pin that rule
+ * for every placed piece rather than the slice literals, which are retuned
+ * whenever the art is.
+ */
+export function ornamentInsets(piece: KitPiece, scale?: number): { top: number; right: number; bottom: number; left: number } {
+    const sliced = SLICED[piece];
+    if (!sliced) return { top: 0, right: 0, bottom: 0, left: 0 };
+    const { w, h } = KIT[piece];
+    const k = scale ?? sliced.scale;
+    const [top, right, bottom, left] = sliced.slice;
+    return { top: top * h * k, right: right * w * k, bottom: bottom * h * k, left: left * w * k };
+}
+
 /** One piece stretched to whatever box `style` gives it. */
 export function KitImage({ piece, style }: { piece: KitPiece; style?: StyleProp<ViewStyle> }) {
     return <Image source={KIT[piece].source} style={style as never} contentFit="fill" transition={0} />;
