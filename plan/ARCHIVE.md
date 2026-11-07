@@ -582,3 +582,4 @@
 - 2026-11-07 · 157.1 (alias: EN3a) · Chapter 1's six recast faces exist on their cut foes' numbers · 1322491f..f7e78c83 (#1428)
 - 2026-11-07 · 157.3 (alias: EN3c) · Six recast faces animate in combat; mobile gate green · 86d9f973..0fa7195d (#1437)
 - 2026-11-07 · 154.3 (alias: UK2c) · the dialogue offers only its own replies; no leave row, no errand chip · e742f12b..e742f12b (#1434)
+- 2026-11-07 · 153.1 (alias: UX1a) · The main menu prints only its verbs; the hints are spoken · 1df97aaa..1df97aaa (#1439)
