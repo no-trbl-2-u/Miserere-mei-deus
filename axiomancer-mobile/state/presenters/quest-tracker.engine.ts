@@ -12,7 +12,7 @@ import type { GameState, Quest, QuestObjective, Reward } from '@mechanics';
 import {
     TRACKER_READY_LINE,
     questBringLine,
-    questProgressShort,
+    questCounterText,
 } from './quest.copy';
 
 /** The most rows the tracker draws before it folds the rest into `+n more`. */
@@ -24,7 +24,7 @@ export interface QuestTrackerRow {
     name: string;
     /** The next unmet objective in words (`Bring: Key` for a carry objective). */
     objective: string;
-    /** "2/3"; empty when the quest is ready to turn in. */
+    /** "2/3"; empty when the quest is ready to turn in or has a single step. */
     progress: string;
 }
 
@@ -94,7 +94,7 @@ function rowOf(quest: Quest): QuestTrackerRow {
         id: quest.name,
         name: quest.name,
         objective: objectiveText(next),
-        progress: questProgressShort(next.currentCount, next.requiredCount),
+        progress: questCounterText(next.currentCount, next.requiredCount),
     };
 }
 

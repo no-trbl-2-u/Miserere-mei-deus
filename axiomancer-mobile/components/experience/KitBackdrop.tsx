@@ -63,12 +63,38 @@ const SLICED: Partial<Record<KitPiece, { slice: Slice; scale: number }>> = {
     'modal-panel-vellum': { slice: [0.2, 0.19, 0.2, 0.19], scale: 0.3 },
     'action-button-vellum': { slice: [0.33, 0.1, 0.33, 0.1], scale: 0.36 },
     'quest-row-vellum': { slice: [0.25, 0.14, 0.25, 0.14], scale: 0.42 },
-    'nav-dock-vellum': { slice: [0.12, 0.055, 0.12, 0.055], scale: 0.4875 },
+    // Profiled off the 800x74 art by dark-pixel counts: no centre ornament, a
+    // heavy rail pair to row 19 above and from row 64 below, and an end
+    // flourish whose ink stays within 66px of each edge. The 0.27 / 0.14
+    // slices hold both rail pairs whole, the 0.09 columns (72px) hold each
+    // flourish whole, and 0.8 makes the art 59pt tall in a 60pt dock, so the
+    // middle band stretches about 1.02x rather than 1.67x.
+    'nav-dock-vellum': { slice: [0.27, 0.09, 0.14, 0.09], scale: 0.8 },
     'section-header-vellum-star': { slice: [0.2, 0.1, 0.2, 0.1], scale: 0.5 },
     'section-header-vellum-leaf': { slice: [0.2, 0.1, 0.2, 0.1], scale: 0.5 },
     'filter-tab-vellum': { slice: [0.3, 0.1, 0.3, 0.1], scale: 0.26 },
     'vellum-chip': { slice: [0.3, 0.2, 0.3, 0.2], scale: 0.3 },
 };
+
+/** Points per image pixel a sliced piece draws at by default (1 for a whole piece). */
+export function kitScale(piece: KitPiece): number {
+    return SLICED[piece]?.scale ?? 1;
+}
+
+/**
+ * What a sliced piece keeps unstretched on each side, in points: top, right,
+ * bottom, left. An element drawn in front of the piece has to pad past this
+ * much on a side that carries an ornament, or its content lands on the art.
+ * Null for a piece that is drawn whole.
+ */
+export function unstretchedInset(piece: KitPiece, scale?: number): { top: number; right: number; bottom: number; left: number } | null {
+    const sliced = SLICED[piece];
+    if (!sliced) return null;
+    const { w, h } = KIT[piece];
+    const k = scale ?? sliced.scale;
+    const [top, right, bottom, left] = sliced.slice;
+    return { top: top * h * k, right: right * w * k, bottom: bottom * h * k, left: left * w * k };
+}
 
 /** One piece stretched to whatever box `style` gives it. */
 export function KitImage({ piece, style }: { piece: KitPiece; style?: StyleProp<ViewStyle> }) {
