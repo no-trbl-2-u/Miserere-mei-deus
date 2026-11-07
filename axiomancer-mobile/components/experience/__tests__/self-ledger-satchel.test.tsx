@@ -71,10 +71,10 @@ describe('Self (A6)', () => {
         }
     });
 
-    it('leaves the hazard deck link as it was', () => {
-        const { getByTestId, getByText } = render(screen(<CharacterScreen />));
-        expect(getByTestId('self-hazard-deck-link')).toBeTruthy();
-        expect(getByText('✠ HAZARD DECK')).toBeTruthy();
+    it('has no hazard deck link (UX1e)', () => {
+        const { queryByTestId, queryByText } = render(screen(<CharacterScreen />));
+        expect(queryByTestId('self-hazard-deck-link')).toBeNull();
+        expect(queryByText('✠ HAZARD DECK')).toBeNull();
     });
 });
 

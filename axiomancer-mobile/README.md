@@ -190,7 +190,6 @@ app/                       expo-router routes
     deck/                  the combat deck, read-only
   combat-encounter/        the live fight (CombatGate pushes it for every map and labyrinth encounter)
   hazard/                  hazard minigame
-  hazard-deck/             hazard deck builder
   rest/                    rest-choice encounter (Phase 52d)
   cache/                   loot-cache encounter (The Reliquary)
   dialogue/                NPC dialogue trees

@@ -317,12 +317,6 @@ async function shell(page) {
     await clickTab(page, 'Character', '/character')
     log('play: every tab')
 
-    await tap(page, 'self-hazard-deck-link') || fail('the SELF sheet has no hazard deck link')
-    await waitForPath(page, '/hazard-deck', 'hazard deck')
-    await waitFor(page, 'hazard-deck-back', 'the hazard deck screen')
-    await tap(page, 'hazard-deck-back')
-    await waitForPath(page, '/character', 'back from the hazard deck')
-    log('play: the hazard deck and back')
 
     await clickTab(page, 'Settings', '/settings-tab')
     await waitFor(page, 'settings-screen', 'the settings screen')
