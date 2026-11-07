@@ -58,7 +58,7 @@ function open(node: number, description?: string) {
 }
 
 describe('/quest - offer', () => {
-    it('shows the giver, "Step 1 of 4", the requirement, the progress and the pay, with ACCEPT and LEAVE', () => {
+    it('shows the giver, "Step 1 of 4", the requirement, no counter and no pay, with ACCEPT and LEAVE', () => {
         const { resolve, view } = open(1, 'A sailor wants the Gallows crossed.');
         resolve();
         view();
@@ -66,9 +66,11 @@ describe('/quest - offer', () => {
         expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 1 OF 4');
         expect(screen.getByTestId('quest-offer')).toBeTruthy();
         expect(screen.getByText('Cross a hazard')).toBeTruthy();
-        expect(screen.getByText('0 of 1')).toBeTruthy();
-        expect(screen.getByText('+40 XP')).toBeTruthy();
-        expect(screen.getByText('+10 shillings')).toBeTruthy();
+        expect(screen.queryByText('0 of 1')).toBeNull();
+        expect(screen.queryByText('0/1')).toBeNull();
+        expect(screen.queryByText('THE PAY')).toBeNull();
+        expect(screen.queryByText('+40 XP')).toBeNull();
+        expect(screen.queryByText('+10 shillings')).toBeNull();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
         expect(screen.getByTestId('quest-leave-button')).toBeTruthy();
         expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
@@ -106,7 +108,8 @@ describe('/quest - turn-in', () => {
         expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 2 OF 4');
         expect(screen.getByTestId('quest-turn-in')).toBeTruthy();
         expect(screen.getByText('Cross the Gallows')).toBeTruthy();
-        expect(screen.getByText('1 of 1')).toBeTruthy();
+        expect(screen.queryByText('1 of 1')).toBeNull();
+        expect(screen.queryByText('1/1')).toBeNull();
         expect(screen.queryByTestId('quest-accept-button')).toBeNull();
 
         const before = gs(store).player.currency;
@@ -145,7 +148,7 @@ describe('/quest - waiting', () => {
         resolve();
         view();
         expect(screen.getByTestId('quest-waiting')).toBeTruthy();
-        expect(screen.getByText('0 of 1')).toBeTruthy();
+        expect(screen.queryByText('0 of 1')).toBeNull();
         expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
         expect(screen.queryByTestId('quest-accept-button')).toBeNull();
         expect(screen.getByTestId('quest-leave-button')).toBeTruthy();
