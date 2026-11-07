@@ -124,7 +124,7 @@ Checked against `app/` and the 19 `ROUTES` (2026-11-07). Not expanded here excep
 
 Measure: 7 open · 0 closed · next A8
 
-- [ ] **158.1** The combat board gets a visual route, a thin test and its words · M · closes A1, A2, A3, A4, A5, A6 · needs 152.3 · alias: VR1a
+- [ ] **158.1** The combat board gets a visual route, a thin test and its words · M · closes A1, A2, A3, A4, A5, A6 · needs — · alias: VR1a
 - [ ] **158.2** The Deck and Settings tabs get routes · S · closes A7 · needs — · alias: VR1b
 
 ### 158.1 (VR1a) — The combat board gets a visual route · M · closes A1, A2, A3, A4, A5, A6 · requires 152.3
