@@ -12,8 +12,9 @@
 import { describe, expect, it } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { StatBar } from '@/components/StatBar';
+import { BRASS_CAP_X, BRASS_CAP_Y, StatBar } from '@/components/StatBar';
 
 function findFillWidth(json: unknown): string | null {
     if (json === null || typeof json !== 'object') return null;
@@ -143,5 +144,18 @@ describe('FE-019: alarm state', () => {
             <StatBar value={0} max={50} color="#8b4a1a" label="STONE" />
         );
         expect(r.queryByTestId('statbar-value-alarmed')).toBeNull();
+    });
+});
+
+describe('StatBar: brass look keeps the fill inside the rail caps', () => {
+    it('insets the fill slot by the end caps and grows the rail to hold them', () => {
+        const r = render(<StatBar value={10} max={20} look="brass" height={14} />);
+        const track = StyleSheet.flatten(r.getByTestId('statbar-track').props.style) as { height: number };
+        expect(track.height).toBe(14 + BRASS_CAP_Y * 2);
+        const slots = r.UNSAFE_getAllByType(View)
+            .map((n) => StyleSheet.flatten(n.props.style) as Record<string, unknown> | undefined)
+            .filter((s) => s !== undefined && s.position === 'absolute' && s.left === BRASS_CAP_X);
+        expect(slots).toHaveLength(1);
+        expect(slots[0]).toMatchObject({ top: BRASS_CAP_Y, right: BRASS_CAP_X, bottom: BRASS_CAP_Y });
     });
 });

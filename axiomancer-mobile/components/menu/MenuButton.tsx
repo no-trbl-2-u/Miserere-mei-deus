@@ -61,26 +61,29 @@ export function MenuButton({
             accessibilityHint={accessibilityHint ?? hint}
             testID={testID}
         >
-            {({ pressed }) => (
+            {({ pressed }) => {
+                const onPlate = primary || (kit && pressed && !disabled);
+                return (
                 <>
                     {kit ? (
                         <KitBackdrop
-                            piece={disabled ? 'action-button-disabled' : primary || pressed ? 'action-button-selected' : 'action-button-idle'}
+                            piece={disabled ? 'action-button-disabled' : onPlate ? 'action-button-selected' : 'action-button-idle'}
                         />
                     ) : null}
                     <View style={styles.text}>
-                        <Text style={[styles.label, primary && styles.labelPrimary, !kit && danger && styles.labelDanger]}>
+                        <Text style={[styles.label, onPlate && styles.labelPrimary, !kit && danger && styles.labelDanger]}>
                             {label}
                         </Text>
                         {hint ? (
-                            <Text style={[styles.hint, primary && styles.hintPrimary]} numberOfLines={2}>
+                            <Text style={[styles.hint, onPlate && styles.hintPrimary]} numberOfLines={2}>
                                 {hint}
                             </Text>
                         ) : null}
                     </View>
-                    <Text style={[styles.chevron, primary && styles.labelPrimary]}>›</Text>
+                    <Text style={[styles.chevron, onPlate && styles.labelPrimary]}>›</Text>
                 </>
-            )}
+                );
+            }}
         </Pressable>
     );
 }

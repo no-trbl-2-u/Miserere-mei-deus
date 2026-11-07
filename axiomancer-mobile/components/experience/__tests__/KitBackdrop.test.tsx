@@ -24,7 +24,13 @@ describe('the experience kit', () => {
     });
 
     it('draws a growing piece from more images than a fixed one', () => {
-        expect(imagesIn('nav-dock-dark')).toBeGreaterThan(imagesIn('stat-tile'));
+        expect(imagesIn('nav-dock-dark')).toBeGreaterThan(imagesIn('divider-short-brass'));
+    });
+
+    it('nine-slices every piece that backs a box whose size varies (a stretched tile smears its ornament)', () => {
+        for (const piece of ['stat-tile', 'equipment-slot-dark', 'equipment-slot-selected', 'combat-vitae-track', 'character-portrait-frame', 'level-badge-dark'] as KitPiece[]) {
+            expect(imagesIn(piece)).toBe(9);
+        }
     });
 
     it('keeps a section heading as a header for a screen reader', () => {

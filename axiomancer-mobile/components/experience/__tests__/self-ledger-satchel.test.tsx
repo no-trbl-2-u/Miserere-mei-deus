@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 jest.mock('@/lib/platform/router', () => ({
     useRouter: () => ({ replace: jest.fn(), push: jest.fn(), back: jest.fn(), canGoBack: () => false }),
@@ -116,6 +117,18 @@ describe('The Satchel (A7)', () => {
         const { tree } = withAllProviders(<InventoryTabs tabs={tabs} activeTab="all" onTabPress={jest.fn()} />);
         const drawn = render(tree).UNSAFE_root.findAll((n: Node) => n.props.source === KIT['filter-tab-vellum'].source);
         expect(drawn.length).toBeGreaterThanOrEqual(tabs.length);
+    });
+
+    it('draws the oxblood rule under the picked vellum tab only', () => {
+        const tabs = [
+            { key: 'all' as const, label: 'All', count: 5 },
+            { key: 'equipment' as const, label: 'Gear', count: 0 },
+        ];
+        const { tree } = withAllProviders(<InventoryTabs tabs={tabs} activeTab="all" onTabPress={jest.fn()} />);
+        const view = render(tree);
+        const rule = (id: string) => StyleSheet.flatten(view.getByTestId(id).props.style) as { borderBottomWidth: number; borderBottomColor: string };
+        expect(rule('tab-all')).toMatchObject({ borderBottomWidth: 2, borderBottomColor: VELLUM_OXBLOOD });
+        expect(rule('tab-equipment').borderBottomColor).toBe('transparent');
     });
 });
 

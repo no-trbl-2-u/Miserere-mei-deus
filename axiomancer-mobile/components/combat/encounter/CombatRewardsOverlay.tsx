@@ -40,7 +40,7 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
-import { SPOILS_INK } from '@/components/combat/encounter/spoils-ink';
+import { OFFER_FRAME_BORDER, OFFER_FRAME_PAD, SPOILS_INK, VELLUM_OFFER_H, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
@@ -120,7 +120,7 @@ export function CombatRewardsOverlay({
 
     return (
         <View style={[styles.backdrop, v && styles.vBackdrop]} testID="combat-rewards">
-            <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]}>
+            <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]} testID="combat-rewards-panel">
                 {v && <KitBackdrop piece="modal-panel-vellum" />}
                 <Text style={[styles.eyebrow, v && styles.vEyebrow]}>✦ SPOILS</Text>
                 <Text style={[styles.title, v && styles.vBody]}>Add a card to your deck</Text>
@@ -152,7 +152,7 @@ export function CombatRewardsOverlay({
                                     },
                                 ]}
                             >
-                                <CombatCardFace card={card} width={OFFER_W} height={OFFER_H} />
+                                <CombatCardFace card={card} width={v ? VELLUM_OFFER_W : OFFER_W} height={v ? VELLUM_OFFER_H : OFFER_H} />
                                 {/* The NAMED LABEL signal. The 100pt offer face is
                                     too narrow to print the word in its own name
                                     band, and this is the one screen where the
@@ -282,7 +282,7 @@ const useStyles = makeStyles((AXM) => ({
     title: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, textAlign: 'center' },
     sub: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12, color: AXM.bone, textAlign: 'center', marginTop: 3, marginBottom: 14 },
     offerRow: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
-    offerFrame: { borderWidth: 2, padding: 3, alignItems: 'center' },
+    offerFrame: { borderWidth: OFFER_FRAME_BORDER, padding: OFFER_FRAME_PAD, alignItems: 'center' },
     // The rarity word under each offer face. Hue matches the frame it sits in,
     // but the WORD is the signal — the colour is never asked to carry it alone.
     offerRarity: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.4, marginTop: 3 },
@@ -296,11 +296,11 @@ const useStyles = makeStyles((AXM) => ({
     upgradeBack: { flex: 0, marginTop: 12 },
     btnNote: { fontFamily: FONTS.sans, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
     // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side
-    // ornament, 26pt of top and bottom. The tiles are 330pt wide, so the sides
-    // carry less padding than the title and sub-line, which sit clear of the corners.
+    // ornament, 26pt of top and bottom. The panel pads 40pt a side to clear it, and
+    // the vellum tiles are 80pt faces (270pt in all) so three still fit at 360.
     vBackdrop: { padding: 2 },
     vOfferRow: { gap: 0 },
-    vPanel: { width: '100%', maxWidth: 420, paddingHorizontal: 12, paddingTop: 36, paddingBottom: 34, alignItems: 'center' },
+    vPanel: { width: '100%', maxWidth: 420, paddingHorizontal: VELLUM_PANEL_PAD, paddingTop: 36, paddingBottom: 34, alignItems: 'center' },
     vEyebrow: { color: SPOILS_INK.accent, fontSize: 13 },
     vBody: { color: SPOILS_INK.body },
     vSub: { color: SPOILS_INK.soft, fontSize: 13, marginHorizontal: 22 },

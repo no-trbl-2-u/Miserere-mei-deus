@@ -59,3 +59,17 @@ export function blend(fg: string, bg: string, opacity: number): string {
     };
     return `#${mix(1)}${mix(3)}${mix(5)}`;
 }
+
+/**
+ * Vellum offer-tile geometry. The panel art is 741x437 drawn at 0.3, so 42pt
+ * of side ornament per side; the panel pads 40pt. Three tiles (face + 3pt
+ * padding + 2pt border per side) must fit what is left at the narrowest phone
+ * (360pt, less the backdrop's 2pt padding per side).
+ */
+export const VELLUM_PANEL_PAD = 40;
+export const VELLUM_OFFER_W = 80;
+export const VELLUM_OFFER_H = 118;
+/** The offer tile's frame: border and padding per side, shared with `CombatRewardsOverlay`'s `offerFrame`. */
+export const OFFER_FRAME_BORDER = 2;
+export const OFFER_FRAME_PAD = 3;
+export const OFFER_TILE_CHROME = 2 * (OFFER_FRAME_BORDER + OFFER_FRAME_PAD);

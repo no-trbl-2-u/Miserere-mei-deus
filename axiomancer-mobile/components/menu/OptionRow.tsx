@@ -27,6 +27,8 @@ export interface OptionRowProps<V> {
     testID: string;
     /** Draw the choices as radio rings rather than segments. */
     radio?: boolean;
+    /** Opt out of the brass looks (a picker outside Settings keeps the plain segments). */
+    plain?: boolean;
 }
 
 const TOGGLE_W = 72;
@@ -34,13 +36,13 @@ const TOGGLE_H = 34;
 const KNOB = 25;
 
 export function OptionRow<V extends string | number | boolean>({
-    label, hint, options, value, onChange, testID, radio = false,
+    label, hint, options, value, onChange, testID, radio = false, plain = false,
 }: OptionRowProps<V>) {
     const styles = useStyles();
     const isToggle = options.length === 2 && options.every((o) => typeof o.value === 'boolean');
-    const toggle = isToggle && LOOKS['O-05'] === 'brass';
-    const rings = !isToggle && radio && LOOKS['O-04'] === 'brass';
-    const segmentKit = !isToggle && !rings && LOOKS['O-03'] === 'brass';
+    const toggle = isToggle && !plain && LOOKS['O-05'] === 'brass';
+    const rings = !isToggle && radio && !plain && LOOKS['O-04'] === 'brass';
+    const segmentKit = !isToggle && !rings && !plain && LOOKS['O-03'] === 'brass';
     return (
         <View style={styles.root} testID={testID}>
             <View style={styles.text}>

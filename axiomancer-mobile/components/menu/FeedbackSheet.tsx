@@ -60,6 +60,7 @@ export function FeedbackSheet({ visible, onSubmit, onClose, testID = 'feedback-s
                         value={form.kind ?? 'none'}
                         onChange={(kind) => setForm((f) => ({ ...f, kind: kind === 'none' ? null : kind }))}
                         testID={`${testID}-kind`}
+                        plain
                     />
                     <TextInput
                         style={styles.input}
