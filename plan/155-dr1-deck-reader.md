@@ -58,8 +58,8 @@ Most of this screen is a re-arrangement of parts already built: the view-model h
    - **Its text** under the art at **16.5 pt**: the outcome line, then the two play lines in their kept shorthand (`◇ NO DIE` and `◆ +DIE`) and the stacks footnote.
    - **No keyword chip row** above it (`kw: off`) and **no flavour** (`flavor: off`).
 3. **The type tabs.** Between the open card and the grid: **boxed** tabs, one per card type the deck actually holds, reading ATTACKS / SKILLS / SPELLS / GLOBALS (and CURSES when the run carries one), **with no counts** (`tabCounts: off`). The tabs never move down the screen when a different card opens: the open card's block is a fixed height, so the tab row sits at the same place all the way through.
-4. **The grid.** Below the tabs, the cards of the active tab only, as art thumbnails. Each thumbnail shows the painting, the card's name, its copies badge when the run carries more than one, and its colour mark. Tapping one opens it above; the cards that are not open are dimmed.
-5. **The tab bar** at the bottom is the app's own, unchanged.
+4. **The grid.** Below the tabs, the cards of the active tab only, as art thumbnails, **4 to a row and square**. Each thumbnail shows the painting, the card's name, its copies badge when the run carries more than one, and its colour mark — all three on. Tapping one opens it above; the cards that are not open are dimmed. The gap is the lab's default. *Confirmed by T (2026-11-06).*
+5. **The tab bar** at the bottom is the app's own. This spec does not touch it: its kit treatment is 152.2 (UK1b, the tab bar wearing the look) and 153.3 (UX1c, bigger icons and no words), which T confirmed stands — "the bottom tab navigation will have the treatment". Neither gates a chunk here, because the bar is outside this screen.
 6. **No guide line.** The lab's dashed tab-start marker was a lab tool (`guide: off`); nothing of it ships.
 
 ### Keywords you press
@@ -75,7 +75,9 @@ T's note is the one behaviour change. Keywords leave the ledger and move into th
 
 ### The detail overlay, and where flavour goes
 
-In the Reader the open card **is** the detail, so `DeckCardDetailOverlay` has nothing left to open — and it is the only screen in the game that shows card flavour. T's `flavor: off` therefore takes flavour off the last surface that had it. The spec's default is to accept that: the overlay is deleted and the game shows no card flavour. [T to confirm #2]
+In the Reader the open card **is** the detail, so `DeckCardDetailOverlay` has nothing left to open — and it is the only screen in the game that shows card flavour. T's `flavor: off` therefore takes flavour off the last surface that had it.
+
+**Confirmed by T (2026-11-06): delete it.** `DeckCardDetailOverlay` and its test go, and no screen in the game shows card flavour. `flavor` stays on the view-model and `description` stays on the card data — the prose is not deleted from the game's content, only from every surface that drew it — so a later screen can pick it up without a data change.
 
 ### Decisions made upfront (do not ask)
 
@@ -87,7 +89,7 @@ In the Reader the open card **is** the detail, so `DeckCardDetailOverlay` has no
 
 ### Out of scope
 
-- The Deck screen wearing a kit look (brass or vellum). Spec 152 left it as it is, and T picked no shade in the lab. The screen keeps today's ground. [T to confirm #3]
+- The Deck screen wearing a kit look (brass or vellum). *Confirmed by T (2026-11-06): no — "keep everything as we saw it".* The screen keeps today's ground and the boxed tabs are drawn from palette tokens, which is also what spec 152 left it as. The bottom tab bar is the exception T named, and it is 152.2's and 153.3's work, not this spec's.
 - Deck editing (thin, swap).
 - The keyword ledger anywhere else.
 - Committing the Reader lab page into this repo.
@@ -101,15 +103,17 @@ In the Reader the open card **is** the detail, so `DeckCardDetailOverlay` has no
 ## Acceptance
 
 - **A1** The Deck screen has no header block, no stat row and no rarity or colour tally. One card is open at the top: its own painting as a 340 pt banner cropped from the top, its name over the art at 23 pt, and its text under the art at 16.5 pt — the outcome line and the two play lines, with no keyword chip row and no flavour.
-- **A2** Below the open card, the cards of one type are a grid of art thumbnails, each with its painting, its name, its copies badge when the run carries more than one and its colour mark; the cards that are not open are dimmed, and tapping one opens it above.
+- **A2** Below the open card, the cards of one type are a grid of art thumbnails, four to a row and square, each with its painting, its name, its copies badge when the run carries more than one and its colour mark; the cards that are not open are dimmed, and tapping one opens it above. No tap-up detail overlay remains, and no screen in the game shows card flavour.
 - **A3** Boxed type tabs sit between the open card and the grid, one per type the deck holds, with no counts, and the grid shows only the active tab's cards. The tab row's vertical position does not change when a different card opens.
 - **A4** A keyword inside the open card's text is drawn as part of the line and is pressable: a tap shows its gloss anchored to the word, a hold pins the gloss until it is dismissed, and each keyword carries its word and gloss to a screen reader. No keyword ledger is drawn on this screen; combat, rewards and the hazard deck still draw theirs.
 
 ## Open questions
 
-1. The lab settings you did not change are taken as the lab's own defaults. The spec assumes: the name sits **on** the art; the card text is the **effect plus the die lines**; **4** cards per row, **square**, at the lab's default gap; card **names, copies badges and colour marks all on**; the cards that are not open **dimmed**; the **first background shade**; the app's **tab bar on**. Correct any that are wrong. [T to confirm #1]
-2. Card flavour has no home once the open card replaces the detail overlay. Default: the overlay is deleted and no screen shows card flavour. Or: keep flavour on the open card, under the lines; or keep a small "more" that opens flavour alone. [T to confirm #2]
-3. Does the Deck screen wear a kit look? Default: no — it keeps today's flat ground, as spec 152 left it, and the boxed tabs are drawn from palette tokens. Or: the Satchel's vellum filter tabs and a vellum ground, which would make this wait on 152.1 and 152.5. [T to confirm #3]
+None left open. All three were answered by T on 2026-11-06, in the same session that settled the numbers:
+
+1. The lab settings T did not change are the lab's own defaults. **Confirmed by T (2026-11-06): all as listed** — the name sits **on** the art; the card text is the **effect plus the die lines**; **4** cards per row, **square**, at the lab's default gap; card **names, copies badges and colour marks all on**; the cards that are not open **dimmed**; the **first background shade**; the app's **tab bar on**.
+2. Card flavour has no home once the open card replaces the detail overlay. **Confirmed by T (2026-11-06): delete it** — the overlay goes and no screen shows card flavour; the prose stays in the card data, unused.
+3. Does the Deck screen wear a kit look? **Confirmed by T (2026-11-06): no** — "the bottom tab navigation will have the treatment, but no, keep everything as we saw it". The screen keeps today's ground; the tab bar's treatment is 152.2's and 153.3's, outside this spec.
 
 ## Chunks
 
@@ -130,9 +134,9 @@ Measure: 4 open · 0 closed · next A5
 ### 155.2 (DR1b) — The deck below it: art thumbnails, dimmed when not open · M · closes A2 · requires 155.1
 
 - `DeckCardTile` becomes a thumbnail: the painting, the name, the copies badge, the colour mark, and a dimmed state when the card is not the open one. Its comment about a face at list density is rewritten — the thumbnail is a painting, not a face, which is what makes it readable.
-- The grid lays out at the per-row count and shape question 1 settles, and keeps each card's existing a11y label.
-- `DeckCardDetailOverlay` and its test go per question 2, and the screen's detail state with them.
-- Measure: tile and screen tests (a thumbnail carries its painting, badge and mark; tapping it opens that card above; the others are dimmed), `git grep DeckCardDetailOverlay` finds nothing if question 2 keeps its default, then `npm run verify -w axiomancer-mobile`. The PR carries a screenshot per tab.
+- The grid lays out **4 to a row, square**, at the lab's default gap, and keeps each card's existing a11y label.
+- `DeckCardDetailOverlay`, its test and the screen's detail state all go. `flavor` stays on the view-model and `description` on the card data, unused by any screen; a comment on `flavor` says so, so the next reader does not take it for dead weight.
+- Measure: tile and screen tests (a thumbnail carries its painting, badge and mark; tapping it opens that card above; the others are dimmed), `git grep DeckCardDetailOverlay` finds nothing, then `npm run verify -w axiomancer-mobile`. The PR carries a screenshot per tab.
 
 ### 155.3 (DR1c) — Boxed type tabs between the two, one type at a time · S · closes A3 · requires 155.2
 

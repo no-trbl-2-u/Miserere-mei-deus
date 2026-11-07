@@ -1,0 +1,46 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "Built-in image generator, Pillow grid registration, split-spritesheet.py, ingest-art.mjs --no-grade",
+    "source": "art-department/masters/enemies/wreckmaster.sheet.png and art-department/masters/enemies/wreckmaster.prompt.txt",
+    "model": "Built-in image generator",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "portrait": "wreckmaster.webp",
+    "portrait_sha256": "1292d435b7be41569fb722c0940565320ed40fd99294eeff4f15896a8ba534a7",
+    "master_sha256": "88b6eada23298b1236ae7152a28f39dbe524fe0c908ab48410bc6cb82699350b",
+    "graded": false,
+    "graded_in_this_run": false,
+    "method": "Generator returned 1774x887. Extracted the 24 poses, aligned them on a 2048x768 grid with one scale and copied the first idle pose into both recovery endpoints. Encoded 256px cells within the WebP byte budget.",
+    "measured": "168192 B total, 7008 B mean, 8306 B max against 33260 B static.",
+    "used_by": [
+      "assets/images/enemies/frames.ts (registry for wreckmaster)"
+    ],
+    "covers": [
+      "wreckmaster-00.webp",
+      "wreckmaster-01.webp",
+      "wreckmaster-02.webp",
+      "wreckmaster-03.webp",
+      "wreckmaster-04.webp",
+      "wreckmaster-05.webp",
+      "wreckmaster-06.webp",
+      "wreckmaster-07.webp",
+      "wreckmaster-08.webp",
+      "wreckmaster-09.webp",
+      "wreckmaster-10.webp",
+      "wreckmaster-11.webp",
+      "wreckmaster-12.webp",
+      "wreckmaster-13.webp",
+      "wreckmaster-14.webp",
+      "wreckmaster-15.webp",
+      "wreckmaster-16.webp",
+      "wreckmaster-17.webp",
+      "wreckmaster-18.webp",
+      "wreckmaster-19.webp",
+      "wreckmaster-20.webp",
+      "wreckmaster-21.webp",
+      "wreckmaster-22.webp",
+      "wreckmaster-23.webp"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export const QUAY_CRAB_CELLS: readonly ImageSourcePropType[] = [
+    require('./quay-crab-00.webp'),
+    require('./quay-crab-01.webp'),
+    require('./quay-crab-02.webp'),
+    require('./quay-crab-03.webp'),
+    require('./quay-crab-04.webp'),
+    require('./quay-crab-05.webp'),
+    require('./quay-crab-06.webp'),
+    require('./quay-crab-07.webp'),
+    require('./quay-crab-08.webp'),
+    require('./quay-crab-09.webp'),
+    require('./quay-crab-10.webp'),
+    require('./quay-crab-11.webp'),
+    require('./quay-crab-12.webp'),
+    require('./quay-crab-13.webp'),
+    require('./quay-crab-14.webp'),
+    require('./quay-crab-15.webp'),
+    require('./quay-crab-16.webp'),
+    require('./quay-crab-17.webp'),
+    require('./quay-crab-18.webp'),
+    require('./quay-crab-19.webp'),
+    require('./quay-crab-20.webp'),
+    require('./quay-crab-21.webp'),
+    require('./quay-crab-22.webp'),
+    require('./quay-crab-23.webp'),
+];

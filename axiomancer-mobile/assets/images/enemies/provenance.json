@@ -104,5 +104,95 @@
     ],
     "license": "open source (T, 2026-10-29, D115)",
     "license_note": "stand-in until T's portrait swap. Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\" No sprite sheets (D97)."
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-11-06",
+    "tool": "Border-connected matteBlackGround from scripts/art/sheet.mjs, encoded with sharp",
+    "post_process": "640px max edge, transparent WebP q44, original color",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "Lamp Jelly.jpg (TOR-0539) from the torio Javardry collection",
+    "covers": [
+      "saltwick-swarm.webp"
+    ],
+    "used_by": [
+      "assets/images/enemies/index.ts (portrait registry)"
+    ]
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-11-06",
+    "tool": "Border-connected matteBlackGround from scripts/art/sheet.mjs, encoded with sharp",
+    "post_process": "640px max edge, transparent WebP q44, original color",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "Tide Bringer.jpg (TOR-0872) from the torio Javardry collection",
+    "covers": [
+      "quay-crab.webp"
+    ],
+    "used_by": [
+      "assets/images/enemies/index.ts (portrait registry)"
+    ]
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-11-06",
+    "tool": "Border-connected matteBlackGround from scripts/art/sheet.mjs, encoded with sharp",
+    "post_process": "640px max edge, transparent WebP q44, original color",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "Coral Crab.jpg (TOR-0133) from the torio Javardry collection",
+    "covers": [
+      "coralback.webp"
+    ],
+    "used_by": [
+      "assets/images/enemies/index.ts (portrait registry)"
+    ]
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-11-06",
+    "tool": "Border-connected matteBlackGround from scripts/art/sheet.mjs, encoded with sharp",
+    "post_process": "640px max edge, transparent WebP q44, original color",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "Atlantis.jpg (TOR-0041) from the torio Javardry collection",
+    "covers": [
+      "bilge-stalker.webp"
+    ],
+    "used_by": [
+      "assets/images/enemies/index.ts (portrait registry)"
+    ]
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-11-06",
+    "tool": "Border-connected matteBlackGround from scripts/art/sheet.mjs, encoded with sharp",
+    "post_process": "640px max edge, transparent WebP q44, original color",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "Kaizoku 09 Saber Pistol.png (TOR-0487) from the torio Javardry collection",
+    "covers": [
+      "wreckmaster.webp"
+    ],
+    "used_by": [
+      "assets/images/enemies/index.ts (portrait registry)"
+    ]
+  },
+  {
+    "generated_by": "acquisition",
+    "date": "2026-11-06",
+    "tool": "Border-connected matteBlackGround from scripts/art/sheet.mjs, encoded with sharp",
+    "post_process": "640px max edge, transparent WebP q44, original color",
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "artist": "torio (とり夫), Pixiv user 5887541",
+    "source": "Umi Bouzu A.png (TOR-0918) from the torio Javardry collection",
+    "covers": [
+      "saint-beneath.webp"
+    ],
+    "used_by": [
+      "assets/images/enemies/index.ts (portrait registry)"
+    ]
   }
 ]

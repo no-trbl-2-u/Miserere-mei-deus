@@ -22,6 +22,10 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
+- **157.1** · EN3a: the six new library entries, each on its cut foe's numbers (T's enemy recast, `/plot asap`, 2026-11-06; `main`'s verify-mobile is red until EN3c)
+- **157.3** · EN3c: the six portraits drawn — art registry, provenance, frame sets, backings (T's enemy recast, `/plot asap`, 2026-11-06; this is the chunk that takes `main` green)
+- **157.2** · EN3b: Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors (T's enemy recast, `/plot asap`, 2026-11-06)
+
 - **135.3** · SM2c: the four personas (T, `/plot asap`, 2026-11-01)
 - **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
@@ -98,6 +102,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 3 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 4 left |
 | 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 9 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
