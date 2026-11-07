@@ -22,10 +22,15 @@ import {
 
 const SPREADS: readonly StatSpread[] = ['even', 'body-mind', 'body'];
 
+/** The door boss of a node's map: the Saint Beneath on the Breakwater (EN3b, 2026-11-07), the Death Beholder elsewhere. */
+const doorBoss = (nodeId: string) => nodeId.startsWith('bw-')
+    ? { slug: 'saint-beneath', name: 'Saint Beneath' } as const
+    : { slug: 'death-beholder', name: 'Death Beholder' } as const;
+
 function printWalk(label: string, walk: Act1Walk): void {
     process.stdout.write(`\n${label}: ends level ${walk.finalLevel} (${walk.finalExperience} XP)\n`);
     for (const d of walk.doors) {
-        process.stdout.write(`  ${d.nodeId.padEnd(6)} player L${d.playerLevel} at ${d.experience} XP vs Death Beholder L${d.doorLevel}\n`);
+        process.stdout.write(`  ${d.nodeId.padEnd(6)} player L${d.playerLevel} at ${d.experience} XP vs ${doorBoss(d.nodeId).name} L${d.doorLevel}\n`);
     }
 }
 
@@ -53,7 +58,7 @@ if (require.main === module) {
     process.stdout.write(`\nDoor win rate at the full-clear stage (greedy witness, ${runs} runs, seed ${seed})\n`);
     process.stdout.write(`  ${'door'.padEnd(6)} ${SPREADS.map(s => s.padStart(10)).join('')}\n`);
     for (const d of full.doors) {
-        const foe = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], d.doorLevel ?? d.playerLevel);
+        const foe = scaleEnemyToLevel(ENEMY_REGISTRY[doorBoss(d.nodeId).slug], d.doorLevel ?? d.playerLevel);
         const cells = SPREADS.map(spread => {
             const player = createCharacter({
                 name: 'Stage', level: d.playerLevel,

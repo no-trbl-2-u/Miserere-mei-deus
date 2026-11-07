@@ -260,7 +260,7 @@ export const SCREENS = [
         // No preset wears a relic yet, so this shows the sage's consumables;
         // the relic icons wait on a relic-holding fixture (AUDIT row).
         fixture: 'sage-bw-door-gate',
-        why: 'The satchel tab — item icons, burden and what a carried item does.',
+        why: 'The satchel tab — item icons and what a carried item does.',
     },
     {
         name: 'quest',

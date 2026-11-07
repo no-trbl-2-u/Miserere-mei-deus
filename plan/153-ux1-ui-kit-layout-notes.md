@@ -69,10 +69,8 @@
 
 ## Acceptance
 
-- **A3** The tab bar shows six larger icons with no words, each with its tab's name as its accessibility label.
 - **A4** The reveal screen has no "A FOE RISES". The dock has no phase-ledger marks, a narrower END and a taller dock, and VITAE, the piles and the portrait keep their order.
 - **A5** Self has no hazard deck link, and the `/hazard-deck` route and screen are gone. No test or e2e flow names them.
-- **A6** No screen shows burden. The Satchel has no bar, tooltip or number for it, its header does not say it, and the presenter does not compute it.
 
 ## Open questions
 
@@ -83,12 +81,10 @@
 
 ## Chunks
 
-Measure: 4 open · 3 closed · next A8
+Measure: 2 open · 5 closed · next A8
 
-- [ ] **153.3** The tab bar is bigger icons, no words · S · closes A3 · needs — · alias: UX1c
 - [ ] **153.4** No "A FOE RISES"; the dock trades its circles for room · M · closes A4 · needs — · alias: UX1d
 - [ ] **153.5** The hazard deck link and screen go · S · closes A5 · needs — · alias: UX1e
-- [ ] **153.6** No burden, anywhere · S · closes A6 · needs — · alias: UX1f
 
 ### 153.1 (UX1a) — The main menu says only its three words · S · closes A1 · requires 152.6
 

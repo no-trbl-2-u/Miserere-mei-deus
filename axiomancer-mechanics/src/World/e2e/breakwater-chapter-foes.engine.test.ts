@@ -138,9 +138,43 @@ describe('the sea cave draws the Cave Choir, which fires both its DANGERs at its
     });
 });
 
-describe('the keep causeway draws the Toll-Keeper or the Tide-Gate, each firing both its DANGERs (phase EN1l)', () => {
+/** A fight against `slug` at `level`, drawn straight from the registry (no node), for a foe the chapter no longer stages. */
+function fightAsFoe(slug: keyof typeof ENEMY_REGISTRY, level: number): CombatEncounterState {
+    const fresh = createNewGameState({ startMap: 'breakwater' });
+    const player = { ...fresh.player, health: 5000, maxHealth: 5000 };
+    const foe = { ...scaleEnemyToLevel(ENEMY_REGISTRY[slug], level), effects: [] };
+    return rollEncounterDice(initializeCombatEncounter(player, foe, undefined, 7), rng).state;
+}
+
+/** Walk one elite's two DANGERs at its 60% and 30% lines, starting from `s`. */
+function walkDangers(start: CombatEncounterState, source: { id: string }, sixty: string, thirty: string): void {
+    let s = start;
+    for (const [phase, line, danger] of [[1, 0.6, sixty], [2, 0.3, thirty]] as const) {
+        const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } }, rng);
+        expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: source.id, phase, danger });
+        s = crossed.state;
+        expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger', name: danger });
+        const res = resolveThreatPhase(s, rng);
+        expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger}: `));
+        expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
+        s = res.state;
+    }
+}
+
+/** A foe turn raises the TOLL to 1; the player pays it once, a SACRIFICE 1. Returns the state after. */
+function payOneToll(start: CombatEncounterState): CombatEncounterState {
+    const s = startTurn(resolveThreatPhase(start, rng).state, rng).state;
+    expect(tollOwed(s)).toBe(1);
+    const paid = payTheToll(s);
+    expect(paid.events).toContainEqual({ kind: 'vitae-sacrificed', cardId: TOLL_SOURCE, amount: 1, counted: 1 });
+    expect(paid.state.player.health).toBe(s.player.health - 1);
+    expect(tollOwed(paid.state)).toBe(0);
+    return paid.state;
+}
+
+describe('the keep causeway draws the Wreckmaster or the Tide-Gate, each firing both its DANGERs (phases EN1l, EN3b)', () => {
     /** The causeway's fight with the map's pool roll drawing `slug`. */
-    const drawn = (slug: 'toll-keeper' | 'tide-gate'): CombatEncounterState => {
+    const drawn = (slug: 'wreckmaster' | 'tide-gate'): CombatEncounterState => {
         for (const roll of [0.1, 0.3, 0.5, 0.7, 0.9]) {
             const s = fightAt('bw-w5', () => roll);
             if (s.enemy.id === ENEMY_REGISTRY[slug].id) return s;
@@ -148,32 +182,30 @@ describe('the keep causeway draws the Toll-Keeper or the Tide-Gate, each firing 
         throw new Error(`bw-w5 never drew ${slug}`);
     };
 
+    it('bw-w5 names the Wreckmaster first and the Tide-Gate second, each at level 8', () => {
+        const slugs = getNodeEventPool('coastal-continent', 'breakwater', 'bw-w5')!.entries.map(e => (e.payload as { enemySlug?: string }).enemySlug);
+        expect(slugs).toEqual(['wreckmaster', 'tide-gate']);
+        expect(BW_ELITE_DRAWS['bw-w5']).toEqual([{ slug: 'wreckmaster', level: 8 }, { slug: 'tide-gate', level: 8 }]);
+    });
+
     it.each([
-        ['toll-keeper', 'Compound Interest', 'Seize the Causeway'],
+        ['wreckmaster', 'Compound Interest', 'Seize the Causeway'],
         ['tide-gate', 'Spring Tide', 'The Gate Opens'],
     ] as const)('bw-w5 draws %s', (slug, sixty, thirty) => {
         let s = drawn(slug);
         const source = ENEMY_REGISTRY[slug];
         expect(s.enemy).toMatchObject({ id: source.id, difficulty: 'elite', level: 8 });
-        if (slug === 'toll-keeper') {
-            // A foe turn raises the TOLL to 1; the player pays it once, a SACRIFICE 1.
-            s = startTurn(resolveThreatPhase(s, rng).state, rng).state;
-            expect(tollOwed(s)).toBe(1);
-            const paid = payTheToll(s);
-            expect(paid.events).toContainEqual({ kind: 'vitae-sacrificed', cardId: TOLL_SOURCE, amount: 1, counted: 1 });
-            expect(paid.state.player.health).toBe(s.player.health - 1);
-            expect(tollOwed(paid.state)).toBe(0);
-            s = paid.state;
-        }
-        for (const [phase, line, danger] of [[1, 0.6, sixty], [2, 0.3, thirty]] as const) {
-            const crossed = resolveThreatPhase({ ...s, enemy: { ...s.enemy, health: Math.floor(s.enemy.maxHealth * line) } }, rng);
-            expect(crossed.events).toContainEqual({ kind: 'enemy-phase-entered', enemyId: source.id, phase, danger });
-            s = crossed.state;
-            expect(telegraph(s)).toMatchObject({ phase, danger: true, kind: 'danger', name: danger });
-            const res = resolveThreatPhase(s, rng);
-            expect(fired(res.events)[0]).toMatch(new RegExp(`^${danger}: `));
-            expect(telegraph(res.state)).toMatchObject({ phase, step: 0, danger: false });
-            s = res.state;
-        }
+        if (slug === 'wreckmaster') s = payOneToll(s);
+        walkDangers(s, source, sixty, thirty);
+    });
+});
+
+describe('the benched Toll-Keeper is drawn by no node but still plays its fight (EN3b)', () => {
+    it('collects its TOLL and fires both its DANGERs at level 8', () => {
+        const source = ENEMY_REGISTRY['toll-keeper'];
+        let s = fightAsFoe('toll-keeper', 8);
+        expect(s.enemy).toMatchObject({ id: source.id, difficulty: 'elite', level: 8 });
+        s = payOneToll(s);
+        walkDangers(s, source, 'Compound Interest', 'Seize the Causeway');
     });
 });

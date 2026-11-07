@@ -8,7 +8,8 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 import {
-    clearSandboxCards, registerSandboxCards, rollEncounterDice, type Card, type CombatEncounterState, type StateFixture,
+    clearSandboxCards, ENEMY_REGISTRY, getThreatSequence, registerSandboxCards, rollEncounterDice,
+    type Card, type CombatEncounterState, type StateFixture,
 } from '@mechanics';
 
 import { buildCombatViewModel, effectChipA11y } from '../combat-encounter.engine';
@@ -35,6 +36,16 @@ function fightAt(node: string, seed = `fixture-en1f-${node}`): CombatEncounterSt
     return rollEncounterDice(combat).state;
 }
 
+/**
+ * The same fight with the registry foe `slug` in the foe's seat. For a foe
+ * Chapter 1 no longer stages at any node (EN3b), whose board coverage must
+ * outlive the repoint.
+ */
+function asFoe(s: CombatEncounterState, slug: keyof typeof ENEMY_REGISTRY): CombatEncounterState {
+    const enemy = { ...ENEMY_REGISTRY[slug] };
+    return { ...s, enemy, threatPhases: getThreatSequence(enemy), currentPhaseIndex: 0 };
+}
+
 /** The fight with the foe about to play `move` in its opening loop. */
 function at(s: CombatEncounterState, move: string): CombatEncounterState {
     const i = s.threatPhases.findIndex((p) => p.enemyMove?.name === move && p.enemyMove.phase === 0);
@@ -46,11 +57,12 @@ const NO_WORDS = { ward: 0, brine: 0, leechTurns: 0, leechPotency: 0 };
 
 describe('each fields, quays, pier and town node stages its own foe and portrait', () => {
     it.each([
-        ['bw-w2', 'Float-Eye', 'float-eye'], ['bw-w3', 'Gallows Crow', 'gallows-crow'],
-        ['bw-h1', 'Net-Mender', 'net-mender'], ['bw-h2', 'Crane-Hook', 'crane-hook'],
-        ['bw-h7', 'Brine-Widow', 'brine-widow'], ['bw-t1', 'Lamprey-Knot', 'lamprey-knot'],
-        ['bw-t2', 'Green Jelly', 'green-jelly'], ['bw-t3', 'Curfew-Ringer', 'curfew-ringer'],
-        ['bw-l1', 'Wreck-Picker', 'wreck-picker'], ['bw-d1', 'Smokehouse Gutter', 'smokehouse-gutter'],
+        // Chapter 1's recast roster (EN3b): the Design table's foe at each node.
+        ['bw-w2', 'Quay-Crab', 'quay-crab'], ['bw-w3', 'Coralback', 'coralback'],
+        ['bw-h1', 'Net-Mender', 'net-mender'], ['bw-h2', 'Quay-Crab', 'quay-crab'],
+        ['bw-h7', 'Brine-Widow', 'brine-widow'], ['bw-t1', 'Coralback', 'coralback'],
+        ['bw-t2', 'Saltwick Swarm', 'saltwick-swarm'], ['bw-t3', 'Brine-Widow', 'brine-widow'],
+        ['bw-l1', 'Bilge-Stalker', 'bilge-stalker'], ['bw-d1', 'Net-Mender', 'net-mender'],
     ])('%s: %s', (node, name, art) => {
         const vm = buildCombatViewModel(fightAt(node));
         expect(vm.enemy.name).toBe(name);
@@ -94,8 +106,18 @@ describe('the hoard and the LEDGER stand on the foe\'s side as counters', () => 
 });
 
 describe('a WARD-only move telegraphs DEFEND, with no number', () => {
-    it.each([['bw-w2', 'Shut Lid'], ['bw-w3', 'Take Wing'], ['bw-h2', 'Lock the Brake']])('%s: %s', (node, move) => {
+    it.each([
+        ['bw-w2', 'Lock the Brake'], ['bw-w3', 'Knot Up'], ['bw-h2', 'Lock the Brake'],
+    ])('%s: %s', (node, move) => {
         const intent = buildCombatViewModel(at(fightAt(node), move)).enemy.intent;
+        expect([intent.type, intent.label, intent.moveName]).toEqual(['defend', 'DEFEND', move]);
+        expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
+        expect(intent.damage).toBe(0);
+    });
+
+    // The benched Float-Eye and Gallows Crow stage at no Chapter 1 node, and still telegraph DEFEND without a number.
+    it.each<[slug: 'float-eye' | 'gallows-crow', move: 'Shut Lid' | 'Take Wing']>([['float-eye', 'Shut Lid'], ['gallows-crow', 'Take Wing']])('benched %s: %s', (slug, move) => {
+        const intent = buildCombatViewModel(at(asFoe(fightAt('bw-w2'), slug), move)).enemy.intent;
         expect([intent.type, intent.label, intent.moveName]).toEqual(['defend', 'DEFEND', move]);
         expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
         expect(intent.damage).toBe(0);
@@ -136,13 +158,13 @@ describe('the foes own counters stand on the board, never on the telegraph', () 
     });
 
     it('the Curfew-Ringer Toll count shows on its side', () => {
-        const s = fightAt('bw-t3');
+        const s = asFoe(fightAt('bw-w2'), 'curfew-ringer');
         const tolled = buildCombatViewModel({ ...s, enemyRiders: { tolls: 3 } });
         expect(tolled.enemy.effects).toContainEqual(expect.objectContaining({ effectId: 'enemy-counter-toll', intensity: 3 }));
     });
 
     it('a Toll telegraphs ATTACK with no number, however high the count', () => {
-        const s = { ...at(fightAt('bw-t3'), 'Toll'), enemyRiders: { tolls: 4 } };
+        const s = { ...at(asFoe(fightAt('bw-w2'), 'curfew-ringer'), 'Toll'), enemyRiders: { tolls: 4 } };
         const intent = buildCombatViewModel(s).enemy.intent;
         expect([intent.type, intent.moveName]).toEqual(['attack', 'Toll']);
         expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);

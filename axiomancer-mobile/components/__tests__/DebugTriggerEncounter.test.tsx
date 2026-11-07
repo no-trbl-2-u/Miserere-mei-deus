@@ -5,8 +5,8 @@
  *   - DEV gate (true / simulated-false)
  *   - One button per encounter kind mounts
  *   - COMBAT seeds a combat-prelude encounter event with the
- *     lowest-level standard foe on the current map (level 1 on
- *     the Breakwater) and navigates to the WILDS tab
+ *     lowest-level standard foe on the current map (the
+ *     lowest level of the Breakwater's wandering pool) and navigates to the WILDS tab
  *   - BOSS seeds an isBoss encounter with a boss-tier foe
  *   - HAZARD / REST / TREASURE launch their REAL minigame session
  *     (and crucially leave NO paced /event route, so they can never
@@ -96,8 +96,8 @@ describe('DebugTriggerEncounter: combat triggers', () => {
         const event = slice.pending!.event as { kind: string; isBoss: boolean; encounter: { enemies: { level: number }[] } };
         expect(event.kind).toBe('encounter');
         expect(event.isBoss).toBe(false);
-        // Fishing-village's gentlest foes are level 1.
-        expect(event.encounter.enemies[0].level).toBe(1);
+        // The gentlest foe of the Breakwater's wandering pool is the Quay-Crab, level 3 (EN3b; it was the Float-Eye, level 1).
+        expect(event.encounter.enemies[0].level).toBe(3);
         expect(selectHasActiveEvent(store.getState())).toBe(true);
     });
 

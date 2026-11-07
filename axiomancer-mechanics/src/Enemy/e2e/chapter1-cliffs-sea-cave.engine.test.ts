@@ -151,9 +151,10 @@ describe('A11 and A12 — the three foes play exactly the Appendix', () => {
     });
 
     it('the nodes bind them, every foe under level 10, and the sea cave is an elite node', () => {
-        expect(BW_ENCOUNTER_FOES['bw-l1']).toEqual({ slug: 'wreck-picker', level: 6 });
-        expect(BW_ENCOUNTER_FOES['bw-d1']).toEqual({ slug: 'smokehouse-gutter', level: 6 });
-        expect(BW_ENCOUNTER_FOES['bw-d3']).toEqual({ slug: 'wreck-picker', level: 6 });
+        // The recast (EN3b): the Bilge-Stalker holds the Wreck-Picker's nodes, a Net-Mender the Gutter's.
+        expect(BW_ENCOUNTER_FOES['bw-l1']).toEqual({ slug: 'bilge-stalker', level: 6 });
+        expect(BW_ENCOUNTER_FOES['bw-d1']).toEqual({ slug: 'net-mender', level: 6 });
+        expect(BW_ENCOUNTER_FOES['bw-d3']).toEqual({ slug: 'bilge-stalker', level: 6 });
         // The sea cave draws the Tithe-Collector or the Cave Choir (EN1j's pair), 50/50.
         expect(BW_ELITE_DRAWS['bw-c1']).toContainEqual(expect.objectContaining({ slug: 'tithe-collector', level: 5 }));
         const entries = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries;

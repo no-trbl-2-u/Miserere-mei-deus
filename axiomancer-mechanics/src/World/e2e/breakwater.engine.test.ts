@@ -160,12 +160,12 @@ describe('the Breakwater\'s events (D29)', () => {
         });
     });
 
-    it('fights the Death Beholder in the sea keep, pinned low, as the chapter boss (D61)', () => {
+    it('fights the Saint Beneath (EN3b) in the sea keep, pinned low, as the chapter boss (D61)', () => {
         const payload = getNodeEventPool('coastal-continent', 'breakwater', 'bw-k2')!.entries[0]!.payload;
-        expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'death-beholder', isBoss: true, level: BW_DOOR_LEVEL });
+        expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'saint-beneath', isBoss: true, level: BW_DOOR_LEVEL });
     });
 
-    it('fights the Cave Choir in the sea cave (EN1j), the Lamplighter or the Wrecker on the lighthouse path (EN1k) and the Toll-Keeper or the Tide-Gate on the keep causeway (EN1l)', () => {
+    it('fights the Cave Choir in the sea cave (EN1j), the Lamplighter or the Wrecker on the lighthouse path (EN1k) and the Wreckmaster or the Tide-Gate on the keep causeway (EN1l, EN3b)', () => {
         const cave = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries.map(e => e.payload);
         expect(cave).toContainEqual(expect.objectContaining({ kind: 'encounter', enemySlug: 'cave-choir', isBoss: false, level: 5 }));
         const lighthouse = getNodeEventPool('coastal-continent', 'breakwater', 'bw-l4')!.entries.map(e => e.payload);
@@ -175,7 +175,7 @@ describe('the Breakwater\'s events (D29)', () => {
         ]);
         const causeway = getNodeEventPool('coastal-continent', 'breakwater', 'bw-w5')!.entries.map(e => e.payload);
         expect(causeway).toEqual([
-            expect.objectContaining({ kind: 'encounter', enemySlug: 'toll-keeper', isBoss: false, level: 8 }),
+            expect.objectContaining({ kind: 'encounter', enemySlug: 'wreckmaster', isBoss: false, level: 8 }),
             expect.objectContaining({ kind: 'encounter', enemySlug: 'tide-gate', isBoss: false, level: 8 }),
         ]);
     });

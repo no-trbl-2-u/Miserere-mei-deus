@@ -18,8 +18,8 @@ interface StatBarProps {
    * bar's own colour at full opacity and the empty track tints toward it, so
    * a nearly-spent bar cannot be mistaken for a bar with nothing in it.
    *
-   * Omitted by default, so a consumer that has no danger state — the BURDEN
-   * bar, where a full bar is the problem, not an empty one — is unchanged.
+   * Omitted by default, so a consumer that has no danger state — a bar
+   * where a full bar is the problem, not an empty one — is unchanged.
    */
   alarmAt?: number;
   /**

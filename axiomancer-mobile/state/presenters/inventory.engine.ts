@@ -221,9 +221,6 @@ export interface InventoryViewModel {
     items: readonly InventoryItemRow[];
     /** Currency the player carries (engine "shilling"). */
     shilling: number;
-    /** Burden / encumbrance numerator. */
-    burden: number;
-    burdenMax: number;
     /** ID of the item the user has tapped to expand, or `null`. */
     expandedItemId: string | null;
     /** True when the inventory is empty — the screen shows the empty state. */
@@ -265,7 +262,7 @@ const TAB_ORDER: readonly InventoryTab[] = [
 
 /** Display strings for the inventory screen's chrome. */
 // PURSE is the canonical money-container word (blacksmith/rest/village).
-const SECTION_HEADER = 'SATCHEL · PURSE · BURDEN';
+const SECTION_HEADER = 'SATCHEL · PURSE';
 const CATEGORY_HEADERS: Record<InventoryCategory, string> = {
     // Every header echoes its own tab — GEAR → '✠ GEAR & GIRDING', PHIALS →
     // '✠ PHIALS & SOPS', and so on. The equipment header names the goods, not
@@ -296,7 +293,6 @@ const SLOT_LABELS: Record<Equipment['slot'], string> = {
     relic: 'Relic',
 };
 
-const BURDEN_MAX = 50;
 const EMPTY_MESSAGE = 'nothing in the satchel.';
 
 
@@ -543,17 +539,6 @@ function readShilling(state: GameStore): number {
     return Number.isFinite(raw) && raw >= 0 ? raw : 0;
 }
 
-function computeBurden(rows: readonly InventoryItemRow[]): number {
-    // Return the uncapped total so the BURDEN bar's text reads
-    // honestly ("60 / 50" when over capacity) rather than silently
-    // clamping the display to "50 / 50". The bar fill renders
-    // clamped at 100% (StatBar handles its own pct clamp) — that's
-    // correct because the bar can't visualize "more than full" —
-    // but the numeric text on the label row carries the overflow
-    // signal.
-    return rows.reduce((acc, r) => acc + r.quantity, 0);
-}
-
 function buildEquipmentDock(
     player: Character,
     selectedRow: DockRowId | null,
@@ -615,8 +600,6 @@ export function selectInventoryViewModel(
         activeTab,
         items,
         shilling: readShilling(state),
-        burden: computeBurden(rows),
-        burdenMax: BURDEN_MAX,
         expandedItemId: localUi.expandedItemId ?? null,
         isEmpty: rows.length === 0,
         emptyMessage: EMPTY_MESSAGE,

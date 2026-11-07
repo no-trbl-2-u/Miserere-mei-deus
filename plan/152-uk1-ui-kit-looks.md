@@ -36,7 +36,7 @@
 
 **Vellum and ink.**
 
-- Text that sits on a vellum piece is inked: body text in dark iron-gall brown (about `#2b1f14`), and accents in oxblood (about `#7a1f14`) where today's text is gold or amber (T, 2026-11-06: oxblood red, not the dark-brown body ink).
+- Text that sits on a vellum piece is inked: body text in dark iron-gall brown (about `#2b1f14`), and accents in oxblood (about `#6e1a10`; `#7a1f14` measures 4.35:1 on the darkest parchment and fails A5's 4.5:1 floor) where today's text is gold or amber (T, 2026-11-06: oxblood red, not the dark-brown body ink).
 - Every inked colour meets 4.5:1 contrast on the parchment.
 - Green is darkened to a readable ink. An example is the fight summary's "Victory".
 - T's note on P-01 ("adjust the font to be easier to read, and change the yellow font to be readable") is satisfied by the ink rule and a body face at least as large as today's.

@@ -81,7 +81,7 @@ describe('chapter1Content', () => {
             c.enemies.find((e) => e.id === ENEMY_REGISTRY[slug as keyof typeof ENEMY_REGISTRY].id)?.stagings.some((s) => s.nodeId === node);
         for (const [node, foe] of Object.entries(BW_ENCOUNTER_FOES)) expect(staged(foe.slug, node), node).toBe(true);
         for (const [node, draw] of Object.entries(BW_ELITE_DRAWS)) for (const foe of draw) expect(staged(foe.slug, node), node).toBe(true);
-        expect(staged('death-beholder', 'bw-k2')).toBe(true);
+        expect(staged('saint-beneath', 'bw-k2')).toBe(true);
     });
 
     it('lists every hazard a crossing can draw once, at every hazard node', () => {

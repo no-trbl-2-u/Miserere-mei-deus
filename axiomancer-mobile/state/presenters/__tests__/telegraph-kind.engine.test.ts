@@ -114,15 +114,15 @@ describe('DANGER is named only once seen (A5)', () => {
     });
 
     it('lists no dangers for a foe without phases', () => {
-        // The chapter boss keeps its deck (the Float-Eye at bw-w2 plays HP phases).
+        // The chapter boss keeps its deck (the Quay-Crab at bw-w2 plays HP phases).
         const { combat } = startRealFight({ ...REAL_BOSS_FIGHT_FIXTURE, player: { level: 1 } }, { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat).enemy.dangers).toEqual([]);
     });
 
-    it('lists the live Float-Eye\'s DANGER at bw-w2: unnamed until seen, then named', () => {
+    it('lists the live Quay-Crab\'s DANGER at bw-w2: unnamed until seen, then named', () => {
         const { combat } = startRealFight(realFightFixture({ level: 1 }), { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat, NO_DANGERS_SEEN).enemy.dangers).toEqual([{ phase: 2, name: null }]);
-        expect(buildCombatViewModel(combat, new Set(['The Long Career'])).enemy.dangers).toEqual([{ phase: 2, name: 'The Long Career' }]);
+        expect(buildCombatViewModel(combat, new Set(['Drop the Load'])).enemy.dangers).toEqual([{ phase: 2, name: 'Drop the Load' }]);
     });
 });
 

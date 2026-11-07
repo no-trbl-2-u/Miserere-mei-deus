@@ -584,3 +584,5 @@
 - 2026-11-07 · 154.3 (alias: UK2c) · the dialogue offers only its own replies; no leave row, no errand chip · e742f12b..e742f12b (#1434)
 - 2026-11-07 · 153.1 (alias: UX1a) · The main menu prints only its verbs; the hints are spoken · 1df97aaa..1df97aaa (#1439)
 - 2026-11-07 · 153.2 (alias: UX1b) · Quest tracker loses its head and a lone 0/1 · afff1809..afff1809 (#1432)
+- 2026-11-07 · 153.3 (alias: UX1c) · the tab bar is large icons alone, clear of the dock flourishes · 93fa450e..acd6340f (#1441)
+- 2026-11-07 · 153.6 (alias: UX1f) · The Satchel has no burden: no bar, no tooltip, no number, no word, and the presenter computes none · b48d3cee..8224c1cd (#1442)

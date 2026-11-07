@@ -22,7 +22,6 @@ export const QUEST_LOCKED_LINE = '[content] Not yet. Finish the work you were gi
 export const QUEST_WAITING_HEAD = 'YOUR WORK, SO FAR';
 export const QUEST_TURN_IN_HEAD = 'THE WORK IS DONE';
 export const QUEST_OFFER_HEAD = 'THE NEXT WORK';
-export const QUEST_REWARDS_HEAD = 'THE PAY';
 export const QUEST_ACCEPTED_LINE = 'Accepted. The count begins now.';
 export const QUEST_DONE_LINE = 'Done and paid.';
 export const QUEST_PAID_HEAD = 'PAID';
@@ -30,11 +29,6 @@ export const QUEST_PAID_HEAD = 'PAID';
 export const QUEST_ACCEPT_LABEL = 'ACCEPT';
 export const QUEST_TURN_IN_LABEL = 'TURN IN';
 export const QUEST_LEAVE_LABEL = 'LEAVE';
-
-/** "1 of 2". */
-export function questProgressLine(current: number, required: number): string {
-    return `${Math.min(current, required)} of ${required}`;
-}
 
 export const QUEST_PAID_NOTHING = 'Nothing more is owed.';
 

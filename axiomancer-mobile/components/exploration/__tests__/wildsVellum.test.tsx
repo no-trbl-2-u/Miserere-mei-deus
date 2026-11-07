@@ -179,6 +179,28 @@ describe('A3: the tab bar on the vellum dock', () => {
         expect(typeof options.tabBarBackground).toBe('function');
     });
 
+    it('153.3: shows no tab words, and each tab keeps its name as its accessibility label', () => {
+        const { options } = mountLayout();
+        expect(options.tabBarShowLabel).toBe(false);
+        const screenProps = mockTabsScreen.mock.calls.map((c) => c[0] as unknown as { options: { title: string; tabBarLabel?: string; tabBarAccessibilityLabel?: string; tabBarIcon: (p: unknown) => React.ReactElement } });
+        expect(screenProps).toHaveLength(6);
+        for (const { options: o } of screenProps) {
+            expect(o.tabBarLabel).toBeUndefined();
+            expect(o.tabBarAccessibilityLabel).toBe(o.title);
+            expect(o.tabBarAccessibilityLabel).toMatch(/[A-Z]/);
+        }
+    });
+
+    it('153.3: draws each icon at 30pt with no text beside it', () => {
+        const { screens } = mountLayout();
+        for (const sc of screens) {
+            const icon = render(sc.options.tabBarIcon({ color: '#000', focused: false }));
+            expect(icon.queryAllByText(/./).length).toBe(0);
+            const svg = icon.UNSAFE_getByProps({ accessibilityRole: 'image' });
+            expect(Number(svg.props.width ?? svg.props.height)).toBe(30);
+        }
+    });
+
     it('draws nothing behind the selected tab (no tick, no tile)', () => {
         const { screens } = mountLayout();
         const icon = render(screens[0].options.tabBarIcon({ color: VELLUM_OXBLOOD, size: 24, focused: true }));

@@ -13,7 +13,7 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { fightWage, spareWage, type EnemyDifficulty } from '@mechanics';
-import { FloatEye } from '@mechanics/Enemy/enemy.library';
+import { QuayCrab } from '@mechanics/Enemy/enemy.library';
 
 import type { CombatBoardProps } from '@/components/combat/encounter/CombatBoard';
 import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
@@ -113,8 +113,8 @@ describe('the prompt, before the choice', () => {
         expect(screen.queryByTestId('combat-summary-shillings')).toBeNull();
         expect(screen.queryByTestId('combat-summary-spare-reward')).toBeNull();
         expect(screen.queryByTestId('combat-summary-mercy-line')).toBeNull();
-        expect(screen.queryByText(FloatEye.mercyLines!.spare)).toBeNull();
-        expect(screen.queryByText(FloatEye.mercyLines!.finish)).toBeNull();
+        expect(screen.queryByText(QuayCrab.mercyLines!.spare)).toBeNull();
+        expect(screen.queryByText(QuayCrab.mercyLines!.finish)).toBeNull();
         expect(screen.queryByText(/shilling/i)).toBeNull();
         expect(screen.queryByText(new RegExp(spareRewardLabel))).toBeNull();
     });
@@ -143,14 +143,14 @@ describe('Spare', () => {
         expect(screen.getByTestId('combat-summary-shillings')).toBeTruthy();
         expect(textsUnder('combat-summary-shillings').join('')).toContain(`+${spareWage(enemy.level)}`);
         expect(textsUnder('combat-summary-spare-reward').join('')).toContain(spareRewardLabel);
-        expect(textsUnder('combat-summary-mercy-line')).toEqual([FloatEye.mercyLines!.spare]);
+        expect(textsUnder('combat-summary-mercy-line')).toEqual([QuayCrab.mercyLines!.spare]);
 
         const after = store.getState();
         expect(after.currentEncounter).toBeUndefined();
         expect(after.player.experience).toBe(before.experience);
         expect(after.player.currency).toBeGreaterThanOrEqual(before.currency + spareWage(enemy.level));
         expect(after.combatReward?.spare?.reward).toBeDefined();
-        expect(after.codex.defeatedEnemies).toContain('float-eye');
+        expect(after.codex.defeatedEnemies).toContain('quay-crab');
     });
 
     it('the rolled item reaches the run log, tagged spare', () => {
@@ -181,7 +181,7 @@ describe('Finish', () => {
         expect(screen.getByTestId('combat-summary')).toBeTruthy();
         expect(screen.queryByTestId('combat-summary-spare-reward')).toBeNull();
         expect(textsUnder('combat-summary').join(' ')).toMatch(/falls/);
-        expect(textsUnder('combat-summary-mercy-line')).toEqual([FloatEye.mercyLines!.finish]);
+        expect(textsUnder('combat-summary-mercy-line')).toEqual([QuayCrab.mercyLines!.finish]);
     });
 });
 

@@ -26,17 +26,18 @@ const LIVE = auditRosterHealth();
 
 /** The orphans on the live tree, by lens and id. Change with the content. */
 const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
-    // Chapter 1's six recast faces (EN3a, T 2026-11-06). 157.1 puts them in
-    // the library; 157.2 repoints the node tables and the wandering pool onto
-    // them. Until it does they are authored and placed nowhere, which is what
-    // this lens is for. 157.2 clears all six from this list — and adds the ten
-    // foes T cut from Chapter 1, which stay in the library drawn by nothing.
-    { lens: 'enemy-unpooled', id: 'enemy-quay-crab' },
-    { lens: 'enemy-unpooled', id: 'enemy-coralback' },
-    { lens: 'enemy-unpooled', id: 'enemy-saltwick-swarm' },
-    { lens: 'enemy-unpooled', id: 'enemy-bilge-stalker' },
-    { lens: 'enemy-unpooled', id: 'enemy-wreckmaster' },
-    { lens: 'enemy-unpooled', id: 'enemy-saint-beneath' },
+    // Chapter 1's recast (EN3b, T 2026-11-06): ten of its seventeen foes are
+    // out of the chapter ("they're just not in chapter 1") and stay in the
+    // library drawn by no Breakwater node and no wandering pool. These seven
+    // are the ones no other map's table stages either (the Float-Eye, the Green
+    // Jelly and the Death Beholder are still pinned in the later Act 1 maps).
+    { lens: 'enemy-unpooled', id: 'enemy-gallows-crow' },
+    { lens: 'enemy-unpooled', id: 'enemy-crane-hook' },
+    { lens: 'enemy-unpooled', id: 'enemy-lamprey-knot' },
+    { lens: 'enemy-unpooled', id: 'enemy-curfew-ringer' },
+    { lens: 'enemy-unpooled', id: 'enemy-wreck-picker' },
+    { lens: 'enemy-unpooled', id: 'enemy-smokehouse-gutter' },
+    { lens: 'enemy-unpooled', id: 'enemy-toll-keeper' },
     // No run starts with the ring or is handed it any more; old saves and
     // the dev menu hold it until it gets a lane.
     { lens: 'item-ungranted', id: 'relic-disarming-plea' },

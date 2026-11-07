@@ -1,7 +1,7 @@
 /**
  * The keep causeway's two elites on the board (phase EN1l, A18 and A19):
- * `bw-w5` stages the Toll-Keeper or the Tide-Gate with its stand-in portrait.
- * The Toll-Keeper's TOLL and distrained cards stand on its side as live
+ * `bw-w5` stages the Wreckmaster (EN3b, the Toll-Keeper's recast) or the Tide-Gate with its stand-in portrait.
+ * The Wreckmaster's TOLL and distrained cards stand on its side as live
  * chips, and its pane carries "Pay the toll (n)", which the engine refuses
  * loudly at the SACRIFICE floor. The Tide-Gate's TIDE stands on its side from
  * the first turn, 0 included, with its low-tide VULNERABLE. Neither number
@@ -10,7 +10,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import {
-    payTheToll, rollEncounterDice, type CombatEncounterState, type StateFixture,
+    ENEMY_REGISTRY, getThreatSequence, payTheToll, rollEncounterDice, type CombatEncounterState, type StateFixture,
 } from '@mechanics';
 
 import { buildCombatViewModel, effectChipA11y, TOLL_COPY } from '../combat-encounter.engine';
@@ -19,7 +19,7 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 const DECK = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 
 /** The live fight at the keep causeway with `foeId` drawn: tries seeds until the map's pool roll draws it. */
-function fightAt(foeId: 'enemy-toll-keeper' | 'enemy-tide-gate'): CombatEncounterState {
+function fightAt(foeId: 'enemy-wreckmaster' | 'enemy-tide-gate'): CombatEncounterState {
     for (let i = 0; i < 40; i++) {
         const ref: StateFixture = {
             ...REAL_FIGHT_FIXTURE,
@@ -37,16 +37,16 @@ function fightAt(foeId: 'enemy-toll-keeper' | 'enemy-tide-gate'): CombatEncounte
 const chipOf = (s: CombatEncounterState, id: string) =>
     buildCombatViewModel(s).enemy.effects.find((e) => e.effectId === id);
 
-describe('the keep causeway stages the Toll-Keeper', () => {
+describe('the keep causeway stages the Wreckmaster', () => {
     it('with its stand-in portrait and its two DANGERs listed, unnamed while unbeaten', () => {
-        const vm = buildCombatViewModel(fightAt('enemy-toll-keeper'));
-        expect(vm.enemy.name).toBe('The Toll-Keeper');
-        expect(vm.enemy.artKey).toBe('toll-keeper');
+        const vm = buildCombatViewModel(fightAt('enemy-wreckmaster'));
+        expect(vm.enemy.name).toBe('The Wreckmaster');
+        expect(vm.enemy.artKey).toBe('wreckmaster');
         expect(vm.enemy.dangers?.map((d) => d.name)).toEqual([null, null]);
     });
 
     it('shows TOLL only once one is owed, with its gloss and a11y saying how it clears', () => {
-        const s = fightAt('enemy-toll-keeper');
+        const s = fightAt('enemy-wreckmaster');
         expect(chipOf(s, 'enemy-counter-toll-owed')).toBeUndefined();
         const chip = chipOf({ ...s, enemyRiders: { tollOwed: 3 } }, 'enemy-counter-toll-owed')!;
         expect(chip).toMatchObject({ intensity: 3, glyph: { label: 'Toll' } });
@@ -55,7 +55,7 @@ describe('the keep causeway stages the Toll-Keeper', () => {
     });
 
     it('shows the distrained cards on its side', () => {
-        const s = { ...fightAt('enemy-toll-keeper'), enemyRiders: { tollOwed: 1, distrained: [{ uid: 'x1', cardId: 'grey-strike' }] } };
+        const s = { ...fightAt('enemy-wreckmaster'), enemyRiders: { tollOwed: 1, distrained: [{ uid: 'x1', cardId: 'grey-strike' }] } };
         const chip = chipOf(s, 'enemy-counter-distrained')!;
         expect(chip.intensity).toBe(1);
         expect(effectChipA11y(chip)).toContain('until you pay the toll');
@@ -63,7 +63,7 @@ describe('the keep causeway stages the Toll-Keeper', () => {
     });
 
     it('a Levy telegraphs ATTACK with no number, however much TOLL is owed', () => {
-        const base = fightAt('enemy-toll-keeper');
+        const base = fightAt('enemy-wreckmaster');
         const i = base.threatPhases.findIndex((p) => p.enemyMove?.name === 'Levy');
         const intent = buildCombatViewModel({ ...base, currentPhaseIndex: i, enemyRiders: { tollOwed: 5 } }).enemy.intent;
         expect([intent.type, intent.moveName]).toEqual(['attack', 'Levy']);
@@ -73,7 +73,7 @@ describe('the keep causeway stages the Toll-Keeper', () => {
 
 describe('Pay the toll (n)', () => {
     it('reads the TOLL owed and pays it as a SACRIFICE', () => {
-        const s = { ...fightAt('enemy-toll-keeper'), enemyRiders: { tollOwed: 2 } };
+        const s = { ...fightAt('enemy-wreckmaster'), enemyRiders: { tollOwed: 2 } };
         const toll = buildCombatViewModel(s).enemy.toll!;
         expect(toll).toMatchObject({ owed: 2, cost: 2, label: TOLL_COPY.label(2), block: null, shortfall: null });
         expect(toll.label).toBe('Pay the toll (2)');
@@ -84,7 +84,7 @@ describe('Pay the toll (n)', () => {
     });
 
     it('is refused loudly when VITAE is not above the TOLL: the reason and the floor both read', () => {
-        const base = fightAt('enemy-toll-keeper');
+        const base = fightAt('enemy-wreckmaster');
         const s = { ...base, player: { ...base.player, health: 4 }, enemyRiders: { tollOwed: 4 } };
         const toll = buildCombatViewModel(s).enemy.toll!;
         expect(toll.block).toMatch(/below 1 VITAE/);
@@ -112,5 +112,28 @@ describe('the keep causeway stages the Tide-Gate', () => {
         expect(effectChipA11y(chip)).toContain('rises each foe turn');
         expect(buildCombatViewModel(s).enemy.effects.some((e) => e.effectId === 'debuff_vulnerable')).toBe(true);
         expect(chipOf({ ...s, enemyRiders: { tide: 4 } }, 'enemy-counter-tide')!.caption).toBe('4 of 5');
+    });
+});
+
+describe('the benched Toll-Keeper keeps its TOLL on the board, staged directly (EN3b)', () => {
+    const tollKeeper = (): CombatEncounterState => {
+        const s = fightAt('enemy-wreckmaster');
+        const enemy = { ...ENEMY_REGISTRY['toll-keeper'] };
+        return { ...s, enemy, threatPhases: getThreatSequence(enemy), currentPhaseIndex: 0 };
+    };
+
+    it('with its portrait and DANGERs unnamed', () => {
+        const vm = buildCombatViewModel(tollKeeper());
+        expect(vm.enemy.name).toBe('The Toll-Keeper');
+        expect(vm.enemy.artKey).toBe('toll-keeper');
+        expect(vm.enemy.dangers?.map((d) => d.name)).toEqual([null, null]);
+    });
+
+    it('shows TOLL and the distrained cards once owed', () => {
+        const s = { ...tollKeeper(), enemyRiders: { tollOwed: 1, distrained: [{ uid: 'x1', cardId: 'grey-strike' }] } };
+        const effects = buildCombatViewModel(s).enemy.effects.map((e) => e.effectId);
+        expect(effects.length).toBeGreaterThan(0);
+        expect(chipOf(s, 'enemy-counter-toll-owed')).toBeDefined();
+        expect(chipOf(s, 'enemy-counter-distrained')).toBeDefined();
     });
 });

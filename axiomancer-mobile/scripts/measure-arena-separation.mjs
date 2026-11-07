@@ -39,16 +39,19 @@ const SOLID = BACKING_TUNING.threshold
 /**
  * Each Act 1 region's foes, read from the encounter data: the stagings of
  * `mapContent(def).enemies` for each Act 1 map (axiomancer-mechanics
- * World/chapter1-content.ts), 2026-11-04. A foe met in several regions has a
- * row in each. Every one of the 17 foes appears; none is regionless.
+ * World/chapter1-content.ts), repointed 2026-11-07 for Chapter 1's recast
+ * (EN3b). A foe met in several regions has a row in each. The Breakwater
+ * stages thirteen foes: the six wandering normals, the six elites and the
+ * Saint Beneath. The ten foes cut from Chapter 1 stay in the library; three of
+ * them (Float-Eye, Green Jelly, Death Beholder) are still staged by the later
+ * Act 1 regions below, the other seven by no region.
  */
 const REGIONS = [
   {
     id: 'breakwater', name: 'The Breakwater',
     plates: ['northern-sea', 'kuste-bei-mondschein', 'mondscheinnacht-ruegen'], default: 'northern-sea',
-    foes: ['float-eye', 'gallows-crow', 'toll-keeper', 'tide-gate', 'death-beholder', 'net-mender', 'crane-hook',
-      'brine-widow', 'cave-choir', 'tithe-collector', 'lamprey-knot', 'green-jelly', 'curfew-ringer', 'wreck-picker',
-      'lamplighter', 'wrecker', 'smokehouse-gutter'],
+    foes: ['quay-crab', 'net-mender', 'coralback', 'brine-widow', 'saltwick-swarm', 'bilge-stalker',
+      'cave-choir', 'tithe-collector', 'lamplighter', 'wrecker', 'wreckmaster', 'tide-gate', 'saint-beneath'],
   },
   {
     id: 'charcoal-wood', name: 'The Charcoal Wood',
@@ -66,7 +69,7 @@ const REGIONS = [
     foes: ['float-eye', 'green-jelly', 'death-beholder'],
   },
 ]
-const BOSSES = new Set(['death-beholder'])
+const BOSSES = new Set(['death-beholder', 'saint-beneath'])
 
 const luma = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b
 

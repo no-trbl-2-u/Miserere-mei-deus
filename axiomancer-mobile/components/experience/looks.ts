@@ -81,7 +81,7 @@ export const LOOKS: Record<PlaceId, Look> = {
     'F-06': 'brass', // Self: VITAE pool bar
     'L-01': 'vellum', // Ledger: section headings and dividers
     'B-01': 'normal', // Satchel: purse
-    'B-02': 'normal', // Satchel: burden bar
+    'B-02': 'normal', // Satchel: removed place (the bar is gone); id kept so the catalog stays stable
     'B-03': 'normal', // Satchel: worn-gear panel and corners
     'B-04': 'brass', // Satchel: gear slot rows
     'B-05': 'vellum', // Satchel: ALL / GEAR / PHIALS tabs

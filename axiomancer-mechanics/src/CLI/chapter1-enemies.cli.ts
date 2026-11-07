@@ -210,7 +210,7 @@ export function renderReport(cells: TuningCell[], o: { runs: number; seed: numbe
         '## Limits',
         '',
         `- ${o.runs} seeded fights per cell, seeds ${o.seed} to ${o.seed + o.runs - 1}; rider rolls are seeded by the fight seed, so a rerun reproduces the table.`,
-        '- The sim never pays the Toll-Keeper\'s toll: "Pay the toll" is a player board action, not a card, so the Toll-Keeper rows are the cost of refusing it.',
+        '- The sim never pays the Wreckmaster\'s toll: "Pay the toll" is a player board action, not a card, so the Wreckmaster rows are the cost of refusing it.',
         '- Mercy is off: no lane here casts The Open Hand.',
         '- Sim drivers are not players: `human-like` is the headline (one best line, no chaining), `witness` plays the whole hand and reads as a ceiling.',
         '',

@@ -48,7 +48,7 @@ describe('applyHazardOutcome: the mercy check', () => {
         expect(paid).toBe(spareWage(enemy.level));
         expect(after.player!.experience).toBe(before.experience);
         expect(after.currentEncounter).toBeUndefined();
-        expect(after.codex.defeatedEnemies).toContain('float-eye');
+        expect(after.codex.defeatedEnemies).toContain('quay-crab');
         expect(after.combatReward).toMatchObject({ offers: [], claimed: true });
         expect(after.combatReward?.spare?.reward).toBeDefined();
     });

@@ -12,14 +12,9 @@ import { afterEach, describe, it, expect, jest } from '@jest/globals';
 
 import {
     isTabHidden,
-    measureTabBarFit,
-    measureTabLabel,
-    NARROW_VIEWPORT_PT,
-    NARROWEST_VIEWPORT_PT,
     selectVisibleTabs,
-    TAB_BAR_LABEL_FONT_SIZE,
+    TAB_ICON_SIZE,
     TAB_TITLES,
-    visibleTabTitles,
     type TabKey,
 } from '@/state/presenters/tabs.engine';
 
@@ -203,82 +198,8 @@ describe('TAB_TITLES: tab-label contract', () => {
     });
 });
 
-// ---------------------------------------------------------------------------
-// Tab-bar FIT — the overflow contract SETTINGS has to clear
-// ---------------------------------------------------------------------------
-
-describe('measureTabBarFit: no tab-bar overflow at 360pt', () => {
-    it('fits every visible label at 360pt in both modes', () => {
-        for (const inCombat of [false, true]) {
-            const fit = measureTabBarFit(visibleTabTitles(inCombat), NARROW_VIEWPORT_PT);
-
-            expect(fit.tabCount).toBe(6);
-            // Reported as an object so a failure prints WHICH label overflowed
-            // and by how much, rather than just `false`.
-            expect({
-                mode: inCombat ? 'combat' : 'exploration',
-                widest: fit.widestTitle,
-                labelPt: Math.round(fit.widestLabelPt * 10) / 10,
-                budgetPt: fit.labelBudgetPt,
-                fits: fit.fits,
-            }).toEqual({
-                mode: inCombat ? 'combat' : 'exploration',
-                widest: fit.widestTitle,
-                labelPt: Math.round(fit.widestLabelPt * 10) / 10,
-                budgetPt: fit.labelBudgetPt,
-                fits: true,
-            });
-        }
-    });
-
-    it('still fits on the narrowest supported phone (320pt)', () => {
-        // 360pt is the brief's bar; 320pt is an SE-class device that really
-        // ships. A contract that only clears the wider one is a contract that
-        // clips on the narrower one, silently (the navigator's label is
-        // numberOfLines: 1, so overflow ellipsises instead of breaking layout).
-        const fit = measureTabBarFit(visibleTabTitles(false), NARROWEST_VIEWPORT_PT);
-        expect(fit.fits).toBe(true);
-    });
-
-    it('keeps real headroom, so the next title change is not a cliff edge', () => {
-        const fit = measureTabBarFit(visibleTabTitles(false), NARROW_VIEWPORT_PT);
-        expect(fit.widestTitle).toBe(TAB_TITLES.memoir);
-        expect(fit.slackPt).toBeGreaterThan(5);
-    });
-
-    it('detects an overflow rather than always answering yes', () => {
-        // The check has to be capable of failing, or it proves nothing. A
-        // sixth tab with a long title is the shape of the next regression.
-        const overloaded = [...visibleTabTitles(false), 'THE UNDERCROFT', 'THE DROWNED UNDERCROFT'];
-        expect(measureTabBarFit(overloaded, NARROW_VIEWPORT_PT).fits).toBe(false);
-    });
-});
-
-describe('measureTabLabel: the measurement itself', () => {
-    it('is monotonic — a longer word is never measured narrower', () => {
-        expect(measureTabLabel('SATCHEL')).toBeGreaterThan(measureTabLabel('SELF'));
-        expect(measureTabLabel('THE LEDGER')).toBeGreaterThan(measureTabLabel('DECK'));
-    });
-
-    it('measures the empty label as zero and never returns NaN', () => {
-        expect(measureTabLabel('')).toBe(0);
-        for (const title of Object.values(TAB_TITLES)) {
-            expect(Number.isFinite(measureTabLabel(title))).toBe(true);
-        }
-    });
-
-    it('charges an unmeasured glyph at the widest known advance', () => {
-        // An out-of-table character (a digit, punctuation, a glyph) must
-        // over-estimate, never sail through unmeasured.
-        expect(measureTabLabel('?')).toBeGreaterThanOrEqual(measureTabLabel('W'));
-    });
-
-    it('is pinned to the Uncial Antiqua .ttf metrics, so a reverted or stale table fails loudly', () => {
-        // These are the actual hmtx advance widths for FONTS.sans
-        // (Uncial Antiqua 400), not the condensed Bebas Neue numbers the
-        // table used before. A regression back to those (or any other
-        // mismeasured face) silently changes what "fits" means.
-        expect(measureTabLabel('M')).toBeCloseTo(1.27783 * TAB_BAR_LABEL_FONT_SIZE, 1);
-        expect(measureTabLabel('THE LEDGER')).toBeCloseTo(43.0, 0);
+describe('TAB_ICON_SIZE', () => {
+    it('is the larger icon-only size', () => {
+        expect(TAB_ICON_SIZE).toBe(30);
     });
 });
