@@ -2,7 +2,7 @@
  * DECK — the fifth bottom tab.
  *
  * The player-facing view of the COMBAT deck, the one they build all run, as a
- * READER: one card open at the top (`DeckOpenCard`: its painting
+ * READER (DR1): one card open at the top (`DeckOpenCard`: its painting
  * as a banner, its lines under it), the deck below it. No header, no tallies.
  * Tapping a row opens that card above; 155.2 turns the rows into thumbnails.
  *

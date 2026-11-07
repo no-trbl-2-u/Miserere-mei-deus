@@ -199,7 +199,6 @@ The `description` itself is the irreducible minimum — the field is required by
 
 - **A2** Chapter 1's 18 combat nodes draw the recast roster at the levels in the Design table: the six new foes hold the nodes of the six they replace, the four benched foes' five nodes draw duplicates of the keepers, the keep causeway still draws one of two, and the sea keep's boss is The Saint Beneath. No benched foe is drawn or pinned anywhere in Chapter 1.
 - **A3** A wandering Act 1 fight draws one of the six named Chapter 1 normals, never a benched foe, and `docs/reports/chapter1-enemies.md` is regenerated against the recast roster with its new commit stamp.
-- **A4** Every one of the 23 portraits is drawn by exactly one library foe, through its own `ENEMY_ART_BY_KEY` entry, its own 24-cell frame set with its anchor, its own baked backings and its own provenance record. `npm run verify -w axiomancer-mobile` is green, and so are `asset-provenance.test.mjs`, `enemy-backings.test.mjs` and the one-enemy-per-installed-set guard.
 
 ## Open questions
 
@@ -211,10 +210,9 @@ The `description` itself is the irreducible minimum — the field is required by
 
 ## Chunks
 
-Measure: 3 open · 1 closed · next A5
+Measure: 2 open · 2 closed · next A5
 
 - [ ] **157.2** Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors · M · closes A2, A3 · needs — · alias: EN3b
-- [ ] **157.3** The six portraits drawn: art registry, provenance, frame sets, backings · M · closes A4 · needs — · alias: EN3c
 
 ### 157.1 (EN3a) — The six new library entries, each on its cut foe's numbers · M · closes A1 · requires —
 
