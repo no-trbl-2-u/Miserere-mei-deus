@@ -12,14 +12,19 @@
 
 import React, { useEffect, useMemo } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
 import { EventArt } from '@/components/event/EventArt';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { selectHasActiveTravel, selectTravelVM } from '@/state/presenters/travel.engine';
-import { FONTS } from '@/theme/axm';
+import { KitPressable } from '@/components/experience/KitSurface';
+import { PLACE_PIECES } from '@/components/experience/looks';
+import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+
+/** The vellum button YES · MOVE and NO · STAY wear (T-02). */
+const [BUTTON] = PLACE_PIECES['T-02'];
 
 export default function TravelScreen() {
     const styles = useStyles();
@@ -67,25 +72,27 @@ export default function TravelScreen() {
 
             <View style={styles.choices}>
                 {vm.open && (
-                    <TouchableOpacity
+                    <KitPressable
+                        piece={BUTTON}
                         accessibilityRole="button"
                         accessibilityLabel={vm.question}
                         onPress={actions.takeTravel}
-                        style={[styles.choiceRow, { borderColor: AXM.sulfur, backgroundColor: AXM.selectFill }]}
+                        style={styles.choiceRow}
                         testID="travel-yes"
                     >
                         <Text style={styles.choiceLabel}>{vm.yesLabel}</Text>
-                    </TouchableOpacity>
+                    </KitPressable>
                 )}
-                <TouchableOpacity
+                <KitPressable
+                    piece={BUTTON}
                     accessibilityRole="button"
                     accessibilityLabel={vm.noLabel}
                     onPress={actions.closeTravel}
-                    style={[styles.choiceRow, { borderColor: AXM.bone, backgroundColor: AXM.bg }]}
+                    style={styles.choiceRow}
                     testID="travel-no"
                 >
                     <Text style={styles.choiceLabel}>{vm.noLabel}</Text>
-                </TouchableOpacity>
+                </KitPressable>
             </View>
         </ScreenBg>
     );
@@ -116,15 +123,16 @@ const useStyles = makeStyles((AXM) => ({
     },
     questionShut: { color: AXM.bone },
     choices: { paddingHorizontal: 14, paddingTop: 16, paddingBottom: 16, gap: 8 },
+    // Clears the vellum button's drawn corners (about 16 high, 13 wide).
     choiceRow: {
         alignItems: 'center',
-        padding: 12,
-        borderWidth: 2,
+        paddingVertical: 18,
+        paddingHorizontal: 16,
     },
     choiceLabel: {
         fontFamily: FONTS.gothic,
         fontSize: 18,
-        color: AXM.parchment,
+        color: HUE.hzCardInk,
         lineHeight: 20,
         letterSpacing: 1.5,
     },

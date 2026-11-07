@@ -15,11 +15,13 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { isDialogueAppliedEvent } from '@mechanics';
 
 import { LeaveRow } from '@/components/LeaveRow';
+import { KitPressable, KitSurface } from '@/components/experience/KitSurface';
+import { PLACE_PIECES } from '@/components/experience/looks';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useGameActions, useGameEvents, useGameState } from '@/state/GameStoreProvider';
 import { consequenceLabel, visibleConsequences } from '@/state/presenters/consequence-copy';
@@ -29,8 +31,12 @@ import {
     selectHasActiveEvent,
     type EventChoice,
 } from '@/state/presenters/event.engine';
-import { FONTS, TYPE } from '@/theme/axm';
+import { FONTS, HUE, TYPE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+
+/** The kit pieces the choice rows (E-03) and the spoken-line box (E-02) wear. */
+const [ROW_IDLE, ROW_SELECTED, ROW_DISABLED] = PLACE_PIECES['E-03'];
+const [SPEECH_PANEL] = PLACE_PIECES['E-02'];
 
 /** How long the dialogue-confirmation ✓ stays visible. */
 const DIALOGUE_CONFIRM_TTL_MS = 500;
@@ -91,13 +97,15 @@ function ReplyRow({
 }) {
     const styles = useStyles();
     return (
-        <TouchableOpacity
+        <KitPressable
+            piece={choice.enabled ? ROW_IDLE : ROW_DISABLED}
+            pressedPiece={ROW_SELECTED}
             accessibilityRole="button"
             accessibilityLabel={`${choice.label}, ${choice.description}`}
             accessibilityState={{ disabled: !choice.enabled }}
             disabled={!choice.enabled}
             onPress={onPress}
-            style={[styles.replyRow, { opacity: choice.enabled ? 1 : 0.4 }]}
+            style={[styles.replyRow, { opacity: choice.enabled ? 1 : 0.6 }]}
             testID={`dialogue-choice-${choice.id}`}
         >
             <Text style={styles.replyMark}>—</Text>
@@ -118,7 +126,7 @@ function ReplyRow({
                     ✓
                 </Text>
             )}
-        </TouchableOpacity>
+        </KitPressable>
     );
 }
 
@@ -207,9 +215,9 @@ export default function DialogueScreen() {
                     {vm.subtitle.length > 0 && <Text style={styles.subtitle}>{vm.subtitle}</Text>}
                 </View>
 
-                <View style={styles.speech} testID="dialogue-speech">
+                <KitSurface piece={SPEECH_PANEL} style={styles.speech} testID="dialogue-speech">
                     <Text style={styles.speechText}>{vm.body}</Text>
-                </View>
+                </KitSurface>
 
                 {/* The eyebrow heads the reply list, so it only renders when
                   * there are replies. On a tree's closing node the list is
@@ -274,18 +282,17 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
     },
     subtitle: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 2 },
+    // Clears the vellum panel's drawn corners (about 26 high, 42 wide).
     speech: {
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
-        padding: 12,
+        paddingVertical: 28,
+        paddingHorizontal: 40,
         marginBottom: 10,
     },
     speechText: {
         fontFamily: FONTS.serif,
         fontSize: 14,
         lineHeight: 21,
-        color: AXM.parchment,
+        color: HUE.hzCardInk,
     },
     sectionLabel: {
         fontFamily: FONTS.sans,
@@ -297,10 +304,9 @@ const useStyles = makeStyles((AXM) => ({
     replyRow: {
         flexDirection: 'row',
         gap: 8,
-        borderWidth: 2,
-        borderColor: AXM.bone,
-        backgroundColor: AXM.bg,
-        padding: 10,
+        // Clears the brass button's drawn corners (about 16 high, 13 wide).
+        paddingVertical: 20,
+        paddingHorizontal: 20,
         marginBottom: 6,
     },
     replyMark: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur },
