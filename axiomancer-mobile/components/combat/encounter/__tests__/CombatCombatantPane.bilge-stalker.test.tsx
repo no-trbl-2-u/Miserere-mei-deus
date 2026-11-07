@@ -11,6 +11,14 @@
  * screen (row * columns + frame), so asserting its row asserts which drawing
  * the player sees: idle row 0, struck row 1, attacking row 2. Its anchor kind
  * is foot-line, so every cell sits on the bottom of its box.
+ *
+ * guard-test: this pins the 'bilge-stalker' wiring, which landed ahead of this chunk in PR #1409, so it passes on the base by design.
+ *
+ * EN3c's own diff touches no registry file: the static require, the frame
+ * set with its anchor and the baked backing were all on the base already.
+ * What was missing was any per-foe proof that this face is actually drawn
+ * and animated, as the other 17 have. That is what this suite is. It goes
+ * red if the set is renamed, dropped, left static or loses its anchor.
  */
 import React from 'react';
 import { AccessibilityInfo } from 'react-native';
