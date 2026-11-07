@@ -24,7 +24,6 @@ needs are done):
 
 - **158.1** · VR1a: the combat board's CI visual route, before 153.4 changes the dock (T, `/plot`, 2026-11-07; needs 152.3)
 
-- **157.3** · EN3c: the six portraits drawn — art registry, provenance, frame sets, backings (T's enemy recast, `/plot asap`, 2026-11-06; this is the chunk that takes `main` green)
 - **157.2** · EN3b: Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors (T's enemy recast, `/plot asap`, 2026-11-06)
 
 - **135.3** · SM2c: the four personas (T, `/plot asap`, 2026-11-01)
@@ -37,7 +36,6 @@ needs are done):
 
 - **152.4** · UK1d: the Spoils on vellum, inked to read (T's mixer picks, `/plot`, 2026-11-06)
 
-- **153.1** · UX1a: the main menu says only its three words (T's mixer notes, `/plot`, 2026-11-06)
 - **153.2** · UX1b: the quest tracker steps aside, and loses its label and a lone 0/1 (T's mixer notes, `/plot`, 2026-11-06)
 - **153.3** · UX1c: the tab bar is bigger icons, no words (T's mixer notes, `/plot`, 2026-11-06)
 - **153.4** · UX1d: no "A FOE RISES"; the dock trades its circles for room (T's mixer notes, `/plot`, 2026-11-06)
@@ -45,7 +43,6 @@ needs are done):
 - **153.6** · UX1f: no burden, anywhere (T's mixer notes, `/plot`, 2026-11-06)
 
 - **154.2** · UK2b: round 2's looks: new game and the endings (T's mixer round 2, `/plot`, 2026-11-06)
-- **154.3** · UK2c: the dialogue offers two choices (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.5** · UK2e: the stakes card says three things (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.6** · UK2f: the quest shows no pay and no lone counter (T's mixer round 2, `/plot`, 2026-11-06)
 - **154.7** · UK2g: the cache says what you do, not what you get (T's mixer round 2, `/plot`, 2026-11-06)
@@ -56,6 +53,7 @@ needs are done):
 - **155.4** · DR1d: keywords tapped and held in the card's own text (T's note on the Reader lab, `/plot`, 2026-11-06)
 - **99.6** · automate footgun `font-width-estimates-stale` (seen 2×), spec 99's ladder chunk.
 - **99.7** · automate footgun `recast-pinned-orphan-lens` (seen 2×), spec 99's ladder chunk.
+- **99.8** · automate footgun `scratchpad-script-no-resolve` (seen 2×), spec 99's ladder chunk.
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -98,10 +96,10 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned (**Asap**: 158.1) | 2 left |
-| 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 2 left |
+| 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 1 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 6 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 4 left |
-| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 5 left |
+| 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 4 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
 | 112 | Combat entry and exit: the music steps aside for the whole fight, and the ink really spreads | [112-cx1-combat-entry-exit.md](112-cx1-combat-entry-exit.md) | planned | 1 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
@@ -127,9 +125,9 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
-| 153 | The kit mixer's layout notes: fewer words, a calmer map, no burden, and a Deck to pick | [153-ux1-ui-kit-layout-notes.md](153-ux1-ui-kit-layout-notes.md) | planned | 6 left |
+| 153 | The kit mixer's layout notes: fewer words, a calmer map, no burden, and a Deck to pick | [153-ux1-ui-kit-layout-notes.md](153-ux1-ui-kit-layout-notes.md) | planned | 5 left |
 | 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 1 left |
-| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 4 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
 
 ## How the loop reads this folder
 

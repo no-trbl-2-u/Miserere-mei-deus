@@ -90,7 +90,7 @@ scrolling panel stack:
 | Dice row | Free-floating gem dice above the hand. |
 | Hand fan | Edge-to-edge arc of playable cards. |
 | Corner medallions | Player portrait (tap → pilgrim modal) and the END PHASE button. |
-| Bottom rail | HP, phase ledger (`ledger`/`phaseBadge`/`roundLabel`/`turnLabel`), deck/discard counts. |
+| Bottom rail | HP and the deck/discard counts. No phase-ledger marks: `metaLine` (phase, round, turn) reads in the HUD. |
 
 There is no scrolling battle log; state changes read from the board itself
 plus transient FX (`CombatFx`).

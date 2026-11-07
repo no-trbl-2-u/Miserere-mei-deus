@@ -1,32 +1,60 @@
 /**
- * A deck list tile prints no grey meta line (T, 2026-11-02): the `STANCE ·
- * RANK · RARITY · TYPE` strip is gone, as it is from every opened card. The
- * name, what the card does, its rarity mark and its copies stay.
+ * A deck grid tile is a thumbnail: the painting, the name, a copies badge when
+ * the run carries more than one, a colour mark, and a dimmed state when it is
+ * not the open card. No grey meta strip (T, 2026-11-02).
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
-import { describe, expect, it } from '@jest/globals';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import { describe, expect, it, jest } from '@jest/globals';
+import { StyleSheet } from 'react-native';
 
 import { cardLibrary, createNewGameState, type Character } from '@mechanics';
-import { DeckCardTile } from '@/components/deck/DeckCardTile';
+import { DeckCardTile, DIMMED_OPACITY } from '@/components/deck/DeckCardTile';
 import { selectDeckViewModel } from '@/state/presenters/deck.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 const GLOBAL_ID = cardLibrary.find((c) => c.program?.global)!.id;
 
-describe('DeckCardTile: no meta strip', () => {
+function cardFor(ids: string[], id: string) {
+    const player = createNewGameState().player as Character;
+    const state = { player: { ...player, knownCards: ids, combatRewardCards: [] }, flags: [] } as never;
+    return selectDeckViewModel(state).groups.flatMap((g) => g.cards).find((c) => c.cardId === id)!;
+}
+
+describe('DeckCardTile: thumbnail', () => {
     for (const id of ['grey-strike', GLOBAL_ID]) {
-        it(`${id} shows name and outcome but no stance, rank, rarity and type line`, () => {
-            const player = createNewGameState().player as Character;
-            const state = { player: { ...player, knownCards: [id], combatRewardCards: [] }, flags: [] } as never;
-            const card = selectDeckViewModel(state).groups.flatMap((g) => g.cards).find((c) => c.cardId === id)!;
+        it(`${id} shows its name and mark but no stance, rank, rarity and type line`, () => {
+            const card = cardFor([id], id);
             expect(card).not.toHaveProperty('metaChip');
             const { unmount } = render(withAllProviders(<DeckCardTile card={card} onPress={() => {}} />).tree);
             expect(screen.getByText(card.name)).toBeTruthy();
+            expect(screen.getByTestId(`deck-card-mark-${id}`)).toBeTruthy();
             expect(screen.queryByText(/· (ASH|COMMON)/)).toBeNull();
-            expect(screen.queryByText(/^[A-Z]+ · [A-Z]+ ·/)).toBeNull();
             unmount();
         });
     }
+
+    it('carries a copies badge only with more than one copy', () => {
+        const two = cardFor(['grey-strike', 'grey-strike'], 'grey-strike');
+        const one = cardFor(['grey-strike'], 'grey-strike');
+        const a = render(withAllProviders(<DeckCardTile card={two} onPress={() => {}} />).tree);
+        expect(screen.getByTestId('deck-card-count-grey-strike')).toBeTruthy();
+        a.unmount();
+        render(withAllProviders(<DeckCardTile card={one} onPress={() => {}} />).tree);
+        expect(screen.queryByTestId('deck-card-count-grey-strike')).toBeNull();
+    });
+
+    it('is dimmed unless open, and a press hands the card back', () => {
+        const card = cardFor(['grey-strike'], 'grey-strike');
+        const onPress = jest.fn();
+        const a = render(withAllProviders(<DeckCardTile card={card} onPress={onPress} />).tree);
+        const dim = StyleSheet.flatten(screen.getByTestId('deck-card-grey-strike').props.style);
+        expect(dim.opacity).toBe(DIMMED_OPACITY);
+        fireEvent.press(screen.getByTestId('deck-card-grey-strike'));
+        expect(onPress).toHaveBeenCalledWith(card);
+        a.unmount();
+        render(withAllProviders(<DeckCardTile card={card} onPress={onPress} open />).tree);
+        expect(StyleSheet.flatten(screen.getByTestId('deck-card-grey-strike').props.style).opacity).toBe(1);
+    });
 });

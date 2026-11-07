@@ -1,16 +1,17 @@
 /**
- * DECK — the fifth tab, rendered as a reader.
+ * DECK — the fifth tab, rendered as a reader (DR1a).
  *
  * The presenter is pinned separately in
  * `state/presenters/__tests__/deck.engine.test.ts`. What this file pins:
  *
  *   · no header block, no stat row, no rarity or colour tally;
  *   · one card is open at the top, its name and both play lines on screen;
- *   · tapping a row opens that card above;
+ *   · tapping a thumbnail opens that card above;
  *   · the empty run says so instead of rendering a bare screen.
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
@@ -68,6 +69,17 @@ describe('DeckScreen: the reader', () => {
         expect(screen.getByTestId('deck-open-card-name').props.children).toBe(getCardById(WARD)!.name);
     });
 
+    it('dims every thumbnail but the open one, and moves the full light on a tap', () => {
+        mount([BLOW, WARD]);
+        const opacity = (id: string) =>
+            StyleSheet.flatten(screen.getByTestId(`deck-card-${id}`).props.style).opacity;
+        expect(opacity(BLOW)).toBe(1);
+        expect(opacity(WARD)).toBeLessThan(1);
+        fireEvent.press(screen.getByTestId(`deck-card-${WARD}`));
+        expect(opacity(WARD)).toBe(1);
+        expect(opacity(BLOW)).toBeLessThan(1);
+    });
+
     it('shows no flavour and no keyword ledger', () => {
         mount([BLOW, WORD]);
 
@@ -77,7 +89,7 @@ describe('DeckScreen: the reader', () => {
 });
 
 describe('DeckScreen: the list', () => {
-    it('lists a real row per card in the run deck', () => {
+    it('lists a thumbnail per card in the run deck', () => {
         mount([BLOW, BLOW, WARD, WORD]);
 
         expect(screen.getByTestId(`deck-card-${BLOW}`)).toBeTruthy();

@@ -128,6 +128,6 @@ export const HUE = {
     // The Spoils' two outcome inks: boonGreen and tickPurple darkened to read.
     vellumVictory: '#16401c',
     vellumMercy: '#3a2557',
-    // The vellum looks' quiet ink, for secondary lines on parchment.
+    // The vellum looks' quiet ink (UK1e).
     vellumInkQuiet: '#4a3826',
 } as const;
