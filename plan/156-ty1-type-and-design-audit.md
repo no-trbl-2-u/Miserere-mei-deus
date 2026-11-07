@@ -1,4 +1,4 @@
-# 156 — Type by T's ballot, then a design audit of every screen against the AI-design tells
+# 156 — Type and colour by T's ballots, then a design audit of every screen against the AI-design tells
 
 > A friend of T's said the screens look made with Claude design. They were, and T doesn't want them to read that way. This spec does three things:
 >
