@@ -63,6 +63,14 @@
     "env-run:test": "node --test scripts/env-run.test.mjs"
   },
   "dependencies": {
+    "@expo-google-fonts/eagle-lake": "^0.4.1",
+    "@expo-google-fonts/fondamento": "^0.4.1",
+    "@expo-google-fonts/grenze": "^0.4.2",
+    "@expo-google-fonts/marcellus-sc": "^0.4.1",
+    "@expo-google-fonts/medievalsharp": "^0.4.1",
+    "@expo-google-fonts/rosarivo": "^0.4.1",
+    "@expo-google-fonts/spectral": "^0.4.1",
+    "@expo-google-fonts/uncial-antiqua": "^0.4.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.18.17",
     "@react-navigation/native": "^7.3.17",

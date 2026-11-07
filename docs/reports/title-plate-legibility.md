@@ -65,7 +65,7 @@ Plate `assets/images/title/lion-in-the-wood.webp` at desktop 1280x800 (1280x800)
 
 | Text | Contrast (plate undimmed, no overlay) |
 | --- | --- |
-| Wordmark | 14.87:1 |
+| Wordmark | 14.94:1 |
 | Psalm line | 13.2:1 |
 
 ```json legibility-baseline
@@ -80,7 +80,7 @@ Plate `assets/images/title/lion-in-the-wood.webp` at desktop 1280x800 (1280x800)
   },
   "theme": "ashen-gold",
   "figures": {
-    "wordmark.title": 14.87,
+    "wordmark.title": 14.94,
     "psalm.title": 13.2
   }
 }

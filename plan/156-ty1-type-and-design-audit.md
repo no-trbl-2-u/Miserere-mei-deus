@@ -102,7 +102,6 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 ## Acceptance
 
 - **A1** `docs/design-direction.md` states the six parts of the direction above, with its sources, and `AGENTS.md`'s design reading order names it.
-- **A2** `TYPE_ROLES` holds the 15 roles, each from T's ballot verdict (or today's face where T left it blank), and every chosen face loads on web, Android and iOS.
 - **A3** No component under `app/` or `components/` sets a `FONTS.<face>` directly. Every text style goes through a role, and a lint test fails a new direct use.
 - **A4** The audit report `docs/reports/design-audit-<date>.md` covers every screen in the list, each with its emotional job, its tells table, its bold thing and its top three fixes. It also carries the tell count before and after the UI rounds, and the copy flagged by screen.
 - **A5** A mock page offers three directions for each of the audit's three worst screens, under the ballot index, and T's picks come back through the ballot kit.
@@ -119,11 +118,10 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 6 open · 1 closed · next A8
 
 - [ ] **156.1** The design direction, written down · S · closes A1 · needs — · alias: TY1a
-- [ ] **156.2** The type roles, filled from T's font ballot · M · closes A2 · needs — · alias: TY1b
-- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 156.2, 152.4, 153.1, 153.3, 153.4, 153.5, 153.6, 154.2, 154.3, 154.5, 154.6, 154.7, 155.3, 155.4 · alias: TY1c
+- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 152.4, 153.1, 153.3, 153.4, 153.5, 153.6, 154.2, 154.3, 154.5, 154.6, 154.7, 155.3, 155.4 · alias: TY1c
 - [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.1, 156.7 · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
 - [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs 156.3 · alias: TY1f
@@ -143,7 +141,7 @@ Measure: 7 open · 0 closed · next A8
 
 - T's verdict is in `plan/card-ledger/fonts.md` (voted and pasted 2026-11-06, written there by the plot's session; the ballot is closed).
 - Add `TYPE_ROLES` to `theme/axm.ts` and the picked faces' `@expo-google-fonts` packages. Load them in `app/_layout.tsx`, the title and body faces first.
-- Keep `FONTS` and `TYPE` working, so no screen changes in this chunk.
+- Keep `FONTS` and `TYPE` working. T's answer at the pilot gate (2026-11-07) overrides "no screen changes": this chunk also repoints today's five `FONTS` slots to T's picks (gothic and sans to Uncial Antiqua, serif to Rosarivo, serifItalic to Eagle Lake, mono to Grenze), so every screen shows T's fonts on the next build. 156.3 does the exact per-job mapping (Marcellus SC labels, MedievalSharp headings, Spectral big numbers, Fondamento quests) by moving components to `TYPE_ROLES`.
 - Measure: a test that every role names a loaded face, then `npm run verify -w axiomancer-mobile`. The PR carries a 390×844 specimen page of the 15 roles.
 
 ### 156.3 (TY1c) — Every screen sets its type through a role · L · closes A3 · requires 156.2 and the last open chunks of specs 152 to 155

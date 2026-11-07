@@ -38,7 +38,14 @@ export const VELLUM_OXBLOOD = HUE.vellumOxblood;
 type Slice = readonly [number, number, number, number];
 
 const SLICED: Partial<Record<KitPiece, { slice: Slice; scale: number }>> = {
-    'nav-dock-dark': { slice: [0.12, 0.055, 0.12, 0.055], scale: 0.4875 },
+    // The rails carry a centre ornament that reaches to 37% of the height at
+    // the top and 30% at the bottom, measured off the art. A slice that stops
+    // short of it leaves the ornament in the middle band, which stretches 2.7x
+    // vertically to fill the dock and drags a smeared diamond down across the
+    // readout. The slices below hold both rails whole, so only the plain panel
+    // between them stretches. Horizontally 800px at 0.4875 is 390pt, the
+    // dock's own width, so nothing is stretched that way at all.
+    'nav-dock-dark': { slice: [0.38, 0.065, 0.3, 0.065], scale: 0.4875 },
     'modal-panel-dark': { slice: [0.2, 0.19, 0.2, 0.19], scale: 0.3 },
     'action-button-idle': { slice: [0.33, 0.1, 0.33, 0.1], scale: 0.36 },
     'action-button-selected': { slice: [0.33, 0.1, 0.33, 0.1], scale: 0.36 },

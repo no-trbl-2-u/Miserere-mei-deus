@@ -8,9 +8,11 @@ its last chunk closes. Write nothing else here.
 
 - **A1** `card-voice-stale-rows` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
 - **A2** `face-text-parsers` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
+- **A6** `font-width-estimates-stale` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
 
 ## Chunks
-Measure: 2 open · 3 closed · next A6
+Measure: 3 open · 3 closed · next A7
 
+- [ ] **99.6** Automate footgun `font-width-estimates-stale` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A6 · needs —
 - [ ] **99.2** Automate footgun `face-text-parsers` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A2 · needs —
 - [ ] **99.1** Automate footgun `card-voice-stale-rows` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A1 · needs —
