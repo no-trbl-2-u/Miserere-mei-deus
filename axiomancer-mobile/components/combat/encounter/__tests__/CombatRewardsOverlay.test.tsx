@@ -16,6 +16,7 @@
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
@@ -24,6 +25,7 @@ import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatReward
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
+import { SPOILS_INK } from '@/components/combat/encounter/spoils-ink';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // The three real library cards the reward draft offers: the grey office.
@@ -281,5 +283,14 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         fireEvent.press(screen.getByTestId('combat-reward-upgrade-back'));
         expect(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`)).toBeTruthy();
         expect(onUpgrade).not.toHaveBeenCalled();
+    });
+
+    it('on vellum the buttons are inked and the plate flexes', () => {
+        renderOverlay();
+        expect(screen.getByText('TAKE NOTHING')).toHaveStyle({ color: SPOILS_INK.body });
+        expect(screen.getByText('TAKE CARD')).toHaveStyle({ color: SPOILS_INK.body });
+        fireEvent.press(screen.getByTestId('combat-reward-grey-strike'));
+        expect(screen.getByText('TAKE CARD')).toHaveStyle({ color: SPOILS_INK.accent });
+        expect(StyleSheet.flatten(screen.getByTestId('combat-reward-confirm').props.style).flex).toBe(1);
     });
 });
