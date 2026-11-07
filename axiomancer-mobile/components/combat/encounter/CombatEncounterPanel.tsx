@@ -72,6 +72,8 @@ import {
     settleEliteEquipmentAction, settleEliteRelicAction, settleSpareAction,
 } from '@/state/combat/store-actions';
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { boardGlossView, MOMENTUM_GLOSS } from '@/state/combat/keywords';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
@@ -795,6 +797,9 @@ export function CombatEncounterPanel({
     const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
     const mercyLine = mercyLineFor(enemy.mercyLines, live.mercyCheck);
     const showReveal = live.phase === 'reveal';
+    // The commit pair's look is the place's. The reveal's own column, portrait
+    // and threat list are not kit places and keep today's code.
+    const revealBrass = lookOf('S-01') === 'brass';
     // A `phases` foe's reveal shows its DANGER lines and nothing else.
     const revealDangerLines = showReveal ? revealDangers(live, seen) : null;
     // The log toggle/sheet never shows over the
@@ -950,8 +955,20 @@ export function CombatEncounterPanel({
                             );
                         })}
                         </>)}
-                        <Pressable onPress={onEnter} testID="combat-enter" accessibilityRole="button" accessibilityLabel="Enter combat and roll your first dice" style={[styles.revealBtn, { borderColor: AXM.sulfur }]}>
-                            <Text style={[styles.revealBtnText, { color: AXM.sulfur }]}>ENTER COMBAT ›</Text>
+                        <Pressable
+                            onPress={onEnter}
+                            testID="combat-enter"
+                            accessibilityRole="button"
+                            accessibilityLabel="Enter combat and roll your first dice"
+                            style={[styles.revealBtn, revealBrass ? styles.revealBtnBare : { borderColor: AXM.sulfur }]}
+                        >
+                            {/* The commit takes the struck button, the retreat
+                              * the plain one, so the pair reads as a primary
+                              * and a lesser road without changing either box.
+                              * Both plates' end ornaments are 13pt wide, inside
+                              * the paddings these buttons already had. */}
+                            {revealBrass ? <KitBackdrop piece="action-button-selected" /> : null}
+                            <Text style={[styles.revealBtnText, { color: revealBrass ? AXM.bg : AXM.sulfur }]}>ENTER COMBAT ›</Text>
                         </Pressable>
                         {/* The retreat: the reveal is the commit gate, so the choice
                             sits beside the commit. Absent when retreat is sealed. */}
@@ -961,8 +978,9 @@ export function CombatEncounterPanel({
                                 testID="combat-withdraw"
                                 accessibilityRole="button"
                                 accessibilityLabel="Withdraw from this encounter"
-                                style={styles.withdrawBtn}
+                                style={[styles.withdrawBtn, revealBrass ? styles.withdrawBtnBare : null]}
                             >
+                                {revealBrass ? <KitBackdrop piece="action-button-idle" /> : null}
                                 <Text style={[styles.withdrawBtnText, { color: AXM.bone }]}>WITHDRAW</Text>
                                 <Text style={styles.withdrawSub}>forfeit the path</Text>
                             </Pressable>
@@ -1502,10 +1520,22 @@ const useStyles = makeStyles((AXM) => ({
     revealBranchCond: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 0.6, color: AXM.sulfur, marginTop: 2 },
     revealBranchTaken: { color: AXM.parchment },
     revealBtn: { borderWidth: 2, paddingHorizontal: 30, paddingVertical: 12, marginTop: 22, backgroundColor: 'rgba(212,192,38,0.12)' },
+    // Both buttons are sized by padding and content, so the border widths stay
+    // and only the ink goes; the plate draws the frame instead.
+    revealBtnBare: {
+        backgroundColor: 'transparent', borderColor: 'transparent',
+        borderTopColor: 'transparent', borderRightColor: 'transparent',
+        borderBottomColor: 'transparent', borderLeftColor: 'transparent',
+    },
     revealBtnText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 1 },
     // Retreat reads QUIETER than the commit — it is the lesser road, not the
     // symmetric other half of a fight-or-flight binary.
     withdrawBtn: { borderWidth: 1, borderColor: AXM.ash, paddingHorizontal: 20, paddingVertical: 8, marginTop: 12, alignItems: 'center' },
+    withdrawBtnBare: {
+        backgroundColor: 'transparent', borderColor: 'transparent',
+        borderTopColor: 'transparent', borderRightColor: 'transparent',
+        borderBottomColor: 'transparent', borderLeftColor: 'transparent',
+    },
     withdrawBtnText: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2 },
     // The only line that says what withdrawing costs: readable bone (AA on
     // every theme's bg), kept under WITHDRAW by size alone. Never `ash`.
