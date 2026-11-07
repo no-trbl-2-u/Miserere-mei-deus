@@ -1097,6 +1097,258 @@ export const Wrecker = createEnemy({
     tags: ['early-game', 'enemy', 'elite'],
 });
 
+// ─── Chapter 1's recast faces (EN3, T 2026-11-06) ────────────────────────────
+//
+// T settled six new portraits onto six cut foes' slots. Each entry below is
+// its cut foe's numbers under a new id, name, description and portrait key:
+// `level`, `baseStats`, `difficulty`, `logic` and `phases` (or, for the boss,
+// its authored VITAE and its three stages) are COPIED VERBATIM. Nothing here
+// is designed, retuned or removed, and no cut foe is deleted — all ten stay
+// in the library, placed nowhere in Chapter 1 (T: "they're just not in
+// chapter 1").
+//
+// Voice: each new entry is description-only, exactly as Chapter 1's fourteen
+// stand-ins are today (T, 2026-11-06, question 4) — one drafted line read off
+// its portrait, for T to rewrite, and no `finalBlowLines` or `causeLines`.
+// The normals keep a drafted Spare/Finish pair because the mercy check is
+// gameplay, not prose, and `aftermath-lines.engine.test.ts` requires one of
+// every normal. The boss carries a journal entry (a boss must) and no mercy
+// lines (a boss is never spared).
+
+/** Provenance stamp for the EN3 recast's six new faces. */
+const RECAST_ADDED = '2026-11-07';
+
+/** Chapter 1's boss: takes the Death Beholder's fight whole (EN3a). */
+export const SaintBeneath = createEnemy({
+    id: 'enemy-saint-beneath',
+    portraitAsset: 'saint-beneath',
+    name: 'The Saint Beneath',
+    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
+    description:
+        'A great fish with an old man\'s face grown into the front of it, eyes shut, mouth open ' +
+        'on a double row of teeth. It has been down there long enough to be prayed to, and long ' +
+        'enough to have started answering.',
+    level: 8,
+    baseStats: enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }),
+    mapName: 'breakwater',
+    difficulty: 'boss',
+    logic: 'boss',
+    vitae: 320,
+    // The Death Beholder's three boss-line stages, copied (75%, 50%, 25%).
+    // Its real moves are a later owner-led row's; this entry only puts T's
+    // chosen face in the chapter's boss slot on numbers already measured.
+    stages: [
+        {
+            at: { vitaePct: 0.75 },
+            name: 'EVERY DOOR HE REMEMBERS',
+            text: 'He shuts one more. You did not know it was open until you heard it.',
+            threatBonus: 0.3,
+        },
+        {
+            at: { vitaePct: 0.5 },
+            // DRAFT (Claude): name, text and number for T to rewrite.
+            name: 'THE HINGES TURN INWARD',
+            text: 'He turns the room on its pins. Every way out now opens toward him.',
+            threatBonus: 0.2,
+        },
+        {
+            at: { vitaePct: 0.25 },
+            name: 'WHAT SHUTS, STAYS SHUT',
+            text: 'He kneels lower. Bronze finds the seam of the room and the room stops having a far side.',
+            heal: { pct: 0.15 },
+            threatBonus: 0.5,
+        },
+    ],
+    // Carried over from the Death Beholder with its title on this foe's own
+    // name (T, 2026-11-06, question 4). The body is the Death Beholder's,
+    // a DRAFT until the boss-design row writes this foe's own.
+    journalEntry: {
+        id: 'codex-saint-beneath',
+        title: 'The Saint Beneath',
+        body:
+            'The house needed something to believe in its doors, so it built a believer. ' +
+            'He was assembled from the hinges of every argument that ever closed — each ' +
+            'joint a refusal, oiled and kept. His liturgy is short: what shuts, stays ' +
+            'shut. He kneels because a kneeling thing is a door at rest, and he has ' +
+            'been at rest, facing the entrance, for a very long time.',
+    },
+    addedIn: RECAST_ADDED,
+    tags: ['early-game', 'boss', 'enemy'],
+});
+
+/** The town: the Green Jelly's numbers, five lit jellies drifting as one (EN3a). */
+export const SaltwickSwarm = createEnemy({
+    id: 'enemy-saltwick-swarm',
+    portraitAsset: 'saltwick-swarm',
+    name: 'Saltwick Swarm',
+    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
+    description:
+        'Five lit jellies drifting as one body, the largest the size of a cart wheel and the ' +
+        'smallest no bigger than a thumb. Nothing in the cluster is in charge. It all stings the same.',
+    level: 5,
+    baseStats: enemyStatBudget(5, { heart: 4, body: 1, mind: 2 }),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    mercyLines: {
+        // DRAFT (Claude): for T to rewrite.
+        spare: 'The cluster drifts apart and goes on lighting the water.',
+        finish: 'The lights go out one at a time, the smallest last.',
+    },
+    logic: 'strategic',
+    phases: [
+        { moves: [engulf(1), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION] },
+        {
+            danger: {
+                name: 'Spit It Out', kind: 'danger',
+                text: 'Every HELD card drops into your discard, 4 damage per card.',
+                rider: { kind: 'spit-held', damage: 4 },
+            },
+            moves: [engulf(2), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION],
+        },
+    ],
+    addedIn: RECAST_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The keep causeway's elite: the Toll-Keeper's numbers (EN3a). */
+export const Wreckmaster = createEnemy({
+    id: 'enemy-wreckmaster',
+    portraitAsset: 'wreckmaster',
+    name: 'The Wreckmaster',
+    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
+    description:
+        'A drowned captain in a good coat, sabre out and pistol up, still giving orders to a crew ' +
+        'the sea has already finished with.',
+    level: 8,
+    baseStats: enemyStatBudget(8),
+    mapName: 'breakwater',
+    difficulty: 'elite',
+    logic: 'strategic',
+    phases: [
+        { moves: [LEVY, STRONGBOX, WRIT] },
+        {
+            danger: {
+                name: 'Compound Interest', kind: 'danger',
+                text: '4 damage per Curse in your hand, deck and discard.',
+                rider: { kind: 'curse-count-hit', damage: 4 },
+            },
+            moves: [LEVY, DISTRAIN],
+        },
+        {
+            danger: {
+                name: 'Seize the Causeway', kind: 'danger',
+                text: 'TOLL doubles, then 2 damage per TOLL.',
+                rider: { kind: 'toll-seize', damage: 2 },
+            },
+            moves: [DOUBLE_LEVY, DISTRAIN],
+        },
+    ],
+    addedIn: RECAST_ADDED,
+    tags: ['early-game', 'enemy', 'elite'],
+});
+
+/** The quays: the Crane-Hook's numbers (EN3a). */
+export const QuayCrab = createEnemy({
+    id: 'enemy-quay-crab',
+    portraitAsset: 'quay-crab',
+    name: 'Quay-Crab',
+    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
+    description:
+        'A dark green crab the size of a dog, one claw grown huge from a life of holding on to ' +
+        'things that wanted to leave.',
+    level: 3,
+    baseStats: enemyStatBudget(3),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    mercyLines: {
+        // DRAFT (Claude): for T to rewrite.
+        spare: 'It backs into the stones with the big claw still raised.',
+        finish: 'The big claw opens, and does not close again.',
+    },
+    logic: 'balanced',
+    phases: [
+        { moves: [SWING, counterweight(6), LOCK_THE_BRAKE, HOIST] },
+        {
+            danger: {
+                name: 'Drop the Load', kind: 'danger',
+                text: '15 damage. If you block all of it, the crane is VULNERABLE 50% for 2 turns.',
+                damage: 15, rider: { kind: 'self-vulnerable-on-block', pct: 50, turns: 2 },
+            },
+            moves: [SWING, counterweight(9), LOCK_THE_BRAKE, HOIST],
+        },
+    ],
+    addedIn: RECAST_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The cliffs and the hamlet: the Wreck-Picker's numbers (EN3a). */
+export const BilgeStalker = createEnemy({
+    id: 'enemy-bilge-stalker',
+    portraitAsset: 'bilge-stalker',
+    name: 'Bilge-Stalker',
+    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
+    description:
+        'A green thing that learned to stand — finned along the spine, bright-eyed, built low and ' +
+        'quiet for the dark under a deck.',
+    level: 6,
+    baseStats: enemyStatBudget(6),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    mercyLines: {
+        // DRAFT (Claude): for T to rewrite.
+        spare: 'It drops back under the deck boards and waits for quieter feet.',
+        finish: 'It goes down in the bilge water it came up out of.',
+    },
+    logic: 'balanced',
+    phases: [
+        { moves: [pickOver(1), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL] },
+        {
+            danger: {
+                name: 'Everything Washes Up', kind: 'danger',
+                text: '4 damage per hoarded card, then the cards go back to your hand.',
+                rider: { kind: 'hoard-return', damage: 4 },
+            },
+            moves: [pickOver(2), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL],
+        },
+    ],
+    addedIn: RECAST_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
+/** The harbour steps: the Lamprey-Knot's numbers (EN3a). */
+export const Coralback = createEnemy({
+    id: 'enemy-coralback',
+    portraitAsset: 'coralback',
+    name: 'Coralback',
+    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
+    description:
+        'A pale crab wearing a crown of coral it did not grow. The colours are a warning, and ' +
+        'the warning is honest.',
+    level: 4,
+    baseStats: enemyStatBudget(4),
+    mapName: 'breakwater',
+    difficulty: 'normal',
+    mercyLines: {
+        // DRAFT (Claude): for T to rewrite.
+        spare: 'It sidles off crown-first, still warning you.',
+        finish: 'The crown goes grey a long moment before the crab does.',
+    },
+    logic: 'balanced',
+    phases: [
+        { moves: [LATCH, writhe(3), KNOT_UP, MOUTHFUL] },
+        {
+            danger: {
+                name: 'Unravel', kind: 'danger',
+                text: '4 damage per turn of LEECH left on you, then it lets go.',
+                rider: { kind: 'leech-turns-damage', damage: 4 },
+            },
+            moves: [LATCH, writhe(4), KNOT_UP, MOUTHFUL],
+        },
+    ],
+    addedIn: RECAST_ADDED,
+    tags: ['early-game', 'enemy'],
+});
+
 // ─── Test fixture (NOT part of the roster) ───────────────────────────────────
 
 /**
@@ -1126,6 +1378,10 @@ export const EnemyLibrary = [
     Lamplighter, Wrecker,
     TollKeeper, TideGate,
     DeathBeholder,
+    // Chapter 1's recast faces (EN3a). The cut foes above them stay.
+    QuayCrab, Coralback, SaltwickSwarm, BilgeStalker,
+    Wreckmaster,
+    SaintBeneath,
 ] as const;
 
 /**
@@ -1174,6 +1430,14 @@ export const ENEMY_REGISTRY = {
     'toll-keeper':    TollKeeper,
     'tide-gate':      TideGate,
     'death-beholder': DeathBeholder,
+    // Chapter 1's recast faces (EN3a). Placed nowhere until 157.2 repoints
+    // the node tables; the cut foes above keep their keys.
+    'quay-crab':       QuayCrab,
+    'coralback':       Coralback,
+    'saltwick-swarm':  SaltwickSwarm,
+    'bilge-stalker':   BilgeStalker,
+    'wreckmaster':     Wreckmaster,
+    'saint-beneath':   SaintBeneath,
 } as const;
 
 export type EnemySlug = keyof typeof ENEMY_REGISTRY;

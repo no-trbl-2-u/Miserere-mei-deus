@@ -54,6 +54,12 @@ describe('per-foe aftermath narrative lines (art-driven roster)', () => {
         'enemy-cave-choir',
         'enemy-lamplighter', 'enemy-wrecker',
         'enemy-toll-keeper', 'enemy-tide-gate',
+        // Chapter 1's recast faces (EN3a, T 2026-11-06, question 4): each
+        // ships with its one drafted description and no aftermath prose, the
+        // same way the stand-ins above do. The normals still carry a Spare
+        // and a Finish line — the mercy check is gameplay, not voice.
+        'enemy-quay-crab', 'enemy-coralback', 'enemy-saltwick-swarm',
+        'enemy-bilge-stalker', 'enemy-wreckmaster', 'enemy-saint-beneath',
     ]);
 
     it('Chapter 1\'s description-only foes carry no aftermath prose yet', () => {

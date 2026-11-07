@@ -77,7 +77,7 @@ import { juiceHaptics, useJuicePulse, useJuiceShake } from '@/lib/juice';
 
 // Per-card art registry (temp art pass) — keyed by cardId, falls back to the
 // circe placeholder for unmapped ids. Stance tint + glyph still ride on top.
-import { getCardArt } from '@/assets/images/cards';
+import { cardArtFor } from '@/assets/images/cards';
 
 // ── Layout-animation builders (hoisted, identity-stable) ─────────────────────
 // Reanimated compares an Animated component's `layout` / `exiting` prop by
@@ -2057,7 +2057,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                 <View style={styles.plateArtWrap} pointerEvents="none" testID="combat-card-face-art">
                     <View style={styles.plateArtFrame} testID="combat-card-face-art-frame">
                         <Image
-                            source={getCardArt(card.cardId)}
+                            source={cardArtFor(card.cardId)}
                             style={[StyleSheet.absoluteFill, artMirrored(card.cardId) && { transform: [{ scaleX: -1 }] }]}
                             contentFit="cover"
                             transition={0}

@@ -197,7 +197,6 @@ The `description` itself is the irreducible minimum — the field is required by
 
 ## Acceptance
 
-- **A1** Six new library entries exist, each carrying its own id, name, description and portrait key and its cut foe's level, VITAE, tier, moves and phases (the boss its deck and its three stages), registered in `EnemyLibrary`, `ENEMY_REGISTRY`, `EnemySlug` and `LIVE_ENEMY_IDS`. All ten cut foes remain in the library with their own entries, portraits and frame sets, and `FRAME_SET_EXEMPTIONS` is still empty.
 - **A2** Chapter 1's 18 combat nodes draw the recast roster at the levels in the Design table: the six new foes hold the nodes of the six they replace, the four benched foes' five nodes draw duplicates of the keepers, the keep causeway still draws one of two, and the sea keep's boss is The Saint Beneath. No benched foe is drawn or pinned anywhere in Chapter 1.
 - **A3** A wandering Act 1 fight draws one of the six named Chapter 1 normals, never a benched foe, and `docs/reports/chapter1-enemies.md` is regenerated against the recast roster with its new commit stamp.
 - **A4** Every one of the 23 portraits is drawn by exactly one library foe, through its own `ENEMY_ART_BY_KEY` entry, its own 24-cell frame set with its anchor, its own baked backings and its own provenance record. `npm run verify -w axiomancer-mobile` is green, and so are `asset-provenance.test.mjs`, `enemy-backings.test.mjs` and the one-enemy-per-installed-set guard.
@@ -212,11 +211,10 @@ The `description` itself is the irreducible minimum — the field is required by
 
 ## Chunks
 
-Measure: 4 open · 0 closed · next A5
+Measure: 3 open · 1 closed · next A5
 
-- [ ] **157.1** The six new library entries, each on its cut foe's numbers · M · closes A1 · needs — · alias: EN3a
-- [ ] **157.2** Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors · M · closes A2, A3 · needs 157.1 · alias: EN3b
-- [ ] **157.3** The six portraits drawn: art registry, provenance, frame sets, backings · M · closes A4 · needs 157.1 · alias: EN3c
+- [ ] **157.2** Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors · M · closes A2, A3 · needs — · alias: EN3b
+- [ ] **157.3** The six portraits drawn: art registry, provenance, frame sets, backings · M · closes A4 · needs — · alias: EN3c
 
 ### 157.1 (EN3a) — The six new library entries, each on its cut foe's numbers · M · closes A1 · requires —
 

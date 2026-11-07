@@ -21,7 +21,9 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
+import { FALLBACK_CARD_ART } from '@/assets/images/cards';
 import {
+    CARD_LANES,
     buildCombatDeck,
     createNewGameState,
     getCardById,
@@ -309,5 +311,27 @@ describe('selectDeckViewModel: purity', () => {
         selectDeckViewModel(state);
 
         expect(JSON.stringify(state)).toBe(snapshot);
+    });
+});
+
+describe('selectDeckViewModel: the open card (155.1)', () => {
+    it('resolves a painting for every card of every lane deck, never the fallback', () => {
+        for (const lane of CARD_LANES) {
+            const vm = selectDeckViewModel(runWith(lane.testDeck));
+            for (const card of vm.groups.flatMap((g) => g.cards)) {
+                expect(card.art).toBeTruthy();
+                if (lane.id !== 'grey') expect(card.art).not.toBe(FALLBACK_CARD_ART);
+            }
+        }
+    });
+
+    it('hands the outcome line then the play lines as labelled text runs', () => {
+        const card = findCard(selectDeckViewModel(runWith([BLOW])), BLOW);
+        const detail = detailStats(toCombatCard(BLOW, getCardById, lookupEffect)!, getCardById(BLOW)!);
+
+        expect(card.lines[0]).toEqual({ label: null, runs: [{ kind: 'text', text: detail.outcomeLine }] });
+        expect(card.lines[1].label).toBe('◇ NO DIE');
+        expect(card.lines[1].runs).toEqual([{ kind: 'text', text: detail.freePill }]);
+        expect(card.lines.length).toBe(detail.diePaidLine === null ? 2 : 3);
     });
 });
