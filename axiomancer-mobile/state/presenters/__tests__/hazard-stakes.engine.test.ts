@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals';
 
 import { createMapState, getMapDefinition } from '@mechanics';
 import { HAZARD_STAKES_CTA, selectHazardStakes } from '../hazard-stakes.engine';
+import { hazardPuzzleStakesGoalLine } from '../hazard-puzzle.copy';
 
 function stateAt(nodeId: string, hazardId = 'cracked-cliff') {
     const map = createMapState(getMapDefinition('coastal-continent', 'breakwater'));
@@ -41,9 +42,25 @@ describe('the hazard stakes card', () => {
         expect(line(vm, 'routes')!.values).toHaveLength(2);
     });
 
+    it('a plain hazard has no goal or time line to draw', () => {
+        const vm = selectHazardStakes(stateAt('bw-t5'))!;
+        expect(vm.goalLine).toBeNull();
+        expect(vm.timeLine).toBeNull();
+    });
+
     it('falls back to the hazard title off the Breakwater, and is null with no session', () => {
         const off = { hazard: { session: { hazardId: 'cracked-cliff' } }, world: { currentMap: null } } as never;
         expect(selectHazardStakes(off)!.place).toBeTruthy();
         expect(selectHazardStakes({ hazard: { session: null }, world: null } as never)).toBeNull();
+    });
+});
+
+describe('hazardPuzzleStakesGoalLine', () => {
+    it('reads the single combined goal on the safe route', () => {
+        expect(hazardPuzzleStakesGoalLine(18)).toBe('Goal: Force + Escape 18');
+    });
+
+    it('reads the two goals on the risk route', () => {
+        expect(hazardPuzzleStakesGoalLine([18, 10])).toBe('Goal: Force 18 | Escape 10');
     });
 });

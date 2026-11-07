@@ -93,6 +93,17 @@ export function hazardPuzzleStakesGoal(goal: number | readonly [number, number])
     return `FORCE ${goal[0]} and ESCAPE ${goal[1]} in one round`;
 }
 
+/** The stakes card's goal line: "Goal: Force 18 | Escape 10" (the safe route adds the two in one meter). */
+export function hazardPuzzleStakesGoalLine(goal: number | readonly [number, number]): string {
+    if (typeof goal === 'number') return `Goal: Force + Escape ${goal}`;
+    return `Goal: Force ${goal[0]} | Escape ${goal[1]}`;
+}
+
+/** The stakes card's time line: "Time: 60 secs". */
+export function hazardPuzzleStakesTimeLine(seconds: number): string {
+    return `Time: ${seconds} secs`;
+}
+
 export function hazardPuzzleStakesClock(seconds: number): string {
     return `${seconds} seconds on the clock`;
 }
