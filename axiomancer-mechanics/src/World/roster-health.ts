@@ -202,7 +202,7 @@ function itemRefs(src: RosterSources): ItemRef[] {
 }
 
 /** Every dialogue tree in play, labelled with where it lives. */
-function dialogueTrees(src: RosterSources): Array<{ tree: DialogueTree; where: string }> {
+export function dialogueTrees(src: RosterSources): Array<{ tree: DialogueTree; where: string }> {
     const out: Array<{ tree: DialogueTree; where: string }> = [];
     for (const def of src.maps) {
         for (const npc of def.npcs ?? []) {
