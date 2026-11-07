@@ -31,11 +31,16 @@
 
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
+import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
+import { SPOILS_INK } from '@/components/combat/encounter/spoils-ink';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
@@ -59,6 +64,17 @@ const OFFER_H = 147;
 const PREVIEW_W = 208;
 const PREVIEW_H = 305;
 
+/** The offer panel (P-03) and its buttons (P-04) read their looks from the
+ *  table, so flipping a place to normal restores today's code path. */
+const VELLUM_PANEL = lookOf('P-03') === 'vellum';
+const VELLUM_BUTTONS = lookOf('P-04') === 'vellum';
+
+/** A button on the vellum plate when P-04 wears it, else today's bordered one. */
+function PlateButton({ plain, vellumStyle, children, ...rest }: PressableProps & { plain: StyleProp<ViewStyle>; vellumStyle?: StyleProp<ViewStyle> }) {
+    if (VELLUM_BUTTONS) return <SpoilsButton {...rest} style={vellumStyle}>{children as React.ReactNode}</SpoilsButton>;
+    return <Pressable {...rest} style={plain}>{children as React.ReactNode}</Pressable>;
+}
+
 export function CombatRewardsOverlay({
     offers,
     onPick,
@@ -79,6 +95,8 @@ export function CombatRewardsOverlay({
     const [preview, setPreview] = useState<string | null>(null);
     const [upgrading, setUpgrading] = useState(false);
     const previewCard = preview ? offers.find((o) => o.cardId === preview) ?? null : null;
+    const v = VELLUM_PANEL;
+    const vb = VELLUM_BUTTONS;
     const upgradeRow = upgradeRows && upgradeRows.length > 0 && onUpgrade ? upgradeRows[0] : null;
 
     if (upgrading && upgradeRow && onUpgrade) {
@@ -101,13 +119,14 @@ export function CombatRewardsOverlay({
     }
 
     return (
-        <View style={styles.backdrop} testID="combat-rewards">
-            <View style={[styles.panel, { borderColor: AXM.sulfur }]}>
-                <Text style={styles.eyebrow}>✦ SPOILS</Text>
-                <Text style={styles.title}>Add a card to your deck</Text>
-                <Text style={styles.sub}>{upgradeRow ? ELITE_REWARD_SUB : SPOILS_SUB}</Text>
+        <View style={[styles.backdrop, v && styles.vBackdrop]} testID="combat-rewards">
+            <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]}>
+                {v && <KitBackdrop piece="modal-panel-vellum" />}
+                <Text style={[styles.eyebrow, v && styles.vEyebrow]}>✦ SPOILS</Text>
+                <Text style={[styles.title, v && styles.vBody]}>Add a card to your deck</Text>
+                <Text style={[styles.sub, v && styles.vSub]}>{upgradeRow ? ELITE_REWARD_SUB : SPOILS_SUB}</Text>
 
-                <View style={styles.offerRow}>
+                <View style={[styles.offerRow, v && styles.vOfferRow]}>
                     {offers.map((card) => {
                         const on = picked === card.cardId;
                         // The rarity signals on one tile: the FRAME COLOUR (this
@@ -127,8 +146,8 @@ export function CombatRewardsOverlay({
                                 style={[
                                     styles.offerFrame,
                                     {
-                                        borderColor: on ? AXM.sulfur : rarityColor,
-                                        backgroundColor: on ? 'rgba(212,192,38,0.16)' : 'transparent',
+                                        borderColor: on ? (v ? SPOILS_INK.accent : AXM.sulfur) : rarityColor,
+                                        backgroundColor: on ? (v ? 'rgba(110,26,16,0.14)' : 'rgba(212,192,38,0.16)') : 'transparent',
                                         transform: [{ translateY: on ? -6 : 0 }],
                                     },
                                 ]}
@@ -140,7 +159,7 @@ export function CombatRewardsOverlay({
                                     player is choosing BETWEEN cards — the band
                                     has to be a word here, not a hue to decode. */}
                                 <Text
-                                    style={[styles.offerRarity, { color: rarityColor }]}
+                                    style={[styles.offerRarity, { color: v ? SPOILS_INK.body : rarityColor }, v && styles.vRarity]}
                                     numberOfLines={1}
                                     allowFontScaling={false}
                                     testID={`combat-reward-rarity-${card.cardId}`}
@@ -148,8 +167,8 @@ export function CombatRewardsOverlay({
                                     {RARITY_LABEL[band].toUpperCase()}
                                 </Text>
                                 {on && (
-                                    <View style={[styles.pickedBadge, { backgroundColor: AXM.sulfur }]}>
-                                        <Text style={styles.pickedBadgeText}>✓</Text>
+                                    <View style={[styles.pickedBadge, { backgroundColor: v ? SPOILS_INK.accent : AXM.sulfur }]}>
+                                        <Text style={[styles.pickedBadgeText, v && { color: AXM.parchment }]}>✓</Text>
                                     </View>
                                 )}
                             </Pressable>
@@ -158,41 +177,42 @@ export function CombatRewardsOverlay({
                 </View>
 
                 <View style={styles.btnRow}>
-                    <Pressable
+                    <PlateButton
+                        plain={[styles.btn, { borderColor: AXM.bone }]}
                         onPress={() => onPick(null)}
                         testID="combat-reward-skip"
                         accessibilityRole="button"
                         accessibilityLabel="Take nothing — keep the deck lean"
-                        style={[styles.btn, { borderColor: AXM.bone }]}
                     >
-                        <Text style={[styles.btnText, { color: AXM.parchment }]}>TAKE NOTHING</Text>
-                        <Text style={styles.btnNote}>a lean deck draws its best more often</Text>
-                    </Pressable>
-                    <Pressable
+                        <Text style={[styles.btnText, { color: vb ? SPOILS_INK.body : AXM.parchment }, vb && styles.vBtnText]}>TAKE NOTHING</Text>
+                        <Text style={[styles.btnNote, vb && styles.vBtnNote]}>a lean deck draws its best more often</Text>
+                    </PlateButton>
+                    <PlateButton
+                        plain={[styles.btn, { borderColor: picked ? AXM.sulfur : AXM.ash, opacity: picked ? 1 : 0.55 }]}
                         disabled={!picked}
                         onPress={() => onPick(picked)}
                         testID="combat-reward-confirm"
                         accessibilityRole="button"
                         accessibilityState={{ disabled: !picked }}
                         accessibilityLabel="Take the selected card"
-                        style={[styles.btn, { borderColor: picked ? AXM.sulfur : AXM.ash, opacity: picked ? 1 : 0.55 }]}
                     >
-                        <Text style={[styles.btnText, { color: picked ? AXM.sulfur : AXM.bone }]}>TAKE CARD</Text>
-                        <Text style={styles.btnNote}>{picked ? 'it joins your deck for the run' : 'choose a card first'}</Text>
-                    </Pressable>
+                        <Text style={[styles.btnText, { color: vb ? (picked ? SPOILS_INK.accent : SPOILS_INK.body) : (picked ? AXM.sulfur : AXM.bone) }, vb && styles.vBtnText]}>TAKE CARD</Text>
+                        <Text style={[styles.btnNote, vb && styles.vBtnNote]}>{picked ? 'it joins your deck for the run' : 'choose a card first'}</Text>
+                    </PlateButton>
                 </View>
 
                 {upgradeRow && (
-                    <Pressable
+                    <PlateButton
+                        plain={[styles.btn, styles.upgradeOpen, { borderColor: AXM.sulfur }]}
+                        vellumStyle={styles.vUpgradeOpen}
                         onPress={() => setUpgrading(true)}
                         testID="combat-reward-upgrade-open"
                         accessibilityRole="button"
                         accessibilityLabel={`Upgrade ${upgradeRow.name} instead of taking a card`}
-                        style={[styles.btn, styles.upgradeOpen, { borderColor: AXM.sulfur }]}
                     >
-                        <Text style={[styles.btnText, { color: AXM.sulfur }]}>{ELITE_UPGRADE_OPEN_LABEL}</Text>
-                        <Text style={styles.btnNote}>{eliteUpgradeNote(upgradeRow.name)}</Text>
-                    </Pressable>
+                        <Text style={[styles.btnText, { color: vb ? SPOILS_INK.accent : AXM.sulfur }, vb && styles.vBtnText]}>{ELITE_UPGRADE_OPEN_LABEL}</Text>
+                        <Text style={[styles.btnNote, vb && styles.vBtnNote]}>{eliteUpgradeNote(upgradeRow.name)}</Text>
+                    </PlateButton>
                 )}
             </View>
 
@@ -275,6 +295,19 @@ const useStyles = makeStyles((AXM) => ({
     upgradePanel: { alignItems: 'stretch' },
     upgradeBack: { flex: 0, marginTop: 12 },
     btnNote: { fontFamily: FONTS.sans, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
+    // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side
+    // ornament, 26pt of top and bottom. The tiles are 330pt wide, so the sides
+    // carry less padding than the title and sub-line, which sit clear of the corners.
+    vBackdrop: { padding: 2 },
+    vOfferRow: { gap: 0 },
+    vPanel: { width: '100%', maxWidth: 420, paddingHorizontal: 12, paddingTop: 36, paddingBottom: 34, alignItems: 'center' },
+    vEyebrow: { color: SPOILS_INK.accent, fontSize: 13 },
+    vBody: { color: SPOILS_INK.body },
+    vSub: { color: SPOILS_INK.soft, fontSize: 13, marginHorizontal: 22 },
+    vRarity: { fontSize: 10 },
+    vBtnText: { fontSize: 14, letterSpacing: 0.6 },
+    vBtnNote: { color: SPOILS_INK.body, fontSize: 10 },
+    vUpgradeOpen: { flex: 0, alignSelf: 'stretch', marginTop: 6 },
     previewOverlay: { ...StyleSheet.absoluteFillObject, zIndex: 70, backgroundColor: 'rgba(0,0,0,0.92)', alignItems: 'center', justifyContent: 'center', padding: 14 },
     previewColumn: { width: '100%', maxWidth: 400, maxHeight: '100%' },
     previewPanel: { width: '100%', maxWidth: 400, flexShrink: 1, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 14, paddingTop: 16, paddingBottom: 12 },
