@@ -3,7 +3,7 @@
  * A9 and A10).
  *
  * A9: two active quests show as two rows, each with its next unmet objective
- * and count; at most three rows then `+n more`; a tap opens the memoir; an
+ * (and its count, unless the objective is one step); at most three rows then `+n more`; a tap opens the memoir; an
  * empty log draws no tracker; a `carry` objective reads `Bring: <item>`.
  * A10: a tap on a node behind a shut road shows the road's reason and the
  * quest holding it on the node confirm panel, with no TRAVEL button.
@@ -105,15 +105,43 @@ function filler(n: number): Quest {
 }
 
 describe('A9: the quest tracker', () => {
-    it('shows two active quests, each with its next unmet objective and count', () => {
+    it('shows two active quests, each with its next unmet objective and no lone 0/1', () => {
         const store = newStore();
         giveTwo(store);
         const tree = mount(store);
         expect(tree.getByTestId('quest-tracker')).toBeTruthy();
         expect(tree.getByTestId('quest-tracker-row-mq1-long-1')).toBeTruthy();
         expect(tree.getByTestId('quest-tracker-row-mq1-long-side-1')).toBeTruthy();
-        expect(tree.getAllByText('0/1')).toHaveLength(2);
+        expect(tree.queryAllByText('0/1')).toHaveLength(0);
         expect(tree.queryByTestId('quest-tracker-more')).toBeNull();
+    });
+
+    it('has no QUESTS heading', () => {
+        const store = newStore();
+        giveTwo(store);
+        const tree = mount(store);
+        expect(tree.queryByText('QUESTS')).toBeNull();
+    });
+
+    it('steps aside while a node is chosen and returns when the panel closes', () => {
+        const store = newStore();
+        giveTwo(store);
+        const tree = mount(store);
+        const target = selectExplorationViewModel(store.getState()).options[0];
+        expect(target).toBeTruthy();
+        expect(tree.getByTestId('quest-tracker')).toBeTruthy();
+        act(() => { fireEvent.press(tree.getByTestId(`node-${target.nodeId}`)); });
+        expect(tree.getByTestId('node-confirm-panel')).toBeTruthy();
+        expect(tree.queryByTestId('quest-tracker')).toBeNull();
+        fireEvent.press(tree.getByTestId('node-confirm-cancel'));
+        expect(tree.getByTestId('quest-tracker')).toBeTruthy();
+    });
+
+    it('hides the count of a one-step objective and keeps a longer one', () => {
+        const one = { ...filler(1), objectives: [{ id: 'g', type: 'kill', description: 'a foe', requiredCount: 1, currentCount: 0 }] } as Quest;
+        const log = startQuest(startQuest(emptyQuestLog(), one), filler(2));
+        const vm = selectQuestTrackerVM({ quests: log });
+        expect(vm.rows.map(r => r.progress)).toEqual(['', '2/3']);
     });
 
     it('draws three rows then "+n more"', () => {
@@ -142,7 +170,7 @@ describe('A9: the quest tracker', () => {
         expect(tree.queryByTestId('quest-tracker')).toBeNull();
     });
 
-    it('a carry objective reads "Bring: <item>" and the count follows the satchel', () => {
+    it('a carry objective reads "Bring: <item>" and no lone count shows', () => {
         const store = newStore();
         let state = store.getState() as unknown as GameState;
         const log: QuestLog = { ...state.quests, completed: [LONG_STEP_1, LONG_STEP_2] };
@@ -150,7 +178,7 @@ describe('A9: the quest tracker', () => {
         store.setState({ quests: state.quests } as never);
         const vm = selectQuestTrackerVM({ quests: state.quests });
         expect(vm.rows).toEqual([
-            { id: LONG_STEP_3, name: LONG_STEP_3, objective: `Bring: ${CASTLE_KEY.name}`, progress: '0/1' },
+            { id: LONG_STEP_3, name: LONG_STEP_3, objective: `Bring: ${CASTLE_KEY.name}`, progress: '' },
         ]);
     });
 });

@@ -5,14 +5,16 @@ import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectQuestTrackerVM } from '@/state/presenters/quest-tracker.engine';
-import { TRACKER_HEAD, trackerMoreLine } from '@/state/presenters/quest.copy';
+import { trackerMoreLine } from '@/state/presenters/quest.copy';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { VELLUM_INK, INK_SOFT, VELLUM_OXBLOOD, overlay } from '@/components/exploration/wildsInk';
 
 /**
  * The exploration screen's quest tracker (phase MQ1c): each active quest's
- * name and its next unmet objective with its count, three rows then `+n more`.
+ * name and its next unmet objective with its count (none for a one-step
+ * objective, which could only read 0/1 or 1/1), three rows then `+n more`.
+ * It carries no heading.
  * Tapping it opens the memoir's quest list. Draws nothing for an empty log.
  * Reads the log through `selectQuestTrackerVM`; decides no rule.
  *
@@ -43,7 +45,6 @@ function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> 
             style={styles.box}
         >
             {vellum && <KitBackdrop piece="quest-row-vellum" />}
-            <Text style={styles.head}>{TRACKER_HEAD}</Text>
             {vm.rows.map((row) => (
                 <View key={row.id} style={styles.row} testID={`quest-tracker-row-${row.id}`}>
                     <View style={styles.text}>
@@ -72,7 +73,6 @@ const useVellumStyles = makeStyles(() => ({
         borderWidth: 0,
         backgroundColor: 'transparent',
     },
-    head: { color: VELLUM_OXBLOOD },
     name: { color: VELLUM_INK },
     objective: { color: INK_SOFT },
     progress: { color: VELLUM_OXBLOOD },
@@ -89,7 +89,6 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
         backgroundColor: AXM.panelBg,
     },
-    head: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 1.5, color: AXM.sulfur },
     row: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, marginTop: 3 },
     text: { flex: 1 },
     name: { fontFamily: FONTS.gothic, fontSize: 13, color: AXM.parchment },

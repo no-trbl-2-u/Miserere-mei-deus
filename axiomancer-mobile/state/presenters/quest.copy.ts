@@ -66,7 +66,6 @@ export function questBringLine(itemName: string): string {
 
 /** The tracker row of a quest whose objectives are all filled. */
 export const TRACKER_READY_LINE = 'Ready to turn in';
-export const TRACKER_HEAD = 'QUESTS';
 
 /** "+2 more". */
 export function trackerMoreLine(n: number): string {

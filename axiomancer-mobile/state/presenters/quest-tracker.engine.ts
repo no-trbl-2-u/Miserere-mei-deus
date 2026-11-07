@@ -24,7 +24,7 @@ export interface QuestTrackerRow {
     name: string;
     /** The next unmet objective in words (`Bring: Key` for a carry objective). */
     objective: string;
-    /** "2/3"; empty when the quest is ready to turn in. */
+    /** "2/3"; empty when the quest is ready to turn in or the objective is one step (a lone 0/1 or 1/1). */
     progress: string;
 }
 
@@ -94,7 +94,7 @@ function rowOf(quest: Quest): QuestTrackerRow {
         id: quest.name,
         name: quest.name,
         objective: objectiveText(next),
-        progress: questProgressShort(next.currentCount, next.requiredCount),
+        progress: next.requiredCount > 1 ? questProgressShort(next.currentCount, next.requiredCount) : '',
     };
 }
 
