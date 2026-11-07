@@ -1,8 +1,9 @@
 # 156 — Type by T's ballot, then a design audit of every screen against the AI-design tells
 
-> A friend of T's said the screens look made with Claude design. They were, and T doesn't want them to read that way. This spec does two things:
+> A friend of T's said the screens look made with Claude design. They were, and T doesn't want them to read that way. This spec does three things:
 >
 > - **Type.** T picks a font for each of 15 jobs type does in the game on a ballot. The game then sets every word through those 15 roles.
+> - **Colour.** Once the fonts and every UI round in flight have landed, a second ballot offers whole palettes drawn from real references, shown on the real screens with T's kit pieces. T's pick replaces the near-black brown ground and the gold-on-everything accent.
 > - **The audit.** Once every UI round in flight has landed (specs 152 to 155, and the type), one pass screenshots every screen and lists what still reads as AI-made, why, and the fix. For the three worst screens it mocks three directions each for T to pick from.
 
 ## Why
@@ -11,6 +12,7 @@
 
 - T, 2026-11-06, in a session: "a friend of mine mentioned that the screens for Miserere all look very much like they've been made with Claude design. Now they were, but I don't want the screens to look AI generated."
 - T, the same session, after the research below: "We definitely need to work on the font. I want an artifact/ballot where I could have several options to decide which screen/area gets which font with a lot of thematic font options." And: "plot a phase where after all the UI work is done, we do a design audit pass with all this as the direction."
+- T, the same session, after a second outside read of one of T's pages named the tells (near-black warm brown background, muted gold accent on everything, blackletter titles, condensed capital buttons, tiny letter-spaced mono labels): asked whether this work covers them, then chose a colour ballot "but only after 1) The new fonts are chosen and landed and 2) All UI treatment from today land in main".
 - The research: five web-research passes the same day. Their findings, with sources, are the Design section's "The direction". Evidence is thin across the field: almost no controlled comparisons. The firmest sources are Anthropic's frontend-design skill, its frontend-aesthetics cookbook, and the Claude Design blog post by the designer who built it.
 
 ### What exists today (read 2026-11-06, at origin/main)
@@ -52,6 +54,21 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 - **Fonts load from their `@expo-google-fonts` packages.** The faces the title and body roles use load first, the rest after start, as today. A face no role uses is removed with its package (`[T to confirm #2]`).
 - **Letter spacing follows the face.** The 1 to 2 point tracking stays only where T's pick for that role is a condensed capital face.
 
+### Colour
+
+- **After the type and the UI rounds** (T, 2026-11-06). 156.6 needs 156.3, which needs the last chunks of specs 152 to 155, so the ballot is built on the screens as they will stand.
+- **The ballot offers whole palettes, not single colours:**
+  - 4 to 6 of them, each a ground, an ink, one accent and a danger red;
+  - each drawn from a named real reference: an illuminated manuscript, a woodcut, a fresco, a printed book, or a painting in the game's own art set;
+  - none of them the warm near-black with gold;
+  - today's palette is on it as "now".
+- **Shown on the real screens:**
+  - the Wilds, a fight, Self, the Deck and one node screen, at 390×844, from a build with each palette swapped in;
+  - T's kit pieces in place;
+  - the brass pieces are gold by nature, so each palette says how it treats them: kept as the one bold metal, toned, or kept to fewer places.
+- **One accent, one place.** Whichever palette wins, the accent goes on the screen's one bold element. Everything else uses the ink and the ground (the direction's part 3).
+- **Applied as a theme.** The pick becomes a `ThemeSpec` in `theme/palette.ts`, made the default. The other themes stay selectable in Settings.
+
 ### The audit
 
 - **Every screen, 390×844**, through the existing e2e drivers, in its main states: Wilds, the fight (with a foe and with the hand open), Spoils, Self, Satchel, Deck, Ledger, Settings, main menu, and each node screen of spec 154.
@@ -80,7 +97,6 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 ### Out of scope
 
 - New art. Frames, textures and kit pieces are T's (D88). The audit may say a screen wants one, and T commissions or makes it.
-- Colour themes. The palette work stays with `theme/palette.ts`.
 - The village, until its own pitch (Item, Nov 7).
 
 ## Acceptance
@@ -90,6 +106,8 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 - **A3** No component under `app/` or `components/` sets a `FONTS.<face>` directly. Every text style goes through a role, and a lint test fails a new direct use.
 - **A4** The audit report `docs/reports/design-audit-<date>.md` covers every screen in the list, each with its emotional job, its tells table, its bold thing and its top three fixes. It also carries the tell count before and after the UI rounds, and the copy flagged by screen.
 - **A5** A mock page offers three directions for each of the audit's three worst screens, under the ballot index, and T's picks come back through the ballot kit.
+- **A6** A colour ballot offers 4 to 6 whole palettes from named references, plus today's as "now", each shown on five real screens with T's kit pieces, under the ballot index.
+- **A7** T's palette is the default theme. The accent appears only on each screen's bold element and the controls that need it, and the audit's gold-accent count drops against its before figure.
 
 ## Open questions
 
@@ -97,16 +115,19 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 2. A face no role uses after T's picks (likely JetBrains Mono, Bebas Neue) leaves the app entirely. Default: yes, package and all. Or: keep it for the dev menu only. [T to confirm #2]
 3. The audit waits for every UI chunk of specs 152 to 155 and the type. Default: yes, all of them. Or: start once 152 to 154 land and leave the Deck to a second pass. [T to confirm #3]
 4. The audit proposes each screen's emotional job for T to confirm. Default: yes, the loop drafts and T edits. Or: T writes them before the audit runs. [T to confirm #4]
+5. The audit runs after the colour pick lands, so it audits the finished look. Default: yes. Or: run the audit right after the fonts, before colour. [T to confirm #5]
 
 ## Chunks
 
-Measure: 5 open · 0 closed · next A6
+Measure: 7 open · 0 closed · next A8
 
 - [ ] **156.1** The design direction, written down · S · closes A1 · needs — · alias: TY1a
 - [ ] **156.2** The type roles, filled from T's font ballot · M · closes A2 · needs — · alias: TY1b
 - [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 156.2, 152.4, 153.1, 153.3, 153.4, 153.5, 153.6, 154.2, 154.3, 154.4, 154.5, 154.6, 154.7, 154.8, 154.9, 155.3, 155.4 · alias: TY1c
-- [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.1, 156.3 · alias: TY1d
+- [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.1, 156.7 · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
+- [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs 156.3 · alias: TY1f
+- [ ] **156.7** T's palette, the default theme · M · closes A7 · needs 156.6 · alias: TY1g
 
 ### 156.1 (TY1a) — The design direction, written down · S · closes A1 · requires —
 
@@ -132,7 +153,7 @@ Measure: 5 open · 0 closed · next A6
 - Waits for the UI rounds so it does not fight their diffs.
 - Measure: the lint test, then `npm run verify -w axiomancer-mobile`. The PR carries before and after shots of the Wilds, the fight, Spoils, Self and the Deck.
 
-### 156.4 (TY1d) — The design audit of every screen · M · closes A4 · requires 156.1, 156.3
+### 156.4 (TY1d) — The design audit of every screen · M · closes A4 · requires 156.1, 156.7
 
 - Screenshot every screen in the audit's list at 390×844, with the e2e drivers (`enterLiveFight` stops on the reveal card: press `combat-enter`).
 - Write `docs/reports/design-audit-<date>.md` per the Design section. The tell count is taken at the commit before spec 152's first chunk and at this chunk's base.
@@ -144,3 +165,16 @@ Measure: 5 open · 0 closed · next A6
 - For each of the three worst screens, mock three directions, each from a different named reference, as one ballot page under `plan/card-ledger/` (the kit, an index entry, no colours on candidates).
 - Each direction is a still at 390×844 with a one-line idea and its reference.
 - Measure: `node --test scripts/ballot-kit.test.mjs`. The PR links the page's branch preview.
+
+### 156.6 (TY1f) — The colour ballot: whole palettes on the real screens · M · closes A6 · requires 156.3
+
+- Draft 4 to 6 palettes per the Design section's "Colour", each from a named reference, plus today's as "now". Write each as a `ThemeSpec` on the branch only; no default changes.
+- Shoot the Wilds, a fight, Self, the Deck and one node screen at 390×844 under each palette, kit pieces in place.
+- Build `plan/card-ledger/colours.ballot.html` with the kit, an index entry and a ledger `colours.md`. It takes one pick, plus a note on how the brass pieces are treated.
+- Measure: `node --test scripts/ballot-kit.test.mjs`. The PR links the page's branch preview.
+
+### 156.7 (TY1g) — T's palette, the default theme · M · closes A7 · requires 156.6
+
+- Held until T submits the colour ballot. Read the verdict into `colours.md` and close the ballot.
+- Add T's palette to `THEME_SPECS` and make it `DEFAULT_THEME_ID`. Move the accent off every place but each screen's bold element and the controls that need it.
+- Measure: the palette tests, then `npm run verify -w axiomancer-mobile`. The PR carries before and after shots of the five ballot screens.
