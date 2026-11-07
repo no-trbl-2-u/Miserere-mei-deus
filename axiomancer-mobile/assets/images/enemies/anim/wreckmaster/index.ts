@@ -1,0 +1,28 @@
+import type { ImageSourcePropType } from 'react-native';
+
+export const WRECKMASTER_CELLS: readonly ImageSourcePropType[] = [
+    require('./wreckmaster-00.webp'),
+    require('./wreckmaster-01.webp'),
+    require('./wreckmaster-02.webp'),
+    require('./wreckmaster-03.webp'),
+    require('./wreckmaster-04.webp'),
+    require('./wreckmaster-05.webp'),
+    require('./wreckmaster-06.webp'),
+    require('./wreckmaster-07.webp'),
+    require('./wreckmaster-08.webp'),
+    require('./wreckmaster-09.webp'),
+    require('./wreckmaster-10.webp'),
+    require('./wreckmaster-11.webp'),
+    require('./wreckmaster-12.webp'),
+    require('./wreckmaster-13.webp'),
+    require('./wreckmaster-14.webp'),
+    require('./wreckmaster-15.webp'),
+    require('./wreckmaster-16.webp'),
+    require('./wreckmaster-17.webp'),
+    require('./wreckmaster-18.webp'),
+    require('./wreckmaster-19.webp'),
+    require('./wreckmaster-20.webp'),
+    require('./wreckmaster-21.webp'),
+    require('./wreckmaster-22.webp'),
+    require('./wreckmaster-23.webp'),
+];
