@@ -28,7 +28,9 @@ origin/main, 2026-11-06):
 labels, Numbers, Cards and foes), 8 to 10 fonts each, from a pool of 43
 Google Fonts families. Every one has an `@expo-google-fonts` package, so
 any pick can be built. A Browse tab sets every font the same way with one
-line on what it is. One tick per place; the footer counts how many
+line on what it is. Each place with backdrop art in the game is set over
+that screen's own plate (`fonts/`, resized from `assets/images/maps` and
+`combat`), dimmed as `ScreenBg` dims it; a toggle shows them flat. One tick per place; the footer counts how many
 families the picks add up to.
 
 ## Verdicts
