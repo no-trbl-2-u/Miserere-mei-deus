@@ -6,10 +6,7 @@
 import { isInnShelter } from '@mechanics';
 import type { RestChoiceOfferId, RestShelter } from '@mechanics';
 
-export const REST_CHOICE_EYEBROW = 'A MOMENT TO STOP';
 export const REST_CHOICE_TITLE = 'TWO DOORS, ONE STEP THROUGH';
-export const REST_CHOICE_INTRO =
-    'The node is spent the moment you stop here. Pick one — there is no walking back out.';
 
 export const REST_CHOICE_OFFER_LABEL: Record<RestChoiceOfferId, string> = Object.freeze({
     rest: 'REST',
