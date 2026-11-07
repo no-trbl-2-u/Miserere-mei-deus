@@ -30,7 +30,7 @@ describe('sanitizeDevSettings', () => {
     it('defaults a missing or malformed field and drops junk', () => {
         expect(sanitizeDevSettings(null)).toEqual(DEFAULT_DEV_SETTINGS);
         expect(sanitizeDevSettings({ playLogging: 'no', extra: 1 })).toEqual(DEFAULT_DEV_SETTINGS);
-        expect(sanitizeDevSettings({ playLogging: false })).toEqual({ playLogging: false, forceMercyCheck: false });
+        expect(sanitizeDevSettings({ playLogging: false })).toEqual({ playLogging: false, forceMercyCheck: false, wildsBlackBand: true });
         expect(sanitizeDevSettings({ forceMercyCheck: 'yes' }).forceMercyCheck).toBe(false);
         expect(sanitizeDevSettings({ forceMercyCheck: true }).forceMercyCheck).toBe(true);
     });
@@ -67,7 +67,7 @@ describe('createDevSettingsStore', () => {
         expect(notified).toBe(1);
         expect(DEV_SETTINGS_STORAGE_KEY).not.toBe(SETTINGS_STORAGE_KEY);
         expect([...storage.bag.keys()]).toEqual([DEV_SETTINGS_STORAGE_KEY]);
-        expect(JSON.parse(storage.bag.get(DEV_SETTINGS_STORAGE_KEY)!)).toEqual({ playLogging: false, forceMercyCheck: false });
+        expect(JSON.parse(storage.bag.get(DEV_SETTINGS_STORAGE_KEY)!)).toEqual({ playLogging: false, forceMercyCheck: false, wildsBlackBand: true });
     });
 
     it('survives a restart: a fresh store hydrates the flipped value', async () => {
@@ -77,6 +77,19 @@ describe('createDevSettingsStore', () => {
         const relaunched = createDevSettingsStore({ storage });
         await relaunched.hydrate();
         expect(relaunched.get().playLogging).toBe(false);
+    });
+
+    it('ships the Wilds black band on (T, 2026-11-06) and keeps a flip across a restart', async () => {
+        const storage = fakeStorage();
+        const store = createDevSettingsStore({ storage });
+        await store.hydrate();
+        expect(store.get().wildsBlackBand).toBe(true);
+        store.set({ wildsBlackBand: false });
+        await flush();
+        const reborn = createDevSettingsStore({ storage });
+        await reborn.hydrate();
+        expect(reborn.get().wildsBlackBand).toBe(false);
+        expect(sanitizeDevSettings({ wildsBlackBand: 'no' }).wildsBlackBand).toBe(true);
     });
 
     it('a same-value set neither notifies nor writes', async () => {

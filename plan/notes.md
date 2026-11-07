@@ -168,3 +168,9 @@ re-exported `BRASS` from `index.ts`, which would pull all 86 PNGs into the
 bundle.
 
 - **154.9 (UK2i) defaults, taken under the loop.** The fire is 240pt square, centred in the free space between the header and the two choices, shown in the offer phase only; the VITAE bar sits beside the purse on one strip line; the node's own line stays above the fire; the node-spent constant was only read by rest, so it is deleted from rest.copy.ts.
+
+- The look table gained thirteen round 2 places (E-01 to E-03, C-01, C-02, T-01, T-02, H-01, H-02, Q-01, Q-02, X-01, X-02); the village, rest and new-game places are left to the chunks that wire them.
+- Wired: the dialogue's spoken line (vellum) and choice rows (brass), the travel buttons (vellum), the stakes card (vellum), the quest cards (vellum), and the labyrinth's act rows and LEAVE on the act-select and completion screens (brass). The in-room LEAVE and MAP header links stay plain text.
+- Text on vellum reads `HUE.hzCardInk` and `hzCardInk2`, with `hzForceInk` (oxblood) for the accents that were gold or amber; no new token.
+- Each wired place reads its look (`lookOf`) once at module level; set to `normal` it renders today's styles and draws no kit piece, which `lookGate.normal.test.tsx` and `lookGate.worn.test.tsx` pin.
+- `KitSurface` and `KitPressable` (`components/experience/KitSurface.tsx`) are the shared box and button that wear a piece; a caller's padding must clear the piece's unstretched corners.

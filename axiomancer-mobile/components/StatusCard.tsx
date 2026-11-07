@@ -1,9 +1,13 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import type { DimensionValue } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { StatBar } from './StatBar';
 import { useGameState } from '@/state/GameStoreProvider';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
+import { VELLUM_INK, VELLUM_OXBLOOD, VITAE_RED } from '@/components/exploration/wildsInk';
 
 interface StatusCardProps {
   /**
@@ -41,6 +45,12 @@ export function StatusCard(props: StatusCardProps = {}) {
   const hp = props.hp ?? playerHp;
   const hpMax = props.hpMax ?? playerHpMax;
 
+  // W-01: T's pick is vellum and ink. `normal` or `brass` keeps
+  // today's card below, byte for byte.
+  if (lookOf('W-01') === 'vellum') {
+    return <VellumStatusCard name={name} level={level} hp={hp} hpMax={hpMax} mapName={props.mapName} />;
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.row}>
@@ -71,6 +81,141 @@ export function StatusCard(props: StatusCardProps = {}) {
     </View>
   );
 }
+
+/**
+ * The status card on a vellum panel, inked (W-01).
+ *
+ * Everything sits inside the panel's ruled oval (T: "tighten everything up so
+ * it all fits inside the oval"): the padding keeps the writing clear of the
+ * panel's corner flourishes and its inner rule, at 360 and 390 widths. The
+ * level is an oxblood numeral on the small vellum chip; the name and the map
+ * are ink; the VITAE bar is drawn here in ink and red rather than through
+ * `StatBar`, whose parchment-on-dark text would vanish on paper. The bar keeps
+ * `StatBar`'s accessibility contract and its alarm at a quarter or less.
+ */
+function VellumStatusCard({ name, level, hp, hpMax, mapName }: {
+  name: string;
+  level: number;
+  hp: number;
+  hpMax: number;
+  mapName?: string;
+}) {
+  const styles = useVellumStyles();
+  const pct = hpMax > 0 ? Math.max(0, Math.min(1, hp / hpMax)) : 0;
+  const alarmed = pct <= 0.25;
+  const percentage = Math.round(pct * 100);
+  return (
+    <View style={styles.card} testID="status-card-vellum">
+      <KitBackdrop piece="menu-panel-vellum" />
+      <View style={styles.row}>
+        <View style={styles.levelBox}>
+          <KitBackdrop piece="vellum-chip" />
+          <Text style={styles.levelText}>{level}</Text>
+        </View>
+        <View style={styles.nameCol}>
+          <Text style={styles.name} numberOfLines={1}>{name}</Text>
+          {mapName !== undefined && mapName.length > 0 && (
+            <Text
+              style={styles.mapName}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.6}
+              testID="status-card-map-name"
+            >
+              {mapName}
+            </Text>
+          )}
+        </View>
+      </View>
+      <View
+        style={styles.bar}
+        accessibilityRole="progressbar"
+        accessibilityLabel={`VITAE: ${hp} out of ${hpMax}, ${percentage} percent`}
+        accessibilityValue={{ now: hp, min: 0, max: hpMax }}
+      >
+        <View style={styles.barLabels}>
+          <Text style={styles.barLabel} accessibilityRole="text" importantForAccessibility="no">VITAE</Text>
+          <Text
+            style={[styles.barValue, alarmed && styles.barValueAlarm]}
+            accessibilityRole="text"
+            importantForAccessibility="no"
+            testID={alarmed ? 'statbar-value-alarmed' : 'statbar-value'}
+          >
+            {hp}/{hpMax}
+          </Text>
+        </View>
+        <View style={[styles.track, alarmed && styles.trackAlarm]} importantForAccessibility="no">
+          <View
+            style={[styles.fill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue }]}
+            importantForAccessibility="no"
+          />
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const useVellumStyles = makeStyles(() => ({
+  // The padding is the "fits inside the oval" budget: the panel's corner
+  // flourishes reach about 36pt in and 23pt down at its scale, so the writing
+  // starts past them and ends short of the opposite rule.
+  card: {
+    marginHorizontal: 8,
+    marginTop: 8,
+    paddingTop: 20,
+    paddingBottom: 26,
+    paddingHorizontal: 40,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  levelBox: {
+    width: 40,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  levelText: {
+    fontFamily: FONTS.sans,
+    fontSize: 20,
+    lineHeight: 24,
+    color: VELLUM_OXBLOOD,
+  },
+  nameCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  name: {
+    fontFamily: FONTS.gothic,
+    fontSize: 12,
+    lineHeight: 15,
+    color: VELLUM_INK,
+    letterSpacing: 1,
+  },
+  mapName: {
+    fontFamily: FONTS.gothic,
+    fontSize: 22,
+    lineHeight: 25,
+    color: VELLUM_INK,
+  },
+  bar: { marginTop: 4 },
+  barLabels: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 1 },
+  barLabel: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 2, color: VELLUM_OXBLOOD },
+  barValue: { fontFamily: FONTS.mono, fontSize: 10, color: VELLUM_INK },
+  barValueAlarm: { color: VELLUM_OXBLOOD, fontWeight: '700' },
+  track: {
+    width: '100%',
+    height: 7,
+    borderWidth: 1,
+    borderColor: VELLUM_INK,
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+  },
+  trackAlarm: { borderColor: VELLUM_OXBLOOD },
+  fill: { position: 'absolute', top: 0, left: 0, bottom: 0, backgroundColor: VITAE_RED },
+}));
 
 const useStyles = makeStyles((AXM) => ({
   card: {
