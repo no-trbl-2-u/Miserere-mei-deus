@@ -40,28 +40,38 @@ import {
     questXpLine,
 } from '@/state/presenters/quest.copy';
 import { KitSurface } from '@/components/experience/KitSurface';
-import { PLACE_PIECES } from '@/components/experience/looks';
+import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { FONTS, HUE, TYPE } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The vellum panel the quest's cards wear (Q-01). */
 const [PANEL] = PLACE_PIECES['Q-01'];
+const WANTS_KIT = lookOf('Q-01') !== 'normal';
 
 function StepBlock({ head, step, testID }: { head: string; step: QuestStepVM; testID: string }) {
     const styles = useStyles();
     return (
-        <KitSurface piece={PANEL} style={styles.card} testID={testID}>
-            <Text style={styles.cardEyebrow}>{head}</Text>
-            <Text style={styles.cardTitle}>{step.name}</Text>
+        <KitSurface wear={WANTS_KIT} piece={PANEL} style={WANTS_KIT ? styles.cardKit : styles.card} testID={testID}>
+            <Text style={[styles.eyebrow, WANTS_KIT && styles.eyebrowKit]}>{head}</Text>
+            <Text style={[styles.cardTitle, WANTS_KIT && styles.cardTitleKit]}>{step.name}</Text>
             {step.objectives.map(o => (
                 <View key={o.id} style={styles.objectiveRow} testID={`${testID}-objective-${o.id}`}>
-                    <Text style={styles.cardBody}>{o.description}</Text>
-                    <Text style={[styles.progress, o.done && styles.progressDone]}>{o.progress}</Text>
+                    <Text style={[styles.body, WANTS_KIT && styles.bodyKit]}>{o.description}</Text>
+                    <Text
+                        style={[
+                            styles.progress,
+                            WANTS_KIT && styles.progressKit,
+                            o.done && styles.progressDone,
+                            o.done && WANTS_KIT && styles.progressDoneKit,
+                        ]}
+                    >
+                        {o.progress}
+                    </Text>
                 </View>
             ))}
-            <Text style={styles.cardEyebrow}>{QUEST_REWARDS_HEAD}</Text>
+            <Text style={[styles.eyebrow, WANTS_KIT && styles.eyebrowKit]}>{QUEST_REWARDS_HEAD}</Text>
             {step.rewards.map(line => (
-                <Text key={line} style={styles.rewardLine}>{line}</Text>
+                <Text key={line} style={[styles.rewardLine, WANTS_KIT && styles.rewardLineKit]}>{line}</Text>
             ))}
         </KitSurface>
     );
@@ -119,19 +129,19 @@ export default function QuestScreen() {
                         )}
 
                         {vm.paid && (
-                            <KitSurface piece={PANEL} style={styles.card} testID="quest-paid">
-                                <Text style={styles.cardEyebrow}>{QUEST_PAID_HEAD}</Text>
-                                <Text style={[styles.cardTitle, { color: HUE.hzForceInk }]}>{vm.paid.questName}</Text>
+                            <KitSurface wear={WANTS_KIT} piece={PANEL} style={WANTS_KIT ? styles.cardKit : styles.card} testID="quest-paid">
+                                <Text style={[styles.eyebrow, WANTS_KIT && styles.eyebrowKit]}>{QUEST_PAID_HEAD}</Text>
+                                <Text style={[styles.cardTitle, { color: WANTS_KIT ? HUE.hzForceInk : AXM.sulfur }]}>{vm.paid.questName}</Text>
                                 <View style={styles.chipRow}>
                                     {vm.paid.experience > 0 && (
-                                        <Text style={styles.chip}>{questXpLine(vm.paid.experience)}</Text>
+                                        <Text style={[styles.chip, WANTS_KIT && styles.chipKit]}>{questXpLine(vm.paid.experience)}</Text>
                                     )}
                                     {vm.paid.currency > 0 && (
-                                        <Text style={styles.chip}>{questShillingsLine(vm.paid.currency)}</Text>
+                                        <Text style={[styles.chip, WANTS_KIT && styles.chipKit]}>{questShillingsLine(vm.paid.currency)}</Text>
                                     )}
                                     {/* The first item rises into view above; the rest ride as chips. */}
                                     {vm.paid.itemNames.slice(1).map(name => (
-                                        <Text key={name} style={styles.chip}>{name}</Text>
+                                        <Text key={name} style={[styles.chip, WANTS_KIT && styles.chipKit]}>{name}</Text>
                                     ))}
                                 </View>
                             </KitSurface>
@@ -232,50 +242,49 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
         marginBottom: 8,
     },
-    // Clears the vellum panel's drawn corners (about 26 high, 42 wide).
     card: {
+        borderWidth: 2,
+        borderColor: AXM.ash,
+        backgroundColor: AXM.panelBg,
+        padding: 12,
+        marginBottom: 10,
+    },
+    // Worn on the vellum panel instead of `card`: padding that clears its
+    // drawn corners (about 26 high, 42 wide).
+    cardKit: {
         paddingVertical: 30,
         paddingHorizontal: 44,
         marginBottom: 10,
     },
-    cardEyebrow: {
-        fontFamily: FONTS.sans,
-        fontSize: 12,
-        letterSpacing: 2.2,
-        color: HUE.hzCardInk2,
-        marginTop: 6,
-        marginBottom: 4,
-    },
-    cardBody: {
-        flex: 1,
-        fontFamily: FONTS.serif,
-        fontSize: 13,
-        lineHeight: 19,
-        color: HUE.hzCardInk,
-        marginBottom: 8,
-    },
+    eyebrowKit: { color: HUE.hzCardInk2 },
+    bodyKit: { flex: 1, color: HUE.hzCardInk },
     cardTitle: {
         fontFamily: FONTS.gothic,
         fontSize: 20,
         lineHeight: 24,
-        color: HUE.hzCardInk,
+        color: AXM.parchment,
         marginBottom: 6,
     },
+    cardTitleKit: { color: HUE.hzCardInk },
     objectiveRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 },
-    progress: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 1, color: HUE.hzCardInk2 },
-    progressDone: { color: HUE.hzForceInk },
-    rewardLine: { fontFamily: FONTS.mono, fontSize: 13, color: HUE.hzForceInk, marginBottom: 2 },
+    progress: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 1, color: AXM.bone },
+    progressKit: { color: HUE.hzCardInk2 },
+    progressDone: { color: AXM.sulfur },
+    progressDoneKit: { color: HUE.hzForceInk },
+    rewardLine: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.sulfur, marginBottom: 2 },
+    rewardLineKit: { color: HUE.hzForceInk },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
         fontFamily: FONTS.mono,
         fontSize: 12,
         letterSpacing: 1,
-        color: HUE.hzCardInk,
+        color: AXM.parchment,
         borderWidth: 1,
-        borderColor: HUE.hzCardEdge,
+        borderColor: AXM.ash,
         paddingHorizontal: 5,
         paddingVertical: 2,
     },
+    chipKit: { color: HUE.hzCardInk, borderColor: HUE.hzCardEdge },
     bigButton: {
         borderWidth: 2,
         borderColor: AXM.sulfur,
