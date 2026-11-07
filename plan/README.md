@@ -22,6 +22,8 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
+- **158.1** · VR1a: the combat board's CI visual route, before 153.4 changes the dock (T, `/plot`, 2026-11-07; needs 152.3)
+
 - **157.1** · EN3a: the six new library entries, each on its cut foe's numbers (T's enemy recast, `/plot asap`, 2026-11-06; `main`'s verify-mobile is red until EN3c)
 - **157.3** · EN3c: the six portraits drawn — art registry, provenance, frame sets, backings (T's enemy recast, `/plot asap`, 2026-11-06; this is the chunk that takes `main` green)
 - **157.2** · EN3b: Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors (T's enemy recast, `/plot asap`, 2026-11-06)
@@ -96,6 +98,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned (**Asap**: 158.1) | 2 left |
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 3 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 7 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 4 left |
