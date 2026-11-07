@@ -575,3 +575,4 @@
 - 2026-11-06 · 154.8 (alias: UK2h) · The unused defeat aftermath panel, its dev page and presenter half are gone · 54d9e2c0..54d9e2c0 (#1412)
 - 2026-11-06 · 152.2 (alias: UK1b) · The Wilds and tab bar wear inked vellum; black band ships · 84a56528..a5c42c6c (#1418)
 - 2026-11-06 · 154.1 (alias: UK2a) · Dialogue, travel, hazard stakes, quest and labyrinth wear round 2's looks · 7a47e22d..7a47e22d (#1419)
+- 2026-11-06 · 152.3 (alias: UK1c) · The fight wears brass where T kept it and nothing moved · c5a9de8f..c5a9de8f (#1422)
