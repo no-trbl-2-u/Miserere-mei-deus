@@ -4,8 +4,7 @@
  * What it renders: a single centred, dashed-bordered row carrying one line of
  * mono copy, sized to a 44px minimum touch target.
  * What state it reads: none. It is pure props; the screen owns the action.
- * Where it is mounted: `app/dialogue/index.tsx` (TIP YOUR CAP AND GO) and
- * `app/blacksmith/index.tsx` (LET THE COALS DIE).
+ * Where it is mounted: `app/blacksmith/index.tsx` (LET THE COALS DIE).
  *
  * Bare text beneath choices drawn as solid bordered boxes reads as a caption,
  * not a control, so the exit gets a border and a 44px hit target.
