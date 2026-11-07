@@ -172,7 +172,7 @@ export default function CharacterSelectScreen() {
                         {selected !== null ? (
                             <>
                                 <ItemGlyph category="equipment" sub="Relic" itemId={selected.relicId} size={RELIC_MARK_SIZE} />
-                                <Text style={styles.relicName} testID="character-select-relic-name">
+                                <Text style={styles.relicName} numberOfLines={3} adjustsFontSizeToFit minimumFontScale={0.7} testID="character-select-relic-name">
                                     {selected.relicName}
                                 </Text>
                             </>
@@ -191,7 +191,7 @@ export default function CharacterSelectScreen() {
                                     key={stat.key}
                                     wear={WEAR_TILE}
                                     piece={TILE}
-                                    style={[styles.stat, !WEAR_TILE && styles.statPlain]}
+                                    style={[styles.stat, WEAR_TILE ? styles.statKit : styles.statPlain]}
                                     testID={`character-select-stat-${stat.key}`}
                                 >
                                     <Text style={[styles.statLabel, WEAR_TILE && styles.inkText]}>{stat.label}</Text>
@@ -288,6 +288,8 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         paddingVertical: 10,
     },
+    // Clears the vellum chip's drawn corners (about 9.5 wide).
+    statKit: { paddingHorizontal: 10 },
     statPlain: { borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.panelBg, paddingVertical: 6 },
     inkText: { color: VELLUM_INK },
     statLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
@@ -300,7 +302,8 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     confirmPlain: { borderWidth: 1, borderColor: AXM.sulfur, backgroundColor: AXM.selectFill },
-    confirmKit: { height: 54 },
+    // Clears the vellum button's drawn corners (about 16 high, 13 wide).
+    confirmKit: { height: 54, paddingVertical: 16, paddingHorizontal: 16 },
     confirmOff: { opacity: 0.5 },
     confirmOffPlain: { borderColor: AXM.ash },
     confirmLabel: { fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur, letterSpacing: 2 },

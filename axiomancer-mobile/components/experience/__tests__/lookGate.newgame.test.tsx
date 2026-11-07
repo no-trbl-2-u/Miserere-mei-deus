@@ -78,6 +78,15 @@ describe('the new-game and ending screens on their kit looks', () => {
         for (const id of ['character-select-portrait', 'character-select-relic', 'character-select-stat-body', 'character-select-confirm']) {
             expect(kitIn(view.getByTestId(id))).toBeGreaterThan(0);
         }
+        // The relic name sits in about 77pt at 375 wide, so it wraps then shrinks rather than running onto the card.
+        const name = view.getByTestId('character-select-relic-name').props as { numberOfLines?: number; adjustsFontSizeToFit?: boolean };
+        expect(name.numberOfLines).toBe(3);
+        expect(name.adjustsFontSizeToFit).toBe(true);
+        // CONFIRM and the stat tiles pad past their pieces' drawn corners.
+        const confirm = StyleSheet.flatten(view.getByTestId('character-select-confirm').props.style);
+        expect(confirm.paddingVertical).toBeGreaterThanOrEqual(16);
+        expect(confirm.paddingHorizontal).toBeGreaterThanOrEqual(13);
+        expect(StyleSheet.flatten(view.getByTestId('character-select-stat-body').props.style).paddingHorizontal).toBeGreaterThanOrEqual(10);
     });
 
     it('N-01: the most recent slot and a torn slot keep a marker on vellum', () => {
