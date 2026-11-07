@@ -96,10 +96,10 @@ describe('hazard screen — a puzzle node (the wreck)', () => {
         expect(screen.getByTestId('hazard-stakes-place').props.children).toBe('The wreck');
         expect(screen.getByTestId('hazard-stakes-goal')).toBeTruthy();
         expect(screen.queryByTestId('hazard-stakes-routes')).toBeNull();
-        expect(screen.getByTestId('hazard-stakes-opens')).toBeTruthy();
+        expect(screen.queryByTestId('hazard-stakes-opens')).toBeNull();
         const candidate = getHazardPuzzleCandidate(BREAKWATER_HAZARD_PUZZLES['bw-h4']!);
         const seconds = hazardPuzzleClockFor(candidate, candidate.route);
-        expect(screen.getByText(`${seconds} seconds on the clock`)).toBeTruthy();
+        expect(screen.getByText(`Time: ${seconds} secs`)).toBeTruthy();
     });
 
     it('Face it opens the puzzle board with no route select; CONFIRM claims; the outcome closes back to the map', () => {
@@ -154,7 +154,8 @@ describe('hazard screen — a Charcoal Wood hazard', () => {
             actions.beginHazard();
         });
         expect(store.getState().hazard.puzzle ?? null).toBeNull();
-        expect(screen.getByTestId('hazard-stakes-routes')).toBeTruthy();
+        expect(screen.getByTestId('hazard-stakes-place')).toBeTruthy();
+        expect(screen.queryByTestId('hazard-stakes-goal')).toBeNull();
         fireEvent.press(screen.getByTestId('hazard-stakes-face'));
         expect(screen.getByTestId('hazard-route-select')).toBeTruthy();
         expect(screen.queryByTestId('hazard-puzzle-node')).toBeNull();
