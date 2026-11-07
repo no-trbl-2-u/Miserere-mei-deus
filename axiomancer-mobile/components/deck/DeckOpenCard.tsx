@@ -142,6 +142,6 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.sulfur,
         textDecorationLine: 'underline',
     },
-    keywordMinor: { color: AXM.ash },
+    keywordMinor: { color: AXM.bone },
     footnote: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, lineHeight: 18, color: AXM.bone },
 }));
