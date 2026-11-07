@@ -8,11 +8,12 @@ import { render } from '@testing-library/react-native';
 
 import { StakesCard } from '../StakesCard';
 import { TYPE_ROLES } from '@/theme/axm';
+import { hazardPuzzleStakesGoalLine } from '@/state/presenters/hazard-puzzle.copy';
 
 const STAKES = {
     place: 'River meadow',
     kindLine: 'Hazard · holds the road',
-    goalLine: 'Goal: Force 18 | Escape 10',
+    goalLine: hazardPuzzleStakesGoalLine([18, 10]),
     timeLine: 'Time: 60 secs',
     lines: [
         { key: 'fail', label: 'FALLING SHORT COSTS', values: ['Up to −4 VITAE'] },
