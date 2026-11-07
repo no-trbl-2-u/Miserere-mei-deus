@@ -86,3 +86,41 @@ describe('the bundle the table names (A1)', () => {
         }
     });
 });
+
+/** Round 2's node screens, written out so a dropped row fails rather than shrinking the check. */
+const ROUND_TWO: readonly PlaceId[] = [
+    'E-01', 'E-02', 'E-03',
+    'C-01', 'C-02',
+    'T-01', 'T-02',
+    'H-01', 'H-02',
+    'Q-01', 'Q-02',
+    'X-01', 'X-02',
+];
+
+describe("round 2's node screens (A1)", () => {
+    it('names all 13 places, in LOOKS and in PLACE_PIECES', () => {
+        expect(new Set(ROUND_TWO).size).toBe(13);
+        for (const place of ROUND_TWO) {
+            expect(LOOK_VALUES).toContain(LOOKS[place]);
+            expect(PLACE_PIECES[place]).toBeDefined();
+        }
+    });
+
+    it("matches T's picks: vellum for the spoken line, travel buttons, stakes card and quest panel; brass for the choices, act rows and LEAVE", () => {
+        const picked = (look: Look) => ROUND_TWO.filter((p) => LOOKS[p] === look);
+        expect(picked('vellum')).toEqual(['E-02', 'T-02', 'H-01', 'Q-01']);
+        expect(picked('brass')).toEqual(['E-03', 'X-01', 'X-02']);
+        expect(picked('normal')).toEqual(['E-01', 'C-01', 'C-02', 'T-01', 'H-02', 'Q-02']);
+    });
+
+    it('draws a vellum piece on every vellum place and a brass piece on every brass place', () => {
+        const isVellum = (piece: KitPiece) => piece.includes('vellum') || piece.includes('-ink');
+        for (const place of ROUND_TWO) {
+            const pieces = PLACE_PIECES[place];
+            if (LOOKS[place] === 'vellum') expect(pieces.every(isVellum)).toBe(true);
+            if (LOOKS[place] === 'brass') expect(pieces.some(isVellum)).toBe(false);
+            if (LOOKS[place] === 'normal') expect(pieces).toEqual([]);
+            if (LOOKS[place] !== 'normal') expect(pieces.length).toBeGreaterThan(0);
+        }
+    });
+});

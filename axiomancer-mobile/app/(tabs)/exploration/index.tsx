@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { ScreenBg } from '@/components/ScreenBg';
 import { StatusCard } from '@/components/StatusCard';
 import { MapCanvas } from '@/components/exploration/MapCanvas';
@@ -17,11 +18,24 @@ import {
 } from '@/state/presenters/exploration.engine';
 import { selectHasAnyActiveSession } from '@/state/presenters/navigation.engine';
 import { selectIsInCombat } from '@mechanics';
+import { lookOf } from '@/components/experience/looks';
+import { BAND_BLACK } from '@/components/exploration/wildsInk';
+import { useDevSetting } from '@/state/dev/dev-settings';
 
 export default function ExplorationScreen() {
     const { inCombat, recordDeepestNode } = useCombatMode();
     const [nodeTip, setNodeTip] = useState<string | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+    // The top of the Wilds on a solid black band, to quiet the map's lines
+    // behind the status card (T, 2026-11-06, W-01). It ships on; the dev menu's
+    // WILDS BAND switch turns it off for comparison. It belongs to the vellum
+    // card, so a card that is not vellum draws no band.
+    // WITHOUT the band the map runs up under the card (`floating`), which is the
+    // other half of the comparison: the card over the map's own lines.
+    const vellumTop = lookOf('W-01') === 'vellum';
+    const bandSwitch = useDevSetting('wildsBlackBand');
+    const bandOn = bandSwitch && vellumTop;
+    const floating = !bandSwitch && vellumTop;
 
     useEffect(() => {
         if (nodeTip !== null) {
@@ -175,20 +189,42 @@ export default function ExplorationScreen() {
         }
     };
 
+    // Node Graph. The compass copy rides the `overlays` slot (viewport-fixed),
+    // not `children` (the pannable canvas) — CRITIQUE pass 20.
+    const canvas = (
+        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />}>
+            <NodeGrid
+                nodes={vm.nodes}
+                onNodePress={onNodePress}
+                selectedNodeId={selectedNodeId}
+            />
+        </MapCanvas>
+    );
+    const status = <StatusCard mapName={vm.region} />;
+
     return (
         <ScreenBg scrollable={false}>
-            <StatusCard mapName={vm.region} />
-
-            {/* Node Graph */}
-            {/* The compass copy rides the `overlays` slot (viewport-fixed),
-                not `children` (the pannable canvas) — CRITIQUE pass 20. */}
-            <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />}>
-                <NodeGrid
-                    nodes={vm.nodes}
-                    onNodePress={onNodePress}
-                    selectedNodeId={selectedNodeId}
-                />
-            </MapCanvas>
+            {bandOn && (
+                <>
+                    <View style={styles.band} testID="wilds-black-band">{status}</View>
+                    {canvas}
+                </>
+            )}
+            {/* Without the band the map runs up under the status card, as in the
+                kit mixer, so the card floats over the map's own lines: the look
+                T compares the band against. */}
+            {floating && (
+                <View style={styles.stage} testID="wilds-floating-top">
+                    {canvas}
+                    <View style={styles.floatTop} pointerEvents="box-none">{status}</View>
+                </View>
+            )}
+            {!bandOn && !floating && (
+                <>
+                    {status}
+                    {canvas}
+                </>
+            )}
 
             {vm.eventCallout && (
                 <EventBadge eventCallout={vm.eventCallout} />
@@ -217,3 +253,11 @@ export default function ExplorationScreen() {
         </ScreenBg>
     );
 }
+
+const styles = StyleSheet.create({
+    // Full width, edge to edge, so the map's lines stop at the band's foot.
+    band: { backgroundColor: BAND_BLACK, paddingBottom: 8 },
+    // The no-band variant: the map fills the stage and the card floats at its top.
+    stage: { flex: 1 },
+    floatTop: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 2 },
+});

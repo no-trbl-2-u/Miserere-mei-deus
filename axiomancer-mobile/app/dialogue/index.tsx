@@ -15,11 +15,13 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { isDialogueAppliedEvent } from '@mechanics';
 
 import { LeaveRow } from '@/components/LeaveRow';
+import { KitPressable, KitSurface } from '@/components/experience/KitSurface';
+import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useGameActions, useGameEvents, useGameState } from '@/state/GameStoreProvider';
 import { consequenceLabel, visibleConsequences } from '@/state/presenters/consequence-copy';
@@ -29,8 +31,15 @@ import {
     selectHasActiveEvent,
     type EventChoice,
 } from '@/state/presenters/event.engine';
-import { FONTS, TYPE } from '@/theme/axm';
+import { FONTS, HUE, TYPE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
+
+/** The kit pieces the choice rows (E-03) and the spoken-line box (E-02) wear. */
+const [ROW_IDLE, ROW_SELECTED, ROW_DISABLED] = PLACE_PIECES['E-03'];
+const [SPEECH_PANEL] = PLACE_PIECES['E-02'];
+/** Whether each place wears its kit look; `normal` is today's plain box. */
+const WANTS_ROW_KIT = lookOf('E-03') !== 'normal';
+const WANTS_SPEECH_KIT = lookOf('E-02') !== 'normal';
 
 /** How long the dialogue-confirmation ✓ stays visible. */
 const DIALOGUE_CONFIRM_TTL_MS = 500;
@@ -91,13 +100,21 @@ function ReplyRow({
 }) {
     const styles = useStyles();
     return (
-        <TouchableOpacity
+        <KitPressable
+            wear={WANTS_ROW_KIT}
+            plainOpacity
+            piece={choice.enabled ? ROW_IDLE : ROW_DISABLED}
+            pressedPiece={ROW_SELECTED}
             accessibilityRole="button"
             accessibilityLabel={`${choice.label}, ${choice.description}`}
             accessibilityState={{ disabled: !choice.enabled }}
             disabled={!choice.enabled}
             onPress={onPress}
-            style={[styles.replyRow, { opacity: choice.enabled ? 1 : 0.4 }]}
+            style={[
+                styles.replyRow,
+                WANTS_ROW_KIT ? styles.replyRowKit : styles.replyRowPlain,
+                { opacity: choice.enabled ? 1 : WANTS_ROW_KIT ? 0.6 : 0.4 },
+            ]}
             testID={`dialogue-choice-${choice.id}`}
         >
             <Text style={styles.replyMark}>—</Text>
@@ -118,7 +135,7 @@ function ReplyRow({
                     ✓
                 </Text>
             )}
-        </TouchableOpacity>
+        </KitPressable>
     );
 }
 
@@ -207,9 +224,14 @@ export default function DialogueScreen() {
                     {vm.subtitle.length > 0 && <Text style={styles.subtitle}>{vm.subtitle}</Text>}
                 </View>
 
-                <View style={styles.speech} testID="dialogue-speech">
-                    <Text style={styles.speechText}>{vm.body}</Text>
-                </View>
+                <KitSurface
+                    wear={WANTS_SPEECH_KIT}
+                    piece={SPEECH_PANEL}
+                    style={[styles.speech, WANTS_SPEECH_KIT ? styles.speechKit : styles.speechPlain]}
+                    testID="dialogue-speech"
+                >
+                    <Text style={[styles.speechText, WANTS_SPEECH_KIT && styles.speechTextKit]}>{vm.body}</Text>
+                </KitSurface>
 
                 {/* The eyebrow heads the reply list, so it only renders when
                   * there are replies. On a tree's closing node the list is
@@ -274,19 +296,22 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
     },
     subtitle: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 2 },
-    speech: {
+    speech: { marginBottom: 10 },
+    speechPlain: {
         borderWidth: 1,
         borderColor: AXM.ash,
         backgroundColor: AXM.panelBg,
         padding: 12,
-        marginBottom: 10,
     },
+    // Clears the vellum panel's drawn corners (about 26 high, 42 wide).
+    speechKit: { paddingVertical: 28, paddingHorizontal: 40 },
     speechText: {
         fontFamily: FONTS.serif,
         fontSize: 14,
         lineHeight: 21,
         color: AXM.parchment,
     },
+    speechTextKit: { color: HUE.hzCardInk },
     sectionLabel: {
         fontFamily: FONTS.sans,
         fontSize: 10,
@@ -297,12 +322,16 @@ const useStyles = makeStyles((AXM) => ({
     replyRow: {
         flexDirection: 'row',
         gap: 8,
+        marginBottom: 6,
+    },
+    replyRowPlain: {
         borderWidth: 2,
         borderColor: AXM.bone,
         backgroundColor: AXM.bg,
         padding: 10,
-        marginBottom: 6,
     },
+    // Clears the brass button's drawn corners (about 16 high, 13 wide).
+    replyRowKit: { paddingVertical: 20, paddingHorizontal: 20 },
     replyMark: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur },
     replyConfirm: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur, marginLeft: 4 },
     replyLabel: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, letterSpacing: 1 },

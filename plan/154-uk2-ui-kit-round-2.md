@@ -88,10 +88,6 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 
 ## Acceptance
 
-- **A1** The look table holds round 2's places with T's picks:
-  - the dialogue's spoken line, the travel buttons, the hazard stakes card and the quest panel are on vellum with inked text;
-  - the dialogue's choices and the labyrinth's act rows and LEAVE wear brass;
-  - every Normal place is unchanged.
 - **A2** The save slots, BEGIN, the character select's HEART / BODY / MIND and CONFIRM, and the death and game-over buttons are on vellum. The character select's portrait and relic cards wear brass.
 - **A3** The dialogue offers exactly its choices, with no tip-your-cap row, and "Take the quest." shows no errand chip. The blacksmith's leave row is unchanged.
 - **A5** The hazard stakes card shows only the place's name, the goal and the time, in legible type. The hazard's rules are unchanged.
@@ -106,13 +102,12 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 
 ## Chunks
 
-Measure: 6 open · 3 closed · next A10
+Measure: 5 open · 4 closed · next A10
 
-- [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs — · alias: UK2a
 - [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
-- [ ] **154.3** The dialogue offers two choices · S · closes A3 · needs 154.1 · alias: UK2c
-- [ ] **154.5** The stakes card says three things · S · closes A5 · needs 154.1 · alias: UK2e
-- [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 154.1, 153.2 · alias: UK2f
+- [ ] **154.3** The dialogue offers two choices · S · closes A3 · needs — · alias: UK2c
+- [ ] **154.5** The stakes card says three things · S · closes A5 · needs — · alias: UK2e
+- [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 153.2 · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
