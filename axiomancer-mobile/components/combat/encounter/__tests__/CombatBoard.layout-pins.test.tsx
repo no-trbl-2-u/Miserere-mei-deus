@@ -17,10 +17,12 @@
  * Nothing here reads the baseline from disk at run time. The capture ran
  * outside the suite; the pins are literals.
  *
- * WHOEVER CHANGES THE FIGHT'S LAYOUT ON PURPOSE EDITS THIS FILE. The dock's
- * phase-ledger circles and the reveal's "A FOE RISES" line are both due to
- * change, and the pins for the dock and its ledger row are expected to move
- * with them. Re-measure, do not guess: render the board and read the boxes.
+ * WHOEVER CHANGES THE FIGHT'S LAYOUT ON PURPOSE EDITS THIS FILE. Re-measure,
+ * do not guess: render the board and read the boxes.
+ *
+ * The dock (UX1d): no phase-ledger row, END 88 x 56, the dock row 66, so
+ * the dock's minimum height at the phone's inset is 116. The cells keep
+ * their order: portrait, VITAE column, END.
  */
 
 import React from 'react';
@@ -33,7 +35,7 @@ import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, SIG_CONVICTION_CHIP_H, SIG_RUNE_SIZE, SIG_COLUMN_GAP, type DragController } from '@/components/combat/encounter/CombatBoard';
 import {
     DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP, END_BTN_W, END_BTN_H,
-    VITAE_BAR_H, DOCK_LEDGER_MARK, DOCK_VITAE_MAX_WIDTH, dockMinHeight,
+    VITAE_BAR_H, DOCK_VITAE_MAX_WIDTH, dockMinHeight,
 } from '@/components/combat/encounter/CombatFooterDock';
 import { KIT } from '@/assets/images/experience/kit';
 import { LOOKS } from '@/components/experience/looks';
@@ -140,19 +142,18 @@ describe('UK1c — a brass place keeps the box it has today', () => {
             flexDirection: 'row', alignItems: 'center',
             gap: 10, paddingHorizontal: 10, paddingTop: 8,
             // The bottom inset plus the dock's own padding.
-            paddingBottom: 42, minHeight: 106,
+            paddingBottom: 42, minHeight: 116,
         });
         pin('combat-rail-vitae-col', { flex: 1, minWidth: 0, maxWidth: 360, gap: 4 });
         pin('combat-piles', { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 });
-        // The phase ledger's row, and the per-mark wrapper that keeps each mark
-        // painted above the dock's backdrop on RN-web at exactly its own size.
-        pin('combat-ledger', { flexDirection: 'row', alignItems: 'center', gap: 3 });
-        expect(DOCK_LEDGER_MARK).toBe(14);
-        // The dock's exported geometry, by name: the brass frame is drawn at
-        // its own scale precisely so none of these has to grow for it.
-        expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([56, 8, 10, 10]);
-        expect([END_BTN_W, END_BTN_H, DOCK_VITAE_MAX_WIDTH]).toEqual([116, 56, 360]);
-        expect(dockMinHeight(INSETS.bottom)).toBe(106);
+        // No phase-ledger row any more (UX1d): the name rail's PHASE n/N
+        // keeps the count.
+        expect(screen.queryByTestId('combat-ledger')).toBeNull();
+        // The dock's exported geometry, by name. The row is taller than END
+        // so the brass frame shows around the button.
+        expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([66, 8, 10, 10]);
+        expect([END_BTN_W, END_BTN_H, DOCK_VITAE_MAX_WIDTH]).toEqual([88, 56, 360]);
+        expect(dockMinHeight(INSETS.bottom)).toBe(116);
         // The dock's drawn fill and top rule are cleared for the frame, but the
         // rule's WIDTH stays: it counts toward the dock's height.
         pin('combat-rail', { backgroundColor: 'transparent', borderTopColor: 'transparent', borderTopWidth: 1 });
@@ -185,10 +186,10 @@ describe('UK1c — a place T kept plain is not re-skinned', () => {
 
     it('END keeps its drawn button, borders and all', () => {
         renderBoard();
-        pin('combat-end-wrap', { width: 116, height: 56, marginLeft: 'auto' });
+        pin('combat-end-wrap', { width: 88, height: 56, marginLeft: 'auto' });
         // Still a drawn button: a kit plate would have cleared these.
         const end = flat('combat-end-phase');
-        expect(end).toMatchObject({ width: 116, height: 56, borderRadius: 10, borderWidth: 2.5 });
+        expect(end).toMatchObject({ width: 88, height: 56, borderRadius: 10, borderWidth: 2.5 });
         expect(end.backgroundColor).toBeTruthy();
         expect(end.borderColor).not.toBe('transparent');
     });

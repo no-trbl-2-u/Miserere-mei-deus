@@ -35,9 +35,9 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-trash` | Discard target |
 | `combat-drop-reject` | Flash when a die is dropped on a wrong-colour card |
 | `combat-signature-<id>` | Signature buttons |
-| `combat-end-phase` | END PHASE (the wide button at the right of the footer dock) — closes your turn, enemy acts, tray re-rolls |
+| `combat-end-phase` | END PHASE (the button at the right of the footer dock) — closes your turn, enemy acts, tray re-rolls |
 | `combat-end-consequence` | Consequence line shown above END on a dead tray |
-| `combat-rail` / `combat-rail-vitae` / `combat-rail-vitae-bar` / `combat-ledger` | Footer dock: VITAE value, fill bar and phase ledger |
+| `combat-rail` / `combat-rail-vitae` / `combat-rail-vitae-bar` | Footer dock: VITAE value and fill bar |
 | `combat-player-medallion` | The player avatar at the left of the footer dock; tap opens `combat-pilgrim-modal` |
 | `combat-pilgrim-log` / `combat-log` / `combat-pilgrim-log-back` / `combat-pilgrim-close` | Combat log, inside the pilgrim modal: LOG opens it, BACK returns to the stats |
 | `combat-card-detail` / `combat-card-detail-close` | Card detail modal (deliberate; has a dismiss) |
