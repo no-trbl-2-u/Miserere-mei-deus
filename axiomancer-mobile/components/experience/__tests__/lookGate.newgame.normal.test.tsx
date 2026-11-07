@@ -2,6 +2,8 @@
  * The look affordance for round 2's new-game and ending places: with every
  * look forced to `normal`, none of them draws a kit piece.
  * `lookGate.newgame.test.tsx` is the other half.
+ * guard-test: with every look at normal the base already draws no kit piece here, so this passes on the base by design; it pins the plain fallback that
+ * the new look gates must keep.
  */
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
