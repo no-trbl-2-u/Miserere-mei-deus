@@ -12,6 +12,10 @@ import type { CombatSummary } from '@mechanics';
 import { summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
 import type { SpareSummaryLine } from '@/state/presenters/spare-reward.engine';
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
+import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
+import { OUTCOME_INK, SPOILS_INK } from '@/components/combat/encounter/spoils-ink';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** "1 play", "12 plays". */
@@ -24,29 +28,37 @@ const OUTCOME_COLOR: Record<string, string> = {
     defeat: HUE.defeatRed, retreat: HUE.retreatBone,
 };
 
+/** The panel (P-01) and CONTINUE (P-02) read their looks from the table, so
+ *  flipping a place to normal restores today's code path. */
+const VELLUM_PANEL = lookOf('P-01') === 'vellum';
+const VELLUM_CONTINUE = lookOf('P-02') === 'vellum';
+
 export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLine, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; mercyLine?: string; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
-    const color = OUTCOME_COLOR[summary.outcome] ?? AXM.parchment;
+    const v = VELLUM_PANEL;
+    const color = v ? (OUTCOME_INK[summary.outcome] ?? SPOILS_INK.body) : (OUTCOME_COLOR[summary.outcome] ?? AXM.parchment);
+    const btnColor = VELLUM_CONTINUE ? (OUTCOME_INK[summary.outcome] ?? SPOILS_INK.body) : color;
     return (
         <View style={styles.backdrop} testID="combat-summary">
-            <View style={[styles.panel, { borderColor: color }]}>
-                <Text style={[styles.headline, { color }]}>{summary.headline}</Text>
+            <View style={v ? styles.vPanel : [styles.panel, { borderColor: color }]}>
+                {v && <KitBackdrop piece="modal-panel-vellum" />}
+                <Text style={[styles.headline, v && styles.vHeadline, { color }]}>{summary.headline}</Text>
 
-                {summary.rows.length > 0 && <Text style={styles.rowsHead}>DAMAGE BY CARD</Text>}
+                {summary.rows.length > 0 && <Text style={[styles.rowsHead, v && styles.vRowsHead]}>DAMAGE BY CARD</Text>}
                 <View style={styles.rows}>
                     {summary.rows.length === 0 && (
                         <>
-                            <Text style={styles.noRows}>No status effects contributed.</Text>
-                            <Text style={styles.coach}>POWER a status card with a die each turn — DoT wears the enemy down and control skips its turns. Basic strikes alone will not close it.</Text>
+                            <Text style={[styles.noRows, v && styles.vSoft]}>No status effects contributed.</Text>
+                            <Text style={[styles.coach, v && styles.vCoach]}>POWER a status card with a die each turn — DoT wears the enemy down and control skips its turns. Basic strikes alone will not close it.</Text>
                         </>
                     )}
                     {summary.rows.slice(0, 6).map(row => (
-                        <View key={row.cardId} style={styles.row} testID={`combat-summary-row-${row.cardId}`}>
-                            <Text style={styles.rowName} numberOfLines={1}>{row.name}</Text>
-                            <Text style={styles.rowVal}>
+                        <View key={row.cardId} style={[styles.row, v && styles.vRow]} testID={`combat-summary-row-${row.cardId}`}>
+                            <Text style={[styles.rowName, v && styles.vBody]} numberOfLines={1}>{row.name}</Text>
+                            <Text style={[styles.rowVal, v && styles.vRowVal]}>
                                 {row.dotDamage > 0 ? `${row.dotDamage} dmg` : `${row.damageDealt} dmg`}
-                                {row.phases > 0 && <Text style={{ color: AXM.bone }}> · {playsLabel(row.phases)}</Text>}
+                                {row.phases > 0 && <Text style={{ color: v ? SPOILS_INK.soft : AXM.bone }}> · {playsLabel(row.phases)}</Text>}
                             </Text>
                         </View>
                     ))}
@@ -54,28 +66,34 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLi
 
                 <View style={styles.totals}>
                     {summary.totalDotDamage > 0 && (
-                        <Text style={styles.total} testID="combat-summary-dot-total">Total DoT damage: <Text style={{ color: AXM.parchment }}>{summary.totalDotDamage}</Text></Text>
+                        <Text style={[styles.total, v && styles.vTotal]} testID="combat-summary-dot-total">Total DoT damage: <Text style={{ color: v ? SPOILS_INK.body : AXM.parchment }}>{summary.totalDotDamage}</Text></Text>
                     )}
-                    <Text style={styles.total}>Direct damage: <Text style={{ color: AXM.parchment }}>{summary.directDamage}</Text></Text>
+                    <Text style={[styles.total, v && styles.vTotal]}>Direct damage: <Text style={{ color: v ? SPOILS_INK.body : AXM.parchment }}>{summary.directDamage}</Text></Text>
                     {shillings > 0 && (
-                        <Text style={styles.total} testID="combat-summary-shillings">{summaryShillingsLabel} <Text style={{ color: AXM.sulfur }}>{summaryShillingsValue(shillings)}</Text></Text>
+                        <Text style={[styles.total, v && styles.vTotal]} testID="combat-summary-shillings">{summaryShillingsLabel} <Text style={{ color: v ? SPOILS_INK.accent : AXM.sulfur }}>{summaryShillingsValue(shillings)}</Text></Text>
                     )}
                     {spareLines?.map(line => (
-                        <Text key={line.key} style={styles.total} testID={`combat-summary-spare-${line.key}`}>{line.label} <Text style={{ color: AXM.sulfur }}>{line.value}</Text></Text>
+                        <Text key={line.key} style={[styles.total, v && styles.vTotal]} testID={`combat-summary-spare-${line.key}`}>{line.label} <Text style={{ color: v ? SPOILS_INK.accent : AXM.sulfur }}>{line.value}</Text></Text>
                     ))}
                 </View>
 
                 {mercyLine && (
-                    <Text style={styles.mercyLine} testID="combat-summary-mercy-line">{mercyLine}</Text>
+                    <Text style={[styles.mercyLine, v && styles.vBody]} testID="combat-summary-mercy-line">{mercyLine}</Text>
                 )}
 
                 {summary.bestCard.length > 0 && (
                     <Text style={[styles.best, { color }]} testID="combat-summary-best">★ Best card: {summary.bestCard}</Text>
                 )}
 
-                <Pressable onPress={onClose} testID="combat-summary-close" accessibilityRole="button" accessibilityLabel="Continue" style={[styles.btn, { borderColor: color }]}>
-                    <Text style={[styles.btnText, { color }]}>CONTINUE</Text>
-                </Pressable>
+                {VELLUM_CONTINUE ? (
+                    <SpoilsButton onPress={onClose} testID="combat-summary-close" accessibilityRole="button" accessibilityLabel="Continue" style={styles.vBtn}>
+                        <Text style={[styles.btnText, { color: btnColor }]}>CONTINUE</Text>
+                    </SpoilsButton>
+                ) : (
+                    <Pressable onPress={onClose} testID="combat-summary-close" accessibilityRole="button" accessibilityLabel="Continue" style={[styles.btn, { borderColor: color }]}>
+                        <Text style={[styles.btnText, { color }]}>CONTINUE</Text>
+                    </Pressable>
+                )}
             </View>
         </View>
     );
@@ -98,4 +116,17 @@ const useStyles = makeStyles((AXM) => ({
     best: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 0.6, textAlign: 'center', marginBottom: 12 },
     btn: { borderWidth: 2, paddingVertical: 9, alignItems: 'center' },
     btnText: { fontFamily: FONTS.gothic, fontSize: 16, letterSpacing: 1 },
+
+    // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side
+    // ornament, 26pt of top and bottom. Body faces are today's size or larger.
+    vPanel: { width: '100%', maxWidth: 420, paddingHorizontal: 40, paddingVertical: 34 },
+    vHeadline: { fontSize: 22, marginBottom: 12 },
+    vRowsHead: { fontSize: 12, color: SPOILS_INK.soft },
+    vRow: { borderBottomColor: HUE.vellumShadow },
+    vBody: { color: SPOILS_INK.body },
+    vSoft: { color: SPOILS_INK.soft, fontSize: 14 },
+    vRowVal: { fontSize: 13, color: SPOILS_INK.accent },
+    vCoach: { fontSize: 12, lineHeight: 16, color: SPOILS_INK.accent },
+    vTotal: { fontSize: 13, color: SPOILS_INK.soft },
+    vBtn: { flex: 0, alignSelf: 'stretch', marginTop: 4 },
 }));
