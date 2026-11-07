@@ -299,7 +299,7 @@ const useStyles = makeStyles((AXM) => ({
     // ornament, 26pt of top and bottom. The tiles are 330pt wide, so the sides
     // carry less padding than the title and sub-line, which sit clear of the corners.
     vBackdrop: { padding: 2 },
-    vOfferRow: { gap: 4 },
+    vOfferRow: { gap: 0 },
     vPanel: { width: '100%', maxWidth: 420, paddingHorizontal: 12, paddingTop: 36, paddingBottom: 34, alignItems: 'center' },
     vEyebrow: { color: SPOILS_INK.accent, fontSize: 13 },
     vBody: { color: SPOILS_INK.body },
