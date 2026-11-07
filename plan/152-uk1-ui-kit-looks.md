@@ -79,9 +79,6 @@
 ## Acceptance
 
 - **A5** The fight summary, card offer, CONTINUE and TAKE NOTHING / TAKE CARD are on vellum. No gold or amber text sits on parchment, and every inked colour on vellum measures at least 4.5:1.
-- **A6** Self's portrait frame, level badge, HEART / BODY / MIND tiles, section headings, divider and VITAE pool bar wear brass. The hazard deck link is unchanged here.
-- **A7** The Ledger's headings and dividers are vellum and ink. The Satchel's gear slot rows wear brass and its filter tabs are vellum. The purse, burden bar, worn-gear panel, item cards and the whole Deck screen are unchanged.
-- **A8** The main menu buttons and Settings' headings, segmented choices, radio choices, toggles, volume steppers and menu rows wear brass. The colour theme list is unchanged and still shows each theme's colours.
 
 ## Open questions
 
@@ -92,11 +89,9 @@
 
 ## Chunks
 
-Measure: 4 open · 4 closed · next A9
+Measure: 1 open · 7 closed · next A9
 
 - [ ] **152.4** The Spoils on vellum, inked to read · S · closes A5 · needs — · alias: UK1d
-- [ ] **152.5** Self in brass; the Ledger and Satchel pieces · M · closes A6, A7 · needs — · alias: UK1e
-- [ ] **152.6** The main menu and Settings in brass · M · closes A8 · needs — · alias: UK1f
 
 ### 152.1 (UK1a) — The look table, the kit primitives and the pieces it names · M · closes A1 · requires —
 

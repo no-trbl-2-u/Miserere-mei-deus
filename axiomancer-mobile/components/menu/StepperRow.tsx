@@ -4,12 +4,16 @@
  * web and native alike.
  *
  * Inputs: `label`, `valueLabel` (`70%`), `onDecrement`, `onIncrement`,
- * `atMin` / `atMax` (dim the exhausted verb), `testID`.
+ * `atMin` / `atMax` (dim the exhausted verb), `testID`. With a `level` (0-1)
+ * and a brass look the row also draws the kit's slider between the verbs;
+ * the verbs stay the only controls.
  */
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
+import { LOOKS } from '@/components/experience/looks';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
@@ -21,33 +25,48 @@ export interface StepperRowProps {
     atMin?: boolean;
     atMax?: boolean;
     testID: string;
+    /** The level as a share of its range, drawn on a kit slider between the verbs. */
+    level?: number;
+    track?: 'diamond' | 'quatrefoil';
 }
 
-export function StepperRow({ label, valueLabel, onDecrement, onIncrement, atMin, atMax, testID }: StepperRowProps) {
+export function StepperRow({ label, valueLabel, onDecrement, onIncrement, atMin, atMax, testID, level, track = 'diamond' }: StepperRowProps) {
     const styles = useStyles();
+    const kit = LOOKS['O-06'] === 'brass';
     return (
         <View style={styles.root} testID={testID}>
             <Text style={styles.label}>{label}</Text>
             <View style={styles.controls}>
                 <Pressable
-                    style={[styles.step, atMin && styles.stepOff]}
+                    style={[styles.step, kit && styles.stepKit, atMin && styles.stepOff]}
                     onPress={atMin ? undefined : onDecrement}
                     disabled={atMin}
                     accessibilityRole="button"
                     accessibilityLabel={`${label} down`}
                     testID={`${testID}-down`}
                 >
+                    {kit ? <KitBackdrop piece="icon-button-square" /> : null}
                     <Text style={styles.stepLabel}>−</Text>
                 </Pressable>
+                {kit && level !== undefined ? (
+                    <View style={styles.slider} pointerEvents="none">
+                        <KitImage piece={track === 'diamond' ? 'slider-track-diamond' : 'slider-track-quatrefoil'} style={styles.sliderTrack} />
+                        <KitImage
+                            piece={track === 'diamond' ? 'slider-knob-diamond' : 'slider-knob-round'}
+                            style={[styles.sliderKnob, { left: `${Math.round(level * 100)}%` }]}
+                        />
+                    </View>
+                ) : null}
                 <Text style={styles.value} testID={`${testID}-value`}>{valueLabel}</Text>
                 <Pressable
-                    style={[styles.step, atMax && styles.stepOff]}
+                    style={[styles.step, kit && styles.stepKit, atMax && styles.stepOff]}
                     onPress={atMax ? undefined : onIncrement}
                     disabled={atMax}
                     accessibilityRole="button"
                     accessibilityLabel={`${label} up`}
                     testID={`${testID}-up`}
                 >
+                    {kit ? <KitBackdrop piece="icon-button-square" /> : null}
                     <Text style={styles.stepLabel}>+</Text>
                 </Pressable>
             </View>
@@ -77,6 +96,17 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    // The art is the frame: no border, no fill, and the border widths are
+    // zeroed side by side so none survives.
+    stepKit: {
+        height: 34,
+        borderWidth: 0,
+        borderBottomWidth: 0,
+        backgroundColor: 'transparent',
+    },
+    slider: { width: 84, height: 22, justifyContent: 'center' },
+    sliderTrack: { width: '100%', height: 8 },
+    sliderKnob: { position: 'absolute', top: 2, width: 18, height: 18, marginLeft: -9 },
     stepOff: { opacity: 0.35 },
     stepLabel: { fontFamily: FONTS.mono, fontSize: 16, color: AXM.sulfur },
     value: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.parchment, minWidth: 40, textAlign: 'center' },
