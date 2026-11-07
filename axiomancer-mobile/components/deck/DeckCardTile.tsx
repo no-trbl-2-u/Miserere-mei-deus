@@ -1,82 +1,107 @@
 /**
- * One row in the DECK list: the card, its colour, its rarity, and how many
- * copies of it the run carries. Tap to open the detail.
+ * One thumbnail in the DECK grid: the card's painting, its name, a copies
+ * badge when the run carries more than one, and its colour mark. Tap to open
+ * the card at the top of the screen; a card that is not the open one is dimmed.
  *
- * A ROW, not a miniature card face. The combat board already renders the
- * face (`CombatCardFace`), and it is sized for a five-card hand, not a
- * forty-row list — at list density a face is unreadable and a row is
- * scannable. The tile therefore prints the four things a player scans a deck
- * list for (name · what it does · rarity · copies) and leaves the face where
- * it is earned.
+ * A painting, not a card face. The combat board renders the face
+ * (`CombatCardFace`), sized for a five-card hand; at grid density a face is
+ * unreadable, but a square painting with a name under it is, and that is what
+ * makes the thumbnail work. The screen-reader label still names the rarity,
+ * so nothing here leans on colour alone.
  */
 
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { RarityMark } from '@/components/deck/RarityMark';
+import { Image } from '@/lib/platform/image';
 import type { DeckCardVM } from '@/state/presenters/deck.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
+/** A thumbnail that is not the open card. */
+export const DIMMED_OPACITY = 0.45;
+
 export interface DeckCardTileProps {
     card: DeckCardVM;
     onPress: (card: DeckCardVM) => void;
+    /** True when this is the card open above; every other thumbnail is dimmed. */
+    open?: boolean;
+    /** Side of the square in pt; omitted, the tile takes a quarter of the row. */
+    size?: number;
 }
 
-export function DeckCardTile({ card, onPress }: DeckCardTileProps) {
+export function DeckCardTile({ card, onPress, open = false, size }: DeckCardTileProps) {
     const AXM = usePalette();
     const styles = useStyles();
 
     return (
         <Pressable
-            style={[styles.row, { borderLeftColor: card.rarity.color }]}
+            style={[
+                styles.tile,
+                size !== undefined ? { width: size, height: size } : styles.tileFluid,
+                { opacity: open ? 1 : DIMMED_OPACITY },
+            ]}
             onPress={() => onPress(card)}
             accessibilityRole="button"
             accessibilityLabel={card.a11yLabel}
             accessibilityHint="Opens this card at the top of the screen"
+            accessibilityState={{ selected: open }}
             testID={`deck-card-${card.cardId}`}
         >
-            <View style={styles.main}>
-                <View style={styles.nameRow}>
-                    <Text style={styles.name} numberOfLines={1}>{card.name}</Text>
-                    {card.count > 1 && (
-                        <Text
-                            style={[styles.count, { color: AXM.sulfur }]}
-                            testID={`deck-card-count-${card.cardId}`}
-                        >
-                            ×{card.count}
-                        </Text>
-                    )}
-                </View>
-                <Text style={styles.outcome} numberOfLines={2}>{card.outcomeLine}</Text>
-            </View>
-            <RarityMark
-                label={card.rarity.label}
-                pips={card.rarity.pips}
-                color={card.rarity.color}
-                compact
-                testID={`deck-card-rarity-${card.cardId}`}
+            <Image source={card.art} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" transition={0} />
+            <View style={styles.nameScrim} pointerEvents="none" />
+            <Text style={styles.name} numberOfLines={2}>{card.name}</Text>
+            <View
+                style={[styles.mark, { backgroundColor: card.stanceColor }]}
+                testID={`deck-card-mark-${card.cardId}`}
             />
+            {card.count > 1 && (
+                <View style={styles.badge}>
+                    <Text
+                        style={[styles.count, { color: AXM.sulfur }]}
+                        testID={`deck-card-count-${card.cardId}`}
+                    >
+                        ×{card.count}
+                    </Text>
+                </View>
+            )}
         </Pressable>
     );
 }
 
 const useStyles = makeStyles((AXM) => ({
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
+    tile: {
+        overflow: 'hidden',
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: AXM.divider,
-        borderLeftWidth: 3,
         backgroundColor: AXM.panelBg,
-        paddingVertical: 9,
-        paddingHorizontal: 10,
-        marginBottom: 6,
     },
-    main: { flex: 1, gap: 2 },
-    nameRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
-    name: { flexShrink: 1, fontFamily: FONTS.gothic, fontSize: 16, letterSpacing: 0.5, color: AXM.parchment },
-    count: { fontFamily: FONTS.mono, fontSize: 12 },
-    outcome: { fontFamily: FONTS.serif, fontSize: 13, lineHeight: 17, color: AXM.parchmentDim },
+    tileFluid: { width: '23.5%', aspectRatio: 1 },
+    nameScrim: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: '45%',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
+    name: {
+        position: 'absolute',
+        left: 4,
+        right: 4,
+        bottom: 3,
+        fontFamily: FONTS.serif,
+        fontSize: 10,
+        lineHeight: 12,
+        color: AXM.parchment,
+    },
+    mark: { position: 'absolute', left: 0, top: 0, width: 10, height: 10 },
+    badge: {
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        paddingHorizontal: 4,
+        backgroundColor: 'rgba(0,0,0,0.75)',
+    },
+    count: { fontFamily: FONTS.mono, fontSize: 11 },
 }));
