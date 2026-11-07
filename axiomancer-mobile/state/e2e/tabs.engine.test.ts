@@ -17,6 +17,7 @@ import {
     NARROW_VIEWPORT_PT,
     NARROWEST_VIEWPORT_PT,
     selectVisibleTabs,
+    TAB_BAR_LABEL_FONT_SIZE,
     TAB_TITLES,
     visibleTabTitles,
     type TabKey,
@@ -248,7 +249,7 @@ describe('measureTabBarFit: no tab-bar overflow at 360pt', () => {
     it('detects an overflow rather than always answering yes', () => {
         // The check has to be capable of failing, or it proves nothing. A
         // sixth tab with a long title is the shape of the next regression.
-        const overloaded = [...visibleTabTitles(false), 'THE UNDERCROFT'];
+        const overloaded = [...visibleTabTitles(false), 'THE UNDERCROFT', 'THE DROWNED UNDERCROFT'];
         expect(measureTabBarFit(overloaded, NARROW_VIEWPORT_PT).fits).toBe(false);
     });
 });
@@ -270,5 +271,14 @@ describe('measureTabLabel: the measurement itself', () => {
         // An out-of-table character (a digit, punctuation, a glyph) must
         // over-estimate, never sail through unmeasured.
         expect(measureTabLabel('?')).toBeGreaterThanOrEqual(measureTabLabel('W'));
+    });
+
+    it('is pinned to the Uncial Antiqua .ttf metrics, so a reverted or stale table fails loudly', () => {
+        // These are the actual hmtx advance widths for FONTS.sans
+        // (Uncial Antiqua 400), not the condensed Bebas Neue numbers the
+        // table used before. A regression back to those (or any other
+        // mismeasured face) silently changes what "fits" means.
+        expect(measureTabLabel('M')).toBeCloseTo(1.27783 * TAB_BAR_LABEL_FONT_SIZE, 1);
+        expect(measureTabLabel('THE LEDGER')).toBeCloseTo(43.0, 0);
     });
 });

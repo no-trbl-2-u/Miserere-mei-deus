@@ -38,12 +38,11 @@ export const TITLE_COPY = Object.freeze({
 export const SPLASH_WORDMARK_WIDTH = 180;
 
 /**
- * Pirata One's ink width for the wordmark, in ems: the rendered width at font
- * size 1. Measured by `scripts/build-title-assets.mjs`'s renderer (687px at
- * 100). The component measures the real text on layout and corrects; this is
+ * Uncial Antiqua's (FONTS.gothic) ink width for the wordmark, in ems: the rendered width at font
+ * size 1, measured in Chromium (1123px at 100; the slot was Pirata One at 6.87). The component measures the real text on layout and corrects; this is
  * only the first frame's estimate.
  */
-export const WORDMARK_EM_WIDTH = 6.87;
+export const WORDMARK_EM_WIDTH = 11.3;
 
 /** The sequence's beats, in ms. */
 export const TITLE_TIMING = Object.freeze({
