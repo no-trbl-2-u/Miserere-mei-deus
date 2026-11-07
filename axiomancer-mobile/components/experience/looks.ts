@@ -1,11 +1,12 @@
 /**
  * THE LOOK TABLE — the single source for which look each place in the app
- * wears. The components that draw a place read its look from here.
+ * wears. Every screen that wears a kit piece reads it.
  *
- * Forty-four places, the ledger's ids, each with one of three looks: Brass
- * Gothic, Vellum & Ink, or Normal (today's code path, untouched). The values
- * are T's picks in the kit mixer, pasted 2026-11-06; the picks and T's notes
- * verbatim are the Verdicts section of `plan/card-ledger/ui-kit.md`.
+ * Forty-four places in round 1 and thirteen of round 2's node screens, the
+ * ledger's ids, each with one of three looks: Brass Gothic, Vellum & Ink, or
+ * Normal (today's code path, untouched). The values are T's picks in the kit
+ * mixer, pasted 2026-11-06; the picks and T's notes verbatim are the Verdicts
+ * section of `plan/card-ledger/ui-kit.md`.
  *
  * A component NEVER hard-codes a look: it reads its place's look from `LOOKS`
  * (or `lookOf`), so a change of heart is a one-line edit here rather than a
@@ -38,7 +39,14 @@ export type PlaceId =
     | 'L-01'
     | 'B-01' | 'B-02' | 'B-03' | 'B-04' | 'B-05' | 'B-06'
     | 'D-01' | 'D-02' | 'D-03' | 'D-04'
-    | 'O-01' | 'O-02' | 'O-03' | 'O-04' | 'O-05' | 'O-06' | 'O-07';
+    | 'O-01' | 'O-02' | 'O-03' | 'O-04' | 'O-05' | 'O-06' | 'O-07'
+    // Round 2 of the mixer: the node screens (dialogue, cutscene, travel, hazard, quest, labyrinth).
+    | 'E-01' | 'E-02' | 'E-03'
+    | 'C-01' | 'C-02'
+    | 'T-01' | 'T-02'
+    | 'H-01' | 'H-02'
+    | 'Q-01' | 'Q-02'
+    | 'X-01' | 'X-02';
 
 /** T's pick for every place (18 brass, 11 vellum, 15 normal). */
 export const LOOKS: Record<PlaceId, Look> = {
@@ -86,6 +94,21 @@ export const LOOKS: Record<PlaceId, Look> = {
     'O-05': 'brass', // Settings: on/off toggles
     'O-06': 'brass', // Settings: volume steppers
     'O-07': 'brass', // Settings: menu row buttons
+
+    // Round 2: the node screens.
+    'E-01': 'normal', // Dialogue: title and its underline
+    'E-02': 'vellum', // Dialogue: spoken-line box
+    'E-03': 'brass', // Dialogue: choice rows
+    'C-01': 'normal', // Cutscene: omen
+    'C-02': 'normal', // Cutscene: SKIP
+    'T-01': 'normal', // Travel: THE WAY ON tag
+    'T-02': 'vellum', // Travel: YES / NO buttons
+    'H-01': 'vellum', // Hazard: stakes card
+    'H-02': 'normal', // Hazard: FACE IT
+    'Q-01': 'vellum', // Quest: panel
+    'Q-02': 'normal', // Quest: ACCEPT / LEAVE
+    'X-01': 'brass', // Labyrinth: act rows
+    'X-02': 'brass', // Labyrinth: LEAVE
 };
 
 /** The converted pieces each place draws. A `normal` place draws none. */
@@ -134,6 +157,20 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'O-05': ['toggle-shell-active', 'toggle-shell-inactive', 'slider-knob-round'],
     'O-06': ['icon-button-square', 'slider-track-diamond', 'slider-track-quatrefoil', 'slider-knob-diamond', 'slider-knob-round'],
     'O-07': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
+
+    'E-01': [],
+    'E-02': ['modal-panel-vellum'],
+    'E-03': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
+    'C-01': [],
+    'C-02': [],
+    'T-01': [],
+    'T-02': ['action-button-vellum'],
+    'H-01': ['modal-panel-vellum'],
+    'H-02': [],
+    'Q-01': ['modal-panel-vellum'],
+    'Q-02': [],
+    'X-01': ['action-button-idle', 'action-button-selected'],
+    'X-02': ['action-button-idle', 'action-button-selected'],
 };
 
 /** The look a place wears. */
