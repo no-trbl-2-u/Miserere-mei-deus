@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { FONTS, HUE } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { KitBackdrop, VELLUM_INK, VELLUM_OXBLOOD } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
@@ -14,7 +14,7 @@ const VELLUM_TABS = lookOf('B-05') === 'vellum';
  * drop it under 4.5:1 on the parchment, so it is told apart by a lighter brown
  * and kept readable (the vellum-ink test measures the blended colour).
  */
-export const VELLUM_INK_QUIET = '#4a3826';
+export const VELLUM_INK_QUIET = HUE.vellumInkQuiet;
 export const VELLUM_EMPTY_OPACITY = 0.9;
 
 interface InventoryTabsProps {
