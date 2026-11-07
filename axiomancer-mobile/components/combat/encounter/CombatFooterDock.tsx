@@ -12,10 +12,8 @@
  *                 line above it, dimmed while a phase resolves. Pushed to the
  *                 right edge however wide the window is.
  *
- * No phase ledger: its marks left the dock (spec 153, UX1d; T, 2026-11-07,
- * "off the board"), and the name rail's "PHASE n/N" keeps the count. END is
- * narrower and the dock taller than END, so the brass dock art reads (T's
- * S-09 note).
+ * No phase ledger: the name rail's "PHASE n/N" keeps the count. The dock
+ * row is taller than END, so the brass dock art reads around the button.
  *
  * The dock respects the bottom safe-area inset and grows rather than clips.
  */
@@ -32,7 +30,7 @@ import type { CombatViewModel } from '@/state/presenters/combat-encounter.engine
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 
 /**
- * The dock's row height before padding. Taller than END (spec 153, UX1d), so
+ * The dock's row height before padding. Taller than END, so
  * the dock frame shows above and below the button; every cell is centred in it.
  * 66, not more: at 375x667 a five-rune signature column still fits between
  * the board top and the tray (`CombatBoard.sig-column.test.tsx`).
@@ -43,7 +41,7 @@ export const DOCK_PAD_V = 8;
 /** Side padding and the gap between the dock's three cells. */
 export const DOCK_PAD_H = 10;
 export const DOCK_GAP = 10;
-/** The END button: a thumb target, not a corner disc, narrowed by UX1d. */
+/** The END button: a thumb target, not a corner disc. */
 export const END_BTN_W = 88;
 export const END_BTN_H = 56;
 /** The VITAE fill bar's height. */

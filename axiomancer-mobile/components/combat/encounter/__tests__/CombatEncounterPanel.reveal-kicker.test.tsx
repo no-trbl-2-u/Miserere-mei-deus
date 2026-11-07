@@ -1,8 +1,7 @@
 /**
- * The pre-combat reveal has no kicker line (UX1d, spec 153). T's S-01 note:
- * remove "A FOE RISES". The line above the foe ("A FOE BARS THE WAY" and its
- * elite and boss forms) is gone; the portrait, the foe's name, its VITAE and
- * the threat section stay, since this is T's reference screen.
+ * The pre-combat reveal has no kicker line above the foe (UX1d), for any
+ * tier. The portrait, the foe's name, both VITAE figures and the threat
+ * section stay.
  */
 
 import React from 'react';

@@ -97,8 +97,8 @@ const HUD_BOTTOM_812 = 143;
 const TRAY_H = 74;
 /** The tray's top edge at a given screen height: the screen less the footer
  *  dock (its minimum plus the 1pt top rule), the hand dock and the tray. At
- *  812 this is 443: the 453 the web build measured, less the 10pt UX1d added
- *  to the dock row (spec 153). */
+ *  812 this is 443 (the web build measured 453 with a 56pt dock row; the
+ *  row is 66 now). */
 const trayTopAt = (screenH: number) =>
     screenH - (dockMinHeight(0) + 1) - (HAND_CARD_H + HAND_FAN_PAD_BOTTOM + HAND_PILL_OVERHANG) - TRAY_H;
 

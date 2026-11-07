@@ -20,11 +20,9 @@
  * WHOEVER CHANGES THE FIGHT'S LAYOUT ON PURPOSE EDITS THIS FILE. Re-measure,
  * do not guess: render the board and read the boxes.
  *
- * Moved on purpose once, by UX1d (spec 153, T's S-09 note): the dock's
- * phase-ledger circles are gone, END narrowed from 116 to 88 (its height
- * stays 56), and the dock row grew from END's 56 to 66, so the dock's
- * minimum height at the phone's inset went from 106 to 116. Every cell keeps
- * its order: portrait, VITAE column, END.
+ * The dock (UX1d): no phase-ledger row, END 88 x 56, the dock row 66, so
+ * the dock's minimum height at the phone's inset is 116. The cells keep
+ * their order: portrait, VITAE column, END.
  */
 
 import React from 'react';

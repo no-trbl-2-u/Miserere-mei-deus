@@ -7,8 +7,8 @@
  * floats over the hand any more: the avatar and END both sit inside the dock.
  * The VITAE bar turns blood below 25%.
  *
- * UX1d (spec 153): the phase ledger's marks are gone from the dock, END is
- * narrower, and the dock row is taller than END so the dock art reads.
+ * UX1d: no phase-ledger marks in the dock, and the dock row is taller than
+ * END so the dock art reads.
  */
 
 import React from 'react';
