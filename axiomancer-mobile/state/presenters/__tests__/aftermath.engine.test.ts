@@ -158,167 +158,6 @@ describe('selectAftermathViewModel', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Defeat branch
-// ---------------------------------------------------------------------------
-
-const DEFEAT_SNAPSHOT: Extract<AftermathData, { variant: 'defeat' }> = {
-    variant: 'defeat',
-    enemy: {
-        name: 'Hierophant',
-        description: 'A figure long since gnawed by iron tongues.',
-        level: 7,
-    },
-    characterName: 'Worm-Eaten Pilgrim',
-    finalBlow: {
-        cardName: 'AXE-FALL',
-        damage: 28,
-        descriptor: 'cleaves the binding rib',
-    },
-    runSummary: {
-        roundsEndured: 4,
-        encountersFaced: 12,
-        deepestNodeId: 'bw-l5',
-        currentMapId: 'breakwater',
-    },
-};
-
-describe('selectAftermathViewModel: defeat branch', () => {
-    it('returns a defeat VM with uppercased character name', () => {
-        const vm = selectAftermathViewModel(DEFEAT_SNAPSHOT);
-        expect(vm?.kind).toBe('defeat');
-        expect(vm?.kind === 'defeat' && vm.characterName).toBe('WORM-EATEN PILGRIM');
-    });
-
-    it('populates the killer block (uppercased name + epithet + final card + damage)', () => {
-        const vm = selectAftermathViewModel(DEFEAT_SNAPSHOT);
-        expect(vm?.kind === 'defeat' && vm.killer).toEqual({
-            name: 'HIEROPHANT',
-            epithet: 'figure long since gnawed by iron tongues',
-            finalCard: 'AXE-FALL',
-            damage: 28,
-        });
-    });
-
-    it('falls back to STRIKE + 0 damage when finalBlow is null', () => {
-        const vm = selectAftermathViewModel({ ...DEFEAT_SNAPSHOT, finalBlow: null });
-        expect(vm?.kind === 'defeat' && vm.killer).toEqual({
-            name: 'HIEROPHANT',
-            epithet: 'figure long since gnawed by iron tongues',
-            finalCard: 'STRIKE',
-            damage: 0,
-        });
-    });
-
-    it('picks the brutal cause phrase for damage >= 20', () => {
-        const vm = selectAftermathViewModel(DEFEAT_SNAPSHOT);
-        expect(vm?.kind === 'defeat' && vm.causePhrase).toContain('laid down where it stood');
-    });
-
-    it('picks the broken-down cause phrase for damage in [10, 20)', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            finalBlow: { cardName: 'STRIKE', damage: 12, descriptor: null },
-        });
-        expect(vm?.kind === 'defeat' && vm.causePhrase).toContain('came in pieces');
-    });
-
-    it('picks the quiet cause phrase for damage < 10', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            finalBlow: { cardName: 'STRIKE', damage: 4, descriptor: null },
-        });
-        expect(vm?.kind === 'defeat' && vm.causePhrase).toContain('steady one');
-    });
-
-    it('threads the run-summary with Phase 93 fixes', () => {
-        const vm = selectAftermathViewModel(DEFEAT_SNAPSHOT);
-        expect(vm?.kind === 'defeat' && vm.runSummary).toEqual({
-            rounds: 4,
-            encountersFaced: 11, // 12 - 1: the fatal encounter is not survived
-            deepestNodeId: 'The Lighthouse', // resolved from bw-l5 via map layout
-        });
-    });
-
-    it('preserves a null deepestNodeId for the "died on first node" branch', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { roundsEndured: 1, encountersFaced: 1, deepestNodeId: null, currentMapId: 'breakwater' },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('·');
-    });
-});
-
-// ---------------------------------------------------------------------------
-// Death screen: encounters survived and deepest node name
-// ---------------------------------------------------------------------------
-
-describe('selectAftermathViewModel: Phase 93 fixes', () => {
-    it('F09: encounter survived counter shows 0 when player died in first encounter', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, encountersFaced: 1 },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.encountersFaced).toBe(0);
-    });
-
-    it('F09: encounter survived counter is encountersFaced - 1 for multi-encounter deaths', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, encountersFaced: 5 },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.encountersFaced).toBe(4);
-    });
-
-    it('F09: guards against negative encounter counts in edge cases', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, encountersFaced: 0 },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.encountersFaced).toBe(0);
-    });
-
-    it('F10: resolves node ID to human-readable name via map layout', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'bw-w1', currentMapId: 'breakwater' },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('The Windmill');
-    });
-
-    it('F10: falls back to node ID when map layout is missing', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'unknown-node', currentMapId: 'missing-map' },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('unknown-node');
-    });
-
-    it('F10: falls back to node ID when current map is null', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'bw-w1', currentMapId: null },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('bw-w1');
-    });
-
-    it('F10: falls back to node ID when node is not found in map layout', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: 'non-existent-node', currentMapId: 'breakwater' },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('non-existent-node');
-    });
-
-    it('F10: shows "·" when deepest node ID is null', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            runSummary: { ...DEFEAT_SNAPSHOT.runSummary, deepestNodeId: null, currentMapId: 'breakwater' },
-        });
-        expect(vm?.kind === 'defeat' && vm.runSummary.deepestNodeId).toBe('·');
-    });
-});
-
-// ---------------------------------------------------------------------------
 // Engine narrative prose consumer
 // ---------------------------------------------------------------------------
 
@@ -328,12 +167,6 @@ describe('selectAftermathViewModel: engine narrative lines (Phase 76)', () => {
         quiet: 'it folds its wings and lands once, gently, before it stops.',
         ironic: 'a slight it had not catalogued yet, delivered by the listener.',
     };
-        const CAUSE_LINES = {
-        brutal: 'the list resolves in your name. you go down to the next item on it.',
-        broken: 'the slights accumulate. eventually you are one of them.',
-        quiet: 'it catalogues a last grievance and you do not stand up from it.',
-    };
-
     it('victory: prefers engine finalBlowLines.brutal for damage >= 20', () => {
         const vm = selectAftermathViewModel({
             ...VICTORY_SNAPSHOT,
@@ -360,41 +193,11 @@ describe('selectAftermathViewModel: engine narrative lines (Phase 76)', () => {
         expect(vm?.kind === 'victory' && vm.finalBlowPhrase).toBe(FINAL_BLOW_LINES.ironic);
     });
 
-    it('defeat: prefers engine causeLines.brutal for damage >= 20', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            enemy: { ...DEFEAT_SNAPSHOT.enemy, causeLines: CAUSE_LINES },
-        });
-        expect(vm?.kind === 'defeat' && vm.causePhrase).toBe(CAUSE_LINES.brutal);
-    });
-
-    it('defeat: prefers engine causeLines.broken for damage in [10, 20)', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            finalBlow: { cardName: 'STRIKE', damage: 12, descriptor: null },
-            enemy: { ...DEFEAT_SNAPSHOT.enemy, causeLines: CAUSE_LINES },
-        });
-        expect(vm?.kind === 'defeat' && vm.causePhrase).toBe(CAUSE_LINES.broken);
-    });
-
-    it('defeat: prefers engine causeLines.quiet for damage < 10', () => {
-        const vm = selectAftermathViewModel({
-            ...DEFEAT_SNAPSHOT,
-            finalBlow: { cardName: 'STRIKE', damage: 4, descriptor: null },
-            enemy: { ...DEFEAT_SNAPSHOT.enemy, causeLines: CAUSE_LINES },
-        });
-        expect(vm?.kind === 'defeat' && vm.causePhrase).toBe(CAUSE_LINES.quiet);
-    });
-
     it('falls back to the generic phrase when the engine field is absent', () => {
-        // Sanity — re-pin a single fallback per branch to confirm the
-        // null-engine-line path keeps the panel rendering.
+        // Sanity — re-pin the fallback to confirm the null-engine-line
+        // path keeps the panel rendering.
         const victory = selectAftermathViewModel(VICTORY_SNAPSHOT);
         expect(victory?.kind === 'victory' && victory.finalBlowPhrase)
             .toContain('went down face-first');
-
-        const defeat = selectAftermathViewModel(DEFEAT_SNAPSHOT);
-        expect(defeat?.kind === 'defeat' && defeat.causePhrase)
-            .toContain('laid down where it stood');
     });
 });

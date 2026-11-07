@@ -4,7 +4,7 @@
  * Consolidates 5 pre-existing implementations (3 array-lookup
  * variants in `combat.engine.ts`, `combat.codex.engine.ts`,
  * `event.engine.ts`; 2 algorithmic variants in
- * `encounter-seal.engine.ts` and `aftermath/CombatDefeatPanel.tsx`).
+ * `encounter-seal.engine.ts` and a since-removed defeat panel).
  *
  * Lowercase Roman per the design bundle's numeral rule for
  * chronicle counts (level pages, round counters, etc.). Uppercase
@@ -35,9 +35,8 @@ const ROMAN_LOWER: ReadonlyArray<readonly [string, number]> = [
  * @param fallback  Returned when `n` is not a positive finite
  *                  integer. Defaults to `'i'` for compatibility
  *                  with the array-lookup callers
- *                  (`combat.engine.ts::toRoman` etc.); the
- *                  CombatDefeatPanel caller passes
- *                  `'·'` (middle-dot) as the "no round yet"
+ *                  (`combat.engine.ts::toRoman` etc.); a caller
+ *                  may pass `'·'` (middle-dot) as a "no round yet"
  *                  sentinel.
  */
 export function toRomanLower(n: number, fallback: string = 'i'): string {

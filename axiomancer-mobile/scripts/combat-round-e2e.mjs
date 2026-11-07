@@ -734,14 +734,13 @@ async function playSeed(browser, baseUrl, seed, mode) {
                 }
             }
             // Walk whichever aftermath panel the outcome produced, in the order
-            // they stack: summary → victory/defeat → reward pick.
+            // they stack: summary → victory → reward pick.
             // These are the REAL testIDs (CombatSummaryModal / CombatRewardsOverlay
             // / components/event/aftermath) — grep them if the panels are renamed,
             // because a silently-missing id turns this whole block into a no-op.
             const AFTERMATH = [
                 'combat-summary-close',
                 'combat-victory-panel-carry-on',
-                'combat-defeat-panel-begin-again',
                 'combat-reward-confirm',
                 'combat-reward-skip',
             ]
