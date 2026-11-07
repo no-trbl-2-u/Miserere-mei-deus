@@ -131,10 +131,10 @@ async function runRoundTrip(page, baseUrl) {
 
     log('entering Act I ...')
     await press(page, 'labyrinth-act-act1', 'act select')
-    // The entrance narration, when it shows, is left with LEAVE (dialogue) or
+    // The entrance narration, when it shows, is left with its first reply (dialogue) or
     // played out (the Omen is a `/cutscene` route, `cutscene-advance`); either
     // way the entry room is where the walk starts.
-    const leave = page.locator('[data-testid="dialogue-leave"]:visible').first()
+    const leave = page.locator('[data-testid="dialogue-choice-0"]:visible').first()
     const cutscene = page.locator('[data-testid="cutscene-advance"]:visible').first()
     const room = page.locator('[data-testid="labyrinth-room"]:visible').first()
     await Promise.race([

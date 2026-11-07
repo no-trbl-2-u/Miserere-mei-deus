@@ -53,10 +53,10 @@ export const GALLERY = [
       steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { settle: 400 }] },
     { name: 'labyrinth-room', why: 'Inside Act I of THE APORIA — the room view.',
       fixture: { id: 'g-lab-room', seed: 'g9', ...SAGE, world: coastal('breakwater', 'bw-m3') }, path: '/labyrinth',
-      steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-leave' }, { waitFor: 'labyrinth-room' }, { settle: 600 }] },
+      steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-choice-0' }, { waitFor: 'labyrinth-room' }, { settle: 600 }] },
     { name: 'labyrinth-map', why: 'The Act I map overlay.',
       fixture: { id: 'g-lab-map', seed: 'g10', ...SAGE, world: coastal('breakwater', 'bw-m3') }, path: '/labyrinth',
-      steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-leave' }, { waitFor: 'labyrinth-room' }, { click: 'labyrinth-map-toggle' }, { settle: 600 }] },
+      steps: [{ click: 'labyrinth-act-act1' }, { waitForPath: '/dialogue' }, { click: 'dialogue-choice-0' }, { waitFor: 'labyrinth-room' }, { click: 'labyrinth-map-toggle' }, { settle: 600 }] },
 
     // ── Minigames + services ─────────────────────────────────────────────
     { name: 'village-anvil', why: 'The village with its Anvil counter, on arrival.',

@@ -19,7 +19,6 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { isDialogueAppliedEvent } from '@mechanics';
 
-import { LeaveRow } from '@/components/LeaveRow';
 import { KitPressable, KitSurface } from '@/components/experience/KitSurface';
 import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { ScreenBg } from '@/components/ScreenBg';
@@ -71,7 +70,9 @@ function ReplyConsequences({ choice }: { choice: EventChoice }) {
     // Drop consequences with no player-facing label (story flags)
     // before slicing, so they neither render an empty chip nor spend one of
     // the three visible slots.
-    const visible = visibleConsequences(choice.consequences);
+    // The errand a reply starts is told by the reply's own words, so its
+    // quest-start chip is dropped (UK2c).
+    const visible = visibleConsequences(choice.consequences).filter((c) => c.kind !== 'quest-start');
     if (visible.length === 0) return null;
     const shown = visible.slice(0, 3);
     const overflow = visible.length - shown.length;
@@ -234,9 +235,9 @@ export default function DialogueScreen() {
                 </KitSurface>
 
                 {/* The eyebrow heads the reply list, so it only renders when
-                  * there are replies. On a tree's closing node the list is
-                  * empty, and 'A RECKONING' over nothing but the exit would
-                  * read as choices that failed to load. */}
+                  * there are replies. Every node offers one that ends the
+                  * talk (`dialogue.exits.engine.test.ts`); there is no
+                  * separate leave row. */}
                 {vm.choices.length > 0 && (
                     <Text style={styles.sectionLabel}>{vm.chrome.reckoningEyebrow}</Text>
                 )}
@@ -248,15 +249,6 @@ export default function DialogueScreen() {
                         onPress={() => actions.pickEventChoice(choice.id)}
                     />
                 ))}
-
-                {/* Shared bordered control, so it reads as the way out rather
-                  * than a caption under the boxed replies. */}
-                <LeaveRow
-                    label="TIP YOUR CAP AND GO"
-                    accessibilityLabel="Walk away"
-                    onPress={actions.dismissEvent}
-                    testID="dialogue-leave"
-                />
             </ScrollView>
         </ScreenBg>
     );
