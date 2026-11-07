@@ -85,6 +85,7 @@ describe('DeckScreen: the reader', () => {
 
         expect(screen.queryByTestId('deck-card-detail')).toBeNull();
         expect(screen.queryByTestId('deck-card-detail-flavor')).toBeNull();
+        expect(screen.queryByTestId('card-keyword-ledger')).toBeNull();
     });
 });
 
