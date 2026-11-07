@@ -1,5 +1,5 @@
 /**
- * The Wilds' ink (spec 152.2, A2): every colour text wears on a vellum piece
+ * The Wilds' ink: every colour text wears on a vellum piece
  * measures at least 4.5:1 on the darkest parchment tone those pieces carry,
  * and none of them is gold or amber.
  */

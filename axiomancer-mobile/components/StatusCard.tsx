@@ -45,7 +45,7 @@ export function StatusCard(props: StatusCardProps = {}) {
   const hp = props.hp ?? playerHp;
   const hpMax = props.hpMax ?? playerHpMax;
 
-  // W-01: T's pick is vellum and ink (spec 152.2). `normal` or `brass` keeps
+  // W-01: T's pick is vellum and ink. `normal` or `brass` keeps
   // today's card below, byte for byte.
   if (lookOf('W-01') === 'vellum') {
     return <VellumStatusCard name={name} level={level} hp={hp} hpMax={hpMax} mapName={props.mapName} />;

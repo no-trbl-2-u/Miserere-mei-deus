@@ -30,7 +30,7 @@ export function QuestTracker({ fallback = null }: { fallback?: React.ReactNode }
 function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> }) {
     const base = useStyles();
     const inked = useVellumStyles();
-    // W-04: vellum and ink (spec 152.2). `normal` keeps today's tracker.
+    // W-04: vellum and ink. `normal` keeps today's tracker.
     const vellum = lookOf('W-04') === 'vellum';
     const styles = vellum ? overlay(base, inked) : base;
     const router = useRouter();

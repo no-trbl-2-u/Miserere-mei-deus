@@ -1,5 +1,5 @@
 /**
- * The Wilds on vellum (spec 152.2, A2 and A3), through the real exploration
+ * The Wilds on vellum, through the real exploration
  * screen and the tab layout:
  *
  * - the status card, node panel, its BACK / TRAVEL HERE buttons and the quest

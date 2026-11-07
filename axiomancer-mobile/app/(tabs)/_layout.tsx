@@ -38,7 +38,7 @@ function TabBadge({ text, kind }: { text: string; kind: 'event' | 'levelup' }) {
 // upgrades in one place. Per-tab a11y labels override the registry's
 // generic ones. The active tab wears the handoff active-tick: a short
 // sulfur bar above the icon (the handoff tab contract).
-// W-06: the tab bar is on the vellum dock when T's pick says so (spec 152.2).
+// W-06: the tab bar is on the vellum dock when T's pick says so.
 const VELLUM_DOCK = lookOf('W-06') === 'vellum';
 
 const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {

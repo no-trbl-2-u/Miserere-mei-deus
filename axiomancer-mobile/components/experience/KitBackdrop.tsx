@@ -23,11 +23,12 @@ import type { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 
 import { KIT, type KitPiece } from '@/assets/images/experience/kit';
 import { Image } from '@/lib/platform/image';
+import { HUE } from '@/theme/hue';
 import { SectionLabel } from '@/components/SectionLabel';
 
 /** Text on a vellum piece: dark iron-gall brown (body) and oxblood (accents that were gold or amber). */
-export const VELLUM_INK = '#2b1f14';
-export const VELLUM_OXBLOOD = '#6e1a10';
+export const VELLUM_INK = HUE.vellumInk;
+export const VELLUM_OXBLOOD = HUE.vellumOxblood;
 
 /** Unstretched share of a piece on each side: top, right, bottom, left. */
 type Slice = readonly [number, number, number, number];

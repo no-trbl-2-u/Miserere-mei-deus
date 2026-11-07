@@ -37,7 +37,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
     const base = useStyles();
     const vellumStyles = useVellumStyles();
     const AXM = usePalette();
-    // W-02 the panel and W-03 its two buttons are vellum and ink (spec 152.2).
+    // W-02 the panel and W-03 its two buttons are vellum and ink.
     // A `normal` look keeps today's styles and draws no backdrop.
     const panelVellum = lookOf('W-02') === 'vellum';
     const buttonVellum = lookOf('W-03') === 'vellum';

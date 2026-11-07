@@ -1,5 +1,5 @@
 /**
- * Dev-only WILDS BLACK BAND switch (spec 152.2, W-01): one checkbox that
+ * Dev-only WILDS BLACK BAND switch: one checkbox that
  * reads and flips `wildsBlackBand` in the dev settings
  * (`state/dev/dev-settings.ts`), so T can compare the top of the Wilds with
  * and without a solid black band behind the status card. The band is what
