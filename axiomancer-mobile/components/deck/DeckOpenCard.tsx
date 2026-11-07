@@ -1,5 +1,5 @@
 /**
- * The open card on the DECK screen (spec 155, the Reader): the card's own
+ * The open card on the DECK screen (the Reader): the card's own
  * painting as a banner, its name over the art, its printed lines under it.
  *
  * T's numbers, kept to the half point and not retuned: banner 340 pt tall,
