@@ -52,7 +52,6 @@ import SettingsScreen from './settings/index';
 import TabLayout from './(tabs)/_layout';
 import HazardScreen from './hazard/index';
 import CombatEncounterScreen from './combat-encounter/index';
-import HazardDeckScreen from './hazard-deck/index';
 import ItemRewardScreen from './item-reward/index';
 import RestScreen from './rest/index';
 import DeathReturnScreen from './death-return/index';
@@ -322,11 +321,6 @@ function RootLayout() {
               name="combat-encounter/index"
               component={CombatEncounterScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
-            />
-            <Stack.Screen
-              name="hazard-deck/index"
-              component={HazardDeckScreen}
-              options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             {/* The ONE reward screen that is dismissible on purpose.
                 No `gestureEnabled: false` and no <HardwareBackHandler>: the

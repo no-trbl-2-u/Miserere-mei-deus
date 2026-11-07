@@ -49,7 +49,7 @@
 - **Tab bar.** Six icons and no words, each icon larger (about 30 pt, from today's smaller size) and centred in its slot. Each tab keeps its name as its accessibility label, so nothing is lost to a screen reader.
 - **Reveal.** No "A FOE RISES". Everything else on the reveal screen stays, since it is T's reference screen ("I do love the screen looking like this").
 - **Dock.** The phase ledger's marks leave the dock (`[T to confirm #2]`). The END button narrows, and the dock grows taller so the brass dock art (spec 152) reads. VITAE, the piles and the portrait keep their order.
-- **Hazard deck.** Self's link goes, and so does the `/hazard-deck` route and screen, which nothing else reaches (`[T to confirm #3]`). The saved hazard deck in the save file is left to the W2 cuts plot. This spec removes only what the player sees.
+- **Hazard deck.** Self's link goes, and so does the `/hazard-deck` route and screen, which nothing else reaches (Confirmed by T (2026-11-07): the route and screen go). The saved hazard deck in the save file is left to the W2 cuts plot. This spec removes only what the player sees.
 - **No burden.** The Satchel has no burden bar, tooltip or number, and its header loses the word. The presenter stops computing it. Nothing in the rules changes, because nothing in the rules read it: the player can hold anything and everything (T).
 - **Deck directions.** The loop mocks three Deck tab directions as one page in `plan/card-ledger/`, like the kit mixer: real deck data, the same phone frame and switchable. Each one aims at T's brief, "minimalist order while still providing images". T picks one in 134.7 (B7), the owner-led revamp, which then builds it.
 
@@ -70,21 +70,19 @@
 ## Acceptance
 
 - **A4** The reveal screen has no "A FOE RISES". The dock has no phase-ledger marks, a narrower END and a taller dock, and VITAE, the piles and the portrait keep their order.
-- **A5** Self has no hazard deck link, and the `/hazard-deck` route and screen are gone. No test or e2e flow names them.
 
 ## Open questions
 
 1. When should a quest row hide its counter? Confirmed by T (2026-11-07): single-step quests. The rule is `questCounterText` in `quest.copy.ts`.
 2. Where do the phase-ledger marks go? These are the circles: one per phase, O cleared, X overwhelmed. Default: off the board entirely, since the rail's "PHASE 1/8" keeps the count. Or: a small row under the enemy's name rail. [T to confirm #2]
-3. What happens to the hazard deck screen with its link? Default: the route and screen go too, since nothing else reaches it. Or: keep the screen and reach it from the dev menu. [T to confirm #3]
+3. What happens to the hazard deck screen with its link? Default: the route and screen go too, since nothing else reaches it. Or: keep the screen and reach it from the dev menu. Confirmed by T (2026-11-07): the route and screen go
 4. When should the Deck directions be mocked? Default: table order now, ready for B7 after Act 1 is complete. Or: pull B7 itself ahead of it. [T to confirm #4]
 
 ## Chunks
 
-Measure: 2 open · 5 closed · next A8
+Measure: 1 open · 6 closed · next A8
 
 - [ ] **153.4** No "A FOE RISES"; the dock trades its circles for room · M · closes A4 · needs — · alias: UX1d
-- [ ] **153.5** The hazard deck link and screen go · S · closes A5 · needs — · alias: UX1e
 
 ### 153.1 (UX1a) — The main menu says only its three words · S · closes A1 · requires 152.6
 
