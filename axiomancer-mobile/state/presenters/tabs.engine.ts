@@ -64,7 +64,6 @@ export function isTabHidden(inCombat: boolean, tab: TabKey): boolean {
     return selectVisibleTabs(inCombat).hiddenTabs.includes(tab);
 }
 
-/** Tab icon size in points. The bar is icons only (T, W-06, spec 153.3); the
- *  name of each tab rides as its accessibility label, so there is no label
- *  size, tracking or fit check left to keep. */
+/** Tab icon size in points. The bar shows icons alone; each tab's name rides as
+ *  its accessibility label. */
 export const TAB_ICON_SIZE = 30;
