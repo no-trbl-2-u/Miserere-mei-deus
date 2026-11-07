@@ -105,7 +105,7 @@ Measure: 4 open · 5 closed · next A10
 
 - [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
 - [ ] **154.5** The stakes card says three things · S · closes A5 · needs — · alias: UK2e
-- [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 153.2 · alias: UK2f
+- [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs — · alias: UK2f
 - [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
