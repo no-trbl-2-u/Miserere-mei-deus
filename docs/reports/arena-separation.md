@@ -1,6 +1,6 @@
 # Arena separation: every foe on its region's three plates
 
-Measured at commit `3958b4d14` (the tree the plates, mattes and cells below are read from). Regenerate with `node axiomancer-mobile/scripts/measure-arena-separation.mjs`.
+Measured at commit `de0628add` (the tree the plates, mattes and cells below are read from). Regenerate with `node axiomancer-mobile/scripts/measure-arena-separation.mjs`.
 
 This is a measurement (D57), not a gate. It rejects nothing and carries no verdict on any plate or pick.
 
@@ -44,23 +44,19 @@ Mean Y 59.0, sd Y 23.4, dark share 11%, detail 0.4. By detail it ranks 12 of 12 
 
 | Foe | northern-sea (default) | kuste-bei-mondschein | mondscheinnacht-ruegen | plate Y behind (northern-sea / kuste-bei-mondschein / mondscheinnacht-ruegen) |
 |---|---|---|---|---|
-| float-eye | +68.1 (+37.9) | +68.1 (+42.5) | +68.0 (+23.3) | 40.4 / 35.8 / 55.1 |
-| gallows-crow | +160.9 (+135.7) | +161.0 (+136.8) | +160.7 (+120.3) | 35.5 / 34.4 / 50.9 |
-| toll-keeper | +53.6 (+45.3) | +53.6 (+44.1) | +53.4 (+21.5) | 18.5 / 19.7 / 42.2 |
-| tide-gate | +51.5 (+23.5) | +51.6 (+25.0) | +50.7 (+9.5) | 39.1 / 37.6 / 53.0 |
-| death-beholder | +39.1 (+12.8) | +39.2 (+17.9) | +38.9 (-3.3) | 36.7 / 31.5 / 52.8 |
+| quay-crab | +70.9 (+64.5) | +70.9 (+62.7) | +70.6 (+27.0) | 16.6 / 18.4 / 54.1 |
 | net-mender | +53.7 (+29.9) | +54.0 (+34.4) | +52.5 (+12.7) | 35.2 / 30.6 / 52.4 |
-| crane-hook | +64.9 (+49.3) | +64.9 (+50.5) | +64.9 (+30.0) | 25.9 / 24.7 / 45.2 |
+| coralback | +99.7 (+91.1) | +99.7 (+90.1) | +99.6 (+60.2) | 18.8 / 19.9 / 49.7 |
 | brine-widow | +142.5 (+122.3) | +142.6 (+124.8) | +142.1 (+106.9) | 30.6 / 28.2 / 46.1 |
+| saltwick-swarm | +143.7 (+109.3) | +143.7 (+113.5) | +143.4 (+102.3) | 45.8 / 41.5 / 52.8 |
+| bilge-stalker | +97.0 (+72.6) | +97.1 (+77.5) | +96.7 (+56.4) | 34.9 / 30.0 / 51.1 |
 | cave-choir | +74.6 (+55.4) | +74.7 (+57.4) | +74.5 (+38.4) | 29.6 / 27.6 / 46.6 |
 | tithe-collector | +53.4 (+33.5) | +53.4 (+36.5) | +53.2 (+15.9) | 30.2 / 27.2 / 47.8 |
-| lamprey-knot | +58.4 (+38.5) | +58.4 (+41.0) | +58.0 (+16.3) | 30.2 / 27.7 / 52.4 |
-| green-jelly | +116.0 (+98.5) | +116.0 (+99.6) | +115.9 (+76.6) | 27.7 / 26.7 / 49.6 |
-| curfew-ringer | +73.9 (+54.2) | +74.0 (+57.2) | +73.7 (+35.2) | 30.1 / 27.1 / 49.0 |
-| wreck-picker | +75.4 (+54.9) | +75.4 (+56.3) | +75.2 (+34.1) | 30.7 / 29.3 / 51.5 |
 | lamplighter | +78.9 (+73.2) | +78.9 (+73.8) | +78.7 (+46.2) | 15.9 / 15.3 / 42.9 |
 | wrecker | +116.7 (+107.2) | +116.7 (+107.2) | +116.4 (+87.4) | 19.8 / 19.8 / 39.7 |
-| smokehouse-gutter | +79.5 (+67.5) | +79.5 (+68.2) | +79.3 (+45.9) | 22.3 / 21.5 / 43.8 |
+| wreckmaster | +66.5 (+39.2) | +66.5 (+41.8) | +66.4 (+24.5) | 37.6 / 35.1 / 52.3 |
+| tide-gate | +51.5 (+23.5) | +51.6 (+25.0) | +50.7 (+9.5) | 39.1 / 37.6 / 53.0 |
+| saint-beneath | +67.6 (+40.3) | +67.6 (+41.5) | +67.4 (+23.4) | 37.6 / 36.3 / 54.5 |
 
 ## The Charcoal Wood
 
@@ -92,10 +88,15 @@ The resting cell's own backing (one per cell since 146.8) against the cell it si
 
 | Foe | rendered square | figure | backing | ratio |
 |---|---|---|---|---|
+| bilge-stalker | 304px | 11% | 11% | 1.08x |
 | toll-keeper | 304px | 15% | 16% | 1.06x |
+| coralback | 304px | 14% | 15% | 1.05x |
+| quay-crab | 304px | 10% | 10% | 1.04x |
 | lamplighter | 304px | 14% | 15% | 1.04x |
+| saltwick-swarm | 304px | 10% | 10% | 1.04x |
 | gallows-crow | 304px | 20% | 20% | 1.03x |
 | lamprey-knot | 304px | 28% | 29% | 1.03x |
+| wreckmaster | 304px | 10% | 10% | 1.03x |
 | wreck-picker | 304px | 26% | 27% | 1.03x |
 | tide-gate | 304px | 15% | 16% | 1.03x |
 | net-mender | 304px | 22% | 23% | 1.03x |
@@ -106,6 +107,7 @@ The resting cell's own backing (one per cell since 146.8) against the cell it si
 | smokehouse-gutter | 304px | 19% | 20% | 1.02x |
 | curfew-ringer | 304px | 18% | 18% | 1.02x |
 | wrecker | 304px | 31% | 32% | 1.02x |
+| saint-beneath | 328px | 14% | 14% | 1.01x |
 | crane-hook | 304px | 34% | 34% | 1.01x |
 | float-eye | 304px | 28% | 29% | 1.00x |
 | green-jelly | 304px | 33% | 33% | 1.00x |

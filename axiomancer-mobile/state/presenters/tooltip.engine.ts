@@ -17,7 +17,7 @@
  *   off `HazardKeywordId`; this kind reads the same glossary the
  *   in-hazard card faces already draw from, so the two stay in sync
  *   for free.
- * - `'slot'`, `'burden'`, `'map-node'`, `'chronicle-entry'`,
+ * - `'slot'`, `'map-node'`, `'chronicle-entry'`,
  *   `'quest-objective'`, `'item-stat'`, `'disabled-action'` — static
  *   tables below.
  *
@@ -39,7 +39,6 @@ export type TooltipKind =
     | 'card'
     | 'hazard-keyword'
     | 'slot'
-    | 'burden'
     | 'item-stat'
     | 'chronicle-entry'
     | 'quest-objective'
@@ -211,15 +210,6 @@ const MAP_NODE_CONTENT: Record<string, TooltipContent> = {
     },
 };
 
-// Burden bar content. Single id ('burden') keys the inventory burden tooltip.
-const BURDEN_CONTENT: Record<string, TooltipContent> = {
-    burden: {
-        title: 'BURDEN',
-        body: 'the weight of what you carry, in stones. high burden slows you and saps endurance; over the cap, what you carry begins to wear on you.',
-        footnote: 'shed gear to lighten',
-    },
-};
-
 // Equipment slot content. Keys match the engine `EquipmentSlot` kinds
 // (`weapon | armor | relic`). SELF equipment cells pass the slotKey verbatim as the tooltip
 // id.
@@ -230,7 +220,7 @@ const SLOT_CONTENT: Record<string, TooltipContent> = {
     },
     armor: {
         title: 'ARMOR',
-        body: 'harness, surcoat, ritual mantle — everything worn on the torso. raw defense; the heaviest single item the burden bar feels.',
+        body: 'harness, surcoat, ritual mantle — everything worn on the torso. raw defense.',
     },
     relic: {
         title: 'RELIC',
@@ -322,9 +312,6 @@ export function selectTooltipContentFor(
     }
     if (kind === 'slot') {
         return SLOT_CONTENT[id] ?? null;
-    }
-    if (kind === 'burden') {
-        return BURDEN_CONTENT[id] ?? null;
     }
     if (kind === 'map-node') {
         return MAP_NODE_CONTENT[id] ?? null;
