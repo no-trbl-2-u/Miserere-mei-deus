@@ -19,9 +19,9 @@ const LOOK_VALUES: readonly Look[] = ['normal', 'brass', 'vellum'];
 const of = (look: Look) => PLACES.filter((p) => LOOKS[p] === look);
 
 describe('the look table (A1)', () => {
-    // Containment, not equality: round 2 of the mixer (spec 154) adds its own
-    // places to the same table, and that must not have to edit round 1's
-    // pinned record. What A1 asks is that no place of round 1 goes missing.
+    // Containment, not equality: a later round of the mixer adds its own
+    // places to the same table, and that must not have to edit the pinned
+    // record below. What is asked here is that no place already in it is lost.
     it('names all 44 places, in LOOKS and in PLACE_PIECES', () => {
         expect(PLACES).toHaveLength(44);
         expect(new Set(PLACES).size).toBe(44);
