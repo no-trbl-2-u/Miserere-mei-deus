@@ -25,17 +25,12 @@ import { KIT, type KitPiece } from '@/assets/images/experience/kit';
 import { Image } from '@/lib/platform/image';
 import { HUE } from '@/theme/hue';
 import { SectionLabel } from '@/components/SectionLabel';
-import { HUE } from '@/theme/axm';
 
 /**
  * Ink on parchment (T, 2026-11-06): body text in iron-gall brown, accents in
  * oxblood where today's text is gold or amber. Every one measures at least
  * 4.5:1 against the vellum pieces' darkest parchment (see the vellum-ink test).
  */
-export const VELLUM_INK = HUE.vellumInk;
-export const VELLUM_OXBLOOD = HUE.vellumOxblood;
-
-/** Text on a vellum piece: dark iron-gall brown (body) and oxblood (accents that were gold or amber). */
 export const VELLUM_INK = HUE.vellumInk;
 export const VELLUM_OXBLOOD = HUE.vellumOxblood;
 

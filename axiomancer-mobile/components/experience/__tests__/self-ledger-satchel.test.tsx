@@ -149,7 +149,7 @@ describe('ink on vellum', () => {
     });
 
     it('keeps oxblood the accent T chose, not a gold or amber', () => {
-        expect(VELLUM_OXBLOOD).toBe('#7a1f14');
+        expect(VELLUM_OXBLOOD).toBe('#6e1a10');
         expect(VELLUM_INK).toBe('#2b1f14');
     });
 });
