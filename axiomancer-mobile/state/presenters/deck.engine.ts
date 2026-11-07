@@ -7,11 +7,9 @@
  *
  * ## Prior art it deliberately copies
  *
- * `state/presenters/hazard-deck.engine.ts` + `app/hazard-deck/index.tsx` are
- * the house idiom for exactly this screen — a durable, out-of-encounter deck
- * listing with tallies and a tap-to-inspect detail. This file mirrors its
- * shape (group + count distinct ids, tally the axes, sort for display, hand
- * the screen a frozen VM) so the two deck surfaces read as one system.
+ * The house idiom for a durable, out-of-encounter deck listing: group and
+ * count distinct ids, tally the axes, sort for display, and hand the screen
+ * a frozen VM.
  *
  * ## Where every word on the screen comes from
  *
@@ -294,8 +292,7 @@ function deckCardVM(cardId: string, count: number): DeckCardVM | null {
  * Build the DECK view-model from the run's character and flags.
  *
  * The store spreads the engine `GameState` at its root, so `flags` is read off
- * the same `AppStoreState` — the identical access the hazard-deck presenter
- * makes. `flags` matters: `buildCombatDeck` prefers a curated loadout when the
+ * the same `AppStoreState`. `flags` matters: `buildCombatDeck` prefers a curated loadout when the
  * save carries loadout flags, and a deck screen that ignored them would show a
  * different deck than the one the next fight deals.
  */

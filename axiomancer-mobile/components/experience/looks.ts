@@ -2,7 +2,7 @@
  * THE LOOK TABLE — the single source for which look each place in the app
  * wears. Every screen that wears a kit piece reads it.
  *
- * Forty-four places in round 1 and thirteen of round 2's node screens, the
+ * Forty-three places in round 1 and thirteen of round 2's node screens, the
  * ledger's ids, each with one of three looks: Brass Gothic, Vellum & Ink, or
  * Normal (today's code path, untouched). The values are T's picks in the kit
  * mixer, pasted 2026-11-06; the picks and T's notes verbatim are the Verdicts
@@ -29,13 +29,13 @@ import type { KitPiece } from '@/assets/images/experience/kit';
 
 export type Look = 'normal' | 'brass' | 'vellum';
 
-/** The 44 places of the kit ledger, in ledger order. */
+/** The 43 places of the kit ledger, in ledger order. */
 export type PlaceId =
     | 'M-01'
     | 'W-01' | 'W-02' | 'W-03' | 'W-04' | 'W-05' | 'W-06'
     | 'S-01' | 'S-02' | 'S-03' | 'S-04' | 'S-05' | 'S-06' | 'S-07' | 'S-08' | 'S-09'
     | 'P-01' | 'P-02' | 'P-03' | 'P-04'
-    | 'F-01' | 'F-02' | 'F-03' | 'F-04' | 'F-05' | 'F-06'
+    | 'F-01' | 'F-02' | 'F-03' | 'F-05' | 'F-06'
     | 'L-01'
     | 'B-01' | 'B-02' | 'B-03' | 'B-04' | 'B-05' | 'B-06'
     | 'D-01' | 'D-02' | 'D-03' | 'D-04'
@@ -73,7 +73,6 @@ export const LOOKS: Record<PlaceId, Look> = {
     'F-01': 'brass', // Self: portrait frame
     'F-02': 'brass', // Self: level badge
     'F-03': 'brass', // Self: HEART / BODY / MIND tiles
-    'F-04': 'normal', // Self: HAZARD DECK link
     'F-05': 'brass', // Self: section headings and divider
     'F-06': 'brass', // Self: VITAE pool bar
     'L-01': 'vellum', // Ledger: section headings and dividers
@@ -136,7 +135,6 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'F-01': ['character-portrait-frame'],
     'F-02': ['level-badge-dark'],
     'F-03': ['stat-tile'],
-    'F-04': [],
     'F-05': ['section-header-dark-star', 'section-header-dark-quatrefoil', 'divider-ornate-brass', 'nav-count-shield-dark'],
     'F-06': ['combat-vitae-track', 'combat-vitae-fill'],
     'L-01': ['section-header-vellum-star', 'section-header-vellum-leaf', 'divider-ornate-ink', 'divider-plain-ink', 'divider-short-ink'],

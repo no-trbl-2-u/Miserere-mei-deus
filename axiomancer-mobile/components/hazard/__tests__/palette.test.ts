@@ -2,8 +2,8 @@
  * Hazard-minigame palette.
  *
  * Isolates components/hazard/palette.ts's own contract — it is consumed
- * by seven hazard components (HazardCard, HazardBoard, HazardDie,
- * HazardOverlays, HazardRemoveGrid, RewardsOverlay, RouteSelect) yet
+ * by six hazard components (HazardCard, HazardBoard, HazardDie,
+ * HazardOverlays, RewardsOverlay, RouteSelect) yet
  * carried no test of any kind. Colour is never the only channel here:
  * every die face pairs its colour with a distinct glyph shape, so the
  * map's completeness and per-kind glyph distinctness is a real

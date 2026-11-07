@@ -1,17 +1,13 @@
 /**
  * DECK — the fifth bottom tab.
  *
- * The player-facing view of the COMBAT deck, the one they build all run. It
- * deliberately mirrors the hazard deck screen's (`app/hazard-deck/index.tsx`)
- * structure — headline tallies, distribution rows, the full list,
- * tap a card to inspect — so the two decks read as one system rather than two
- * separate inventions.
+ * The player-facing view of the COMBAT deck, the one they build all run:
+ * headline tallies, distribution rows, the full list, tap a card to inspect.
  *
  * Composition is engine truth (`buildCombatDeck`), the presenter maps it
  * (`selectDeckViewModel`), this screen renders the view-model. It reads no
  * rules and writes nothing: the deck is changed by playing the game, never
- * from here. Deck EDITING (thin / swap) is out of scope — see the hazard deck
- * screen's own blocked remove-grid for the precedent on not shipping a
+ * from here. Deck EDITING (thin / swap) is out of scope: nothing ships a
  * mutation the engine has not opened.
  */
 
@@ -32,7 +28,7 @@ export default function DeckScreen() {
     const AXM = usePalette();
     const styles = useStyles();
 
-    // Slim slices + memo, the house pattern (see MemoirScreen / HazardDeckScreen):
+    // Slim slices + memo, the house pattern (see MemoirScreen):
     // `useGameState(selectDeckViewModel)` would churn `useSyncExternalStore`
     // because the VM is a freshly frozen object on every call.
     //

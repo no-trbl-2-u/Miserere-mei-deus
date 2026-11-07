@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, within } from '@testing-library/react-native';
 
 import { 
     DiceRollOverlay, 
@@ -14,6 +14,7 @@ import type {
     HazardResolveFlashVM, 
     HazardOutcomeVM 
 } from '@/state/presenters/hazard.engine';
+import { HAZARD_STAT_KEY } from '@/state/presenters/hazard.engine';
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
@@ -192,6 +193,16 @@ describe('OutcomeOverlay', () => {
 });
 
 describe('CardDetailOverlay', () => {
+    it('keys FORCE and ESCAPE under the card', () => {
+        const { getByTestId, getByText } = render(
+            <CardDetailOverlay card={mockCard} onClose={jest.fn()} />
+        );
+        const key = getByTestId('hazard-stat-key');
+        expect(within(key).getByText('FORCE')).toBeTruthy();
+        expect(within(key).getByText('ESCAPE')).toBeTruthy();
+        expect(getByText(HAZARD_STAT_KEY.caption)).toBeTruthy();
+    });
+
     it('renders card detail view', () => {
         const { getByText } = render(
             <CardDetailOverlay card={mockCard} onClose={jest.fn()} />

@@ -49,7 +49,7 @@ describe('the picks this chunk wires', () => {
     it('are the ones T made', () => {
         for (const id of ['F-01', 'F-02', 'F-03', 'F-05', 'F-06', 'B-04'] as const) expect(LOOKS[id]).toBe('brass');
         for (const id of ['L-01', 'B-05'] as const) expect(LOOKS[id]).toBe('vellum');
-        for (const id of ['F-04', 'B-01', 'B-02', 'B-03', 'B-06'] as const) expect(LOOKS[id]).toBe('normal');
+        for (const id of ['B-01', 'B-02', 'B-03', 'B-06'] as const) expect(LOOKS[id]).toBe('normal');
     });
 });
 
@@ -71,10 +71,10 @@ describe('Self (A6)', () => {
         }
     });
 
-    it('leaves the hazard deck link as it was', () => {
-        const { getByTestId, getByText } = render(screen(<CharacterScreen />));
-        expect(getByTestId('self-hazard-deck-link')).toBeTruthy();
-        expect(getByText('✠ HAZARD DECK')).toBeTruthy();
+    it('has no hazard deck link', () => {
+        const { queryByTestId, queryByText } = render(screen(<CharacterScreen />));
+        expect(queryByTestId('self-hazard-deck-link')).toBeNull();
+        expect(queryByText(/HAZARD DECK/)).toBeNull();
     });
 });
 

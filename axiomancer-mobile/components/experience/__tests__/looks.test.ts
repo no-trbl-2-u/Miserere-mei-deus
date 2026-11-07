@@ -1,13 +1,13 @@
 import { KIT, type KitPiece } from '@/assets/images/experience/kit';
 import { LOOKS, PLACE_PIECES, lookOf, type Look, type PlaceId } from '../looks';
 
-/** The ledger's 44 place ids, written out so a dropped row fails rather than shrinking the check. */
+/** The ledger's 43 place ids, written out so a dropped row fails rather than shrinking the check. */
 const PLACES: readonly PlaceId[] = [
     'M-01',
     'W-01', 'W-02', 'W-03', 'W-04', 'W-05', 'W-06',
     'S-01', 'S-02', 'S-03', 'S-04', 'S-05', 'S-06', 'S-07', 'S-08', 'S-09',
     'P-01', 'P-02', 'P-03', 'P-04',
-    'F-01', 'F-02', 'F-03', 'F-04', 'F-05', 'F-06',
+    'F-01', 'F-02', 'F-03', 'F-05', 'F-06',
     'L-01',
     'B-01', 'B-02', 'B-03', 'B-04', 'B-05', 'B-06',
     'D-01', 'D-02', 'D-03', 'D-04',
@@ -21,9 +21,9 @@ const of = (look: Look) => PLACES.filter((p) => LOOKS[p] === look);
 describe('the look table (A1)', () => {
     // Containment, not equality: round 2 of the mixer adds its own places to
     // the same table, and that must not have to edit round 1's pinned record. What A1 asks is that no place of round 1 goes missing.
-    it('names all 44 places, in LOOKS and in PLACE_PIECES', () => {
-        expect(PLACES).toHaveLength(44);
-        expect(new Set(PLACES).size).toBe(44);
+    it('names all 43 places, in LOOKS and in PLACE_PIECES', () => {
+        expect(PLACES).toHaveLength(43);
+        expect(new Set(PLACES).size).toBe(43);
         const missingLook = PLACES.filter((p) => LOOKS[p] === undefined);
         const missingPieces = PLACES.filter((p) => PLACE_PIECES[p] === undefined);
         expect(missingLook).toEqual([]);
@@ -38,7 +38,7 @@ describe('the look table (A1)', () => {
         }
     });
 
-    it("matches T's picks exactly: 18 brass, 11 vellum, 15 normal", () => {
+    it("matches T's picks exactly: 18 brass, 11 vellum, 14 normal", () => {
         expect(of('brass')).toEqual([
             'M-01', 'S-01', 'S-03', 'S-04', 'S-06', 'S-09',
             'F-01', 'F-02', 'F-03', 'F-05', 'F-06',
@@ -52,7 +52,7 @@ describe('the look table (A1)', () => {
         ]);
         expect(of('brass')).toHaveLength(18);
         expect(of('vellum')).toHaveLength(11);
-        expect(of('normal')).toHaveLength(15);
+        expect(of('normal')).toHaveLength(14);
     });
 });
 
