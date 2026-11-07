@@ -19,6 +19,7 @@ import { Text, View, type LayoutChangeEvent } from 'react-native';
 
 import { DeckCardTile } from '@/components/deck/DeckCardTile';
 import { DeckOpenCard } from '@/components/deck/DeckOpenCard';
+import { DeckTypeTabs } from '@/components/deck/DeckTypeTabs';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectDeckViewModel, type DeckCardVM } from '@/state/presenters/deck.engine';
@@ -55,6 +56,11 @@ export default function DeckScreen() {
     const allCards = useMemo(() => vm.groups.flatMap((g) => g.cards), [vm]);
     const open = allCards.find((c) => c.cardId === openId) ?? allCards[0] ?? null;
 
+    // The active type; opening a card never moves it. A type the deck no longer
+    // holds falls back to the first group.
+    const [tabKey, setTabKey] = useState<string | null>(null);
+    const activeGroup = vm.groups.find((g) => g.key === tabKey) ?? vm.groups[0] ?? null;
+
     // Four square thumbnails to a row; the side is measured from the grid.
     const [gridW, setGridW] = useState(0);
     const onGridLayout = useCallback((e: LayoutChangeEvent) => setGridW(e.nativeEvent.layout.width), []);
@@ -71,15 +77,20 @@ export default function DeckScreen() {
                     <>
                         {open !== null && <DeckOpenCard card={open} />}
 
-                        {/* The deck, one grid per card type (155.3 shows only the active one). */}
-                        {vm.groups.map((group) => (
+                        <DeckTypeTabs
+                            groups={vm.groups}
+                            activeKey={activeGroup?.key ?? ''}
+                            onSelect={setTabKey}
+                        />
+
+                        {/* Only the active type's cards; this one grid sets the tile width. */}
+                        {activeGroup !== null && (
                             <View
-                                key={group.key}
                                 style={styles.grid}
                                 onLayout={onGridLayout}
-                                testID={`deck-group-${group.key}`}
+                                testID={`deck-group-${activeGroup.key}`}
                             >
-                                {group.cards.map((card) => (
+                                {activeGroup.cards.map((card) => (
                                     <DeckCardTile
                                         key={card.cardId}
                                         card={card}
@@ -89,7 +100,7 @@ export default function DeckScreen() {
                                     />
                                 ))}
                             </View>
-                        ))}
+                        )}
                     </>
                 )}
             </ScreenBg>
