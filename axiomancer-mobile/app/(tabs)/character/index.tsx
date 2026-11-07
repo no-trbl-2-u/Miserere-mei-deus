@@ -10,6 +10,9 @@ import { LevelUpModal } from '@/components/levelup/LevelUpModal';
 import { DevToolsLink } from '@/components/dev/DevToolsLink';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
+import { StatBar } from '@/components/StatBar';
+import { KitBackdrop, KitDivider, KitHeader } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { StanceGlyph } from '@/components/StanceGlyph';
 import { EffectGlyph } from '@/components/EffectGlyph';
 import { XpChain } from '@/components/XpChain';
@@ -28,9 +31,23 @@ import { selectCharacterViewModel } from '@/state/presenters/character.engine';
  * a view model via `selectCharacterViewModel`.
  * Output: the sheet element tree.
  */
+/** A Self section heading: on its brass plate where T kept the kit (F-05), else today's label. */
+function SelfHeading({ children, variant = 'star' }: { children: string; variant?: 'star' | 'quatrefoil' }) {
+  return lookOf('F-05') === 'brass'
+    ? <KitHeader variant={variant}>{children}</KitHeader>
+    : <SectionLabel size={13}>{children}</SectionLabel>;
+}
+
 export default function CharacterScreen() {
   const AXM = usePalette();
   const styles = useStyles();
+  const frameBrass = lookOf('F-01') === 'brass';
+  const badgeBrass = lookOf('F-02') === 'brass';
+  const tilesBrass = lookOf('F-03') === 'brass';
+  const rulesBrass = lookOf('F-05') === 'brass';
+  const poolBrass = lookOf('F-06') === 'brass';
+  const portraitW = frameBrass ? 136 : 176;
+  const portraitH = frameBrass ? 170 : 212;
   // Subscribe to stable slices to avoid getSnapshot identity churn:
   // `selectCharacterViewModel` returns a frozen new object every call,
   // which would loop `useSyncExternalStore` if used directly as a
@@ -104,19 +121,21 @@ export default function CharacterScreen() {
       >
         <View style={styles.sheetHeaderTopRow}>
           {portraitLocked ? (
-            <View style={styles.portraitFrame} testID="self-portrait">
-              <PlayerPortraitImage width={176} height={212} />
+            <View style={[styles.portraitFrame, frameBrass && styles.kitBare]} testID="self-portrait">
+              <PlayerPortraitImage width={portraitW} height={portraitH} />
+              {frameBrass && <KitBackdrop piece="character-portrait-frame" />}
             </View>
           ) : (
             <Pressable
-              style={styles.portraitFrame}
+              style={[styles.portraitFrame, frameBrass && styles.kitBare]}
               onPress={onCyclePortrait}
               accessibilityRole="button"
               accessibilityLabel="Change portrait"
               accessibilityHint="cycles through the portrait gallery"
               testID="self-portrait-cycle"
             >
-              <PlayerPortraitImage width={176} height={212} />
+              <PlayerPortraitImage width={portraitW} height={portraitH} />
+              {frameBrass && <KitBackdrop piece="character-portrait-frame" />}
             </Pressable>
           )}
           <View style={styles.identityCol}>
@@ -133,7 +152,8 @@ export default function CharacterScreen() {
             </View>
             <XpChain value={vm.xp} max={vm.xpMax} />
           </View>
-          <View style={styles.levelBox}>
+          <View style={[styles.levelBox, badgeBrass && styles.kitBare]}>
+            {badgeBrass && <KitBackdrop piece="level-badge-dark" />}
             <Text style={styles.levelText}>{vm.level}</Text>
             <Text style={styles.levelCaption}>LVL</Text>
           </View>
@@ -148,7 +168,8 @@ export default function CharacterScreen() {
               accessibilityHint="tap to read description"
               testID={`self-base-${r.stanceKey}`}
             >
-              <View style={styles.baseCard}>
+              <View style={[styles.baseCard, tilesBrass && styles.kitBare]}>
+                {tilesBrass && <KitBackdrop piece="stat-tile" />}
                 <StanceGlyph kind={r.stanceKey} size={28} color={AXM.parchment} />
                 <Text style={styles.baseStatLabel}>{r.label}</Text>
                 <Text style={styles.baseStatValue}>{r.value}</Text>
@@ -215,7 +236,8 @@ export default function CharacterScreen() {
 
       {/* Pools — VITAE (Problem 6 design) */}
       <View style={styles.section}>
-        <SectionLabel size={13}>✠ POOLS</SectionLabel>
+        {rulesBrass && <KitDivider piece="divider-ornate-brass" />}
+        <SelfHeading>✠ POOLS</SelfHeading>
         <View style={styles.poolsCard}>
           {[
             { label: 'VITAE', value: player?.health ?? 0, max: player?.maxHealth ?? 1, color: AXM.blood, gloss: 'flesh holds' },
@@ -228,9 +250,13 @@ export default function CharacterScreen() {
                 </View>
                 <Text style={styles.poolValue}>{pool.value}<Text style={styles.boneText}> / {pool.max}</Text></Text>
               </View>
-              <View style={styles.poolTrack}>
-                <View style={[styles.poolFill, { width: `${(pool.value / pool.max) * 100}%`, backgroundColor: pool.color }]} />
-              </View>
+              {poolBrass ? (
+                <StatBar value={pool.value} max={pool.max} color={pool.color} height={10} look="brass" />
+              ) : (
+                <View style={styles.poolTrack}>
+                  <View style={[styles.poolFill, { width: `${(pool.value / pool.max) * 100}%`, backgroundColor: pool.color }]} />
+                </View>
+              )}
             </View>
           ))}
         </View>
@@ -238,7 +264,7 @@ export default function CharacterScreen() {
 
       {/* Afflictions & Blessings */}
       <View style={styles.section} accessible accessibilityLabel={vm.a11y.effects}>
-        <SectionLabel size={13}>✠ AFFLICTIONS &amp; BLESSINGS</SectionLabel>
+        <SelfHeading variant="quatrefoil">✠ AFFLICTIONS &amp; BLESSINGS</SelfHeading>
         <View style={styles.effectsList}>
           {vm.effects.length === 0 ? (
             <Text style={styles.emptyLabel}>{vm.emptyEffectsMessage}</Text>
@@ -288,7 +314,7 @@ export default function CharacterScreen() {
       {/* Cards */}
       {vm.cards.length > 0 && (
         <View style={styles.section}>
-          <SectionLabel size={13}>✠ FALLACIES &amp; PARADOXES</SectionLabel>
+          <SelfHeading>✠ FALLACIES &amp; PARADOXES</SelfHeading>
           <View style={styles.cardsGrid}>
             {vm.cards.map((s) => (
               // Wrap each card in a TooltipTarget pointing at the
@@ -331,6 +357,8 @@ const useStyles = makeStyles((AXM) => ({
   sheetHeader: { flexDirection: 'column', paddingHorizontal: 12, paddingTop: 4, paddingBottom: 0 },
   sheetHeaderTopRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
   portraitFrame: { width: 180, height: 216, borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.deepBg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  // A kit piece draws the edge and the ground, so today's border and fill go.
+  kitBare: { borderWidth: 0, backgroundColor: 'transparent' },
   identityCol: { flex: 1, paddingTop: 2 },
   characterName: { fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 24, color: AXM.parchment, marginTop: 1 },
   levelBox: { width: 60, height: 66, borderWidth: 2, borderColor: AXM.parchment, backgroundColor: AXM.deepBg, alignItems: 'center', justifyContent: 'center' },
