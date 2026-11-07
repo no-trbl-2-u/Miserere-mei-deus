@@ -87,6 +87,14 @@ describe('DeckScreen: the reader', () => {
         expect(screen.queryByTestId('deck-card-detail-flavor')).toBeNull();
         expect(screen.queryByTestId('card-keyword-ledger')).toBeNull();
     });
+
+    it('draws a printed keyword as a pressable word in the open card, not in a ledger', () => {
+        mount([BLOW, WARD]);
+        fireEvent.press(screen.getByTestId(`deck-card-${WARD}`));
+
+        expect(screen.getByTestId('deck-keyword-Guard').props.accessibilityLabel).toBe('GUARD');
+        expect(screen.queryByTestId('card-keyword-ledger')).toBeNull();
+    });
 });
 
 describe('DeckScreen: the list', () => {

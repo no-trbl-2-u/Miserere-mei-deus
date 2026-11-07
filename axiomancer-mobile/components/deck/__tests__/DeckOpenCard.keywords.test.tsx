@@ -83,6 +83,19 @@ describe('DeckOpenCard keywords', () => {
         expect(screen.queryByTestId('tap-tooltip')).toBeNull();
     });
 
+    it('a hold on a word whose timed gloss is already up pins it instead of closing it', () => {
+        mount();
+        fireEvent.press(screen.getByTestId('deck-keyword-Guard'));
+        fireEvent(screen.getByTestId('deck-keyword-Guard'), 'longPress');
+        act(() => {
+            jest.advanceTimersByTime(20000);
+        });
+        expect(screen.queryByTestId('tap-tooltip')).not.toBeNull();
+        // A pinned gloss is closed by pressing the same word again.
+        fireEvent.press(screen.getByTestId('deck-keyword-Guard'));
+        expect(screen.queryByTestId('tap-tooltip')).toBeNull();
+    });
+
     it('a pinned gloss is tapped away by the backdrop', () => {
         mount();
         fireEvent(screen.getByTestId('deck-keyword-Guard'), 'longPress');
