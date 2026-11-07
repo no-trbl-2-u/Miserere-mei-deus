@@ -20,6 +20,8 @@ import { FeedbackSheet } from '@/components/menu/FeedbackSheet';
 import { MenuButton } from '@/components/menu/MenuButton';
 import { OptionRow } from '@/components/menu/OptionRow';
 import { StepperRow } from '@/components/menu/StepperRow';
+import { KitDivider, KitHeader } from '@/components/experience/KitBackdrop';
+import { LOOKS } from '@/components/experience/looks';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
@@ -58,6 +60,18 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
     useSaveSlotSummaries();
     const inRun = slots.getActiveSlot() !== null;
     const vm = selectSettingsViewModel(settings, inRun);
+    const kit = LOOKS['O-01'] === 'brass';
+    // A section heading: the kit's plate under brass, else today's label. The
+    // theme list below the first heading is not the kit's (O-02).
+    const heading = (text: string, variant?: 'star' | 'quatrefoil', divider?: 'divider-ornate-brass' | 'divider-plain-brass' | 'divider-short-brass') =>
+        kit ? (
+            <>
+                {divider ? <KitDivider piece={divider} /> : null}
+                <KitHeader variant={variant}>{text}</KitHeader>
+            </>
+        ) : (
+            <SectionLabel size={10} color={AXM.sulfur} style={divider !== undefined || variant !== undefined ? styles.sectionGap : undefined}>{text}</SectionLabel>
+        );
 
     const [confirmReset, setConfirmReset] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
@@ -89,7 +103,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
             </View>
 
             <View style={styles.body} testID="settings-screen">
-                <SectionLabel size={10} color={AXM.sulfur}>{SETTINGS_COPY.sections.appearance}</SectionLabel>
+                {heading(SETTINGS_COPY.sections.appearance)}
                 <ThemeSwitcher initialExpanded />
                 <OptionRow
                     label={SETTINGS_COPY.textSize}
@@ -108,7 +122,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     testID="settings-card-text"
                 />
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.motion}</SectionLabel>
+                {heading(SETTINGS_COPY.sections.motion, 'quatrefoil', 'divider-ornate-brass')}
                 <OptionRow
                     label={SETTINGS_COPY.reducedMotion}
                     hint={SETTINGS_COPY.reducedMotionHint}
@@ -116,6 +130,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     value={vm.reducedMotion}
                     onChange={(reducedMotion) => settingsStore.set({ reducedMotion })}
                     testID="settings-reduced-motion"
+                    radio
                 />
                 <OptionRow
                     label={SETTINGS_COPY.haptics}
@@ -126,7 +141,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     testID="settings-haptics"
                 />
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.sound}</SectionLabel>
+                {heading(SETTINGS_COPY.sections.sound, 'star', 'divider-plain-brass')}
                 <OptionRow
                     label={SETTINGS_COPY.musicSwitch}
                     hint={SETTINGS_COPY.musicSwitchHint}
@@ -143,6 +158,8 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     atMin={vm.musicVolume <= 0}
                     atMax={vm.musicVolume >= 100}
                     testID="settings-music"
+                    level={vm.musicVolume / 100}
+                    track="diamond"
                 />
                 <StepperRow
                     label={SETTINGS_COPY.sfx}
@@ -152,45 +169,51 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     atMin={vm.sfxVolume <= 0}
                     atMax={vm.sfxVolume >= 100}
                     testID="settings-sfx"
+                    level={vm.sfxVolume / 100}
+                    track="quatrefoil"
                 />
                 <Text style={styles.note}>{SETTINGS_COPY.soundNote}</Text>
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.story}</SectionLabel>
+                {heading(SETTINGS_COPY.sections.story, 'quatrefoil', 'divider-short-brass')}
                 <MenuButton
                     label={`${SETTINGS_COPY.storyMode} · ${SETTINGS_COPY.comingSoon}`}
                     hint={SETTINGS_COPY.storyModeHint}
                     onPress={() => undefined}
                     disabled
                     testID="settings-story-mode"
+                    place="O-07"
                 />
 
                 {vm.inRun ? (
                     <>
-                        <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.run}</SectionLabel>
+                        {heading(SETTINGS_COPY.sections.run, 'star')}
                         <MenuButton
                             label={SETTINGS_COPY.returnToTitle}
                             hint={SETTINGS_COPY.returnToTitleHint}
                             onPress={onReturnToTitle}
                             testID="settings-return-to-title"
+                            place="O-07"
                         />
                     </>
                 ) : null}
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.feedback}</SectionLabel>
+                {heading(SETTINGS_COPY.sections.feedback, 'quatrefoil')}
                 <MenuButton
                     label={FEEDBACK_COPY.open}
                     hint={SETTINGS_COPY.feedbackHint}
                     onPress={() => { setThanks(false); setFeedbackOpen(true); }}
                     testID="settings-feedback"
+                    place="O-07"
                 />
                 {thanks ? <Text style={styles.note} testID="settings-feedback-thanks">{FEEDBACK_COPY.thanks}</Text> : null}
 
-                <SectionLabel size={10} color={AXM.sulfur} style={styles.sectionGap}>{SETTINGS_COPY.sections.device}</SectionLabel>
+                {heading(SETTINGS_COPY.sections.device, 'star')}
                 <MenuButton
                     label={SETTINGS_COPY.resetSettings}
                     hint={SETTINGS_COPY.resetSettingsHint}
                     onPress={() => setConfirmReset(true)}
                     danger
+                    place="O-07"
                     testID="settings-reset"
                 />
             </View>
