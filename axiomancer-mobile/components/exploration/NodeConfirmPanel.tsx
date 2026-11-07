@@ -5,6 +5,9 @@ import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, nodePurseLines, type ExplorationNode, type ExplorationOption } from '@/state/presenters/exploration.engine';
 import { SHUT_ROAD_HEAD, shutRoadQuestLine } from '@/state/presenters/quest.copy';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
+import { VELLUM_INK, INK_SOFT, VELLUM_OXBLOOD, overlay } from '@/components/exploration/wildsInk';
 
 interface NodeConfirmPanelProps {
     /** The node the player has selected, or null when nothing is selected. */
@@ -31,15 +34,26 @@ interface NodeConfirmPanelProps {
  * before the walk rather than inside.
  */
 export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, emptyMessage }: NodeConfirmPanelProps) {
-    const styles = useStyles();
+    const base = useStyles();
+    const vellumStyles = useVellumStyles();
     const AXM = usePalette();
+    // W-02 the panel and W-03 its two buttons are vellum and ink (spec 152.2).
+    // A `normal` look keeps today's styles and draws no backdrop.
+    const panelVellum = lookOf('W-02') === 'vellum';
+    const buttonVellum = lookOf('W-03') === 'vellum';
+    const { buttonBox, cancelText, confirmText, ...inked } = vellumStyles;
+    const styles = panelVellum ? overlay(base, inked) : base;
+    const btn = buttonVellum ? { box: buttonBox, cancelText, confirmText } : null;
+    const iconInk = panelVellum ? VELLUM_INK : AXM.parchment;
+    const iconInkShut = panelVellum ? VELLUM_OXBLOOD : AXM.bone;
 
     if (shut !== null) {
         return (
             <View style={styles.panel} testID="node-confirm-panel">
+                {panelVellum && <KitBackdrop piece="menu-panel-vellum" />}
                 <View style={styles.body}>
                     <View style={styles.iconWrap}>
-                        <ActionIcon kind={ACTION_ICON_BY_TYPE[shut.type] ?? 'sword'} size={22} color={AXM.bone} />
+                        <ActionIcon kind={ACTION_ICON_BY_TYPE[shut.type] ?? 'sword'} size={22} color={iconInkShut} />
                     </View>
                     <View style={styles.text}>
                         <Text style={styles.kind}>{SHUT_ROAD_HEAD}</Text>
@@ -56,9 +70,10 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
                         accessibilityRole="button"
                         accessibilityLabel="Cancel selection"
                         testID="node-confirm-cancel"
-                        style={styles.cancel}
+                        style={[styles.cancel, btn?.box]}
                     >
-                        <Text style={styles.cancelText}>BACK</Text>
+                        {buttonVellum && <KitBackdrop piece="action-button-vellum" />}
+                        <Text style={[styles.cancelText, btn?.cancelText]}>BACK</Text>
                     </Pressable>
                 </View>
             </View>
@@ -68,6 +83,7 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
     if (selected === null) {
         return (
             <View style={styles.panel}>
+                {panelVellum && <KitBackdrop piece="menu-panel-vellum" />}
                 <Text style={styles.hint}>{emptyMessage}</Text>
             </View>
         );
@@ -79,9 +95,10 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
 
     return (
         <View style={styles.panel} testID="node-confirm-panel">
+            {panelVellum && <KitBackdrop piece="menu-panel-vellum" />}
             <View style={styles.body}>
                 <View style={styles.iconWrap}>
-                    <ActionIcon kind={iconKey} size={22} color={AXM.parchment} />
+                    <ActionIcon kind={iconKey} size={22} color={iconInk} />
                 </View>
                 <View style={styles.text}>
                     <Text style={styles.kind}>{kindLabel}</Text>
@@ -105,23 +122,61 @@ export function NodeConfirmPanel({ selected, shut = null, onConfirm, onCancel, e
                     accessibilityRole="button"
                     accessibilityLabel="Cancel selection"
                     testID="node-confirm-cancel"
-                    style={styles.cancel}
+                    style={[styles.cancel, btn?.box]}
                 >
-                    <Text style={styles.cancelText}>BACK</Text>
+                    {buttonVellum && <KitBackdrop piece="action-button-vellum" />}
+                    <Text style={[styles.cancelText, btn?.cancelText]}>BACK</Text>
                 </Pressable>
                 <Pressable
                     onPress={onConfirm}
                     accessibilityRole="button"
                     accessibilityLabel={`Travel to ${selected.label}`}
                     testID="node-confirm-go"
-                    style={styles.confirm}
+                    style={[styles.confirm, btn?.box]}
                 >
-                    <Text style={styles.confirmText}>TRAVEL HERE</Text>
+                    {buttonVellum && <KitBackdrop piece="action-button-vellum" />}
+                    <Text style={[styles.confirmText, btn?.confirmText]}>TRAVEL HERE</Text>
                 </Pressable>
             </View>
         </View>
     );
 }
+
+/**
+ * The vellum looks, laid over today's styles only where a look is worn. The
+ * padding is the "inside the ruled frame" budget: the panel's corner
+ * flourishes reach about 36pt in and 23pt down at its scale, so the writing
+ * starts past them. Ink and oxblood only (wildsInk.ts); no gold, no amber.
+ */
+const useVellumStyles = makeStyles(() => ({
+    panel: {
+        marginHorizontal: 8,
+        marginBottom: 8,
+        paddingHorizontal: 30,
+        paddingTop: 20,
+        paddingBottom: 20,
+        borderWidth: 0,
+        backgroundColor: 'transparent',
+    },
+    hint: { color: INK_SOFT },
+    kind: { color: VELLUM_OXBLOOD },
+    name: { color: VELLUM_INK },
+    blurb: { color: INK_SOFT },
+    purse: { color: VELLUM_INK },
+    purseShort: { color: VELLUM_OXBLOOD },
+    buttonBox: {
+        minHeight: 36,
+        minWidth: 92,
+        paddingHorizontal: 34,
+        paddingVertical: 8,
+        borderWidth: 0,
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    cancelText: { color: VELLUM_INK, letterSpacing: 1 },
+    confirmText: { color: VELLUM_OXBLOOD, letterSpacing: 1 },
+}));
 
 const useStyles = makeStyles((AXM) => ({
     panel: {

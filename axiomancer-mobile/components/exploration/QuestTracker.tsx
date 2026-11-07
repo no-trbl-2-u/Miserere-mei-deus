@@ -6,6 +6,9 @@ import { makeStyles } from '@/theme/runtime';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectQuestTrackerVM } from '@/state/presenters/quest-tracker.engine';
 import { TRACKER_HEAD, trackerMoreLine } from '@/state/presenters/quest.copy';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
+import { VELLUM_INK, INK_SOFT, VELLUM_OXBLOOD, overlay } from '@/components/exploration/wildsInk';
 
 /**
  * The exploration screen's quest tracker (phase MQ1c): each active quest's
@@ -25,7 +28,11 @@ export function QuestTracker({ fallback = null }: { fallback?: React.ReactNode }
 }
 
 function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> }) {
-    const styles = useStyles();
+    const base = useStyles();
+    const inked = useVellumStyles();
+    // W-04: vellum and ink (spec 152.2). `normal` keeps today's tracker.
+    const vellum = lookOf('W-04') === 'vellum';
+    const styles = vellum ? overlay(base, inked) : base;
     const router = useRouter();
     return (
         <Pressable
@@ -35,6 +42,7 @@ function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> 
             testID="quest-tracker"
             style={styles.box}
         >
+            {vellum && <KitBackdrop piece="quest-row-vellum" />}
             <Text style={styles.head}>{TRACKER_HEAD}</Text>
             {vm.rows.map((row) => (
                 <View key={row.id} style={styles.row} testID={`quest-tracker-row-${row.id}`}>
@@ -49,6 +57,27 @@ function QuestTrackerBody({ vm }: { vm: ReturnType<typeof selectQuestTrackerVM> 
         </Pressable>
     );
 }
+
+/**
+ * The vellum look over today's styles. The padding keeps the writing inside
+ * the piece's ruled frame, clear of its corner flourishes. Ink and oxblood
+ * only (wildsInk.ts): no gold or amber on the parchment.
+ */
+const useVellumStyles = makeStyles(() => ({
+    box: {
+        marginHorizontal: 8,
+        marginBottom: 8,
+        paddingHorizontal: 32,
+        paddingVertical: 16,
+        borderWidth: 0,
+        backgroundColor: 'transparent',
+    },
+    head: { color: VELLUM_OXBLOOD },
+    name: { color: VELLUM_INK },
+    objective: { color: INK_SOFT },
+    progress: { color: VELLUM_OXBLOOD },
+    more: { color: INK_SOFT },
+}));
 
 const useStyles = makeStyles((AXM) => ({
     box: {
