@@ -69,14 +69,15 @@ export function isTabHidden(inCombat: boolean, tab: TabKey): boolean {
 // ---------------------------------------------------------------------------
 
 /**
- * Per-glyph advance widths, in em, of the app's sans face
- * (`FONTS.sans` = Bebas Neue 400, `assets/fonts/BebasNeue_400Regular.ttf`).
+ * Per-glyph advance widths, in em, of the app's sans face (`FONTS.sans` =
+ * Uncial Antiqua 400, `@expo-google-fonts/uncial-antiqua`).
  *
  * MEASURED, not estimated: read straight out of the shipped `.ttf`'s
- * `hmtx`/`head` tables (unitsPerEm 1000), covering exactly the
- * characters the tab titles use — space plus A-Z. Bebas Neue is a condensed
- * display face, so a generic 0.6em-per-character rule of thumb overstates its
- * labels by ~50% and would have failed a fit that in fact passes comfortably.
+ * `hmtx`/`head` tables, covering exactly the characters the tab titles
+ * use — space plus A-Z. Uncial Antiqua is a wide uncial face, not a
+ * condensed display face like the sans it replaced, so these widths run
+ * roughly double the old ones; a reused condensed-face table would have
+ * waved through a fit that in fact clips.
  *
  * Numbers rather than a guess because the fifth tab makes this a real
  * constraint: five tabs across a 360pt phone leave 72pt each, and the tab item
@@ -85,26 +86,27 @@ export function isTabHidden(inCombat: boolean, tab: TabKey): boolean {
  * overflow is silent — a clipped word, not a broken layout.
  */
 const SANS_ADVANCE_EM: Readonly<Record<string, number>> = Object.freeze({
-    ' ': 0.16,
-    A: 0.401, B: 0.404, C: 0.383, D: 0.406, E: 0.363, F: 0.344, G: 0.391,
-    H: 0.42, I: 0.192, J: 0.265, K: 0.414, L: 0.344, M: 0.538, N: 0.427,
-    O: 0.4, P: 0.386, Q: 0.4, R: 0.403, S: 0.372, T: 0.364, U: 0.402,
-    V: 0.382, W: 0.557, X: 0.406, Y: 0.394, Z: 0.362,
+    ' ': 0.25,
+    A: 0.79492, B: 0.77686, C: 0.73584, D: 0.89111, E: 0.73682, F: 0.66797, G: 0.83789,
+    H: 0.88818, I: 0.40479, J: 0.38818, K: 0.80615, L: 0.60596, M: 1.27783, N: 0.81689,
+    O: 0.85986, P: 0.83789, Q: 0.83691, R: 0.76807, S: 0.70410, T: 0.71582, U: 0.89502,
+    V: 0.79590, W: 1.10986, X: 0.76318, Y: 0.73389, Z: 0.70020,
 });
 
-/** Widest measured glyph (`W`), used for any character outside the table so an
+/** Widest measured glyph (`M`), used for any character outside the table so an
  *  unmeasured title is over-estimated rather than waved through. */
-const SANS_ADVANCE_EM_FALLBACK = 0.557;
+const SANS_ADVANCE_EM_FALLBACK = 1.27783;
 
 /** Tab label type size. `_layout.tsx` styles the label from this constant, so
  *  the fit contract below measures what the bar actually renders. */
-// One step down from 10: the sixth tab (SETTINGS) leaves THE LEDGER no headroom at 10.
-export const TAB_BAR_LABEL_FONT_SIZE = 7;
+// Uncial Antiqua runs far wider than the condensed face this replaced: THE
+// LEDGER needs 6 to clear the 320pt phone at all, let alone with headroom.
+export const TAB_BAR_LABEL_FONT_SIZE = 6;
 
 /**
- * Tab label letter-spacing. With five tabs, THE LEDGER at spacing 2 measures
- * 55.8pt, which overflows a 320pt phone (iPhone SE, 54pt budget). Spacing 1
- * measures 45.8pt and fits both 320pt and 360pt phones.
+ * Tab label letter-spacing. At the wide Uncial Antiqua metrics, THE LEDGER
+ * already leaves almost no headroom on the 320pt phone at spacing 0 (see
+ * `TAB_BAR_LABEL_FONT_SIZE`); any positive spacing overflows it.
  */
 export const TAB_BAR_LABEL_LETTER_SPACING = 0;
 

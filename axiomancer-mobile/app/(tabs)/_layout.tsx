@@ -245,10 +245,11 @@ const useStyles = makeStyles((AXM) => ({
   },
   // Type size and tracking come from the presenter so the tab-bar FIT
   // contract in `state/e2e/tabs.engine.test.ts` measures the label the bar
-  // actually draws. Tracking is 1 because the bar is five tabs
-  // wide: THE LEDGER at tracking 2 clears a 360pt phone by 6pt but overflows
-  // a 320pt one, and a clipped label is silent (the navigator's Label is
-  // `numberOfLines: 1`, so it ellipsises rather than breaking the layout).
+  // actually draws. Size and tracking are both pinned to the presenter's
+  // measured minimum: Uncial Antiqua is wide enough that THE LEDGER barely
+  // clears a 320pt phone even at size 6, tracking 0, and a clipped label is
+  // silent (the navigator's Label is `numberOfLines: 1`, so it ellipsises
+  // rather than breaking the layout).
   tabLabel: {
     fontFamily: FONTS.sans,
     fontSize: TAB_BAR_LABEL_FONT_SIZE,
