@@ -50,7 +50,7 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 ### Type
 
 - **Roles, not faces.** `theme/axm.ts` gains `TYPE_ROLES`, one entry per ballot place: title, eyebrow, sectionHead, narration, spoken, rules, button, chip, mapName, bigNumber, count, cardName, cardRules, foeName, entry. Each sets family, size, line height, case and letter spacing. A component names the job (`TYPE_ROLES.button`), never a face.
-- **T's picks fill the roles.** A place T left unanswered keeps its face of today (`[T to confirm #1]`).
+- **T's picks fill the roles** (voted 2026-11-06; the table is in `plan/card-ledger/fonts.md`). Eight families: Uncial Antiqua carries titles, buttons, chips, map names, card names and foe names; Eagle Lake the omens and the spoken line; Rosarivo the rules and card rules; Marcellus SC the small labels; MedievalSharp the section headings; Spectral the big numbers; Grenze the small counts; Fondamento the quest and ledger entries.
 - **Fonts load from their `@expo-google-fonts` packages.** The faces the title and body roles use load first, the rest after start, as today. A face no role uses is removed with its package (`[T to confirm #2]`).
 - **Letter spacing follows the face.** The 1 to 2 point tracking stays only where T's pick for that role is a condensed capital face.
 
@@ -111,8 +111,8 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 ## Open questions
 
-1. A place T leaves blank on the font ballot keeps today's face. Default: yes. Or: Claude picks from T's other choices so the families stay few. [T to confirm #1]
-2. A face no role uses after T's picks (likely JetBrains Mono, Bebas Neue) leaves the app entirely. Default: yes, package and all. Or: keep it for the dev menu only. [T to confirm #2]
+1. A place T leaves blank on the font ballot keeps today's face. Confirmed by T (2026-11-06): moot; T's notes filled the three places left unticked, so no place is blank.
+2. A face no role uses after T's picks leaves the app entirely. T's picks keep none of today's four: Pirata One, IM Fell English, Bebas Neue and JetBrains Mono would all go (EMBARK is an image and is unaffected). Default: yes, package and all. Or: keep it for the dev menu only. [T to confirm #2]
 3. The audit waits for every UI chunk of specs 152 to 155 and the type. Default: yes, all of them. Or: start once 152 to 154 land and leave the Deck to a second pass. [T to confirm #3]
 4. The audit proposes each screen's emotional job for T to confirm. Default: yes, the loop drafts and T edits. Or: T writes them before the audit runs. [T to confirm #4]
 5. The audit runs after the colour pick lands, so it audits the finished look. Default: yes. Or: run the audit right after the fonts, before colour. [T to confirm #5]
@@ -141,7 +141,7 @@ Measure: 7 open · 0 closed · next A8
 
 ### 156.2 (TY1b) — The type roles, filled from T's font ballot · M · closes A2 · requires —
 
-- Held until T submits the font ballot. Read the newest `final` row for `fonts-2026-11-06` (`plan/card-ledger/README.md`, "Reading a verdict back") and write the verdicts into `plan/card-ledger/fonts.md`. Mark the ballot `closed` in the index.
+- T's verdict is in `plan/card-ledger/fonts.md` (voted and pasted 2026-11-06, written there by the plot's session; the ballot is closed).
 - Add `TYPE_ROLES` to `theme/axm.ts` and the picked faces' `@expo-google-fonts` packages. Load them in `app/_layout.tsx`, the title and body faces first.
 - Keep `FONTS` and `TYPE` working, so no screen changes in this chunk.
 - Measure: a test that every role names a loaded face, then `npm run verify -w axiomancer-mobile`. The PR carries a 390×844 specimen page of the 15 roles.

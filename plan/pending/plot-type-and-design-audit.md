@@ -19,6 +19,5 @@ date: 2026-11-06
 ~~~
 ~~~ new
 - **113.9** · attended: T does this one (SM1i) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **156.2** · waits on T's font ballot verdict (TY1b; `fonts-2026-11-06`) · since: 2026-11-06 · until: T's word · max_age: 30d
 - **156.7** · waits on T's colour ballot verdict (TY1g; built by TY1f) · since: 2026-11-06 · until: T's word · max_age: 60d
 ~~~

@@ -244,7 +244,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - CF1a — the card-face grammar lint (spec 137); no dated T act waits on it, only T's read of CF1b's rewrite, whose date T has not set
 - CF1b — every card line rewritten to T's grammar; T reads and merges its rules-change PR; date not set (T picks it).
 - TY1a — the design direction doc; no dated T act waits on it; the loop may pick it on its ordinary turn.
-- TY1b — the type roles from T's font ballot; waits on T voting `fonts-2026-11-06`; date not set (T picks it).
+- TY1b — the type roles from T's font ballot (voted 2026-11-06); no dated T act waits on it; the loop may pick it on its ordinary turn.
 - TY1c — every screen onto the type roles, after the last chunks of specs 152-155; no dated T act waits on it yet.
 - TY1d — the design audit of every screen, after TY1c; T reads the report; date not set (T picks it).
 - TY1e — three directions for the audit's three worst screens; T picks on the mock page; date not set (T picks it).

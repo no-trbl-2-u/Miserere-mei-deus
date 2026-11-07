@@ -25,7 +25,6 @@
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<script src="ballot-kit.js"></script>
 <style>
   :root { --bg:#0b0a09; --ink:#ece0c8; --muted:#a39887; --card:#1a1613; --edge:#4a3f33; --sel:#dcb04a; --btn:#ece0c8; --btn-ink:#141110;
           --dark:#0b0a09; --dark-ink:#ece0c8; --vellum:#e6d6b4; --vellum-ink:#2a1d12; }
@@ -84,6 +83,7 @@
 <body>
 <header>
   <h1>Fonts: which type does which job?</h1>
+  <p class="sub"><b>Closed:</b> voted 2026-11-06; the verdict is in fonts.md.</p>
   <p class="sub">15 places type does a job in the game. For each, tick the one font to use. Every specimen is the real font, set in the game's own words where they exist, over the screen's own backdrop art where it has one.</p>
   <p class="legend"><b>now</b> marks roughly what the game uses for that job today. <b>common in AI UI</b> marks a face that shows up in lists of AI-design tells.<br>
   The same font can win many places, and fewer families usually look less generated: the footer counts how many your picks add up to (two or three is typical for a game).<br>
@@ -460,7 +460,8 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed: T voted 2026-11-06 (verdict in fonts.md), so this ballot no longer saves or submits. */
+refresh();
 </script>
 </body>
 </html>
