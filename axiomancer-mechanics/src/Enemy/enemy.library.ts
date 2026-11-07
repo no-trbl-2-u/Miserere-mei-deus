@@ -1385,15 +1385,27 @@ export const EnemyLibrary = [
 ] as const;
 
 /**
- * An Act 1 region's wandering pool: Float-Eye. The Green Jelly is a
- * rarer mid-region fight and the Death Beholder the door fight; both are pinned
+ * An Act 1 region's wandering pool: the six named normals of Chapter 1's
+ * recast roster (EN3b, 2026-11-07). The elites and the boss are pinned
  * per-node in `MapEvents/content.ts`, not drawn.
+ *
+ * Ten of Chapter 1's seventeen foes are deliberately out of the chapter (T,
+ * 2026-11-06: "they're just not in chapter 1"): Float-Eye, Gallows Crow,
+ * Crane-Hook, Lamprey-Knot, Green Jelly, Curfew-Ringer, Wreck-Picker,
+ * Smokehouse Gutter, Toll-Keeper and Death Beholder. All ten stay in the
+ * library with their art and frame sets and are drawn by no Breakwater node
+ * and no wandering pool. Seven of them (Gallows Crow, Crane-Hook,
+ * Lamprey-Knot, Curfew-Ringer, Wreck-Picker, Smokehouse Gutter, Toll-Keeper)
+ * are staged by no map at all, so `orphanEnemies` reporting those seven as
+ * unpooled is intent, not a defect. Float-Eye, Green Jelly and Death Beholder
+ * are out of Chapter 1 only: the Charcoal Wood, Beacon Crags and Lantern Deep
+ * still stage them, so they are live content and must not be deleted.
  */
-const ACT1_POOL = [FloatEye];
+const ACT1_POOL = [QuayCrab, NetMender, Coralback, BrineWidow, SaltwickSwarm, BilgeStalker];
 
 /**
- * Per-map enemy pools used by the encounter generator. Act 1 draws Float-Eye;
- * the parked Labyrinth keeps it so its parked tests run.
+ * Per-map enemy pools used by the encounter generator. Act 1 draws the six Chapter 1 normals;
+ * the parked Labyrinth keeps that pool so its parked tests run.
  */
 export const EnemiesByMap = {
     'breakwater': ACT1_POOL,

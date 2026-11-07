@@ -71,7 +71,8 @@ describe('/quest - a carry objective', () => {
     it('reads "Bring: <item>" with its progress, in the offer and once taken', () => {
         const handle = open(LONG_MAIN_LINE, 3, [LONG_STEP_1, LONG_STEP_2]);
         expect(screen.getByText(`Bring: ${CASTLE_KEY.name}`)).toBeTruthy();
-        expect(screen.getByText('0 of 1')).toBeTruthy();
+        expect(screen.queryByText('0 of 1')).toBeNull();
+        expect(screen.queryByText('0/1')).toBeNull();
         // Taken (the engine's give door), the line stays on the waiting block of the next node.
         const next = giveQuestStep(gs(handle.store), LONG_MAIN_LINE, 3);
         expect(next.quests.active.map(q => q.name)).toEqual([LONG_STEP_3]);
@@ -79,11 +80,11 @@ describe('/quest - a carry objective', () => {
 });
 
 describe('/quest - a node of the second questline', () => {
-    it('offers the side quest as step 1 of 1, with its pay', () => {
+    it('offers the side quest as step 1 of 1, without its pay', () => {
         open(LONG_SIDE_LINE, 1);
         expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 1 OF 1');
         expect(screen.getByText(LONG_SIDE_STEP)).toBeTruthy();
-        expect(screen.getByText('+25 XP')).toBeTruthy();
+        expect(screen.queryByText('+25 XP')).toBeNull();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
     });
 

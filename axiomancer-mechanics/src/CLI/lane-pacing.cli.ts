@@ -15,6 +15,12 @@
  * the live VITAE multiplier. Pins per player level (the region the player
  * reaches at that level, `World/MapEvents/content.ts`):
  *
+ * The trio is the pre-recast Chapter 1 trio. Since EN3b (2026-11-07) the
+ * Breakwater no longer draws the Float-Eye or the Green Jelly and its boss is
+ * the Saint Beneath (same numbers as the Death Beholder), so the L1 row below
+ * does NOT describe the live Breakwater; the Charcoal Wood, Beacon Crags and
+ * Lantern Deep rows still do. Recalibrating the L1 row is parked for T.
+ *
  *   player L1 → the Breakwater:     Float-Eye 2, Green Jelly 3, Death Beholder 1
  *   player L3 → the Beacon Crags:   Float-Eye 3, Green Jelly 3, Death Beholder 3
  *   player L5 → the Lantern Deep:   Float-Eye 4, Green Jelly 3, Death Beholder 4
