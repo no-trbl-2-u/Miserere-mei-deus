@@ -96,7 +96,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     // Vellum: the piece draws the tab; the label is inked and the picked tab is
     // told by oxblood ink and a rule under its words.
-    tabVellum: { backgroundColor: 'transparent', borderWidth: 0, paddingVertical: 10 },
+    tabVellum: { backgroundColor: 'transparent', borderWidth: 0, borderBottomWidth: 0, paddingVertical: 10 },
     inkText: { color: VELLUM_INK },
     inkTextActive: { color: VELLUM_OXBLOOD },
     inkCount: { color: VELLUM_INK, backgroundColor: 'transparent' },

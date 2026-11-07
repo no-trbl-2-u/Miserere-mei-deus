@@ -80,11 +80,13 @@ export const StatBar = React.memo(function StatBar({ value, max, color, label, h
           testID={alarmed ? 'statbar-track-alarmed' : 'statbar-track'}
         >
           <KitBackdrop piece="combat-vitae-track" />
-          <View
-            style={[styles.brassFill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue }]}
-            importantForAccessibility="no"
-          >
-            <KitImage piece="combat-vitae-fill" style={StyleSheet.absoluteFill} />
+          <View style={styles.brassFillSlot} importantForAccessibility="no">
+            <View
+              style={[styles.brassFill, { width: `${(pct * 100).toFixed(1)}%` as DimensionValue }]}
+              importantForAccessibility="no"
+            >
+              <KitImage piece="combat-vitae-fill" style={StyleSheet.absoluteFill} />
+            </View>
           </View>
         </View>
       ) : (
@@ -136,7 +138,8 @@ const useStyles = makeStyles((AXM) => ({
     position: 'relative',
   },
   brassTrack: { width: '100%', overflow: 'hidden', position: 'relative' },
-  brassFill: { position: 'absolute', top: 3, left: 3, bottom: 3, borderRadius: 3, overflow: 'hidden' },
+  brassFillSlot: { position: 'absolute', top: 3, left: 3, right: 3, bottom: 3 },
+  brassFill: { height: '100%', borderRadius: 3, overflow: 'hidden' },
   fill: {
     position: 'absolute',
     top: 0,
