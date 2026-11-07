@@ -25,7 +25,7 @@ import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatReward
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
-import { SPOILS_INK } from '@/components/combat/encounter/spoils-ink';
+import { OFFER_TILE_CHROME, SPOILS_INK, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // The three real library cards the reward draft offers: the grey office.
@@ -283,6 +283,14 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         fireEvent.press(screen.getByTestId('combat-reward-upgrade-back'));
         expect(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`)).toBeTruthy();
         expect(onUpgrade).not.toHaveBeenCalled();
+    });
+
+    it('on vellum the panel pads clear of the ornament and three offer tiles fit at 360', () => {
+        renderOverlay();
+        const panel = StyleSheet.flatten(screen.getByTestId('combat-rewards-panel').props.style) as { paddingHorizontal: number };
+        expect(panel.paddingHorizontal).toBe(VELLUM_PANEL_PAD);
+        const content = 360 - 2 * 2 - 2 * panel.paddingHorizontal;
+        expect(3 * (VELLUM_OFFER_W + OFFER_TILE_CHROME)).toBeLessThanOrEqual(content);
     });
 
     it('on vellum the buttons are inked and the plate flexes', () => {

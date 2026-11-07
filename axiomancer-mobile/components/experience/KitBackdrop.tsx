@@ -58,7 +58,7 @@ const SLICED: Partial<Record<KitPiece, { slice: Slice; scale: number }>> = {
     'combat-badge': { slice: [0.3, 0.2, 0.3, 0.2], scale: 0.3 },
     'nav-count-plate-dark': { slice: [0.3, 0.2, 0.3, 0.2], scale: 0.32 },
 
-    // Self and Satchel pieces (152.5). Each ornament sits mid-edge, so the middle
+    // Self and Satchel pieces. Each ornament sits mid-edge, so the middle
     // band is held to a sliver at the ornament's centre and the corners keep the rest.
     'stat-tile': { slice: [0.16, 0.45, 0.14, 0.45], scale: 0.6 },
     'equipment-slot-dark': { slice: [0.3, 0.46, 0.3, 0.46], scale: 0.35 },

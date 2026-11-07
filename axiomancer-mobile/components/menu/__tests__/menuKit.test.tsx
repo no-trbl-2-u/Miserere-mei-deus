@@ -8,6 +8,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
+import { FeedbackSheet } from '@/components/menu/FeedbackSheet';
 import { MenuButton } from '@/components/menu/MenuButton';
 import { OptionRow } from '@/components/menu/OptionRow';
 import { StepperRow } from '@/components/menu/StepperRow';
@@ -72,5 +73,14 @@ describe('StepperRow', () => {
     it('draws no slider without a level', () => {
         render(<StepperRow label="V" valueLabel="70%" onDecrement={noop} onIncrement={noop} testID="s" />);
         expect(screen.queryByTestId('piece-slider-track-diamond')).toBeNull();
+    });
+});
+
+describe('FeedbackSheet', () => {
+    it('keeps its BUG or PROPOSAL picker off the brass segments', () => {
+        render(<FeedbackSheet visible onSubmit={noop} onClose={noop} />);
+        expect(screen.getByTestId('feedback-sheet-kind-bug')).toBeTruthy();
+        expect(screen.queryByTestId('piece-segment-button-selected')).toBeNull();
+        expect(screen.queryByTestId('piece-segment-button-idle')).toBeNull();
     });
 });

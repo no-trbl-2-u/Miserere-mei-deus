@@ -120,7 +120,7 @@ export function CombatRewardsOverlay({
 
     return (
         <View style={[styles.backdrop, v && styles.vBackdrop]} testID="combat-rewards">
-            <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]}>
+            <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]} testID="combat-rewards-panel">
                 {v && <KitBackdrop piece="modal-panel-vellum" />}
                 <Text style={[styles.eyebrow, v && styles.vEyebrow]}>✦ SPOILS</Text>
                 <Text style={[styles.title, v && styles.vBody]}>Add a card to your deck</Text>
