@@ -50,7 +50,7 @@ export function MainMenu({ onContinue, onNewGame, onLoadGame, onSettings, now = 
                     {vm.continue.enabled ? (
                         <MenuButton
                             label={MAIN_MENU_COPY.continue}
-                            hint={vm.continue.hint}
+                            accessibilityHint={vm.continue.hint}
                             onPress={onContinue}
                             primary
                             testID="main-menu-continue"
@@ -58,21 +58,21 @@ export function MainMenu({ onContinue, onNewGame, onLoadGame, onSettings, now = 
                     ) : null}
                     <MenuButton
                         label={MAIN_MENU_COPY.newGame}
-                        hint={vm.newGame.hint}
+                        accessibilityHint={vm.newGame.hint}
                         onPress={onNewGame}
                         primary={!vm.continue.enabled}
                         testID="main-menu-new-game"
                     />
                     <MenuButton
                         label={MAIN_MENU_COPY.loadGame}
-                        hint={vm.loadGame.hint}
+                        accessibilityHint={vm.loadGame.hint}
                         onPress={onLoadGame}
                         disabled={!vm.loadGame.enabled}
                         testID="main-menu-load-game"
                     />
                     <MenuButton
                         label={MAIN_MENU_COPY.settings}
-                        hint={vm.settings.hint}
+                        accessibilityHint={vm.settings.hint}
                         onPress={onSettings}
                         testID="main-menu-settings"
                     />

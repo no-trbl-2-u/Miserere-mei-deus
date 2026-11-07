@@ -49,6 +49,7 @@ import { CombatModeProvider } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { questCounterText } from '@/state/presenters/quest.copy';
 import { selectQuestTrackerVM } from '@/state/presenters/quest-tracker.engine';
 import { selectExplorationViewModel } from '@/state/presenters/exploration.engine';
 import ExplorationScreen from '@/app/(tabs)/exploration';
@@ -104,6 +105,20 @@ function filler(n: number): Quest {
     } as Quest;
 }
 
+/** On the keep gate (bw-k1), the keep gate to the sea keep (bw-k2) still shut. */
+function atTheKeepGate(): AppStore {
+    const w = createStartingWorld('breakwater');
+    const map = {
+        ...w.currentMap,
+        currentNode: 'bw-k1',
+        pendingArrival: null,
+        completedNodes: ['bw-w2', 'bw-w4', 'bw-w5'],
+        consumedNodes: ['bw-w1', 'bw-w2', 'bw-w4', 'bw-w5'],
+    };
+    return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: { ...w, currentMap: map } } });
+}
+
+
 describe('A9: the quest tracker', () => {
     it('shows two active quests, each with its next unmet objective and count', () => {
         const store = newStore();
@@ -112,7 +127,9 @@ describe('A9: the quest tracker', () => {
         expect(tree.getByTestId('quest-tracker')).toBeTruthy();
         expect(tree.getByTestId('quest-tracker-row-mq1-long-1')).toBeTruthy();
         expect(tree.getByTestId('quest-tracker-row-mq1-long-side-1')).toBeTruthy();
-        expect(tree.getAllByText('0/1')).toHaveLength(2);
+        // A single-step objective (0/1) shows no counter (T, 2026-11-07), and the tracker has no head.
+        expect(tree.queryByText('0/1')).toBeNull();
+        expect(tree.queryByText('QUESTS')).toBeNull();
         expect(tree.queryByTestId('quest-tracker-more')).toBeNull();
     });
 
@@ -127,6 +144,35 @@ describe('A9: the quest tracker', () => {
         const tree = mount(store);
         expect(tree.getByTestId('quest-tracker-more').props.children).toBe('+2 more');
         expect(tree.queryByTestId('quest-tracker-row-Errand 4')).toBeNull();
+    });
+
+    it('keeps the counter of a multi-step objective', () => {
+        const store = newStore();
+        let log: QuestLog = emptyQuestLog();
+        log = startQuest(log, filler(1));
+        store.setState({ quests: log } as never);
+        const tree = mount(store);
+        expect(tree.getByText('2/3')).toBeTruthy();
+    });
+
+    it('questCounterText is empty for a single step and "n/m" otherwise', () => {
+        expect(questCounterText(0, 1)).toBe('');
+        expect(questCounterText(1, 1)).toBe('');
+        expect(questCounterText(2, 3)).toBe('2/3');
+    });
+
+    it('steps aside while a node is chosen and returns when it closes', () => {
+        const store = atTheKeepGate();
+        let log: QuestLog = emptyQuestLog();
+        log = startQuest(log, filler(1));
+        store.setState({ quests: log } as never);
+        const tree = mount(store);
+        expect(tree.getByTestId('quest-tracker')).toBeTruthy();
+        act(() => { fireEvent.press(tree.getByTestId('node-bw-k2')); });
+        expect(tree.getByTestId('node-confirm-panel')).toBeTruthy();
+        expect(tree.queryByTestId('quest-tracker')).toBeNull();
+        fireEvent.press(tree.getByTestId('node-confirm-cancel'));
+        expect(tree.getByTestId('quest-tracker')).toBeTruthy();
     });
 
     it('a tap opens the memoir quest list', () => {
@@ -150,7 +196,7 @@ describe('A9: the quest tracker', () => {
         store.setState({ quests: state.quests } as never);
         const vm = selectQuestTrackerVM({ quests: state.quests });
         expect(vm.rows).toEqual([
-            { id: LONG_STEP_3, name: LONG_STEP_3, objective: `Bring: ${CASTLE_KEY.name}`, progress: '0/1' },
+            { id: LONG_STEP_3, name: LONG_STEP_3, objective: `Bring: ${CASTLE_KEY.name}`, progress: '' },
         ]);
     });
 });
@@ -158,19 +204,6 @@ describe('A9: the quest tracker', () => {
 describe('A10: a shut road says why on the node panel', () => {
     const reasonOf = () => getMapDefinition('coastal-continent', 'breakwater')
         .initialBlockedRoutes!.find((r) => r.to === 'bw-k2')!.reason;
-
-    /** On the keep gate (bw-k1), the keep gate to the sea keep (bw-k2) still shut. */
-    function atTheKeepGate(): AppStore {
-        const w = createStartingWorld('breakwater');
-        const map = {
-            ...w.currentMap,
-            currentNode: 'bw-k1',
-            pendingArrival: null,
-            completedNodes: ['bw-w2', 'bw-w4', 'bw-w5'],
-            consumedNodes: ['bw-w1', 'bw-w2', 'bw-w4', 'bw-w5'],
-        };
-        return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: { ...w, currentMap: map } } });
-    }
 
     it('names the node, the road\'s reason and the quest that holds it, with no TRAVEL button', () => {
         const store = atTheKeepGate();

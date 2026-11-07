@@ -28,7 +28,14 @@ describe('MainMenu', () => {
         expect(screen.getByText(MAIN_MENU_COPY.newGame)).toBeTruthy();
         expect(screen.getByText(MAIN_MENU_COPY.loadGame)).toBeTruthy();
         expect(screen.getByText(MAIN_MENU_COPY.settings)).toBeTruthy();
-        expect(screen.getByText(/chronicle I · Level 1 · Breakwater · moments ago/)).toBeTruthy();
+        // The hints are spoken, never printed.
+        expect(screen.queryByText(/chronicle I · Level 1/)).toBeNull();
+        expect(screen.getByTestId('main-menu-continue').props.accessibilityHint)
+            .toMatch(/chronicle I · Level 1 · Breakwater · moments ago/);
+        expect(screen.queryByText(MAIN_MENU_COPY.newGameHint)).toBeNull();
+        expect(screen.queryByText(MAIN_MENU_COPY.settingsHint)).toBeNull();
+        expect(screen.getByTestId('main-menu-new-game').props.accessibilityHint).toBe(MAIN_MENU_COPY.newGameHint);
+        expect(screen.getByTestId('main-menu-settings').props.accessibilityHint).toBe(MAIN_MENU_COPY.settingsHint);
 
         fireEvent.press(screen.getByTestId('main-menu-continue'));
         fireEvent.press(screen.getByTestId('main-menu-new-game'));
@@ -45,7 +52,8 @@ describe('MainMenu', () => {
         expect(screen.queryByTestId('main-menu-continue')).toBeNull();
         fireEvent.press(screen.getByTestId('main-menu-load-game'));
         expect(h.onLoadGame).not.toHaveBeenCalled();
-        expect(screen.getByText(MAIN_MENU_COPY.loadGameEmptyHint)).toBeTruthy();
+        expect(screen.queryByText(MAIN_MENU_COPY.loadGameEmptyHint)).toBeNull();
+        expect(screen.getByTestId('main-menu-load-game').props.accessibilityHint).toBe(MAIN_MENU_COPY.loadGameEmptyHint);
     });
 
     it('re-renders when a slot is written', () => {
