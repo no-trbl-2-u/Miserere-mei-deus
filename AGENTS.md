@@ -12,8 +12,7 @@ does not have. Then the product spec, `spec.md`.
 **Reading order:** everyone → `docs/game-model.md`; loop/plan work →
 `plan/bearings.md`; package work → that package's `AGENTS.md`;
 design/balance/content work → `axiomancer-mechanics/VISION.md` (T's wants)
-+ `spec.md`; visual design and UI work (screens, type, colour, the kit) →
-[`docs/design-direction.md`](docs/design-direction.md) first.
++ `spec.md`.
 
 npm-workspaces monorepo. Three packages, flat at the root:
 
