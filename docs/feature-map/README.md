@@ -32,7 +32,6 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Travel | route | yes | yes | yes | no |
 | Village | route | yes | yes | yes | no |
 | The hazard minigame | route | yes | yes | yes | no |
-| The hazard deck | route | yes | yes | yes | no |
 | The Labyrinth | route | yes | yes | yes | no |
 | Atlas | engine area | no | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Atlas") |
 | Cards | engine area | yes | yes | yes | no |
@@ -71,7 +70,6 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Rest (`route:rest`)
 - Travel (`route:travel`)
 - Village (`route:village`)
-- The hazard deck (`route:hazard-deck`)
 - The Labyrinth (`route:labyrinth`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)

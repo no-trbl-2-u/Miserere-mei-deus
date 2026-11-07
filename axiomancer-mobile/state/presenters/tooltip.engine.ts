@@ -13,8 +13,7 @@
  *   `description` is only a fallback.
  * - `'card'` — engine-sourced via `getCombatCardById(id)`.
  * - `'hazard-keyword'` — engine-sourced via `HAZARD_KEYWORDS[id]`.
- *   The hazard-deck screen's keyword tally chips key
- *   off `HazardKeywordId`; this kind reads the same glossary the
+ *   Hazard keywords key off `HazardKeywordId`; this kind reads the same glossary the
  *   in-hazard card faces already draw from, so the two stay in sync
  *   for free.
  * - `'slot'`, `'map-node'`, `'chronicle-entry'`,
