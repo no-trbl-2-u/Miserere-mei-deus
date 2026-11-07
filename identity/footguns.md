@@ -41,6 +41,8 @@ One line each, at most 500 bytes, never wrapped:
 - **item-queue-unsaved** · `itemReward.queue` is never persisted, so an item taken out of the satchel to be offered is lost on an app close → offer a piece that is already saved with `carried: true` · seen 1× · last 2026-11-03 · open
 - **settle-dry-run-reads-main** · `pr-settle --dry-run` settles origin/main's tree in a throwaway worktree, so it never sees a branch's own plan changes → rehearse a branch with `--dry-run --ref HEAD` · seen 1× · last 2026-11-03 · open
 - **kit-header-leaf-variant** · `KitHeader`'s vellum art for variant `"quatrefoil"` is `section-header-vellum-leaf` and not a quatrefoil at all, because one prop name spans both looks → pass `look="vellum"` and read the variant mapping in `KitBackdrop.tsx`, rather than adding a `"leaf"` variant only one look answers to · seen 1× · last 2026-11-06 · open
+- **kit-swap-shrinks-the-box** · clearing a drawn frame for kit art by dropping `borderWidth`/`backgroundColor` shrinks any element sized by padding and content, moving everything near it → keep the border's WIDTH, clear only its colour, and clear the per-side colours too, since a surviving `borderTopColor` still rules a line across the art · seen 1× · last 2026-11-06 · open
+- **nine-slice-cuts-a-centre-ornament** · a kit piece with an ornament on the middle of a rail smears it across the stretched band when the slice stops short of it, which reads as art drawn over the content → profile the art's rows and columns and slice past every ornament, so only plain panel is left to stretch · seen 1× · last 2026-11-06 · open
 ## Watch (seen once: searched before adding a line, not read before building)
 
 ## Guarded (automated: the line says by what)

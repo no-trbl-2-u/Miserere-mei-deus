@@ -42,6 +42,8 @@ import Animated, {
 import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
 
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type {
     CombatViewModel, CombatCardVM, CombatDieVM,
@@ -320,6 +322,9 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
 }) {
     const AXM = usePalette();
     const styles = useStyles();
+    // The chip's look is the place's; the runes below it are not a kit place
+    // and keep today's rings.
+    const convictionBrass = lookOf('S-04') === 'brass';
     return (
         <View
             style={[styles.sigColumn, top !== undefined ? { top } : null]}
@@ -328,13 +333,16 @@ const SignatureColumn = React.memo(function SignatureColumn({ conviction, signat
             onLayout={(e) => onMeasureHeight?.(e.nativeEvent.layout.height)}
         >
             <Pressable
-                style={styles.convictionChip}
+                style={[styles.convictionChip, convictionBrass ? styles.convictionChipBare : null]}
                 testID="combat-conviction"
                 onPress={onConviction}
                 accessibilityRole="button"
                 accessibilityLabel={`${conviction} conviction`}
                 accessibilityHint="Tap to read what Conviction is"
             >
+                {/* 0.17 holds the plate's end ornaments inside the chip's 7pt
+                  * side padding, so the chip keeps the width it has today. */}
+                {convictionBrass ? <KitBackdrop piece="combat-badge" scale={0.17} /> : null}
                 <Text style={[styles.convictionText, { color: AXM.sulfur }]} allowFontScaling={false}>◆ {conviction}</Text>
                 {/* Name the economy: every rune below is priced in ◆ and the
                   * enemy telegraph offers '+1◆', so the chip prints the word
@@ -2262,6 +2270,15 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     convictionChip: {
         borderWidth: 1, borderColor: AXM.sulfur, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.6)',
         paddingHorizontal: 7, paddingVertical: 3,
+    },
+    // The plate replaces the drawn chip. The 1pt border's WIDTH stays, because
+    // the chip is sized by its padding and content: dropping the border would
+    // shorten it by 2pt and `SIG_CONVICTION_CHIP_H` (38) would stop being the
+    // chip's real height, moving every rune below it.
+    convictionChipBare: {
+        borderColor: 'transparent', backgroundColor: 'transparent',
+        borderTopColor: 'transparent', borderRightColor: 'transparent',
+        borderBottomColor: 'transparent', borderLeftColor: 'transparent',
     },
     convictionText: { fontFamily: FONTS.sans, fontSize: 15, lineHeight: 18, letterSpacing: 0.5, textAlign: 'center' },
     // The CONVICTION caption — small enough to stay chrome, large enough to

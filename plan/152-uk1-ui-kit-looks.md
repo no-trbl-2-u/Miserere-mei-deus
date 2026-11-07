@@ -78,11 +78,6 @@
 
 ## Acceptance
 
-- **A4** In the fight:
-  - ENTER COMBAT / WITHDRAW, the intent badge, the conviction chip, the player dock and the player VITAE bar wear brass.
-  - The name rail, momentum chip, END and portrait ring are unchanged.
-  - Every element's position and size on the board match today's.
-  - No card changes.
 - **A5** The fight summary, card offer, CONTINUE and TAKE NOTHING / TAKE CARD are on vellum. No gold or amber text sits on parchment, and every inked colour on vellum measures at least 4.5:1.
 - **A6** Self's portrait frame, level badge, HEART / BODY / MIND tiles, section headings, divider and VITAE pool bar wear brass. The hazard deck link is unchanged here.
 - **A7** The Ledger's headings and dividers are vellum and ink. The Satchel's gear slot rows wear brass and its filter tabs are vellum. The purse, burden bar, worn-gear panel, item cards and the whole Deck screen are unchanged.
@@ -97,9 +92,8 @@
 
 ## Chunks
 
-Measure: 5 open · 3 closed · next A9
+Measure: 4 open · 4 closed · next A9
 
-- [ ] **152.3** The fight in brass where T kept it, layout held · M · closes A4 · needs — · alias: UK1c
 - [ ] **152.4** The Spoils on vellum, inked to read · S · closes A5 · needs — · alias: UK1d
 - [ ] **152.5** Self in brass; the Ledger and Satchel pieces · M · closes A6, A7 · needs — · alias: UK1e
 - [ ] **152.6** The main menu and Settings in brass · M · closes A8 · needs — · alias: UK1f

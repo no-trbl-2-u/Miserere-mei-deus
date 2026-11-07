@@ -16,10 +16,12 @@
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 
 import { FONTS, HUE } from '@/theme/axm';
+import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ledgerA11y } from '@/state/presenters/combat-encounter.engine';
 import type { CombatViewModel } from '@/state/presenters/combat-encounter.engine';
@@ -78,19 +80,26 @@ export const VitaeBar = React.memo(function VitaeBar({ hp, maxHp }: { hp: number
     const AXM = usePalette();
     const styles = useStyles();
     const { pct, low } = vitaeBarFill(hp, maxHp);
+    const brass = lookOf('S-09') === 'brass';
     return (
         <View
-            style={styles.barTrack}
+            style={[styles.barTrack, brass ? styles.barTrackBare : null]}
             testID="combat-rail-vitae-bar"
             accessible
             accessibilityRole="progressbar"
             accessibilityLabel={`VITAE ${hp} of ${maxHp}`}
             accessibilityValue={{ min: 0, max: maxHp, now: hp }}
         >
+            {brass ? <KitBackdrop piece="combat-player-track" /> : null}
             <View
                 style={[styles.barFill, { width: `${pct}%`, backgroundColor: low ? AXM.blood : AXM.heal }]}
                 testID="combat-rail-vitae-fill"
-            />
+            >
+                {/* The fill keeps its palette colour underneath, so a low bar
+                  * still reads blood if the art ever fails to load. The two
+                  * fills are the kit's own: blood below a quarter, else heal. */}
+                {brass ? <KitImage piece={low ? 'combat-vitae-fill' : 'combat-player-fill'} style={StyleSheet.absoluteFill} /> : null}
+            </View>
         </View>
     );
 });
@@ -146,12 +155,22 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
     onLayout?: (e: LayoutChangeEvent) => void;
 }) {
     const styles = useStyles();
+    const brass = lookOf('S-06') === 'brass';
     return (
         <View
-            style={[styles.dock, { minHeight: dockMinHeight(bottomInset), paddingBottom: bottomInset + DOCK_PAD_V }]}
+            style={[
+                styles.dock,
+                brass ? styles.dockBare : null,
+                { minHeight: dockMinHeight(bottomInset), paddingBottom: bottomInset + DOCK_PAD_V },
+            ]}
             testID="combat-rail"
             onLayout={onLayout}
         >
+            {/* The dock frame is drawn at its own scale, so its end caps run
+              * wider than the dock's 10pt side padding and sit behind the
+              * portrait and END rather than pushing them inward. The padding is
+              * what holds every cell where it is today. */}
+            {brass ? <KitBackdrop piece="nav-dock-dark" /> : null}
             {avatar}
             <View style={styles.vitaeCol} testID="combat-rail-vitae-col">
                 <View style={styles.vitaeRow}>
@@ -195,7 +214,17 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                     accessibilityHint="Tap to read what the marks mean"
                     hitSlop={4}
                 >
-                    {vm.ledger.map((m, i) => <LedgerMark key={i} kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />)}
+                    {/* Each mark is wrapped in a View. `LedgerMark` is a bare
+                      * `Svg`, and on RN-web a bare svg is not a positioned box,
+                      * so the dock's absolutely positioned backdrop paints over
+                      * it and the marks vanish. The wrapper is the mark's own
+                      * size, so the row measures exactly as it did. The marks
+                      * themselves are untouched. */}
+                    {vm.ledger.map((m, i) => (
+                        <View key={i} style={styles.ledgerMark}>
+                            <LedgerMark kind={m === 'clear' ? 'O' : m === 'overwhelmed' ? 'X' : 'pending'} size={DOCK_LEDGER_MARK} />
+                        </View>
+                    ))}
                 </Pressable>
             </View>
             <EndPhaseButton onPress={onEndPhase} consequence={endConsequence} disabled={resolving} />
@@ -209,6 +238,12 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: DOCK_PAD_H, paddingTop: DOCK_PAD_V,
         backgroundColor: 'rgba(7,5,9,0.9)', borderTopWidth: 1, borderTopColor: AXM.divider,
     },
+    // `borderTopWidth` stays at 1: the dock is sized by its padding and
+    // `minHeight`, and a border adds to that height, so clearing the width
+    // would raise the whole dock by a point. Only the colour goes — and it has
+    // to go by its own side, since a surviving `borderTopColor` would still
+    // rule a hairline across the top of the brass frame.
+    dockBare: { backgroundColor: 'transparent', borderTopColor: 'transparent' },
     // The VITAE column takes what the avatar and END leave, up to a cap on wide
     // windows; its cells never wrap.
     vitaeCol: { flex: 1, minWidth: 0, maxWidth: DOCK_VITAE_MAX_WIDTH, gap: 4 },
@@ -220,8 +255,17 @@ const useStyles = makeStyles((AXM) => ({
         height: VITAE_BAR_H, borderRadius: VITAE_BAR_H / 2, overflow: 'hidden',
         backgroundColor: 'rgba(0,0,0,0.6)', borderWidth: 1, borderColor: AXM.divider,
     },
+    // The track art replaces the drawn trough. The 1pt border's width is kept
+    // for the same reason as the dock's, even though the bar's height is
+    // explicit: the radius and the clip still have to measure 8.
+    barTrackBare: {
+        backgroundColor: 'transparent', borderColor: 'transparent',
+        borderTopColor: 'transparent', borderRightColor: 'transparent',
+        borderBottomColor: 'transparent', borderLeftColor: 'transparent',
+    },
     barFill: { height: '100%' },
     ledger: { flexDirection: 'row', gap: DOCK_LEDGER_GAP, alignItems: 'center' },
+    ledgerMark: { width: DOCK_LEDGER_MARK, height: DOCK_LEDGER_MARK },
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
     pileGlyphText: { fontFamily: FONTS.sans, fontSize: 7, color: AXM.ash, lineHeight: 9 },
