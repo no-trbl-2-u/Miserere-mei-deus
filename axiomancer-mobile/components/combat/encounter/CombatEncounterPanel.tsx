@@ -81,7 +81,7 @@ import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 /** The mark the gloss plaque's burst wears for each board term. */
 const GLOSS_GLYPH: Record<BoardTermId, string> = {
     conviction: '◆', boon: '◆', mana: '●', miss: '○', banked: '⏳', ghost: '✦',
-    xdie: '✕', xvaries: 'X', piles: '▮', ledger: 'O', global: '⟳',
+    xdie: '✕', xvaries: 'X', piles: '▮', global: '⟳',
 };
 
 type DropResolver = (payload: DragPayload, x: number, y: number) => void | Promise<void>;

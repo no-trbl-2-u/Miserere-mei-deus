@@ -22,8 +22,8 @@
  *
  * Moved on purpose once, by UX1d (spec 153, T's S-09 note): the dock's
  * phase-ledger circles are gone, END narrowed from 116 to 88 (its height
- * stays 56), and the dock row grew from END's 56 to 72, so the dock's
- * minimum height at the phone's inset went from 106 to 122. Every cell keeps
+ * stays 56), and the dock row grew from END's 56 to 66, so the dock's
+ * minimum height at the phone's inset went from 106 to 116. Every cell keeps
  * its order: portrait, VITAE column, END.
  */
 
@@ -144,7 +144,7 @@ describe('UK1c — a brass place keeps the box it has today', () => {
             flexDirection: 'row', alignItems: 'center',
             gap: 10, paddingHorizontal: 10, paddingTop: 8,
             // The bottom inset plus the dock's own padding.
-            paddingBottom: 42, minHeight: 122,
+            paddingBottom: 42, minHeight: 116,
         });
         pin('combat-rail-vitae-col', { flex: 1, minWidth: 0, maxWidth: 360, gap: 4 });
         pin('combat-piles', { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 });
@@ -153,9 +153,9 @@ describe('UK1c — a brass place keeps the box it has today', () => {
         expect(screen.queryByTestId('combat-ledger')).toBeNull();
         // The dock's exported geometry, by name. The row is taller than END
         // so the brass frame shows around the button.
-        expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([72, 8, 10, 10]);
+        expect([DOCK_ROW_H, DOCK_PAD_V, DOCK_PAD_H, DOCK_GAP]).toEqual([66, 8, 10, 10]);
         expect([END_BTN_W, END_BTN_H, DOCK_VITAE_MAX_WIDTH]).toEqual([88, 56, 360]);
-        expect(dockMinHeight(INSETS.bottom)).toBe(122);
+        expect(dockMinHeight(INSETS.bottom)).toBe(116);
         // The dock's drawn fill and top rule are cleared for the frame, but the
         // rule's WIDTH stays: it counts toward the dock's height.
         pin('combat-rail', { backgroundColor: 'transparent', borderTopColor: 'transparent', borderTopWidth: 1 });

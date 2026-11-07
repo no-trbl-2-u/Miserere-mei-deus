@@ -34,8 +34,10 @@ import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 /**
  * The dock's row height before padding. Taller than END (spec 153, UX1d), so
  * the dock frame shows above and below the button; every cell is centred in it.
+ * 66, not more: at 375x667 a five-rune signature column still fits between
+ * the board top and the tray (`CombatBoard.sig-column.test.tsx`).
  */
-export const DOCK_ROW_H = 72;
+export const DOCK_ROW_H = 66;
 /** The dock's top and bottom padding (the bottom one sits above the inset). */
 export const DOCK_PAD_V = 8;
 /** Side padding and the gap between the dock's three cells. */
