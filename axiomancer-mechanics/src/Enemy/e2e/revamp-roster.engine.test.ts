@@ -33,15 +33,28 @@ const CHAPTER1_IDS = [
 /** The cliffs, the hamlet and the sea cave's elite (EN1h), in library order. */
 const CLIFF_IDS = ['enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector'];
 /** The foes that still play an enemy deck (the rest play HP phases). */
-const DECK_IDS = ['enemy-death-beholder'];
+const DECK_IDS = ['enemy-death-beholder', 'enemy-saint-beneath'];
+/**
+ * Chapter 1's recast faces (EN3a), in library order. Each is its cut foe's
+ * numbers under a new id, name, description and portrait key; the cut foes
+ * all stay in the library beside them.
+ */
+const RECAST_IDS = [
+    'enemy-quay-crab', 'enemy-coralback', 'enemy-saltwick-swarm', 'enemy-bilge-stalker',
+    'enemy-wreckmaster', 'enemy-saint-beneath',
+];
 
 describe('the R2 roster', () => {
     it('ENEMY_REGISTRY is exactly sandbag, the three survivors and Chapter 1 normals', () => {
         expect(Object.keys(ENEMY_REGISTRY).sort())
             .toEqual([
-                'brine-widow', 'cave-choir', 'crane-hook', 'curfew-ringer', 'death-beholder', 'float-eye', 'gallows-crow',
-                'green-jelly', 'lamplighter', 'lamprey-knot', 'net-mender', 'sandbag', 'smokehouse-gutter', 'tide-gate',
-                'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker',
+                'bilge-stalker',
+                'brine-widow', 'cave-choir', 'coralback', 'crane-hook', 'curfew-ringer', 'death-beholder',
+                'float-eye', 'gallows-crow',
+                'green-jelly', 'lamplighter', 'lamprey-knot', 'net-mender', 'quay-crab',
+                'saint-beneath', 'saltwick-swarm',
+                'sandbag', 'smokehouse-gutter', 'tide-gate',
+                'tithe-collector', 'toll-keeper', 'wreck-picker', 'wrecker', 'wreckmaster',
             ]);
         expect(EnemyLibrary.map(e => e.id)).toEqual([
             'enemy-float-eye', ...CHAPTER1_IDS, 'enemy-green-jelly', 'enemy-curfew-ringer', ...CLIFF_IDS,
@@ -49,6 +62,7 @@ describe('the R2 roster', () => {
             'enemy-lamplighter', 'enemy-wrecker',
             'enemy-toll-keeper', 'enemy-tide-gate',
             'enemy-death-beholder',
+            ...RECAST_IDS,
         ]);
         expect([...LIVE_ENEMY_IDS].sort())
             .toEqual([
@@ -56,6 +70,7 @@ describe('the R2 roster', () => {
                 'enemy-lamplighter', 'enemy-wrecker',
                 ENEMY_REGISTRY.sandbag.id,
                 'enemy-toll-keeper', 'enemy-tide-gate',
+                ...RECAST_IDS,
             ].sort());
     });
 
