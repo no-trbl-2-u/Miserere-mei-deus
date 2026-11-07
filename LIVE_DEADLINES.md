@@ -20,7 +20,7 @@
 | 2026-11-10 (in 3 days) | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | needs you: your task; the loop still owes UK2e, UK2i | W2 |
 | 2026-11-11 (in 4 days) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
 | 2026-11-11 (in 4 days) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task; the loop still owes UK2f | W2 |
-| 2026-11-12 (in 5 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task; the loop still owes UK2d, UK2g | W2 |
+| 2026-11-12 (in 5 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task; the loop still owes UK2g | W2 |
 | 2026-11-13 (in 6 days) | Buffer: fixes from the event-screen reviews (1 h) | needs you: your task | W2 |
 | 2026-11-14 (in 7 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b | W2 |
 | 2026-11-14 (in 7 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
