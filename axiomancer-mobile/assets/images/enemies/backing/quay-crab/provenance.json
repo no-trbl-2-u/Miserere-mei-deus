@@ -1,0 +1,38 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "source": "anim/quay-crab/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "quay-crab-00.backing.webp",
+      "quay-crab-01.backing.webp",
+      "quay-crab-02.backing.webp",
+      "quay-crab-03.backing.webp",
+      "quay-crab-04.backing.webp",
+      "quay-crab-05.backing.webp",
+      "quay-crab-06.backing.webp",
+      "quay-crab-07.backing.webp",
+      "quay-crab-08.backing.webp",
+      "quay-crab-09.backing.webp",
+      "quay-crab-10.backing.webp",
+      "quay-crab-11.backing.webp",
+      "quay-crab-12.backing.webp",
+      "quay-crab-13.backing.webp",
+      "quay-crab-14.backing.webp",
+      "quay-crab-15.backing.webp",
+      "quay-crab-16.backing.webp",
+      "quay-crab-17.backing.webp",
+      "quay-crab-18.backing.webp",
+      "quay-crab-19.backing.webp",
+      "quay-crab-20.backing.webp",
+      "quay-crab-21.backing.webp",
+      "quay-crab-22.backing.webp",
+      "quay-crab-23.backing.webp"
+    ]
+  }
+]
