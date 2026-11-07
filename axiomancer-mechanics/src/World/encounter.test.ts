@@ -15,7 +15,7 @@ import {
     DIFFICULTY_LEVEL_BANDS,
 } from './encounter';
 import { Enemy } from '../Enemy/types';
-import { FloatEye, ENEMY_REGISTRY } from '../Enemy/enemy.library';
+import { FloatEye, ENEMY_REGISTRY, EnemiesByMap } from '../Enemy/enemy.library';
 import { DEFAULT_XP_BY_DIFFICULTY } from '../Enemy';
 import { MapNode } from './types';
 
@@ -95,8 +95,8 @@ describe('generateEncounter', () => {
     it('picks an enemy from the resolved map and stamps origin', () => {
         const enc = generateEncounter(coastNode, 1);
         expect(enc.enemies).toHaveLength(1);
-        // The Act 1 pool is Float-Eye only.
-        expect(enc.enemies[0].id).toBe(FloatEye.id);
+        // The Act 1 pool is the six Chapter 1 normals (EN3b).
+        expect(EnemiesByMap.breakwater.map(e => e.id)).toContain(enc.enemies[0].id);
         expect(enc.origin).toBe('breakwater:bw-w2');
     });
 

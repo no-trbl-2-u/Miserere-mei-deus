@@ -5,8 +5,8 @@
  *   - DEV gate (true / simulated-false)
  *   - One button per encounter kind mounts
  *   - COMBAT seeds a combat-prelude encounter event with the
- *     lowest-level standard foe on the current map (level 1 on
- *     the Breakwater) and navigates to the WILDS tab
+ *     lowest-level standard foe on the current map (the
+ *     lowest level of the Breakwater's wandering pool) and navigates to the WILDS tab
  *   - BOSS seeds an isBoss encounter with a boss-tier foe
  *   - HAZARD / REST / TREASURE launch their REAL minigame session
  *     (and crucially leave NO paced /event route, so they can never
@@ -24,6 +24,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
+import { EnemiesByMap } from '@mechanics';
 
 import { DebugTriggerEncounter } from '@/components/DebugTriggerEncounter';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
@@ -96,8 +97,8 @@ describe('DebugTriggerEncounter: combat triggers', () => {
         const event = slice.pending!.event as { kind: string; isBoss: boolean; encounter: { enemies: { level: number }[] } };
         expect(event.kind).toBe('encounter');
         expect(event.isBoss).toBe(false);
-        // Fishing-village's gentlest foes are level 1.
-        expect(event.encounter.enemies[0].level).toBe(1);
+        // The gentlest foe of the Breakwater's wandering pool (the six Chapter 1 normals, EN3b).
+        expect(event.encounter.enemies[0].level).toBe(Math.min(...EnemiesByMap.breakwater.map(e => e.level)));
         expect(selectHasActiveEvent(store.getState())).toBe(true);
     });
 
