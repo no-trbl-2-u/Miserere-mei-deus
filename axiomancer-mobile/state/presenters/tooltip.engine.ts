@@ -17,6 +17,8 @@
  *   off `HazardKeywordId`; this kind reads the same glossary the
  *   in-hazard card faces already draw from, so the two stay in sync
  *   for free.
+ * - `'card-keyword'` — a keyword printed in a card's own text, resolved
+ *   from the keyword registry by its Title-Case name.
  * - `'slot'`, `'burden'`, `'map-node'`, `'chronicle-entry'`,
  *   `'quest-objective'`, `'item-stat'`, `'disabled-action'` — static
  *   tables below.
@@ -28,6 +30,7 @@
 
 import { HAZARD_KEYWORDS, lookupEffect } from '@mechanics';
 
+import { keywordGloss } from '@/state/combat/keywords';
 import { getCombatCardById } from '@/state/selectors/combat-cards';
 import type { AppStoreState } from '@/state/store';
 
@@ -38,6 +41,7 @@ export type TooltipKind =
     | 'effect'
     | 'card'
     | 'hazard-keyword'
+    | 'card-keyword'
     | 'slot'
     | 'burden'
     | 'item-stat'
@@ -375,6 +379,12 @@ export function selectTooltipContentFor(
             body: kw.desc,
             accent: 'neutral',
         };
+    }
+    if (kind === 'card-keyword') {
+        // The id is the registry's Title-Case keyword name.
+        const gloss = keywordGloss(id);
+        if (!gloss) return null;
+        return { title: id.toUpperCase(), body: gloss, accent: 'neutral' };
     }
     if (kind === 'disabled-action') {
         return DISABLED_ACTION_CONTENT[id] ?? null;

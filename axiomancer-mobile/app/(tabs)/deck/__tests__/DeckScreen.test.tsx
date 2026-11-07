@@ -1,5 +1,5 @@
 /**
- * DECK — the fifth tab, rendered as a reader (spec 155.1).
+ * DECK — the fifth tab, rendered as a reader.
  *
  * The presenter is pinned separately in
  * `state/presenters/__tests__/deck.engine.test.ts`. What this file pins:
@@ -73,6 +73,7 @@ describe('DeckScreen: the reader', () => {
 
         expect(screen.queryByTestId('deck-card-detail')).toBeNull();
         expect(screen.queryByTestId('deck-card-detail-flavor')).toBeNull();
+        expect(screen.queryByTestId('card-keyword-ledger')).toBeNull();
     });
 });
 

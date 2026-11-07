@@ -368,7 +368,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDock.drag.test.tsx, ..."
+        "source": "axiomancer-mobile/components/experience/__tests__/self-ledger-satchel.test.tsx, axiomancer-mobile/components/inventory/SlotBanner.test.tsx, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
@@ -393,7 +393,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/ErrorBoundary.test.tsx, axiomancer-mobile/scripts/__tests__/smoke-screens.test.ts, axiomancer-mobile/state/e2e/app-components.engine.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/ErrorBoundary.test.tsx, axiomancer-mobile/components/experience/__tests__/self-ledger-satchel.test.tsx, axiomancer-mobile/scripts/__tests__/smoke-screens.test.ts, ..."
       },
       "needsPitch": {
         "value": true,
@@ -2736,6 +2736,12 @@
       "kind": "coupling",
       "from": "route:(tabs)/deck",
       "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
+      "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {
@@ -2761,6 +2767,12 @@
       "from": "route:(tabs)/deck",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/deck.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -2797,6 +2809,12 @@
       "from": "route:(tabs)/deck",
       "to": "area:NPCs",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/deck",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",

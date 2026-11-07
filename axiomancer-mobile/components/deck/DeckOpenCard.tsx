@@ -1,5 +1,5 @@
 /**
- * The open card on the DECK screen (spec 155, the Reader): the card's own
+ * The open card on the DECK screen (the Reader): the card's own
  * painting as a banner, its name over the art, its printed lines under it.
  *
  * T's numbers, kept to the half point and not retuned: banner 340 pt tall,
@@ -11,13 +11,14 @@
  * open card (the type tabs, 155.3) is at the same place whichever card is open.
  *
  * Lines arrive as `DeckLineVM`s (an optional label, then ordered runs); this
- * component assembles no card text. 155.4 adds keyword runs to `DeckRunVM`
- * and renders them as pressable spans in `RunText`.
+ * component assembles no card text. Keyword runs are pressable spans: tap
+ * for the gloss, hold to pin it.
  */
 
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { Image } from '@/lib/platform/image';
 import type { DeckCardVM, DeckLineVM, DeckRunVM } from '@/state/presenters/deck.engine';
 import { TYPE_ROLES } from '@/theme/axm';
@@ -84,9 +85,25 @@ function Line({ line, index }: { line: DeckLineVM; index: number }) {
     );
 }
 
-/** One run, in order. 155.4 branches here on `run.kind === 'keyword'`. */
+/**
+ * One run, in order. A keyword run is a pressable span in the keyword's ink:
+ * a tap shows its gloss anchored to the word, a hold pins it.
+ */
 function RunText({ run }: { run: DeckRunVM }) {
-    return <Text>{run.text}</Text>;
+    const styles = useStyles();
+    if (run.kind === 'text') return <Text>{run.text}</Text>;
+    return (
+        <TooltipTarget
+            kind="card-keyword"
+            id={run.keyword}
+            pinOnLongPress
+            accessibilityLabel={run.word}
+            accessibilityHint={run.minor ? `${run.gloss} (minor right now)` : run.gloss}
+            testID={`deck-keyword-${run.keyword}`}
+        >
+            <Text style={[styles.keyword, run.minor ? styles.keywordMinor : null]}>{run.word}</Text>
+        </TooltipTarget>
+    );
 }
 
 const useStyles = makeStyles((AXM) => ({
@@ -118,5 +135,13 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 23,
         color: AXM.parchment,
     },
+    keyword: {
+        fontFamily: TYPE_ROLES.rules.fontFamily,
+        fontSize: 16.5,
+        lineHeight: 23,
+        color: AXM.sulfur,
+        textDecorationLine: 'underline',
+    },
+    keywordMinor: { color: AXM.ash },
     footnote: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, lineHeight: 18, color: AXM.bone },
 }));
