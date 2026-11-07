@@ -24,14 +24,15 @@ import type { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 import { KIT, type KitPiece } from '@/assets/images/experience/kit';
 import { Image } from '@/lib/platform/image';
 import { SectionLabel } from '@/components/SectionLabel';
+import { HUE } from '@/theme/axm';
 
 /**
  * Ink on parchment (T, 2026-11-06): body text in iron-gall brown, accents in
  * oxblood where today's text is gold or amber. Every one measures at least
  * 4.5:1 against the vellum pieces' darkest parchment (see the vellum-ink test).
  */
-export const VELLUM_INK = '#2b1f14';
-export const VELLUM_OXBLOOD = '#7a1f14';
+export const VELLUM_INK = HUE.vellumInk;
+export const VELLUM_OXBLOOD = HUE.vellumOxblood;
 
 /** Unstretched share of a piece on each side: top, right, bottom, left. */
 type Slice = readonly [number, number, number, number];

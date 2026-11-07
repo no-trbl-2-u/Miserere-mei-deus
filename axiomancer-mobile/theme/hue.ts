@@ -117,4 +117,9 @@ export const HUE = {
     artWater: '#0f1416',
     artWaterLine: '#27353a',
     artMoss: '#10150f',
+
+    // Ink on parchment (UK1e, spec 152.5): the vellum looks' fixed inks
+    vellumInk: '#2b1f14',
+    vellumOxblood: '#7a1f14',
+    vellumInkQuiet: '#4a3826',
 } as const;
