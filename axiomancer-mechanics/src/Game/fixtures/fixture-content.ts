@@ -50,7 +50,7 @@ export const FIXTURE_NPC: NPC = {
                     { text: 'Leave.' },
                 ],
             },
-            end: { id: 'end', text: 'A closing line.' },
+            end: { id: 'end', text: 'A closing line.', choices: [{ text: 'Leave.' }] },
         },
     },
 };

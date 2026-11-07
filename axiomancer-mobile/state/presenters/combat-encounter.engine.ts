@@ -1150,29 +1150,6 @@ export function revealDangers(state: CombatEncounterState, seen: SeenDangerNames
     });
 }
 
-const LEDGER_WORD: Record<CombatViewModel['ledger'][number], string> = {
-    clear: 'cleared', overwhelmed: 'overwhelmed', pending: 'ahead',
-};
-
-/**
- * The dock ledger's screen-reader line. The marks are glyphs only, so the
- * row speaks once, naming each run of phases by its mark.
- *
- * @example ledgerA11y(['clear', 'overwhelmed', 'pending', 'pending', 'pending'])
- * // 'Phases: 1 cleared, 2 overwhelmed, 3 to 5 ahead'
- */
-export function ledgerA11y(ledger: CombatViewModel['ledger']): string {
-    const runs: string[] = [];
-    for (let i = 0; i < ledger.length;) {
-        let j = i;
-        while (j + 1 < ledger.length && ledger[j + 1] === ledger[i]) j++;
-        const span = j === i ? `${i + 1}` : j === i + 1 ? `${i + 1} and ${j + 1}` : `${i + 1} to ${j + 1}`;
-        runs.push(`${span} ${LEDGER_WORD[ledger[i]]}`);
-        i = j + 1;
-    }
-    return runs.length > 0 ? `Phases: ${runs.join(', ')}` : 'Phases: none';
-}
-
 /** The intent of a `phases` foe: the move's kind and name, every number left out. */
 function phasesIntentVM(state: CombatEncounterState, cur: CombatThreatPhase, seen: SeenDangerNames): CombatIntentVM {
     // The Lamplighter's Dark (phase EN1k): every intent it shows reads UNKNOWN, unnamed.

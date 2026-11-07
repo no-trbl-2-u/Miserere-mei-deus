@@ -10,14 +10,13 @@
 
 import { arrivalLineAt, breakwaterEncounterTier, breakwaterPlaceAt, heldRoadPlaceAt } from '@mechanics';
 import {
-    BOSS_CARD_SUBTITLE, REVEAL_EYEBROW_BOSS, REVEAL_EYEBROW_ELITE, REVEAL_EYEBROW_FIGHT, heldRoadLine,
+    BOSS_CARD_SUBTITLE, heldRoadLine,
 } from '@/components/combat/encounter/reveal.copy';
 
 export type RevealTier = 'fight' | 'elite' | 'boss';
 
 export interface RevealFrameVM {
     readonly tier: RevealTier;
-    readonly eyebrow: string;
     /** The node's arrival line, or null when the node has none. */
     readonly arrivalLine: string | null;
     /** "Holds the road to <place>" for an elite that holds one, else null. */
@@ -33,7 +32,6 @@ export function buildRevealFrame(nodeId: string | undefined): RevealFrameVM {
     const place = breakwaterPlaceAt(nodeId);
     return {
         tier,
-        eyebrow: tier === 'boss' ? REVEAL_EYEBROW_BOSS : tier === 'elite' ? REVEAL_EYEBROW_ELITE : REVEAL_EYEBROW_FIGHT,
         arrivalLine: arrivalLineAt(nodeId) ?? null,
         heldLine: heldPlace === undefined ? null : heldRoadLine(heldPlace),
         bossCard: tier === 'boss' ? { place: place ?? '', subtitle: BOSS_CARD_SUBTITLE } : null,
