@@ -243,7 +243,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mechanics/src/NPCs/e2e/dialogue.engine.test.ts, axiomancer-mechanics/src/World/e2e/quest-rewards.engine.test.ts, axiomancer-mechanics/src/World/e2e/questline-steps.engine.test.ts, ..."
+        "source": "axiomancer-mechanics/src/NPCs/e2e/dialogue.engine.test.ts, axiomancer-mechanics/src/NPCs/e2e/dialogue.exits.engine.test.ts, axiomancer-mechanics/src/World/e2e/quest-rewards.engine.test.ts, ..."
       },
       "needsPitch": {
         "value": false,
@@ -318,7 +318,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardDetailOverlay.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardTile.test.tsx, ..."
+        "source": "axiomancer-mobile/app/(tabs)/deck/__tests__/DeckScreen.test.tsx, axiomancer-mobile/components/deck/__tests__/DeckCardTile.test.tsx, axiomancer-mobile/state/presenters/__tests__/deck.engine.test.ts"
       },
       "needsPitch": {
         "value": false,
@@ -443,7 +443,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/e2e/blacksmith-upgrade.UP1e.test.tsx, axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, axiomancer-mobile/state/e2e/region-plate.rc-walk-10.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/LeaveRow.test.tsx, axiomancer-mobile/state/e2e/blacksmith-upgrade.UP1e.test.tsx, axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,

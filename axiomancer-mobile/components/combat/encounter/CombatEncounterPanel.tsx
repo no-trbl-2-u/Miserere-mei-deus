@@ -81,7 +81,7 @@ import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 /** The mark the gloss plaque's burst wears for each board term. */
 const GLOSS_GLYPH: Record<BoardTermId, string> = {
     conviction: '◆', boon: '◆', mana: '●', miss: '○', banked: '⏳', ghost: '✦',
-    xdie: '✕', xvaries: 'X', piles: '▮', ledger: 'O', global: '⟳',
+    xdie: '✕', xvaries: 'X', piles: '▮', global: '⟳',
 };
 
 type DropResolver = (payload: DragPayload, x: number, y: number) => void | Promise<void>;
@@ -854,7 +854,6 @@ export function CombatEncounterPanel({
             {showReveal && (
                 <View style={styles.reveal} testID="combat-reveal">
                     <ScrollView contentContainerStyle={styles.revealScroll} testID="combat-reveal-column">
-                        <Text style={styles.revealEyebrow} testID="combat-reveal-eyebrow">{revealFrame.eyebrow}</Text>
                         <Animated.View
                             entering={inkInstant ? undefined : FadeInDown.delay(600).duration(500)}
                             style={[
@@ -1491,7 +1490,6 @@ const useStyles = makeStyles((AXM) => ({
     // threat rows under the foe at a reading width instead of running each
     // row (label at one edge, chevron at the other) across the screen.
     revealScroll: { alignItems: 'center', padding: 22, paddingBottom: 40, width: '100%', maxWidth: REVEAL_COLUMN_MAX_WIDTH, alignSelf: 'center' },
-    revealEyebrow: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.blood, marginBottom: 14, marginTop: 8 },
     revealPortrait: { borderWidth: 2, borderRadius: 6, padding: 6, backgroundColor: AXM.deepBg },
     revealPortraitElite: { borderWidth: 4 },
     revealHeld: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1, color: AXM.kindElite, marginTop: 6, textAlign: 'center' },

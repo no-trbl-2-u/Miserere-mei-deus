@@ -33,10 +33,13 @@ export interface MenuButtonProps {
     place?: 'M-01' | 'O-07';
     testID?: string;
     accessibilityLabel?: string;
+    /** Read aloud only, never printed; `hint` is read aloud too when this is absent. */
+    accessibilityHint?: string;
 }
 
 export function MenuButton({
     label, hint, onPress, disabled = false, primary = false, danger = false, place = 'M-01', testID, accessibilityLabel,
+    accessibilityHint,
 }: MenuButtonProps) {
     const styles = useStyles();
     const kit = LOOKS[place] === 'brass';
@@ -55,7 +58,7 @@ export function MenuButton({
             accessibilityRole="button"
             accessibilityState={{ disabled }}
             accessibilityLabel={accessibilityLabel ?? label}
-            accessibilityHint={hint}
+            accessibilityHint={accessibilityHint ?? hint}
             testID={testID}
         >
             {({ pressed }) => (
