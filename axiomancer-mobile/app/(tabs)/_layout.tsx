@@ -11,6 +11,9 @@ import {
 } from '@/state/presenters/tabs.engine';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectTabBadges } from '@/state/presenters/navigation.engine';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
+import { INK_SOFT, VELLUM_OXBLOOD } from '@/components/exploration/wildsInk';
 import ExplorationScreen from './exploration/index';
 import CharacterScreen from './character/index';
 import MemoirScreen from './memoir/index';
@@ -35,6 +38,9 @@ function TabBadge({ text, kind }: { text: string; kind: 'event' | 'levelup' }) {
 // upgrades in one place. Per-tab a11y labels override the registry's
 // generic ones. The active tab wears the handoff active-tick: a short
 // sulfur bar above the icon (the handoff tab contract).
+// W-06: the tab bar is on the vellum dock when T's pick says so.
+const VELLUM_DOCK = lookOf('W-06') === 'vellum';
+
 const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {
   eye: { name: 'action-eye', label: 'Exploration tab' },
   sword: { name: 'action-sword', label: 'Combat tab' },
@@ -70,7 +76,9 @@ function TabIconWithBadge({
   if (!icon) return null;
   return (
     <View style={styles.iconContainer}>
-      <View style={[styles.activeTick, focused && { backgroundColor: AXM.sulfur }]} />
+      {/* W-06: on the vellum dock the selected tab is marked by its oxblood ink
+          alone (T, 2026-11-06), so the tick above the icon is not drawn. */}
+      <View style={[styles.activeTick, focused && !VELLUM_DOCK && { backgroundColor: AXM.sulfur }]} />
       <AxmIcon name={icon.name} size={size} color={color} label={icon.label} />
       {badge && <TabBadge text={badge.text} kind={badge.kind} />}
     </View>
@@ -108,10 +116,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: AXM.sulfur,
-        tabBarInactiveTintColor: AXM.bone,
+        tabBarStyle: VELLUM_DOCK ? [styles.tabBar, styles.tabBarVellum] : styles.tabBar,
+        // The vellum dock inks the tabs: oxblood for the selected one, iron-gall
+        // brown for the rest. Nothing is drawn behind the selection.
+        tabBarActiveTintColor: VELLUM_DOCK ? VELLUM_OXBLOOD : AXM.sulfur,
+        tabBarInactiveTintColor: VELLUM_DOCK ? INK_SOFT : AXM.bone,
         tabBarLabelStyle: styles.tabLabel,
+        ...(VELLUM_DOCK ? { tabBarBackground: () => <KitBackdrop piece="nav-dock-vellum" /> } : {}),
       }}
     >
       <Tabs.Screen
@@ -226,6 +237,11 @@ const useStyles = makeStyles((AXM) => ({
     borderTopWidth: 1,
     height: 60,
     paddingBottom: 8,
+  },
+  // The dock art replaces the bar's flat panel and its top rule.
+  tabBarVellum: {
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
   },
   // Type size and tracking come from the presenter so the tab-bar FIT
   // contract in `state/e2e/tabs.engine.test.ts` measures the label the bar
