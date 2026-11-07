@@ -4,6 +4,8 @@ import { View, Text, ScrollView } from 'react-native';
 import { ScreenBg } from '@/components/ScreenBg';
 import { AxmIcon } from '@/components/icons';
 import { SectionLabel } from '@/components/SectionLabel';
+import { KitDivider, KitHeader, VELLUM_INK } from '@/components/experience/KitBackdrop';
+import { lookOf } from '@/components/experience/looks';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -13,6 +15,18 @@ import {
 } from '@/state/presenters/memoir.engine';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
+
+const LEDGER_VELLUM = lookOf('L-01') === 'vellum';
+
+/**
+ * A Ledger section heading: on its vellum plate, inked in oxblood, where T
+ * kept the kit (L-01), else today's label. The vellum set's leaf stands where
+ * brass has its quatrefoil, so the errands heading passes `quatrefoil`.
+ */
+function LedgerHeading({ children, variant = 'star', right }: { children: string; variant?: 'star' | 'quatrefoil'; right?: React.ReactNode }) {
+    if (LEDGER_VELLUM) return <KitHeader look="vellum" variant={variant} right={right}>{children}</KitHeader>;
+    return <SectionLabel size={10}>{children}</SectionLabel>;
+}
 
 function QuestCard({ quest }: { quest: MemoirQuestRow }) {
     const styles = useStyles();
@@ -115,7 +129,8 @@ export default function MemoirScreen() {
 
                 {/* Chronicle */}
                 <View style={styles.section} testID="memoir-chronicle">
-                    <SectionLabel size={10}>{vm.chronicleEyebrow}</SectionLabel>
+                    {LEDGER_VELLUM && <KitDivider piece="divider-ornate-ink" />}
+                    <LedgerHeading>{vm.chronicleEyebrow}</LedgerHeading>
                     {vm.chronicle.length === 0 ? (
                         <Text style={styles.emptyLine}>{vm.emptyChronicle}</Text>
                     ) : (
@@ -147,7 +162,8 @@ export default function MemoirScreen() {
 
                 {/* Errands */}
                 <View style={styles.section} testID="memoir-quests">
-                    <SectionLabel size={10}>{vm.questsEyebrow}</SectionLabel>
+                    {LEDGER_VELLUM && <KitDivider piece="divider-plain-ink" />}
+                    <LedgerHeading variant="quatrefoil">{vm.questsEyebrow}</LedgerHeading>
                     {vm.quests.active.length === 0 &&
                     vm.quests.completed.length === 0 &&
                     vm.quests.forgotten.length === 0 ? (
@@ -190,10 +206,17 @@ export default function MemoirScreen() {
 
                 {/* Remains */}
                 <View style={styles.section} testID="memoir-remains">
-                    <View style={styles.remainsEyebrowRow}>
-                        <AxmIcon name="action-tombstone" size={14} color={AXM.bone} />
-                        <SectionLabel size={10}>{vm.remainsEyebrow}</SectionLabel>
-                    </View>
+                    {LEDGER_VELLUM && <KitDivider piece="divider-plain-ink" />}
+                    {LEDGER_VELLUM ? (
+                        <LedgerHeading right={<AxmIcon name="action-tombstone" size={14} color={VELLUM_INK} />}>
+                            {vm.remainsEyebrow}
+                        </LedgerHeading>
+                    ) : (
+                        <View style={styles.remainsEyebrowRow}>
+                            <AxmIcon name="action-tombstone" size={14} color={AXM.bone} />
+                            <SectionLabel size={10}>{vm.remainsEyebrow}</SectionLabel>
+                        </View>
+                    )}
                     <Text style={styles.remainsLine} testID="memoir-death-line">
                         {vm.remains.deathLine}
                     </Text>

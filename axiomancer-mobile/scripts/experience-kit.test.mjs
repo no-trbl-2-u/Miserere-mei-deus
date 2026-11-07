@@ -126,3 +126,10 @@ test('nothing imports the PNG registry root, so the 86 PNGs stay unbundled', () 
     for (const root of roots) walk(root)
     assert.deepEqual(offenders, [], 'importing the PNG registry pulls all 86 delivered PNGs into the bundle')
 })
+
+test("the worn-gear panel and the item cards keep today's code (UK1e: B-03 and B-06 stay Normal)", () => {
+    for (const f of ['EquipmentDock.tsx', 'ItemCard.tsx']) {
+        const source = fs.readFileSync(path.join(MOBILE, 'components/inventory', f), 'utf8')
+        assert.doesNotMatch(source, /experience\/(KitBackdrop|looks)/, `${f} must not draw a kit piece`)
+    }
+})
