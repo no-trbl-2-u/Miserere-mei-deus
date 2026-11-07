@@ -1,7 +1,7 @@
 /**
  * Every dialogue offers a way out among its choices.
  *
- * The dialogue screen no longer draws a separate "walk away" row (UK2c), so
+ * The dialogue screen no longer draws a separate "walk away" row, so
  * the only exit is a choice that ends the conversation (one with no
  * `nextNodeId`). A node that is a dead end (no choices) or whose choices all
  * loop or sit behind a gate strands the player. This walks every dialogue tree

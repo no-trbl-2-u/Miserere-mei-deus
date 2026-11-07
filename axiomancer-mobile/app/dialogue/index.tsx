@@ -71,7 +71,7 @@ function ReplyConsequences({ choice }: { choice: EventChoice }) {
     // before slicing, so they neither render an empty chip nor spend one of
     // the three visible slots.
     // The errand a reply starts is told by the reply's own words, so its
-    // quest-start chip is dropped (UK2c).
+    // quest-start chip is dropped.
     const visible = visibleConsequences(choice.consequences).filter((c) => c.kind !== 'quest-start');
     if (visible.length === 0) return null;
     const shown = visible.slice(0, 3);
