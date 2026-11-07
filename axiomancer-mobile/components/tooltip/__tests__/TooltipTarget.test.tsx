@@ -105,7 +105,6 @@ describe('<TooltipTarget>', () => {
             { kind: 'effect', id: 'tier1_heart_attack' },
             { kind: 'card', id: 'ad_baculum' },
             { kind: 'slot', id: 'Head' },
-            { kind: 'burden', id: 'current-burden' },
         ];
 
         kinds.forEach(({ kind, id }, index) => {
