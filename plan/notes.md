@@ -139,3 +139,30 @@ Defaults taken: an elite drop adds its own satchel row when carried entries alre
 
 - T, after the combat-overlay experiment: "Enemy looks great ... the worktree can open a PR now since it fixed the combat screen", on top of the earlier "The black overlay is WAY too much." Removed from `CombatCombatantPane`: the top scrim (`axmCombatTopScrim`, with `combatTopScrimStops`), the floor glow (`axmFloorGlow`), the dock scrim (`axmCombatDockScrim`) and the red hit-flash vignette (`combat-hit-flash`), plus their styles, the `woundVignette` colour and the tests that pinned them. The red flash on a hit is gone too; that is part of "remove any combat overlay". The title screen is untouched.
 - The dimming T saw was on Android and the web build never showed it, so T's phone is the real check. The likely cause is 43ef90b3c's resized scrims.
+
+The look table is `axiomancer-mobile/components/experience/looks.ts`: `LOOKS`,
+a plain place-id to look map holding T's pick for each of the 44 ledger places,
+and `PLACE_PIECES`, which records the converted pieces each place draws. No
+component hard-codes a look, so a change of heart is a one-line edit. The
+primitives are `components/experience/KitBackdrop.tsx` (`KitBackdrop`,
+`KitImage`, `KitHeader`, `KitDivider`), ported from closed PR #1398
+(`experience-brass-full`, `5dd8cf6e9`) and widened to both looks; the
+nine-slice stays flex rows and columns with percentage insets, never
+`capInsets`, which Android ignores. Thirty-six brass webps (carried
+byte-for-byte from `5dd8cf6e9`, narrowed from its 65 to the pieces T's picks
+name) and twelve new vellum webps are bundled under
+`assets/images/experience/brass` and `.../vellum`, merged by
+`.../experience/kit.ts`; every other delivered piece stays an unbundled PNG.
+Nothing is wired to a screen — 152.2 through 152.6 do that — and the gate
+fails if the title screen ever draws a kit piece.
+
+Defaults taken under the loop, since no question could reach T mid-run:
+`vellum-chip` was converted alongside the eleven vellum pieces the chunk note
+lists, because W-01's status card carries chips inside its oval and 152.2 would
+otherwise stall on a missing piece. The disk gate is named
+`scripts/experience-kit.test.mjs`, not the reference's `brass-kit.test.mjs`,
+because it now covers both looks. `scripts/asset-provenance.test.mjs` grew an
+`EXTRA_REGISTRY_ROOTS` entry so its registry-reachability sweep walks
+`experience/kit.ts` as well as `index.ts`; the reference build instead
+re-exported `BRASS` from `index.ts`, which would pull all 86 PNGs into the
+bundle.

@@ -36,7 +36,7 @@
 
 **Vellum and ink.**
 
-- Text that sits on a vellum piece is inked: body text in dark iron-gall brown (about `#2b1f14`), and accents in oxblood (about `#7a1f14`) where today's text is gold or amber (`[T to confirm #3]`).
+- Text that sits on a vellum piece is inked: body text in dark iron-gall brown (about `#2b1f14`), and accents in oxblood (about `#7a1f14`) where today's text is gold or amber (T, 2026-11-06: oxblood red, not the dark-brown body ink).
 - Every inked colour meets 4.5:1 contrast on the parchment.
 - Green is darkened to a readable ink. An example is the fight summary's "Victory".
 - T's note on P-01 ("adjust the font to be easier to read, and change the yellow font to be readable") is satisfied by the ink rule and a body face at least as large as today's.
@@ -78,7 +78,6 @@
 
 ## Acceptance
 
-- **A1** One look table holds T's pick for each of the 44 places, and every piece it names is a converted, bundled webp with provenance. A test fails if a place is missing from the table, if a piece it names is not bundled, or if the title screen draws a kit piece.
 - **A2** The Wilds' status card, node panel, BACK / TRAVEL HERE and quest tracker are on vellum with inked text. The status card's contents sit inside its oval at 360 and 390 widths, and the top of the Wilds ships with and without a black band behind it, switched by a dev toggle. The map node marks are unchanged.
 - **A3** The bottom tab bar sits on the vellum dock. The selected tab is marked only by oxblood ink, with nothing drawn behind it.
 - **A4** In the fight:
@@ -95,19 +94,18 @@
 
 1. When should this be built? Default: the Asap lane, after the entries already there, so T sees it at the MVP demo on Nov 16. Or: table order. [T to confirm #1]
 2. Which top of the Wilds ships by default while T compares the two? Default: no black band, which is closest to the mixer. Or: the black band. [T to confirm #2]
-3. What colour do gold or amber accents become on parchment? Default: oxblood red, as in the mixer. Or: the same dark brown as the body text. [T to confirm #3]
-4. Which ring does the intent badge use? The kit has an oxblood ring and a brass ring. Default: oxblood for an attack and brass for anything else (guard, buff), matching today's colour split. Or: oxblood always. [T to confirm #4]
+3. **Answered** (T, 2026-11-06): gold and amber accents on parchment become oxblood red, as in the mixer, not the dark-brown body ink.
+4. **Answered** (T, 2026-11-06): the intent badge uses the oxblood ring for an attack and the brass ring for anything else (guard, buff), matching today's colour split. Both rings are converted and registered (152.1).
 
 ## Chunks
 
-Measure: 8 open · 0 closed · next A9
+Measure: 7 open · 1 closed · next A9
 
-- [ ] **152.1** The look table, the kit primitives and the pieces it names · M · closes A1 · needs — · alias: UK1a
-- [ ] **152.2** The Wilds on vellum, and the tab bar · M · closes A2, A3 · needs 152.1 · alias: UK1b
-- [ ] **152.3** The fight in brass where T kept it, layout held · M · closes A4 · needs 152.1 · alias: UK1c
-- [ ] **152.4** The Spoils on vellum, inked to read · S · closes A5 · needs 152.1 · alias: UK1d
-- [ ] **152.5** Self in brass; the Ledger and Satchel pieces · M · closes A6, A7 · needs 152.1 · alias: UK1e
-- [ ] **152.6** The main menu and Settings in brass · M · closes A8 · needs 152.1 · alias: UK1f
+- [ ] **152.2** The Wilds on vellum, and the tab bar · M · closes A2, A3 · needs — · alias: UK1b
+- [ ] **152.3** The fight in brass where T kept it, layout held · M · closes A4 · needs — · alias: UK1c
+- [ ] **152.4** The Spoils on vellum, inked to read · S · closes A5 · needs — · alias: UK1d
+- [ ] **152.5** Self in brass; the Ledger and Satchel pieces · M · closes A6, A7 · needs — · alias: UK1e
+- [ ] **152.6** The main menu and Settings in brass · M · closes A8 · needs — · alias: UK1f
 
 ### 152.1 (UK1a) — The look table, the kit primitives and the pieces it names · M · closes A1 · requires —
 

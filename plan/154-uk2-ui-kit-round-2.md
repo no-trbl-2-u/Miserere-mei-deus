@@ -110,8 +110,8 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel goes (`[T to conf
 
 Measure: 8 open · 1 closed · next A10
 
-- [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs 152.1 · alias: UK2a
-- [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs 152.1 · alias: UK2b
+- [ ] **154.1** Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · needs — · alias: UK2a
+- [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
 - [ ] **154.3** The dialogue offers two choices · S · closes A3 · needs 154.1 · alias: UK2c
 - [ ] **154.5** The stakes card says three things · S · closes A5 · needs 154.1 · alias: UK2e
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs 154.1, 153.2 · alias: UK2f

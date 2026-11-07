@@ -570,3 +570,4 @@
 - 2026-11-04 · 121.2 (alias: TP1b) · Title screen shows Doré's lion; plate fills tall phones · 348da77f..2a84a14b (#1394)
 - 2026-11-06 · 153.7 (alias: UX1g) · Deck directions mock page lets T pick one of three · 618f0d73..618f0d73 (#1405)
 - 2026-11-06 · 154.4 (alias: UK2d) · the cutscene omen is bare text on the background, no border or panel · 7b2436bd..b7154690 (#1408)
+- 2026-11-06 · 152.1 (alias: UK1a) · The look table, the kit primitives and 48 converted pieces · f7ace151..6463dbf2 (#1407)
