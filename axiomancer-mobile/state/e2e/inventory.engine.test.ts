@@ -169,8 +169,6 @@ describe('selectInventoryViewModel: shape contract', () => {
         expect(Array.isArray(vm.tabs)).toBe(true);
         expect(Array.isArray(vm.items)).toBe(true);
         expect(typeof vm.shilling).toBe('number');
-        expect(typeof vm.burden).toBe('number');
-        expect(typeof vm.burdenMax).toBe('number');
         expect(typeof vm.isEmpty).toBe('boolean');
         expect(typeof vm.emptyMessage).toBe('string');
         expect(['all', 'equipment', 'consumable', 'material', 'quest']).toContain(vm.activeTab);
@@ -420,29 +418,10 @@ describe('selectInventoryViewModel: equipped flag (EQ1 A1)', () => {
 // ---------------------------------------------------------------------------
 
 describe('selectInventoryViewModel: invariants', () => {
-    it('burden is non-negative on a fresh game (and within capacity)', () => {
-        // Fresh game starts well below burdenMax; the looser
-        // invariant (just >= 0) leaves room for overflow without
-        // breaking on a starting inventory.
+    it('holds any amount: sixty distinct items all show, with no cap or weight on the VM', () => {
         const store = createGameStore(createMemoryAdapter());
-
-        const vm = selectInventoryViewModel(store.getState());
-
-        expect(vm.burden).toBeGreaterThanOrEqual(0);
-        expect(vm.burdenMax).toBeGreaterThan(0);
-    });
-
-    it('burden is UNCAPPED — exceeds burdenMax when inventory carries more than capacity (mechanics-ui audit [3.0] fix)', () => {
-        // Pre-fix `computeBurden` clamped to `Math.min(BURDEN_MAX,
-        // total)`; a player carrying 60 items read "50/50" — chrome
-        // lied. Post-fix the bar text reads "60/50" honestly. The
-        // StatBar fill still clamps at 100% internally (correct —
-        // a bar can't visualize "more than full").
-        const store = createGameStore(createMemoryAdapter());
-        // Synthesize an inventory with > BURDEN_MAX (=50) consumable
-        // entries so total > capacity. Items must be distinct ids so
-        // the presenter's stacking pass doesn't collapse them into
-        // one row.
+        // Items must be distinct ids so the presenter's stacking pass
+        // doesn't collapse them into one row.
         const inventory = Array.from({ length: 60 }, (_, i) => ({
             id: `phial-${i}`,
             name: `Phial ${i}`,
@@ -455,9 +434,8 @@ describe('selectInventoryViewModel: invariants', () => {
         });
 
         const vm = selectInventoryViewModel(store.getState());
-        expect(vm.burdenMax).toBe(50);
-        expect(vm.burden).toBe(60);
-        expect(vm.burden).toBeGreaterThan(vm.burdenMax);
+        expect(vm.items).toHaveLength(60);
+        expect(Object.keys(vm).join(' ')).not.toMatch(/burd|weight|capacity/i);
     });
 
     it('the returned VM is deep-frozen', () => {
@@ -767,7 +745,7 @@ describe('selectInventoryViewModel: chrome strings', () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
         const vm: InventoryViewModel = selectInventoryViewModel(store.getState());
 
-        expect(vm.sectionHeader).toBe('SATCHEL · PURSE · BURDEN');
+        expect(vm.sectionHeader).toBe('SATCHEL · PURSE');
         expect(vm.categoryHeaders.equipment).toBe('✠ GEAR & GIRDING');
         expect(vm.categoryHeaders.consumable).toBe('✠ PHIALS & SOPS');
         expect(vm.categoryHeaders.material).toBe('✠ STUFF');

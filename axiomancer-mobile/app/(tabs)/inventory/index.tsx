@@ -4,8 +4,6 @@ import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
-import { StatBar } from '@/components/StatBar';
-import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { EquipmentDock } from '@/components/inventory/EquipmentDock';
 import { InventoryTabs } from '@/components/inventory/InventoryTabs';
 import { ItemGrid } from '@/components/inventory/ItemGrid';
@@ -171,20 +169,6 @@ export default function InventoryScreen() {
                         <Text style={styles.shillingVal}>⚜ {vm.shilling}</Text>
                     </View>
                 </View>
-                <View style={styles.burdenSection}>
-                    {/* Wrap the burden bar in a TooltipTarget pointing
-                        at the kind:'burden' content. Tap explains
-                        what burden does + the over-cap consequence. */}
-                    <TooltipTarget
-                        kind="burden"
-                        id="burden"
-                        accessibilityLabel="Explain burden"
-                        accessibilityHint="tap to read description"
-                        testID="inventory-burden-tooltip-target"
-                    >
-                        <StatBar value={vm.burden} max={vm.burdenMax} color={AXM.rust} label="BURDEN · STONE" height={9} />
-                    </TooltipTarget>
-                </View>
             </View>
 
             <EquipmentDock
@@ -268,7 +252,4 @@ const useStyles = makeStyles((AXM) => ({
     shillingBox: { alignItems: 'flex-end' },
     shillingLabel: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, letterSpacing: 1 },
     shillingVal: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.sulfur, lineHeight: 24 },
-    burdenSection: {
-        marginTop: 8,
-    },
 }));

@@ -155,23 +155,6 @@ describe('selectTooltipContentFor', () => {
         });
     });
 
-    describe('kind: burden (Phase 74 walkthrough — inventory Tick 1)', () => {
-        it('returns content for id "burden"', () => {
-            const content = selectTooltipContentFor('burden', 'burden', EMPTY_STATE);
-            expect(content?.title).toBe('BURDEN');
-            expect(content?.body).toContain('weight');
-            expect(content?.footnote).toContain('shed');
-        });
-
-        it('returns null for an unknown burden id', () => {
-            expect(selectTooltipContentFor('burden', 'whatever', EMPTY_STATE)).toBeNull();
-        });
-
-        it('returns null for an empty burden id', () => {
-            expect(selectTooltipContentFor('burden', '', EMPTY_STATE)).toBeNull();
-        });
-    });
-
     describe('kind: slot (Phase 74 walkthrough Tick 3)', () => {
         // Only weapon / armor / relic tooltip ids resolve.
         const slotKeys = ['weapon', 'armor', 'relic'] as const;

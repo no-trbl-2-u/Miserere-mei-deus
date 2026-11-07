@@ -138,9 +138,9 @@ describe('FE-019: alarm state', () => {
         expect(r.queryByTestId('statbar-track-alarmed')).toBeNull();
     });
 
-    it('never alarms when no threshold is given (the BURDEN bar)', () => {
+    it('never alarms when no threshold is given (a bar with no threshold)', () => {
         const r = render(
-            <StatBar value={0} max={50} color="#8b4a1a" label="BURDEN · STONE" />
+            <StatBar value={0} max={50} color="#8b4a1a" label="STONE" />
         );
         expect(r.queryByTestId('statbar-value-alarmed')).toBeNull();
     });
