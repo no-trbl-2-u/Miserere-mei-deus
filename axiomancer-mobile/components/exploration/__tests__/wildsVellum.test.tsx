@@ -57,7 +57,7 @@ afterEach(() => {
     devSettingsStore.set({ wildsBlackBand: true });
 });
 
-const INKS = new Set([VELLUM_INK, INK_SOFT, VELLUM_OXBLOOD]);
+const INKS = new Set<string>([VELLUM_INK, INK_SOFT, VELLUM_OXBLOOD]);
 
 /** A node option for the panel: a fight, no purse. */
 const BATTLE = {
