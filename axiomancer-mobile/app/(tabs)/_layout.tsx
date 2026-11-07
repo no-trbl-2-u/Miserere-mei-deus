@@ -67,11 +67,13 @@ const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {
 function TabIconWithBadge({
   kind,
   color,
+  size,
   focused,
   badge,
 }: {
   kind: string;
   color: string;
+  size: number;
   focused: boolean;
   badge: { text: string; kind: 'event' | 'levelup' } | null;
 }) {
@@ -84,7 +86,7 @@ function TabIconWithBadge({
       {/* W-06: on the vellum dock the selected tab is marked by its oxblood ink
           alone (T, 2026-11-06), so the tick above the icon is not drawn. */}
       <View style={[styles.activeTick, focused && !VELLUM_DOCK && { backgroundColor: AXM.sulfur }]} />
-      <AxmIcon name={icon.name} size={TAB_ICON_SIZE} color={color} label={icon.label} />
+      <AxmIcon name={icon.name} size={size} color={color} label={icon.label} />
       {badge && <TabBadge text={badge.text} kind={badge.kind} />}
     </View>
   );
@@ -141,6 +143,7 @@ export default function TabLayout() {
             <TabIconWithBadge
               kind="eye"
               color={color}
+              size={TAB_ICON_SIZE}
               focused={focused}
               badge={badges.exploration}
             />
@@ -158,6 +161,7 @@ export default function TabLayout() {
             <TabIconWithBadge
               kind="crown"
               color={color}
+              size={TAB_ICON_SIZE}
               focused={focused}
               badge={badges.character}
             />
@@ -174,6 +178,7 @@ export default function TabLayout() {
             <TabIconWithBadge
               kind="quill"
               color={color}
+              size={TAB_ICON_SIZE}
               focused={focused}
               badge={badges.memoir}
             />
@@ -190,6 +195,7 @@ export default function TabLayout() {
             <TabIconWithBadge
               kind="bag"
               color={color}
+              size={TAB_ICON_SIZE}
               focused={focused}
               badge={badges.inventory}
             />
@@ -209,6 +215,7 @@ export default function TabLayout() {
             <TabIconWithBadge
               kind="cards"
               color={color}
+              size={TAB_ICON_SIZE}
               focused={focused}
               badge={badges.deck}
             />
@@ -223,7 +230,7 @@ export default function TabLayout() {
           title: TAB_TITLES.settings,
           tabBarAccessibilityLabel: TAB_TITLES.settings,
           tabBarIcon: ({ color, focused }) => (
-            <TabIconWithBadge kind="gear" color={color} focused={focused} badge={null} />
+            <TabIconWithBadge kind="gear" color={color} size={TAB_ICON_SIZE} focused={focused} badge={null} />
           ),
         }}
       />
