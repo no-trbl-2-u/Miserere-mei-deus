@@ -1,0 +1,35 @@
+{
+  "source": "wreckmaster.sheet.png",
+  "frame": 256,
+  "columns": 8,
+  "rows": 3,
+  "anchor": {
+    "kind": "foot-line",
+    "x": 128.0,
+    "y": 218.0,
+    "why": "Grounded silhouette aligned to the foot line."
+  },
+  "clips": {
+    "idle": {
+      "row": 0,
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "rest": 0
+    },
+    "struck": {
+      "row": 1,
+      "frames": 8,
+      "fps": 16,
+      "loop": false,
+      "rest": 7
+    },
+    "attacking": {
+      "row": 2,
+      "frames": 8,
+      "fps": 12,
+      "loop": false,
+      "rest": 7
+    }
+  }
+}

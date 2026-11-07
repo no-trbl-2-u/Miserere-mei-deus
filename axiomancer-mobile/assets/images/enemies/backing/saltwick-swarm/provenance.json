@@ -1,0 +1,38 @@
+[
+  {
+    "generated_by": "derived",
+    "date": "2026-11-06",
+    "tool": "scripts/bake-backings.mjs (sharp)",
+    "model": "none - no image model was called and nothing was spent",
+    "post_process": "one backing per cell, from that cell alone: threshold 64, close 0.012 of the cell edge, fill holes, drop islands under 0.0005 of the cell, no grow, feather 0.6px, black, lossless WebP",
+    "graded": false,
+    "license": "torio Javardry free material; see docs/licences/torio-javardry.md",
+    "source": "anim/saltwick-swarm/, each cell backed by the file of the same index. Holds only the silhouette: no pixel of colour survives.",
+    "covers": [
+      "saltwick-swarm-00.backing.webp",
+      "saltwick-swarm-01.backing.webp",
+      "saltwick-swarm-02.backing.webp",
+      "saltwick-swarm-03.backing.webp",
+      "saltwick-swarm-04.backing.webp",
+      "saltwick-swarm-05.backing.webp",
+      "saltwick-swarm-06.backing.webp",
+      "saltwick-swarm-07.backing.webp",
+      "saltwick-swarm-08.backing.webp",
+      "saltwick-swarm-09.backing.webp",
+      "saltwick-swarm-10.backing.webp",
+      "saltwick-swarm-11.backing.webp",
+      "saltwick-swarm-12.backing.webp",
+      "saltwick-swarm-13.backing.webp",
+      "saltwick-swarm-14.backing.webp",
+      "saltwick-swarm-15.backing.webp",
+      "saltwick-swarm-16.backing.webp",
+      "saltwick-swarm-17.backing.webp",
+      "saltwick-swarm-18.backing.webp",
+      "saltwick-swarm-19.backing.webp",
+      "saltwick-swarm-20.backing.webp",
+      "saltwick-swarm-21.backing.webp",
+      "saltwick-swarm-22.backing.webp",
+      "saltwick-swarm-23.backing.webp"
+    ]
+  }
+]

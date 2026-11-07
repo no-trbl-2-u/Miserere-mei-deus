@@ -28,6 +28,15 @@ import type { CombatEvent, Enemy } from '@mechanics';
 
 const TURNS = 24;
 
+/**
+ * Frame sets installed before any enemy in the library wears their portrait
+ * (the six Breakwater foes of the portrait swap). They have no enemy to take a
+ * turn, so the roster sweep below cannot cover them yet.
+ */
+const STAGED_SETS = [
+    'bilge-stalker', 'coralback', 'quay-crab', 'saint-beneath', 'saltwick-swarm', 'wreckmaster',
+]
+
 /** Sear the Frozen's free line: a DEAL now, and INFERNO on the foe for its turn start. */
 const SEAR = cardIdNamed('Sear the Frozen');
 /** Thornwall's free line: THORNS, for the foe's strikes to meet. */
@@ -80,8 +89,19 @@ function expectActionThenFlinch(view: RenderResult, set: EnemyFrameSet) {
 
 describe('every framed enemy acts on every turn it fires (A1)', () => {
     it('finds the whole framed roster in the library', () => {
-        // The guard against a vacuous table: one enemy per installed set.
-        expect(FRAMED.map((e) => e.portraitAsset).sort()).toEqual(Object.keys(ENEMY_FRAME_SETS).sort());
+        // The guard against a vacuous table: one enemy per installed set, bar the
+        // Breakwater portraits whose sets are installed ahead of their enemies.
+        const unseated = Object.keys(ENEMY_FRAME_SETS).filter((key) => !STAGED_SETS.includes(key));
+        expect(FRAMED.map((e) => e.portraitAsset).sort()).toEqual(unseated.sort());
+    });
+
+    it('lists as staged only sets whose portrait no library enemy wears yet', () => {
+        // A stale entry fails here: once an enemy wears one of these, drop it from
+        // STAGED_SETS so the turn sweep below covers that enemy.
+        for (const key of STAGED_SETS) {
+            expect(Object.keys(ENEMY_FRAME_SETS)).toContain(key);
+            expect(FRAMED.map((e) => e.portraitAsset)).not.toContain(key);
+        }
     });
 
     it('counts an action beat on every fired turn, across the roster', () => {

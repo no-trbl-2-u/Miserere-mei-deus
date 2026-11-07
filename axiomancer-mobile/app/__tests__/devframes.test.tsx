@@ -72,12 +72,12 @@ describe('the enemy frame harness', () => {
     });
 
     // AN5 A8 (closed by AN5e): the gallery shows every enemy with a portrait,
-    // all seventeen, so T can watch each cycle its three clips outside a
-    // fight. Read off the static registry, not the frame registry, so a
+    // including the six Breakwater portraits. It reads the static registry
+    // so a
     // portrait whose set went missing is a missing button here too.
-    it('offers a set for every one of the seventeen portraits (A8)', () => {
+    it('offers a set for every one of the 23 portraits (A8)', () => {
         render(<DevFrameHarness />);
-        expect(ENEMY_ART_KEYS).toHaveLength(17);
+        expect(ENEMY_ART_KEYS).toHaveLength(23);
         for (const key of ENEMY_ART_KEYS) {
             expect(screen.getByTestId(`devframes-set-${key}`)).toBeTruthy();
         }
