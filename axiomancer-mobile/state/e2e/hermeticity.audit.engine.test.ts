@@ -174,11 +174,6 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // that the route is gone and the header names its callers are source
         // facts, unprovable by rendering.
         'state/e2e/app-components.engine.test.tsx',
-        // The UK1e guard (spec 152.5) reads the committed inventory components
-        // to prove the worn-gear panel and item cards stay on today's code (no
-        // vellum or experience look import); an import is a source fact,
-        // unprovable by rendering.
-        'components/experience/__tests__/self-ledger-satchel.test.tsx',
     ]);
 
     const FS_PATTERN =
