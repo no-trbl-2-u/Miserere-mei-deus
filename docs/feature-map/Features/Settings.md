@@ -25,6 +25,7 @@ route in Tabs, from `axiomancer-mobile/app/(tabs)/settings/index.tsx`.
 - [[Features/Inventory|Inventory]]
 - [[Features/Memoir|Memoir]]
 - [[Features/Index|Index]]
+- [[Features/The dev menu|The dev menu]]
 
 ## Uses
 
