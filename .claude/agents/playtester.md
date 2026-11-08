@@ -157,8 +157,8 @@ only — `axiomancer-mobile/docs/dev-tools.md` is the reference):
   (e.g. `fresh-start`, `apprentice-fv-interaction`, `sage-fv-boss-gate`,
   `wanderer-staged-village`, `apprentice-fv-rest`, `apprentice-fv-cache`,
   `wanderer-fv-blacksmith`, `l30-bw-hazard`).
-- **The `/dev` route** — reached from the SELF tab's DEV TOOLS link
-  (`self-dev-tools-link`). Use it to stand somewhere or fire a
+- **The `/dev` route** — reached from Settings' DEV TOOLS link
+  (`settings-dev-tools-link`). Use it to stand somewhere or fire a
   specific encounter when the caller's focus needs it; never to
   grant yourself power a player would not have mid-path.
 - **The skip hook** — when a node genuinely cannot be completed

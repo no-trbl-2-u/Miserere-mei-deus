@@ -424,10 +424,10 @@ async function seamLeg(page, baseUrl, id) {
 }
 
 async function openSeamFromDevTools(page, baseUrl, seam) {
-    await page.goto(`${baseUrl}/character`, { waitUntil: 'networkidle' })
-    await page.getByTestId('self-dev-tools-link').waitFor({ state: 'visible', timeout: 15000 })
-        .catch(() => fail('the SELF sheet has no DEV TOOLS link'))
-    await page.getByTestId('self-dev-tools-link').click()
+    await page.goto(`${baseUrl}/settings`, { waitUntil: 'networkidle' })
+    await page.getByTestId('settings-dev-tools-link').waitFor({ state: 'visible', timeout: 15000 })
+        .catch(() => fail('Settings has no DEV TOOLS link'))
+    await page.getByTestId('settings-dev-tools-link').click()
     await waitForPath(page, '/dev', 'the dev tools')
     if (seam.section) await openDevSection(page, seam.section, seam.leaf)
     if (seam.press) await seam.press(page)

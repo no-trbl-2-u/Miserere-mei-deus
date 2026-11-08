@@ -104,7 +104,7 @@ const SCREENS = [
     },
     {
         id: 'hazard', file: '13-hazard.png', drive: async (p) => {
-            await goto(p, '/character')
+            await goto(p, '/settings')
             await openDevMenu(p)
             await openDevSection(p, 'rewards', 'debug-hazard-button')
             await p.getByTestId('debug-hazard-button').click()
@@ -142,7 +142,7 @@ const SCREENS = [
     },
     {
         id: 'hazard-board', file: '14-hazard-board.png', drive: async (p) => {
-            await goto(p, '/character')
+            await goto(p, '/settings')
             await openDevMenu(p)
             await openDevSection(p, 'rewards', 'debug-hazard-button')
             await p.getByTestId('debug-hazard-button').click()
@@ -160,7 +160,7 @@ const SCREENS = [
 /** Open the dev menu and click a dedicated debug-launch button (real
  *  beginX() action), then settle on the resulting minigame route. */
 async function debugLaunch(page, testId, settleMs) {
-    await goto(page, '/character')
+    await goto(page, '/settings')
     await openDevMenu(page)
     await openDevSection(page, 'rewards', testId)
     const btn = page.getByTestId(testId)
@@ -172,7 +172,7 @@ async function debugLaunch(page, testId, settleMs) {
 /** Open the dev menu and fire a trigger-encounter button, then settle on
  *  the resulting route (minigame intro / approach screen). */
 async function triggerMinigame(page, kind) {
-    await goto(page, '/character')
+    await goto(page, '/settings')
     await openDevMenu(page)
     await openDevSection(page, 'encounters', `debug-trigger-encounter-${kind}`)
     const btn = page.getByTestId(`debug-trigger-encounter-${kind}`)
@@ -214,7 +214,7 @@ async function playRound(page) {
 }
 
 async function triggerEncounter(page, kind) {
-    await goto(page, '/character')
+    await goto(page, '/settings')
     await openDevMenu(page)
     await openDevSection(page, 'encounters', `debug-trigger-encounter-${kind}`)
     const btn = page.getByTestId(`debug-trigger-encounter-${kind}`)
@@ -233,11 +233,11 @@ async function goto(page, path) {
 
 // Phase 132 extracted the inline DevMenu dropdown (the old
 // `dev-menu-header` affordance) into a dedicated `/dev` route reached by
-// the `self-dev-tools-link` row on the SELF sheet. Callers `goto('/character')`
+// the `settings-dev-tools-link` row at the foot of Settings. Callers `goto('/settings')`
 // first; this taps the link and waits for the route before the Debug*
 // buttons are queried.
 async function openDevMenu(page) {
-    const link = page.getByTestId('self-dev-tools-link')
+    const link = page.getByTestId('settings-dev-tools-link')
     await link.waitFor({ state: 'visible', timeout: 15000 })
     await link.click()
     await page.waitForURL((url) => url.pathname.endsWith('/dev'), { timeout: 10000 })

@@ -1,11 +1,11 @@
 /**
- * SELF-tab affordance that opens the dedicated `/dev` route.
+ * Settings affordance that opens the dedicated `/dev` route.
  *
- * The SELF screen stays a player-facing character surface; the dev
+ * Settings stays a player-facing surface; the dev
  * controls live on their own route, reached by tapping this link.
  *
  * Production gate: returns `null` outside dev builds, so production /
- * non-dev builds expose no dev affordance on the SELF tab.
+ * non-dev builds expose no dev affordance in Settings.
  */
 
 import React from 'react';
@@ -29,7 +29,7 @@ export function DevToolsLink() {
             accessibilityRole="button"
             accessibilityLabel="Open dev tools"
             accessibilityHint="evidence and encounter controls for testing"
-            testID="self-dev-tools-link"
+            testID="settings-dev-tools-link"
         >
             <View style={styles.text}>
                 <Text style={styles.label}>DEV TOOLS</Text>

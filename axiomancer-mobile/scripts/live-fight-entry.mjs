@@ -4,7 +4,7 @@
 //   await enterLiveFight(page, baseUrl, { seed: 16 })            // standard foe
 //   await enterLiveFight(page, baseUrl, { seed: 16, kind: 'boss' })
 //
-// Boots the app on /character, opens /dev through the SELF tab's link, and
+// Boots the app on /settings, opens /dev through its DEV TOOLS link, and
 // presses `debug-trigger-encounter-<kind>`. `<CombatGate>` engages the fight
 // and pushes `/combat-encounter`; this resolves once that route shows the
 // combat reveal. The seed pins the engine through `__AXM_COMBAT_SEED__`,
@@ -27,8 +27,8 @@ export async function enterLiveFight(page, baseUrl, options = {}) {
         globalThis.__AXM_FORCE_DEV_TOOLS__ = true
         if (typeof s === 'number') globalThis.__AXM_COMBAT_SEED__ = s
     }, seed ?? null)
-    await page.goto(`${baseUrl}/character`, { waitUntil: 'networkidle' })
-    const link = page.getByTestId('self-dev-tools-link')
+    await page.goto(`${baseUrl}/settings`, { waitUntil: 'networkidle' })
+    const link = page.getByTestId('settings-dev-tools-link')
     await link.waitFor({ state: 'visible', timeout })
     await link.click()
     await page.waitForURL((url) => url.pathname.endsWith('/dev'), { timeout })

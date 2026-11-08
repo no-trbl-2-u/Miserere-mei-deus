@@ -137,17 +137,17 @@ function startStaticServer(rootDir) {
 // ---------------------------------------------------------------------------
 
 /**
- * Navigate from the SELF tab into the dev controls.
+ * Navigate from Settings into the dev controls.
  *
  * Phase 132 extracted the inline `DevMenu` dropdown (the old
  * `dev-menu-header` affordance) into a dedicated `/dev` route reached
- * by the `self-dev-tools-link` row on the SELF sheet. The Debug* entry
+ * by the `settings-dev-tools-link` row at the foot of Settings. The Debug* entry
  * buttons now live on that Developer screen, so the harness taps the
  * link and waits for the route before looking for them.
  */
 async function openDevTools(page) {
-    await page.getByTestId('self-dev-tools-link').waitFor({ state: 'visible', timeout: 15000 })
-    await page.getByTestId('self-dev-tools-link').click()
+    await page.getByTestId('settings-dev-tools-link').waitFor({ state: 'visible', timeout: 15000 })
+    await page.getByTestId('settings-dev-tools-link').click()
     await page.waitForURL((url) => url.pathname.endsWith('/dev'), { timeout: 10000 })
 }
 
@@ -157,9 +157,9 @@ async function checkButton(page, baseUrl, c) {
     // (phase 47b: `web.output` moved to `"single"`) — the documented opt-in
     // (lib/buildProfile.ts). Inert in real builds: nothing sets the global there.
     await page.addInitScript(() => { globalThis.__AXM_FORCE_DEV_TOOLS__ = true })
-    await page.goto(`${baseUrl}/character`, { waitUntil: 'networkidle' })
+    await page.goto(`${baseUrl}/settings`, { waitUntil: 'networkidle' })
 
-    // Open the dev tools (SELF → DEV TOOLS → the /dev Developer screen)
+    // Open the dev tools (SETTINGS → DEV TOOLS → the /dev Developer screen)
     // and fire the trigger button.
     await openDevTools(page)
     await openDevSection(page, 'encounters', `debug-trigger-encounter-${c.button}`)

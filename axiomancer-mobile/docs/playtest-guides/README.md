@@ -24,7 +24,7 @@ Shared facts (every guide assumes them):
   `globalThis.__AXM_FORCE_DEV_TOOLS__ = true`). A fixture with `arrive: true`
   fires the node's event once navigation is ready (`components/FixtureBoot.tsx`)
   and stands down if a session already exists. The run is ephemeral — no save slot is read or written.
-- `/dev` is reached from the SELF tab (`self-dev-tools-link`); its controls are
+- `/dev` is reached from Settings (`settings-dev-tools-link`); its controls are
   catalogued in `docs/dev-tools.md`.
 - Seed globals are read at bundle boot, so a session sets them before every
   page load: `playtest-session.mjs start --agent <name> --seed <n>` sets
