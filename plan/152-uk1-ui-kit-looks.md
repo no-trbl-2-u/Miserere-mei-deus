@@ -22,7 +22,7 @@
 
 ## Design
 
-**One look table.** A module (e.g. `components/experience/looks.ts`) maps each of the 44 place ids (`M-01` ... `O-07`, the ledger's ids) to `normal`, `brass` or `vellum`, with T's picks as the values. Each wired component reads its place's look from it, so a later change of heart is a one-line edit, not a re-wire. `normal` means the component's code path is today's, untouched.
+**One look table.** A module (e.g. `components/experience/looks.ts`) maps each of the 43 place ids (the mixer had 44; F-04, the hazard deck link, went with its screen in 153.5) (`M-01` ... `O-07`, the ledger's ids) to `normal`, `brass` or `vellum`, with T's picks as the values. Each wired component reads its place's look from it, so a later change of heart is a one-line edit, not a re-wire. `normal` means the component's code path is today's, untouched.
 
 **T's picks:**
 
@@ -30,7 +30,7 @@
 |---|---|
 | Brass Gothic | M-01 main menu buttons; S-01 ENTER COMBAT / WITHDRAW; S-03 intent badge; S-04 conviction chip; S-06 player dock; S-09 player VITAE bar; F-01 portrait frame; F-02 level badge; F-03 HEART / BODY / MIND tiles; F-05 section headings and divider; F-06 VITAE pool bar; B-04 gear slot rows; O-01 section headings; O-03 segmented choices; O-04 radio choices; O-05 on/off toggles; O-06 volume steppers; O-07 menu row buttons |
 | Vellum & Ink | W-01 status card; W-02 node panel; W-03 BACK / TRAVEL HERE; W-04 quest tracker; W-06 bottom tab bar; P-01 fight summary; P-02 CONTINUE; P-03 card offer; P-04 TAKE NOTHING / TAKE CARD; L-01 Ledger headings and dividers; B-05 ALL / GEAR / PHIALS tabs |
-| Normal (unchanged) | W-05 map node marks; S-02 name rail and VITAE bar; S-05 momentum chip; S-07 END; S-08 portrait ring; F-04 hazard deck link; B-01 purse; B-02 burden bar; B-03 worn-gear panel; B-06 item cards; D-01 to D-04 (the whole Deck screen); O-02 colour theme list |
+| Normal (unchanged) | W-05 map node marks; S-02 name rail and VITAE bar; S-05 momentum chip; S-07 END; S-08 portrait ring; B-01 purse; B-02 burden bar; B-03 worn-gear panel; B-06 item cards; D-01 to D-04 (the whole Deck screen); O-02 colour theme list |
 
 **Brass** reuses #1398's wiring for exactly the brass places above, and nothing else.
 

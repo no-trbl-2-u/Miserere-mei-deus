@@ -5,7 +5,7 @@
 > - The main menu says only its three words.
 > - The Wilds' quest tracker steps aside while a node is chosen, and loses its label and a lone 0/1.
 > - The tab bar is bigger icons with no words.
-> - The fight loses "A FOE RISES" and the dock's row of circles, so END shrinks and the dock grows.
+> - The fight loses the reveal's kicker line and the dock's row of circles, so END shrinks and the dock grows.
 > - The Self tab loses the hazard deck link.
 > - The Satchel loses burden entirely.
 > - The Deck gets three mocked directions for T's owner-led revamp.
@@ -30,7 +30,7 @@
 - **Main menu.** `state/presenters/main-menu.engine.ts` gives each row a hint ("begin at the very start — nothing in hand"). `components/menu/MenuButton.tsx` draws it under the label, and Settings' rows use the same component.
 - **Quest tracker.** `components/exploration/QuestTracker.tsx` heads itself `TRACKER_HEAD = 'QUESTS'` (`state/presenters/quest.copy.ts`) and prints each row's `progress` when non-empty. `NodeConfirmPanel` and the tracker are both on screen while a node is chosen.
 - **Tab bar.** `app/(tabs)/_layout.tsx` draws an icon over a small caps label for each of the six tabs.
-- **Reveal.** `CombatEncounterPanel` prints "A FOE RISES" above the foe's name.
+- **Reveal.** The reveal prints a kicker line above the portrait, one per tier: "⚔ A FOE BARS THE WAY", "⚔ A CHAMPION HOLDS THE WAY" and "⚔ THE WAY ENDS HERE" (`REVEAL_EYEBROW_FIGHT`, `_ELITE`, `_BOSS` in `reveal.copy.ts`, carried as `RevealFrameVM.eyebrow`). "A FOE RISES", the words T quoted, was the kit mixer's mock; the app never printed it.
 - **The dock's circles.** These are the phase ledger. `CombatFooterDock.tsx` draws one `LedgerMark` per phase under the VITAE bar: O for a phase cleared, X for overwhelmed, a ring for one still to come (`DOCK_LEDGER_MARK = 14`). Tapping them opens their gloss. The name rail already reads "PHASE 1/8".
 - **Hazard deck.** Self's "Hazard Deck" link pushes `/hazard-deck`, a screen showing the saved hazard deck. Nothing else links to it.
   - The saved hazard deck is already one of the W2 "cuts" (`plan/deadlines.md`: "the cuts (RE-CAST cards, the saved hazard deck, `deadcard`)"), still `needs plot` in the Nov 3 Item.
@@ -47,7 +47,7 @@
   - The tracker drops its "QUESTS" head.
   - A row's counter is hidden when the quest has a single step, so it would only ever read 0/1 or 1/1 (Confirmed by T (2026-11-07): single-step quests).
 - **Tab bar.** Six icons and no words, each icon larger (about 30 pt, from today's smaller size) and centred in its slot. Each tab keeps its name as its accessibility label, so nothing is lost to a screen reader.
-- **Reveal.** No "A FOE RISES". Everything else on the reveal screen stays, since it is T's reference screen ("I do love the screen looking like this").
+- **Reveal.** No kicker line on any tier: the eyebrow field and its three strings go, and the tier still reads off the portrait's frame and the boss's held title card. Everything else on the reveal screen stays, since it is T's reference screen ("I do love the screen looking like this").
 - **Dock.** The phase ledger's marks leave the dock (`[T to confirm #2]`). The END button narrows, and the dock grows taller so the brass dock art (spec 152) reads. VITAE, the piles and the portrait keep their order.
 - **Hazard deck.** Self's link goes, and so does the `/hazard-deck` route and screen, which nothing else reaches (Confirmed by T (2026-11-07): the route and screen go). The saved hazard deck in the save file is left to the W2 cuts plot. This spec removes only what the player sees.
 - **No burden.** The Satchel has no burden bar, tooltip or number, and its header loses the word. The presenter stops computing it. Nothing in the rules changes, because nothing in the rules read it: the player can hold anything and everything (T).
