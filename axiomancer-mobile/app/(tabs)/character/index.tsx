@@ -180,8 +180,8 @@ export default function CharacterScreen() {
               >
                 {tilesBrass && <KitBackdrop piece="stat-tile" scale={tile.scale} />}
                 <StanceGlyph kind={r.stanceKey} size={28} color={AXM.parchment} />
-                <Text style={styles.baseStatLabel}>{r.label}</Text>
-                <Text style={styles.baseStatValue}>{r.value}</Text>
+                <Text style={[styles.baseStatLabel, { fontSize: tile.labelSize }]} numberOfLines={1}>{r.label}</Text>
+                <Text style={[styles.baseStatValue, { fontSize: tile.valueSize, lineHeight: tile.valueSize + 2 }]} numberOfLines={1}>{r.value}</Text>
               </View>
             </TooltipTarget>
           ))}
@@ -362,7 +362,7 @@ const useStyles = makeStyles((AXM) => ({
   section: { paddingTop: 4, paddingHorizontal: 12, paddingBottom: 0 },
   baseRow: { flexDirection: 'row', flexWrap: 'nowrap', gap: 4, marginTop: 6, justifyContent: 'center' },
   baseCard: { paddingVertical: 10, paddingHorizontal: 6, backgroundColor: AXM.panelBg, borderWidth: 1, borderColor: AXM.ash, alignItems: 'center' },
-  baseStatLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 1, color: AXM.bone, marginTop: 3 },
+  baseStatLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 0, color: AXM.bone, marginTop: 3 },
   baseStatValue: { fontFamily: FONTS.sans, fontSize: 32, color: AXM.sulfur, lineHeight: 34, marginTop: 2 },
   effectsList: { marginTop: 4, gap: 4 },
   emptyLabel: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, letterSpacing: 1, textTransform: 'uppercase' },
