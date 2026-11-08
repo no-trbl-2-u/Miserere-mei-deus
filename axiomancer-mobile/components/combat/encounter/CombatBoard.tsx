@@ -39,7 +39,7 @@ import Animated, {
     useAnimatedStyle, useSharedValue,
     type SharedValue,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, LinearGradient, Path, RadialGradient, Rect as SvgRect, Stop } from 'react-native-svg';
 
 import { FONTS, HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
@@ -53,6 +53,7 @@ import type {
 import { dieCanPowerCardVM, DEAD_TRAY_COPY, selectDeadTray, STANCE_COLORS, PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
 import { largePaidLineSize, paidLineCube, paidLineFit, paidLineGap, paidLineLead, paidLineRuns, paidLineWords, GLYPH_EM, GLYPH_GAP, PAID_LINE_LEADING, PAID_LINE_ROWS, PAID_CAPS_SPACING } from '@/state/presenters/paid-line.engine';
 import { KeywordGlyph } from '@/components/keyword-glyphs';
+import { fitCardNameSize } from '@/components/combat/encounter/card-name-fit';
 import { useSetting, type CardTextMode } from '@/state/settings';
 // The ONE mobile source for the rarity band. The face never
 // re-bands a rank and never re-types a rarity hue; see `card-rarity.engine.ts`.
@@ -469,7 +470,7 @@ export const HAND_PILL_OVERHANG = 16;
  *
  * In the fan, card `i` is covered by card `i+1`, so only `step` points of a
  * covered card show, and this chrome eats the first 17.5 of them. The name
- * wraps to at most two lines and runs on under its neighbour; a tap reads it whole.
+ * draws on one line (shrinking to fit) and runs on under its neighbour; a tap reads it whole.
  *
  * Gated for real: `CombatBoard.handfan.test.tsx` renders
  * {@link useCombatBoardStyles} and sums `faceCard.borderWidth +
@@ -1715,8 +1716,9 @@ function artMirrored(cardId: string): boolean {
 
 /**
  * Compact the FREE value to what sits INSIDE the glyph — its intensity (the
- * effect owns the duration): "i1 d1" → "+1", "3 rounds" → "3r", "2" → "+2",
- * "×4 · 3t" → "×4", "+24% · 1t" → "+24%" (a percent keeps its unit).
+ * effect owns the duration): "i1 d1" → "1", "3 rounds" → "3r", "2" → "2",
+ * "×4 · 3t" → "×4", "+24% · 1t" → "24%" (a percent keeps its unit). The pill never
+ * prints a leading "+"; a "-" stays ("-2" → "-2").
  *
  * Input: the face's raw FREE value (or its hero line), or null.
  * Output: a WHOLE value, never a fragment — '' when nothing whole fits.
@@ -1729,14 +1731,16 @@ export function compactFree(v: string | null): string {
     if (!v) return '';
     const s = v.trim();
     const im = s.match(/i(\d+)/i);
-    if (im) return `+${im[1]}`;
+    if (im) return im[1]!;
     const rm = s.match(/^(\d+)\s*rounds?$/i);
     if (rm) return `${rm[1]}r`;
     // The presenter's applyEffect rail: '×4 · 3t', '×1 (enemy)', '×4 · 3t +'.
     const xm = s.match(/×\s*(\d+)/);
     if (xm) return `×${xm[1]}`;
+    const neg = s.match(/^[-−–]\s*(\d+)(%?)/);
+    if (neg) return `-${neg[1]}${neg[2]}`;
     const nm = s.match(/^\+?(\d+)(%?)/);
-    if (nm) return `+${nm[1]}${nm[2]}`;
+    if (nm) return `${nm[1]}${nm[2]}`;
     const head = s.split(/\s+/)[0];
     return head.length <= 3 ? head : '';
 }
@@ -1957,13 +1961,68 @@ export const PLATE_NAME = {
 } as const;
 /** The name's vertical padding, each side (`plateName.paddingVertical`). */
 export const PLATE_NAME_PAD_V = 2;
-/** The name band's fixed height: two name lines, the name's padding, and the pill room only
+/** The smallest size a name steps down to, per face size. The narrow face (the Spoils
+ *  tile) cannot hold the longest Act 1 name on one line at 10, so its floor is lower:
+ *  one line wins over size there. */
+export const PLATE_NAME_FLOOR = { normal: 10, large: 10, narrow: 7 } as const;
+/** The name band's fixed height: ONE name line, the name's padding, and the pill room only
  *  when the face wears a pill (a card without one gives that room to its art). */
 export function nameBandHeight(large: boolean, narrow: boolean, hasPill = false): number {
     const lineH = (large ? PLATE_NAME.large : narrow ? PLATE_NAME.narrow : PLATE_NAME.normal).lineHeight;
     const pillRoom = hasPill ? (large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD) : 0;
-    return pillRoom + 2 * lineH + 2 * PLATE_NAME_PAD_V;
+    return pillRoom + lineH + 2 * PLATE_NAME_PAD_V;
 }
+/** The width the name has inside the band: the face less its border, the band's side
+ *  padding, the rarity spacer and gap, and (large only) the rarity word at the tail. */
+export function nameColumnWidth(width: number, large: boolean, narrow: boolean, rarityWord = ''): number {
+    if (narrow) return width - 2 * 1.5 - 2 * 3;
+    const chrome = 2 * 1.5 + 2 * 6 + 5 + 5;
+    // The rarity word: 10pt sans capitals with 1.6 of tracking, a 6pt margin and the band's gap.
+    const tail = large && rarityWord ? rarityWord.length * 8.6 + 6 + 5 : 0;
+    return width - chrome - tail;
+}
+/** The name's font size on a face: the nominal size, stepped down until the whole name
+ *  fits its column on one line. */
+export function plateNameSize(name: string, width: number, large: boolean, narrow: boolean, rarityWord = ''): number {
+    const key = large ? 'large' : narrow ? 'narrow' : 'normal';
+    return fitCardNameSize(name, nameColumnWidth(width, large, narrow, rarityWord), PLATE_NAME[key].fontSize, PLATE_NAME_FLOOR[key]);
+}
+
+/** The one black of a card face: its name band, art ground and text panel. */
+export const CARD_FACE_BLACK = HUE.black;
+/** How tall the fade is where the art meets the name band and the text panel. */
+export const ART_FADE_H = 12;
+
+/**
+ * An edgeless fade from the art into the face's black, at the art's top or bottom edge,
+ * so a painting whose edge is not pure black blends into the band or panel instead of
+ * cutting. Takes no touches. Input: which edge. Output: a 12 pt gradient strip.
+ */
+function ArtEdgeFade({ edge }: { edge: 'top' | 'bottom' }) {
+    const id = `axmArtFade-${edge}`;
+    const fromBlack = edge === 'top';
+    return (
+        <View
+            pointerEvents="none"
+            style={[edge === 'top' ? styles0.fadeTop : styles0.fadeBottom, { height: ART_FADE_H }]}
+            testID={`combat-card-face-art-fade-${edge}`}
+        >
+            <Svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" pointerEvents="none">
+                <Defs>
+                    <LinearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+                        <Stop offset="0" stopColor={CARD_FACE_BLACK} stopOpacity={fromBlack ? 1 : 0} />
+                        <Stop offset="1" stopColor={CARD_FACE_BLACK} stopOpacity={fromBlack ? 0 : 1} />
+                    </LinearGradient>
+                </Defs>
+                <SvgRect x={0} y={0} width={100} height={100} fill={`url(#${id})`} />
+            </Svg>
+        </View>
+    );
+}
+const styles0 = StyleSheet.create({
+    fadeTop: { position: 'absolute', top: 0, left: 0, right: 0 },
+    fadeBottom: { position: 'absolute', bottom: 0, left: 0, right: 0 },
+});
 
 export const CombatCardFace = React.memo(function CombatCardFace({
     card, width, height, large = false, accent = null, children,
@@ -2004,9 +2063,9 @@ export const CombatCardFace = React.memo(function CombatCardFace({
         : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube) }).size;
     const paidRowH = Math.round(paidSize * PAID_LINE_LEADING);
     // A face too narrow for the hand card's name column (the Spoils tiles) trims the band's
-    // side chrome and the name's size so the longest Act 1 name wraps to two lines, whole words.
+    // side chrome and the name's size so the longest Act 1 name still fits one line.
     const narrow = !large && width < NARROW_FACE_W;
-    // The band is a FIXED height that holds two name lines, plus the free pill's corner
+    // The band is a FIXED height that holds one name line, plus the free pill's corner
     // room when the face wears a pill, so the art plate under it is the same height on
     // every card of a size and pill state.
     const hasPill = hasFree || !!f.isGlobal;
@@ -2024,10 +2083,12 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     const rarBand = rarityFor(card);
     const rarColor = RARITY_COLOR[rarBand];
     const rarLabel = RARITY_LABEL[rarBand];
+    // The name draws on one line; a name too long for its column steps its font down to fit.
+    const nameSize = plateNameSize(card.name, width, large, narrow, large ? rarLabel : '');
     return (
         <View style={[styles.faceOuter, { width, height, shadowColor: accent ?? band }]}>
             <View style={[styles.faceCard, { borderColor: accent ?? band }]}>
-                {/* ① NAME BAND — horizontal blackletter on solid ink, at most two lines.
+                {/* ① NAME BAND — horizontal blackletter on solid ink, one line, shrunk to fit.
                     A fanned card's name runs on under its right-hand neighbour;
                     the tap reads it whole. When the free pill sits over the
                     band's corner, the band takes top padding so the pill never
@@ -2056,8 +2117,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         testID="combat-card-face-rarity-a11y"
                     />
                     <Text
-                        style={[styles.plateName, large && styles.plateNameLarge, narrow && styles.plateNameNarrow]}
-                        numberOfLines={2}
+                        style={[styles.plateName, large && styles.plateNameLarge, narrow && styles.plateNameNarrow, { fontSize: nameSize }]}
+                        numberOfLines={1}
                         allowFontScaling={false}
                         testID="combat-card-face-name"
                     >
@@ -2089,6 +2150,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                             transition={0}
                         />
                         {f.inert ? <View style={styles.plateInertWash} /> : null}
+                        <ArtEdgeFade edge="top" />
+                        <ArtEdgeFade edge="bottom" />
                         {f.typeTag && !f.isGlobal ? (
                             <View style={styles.typeTag} testID="combat-card-face-type-tag">
                                 <Text style={[styles.typeTagText, large && styles.typeTagTextLarge]} numberOfLines={1} allowFontScaling={false}>{f.typeTag}</Text>
@@ -2446,14 +2509,14 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // inline by `CombatCardFace` (`shadowColor` is per-card data, so it cannot
     // live in this static style).
     faceOuter: {
-        borderRadius: 6, backgroundColor: AXM.deepBg,
+        borderRadius: 6, backgroundColor: CARD_FACE_BLACK,
         shadowOpacity: 0.5, shadowRadius: 6, shadowOffset: { width: 0, height: 3 }, elevation: 6,
     },
-    faceCard: { flex: 1, borderWidth: 1.5, borderRadius: 4, backgroundColor: AXM.deepBg, overflow: 'hidden' },
-    // ① The name band — horizontal blackletter, fixed height for two lines, no rule under it.
+    faceCard: { flex: 1, borderWidth: 1.5, borderRadius: 4, backgroundColor: CARD_FACE_BLACK, overflow: 'hidden' },
+    // ① The name band — horizontal blackletter, fixed height for one line, no rule under it.
     plateBand: {
         flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, gap: 5,
-        backgroundColor: AXM.deepBg,
+        backgroundColor: CARD_FACE_BLACK,
     },
     // The rarity spacer: draws nothing, says the rarity to a screen reader.
     // Its width is summed into NAME_BAND_LEFT_CHROME off the shipped sheet by
@@ -2480,12 +2543,12 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.6,
         marginLeft: 6, flexShrink: 0,
     },
-    // The name wraps to at most TWO lines on every face; its explicit lineHeight makes the
-    // band's height a known quantity.
+    // The name draws on ONE line on every face and steps its font down to fit (`plateNameSize`
+    // overrides `fontSize` inline); its explicit lineHeight makes the band's height a known quantity.
     plateName: { flex: 1, fontFamily: TYPE_ROLES.cardName.fontFamily, fontSize: TYPE_ROLES.cardName.fontSize, lineHeight: PLATE_NAME.normal.lineHeight, letterSpacing: 0, color: AXM.parchment, paddingVertical: PLATE_NAME_PAD_V },
     plateNameLarge: { ...PLATE_NAME.large },
-    // Narrow faces (< NARROW_FACE_W: the Spoils tiles): 10.5 pt in a 71 pt column fits
-    // every Act 1 card name in two lines, no word cut (measured off the Fondamento font file).
+    // Narrow faces (< NARROW_FACE_W: the Spoils tiles): 10.5 pt nominal in a 71 pt column; the
+    // longest Act 1 name steps down to about 7.5 pt to hold one line (measured off the Fondamento font file).
     plateNameNarrow: { ...PLATE_NAME.narrow },
     plateBandNarrow: { paddingHorizontal: 3, gap: 0 },
     plateRaritySpacerNarrow: { width: 0 },
@@ -2496,7 +2559,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // ③ The PAID line — die cube then one line of text, solid ground, no rule.
     plateLedger: {
         flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, gap: 5,
-        backgroundColor: AXM.deepBg,
+        backgroundColor: CARD_FACE_BLACK,
     },
     paidColumn: { flex: 1, justifyContent: 'center' },
     // The small face's ledger: the whole PAID line over up to three rows, at

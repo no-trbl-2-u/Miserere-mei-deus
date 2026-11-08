@@ -107,7 +107,7 @@ function RunText({ run, anchorRef }: { run: DeckRunVM; anchorRef: React.RefObjec
             accessibilityHint={run.minor ? `${run.gloss} (minor right now)` : run.gloss}
             testID={`deck-keyword-${run.keyword}`}
         >
-            {run.keyword}
+            {run.word}
         </Text>
     );
 }
