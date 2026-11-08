@@ -147,6 +147,37 @@ describe('the enemy words stand on the board as chips', () => {
     });
 });
 
+describe('SHOCK and UNBROKEN stand on the board', () => {
+    const SHOCK = { effectId: 'debuff_shock', remainingDuration: 3, intensity: 2, appliedAt: 1, tier: 1 as const };
+
+    it('SHOCK shows on your status row with its number, turns and gloss', () => {
+        const s = fightAt('bw-h1');
+        const chip = buildCombatViewModel({ ...s, player: { ...s.player, effects: [SHOCK] } })
+            .player.effects.find((e) => e.effectId === 'debuff_shock')!;
+        expect(chip).toMatchObject({ intensity: 2, duration: 3 });
+        expect(chip.glyph.label).toBe('Shock');
+        expect(chip.gloss).toMatch(/per hit/);
+        expect(effectChipA11y(chip)).toContain('3 turns left');
+    });
+
+    it('SHOCK on the foe shows on its row too: the status works on either side', () => {
+        const s = fightAt('bw-h1');
+        const chip = buildCombatViewModel({ ...s, enemy: { ...s.enemy, effects: [SHOCK] } })
+            .enemy.effects.find((e) => e.effectId === 'debuff_shock')!;
+        expect(chip).toMatchObject({ intensity: 2, duration: 3 });
+    });
+
+    it('an armed UNBROKEN shows on the foe beside its WARD, saying what it pays', () => {
+        const s = fightAt('bw-h2');
+        const warded = (ward: number) => buildCombatViewModel({
+            ...s, enemyWords: { ...NO_WORDS, ward, unbroken: { damage: 4, hits: 2 } },
+        }).enemy.effects.find((e) => e.effectId === 'enemy-word-unbroken');
+        expect(warded(6)).toMatchObject({ noBadge: true, caption: 'DEAL 4 x2 at its next turn if any WARD is left' });
+        expect(warded(6)!.gloss).toMatch(/pays nothing/);
+        expect(warded(0)).toBeUndefined();
+    });
+});
+
 describe('the foes own counters stand on the board, never on the telegraph', () => {
     it('the Green Jelly HELD cards show on its side with their count', () => {
         const s = fightAt('bw-t2');

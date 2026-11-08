@@ -25,9 +25,21 @@
   },
   {
     "rule": "carrier-rule",
+    "id": "SHOCK",
+    "reason": "the word landed with spec 162's chunk 162.2; no foe plays it until 162.4 recasts Saltwick Swarm, and this row goes stale then",
+    "filed": "2026-11-08"
+  },
+  {
+    "rule": "carrier-rule",
     "id": "TEMPER",
     "reason": "pinned at CS1, awaits T's card session",
     "filed": "2026-10-13"
+  },
+  {
+    "rule": "carrier-rule",
+    "id": "UNBROKEN",
+    "reason": "the word landed with spec 162's chunk 162.2; no foe plays it until 162.4 recasts its foes, and this row goes stale then",
+    "filed": "2026-11-08"
   },
   {
     "rule": "carrier-rule",

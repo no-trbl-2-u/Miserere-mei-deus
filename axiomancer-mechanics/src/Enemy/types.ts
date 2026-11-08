@@ -172,6 +172,18 @@ export interface Enemy {
 export type EnemyMoveKind = 'attack' | 'defend' | 'status' | 'danger' | 'unknown';
 
 /**
+ * What an UNBROKEN clause pays out: e.g. `{ damage: 4, hits: 2 }`,
+ * `{ shock: 1 }` or `{ barnacle: 1 }`. `damage` is per hit at the authored
+ * level and scales with the foe; `hits`, `shock` and `barnacle` are counts.
+ */
+export interface UnbrokenPayout {
+    damage?: number;
+    hits?: number;
+    shock?: number;
+    barnacle?: number;
+}
+
+/**
  * One move a `phases` foe plays. Numbers are authored at
  * `PHASES_AUTHORED_LEVEL` for the foe's tier and scale with its level
  * (`scaleMoveNumber`, `Combat/combat.threat.ts`).
@@ -216,6 +228,11 @@ export interface EnemyMove {
     undertow?: 'heart' | 'body' | 'mind' | 'random' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;
+    /** SHOCK n: each DEAL against you deals n more, per hit, for 3 turns (a count, not scaled by level). */
+    shock?: number;
+    /** UNBROKEN: on a WARD move, what pays out at the start of the foe's next
+     *  turn if any of the WARD is left. See {@link UnbrokenPayout}. */
+    unbroken?: UnbrokenPayout;
     /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
      *  See {@link EnemyMoveRider}. */
     rider?: EnemyMoveRider;

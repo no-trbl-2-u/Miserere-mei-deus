@@ -16,7 +16,7 @@
  */
 
 import type { Character } from '../Character/types';
-import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind } from '../Enemy/types';
+import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind, UnbrokenPayout } from '../Enemy/types';
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
@@ -241,11 +241,16 @@ export interface CombatThreatEffect {
     undertow?: WheelStance | 'random';
     /** BARNACLE: this many Barnacle Curses join your hand. */
     barnacle?: number;
+    /** SHOCK on you: each DEAL against you deals this much more, per hit, for 3 turns. */
+    shock?: number;
+    /** UNBROKEN: this move's clause, armed when it fires (damage already scaled). */
+    unbroken?: UnbrokenPayout;
 }
 
 /** The enemy words with live state on the board (`combat.enemy-words.ts`). */
 export type EnemyWordId =
-    | 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech' | 'tangle' | 'undertow' | 'barnacle';
+    | 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech' | 'tangle' | 'undertow' | 'barnacle'
+    | 'shock' | 'unbroken';
 
 /**
  * The enemy words' fight state. Optional on the encounter: absent reads as
@@ -269,6 +274,8 @@ export interface EnemyWordsState {
     undertowAlso?: WheelStance;
     /** Counter for the uids of the Barnacles put in your hand. */
     barnacleUid?: number;
+    /** UNBROKEN: the clause the foe's last WARD move armed; read and cleared at the start of its next turn. */
+    unbroken?: UnbrokenPayout;
 }
 
 export interface CombatThreatAction {
@@ -591,12 +598,12 @@ export type CombatEvent =
     | { kind: 'threat-branch'; phaseIndex: number; conditionText: string; taken: 'then' | 'else' }
     // The enemy's reactive cleanse shed some of its own afflictions.
     | { kind: 'threat-cleansed'; phaseIndex: number; effectIds: string[] }
-    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE, LEECH, TANGLE, UNDERTOW or BARNACLE
-     *  landed, `amount` its number),
+    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE, LEECH, TANGLE, UNDERTOW, BARNACLE or SHOCK
+     *  landed, `amount` its number, or an UNBROKEN clause armed),
      *  `soaked` (WARD took `amount` off a DEAL), `cut` (BRINE took `amount` off a GUARD gain),
      *  `ticked` (LEECH took `amount` VITAE from you), `stripped` (SCOUR took `stripped` off the foe)
      *  `faded` (WARD, BRINE or TANGLE ran out with `amount` left), `spent` (a landed PAID play counted a card off TANGLE,
-     *  or UNDERTOW kept a die off the tray) or `shed` (a BARNACLE fell off). */
+     *  UNDERTOW kept a die off the tray, or an UNBROKEN clause paid out) or `shed` (a BARNACLE fell off). */
     | { kind: 'enemy-word'; word: EnemyWordId;
         op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded' | 'spent' | 'shed';
         amount: number; stripped?: string[] }

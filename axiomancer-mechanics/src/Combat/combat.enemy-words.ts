@@ -14,7 +14,7 @@
  * `combat.enemy-words.resolve.ts`.
  */
 
-import type { CombatEncounterState, CombatEvent, EnemyWordsState } from './combat.encounter.types';
+import type { CombatEncounterState, CombatEvent, CombatThreatEffect, EnemyWordsState } from './combat.encounter.types';
 
 /** Why a FREE line is refused while TANGLE holds (the engine's refusal and the board's ribbon). */
 export const TANGLE_FREE_REFUSAL = 'tangled, the next cards cannot use their FREE line, pay with a die';
@@ -52,6 +52,23 @@ export function soakDealWithWard(
     if (r.soaked <= 0) return { state, dealt };
     events.push({ kind: 'enemy-word', word: 'ward', op: 'soaked', amount: r.soaked });
     return { state: { ...state, enemyWords: { ...words, ward: r.ward } }, dealt: r.dealt };
+}
+
+/**
+ * UNBROKEN at the start of the foe's turn, read before WARD fades: the armed
+ * clause as the effects it pays, or none when no WARD is left (any left pays).
+ */
+export function unbrokenPayout(state: Pick<CombatEncounterState, 'enemyWords'>): CombatThreatEffect[] {
+    const words = state.enemyWords;
+    const clause = words?.unbroken;
+    if (!words || !clause || words.ward <= 0) return [];
+    const out: CombatThreatEffect[] = [];
+    if ((clause.damage ?? 0) > 0) {
+        for (let h = 0; h < Math.max(1, clause.hits ?? 1); h++) out.push({ damage: clause.damage });
+    }
+    if ((clause.shock ?? 0) > 0) out.push({ shock: clause.shock });
+    if ((clause.barnacle ?? 0) > 0) out.push({ barnacle: clause.barnacle });
+    return out;
 }
 
 /** The foe's veil halves one HEAL of yours (rounded down) until its next turn. */

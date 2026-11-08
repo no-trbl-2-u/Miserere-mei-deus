@@ -115,6 +115,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         'state/e2e/route-tree.engine.test.ts',
         'state/e2e/route-registration.engine.test.ts',
         'state/e2e/hermeticity.audit.engine.test.ts',
+        // The glyph-table guard reads the catalog build script's copy of the
+        // table, a source fact no render can reach.
+        'components/combat/__tests__/glyphShapes.catalog.test.ts',
         // EQ2b: the slot-word guard reads committed sources, like this one.
         'state/presenters/__tests__/slot-words.test.ts',
         // The Expo-decouple boundary guard reads committed sources

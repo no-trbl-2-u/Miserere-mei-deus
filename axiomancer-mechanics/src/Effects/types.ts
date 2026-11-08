@@ -85,6 +85,11 @@ export interface EffectPayload {
      * own payloads, uncapped.
      */
     damageTakenMult?: number;
+    /**
+     * SHOCK: flat damage added per point of intensity to each DEAL the bearer
+     * takes, before VULNERABLE. Read by `getDamageTakenFlat`.
+     */
+    damageTakenFlat?: number;
     /** DoT-specific behaviour beyond the plain `damageOverTime` tick. */
     dotModifiers?: {
         /** Tick damage ramps the longer the effect survives (POISON):

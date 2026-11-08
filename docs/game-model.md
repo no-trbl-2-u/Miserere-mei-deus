@@ -277,6 +277,16 @@ the Expo app (`axiomancer-mobile`) presents it.
     player library). It cannot be played or scrapped and holds a slot; it
     falls off when you spend a body die on a card, one Barnacle per such
     play. A count, not scaled with level.
+  - **SHOCK n** (`debuff_shock`): every DEAL against the bearer deals n more,
+    per hit, before VULNERABLE and unscaled by the foe's clock. It lasts 3
+    turns; a new SHOCK resets the turns to 3 and adds to n. It works on either
+    side, and only foes place it so far. Counter: GUARD still blocks the larger
+    hit. A count, not scaled with level.
+  - **UNBROKEN** is a clause on a WARD move (`EnemyMove.unbroken`: hits, SHOCK
+    or BARNACLE). At the start of the foe's next turn, if any WARD is left, it
+    pays out, before the foe's move; broken WARD pays nothing, and a partly
+    broken WARD pays in full. A foe denied its turn pays nothing. Counter:
+    break the WARD.
   A foe-only counter (the Tithe-Collector's LEDGER, a hoard) is fight state
   on the pane, not a word. No live foe carries a word until the Breakwater
   foes land.
