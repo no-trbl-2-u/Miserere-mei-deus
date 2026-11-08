@@ -182,6 +182,21 @@ describe('CombatRewardsOverlay', () => {
         expect(screen.getByText('TAKE CARD')).toBeTruthy();
     });
 
+    it('prints no eyebrow, no sub-line and no note under the two buttons', () => {
+        renderOverlay();
+        expect(screen.getByText('Add a card to your deck')).toBeTruthy();
+        expect(screen.queryByText(/SPOILS/)).toBeNull();
+        expect(screen.queryByText(/your deck grows as you fight/)).toBeNull();
+        expect(screen.queryByText(/the best of what there is/)).toBeNull();
+        expect(screen.queryByText(/a lean deck draws/)).toBeNull();
+        expect(screen.queryByText(/choose a card first/)).toBeNull();
+        fireEvent.press(screen.getByTestId(`combat-reward-${OFFER_IDS[0]}`));
+        expect(screen.queryByText(/it joins your deck/)).toBeNull();
+        // The buttons keep their meaning for a screen reader.
+        expect(screen.getByTestId('combat-reward-skip').props.accessibilityLabel).toBe('Take nothing — keep the deck lean');
+        expect(screen.getByTestId('combat-reward-confirm').props.accessibilityLabel).toBe('Take the selected card');
+    });
+
     it('renders nothing at all when the draft is empty', () => {
         render(withAllProviders(<CombatRewardsOverlay offers={[]} onPick={() => undefined} />).tree);
         expect(screen.getByTestId('combat-rewards')).toBeTruthy();

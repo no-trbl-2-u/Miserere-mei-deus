@@ -12,7 +12,7 @@
  *                 line above it, dimmed while a phase resolves. Pushed to the
  *                 right edge however wide the window is.
  *
- * No phase ledger: the name rail's "PHASE n/N" keeps the count. The dock
+ * No phase ledger and no meta line: the board prints no phase count. The dock
  * row is taller than END, so the brass dock art reads around the button.
  *
  * The dock respects the bottom safe-area inset and grows rather than clips.
@@ -42,8 +42,12 @@ export const DOCK_PAD_V = 8;
 export const DOCK_PAD_H = 10;
 export const DOCK_GAP = 10;
 /** The END button: a thumb target, not a corner disc. */
-export const END_BTN_W = 88;
-export const END_BTN_H = 56;
+export const END_BTN_W = 72;
+export const END_BTN_H = 48;
+/** The least a button may be: a 44pt touch target either way. */
+export const END_TOUCH_MIN = 44;
+/** Room left of the portrait, so the brass frame's end cap never cuts its ring. */
+export const DOCK_AVATAR_INSET = 6;
 /** The VITAE fill bar's height. */
 export const VITAE_BAR_H = 8;
 /** Below this share of max VITAE the bar turns blood (presentation only). */
@@ -168,7 +172,7 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
               * portrait and END rather than pushing them inward. The padding is
               * what holds every cell where it is today. */}
             {brass ? <KitBackdrop piece="nav-dock-dark" /> : null}
-            {avatar}
+            <View style={{ marginLeft: DOCK_AVATAR_INSET }} testID="combat-rail-avatar">{avatar}</View>
             <View style={styles.vitaeCol} testID="combat-rail-vitae-col">
                 <View style={styles.vitaeRow}>
                     {/* Print the maximum, as the enemy's bar does, so the
@@ -224,9 +228,9 @@ const useStyles = makeStyles((AXM) => ({
     // windows; its cells never wrap.
     vitaeCol: { flex: 1, minWidth: 0, maxWidth: DOCK_VITAE_MAX_WIDTH, gap: 4 },
     vitaeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6 },
-    vitaeText: { fontFamily: FONTS.mono, fontSize: 14, lineHeight: 18, color: AXM.parchment, letterSpacing: 0.5, flexShrink: 0 },
+    vitaeText: { fontFamily: FONTS.mono, fontSize: 16, lineHeight: 20, color: AXM.parchment, letterSpacing: 0.5, flexShrink: 0 },
     // The maximum rides quieter than the live value.
-    vitaeMax: { color: AXM.bone, fontSize: 11 },
+    vitaeMax: { color: AXM.parchment, fontSize: 13 },
     barTrack: {
         height: VITAE_BAR_H, borderRadius: VITAE_BAR_H / 2, overflow: 'hidden',
         backgroundColor: 'rgba(0,0,0,0.6)', borderWidth: 1, borderColor: AXM.divider,
@@ -243,7 +247,7 @@ const useStyles = makeStyles((AXM) => ({
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
     pileGlyphText: { fontFamily: FONTS.sans, fontSize: 7, color: AXM.ash, lineHeight: 9 },
-    pileCount: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, marginRight: 4 },
+    pileCount: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment, marginRight: 4 },
 
     // `marginLeft: 'auto'` takes the room the capped VITAE column leaves, so
     // END sits at the dock's right edge on a wide window. A phone's column
@@ -251,13 +255,13 @@ const useStyles = makeStyles((AXM) => ({
     endWrap: { width: END_BTN_W, height: END_BTN_H, marginLeft: 'auto' },
     endBtn: {
         width: END_BTN_W, height: END_BTN_H, borderRadius: 10, borderWidth: 2.5, backgroundColor: HUE.medallionBg,
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4,
     },
     // Dimmed while a phase resolves (double-tap guard); every other disabled
     // control on the board uses the same ~0.4 opacity treatment.
     endBtnDisabled: { opacity: 0.4 },
-    endGlyph: { fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 26 },
-    endLabel: { fontFamily: FONTS.sans, fontSize: 15, letterSpacing: 3 },
+    endGlyph: { fontFamily: FONTS.gothic, fontSize: 18, lineHeight: 22 },
+    endLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2 },
     // The honest END consequence floats ABOVE the button. Anchored to the
     // button's RIGHT edge, so the 140pt line runs inward across the board
     // rather than past the screen's right edge, where the board clips.

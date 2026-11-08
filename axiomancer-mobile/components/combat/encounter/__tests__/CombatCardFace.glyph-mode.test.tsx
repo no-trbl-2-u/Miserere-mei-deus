@@ -13,7 +13,7 @@ import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
 import { cardLibrary, rollEncounterDice } from '@mechanics';
-import { CombatCardFace, HAND_CARD_H, HAND_CARD_W } from '@/components/combat/encounter/CombatBoard';
+import { CombatCardFace, HAND_CARD_H, HAND_CARD_W, nameBandHeight } from '@/components/combat/encounter/CombatBoard';
 import { KeywordGlyph } from '@/components/keyword-glyphs';
 import { glyphKeywordFor } from '@/state/presenters/keyword-glyph.engine';
 import { buildCombatViewModel, type CombatCardVM } from '@/state/presenters/combat-encounter.engine';
@@ -155,8 +155,8 @@ describe('the open card prints the same line as the hand', () => {
         const w = 208;
         const size = largePaidLineSize(w);
         const room = paidLineRoom(w, paidLineLead(20)) - 2;
-        // the 305-tall preview less its 52 name band and 100 of art, less the ledger's padding
-        const maxRows = Math.floor((305 - 52 - 100 - 12) / Math.round(size * PAID_LINE_LEADING));
+        // the 305-tall preview less its name band (with the pill room, the tallest) and 100 of art, less the ledger's padding
+        const maxRows = Math.floor((305 - nameBandHeight(true, false, true) - 100 - 12) / Math.round(size * PAID_LINE_LEADING));
         const { combat } = startRealFight(REAL_FIGHT_FIXTURE, { player: { knownCards: GREY, baseStats: { heart: 8, body: 8, mind: 8 } }, seed: 16 });
         const base = rollEncounterDice(combat).state;
         const over: string[] = [];

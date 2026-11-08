@@ -12,7 +12,7 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -20,8 +20,9 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { rollEncounterDice } from '@mechanics';
 import { CombatBoard, type DragController } from '@/components/combat/encounter/CombatBoard';
 import {
-    DOCK_GAP, DOCK_PAD_H, DOCK_PAD_V, DOCK_ROW_H, DOCK_VITAE_MAX_WIDTH, END_BTN_W, END_BTN_H, VITAE_BAR_H, VITAE_LOW_RATIO, dockMinHeight, vitaeBarFill,
+    DOCK_AVATAR_INSET, DOCK_GAP, DOCK_PAD_H, END_TOUCH_MIN, DOCK_PAD_V, DOCK_ROW_H, DOCK_VITAE_MAX_WIDTH, END_BTN_W, END_BTN_H, VITAE_BAR_H, VITAE_LOW_RATIO, dockMinHeight, vitaeBarFill,
 } from '@/components/combat/encounter/CombatFooterDock';
+import { FIGURE_BOTTOM_PCT, FOG_TOP_PCT, SCENE_BAND_PCT } from '@/components/combat/encounter/SeamFog';
 import { PLAYER_AVATAR_SIZE } from '@/components/combat/encounter/CombatCombatantPane';
 import { buildCombatViewModel, type CombatViewModel } from '@/state/presenters/combat-encounter.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
@@ -128,11 +129,33 @@ describe('A4 — the footer dock', () => {
 
     it('END is narrower than before and the dock row is taller than END (UX1d)', () => {
         renderBoard();
-        // Was 116 wide, and the row was END's own 56.
-        expect(END_BTN_W).toBeLessThan(116);
+        // Was 116 wide, then 88 x 56; T's phone says still too big (159.1).
+        expect(END_BTN_W).toBe(72);
+        expect(END_BTN_H).toBe(48);
+        expect(END_BTN_H).toBeGreaterThanOrEqual(END_TOUCH_MIN);
+        expect(END_BTN_W).toBeGreaterThanOrEqual(END_TOUCH_MIN);
         expect(DOCK_ROW_H).toBeGreaterThan(END_BTN_H);
         expect(flat('combat-rail').minHeight).toBe(DOCK_ROW_H + DOCK_PAD_V * 2 + INSETS.bottom);
         expect(flat('combat-rail').alignItems).toBe('center');
+    });
+
+    it('insets the portrait so its ring is whole, and the counts read large and bright (159.1)', () => {
+        renderBoard();
+        expect(flat('combat-rail-avatar').marginLeft).toBe(DOCK_AVATAR_INSET);
+        expect(DOCK_AVATAR_INSET).toBeGreaterThan(0);
+        expect((StyleSheet.flatten(screen.getByTestId('combat-rail-vitae', { includeHiddenElements: true }).props.style) as { fontSize: number }).fontSize).toBeGreaterThanOrEqual(16);
+        const counts = screen.getByTestId('combat-piles');
+        const sizes = within(counts).UNSAFE_getAllByType(Text)
+            .map((n) => StyleSheet.flatten(n.props.style as never) as { fontSize?: number; color?: string })
+            .filter((st) => st.fontSize !== undefined && st.fontSize >= 12);
+        expect(sizes.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('shows no phase/round/turn line in the fight (159.1)', () => {
+        renderBoard();
+        expect(screen.queryByText(/PHASE \d+\/\d+/)).toBeNull();
+        expect(screen.queryByText(/ROUND \d+/)).toBeNull();
+        expect(screen.queryByText(/TURN \d+/)).toBeNull();
     });
 
     it('caps the VITAE column on a wide window, never on a phone (CRITIQUE pass 85)', () => {
@@ -146,7 +169,7 @@ describe('A4 — the footer dock', () => {
         // On phones (375 and a 430 large phone) the column is narrower than the
         // cap, so the phone dock is unchanged.
         const phoneColumn = (width: number) =>
-            width - DOCK_PAD_H * 2 - DOCK_GAP * 2 - PLAYER_AVATAR_SIZE - END_BTN_W;
+            width - DOCK_PAD_H * 2 - DOCK_GAP * 2 - DOCK_AVATAR_INSET - PLAYER_AVATAR_SIZE - END_BTN_W;
         expect(phoneColumn(PHONE.width)).toBeLessThan(DOCK_VITAE_MAX_WIDTH);
         expect(phoneColumn(430)).toBeLessThan(DOCK_VITAE_MAX_WIDTH);
         // END takes the room the capped column leaves, so it stays at the
@@ -194,6 +217,40 @@ describe('A4 — the footer dock', () => {
         expect(dock.paddingBottom).toBe(INSETS.bottom + DOCK_PAD_V);
         expect(dock.minHeight).toBe(dockMinHeight(INSETS.bottom));
         expect(dock.height).toBeUndefined();
+    });
+});
+
+describe('159.1 — the fog over the plate\'s foot', () => {
+    const pct = (v: unknown): number => Number.parseFloat(String(v));
+
+    it.each([['an ordinary foe', false], ['the largest sprite (a boss)', true]])('%s: the fog stays below the foe and above the hand, and takes no touches', (_n, boss) => {
+        renderBoard({ shape: (vm) => ({ ...vm, enemy: { ...vm.enemy, isBoss: boss } }) });
+        const fog = screen.getByTestId('combat-seam-fog');
+        expect(fog.props.pointerEvents).toBe('none');
+        const sceneBandH = pct(flat('combat-enemy-figure-wrap').bottom) >= 0 ? SCENE_BAND_PCT : 0;
+        // The foe's box ends FIGURE_BOTTOM_PCT of the band above the band's foot.
+        const foeBottom = sceneBandH * (1 - pct(flat('combat-enemy-figure-wrap').bottom) / 100);
+        const fogTop = pct(flat('combat-seam-fog').top);
+        const fogBottom = fogTop + pct(flat('combat-seam-fog').height);
+        expect(fogTop).toBeGreaterThanOrEqual(foeBottom - 1e-9);
+        // It ends at the plate's foot, which is above the hand's own top edge.
+        expect(fogBottom).toBeLessThanOrEqual(SCENE_BAND_PCT + 1e-9);
+        expect(fogBottom).toBeGreaterThan(fogTop);
+    });
+
+    it('is drawn before the interactive column, so the hand and the dice sit over it', () => {
+        renderBoard();
+        const ids = testIdOrder();
+        expect(ids.indexOf('combat-seam-fog')).toBeGreaterThan(-1);
+        expect(ids.indexOf('combat-seam-fog')).toBeLessThan(ids.indexOf('combat-hand'));
+        expect(ids.indexOf('combat-seam-fog')).toBeLessThan(ids.indexOf('combat-tray-layer'));
+        expect(ids.indexOf('combat-seam-fog')).toBeGreaterThan(ids.indexOf('combat-arena-backdrop'));
+    });
+
+    it('shares its numbers with the pane: the foe wrap leaves FIGURE_BOTTOM_PCT of the band', () => {
+        renderBoard();
+        expect(flat('combat-enemy-figure-wrap').bottom).toBe(`${FIGURE_BOTTOM_PCT}%`);
+        expect(FOG_TOP_PCT).toBeCloseTo(SCENE_BAND_PCT * (1 - FIGURE_BOTTOM_PCT / 100));
     });
 });
 

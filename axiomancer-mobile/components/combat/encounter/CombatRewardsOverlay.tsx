@@ -11,10 +11,10 @@
  *     definitions, and the flavor. The first tap only selects, so taking a
  *     card is two taps: the tile, then TAKE CARD (Phase TQ1).
  *
- *  2. SKIP IS A CHOICE, not an escape hatch. It carries its own line — a lean
- *     deck draws its good cards more often — and is styled as a peer of TAKE,
+ *  2. SKIP IS A CHOICE, not an escape hatch. It is styled as a peer of TAKE,
  *     not a greyed-out afterthought. The Threadbare Office exists to teach
- *     exactly that.
+ *     that a lean deck draws its good cards more often. The panel prints no
+ *     small print: no eyebrow, no sub-line, no note under the buttons.
  *
  * After an elite fight the draft carries a second option (Phase UP1f): one
  * upgrade of a card the player owns, drawn at random by the engine. UPGRADE
@@ -45,10 +45,8 @@ import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
 import {
-    ELITE_REWARD_SUB,
     ELITE_UPGRADE_BACK_LABEL,
     ELITE_UPGRADE_OPEN_LABEL,
-    SPOILS_SUB,
     SPOILS_TILE_HINT,
     eliteUpgradeNote,
 } from '@/state/presenters/combat-reward.copy';
@@ -122,9 +120,7 @@ export function CombatRewardsOverlay({
         <View style={[styles.backdrop, v && styles.vBackdrop]} testID="combat-rewards">
             <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]} testID="combat-rewards-panel">
                 {v && <KitBackdrop piece="modal-panel-vellum" />}
-                <Text style={[styles.eyebrow, v && styles.vEyebrow]}>✦ SPOILS</Text>
-                <Text style={[styles.title, v && styles.vBody]}>Add a card to your deck</Text>
-                <Text style={[styles.sub, v && styles.vSub]}>{upgradeRow ? ELITE_REWARD_SUB : SPOILS_SUB}</Text>
+                <Text style={[styles.title, v && styles.vBody, styles.titleGap]}>Add a card to your deck</Text>
 
                 <View style={[styles.offerRow, v && styles.vOfferRow]}>
                     {offers.map((card) => {
@@ -185,7 +181,6 @@ export function CombatRewardsOverlay({
                         accessibilityLabel="Take nothing — keep the deck lean"
                     >
                         <Text style={[styles.btnText, { color: vb ? SPOILS_INK.body : AXM.parchment }, vb && styles.vBtnText]}>TAKE NOTHING</Text>
-                        <Text style={[styles.btnNote, vb && styles.vBtnNote]}>a lean deck draws its best more often</Text>
                     </PlateButton>
                     <PlateButton
                         plain={[styles.btn, { borderColor: picked ? AXM.sulfur : AXM.ash, opacity: picked ? 1 : 0.55 }]}
@@ -197,7 +192,6 @@ export function CombatRewardsOverlay({
                         accessibilityLabel="Take the selected card"
                     >
                         <Text style={[styles.btnText, { color: vb ? (picked ? SPOILS_INK.accent : SPOILS_INK.body) : (picked ? AXM.sulfur : AXM.bone) }, vb && styles.vBtnText]}>TAKE CARD</Text>
-                        <Text style={[styles.btnNote, vb && styles.vBtnNote]}>{picked ? 'it joins your deck for the run' : 'choose a card first'}</Text>
                     </PlateButton>
                 </View>
 
@@ -278,9 +272,8 @@ export function CombatRewardsOverlay({
 const useStyles = makeStyles((AXM) => ({
     backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 60 },
     panel: { width: '100%', maxWidth: 420, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 12, paddingVertical: 16, alignItems: 'center' },
-    eyebrow: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.sulfur, marginBottom: 4 },
     title: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, textAlign: 'center' },
-    sub: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12, color: AXM.bone, textAlign: 'center', marginTop: 3, marginBottom: 14 },
+    titleGap: { marginBottom: 14 },
     offerRow: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
     offerFrame: { borderWidth: OFFER_FRAME_BORDER, padding: OFFER_FRAME_PAD, alignItems: 'center' },
     // The rarity word under each offer face. Hue matches the frame it sits in,
@@ -301,9 +294,7 @@ const useStyles = makeStyles((AXM) => ({
     vBackdrop: { padding: 2 },
     vOfferRow: { gap: 0 },
     vPanel: { width: '100%', maxWidth: 420, paddingHorizontal: VELLUM_PANEL_PAD, paddingTop: 36, paddingBottom: 34, alignItems: 'center' },
-    vEyebrow: { color: SPOILS_INK.accent, fontSize: 13 },
     vBody: { color: SPOILS_INK.body },
-    vSub: { color: SPOILS_INK.soft, fontSize: 13, marginHorizontal: 22 },
     vRarity: { fontSize: 10 },
     vBtnText: { fontSize: 14, letterSpacing: 0.6 },
     vBtnNote: { color: SPOILS_INK.body, fontSize: 10 },

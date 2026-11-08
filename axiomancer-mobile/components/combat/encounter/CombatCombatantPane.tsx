@@ -17,6 +17,7 @@
  * wrapper is pointerEvents box-none so only the chips/intent stay tappable.
  */
 
+import { FIGURE_BOTTOM_PCT, SCENE_BAND_PCT } from './SeamFog';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Image } from '@/lib/platform/image';
@@ -386,7 +387,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
                         <Animated.View style={[styles.medallionFlash, flashAnim]} pointerEvents="none" testID="combat-player-flash" />
                     </View>
                     <Svg width={PLAYER_AVATAR_SIZE} height={PLAYER_AVATAR_SIZE} viewBox="0 0 92 92" style={StyleSheet.absoluteFill} pointerEvents="none">
-                        <Circle cx={46} cy={46} r={44.5} stroke={AXM.sulfur} strokeWidth={3.6} fill="none" opacity={0.9} />
+                        <Circle cx={46} cy={46} r={43.5} stroke={AXM.sulfur} strokeWidth={3.6} fill="none" opacity={0.9} />
                     </Svg>
                     {sacrificeCallout ? (
                         <VitaeSacrificeCallout
@@ -416,7 +417,7 @@ export const PlayerMedallion = React.memo(function PlayerMedallion({
 // ── The overlay ──────────────────────────────────────────────────────────────
 
 export const CombatCombatantPane = React.memo(function CombatCombatantPane({
-    enemy, player, onChip, fx, topInset = 0, metaLine, onHudLayout, region, nodeId, onPayToll,
+    enemy, player, onChip, fx, topInset = 0, onHudLayout, region, nodeId, onPayToll,
 }: {
     enemy: CombatEnemyPaneVM;
     player: CombatPlayerPaneVM;
@@ -426,8 +427,6 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
     fx?: CombatFx;
     /** Safe-area insets, passed by the board (the overlay is absolute-fill). */
     topInset?: number;
-    /** Micro phase/round/turn meta rendered beside the enemy name (a11y keeps the words). */
-    metaLine?: string;
     /** The live map region (`vm.region`, e.g. "the Drowned Parish"), keying the
      *  arena backdrop plate. Omitted by the dev-only sandbox route, which gets
      *  the fallback plate — same as every region with no rule of its own. */
@@ -757,7 +756,6 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                 >
                     <View style={styles.hudNameRow} pointerEvents="box-none">
                         <Text style={styles.enemyName} numberOfLines={1}>{enemy.name}</Text>
-                        {metaLine ? <Text style={styles.hudMeta}>{metaLine}</Text> : null}
                     </View>
                     <EnemyHpBar pct={enemy.hpPct} value={enemy.hp} max={enemy.maxHp} />
                     {/* The status kill-path foresight. Makes the DoT win path
@@ -844,14 +842,14 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
 
 const useStyles = makeStyles((AXM) => ({
     // Battlefield band — the scene fills the top ~62% and fades into the floor.
-    sceneBand: { position: 'absolute', top: 0, left: 0, right: 0, height: '62%', backgroundColor: AXM.bg },
+    sceneBand: { position: 'absolute', top: 0, left: 0, right: 0, height: `${SCENE_BAND_PCT}%`, backgroundColor: AXM.bg },
     // Enemy painting — anchored to the band's lower half, clear of the HUD; the
     // grounding shadow hugs its feet. This `top` is the PRE-LAYOUT FALLBACK
     // only: once the HUD's full-width block reports its height the wrap
     // overrides it with the measured anchor (see `combat-hud-block`), so a
     // taller stack of meters pushes the figure down instead of being painted
     // across its head.
-    enemyFigureWrap: { position: 'absolute', left: 0, right: 0, top: COMBAT_HUD_HEIGHT - 14, bottom: '9%', alignItems: 'center', justifyContent: 'flex-end' },
+    enemyFigureWrap: { position: 'absolute', left: 0, right: 0, top: COMBAT_HUD_HEIGHT - 14, bottom: `${FIGURE_BOTTOM_PCT}%`, alignItems: 'center', justifyContent: 'flex-end' },
     enemyShadow: { position: 'absolute', bottom: -12 },
     // The idle-breath wrapper fills its parent so the figure's percentage
     // sizing still resolves against the scene band; `transformOrigin` bottom
@@ -870,7 +868,6 @@ const useStyles = makeStyles((AXM) => ({
         flexGrow: 1, flexShrink: 1, fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur, letterSpacing: 0.6,
         textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 4, textShadowOffset: { width: 0, height: 1 },
     },
-    hudMeta: { marginLeft: 'auto', fontFamily: FONTS.sans, fontSize: 11, color: AXM.bone, letterSpacing: 0.8 },
 
     // Emblem-anchored HP bar.
     hpBlock: { marginTop: 4, height: 58, justifyContent: 'flex-start' },

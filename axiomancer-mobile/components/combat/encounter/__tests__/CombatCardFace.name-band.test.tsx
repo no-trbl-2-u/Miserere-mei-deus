@@ -16,6 +16,8 @@ import {
     HAND_CARD_H,
     HAND_CARD_W,
     NARROW_FACE_W,
+    PLATE_NAME,
+    PLATE_NAME_PAD_V,
     nameBandHeight,
     useCombatBoardStyles,
 } from '@/components/combat/encounter/CombatBoard';
@@ -75,22 +77,52 @@ describe('CombatCardFace name band: a fixed height', () => {
         ['hand', HAND_CARD_W, HAND_CARD_H, false],
         ['large', 208, 305, true],
     ];
-    it.each(sizes)('the %s band is the same height on every card', (_n, w, h, large) => {
-        const expected = nameBandHeight(large, !large && w < NARROW_FACE_W);
+    it.each(sizes)('the %s band is the same height on every card of one pill state', (_n, w, h, large) => {
+        const narrow = !large && w < NARROW_FACE_W;
         const hand = cards();
         expect(hand.length).toBeGreaterThan(1);
+        const seen = new Set<boolean>();
         for (let i = 0; i < hand.length; i++) {
+            const f = hand[i]!.face;
+            const hasPill = !!f.freeGlyph || !!f.isGlobal;
+            seen.add(hasPill);
             const { unmount } = render(withAllProviders(<CombatCardFace card={hand[i]!} width={w} height={h} large={large} />).tree);
             const band = flat('combat-card-face-band');
-            expect(band.height).toBe(expected);
+            expect(band.height).toBe(nameBandHeight(large, narrow, hasPill));
             expect(band.minHeight).toBeUndefined();
             unmount();
         }
+        expect(seen.size).toBeGreaterThan(0);
     });
 
-    it('holds two name lines plus the pill room', () => {
-        expect(nameBandHeight(false, false)).toBe(12 + 2 * 15 + 4);
-        expect(nameBandHeight(false, true)).toBe(12 + 2 * 12 + 4);
-        expect(nameBandHeight(true, false)).toBe(16 + 2 * 24 + 4);
+    it('holds two name lines and the name padding, from the plateName constants', () => {
+        const s = sheet();
+        expect(s.plateName!.lineHeight).toBe(PLATE_NAME.normal.lineHeight);
+        expect(s.plateName!.paddingVertical).toBe(PLATE_NAME_PAD_V);
+        expect(s.plateNameLarge!.lineHeight).toBe(PLATE_NAME.large.lineHeight);
+        expect(s.plateNameNarrow!.lineHeight).toBe(PLATE_NAME.narrow.lineHeight);
+        for (const [large, narrow, key] of [[false, false, 'normal'], [false, true, 'narrow'], [true, false, 'large']] as const) {
+            expect(nameBandHeight(large, narrow)).toBe(2 * PLATE_NAME[key].lineHeight + 2 * PLATE_NAME_PAD_V);
+        }
+    });
+
+    it('reserves the pill room only when the face shows a pill', () => {
+        for (const [large, narrow] of [[false, false], [false, true], [true, false]] as const) {
+            expect(nameBandHeight(large, narrow, true)).toBeGreaterThan(nameBandHeight(large, narrow, false));
+        }
+    });
+
+    it('a Spoils tile (80 x 118) without a pill leaves its art at least 45pt, and a pilled one less', () => {
+        const base = cards()[0]!;
+        const bare = { ...base, face: { ...base.face, freeGlyph: '', isGlobal: false } };
+        const pilled = { ...base, face: { ...base.face, freeGlyph: '◆', isGlobal: false } };
+        const artOf = (card: typeof base) => {
+            const { unmount } = render(withAllProviders(<CombatCardFace card={card} width={80} height={118} />).tree);
+            const art = 118 - 2 * 1.5 - (flat('combat-card-face-band').height as number) - (flat('combat-card-face-ledger').height as number);
+            unmount();
+            return art;
+        };
+        expect(artOf(bare)).toBeGreaterThanOrEqual(45);
+        expect(artOf(pilled)).toBeLessThan(artOf(bare));
     });
 });
