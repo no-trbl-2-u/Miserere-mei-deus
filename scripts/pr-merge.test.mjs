@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url'
 
 import * as policy from './pr-policy.mjs'
 import { AUTO_MARKER, HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, TREE_LINTS, TRUSTED_AUTHORS, treeCheckSafe, auditComment, countAutoMerges, lintTree, mergeWanted, reviewStartedAt, treeUpdateComment, treeUpdated, treeVerdict, verdictFor, verifyGateGreen } from './pr-merge.mjs'
-import { headMarker } from './pr-review.mjs'
+import { headMarker, reviewWanted } from './pr-review.mjs'
 import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
@@ -814,6 +814,85 @@ test('a red scan still dispatches its resolves, and pr-resolve fails the step on
   // Nothing after the scan clears it: the mode ends by returning.
   assert.doesNotMatch(resolve, /process\.exitCode = 0/)
 })
+
+// A review posted on the head by an earlier run, then this run's gate goes green: `review-wanted` runs
+// on the new run, and the merge job runs only when it says go-and-reviewed or reuse (the job's `if`).
+{
+  const DIGEST = 'c'.repeat(40)
+  // This run's review never ran, so `since` is after the verdict: only the digest match can find it.
+  const LATE = '2026-10-20T11:00:00Z'
+  const lateRun = (extra = {}) => {
+    const facts = pr({ digest: DIGEST, since: LATE, ...extra })
+    const wanted = reviewWanted({ ...facts, comments: facts.comments.map((c) => c.body) })
+    const jobRuns = wanted.reuse === true
+    return { wanted, jobRuns, decision: jobRuns ? mergeWanted(facts) : null, facts }
+  }
+
+  test('late gate: a pass on the head before the gate finished runs the decision and merges', () => {
+    const { wanted, jobRuns, decision } = lateRun()
+    assert.equal(wanted.go, false, 'no second review')
+    assert.equal(jobRuns, true, 'the merge job runs')
+    assert.equal(decision.go, true)
+    assert.match(decision.reason, /verdict pass/)
+  })
+
+  test('late gate: the pass predates this run, and the digest is what finds it', () => {
+    const { facts } = lateRun({ digest: null })
+    assert.match(mergeWanted(facts).reason, /no verdict/, 'the head rule alone is bound by since')
+  })
+
+  test('late gate: a not-pass on the head never reaches the merge', () => {
+    const { wanted, jobRuns, facts } = lateRun({ comments: [verdict('not-pass')] })
+    assert.equal(wanted.go, false)
+    assert.equal(jobRuns, false, 'a not-pass does not run the job')
+    assert.match(mergeWanted(facts).reason, /not-pass/, 'and the decision refuses it anyway')
+  })
+
+  test('late gate: the latest verdict on the head counts', () => {
+    const later = verdict('not-pass', HEAD, '2026-10-20T10:40:00Z')
+    assert.equal(lateRun({ comments: [verdict('pass'), later] }).jobRuns, false)
+    const repassed = verdict('pass', HEAD, '2026-10-20T10:50:00Z')
+    assert.equal(lateRun({ comments: [later, repassed] }).jobRuns, true)
+  })
+
+  test('late gate: a pass with a hold label, a plot or the kill switch does not merge', () => {
+    for (const label of HOLD_LABELS) {
+      const { decision, facts } = lateRun({ labels: ['loop:pr', label] })
+      // A seeded draft stops at review-wanted; every other hold reaches the decision and stops there.
+      assert.equal(decision?.go ?? false, false, label)
+      assert.match(mergeWanted(facts).reason, new RegExp(label), label)
+    }
+    assert.equal(lateRun({ labels: ['plot'] }).decision, null, 'a plot PR is never reviewed or merged here')
+    assert.match(lateRun({ title: 'feat: x', labels: ['no-auto-merge'] }).decision.reason, /no-auto-merge/)
+    assert.match(lateRun({ killSwitch: true }).decision.reason, /kill switch/)
+  })
+
+  test('late gate: a pass on an older head does not merge the new head', () => {
+    const { wanted, jobRuns, facts } = lateRun({ comments: [verdict('pass', OLD)], digest: 'd'.repeat(40) })
+    assert.equal(wanted.go, true, 'a new diff is reviewed')
+    assert.equal(jobRuns, false, 'not the late path')
+    assert.match(mergeWanted(facts).reason, /no verdict/, 'and the old pass is no verdict for this head')
+  })
+
+  test('late gate: a red or missing gate on the head still holds', () => {
+    assert.match(lateRun({ checks: [] }).decision.reason, /verify-gate is not green/)
+    assert.match(lateRun({ checks: [{ name: 'verify-gate', conclusion: 'failure', headSha: HEAD }] }).decision.reason, /verify-gate is not green/)
+  })
+
+  test('late gate: a second trigger after the merge is a clean no-op, so a PR merges once', () => {
+    const merged = lateRun({ state: 'MERGED' })
+    assert.equal(merged.wanted.go, false)
+    assert.equal(merged.jobRuns, false, 'review-wanted reads MERGED first: the job does not run')
+    const d = mergeWanted(merged.facts)
+    assert.deepEqual(d, { go: false, reason: 'PR is merged' }, 'a run already queued in the group holds rather than fails')
+  })
+
+  test('late gate: a PR whose gate was green at review time takes the one ordinary route', () => {
+    const fresh = reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: HEAD, digest: DIGEST, comments: [] })
+    assert.equal(fresh.go, true, 'the review runs and the merge job follows it')
+    assert.equal(fresh.reuse, undefined, 'not reuse: one route, one merge request')
+  })
+}
 
 test('shapeArchive: only the lines settle added gain the alias and the PR', () => {
   const before = '- 2026-10-01 · 06.1 (alias: OLD1) · Old · 1234567 (#7)'

@@ -75,7 +75,9 @@ export { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS
  * merge of main (`pr-resolve`) moves the head and leaves the diff alone,
  * and `review-wanted` then reuses the verdict instead of reviewing again.
  * That match ignores `since` (the verdict predates this run by design) and
- * rests on the trusted author plus the digest this run computed itself.
+ * rests on the trusted author plus the digest this run computed itself. It
+ * is also how a run whose gate finished after an earlier run's review finds
+ * that pass: same head, same digest, posted before this run's `since`.
  *
  * @param {{ body: string, createdAt: string, author?: string }[]} comments the PR's comments, any order.
  * @param {string} head the full head SHA the job was given.

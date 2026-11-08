@@ -234,8 +234,11 @@ jobs:
       PR: ${{ github.event_name == 'workflow_dispatch' && inputs.pr || github.event.pull_request.number }}
       DISPATCH: ${{ github.event_name == 'workflow_dispatch' && '--dispatch' || '' }}
     steps:
+      # main's scripts, never the PR's: the digest and the reuse this job
+      # reports are what the merge job's decision reads.
       - uses: actions/checkout@v4
         with:
+          ref: main
           sparse-checkout: scripts
       - uses: actions/setup-node@v4
         with:
@@ -295,6 +298,10 @@ jobs:
     # spares a runner.
     # Also after a reused verdict (an unchanged diff on a new head, the
     # review job skipped): the decision finds that verdict by its digest.
+    # The same route re-runs the decision when the gate finishes after a
+    # review an earlier run posted on this head: that run's merge held on the
+    # gate, and `reuse` comes from this run's `needs` chain, so the gate's
+    # completion is the event and no second workflow or token is involved.
     if: always() && ((needs.review-wanted.outputs.go == 'true' && needs.review.result == 'success') || needs.review-wanted.outputs.reuse == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -99,6 +99,20 @@ test('a head that already has a verdict is not reviewed again; a new head is', (
   assert.equal(reviewWanted(pr({ head: 'c'.repeat(40), comments: [verdict] })).go, true)
 })
 
+test('a pass already on the head tells the merge job to run; any other verdict does not', () => {
+  const head = 'b'.repeat(40)
+  const v = (verdict) => `## Review verdict\n<!-- pr-review:verdict ${verdict} -->\n${headMarker(head)}`
+  const pass = reviewWanted(pr({ head, comments: [v('pass')] }))
+  assert.equal(pass.go, false, 'no second review')
+  assert.equal(pass.reuse, true)
+  assert.match(pass.reason, /merge decision runs again/)
+  assert.equal(reviewWanted(pr({ head, comments: [v('not-pass')] })).reuse, undefined)
+  assert.equal(reviewWanted(pr({ head, comments: [headMarker(head)] })).reuse, undefined, 'a marker with no verdict')
+  assert.equal(reviewWanted(pr({ head, comments: [v('pass'), v('not-pass')] })).reuse, undefined, 'the latest verdict counts')
+  assert.equal(reviewWanted(pr({ head, comments: [v('not-pass'), v('pass')] })).reuse, true)
+  assert.equal(reviewWanted(pr({ head, state: 'MERGED', comments: [v('pass')] })).reuse, undefined, 'a merged PR stays a no-op')
+})
+
 // --- the diff digest (phase RV2) ----------------------------------------------
 
 const PATCH = [
