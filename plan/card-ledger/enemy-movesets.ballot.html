@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Enemy movesets: ballot</title>
-<script src="ballot-kit.js"></script>
 <style>
   /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
   :root {
@@ -114,6 +113,7 @@
 <body>
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">&#9680;</button>
+  <p class="banner" role="note"><b>CLOSED</b>: T voted on 2026-11-08. The verdict is in enemy-movesets.md, and the build is plan/162-mv1-enemy-movesets.md.</p>
   <h1>Enemy movesets</h1>
   <p class="sub">Six foes play moves that are not their own: the Saint Beneath plays the Death Beholder's deck, and five recast foes copy a benched foe's moves. Three recommendations for each of attack, defend, status and danger, for every foe, laid out by its phases.</p>
   <p class="legend">
@@ -1017,7 +1017,6 @@ const sheet = () => {
     ...TABS.flatMap((t) => ['-- ' + t.name + ' --', ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k))]),
     general ? 'general: ' + general : null].filter(Boolean).join('\n');
 };
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
 document.getElementById('themeBtn').addEventListener('click', () => {
   const root = document.documentElement;
   const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
