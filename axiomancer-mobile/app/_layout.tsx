@@ -1,4 +1,4 @@
-import { NavigationContainer, Stack, linking, navigationRef, flushPendingNavigation } from '@/lib/platform/router';
+import { NavigationContainer, appNavTheme, Stack, linking, navigationRef, flushPendingNavigation } from '@/lib/platform/router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from '@/lib/platform/font';
 import * as SplashScreen from '@/lib/platform/splash-screen';
@@ -12,6 +12,7 @@ import { CombatModeProvider } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { FontProvider } from '@/hooks/useFontFallbacks';
 import { CORE_FACES, SECONDARY_FACES } from '@/theme/fontFaces';
+import { AXM } from '@/theme/axm';
 // Map event pools are authored and self-registered by the engine
 // (axiomancer-mechanics → World/MapEvents/content); the client registers
 // none of its own.
@@ -81,6 +82,9 @@ initCrashReporting();
 
 // The root container is ready: replay a queued navigation request, then hand
 // the container to Sentry for per-screen transactions (preview builds only).
+/** Dark ground for every navigator container (see appNavTheme). */
+const NAV_THEME = appNavTheme(AXM.bg);
+
 function onNavigationReady(): void {
   flushPendingNavigation();
   registerNavigationTracing(navigationRef);
@@ -258,6 +262,7 @@ function RootLayout() {
             `onReady` is where it gets replayed. */}
             <NavigationContainer
           ref={navigationRef}
+          theme={NAV_THEME}
           linking={linking}
           onReady={onNavigationReady}
             >
