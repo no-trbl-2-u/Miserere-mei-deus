@@ -150,12 +150,12 @@ describe('the hand fan prints every name on one uncapped line', () => {
         expect(left - swing - 6).toBeGreaterThanOrEqual(0);
     });
 
-    it('every hand card, covered or not, keeps one line and no width cap', () => {
+    it('every hand card, covered or not, wraps in at most two lines and has no width cap', () => {
         const { vm } = renderBoard();
         const names = screen.getAllByTestId('combat-card-face-name');
         expect(names.length).toBe(vm.hand.length);
         for (const n of names) {
-            expect(n.props.numberOfLines).toBe(1);
+            expect(n.props.numberOfLines).toBe(2);
             expect(flatten(n.props.style).maxWidth).toBeUndefined();
             expect(textOf(n).length).toBeGreaterThan(0);
         }
@@ -164,7 +164,7 @@ describe('the hand fan prints every name on one uncapped line', () => {
 
 // ── 3. The other face sizes ─────────────────────────────────────────────────
 
-describe('CombatCardFace prints one uncapped name line on every face', () => {
+describe('CombatCardFace prints a two-line uncapped name on every face', () => {
     it('staged, reward offer and detail faces alike', () => {
         const { vm } = freshVM();
         const card = vm.hand[0]!;
@@ -173,7 +173,7 @@ describe('CombatCardFace prints one uncapped name line on every face', () => {
                 <CombatCardFace card={card} width={w} height={h} large={large} />,
             ).tree);
             const name = screen.getByTestId('combat-card-face-name');
-            expect(name.props.numberOfLines).toBe(1);
+            expect(name.props.numberOfLines).toBe(2);
             expect(flatten(name.props.style).maxWidth).toBeUndefined();
             unmount();
         }

@@ -15,7 +15,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Image } from '@/lib/platform/image';
 import type { DeckCardVM } from '@/state/presenters/deck.engine';
-import { FONTS } from '@/theme/axm';
+import { FONTS, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** A thumbnail that is not the open card. */
@@ -90,9 +90,9 @@ const useStyles = makeStyles((AXM) => ({
         left: 4,
         right: 4,
         bottom: 3,
-        fontFamily: FONTS.serif,
-        fontSize: 10,
-        lineHeight: 12,
+        fontFamily: TYPE_ROLES.cardName.fontFamily,
+        fontSize: 11,
+        lineHeight: 13,
         color: AXM.parchment,
     },
     mark: { position: 'absolute', left: 0, top: 0, width: 10, height: 10 },

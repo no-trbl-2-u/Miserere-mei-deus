@@ -97,7 +97,10 @@ describe('DeckScreen: the reader', () => {
         fireEvent.press(screen.getByTestId('deck-tab-skill'));
         fireEvent.press(screen.getByTestId(`deck-card-${WARD}`));
 
-        expect(screen.getByTestId('deck-keyword-Guard').props.accessibilityLabel).toBe('GUARD');
+        // The free and the paid line both press the same word.
+        const guards = screen.getAllByTestId('deck-keyword-Guard');
+        expect(guards.length).toBe(2);
+        expect(guards[0].props.accessibilityLabel).toBe('GUARD');
         expect(screen.queryByTestId('card-keyword-ledger')).toBeNull();
     });
 });

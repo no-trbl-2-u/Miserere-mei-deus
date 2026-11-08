@@ -38,6 +38,7 @@ import { detailStats } from '@/state/presenters/combat-encounter.engine';
 import {
     DECK_SOURCE_NOTE,
     runsFor,
+    capitaliseKeywords,
     selectDeckViewModel,
     type DeckCardVM,
 } from '@/state/presenters/deck.engine';
@@ -327,17 +328,27 @@ describe('selectDeckViewModel: the open card (155.1)', () => {
         }
     });
 
-    it('hands the outcome line then the play lines as labelled text runs', () => {
+    it('hands the two play lines only, each with its label as the first run', () => {
         const card = findCard(selectDeckViewModel(runWith([BLOW])), BLOW);
         const detail = detailStats(toCombatCard(BLOW, getCardById, lookupEffect)!, getCardById(BLOW)!);
 
         const joined = (i: number) =>
-            card.lines[i].runs.map((r) => (r.kind === 'text' ? r.text : r.word)).join('');
-        expect(card.lines[0].label).toBeNull();
-        expect(joined(0)).toBe(detail.outcomeLine);
-        expect(card.lines[1].label).toBe('◇ NO DIE');
-        expect(joined(1)).toBe(detail.freePill);
-        expect(card.lines.length).toBe(detail.diePaidLine === null ? 2 : 3);
+            card.lines[i].runs.map((r) => (r.kind === 'keyword' ? r.word : r.text)).join('');
+        expect(card.lines[0].label).toBe('◇ No die');
+        expect(card.lines[0].runs[0]).toEqual({ kind: 'label', text: '◇ No die' });
+        expect(joined(0)).toBe(`◇ No die · ${capitaliseKeywords(detail.freePill)}`);
+        expect(card.lines.length).toBe(detail.diePaidLine === null ? 1 : 2);
+        // The outcome summary is not a line on this screen.
+        expect(card.lines.some((_, i) => joined(i) === detail.outcomeLine)).toBe(false);
+    });
+
+    it('presses the same keyword in the free and the paid line of A Plain Word', () => {
+        const card = findCard(selectDeckViewModel(runWith([WORD])), WORD);
+        const kwRuns = (i: number) => card.lines[i].runs.filter((r) => r.kind === 'keyword');
+        expect(card.lines.length).toBe(2);
+        expect(card.lines[1].label).toBe('◆ +Die');
+        expect(kwRuns(0).length).toBeGreaterThan(0);
+        expect(kwRuns(0).map((r) => (r as { word: string }).word)).toEqual(kwRuns(1).map((r) => (r as { word: string }).word));
     });
 });
 
