@@ -60,7 +60,15 @@ context). It names only values checked in the code:
    defect or idea it saw outside its scope.
 
 Dispatch it with the Agent tool, and beat the ledger with
-its id (`--set builder=<agent id>`):
+its id (`--set builder=<agent id>`).
+<!-- miserere:local -->
+**Always pass `model`** (unset, a builder inherits the lead's
+Opus), by alias so it tracks the newest release: `sonnet` by
+default; `opus` only when the chunk genuinely needs reasoning
+(an L chunk, combat or balance math, mechanism mapping, a design
+call, several workspaces, or a Sonnet attempt that came back
+wrong). Beat it: `--set model=<alias>`.
+<!-- /miserere:local -->
 
 - **Interactive** (`/next`, `/heads-down`, `/plot ... and do`):
   in the background (`run_in_background: true`), so the lead
@@ -88,6 +96,10 @@ The shape, one agent per phase, all in the run's worktree:
 | verify | an adversarial reviewer: reads the diff against each A-ID, runs the touched tests, tries to break the chunk with realistic input; reports only findings it reproduced | findings, each with a repro |
 | fix | the builder again, given only the reproduced findings | fix commits, a red-first test per finding |
 
+<!-- miserere:local -->
+Models (`agent()`'s `model`, by alias): build and verify on
+`opus`, fix on `sonnet`.
+<!-- /miserere:local -->
 At most two verify rounds. `batch`: one Workflow per chunk,
 each in its own worktree, only for chunks whose paths are
 disjoint; landing stays serial, one chunk at a time. A design

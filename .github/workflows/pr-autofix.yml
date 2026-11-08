@@ -109,5 +109,5 @@ jobs:
         -p
         --dangerously-skip-permissions
       prompt: '/fix-ci ${{ needs.gate.outputs.run_id }} --branch ${{ needs.gate.outputs.branch }}'
-      model: 'claude-haiku-5-5'
+      model: 'haiku'
       timeout_minutes: 30

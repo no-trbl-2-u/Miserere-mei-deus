@@ -113,5 +113,5 @@ jobs:
         git config user.email '41898282+claude[bot]@users.noreply.github.com'
         node scripts/pr-resolve.mjs finish --branch '${{ inputs.branch }}'
       prompt: '/fix-ci --resolve ${{ inputs.branch }} (PR #${{ inputs.pr }}). The conflicted files are listed one per line in .git/pr-resolve-files.txt.'
-      model: 'claude-haiku-5-5'
+      model: 'haiku'
       timeout_minutes: 30
