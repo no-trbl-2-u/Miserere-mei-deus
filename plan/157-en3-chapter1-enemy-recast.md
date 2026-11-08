@@ -4,7 +4,7 @@
 >
 > - Each new portrait becomes a **new library entry** that takes over the cut foe's node(s), reusing that foe's level, VITAE and moves, so nothing is designed or re-tuned here.
 > - **The cut creatures are never deleted.** T: "Don't delete them, they're just not in chapter 1." Their entries, art and 24-cell frame sets all stay in the library, placed nowhere in Chapter 1.
-> - The four cut with no replacement face have their nodes refilled with **duplicates of the thematic keepers**. T: "I want to see duplicates of the most thematic enemies."
+> - The four cut with no replacement face have their nodes refilled with **repeats of foes that stay**. T: "I want to see duplicates of the most thematic enemies." In the table below that is two keeper duplicates (`bw-t3` Brine-Widow, `bw-d1` Net-Mender) and three repeats of a new recast face (`bw-w2` and `bw-m1` Quay-Crab, `bw-w3` Coralback).
 > - **The Saint Beneath is Chapter 1's boss.** T: "100% Saint beneath, the big fish is the chapter boss."
 > - Float-Eye is also the wandering pool for every Act 1 map; the pool **repoints to the Chapter 1 survivors**.
 > - **No keeper is touched, face included.** T: "We're not replacing or reskinning any enemies I want to keep, right? only the ones I named above."
@@ -100,7 +100,7 @@ One number worth stating because it surprises: `bw-k2` stages its boss at `BW_DO
 
 ### The four benched with no replacement face
 
-**Smokehouse Gutter, Curfew-Ringer, Gallows Crow and Float-Eye** leave Chapter 1. Their entries stay in the library untouched. Their five nodes are refilled with duplicates of the keepers, following EN1i's own rule — "a zone's two foes alternate across its nodes" — so every zone still reads as two foes trading nodes:
+**Smokehouse Gutter, Curfew-Ringer, Gallows Crow and Float-Eye** leave Chapter 1. Their entries stay in the library untouched. Their five nodes are refilled with repeats of foes that stay — two of them duplicates of a keeper (`bw-t3`, `bw-d1`), three of them a second node for a new recast face (`bw-w2`, `bw-m1`, `bw-w3`) — following EN1i's own rule — "a zone's two foes alternate across its nodes" — so every zone still reads as two foes trading nodes:
 
 | Node | Zone | Level | Today | After | Why |
 |---|---|---|---|---|---|
@@ -197,7 +197,7 @@ The `description` itself is the irreducible minimum — the field is required by
 
 ## Acceptance
 
-- **A2** Chapter 1's 18 combat nodes draw the recast roster at the levels in the Design table: the six new foes hold the nodes of the six they replace, the four benched foes' five nodes draw duplicates of the keepers, the keep causeway still draws one of two, and the sea keep's boss is The Saint Beneath. No benched foe is drawn or pinned anywhere in Chapter 1.
+- **A2** Chapter 1's 18 combat nodes draw the recast roster at the levels in the Design table: the six new foes hold the nodes of the six they replace, the four benched foes' five nodes draw repeats of foes that stay (two keeper duplicates, three a new recast face's second node), the keep causeway still draws one of two, and the sea keep's boss is The Saint Beneath. No benched foe is drawn or pinned anywhere in Chapter 1.
 - **A3** A wandering Act 1 fight draws one of the six named Chapter 1 normals, never a benched foe, and `docs/reports/chapter1-enemies.md` is regenerated against the recast roster with its new commit stamp.
 
 ## Open questions
@@ -237,6 +237,8 @@ Measure: 2 open · 2 closed · next A5
 ### 157.3 (EN3c) — The six portraits drawn: art registry, provenance, frame sets, backings · M · closes A4 · requires 157.1
 
 **This is the chunk that takes `main` green.** It needs 157.1's entries (the bijection guard counts library foes, not files) and the six frame sets from PR #1409 per question 3.
+
+> **What actually happened (2026-11-07).** PR #1409 landed far more than this section assumed: not only the `anim/` cells but the art registry, the six frame sets with their anchors, the baked backings, the provenance records and the count fixtures. So by the time EN3c was built, every bullet below was already true on `main` and acceptance A4 was satisfied in the tree. The chunk's real content was the regression guards that were missing: six per-foe pane suites, each carrying a `guard-test:` reason naming #1409, plus the `backing.test.tsx` floor. They pass on the merge base by design, which is what `verify-gate`'s fail-on-parent step is there to make explicit. `CombatCombatantPane.action-clip.test.tsx` was fixed by 157.1, not here. Read the bullets below as the state #1409 reached, not as work this chunk did.
 
 - `ENEMY_ART_BY_KEY` gains six static `require()` literals — spelled out, because Metro resolves them statically.
 - `frames.ts` gains the six `EnemyFrameSet` literals with their manifests and their `anchor` (`centre` for `saint-beneath` and `saltwick-swarm`, `foot-line` for the other four), each importing its `<KEY>_CELLS` from `./anim/<key>`. `FRAME_SET_EXEMPTIONS` is left `{}`.
