@@ -1,3 +1,4 @@
+// guard-test: pins 158.1's merged board-entry steps (intoBoard), which had no test; review finding on #1457
 // scripts/live-fight-entry.test.mjs
 //
 // The live-fight entry, driven by a page that only records. No browser, disk or network.
