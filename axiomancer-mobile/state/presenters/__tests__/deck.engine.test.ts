@@ -373,3 +373,25 @@ describe('runsFor: keywords in a printed line', () => {
         expect(runs[1]).toEqual({ kind: 'keyword', word: 'GUARD', keyword: 'Guard', gloss: 'Own words.', minor: true });
     });
 });
+
+describe('capitaliseKeywords: edge cases', () => {
+    it('capitalises a lower-case registry keyword', () => {
+        expect(capitaliseKeywords('vulnerable +10% · 1 turn')).toBe('VULNERABLE +10% · 1 turn');
+    });
+    it('leaves an already capitalised keyword as it is', () => {
+        expect(capitaliseKeywords('VULNERABLE +25% · 2 turns')).toBe('VULNERABLE +25% · 2 turns');
+    });
+    it('capitalises a mixed-case keyword whole', () => {
+        expect(capitaliseKeywords('Gain Guard 5')).toBe('Gain GUARD 5');
+    });
+    it('does not touch a keyword inside a longer word', () => {
+        expect(capitaliseKeywords('guardian and unguarded')).toBe('guardian and unguarded');
+    });
+    it('does not touch a line with no keyword', () => {
+        expect(capitaliseKeywords('Deal 5 damage.')).toBe('Deal 5 damage.');
+        expect(capitaliseKeywords('')).toBe('');
+    });
+    it('capitalises each keyword of a line with several', () => {
+        expect(capitaliseKeywords('guard 5, then boon')).toBe('GUARD 5, then BOON');
+    });
+});

@@ -4,7 +4,7 @@
 
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { DeckOpenCard } from '@/components/deck/DeckOpenCard';
 import type { DeckCardVM } from '@/state/presenters/deck.engine';
@@ -65,8 +65,11 @@ describe('DeckOpenCard keywords', () => {
         expect(React.Children.count(line.props.children)).toBe(1);
         expect(screen.getByText('◇ No die')).toBeTruthy();
         expect(screen.getByTestId('deck-keyword-Guard').props.children).toBe('Guard');
-        const art = screen.getByTestId('deck-open-card-art');
-        expect(art.props.children.length).toBe(2); // the painting and the name, no scrim
+        expect(screen.getByTestId('deck-open-card-art')).toBeTruthy();
+        expect(screen.queryByTestId('deck-open-card-scrim')).toBeNull();
+        const name = StyleSheet.flatten(screen.getByTestId('deck-open-card-name').props.style) as Record<string, unknown>;
+        expect(name.textShadowColor).toBeTruthy();
+        expect(name.textShadowRadius).toBeGreaterThan(0);
     });
 
     it('a tap shows the gloss and it times out', () => {
