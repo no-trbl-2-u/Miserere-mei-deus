@@ -22,12 +22,12 @@ export function DebugWildsBandSwitch({ store = devSettingsStore }: { store?: Dev
     return (
         <DevRow
             label="DEBUG · WILDS BAND"
-            sub={on ? 'on · a black band behind the status card' : 'off · the map runs up under the status card'}
+            sub={on ? 'on · a black band behind the top half of the status card' : 'off · the map runs up under the status card'}
             testID="debug-wilds-band"
         >
             <DevChips>
                 <DevCheck
-                    label="Black band behind the Wilds' top"
+                    label="Black band behind the status card's top half"
                     checked={on}
                     onToggle={() => store.set({ wildsBlackBand: !on })}
                     testID="debug-wilds-band-toggle"

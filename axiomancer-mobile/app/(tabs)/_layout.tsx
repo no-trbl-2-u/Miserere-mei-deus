@@ -43,11 +43,28 @@ export { TAB_ICON_SIZE };
 
 /**
  * How far the vellum dock's end flourishes reach in from each edge, in the
- * art's own pixels (profiled off the 800x74 webp). The bar pads its tabs past
- * the flourish so the first and last icons never sit on the ink.
+ * art's own pixels (profiled off the 800x74 webp). The first and last icons
+ * never sit on the ink.
  */
 export const DOCK_FLOURISH_PX = 66;
-export const DOCK_END_PADDING = Math.ceil(DOCK_FLOURISH_PX * kitScale('nav-dock-vellum')) + 1;
+
+/** The smallest a tab's touch width may be, in points. */
+export const TAB_MIN_WIDTH = 44;
+
+/**
+ * The bar's side padding. At 360 the six tabs share 360 minus both paddings, so
+ * 48 keeps every tab at least TAB_MIN_WIDTH wide from 360 up.
+ */
+export const DOCK_END_PADDING = 48;
+
+/**
+ * The outer two tabs pad their content inward by this much, so the first and
+ * last icons clear the flourishes while their touch area stays whole: the
+ * icon's edge lands at least one point past the ink at the narrowest tab.
+ */
+export const DOCK_END_NUDGE = Math.ceil(
+  2 * (Math.ceil(DOCK_FLOURISH_PX * kitScale('nav-dock-vellum')) + 1 - DOCK_END_PADDING - (TAB_MIN_WIDTH - TAB_ICON_SIZE) / 2),
+);
 
 /**
  * The vellum dock's height in points, before the bottom inset (T, 2026-11-08:
@@ -179,6 +196,7 @@ export default function TabLayout() {
             />
           ),
           // Exploration is the unconditional leftmost tab.
+          tabBarItemStyle: VELLUM_DOCK ? { paddingLeft: DOCK_END_NUDGE } : undefined,
         }}
       />
       <Tabs.Screen
@@ -259,6 +277,7 @@ export default function TabLayout() {
         options={{
           title: TAB_TITLES.settings,
           tabBarAccessibilityLabel: TAB_TITLES.settings,
+          tabBarItemStyle: VELLUM_DOCK ? { paddingRight: DOCK_END_NUDGE } : undefined,
           tabBarIcon: ({ color, focused }) => (
             <TabIconWithBadge kind="gear" color={color} size={TAB_ICON_SIZE} focused={focused} badge={null} />
           ),
