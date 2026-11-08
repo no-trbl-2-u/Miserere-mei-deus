@@ -47,7 +47,7 @@ needs are done):
 - **99.9** · automate footgun `stakes-card-vm-undrawn-lines` (seen 2×), spec 99's ladder chunk.
 - **99.10** · automate footgun `windows-tar-tree-lint` (seen 2×), spec 99's ladder chunk.
 
-- **159.1** · TU1a: the Spoils lose their small print; the fight loses its meta line, fits its dock and fogs its seam (T's phone marks, `/plot asap`, 2026-11-08; needs 158.1)
+- **159.1** · TU1a: the Spoils lose their small print; the fight loses its meta line, fits its dock and fogs its seam (T's phone marks, `/plot asap`, 2026-11-08)
 - **159.4** · TU1d: Self's plaques fit; Dev Tools moves to Settings (T's phone marks, `/plot asap`, 2026-11-08)
 
 **Held** (waits on a person's word; never picked until the
