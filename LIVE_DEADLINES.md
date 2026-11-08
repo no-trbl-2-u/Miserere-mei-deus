@@ -11,7 +11,7 @@
 | 2026-11-07 (1 day overdue) | Merge PR #1409, the six Breakwater enemy frame sets, so the recast's art chunk can wire them. `main`'s verify-mobile is red until spec 157's EN3c lands, and every open PR is gated behind it (0.1 h) | needs you: your task | W2 |
 | 2026-11-08 (today) | Event kind 6, travel ("move to X?", secret paths): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (today) | Find two travel images: Chapter 1 to Chapter 2, and the Chapter 1 cave shortcut (0.5 h) | needs you: your task | W2 |
-| 2026-11-08 (today) | Fix the title and combat image cut with a light fog blur (1 h) | needs you: your task | W2 |
+| 2026-11-08 (today) | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | needs you: your task | W2 |
 | 2026-11-09 (tomorrow) | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-09 (tomorrow) | The Blacksmith (the village's Anvil): pitch its own screen's full treatment (design, NPC image, transitions, copy, working end to end), settle it and plot it. Its UI/UX was never reworked (T, 2026-11-07), and the village row above has each option screen pitched on its own (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-09 (tomorrow) | Event kind 7, loot cache: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
@@ -25,7 +25,7 @@
 | 2026-11-11 (in 3 days) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task | W2 |
 | 2026-11-12 (in 4 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task | W2 |
 | 2026-11-13 (in 5 days) | Buffer: fixes from the event-screen reviews (1 h) | needs you: your task | W2 |
-| 2026-11-14 (in 6 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b | W2 |
+| 2026-11-14 (in 6 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b, TU1a, TU1b, TU1c, TU1d | W2 |
 | 2026-11-14 (in 6 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
 | 2026-11-14 (in 6 days) | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | needs you: your task | W2 |
 | 2026-11-14 (in 6 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
