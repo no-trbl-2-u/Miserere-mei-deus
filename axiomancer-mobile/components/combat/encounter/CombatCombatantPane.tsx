@@ -17,6 +17,8 @@
  * wrapper is pointerEvents box-none so only the chips/intent stay tappable.
  */
 
+import { FitText } from '@/components/FitText';
+import { enemyNameRoom } from './enemy-name-fit';
 import { FIGURE_BOTTOM_PCT, SCENE_BAND_PCT } from './SeamFog';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -83,6 +85,12 @@ const TICK_ROW_PX = 28;
 /** The first tick row's distance from the hit, so a tick never lands on it. */
 const TICK_ROW_GAP_PX = 30;
 
+const ENEMY_NAME_SIZE = 18;
+const ENEMY_NAME_FLOOR = 11;
+const ENEMY_NAME_SPACING = 0.6;
+// Fixed, so a smaller name leaves the row as tall as before and the VITAE bar where it was.
+const ENEMY_NAME_LINE = 24;
+
 // ── Enemy HP bar + crest ─────────────────────────────────────────────────────
 
 /** Full-width HP bar anchored by a central shield crest carrying the big HP
@@ -136,6 +144,25 @@ function EnemyHpBar({ pct, value, max }: { pct: number; value: number; max: numb
                 </View>
             </View>
         </View>
+    );
+}
+
+/** The foe's name, one line, stepped down so it ends before the VITAE shield
+ *  (`enemy-name-fit.ts`). A hidden twin at the nominal size gives the name's
+ *  real width; the row's width gives the room. */
+function EnemyName({ name }: { name: string }) {
+    const styles = useStyles();
+    return (
+        <FitText
+            text={name}
+            style={styles.enemyName}
+            nominal={ENEMY_NAME_SIZE}
+            floor={ENEMY_NAME_FLOOR}
+            letterSpacing={ENEMY_NAME_SPACING}
+            room={enemyNameRoom}
+            wrapStyle={styles.enemyNameWrap}
+            testID="combat-enemy-name"
+        />
     );
 }
 
@@ -755,7 +782,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                     testID="combat-hud-block"
                 >
                     <View style={styles.hudNameRow} pointerEvents="box-none">
-                        <Text style={styles.enemyName} numberOfLines={1}>{enemy.name}</Text>
+                        <EnemyName name={enemy.name} />
                     </View>
                     <EnemyHpBar pct={enemy.hpPct} value={enemy.hp} max={enemy.maxHp} />
                     {/* The status kill-path foresight. Makes the DoT win path
@@ -864,8 +891,9 @@ const useStyles = makeStyles((AXM) => ({
     // Wraps so a long name and the full clock line both stay whole on a
     // phone; the clock keeps to the right edge on either line.
     hudNameRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 8 },
+    enemyNameWrap: { flexGrow: 1, flexShrink: 1 },
     enemyName: {
-        flexGrow: 1, flexShrink: 1, fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur, letterSpacing: 0.6,
+        fontFamily: FONTS.gothic, fontSize: ENEMY_NAME_SIZE, lineHeight: ENEMY_NAME_LINE, color: AXM.sulfur, letterSpacing: ENEMY_NAME_SPACING,
         textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 4, textShadowOffset: { width: 0, height: 1 },
     },
 

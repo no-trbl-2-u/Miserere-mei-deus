@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { CARD_LANES, type CharacterDefinition } from '@mechanics';
@@ -113,6 +114,28 @@ describe('/character-select', () => {
         expect(screen.getByTestId('character-select-name').props.children).toBe('Fixture Bard');
         expect(screen.getByTestId('character-select-relic-name').props.children).toBe("Suppliant's Ring");
         expect(screen.getByTestId('character-select-playstyle').props.children).toBe('Talks first.');
+    });
+
+    // A17. Measured on a rendered export at 390: "Suppliant's", the longest word
+    // of "Suppliant's Ring", is 100.03 wide at 16 points; the plate's text column is
+    // 97.59 (85.6 at 360). At 16 the word broke after "Suppliant" and left "'s".
+    it.each([
+        [97.59375, 16],
+        [85.59375, 16],
+    ])('steps the relic name down until "Suppliant\'s" fits a %d plate, so it breaks only between words', (plate, nominal) => {
+        mount({ slot: '2' });
+        act(() => { fireEvent.press(screen.getByTestId('character-select-square-fixture-bard')); });
+        const layout = (width: number) => ({ nativeEvent: { layout: { x: 0, y: 0, width, height: 20 } } });
+        act(() => {
+            fireEvent(screen.getByTestId('character-select-relic-name-probe', { includeHiddenElements: true }), 'layout', layout(100.03125));
+            fireEvent(screen.getByTestId('character-select-relic-name'), 'layout', layout(plate));
+        });
+        const drawn = screen.getByTestId('character-select-relic-name');
+        const size = (StyleSheet.flatten(drawn.props.style) as { fontSize: number }).fontSize;
+        expect(drawn.props.children).toBe("Suppliant's Ring");
+        expect(size).toBeLessThan(nominal);
+        expect(100.03125 * (size / nominal)).toBeLessThanOrEqual(plate);
+        expect(drawn.props.numberOfLines).toBe(3);
     });
 
     it('names no lane, and no old slot word', () => {

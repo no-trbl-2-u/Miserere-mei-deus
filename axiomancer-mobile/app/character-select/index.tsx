@@ -38,6 +38,8 @@ import {
 } from '@/state/presenters/character-select.engine';
 import { RUN_END_PARAM } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
+import { FitText } from '@/components/FitText';
+import { longestWord } from '@/lib/text-fit';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
@@ -53,6 +55,10 @@ const CARD_SCALE = 0.2;
 
 /** The starting relic's mark, in points. */
 const RELIC_MARK_SIZE = 44;
+
+/** The relic name's size, stepped down until its longest word fits the plate. */
+const RELIC_NAME_SIZE = 16;
+const RELIC_NAME_FLOOR = 10;
 
 function readSlot(raw: unknown): SaveSlotId | null {
     const n = Number(raw);
@@ -172,9 +178,15 @@ export default function CharacterSelectScreen() {
                         {selected !== null ? (
                             <>
                                 <ItemGlyph category="equipment" sub="Relic" itemId={selected.relicId} size={RELIC_MARK_SIZE} />
-                                <Text style={styles.relicName} numberOfLines={3} adjustsFontSizeToFit minimumFontScale={0.7} testID="character-select-relic-name">
-                                    {selected.relicName}
-                                </Text>
+                                <FitText
+                                    text={selected.relicName}
+                                    fitText={longestWord(selected.relicName)}
+                                    style={styles.relicName}
+                                    nominal={RELIC_NAME_SIZE}
+                                    floor={RELIC_NAME_FLOOR}
+                                    numberOfLines={3}
+                                    testID="character-select-relic-name"
+                                />
                             </>
                         ) : (
                             <Text style={styles.relicLocked}>?</Text>
@@ -279,7 +291,7 @@ const useStyles = makeStyles((AXM) => ({
     relicBoxPlain: { borderWidth: 1, borderColor: AXM.sulfur, backgroundColor: AXM.panelBg, padding: 8 },
     relicBoxKit: { paddingVertical: 22, paddingHorizontal: 28 },
     relicLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
-    relicName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, textAlign: 'center' },
+    relicName: { fontFamily: FONTS.gothic, fontSize: RELIC_NAME_SIZE, color: AXM.parchment, textAlign: 'center' },
     relicLocked: { fontFamily: FONTS.gothic, fontSize: 44, color: AXM.ash },
     name: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, marginTop: 10 },
     statsRow: { flexDirection: 'row', gap: 8, marginTop: 8 },

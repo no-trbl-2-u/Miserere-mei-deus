@@ -78,10 +78,12 @@ describe('the new-game and ending screens on their kit looks', () => {
         for (const id of ['character-select-portrait', 'character-select-relic', 'character-select-stat-body', 'character-select-confirm']) {
             expect(kitIn(view.getByTestId(id))).toBeGreaterThan(0);
         }
-        // The relic name sits in about 77pt at 375 wide, so it wraps then shrinks rather than running onto the card.
-        const name = view.getByTestId('character-select-relic-name').props as { numberOfLines?: number; adjustsFontSizeToFit?: boolean };
+        // The relic name sits in about 77pt at 375 wide, so it wraps between words and steps its font
+        // down until its longest word fits (FitText, measured), rather than running onto the card.
+        // `adjustsFontSizeToFit` is not honoured on web, which is where the word broke mid-letter.
+        const name = view.getByTestId('character-select-relic-name').props as { numberOfLines?: number };
         expect(name.numberOfLines).toBe(3);
-        expect(name.adjustsFontSizeToFit).toBe(true);
+        expect(view.getByTestId('character-select-relic-name-probe', { includeHiddenElements: true })).toBeTruthy();
         // CONFIRM and the stat tiles pad past their pieces' drawn corners.
         const confirm = StyleSheet.flatten(view.getByTestId('character-select-confirm').props.style);
         expect(confirm.paddingVertical).toBeGreaterThanOrEqual(16);
