@@ -9,7 +9,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-    BOARD_PLACES, DIFF_THRESHOLD_RATIO, ROUTES, compareCapture, diffRatioFor, expectPlaces, isOverThreshold, loadRoute, pickHazardRoute, pixelDiffRatio, selectRoutes, settleDiceRoll,
+    BOARD_PLACES, browserLaunchOptions, DIFF_THRESHOLD_RATIO, ROUTES, compareCapture, diffRatioFor, expectPlaces, isOverThreshold, loadRoute, pickHazardRoute, pixelDiffRatio, selectRoutes, settleDiceRoll,
 } from './smoke-screens.mjs'
 
 /** A page stand-in that records every locator call in order. */
@@ -218,4 +218,13 @@ test('loadRoute rejects when a place never shows, so the route is load-failed an
         loadRoute(page, 'http://x', ROUTES.find((r) => r.name === 'combat-board'), { enter: async () => {} }),
         /Timeout/,
     )
+})
+
+test('the harness browser launches with full-tile raster, so the board shoots the same every load', () => {
+    const options = browserLaunchOptions({})
+    assert.ok(options.args.includes('--disable-partial-raster'))
+    assert.equal(options.headless, true)
+    assert.equal(options.executablePath, undefined)
+    assert.equal(browserLaunchOptions({ SMOKE_CHROME: '/opt/chrome' }).executablePath, '/opt/chrome')
+    assert.ok(browserLaunchOptions({ SMOKE_CHROME: '/opt/chrome' }).args.includes('--disable-partial-raster'))
 })

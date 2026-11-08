@@ -296,6 +296,28 @@ export async function settleDiceRoll(page) {
 }
 
 /**
+ * Full-tile raster: with partial raster Chromium re-paints only the damaged
+ * part of a tile, and the board's fading hand and moving foe leave edge pixels
+ * a few levels off from one load to the next (combat-board, measured 5 loads,
+ * 3 to 6 distinct captures). Every other route is byte-identical with and
+ * without the flag.
+ */
+export const BROWSER_ARGS = ['--disable-partial-raster']
+
+/**
+ * The harness browser's launch options. `SMOKE_CHROME=/path/to/chrome`
+ * overrides the binary (the other scripts/*-e2e.mjs drivers expose the same
+ * escape hatch).
+ *
+ * @param {Record<string, string | undefined>} env the process environment.
+ */
+export function browserLaunchOptions(env) {
+    const options = { headless: true, args: [...BROWSER_ARGS] }
+    if (env.SMOKE_CHROME) options.executablePath = env.SMOKE_CHROME
+    return options
+}
+
+/**
  * Drives `target` to the route's screen and waits until it is ready to shoot:
  * the live fight (into the board when `intoBoard`), the load or the fixture's
  * gate push, the route's own waits, and every `expectTestIds` place. A place
@@ -476,13 +498,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
 
     // SMOKE_CHROME=/path/to/chrome overrides the browser binary (the other
     // scripts/*-e2e.mjs drivers expose the same escape hatch).
-    // Full-tile raster: with partial raster Chromium re-paints only the damaged
-    // part of a tile, and the board's fading hand and moving foe leave edge
-    // pixels a few levels off from one load to the next (combat-board, measured
-    // 5 loads, 3 to 6 distinct captures). Every other route is byte-identical
-    // with and without the flag.
-    const launchOptions = { headless: true, args: ['--disable-partial-raster'] }
-    if (process.env.SMOKE_CHROME) launchOptions.executablePath = process.env.SMOKE_CHROME
+    const launchOptions = browserLaunchOptions(process.env)
     const browser = await playwright.chromium.launch(launchOptions)
     const contextOptions = {
         viewport: VIEWPORT,
