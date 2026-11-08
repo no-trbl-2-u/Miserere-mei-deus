@@ -267,6 +267,8 @@ export type PacedEventRoute = '/village' | '/dialogue' | '/cutscene';
  */
 export function selectPacedEventRoute(state: AppStoreState): PacedEventRoute | null {
     if (!selectHasActivePacedEvent(state)) return null;
+    // A finished run is on its way to Game Over: no scene may push over it.
+    if (state.runOver === true) return null;
     if (state.event.dialogueCursor !== null) return '/dialogue';
     const kind = state.event.pending?.event.kind;
     if (kind === 'village') return '/village';

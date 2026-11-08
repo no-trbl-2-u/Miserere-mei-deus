@@ -100,6 +100,9 @@ export default function ExplorationScreen() {
             // resolving it here as well would stage the same fight twice.
             const now = store.getState();
             if (selectHasAnyActiveSession(now) || selectIsInCombat(now)) return;
+            // A finished run owes no arrival: the shell world's start node is not a place to
+            // play a scene on, and the Game Over screen is about to take the player.
+            if (now.runOver === true) return;
             actions.resolveCurrentMapEvent();
         }, 0);
         return () => clearTimeout(settle);
