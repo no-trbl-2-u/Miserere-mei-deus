@@ -8,7 +8,7 @@
  * There is no file-tree auto-discovery: `_layout.tsx` gives every
  * screen an explicit `component` prop.
  */
-import { useEffect, useState } from 'react';
+import { createElement, useEffect, useMemo, useState, type ComponentProps } from 'react';
 import {
   DarkTheme,
   createNavigationContainerRef,
@@ -23,8 +23,10 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getLogger } from '@mechanics';
+import { usePalette } from '@/theme/runtime';
 
-export { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
+export { NavigationContainer };
 
 /**
  * The navigation theme: React Navigation's default paints its containers
@@ -34,6 +36,18 @@ export { NavigationContainer } from '@react-navigation/native';
  */
 export function appNavTheme(bg: string): Theme {
   return { ...DarkTheme, colors: { ...DarkTheme.colors, background: bg, card: bg, border: bg } };
+}
+
+/**
+ * The app's one navigation container: `NavigationContainer` wearing
+ * `appNavTheme` of the active palette's background. The root layout renders
+ * this and nothing else, so no container can lack the dark ground.
+ */
+export function AppNavigationContainer(props: ComponentProps<typeof NavigationContainer<ParamListBase>>) {
+  const bg = usePalette().bg;
+  const theme = useMemo(() => appNavTheme(bg), [bg]);
+  // The container's own ref type is generic over the param list; the cast keeps the app's list.
+  return createElement(NavigationContainer as never, { ...props, theme } as never);
 }
 
 // `<Stack>`/`<Tabs>` compat surface: expo-router's own versions are a

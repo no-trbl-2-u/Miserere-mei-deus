@@ -20,6 +20,14 @@
  * WHOEVER CHANGES THE FIGHT'S LAYOUT ON PURPOSE EDITS THIS FILE. Re-measure,
  * do not guess: render the board and read the boxes.
  *
+ * THESE PINS ARE NOT THE PIXEL NET. They see boxes and a few `transparent`
+ * colours, in jsdom, on every PR, and are blind to art, colour, fonts and how
+ * anything paints. The visual smoke route `combat-board` (scripts/smoke-screens.mjs,
+ * shot in CI's Chromium, report-only) sees the painted board and is blind to
+ * a small move or recolour under its 0.1% line. Neither covers the other: delete
+ * these and a half-pixel shift passes unseen, delete the route and a recolour
+ * does. The table is in screenshots/baseline/README.md.
+ *
  * The dock (UX1d, then 159.1): no phase-ledger row, END 72 x 48, the dock row 66, so
  * the dock's minimum height at the phone's inset is 116. The cells keep
  * their order: portrait, VITAE column, END.

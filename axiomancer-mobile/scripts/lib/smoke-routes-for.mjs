@@ -11,6 +11,8 @@ import { spawnSync } from 'node:child_process'
 
 export const ALL = 'all'
 
+// The reveal and the board behind it: the same fight, two shots.
+const COMBAT = ['combat-encounter', 'combat-board']
 const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.
@@ -47,8 +49,8 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/exploration\//, routes: VIA_EXPLORATION },
     { test: /^axiomancer-mobile\/components\/exploration\//, routes: VIA_EXPLORATION },
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/memoir\//, routes: ['memoir'] },
-    { test: /^axiomancer-mobile\/app\/combat-encounter\//, routes: ['combat-encounter'] },
-    { test: /^axiomancer-mobile\/components\/combat\//, routes: ['combat-encounter'] },
+    { test: /^axiomancer-mobile\/app\/combat-encounter\//, routes: COMBAT },
+    { test: /^axiomancer-mobile\/components\/combat\//, routes: COMBAT },
     { test: /^axiomancer-mobile\/app\/labyrinth\//, routes: ['labyrinth'] },
     { test: /^axiomancer-mobile\/components\/labyrinth\//, routes: ['labyrinth'] },
     { test: /^axiomancer-mobile\/app\/dialogue\//, routes: ['dialogue'] },
@@ -59,7 +61,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/game-over\//, routes: ['game-over'] },
     { test: /^axiomancer-mobile\/app\/(hazard|devpuzzle)\//, routes: HAZARD },
     // The combat board draws two hazard glyphs.
-    { test: /^axiomancer-mobile\/components\/hazard\//, routes: [...HAZARD, 'combat-encounter'] },
+    { test: /^axiomancer-mobile\/components\/hazard\//, routes: [...HAZARD, ...COMBAT] },
     // Everything else the bundle reads: the root layout, the tab bar,
     // shared components, state, lib, hooks, assets, config, the engine,
     // the lockfile and the capture scripts themselves.

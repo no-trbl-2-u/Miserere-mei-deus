@@ -23,7 +23,7 @@ jest.mock('@/lib/platform/router', () => ({
 
 import { KIT } from '@/assets/images/experience/kit';
 import { kitScale, unstretchedInset } from '@/components/experience/KitBackdrop';
-import TabLayout, { DOCK_END_PADDING, DOCK_FLOURISH_PX, TAB_ICON_SIZE } from '@/app/(tabs)/_layout';
+import TabLayout, { DOCK_END_NUDGE, DOCK_END_PADDING, DOCK_FLOURISH_PX, TAB_ICON_SIZE, TAB_MIN_WIDTH } from '@/app/(tabs)/_layout';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 afterEach(() => {
@@ -33,6 +33,7 @@ afterEach(() => {
 type ScreenProps = {
     name: string;
     options: {
+        tabBarItemStyle?: unknown;
         tabBarAccessibilityLabel?: string;
         tabBarLabel?: unknown;
         tabBarIcon: (p: { color: string; focused: boolean }) => React.ReactElement;
@@ -98,11 +99,24 @@ describe('the vellum dock art against the bar in front of it', () => {
         expect(inset!.right).toBeGreaterThanOrEqual(DOCK_FLOURISH_PX * k);
     });
 
-    it('pads the tabs past the flourishes', () => {
+    it('keeps every tab at least 44pt wide from 360 to 430', () => {
         const { options } = mountLayout();
         const bar = StyleSheet.flatten(options.tabBarStyle as never) as { paddingHorizontal?: number };
         expect(bar.paddingHorizontal).toBe(DOCK_END_PADDING);
-        expect(DOCK_END_PADDING).toBeGreaterThanOrEqual(DOCK_FLOURISH_PX * k);
+        for (const width of [360, 375, 390, 430]) {
+            expect((width - 2 * DOCK_END_PADDING) / 6).toBeGreaterThanOrEqual(TAB_MIN_WIDTH);
+        }
+    });
+
+    it('nudges the outer icons past the flourishes without shrinking their tabs', () => {
+        const { screens } = mountLayout();
+        const first = screens[0].options as { tabBarItemStyle?: { paddingLeft?: number } };
+        const last = screens[screens.length - 1].options as { tabBarItemStyle?: { paddingRight?: number } };
+        expect(first.tabBarItemStyle?.paddingLeft).toBe(DOCK_END_NUDGE);
+        expect(last.tabBarItemStyle?.paddingRight).toBe(DOCK_END_NUDGE);
+        // Narrowest tab (44): the icon is centred in what the nudge leaves.
+        const iconEdge = DOCK_END_PADDING + DOCK_END_NUDGE + (TAB_MIN_WIDTH - DOCK_END_NUDGE) / 2 - TAB_ICON_SIZE / 2;
+        expect(iconEdge).toBeGreaterThanOrEqual(DOCK_FLOURISH_PX * k);
     });
 
     it('stretches the middle band close to 1x, so the rails keep their drawn weight', () => {
