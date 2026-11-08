@@ -25,7 +25,7 @@
 | 2026-11-11 (in 3 days) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task | W2 |
 | 2026-11-12 (in 4 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task | W2 |
 | 2026-11-13 (in 5 days) | Buffer: fixes from the event-screen reviews (1 h) | needs you: your task | W2 |
-| 2026-11-14 (in 6 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b, TU1a, TU1b, TU1c, TU1d | W2 |
+| 2026-11-14 (in 6 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task; the loop still owes MC1c, CX1b, TU1a, TU1c, TU1d | W2 |
 | 2026-11-14 (in 6 days) | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | needs you: DF1f ready for you | W2 |
 | 2026-11-14 (in 6 days) | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | needs you: your task | W2 |
 | 2026-11-14 (in 6 days) | Play your quest line on the preview build and rule on its lines (0.5 h) | needs you: your task; the loop still owes BW1e | W2 |
