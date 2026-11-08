@@ -17,8 +17,10 @@ function card(): DeckCardVM {
         art: 1,
         lines: [
             {
-                label: null,
+                label: '◇ No die',
                 runs: [
+                    { kind: 'label', text: '◇ No die' },
+                    { kind: 'text', text: ' · ' },
                     { kind: 'text', text: 'Gain ' },
                     { kind: 'keyword', word: 'GUARD', keyword: 'Guard', gloss: 'Soaks damage.', minor: false },
                     { kind: 'text', text: ' and ' },
@@ -54,6 +56,17 @@ describe('DeckOpenCard keywords', () => {
         expect(guard.props.accessibilityLabel).toBe('GUARD');
         expect(guard.props.accessibilityHint).toBe('Soaks damage.');
         expect(screen.getByTestId('deck-keyword-Boon').props.accessibilityHint).toContain('minor');
+    });
+
+    it('draws the label and the effect in one Text, with no band under the name', () => {
+        mount();
+        const line = screen.getByTestId('deck-open-card-line-0');
+        // One Text child in the line: the label is a run of it, not its own row.
+        expect(React.Children.count(line.props.children)).toBe(1);
+        expect(screen.getByText('◇ No die')).toBeTruthy();
+        expect(screen.getByTestId('deck-keyword-Guard').props.children).toBe('Guard');
+        const art = screen.getByTestId('deck-open-card-art');
+        expect(art.props.children.length).toBe(2); // the painting and the name, no scrim
     });
 
     it('a tap shows the gloss and it times out', () => {

@@ -41,7 +41,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
 
-import { FONTS, HUE } from '@/theme/axm';
+import { FONTS, HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -1985,6 +1985,9 @@ export const CombatCardFace = React.memo(function CombatCardFace({
         : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube) }).size;
     const paidRowH = Math.round(paidSize * PAID_LINE_LEADING);
     const bandH = large ? 36 : 26;
+    // A face too narrow for the hand card's name column (the Spoils tiles) trims the band's
+    // side chrome and the name's size so the longest Act 1 name wraps to two lines, whole words.
+    const narrow = !large && width < NARROW_FACE_W;
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.
     const hasPill = hasFree || f.isGlobal;
@@ -2010,6 +2013,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                 <View
                     style={[
                         styles.plateBand,
+                        narrow && styles.plateBandNarrow,
                         { minHeight: bandH },
                         hasPill ? { paddingTop: large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD } : null,
                     ]}
@@ -2023,19 +2027,19 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         tile — that parent label wins, and both of those name the
                         rarity themselves. */}
                     <View
-                        style={styles.plateRaritySpacer}
+                        style={[styles.plateRaritySpacer, narrow && styles.plateRaritySpacerNarrow]}
                         accessible
                         accessibilityRole="text"
                         accessibilityLabel={rarLabel}
                         testID="combat-card-face-rarity-a11y"
                     />
                     <Text
-                        style={[styles.plateName, large && styles.plateNameLarge]}
-                        numberOfLines={1}
+                        style={[styles.plateName, large && styles.plateNameLarge, narrow && styles.plateNameNarrow]}
+                        numberOfLines={2}
                         allowFontScaling={false}
                         testID="combat-card-face-name"
                     >
-                        {card.name.toUpperCase()}
+                        {card.name}
                     </Text>
                     {/* The NAMED LABEL leg — `large` only. The inspect overlay
                         and the reward preview have the band width for a word;
@@ -2454,10 +2458,15 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.6,
         marginLeft: 6, flexShrink: 0,
     },
-    // The name keeps ONE line on every face; its explicit lineHeight makes the
+    // The name wraps to at most TWO lines on every face; its explicit lineHeight makes the
     // band's height a known quantity.
-    plateName: { flex: 1, fontFamily: FONTS.gothic, fontSize: 13, lineHeight: 15, letterSpacing: 0.4, color: AXM.parchment, paddingVertical: 2 },
-    plateNameLarge: { fontSize: 20, lineHeight: 24, letterSpacing: 0.8 },
+    plateName: { flex: 1, fontFamily: TYPE_ROLES.cardName.fontFamily, fontSize: TYPE_ROLES.cardName.fontSize, lineHeight: 15, letterSpacing: 0, color: AXM.parchment, paddingVertical: 2 },
+    plateNameLarge: { fontSize: 20, lineHeight: 24 },
+    // Narrow faces (< NARROW_FACE_W: the Spoils tiles): 10.5 pt in a 71 pt column fits
+    // every Act 1 card name in two lines, no word cut (measured off the Fondamento font file).
+    plateNameNarrow: { fontSize: 10.5, lineHeight: 12 },
+    plateBandNarrow: { paddingHorizontal: 3, gap: 0 },
+    plateRaritySpacerNarrow: { width: 0 },
     // ② The art plate — seamless: no mat, no frame.
     plateArtWrap: { flex: 1 },
     plateArtFrame: { flex: 1, overflow: 'hidden' },

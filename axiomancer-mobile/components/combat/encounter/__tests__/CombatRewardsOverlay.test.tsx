@@ -43,9 +43,9 @@ describe('CombatRewardsOverlay', () => {
         expect(offers.length).toBe(3);
         for (const id of OFFER_IDS) {
             expect(screen.getByTestId(`combat-reward-${id}`)).toBeTruthy();
-            // The face prints the card's OWN name, uppercased on the side rail.
+            // The face prints the card's OWN name, in its own case.
             const name = getCardById(id)?.name ?? '';
-            expect(screen.getAllByText(name.toUpperCase()).length).toBeGreaterThan(0);
+            expect(screen.getAllByText(name).length).toBeGreaterThan(0);
         }
     });
 
