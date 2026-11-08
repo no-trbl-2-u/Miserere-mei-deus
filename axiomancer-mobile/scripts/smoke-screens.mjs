@@ -52,6 +52,22 @@ const REPO_ROOT = resolve(__dirname, '..')
 // Config — also re-exported for the hermetic test
 // ---------------------------------------------------------------------------
 
+/**
+ * The board's brass places, one testID each: S-03 the intent badge's ring,
+ * S-04 the conviction chip, S-05 the momentum chip, S-06 the player dock,
+ * S-07 END, S-08 the player portrait (the medallion) and S-09 the player
+ * VITAE bar. All seven render on a fight's opening board.
+ */
+export const BOARD_PLACES = [
+    'combat-intent',
+    'combat-conviction',
+    'combat-momentum-v2',
+    'combat-rail',
+    'combat-end-phase',
+    'combat-player-medallion',
+    'combat-rail-vitae-bar',
+]
+
 export const ROUTES = [
     { name: 'root', path: '/' },
     { name: 'character', path: '/character' },
@@ -60,6 +76,12 @@ export const ROUTES = [
     // The live fight holds only a staged fight, so it is entered through
     // /dev's encounter trigger with the engine seed pinned.
     { name: 'combat-encounter', path: '/combat-encounter', liveFight: true },
+    // The same fight one click further: ENTER COMBAT pressed, the board shot with
+    // its dice at rest. It waits on a testID for each brass place (spec 152's
+    // S-03 to S-09), so a board missing one is a load-failed route that is never
+    // re-stamped, and it carries a tighter diff line (0.1%) than the other routes
+    // because the places are small. See screenshots/baseline/README.md.
+    { name: 'combat-board', path: '/combat-encounter', liveFight: true, intoBoard: true, maxDiffRatio: 0.001, expectTestIds: BOARD_PLACES },
     { name: 'memoir', path: '/memoir' },
     // THE APORIA act select (no session on a fresh boot).
     { name: 'labyrinth', path: '/labyrinth' },
@@ -184,6 +206,28 @@ export function pixelDiffRatio(width, height, diffPixelCount) {
 
 export function isOverThreshold(ratio, threshold = DIFF_THRESHOLD_RATIO) {
     return ratio > threshold
+}
+
+/**
+ * The share of pixels that may differ before `route` is flagged: its own
+ * `maxDiffRatio`, else the global line.
+ *
+ * @param {{ maxDiffRatio?: number }} route a `ROUTES` entry.
+ */
+export function diffRatioFor(route) {
+    return route.maxDiffRatio ?? DIFF_THRESHOLD_RATIO
+}
+
+/**
+ * Waits for each testID to be visible, so a board with a piece missing fails
+ * the route (a `load-failed` row, never re-stamped) instead of becoming the
+ * baseline.
+ *
+ * @param {import('playwright').Page} page the page, on the screen to shoot.
+ * @param {string[] | undefined} testIds the places that must be on screen.
+ */
+export async function expectPlaces(page, testIds = []) {
+    for (const id of testIds) await page.getByTestId(id).first().waitFor({ state: 'visible', timeout: 10_000 })
 }
 
 /**
@@ -379,7 +423,12 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
 
     // SMOKE_CHROME=/path/to/chrome overrides the browser binary (the other
     // scripts/*-e2e.mjs drivers expose the same escape hatch).
-    const launchOptions = { headless: true }
+    // Full-tile raster: with partial raster Chromium re-paints only the damaged
+    // part of a tile, and the board's fading hand and moving foe leave edge
+    // pixels a few levels off from one load to the next (combat-board, measured
+    // 5 loads, 3 to 6 distinct captures). Every other route is byte-identical
+    // with and without the flag.
+    const launchOptions = { headless: true, args: ['--disable-partial-raster'] }
     if (process.env.SMOKE_CHROME) launchOptions.executablePath = process.env.SMOKE_CHROME
     const browser = await playwright.chromium.launch(launchOptions)
     const contextOptions = {
@@ -458,13 +507,14 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
                     globalThis.__AXM_HAZARD_CLOCK_PAUSED__ = true
                 })
             }
-            if (route.liveFight) await enterLiveFight(target, baseUrl, { seed: LIVE_FIGHT_SEED })
+            if (route.liveFight) await enterLiveFight(target, baseUrl, { seed: LIVE_FIGHT_SEED, intoBoard: route.intoBoard === true })
             else await target.goto(url, { waitUntil: 'networkidle', timeout: 30_000 })
             if (route.waitForPath) {
                 await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
             }
             await waitForReady(target)
             if (route.waitForTestId) await target.getByTestId(route.waitForTestId).waitFor({ state: 'visible', timeout: 10_000 })
+            await expectPlaces(target, route.expectTestIds)
             if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
             if (route.hazardPuzzle) await faceHazardPuzzle(target)
             if (route.settleRoll) {
@@ -472,7 +522,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
                 await settleDiceRoll(target)
             }
             // After a hazard step the board has re-rendered; let it paint.
-            if (route.hazardRoute || route.settleRoll || route.hazardPuzzle || route.waitForTestId) await waitForReady(target)
+            if (route.hazardRoute || route.settleRoll || route.hazardPuzzle || route.waitForTestId || route.expectTestIds) await waitForReady(target)
             return await target.screenshot({ fullPage: false })
         } finally {
             if (target !== page) await target.close().catch(() => {})
@@ -536,7 +586,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
         })
 
         const ratio = pixelDiffRatio(width, height, diffPixels)
-        if (isOverThreshold(ratio)) {
+        if (isOverThreshold(ratio, diffRatioFor(route))) {
             const diffPath = join(DIFF_DIR, `${route.name}.png`)
             await writeFile(diffPath, PNG.sync.write(diff))
             differing.push({

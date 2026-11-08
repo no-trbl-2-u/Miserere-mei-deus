@@ -15,6 +15,7 @@ One PNG per route, named after the route's stable `name` in
 | `inventory.png` | `/inventory` | `app/(tabs)/inventory/index.tsx` |
 | `exploration.png` | `/exploration` | `app/(tabs)/exploration/index.tsx` |
 | `combat-encounter.png` | `/combat-encounter` | `app/combat-encounter/index.tsx` |
+| `combat-board.png` | `/combat-encounter` entered as `combat-encounter` is (seed 16, the lowest-level standard foe), then ENTER COMBAT pressed, dice at rest; waits on a testID for each brass place (intent badge, conviction chip, momentum chip, dock, END, player medallion, player VITAE bar) and carries its own 0.1% diff line | `components/combat/encounter/CombatBoard.tsx`, `CombatFooterDock.tsx`, `CombatCombatantPane.tsx` (the fight's board) |
 | `memoir.png` | `/memoir` | `app/(tabs)/memoir/index.tsx` |
 | `labyrinth.png` | `/labyrinth` | `app/labyrinth/index.tsx` |
 | `dialogue.png` | `/exploration` + fixture `apprentice-staged-dialogue` → `/dialogue` | `app/dialogue/index.tsx` |
@@ -52,6 +53,35 @@ matches the tree; `AXM_FORCE_EXPORT=1` re-exports.
 `/combat` is intentionally not a visual-smoke baseline route while it renders
 the unseeded placeholder `THE FIELD STIRS.`. The canonical combat screenshot is
 `combat-encounter.png`, which exercises the seeded Hazard-style combat surface.
+
+## Layout pins versus the `combat-board` route
+
+The fight's board has two nets, and neither replaces the other.
+`components/combat/encounter/__tests__/CombatBoard.layout-pins.test.tsx`
+pins element boxes and a few `transparent` colours in jest; the
+`combat-board` route here shoots the painted board in Chromium.
+
+| | Layout pins (jest, jsdom) | `combat-board` route (Chromium, CI) |
+| --- | --- | --- |
+| Catches | an element moved or resized by a pixel; a `transparent` colour that came back opaque | art, colour, text, z-order, overflow and clipping, fonts, a missing or doubled element, anything painted |
+| Blind to | art, colour, fonts, how anything actually paints | a small move or recolour under its threshold (0.1%); anything on a state it does not shoot |
+| Runs | every PR, in `npm test`, seconds, any machine | in CI on the renderer of record; report-only; a local run is advisory |
+| Fails by | going red | a diff image in the PR and a re-stamp commit T merges |
+
+If a change moves the dock, both react: the pin fails, and the route shows
+the new pixels. Delete the pins and a half-pixel shift passes unseen; delete
+the route and a recolour passes unseen.
+
+The route shoots the opening board only, and it refuses to stamp a board
+with a piece missing: `expectTestIds` makes an absent place a `load-failed`
+route, which the re-stamp never commits. A route may carry its own
+`maxDiffRatio` (the board's is 0.1%, about 330 px of 329,160); every other
+route keeps the global 0.5%. The harness launches Chromium with
+`--disable-partial-raster`: with partial raster the board's fading hand and
+moving foe left edge pixels a few levels off from load to load, so
+`SMOKE_RUNS` reported the route nondeterministic; with full-tile raster five
+loads are byte-identical (the other routes are unchanged to within one level
+on two pixels).
 
 Add a row when you add a route. PNGs are 390×844 (iPhone-13-ish
 portrait, `deviceScaleFactor: 1`).

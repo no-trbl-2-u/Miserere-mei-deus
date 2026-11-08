@@ -41,6 +41,13 @@ interface MapCanvasProps {
      */
     overlays?: React.ReactNode;
     /**
+     * How much of the pane's top and bottom is covered by furniture floating
+     * over the map (the status card, the node panel), in points measured from
+     * the stage edges. The camera frames inside the rest, and the overlays and
+     * the recentre button sit clear of it. Omitted: the whole pane is free.
+     */
+    insets?: MapInsets;
+    /**
      * The map's identity for the camera memory (MC1b): the camera is kept per
      * map across the map unmounting under a fight. Omitted, nothing is
      * remembered.
@@ -235,6 +242,60 @@ export function panIntoFrame(
         tx: keepInFrameAxis(camera.tx, px, camera.scale, viewport.w),
         ty: keepInFrameAxis(camera.ty, py, camera.scale, viewport.h),
     };
+}
+
+/** Points of the pane covered at its top and bottom by furniture floating over it. */
+export interface MapInsets { top: number; bottom: number }
+
+export const NO_INSETS: MapInsets = { top: 0, bottom: 0 };
+
+/** The pane's own vertical margin (`graphWrap`), which the stage insets already include. */
+const WRAP_MARGIN_Y = 6;
+
+/** Stage insets as seen from inside the pane: the pane's margin is not covered twice. */
+export function paneInsets(insets: MapInsets): MapInsets {
+    return {
+        top: Math.max(0, insets.top - WRAP_MARGIN_Y),
+        bottom: Math.max(0, insets.bottom - WRAP_MARGIN_Y),
+    };
+}
+
+/** The free rectangle of the pane: its height after the insets, and where it starts. */
+function freeFrame(viewport: { w: number; h: number }, insets: MapInsets): { frame: { w: number; h: number }; top: number } {
+    const top = Math.min(insets.top, viewport.h);
+    const bottom = Math.min(insets.bottom, Math.max(0, viewport.h - top));
+    return { frame: { w: viewport.w, h: Math.max(1, viewport.h - top - bottom) }, top };
+}
+
+/** The canvas-space centre row of the free rectangle, for a camera: where the player is framed. */
+export function frameCentreY(viewport: { w: number; h: number }, insets: MapInsets): number {
+    const { frame, top } = freeFrame(viewport, insets);
+    return top + frame.h / 2;
+}
+
+/** `computeFocusTransform` inside the free rectangle: the player lands at its centre, not the pane's. */
+export function computeFocusTransformIn(
+    nodes: readonly ExplorationNode[],
+    viewport: { w: number; h: number },
+    size: SheetSize,
+    insets: MapInsets,
+): FocusTransform {
+    const { frame, top } = freeFrame(viewport, insets);
+    const fit = computeFocusTransform(nodes, frame, size);
+    return { ...fit, ty: fit.ty + top };
+}
+
+/** `panIntoFrame` inside the free rectangle: the inner 80% is the rectangle's, not the pane's. */
+export function panIntoFrameIn(
+    camera: FocusTransform,
+    px: number,
+    py: number,
+    viewport: { w: number; h: number },
+    insets: MapInsets,
+): FocusTransform {
+    const { frame, top } = freeFrame(viewport, insets);
+    const moved = panIntoFrame({ ...camera, ty: camera.ty - top }, px, py, frame);
+    return { ...moved, ty: moved.ty + top };
 }
 
 /** How one edge is inked. Exported with `edgeStroke` for unit coverage. */
@@ -521,8 +582,11 @@ function FogDrift({ viewport, tile, ms, opacity, still }: {
     );
 }
 
-export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: MapCanvasProps) {
+export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, children }: MapCanvasProps) {
     const styles = useStyles();
+    const free = React.useMemo(() => paneInsets(insets ?? NO_INSETS), [insets?.top, insets?.bottom]); // eslint-disable-line react-hooks/exhaustive-deps
+    const freeRef = React.useRef(free);
+    freeRef.current = free;
     const AXM = usePalette();
     const size: SheetSize = sheet ?? LEGACY_SHEET_SIZE;
     const canvas = canvasSizeOf(size);
@@ -584,7 +648,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
      */
     const recenter = React.useCallback(() => {
         if (!viewport || nodes.length === 0) return;
-        commitCamera(computeFocusTransform(nodes, viewport, size));
+        commitCamera(computeFocusTransformIn(nodes, viewport, size, freeRef.current));
     }, [viewport, nodes, size, commitCamera]);
 
     // The camera's framing (MC1b). Three moments, all keyed on the player's
@@ -613,23 +677,23 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
             lastMapId.current = mapId;
             const remembered = mapId ? recallCamera(mapId) : undefined;
             if (!remembered) {
-                commitCamera(computeFocusTransform(nodes, viewport, size));
+                commitCamera(computeFocusTransformIn(nodes, viewport, size, freeRef.current));
                 return;
             }
             const sc = clampScale(remembered.scale, minScaleFor(viewport, size));
             const restored = {
                 scale: sc,
                 tx: viewport.w / 2 - remembered.cx * sc,
-                ty: viewport.h / 2 - remembered.cy * sc,
+                ty: frameCentreY(viewport, freeRef.current) - remembered.cy * sc,
             };
-            commitCamera(current ? panIntoFrame(restored, px, py, viewport) : restored);
+            commitCamera(current ? panIntoFrameIn(restored, px, py, viewport, freeRef.current) : restored);
             return;
         }
         if (lastCurrent.current === currentId) return;
         lastCurrent.current = currentId;
-        commitCamera(panIntoFrame(
+        commitCamera(panIntoFrameIn(
             { scale: scale.value, tx: tx.value, ty: ty.value },
-            px, py, viewport,
+            px, py, viewport, freeRef.current,
         ));
         // `nodes` is deliberately NOT a dependency: it is a fresh array every
         // render. `currentId` is the stable projection of what the camera follows.
@@ -647,7 +711,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
         rememberCamera(mapId, {
             scale: sc,
             cx: (vp.w / 2 - tx.value) / sc,
-            cy: (vp.h / 2 - ty.value) / sc,
+            cy: (frameCentreY(vp, freeRef.current) - ty.value) / sc,
         });
     }, [mapId, scale, tx, ty]);
 
@@ -1006,7 +1070,11 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
             {/* Viewport-fixed overlays (legend etc.) — pointerEvents none so
                 they never swallow a pan that starts over them. */}
             {overlays != null && (
-                <View style={StyleSheet.absoluteFillObject} pointerEvents="none" testID="map-overlays-fixed">
+                <View
+                    style={[StyleSheet.absoluteFillObject, { top: free.top, bottom: free.bottom }]}
+                    pointerEvents="none"
+                    testID="map-overlays-fixed"
+                >
                     {overlays}
                 </View>
             )}
@@ -1019,7 +1087,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, mapId, children }: Ma
                 accessibilityHint="Frames where you stand and every path open to you"
                 onPress={recenter}
                 hitSlop={8}
-                style={styles.recenter}
+                style={[styles.recenter, { bottom: 10 + free.bottom }]}
                 testID="map-recenter"
             >
                 <Text style={styles.recenterGlyph}>◎</Text>

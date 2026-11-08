@@ -173,6 +173,20 @@ describe('A2: the Wilds wear vellum, inked', () => {
         expect(stage.findByProps({ testID: 'map-canvas-wrapper' })).toBeTruthy();
     });
 
+    it('159.3: the foot takes touches only through its panels, and the map is told what covers it', () => {
+        const store = newStore();
+        withQuest(store);
+        const r = mountScreen(store);
+        expect(r.getByTestId('wilds-foot').props.pointerEvents).toBe('box-none');
+        act(() => { fireEvent(r.getByTestId('wilds-top-card'), 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 120 } } }); });
+        act(() => { fireEvent(r.getByTestId('wilds-foot'), 'layout', { nativeEvent: { layout: { x: 0, y: 700, width: 390, height: 90 } } }); });
+        act(() => { fireEvent(r.getByTestId('map-canvas-wrapper'), 'layout', { nativeEvent: { layout: { width: 370, height: 700 } } }); });
+        // The gesture line sits below the card (120 less the pane's 6pt margin).
+        expect(StyleSheet.flatten(r.getByTestId('map-overlays-fixed').props.style)).toMatchObject({ top: 114, bottom: 84 });
+        // The Recentre button is parked above the foot.
+        expect(StyleSheet.flatten(r.getByTestId('map-recenter').props.style).bottom).toBe(10 + 84);
+    });
+
     it('159.3 A7: nothing black is drawn behind the quest tracker or the node panel', () => {
         const store = newStore();
         withQuest(store);
