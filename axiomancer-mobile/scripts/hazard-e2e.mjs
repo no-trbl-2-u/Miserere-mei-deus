@@ -299,7 +299,7 @@ async function playHazard(page, baseUrl, route, seed) {
     )
     // A static web export can't surface `extra.devToolsEnabled` at runtime
     // (phase 47b: `web.output` moved to `"single"`, so there's no per-route
-    // manifest for `expo-constants` to read), so the SELF → /dev affordance
+    // manifest for `expo-constants` to read), so the SETTINGS → /dev affordance
     // this harness drives from needs the documented opt-in
     // (lib/buildProfile.ts) — the same one combat-round-e2e sets. Inert
     // in real builds: nothing sets the global there.

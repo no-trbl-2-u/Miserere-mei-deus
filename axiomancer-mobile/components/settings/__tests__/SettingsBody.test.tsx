@@ -8,6 +8,7 @@ import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import SettingsScreen from '@/app/settings/index';
+import SettingsTabScreen from '@/app/(tabs)/settings';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { createSettingsStore } from '@/state/settings';
 import { createAppStore } from '@/state/store';
@@ -40,6 +41,28 @@ describe('SettingsBody dev tools row', () => {
     it('shows the DEV TOOLS link under the dev gate', () => {
         renderSettings();
         expect(screen.getByTestId('settings-dev-tools-link')).toBeTruthy();
+    });
+
+    it('is the last row of the screen, on the route and on the tab', () => {
+        for (const Screen of [SettingsScreen, SettingsTabScreen]) {
+            const slots = createMemorySlotStore({ activeSlot: 1 });
+            const store = createAppStore({ adapter: slots });
+            const settings = createSettingsStore({ storage: NO_STORAGE });
+            const view = render(withAllProviders(<Screen />, { store, slots, settings }).tree);
+            const link = view.getByTestId('settings-dev-tools-link');
+            const reset = view.getByTestId('settings-reset');
+            const ids: string[] = [];
+            const walk = (n: { type?: unknown; props?: { testID?: string }; children?: unknown[] } | string): void => {
+                if (typeof n === 'string') return;
+                if (n.props?.testID === 'settings-reset' || n.props?.testID === 'settings-dev-tools-link') ids.push(n.props.testID);
+                (n.children ?? []).forEach((c) => walk(c as never));
+            };
+            walk(view.toJSON() as never);
+            expect(link).toBeTruthy();
+            expect(reset).toBeTruthy();
+            expect(ids.indexOf('settings-dev-tools-link')).toBeGreaterThan(ids.indexOf('settings-reset'));
+            view.unmount();
+        }
     });
 
     it('hides the link outside dev builds', () => {

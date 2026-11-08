@@ -2,7 +2,7 @@
  * Hermetic component tests — DevToolsLink.
  *
  * Pins the Settings affordance that opens the dedicated `/dev` route:
- *   - DEV gate (production renders null — no dev affordance on SELF)
+ *   - DEV gate (production renders null — no dev affordance in Settings)
  *   - Renders the link in dev builds
  *   - Tapping pushes the `/dev` route
  */

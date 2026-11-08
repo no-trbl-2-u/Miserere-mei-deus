@@ -418,7 +418,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/state/e2e/settings.screen.test.tsx"
+        "source": "axiomancer-mobile/components/settings/__tests__/SettingsBody.test.tsx, axiomancer-mobile/state/e2e/settings.screen.test.tsx"
       },
       "needsPitch": {
         "value": false,
