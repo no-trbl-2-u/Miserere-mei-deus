@@ -47,6 +47,9 @@ needs are done):
 - **99.9** · automate footgun `stakes-card-vm-undrawn-lines` (seen 2×), spec 99's ladder chunk.
 - **99.10** · automate footgun `windows-tar-tree-lint` (seen 2×), spec 99's ladder chunk.
 
+- **159.1** · TU1a: the Spoils lose their small print; the fight loses its meta line, fits its dock and fogs its seam (T's phone marks, `/plot asap`, 2026-11-08; needs 158.1)
+- **159.4** · TU1d: Self's plaques fit; Dev Tools moves to Settings (T's phone marks, `/plot asap`, 2026-11-08)
+
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
 `- **<NN.k>** · <reason> · since: <date> · until: <date or
@@ -87,6 +90,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned (**Asap**: 159.1-159.4) | 2 left |
 | 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned (**Asap**: 158.1) | 2 left |
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 1 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 5 left |

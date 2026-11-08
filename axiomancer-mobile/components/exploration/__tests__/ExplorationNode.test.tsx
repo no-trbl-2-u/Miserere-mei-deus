@@ -187,6 +187,12 @@ describe('the portrait mark on the node underfoot', () => {
         return render(tree);
     };
 
+    it('159.3 A8: is a quarter larger than the 66 it was (82), on the same centre', () => {
+        expect(CURRENT_NODE_SIZE).toBe(82);
+        expect(CURRENT_NODE_SIZE / 66).toBeGreaterThanOrEqual(1.2);
+        expect(CURRENT_NODE_SIZE / 66).toBeLessThanOrEqual(1.3);
+    });
+
     it('draws larger than every other mark', () => {
         expect(CURRENT_NODE_SIZE).toBeGreaterThan(NODE_SIZE);
         const wrap = StyleSheet.flatten(renderHere().getByTestId('node-here').props.style);

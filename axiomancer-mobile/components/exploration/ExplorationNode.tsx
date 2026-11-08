@@ -43,8 +43,12 @@ export const NODE_SIZE = 44;
  * (T, 2026-11-02 — "it's too hard to know which node you're on"). One face
  * in both places is the one-card-face rule applied to the chart: the thing
  * that is YOU looks the same wherever you meet it.
+ *
+ * 82 is the old 66 grown by a quarter (T, 2026-11-08, "a little bigger"):
+ * it stays centred on the same
+ * node, and every other node's mark and press target are unchanged.
  */
-export const CURRENT_NODE_SIZE = 66;
+export const CURRENT_NODE_SIZE = 82;
 
 /**
  * The smallest a node mark draws on screen, in device px. A phone fits a whole

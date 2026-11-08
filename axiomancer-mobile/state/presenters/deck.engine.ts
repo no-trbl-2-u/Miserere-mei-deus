@@ -80,12 +80,17 @@ export interface DeckRarityVM {
  */
 export type DeckRunVM =
     | { kind: 'text'; text: string }
+    /** The play line's shorthand ('◇ No die'), the first run of its line. */
+    | { kind: 'label'; text: string }
     | { kind: 'keyword'; word: string; keyword: string; gloss: string; minor: boolean };
 
-/** One printed line of the open card: an optional shorthand label, then runs. */
+/**
+ * One play line of the open card: its shorthand label ('◇ No die' / '◆ +Die')
+ * is the first run, so label and effect read on one line.
+ */
 export interface DeckLineVM {
-    /** '◇ NO DIE' / '◆ +DIE'; null on the outcome line. */
-    label: string | null;
+    /** The label, also the first run; kept for keys and tests. */
+    label: string;
     runs: DeckRunVM[];
 }
 
@@ -96,7 +101,7 @@ export interface DeckCardVM {
     name: string;
     /** The card's painting (required asset id; the fallback when unmapped). */
     art: number;
-    /** Outcome line, then the two play lines, as label + runs. */
+    /** The play lines only (no outcome summary on this screen): free, then paid when there is one. */
     lines: DeckLineVM[];
     /** Copies of this card in the deck the next fight deals. */
     count: number;
@@ -216,8 +221,9 @@ export const DECK_SOURCE_NOTE = 'The whole deck you carry — the cards the next
  * in the component so the deck detail and the combat detail can be pinned to
  * one spelling.
  */
-export const FREE_LINE_LABEL = '◇ NO DIE';
-export const PAID_LINE_LABEL = '◆ +DIE';
+export const FREE_LINE_LABEL = '◇ No die';
+export const PAID_LINE_LABEL = '◆ +Die';
+const LABEL_JOIN = ' · ';
 
 const EMPTY_REASON = 'No cards yet. Your starting deck is dealt when your run begins.';
 
@@ -291,6 +297,26 @@ export function runsFor(text: string, own: readonly { name: string; def: string;
 }
 
 /**
+ * Print every registered keyword in capitals, the way the paid line does, so
+ * the same word never shows in two casings and `keywordsInText` finds it. The
+ * free line comes from the engine as plain lower case ('vulnerable +10%').
+ */
+export function capitaliseKeywords(text: string): string {
+    return text.replace(/\b[A-Za-z]{2,}\b/g, (w) => {
+        const title = w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+        return keywordGloss(title) !== null ? w.toUpperCase() : w;
+    });
+}
+
+/** A play line: its label as the first run, then the effect's runs. */
+function playLine(label: string, text: string, own: readonly { name: string; def: string; minor: boolean }[]): DeckLineVM {
+    return {
+        label,
+        runs: [{ kind: 'label', text: label }, { kind: 'text', text: LABEL_JOIN }, ...runsFor(capitaliseKeywords(text), own)],
+    };
+}
+
+/**
  * Build one card's VM from the engine projection plus the SHARED combat
  * detail presenter. Returns null for an id the card library does not know
  * (e.g. a save holding a card the library lacks), so an unknown id drops out of the list
@@ -315,13 +341,10 @@ function deckCardVM(cardId: string, count: number): DeckCardVM | null {
     const copies = count > 1 ? `, ${count} copies` : '';
 
     const own = detail.keywords;
-    const lines: DeckLineVM[] = [
-        { label: null, runs: runsFor(detail.outcomeLine, own) },
-        { label: FREE_LINE_LABEL, runs: runsFor(detail.freePill, own) },
-    ];
-    if (detail.diePaidLine !== null) {
-        lines.push({ label: PAID_LINE_LABEL, runs: runsFor(detail.diePaidLine, own) });
-    }
+    // The outcome line restates the +DIE effect, so this screen leaves it out
+    // (T, 2026-11-08); it stays on the VM for any other reader.
+    const lines: DeckLineVM[] = [playLine(FREE_LINE_LABEL, detail.freePill, own)];
+    if (detail.diePaidLine !== null) lines.push(playLine(PAID_LINE_LABEL, detail.diePaidLine, own));
 
     return {
         cardId,
