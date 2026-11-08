@@ -101,7 +101,6 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 ## Acceptance
 
-- **A1** `docs/design-direction.md` states the six parts of the direction above, with its sources, and `AGENTS.md`'s design reading order names it.
 - **A3** No component under `app/` or `components/` sets a `FONTS.<face>` directly. Every text style goes through a role, and a lint test fails a new direct use.
 - **A4** The audit report `docs/reports/design-audit-<date>.md` covers every screen in the list, each with its emotional job, its tells table, its bold thing and its top three fixes. It also carries the tell count before and after the UI rounds, and the copy flagged by screen.
 - **A5** A mock page offers three directions for each of the audit's three worst screens, under the ballot index, and T's picks come back through the ballot kit.
@@ -118,11 +117,10 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 ## Chunks
 
-Measure: 6 open · 1 closed · next A8
+Measure: 5 open · 2 closed · next A8
 
-- [ ] **156.1** The design direction, written down · S · closes A1 · needs — · alias: TY1a
-- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 152.4, 153.4, 154.2, 154.6, 154.7, 155.3, 155.4 · alias: TY1c
-- [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.1, 156.7 · alias: TY1d
+- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 152.4, 153.4, 154.6, 155.4 · alias: TY1c
+- [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.7 · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
 - [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs 156.3 · alias: TY1f
 - [ ] **156.7** T's palette, the default theme · M · closes A7 · needs 156.6 · alias: TY1g

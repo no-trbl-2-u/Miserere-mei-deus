@@ -229,7 +229,7 @@ Recorded as the next free D-numbers (D84 onward; D83 went to RC2) in
   job-level concurrency per PR (the ci-autofix lesson above: never the
   shared `nexus-loop` group); only for a PR labelled `loop:pr` whose head
   is in this repo (never a fork). Calls `_claude-skill.yml` with
-  `model: claude-haiku-5-5`, prompt `/fix-ci <run-id> --branch <head>`,
+  `model: haiku`, prompt `/fix-ci <run-id> --branch <head>`,
   `timeout_minutes: 30`. `skills/fix-ci.md` gains `--branch`: check out
   the PR branch, reproduce, fix the root cause, push to the branch (never
   force), one root cause per run. After two red runs on one PR it adds

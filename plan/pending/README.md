@@ -102,6 +102,10 @@ the empty copy (locked in Design)
 - `D?<slug>` is a decision's number before it has one. Write
   it anywhere (a spec, a code comment); settle replaces every
   one in the repo.
+- A `## Footguns` line is capped at 500 bytes
+  (`footgunBytes` in `scripts/plan/config.mjs`). Nothing warns
+  while you write it: settle throws on a longer one, after the
+  pull request has merged. Say the trap once and its rule.
 - `footguns:` lists sightings: settle bumps `seen` and `last`.
   One that reaches 2× while open gets an `automate <slug>`
   chunk in the ladder spec with an Asap lane entry, and so does

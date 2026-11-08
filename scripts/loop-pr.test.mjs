@@ -73,7 +73,7 @@ test('pr-autofix concurrency is job-level, per PR, never nexus-loop', () => {
 
 test('pr-autofix runs /fix-ci --branch on Haiku with a 30-minute cap', () => {
   assert.match(autofix, /prompt: '\/fix-ci \$\{\{ needs\.gate\.outputs\.run_id \}\} --branch \$\{\{ needs\.gate\.outputs\.branch \}\}'/)
-  assert.match(autofix, /model: 'claude-haiku-5-5'/)
+  assert.match(autofix, /model: 'haiku'/)
   assert.match(autofix, /timeout_minutes: 30/)
 })
 
@@ -91,7 +91,7 @@ test('pr-resolve runs on pushes to main, job-level group, never nexus-loop', () 
 
 test('pr-resolve hands Claude only Read and Edit, on Haiku', () => {
   assert.match(resolve, /allowed_tools: 'Read,Edit'/)
-  assert.match(resolve, /model: 'claude-haiku-5-5'/)
+  assert.match(resolve, /model: 'haiku'/)
 })
 
 // NX1a (A2): `--dangerously-skip-permissions` makes Claude Code ignore the

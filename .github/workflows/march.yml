@@ -194,7 +194,8 @@ jobs:
       # every following tick re-dispatches to the same dead end and starves
       # pending chunks. Grant Playwright so a march-dispatched critique runs.
       install_playwright: true
-      # Pinned to Opus 5.5: /march runs every sub-skill it dispatches
-      # (triage, critique, next, expand, iterate) inside this one session,
-      # so this pin is what sets the model for the whole tick.
-      model: 'claude-opus-5-5'
+      # Sonnet (alias: always the newest Sonnet): /march runs every
+      # sub-skill it dispatches (triage, critique, next, expand, iterate)
+      # inside this one session, so this sets the model for the whole tick.
+      # Builders that need reasoning still spawn on `opus` (next/build.md).
+      model: 'sonnet'

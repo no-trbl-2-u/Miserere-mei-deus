@@ -34,5 +34,5 @@ jobs:
         --dangerously-skip-permissions
       prompt: '/iterate'
       timeout_minutes: 90
-      model: 'claude-opus-5-5'
+      model: 'opus'
       effort: 'medium'

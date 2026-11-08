@@ -88,23 +88,19 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 
 ## Acceptance
 
-- **A2** The save slots, BEGIN, the character select's HEART / BODY / MIND and CONFIRM, and the death and game-over buttons are on vellum. The character select's portrait and relic cards wear brass.
 - **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
-- **A7** A cache shows its title, its flavour line and two choices, each with an action line and no reward shown. The eyebrow, the "node is spent" line, the card image and the goods list are gone, and the rewards paid are unchanged.
 
 ## Open questions
 
 1. Which animated fire does the rest screen use? Confirmed by T (2026-11-06): `campfire-05`, copied from T's checkout into `assets/images/screens/animated-fixtures/campfire-05/` (PR #1404).
 2. Should the aftermath panel ("the page closes", BEGIN AGAIN) be deleted, since no game flow shows it? Confirmed by T (2026-11-06): "Delete it. Delete `CombatDefeatPanel`, `/devaftermath`, its `_layout.tsx` registration and the `DebugRunControls` link, plus the aftermath presenter's defeat half if nothing else reads it. A lost fight already goes to death-return and game-over since DY1." Done in 154.8.
-3. What do the caches without T's action lines show? Default: `[content]` placeholders until T writes them, with T's two lines on the cave cache. Or: the loop drafts every cache's lines in T's pattern for T to edit in the PR. [T to confirm #3]
+3. What do the caches without T's action lines show? Answered by T (2026-11-06): `[content]` placeholders. T's two lines go on the cave cache; every other cache shows a `[content]` placeholder until T writes them, and a test fails any cache with neither. The missing lines become a row in T's Chapter 1 `[content]` copy pass (the Nov 10 deadline Item).
 
 ## Chunks
 
-Measure: 3 open · 6 closed · next A10
+Measure: 1 open · 8 closed · next A10
 
-- [ ] **154.2** Round 2's looks: new game and the endings · M · closes A2 · needs — · alias: UK2b
 - [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs — · alias: UK2f
-- [ ] **154.7** The cache says what you do, not what you get · M · closes A7 · needs — · alias: UK2g
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
 

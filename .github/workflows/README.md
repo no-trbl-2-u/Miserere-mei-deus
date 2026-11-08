@@ -18,10 +18,11 @@ Two layers live here:
    [`_claude-skill.yml`](./_claude-skill.yml), which owns checkout, `npm
    ci`, `.env` materialization, the nexus enforcement layer (guard hooks +
    deny walls), and the `anthropics/claude-code-action` invocation. The
-   runner defaults to **Sonnet 5** (`claude-sonnet-5`); `march.yml`,
-   `iterate.yml`, and `claude.yml` (which doesn't use the runner) are
-   pinned to **Opus 5.5** (`claude-opus-5-5`); `pr-autofix.yml` and
-   `pr-resolve.yml` run on **Haiku 5.5** (`claude-haiku-5-5`). The runner
+   runner defaults to **Sonnet** (`sonnet`), as does `march.yml`;
+   `iterate.yml` and `claude.yml` (which doesn't use the runner) run on
+   **Opus** (`opus`); `pr-autofix.yml` and `pr-resolve.yml` run on
+   **Haiku** (`haiku`). Every pin is an alias, so each tracks the newest
+   release of its family with no edit here. The runner
    also takes `allowed_tools` (override the grant), `pre_run` and
    `post_run` (shell around the Claude step; `pr-resolve` uses them).
 
