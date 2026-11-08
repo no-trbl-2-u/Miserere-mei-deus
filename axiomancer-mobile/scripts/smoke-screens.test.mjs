@@ -9,7 +9,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-    BOARD_PLACES, DIFF_THRESHOLD_RATIO, ROUTES, diffRatioFor, expectPlaces, isOverThreshold, pickHazardRoute, pixelDiffRatio, selectRoutes, settleDiceRoll,
+    BOARD_PLACES, DIFF_THRESHOLD_RATIO, ROUTES, compareCapture, diffRatioFor, expectPlaces, isOverThreshold, loadRoute, pickHazardRoute, pixelDiffRatio, selectRoutes, settleDiceRoll,
 } from './smoke-screens.mjs'
 
 /** A page stand-in that records every locator call in order. */
@@ -107,8 +107,13 @@ test('the combat-board route is the reveal route\'s fight one click further, on 
     assert.equal(board.liveFight, true)
     assert.equal(board.intoBoard, true)
     assert.equal(reveal.intoBoard, undefined)
-    assert.deepEqual(board.expectTestIds, BOARD_PLACES)
-    assert.equal(new Set(BOARD_PLACES).size, 7)
+    // The literal ids, read off the board: a rename in the app fails here, not silently.
+    const places = [
+        'combat-intent', 'combat-conviction', 'combat-momentum-v2', 'combat-rail',
+        'combat-end-phase', 'combat-player-medallion', 'combat-rail-vitae-bar',
+    ]
+    assert.deepEqual(BOARD_PLACES, places)
+    assert.deepEqual(board.expectTestIds, places)
 })
 
 test('a route may carry its own diff ratio; only combat-board does, at 0.1%', () => {
@@ -134,4 +139,83 @@ test('expectPlaces waits on every testID in order, and a missing one rejects', a
     await expectPlaces(page, undefined)
     await assert.rejects(expectPlaces(page, ['a', 'gone', 'c']), /timeout/)
     assert.deepEqual(waited.map((w) => w[0]), ['a', 'b', 'a', 'gone'])
+})
+
+// A pixel diff and a PNG class that touch no disk: the diff count is whatever the stub says.
+const stubDeps = (diffPixels) => ({
+    PNG: class { constructor({ width, height }) { this.width = width; this.height = height; this.data = new Uint8Array(0) } },
+    pixelmatch: () => diffPixels,
+})
+const shot = (width, height) => ({ width, height, data: new Uint8Array(0) })
+
+test('compareCapture flags combat-board and not another route at a ratio between 0.1% and 0.5%', () => {
+    const deps = stubDeps(1000) // 1,000 of 329,160 px: 0.30%
+    const board = compareCapture(ROUTES.find((r) => r.name === 'combat-board'), shot(390, 844), shot(390, 844), deps)
+    assert.equal(board.kind, 'pixel-diff')
+    assert.ok(board.ratio > 0.001 && board.ratio < 0.005)
+    for (const name of ['combat-encounter', 'character']) {
+        const other = compareCapture(ROUTES.find((r) => r.name === name), shot(390, 844), shot(390, 844), deps)
+        assert.equal(other.kind, 'matched', name)
+    }
+})
+
+test('compareCapture matches under the board line, and reports a size change before any diff', () => {
+    const board = ROUTES.find((r) => r.name === 'combat-board')
+    assert.equal(compareCapture(board, shot(390, 844), shot(390, 844), stubDeps(300)).kind, 'matched') // 0.09%
+    assert.equal(compareCapture(board, shot(390, 844), shot(390, 844), stubDeps(0)).kind, 'matched')
+    const sized = compareCapture(board, shot(390, 844), shot(390, 900), stubDeps(0))
+    assert.equal(sized.kind, 'size-mismatch')
+    assert.match(sized.message, /390x844 vs current 390x900/)
+})
+
+// A page that records what it is asked and never touches a browser.
+function recordingPage(log) {
+    const locator = (id) => {
+        const l = {
+            first: () => l,
+            waitFor: async (o) => { log.push(`waitFor ${id} ${o?.state ?? ''}`.trim()) },
+            click: async () => { log.push(`click ${id}`) },
+        }
+        return l
+    }
+    return {
+        getByTestId: locator,
+        goto: async (u) => { log.push(`goto ${u}`) },
+        waitForURL: async () => {},
+        waitForFunction: async () => { log.push('ready') },
+        evaluate: async () => {},
+    }
+}
+
+test('loadRoute enters the board with intoBoard and waits for every place before the shot', async () => {
+    const log = []
+    const enter = async (_page, _base, opts) => { log.push(`enter ${JSON.stringify(opts)}`) }
+    await loadRoute(recordingPage(log), 'http://x', ROUTES.find((r) => r.name === 'combat-board'), { enter })
+    assert.equal(log[0], 'enter {"seed":16,"intoBoard":true}')
+    const waited = log.filter((l) => l.startsWith('waitFor ')).map((l) => l.split(' ')[1])
+    assert.deepEqual(waited, BOARD_PLACES)
+    assert.equal(log.at(-1), 'ready') // painted again after the place waits
+})
+
+test('loadRoute stops at the reveal for combat-encounter and loads a plain route by URL', async () => {
+    const log = []
+    const enter = async (_page, _base, opts) => { log.push(`enter ${JSON.stringify(opts)}`) }
+    await loadRoute(recordingPage(log), 'http://x', ROUTES.find((r) => r.name === 'combat-encounter'), { enter })
+    assert.equal(log[0], 'enter {"seed":16,"intoBoard":false}')
+    assert.equal(log.some((l) => l.startsWith('waitFor ')), false)
+    const plain = []
+    await loadRoute(recordingPage(plain), 'http://x', ROUTES.find((r) => r.name === 'character'), { enter })
+    assert.equal(plain[0], 'goto http://x/character')
+})
+
+test('loadRoute rejects when a place never shows, so the route is load-failed and not stamped', async () => {
+    const page = recordingPage([])
+    const real = page.getByTestId
+    page.getByTestId = (id) => (id === 'combat-conviction'
+        ? { first: () => ({ waitFor: async () => { throw new Error('Timeout 10000ms exceeded') } }) }
+        : real(id))
+    await assert.rejects(
+        loadRoute(page, 'http://x', ROUTES.find((r) => r.name === 'combat-board'), { enter: async () => {} }),
+        /Timeout/,
+    )
 })

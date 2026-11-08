@@ -51,9 +51,10 @@ const REPO_ROOT = resolve(__dirname, '..')
 // ---------------------------------------------------------------------------
 // Config — also re-exported for the hermetic test
 // ---------------------------------------------------------------------------
-
 /**
- * The board's brass places, one testID each: S-03 the intent badge's ring,
+ * The board's brass places, one testID each: S-03 the intent badge
+ * (`combat-intent` is the badge's wrapper; `combat-intent-ring` is left off
+ * because the seed-16 foe telegraphs and draws the disc, not the ring),
  * S-04 the conviction chip, S-05 the momentum chip, S-06 the player dock,
  * S-07 END, S-08 the player portrait (the medallion) and S-09 the player
  * VITAE bar. All seven render on a fight's opening board.
@@ -294,6 +295,58 @@ export async function settleDiceRoll(page) {
     await page.getByTestId('hazard-dice-roll').waitFor({ state: 'hidden', timeout: 10_000 })
 }
 
+/**
+ * Drives `target` to the route's screen and waits until it is ready to shoot:
+ * the live fight (into the board when `intoBoard`), the load or the fixture's
+ * gate push, the route's own waits, and every `expectTestIds` place. A place
+ * that never shows rejects, which the caller records as `load-failed`.
+ *
+ * @param {import('playwright').Page} target the page to drive.
+ * @param {string} baseUrl the static server's origin.
+ * @param {typeof ROUTES[number]} route the route to reach.
+ * @param {{ enter?: typeof enterLiveFight }} [deps] the live-fight entry, injectable for tests.
+ */
+export async function loadRoute(target, baseUrl, route, { enter = enterLiveFight } = {}) {
+    if (route.liveFight) await enter(target, baseUrl, { seed: LIVE_FIGHT_SEED, intoBoard: route.intoBoard === true })
+    else await target.goto(`${baseUrl}${route.path}`, { waitUntil: 'networkidle', timeout: 30_000 })
+    if (route.waitForPath) {
+        await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
+    }
+    await waitForReady(target)
+    if (route.waitForTestId) await target.getByTestId(route.waitForTestId).waitFor({ state: 'visible', timeout: 10_000 })
+    await expectPlaces(target, route.expectTestIds)
+    if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
+    if (route.hazardPuzzle) await faceHazardPuzzle(target)
+    if (route.settleRoll) {
+        await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
+        await settleDiceRoll(target)
+    }
+    // After a hazard step the board has re-rendered; let it paint.
+    if (route.hazardRoute || route.settleRoll || route.hazardPuzzle || route.waitForTestId || route.expectTestIds) await waitForReady(target)
+}
+
+/**
+ * Compares a route's capture with its baseline at the route's own line.
+ *
+ * @param {typeof ROUTES[number]} route the route compared.
+ * @param {{ width: number, height: number, data: Uint8Array }} baselinePng the decoded baseline.
+ * @param {{ width: number, height: number, data: Uint8Array }} currentPng the decoded capture.
+ * @param {{ PNG: new (o: { width: number, height: number }) => { data: Uint8Array }, pixelmatch: Function }} deps the PNG class and pixelmatch.
+ */
+export function compareCapture(route, baselinePng, currentPng, { PNG, pixelmatch }) {
+    if (baselinePng.width !== currentPng.width || baselinePng.height !== currentPng.height) {
+        return {
+            kind: 'size-mismatch',
+            message: `baseline ${baselinePng.width}x${baselinePng.height} vs current ${currentPng.width}x${currentPng.height}`,
+        }
+    }
+    const { width, height } = baselinePng
+    const diff = new PNG({ width, height })
+    const diffPixels = pixelmatch(baselinePng.data, currentPng.data, diff.data, width, height, { threshold: PIXELMATCH_THRESHOLD })
+    const ratio = pixelDiffRatio(width, height, diffPixels)
+    return isOverThreshold(ratio, diffRatioFor(route)) ? { kind: 'pixel-diff', ratio, diff } : { kind: 'matched', ratio }
+}
+
 // ---------------------------------------------------------------------------
 // Lazy imports — keep boot fast + don't crash the file from being
 // required by Jest when devDeps aren't installed yet.
@@ -476,7 +529,6 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
     // Load the route and shoot it; returns the PNG. A fixture page or a
     // live fight's own context is closed straight after its shot.
     async function shootRoute(route) {
-        const url = `${baseUrl}${route.path}`
         const liveContext = route.liveFight ? await browser.newContext(contextOptions) : null
         const target = route.fixture ? await fixturePage(route.fixture)
             : liveContext ? await liveContext.newPage()
@@ -507,22 +559,7 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
                     globalThis.__AXM_HAZARD_CLOCK_PAUSED__ = true
                 })
             }
-            if (route.liveFight) await enterLiveFight(target, baseUrl, { seed: LIVE_FIGHT_SEED, intoBoard: route.intoBoard === true })
-            else await target.goto(url, { waitUntil: 'networkidle', timeout: 30_000 })
-            if (route.waitForPath) {
-                await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
-            }
-            await waitForReady(target)
-            if (route.waitForTestId) await target.getByTestId(route.waitForTestId).waitFor({ state: 'visible', timeout: 10_000 })
-            await expectPlaces(target, route.expectTestIds)
-            if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)
-            if (route.hazardPuzzle) await faceHazardPuzzle(target)
-            if (route.settleRoll) {
-                await target.getByTestId('hazard-board').waitFor({ state: 'visible', timeout: 10_000 })
-                await settleDiceRoll(target)
-            }
-            // After a hazard step the board has re-rendered; let it paint.
-            if (route.hazardRoute || route.settleRoll || route.hazardPuzzle || route.waitForTestId || route.expectTestIds) await waitForReady(target)
+            await loadRoute(target, baseUrl, route)
             return await target.screenshot({ fullPage: false })
         } finally {
             if (target !== page) await target.close().catch(() => {})
@@ -570,33 +607,15 @@ async function captureAndDiff({ playwright, PNG, pixelmatch }, baseUrl, routes) 
         const baselinePng = PNG.sync.read(await readFile(baselinePath))
         const currentPng = PNG.sync.read(await readFile(currentPath))
 
-        if (baselinePng.width !== currentPng.width || baselinePng.height !== currentPng.height) {
-            differing.push({
-                route: route.name,
-                reason: 'size-mismatch',
-                message: `baseline ${baselinePng.width}x${baselinePng.height} vs current ${currentPng.width}x${currentPng.height}`,
-            })
-            continue
-        }
-
-        const { width, height } = baselinePng
-        const diff = new PNG({ width, height })
-        const diffPixels = pixelmatch(baselinePng.data, currentPng.data, diff.data, width, height, {
-            threshold: PIXELMATCH_THRESHOLD,
-        })
-
-        const ratio = pixelDiffRatio(width, height, diffPixels)
-        if (isOverThreshold(ratio, diffRatioFor(route))) {
+        const cmp = compareCapture(route, baselinePng, currentPng, { PNG, pixelmatch })
+        if (cmp.kind === 'size-mismatch') {
+            differing.push({ route: route.name, reason: 'size-mismatch', message: cmp.message })
+        } else if (cmp.kind === 'pixel-diff') {
             const diffPath = join(DIFF_DIR, `${route.name}.png`)
-            await writeFile(diffPath, PNG.sync.write(diff))
-            differing.push({
-                route: route.name,
-                reason: 'pixel-diff',
-                ratio,
-                diffPath,
-            })
+            await writeFile(diffPath, PNG.sync.write(cmp.diff))
+            differing.push({ route: route.name, reason: 'pixel-diff', ratio: cmp.ratio, diffPath })
         } else {
-            matched.push({ route: route.name, ratio })
+            matched.push({ route: route.name, ratio: cmp.ratio })
         }
     }
 
