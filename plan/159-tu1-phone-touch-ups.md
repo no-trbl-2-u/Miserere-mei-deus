@@ -86,26 +86,27 @@
 - Any change to card rules text, keywords, or what the Spoils offer.
 - Settings' own look (152.6).
 
+## Sources
+
+- **T's end-gate answers (2026-11-08, after `/pilot 158.1 159`),** shown a 3x crop of the hand with the two-line name band: "Always one line, shrink text" (names on one line, long names shrink); on the Deck reader's title-cased keywords: "Keywords should remain caps". Then: "I don't want the "+" in the free cost. "-" can stay." and "I want the card text background to be the same color as the art's background so there's [no] cutoff line between sections", answered as: no visible line (blend), "One black for them all", "+" removed everywhere a card shows the pill.
+
 ## Acceptance
 
-- **A1** The Spoils panel shows no `SPOILS` eyebrow, no sub-line (normal or elite) and no note under TAKE NOTHING or TAKE CARD; each button reads its label alone, and their accessibility labels and disabled state are unchanged.
-- **A2** The fight shows no phase/round/turn line; `metaLine` is gone from the view-model.
-- **A3** At 360, 375 and 390 the dock's portrait ring is whole and the VITAE number and pile counts are legible; END is about 72 x 48 with at least a 44 pt touch target.
-- **A4** A fog gradient hides the edge between the arena plate and the hand, takes no touches, and its top stays below every staged Chapter 1 foe's lowest drawn pixel.
-- **A10** Self's three stat plaques fit at 360 and 390 (labels inside the frames, numbers whole, all on screen); Dev Tools is the last row of Settings under the same dev gate, testID `settings-dev-tools-link`, and no script reaches `/dev` through Self.
+- **A11** Every card name draws on one line in a band sized for one line, on the hand card, the Spoils tile and the large face: a name too long for the line steps its font down to fit (floor about 10 pt) rather than wrapping or truncating, and art height is the same on every card of a size.
+- **A12** The free cost pill never prints a leading "+" ("+2" reads "2", "+35%" reads "35%"); a "-" stays. This holds everywhere a card face draws the pill: hand, Spoils tiles, the large inspect face, and the Deck.
+- **A13** The card face's name band and text panel are one black (`HUE.black`, via an AXM token), and the art meets them with no visible line: a short fade from the art into the black at each edge, so a painting whose edge is not pure black blends rather than cuts.
+- **A14** The Deck's open card prints keywords in capitals (VULNERABLE), matching the card faces and combat, in both play lines, and they stay pressable.
 
 ## Open questions
 
 1. How tall is the tab bar? Default: about 76 pt plus the bottom inset. Or: 84 pt; or keep 60 and only fix width and fill. Accepted at merge (default).
 2. How much bigger is the player's token? Default: about 25%. Or: 50%. Accepted at merge (default).
-3. Should Settings' Dev Tools row be the last row, or sit under a "Developer" heading? Default: the last row, no heading. Or: a heading. [T to confirm #3]
+3. Should Settings' Dev Tools row be the last row, or sit under a "Developer" heading? Default: the last row, no heading. Or: a heading. Accepted at merge (default).
 
 ## Chunks
 
-Measure: 5 open · 5 closed · next A11
+Measure: 4 open · 10 closed · next A15
 
-- [ ] **159.1** The Spoils lose their small print; the fight loses its meta line, fits its dock and fogs its seam · M · closes A1, A2, A3, A4 · needs 158.1 · alias: TU1a
-- [ ] **159.4** Self's plaques fit; Dev Tools moves to Settings · M · closes A10 · needs — · alias: TU1d
 
 ### 159.1 (TU1a) — The Spoils and the fight · M · closes A1, A2, A3, A4 · requires 158.1
 
@@ -135,3 +136,10 @@ Measure: 5 open · 5 closed · next A11
 - Move `<DevToolsLink />` from Self to the end of `app/(tabs)/settings/index.tsx`; testID `settings-dev-tools-link`. Update every script that clicked `self-dev-tools-link` from `/character` to open `/settings` and click the new testID (`grep -rl self-dev-tools-link axiomancer-mobile/scripts .github`); update the docs and comments that say "the SELF tab's DEV TOOLS" (`app/dev/index.tsx` header, `scripts/live-fight-entry.mjs`, spec text is history and stays).
 - Tests: Self no longer renders the link; Settings renders it under the dev gate; the plaque layout at 360 and 390.
 - Measure: `npm run verify -w axiomancer-mobile`, then `npm run verify:visual -w axiomancer-mobile` locally on the `combat-encounter` route (its entry walks the new path) and one e2e that used the old link (`node scripts/encounter-routing-e2e.mjs` or the lightest of the seven).
+- [ ] **159.5** Card names on one line that shrink to fit; no "+" on the free pill; one black text panel the art fades into; Deck keywords in capitals · M · closes A11, A12, A13, A14 · needs — · alias: TU1e
+  - `components/combat/encounter/CombatBoard.tsx`: `nameBandHeight` reserves one line (`PLATE_NAME.*.lineHeight` plus pill room when the face shows one) for normal, narrow and large faces; the name `Text` is `numberOfLines={1}` with a computed font size per face width (largest step that fits the longest word line, floor about 10 pt), not `adjustsFontSizeToFit` alone, so web and native agree. Find the longest names from the card data (today "Stir the Thundersnow", "Call Lightning Twice", "Call Back a Kindness"); say the size each gets on the 95 pt hand column and the 71 pt narrow column.
+  - Update the name-band tests (`CombatCardFace.name-band.test.tsx`, `CombatCardFace.glyph-mode.test.tsx`) so a two-line band or a wrapped name fails them.
+  - `state/presenters/deck.engine.ts` / `components/deck/DeckOpenCard.tsx`: the keyword run draws its word in capitals (`run.word`, already "VULNERABLE"), not the registry's title case; the a11y label stays. Test: the open card of A Plain Word shows "VULNERABLE" in both play lines and the keyword is still pressable.
+  - `CombatBoard.tsx` `compactFree`: drop the leading "+" it adds (`+${im[1]}`, `+${nm[1]}${nm[2]}`); keep a "-" when the value is negative. Check every other place the pill value is built (presenters such as `card-program.engine.ts` that format `+N%`) and strip the "+" only where it feeds the pill, not floating combat numbers. Test: the pill for a +2 card reads "2", a +35% card reads "35%", a negative value keeps "-".
+  - `faceOuter`, `faceCard`, `plateBand`, `plateLedger` backgrounds: one black (add an AXM token for `HUE.black` if none exists; no hex literals). Add an edgeless gradient (about 12 pt, clear to black) at the art's top and bottom inside `plateArtFrame`, `pointerEvents="none"`, so no seam shows. Test: the band and ledger share the face's black, and the fade views render on normal, narrow and large faces.
+  - Measure: `npm run verify -w axiomancer-mobile`; CI re-stamps `combat-board`, `village` and `deck` where they change.

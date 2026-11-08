@@ -22,7 +22,6 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
-- **158.1** · VR1a: the combat board's CI visual route, before 153.4 changes the dock (T, `/plot`, 2026-11-07; needs 152.3)
 
 - **157.2** · EN3b: Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors (T's enemy recast, `/plot asap`, 2026-11-06)
 
@@ -47,8 +46,9 @@ needs are done):
 - **99.9** · automate footgun `stakes-card-vm-undrawn-lines` (seen 2×), spec 99's ladder chunk.
 - **99.10** · automate footgun `windows-tar-tree-lint` (seen 2×), spec 99's ladder chunk.
 
-- **159.1** · TU1a: the Spoils lose their small print; the fight loses its meta line, fits its dock and fogs its seam (T's phone marks, `/plot asap`, 2026-11-08)
-- **159.4** · TU1d: Self's plaques fit; Dev Tools moves to Settings (T's phone marks, `/plot asap`, 2026-11-08)
+- **159.5** · TU1e: card names on one line that shrink to fit; no "+" on the free pill; one black text panel; Deck keywords in capitals (T's end gate, `/plot`, 2026-11-08)
+- **160.1** · MG1a: the merge decision re-runs when the verify gate finishes (T's end gate, `/plot`, 2026-11-08)
+
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -90,8 +90,9 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned (**Asap**: 159.1-159.4) | 2 left |
-| 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned (**Asap**: 158.1) | 2 left |
+| 160 | A passed review still merges when the verify gate finishes after it | [160-mg1-merge-after-late-gate.md](160-mg1-merge-after-late-gate.md) | planned (**Asap**: 160.1) | 1 left |
+| 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned | 1 left |
+| 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned | 1 left |
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 1 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 5 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 1 left |

@@ -104,12 +104,6 @@ Checked against `app/` and the 19 `ROUTES` (2026-11-07). Not expanded here excep
 
 ## Acceptance
 
-- **A1** `enterLiveFight` takes `intoBoard: true`, presses `combat-enter`, and resolves with `combat-board` visible and the dice at rest. With the option off, behaviour is exactly today's: it resolves on `combat-reveal`.
-- **A2** `smoke-screens` has a `combat-board` route on seed 16 and the same entry as `combat-encounter`. `SMOKE_ONLY=combat-board SMOKE_RUNS=5 npm run verify:visual` exits 2 (baseline missing), never 4. CI's own `SMOKE_RUNS=2` reports the route `nondeterministic 0`, and the re-stamp commits `screenshots/baseline/combat-board.png`.
-- **A3** The route waits on a testID for each of S-03, S-04, S-05, S-06, S-07, S-08 and S-09 before it shoots, and the PR names each testID and says which, if any, the opening board does not render (and so left off the list). An absent place makes the route `load-failed`.
-- **A4** A route may carry its own diff ratio; `combat-board` carries 0.1% and every other route keeps 0.5%. A test pins that a diff between the two ratios flags the board and not another route.
-- **A5** Route selection: a change under `components/combat/`, `app/combat-encounter/` or `components/hazard/` selects `combat-board` as well as `combat-encounter`; `smoke-routes-for.test.mjs` pins it. The baselines README has the `combat-board` row.
-- **A6** The pins-versus-pixels difference is written down in the baselines README and in the header comment of `CombatBoard.layout-pins.test.tsx`, without naming a spec number in the comment.
 - **A7** `smoke-screens` has `deck` and `settings` routes (the `/deck` and `/settings` tabs) with baselines, selection rules for `app/(tabs)/deck/` and `app/(tabs)/settings/` that select only their own route, and README rows.
 
 ## Open questions
@@ -122,9 +116,8 @@ Checked against `app/` and the 19 `ROUTES` (2026-11-07). Not expanded here excep
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 1 open · 6 closed · next A8
 
-- [ ] **158.1** The combat board gets a visual route, a thin test and its words · M · closes A1, A2, A3, A4, A5, A6 · needs — · alias: VR1a
 - [ ] **158.2** The Deck and Settings tabs get routes · S · closes A7 · needs — · alias: VR1b
 
 ### 158.1 (VR1a) — The combat board gets a visual route · M · closes A1, A2, A3, A4, A5, A6 · requires 152.3

@@ -596,3 +596,6 @@
 - 2026-11-07 · 155.3 (alias: DR1c) · Deck shows boxed type tabs, one type's grid at a time · b14c4371..5f9fd822 (#1444)
 - 2026-11-08 · 159.2 (alias: TU1b) · Card names in Fondamento; Deck card without band or repeat · cb9d1c0e..cb9d1c0e (#1455)
 - 2026-11-08 · 159.3 (alias: TU1c) · Wilds keep half a band; bigger token; full-width tab bar · 8188f8c7..070390aa (#1456)
+- 2026-11-08 · 158.1 (alias: VR1a) · The combat board has a CI visual route, tight line, its words · 87437ed3..a6025cae (#1457)
+- 2026-11-08 · 159.1 (alias: TU1a) · The Spoils lose small print; the fight loses its clock, fits its dock, fogs its seam · 6d284189..a02bcc39 (#1464)
+- 2026-11-08 · 159.4 (alias: TU1d) · Self's three stat plaques fit; Dev Tools is Settings' last row · d43d388f..5812c1b8 (#1463)

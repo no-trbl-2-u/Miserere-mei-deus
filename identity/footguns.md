@@ -16,7 +16,6 @@ One line each, at most 500 bytes, never wrapped:
 
 ## Open (a rule, not yet automated)
 
-- **equipment-hook-apply-only** · `LineCtx` runs every line in `cost` and `value` modes too, so a gear hook fired outside `apply` pays twice or leaks into the sim's estimate → fire gear only in `apply` and read `equipmentDealBonusPreview` elsewhere · seen 1× · last 2026-11-01 · open
 - **special-needs-a-weapon** · a special pays only what the worn weapon's `special` says, so a fresh `createCharacter` or new game earns no Conviction from specials until the grey pair is granted at the start → any sim or test that models a fresh run wears `GREY_SWORD_STAND_IN` (`wearGreySword`), and the grey-pair grant replaces it · seen 1× · last 2026-11-01 · open
 - **rail-special-conviction-inert** · `UpgradeableDieGear.specialConviction` (the rail, the Blacksmith's +3 witness variant) no longer sets a payout; the worn weapon does → read the payout from `state.equipmentDice.special`, not the die gear · seen 1× · last 2026-11-01 · open
 - **stand-in-still-worn** · `combat.measured-truth.ts` and the act-1 door fixtures in `Game/act1-progression.test.ts` still wear `GREY_SWORD_STAND_IN` (no deal bonus, no armor), so the sims do not play what a new run wears → swap them for `wearGreyPair` and delete `Combat/combat.grey-sword.ts` (the grey-pair footgun in 136.5's close is met here) · seen 1× · last 2026-11-01 · open
@@ -46,6 +45,7 @@ One line each, at most 500 bytes, never wrapped:
 - **single-step-counter-rule** · the "hide a lone 0/1" rule is `questCounterText` in `quest.copy.ts`; re-deriving it in the quest panel would let the two screens disagree → import the helper, never re-test `requiredCount` · seen 1× · last 2026-11-07 · open
 - **stakes-card-vm-undrawn-lines** · `HazardStakesVM` keeps `lines` and `kindLine` for the rules but `StakesCard` no longer draws them; a non-puzzle hazard has `goalLine` and `timeLine` null so its card shows the place only → add a new line to the VM and draw it in the card, not just in the engine · seen 2× · last 2026-11-07 · open
 - **windows-tar-tree-lint** · `lintTree` in `scripts/pr-merge.mjs` shells out to `tar`, which on Windows rejects the `C:` temp path, so the `pr-merge`/`pr-resolve` tar cases die on `spawnSync tar EOF` in root `npm test` while CI is green; a rerun failed one of three, so they are part flaky → on Windows judge those two on CI, never locally · seen 7× · last 2026-11-07 · open
+- **partial-raster-nondeterminism** · Chromium's partial raster left the fading hand and the foe's edge pixels a few levels different load to load, so `SMOKE_RUNS` called `combat-board` nondeterministic (exit 4) → the harness launches with `--disable-partial-raster`; a new live route that fails the five-load check should try that before changing the page · seen 1× · last 2026-11-08 · open
 ## Watch (seen once: searched before adding a line, not read before building)
 
 - **minigame-pin-masks-puzzle** · the Playwright minigame-seed injector pins `hazard.hazardId` (and `__AXM_HAZARD_ID__`) for every page, and a pinned id draws the three-round board, so a harness at a Breakwater hazard never sees the puzzle → strip both pins (see `puzzleNode` in `scripts/smoke-screens.mjs`) for a puzzle shot · seen 1× · last 2026-11-01 · watch
@@ -53,6 +53,7 @@ One line each, at most 500 bytes, never wrapped:
 - **sprite-size-in-style** · A sprite `Image` carries its size in `style`, not a `width` prop like `AxmIcon`; a test that reads `props.width` gets NaN → read `props.width ?? style.width` · seen 1× · last 2026-11-01 · watch
 - **dock-selection-is-a-row** · the dock's pick was a slot kind, so RELIC I lit all three relic rows and carried no position to the equip → the pick is a `DockRowId` (`weapon`, `armor`, `relic-0..2`); read a relic position with `rowRelicPosition` and pass it to `equipItem(id, position)` · seen 1× · last 2026-11-01 · watch
 - **web-press-after-drag** · on web the pointer stays captured by the view a pan began on, so its `onPress` still fires on release and a drag also picks a row → a press while a drag is live or within 350 ms of its end is the drag's release: guard taps with the controller's `suppressTap()` · seen 1× · last 2026-11-01 · watch
+- **equipment-hook-apply-only** · `LineCtx` runs every line in `cost` and `value` modes too, so a gear hook fired outside `apply` pays twice or leaks into the sim's estimate → fire gear only in `apply` and read `equipmentDealBonusPreview` elsewhere · seen 1× · last 2026-11-01 · watch
 
 ## Guarded (automated: the line says by what)
 
