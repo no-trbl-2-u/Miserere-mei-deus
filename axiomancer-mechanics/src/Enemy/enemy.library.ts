@@ -124,7 +124,7 @@ const LOCK_THE_BRAKE: EnemyMove = {
 };
 const HOIST: EnemyMove = {
     name: 'Hoist', kind: 'status',
-    text: 'UNDERTOW: your body die is lifted out of your next roll.',
+    text: 'SEIZED: your body die is lifted out of your next roll.',
     undertow: 'body',
 };
 /** Counterweight's second hit: 6, and 9 in its second phase. */
@@ -242,7 +242,7 @@ const HIDE_IN_THE_HOARD: EnemyMove = {
 };
 const GULL_CALL: EnemyMove = {
     name: 'Gull-call', kind: 'status',
-    text: 'UNDERTOW on a random die.',
+    text: 'SEIZED on a random die.',
     undertow: 'random',
 };
 
@@ -377,7 +377,7 @@ const SLUICE: EnemyMove = {
 };
 const GATE_UNDERTOW: EnemyMove = {
     name: 'Undertow', kind: 'status',
-    text: 'UNDERTOW on 1 die.',
+    text: 'SEIZED on 1 die.',
     undertow: 'mind',
 };
 const WASH_OVER_HIGH: EnemyMove = {
@@ -942,7 +942,7 @@ export const CaveChoir = createEnemy({
         {
             danger: {
                 name: 'Toll for the Drowned', kind: 'danger',
-                text: 'UNDERTOW on 2 dice, then 8 damage.',
+                text: 'SEIZED on 2 dice, then 8 damage.',
                 // Heart and Mind: the Body die stays, to shake off the Psalm's Barnacles.
                 undertow: ['heart', 'mind'], damage: 8,
             },

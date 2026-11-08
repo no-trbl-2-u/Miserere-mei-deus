@@ -124,7 +124,7 @@ const KEYWORD_GLOSS: Record<string, string> = {
         'Each GUARD you gain is cut by that much until the end of your next turn. '
         + 'Gain your GUARD in one big play, not many small ones.',
     Tangle: 'Your next cards cannot use their FREE line, as many as the number says. Pay for them with dice, or play fewer cards.',
-    Undertow:
+    Seized:
         'One named die does not roll on your next turn. '
         + 'A die banked in the Reserve is not on the tray, so bank one to cover it.',
     Barnacle:

@@ -290,7 +290,7 @@ describe('TIDE 0-5: rises 1 each foe turn, VULNERABLE 25% at TIDE 0-1', () => {
         expect(foeTurn(at(gate, 'Sluice')).next.enemyWords?.ward ?? 0).toBe(0);
     });
 
-    it('Undertow: UNDERTOW on the Mind die', () => {
+    it('Undertow: SEIZED on the Mind die', () => {
         expect(foeTurn(at(gate, 'Undertow')).next.enemyWords?.undertow).toBe('mind');
     });
 

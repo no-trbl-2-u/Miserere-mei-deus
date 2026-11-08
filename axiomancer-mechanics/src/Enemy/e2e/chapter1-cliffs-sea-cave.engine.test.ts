@@ -145,7 +145,7 @@ describe('A11 and A12 — the three foes play exactly the Appendix', () => {
 
     it('their enemy words are the words their moves carry', () => {
         // The hoard's WARD is a rider, shown by the hoard counter, not a move word.
-        expect(enemyPhaseKeywords(WreckPicker)).toEqual(['undertow']);
+        expect(enemyPhaseKeywords(WreckPicker)).toEqual(['seized']);
         expect(enemyPhaseKeywords(SmokehouseGutter)).toEqual(['mend', 'tangle', 'barnacle']);
         expect(enemyPhaseKeywords(TitheCollector)).toEqual(['barnacle']);
     });
@@ -204,7 +204,7 @@ describe('the Wreck-Picker\'s riders (level 6)', () => {
         expect(res.next.enemyWords?.ward).toBe(n6(3) * 2);
     });
 
-    it('Gull-call: UNDERTOW on a random die', () => {
+    it('Gull-call: SEIZED on a random die', () => {
         const s = at(picker, 'Gull-call');
         expect(foeTurn(s, () => 0).next.enemyWords?.undertow).toBe('heart');
         expect(foeTurn(s, () => 0.5).next.enemyWords?.undertow).toBe('body');

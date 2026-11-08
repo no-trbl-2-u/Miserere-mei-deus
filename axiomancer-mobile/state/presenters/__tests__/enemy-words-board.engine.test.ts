@@ -1,7 +1,7 @@
 /**
  * Chapter 1's foes on the board (phases EN1f and EN1g): the live `phases` foes.
  * Their enemy words stand as chips (the foe's WARD on its side; BRINE,
- * TANGLE, LEECH and UNDERTOW on yours), TANGLE refuses every card's FREE
+ * TANGLE, LEECH and SEIZED on yours), TANGLE refuses every card's FREE
  * line on the board as the engine does, and a WARD-only move telegraphs
  * DEFEND with no number.
  */
@@ -133,14 +133,14 @@ describe('the enemy words stand on the board as chips', () => {
         expect(warded.find((e) => e.effectId === 'enemy-word-ward')!.gloss).toMatch(/GUARD/);
     });
 
-    it('BRINE, TANGLE, LEECH and UNDERTOW show on yours', () => {
+    it('BRINE, TANGLE, LEECH and SEIZED show on yours', () => {
         const s = fightAt('bw-h1');
         const vm = buildCombatViewModel({
             ...s, enemyWords: { ward: 0, brine: 3, leechTurns: 3, leechPotency: 2, tangle: 1, undertow: 'body' },
         });
         const ids = vm.player.effects.map((e) => e.effectId);
         expect(ids).toEqual(expect.arrayContaining([
-            'enemy-word-brine', 'enemy-word-tangle', 'enemy-word-leech', 'enemy-word-undertow',
+            'enemy-word-brine', 'enemy-word-tangle', 'enemy-word-leech', 'enemy-word-seized',
         ]));
         expect(vm.player.effects.find((e) => e.effectId === 'enemy-word-leech')).toMatchObject({ intensity: 2, duration: 3 });
         expect(vm.enemy.effects.some((e) => e.effectId.startsWith('enemy-word-'))).toBe(false);
@@ -215,18 +215,18 @@ describe('the enemy-word chips carry their real kind, die and span', () => {
     const chipsOf = (words: Record<string, unknown>) =>
         buildCombatViewModel({ ...fightAt('bw-h1'), enemyWords: { ...NO_WORDS, ...words } } as CombatEncounterState);
 
-    it('WARD is a boon, BRINE a cut, LEECH a drain, TANGLE and UNDERTOW control, each in its own colour', () => {
+    it('WARD is a boon, BRINE a cut, LEECH a drain, TANGLE and SEIZED control, each in its own colour', () => {
         const vm = chipsOf({ ward: 4, brine: 2, leechTurns: 2, leechPotency: 1, tangle: 1, undertow: 'mind' });
         const glyph = (side: 'enemy' | 'player', id: string) => (vm[side].effects.find((e) => e.effectId === id)!).glyph;
         expect(glyph('enemy', 'enemy-word-ward')).toMatchObject({ kind: 'statup', color: GLYPH_COLORS.statup });
         expect(glyph('player', 'enemy-word-brine')).toMatchObject({ kind: 'statdown', color: GLYPH_COLORS.statdown });
         expect(glyph('player', 'enemy-word-leech')).toMatchObject({ kind: 'dot', color: GLYPH_COLORS.dot });
         expect(glyph('player', 'enemy-word-tangle')).toMatchObject({ kind: 'control', color: GLYPH_COLORS.control });
-        expect(glyph('player', 'enemy-word-undertow')).toMatchObject({ kind: 'control', color: GLYPH_COLORS.control });
+        expect(glyph('player', 'enemy-word-seized')).toMatchObject({ kind: 'control', color: GLYPH_COLORS.control });
     });
 
-    it.each(['heart', 'body', 'mind'] as const)('UNDERTOW names the %s die it lifts', (die) => {
-        const chip = chipsOf({ undertow: die }).player.effects.find((e) => e.effectId === 'enemy-word-undertow')!;
+    it.each(['heart', 'body', 'mind'] as const)('SEIZED names the %s die it lifts', (die) => {
+        const chip = chipsOf({ undertow: die }).player.effects.find((e) => e.effectId === 'enemy-word-seized')!;
         expect(chip.caption).toContain(die.charAt(0).toUpperCase() + die.slice(1));
         expect(effectChipA11y(chip)).toContain(chip.caption!);
     });
@@ -237,7 +237,7 @@ describe('the enemy-word chips carry their real kind, die and span', () => {
         expect(a11y('enemy', 'enemy-word-ward')).toContain("until the foe's next turn");
         expect(a11y('player', 'enemy-word-brine')).toContain('until the end of your next turn');
         expect(a11y('player', 'enemy-word-tangle')).toContain('until that many cards are played');
-        expect(a11y('player', 'enemy-word-undertow')).toContain('until your next roll');
+        expect(a11y('player', 'enemy-word-seized')).toContain('until your next roll');
         expect(a11y('player', 'enemy-word-leech')).toContain('2 turns left');
     });
 });

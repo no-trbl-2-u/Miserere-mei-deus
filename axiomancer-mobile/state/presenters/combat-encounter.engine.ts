@@ -2060,7 +2060,7 @@ export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
 
 /**
  * The enemy words standing on the board (`state.enemyWords`), as chips: the
- * foe's WARD on its side; BRINE, TANGLE, LEECH and UNDERTOW on yours. These
+ * foe's WARD on its side; BRINE, TANGLE, LEECH and SEIZED on yours. These
  * are live state, like GUARD, so they carry their numbers; the telegraph
  * (intent, next, wall math) never does. BARNACLE shows as the Curse in hand.
  */
@@ -2086,9 +2086,9 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
     if ((w.tangle ?? 0) > 0) out.push(chip('Tangle', w.tangle!, 0, '#', 'control'));
     if (w.leechTurns > 0 && w.leechPotency > 0) out.push(chip('Leech', w.leechPotency, w.leechTurns, '∿', 'dot'));
     if (w.undertow && w.undertowAlso) {
-        out.push(chip('Undertow', 2, 0, '↓', 'control',
+        out.push(chip('Seized', 2, 0, '↓', 'control',
             `${undertowDieName(w.undertow)} and ${undertowDieName(w.undertowAlso)} dice lifted from your next roll`));
-    } else if (w.undertow) out.push(chip('Undertow', 1, 0, '↓', 'control', `${undertowDieName(w.undertow)} die lifted from your next roll`));
+    } else if (w.undertow) out.push(chip('Seized', 1, 0, '↓', 'control', `${undertowDieName(w.undertow)} die lifted from your next roll`));
     return out;
 }
 
@@ -2263,7 +2263,7 @@ export function lighthouseChips(state: CombatEncounterState, side: 'enemy' | 'pl
     return out;
 }
 
-/** The die an UNDERTOW lifts, by the name the dice wear on the board. */
+/** The die a SEIZED lifts, by the name the dice wear on the board. */
 function undertowDieName(die: 'heart' | 'body' | 'mind'): string {
     return die.charAt(0).toUpperCase() + die.slice(1);
 }
@@ -2289,7 +2289,7 @@ const ENEMY_WORD_SPAN: Record<string, string> = {
     'enemy-counter-ledger': 'until its Audit clears it',
     'enemy-word-brine': 'until the end of your next turn',
     'enemy-word-tangle': 'until that many cards are played',
-    'enemy-word-undertow': 'until your next roll',
+    'enemy-word-seized': 'until your next roll',
 };
 
 /** Fallback for a lamp chip built with no `span` (e.g. a test literal): a Shutter darkens it, a light move relights it, and once out it stays. */
