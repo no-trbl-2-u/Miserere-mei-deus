@@ -26,16 +26,17 @@ export default function ExplorationScreen() {
     const { inCombat, recordDeepestNode } = useCombatMode();
     const [nodeTip, setNodeTip] = useState<string | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-    // The top of the Wilds on a solid black band, to quiet the map's lines
-    // behind the status card (T, 2026-11-06, W-01). It ships on; the dev menu's
+    // The TOP HALF of the status card on a solid black band, to quiet the map's
+    // lines behind it (T, 2026-11-06, W-01; halved by T, 2026-11-08). It ships on; the dev menu's
     // WILDS BAND switch turns it off for comparison. It belongs to the vellum
     // card, so a card that is not vellum draws no band.
-    // WITHOUT the band the map runs up under the card (`floating`), which is the
-    // other half of the comparison: the card over the map's own lines.
+    // WITHOUT the band the map runs up under the whole card, which is the other
+    // half of the comparison: the card over the map's own lines.
     const vellumTop = lookOf('W-01') === 'vellum';
     const bandSwitch = useDevSetting('wildsBlackBand');
     const bandOn = bandSwitch && vellumTop;
-    const floating = !bandSwitch && vellumTop;
+    // The measured height of the status card, to halve it for the band.
+    const [cardHeight, setCardHeight] = useState(0);
 
     useEffect(() => {
         if (nodeTip !== null) {
@@ -202,51 +203,65 @@ export default function ExplorationScreen() {
     );
     const status = <StatusCard mapName={vm.region} />;
 
+    // The foot of the screen: a selected node's panel, else the ACTIVE QUEST
+    // (T, 2026-11-02; the map's flavour line is only the fallback for an empty
+    // quest log). It is laid over the map's foot with nothing drawn behind it
+    // but its own vellum (T, 2026-11-08: "no black behind the quest card, nor
+    // behind the Travel here buttons").
+    const foot = selectedOption !== null || shutNode !== null ? (
+        <NodeConfirmPanel
+            selected={selectedOption}
+            shut={shutNode}
+            onConfirm={onConfirmMove}
+            onCancel={() => setSelectedNodeId(null)}
+            emptyMessage={vm.drawerCopy.emptyMessage}
+        />
+    ) : (
+        <QuestTracker
+            fallback={<NodeConfirmPanel selected={null} emptyMessage={vm.drawerCopy.emptyMessage} />}
+        />
+    );
+
     return (
         <ScreenBg scrollable={false}>
-            {bandOn && (
-                <>
-                    <View style={styles.band} testID="wilds-black-band">{status}</View>
-                    {canvas}
-                </>
-            )}
-            {/* Without the band the map runs up under the status card, as in the
-                kit mixer, so the card floats over the map's own lines: the look
-                T compares the band against. */}
-            {floating && (
-                <View style={styles.stage} testID="wilds-floating-top">
-                    {canvas}
-                    <View style={styles.floatTop} pointerEvents="box-none">{status}</View>
+            <View style={styles.stage} testID="wilds-stage">
+                {vellumTop ? (
+                    <>
+                        {/* The map runs the whole stage, up under the status card and
+                            down to the tab bar; the card and the foot float over it. */}
+                        <View style={StyleSheet.absoluteFill}>{canvas}</View>
+                        <View
+                            style={styles.top}
+                            pointerEvents="box-none"
+                            testID="wilds-top-card"
+                            onLayout={(e) => setCardHeight(e.nativeEvent.layout.height)}
+                        >
+                            {/* Toggle on: the black runs from the screen's top to the card's
+                                vertical middle, so the map shows behind its lower half
+                                (T, 2026-11-08: "the top half of the top section"). */}
+                            {bandOn && (
+                                <View
+                                    style={[styles.band, { height: cardHeight / 2 }]}
+                                    testID="wilds-black-band"
+                                    pointerEvents="none"
+                                />
+                            )}
+                            {status}
+                        </View>
+                    </>
+                ) : (
+                    <>
+                        {status}
+                        <View style={styles.fill}>{canvas}</View>
+                    </>
+                )}
+                <View style={styles.foot} pointerEvents="box-none" testID="wilds-foot">
+                    {foot}
                 </View>
-            )}
-            {!bandOn && !floating && (
-                <>
-                    {status}
-                    {canvas}
-                </>
-            )}
+            </View>
 
             {vm.eventCallout && (
                 <EventBadge eventCallout={vm.eventCallout} />
-            )}
-
-            {/* Select a node on the map → name + brief explanation + confirm.
-                With nothing selected the slot belongs to the ACTIVE QUEST
-                (T, 2026-11-02): the quest tracker stands where the map's
-                flavour line used to, and that line is only the fallback for
-                a pilgrim with an empty quest log. */}
-            {selectedOption !== null || shutNode !== null ? (
-                <NodeConfirmPanel
-                    selected={selectedOption}
-                    shut={shutNode}
-                    onConfirm={onConfirmMove}
-                    onCancel={() => setSelectedNodeId(null)}
-                    emptyMessage={vm.drawerCopy.emptyMessage}
-                />
-            ) : (
-                <QuestTracker
-                    fallback={<NodeConfirmPanel selected={null} emptyMessage={vm.drawerCopy.emptyMessage} />}
-                />
             )}
 
             {nodeTip !== null && <NodeToast tip={nodeTip} />}
@@ -255,9 +270,12 @@ export default function ExplorationScreen() {
 }
 
 const styles = StyleSheet.create({
-    // Full width, edge to edge, so the map's lines stop at the band's foot.
-    band: { backgroundColor: BAND_BLACK, paddingBottom: 8 },
-    // The no-band variant: the map fills the stage and the card floats at its top.
     stage: { flex: 1 },
-    floatTop: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 2 },
+    fill: { flex: 1 },
+    // The status card's holder, over the map. `band` hangs from its top edge to
+    // the card's middle (its height is set from the measured card).
+    top: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 2 },
+    band: { position: 'absolute', top: 0, left: 0, right: 0, backgroundColor: BAND_BLACK },
+    // The foot floats over the map's foot: no fill of its own.
+    foot: { position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 2 },
 });

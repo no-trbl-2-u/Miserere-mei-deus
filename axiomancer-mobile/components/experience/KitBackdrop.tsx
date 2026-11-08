@@ -76,9 +76,9 @@ const SLICED: Partial<Record<KitPiece, { slice: Slice; scale: number }>> = {
     // heavy rail pair to row 19 above and from row 64 below, and an end
     // flourish whose ink stays within 66px of each edge. The 0.27 / 0.14
     // slices hold both rail pairs whole, the 0.09 columns (72px) hold each
-    // flourish whole, and 0.8 makes the art 59pt tall in a 60pt dock, so the
-    // middle band stretches about 1.02x rather than 1.67x.
-    'nav-dock-vellum': { slice: [0.27, 0.09, 0.14, 0.09], scale: 0.8 },
+    // flourish whole, and 1 draws the art at its own 74pt in the 76pt dock, so
+    // the middle band stretches about 1.05x (the dock was 60pt at scale 0.8).
+    'nav-dock-vellum': { slice: [0.27, 0.09, 0.14, 0.09], scale: 1 },
     'section-header-vellum-star': { slice: [0.2, 0.1, 0.2, 0.1], scale: 0.5 },
     'section-header-vellum-leaf': { slice: [0.2, 0.1, 0.2, 0.1], scale: 0.5 },
     'filter-tab-vellum': { slice: [0.3, 0.1, 0.3, 0.1], scale: 0.26 },

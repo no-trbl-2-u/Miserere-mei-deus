@@ -44,7 +44,7 @@ import { VELLUM_INK, INK_SOFT, VELLUM_OXBLOOD } from '@/components/exploration/w
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { AXM } from '@/theme/axm';
 import ExplorationScreen from '@/app/(tabs)/exploration';
-import TabLayout from '@/app/(tabs)/_layout';
+import TabLayout, { DOCK_HEIGHT } from '@/app/(tabs)/_layout';
 
 beforeEach(() => {
     jest.useFakeTimers();
@@ -150,16 +150,45 @@ describe('A2: the Wilds wear vellum, inked', () => {
     it('ships the black band, and the dev switch takes it off', () => {
         const on = mountScreen(newStore());
         expect(on.queryByTestId('wilds-black-band')).not.toBeNull();
-        expect(on.queryByTestId('wilds-floating-top')).toBeNull();
         on.unmount();
         devSettingsStore.set({ wildsBlackBand: false });
         const off = mountScreen(newStore());
         expect(off.queryByTestId('wilds-black-band')).toBeNull();
-        // Without the band the map runs up under the card: the card floats on it.
-        expect(off.queryByTestId('wilds-floating-top')).not.toBeNull();
+        // Without the band the map runs up under the whole card.
+        expect(off.queryByTestId('wilds-top-card')).not.toBeNull();
         // The status card and the map are there either way.
         expect(off.queryByTestId('status-card-vellum')).not.toBeNull();
         expect(off.queryByTestId('map-canvas-wrapper')).not.toBeNull();
+    });
+
+    it('159.3 A7: the black ends at the status card\'s vertical middle', () => {
+        const r = mountScreen(newStore());
+        const top = r.getByTestId('wilds-top-card');
+        act(() => { fireEvent(top, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 120 } } }); });
+        const band = StyleSheet.flatten(r.getByTestId('wilds-black-band').props.style) as { height: number; top: number };
+        expect(band.top).toBe(0);
+        expect(band.height).toBe(60);
+        // The map is not pushed down by the card: it fills the stage behind it.
+        const stage = r.getByTestId('wilds-stage');
+        expect(stage.findByProps({ testID: 'map-canvas-wrapper' })).toBeTruthy();
+    });
+
+    it('159.3 A7: nothing black is drawn behind the quest tracker or the node panel', () => {
+        const store = newStore();
+        withQuest(store);
+        const r = mountScreen(store);
+        const foot = StyleSheet.flatten(r.getByTestId('wilds-foot').props.style) as { position: string; bottom: number; backgroundColor?: unknown };
+        // Laid over the map's foot, with no fill of its own.
+        expect(foot.position).toBe('absolute');
+        expect(foot.bottom).toBe(0);
+        expect(foot.backgroundColor).toBeUndefined();
+        expect(r.queryByTestId('quest-tracker')).not.toBeNull();
+        // The stage and every ancestor of the foot up to the screen draw no fill.
+        const stage = StyleSheet.flatten(r.getByTestId('wilds-stage').props.style) as { backgroundColor?: unknown };
+        expect(stage.backgroundColor).toBeUndefined();
+        const band = r.getByTestId('wilds-black-band');
+        // The only black on the screen is the band, and it hangs from the top.
+        expect(StyleSheet.flatten(band.props.style)).toMatchObject({ top: 0 });
     });
 });
 
@@ -177,6 +206,31 @@ describe('A3: the tab bar on the vellum dock', () => {
         expect(options.tabBarActiveTintColor).toBe(VELLUM_OXBLOOD);
         expect(options.tabBarInactiveTintColor).toBe(INK_SOFT);
         expect(typeof options.tabBarBackground).toBe('function');
+    });
+
+    it('159.3 A9: draws nothing behind the vellum, spans the width, and is about 76pt tall plus the inset', () => {
+        const { options } = mountLayout();
+        const bar = StyleSheet.flatten(options.tabBarStyle as never) as {
+            backgroundColor: string; borderTopWidth: number; elevation: number; height: number;
+        };
+        expect(bar.backgroundColor).toBe('transparent');
+        expect(bar.borderTopWidth).toBe(0);
+        expect(bar.elevation).toBe(0);
+        expect(bar.height).toBe(DOCK_HEIGHT);
+        expect(DOCK_HEIGHT).toBe(76);
+        // The art is pinned to the top 76pt and fills the bar edge to edge.
+        const art = render((options.tabBarBackground as () => React.ReactElement)());
+        const holder = StyleSheet.flatten(art.getByTestId('tab-dock-art').props.style) as { left: number; right: number; top: number; height: number };
+        expect(holder).toMatchObject({ left: 0, right: 0, top: 0, height: DOCK_HEIGHT });
+    });
+
+    it('159.3 A9: the icons sit inside the art\'s rails at 360 and 430', () => {
+        const { options } = mountLayout();
+        const bar = StyleSheet.flatten(options.tabBarStyle as never) as { paddingTop: number; paddingBottom: number; paddingHorizontal: number; height: number };
+        expect(bar.height - bar.paddingTop - bar.paddingBottom).toBeGreaterThanOrEqual(30 + 4);
+        for (const width of [360, 390, 430]) {
+            expect((width - 2 * bar.paddingHorizontal) / 6).toBeGreaterThanOrEqual(30);
+        }
     });
 
     it('153.3: shows no tab words, and each tab keeps its name as its accessibility label', () => {
