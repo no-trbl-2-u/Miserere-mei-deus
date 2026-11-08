@@ -23,6 +23,11 @@ describe('TYPE_ROLES', () => {
     expect(role.letterSpacing).toBeLessThanOrEqual(0.5);
   });
 
+  it('card names are Fondamento, which has real lowercase', () => {
+    expect(TYPE_ROLES.cardName.fontFamily).toBe('Fondamento_400Regular');
+    expect(TYPE_ROLES.cardName.textTransform).toBe('none');
+  });
+
   it('every FONTS face slot names a loaded face', () => {
     for (const slot of ['gothic', 'serif', 'serifItalic', 'sans', 'mono'] as const) {
       expect(LOADED_FACE_NAMES).toContain(FONTS[slot]);

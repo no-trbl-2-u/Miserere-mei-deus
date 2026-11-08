@@ -10,6 +10,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { StyleSheet } from 'react-native';
 
 import { cardLibrary, createNewGameState, type Character } from '@mechanics';
+import { TYPE_ROLES } from '@/theme/axm';
 import { DeckCardTile, DIMMED_OPACITY } from '@/components/deck/DeckCardTile';
 import { selectDeckViewModel } from '@/state/presenters/deck.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -23,6 +24,16 @@ function cardFor(ids: string[], id: string) {
 }
 
 describe('DeckCardTile: thumbnail', () => {
+    it('draws the name in the cardName role face at 11/13', () => {
+        const card = cardFor(['grey-strike'], 'grey-strike');
+        render(withAllProviders(<DeckCardTile card={card} onPress={() => {}} />).tree);
+        const name = StyleSheet.flatten(screen.getByText(card.name).props.style) as Record<string, unknown>;
+        expect(name.fontFamily).toBe(TYPE_ROLES.cardName.fontFamily);
+        expect(name.fontFamily).toBe('Fondamento_400Regular');
+        expect(name.fontSize).toBe(11);
+        expect(name.lineHeight).toBe(13);
+    });
+
     for (const id of ['grey-strike', GLOBAL_ID]) {
         it(`${id} shows its name and mark but no stance, rank, rarity and type line`, () => {
             const card = cardFor([id], id);

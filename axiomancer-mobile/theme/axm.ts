@@ -50,7 +50,7 @@ export const TYPE_ROLES = {
   mapName: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 14, lineHeight: 18, letterSpacing: 0, textTransform: 'none' },
   bigNumber: { fontFamily: 'Spectral_600SemiBold', fontSize: 34, lineHeight: 38, letterSpacing: 0, textTransform: 'none' },
   count: { fontFamily: 'Grenze_400Regular', fontSize: 14, lineHeight: 18, letterSpacing: 0, textTransform: 'none' },
-  cardName: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 13, lineHeight: 16, letterSpacing: 0, textTransform: 'none' },
+  cardName: { fontFamily: 'Fondamento_400Regular', fontSize: 13, lineHeight: 16, letterSpacing: 0, textTransform: 'none' },
   cardRules: { fontFamily: 'Rosarivo_400Regular', fontSize: 11, lineHeight: 14, letterSpacing: 0, textTransform: 'none' },
   foeName: { fontFamily: 'UncialAntiqua_400Regular', fontSize: 20, lineHeight: 24, letterSpacing: 0.2, textTransform: 'none' },
   entry: { fontFamily: 'Fondamento_400Regular', fontSize: 15, lineHeight: 22, letterSpacing: 0, textTransform: 'none' },

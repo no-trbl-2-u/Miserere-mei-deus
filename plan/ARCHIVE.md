@@ -594,3 +594,5 @@
 - 2026-11-07 · 155.1 (alias: DR1a) · The Deck opens one card, its painting a 340 pt banner · 64b8906a..64b8906a (#1429)
 - 2026-11-07 · 155.2 (alias: DR1b) · The Deck below the open card is a grid of art thumbnails, dimmed when not open · 362f4594..362f4594 (#1438)
 - 2026-11-07 · 155.3 (alias: DR1c) · Deck shows boxed type tabs, one type's grid at a time · b14c4371..5f9fd822 (#1444)
+- 2026-11-08 · 159.2 (alias: TU1b) · Card names in Fondamento; Deck card without band or repeat · cb9d1c0e..cb9d1c0e (#1455)
+- 2026-11-08 · 159.3 (alias: TU1c) · Wilds keep half a band; bigger token; full-width tab bar · 8188f8c7..070390aa (#1456)

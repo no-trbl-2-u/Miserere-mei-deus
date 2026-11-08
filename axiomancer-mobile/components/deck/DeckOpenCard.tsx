@@ -48,7 +48,6 @@ export function DeckOpenCard({ card }: DeckOpenCardProps) {
                     contentPosition="top"
                     transition={0}
                 />
-                <View style={styles.nameScrim} pointerEvents="none" />
                 <Text style={styles.name} numberOfLines={2} testID="deck-open-card-name">
                     {card.name}
                 </Text>
@@ -61,7 +60,7 @@ export function DeckOpenCard({ card }: DeckOpenCardProps) {
                 testID="deck-open-card-lines"
             >
                 {card.lines.map((line, i) => (
-                    <Line key={`${line.label ?? 'outcome'}-${i}`} line={line} index={i} />
+                    <Line key={`${line.label}-${i}`} line={line} index={i} />
                 ))}
                 {card.stacksText !== null && (
                     <Text style={styles.footnote} testID="deck-open-card-stacks">{card.stacksText}</Text>
@@ -78,7 +77,6 @@ function Line({ line, index }: { line: DeckLineVM; index: number }) {
     const anchorRef = useRef<View | null>(null);
     return (
         <View ref={anchorRef} style={styles.line} testID={`deck-open-card-line-${index}`}>
-            {line.label !== null && <Text style={styles.lineLabel}>{line.label}</Text>}
             <Text style={styles.lineText}>
                 {line.runs.map((run, i) => (
                     <RunText key={i} run={run} anchorRef={anchorRef} />
@@ -96,6 +94,7 @@ function RunText({ run, anchorRef }: { run: DeckRunVM; anchorRef: React.RefObjec
     const styles = useStyles();
     const tooltip = useTooltip();
     if (run.kind === 'text') return <Text>{run.text}</Text>;
+    if (run.kind === 'label') return <Text style={styles.lineLabel}>{run.text}</Text>;
     const show = (pinned: boolean) =>
         tooltip.show({ kind: 'card-keyword', id: run.keyword, anchorRef, pinned });
     return (
@@ -108,7 +107,7 @@ function RunText({ run, anchorRef }: { run: DeckRunVM; anchorRef: React.RefObjec
             accessibilityHint={run.minor ? `${run.gloss} (minor right now)` : run.gloss}
             testID={`deck-keyword-${run.keyword}`}
         >
-            {run.word}
+            {run.keyword}
         </Text>
     );
 }
@@ -116,14 +115,6 @@ function RunText({ run, anchorRef }: { run: DeckRunVM; anchorRef: React.RefObjec
 const useStyles = makeStyles((AXM) => ({
     root: { height: OPEN_CARD_HEIGHT, marginBottom: 14, backgroundColor: AXM.panelBg },
     art: { height: OPEN_CARD_ART_HEIGHT, overflow: 'hidden', justifyContent: 'flex-end' },
-    nameScrim: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 96,
-        backgroundColor: 'rgba(5,4,3,0.55)',
-    },
     name: {
         fontFamily: TYPE_ROLES.cardName.fontFamily,
         fontSize: 23,
@@ -131,11 +122,15 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
         paddingHorizontal: 14,
         paddingBottom: 12,
+        // No band under the name: a soft shadow keeps it legible over the painting.
+        textShadowColor: 'rgba(0,0,0,0.9)',
+        textShadowRadius: 8,
+        textShadowOffset: { width: 0, height: 1 },
     },
     textBox: { height: OPEN_CARD_TEXT_HEIGHT },
     textContent: { paddingHorizontal: 14, paddingVertical: 12, gap: 8 },
-    line: { gap: 2 },
-    lineLabel: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 12, letterSpacing: 1, color: AXM.bone },
+    line: {},
+    lineLabel: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: AXM.bone },
     lineText: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 16.5,

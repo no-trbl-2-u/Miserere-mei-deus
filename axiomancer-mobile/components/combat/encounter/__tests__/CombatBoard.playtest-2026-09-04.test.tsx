@@ -144,7 +144,7 @@ describe('CombatCardFace — the reward-draft mini face (100x147) is readable', 
         expect(screen.queryByTestId('combat-card-face-ledger-stacked')).toBeNull();
         expect(screen.getByTestId('combat-card-face-paid-line').props.numberOfLines).toBe(3);
         expect(screen.getByTestId('combat-card-face-paid-line').props.accessibilityLabel).toBe(withPaid!.face.paidLine);
-        expect(screen.getByTestId('combat-card-face-name').props.numberOfLines).toBe(1);
+        expect(screen.getByTestId('combat-card-face-name').props.numberOfLines).toBe(2);
         for (const id of ['combat-card-face-name', 'combat-card-face-paid-line']) {
             const t = screen.getByTestId(id);
             expect(t.props.adjustsFontSizeToFit).toBeUndefined();
@@ -152,7 +152,7 @@ describe('CombatCardFace — the reward-draft mini face (100x147) is readable', 
         const name = StyleSheet.flatten(screen.getByTestId('combat-card-face-name').props.style) as Record<string, unknown>;
         expect(typeof name.lineHeight).toBe('number');
         // Full text present, not a stub.
-        expect(screen.getByTestId('combat-card-face-name').props.children).toBe(withPaid!.name.toUpperCase());
+        expect(screen.getByTestId('combat-card-face-name').props.children).toBe(withPaid!.name);
     });
 
     it('at the hand width (120) the ledger is the same single row', () => {

@@ -91,7 +91,7 @@ describe('CombatCardFace — no prose on the face (2026-08-10 declutter)', () =>
     it('still prints the card NAME, its KEYWORD and its number — the glance read survives', () => {
         for (const card of cards) {
             const flat = faceText(card);
-            expect(flat).toContain(card.name.toUpperCase());
+            expect(flat).toContain(card.name);
             if (card.face.keyword) expect(flat).toContain(card.face.keyword.toUpperCase());
             // Real-units-or-no-number: a card with an honest number prints it.
             const value = (card.face.heroText || '').trim();

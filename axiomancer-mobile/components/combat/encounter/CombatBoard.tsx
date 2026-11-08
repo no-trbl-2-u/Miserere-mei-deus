@@ -41,7 +41,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
 
-import { FONTS, HUE } from '@/theme/axm';
+import { FONTS, HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -468,7 +468,7 @@ export const HAND_PILL_OVERHANG = 16;
  *
  * In the fan, card `i` is covered by card `i+1`, so only `step` points of a
  * covered card show, and this chrome eats the first 17.5 of them. The name
- * keeps one line and runs on under its neighbour; a tap reads it whole.
+ * wraps to at most two lines and runs on under its neighbour; a tap reads it whole.
  *
  * Gated for real: `CombatBoard.handfan.test.tsx` renders
  * {@link useCombatBoardStyles} and sums `faceCard.borderWidth +
@@ -1768,7 +1768,7 @@ function StanceCube({ color, size }: { color: string; size: number }) {
  *     pill straddling the card's top-left corner. A card with no FREE line has
  *     no pill. It is drawn as a sibling of the frame, so the frame's
  *     `overflow: hidden` cannot clip it;
- *   · ① NAME BAND, top, HORIZONTAL, blackletter on solid ink, ONE line. A
+ *   · ① NAME BAND, top, HORIZONTAL, blackletter on solid ink, at most TWO lines in a fixed-height band. A
  *     fanned card's name runs on under its right-hand neighbour; a tap reads
  *     it whole. The band takes top padding only when the pill sits over it.
  *     The large face adds the rarity WORD at the band's tail;
@@ -1945,6 +1945,14 @@ const FREE_PILL_GLYPH_LARGE = 20;
 /** Extra top padding the name band takes when the pill sits over it. */
 const FREE_PILL_BAND_PAD = 12;
 const FREE_PILL_BAND_PAD_LARGE = 16;
+/** The name's line heights and its vertical padding (`plateName*` styles), per face size. */
+const NAME_LINE_H = { normal: 15, narrow: 12, large: 24 } as const;
+const NAME_PAD_V = 4;
+/** The name band's fixed height: pill room + two name lines + the name's padding. */
+export function nameBandHeight(large: boolean, narrow: boolean): number {
+    const lineH = large ? NAME_LINE_H.large : narrow ? NAME_LINE_H.narrow : NAME_LINE_H.normal;
+    return (large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD) + 2 * lineH + NAME_PAD_V;
+}
 
 export const CombatCardFace = React.memo(function CombatCardFace({
     card, width, height, large = false, accent = null, children,
@@ -1984,7 +1992,12 @@ export const CombatCardFace = React.memo(function CombatCardFace({
         ? largePaidLineSize(width)
         : paidLineFit({ width, line: f.paidLine, mode: cardText, lead: paidLineLead(ledgerCube) }).size;
     const paidRowH = Math.round(paidSize * PAID_LINE_LEADING);
-    const bandH = large ? 36 : 26;
+    // A face too narrow for the hand card's name column (the Spoils tiles) trims the band's
+    // side chrome and the name's size so the longest Act 1 name wraps to two lines, whole words.
+    const narrow = !large && width < NARROW_FACE_W;
+    // The band is a FIXED height that holds two name lines plus the free pill's corner
+    // room, so the art plate under it is the same height on every card of a size.
+    const bandH = nameBandHeight(large, narrow);
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.
     const hasPill = hasFree || f.isGlobal;
@@ -2002,7 +2015,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     return (
         <View style={[styles.faceOuter, { width, height, shadowColor: accent ?? band }]}>
             <View style={[styles.faceCard, { borderColor: accent ?? band }]}>
-                {/* ① NAME BAND — horizontal blackletter on solid ink, one line.
+                {/* ① NAME BAND — horizontal blackletter on solid ink, at most two lines.
                     A fanned card's name runs on under its right-hand neighbour;
                     the tap reads it whole. When the free pill sits over the
                     band's corner, the band takes top padding so the pill never
@@ -2010,7 +2023,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                 <View
                     style={[
                         styles.plateBand,
-                        { minHeight: bandH },
+                        narrow && styles.plateBandNarrow,
+                        { height: bandH },
                         hasPill ? { paddingTop: large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD } : null,
                     ]}
                     pointerEvents="none"
@@ -2023,19 +2037,19 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                         tile — that parent label wins, and both of those name the
                         rarity themselves. */}
                     <View
-                        style={styles.plateRaritySpacer}
+                        style={[styles.plateRaritySpacer, narrow && styles.plateRaritySpacerNarrow]}
                         accessible
                         accessibilityRole="text"
                         accessibilityLabel={rarLabel}
                         testID="combat-card-face-rarity-a11y"
                     />
                     <Text
-                        style={[styles.plateName, large && styles.plateNameLarge]}
-                        numberOfLines={1}
+                        style={[styles.plateName, large && styles.plateNameLarge, narrow && styles.plateNameNarrow]}
+                        numberOfLines={2}
                         allowFontScaling={false}
                         testID="combat-card-face-name"
                     >
-                        {card.name.toUpperCase()}
+                        {card.name}
                     </Text>
                     {/* The NAMED LABEL leg — `large` only. The inspect overlay
                         and the reward preview have the band width for a word;
@@ -2424,7 +2438,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         shadowOpacity: 0.5, shadowRadius: 6, shadowOffset: { width: 0, height: 3 }, elevation: 6,
     },
     faceCard: { flex: 1, borderWidth: 1.5, borderRadius: 4, backgroundColor: AXM.deepBg, overflow: 'hidden' },
-    // ① The name band — horizontal blackletter, one line, no rule under it.
+    // ① The name band — horizontal blackletter, fixed height for two lines, no rule under it.
     plateBand: {
         flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, gap: 5,
         backgroundColor: AXM.deepBg,
@@ -2454,10 +2468,15 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.6,
         marginLeft: 6, flexShrink: 0,
     },
-    // The name keeps ONE line on every face; its explicit lineHeight makes the
+    // The name wraps to at most TWO lines on every face; its explicit lineHeight makes the
     // band's height a known quantity.
-    plateName: { flex: 1, fontFamily: FONTS.gothic, fontSize: 13, lineHeight: 15, letterSpacing: 0.4, color: AXM.parchment, paddingVertical: 2 },
-    plateNameLarge: { fontSize: 20, lineHeight: 24, letterSpacing: 0.8 },
+    plateName: { flex: 1, fontFamily: TYPE_ROLES.cardName.fontFamily, fontSize: TYPE_ROLES.cardName.fontSize, lineHeight: 15, letterSpacing: 0, color: AXM.parchment, paddingVertical: 2 },
+    plateNameLarge: { fontSize: 20, lineHeight: 24 },
+    // Narrow faces (< NARROW_FACE_W: the Spoils tiles): 10.5 pt in a 71 pt column fits
+    // every Act 1 card name in two lines, no word cut (measured off the Fondamento font file).
+    plateNameNarrow: { fontSize: 10.5, lineHeight: 12 },
+    plateBandNarrow: { paddingHorizontal: 3, gap: 0 },
+    plateRaritySpacerNarrow: { width: 0 },
     // ② The art plate — seamless: no mat, no frame.
     plateArtWrap: { flex: 1 },
     plateArtFrame: { flex: 1, overflow: 'hidden' },
