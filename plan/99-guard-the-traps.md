@@ -12,10 +12,12 @@ its last chunk closes. Write nothing else here.
 - **A7** `recast-pinned-orphan-lens` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
 - **A8** `scratchpad-script-no-resolve` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
 - **A9** `stakes-card-vm-undrawn-lines` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
+- **A10** `windows-tar-tree-lint` is guarded: a test, hook or lint fails on the trap, and its footgun line says `guarded by` it.
 
 ## Chunks
-Measure: 6 open · 3 closed · next A10
+Measure: 7 open · 3 closed · next A11
 
+- [ ] **99.10** Automate footgun `windows-tar-tree-lint` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A10 · needs —
 - [ ] **99.9** Automate footgun `stakes-card-vm-undrawn-lines` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A9 · needs —
 - [ ] **99.8** Automate footgun `scratchpad-script-no-resolve` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A8 · needs —
 - [ ] **99.7** Automate footgun `recast-pinned-orphan-lens` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A7 · needs —

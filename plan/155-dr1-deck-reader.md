@@ -102,9 +102,6 @@ In the Reader the open card **is** the detail, so `DeckCardDetailOverlay` has no
 
 ## Acceptance
 
-- **A1** The Deck screen has no header block, no stat row and no rarity or colour tally. One card is open at the top: its own painting as a 340 pt banner cropped from the top, its name over the art at 23 pt, and its text under the art at 16.5 pt — the outcome line and the two play lines, with no keyword chip row and no flavour.
-- **A2** Below the open card, the cards of one type are a grid of art thumbnails, four to a row and square, each with its painting, its name, its copies badge when the run carries more than one and its colour mark; the cards that are not open are dimmed, and tapping one opens it above. No tap-up detail overlay remains, and no screen in the game shows card flavour.
-- **A3** Boxed type tabs sit between the open card and the grid, one per type the deck holds, with no counts, and the grid shows only the active tab's cards. The tab row's vertical position does not change when a different card opens.
 - **A4** A keyword inside the open card's text is drawn as part of the line and is pressable: a tap shows its gloss anchored to the word, a hold pins the gloss until it is dismissed, and each keyword carries its word and gloss to a screen reader. No keyword ledger is drawn on this screen; combat, rewards and the hazard deck still draw theirs.
 
 ## Open questions
@@ -117,12 +114,9 @@ None left open. All three were answered by T on 2026-11-06, in the same session 
 
 ## Chunks
 
-Measure: 4 open · 0 closed · next A5
+Measure: 1 open · 3 closed · next A5
 
-- [ ] **155.1** The open card: its painting as a banner, its lines under it · M · closes A1 · needs — · alias: DR1a
-- [ ] **155.2** The deck below it: art thumbnails, dimmed when not open · M · closes A2 · needs 155.1 · alias: DR1b
-- [ ] **155.3** Boxed type tabs between the two, one type at a time · S · closes A3 · needs 155.2 · alias: DR1c
-- [ ] **155.4** Keywords tapped and held in the card's own text · M · closes A4 · needs 155.1 · alias: DR1d
+- [ ] **155.4** Keywords tapped and held in the card's own text · M · closes A4 · needs — · alias: DR1d
 
 ### 155.1 (DR1a) — The open card: its painting as a banner, its lines under it · M · closes A1 · requires —
 
