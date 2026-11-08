@@ -93,9 +93,10 @@ test('a nexus sync PR with a passing verdict is held for T: the label, the CLI\'
   assert.equal(mergeWanted(pr({ headRefName: 'loop/next-NX1h', title: 'feat: the weekly nexus sync (NX1h)' })).go, true, 'a PR that builds the sync merges like any other')
 })
 
-test('holds: needs-T, stuck, eval seeds, no-auto-merge, drafts, forks, closed', () => {
-  assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
+test('holds: needs-T, stuck, eval seeds, no-auto-merge, content, drafts, forks, closed', () => {
+  assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change', 'content'])
   for (const l of HOLD_LABELS) assert.equal(mergeWanted(pr({ labels: ['loop:pr', l] })).go, false, l)
+  assert.match(mergeWanted(pr({ labels: ['loop:pr', 'content'] })).reason, /label content/, 'T approves generated writing by merging it')
   assert.match(mergeWanted(pr({ isDraft: true })).reason, /draft/)
   assert.match(mergeWanted(pr({ isCrossRepository: true })).reason, /fork/)
   assert.match(mergeWanted(pr({ state: 'MERGED' })).reason, /merged/)

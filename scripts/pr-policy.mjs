@@ -20,8 +20,11 @@ export const PLAN_TITLE = /^plot\s*[:(]/i
 /**
  * Labels that hold a PR for T or the loop. `review:rules-change` (D119, NX1a):
  * the PR is reviewed, but only T merges a change to the game's rules.
+ * `content` (T, 2026-11-08): the PR is reviewed, but T approves all generated
+ * game writing by merging it. On an issue the same label is a triage category
+ * and holds nothing; this list is only read for PRs.
  */
-export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
+export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change', 'content'])
 
 /**
  * The weekly nexus sync PR (phase NX1h): only T merges it. `nexus-sync.yml` labels it; the
