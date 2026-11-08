@@ -51,6 +51,8 @@ needs are done):
 
 - **159.6** · TU1f: LOAD GAME takes its tap; foe names clear the shield; relic names keep their words; Self shows the whole name (T, `/plot`, 2026-11-08)
 
+- **161.1** · GO1a: a second death reaches Game Over, not the opening scene (T, `/plot`, 2026-11-08)
+
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
 `- **<NN.k>** · <reason> · since: <date> · until: <date or
@@ -91,6 +93,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 161 | A second death reaches the Game Over screen | [161-go1-second-death-game-over.md](161-go1-second-death-game-over.md) | planned (**Asap**: 161.1) | 1 left |
 | 160 | A passed review still merges when the verify gate finishes after it | [160-mg1-merge-after-late-gate.md](160-mg1-merge-after-late-gate.md) | planned (**Asap**: 160.1) | 1 left |
 | 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned | 1 left |
 | 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned | 1 left |
