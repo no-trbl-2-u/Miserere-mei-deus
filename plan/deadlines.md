@@ -238,6 +238,8 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- GO1b — the second run-end test really has a scene pending (spec 161); test-only loop work, no dated T act waits on it.
+- TU1g — the Embark unmount under reduced motion and FitText's re-measure get tests (spec 159); test-only loop work, no dated T act waits on it.
 - MG1a — the merge decision re-runs when the verify gate finishes (spec 160); loop work, no dated T act waits on it.
 - AP1g — T picks which map nodes show a plate other than their region's default, after AP1f's report; date not set (T picks it).
 - B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21. Chapter 1's own boss now has its face and its slot, but not its moves: T's recast (2026-11-06, spec 157) makes The Saint Beneath the sea keep's boss on the Death Beholder's inherited deck and stages, and one of its stages is still marked a draft for T to rewrite. Designing that fight is a later owner-led session, not part of this row, which is Chapters 2-4.
@@ -303,6 +305,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-08** — **three test gaps from the #1473 and #1474 reviews plotted (GO1b in spec 161, TU1g in spec 159)** (T, attended: "Yes plot the test gaps"). **Added** GO1b and TU1g under `## Unscheduled`: test-only work, no dated T act waits on it. Nothing ticked; no date moved.
 - **2026-11-08** — **a second death reaches Game Over, plotted as spec 161 (GO1a)** (T, attended: "a new plot for 5", after a browser run showed the second death landing on the opening scene). **Added** GO1a to the `Waits on` of the Mid-MVP check (Nov 14). Nothing ticked; no date moved.
 - **2026-11-08** — **four small faults from a browser playthrough plotted as TU1f in spec 159** (T, attended: "plot 1-4 all together"). **Added** TU1f to the `Waits on` of the Mid-MVP check (Nov 14) beside TU1a-TU1e: LOAD GAME takes its tap, foe names clear the shield, relic names keep their words, Self shows the whole name. Nothing ticked; no date moved.
 - **2026-11-08** — **T's end-gate answers after `/pilot 158.1 159` plotted: TU1e into spec 159, MG1a as spec 160** (T, attended: "Always one line, shrink text" for card names; "Keywords should remain caps" on the Deck; "Yes, /plot it" for the merge gap). **Added** TU1e to the `Waits on` of the Mid-MVP check (Nov 14) beside TU1a-TU1d; MG1a under `## Unscheduled`. Nothing ticked; no date moved.
