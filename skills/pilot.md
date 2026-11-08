@@ -72,11 +72,14 @@ Step 2 plan around it.
   drive it to green with the `fix-ci --branch` posture
   (`skills/fix-ci.md` §3.5); the worker never merges it.
 - **Model**, for efficiency, stated with its reason in the plan
-  (`pilot-waves.mjs` proposes the first two by size):
+  (`pilot-waves.mjs` proposes the first two by size) and passed
+  as the Agent tool's `model` alias on every launch (unset, a
+  worker inherits the lead's Opus; `next/build.md` §2):
   - **Sonnet** (the loop's default) for S and M chunks and for
     driving a PR to green;
-  - **Opus** for L chunks, plot calls, mechanism mapping and
-    chunks that cross several workspaces;
+  - **Opus** only where the chunk genuinely needs reasoning: L
+    chunks, plot calls, combat or balance math, mechanism
+    mapping and chunks that cross several workspaces;
   - **Haiku** for nothing that touches the repo's hard rules
     (commits, PRs, plan files); at most read-only lookups.
 

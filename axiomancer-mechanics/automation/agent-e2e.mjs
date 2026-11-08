@@ -13,7 +13,7 @@
  * Env:
  *   ANTHROPIC_API_KEY   required. The grading layer is intentionally
  *                       non-hermetic — it phones home to Claude.
- *   AGENT_MODEL         optional. Defaults to 'claude-sonnet-4-6'.
+ *   AGENT_MODEL         optional. Defaults to 'claude-sonnet-5-5'.
  *
  * This harness sits outside the vitest hermetic-e2e contract on
  * purpose. It's a validation layer for the CLI's full feature surface,
@@ -26,7 +26,7 @@ import path from 'path';
 import { spawn } from 'child_process';
 import { randomUUID } from 'crypto';
 
-const DEFAULT_MODEL = 'claude-sonnet-4-6';
+const DEFAULT_MODEL = 'claude-sonnet-5-5';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 
 function die(message, code = 1) {

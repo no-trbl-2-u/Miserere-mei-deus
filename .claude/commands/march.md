@@ -1,4 +1,5 @@
 ---
+model: sonnet
 description: The always-do-the-right-thing entry — triage → critique → chunk → data → expand → iterate. The loop's outer orchestrator.
 ---
 

@@ -74,7 +74,7 @@ on:
       model:
         description: 'Model for the run. Default Sonnet 5; scheduled/high-frequency callers should stay on the default — premium tiers are for deliberate, manually dispatched passes.'
         type: string
-        default: 'claude-sonnet-5'
+        default: 'sonnet'
       effort:
         description: 'Reasoning effort for models that support it (low|medium|high|xhigh|max). Empty = model default.'
         type: string

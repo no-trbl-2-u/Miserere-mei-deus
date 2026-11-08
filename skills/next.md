@@ -108,7 +108,7 @@ The lead cuts the worktree (`next/build.md` §1), then:
 
 | Size | Default | Override |
 |---|---|---|
-| S, M | one builder subagent (Agent tool; background, but foreground when headless) | `--workflow` |
+| S, M | one builder subagent (Agent tool; background, but foreground when headless; `model: sonnet` unless it needs reasoning, `next/build.md` §2) | `--workflow` |
 | L | a Workflow: build, then adversarial verify, then fix | `--agents` |
 | `batch` | one Workflow per chunk, disjoint paths | owner only |
 

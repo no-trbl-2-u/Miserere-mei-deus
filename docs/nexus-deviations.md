@@ -229,6 +229,7 @@ finishes the row.
 | Map row | Verdict | Lives now | State |
 |---|---|---|---|
 | march: landing split by path | MERGE | `skills/next/land.md` marked local block (`<!-- miserere:local -->`, a sync keeps it) pointing at `skills/march.lanes.md` notes "Landing a change"; `scripts/loop-land.mjs` (branch `loop/next-<id>`, labels, the cap); `scripts/pr-settle.mjs` (the merge job settles `plan/pending/` on main, called from `pr-resolve.mjs scan` and `pr-merge.mjs settle`); `plan/bearings.md` `Landing: pr` | adapted in NX1e: v2's contributor path plus our labels and settle-on-merge; the path split ended (D119) |
+| models: aliases, Sonnet builders (T, 2026-11-07) | KEEP | `skills/next/build.md` two marked local blocks (builder `model` per chunk, Workflow phase models); `skills/pilot.md` Step 2, `skills/next.md` Step 3 table, `skills/heads-down.md` brief; `.claude/commands/march.md` `model: sonnet`; every workflow pin an alias (`sonnet`/`opus`/`haiku`) | ours: builders were inheriting Opus (59% of three weeks' usage went to Opus subagents); aliases track the newest release with no edit |
 | march: PR cap (D85) | KEEP | `skills/march.lanes.md` lane `pr-cap` (pre, end-tick) | carried |
 | march: 7d+ / stuck PRs / NEEDS_T every tick | KEEP | `skills/march.lanes.md` lane `pr-watch` (pre, continue) | carried |
 | march: size, area, review labels; PR body | KEEP | `skills/march.lanes.md` notes "Landing a change" (labels, Body template) | carried |

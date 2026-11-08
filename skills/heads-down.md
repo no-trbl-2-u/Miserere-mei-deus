@@ -95,7 +95,8 @@ Then invoke the `loop` skill (no interval) with it:
 > "Build on pkg/<slug> in one worktree, one commit series and
 > one pending file per chunk; push the branch; never push main,
 > never settle, no PR until the package ends."> Delegate each
-> build by size (S/M one background builder, L a Workflow); act
+> build by size (S/M one background builder on `sonnet` unless it needs reasoning, L a Workflow;
+> models per `next/build.md`); act
 > on a board `REBOOT` line meanwhile, never polling. The lead
 > runs the gate. Beat the ledger (`node scripts/ledger.mjs beat`) at every step: `--chunk
 > <id> --step <step>` and the worktree as `/next` says, `--set builder=<agent id>` or `--set
