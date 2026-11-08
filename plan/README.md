@@ -46,9 +46,10 @@ needs are done):
 - **99.9** · automate footgun `stakes-card-vm-undrawn-lines` (seen 2×), spec 99's ladder chunk.
 - **99.10** · automate footgun `windows-tar-tree-lint` (seen 2×), spec 99's ladder chunk.
 
-- **159.5** · TU1e: card names on one line that shrink to fit; no "+" on the free pill; one black text panel; Deck keywords in capitals (T's end gate, `/plot`, 2026-11-08)
 - **160.1** · MG1a: the merge decision re-runs when the verify gate finishes (T's end gate, `/plot`, 2026-11-08)
 
+
+- **159.6** · TU1f: LOAD GAME takes its tap; foe names clear the shield; relic names keep their words; Self shows the whole name (T, `/plot`, 2026-11-08)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
