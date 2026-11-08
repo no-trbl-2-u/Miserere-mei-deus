@@ -250,7 +250,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   (`codex.defeatedEnemies`, written on a win, spared or finished); before that the
   DANGER icon shows with no name, and it stays unnamed when it fires.
 - **Enemy words (D116).** A foe's move may carry the five enemy words (WARD,
-  MEND and SCOUR count as one, then BRINE, TANGLE, UNDERTOW, BARNACLE), and
+  MEND and SCOUR count as one, then BRINE, TANGLE, SEIZED, BARNACLE), and
   may land the player's own VULNERABLE and LEECH on you. Each is a field on
   `EnemyMove` with a counter its gloss names
   (`Enemy/enemy-keywords.ts`, resolved in `Combat/combat.enemy-words.ts` and
@@ -270,7 +270,7 @@ the Expo app (`axiomancer-mobile`) presents it.
     refused, each landed PAID play counts one card off, and what is left fades
     at the start of the foe's next turn. Counter: pay with dice. A count, not
     scaled with level.
-  - **UNDERTOW** names one die (body, mind or heart): it does not roll on your
+  - **SEIZED** names one die (body, mind or heart): it does not roll on your
     next turn. Counter: a banked Reserve die is not on the tray, so it is not
     lost.
   - **BARNACLE** puts a Barnacle Curse in your hand (`barnacle`, outside the

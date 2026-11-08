@@ -150,7 +150,7 @@ on `EnemyMove` (`src/Enemy/types.ts`), listed in `ENEMY_KEYWORDS`
 (`src/Enemy/enemy-keywords.ts`) and resolved in
 `src/Combat/combat.enemy-words.ts` and `combat.enemy-words.resolve.ts`. Every
 number but VULNERABLE's, TANGLE's and BARNACLE's scales with the foe's level the
-way its damage does (`scaleMoveNumber`); UNDERTOW names a die, not a number. The player's own VULNERABLE and LEECH can also land on
+way its damage does (`scaleMoveNumber`); SEIZED names a die, not a number. The player's own VULNERABLE and LEECH can also land on
 the player from a foe's move (the `vulnerable` and `leech` fields); their
 rows are above, and their glosses read for either side. VULNERABLE on you is
 `debuff_vulnerable` for the foe's next `turns` attacks; LEECH on you mirrors
@@ -164,7 +164,7 @@ turn past GUARD, and the foe heals what you lost.
 | **SCOUR N** | The foe strips that many statuses off itself, the last one too: LEECH first, then INFERNO, STORM and its afflictions. Lay more statuses than it can strip. Its afflictions go newest first; a both-sides INFERNO leaves you your half. MERCY is not a status it strips. `EnemyMove.enemyCleanse`. | the Net-Mender (Mend the Net) |
 | **BRINE N** | Each GUARD you gain is cut by that much until the end of your next turn. Gain your GUARD in one big play, not many small ones. Each gain is cut on its own (a PAID play's pips included, a HEAL's overflow into GUARD too); it fades at the start of the foe's next turn. `EnemyMove.brine`. | the Brine-Widow (Keening) |
 | **TANGLE N** | Your next N cards cannot use their FREE line. Pay for them with dice. A FREE play is refused and costs nothing; each landed PAID play counts one card off, and what is left fades at the start of the foe's next turn. N is a count and does not scale with level. `EnemyMove.tangle`. | the Net-Mender (Cast Net, The Whole Catch), the Gallows Crow (Shiny Thing with no die banked), the Curfew-Ringer (Hush), the Smokehouse Gutter (Choking Smoke) |
-| **UNDERTOW** | One named die (body, mind or heart) does not roll on your next turn. A Reserve die you banked is not on the tray, so bank one to cover it. The tray's base die of that colour is dropped (an act-reward or floating die of the colour still rolls); it lasts one turn. `EnemyMove.undertow`. | the Crane-Hook (Hoist, the body die), the Wreck-Picker (Gull-call, a random die) |
+| **SEIZED** | One named die (body, mind or heart) does not roll on your next turn. A Reserve die you banked is not on the tray, so bank one to cover it. The tray's base die of that colour is dropped (an act-reward or floating die of the colour still rolls); it lasts one turn. `EnemyMove.undertow`. | the Crane-Hook (Hoist, the body die), the Wreck-Picker (Gull-call, a random die) |
 | **BARNACLE** | A Barnacle Curse joins your hand. It cannot be played or scrapped, and it holds a slot until you spend a body die on a card, which knocks one off. It is the engine's `barnacle` card, outside the player library; no program line can play or exile it. The count does not scale with level. `EnemyMove.barnacle`. | the Net-Mender (Gill-hook), the Smokehouse Gutter (Gut Hook), the Tithe-Collector (Lien) |
 
 ---

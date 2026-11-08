@@ -3,7 +3,7 @@
  * stands at `bw-c1` with its stand-in portrait and two unnamed DANGERs, its
  * VERSE count stands on its side as a live chip (never on the telegraph), its
  * Antiphon telegraphs UNKNOWN with no number, and Toll for the Drowned's two
- * lifted dice read on one UNDERTOW chip.
+ * lifted dice read on one SEIZED chip.
  */
 
 import { describe, expect, it } from '@jest/globals';
@@ -88,9 +88,9 @@ describe('the Antiphon telegraphs UNKNOWN', () => {
 });
 
 describe('Toll for the Drowned\'s two lifted dice', () => {
-    it('read on one UNDERTOW chip that names both dice and says when they come back', () => {
+    it('read on one SEIZED chip that names both dice and says when they come back', () => {
         const s = { ...cave(), enemyWords: { ...NO_WORDS, undertow: 'heart' as const, undertowAlso: 'mind' as const } };
-        const chips = buildCombatViewModel(s).player.effects.filter((e) => e.effectId === 'enemy-word-undertow');
+        const chips = buildCombatViewModel(s).player.effects.filter((e) => e.effectId === 'enemy-word-seized');
         expect(chips).toHaveLength(1);
         expect(chips[0]!.intensity).toBe(2);
         expect(chips[0]!.caption).toBe('Heart and Mind dice lifted from your next roll');

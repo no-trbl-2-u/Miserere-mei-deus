@@ -93,7 +93,7 @@ describe('A15 — the Cave Choir plays exactly the Appendix', () => {
         expect(choir.maxHealth).toBe(enemyVitae(5, 'elite'));
         const words = new Set((CaveChoir.phases ?? []).flatMap(p => [...p.moves, ...(p.danger ? [p.danger] : [])])
             .flatMap(m => moveKeywords(m)));
-        expect([...words].sort()).toEqual(['barnacle', 'tangle', 'undertow', 'ward']);
+        expect([...words].sort()).toEqual(['barnacle', 'seized', 'tangle', 'ward']);
     });
 
     it('crosses its 60% line into Toll for the Drowned and its 30% line into the Amen, one per turn', () => {
@@ -140,7 +140,7 @@ describe('VERSE: each Hymn adds one', () => {
 });
 
 describe('the two DANGERs', () => {
-    it('Toll for the Drowned: UNDERTOW on the Heart and Mind dice, then 8 damage', () => {
+    it('Toll for the Drowned: SEIZED on the Heart and Mind dice, then 8 damage', () => {
         const fired = foeTurn(at('Toll for the Drowned', 1));
         expect(fired.lost).toBe(s5(8));
         expect(fired.next.enemyWords).toMatchObject({ undertow: 'heart', undertowAlso: 'mind' });
