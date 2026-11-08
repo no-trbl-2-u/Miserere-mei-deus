@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enemy movesets: ballot</title>
+<script src="ballot-kit.js"></script>
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .hue { font-weight: bold; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+  .foe { display: block; width: 180px; max-width: 60%; height: 180px; object-fit: contain; margin: 12px auto 0; }
+</style>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">&#9680;</button>
+  <h1>Enemy movesets</h1>
+  <p class="sub">Six foes play moves that are not their own: the Saint Beneath plays the Death Beholder's deck, and five recast foes copy a benched foe's moves. Three recommendations for each of attack, defend, status and danger, for every foe, laid out by its phases.</p>
+  <p class="legend">
+    <b>Tick</b> the moves you want. Ticking more than one in a group means the foe gets them all; tick none and I'll bring new ones. The tag on each card says when it comes in.<br>
+    Every move uses a rule the game already has. Numbers are first drafts, written at the level foes are tuned from, so they scale with the fight.<br>
+    <b>WARD</b>: its block. <b>MEND</b>: it heals. <b>SCOUR</b>: it strips a status off itself. <b>TANGLE n</b>: your next n cards cannot use their FREE line. <b>BARNACLE</b>: a Curse in your hand. <b>BRINE</b>: cuts each GUARD you gain. <b>UNDERTOW</b>: a die sits out your next roll. <b>LEECH</b>: drains you and heals it.
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Foes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about these foes as a whole"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+const BALLOT_ID = 'enemy-movesets-2026-11-08';
+const TABS = [
+ {
+  "key": "SB",
+  "name": "The Saint Beneath",
+  "art": "https://raw.githubusercontent.com/no-trbl-2-u/Miserere-mei-deus/main/axiomancer-mobile/assets/images/enemies/anim/saint-beneath/saint-beneath-00.webp",
+  "blurb": "Boss: four phases, changing at 75%, 50% and 25% VITAE. Each line opens with a Danger. Today it plays a copy of the Death Beholder's deck. These replace that copy, and the Beholder keeps its own."
+ },
+ {
+  "key": "WM",
+  "name": "The Wreckmaster",
+  "art": "https://raw.githubusercontent.com/no-trbl-2-u/Miserere-mei-deus/main/axiomancer-mobile/assets/images/enemies/anim/wreckmaster/wreckmaster-00.webp",
+  "blurb": "Elite: three phases, changing at 60% and 30% VITAE. Each line opens with a Danger. Today it plays a copy of the Toll-Keeper's moves."
+ },
+ {
+  "key": "SW",
+  "name": "Saltwick Swarm",
+  "art": "https://raw.githubusercontent.com/no-trbl-2-u/Miserere-mei-deus/main/axiomancer-mobile/assets/images/enemies/anim/saltwick-swarm/saltwick-swarm-00.webp",
+  "blurb": "Normal foe: two phases. Phase 1 runs above 30% VITAE. At 30% its Danger opens phase 2, and its attacks stay with it. Today it plays a copy of the Green Jelly's moves."
+ },
+ {
+  "key": "QC",
+  "name": "Quay-Crab",
+  "art": "https://raw.githubusercontent.com/no-trbl-2-u/Miserere-mei-deus/main/axiomancer-mobile/assets/images/enemies/anim/quay-crab/quay-crab-00.webp",
+  "blurb": "Normal foe: two phases. Phase 1 runs above 30% VITAE. At 30% its Danger opens phase 2, and its attacks stay with it. Today it plays a copy of the Crane-Hook's moves."
+ },
+ {
+  "key": "CB",
+  "name": "Coralback",
+  "art": "https://raw.githubusercontent.com/no-trbl-2-u/Miserere-mei-deus/main/axiomancer-mobile/assets/images/enemies/anim/coralback/coralback-00.webp",
+  "blurb": "Normal foe: two phases. Phase 1 runs above 30% VITAE. At 30% its Danger opens phase 2, and its attacks stay with it. Today it plays a copy of the Lamprey-Knot's moves."
+ },
+ {
+  "key": "BS",
+  "name": "Bilge-Stalker",
+  "art": "https://raw.githubusercontent.com/no-trbl-2-u/Miserere-mei-deus/main/axiomancer-mobile/assets/images/enemies/anim/bilge-stalker/bilge-stalker-00.webp",
+  "blurb": "Normal foe: two phases. Phase 1 runs above 30% VITAE. At 30% its Danger opens phase 2, and its attacks stay with it. Today it plays a copy of the Wreck-Picker's moves."
+ }
+];
+const SLOTS = [
+ {
+  "slot": "SB-ATK",
+  "kind": "Attack",
+  "role": "Tick the ones it should have; the tag says when each comes in."
+ },
+ {
+  "slot": "SB-DEF",
+  "kind": "Defend",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "SB-STA",
+  "kind": "Status",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "SB-D75",
+  "kind": "Danger at 75%",
+  "role": "Opens phase 2."
+ },
+ {
+  "slot": "SB-D50",
+  "kind": "Danger at 50%",
+  "role": "Opens phase 3."
+ },
+ {
+  "slot": "SB-D25",
+  "kind": "Danger at 25%",
+  "role": "Opens the last phase."
+ },
+ {
+  "slot": "WM-ATK",
+  "kind": "Attack",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "WM-DEF",
+  "kind": "Defend",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "WM-STA",
+  "kind": "Status",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "WM-D60",
+  "kind": "Danger at 60%",
+  "role": "Opens phase 2."
+ },
+ {
+  "slot": "WM-D30",
+  "kind": "Danger at 30%",
+  "role": "Opens the last phase."
+ },
+ {
+  "slot": "SW-ATK",
+  "kind": "Attack",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "SW-DEF",
+  "kind": "Defend",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "SW-STA",
+  "kind": "Status",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "SW-D30",
+  "kind": "Danger at 30%",
+  "role": "Opens phase 2."
+ },
+ {
+  "slot": "QC-ATK",
+  "kind": "Attack",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "QC-DEF",
+  "kind": "Defend",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "QC-STA",
+  "kind": "Status",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "QC-D30",
+  "kind": "Danger at 30%",
+  "role": "Opens phase 2."
+ },
+ {
+  "slot": "CB-ATK",
+  "kind": "Attack",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "CB-DEF",
+  "kind": "Defend",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "CB-STA",
+  "kind": "Status",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "CB-D30",
+  "kind": "Danger at 30%",
+  "role": "Opens phase 2."
+ },
+ {
+  "slot": "BS-ATK",
+  "kind": "Attack",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "BS-DEF",
+  "kind": "Defend",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "BS-STA",
+  "kind": "Status",
+  "role": "Tick the ones it should have."
+ },
+ {
+  "slot": "BS-D30",
+  "kind": "Danger at 30%",
+  "role": "Opens phase 2."
+ }
+];
+const CARDS = [
+ {
+  "id": "SB-ATKa",
+  "name": "The Long Swallow",
+  "kind": "Attack",
+  "when": "Phase 1 on",
+  "text": "8 damage. Your GUARD counts half against it.",
+  "why": "A mouth that big does not care about walls."
+ },
+ {
+  "id": "SB-ATKb",
+  "name": "Answered Prayer",
+  "kind": "Attack",
+  "when": "Phase 2 on",
+  "text": "7 damage. If it gets through your GUARD, a BARNACLE Curse goes into your hand.",
+  "why": "Feeds the Curse count the later moves read."
+ },
+ {
+  "id": "SB-ATKc",
+  "name": "Communion",
+  "kind": "Attack",
+  "when": "Phase 3 on",
+  "text": "2 damage per Curse in your hand, deck and discard.",
+  "why": "Everything you were handed comes back at once."
+ },
+ {
+  "id": "SB-DEFa",
+  "name": "Eyes Shut",
+  "kind": "Defend",
+  "when": "Phase 1 on",
+  "text": "WARD 12. The next status you put on it lasts 1 turn longer.",
+  "why": "Its eyes are shut in the art; the prayer is the wall."
+ },
+ {
+  "id": "SB-DEFb",
+  "name": "Sink Below",
+  "kind": "Defend",
+  "when": "Phase 2 on",
+  "text": "WARD 8 and MEND 8.",
+  "why": "It goes down into the dark and comes back fuller."
+ },
+ {
+  "id": "SB-DEFc",
+  "name": "The Faithful Gather",
+  "kind": "Defend",
+  "when": "Phase 3 on",
+  "text": "MEND 10 and it SCOURs one status off itself.",
+  "why": "The late answer to a status build."
+ },
+ {
+  "id": "SB-STAa",
+  "name": "Votive",
+  "kind": "Status",
+  "when": "Phase 1 on",
+  "text": "2 BARNACLE Curses go into your hand.",
+  "why": "The offering. Sets up Communion and the Tithe."
+ },
+ {
+  "id": "SB-STAb",
+  "name": "Deep Water",
+  "kind": "Status",
+  "when": "Phase 1 on",
+  "text": "BRINE 3: each GUARD you gain is cut by 3 until the end of your next turn.",
+  "why": "Salt in everything you try to hold up."
+ },
+ {
+  "id": "SB-STAc",
+  "name": "Hear Me",
+  "kind": "Status",
+  "when": "Phase 2 on",
+  "text": "UNDERTOW: your heart and mind dice are lifted out of your next roll.",
+  "why": "It answers, and you lose your thoughts."
+ },
+ {
+  "id": "SB-D75a",
+  "name": "Swell",
+  "kind": "Danger at 75%",
+  "when": "At 75%",
+  "text": "3 damage per card in your hand, then BRINE 3.",
+  "why": "Teaches you to spend your hand before the line."
+ },
+ {
+  "id": "SB-D75b",
+  "name": "The Mouth Opens",
+  "kind": "Danger at 75%",
+  "when": "At 75%",
+  "text": "15 damage. If you block all of it, it is VULNERABLE 50% for 2 turns.",
+  "why": "A clean test with a reward for passing."
+ },
+ {
+  "id": "SB-D75c",
+  "name": "Kneel",
+  "kind": "Danger at 75%",
+  "when": "At 75%",
+  "text": "TANGLE 3 and MEND 10.",
+  "why": "A slower, stranger start to the fight."
+ },
+ {
+  "id": "SB-D50a",
+  "name": "Tithe of the Drowned",
+  "kind": "Danger at 50%",
+  "when": "At 50%",
+  "text": "4 damage per Curse in your hand, deck and discard.",
+  "why": "Pays off Votive and Answered Prayer."
+ },
+ {
+  "id": "SB-D50b",
+  "name": "The Answer",
+  "kind": "Danger at 50%",
+  "when": "At 50%",
+  "text": "Deals what you dealt it last turn, up to 18.",
+  "why": "Prayed to long enough to start answering."
+ },
+ {
+  "id": "SB-D50c",
+  "name": "Prayer Without End",
+  "kind": "Danger at 50%",
+  "when": "At 50%",
+  "text": "Next turn you can play at most 2 cards, and you are VULNERABLE 25% for 2 turns.",
+  "why": "No damage, but the next two turns are bad."
+ },
+ {
+  "id": "SB-D25a",
+  "name": "He Opens His Eyes",
+  "kind": "Danger at 25%",
+  "when": "At 25%",
+  "text": "10 damage, doubled if you carry any status.",
+  "why": "The one thing its eyes have not done yet."
+ },
+ {
+  "id": "SB-D25b",
+  "name": "The Last Psalm",
+  "kind": "Danger at 25%",
+  "when": "At 25%",
+  "text": "One 3-damage hit per 2 cards in your discard (at least 4 hits).",
+  "why": "A long fight makes this one worse."
+ },
+ {
+  "id": "SB-D25c",
+  "name": "Drowning Mercy",
+  "kind": "Danger at 25%",
+  "when": "At 25%",
+  "text": "16 damage. If you are under half VITAE: 24 damage, and it MENDs 12.",
+  "why": "The finisher that reads how the fight has gone."
+ },
+ {
+  "id": "WM-ATKa",
+  "name": "Cutlass Drill",
+  "kind": "Attack",
+  "when": "Phase 1 on",
+  "text": "4 damage, 2 hits.",
+  "why": "The sabre in the art."
+ },
+ {
+  "id": "WM-ATKb",
+  "name": "Pistol Shot",
+  "kind": "Attack",
+  "when": "Phase 1 on",
+  "text": "9 damage. Your GUARD counts half against it.",
+  "why": "The pistol in the art."
+ },
+ {
+  "id": "WM-ATKc",
+  "name": "Boarding Party",
+  "kind": "Attack",
+  "when": "Phase 2 on",
+  "text": "7 damage, +4 if you played 3+ cards this turn.",
+  "why": "Punishes a big turn."
+ },
+ {
+  "id": "WM-DEFa",
+  "name": "Hold the Line",
+  "kind": "Defend",
+  "when": "Phase 1 on",
+  "text": "WARD 12.",
+  "why": "A plain order."
+ },
+ {
+  "id": "WM-DEFb",
+  "name": "Brace for Impact",
+  "kind": "Defend",
+  "when": "Phase 1 on",
+  "text": "WARD 8 and MEND 5.",
+  "why": "A captain who has done this before."
+ },
+ {
+  "id": "WM-DEFc",
+  "name": "Stand to Your Posts",
+  "kind": "Defend",
+  "when": "Phase 2 on",
+  "text": "WARD 10. If you do not hit it this turn, its next attack gains +3.",
+  "why": "Waiting on it costs you."
+ },
+ {
+  "id": "WM-STAa",
+  "name": "Dead Men's Orders",
+  "kind": "Status",
+  "when": "Phase 1 on",
+  "text": "TANGLE 2.",
+  "why": "A crew the sea has already finished with."
+ },
+ {
+  "id": "WM-STAb",
+  "name": "Mark the Deck",
+  "kind": "Status",
+  "when": "Phase 1 on",
+  "text": "You are VULNERABLE 25% for 2 turns.",
+  "why": "Sets up the pistol."
+ },
+ {
+  "id": "WM-STAc",
+  "name": "Press-Ganged",
+  "kind": "Status",
+  "when": "Phase 2 on",
+  "text": "Steals one banked die. With none banked: TANGLE 1.",
+  "why": "Takes what it needs for the crew."
+ },
+ {
+  "id": "WM-D60a",
+  "name": "Grapeshot",
+  "kind": "Danger at 60%",
+  "when": "At 60%",
+  "text": "One 2-damage hit per 2 cards in your discard (at least 3 hits).",
+  "why": "A scatter of small hits."
+ },
+ {
+  "id": "WM-D60b",
+  "name": "All Hands",
+  "kind": "Danger at 60%",
+  "when": "At 60%",
+  "text": "15 damage. If you block all of it, it is VULNERABLE 50% for 2 turns.",
+  "why": "One big order you can answer."
+ },
+ {
+  "id": "WM-D60c",
+  "name": "Reload Under Fire",
+  "kind": "Danger at 60%",
+  "when": "At 60%",
+  "text": "TANGLE 3 and MEND 8.",
+  "why": "It buys itself a turn."
+ },
+ {
+  "id": "WM-D30a",
+  "name": "Go Down With the Ship",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "18 damage, and it is VULNERABLE 50% for 2 turns.",
+  "why": "Hurts both sides; a good last stand."
+ },
+ {
+  "id": "WM-D30b",
+  "name": "The Last Order",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "Next turn you can play at most 2 cards.",
+  "why": "Still giving orders, and you still follow."
+ },
+ {
+  "id": "WM-D30c",
+  "name": "Take the Colours",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "Takes your banked dice and 4 Conviction, WARD 4 per thing taken.",
+  "why": "Strips the ship before it sinks."
+ },
+ {
+  "id": "SW-ATKa",
+  "name": "Many Stings",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "2 damage, 3 hits.",
+  "why": "Five bodies, all stinging the same."
+ },
+ {
+  "id": "SW-ATKb",
+  "name": "Trailing Threads",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "3 damage and TANGLE 1.",
+  "why": "A hit that also catches you."
+ },
+ {
+  "id": "SW-ATKc",
+  "name": "Brush Past",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "5 damage, doubled if you carry any status.",
+  "why": "Worse once the threads are on you."
+ },
+ {
+  "id": "SW-DEFa",
+  "name": "Drift Apart",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 8.",
+  "why": "Five small targets."
+ },
+ {
+  "id": "SW-DEFb",
+  "name": "Close Ranks",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 5 and MEND 4.",
+  "why": "The cluster pulls in."
+ },
+ {
+  "id": "SW-DEFc",
+  "name": "Glow Dim",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 6. If you do not hit it this turn, its next attack gains +3.",
+  "why": "The dark before the sting."
+ },
+ {
+  "id": "SW-STAa",
+  "name": "Lit From Within",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "You are VULNERABLE 25% for 2 turns.",
+  "why": "You cannot look away from it."
+ },
+ {
+  "id": "SW-STAb",
+  "name": "Numbing Threads",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "TANGLE 2.",
+  "why": "The tendrils."
+ },
+ {
+  "id": "SW-STAc",
+  "name": "Salt Sting",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "BRINE 2: each GUARD you gain is cut by 2 until the end of your next turn.",
+  "why": "Stings through what you hold up."
+ },
+ {
+  "id": "SW-D30a",
+  "name": "The Whole Bloom",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "One 2-damage hit per 2 cards in your discard (at least 3 hits).",
+  "why": "Every jelly at once."
+ },
+ {
+  "id": "SW-D30b",
+  "name": "Burst",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "15 damage. If you block all of it, it is VULNERABLE 50% for 2 turns.",
+  "why": "A swarm breaking open."
+ },
+ {
+  "id": "SW-D30c",
+  "name": "Drown in Light",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "3 damage per card in your hand, then TANGLE 2.",
+  "why": "Spend your hand or pay for it."
+ },
+ {
+  "id": "QC-ATKa",
+  "name": "Pincer",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "7 damage. Your GUARD counts half against it.",
+  "why": "The huge claw."
+ },
+ {
+  "id": "QC-ATKb",
+  "name": "Clamp",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "4 damage and TANGLE 1.",
+  "why": "It holds on."
+ },
+ {
+  "id": "QC-ATKc",
+  "name": "Scuttle In",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "3 damage, 2 hits.",
+  "why": "The small claw and the legs."
+ },
+ {
+  "id": "QC-DEFa",
+  "name": "Shell Up",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 10.",
+  "why": "A plain crab move."
+ },
+ {
+  "id": "QC-DEFb",
+  "name": "Back Into the Rocks",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 6 and MEND 4.",
+  "why": "It knows where to hide."
+ },
+ {
+  "id": "QC-DEFc",
+  "name": "Hold Fast",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 6. While it holds, your HEAL is halved.",
+  "why": "Holding on to things that want to leave."
+ },
+ {
+  "id": "QC-STAa",
+  "name": "Won't Let Go",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "TANGLE 2.",
+  "why": "The description, as a move."
+ },
+ {
+  "id": "QC-STAb",
+  "name": "Grip",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "UNDERTOW: your heart die is lifted out of your next roll.",
+  "why": "A claw around something you needed."
+ },
+ {
+  "id": "QC-STAc",
+  "name": "Pry Open",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "You are VULNERABLE 25% for 2 turns.",
+  "why": "It finds the gap."
+ },
+ {
+  "id": "QC-D30a",
+  "name": "Clamp Down",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "10 damage. If you are under half VITAE: 16 damage, and it MENDs 4.",
+  "why": "Worse the closer you are to dying."
+ },
+ {
+  "id": "QC-D30b",
+  "name": "Never Let Go",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "6 damage. If you are TANGLED: 14 damage, and the tangle ends.",
+  "why": "Pays off Clamp and Won't Let Go."
+ },
+ {
+  "id": "QC-D30c",
+  "name": "Snap Shut",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "Next turn you can play at most 2 cards.",
+  "why": "No damage; it just holds you."
+ },
+ {
+  "id": "CB-ATKa",
+  "name": "Coral Spur",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "6 damage. If it gets through your GUARD: BARNACLE.",
+  "why": "It leaves a piece of itself in you."
+ },
+ {
+  "id": "CB-ATKb",
+  "name": "Warning Colours",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "5 damage, doubled if you carry any status.",
+  "why": "The warning is honest."
+ },
+ {
+  "id": "CB-ATKc",
+  "name": "Ramming Crown",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "7 damage, +4 if you played 3+ cards this turn.",
+  "why": "Punishes a big turn."
+ },
+ {
+  "id": "CB-DEFa",
+  "name": "Crown Down",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 8. The next status you put on it lasts 1 turn longer.",
+  "why": "It tucks in behind the coral."
+ },
+ {
+  "id": "CB-DEFb",
+  "name": "Bright Shell",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 6. If you do not hit it this turn, its next attack gains +3.",
+  "why": "Leaving it alone is not safe."
+ },
+ {
+  "id": "CB-DEFc",
+  "name": "Regrow",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "MEND 6 and it SCOURs one status off itself.",
+  "why": "Coral grows back."
+ },
+ {
+  "id": "CB-STAa",
+  "name": "Polyp",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "A BARNACLE Curse goes into your hand.",
+  "why": "Coral taking root in your hand."
+ },
+ {
+  "id": "CB-STAb",
+  "name": "Venom Bloom",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "LEECH 3 on you.",
+  "why": "Sets up Full Bloom."
+ },
+ {
+  "id": "CB-STAc",
+  "name": "Stinging Crown",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "BRINE 3: each GUARD you gain is cut by 3 until the end of your next turn.",
+  "why": "Everything that touches it stings."
+ },
+ {
+  "id": "CB-D30a",
+  "name": "Full Bloom",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "4 damage per turn of LEECH left on you, then it lets go.",
+  "why": "Pays off Venom Bloom."
+ },
+ {
+  "id": "CB-D30b",
+  "name": "Coral Grows Over",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "3 damage per Curse in your hand, deck and discard.",
+  "why": "Pays off Coral Spur and Polyp."
+ },
+ {
+  "id": "CB-D30c",
+  "name": "Strip the Reef",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "Strips your THORNS, REFLECT and INFERNO, then 3 damage for each one stripped.",
+  "why": "Punishes a build wearing its own spikes."
+ },
+ {
+  "id": "BS-ATKa",
+  "name": "From Below",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "6 damage, +2 for each card you leave unplayed in your hand.",
+  "why": "It waits for you to hesitate."
+ },
+ {
+  "id": "BS-ATKb",
+  "name": "Ankle Bite",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "5 damage. If you are under half VITAE: 9 damage, and it MENDs 3.",
+  "why": "It goes for the wounded."
+ },
+ {
+  "id": "BS-ATKc",
+  "name": "Quick Claws",
+  "kind": "Attack",
+  "when": "Both phases",
+  "text": "3 damage, 2 hits. Each hit that gets through steals 1 Conviction.",
+  "why": "Built low and quick."
+ },
+ {
+  "id": "BS-DEFa",
+  "name": "Into the Dark",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 8. If you do not hit it this turn, its next attack gains +3.",
+  "why": "The dark under a deck."
+ },
+ {
+  "id": "BS-DEFb",
+  "name": "Go to Water",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 5 and MEND 4.",
+  "why": "It came out of the bilge and can go back."
+ },
+ {
+  "id": "BS-DEFc",
+  "name": "Dead Still",
+  "kind": "Defend",
+  "when": "Phase 1",
+  "text": "WARD 10.",
+  "why": "Built quiet."
+ },
+ {
+  "id": "BS-STAa",
+  "name": "Eyes in the Dark",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "You are VULNERABLE 25% for 2 turns.",
+  "why": "Bright-eyed, in the art."
+ },
+ {
+  "id": "BS-STAb",
+  "name": "Steal the Light",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "Steals one banked die. With none banked: TANGLE 1.",
+  "why": "Light-fingered."
+ },
+ {
+  "id": "BS-STAc",
+  "name": "Stagnant",
+  "kind": "Status",
+  "when": "Phase 1",
+  "text": "BRINE 2: each GUARD you gain is cut by 2 until the end of your next turn.",
+  "why": "Bilge water."
+ },
+ {
+  "id": "BS-D30a",
+  "name": "Ambush",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "3 damage per card in your hand, then TANGLE 2.",
+  "why": "Spend your hand or pay for it."
+ },
+ {
+  "id": "BS-D30b",
+  "name": "Drag Under",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "Next turn you can play at most 2 cards.",
+  "why": "Pulled down below the deck."
+ },
+ {
+  "id": "BS-D30c",
+  "name": "Every Last Bit",
+  "kind": "Danger at 30%",
+  "when": "At 30%",
+  "text": "One 2-damage hit per 2 cards in your discard (at least 3 hits).",
+  "why": "A longer fight makes it worse."
+ }
+];
+
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const KW = /\b(GUARD|WARD|MEND|SCOURs?|HEAL|VULNERABLE|TANGLED?|BARNACLE|BRINE|UNDERTOW|LEECH|THORNS|REFLECT|INFERNO|VITAE)\b/g;
+const mark = (s) => esc(s).replace(KW, '<span class="kw">$1</span>');
+const cardHtml = (c) => `
+  <label class="card" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${esc(c.name)}">
+    <div class="top"><span class="name">${esc(c.name)}</span><span class="type">${esc(c.when)}</span></div>
+    <div class="line">${mark(c.text)}</div>
+    <div class="why">${esc(c.why)}</div>
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.kind)}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note on these (optional): a number to change, a merge, a new idea">
+  </section>`;
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <img class="foe" src="${t.art}" alt="${esc(t.name)}">
+    <p class="blurb"><b>${esc(t.name)}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+const tabHtml = (t, i) => `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${esc(t.name)}<span class="n" data-n="${t.key}"></span></button>`;
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById('panel-' + t.key).hidden = t.key !== key; });
+  scrollTo(0, 0);
+};
+document.getElementById('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) showTab(b.dataset.tab); });
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = k.length + ' kept of ' + CARDS.length;
+  TABS.forEach((t) => { document.querySelector('[data-n="' + t.key + '"]').textContent = ' ' + k.filter((id) => id.startsWith(t.key + '-')).length; });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+const slotLine = (s, keptIds) => {
+  const here = CARDS.filter((c) => c.id.startsWith(s.slot));
+  const keep = here.filter((c) => keptIds.includes(c.id)).map((c) => c.id + ' ' + c.name);
+  const note = document.querySelector('[data-note="' + s.slot + '"]').value.trim();
+  return s.slot + ' (' + s.kind + '): ' + (keep.length ? keep.join(' + ') : 'none') + (note ? ' | note: ' + note : '');
+};
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return ['BALLOT: enemy movesets (' + BALLOT_ID + ')', 'kept ' + k.length + ' of ' + CARDS.length,
+    ...TABS.flatMap((t) => ['-- ' + t.name + ' --', ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k))]),
+    general ? 'general: ' + general : null].filter(Boolean).join('\n');
+};
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
