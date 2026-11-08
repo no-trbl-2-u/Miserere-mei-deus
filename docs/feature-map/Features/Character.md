@@ -24,7 +24,6 @@ route in Tabs, from `axiomancer-mobile/app/(tabs)/character/index.tsx`.
 - [[Features/Inventory|Inventory]]
 - [[Features/Memoir|Memoir]]
 - [[Features/Settings|Settings]]
-- [[Features/The dev menu|The dev menu]]
 
 ## Uses
 
@@ -35,7 +34,6 @@ Code it uses, as plain text so Graph view draws player flow only.
 - Effects
 - Game
 - Items
-- Log
 - The world
 
 ## Pitch

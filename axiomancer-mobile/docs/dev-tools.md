@@ -1,8 +1,8 @@
 # Dev tools — the `/dev` route
 
 > Reference for the developer surface rebuilt in the 2026-09 dev-tools
-> audit. Reached from the SELF tab's **DEV TOOLS** link
-> (`self-dev-tools-link`) in dev builds; production renders an inert
+> audit. Reached from the last row of Settings, the **DEV TOOLS** link
+> (`settings-dev-tools-link`) in dev builds; production renders an inert
 > placeholder. Gate: `isDevToolsEnabled()` in `lib/buildProfile.ts`
 > (browser harnesses opt in with `globalThis.__AXM_FORCE_DEV_TOOLS__`).
 
@@ -389,7 +389,7 @@ shaping who the player is.
 they can launch (`DebugEnemy|DebugQuest|DebugRest|DebugReward|
 DebugTriggerEncounter|DebugWorld` → encounters; `DebugHazard*` → hazard;
 `CombatGate` → combat). Browser scripts depend on these ids staying
-stable: `self-dev-tools-link`, `debug-trigger-encounter-*`
+stable: `settings-dev-tools-link`, `debug-trigger-encounter-*`
 (`scripts/live-fight-entry.mjs` enters every scripted fight through it),
 `debug-hazard-button`, `debug-currency-large-grant`, `debug-rest-button`,
 `debug-cache-button`, `debug-xp-grant-button`.

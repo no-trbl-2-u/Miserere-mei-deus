@@ -15,6 +15,7 @@
 import React, { useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { DevToolsLink } from '@/components/dev/DevToolsLink';
 import { ConfirmSheet } from '@/components/menu/ConfirmSheet';
 import { FeedbackSheet } from '@/components/menu/FeedbackSheet';
 import { MenuButton } from '@/components/menu/MenuButton';
@@ -217,6 +218,9 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     testID="settings-reset"
                 />
             </View>
+
+            {/* The last row; renders nothing outside dev builds. */}
+            <DevToolsLink />
 
             <FeedbackSheet
                 visible={feedbackOpen}

@@ -29,6 +29,32 @@ jest.mock('@/components/experience/KitBackdrop', () => {
 
 const NO_STORAGE = { getItem: async () => null, setItem: async () => undefined, removeItem: async () => undefined };
 
+describe('SettingsBody dev tools row', () => {
+    const renderSettings = () => {
+        const slots = createMemorySlotStore({ activeSlot: 1 });
+        const store = createAppStore({ adapter: slots });
+        const settings = createSettingsStore({ storage: NO_STORAGE });
+        render(withAllProviders(<SettingsScreen />, { store, slots, settings }).tree);
+    };
+
+    it('shows the DEV TOOLS link under the dev gate', () => {
+        renderSettings();
+        expect(screen.getByTestId('settings-dev-tools-link')).toBeTruthy();
+    });
+
+    it('hides the link outside dev builds', () => {
+        const g = global as unknown as { __DEV__: boolean };
+        const original = g.__DEV__;
+        g.__DEV__ = false;
+        try {
+            renderSettings();
+            expect(screen.queryByTestId('settings-dev-tools-link')).toBeNull();
+        } finally {
+            g.__DEV__ = original;
+        }
+    });
+});
+
 describe('SettingsBody dividers', () => {
     it('puts a brass divider above THE RUN, FEEDBACK and THIS DEVICE as well as the first three', () => {
         const slots = createMemorySlotStore({ activeSlot: 1 });

@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import { AscendStrip } from '@/components/levelup/AscendStrip';
 import { LevelReadyStrip } from '@/components/levelup/LevelReadyStrip';
 import { LevelUpModal } from '@/components/levelup/LevelUpModal';
-import { DevToolsLink } from '@/components/dev/DevToolsLink';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
 import { StatBar } from '@/components/StatBar';
@@ -14,6 +13,7 @@ import { KitBackdrop, KitDivider, KitHeader } from '@/components/experience/KitB
 import { lookOf } from '@/components/experience/looks';
 import { StanceGlyph } from '@/components/StanceGlyph';
 import { EffectGlyph } from '@/components/EffectGlyph';
+import { statTileLayout } from '@/components/self/statTileLayout';
 import { XpChain } from '@/components/XpChain';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { characterPortraitKey } from '@/state/presenters/character-select.engine';
@@ -45,6 +45,9 @@ export default function CharacterScreen() {
   const tilesBrass = lookOf('F-03') === 'brass';
   const rulesBrass = lookOf('F-05') === 'brass';
   const poolBrass = lookOf('F-06') === 'brass';
+  const { width: windowWidth } = useWindowDimensions();
+  // The sheet header pads 12 a side; the plaques share what is left.
+  const tile = statTileLayout(windowWidth - 24);
   const portraitW = frameBrass ? 136 : 176;
   const portraitH = frameBrass ? 170 : 212;
   // Subscribe to stable slices to avoid getSnapshot identity churn:
@@ -166,8 +169,16 @@ export default function CharacterScreen() {
               accessibilityHint="tap to read description"
               testID={`self-base-${r.stanceKey}`}
             >
-              <View style={[styles.baseCard, tilesBrass && styles.kitBare]}>
-                {tilesBrass && <KitBackdrop piece="stat-tile" />}
+              <View
+                style={[
+                  styles.baseCard,
+                  { width: tile.width },
+                  tilesBrass && styles.kitBare,
+                  tilesBrass && { paddingTop: tile.padTop, paddingBottom: tile.padBottom, paddingHorizontal: tile.padSide },
+                ]}
+                testID={`self-base-tile-${r.stanceKey}`}
+              >
+                {tilesBrass && <KitBackdrop piece="stat-tile" scale={tile.scale} />}
                 <StanceGlyph kind={r.stanceKey} size={28} color={AXM.parchment} />
                 <Text style={styles.baseStatLabel}>{r.label}</Text>
                 <Text style={styles.baseStatValue}>{r.value}</Text>
@@ -327,7 +338,6 @@ export default function CharacterScreen() {
           </View>
         </View>
       )}
-      <DevToolsLink />
     </ScreenBg>
   );
 }
@@ -350,9 +360,9 @@ const useStyles = makeStyles((AXM) => ({
   xpLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
   xpValue: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.sulfur },
   section: { paddingTop: 4, paddingHorizontal: 12, paddingBottom: 0 },
-  baseRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: -52, justifyContent: 'flex-end' },
-  baseCard: { flex: 1, paddingVertical: 10, paddingHorizontal: 6, backgroundColor: AXM.panelBg, borderWidth: 1, borderColor: AXM.ash, alignItems: 'center' },
-  baseStatLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2, color: AXM.bone, marginTop: 3 },
+  baseRow: { flexDirection: 'row', flexWrap: 'nowrap', gap: 4, marginTop: 6, justifyContent: 'center' },
+  baseCard: { paddingVertical: 10, paddingHorizontal: 6, backgroundColor: AXM.panelBg, borderWidth: 1, borderColor: AXM.ash, alignItems: 'center' },
+  baseStatLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 1, color: AXM.bone, marginTop: 3 },
   baseStatValue: { fontFamily: FONTS.sans, fontSize: 32, color: AXM.sulfur, lineHeight: 34, marginTop: 2 },
   effectsList: { marginTop: 4, gap: 4 },
   emptyLabel: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, letterSpacing: 1, textTransform: 'uppercase' },

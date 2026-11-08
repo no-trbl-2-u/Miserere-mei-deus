@@ -1,7 +1,7 @@
 /**
  * Hermetic component tests — DevToolsLink.
  *
- * Pins the SELF-tab affordance that opens the dedicated `/dev` route:
+ * Pins the Settings affordance that opens the dedicated `/dev` route:
  *   - DEV gate (production renders null — no dev affordance on SELF)
  *   - Renders the link in dev builds
  *   - Tapping pushes the `/dev` route
@@ -22,7 +22,7 @@ import { DevToolsLink } from '@/components/dev/DevToolsLink';
 describe('DevToolsLink: DEV gate', () => {
     it('renders the link when __DEV__ is true (jest default)', () => {
         const tree = render(<DevToolsLink />);
-        expect(tree.queryByTestId('self-dev-tools-link')).not.toBeNull();
+        expect(tree.queryByTestId('settings-dev-tools-link')).not.toBeNull();
     });
 
     it('renders null when __DEV__ is false (production build simulation)', () => {
@@ -31,7 +31,7 @@ describe('DevToolsLink: DEV gate', () => {
         g.__DEV__ = false;
         try {
             const tree = render(<DevToolsLink />);
-            expect(tree.queryByTestId('self-dev-tools-link')).toBeNull();
+            expect(tree.queryByTestId('settings-dev-tools-link')).toBeNull();
         } finally {
             g.__DEV__ = original;
         }
@@ -42,7 +42,7 @@ describe('DevToolsLink: navigation', () => {
     it('pushes the /dev route when pressed', () => {
         mockPush.mockClear();
         const tree = render(<DevToolsLink />);
-        fireEvent.press(tree.getByTestId('self-dev-tools-link'));
+        fireEvent.press(tree.getByTestId('settings-dev-tools-link'));
         expect(mockPush).toHaveBeenCalledWith('/dev');
     });
 });
