@@ -85,13 +85,11 @@ describe('CombatIntentVM.wallMath — the telegraph readout (phase 28)', () => {
     });
 });
 
-// CRITIQUE pass 88: the board printed "PHASE 1/5 · R1 · T1", cutting the
-// presenter's words to bare codes. The presenter now builds the whole line.
-describe('CombatViewModel.metaLine — the HUD clock beside the foe name', () => {
-    it('spells out phase, round and turn in full', () => {
-        const s = openState();
-        const vm = buildCombatViewModel(s);
-        expect(vm.metaLine).toBe(`${vm.phaseBadge} · ROUND ${s.round} · TURN ${s.turn}`);
-        expect(vm.metaLine).toMatch(/^PHASE \d+\/\d+ · ROUND \d+ · TURN \d+$/);
+// T, 2026-11-08: the PHASE/ROUND/TURN line left the fight (the count was
+// wrong for how phases work); the view-model no longer builds it.
+describe('CombatViewModel — no HUD clock line', () => {
+    it('carries no metaLine', () => {
+        const vm = buildCombatViewModel(openState());
+        expect('metaLine' in vm).toBe(false);
     });
 });

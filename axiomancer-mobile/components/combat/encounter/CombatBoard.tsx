@@ -61,6 +61,7 @@ import { TrashGlyph } from '@/components/hazard/glyphs';
 import { glyphShapeFor } from '@/components/combat/glyphShapes';
 import { CombatCombatantPane, EffectChips, PlayerMedallion, COMBAT_HUD_HEIGHT, type CombatFx } from './CombatCombatantPane';
 import { CombatFooterDock, dockMinHeight } from './CombatFooterDock';
+import { SeamFog } from './SeamFog';
 import { SACRIFICE_CALLOUT_MS } from './VitaeSacrificeCallout';
 import { CARD_ENTER_MS, CARD_LAYOUT_MS } from './cardMotion';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
@@ -1461,12 +1462,15 @@ export const CombatBoard = React.memo(function CombatBoard({
                 onChip={onChip}
                 fx={fx}
                 topInset={topInset}
-                metaLine={vm.metaLine}
                 onHudLayout={handleHudLayout}
                 region={region}
                 nodeId={nodeId}
                 onPayToll={onPayToll}
             />
+
+            {/* the fog over the plate's foot: under the hand and the dice,
+                over the plate, and clear of the foe (SeamFog) */}
+            <SeamFog />
 
             {/* interactive column */}
             <View style={styles.content} pointerEvents="box-none">
@@ -1945,13 +1949,20 @@ const FREE_PILL_GLYPH_LARGE = 20;
 /** Extra top padding the name band takes when the pill sits over it. */
 const FREE_PILL_BAND_PAD = 12;
 const FREE_PILL_BAND_PAD_LARGE = 16;
-/** The name's line heights and its vertical padding (`plateName*` styles), per face size. */
-const NAME_LINE_H = { normal: 15, narrow: 12, large: 24 } as const;
-const NAME_PAD_V = 4;
-/** The name band's fixed height: pill room + two name lines + the name's padding. */
-export function nameBandHeight(large: boolean, narrow: boolean): number {
-    const lineH = large ? NAME_LINE_H.large : narrow ? NAME_LINE_H.narrow : NAME_LINE_H.normal;
-    return (large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD) + 2 * lineH + NAME_PAD_V;
+/** The name's sizes per face size: the ONE source for the `plateName*` styles and the band's height. */
+export const PLATE_NAME = {
+    normal: { fontSize: TYPE_ROLES.cardName.fontSize, lineHeight: 15 },
+    large: { fontSize: 20, lineHeight: 24 },
+    narrow: { fontSize: 10.5, lineHeight: 12 },
+} as const;
+/** The name's vertical padding, each side (`plateName.paddingVertical`). */
+export const PLATE_NAME_PAD_V = 2;
+/** The name band's fixed height: two name lines, the name's padding, and the pill room only
+ *  when the face wears a pill (a card without one gives that room to its art). */
+export function nameBandHeight(large: boolean, narrow: boolean, hasPill = false): number {
+    const lineH = (large ? PLATE_NAME.large : narrow ? PLATE_NAME.narrow : PLATE_NAME.normal).lineHeight;
+    const pillRoom = hasPill ? (large ? FREE_PILL_BAND_PAD_LARGE : FREE_PILL_BAND_PAD) : 0;
+    return pillRoom + 2 * lineH + 2 * PLATE_NAME_PAD_V;
 }
 
 export const CombatCardFace = React.memo(function CombatCardFace({
@@ -1995,12 +2006,13 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     // A face too narrow for the hand card's name column (the Spoils tiles) trims the band's
     // side chrome and the name's size so the longest Act 1 name wraps to two lines, whole words.
     const narrow = !large && width < NARROW_FACE_W;
-    // The band is a FIXED height that holds two name lines plus the free pill's corner
-    // room, so the art plate under it is the same height on every card of a size.
-    const bandH = nameBandHeight(large, narrow);
+    // The band is a FIXED height that holds two name lines, plus the free pill's corner
+    // room when the face wears a pill, so the art plate under it is the same height on
+    // every card of a size and pill state.
+    const hasPill = hasFree || !!f.isGlobal;
+    const bandH = nameBandHeight(large, narrow, hasPill);
     const ledgerH = large ? 60 : SMALL_LEDGER_H;
     // A Global wears a GLOBAL plate where the FREE pill sits.
-    const hasPill = hasFree || f.isGlobal;
     // The drop shadow is STANCE-coloured. It is
     // applied inline on `faceOuter` rather than in the static style, because
     // the colour is per-card data; `accent` (the armed staged-card read tint)
@@ -2470,11 +2482,11 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     },
     // The name wraps to at most TWO lines on every face; its explicit lineHeight makes the
     // band's height a known quantity.
-    plateName: { flex: 1, fontFamily: TYPE_ROLES.cardName.fontFamily, fontSize: TYPE_ROLES.cardName.fontSize, lineHeight: 15, letterSpacing: 0, color: AXM.parchment, paddingVertical: 2 },
-    plateNameLarge: { fontSize: 20, lineHeight: 24 },
+    plateName: { flex: 1, fontFamily: TYPE_ROLES.cardName.fontFamily, fontSize: TYPE_ROLES.cardName.fontSize, lineHeight: PLATE_NAME.normal.lineHeight, letterSpacing: 0, color: AXM.parchment, paddingVertical: PLATE_NAME_PAD_V },
+    plateNameLarge: { ...PLATE_NAME.large },
     // Narrow faces (< NARROW_FACE_W: the Spoils tiles): 10.5 pt in a 71 pt column fits
     // every Act 1 card name in two lines, no word cut (measured off the Fondamento font file).
-    plateNameNarrow: { fontSize: 10.5, lineHeight: 12 },
+    plateNameNarrow: { ...PLATE_NAME.narrow },
     plateBandNarrow: { paddingHorizontal: 3, gap: 0 },
     plateRaritySpacerNarrow: { width: 0 },
     // ② The art plate — seamless: no mat, no frame.

@@ -650,9 +650,6 @@ export interface CombatViewModel {
     phaseBadge: string;
     roundLabel: string;
     turnLabel: string;
-    /** The HUD's one-line clock beside the foe's name, built whole here so
-     *  the board prints it as given (CRITIQUE pass 88). */
-    metaLine: string;
     deckCount: number;
     discardCount: number;
     /** Discard-pile card ids + names, for the REPRISE songbook picker. */
@@ -2569,7 +2566,6 @@ export function buildCombatViewModel(state: CombatEncounterState, seen: SeenDang
         phaseBadge: `PHASE ${idx + 1}/${total}`,
         roundLabel: `ROUND ${state.round}`,
         turnLabel: `TURN ${state.turn}`,
-        metaLine: `PHASE ${idx + 1}/${total} · ROUND ${state.round} · TURN ${state.turn}`,
         deckCount: state.drawPile.length,
         discardCount: state.discard.length,
         discardCards: state.discard.map((id) => ({ id, name: getCardById(id)?.name ?? id })),
