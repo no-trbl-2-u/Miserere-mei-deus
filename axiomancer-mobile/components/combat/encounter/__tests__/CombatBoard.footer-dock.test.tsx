@@ -12,7 +12,8 @@
  */
 
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Stop } from 'react-native-svg';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -143,12 +144,15 @@ describe('A4 — the footer dock', () => {
         renderBoard();
         expect(flat('combat-rail-avatar').marginLeft).toBe(DOCK_AVATAR_INSET);
         expect(DOCK_AVATAR_INSET).toBeGreaterThan(0);
-        expect((StyleSheet.flatten(screen.getByTestId('combat-rail-vitae', { includeHiddenElements: true }).props.style) as { fontSize: number }).fontSize).toBeGreaterThanOrEqual(16);
-        const counts = screen.getByTestId('combat-piles');
-        const sizes = within(counts).UNSAFE_getAllByType(Text)
-            .map((n) => StyleSheet.flatten(n.props.style as never) as { fontSize?: number; color?: string })
-            .filter((st) => st.fontSize !== undefined && st.fontSize >= 12);
-        expect(sizes.length).toBeGreaterThanOrEqual(2);
+        const AXM = currentPalette();
+        const vitae = StyleSheet.flatten(screen.getByTestId('combat-rail-vitae', { includeHiddenElements: true }).props.style) as { fontSize: number; color: string };
+        expect(vitae.fontSize).toBe(16);
+        expect(vitae.color).toBe(AXM.parchment);
+        for (const id of ['combat-pile-deck-count', 'combat-pile-discard-count']) {
+            const count = flat(id) as { fontSize: number; color: string };
+            expect(count.fontSize).toBe(13);
+            expect(count.color).toBe(AXM.parchment);
+        }
     });
 
     it('shows no phase/round/turn line in the fight (159.1)', () => {
@@ -223,19 +227,23 @@ describe('A4 — the footer dock', () => {
 describe('159.1 — the fog over the plate\'s foot', () => {
     const pct = (v: unknown): number => Number.parseFloat(String(v));
 
-    it.each([['an ordinary foe', false], ['the largest sprite (a boss)', true]])('%s: the fog stays below the foe and above the hand, and takes no touches', (_n, boss) => {
-        renderBoard({ shape: (vm) => ({ ...vm, enemy: { ...vm.enemy, isBoss: boss } }) });
+    it('the fog stays below the foe and above the hand, takes no touches, and runs clear to the hand background', () => {
+        renderBoard();
         const fog = screen.getByTestId('combat-seam-fog');
         expect(fog.props.pointerEvents).toBe('none');
-        const sceneBandH = pct(flat('combat-enemy-figure-wrap').bottom) >= 0 ? SCENE_BAND_PCT : 0;
-        // The foe's box ends FIGURE_BOTTOM_PCT of the band above the band's foot.
-        const foeBottom = sceneBandH * (1 - pct(flat('combat-enemy-figure-wrap').bottom) / 100);
+        // The foe's box is bottom-aligned and sized in percent, so its lowest drawn
+        // pixel is the same for every foe, a boss included.
+        const foeBottom = SCENE_BAND_PCT * (1 - pct(flat('combat-enemy-figure-wrap').bottom) / 100);
         const fogTop = pct(flat('combat-seam-fog').top);
         const fogBottom = fogTop + pct(flat('combat-seam-fog').height);
         expect(fogTop).toBeGreaterThanOrEqual(foeBottom - 1e-9);
-        // It ends at the plate's foot, which is above the hand's own top edge.
         expect(fogBottom).toBeLessThanOrEqual(SCENE_BAND_PCT + 1e-9);
         expect(fogBottom).toBeGreaterThan(fogTop);
+        const stops = within(fog).UNSAFE_getAllByType(Stop).map((n) => n.props as { offset: string | number; stopColor: string; stopOpacity: number });
+        expect(stops.length).toBeGreaterThanOrEqual(2);
+        expect(stops[0]!.stopOpacity).toBe(0);
+        expect(stops[stops.length - 1]!.stopOpacity).toBe(1);
+        for (const st of stops) expect(st.stopColor).toBe(currentPalette().bg);
     });
 
     it('is drawn before the interactive column, so the hand and the dice sit over it', () => {

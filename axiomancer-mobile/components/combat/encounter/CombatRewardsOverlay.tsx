@@ -14,7 +14,8 @@
  *  2. SKIP IS A CHOICE, not an escape hatch. It is styled as a peer of TAKE,
  *     not a greyed-out afterthought. The Threadbare Office exists to teach
  *     that a lean deck draws its good cards more often. The panel prints no
- *     small print: no eyebrow, no sub-line, no note under the buttons.
+ *     small print: no eyebrow, no sub-line, no note under TAKE NOTHING or
+ *     TAKE CARD. The elite UPGRADE INSTEAD button keeps its own note.
  *
  * After an elite fight the draft carries a second option (Phase UP1f): one
  * upgrade of a card the player owns, drawn at random by the engine. UPGRADE

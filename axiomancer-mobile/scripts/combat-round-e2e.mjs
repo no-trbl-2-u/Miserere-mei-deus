@@ -354,12 +354,10 @@ async function playRound(page, sink, seed, round) {
     const at = (step) => `seed ${seed}, round ${round}, ${step}`
     const acted = { staged: 0, powered: 0, powerMissed: 0, applied: 0, signature: 0, fired: [], ledger: null }
 
-    // The board's own counter ("PHASE 2/4 · R2 · T2") plus the hand size, so a
-    // round that does nothing is legible as "the hand ran dry" or "the phase
-    // never advanced" rather than "the harness could not grab a card".
-    const header = (await page.getByTestId('combat-board').innerText().catch(() => '')).split('\n')
-    acted.ledger = `${header.find((l) => /PHASE\s*\d+\/\d+/.test(l))?.trim() ?? '?'} · hand `
-        + `${await page.locator('[data-testid^="combat-hand-"]').count()}`
+    // The hand size, so a round that does nothing is legible as "the hand ran
+    // dry" rather than "the harness could not grab a card". The board prints no
+    // phase counter any more.
+    acted.ledger = `hand ${await page.locator('[data-testid^="combat-hand-"]').count()}`
 
     await skipRoll(page)
     await assertAlive(page, sink, at('after the dice roll'))
