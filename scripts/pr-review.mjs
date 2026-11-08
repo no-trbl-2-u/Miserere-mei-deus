@@ -143,7 +143,7 @@ export function diffDigest(patch) {
  * Whether to review this PR now.
  *
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title?: string, head: string, digest?: string | null, comments: string[], dispatch?: boolean }} pr the PR's live facts; `comments` are bodies, `digest` is the head's `diffDigest` (null when unavailable).
- * @returns {{ go: boolean, reason: string, exhausted?: boolean, reuse?: boolean }} the decision and why; `exhausted` when the pass cap stopped it; `reuse` when an earlier verdict on the same diff stands for this head (the merge job reads it).
+ * @returns {{ go: boolean, reason: string, exhausted?: boolean, reuse?: boolean }} the decision and why; `exhausted` when the pass cap stopped it; `reuse` when an earlier verdict on the same diff stands for this head, or this head already carries a pass (the merge job reads it and runs its decision).
  * @example reviewWanted({ state: 'OPEN', isDraft: false, isCrossRepository: false, labels: ['loop:pr'], head: 'a', comments: [] }).go // true
  */
 export function reviewWanted({ state, isDraft, isCrossRepository, labels, title = '', head, digest = null, comments, dispatch = false }) {
@@ -156,7 +156,13 @@ export function reviewWanted({ state, isDraft, isCrossRepository, labels, title 
   if (seed) return { go: false, reason: `${seed}: reviewed by dispatch only` }
   if (isDraft) return { go: false, reason: 'draft' }
   const marked = comments.flatMap(markedHeads)
-  if (marked.some((m) => m.sha === head)) return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
+  const onHead = comments.filter((c) => markedHeads(c).some((m) => m.sha === head))
+  if (onHead.length) {
+    // A review started by an earlier run can post on this head while this run's gate still waits: that
+    // run's merge holds on the gate, and this job is the first thing to run once the gate is green.
+    if (VERDICT.exec(onHead.at(-1))?.[1] === 'pass') return { go: false, reuse: true, reason: `head ${head.slice(0, 8)} already has a pass verdict and its gate is green: the merge decision runs again` }
+    return { go: false, reason: `head ${head.slice(0, 8)} already has a verdict` }
+  }
   if (digest) {
     const same = marked.find((m) => m.digest === digest)
     if (same) return { go: false, reuse: true, reason: `diff ${digest.slice(0, 8)} already has a verdict (head ${same.sha.slice(0, 8)}); head ${head.slice(0, 8)} changes nothing in it, so that verdict stands` }
