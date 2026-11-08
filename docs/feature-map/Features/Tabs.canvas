@@ -101,12 +101,6 @@
 	],
 	"edges": [
 		{
-			"id": "flow:route:(tabs)/character->elsewhere:route:dev",
-			"fromNode": "route:(tabs)/character",
-			"toNode": "elsewhere:route:dev",
-			"color": "5"
-		},
-		{
 			"id": "flow:route:(tabs)/character->route:(tabs)/deck",
 			"fromNode": "route:(tabs)/character",
 			"toNode": "route:(tabs)/deck",
@@ -210,6 +204,12 @@
 			"toNode": "route:(tabs)/settings",
 			"color": "5",
 			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:(tabs)/settings->elsewhere:route:dev",
+			"fromNode": "route:(tabs)/settings",
+			"toNode": "elsewhere:route:dev",
+			"color": "5"
 		},
 		{
 			"id": "flow:route:(tabs)/settings->elsewhere:route:index",

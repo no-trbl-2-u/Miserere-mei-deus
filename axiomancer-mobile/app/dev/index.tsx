@@ -1,8 +1,8 @@
 /**
  * Dev-only tooling route.
  *
- * Keeps the evidence-setup controls off the player-facing SELF sheet in a
- * purpose-grouped dev surface, reached from the SELF tab's `DEV TOOLS`
+ * Keeps the evidence-setup controls off the player-facing screens in a
+ * purpose-grouped dev surface, reached from the last row of Settings, the `DEV TOOLS`
  * link in dev builds. Every Debug* affordance lives in `DevToolsSections`.
  *
  * Production gate: outside dev builds the route renders an inert

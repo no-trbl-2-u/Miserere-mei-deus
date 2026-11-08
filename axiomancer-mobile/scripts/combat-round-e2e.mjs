@@ -524,14 +524,14 @@ async function enterLive(page, baseUrl, seed) {
             + `Use one of: ${Object.keys(PRESET_FIXTURES).join(', ')}`)
         process.exit(2)
     }
-    const entry = fixture ? `/exploration?fixture=${fixture}` : '/character'
+    const entry = fixture ? `/exploration?fixture=${fixture}` : '/settings'
     await page.goto(`${baseUrl}${entry}`, { waitUntil: 'networkidle' })
     if (fixture) {
         log(`live: booted the "${fixture}" fixture for PRESET="${preset}"`)
-        await page.goto(`${baseUrl}/character`, { waitUntil: 'networkidle' })
+        await page.goto(`${baseUrl}/settings`, { waitUntil: 'networkidle' })
     }
-    await page.getByTestId('self-dev-tools-link').waitFor({ state: 'visible', timeout: 25000 })
-    await page.getByTestId('self-dev-tools-link').click()
+    await page.getByTestId('settings-dev-tools-link').waitFor({ state: 'visible', timeout: 25000 })
+    await page.getByTestId('settings-dev-tools-link').click()
     await page.waitForURL((url) => url.pathname.endsWith('/dev'), { timeout: 15000 })
     if (LEVEL_UP) {
         await openDevSection(page, 'player', 'debug-xp-grant-button')

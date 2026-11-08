@@ -125,10 +125,10 @@ function startStaticServer(rootDir) {
     })
 }
 
-/** Navigate from the SELF tab into the dev controls (mirrors encounter-routing-e2e.mjs). */
+/** Navigate from Settings into the dev controls (mirrors encounter-routing-e2e.mjs). */
 async function openDevTools(page) {
-    await page.getByTestId('self-dev-tools-link').waitFor({ state: 'visible', timeout: 15000 })
-    await page.getByTestId('self-dev-tools-link').click()
+    await page.getByTestId('settings-dev-tools-link').waitFor({ state: 'visible', timeout: 15000 })
+    await page.getByTestId('settings-dev-tools-link').click()
     await page.waitForURL((url) => url.pathname.endsWith('/dev'), { timeout: 10000 })
 }
 
@@ -180,7 +180,7 @@ async function runRoundTrip(page, baseUrl) {
     // opt-in (lib/buildProfile.ts) — the same one combat-round-e2e sets.
     // Inert in real builds: nothing sets the global there.
     await page.addInitScript(() => { globalThis.__AXM_FORCE_DEV_TOOLS__ = true })
-    await page.goto(`${baseUrl}/character`, { waitUntil: 'networkidle' })
+    await page.goto(`${baseUrl}/settings`, { waitUntil: 'networkidle' })
     await openDevTools(page)
 
     log('arming an encounter via the COMBAT dev trigger ...')

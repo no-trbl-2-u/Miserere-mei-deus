@@ -20,6 +20,7 @@ route in World routes, from `axiomancer-mobile/app/settings/index.tsx`.
 ## Leads to
 
 - [[Features/Index|Index]]
+- [[Features/The dev menu|The dev menu]]
 
 ## Uses
 

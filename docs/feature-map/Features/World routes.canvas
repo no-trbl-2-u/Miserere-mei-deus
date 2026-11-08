@@ -15,7 +15,7 @@
 			"x": 1060,
 			"y": 0,
 			"width": 340,
-			"height": 690,
+			"height": 820,
 			"label": "Elsewhere"
 		},
 		{
@@ -227,6 +227,16 @@
 			"width": 260,
 			"height": 90,
 			"color": "1"
+		},
+		{
+			"id": "elsewhere:route:dev",
+			"type": "file",
+			"file": "Features/The dev menu.md",
+			"x": 1100,
+			"y": 690,
+			"width": 260,
+			"height": 90,
+			"color": "4"
 		}
 	],
 	"edges": [
@@ -339,6 +349,12 @@
 			"toNode": "route:settings",
 			"color": "5",
 			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:settings->elsewhere:route:dev",
+			"fromNode": "route:settings",
+			"toNode": "elsewhere:route:dev",
+			"color": "5"
 		}
 	]
 }
