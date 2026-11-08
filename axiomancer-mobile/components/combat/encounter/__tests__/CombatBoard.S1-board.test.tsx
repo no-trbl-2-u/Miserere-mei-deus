@@ -186,16 +186,26 @@ describe('S1-board-C32 — compactFree never prints a chopped fragment', () => {
     });
 
     it('keeps the reads it already had', () => {
-        expect(compactFree('i1 d1')).toBe('+1');
+        expect(compactFree('i1 d1')).toBe('1');
         expect(compactFree('3 rounds')).toBe('3r');
-        expect(compactFree('2')).toBe('+2');
-        expect(compactFree('+2 int')).toBe('+2');
+        expect(compactFree('2')).toBe('2');
+        expect(compactFree('+2 int')).toBe('2');
         expect(compactFree(null)).toBe('');
     });
 
     it('keeps the unit on a percent intensity (A Plain Word’s VULNERABLE)', () => {
-        expect(compactFree('+24%')).toBe('+24%');
-        expect(compactFree('+24% · 1t')).toBe('+24%');
+        expect(compactFree('+24%')).toBe('24%');
+        expect(compactFree('+24% · 1t')).toBe('24%');
+    });
+
+    it('never prints a leading "+" on the pill, and keeps a "-"', () => {
+        expect(compactFree('+2')).toBe('2');
+        expect(compactFree('2')).toBe('2');
+        expect(compactFree('+35%')).toBe('35%');
+        expect(compactFree('+35% · 2t')).toBe('35%');
+        expect(compactFree('-2')).toBe('-2');
+        expect(compactFree('-10% · 1t')).toBe('-10%');
+        for (const v of ['i1 d1', '+2 int', '+24% · 1t', '3', '×4 · 3t']) expect(compactFree(v).startsWith('+')).toBe(false);
     });
 
     it('prints nothing rather than half a word', () => {
@@ -206,7 +216,7 @@ describe('S1-board-C32 — compactFree never prints a chopped fragment', () => {
         // the input — never a slice through one, never a trailing space.
         for (const v of ['×4 · 3t', 'mercy', 'timed', 'spare a foe', 'all DoTs', '3 rounds']) {
             const out = compactFree(v);
-            const derived = /^(?:[×+]\d+%?|\d+r)$/.test(out);
+            const derived = /^(?:×\d+%?|-?\d+%?|\d+r)$/.test(out);
             const wholeWord = v.trim().split(/\s+/).includes(out);
             expect(out === '' || derived || wholeWord).toBe(true);
             expect(out).toBe(out.trim());

@@ -6,8 +6,9 @@ import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { createNewGameState, type Character } from '@mechanics';
 import { DeckOpenCard } from '@/components/deck/DeckOpenCard';
-import type { DeckCardVM } from '@/state/presenters/deck.engine';
+import { selectDeckViewModel, type DeckCardVM } from '@/state/presenters/deck.engine';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 function card(): DeckCardVM {
@@ -64,7 +65,7 @@ describe('DeckOpenCard keywords', () => {
         // One Text child in the line: the label is a run of it, not its own row.
         expect(React.Children.count(line.props.children)).toBe(1);
         expect(screen.getByText('◇ No die')).toBeTruthy();
-        expect(screen.getByTestId('deck-keyword-Guard').props.children).toBe('Guard');
+        expect(screen.getByTestId('deck-keyword-Guard').props.children).toBe('GUARD');
         expect(screen.getByTestId('deck-open-card-art')).toBeTruthy();
         expect(screen.queryByTestId('deck-open-card-scrim')).toBeNull();
         const name = StyleSheet.flatten(screen.getByTestId('deck-open-card-name').props.style) as Record<string, unknown>;
@@ -117,5 +118,21 @@ describe('DeckOpenCard keywords', () => {
         fireEvent(screen.getByTestId('deck-keyword-Guard'), 'longPress');
         fireEvent.press(screen.getByTestId('tap-tooltip-backdrop'));
         expect(screen.queryByTestId('tap-tooltip')).toBeNull();
+    });
+});
+
+describe('DeckOpenCard keyword case on a real card', () => {
+    it('A Plain Word prints VULNERABLE in capitals in both play lines, and each is pressable', () => {
+        const player = createNewGameState().player as Character;
+        const run = { player: { ...player, knownCards: ['grey-word'], combatRewardCards: [] }, flags: [] } as never;
+        const word = selectDeckViewModel(run).groups.flatMap((g) => g.cards).find((c) => c.cardId === 'grey-word')!;
+        const { tree } = withAllProviders(<DeckOpenCard card={word} />);
+        render(tree);
+        const nodes = screen.getAllByTestId('deck-keyword-Vulnerable');
+        expect(nodes.length).toBe(2);
+        for (const n of nodes) {
+            expect(n.props.children).toBe('VULNERABLE');
+            expect(n.props.onPress).toBeDefined();
+        }
     });
 });
