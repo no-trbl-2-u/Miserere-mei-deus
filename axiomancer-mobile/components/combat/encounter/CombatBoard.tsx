@@ -1977,8 +1977,9 @@ export function nameBandHeight(large: boolean, narrow: boolean, hasPill = false)
 export function nameColumnWidth(width: number, large: boolean, narrow: boolean, rarityWord = ''): number {
     if (narrow) return width - 2 * 1.5 - 2 * 3;
     const chrome = 2 * 1.5 + 2 * 6 + 5 + 5;
-    // The rarity word: 10pt sans capitals with 1.6 of tracking, a 6pt margin and the band's gap.
-    const tail = large && rarityWord ? rarityWord.length * 8.6 + 6 + 5 : 0;
+    // The rarity word: 10pt capitals with 1.6 of tracking (measured off a render: "COMMON" is
+    // 65 pt wide, about 11 pt a letter), a 6pt margin and the band's gap.
+    const tail = large && rarityWord ? rarityWord.length * 11.5 + 6 + 5 : 0;
     return width - chrome - tail;
 }
 /** The name's font size on a face: the nominal size, stepped down until the whole name

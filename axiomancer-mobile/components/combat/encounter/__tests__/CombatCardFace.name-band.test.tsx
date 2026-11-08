@@ -164,6 +164,17 @@ describe('CombatCardFace name band: one line, shrunk to fit', () => {
         }
     });
 
+    it('the large face reserves at least the width the rarity word was measured at in a render', () => {
+        // Measured off a 208 pt large face in a browser: "COMMON" drew 65 pt wide, plus the label's
+        // 6 pt margin and the band's 5 pt gap, so the name column loses 76 pt, not less.
+        const withoutWord = nameColumnWidth(208, true, false, '');
+        const withWord = nameColumnWidth(208, true, false, 'COMMON');
+        expect(withoutWord - withWord).toBeGreaterThanOrEqual(76);
+        // So the longest name's size on that face is the one that kept it whole (no ellipsis) in the render.
+        const size = plateNameSize('Stir the Thundersnow', 208, true, false, 'COMMON');
+        expect(cardNameWidth('Stir the Thundersnow', size)).toBeLessThanOrEqual(withWord);
+    });
+
     it('a short name keeps the nominal size on every face', () => {
         for (const [, w, h, large] of faces) {
             const narrow = !large && w < NARROW_FACE_W;
