@@ -37,9 +37,9 @@
 
 The `phases` model, `vitae: 320` kept. Attack, defend and status are available from phase 1, and each Danger opens its phase. The copied `ENEMY_DECKS` entry goes.
 
-**The leftovers.** The copied `stages` go too: their door lines were the Beholder's, and the three Dangers now mark the phase changes, so the stages' damage bonuses and their 15% heal at 25% go with them. The journal entry drops the Beholder's text for this draft [T to confirm #3]:
+**The leftovers.** The copied `stages` go too: their door lines were the Beholder's, and the three Dangers now mark the phase changes, so the stages' damage bonuses and their 15% heal at 25% go with them. The journal entry drops the Beholder's text. Confirmed by T (2026-11-08): the Saint was a Breakwater fisherman who stood against the gang that rules the town; the townsfolk betrayed him when it came to it, the gang drowned him and threw his body in the river, and his anger made him the demonic fish that keeps everyone trapped in the Breakwater, worded in the voice of Cormac McCarthy:
 
-> It is a fish, mostly: a great length of one, with an old man's face grown into the front of it, eyes shut, mouth open on a double row of teeth. The Breakwater's drowned prayed to the sea, and the sea does not answer, so something beneath it learned to. Every offering that went down came to rest in that mouth. It has heard all of them. It has started answering.
+> He was a fisherman once and he stood up in the square against the men who held the town and he asked the others to stand with him and they did not. They watched from their doorways. The gang held him under at the foot of the quay until the bubbles quit and then they put what was left of him in the river and the river carried him down to the sea. He did not go easy into it. Something in the dark took up his anger and made a body for it, a great length of scale and gristle with the old man's face set in the front of it like a mask nailed to a prow. Now it lies beneath the Breakwater with its mouth open and no boat leaves and no one walks out and the town keeps the vigil it once refused him. They call it a saint. It has never forgiven anyone.
 
 | Slot | Name | Text |
 |---|---|---|
@@ -122,7 +122,7 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 1. Saltwick Swarm's SHOCK 2 move had no name on the ballot. Default: **Static Bloom**. Or: Lit Nerves; or a name of T's. [T to confirm #1]
 2. SHOCK as written lands on the target and makes every DEAL against it worse. Default: that reading, so a foe's SHOCK makes each of its hits on you hit harder. Or: SHOCK on you makes your own DEALs stronger. [T to confirm #2]
-3. The Saint Beneath's journal text. Default: the draft under "The leftovers" above. Or: T's own words. [T to confirm #3]
+3. The Saint Beneath's journal text. Confirmed by T (2026-11-08): T's own story (a fisherman betrayed by the town, drowned by the gang, made the Saint by his anger), in Cormac McCarthy's voice; the text under "The leftovers" above.
 
 ## Chunks
 
@@ -148,7 +148,7 @@ Measure: 8 open · 0 closed · next A9
 
 ### 162.3 (MV1c) — The Saint Beneath's own moves · M · closes A4, A5 · requires 162.1
 
-- `SaintBeneath` moves to `phases` with the six moves, keeping `vitae: 320`. Remove its `ENEMY_DECKS` entry and its `stages`, and replace its `journalEntry.body` with the draft in Design (or T's answer to call 3). Boss-tier `phases` is new, so check escalation (`escalationApplies`) and the reveal's threat list for a boss with no deck.
+- `SaintBeneath` moves to `phases` with the six moves, keeping `vitae: 320`. Remove its `ENEMY_DECKS` entry and its `stages`, and replace its `journalEntry.body` with the text T confirmed in Design (call 3). Boss-tier `phases` is new, so check escalation (`escalationApplies`) and the reveal's threat list for a boss with no deck.
 - New rider work: a Curse-count hit that adds a BARNACLE when there are none; Swell's TANGLE per card in hand, and both Dangers counting the hand after their 2 BARNACLE.
 - Update the pinned tests: `revamp-roster`, `chapter1-recast`, and anything naming the Saint's deck.
 - Tests: each move's text and effect, the three phase lines, and the Beholder's deck untouched.
