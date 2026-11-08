@@ -54,7 +54,7 @@ export const VITAE_BAR_H = 8;
 export const VITAE_LOW_RATIO = 0.25;
 /**
  * The VITAE column's widest extent. A phone never reaches it (the column gets
- * what the avatar and END leave, about 160pt at 375 wide). On a desktop or
+ * what the avatar and END leave, about 209pt at 375 wide: 375 less 20 side padding, 20 of gaps, the 6 portrait inset, the 48 portrait and the 72 END). On a desktop or
  * tablet window it stops the bar running the window's width and keeps the deck
  * and discard counts beside the VITAE figure; END stays at the right edge.
  */
@@ -200,9 +200,9 @@ export const CombatFooterDock = React.memo(function CombatFooterDock({
                         hitSlop={6}
                     >
                         <View style={styles.pileGlyph}><Text style={styles.pileGlyphText} allowFontScaling={false}>▮</Text></View>
-                        <Text style={styles.pileCount} allowFontScaling={false}>{vm.deckCount}</Text>
+                        <Text style={styles.pileCount} allowFontScaling={false} testID="combat-pile-deck-count">{vm.deckCount}</Text>
                         <View style={[styles.pileGlyph, { transform: [{ rotate: '8deg' }] }]}><Text style={styles.pileGlyphText} allowFontScaling={false}>▯</Text></View>
-                        <Text style={styles.pileCount} allowFontScaling={false}>{vm.discardCount}</Text>
+                        <Text style={styles.pileCount} allowFontScaling={false} testID="combat-pile-discard-count">{vm.discardCount}</Text>
                     </Pressable>
                 </View>
                 <VitaeBar hp={vm.player.hp} maxHp={vm.player.maxHp} />

@@ -841,7 +841,7 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
 });
 
 const useStyles = makeStyles((AXM) => ({
-    // Battlefield band — the scene fills the top ~62% and fades into the floor.
+    // Battlefield band — the scene fills the top SCENE_BAND_PCT and fades into the floor.
     sceneBand: { position: 'absolute', top: 0, left: 0, right: 0, height: `${SCENE_BAND_PCT}%`, backgroundColor: AXM.bg },
     // Enemy painting — anchored to the band's lower half, clear of the HUD; the
     // grounding shadow hugs its feet. This `top` is the PRE-LAYOUT FALLBACK
@@ -945,7 +945,7 @@ const useStyles = makeStyles((AXM) => ({
     // Floats.
     // The float band mirrors `sceneBand`'s geometry (no paint) so the anchor
     // inside it lands exactly on `enemyFigureWrap`.
-    floatBand: { position: 'absolute', top: 0, left: 0, right: 0, height: '62%', zIndex: 20 },
+    floatBand: { position: 'absolute', top: 0, left: 0, right: 0, height: `${SCENE_BAND_PCT}%`, zIndex: 20 },
     // The figure fills ~96% of the wrap from its feet up (both sizes share the
     // height), so 22% down the wrap is the upper third of the drawn foe.
     enemyFloatLayer: { position: 'absolute', top: '22%', left: 0, right: 0, alignItems: 'center', zIndex: 20 },

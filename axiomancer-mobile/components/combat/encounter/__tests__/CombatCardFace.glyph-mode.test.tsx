@@ -151,6 +151,13 @@ describe('the open card prints the same line as the hand', () => {
         expect(inks[0].fontFamily).toBe(FONTS.sans);
     });
 
+    it('the large face\'s name band is the height the budget below subtracts (with the pill room)', () => {
+        const card = namedCard('Draw the Fever');
+        renderFace(card, 'words', true, 208);
+        const band = StyleSheet.flatten(screen.getByTestId('combat-card-face-band').props.style) as { height: number };
+        expect(band.height).toBe(nameBandHeight(true, false, !!card.face.freeGlyph || !!card.face.isGlobal));
+    });
+
     it('every library line wraps inside the narrowest open card, in both modes, with art to spare', () => {
         const w = 208;
         const size = largePaidLineSize(w);
