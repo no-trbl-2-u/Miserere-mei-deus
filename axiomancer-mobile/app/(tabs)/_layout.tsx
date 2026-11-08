@@ -1,13 +1,14 @@
 import { Tabs } from '@/lib/platform/router';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { View, Text } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FONTS } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { AxmIcon, type AxmIconName } from '@/components/icons';
 import { TAB_ICON_SIZE, TAB_TITLES } from '@/state/presenters/tabs.engine';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectTabBadges } from '@/state/presenters/navigation.engine';
-import { KitBackdrop, kitScale } from '@/components/experience/KitBackdrop';
+import { KitBackdrop, kitScale, unstretchedInset } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { INK_SOFT, VELLUM_OXBLOOD } from '@/components/exploration/wildsInk';
 import ExplorationScreen from './exploration/index';
@@ -47,6 +48,21 @@ export { TAB_ICON_SIZE };
  */
 export const DOCK_FLOURISH_PX = 66;
 export const DOCK_END_PADDING = Math.ceil(DOCK_FLOURISH_PX * kitScale('nav-dock-vellum')) + 1;
+
+/**
+ * The vellum dock's height in points, before the bottom inset (T, 2026-11-08:
+ * "taller": about 76 from 60).
+ * The art is 74px tall, so the dock draws it at one point per pixel and its
+ * middle band stretches about 1.05x.
+ */
+export const DOCK_HEIGHT = 76;
+
+/**
+ * Where the icons sit inside the dock: clear of the art's rail pairs, which
+ * hold 27% of the art's height above and 14% below (KitBackdrop's slices).
+ */
+const DOCK_PAD_TOP = Math.ceil(unstretchedInset('nav-dock-vellum')!.top) + 2;
+const DOCK_PAD_BOTTOM = Math.ceil(unstretchedInset('nav-dock-vellum')!.bottom) + 2;
 
 const TAB_ICONS: Record<string, { name: AxmIconName; label: string }> = {
   eye: { name: 'action-eye', label: 'Exploration tab' },
@@ -106,6 +122,8 @@ export default function TabLayout() {
   // layout on every unrelated store change (engine events fire on
   // most actions). Slim-slice + memo mirrors the character / event
   // screen pattern.
+  // The context, not the hook: a tree with no provider (a test) reads no inset.
+  const bottomInset = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
   const player = useGameState((s) => s.player);
   const eventSlice = useGameState((s) => s.event);
   const notifications = useGameState((s) => s.notifications);
@@ -123,14 +141,26 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: VELLUM_DOCK ? [styles.tabBar, styles.tabBarVellum] : styles.tabBar,
+        tabBarStyle: VELLUM_DOCK
+          ? [styles.tabBar, styles.tabBarVellum, { height: DOCK_HEIGHT + bottomInset, paddingBottom: DOCK_PAD_BOTTOM + bottomInset }]
+          : styles.tabBar,
         // The vellum dock inks the tabs: oxblood for the selected one, iron-gall
         // brown for the rest. Nothing is drawn behind the selection.
         tabBarActiveTintColor: VELLUM_DOCK ? VELLUM_OXBLOOD : AXM.sulfur,
         tabBarInactiveTintColor: VELLUM_DOCK ? INK_SOFT : AXM.bone,
         // T (W-06): icons only. Each screen sets tabBarAccessibilityLabel to its name.
         tabBarShowLabel: false,
-        ...(VELLUM_DOCK ? { tabBarBackground: () => <KitBackdrop piece="nav-dock-vellum" /> } : {}),
+        // The art is pinned to the top DOCK_HEIGHT points, edge to edge; the inset
+        // below it stays empty, so nothing is drawn behind the bar.
+        ...(VELLUM_DOCK
+          ? {
+              tabBarBackground: () => (
+                <View style={styles.dockArt} pointerEvents="none" testID="tab-dock-art">
+                  <KitBackdrop piece="nav-dock-vellum" scale={1} />
+                </View>
+              ),
+            }
+          : {}),
       }}
     >
       <Tabs.Screen
@@ -250,7 +280,20 @@ const useStyles = makeStyles((AXM) => ({
   tabBarVellum: {
     backgroundColor: 'transparent',
     borderTopWidth: 0,
+    borderTopColor: 'transparent',
+    elevation: 0,
+    shadowOpacity: 0,
+    height: DOCK_HEIGHT,
+    paddingTop: DOCK_PAD_TOP,
+    paddingBottom: DOCK_PAD_BOTTOM,
     paddingHorizontal: DOCK_END_PADDING,
+  },
+  dockArt: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: DOCK_HEIGHT,
   },
   iconContainer: {
     position: 'relative',

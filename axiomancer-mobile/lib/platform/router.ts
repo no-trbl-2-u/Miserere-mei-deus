@@ -10,6 +10,7 @@
  */
 import { useEffect, useState } from 'react';
 import {
+  DarkTheme,
   createNavigationContainerRef,
   StackActions,
   useRoute,
@@ -17,12 +18,23 @@ import {
   type NavigationState,
   type ParamListBase,
   type PartialState,
+  type Theme,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getLogger } from '@mechanics';
 
 export { NavigationContainer } from '@react-navigation/native';
+
+/**
+ * The navigation theme: React Navigation's default paints its containers
+ * near-white (#f2f2f2) and shows that wherever nothing else is drawn, which is
+ * what lies behind the transparent vellum tab bar. Every colour it uses is the
+ * app's own background, so a gap shows the dark ground.
+ */
+export function appNavTheme(bg: string): Theme {
+  return { ...DarkTheme, colors: { ...DarkTheme.colors, background: bg, card: bg, border: bg } };
+}
 
 // `<Stack>`/`<Tabs>` compat surface: expo-router's own versions are a
 // thin wrapper over exactly these two factories, with `.Screen`

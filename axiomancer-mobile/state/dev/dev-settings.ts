@@ -11,10 +11,12 @@
  * - `forceMercyCheck`: every normal foe asks spare or finish as it falls, so the
  *   prompt can be seen without waiting on the chance. Off by default.
  *
- * - `wildsBlackBand`: the Wilds' status card sits on a solid black band, to
- *   quiet the map's lines (T, 2026-11-06, W-01). On by default: T chose the
- *   band as what ships. Off, the map runs up under the card as in the kit
- *   mixer, so T can compare the two. Not a debugging aid, so a production
+ * - `wildsBlackBand`: the top half of the Wilds' status card sits on a solid
+ *   black band (the black runs from the screen's top to the card's vertical
+ *   middle; the map shows behind the card's lower half), to quiet the map's
+ *   lines (T, 2026-11-06, W-01; halved 2026-11-08). On by default: T
+ *   chose the band as what ships. Off, the map runs up under the whole card as
+ *   in the kit mixer, so T can compare the two. Not a debugging aid, so a production
  *   build reads the default and never shows the switch.
  *
  * Same tiny external-store shape as `state/settings.ts`, so the poster in
