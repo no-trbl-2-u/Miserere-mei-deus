@@ -37,6 +37,9 @@ export default function ExplorationScreen() {
     const bandOn = bandSwitch && vellumTop;
     // The measured height of the status card, to halve it for the band.
     const [cardHeight, setCardHeight] = useState(0);
+    // The foot's measured height: the map frames and parks its button above it.
+    const [footHeight, setFootHeight] = useState(0);
+    const mapInsets = useMemo(() => ({ top: vellumTop ? cardHeight : 0, bottom: footHeight }), [vellumTop, cardHeight, footHeight]);
 
     useEffect(() => {
         if (nodeTip !== null) {
@@ -193,7 +196,7 @@ export default function ExplorationScreen() {
     // Node Graph. The compass copy rides the `overlays` slot (viewport-fixed),
     // not `children` (the pannable canvas) — CRITIQUE pass 20.
     const canvas = (
-        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />}>
+        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />} insets={mapInsets}>
             <NodeGrid
                 nodes={vm.nodes}
                 onNodePress={onNodePress}
@@ -255,7 +258,12 @@ export default function ExplorationScreen() {
                         <View style={styles.fill}>{canvas}</View>
                     </>
                 )}
-                <View style={styles.foot} pointerEvents="box-none" testID="wilds-foot">
+                <View
+                    style={styles.foot}
+                    pointerEvents="box-none"
+                    testID="wilds-foot"
+                    onLayout={(e) => setFootHeight(e.nativeEvent.layout.height)}
+                >
                     {foot}
                 </View>
             </View>
