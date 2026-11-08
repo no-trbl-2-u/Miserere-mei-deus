@@ -293,7 +293,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/character-no-dev-link.test.tsx, axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/components/__tests__/EffectGlyph.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/character-no-dev-link.test.tsx, axiomancer-mobile/app/__tests__/character-select.live-roster.screen.test.tsx, axiomancer-mobile/app/__tests__/character-self-name.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,

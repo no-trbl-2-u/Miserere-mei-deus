@@ -20,6 +20,8 @@ import { characterPortraitKey } from '@/state/presenters/character-select.engine
 import { nextPlayerPortrait, portraitIdFromFlags, PORTRAIT_FLAG_PREFIX } from '@/assets/images/portraits';
 import { useGameActions, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { selectCharacterViewModel } from '@/state/presenters/character.engine';
+import { FitText } from '@/components/FitText';
+import { longestWord } from '@/lib/text-fit';
 
 /**
  * The SELF sheet (`/character`).
@@ -30,6 +32,10 @@ import { selectCharacterViewModel } from '@/state/presenters/character.engine';
  * a view model via `selectCharacterViewModel`.
  * Output: the sheet element tree.
  */
+/** The name wraps between words, and steps down from 22 to 14 until its longest word fits. */
+const CHARACTER_NAME_SIZE = 22;
+const CHARACTER_NAME_FLOOR = 14;
+
 /** A Self section heading: on its brass plate where T kept the kit (F-05), else today's label. */
 function SelfHeading({ children, variant = 'star' }: { children: string; variant?: 'star' | 'quatrefoil' }) {
   return lookOf('F-05') === 'brass'
@@ -141,7 +147,15 @@ export default function CharacterScreen() {
           )}
           <View style={styles.identityCol}>
             <SectionLabel size={9} color={AXM.bone}>{vm.subtitle}</SectionLabel>
-            <Text style={styles.characterName} numberOfLines={1}>{vm.displayName}</Text>
+            <FitText
+              text={vm.displayName}
+              fitText={longestWord(vm.displayName)}
+              style={styles.characterName}
+              nominal={CHARACTER_NAME_SIZE}
+              floor={CHARACTER_NAME_FLOOR}
+              numberOfLines={2}
+              testID="self-character-name"
+            />
             <View style={styles.xpRow}>
               {/* Value first, then the caption naming what it counts TOWARD.
                 * Stacked, each fits one line of this ~130px column (side by
@@ -352,7 +366,7 @@ const useStyles = makeStyles((AXM) => ({
   // A kit piece draws the edge and the ground, so today's border and fill go.
   kitBare: { borderWidth: 0, backgroundColor: 'transparent' },
   identityCol: { flex: 1, paddingTop: 2 },
-  characterName: { fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 24, color: AXM.parchment, marginTop: 1 },
+  characterName: { fontFamily: FONTS.gothic, fontSize: CHARACTER_NAME_SIZE, lineHeight: 24, color: AXM.parchment, marginTop: 1 },
   levelBox: { width: 60, height: 66, borderWidth: 2, borderColor: AXM.parchment, backgroundColor: AXM.deepBg, alignItems: 'center', justifyContent: 'center' },
   levelText: { fontFamily: FONTS.sans, fontSize: 34, lineHeight: 36, color: AXM.sulfur },
   levelCaption: { fontFamily: FONTS.sans, fontSize: 8, letterSpacing: 2, color: AXM.bone },

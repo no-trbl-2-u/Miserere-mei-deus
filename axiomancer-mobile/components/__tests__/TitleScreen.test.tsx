@@ -110,6 +110,26 @@ describe('TitleScreen', () => {
     expect(queryByText(TITLE_COPY.psalm)).toBeNull();
   });
 
+  // A15: the faded Embark scroll's image sat over LOAD GAME and ate its tap.
+  it('unmounts the Embark block once its fade ends, so nothing of it can take a touch', () => {
+    const { getByRole, queryByTestId } = mount();
+    playIntro();
+    fireEvent.press(getByRole('button'));
+    expect(queryByTestId('title-embark-scroll', { includeHiddenElements: true })).toBeTruthy();
+    act(() => {
+      jest.advanceTimersByTime(TITLE_TIMING.menuMs);
+    });
+    expect(queryByTestId('title-cta', { includeHiddenElements: true })).toBeNull();
+    expect(queryByTestId('title-embark', { includeHiddenElements: true })).toBeNull();
+    expect(queryByTestId('title-embark-scroll', { includeHiddenElements: true })).toBeNull();
+    expect(queryByTestId('stub-menu')).toBeTruthy();
+  });
+
+  it('never mounts the Embark block when it opens on the menu', () => {
+    const { queryByTestId } = mount({ startAtMenu: true });
+    expect(queryByTestId('title-cta', { includeHiddenElements: true })).toBeNull();
+  });
+
   it('opens on the menu when asked to (RETURN TO TITLE lands on ?menu=1)', () => {
     const { getByTestId } = mount({ startAtMenu: true });
     expect(getByTestId('stub-menu')).toBeTruthy();

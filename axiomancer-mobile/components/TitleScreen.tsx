@@ -84,6 +84,21 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The Embark block is unmounted once its fade-out ends, so no layer of it
+  // (the scroll's image included) can sit over the menu's buttons and take a
+  // touch, on web or native.
+  const [ctaMounted, setCtaMounted] = useState(!startAtMenu);
+
+  useEffect(() => {
+    if (phase !== 'menu') return;
+    if (instant) {
+      setCtaMounted(false);
+      return;
+    }
+    const gone = setTimeout(() => setCtaMounted(false), TITLE_TIMING.menuMs);
+    return () => clearTimeout(gone);
+  }, [phase, instant]);
+
   const handleEmbark = () => {
     setPhase('menu');
     toMenu.value = instant ? 1 : withTiming(1, { duration: TITLE_TIMING.menuMs });
@@ -136,7 +151,8 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
 
       {/* Once the menu is up the faded block stays mounted for its fade
           but is hidden from screen readers, so the menu does not read an
-          invisible psalm and a disabled EMBARK. */}
+          invisible psalm and a disabled EMBARK; after the fade it is gone. */}
+      {ctaMounted ? (
       <Animated.View
         style={[styles.content, ctaStyle]}
         pointerEvents={phase === 'title' ? 'box-none' : 'none'}
@@ -162,6 +178,7 @@ export function TitleScreen({ menu, startAtMenu = false }: TitleScreenProps) {
 
         <Text style={styles.footerText}>{TITLE_COPY.footer}</Text>
       </Animated.View>
+      ) : null}
 
       {/* The wordmark, last so it draws over the menu's fade. Its resting
           frame sits in the plate's dark upper band; the lift starts it at the splash's
