@@ -8,7 +8,9 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { ROUTES, pickHazardRoute, selectRoutes, settleDiceRoll } from './smoke-screens.mjs'
+import {
+    BOARD_PLACES, DIFF_THRESHOLD_RATIO, ROUTES, diffRatioFor, expectPlaces, isOverThreshold, pickHazardRoute, pixelDiffRatio, selectRoutes, settleDiceRoll,
+} from './smoke-screens.mjs'
 
 /** A page stand-in that records every locator call in order. */
 function fakePage() {
@@ -96,4 +98,40 @@ test('selectRoutes keeps every route unless SMOKE_ONLY names some', () => {
 
 test('selectRoutes throws on a route name it does not know', () => {
     assert.throws(() => selectRoutes(ROUTES, 'devpuzzle-board,no-such-shot'), /no-such-shot/)
+})
+
+test('the combat-board route is the reveal route\'s fight one click further, on a tighter line', () => {
+    const reveal = ROUTES.find((r) => r.name === 'combat-encounter')
+    const board = ROUTES.find((r) => r.name === 'combat-board')
+    assert.equal(board.path, reveal.path)
+    assert.equal(board.liveFight, true)
+    assert.equal(board.intoBoard, true)
+    assert.equal(reveal.intoBoard, undefined)
+    assert.deepEqual(board.expectTestIds, BOARD_PLACES)
+    assert.equal(new Set(BOARD_PLACES).size, 7)
+})
+
+test('a route may carry its own diff ratio; only combat-board does, at 0.1%', () => {
+    assert.equal(diffRatioFor(ROUTES.find((r) => r.name === 'combat-board')), 0.001)
+    for (const r of ROUTES.filter((x) => x.name !== 'combat-board')) assert.equal(diffRatioFor(r), DIFF_THRESHOLD_RATIO, r.name)
+    assert.equal(DIFF_THRESHOLD_RATIO, 0.005)
+})
+
+test('a diff between the two ratios flags the board and not another route', () => {
+    // 1,000 of the 329,160 pixels in a 390x844 shot: 0.3%, between 0.1% and 0.5%.
+    const ratio = pixelDiffRatio(390, 844, 1000)
+    const flagged = (name) => isOverThreshold(ratio, diffRatioFor(ROUTES.find((r) => r.name === name)))
+    assert.equal(flagged('combat-board'), true)
+    assert.equal(flagged('combat-encounter'), false)
+    assert.equal(flagged('character'), false)
+})
+
+test('expectPlaces waits on every testID in order, and a missing one rejects', async () => {
+    const waited = []
+    const page = { getByTestId: (id) => ({ first: () => ({ waitFor: async (o) => { waited.push([id, o.state]); if (id === 'gone') throw new Error('timeout') } }) }) }
+    await expectPlaces(page, ['a', 'b'])
+    assert.deepEqual(waited, [['a', 'visible'], ['b', 'visible']])
+    await expectPlaces(page, undefined)
+    await assert.rejects(expectPlaces(page, ['a', 'gone', 'c']), /timeout/)
+    assert.deepEqual(waited.map((w) => w[0]), ['a', 'b', 'a', 'gone'])
 })
