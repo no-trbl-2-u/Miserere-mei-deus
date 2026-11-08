@@ -90,12 +90,15 @@
 
 - **T's end-gate answers (2026-11-08, after `/pilot 158.1 159`),** shown a 3x crop of the hand with the two-line name band: "Always one line, shrink text" (names on one line, long names shrink); on the Deck reader's title-cased keywords: "Keywords should remain caps". Then: "I don't want the "+" in the free cost. "-" can stay." and "I want the card text background to be the same color as the art's background so there's [no] cutoff line between sections", answered as: no visible line (blend), "One black for them all", "+" removed everywhere a card shows the pill.
 
+- **T, 2026-11-08,** after a browser playthrough of the current build that reported four small faults (shots `081` and `004` in the playthrough folder, `C:\Users\notrb\Workspace\Miserere-playthrough-2026-11-08`): "plot 1-4 all together".
+- **Read 2026-11-08, at 9ebb8e890.** LOAD GAME: with a save the menu has four buttons and LOAD GAME sits at y 664 on a 390 x 844 screen. `document.elementFromPoint` at its centre returns the Embark scroll's image inside `title-cta`, which `TitleScreen.tsx` keeps mounted at opacity 0 after the menu appears. Its parent has `pointerEvents="none"`, but a real mouse click at the centre still did nothing, with reduced motion on and off, and `/saves` opened only on a direct DOM click. Measured on the web export; not measured on a device. The foe's name: `enemyName` in `CombatCombatantPane.tsx` wraps in a row across the full width while the HP shield rises through the middle of it. The relic name: `relicName` at `app/character-select/index.tsx:175`, `numberOfLines={3}` in a narrow plate. Self's name: `characterName` at `app/(tabs)/character/index.tsx:144`, `numberOfLines={1}` beside the level badge.
+
 ## Acceptance
 
-- **A11** Every card name draws on one line in a band sized for one line, on the hand card, the Spoils tile and the large face: a name too long for the line steps its font down to fit (floor about 10 pt) rather than wrapping or truncating, and art height is the same on every card of a size.
-- **A12** The free cost pill never prints a leading "+" ("+2" reads "2", "+35%" reads "35%"); a "-" stays. This holds everywhere a card face draws the pill: hand, Spoils tiles, the large inspect face, and the Deck.
-- **A13** The card face's name band and text panel are one black (`HUE.black`, via an AXM token), and the art meets them with no visible line: a short fade from the art into the black at each edge, so a painting whose edge is not pure black blends rather than cuts.
-- **A14** The Deck's open card prints keywords in capitals (VULNERABLE), matching the card faces and combat, in both play lines, and they stay pressable.
+- **A15** With a save present, a tap anywhere on LOAD GAME opens the Load screen, and nothing left over from the title screen's Embark block takes a touch once the main menu is up.
+- **A16** The foe's name on the fight board never runs under the VITAE shield: every Act 1 foe's name reads whole at 360, 375 and 390 wide, the longest included ("The Death Beholder", "The Saint Beneath", "The Tithe-Collector").
+- **A17** A relic name on character select never breaks inside a word ("Suppliant's Ring" reads "Suppliant's / Ring", not "Suppliant' / s Ring").
+- **A18** Self shows the character's whole name ("The Chosen", not "The Ch...") at 360, 390 and 430 wide.
 
 ## Open questions
 
@@ -105,7 +108,7 @@
 
 ## Chunks
 
-Measure: 4 open · 10 closed · next A15
+Measure: 4 open · 14 closed · next A19
 
 
 ### 159.1 (TU1a) — The Spoils and the fight · M · closes A1, A2, A3, A4 · requires 158.1
@@ -136,10 +139,10 @@ Measure: 4 open · 10 closed · next A15
 - Move `<DevToolsLink />` from Self to the end of `app/(tabs)/settings/index.tsx`; testID `settings-dev-tools-link`. Update every script that clicked `self-dev-tools-link` from `/character` to open `/settings` and click the new testID (`grep -rl self-dev-tools-link axiomancer-mobile/scripts .github`); update the docs and comments that say "the SELF tab's DEV TOOLS" (`app/dev/index.tsx` header, `scripts/live-fight-entry.mjs`, spec text is history and stays).
 - Tests: Self no longer renders the link; Settings renders it under the dev gate; the plaque layout at 360 and 390.
 - Measure: `npm run verify -w axiomancer-mobile`, then `npm run verify:visual -w axiomancer-mobile` locally on the `combat-encounter` route (its entry walks the new path) and one e2e that used the old link (`node scripts/encounter-routing-e2e.mjs` or the lightest of the seven).
-- [ ] **159.5** Card names on one line that shrink to fit; no "+" on the free pill; one black text panel the art fades into; Deck keywords in capitals · M · closes A11, A12, A13, A14 · needs — · alias: TU1e
-  - `components/combat/encounter/CombatBoard.tsx`: `nameBandHeight` reserves one line (`PLATE_NAME.*.lineHeight` plus pill room when the face shows one) for normal, narrow and large faces; the name `Text` is `numberOfLines={1}` with a computed font size per face width (largest step that fits the longest word line, floor about 10 pt), not `adjustsFontSizeToFit` alone, so web and native agree. Find the longest names from the card data (today "Stir the Thundersnow", "Call Lightning Twice", "Call Back a Kindness"); say the size each gets on the 95 pt hand column and the 71 pt narrow column.
-  - Update the name-band tests (`CombatCardFace.name-band.test.tsx`, `CombatCardFace.glyph-mode.test.tsx`) so a two-line band or a wrapped name fails them.
-  - `state/presenters/deck.engine.ts` / `components/deck/DeckOpenCard.tsx`: the keyword run draws its word in capitals (`run.word`, already "VULNERABLE"), not the registry's title case; the a11y label stays. Test: the open card of A Plain Word shows "VULNERABLE" in both play lines and the keyword is still pressable.
-  - `CombatBoard.tsx` `compactFree`: drop the leading "+" it adds (`+${im[1]}`, `+${nm[1]}${nm[2]}`); keep a "-" when the value is negative. Check every other place the pill value is built (presenters such as `card-program.engine.ts` that format `+N%`) and strip the "+" only where it feeds the pill, not floating combat numbers. Test: the pill for a +2 card reads "2", a +35% card reads "35%", a negative value keeps "-".
-  - `faceOuter`, `faceCard`, `plateBand`, `plateLedger` backgrounds: one black (add an AXM token for `HUE.black` if none exists; no hex literals). Add an edgeless gradient (about 12 pt, clear to black) at the art's top and bottom inside `plateArtFrame`, `pointerEvents="none"`, so no seam shows. Test: the band and ledger share the face's black, and the fade views render on normal, narrow and large faces.
-  - Measure: `npm run verify -w axiomancer-mobile`; CI re-stamps `combat-board`, `village` and `deck` where they change.
+- [ ] **159.6** LOAD GAME takes its tap; foe names clear the shield; relic names keep their words; Self shows the whole name · M · closes A15, A16, A17, A18 · needs — · alias: TU1f
+  - `components/TitleScreen.tsx`: once the phase is `menu`, nothing in the faded Embark block can take a touch at any layer, on web as well as native. Smallest fix first: stop rendering the block once its fade ends, if nothing else reads it; otherwise carry the no-touch rule down to the button and its image. Test: with the menu up the Embark button is gone or takes no press, and a browser check that the element at LOAD GAME's centre is LOAD GAME. Check all four menu buttons, with and without a save.
+  - `components/combat/encounter/CombatCombatantPane.tsx`: lay the name so it cannot meet the shield (`hudNameRow`, `enemyName`, the `hpBlock` it sits above). Keep the name on one line where it fits; shrink rather than truncate. The shield's position and the HP bar do not move. Find the longest name from the enemy library and say its width in the PR. The `combat-board` visual route re-stamps.
+  - `app/character-select/index.tsx`: the relic name breaks only between words; fit the longest relic name in the plate. Test the break on "Suppliant's Ring".
+  - `app/(tabs)/character/index.tsx`: the name column gets the room to show the whole name; shrink rather than truncate if it must. Test at 360 and 430.
+  - Tests per item above, and pin the fits against measured widths from a render rather than an estimate the code also uses (footgun `font-width-estimates-stale`).
+  - Measure: the mobile gate run piecewise with a worker cap; before and after shots of the main menu with a save, the fight board with the Death Beholder, character select and Self at 390 in the PR body.

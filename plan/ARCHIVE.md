@@ -599,3 +599,4 @@
 - 2026-11-08 · 158.1 (alias: VR1a) · The combat board has a CI visual route, tight line, its words · 87437ed3..a6025cae (#1457)
 - 2026-11-08 · 159.1 (alias: TU1a) · The Spoils lose small print; the fight loses its clock, fits its dock, fogs its seam · 6d284189..a02bcc39 (#1464)
 - 2026-11-08 · 159.4 (alias: TU1d) · Self's three stat plaques fit; Dev Tools is Settings' last row · d43d388f..5812c1b8 (#1463)
+- 2026-11-08 · 159.5 (alias: TU1e) · Card names draw on one line, shrunk to fit; free pill has no plus; faces share one black · fbf9e2d1..56117a37 (#1470)
