@@ -620,6 +620,14 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
         [],
     );
 
+    // The camera as last committed by the map itself, and how to frame it again
+    // for other insets. The card and the foot report their heights after the pane
+    // does, so the opening frame is redone while the camera is still exactly as
+    // committed (no gesture has moved it); a camera the player has moved, or one
+    // that followed a node, is never touched by an inset change.
+    const committed = React.useRef<FocusTransform | null>(null);
+    const refit = React.useRef<((insets: MapInsets) => FocusTransform) | null>(null);
+
     /**
      * Commit a camera transform to every shared value at once.
      *
@@ -631,6 +639,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
         scale.value = fit.scale;
         tx.value = fit.tx;
         ty.value = fit.ty;
+        committed.current = fit;
     }, [scale, tx, ty]);
 
     /**
@@ -648,6 +657,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
      */
     const recenter = React.useCallback(() => {
         if (!viewport || nodes.length === 0) return;
+        refit.current = (ins) => computeFocusTransformIn(nodes, viewport, size, ins);
         commitCamera(computeFocusTransformIn(nodes, viewport, size, freeRef.current));
     }, [viewport, nodes, size, commitCamera]);
 
@@ -677,20 +687,30 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
             lastMapId.current = mapId;
             const remembered = mapId ? recallCamera(mapId) : undefined;
             if (!remembered) {
-                commitCamera(computeFocusTransformIn(nodes, viewport, size, freeRef.current));
+                const frameFresh = (ins: MapInsets) => computeFocusTransformIn(nodes, viewport, size, ins);
+                refit.current = frameFresh;
+                commitCamera(frameFresh(freeRef.current));
                 return;
             }
+            // The remembered point is a point of the map that sat at the centre of
+            // the free rectangle; it is put at the centre of whatever rectangle is free now.
             const sc = clampScale(remembered.scale, minScaleFor(viewport, size));
-            const restored = {
-                scale: sc,
-                tx: viewport.w / 2 - remembered.cx * sc,
-                ty: frameCentreY(viewport, freeRef.current) - remembered.cy * sc,
+            const frameRemembered = (ins: MapInsets) => {
+                const restored = {
+                    scale: sc,
+                    tx: viewport.w / 2 - remembered.cx * sc,
+                    ty: frameCentreY(viewport, ins) - remembered.cy * sc,
+                };
+                return current ? panIntoFrameIn(restored, px, py, viewport, ins) : restored;
             };
-            commitCamera(current ? panIntoFrameIn(restored, px, py, viewport, freeRef.current) : restored);
+            refit.current = frameRemembered;
+            commitCamera(frameRemembered(freeRef.current));
             return;
         }
         if (lastCurrent.current === currentId) return;
         lastCurrent.current = currentId;
+        // The camera now follows the player's move: an inset change no longer re-frames it.
+        refit.current = null;
         commitCamera(panIntoFrameIn(
             { scale: scale.value, tx: tx.value, ty: ty.value },
             px, py, viewport, freeRef.current,
@@ -699,6 +719,17 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
         // render. `currentId` is the stable projection of what the camera follows.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [viewport, currentId, mapId, size.width, size.height, size.scale, commitCamera]);
+
+    // Re-frame for new insets while the camera is still the one the map committed.
+    React.useEffect(() => {
+        const again = refit.current;
+        const last = committed.current;
+        if (!viewport || !framed.current || !again || !last) return;
+        const still = Math.abs(scale.value - last.scale) < 1e-6
+            && Math.abs(tx.value - last.tx) < 1e-6
+            && Math.abs(ty.value - last.ty) < 1e-6;
+        if (still) commitCamera(again(freeRef.current));
+    }, [free.top, free.bottom, viewport, scale, tx, ty, commitCamera]);
 
     // Remember the camera as the map unmounts (a fight, a rest, a hazard): the
     // canvas point at the pane's centre, so it survives a pane of another size.
