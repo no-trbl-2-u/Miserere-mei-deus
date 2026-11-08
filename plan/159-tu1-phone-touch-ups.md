@@ -92,23 +92,19 @@
 - **A2** The fight shows no phase/round/turn line; `metaLine` is gone from the view-model.
 - **A3** At 360, 375 and 390 the dock's portrait ring is whole and the VITAE number and pile counts are legible; END is about 72 x 48 with at least a 44 pt touch target.
 - **A4** A fog gradient hides the edge between the arena plate and the hand, takes no touches, and its top stays below every staged Chapter 1 foe's lowest drawn pixel.
-- **A7** On the Wilds the black behind the status card ends at the card's vertical middle (toggle on, default), and nothing black is drawn behind the quest tracker or the node panel.
-- **A8** The player's token is about 25% larger, on the same node.
-- **A9** The tab bar has nothing drawn behind its vellum, spans the full width, is about 76 pt tall plus the inset, and its six icons sit inside the border from 360 to 430.
 - **A10** Self's three stat plaques fit at 360 and 390 (labels inside the frames, numbers whole, all on screen); Dev Tools is the last row of Settings under the same dev gate, testID `settings-dev-tools-link`, and no script reaches `/dev` through Self.
 
 ## Open questions
 
-1. How tall is the tab bar? Default: about 76 pt plus the bottom inset. Or: 84 pt; or keep 60 and only fix width and fill. [T to confirm #1]
-2. How much bigger is the player's token? Default: about 25%. Or: 50%. [T to confirm #2]
+1. How tall is the tab bar? Default: about 76 pt plus the bottom inset. Or: 84 pt; or keep 60 and only fix width and fill. Accepted at merge (default).
+2. How much bigger is the player's token? Default: about 25%. Or: 50%. Accepted at merge (default).
 3. Should Settings' Dev Tools row be the last row, or sit under a "Developer" heading? Default: the last row, no heading. Or: a heading. [T to confirm #3]
 
 ## Chunks
 
-Measure: 8 open · 2 closed · next A11
+Measure: 5 open · 5 closed · next A11
 
 - [ ] **159.1** The Spoils lose their small print; the fight loses its meta line, fits its dock and fogs its seam · M · closes A1, A2, A3, A4 · needs 158.1 · alias: TU1a
-- [ ] **159.3** The Wilds keep half a band and lose the bottom black; a bigger token; the tab bar edge to edge · M · closes A7, A8, A9 · needs — · alias: TU1c
 - [ ] **159.4** Self's plaques fit; Dev Tools moves to Settings · M · closes A10 · needs — · alias: TU1d
 
 ### 159.1 (TU1a) — The Spoils and the fight · M · closes A1, A2, A3, A4 · requires 158.1
