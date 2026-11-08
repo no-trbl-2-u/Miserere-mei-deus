@@ -12,7 +12,9 @@
   1. The word for "if held": **UNBROKEN**.
   2. The Saint and Wreckmaster picks tagged for later phases: **all from phase 1**, and Communion adds a BARNACLE when you hold no Curses.
   3. T's notes on Swell and Tithe of the Drowned **replace the whole move**.
-  4. UNDERTOW: "Use SEIZED just make sure the card names are thematic. And since it's seized, it doesn't have to be exclusively one color die either".
+  4. Saltwick Swarm is an elite ("make sure that jellyfish one is an elite because you're right, 15 is rough"), its second Danger is Drown in Light, and it sits on the sea cave's elite node alongside its two foes, with no new or duplicate elite nodes.
+  5. The Saint's leftovers (its copied stage effects and its journal text) are written in this plot.
+  6. UNDERTOW: "Use SEIZED just make sure the card names are thematic. And since it's seized, it doesn't have to be exclusively one color die either".
 - **T on SHOCK, verbatim:** "SHOCK is a new status effect Keyword (will be added to future lanes as well). It's effect is: Every DEAL does x more damage where x is equal to SHOCK. (lasts 3 turns, every new placement of SHOCK just refreshes it to 3 and adds to the intensity). (This is my wording but I'm sure you can make the wording more consistent)"
 
 ### What exists today (read 2026-11-08, at 199591007)
@@ -33,7 +35,11 @@
 
 ### The Saint Beneath (boss, four phases)
 
-The `phases` model, `vitae: 320` kept. Attack, defend and status are available from phase 1, and each Danger opens its phase. The copied `ENEMY_DECKS` entry and the copied `stages` go. Its journal entry stays as is (T's to rewrite).
+The `phases` model, `vitae: 320` kept. Attack, defend and status are available from phase 1, and each Danger opens its phase. The copied `ENEMY_DECKS` entry goes.
+
+**The leftovers.** The copied `stages` go too: their door lines were the Beholder's, and the three Dangers now mark the phase changes, so the stages' damage bonuses and their 15% heal at 25% go with them. The journal entry drops the Beholder's text for this draft [T to confirm #3]:
+
+> It is a fish, mostly: a great length of one, with an old man's face grown into the front of it, eyes shut, mouth open on a double row of teeth. The Breakwater's drowned prayed to the sea, and the sea does not answer, so something beneath it learned to. Every offering that went down came to rest in that mouth. It has heard all of them. It has started answering.
 
 | Slot | Name | Text |
 |---|---|---|
@@ -58,14 +64,24 @@ Attack, defend and status are available from phase 1.
 | Danger 60% | Reload Under Fire | TANGLE 3 and 2 BARNACLE. |
 | Danger 30% | Take the Colours | Takes up to 4 Conviction, WARD 4 per Conviction taken. BARNACLE 1. |
 
-### The four normals (two phases, the Danger at 30%; attacks stay in phase 2)
+### Saltwick Swarm (elite, three phases)
+
+Attack, defend and status are available from phase 1. It becomes `difficulty: 'elite'` at level 5.
+
+| Slot | Name | Text |
+|---|---|---|
+| Attack | Many Stings | DEAL 1 five times. |
+| Defend | Drift Apart | WARD 8. UNBROKEN: SHOCK 1. |
+| Status | Static Bloom [T to confirm #1] | SHOCK 2. |
+| Danger 60% | Drown in Light | 3 damage per card in your hand, then TANGLE 2. |
+| Danger 30% | The Whole Bloom | DEAL 2, once per card in your discard. No minimum. |
+
+**Where it fights.** The sea cave (`bw-c1`, level 5) draws one of the Cave Choir, the Tithe-Collector or Saltwick Swarm, a third each. No elite node is added or repeated. Its two town fights stay ordinary fights at level 5: `bw-t2` becomes a Bilge-Stalker and `bw-t6` a Coralback. It leaves the wandering pool.
+
+### The three normals (two phases, the Danger at 30%; attacks stay in phase 2)
 
 | Foe | Slot | Name | Text |
 |---|---|---|---|
-| Saltwick Swarm | Attack | Many Stings | DEAL 1 five times. |
-| | Defend | Drift Apart | WARD 8. UNBROKEN: SHOCK 1. |
-| | Status | Static Bloom [T to confirm #1] | SHOCK 2. |
-| | Danger | The Whole Bloom | DEAL 2, once per card in your discard. No minimum. |
 | Quay-Crab | Attack | Pincer | 7 damage. Your GUARD counts half against it. |
 | | Defend | Shell Up | WARD 10. UNBROKEN: BARNACLE 1. |
 | | Status | Grip | SEIZED: your body die sits out your next roll. |
@@ -87,33 +103,35 @@ Attack, defend and status are available from phase 1.
 
 ### Out of scope
 
-- How a foe's attack is shown on screen (T's idea: hide the UI, make the screen look like a card, print the effect). T plots that separately.
+- How a foe's attack is shown on screen (T's idea: hide the UI, make the screen look like a card, print the effect). T plots that separately: it is on the deadlines for Nov 17.
 - SHOCK on cards (future lanes).
-- The Saint's journal entry and any foe's final-blow lines (authored content, D88).
+- Any foe's final-blow lines (authored content, D88).
 
 ## Acceptance
 
 - **A1** Every word the player reads as UNDERTOW now reads SEIZED, with its gloss and glyph; the effect and each move's dice are unchanged; a move named Undertow keeps that name.
 - **A2** SHOCK n adds n to each DEAL hit against the target; it lasts 3 turns; a new SHOCK resets the turns to 3 and adds to n; it shows on the status row and has a gloss.
 - **A3** UNBROKEN pays out at the start of the foe's next turn when any of that move's WARD is left, and pays nothing when it was broken; it has a gloss.
-- **A4** The Saint Beneath fights with exactly the six moves above in four phases, each Danger opening its phase at 75%, 50% and 25%; it has no enemy deck and no copied stages; Communion and the Curse counts behave as written, with no Curses included.
+- **A4** The Saint Beneath fights with exactly the six moves above in four phases, each Danger opening its phase at 75%, 50% and 25%; it has no enemy deck and no copied stages, and its journal entry no longer carries the Death Beholder's text; Communion and the Curse counts behave as written, with no Curses included.
 - **A5** The Death Beholder's deck, stages and fights are unchanged.
 - **A6** The Wreckmaster, Saltwick Swarm, Quay-Crab, Coralback and Bilge-Stalker play exactly the moves above, each Danger at its line, and share no move with any other foe.
 - **A7** The other animated foes' moves are unchanged.
+- **A8** Saltwick Swarm is an elite with Dangers at 60% and 30%. The sea cave draws it, the Cave Choir or the Tithe-Collector at a third each; no other elite node changes; `bw-t2` is a Bilge-Stalker and `bw-t6` a Coralback, both level 5; it is not in the wandering pool.
 
 ## Open questions
 
 1. Saltwick Swarm's SHOCK 2 move had no name on the ballot. Default: **Static Bloom**. Or: Lit Nerves; or a name of T's. [T to confirm #1]
 2. SHOCK as written lands on the target and makes every DEAL against it worse. Default: that reading, so a foe's SHOCK makes each of its hits on you hit harder. Or: SHOCK on you makes your own DEALs stronger. [T to confirm #2]
+3. The Saint Beneath's journal text. Default: the draft under "The leftovers" above. Or: T's own words. [T to confirm #3]
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 8 open · 0 closed · next A9
 
 - [ ] **162.1** SEIZED replaces UNDERTOW · S · closes A1 · needs — · alias: MV1a
 - [ ] **162.2** SHOCK and UNBROKEN join the rules · M · closes A2, A3 · needs — · alias: MV1b
 - [ ] **162.3** The Saint Beneath's own moves · M · closes A4, A5 · needs 162.1 · alias: MV1c
-- [ ] **162.4** Five recast foes get their own moves · M · closes A6, A7 · needs 162.1, 162.2 · alias: MV1d
+- [ ] **162.4** Five recast foes get their own moves, and Saltwick Swarm becomes an elite · M · closes A6, A7, A8 · needs 162.1, 162.2 · alias: MV1d
 
 ### 162.1 (MV1a) — SEIZED replaces UNDERTOW · S · closes A1 · requires —
 
@@ -130,15 +148,16 @@ Measure: 7 open · 0 closed · next A8
 
 ### 162.3 (MV1c) — The Saint Beneath's own moves · M · closes A4, A5 · requires 162.1
 
-- `SaintBeneath` moves to `phases` with the six moves, keeping `vitae: 320`. Remove its `ENEMY_DECKS` entry and its `stages`. Boss-tier `phases` is new, so check escalation (`escalationApplies`) and the reveal's threat list for a boss with no deck.
+- `SaintBeneath` moves to `phases` with the six moves, keeping `vitae: 320`. Remove its `ENEMY_DECKS` entry and its `stages`, and replace its `journalEntry.body` with the draft in Design (or T's answer to call 3). Boss-tier `phases` is new, so check escalation (`escalationApplies`) and the reveal's threat list for a boss with no deck.
 - New rider work: a Curse-count hit that adds a BARNACLE when there are none; Swell's TANGLE per card in hand, and both Dangers counting the hand after their 2 BARNACLE.
 - Update the pinned tests: `revamp-roster`, `chapter1-recast`, and anything naming the Saint's deck.
 - Tests: each move's text and effect, the three phase lines, and the Beholder's deck untouched.
 - Measure: the mechanics and mobile gates, run piecewise with a worker cap; one browser fight against the Saint through all four phases, shots in the PR body. Label `review:rules-change`.
 
-### 162.4 (MV1d) — Five recast foes get their own moves · M · closes A6, A7 · requires 162.1, 162.2
+### 162.4 (MV1d) — Five recast foes get their own moves, and Saltwick Swarm becomes an elite · M · closes A6, A7, A8 · requires 162.1, 162.2
 
 - New moves per the tables; the five foes point at them instead of the benched foes' moves. Rider work: Take the Colours (a capped Conviction take, WARD per point taken, then a BARNACLE, with no dice), Coral Grows Over reusing the Curse-count rule from 162.3, The Whole Bloom with no minimum (`hits-per-discard` at `per: 1`, `min: 0`), Press-Ganged's TANGLE 2.
 - Phase 2 and later keep each foe's attack, as the other normals and elites do.
+- Saltwick Swarm: `difficulty: 'elite'`, three phases. `BW_ELITE_DRAWS['bw-c1']` gains it at level 5, and `eliteDrawPool`'s limit rises from two foes to three, equal odds. `BW_ENCOUNTER_FOES`: `bw-t2` to `bilge-stalker` and `bw-t6` to `coralback`, levels unchanged. It leaves `ACT1_POOL`. Update the pinned node tests (`breakwater-chapter-foes`, `chapter1-recast`, `chapter1-pier-town`), and keep the check that no foe appears twice in a row on any route.
 - Tests: each foe's moves and Danger lines; no foe shares a move with another among these five; the other foes' moves unchanged.
 - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim report for the Breakwater before and after, in the PR body. Label `review:rules-change`.

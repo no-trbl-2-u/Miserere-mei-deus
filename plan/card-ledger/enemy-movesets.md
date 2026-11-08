@@ -14,7 +14,7 @@ The ballot `enemy-movesets.ballot.html` (id `enemy-movesets-2026-11-08`) offers 
 |---|---|---|
 | The Saint Beneath | boss | a copy of the Death Beholder's deck |
 | The Wreckmaster | elite | the Toll-Keeper's moves |
-| Saltwick Swarm | normal | the Green Jelly's moves |
+| Saltwick Swarm | normal (elite after the vote) | the Green Jelly's moves |
 | Quay-Crab | normal | the Crane-Hook's moves |
 | Coralback | normal | the Lamprey-Knot's moves |
 | Bilge-Stalker | normal | the Wreck-Picker's moves |
@@ -64,4 +64,4 @@ BS-D30 (Danger at 30%): BS-D30b Drag Under
 general: We may need a new keyword for "held" or at least a more concise phrasing. I'll also need to plot how to show the enemy's attacks. I'm thinking we hide all the UI except for the animated enemy, make the screen look like a card, and put the text of the effect on screen.
 ```
 
-T also defined SHOCK and asked that UNDERTOW stop being a keyword. T's four follow-up answers and the final moves are in \`plan/162-mv1-enemy-movesets.md\`.
+T also defined SHOCK and asked that UNDERTOW stop being a keyword. T then made Saltwick Swarm an elite on the sea cave's node, with Drown in Light as its 60% Danger. T's follow-up answers and the final moves are in \`plan/162-mv1-enemy-movesets.md\`.
