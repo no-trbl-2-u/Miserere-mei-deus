@@ -131,8 +131,8 @@ with the `bypass_actors` line above), and it is T's row in
 repository variable:
 `gh variable set PR_AUTO_MERGE --body off` stops every auto-merge until
 it is deleted or set to anything else; the label `no-auto-merge` holds
-one PR, and the label `content` holds a PR of generated game writing for
-T's approval.
+one PR. The label `content`, or any change to a `CONTENT_PATHS` file
+(`scripts/pr-policy.mjs`), holds a PR of game writing for T's approval.
 
 ## Operating notes
 

@@ -61,6 +61,7 @@ import { fileURLToPath } from 'node:url'
 import { newTitles, runnerFor, verdictFor } from './eval/parent-replay-lib.mjs'
 import { checkout, closeWorktree, git, openWorktree, runTests } from './eval/worktree.mjs'
 import { ghApi, prSnapshot } from './pr-files.mjs'
+import { isContentPath } from './pr-policy.mjs'
 import { HOLD_LABELS, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 
 /**
@@ -193,7 +194,7 @@ export function fixView(pr, repo, readView, api = ghApi) {
  * @param {{ state: string, isDraft: boolean, isCrossRepository: boolean, labels: string[], title: string, files: string[], head: string, comments: { body: string, author?: string }[], commitMessages?: string[], trusted?: readonly string[], planLabels?: readonly string[], holdLabels?: readonly string[], pipelinePaths?: readonly string[], planTitle?: RegExp }} pr the PR's live facts.
  * @returns {{ go: boolean, reason: string }} the decision and why.
  */
-export function fixWanted({ state, isDraft, isCrossRepository, labels, title, files = [], head, comments, commitMessages = [], trusted = [], planLabels = [], holdLabels = [], pipelinePaths = [], planTitle = /^(plot|plan)\s*[:(]/i }) {
+export function fixWanted({ state, isDraft, isCrossRepository, labels, title, files = [], head, comments, commitMessages = [], trusted = [], planLabels = [], holdLabels = [], pipelinePaths = [], isContent = () => false,planTitle = /^(plot|plan)\s*[:(]/i }) {
   if (isCrossRepository) return { go: false, reason: 'fork head' }
   if (state !== 'OPEN') return { go: false, reason: `PR is ${state.toLowerCase()}` }
   if (isDraft) return { go: false, reason: 'draft' }
@@ -203,6 +204,8 @@ export function fixWanted({ state, isDraft, isCrossRepository, labels, title, fi
   if (hold) return { go: false, reason: `label ${hold}` }
   const pipeline = files.find((f) => pipelinePaths.includes(f))
   if (pipeline) return { go: false, reason: `pipeline PR (${pipeline}): T fixes the pipeline` }
+  const writing = files.find(isContent)
+  if (writing) return { go: false, reason: `content PR (${writing}): T edits game writing` }
   if ([...comments.map((c) => c.body ?? ''), ...commitMessages].some((t) => t.includes(FIX_ATTEMPT_MARKER))) return { go: false, reason: 'a fix attempt is already on the PR' }
   const last = comments
     .filter((c) => trusted.includes(c.author ?? '') && VERDICT.test(c.body ?? '') && markedHeads(c.body ?? '').some((m) => m.sha === head))
@@ -391,7 +394,7 @@ async function main() {
       files: (v.files ?? []).map((f) => f.path), head: v.headRefOid,
       comments: v.comments.map((c) => ({ body: c.body ?? '', author: c.author?.login ?? '' })),
       commitMessages: (v.commits ?? []).map((c) => c.messageBody ?? ''),
-      trusted: TRUSTED_AUTHORS, planLabels: PLAN_LABELS, holdLabels: HOLD_LABELS, pipelinePaths: PIPELINE_PATHS, planTitle: PLAN_TITLE,
+      trusted: TRUSTED_AUTHORS, planLabels: PLAN_LABELS, holdLabels: HOLD_LABELS, pipelinePaths: PIPELINE_PATHS, isContent: isContentPath, planTitle: PLAN_TITLE,
     })
     console.log(`pr-review-fix #${pr}: ${d.go ? 'fix' : 'skip'} (${d.reason})`)
     if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `go=${d.go}\nbranch=${v.headRefName}\nhead=${v.headRefOid}\n`)

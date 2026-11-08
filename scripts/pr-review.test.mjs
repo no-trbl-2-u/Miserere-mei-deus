@@ -75,6 +75,7 @@ test('the fixer runs once, on a trusted not-pass for the head, never on a plan, 
     comments: [notPass], trusted: ['no-trbl-2-u'], planLabels: ['plot'], holdLabels: ['review:needs-T'], pipelinePaths: ['scripts/pr-merge.mjs'],
   }
   assert.equal(fixWanted(base).go, true)
+  assert.match(fixWanted({ ...base, isContent: (f) => f === 'scripts/a.mjs' }).reason, /content PR/, 'the fixer leaves held writing alone')
   assert.match(fixWanted({ ...base, comments: [{ ...notPass, body: notPass.body.replace('not-pass', 'pass') }] }).reason, /nothing to fix/)
   assert.match(fixWanted({ ...base, comments: [{ ...notPass, author: 'stranger' }] }).reason, /no trusted verdict/)
   assert.match(fixWanted({ ...base, comments: [{ ...notPass, body: notPass.body.replace(head, 'd'.repeat(40)) }] }).reason, /no trusted verdict/)
