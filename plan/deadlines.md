@@ -239,6 +239,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - GO1b — the second run-end test really has a scene pending (spec 161); test-only loop work, no dated T act waits on it.
 - TU1g — the Embark unmount under reduced motion and FitText's re-measure get tests (spec 159); test-only loop work, no dated T act waits on it.
 - MG1a — the merge decision re-runs when the verify gate finishes (spec 160); loop work, no dated T act waits on it.
@@ -306,6 +307,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-09** — **the Rules Glossary's full keyword list plotted as spec 165 (RG1a)** (T, attended: "Yes, plot it", holding 137.9 to D183). **Added** RG1a under `## Unscheduled`.
 - **2026-11-08** — **three test gaps from the #1473 and #1474 reviews plotted (GO1b in spec 161, TU1g in spec 159)** (T, attended: "Yes plot the test gaps"). **Added** GO1b and TU1g under `## Unscheduled`: test-only work, no dated T act waits on it. Nothing ticked; no date moved.
 - **2026-11-08** — **T's end-gate answers after `/pilot 162` plotted: MV1e, MV1f into spec 162** (T, attended: UNBROKEN pays at the start of the player's turn, even if the foe lost its turn; "The saint beneath should be a level 8 enemy"). **Added** both to the `Waits on` of the Mid-MVP check (Nov 14). **Edited** the Nov 17 re-tune Item: the level 5 Coralback at `bw-t6`, and the player's level on reaching the Saint. Nothing ticked; no date moved.
 - **2026-11-08** — **T's follow-ups on spec 162, and the foe-attack screen dated** (T, attended: "let's not plot the UX for the enemy's attack just yet. Just add that to the deadlines", due Nov 17). **Added** the Nov 17 Item to plot that screen. **Edited** the Nov 17 re-tune Item: five named normals, since Saltwick Swarm became an elite. Nothing ticked; no date moved.
