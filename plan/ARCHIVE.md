@@ -618,3 +618,5 @@
 - 2026-11-09 · 135.8 (alias: SM2i) · Every bot spends at the village anvil; the Wanderer at random · 26018e17..d34bdd83 (#1529)
 - 2026-11-09 · 135.9 (alias: SM2j) · sim:run takes shillings, boss level, start relics and mix-and-match flags · 57094d8f..1dfcd1ea (#1535)
 - 2026-11-09 · 135.10 (alias: SM2k) · sim:run prints boss damage, end node and a per-policy batch table · aedba465..aedba465 (#1536)
+- 2026-11-09 · 139.1 (alias: EQ4a) · The Blacksmith offers no +3 fitting; die gear has no payout field · 46989e31..46989e31 (#1526)
+- 2026-11-09 · 99.10 · Tree lint no longer needs tar, shown failing with it back · 819bd2d8..819bd2d8 (#1503)
