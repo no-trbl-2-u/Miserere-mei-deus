@@ -613,3 +613,4 @@
 - 2026-11-09 · 123.2 (alias: PF2a) · Combat static SVG layers and dice are texture-cached · 50fe155d..50fe155d (#1511)
 - 2026-11-09 · 135.11 (alias: SM2h) · Lane bots and personas guard first when the foe hits · 65e2483b..65e2483b (#1527)
 - 2026-11-09 · 125.9 (alias: LG1i) · An Android emulator plays the preview APK through one round · 3ad0753e..aa3c4d34 (#1528)
+- 2026-11-09 · 115.6 (alias: MF1f) · The Merciful's Brim Over and Absolution quest relics · deefe6c4..deefe6c4 (#1525)
