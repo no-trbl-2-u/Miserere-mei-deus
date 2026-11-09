@@ -18,7 +18,7 @@ import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { CrashReportPanel } from '@/components/CrashReportPanel';
 import { getPrevSessionCrash, getPrevSessionLogTail, type CrashInfo } from '@/state/logging';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** Crash-tail read is async AsyncStorage I/O — poll a few ticks after
@@ -124,29 +124,28 @@ const useStyles = makeStyles((AXM) => ({
     },
     bannerBody: { flex: 1 },
     bannerText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
-        letterSpacing: 0.5,
         color: AXM.sulfur,
     },
     bannerDismiss: { paddingHorizontal: 8, paddingVertical: 2 },
     bannerDismissLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
         color: AXM.bone,
     },
     modalRoot: { flex: 1, backgroundColor: AXM.panelBg },
     modalContent: { padding: 20, paddingTop: 40, paddingBottom: 48 },
     modalTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         color: AXM.parchment,
         marginBottom: 4,
     },
     modalKind: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.rust,
         marginBottom: 12,
     },
@@ -158,7 +157,7 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     closeButtonLabel: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
         color: AXM.bone,
     },

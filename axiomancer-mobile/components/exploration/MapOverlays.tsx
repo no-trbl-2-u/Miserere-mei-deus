@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { Text, View, Platform } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { MAP_GESTURE_LINE } from '@/state/presenters/exploration.engine';
 import type { MapPointer } from '@/state/presenters/exploration.engine';
@@ -65,9 +65,8 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 10,
     },
     gestures: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 9,
         color: AXM.bone,
-        letterSpacing: 1,
     },
 }));

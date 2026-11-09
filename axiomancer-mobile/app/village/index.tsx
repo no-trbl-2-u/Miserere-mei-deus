@@ -41,7 +41,7 @@ import {
 } from '@/state/presenters/village.copy';
 import { selectVillageVM } from '@/state/presenters/village.engine';
 import type { VillageCounterResult } from '@/state/village/store-actions';
-import { FONTS, TYPE } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /**
@@ -376,30 +376,30 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.parchment,
         marginBottom: 4,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 30,
         lineHeight: 34,
         color: AXM.parchment,
         marginBottom: 8,
     },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 19,
         color: AXM.parchment,
         marginBottom: 8,
     },
     sectionLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 12,
         marginBottom: 6,
@@ -416,21 +416,21 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 2,
         marginBottom: 8,
     },
-    merchantName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur, letterSpacing: 1.2 },
-    merchantLine: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.parchment, marginTop: 4 },
-    purse: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.sulfur, letterSpacing: 1 },
+    merchantName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.sulfur, letterSpacing: TYPE_ROLES.title.letterSpacing},
+    merchantLine: { fontFamily: TYPE_ROLES.spoken.fontFamily, fontSize: 12, color: AXM.parchment, marginTop: 4 },
+    purse: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.sulfur},
     // A refused counter names its reason under it, in the inn's reason voice
     // (`/rest` `offerReason`): shown, never hidden.
     refusal: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         lineHeight: 15,
         color: AXM.bone,
         marginTop: -2,
         marginBottom: 6,
     },
-    note: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.sulfur, marginTop: 4 },
-    priceHint: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.5, color: AXM.sulfur, marginBottom: 4 },
+    note: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.sulfur, marginTop: 4 },
+    priceHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.sulfur, marginBottom: 4 },
     // Three faces side by side at the reward draft's size fit a 375pt phone.
     shopRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginTop: 18, marginBottom: 8 },
     shopCard: { alignItems: 'center', width: 104 },
@@ -443,7 +443,7 @@ const useStyles = makeStyles((AXM) => ({
         marginTop: 6,
         alignItems: 'center',
     },
-    buyText: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 0.5, color: AXM.sulfur, textAlign: 'center' },
+    buyText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur, textAlign: 'center' },
     equipmentList: { marginTop: 6 },
     removeRow: {
         borderWidth: 1,
@@ -452,8 +452,8 @@ const useStyles = makeStyles((AXM) => ({
         padding: 8,
         marginBottom: 4,
     },
-    removeName: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment },
-    emptyNote: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, marginBottom: 6 },
+    removeName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 13, color: AXM.parchment },
+    emptyNote: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.bone, marginBottom: 6 },
     wareRow: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -468,21 +468,21 @@ const useStyles = makeStyles((AXM) => ({
     // signals disabled so the name/description stay bone/parchment-bright
     // and legible, matching combat's disabled-item treatment.
     wareRowUnaffordable: { borderColor: AXM.ash },
-    wareName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, letterSpacing: 1 },
+    wareName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing},
     // The inn prints the identical uppercase-mono description at
     // DESC_FONT_SIZE. One size for a description wherever it appears.
-    wareDesc: { fontFamily: FONTS.mono, fontSize: DESC_FONT_SIZE, color: AXM.bone, marginTop: 2, textTransform: 'uppercase' },
+    wareDesc: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: DESC_FONT_SIZE, color: AXM.bone, marginTop: 2, textTransform: 'uppercase' },
     // The effect line is the row's load-bearing text, so it takes
     // full parchment while the flavour line below keeps the quieter bone.
     wareEffect: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: DESC_FONT_SIZE,
         color: AXM.parchment,
         marginTop: 3,
         letterSpacing: 0.4,
         textTransform: 'uppercase',
     },
-    warePrice: { fontFamily: FONTS.sans, fontSize: 18, color: AXM.sulfur },
+    warePrice: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 18, color: AXM.sulfur },
     // Price tracks affordability, not just the row's opacity: value-gold
     // is loud enough to survive the unaffordable dim, so mute the colour
     // to bone when the player can't afford it.
@@ -496,12 +496,12 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         backgroundColor: AXM.bg,
     },
-    bigButtonText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 2, color: AXM.parchment },
+    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.parchment },
     // The pinned exit keeps the page's 14pt gutter and clears the
     // vignette below it; the button's own marginTop is the gap above it,
     // as it was inside the list.
     exitBar: { paddingHorizontal: 14, paddingBottom: SCREEN_FRAME_INSET },
     flexOne: { flex: 1 },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import type { DimensionValue } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { StatBar } from './StatBar';
 import { useGameState } from '@/state/GameStoreProvider';
@@ -178,7 +178,7 @@ const useVellumStyles = makeStyles(() => ({
     justifyContent: 'center',
   },
   levelText: {
-    fontFamily: FONTS.sans,
+    fontFamily: TYPE_ROLES.bigNumber.fontFamily,
     fontSize: 20,
     lineHeight: 24,
     color: VELLUM_OXBLOOD,
@@ -188,22 +188,22 @@ const useVellumStyles = makeStyles(() => ({
     minWidth: 0,
   },
   name: {
-    fontFamily: FONTS.gothic,
+    fontFamily: TYPE_ROLES.title.fontFamily,
     fontSize: 12,
     lineHeight: 15,
     color: VELLUM_INK,
-    letterSpacing: 1,
+    letterSpacing: TYPE_ROLES.title.letterSpacing,
   },
   mapName: {
-    fontFamily: FONTS.gothic,
+    fontFamily: TYPE_ROLES.mapName.fontFamily,
     fontSize: 22,
     lineHeight: 25,
     color: VELLUM_INK,
   },
   bar: { marginTop: 4 },
   barLabels: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 1 },
-  barLabel: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 2, color: VELLUM_OXBLOOD },
-  barValue: { fontFamily: FONTS.mono, fontSize: 10, color: VELLUM_INK },
+  barLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: VELLUM_OXBLOOD },
+  barValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: VELLUM_INK },
   barValueAlarm: { color: VELLUM_OXBLOOD, fontWeight: '700' },
   track: {
     width: '100%',
@@ -241,7 +241,7 @@ const useStyles = makeStyles((AXM) => ({
     justifyContent: 'center',
   },
   levelText: {
-    fontFamily: FONTS.sans,
+    fontFamily: TYPE_ROLES.bigNumber.fontFamily,
     fontSize: 22,
     color: AXM.sulfur,
   },
@@ -250,18 +250,18 @@ const useStyles = makeStyles((AXM) => ({
     minWidth: 0,
   },
   name: {
-    fontFamily: FONTS.gothic,
+    fontFamily: TYPE_ROLES.title.fontFamily,
     fontSize: 13,
     lineHeight: 18,
     color: AXM.parchment,
-    letterSpacing: 1,
+    letterSpacing: TYPE_ROLES.title.letterSpacing,
   },
   barsCol: {
     marginTop: 6,
     gap: 6,
   },
   mapName: {
-    fontFamily: FONTS.gothic,
+    fontFamily: TYPE_ROLES.mapName.fontFamily,
     fontSize: 24,
     lineHeight: 27,
     color: AXM.parchment,

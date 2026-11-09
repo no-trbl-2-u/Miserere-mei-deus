@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, within } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 
 import { HAZARD_DECK } from '@mechanics';
 import { HazardCard, CardArt, DETAIL_EFFECT_LINE_H, handArtSize, handEffectFontSize, handNameFontSize } from '../HazardCard';
@@ -70,7 +70,7 @@ describe('HazardCard', () => {
         const { getByLabelText } = render(<HazardCard card={mockCardVM} mode="hand" />);
         const values = within(getByLabelText('FORCE 3, ESCAPE 1')).getAllByText(/\d/);
         expect(values).toHaveLength(2);
-        for (const v of values) expect(StyleSheet.flatten(v.props.style).fontFamily).toBe(FONTS.sans);
+        for (const v of values) expect(StyleSheet.flatten(v.props.style).fontFamily).toBe(TYPE_ROLES.chip.fontFamily);
     });
 
     it('renders card in offer mode for rewards', () => {

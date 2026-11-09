@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { KitBackdrop, VELLUM_INK, VELLUM_OXBLOOD } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
@@ -103,10 +103,10 @@ const useStyles = makeStyles((AXM) => ({
     inkCount: { color: VELLUM_INK, backgroundColor: 'transparent' },
     inkCountEmpty: { color: VELLUM_INK_QUIET, opacity: VELLUM_EMPTY_OPACITY },
     tabText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 11,
         color: AXM.bone,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         textTransform: 'uppercase',
     },
     tabTextActive: {
@@ -115,7 +115,7 @@ const useStyles = makeStyles((AXM) => ({
     // The badge keeps a single-digit minimum but may not shrink or wrap, so
     // a two-digit count stays on one line inside the pill.
     tabCount: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 10,
         color: AXM.ash,
         backgroundColor: AXM.deepBg,

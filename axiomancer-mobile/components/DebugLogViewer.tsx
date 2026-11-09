@@ -20,7 +20,7 @@ import {
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { getPrevSessionLogTail } from '@/state/logging';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 const LEVEL_CHIPS: readonly (AxmLogLevel | 'all')[] = ['all', 'info', 'warn', 'error'];
@@ -204,9 +204,8 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.sulfurSubtle,
     },
     chipLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 9,
-        letterSpacing: 1,
         color: AXM.bone,
     },
     chipLabelActive: { color: AXM.sulfur },
@@ -218,12 +217,12 @@ const useStyles = makeStyles((AXM) => ({
         padding: 6,
     },
     emptyLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
         color: AXM.bone,
     },
     entryLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.entry.fontFamily,
         fontSize: 9.5,
         lineHeight: 13,
         color: AXM.parchmentDim,

@@ -40,7 +40,7 @@ import {
 } from '@/state/presenters/quest.copy';
 import { KitSurface } from '@/components/experience/KitSurface';
 import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
-import { FONTS, HUE, TYPE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The vellum panel the quest's cards wear (Q-01). */
@@ -218,22 +218,22 @@ const useStyles = makeStyles((AXM) => ({
     scroll: { padding: 14, paddingBottom: 24, flexGrow: 1, justifyContent: 'center' },
     column: { width: '100%', maxWidth: QUEST_COLUMN_MAX_WIDTH, alignSelf: 'center' },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 12,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 6,
         marginBottom: 4,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
         lineHeight: 28,
         color: AXM.parchment,
         marginBottom: 10,
     },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 19,
         color: AXM.parchment,
@@ -256,7 +256,7 @@ const useStyles = makeStyles((AXM) => ({
     eyebrowKit: { color: HUE.hzCardInk2 },
     bodyKit: { flex: 1, color: HUE.hzCardInk },
     cardTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 20,
         lineHeight: 24,
         color: AXM.parchment,
@@ -264,15 +264,14 @@ const useStyles = makeStyles((AXM) => ({
     },
     cardTitleKit: { color: HUE.hzCardInk },
     objectiveRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 },
-    progress: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 1, color: AXM.bone },
+    progress: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.bone },
     progressKit: { color: HUE.hzCardInk2 },
     progressDone: { color: AXM.sulfur },
     progressDoneKit: { color: HUE.hzForceInk },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
         color: AXM.parchment,
         borderWidth: 1,
         borderColor: AXM.ash,
@@ -290,7 +289,7 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     leaveButton: { borderColor: AXM.ash },
-    bigButtonText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 2, color: AXM.sulfur },
+    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

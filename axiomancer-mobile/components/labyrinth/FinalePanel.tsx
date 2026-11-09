@@ -14,7 +14,7 @@ import { Pressable, Text, TextInput, View } from 'react-native';
 
 import { LABYRINTH_COPY } from '@/state/presenters/labyrinth.engine';
 import type { LabyrinthFinaleVM } from '@/state/presenters/labyrinth.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 interface FinalePanelProps {
@@ -95,19 +95,19 @@ const useStyles = makeStyles((AXM) => ({
         gap: 10,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
         color: AXM.parchment,
         textAlign: 'center',
     },
     intro: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 14,
         lineHeight: 20,
         color: AXM.parchment,
     },
     stacks: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 12,
         color: AXM.blood,
     },
@@ -118,7 +118,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     namePrompt: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.bone,
@@ -128,13 +128,13 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.bone,
         paddingHorizontal: 10,
         paddingVertical: 8,
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 16,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.sulfur,
     },
     refused: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.blood,
@@ -146,9 +146,9 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     speakText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
     fightButton: {
@@ -158,9 +158,9 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     fightText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 14,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.blood,
     },
 }));

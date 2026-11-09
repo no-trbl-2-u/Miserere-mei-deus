@@ -15,7 +15,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { OptionVM } from '@/state/presenters/settings.engine';
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { LOOKS } from '@/components/experience/looks';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface OptionRowProps<V> {
@@ -120,8 +120,8 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     text: {},
-    label: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.parchment },
-    hint: { fontFamily: FONTS.serifItalic, fontSize: 11, color: AXM.bone, marginTop: 2 },
+    label: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.parchment },
+    hint: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 11, color: AXM.bone, marginTop: 2 },
     segments: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
     segment: {
         paddingVertical: 6,
@@ -155,6 +155,6 @@ const useStyles = makeStyles((AXM) => ({
     radioLabelOn: { color: AXM.sulfur },
     segmentLabelKitOn: { color: AXM.bg },
     segmentOn: { borderColor: AXM.sulfur, backgroundColor: AXM.selectFill },
-    segmentLabel: { fontFamily: FONTS.gothic, fontSize: 12, letterSpacing: 1.5, color: AXM.bone },
+    segmentLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.bone },
     segmentLabelOn: { color: AXM.sulfur },
 }));

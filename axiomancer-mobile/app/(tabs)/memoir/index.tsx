@@ -13,7 +13,7 @@ import {
     type MemoirQuestRow,
     type MemoirViewModel,
 } from '@/state/presenters/memoir.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 const LEDGER_VELLUM = lookOf('L-01') === 'vellum';
@@ -253,7 +253,7 @@ const useStyles = makeStyles((AXM) => ({
     scroll: { paddingBottom: 32 },
     header: { padding: 14, paddingBottom: 4 },
     subline: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         color: AXM.bone,
         marginTop: 2,
@@ -265,9 +265,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     section: { padding: 14, paddingTop: 12 },
     emptyLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
         color: AXM.bone,
         marginTop: 6,
         textTransform: 'uppercase',
@@ -279,13 +278,13 @@ const useStyles = makeStyles((AXM) => ({
         paddingLeft: 8,
     },
     chronicleLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     chronicleBody: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.entry.fontFamily,
         fontSize: 13,
         color: AXM.parchment,
         lineHeight: 17,
@@ -302,13 +301,13 @@ const useStyles = makeStyles((AXM) => ({
     },
     questCardCompleted: { opacity: 0.55 },
     questName: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 14,
         color: AXM.parchment,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
     },
     questDescription: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.entry.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         marginTop: 2,
@@ -316,21 +315,20 @@ const useStyles = makeStyles((AXM) => ({
     },
     objectiveList: { marginTop: 4, gap: 2 },
     objectiveLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.entry.fontFamily,
         fontSize: 11,
         color: AXM.bone,
-        letterSpacing: 0.5,
     },
     objectiveDone: { color: AXM.sulfur, textDecorationLine: 'line-through' },
     remainsLine: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         marginTop: 6,
         lineHeight: 15,
     },
     keepsakeLine: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.entry.fontFamily,
         fontSize: 13,
         color: AXM.parchment,
         marginTop: 4,

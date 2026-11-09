@@ -11,7 +11,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { HAZARD_PUZZLE_BACK_LABEL } from '@/state/presenters/hazard-puzzle.copy';
 import type { HazardPuzzleStripVM } from '@/state/presenters/hazard-puzzle.engine';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 import { HZ } from '../palette';
@@ -80,9 +80,9 @@ const useStyles = makeStyles((AXM) => ({
         gap: 2,
     },
     row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
-    clock: { fontFamily: FONTS.sans, fontSize: 22, lineHeight: 24, letterSpacing: 1 },
+    clock: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 22, lineHeight: 24},
     back: { borderWidth: 1, borderColor: AXM.ash, paddingHorizontal: 10, paddingVertical: 3 },
-    backText: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.6, color: AXM.bone },
-    reserve: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 1, color: HZ.acid },
-    unlocks: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12, color: AXM.bone },
+    backText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.bone },
+    reserve: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 11, color: HZ.acid },
+    unlocks: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 12, color: AXM.bone },
 }));

@@ -10,7 +10,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles } from '@/theme/runtime';
@@ -156,9 +156,9 @@ const useStyles = makeStyles((AXM) => ({
         borderTopColor: 'transparent', borderRightColor: 'transparent',
         borderBottomColor: 'transparent', borderLeftColor: 'transparent',
     },
-    pillText: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.3 },
-    debuffMark: { fontFamily: FONTS.sans, fontSize: 10, color: HUE.tickPurple },
-    wallMathDenied: { fontFamily: FONTS.sans, fontSize: 9, color: HUE.goldAccent, marginTop: 1, letterSpacing: 0.5 },
-    wallMathBlizzard: { fontFamily: FONTS.mono, fontSize: 9, marginTop: 1 },
-    wallMathNet: { fontFamily: FONTS.mono, fontSize: 9, color: HUE.stoneGrey, marginTop: 1 },
+    pillText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: 0.3 },
+    debuffMark: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, color: HUE.tickPurple },
+    wallMathDenied: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, color: HUE.goldAccent, marginTop: 1},
+    wallMathBlizzard: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, marginTop: 1 },
+    wallMathNet: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, color: HUE.stoneGrey, marginTop: 1 },
 }));
