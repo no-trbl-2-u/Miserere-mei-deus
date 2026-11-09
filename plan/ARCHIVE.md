@@ -617,3 +617,4 @@
 - 2026-11-09 · 156.3 (alias: TY1c) · Every screen sets its type through a role · 09b1e3fc..9655a6cd (#1534)
 - 2026-11-09 · 135.8 (alias: SM2i) · Every bot spends at the village anvil; the Wanderer at random · 26018e17..d34bdd83 (#1529)
 - 2026-11-09 · 135.9 (alias: SM2j) · sim:run takes shillings, boss level, start relics and mix-and-match flags · 57094d8f..1dfcd1ea (#1535)
+- 2026-11-09 · 135.10 (alias: SM2k) · sim:run prints boss damage, end node and a per-policy batch table · aedba465..aedba465 (#1536)
