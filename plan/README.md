@@ -74,10 +74,17 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **134.8** · owner-led: T's session 2026-09-28 (B8) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.9** · owner-led: T's session 2026-09-28 (B9) · since: 2026-11-01 · until: T's word · max_age: 30d
 
+- **166.2** · attended: T does this one (CK1b) · since: 2026-11-09 · until: T's word · max_age: 60d
+- **166.3** · attended: T does this one (CK1c) · since: 2026-11-09 · until: T's word · max_age: 60d
+- **166.4** · attended: T does this one (CK1d) · since: 2026-11-09 · until: 2026-12-23 · max_age: 60d
+- **166.5** · attended: T does this one (CK1e) · since: 2026-11-09 · until: T's word · max_age: 60d
+- **166.6** · attended: T does this one (CK1f) · since: 2026-11-09 · until: T's word · max_age: 60d
+
 ## Specs
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 6 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
 | 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 1 left |
