@@ -444,12 +444,6 @@ no exit code depends on it.
 
 ## Acceptance
 
-- **A7** The `cautious`, `reckless`, `explorer` and `rusher` policies ship in `run-sim/` and `RUN_POLICY_IDS`, each
-  opening as the first playable roster character and fighting with `PLAYER_WITNESS`, every rule as the Design states
-  and read from data (the no-id guard covers them); seam tests cover each persona's rests, roads, withdrawals, trips
-  and hazard pick.
-- **A8** A behaviour test plays each persona over 10 seeds through the driver and checks it did what its name says
-  (the Tests matrix's four checks), asserting no clear rate, level or VITAE.
 - **A9** The sim batch records a `crash`, `stuck` or `fight-stuck` run as a break and goes on with the next seed, and
   checks `quest-unfinishable` and `node-unresolved` at each run's end; `sim:run --breaks <file>` writes one line per
   break with the key `<persona>:<map>/<node>:<kind>` and the state summary; it still exits non-zero after a crash,
@@ -495,12 +489,11 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 11 open · 11 closed · next A23
+Measure: 9 open · 13 closed · next A23
 
-- [ ] **135.3** The four personas · M · closes A7, A8 · needs — · alias: SM2c
-- [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs 135.3 · alias: SM2d
+- [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.11** The lane bots guard when hit · S · closes A19 · needs 135.3 · alias: SM2h
-- [ ] **135.8** The bots use the anvil · M · closes A20 · needs 135.3 · alias: SM2i
+- [ ] **135.11** The lane bots guard when hit · S · closes A19 · needs — · alias: SM2h
+- [ ] **135.8** The bots use the anvil · M · closes A20 · needs — · alias: SM2i
 - [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.11, 135.8 · alias: SM2j
 - [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k

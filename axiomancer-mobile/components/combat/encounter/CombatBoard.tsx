@@ -67,6 +67,7 @@ import { SACRIFICE_CALLOUT_MS } from './VitaeSacrificeCallout';
 import { CARD_ENTER_MS, CARD_LAYOUT_MS } from './cardMotion';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 import { CombatDie, combatDieA11yLabel } from './CombatDie';
+import { RASTER_LAYER } from './rasterLayer';
 import { RollingDie } from './RollingDie';
 import { CombatGear, useGearFired } from './CombatGear';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -1641,15 +1642,17 @@ export const CombatBoard = React.memo(function CombatBoard({
                     card, and a tap still reads the card whole. */}
                 <View style={styles.dock}>
                     {/* sulfur shelf glow behind the fan */}
-                    <Svg width="100%" height={90} viewBox="0 0 100 30" preserveAspectRatio="none" style={styles.fanGlow} pointerEvents="none">
-                        <Defs>
-                            <RadialGradient id="axmFanGlow" cx="50%" cy="100%" r="80%">
-                                <Stop offset="0%" stopColor={AXM.sulfur} stopOpacity={0.16} />
-                                <Stop offset="100%" stopColor={AXM.sulfur} stopOpacity={0} />
-                            </RadialGradient>
-                        </Defs>
-                        <Circle cx={50} cy={30} r={55} fill="url(#axmFanGlow)" />
-                    </Svg>
+                    <View style={styles.fanGlow} pointerEvents="none" {...RASTER_LAYER}>
+                        <Svg width="100%" height={90} viewBox="0 0 100 30" preserveAspectRatio="none" pointerEvents="none">
+                            <Defs>
+                                <RadialGradient id="axmFanGlow" cx="50%" cy="100%" r="80%">
+                                    <Stop offset="0%" stopColor={AXM.sulfur} stopOpacity={0.16} />
+                                    <Stop offset="100%" stopColor={AXM.sulfur} stopOpacity={0} />
+                                </RadialGradient>
+                            </Defs>
+                            <Circle cx={50} cy={30} r={55} fill="url(#axmFanGlow)" />
+                        </Svg>
+                    </View>
                     <View style={styles.fan} testID="combat-hand" pointerEvents="box-none">
                         {fan.map((card, i) => (
                             <FanCard
@@ -2439,7 +2442,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     },
     // The mark's mirror on the leading edge of the chip row.
     chipInfoGutter: { width: CHIP_INFO_MARK_W + CHIP_INFO_MARK_GAP },
-    fanGlow: { position: 'absolute', bottom: 0, left: 0 },
+    fanGlow: { position: 'absolute', bottom: 0, left: 0, width: '100%', height: 90 },
     // The fan is centred in the full board band (see `handFanLayout`): no
     // corner chrome sits beside it.
     fan: {

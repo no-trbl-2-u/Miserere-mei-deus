@@ -806,18 +806,67 @@ describe('MapCanvas re-frames on a focus change', () => {
         expect(onCrossing).not.toEqual(leftOnA);
     });
 
-    it('a pane re-measure does not re-frame the camera', () => {
+    it('a pane re-measure re-frames a camera the player has not moved, for the new pane (MC1c A9)', () => {
         const { getByTestId, rerender } = render(
             <MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>,
         );
         layoutIn(getByTestId);
         rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
-        const before = cameraOf(getByTestId);
+        const shorter = { w: VIEWPORT.w, h: VIEWPORT.h - 50 };
+        fireEvent(getByTestId('map-canvas-wrapper'), 'layout', {
+            nativeEvent: { layout: { width: shorter.w, height: shorter.h } },
+        });
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        expect(cameraOf(getByTestId)).toEqual(computeFocusTransform(mockNodes, shorter));
+    });
+
+    it('a pane re-measure leaves a camera the player has moved where it is (MC1c A9)', () => {
+        const { getByTestId, rerender } = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>,
+        );
+        layoutIn(getByTestId);
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const fit = cameraOf(getByTestId);
+        const drag = { translationX: 30, translationY: -20 };
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, ...drag },
+            { state: State.END, ...drag },
+        ]);
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const panned = cameraOf(getByTestId);
+        expect(panned).toEqual({ scale: fit.scale, tx: fit.tx + 30, ty: fit.ty - 20 });
         fireEvent(getByTestId('map-canvas-wrapper'), 'layout', {
             nativeEvent: { layout: { width: VIEWPORT.w, height: VIEWPORT.h - 50 } },
         });
         rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
-        expect(cameraOf(getByTestId)).toEqual(before);
+        expect(cameraOf(getByTestId)).toEqual(panned);
+    });
+
+    it('the pan limit follows a pane that shrinks: the plate foot still reaches the pane middle (MC1c A9, A10)', () => {
+        const { getByTestId, rerender } = render(
+            <MapCanvas nodes={mockNodes} edges={mockEdges}><MockChildren /></MapCanvas>,
+        );
+        layoutIn(getByTestId);
+        const shortH = VIEWPORT.h - 300;
+        fireEvent(getByTestId('map-canvas-wrapper'), 'layout', {
+            nativeEvent: { layout: { width: VIEWPORT.w, height: shortH } },
+        });
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const fit = cameraOf(getByTestId);
+        fireGestureHandler(getByGestureTestId('map-pan'), [
+            { state: State.BEGAN },
+            { state: State.ACTIVE },
+            { state: State.ACTIVE, translationX: 0, translationY: -20000 },
+            { state: State.END, translationX: 0, translationY: -20000 },
+        ]);
+        rerender(<MapCanvas nodes={[...mockNodes]} edges={mockEdges}><MockChildren /></MapCanvas>);
+        const foot = cameraOf(getByTestId);
+        // Against the NEW pane height, not the first one's.
+        expect(foot.ty + 400 * 2.6 * fit.scale).toBeCloseTo(shortH / 2, 5);
     });
 
     it('does not undo a manual pan when a fresh nodes array describes the same focus (issue #294)', () => {

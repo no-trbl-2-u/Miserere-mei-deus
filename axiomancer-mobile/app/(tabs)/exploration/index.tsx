@@ -231,10 +231,10 @@ export default function ExplorationScreen() {
         }
     };
 
-    // Node Graph. The compass copy rides the `overlays` slot (viewport-fixed),
-    // not `children` (the pannable canvas) — CRITIQUE pass 20.
+    // Node Graph. The gesture line is not drawn over it: it sits in a strip
+    // under the frame (MC1c), so nothing covers a node but the recentre button.
     const canvas = (
-        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />} insets={mapInsets} locatorRef={locator}>
+        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} insets={mapInsets} locatorRef={locator}>
             <NodeGrid
                 nodes={vm.nodes}
                 onNodePress={onNodePress}
@@ -266,44 +266,47 @@ export default function ExplorationScreen() {
     return (
         <ScreenBg scrollable={false}>
             <View style={styles.stage} testID="wilds-stage">
-                {vellumTop ? (
-                    <>
-                        {/* The map runs the whole stage, up under the status card and
-                            down to the tab bar; the card and the foot float over it. */}
-                        <View style={StyleSheet.absoluteFill}>{canvas}</View>
-                        <View
-                            style={styles.top}
-                            pointerEvents="box-none"
-                            testID="wilds-top-card"
-                            onLayout={(e) => setCardHeight(e.nativeEvent.layout.height)}
-                        >
-                            {/* Toggle on: the black runs from the screen's top to the card's
-                                vertical middle, so the map shows behind its lower half
-                                (T, 2026-11-08: "the top half of the top section"). */}
-                            {bandOn && (
-                                <View
-                                    style={[styles.band, { height: cardHeight / 2 }]}
-                                    testID="wilds-black-band"
-                                    pointerEvents="none"
-                                />
-                            )}
+                <View style={styles.frame} testID="wilds-map-frame">
+                    {vellumTop ? (
+                        <>
+                            {/* The map runs the whole stage, up under the status card and
+                                down to the tab bar; the card and the foot float over it. */}
+                            <View style={StyleSheet.absoluteFill}>{canvas}</View>
+                            <View
+                                style={styles.top}
+                                pointerEvents="box-none"
+                                testID="wilds-top-card"
+                                onLayout={(e) => setCardHeight(e.nativeEvent.layout.height)}
+                            >
+                                {/* Toggle on: the black runs from the screen's top to the card's
+                                    vertical middle, so the map shows behind its lower half
+                                    (T, 2026-11-08: "the top half of the top section"). */}
+                                {bandOn && (
+                                    <View
+                                        style={[styles.band, { height: cardHeight / 2 }]}
+                                        testID="wilds-black-band"
+                                        pointerEvents="none"
+                                    />
+                                )}
+                                {status}
+                            </View>
+                        </>
+                    ) : (
+                        <>
                             {status}
-                        </View>
-                    </>
-                ) : (
-                    <>
-                        {status}
-                        <View style={styles.fill}>{canvas}</View>
-                    </>
-                )}
-                <View
-                    style={styles.foot}
-                    pointerEvents="box-none"
-                    testID="wilds-foot"
-                    onLayout={(e) => setFootHeight(e.nativeEvent.layout.height)}
-                >
-                    {foot}
+                            <View style={styles.fill}>{canvas}</View>
+                        </>
+                    )}
+                    <View
+                        style={styles.foot}
+                        pointerEvents="box-none"
+                        testID="wilds-foot"
+                        onLayout={(e) => setFootHeight(e.nativeEvent.layout.height)}
+                    >
+                        {foot}
+                    </View>
                 </View>
+                <MapOverlays />
             </View>
 
             {vm.eventCallout && (
@@ -317,6 +320,9 @@ export default function ExplorationScreen() {
 
 const styles = StyleSheet.create({
     stage: { flex: 1 },
+    // The map's frame: the map, the status card and the foot float together in
+    // it; the gesture line sits in a strip beneath, so the foot never covers it.
+    frame: { flex: 1 },
     fill: { flex: 1 },
     // The status card's holder, over the map. `band` hangs from its top edge to
     // the card's middle (its height is set from the measured card).

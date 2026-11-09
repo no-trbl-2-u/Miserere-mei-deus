@@ -34,7 +34,7 @@ interface MapCanvasProps {
      */
     sheet?: MapSheet | null;
     /**
-     * Viewport-fixed chart furniture (legend, gesture line) —
+     * Viewport-fixed chart furniture (none today: the gesture line sits under the frame) —
      * rendered as a sibling of the vignette SVG, NOT inside the
      * pannable canvas, so absolute positions resolve against the visible
      * viewport instead of the pannable canvas.
@@ -653,7 +653,10 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locato
         (e: { nativeEvent: { layout: { width: number; height: number } } }) => {
             const { width, height } = e.nativeEvent.layout;
             if (width === 0) return;
-            setViewport((prev) => prev ?? { w: width, h: height });
+            // Every layout, not only the first: the status card and the foot settle
+            // after the pane does, and a pane that shrinks later must shrink the
+            // pan limit with it, or the plate's foot stays out of reach.
+            setViewport((prev) => (prev && prev.w === width && prev.h === height ? prev : { w: width, h: height }));
             measurePaneOrigin();
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -666,7 +669,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locato
     // committed (no gesture has moved it); a camera the player has moved, or one
     // that followed a node, is never touched by an inset change.
     const committed = React.useRef<FocusTransform | null>(null);
-    const refit = React.useRef<((insets: MapInsets) => FocusTransform) | null>(null);
+    const refit = React.useRef<((insets: MapInsets, vp: { w: number; h: number }) => FocusTransform) | null>(null);
 
     /**
      * Commit a camera transform to every shared value at once.
@@ -711,7 +714,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locato
 
     const recenter = React.useCallback(() => {
         if (!viewport || nodes.length === 0) return;
-        refit.current = (ins) => computeFocusTransformIn(nodes, viewport, size, ins);
+        refit.current = (ins, vp) => computeFocusTransformIn(nodes, vp, size, ins);
         commitCamera(computeFocusTransformIn(nodes, viewport, size, freeRef.current));
     }, [viewport, nodes, size, commitCamera]);
 
@@ -724,7 +727,8 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locato
     //     stands off-frame (a fight's win moved them on);
     //   - the player's node changing later on the SAME map: the same zoom,
     //     panned only if the new node is outside the inner 80% of the pane;
-    //   - never on a re-measure of the pane (MC1c owns the pane's relayout).
+    //   - never on a re-measure of the pane: the pan limit and the inset re-frame
+//     below follow it, and a camera the player has moved is left alone.
     const currentId = nodes.find((n) => n.kind === 'current')?.id ?? '';
     const framed = React.useRef(false);
     const lastCurrent = React.useRef<string | null>(null);
@@ -741,24 +745,24 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locato
             lastMapId.current = mapId;
             const remembered = mapId ? recallCamera(mapId) : undefined;
             if (!remembered) {
-                const frameFresh = (ins: MapInsets) => computeFocusTransformIn(nodes, viewport, size, ins);
+                const frameFresh = (ins: MapInsets, vp: { w: number; h: number }) => computeFocusTransformIn(nodes, vp, size, ins);
                 refit.current = frameFresh;
-                commitCamera(frameFresh(freeRef.current));
+                commitCamera(frameFresh(freeRef.current, viewport));
                 return;
             }
             // The remembered point is a point of the map that sat at the centre of
             // the free rectangle; it is put at the centre of whatever rectangle is free now.
-            const sc = clampScale(remembered.scale, minScaleFor(viewport, size));
-            const frameRemembered = (ins: MapInsets) => {
+            const frameRemembered = (ins: MapInsets, vp: { w: number; h: number }) => {
+                const sc = clampScale(remembered.scale, minScaleFor(vp, size));
                 const restored = {
                     scale: sc,
-                    tx: viewport.w / 2 - remembered.cx * sc,
-                    ty: frameCentreY(viewport, ins) - remembered.cy * sc,
+                    tx: vp.w / 2 - remembered.cx * sc,
+                    ty: frameCentreY(vp, ins) - remembered.cy * sc,
                 };
-                return current ? panIntoFrameIn(restored, px, py, viewport, ins) : restored;
+                return current ? panIntoFrameIn(restored, px, py, vp, ins) : restored;
             };
             refit.current = frameRemembered;
-            commitCamera(frameRemembered(freeRef.current));
+            commitCamera(frameRemembered(freeRef.current, viewport));
             return;
         }
         if (lastCurrent.current === currentId) return;
@@ -782,7 +786,7 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locato
         const still = Math.abs(scale.value - last.scale) < 1e-6
             && Math.abs(tx.value - last.tx) < 1e-6
             && Math.abs(ty.value - last.ty) < 1e-6;
-        if (still) commitCamera(again(freeRef.current));
+        if (still) commitCamera(again(freeRef.current, viewport));
     }, [free.top, free.bottom, viewport, scale, tx, ty, commitCamera]);
 
     // Remember the camera as the map unmounts (a fight, a rest, a hazard): the

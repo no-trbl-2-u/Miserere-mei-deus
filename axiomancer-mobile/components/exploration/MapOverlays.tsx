@@ -1,9 +1,9 @@
 /**
- * Viewport-fixed chart furniture for `<MapCanvas>` — the gesture line.
+ * The gesture line, in a strip directly under the map's frame (MC1c).
  *
- * Renders inside the map's viewport (never inside the pannable canvas), so
- * every position here resolves against the visible chart rather than the
- * 936x1040 spread.
+ * It used to sit over the map's top-left corner and cover whatever was drawn
+ * there; now it is a row of its own beneath the frame, so nothing but the
+ * recentre button is drawn over the map.
  *
  * The LEGEND strip (trodden / open / sealed, and the node counter) was cut on
  * 2026-11-02: T ruled the marks read for themselves, and the strip was the
@@ -12,15 +12,18 @@
  * State read: none. It is pure props; the presenter owns the gesture line's
  * words (`MAP_GESTURE_LINE`). Which line shows follows the pointer: a mouse
  * gets the wheel, a finger the pinch (`detectMapPointer`).
- * Mounted from: `app/(tabs)/exploration/index.tsx`, as `<MapCanvas overlays=…>`.
+ * Mounted from: `app/(tabs)/exploration/index.tsx`, under the map frame.
  */
 
 import React from 'react';
-import { Text, Platform } from 'react-native';
+import { Text, View, Platform } from 'react-native';
 import { FONTS } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { MAP_GESTURE_LINE } from '@/state/presenters/exploration.engine';
 import type { MapPointer } from '@/state/presenters/exploration.engine';
+
+/** The strip's height: one line of 9pt mono with a little air. */
+export const GESTURE_STRIP_HEIGHT = 20;
 
 interface MapOverlaysProps {
     /** Overrides the detected pointer (tests); defaults to `detectMapPointer()`. */
@@ -42,12 +45,11 @@ export function MapOverlays({ pointer }: MapOverlaysProps = {}) {
     const styles = useStyles();
     const gestureLine = MAP_GESTURE_LINE[pointer ?? detectMapPointer()];
     return (
-        <>
+        <View style={styles.strip} testID="map-gesture-strip">
             {/* Gesture line. Naming the gesture here keeps "the sheet
                 moves" on screen for the whole run. */}
             <Text style={styles.gestures} testID="map-gesture-line">{gestureLine}</Text>
-
-        </>
+        </View>
     );
 }
 
@@ -57,14 +59,15 @@ export function MapOverlays({ pointer }: MapOverlaysProps = {}) {
  * Input: the active palette `AXM`. Output: the gesture line / legend styles.
  */
 const useStyles = makeStyles((AXM) => ({
+    strip: {
+        height: GESTURE_STRIP_HEIGHT,
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+    },
     gestures: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
         fontFamily: FONTS.mono,
         fontSize: 9,
         color: AXM.bone,
         letterSpacing: 1,
-        zIndex: 2,
     },
 }));

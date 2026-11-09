@@ -42,6 +42,7 @@ import { useDragInterruptRecovery } from '@/components/combat/encounter/useDragI
 import { startDragSpan, type DragSpanEnd, type DragSpanKind, type DragSpanOutcome } from '@/lib/monitoring';
 import { type CombatFx } from '@/components/combat/encounter/CombatCombatantPane';
 import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/CombatDie';
+import { RASTER_LAYER } from '@/components/combat/encounter/rasterLayer';
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { Image } from '@/lib/platform/image';
@@ -1045,16 +1046,22 @@ export function CombatEncounterPanel({
                                 value); the sentence, the type strip and the die triplet are
                                 shown BELOW, where the definitions already live. */}
                             <View style={styles.detailCardWrap}>
-                                <Svg width={detailCardW + 120} height={detailCardW + 120} viewBox="0 0 100 100" style={styles.detailHalo} pointerEvents="none">
-                                    <Defs>
-                                        <RadialGradient id="axmCardHalo" cx="50%" cy="50%" r="50%">
-                                            <Stop offset="0%" stopColor={detailCard.stanceColor} stopOpacity={0.34} />
-                                            <Stop offset="60%" stopColor={detailCard.stanceColor} stopOpacity={0.1} />
-                                            <Stop offset="100%" stopColor={detailCard.stanceColor} stopOpacity={0} />
-                                        </RadialGradient>
-                                    </Defs>
-                                    <Circle cx={50} cy={50} r={50} fill="url(#axmCardHalo)" />
-                                </Svg>
+                                <View
+                                    style={[styles.detailHalo, { width: detailCardW + 120, height: detailCardW + 120 }]}
+                                    pointerEvents="none"
+                                    {...RASTER_LAYER}
+                                >
+                                    <Svg width={detailCardW + 120} height={detailCardW + 120} viewBox="0 0 100 100" pointerEvents="none">
+                                        <Defs>
+                                            <RadialGradient id="axmCardHalo" cx="50%" cy="50%" r="50%">
+                                                <Stop offset="0%" stopColor={detailCard.stanceColor} stopOpacity={0.34} />
+                                                <Stop offset="60%" stopColor={detailCard.stanceColor} stopOpacity={0.1} />
+                                                <Stop offset="100%" stopColor={detailCard.stanceColor} stopOpacity={0} />
+                                            </RadialGradient>
+                                        </Defs>
+                                        <Circle cx={50} cy={50} r={50} fill="url(#axmCardHalo)" />
+                                    </Svg>
+                                </View>
                                 <CombatCardFace card={detailCard} width={detailCardW} height={Math.round(detailCardW * 1.43)} large />
                             </View>
                             {/* (3) the NO-DIE / +DIE fork. The face is bare, so this is the

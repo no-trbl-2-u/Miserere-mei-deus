@@ -130,6 +130,12 @@ function seedExemptions(violations: readonly CardRuleViolation[], prior: readonl
     fs.writeFileSync(FIXTURE_PATH, `${JSON.stringify(unique, null, 2)}\n`);
 }
 
+/** The failure message for a stale row: the footgun `card-voice-stale-rows` is a fixed card still pinned. */
+function staleHint(ids: readonly string[]): string {
+    return `${ids.length} card(s) now pass but are still pinned (${ids.join(', ')}). Drop the fixed rows and commit the fixture with the text: `
+        + 'CARD_RULES_SEED=1 npx vitest run src/Cards/e2e/card-rules.engine.test.ts (in axiomancer-mechanics)';
+}
+
 const LIVE = allViolations(cardLibrary);
 if (SEED) seedExemptions(LIVE, loadExemptions());
 const EXEMPTIONS = loadExemptions();
@@ -137,6 +143,12 @@ const EXEMPT_KEYS = new Set(EXEMPTIONS.map(key));
 const LIVE_KEYS = new Set(LIVE.map(key));
 
 describe('the card-rules fence reads real inputs', () => {
+    it('a stale-row failure names the seed command that fixes it (footgun card-voice-stale-rows)', () => {
+        const hint = staleHint(['some-card']);
+        expect(hint).toContain('CARD_RULES_SEED=1 npx vitest run src/Cards/e2e/card-rules.engine.test.ts');
+        expect(hint).toContain('some-card');
+    });
+
     it('runs over every library card, grey and trial', () => {
         expect(cardLibrary.length).toBeGreaterThan(3);
         expect(cardLibrary.some(c => c.tags?.includes('grey'))).toBe(true);
@@ -172,7 +184,7 @@ for (const rule of FENCED_RULES) {
 
         it('every pinned break still happens (no stale exemption)', () => {
             const stale = EXEMPTIONS.filter(e => e.rule === rule && !LIVE_KEYS.has(key(e))).map(e => e.id);
-            expect(stale).toEqual([]);
+            expect(stale, stale.length ? staleHint(stale) : undefined).toEqual([]);
         });
     });
 }

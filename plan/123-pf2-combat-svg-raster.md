@@ -124,10 +124,6 @@ None.
 
 ## Acceptance
 
-- **A1** Step 1 shipped: `renderToHardwareTextureAndroid` (and
-  `shouldRasterizeIOS`) on a wrapper `View` around each static SVG layer
-  listed in Scope and around each `CombatDie`; no visual change on web
-  or in the jest snapshots. The loop builds this (123.2, PF2a).
 - **A2** (attended) T records step 1's numbers for drags a/b/c in
   `combat-drag-baseline.md` beside the PR #510 baseline, same device,
   same APK profile.
@@ -147,8 +143,6 @@ None.
   colour. Pixel diff against the SVG under 1% per glyph in the web
   harness.
 - **A7** T records steps 2 and 3's numbers in the same tables.
-- **A8** `npm run verify -w axiomancer-mobile`, `combat-round-e2e.mjs`
-  and `combat-encounter-e2e.mjs` pass at every step.
 
 ## Open questions
 
@@ -156,11 +150,8 @@ None.
 
 ## Chunks
 
-Measure: 8 open · 0 closed · next A9
+Measure: 6 open · 2 closed · next A9
 
-- [ ] **123.1** Combat SVG rasterisation: T's Android measurement and the gate call (attended) · S · closes A2, A3, A4, A5, A6, A7 · needs 123.2 · alias: PF2
+- [ ] **123.1** Combat SVG rasterisation: T's Android measurement and the gate call (attended) · S · closes A2, A3, A4, A5, A6, A7 · needs — · alias: PF2
   - A4-A7 (steps 2 and 3) are code that runs only if A3 says so; if it does, a `/plot` splits them into a loop chunk and keeps A2/A7 with T.
   - also waits on: its Android baseline tables filled by T
-- [ ] **123.2** Combat SVG rasterisation, step 1: texture caching on the static layers and dice · S · closes A1, A8 · needs — · alias: PF2a
-  - Wrap each static SVG layer in Scope and each `CombatDie` in a `View` with `renderToHardwareTextureAndroid` and `shouldRasterizeIOS`; no visual change.
-  - Measure: `npm run verify -w axiomancer-mobile`, `node scripts/combat-round-e2e.mjs`, `node scripts/combat-encounter-e2e.mjs`.

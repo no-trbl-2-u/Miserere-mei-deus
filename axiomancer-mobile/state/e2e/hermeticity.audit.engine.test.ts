@@ -180,6 +180,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // that the route is gone and the header names its callers are source
         // facts, unprovable by rendering.
         'state/e2e/app-components.engine.test.tsx',
+        // The stakes-card guard (phase 99.9) reads StakesCard.tsx and the
+        // stakes VM source to pin which VM fields the card draws; a source
+        // fact, unprovable by rendering.
+        'components/hazard/__tests__/StakesCard.vm-drawn.test.ts',
     ]);
 
     const FS_PATTERN =
