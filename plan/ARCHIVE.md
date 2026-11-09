@@ -605,3 +605,5 @@
 - 2026-11-08 · 162.3 (alias: MV1c) · the Saint Beneath plays its own six moves · 4f03239d..59d95308 (#1483)
 - 2026-11-08 · 162.4 (alias: MV1d) · Five foes play own moves; Saltwick Swarm is a sea cave elite · fdf6c359..88f7e5dd (#1492)
 - 2026-11-08 · 162.5 (alias: MV1e) · UNBROKEN pays at the start of your next turn · 50cc40f4..2f39f4e2 (#1498)
+- 2026-11-08 · 159.6 (alias: TU1f) · LOAD GAME takes taps; foe, relic and Self names show whole · 5eeea52e..6f615a5b (#1474)
+- 2026-11-08 · 161.1 (alias: GO1a) · a second death shows Game Over, not the opening scene; NEW CHARACTER then CONFIRM opens the run · 5f5c842d..5f5c842d (#1473)
