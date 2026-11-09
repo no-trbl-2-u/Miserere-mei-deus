@@ -17,7 +17,7 @@
  *   · TANGLE n: your next n cards cannot use their FREE line (a FREE play is
  *     refused, each landed PAID play counts one off, the rest fades at the
  *     foe's next turn).
- *   · UNDERTOW: the named die does not roll on your next turn.
+ *   · SEIZED: the named die does not roll on your next turn.
  *   · BARNACLE: a Curse joins your hand; it cannot be played or scrapped and
  *     falls off when you spend a body die on a card.
  * Every word's numbers but VULNERABLE's, TANGLE's and BARNACLE's scale with the foe's level.
@@ -130,10 +130,10 @@ it('the fixture player is at neutral stats, so a printed number is the number', 
     expect(scaleFor(5, STATS, 'mind', 'one-shot')).toBe(5);
 });
 
-describe('the nine words are the enemy keywords', () => {
-    it('ENEMY_KEYWORDS names the six, then TANGLE, UNDERTOW and BARNACLE', () => {
+describe('the eleven words are the enemy keywords', () => {
+    it('ENEMY_KEYWORDS names the six, then TANGLE, SEIZED, BARNACLE, SHOCK and UNBROKEN', () => {
         expect([...ENEMY_KEYWORDS]).toEqual([
-            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'undertow', 'barnacle',
+            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'seized', 'barnacle', 'shock', 'unbroken',
         ]);
     });
 
@@ -429,8 +429,8 @@ describe('TANGLE', () => {
     });
 });
 
-describe('UNDERTOW', () => {
-    const DRAG: EnemyMove = { name: 'Drag', kind: 'status', text: 'UNDERTOW.', undertow: 'mind' };
+describe('SEIZED', () => {
+    const DRAG: EnemyMove = { name: 'Drag', kind: 'status', text: 'SEIZED.', undertow: 'mind' };
 
     it('names one die and does not scale', () => {
         const [entry] = getThreatSequence(foe([DRAG], { level: 6 }));

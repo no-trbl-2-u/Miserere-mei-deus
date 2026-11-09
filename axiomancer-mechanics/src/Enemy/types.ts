@@ -172,6 +172,18 @@ export interface Enemy {
 export type EnemyMoveKind = 'attack' | 'defend' | 'status' | 'danger' | 'unknown';
 
 /**
+ * What an UNBROKEN clause pays out: e.g. `{ damage: 4, hits: 2 }`,
+ * `{ shock: 1 }` or `{ barnacle: 1 }`. `damage` is per hit at the authored
+ * level and scales with the foe; `hits`, `shock` and `barnacle` are counts.
+ */
+export interface UnbrokenPayout {
+    damage?: number;
+    hits?: number;
+    shock?: number;
+    barnacle?: number;
+}
+
+/**
  * One move a `phases` foe plays. Numbers are authored at
  * `PHASES_AUTHORED_LEVEL` for the foe's tier and scale with its level
  * (`scaleMoveNumber`, `Combat/combat.threat.ts`).
@@ -216,6 +228,11 @@ export interface EnemyMove {
     undertow?: 'heart' | 'body' | 'mind' | 'random' | readonly ['heart' | 'body' | 'mind', 'heart' | 'body' | 'mind'];
     /** BARNACLE n: n Barnacle Curses join your hand (a count, not scaled by level). */
     barnacle?: number;
+    /** SHOCK n: each DEAL against you deals n more, per hit, for 3 turns (a count, not scaled by level). */
+    shock?: number;
+    /** UNBROKEN: on a WARD move, what pays out at the start of the foe's next
+     *  turn if any of the WARD is left. See {@link UnbrokenPayout}. */
+    unbroken?: UnbrokenPayout;
     /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
      *  See {@link EnemyMoveRider}. */
     rider?: EnemyMoveRider;
@@ -228,7 +245,8 @@ export interface EnemyMove {
  * like the move's damage; counts, percentages and thresholds do not.
  *
  *   unplayed-card-bonus      +`damage` per card you leave unplayed in your hand.
- *   hand-size-damage         one hit of `damage` per card in your hand.
+ *   hand-size-damage         one hit of `damage` per card in your hand, counting the BARNACLE the same move adds.
+ *   hand-size-tangle         TANGLE `per` per card in your hand, counting the BARNACLE the same move adds.
  *   half-dealt-last-turn     one hit of half what you dealt it last turn.
  *   below-half-vitae         under half VITAE: the hit becomes `damage` and it MENDs `mend`.
  *   if-tangled               TANGLE left at the end of your turn: the hit becomes `damage`.
@@ -264,6 +282,7 @@ export interface EnemyMove {
  *   garnish                  takes `take` Conviction; with none to take the hit gains `bonus` (and +`perLien` per Barnacle in your hand).
  *   ward-per-conviction      WARD `per` for each Conviction you hold.
  *   audit                    one hit of `damage` per LEDGER, then the LEDGER clears.
+ *   take-conviction-ward     takes up to `conviction` of your Conviction (no dice), WARD `ward` per point taken.
  *   foreclose                takes all your Conviction: one hit of `damage` and WARD `ward` per point taken.
  *   verse-gain               adds `verse` to the foe's VERSE count.
  *   verse-hit                one hit of `damage` per VERSE.
@@ -280,7 +299,8 @@ export interface EnemyMove {
  *                            die and per point taken.
  *   toll-levy                +`damage` on the hit per TOLL owed.
  *   toll-seize               TOLL doubles, then one hit of `damage` per TOLL.
- *   curse-count-hit          one hit of `damage` per Curse in your hand, draw pile and discard.
+ *   curse-count-hit          one hit of `damage` per Curse in your hand, draw pile and discard;
+ *                            with none, `barnacleIfNone` Barnacles join your hand instead.
  *   distrain                 takes a random card (not a Curse) from your hand until you pay the TOLL.
  *   tide-wash                +`damage` on the hit per TIDE; at TIDE `twiceAt`+ it hits twice; TIDE
  *                            rises `rise` a turn in the phase that carries it (default 1).
@@ -291,6 +311,7 @@ export interface EnemyMove {
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
     | { kind: 'hand-size-damage'; damage: number }
+    | { kind: 'hand-size-tangle'; per: number }
     | { kind: 'half-dealt-last-turn' }
     | { kind: 'below-half-vitae'; damage: number; mend: number }
     | { kind: 'if-tangled'; damage: number }
@@ -327,6 +348,7 @@ export type EnemyMoveRider =
     | { kind: 'ward-per-conviction'; per: number }
     | { kind: 'audit'; damage: number }
     | { kind: 'foreclose'; damage: number; ward: number }
+    | { kind: 'take-conviction-ward'; conviction: number; ward: number }
     // The Cave Choir (phase EN1j).
     | { kind: 'verse-gain'; verse: number }
     | { kind: 'verse-hit'; damage: number }
@@ -342,7 +364,7 @@ export type EnemyMoveRider =
     // The Toll-Keeper (phase EN1l).
     | { kind: 'toll-levy'; damage: number }
     | { kind: 'toll-seize'; damage: number }
-    | { kind: 'curse-count-hit'; damage: number }
+    | { kind: 'curse-count-hit'; damage: number; barnacleIfNone?: number }
     | { kind: 'distrain' }
     // The Tide-Gate (phase EN1l).
     | { kind: 'tide-wash'; damage: number; twiceAt?: number; rise?: number }

@@ -138,7 +138,7 @@ describe('A9 — the four foes play exactly the Appendix', () => {
         }
         const words = (foe: Enemy) => new Set((foe.phases ?? []).flatMap(p => [...p.moves, ...(p.danger ? [p.danger] : [])]).flatMap(moveKeywords));
         expect([...words(NetMender)].sort()).toEqual(['barnacle', 'mend', 'scour', 'tangle']);
-        expect([...words(CraneHook)].sort()).toEqual(['undertow', 'ward']);
+        expect([...words(CraneHook)].sort()).toEqual(['seized', 'ward']);
     });
 
     it('every Breakwater node binds its foe under level 10 (the recast faces hold the cut foes\' nodes, EN3b)', () => {
@@ -337,7 +337,7 @@ describe('the Crane-Hook\'s riders (level 3)', () => {
         expect(foeTurn(s).next.enemyWords?.ward).toBe(s3(10));
     });
 
-    it('Hoist: UNDERTOW on your body die', () => {
+    it('Hoist: SEIZED on your body die', () => {
         expect(foeTurn(at(crane, 'Hoist')).next.enemyWords?.undertow).toBe('body');
     });
 

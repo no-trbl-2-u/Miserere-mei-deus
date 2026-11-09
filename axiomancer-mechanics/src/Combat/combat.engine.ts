@@ -35,7 +35,7 @@ import type { CombatState } from './types';
 import { applyDamage, heal, isDefeated, erodeMaxHealth } from './health';
 import {
     processRoundStartEffects, processRoundEndEffects,
-    getDamageTakenMultiplier, getPendingDotTotal,
+    getDamageTakenFlat, getDamageTakenMultiplier, getPendingDotTotal,
     getOutgoingDamageMult,
     computeRoundsToKill,
     fireDotTrigger, growPerEnemyActionDots,
@@ -876,7 +876,7 @@ function applyRiderToState(
     if (r.damage) {
         // The printed number is the number, scaled by body and VULNERABLE;
         // the foe's WARD soaks the part before VULNERABLE.
-        const base = scaleFor(r.damage, stats, 'body', 'one-shot') + dealBonus;
+        const base = scaleFor(r.damage, stats, 'body', 'one-shot') + dealBonus + getDamageTakenFlat(enemy);
         const warded = soakDealWithWard(state, base, scalePlayerHit({
             base, vulnMult: getDamageTakenMultiplier(enemy),
         }), events);
@@ -1140,7 +1140,7 @@ function playBottomAction(
         // The next-DEAL bonus (Crimson Pact) joins unscaled, before VULNERABLE, and the first DEAL spends it.
         const pending = gear.program?.nextDealBonus ?? 0;
         if (pending > 0 && gear.program) gear = { ...gear, program: { ...gear.program, nextDealBonus: 0 } };
-        const base = scaleFor(mech.amount, stats, 'body', 'one-shot') + fired.bonus + pending;
+        const base = scaleFor(mech.amount, stats, 'body', 'one-shot') + fired.bonus + pending + getDamageTakenFlat(enemy);
         const warded = soakDealWithWard(wardState, base, scalePlayerHit({ base, vulnMult }), events);
         wardState = warded.state;
         const dmg = warded.dealt;
@@ -1420,6 +1420,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         events.push(...plan.events);
         // The enemy attacks: its telegraphed threat action fires on the player.
         const playerTakenMult = getDamageTakenMultiplier(state.player);
+        // SHOCK adds to each hit, unscaled by the clock, before VULNERABLE.
+        const playerShock = getDamageTakenFlat(state.player);
         if (attackLess > 0 && state.program && moveEffects.some(e => (e.damage ?? 0) > 0)) {
             state = { ...state, program: { ...state.program, attackLess: 0 } };
         } else attackLess = 0;
@@ -1427,7 +1429,7 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
             // A foe the spikes defeated mid-attack strikes no more.
             if (eff.damage && eff.damage > 0 && !isDefeated(enemy)) {
                 attacksLanded += 1;
-                let dmg = Math.round(
+                let dmg = Math.round((
                     eff.damage * THREAT_DAMAGE_SCALE * escalation
                     * enemyOutgoingMult
                     // Every STAGE this foe has entered adds its printed weight
@@ -1437,8 +1439,8 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     // into a one-shot. A stage should change the shape of a fight, not end
                     // it before the deck can answer.
                     * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
-                    * playerTakenMult,
-                );
+                    + playerShock
+                ) * playerTakenMult);
                 if (attackLess > 0) {
                     const less = Math.min(dmg, attackLess);
                     dmg -= less;
@@ -2208,7 +2210,9 @@ export function projectIncomingThreat(state: CombatEncounterState): {
 } {
     const idx = Math.min(state.currentPhaseIndex, state.threatPhases.length - 1);
     const phase = state.threatPhases[idx];
-    const rawDamage = planRiderTurn(state, phase.threatAction).effects.reduce((s, e) => s + (e.damage ?? 0), 0);
+    const planned = planRiderTurn(state, phase.threatAction).effects;
+    const rawDamage = planned.reduce((s, e) => s + (e.damage ?? 0), 0);
+    const shockTotal = getDamageTakenFlat(state.player) * planned.filter(e => (e.damage ?? 0) > 0).length;
 
     const act = canAct(state.enemy.effects as ActiveEffect[]);
     const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
@@ -2226,7 +2230,7 @@ export function projectIncomingThreat(state: CombatEncounterState): {
     const projectedDamage = willDeny ? 0 : blizzard > 0
         // BLIZZARD takes n off each hit, as the engine applies it.
         ? threatHits(state).reduce((sum, h) => sum + Math.max(0, h - blizzard), 0)
-        : Math.round(rawDamage * THREAT_DAMAGE_SCALE * escalation * enemyOutgoingMult * playerTakenMult);
+        : Math.round((rawDamage * THREAT_DAMAGE_SCALE * escalation * enemyOutgoingMult + shockTotal) * playerTakenMult);
 
     const guard = state.guard ?? 0;
     const barrier = state.barrier ?? 0;
@@ -2287,12 +2291,13 @@ export function threatHits(state: CombatEncounterState, effects?: readonly Comba
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
     const escalation = !escalationApplies(state.enemy) ? 1
         : Math.min(THREAT_ESCALATION_MAX, 1 + escalationRate * Math.max(0, state.round - THREAT_ESCALATION_GRACE));
-    const mult =escalation * getOutgoingDamageMult(state.enemy)
-        * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0))
-        * getDamageTakenMultiplier(state.player);
+    const mult = escalation * getOutgoingDamageMult(state.enemy)
+        * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0));
+    const shock = getDamageTakenFlat(state.player);
+    const taken = getDamageTakenMultiplier(state.player);
     return moveEffects
         .filter(e => (e.damage ?? 0) > 0)
-        .map(e => Math.round((e.damage as number) * THREAT_DAMAGE_SCALE * mult));
+        .map(e => Math.round(((e.damage as number) * THREAT_DAMAGE_SCALE * mult + shock) * taken));
 }
 
 /**

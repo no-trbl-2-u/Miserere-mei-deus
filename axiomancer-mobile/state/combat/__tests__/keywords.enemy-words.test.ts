@@ -6,6 +6,7 @@
 import { describe, expect, it } from '@jest/globals';
 
 import { ENEMY_KEYWORDS } from '../../../../axiomancer-mechanics/src/Enemy/enemy-keywords';
+import * as library from '../../../../axiomancer-mechanics/src/Enemy/enemy.library';
 import { keywordGloss, keywordsInText } from '@/state/combat/keywords';
 import { glyphShapeFor } from '@/components/combat/glyphShapes';
 
@@ -20,15 +21,21 @@ const COUNTER: Record<(typeof ENEMY_KEYWORDS)[number], RegExp> = {
     vulnerable: /GUARD still blocks the larger hit/,
     leech: /race a LEECH on you/,
     tangle: /Pay for them with dice/,
-    undertow: /banked in the Reserve/,
+    seized: /banked in the Reserve/,
     barnacle: /Spend a body die on a card/,
+    shock: /GUARD still blocks the larger hit/,
+    unbroken: /Break the WARD and it pays nothing/,
 };
 
 describe('the enemy words', () => {
-    it('reads the engine list of nine', () => {
+    it('reads the engine list of eleven', () => {
         expect([...ENEMY_KEYWORDS]).toEqual([
-            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'undertow', 'barnacle',
+            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'seized', 'barnacle', 'shock', 'unbroken',
         ]);
+    });
+
+    it('a move line printing SHOCK or UNBROKEN opens their glosses', () => {
+        expect(keywordsInText('Drift Apart: WARD 8. UNBROKEN: SHOCK 1.')).toEqual(['Ward', 'Unbroken', 'Shock']);
     });
 
     for (const id of ENEMY_KEYWORDS) {
@@ -45,5 +52,18 @@ describe('the enemy words', () => {
         expect(keywordsInText('Knot Up: WARD 5 and MEND 4.')).toEqual(['Ward', 'Mend']);
         expect(keywordsInText('Mend the Net: MEND 6 and it SCOURs one status off itself.')).toEqual(['Mend', 'Scour']);
         expect(keywordsInText('Net Throw: TANGLE 2 and BARNACLE.')).toEqual(['Tangle', 'Barnacle']);
+    });
+
+    it('the word the player reads is SEIZED, never UNDERTOW', () => {
+        const lines: string[] = [];
+        for (const foe of Object.values(library) as { phases?: { moves: { text: string }[]; danger?: { text: string } }[] }[]) {
+            for (const phase of foe?.phases ?? []) {
+                for (const m of [...phase.moves, ...(phase.danger ? [phase.danger] : [])]) lines.push(m.text);
+            }
+        }
+        expect(lines.filter((l) => l.includes('SEIZED')).length).toBeGreaterThanOrEqual(3);
+        expect(lines.filter((l) => /UNDERTOW/.test(l))).toEqual([]);
+        expect(keywordsInText('Hoist: SEIZED, your body die is lifted.')).toEqual(['Seized']);
+        expect(keywordGloss('Undertow')).toBeNull();
     });
 });

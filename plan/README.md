@@ -44,7 +44,7 @@ needs are done):
 - **99.7** · automate footgun `recast-pinned-orphan-lens` (seen 2×), spec 99's ladder chunk.
 - **99.8** · automate footgun `scratchpad-script-no-resolve` (seen 2×), spec 99's ladder chunk.
 - **99.9** · automate footgun `stakes-card-vm-undrawn-lines` (seen 2×), spec 99's ladder chunk.
-- **99.10** · automate footgun `windows-tar-tree-lint` (seen 2×), spec 99's ladder chunk.
+- **99.10** · automate footgun `windows-tar-tree-lint` (seen 7×), spec 99's ladder chunk.
 
 - **160.1** · MG1a: the merge decision re-runs when the verify gate finishes (T's end gate, `/plot`, 2026-11-08)
 
@@ -53,10 +53,9 @@ needs are done):
 
 - **161.1** · GO1a: a second death reaches Game Over, not the opening scene (T, `/plot`, 2026-11-08)
 
-- **162.1** · MV1a: SEIZED replaces UNDERTOW (T's ballot, `/plot`, 2026-11-08)
-- **162.2** · MV1b: SHOCK and UNBROKEN join the rules (T's ballot, `/plot`, 2026-11-08)
-- **162.3** · MV1c: the Saint Beneath's own moves (T's ballot, `/plot`, 2026-11-08; needs 162.1)
-- **162.4** · MV1d: five recast foes get their own moves (T's ballot, `/plot`, 2026-11-08; needs 162.1, 162.2)
+
+- **162.5** · MV1e: UNBROKEN pays at the start of your next turn (T's end gate, `/plot`, 2026-11-08)
+- **162.6** · MV1f: the Saint Beneath fights at level 8 (T's end gate, `/plot`, 2026-11-08)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -98,7 +97,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 162 | Six foes get moves of their own | [162-mv1-enemy-movesets.md](162-mv1-enemy-movesets.md) | planned (**Asap**: 162.1-162.4) | 4 left |
+| 162 | Six foes get moves of their own | [162-mv1-enemy-movesets.md](162-mv1-enemy-movesets.md) | planned | 2 left |
 | 161 | A second death reaches the Game Over screen | [161-go1-second-death-game-over.md](161-go1-second-death-game-over.md) | planned (**Asap**: 161.1) | 1 left |
 | 160 | A passed review still merges when the verify gate finishes after it | [160-mg1-merge-after-late-gate.md](160-mg1-merge-after-late-gate.md) | planned (**Asap**: 160.1) | 1 left |
 | 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned | 1 left |

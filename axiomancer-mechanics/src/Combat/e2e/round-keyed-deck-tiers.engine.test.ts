@@ -163,9 +163,8 @@ describe('round-keyed deck tiers — a flat deck still compiles to what it alway
             expect(ENEMY_DECK_IDS, id).not.toContain(id);
             expect(enemyById(id).phases?.length, id).toBe(2);
         }
-        // The Saint Beneath (EN3a) takes the Death Beholder's deck whole;
-        // both boss entries keep theirs.
-        expect(ENEMY_DECK_IDS).toEqual(['enemy-death-beholder', 'enemy-saint-beneath']);
+        // The Saint Beneath plays HP phases too; the Death Beholder is the one deck foe left.
+        expect(ENEMY_DECK_IDS).toEqual(['enemy-death-beholder']);
     });
 });
 
@@ -173,9 +172,7 @@ describe('round-keyed deck tiers — a flat deck still compiles to what it alway
 
 describe('round-keyed deck tiers — an authored tiered deck opens its tiers by round', () => {
     it('every boss/unique that hand-authored tiers gates exactly by tier', () => {
-        // The Death Beholder and its recast face, The Saint Beneath (EN3a),
-        // are the hand-tiered decks; the Saint's tiers are the Beholder's.
-        expect(TIERED_DECK_IDS).toEqual(['enemy-death-beholder', 'enemy-saint-beneath']);
+        expect(TIERED_DECK_IDS).toEqual(['enemy-death-beholder']);
         for (const id of TIERED_DECK_IDS) {
             const plan = planDeckTiers(id)!;
             expect(plan.authored).toBe(true);

@@ -124,7 +124,7 @@ const LOCK_THE_BRAKE: EnemyMove = {
 };
 const HOIST: EnemyMove = {
     name: 'Hoist', kind: 'status',
-    text: 'UNDERTOW: your body die is lifted out of your next roll.',
+    text: 'SEIZED: your body die is lifted out of your next roll.',
     undertow: 'body',
 };
 /** Counterweight's second hit: 6, and 9 in its second phase. */
@@ -242,7 +242,7 @@ const HIDE_IN_THE_HOARD: EnemyMove = {
 };
 const GULL_CALL: EnemyMove = {
     name: 'Gull-call', kind: 'status',
-    text: 'UNDERTOW on a random die.',
+    text: 'SEIZED on a random die.',
     undertow: 'random',
 };
 
@@ -377,7 +377,7 @@ const SLUICE: EnemyMove = {
 };
 const GATE_UNDERTOW: EnemyMove = {
     name: 'Undertow', kind: 'status',
-    text: 'UNDERTOW on 1 die.',
+    text: 'SEIZED on 1 die.',
     undertow: 'mind',
 };
 const WASH_OVER_HIGH: EnemyMove = {
@@ -942,7 +942,7 @@ export const CaveChoir = createEnemy({
         {
             danger: {
                 name: 'Toll for the Drowned', kind: 'danger',
-                text: 'UNDERTOW on 2 dice, then 8 damage.',
+                text: 'SEIZED on 2 dice, then 8 damage.',
                 // Heart and Mind: the Body die stays, to shake off the Psalm's Barnacles.
                 undertow: ['heart', 'mind'], damage: 8,
             },
@@ -1101,24 +1101,44 @@ export const Wrecker = createEnemy({
 //
 // T settled six new portraits onto six cut foes' slots. Each entry below is
 // its cut foe's numbers under a new id, name, description and portrait key:
-// `level`, `baseStats`, `difficulty`, `logic` and `phases` (or, for the boss,
-// its authored VITAE and its three stages) are COPIED VERBATIM. Nothing here
-// is designed, retuned or removed, and no cut foe is deleted — all ten stay
-// in the library, placed nowhere in Chapter 1 (T: "they're just not in
-// chapter 1").
+// `level`, `baseStats`, `difficulty`, `logic` and (except the boss, which now
+// plays its own moves) `phases` are COPIED VERBATIM. No cut foe is deleted —
+// all ten stay in the library, placed nowhere in Chapter 1 (T: "they're just
+// not in chapter 1").
 //
 // Voice: each new entry is description-only, exactly as Chapter 1's fourteen
 // stand-ins are today (T, 2026-11-06, question 4) — one drafted line read off
 // its portrait, for T to rewrite, and no `finalBlowLines` or `causeLines`.
 // The normals keep a drafted Spare/Finish pair because the mercy check is
 // gameplay, not prose, and `aftermath-lines.engine.test.ts` requires one of
-// every normal. The boss carries a journal entry (a boss must) and no mercy
-// lines (a boss is never spared).
+// every normal. The boss carries T's journal page (a boss must have one) and
+// no mercy lines (a boss is never spared).
 
 /** Provenance stamp for the EN3 recast's six new faces. */
 const RECAST_ADDED = '2026-11-07';
 
-/** Chapter 1's boss: takes the Death Beholder's fight whole (EN3a). */
+/** Communion: 2 damage per Curse you carry, or a BARNACLE Curse if you carry none. */
+const COMMUNION: EnemyMove = {
+    name: 'Communion', kind: 'attack',
+    text: '2 damage per Curse in your hand, deck and discard. With none, a BARNACLE Curse goes into your hand instead.',
+    rider: { kind: 'curse-count-hit', damage: 2, barnacleIfNone: 1 },
+};
+
+/** The Faithful Gather: it heals and strips one status off itself. */
+const THE_FAITHFUL_GATHER: EnemyMove = {
+    name: 'The Faithful Gather', kind: 'defend',
+    text: 'MEND 10 and it SCOURs one status off itself.',
+    enemyHeal: 10, enemyCleanse: 1,
+};
+
+/** Hear Me: the Heart and Mind dice sit out your next roll. */
+const HEAR_ME: EnemyMove = {
+    name: 'Hear Me', kind: 'status',
+    text: 'SEIZED: your heart and mind dice sit out your next roll.',
+    undertow: ['heart', 'mind'],
+};
+
+/** Chapter 1's boss: four HP phases of its own, the Death Beholder's numbers only in its VITAE. */
 export const SaintBeneath = createEnemy({
     id: 'enemy-saint-beneath',
     portraitAsset: 'saint-beneath',
@@ -1134,49 +1154,180 @@ export const SaintBeneath = createEnemy({
     difficulty: 'boss',
     logic: 'boss',
     vitae: 320,
-    // The Death Beholder's three boss-line stages, copied (75%, 50%, 25%).
-    // Its real moves are a later owner-led row's; this entry only puts T's
-    // chosen face in the chapter's boss slot on numbers already measured.
-    stages: [
+    // Attack, defend and status from the first phase; each DANGER opens its
+    // phase at the boss lines (75%, 50%, 25%).
+    phases: [
+        { moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME] },
         {
-            at: { vitaePct: 0.75 },
-            name: 'EVERY DOOR HE REMEMBERS',
-            text: 'He shuts one more. You did not know it was open until you heard it.',
-            threatBonus: 0.3,
+            danger: {
+                name: 'Swell', kind: 'danger',
+                text: '2 BARNACLE, then TANGLE 1 per card in your hand.',
+                barnacle: 2, rider: { kind: 'hand-size-tangle', per: 1 },
+            },
+            moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
         {
-            at: { vitaePct: 0.5 },
-            // DRAFT (Claude): name, text and number for T to rewrite.
-            name: 'THE HINGES TURN INWARD',
-            text: 'He turns the room on its pins. Every way out now opens toward him.',
-            threatBonus: 0.2,
+            danger: {
+                name: 'Tithe of the Drowned', kind: 'danger',
+                text: '2 BARNACLE, then 3 damage per card in your hand.',
+                barnacle: 2, rider: { kind: 'hand-size-damage', damage: 3 },
+            },
+            moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
         {
-            at: { vitaePct: 0.25 },
-            name: 'WHAT SHUTS, STAYS SHUT',
-            text: 'He kneels lower. Bronze finds the seam of the room and the room stops having a far side.',
-            heal: { pct: 0.15 },
-            threatBonus: 0.5,
+            danger: {
+                name: 'Pull Under', kind: 'danger',
+                text: '16 damage. If you are under half VITAE: 24 damage, and it MENDs 12.',
+                damage: 16, rider: { kind: 'below-half-vitae', damage: 24, mend: 12 },
+            },
+            moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
     ],
-    // Carried over from the Death Beholder with its title on this foe's own
-    // name (T, 2026-11-06, question 4). The body is the Death Beholder's,
-    // a DRAFT until the boss-design row writes this foe's own.
+    // T's page (2026-11-08), word for word.
     journalEntry: {
         id: 'codex-saint-beneath',
         title: 'The Saint Beneath',
         body:
-            'The house needed something to believe in its doors, so it built a believer. ' +
-            'He was assembled from the hinges of every argument that ever closed — each ' +
-            'joint a refusal, oiled and kept. His liturgy is short: what shuts, stays ' +
-            'shut. He kneels because a kneeling thing is a door at rest, and he has ' +
-            'been at rest, facing the entrance, for a very long time.',
+            'He was a fisherman once and he stood up in the square against the men who held the ' +
+            'town and he asked the others to stand with him and they did not. They watched from ' +
+            'their doorways. The gang held him under at the foot of the quay until the bubbles ' +
+            'quit and then they put what was left of him in the river and the river carried him ' +
+            'down to the sea. He did not go easy into it. Something in the dark took up his anger ' +
+            'and made a body for it, a great length of scale and gristle with the old man\'s face ' +
+            'set in the front of it like a mask nailed to a prow. Now it lies beneath the ' +
+            'Breakwater with its mouth open and no boat leaves and no one walks out and the town ' +
+            'keeps the vigil it once refused him. They call it a saint. It has never forgiven anyone.',
     },
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'boss', 'enemy'],
 });
 
-/** The town: the Green Jelly's numbers, five lit jellies drifting as one (EN3a). */
+// ─── Five recast foes play moves of their own (MV1d) ──────────────────────────
+//
+// Each foe below used to copy a benched foe's moves. These are theirs alone and
+// share no name with any other foe's. Numbers are T's picks; no retune.
+
+// The Wreckmaster (elite, authored at level 3).
+const SABRE_AND_PISTOL: EnemyMove = {
+    name: 'Sabre and Pistol', kind: 'attack',
+    text: '7 damage, +4 if you played 3+ cards this turn.',
+    damage: 7, rider: { kind: 'many-plays-bonus', damage: 4, cards: 3 },
+};
+const RIPOSTE: EnemyMove = {
+    name: 'Riposte', kind: 'defend',
+    text: 'WARD 10. UNBROKEN: DEAL 4 twice.',
+    ward: 10, unbroken: { damage: 4, hits: 2 },
+};
+const PRESS_GANGED: EnemyMove = {
+    name: 'Press-Ganged', kind: 'status',
+    text: 'Steals one banked die. With none banked: TANGLE 2.',
+    rider: { kind: 'steal-banked-die', tangle: 2 },
+};
+const RELOAD_UNDER_FIRE: EnemyMove = {
+    name: 'Reload Under Fire', kind: 'danger',
+    text: 'TANGLE 3 and 2 BARNACLE.',
+    tangle: 3, barnacle: 2,
+};
+const TAKE_THE_COLOURS: EnemyMove = {
+    name: 'Take the Colours', kind: 'danger',
+    text: 'Takes up to 4 Conviction, WARD 4 per Conviction taken. BARNACLE 1.',
+    barnacle: 1, rider: { kind: 'take-conviction-ward', conviction: 4, ward: 4 },
+};
+
+// Saltwick Swarm (elite, authored at level 3).
+const MANY_STINGS: EnemyMove = {
+    name: 'Many Stings', kind: 'attack',
+    text: '1 damage, 5 hits.',
+    damage: 1, hits: 5,
+};
+const DRIFT_APART: EnemyMove = {
+    name: 'Drift Apart', kind: 'defend',
+    text: 'WARD 8. UNBROKEN: SHOCK 1.',
+    ward: 8, unbroken: { shock: 1 },
+};
+const STATIC_BLOOM: EnemyMove = {
+    name: 'Static Bloom', kind: 'status',
+    text: 'SHOCK 2.',
+    shock: 2,
+};
+const DROWN_IN_LIGHT: EnemyMove = {
+    name: 'Drown in Light', kind: 'danger',
+    text: '3 damage per card in your hand, then TANGLE 2.',
+    tangle: 2, rider: { kind: 'hand-size-damage', damage: 3 },
+};
+const THE_WHOLE_BLOOM: EnemyMove = {
+    name: 'The Whole Bloom', kind: 'danger',
+    text: 'DEAL 2, once per card in your discard. No minimum.',
+    damage: 2, rider: { kind: 'hits-per-discard', per: 1, min: 0 },
+};
+
+// Quay-Crab (normal, authored at level 2).
+const PINCER: EnemyMove = {
+    name: 'Pincer', kind: 'attack',
+    text: '7 damage. Your GUARD counts half against it.',
+    damage: 7, rider: { kind: 'half-guard' },
+};
+const SHELL_UP: EnemyMove = {
+    name: 'Shell Up', kind: 'defend',
+    text: 'WARD 10. UNBROKEN: BARNACLE 1.',
+    ward: 10, unbroken: { barnacle: 1 },
+};
+const GRIP: EnemyMove = {
+    name: 'Grip', kind: 'status',
+    text: 'SEIZED: your body die sits out your next roll.',
+    undertow: 'body',
+};
+const CLAMP_DOWN: EnemyMove = {
+    name: 'Clamp Down', kind: 'danger',
+    text: '10 damage. If you are under half VITAE: 16 damage, and it MENDs 4.',
+    damage: 10, rider: { kind: 'below-half-vitae', damage: 16, mend: 4 },
+};
+
+// Coralback (normal, authored at level 2).
+const CORAL_SPUR: EnemyMove = {
+    name: 'Coral Spur', kind: 'attack',
+    text: '6 damage. If it gets through your GUARD: BARNACLE.',
+    damage: 6, rider: { kind: 'barnacle-on-hit' },
+};
+const CROWN_DOWN: EnemyMove = {
+    name: 'Crown Down', kind: 'defend',
+    text: 'WARD 15. The next status you put on it lasts 1 turn longer.',
+    ward: 15, rider: { kind: 'lengthen-next-status', turns: 1 },
+};
+const POLYP: EnemyMove = {
+    name: 'Polyp', kind: 'status',
+    text: 'A BARNACLE Curse goes into your hand.',
+    barnacle: 1,
+};
+const CORAL_GROWS_OVER: EnemyMove = {
+    name: 'Coral Grows Over', kind: 'danger',
+    text: '3 damage per Curse in your hand, deck and discard. With none, a BARNACLE Curse goes into your hand instead.',
+    rider: { kind: 'curse-count-hit', damage: 3, barnacleIfNone: 1 },
+};
+
+// Bilge-Stalker (normal, authored at level 2).
+const QUICK_CLAWS: EnemyMove = {
+    name: 'Quick Claws', kind: 'attack',
+    text: '3 damage, 2 hits. Each hit that gets through steals 1 Conviction.',
+    damage: 3, hits: 2, rider: { kind: 'steal-conviction-per-hit', amount: 1 },
+};
+const INTO_THE_DARK: EnemyMove = {
+    name: 'Into the Dark', kind: 'defend',
+    text: 'WARD 8. If you do not hit it this turn, its next attack gains +3.',
+    ward: 8, rider: { kind: 'unhit-next-attack-bonus', damage: 3 },
+};
+const STAGNANT: EnemyMove = {
+    name: 'Stagnant', kind: 'status',
+    text: 'BRINE 2.',
+    brine: 2,
+};
+const DRAG_UNDER: EnemyMove = {
+    name: 'Drag Under', kind: 'danger',
+    text: 'Next turn you can play at most 2 cards.',
+    rider: { kind: 'curfew', cards: 2 },
+};
+
+/** The sea cave's third elite: five lit jellies drifting as one (EN3a; its own moves, MV1d). */
 export const SaltwickSwarm = createEnemy({
     id: 'enemy-saltwick-swarm',
     portraitAsset: 'saltwick-swarm',
@@ -1188,29 +1339,18 @@ export const SaltwickSwarm = createEnemy({
     level: 5,
     baseStats: enemyStatBudget(5, { heart: 4, body: 1, mind: 2 }),
     mapName: 'breakwater',
-    difficulty: 'normal',
-    mercyLines: {
-        // DRAFT (Claude): for T to rewrite.
-        spare: 'The cluster drifts apart and goes on lighting the water.',
-        finish: 'The lights go out one at a time, the smallest last.',
-    },
+    difficulty: 'elite',
     logic: 'strategic',
     phases: [
-        { moves: [engulf(1), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION] },
-        {
-            danger: {
-                name: 'Spit It Out', kind: 'danger',
-                text: 'Every HELD card drops into your discard, 4 damage per card.',
-                rider: { kind: 'spit-held', damage: 4 },
-            },
-            moves: [engulf(2), SHOW_YOU_YOUR_FACE, SETTLE, REFLECTION],
-        },
+        { moves: [MANY_STINGS, DRIFT_APART, STATIC_BLOOM] },
+        { danger: DROWN_IN_LIGHT, moves: [MANY_STINGS, DRIFT_APART, STATIC_BLOOM] },
+        { danger: THE_WHOLE_BLOOM, moves: [MANY_STINGS, DRIFT_APART, STATIC_BLOOM] },
     ],
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'enemy'],
 });
 
-/** The keep causeway's elite: the Toll-Keeper's numbers (EN3a). */
+/** The keep causeway's elite (EN3a; its own moves, MV1d). */
 export const Wreckmaster = createEnemy({
     id: 'enemy-wreckmaster',
     portraitAsset: 'wreckmaster',
@@ -1225,29 +1365,15 @@ export const Wreckmaster = createEnemy({
     difficulty: 'elite',
     logic: 'strategic',
     phases: [
-        { moves: [LEVY, STRONGBOX, WRIT] },
-        {
-            danger: {
-                name: 'Compound Interest', kind: 'danger',
-                text: '4 damage per Curse in your hand, deck and discard.',
-                rider: { kind: 'curse-count-hit', damage: 4 },
-            },
-            moves: [LEVY, DISTRAIN],
-        },
-        {
-            danger: {
-                name: 'Seize the Causeway', kind: 'danger',
-                text: 'TOLL doubles, then 2 damage per TOLL.',
-                rider: { kind: 'toll-seize', damage: 2 },
-            },
-            moves: [DOUBLE_LEVY, DISTRAIN],
-        },
+        { moves: [SABRE_AND_PISTOL, RIPOSTE, PRESS_GANGED] },
+        { danger: RELOAD_UNDER_FIRE, moves: [SABRE_AND_PISTOL, RIPOSTE, PRESS_GANGED] },
+        { danger: TAKE_THE_COLOURS, moves: [SABRE_AND_PISTOL, RIPOSTE, PRESS_GANGED] },
     ],
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'enemy', 'elite'],
 });
 
-/** The quays: the Crane-Hook's numbers (EN3a). */
+/** The quays (EN3a; its own moves, MV1d). */
 export const QuayCrab = createEnemy({
     id: 'enemy-quay-crab',
     portraitAsset: 'quay-crab',
@@ -1267,21 +1393,14 @@ export const QuayCrab = createEnemy({
     },
     logic: 'balanced',
     phases: [
-        { moves: [SWING, counterweight(6), LOCK_THE_BRAKE, HOIST] },
-        {
-            danger: {
-                name: 'Drop the Load', kind: 'danger',
-                text: '15 damage. If you block all of it, the crane is VULNERABLE 50% for 2 turns.',
-                damage: 15, rider: { kind: 'self-vulnerable-on-block', pct: 50, turns: 2 },
-            },
-            moves: [SWING, counterweight(9), LOCK_THE_BRAKE, HOIST],
-        },
+        { moves: [PINCER, SHELL_UP, GRIP] },
+        { danger: CLAMP_DOWN, moves: [PINCER, SHELL_UP, GRIP] },
     ],
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'enemy'],
 });
 
-/** The cliffs and the hamlet: the Wreck-Picker's numbers (EN3a). */
+/** The cliffs, the hamlet and the town (EN3a; its own moves, MV1d). */
 export const BilgeStalker = createEnemy({
     id: 'enemy-bilge-stalker',
     portraitAsset: 'bilge-stalker',
@@ -1301,21 +1420,14 @@ export const BilgeStalker = createEnemy({
     },
     logic: 'balanced',
     phases: [
-        { moves: [pickOver(1), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL] },
-        {
-            danger: {
-                name: 'Everything Washes Up', kind: 'danger',
-                text: '4 damage per hoarded card, then the cards go back to your hand.',
-                rider: { kind: 'hoard-return', damage: 4 },
-            },
-            moves: [pickOver(2), HURL_FLOTSAM, HIDE_IN_THE_HOARD, GULL_CALL],
-        },
+        { moves: [QUICK_CLAWS, INTO_THE_DARK, STAGNANT] },
+        { danger: DRAG_UNDER, moves: [QUICK_CLAWS, INTO_THE_DARK, STAGNANT] },
     ],
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'enemy'],
 });
 
-/** The harbour steps: the Lamprey-Knot's numbers (EN3a). */
+/** The harbour steps and the upper town (EN3a; its own moves, MV1d). */
 export const Coralback = createEnemy({
     id: 'enemy-coralback',
     portraitAsset: 'coralback',
@@ -1335,15 +1447,8 @@ export const Coralback = createEnemy({
     },
     logic: 'balanced',
     phases: [
-        { moves: [LATCH, writhe(3), KNOT_UP, MOUTHFUL] },
-        {
-            danger: {
-                name: 'Unravel', kind: 'danger',
-                text: '4 damage per turn of LEECH left on you, then it lets go.',
-                rider: { kind: 'leech-turns-damage', damage: 4 },
-            },
-            moves: [LATCH, writhe(4), KNOT_UP, MOUTHFUL],
-        },
+        { moves: [CORAL_SPUR, CROWN_DOWN, POLYP] },
+        { danger: CORAL_GROWS_OVER, moves: [CORAL_SPUR, CROWN_DOWN, POLYP] },
     ],
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'enemy'],
@@ -1401,7 +1506,7 @@ export const EnemyLibrary = [
  * are out of Chapter 1 only: the Charcoal Wood, Beacon Crags and Lantern Deep
  * still stage them, so they are live content and must not be deleted.
  */
-const ACT1_POOL = [QuayCrab, NetMender, Coralback, BrineWidow, SaltwickSwarm, BilgeStalker];
+const ACT1_POOL = [QuayCrab, NetMender, Coralback, BrineWidow, BilgeStalker];
 
 /**
  * Per-map enemy pools used by the encounter generator. Act 1 draws the six Chapter 1 normals;

@@ -34,6 +34,8 @@ const CARD_EFFECT_SET = new Set([
     'debuff_quarter',
     // VULNERABLE, carried by the grey office's A Plain Word.
     'debuff_vulnerable',
+    // SHOCK: foes place it first; future lanes give it to cards.
+    'debuff_shock',
     'debuff_creeping_doom',
 ]);
 
@@ -53,7 +55,7 @@ const RETIRED_CARD_VOCABULARY = [
     // DoT clones
     'debuff_burn', 'debuff_hemorrhage', 'debuff_septic', 'debuff_unraveling',
     'debuff_despair', 'debuff_torment', 'debuff_strong_poison',
-    'debuff_strong_burn', 'debuff_acid', 'debuff_frostbite', 'debuff_shock',
+    'debuff_strong_burn', 'debuff_acid', 'debuff_frostbite',
     'debuff_tartarus_rot', 'debuff_basilisk_venom', 'debuff_harpy_torment',
     'debuff_hp_decay',
     // the control zoo
@@ -188,7 +190,7 @@ describe('effect deprecation contract (spec 32 v3 §3) — the ban list', () => 
             const def = lookupEffect(id)!;
             const p = def.payload;
             const real = !!(p.damageOverTime || p.actionRestriction
-                || p.damageTakenMult !== undefined
+                || p.damageTakenMult !== undefined || p.damageTakenFlat !== undefined
                 || p.outgoingDamageMulPct !== undefined || p.dotModifiers
                 || (p as { tickAmplifyFlat?: number }).tickAmplifyFlat);
             expect(real, `${id} is a card effect with no engine-read channel`).toBe(true);

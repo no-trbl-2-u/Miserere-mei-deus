@@ -390,6 +390,12 @@ function moveThreatAction(move: EnemyMove, level: number, authoredLevel: number)
     if (typeof move.undertow === 'string') effects.push({ undertow: move.undertow });
     else if (move.undertow) for (const die of move.undertow) effects.push({ undertow: die });
     if ((move.barnacle ?? 0) > 0) effects.push({ barnacle: move.barnacle });
+    // SHOCK is a count too. An UNBROKEN clause's hits scale like damage; its counts do not.
+    if ((move.shock ?? 0) > 0) effects.push({ shock: move.shock });
+    if (move.unbroken) {
+        const { damage: hit, ...counts } = move.unbroken;
+        effects.push({ unbroken: { ...counts, ...(hit ? { damage: scaleMoveNumber(hit, level, authoredLevel) } : {}) } });
+    }
     // The move's conditional effect rides along, its level-bound numbers scaled
     // (`combat.enemy-riders.ts` resolves it).
     const rider = move.rider ? scaleRider(move.rider, n => scaleMoveNumber(n, level, authoredLevel)) : undefined;

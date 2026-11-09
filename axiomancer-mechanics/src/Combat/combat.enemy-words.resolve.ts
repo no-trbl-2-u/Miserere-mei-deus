@@ -21,6 +21,10 @@
  *                 one off (`enemyWordsAfterPlay`).
  *   VULNERABLE    `debuff_vulnerable` on you: n% more damage from the foe's
  *                 next `turns` attacks.
+ *   SHOCK n       `debuff_shock` on you: each of the foe's hits deals n more
+ *                 for its next 3 attacks; a new SHOCK resets that and adds to n.
+ *   UNBROKEN      a WARD move's clause, armed here and paid at the start of
+ *                 the foe's next turn if any WARD is left (`unbrokenPayout`).
  *   LEECH n       the program ledger's foe LEECH, mirrored onto you: each
  *                 LEECH adds `LEECH_TURNS_PER_APPLICATION` turns and n to the
  *                 potency. At the start of your turn you lose the potency
@@ -54,12 +58,14 @@ function withWords(state: CombatEncounterState, words: EnemyWordsState): CombatE
 export function enemyWordsFoeTurnStart(state: CombatEncounterState): WordsResult {
     const words = state.enemyWords;
     const tangle = words?.tangle ?? 0;
-    if (!words || (words.ward <= 0 && words.brine <= 0 && tangle <= 0)) return { state, events: [] };
+    if (!words || (words.ward <= 0 && words.brine <= 0 && tangle <= 0 && !words.unbroken)) return { state, events: [] };
     const events: CombatEvent[] = [];
     if (words.ward > 0) events.push({ kind: 'enemy-word', word: 'ward', op: 'faded', amount: words.ward });
     if (words.brine > 0) events.push({ kind: 'enemy-word', word: 'brine', op: 'faded', amount: words.brine });
     if (tangle > 0) events.push({ kind: 'enemy-word', word: 'tangle', op: 'faded', amount: tangle });
-    return { state: withWords(state, { ...words, ward: 0, brine: 0, tangle: 0 }), events };
+    // An UNBROKEN clause lasts one foe turn: `planRiderTurn` has already read it.
+    const { unbroken: _read, ...rest } = words;
+    return { state: withWords(state, { ...rest, ward: 0, brine: 0, tangle: 0 }), events };
 }
 
 /**
@@ -193,6 +199,25 @@ export function applyEnemyWordEffects(
                 state = { ...state, player: { ...state.player, effects: applied.activeEffects } };
                 events.push({ kind: 'enemy-word', word: 'vulnerable', op: 'gained', amount: eff.vulnerable.pct });
             }
+        }
+        if ((eff.shock ?? 0) > 0) {
+            const def = lookupEffect('debuff_shock');
+            if (def) {
+                // A new SHOCK resets the clock and adds to the number. One turn
+                // of the clock ticks off at this same round's end, so it reads
+                // 3 on your turn and lasts through the foe's next 3 attacks.
+                const applied = applyEffect(state.player.effects, def, state.round, {
+                    intensityDelta: eff.shock!, uncapped: true,
+                    durationMode: 'additive', durationDelta: def.duration + 1,
+                    sourceId: state.enemy.id,
+                });
+                state = { ...state, player: { ...state.player, effects: applied.activeEffects } };
+                events.push({ kind: 'enemy-word', word: 'shock', op: 'gained', amount: eff.shock! });
+            }
+        }
+        if (eff.unbroken) {
+            state = withWords(state, { ...wordsOf(state), unbroken: eff.unbroken });
+            events.push({ kind: 'enemy-word', word: 'unbroken', op: 'gained', amount: 1 });
         }
         if ((eff.leech ?? 0) > 0) {
             const words = wordsOf(state);

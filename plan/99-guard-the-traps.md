@@ -17,7 +17,7 @@ its last chunk closes. Write nothing else here.
 ## Chunks
 Measure: 7 open · 3 closed · next A11
 
-- [ ] **99.10** Automate footgun `windows-tar-tree-lint` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A10 · needs —
+- [ ] **99.10** Automate footgun `windows-tar-tree-lint` (seen 7×): a test, hook or lint, then mark it guarded · S · closes A10 · needs —
 - [ ] **99.9** Automate footgun `stakes-card-vm-undrawn-lines` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A9 · needs —
 - [ ] **99.8** Automate footgun `scratchpad-script-no-resolve` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A8 · needs —
 - [ ] **99.7** Automate footgun `recast-pinned-orphan-lens` (seen 2×): a test, hook or lint, then mark it guarded · S · closes A7 · needs —

@@ -600,3 +600,7 @@
 - 2026-11-08 · 159.1 (alias: TU1a) · The Spoils lose small print; the fight loses its clock, fits its dock, fogs its seam · 6d284189..a02bcc39 (#1464)
 - 2026-11-08 · 159.4 (alias: TU1d) · Self's three stat plaques fit; Dev Tools is Settings' last row · d43d388f..5812c1b8 (#1463)
 - 2026-11-08 · 159.5 (alias: TU1e) · Card names draw on one line, shrunk to fit; free pill has no plus; faces share one black · fbf9e2d1..56117a37 (#1470)
+- 2026-11-08 · 162.1 (alias: MV1a) · Players read SEIZED where they read UNDERTOW · 7302574c..7302574c (#1480)
+- 2026-11-08 · 162.2 (alias: MV1b) · SHOCK and UNBROKEN join the enemy words · adea52b3..adea52b3 (#1482)
+- 2026-11-08 · 162.3 (alias: MV1c) · the Saint Beneath plays its own six moves · 4f03239d..59d95308 (#1483)
+- 2026-11-08 · 162.4 (alias: MV1d) · Five foes play own moves; Saltwick Swarm is a sea cave elite · fdf6c359..88f7e5dd (#1492)

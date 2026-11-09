@@ -346,7 +346,7 @@ Proof: <the chunk's proof and its result>.
   regions); the report job in `sim-runs.yml`; `.github/workflows/README.md`; `docs/truth-sources.md`.
 - Verify gate: root `npm test`.
 
-#### SM2g (chunk 135.7)
+#### SM2g (chunk 135.7, closed)
 
 - Proof: `npm run verify -w backend` with the scheduled-handler tests; after deploy, the first cron run's log line and
   a `GET /v1/play-runs?source=sim` with no run older than 14 days, recorded in the PR or a follow-up comment.
@@ -500,7 +500,7 @@ Measure: 11 open · 11 closed · next A23
 - [ ] **135.3** The four personas · M · closes A7, A8 · needs — · alias: SM2c
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs 135.3 · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.7** The lane bots guard when hit · S · closes A19 · needs 135.3 · alias: SM2h
+- [ ] **135.11** The lane bots guard when hit · S · closes A19 · needs 135.3 · alias: SM2h
 - [ ] **135.8** The bots use the anvil · M · closes A20 · needs 135.3 · alias: SM2i
-- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.7, 135.8 · alias: SM2j
+- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.11, 135.8 · alias: SM2j
 - [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k

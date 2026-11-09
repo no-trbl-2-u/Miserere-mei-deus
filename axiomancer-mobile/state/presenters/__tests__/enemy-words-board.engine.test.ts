@@ -1,7 +1,7 @@
 /**
  * Chapter 1's foes on the board (phases EN1f and EN1g): the live `phases` foes.
  * Their enemy words stand as chips (the foe's WARD on its side; BRINE,
- * TANGLE, LEECH and UNDERTOW on yours), TANGLE refuses every card's FREE
+ * TANGLE, LEECH and SEIZED on yours), TANGLE refuses every card's FREE
  * line on the board as the engine does, and a WARD-only move telegraphs
  * DEFEND with no number.
  */
@@ -61,7 +61,8 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
         ['bw-w2', 'Quay-Crab', 'quay-crab'], ['bw-w3', 'Coralback', 'coralback'],
         ['bw-h1', 'Net-Mender', 'net-mender'], ['bw-h2', 'Quay-Crab', 'quay-crab'],
         ['bw-h7', 'Brine-Widow', 'brine-widow'], ['bw-t1', 'Coralback', 'coralback'],
-        ['bw-t2', 'Saltwick Swarm', 'saltwick-swarm'], ['bw-t3', 'Brine-Widow', 'brine-widow'],
+        ['bw-t2', 'Bilge-Stalker', 'bilge-stalker'], ['bw-t3', 'Brine-Widow', 'brine-widow'],
+        ['bw-t6', 'Coralback', 'coralback'],
         ['bw-l1', 'Bilge-Stalker', 'bilge-stalker'], ['bw-d1', 'Net-Mender', 'net-mender'],
     ])('%s: %s', (node, name, art) => {
         const vm = buildCombatViewModel(fightAt(node));
@@ -73,11 +74,16 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
 });
 
 describe('the sea cave elite stages its own foe and portrait, with both DANGERs unnamed', () => {
-    it('bw-c1: The Tithe-Collector', () => {
-        const vm = buildCombatViewModel(fightAt('bw-c1', 'fixture-en1h-bw-c1'));
-        expect(vm.enemy.name).toBe('The Tithe-Collector');
-        expect(vm.enemy.artKey).toBe('tithe-collector');
-        expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
+    it('bw-c1 draws the Cave Choir, the Tithe-Collector or Saltwick Swarm by seed, each with both DANGERs unnamed', () => {
+        const seen = new Map<string, string>();
+        for (let i = 0; i < 40 && seen.size < 3; i++) {
+            const vm = buildCombatViewModel(fightAt('bw-c1', `fixture-en1h-bw-c1-${i}`));
+            seen.set(vm.enemy.name, vm.enemy.artKey);
+            expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
+        }
+        expect([...seen.entries()].sort()).toEqual([
+            ['Saltwick Swarm', 'saltwick-swarm'], ['The Cave Choir', 'cave-choir'], ['The Tithe-Collector', 'tithe-collector'],
+        ]);
     });
 });
 
@@ -107,7 +113,7 @@ describe('the hoard and the LEDGER stand on the foe\'s side as counters', () => 
 
 describe('a WARD-only move telegraphs DEFEND, with no number', () => {
     it.each([
-        ['bw-w2', 'Lock the Brake'], ['bw-w3', 'Knot Up'], ['bw-h2', 'Lock the Brake'],
+        ['bw-w2', 'Shell Up'], ['bw-w3', 'Crown Down'], ['bw-h2', 'Shell Up'],
     ])('%s: %s', (node, move) => {
         const intent = buildCombatViewModel(at(fightAt(node), move)).enemy.intent;
         expect([intent.type, intent.label, intent.moveName]).toEqual(['defend', 'DEFEND', move]);
@@ -133,17 +139,48 @@ describe('the enemy words stand on the board as chips', () => {
         expect(warded.find((e) => e.effectId === 'enemy-word-ward')!.gloss).toMatch(/GUARD/);
     });
 
-    it('BRINE, TANGLE, LEECH and UNDERTOW show on yours', () => {
+    it('BRINE, TANGLE, LEECH and SEIZED show on yours', () => {
         const s = fightAt('bw-h1');
         const vm = buildCombatViewModel({
             ...s, enemyWords: { ward: 0, brine: 3, leechTurns: 3, leechPotency: 2, tangle: 1, undertow: 'body' },
         });
         const ids = vm.player.effects.map((e) => e.effectId);
         expect(ids).toEqual(expect.arrayContaining([
-            'enemy-word-brine', 'enemy-word-tangle', 'enemy-word-leech', 'enemy-word-undertow',
+            'enemy-word-brine', 'enemy-word-tangle', 'enemy-word-leech', 'enemy-word-seized',
         ]));
         expect(vm.player.effects.find((e) => e.effectId === 'enemy-word-leech')).toMatchObject({ intensity: 2, duration: 3 });
         expect(vm.enemy.effects.some((e) => e.effectId.startsWith('enemy-word-'))).toBe(false);
+    });
+});
+
+describe('SHOCK and UNBROKEN stand on the board', () => {
+    const SHOCK = { effectId: 'debuff_shock', remainingDuration: 3, intensity: 2, appliedAt: 1, tier: 1 as const };
+
+    it('SHOCK shows on your status row with its number, turns and gloss', () => {
+        const s = fightAt('bw-h1');
+        const chip = buildCombatViewModel({ ...s, player: { ...s.player, effects: [SHOCK] } })
+            .player.effects.find((e) => e.effectId === 'debuff_shock')!;
+        expect(chip).toMatchObject({ intensity: 2, duration: 3 });
+        expect(chip.glyph.label).toBe('Shock');
+        expect(chip.gloss).toMatch(/per hit/);
+        expect(effectChipA11y(chip)).toContain('3 turns left');
+    });
+
+    it('SHOCK on the foe shows on its row too: the status works on either side', () => {
+        const s = fightAt('bw-h1');
+        const chip = buildCombatViewModel({ ...s, enemy: { ...s.enemy, effects: [SHOCK] } })
+            .enemy.effects.find((e) => e.effectId === 'debuff_shock')!;
+        expect(chip).toMatchObject({ intensity: 2, duration: 3 });
+    });
+
+    it('an armed UNBROKEN shows on the foe beside its WARD, saying what it pays', () => {
+        const s = fightAt('bw-h2');
+        const warded = (ward: number) => buildCombatViewModel({
+            ...s, enemyWords: { ...NO_WORDS, ward, unbroken: { damage: 4, hits: 2 } },
+        }).enemy.effects.find((e) => e.effectId === 'enemy-word-unbroken');
+        expect(warded(6)).toMatchObject({ noBadge: true, caption: 'DEAL 4 x2 if WARD holds' });
+        expect(warded(6)!.gloss).toMatch(/pays nothing/);
+        expect(warded(0)).toBeUndefined();
     });
 });
 
@@ -173,7 +210,7 @@ describe('the foes own counters stand on the board, never on the telegraph', () 
 
     it('a Green Jelly move that reads your last turn telegraphs a kind, not a number', () => {
         for (const move of ['Engulf', 'Show You Your Face', 'Reflection']) {
-            const s = { ...at(fightAt('bw-t2'), move), directDamageDealt: 7 };
+            const s = { ...at(asFoe(fightAt('bw-w2'), 'green-jelly'), move), directDamageDealt: 7 };
             const intent = buildCombatViewModel(s).enemy.intent;
             expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
             expect(intent.damage).toBe(0);
@@ -215,18 +252,18 @@ describe('the enemy-word chips carry their real kind, die and span', () => {
     const chipsOf = (words: Record<string, unknown>) =>
         buildCombatViewModel({ ...fightAt('bw-h1'), enemyWords: { ...NO_WORDS, ...words } } as CombatEncounterState);
 
-    it('WARD is a boon, BRINE a cut, LEECH a drain, TANGLE and UNDERTOW control, each in its own colour', () => {
+    it('WARD is a boon, BRINE a cut, LEECH a drain, TANGLE and SEIZED control, each in its own colour', () => {
         const vm = chipsOf({ ward: 4, brine: 2, leechTurns: 2, leechPotency: 1, tangle: 1, undertow: 'mind' });
         const glyph = (side: 'enemy' | 'player', id: string) => (vm[side].effects.find((e) => e.effectId === id)!).glyph;
         expect(glyph('enemy', 'enemy-word-ward')).toMatchObject({ kind: 'statup', color: GLYPH_COLORS.statup });
         expect(glyph('player', 'enemy-word-brine')).toMatchObject({ kind: 'statdown', color: GLYPH_COLORS.statdown });
         expect(glyph('player', 'enemy-word-leech')).toMatchObject({ kind: 'dot', color: GLYPH_COLORS.dot });
         expect(glyph('player', 'enemy-word-tangle')).toMatchObject({ kind: 'control', color: GLYPH_COLORS.control });
-        expect(glyph('player', 'enemy-word-undertow')).toMatchObject({ kind: 'control', color: GLYPH_COLORS.control });
+        expect(glyph('player', 'enemy-word-seized')).toMatchObject({ kind: 'control', color: GLYPH_COLORS.control });
     });
 
-    it.each(['heart', 'body', 'mind'] as const)('UNDERTOW names the %s die it lifts', (die) => {
-        const chip = chipsOf({ undertow: die }).player.effects.find((e) => e.effectId === 'enemy-word-undertow')!;
+    it.each(['heart', 'body', 'mind'] as const)('SEIZED names the %s die it lifts', (die) => {
+        const chip = chipsOf({ undertow: die }).player.effects.find((e) => e.effectId === 'enemy-word-seized')!;
         expect(chip.caption).toContain(die.charAt(0).toUpperCase() + die.slice(1));
         expect(effectChipA11y(chip)).toContain(chip.caption!);
     });
@@ -237,7 +274,7 @@ describe('the enemy-word chips carry their real kind, die and span', () => {
         expect(a11y('enemy', 'enemy-word-ward')).toContain("until the foe's next turn");
         expect(a11y('player', 'enemy-word-brine')).toContain('until the end of your next turn');
         expect(a11y('player', 'enemy-word-tangle')).toContain('until that many cards are played');
-        expect(a11y('player', 'enemy-word-undertow')).toContain('until your next roll');
+        expect(a11y('player', 'enemy-word-seized')).toContain('until your next roll');
         expect(a11y('player', 'enemy-word-leech')).toContain('2 turns left');
     });
 });
