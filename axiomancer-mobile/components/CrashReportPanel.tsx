@@ -14,7 +14,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { type AxmLogEntry } from '@mechanics';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface CrashReportPanelProps {
@@ -124,9 +124,8 @@ const useStyles = makeStyles((AXM) => ({
         position: 'absolute',
         top: 8,
         left: 12,
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 8,
-        letterSpacing: 1.4,
         color: AXM.ash,
     },
     copyButton: {
@@ -144,23 +143,23 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.sulfurSubtle,
     },
     copyButtonLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.bone,
     },
     copyButtonLabelPressed: { color: AXM.sulfur },
     technicalText: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 10.5,
         lineHeight: 14,
         color: AXM.parchmentDim,
     },
     section: { marginTop: 14 },
     sectionLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         marginBottom: 4,
     },
@@ -171,7 +170,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 8,
     },
     codeBlock: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 10,
         lineHeight: 14,
         color: AXM.parchment,

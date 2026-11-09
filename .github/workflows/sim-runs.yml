@@ -1,18 +1,31 @@
 name: sim-runs
 
-# The bots post their own data (phase SM1g). Plays whole Chapter 1 runs
-# headlessly through the app's own store actions, one archetype bot at a time
-# (blood-price, defender, merciful, elementalist), and posts each run to the
-# miserere-api Worker through the app's own posters, every row stamped
-# `source: sim` (`npm run sim:run -- --post`). T's reports read `human` unless
-# told otherwise, and `card-vs-bot` sets T beside these.
+# The bots post their own data (phase SM1g) and what breaks gets filed (SM2d).
+# Plays whole Chapter 1 runs headlessly through the app's own store actions, one
+# bot at a time, and posts each run to the miserere-api Worker through the app's
+# own posters, every row stamped `source: sim` (`npm run sim:run -- --post`).
+# T's reports read `human` unless told otherwise, and `card-vs-bot` sets T beside
+# these.
 #
-# Runs at the commit of every successful `preview-build` (its `head_sha`, so
-# every APK T plays has the bots' numbers at the same build), by hand
-# (`workflow_dispatch`, with a ref and a run count), and nightly on main. Four
-# archetypes x 5 runs by default. A measurement, not a gate (D57): it fails only
-# when the driver crashes, a run sticks, or a post is refused, never on a number,
-# and it is never a required check. `measured-truth` is unchanged and separate.
+# Which bots: the four player personas (cautious, reckless, explorer, rusher)
+# play on the schedule and after every successful `preview-build` (its
+# `head_sha`, so every APK T plays has the bots' rows at its build). The lane
+# bots (blood-price, defender, merciful, elementalist) run only by hand:
+# `workflow_dispatch` takes `bots`: `personas` (default), `lanes`, or `all`
+# (personas, lane bots and the wanderer). 5 runs per bot by default.
+#
+# Breaks: each batch writes its breaks (a crash, a stuck run, a stuck fight, a
+# quest no road can finish, a node left unresolved) to a JSON-lines file
+# (`--breaks`); the filing step (`npm run sim:breaks`) opens one GitHub issue per
+# new break key, labelled `bug` and `sim-break` so /triage routes it as a bug. It
+# runs `if: always()` after the batch, so a crash still gets filed, and only on
+# the scheduled run and a dispatch at `main`: a preview-build run plays and
+# posts only.
+#
+# A measurement, not a gate (D57): the batch step fails only when the driver
+# crashes, a run sticks, a fight sticks or a post is refused, never on a number
+# or on the two end-of-run checks, and the job is never a required check.
+# `measured-truth` is unchanged and separate.
 #
 # Reads the repo secrets EXPO_PUBLIC_PUZZLE_API_URL (the Worker's origin, which
 # the preview build bakes into the APK) and PUZZLE_API_TOKEN (the shared bearer
@@ -30,14 +43,20 @@ on:
         type: string
         default: 'main'
       runs:
-        description: 'Runs per archetype'
+        description: 'Runs per bot'
         type: string
         default: '5'
+      bots:
+        description: 'Which bots: personas (default), lanes (the four lane bots) or all (personas, lane bots and the wanderer)'
+        type: choice
+        options: [personas, lanes, all]
+        default: personas
   schedule:
     - cron: '43 3 * * *'
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: sim-runs
@@ -45,7 +64,7 @@ concurrency:
 
 jobs:
   sim:
-    name: Play and post the archetype bots
+    name: Play and post the bots
     # A scheduled run plays main; a workflow_run plays the commit the build was made from.
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
@@ -53,6 +72,10 @@ jobs:
     env:
       SIM_REF: ${{ github.event.workflow_run.head_sha || inputs.ref || 'main' }}
       SIM_RUNS: ${{ inputs.runs || '5' }}
+      SIM_BOTS: ${{ inputs.bots || 'personas' }}
+      # Breaks are filed by the scheduled run and a dispatch at main only.
+      SIM_FILES_BREAKS: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.ref || 'main') == 'main')) && 'true' || 'false' }}
+      GH_TOKEN: ${{ github.token }}
       PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
       PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
     steps:
@@ -83,17 +106,31 @@ jobs:
       - name: Install workspace dependencies
         run: npm ci
 
-      # One batch: every archetype shares this run's id as its session id. A
-      # failing archetype does not stop the others; the step fails at the end.
-      - name: Play and post the four archetypes
+      # One batch: every bot shares this run's id as its session id. A failing
+      # bot does not stop the others; the step fails at the end.
+      - name: Play and post the bots
         run: |
+          case "$SIM_BOTS" in
+            personas) policies="cautious reckless explorer rusher" ;;
+            lanes) policies="blood-price defender merciful elementalist" ;;
+            all) policies="cautious reckless explorer rusher blood-price defender merciful elementalist wanderer" ;;
+            *) echo "::error::bots must be personas, lanes or all, not '$SIM_BOTS'"; exit 1 ;;
+          esac
+          SIM_BREAKS_FILE="$RUNNER_TEMP/sim-breaks.jsonl"
+          : > "$SIM_BREAKS_FILE"
           failed=""
-          for policy in blood-price defender merciful elementalist; do
+          for policy in $policies; do
             echo "::group::$policy"
-            npm run sim:run -- --policy "$policy" --runs "$SIM_RUNS" --seed 1 --post || failed="$failed $policy"
+            npm run sim:run -- --policy "$policy" --runs "$SIM_RUNS" --seed 1 --post --breaks "$SIM_BREAKS_FILE" || failed="$failed $policy"
             echo "::endgroup::"
           done
           if [ -n "$failed" ]; then
             echo "::error::sim:run failed for:$failed"
             exit 1
           fi
+
+      # One issue per new break key (never a failing check on a number). Runs
+      # after a failed batch too, so a crash is still filed.
+      - name: File the breaks as issues
+        if: always() && env.SIM_FILES_BREAKS == 'true'
+        run: npm run sim:breaks -- --file "$RUNNER_TEMP/sim-breaks.jsonl"

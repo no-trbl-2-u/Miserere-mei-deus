@@ -283,6 +283,7 @@ function payloadLines(p: any): string[] {
     const d = p.damageOverTime;
     if (d) out.push(`DoT ${d.damagePerRound}/round × intensity (${d.damageType}, ticks ${d.trigger ?? 'round start'})`);
     if (p.damageTakenMult && p.damageTakenMult !== 1) out.push(`Damage taken ${pct(p.damageTakenMult)}`);
+    if (p.damageTakenFlat) out.push(`Damage taken ${signed(p.damageTakenFlat)} per hit × intensity`);
     if (p.outgoingDamageMulPct) out.push(`Outgoing damage ${signed(p.outgoingDamageMulPct)}%`);
     const ar = p.actionRestriction;
     if (ar?.skipTurn) out.push('Skips turn');

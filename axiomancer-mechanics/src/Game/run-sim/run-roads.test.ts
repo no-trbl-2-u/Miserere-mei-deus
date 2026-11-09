@@ -13,7 +13,7 @@ import {
 } from '../../index';
 import {
     distanceToExit, distanceToStory, distanceToUnfinished, isEliteNode, isNodeUnfinished, isReachTarget, isStoryNode,
-    runRoadOptions, unfinishedReachable,
+    runRoadOptions, unfinishableQuests, unfinishedReachable,
 } from './run-roads';
 
 /** A new game as the-chosen, optionally standing on `nodeId` with `spent` nodes walked. */
@@ -175,5 +175,31 @@ describe('unfinishedReachable (phase SM2b)', () => {
             { from: 'bw-w2', to: 'bw-m1', reason: 'test' },
         ] } } };
         expect(unfinishedReachable(walled)).toBe(0);
+    });
+});
+
+describe('unfinishableQuests (phase SM2d)', () => {
+    it('names no quest when none is accepted, or when the target is where the player stands', () => {
+        expect(unfinishableQuests(stateAt('bw-w2', ['bw-w2'], true))).toEqual([]);
+        expect(unfinishableQuests(withStep1(stateAt('bw-c2', ['bw-w2'], true)))).toEqual([]);
+    });
+
+    it('names an accepted quest whose next target no road reaches', () => {
+        const state = withStep1(stateAt('bw-w2', ['bw-w2'], true));
+        const walled: GameState = { ...state, world: { ...state.world, currentMap: { ...state.world.currentMap, blockedRoutes: [
+            { from: 'bw-w1', to: 'bw-w2', reason: 'test' },
+            { from: 'bw-w2', to: 'bw-w3', reason: 'test' },
+            { from: 'bw-w2', to: 'bw-w4', reason: 'test' },
+            { from: 'bw-w2', to: 'bw-m1', reason: 'test' },
+        ] } } };
+        const found = unfinishableQuests(walled);
+        expect(found).toHaveLength(1);
+        expect(found[0]!.targets.length).toBeGreaterThan(0);
+    });
+
+    it('checks nothing for a quest outside every questline', () => {
+        const base = stateAt('bw-w2', ['bw-w2'], true);
+        const loose = { name: 'loose', description: '', mapName: 'breakwater', reward: 'quest', status: 'active', objectives: [] } as unknown as Quest;
+        expect(unfinishableQuests({ ...base, quests: { available: [], active: [loose], completed: [] } })).toEqual([]);
     });
 });

@@ -12,7 +12,7 @@ import React from 'react';
 import { Text } from 'react-native';
 
 import { SectionLabel } from '@/components/SectionLabel';
-import { AXM, FONTS } from '@/theme/axm';
+import { AXM, TYPE_ROLES } from '@/theme/axm';
 
 function flattenStyle(node: { props: { style?: unknown } }): Record<string, unknown> {
     const raw = node.props.style;
@@ -41,13 +41,13 @@ describe('SectionLabel: children + defaults', () => {
         expect(flattenStyle(node).fontSize).toBe(11);
     });
 
-    it('always applies the base typographic invariants (uppercase + letterSpacing 3 + sans font)', () => {
+    it('always applies the base typographic invariants (uppercase, the eyebrow face and its tracking)', () => {
         const tree = render(<SectionLabel>X</SectionLabel>);
         const node = tree.UNSAFE_getAllByType(Text)[0];
         const style = flattenStyle(node);
         expect(style.textTransform).toBe('uppercase');
-        expect(style.letterSpacing).toBe(3);
-        expect(style.fontFamily).toBe(FONTS.sans);
+        expect(style.letterSpacing).toBe(TYPE_ROLES.eyebrow.letterSpacing);
+        expect(style.fontFamily).toBe(TYPE_ROLES.eyebrow.fontFamily);
     });
 });
 

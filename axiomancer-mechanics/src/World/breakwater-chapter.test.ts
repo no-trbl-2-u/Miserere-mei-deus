@@ -129,10 +129,11 @@ describe('A1: the graph is T\'s node list', () => {
             expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);
             expect(boardKindOf(n.id), n.id).toBe(n.kind);
         }
-        // The above reads BW_ELITE_DRAWS itself, so pin each elite pair's
+        // The above reads BW_ELITE_DRAWS itself, so pin each elite node's
         // count independently, or a one-foe regression would pass above.
-        for (const id of ['bw-c1', 'bw-l4', 'bw-w5']) {
-            expect(getNodeEventPool('coastal-continent', 'breakwater', id)!.entries, id).toHaveLength(2);
+        // The sea cave draws three (MV1d), the other two a pair.
+        for (const [id, n] of [['bw-c1', 3], ['bw-l4', 2], ['bw-w5', 2]] as const) {
+            expect(getNodeEventPool('coastal-continent', 'breakwater', id)!.entries, id).toHaveLength(n);
         }
     });
 
@@ -169,7 +170,7 @@ describe('A1: the graph is T\'s node list', () => {
             if (p.kind !== 'village') continue;
             expect(p.rest).toBe(true);
             expect(p.cardShop).toBe(true);
-            expect(p.anvil?.variants?.length).toBeGreaterThan(0);
+            expect(p.anvil?.variants).toEqual([]);
         }
     });
 

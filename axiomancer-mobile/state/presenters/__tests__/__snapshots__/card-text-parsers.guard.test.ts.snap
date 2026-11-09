@@ -1,0 +1,1745 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`face-text parsers guard every library card parses to the keywords, headline and FREE cell it was pinned at 1`] = `
+{
+  "bp-curse": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−5",
+    },
+    "keywords": [
+      "CURSE",
+      "EXILE",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "SACRIFICE",
+      "value": "10",
+    },
+  },
+  "bp-e-01n": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−3",
+    },
+    "keywords": [
+      "CONVICTION",
+      "EXILE",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "+5 ◆",
+    },
+  },
+  "bp-e-02d": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−1",
+    },
+    "keywords": [
+      "SACRIFICE",
+      "TETHER",
+    ],
+    "paid": {
+      "keyword": "TETHER",
+      "value": "2",
+    },
+  },
+  "bp-e-03d": {
+    "free": {
+      "keyword": "LEECH",
+      "value": "1",
+    },
+    "keywords": [
+      "GLOBAL",
+      "LEECH",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "LEECH",
+      "value": "1",
+    },
+  },
+  "bp-e-04c": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "CONVICTION",
+      "EXILE",
+      "GUARD",
+      "WAIVE",
+    ],
+    "paid": {
+      "keyword": "WAIVE",
+      "value": "",
+    },
+  },
+  "bp-e-05n": {
+    "free": {
+      "keyword": "TETHER",
+      "value": "2",
+    },
+    "keywords": [
+      "LEECH",
+      "SACRIFICE",
+      "TETHER",
+    ],
+    "paid": {
+      "keyword": "LEECH",
+      "value": "2",
+    },
+  },
+  "bp-e-06b": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−2",
+    },
+    "keywords": [
+      "DEAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 9",
+    },
+  },
+  "bp-e-07b": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "×2",
+    },
+    "keywords": [
+      "CONVICTION",
+      "EXILE",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "+3 ◆",
+    },
+  },
+  "bp-e-08n": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−3",
+    },
+    "keywords": [
+      "DEAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "bp-e-09n": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "+X",
+    },
+    "keywords": [
+      "DEAL",
+      "GLOBAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Next Deal +X",
+    },
+  },
+  "bp-e-10d": {
+    "free": {
+      "keyword": "TETHER",
+      "value": "1",
+    },
+    "keywords": [
+      "EXILE",
+      "SACRIFICE",
+      "TETHER",
+    ],
+    "paid": {
+      "keyword": "TETHER",
+      "value": "1",
+    },
+  },
+  "bp-m-01d": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "HEAL",
+      "LEECH",
+    ],
+    "paid": {
+      "keyword": "LEECH",
+      "value": "4",
+    },
+  },
+  "bp-m-02b": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 6",
+    },
+  },
+  "bp-m-03d": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "LEECH",
+    ],
+    "paid": {
+      "keyword": "LEECH",
+      "value": "3",
+    },
+  },
+  "bp-m-04n": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "6",
+    },
+    "keywords": [
+      "HEAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "12",
+    },
+  },
+  "bp-m-05b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "2",
+    },
+    "keywords": [
+      "CONVICTION",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "+2 ◆",
+    },
+  },
+  "bp-m-06c": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "EXILE",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "5",
+    },
+  },
+  "bp-m-07a": {
+    "free": {
+      "keyword": "VULNERABLE",
+      "value": "+10%",
+    },
+    "keywords": [
+      "EXILE",
+      "HEAL",
+      "VULNERABLE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Foe − varies",
+    },
+  },
+  "bp-m-08d": {
+    "free": {
+      "keyword": "LEECH",
+      "value": "1",
+    },
+    "keywords": [
+      "GLOBAL",
+      "LEECH",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "LEECH",
+      "value": "1",
+    },
+  },
+  "bp-m-09a": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "4",
+    },
+    "keywords": [
+      "GUARD",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "10",
+    },
+  },
+  "bp-m-10a": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "X",
+    },
+    "keywords": [
+      "EXILE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Foe − varies",
+    },
+  },
+  "bp-p-01a": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−2",
+    },
+    "keywords": [
+      "DEAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 16",
+    },
+  },
+  "bp-p-02a": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "7",
+    },
+    "keywords": [
+      "GUARD",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "16",
+    },
+  },
+  "bp-p-03a": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "DEAL",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 6",
+    },
+  },
+  "bp-p-04c": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "10",
+    },
+    "keywords": [
+      "EXILE",
+      "HEAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "varies",
+    },
+  },
+  "bp-p-05b": {
+    "free": {
+      "keyword": "VULNERABLE",
+      "value": "+20%",
+    },
+    "keywords": [
+      "EXILE",
+      "SACRIFICE",
+      "VULNERABLE",
+    ],
+    "paid": {
+      "keyword": "VULNERABLE",
+      "value": "+70%",
+    },
+  },
+  "bp-p-06d": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "LEECH",
+    ],
+    "paid": {
+      "keyword": "LEECH",
+      "value": "1",
+    },
+  },
+  "bp-p-07b": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "X",
+    },
+    "keywords": [
+      "DEAL",
+      "EXILE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "bp-p-08d": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−2",
+    },
+    "keywords": [
+      "CONVICTION",
+      "SACRIFICE",
+      "TETHER",
+    ],
+    "paid": {
+      "keyword": "TETHER",
+      "value": "3",
+    },
+  },
+  "bp-p-09b": {
+    "free": {
+      "keyword": "SACRIFICE",
+      "value": "−4",
+    },
+    "keywords": [
+      "EXILE",
+      "SACRIFICE",
+      "VULNERABLE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Foe −17",
+    },
+  },
+  "bp-p-10c": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "X",
+    },
+    "keywords": [
+      "DEAL",
+      "GLOBAL",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "df-e-01c": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "DISCARD",
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "10",
+    },
+  },
+  "df-e-02b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "5",
+    },
+  },
+  "df-e-03b": {
+    "free": {
+      "keyword": "REFLECT",
+      "value": "50%",
+    },
+    "keywords": [
+      "REFLECT",
+    ],
+    "paid": {
+      "keyword": "REFLECT",
+      "value": "100%",
+    },
+  },
+  "df-e-04a": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 3",
+    },
+  },
+  "df-e-05c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "3",
+    },
+    "keywords": [
+      "DISCARD",
+      "EXILE",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "8",
+    },
+  },
+  "df-e-06c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "3",
+    },
+    "keywords": [
+      "EXILE",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "",
+    },
+  },
+  "df-e-07c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "DISCARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 5",
+    },
+  },
+  "df-e-08b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "REFLECT",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "6",
+    },
+  },
+  "df-e-09c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "3",
+    },
+    "keywords": [
+      "GLOBAL",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "3",
+    },
+  },
+  "df-e-10c": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "1",
+    },
+    "keywords": [
+      "DRAW",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "DRAW",
+      "value": "2",
+    },
+  },
+  "df-m-01b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "DRAW",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "8",
+    },
+  },
+  "df-m-02b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "X",
+    },
+    "keywords": [
+      "GUARD",
+      "HEAL",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "varies",
+    },
+  },
+  "df-m-03b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "VULNERABLE",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "6",
+    },
+  },
+  "df-m-04b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+  },
+  "df-m-05c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "1",
+    },
+    "keywords": [
+      "CONVICTION",
+      "DISCARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "2",
+    },
+  },
+  "df-m-06b": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "1",
+    },
+    "keywords": [
+      "DRAW",
+      "GLOBAL",
+    ],
+    "paid": {
+      "keyword": "DRAW",
+      "value": "1",
+    },
+  },
+  "df-m-07c": {
+    "free": {
+      "keyword": "RETRIEVE",
+      "value": "1",
+    },
+    "keywords": [
+      "EXILE",
+      "RETRIEVE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "",
+    },
+  },
+  "df-m-08c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "DRAW",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 2",
+    },
+  },
+  "df-m-09a": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "DEAL",
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 5",
+    },
+  },
+  "df-m-10n": {
+    "free": {
+      "keyword": "REFLECT",
+      "value": "15%",
+    },
+    "keywords": [
+      "GLOBAL",
+      "REFLECT",
+    ],
+    "paid": {
+      "keyword": "REFLECT",
+      "value": "15%",
+    },
+  },
+  "df-p-01a": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 4",
+    },
+  },
+  "df-p-02b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "DEAL",
+      "DISCARD",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "df-p-03c": {
+    "free": {
+      "keyword": "VULNERABLE",
+      "value": "+25%",
+    },
+    "keywords": [
+      "DEAL",
+      "DISCARD",
+      "VULNERABLE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 8",
+    },
+  },
+  "df-p-04a": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "DISCARD",
+      "REFLECT",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 3",
+    },
+  },
+  "df-p-05c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "2",
+    },
+    "keywords": [
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "3",
+    },
+  },
+  "df-p-06c": {
+    "free": {
+      "keyword": "THORNS",
+      "value": "X",
+    },
+    "keywords": [
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "",
+    },
+  },
+  "df-p-07c": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "DISCARD",
+      "EXILE",
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "THORNS",
+      "value": "3",
+    },
+  },
+  "df-p-08b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "GUARD",
+      "HOLDS",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "9",
+    },
+  },
+  "df-p-09b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "REFLECT",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "6",
+    },
+  },
+  "df-p-10b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "X",
+    },
+    "keywords": [
+      "GLOBAL",
+      "GUARD",
+      "THORNS",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "varies",
+    },
+  },
+  "el-e-01b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "2",
+    },
+    "keywords": [
+      "EXILE",
+      "GUARD",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "7",
+    },
+  },
+  "el-e-02c": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "DEAL",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 4",
+    },
+  },
+  "el-e-03b": {
+    "free": {
+      "keyword": "BLIZZARD",
+      "value": "2",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "DRAW",
+      "EXILE",
+    ],
+    "paid": {
+      "keyword": "BLIZZARD",
+      "value": "8",
+    },
+  },
+  "el-e-04c": {
+    "free": {
+      "keyword": "BLIZZARD",
+      "value": "3",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "BLIZZARD",
+      "value": "5",
+    },
+  },
+  "el-e-05b": {
+    "free": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+    "keywords": [
+      "DRAW",
+      "EXILE",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "STORM",
+      "value": "4",
+    },
+  },
+  "el-e-06a": {
+    "free": {
+      "keyword": "STORM",
+      "value": "+1",
+    },
+    "keywords": [
+      "GLOBAL",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "STORM",
+      "value": "",
+    },
+  },
+  "el-e-07b": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "2",
+    },
+    "keywords": [
+      "DRAW",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "DRAW",
+      "value": "2",
+    },
+  },
+  "el-e-08c": {
+    "free": {
+      "keyword": "INFERNO",
+      "value": "1",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "EXILE",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": "INFERNO",
+      "value": "2",
+    },
+  },
+  "el-e-09b": {
+    "free": {
+      "keyword": "BLIZZARD",
+      "value": "X",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "GLOBAL",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "BLIZZARD",
+      "value": "",
+    },
+  },
+  "el-e-10c": {
+    "free": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+    "keywords": [
+      "DRAW",
+      "EXILE",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "DRAW",
+      "value": "2",
+    },
+  },
+  "el-m-01a": {
+    "free": {
+      "keyword": "INFERNO",
+      "value": "X",
+    },
+    "keywords": [
+      "HEAL",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "varies",
+    },
+  },
+  "el-m-02a": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "4",
+    },
+  },
+  "el-m-03a": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "2",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "DRAW",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "2",
+    },
+  },
+  "el-m-04a": {
+    "free": {
+      "keyword": "INFERNO",
+      "value": "1",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "EXILE",
+      "INFERNO",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "INFERNO",
+      "value": "5",
+    },
+  },
+  "el-m-05c": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "1",
+    },
+    "keywords": [
+      "CONVICTION",
+      "DRAW",
+    ],
+    "paid": {
+      "keyword": "DRAW",
+      "value": "1",
+    },
+  },
+  "el-m-06a": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "4",
+    },
+    "keywords": [
+      "FROZEN",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "9",
+    },
+  },
+  "el-m-07b": {
+    "free": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+    "keywords": [
+      "EXILE",
+      "STORM",
+      "VULNERABLE",
+    ],
+    "paid": {
+      "keyword": "VULNERABLE",
+      "value": "+14%",
+    },
+  },
+  "el-m-08c": {
+    "free": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+    "keywords": [
+      "DRAW",
+      "GLOBAL",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+  },
+  "el-m-09c": {
+    "free": {
+      "keyword": "INFERNO",
+      "value": "X",
+    },
+    "keywords": [
+      "HEAL",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "varies",
+    },
+  },
+  "el-m-10n": {
+    "free": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+    "keywords": [
+      "GLOBAL",
+      "HEAL",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+  },
+  "el-p-01b": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "DEAL",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 4",
+    },
+  },
+  "el-p-02b": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "DEAL",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 9",
+    },
+  },
+  "el-p-03a": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "X",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "varies",
+    },
+  },
+  "el-p-04a": {
+    "free": {
+      "keyword": "BLIZZARD",
+      "value": "2",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "DEAL",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 3",
+    },
+  },
+  "el-p-05b": {
+    "free": {
+      "keyword": "STORM",
+      "value": "1",
+    },
+    "keywords": [
+      "DEAL",
+      "EXILE",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Foe − varies",
+    },
+  },
+  "el-p-06b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "DRAW",
+      "GUARD",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "5",
+    },
+  },
+  "el-p-07a": {
+    "free": {
+      "keyword": "INFERNO",
+      "value": "1",
+    },
+    "keywords": [
+      "DEAL",
+      "FROZEN",
+      "INFERNO",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 5",
+    },
+  },
+  "el-p-08b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "X",
+    },
+    "keywords": [
+      "BLIZZARD",
+      "GUARD",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": "BLIZZARD",
+      "value": "",
+    },
+  },
+  "el-p-09a": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "INFERNO",
+      "STORM",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 4",
+    },
+  },
+  "el-p-10b": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "DEAL",
+      "GLOBAL",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 3",
+    },
+  },
+  "grey-strike": {
+    "keywords": [
+      "DEAL",
+    ],
+  },
+  "grey-ward": {
+    "keywords": [
+      "GUARD",
+    ],
+  },
+  "grey-word": {
+    "keywords": [
+      "VULNERABLE",
+    ],
+  },
+  "mc-e-01b": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "DRAW",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "5",
+    },
+  },
+  "mc-e-02c": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "2",
+    },
+    "keywords": [
+      "DRAW",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "MERCY",
+      "value": "4",
+    },
+  },
+  "mc-e-03b": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "X",
+    },
+    "keywords": [
+      "EXILE",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "varies",
+    },
+  },
+  "mc-e-04b": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "2",
+    },
+    "keywords": [
+      "DRAW",
+      "SACRIFICE",
+    ],
+    "paid": {
+      "keyword": "DRAW",
+      "value": "3",
+    },
+  },
+  "mc-e-06a": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "X",
+    },
+    "keywords": [
+      "DEAL",
+      "EXILE",
+      "HEAL",
+      "RADIANCE",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "mc-e-07b": {
+    "free": {
+      "keyword": "LEECH",
+      "value": "1",
+    },
+    "keywords": [
+      "DEAL",
+      "LEECH",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 4",
+    },
+  },
+  "mc-e-08b": {
+    "free": {
+      "keyword": "RADIANCE",
+      "value": "3",
+    },
+    "keywords": [
+      "MERCY",
+      "RADIANCE",
+    ],
+    "paid": {
+      "keyword": "RADIANCE",
+      "value": "6",
+    },
+  },
+  "mc-e-09b": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "1",
+    },
+    "keywords": [
+      "GLOBAL",
+      "HEAL",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "1",
+    },
+  },
+  "mc-e-10b": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "DRAW",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "4",
+    },
+  },
+  "mc-m-01b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "3",
+    },
+    "keywords": [
+      "GUARD",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "7",
+    },
+  },
+  "mc-m-02b": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "3",
+    },
+    "keywords": [
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "MERCY",
+      "value": "7",
+    },
+  },
+  "mc-m-04b": {
+    "free": {
+      "keyword": "RADIANCE",
+      "value": "2",
+    },
+    "keywords": [
+      "RADIANCE",
+    ],
+    "paid": {
+      "keyword": "RADIANCE",
+      "value": "5",
+    },
+  },
+  "mc-m-05c": {
+    "free": {
+      "keyword": "DRAW",
+      "value": "1",
+    },
+    "keywords": [
+      "DRAW",
+      "EXILE",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "varies",
+    },
+  },
+  "mc-m-06c": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "GLOBAL",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+  },
+  "mc-m-07c": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "1",
+    },
+    "keywords": [
+      "DEAL",
+      "DRAW",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 2",
+    },
+  },
+  "mc-m-08a": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "3",
+    },
+    "keywords": [
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "MERCY",
+      "value": "5",
+    },
+  },
+  "mc-m-09c": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "X",
+    },
+    "keywords": [
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "MERCY",
+      "value": "",
+    },
+  },
+  "mc-m-10c": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 9",
+    },
+  },
+  "mc-p-01a": {
+    "free": {
+      "keyword": "RADIANCE",
+      "value": "3",
+    },
+    "keywords": [
+      "RADIANCE",
+    ],
+    "paid": {
+      "keyword": "RADIANCE",
+      "value": "7",
+    },
+  },
+  "mc-p-02b": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "2",
+    },
+    "keywords": [
+      "GUARD",
+      "RADIANCE",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "5",
+    },
+  },
+  "mc-p-03b": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "5",
+    },
+    "keywords": [
+      "EXILE",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "MERCY",
+      "value": "8",
+    },
+  },
+  "mc-p-04a": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "DEAL",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal 6",
+    },
+  },
+  "mc-p-05a": {
+    "free": {
+      "keyword": "MERCY",
+      "value": "X",
+    },
+    "keywords": [
+      "EXILE",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "MERCY",
+      "value": "",
+    },
+  },
+  "mc-p-06a": {
+    "free": {
+      "keyword": "DEAL",
+      "value": "X",
+    },
+    "keywords": [
+      "DEAL",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "mc-p-06c": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "X",
+    },
+    "keywords": [
+      "GUARD",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "varies",
+    },
+  },
+  "mc-p-07b": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "2",
+    },
+    "keywords": [
+      "DEAL",
+      "HEAL",
+    ],
+    "paid": {
+      "keyword": null,
+      "value": "Deal varies",
+    },
+  },
+  "mc-p-08b": {
+    "free": {
+      "keyword": "HEAL",
+      "value": "3",
+    },
+    "keywords": [
+      "HEAL",
+      "MERCY",
+    ],
+    "paid": {
+      "keyword": "HEAL",
+      "value": "6",
+    },
+  },
+  "mc-p-09c": {
+    "free": {
+      "keyword": "GUARD",
+      "value": "2",
+    },
+    "keywords": [
+      "GUARD",
+    ],
+    "paid": {
+      "keyword": "GUARD",
+      "value": "varies",
+    },
+  },
+  "mc-p-10c": {
+    "free": {
+      "keyword": "RADIANCE",
+      "value": "5",
+    },
+    "keywords": [
+      "GLOBAL",
+      "MERCY",
+      "RADIANCE",
+    ],
+    "paid": {
+      "keyword": "RADIANCE",
+      "value": "5",
+    },
+  },
+}
+`;

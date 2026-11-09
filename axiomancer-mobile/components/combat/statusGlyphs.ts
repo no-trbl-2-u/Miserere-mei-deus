@@ -73,6 +73,8 @@ const EFFECT_GLYPHS: Record<string, string> = {
     debuff_quarter: '☙',
     // A Plain Word's affliction: the foe's guard is open.
     debuff_vulnerable: '▼',
+    // A foe's SHOCK: every hit on the bearer lands harder.
+    debuff_shock: '↯',
 };
 
 /** Category fallback glyphs. */

@@ -73,7 +73,6 @@ Ban from house narration:
 - faux-archaic constructions (`thee`, `thou`, `hath`, ornamental inversions);
 - generic “wrathful heavens,” “blood-red sky,” judgmental thunder, or other
   scriptural-weather shorthand;
-- gore used only as intensity;
 - prestige-dark filler such as ineffable evil, nameless dread, or a land that
   “remembers” without a concrete recording mechanism;
 - imported catchphrases or recognizable strings from external fiction.

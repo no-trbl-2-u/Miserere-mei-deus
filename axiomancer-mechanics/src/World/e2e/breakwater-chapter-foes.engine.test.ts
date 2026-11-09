@@ -92,9 +92,9 @@ function fightAs(slug: 'tithe-collector'): CombatEncounterState {
 }
 
 describe('the sea cave draws the Tithe-Collector, which fires Audit at 60% and Foreclose at 30% (phase EN1h)', () => {
-    it('bw-c1 names it as the second of its two draws, at level 5', () => {
+    it('bw-c1 names it as the second of its three draws, at level 5', () => {
         const slugs = getNodeEventPool('coastal-continent', 'breakwater', 'bw-c1')!.entries.map(e => (e.payload as { enemySlug?: string }).enemySlug);
-        expect(slugs).toEqual(['cave-choir', 'tithe-collector']);
+        expect(slugs).toEqual(['cave-choir', 'tithe-collector', 'saltwick-swarm']);
         expect(BW_ELITE_DRAWS['bw-c1']![1]).toMatchObject({ slug: 'tithe-collector', level: 5 });
     });
 
@@ -117,9 +117,18 @@ describe('the sea cave draws the Tithe-Collector, which fires Audit at 60% and F
     });
 });
 
+describe('the sea cave draws Saltwick Swarm, an elite that fires Drown in Light at 60% and The Whole Bloom at 30% (MV1d)', () => {
+    it('bw-c1 draws it on the last third of the roll, as an elite at level 5', () => {
+        const s = fightAt('bw-c1', () => 0.95);
+        const swarm = ENEMY_REGISTRY['saltwick-swarm'];
+        expect(s.enemy).toMatchObject({ id: swarm.id, difficulty: 'elite', level: 5 });
+        walkDangers(s, swarm, 'Drown in Light', 'The Whole Bloom');
+    });
+});
+
 describe('the sea cave draws the Cave Choir, which fires both its DANGERs at its lines (phase EN1j)', () => {
     it('bw-c1', () => {
-        let s = fightAt('bw-c1');
+        let s = fightAt('bw-c1', () => 0.1);
         const choir = ENEMY_REGISTRY['cave-choir'];
         expect(s.enemy.id).toBe(choir.id);
         expect(s.enemy.difficulty).toBe('elite');
@@ -189,13 +198,12 @@ describe('the keep causeway draws the Wreckmaster or the Tide-Gate, each firing 
     });
 
     it.each([
-        ['wreckmaster', 'Compound Interest', 'Seize the Causeway'],
+        ['wreckmaster', 'Reload Under Fire', 'Take the Colours'],
         ['tide-gate', 'Spring Tide', 'The Gate Opens'],
     ] as const)('bw-w5 draws %s', (slug, sixty, thirty) => {
         let s = drawn(slug);
         const source = ENEMY_REGISTRY[slug];
         expect(s.enemy).toMatchObject({ id: source.id, difficulty: 'elite', level: 8 });
-        if (slug === 'wreckmaster') s = payOneToll(s);
         walkDangers(s, source, sixty, thirty);
     });
 });

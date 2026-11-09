@@ -33,7 +33,7 @@ const CHAPTER1_IDS = [
 /** The cliffs, the hamlet and the sea cave's elite (EN1h), in library order. */
 const CLIFF_IDS = ['enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector'];
 /** The foes that still play an enemy deck (the rest play HP phases). */
-const DECK_IDS = ['enemy-death-beholder', 'enemy-saint-beneath'];
+const DECK_IDS = ['enemy-death-beholder'];
 /**
  * Chapter 1's recast faces (EN3a), in library order. Each is its cut foe's
  * numbers under a new id, name, description and portrait key; the cut foes
@@ -135,10 +135,10 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         return payload as { kind: 'encounter'; enemySlug?: string; isBoss?: boolean };
     };
 
-    it.each(ACT1)('$map wanders the six Chapter 1 normals and nothing else (EN3b)', ({ map }) => {
+    it.each(ACT1)('$map wanders the five Chapter 1 normals and nothing else (EN3b, MV1d: Saltwick Swarm is an elite)', ({ map }) => {
         expect(EnemiesByMap[map].map(e => e.id)).toEqual([
             'enemy-quay-crab', 'enemy-net-mender', 'enemy-coralback',
-            'enemy-brine-widow', 'enemy-saltwick-swarm', 'enemy-bilge-stalker',
+            'enemy-brine-widow', 'enemy-bilge-stalker',
         ]);
     });
 

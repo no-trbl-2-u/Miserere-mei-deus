@@ -42,6 +42,8 @@ import { ItemRewardGate } from '@/components/item-reward/ItemRewardGate';
 import { RestGate } from '@/components/RestGate';
 import { NavLogger } from '@/components/NavLogger';
 import { ToastHost } from '@/components/ToastHost';
+import { MapInkHost } from '@/components/exploration/MapInkHost';
+import { isMapInkHandoff } from '@/state/map-ink';
 import { getLogger } from '@mechanics';
 import { initAppLogging } from '@/state/logging';
 import { attachCrashBreadcrumbs, initCrashReporting, registerNavigationTracing, withCrashReporting } from '@/lib/monitoring';
@@ -71,7 +73,7 @@ import DevHazardPuzzles from './devpuzzle/index';
 import DevFrameHarness from './devframes/index';
 
 // Faces come from the @expo-google-fonts packages, registered in theme/fontFaces.ts under the exact
-// fontFamily strings theme/axm.ts references. The old vendored faces (assets/fonts/) are no longer loaded.
+// fontFamily strings theme/axm.ts references. Only Pirata One stays in assets/fonts/, as the source the splash wordmark is drawn from.
 
 SplashScreen.preventAutoHideAsync();
 
@@ -284,6 +286,9 @@ function RootLayout() {
             </Suspense>
           )}
           <ToastHost />
+          {/* The map's ink (CX1b): over every screen, so a walk into a fight
+              goes black across the whole window, the tab bar included. */}
+          <MapInkHost />
           {/* The adapter's 500ms write debounce could eat a checkpoint if
               the player closed inside it. This takes a final save and
               flushes it on background/pagehide. */}
@@ -320,7 +325,16 @@ function RootLayout() {
             <Stack.Screen
               name="combat-encounter/index"
               component={CombatEncounterScreen}
-              options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
+              // A fight walked to through the map's ink (CX1b, A7) opens with no
+              // stack animation: the ink already covers the window, and the
+              // screen's own curtain takes it over. Any other entry (the
+              // labyrinth, a dev trigger, a resumed fight) keeps the modal's own.
+              options={() => ({
+                headerShown: false,
+                presentation: 'fullScreenModal',
+                gestureEnabled: false,
+                ...(isMapInkHandoff() ? { animation: 'none' as const } : {}),
+              })}
             />
             {/* The ONE reward screen that is dismissible on purpose.
                 No `gestureEnabled: false` and no <HardwareBackHandler>: the

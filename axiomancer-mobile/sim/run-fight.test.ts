@@ -18,7 +18,7 @@ import {
 import { FloatEye } from '@mechanics/Enemy/enemy.library';
 
 import { playRun } from './run-driver';
-import { answerMercyCheck } from './run-fight';
+import { answerMercyCheck, damagePctOf } from './run-fight';
 
 function won(mercyCheck?: CombatEncounterState['mercyCheck']): CombatEncounterState {
     const player = createCharacter({ name: 'Pilgrim', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
@@ -28,6 +28,17 @@ function won(mercyCheck?: CombatEncounterState['mercyCheck']): CombatEncounterSt
         ...(mercyCheck ? { mercyCheck } : {}),
     };
 }
+
+describe('damagePctOf', () => {
+    it('reads the share of VITAE gone, to one decimal, clamped to 0 through 100', () => {
+        expect(damagePctOf({ health: 100, maxHealth: 100 })).toBe(0);
+        expect(damagePctOf({ health: 25, maxHealth: 80 })).toBe(68.8);
+        expect(damagePctOf({ health: 0, maxHealth: 80 })).toBe(100);
+        expect(damagePctOf({ health: -12, maxHealth: 80 })).toBe(100);
+        expect(damagePctOf({ health: 90, maxHealth: 80 })).toBe(0);
+        expect(damagePctOf({ health: 0, maxHealth: 0 })).toBe(0);
+    });
+});
 
 describe('answerMercyCheck', () => {
     it('spares an offered check for spare-all, and finishes it for the player witness', () => {
@@ -66,7 +77,15 @@ describe('a run with the check answered', () => {
         // The ledger behind the spare-all / finish-all comparison: both pay shillings, and a Spare forgoes its fight's XP.
         expect(spare.mercy.shillings).toBeGreaterThan(0);
         expect(finish.mercy.shillings).toBeGreaterThan(0);
-        expect(finish.mercy.xp).toBeGreaterThan(spare.mercy.xp);
+        // One seed's two runs diverge (a Spare changes what you meet next), so the XP is read over several.
+        // A seed where either run loses a fight is left out: a death cuts that run's XP for a reason that is not the Spare.
+        const seeds = [1, 2, 3, 4, 5, 6].map((seed) => ({
+            spare: playRun({ policy: policyOf('spare-all'), seed, roster }),
+            finish: playRun({ policy: policyOf('finish-all'), seed, roster }),
+        })).filter(({ spare: s, finish: f }) => s.fights.lost === 0 && f.fights.lost === 0);
+        expect(seeds.length).toBeGreaterThan(0);
+        const xpOver = (pick: 'spare' | 'finish') => seeds.reduce((sum, run) => sum + run[pick].mercy.xp, 0);
+        expect(xpOver('finish')).toBeGreaterThan(xpOver('spare'));
     });
 });
 

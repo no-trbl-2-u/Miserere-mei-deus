@@ -40,7 +40,7 @@ import { RUN_END_PARAM } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
 import { FitText } from '@/components/FitText';
 import { longestWord } from '@/lib/text-fit';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The brass card (N-04), the vellum stat tile (N-05) and the vellum CONFIRM (N-06). */
@@ -259,7 +259,7 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 6,
     },
     headerText: { flex: 1 },
-    title: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.sulfur, letterSpacing: 1, marginTop: 1 },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, color: AXM.sulfur, letterSpacing: TYPE_ROLES.title.letterSpacing, marginTop: 1 },
     backBtn: {
         width: 40,
         height: 40,
@@ -269,7 +269,7 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
         backgroundColor: AXM.panelBg,
     },
-    backLabel: { fontFamily: FONTS.mono, fontSize: 16, color: AXM.bone },
+    backLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, color: AXM.bone },
     focal: { flexDirection: 'row', gap: 10, height: 220 },
     portraitFrame: {
         flex: 3,
@@ -281,7 +281,7 @@ const useStyles = makeStyles((AXM) => ({
     // Clears the brass card's drawn corners at CARD_SCALE (about 19 high, 27 wide).
     portraitFrameKit: { paddingVertical: 22, paddingHorizontal: 28 },
     portraitImage: { width: '100%', height: '100%' },
-    portraitLocked: { fontFamily: FONTS.gothic, fontSize: 72, color: AXM.ash },
+    portraitLocked: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 72, color: AXM.ash },
     relicBox: {
         flex: 2,
         alignItems: 'center',
@@ -290,10 +290,10 @@ const useStyles = makeStyles((AXM) => ({
     },
     relicBoxPlain: { borderWidth: 1, borderColor: AXM.sulfur, backgroundColor: AXM.panelBg, padding: 8 },
     relicBoxKit: { paddingVertical: 22, paddingHorizontal: 28 },
-    relicLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
-    relicName: { fontFamily: FONTS.gothic, fontSize: RELIC_NAME_SIZE, color: AXM.parchment, textAlign: 'center' },
-    relicLocked: { fontFamily: FONTS.gothic, fontSize: 44, color: AXM.ash },
-    name: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, marginTop: 10 },
+    relicLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, color: AXM.bone, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    relicName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: RELIC_NAME_SIZE, color: AXM.parchment, textAlign: 'center' },
+    relicLocked: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 44, color: AXM.ash },
+    name: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 20, color: AXM.parchment, marginTop: 10 },
     statsRow: { flexDirection: 'row', gap: 8, marginTop: 8 },
     stat: {
         flex: 1,
@@ -304,9 +304,9 @@ const useStyles = makeStyles((AXM) => ({
     statKit: { paddingHorizontal: 10 },
     statPlain: { borderWidth: 1, borderColor: AXM.ash, backgroundColor: AXM.panelBg, paddingVertical: 6 },
     inkText: { color: VELLUM_INK },
-    statLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, letterSpacing: 1 },
-    statValue: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.parchment },
-    playstyle: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 8 },
+    statLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, color: AXM.bone, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    statValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 22, color: AXM.parchment },
+    playstyle: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 13, color: AXM.bone, marginTop: 8 },
     confirm: {
         marginTop: 12,
         height: 46,
@@ -318,7 +318,7 @@ const useStyles = makeStyles((AXM) => ({
     confirmKit: { height: 54, paddingVertical: 16, paddingHorizontal: 16 },
     confirmOff: { opacity: 0.5 },
     confirmOffPlain: { borderColor: AXM.ash },
-    confirmLabel: { fontFamily: FONTS.gothic, fontSize: 18, color: AXM.sulfur, letterSpacing: 2 },
+    confirmLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, color: AXM.sulfur, letterSpacing: TYPE_ROLES.button.letterSpacing},
     spacer: { flex: 1, minHeight: 8 },
     carousel: { gap: 8 },
     carouselRow: { flexDirection: 'row', gap: 8 },
@@ -335,5 +335,5 @@ const useStyles = makeStyles((AXM) => ({
     squareSelected: { borderColor: AXM.sulfur, borderWidth: 2 },
     squareLocked: { backgroundColor: AXM.deepBg },
     squareImage: { width: '100%', height: '100%' },
-    questionMark: { fontFamily: FONTS.gothic, fontSize: 28, color: AXM.ash },
+    questionMark: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 28, color: AXM.ash },
 }));

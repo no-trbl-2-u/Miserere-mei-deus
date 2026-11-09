@@ -19,7 +19,7 @@ import { Pressable, Text, View } from 'react-native';
 import Svg, { Circle, Path as SvgPath } from 'react-native-svg';
 
 import { Splatter } from '@/components/Splatter';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export interface LevelReadyStripProps {
@@ -136,15 +136,15 @@ const useStyles = makeStyles((AXM) => ({
     },
     centerCol: { flex: 1, justifyContent: 'center' },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 18,
         color: AXM.sulfur,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
     },
     subline: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9.5,
-        letterSpacing: 1.6,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         opacity: 0.6,
         marginTop: 2,
@@ -160,7 +160,7 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     chevron: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 22,
         color: AXM.sulfur,
         lineHeight: 22,

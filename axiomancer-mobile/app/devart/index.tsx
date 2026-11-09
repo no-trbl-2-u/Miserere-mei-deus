@@ -10,7 +10,7 @@
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { EnemyIllustration } from '@/components/event/enemy-art/EnemyIllustration';
@@ -54,10 +54,9 @@ const useStyles = makeStyles((AXM) => ({
     root: { flex: 1, backgroundColor: AXM.bg },
     content: { padding: 12, paddingBottom: 48 },
     heading: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.sectionHead.fontFamily,
         fontSize: 18,
         color: AXM.sulfur,
-        letterSpacing: 2,
         marginBottom: 12,
         textAlign: 'center',
     },
@@ -72,10 +71,10 @@ const useStyles = makeStyles((AXM) => ({
         overflow: 'hidden',
     },
     label: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
         color: AXM.bone,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         marginTop: 4,
         textAlign: 'center',
     },

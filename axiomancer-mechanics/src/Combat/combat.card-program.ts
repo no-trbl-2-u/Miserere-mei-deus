@@ -64,7 +64,7 @@ import { lookupEffect, applyEffect } from '../Effects';
 import type { Enemy } from '../Enemy/types';
 import type { SpecialPayload } from '../Items/types';
 import { applyDamage, heal as healCombatant, isDefeated } from './health';
-import { fireDotTrigger, getDamageTakenMultiplier } from './effects';
+import { fireDotTrigger, getDamageTakenFlat, getDamageTakenMultiplier } from './effects';
 import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
 
 export { programText };
@@ -159,6 +159,9 @@ export interface ProgramLedger {
     attackLess?: number;
     /** The cards whose line added MERCY, oldest first, one entry per play (a Merciful card returns the last). */
     mercyCards?: string[];
+    /** Brim Over (the Brimming Locket) is armed: every VITAE heal you make turns what it could not restore into GUARD.
+     *  Set on your turn, cleared when the foe's turn begins and when your next turn starts. Absent = off. */
+    brimming?: boolean;
 }
 
 export function initProgramLedger(): ProgramLedger {
@@ -375,6 +378,8 @@ class LineCtx implements ProgramCtx {
             dmg *= 2;
             this.w.l.el.frozen = false;
         }
+        // SHOCK on the foe joins each DEAL after FROZEN's doubling, before VULNERABLE.
+        dmg += getDamageTakenFlat(enemy);
         const preVuln = dmg;
         const vuln = getDamageTakenMultiplier(enemy);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
@@ -543,7 +548,7 @@ class LineCtx implements ProgramCtx {
         const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
         if (this.mode !== 'cost') this.heals().healed += healed;
         // An overflow into GUARD is a GUARD gain, so BRINE cuts it.
-        const overflow = overflowToGuard ? amt - healed : 0;
+        const overflow = overflowToGuard || this.w.l.brimming === true ? amt - healed : 0;
         const toGuard = overflow <= 0 ? 0
             : this.mode === 'apply' ? cutGuardGain(this.w.s, overflow, this.w.events) : brineCut(this.w.s, overflow);
         if (this.mode === 'value') {
@@ -678,6 +683,7 @@ class LineCtx implements ProgramCtx {
                     dmg *= 2;
                     l.el.frozen = false;
                 }
+                dmg += getDamageTakenFlat(w.s.enemy);
                 const preVuln = dmg;
                 dmg = Math.round(dmg * getDamageTakenMultiplier(w.s.enemy));
                 // The foe's WARD soaks TETHER's hit too: it is a DEAL.
@@ -1844,6 +1850,7 @@ export function programTurnStart(state: CombatEncounterState, kit: ProgramKit): 
     l.dealtThisTurn = 0;
     // The turn's heal modifiers reset before anything heals (the Globals fire after).
     l.heals = initHealMods();
+    l.brimming = false;
     l.drains = l.drains.filter(d => d.untilRound >= state.round);
     if (l.pendingHeal > 0) {
         const p = w.s.player;
@@ -1951,16 +1958,92 @@ export function programPaySacrifice(
  * VITAE, as a card's HEAL.
  */
 export function programSignatureHeal(
-    state: CombatEncounterState, n: number, sourceId: string,
+    state: CombatEncounterState, n: number, sourceId: string, opts?: { counts?: boolean },
 ): ProgramPlayResult {
     const amt = n > 0 ? veilHeal(state, scaleFor(n, state.player.baseStats, 'mind', 'one-shot')) : 0;
     const p = state.player;
     const healed = Math.min(amt, Math.max(0, p.maxHealth - p.health));
-    if (healed <= 0) return { state, events: [] };
-    const events: CombatEvent[] = [{ kind: 'player-healed', cardId: sourceId, amount: healed }];
+    const events: CombatEvent[] = [];
+    // Brim Over: what the heal could not restore becomes GUARD (BRINE cuts it as any GUARD gain).
+    const toGuard = state.program?.brimming === true && amt > healed ? cutGuardGain(state, amt - healed, events) : 0;
+    if (healed <= 0 && toGuard <= 0) return { state, events: [] };
+    let s: CombatEncounterState = toGuard > 0 ? { ...state, guard: (state.guard ?? 0) + toGuard } : state;
+    if (healed <= 0) return { state: s, events };
+    events.push({ kind: 'player-healed', cardId: sourceId, amount: healed });
+    // This signature's heal counts toward "all you healed this turn" when asked (Absolution).
+    if (opts?.counts) {
+        const l = cloneLedger(s.program ?? initProgramLedger());
+        l.heals = { ...(l.heals ?? initHealMods()) };
+        l.heals.healed += healed;
+        s = { ...s, program: l };
+    }
     // A signature's HEAL fires the worn gear's HEAL trigger.
-    const fired = fireEquipment('heal', { ...state, player: healCombatant(p, healed) }, events);
+    const fired = fireEquipment('heal', { ...s, player: healCombatant(p, healed) }, events);
     return { state: fired.state, events };
+}
+
+/** Brim Over (the Brimming Locket): whether it is armed now (a second cast is refused). */
+export function programBrimming(state: CombatEncounterState): boolean {
+    return state.program?.brimming === true;
+}
+
+/** Arms Brim Over for the rest of your turn: every heal you make counts until the foe's turn begins. */
+export function programArmBrim(state: CombatEncounterState): ProgramPlayResult {
+    const l = cloneLedger(state.program ?? initProgramLedger());
+    l.brimming = true;
+    return { state: { ...state, program: l }, events: [] };
+}
+
+/** Your turn ends: Brim Over lets go, so a heal on the foe's turn gives no GUARD. */
+export function programEndYourTurn(state: CombatEncounterState): CombatEncounterState {
+    if (!state.program?.brimming) return state;
+    return { ...state, program: { ...state.program, brimming: false } };
+}
+
+/** The Penitent's Brooch's HEAL for each condition removed (mind-scaled in one heal). */
+export const ABSOLUTION_HEAL_EACH = 2;
+
+/**
+ * What is on you that Absolution removes, as one entry per condition (whatever its stacks): each debuff in
+ * `player.effects`, and BRINE, TANGLE, UNDERTOW and LEECH laid on you by a foe's word. A BARNACLE is a card in
+ * your hand, not a condition, and is not listed.
+ */
+export function programAbsolveConditions(state: CombatEncounterState): string[] {
+    const out: string[] = [];
+    for (const ae of state.player.effects) if (lookupEffect(ae.effectId)?.type === 'debuff') out.push(ae.effectId);
+    const w = state.enemyWords;
+    if (w) {
+        if (w.brine > 0) out.push('brine');
+        if ((w.tangle ?? 0) > 0) out.push('tangle');
+        if (w.undertow) out.push('undertow');
+        if (w.leechTurns > 0 && w.leechPotency > 0) out.push('leech');
+    }
+    return out;
+}
+
+/** Absolution: removes every condition `programAbsolveConditions` lists, then HEALs 2 for each (counted toward the turn's heals). */
+export function programAbsolve(state: CombatEncounterState, sourceId: string): ProgramPlayResult {
+    const gone = programAbsolveConditions(state);
+    if (gone.length === 0) return { state, events: [] };
+    const events: CombatEvent[] = [];
+    const p = state.player;
+    let s: CombatEncounterState = {
+        ...state, player: { ...p, effects: p.effects.filter(ae => lookupEffect(ae.effectId)?.type !== 'debuff') },
+    };
+    const w = state.enemyWords;
+    if (w) {
+        const next = { ...w };
+        const strip = (word: 'brine' | 'tangle' | 'undertow' | 'leech'): void => {
+            events.push({ kind: 'enemy-word', word, op: 'stripped', amount: 1 });
+        };
+        if (gone.includes('brine')) { next.brine = 0; strip('brine'); }
+        if (gone.includes('tangle')) { next.tangle = 0; strip('tangle'); }
+        if (gone.includes('undertow')) { delete next.undertow; delete next.undertowAlso; strip('undertow'); }
+        if (gone.includes('leech')) { next.leechTurns = 0; next.leechPotency = 0; strip('leech'); }
+        s = { ...s, enemyWords: next };
+    }
+    const healed = programSignatureHeal(s, ABSOLUTION_HEAL_EACH * gone.length, sourceId, { counts: true });
+    return { state: healed.state, events: [...events, ...healed.events] };
 }
 
 /**
@@ -1990,13 +2073,17 @@ function leechTick(state: CombatEncounterState, tick: boolean): ProgramPlayResul
     const before = state.enemy.health;
     const enemy = applyDamage(state.enemy, lost);
     const p = state.player;
-    const healed = Math.min(veilHeal(state, lost), Math.max(0, p.maxHealth - p.health));
+    const veiled = veilHeal(state, lost);
+    const healed = Math.min(veiled, Math.max(0, p.maxHealth - p.health));
     const events: CombatEvent[] = [{ kind: 'damage-dealt', cardId, target: 'enemy', amount: lost }];
     if (healed > 0) events.push({ kind: 'player-healed', cardId, amount: healed });
+    // Brim Over: a LEECH you trigger on your turn counts (it is off on the foe's turn).
+    const toGuard = l.brimming === true && veiled > healed ? cutGuardGain(state, veiled - healed, events) : 0;
     return {
         state: {
             ...state, enemy,
             player: healCombatant(p, healed),
+            ...(toGuard > 0 ? { guard: (state.guard ?? 0) + toGuard } : {}),
             directDamageDealt: state.directDamageDealt + lost,
             attribution: recordAttribution(state.attribution, cardId, cardName, null, lost, before),
             program: turns > 0
@@ -2257,11 +2344,12 @@ export function programSpikeStrike(
     if (returns.length === 0) return { ledger: l, hits: [] };
     const ledger = cloneLedger(l);
     const vuln = getDamageTakenMultiplier(enemy);
+    const shock = getDamageTakenFlat(enemy);
     const hits = returns.map(r => {
         let dmg = r.amount + ledger.nextDealBonus;
         ledger.nextDealBonus = 0;
         if (ledger.el.frozen) { dmg *= 2; ledger.el.frozen = false; }
-        return { spike: r.spike, amount: Math.round(dmg * vuln) };
+        return { spike: r.spike, amount: Math.round((dmg + shock) * vuln) };
     });
     return { ledger, hits };
 }

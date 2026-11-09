@@ -9,12 +9,14 @@
  * (`distanceToUnfinished`), so the wanderer walks the chapter rather than
  * pacing back and forth; with nothing unfinished in reach it has no road and
  * the driver throws. It takes a trip only to somewhere it has not stood, or
- * out of the map; it never flees, rests at a village only when hurt, buys and
- * removes nothing, and wears every item it can.
+ * out of the map; it never flees and wears every item it can. At a village it
+ * spends without a plan: a random share of the purse at the anvil, then random
+ * picks among what the rest can afford.
  */
 
 import { PLAYER_WITNESS, SPARE_ALL_WITNESS } from './player-witness';
-import type { RunPolicy, RunRoadOption } from './run-policy.types';
+import { randomAnvil } from './run-policy.anvil';
+import type { RunPolicy, RunRoadOption, RunVillageContext, RunVillageDecision } from './run-policy.types';
 
 /** The first option among the nearest to something unfinished, or null when none leads anywhere. */
 export function nearestRoad(options: readonly RunRoadOption[]): RunRoadOption | null {
@@ -26,9 +28,51 @@ export function nearestRoad(options: readonly RunRoadOption[]): RunRoadOption | 
     return best;
 }
 
+/** An integer in [0, n) from the seeded stream. */
+function draw(rng: () => number, n: number): number {
+    return Math.min(n - 1, Math.floor(rng() * n));
+}
+
+/**
+ * The Wanderer's village: picks at random from what the purse can still pay
+ * for (the bed, a shop card, one removal), or stops, until it stops or nothing
+ * is affordable. Draws from `ctx.rng`, so a seed replays the same spending.
+ */
+export function randomVillage(ctx: RunVillageContext): RunVillageDecision {
+    let purse = ctx.currency;
+    let rest = false;
+    const buy: string[] = [];
+    const remove: string[] = [];
+    for (let guard = 0; guard < 64; guard++) {
+        interface Option { readonly price: number; readonly take: () => void }
+        const options: Option[] = [];
+        if (ctx.rest?.enabled && !rest) options.push({ price: ctx.rest.price, take: () => { rest = true; } });
+        for (const offer of ctx.shop) {
+            if (offer.enabled && !buy.includes(offer.cardId)) {
+                options.push({ price: offer.price, take: () => { buy.push(offer.cardId); } });
+            }
+        }
+        const removal = ctx.removal;
+        if (removal?.enabled && remove.length === 0 && removal.cardIds.length > 0) {
+            options.push({
+                price: removal.price,
+                take: () => { remove.push(removal.cardIds[draw(ctx.rng, removal.cardIds.length)]!); },
+            });
+        }
+        const affordable = options.filter(o => o.price <= purse);
+        if (affordable.length === 0) break;
+        // One extra slot is "stop here".
+        const chosen = affordable[draw(ctx.rng, affordable.length + 1)];
+        if (!chosen) break;
+        purse -= chosen.price;
+        chosen.take();
+    }
+    return { rest, buy, remove };
+}
+
 export const WANDERER_POLICY: RunPolicy = Object.freeze<RunPolicy>({
     id: 'wanderer',
-    description: 'The baseline: the first legal choice at every seam, the player witness in fights.',
+    description: 'The baseline: the first legal choice at every seam, random spending at a village, the player witness in fights.',
     chooseCharacter: (roster) => {
         const first = roster[0];
         if (!first) throw new Error('wanderer: the roster holds no character.');
@@ -49,11 +93,8 @@ export const WANDERER_POLICY: RunPolicy = Object.freeze<RunPolicy>({
         return { offer: 'rest' };
     },
     chooseCacheOffer: () => 'card',
-    visitVillage: (ctx) => ({
-        rest: ctx.rest !== null && ctx.rest.enabled && ctx.health < ctx.maxHealth,
-        buy: [],
-        remove: [],
-    }),
+    visitAnvil: randomAnvil,
+    visitVillage: randomVillage,
     hazardPolicy: () => 'greedy',
     pickHazardCard: (ctx) => ctx.offers[0] ?? null,
     fightPolicy: () => PLAYER_WITNESS,

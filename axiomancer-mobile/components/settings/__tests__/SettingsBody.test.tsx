@@ -1,14 +1,15 @@
 /**
  * SettingsBody under the brass kit: every section heading but the first sits
- * under a brass divider (MOTION, SOUND, STORY, THE RUN, FEEDBACK, THIS DEVICE).
+ * under a brass divider (MOTION, SOUND, STORY, THE RUN, RULES, FEEDBACK, THIS DEVICE).
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import SettingsScreen from '@/app/settings/index';
 import SettingsTabScreen from '@/app/(tabs)/settings';
+import { keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { createSettingsStore } from '@/state/settings';
 import { createAppStore } from '@/state/store';
@@ -79,13 +80,41 @@ describe('SettingsBody dev tools row', () => {
 });
 
 describe('SettingsBody dividers', () => {
-    it('puts a brass divider above THE RUN, FEEDBACK and THIS DEVICE as well as the first three', () => {
+    it('puts a brass divider above THE RUN, RULES, FEEDBACK and THIS DEVICE as well as the first three', () => {
         const slots = createMemorySlotStore({ activeSlot: 1 });
         const store = createAppStore({ adapter: slots });
         const settings = createSettingsStore({ storage: NO_STORAGE });
         render(withAllProviders(<SettingsScreen />, { store, slots, settings }).tree);
-        // MOTION and SOUND and STORY, THE RUN (in a run), FEEDBACK, THIS DEVICE: six dividers.
-        expect(screen.getAllByTestId(/^divider-divider-/)).toHaveLength(6);
-        expect(screen.getAllByTestId('divider-divider-short-brass')).toHaveLength(2);
+        // MOTION and SOUND and STORY, THE RUN (in a run), RULES, FEEDBACK, THIS DEVICE: seven dividers.
+        expect(screen.getAllByTestId(/^divider-divider-/)).toHaveLength(7);
+        expect(screen.getAllByTestId('divider-divider-short-brass')).toHaveLength(3);
+    });
+});
+
+describe('SettingsBody rules glossary', () => {
+    it.each([
+        ['route', SettingsScreen],
+        ['tab', SettingsTabScreen],
+    ])('opens a list of every shared glossary term on the %s and closes again', (_name, Screen) => {
+        const slots = createMemorySlotStore({ activeSlot: null });
+        const store = createAppStore({ adapter: slots });
+        const settings = createSettingsStore({ storage: NO_STORAGE });
+        render(withAllProviders(<Screen />, { store, slots, settings }).tree);
+        expect(screen.queryByTestId('rules-glossary-sheet-list')).toBeNull();
+        fireEvent.press(screen.getByTestId('settings-rules-glossary'));
+        expect(screen.getAllByTestId('rules-glossary-sheet-entry')).toHaveLength(SYSTEM_GLOSSARY.length + 2);
+        const expected = [
+            ...SYSTEM_GLOSSARY,
+            { term: 'VULNERABLE', def: keywordGloss('Vulnerable') as string },
+            { term: 'DISCARD', def: keywordGloss('Discard') as string },
+        ];
+        for (const { term, def } of expected) {
+            expect(screen.getByText(term)).toBeTruthy();
+            expect(screen.getByText(def)).toBeTruthy();
+        }
+        expect(screen.getByText('READING A LINE')).toBeTruthy();
+        expect(screen.getByText('GLOBAL')).toBeTruthy();
+        fireEvent.press(screen.getByTestId('rules-glossary-sheet-close'));
+        expect(screen.queryByTestId('rules-glossary-sheet-list')).toBeNull();
     });
 });

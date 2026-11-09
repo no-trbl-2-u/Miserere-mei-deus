@@ -39,7 +39,7 @@ import {
     restOutcomeHealChip,
     restDawnUpgradedChip,
 } from '@/state/presenters/rest.copy';
-import { FONTS, HUE, TYPE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 function OfferCard({ offer, onPress }: { offer: RestChoiceOfferVM; onPress: () => void }) {
@@ -218,14 +218,14 @@ const useStyles = makeStyles((AXM) => ({
     // offer's name beside its price instead of across the screen.
     column: { width: '100%', maxWidth: REST_COLUMN_MAX_WIDTH, alignSelf: 'center', flexGrow: 1 },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 12,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginBottom: 4,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
         lineHeight: 28,
         color: AXM.parchment,
@@ -241,17 +241,17 @@ const useStyles = makeStyles((AXM) => ({
         padding: 8,
         marginBottom: 10,
     },
-    purseLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.5, color: AXM.bone },
-    purseValue: { fontFamily: FONTS.sans, fontSize: 16, letterSpacing: 1, color: AXM.sulfur },
+    purseLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    purseValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 16, color: AXM.sulfur },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 19,
         color: AXM.parchment,
         marginBottom: 8,
     },
     // The night brings a fought elite back: one quiet line per foe.
-    eliteReturn: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginTop: 8 },
+    eliteReturn: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginTop: 8 },
     offerCol: { marginBottom: 8 },
     offerButton: {
         borderWidth: 2,
@@ -261,17 +261,17 @@ const useStyles = makeStyles((AXM) => ({
     },
     offerDisabled: { borderColor: AXM.ash, opacity: 0.5 },
     offerHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
-    offerLabel: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 1.2, color: AXM.sulfur },
-    offerPrice: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.sulfur },
+    offerLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 17, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
+    offerPrice: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.sulfur },
     offerDesc: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         marginTop: 2,
         textTransform: 'uppercase',
     },
     offerReason: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         lineHeight: 15,
         color: AXM.bone,
@@ -284,7 +284,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 12,
     },
     cardTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         lineHeight: 26,
         color: AXM.parchment,
@@ -292,9 +292,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
         color: AXM.parchment,
         borderWidth: 1,
         borderColor: AXM.ash,
@@ -309,7 +308,7 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         backgroundColor: AXM.bg,
     },
-    bigButtonText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 2, color: AXM.sulfur },
+    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

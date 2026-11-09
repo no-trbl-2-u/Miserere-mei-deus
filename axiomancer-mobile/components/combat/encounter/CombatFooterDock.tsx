@@ -22,7 +22,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -228,7 +228,7 @@ const useStyles = makeStyles((AXM) => ({
     // windows; its cells never wrap.
     vitaeCol: { flex: 1, minWidth: 0, maxWidth: DOCK_VITAE_MAX_WIDTH, gap: 4 },
     vitaeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6 },
-    vitaeText: { fontFamily: FONTS.mono, fontSize: 16, lineHeight: 20, color: AXM.parchment, letterSpacing: 0.5, flexShrink: 0 },
+    vitaeText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 20, color: AXM.parchment, flexShrink: 0 },
     // The maximum rides quieter than the live value.
     vitaeMax: { color: AXM.parchment, fontSize: 13 },
     barTrack: {
@@ -246,8 +246,8 @@ const useStyles = makeStyles((AXM) => ({
     barFill: { height: '100%' },
     piles: { flexDirection: 'row', alignItems: 'center', gap: 3, flexShrink: 0 },
     pileGlyph: { width: 13, height: 17, borderRadius: 2, borderWidth: 1, borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
-    pileGlyphText: { fontFamily: FONTS.sans, fontSize: 7, color: AXM.ash, lineHeight: 9 },
-    pileCount: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment, marginRight: 4 },
+    pileGlyphText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 7, color: AXM.ash, lineHeight: 9 },
+    pileCount: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.parchment, marginRight: 4 },
 
     // `marginLeft: 'auto'` takes the room the capped VITAE column leaves, so
     // END sits at the dock's right edge on a wide window. A phone's column
@@ -260,14 +260,14 @@ const useStyles = makeStyles((AXM) => ({
     // Dimmed while a phase resolves (double-tap guard); every other disabled
     // control on the board uses the same ~0.4 opacity treatment.
     endBtnDisabled: { opacity: 0.4 },
-    endGlyph: { fontFamily: FONTS.gothic, fontSize: 18, lineHeight: 22 },
-    endLabel: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2 },
+    endGlyph: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 18, lineHeight: 22 },
+    endLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
     // The honest END consequence floats ABOVE the button. Anchored to the
     // button's RIGHT edge, so the 140pt line runs inward across the board
     // rather than past the screen's right edge, where the board clips.
     endConsequenceWrap: { position: 'absolute', top: -34, right: 0, width: 140, alignItems: 'center' },
     endConsequence: {
-        fontFamily: FONTS.sans, fontSize: 8.5,
+        fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 8.5,
         letterSpacing: 0.4, color: AXM.sulfur, textAlign: 'center',
         textShadowColor: 'rgba(0,0,0,0.95)', textShadowRadius: 3,
     },

@@ -21,7 +21,6 @@ import {
     getMapDefinition,
     getNodePrimaryEventKind,
     concreteDefaultRail,
-    HEART_RICH_PAYLOAD_VARIANT,
     type GameState,
     type BlacksmithSession,
 } from '@mechanics';
@@ -36,6 +35,13 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 afterEach(() => {
     jest.restoreAllMocks();
 });
+
+/** A local fixture: the shipped variant list is empty (EQ4a); the swap path is still generic. */
+const FIXTURE_VARIANT = {
+    id: 'fixture-heart-wide-mana',
+    name: 'Fixture Fitting',
+    gear: { dieColor: 'heart', specialFaces: 1, manaFaces: 3 },
+} as const;
 
 function makeStoreAndActions(): { store: AppStore; actions: AppActions } {
     const store = createAppStore({ adapter: createMemoryAdapter() });
@@ -90,8 +96,8 @@ describe('the village Anvil counter', () => {
         expect(selectHasActiveBlacksmith(store.getState())).toBe(true);
         // The hub stays up underneath; the anvil is a counter, not a second event.
         expect(selectPacedEventRoute(store.getState())).toBe('/village');
-        // The witness swap variant rides the payload through to the session.
-        expect(session(store).variants.map((v) => v.id)).toContain(HEART_RICH_PAYLOAD_VARIANT.id);
+        // The payload carries no swap variant today: the shipped list is empty.
+        expect(session(store).variants).toHaveLength(0);
     });
 
     it('the first map has exactly its two authored villages, bw-t4 and bw-m5 (no invented cadence)', () => {
@@ -139,13 +145,13 @@ describe('blacksmith forging drives the engine', () => {
     it('SWAP installs an offered variant gear piece', () => {
         const { store, actions } = makeStoreAndActions();
         setCurrency(store, 100);
-        actions.beginBlacksmith({ variants: [HEART_RICH_PAYLOAD_VARIANT] });
+        actions.beginBlacksmith({ variants: [FIXTURE_VARIANT] });
         actions.startBlacksmithForging();
 
-        actions.swapBlacksmith(HEART_RICH_PAYLOAD_VARIANT.id);
+        actions.swapBlacksmith(FIXTURE_VARIANT.id);
         expect(session(store).card?.refused).toBe(false);
-        expect(session(store).rail.heart.specialConviction).toBe(
-            HEART_RICH_PAYLOAD_VARIANT.gear.specialConviction,
+        expect(session(store).rail.heart.manaFaces).toBe(
+            FIXTURE_VARIANT.gear.manaFaces,
         );
     });
 });

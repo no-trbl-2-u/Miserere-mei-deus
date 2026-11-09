@@ -17,6 +17,15 @@ const HERE = __dirname;
 /** The policy source files: every non-test file of the run sim. */
 const POLICY_FILES = readdirSync(HERE).filter(f => f.endsWith('.ts') && !f.endsWith('.test.ts'));
 
+describe('the run policies draw no chance of their own', () => {
+    it.each(POLICY_FILES)('%s calls no Math.random', (file) => {
+        const source = readFileSync(path.join(HERE, file), 'utf8')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/\/\/.*$/gm, '');
+        expect(source).not.toMatch(/Math\.random/);
+    });
+});
+
 describe('the run policies name no card', () => {
     it('finds the policy files', () => {
         expect(POLICY_FILES).toEqual(expect.arrayContaining([

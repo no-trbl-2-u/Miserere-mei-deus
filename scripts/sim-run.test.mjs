@@ -8,11 +8,12 @@
 
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally } from './sim-run.mjs'
+import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, batchTable, formatBatchTable, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally, tuningOf } from './sim-run.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURE = JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', 'sim-runs.json'), 'utf-8'))
@@ -23,11 +24,11 @@ const sink = () => {
 }
 
 test('parseArgs reads both flag shapes and defaults', () => {
-  assert.deepEqual(parseArgs([]), { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, help: false })
+  assert.deepEqual(parseArgs([]), { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, breaks: null, help: false })
   assert.deepEqual(parseArgs(['--policy', 'wanderer', '--runs', '3', '--seed', '0', '--json']),
-    { policy: 'wanderer', runs: 3, seed: 0, json: true, post: false, help: false })
+    { policy: 'wanderer', runs: 3, seed: 0, json: true, post: false, breaks: null, help: false })
   assert.deepEqual(parseArgs(['--policy=wanderer', '--runs=2', '--seed=7', '--post']),
-    { policy: 'wanderer', runs: 2, seed: 7, json: false, post: true, help: false })
+    { policy: 'wanderer', runs: 2, seed: 7, json: false, post: true, breaks: null, help: false })
 })
 
 test('parseArgs refuses unknown flags, missing values and bad numbers', () => {
@@ -46,18 +47,21 @@ test('formatLanes lists the largest lane first, ties by id', () => {
 test('formatRunLine prints every field the brief names', () => {
   assert.equal(
     formatRunLine(FIXTURE.runs[0]),
-    'wanderer seed=1 | chapter-clear | furthest=bw-d5 | level=16 | vitae=283/288 | fights won=19 lost=0 spared=0 | deck blood-price=13 grey=8 merciful=8 defender=2',
+    'wanderer seed=1 | chapter-clear | furthest=bw-d5 | level=16 | vitae=283/288 | fights won=19 lost=0 spared=0 | boss=100% | end=bw-b2 | deck blood-price=13 grey=8 merciful=8 defender=2',
   )
-  assert.match(formatRunLine(FIXTURE.runs[1]), /^wanderer seed=2 \| run-over \| furthest=bw-k2 \| level=9 \| vitae=0\/226 \| fights won=11 lost=2 spared=1 \|/)
+  assert.match(formatRunLine(FIXTURE.runs[1]), /^wanderer seed=2 \| run-over \| furthest=bw-k2 \| level=9 \| vitae=0\/226 \| fights won=11 lost=2 spared=1 \| boss=n\/a \| end=bw-k2 \|/)
   assert.match(formatRunLine(FIXTURE.runs[2]), /^wanderer seed=3 STUCK at bw-l4: run stuck at breakwater\/bw-l4/)
 })
 
-test('main prints one line per run and exits 1 when a run stuck', async () => {
+test('main prints one line per run, then the batch table, and exits 1 when a run stuck', async () => {
   const stdout = sink()
   const asked = []
   const code = await main(['--runs', '3'], { stdout, stderr: sink(), play: (opts) => { asked.push(opts); return FIXTURE } })
   assert.equal(code, 1)
-  assert.equal(stdout.text.trim().split('\n').length, 3)
+  const lines = stdout.text.trim().split('\n')
+  assert.equal(lines.length, 3 + 2)
+  assert.match(lines[3], /^policy \| clears/)
+  assert.match(lines[4], /^wanderer \| 1\/3 \|/)
   assert.equal(asked[0].runs, 3)
 })
 
@@ -65,7 +69,32 @@ test('main exits 0 when every run ended, and --json prints the runs', async () =
   const clean = { policy: 'wanderer', runs: FIXTURE.runs.slice(0, 2) }
   const stdout = sink()
   assert.equal(await main(['--json'], { stdout, stderr: sink(), play: () => clean }), 0)
-  assert.equal(JSON.parse(stdout.text).length, 2)
+  const json = JSON.parse(stdout.text)
+  assert.equal(json.runs.length, 2)
+  assert.equal(json.table[0].avgBossDamagePct, 100)
+})
+
+test('batchTable: a row per policy; a run that never met the boss is left out of the boss average', () => {
+  const run = (policy, outcome, endNodeId, bossDamagePct, level, deckByLane) => ({ policy, outcome, endNodeId, bossDamagePct, level, deckByLane })
+  const rows = batchTable([
+    run('merciful', 'chapter-clear', 'bw-b2', 100, 16, { grey: 8, merciful: 4 }),
+    run('merciful', 'run-over', 'bw-k2', 40, 10, { grey: 8, merciful: 6 }),
+    run('merciful', 'run-over', 'bw-k2', null, 8, { grey: 8, merciful: 2 }),
+    run('merciful', 'run-over', 'bw-a1', null, 4, { grey: 8 }),
+    { policy: 'merciful', seed: 9, stuck: true, node: 'bw-a1', error: 'x' },
+    run('defender', 'run-over', 'bw-k2', null, 6, { defender: 4 }),
+  ])
+  assert.equal(rows.length, 2)
+  const [merciful, defender] = rows
+  assert.equal(merciful.runs, 5)
+  assert.equal(merciful.clears, 1)
+  assert.equal(merciful.avgBossDamagePct, 70)
+  assert.equal(merciful.avgLevel, 9.5)
+  assert.deepEqual(merciful.avgDeckByLane, { grey: 8, merciful: 3 })
+  // Failed runs by where they ended, most first, ties by node id; the stuck run counts where it stuck.
+  assert.deepEqual(merciful.failedEnds, [{ nodeId: 'bw-a1', count: 2 }, { nodeId: 'bw-k2', count: 2 }])
+  assert.equal(defender.avgBossDamagePct, null)
+  assert.match(formatBatchTable(rows), /\nmerciful \| 1\/5 \| 9\.5 \| 70\.0% \| grey=8 merciful=3 \| bw-a1=2 bw-k2=2\ndefender \| 0\/1 \| 6\.0 \| n\/a \|/)
 })
 
 test('main reports a bad flag with usage (exit 2) and a driver crash (exit 1)', async () => {
@@ -245,4 +274,70 @@ test('--compare plays both arms on the same seeds and prints one table', async (
   assert.equal(code, 0)
   assert.deepEqual(asked, [['spare-all', 2, 9], ['finish-all', 2, 9]])
   assert.match(out.text, /spare-all\s+finish-all/)
+})
+
+test('--breaks appends one JSON line per break, names the build, and only a crash or a stuck run fails', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sim-breaks-'))
+  const file = path.join(dir, 'breaks.jsonl')
+  try {
+    const finding = { key: 'explorer:breakwater/bw-l5:quest-unfinishable', kind: 'quest-unfinishable' }
+    const asked = []
+    const play = (opts) => { asked.push(opts); return { runs: [{ policy: 'explorer', seed: 1, outcome: 'chapter-clear', furthestNodeId: 'x', level: 1, vitae: 1, maxVitae: 1, fights: { won: 0, lost: 0, spared: 0 }, deckByLane: {} }], breaks: [finding] } }
+    assert.equal(await main(['--policy', 'explorer', '--breaks', file], { stdout: sink(), stderr: sink(), play, sha: () => 'f'.repeat(40) }), 0)
+    assert.equal(asked[0].build, 'f'.repeat(40))
+    assert.equal(await main(['--policy', 'explorer', '--breaks', file], { stdout: sink(), stderr: sink(), play, sha: () => null }), 0)
+    const written = fs.readFileSync(file, 'utf-8').trim().split('\n').map((l) => JSON.parse(l))
+    assert.deepEqual(written, [finding, finding])
+
+    const crash = { policy: 'explorer', seed: 2, stuck: true, kind: 'crash', node: 'bw-w2', error: 'run crashed at breakwater/bw-w2: boom', break: { key: 'explorer:breakwater/bw-w2:crash', kind: 'crash' } }
+    const out = sink()
+    assert.equal(await main(['--breaks', file], { stdout: out, stderr: sink(), play: () => ({ runs: [crash], breaks: [crash.break] }), sha: () => null }), 1)
+    assert.match(out.text, /^explorer seed=2 CRASH at bw-w2: /)
+    assert.equal(fs.readFileSync(file, 'utf-8').trim().split('\n').length, 3)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('parseArgs reads the tuning flags, the relic repeating', () => {
+  const o = parseArgs(['--shillings', '2.5', '--boss-level=12', '--start-relic', 'a', '--start-relic=b', '--no-relic-stats', '--fight', 'defender', '--no-anvil', '--no-guard', '--policy', 'lanes'])
+  assert.equal(o.shillings, 2.5)
+  assert.equal(o.bossLevel, 12)
+  assert.deepEqual(o.startRelic, ['a', 'b'])
+  assert.equal(o.policy, 'lanes')
+  assert.deepEqual(tuningOf(o), { shillings: 2.5, bossLevel: 12, startRelics: ['a', 'b'], noRelicStats: true, fight: 'defender', noAnvil: true, noGuard: true })
+  assert.equal(tuningOf(parseArgs([])), null)
+  assert.throws(() => parseArgs(['--shillings', '0']), /positive number/)
+  assert.throws(() => parseArgs(['--boss-level', '1.5']), /positive integer/)
+})
+
+test('main hands the tuning to the driver and refuses --post with any of it before a run is played', async () => {
+  const asked = []
+  const play = (opts) => { asked.push(opts); return { policy: 'wanderer', runs: [] } }
+  assert.equal(await main(['--no-anvil', '--shillings', '2'], { stdout: sink(), stderr: sink(), play }), 0)
+  assert.equal(asked.length, 1)
+  assert.equal(asked[0].noAnvil, true)
+  for (const flag of [['--no-anvil'], ['--no-guard'], ['--shillings', '2'], ['--boss-level', '9'], ['--fight', 'defender'], ['--start-relic', 'x']]) {
+    const stderr = sink()
+    assert.equal(await main([...flag, '--post'], { stdout: sink(), stderr, play }), 2, flag.join(' '))
+    assert.match(stderr.text, /--post is refused/)
+  }
+  assert.equal(asked.length, 1)
+  const stderr = sink()
+  assert.equal(await main(['--no-relic-stats'], { stdout: sink(), stderr, play }), 2)
+  assert.match(stderr.text, /needs a --start-relic/)
+})
+
+test('playRuns carries the tuning in the request', () => {
+  let args = null
+  const spawn = (cmd, a, opts) => {
+    args = JSON.parse(opts.env.SIM_RUN_ARGS)
+    fs.writeFileSync(opts.env.SIM_RUN_OUT, JSON.stringify({ policy: 'x', runs: [] }))
+    return { status: 0, stdout: '', stderr: '' }
+  }
+  playRuns(parseArgs(['--policy', 'a,b', '--no-guard', '--boss-level', '3']), { spawn })
+  assert.deepEqual(args.tuning, { bossLevel: 3, noGuard: true })
+  assert.equal(args.policy, 'a,b')
+  playRuns(parseArgs([]), { spawn })
+  assert.equal('tuning' in args, false)
 })

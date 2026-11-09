@@ -48,7 +48,7 @@ import {
     ITEM_REWARD_INACTIVE_NOTE,
     selectItemRewardVM,
 } from '@/state/presenters/item-reward.engine';
-import { FONTS, TYPE } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export default function ItemRewardScreen() {
@@ -182,9 +182,9 @@ const useStyles = makeStyles((AXM) => ({
     scrollOuter: { flex: 1 },
     scroll: { padding: 14, paddingBottom: 24, flexGrow: 1, justifyContent: 'center' },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginBottom: 6,
     },
@@ -208,16 +208,16 @@ const useStyles = makeStyles((AXM) => ({
     },
     factsCol: { flex: 1, minWidth: 0 },
     name: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 21,
         lineHeight: 25,
         color: AXM.parchment,
-        letterSpacing: 0.5,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
     },
     slot: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.8,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 2,
     },
@@ -231,9 +231,9 @@ const useStyles = makeStyles((AXM) => ({
         marginTop: 10,
     },
     blockEyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
-        letterSpacing: 1.8,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         marginBottom: 6,
     },
@@ -243,25 +243,25 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         paddingVertical: 1,
     },
-    statLabel: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1, color: AXM.bone },
-    statValue: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.parchment },
+    statLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    statValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.parchment },
     sigHeadRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'baseline',
         gap: 8,
     },
-    sigName: { flex: 1, fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment },
-    sigCost: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.sulfur },
+    sigName: { flex: 1, fontFamily: TYPE_ROLES.cardRules.fontFamily, fontSize: 13, color: AXM.parchment },
+    sigCost: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, color: AXM.sulfur },
     sigDesc: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardRules.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.bone,
         marginTop: 5,
     },
     laneLine: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardRules.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.sulfur,
@@ -269,7 +269,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     // The one unbordered block, matching EquipmentDetailModal's flavour rule.
     flavor: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         lineHeight: 18,
         color: AXM.bone,
@@ -287,9 +287,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     primaryButtonText: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 18,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
     secondaryButton: {
@@ -303,13 +303,13 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     secondaryButtonText: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 16,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.parchment,
     },
     keepNote: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         lineHeight: 16,
         color: AXM.bone,
@@ -317,13 +317,12 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
     },
     remainingNote: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
-        letterSpacing: 1,
         color: AXM.bone,
         marginTop: 4,
         textAlign: 'center',
     },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

@@ -52,6 +52,8 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
     { lens: 'item-ungranted', id: 'relic-thornback-signet' },
     { lens: 'item-ungranted', id: 'relic-carapace-belt' },
+    { lens: 'item-ungranted', id: 'relic-brimming-locket' },
+    { lens: 'item-ungranted', id: 'relic-penitents-brooch' },
 ];
 
 describe('roster health — live tree', () => {
@@ -60,7 +62,26 @@ describe('roster health — live tree', () => {
     });
 
     it('orphans match the pinned list', () => {
-        expect(LIVE.orphans.map(o => ({ lens: o.lens, id: o.id }))).toEqual(PINNED_ORPHANS);
+        const key = (o: { lens: string; id: string }) => `${o.lens}:${o.id}`;
+        const live = LIVE.orphans.map(o => ({ lens: o.lens, id: o.id }));
+        const pinned = new Set(PINNED_ORPHANS.map(key));
+        const seen = new Set(live.map(key));
+        const added = live.filter(o => !pinned.has(key(o))).map(key);
+        const gone = PINNED_ORPHANS.filter(o => !seen.has(key(o))).map(key);
+        // Guard for footgun recast-pinned-orphan-lens: name the edit, not just the diff.
+        const hint = 'A change that adds a foe or moves what a pool or node table draws must edit PINNED_ORPHANS in the same commit. '
+            + `Orphans now unpinned (add to the list): [${added.join(', ')}]. `
+            + `Pinned but no longer orphans (remove from the list): [${gone.join(', ')}].`;
+        expect({ added, gone }, hint).toEqual({ added: [], gone: [] });
+        expect(live).toEqual(PINNED_ORPHANS);
+    });
+
+    it('every pinned enemy orphan is still a library foe, listed once', () => {
+        const ids = PINNED_ORPHANS.map(o => `${o.lens}:${o.id}`);
+        expect(new Set(ids).size, 'PINNED_ORPHANS lists an id twice').toBe(ids.length);
+        const library = new Set(collectRosterSources().enemyLibrary.map(e => e.id));
+        const stale = PINNED_ORPHANS.filter(o => o.lens === 'enemy-unpooled' && !library.has(o.id)).map(o => o.id);
+        expect(stale, 'PINNED_ORPHANS pins a foe the library no longer holds: remove it').toEqual([]);
     });
 
     it('reads the four Act 1 maps and their pools', () => {

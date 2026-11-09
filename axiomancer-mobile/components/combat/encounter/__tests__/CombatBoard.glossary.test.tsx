@@ -27,7 +27,7 @@ import { BOARD_GLOSSARY, MOMENTUM_GLOSS } from '@/state/combat/keywords';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 import { withAllProviders } from '@/test-utils/withAllProviders';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'];
 const INSETS = { top: 47, bottom: 34, left: 0, right: 0 };
@@ -98,7 +98,7 @@ describe('A3 — the Conviction chip', () => {
     it('prints the count in the open-zero face, so 0 never reads as 8 (critique pass 104)', () => {
         const { vm } = renderBoard();
         const count = screen.getByText(`◆ ${vm.conviction}`);
-        expect(StyleSheet.flatten(count.props.style).fontFamily).toBe(FONTS.sans);
+        expect(StyleSheet.flatten(count.props.style).fontFamily).toBe(TYPE_ROLES.count.fontFamily);
     });
 });
 

@@ -204,7 +204,7 @@ export function renderReport(cells: TuningCell[], o: { runs: number; seed: numbe
         '- The player is an even stat spread at the level, wearing the lane\'s relics.',
         ...lanes,
         `- Player max VITAE: ${maxVitae.join('; ')}.`,
-        '- Each elite pair node (`bw-c1`, `bw-l4`, `bw-w5`) gets one row per foe, since the node draws one of the two 50/50.',
+        '- Each elite node (`bw-c1`, `bw-l4`, `bw-w5`) gets one row per foe it draws, since the node draws one of them with equal odds (a third each at the sea cave, a half at the others).',
         '- A foe staged at two nodes shares one row, its nodes listed.',
         '',
         '## Limits',

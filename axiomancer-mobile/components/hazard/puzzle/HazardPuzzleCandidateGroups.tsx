@@ -13,7 +13,7 @@ import {
     HAZARD_PUZZLE_CANDIDATES_INTRO,
 } from '@/state/presenters/hazard-puzzle.copy';
 import type { HazardPuzzleCandidateGroupVM } from '@/state/presenters/hazard-puzzle.engine';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface HazardPuzzleCandidateGroupsProps {
@@ -52,12 +52,12 @@ export function HazardPuzzleCandidateGroups({ groups, onPick }: HazardPuzzleCand
 
 const useStyles = makeStyles((AXM) => ({
     root: { gap: 10, marginTop: 8 },
-    heading: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.blood, letterSpacing: 2 },
-    intro: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.bone, lineHeight: 17 },
+    heading: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, color: AXM.blood, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    intro: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: AXM.bone, lineHeight: 17 },
     group: { gap: 6 },
-    groupHeading: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.6, color: AXM.sulfur, marginTop: 4 },
-    empty: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12, color: AXM.ash },
+    groupHeading: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.sulfur, marginTop: 4 },
+    empty: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 12, color: AXM.ash },
     row: { borderWidth: 1, borderColor: AXM.ash, backgroundColor: HUE.hzRouteSafeBg, paddingVertical: 9, paddingHorizontal: 12 },
-    label: { fontFamily: FONTS.gothic, fontSize: 18, lineHeight: 20, color: AXM.parchment, letterSpacing: 0.5 },
-    detail: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.2, color: AXM.bone, marginTop: 3 },
+    label: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 18, lineHeight: 20, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing},
+    detail: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.bone, marginTop: 3 },
 }));

@@ -55,6 +55,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
+import { isContentPath } from './pr-policy.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { updateBranchIsolated } from './pr-resolve.mjs'
 import { settleFailure, settleMain } from './pr-settle.mjs'
@@ -153,6 +154,8 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   if (hold) return { go: false, reason: `label ${hold}` }
   const pipeline = files.find((f) => PIPELINE_PATHS.includes(f))
   if (pipeline) return { go: false, reason: `pipeline PR (changes ${pipeline}): T merges the review pipeline by hand` }
+  const writing = files.find(isContentPath)
+  if (writing) return { go: false, reason: `content PR (changes ${writing}): T approves game writing by merging it` }
   const verdict = verdictFor(comments, head, since, trusted, digest)
   if (!verdict) return { go: false, reason: `no verdict for head ${head.slice(0, 8)} posted since ${since} by a trusted account` }
   if (verdict !== 'pass') return { go: false, reason: `verdict ${verdict} on head ${head.slice(0, 8)}` }
@@ -268,8 +271,12 @@ export function lintTree({ scriptsDir, repo, treeish, lints = TREE_LINTS }) {
   const dir = mkdtempSync(join(tmpdir(), 'pr-merge-tree-'))
   try {
     cpSync(scriptsDir, join(dir, 'scripts'), { recursive: true })
-    const tar = execFileSync('git', ['archive', '--format=tar', treeish, 'plan'], { cwd: repo, maxBuffer: 256 * 1024 * 1024 })
-    execFileSync('tar', ['-x', '-C', dir], { input: tar })
+    // No `tar`: Windows' tar rejects a `C:` path (footgun windows-tar-tree-lint). A throwaway index
+    // holds the tree's plan/, and git itself writes it out under the scratch directory.
+    const env = { ...process.env, GIT_INDEX_FILE: join(dir, '.tree-index') }
+    execFileSync('git', ['read-tree', '--prefix=plan/', `${treeish}:plan`], { cwd: repo, env, stdio: 'pipe' })
+    execFileSync('git', ['checkout-index', '-a', `--prefix=${dir.replaceAll('\\', '/')}/`], { cwd: repo, env, stdio: 'pipe' })
+    rmSync(join(dir, '.tree-index'), { force: true })
     return lints.map((l) => {
       const r = spawnSync(process.execPath, [join(dir, 'scripts', l.script)], { cwd: dir, encoding: 'utf8' })
       const first = `${r.stderr ?? ''}\n${r.stdout ?? ''}`.split('\n').map((s) => s.trim()).find((s) => s && !/disagreement|finding/i.test(s))

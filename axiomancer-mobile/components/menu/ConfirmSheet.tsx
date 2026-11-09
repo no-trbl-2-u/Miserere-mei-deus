@@ -11,7 +11,7 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface ConfirmSheetProps {
@@ -73,13 +73,13 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 18,
         paddingHorizontal: 18,
     },
-    title: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.parchment },
-    body: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.bone, marginTop: 12, lineHeight: 18 },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, color: AXM.parchment },
+    body: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.bone, marginTop: 12, lineHeight: 18 },
     actions: { marginTop: 18, gap: 8 },
     button: { borderWidth: 1, paddingVertical: 10, paddingHorizontal: 12, alignItems: 'center' },
     confirmButton: { borderColor: AXM.blood, backgroundColor: AXM.bg },
     cancelButton: { borderColor: AXM.ash, borderStyle: 'dashed', backgroundColor: 'transparent' },
-    buttonLabel: { fontFamily: FONTS.gothic, fontSize: 13, letterSpacing: 1.5 },
+    buttonLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.button.letterSpacing},
     confirmLabel: { color: AXM.blood },
     cancelLabel: { color: AXM.bone },
 }));

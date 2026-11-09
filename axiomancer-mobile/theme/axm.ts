@@ -21,6 +21,11 @@ export const AXM: Palette = currentPalette();
 /** Fixed colours, the same in every theme. Defined in `theme/hue.ts`. */
 export { HUE } from './hue';
 
+/**
+ * The five face slots from before the type roles, kept for engine code and
+ * tests that still read a face by slot. Components never use them: they name a
+ * job in `TYPE_ROLES` (`theme/__tests__/type-roles-only.test.ts` fails a direct use).
+ */
 export const FONTS = {
   gothic: 'UncialAntiqua_400Regular',
   serif: 'Rosarivo_400Regular',

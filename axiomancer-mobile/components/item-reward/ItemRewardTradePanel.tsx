@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 import { EquipDeltaPanel } from '@/components/inventory/EquipDeltaPanel';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import type { ItemRewardTradeVM } from '@/state/presenters/item-reward.engine';
 import type { EquipDelta } from '@mechanics';
@@ -56,23 +56,23 @@ const useStyles = makeStyles((AXM) => ({
         marginTop: 10,
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
-        letterSpacing: 1.8,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         marginBottom: 4,
     },
     // The displaced piece is the one thing on this screen the player LOSES, so
     // it reads in the blood register the delta panel already uses for losses.
     tradeNote: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.blood,
         marginTop: 6,
     },
     freeNote: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.bone,

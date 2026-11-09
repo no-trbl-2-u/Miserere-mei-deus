@@ -20,7 +20,7 @@ import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { selectHasActiveTravel, selectTravelVM } from '@/state/presenters/travel.engine';
 import { KitPressable } from '@/components/experience/KitSurface';
 import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The vellum button YES · MOVE and NO · STAY wear (T-02). */
@@ -122,14 +122,14 @@ const useStyles = makeStyles((AXM) => ({
         borderWidth: 2,
         borderColor: AXM.sulfur,
     },
-    badgeText: { fontFamily: FONTS.gothic, fontSize: 14, letterSpacing: 2, color: AXM.sulfur },
+    badgeText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: AXM.sulfur },
     body: { paddingHorizontal: 14, paddingTop: 8, gap: 12 },
-    prompt: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment, lineHeight: 19 },
+    prompt: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.parchment, lineHeight: 19 },
     question: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
         lineHeight: 28,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
     },
     questionShut: { color: AXM.bone },
@@ -139,11 +139,11 @@ const useStyles = makeStyles((AXM) => ({
     // Clears the vellum button's drawn corners (about 16 high, 13 wide).
     choiceRowKit: { paddingVertical: 18, paddingHorizontal: 16 },
     choiceLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 18,
         color: AXM.parchment,
         lineHeight: 20,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
     choiceLabelKit: { color: HUE.hzCardInk },
 }));

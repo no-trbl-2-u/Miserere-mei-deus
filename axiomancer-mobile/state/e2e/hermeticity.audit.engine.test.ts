@@ -115,6 +115,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         'state/e2e/route-tree.engine.test.ts',
         'state/e2e/route-registration.engine.test.ts',
         'state/e2e/hermeticity.audit.engine.test.ts',
+        // The glyph-table guard reads the catalog build script's copy of the
+        // table, a source fact no render can reach.
+        'components/combat/__tests__/glyphShapes.catalog.test.ts',
         // EQ2b: the slot-word guard reads committed sources, like this one.
         'state/presenters/__tests__/slot-words.test.ts',
         // The Expo-decouple boundary guard reads committed sources
@@ -140,6 +143,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // for a preference the caller already holds — the same standing as the
         // boundary guard above, and unprovable by rendering.
         'components/combat/frames/__tests__/reducedMotionSource.test.ts',
+        // The ink's reduced-motion guard (phase CX1b, A8): the map ink and the
+        // fight's curtain take the motion answer from their callers.
+        'components/exploration/__tests__/inkMotionSource.test.ts',
         // The quest giver scene (phase ET1d, A11) reads its own source to prove
         // the relic rise takes the reduced-motion answer from its caller.
         'state/e2e/quest-giver.screen.test.tsx',
@@ -174,6 +180,14 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // that the route is gone and the header names its callers are source
         // facts, unprovable by rendering.
         'state/e2e/app-components.engine.test.tsx',
+        // The font-width guard reads the committed font files to
+        // check the presenters' width estimates against the real faces; a
+        // source fact, unprovable by rendering.
+        'state/presenters/__tests__/font-width-estimates.guard.test.ts',
+        // The stakes-card guard reads StakesCard.tsx and the
+        // stakes VM source to pin which VM fields the card draws; a source
+        // fact, unprovable by rendering.
+        'components/hazard/__tests__/StakesCard.vm-drawn.test.ts',
     ]);
 
     const FS_PATTERN =

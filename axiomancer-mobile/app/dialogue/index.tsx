@@ -30,7 +30,7 @@ import {
     selectHasActiveEvent,
     type EventChoice,
 } from '@/state/presenters/event.engine';
-import { FONTS, HUE, TYPE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** The kit pieces the choice rows (E-03) and the spoken-line box (E-02) wear. */
@@ -269,9 +269,9 @@ const useStyles = makeStyles((AXM) => ({
         alignSelf: 'center',
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.parchment,
         marginBottom: 8,
     },
@@ -282,12 +282,12 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 10,
     },
     name: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 30,
         lineHeight: 34,
         color: AXM.parchment,
     },
-    subtitle: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone, marginTop: 2 },
+    subtitle: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 13, color: AXM.bone, marginTop: 2 },
     speech: { marginBottom: 10 },
     speechPlain: {
         borderWidth: 1,
@@ -298,16 +298,16 @@ const useStyles = makeStyles((AXM) => ({
     // Clears the vellum panel's drawn corners (about 26 high, 42 wide).
     speechKit: { paddingVertical: 28, paddingHorizontal: 40 },
     speechText: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.spoken.fontFamily,
         fontSize: 14,
         lineHeight: 21,
         color: AXM.parchment,
     },
     speechTextKit: { color: HUE.hzCardInk },
     sectionLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginBottom: 6,
     },
@@ -324,11 +324,11 @@ const useStyles = makeStyles((AXM) => ({
     },
     // Clears the brass button's drawn corners (about 16 high, 13 wide).
     replyRowKit: { paddingVertical: 20, paddingHorizontal: 20 },
-    replyMark: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur },
-    replyConfirm: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.sulfur, marginLeft: 4 },
-    replyLabel: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, letterSpacing: 1 },
+    replyMark: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, color: AXM.sulfur },
+    replyConfirm: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, color: AXM.sulfur, marginLeft: 4 },
+    replyLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, color: AXM.parchment, letterSpacing: TYPE_ROLES.button.letterSpacing},
     replyDesc: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
         color: AXM.bone,
         marginTop: 3,
@@ -338,9 +338,8 @@ const useStyles = makeStyles((AXM) => ({
     consequenceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     // Sized to match every other description line.
     consequenceChip: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: CHIP_FONT_SIZE,
-        letterSpacing: 1,
         color: AXM.bone,
         borderWidth: 1,
         borderColor: AXM.ash,
@@ -348,5 +347,5 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 1,
     },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

@@ -7,15 +7,19 @@
  */
 
 import {
+    ANVIL_VERB_PRICING,
     BREAKWATER_HAZARD_NODES,
+    CAUTIOUS_POLICY,
     CHARACTER_ROSTER,
+    DEFENDER_POLICY,
     WANDERER_POLICY,
     characterDeck,
+    getRunPolicy,
     type RunPolicy,
 } from '@mechanics';
 
 import { playRun, type PlayRunOptions } from './run-driver';
-import { describeScreen, RunStuckError } from './run-stuck';
+import { describeScreen, RunCrashError, RunStuckError } from './run-stuck';
 import { playRuns } from './sim-runs';
 
 /** A wanderer that records every seam it was asked. */
@@ -60,6 +64,11 @@ describe('the headless run driver', () => {
         const { policy, asked } = spying();
         const { result, screens } = tracedRun({ policy, seed: 8 });
         expect(['run-over', 'chapter-clear']).toContain(result.outcome);
+        // A cleared chapter met the boss, and its last fight with it took some of the boss's VITAE.
+        if (result.outcome === 'chapter-clear') {
+            expect(result.bossDamagePct).toBeGreaterThan(0);
+            expect(result.bossDamagePct).toBeLessThanOrEqual(100);
+        }
         expect(result.characterId).toBe(CHARACTER_ROSTER[0]!.id);
         expect(result.runId).toMatch(/^[0-9a-f]{16}$/);
         // The node kinds the Breakwater carries, each answered on its own screen.
@@ -112,6 +121,16 @@ describe('the headless run driver', () => {
         expect(result.outcome).toBe('run-over');
         expect(result.fights.lost).toBe(1);
         expect(result.vitae).toBe(0);
+        // It never met the boss: null, not 0.
+        expect(result.bossDamagePct).toBeNull();
+    });
+
+    it('reads how much of the boss a run took when it fell to it, from the last fight with it', () => {
+        const result = playRun({ policy: getRunPolicy('merciful')!, seed: 9, tuning: { bossLevel: 30 } });
+        expect(result.outcome).toBe('run-over');
+        expect(result.endNodeId).toBe('bw-k2');
+        expect(result.bossDamagePct).toBeGreaterThan(0);
+        expect(result.bossDamagePct).toBeLessThan(100);
     });
 
     it('throws, naming the node and the state, when a step has no legal move', () => {
@@ -171,6 +190,68 @@ describe('the headless run driver', () => {
         expect(() => playRun({ policy: wrong, seed: 1 })).toThrow(/'bw-k2', which is not a legal road/);
     });
 
+    describe('the village anvil', () => {
+        const PURSE = 400;
+        const rich = (store: Parameters<NonNullable<PlayRunOptions['onStart']>>[0]) =>
+            store.setState({ player: { ...store.getState().player, currency: PURSE } } as never);
+
+        /** Play one run with a full purse, logging each anvil ask and answer and the final player. */
+        function withAnvilLog(base: RunPolicy, seed: number, answer?: RunPolicy['visitAnvil']) {
+            const asks: { ctx: Parameters<RunPolicy['visitAnvil']>[0]; decision: ReturnType<RunPolicy['visitAnvil']> }[] = [];
+            const policy: RunPolicy = {
+                ...base,
+                visitAnvil: (ctx) => {
+                    const decision = (answer ?? base.visitAnvil)(ctx);
+                    asks.push({ ctx, decision });
+                    return decision;
+                },
+            };
+            const result = playRun({ policy, seed, onStart: rich });
+            return { asks, result };
+        }
+
+        it.each([['a lane bot', DEFENDER_POLICY], ['a persona', CAUTIOUS_POLICY]] as const)(
+            '%s with shillings spends them at an anvil and owns the result', (_name, base) => {
+                const { asks } = withAnvilLog(base, 4);
+                const spending = asks.find((a) => a.decision.budget > 0);
+                expect(spending).toBeDefined();
+                expect(spending!.ctx.prices).toEqual({
+                    hone: ANVIL_VERB_PRICING.hone, temper: ANVIL_VERB_PRICING.temper, upgrade: ANVIL_VERB_PRICING.upgrade,
+                });
+                // The shillings went into the anvil: the same run with the anvil shut ends richer.
+                const probe = playRun({
+                    policy: { ...base, visitAnvil: (ctx) => ({ ...base.visitAnvil(ctx), budget: 0 }) },
+                    seed: 4,
+                    onStart: rich,
+                });
+                const spent = withAnvilLog(base, 4).result;
+                expect(spent.currency).toBeLessThan(probe.currency);
+            });
+
+        it('keeps back the bed\'s price when under half VITAE', () => {
+            const { asks } = withAnvilLog(DEFENDER_POLICY, 4);
+            const hurt = asks.filter((a) => a.ctx.bedPrice !== null && a.ctx.health < a.ctx.maxHealth * 0.5);
+            for (const a of hurt) expect(a.decision.budget).toBeLessThanOrEqual(a.ctx.currency - a.ctx.bedPrice!);
+            for (const a of asks) expect(a.decision.budget).toBeLessThanOrEqual(a.ctx.currency);
+        });
+
+        it('replays the same spending for a seed, and the Wanderer spends differently across seeds', () => {
+            const a = withAnvilLog(WANDERER_POLICY, 6);
+            expect(withAnvilLog(WANDERER_POLICY, 6).asks.map((x) => x.decision)).toEqual(a.asks.map((x) => x.decision));
+            const other = withAnvilLog(WANDERER_POLICY, 7);
+            expect(JSON.stringify(other.asks.map((x) => x.decision))).not.toEqual(JSON.stringify(a.asks.map((x) => x.decision)));
+        });
+
+        it('throws when the policy spends more than the purse, or upgrades a card that cannot take one', () => {
+            expect(() => withAnvilLog(WANDERER_POLICY, 4, (ctx) => ({ budget: ctx.currency + 1, upgradeCardId: null, colors: [] })))
+                .toThrow(/budget of/);
+            expect(() => withAnvilLog(WANDERER_POLICY, 4, (ctx) => ({ budget: ctx.currency, upgradeCardId: 'nope', colors: [] })))
+                .toThrow(/cannot take one/);
+            expect(() => withAnvilLog(WANDERER_POLICY, 4, (ctx) => ({ budget: ctx.currency, upgradeCardId: null, colors: ['heart', 'heart'] })))
+                .toThrow(/colour/);
+        });
+    });
+
     it('calls a run stuck past its step budget', () => {
         expect(() => playRun({ policy: WANDERER_POLICY, seed: 1, maxSteps: 5 })).toThrow(/no run end in 5 steps/);
     });
@@ -182,5 +263,63 @@ describe('the headless run driver', () => {
         expect(runs[0]).toMatchObject({ policy: 'wanderer', seed: 1, stuck: true, node: 'bw-w2' });
         expect(runs[1]).toMatchObject({ policy: 'wanderer', seed: 2 });
         expect('stuck' in runs[1]!).toBe(false);
+    });
+
+    it('clears an owed node when its node-resolved arrives: a run of many fights, rests and quests leaves no unresolved node', () => {
+        const resolved: string[] = [];
+        const result = playRun({
+            policy: WANDERER_POLICY,
+            seed: 8,
+            onStep: (store) => {
+                const here = store.getState().world.currentMap.currentNode;
+                if (!resolved.includes(here)) resolved.push(here);
+            },
+        });
+        // The run stands on many fight, rest and quest nodes, each owed on arrival and each resolved.
+        expect(resolved.length).toBeGreaterThan(20);
+        expect(result.findings.filter((f) => f.kind === 'node-unresolved')).toEqual([]);
+    });
+
+    it('throws a crash with the node, the deck, the quests and the last events when a step raises', () => {
+        // The second road: one node has been entered, so the event log has something to show.
+        let roads = 0;
+        const boom: RunPolicy = {
+            ...WANDERER_POLICY,
+            chooseRoad: (ctx) => {
+                if (++roads > 1) throw new Error('boom');
+                return WANDERER_POLICY.chooseRoad(ctx);
+            },
+        };
+        let thrown: unknown;
+        try {
+            playRun({ policy: boom, seed: 1 });
+        } catch (error) {
+            thrown = error;
+        }
+        expect(thrown).toBeInstanceOf(RunCrashError);
+        const crash = thrown as RunCrashError;
+        expect(crash.node).toBe('bw-w2');
+        expect(crash.message).toMatch(/run crashed at breakwater\/bw-w2 .*boom/);
+        expect(crash.detail!.deckSize).toBeGreaterThan(0);
+        expect(crash.detail!.lastEvents.length).toBeGreaterThan(0);
+        expect(Array.isArray(crash.detail!.quests)).toBe(true);
+    });
+
+    it('fills a stuck error with the same detail as it leaves the driver', () => {
+        let roads = 0;
+        const lost: RunPolicy = {
+            ...WANDERER_POLICY,
+            chooseRoad: (ctx) => (++roads > 1 ? null : WANDERER_POLICY.chooseRoad(ctx)),
+        };
+        let thrown: unknown;
+        try {
+            playRun({ policy: lost, seed: 1 });
+        } catch (error) {
+            thrown = error;
+        }
+        const stuck = thrown as RunStuckError;
+        expect(stuck.kind).toBe('stuck');
+        expect(stuck.detail!.deckSize).toBeGreaterThan(0);
+        expect(stuck.detail!.lastEvents.length).toBeGreaterThan(0);
     });
 });

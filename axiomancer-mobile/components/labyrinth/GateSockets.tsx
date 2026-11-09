@@ -16,7 +16,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { LABYRINTH_COPY } from '@/state/presenters/labyrinth.engine';
 import type { LabyrinthGateVM, LabyrinthPocketChipVM } from '@/state/presenters/labyrinth.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 interface GateSocketsProps {
@@ -118,7 +118,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 14,
     },
     riddle: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 14,
         lineHeight: 20,
         fontStyle: 'italic',
@@ -146,9 +146,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.nodeBg,
     },
     socketConfirmedText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.bone,
     },
     socketLaid: {
@@ -156,13 +156,13 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.sulfur,
     },
     socketLaidText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
     socketEmptyText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
         color: AXM.ash,
     },
@@ -182,13 +182,12 @@ const useStyles = makeStyles((AXM) => ({
         opacity: 0.35,
     },
     chipText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 13,
-        letterSpacing: 1,
         color: AXM.parchment,
     },
     resultLine: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.parchment,
@@ -206,9 +205,9 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     clearText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.bone,
     },
     submitButton: {
@@ -222,9 +221,9 @@ const useStyles = makeStyles((AXM) => ({
         opacity: 0.6,
     },
     submitText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
 }));

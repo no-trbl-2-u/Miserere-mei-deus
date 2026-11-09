@@ -9,6 +9,7 @@ import {
     ELEMENTALIST_POLICY,
     MERCIFUL_POLICY,
 } from './run-policy.archetypes';
+import { CAUTIOUS_POLICY, EXPLORER_POLICY, RECKLESS_POLICY, RUSHER_POLICY } from './run-policy.personas';
 import type { RunPolicy } from './run-policy.types';
 import { FINISH_ALL_POLICY, SPARE_ALL_POLICY, WANDERER_POLICY } from './run-policy.wanderer';
 
@@ -21,6 +22,10 @@ export const RUN_POLICIES: Readonly<Record<string, RunPolicy>> = Object.freeze({
     elementalist: ELEMENTALIST_POLICY,
     'finish-all': FINISH_ALL_POLICY,
     'spare-all': SPARE_ALL_POLICY,
+    cautious: CAUTIOUS_POLICY,
+    reckless: RECKLESS_POLICY,
+    explorer: EXPLORER_POLICY,
+    rusher: RUSHER_POLICY,
 });
 
 /** The policy ids, in listing order. */

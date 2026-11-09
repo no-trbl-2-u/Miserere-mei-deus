@@ -93,9 +93,21 @@ test('a nexus sync PR with a passing verdict is held for T: the label, the CLI\'
   assert.equal(mergeWanted(pr({ headRefName: 'loop/next-NX1h', title: 'feat: the weekly nexus sync (NX1h)' })).go, true, 'a PR that builds the sync merges like any other')
 })
 
-test('holds: needs-T, stuck, eval seeds, no-auto-merge, drafts, forks, closed', () => {
-  assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
+test('a PR touching game writing waits for T with no label, and every linted surface is covered', async () => {
+  const { CONTENT_SURFACES } = await import('./check-prose.mjs')
+  for (const f of CONTENT_SURFACES) assert.ok(policy.isContentPath(f), `${f} carries writing but is not held`)
+  for (const f of ['axiomancer-mechanics/content/story/story-overview.md', 'axiomancer-mobile/state/presenters/quest.copy.ts', 'axiomancer-mechanics/src/World/breakwater-chapter.questline.ts', 'axiomancer-mechanics/src/World/Continents/Coastal-Village/charcoal-wood.ts']) {
+    assert.match(mergeWanted(pr({ files: [f] })).reason, /content PR/, f)
+  }
+  for (const f of ['axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater-puzzles.ts', 'axiomancer-mechanics/src/Combat/live-encounter.ts', 'scripts/a.mjs']) {
+    assert.equal(policy.isContentPath(f), false, `${f} is not writing`)
+  }
+})
+
+test('holds: needs-T, stuck, eval seeds, no-auto-merge, content, drafts, forks, closed', () => {
+  assert.deepEqual([...HOLD_LABELS], ['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change', 'content'])
   for (const l of HOLD_LABELS) assert.equal(mergeWanted(pr({ labels: ['loop:pr', l] })).go, false, l)
+  assert.match(mergeWanted(pr({ labels: ['loop:pr', 'content'] })).reason, /label content/, 'T approves generated writing by merging it')
   assert.match(mergeWanted(pr({ isDraft: true })).reason, /draft/)
   assert.match(mergeWanted(pr({ isCrossRepository: true })).reason, /fork/)
   assert.match(mergeWanted(pr({ state: 'MERGED' })).reason, /merged/)
@@ -318,6 +330,14 @@ test('the live plan passes the tree lints, and a doubled lessons row fails them 
   } finally {
     fs.rmSync(repo, { recursive: true, force: true })
   }
+})
+
+test('lintTree never shells out to tar (Windows tar rejects a C: path; footgun windows-tar-tree-lint)', () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), 'pr-merge.mjs'), 'utf8')
+  const body = src.slice(src.indexOf('export function lintTree'), src.indexOf('// --- I/O'))
+  assert.ok(body.length > 200, 'found the lintTree body')
+  assert.doesNotMatch(body, /(?:execFileSync|spawnSync|execFile|spawn|execSync|exec)\(\s*['"`]tar\b/, 'lintTree spawns tar')
+  assert.doesNotMatch(body, /--format=tar/, 'lintTree pipes a tar archive')
 })
 
 test('a throwing tree check becomes a hold outcome with a comment, never a thrown step', async () => {

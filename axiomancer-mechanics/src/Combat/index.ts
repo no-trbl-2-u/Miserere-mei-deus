@@ -65,6 +65,8 @@ export {
     // Card programs: why a line cannot be played, and an X line's range
     programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice,
 } from './combat.engine';
+// A held UNBROKEN clause's events, off the tail of a turn start (the board's fx).
+export { unbrokenPayoutEvents } from './combat.enemy-words';
 // The keep causeway (phase EN1l): paying the Toll-Keeper's toll, and the TOLL and TIDE reads.
 export { payTheToll, tollPayBlock, tollPayShortfall, tollPayCost, TOLL_SOURCE } from './combat.engine';
 export {

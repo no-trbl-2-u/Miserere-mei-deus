@@ -22,7 +22,7 @@ const BENCHED = [
 ] as const;
 
 /** The six named normals the wandering pool is made of. */
-const NORMALS = ['quay-crab', 'net-mender', 'coralback', 'brine-widow', 'saltwick-swarm', 'bilge-stalker'] as const;
+const NORMALS = ['quay-crab', 'net-mender', 'coralback', 'brine-widow', 'bilge-stalker'] as const;
 
 /** Every one of the 18 combat nodes: its foe slug(s) and level, from the Design table. */
 const TABLE: Readonly<Record<string, { slugs: readonly string[]; level: number; boss?: true }>> = {
@@ -34,16 +34,16 @@ const TABLE: Readonly<Record<string, { slugs: readonly string[]; level: number; 
     'bw-h3': { slugs: ['net-mender'], level: 3 },
     'bw-h7': { slugs: ['brine-widow'], level: 4 },
     'bw-t1': { slugs: ['coralback'], level: 4 },
-    'bw-t2': { slugs: ['saltwick-swarm'], level: 5 },
+    'bw-t2': { slugs: ['bilge-stalker'], level: 5 },
     'bw-t3': { slugs: ['brine-widow'], level: 5 },
-    'bw-t6': { slugs: ['saltwick-swarm'], level: 5 },
+    'bw-t6': { slugs: ['coralback'], level: 5 },
     'bw-l1': { slugs: ['bilge-stalker'], level: 6 },
     'bw-d1': { slugs: ['net-mender'], level: 6 },
     'bw-d3': { slugs: ['bilge-stalker'], level: 6 },
-    'bw-c1': { slugs: ['cave-choir', 'tithe-collector'], level: 5 },
+    'bw-c1': { slugs: ['cave-choir', 'tithe-collector', 'saltwick-swarm'], level: 5 },
     'bw-l4': { slugs: ['lamplighter', 'wrecker'], level: 7 },
     'bw-w5': { slugs: ['wreckmaster', 'tide-gate'], level: 8 },
-    'bw-k2': { slugs: ['saint-beneath'], level: 1, boss: true },
+    'bw-k2': { slugs: ['saint-beneath'], level: 8, boss: true },
 };
 
 type Staged = { enemySlug?: string; level?: number; isBoss?: boolean };
@@ -84,13 +84,37 @@ describe('Chapter 1 nodes after the recast (EN3b)', () => {
         expect(BW_ELITE_DRAWS['bw-w5']).toHaveLength(2);
     });
 
+    it('the sea cave is the only elite node that changed: three draws, a third each, no elite node added or repeated (MV1d)', () => {
+        expect(Object.keys(BW_ELITE_DRAWS).sort()).toEqual(['bw-c1', 'bw-l4', 'bw-w5']);
+        expect(BW_ELITE_DRAWS['bw-c1']!.map(f => f.slug)).toEqual(['cave-choir', 'tithe-collector', 'saltwick-swarm']);
+        expect(stagedAt('bw-c1').map(p => p.enemySlug)).toEqual(['cave-choir', 'tithe-collector', 'saltwick-swarm']);
+        const elsewhere = [...Object.keys(BW_ENCOUNTER_FOES), 'bw-l4', 'bw-w5'].flatMap(id => stagedAt(id).map(p => p.enemySlug));
+        expect(elsewhere).not.toContain('saltwick-swarm');
+    });
+
+    it('the nodes MV1d re-staged (bw-t2, bw-t6, bw-c1) never put a foe beside itself on a route', () => {
+        const map = getMapDefinition('coastal-continent', 'breakwater');
+        const foes = (id: string): string[] => (TABLE[id]?.slugs ?? []) as string[];
+        const restaged = new Set(['bw-t2', 'bw-t6', 'bw-c1']);
+        for (const node of map.nodes) {
+            for (const next of node.connectedNodes) {
+                if (!restaged.has(node.id) && !restaged.has(next)) continue;
+                const a = foes(node.id);
+                const b = foes(next);
+                if (a.length === 0 || b.length === 0) continue;
+                // A shared foe is a repeat only when each node can only ever draw it.
+                if (a.length === 1 && b.length === 1) expect(a[0], `${node.id} -> ${next}`).not.toBe(b[0]);
+            }
+        }
+    });
+
     it('keeps every cut foe in the library, so an old save naming one still resolves', () => {
         for (const slug of BENCHED) expect(ENEMY_REGISTRY[slug], slug).toBeDefined();
     });
 });
 
 describe('the wandering Act 1 pool (EN3b)', () => {
-    it('is the six named normals, on all seven maps, and no benched foe', () => {
+    it('is the five named normals, on all seven maps, and no benched foe or elite', () => {
         const ids = NORMALS.map(slug => ENEMY_REGISTRY[slug].id);
         for (const [map, pool] of Object.entries(EnemiesByMap)) {
             expect(pool.map(e => e.id), map).toEqual(ids);
@@ -99,7 +123,7 @@ describe('the wandering Act 1 pool (EN3b)', () => {
         for (const e of EnemiesByMap.breakwater) expect(benched).not.toContain(e.id);
     });
 
-    it('draws each of the six and nothing else across a sweep of the roll', () => {
+    it('draws each of the five and nothing else across a sweep of the roll', () => {
         const node: MapNode = { id: 'bw-w2', location: [0, 0], connectedNodes: [] };
         const seen = new Set<string>();
         for (let i = 0; i < 60; i++) {

@@ -321,7 +321,10 @@ async function fight(page) {
     // The budget covers a foe that never takes damage from ending phases
     // (the Gallows Crow's WARD and Take Wing): it wins only by the player's
     // death, about 190 phases in, so 120 gave up on a fight still under way.
-    for (let k = 0; k < 400; k++) {
+    // Since 162.5 (UNBROKEN pays at your turn start) the Coralback's ending-
+    // phase drain is slower (about 0.3 VITAE a phase, ~430 phases to the
+    // defeat), so the budget is 1000.
+    for (let k = 0; k < 1000; k++) {
         if (await page.getByTestId('combat-summary').count()) break
         if (await tap(page, 'combat-mercy-spare')) continue
         await tap(page, 'combat-end-phase')

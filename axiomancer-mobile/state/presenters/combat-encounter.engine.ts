@@ -611,11 +611,8 @@ export interface CombatDieGearSlotVM {
     specialFaces: number;
     manaFaces: number;
     missFaces: number;
-    specialConviction: number;
     /** Terse face table, e.g. '1 special · 2 mana · 3 miss'. */
     faceTable: string;
-    /** Payload text for the BOON face, e.g. '+2 ◆'. */
-    payload: string;
     /** True when this slot's gear differs from the stock default (upgraded). */
     upgraded: boolean;
     a11y: string;
@@ -2060,7 +2057,7 @@ export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
 
 /**
  * The enemy words standing on the board (`state.enemyWords`), as chips: the
- * foe's WARD on its side; BRINE, TANGLE, LEECH and SEIZED on yours. These
+ * foe's WARD and an armed UNBROKEN on its side; BRINE, TANGLE, LEECH and SEIZED on yours. These
  * are live state, like GUARD, so they carry their numbers; the telegraph
  * (intent, next, wall math) never does. BARNACLE shows as the Curse in hand.
  */
@@ -2079,7 +2076,11 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
         ...(caption ? { caption } : {}),
     });
     if (side === 'enemy') {
-        return [...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : []), ...counters];
+        return [
+            ...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : []),
+            ...(w.unbroken && w.ward > 0 ? [{ ...chip('Unbroken', 0, 0, '⛊', 'mark', unbrokenCaption(w.unbroken)), noBadge: true }] : []),
+            ...counters,
+        ];
     }
     const out: CombatEffectChipVM[] = [...counters];
     if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', 'statdown'));
@@ -2263,6 +2264,19 @@ export function lighthouseChips(state: CombatEncounterState, side: 'enemy' | 'pl
     return out;
 }
 
+/** What an armed UNBROKEN clause pays, in the move text's own words. */
+function unbrokenCaption(clause: NonNullable<NonNullable<CombatEncounterState['enemyWords']>['unbroken']>): string {
+    const hits = Math.max(1, clause.hits ?? 1);
+    const parts = [
+        ...((clause.damage ?? 0) > 0 ? [`DEAL ${clause.damage}${hits > 1 ? ` x${hits}` : ''}`] : []),
+        ...((clause.shock ?? 0) > 0 ? [`SHOCK ${clause.shock}`] : []),
+        ...((clause.barnacle ?? 0) > 0 ? [`BARNACLE ${clause.barnacle}`] : []),
+    ];
+    // Short on purpose: the caption is one 9 pt line beside the WARD chip at 360 wide. The keyword
+    // gloss says when it pays (the start of your next turn).
+    return `${parts.join(', ')} if WARD holds`;
+}
+
 /** The die a SEIZED lifts, by the name the dice wear on the board. */
 function undertowDieName(die: 'heart' | 'body' | 'mind'): string {
     return die.charAt(0).toUpperCase() + die.slice(1);
@@ -2405,6 +2419,8 @@ const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     'guard-to-thorns': '🌵',
     'reflect-half': '🪞',
     'hold-guard': '🛡',
+    'overheal-guard': '💧',
+    absolve: '✨',
 };
 
 function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {
@@ -2516,16 +2532,14 @@ function gearSlotVM(state: CombatEncounterState, color: 'heart' | 'body' | 'mind
     const missFaces = Math.max(0, 6 - gear.specialFaces - gear.manaFaces);
     const stock = DEFAULT_DIE_GEAR[color];
     const upgraded = gear.specialFaces !== stock.specialFaces
-        || gear.manaFaces !== stock.manaFaces
-        || gear.specialConviction !== stock.specialConviction;
+        || gear.manaFaces !== stock.manaFaces;
     const faceTable = `${gear.specialFaces} boon · ${gear.manaFaces} mana · ${missFaces} miss`;
-    const payload = `+${gear.specialConviction} ◆`;
     const label = STANCE_LABELS[color] ?? color.toUpperCase();
     return {
         color, label, glyph: DIE_GLYPHS[color] ?? '?', colorHex: STANCE_COLORS[color] ?? HUE.fallbackGrey,
         specialFaces: gear.specialFaces, manaFaces: gear.manaFaces, missFaces,
-        specialConviction: gear.specialConviction, faceTable, payload, upgraded,
-        a11y: `${label} die gear — ${faceTable}. Boon face grants ${payload}.`
+        faceTable, upgraded,
+        a11y: `${label} die gear — ${faceTable}.`
             + (upgraded ? ' Upgraded from stock.' : ' Stock.'),
     };
 }

@@ -47,6 +47,19 @@ export function getDamageTakenMultiplier(bearer: Combatant): number {
 }
 
 /**
+ * SHOCK: what each DEAL against this bearer gains, per hit. Works on either
+ * side, since the status lives on the combatant. 0 when unmarked. Pure.
+ */
+export function getDamageTakenFlat(bearer: Combatant): number {
+    let flat = 0;
+    for (const ae of bearer.effects) {
+        const n = lookupEffect(ae.effectId)?.payload.damageTakenFlat ?? 0;
+        if (n !== 0) flat += n * (ae.intensity ?? 1);
+    }
+    return flat;
+}
+
+/**
  * Outgoing-damage multiplier for the bearer, from `outgoingDamageMulPct`
  * (QUARTER −10/stack — dampens the bearer's hits):
  *   mult = 1 + Σ (outgoingDamageMulPct/100 × intensity)

@@ -16,7 +16,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { hazardSignedNumber, hazardStatPairLabel } from '@/state/presenters/hazard.engine';
 import type { HazardCardVM } from '@/state/presenters/hazard.engine';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 
 import { DieGlyph, ProgGlyph } from './glyphs';
 import { CARD_EDGE, CARD_INK, CARD_INK2, CARD_PAPER, COST_INK, DIE, RARITY_UI, TYPE_INK } from './palette';
@@ -78,7 +78,7 @@ function ManaSocket({
             {filled ? (
                 <DieGlyph kind={c.glyph} size={size - 7} color={c.c} />
             ) : (
-                <Text style={{ fontFamily: FONTS.mono, fontSize: size * 0.5, color: c.c, opacity: 0.75, lineHeight: size * 0.62 }}>+</Text>
+                <Text style={{ fontFamily: TYPE_ROLES.count.fontFamily, fontSize: size * 0.5, color: c.c, opacity: 0.75, lineHeight: size * 0.62 }}>+</Text>
             )}
         </View>
     );
@@ -114,7 +114,7 @@ function StatPair({
             style={{ flexDirection: 'row', alignItems: 'center', gap: 2, opacity: val === 0 ? 0.3 : 1 }}
         >
             <ProgGlyph kind={kind} size={size} color={TYPE_INK[kind]} />
-            <Text style={{ fontFamily: FONTS.sans, fontSize: size + 4, lineHeight: size + 5, color: val < 0 ? COST_INK : TYPE_INK[kind] }}>
+            <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: size + 4, lineHeight: size + 5, color: val < 0 ? COST_INK : TYPE_INK[kind] }}>
                 {hazardSignedNumber(val)}
             </Text>
         </View>
@@ -163,13 +163,13 @@ function Row({
                 {bottom ? (
                     <ManaSocket kind={card.kind} filled={powered} size={compact ? 15 : 17} pulse={!powered && card.dieAvailable} />
                 ) : (
-                    <Text style={{ fontFamily: FONTS.sans, fontSize: compact ? 10 : 11, letterSpacing: 1, color: CARD_INK2 }}>FREE</Text>
+                    <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: compact ? 10 : 11, letterSpacing: 1, color: CARD_INK2 }}>FREE</Text>
                 )}
             </View>
             {card.utility && effectLabel !== null && (
                 <Text
                     numberOfLines={1}
-                    style={{ fontFamily: FONTS.sans, fontSize: effectSize, letterSpacing: EFFECT_SPACING, color: bottom ? c.dark : CARD_INK, marginTop: 1 }}
+                    style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: effectSize, letterSpacing: EFFECT_SPACING, color: bottom ? c.dark : CARD_INK, marginTop: 1 }}
                 >
                     {compact ? `⬡ ${effectLabel}` : effectLabel}
                 </Text>
@@ -189,7 +189,7 @@ const HAND_NAME_SIZE = 13;
 /** Hand-mode text width: the 90px card less its 1.5px borders and 4px padding. */
 const HAND_TEXT_W = 90 - 3 - 8;
 /** Pirata One capital width per px of font size, letter spacing included, with a little slack. */
-const GOTHIC_CAP_EM = 0.43;
+export const GOTHIC_CAP_EM = 0.43;
 
 /** Hand-mode name size. A multi-word name wraps at its spaces; a single word cannot, so
  *  one too long for the strip left beside the pips and a fanned neighbour shrinks to fit
@@ -208,7 +208,7 @@ const HAND_EFFECT_W = HAND_TEXT_W - 2 - 12;
 
 /** Bebas Neue advance per px of font size: capitals, digits and `-+` run 0.4, a space 0.25,
  *  and the fallback-font symbols (✕ → ◆) up to 1.0, so 0.9 leaves a little slack. */
-function effectGlyphEm(ch: string): number {
+export function effectGlyphEm(ch: string): number {
     if (ch === ' ') return 0.25;
     return /[A-Z0-9+\-]/.test(ch) ? 0.4 : 0.9;
 }
@@ -322,7 +322,7 @@ export const HazardCard = React.memo(function HazardCard({
                         size={14}
                     />
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                        <Text style={{ fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.2, color: bottom ? c.dark : CARD_INK2 }}>
+                        <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 12, letterSpacing: 1.2, color: bottom ? c.dark : CARD_INK2 }}>
                             {bottom ? 'MANA' : 'FREE'}
                         </Text>
                         {bottom && <ManaSocket kind={card.kind} filled={powered} size={18} />}
@@ -330,11 +330,11 @@ export const HazardCard = React.memo(function HazardCard({
                 </View>
                 {/* Its own line: beside the stats it ran under MANA and the socket ("RE-CAST +DIE"). */}
                 {card.utility && (
-                    <Text style={{ fontFamily: FONTS.gothic, fontSize: 15, color: bottom ? c.dark : CARD_INK, marginTop: 2 }}>
+                    <Text style={{ fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 15, color: bottom ? c.dark : CARD_INK, marginTop: 2 }}>
                         ⬡ {bottom ? card.poweredEffectLabel : card.freeEffectLabel}
                     </Text>
                 )}
-                <Text style={{ fontFamily: FONTS.serif, fontSize: 14, color: CARD_INK, lineHeight: 17, marginTop: 3 }}>
+                <Text style={{ fontFamily: TYPE_ROLES.cardRules.fontFamily, fontSize: 14, color: CARD_INK, lineHeight: 17, marginTop: 3 }}>
                     {card.dead
                         ? 'Dead weight. It does nothing, and nothing can power it.'
                         : bottom
@@ -350,14 +350,14 @@ export const HazardCard = React.memo(function HazardCard({
                 {overlays}
                 <View style={{ alignItems: 'center', paddingTop: 11, paddingHorizontal: 14 }}>
                     <View style={{ flexDirection: 'row', gap: 6, marginBottom: 4 }}>
-                        <Text style={{ fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.5, color: HUE.white, backgroundColor: rar.c, paddingHorizontal: 7, paddingVertical: 1 }}>
+                        <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: 1.5, color: HUE.white, backgroundColor: rar.c, paddingHorizontal: 7, paddingVertical: 1 }}>
                             {rar.label}
                         </Text>
-                        <Text style={{ fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.5, color: c.dark, borderWidth: 1, borderColor: c.c, paddingHorizontal: 7, paddingVertical: 1 }}>
+                        <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: 1.5, color: c.dark, borderWidth: 1, borderColor: c.c, paddingHorizontal: 7, paddingVertical: 1 }}>
                             {powerLabel}
                         </Text>
                     </View>
-                    <Text style={{ fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 23, letterSpacing: 0.5, color: CARD_INK, textAlign: 'center' }}>
+                    <Text style={{ fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, lineHeight: 23, letterSpacing: 0.5, color: CARD_INK, textAlign: 'center' }}>
                         {card.name}
                     </Text>
                     <View style={{ marginVertical: 9 }}>
@@ -369,8 +369,8 @@ export const HazardCard = React.memo(function HazardCard({
                     {section(true)}
                     {card.salvageLabel !== null && (
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, marginTop: 6, paddingVertical: 4, borderWidth: 1, borderStyle: 'dashed', borderColor: CARD_EDGE }}>
-                            <Text style={{ fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.2, color: CARD_INK2 }}>SALVAGE</Text>
-                            <Text style={{ fontFamily: FONTS.serif, fontSize: 13, color: CARD_INK }}>
+                            <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: 1.2, color: CARD_INK2 }}>SALVAGE</Text>
+                            <Text style={{ fontFamily: TYPE_ROLES.cardRules.fontFamily, fontSize: 13, color: CARD_INK }}>
                                 scrap for {card.salvageLabel}
                             </Text>
                         </View>
@@ -379,13 +379,13 @@ export const HazardCard = React.memo(function HazardCard({
                         <View style={{ marginTop: 8, gap: 4 }}>
                             {card.keywords.filter(kw => kw.id !== 'salvage').map(kw => (
                                 <View key={kw.id} style={{ flexDirection: 'row', gap: 6, alignItems: 'flex-start' }}>
-                                    <Text style={{ fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.2, color: CARD_INK2, minWidth: 64, paddingTop: 1 }}>{kw.name}</Text>
-                                    <Text style={{ fontFamily: FONTS.serif, fontSize: 11, color: CARD_INK, flex: 1, lineHeight: 14 }}>{kw.desc}</Text>
+                                    <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, letterSpacing: 1.2, color: CARD_INK2, minWidth: 64, paddingTop: 1 }}>{kw.name}</Text>
+                                    <Text style={{ fontFamily: TYPE_ROLES.cardRules.fontFamily, fontSize: 11, color: CARD_INK, flex: 1, lineHeight: 14 }}>{kw.desc}</Text>
                                 </View>
                             ))}
                         </View>
                     )}
-                    <Text style={{ fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: CARD_INK2, marginTop: 8, lineHeight: 17, textAlign: 'center' }}>
+                    <Text style={{ fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: CARD_INK2, marginTop: 8, lineHeight: 17, textAlign: 'center' }}>
                         “{card.flavor}”
                     </Text>
                 </View>
@@ -396,7 +396,7 @@ export const HazardCard = React.memo(function HazardCard({
     if (mode === 'offer') {
         return (
             <View style={[frame, { paddingBottom: 6 }]}>
-                <Text style={{ fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.5, color: HUE.badgeInk, backgroundColor: rar.c, textAlign: 'center', paddingVertical: 2 }}>
+                <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: 1.5, color: HUE.badgeInk, backgroundColor: rar.c, textAlign: 'center', paddingVertical: 2 }}>
                     {rar.label}
                 </Text>
                 <View pointerEvents="none" style={[StyleSheet.absoluteFillObject, { backgroundColor: `${c.c}1c` }]} />
@@ -406,7 +406,7 @@ export const HazardCard = React.memo(function HazardCard({
                 </View>
                 <View style={{ alignItems: 'center', paddingBottom: 2 }}>
                     {card.utility ? (
-                        <Text style={{ fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 0.6, color: c.dark }}>{card.freeEffectLabel}</Text>
+                        <Text style={{ fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 12, letterSpacing: 0.6, color: c.dark }}>{card.freeEffectLabel}</Text>
                     ) : (
                         <StatPair force={card.powered.force} escape={card.powered.escape} size={11} />
                     )}
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
     },
     edgeStripe: { position: 'absolute', top: 0, left: 0, right: 0, height: 3 },
     name: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         color: CARD_INK,
         letterSpacing: 0.2,
         textAlign: 'center',
@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(134,168,33,0.16)',
     },
     appliedTag: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 10,
         letterSpacing: 1,
         color: HUE.inkBg,

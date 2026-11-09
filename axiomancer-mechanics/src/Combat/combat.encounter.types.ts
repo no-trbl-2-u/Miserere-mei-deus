@@ -16,7 +16,7 @@
  */
 
 import type { Character } from '../Character/types';
-import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind } from '../Enemy/types';
+import type { Enemy, EnemyMoveKind, EnemyMoveRider, EnemyMoveRiderKind, UnbrokenPayout } from '../Enemy/types';
 import type { Effect, ActiveEffect } from '../Effects/types';
 import type { CardAspect, CardType } from '../Cards/types';
 import type { ProgramLedger } from './combat.card-program';
@@ -174,7 +174,9 @@ export type SignatureSkillKind =
     | 'blizzard-to-storm'         // the Elementalist's Belt: all BLIZZARD becomes STORM
     | 'guard-to-thorns'           // the Thornback Signet: THORNS equal to your GUARD
     | 'reflect-half'              // the Mirror Brooch: REFLECT 50%
-    | 'hold-guard';               // the Carapace Belt: your GUARD is kept through the foe's next turn
+    | 'hold-guard'                // the Carapace Belt: your GUARD is kept through the foe's next turn
+    | 'overheal-guard'            // the Brimming Locket: this turn, healing past max VITAE becomes GUARD
+    | 'absolve';                  // the Penitent's Brooch: remove your debuffs, then HEAL 2 for each
 
 export type SignatureSkillId =
     | 'sig-disarming-plea'
@@ -186,7 +188,9 @@ export type SignatureSkillId =
     | 'sig-elementalist-belt'
     | 'sig-defender-signet'
     | 'sig-defender-brooch'
-    | 'sig-defender-belt';
+    | 'sig-defender-belt'
+    | 'sig-merciful-locket'
+    | 'sig-merciful-brooch';
 
 /** Player archetype, derived from the dominant base stat. Drives (mobile) the
  *  portrait only. */
@@ -241,11 +245,16 @@ export interface CombatThreatEffect {
     undertow?: WheelStance | 'random';
     /** BARNACLE: this many Barnacle Curses join your hand. */
     barnacle?: number;
+    /** SHOCK on you: each DEAL against you deals this much more, per hit, for 3 turns. */
+    shock?: number;
+    /** UNBROKEN: this move's clause, armed when it fires (damage already scaled). */
+    unbroken?: UnbrokenPayout;
 }
 
 /** The enemy words with live state on the board (`combat.enemy-words.ts`). */
 export type EnemyWordId =
-    | 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech' | 'tangle' | 'undertow' | 'barnacle';
+    | 'ward' | 'mend' | 'scour' | 'brine' | 'vulnerable' | 'leech' | 'tangle' | 'undertow' | 'barnacle'
+    | 'shock' | 'unbroken';
 
 /**
  * The enemy words' fight state. Optional on the encounter: absent reads as
@@ -269,6 +278,11 @@ export interface EnemyWordsState {
     undertowAlso?: WheelStance;
     /** Counter for the uids of the Barnacles put in your hand. */
     barnacleUid?: number;
+    /** UNBROKEN: the clause the foe's last WARD move armed; read and cleared at the start of its next turn. */
+    unbroken?: UnbrokenPayout;
+    /** UNBROKEN: a clause whose WARD survived your turn, waiting to pay at the start of your next one.
+     *  `guardLeft` is the GUARD the foe's turn left, which would have gone at its end and meets these hits first. */
+    unbrokenHeld?: UnbrokenPayout & { guardLeft?: number };
 }
 
 export interface CombatThreatAction {
@@ -591,12 +605,12 @@ export type CombatEvent =
     | { kind: 'threat-branch'; phaseIndex: number; conditionText: string; taken: 'then' | 'else' }
     // The enemy's reactive cleanse shed some of its own afflictions.
     | { kind: 'threat-cleansed'; phaseIndex: number; effectIds: string[] }
-    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE, LEECH, TANGLE, UNDERTOW or BARNACLE
-     *  landed, `amount` its number),
+    /** An enemy word moved: `gained` (WARD, BRINE, VULNERABLE, LEECH, TANGLE, UNDERTOW, BARNACLE or SHOCK
+     *  landed, `amount` its number, or an UNBROKEN clause armed),
      *  `soaked` (WARD took `amount` off a DEAL), `cut` (BRINE took `amount` off a GUARD gain),
      *  `ticked` (LEECH took `amount` VITAE from you), `stripped` (SCOUR took `stripped` off the foe)
      *  `faded` (WARD, BRINE or TANGLE ran out with `amount` left), `spent` (a landed PAID play counted a card off TANGLE,
-     *  or UNDERTOW kept a die off the tray) or `shed` (a BARNACLE fell off). */
+     *  UNDERTOW kept a die off the tray, or an UNBROKEN clause paid out) or `shed` (a BARNACLE fell off). */
     | { kind: 'enemy-word'; word: EnemyWordId;
         op: 'gained' | 'soaked' | 'cut' | 'ticked' | 'stripped' | 'faded' | 'spent' | 'shed';
         amount: number; stripped?: string[] }
@@ -816,10 +830,6 @@ export interface UpgradeableDieGear {
     specialFaces: number;
     /** Number of mana faces on the driven die (default 2; gold default 1). */
     manaFaces: number;
-    /** No longer sets a payout: what a special pays is the worn weapon's
-     *  `special` (`CombatEncounterState.equipmentDice`). Kept on the rail for
-     *  the display and saves. */
-    specialConviction: number;
 }
 
 /** Return shape of every engine transition (mirrors `CardResolution`). */

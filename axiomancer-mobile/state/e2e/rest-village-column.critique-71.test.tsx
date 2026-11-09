@@ -32,7 +32,7 @@ import VillageScreen, { VILLAGE_COLUMN_MAX_WIDTH } from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 
 // Hoisted above the imports by babel-plugin-jest-hoist: both screens pop the
 // route the moment their slice empties, so the router must be stubbed.
@@ -136,7 +136,7 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
             </GameStoreProvider>,
         );
         const figure = within(r.getByTestId('rest-purse')).getByText(/^\d+$/);
-        expect(StyleSheet.flatten(figure.props.style).fontFamily).toBe(FONTS.sans);
+        expect(StyleSheet.flatten(figure.props.style).fontFamily).toBe(TYPE_ROLES.count.fontFamily);
     });
 
     it('village: the counters sit in the capped column, and the exit shares the cap', () => {

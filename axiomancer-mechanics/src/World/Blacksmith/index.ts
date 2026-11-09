@@ -24,7 +24,7 @@ export type {
 export { ANVIL_VERB_PRICING } from './blacksmith.engine';
 
 // ── Witness variant gear (minimal, see module note) ─────────────────────────
-export { BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT } from './blacksmith.content';
+export { BLACKSMITH_WITNESS_VARIANTS } from './blacksmith.content';
 
 // ── Pure engine transitions ────────────────────────────────────────────────
 export {

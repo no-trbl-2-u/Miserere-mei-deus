@@ -314,7 +314,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
@@ -1511,6 +1511,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
     },
     {
@@ -1800,6 +1806,12 @@
       "from": "area:Game",
       "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/legacy-slots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.anvil.ts"
     },
     {
       "kind": "coupling",
@@ -3372,6 +3384,12 @@
       "from": "route:(tabs)/settings",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",
@@ -5910,6 +5928,12 @@
       "from": "route:settings",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:settings",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",
