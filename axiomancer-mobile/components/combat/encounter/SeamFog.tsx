@@ -19,6 +19,8 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { usePalette } from '@/theme/runtime';
 
+import { RASTER_LAYER } from './rasterLayer';
+
 /** The arena plate's share of the board's height (percent). */
 export const SCENE_BAND_PCT = 62;
 /** The gap under the foe's box, as a share of the band's height (percent). */
@@ -38,6 +40,7 @@ export const SeamFog = React.memo(function SeamFog() {
             pointerEvents="none"
             style={[styles.fog, { top: `${FOG_TOP_PCT}%`, height: `${FOG_HEIGHT_PCT}%` }]}
             testID="combat-seam-fog"
+            {...RASTER_LAYER}
         >
             <Svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" pointerEvents="none">
                 <Defs>
