@@ -103,7 +103,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
 | 112 | Combat entry and exit: the music steps aside for the whole fight, and the ink really spreads | [112-cx1-combat-entry-exit.md](112-cx1-combat-entry-exit.md) | planned | 1 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
-| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 2 left |
+| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 1 left |
 | 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 2 left |
 | 117 | The Defender trial set (the turtle with spikes) | [117-df1-defender-trial-set.md](117-df1-defender-trial-set.md) | planned | 1 left |
 | 118 | The Elementalist trial set (the weather in play) | [118-el1-elementalist-trial-set.md](118-el1-elementalist-trial-set.md) | planned | 1 left |
