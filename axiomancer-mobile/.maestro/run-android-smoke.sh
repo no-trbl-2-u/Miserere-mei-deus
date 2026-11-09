@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Installs the preview APK on the booted emulator and runs the Android smoke
-# flow (phase LG1i). Called by .github/workflows/android-smoke.yml from inside
+# flow. Called by .github/workflows/android-smoke.yml from inside
 # the emulator action, whose `script:` runs each line on its own, so the whole
 # run lives here as one call.
 #

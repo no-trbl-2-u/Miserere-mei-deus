@@ -1,4 +1,4 @@
-# The Android smoke flow (phase LG1i, spec 125 A9), run by
+# The Android smoke flow, run by
 # .github/workflows/android-smoke.yml against a preview APK on an emulator.
 #
 # It reaches the title, opens the main menu, goes through SETTINGS to the
