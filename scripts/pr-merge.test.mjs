@@ -21,11 +21,12 @@ import { headMarker, reviewWanted } from './pr-review.mjs'
 import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
-import { pendingFiles } from './plan/pending.mjs'
-import { listedChunks } from './plan/settle.mjs'
+import { parsePending, pendingFiles } from './plan/pending.mjs'
+import { holdReason, listedChunks } from './plan/settle.mjs'
 import { settledView } from './plan/settled.mjs'
 import { readPlanSources } from './check-deadlines.mjs'
 import { runCheck } from './plan-check.mjs'
+import { lintQueue } from './check-plan-queues.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -736,6 +737,149 @@ test('the view judges on the end state as settle does: an edit that empties a sp
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+// --- a finished spec retires itself (spec 164, SR1a) --------------------------------------------
+//
+// A spec's last close carries `absorb:` (where its lasting rules went), and settle retires the spec
+// it empties: the file, its row and lane lines go, its Follow-ups reach CANDIDATES, and a spec-complete
+// line holds the absorb text. Without the key the close is held as before (D168), and says so.
+
+const absorbing = (id, absorb, extra = '', date = '2026-11-01') => ['---', `close: ${id}`, `date: ${date}`, 'says: It works', `absorb: ${absorb}`, '---', extra].join('\n')
+const FOLLOW_UPS = ['', '## Follow-ups', '', '- **A map legend**, if T wants one.', '', '### Later', '', '- The labyrinth, someday.', ''].join('\n')
+const CANDIDATES = ['# Phase candidates', '', '## Pending', '', '### [ ] [owner] An old idea', '- proposed: 2026-10-01', '', '## Promoted', '', '- none', ''].join('\n')
+const README_LANE = README_TWO.replace('- (none yet)', '- **08.1** · XY2a: the map (T, 2026-11-01)')
+
+test('a last close with absorb: retires its spec: file, row and lane line gone, spec complete archived, Follow-ups carried', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const decided = absorbing('08.1', 'D?map-rule, pinned by maps.test.mjs', '## Decisions\n- **D?map-rule** · 2026-11-01 · Maps stay square. *Why:* a reason.\n')
+    landOnMain(work, g, {
+      'plan/08-maps.md': SPEC_ONE + FOLLOW_UPS,
+      'plan/README.md': README_LANE,
+      'plan/CANDIDATES.md': CANDIDATES,
+      'identity/decisions/2026.md': '# 2026\n\n- **D5** · 2026-01-01 · Old.\n',
+      'plan/pending/07.1.md': PENDING,
+      'plan/pending/08.1.md': decided,
+    })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.ids.sort(), ['07.1', '08.1'])
+    assert.deepEqual(r.left, [])
+    assert.equal(settleFailure(r), null)
+    g(work, 'pull', '-q', 'origin', 'main')
+    assert.ok(!fs.existsSync(path.join(work, 'plan/08-maps.md')), 'the spec file is deleted')
+    const readme = fs.readFileSync(path.join(work, 'plan/README.md'), 'utf8')
+    assert.doesNotMatch(readme, /08-maps\.md|\*\*08\.1\*\*/, 'its row and lane line are gone')
+    assert.match(readme, /07-search\.md\) \| planned \| 1 left \|/, 'the other spec is untouched')
+    const archive = fs.readFileSync(path.join(work, 'plan/ARCHIVE.md'), 'utf8').trimEnd().split('\n')
+    assert.match(archive.at(-2), /^- 2026-11-01 · 08\.1 \(alias: XY2a\) · It works · [0-9a-f]+\.\.[0-9a-f]+$/, 'the close is shaped as usual')
+    assert.equal(archive.at(-1), '- 2026-11-01 · 08 · spec complete: Maps · D6, pinned by maps.test.mjs · deleted in (this commit)')
+    assert.match(fs.readFileSync(path.join(work, 'identity/decisions/2026.md'), 'utf8'), /\*\*D6\*\* · 2026-11-01 · Maps stay square/)
+    const candidates = fs.readFileSync(path.join(work, 'plan/CANDIDATES.md'), 'utf8')
+    const row = candidates.slice(candidates.indexOf('### [ ] [owner] Follow-ups'), candidates.indexOf('## Promoted'))
+    assert.match(row, /^### \[ \] \[owner\] Follow-ups carried from spec 08 when it retired: Maps\n- proposed: 2026-11-01/)
+    assert.match(row, /#### Follow-ups\n\n- \*\*A map legend\*\*, if T wants one\.\n\n##### Later\n\n- The labyrinth, someday\.\n\n$/, 'the section verbatim, its headings moved under the row')
+    assert.deepEqual(lintQueue(candidates, 'candidates').findings, [])
+    assert.deepEqual(lintsOf(work), [], 'plan-check and the deadline view stay green')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: none retires a spec with no Follow-ups and writes nothing to CANDIDATES', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/CANDIDATES.md': CANDIDATES, 'plan/pending/08.1.md': absorbing('08.1', 'none') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(settleFailure(r), null, JSON.stringify(r))
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'show', 'origin/main:plan/CANDIDATES.md'), CANDIDATES.trimEnd())
+    assert.doesNotMatch(g(work, 'ls-tree', '-r', '--name-only', 'origin/main', 'plan/'), /08-maps\.md|pending\/08\.1/)
+    assert.match(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /^- 2026-11-01 · 08 · spec complete: Maps · none · deleted in \(this commit\)$/m)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a last close without absorb: is held as before, and the hold names the missing key', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.left, ['plan/pending/08.1.md'], JSON.stringify(r))
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk: absorb the spec by hand .*the missing "absorb:" key/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a spec emptied by an absorbing close and refilled later in the run stands, and nothing is archived as complete', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE + FOLLOW_UPS, 'plan/README.md': README_TWO, 'plan/CANDIDATES.md': CANDIDATES, 'plan/pending/08.1.md': absorbing('08.1', 'none'), 'plan/pending/plot-more.md': PLOT_MORE })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(settleFailure(r), null, JSON.stringify(r))
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.2\*\* More/)
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+    assert.equal(g(work, 'show', 'origin/main:plan/CANDIDATES.md'), CANDIDATES.trimEnd())
+    assert.match(g(work, 'show', 'origin/main:plan/README.md'), /08-maps\.md\)/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: rides only a close, says something, and names only its own decisions', () => {
+  const head = (lines) => ['---', ...lines, '---', ''].join('\n')
+  assert.throws(() => parsePending(head(['date: 2026-11-01', 'absorb: none', 'footguns: a']), 'x.md'), /"absorb:" goes on a spec's last close/)
+  assert.throws(() => parsePending(head(['close: 08.1', 'date: 2026-11-01', 'says: It works', 'absorb:']), 'x.md'), /"absorb:" goes on a spec's last close/)
+  assert.throws(() => parsePending(absorbing('08.1', 'D?nowhere'), 'x.md'), /absorb names D\?nowhere, but no "## Decisions" entry here defines it/)
+  assert.equal(parsePending(absorbing('08.1', 'none'), 'x.md').absorb, 'none')
+  assert.equal(parsePending(closeOf('08.1'), 'x.md').absorb, null)
+})
+
+test('an absorbing close that empties a spec under open acceptance is held for chunks, and nothing retires', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const partial = SPEC_ONE.replace('closes A1 ·', 'closes A1 (partial) ·')
+    landOnMain(work, g, { 'plan/08-maps.md': partial, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': absorbing('08.1', 'none') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
+    assert.deepEqual(r.left, ['plan/pending/08.1.md'])
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk under open acceptance: chunk the spec/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'the spec stands')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: speaks only for its own close\'s spec: emptying another spec holds, and so does a file with no close', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    // A close of 07.1 (spec 07 keeps 07.2) whose Edit empties spec 08: its absorb: is spec 07's, not 08's.
+    // The Edit takes its acceptance too, so only the guard stands between spec 08 and a retire.
+    const edit = EDIT_EMPTIES.slice(EDIT_EMPTIES.indexOf('## Edit')).replace('~~~ new\n~~~\n', '~~~ new\n~~~\n~~~ old\n## Acceptance\n\n- **A1** A map.\n~~~\n~~~ new\n~~~\n')
+    const elsewhere = absorbing('07.1', 'none', edit)
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': elsewhere })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'refused', JSON.stringify(r))
+    assert.match(settleFailure(r), /held back plan\/pending\/07\.1\.md: it would leave plan\/08-maps\.md with no chunk: absorb the spec by hand/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'spec 08 stands')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+  // A file with no close (the parser refuses absorb: there; this is the guard behind it) never exempts a spec.
+  const empty = '# 08 · Maps\n\n## Chunks\n\nMeasure: 0 open · 1 closed · next A2\n'
+  assert.match(holdReason({ close: null, absorb: 'none' }, 'plan/08-maps.md', empty), /with no chunk: absorb the spec by hand/)
+  assert.match(holdReason({ close: '07.1', absorb: 'none' }, 'plan/08-maps.md', empty), /with no chunk: absorb the spec by hand/)
+  assert.equal(holdReason({ close: '08.1', absorb: 'none' }, 'plan/08-maps.md', empty), null)
 })
 
 // The CLI itself, spawned. Its root is its own file's parent, so a scratch repo gets a copy of the script and what it imports.

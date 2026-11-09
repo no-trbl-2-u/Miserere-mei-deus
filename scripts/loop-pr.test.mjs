@@ -670,6 +670,11 @@ test('the land step names Miserere\'s landing in a marked local block; kit text 
     assert.ok(block.includes(want), `the local block names ${want}`)
   }
   assert.match(land, /^## 4\. Contributor: land as a pull request$/m, 'the kit section stays')
+  // Spec 164 (SR1a): the builder of a spec's last chunk writes `absorb:`, or settle holds the close.
+  const flat = block.replace(/\s+/g, ' ')
+  assert.ok(flat.includes("**Closing a spec's last chunk:** re-read the spec's Design, Decisions and Open questions; record each rule a future builder could break unknowingly as a `## Decisions` entry, unless a test or lint already enforces it; and put `absorb:` in the close's front matter"), 'the local block tells the builder what absorb: is')
+  const pendingDoc = read('plan/pending/README.md').replace(/\s+/g, ' ')
+  assert.ok(pendingDoc.includes("`absorb:` (Miserere, spec 164) goes on a spec's **last** close and nowhere else: where the spec's lasting rules went"), 'plan/pending/README.md documents the key')
   const notes = read('skills/march.lanes.md')
   const landing = notes.slice(notes.indexOf('### Landing a change'), notes.indexOf('### Retro'))
   assert.match(landing, /plan\/pending\//)

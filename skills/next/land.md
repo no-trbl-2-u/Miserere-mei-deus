@@ -14,6 +14,14 @@ review labels, stopping at the cap (5). The pending close
 rides in the PR; the merge job settles it on main
 (`node scripts/pr-merge.mjs settle`, from `pr-resolve`'s scan).
 `plot`, `review:rules-change` and `nexus-sync` PRs wait for T.
+**Closing a spec's last chunk:** re-read the spec's Design,
+Decisions and Open questions; record each rule a future builder
+could break unknowingly as a `## Decisions` entry, unless a test
+or lint already enforces it; and put `absorb:` in the close's
+front matter: those `D?<slug>`s, that test or file, or `none`.
+Settle then retires the spec (file, row, a `spec complete`
+archive line, any `Follow-ups` to `plan/CANDIDATES.md`); with
+no `absorb:` the close is held and `pr-resolve` goes red.
 <!-- /miserere:local -->
 
 ## 1. Settle at orient (owner only)

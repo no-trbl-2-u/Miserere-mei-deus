@@ -34,6 +34,7 @@ const COPIED_SCRIPTS = [
   'plan/config.mjs',
   'plan/footguns.mjs',
   'plan/pending.mjs',
+  'plan/retire-local.mjs',
   'plan/settle.mjs',
   'plan/settled.mjs',
 ]
