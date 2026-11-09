@@ -67,6 +67,36 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
+### [ ] [content] measured drift: bw-w5/wreckmaster grey meanRounds 8.9 -> 11.2 (even, 2026-11-09)
+- issue: #1493
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-w5/wreckmaster with the grey deck (even spread) from 8.9 at 587ec54 to 11.2 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 8.9 -> 11.2 at beb11aa
+- evidence 2026-11-09: body 8.9 -> 11.2 at beb11aa
+
+### [ ] [content] measured drift: bw-w5/wreckmaster grey+bare lowestVitaeFractionP10 0.08 -> 0.42 (even, 2026-11-09)
+- issue: #1494
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/wreckmaster with the grey+bare deck (even spread) from 0.08 at 587ec54 to 0.42 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.08 -> 0.42 at beb11aa
+- evidence 2026-11-09: body 0.08 -> 0.42 at beb11aa
+
+### [ ] [content] measured drift: bw-w5/wreckmaster grey+bare meanRounds 11.0 -> 13.3 (even, 2026-11-09)
+- issue: #1495
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-w5/wreckmaster with the grey+bare deck (even spread) from 11.0 at 587ec54 to 13.3 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 11.0 -> 13.3 at beb11aa
+- evidence 2026-11-09: body 11.0 -> 13.3 at beb11aa
+
 ### [ ] [content] measured drift: bw-k2/saint-beneath grey lowestVitaeFractionP10 0.38 -> 0.70 (even, 2026-11-09)
 - issue: #1485
 - category: content
