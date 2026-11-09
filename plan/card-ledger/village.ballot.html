@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Village, Blacksmith and Shop ballot</title>
+<!--
+  The village ballot (2026-11-09). Three screens, five candidates each. The
+  first of each is the screen as it stands today (Village and Shop from the
+  app's baseline screenshot, Blacksmith redrawn from its current code); the
+  other four are mockups at 390 x 844 drawn from the real kit art.
+
+  Every button on every mockup is the brass action button (the main menu's and
+  Settings' plate). The portraits are stand-ins from
+  Potential Assets/sorted-entity-library-base, there for spacing. The spoken
+  lines are placeholders; prices are the engine's.
+-->
+<style>
+  :root { --bg:#efe9dc; --ink:#1b1714; --muted:#6b6259; --card:#fbf7ee; --edge:#2a2420; --sel:#1b1714; --btn:#1b1714; --btn-ink:#fbf7ee; --shotbg:#d9cfbd; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  }
+  :root[data-theme="dark"] { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.92rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  .theme { float:right; font:inherit; padding:6px 12px; border-radius:6px; border:1px solid var(--edge); background:var(--card); color:var(--ink); cursor:pointer; }
+  .slot { margin:22px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.1rem; margin:0; }
+  .role { color:var(--muted); margin:2px 0 10px; }
+  .row { display:grid; grid-template-columns:repeat(auto-fill, minmax(232px, 1fr)); gap:12px; }
+  label.card { position:relative; display:block; background:var(--card); border:2px solid var(--edge); border-radius:10px; padding:8px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 4px var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .top { padding-right:34px; min-height:96px; }
+  .name { font-size:1.05rem; font-weight:bold; }
+  .ref { color:var(--muted); font-size:.9rem; margin:2px 0 6px; }
+  label.card img { display:block; width:100%; height:auto; border-radius:4px; background:var(--shotbg); }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  footer { margin-top:28px; padding-top:12px; border-top:2px solid var(--edge); }
+  textarea { width:100%; font:13px/1.4 ui-monospace, Menlo, Consolas, monospace; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  #general { min-height:60px; } #out { min-height:160px; margin-top:10px; }
+  button { font:inherit; padding:9px 18px; min-height:42px; border-radius:6px; border:0; background:var(--btn); color:var(--btn-ink); cursor:pointer; margin:8px 8px 0 0; }
+  .count { color:var(--muted); margin-left:6px; }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <h1>The Village, the Blacksmith and the Shop</h1>
+  <p class="sub">Five screens each. The first of each is <b>Today</b>; the other four are mockups. Today's Village and Shop are the app's own screenshot (the Shop is a section of that same page); today's Blacksmith is redrawn from its current code.</p>
+  <p class="legend">
+    <b>Tick one per screen.</b> Ticking another moves the tick; each screen has its own note line for a mix.<br>
+    <b>Every button</b> on the mockups is the brass plate the main menu and Settings wear. <b>The portraits</b> are stand-ins for spacing, from <code>sorted-entity-library-base</code>: Harbalist as the innkeeper, Evil Merchant as the shopkeeper, Stonehead as the smith, Hermit as the host.<br>
+    <b>The spoken lines</b> are placeholders for your words. <b>The prices</b> are the engine's.
+  </p>
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="A different NPC, a mix of two screens, anything else…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'village-2026-11-09';
+
+const SLOTS = [
+  { slot: 'V-01', label: 'The Village', role: 'The hub you arrive at. Each option opens its own screen (T, 2026-11-06); today it is all one long page.' },
+  { slot: 'B-01', label: 'The Blacksmith', role: 'Hone or temper a die, upgrade a card, swap gear. A refused offer stays visible and says why (B shows one).' },
+  { slot: 'S-01', label: 'The Shop', role: 'Three cards and card removal. Weapons and armor have their own counter today: C draws them as a tab; the note line can say where they belong.' },
+];
+
+/* One candidate per id; the kit reads the ticks by id. */
+const CARDS = [
+  { id: 'V-01a', look: 'Today', ref: 'One scrolling page: rest, shop, gear and Anvil together.' },
+  { id: 'V-01b', look: 'Keepers on the buttons', ref: 'Each option is a brass button with its keeper standing over it. The street shows above.' },
+  { id: 'V-01c', look: 'The street', ref: 'Three keepers side by side, a button under each.' },
+  { id: 'V-01d', look: 'The host', ref: 'One greeter with a line, then a plain stack of verbs.' },
+  { id: 'V-01e', look: 'Portrait tiles', ref: 'Framed tiles with the price under each name.' },
+  { id: 'B-01a', look: 'Today', ref: 'Text rows in plain boxes, no smith. Redrawn from the current code.' },
+  { id: 'B-01b', look: 'Smith and work list', ref: 'The smith speaks up top; every die has its HONE and TEMPER in view.' },
+  { id: 'B-01c', look: 'One die on the anvil', ref: 'Pick a die by tab; its six faces are laid out, the two verbs below.' },
+  { id: 'B-01d', look: 'Services, like the village', ref: 'The smith and a stack of services. Pick a service, then a die on the next screen.' },
+  { id: 'B-01e', look: 'The smith fills the screen', ref: 'A full-height smith with a compact work list in the dark below.' },
+  { id: 'S-01a', look: 'Today', ref: 'Not its own screen today: the card shop is the lower half of the village page.' },
+  { id: 'S-01b', look: 'The counter', ref: 'The merchant behind a counter line, three cards laid on it.' },
+  { id: 'S-01c', look: 'Tabs', ref: 'A small merchant, then Cards, Gear and Remove as tabs. Biggest cards in a grid.' },
+  { id: 'S-01d', look: 'One card at a time', ref: 'One large card to read, the others peeking; swipe, then buy.' },
+  { id: 'S-01e', look: 'The merchant\'s list', ref: 'A list of wares with small cards, the merchant standing beside it.' },
+];
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cardHtml = (c) => `
+  <label class="card" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${esc(c.look)}">
+    <div class="top"><div class="name">${c.id.slice(4).toUpperCase()}. ${esc(c.look)}</div><div class="ref">${esc(c.ref)}</div></div>
+    <img src="village/${c.id}.webp" alt="${esc(c.look)}" loading="lazy" width="780" height="1688">
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${esc(s.label)} (optional)">
+  </section>`;
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered`;
+};
+/* One tick per screen: a new tick clears the others in its slot. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  refresh();
+});
+refresh();
+
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: village, blacksmith and shop (${BALLOT_ID})`,
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      const name = pick ? CARDS.find((c) => c.id === pick).look : null;
+      return `${s.slot} ${s.label}: ${pick ? `KEEP ${pick} (${name})` : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
