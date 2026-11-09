@@ -61,7 +61,8 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
         ['bw-w2', 'Quay-Crab', 'quay-crab'], ['bw-w3', 'Coralback', 'coralback'],
         ['bw-h1', 'Net-Mender', 'net-mender'], ['bw-h2', 'Quay-Crab', 'quay-crab'],
         ['bw-h7', 'Brine-Widow', 'brine-widow'], ['bw-t1', 'Coralback', 'coralback'],
-        ['bw-t2', 'Saltwick Swarm', 'saltwick-swarm'], ['bw-t3', 'Brine-Widow', 'brine-widow'],
+        ['bw-t2', 'Bilge-Stalker', 'bilge-stalker'], ['bw-t3', 'Brine-Widow', 'brine-widow'],
+        ['bw-t6', 'Coralback', 'coralback'],
         ['bw-l1', 'Bilge-Stalker', 'bilge-stalker'], ['bw-d1', 'Net-Mender', 'net-mender'],
     ])('%s: %s', (node, name, art) => {
         const vm = buildCombatViewModel(fightAt(node));
@@ -73,11 +74,16 @@ describe('each fields, quays, pier and town node stages its own foe and portrait
 });
 
 describe('the sea cave elite stages its own foe and portrait, with both DANGERs unnamed', () => {
-    it('bw-c1: The Tithe-Collector', () => {
-        const vm = buildCombatViewModel(fightAt('bw-c1', 'fixture-en1h-bw-c1'));
-        expect(vm.enemy.name).toBe('The Tithe-Collector');
-        expect(vm.enemy.artKey).toBe('tithe-collector');
-        expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
+    it('bw-c1 draws the Cave Choir, the Tithe-Collector or Saltwick Swarm by seed, each with both DANGERs unnamed', () => {
+        const seen = new Map<string, string>();
+        for (let i = 0; i < 40 && seen.size < 3; i++) {
+            const vm = buildCombatViewModel(fightAt('bw-c1', `fixture-en1h-bw-c1-${i}`));
+            seen.set(vm.enemy.name, vm.enemy.artKey);
+            expect(vm.enemy.dangers).toEqual([{ phase: 2, name: null }, { phase: 3, name: null }]);
+        }
+        expect([...seen.entries()].sort()).toEqual([
+            ['Saltwick Swarm', 'saltwick-swarm'], ['The Cave Choir', 'cave-choir'], ['The Tithe-Collector', 'tithe-collector'],
+        ]);
     });
 });
 
@@ -107,7 +113,7 @@ describe('the hoard and the LEDGER stand on the foe\'s side as counters', () => 
 
 describe('a WARD-only move telegraphs DEFEND, with no number', () => {
     it.each([
-        ['bw-w2', 'Lock the Brake'], ['bw-w3', 'Knot Up'], ['bw-h2', 'Lock the Brake'],
+        ['bw-w2', 'Shell Up'], ['bw-w3', 'Crown Down'], ['bw-h2', 'Shell Up'],
     ])('%s: %s', (node, move) => {
         const intent = buildCombatViewModel(at(fightAt(node), move)).enemy.intent;
         expect([intent.type, intent.label, intent.moveName]).toEqual(['defend', 'DEFEND', move]);
@@ -204,7 +210,7 @@ describe('the foes own counters stand on the board, never on the telegraph', () 
 
     it('a Green Jelly move that reads your last turn telegraphs a kind, not a number', () => {
         for (const move of ['Engulf', 'Show You Your Face', 'Reflection']) {
-            const s = { ...at(fightAt('bw-t2'), move), directDamageDealt: 7 };
+            const s = { ...at(asFoe(fightAt('bw-w2'), 'green-jelly'), move), directDamageDealt: 7 };
             const intent = buildCombatViewModel(s).enemy.intent;
             expect(`${intent.label} ${intent.description} ${intent.moveName}`).not.toMatch(/\d/);
             expect(intent.damage).toBe(0);

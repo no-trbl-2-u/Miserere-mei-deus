@@ -1,6 +1,5 @@
 /**
- * Hermetic E2E: five recast foes play moves of their own (spec 162, chunk
- * 162.4): the Wreckmaster, Saltwick Swarm, Quay-Crab, Coralback and
+ * Hermetic E2E: five recast foes play moves of their own (MV1d): the Wreckmaster, Saltwick Swarm, Quay-Crab, Coralback and
  * Bilge-Stalker. Each foe's moves and Danger lines, no move shared between
  * them, the other animated foes untouched, and the new rider work:
  * Take the Colours, Coral Grows Over, The Whole Bloom (no minimum) and

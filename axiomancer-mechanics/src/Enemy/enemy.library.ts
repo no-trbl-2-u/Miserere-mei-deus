@@ -1202,7 +1202,7 @@ export const SaintBeneath = createEnemy({
     tags: ['early-game', 'boss', 'enemy'],
 });
 
-// ─── MV1d: five recast foes play moves of their own (spec 162) ───────────────
+// ─── Five recast foes play moves of their own (MV1d) ──────────────────────────
 //
 // Each foe below used to copy a benched foe's moves. These are theirs alone and
 // share no name with any other foe's. Numbers are T's picks; no retune.
