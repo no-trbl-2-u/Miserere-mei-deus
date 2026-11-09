@@ -39,7 +39,7 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 import { withSeededRun } from './run-env';
 import { startTuning, tunedPolicy, type RunTuning } from './run-options';
-import { emptyMercyLedger, FightStuckError, playFight, type MercyLedger, type RunFightResult } from './run-fight';
+import { emptyBossLedger, emptyMercyLedger, FightStuckError, playFight, type BossLedger, type MercyLedger, type RunFightResult } from './run-fight';
 import {
     ScreenStuckError,
     resolveCache,
@@ -68,6 +68,8 @@ export interface RunResult {
     readonly endNodeId: string;
     /** The deepest node stood on (the map's depth from its start). */
     readonly furthestNodeId: string;
+    /** The share (0 to 100) of the boss's VITAE gone when the run's last fight with it ended; null if it never met it. */
+    readonly bossDamagePct: number | null;
     readonly level: number;
     readonly vitae: number;
     readonly maxVitae: number;
@@ -114,6 +116,8 @@ interface Tally {
     fled: Map<string, number>;
     /** What the won fights paid and what the mercy checks did. */
     mercy: MercyLedger;
+    /** How the last fight with the boss went. */
+    boss: BossLedger;
     /** The last state seen alive, for a run-over's summary. */
     alive: AppStoreState;
 }
@@ -204,7 +208,7 @@ function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Ta
     if (s.labyrinthUi?.session) throw stuck('the run entered the Aporia, which the driver does not walk', s, n);
     const pending = s.event?.pending ?? null;
     if ((pending && pending.event.kind === 'encounter') || s.currentEncounter) {
-        const result = playFight(store, actions, policy, tally.fled, tally.mercy);
+        const result = playFight(store, actions, policy, tally.fled, tally.mercy, tally.boss);
         if (result === null) throw stuck('a fight was offered but would not stage', s, n);
         tally.fights[result]++;
         return;
@@ -243,6 +247,7 @@ function summarize(
         outcome,
         endNodeId: tally.alive.world.currentMap.currentNode,
         furthestNodeId: tally.furthest.nodeId,
+        bossDamagePct: tally.boss.damagePct,
         level: game.player.level,
         vitae: outcome === 'run-over' ? 0 : Math.max(0, game.player.health),
         maxVitae: game.player.maxHealth,
@@ -287,6 +292,7 @@ export function playRun(options: PlayRunOptions): RunResult {
                 hazard: { policy: null },
                 fled: new Map(),
                 mercy: emptyMercyLedger(),
+                boss: emptyBossLedger(),
                 alive: store.getState(),
             };
             for (let n = 0; n < maxSteps; n++) {

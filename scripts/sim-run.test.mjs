@@ -12,7 +12,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally, tuningOf } from './sim-run.mjs'
+import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, batchTable, formatBatchTable, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally, tuningOf } from './sim-run.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURE = JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', 'sim-runs.json'), 'utf-8'))
@@ -46,18 +46,21 @@ test('formatLanes lists the largest lane first, ties by id', () => {
 test('formatRunLine prints every field the brief names', () => {
   assert.equal(
     formatRunLine(FIXTURE.runs[0]),
-    'wanderer seed=1 | chapter-clear | furthest=bw-d5 | level=16 | vitae=283/288 | fights won=19 lost=0 spared=0 | deck blood-price=13 grey=8 merciful=8 defender=2',
+    'wanderer seed=1 | chapter-clear | furthest=bw-d5 | level=16 | vitae=283/288 | fights won=19 lost=0 spared=0 | boss=100% | end=bw-b2 | deck blood-price=13 grey=8 merciful=8 defender=2',
   )
-  assert.match(formatRunLine(FIXTURE.runs[1]), /^wanderer seed=2 \| run-over \| furthest=bw-k2 \| level=9 \| vitae=0\/226 \| fights won=11 lost=2 spared=1 \|/)
+  assert.match(formatRunLine(FIXTURE.runs[1]), /^wanderer seed=2 \| run-over \| furthest=bw-k2 \| level=9 \| vitae=0\/226 \| fights won=11 lost=2 spared=1 \| boss=n\/a \| end=bw-k2 \|/)
   assert.match(formatRunLine(FIXTURE.runs[2]), /^wanderer seed=3 STUCK at bw-l4: run stuck at breakwater\/bw-l4/)
 })
 
-test('main prints one line per run and exits 1 when a run stuck', async () => {
+test('main prints one line per run, then the batch table, and exits 1 when a run stuck', async () => {
   const stdout = sink()
   const asked = []
   const code = await main(['--runs', '3'], { stdout, stderr: sink(), play: (opts) => { asked.push(opts); return FIXTURE } })
   assert.equal(code, 1)
-  assert.equal(stdout.text.trim().split('\n').length, 3)
+  const lines = stdout.text.trim().split('\n')
+  assert.equal(lines.length, 3 + 2)
+  assert.match(lines[3], /^policy \| clears/)
+  assert.match(lines[4], /^wanderer \| 1\/3 \|/)
   assert.equal(asked[0].runs, 3)
 })
 
@@ -65,7 +68,32 @@ test('main exits 0 when every run ended, and --json prints the runs', async () =
   const clean = { policy: 'wanderer', runs: FIXTURE.runs.slice(0, 2) }
   const stdout = sink()
   assert.equal(await main(['--json'], { stdout, stderr: sink(), play: () => clean }), 0)
-  assert.equal(JSON.parse(stdout.text).length, 2)
+  const json = JSON.parse(stdout.text)
+  assert.equal(json.runs.length, 2)
+  assert.equal(json.table[0].avgBossDamagePct, 100)
+})
+
+test('batchTable: a row per policy; a run that never met the boss is left out of the boss average', () => {
+  const run = (policy, outcome, endNodeId, bossDamagePct, level, deckByLane) => ({ policy, outcome, endNodeId, bossDamagePct, level, deckByLane })
+  const rows = batchTable([
+    run('merciful', 'chapter-clear', 'bw-b2', 100, 16, { grey: 8, merciful: 4 }),
+    run('merciful', 'run-over', 'bw-k2', 40, 10, { grey: 8, merciful: 6 }),
+    run('merciful', 'run-over', 'bw-k2', null, 8, { grey: 8, merciful: 2 }),
+    run('merciful', 'run-over', 'bw-a1', null, 4, { grey: 8 }),
+    { policy: 'merciful', seed: 9, stuck: true, node: 'bw-a1', error: 'x' },
+    run('defender', 'run-over', 'bw-k2', null, 6, { defender: 4 }),
+  ])
+  assert.equal(rows.length, 2)
+  const [merciful, defender] = rows
+  assert.equal(merciful.runs, 5)
+  assert.equal(merciful.clears, 1)
+  assert.equal(merciful.avgBossDamagePct, 70)
+  assert.equal(merciful.avgLevel, 9.5)
+  assert.deepEqual(merciful.avgDeckByLane, { grey: 8, merciful: 3 })
+  // Failed runs by where they ended, most first, ties by node id; the stuck run counts where it stuck.
+  assert.deepEqual(merciful.failedEnds, [{ nodeId: 'bw-a1', count: 2 }, { nodeId: 'bw-k2', count: 2 }])
+  assert.equal(defender.avgBossDamagePct, null)
+  assert.match(formatBatchTable(rows), /\nmerciful \| 1\/5 \| 9\.5 \| 70\.0% \| grey=8 merciful=3 \| bw-a1=2 bw-k2=2\ndefender \| 0\/1 \| 6\.0 \| n\/a \|/)
 })
 
 test('main reports a bad flag with usage (exit 2) and a driver crash (exit 1)', async () => {
