@@ -12,7 +12,7 @@
  * - take a cache's card, and the first card a hazard pays;
  * - wear every item they can, and raise the character's highest stat;
  * - buy nothing and remove nothing at a village (a bed when hurt);
- * - fight with the player witness (`PLAYER_WITNESS`: it kills every foe, so a
+ * - fight with the player witness plus the guard-when-hit rule (`PERSONA_FIGHT`: it kills every foe, so a
  *   persona earns XP and drafts).
  *
  * What differs is how hurt each lets itself get before it rests, which
@@ -21,7 +21,7 @@
  * contexts, never a card or a node id (the no-id guard covers this file).
  */
 
-import { PLAYER_WITNESS } from './player-witness';
+import { PERSONA_FIGHT } from './run-policy.fight';
 import { nearestRoad } from './run-policy.wanderer';
 import type {
     RunFightContext,
@@ -98,7 +98,7 @@ function persona(spec: PersonaSpec): RunPolicy {
         }),
         hazardPolicy: spec.hazardPolicy,
         pickHazardCard: (ctx) => ctx.offers[0] ?? null,
-        fightPolicy: () => PLAYER_WITNESS,
+        fightPolicy: () => PERSONA_FIGHT,
         flee: spec.flee,
         raiseStat: (ctx): RunStat => {
             const { heart, body, mind } = ctx.baseStats;
