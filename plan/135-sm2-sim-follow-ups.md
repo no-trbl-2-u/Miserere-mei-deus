@@ -464,10 +464,6 @@ no exit code depends on it.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A19** One shared helper holds the guard-when-hit rule; the Defender, Blood Price, Merciful and Elementalist
-  rankings and the four personas use it, seam tests over a hitting and a non-hitting foe cover each, and a card ranked
-  `-Infinity` stays `-Infinity`. The Wanderer still fights with `PLAYER_WITNESS`, and `PLAYER_WITNESS` and
-  `combat.sim-policies.ts` are unchanged.
 - **A20** `RunPolicy` has a `visitAnvil` seam, the driver carries its answer out through the blacksmith store
   actions before the village's other steps, an illegal answer throws as other seams do, and the no-id guard covers the
   helper. A driver test shows a lane bot and a persona with shillings at an anvil spend them there and own the result;
@@ -489,11 +485,10 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 9 open · 13 closed · next A23
+Measure: 8 open · 14 closed · next A23
 
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.11** The lane bots guard when hit · S · closes A19 · needs — · alias: SM2h
 - [ ] **135.8** The bots use the anvil · M · closes A20 · needs — · alias: SM2i
-- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.11, 135.8 · alias: SM2j
+- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.8 · alias: SM2j
 - [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k
