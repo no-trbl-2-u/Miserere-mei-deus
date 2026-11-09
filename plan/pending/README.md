@@ -106,6 +106,21 @@ the empty copy (locked in Design)
   (`footgunBytes` in `scripts/plan/config.mjs`). Nothing warns
   while you write it: settle throws on a longer one, after the
   pull request has merged. Say the trap once and its rule.
+- `absorb:` (Miserere, spec 164) goes on a spec's **last** close
+  and nowhere else: where the spec's lasting rules went, as
+  `D?<slug>` decisions in the same file (each one defined under
+  its `## Decisions`), a file named (the test or lint that
+  enforces the rule, an `identity/` page), or `none`. With it,
+  settle retires the spec the close empties, once the run's end
+  state leaves it empty: the spec file is deleted, its roadmap
+  row and lane lines go, any section whose heading says
+  `Follow-ups` is copied to `plan/CANDIDATES.md` as an `[owner]`
+  row under `## Pending`, and `ARCHIVE.md` gets
+  `- <date> · NN · spec complete: <the row's title> · <absorb> ·
+  deleted in (this commit)` after the close's own line. Without
+  it the close is held, as before, and the hold names the key
+  (`scripts/plan/retire-local.mjs`). Example:
+  `absorb: D?map-rule, pinned by maps.test.mjs`.
 - `footguns:` lists sightings: settle bumps `seen` and `last`.
   One that reaches 2× while open gets an `automate <slug>`
   chunk in the ladder spec with an Asap lane entry, and so does
