@@ -38,6 +38,8 @@ needs are done):
 
 
 
+- **164.1** · SR1a: settle retires an emptied spec whose last close says where its rules went (T, `/plot asap`, 2026-11-09)
+
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
 `- **<NN.k>** · <reason> · since: <date> · until: <date or
@@ -84,6 +86,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 164 | A finished spec retires itself at settle | [164-sr1-spec-retires-itself.md](164-sr1-spec-retires-itself.md) | planned (**Asap**: 164.1) | 1 left |
 | 165 | The Rules Glossary lists every keyword | [165-rg1-rules-glossary-keywords.md](165-rg1-rules-glossary-keywords.md) | planned | 1 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 6 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
