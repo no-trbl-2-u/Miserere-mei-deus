@@ -611,11 +611,8 @@ export interface CombatDieGearSlotVM {
     specialFaces: number;
     manaFaces: number;
     missFaces: number;
-    specialConviction: number;
     /** Terse face table, e.g. '1 special · 2 mana · 3 miss'. */
     faceTable: string;
-    /** Payload text for the BOON face, e.g. '+2 ◆'. */
-    payload: string;
     /** True when this slot's gear differs from the stock default (upgraded). */
     upgraded: boolean;
     a11y: string;
@@ -2535,16 +2532,14 @@ function gearSlotVM(state: CombatEncounterState, color: 'heart' | 'body' | 'mind
     const missFaces = Math.max(0, 6 - gear.specialFaces - gear.manaFaces);
     const stock = DEFAULT_DIE_GEAR[color];
     const upgraded = gear.specialFaces !== stock.specialFaces
-        || gear.manaFaces !== stock.manaFaces
-        || gear.specialConviction !== stock.specialConviction;
+        || gear.manaFaces !== stock.manaFaces;
     const faceTable = `${gear.specialFaces} boon · ${gear.manaFaces} mana · ${missFaces} miss`;
-    const payload = `+${gear.specialConviction} ◆`;
     const label = STANCE_LABELS[color] ?? color.toUpperCase();
     return {
         color, label, glyph: DIE_GLYPHS[color] ?? '?', colorHex: STANCE_COLORS[color] ?? HUE.fallbackGrey,
         specialFaces: gear.specialFaces, manaFaces: gear.manaFaces, missFaces,
-        specialConviction: gear.specialConviction, faceTable, payload, upgraded,
-        a11y: `${label} die gear — ${faceTable}. Boon face grants ${payload}.`
+        faceTable, upgraded,
+        a11y: `${label} die gear — ${faceTable}.`
             + (upgraded ? ' Upgraded from stock.' : ' Stock.'),
     };
 }

@@ -19,7 +19,7 @@ import { applyPayload, resolveVillage } from '../handlers';
 import { resolveMapEvent, getNodePrimaryEventKind } from '../resolve-map-event';
 import { ACT1_ANVIL_NODES, BREAKWATER_ANVIL_NODES, breakwaterVillagePool } from '../content';
 import { MAP_REGISTRY, createMapState } from '../../map.registry';
-import { BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT } from '../../Blacksmith/blacksmith.content';
+import { BLACKSMITH_WITNESS_VARIANTS } from '../../Blacksmith/blacksmith.content';
 import type { VillagePayload } from '../types';
 import type { MapDefinition } from '../../types';
 import type { GameState } from '../../../Game/types';
@@ -27,10 +27,17 @@ import {
     FRESH_VILLAGE_VISIT, VILLAGE_TUNING, restAtVillage, villageCardShopFor, villageRestQuote,
 } from '../../Village';
 
+/** A local fixture: the shipped variant list is empty (EQ4a), the counter still carries what it is given. */
+const FIXTURE_VARIANT = {
+    id: 'fixture-heart-wide-mana',
+    name: 'Fixture Fitting',
+    gear: { dieColor: 'heart', specialFaces: 1, manaFaces: 3 },
+} as const;
+
 const PAYLOAD: VillagePayload = {
     kind: 'village',
     villageName: 'Smithy',
-    anvil: { variants: [HEART_RICH_PAYLOAD_VARIANT] },
+    anvil: { variants: [FIXTURE_VARIANT] },
 };
 
 describe("MapEvents 'village' kind, the Anvil counter", () => {
@@ -41,7 +48,7 @@ describe("MapEvents 'village' kind, the Anvil counter", () => {
         expect(result.event).toMatchObject({
             kind: 'village',
             villageName: 'Smithy',
-            anvil: { variants: [HEART_RICH_PAYLOAD_VARIANT] },
+            anvil: { variants: [FIXTURE_VARIANT] },
         });
     });
 
@@ -66,7 +73,7 @@ describe("MapEvents 'village' kind, the Anvil counter", () => {
                 variants: [{
                     id: 'bad-variant',
                     name: 'Overforged',
-                    gear: { dieColor: 'heart', specialFaces: 3, manaFaces: 2, specialConviction: 2 },
+                    gear: { dieColor: 'heart', specialFaces: 3, manaFaces: 2 },
                 }],
             },
         };
@@ -125,14 +132,14 @@ describe('the regional Anvils — one per later Act 1 map, two on the Breakwater
     });
 
     it.each(ANVIL_VILLAGES)(
-        '%s: %s resolves to a village whose Anvil offers the witness variants',
+        '%s: %s resolves to a village whose Anvil offers no swap (the witness list is empty)',
         (mapName, nodeId) => {
             const def = act1Map(mapName);
             const result = resolveMapEvent(standingOn(def, nodeId), () => 0.5);
             expect(result.event.kind).toBe('village');
             if (result.event.kind !== 'village') return;
             expect(result.event.anvil?.variants).toEqual(BLACKSMITH_WITNESS_VARIANTS);
-            expect(result.event.anvil?.variants?.map(v => v.id)).toContain(HEART_RICH_PAYLOAD_VARIANT.id);
+            expect(result.event.anvil?.variants).toHaveLength(0);
         },
     );
 

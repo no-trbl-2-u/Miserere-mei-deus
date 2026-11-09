@@ -170,7 +170,7 @@ describe('A1: the graph is T\'s node list', () => {
             if (p.kind !== 'village') continue;
             expect(p.rest).toBe(true);
             expect(p.cardShop).toBe(true);
-            expect(p.anvil?.variants?.length).toBeGreaterThan(0);
+            expect(p.anvil?.variants).toEqual([]);
         }
     });
 

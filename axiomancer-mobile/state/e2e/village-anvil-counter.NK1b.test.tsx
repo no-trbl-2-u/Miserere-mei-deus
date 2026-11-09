@@ -11,7 +11,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 
-import { ANVIL_VERB_PRICING, HEART_RICH_PAYLOAD_VARIANT } from '@mechanics';
+import { ANVIL_VERB_PRICING } from '@mechanics';
 import VillageScreen from '@/app/village/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { selectHasActiveBlacksmith } from '@/state/presenters/blacksmith.engine';
@@ -28,6 +28,13 @@ jest.mock('@/lib/platform/router', () => ({
     }),
 }));
 
+/** A local fixture: the shipped variant list is empty (EQ4a); the counter carries what it is given. */
+const FIXTURE_VARIANT = {
+    id: 'fixture-heart-wide-mana',
+    name: 'Fixture Fitting',
+    gear: { dieColor: 'heart', specialFaces: 1, manaFaces: 3 },
+} as const;
+
 function makeStore(anvil: boolean): AppStore {
     const store = createAppStore({ adapter: createMemoryAdapter() });
     store.setState({
@@ -39,7 +46,7 @@ function makeStore(anvil: boolean): AppStore {
                     kind: 'village',
                     villageName: 'The Fishing Hamlet',
                     merchants: [],
-                    ...(anvil ? { anvil: { variants: [HEART_RICH_PAYLOAD_VARIANT] } } : {}),
+                    ...(anvil ? { anvil: { variants: [FIXTURE_VARIANT] } } : {}),
                 } as never,
             },
         },
@@ -58,7 +65,7 @@ function renderVillage(store: AppStore) {
 describe('the village Anvil counter (NK1b A7)', () => {
     it('the presenter names the cheapest work and carries the variants', () => {
         const vm = selectVillageVM(makeStore(true).getState());
-        expect(vm.anvil).toEqual({ variants: [HEART_RICH_PAYLOAD_VARIANT], cheapestWork: ANVIL_VERB_PRICING.hone });
+        expect(vm.anvil).toEqual({ variants: [FIXTURE_VARIANT], cheapestWork: ANVIL_VERB_PRICING.hone });
     });
 
     it('a village without a smith has no counter', () => {
@@ -77,7 +84,7 @@ describe('the village Anvil counter (NK1b A7)', () => {
         expect(selectHasActiveBlacksmith(store.getState())).toBe(false);
         fireEvent.press(screen.getByTestId('village-anvil'));
         expect(selectHasActiveBlacksmith(store.getState())).toBe(true);
-        expect(store.getState().blacksmith.session?.variants.map((v) => v.id)).toContain(HEART_RICH_PAYLOAD_VARIANT.id);
+        expect(store.getState().blacksmith.session?.variants.map((v) => v.id)).toContain(FIXTURE_VARIANT.id);
         // The village event stays pending underneath, so leaving the anvil lands on the hub.
         expect(store.getState().event.pending?.event.kind).toBe('village');
     });

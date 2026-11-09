@@ -97,7 +97,8 @@ describe('chapter1Content', () => {
         expect(item(BREAKWATER_KEEP_KEY.id)).toMatchObject({ sources: ['quest'], nodeIds: ['bw-l5'] });
         for (const piece of Object.values(BREAKWATER_CHAPTER_PIECES)) expect(item(piece)?.sources).toContain('quest');
         expect(item('relic-crimson-circlet')?.sources).toEqual(['elite-drop']);
-        expect(c.items.some((i) => i.sources.includes('village'))).toBe(true);
+        // The village Anvil sells no variant any more (EQ4a), so no item has a village source.
+        expect(c.items.some((i) => i.sources.includes('village'))).toBe(false);
     });
 
     it('prints a readable listing with every region', () => {
