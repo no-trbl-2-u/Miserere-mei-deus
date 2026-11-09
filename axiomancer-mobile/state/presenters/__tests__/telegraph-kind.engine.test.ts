@@ -15,6 +15,7 @@ import {
 } from '../combat-encounter.engine';
 import { REAL_BOSS_FIGHT_FIXTURE, REAL_DECK_BOSS_FIGHT_FIXTURE, realFightFixture, startRealFight } from '@/test-utils/realFight';
 
+// guard-test: 162.3 moved the Saint off its deck, so the no-phases case now reads the Death Beholder's door; the rule it guards did not change.
 const DANGER_NAME = 'Gallows Toll';
 const SEEN = new Set([DANGER_NAME]);
 

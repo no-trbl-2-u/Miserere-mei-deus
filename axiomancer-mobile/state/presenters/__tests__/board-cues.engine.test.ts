@@ -93,6 +93,7 @@ describe('the self INFERNO log line (A2)', () => {
     });
 });
 
+// guard-test: 162.3 moved the Saint off its deck, so the wall-math case now reads the Death Beholder's door; the rule it guards did not change.
 describe('the BLIZZARD cut reaches the intent (A3)', () => {
     it('forwards the engine cut, and 0 with no BLIZZARD', () => {
         // Wall math is a deck foe's readout (a `phases` foe's telegraph carries
