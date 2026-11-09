@@ -6,7 +6,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { CHARACTER_ROSTER } from '../../Character/roster';
-import { PLAYER_WITNESS } from './player-witness';
+import { PERSONA_FIGHT } from './run-policy.fight';
 import {
     CAUTIOUS_POLICY as C, EXPLORER_POLICY as E, PERSONA_POLICIES, RECKLESS_POLICY as R, RUSHER_POLICY as U,
 } from './run-policy.personas';
@@ -37,7 +37,7 @@ describe('the personas, all four', () => {
         for (const p of PERSONA_POLICIES) {
             expect(getRunPolicy(p.id)).toBe(p);
             expect(p.chooseCharacter(CHARACTER_ROSTER)).toBe(CHARACTER_ROSTER[0]!.id);
-            expect(p.fightPolicy(fight(100))).toBe(PLAYER_WITNESS);
+            expect(p.fightPolicy(fight(100))).toBe(PERSONA_FIGHT);
             expect(() => p.chooseCharacter([])).toThrow(/no character/);
         }
     });

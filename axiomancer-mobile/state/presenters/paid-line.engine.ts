@@ -28,11 +28,11 @@ export const PAID_LINE_LEADING = 1.2;
 export const PAID_CAPS_SPACING = 0.4;
 
 /** Bebas Neue advance per px of size, measured, with a little slack. */
-const CAPS_EM = 0.4;
+export const CAPS_EM = 0.4;
 /** The serif's lowercase advance per px of size, measured, with a little slack. */
-const SERIF_EM = 0.41;
+export const SERIF_EM = 0.41;
 /** A space, per px of size. */
-const SPACE_EM = 0.24;
+export const SPACE_EM = 0.24;
 /** The PAID line's size on the large face, by width: 15 on the 208 reward preview, 17 from about 264. */
 export function largePaidLineSize(width: number): number {
     return Math.min(17, Math.max(15, Math.round(width / 16)));
