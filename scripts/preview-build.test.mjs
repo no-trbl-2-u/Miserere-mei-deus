@@ -2,8 +2,8 @@
 // the `submit` input, that a submit is the iOS beta build only, that the App
 // Store Connect key reaches only the step that writes it and fails naming a
 // missing secret or a placeholder app id, that `--auto-submit` runs only
-// behind `submit`, and that the beta and production profiles never get the
-// puzzle API values, so a friend's build posts no play data.
+// behind `submit`, and that the beta profile never gets the puzzle API values
+// (a friend's build posts no play data) while production gets them like preview.
 
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -95,8 +95,8 @@ test('--auto-submit appears only in the EAS build step, only behind submit, afte
   assert.ok(indexOf(step(/ASC_API_KEY_P8: \$\{\{ secrets\.ASC_API_KEY_P8 \}\}/)) < indexOf(build))
 })
 
-test('the puzzle API values skip the beta and production profiles', () => {
+test('the puzzle API values skip the beta profile only, so production bakes them like preview', () => {
   const puzzle = step(/EXPO_PUBLIC_PUZZLE_API_URL: \$\{\{ secrets\.EXPO_PUBLIC_PUZZLE_API_URL \}\}/)
-  assert.equal(condition(puzzle), "env.PREVIEW_PROFILE != 'production' && env.PREVIEW_PROFILE != 'beta'")
+  assert.equal(condition(puzzle), "env.PREVIEW_PROFILE != 'beta'")
   assert.ok(indexOf(puzzle) < indexOf(step(/npx eas-cli@latest build /)))
 })

@@ -18,7 +18,7 @@ on:
           - ios
           - all
       profile:
-        description: 'EAS build profile'
+        description: 'EAS build profile (preview is the owner dev-tools APK; production is the published tester APK on Android)'
         required: true
         default: 'preview'
         type: string
@@ -85,11 +85,12 @@ jobs:
       # /devpuzzle attempt when both EXPO_PUBLIC_PUZZLE_API_* values are baked
       # in. An EAS cloud build does not see this runner's env, but it archives
       # the working tree, so the values go into the profile's `env` in this
-      # checkout's eas.json (never committed). Skipped for production and for
-      # beta, the TestFlight build friends install, which posts no play data;
+      # checkout's eas.json (never committed). Skipped for beta, the TestFlight
+      # build friends install, which posts no play data; production is the
+      # tester APK and gets the same values as preview;
       # when either secret is unset the build simply never posts.
       - name: Pass the puzzle API values to the build
-        if: env.PREVIEW_PROFILE != 'production' && env.PREVIEW_PROFILE != 'beta'
+        if: env.PREVIEW_PROFILE != 'beta'
         working-directory: axiomancer-mobile
         env:
           EXPO_PUBLIC_PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
