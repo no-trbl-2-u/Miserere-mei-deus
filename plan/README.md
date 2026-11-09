@@ -28,7 +28,6 @@ needs are done):
 - **135.3** · SM2c: the four personas (T, `/plot asap`, 2026-11-01)
 - **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
-- **99.1** · automate footgun `card-voice-stale-rows` (seen 2×), spec 99's ladder chunk.
 - **99.2** · automate footgun `face-text-parsers` (seen 2×), spec 99's ladder chunk.
 
 
@@ -129,7 +128,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 153 | The kit mixer's layout notes: fewer words, a calmer map, no burden, and a Deck to pick | [153-ux1-ui-kit-layout-notes.md](153-ux1-ui-kit-layout-notes.md) | planned | 1 left |
 | 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 1 left |
-| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 6 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
 
 ## How the loop reads this folder
 

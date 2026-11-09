@@ -608,3 +608,4 @@
 - 2026-11-08 · 159.6 (alias: TU1f) · LOAD GAME takes taps; foe, relic and Self names show whole · 5eeea52e..6f615a5b (#1474)
 - 2026-11-08 · 161.1 (alias: GO1a) · a second death shows Game Over, not the opening scene; NEW CHARACTER then CONFIRM opens the run · 5f5c842d..5f5c842d (#1473)
 - 2026-11-09 · 99.9 · A stakes card test fails on an undrawn VM field · 83cd0629..b9262f7a (#1505)
+- 2026-11-09 · 99.1 · A stale card-rules row now fails with the seed command · 46c09873..46c09873 (#1512)
