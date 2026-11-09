@@ -63,28 +63,37 @@ Round 2 tested three kinds of fear but drifted into modern horror. T asked for
 the target directly: "Imagine if Cormac McCarthy wrote Elder ring". It was
 withdrawn unvoted.
 
-## Round 3: which dark, where
+## Round 3, withdrawn
 
-T, 2026-11-09, on the sample Gallows Crossroads (take **Ruin** below): "This is
-great, I love this tone! While maybe not 'bloodier' but some (maybe half the
-entries) should be darker, sometimes in a gorey/bloody way, and others just in
-a more immoral way."
+Eight places in the tone T chose (T, 2026-11-09), each offered plain, bloody
+and immoral. Withdrawn unvoted when T set the three takes for round 4.
 
-Round 3 (`narrator-voice-3.ballot.html`, ballot id
-`narrator-voice-3-2026-11-09`). **Ruin** is enormous age and indifference.
-**Blood** is the same voice, physical and gory. **Immoral** is the same voice,
-with what people do to one another for gain.
+## Round 4: our quests, our enemies
+
+T, 2026-11-09: "Stick to Cormac McCarthy writes elden Ring but based on our
+quests and enemies. Out of the three proposals each do: 1) Stick to just the
+ancient, looming fear closer to Elden Ring 2) Find the middle ground between
+the writing and prose of Blood meridian but the imagination of Elden Ring 3)
+Stick to Cormac McCarthy writes Elden Ring but with maximum immorality. Keep
+the gore purposeful though and the write around it instead of describing it
+outright"
+
+Round 4 (`narrator-voice-4.ballot.html`, ballot id
+`narrator-voice-4-2026-11-09`). The feel only: no place, character, name or
+sentence is taken from either work. Details the samples add (the priest, the
+list, the false fires) are not story until T rules them in.
 
 | Slot | a | b | c |
 |---|---|---|---|
-| N-03 Gallows Crossroads | blood | ruin | immoral |
-| N-04 Rope bridge toll | immoral | ruin | blood |
-| N-05 Opening | ruin | immoral | blood |
-| J-01 Saint Beneath | blood | immoral | ruin |
-| J-02 The last hut | immoral | blood | ruin |
-| F-01 Keep key | ruin | immoral | blood |
-| F-02 A Plain Blow | blood | ruin | immoral |
-| F-03 Death line | immoral | ruin | blood |
+| P-01 Gallows Crossroads | 3 immoral | 1 ancient | 2 middle |
+| Q-01 The capsized boat | 2 middle | 3 immoral | 1 ancient |
+| Q-02 The lighthouse | 1 ancient | 3 immoral | 2 middle |
+| Q-03 The keep key | 3 immoral | 2 middle | 1 ancient |
+| Q-04 The sea keep | 2 middle | 1 ancient | 3 immoral |
+| E-01 The Saint Beneath | 3 immoral | 2 middle | 1 ancient |
+| E-02 The Wreckmaster | 1 ancient | 3 immoral | 2 middle |
+| E-03 Quay-Crab | 2 middle | 1 ancient | 3 immoral |
+| E-04 Saltwick Swarm | 3 immoral | 1 ancient | 2 middle |
 
 ## Verdicts
 
@@ -107,8 +116,8 @@ started in.
 > the eyes and they do not look up. Caves lie in the south where many have
 > entered only to exit as a shadow of who they once were.
 
-The other eight slots went to round 3.
+Everything else is redrawn in round 4.
 
-### Round 3
+### Round 4
 
 Not voted yet.
