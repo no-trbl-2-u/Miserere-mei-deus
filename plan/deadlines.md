@@ -239,6 +239,9 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- TK1a — the Worker takes a tester token (spec 163); loop work, ahead of T's rotation, date not set.
+- TK1b — T rotates both tokens (spec 163, attended); date not set (T's to pick, once TK1a has shipped).
+- TK1c — preview builds refuse the owner token, and a release can carry its APK (spec 163); loop work after T's rotation, date not set.
 - SR1a — settle retires an emptied spec (spec 164); loop work, no dated T act waits on it.
 - RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - CK1a — closes the three checks T confirmed on 2026-11-09 and moves five here (spec 166); loop work after SR1a, no dated T act waits on it.
@@ -314,6 +317,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-09** — **the API token split plotted as spec 163 (TK1a-TK1c)** (T, attended: told the preview APK holds the all-routes token, "Plot the token split now"). **Added** TK1a, TK1b and TK1c under `## Unscheduled`; no date is T's until TK1a ships.
 - **2026-11-09** — **a finished spec retires itself, plotted as spec 164 (SR1a)** (T, attended: "Yes, /plot it"). **Added** SR1a under `## Unscheduled`.
 - **2026-11-09** — **the Rules Glossary's full keyword list plotted as spec 165 (RG1a)** (T, attended: "Yes, plot it", holding 137.9 to D183). **Added** RG1a under `## Unscheduled`.
 - **2026-11-09** — **T's checks bundled as spec 166 (CK1a-CK1f)** (T, attended: "bundle them all up into one spec"; Merciful, Defender and Elementalist confirmed on the APK). **Added** CK1a-CK1f under `## Unscheduled`; CK1a re-points the Dec 23 Item and retires the old rows.
