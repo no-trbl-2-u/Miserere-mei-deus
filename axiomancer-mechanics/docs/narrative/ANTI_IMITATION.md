@@ -17,7 +17,6 @@ Also reject:
 - pastiche disguised as homage;
 - generic biblical weather or prophetic narration;
 - faux archaism and ornamental inversion;
-- gratuitous gore or suffering used as tonal proof;
 - uniformly grave, laconic, or aphoristic character voices;
 - long polysyndetic processions, punctuation signatures, or repeated
   “and…and…and” cadence used for prestige;
@@ -85,7 +84,6 @@ influence and answers:
 - Could each speaker be identified with names removed?
 - Are coast/forest/labyrinth objects doing real work, or masking generic
   prestige-dark prose?
-- Is violence proportionate and consequential rather than decorative?
 - Did mechanical clarity survive the prose?
 
 Any “yes” to specific-author evocation blocks shipment until rewritten. Run the

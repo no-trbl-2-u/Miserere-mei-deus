@@ -11,7 +11,7 @@ entry, or screen. Score each dimension 0–3.
 | Landscape agency | mood wallpaper | generic obstacle | terrain physically routes action | local ecology/construction creates distinct options |
 | Moral event design | narrator declares verdict | false binary or hidden bias | beneficiary/cost visible | outcomes complicate the initial claim without authorial verdict |
 | Voice/register fit | wrong surface or uniform voice | inconsistent | register and speaker card followed | distinctive voice increases information and tension |
-| Restraint | exposition, melodrama, or decorative violence | several removable flourishes | mostly necessary | every image/action earns decision, place, or consequence |
+| Restraint | exposition or melodrama | several removable flourishes | mostly necessary | every image/action earns decision, place, or consequence |
 | Originality | recognizable imitation/pastiche | generic prestige-dark language | Axiomancer imagery and syntax | unmistakably setting-specific without mannerism |
 | Accessibility | flavor embedded in controls; ambiguous references | dense or specialist-dependent | short labels and separated layers | clear aloud, localizable, and readable under pressure |
 | Residue/continuity | event vanishes | cosmetic aftermath only | result named | state, route, inventory, relation, or record visibly changes |
@@ -25,7 +25,7 @@ A unit is **blocked** regardless of total if:
 - Mechanical clarity, Canon terminology, Originality, or Accessibility scores
   below 2.
 - It contains a recognizable phrase, author imitation, generic biblical
-  weather, faux archaism, gratuitous gore, or a copied sentence skeleton.
+  weather, faux archaism, or a copied sentence skeleton.
 - A dialogue scene cannot distinguish recurring speakers with names removed.
 - A consequence preview promises a rule the engine does not implement.
 
