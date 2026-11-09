@@ -351,3 +351,11 @@ T's look at the feature map (130's A10) stays unchecked: spec 166 took it as 166
 Wrote the eight last-chunk closes (115.5, 117.6, 118.4 confirmed by T on the APK on 2026-11-09; 113.9, 125.8, 126.4, 128.7 and 130.4 moved to 166.2, 166.4, 166.5, 166.3 and 166.6), each with an `absorb:` naming the tests or files that pin the spec's rules. `plan/deadlines.md`: the Dec 23 Item's Rows and the W5 line name CK1d in place of LG1h; the Unscheduled lines for the seven closed aliases (and the shipped SR1a) are gone, and CK1d's own line goes because the Item now names it.
 
 Defaults taken: no `## Decisions` entries on the eight closes, because each spec's rules already sit in a named test or file; the Held lines for the eight chunks leave with their specs (settle's retire step drops a retired spec's lane lines).
+
+The Rules Glossary now reads `allRegistryKeywords()` (42 entries at 360 wide,
+scrolling to the last), so a keyword added to the registry appears with no
+edit in `settings.engine.ts`. `RULES_GLOSSARY_KEYWORDS` is gone. The sheet
+already scrolled; `RulesGlossarySheet.tsx` is unchanged.
+
+Defaults taken: sort by upper-cased term with a plain code-unit comparison (not
+`localeCompare`), so the order is the same on every device.

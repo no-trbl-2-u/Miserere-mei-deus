@@ -677,3 +677,5 @@
 - 2026-11-09 · 126 · spec complete: The Obsidian vault: brainstorm and plot from the phone · docs/vault.md · deleted in (this commit)
 - 2026-11-09 · 128 · spec complete: Card and combat logging (the play log) · pinned by backend/test/play-log.test.ts and axiomancer-mobile/lib/__tests__/playLog.test.ts · deleted in (this commit)
 - 2026-11-09 · 130 · spec complete: The modular feature map: a note per feature, canvases you zoom into · pinned by scripts/feature-map.test.mjs · deleted in (this commit)
+- 2026-11-09 · 165.1 (alias: RG1a) · Rules Glossary lists the systems glossary and every keyword · 302faeee..302faeee (#1551)
+- 2026-11-09 · 165 · spec complete: The Rules Glossary lists every keyword · D183, pinned by axiomancer-mobile/state/presenters/__tests__/settings.engine.test.ts · deleted in (this commit)

@@ -82,7 +82,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
-| 165 | The Rules Glossary lists every keyword | [165-rg1-rules-glossary-keywords.md](165-rg1-rules-glossary-keywords.md) | planned | 1 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
 | 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 2 left |
