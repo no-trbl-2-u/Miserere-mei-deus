@@ -4,6 +4,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 
+import { allRegistryKeywords, keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
 import { DEFAULT_SETTINGS, TEXT_SCALES } from '@/state/settings';
 import {
     CARD_TEXT_OPTIONS,
@@ -12,6 +13,7 @@ import {
     TOGGLE_OPTIONS,
     FEEDBACK_MAX_CHARS,
     selectFeedbackViewModel,
+    selectRulesGlossary,
     selectSettingsViewModel,
     volumeStep,
 } from '../settings.engine';
@@ -24,6 +26,21 @@ describe('option lists', () => {
         expect(selectSettingsViewModel(DEFAULT_SETTINGS, false).cardText).toBe('words');
         expect(REDUCED_MOTION_OPTIONS.map((o) => o.value)).toEqual(['system', 'on', 'off']);
         expect(TOGGLE_OPTIONS.map((o) => o.value)).toEqual([true, false]);
+    });
+});
+
+describe('selectRulesGlossary', () => {
+    it('lists the systems glossary in order, then every registered keyword alphabetically', () => {
+        const entries = selectRulesGlossary();
+        const systems = SYSTEM_GLOSSARY.map(({ term, def }) => ({ term, def }));
+        expect(entries.slice(0, systems.length)).toEqual(systems);
+        const keywordEntries = entries.slice(systems.length);
+        const names = allRegistryKeywords().map((k) => k.toUpperCase());
+        expect(keywordEntries.map((e) => e.term)).toEqual([...names].sort());
+        expect(keywordEntries.length).toBe(allRegistryKeywords().length);
+        for (const keyword of allRegistryKeywords()) {
+            expect(keywordEntries.find((e) => e.term === keyword.toUpperCase())?.def).toBe(keywordGloss(keyword));
+        }
     });
 });
 

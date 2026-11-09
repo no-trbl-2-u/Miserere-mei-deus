@@ -21,7 +21,7 @@
  *   selectSettingsViewModel(settings, inRun)  the rows
  */
 
-import { keywordGloss, SYSTEM_GLOSSARY } from '../combat/keywords';
+import { allRegistryKeywords, keywordGloss, SYSTEM_GLOSSARY } from '../combat/keywords';
 import { CARD_TEXT_MODES, TEXT_SCALES, type CardTextMode, type PlayerSettings, type ReducedMotionPreference, type TextScale } from '../settings';
 
 export const SETTINGS_COPY = Object.freeze({
@@ -134,19 +134,18 @@ export interface RulesGlossaryEntry {
     readonly def: string;
 }
 
-/** The keywords whose gloss joins the systems glossary in the Rules Glossary. */
-const RULES_GLOSSARY_KEYWORDS: readonly string[] = Object.freeze(['Vulnerable', 'Discard']);
-
 /**
  * The Rules Glossary list: one entry per systems-glossary term in its own
- * order, then VULNERABLE and DISCARD. Every word is read from
- * `state/combat/keywords.ts`; none is retyped here. Pure.
+ * order, then one per registered keyword, upper-cased and alphabetical. Every
+ * word is read from `state/combat/keywords.ts`; none is retyped here, and a
+ * keyword added to the registry appears with no edit here. Pure.
  */
 export function selectRulesGlossary(): readonly RulesGlossaryEntry[] {
-    const keywords = RULES_GLOSSARY_KEYWORDS.flatMap((keyword) => {
+    const keywords = allRegistryKeywords().flatMap((keyword) => {
         const def = keywordGloss(keyword);
         return def === null ? [] : [{ term: keyword.toUpperCase(), def }];
     });
+    keywords.sort((a, b) => (a.term < b.term ? -1 : a.term > b.term ? 1 : 0));
     return [...SYSTEM_GLOSSARY.map(({ term, def }) => ({ term, def })), ...keywords];
 }
 

@@ -9,7 +9,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 
 import SettingsScreen from '@/app/settings/index';
 import SettingsTabScreen from '@/app/(tabs)/settings';
-import { keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
+import { allRegistryKeywords, keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { createSettingsStore } from '@/state/settings';
 import { createAppStore } from '@/state/store';
@@ -102,15 +102,16 @@ describe('SettingsBody rules glossary', () => {
         render(withAllProviders(<Screen />, { store, slots, settings }).tree);
         expect(screen.queryByTestId('rules-glossary-sheet-list')).toBeNull();
         fireEvent.press(screen.getByTestId('settings-rules-glossary'));
-        expect(screen.getAllByTestId('rules-glossary-sheet-entry')).toHaveLength(SYSTEM_GLOSSARY.length + 2);
+        expect(screen.getAllByTestId('rules-glossary-sheet-entry')).toHaveLength(
+            SYSTEM_GLOSSARY.length + allRegistryKeywords().length,
+        );
         const expected = [
             ...SYSTEM_GLOSSARY,
-            { term: 'VULNERABLE', def: keywordGloss('Vulnerable') as string },
-            { term: 'DISCARD', def: keywordGloss('Discard') as string },
+            ...allRegistryKeywords().map((k) => ({ term: k.toUpperCase(), def: keywordGloss(k) as string })),
         ];
         for (const { term, def } of expected) {
-            expect(screen.getByText(term)).toBeTruthy();
-            expect(screen.getByText(def)).toBeTruthy();
+            expect(screen.getAllByText(term).length).toBeGreaterThan(0);
+            expect(screen.getAllByText(def).length).toBeGreaterThan(0);
         }
         expect(screen.getByText('READING A LINE')).toBeTruthy();
         expect(screen.getByText('GLOBAL')).toBeTruthy();
