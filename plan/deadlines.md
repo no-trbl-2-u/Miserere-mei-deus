@@ -242,6 +242,8 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TK1a — the Worker takes a tester token (spec 163); loop work, ahead of T's rotation, date not set.
 - TK1b — T rotates both tokens (spec 163, attended); date not set (T's to pick, once TK1a has shipped).
 - TK1c — preview builds refuse the owner token, and a release can carry its APK (spec 163); loop work after T's rotation, date not set.
+- TK1e — the production APK posts what testers play (spec 167); loop work, TK1c needs it, date not set.
+- RD1a — review debt from the 163-166 pilot (spec 167); loop work, no dated T act waits on it.
 - TK1d — the production profile builds the prod APK with no DEV TOOLS (spec 163); loop work, TK1c needs it, date not set.
 - RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - CK1a — closes the three checks T confirmed on 2026-11-09 and moves five here (spec 166); loop work after SR1a, no dated T act waits on it.
@@ -310,6 +312,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-09** — **the 163-166 pilot's end gate plotted spec 167, TK1e and RD1a** (T, attended: the production APK must post what testers play before any release carries it, the production bake is android-only, the owed review findings are one cleanup chunk, D184 confirmed). **Added** TK1e and RD1a under `## Unscheduled`; TK1c now needs TK1e.
 - **2026-11-09** — **CK1a closes the three confirmed checks and retires eight specs** (T confirmed Merciful, Defender and Elementalist on the APK). **Ticked** the Nov 14 Defender Item (DF1f). **Edited** the Dec 23 Item's Rows from LG1h to CK1d. **Removed** the Unscheduled lines for MF1e, EL1d, SM1i, OV1d, BE2g, FM2d and the shipped SR1a, and CK1d's line, which the Dec 23 Item now covers.
 
 - **2026-11-09** — **the prod APK plotted into spec 163 (TK1d)** (T, attended, answering 163's calls during the 163-166 pilot: preview stays T's, `production` is repurposed as the sideloadable APK with no DEV TOOLS, rows post as `human`, releases carry the prod APK only). **Added** TK1d under `## Unscheduled`; TK1c now needs it.
