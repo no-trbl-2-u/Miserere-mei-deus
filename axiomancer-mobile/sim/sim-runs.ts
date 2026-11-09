@@ -6,14 +6,18 @@
 import type { RunPolicy } from '@mechanics';
 
 import type { PlayRunOptions, RunResult } from './run-driver';
+import { tunedPolicy, type RunTuning } from './run-options';
 import { playRunPosted, type PostedRun, type SimPostContext } from './run-post';
 import { RunStuckError } from './run-stuck';
 
 /** What `npm run sim:run` asks for. */
 export interface SimRunRequest {
+    /** One policy id, a comma list, or `lanes` (the entry expands it). */
     readonly policy: string;
     readonly runs: number;
     readonly seed: number;
+    /** The tuning flags (never with `post`: a tuning batch does not reach the nightly data). */
+    readonly tuning?: RunTuning;
     /** Present with `--post` (phase SM1g): the batch and build the rows are stamped with. */
     readonly post?: SimPostContext;
 }
@@ -38,17 +42,17 @@ export type SimRunEntry = RunResult | StuckRun;
  */
 export function playRuns(
     policy: RunPolicy,
-    request: Pick<SimRunRequest, 'runs' | 'seed'>,
+    request: Pick<SimRunRequest, 'runs' | 'seed' | 'tuning'>,
     play: (options: PlayRunOptions) => RunResult,
 ): SimRunEntry[] {
     const out: SimRunEntry[] = [];
     for (let i = 0; i < request.runs; i++) {
         const seed = request.seed + i;
         try {
-            out.push(play({ policy, seed }));
+            out.push(play({ policy, seed, ...(request.tuning ? { tuning: request.tuning } : {}) }));
         } catch (error) {
             if (!(error instanceof RunStuckError)) throw error;
-            out.push({ policy: policy.id, seed, stuck: true, node: error.node, error: error.message });
+            out.push({ policy: tunedPolicy(policy, request.tuning).id, seed, stuck: true, node: error.node, error: error.message });
         }
     }
     return out;

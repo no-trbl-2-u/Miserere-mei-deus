@@ -38,6 +38,7 @@ import { createAppStore, type AppStore, type AppStoreState } from '@/state/store
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 import { withSeededRun } from './run-env';
+import { startTuning, tunedPolicy, type RunTuning } from './run-options';
 import { emptyMercyLedger, FightStuckError, playFight, type MercyLedger, type RunFightResult } from './run-fight';
 import {
     ScreenStuckError,
@@ -92,6 +93,8 @@ export interface PlayRunOptions {
     readonly maxSteps?: number;
     /** The roster character select shows. Defaults to the live roster. */
     readonly roster?: readonly CharacterDefinition[];
+    /** Tuning flags (shillings, boss level, start relics, fight policy, no anvil, no guard); off when absent. */
+    readonly tuning?: RunTuning;
     /** A hook on the fresh store, before the first step (tests seat fixtures here). */
     readonly onStart?: (store: AppStore) => void;
     /** A hook before every step (tests and traces read the store here). */
@@ -262,7 +265,8 @@ function summarize(
  * @throws RunStuckError when a step has no legal move.
  */
 export function playRun(options: PlayRunOptions): RunResult {
-    const { policy, seed } = options;
+    const { seed } = options;
+    const policy = tunedPolicy(options.policy, options.tuning);
     const maxSteps = options.maxSteps ?? MAX_RUN_STEPS;
     return withSeededRun(seed, () => {
         const store = createAppStore({ adapter: createMemoryAdapter() });
@@ -271,35 +275,40 @@ export function playRun(options: PlayRunOptions): RunResult {
         const characterId = policy.chooseCharacter(roster);
         // Character select's CONFIRM: a new game as the chosen character.
         startNewGameAction(store, createMemorySlotStore(), 1, undefined, characterId, roster);
-        options.onStart?.(store);
-        const startMap = store.getState().world.currentMap.name;
-        const tally: Tally = {
-            fights: { won: 0, spared: 0, lost: 0, fled: 0 },
-            nodesResolved: 0,
-            visited: new Set(),
-            furthest: { nodeId: store.getState().world.currentMap.currentNode, depth: -1 },
-            hazard: { policy: null },
-            fled: new Map(),
-            mercy: emptyMercyLedger(),
-            alive: store.getState(),
-        };
-        for (let n = 0; n < maxSteps; n++) {
-            const s = store.getState();
-            if (s.runOver === true) return summarize(store, policy, seed, 'run-over', tally, n);
-            if (s.world.currentMap.name !== startMap) return summarize(store, policy, seed, 'chapter-clear', tally, n);
-            tally.alive = s;
-            standOn(tally, s, startMap);
-            options.onStep?.(store, n);
-            try {
-                step(store, actions, policy, tally, n);
-            } catch (error) {
-                if (error instanceof RunStuckError) throw error;
-                if (error instanceof FightStuckError || error instanceof ScreenStuckError) {
-                    throw stuck(error.message, store.getState(), n);
+        const undoTuning = startTuning(store, options.tuning);
+        try {
+            options.onStart?.(store);
+            const startMap = store.getState().world.currentMap.name;
+            const tally: Tally = {
+                fights: { won: 0, spared: 0, lost: 0, fled: 0 },
+                nodesResolved: 0,
+                visited: new Set(),
+                furthest: { nodeId: store.getState().world.currentMap.currentNode, depth: -1 },
+                hazard: { policy: null },
+                fled: new Map(),
+                mercy: emptyMercyLedger(),
+                alive: store.getState(),
+            };
+            for (let n = 0; n < maxSteps; n++) {
+                const s = store.getState();
+                if (s.runOver === true) return summarize(store, policy, seed, 'run-over', tally, n);
+                if (s.world.currentMap.name !== startMap) return summarize(store, policy, seed, 'chapter-clear', tally, n);
+                tally.alive = s;
+                standOn(tally, s, startMap);
+                options.onStep?.(store, n);
+                try {
+                    step(store, actions, policy, tally, n);
+                } catch (error) {
+                    if (error instanceof RunStuckError) throw error;
+                    if (error instanceof FightStuckError || error instanceof ScreenStuckError) {
+                        throw stuck(error.message, store.getState(), n);
+                    }
+                    throw error;
                 }
-                throw error;
             }
+            throw stuck(`no run end in ${maxSteps} steps`, store.getState(), maxSteps);
+        } finally {
+            undoTuning();
         }
-        throw stuck(`no run end in ${maxSteps} steps`, store.getState(), maxSteps);
     });
 }

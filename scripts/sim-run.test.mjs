@@ -12,7 +12,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally } from './sim-run.mjs'
+import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally, tuningOf } from './sim-run.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURE = JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', 'sim-runs.json'), 'utf-8'))
@@ -245,4 +245,47 @@ test('--compare plays both arms on the same seeds and prints one table', async (
   assert.equal(code, 0)
   assert.deepEqual(asked, [['spare-all', 2, 9], ['finish-all', 2, 9]])
   assert.match(out.text, /spare-all\s+finish-all/)
+})
+
+test('parseArgs reads the tuning flags, the relic repeating', () => {
+  const o = parseArgs(['--shillings', '2.5', '--boss-level=12', '--start-relic', 'a', '--start-relic=b', '--no-relic-stats', '--fight', 'defender', '--no-anvil', '--no-guard', '--policy', 'lanes'])
+  assert.equal(o.shillings, 2.5)
+  assert.equal(o.bossLevel, 12)
+  assert.deepEqual(o.startRelic, ['a', 'b'])
+  assert.equal(o.policy, 'lanes')
+  assert.deepEqual(tuningOf(o), { shillings: 2.5, bossLevel: 12, startRelics: ['a', 'b'], noRelicStats: true, fight: 'defender', noAnvil: true, noGuard: true })
+  assert.equal(tuningOf(parseArgs([])), null)
+  assert.throws(() => parseArgs(['--shillings', '0']), /positive number/)
+  assert.throws(() => parseArgs(['--boss-level', '1.5']), /positive integer/)
+})
+
+test('main hands the tuning to the driver and refuses --post with any of it before a run is played', async () => {
+  const asked = []
+  const play = (opts) => { asked.push(opts); return { policy: 'wanderer', runs: [] } }
+  assert.equal(await main(['--no-anvil', '--shillings', '2'], { stdout: sink(), stderr: sink(), play }), 0)
+  assert.equal(asked.length, 1)
+  assert.equal(asked[0].noAnvil, true)
+  for (const flag of [['--no-anvil'], ['--no-guard'], ['--shillings', '2'], ['--boss-level', '9'], ['--fight', 'defender'], ['--start-relic', 'x']]) {
+    const stderr = sink()
+    assert.equal(await main([...flag, '--post'], { stdout: sink(), stderr, play }), 2, flag.join(' '))
+    assert.match(stderr.text, /--post is refused/)
+  }
+  assert.equal(asked.length, 1)
+  const stderr = sink()
+  assert.equal(await main(['--no-relic-stats'], { stdout: sink(), stderr, play }), 2)
+  assert.match(stderr.text, /needs a --start-relic/)
+})
+
+test('playRuns carries the tuning in the request', () => {
+  let args = null
+  const spawn = (cmd, a, opts) => {
+    args = JSON.parse(opts.env.SIM_RUN_ARGS)
+    fs.writeFileSync(opts.env.SIM_RUN_OUT, JSON.stringify({ policy: 'x', runs: [] }))
+    return { status: 0, stdout: '', stderr: '' }
+  }
+  playRuns(parseArgs(['--policy', 'a,b', '--no-guard', '--boss-level', '3']), { spawn })
+  assert.deepEqual(args.tuning, { bossLevel: 3, noGuard: true })
+  assert.equal(args.policy, 'a,b')
+  playRuns(parseArgs([]), { spawn })
+  assert.equal('tuning' in args, false)
 })
