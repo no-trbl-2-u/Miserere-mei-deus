@@ -41,6 +41,8 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
+import { findScratchpadTrap, scratchpadTrapMessage } from './scratchpad-resolve.mjs'
+
 const DEFAULT_BRANCH = 'main'
 
 // --- forbidden-command rules ------------------------------------------
@@ -119,7 +121,20 @@ const RULES = [
       'no Co-Authored-By trailers, no emojis. The only sanctioned ' +
       'trailer is Cloud-Run: (cloud ticks only). Rewrite the message.',
   },
+  {
+    // footgun scratchpad-script-no-resolve: a script outside the repo resolves
+    // packages from its own folder, so a bare import dies ERR_MODULE_NOT_FOUND.
+    name: 'scratchpad-script-no-resolve',
+    test: (cmd) => {
+      trap = findScratchpadTrap(cmd)
+      return !!trap
+    },
+    get message() {
+      return trap ? scratchpadTrapMessage(trap) : 'guard: scratchpad-script-no-resolve'
+    },
+  },
 ]
+let trap = null
 
 // Backgrounding the gate is its own rule because it needs the
 // run_in_background flag, not just the command string. This is
