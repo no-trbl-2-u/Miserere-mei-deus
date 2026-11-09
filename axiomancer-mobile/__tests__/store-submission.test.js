@@ -25,9 +25,12 @@ describe('Store Submission Requirements', () => {
       expect(easConfig.build.production.ios.autoIncrement).toBe('buildNumber');
       
       // Android production config  
-      expect(easConfig.build.production.android.distribution).toBe('store');
+      // Android production is the sideloadable tester APK (spec 163, A8)
+      expect(easConfig.build.production.android.distribution).toBe('internal');
       expect(easConfig.build.production.android.autoIncrement).toBe('versionCode');
-      expect(easConfig.build.production.android.buildType).toBe('app-bundle');
+      expect(easConfig.build.production.android.buildType).toBe('apk');
+      // its play-log rows post as T's own do
+      expect(easConfig.build.production.env.EXPO_PUBLIC_PLAY_LOG_SOURCE).toBe('human');
     });
   });
 

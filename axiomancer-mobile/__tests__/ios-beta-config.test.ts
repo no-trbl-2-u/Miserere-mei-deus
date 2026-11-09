@@ -58,10 +58,11 @@ describe('EAS profiles (A2)', () => {
     expect(eas.submit.beta.ios.ascAppId.length).toBeGreaterThan(0);
   });
 
-  test('production is unchanged', () => {
+  test('production: iOS unchanged, Android the tester APK', () => {
     expect(eas.build.production).toEqual({
+      env: { EXPO_PUBLIC_PLAY_LOG_SOURCE: 'human' },
       ios: { distribution: 'store', autoIncrement: 'buildNumber' },
-      android: { distribution: 'store', autoIncrement: 'versionCode', buildType: 'app-bundle' },
+      android: { distribution: 'internal', autoIncrement: 'versionCode', buildType: 'apk' },
     });
     expect(eas.submit.production).toBeUndefined();
   });
