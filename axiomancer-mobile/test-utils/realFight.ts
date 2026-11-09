@@ -45,13 +45,22 @@ export const REAL_FIGHT_FIXTURE: StateFixture = Object.freeze<StateFixture>({
     arrive: true,
 });
 
-/** An Apprentice at the Breakwater's chapter boss (bw-k2, the Death Beholder): a boss, no WITHDRAW. */
+/** An Apprentice at the Breakwater's chapter boss (bw-k2, the Saint Beneath): a boss on HP phases, no WITHDRAW. */
 export const REAL_BOSS_FIGHT_FIXTURE: StateFixture = Object.freeze<StateFixture>({
     ...REAL_FIGHT_FIXTURE,
     id: 'real-fight-apprentice-bw-k2',
     description: 'Apprentice on the Breakwater\'s bw-k2 chapter boss (a boss); `arrive` opens its combat prelude. Mobile combat tests.',
     seed: 'fixture-real-fight-apprentice-bw-k2',
     world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k2' },
+});
+
+/** An Apprentice at the Charcoal Wood's door (cw-17, the Death Beholder), the one foe that still plays a deck. */
+export const REAL_DECK_BOSS_FIGHT_FIXTURE: StateFixture = Object.freeze<StateFixture>({
+    ...REAL_BOSS_FIGHT_FIXTURE,
+    id: 'real-fight-apprentice-cw-17',
+    description: 'Apprentice on the Charcoal Wood\'s cw-17 door (the Death Beholder); `arrive` opens its combat prelude. Mobile combat tests.',
+    seed: 'fixture-real-fight-apprentice-cw-17',
+    world: { continent: 'coastal-continent', map: 'charcoal-wood', node: 'cw-17' },
 });
 
 /** The default fixture with `player` overrides (level, stats, known cards, …). */

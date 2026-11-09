@@ -24,7 +24,7 @@ import {
 import { effectGlyph } from '@/components/combat/statusGlyphs';
 import { HUE } from '@/theme/axm';
 import { lookupEffect } from '@mechanics';
-import { REAL_BOSS_FIGHT_FIXTURE, realFightFixture, startRealFight } from '@/test-utils/realFight';
+import { REAL_DECK_BOSS_FIGHT_FIXTURE, realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 // One program card in the deck gives the fight its weather ledger.
 const WEATHER_CARD: Card = {
@@ -96,9 +96,9 @@ describe('the self INFERNO log line (A2)', () => {
 describe('the BLIZZARD cut reaches the intent (A3)', () => {
     it('forwards the engine cut, and 0 with no BLIZZARD', () => {
         // Wall math is a deck foe's readout (a `phases` foe's telegraph carries
-        // no number), so this reads the chapter boss.
+        // no number), so this reads the Death Beholder.
         const { combat } = startRealFight(
-            { ...REAL_BOSS_FIGHT_FIXTURE, player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } } },
+            { ...REAL_DECK_BOSS_FIGHT_FIXTURE, player: { level: 1, baseStats: { heart: 5, body: 5, mind: 5 } } },
             { deck: ['bc-inferno', 'grey-strike', 'grey-ward', 'grey-word', 'grey-strike', 'grey-ward'], seed: 5 },
         );
         const rolled = rollEncounterDice(combat).state;

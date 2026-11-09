@@ -13,7 +13,7 @@ import {
     buildCombatViewModel, NO_DANGERS_SEEN, revealDangers, selectCombatLogHistory, telegraphName, threatPhaseHeader,
     UNSEEN_DANGER_LINE,
 } from '../combat-encounter.engine';
-import { REAL_BOSS_FIGHT_FIXTURE, realFightFixture, startRealFight } from '@/test-utils/realFight';
+import { REAL_BOSS_FIGHT_FIXTURE, REAL_DECK_BOSS_FIGHT_FIXTURE, realFightFixture, startRealFight } from '@/test-utils/realFight';
 
 const DANGER_NAME = 'Gallows Toll';
 const SEEN = new Set([DANGER_NAME]);
@@ -114,8 +114,8 @@ describe('DANGER is named only once seen (A5)', () => {
     });
 
     it('lists no dangers for a foe without phases', () => {
-        // The chapter boss keeps its deck (the Quay-Crab at bw-w2 plays HP phases).
-        const { combat } = startRealFight({ ...REAL_BOSS_FIGHT_FIXTURE, player: { level: 1 } }, { deck: ['grey-strike'], seed: 1 });
+        // The Death Beholder keeps its deck.
+        const { combat } = startRealFight({ ...REAL_DECK_BOSS_FIGHT_FIXTURE, player: { level: 1 } }, { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat).enemy.dangers).toEqual([]);
     });
 
