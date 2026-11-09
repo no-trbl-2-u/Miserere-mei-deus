@@ -41,8 +41,8 @@ import { CombatModeProvider } from '@/state/combat-mode';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { startNewGameAction } from '@/state/menu/store-actions';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
-import { selectPacedEventRoute } from '@/state/presenters/event.engine';
-import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
+import { selectHasActivePacedEvent, selectPacedEventRoute } from '@/state/presenters/event.engine';
+import { createAppStore, EMPTY_EVENT_SLICE, type AppStore, type MobileEventSlice } from '@/state/store';
 
 beforeEach(() => {
     jest.useFakeTimers();
@@ -54,7 +54,11 @@ afterEach(() => {
 });
 
 /** A new run on the Windmill with the map and the event gate mounted, the opening scene played. */
-function mountedRun(): { store: AppStore; actions: ReturnType<typeof createAppActions> } {
+function mountedRun(): {
+    store: AppStore;
+    actions: ReturnType<typeof createAppActions>;
+    openingScene: MobileEventSlice;
+} {
     const slots = createMemorySlotStore();
     const store = createAppStore({ adapter: slots });
     startNewGameAction(store, slots, 1, undefined, 'the-chosen');
@@ -68,10 +72,11 @@ function mountedRun(): { store: AppStore; actions: ReturnType<typeof createAppAc
     );
     act(() => { jest.advanceTimersByTime(1); });
     expect(store.getState().event.pending?.event.kind).toBe('cutscene');
+    const openingScene = store.getState().event;
     // The opening scene is answered.
     act(() => { store.setState({ event: EMPTY_EVENT_SLICE } as never); });
     mockPush.mockClear();
-    return { store, actions: createAppActions(store) };
+    return { store, actions: createAppActions(store), openingScene };
 }
 
 describe('a run end plays no scene', () => {
@@ -93,12 +98,15 @@ describe('a run end plays no scene', () => {
     });
 
     it('the event gate names no route for a run-over state, even with a scene pending', () => {
-        const { store, actions } = mountedRun();
+        const { store, actions, openingScene } = mountedRun();
         die(actions);
         die(actions);
         expect(store.getState().runOver).toBe(true);
-        // Whatever put a paced event there, the route is withheld.
-        act(() => { actions.resolveCurrentMapEvent(); });
+        // Whatever put a paced event there, the route is withheld. Put the opening cutscene
+        // on the run-over state itself, so the guard is the only thing between it and a route.
+        act(() => { store.setState({ event: openingScene } as never); });
+        expect(store.getState().event.pending?.event.kind).toBe('cutscene');
+        expect(selectHasActivePacedEvent(store.getState())).toBe(true);
         expect(selectPacedEventRoute(store.getState())).toBeNull();
     });
 });

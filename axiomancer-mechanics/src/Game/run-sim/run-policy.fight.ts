@@ -7,8 +7,9 @@
  *
  * - Blood Price spends VITAE (a SACRIFICE card) when a worn signature pays it
  *   back or while it is above its VITAE threshold, and holds it otherwise.
- * - The Defender guards first against an ATTACK or DANGER intent (or any
- *   telegraphed hit).
+ * - Every lane bot (and, through {@link PERSONA_FIGHT}, every persona) guards
+ *   first against an ATTACK or DANGER intent (or any telegraphed hit): the one
+ *   shared {@link guardWhenHit} rule. Only the Wanderer, the floor, skips it.
  * - The Merciful plays its mercy lines first, casts The Open Hand, and spares.
  * - The Elementalist chains its elements (a line that puts a new element on
  *   the foe first) and refuses a PAID line whose self-burn would end it.
@@ -27,6 +28,7 @@ import type {
 } from '../../Combat/combat.encounter.types';
 import { getSignatureSkill, SIGNATURE_SKILL_LIST } from '../../Combat/combat.signature';
 import { COMBAT_SIM_POLICIES, type CombatSimPolicy } from '../../Combat/combat.sim-policies';
+import { PLAYER_WITNESS } from './player-witness';
 import { cardKeywords, cardLaneId, laneKeywords } from './run-policy.lanes';
 
 /**
@@ -87,6 +89,30 @@ export function foeMeansToHit(s: CombatEncounterState): boolean {
     if (danger || (intent !== undefined && HIT_INTENTS.has(intent))) return true;
     return threatHits(s).length > 0;
 }
+
+/**
+ * The guard-when-hit rule every fighter but the Wanderer shares: a guard card
+ * (`verbClass` defend, or a `guard`/`holdGuard` verb) scores in the first
+ * band while the foe means to hit. A ranking's `-Infinity` refusal stays a
+ * refusal.
+ */
+export function guardWhenHit(s: CombatEncounterState, card: CombatCard, score: number): number {
+    if (score === -Infinity) return score;
+    const verbs = cardVerbs(s, card.id);
+    const guards = card.verbClass === 'defend' || verbs.has('guard') || verbs.has('holdGuard');
+    return guards && foeMeansToHit(s) ? score + BAND_FIRST : score;
+}
+
+/**
+ * The player witness plus {@link guardWhenHit}: how the four personas fight.
+ * `PLAYER_WITNESS` itself is unchanged (the Wanderer still plays it).
+ */
+export const PERSONA_FIGHT: CombatSimPolicy = Object.freeze<CombatSimPolicy>({
+    ...PLAYER_WITNESS,
+    name: 'Player (greedy, finishes, guards when hit)',
+    description: 'The player witness that guards first when the foe means to hit.',
+    rankCard: (s, card, rng) => guardWhenHit(s, card, PLAYER_WITNESS.rankCard(s, card, rng)),
+});
 
 /** True when the player wears a signature that pays a SACRIFICE back. */
 export function sacrificePaysBack(s: CombatEncounterState): boolean {
@@ -170,12 +196,12 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
             return {
                 ...greedy,
                 name: 'Blood Price (lane bot)',
-                description: 'Spends VITAE when a signature pays it back or it can afford to; its own lane first.',
+                description: 'Spends VITAE when a signature pays it back or it can afford to; guards when hit; its own lane first.',
                 rankCard: (s, card) => {
                     const score = laneScore(s, card, laneId, keywords);
-                    if (!cardKeywords(card.id).includes('SACRIFICE')) return score;
+                    if (!cardKeywords(card.id).includes('SACRIFICE')) return guardWhenHit(s, card, score);
                     const afford = s.player.health >= s.player.maxHealth * BLOOD_PRICE_SPEND_FLOOR;
-                    return sacrificePaysBack(s) || afford ? score + BAND_RULE : -Infinity;
+                    return sacrificePaysBack(s) || afford ? guardWhenHit(s, card, score + BAND_RULE) : -Infinity;
                 },
                 signatureKinds: KILLER_SIGNATURES,
             };
@@ -185,10 +211,7 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
                 name: 'Defender (lane bot)',
                 description: 'Guards first against an ATTACK or DANGER intent; its own lane first otherwise.',
                 rankCard: (s, card) => {
-                    const score = laneScore(s, card, laneId, keywords);
-                    const verbs = cardVerbs(s, card.id);
-                    const guards = card.verbClass === 'defend' || verbs.has('guard') || verbs.has('holdGuard');
-                    return guards && foeMeansToHit(s) ? score + BAND_FIRST : score;
+                    return guardWhenHit(s, card, laneScore(s, card, laneId, keywords));
                 },
                 signatureKinds: KILLER_SIGNATURES,
             };
@@ -201,7 +224,7 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
                     const score = laneScore(s, card, laneId, keywords);
                     const verbs = cardVerbs(s, card.id);
                     const mercy = [...verbs].some(v => v.toLowerCase().includes('mercy'));
-                    return mercy ? score + BAND_MERCY : score;
+                    return guardWhenHit(s, card, mercy ? score + BAND_MERCY : score);
                 },
                 signatureKinds: EVERY_SIGNATURE,
                 mercyCheck: 'spare',
@@ -215,7 +238,7 @@ export function laneFightPolicy(laneId: string): CombatSimPolicy {
                     if (selfBurnWouldEnd(s, card)) return -Infinity;
                     const score = laneScore(s, card, laneId, keywords);
                     const adds = newElements(s, cardVerbs(s, card.id));
-                    return adds > 0 ? score + BAND_RULE * adds : score;
+                    return guardWhenHit(s, card, adds > 0 ? score + BAND_RULE * adds : score);
                 },
                 signatureKinds: KILLER_SIGNATURES,
             };

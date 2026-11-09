@@ -51,6 +51,7 @@ import { type CombatEvent } from '@mechanics';
 import { effectGlyph } from '@/components/combat/statusGlyphs';
 import { keywordForEffect } from '@/state/combat/keywords';
 import { IntentIcon } from './IntentIcon';
+import { RASTER_LAYER } from './rasterLayer';
 import { VitaeSacrificeCallout } from './VitaeSacrificeCallout';
 import { useJuiceIdleBreath, useJuiceNumberPop, useJuicePulse, useJuiceShake } from '@/lib/juice';
 
@@ -124,20 +125,22 @@ function EnemyHpBar({ pct, value, max }: { pct: number; value: number; max: numb
             </View>
             {/* central crest — the ONE big enemy HP number lives here */}
             <View style={styles.crest} pointerEvents="none">
-                <Svg width={62} height={70} viewBox="0 0 62 70">
-                    <Path
-                        d="M5 3 H57 V38 Q57 48 31 66 Q5 48 5 38 Z"
-                        fill={AXM.panelBg}
-                        stroke={AXM.sulfur}
-                        strokeWidth={1.6}
-                    />
-                    <Path
-                        d="M9 7 H53 V37 Q53 45 31 61 Q9 45 9 37 Z"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.18)"
-                        strokeWidth={1}
-                    />
-                </Svg>
+                <View style={styles.crestShield} {...RASTER_LAYER}>
+                    <Svg width={62} height={70} viewBox="0 0 62 70">
+                        <Path
+                            d="M5 3 H57 V38 Q57 48 31 66 Q5 48 5 38 Z"
+                            fill={AXM.panelBg}
+                            stroke={AXM.sulfur}
+                            strokeWidth={1.6}
+                        />
+                        <Path
+                            d="M9 7 H53 V37 Q53 45 31 61 Q9 45 9 37 Z"
+                            fill="none"
+                            stroke="rgba(255,255,255,0.18)"
+                            strokeWidth={1}
+                        />
+                    </Svg>
+                </View>
                 <View style={styles.crestInner}>
                     <Text style={styles.crestHp} allowFontScaling={false}>{value}</Text>
                     <Text style={styles.crestMax} allowFontScaling={false}>/{max}</Text>
@@ -687,15 +690,17 @@ export const CombatCombatantPane = React.memo(function CombatCombatantPane({
                             It stays OUTSIDE the idle wrapper: the shadow is the floor's,
                             not the creature's, so the figure breathes over a planted
                             shadow instead of dragging it up and down. */}
-                        <Svg width={240} height={40} style={styles.enemyShadow}>
-                            <Defs>
-                                <RadialGradient id="axmEnemyGroundShadow" cx="50%" cy="50%" rx="50%" ry="50%">
-                                    <Stop offset="0" stopColor={HUE.black} stopOpacity={0.55} />
-                                    <Stop offset="1" stopColor={HUE.black} stopOpacity={0} />
-                                </RadialGradient>
-                            </Defs>
-                            <Ellipse cx={120} cy={20} rx={112} ry={17} fill="url(#axmEnemyGroundShadow)" />
-                        </Svg>
+                        <View style={[styles.enemyShadow, { width: 240, height: 40 }]} pointerEvents="none" {...RASTER_LAYER}>
+                            <Svg width={240} height={40}>
+                                <Defs>
+                                    <RadialGradient id="axmEnemyGroundShadow" cx="50%" cy="50%" rx="50%" ry="50%">
+                                        <Stop offset="0" stopColor={HUE.black} stopOpacity={0.55} />
+                                        <Stop offset="1" stopColor={HUE.black} stopOpacity={0} />
+                                    </RadialGradient>
+                                </Defs>
+                                <Ellipse cx={120} cy={20} rx={112} ry={17} fill="url(#axmEnemyGroundShadow)" />
+                            </Svg>
+                        </View>
                         {/* The foe is ALIVE between turns — a slow breath swell + float
                             (lib/juice `useJuiceIdleBreath`, reduced-motion gated). Its own
                             wrapper because RN cannot merge two `transform` arrays from a
@@ -906,6 +911,7 @@ const useStyles = makeStyles((AXM) => ({
     hpFill: { height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 3 },
     hpSheen: { position: 'absolute', left: 0, right: 0, top: 0, height: 4, backgroundColor: 'rgba(255,255,255,0.28)' },
     hpGhost: { height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.22)' },
+    crestShield: { width: 62, height: 70 },
     crest: { position: 'absolute', top: -14, left: '50%', marginLeft: -31, width: 62, height: 70, alignItems: 'center' },
     crestInner: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 },
     crestHp: {

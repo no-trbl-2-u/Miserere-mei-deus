@@ -41,7 +41,7 @@ const fight = (over: Partial<RunFightContext> = {}): RunFightContext => ({
 
 describe('the archetype bots', () => {
     it('are registered by their lane ids beside the wanderer', () => {
-        expect(RUN_POLICY_IDS).toEqual(['wanderer', 'blood-price', 'defender', 'merciful', 'elementalist', 'finish-all', 'spare-all']);
+        expect(RUN_POLICY_IDS).toEqual(['wanderer', 'blood-price', 'defender', 'merciful', 'elementalist', 'finish-all', 'spare-all', 'cautious', 'reckless', 'explorer', 'rusher']);
         for (const p of ARCHETYPE_POLICIES) {
             expect(getRunPolicy(p.id)).toBe(p);
             expect(getCardLane(p.id)).toBeDefined();
