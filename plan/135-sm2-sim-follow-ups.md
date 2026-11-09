@@ -464,9 +464,6 @@ no exit code depends on it.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A22** A run's line and `--json` carry `bossDamagePct` and `endNodeId`, and a batch ends with one row per
-  policy: clears, average level, average boss damage, average deck by lane and where failed runs ended. Tests cover a
-  run that never met the boss (null, left out of the average). No exit code depends on these numbers.
 
 ## Open questions
 
@@ -474,8 +471,7 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 6 open · 16 closed · next A23
+Measure: 5 open · 17 closed · next A23
 
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs — · alias: SM2k

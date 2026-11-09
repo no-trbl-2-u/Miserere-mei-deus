@@ -14,6 +14,7 @@ import {
     DEFENDER_POLICY,
     WANDERER_POLICY,
     characterDeck,
+    getRunPolicy,
     type RunPolicy,
 } from '@mechanics';
 
@@ -63,6 +64,11 @@ describe('the headless run driver', () => {
         const { policy, asked } = spying();
         const { result, screens } = tracedRun({ policy, seed: 8 });
         expect(['run-over', 'chapter-clear']).toContain(result.outcome);
+        // A cleared chapter met the boss, and its last fight with it took some of the boss's VITAE.
+        if (result.outcome === 'chapter-clear') {
+            expect(result.bossDamagePct).toBeGreaterThan(0);
+            expect(result.bossDamagePct).toBeLessThanOrEqual(100);
+        }
         expect(result.characterId).toBe(CHARACTER_ROSTER[0]!.id);
         expect(result.runId).toMatch(/^[0-9a-f]{16}$/);
         // The node kinds the Breakwater carries, each answered on its own screen.
@@ -115,6 +121,16 @@ describe('the headless run driver', () => {
         expect(result.outcome).toBe('run-over');
         expect(result.fights.lost).toBe(1);
         expect(result.vitae).toBe(0);
+        // It never met the boss: null, not 0.
+        expect(result.bossDamagePct).toBeNull();
+    });
+
+    it('reads how much of the boss a run took when it fell to it, from the last fight with it', () => {
+        const result = playRun({ policy: getRunPolicy('merciful')!, seed: 9, tuning: { bossLevel: 30 } });
+        expect(result.outcome).toBe('run-over');
+        expect(result.endNodeId).toBe('bw-k2');
+        expect(result.bossDamagePct).toBeGreaterThan(0);
+        expect(result.bossDamagePct).toBeLessThan(100);
     });
 
     it('throws, naming the node and the state, when a step has no legal move', () => {

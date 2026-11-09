@@ -5,7 +5,8 @@
 // the app's own store actions (`axiomancer-mobile/sim/`), one per seed, as a
 // run policy decides, and prints one line per run: the policy, the seed, the
 // outcome, the furthest node, level, VITAE at the end, fights won, lost and
-// spared, and the end deck's card count per lane. It posts nothing.
+// spared, the boss damage and end node, and the end deck's card count per lane,
+// then one batch table row per policy. It posts nothing.
 //
 // The driver runs under jest (`axiomancer-mobile/sim/jest.config.js`, the
 // app's own preset and module mapping) and hands its runs back as JSON; this
@@ -103,8 +104,62 @@ export function formatRunLine(run) {
     `level=${run.level}`,
     `vitae=${run.vitae}/${run.maxVitae}`,
     `fights won=${f.won} lost=${f.lost} spared=${f.spared}`,
+    `boss=${run.bossDamagePct == null ? 'n/a' : `${run.bossDamagePct}%`}`,
+    `end=${run.endNodeId}`,
     `deck ${formatLanes(run.deckByLane)}`,
   ].join(' | ')
+}
+
+/**
+ * The batch as one row per policy: runs played, clears, average level, average
+ * boss damage (a run that never met the boss is left out of it), the average
+ * deck by lane, and where the runs that did not clear ended, most first. A
+ * stuck run counts as a run that did not clear and ended where it stuck. A
+ * reading: nothing here sets an exit code.
+ */
+export function batchTable(runs) {
+  const byPolicy = new Map()
+  for (const run of runs) {
+    if (!byPolicy.has(run.policy)) byPolicy.set(run.policy, [])
+    byPolicy.get(run.policy).push(run)
+  }
+  return [...byPolicy].map(([policy, group]) => {
+    const played = group.filter((r) => !r.stuck)
+    const lanes = {}
+    for (const r of played) for (const [lane, n] of Object.entries(r.deckByLane ?? {})) lanes[lane] = (lanes[lane] ?? 0) + n
+    const ends = {}
+    for (const r of group) {
+      if (r.outcome === 'chapter-clear') continue
+      const at = r.stuck ? r.node : r.endNodeId
+      ends[at] = (ends[at] ?? 0) + 1
+    }
+    return {
+      policy,
+      runs: group.length,
+      clears: played.filter((r) => r.outcome === 'chapter-clear').length,
+      avgLevel: mean(played.map((r) => r.level)),
+      avgBossDamagePct: mean(played.map((r) => r.bossDamagePct).filter((x) => x != null)),
+      avgDeckByLane: Object.fromEntries(Object.entries(lanes).map(([lane, n]) => [lane, n / played.length])),
+      failedEnds: Object.entries(ends).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([nodeId, count]) => ({ nodeId, count })),
+    }
+  })
+}
+
+/** The batch table as text: a header and one row per policy. */
+export function formatBatchTable(rows) {
+  const lanes = (deck) => formatLanes(Object.fromEntries(Object.entries(deck).map(([k, v]) => [k, Math.round(v * 10) / 10])))
+  const lines = ['policy | clears | avg level | avg boss damage | avg deck by lane | where failed runs ended']
+  for (const r of rows) {
+    lines.push([
+      r.policy,
+      `${r.clears}/${r.runs}`,
+      fmt(r.avgLevel),
+      r.avgBossDamagePct === null ? 'n/a' : `${fmt(r.avgBossDamagePct)}%`,
+      lanes(r.avgDeckByLane) || '-',
+      r.failedEnds.map((e) => `${e.nodeId}=${e.count}`).join(' ') || '-',
+    ].join(' | '))
+  }
+  return lines.join('\n')
 }
 
 /** The tuning flags the options carry, in the shape the run driver takes; null when none is set. */
@@ -347,8 +402,12 @@ export async function main(argv, {
     stderr.write(`sim-run: ${err.message}\n`)
     return 1
   }
-  if (opts.json) stdout.write(`${JSON.stringify(body.runs, null, 2)}\n`)
-  else for (const line of body.runs) stdout.write(`${formatRunLine(line)}\n`)
+  const table = batchTable(body.runs)
+  if (opts.json) stdout.write(`${JSON.stringify({ runs: body.runs, table }, null, 2)}\n`)
+  else {
+    for (const line of body.runs) stdout.write(`${formatRunLine(line)}\n`)
+    stdout.write(`${formatBatchTable(table)}\n`)
+  }
   // A crash, a stuck run or a stuck fight fails the step; the end-of-run checks never do.
   let code = body.runs.some((r) => r.stuck) ? 1 : 0
   if (opts.breaks) {
