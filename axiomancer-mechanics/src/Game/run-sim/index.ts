@@ -8,9 +8,10 @@
 export type {
     RunPolicy, RunRoadOption, RunRoadContext, RunTravelContext, RunRewardSource,
     RunRewardContext, RunRewardDecision, RunRestContext, RunRestDecision, RunCacheContext,
-    RunVillageContext, RunVillageDecision, RunHazardContext, RunHazardCardContext,
+    RunVillageContext, RunVillageDecision, RunAnvilContext, RunAnvilDecision, RunAnvilPrices, RunHazardContext, RunHazardCardContext,
     RunFightContext, RunLevelUpContext, RunItemContext, RunStat,
 } from './run-policy.types';
+export { greedyAnvil, randomAnvil, anvilBudget, ANVIL_BED_RESERVE_BELOW } from './run-policy.anvil';
 export { WANDERER_POLICY, FINISH_ALL_POLICY, SPARE_ALL_POLICY, nearestRoad } from './run-policy.wanderer';
 export { RUN_POLICIES, RUN_POLICY_IDS, getRunPolicy } from './run-policy.registry';
 export {

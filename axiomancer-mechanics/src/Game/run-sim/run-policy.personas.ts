@@ -11,7 +11,8 @@
  *   improves a card (the pool is already the character's lanes);
  * - take a cache's card, and the first card a hazard pays;
  * - wear every item they can, and raise the character's highest stat;
- * - buy nothing and remove nothing at a village (a bed when hurt);
+ * - spend at a village's anvil (`greedyAnvil`, favouring the highest stat's die),
+ *   buy nothing and remove nothing there (a bed when hurt);
  * - fight with the player witness plus the guard-when-hit rule (`PERSONA_FIGHT`: it kills every foe, so a
  *   persona earns XP and drafts).
  *
@@ -21,6 +22,7 @@
  * contexts, never a card or a node id (the no-id guard covers this file).
  */
 
+import { greedyAnvil, highestStat } from './run-policy.anvil';
 import { PERSONA_FIGHT } from './run-policy.fight';
 import { nearestRoad } from './run-policy.wanderer';
 import type {
@@ -90,6 +92,7 @@ function persona(spec: PersonaSpec): RunPolicy {
             return { offer: 'rest' };
         },
         chooseCacheOffer: () => 'card',
+        visitAnvil: (ctx) => greedyAnvil(ctx, { firstColor: highestStat(ctx.baseStats) }),
         visitVillage: (ctx) => ({
             rest: ctx.rest !== null && ctx.rest.enabled && ctx.rest.price <= ctx.currency
                 && below(ctx.health, ctx.maxHealth, spec.restBelow),
