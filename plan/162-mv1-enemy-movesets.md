@@ -109,8 +109,6 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 ## Acceptance
 
-- **A4** The Saint Beneath fights with exactly the six moves above in four phases, each Danger opening its phase at 75%, 50% and 25%; it has no enemy deck and no copied stages, and its journal entry no longer carries the Death Beholder's text; Communion and the Curse counts behave as written, with no Curses included.
-- **A5** The Death Beholder's deck, stages and fights are unchanged.
 - **A6** The Wreckmaster, Saltwick Swarm, Quay-Crab, Coralback and Bilge-Stalker play exactly the moves above, each Danger at its line, and share no move with any other foe.
 - **A7** The other animated foes' moves are unchanged.
 - **A8** Saltwick Swarm is an elite with Dangers at 60% and 30%. The sea cave draws it, the Cave Choir or the Tithe-Collector at a third each; no other elite node changes; `bw-t2` is a Bilge-Stalker and `bw-t6` a Coralback, both level 5; it is not in the wandering pool.
@@ -123,9 +121,8 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 ## Chunks
 
-Measure: 5 open · 3 closed · next A9
+Measure: 3 open · 5 closed · next A9
 
-- [ ] **162.3** The Saint Beneath's own moves · M · closes A4, A5 · needs — · alias: MV1c
 - [ ] **162.4** Five recast foes get their own moves, and Saltwick Swarm becomes an elite · M · closes A6, A7, A8 · needs — · alias: MV1d
 
 ### 162.1 (MV1a) — SEIZED replaces UNDERTOW · S · closes A1 · requires —

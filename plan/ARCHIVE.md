@@ -602,3 +602,4 @@
 - 2026-11-08 · 159.5 (alias: TU1e) · Card names draw on one line, shrunk to fit; free pill has no plus; faces share one black · fbf9e2d1..56117a37 (#1470)
 - 2026-11-08 · 162.1 (alias: MV1a) · Players read SEIZED where they read UNDERTOW · 7302574c..7302574c (#1480)
 - 2026-11-08 · 162.2 (alias: MV1b) · SHOCK and UNBROKEN join the enemy words · adea52b3..adea52b3 (#1482)
+- 2026-11-08 · 162.3 (alias: MV1c) · the Saint Beneath plays its own six moves · 4f03239d..59d95308 (#1483)
