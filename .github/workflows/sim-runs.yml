@@ -75,7 +75,6 @@ jobs:
       SIM_BOTS: ${{ inputs.bots || 'personas' }}
       # Breaks are filed by the scheduled run and a dispatch at main only.
       SIM_FILES_BREAKS: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.ref || 'main') == 'main')) && 'true' || 'false' }}
-      SIM_BREAKS_FILE: ${{ runner.temp }}/sim-breaks.jsonl
       GH_TOKEN: ${{ github.token }}
       PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
       PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
@@ -117,6 +116,7 @@ jobs:
             all) policies="cautious reckless explorer rusher blood-price defender merciful elementalist wanderer" ;;
             *) echo "::error::bots must be personas, lanes or all, not '$SIM_BOTS'"; exit 1 ;;
           esac
+          SIM_BREAKS_FILE="$RUNNER_TEMP/sim-breaks.jsonl"
           : > "$SIM_BREAKS_FILE"
           failed=""
           for policy in $policies; do
@@ -133,4 +133,4 @@ jobs:
       # after a failed batch too, so a crash is still filed.
       - name: File the breaks as issues
         if: always() && env.SIM_FILES_BREAKS == 'true'
-        run: npm run sim:breaks -- --file "$SIM_BREAKS_FILE"
+        run: npm run sim:breaks -- --file "$RUNNER_TEMP/sim-breaks.jsonl"

@@ -264,7 +264,7 @@ test('--breaks appends one JSON line per break, names the build, and only a cras
     const crash = { policy: 'explorer', seed: 2, stuck: true, kind: 'crash', node: 'bw-w2', error: 'run crashed at breakwater/bw-w2: boom', break: { key: 'explorer:breakwater/bw-w2:crash', kind: 'crash' } }
     const out = sink()
     assert.equal(await main(['--breaks', file], { stdout: out, stderr: sink(), play: () => ({ runs: [crash], breaks: [crash.break] }), sha: () => null }), 1)
-    assert.match(out.text, /wanderer seed=2 CRASH at bw-w2|explorer seed=2 CRASH at bw-w2/)
+    assert.match(out.text, /^explorer seed=2 CRASH at bw-w2: /)
     assert.equal(fs.readFileSync(file, 'utf-8').trim().split('\n').length, 3)
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
