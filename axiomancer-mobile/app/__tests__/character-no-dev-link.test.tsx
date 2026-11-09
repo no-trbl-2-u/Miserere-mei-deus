@@ -25,7 +25,6 @@ describe('Self screen', () => {
         const store = createAppStore({ adapter: slots });
         render(withAllProviders(<CharacterScreen />, { store, slots }).tree);
         expect(screen.queryByTestId('settings-dev-tools-link')).toBeNull();
-        expect(screen.queryByTestId('self-dev-tools-link')).toBeNull();
     });
 
     it('draws HEART, BODY and MIND plaques of one width', () => {

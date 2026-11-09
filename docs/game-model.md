@@ -439,7 +439,11 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   Heart, +20 max VITAE; Thorn Mantle: THORNS equal to your GUARD), the Mirror
   Brooch (a quest's; +5 Mind; Mirror Ward: REFLECT 50%) and the Carapace Belt
   (a quest's; +5 Body; Hold the Line: your GUARD is not lost at the end of the
-  foe's next turn); no quest hands the Brooch or the Belt out yet. A worn relic's stat lines and signature are
+  foe's next turn); no quest hands the Brooch or the Belt out yet. The Merciful's
+  two quest relics (spec 115, MF1f; +5 Mind each, neither touches MERCY): the
+  Brimming Locket (Brim Over ◆3: this turn, healing past your max VITAE becomes
+  GUARD) and the Penitent's Brooch (Absolution ◆3: remove your debuffs, then HEAL
+  2 for each). A worn relic's stat lines and signature are
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) draws from the

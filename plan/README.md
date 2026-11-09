@@ -103,7 +103,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
 | 112 | Combat entry and exit: the music steps aside for the whole fight, and the ink really spreads | [112-cx1-combat-entry-exit.md](112-cx1-combat-entry-exit.md) | planned | 1 left |
 | 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
-| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 2 left |
+| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 1 left |
 | 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 2 left |
 | 117 | The Defender trial set (the turtle with spikes) | [117-df1-defender-trial-set.md](117-df1-defender-trial-set.md) | planned | 1 left |
 | 118 | The Elementalist trial set (the weather in play) | [118-el1-elementalist-trial-set.md](118-el1-elementalist-trial-set.md) | planned | 1 left |
@@ -111,7 +111,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 121 | Title plate legibility: prove the plate, then replace it | [121-tp1-title-plate-legibility.md](121-tp1-title-plate-legibility.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
-| 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 2 left |
+| 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 1 left |
 | 126 | The Obsidian vault: brainstorm and plot from the phone | [126-ov1-obsidian-vault.md](126-ov1-obsidian-vault.md) | planned | 1 left |
 | 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
 | 128 | Card and combat logging (the play log) | [128-be2-card-combat-logging.md](128-be2-card-combat-logging.md) | planned | 1 left |

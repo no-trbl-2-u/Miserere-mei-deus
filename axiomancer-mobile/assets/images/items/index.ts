@@ -27,6 +27,9 @@ export const ITEM_SPRITE_FILES = {
     'relic-thornback-signet': require('./relic-thornback-signet.png'),
     'relic-mirror-brooch': require('./relic-mirror-brooch.png'),
     'relic-carapace-belt': require('./relic-carapace-belt.png'),
+    // Until T picks icons the two Merciful quest relics draw the Suppliant's Ring.
+    'relic-brimming-locket': require('./relic-disarming-plea.png'),
+    'relic-penitents-brooch': require('./relic-disarming-plea.png'),
     'minor-healing-potion': require('./minor-healing-potion.png'),
     'healing-potion': require('./healing-potion.png'),
     'greater-healing-potion': require('./greater-healing-potion.png'),

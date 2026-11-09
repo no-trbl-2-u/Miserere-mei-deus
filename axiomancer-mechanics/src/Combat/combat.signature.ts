@@ -21,6 +21,11 @@
  *   Hold the Line (the Carapace Belt, ◆4) — your GUARD is kept through the
  *     foe's next turn.
  *
+ *   Brim Over (the Brimming Locket, ◆3) — this turn, healing past your max
+ *     VITAE becomes GUARD.
+ *   Absolution (the Penitent's Brooch, ◆3) — remove all your debuffs, then
+ *     HEAL 2 for each. Neither Merciful quest relic touches MERCY.
+ *
  * The Blood Price and Defender names and descriptions are plain placeholders
  * [content] for T to rewrite; the costs are T's.
  *
@@ -33,6 +38,7 @@
 import {
     programArmSacrifice, programSacrificeArmed, programSignatureHeal, programSignatureMercy, programTriggerLeech,
     programSpikeSignature, programSpikeSignatureLive, programWeatherSignature, programWeatherSignatureLive,
+    programArmBrim, programBrimming, programAbsolve, programAbsolveConditions, ABSOLUTION_HEAL_EACH,
 } from './combat.card-program';
 import { programText } from './stat-scaling';
 import type { BaseStats } from '../Character/types';
@@ -89,6 +95,14 @@ export const SIGNATURE_SKILLS: Record<SignatureSkillId, SignatureSkill> = {
         id: 'sig-defender-belt', name: 'Hold the Line', kind: 'hold-guard', cost: 4,
         description: "Your GUARD isn't lost at the end of the foe's next turn.",
     },
+    'sig-merciful-locket': {
+        id: 'sig-merciful-locket', name: 'Brim Over', kind: 'overheal-guard', cost: 3,
+        description: 'This turn, healing past your max VITAE becomes GUARD.',
+    },
+    'sig-merciful-brooch': {
+        id: 'sig-merciful-brooch', name: 'Absolution', kind: 'absolve', cost: 3,
+        description: `Remove all your debuffs, then HEAL {heal:${ABSOLUTION_HEAL_EACH}} for each.`,
+    },
 };
 
 /** The player's archetype from their dominant base stat (body > mind > heart
@@ -143,6 +157,10 @@ export function signatureCastBlock(state: CombatEncounterState, skill: Signature
             return null;
         case 'hold-guard':
             return programSpikeSignatureLive(state, skill.kind) ? null : 'Your GUARD is already held';
+        case 'overheal-guard':
+            return programBrimming(state) ? 'You are already brimming' : null;
+        case 'absolve':
+            return programAbsolveConditions(state).length > 0 ? null : 'Nothing on you to absolve';
     }
 }
 
@@ -174,5 +192,9 @@ export function applySignatureSkill(
         case 'reflect-half':
         case 'hold-guard':
             return programSpikeSignature(state, skill.kind);
+        case 'overheal-guard':
+            return programArmBrim(state);
+        case 'absolve':
+            return programAbsolve(state, skill.id);
     }
 }

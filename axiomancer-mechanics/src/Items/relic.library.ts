@@ -18,6 +18,8 @@
  *   Thornback Signet                  Defender      elite drop
  *   Mirror Brooch                     Defender      quest
  *   Carapace Belt                     Defender      quest
+ *   Brimming Locket (Brim Over)       Merciful      quest
+ *   Penitent's Brooch (Absolution)    Merciful      quest
  *
  * `relicSource` says where the elite drop draws from when a fight lists no
  * drops of its own (`eliteRelicPool`); it does not limit who may pay a relic.
@@ -203,6 +205,38 @@ const CARAPACE_BELT: Equipment = {
     relicSource: 'quest',
 };
 
+/**
+ * The Brimming Locket (T's, 2026-11-02): +5 Mind, and Brim Over (◆3): this turn, healing past your max VITAE
+ * becomes GUARD. A quest's reward. It never touches MERCY.
+ */
+const BRIMMING_LOCKET: Equipment = {
+    id: 'relic-brimming-locket',
+    name: 'Brimming Locket',
+    description: '+5 Mind while worn. This turn, healing past your max VITAE becomes GUARD.',
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'mind', value: 5 }],
+    grantsSignature: 'sig-merciful-locket',
+    laneId: 'merciful',
+    relicSource: 'quest',
+};
+
+/**
+ * The Penitent's Brooch (T's, 2026-11-02): +5 Mind, and Absolution (◆3): remove all your debuffs, then HEAL 2 for
+ * each. A quest's reward. It never touches MERCY.
+ */
+const PENITENTS_BROOCH: Equipment = {
+    id: 'relic-penitents-brooch',
+    name: "Penitent's Brooch",
+    description: '+5 Mind while worn. Remove all your debuffs, then HEAL 2 for each.',
+    category: 'equipment',
+    slot: 'relic',
+    statModifiers: [{ stat: 'mind', value: 5 }],
+    grantsSignature: 'sig-merciful-brooch',
+    laneId: 'merciful',
+    relicSource: 'quest',
+};
+
 /** A fresh copy of a relic (never aliases the library singleton). */
 export function cloneRelic(relic: Equipment): Equipment {
     return { ...relic, statModifiers: (relic.statModifiers ?? []).map(m => ({ ...m })) };
@@ -218,6 +252,7 @@ export const relicLibrary: readonly Equipment[] = [
     SUPPLIANTS_RING, CRIMSON_CIRCLET, RUBY_SIGNET, BLEEDING_SIGNET,
     ELEMENTALIST_SIGNET, ELEMENTALIST_BROOCH, ELEMENTALIST_BELT,
     THORNBACK_SIGNET, MIRROR_BROOCH, CARAPACE_BELT,
+    BRIMMING_LOCKET, PENITENTS_BROOCH,
 ];
 
 /** Resolve a relic by id (returns the canonical singleton, not a clone). */

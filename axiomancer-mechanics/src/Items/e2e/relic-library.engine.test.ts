@@ -34,7 +34,8 @@ describe('relic library — roster', () => {
     it('ships the Suppliant\'s Ring, Blood Price\'s three relics and the Elementalist\'s three', () => {
         expect(relicLibrary.map(r => r.id)).toEqual([RING_ID, CIRCLET_ID, RUBY_ID, SIGNET_ID,
             'relic-elementalist-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt',
-            'relic-thornback-signet', 'relic-mirror-brooch', 'relic-carapace-belt']);
+            'relic-thornback-signet', 'relic-mirror-brooch', 'relic-carapace-belt',
+            'relic-brimming-locket', 'relic-penitents-brooch']);
         const ring = getRelicById(RING_ID)!;
         expect(ring.name).toBe("Suppliant's Ring");
         expect(ring.slot).toBe('relic');
@@ -180,16 +181,18 @@ describe('DF1e · A10 · the Defender\'s three relics', () => {
 });
 
 describe('A16 · every lane relic resolves to a registered lane', () => {
-    it('the ten lane relics name a registered lane; each lane has one elite-drop relic, and the three lanes with a full set have two quest relics', () => {
+    it('the twelve lane relics name a registered lane; each of the four lanes has one elite-drop relic and two quest relics', () => {
         const laneRelics = relicLibrary.filter(r => r.laneId);
-        expect(laneRelics).toHaveLength(10);
+        expect(laneRelics).toHaveLength(12);
         for (const r of laneRelics) expect(getCardLane(relicLaneId(r)!), r.id).toBeDefined();
-        for (const lane of ['blood-price', 'elementalist', 'defender']) {
+        for (const lane of ['blood-price', 'elementalist', 'defender', 'merciful']) {
             expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'elite')).toHaveLength(1);
             expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'quest')).toHaveLength(2);
         }
-        // The Merciful has its family relic (the Ring, an elite drop); T picks its other two later.
-        expect(laneRelics.filter(r => r.laneId === 'merciful').map(r => [r.id, r.relicSource])).toEqual([[RING_ID, 'elite']]);
+        // The Merciful: the Ring is its elite drop; the Locket and the Brooch are its quest relics (MF1f).
+        expect(laneRelics.filter(r => r.laneId === 'merciful').map(r => [r.id, r.relicSource])).toEqual([
+            [RING_ID, 'elite'], ['relic-brimming-locket', 'quest'], ['relic-penitents-brooch', 'quest'],
+        ]);
     });
 });
 
