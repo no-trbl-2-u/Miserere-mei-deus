@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colour ballot</title>
+<!--
+  The colour ballot (2026-11-09). Five whole palettes, each drawn from a named
+  real reference, plus today's as "now". Each is shown on the five real screens
+  (the Wilds, a fight, Self, the Deck, one node screen) at 390 x 844, from a web
+  build with that palette swapped in and T's kit pieces in place.
+
+  The shots swap the palette only. The kit pieces (brass frames, vellum
+  panels) are art, so they stay as drawn in every shot; each palette's line
+  says what it would do with the brass. The accent shows wherever the app uses
+  its accent token today: moving it onto each screen's one bold element is the
+  next chunk, after the pick.
+
+  Tick one palette (P-01) and one brass treatment (P-02); ticking another moves
+  the tick. The tokens are in colours.md as ThemeSpecs. No candidate here
+  carries a colour field: the swatches are in PALETTES, not CARDS.
+-->
+<style>
+  :root { --bg:#efe9dc; --ink:#1b1714; --muted:#6b6259; --card:#fbf7ee; --edge:#2a2420; --sel:#1b1714; --btn:#1b1714; --btn-ink:#fbf7ee; --shotbg:#d9cfbd; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  }
+  :root[data-theme="dark"] { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.92rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  .theme { float:right; font:inherit; padding:6px 12px; border-radius:6px; border:1px solid var(--edge); background:var(--card); color:var(--ink); cursor:pointer; }
+  .slot { margin:22px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.1rem; margin:0; }
+  .role { color:var(--muted); margin:2px 0 10px; }
+  .col { display:flex; flex-direction:column; gap:14px; }
+  label.card { position:relative; display:block; background:var(--card); border:2px solid var(--edge); border-radius:10px; padding:10px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 4px var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .top { padding-right:34px; }
+  .name { font-size:1.1rem; font-weight:bold; }
+  .ref { color:var(--muted); font-size:.92rem; margin:2px 0 6px; }
+  .swatches { display:flex; gap:0; margin:6px 0; border:1px solid var(--edge); border-radius:4px; overflow:hidden; height:34px; max-width:420px; }
+  .swatches span { flex:1; display:block; }
+  .swatches span.wide { flex:2; }
+  .keys { display:flex; gap:0; max-width:420px; font-size:.72rem; color:var(--muted); margin-bottom:6px; }
+  .keys span { flex:1; } .keys span.wide { flex:2; }
+  .line { margin:4px 0; font-size:.94rem; }
+  .line b { font-weight:bold; }
+  .strip { display:flex; gap:8px; overflow-x:auto; padding:6px 2px 8px; margin-top:6px; background:var(--shotbg); border-radius:6px; -webkit-overflow-scrolling:touch; }
+  .strip figure { margin:0; flex:0 0 auto; width:168px; }
+  .strip img { display:block; width:168px; height:auto; border-radius:3px; }
+  .strip figcaption { font-size:.75rem; color:var(--muted); text-align:center; padding-top:2px; }
+  .brass .name { font-size:1.02rem; }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  footer { margin-top:28px; padding-top:12px; border-top:2px solid var(--edge); }
+  textarea { width:100%; font:13px/1.4 ui-monospace, Menlo, Consolas, monospace; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  #general { min-height:60px; } #out { min-height:160px; margin-top:10px; }
+  button { font:inherit; padding:9px 18px; min-height:42px; border-radius:6px; border:0; background:var(--btn); color:var(--btn-ink); cursor:pointer; margin:8px 8px 0 0; }
+  .count { color:var(--muted); margin-left:6px; }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <h1>Colour: which whole palette?</h1>
+  <p class="sub">Five palettes from real references, and today's as <b>Now</b>. Each is shown on the Wilds, a fight, Self, the Deck and a node screen. Swipe a strip sideways to see all five.</p>
+  <p class="legend">
+    <b>Tick one palette</b> (P-01), then <b>one way to treat the brass pieces</b> (P-02). Ticking another moves the tick; leave one unticked for "no answer".<br>
+    The swatches read left to right: <b>ground</b>, <b>panel</b>, <b>ink</b>, <b>accent</b>, <b>danger red</b>.<br>
+    The shots change the palette only. The kit pieces are drawn art, so the brass and vellum stay as they are in every shot; each palette's <b>Brass</b> line says what it would do. Where the accent lands (today it is on many things) is tightened to each screen's one bold element after you pick.
+  </p>
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="A mix? (this ground with that accent), a palette you want instead, anything about the look…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'colours-2026-11-09';
+
+const SLOTS = [
+  { slot: 'P-01', label: 'Which palette', role: 'One ground, one ink, one accent and a danger red, each drawn from a named reference.' },
+  { slot: 'P-02', label: 'The brass pieces', role: 'The brass kit pieces are gold by nature. Whichever palette wins, how should they sit in it?' },
+];
+
+/* The swatches and the prose live here, not in CARDS: a ballot candidate carries no colour field. */
+const PALETTES = {
+  'P-01a': { name: 'Now: Ashen Gold', ref: 'Iron-gall ink and gold leaf on a near-black warm brown. The tell a friend of T named.', brass: 'Brass sits in its own colour: gold on gold.',
+    sw: ['#0b0a09', '#15110c', '#ece0c8', '#dcb04a', '#e05a45'], file: 'ashen-gold' },
+  'P-01b': { name: 'Night of the Hours', ref: 'The Limbourg brothers, Tres Riches Heures (c. 1411): the ultramarine night skies, vermilion on vellum.', brass: 'Kept as the one bold metal. Gold on deep blue is how the Limbourgs used it, so the brass reads as illumination.',
+    sw: ['#0a1020', '#101a30', '#ece6d2', '#e8744a', '#e0587a'], file: 'limbourg' },
+  'P-01c': { name: 'Apocalypse Woodcut', ref: 'Durer, the Apocalypse woodcuts (1498): black line on paper, one cinnabar block printed over it. A neutral graphite ground, no brown.', brass: 'Toned: pushed to cold iron and pewter so it stops reading as gold. The cinnabar is then the only warm colour.',
+    sw: ['#121314', '#1a1b1c', '#ece8dc', '#d9533a', '#e8685a'], file: 'durer' },
+  'P-01d': { name: 'Scrovegni Green Earth', ref: 'Giotto, the Arena Chapel frescoes (c. 1305): the terra verde underpaint, plaster white, lapis for the one blue.', brass: 'Kept to fewer places: only the Self frame and the tab bar stay brass; the rest take plain plaster edges.',
+    sw: ['#0d1510', '#142019', '#e8e8d6', '#7d9ae8', '#e0654f'], file: 'giotto' },
+  'P-01e': { name: 'Isenheim Night', ref: 'Grunewald, the Isenheim Altarpiece (c. 1515): the blue-black teal of the Crucifixion sky, livid flesh, madder rose.', brass: 'Toned: dulled to old bronze with a green cast, so it sits in the teal instead of glowing against it.',
+    sw: ['#0b1517', '#112024', '#e4e8d8', '#d8849a', '#e0554a'], file: 'isenheim' },
+  'P-01f': { name: 'Purple Vellum, Silver Ink', ref: 'The Rossano Gospels (6th c.): silver ink on purple-dyed vellum, the oldest of the purple codices.', brass: 'Toned toward silver: the brass cools to a bright nickel so metal and accent agree. Gold is gone.',
+    sw: ['#150e1c', '#1d1428', '#ebe7f0', '#b6c2dc', '#e8604e'], file: 'purpureus' },
+  'P-02a': { name: 'Keep it as the one bold metal', ref: 'The brass stays as drawn on every screen, and the accent gives way to it.' },
+  'P-02b': { name: 'Tone it to the palette', ref: 'Re-tint the brass pieces to sit in the winning palette (pewter, bronze or nickel). This recolours the art, so T makes it.' },
+  'P-02c': { name: 'Keep it to fewer places', ref: 'Brass only on the Self frame and the tab bar; the other places take plain edges.' },
+};
+
+/* One candidate per id; the kit reads the ticks by id. No colour field on any. */
+const CARDS = [
+  { id: 'P-01a', look: 'Now: Ashen Gold' },
+  { id: 'P-01b', look: 'Night of the Hours' },
+  { id: 'P-01c', look: 'Apocalypse Woodcut' },
+  { id: 'P-01d', look: 'Scrovegni Green Earth' },
+  { id: 'P-01e', look: 'Isenheim Night' },
+  { id: 'P-01f', look: 'Purple Vellum, Silver Ink' },
+  { id: 'P-02a', look: 'Keep it as the one bold metal' },
+  { id: 'P-02b', look: 'Tone it to the palette' },
+  { id: 'P-02c', look: 'Keep it to fewer places' },
+];
+
+const SCREENS = [['wilds', 'Wilds'], ['fight', 'Fight'], ['self', 'Self'], ['deck', 'Deck'], ['node', 'Node']];
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const KEYS = ['ground', 'panel', 'ink', 'accent', 'danger'];
+
+const paletteHtml = (c) => {
+  const p = PALETTES[c.id];
+  return `
+  <label class="card" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${esc(p.name)}">
+    <div class="top"><div class="name">${esc(p.name)}</div><div class="ref">${esc(p.ref)}</div></div>
+    <div class="swatches" role="img" aria-label="${KEYS.map((k, i) => `${k} ${p.sw[i]}`).join(', ')}">${p.sw.map((h, i) => `<span class="${i === 2 ? 'wide' : ''}" style="background:${h}"></span>`).join('')}</div>
+    <div class="keys">${KEYS.map((k, i) => `<span class="${i === 2 ? 'wide' : ''}">${k}</span>`).join('')}</div>
+    <div class="line"><b>Brass:</b> ${esc(p.brass)}</div>
+    <div class="strip">${SCREENS.map(([s, n]) => `<figure><img src="colours/${p.file}-${s}.webp" alt="${esc(p.name)}: ${n}" loading="lazy"><figcaption>${n}</figcaption></figure>`).join('')}</div>
+  </label>`;
+};
+const brassHtml = (c) => `
+  <label class="card brass" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="${esc(PALETTES[c.id].name)}">
+    <div class="top"><div class="name">${esc(PALETTES[c.id].name)}</div><div class="ref">${esc(PALETTES[c.id].ref)}</div></div>
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="col">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(s.slot === 'P-01' ? paletteHtml : brassHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot} (optional)">
+  </section>`;
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered`;
+};
+/* One tick per place: a new tick clears the others in its slot. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  refresh();
+});
+refresh();
+
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'BALLOT: colours, which whole palette (colours-2026-11-09)',
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      const name = pick ? CARDS.find((c) => c.id === pick).look : null;
+      return `${s.slot} ${s.label}: ${pick ? `KEEP ${pick} (${name})` : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
