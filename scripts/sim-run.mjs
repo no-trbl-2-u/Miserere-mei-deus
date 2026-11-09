@@ -37,7 +37,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const MOBILE = path.join(ROOT, 'axiomancer-mobile')
 
-export const USAGE = 'usage: npm run sim:run -- --policy <id> [--runs <n>] [--seed <s>] [--json] [--post]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
+export const USAGE = 'usage: npm run sim:run -- --policy <id|a,b|lanes> [--runs <n>] [--seed <s>] [--json] [--post]\n       tuning (never with --post): [--shillings <n>] [--boss-level <n>] [--start-relic <id>]... [--no-relic-stats] [--fight <policy>] [--no-anvil] [--no-guard]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
 
 /** One batch posts at most this many bytes (A13). */
 export const POST_BATCH_CAP_BYTES = 25 * 1024 * 1024
@@ -50,12 +50,29 @@ export function parseArgs(argv) {
     if (arg === '--json') { opts.json = true; continue }
     if (arg === '--post') { opts.post = true; continue }
     if (arg === '--compare') { opts.compare = true; continue }
+    if (arg === '--no-relic-stats') { opts.noRelicStats = true; continue }
+    if (arg === '--no-anvil') { opts.noAnvil = true; continue }
+    if (arg === '--no-guard') { opts.noGuard = true; continue }
     if (arg === '--help' || arg === '-h') { opts.help = true; continue }
-    const m = /^--(policy|runs|seed)(?:=(.*))?$/.exec(arg)
+    const m = /^--(policy|runs|seed|shillings|boss-level|start-relic|fight)(?:=(.*))?$/.exec(arg)
     if (!m) throw new Error(`unknown argument '${arg}'`)
     const value = m[2] ?? argv[++i]
     if (value === undefined || value === '') throw new Error(`--${m[1]} needs a value`)
     if (m[1] === 'policy') { opts.policy = value; continue }
+    if (m[1] === 'fight') { opts.fight = value; continue }
+    if (m[1] === 'start-relic') { opts.startRelic = [...(opts.startRelic ?? []), value]; continue }
+    if (m[1] === 'shillings') {
+      const x = Number(value)
+      if (!Number.isFinite(x) || x <= 0) throw new Error(`--shillings must be a positive number, not '${value}'`)
+      opts.shillings = x
+      continue
+    }
+    if (m[1] === 'boss-level') {
+      const x = Number(value)
+      if (!Number.isInteger(x) || x < 1) throw new Error(`--boss-level must be a positive integer, not '${value}'`)
+      opts.bossLevel = x
+      continue
+    }
     const n = Number(value)
     if (!Number.isInteger(n) || (m[1] === 'runs' ? n < 1 : n < 0)) throw new Error(`--${m[1]} must be a ${m[1] === 'runs' ? 'positive' : 'non-negative'} integer, not '${value}'`)
     opts[m[1]] = n
@@ -84,6 +101,20 @@ export function formatRunLine(run) {
     `fights won=${f.won} lost=${f.lost} spared=${f.spared}`,
     `deck ${formatLanes(run.deckByLane)}`,
   ].join(' | ')
+}
+
+/** The tuning flags the options carry, in the shape the run driver takes; null when none is set. */
+export function tuningOf(opts) {
+  const tuning = {
+    ...(opts.shillings !== undefined ? { shillings: opts.shillings } : {}),
+    ...(opts.bossLevel !== undefined ? { bossLevel: opts.bossLevel } : {}),
+    ...(opts.startRelic?.length ? { startRelics: opts.startRelic } : {}),
+    ...(opts.noRelicStats ? { noRelicStats: true } : {}),
+    ...(opts.fight !== undefined ? { fight: opts.fight } : {}),
+    ...(opts.noAnvil ? { noAnvil: true } : {}),
+    ...(opts.noGuard ? { noGuard: true } : {}),
+  }
+  return Object.keys(tuning).length > 0 ? tuning : null
 }
 
 /** The Spare table's results, in table order. */
@@ -155,7 +186,7 @@ export function playRuns(opts, { spawn = spawnSync } = {}) {
     const jest = createRequire(path.join(MOBILE, 'package.json')).resolve('jest/bin/jest')
     const res = spawn(process.execPath, [jest, '-c', 'sim/jest.config.js', '--silent', '--runInBand'], {
       cwd: MOBILE,
-      env: { ...process.env, SIM_RUN_ARGS: JSON.stringify({ policy: opts.policy, runs: opts.runs, seed: opts.seed, ...(opts.post ? { post: opts.post } : {}) }), SIM_RUN_OUT: out },
+      env: { ...process.env, SIM_RUN_ARGS: JSON.stringify({ policy: opts.policy, runs: opts.runs, seed: opts.seed, ...(tuningOf(opts) ? { tuning: tuningOf(opts) } : {}), ...(opts.post ? { post: opts.post } : {}) }), SIM_RUN_OUT: out },
       encoding: 'utf-8',
       maxBuffer: 64 * 1024 * 1024,
     })
@@ -278,6 +309,14 @@ export async function main(argv, {
   if (opts.help) {
     stdout.write(`${USAGE}\n`)
     return 0
+  }
+  if (opts.post && tuningOf(opts)) {
+    stderr.write(`sim-run: --post is refused with a tuning flag; a tuning batch never reaches the nightly data\n${USAGE}\n`)
+    return 2
+  }
+  if (opts.noRelicStats && !opts.startRelic?.length) {
+    stderr.write(`sim-run: --no-relic-stats needs a --start-relic\n${USAGE}\n`)
+    return 2
   }
   if (opts.compare) {
     if (opts.post || opts.json) {

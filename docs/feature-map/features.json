@@ -314,7 +314,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/feature-map-e2e.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
@@ -1806,6 +1806,12 @@
       "from": "area:Game",
       "to": "area:Character",
       "file": "axiomancer-mechanics/src/Game/legacy-slots.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Character",
+      "file": "axiomancer-mechanics/src/Game/run-sim/run-policy.anvil.ts"
     },
     {
       "kind": "coupling",
