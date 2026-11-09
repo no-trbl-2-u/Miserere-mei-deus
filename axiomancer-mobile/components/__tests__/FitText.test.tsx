@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 
 import { FitText } from '../FitText';
 import { enemyNameRoom } from '../combat/encounter/enemy-name-fit';
@@ -77,5 +77,92 @@ describe('FitText', () => {
     it('always renders the whole text, never an ellipsis cut', () => {
         const { getByTestId } = mountAt({ text: 'The Death Beholder', letterSpacing: 0.6, room: enemyNameRoom }, 336, 213.6);
         expect(getByTestId('fit').props.children).toBe('The Death Beholder');
+    });
+});
+
+/**
+ * The twin is re-measured, never trusted from before the game's font arrived.
+ * `document.fonts` is stubbed (the jest env has none) and put back after each
+ * case. A re-measure is a remount of the twin (its key changes), watched
+ * directly: the twin host element is a new object after it, the same object
+ * when nothing re-keyed it.
+ */
+describe('FitText re-measures', () => {
+    type Listener = () => void;
+    const g = globalThis as unknown as { document?: { fonts?: unknown } };
+    let hadDocument = false;
+    let prevDocument: { fonts?: unknown } | undefined;
+    let prevFonts: unknown;
+    let listeners: Map<string, Set<Listener>>;
+    let resolveReady: () => void;
+    let addEventListener: jest.Mock;
+    let removeEventListener: jest.Mock;
+
+    beforeEach(() => {
+        hadDocument = g.document !== undefined;
+        prevDocument = g.document;
+        prevFonts = g.document?.fonts;
+        listeners = new Map();
+        addEventListener = jest.fn((type: string, fn: Listener) => {
+            if (!listeners.has(type)) listeners.set(type, new Set());
+            listeners.get(type)!.add(fn);
+        });
+        removeEventListener = jest.fn((type: string, fn: Listener) => {
+            listeners.get(type)?.delete(fn);
+        });
+        const ready = new Promise<void>((resolve) => { resolveReady = resolve; });
+        const fonts = { addEventListener, removeEventListener, ready };
+        if (g.document) g.document.fonts = fonts;
+        else g.document = { fonts };
+    });
+
+    afterEach(() => {
+        if (!hadDocument) delete g.document;
+        else if (prevDocument) prevDocument.fonts = prevFonts;
+    });
+
+    const twin = (u: ReturnType<typeof render>) => u.getByTestId('fit-probe', { includeHiddenElements: true });
+    const mount = () => {
+        const u = render(<FitText text="The Death Beholder" style={{}} nominal={18} floor={11} testID="fit" />);
+        // Settle the first width so each case starts from a steady twin.
+        fireEvent(u.getByTestId('fit'), 'layout', layout(366));
+        return u;
+    };
+
+    it('leaves the twin alone when nothing changed', () => {
+        const u = mount();
+        const before = twin(u);
+        fireEvent(u.getByTestId('fit'), 'layout', layout(366));
+        expect(twin(u)).toBe(before);
+    });
+
+    it('remounts the twin when the fonts finish a load (loadingdone)', () => {
+        const u = mount();
+        const before = twin(u);
+        expect(addEventListener).toHaveBeenCalledWith('loadingdone', expect.any(Function));
+        act(() => { listeners.get('loadingdone')!.forEach((fn) => fn()); });
+        expect(twin(u)).not.toBe(before);
+    });
+
+    it('remounts the twin once document.fonts.ready resolves', async () => {
+        const u = mount();
+        const before = twin(u);
+        await act(async () => { resolveReady(); });
+        expect(twin(u)).not.toBe(before);
+    });
+
+    it('remounts the twin when the wrapper\'s width changes', () => {
+        const u = mount();
+        const before = twin(u);
+        fireEvent(u.getByTestId('fit'), 'layout', layout(336));
+        expect(twin(u)).not.toBe(before);
+    });
+
+    it('removes its loadingdone listener on unmount', () => {
+        const u = mount();
+        const added = addEventListener.mock.calls.find(([type]) => type === 'loadingdone')![1];
+        u.unmount();
+        expect(removeEventListener).toHaveBeenCalledWith('loadingdone', added);
+        expect(listeners.get('loadingdone')!.size).toBe(0);
     });
 });

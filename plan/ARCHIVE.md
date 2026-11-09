@@ -610,3 +610,4 @@
 - 2026-11-09 · 99.9 · A stakes card test fails on an undrawn VM field · 83cd0629..b9262f7a (#1505)
 - 2026-11-09 · 99.1 · A stale card-rules row now fails with the seed command · 46c09873..46c09873 (#1512)
 - 2026-11-09 · 135.3 (alias: SM2c) · Four player personas play whole Chapter 1 runs · 779feb6c..779feb6c (#1513)
+- 2026-11-09 · 123.2 (alias: PF2a) · Combat static SVG layers and dice are texture-cached · 50fe155d..50fe155d (#1511)

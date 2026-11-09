@@ -110,7 +110,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
 | 121 | Title plate legibility: prove the plate, then replace it | [121-tp1-title-plate-legibility.md](121-tp1-title-plate-legibility.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
-| 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 2 left |
+| 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
 | 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 2 left |
 | 126 | The Obsidian vault: brainstorm and plot from the phone | [126-ov1-obsidian-vault.md](126-ov1-obsidian-vault.md) | planned | 1 left |
 | 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
