@@ -170,7 +170,7 @@ const TOP_STRIP_PAD_X = 12;
 const TOP_STRIP_GAP = 10;
 /** JetBrains Mono advance per px of font size, with a little slack; the ◆ falls back
  *  to a wider face, so it is counted as a full em. */
-const STRIP_MONO_EM = 0.62;
+export const STRIP_MONO_EM = 0.62;
 const STRIP_DIAMOND_EM = 1;
 
 /** A strip segment's width at `spacing`, in points. */
