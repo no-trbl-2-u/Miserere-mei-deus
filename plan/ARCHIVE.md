@@ -657,3 +657,5 @@
 - 2026-11-09 · 161 · spec complete: A second death reaches the Game Over screen · nothing further to absorb: pinned by run-end-no-arrival.engine.test.tsx · deleted in (this commit)
 - 2026-11-09 · 162 · spec complete: Six foes get moves of their own · absorbed into identity (D182) · deleted in (this commit)
 - 2026-11-09 · 163.1 (alias: TK1a) · The Worker takes a tester token on the app's POSTs only · 1de09fc3..affc6c7e (#1549)
+- 2026-11-09 · 164.1 (alias: SR1a) · Settle retires an emptied spec whose last close says absorb · 39e8a193..8a5806b1 (#1550)
+- 2026-11-09 · 164 · spec complete: A finished spec retires itself at settle · D184, pinned by scripts/pr-merge.test.mjs and scripts/loop-pr.test.mjs · deleted in (this commit)

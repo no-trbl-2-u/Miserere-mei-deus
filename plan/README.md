@@ -38,7 +38,6 @@ needs are done):
 
 
 
-- **164.1** · SR1a: settle retires an emptied spec whose last close says where its rules went (T, `/plot asap`, 2026-11-09)
 
 - **163.4** · TK1d: the production profile builds the prod APK, with no DEV TOOLS (T, `/plot`, 2026-11-09; 163.3 needs it)
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2, 163.4)
@@ -92,7 +91,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.4 and 163.3) | 3 left |
-| 164 | A finished spec retires itself at settle | [164-sr1-spec-retires-itself.md](164-sr1-spec-retires-itself.md) | planned (**Asap**: 164.1) | 1 left |
 | 165 | The Rules Glossary lists every keyword | [165-rg1-rules-glossary-keywords.md](165-rg1-rules-glossary-keywords.md) | planned | 1 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 6 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
