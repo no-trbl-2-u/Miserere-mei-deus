@@ -11,6 +11,7 @@ const base = require('../jest.config.js');
 module.exports = {
     ...base,
     rootDir: '..',
+    setupFilesAfterEnv: [...(base.setupFilesAfterEnv ?? []), '<rootDir>/sim/sim-run.setup.ts'],
     roots: ['<rootDir>/sim'],
     testMatch: ['<rootDir>/sim/sim-run.entry.ts'],
     testTimeout: 30 * 60 * 1000,

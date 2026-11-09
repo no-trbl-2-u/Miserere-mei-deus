@@ -616,3 +616,4 @@
 - 2026-11-09 · 115.6 (alias: MF1f) · The Merciful's Brim Over and Absolution quest relics · deefe6c4..deefe6c4 (#1525)
 - 2026-11-09 · 156.3 (alias: TY1c) · Every screen sets its type through a role · 09b1e3fc..9655a6cd (#1534)
 - 2026-11-09 · 135.8 (alias: SM2i) · Every bot spends at the village anvil; the Wanderer at random · 26018e17..d34bdd83 (#1529)
+- 2026-11-09 · 135.9 (alias: SM2j) · sim:run takes shillings, boss level, start relics and mix-and-match flags · 57094d8f..1dfcd1ea (#1535)

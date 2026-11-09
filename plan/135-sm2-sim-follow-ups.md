@@ -464,11 +464,6 @@ no exit code depends on it.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A21** `sim:run` takes `--shillings`, `--boss-level`, `--start-relic`, `--no-relic-stats`, `--fight`,
-  `--no-anvil`, `--no-guard` and a list for `--policy`. Tests show each changes the run as named, and that with
-  `--no-relic-stats` the worn relic adds no stat while `relicLibrary`'s entry and the library's own tests are unchanged.
-  No file outside `axiomancer-mobile/sim/`, `scripts/sim-run.mjs` and its test changes for this chunk. `--post` with any
-  of these flags exits non-zero before a run is played; an unknown relic or policy is refused.
 - **A22** A run's line and `--json` carry `bossDamagePct` and `endNodeId`, and a batch ends with one row per
   policy: clears, average level, average boss damage, average deck by lane and where failed runs ended. Tests cover a
   run that never met the boss (null, left out of the average). No exit code depends on these numbers.
@@ -479,9 +474,8 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 7 open · 15 closed · next A23
+Measure: 6 open · 16 closed · next A23
 
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs — · alias: SM2j
-- [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k
+- [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs — · alias: SM2k

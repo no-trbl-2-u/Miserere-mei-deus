@@ -7,14 +7,18 @@
 import { CHARACTER_ROSTER, type RunPolicy } from '@mechanics';
 
 import type { PlayRunOptions, RunResult } from './run-driver';
+import { tunedPolicy, type RunTuning } from './run-options';
 import { playRunPosted, type PostedRun, type SimPostContext } from './run-post';
 import { breakKindOf, toRunBreak, type BreakKind, type RunBreak } from './run-breaks';
 
 /** What `npm run sim:run` asks for. */
 export interface SimRunRequest {
+    /** One policy id, a comma list, or `lanes` (the entry expands it). */
     readonly policy: string;
     readonly runs: number;
     readonly seed: number;
+    /** The tuning flags (never with `post`: a tuning batch does not reach the nightly data). */
+    readonly tuning?: RunTuning;
     /** Present with `--post` (phase SM1g): the batch and build the rows are stamped with. */
     readonly post?: SimPostContext;
     /** The checked-out commit the breaks name (phase SM2d); null or absent when none is known. */
@@ -78,16 +82,16 @@ export type SimRunEntry = RunResult | StuckRun;
  */
 export function playRuns(
     policy: RunPolicy,
-    request: Pick<SimRunRequest, 'runs' | 'seed' | 'build'>,
+    request: Pick<SimRunRequest, 'runs' | 'seed' | 'build' | 'tuning'>,
     play: (options: PlayRunOptions) => RunResult,
 ): SimRunEntry[] {
     const out: SimRunEntry[] = [];
     for (let i = 0; i < request.runs; i++) {
         const seed = request.seed + i;
         try {
-            out.push(play({ policy, seed }));
+            out.push(play({ policy, seed, ...(request.tuning ? { tuning: request.tuning } : {}) }));
         } catch (error) {
-            out.push(recordBreak(policy, seed, request.build ?? null, error));
+            out.push(recordBreak(tunedPolicy(policy, request.tuning), seed, request.build ?? null, error));
         }
     }
     return out;
