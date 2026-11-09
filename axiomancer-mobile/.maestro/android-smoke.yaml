@@ -1,0 +1,131 @@
+# The Android smoke flow, run by
+# .github/workflows/android-smoke.yml against a preview APK on an emulator.
+#
+# It reaches the title, opens the main menu, goes through SETTINGS to the
+# /dev route (a preview build has dev tools on: app.config.ts), arms the
+# lowest standard foe, enters the fight, and finishes one combat round:
+# END pressed, the enemy's threat phase resolved, and the END control live
+# again for the next phase. It plays no card, so it needs no drag.
+#
+# Every selector is a testID already in the app (React Native maps testID to
+# the Android resource id that Maestro's `id:` reads), so the flow runs on any
+# preview build cut since 2026-11-08 without a rebuild.
+#
+# Run by hand against a connected device or emulator with the APK installed:
+#   maestro test axiomancer-mobile/.maestro/android-smoke.yaml
+appId: com.axiomancer.mobile
+name: android-smoke
+---
+- launchApp:
+    clearState: true
+    stopApp: true
+
+# The title.
+- extendedWaitUntil:
+    visible:
+      id: title-screen
+    timeout: 90000
+- takeScreenshot: 01-title
+
+# EMBARK takes no press until its fade-in begins, so tap until the menu opens.
+- retry:
+    maxRetries: 4
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: title-embark
+          timeout: 20000
+      - tapOn:
+          id: title-embark
+      - extendedWaitUntil:
+          visible:
+            id: main-menu-settings
+          timeout: 8000
+- takeScreenshot: 02-menu
+
+# SETTINGS, then DEV TOOLS.
+- tapOn:
+    id: main-menu-settings
+- scrollUntilVisible:
+    element:
+      id: settings-dev-tools-link
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: settings-dev-tools-link
+
+# The ENCOUNTERS section starts closed; open it and arm a standard foe.
+- scrollUntilVisible:
+    element:
+      id: dev-section-encounters-toggle
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: dev-section-encounters-toggle
+- scrollUntilVisible:
+    element:
+      id: debug-trigger-encounter-encounter
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: debug-trigger-encounter-encounter
+
+# The reveal, once the ink curtain has drawn back.
+- extendedWaitUntil:
+    visible:
+      id: combat-reveal
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: ink-curtain
+    timeout: 20000
+- takeScreenshot: 03-reveal
+- scrollUntilVisible:
+    element:
+      id: combat-enter
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: combat-enter
+
+# Round one: the board and a live END control.
+- extendedWaitUntil:
+    visible:
+      id: combat-board
+    timeout: 60000
+- tapOn:
+    id: combat-dice-skip
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: combat-end-phase
+      enabled: true
+    timeout: 30000
+- assertNotVisible:
+    id: error-boundary-screen
+- takeScreenshot: 04-round-1
+
+# END: the enemy acts. The control locks while the phase resolves (about a
+# second), so it reads disabled first when the device is quick enough to see
+# it, then live again once the next phase begins.
+- tapOn:
+    id: combat-end-phase
+- extendedWaitUntil:
+    visible:
+      id: combat-end-phase
+      enabled: false
+    timeout: 3000
+    optional: true
+- tapOn:
+    id: combat-dice-skip
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: combat-end-phase
+      enabled: true
+    timeout: 45000
+- assertVisible:
+    id: combat-board
+- assertNotVisible:
+    id: error-boundary-screen
+- takeScreenshot: 05-round-2
