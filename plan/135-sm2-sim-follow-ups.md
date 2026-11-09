@@ -464,12 +464,6 @@ no exit code depends on it.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A20** `RunPolicy` has a `visitAnvil` seam, the driver carries its answer out through the blacksmith store
-  actions before the village's other steps, an illegal answer throws as other seams do, and the no-id guard covers the
-  helper. A driver test shows a lane bot and a persona with shillings at an anvil spend them there and own the result;
-  another shows the helper keeps back the bed's price when under half VITAE. The Wanderer's anvil and village answers
-  are legal over fixture contexts, the same seed gives the same spending, different seeds give different spending, and
-  a guard test finds no `Math.random` in the policy files.
 - **A21** `sim:run` takes `--shillings`, `--boss-level`, `--start-relic`, `--no-relic-stats`, `--fight`,
   `--no-anvil`, `--no-guard` and a list for `--policy`. Tests show each changes the run as named, and that with
   `--no-relic-stats` the worn relic adds no stat while `relicLibrary`'s entry and the library's own tests are unchanged.
@@ -485,10 +479,9 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 8 open · 14 closed · next A23
+Measure: 7 open · 15 closed · next A23
 
 - [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
 - [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.8** The bots use the anvil · M · closes A20 · needs — · alias: SM2i
-- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.8 · alias: SM2j
+- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs — · alias: SM2j
 - [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k
