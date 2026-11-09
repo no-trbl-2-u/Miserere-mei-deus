@@ -44,7 +44,7 @@ needs are done):
 - **99.7** · automate footgun `recast-pinned-orphan-lens` (seen 2×), spec 99's ladder chunk.
 - **99.8** · automate footgun `scratchpad-script-no-resolve` (seen 2×), spec 99's ladder chunk.
 - **99.9** · automate footgun `stakes-card-vm-undrawn-lines` (seen 2×), spec 99's ladder chunk.
-- **99.10** · automate footgun `windows-tar-tree-lint` (seen 2×), spec 99's ladder chunk.
+- **99.10** · automate footgun `windows-tar-tree-lint` (seen 7×), spec 99's ladder chunk.
 
 - **160.1** · MG1a: the merge decision re-runs when the verify gate finishes (T's end gate, `/plot`, 2026-11-08)
 
