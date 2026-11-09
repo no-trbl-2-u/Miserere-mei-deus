@@ -16,7 +16,7 @@ import { Text, View } from 'react-native';
 import { MenuButton } from '@/components/menu/MenuButton';
 import { useSaveSlotSummaries } from '@/state/SaveSlotsProvider';
 import { MAIN_MENU_COPY, selectMainMenuViewModel } from '@/state/presenters/main-menu.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface MainMenuProps {
@@ -101,13 +101,13 @@ const useStyles = makeStyles((AXM) => ({
     column: { width: '100%', maxWidth: MENU_COLUMN_MAX_WIDTH, alignSelf: 'center' },
     header: { alignItems: 'center', marginBottom: 28 },
     eyebrow: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 3,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 30,
         color: AXM.parchment,
         marginTop: 6,

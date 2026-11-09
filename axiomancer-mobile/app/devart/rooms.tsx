@@ -13,7 +13,7 @@ import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { RoomScene } from '@/components/labyrinth/RoomScene';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { getAporiaAct } from '@mechanics';
@@ -85,13 +85,13 @@ const useStyles = makeStyles((AXM) => ({
         gap: 16,
     },
     heading: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.sectionHead.fontFamily,
         fontSize: 22,
         color: AXM.parchment,
         marginBottom: 8,
     },
     actTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.mapName.fontFamily,
         fontSize: 17,
         color: AXM.bone,
         marginVertical: 10,
@@ -103,9 +103,9 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 18,
     },
     label: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 12,
-        letterSpacing: 0.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.ash,
     },
     frame: {

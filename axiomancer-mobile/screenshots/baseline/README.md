@@ -13,6 +13,8 @@ One PNG per route, named after the route's stable `name` in
 | `root.png` | `/` | redirects to the active tab |
 | `character.png` | `/character` | `app/(tabs)/character/index.tsx` |
 | `inventory.png` | `/inventory` | `app/(tabs)/inventory/index.tsx` |
+| `deck.png` | `/deck` | `app/(tabs)/deck/index.tsx` |
+| `settings.png` | `/settings` | `app/(tabs)/settings/index.tsx` |
 | `exploration.png` | `/exploration` | `app/(tabs)/exploration/index.tsx` |
 | `combat-encounter.png` | `/combat-encounter` | `app/combat-encounter/index.tsx` |
 | `combat-board.png` | `/combat-encounter` entered as `combat-encounter` is (seed 16, the lowest-level standard foe), then ENTER COMBAT pressed, dice at rest; waits on a testID for each brass place (intent badge, conviction chip, momentum chip, dock, END, player medallion, player VITAE bar) and carries its own 0.1% diff line | `components/combat/encounter/CombatBoard.tsx`, `CombatFooterDock.tsx`, `CombatCombatantPane.tsx` (the fight's board) |

@@ -11,7 +11,7 @@ import { Pressable, Text, View } from 'react-native';
 import type { CombatSummary } from '@mechanics';
 import { summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
 import type { SpareSummaryLine } from '@/state/presenters/spare-reward.engine';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
@@ -102,20 +102,20 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLi
 const useStyles = makeStyles((AXM) => ({
     backdrop: { ...({ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 } as const), backgroundColor: 'rgba(0,0,0,0.82)', alignItems: 'center', justifyContent: 'center', padding: 20, zIndex: 50 },
     panel: { width: '100%', maxWidth: 420, borderWidth: 2, backgroundColor: AXM.panelBg, padding: 16 },
-    headline: { fontFamily: FONTS.gothic, fontSize: 20, letterSpacing: 0.5, textAlign: 'center', marginBottom: 12 },
-    rowsHead: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1, color: AXM.bone, marginBottom: 4 },
+    headline: { fontFamily: TYPE_ROLES.sectionHead.fontFamily, fontSize: 20, textAlign: 'center', marginBottom: 12 },
+    rowsHead: { fontFamily: TYPE_ROLES.sectionHead.fontFamily, fontSize: 11, color: AXM.bone, marginBottom: 4 },
     rows: { gap: 5, marginBottom: 10 },
     row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', borderBottomWidth: 1, borderBottomColor: AXM.ash, paddingBottom: 3 },
-    rowName: { flex: 1, fontFamily: FONTS.serif, fontSize: 14, color: AXM.parchment },
-    rowVal: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.sulfur },
-    noRows: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.bone, textAlign: 'center' },
-    coach: { fontFamily: FONTS.sans, fontSize: 11, color: HUE.payoffGold, textAlign: 'center', lineHeight: 15, marginTop: 6, paddingHorizontal: 4, letterSpacing: 0.2 },
+    rowName: { flex: 1, fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 14, color: AXM.parchment },
+    rowVal: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.sulfur },
+    noRows: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: AXM.bone, textAlign: 'center' },
+    coach: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: HUE.payoffGold, textAlign: 'center', lineHeight: 15, marginTop: 6, paddingHorizontal: 4, letterSpacing: 0.2 },
     totals: { gap: 2, marginBottom: 8 },
-    total: { fontFamily: FONTS.sans, fontSize: 12, color: AXM.bone },
-    mercyLine: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.parchment, textAlign: 'center', lineHeight: 18, marginBottom: 10 },
-    best: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 0.6, textAlign: 'center', marginBottom: 12 },
+    total: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.bone },
+    mercyLine: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: AXM.parchment, textAlign: 'center', lineHeight: 18, marginBottom: 10 },
+    best: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, textAlign: 'center', marginBottom: 12 },
     btn: { borderWidth: 2, paddingVertical: 9, alignItems: 'center' },
-    btnText: { fontFamily: FONTS.gothic, fontSize: 16, letterSpacing: 1 },
+    btnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, letterSpacing: TYPE_ROLES.button.letterSpacing},
 
     // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side
     // ornament, 26pt of top and bottom. Body faces are today's size or larger.

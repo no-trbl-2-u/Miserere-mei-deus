@@ -28,7 +28,7 @@ import type {
     HazardOutcomeVM,
 } from '@/state/presenters/hazard.engine';
 import { DICE_ROLL_TIMING, type DiceSpring } from '@/state/combat/dice-roll-ritual.timing';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 import { HazardCard } from './HazardCard';
@@ -296,29 +296,29 @@ export function CardDetailOverlay({ card, onClose }: { card: HazardCardVM; onClo
 
 const useStyles = makeStyles((AXM) => ({
     rollRoot: { ...StyleSheet.absoluteFillObject, zIndex: 55, backgroundColor: HUE.rollBg, alignItems: 'center' },
-    rollBadge: { fontFamily: FONTS.sans, fontSize: 14, letterSpacing: 2, color: AXM.bg, paddingHorizontal: 12, paddingVertical: 3, overflow: 'hidden' },
-    rollTitle: { fontFamily: FONTS.gothic, fontSize: 26, color: AXM.parchment, letterSpacing: 1, marginTop: 14 },
-    rollSub: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 14, color: AXM.bone, marginTop: 3 },
+    rollBadge: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: AXM.bg, paddingHorizontal: 12, paddingVertical: 3, overflow: 'hidden' },
+    rollTitle: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 26, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing, marginTop: 14 },
+    rollSub: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 14, color: AXM.bone, marginTop: 3 },
     rollDice: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 18, width: '100%' },
-    rollFooter: { paddingBottom: 50, fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, letterSpacing: 2 },
+    rollFooter: { paddingBottom: 50, fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 12, color: AXM.bone},
 
     flashRoot: { ...StyleSheet.absoluteFillObject, zIndex: 58, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(4,3,3,0.93)' },
-    flashEyebrow: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2, color: AXM.bone },
-    flashVerdict: { fontFamily: FONTS.gothic, fontSize: 34, letterSpacing: 3, textShadowColor: HUE.black, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 0 },
+    flashEyebrow: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    flashVerdict: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 34, letterSpacing: TYPE_ROLES.title.letterSpacing, textShadowColor: HUE.black, textShadowOffset: { width: 2, height: 2 }, textShadowRadius: 0 },
     flashStats: { flexDirection: 'row', gap: 14, marginTop: 10 },
     flashStat: { alignItems: 'center', gap: 3, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
-    flashStatLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1 },
-    flashStatValue: { fontFamily: FONTS.sans, fontSize: 20, lineHeight: 21 },
-    flashStatNeed: { fontFamily: FONTS.mono, fontSize: 13, color: AXM.bone },
-    flashCarry: { fontFamily: FONTS.mono, fontSize: 12, letterSpacing: 1, color: HZ.gold, marginTop: 14 },
-    tapToContinue: { marginTop: 22, fontFamily: FONTS.mono, fontSize: 12, color: AXM.bone, letterSpacing: 1.5, textAlign: 'center' },
+    flashStatLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    flashStatValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 20, lineHeight: 21 },
+    flashStatNeed: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.bone },
+    flashCarry: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: HZ.gold, marginTop: 14 },
+    tapToContinue: { marginTop: 22, fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, color: AXM.bone, letterSpacing: TYPE_ROLES.button.letterSpacing, textAlign: 'center' },
 
     outcomeRoot: { ...StyleSheet.absoluteFillObject, zIndex: 60, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, backgroundColor: 'rgba(5,4,3,0.97)' },
-    outcomeWord: { fontFamily: FONTS.gothic, fontSize: 56, letterSpacing: 3, lineHeight: 58, textShadowColor: HUE.black, textShadowOffset: { width: 3, height: 3 }, textShadowRadius: 0 },
-    outcomeSub: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2, color: AXM.bone, marginTop: 10 },
-    outcomeLine: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.parchment, marginTop: 16, textAlign: 'center', lineHeight: 18, maxWidth: 280 },
+    outcomeWord: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 56, letterSpacing: TYPE_ROLES.title.letterSpacing, lineHeight: 58, textShadowColor: HUE.black, textShadowOffset: { width: 3, height: 3 }, textShadowRadius: 0 },
+    outcomeSub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.bone, marginTop: 10 },
+    outcomeLine: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: AXM.parchment, marginTop: 16, textAlign: 'center', lineHeight: 18, maxWidth: 280 },
     outcomeCta: { marginTop: 30, paddingHorizontal: 28, paddingVertical: 11, borderWidth: 2, backgroundColor: AXM.bg },
-    outcomeCtaText: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 2.5 },
+    outcomeCtaText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 17, letterSpacing: TYPE_ROLES.button.letterSpacing},
 
     detailRoot: { ...StyleSheet.absoluteFillObject, zIndex: 62, backgroundColor: 'rgba(5,4,3,0.96)' },
 

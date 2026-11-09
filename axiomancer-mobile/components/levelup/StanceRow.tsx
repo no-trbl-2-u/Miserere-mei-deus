@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { SectionLabel } from '@/components/SectionLabel';
 import { StanceGlyph } from '@/components/StanceGlyph';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export type LevelStance = 'heart' | 'body' | 'mind';
@@ -118,18 +118,17 @@ const useStyles = makeStyles((AXM) => ({
     counterCol: { flex: 1, alignItems: 'flex-start' },
     numericRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
     bigNumber: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.bigNumber.fontFamily,
         fontSize: 36,
         color: AXM.sulfur,
-        letterSpacing: 1,
     },
     fromText: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 8,
         color: AXM.bone,
     },
     deltaLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
         color: AXM.parchment,
         opacity: 0.5,
@@ -154,7 +153,7 @@ const useStyles = makeStyles((AXM) => ({
     btnDec: { borderWidth: 1, borderColor: AXM.ash, borderStyle: 'dashed' },
     btnDisabled: { borderColor: AXM.ash },
     btnGlyph: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 22,
         lineHeight: 22,
     },

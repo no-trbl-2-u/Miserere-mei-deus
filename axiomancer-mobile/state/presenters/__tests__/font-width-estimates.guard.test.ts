@@ -25,7 +25,7 @@ import { describe, expect, it } from '@jest/globals';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES, type TypeRoleId } from '@/theme/axm';
 import { CAPS_EM, SERIF_EM, SPACE_EM } from '@/state/presenters/paid-line.engine';
 import { GOTHIC_CAP_EM, effectGlyphEm } from '@/components/hazard/HazardCard';
 import { STRIP_MONO_EM } from '@/components/hazard/RouteSelect';
@@ -44,8 +44,8 @@ const FACE_FILES: Readonly<Record<string, string>> = {
 interface Site {
     /** `file: name`, the key STALE uses. */
     id: string;
-    /** Which `FONTS` entry the text is styled with. */
-    font: keyof typeof FONTS;
+    /** The `TYPE_ROLES` job the text is styled with. */
+    role: TypeRoleId;
     /** The glyphs the estimate stands for. */
     glyphs: string;
     /** The estimate, em per px of size. */
@@ -53,13 +53,13 @@ interface Site {
 }
 
 const SITES: readonly Site[] = [
-    { id: 'paid-line.engine: CAPS_EM', font: 'sans', glyphs: UPPER, estimate: () => CAPS_EM },
-    { id: 'paid-line.engine: SERIF_EM', font: 'serif', glyphs: LOWER, estimate: () => SERIF_EM },
-    { id: 'paid-line.engine: SPACE_EM', font: 'serif', glyphs: ' ', estimate: () => SPACE_EM },
-    { id: 'HazardCard: GOTHIC_CAP_EM', font: 'gothic', glyphs: UPPER, estimate: () => GOTHIC_CAP_EM },
-    { id: 'HazardCard: effectGlyphEm caps', font: 'sans', glyphs: CAPS_DIGITS, estimate: effectGlyphEm },
-    { id: 'HazardCard: effectGlyphEm space', font: 'sans', glyphs: ' ', estimate: effectGlyphEm },
-    { id: 'RouteSelect: STRIP_MONO_EM', font: 'mono', glyphs: `${UPPER}—`, estimate: () => STRIP_MONO_EM },
+    { id: 'paid-line.engine: CAPS_EM', role: 'chip', glyphs: UPPER, estimate: () => CAPS_EM },
+    { id: 'paid-line.engine: SERIF_EM', role: 'cardRules', glyphs: LOWER, estimate: () => SERIF_EM },
+    { id: 'paid-line.engine: SPACE_EM', role: 'cardRules', glyphs: ' ', estimate: () => SPACE_EM },
+    { id: 'HazardCard: GOTHIC_CAP_EM', role: 'title', glyphs: UPPER, estimate: () => GOTHIC_CAP_EM },
+    { id: 'HazardCard: effectGlyphEm caps', role: 'chip', glyphs: CAPS_DIGITS, estimate: effectGlyphEm },
+    { id: 'HazardCard: effectGlyphEm space', role: 'chip', glyphs: ' ', estimate: effectGlyphEm },
+    { id: 'RouteSelect: STRIP_MONO_EM', role: 'count', glyphs: `${UPPER}—`, estimate: () => STRIP_MONO_EM },
 ];
 
 /**
@@ -181,7 +181,7 @@ describe('font width estimates cover the faces they size (footgun font-width-est
     });
 
     it.each(SITES.map(s => [s.id, s] as const))('%s covers its face unless listed STALE', (id, site) => {
-        const face = String(FONTS[site.font]);
+        const face = TYPE_ROLES[site.role].fontFamily;
         const measured = meanAdvance(faceFor(face), site.glyphs);
         const covers = estimateMean(site) + EPS >= measured;
         const note = `${id}: estimate ${estimateMean(site).toFixed(3)} em vs ${face} ${measured.toFixed(3)} em`;

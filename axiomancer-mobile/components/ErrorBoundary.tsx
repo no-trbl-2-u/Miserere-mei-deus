@@ -50,7 +50,7 @@ import {
 import { getLogger, type AxmLogEntry } from '@mechanics';
 
 import { CrashReportPanel } from '@/components/CrashReportPanel';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { useGameState } from '@/state/GameStoreProvider';
 import { flushLogTail } from '@/state/logging';
@@ -339,9 +339,9 @@ const useStyles = makeStyles((AXM) => ({
         borderStyle: 'dashed',
     },
     errorCode: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.rust,
         textAlign: 'center',
         marginBottom: 4,
@@ -350,10 +350,10 @@ const useStyles = makeStyles((AXM) => ({
     // parchment overlay on top. Stacked Text nodes inside a single
     // line keep the offsets predictable.
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 38,
         lineHeight: 42,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
         textAlign: 'center',
         marginTop: 8,
@@ -367,15 +367,15 @@ const useStyles = makeStyles((AXM) => ({
         top: 56,
         left: 0,
         right: 0,
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 38,
         lineHeight: 42,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
         textAlign: 'center',
     },
     scribeHint: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         lineHeight: 18,
         color: AXM.bone,
@@ -385,9 +385,9 @@ const useStyles = makeStyles((AXM) => ({
     },
     section: { marginTop: 14 },
     sectionLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         marginBottom: 4,
     },
@@ -398,7 +398,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 8,
     },
     codeBlock: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 10,
         lineHeight: 14,
         color: AXM.parchment,
@@ -417,10 +417,10 @@ const useStyles = makeStyles((AXM) => ({
     },
     tryAgainPressed: { opacity: 0.85 },
     tryAgainLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 16,
         color: AXM.parchment,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
     returnHearth: {
         paddingVertical: 10,
@@ -428,14 +428,13 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     returnHearthLabel: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
         color: AXM.bone,
     },
     consolation: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.8,
         color: AXM.bone,
         textAlign: 'center',
         marginTop: 14,

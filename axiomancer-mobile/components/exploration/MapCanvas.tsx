@@ -13,7 +13,7 @@ import Animated, {
 import Svg, { Path, Circle, G, Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
 import { Image } from '@/lib/platform/image';
 import { MAP_FOG } from '@/assets/images/map-fog';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type { ExplorationNode, ExplorationEdge } from '@/state/presenters/exploration.engine';
 import type { MapSheet } from '@/state/exploration-maps';
@@ -1169,7 +1169,7 @@ const useStyles = makeStyles((AXM) => ({
         zIndex: 4,
     },
     recenterGlyph: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 15,
         lineHeight: 18,
         color: AXM.bone,

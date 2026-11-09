@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 interface SlotBannerProps {
@@ -47,14 +47,14 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.bone,
     },
     slotBannerEyebrow: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
         color: AXM.bone,
-        letterSpacing: 1.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         textTransform: 'uppercase',
     },
     slotBannerLabel: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 14,
         color: AXM.parchment,
         marginTop: 2,
@@ -66,10 +66,9 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.bone,
     },
     slotBannerClearText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
         color: AXM.bone,
-        letterSpacing: 1.4,
         textTransform: 'uppercase',
     },
 }));

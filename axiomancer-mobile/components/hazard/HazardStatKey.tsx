@@ -15,7 +15,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { HAZARD_STAT_KEY } from '@/state/presenters/hazard.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { usePalette } from '@/theme/runtime';
 
 import { ProgGlyph } from './glyphs';
@@ -49,6 +49,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 4,
     },
-    label: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.5 },
-    caption: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 0.4, marginTop: 5, textAlign: 'center' },
+    label: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    caption: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: 0.4, marginTop: 5, textAlign: 'center' },
 });

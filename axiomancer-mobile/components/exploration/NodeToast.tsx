@@ -6,7 +6,7 @@ import Animated, {
     withTiming,
     Easing,
 } from 'react-native-reanimated';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 interface NodeToastProps {
@@ -54,7 +54,7 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     nodeToastText: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         color: AXM.parchment,
     },

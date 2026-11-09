@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Pressable, View, Text, TouchableOpacity } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { TooltipProvider } from '@/components/tooltip/TooltipProvider';
 import type { ItemModalViewModel } from '@/state/presenters/inventory.modal.engine';
@@ -132,13 +132,13 @@ const useStyles = makeStyles((AXM) => ({
         padding: 16,
     },
     modalTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 20,
         color: AXM.parchment,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
     },
     modalDesc: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         marginTop: 4,
@@ -151,7 +151,7 @@ const useStyles = makeStyles((AXM) => ({
         borderStyle: 'dashed',
     },
     modalPreview: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
         color: AXM.parchment,
         lineHeight: 16,
@@ -169,13 +169,13 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 1,
     },
     modalStatLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     modalStatVal: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 11,
         color: AXM.parchment,
     },
@@ -187,14 +187,14 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
     },
     modalModEyebrow: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginBottom: 4,
     },
     modalModLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         lineHeight: 15,
         color: AXM.sulfur,
@@ -207,7 +207,7 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
     },
     modalEffectLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         lineHeight: 15,
     },
@@ -218,14 +218,14 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.blood,
     },
     modalNotWorn: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 12,
-        letterSpacing: 0.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.rust,
         marginBottom: 6,
     },
     modalPrompt: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         color: AXM.parchment,
         marginTop: 12,
@@ -246,9 +246,9 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.bone,
     },
     modalBtnText: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.parchment,
     },
 }));

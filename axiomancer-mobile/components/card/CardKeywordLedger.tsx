@@ -19,7 +19,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface CardKeywordLedgerEntry {
@@ -88,8 +88,8 @@ const useStyles = makeStyles((AXM) => ({
     row: { alignSelf: 'stretch', paddingHorizontal: 10, paddingVertical: 6 },
     rowSep: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(255,255,255,0.14)' },
     head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2, gap: 8 },
-    name: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.2, color: AXM.sulfur, flexShrink: 1 },
+    name: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.title.letterSpacing, color: AXM.sulfur, flexShrink: 1 },
     nameMinor: { color: AXM.ash },
-    tag: { fontFamily: FONTS.sans, fontSize: 8.5, letterSpacing: 1.2, flexShrink: 0, color: AXM.bone },
-    def: { fontFamily: FONTS.serif, fontSize: 11.5, color: AXM.parchment, lineHeight: 16 },
+    tag: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 8.5, flexShrink: 0, color: AXM.bone },
+    def: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11.5, color: AXM.parchment, lineHeight: 16 },
 }));

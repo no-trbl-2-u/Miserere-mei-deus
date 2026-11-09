@@ -14,7 +14,7 @@ import {
     HAZARD_PUZZLE_LIST_TITLE,
 } from '@/state/presenters/hazard-puzzle.copy';
 import type { HazardPuzzleCandidateGroupVM, HazardPuzzleListItemVM } from '@/state/presenters/hazard-puzzle.engine';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 import { Cracks } from '../glyphs';
@@ -70,11 +70,11 @@ const useStyles = makeStyles((AXM) => ({
         borderBottomColor: AXM.ash,
         alignItems: 'center',
     },
-    topStripText: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.blood, letterSpacing: 2 },
+    topStripText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.blood},
     content: { padding: 12, gap: 10, paddingBottom: 32 },
-    heading: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.blood, letterSpacing: 2 },
-    intro: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.bone, lineHeight: 17 },
+    heading: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, color: AXM.blood, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    intro: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: AXM.bone, lineHeight: 17 },
     row: { borderWidth: 2, borderColor: AXM.ash, backgroundColor: HUE.hzRouteSafeBg, padding: 13, overflow: 'hidden' },
-    band: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.6, color: AXM.sulfur },
-    title: { fontFamily: FONTS.gothic, fontSize: 24, lineHeight: 25, color: AXM.parchment, letterSpacing: 0.5, marginTop: 6 },
+    band: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.sulfur },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 24, lineHeight: 25, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing, marginTop: 6 },
 }));

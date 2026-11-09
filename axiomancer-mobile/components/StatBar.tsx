@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import type { DimensionValue } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
@@ -121,14 +121,14 @@ const useStyles = makeStyles((AXM) => ({
     marginBottom: 2,
   },
   label: {
-    fontFamily: FONTS.sans,
+    fontFamily: TYPE_ROLES.eyebrow.fontFamily,
     fontSize: 11,
-    letterSpacing: 2,
+    letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
     color: AXM.parchment,
     opacity: 0.85,
   },
   value: {
-    fontFamily: FONTS.mono,
+    fontFamily: TYPE_ROLES.count.fontFamily,
     fontSize: 11,
     color: AXM.parchment,
     opacity: 0.85,

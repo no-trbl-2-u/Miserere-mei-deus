@@ -101,7 +101,6 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 ## Acceptance
 
-- **A3** No component under `app/` or `components/` sets a `FONTS.<face>` directly. Every text style goes through a role, and a lint test fails a new direct use.
 - **A4** The audit report `docs/reports/design-audit-<date>.md` covers every screen in the list, each with its emotional job, its tells table, its bold thing and its top three fixes. It also carries the tell count before and after the UI rounds, and the copy flagged by screen.
 - **A5** A mock page offers three directions for each of the audit's three worst screens, under the ballot index, and T's picks come back through the ballot kit.
 - **A6** A colour ballot offers 4 to 6 whole palettes from named references, plus today's as "now", each shown on five real screens with T's kit pieces, under the ballot index.
@@ -110,19 +109,18 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 ## Open questions
 
 1. A place T leaves blank on the font ballot keeps today's face. Confirmed by T (2026-11-06): moot; T's notes filled the three places left unticked, so no place is blank.
-2. A face no role uses after T's picks leaves the app entirely. T's picks keep none of today's four: Pirata One, IM Fell English, Bebas Neue and JetBrains Mono would all go (EMBARK is an image and is unaffected). Default: yes, package and all. Or: keep it for the dev menu only. [T to confirm #2]
+2. A face no role uses after T's picks leaves the app entirely. T's picks keep none of today's four: Pirata One, IM Fell English, Bebas Neue and JetBrains Mono would all go (EMBARK is an image and is unaffected). Confirmed by T (2026-11-09, at the pilot gate): yes, package and all.
 3. The audit waits for every UI chunk of specs 152 to 155 and the type. Default: yes, all of them. Or: start once 152 to 154 land and leave the Deck to a second pass. [T to confirm #3]
 4. The audit proposes each screen's emotional job for T to confirm. Default: yes, the loop drafts and T edits. Or: T writes them before the audit runs. [T to confirm #4]
 5. The audit runs after the colour pick lands, so it audits the finished look. Default: yes. Or: run the audit right after the fonts, before colour. [T to confirm #5]
 
 ## Chunks
 
-Measure: 5 open · 2 closed · next A8
+Measure: 4 open · 3 closed · next A8
 
-- [ ] **156.3** Every screen sets its type through a role · L · closes A3 · needs 152.4, 153.4, 154.6, 155.4 · alias: TY1c
 - [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.7 · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
-- [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs 156.3 · alias: TY1f
+- [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs — · alias: TY1f
 - [ ] **156.7** T's palette, the default theme · M · closes A7 · needs 156.6 · alias: TY1g
 
 ### 156.1 (TY1a) — The design direction, written down · S · closes A1 · requires —

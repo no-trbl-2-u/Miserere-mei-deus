@@ -40,7 +40,7 @@ import {
     volumeStep,
 } from '@/state/presenters/settings.engine';
 import { useSettings, useSettingsStore } from '@/state/settings';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { DEFAULT_THEME_ID } from '@/theme/palette';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { setActiveTheme } from '@/theme/theme-switch';
@@ -253,8 +253,8 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 6,
     },
     headerText: { flex: 1 },
-    title: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.sulfur, letterSpacing: 1, marginTop: 1 },
-    subtitle: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, marginTop: 2 },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, color: AXM.sulfur, letterSpacing: TYPE_ROLES.title.letterSpacing, marginTop: 1 },
+    subtitle: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.bone, marginTop: 2 },
     backBtn: {
         width: 40,
         height: 40,
@@ -264,8 +264,8 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
         backgroundColor: AXM.panelBg,
     },
-    backLabel: { fontFamily: FONTS.mono, fontSize: 16, color: AXM.bone },
+    backLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, color: AXM.bone },
     body: { paddingHorizontal: 12, paddingTop: 6, gap: 8 },
     sectionGap: { marginTop: 14 },
-    note: { fontFamily: FONTS.serifItalic, fontSize: 11, color: AXM.bone, paddingHorizontal: 2 },
+    note: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 11, color: AXM.bone, paddingHorizontal: 2 },
 }));
