@@ -70,7 +70,7 @@ export function InkCurtain({ instant, onDone }: InkCurtainProps) {
     }, []);
 
     const sheet = useAnimatedStyle(() => ({
-        transform: [{ translateY: curtainEdgeY(cover.value, height) }],
+        transform: [{ translateY: curtainEdgeY(cover.value, height) }], // worklet-safe: curtainEdgeY is a worklet
     }));
 
     if (gone) return null;

@@ -68,9 +68,9 @@ export function MapInk({ origin, width, height, instant, onCovered }: MapInkProp
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const blot = useAnimatedStyle(() => ({ transform: [{ scale: inkScaleAt(progress.value, radius) }] }));
+    const blot = useAnimatedStyle(() => ({ transform: [{ scale: inkScaleAt(progress.value, radius) }] })); // worklet-safe: inkScaleAt is a worklet
     const rim = useAnimatedStyle(() => ({
-        transform: [{ scale: Math.min(1, inkScaleAt(progress.value, radius) * (1 + MAP_INK_RIM)) }],
+        transform: [{ scale: Math.min(1, inkScaleAt(progress.value, radius) * (1 + MAP_INK_RIM)) }], // worklet-safe: inkScaleAt is a worklet
     }));
 
     if (instant) return null;
