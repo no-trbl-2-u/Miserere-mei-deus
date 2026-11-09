@@ -101,6 +101,25 @@
       ]
     },
     {
+      "id": "debuff_shock",
+      "name": "Shock",
+      "description": "Every nerve stands open. Each blow that finds them lands harder for it.",
+      "type": "debuff",
+      "category": "stat",
+      "duration": 3,
+      "stacking": "intensity",
+      "refreshOnStack": true,
+      "payload": {
+        "damageTakenFlat": 1
+      },
+      "tier": 1,
+      "addedIn": "2026-11-08",
+      "tags": [
+        "v3",
+        "shock"
+      ]
+    },
+    {
       "id": "debuff_quarter",
       "name": "Quarter",
       "description": "It is harder to strike what has listened. Their blows arrive apologizing.",

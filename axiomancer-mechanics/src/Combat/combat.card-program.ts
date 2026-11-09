@@ -64,7 +64,7 @@ import { lookupEffect, applyEffect } from '../Effects';
 import type { Enemy } from '../Enemy/types';
 import type { SpecialPayload } from '../Items/types';
 import { applyDamage, heal as healCombatant, isDefeated } from './health';
-import { fireDotTrigger, getDamageTakenMultiplier } from './effects';
+import { fireDotTrigger, getDamageTakenFlat, getDamageTakenMultiplier } from './effects';
 import { scaleFor, scaleEffectIntensity, programText } from './stat-scaling';
 
 export { programText };
@@ -375,6 +375,8 @@ class LineCtx implements ProgramCtx {
             dmg *= 2;
             this.w.l.el.frozen = false;
         }
+        // SHOCK on the foe joins each DEAL after FROZEN's doubling, before VULNERABLE.
+        dmg += getDamageTakenFlat(enemy);
         const preVuln = dmg;
         const vuln = getDamageTakenMultiplier(enemy);
         if (vuln !== 1) dmg = Math.round(dmg * vuln);
@@ -678,6 +680,7 @@ class LineCtx implements ProgramCtx {
                     dmg *= 2;
                     l.el.frozen = false;
                 }
+                dmg += getDamageTakenFlat(w.s.enemy);
                 const preVuln = dmg;
                 dmg = Math.round(dmg * getDamageTakenMultiplier(w.s.enemy));
                 // The foe's WARD soaks TETHER's hit too: it is a DEAL.
@@ -2257,11 +2260,12 @@ export function programSpikeStrike(
     if (returns.length === 0) return { ledger: l, hits: [] };
     const ledger = cloneLedger(l);
     const vuln = getDamageTakenMultiplier(enemy);
+    const shock = getDamageTakenFlat(enemy);
     const hits = returns.map(r => {
         let dmg = r.amount + ledger.nextDealBonus;
         ledger.nextDealBonus = 0;
         if (ledger.el.frozen) { dmg *= 2; ledger.el.frozen = false; }
-        return { spike: r.spike, amount: Math.round(dmg * vuln) };
+        return { spike: r.spike, amount: Math.round((dmg + shock) * vuln) };
     });
     return { ledger, hits };
 }

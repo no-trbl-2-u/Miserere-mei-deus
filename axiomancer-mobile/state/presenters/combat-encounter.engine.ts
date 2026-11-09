@@ -2060,7 +2060,7 @@ export function spikeChips(state: CombatEncounterState): CombatEffectChipVM[] {
 
 /**
  * The enemy words standing on the board (`state.enemyWords`), as chips: the
- * foe's WARD on its side; BRINE, TANGLE, LEECH and SEIZED on yours. These
+ * foe's WARD and an armed UNBROKEN on its side; BRINE, TANGLE, LEECH and SEIZED on yours. These
  * are live state, like GUARD, so they carry their numbers; the telegraph
  * (intent, next, wall math) never does. BARNACLE shows as the Curse in hand.
  */
@@ -2079,7 +2079,11 @@ export function enemyWordChips(state: CombatEncounterState, side: 'enemy' | 'pla
         ...(caption ? { caption } : {}),
     });
     if (side === 'enemy') {
-        return [...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : []), ...counters];
+        return [
+            ...(w.ward > 0 ? [chip('Ward', w.ward, 0, '⛨', 'statup')] : []),
+            ...(w.unbroken && w.ward > 0 ? [{ ...chip('Unbroken', 0, 0, '⛊', 'mark', unbrokenCaption(w.unbroken)), noBadge: true }] : []),
+            ...counters,
+        ];
     }
     const out: CombatEffectChipVM[] = [...counters];
     if (w.brine > 0) out.push(chip('Brine', w.brine, 0, '≋', 'statdown'));
@@ -2261,6 +2265,17 @@ export function lighthouseChips(state: CombatEncounterState, side: 'enemy' | 'pl
         });
     }
     return out;
+}
+
+/** What an armed UNBROKEN clause pays, in the move text's own words. */
+function unbrokenCaption(clause: NonNullable<NonNullable<CombatEncounterState['enemyWords']>['unbroken']>): string {
+    const hits = Math.max(1, clause.hits ?? 1);
+    const parts = [
+        ...((clause.damage ?? 0) > 0 ? [`DEAL ${clause.damage}${hits > 1 ? ` x${hits}` : ''}`] : []),
+        ...((clause.shock ?? 0) > 0 ? [`SHOCK ${clause.shock}`] : []),
+        ...((clause.barnacle ?? 0) > 0 ? [`BARNACLE ${clause.barnacle}`] : []),
+    ];
+    return `${parts.join(', ')} at its next turn if any WARD is left`;
 }
 
 /** The die a SEIZED lifts, by the name the dice wear on the board. */

@@ -23,13 +23,19 @@ const COUNTER: Record<(typeof ENEMY_KEYWORDS)[number], RegExp> = {
     tangle: /Pay for them with dice/,
     seized: /banked in the Reserve/,
     barnacle: /Spend a body die on a card/,
+    shock: /GUARD still blocks the larger hit/,
+    unbroken: /Break the WARD and it pays nothing/,
 };
 
 describe('the enemy words', () => {
-    it('reads the engine list of nine', () => {
+    it('reads the engine list of eleven', () => {
         expect([...ENEMY_KEYWORDS]).toEqual([
-            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'seized', 'barnacle',
+            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'seized', 'barnacle', 'shock', 'unbroken',
         ]);
+    });
+
+    it('a move line printing SHOCK or UNBROKEN opens their glosses', () => {
+        expect(keywordsInText('Drift Apart: WARD 8. UNBROKEN: SHOCK 1.')).toEqual(['Ward', 'Unbroken', 'Shock']);
     });
 
     for (const id of ENEMY_KEYWORDS) {

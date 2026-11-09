@@ -130,10 +130,10 @@ it('the fixture player is at neutral stats, so a printed number is the number', 
     expect(scaleFor(5, STATS, 'mind', 'one-shot')).toBe(5);
 });
 
-describe('the nine words are the enemy keywords', () => {
-    it('ENEMY_KEYWORDS names the six, then TANGLE, SEIZED and BARNACLE', () => {
+describe('the eleven words are the enemy keywords', () => {
+    it('ENEMY_KEYWORDS names the six, then TANGLE, SEIZED, BARNACLE, SHOCK and UNBROKEN', () => {
         expect([...ENEMY_KEYWORDS]).toEqual([
-            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'seized', 'barnacle',
+            'ward', 'mend', 'scour', 'brine', 'vulnerable', 'leech', 'tangle', 'seized', 'barnacle', 'shock', 'unbroken',
         ]);
     });
 

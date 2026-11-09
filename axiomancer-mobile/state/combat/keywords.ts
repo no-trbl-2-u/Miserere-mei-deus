@@ -27,6 +27,8 @@ const EFFECT_KEYWORD: Record<string, string> = {
     debuff_bleed: 'Bleed',
     // Printed by the grey office's A Plain Word.
     debuff_vulnerable: 'Vulnerable',
+    // Placed by a foe's move; the status row reads it.
+    debuff_shock: 'Shock',
 };
 
 /**
@@ -130,6 +132,12 @@ const KEYWORD_GLOSS: Record<string, string> = {
     Barnacle:
         'A Barnacle Curse joins your hand, and it cannot be played or scrapped. '
         + 'Spend a body die on a card to knock it off.',
+    Shock:
+        'Every DEAL against the bearer deals that much more, per hit, for 3 turns, and a new SHOCK resets the turns and adds to the number. '
+        + 'GUARD still blocks the larger hit.',
+    Unbroken:
+        "If any of this move's WARD is left at the start of the foe's next turn, the clause pays out. "
+        + 'Break the WARD and it pays nothing.',
     // ── The Merciful (the trial set) ──
     Radiance: 'HEAL that much, then DEAL the VITAE it restored to the foe. At full VITAE it deals nothing.',
     Mercy: 'Heals the foe that much and adds it to its MERCY. The third foe turn after the first MERCY, it bursts for twice the total, then clears.',
