@@ -33,7 +33,7 @@ const CHAPTER1_IDS = [
 /** The cliffs, the hamlet and the sea cave's elite (EN1h), in library order. */
 const CLIFF_IDS = ['enemy-wreck-picker', 'enemy-smokehouse-gutter', 'enemy-tithe-collector'];
 /** The foes that still play an enemy deck (the rest play HP phases). */
-const DECK_IDS = ['enemy-death-beholder', 'enemy-saint-beneath'];
+const DECK_IDS = ['enemy-death-beholder'];
 /**
  * Chapter 1's recast faces (EN3a), in library order. Each is its cut foe's
  * numbers under a new id, name, description and portrait key; the cut foes

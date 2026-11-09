@@ -1101,24 +1101,44 @@ export const Wrecker = createEnemy({
 //
 // T settled six new portraits onto six cut foes' slots. Each entry below is
 // its cut foe's numbers under a new id, name, description and portrait key:
-// `level`, `baseStats`, `difficulty`, `logic` and `phases` (or, for the boss,
-// its authored VITAE and its three stages) are COPIED VERBATIM. Nothing here
-// is designed, retuned or removed, and no cut foe is deleted — all ten stay
-// in the library, placed nowhere in Chapter 1 (T: "they're just not in
-// chapter 1").
+// `level`, `baseStats`, `difficulty`, `logic` and (except the boss, which now
+// plays its own moves) `phases` are COPIED VERBATIM. No cut foe is deleted —
+// all ten stay in the library, placed nowhere in Chapter 1 (T: "they're just
+// not in chapter 1").
 //
 // Voice: each new entry is description-only, exactly as Chapter 1's fourteen
 // stand-ins are today (T, 2026-11-06, question 4) — one drafted line read off
 // its portrait, for T to rewrite, and no `finalBlowLines` or `causeLines`.
 // The normals keep a drafted Spare/Finish pair because the mercy check is
 // gameplay, not prose, and `aftermath-lines.engine.test.ts` requires one of
-// every normal. The boss carries a journal entry (a boss must) and no mercy
-// lines (a boss is never spared).
+// every normal. The boss carries T's journal page (a boss must have one) and
+// no mercy lines (a boss is never spared).
 
 /** Provenance stamp for the EN3 recast's six new faces. */
 const RECAST_ADDED = '2026-11-07';
 
-/** Chapter 1's boss: takes the Death Beholder's fight whole (EN3a). */
+/** Communion: 2 damage per Curse you carry, or a BARNACLE Curse if you carry none. */
+const COMMUNION: EnemyMove = {
+    name: 'Communion', kind: 'attack',
+    text: '2 damage per Curse in your hand, deck and discard. With none, a BARNACLE Curse goes into your hand instead.',
+    rider: { kind: 'curse-count-hit', damage: 2, barnacleIfNone: 1 },
+};
+
+/** The Faithful Gather: it heals and strips one status off itself. */
+const THE_FAITHFUL_GATHER: EnemyMove = {
+    name: 'The Faithful Gather', kind: 'defend',
+    text: 'MEND 10 and it SCOURs one status off itself.',
+    enemyHeal: 10, enemyCleanse: 1,
+};
+
+/** Hear Me: the Heart and Mind dice sit out your next roll. */
+const HEAR_ME: EnemyMove = {
+    name: 'Hear Me', kind: 'status',
+    text: 'SEIZED: your heart and mind dice sit out your next roll.',
+    undertow: ['heart', 'mind'],
+};
+
+/** Chapter 1's boss: four HP phases of its own, the Death Beholder's numbers only in its VITAE. */
 export const SaintBeneath = createEnemy({
     id: 'enemy-saint-beneath',
     portraitAsset: 'saint-beneath',
@@ -1134,43 +1154,49 @@ export const SaintBeneath = createEnemy({
     difficulty: 'boss',
     logic: 'boss',
     vitae: 320,
-    // The Death Beholder's three boss-line stages, copied (75%, 50%, 25%).
-    // Its real moves are a later owner-led row's; this entry only puts T's
-    // chosen face in the chapter's boss slot on numbers already measured.
-    stages: [
+    // Attack, defend and status from the first phase; each DANGER opens its
+    // phase at the boss lines (75%, 50%, 25%).
+    phases: [
+        { moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME] },
         {
-            at: { vitaePct: 0.75 },
-            name: 'EVERY DOOR HE REMEMBERS',
-            text: 'He shuts one more. You did not know it was open until you heard it.',
-            threatBonus: 0.3,
+            danger: {
+                name: 'Swell', kind: 'danger',
+                text: '2 BARNACLE, then TANGLE 1 per card in your hand.',
+                barnacle: 2, rider: { kind: 'hand-size-tangle', per: 1 },
+            },
+            moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
         {
-            at: { vitaePct: 0.5 },
-            // DRAFT (Claude): name, text and number for T to rewrite.
-            name: 'THE HINGES TURN INWARD',
-            text: 'He turns the room on its pins. Every way out now opens toward him.',
-            threatBonus: 0.2,
+            danger: {
+                name: 'Tithe of the Drowned', kind: 'danger',
+                text: '2 BARNACLE, then 3 damage per card in your hand.',
+                barnacle: 2, rider: { kind: 'hand-size-damage', damage: 3 },
+            },
+            moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
         {
-            at: { vitaePct: 0.25 },
-            name: 'WHAT SHUTS, STAYS SHUT',
-            text: 'He kneels lower. Bronze finds the seam of the room and the room stops having a far side.',
-            heal: { pct: 0.15 },
-            threatBonus: 0.5,
+            danger: {
+                name: 'Pull Under', kind: 'danger',
+                text: '16 damage. If you are under half VITAE: 24 damage, and it MENDs 12.',
+                damage: 16, rider: { kind: 'below-half-vitae', damage: 24, mend: 12 },
+            },
+            moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
     ],
-    // Carried over from the Death Beholder with its title on this foe's own
-    // name (T, 2026-11-06, question 4). The body is the Death Beholder's,
-    // a DRAFT until the boss-design row writes this foe's own.
+    // T's page (2026-11-08), word for word.
     journalEntry: {
         id: 'codex-saint-beneath',
         title: 'The Saint Beneath',
         body:
-            'The house needed something to believe in its doors, so it built a believer. ' +
-            'He was assembled from the hinges of every argument that ever closed — each ' +
-            'joint a refusal, oiled and kept. His liturgy is short: what shuts, stays ' +
-            'shut. He kneels because a kneeling thing is a door at rest, and he has ' +
-            'been at rest, facing the entrance, for a very long time.',
+            'He was a fisherman once and he stood up in the square against the men who held the ' +
+            'town and he asked the others to stand with him and they did not. They watched from ' +
+            'their doorways. The gang held him under at the foot of the quay until the bubbles ' +
+            'quit and then they put what was left of him in the river and the river carried him ' +
+            'down to the sea. He did not go easy into it. Something in the dark took up his anger ' +
+            'and made a body for it, a great length of scale and gristle with the old man\'s face ' +
+            'set in the front of it like a mask nailed to a prow. Now it lies beneath the ' +
+            'Breakwater with its mouth open and no boat leaves and no one walks out and the town ' +
+            'keeps the vigil it once refused him. They call it a saint. It has never forgiven anyone.',
     },
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'boss', 'enemy'],

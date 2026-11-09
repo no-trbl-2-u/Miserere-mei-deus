@@ -105,17 +105,6 @@ export const ENEMY_DECKS: Record<string, EnemyDeckSpec> = {
         tier2AtRound: 4,
         tier3AtRound: 7,
     },
-    // BOSS — Chapter 1's recast boss (EN3a, T 2026-11-06). The Saint Beneath
-    // takes the Death Beholder's fight whole: the same three tiers and the
-    // same round gates, copied. Nothing is retuned here; the boss's own moves
-    // are a later owner-led row's. The Death Beholder keeps its entry.
-    'enemy-saint-beneath': {
-        tier1: ['litany-of-thresholds', 'the-door-kept-open'],
-        tier2: ['the-bronze-frame', 'ap-the-margin-note'],
-        tier3: ['what-shuts-stays-shut', 'ap-the-proof-completed', 'ap-the-question-that-eats'],
-        tier2AtRound: 4,
-        tier3AtRound: 7,
-    },
 };
 
 /** Projects one enemy-card face onto an authored-phase fragment. */

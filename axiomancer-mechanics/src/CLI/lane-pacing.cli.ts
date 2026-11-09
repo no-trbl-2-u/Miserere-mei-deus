@@ -17,7 +17,7 @@
  *
  * The trio is the pre-recast Chapter 1 trio. Since EN3b (2026-11-07) the
  * Breakwater no longer draws the Float-Eye or the Green Jelly and its boss is
- * the Saint Beneath (same numbers as the Death Beholder), so the L1 row below
+ * the Saint Beneath (its own moves, the Death Beholder's VITAE), so the L1 row below
  * does NOT describe the live Breakwater; the Charcoal Wood, Beacon Crags and
  * Lantern Deep rows still do. Recalibrating the L1 row is parked for T.
  *

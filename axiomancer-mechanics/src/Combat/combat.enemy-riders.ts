@@ -77,6 +77,7 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
         case 'foreclose':
             return { ...rider, damage: scale(rider.damage), ward: scale(rider.ward) };
         case 'half-dealt-last-turn':
+        case 'hand-size-tangle':
         case 'hits-per-discard':
         case 'half-guard':
         case 'steal-conviction-per-hit':
@@ -198,6 +199,14 @@ function withHits(effects: readonly CombatThreatEffect[], hits: number[]): Comba
     return [...hits.filter(h => h > 0).map(damage => ({ damage })), ...rest];
 }
 
+/**
+ * The cards in your hand once this move's own BARNACLE has landed. Its words
+ * land after its hits, so a move that counts your hand counts them here.
+ */
+function handAfterMove(state: Pick<CombatEncounterState, 'hand'>, effects: readonly CombatThreatEffect[]): number {
+    return state.hand.length + effects.reduce((n, e) => n + (e.barnacle ?? 0), 0);
+}
+
 /** Adds `n` to the first hit, if the move has one. */
 function bumpFirstHit(effects: CombatThreatEffect[], n: number): { effects: CombatThreatEffect[]; bumped: boolean } {
     const i = effects.findIndex(isHit);
@@ -226,8 +235,13 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
                 break;
             }
             case 'hand-size-damage':
-                effects = withHits(effects, [rider.damage * state.hand.length]);
+                effects = withHits(effects, [rider.damage * handAfterMove(state, effects)]);
                 break;
+            case 'hand-size-tangle': {
+                const tangle = rider.per * handAfterMove(state, effects);
+                if (tangle > 0) effects = [...effects, { tangle }];
+                break;
+            }
             case 'half-dealt-last-turn':
                 effects = withHits(effects, [Math.floor(dealt / 2)]);
                 break;
@@ -1025,8 +1039,11 @@ function planCausewayMove(state: CombatEncounterState, effects: CombatThreatEffe
             return bumpFirstHit(effects, rider.damage * tollOwed(state)).effects;
         case 'toll-seize':
             return withHits(effects, [rider.damage * tollOwed(state) * 2]);
-        case 'curse-count-hit':
-            return withHits(effects, [rider.damage * cursesCarried(state)]);
+        case 'curse-count-hit': {
+            const curses = cursesCarried(state);
+            const hits = withHits(effects, [rider.damage * curses]);
+            return curses === 0 && (rider.barnacleIfNone ?? 0) > 0 ? [...hits, { barnacle: rider.barnacleIfNone }] : hits;
+        }
         case 'tide-wash': {
             const tide = tideOf(state);
             const hit = (effects.find(isHit)?.damage ?? 0) + rider.damage * tide;
