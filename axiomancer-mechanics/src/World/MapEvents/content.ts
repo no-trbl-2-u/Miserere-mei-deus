@@ -338,9 +338,9 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
     'bw-h7': { slug: 'brine-widow', level: 4 },
     'bw-t1': { slug: 'coralback', level: 4 },
     // The town, level 5.
-    'bw-t2': { slug: 'saltwick-swarm', level: 5 },
+    'bw-t2': { slug: 'bilge-stalker', level: 5 },
     'bw-t3': { slug: 'brine-widow', level: 5 },
-    'bw-t6': { slug: 'saltwick-swarm', level: 5 },
+    'bw-t6': { slug: 'coralback', level: 5 },
     // The cliffs and the hamlet, level 6.
     'bw-l1': { slug: 'bilge-stalker', level: 6 },
     'bw-d1': { slug: 'net-mender', level: 6 },
@@ -348,15 +348,19 @@ export const BW_ENCOUNTER_FOES: Readonly<Record<string, ActOneFoe>> = {
 };
 
 /**
- * The elite nodes' draws (phase EN1j): each elite node names one foe or two,
- * and with two the map's seeded pool roll (`rollPool`, run once on arrival
- * from the run's RNG) picks one, 50/50. Every elite node has its row now
+ * The elite nodes' draws (phase EN1j): each elite node names one to three foes,
+ * and with several the map's seeded pool roll (`rollPool`, run once on arrival
+ * from the run's RNG) picks one with equal odds. Every elite node has its row now
  * (EN1j, EN1k, EN1l); one with no row would keep the Green Jelly staged as an
  * elite. Levels are T's Breakwater table, every foe under level 10.
  */
 export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
-    // The sea cave, level 5: the Cave Choir (EN1j) and the Tithe-Collector (EN1h).
-    'bw-c1': [{ slug: 'cave-choir', level: 5 }, { slug: 'tithe-collector', level: 5, difficulty: 'elite' }],
+    // The sea cave, level 5: the Cave Choir (EN1j), the Tithe-Collector (EN1h) or Saltwick Swarm (MV1d), a third each.
+    'bw-c1': [
+        { slug: 'cave-choir', level: 5 },
+        { slug: 'tithe-collector', level: 5, difficulty: 'elite' },
+        { slug: 'saltwick-swarm', level: 5 },
+    ],
     // The lighthouse path, level 7: the Lamplighter or the Wrecker (EN1k).
     'bw-l4': [{ slug: 'lamplighter', level: 7 }, { slug: 'wrecker', level: 7 }],
     // The keep causeway, level 8 (phase EN1l): the Wreckmaster or the Tide-Gate.
@@ -365,12 +369,12 @@ export const BW_ELITE_DRAWS: Readonly<Record<string, readonly ActOneFoe[]>> = {
 
 /**
  * An elite node's pool: one `encounter` entry per foe, each `weight: 1`, so
- * the map's pool roll draws each with equal odds. One or two foes; any other
+ * the map's pool roll draws each with equal odds. One to three foes; any other
  * count is an authoring error.
  */
 export function eliteDrawPool(nodeId: string, foes: readonly ActOneFoe[]): MapEventPool {
-    if (foes.length < 1 || foes.length > 2) {
-        throw new Error(`breakwater: elite ${nodeId} names ${foes.length} foes; an elite node draws one or two`);
+    if (foes.length < 1 || foes.length > 3) {
+        throw new Error(`breakwater: elite ${nodeId} names ${foes.length} foes; an elite node draws one to three`);
     }
     return { id: `${nodeId}.encounter`, entries: foes.map(foe => cwEncounterPool(nodeId, foe).entries[0]!) };
 }

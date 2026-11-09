@@ -172,7 +172,7 @@ describe('SHOCK and UNBROKEN stand on the board', () => {
         const warded = (ward: number) => buildCombatViewModel({
             ...s, enemyWords: { ...NO_WORDS, ward, unbroken: { damage: 4, hits: 2 } },
         }).enemy.effects.find((e) => e.effectId === 'enemy-word-unbroken');
-        expect(warded(6)).toMatchObject({ noBadge: true, caption: 'DEAL 4 x2 at its next turn if any WARD is left' });
+        expect(warded(6)).toMatchObject({ noBadge: true, caption: 'DEAL 4 x2 if WARD holds' });
         expect(warded(6)!.gloss).toMatch(/pays nothing/);
         expect(warded(0)).toBeUndefined();
     });

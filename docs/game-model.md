@@ -154,7 +154,7 @@ the Expo app (`axiomancer-mobile`) presents it.
   lanes widen the pool and never add a slot. A cache offers one. The dev
   menu's REWARD POOL can narrow the draft to card lanes (`CARD_LANES`: the
   grey office, Blood Price, the Elementalist and the Defender). A won elite fight
-  (`difficulty: 'elite'`; the sea cave binds the Tithe-Collector, the other elite slots stage the Green Jelly at that tier) pays the elite reward instead
+  (`difficulty: 'elite'`; the sea cave draws the Cave Choir, the Tithe-Collector or Saltwick Swarm, the other elite slots stage the Green Jelly at that tier) pays the elite reward instead
   (`rollEliteReward`, Phase UP1f): the best 3 cards by rarity, one from a
   lane the deck draws on (`deckLaneIds`), or one upgrade of a random owned
   card at the highest rarity owned that can take one, read on the shared
@@ -345,7 +345,7 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   in every region.
 - **Green Jelly:** level 5, a normal with HP phases (EN1g): it holds the
   next cards you play inside it, shows you your own face and throws your last
-  status back. Placed on the town's nodes; an elite slot stages it at the elite
+  status back. Placed on no Breakwater node since MV1d; an elite slot stages it at the elite
   tier until its own foe lands. Its second phase begins at 30% VITAE.
 - **Wreck-Picker and Smokehouse Gutter:** level 6 normals with HP phases (EN1h), on the cliffs
   and the hamlet. The Wreck-Picker takes cards from your discard into its hoard
@@ -359,10 +359,29 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   at the sea cave (`bw-c1`). Its VERSE count (fight state on its pane, not
   a word) rises with each Hymn; Crescendo hits for it and its 30% DANGER,
   the Amen, spends it all, hitting and mending for each. Its Antiphon
-  telegraphs UNKNOWN and answers your last turn. An elite node names one foe
-  or two in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with two, the
-  map's seeded pool roll draws one on arrival, 50/50. The sea cave draws the
-  Cave Choir or the Tithe-Collector.
+  telegraphs UNKNOWN and answers your last turn. An elite node names one to
+  three foes in `BW_ELITE_DRAWS` (`World/MapEvents/content.ts`); with several,
+  the map's seeded pool roll draws one on arrival, with equal odds. The sea
+  cave draws the Cave Choir, the Tithe-Collector or Saltwick Swarm, a third each.
+- **Saltwick Swarm:** level 5, an elite with three HP phases (60% and 30% lines;
+  MV1d), drawn at the sea cave. Many Stings (1 damage, 5 hits), Drift Apart
+  (WARD 8; UNBROKEN: SHOCK 1) and Static Bloom (SHOCK 2) make the loop: SHOCK
+  adds to every hit, so Many Stings after a Static Bloom lands 15. Its DANGERs
+  are Drown in Light (3 damage per card in your hand, then TANGLE 2) and The
+  Whole Bloom (a hit of 2 per card in your discard, none with an empty discard).
+  It is in no wandering pool.
+- **The Wreckmaster:** level 8, the keep causeway's elite with the Tide-Gate
+  (`bw-w5`), three HP phases (MV1d). Sabre and Pistol (7, +4 if you played 3+
+  cards), Riposte (WARD 10; UNBROKEN: DEAL 4 twice) and Press-Ganged (steals a
+  banked die, or TANGLE 2). Reload Under Fire (TANGLE 3, 2 BARNACLE) at 60%;
+  Take the Colours (takes up to 4 Conviction, WARD 4 per point, BARNACLE 1) at 30%.
+- **Quay-Crab, Coralback and Bilge-Stalker:** normals with two HP phases (the
+  DANGER at 30%; MV1d), each with attack, defend and status moves of its own.
+  The Quay-Crab: Pincer, Shell Up (UNBROKEN: BARNACLE), Grip (SEIZED on the body
+  die), Clamp Down. The Coralback: Coral Spur, Crown Down, Polyp, Coral Grows Over
+  (3 damage per Curse carried, or a BARNACLE with none). The Bilge-Stalker: Quick
+  Claws, Into the Dark, Stagnant (BRINE 2), Drag Under (at most 2 cards next
+  turn). The town's `bw-t2` is a Bilge-Stalker and `bw-t6` a Coralback, both level 5.
 - **The Lamplighter and the Wrecker:** level 7, elites with three HP phases
   (EN1k), drawn one per run at the lighthouse path (`bw-l4`). The
   Lamplighter's lamp (fight state on its pane, LIT or DARK, not a word) starts
@@ -382,7 +401,8 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   5) rises 1 each foe turn, 2 in its third phase, and at TIDE 0-1 the gate is
   VULNERABLE 25%; its two DANGERs set the TIDE to 5 and to 0.
 - **The Death Beholder:** boss, 320 VITAE at level 8, three stages (at 75%,
-  50% and 25% VITAE: the boss lines, so four phases). It holds every region's door, pinned at level 1, 2, 3 and 4
+  50% and 25% VITAE: the boss lines, so four phases). It holds the door of the Charcoal Wood, the Beacon Crags and the Lantern Deep
+  (the Saint Beneath holds the Breakwater's), each pinned at its own level
   (`World/MapEvents/content.ts`); `scaleEnemyToLevel` scales its VITAE to
   the pin. Its deck opens tier 2 on round 4 and tier 3 on round 7 (the
   default gates are 3 and 6) and its card weights sit at 0.8-1.15, so its

@@ -282,6 +282,7 @@ export interface EnemyMove {
  *   garnish                  takes `take` Conviction; with none to take the hit gains `bonus` (and +`perLien` per Barnacle in your hand).
  *   ward-per-conviction      WARD `per` for each Conviction you hold.
  *   audit                    one hit of `damage` per LEDGER, then the LEDGER clears.
+ *   take-conviction-ward     takes up to `conviction` of your Conviction (no dice), WARD `ward` per point taken.
  *   foreclose                takes all your Conviction: one hit of `damage` and WARD `ward` per point taken.
  *   verse-gain               adds `verse` to the foe's VERSE count.
  *   verse-hit                one hit of `damage` per VERSE.
@@ -347,6 +348,7 @@ export type EnemyMoveRider =
     | { kind: 'ward-per-conviction'; per: number }
     | { kind: 'audit'; damage: number }
     | { kind: 'foreclose'; damage: number; ward: number }
+    | { kind: 'take-conviction-ward'; conviction: number; ward: number }
     // The Cave Choir (phase EN1j).
     | { kind: 'verse-gain'; verse: number }
     | { kind: 'verse-hit'; damage: number }

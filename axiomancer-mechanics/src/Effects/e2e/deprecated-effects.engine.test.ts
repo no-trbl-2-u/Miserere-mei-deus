@@ -55,7 +55,7 @@ const RETIRED_CARD_VOCABULARY = [
     // DoT clones
     'debuff_burn', 'debuff_hemorrhage', 'debuff_septic', 'debuff_unraveling',
     'debuff_despair', 'debuff_torment', 'debuff_strong_poison',
-    'debuff_strong_burn', 'debuff_acid', 'debuff_frostbite', 'debuff_shock',
+    'debuff_strong_burn', 'debuff_acid', 'debuff_frostbite',
     'debuff_tartarus_rot', 'debuff_basilisk_venom', 'debuff_harpy_torment',
     'debuff_hp_decay',
     // the control zoo

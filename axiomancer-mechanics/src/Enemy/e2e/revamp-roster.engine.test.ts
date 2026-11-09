@@ -135,10 +135,10 @@ describe('the R2 Act 1 pools and pins (D61)', () => {
         return payload as { kind: 'encounter'; enemySlug?: string; isBoss?: boolean };
     };
 
-    it.each(ACT1)('$map wanders the six Chapter 1 normals and nothing else (EN3b)', ({ map }) => {
+    it.each(ACT1)('$map wanders the five Chapter 1 normals and nothing else (EN3b, MV1d: Saltwick Swarm is an elite)', ({ map }) => {
         expect(EnemiesByMap[map].map(e => e.id)).toEqual([
             'enemy-quay-crab', 'enemy-net-mender', 'enemy-coralback',
-            'enemy-brine-widow', 'enemy-saltwick-swarm', 'enemy-bilge-stalker',
+            'enemy-brine-widow', 'enemy-bilge-stalker',
         ]);
     });
 

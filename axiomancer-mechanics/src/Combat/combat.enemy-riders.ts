@@ -76,6 +76,8 @@ export function scaleRider(rider: EnemyMoveRider, scale: (n: number) => number):
             };
         case 'foreclose':
             return { ...rider, damage: scale(rider.damage), ward: scale(rider.ward) };
+        case 'take-conviction-ward':
+            return { ...rider, ward: scale(rider.ward) };
         case 'half-dealt-last-turn':
         case 'hand-size-tangle':
         case 'hits-per-discard':
@@ -571,6 +573,14 @@ export function applyRiderAfterMove(
             const taken = state.conviction;
             if (taken > 0) {
                 state = gainWard({ ...state, conviction: 0 }, rider.ward * taken, events);
+                events.push({ kind: 'enemy-rider', rider: rider.kind, amount: taken });
+            }
+            break;
+        }
+        case 'take-conviction-ward': {
+            const taken = Math.min(state.conviction, rider.conviction);
+            if (taken > 0) {
+                state = gainWard({ ...state, conviction: state.conviction - taken }, rider.ward * taken, events);
                 events.push({ kind: 'enemy-rider', rider: rider.kind, amount: taken });
             }
             break;
