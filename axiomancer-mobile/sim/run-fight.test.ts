@@ -18,7 +18,7 @@ import {
 import { FloatEye } from '@mechanics/Enemy/enemy.library';
 
 import { playRun } from './run-driver';
-import { answerMercyCheck } from './run-fight';
+import { answerMercyCheck, damagePctOf } from './run-fight';
 
 function won(mercyCheck?: CombatEncounterState['mercyCheck']): CombatEncounterState {
     const player = createCharacter({ name: 'Pilgrim', level: 3, baseStats: { heart: 8, body: 8, mind: 8 } });
@@ -28,6 +28,17 @@ function won(mercyCheck?: CombatEncounterState['mercyCheck']): CombatEncounterSt
         ...(mercyCheck ? { mercyCheck } : {}),
     };
 }
+
+describe('damagePctOf', () => {
+    it('reads the share of VITAE gone, to one decimal, clamped to 0 through 100', () => {
+        expect(damagePctOf({ health: 100, maxHealth: 100 })).toBe(0);
+        expect(damagePctOf({ health: 25, maxHealth: 80 })).toBe(68.8);
+        expect(damagePctOf({ health: 0, maxHealth: 80 })).toBe(100);
+        expect(damagePctOf({ health: -12, maxHealth: 80 })).toBe(100);
+        expect(damagePctOf({ health: 90, maxHealth: 80 })).toBe(0);
+        expect(damagePctOf({ health: 0, maxHealth: 0 })).toBe(0);
+    });
+});
 
 describe('answerMercyCheck', () => {
     it('spares an offered check for spare-all, and finishes it for the player witness', () => {

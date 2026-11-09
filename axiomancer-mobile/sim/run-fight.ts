@@ -74,6 +74,24 @@ export function emptyMercyLedger(): MercyLedger {
     return { checks: 0, spared: 0, finished: 0, table: {}, xp: 0, shillings: 0 };
 }
 
+/** The boss fight a run has had, if any: how much of the boss's VITAE its last fight with it took. */
+export interface BossLedger {
+    /** The share (0 to 100, one decimal) of the boss's VITAE gone when its last fight ended; null before one. */
+    damagePct: number | null;
+}
+
+/** A ledger for a run that has not met the boss. */
+export function emptyBossLedger(): BossLedger {
+    return { damagePct: null };
+}
+
+/** The share of `enemy`'s VITAE gone, 0 to 100 at one decimal; 0 for a foe with no VITAE to lose. */
+export function damagePctOf(enemy: Pick<Enemy, 'health' | 'maxHealth'>): number {
+    if (!(enemy.maxHealth > 0)) return 0;
+    const gone = Math.min(1, Math.max(0, (enemy.maxHealth - Math.max(0, enemy.health)) / enemy.maxHealth));
+    return Math.round(gone * 1000) / 10;
+}
+
 /** Phases a fight may take before the driver calls it stuck. */
 export const MAX_FIGHT_PHASES = 200;
 
@@ -178,6 +196,7 @@ export function playFight(
     policy: RunPolicy,
     fled: Map<string, number> = new Map(),
     ledger?: MercyLedger,
+    boss?: BossLedger,
 ): RunFightResult | null {
     if (!store.getState().currentEncounter) {
         // The gate's engage: stage the foe from the pending prelude.
@@ -197,6 +216,8 @@ export function playFight(
     }
     const final = playToOutcome(store, enemy, policy, ctx);
     const outcome = final.finalOutcome as CombatOutcome;
+    // A fight with no way out is the boss's: the last one is the one that counts.
+    if (boss && ctx.isBoss) boss.damagePct = damagePctOf(final.enemy);
     const spared = outcome === 'victory' && final.mercyCheck === 'spared';
     // The ledger reads what `endCombat` paid off its own report: the panel's write-back drops it.
     let report: CombatEndReport | null = null;
