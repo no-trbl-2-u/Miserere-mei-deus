@@ -53,7 +53,54 @@ is short sentences with one long one.
   named author's style.
 - `axiomancer-mechanics/docs/narrative/DELIVERY_REGISTER.md` MB-1 caps
   narration at 20 words, and `scripts/check-prose.mjs` enforces it.
+- `ANTI_IMITATION.md`, `EVALUATION.md` and `LEXICON.md` block gore used for
+  intensity. T, 2026-11-08, wants the player afraid and a corpse on the
+  gallows, so these need rewording.
+
+## Round 2: what kind of dark
+
+T, on round 1: "I love this, buuuut I want darker. I want a corpse hanging
+from those gallows. I want the player to be afraid."
+
+Round 2 (`narrator-voice-2.ballot.html`, ballot id
+`narrator-voice-2-2026-11-08`) takes the eight slots T did not lock and tests
+the kind of fear. **Shown** puts the horror in plain sight. **Wrong** has a
+detail that should not be so. **Yours** aims the threat at the player.
+
+| Slot | a | b | c |
+|---|---|---|---|
+| N-03 Gallows Crossroads | wrong | yours | shown |
+| N-04 Rope bridge toll | yours | shown | wrong |
+| N-05 Opening | shown | wrong | yours |
+| J-01 Saint Beneath | wrong | yours | shown |
+| J-02 The last hut | shown | yours | wrong |
+| F-01 Keep key | yours | wrong | shown |
+| F-02 A Plain Blow | wrong | shown | yours |
+| F-03 Death line | shown | wrong | yours |
 
 ## Verdicts
+
+### Round 1 (T, 2026-11-08)
+
+Locked, with T's edits. Both end on a long sentence, whichever shape they
+started in.
+
+**N-01 the Breakwater** (b, long):
+
+> The wall comes down out of the hills and goes out into the sea and stops and
+> the sea comes over it regardless. Behind it the piers stand black and
+> dripping on their legs and the boats lie chained at them and under the
+> lighthouse the wreck of some older thing lies canted in the shingle where
+> the tides have corroded its ribs for the world to see.
+
+**N-02 the Charcoal Wood** (a, stripped):
+
+> Clearings cut in rings. Clamps smoking under sod. The burners are black to
+> the eyes and they do not look up. Caves lie in the south where many have
+> entered only to exit as a shadow of who they once were.
+
+The other eight slots went to round 2.
+
+### Round 2
 
 Not voted yet.
