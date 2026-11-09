@@ -332,6 +332,14 @@ test('the live plan passes the tree lints, and a doubled lessons row fails them 
   }
 })
 
+test('lintTree never shells out to tar (Windows tar rejects a C: path; footgun windows-tar-tree-lint)', () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), 'pr-merge.mjs'), 'utf8')
+  const body = src.slice(src.indexOf('export function lintTree'), src.indexOf('// --- I/O'))
+  assert.ok(body.length > 200, 'found the lintTree body')
+  assert.doesNotMatch(body, /(?:execFileSync|spawnSync|execFile|spawn|execSync|exec)\(\s*['"`]tar\b/, 'lintTree spawns tar')
+  assert.doesNotMatch(body, /--format=tar/, 'lintTree pipes a tar archive')
+})
+
 test('a throwing tree check becomes a hold outcome with a comment, never a thrown step', async () => {
   const out = path.join(os.tmpdir(), `pr-merge-output-${process.pid}-${Date.now()}`)
   const before = process.env.GITHUB_OUTPUT
