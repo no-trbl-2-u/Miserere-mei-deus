@@ -612,3 +612,4 @@
 - 2026-11-09 · 135.3 (alias: SM2c) · Four player personas play whole Chapter 1 runs · 779feb6c..779feb6c (#1513)
 - 2026-11-09 · 123.2 (alias: PF2a) · Combat static SVG layers and dice are texture-cached · 50fe155d..50fe155d (#1511)
 - 2026-11-09 · 135.11 (alias: SM2h) · Lane bots and personas guard first when the foe hits · 65e2483b..65e2483b (#1527)
+- 2026-11-09 · 125.9 (alias: LG1i) · An Android emulator plays the preview APK through one round · 3ad0753e..aa3c4d34 (#1528)
