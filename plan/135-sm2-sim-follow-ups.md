@@ -444,18 +444,6 @@ no exit code depends on it.
 
 ## Acceptance
 
-- **A9** The sim batch records a `crash`, `stuck` or `fight-stuck` run as a break and goes on with the next seed, and
-  checks `quest-unfinishable` and `node-unresolved` at each run's end; `sim:run --breaks <file>` writes one line per
-  break with the key `<persona>:<map>/<node>:<kind>` and the state summary; it still exits non-zero after a crash,
-  stuck or fight-stuck run, and never for the other two.
-- **A10** `npm run sim:breaks -- --file <breaks>` files one issue per new key (title, `bug` and `sim-break` labels,
-  the hidden key, the seed, persona, build, state summary and replay command), files nothing for an open key, reopens
-  a key closed as completed with a comment, leaves a key closed as not planned, and files at most 10 a night; tests
-  stub `gh`.
-- **A11** `sim-runs.yml` plays the four personas on the schedule and after a successful `preview-build`, takes a `bots`
-  input (`personas`, `lanes`, `all`) on `workflow_dispatch`, runs the lane bots only by hand, and runs the filing
-  step (`if: always()`, `issues: write`) after the scheduled batch and a dispatch at `main` only; no step fails on a
-  number; `.github/workflows/README.md` says so.
 - **A13** `npm run sim:report -- --build <sha>` reads the three reports and `run-summary` from the Worker and
   `chapter1Content()`, writes `docs/reports/sim/latest.md` with the stamp and the five sections in the Design's order
   (run health, pacing, how hard is Chapter 1, coverage, since the last report; no cards), and appends one
@@ -471,7 +459,6 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 5 open · 17 closed · next A23
+Measure: 2 open · 20 closed · next A23
 
-- [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
-- [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
+- [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs — · alias: SM2f

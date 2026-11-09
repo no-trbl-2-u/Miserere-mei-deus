@@ -620,3 +620,4 @@
 - 2026-11-09 · 135.10 (alias: SM2k) · sim:run prints boss damage, end node and a per-policy batch table · aedba465..aedba465 (#1536)
 - 2026-11-09 · 139.1 (alias: EQ4a) · The Blacksmith offers no +3 fitting; die gear has no payout field · 46989e31..46989e31 (#1526)
 - 2026-11-09 · 99.10 · Tree lint no longer needs tar, shown failing with it back · 819bd2d8..819bd2d8 (#1503)
+- 2026-11-09 · 135.4 (alias: SM2d) · Sim breaks caught per run and filed; personas nightly · 10750774..f51f79f6 (#1531)
