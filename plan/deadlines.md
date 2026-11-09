@@ -239,6 +239,7 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- SR1a — settle retires an emptied spec (spec 164); loop work, no dated T act waits on it.
 - RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - CK1a — closes the three checks T confirmed on 2026-11-09 and moves five here (spec 166); loop work after SR1a, no dated T act waits on it.
 - CK1b — T reads the human-versus-sim comparison (spec 166, attended); date not set (T picks it).
@@ -313,6 +314,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-09** — **a finished spec retires itself, plotted as spec 164 (SR1a)** (T, attended: "Yes, /plot it"). **Added** SR1a under `## Unscheduled`.
 - **2026-11-09** — **the Rules Glossary's full keyword list plotted as spec 165 (RG1a)** (T, attended: "Yes, plot it", holding 137.9 to D183). **Added** RG1a under `## Unscheduled`.
 - **2026-11-09** — **T's checks bundled as spec 166 (CK1a-CK1f)** (T, attended: "bundle them all up into one spec"; Merciful, Defender and Elementalist confirmed on the APK). **Added** CK1a-CK1f under `## Unscheduled`; CK1a re-points the Dec 23 Item and retires the old rows.
 - **2026-11-08** — **three test gaps from the #1473 and #1474 reviews plotted (GO1b in spec 161, TU1g in spec 159)** (T, attended: "Yes plot the test gaps"). **Added** GO1b and TU1g under `## Unscheduled`: test-only work, no dated T act waits on it. Nothing ticked; no date moved.
