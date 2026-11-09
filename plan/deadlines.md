@@ -125,7 +125,7 @@ left; otherwise after.
 
 ### W5 — Ship (Dec 15 - Dec 28)
 
-- LG1h (attended): the Android smoke test on the preview APK, once the loop has built the workflow and flow (LG1i).
+- CK1d (attended): the Android smoke test on the preview APK, once the loop has built the workflow and flow (LG1i).
 - Ship: a playtester walk of all four chapters, the full gate, and the APK is built.
 - T's time (about 3 h): the device check; the walk's plot; the build.
 
@@ -203,7 +203,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-12 | Review the reworked travel, loot cache and cutscene screens (1.5 h) | Every event screen proper | Have Claude list each screen's gaps against its pitch; you rule | W2 | T | UK2d, UK2g |
 | [ ] | 2026-11-13 | Buffer: fixes from the event-screen reviews (1 h) | Every event screen proper | Have Claude turn your review notes into fix rows | W2 | T | - |
 | [ ] | 2026-11-14 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | The MVP run | Claude turns your notes into `/plot` or `/messy` rows | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a, MR1a, MR1b, MR1c, MR1d, MR2a, MR2b, MR2c, MR2d, MR2e, TP1b, TP1c, AP1a, AP1b, AP1c, AP1d, AP1e, AP1f, AP1h, AP1i, MR3a, MR3b, MR4a, MR4b, TU1a, TU1b, TU1c, TU1d, TU1e, TU1f, GO1a, MV1a, MV1b, MV1c, MV1d, MV1e, MV1f |
-| [ ] | 2026-11-14 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule | W2 | DF1f | CA3a, CA3e |
+| [x] | 2026-11-14 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule | W2 | DF1f | CA3a, CA3e |
 | [ ] | 2026-11-14 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | Stat scaling (`Combat/stat-scaling.ts`) | Have Claude recommend tuning from a table of each lane's numbers | W2 | T | - |
 | [ ] | 2026-11-14 | Play your quest line on the preview build and rule on its lines (0.5 h) | The Breakwater's questline | Claude turns your notes into fixes for BW1e | W2 | T | BW1e |
 | [ ] | 2026-11-15 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | The MVP run | Claude lists what the mid-MVP check filed and what has shipped since; you cut or keep | W2 | T | SM2b, SM2c, SM2d, SM2e, SM2f |
@@ -228,7 +228,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-12-12 | Combat playtest part 2: winnable and dangerous (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | R12 | - |
 | [ ] | 2026-12-13 | Chapters 2-4's enemy art: pick from the loop's candidates (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | T | - |
 | [ ] | 2026-12-14 | W4 demo: an Act 1 clear ending at the Act Boss (2 h) | Relic pass, combat proven, an Act 1 clear | - | W4 | T | UP1h |
-| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | Ship Act 1 | - | W5 | LG1h | LG1i |
+| [ ] | 2026-12-23 | Android smoke test on the preview APK (1 h) | Ship Act 1 | - | W5 | CK1d | LG1i |
 | [ ] | 2026-12-26 | Playtester walk of all four chapters (plot, 1 h) | Ship Act 1 | `/plot` | W5 | needs plot | - |
 | [ ] | 2026-12-28 | Build the Act 1 APK (1 h) | Ship Act 1 | - | W5 | T | - |
 
@@ -243,12 +243,10 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TK1b — T rotates both tokens (spec 163, attended); date not set (T's to pick, once TK1a has shipped).
 - TK1c — preview builds refuse the owner token, and a release can carry its APK (spec 163); loop work after T's rotation, date not set.
 - TK1d — the production profile builds the prod APK with no DEV TOOLS (spec 163); loop work, TK1c needs it, date not set.
-- SR1a — settle retires an emptied spec (spec 164); loop work, no dated T act waits on it.
 - RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - CK1a — closes the three checks T confirmed on 2026-11-09 and moves five here (spec 166); loop work after SR1a, no dated T act waits on it.
 - CK1b — T reads the human-versus-sim comparison (spec 166, attended); date not set (T picks it).
 - CK1c — T checks the play log on a preview APK (spec 166, attended); date not set (T picks it).
-- CK1d — T watches the Android smoke test (spec 166, attended); the Dec 23 Item names it once CK1a ships.
 - CK1e — T proves the vault's conflict test (spec 166, attended); date not set (T picks it).
 - CK1f — T looks at the feature map (spec 166, attended); date not set (T picks it).
 - GO1b — the second run-end test really has a scene pending (spec 161); test-only loop work, no dated T act waits on it.
@@ -256,9 +254,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - MG1a — the merge decision re-runs when the verify gate finishes (spec 160); loop work, no dated T act waits on it.
 - AP1g — T picks which map nodes show a plate other than their region's default, after AP1f's report; date not set (T picks it).
 - B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21. Chapter 1's own boss now has its face and its slot, but not its moves: T's recast (2026-11-06, spec 157) makes The Saint Beneath the sea keep's boss on the Death Beholder's inherited deck and stages, and one of its stages is still marked a draft for T to rewrite. Designing that fight is a later owner-led session, not part of this row, which is Chapters 2-4.
-- MF1e — T plays the Merciful test deck on a preview build after MF1d; date not set (T picks it).
 - MF1f — the Merciful's two quest relics, the Brimming Locket and the Penitent's Brooch; no dated T act waits on them; the loop may pick them on its ordinary turn.
-- SM1i — T reads the human-versus-sim comparison after a preview build carrying SM1a-SM1h; date not set (T picks it).
 - ST1b — the dev menu moves into Settings; date not set (the beta handout is not dated yet).
 - CF1a — the card-face grammar lint (spec 137); no dated T act waits on it, only T's read of CF1b's rewrite, whose date T has not set
 - CF1b — every card line rewritten to T's grammar; T reads and merges its rules-change PR; date not set (T picks it).
@@ -281,7 +277,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - SM2k — boss damage and a batch table in the sim output (spec 135); a tuning tool, no dated T act waits on it
 - CF1g — the open card prints the hand's whole line, in words or in glyphs (spec 137); no dated T act waits on it
 - NX1i — T turns the loop back on and watches the first v2 tick after NX1d; date not set (T picks it).
-- OV1d — attended; only A11 is left, the conflict test, which needs T at the desktop; date not set.
 - PF2 — attended; after Act 1 complete (The milestone), and waits on PF2a and then on T's Android baseline numbers.
 - PF2a — step 1 of the combat SVG rasterisation, texture caching on the static layers and dice (spec 123); no dated T act waits on it, only PF2's measurement, which has no date set.
 - B5 — blocked: owner-led; the card-creator workflow is Act 1 stretch, in only if a window has time left.
@@ -290,12 +285,9 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - B8 — blocked: owner-led; after Act 1 complete (The milestone).
 - B9 — blocked: owner-led; after Act 1 complete (The milestone).
 - B10 — blocked: owner-led; after Act 1 complete (The milestone).
-- BE2g — attended; T's check on a preview APK once BE2c-BE2f and BUG1b ship (until BUG1b, the Worker refuses every fight post); date not set.
 - IO1b — attended; waits on T enrolling in the Apple Developer Program; date not set.
 - IO1d — attended; T and a friend install the first iPhone builds once IO1b and IO1c ship; date not set.
 - BV1c — attended; T creates the ballot Pages project and submits the first verdict from the phone; date not set.
-- EL1d — attended; T's check on the preview APK after EL1c; date not set.
-- FM2d — attended; T's look in Obsidian once FM2b and FM2c ship; date not set.
 - SB1 — attended: T's set-bonus design session; T said it is not part of the Act 1 MVP deadline; date not set.
 - TL1a — review coverage reaches every file of a wide PR; no T act waits on it.
 - TL1b — a pending file with a footgun settles, and a refused settle shows; no T act waits on it.
@@ -317,6 +309,8 @@ here with the date; nothing is dropped silently. A window's "to plot" items are 
 attended session.
 
 ## Change log
+
+- **2026-11-09** — **CK1a closes the three confirmed checks and retires eight specs** (T confirmed Merciful, Defender and Elementalist on the APK). **Ticked** the Nov 14 Defender Item (DF1f). **Edited** the Dec 23 Item's Rows from LG1h to CK1d. **Removed** the Unscheduled lines for MF1e, EL1d, SM1i, OV1d, BE2g, FM2d and the shipped SR1a, and CK1d's line, which the Dec 23 Item now covers.
 
 - **2026-11-09** — **the prod APK plotted into spec 163 (TK1d)** (T, attended, answering 163's calls during the 163-166 pilot: preview stays T's, `production` is repurposed as the sideloadable APK with no DEV TOOLS, rows post as `human`, releases carry the prod APK only). **Added** TK1d under `## Unscheduled`; TK1c now needs it.
 - **2026-11-09** — **the API token split plotted as spec 163 (TK1a-TK1c)** (T, attended: told the preview APK holds the all-routes token, "Plot the token split now"). **Added** TK1a, TK1b and TK1c under `## Unscheduled`; no date is T's until TK1a ships.
