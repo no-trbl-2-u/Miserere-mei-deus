@@ -22,7 +22,7 @@ import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
 import { parsePending, pendingFiles } from './plan/pending.mjs'
-import { listedChunks } from './plan/settle.mjs'
+import { holdReason, listedChunks } from './plan/settle.mjs'
 import { settledView } from './plan/settled.mjs'
 import { readPlanSources } from './check-deadlines.mjs'
 import { runCheck } from './plan-check.mjs'
@@ -839,6 +839,47 @@ test('absorb: rides only a close, says something, and names only its own decisio
   assert.throws(() => parsePending(absorbing('08.1', 'D?nowhere'), 'x.md'), /absorb names D\?nowhere, but no "## Decisions" entry here defines it/)
   assert.equal(parsePending(absorbing('08.1', 'none'), 'x.md').absorb, 'none')
   assert.equal(parsePending(closeOf('08.1'), 'x.md').absorb, null)
+})
+
+test('an absorbing close that empties a spec under open acceptance is held for chunks, and nothing retires', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const partial = SPEC_ONE.replace('closes A1 ·', 'closes A1 (partial) ·')
+    landOnMain(work, g, { 'plan/08-maps.md': partial, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': absorbing('08.1', 'none') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
+    assert.deepEqual(r.left, ['plan/pending/08.1.md'])
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk under open acceptance: chunk the spec/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'the spec stands')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: speaks only for its own close\'s spec: emptying another spec holds, and so does a file with no close', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    // A close of 07.1 (spec 07 keeps 07.2) whose Edit empties spec 08: its absorb: is spec 07's, not 08's.
+    // The Edit takes its acceptance too, so only the guard stands between spec 08 and a retire.
+    const edit = EDIT_EMPTIES.slice(EDIT_EMPTIES.indexOf('## Edit')).replace('~~~ new\n~~~\n', '~~~ new\n~~~\n~~~ old\n## Acceptance\n\n- **A1** A map.\n~~~\n~~~ new\n~~~\n')
+    const elsewhere = absorbing('07.1', 'none', edit)
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': elsewhere })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'refused', JSON.stringify(r))
+    assert.match(settleFailure(r), /held back plan\/pending\/07\.1\.md: it would leave plan\/08-maps\.md with no chunk: absorb the spec by hand/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'spec 08 stands')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+  // A file with no close (the parser refuses absorb: there; this is the guard behind it) never exempts a spec.
+  const empty = '# 08 · Maps\n\n## Chunks\n\nMeasure: 0 open · 1 closed · next A2\n'
+  assert.match(holdReason({ close: null, absorb: 'none' }, 'plan/08-maps.md', empty), /with no chunk: absorb the spec by hand/)
+  assert.match(holdReason({ close: '07.1', absorb: 'none' }, 'plan/08-maps.md', empty), /with no chunk: absorb the spec by hand/)
+  assert.equal(holdReason({ close: '08.1', absorb: 'none' }, 'plan/08-maps.md', empty), null)
 })
 
 // The CLI itself, spawned. Its root is its own file's parent, so a scratch repo gets a copy of the script and what it imports.
