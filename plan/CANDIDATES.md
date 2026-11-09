@@ -889,6 +889,34 @@
 - trigger: a screen gains a step before its first testid, or a kind is cut, and the walks only fail in CI.
 - proposed scope: 1 phase. A root test that reads the `landing:` and `waitFor` testids in `axiomancer-mobile/scripts/*.mjs` and fails when none appears in `app/` or `components/`.
 
+### [ ] [owner] [score 4.5] The five STALE font-width estimates remeasured, so the guard's STALE set is empty
+- proposed: 2026-11-09, T at the /pilot end gate (parked from 99.6, #1507)
+- part plan: `plan/revamp/pilot-follow-ups.md` section A
+- proposed scope: 1 chunk under spec 99. Set the paid line's CAPS, SERIF and SPACE_EM, HazardCard's GOTHIC_CAP_EM and effectGlyphEm to the measured advances; empty STALE; before and after shots of every screen whose fit moves.
+- conflicts: TY1 (spec 156) type roles; re-measure against the faces on main when built.
+- promote with `/plot`.
+
+### [ ] [owner] [score 4.0] A visual baseline for the WILDS map at rest and panned
+- proposed: 2026-11-09, T at the /pilot end gate (parked from 111.3, #1510)
+- part plan: `plan/revamp/pilot-follow-ups.md` section B
+- proposed scope: 1 chunk under spec 158. Two smoke-screens routes (map at rest, map after a scripted pan), baselines approved from the CI renderer; covers the camera re-clamp when the pane shrinks.
+- conflicts: none.
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] The Settings smoke shot renders the tab, and the Deck shot shows an open card
+- proposed: 2026-11-09, T at the /pilot end gate (review of VR1b, #1514)
+- part plan: `plan/revamp/pilot-follow-ups.md` section C
+- proposed scope: 1 chunk under spec 158. Route the settings shot to /settings-tab, fix the selection rule and README to name the right file, capture the Deck with a card open, re-approve both baselines from CI.
+- conflicts: B (same script); build B and C in one PR or in sequence.
+- promote with `/plot`.
+
+### [ ] [owner] [score 5.0] A declined quest files no false node-unresolved break, and the sim-runs gates are tested
+- proposed: 2026-11-09, T at the /pilot end gate (review of SM2d, #1531)
+- part plan: `plan/revamp/pilot-follow-ups.md` section D
+- proposed scope: 1 chunk under spec 135. The decline and unavailable paths through closeQuest stop filing node-unresolved (logged or exempted), with a firing test, plus a test of the sim-runs workflow gates.
+- conflicts: SM2f (135.6) reads the same break list.
+- promote with `/plot`.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
