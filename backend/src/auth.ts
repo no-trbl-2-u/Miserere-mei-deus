@@ -12,7 +12,7 @@ export function isAuthorized(request: Request, token: string | undefined): boole
 }
 
 /**
- * The check every route runs (spec 163): the owner token opens everything, and
+ * The check every route runs: the owner token opens everything, and
  * the tester token opens only a POST to a route that opts in with `tester`.
  * A route is owner-only unless it says otherwise.
  */

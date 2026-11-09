@@ -1,5 +1,5 @@
 /**
- * Spec 163 (TK1a) A1-A3: the tester token, the one a published APK carries.
+ * TK1a A1-A3: the tester token, the one a published APK carries.
  * It opens the POST of the app's six paths and nothing else; the walk below
  * reads the Worker's own route table, so a route added later is checked here
  * without editing this file, and is owner-only unless it opts in.

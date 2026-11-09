@@ -22,7 +22,7 @@
  *                                      the stored rows, newest first  -> 200 { ballotVerdicts }
  *
  * Every route needs `Authorization: Bearer <PUZZLE_API_TOKEN>`, the owner token
- * (401 without it). The tester token, `PUZZLE_TESTER_TOKEN` (spec 163), is the
+ * (401 without it). The tester token, `PUZZLE_TESTER_TOKEN`, is the
  * one a published APK carries: it opens only the POST of a route marked
  * `tester: true`, the six the app posts to (puzzle attempts, fights, deck
  * events, play runs, run events and a run's end), and is a 401 on every GET,
@@ -111,7 +111,7 @@ export interface Route {
     invalid: string;
     /** Called from a browser page on another origin: answers a preflight and echoes an allowed origin. */
     cors?: boolean;
-    /** The app posts here: its POST also takes the tester token (spec 163). Absent, the route is owner-only. */
+    /** The app posts here: its POST also takes the tester token. Absent, the route is owner-only. */
     tester?: boolean;
     post(body: unknown, env: Env): Promise<Response>;
     get(url: URL, env: Env): Promise<Response>;

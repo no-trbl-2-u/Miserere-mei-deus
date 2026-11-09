@@ -4,7 +4,7 @@ export interface Env {
     /** The owner token: every route and method. */
     PUZZLE_API_TOKEN: string;
     /**
-     * The tester token, the one a published APK carries (spec 163): accepted only on the POST of a
+     * The tester token, the one a published APK carries: accepted only on the POST of a
      * route marked `tester: true`. Unset, the Worker behaves as it did before it existed.
      */
     PUZZLE_TESTER_TOKEN?: string;
