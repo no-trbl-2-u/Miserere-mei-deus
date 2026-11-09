@@ -40,6 +40,9 @@ needs are done):
 
 - **164.1** · SR1a: settle retires an emptied spec whose last close says where its rules went (T, `/plot asap`, 2026-11-09)
 
+- **163.1** · TK1a: the Worker takes a tester token on the app's POST routes only (T, `/plot asap`, 2026-11-09)
+- **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
+
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
 `- **<NN.k>** · <reason> · since: <date> · until: <date or
@@ -82,10 +85,13 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **166.5** · attended: T does this one (CK1e) · since: 2026-11-09 · until: T's word · max_age: 60d
 - **166.6** · attended: T does this one (CK1f) · since: 2026-11-09 · until: T's word · max_age: 60d
 
+- **163.2** · attended: T does this one (TK1b) · since: 2026-11-09 · until: T's word · max_age: 30d
+
 ## Specs
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.1, 163.3) | 3 left |
 | 164 | A finished spec retires itself at settle | [164-sr1-spec-retires-itself.md](164-sr1-spec-retires-itself.md) | planned (**Asap**: 164.1) | 1 left |
 | 165 | The Rules Glossary lists every keyword | [165-rg1-rules-glossary-keywords.md](165-rg1-rules-glossary-keywords.md) | planned | 1 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 6 left |
