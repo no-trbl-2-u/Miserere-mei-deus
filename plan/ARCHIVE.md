@@ -622,3 +622,4 @@
 - 2026-11-09 · 99.10 · Tree lint no longer needs tar, shown failing with it back · 819bd2d8..819bd2d8 (#1503)
 - 2026-11-09 · 135.4 (alias: SM2d) · Sim breaks caught per run and filed; personas nightly · 10750774..f51f79f6 (#1531)
 - 2026-11-09 · 99.8 · Scratchpad-script import trap guarded, shown failing · 942f5395..942f5395 (#1502)
+- 2026-11-09 · 156.6 (alias: TY1f) · Colour ballot offers six palettes on five real screens · 26ab20f0..26ab20f0 (#1537)

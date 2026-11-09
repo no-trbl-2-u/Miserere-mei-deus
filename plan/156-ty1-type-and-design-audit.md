@@ -103,7 +103,6 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 - **A4** The audit report `docs/reports/design-audit-<date>.md` covers every screen in the list, each with its emotional job, its tells table, its bold thing and its top three fixes. It also carries the tell count before and after the UI rounds, and the copy flagged by screen.
 - **A5** A mock page offers three directions for each of the audit's three worst screens, under the ballot index, and T's picks come back through the ballot kit.
-- **A6** A colour ballot offers 4 to 6 whole palettes from named references, plus today's as "now", each shown on five real screens with T's kit pieces, under the ballot index.
 - **A7** T's palette is the default theme. The accent appears only on each screen's bold element and the controls that need it, and the audit's gold-accent count drops against its before figure.
 
 ## Open questions
@@ -116,12 +115,11 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 ## Chunks
 
-Measure: 4 open · 3 closed · next A8
+Measure: 3 open · 4 closed · next A8
 
 - [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.7 · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
-- [ ] **156.6** The colour ballot: whole palettes on the real screens · M · closes A6 · needs — · alias: TY1f
-- [ ] **156.7** T's palette, the default theme · M · closes A7 · needs 156.6 · alias: TY1g
+- [ ] **156.7** T's palette, the default theme · M · closes A7 · needs — · alias: TY1g
 
 ### 156.1 (TY1a) — The design direction, written down · S · closes A1 · requires —
 
