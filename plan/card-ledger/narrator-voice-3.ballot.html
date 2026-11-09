@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Narrator voice ballot, round 2</title>
-<!-- The Narrator voice ballot, round 2 (plan/card-ledger/narrator-voice.md). -->
+<title>The Narrator voice ballot, round 3</title>
+<!-- The Narrator voice ballot, round 3 (plan/card-ledger/narrator-voice.md). -->
 <style>
   /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
   :root {
@@ -116,8 +116,8 @@
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
   <p class="banner" role="note"><b>Samples only.</b> Nothing here ships. The Breakwater and the Charcoal Wood are locked with your edits and are not on this ballot.</p>
-  <h1>The Narrator: what kind of dark?</h1>
-  <p class="sub">Eight places, three takes each, all darker. The takes are shuffled and unlabelled. Pick the one that frightens you.</p>
+  <h1>The Narrator: which dark, where?</h1>
+  <p class="sub">Eight places in the tone you liked, three takes each, shuffled and unlabelled. Pick per place. You wanted about half of them darker, so expect to mix.</p>
   <p class="legend"><b>Tick</b> the take you like. Ticking two means "somewhere between these". <b>Leave all three blank</b> if none is right, and say why in the note box: rejections teach the voice as much as picks. When you are done press <b>Generate</b>, then <b>Copy</b>, and paste it to Claude. <b>Submit and Save do not work right now.</b></p>
 </header>
 
@@ -142,7 +142,7 @@
    free / paid: the two rules lines (plain text);
    why: the drafter's one-line rationale.
    ===================================================================== */
-const BALLOT_ID = 'narrator-voice-2-2026-11-08';
+const BALLOT_ID = 'narrator-voice-3-2026-11-09';
 
 const TABS = [
   {
@@ -177,11 +177,11 @@ const SLOTS = [
   },
   {
     "slot": "J-01",
-    "role": "Enemy journal: the Saint Beneath. Your story, darker, told three ways. If the text you confirmed was better, say so in the note."
+    "role": "Enemy journal: the Saint Beneath. Your story, three ways."
   },
   {
     "slot": "J-02",
-    "role": "A memory from the Memoir tab: the night X reaches the last hut. Says nothing of what X did."
+    "role": "A memory from the Memoir tab: the night X reaches the last hut."
   },
   {
     "slot": "F-01",
@@ -200,99 +200,99 @@ const SLOTS = [
 const CARDS = [
   {
     "id": "N-03a",
-    "text": "Four roads meet under the hill. The man on the gallows hangs with his back to you though the wind is off the sea. You go by with your eyes on the road and when you look back he is facing you. It is only the rope. You tell yourself it is only the rope."
+    "text": "Four roads meet under the hill and the stones that marked them have sunk into the earth. The gallows stands black against the last of the light and the man upon it was opened before he was hung, from the breastbone down, and what came out of him hangs yet in long gray ropes to the ground where the dogs have worried it and been called away. The flies rise and settle like a breathing thing. Blood has gone into that hill for more years than there are names for and nothing grows upon it but the beam."
   },
   {
     "id": "N-03b",
-    "text": "Four roads meet under the hill. The man on the gallows is about your height. Beside him a second rope hangs from the beam, new, the knot already tied. No one has been up here to say who it is for."
+    "text": "Four roads meet under the hill and the stones that marked them have sunk into the earth and the names are gone from them. The gallows stands black against the last of the light, hewn from some timber no longer grown in that country, and the thing upon it has hung through more winters than any rope should bear. Even the crows have quit it. Its jaw has dropped and its face is turned down the road you came by and it regards your coming with the patience of all things that have finished."
   },
   {
     "id": "N-03c",
-    "text": "Four roads meet under the hill and on the hill the gallows stands and the man on it has been there since the thaw. The crows have had the eyes and the lips and what is left of his face grins down the road you came by. One boot is gone. The other turns slowly in the wind and the rope creaks and the creaking carries."
+    "text": "Four roads meet under the hill and the gallows stands above them in the last of the light. The man upon it is not yet a season dead and beneath his feet the people of the country have set out their stalls, for it is a good crossing and the hangings bring custom. A woman sells salt fish from a barrow. She has sold the rope's end by the inch to those who hold it lucky and she will tell you that it was her husband up there and what he fetched."
   },
   {
     "id": "N-04a",
-    "text": "The bridge hangs on two ropes over the gorge. The man at the gate says they came through at first light asking after someone of your description. He says the ropes were sound this morning. He holds out his hand."
+    "text": "The bridge goes out over the gorge on two ropes and a run of slats and the man at the gate will let you pass for coin or he will let you pass for another thing. Those who have no coin may name someone on the road behind them. He keeps the names on a length of knotted cord and he sells them at the turn of the season to those who come asking, and he has never once been asked by anyone who meant them well. He holds out his hand. He wants to know who is behind you."
   },
   {
     "id": "N-04b",
-    "text": "The bridge goes out over the gorge on two ropes and a run of slats and the slats are dark where hands have gripped them and some of the hands are still there, lashed at the wrist to the rope and dried black and curled like something left too near a fire. The man at the gate holds out his palm. He has three fingers on it."
+    "text": "The bridge goes out over the gorge on two ropes and a run of slats and the piers of some greater bridge stand in the void on either hand, broken off at the height of cathedrals, with trees grown upon them that no hand has ever touched. Whatever people raised them are gone from all reckoning. The man at the gate sits at the foot of that wreckage with his palm held out and he does not look up, as his fathers did not."
   },
   {
     "id": "N-04c",
-    "text": "Two ropes and a run of slats over the gorge. The gatekeeper does not ask where you are going. He looks at you a long time and then he looks at the far side of the bridge where no one is standing and his lips move as if he were counting. He holds out his hand."
+    "text": "The bridge goes out over the gorge on two ropes and a run of slats and the slats are black and slick with what has been spilled there and the ropes are strung at every yard with hands, lashed at the wrist and dried to claws, the toll of those who came without coin. Some are fresh. One yet drips. The man at the gate has a cleaver across his knees and a block at his feet worn hollow as a font and he holds out his palm to you and he has three fingers on it."
   },
   {
     "id": "N-05a",
-    "text": "The Covenant has the world now and it has hung the roads with those who stood against it, mile on mile of them, tarred against the weather so that they will last. The capital alone stands yet, far to the north behind its wall, the last place on this earth they have not taken. You are leaving the Drowned Parish in the dark. You can hear the dogs."
+    "text": "The Covenant has come over the world by road and by sea and the old countries lie under it like bones under a plough, their very names forgotten. The capital alone stands yet, far to the north behind its wall, the last lit place upon the darkening earth. You go up out of the Drowned Parish in the night with the soldiers on your track and the stars wheel over you as they wheeled over all that went before and they take no note."
   },
   {
     "id": "N-05b",
-    "text": "There is almost nothing left that the Covenant does not hold. In the towns behind you the doors stand open and the tables are laid and no one is there. The capital stands yet, far to the north behind its wall, and it is the last place left. You are leaving the Drowned Parish in the dark. The dogs stopped a while ago. You do not know what that means."
+    "text": "The Covenant has come over the world by road and by sea and it did not come alone, for in every country there were those who opened the gates and named their neighbors and were given the neighbors' fields for it. They will do as much for you. The capital alone stands yet, far to the north behind its wall, the last place on this earth they have not taken. You go up out of the Drowned Parish in the night and every lit window you pass is someone deciding what you are worth."
   },
   {
     "id": "N-05c",
-    "text": "The Covenant holds the world now. It knows the height of you and the way you walk and the name you gave at the last door. The capital stands yet, far to the north behind its wall, and it is the last place they have not reached. You are leaving the Drowned Parish in the dark. They are in no hurry. There is nowhere else for you to go."
+    "text": "The Covenant has come over the world by road and by sea and it has hung the roads with those who stood against it, flayed and tarred against the weather, mile on mile of them, their red hands nailed out to show the way. The capital alone stands yet, far to the north behind its wall, the last place on this earth they have not taken. You go up out of the Drowned Parish in the night with the soldiers on your track and the dogs before them and the ground under you black with what has run out of the dead."
   },
   {
     "id": "J-01a",
-    "text": "He was a fisherman and he stood up in the square and they watched him from their doorways and they watched the gang walk him down to the quay and they watched the water until it stopped. It was his anger that came back, long as a street and scaled and wearing his face. At night now the harbour knocks. It knocks on the hulls and on the pilings under the fish market, slow and three at a time, the way a man knocks who knows you are home. No boat leaves. No one walks out. They call it a saint and they leave it food."
+    "text": "He was a fisherman once and he stood up in the square against the men who held the town and the others barred their doors. The gang broke his hands on the bollard and they opened him at the belly with a gutting knife so that he would sink and they held him under at the foot of the quay with the water going red about their arms until he quit. What was left they gave to the river. His anger went down into that dark and came back up clothed in scale and gristle and rotted flesh, long as a street, with his face nailed to the front of it and the hooks of every boat that tried to leave hanging bloody in its jaw. It lies beneath the Breakwater now. No one walks out. They call it a saint. It has never forgiven anyone."
   },
   {
     "id": "J-01b",
-    "text": "He was a fisherman once and he stood up in the square against the men who held the town and he asked the others to stand with him and they shut their doors. The gang held him under at the foot of the quay and put him in the river. His anger went down to the sea and grew a body there and it came back up under the Breakwater with his face on the front of it. It knows every door that stayed shut. It lies beneath the town with its mouth open and no boat leaves and no one walks out. They call it a saint. It has never forgiven anyone. It does not know you are not one of them."
+    "text": "He was a fisherman once and he stood up in the square against the men who held the town and he called on the others to stand with him. It was they who told the gang where he slept. His brother opened the door. They stood along the quay to see him held under and afterward they went in to supper, and the gang forgave that year's debts. He went into the river and his anger went into the sea and it came back with his face on it and now it lies beneath the Breakwater and no one walks out. They call it a saint. They bring it the first of every catch and they tell it that they are sorry and they are not."
   },
   {
     "id": "J-01c",
-    "text": "He was a fisherman once and he stood up in the square against the men who held the town and he asked the others to stand with him and they shut their doors. The gang held him under at the foot of the quay until the water quit moving and they put him in the river with the eels already at him. His anger did not die with the rest of him. Something in the dark took it up and built a body for it out of scale and gristle, and his face is on the front of it yet with the mouth dragged open by the hooks of every boat that tried to leave. Now it lies beneath the Breakwater and no one walks out. They call it a saint. It has never forgiven anyone."
+    "text": "He was a fisherman once, in a year no one in that town will name, and he stood up in the square against the men who held it and he called on the others to stand with him and they went in and barred their doors. The gang held him under at the foot of the quay until the water quit moving and they gave him to the river and the river gave him to the sea. In that old dark where no light has ever been his anger went down and down and it was not extinguished, and something older than the town took it up and clothed it in scale and gristle and set his face upon the front of it. It lies beneath the Breakwater now with its mouth agape and no boat leaves and no one walks out. They call it a saint. It has never forgiven anyone."
   },
   {
     "id": "J-02a",
-    "text": "You came down the strand after dark past a dog dead in the lane with the rain filling it and at every door you knocked you heard them inside holding still. The last hut stood alone where the shingle gave out. You knew whose it was. You knocked with the hand that still worked and she came with a lamp and looked at you a long time and stood aside."
+    "text": "Every door on that strand was barred and you went on to the last and you knew whose it was. You stood in the rain and you made up what you would tell her, and you tried it over aloud, and you found the place in it where your voice should break. Then you knocked. She came with a lamp and you let your voice break where you had planned and she stood aside."
   },
   {
     "id": "J-02b",
-    "text": "No door opened. You could hear them behind the boards, holding their breath until you passed. There was one hut left. You knew whose it was. You knew what you were bringing to it. You knocked anyway. She came with a lamp and she stood aside and God help her she smiled."
+    "text": "You came down the strand in the rain with the blood dried black to your elbow and you left it on every door you tried and not one door opened. The last hut stood alone where the shingle gave out and you knew whose it was. You scrubbed your hand on the wet stones and it did no good. She came with a lamp and she looked at the hand and she looked at you and she stood aside and she did not ask."
   },
   {
     "id": "J-02c",
-    "text": "At every door on the strand you heard breathing and no one came. The last hut stood alone where the shingle gave out and there was a lamp in the window as though you had been expected. You stood in the rain. You should have gone on. She opened the door before you knocked and stood aside and she did not ask your name."
+    "text": "You came down that strand in the rain as others had come down it in all the drowned centuries before you, and every door was barred against you. The last hut stood alone where the shingle gave out, built from the ribs of some great vessel no living hand had launched, and you knew whose it was. You knocked. She came with a lamp and looked at you a long time, as one looks at weather, and she stood aside."
   },
   {
     "id": "F-01a",
-    "text": "An iron key worn bright along the bit. Someone will come looking for it. Someone always has."
+    "text": "A key of black iron worn bright along the bit by the hands of men whose tongue is no longer spoken. The door it was made for has outlasted its keepers and will outlast you."
   },
   {
     "id": "F-01b",
-    "text": "An iron key. It is warm when you take it up and it is warm in the morning."
+    "text": "A key of black iron worn bright along the bit. It was got from a dying man by promising to send for his wife."
   },
   {
     "id": "F-01c",
-    "text": "A key of black iron, the bit worn bright. There is a scrap of old skin dried in the bow of it where someone would not let go."
+    "text": "A key of black iron, the bit worn bright. It was cut out of the last man who carried it, and it came up slick, and the stain has not gone from the bow."
   },
   {
     "id": "F-02a",
-    "text": "He goes down without a sound. He looks up at you as if he knew you."
+    "text": "There is no art in it. The teeth go in and the blood comes out and the man goes on trying to rise."
   },
   {
     "id": "F-02b",
-    "text": "There is no art in it. The teeth go in and come out and the man goes on trying to stand."
+    "text": "Men struck one another so before there were words for it and they will be at it still when the words are gone."
   },
   {
     "id": "F-02c",
-    "text": "No art to it. He would have done the same to you and he may yet."
+    "text": "He had stopped fighting some while before. You had not."
   },
   {
     "id": "F-03a",
-    "text": "You lie where you fell and the crows come down and they start at the eyes. You are not yet dead when they begin."
+    "text": "You lie where you fell. They go through your coat before you have finished. Someone who knew you takes the boots."
   },
   {
     "id": "F-03b",
-    "text": "You lie where you fell. The rain stops. Something comes down the road and stands over you a while and then it kneels."
+    "text": "You lie where you fell and the rain comes on and the grass will have you by spring. All the dead of that country lie under the same grass and not one of them was missed."
   },
   {
     "id": "F-03c",
-    "text": "You lie where you fell. They will hang what they find at the crossroads. There is room on the beam."
+    "text": "You lie where you fell with your belly opened and your hands trying yet to gather back what has come out and the crows come down and begin at the eyes. You are not dead when they begin."
   }
 ];
 
@@ -389,7 +389,7 @@ const sheet = () => {
   const k = kept();
   const general = document.getElementById('general').value.trim();
   return [
-    'BALLOT — the Narrator voice, round 2',
+    'BALLOT — the Narrator voice, round 3',
     `kept ${k.length} of ${CARDS.length}`,
     ...TABS.flatMap((t) => [
       `-- ${t.name} --`,

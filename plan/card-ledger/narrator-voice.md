@@ -53,30 +53,38 @@ is short sentences with one long one.
   named author's style.
 - `axiomancer-mechanics/docs/narrative/DELIVERY_REGISTER.md` MB-1 caps
   narration at 20 words, and `scripts/check-prose.mjs` enforces it.
-- `ANTI_IMITATION.md`, `EVALUATION.md` and `LEXICON.md` block gore used for
-  intensity. T, 2026-11-08, wants the player afraid and a corpse on the
-  gallows, so these need rewording.
 
-## Round 2: what kind of dark
+## Round 2, withdrawn
 
 T, on round 1: "I love this, buuuut I want darker. I want a corpse hanging
 from those gallows. I want the player to be afraid."
 
-Round 2 (`narrator-voice-2.ballot.html`, ballot id
-`narrator-voice-2-2026-11-08`) takes the eight slots T did not lock and tests
-the kind of fear. **Shown** puts the horror in plain sight. **Wrong** has a
-detail that should not be so. **Yours** aims the threat at the player.
+Round 2 tested three kinds of fear but drifted into modern horror. T asked for
+the target directly: "Imagine if Cormac McCarthy wrote Elder ring". It was
+withdrawn unvoted.
+
+## Round 3: which dark, where
+
+T, 2026-11-09, on the sample Gallows Crossroads (take **Ruin** below): "This is
+great, I love this tone! While maybe not 'bloodier' but some (maybe half the
+entries) should be darker, sometimes in a gorey/bloody way, and others just in
+a more immoral way."
+
+Round 3 (`narrator-voice-3.ballot.html`, ballot id
+`narrator-voice-3-2026-11-09`). **Ruin** is enormous age and indifference.
+**Blood** is the same voice, physical and gory. **Immoral** is the same voice,
+with what people do to one another for gain.
 
 | Slot | a | b | c |
 |---|---|---|---|
-| N-03 Gallows Crossroads | wrong | yours | shown |
-| N-04 Rope bridge toll | yours | shown | wrong |
-| N-05 Opening | shown | wrong | yours |
-| J-01 Saint Beneath | wrong | yours | shown |
-| J-02 The last hut | shown | yours | wrong |
-| F-01 Keep key | yours | wrong | shown |
-| F-02 A Plain Blow | wrong | shown | yours |
-| F-03 Death line | shown | wrong | yours |
+| N-03 Gallows Crossroads | blood | ruin | immoral |
+| N-04 Rope bridge toll | immoral | ruin | blood |
+| N-05 Opening | ruin | immoral | blood |
+| J-01 Saint Beneath | blood | immoral | ruin |
+| J-02 The last hut | immoral | blood | ruin |
+| F-01 Keep key | ruin | immoral | blood |
+| F-02 A Plain Blow | blood | ruin | immoral |
+| F-03 Death line | immoral | ruin | blood |
 
 ## Verdicts
 
@@ -99,8 +107,8 @@ started in.
 > the eyes and they do not look up. Caves lie in the south where many have
 > entered only to exit as a shadow of who they once were.
 
-The other eight slots went to round 2.
+The other eight slots went to round 3.
 
-### Round 2
+### Round 3
 
 Not voted yet.
