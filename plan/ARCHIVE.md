@@ -656,3 +656,4 @@
 - 2026-11-09 · 160 · spec complete: A passed review still merges when the verify gate finishes after it · nothing further to absorb: pinned by pr-merge.test.mjs · deleted in (this commit)
 - 2026-11-09 · 161 · spec complete: A second death reaches the Game Over screen · nothing further to absorb: pinned by run-end-no-arrival.engine.test.tsx · deleted in (this commit)
 - 2026-11-09 · 162 · spec complete: Six foes get moves of their own · absorbed into identity (D182) · deleted in (this commit)
+- 2026-11-09 · 163.1 (alias: TK1a) · The Worker takes a tester token on the app's POSTs only · 1de09fc3..affc6c7e (#1549)

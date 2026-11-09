@@ -42,10 +42,6 @@
 
 ## Acceptance
 
-- **A1** A request bearing the tester token succeeds on each of the app's POST paths: puzzle attempts, fights, deck events, play runs, run events and run end.
-- **A2** A request bearing the tester token gets 401 on every GET, every report and the ballot verdict POST. A test walks the route table, so a new route is covered without editing the test.
-- **A3** With `PUZZLE_TESTER_TOKEN` unset, the Worker behaves as today, and the tester-token cases get 401.
-- **A4** The deploy sets `PUZZLE_TESTER_TOKEN` when the repo secret exists and still succeeds when it does not.
 - **A5** T's rotation is done: new values in the Worker and repo secrets, a preview build made with the tester value and seen posting a row, and the old value refused by the live Worker with a 401.
 - **A6** `preview-build` fails before spending a build when the baked token equals the owner token.
 - **A7** `node scripts/release-apk.mjs <tag>` finds the finished Android production build for the tag's own commit, refuses any other commit, and attaches its APK to that release. Run on v0.7.0 as its proof.
@@ -58,14 +54,9 @@
 
 ## Chunks
 
-Measure: 8 open · 0 closed · next A9
+Measure: 4 open · 4 closed · next A9
 
-- [ ] **163.1** The Worker takes a tester token on the app's POST routes only · M · closes A1, A2, A3, A4 · needs — · alias: TK1a
-  - `backend/src/env.ts`, `auth.ts`, `index.ts`: `tester: true` on the five `ROUTES` entries the app posts to and on the run-end path. Only their POST takes the tester token. `handleReport` and the ballot route do not change.
-  - `backend-deploy.yml`: a step that sets `PUZZLE_TESTER_TOKEN` when the repo secret exists, and is skipped otherwise. `backend/wrangler.toml`'s comment names both secrets.
-  - Tests in `backend/test/`, with A2's walking the route table.
-  - Measure: `npm test -w backend` green, and A2's test shown red with `tester: true` put on the ballot route.
-- [ ] **163.2** T rotates both tokens (attended) · S · closes A5 · needs 163.1 · alias: TK1b
+- [ ] **163.2** T rotates both tokens (attended) · S · closes A5 · needs — · alias: TK1b
   - An attended session: Claude generates two values and runs `gh secret set` for `PUZZLE_API_TOKEN`, `PUZZLE_TESTER_TOKEN` and `EXPO_PUBLIC_PUZZLE_API_TOKEN` (the tester value), never printing them. Then `backend-deploy` and `preview-build` by `workflow_dispatch`.
   - T re-enters the owner value on the ballot page, and `~/.config/miserere/puzzle-api.env` is updated (this also closes NEEDS_T `local-api-token-stale`).
   - T's installed APK stops posting until the new build is on the phone. Proof: T installs it, plays a fight and the row appears, and a `curl` with the old value gets 401.
