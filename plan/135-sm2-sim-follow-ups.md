@@ -444,18 +444,6 @@ no exit code depends on it.
 
 ## Acceptance
 
-- **A9** The sim batch records a `crash`, `stuck` or `fight-stuck` run as a break and goes on with the next seed, and
-  checks `quest-unfinishable` and `node-unresolved` at each run's end; `sim:run --breaks <file>` writes one line per
-  break with the key `<persona>:<map>/<node>:<kind>` and the state summary; it still exits non-zero after a crash,
-  stuck or fight-stuck run, and never for the other two.
-- **A10** `npm run sim:breaks -- --file <breaks>` files one issue per new key (title, `bug` and `sim-break` labels,
-  the hidden key, the seed, persona, build, state summary and replay command), files nothing for an open key, reopens
-  a key closed as completed with a comment, leaves a key closed as not planned, and files at most 10 a night; tests
-  stub `gh`.
-- **A11** `sim-runs.yml` plays the four personas on the schedule and after a successful `preview-build`, takes a `bots`
-  input (`personas`, `lanes`, `all`) on `workflow_dispatch`, runs the lane bots only by hand, and runs the filing
-  step (`if: always()`, `issues: write`) after the scheduled batch and a dispatch at `main` only; no step fails on a
-  number; `.github/workflows/README.md` says so.
 - **A13** `npm run sim:report -- --build <sha>` reads the three reports and `run-summary` from the Worker and
   `chapter1Content()`, writes `docs/reports/sim/latest.md` with the stamp and the five sections in the Design's order
   (run health, pacing, how hard is Chapter 1, coverage, since the last report; no cards), and appends one
@@ -464,20 +452,6 @@ no exit code depends on it.
 - **A14** The report job in `sim-runs.yml` (`needs: sim`, `if: always()`, after the schedule and a dispatch at `main`)
   runs `sim:report` at the batch's sha and commits `docs/reports/sim/` through `measured-truth.yml`'s push path;
   `docs/truth-sources.md` "Measured truth" names the report.
-- **A20** `RunPolicy` has a `visitAnvil` seam, the driver carries its answer out through the blacksmith store
-  actions before the village's other steps, an illegal answer throws as other seams do, and the no-id guard covers the
-  helper. A driver test shows a lane bot and a persona with shillings at an anvil spend them there and own the result;
-  another shows the helper keeps back the bed's price when under half VITAE. The Wanderer's anvil and village answers
-  are legal over fixture contexts, the same seed gives the same spending, different seeds give different spending, and
-  a guard test finds no `Math.random` in the policy files.
-- **A21** `sim:run` takes `--shillings`, `--boss-level`, `--start-relic`, `--no-relic-stats`, `--fight`,
-  `--no-anvil`, `--no-guard` and a list for `--policy`. Tests show each changes the run as named, and that with
-  `--no-relic-stats` the worn relic adds no stat while `relicLibrary`'s entry and the library's own tests are unchanged.
-  No file outside `axiomancer-mobile/sim/`, `scripts/sim-run.mjs` and its test changes for this chunk. `--post` with any
-  of these flags exits non-zero before a run is played; an unknown relic or policy is refused.
-- **A22** A run's line and `--json` carry `bossDamagePct` and `endNodeId`, and a batch ends with one row per
-  policy: clears, average level, average boss damage, average deck by lane and where failed runs ended. Tests cover a
-  run that never met the boss (null, left out of the average). No exit code depends on these numbers.
 
 ## Open questions
 
@@ -485,10 +459,6 @@ no exit code depends on it.
 
 ## Chunks
 
-Measure: 8 open · 14 closed · next A23
+Measure: 2 open · 20 closed · next A23
 
-- [ ] **135.4** Breaks caught and filed; personas nightly, lane bots by hand · M · closes A9, A10, A11 · needs — · alias: SM2d
-- [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs 135.4 · alias: SM2f
-- [ ] **135.8** The bots use the anvil · M · closes A20 · needs — · alias: SM2i
-- [ ] **135.9** Tuning flags on the sim: shillings, boss level, start relics, mix-and-match · M · closes A21 · needs 135.8 · alias: SM2j
-- [ ] **135.10** Boss damage, where runs ended and a batch table in the sim's output · S · closes A22 · needs 135.9 · alias: SM2k
+- [ ] **135.6** The nightly sim report T reads · M · closes A13, A14 · needs — · alias: SM2f

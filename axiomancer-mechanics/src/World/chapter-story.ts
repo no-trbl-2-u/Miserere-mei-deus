@@ -154,3 +154,34 @@ export function currentStoryTargets(
     }
     return [];
 }
+
+/**
+ * The nodes each accepted quest of a questline needs next (phase SM2d): where
+ * a ready one is turned in, else what each unmet objective sends the player
+ * to. A quest outside every questline names no node (its turn-in is not in
+ * data), so it is left out. Reads the log and the registered questlines, never
+ * a node id.
+ */
+export function activeQuestTargets(
+    def: MapDefinition,
+    log: QuestLog | undefined,
+    questlines: readonly Questline[] = listQuestlines(),
+): { questName: string; targets: NodeId[] }[] {
+    const out: { questName: string; targets: NodeId[] }[] = [];
+    for (const active of log?.active ?? []) {
+        const line = questlines.find(l => l.id === active.questline && l.mapName === def.name);
+        const step = line?.steps.find(s => s.step === active.step);
+        if (!line || !step) continue;
+        const targets = new Set<NodeId>();
+        if (active.objectives.every(o => o.currentCount >= o.requiredCount)) {
+            for (const id of turnInOf(line, step)) targets.add(id);
+        } else {
+            for (const objective of active.objectives) {
+                if (objective.currentCount >= objective.requiredCount) continue;
+                for (const id of objectiveNodes(def, line, step, objective)) targets.add(id);
+            }
+        }
+        out.push({ questName: active.name, targets: [...targets] });
+    }
+    return out;
+}

@@ -224,9 +224,22 @@ id), `buildCommit` the checked-out sha, and the run id is unique to the batch,
 policy and seed (`sim-<batch>-<policy>-<seed>`). It reads `PUZZLE_API_URL` and
 `PUZZLE_API_TOKEN`; without them it prints what it would post and sends nothing.
 It prints the rows and bytes posted, stops before a run that would take the
-batch past 25 MB, and exits 1 if a post is refused. The `sim-runs` workflow
-calls it for the four archetypes, 5 runs each, at every preview build, by hand
-and nightly. **Sim numbers
+batch past 25 MB, and exits 1 if a post is refused. `sim:run --breaks <file>`
+appends one JSON line per break to the file: a `crash` (an exception out of a
+step), `stuck` (no legal move, or past the step cap), `fight-stuck`, and the
+two end-of-run checks, `quest-unfinishable` (at a chapter clear, an accepted
+quest whose next target no road reaches) and `node-unresolved` (a fight, rest,
+cache, hazard or quest node entered and left before it resolved). A broken run
+is recorded and the batch goes on with the next seed. Each line has the key
+`<persona>:<map>/<node>:<kind>`, the seed, the build and a state summary; only
+the first three kinds make the exit code 1. `npm run sim:breaks -- --file <file>`
+files one GitHub issue per new key (labels `bug` and `sim-break`, so `/triage`
+routes it as a bug), leaves a key with an open issue alone, reopens one closed
+as completed with a comment, and files at most 10 new ones per run. The
+`sim-runs` workflow plays the four personas (`cautious`, `reckless`,
+`explorer`, `rusher`), 5 runs each, nightly and at every preview build; the
+lane bots run only by hand (`bots: lanes` or `all`); the nightly and a
+dispatch at `main` file the breaks. **Sim numbers
 from before BUG1j (`0afc538bf`) are not comparable with later ones:** from
 that commit every foe could be befriended, with no XP and no card; befriending left
 the game with spec 144.
@@ -376,7 +389,7 @@ shaping who the player is.
 | `DebugPresetPicker`, `DebugPlayerTierPresets` | Owner call 2026-10-16. Both built players off the real stat curve (CRITIQUE.md: sage carries 75 stat points where a L15 pilgrim reaches 29; `kid-l50` 126 vs 64). The preset *data* stays — `STATE_FIXTURES` and `state/actions.ts` build from it — so a fixture boot (`?fixture=sage-bw-door-gate`) reaches the same player without a button. `e2e:combat-round:boss` / `:levelup` were repointed at fixtures first. |
 | `DebugHazardDeckRandomize` | Owner call 2026-10-16. `HAZARD_DECK_PRESETS` and `actions.randomizeHazardDeck()` stay; only the dev-menu leaf is gone. |
 | KNOW ALL CARDS (in `DebugRewardTriggers`) | Owner call 2026-10-16. `learnAllCards` (`state/dev/rewards.ts`) stays and is now unreferenced by any surface. |
-| `DebugBlacksmithButton` | Owner call 2026-10-16. ANVIL ×500 in `DebugRewardTriggers` strictly dominated it: `BLACKSMITH_WITNESS_VARIANTS` *is* `[HEART_RICH_PAYLOAD_VARIANT]`, the single variant this button offered, and ANVIL adds a 500-shilling budget. The only reach lost is the Anvil on the player's real wallet, which the `wanderer-bw-blacksmith` fixture gives (180 shillings). It carried no test and no harness drove it. |
+| `DebugBlacksmithButton` | Owner call 2026-10-16. ANVIL ×500 in `DebugRewardTriggers` strictly dominated it: `BLACKSMITH_WITNESS_VARIANTS` was `[HEART_RICH_PAYLOAD_VARIANT]`, the single variant this button offered (EQ4a retired it: the list is now empty), and ANVIL adds a 500-shilling budget. The only reach lost is the Anvil on the player's real wallet, which the `wanderer-bw-blacksmith` fixture gives (180 shillings). It carried no test and no harness drove it. |
 | `DebugGetAllRelics` | Owner call 2026-10-16. `DebugItemPicker` chips every id in `relicLibrary` — the same library `grantAllRelics` walks — so the only unique reach was every relic in one tap. The action stays on the store surface; its behaviour (once each, nothing displaced, a free trinket position worn for real) moved from the deleted component test to `state/e2e/dev-presets.engine.test.ts`. Since phase SG1 the chips wear a relic the same way (while a position is free, displacing nothing), as do POPULATE and the seed (`state/e2e/dev-relic-grants.engine.test.ts`). |
 | HIDE MANA / HIDE STANCE toggles | The HUD presenter never read them. |
 | `DebugHudOverrides`, the `devOverrides` store slice, `state/presenters/combat-hud.engine.ts` | HIDE EFFECTS fed a presenter no screen rendered, so the toggle was a no-op (TRIM THE FAT T3, 2026-09-25). |

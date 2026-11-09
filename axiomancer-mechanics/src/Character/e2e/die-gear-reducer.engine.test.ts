@@ -99,7 +99,7 @@ describe('die-gear reducer — TEMPER', () => {
         // Body: temper twice would need 2 mana → after one temper mana=1, cap
         // already hit; craft a no-mana gear directly via swap for the witness.
         const noMana = swapDieGear(base(), 'body', {
-            dieColor: 'body', specialFaces: 2, manaFaces: 0, specialConviction: 2,
+            dieColor: 'body', specialFaces: 2, manaFaces: 0,
         }).character;
         const refused = temperDieGear(noMana, 'body');
         expect(refused.ok).toBe(false);
@@ -108,17 +108,17 @@ describe('die-gear reducer — TEMPER', () => {
 });
 
 describe('die-gear reducer — SWAP + validation', () => {
-    it('swaps a whole gear piece (the payload-change path)', () => {
+    it('swaps a whole gear piece (the gear-change path)', () => {
         const out = swapDieGear(base(), 'heart', {
-            dieColor: 'heart', specialFaces: 1, manaFaces: 2, specialConviction: 3,
+            dieColor: 'heart', specialFaces: 1, manaFaces: 3,
         });
         expect(out.ok).toBe(true);
-        expect(characterDieGear(out.character, 'heart').specialConviction).toBe(3);
+        expect(characterDieGear(out.character, 'heart').manaFaces).toBe(3);
     });
 
     it('refuses a cap-violating swap (colored, 3 special)', () => {
         const refused = swapDieGear(base(), 'heart', {
-            dieColor: 'heart', specialFaces: 3, manaFaces: 2, specialConviction: 2,
+            dieColor: 'heart', specialFaces: 3, manaFaces: 2,
         });
         expect(refused.ok).toBe(false);
         expect(refused.reason).toMatch(/cap/i);
@@ -126,17 +126,17 @@ describe('die-gear reducer — SWAP + validation', () => {
 
     it('refuses a swap whose gear drives the wrong color', () => {
         const refused = swapDieGear(base(), 'heart', {
-            dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 2,
+            dieColor: 'body', specialFaces: 1, manaFaces: 2,
         });
         expect(refused.ok).toBe(false);
         expect(refused.reason).toMatch(/drives/i);
     });
 
     it('validateDieGear is the single cap authority', () => {
-        expect(validateDieGear({ dieColor: 'heart', specialFaces: 2, manaFaces: 3, specialConviction: 2 }, 'heart')).toBeNull();
-        expect(validateDieGear({ dieColor: 'heart', specialFaces: 3, manaFaces: 2, specialConviction: 2 }, 'heart')).toBe('the heart die is capped at 2 BOON faces');
-        expect(validateDieGear({ dieColor: 'wild', specialFaces: 2, manaFaces: 1, specialConviction: 2 }, 'wild')).toBe('the gold die is capped at 1 BOON face');
-        expect(validateDieGear({ dieColor: 'heart', specialFaces: 2, manaFaces: 4, specialConviction: 2 }, 'heart')).toMatch(/miss/);
+        expect(validateDieGear({ dieColor: 'heart', specialFaces: 2, manaFaces: 3 }, 'heart')).toBeNull();
+        expect(validateDieGear({ dieColor: 'heart', specialFaces: 3, manaFaces: 2 }, 'heart')).toBe('the heart die is capped at 2 BOON faces');
+        expect(validateDieGear({ dieColor: 'wild', specialFaces: 2, manaFaces: 1 }, 'wild')).toBe('the gold die is capped at 1 BOON face');
+        expect(validateDieGear({ dieColor: 'heart', specialFaces: 2, manaFaces: 4 }, 'heart')).toMatch(/miss/);
     });
 });
 
@@ -144,8 +144,8 @@ describe('die-gear reducer — immutability + rail materialization', () => {
     it('never mutates the frozen DEFAULT_DIE_GEAR', () => {
         honeDieGear(base(), 'heart');
         temperDieGear(base(), 'body');
-        expect(DEFAULT_DIE_GEAR.heart).toEqual({ dieColor: 'heart', specialFaces: 1, manaFaces: 2, specialConviction: 2 });
-        expect(DEFAULT_DIE_GEAR.body).toEqual({ dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 2 });
+        expect(DEFAULT_DIE_GEAR.heart).toEqual({ dieColor: 'heart', specialFaces: 1, manaFaces: 2 });
+        expect(DEFAULT_DIE_GEAR.body).toEqual({ dieColor: 'body', specialFaces: 1, manaFaces: 2 });
         expect(Object.isFrozen(DEFAULT_DIE_GEAR)).toBe(true);
     });
 
@@ -157,7 +157,7 @@ describe('die-gear reducer — immutability + rail materialization', () => {
 
     it('concreteDefaultRail matches the default loadout but is mutable', () => {
         const rail = concreteDefaultRail();
-        expect(rail.wild).toEqual({ dieColor: 'wild', specialFaces: 1, manaFaces: 1, specialConviction: 2 });
+        expect(rail.wild).toEqual({ dieColor: 'wild', specialFaces: 1, manaFaces: 1 });
         rail.wild.manaFaces = 2; // must not throw (mutable copy)
         expect(DEFAULT_DIE_GEAR.wild.manaFaces).toBe(1);
     });

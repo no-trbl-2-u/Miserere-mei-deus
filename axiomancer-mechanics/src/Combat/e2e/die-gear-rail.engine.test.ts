@@ -25,6 +25,8 @@ import {
     CONVICTION_CAP,
 } from '../combat.engine';
 import { honeDieGear } from '../../Character/dieGear.reducer';
+import { createNewGameState, GAME_STATE_VERSION } from '../../Game/game.reducer';
+import { migrate } from '../../Game/game.migrate';
 import { SPECIAL_CONVICTION_DEFAULT } from '../combat.upgradeable-dice';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
@@ -79,30 +81,37 @@ function events(res: { events: CombatEvent[] }, kind: CombatEvent['kind']): Comb
     return res.events.filter(e => e.kind === kind);
 }
 
+/** A rail as an old save wrote it: it still carries the retired `specialConviction` key (a
+ *  variable, not a literal, so the type check does not see the extra key). */
+const LEGACY_BODY_RAIL = { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 3 } as const;
+
 describe('die-gear rail → combat', () => {
     it('wires the player rail onto the encounter state', () => {
         const player = makePlayer(c => {
-            c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 5 } };
+            c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2 } };
         });
         const s = initializeCombatEncounter(player, makeEnemy(), DECK, 7);
-        expect(s.dieGear?.body?.specialConviction).toBe(5);
+        expect(s.dieGear?.body).toEqual({ dieColor: 'body', specialFaces: 1, manaFaces: 2 });
     });
 
-    it('the worn weapon sets the special payload; a rail with a richer specialConviction does not change it', () => {
-        const player = makePlayer(c => {
-            c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 5 } };
-        });
+    it('a save whose rail still carries specialConviction loads, and a special pays the worn weapon, not the old key', () => {
+        const fresh = createNewGameState({ startMap: 'breakwater' });
+        fresh.player.dieGear = { body: LEGACY_BODY_RAIL } as unknown as Character['dieGear'];
+        const loaded = migrate(JSON.parse(JSON.stringify(fresh)), GAME_STATE_VERSION);
+        expect((loaded.player.dieGear?.body as unknown as Record<string, unknown>).specialConviction).toBe(3);
+        const player = makePlayer(c => { c.dieGear = loaded.player.dieGear; });
         let s = initializeCombatEncounter(player, makeEnemy(), DECK, 7);
         s = rollEncounterDice(s, seqRng(BOON, MANA, MANA, MANA)).state; // body = special
         const before = s.conviction;
         const res = paid(s, trayDie(s, 'body').id);
         expect(events(res, 'special-fired')).toHaveLength(1);
         expect(res.state.conviction).toBe(Math.min(CONVICTION_CAP, before + SPECIAL_CONVICTION_DEFAULT));
+        expect(SPECIAL_CONVICTION_DEFAULT).not.toBe(3);
     });
 
     it('a banked special spent from the Reserve fires the weapon payload (use-triggered)', () => {
         const player = makePlayer(c => {
-            c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: 5 } };
+            c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 2 } };
         });
         let s = initializeCombatEncounter(player, makeEnemy(), DECK, 7);
         s = rollEncounterDice(s, seqRng(BOON, MISS, MISS, MISS)).state;

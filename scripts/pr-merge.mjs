@@ -271,8 +271,12 @@ export function lintTree({ scriptsDir, repo, treeish, lints = TREE_LINTS }) {
   const dir = mkdtempSync(join(tmpdir(), 'pr-merge-tree-'))
   try {
     cpSync(scriptsDir, join(dir, 'scripts'), { recursive: true })
-    const tar = execFileSync('git', ['archive', '--format=tar', treeish, 'plan'], { cwd: repo, maxBuffer: 256 * 1024 * 1024 })
-    execFileSync('tar', ['-x', '-C', dir], { input: tar })
+    // No `tar`: Windows' tar rejects a `C:` path (footgun windows-tar-tree-lint). A throwaway index
+    // holds the tree's plan/, and git itself writes it out under the scratch directory.
+    const env = { ...process.env, GIT_INDEX_FILE: join(dir, '.tree-index') }
+    execFileSync('git', ['read-tree', '--prefix=plan/', `${treeish}:plan`], { cwd: repo, env, stdio: 'pipe' })
+    execFileSync('git', ['checkout-index', '-a', `--prefix=${dir.replaceAll('\\', '/')}/`], { cwd: repo, env, stdio: 'pipe' })
+    rmSync(join(dir, '.tree-index'), { force: true })
     return lints.map((l) => {
       const r = spawnSync(process.execPath, [join(dir, 'scripts', l.script)], { cwd: dir, encoding: 'utf8' })
       const first = `${r.stderr ?? ''}\n${r.stdout ?? ''}`.split('\n').map((s) => s.trim()).find((s) => s && !/disagreement|finding/i.test(s))

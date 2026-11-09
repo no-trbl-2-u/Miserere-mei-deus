@@ -65,7 +65,8 @@ describe('the smith names the faces he is selling (S5-talk-C12)', () => {
         expect(body).toContain('MISS');
         expect(body).toContain('MANA');
         expect(body).toContain('BOON');
-        expect(body).toContain('CONVICTION');
+        expect(body).toContain("fires your weapon's special");
+        expect(body).not.toContain('CONVICTION');
     });
 });
 

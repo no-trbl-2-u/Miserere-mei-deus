@@ -123,19 +123,20 @@ describe('die-gear rail + payload-only inspection', () => {
         expect(heart.manaFaces).toBe(DEFAULT_DIE_GEAR.heart.manaFaces);
         expect(heart.missFaces).toBe(6 - heart.specialFaces - heart.manaFaces);
         expect(heart.faceTable).toMatch(/boon .* mana .* miss/);
-        expect(heart.payload).toBe(`+${DEFAULT_DIE_GEAR.heart.specialConviction} ◆`);
+        expect(heart).not.toHaveProperty('payload');
+        expect(heart).not.toHaveProperty('specialConviction');
         expect(heart.upgraded).toBe(false);
     });
 
     it('marks an UPGRADED slot from the state rail', () => {
         const s = openEncounter();
-        s.dieGear = { body: { dieColor: 'body', specialFaces: 2, manaFaces: 3, specialConviction: 3 } };
+        s.dieGear = { body: { dieColor: 'body', specialFaces: 2, manaFaces: 3 } };
         const rail = buildCombatViewModel(s).dieGear;
         const body = rail.slots.find(x => x.color === 'body')!;
         expect(body.specialFaces).toBe(2);
         expect(body.manaFaces).toBe(3);
         expect(body.missFaces).toBe(1);
-        expect(body.payload).toBe('+3 ◆');
+        expect(body.a11y).not.toMatch(/grants/);
         expect(body.upgraded).toBe(true);
         // Untouched slots stay stock.
         expect(rail.slots.find(x => x.color === 'heart')!.upgraded).toBe(false);

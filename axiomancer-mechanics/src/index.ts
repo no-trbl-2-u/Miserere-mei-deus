@@ -457,7 +457,7 @@ export type { HazardPuzzleCandidate, HazardPuzzleCandidateAudit } from './World/
 // Blacksmith encounter ("The Anvil" — die-gear upgrades: HONE / TEMPER /
 // gear swap, and one card upgrade a visit).
 export {
-    ANVIL_VERB_PRICING, BLACKSMITH_WITNESS_VARIANTS, HEART_RICH_PAYLOAD_VARIANT,
+    ANVIL_VERB_PRICING, BLACKSMITH_WITNESS_VARIANTS,
     createBlacksmithSession, beginBlacksmith, honeBlacksmith, temperBlacksmith,
     swapBlacksmith, chooseBlacksmithCardUpgrade, cancelBlacksmithCardUpgrade,
     pickBlacksmithCardUpgrade, blacksmithCardUpgradeRefusal,

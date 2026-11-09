@@ -34,7 +34,7 @@ const at = (health: number, options: RunRoadOption[]): RunRoadContext => ({
 });
 const village = (over: Partial<RunVillageContext>): RunVillageContext => ({
     health: 100, maxHealth: 100, currency: 0, rest: null, shop: [], removal: null, hasAnvil: false,
-    deck: Array(MIN_DECK_SIZE + 5).fill(GREY), ...over,
+    deck: Array(MIN_DECK_SIZE + 5).fill(GREY), rng: () => 0.5, ...over,
 });
 
 describe('the archetype seams at their edges', () => {

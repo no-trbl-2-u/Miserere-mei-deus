@@ -81,10 +81,10 @@ export const COVETED_DIE_PREFIX = 'coveted-';
 /** The stock loadout: R/B/P at 1 special / 2 mana / 3 miss; Gold 1/1/4. */
 export const DEFAULT_DIE_GEAR: Readonly<Record<'heart' | 'body' | 'mind' | 'wild', UpgradeableDieGear>> =
     Object.freeze({
-        heart: { dieColor: 'heart', specialFaces: 1, manaFaces: 2, specialConviction: SPECIAL_CONVICTION_DEFAULT },
-        body: { dieColor: 'body', specialFaces: 1, manaFaces: 2, specialConviction: SPECIAL_CONVICTION_DEFAULT },
-        mind: { dieColor: 'mind', specialFaces: 1, manaFaces: 2, specialConviction: SPECIAL_CONVICTION_DEFAULT },
-        wild: { dieColor: 'wild', specialFaces: 1, manaFaces: 1, specialConviction: SPECIAL_CONVICTION_DEFAULT },
+        heart: { dieColor: 'heart', specialFaces: 1, manaFaces: 2 },
+        body: { dieColor: 'body', specialFaces: 1, manaFaces: 2 },
+        mind: { dieColor: 'mind', specialFaces: 1, manaFaces: 2 },
+        wild: { dieColor: 'wild', specialFaces: 1, manaFaces: 1 },
     });
 
 /** Faces on an upgradeable die. `specialFaces + manaFaces` may never exceed it —

@@ -74,7 +74,7 @@ describe('THE PATH under the SHIPPED dice model (spec 33)', () => {
     });
 
     it('an authored gear rail always beats the honed default', () => {
-        const rail = { dieColor: 'body', specialFaces: 2, manaFaces: 2, specialConviction: 9 } as const;
+        const rail = { dieColor: 'body', specialFaces: 2, manaFaces: 2 } as const;
         const state = { dieGear: { body: rail }, dieUpgradeLevel: 4 };
         expect(activeDieGear(state, 'body')).toEqual(rail);
         expect(activeDieGear(state, 'mind')).toEqual(honedDieGear('mind', 4));

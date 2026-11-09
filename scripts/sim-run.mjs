@@ -5,13 +5,17 @@
 // the app's own store actions (`axiomancer-mobile/sim/`), one per seed, as a
 // run policy decides, and prints one line per run: the policy, the seed, the
 // outcome, the furthest node, level, VITAE at the end, fights won, lost and
-// spared, and the end deck's card count per lane. It posts nothing.
+// spared, the boss damage and end node, and the end deck's card count per lane,
+// then one batch table row per policy. It posts nothing.
 //
 // The driver runs under jest (`axiomancer-mobile/sim/jest.config.js`, the
 // app's own preset and module mapping) and hands its runs back as JSON; this
 // script prints them. A run that sticks (a step with no legal move: the
 // driver's bug detector) prints as STUCK with the node and the state, and the
-// script exits 1 after printing every run. A measurement, not a gate:
+// script exits 1 after printing every run. `--breaks <file>` (phase SM2d) also appends
+// one JSON line per break to the file (a crash, stuck run or stuck fight, and the two
+// end-of-run checks, a stranded quest and a node left unresolved), for `sim:breaks`
+// to file; only the first three fail the exit code. A measurement, not a gate:
 // nothing here judges a number.
 //
 // `--post` (phase SM1g) also sends each finished run to the Worker, stamped
@@ -28,7 +32,7 @@
 //   npm run sim:run -- --policy blood-price --runs 5 --post
 
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { appendFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -37,25 +41,43 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const MOBILE = path.join(ROOT, 'axiomancer-mobile')
 
-export const USAGE = 'usage: npm run sim:run -- --policy <id> [--runs <n>] [--seed <s>] [--json] [--post]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
+export const USAGE = 'usage: npm run sim:run -- --policy <id|a,b|lanes> [--runs <n>] [--seed <s>] [--json] [--post] [--breaks <file>]\n       tuning (never with --post): [--shillings <n>] [--boss-level <n>] [--start-relic <id>]... [--no-relic-stats] [--fight <policy>] [--no-anvil] [--no-guard]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
 
 /** One batch posts at most this many bytes (A13). */
 export const POST_BATCH_CAP_BYTES = 25 * 1024 * 1024
 
 /** Parse `--key value` / `--key=value` flags. Throws on anything it does not know. */
 export function parseArgs(argv) {
-  const opts = { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, help: false }
+  const opts = { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, breaks: null, help: false }
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     if (arg === '--json') { opts.json = true; continue }
     if (arg === '--post') { opts.post = true; continue }
     if (arg === '--compare') { opts.compare = true; continue }
+    if (arg === '--no-relic-stats') { opts.noRelicStats = true; continue }
+    if (arg === '--no-anvil') { opts.noAnvil = true; continue }
+    if (arg === '--no-guard') { opts.noGuard = true; continue }
     if (arg === '--help' || arg === '-h') { opts.help = true; continue }
-    const m = /^--(policy|runs|seed)(?:=(.*))?$/.exec(arg)
+    const m = /^--(policy|runs|seed|breaks|shillings|boss-level|start-relic|fight)(?:=(.*))?$/.exec(arg)
     if (!m) throw new Error(`unknown argument '${arg}'`)
     const value = m[2] ?? argv[++i]
     if (value === undefined || value === '') throw new Error(`--${m[1]} needs a value`)
     if (m[1] === 'policy') { opts.policy = value; continue }
+    if (m[1] === 'breaks') { opts.breaks = value; continue }
+    if (m[1] === 'fight') { opts.fight = value; continue }
+    if (m[1] === 'start-relic') { opts.startRelic = [...(opts.startRelic ?? []), value]; continue }
+    if (m[1] === 'shillings') {
+      const x = Number(value)
+      if (!Number.isFinite(x) || x <= 0) throw new Error(`--shillings must be a positive number, not '${value}'`)
+      opts.shillings = x
+      continue
+    }
+    if (m[1] === 'boss-level') {
+      const x = Number(value)
+      if (!Number.isInteger(x) || x < 1) throw new Error(`--boss-level must be a positive integer, not '${value}'`)
+      opts.bossLevel = x
+      continue
+    }
     const n = Number(value)
     if (!Number.isInteger(n) || (m[1] === 'runs' ? n < 1 : n < 0)) throw new Error(`--${m[1]} must be a ${m[1] === 'runs' ? 'positive' : 'non-negative'} integer, not '${value}'`)
     opts[m[1]] = n
@@ -73,7 +95,7 @@ export function formatLanes(deckByLane) {
 
 /** One run as one line. */
 export function formatRunLine(run) {
-  if (run.stuck) return `${run.policy} seed=${run.seed} STUCK at ${run.node}: ${run.error}`
+  if (run.stuck) return `${run.policy} seed=${run.seed} ${run.kind === 'crash' ? 'CRASH' : run.kind === 'fight-stuck' ? 'FIGHT-STUCK' : 'STUCK'} at ${run.node}: ${run.error}`
   const f = run.fights
   return [
     `${run.policy} seed=${run.seed}`,
@@ -82,8 +104,76 @@ export function formatRunLine(run) {
     `level=${run.level}`,
     `vitae=${run.vitae}/${run.maxVitae}`,
     `fights won=${f.won} lost=${f.lost} spared=${f.spared}`,
+    `boss=${run.bossDamagePct == null ? 'n/a' : `${run.bossDamagePct}%`}`,
+    `end=${run.endNodeId}`,
     `deck ${formatLanes(run.deckByLane)}`,
   ].join(' | ')
+}
+
+/**
+ * The batch as one row per policy: runs played, clears, average level, average
+ * boss damage (a run that never met the boss is left out of it), the average
+ * deck by lane, and where the runs that did not clear ended, most first. A
+ * stuck run counts as a run that did not clear and ended where it stuck. A
+ * reading: nothing here sets an exit code.
+ */
+export function batchTable(runs) {
+  const byPolicy = new Map()
+  for (const run of runs) {
+    if (!byPolicy.has(run.policy)) byPolicy.set(run.policy, [])
+    byPolicy.get(run.policy).push(run)
+  }
+  return [...byPolicy].map(([policy, group]) => {
+    const played = group.filter((r) => !r.stuck)
+    const lanes = {}
+    for (const r of played) for (const [lane, n] of Object.entries(r.deckByLane ?? {})) lanes[lane] = (lanes[lane] ?? 0) + n
+    const ends = {}
+    for (const r of group) {
+      if (r.outcome === 'chapter-clear') continue
+      const at = r.stuck ? r.node : r.endNodeId
+      ends[at] = (ends[at] ?? 0) + 1
+    }
+    return {
+      policy,
+      runs: group.length,
+      clears: played.filter((r) => r.outcome === 'chapter-clear').length,
+      avgLevel: mean(played.map((r) => r.level)),
+      avgBossDamagePct: mean(played.map((r) => r.bossDamagePct).filter((x) => x != null)),
+      avgDeckByLane: Object.fromEntries(Object.entries(lanes).map(([lane, n]) => [lane, n / played.length])),
+      failedEnds: Object.entries(ends).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([nodeId, count]) => ({ nodeId, count })),
+    }
+  })
+}
+
+/** The batch table as text: a header and one row per policy. */
+export function formatBatchTable(rows) {
+  const lanes = (deck) => formatLanes(Object.fromEntries(Object.entries(deck).map(([k, v]) => [k, Math.round(v * 10) / 10])))
+  const lines = ['policy | clears | avg level | avg boss damage | avg deck by lane | where failed runs ended']
+  for (const r of rows) {
+    lines.push([
+      r.policy,
+      `${r.clears}/${r.runs}`,
+      fmt(r.avgLevel),
+      r.avgBossDamagePct === null ? 'n/a' : `${fmt(r.avgBossDamagePct)}%`,
+      lanes(r.avgDeckByLane) || '-',
+      r.failedEnds.map((e) => `${e.nodeId}=${e.count}`).join(' ') || '-',
+    ].join(' | '))
+  }
+  return lines.join('\n')
+}
+
+/** The tuning flags the options carry, in the shape the run driver takes; null when none is set. */
+export function tuningOf(opts) {
+  const tuning = {
+    ...(opts.shillings !== undefined ? { shillings: opts.shillings } : {}),
+    ...(opts.bossLevel !== undefined ? { bossLevel: opts.bossLevel } : {}),
+    ...(opts.startRelic?.length ? { startRelics: opts.startRelic } : {}),
+    ...(opts.noRelicStats ? { noRelicStats: true } : {}),
+    ...(opts.fight !== undefined ? { fight: opts.fight } : {}),
+    ...(opts.noAnvil ? { noAnvil: true } : {}),
+    ...(opts.noGuard ? { noGuard: true } : {}),
+  }
+  return Object.keys(tuning).length > 0 ? tuning : null
 }
 
 /** The Spare table's results, in table order. */
@@ -155,7 +245,7 @@ export function playRuns(opts, { spawn = spawnSync } = {}) {
     const jest = createRequire(path.join(MOBILE, 'package.json')).resolve('jest/bin/jest')
     const res = spawn(process.execPath, [jest, '-c', 'sim/jest.config.js', '--silent', '--runInBand'], {
       cwd: MOBILE,
-      env: { ...process.env, SIM_RUN_ARGS: JSON.stringify({ policy: opts.policy, runs: opts.runs, seed: opts.seed, ...(opts.post ? { post: opts.post } : {}) }), SIM_RUN_OUT: out },
+      env: { ...process.env, SIM_RUN_ARGS: JSON.stringify({ policy: opts.policy, runs: opts.runs, seed: opts.seed, ...(tuningOf(opts) ? { tuning: tuningOf(opts) } : {}), ...(opts.post ? { post: opts.post } : {}), ...(opts.build !== undefined ? { build: opts.build } : {}) }), SIM_RUN_OUT: out },
       encoding: 'utf-8',
       maxBuffer: 64 * 1024 * 1024,
     })
@@ -279,6 +369,14 @@ export async function main(argv, {
     stdout.write(`${USAGE}\n`)
     return 0
   }
+  if (opts.post && tuningOf(opts)) {
+    stderr.write(`sim-run: --post is refused with a tuning flag; a tuning batch never reaches the nightly data\n${USAGE}\n`)
+    return 2
+  }
+  if (opts.noRelicStats && !opts.startRelic?.length) {
+    stderr.write(`sim-run: --no-relic-stats needs a --start-relic\n${USAGE}\n`)
+    return 2
+  }
   if (opts.compare) {
     if (opts.post || opts.json) {
       stderr.write(`sim-run: --compare prints the table only; it takes no --post or --json\n${USAGE}\n`)
@@ -294,7 +392,9 @@ export async function main(argv, {
     stdout.write(`${formatComparison(arms[0], arms[1], opts)}\n`)
     return 0
   }
-  const run = opts.post ? { ...opts, post: { batchId: batchIdOf(env, now), buildCommit: sha() } } : opts
+  const build = opts.breaks ? sha() : undefined
+  const withBuild = build === undefined ? opts : { ...opts, build }
+  const run = opts.post ? { ...withBuild, post: { batchId: batchIdOf(env, now), buildCommit: build === undefined ? sha() : build } } : withBuild
   let body
   try {
     body = play(run)
@@ -302,9 +402,22 @@ export async function main(argv, {
     stderr.write(`sim-run: ${err.message}\n`)
     return 1
   }
-  if (opts.json) stdout.write(`${JSON.stringify(body.runs, null, 2)}\n`)
-  else for (const line of body.runs) stdout.write(`${formatRunLine(line)}\n`)
+  const table = batchTable(body.runs)
+  if (opts.json) stdout.write(`${JSON.stringify({ runs: body.runs, table }, null, 2)}\n`)
+  else {
+    for (const line of body.runs) stdout.write(`${formatRunLine(line)}\n`)
+    stdout.write(`${formatBatchTable(table)}\n`)
+  }
+  // A crash, a stuck run or a stuck fight fails the step; the end-of-run checks never do.
   let code = body.runs.some((r) => r.stuck) ? 1 : 0
+  if (opts.breaks) {
+    try {
+      appendFileSync(opts.breaks, (body.breaks ?? []).map((b) => `${JSON.stringify(b)}\n`).join(''))
+    } catch (err) {
+      stderr.write(`sim-run: cannot write ${opts.breaks}: ${err.message}\n`)
+      code = 1
+    }
+  }
   if (!opts.post) return code
 
   const posts = body.posts ?? []

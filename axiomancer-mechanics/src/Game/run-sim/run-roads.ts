@@ -27,7 +27,7 @@ import type { MapState } from '../../World/types';
 import type { MapEventPool } from '../../World/MapEvents/types';
 import { getMapDefinition } from '../../World/map.registry';
 import { isNodeSpent, legalMovesFrom } from '../../World/world.reducer';
-import { currentStoryTargets, isExitNode, nodeStagesBoss, nodeStagesElite } from '../../World/chapter-story';
+import { activeQuestTargets, currentStoryTargets, isExitNode, nodeStagesBoss, nodeStagesElite } from '../../World/chapter-story';
 import {
     actsOnRevisit,
     getNodeEventPool,
@@ -198,5 +198,27 @@ export function runRoadOptions(state: RoadState): RunRoadOption[] {
     for (const id of legalMovesFrom(map)) out.push(option(id, 'road'));
     const { passage } = neighbours(map, here);
     if (passage !== null) out.push(option(passage, 'travel'));
+    return out;
+}
+
+/**
+ * The accepted quests whose next target no road reaches from where the player
+ * stands (phase SM2d): by the open road rule and the same-map passages, every
+ * node the quest needs next (a reach target, a foe's node, its turn-in) is
+ * out of reach. A quest with no node in data, or whose targets are empty, is
+ * not checked. The player's own node counts as reached.
+ *
+ * @param state - The run's state (its current map and quest log).
+ * @returns Each such quest's name and its unreachable targets; empty when every quest can be finished.
+ */
+export function unfinishableQuests(state: RoadState): { questName: string; targets: string[] }[] {
+    const map = state.world.currentMap;
+    const def = getMapDefinition(map.continent, map.name);
+    const out: { questName: string; targets: string[] }[] = [];
+    for (const { questName, targets } of activeQuestTargets(def, state.quests)) {
+        if (targets.length === 0) continue;
+        const wanted = new Set(targets);
+        if (distanceTo(state, map.currentNode, id => wanted.has(id)) === null) out.push({ questName, targets });
+    }
     return out;
 }

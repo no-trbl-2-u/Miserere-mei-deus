@@ -150,7 +150,7 @@ describe('the Breakwater\'s events (D29)', () => {
         for (const id of ['bw-t4', 'bw-m5']) {
             expect(kinds[id], id).toBe('village');
             const payload = getNodeEventPool('coastal-continent', 'breakwater', id)!.entries[0]!.payload;
-            expect(payload.kind === 'village' && payload.anvil?.variants?.length, id).toBeGreaterThan(0);
+            expect(payload.kind === 'village' && payload.anvil?.variants, id).toEqual([]);
         }
     });
 

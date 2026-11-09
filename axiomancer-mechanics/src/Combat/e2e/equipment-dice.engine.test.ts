@@ -176,7 +176,7 @@ describe('A17 — a worn armor changes one die', () => {
 
         const railed = initializeCombatEncounter(
             wearer(GREY_CARD.id, { armor: armor({ color: 'body', change: 'mana-to-special' }) }, c => {
-                c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 3, specialConviction: 2 } };
+                c.dieGear = { body: { dieColor: 'body', specialFaces: 1, manaFaces: 3 } };
             }),
             foe(), Array(6).fill(GREY_CARD.id), 7,
         );

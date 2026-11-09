@@ -80,14 +80,6 @@ MVP demo Item (the demo plays the Blacksmith and the gear card).
 
 ## Acceptance
 
-- **A1** The Blacksmith offers no die-gear swap: `BLACKSMITH_WITNESS_VARIANTS` is `[]`, `HEART_RICH_PAYLOAD_VARIANT`
-  no longer exists, and a village anvil visit shows no swap list. An engine test pins the empty list and the swap verb
-  still works for a local fixture variant.
-- **A2** `UpgradeableDieGear` has no `specialConviction`, and neither do the Blacksmith and combat-rail view models. A
-  save whose `dieGear.heart` carries `specialConviction: 3` still loads, and a special pays the worn weapon's
-  `special`, not 3. An engine test loads such a save and plays one special.
-- **A3** The Blacksmith's intro and face key never say a BOON pays Conviction of its own: they say a BOON fires the
-  worn weapon's special. A presenter test pins both strings.
 - **A4** A weapon's or armor's detail card carries no flavor line (`vm.flavor === ''`, no `equip-detail-flavor`
   element), and a relic's card still shows its flavor. A presenter test and a component test pin both.
 
@@ -97,9 +89,8 @@ MVP demo Item (the demo plays the Blacksmith and the gear card).
 
 ## Chunks
 
-Measure: 4 open · 0 closed · next A5
+Measure: 1 open · 3 closed · next A5
 
-- [ ] **139.1** Retire the Blacksmith's +3 upgrade and the inert die-gear payout · M · closes A1, A2, A3 · needs — · alias: EQ4a
 - [ ] **139.2** The gear card shows its effect once · S · closes A4 · needs — · alias: EQ4b
 
 ### 139.1 (EQ4a) — Retire the Blacksmith's +3 upgrade and the inert die-gear payout · M · closes A1, A2, A3 · requires —

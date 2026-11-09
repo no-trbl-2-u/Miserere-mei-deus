@@ -53,7 +53,34 @@ interface MapCanvasProps {
      * remembered.
      */
     mapId?: string;
+    /**
+     * Filled with the map's token locator (CX1b): the window point of a
+     * node's token under the camera as it is now, or null for a node not on
+     * this map. The exploration screen reads it to start the map ink there.
+     */
+    locatorRef?: React.MutableRefObject<MapTokenLocator | null>;
     children: React.ReactNode;
+}
+
+/** A node's token centre in window coordinates, under the current camera. */
+export type MapTokenLocator = (nodeId: string) => { x: number; y: number } | null;
+
+/**
+ * Where a node's token sits in the window (CX1b): its sheet point onto the
+ * canvas (`sheetScale`), through the camera (canvas top-left origin, so a
+ * canvas point lands at `t + s·c` in the pane), plus the pane's own window
+ * origin. Exported for unit coverage.
+ */
+export function tokenWindowPoint(
+    node: { x: number; y: number },
+    sheetScale: number,
+    camera: { scale: number; tx: number; ty: number },
+    paneOrigin: { x: number; y: number },
+): { x: number; y: number } {
+    return {
+        x: paneOrigin.x + camera.tx + node.x * sheetScale * camera.scale,
+        y: paneOrigin.y + camera.ty + node.y * sheetScale * camera.scale,
+    };
 }
 
 // Node coordinates live on the map's sheet (`MapSheet`), rendered `scale`x
@@ -582,7 +609,7 @@ function FogDrift({ viewport, tile, ms, opacity, still }: {
     );
 }
 
-export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, children }: MapCanvasProps) {
+export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, locatorRef, children }: MapCanvasProps) {
     const styles = useStyles();
     const free = React.useMemo(() => paneInsets(insets ?? NO_INSETS), [insets?.top, insets?.bottom]); // eslint-disable-line react-hooks/exhaustive-deps
     const freeRef = React.useRef(free);
@@ -610,7 +637,18 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
     const tx = useSharedValue(0);
     const ty = useSharedValue(0);
 
+    const wrapRef = React.useRef<View>(null);
     const [viewport, setViewport] = React.useState<{ w: number; h: number } | null>(null);
+    // The pane's window origin, for the token locator (CX1b). Measured on
+    // layout and again whenever a token is located, so a pane that moved
+    // since (the status card's band, a rotation) is read where it is now.
+    const paneOrigin = React.useRef({ x: 0, y: 0 });
+    const measurePaneOrigin = () => {
+        const el = wrapRef.current as unknown as { measureInWindow?: (cb: (x: number, y: number) => void) => void } | null;
+        el?.measureInWindow?.((x, y) => {
+            if (Number.isFinite(x) && Number.isFinite(y)) paneOrigin.current = { x, y };
+        });
+    };
     const onWrapLayout = React.useCallback(
         (e: { nativeEvent: { layout: { width: number; height: number } } }) => {
             const { width, height } = e.nativeEvent.layout;
@@ -619,7 +657,9 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
             // after the pane does, and a pane that shrinks later must shrink the
             // pan limit with it, or the plate's foot stays out of reach.
             setViewport((prev) => (prev && prev.w === width && prev.h === height ? prev : { w: width, h: height }));
+            measurePaneOrigin();
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
 
@@ -658,6 +698,20 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
      * the same framing a first visit opens with, so it needs no geometry of
      * its own and cannot disagree with the opening camera.
      */
+    // The token locator (CX1b): read at call time, so it sees the camera the
+    // move has just committed.
+    React.useEffect(() => {
+        if (!locatorRef) return;
+        locatorRef.current = (nodeId: string) => {
+            const n = nodeById.get(nodeId);
+            if (!n) return null;
+            measurePaneOrigin();
+            return tokenWindowPoint(n, size.scale, { scale: scale.value, tx: tx.value, ty: ty.value }, paneOrigin.current);
+        };
+        return () => { locatorRef.current = null; };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [locatorRef, nodeById, size.scale, scale, tx, ty]);
+
     const recenter = React.useCallback(() => {
         if (!viewport || nodes.length === 0) return;
         refit.current = (ins, vp) => computeFocusTransformIn(nodes, vp, size, ins);
@@ -873,7 +927,6 @@ export function MapCanvas({ nodes, edges, sheet, overlays, insets, mapId, childr
     // as ctrl+wheel and lands here too). Anchored at the cursor: with the
     // canvas's top-left transform origin a screen point is `t + s·c`, so
     // holding it fixed across s→s' gives t' = p − (s'/s)(p − t).
-    const wrapRef = React.useRef<View>(null);
     React.useEffect(() => {
         if (Platform.OS !== 'web') return;
         const el = wrapRef.current as unknown as HTMLElement | null;

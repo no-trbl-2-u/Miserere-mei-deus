@@ -25,7 +25,6 @@ needs are done):
 
 - **157.2** · EN3b: Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors (T's enemy recast, `/plot asap`, 2026-11-06)
 
-- **135.4** · SM2d: breaks caught and filed; personas nightly, lane bots by hand (T, `/plot asap`, 2026-11-01)
 - **135.6** · SM2f: the nightly sim report (T, `/plot asap`, 2026-11-01)
 - **99.2** · automate footgun `face-text-parsers` (seen 2×), spec 99's ladder chunk.
 
@@ -41,7 +40,6 @@ needs are done):
 - **99.6** · automate footgun `font-width-estimates-stale` (seen 2×), spec 99's ladder chunk.
 - **99.7** · automate footgun `recast-pinned-orphan-lens` (seen 2×), spec 99's ladder chunk.
 - **99.8** · automate footgun `scratchpad-script-no-resolve` (seen 2×), spec 99's ladder chunk.
-- **99.10** · automate footgun `windows-tar-tree-lint` (seen 7×), spec 99's ladder chunk.
 
 - **160.1** · MG1a: the merge decision re-runs when the verify gate finishes (T's end gate, `/plot`, 2026-11-08)
 
@@ -121,13 +119,13 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 1 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
-| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 5 left |
+| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 1 left |
 | 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
-| 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
+| 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 1 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
 | 153 | The kit mixer's layout notes: fewer words, a calmer map, no burden, and a Deck to pick | [153-ux1-ui-kit-layout-notes.md](153-ux1-ui-kit-layout-notes.md) | planned | 1 left |
 | 152 | The UI kit, place by place: Brass Gothic, Vellum & Ink or as it is, per T's picks | [152-uk1-ui-kit-looks.md](152-uk1-ui-kit-looks.md) | planned | 1 left |
-| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 5 left |
+| 99 | Guard the traps: an open footgun seen twice becomes a test, a hook or a lint | [99-guard-the-traps.md](99-guard-the-traps.md) | planned (**Asap**: each chunk) | 4 left |
 
 ## How the loop reads this folder
 
