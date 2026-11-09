@@ -242,7 +242,6 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TK1a — the Worker takes a tester token (spec 163); loop work, ahead of T's rotation, date not set.
 - TK1b — T rotates both tokens (spec 163, attended); date not set (T's to pick, once TK1a has shipped).
 - TK1c — preview builds refuse the owner token, and a release can carry its APK (spec 163); loop work after T's rotation, date not set.
-- SR1a — settle retires an emptied spec (spec 164); loop work, no dated T act waits on it.
 - RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - CK1a — closes the three checks T confirmed on 2026-11-09 and moves five here (spec 166); loop work after SR1a, no dated T act waits on it.
 - CK1b — T reads the human-versus-sim comparison (spec 166, attended); date not set (T picks it).
