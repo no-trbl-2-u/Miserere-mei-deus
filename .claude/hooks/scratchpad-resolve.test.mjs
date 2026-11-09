@@ -8,7 +8,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { findScratchpadTrap, packageOf, resolvableFrom } from './scratchpad-resolve.mjs'
+import { findScratchpadTrap, maskLiterals, packageOf, resolvableFrom } from './scratchpad-resolve.mjs'
 
 const guard = fileURLToPath(new URL('./guard.mjs', import.meta.url))
 const NO_PATH = { NODE_PATH: '' }
@@ -101,4 +101,65 @@ test('guard pre-bash exits 2 with the footgun named, and 0 for a clean script', 
   assert.equal(blocked.status, 2)
   assert.match(blocked.stderr, /scratchpad-script-no-resolve/)
   assert.equal(run(`node ${good}`).status, 0)
+})
+
+test('import text inside string literals, templates and comments is not an import', () => {
+  const dir = tmp()
+  const f = write(
+    dir,
+    'fixture.mjs',
+    [
+      "const a = \"import x from 'ghost-a'\"",
+      "const b = `import('ghost-b') and require('ghost-c')`",
+      "// import 'ghost-d'",
+      "/* import y from 'ghost-e' */",
+      "const router = '@/lib/router'",
+      "import fs from 'node:fs'",
+    ].join('\n'),
+  )
+  assert.equal(findScratchpadTrap(`node ${f}`, dir, NO_PATH), null)
+  assert.deepEqual(maskLiterals("x('a\\'b') // c").strings, ["a\\'b"])
+})
+
+test('a large source scans in linear time', () => {
+  const dir = tmp()
+  const f = write(dir, 'big.mjs', 'import a from "node:fs"\n' + 'export const x = 1 // import\n'.repeat(50000))
+  const t0 = Date.now()
+  assert.equal(findScratchpadTrap(`node ${f}`, dir, NO_PATH), null)
+  assert.ok(Date.now() - t0 < 3000)
+})
+
+test('a relative script resolves against an earlier cd in the command, then the hook cwd', () => {
+  const dir = tmp()
+  const sub = path.join(dir, 'sub')
+  fs.mkdirSync(sub)
+  write(sub, 'shot.mjs', "import 'sharp'\n")
+  assert.deepEqual(findScratchpadTrap(`cd ${sub} && node shot.mjs`, os.homedir(), NO_PATH)?.missing, ['sharp'])
+  assert.deepEqual(findScratchpadTrap('cd sub && node shot.mjs', dir, NO_PATH)?.missing, ['sharp'])
+  assert.equal(findScratchpadTrap('node shot.mjs', dir, NO_PATH), null)
+})
+
+test('a value-taking flag does not hide the script', () => {
+  const dir = tmp()
+  const f = write(dir, 'flag.mjs', "import 'sharp'\n")
+  for (const flags of ['--import ./reg.mjs', '-r ./pre.js', '--import=./reg.mjs', '--no-warnings']) {
+    assert.deepEqual(findScratchpadTrap(`node ${flags} ${f}`, dir, NO_PATH)?.missing, ['sharp'], flags)
+  }
+})
+
+test('guard honours the hook cwd and its message names the script and the packages', () => {
+  const dir = tmp()
+  const f = write(dir, 'rel.mjs', "import 'ghost-pkg'\n")
+  const r = spawnSync(process.execPath, [guard, 'pre-bash'], {
+    input: JSON.stringify({ cwd: dir, tool_input: { command: 'node rel.mjs' } }),
+    encoding: 'utf-8',
+    env: { ...process.env, NODE_PATH: '' },
+  })
+  assert.equal(r.status, 2)
+  assert.ok(r.stderr.includes(f) && r.stderr.includes('ghost-pkg'), r.stderr)
+})
+
+test('this test file passes its own rule', () => {
+  const here = fileURLToPath(import.meta.url)
+  assert.equal(findScratchpadTrap(`node ${here}`, path.dirname(here), NO_PATH), null)
 })
