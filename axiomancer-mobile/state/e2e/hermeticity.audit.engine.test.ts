@@ -143,6 +143,9 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // for a preference the caller already holds — the same standing as the
         // boundary guard above, and unprovable by rendering.
         'components/combat/frames/__tests__/reducedMotionSource.test.ts',
+        // The ink's reduced-motion guard (phase CX1b, A8): the map ink and the
+        // fight's curtain take the motion answer from their callers.
+        'components/exploration/__tests__/inkMotionSource.test.ts',
         // The quest giver scene (phase ET1d, A11) reads its own source to prove
         // the relic rise takes the reduced-motion answer from its caller.
         'state/e2e/quest-giver.screen.test.tsx',

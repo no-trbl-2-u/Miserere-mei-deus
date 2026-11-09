@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { ScreenBg } from '@/components/ScreenBg';
 import { StatusCard } from '@/components/StatusCard';
-import { MapCanvas } from '@/components/exploration/MapCanvas';
+import { MapCanvas, type MapTokenLocator } from '@/components/exploration/MapCanvas';
 import { NodeGrid } from '@/components/exploration/NodeGrid';
 import { NodeConfirmPanel } from '@/components/exploration/NodeConfirmPanel';
 import { EventBadge } from '@/components/exploration/EventBadge';
@@ -21,6 +21,9 @@ import { selectIsInCombat } from '@mechanics';
 import { lookOf } from '@/components/experience/looks';
 import { BAND_BLACK } from '@/components/exploration/wildsInk';
 import { useDevSetting } from '@/state/dev/dev-settings';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { resolveJuiceMode } from '@/lib/juice/instant';
+import { hasMapInkHost, startMapInk } from '@/state/map-ink';
 
 export default function ExplorationScreen() {
     const { inCombat, recordDeepestNode } = useCombatMode();
@@ -50,6 +53,14 @@ export default function ExplorationScreen() {
 
     const actions = useGameActions();
     const vm = useGameState(selectExplorationViewModel);
+    // The map ink (CX1b): a walk to a fight bleeds ink out of the token
+    // before the fight is staged. The motion answer is asked here, once,
+    // and handed on; reduced motion or the e2e escape hatch resolve at once.
+    const inkInstant = resolveJuiceMode({ reducedMotion: useReducedMotion() }) === 'instant';
+    const locator = useRef<MapTokenLocator | null>(null);
+    // True from a fight walk's confirm until its ink covers and resolves it.
+    const inkOwes = useRef(false);
+    const windowSize = useWindowDimensions();
     const anySession = useGameState(selectHasAnyActiveSession);
 
     // Resolve the arrival this screen still owes the player, once, on mount.
@@ -103,6 +114,9 @@ export default function ExplorationScreen() {
             // A finished run owes no arrival: the shell world's start node is not a place to
             // play a scene on, and the Game Over screen is about to take the player.
             if (now.runOver === true) return;
+            // A walk to a fight whose ink is still spreading owes this arrival to
+            // the ink: it resolves the node once it covers (CX1b).
+            if (inkOwes.current) return;
             actions.resolveCurrentMapEvent();
         }, 0);
         return () => clearTimeout(settle);
@@ -192,14 +206,35 @@ export default function ExplorationScreen() {
             // Resolve the node's event (a fight is engaged by <CombatGate> and
             // fought on /combat-encounter; other kinds route to their minigame
             // or event).
-            actions.resolveCurrentMapEvent(node.type);
+            // No host to draw the ink (a test mounting the screen alone) is the same.
+            if (inkInstant || !node.triggersCombat || !hasMapInkHost()) {
+                actions.resolveCurrentMapEvent(node.type);
+                return;
+            }
+            // A fight in animate mode: the ink bleeds out of the token first, and
+            // the fight is staged only once it covers, so the gate's push lands on
+            // black (A6). Deferring the resolve is safe: the move has checkpointed
+            // with its arrival owed, so a reload mid-spread replays the fight. The
+            // token is located after this commit, under the camera the move framed.
+            const type = node.type;
+            const at = node.id;
+            inkOwes.current = true;
+            setTimeout(() => {
+                const origin = locator.current?.(at) ?? { x: windowSize.width / 2, y: windowSize.height / 2 };
+                const resolve = () => {
+                    inkOwes.current = false;
+                    actions.resolveCurrentMapEvent(type);
+                };
+                // The host went away meanwhile: resolve now.
+                if (startMapInk(origin, resolve) === null) resolve();
+            }, 0);
         }
     };
 
     // Node Graph. The compass copy rides the `overlays` slot (viewport-fixed),
     // not `children` (the pannable canvas) — CRITIQUE pass 20.
     const canvas = (
-        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />} insets={mapInsets}>
+        <MapCanvas nodes={vm.nodes} edges={vm.edges} sheet={vm.sheet} mapId={vm.mapId} overlays={<MapOverlays />} insets={mapInsets} locatorRef={locator}>
             <NodeGrid
                 nodes={vm.nodes}
                 onNodePress={onNodePress}

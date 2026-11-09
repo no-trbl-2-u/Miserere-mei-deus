@@ -45,7 +45,8 @@ import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/Com
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { Image } from '@/lib/platform/image';
-import { InkCurtain } from '@/components/combat/encounter/InkCurtain';
+import { INK_DRAW_MS, INK_HOLD_MS, InkCurtain } from '@/components/combat/encounter/InkCurtain';
+import { clearMapInk } from '@/state/map-ink';
 import { BOSS_CARD_HINT } from '@/components/combat/encounter/reveal.copy';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
@@ -788,6 +789,9 @@ export function CombatEncounterPanel({
     const [inkDone, setInkDone] = useState(nodeId === undefined);
     const [bossCardHeld, setBossCardHeld] = useState(true);
     const onInkDone = useCallback(() => setInkDone(true), []);
+    // The map's ink (CX1b) covered the window until this screen was up; its own
+    // curtain now starts covered beneath it, so the map's is lifted.
+    useEffect(() => { clearMapInk(); }, []);
 
     const lastDragRef = useRef<DragPayload | null>(null);
     if (ghostDrag) lastDragRef.current = ghostDrag;
@@ -860,7 +864,10 @@ export function CombatEncounterPanel({
                 <View style={styles.reveal} testID="combat-reveal">
                     <ScrollView contentContainerStyle={styles.revealScroll} testID="combat-reveal-column">
                         <Animated.View
-                            entering={inkInstant ? undefined : FadeInDown.delay(600).duration(500)}
+                            entering={inkInstant ? undefined : (inkDone
+                                ? FadeInDown.delay(600).duration(500)
+                                // The portrait rises as the ink draws back off it (CX1b, A7).
+                                : FadeInDown.delay(INK_HOLD_MS).duration(INK_DRAW_MS))}
                             style={[
                                 styles.revealPortrait,
                                 { borderColor: revealFrame.tier === 'elite' ? AXM.kindElite : AXM.blood },
