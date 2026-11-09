@@ -5,7 +5,9 @@
  * registry, never re-derived here.
  */
 
-import { createCharacter, getRelicById, type Equipment } from '@mechanics';
+import {
+    armorLibrary, createCharacter, getRelicById, GREY_ARMOR_ID, GREY_WEAPON_ID, weaponLibrary, type Equipment,
+} from '@mechanics';
 
 import { selectEquipmentDetailViewModel } from '@/state/presenters/equipment-detail.engine';
 import { createAppStore } from '@/state/store';
@@ -88,5 +90,26 @@ describe('equipment detail view-model — lane', () => {
         const relic = getRelicById(id)!;
         const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
         expect(vm.lane).toBe('Lane: Merciful (while worn)');
+    });
+});
+
+describe('equipment detail view-model — flavor shows once', () => {
+    const BLADE = weaponLibrary.find((w) => w.id === GREY_WEAPON_ID)!;
+    const COAT = armorLibrary.find((a) => a.id === GREY_ARMOR_ID)!;
+
+    it('a weapon and an armor with an effect block carry no flavor line', () => {
+        const blade = selectEquipmentDetailViewModel(stateWith([BLADE], [BLADE]), BLADE.id)!;
+        expect(blade.effect).not.toBeNull();
+        expect(blade.flavor).toBe('');
+        const coat = selectEquipmentDetailViewModel(stateWith([COAT], [COAT]), COAT.id)!;
+        expect(coat.effect).not.toBeNull();
+        expect(coat.flavor).toBe('');
+    });
+
+    it('a relic has no effect block, so it keeps its description as flavor', () => {
+        const vm = selectEquipmentDetailViewModel(stateWith([SIGNET], [SIGNET]), SIGNET.id)!;
+        expect(vm.effect).toBeNull();
+        expect(SIGNET.description).not.toBe('');
+        expect(vm.flavor).toBe(SIGNET.description);
     });
 });

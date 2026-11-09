@@ -22,7 +22,10 @@
  *   - `signature`           — the granted signature skill's name, Conviction
  *                             cost, and EXACT in-game effect text (the engine's
  *                             own `description`; no added flare).
- *   - `flavor`              — the item's engine `description`, shown last.
+ *   - `flavor`              — the item's engine `description`, shown last, but
+ *                             only for a piece with no `effect` block: a weapon's
+ *                             or armor's description repeats its effect, so the
+ *                             card shows the EFFECT once and `flavor` is `''`.
  *   - `action`              — the one loadout action the card offers: UNEQUIP
  *                             for a worn piece, WEAR for a relic or EQUIP (or <VERB> · REPLACE
  *                             <NAME>) for an unworn one, read from
@@ -97,7 +100,8 @@ export interface EquipmentSignatureInfo {
  *                       (`equipmentEffectParts`), or `null` when it has no effect.
  * @property lane      - `Lane: <lane name> (while worn)` for a relic whose
  *                       resolved lane is registered, else `null`.
- * @property flavor    - The item's engine description (flavour prose).
+ * @property flavor    - The item's engine description (flavour prose), or `''`
+ *                       when the card shows an `effect` block (it would repeat it).
  * @property action   - The loadout action the card's button performs.
  */
 export interface EquipmentDetailViewModel {
@@ -267,6 +271,7 @@ export function selectEquipmentDetailViewModel(
     const item = findOwnedEquipment(player, itemId);
     if (item === null) return null;
     const { mode, label } = loadoutActionFor(player, item);
+    const effect = buildEffect(item);
 
     return freezeViewModel({
         itemId: item.id,
@@ -275,9 +280,9 @@ export function selectEquipmentDetailViewModel(
         sub: SLOT_LABELS[item.slot] ?? null,
         statLines: buildStatLines(item) as readonly EquipmentStatLine[],
         signature: buildSignature(item, player.baseStats ? statsWithWorn(player) : undefined),
-        effect: buildEffect(item),
+        effect,
         lane: buildLaneLine(item),
-        flavor: item.description,
+        flavor: effect === null ? item.description : '',
         action: { mode, label },
     });
 }
