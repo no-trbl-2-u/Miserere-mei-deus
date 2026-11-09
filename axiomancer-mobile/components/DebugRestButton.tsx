@@ -10,7 +10,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useGameActions } from '@/state/GameStoreProvider';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export function DebugRestButton() {
@@ -68,8 +68,8 @@ const useStyles = makeStyles((AXM) => ({
         borderTopColor: AXM.ash,
     },
     labelCol: { flex: 1 },
-    label: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 1.5, color: AXM.bone },
-    sub: { fontFamily: FONTS.mono, fontSize: 9, color: AXM.ash, marginTop: 2 },
+    label: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    sub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, color: AXM.ash, marginTop: 2 },
     button: {
         borderWidth: 1,
         borderColor: HUE.hzAcid,
@@ -77,7 +77,7 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 14,
         backgroundColor: 'rgba(134,168,33,0.08)',
     },
-    buttonLabel: { fontFamily: FONTS.gothic, fontSize: 14, letterSpacing: 2, color: HUE.hzAcid },
+    buttonLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 14, letterSpacing: TYPE_ROLES.button.letterSpacing, color: HUE.hzAcid },
     innButton: { borderColor: AXM.sulfur, backgroundColor: AXM.sulfurSubtle, marginRight: 6 },
     innLabel: { color: AXM.sulfur },
 }));

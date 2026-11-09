@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
@@ -186,7 +186,7 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     dockSlotEmptyMark: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 20,
         color: AXM.ash,
         lineHeight: 22,
@@ -196,36 +196,36 @@ const useStyles = makeStyles((AXM) => ({
         minWidth: 0,
     },
     dockSlotLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
         color: AXM.bone,
-        letterSpacing: 1.6,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         textTransform: 'uppercase',
         lineHeight: 12,
     },
     dockSlotItemName: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
         color: AXM.parchment,
         lineHeight: 14,
     },
     dockSlotItemBare: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         lineHeight: 14,
     },
     // Signet relic's granted signature, a quiet sub-label.
     dockSlotSignature: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
         color: AXM.sulfur,
-        letterSpacing: 0.6,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         lineHeight: 13,
     },
     // A weapon or armor's effect: the payload only, two short lines at most.
     dockSlotEffect: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
         color: AXM.sulfur,
         letterSpacing: 0.2,

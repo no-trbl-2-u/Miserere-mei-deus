@@ -12,7 +12,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface RarityMarkProps {
@@ -61,6 +61,6 @@ const useStyles = makeStyles(() => ({
     pips: { flexDirection: 'row', gap: 3, alignItems: 'center' },
     pip: { width: 7, height: 7, borderRadius: 1, borderWidth: StyleSheet.hairlineWidth },
     pipSmall: { width: 5, height: 5, borderRadius: 1, borderWidth: StyleSheet.hairlineWidth },
-    label: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 2 },
-    labelSmall: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.5 },
+    label: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    labelSmall: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 9, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
 }));

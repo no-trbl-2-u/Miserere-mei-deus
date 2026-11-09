@@ -21,7 +21,7 @@ import { largePaidLineSize, paidLineLead, paidLineRoom, paidLineRows, PAID_LINE_
 import { type CardTextMode, createSettingsStore } from '@/state/settings';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
-import { AXM, FONTS, HUE } from '@/theme/axm';
+import { AXM, HUE, TYPE_ROLES } from '@/theme/axm';
 
 const GREY = ['grey-strike', 'grey-ward', 'grey-word'];
 const NO_STORAGE = { getItem: async () => null, setItem: async () => undefined, removeItem: async () => undefined };
@@ -147,8 +147,8 @@ describe('the open card prints the same line as the hand', () => {
         const inks = lineInks();
         expect(inks.length).toBeGreaterThan(0);
         expect(new Set(inks.map((i) => i.color))).toEqual(new Set([AXM.parchment]));
-        expect(inks.map((i) => i.fontFamily)).not.toContain(FONTS.mono);
-        expect(inks[0].fontFamily).toBe(FONTS.sans);
+        expect(inks.map((i) => i.fontFamily)).not.toContain(TYPE_ROLES.count.fontFamily);
+        expect(inks[0].fontFamily).toBe(TYPE_ROLES.chip.fontFamily);
     });
 
     it('the large face\'s name band is the height the budget below subtracts (with the pill room)', () => {

@@ -21,7 +21,7 @@ import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { useLocalSearchParams, useRouter } from '@/lib/platform/router';
 import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { selectDeathReturnVM } from '@/state/presenters/death-return.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** The vellum button (G-01). */
@@ -79,14 +79,14 @@ const useStyles = makeStyles((AXM) => ({
     empty: { flex: 1, backgroundColor: AXM.deepBg },
     wrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 28, gap: 18 },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 28,
-        letterSpacing: 3,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
         textAlign: 'center',
     },
     body: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 14,
         lineHeight: 21,
         color: AXM.bone,
@@ -110,9 +110,9 @@ const useStyles = makeStyles((AXM) => ({
     buttonKit: { minHeight: 56, paddingVertical: 18, paddingHorizontal: 28 },
     buttonTextKit: { color: VELLUM_INK },
     buttonText: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 18,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
 }));

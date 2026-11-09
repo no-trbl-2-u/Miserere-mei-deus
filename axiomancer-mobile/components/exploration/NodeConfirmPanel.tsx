@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { ACTION_ICON_BY_TYPE, NODE_KIND_LABEL, nodePurseLines, type ExplorationNode, type ExplorationOption } from '@/state/presenters/exploration.engine';
@@ -189,7 +189,7 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.panelBg,
     },
     hint: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         color: AXM.bone,
         textAlign: 'center',
@@ -206,27 +206,26 @@ const useStyles = makeStyles((AXM) => ({
     },
     text: { flex: 1 },
     kind: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
     },
     name: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 16,
         color: AXM.parchment,
         marginTop: 1,
     },
     blurb: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         marginTop: 2,
     },
     purse: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 10,
-        letterSpacing: 1,
         color: AXM.parchment,
         marginTop: 4,
     },
@@ -246,9 +245,9 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
     },
     cancelText: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 11,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.bone,
     },
     confirm: {
@@ -259,9 +258,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.selectFill,
     },
     confirmText: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 11,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
 }));

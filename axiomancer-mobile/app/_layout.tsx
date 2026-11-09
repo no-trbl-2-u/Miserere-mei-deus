@@ -71,7 +71,7 @@ import DevHazardPuzzles from './devpuzzle/index';
 import DevFrameHarness from './devframes/index';
 
 // Faces come from the @expo-google-fonts packages, registered in theme/fontFaces.ts under the exact
-// fontFamily strings theme/axm.ts references. The old vendored faces (assets/fonts/) are no longer loaded.
+// fontFamily strings theme/axm.ts references. Only Pirata One stays in assets/fonts/, as the source the splash wordmark is drawn from.
 
 SplashScreen.preventAutoHideAsync();
 

@@ -40,7 +40,7 @@ import { ScreenBg } from '@/components/ScreenBg';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { CUTSCENE_HINT } from '@/state/presenters/event.engine';
-import { FONTS, TYPE } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** Milliseconds a line takes to fade IN once it becomes the current line. */
@@ -185,9 +185,9 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 24,
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         marginBottom: 18,
         textAlign: 'center',
@@ -196,7 +196,7 @@ const useStyles = makeStyles((AXM) => ({
         textShadowRadius: 6,
     },
     line: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 17,
         lineHeight: 27,
         color: AXM.parchment,
@@ -206,9 +206,8 @@ const useStyles = makeStyles((AXM) => ({
         textShadowRadius: 6,
     },
     hint: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
         color: AXM.bone,
         textAlign: 'center',
         marginTop: 22,
@@ -233,11 +232,11 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.overlay,
     },
     skipText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 3,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.parchment,
     },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

@@ -20,7 +20,7 @@ import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
 import { DevToolsSections } from '@/components/dev/DevToolsSections';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export default function DevToolsScreen() {
@@ -83,17 +83,16 @@ const useStyles = makeStyles((AXM) => ({
     },
     headerText: { flex: 1 },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         color: AXM.sulfur,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         marginTop: 1,
     },
     subtitle: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 10,
         color: AXM.bone,
-        letterSpacing: 0.5,
         marginTop: 2,
     },
     backBtn: {
@@ -106,7 +105,7 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.panelBg,
     },
     backLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 16,
         color: AXM.bone,
     },
@@ -119,10 +118,9 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 8,
     },
     linkLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 11,
         color: AXM.bone,
-        letterSpacing: 0.5,
     },
     body: {
         paddingHorizontal: 12,

@@ -32,7 +32,7 @@ import {
 } from '@/state/presenters/labyrinth.engine';
 import { KitPressable } from '@/components/experience/KitSurface';
 import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** The brass button the act rows (X-01) and LEAVE (X-02) wear, idle then held. */
@@ -360,20 +360,20 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 34,
         color: AXM.parchment,
         textAlign: 'center',
     },
     sub: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 14,
         lineHeight: 20,
         color: AXM.bone,
         textAlign: 'center',
     },
     warning: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.sulfur,
@@ -385,20 +385,20 @@ const useStyles = makeStyles((AXM) => ({
     // Clears the brass button's drawn corners (about 16 high, 13 wide).
     actCardKit: { paddingVertical: 22, paddingHorizontal: 22 },
     actTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.mapName.fontFamily,
         fontSize: 20,
         color: AXM.parchment,
     },
     actRiddle: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         fontStyle: 'italic',
         color: AXM.bone,
     },
     actEnter: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
         marginTop: 4,
     },
@@ -406,9 +406,9 @@ const useStyles = makeStyles((AXM) => ({
     leaveButtonPlain: { paddingVertical: 8, paddingHorizontal: 24, borderWidth: 1, borderColor: AXM.ash },
     leaveButtonKit: { paddingVertical: 20, paddingHorizontal: 40 },
     leaveText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.bone,
     },
     header: {
@@ -420,15 +420,15 @@ const useStyles = makeStyles((AXM) => ({
     },
     headerTitle: {
         flex: 1,
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.sectionHead.fontFamily,
         fontSize: 18,
         color: AXM.parchment,
         textAlign: 'center',
     },
     headerAction: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
     sceneArea: {
@@ -470,7 +470,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 10,
     },
     toastText: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.sulfur,
@@ -485,21 +485,20 @@ const useStyles = makeStyles((AXM) => ({
         gap: 3,
     },
     remarkText: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.spoken.fontFamily,
         fontSize: 14,
         lineHeight: 20,
         color: AXM.parchment,
     },
     pickupText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
     trapText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
         color: AXM.blood,
     },
     confirmStrip: {
@@ -510,7 +509,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     confirmText: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 14,
         color: AXM.parchment,
     },
@@ -526,9 +525,9 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     confirmGoText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
     confirmStay: {
@@ -539,9 +538,9 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     confirmStayText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.bone,
     },
 }));

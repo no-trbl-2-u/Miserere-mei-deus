@@ -16,7 +16,7 @@ import { View, Text } from 'react-native';
 
 import { useGameEvents, useGameState, useGameStore } from '@/state/GameStoreProvider';
 import { selectInventoryToast } from '@/state/presenters/inventory-feedback.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 const TOAST_TTL_MS = 3000;
@@ -114,9 +114,8 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
     },
     text: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
-        letterSpacing: 1.5,
         color: AXM.parchment,
     },
 }));

@@ -19,7 +19,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type { TooltipAccent } from '@/state/presenters/tooltip.engine';
 
@@ -97,19 +97,19 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.panelBg,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 12,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         marginBottom: 4,
     },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 17,
         color: AXM.parchment,
     },
     footnote: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
         color: AXM.bone,
         marginTop: 4,

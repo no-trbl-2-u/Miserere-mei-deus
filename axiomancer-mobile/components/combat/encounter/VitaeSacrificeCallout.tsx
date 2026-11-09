@@ -20,7 +20,7 @@ import Svg, { Circle } from 'react-native-svg';
 
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { PROGRAM_COPY } from '@/state/presenters/combat-encounter.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** How long the callout shows: two pulse cycles. */
@@ -121,7 +121,7 @@ const useStyles = makeStyles((AXM) => ({
         position: 'absolute', top: -22, left: -4, width: 140, alignItems: 'flex-start',
     },
     tagText: {
-        fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 0.6, color: AXM.blood,
+        fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 12, color: AXM.blood,
         backgroundColor: AXM.deepBg, borderColor: AXM.blood, borderWidth: 1, borderRadius: 3,
         paddingHorizontal: 5, paddingVertical: 1, overflow: 'hidden',
     },

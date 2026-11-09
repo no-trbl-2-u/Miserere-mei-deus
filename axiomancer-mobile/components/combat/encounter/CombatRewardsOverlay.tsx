@@ -36,7 +36,7 @@ import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 import { CardKeywordLedger } from '@/components/card/CardKeywordLedger';
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
@@ -273,22 +273,22 @@ export function CombatRewardsOverlay({
 const useStyles = makeStyles((AXM) => ({
     backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 60 },
     panel: { width: '100%', maxWidth: 420, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 12, paddingVertical: 16, alignItems: 'center' },
-    title: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.parchment, textAlign: 'center' },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 20, color: AXM.parchment, textAlign: 'center' },
     titleGap: { marginBottom: 14 },
     offerRow: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
     offerFrame: { borderWidth: OFFER_FRAME_BORDER, padding: OFFER_FRAME_PAD, alignItems: 'center' },
     // The rarity word under each offer face. Hue matches the frame it sits in,
     // but the WORD is the signal — the colour is never asked to carry it alone.
-    offerRarity: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.4, marginTop: 3 },
+    offerRarity: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9, marginTop: 3 },
     pickedBadge: { position: 'absolute', top: -9, right: -9, width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
-    pickedBadgeText: { fontFamily: FONTS.gothic, fontSize: 14, color: HUE.badgeInk },
+    pickedBadgeText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: HUE.badgeInk },
     btnRow: { flexDirection: 'row', gap: 10, marginTop: 18 },
     btn: { flex: 1, borderWidth: 2, paddingHorizontal: 10, paddingVertical: 9, alignItems: 'center' },
-    btnText: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1 },
+    btnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 15, letterSpacing: TYPE_ROLES.button.letterSpacing},
     upgradeOpen: { flex: 0, alignSelf: 'stretch', marginTop: 10 },
     upgradePanel: { alignItems: 'stretch' },
     upgradeBack: { flex: 0, marginTop: 12 },
-    btnNote: { fontFamily: FONTS.sans, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
+    btnNote: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
     // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side
     // ornament, 26pt of top and bottom. The panel pads 40pt a side to clear it, and
     // the vellum tiles are 80pt faces (270pt in all) so three still fit at 360.
@@ -305,10 +305,10 @@ const useStyles = makeStyles((AXM) => ({
     previewPanel: { width: '100%', maxWidth: 400, flexShrink: 1, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 14, paddingTop: 16, paddingBottom: 12 },
     previewScroll: { alignItems: 'center', paddingBottom: 10 },
     previewPlays: { marginTop: 12, alignSelf: 'stretch', paddingTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgba(255,255,255,0.16)' },
-    previewPlayLine: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginBottom: 4 },
-    previewPlayTag: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1, color: AXM.bone },
-    previewFlavor: { fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 13, color: AXM.bone, textAlign: 'center', marginTop: 12, lineHeight: 18 },
+    previewPlayLine: { fontFamily: TYPE_ROLES.cardRules.fontFamily, fontSize: 13, color: AXM.parchment, lineHeight: 18, marginBottom: 4 },
+    previewPlayTag: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, color: AXM.bone },
+    previewFlavor: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 13, color: AXM.bone, textAlign: 'center', marginTop: 12, lineHeight: 18 },
     previewActions: { flexDirection: 'row', gap: 10, marginTop: 10 },
     previewBtn: { flex: 1, borderWidth: 2, paddingVertical: 11, alignItems: 'center' },
-    previewBtnText: { fontFamily: FONTS.gothic, fontSize: 15, letterSpacing: 1.5 },
+    previewBtnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 15, letterSpacing: TYPE_ROLES.button.letterSpacing},
 }));

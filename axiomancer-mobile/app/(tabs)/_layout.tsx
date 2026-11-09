@@ -2,7 +2,7 @@ import { Tabs } from '@/lib/platform/router';
 import React, { useContext, useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { AxmIcon, type AxmIconName } from '@/components/icons';
 import { TAB_ICON_SIZE, TAB_TITLES } from '@/state/presenters/tabs.engine';
@@ -339,7 +339,7 @@ const useStyles = makeStyles((AXM) => ({
   },
   badgeText: {
     color: AXM.parchment,
-    fontFamily: FONTS.sans,
+    fontFamily: TYPE_ROLES.chip.fontFamily,
     fontSize: 10,
     fontWeight: 'bold',
     lineHeight: 16,

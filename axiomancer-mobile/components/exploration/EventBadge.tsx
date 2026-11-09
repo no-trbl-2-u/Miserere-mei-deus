@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { SectionLabel } from '@/components/SectionLabel';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 6,
     },
     eventCalloutText: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 13,
         color: AXM.parchment,
         marginTop: 2,

@@ -19,7 +19,7 @@ import { previewStatAllocation } from '@mechanics';
 
 import { StanceRow, type LevelStance } from '@/components/levelup/StanceRow';
 import { pickFlavor } from '@/components/levelup/levelUpFlavor';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { STANCES } from '@/state/presenters/stances';
 
@@ -302,10 +302,9 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 8,
     },
     binderGlyphs: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 8,
         color: AXM.sulfur,
-        letterSpacing: 2,
     },
     scroll: { flex: 1 },
     scrollContent: {
@@ -314,10 +313,10 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 24,
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
         color: AXM.sulfur,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         textAlign: 'center',
     },
     levelRow: {
@@ -328,15 +327,14 @@ const useStyles = makeStyles((AXM) => ({
         marginTop: 6,
     },
     levelFromLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 1.6,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     summary: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
-        letterSpacing: 1.2,
         color: AXM.bone,
         textAlign: 'center',
         marginTop: 4,
@@ -347,16 +345,16 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.sulfur,
     },
     levelToLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 1.6,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.parchment,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 28,
         lineHeight: 30,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
         textAlign: 'center',
         marginTop: 14,
@@ -365,7 +363,7 @@ const useStyles = makeStyles((AXM) => ({
         textShadowRadius: 0,
     },
     flavor: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         lineHeight: 18,
         color: AXM.parchment,
@@ -389,13 +387,13 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.sulfur,
     },
     pointsLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 1.8,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
     },
     pointsValue: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 18,
         color: AXM.sulfur,
     },
@@ -413,13 +411,13 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'space-between',
     },
     vitaeValue: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 15,
         color: AXM.sulfur,
     },
     resetRow: { alignItems: 'flex-end', marginTop: 8 },
     resetLabel: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
         color: AXM.bone,
     },
@@ -447,9 +445,9 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.parchment,
     },
     commitLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 16,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
     commitLabelGhost: { color: AXM.bone },
     commitLabelLive: { color: AXM.parchment },
@@ -468,14 +466,13 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     deliberateLabel: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
         color: AXM.bone,
     },
     consolation: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.6,
         color: AXM.bone,
         textAlign: 'center',
         marginTop: 16,
@@ -499,13 +496,13 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     discardEyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.blood,
     },
     discardBody: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         lineHeight: 18,
         color: AXM.parchment,
@@ -521,10 +518,10 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.parchment,
     },
     discardConfirmLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 14,
         color: AXM.parchment,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
     discardStay: {
         marginTop: 4,
@@ -533,7 +530,7 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     discardStayLabel: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 12,
         color: AXM.bone,
     },

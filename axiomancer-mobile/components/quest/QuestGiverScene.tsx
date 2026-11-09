@@ -13,7 +13,7 @@ import { ItemGlyph } from '@/components/inventory/ItemCard';
 import { PLAYER_PORTRAITS } from '@/assets/images/portraits';
 import { resolveJuiceMode } from '@/lib/juice/instant';
 import type { QuestGiverVM } from '@/state/presenters/quest.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** The portrait art for a slug; the first gallery entry stands in for an unknown one. */
@@ -73,7 +73,7 @@ const useStyles = makeStyles((AXM) => ({
     row: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
     portrait: { width: 72, height: 72, borderWidth: 2, borderColor: AXM.ash },
     portraitAway: { opacity: 0.35 },
-    name: { flex: 1, fontFamily: FONTS.gothic, fontSize: 22, lineHeight: 26, color: AXM.parchment },
+    name: { flex: 1, fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, lineHeight: 26, color: AXM.parchment },
     relic: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -84,5 +84,5 @@ const useStyles = makeStyles((AXM) => ({
         padding: 10,
         marginBottom: 10,
     },
-    relicName: { fontFamily: FONTS.gothic, fontSize: 20, color: AXM.sulfur },
+    relicName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 20, color: AXM.sulfur },
 }));

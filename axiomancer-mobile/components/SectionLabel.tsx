@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { usePalette } from '@/theme/runtime';
 
 interface SectionLabelProps {
@@ -25,8 +25,8 @@ export const SectionLabel = React.memo(function SectionLabel({ children, color, 
 
 const styles = StyleSheet.create({
   base: {
-    fontFamily: FONTS.sans,
-    letterSpacing: 3,
+    fontFamily: TYPE_ROLES.eyebrow.fontFamily,
+    letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
     textTransform: 'uppercase',
   },
 });

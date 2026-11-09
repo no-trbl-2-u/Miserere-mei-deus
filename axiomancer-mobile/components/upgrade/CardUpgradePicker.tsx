@@ -29,7 +29,7 @@ import {
     type CardUpgradeFaceVM,
     type CardUpgradeRowVM,
 } from '@/state/presenters/card-upgrade.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export interface CardUpgradePickerProps {
@@ -125,10 +125,10 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine }: CardUpgradePic
 }
 
 const useStyles = makeStyles((AXM) => ({
-    eyebrow: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2.2, color: AXM.bone, marginBottom: 4 },
-    body: { fontFamily: FONTS.serif, fontSize: 13, lineHeight: 19, color: AXM.parchment, marginBottom: 8 },
-    priceHint: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.5, color: AXM.sulfur, marginBottom: 8 },
-    hint: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone },
+    eyebrow: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone, marginBottom: 4 },
+    body: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, lineHeight: 19, color: AXM.parchment, marginBottom: 8 },
+    priceHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.sulfur, marginBottom: 8 },
+    hint: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.bone },
     list: { marginBottom: 8 },
     row: {
         flexDirection: 'row',
@@ -140,8 +140,8 @@ const useStyles = makeStyles((AXM) => ({
         padding: 8,
         marginBottom: 4,
     },
-    rowName: { flexShrink: 1, fontFamily: FONTS.mono, fontSize: 13, color: AXM.parchment },
-    rowStep: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 0.5, color: AXM.bone },
+    rowName: { flexShrink: 1, fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 13, color: AXM.parchment },
+    rowStep: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.bone },
     faces: { flexDirection: 'row', gap: 6, alignItems: 'stretch' },
     face: {
         flex: 1,
@@ -151,12 +151,12 @@ const useStyles = makeStyles((AXM) => ({
         padding: 6,
         gap: 2,
     },
-    faceLabel: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.5, color: AXM.bone },
-    faceName: { fontFamily: FONTS.gothic, fontSize: 14, color: AXM.parchment },
-    faceTag: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.5, color: AXM.sulfur, marginTop: 2 },
-    faceLine: { fontFamily: FONTS.serif, fontSize: 11, lineHeight: 15, color: AXM.parchmentDim },
+    faceLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    faceName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 14, color: AXM.parchment },
+    faceTag: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9, color: AXM.sulfur, marginTop: 2 },
+    faceLine: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, lineHeight: 15, color: AXM.parchmentDim },
     locked: { opacity: 0.55, alignItems: 'center', justifyContent: 'center' },
-    lockedMark: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.bone },
+    lockedMark: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 22, color: AXM.bone },
     confirm: {
         borderWidth: 2,
         borderColor: AXM.sulfur,
@@ -165,5 +165,5 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         backgroundColor: AXM.bg,
     },
-    confirmText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 2, color: AXM.sulfur },
+    confirmText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
 }));

@@ -22,7 +22,7 @@ import { Gesture } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { ImpactFeedbackStyle, NotificationFeedbackType } from '@/lib/platform/haptics';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { juiceHaptics } from '@/lib/juice';
 import { ItemGlyph } from '@/components/inventory/ItemCard';
@@ -294,7 +294,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     ghostName: {
         flex: 1,
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardName.fontFamily,
         fontSize: 12,
         color: AXM.parchment,
     },
