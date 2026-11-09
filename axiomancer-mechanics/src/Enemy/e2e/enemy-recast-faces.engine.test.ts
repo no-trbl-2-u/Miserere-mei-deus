@@ -27,9 +27,11 @@ const RECAST: ReadonlyArray<{
     cut: keyof typeof ENEMY_REGISTRY;
     portrait: string;
     name: string;
+    /** The face moved up a tier in 162.4 (MV1d): its VITAE, XP and phase count are its tier's, not its cut foe's. */
+    elite?: true;
 }> = [
     { face: 'saint-beneath',  cut: 'death-beholder', portrait: 'saint-beneath',  name: 'The Saint Beneath' },
-    { face: 'saltwick-swarm', cut: 'green-jelly',    portrait: 'saltwick-swarm', name: 'Saltwick Swarm' },
+    { face: 'saltwick-swarm', cut: 'green-jelly',    portrait: 'saltwick-swarm', name: 'Saltwick Swarm', elite: true },
     { face: 'wreckmaster',    cut: 'toll-keeper',    portrait: 'wreckmaster',    name: 'The Wreckmaster' },
     { face: 'quay-crab',      cut: 'crane-hook',     portrait: 'quay-crab',      name: 'Quay-Crab' },
     { face: 'bilge-stalker',  cut: 'wreck-picker',   portrait: 'bilge-stalker',  name: 'Bilge-Stalker' },
@@ -48,7 +50,7 @@ const phaseCount = (foe: Enemy): number =>
     foe.phases && foe.phases.length > 0 ? foe.phases.length : (foe.stages?.length ?? 0) + 1;
 
 describe('EN3a — Chapter 1\'s six recast faces carry their cut foes\' numbers', () => {
-    it.each(RECAST)('$name is $cut\'s level, VITAE, tier and phase count under its own face', ({ face, cut, portrait, name }) => {
+    it.each(RECAST)('$name is $cut\'s level, VITAE, tier and phase count under its own face', ({ face, cut, portrait, name, elite }) => {
         const now = ENEMY_REGISTRY[face] as Enemy;
         const was = ENEMY_REGISTRY[cut] as Enemy;
 
@@ -61,12 +63,21 @@ describe('EN3a — Chapter 1\'s six recast faces carry their cut foes\' numbers'
 
         // Its cut foe's numbers, copied.
         expect(now.level, `${name} level`).toBe(was.level);
-        expect(now.maxHealth, `${name} VITAE`).toBe(was.maxHealth);
-        expect(now.difficulty, `${name} tier`).toBe(was.difficulty);
+        if (elite) {
+            // Saltwick Swarm is an elite now (T: "15 is rough"): the elite VITAE and three phases.
+            expect(now.difficulty, `${name} tier`).toBe('elite');
+            expect(now.maxHealth, `${name} VITAE`).toBeGreaterThan(was.maxHealth);
+            expect(phaseCount(now), `${name} phase count`).toBe(3);
+        } else {
+            expect(now.maxHealth, `${name} VITAE`).toBe(was.maxHealth);
+            expect(now.difficulty, `${name} tier`).toBe(was.difficulty);
+        }
         expect(now.logic, `${name} logic`).toBe(was.logic);
         expect(now.baseStats, `${name} stat budget`).toEqual(was.baseStats);
-        expect(phaseCount(now), `${name} phase count`).toBe(phaseCount(was));
-        expect(now.xpReward, `${name} xpReward`).toBe(was.xpReward);
+        if (!elite) {
+            expect(phaseCount(now), `${name} phase count`).toBe(phaseCount(was));
+            expect(now.xpReward, `${name} xpReward`).toBe(was.xpReward);
+        }
     });
 
     it('the boss keeps the Death Beholder\'s authored VITAE, on moves of its own (162.3)', () => {

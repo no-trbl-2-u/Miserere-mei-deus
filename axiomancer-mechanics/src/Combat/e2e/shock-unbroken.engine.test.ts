@@ -26,9 +26,10 @@ import type { ProgramCtx } from '../../Cards/card-program.types';
 import type { ActiveEffect } from '../../Effects/types';
 import { deepClone } from '../../Utils';
 import {
-    initializeCombatEncounter, playCombatCard, projectIncomingThreat, resolveThreatPhase, rollEncounterDice, startTurn, threatHits,
+    initializeCombatEncounter, payTheToll, playCombatCard, projectIncomingThreat, resolveThreatPhase, rollEncounterDice, startTurn, threatHits,
 } from '../combat.engine';
 import { getThreatSequence, scaleMoveNumber } from '../combat.threat';
+import { initProgramLedger, programSpikeStrike } from '../combat.card-program';
 import { getDamageTakenFlat } from '../effects';
 import { BARNACLE_ID } from '../../Cards/library/enemy-curses.cards';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
@@ -49,6 +50,7 @@ const CARDS: Card[] = [
     { id: 'su-hit-5', name: 'Hit 5', color: 'any', description: 'x', tier: 1, rank: 1, cardType: 'spell', targetType: 'enemy', free: { damage: 5 } },
     { id: 'su-hit-30', name: 'Hit 30', color: 'any', description: 'x', tier: 1, rank: 1, cardType: 'spell', targetType: 'enemy', free: { damage: 30 } },
     program('su-deal-10', c => { c.deal(10, { exact: true }); }),
+    { id: 'su-paid-deal-6', name: 'Paid 6', color: 'any', description: 'x', tier: 1, rank: 1, cardType: 'attack', targetType: 'enemy', free: { damage: 1 }, specialMechanics: [{ kind: 'deal', amount: 6 }] },
     program('su-deal-1-thrice', c => { c.deal(1, { exact: true }); c.deal(1, { exact: true }); c.deal(1, { exact: true }); }),
 ];
 
@@ -77,7 +79,7 @@ function makePlayer(): Character {
     p.baseStats = { ...STATS };
     p.health = 500; p.maxHealth = 500;
     p.effects = [];
-    p.knownCards = ['grey-strike', 'grey-ward'];
+    p.knownCards = ['grey-strike', 'grey-ward', 'su-paid-deal-6'];
     return p;
 }
 
@@ -185,6 +187,67 @@ describe('SHOCK', () => {
         it('a program DEAL deals n more, per DEAL', () => {
             expect(dealt(onFoe(), 'su-deal-10')).toBe(12);
             expect(dealt(onFoe(), 'su-deal-1-thrice')).toBe(9);
+        });
+
+        const dealtBottom = (s: CombatEncounterState, card: string): number => {
+            const before = s.enemy.health;
+            const hand = yourTurn(s, [card]);
+            return before - playCombatCard({ ...hand, dice: [{ ...WILD }] }, { uid: 'h0' }, true, WILD.id, rng).state.enemy.health;
+        };
+        const plain = (): CombatEncounterState => open(foe([FILLER]));
+
+        it('the PAID path: a card\'s DEAL line deals n more than it does unshocked', () => {
+            const base = dealtBottom(plain(), 'su-paid-deal-6');
+            expect(base).toBeGreaterThan(0);
+            expect(dealtBottom(onFoe(), 'su-paid-deal-6')).toBe(base + 2);
+        });
+
+        it('the FREE rider path (applyRiderToState): n more than unshocked', () => {
+            const base = dealt(plain(), 'su-hit-5');
+            expect(base).toBe(5);
+            expect(dealt(onFoe(), 'su-hit-5')).toBe(base + 2);
+        });
+
+        it('a THORNS or REFLECT strike (programSpikeStrike) is a DEAL: it takes n more per hit', () => {
+            const s = onFoe();
+            const spikes = { ...initProgramLedger().spikes!, thorns: 3, reflect: 50 };
+            const hits = (enemy: typeof s.enemy) => programSpikeStrike(
+                { ...initProgramLedger(), spikes }, enemy, 10,
+            ).hits;
+            // THORNS 3 and REFLECT 50% of a 10 hit (5), each plus SHOCK 2.
+            expect(hits(plain().enemy)).toEqual([{ spike: 'thorns', amount: 3 }, { spike: 'reflect', amount: 5 }]);
+            expect(hits(s.enemy)).toEqual([{ spike: 'thorns', amount: 5 }, { spike: 'reflect', amount: 7 }]);
+        });
+
+        it('a TETHER hit (the toll paid with a tether up) takes n more', () => {
+            const levy: EnemyMove = { name: 'Levy', kind: 'attack', text: 'x', damage: 1, rider: { kind: 'toll-levy', damage: 1 } };
+            const owing = (shocked: boolean): CombatEncounterState => {
+                const s = open(foe([levy]));
+                return {
+                    ...s, phase: 'phase-play',
+                    enemy: shocked ? { ...s.enemy, effects: [SHOCK_2] } : s.enemy,
+                    enemyRiders: { tollOwed: 3 },
+                    program: { ...initProgramLedger(), tetherUntil: 99, tetherCardId: 'su-hit-5' },
+                };
+            };
+            const lost = (s: CombatEncounterState): number => s.enemy.health - payTheToll(s).state.enemy.health;
+            expect(lost(owing(false))).toBe(3);
+            expect(lost(owing(true))).toBe(5);
+        });
+    });
+
+    describe('on a card DEAL the order is FROZEN doubling, then SHOCK, then VULNERABLE', () => {
+        it('(10 x 2 + 2) x 1.5 = 33, not 36 or 32', () => {
+            const vulnerable: ActiveEffect = { effectId: 'debuff_vulnerable', remainingDuration: 3, intensity: 50, appliedAt: 1, tier: 1 };
+            const s = open(foe([FILLER]));
+            const hand = yourTurn(s, ['su-deal-10']);
+            const rigged: CombatEncounterState = {
+                ...hand,
+                enemy: { ...hand.enemy, effects: [SHOCK_2, vulnerable] },
+                program: { ...(hand.program ?? initProgramLedger()), el: { ...(hand.program?.el ?? initProgramLedger().el!), frozen: true } },
+            };
+            const before = rigged.enemy.health;
+            expect(before - play(rigged, 'h0').state.enemy.health).toBe(33);
         });
     });
 });

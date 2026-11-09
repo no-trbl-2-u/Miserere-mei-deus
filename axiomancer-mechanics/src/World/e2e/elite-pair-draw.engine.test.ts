@@ -54,7 +54,7 @@ describe('A14 — every elite node draws from its row', () => {
         for (const [nodeId, foes] of rows) {
             expect(BREAKWATER_CHAPTER_KINDS[nodeId]?.kind, nodeId).toBe('elite');
             expect(foes.length, nodeId).toBeGreaterThanOrEqual(1);
-            expect(foes.length, nodeId).toBeLessThanOrEqual(2);
+            expect(foes.length, nodeId).toBeLessThanOrEqual(3);
             for (const foe of foes) {
                 expect(foe.level, `${nodeId} ${foe.slug}`).toBeLessThan(10);
                 expect(payloadDifficulty({ enemySlug: foe.slug, difficulty: foe.difficulty }), foe.slug).toBe('elite');
@@ -74,6 +74,14 @@ describe('A14 — every elite node draws from its row', () => {
         const drawn = SEEDS.map(seed => drawnAt(nodeId, seed));
         expect([...new Set(drawn)].sort()).toEqual(foes.map(f => ENEMY_REGISTRY[f.slug].id).sort());
         for (const seed of SEEDS.slice(0, 10)) expect(drawnAt(nodeId, seed), `seed ${seed}`).toBe(drawn[seed - 1]);
+    });
+
+    it('the sea cave\'s three draws come up with equal odds, none starved (MV1d)', () => {
+        const drawn = SEEDS.map(seed => drawnAt('bw-c1', seed));
+        for (const f of BW_ELITE_DRAWS['bw-c1']!) {
+            const n = drawn.filter(id => id === ENEMY_REGISTRY[f.slug].id).length;
+            expect(n, f.slug).toBeGreaterThan(SEEDS.length * 0.15);
+        }
     });
 });
 
@@ -126,8 +134,10 @@ describe('A14 — a pair is drawn 50/50 by the seeded pool roll', () => {
         expect([...seen].sort()).toEqual([ENEMY_REGISTRY['cave-choir'].id, ENEMY_REGISTRY['green-jelly'].id].sort());
     });
 
-    it('an elite node names one foe or two, never none or three', () => {
-        expect(() => eliteDrawPool('bw-c1', [])).toThrow(/one or two/);
-        expect(() => eliteDrawPool('bw-c1', [...PAIR, PAIR[0]!])).toThrow(/one or two/);
+    it('an elite node names one to three foes, never none or four', () => {
+        expect(() => eliteDrawPool('bw-c1', [])).toThrow(/one to three/);
+        expect(() => eliteDrawPool('bw-c1', [...PAIR, PAIR[0]!, PAIR[1]!])).toThrow(/one to three/);
+        expect(eliteDrawPool('bw-c1', [...PAIR, PAIR[0]!]).entries.map(e => e.weight)).toEqual([1, 1, 1]);
     });
+
 });

@@ -1114,9 +1114,12 @@ export function CombatEncounterPanel({
                                 {tipEffect.glyph.label.toUpperCase()}
                             </Text>
                             {tipEffect.gloss && <Text style={styles.tipGloss}>{tipEffect.gloss}</Text>}
-                            <Text style={styles.tipMeta}>
-                                {`intensity ${tipEffect.intensity} · ${tipEffect.duration} turns left`}
-                            </Text>
+                            {/* A chip with no badge (UNBROKEN, the lamp, the bait) has no stack or clock to print. */}
+                            {tipEffect.noBadge ? null : (
+                                <Text style={styles.tipMeta}>
+                                    {`intensity ${tipEffect.intensity} · ${tipEffect.duration} turns left`}
+                                </Text>
+                            )}
                             <View style={styles.tipBadgeWrap} pointerEvents="none">
                                 <Svg width={128} height={30} viewBox="0 0 128 30">
                                     <Polygon

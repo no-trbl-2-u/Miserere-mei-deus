@@ -261,7 +261,7 @@ export function EffectChips({ effects, onChip, align = 'flex-start', testID }: {
                     <Text
                         style={[styles.chipCaption, { color: e.glyph.color }]}
                         testID={e.effectId === 'weather-your-inferno' ? 'combat-self-burn' : `combat-caption-${e.effectId}`}
-                        numberOfLines={1}
+                        numberOfLines={2}
                         allowFontScaling={false}
                     >
                         {e.caption}
@@ -959,8 +959,8 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center', justifyContent: 'center',
     },
     // A captioned chip sits beside its caption, the pair one item of the row.
-    chipWithCaption: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-    chipCaption: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.4 },
+    chipWithCaption: { flexDirection: 'row', alignItems: 'center', gap: 4, maxWidth: '100%' },
+    chipCaption: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.4, flexShrink: 1 },
     chipBadgeText: { fontFamily: FONTS.sans, fontSize: 9, lineHeight: 11, color: HUE.white },
     // Remaining-duration tag (top-left), distinct from the stacks badge.
     chipDur: {

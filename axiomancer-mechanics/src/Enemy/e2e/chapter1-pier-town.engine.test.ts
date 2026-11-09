@@ -156,11 +156,12 @@ describe('A10 — the four foes play exactly the Appendix', () => {
 
     it('the town and pier nodes bind them, every foe under level 10', () => {
         expect(BW_ENCOUNTER_FOES['bw-h7']).toEqual({ slug: 'brine-widow', level: 4 });
-        // The recast (EN3b): the Coralback, the Saltwick Swarm and a second Brine-Widow hold the cut foes' nodes.
+        // The recast (EN3b): the Coralback, a Bilge-Stalker and a second Brine-Widow hold the cut foes' nodes;
+        // Saltwick Swarm moved to the sea cave as an elite (MV1d), so the town's two fights are ordinary ones.
         expect(BW_ENCOUNTER_FOES['bw-t1']).toEqual({ slug: 'coralback', level: 4 });
-        expect(BW_ENCOUNTER_FOES['bw-t2']).toEqual({ slug: 'saltwick-swarm', level: 5 });
+        expect(BW_ENCOUNTER_FOES['bw-t2']).toEqual({ slug: 'bilge-stalker', level: 5 });
         expect(BW_ENCOUNTER_FOES['bw-t3']).toEqual({ slug: 'brine-widow', level: 5 });
-        expect(BW_ENCOUNTER_FOES['bw-t6']).toEqual({ slug: 'saltwick-swarm', level: 5 });
+        expect(BW_ENCOUNTER_FOES['bw-t6']).toEqual({ slug: 'coralback', level: 5 });
         for (const row of Object.values(BW_ENCOUNTER_FOES)) expect(row.level).toBeLessThan(10);
     });
 });

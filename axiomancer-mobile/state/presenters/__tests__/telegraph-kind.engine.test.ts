@@ -123,7 +123,7 @@ describe('DANGER is named only once seen (A5)', () => {
     it('lists the live Quay-Crab\'s DANGER at bw-w2: unnamed until seen, then named', () => {
         const { combat } = startRealFight(realFightFixture({ level: 1 }), { deck: ['grey-strike'], seed: 1 });
         expect(buildCombatViewModel(combat, NO_DANGERS_SEEN).enemy.dangers).toEqual([{ phase: 2, name: null }]);
-        expect(buildCombatViewModel(combat, new Set(['Drop the Load'])).enemy.dangers).toEqual([{ phase: 2, name: 'Drop the Load' }]);
+        expect(buildCombatViewModel(combat, new Set(['Clamp Down'])).enemy.dangers).toEqual([{ phase: 2, name: 'Clamp Down' }]);
     });
 });
 

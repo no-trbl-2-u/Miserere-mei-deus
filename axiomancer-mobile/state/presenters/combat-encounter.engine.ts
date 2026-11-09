@@ -2275,7 +2275,9 @@ function unbrokenCaption(clause: NonNullable<NonNullable<CombatEncounterState['e
         ...((clause.shock ?? 0) > 0 ? [`SHOCK ${clause.shock}`] : []),
         ...((clause.barnacle ?? 0) > 0 ? [`BARNACLE ${clause.barnacle}`] : []),
     ];
-    return `${parts.join(', ')} at its next turn if any WARD is left`;
+    // Short on purpose: the caption is one 9 pt line beside the WARD chip at 360 wide. The keyword
+    // gloss says when it pays (the start of the foe's next turn).
+    return `${parts.join(', ')} if WARD holds`;
 }
 
 /** The die a SEIZED lifts, by the name the dice wear on the board. */
