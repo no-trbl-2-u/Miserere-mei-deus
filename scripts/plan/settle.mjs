@@ -18,6 +18,7 @@
 //     is a sighting; a new open one at 2× or more gets the same chunk); past the open budget the coldest single
 //     sightings move to Watch, and Watch drops lines unseen for `watchDays` or past its cap (makeRoom);
 //   - the pending file is deleted.
+// Miserere: a last close carrying `absorb:` is not held: settle retires the spec it empties (scripts/plan/retire-local.mjs).
 // One file's error skips that file whole (said, with why) and settles the rest. A file that would leave a spec with no
 // chunk, judged on the run's end state and never mid-run (a later file may refill it), is held back alone: it stays
 // pending, said with why, and the rest settle as if it weren't there. A chunk the tidy can't take out of a line (prose
@@ -38,6 +39,7 @@ import { DEFAULTS, fill, loadConfig } from './config.mjs';
 import { lintFootguns } from './footguns.mjs';
 import { PLACEHOLDER, parsePending, pendingFiles } from './pending.mjs';
 import { isOwner } from '../owner.mjs';
+import { absorbHint, absorbs, retireSpec } from './retire-local.mjs'; // Miserere: a spec retires on its last close's absorb: (spec 164)
 
 const CHUNK_LINE = (id) => new RegExp(`^- \\[ \\] \\*\\*${esc(id)}\\*\\*`);
 const ANY_CHUNK = /^- \[ \] \*\*(\d{2,}\.\w+)\*\*/;
@@ -1021,9 +1023,10 @@ const SPEC_PATH = /^plan\/\d{2,}-[^/]*\.md$/;
 export function holdReason(p, spec, text) {
   if (text === null || listedChunks(text).length || /not chunked yet/i.test(text)) return null;
   if (/^## Acceptance\b/m.test(text)) return `it would leave ${spec} with no chunk under open acceptance: chunk the spec, then re-run settle`;
+  if (absorbs(p, spec)) return null; // Miserere: its last close says where the rules went; settle retires it (retire-local.mjs)
   const num = path.basename(spec).split('-')[0];
   const close = p.close ? `, this close's line archived` : '';
-  return `it would leave ${spec} with no chunk: absorb the spec by hand (its lasting rules into identity/ or bearings.md, the file deleted, its plan/README.md row dropped, "· ${num} · spec complete: …" archived${close}, this pending file deleted)`;
+  return `it would leave ${spec} with no chunk: absorb the spec by hand (its lasting rules into identity/ or bearings.md, the file deleted, its plan/README.md row dropped, "· ${num} · spec complete: …" archived${close}, this pending file deleted)${absorbHint(p)}`; // Miserere: absorbHint
 }
 
 /** Whether writing `after` over `before` takes a spec's last chunk. The ladder spec empties by design: settle removes it. */
@@ -1295,6 +1298,13 @@ export function main(argv, { cwd = process.cwd(), owner } = {}) {
     return { emptiedBy, read };
   };
   const held = holdBack(settleAll);
+  // Miserere: a spec its last close emptied, held only for want of absorb:, retires now (scripts/plan/retire-local.mjs).
+  for (const [spec, p] of emptiedBy) { // Miserere: retire
+    if (!holdReason({ ...p, absorb: null }, spec, read(spec)) || holdReason(p, spec, read(spec))) continue; // Miserere: retire
+    const out = retireSpec({ spec, p, read, queue: cfg.queue }); // Miserere: retire
+    for (const [f, t] of out.writes) cache.set(f, t); // Miserere: retire
+    notes.push(...out.said); // Miserere: retire
+  } // Miserere: retire
 
   // D?slug wherever the repo says it (a spec, a code comment), once every decision has its number.
   if (renumbers.size) {
