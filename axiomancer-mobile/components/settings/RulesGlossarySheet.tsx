@@ -12,7 +12,7 @@ import React from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { SETTINGS_COPY, selectRulesGlossary } from '@/state/presenters/settings.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface RulesGlossarySheetProps {
@@ -72,12 +72,12 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 16,
         gap: 10,
     },
-    title: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.parchment },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, color: AXM.parchment },
     list: { flexGrow: 0 },
     listContent: { gap: 12 },
     entry: { gap: 2 },
-    term: { fontFamily: FONTS.gothic, fontSize: 13, letterSpacing: 1.5, color: AXM.sulfur },
-    def: { fontFamily: FONTS.serif, fontSize: 13, color: AXM.parchment },
+    term: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 13, letterSpacing: 1.5, color: AXM.sulfur },
+    def: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.parchment },
     closeButton: { borderWidth: 1, borderColor: AXM.ash, borderStyle: 'dashed', paddingVertical: 10, paddingHorizontal: 12, alignItems: 'center', marginTop: 4 },
-    closeLabel: { fontFamily: FONTS.gothic, fontSize: 13, letterSpacing: 1.5, color: AXM.bone },
+    closeLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 13, letterSpacing: 1.5, color: AXM.bone },
 }));
