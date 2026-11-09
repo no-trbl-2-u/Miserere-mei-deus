@@ -22,6 +22,14 @@ name: sim-runs
 # the scheduled run and a dispatch at `main`: a preview-build run plays and
 # posts only.
 #
+# Report: after the batch, a second job (`report`, `needs: sim`, `if: always()`, the
+# scheduled run and a dispatch at `main` only) runs `npm run sim:report` at the
+# batch's sha, which reads the sim's rows back from the Worker and commits
+# `docs/reports/sim/latest.md` and one line of `history.jsonl` to main by
+# `measured-truth`'s push path (the `nexus-loop` group, `claude[bot]`, four tries
+# of pull --rebase and push). It runs after a failed batch too, so a night with
+# breaks still reports.
+#
 # A measurement, not a gate (D57): the batch step fails only when the driver
 # crashes, a run sticks, a fight sticks or a post is refused, never on a number
 # or on the two end-of-run checks, and the job is never a required check.
@@ -69,6 +77,8 @@ jobs:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      sha: ${{ steps.sha.outputs.sha }}
     env:
       SIM_REF: ${{ github.event.workflow_run.head_sha || inputs.ref || 'main' }}
       SIM_RUNS: ${{ inputs.runs || '5' }}
@@ -96,6 +106,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ env.SIM_REF }}
+
+      - name: Record the sha the bots play
+        id: sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
@@ -134,3 +148,106 @@ jobs:
       - name: File the breaks as issues
         if: always() && env.SIM_FILES_BREAKS == 'true'
         run: npm run sim:breaks -- --file "$RUNNER_TEMP/sim-breaks.jsonl"
+
+      # The breaks file rides to the report job, which lists each break with its issue.
+      - name: Keep the breaks for the report
+        if: always() && env.SIM_FILES_BREAKS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-breaks
+          path: ${{ runner.temp }}/sim-breaks.jsonl
+          if-no-files-found: ignore
+          retention-days: 3
+
+  # The report T reads. Runs after the batch whatever its result, on the scheduled
+  # run and a dispatch at main (a preview-build run plays and posts only).
+  report:
+    name: Write the nightly report
+    needs: sim
+    if: always() && needs.sim.result != 'skipped' && needs.sim.outputs.sha != '' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.ref || 'main') == 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Joins the loop's group so this commit queues behind a tick instead of racing its push.
+    concurrency:
+      group: nexus-loop
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      issues: read
+    env:
+      GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+      GH_REPO: ${{ github.repository }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}
+      PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
+      SIM_SHA: ${{ needs.sim.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          token: ${{ secrets.GH_PAT || github.token }}
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Fetch the night's breaks
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: sim-breaks
+          path: ${{ runner.temp }}/sim-breaks
+
+      # A refused read, or a missing URL or token, fails here and writes nothing.
+      - name: Write the report
+        run: |
+          breaks=""
+          [ -f "$RUNNER_TEMP/sim-breaks/sim-breaks.jsonl" ] && breaks="--breaks $RUNNER_TEMP/sim-breaks/sim-breaks.jsonl"
+          npm run sim:report -- --build "$SIM_SHA" $breaks
+
+      - name: Commit the report
+        shell: bash
+        env:
+          GIT_AUTHOR_NAME: claude[bot]
+          GIT_AUTHOR_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: claude[bot]
+          GIT_COMMITTER_EMAIL: 41898282+claude[bot]@users.noreply.github.com
+        run: |
+          git add -- docs/reports/sim/
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "sim: nightly report $(date -u +%F)"
+          branch="${GITHUB_REF_NAME}"
+          # A run queued behind another report measured an older commit, so both
+          # append a line to history.jsonl and rewrite latest.md. Keep main's lines
+          # plus this run's new one, and this run's latest.md.
+          resolve_report() {
+            local f
+            for f in $(git diff --name-only --diff-filter=U); do
+              case "$f" in
+                docs/reports/sim/history.jsonl)
+                  { git show ":2:$f"; git show ":3:$f" | tail -n 1; } > "$f" ;;
+                docs/reports/sim/latest.md)
+                  git show ":3:$f" > "$f" ;;
+                *) return 1 ;;
+              esac
+              git add -- "$f"
+            done
+            GIT_EDITOR=true git rebase --continue
+          }
+          for delay in 2 4 8 16; do
+            { git pull --rebase origin "$branch" || resolve_report; } \
+              && git push origin "HEAD:$branch" && exit 0
+            git rebase --abort 2>/dev/null || true
+            sleep "$delay"
+          done
+          echo "::error::Could not push the sim report after 4 attempts."
+          exit 1
