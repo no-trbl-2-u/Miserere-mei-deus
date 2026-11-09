@@ -11,7 +11,7 @@ import { render, screen } from '@testing-library/react-native';
 
 import { Platform } from 'react-native';
 
-import { MapOverlays, detectMapPointer } from '../MapOverlays';
+import { MapOverlays, detectMapPointer, GESTURE_STRIP_HEIGHT } from '../MapOverlays';
 import { MAP_GESTURE_LINE } from '@/state/presenters/exploration.engine';
 
 describe('MapOverlays', () => {
@@ -84,10 +84,14 @@ describe('MapOverlays', () => {
         expect(screen.queryByText(/nodes ·/)).toBeNull();
     });
 
-    it('keeps the gesture line, the one piece of furniture left', () => {
+    it('lays the gesture line in a strip of its own, not over the map (MC1c A11)', () => {
         render(<MapOverlays />);
-        const flat = StyleSheet.flatten(screen.getByTestId('map-gesture-line').props.style);
-        expect(flat.position).toBe('absolute');
-        expect(flat.fontSize).toBeGreaterThanOrEqual(9);
+        const line = StyleSheet.flatten(screen.getByTestId('map-gesture-line').props.style);
+        const strip = StyleSheet.flatten(screen.getByTestId('map-gesture-strip').props.style);
+        // In flow: nothing absolute, so it takes a row under the frame and covers no node.
+        expect(line.position).toBeUndefined();
+        expect(strip.position).toBeUndefined();
+        expect(strip.height).toBe(GESTURE_STRIP_HEIGHT);
+        expect(line.fontSize).toBeGreaterThanOrEqual(9);
     });
 });
