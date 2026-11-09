@@ -19,6 +19,9 @@ mkdir -p "$out/shots" "$out/debug"
 
 adb wait-for-device
 adb shell 'while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done'
+# The app runs edge to edge, so Android lays its one-time "Viewing full screen"
+# card over the top of the board; mark it seen so the shots show the game.
+adb shell settings put secure immersive_mode_confirmations confirmed || true
 adb install -r -g "$apk" || { echo "::error::adb install failed for $apk"; exit 1; }
 
 adb logcat -c || true
