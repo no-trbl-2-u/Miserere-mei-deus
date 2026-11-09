@@ -177,6 +177,10 @@ describe('hermeticity guard: isolation (no disk in tests)', () => {
         // that the route is gone and the header names its callers are source
         // facts, unprovable by rendering.
         'state/e2e/app-components.engine.test.tsx',
+        // The font-width guard (phase 99.6) reads the committed font files to
+        // check the presenters' width estimates against the real faces; a
+        // source fact, unprovable by rendering.
+        'state/presenters/__tests__/font-width-estimates.guard.test.ts',
         // The stakes-card guard (phase 99.9) reads StakesCard.tsx and the
         // stakes VM source to pin which VM fields the card draws; a source
         // fact, unprovable by rendering.
