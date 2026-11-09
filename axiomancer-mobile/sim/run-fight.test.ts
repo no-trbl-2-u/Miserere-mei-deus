@@ -66,7 +66,10 @@ describe('a run with the check answered', () => {
         // The ledger behind the spare-all / finish-all comparison: both pay shillings, and a Spare forgoes its fight's XP.
         expect(spare.mercy.shillings).toBeGreaterThan(0);
         expect(finish.mercy.shillings).toBeGreaterThan(0);
-        expect(finish.mercy.xp).toBeGreaterThan(spare.mercy.xp);
+        // One seed's two runs diverge (a Spare changes what you meet next), so the XP is read over several.
+        const xpOver = (id: 'spare-all' | 'finish-all') => [1, 2, 3, 4, 5, 6]
+            .reduce((sum, seed) => sum + playRun({ policy: policyOf(id), seed, roster }).mercy.xp, 0);
+        expect(xpOver('finish-all')).toBeGreaterThan(xpOver('spare-all'));
     });
 });
 

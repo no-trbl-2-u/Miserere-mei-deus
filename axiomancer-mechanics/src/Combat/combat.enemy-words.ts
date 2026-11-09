@@ -14,6 +14,7 @@
  * `combat.enemy-words.resolve.ts`.
  */
 
+import type { UnbrokenPayout } from '../Enemy/types';
 import type { CombatEncounterState, CombatEvent, CombatThreatEffect, EnemyWordsState } from './combat.encounter.types';
 
 /** Why a FREE line is refused while TANGLE holds (the engine's refusal and the board's ribbon). */
@@ -54,14 +55,8 @@ export function soakDealWithWard(
     return { state: { ...state, enemyWords: { ...words, ward: r.ward } }, dealt: r.dealt };
 }
 
-/**
- * UNBROKEN at the start of the foe's turn, read before WARD fades: the armed
- * clause as the effects it pays, or none when no WARD is left (any left pays).
- */
-export function unbrokenPayout(state: Pick<CombatEncounterState, 'enemyWords'>): CombatThreatEffect[] {
-    const words = state.enemyWords;
-    const clause = words?.unbroken;
-    if (!words || !clause || words.ward <= 0) return [];
+/** A held UNBROKEN clause as the effects it pays at the start of your turn. */
+export function unbrokenPayout(clause: UnbrokenPayout): CombatThreatEffect[] {
     const out: CombatThreatEffect[] = [];
     if ((clause.damage ?? 0) > 0) {
         for (let h = 0; h < Math.max(1, clause.hits ?? 1); h++) out.push({ damage: clause.damage });
@@ -69,6 +64,12 @@ export function unbrokenPayout(state: Pick<CombatEncounterState, 'enemyWords'>):
     if ((clause.shock ?? 0) > 0) out.push({ shock: clause.shock });
     if ((clause.barnacle ?? 0) > 0) out.push({ barnacle: clause.barnacle });
     return out;
+}
+
+/** The events a turn start spent on its UNBROKEN payout: the last thing `startTurn` does, so its tail (none if nothing paid). */
+export function unbrokenPayoutEvents(events: readonly CombatEvent[]): CombatEvent[] {
+    const at = events.findIndex(e => e.kind === 'enemy-word' && e.word === 'unbroken' && e.op === 'spent');
+    return at < 0 ? [] : events.slice(at);
 }
 
 /** The foe's veil halves one HEAL of yours (rounded down) until its next turn. */

@@ -29,7 +29,7 @@ import Svg, { Circle, Defs, Line, Polygon, RadialGradient, Stop } from 'react-na
 import {
     initializeCombatEncounter, rollEncounterDice, playCombatCard, resolveThreatPhase,
     startTurn, endTurn, discardCombatCard, playSignatureSkill, payTheToll,
-    getFloatingDiceColors,
+    getFloatingDiceColors, unbrokenPayoutEvents,
     buildCombatSummary,
     getLogger, enemySlugOf, firedDangerKeys, rollMercyCheck, chooseMercyCheck, mercyCheckSettled,
     type CombatEncounterState, type CombatOutcome, type Character, type Enemy, type CombatEvent,
@@ -668,7 +668,12 @@ export function CombatEncounterPanel({
             });
             fxRef.current = [...ended.events, ...t.events];
             let ns = t.state;
-            if (ns.phase === 'phase-play' && ns.dice.length === 0) ns = startTurn(ns).state;
+            if (ns.phase === 'phase-play' && ns.dice.length === 0) {
+                const turn = startTurn(ns);
+                ns = turn.state;
+                // A held UNBROKEN clause lands here: its hits land on the board with the rest of the resolution.
+                fxRef.current = [...fxRef.current, ...unbrokenPayoutEvents(turn.events)];
+            }
             log.info('combat', 'end-phase:tray-rolled', { turn: ns.turn, dice: ns.dice.length });
             return ns;
         });

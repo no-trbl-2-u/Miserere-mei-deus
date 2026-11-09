@@ -32,7 +32,7 @@ import type { Enemy, EnemyMoveRider, EnemyMoveRiderKind } from '../Enemy/types';
 import { lookupEffect, applyEffect } from '../Effects';
 import { BARNACLE_ID } from '../Cards/library/enemy-curses.cards';
 import { isCurseCard } from './combat.card-program';
-import { unbrokenPayout, wordsOf } from './combat.enemy-words';
+import { wordsOf } from './combat.enemy-words';
 import { foeInferno, initElementState, weatherEvents, yourInferno } from './combat.elements';
 import { initProgramLedger } from './combat.card-program';
 import { initSpikeState, spikeEvents } from './combat.spikes';
@@ -357,13 +357,6 @@ export function planRiderTurn(state: CombatEncounterState, action: CombatThreatA
             }
             delete riders.delayedHit;
         }
-    }
-    // UNBROKEN pays before the move, read while the WARD still stands. A
-    // hindered foe fires none of this, and the clause goes with its WARD.
-    const paid = unbrokenPayout(state);
-    if (paid.length > 0) {
-        effects = [...paid, ...effects];
-        events.push({ kind: 'enemy-word', word: 'unbroken', op: 'spent', amount: 1 });
     }
     return { effects, riders, events };
 }

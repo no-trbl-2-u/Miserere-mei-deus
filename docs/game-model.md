@@ -283,10 +283,13 @@ the Expo app (`axiomancer-mobile`) presents it.
     side, and only foes place it so far. Counter: GUARD still blocks the larger
     hit. A count, not scaled with level.
   - **UNBROKEN** is a clause on a WARD move (`EnemyMove.unbroken`: hits, SHOCK
-    or BARNACLE). At the start of the foe's next turn, if any WARD is left, it
-    pays out, before the foe's move; broken WARD pays nothing, and a partly
-    broken WARD pays in full. A foe denied its turn pays nothing. Counter:
-    break the WARD.
+    or BARNACLE). If any of the WARD is left when your turn ends (read at the
+    start of the foe's turn, before WARD fades), the clause is held and pays at
+    the start of your next turn, whether or not the foe got to act in between;
+    broken WARD pays nothing, and a partly broken WARD pays in full. Its hits
+    are DEALs: SHOCK adds to them, BLIZZARD cuts them, and the GUARD the foe's
+    turn left, then BARRIER, soak them. A foe dead before your turn starts pays
+    nothing. Counter: break the WARD.
   A foe-only counter (the Tithe-Collector's LEDGER, a hoard) is fight state
   on the pane, not a word. No live foe carries a word until the Breakwater
   foes land.

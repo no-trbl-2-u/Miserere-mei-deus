@@ -82,7 +82,7 @@ import {
 import { weatherEvents } from './combat.elements';
 import { equipmentTurnStart, fireEquipment, initEquipmentDice, initEquipmentEffects } from './combat.equipment-effects';
 import { spikeEvents } from './combat.spikes';
-import { TANGLE_FREE_REFUSAL, cutGuardGain, soakDealWithWard } from './combat.enemy-words';
+import { TANGLE_FREE_REFUSAL, cutGuardGain, soakDealWithWard, unbrokenPayout } from './combat.enemy-words';
 import {
     applyEnemyWordEffects, enemyWordsAfterPlay, enemyWordsFoeTurnStart, enemyWordsPlayerTurnStart,
     enemyWordsUndertow,
@@ -434,6 +434,14 @@ export function startTurn(
         started = withLog(pt.state, pt.events);
         events.push(...pt.events);
         // Your INFERNO can kill you at the start of your turn.
+        if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
+        if (isDefeated(started.enemy)) return endCombat(started, 'victory', events);
+    }
+    // A held UNBROKEN clause pays last, so the board's fx can read it off the tail.
+    const paid = payHeldClause(started, rng);
+    if (paid.events.length > 0) {
+        started = withLog(paid.state, paid.events);
+        events.push(...paid.events);
         if (isDefeated(started.player)) return endCombat(started, 'defeat', events);
         if (isDefeated(started.enemy)) return endCombat(started, 'victory', events);
     }
@@ -1290,6 +1298,123 @@ function soakFlatHit(
 }
 
 /**
+ * A hit that got past the wall lands on the player. Returns the VITAE it took
+ * (a death ward can shrink it to nothing). Shared by the foe's move and a held
+ * UNBROKEN payout at the start of your turn.
+ */
+function strikePlayer(
+    state: CombatEncounterState, playerIn: Character, enemyId: string, dmgIn: number, blocked: number, events: CombatEvent[],
+): { player: Character; dealt: number } {
+    // A death ward keeps the player at 1 VITAE this turn.
+    const dmg = programClampDamage(state, playerIn.health, dmgIn);
+    let player = applyDamage(playerIn, dmg);
+    // The board's hit effects and the log's line wait on this. A hit the
+    // ward stopped whole took nothing, so it says nothing.
+    if (dmg > 0) events.push({ kind: 'damage-dealt', cardId: enemyId, target: 'self', amount: dmg, blocked });
+    // The 'damage-instance' clock, player bearer — a threat
+    // hit that LANDS advances every damage-instance-clocked
+    // DoT the player carries (enemy threat riders land
+    // `debuff_bleed` on the player). Self-costs (RECOIL)
+    // deliberately never advance it — the blood price must
+    // not self-combo with enemy-applied BLEED.
+    const selfClock = fireDotTrigger(player, 'damage-instance', state.round);
+    if (selfClock.damage > 0) {
+        player = selfClock.target;
+        if (state.program?.deathWardRound === state.round && player.health < 1) player = { ...player, health: 1 };
+        for (const t of selfClock.perEffect) {
+            events.push({ kind: 'dot-tick', effectId: t.effectId, label: t.label, amount: t.amount, target: 'self' });
+        }
+    }
+    return { player, dealt: dmg };
+}
+
+/** THORNS and REFLECT answer a strike, each a DEAL off the pre-GUARD hit. */
+function spikesAnswerStrike(
+    stateIn: CombatEncounterState, enemyIn: Enemy, strike: number, unhurt: boolean, directDamageIn: number, events: CombatEvent[],
+): { state: CombatEncounterState; enemy: Enemy; directDamage: number } {
+    let state = stateIn;
+    let enemy = enemyIn;
+    let directDamage = directDamageIn;
+    if (state.program) {
+        const spikes = programSpikeStrike(state.program, enemy, strike, { round: state.round, unhurt });
+        if (spikes.hits.length > 0) {
+            events.push(...weatherEvents(state.program.el, spikes.ledger.el));
+            state = { ...state, program: spikes.ledger };
+            for (const h of spikes.hits) {
+                if (isDefeated(enemy) || h.amount <= 0) continue;
+                const hit = applyEnemyDamage(enemy, h.amount, state.round, events);
+                enemy = hit.enemy;
+                directDamage += h.amount + hit.clockDamage;
+                events.push({ kind: 'spike-struck', spike: h.spike, amount: h.amount });
+            }
+        }
+    }
+    return { state, enemy, directDamage };
+}
+
+/**
+ * Start of your turn: a held UNBROKEN clause pays. Its hits are the foe's DEALs
+ * sized as ever (SHOCK and VULNERABLE included) and meet BLIZZARD, then the
+ * GUARD the foe's turn left, then BARRIER. A parry and "its next attack deals
+ * less" wait for the foe's swing. Whatever GUARD is left after goes, as it
+ * would have at the foe's turn end, unless a card keeps it.
+ */
+function payHeldClause(stateIn: CombatEncounterState, rng: () => number): { state: CombatEncounterState; events: CombatEvent[] } {
+    const held = stateIn.enemyWords?.unbrokenHeld;
+    if (!held || isDefeated(stateIn.player) || isDefeated(stateIn.enemy)) return { state: stateIn, events: [] };
+    const { unbrokenHeld: _paid, ...words } = stateIn.enemyWords!;
+    const paying: CombatEncounterState = { ...stateIn, enemyWords: words };
+    const events: CombatEvent[] = [{ kind: 'enemy-word', word: 'unbroken', op: 'spent', amount: 1 }];
+    const effects = unbrokenPayout(held);
+    const frozen = programFrozenCheck(paying, sizeFoeHits(paying, effects));
+    let state = frozen.state;
+    events.push(...frozen.events);
+    let player = state.player;
+    let enemy = state.enemy;
+    let guard = (state.guard ?? 0) + (held.guardLeft ?? 0);
+    let barrier = state.barrier ?? 0;
+    let directDamage = state.directDamageDealt;
+    let dealt = 0;
+    let softened = 0;
+    for (const size of sizeFoeHits(state, effects)) {
+        if (isDefeated(enemy) || isDefeated(player)) break;
+        const cut = Math.min(size, frozen.blizzard);
+        softened += cut;
+        const strike = size - cut;
+        const barrierBefore = barrier;
+        const soak = soakFlatHit(strike, { guard, barrier });
+        guard = soak.guard;
+        barrier = soak.barrier;
+        if (barrier < barrierBefore) events.push({ kind: 'barrier-absorbed', amount: barrierBefore - barrier });
+        if (soak.dealt > 0) {
+            const struck = strikePlayer(state, player, enemy.id, soak.dealt, strike - soak.dealt, events);
+            player = struck.player;
+            dealt += struck.dealt;
+        }
+        const answered = spikesAnswerStrike(state, enemy, strike, dealt === 0, directDamage, events);
+        state = answered.state;
+        enemy = answered.enemy;
+        directDamage = answered.directDamage;
+    }
+    if (softened > 0) events.push({ kind: 'blizzard-softened', amount: softened });
+    const landed = applyEnemyWordEffects({ ...state, player, enemy }, effects, rng, { atYourTurnStart: true });
+    events.push(...landed.events);
+    const taken = Math.max(0, stateIn.player.health - landed.state.player.health);
+    return {
+        state: {
+            ...landed.state,
+            // The GUARD the foe's turn left is spent first; only a kept GUARD outlasts the payout.
+            guard: Math.min(stateIn.guard ?? 0, guard),
+            barrier,
+            directDamageDealt: directDamage,
+            enemyDamageThisTurn: (stateIn.enemyDamageThisTurn ?? 0) + dealt,
+            ...(landed.state.program ? { program: programRecordDamage(landed.state.program, taken) } : {}),
+        },
+        events,
+    };
+}
+
+/**
  * Resolves the current threat phase (HP model): the enemy executes its
  * telegraphed threat action on the player UNLESS a control status hinders it
  * (`canAct` → skipTurn). This is how control "hinders the enemy" — it loses its
@@ -1470,52 +1595,19 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
                     events.push({ kind: 'barrier-absorbed', amount: barrierAbsorbed });
                 }
                 if (dmg > 0) {
-                    // What the wall took, read before the ward can shrink the hit further.
-                    const blocked = preSoakDmg - dmg;
-                    // A death ward keeps the player at 1 VITAE this turn.
-                    dmg = programClampDamage(state, player.health, dmg);
-                    player = applyDamage(player, dmg);
-                    // The board's hit effects and the log's line wait on this. A hit the
-                    // ward stopped whole took nothing, so it says nothing.
-                    if (dmg > 0) events.push({ kind: 'damage-dealt', cardId: enemy.id, target: 'self', amount: dmg, blocked });
-                    enemyDamageDealt += dmg;
+                    const struck = strikePlayer(state, player, enemy.id, dmg, preSoakDmg - dmg, events);
+                    player = struck.player;
+                    enemyDamageDealt += struck.dealt;
                     convictionStolen += riderStealPerHit(rider);
-                    // The 'damage-instance' clock, player bearer — a threat
-                    // hit that LANDS advances every damage-instance-clocked
-                    // DoT the player carries (enemy threat riders land
-                    // `debuff_bleed` on the player). Self-costs (RECOIL)
-                    // deliberately never advance it — the blood price must
-                    // not self-combo with enemy-applied BLEED.
-                    const selfClock = fireDotTrigger(player, 'damage-instance', state.round);
-                    if (selfClock.damage > 0) {
-                        player = selfClock.target;
-                        if (state.program?.deathWardRound === state.round && player.health < 1) player = { ...player, health: 1 };
-                        for (const t of selfClock.perEffect) {
-                            events.push({ kind: 'dot-tick', effectId: t.effectId, label: t.label, amount: t.amount, target: 'self' });
-                        }
-                    }
                 }
                 else {
                     attacksFullyBlocked += 1;
                     blockedBlowTotal += preSoakDmg;
                 }
-                // THORNS and REFLECT answer the strike, each a DEAL off the pre-GUARD hit.
-                if (state.program) {
-                    const spikes = programSpikeStrike(state.program, enemy, preSoakDmg, {
-                        round: state.round, unhurt: enemyDamageDealt === 0,
-                    });
-                    if (spikes.hits.length > 0) {
-                        events.push(...weatherEvents(state.program.el, spikes.ledger.el));
-                        state = { ...state, program: spikes.ledger };
-                        for (const h of spikes.hits) {
-                            if (isDefeated(enemy) || h.amount <= 0) continue;
-                            const hit = applyEnemyDamage(enemy, h.amount, state.round, events);
-                            enemy = hit.enemy;
-                            directDamage += h.amount + hit.clockDamage;
-                            events.push({ kind: 'spike-struck', spike: h.spike, amount: h.amount });
-                        }
-                    }
-                }
+                const answered = spikesAnswerStrike(state, enemy, preSoakDmg, enemyDamageDealt === 0, directDamage, events);
+                state = answered.state;
+                enemy = answered.enemy;
+                directDamage = answered.directDamage;
             }
             if (eff.effectId) {
                 const def = lookupEffectDef(eff.effectId);
@@ -1652,6 +1744,11 @@ export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => num
         threatMarks,
         phaseResults: [...state.phaseResults, result],
     };
+    // A held UNBROKEN clause's hits still meet the GUARD this turn leaves: it goes from the board now and waits with the clause.
+    const heldClause = next.enemyWords?.unbrokenHeld;
+    if (heldClause && guard > 0 && !programHoldsGuard(state)) {
+        next = { ...next, enemyWords: { ...next.enemyWords!, unbrokenHeld: { ...heldClause, guardLeft: guard } } };
+    }
     // The Toll-Keeper's TOLL and the Tide-Gate's TIDE rise as its turn ends (phase EN1l).
     if (hasEnemyPhases(enemy)) next = causewayFoeTurnEnd(next, hindered ? undefined : rider);
 
@@ -2287,6 +2384,11 @@ export function threatHits(state: CombatEncounterState, effects?: readonly Comba
     // A move's rider shapes its hits from the live board (`planRiderTurn`).
     const moveEffects = effects ?? planRiderTurn(state, phase.threatAction).effects;
     if (!canAct(state.enemy.effects as ActiveEffect[]).canAct) return [];
+    return sizeFoeHits(state, moveEffects);
+}
+
+/** Each of these effects' hits as the engine sizes it. A held UNBROKEN payout comes here direct: a denied foe still pays. */
+function sizeFoeHits(state: CombatEncounterState, effects: readonly CombatThreatEffect[]): number[] {
     const isBossTier = state.enemy.difficulty === 'boss' || state.enemy.difficulty === 'unique';
     const escalationRate = THREAT_ESCALATION_PER_ROUND * (isBossTier ? THREAT_ESCALATION_BOSS_MULT : 1);
     const escalation = !escalationApplies(state.enemy) ? 1
@@ -2295,7 +2397,7 @@ export function threatHits(state: CombatEncounterState, effects?: readonly Comba
         * (1 + Math.min(STAGE_THREAT_BONUS_CAP, state.stageThreatBonus ?? 0));
     const shock = getDamageTakenFlat(state.player);
     const taken = getDamageTakenMultiplier(state.player);
-    return moveEffects
+    return effects
         .filter(e => (e.damage ?? 0) > 0)
         .map(e => Math.round(((e.damage as number) * THREAT_DAMAGE_SCALE * mult + shock) * taken));
 }

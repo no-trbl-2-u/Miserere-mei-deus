@@ -2276,7 +2276,7 @@ function unbrokenCaption(clause: NonNullable<NonNullable<CombatEncounterState['e
         ...((clause.barnacle ?? 0) > 0 ? [`BARNACLE ${clause.barnacle}`] : []),
     ];
     // Short on purpose: the caption is one 9 pt line beside the WARD chip at 360 wide. The keyword
-    // gloss says when it pays (the start of the foe's next turn).
+    // gloss says when it pays (the start of your next turn).
     return `${parts.join(', ')} if WARD holds`;
 }
 

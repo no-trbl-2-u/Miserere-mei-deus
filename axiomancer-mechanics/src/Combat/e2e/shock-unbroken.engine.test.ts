@@ -4,9 +4,9 @@
  *   · SHOCK n: every DEAL against the bearer deals n more, per hit, before
  *     VULNERABLE. It lasts 3 turns; a new SHOCK resets the turns and adds to n.
  *     It works on either side.
- *   · UNBROKEN: a clause on a WARD move. It pays out at the start of the foe's
- *     next turn if any WARD is left, before the foe's move; broken WARD pays
- *     nothing, and a partly broken WARD pays in full.
+ *   · UNBROKEN: a clause on a WARD move. If any WARD is left when your turn
+ *     ends it is held, and pays at the start of your next turn, whether or not
+ *     the foe got to act; broken WARD pays nothing, a partly broken WARD in full.
  *
  * Fixture moves: no live foe plays either word until the recast foes land.
  * Fixed RNG; no disk / network / TTY.
@@ -31,6 +31,7 @@ import {
 import { getThreatSequence, scaleMoveNumber } from '../combat.threat';
 import { initProgramLedger, programSpikeStrike } from '../combat.card-program';
 import { getDamageTakenFlat } from '../effects';
+import { unbrokenPayoutEvents } from '../combat.enemy-words';
 import { BARNACLE_ID } from '../../Cards/library/enemy-curses.cards';
 import type { CombatEncounterState, CombatEvent } from '../combat.encounter.types';
 
@@ -264,61 +265,143 @@ describe('UNBROKEN', () => {
         expect(moveKeywords(RIPOSTE)).toEqual(['ward', 'unbroken']);
     });
 
-    it('WARD whole: pays out at the start of the foe\'s next turn, before its move, and the clause is spent', () => {
+    /** The foe's next turn, then the start of yours: the clause is read on the first and pays on the second. */
+    const SPENT = { kind: 'enemy-word', word: 'unbroken', op: 'spent', amount: 1 } as const;
+    const payOut = (s: CombatEncounterState) => startTurn(foeTurn(s).state, rng);
+    const DRIFT: EnemyMove = { name: 'Drift', kind: 'defend', text: 'WARD 8. UNBROKEN: SHOCK 1.', ward: 8, unbroken: { shock: 1 } };
+    const SHELL: EnemyMove = { name: 'Shell', kind: 'defend', text: 'WARD 10. UNBROKEN: BARNACLE 1.', ward: 10, unbroken: { barnacle: 1 } };
+
+    it('nothing fires at the start of the foe\'s turn: the clause is held', () => {
         const r = foeTurn(yourTurn(armed([RIPOSTE])));
-        expect(hitsOnYou(r.events)).toEqual([4, 4]);
-        expect(r.events).toContainEqual({ kind: 'enemy-word', word: 'unbroken', op: 'spent', amount: 1 });
+        expect(hitsOnYou(r.events)).toEqual([]);
+        expect(r.events).not.toContainEqual(SPENT);
         expect(r.state.enemyWords?.ward).toBe(0);
         expect(r.state.enemyWords?.unbroken).toBeUndefined();
+        expect(r.state.enemyWords?.unbrokenHeld).toMatchObject({ damage: 4, hits: 2 });
+    });
+
+    it('WARD whole: a DEAL pays at the start of your next turn and the clause is spent', () => {
+        const r = payOut(yourTurn(armed([RIPOSTE])));
+        expect(hitsOnYou(r.events)).toEqual([4, 4]);
+        expect(r.events).toContainEqual(SPENT);
+        expect(r.state.enemyWords?.unbrokenHeld).toBeUndefined();
     });
 
     it('WARD partly broken: any left pays, in full', () => {
         const s = yourTurn(armed([RIPOSTE]), ['su-hit-5']);
         const broken = play(s, 'h0').state;
         expect(broken.enemyWords?.ward).toBe(5);
-        expect(hitsOnYou(foeTurn(broken).events)).toEqual([4, 4]);
+        expect(hitsOnYou(payOut(broken).events)).toEqual([4, 4]);
     });
 
-    it('WARD gone: pays nothing and the clause is spent', () => {
+    it('WARD gone: pays nothing, at either turn, and the clause is gone', () => {
         const s = yourTurn(armed([RIPOSTE]), ['su-hit-30']);
         const broken = play(s, 'h0').state;
         expect(broken.enemyWords?.ward).toBe(0);
-        const r = foeTurn(broken);
+        const foes = foeTurn(broken);
+        expect(foes.state.enemyWords?.unbroken).toBeUndefined();
+        expect(foes.state.enemyWords?.unbrokenHeld).toBeUndefined();
+        const r = startTurn(foes.state, rng);
         expect(hitsOnYou(r.events)).toEqual([]);
-        expect(r.events.some(e => e.kind === 'enemy-word' && e.word === 'unbroken')).toBe(false);
-        expect(r.state.enemyWords?.unbroken).toBeUndefined();
+        expect(r.events).not.toContainEqual(SPENT);
     });
 
-    it('its hits are DEALs: GUARD soaks them and SHOCK adds to them', () => {
+    it('with GUARD up: the GUARD left from the foe\'s turn soaks the payout first, then goes', () => {
         const s = yourTurn(armed([RIPOSTE]));
-        expect(hitsOnYou(foeTurn({ ...s, guard: 5 }).events)).toEqual([3]);
-        expect(hitsOnYou(foeTurn({ ...s, player: { ...s.player, effects: [SHOCK_2] } }).events)).toEqual([6, 6]);
+        const r = payOut({ ...s, guard: 5 });
+        expect(hitsOnYou(r.events)).toEqual([3]);
+        expect(r.state.guard ?? 0).toBe(0);
+        expect(r.state.enemyWords?.unbrokenHeld).toBeUndefined();
     });
 
-    it('pays a status: SHOCK lands', () => {
-        const drift: EnemyMove = { name: 'Drift', kind: 'defend', text: 'WARD 8. UNBROKEN: SHOCK 1.', ward: 8, unbroken: { shock: 1 } };
-        expect(enemyPhaseKeywords(foe([drift]))).toEqual(['ward', 'shock', 'unbroken']);
-        const r = foeTurn(yourTurn(armed([drift])));
+    it('the GUARD left over stays for the payout alone: unspent, it is gone', () => {
+        const s = yourTurn(armed([RIPOSTE]));
+        const foes = foeTurn({ ...s, guard: 50 });
+        expect(foes.state.guard ?? 0).toBe(0);
+        const r = startTurn(foes.state, rng);
+        expect(hitsOnYou(r.events)).toEqual([]);
+        expect(r.state.guard ?? 0).toBe(0);
+    });
+
+    it('its hits are DEALs: SHOCK adds to them', () => {
+        const s = yourTurn(armed([RIPOSTE]));
+        const shocked = { ...s, player: { ...s.player, effects: [{ ...SHOCK_2, remainingDuration: 3 }] } };
+        expect(hitsOnYou(payOut(shocked).events)).toEqual([6, 6]);
+    });
+
+    it('pays a status: SHOCK lands and lasts the foe\'s next 3 attacks', () => {
+        expect(enemyPhaseKeywords(foe([DRIFT]))).toEqual(['ward', 'shock', 'unbroken']);
+        const hit: EnemyMove = { name: 'Hit', kind: 'attack', text: 'DEAL 3.', damage: 3 };
+        const r = payOut(yourTurn(armed([DRIFT, hit, hit, hit, hit, hit])));
+        expect(r.events).toContainEqual({ kind: 'enemy-word', word: 'shock', op: 'gained', amount: 1 });
         expect(shockOf(r.state)).toMatchObject({ intensity: 1, remainingDuration: 3 });
+        const seen: number[] = [];
+        let s = r.state;
+        for (let i = 0; i < 4; i++) {
+            const turn = foeTurn({ ...s, guard: 0 });
+            seen.push(...hitsOnYou(turn.events));
+            s = startTurn(turn.state, rng).state;
+        }
+        expect(seen).toEqual([4, 4, 4, 3]);
     });
 
-    it('pays Curses: a BARNACLE joins your hand', () => {
-        const shell: EnemyMove = { name: 'Shell', kind: 'defend', text: 'WARD 10. UNBROKEN: BARNACLE 1.', ward: 10, unbroken: { barnacle: 1 } };
-        const r = foeTurn(yourTurn(armed([shell])));
+    it('pays Curses: a BARNACLE joins your hand at the start of your turn', () => {
+        const foes = foeTurn(yourTurn(armed([SHELL])));
+        expect(foes.state.hand.filter(h => h.cardId === BARNACLE_ID)).toHaveLength(0);
+        const r = startTurn(foes.state, rng);
         expect(r.state.hand.filter(h => h.cardId === BARNACLE_ID)).toHaveLength(1);
     });
 
-    it('a foe denied its turn pays nothing, and the clause goes with its WARD', () => {
+    it('a foe denied its turn still pays: it is held, and lands at the start of your turn', () => {
         const s = yourTurn(armed([RIPOSTE]));
         const stone: ActiveEffect = { effectId: 'debuff_petrify', remainingDuration: 3, intensity: 1, appliedAt: 1, tier: 1 };
-        const r = foeTurn({ ...s, enemy: { ...s.enemy, effects: [stone] } });
-        expect(hitsOnYou(r.events)).toEqual([]);
-        expect(r.state.enemyWords?.unbroken).toBeUndefined();
+        const foes = foeTurn({ ...s, enemy: { ...s.enemy, effects: [stone] } });
+        expect(hitsOnYou(foes.events)).toEqual([]);
+        expect(foes.state.enemyWords?.unbrokenHeld).toMatchObject({ damage: 4, hits: 2 });
+        expect(hitsOnYou(startTurn(foes.state, rng).events)).toEqual([4, 4]);
     });
 
-    it('the wall math shows the payout only while WARD stands', () => {
-        const s = yourTurn(armed([RIPOSTE]), ['su-hit-30']);
-        expect(threatHits(s)).toEqual([4, 4]);
-        expect(threatHits(play(s, 'h0').state)).toEqual([]);
+    it('a clause armed while another is held: each pays at its own turn', () => {
+        const first = yourTurn(armed([RIPOSTE, DRIFT]));
+        const foes = foeTurn(first);
+        expect(foes.state.enemyWords).toMatchObject({ unbrokenHeld: { damage: 4, hits: 2 }, unbroken: { shock: 1 } });
+        const paidFirst = startTurn(foes.state, rng);
+        expect(hitsOnYou(paidFirst.events)).toEqual([4, 4]);
+        expect(shockOf(paidFirst.state)).toBeUndefined();
+        expect(paidFirst.state.enemyWords?.unbroken).toEqual({ shock: 1 });
+        const paidSecond = payOut({ ...paidFirst.state, guard: 0 });
+        expect(shockOf(paidSecond.state)).toMatchObject({ intensity: 1, remainingDuration: 3 });
+        expect(hitsOnYou(paidSecond.events)).toEqual([]);
+    });
+
+    it('a foe dead before your turn starts pays nothing', () => {
+        const foes = foeTurn(yourTurn(armed([RIPOSTE])));
+        const dead = { ...foes.state, enemy: { ...foes.state.enemy, health: 0 } };
+        const r = startTurn(dead, rng);
+        expect(hitsOnYou(r.events)).toEqual([]);
+        expect(r.events).not.toContainEqual(SPENT);
+    });
+
+    it('a payout that kills you ends the fight cleanly at the start of your turn', () => {
+        const s = yourTurn(armed([RIPOSTE]));
+        const r = payOut({ ...s, player: { ...s.player, health: 5 } });
+        expect(r.state.finalOutcome).toBe('defeat');
+        expect(r.state.phase).toBe('complete');
+        expect(r.state.player.health).toBe(0);
+    });
+
+    it('the board reads the payout off the tail of the turn start, and nothing else of it', () => {
+        const r = payOut(yourTurn(armed([RIPOSTE])));
+        const tail = unbrokenPayoutEvents(r.events);
+        expect(tail[0]).toEqual(SPENT);
+        expect(hitsOnYou(tail)).toEqual([4, 4]);
+        expect(tail.some(e => e.kind === 'turn-dice-rolled' || e.kind === 'dice-rolled')).toBe(false);
+        expect(unbrokenPayoutEvents(startTurn(foeTurn(open(foe([FILLER]))).state, rng).events)).toEqual([]);
+    });
+
+    it('the wall math reads only the foe\'s own move: the payout lands at your turn start, off it', () => {
+        const s = yourTurn(armed([RIPOSTE]));
+        expect(threatHits(s)).toEqual([]);
+        expect(projectIncomingThreat(s).projectedDamage).toBe(0);
     });
 });

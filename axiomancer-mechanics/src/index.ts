@@ -88,6 +88,8 @@ export {
     projectCombatOutcome,
     // Floating dice save-back
     getFloatingDiceColors,
+    // A held UNBROKEN clause's events (the board's fx)
+    unbrokenPayoutEvents,
     // Card programs (Global, Curse, SACRIFICE): the reads the board needs
     programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isProgramCard, isCurseCard,
     GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,

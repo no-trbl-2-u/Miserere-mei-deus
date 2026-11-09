@@ -276,6 +276,9 @@ export interface EnemyWordsState {
     barnacleUid?: number;
     /** UNBROKEN: the clause the foe's last WARD move armed; read and cleared at the start of its next turn. */
     unbroken?: UnbrokenPayout;
+    /** UNBROKEN: a clause whose WARD survived your turn, waiting to pay at the start of your next one.
+     *  `guardLeft` is the GUARD the foe's turn left, which would have gone at its end and meets these hits first. */
+    unbrokenHeld?: UnbrokenPayout & { guardLeft?: number };
 }
 
 export interface CombatThreatAction {
