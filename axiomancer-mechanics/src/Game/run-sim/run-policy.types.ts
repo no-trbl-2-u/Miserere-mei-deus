@@ -24,6 +24,7 @@
 import type { CharacterDefinition } from '../../Character/roster';
 import type { BaseStats } from '../../Character/types';
 import type { CombatSimPolicy } from '../../Combat/combat.sim-policies';
+import type { DieGearColor } from '../../Character/dieGear.reducer';
 import type { HazardPolicyId } from '../../World/Hazard/hazard.sim';
 
 /** One legal road from where the player stands. */
@@ -151,6 +152,43 @@ export interface RunVillageContext {
     readonly removal: { readonly price: number; readonly enabled: boolean; readonly cardIds: readonly string[] } | null;
     readonly hasAnvil: boolean;
     readonly deck: readonly string[];
+    /** The engine's seeded stream, so a seed replays the same spending. */
+    readonly rng: () => number;
+}
+
+/** The anvil's service prices in shillings, read by the driver from the blacksmith code. */
+export interface RunAnvilPrices {
+    readonly hone: number;
+    readonly temper: number;
+    readonly upgrade: number;
+}
+
+/** A village's anvil, asked before the village's other steps. */
+export interface RunAnvilContext {
+    readonly health: number;
+    readonly maxHealth: number;
+    /** The purse, in shillings. */
+    readonly currency: number;
+    /** The village bed's price, or null when the village lets no bed. */
+    readonly bedPrice: number | null;
+    readonly prices: RunAnvilPrices;
+    /** The distinct deck cards that can take one more upgrade. */
+    readonly upgradableCardIds: readonly string[];
+    readonly deck: readonly string[];
+    readonly baseStats: Readonly<BaseStats>;
+    /** The engine's seeded stream, so a seed replays the same spending. */
+    readonly rng: () => number;
+}
+
+/**
+ * An anvil answer: the shillings the visit may spend (0 skips the anvil), the
+ * one card to upgrade first or none, and the die colours to hone and temper,
+ * in order. The driver carries it out; a refused step ends that colour.
+ */
+export interface RunAnvilDecision {
+    readonly budget: number;
+    readonly upgradeCardId: string | null;
+    readonly colors: readonly DieGearColor[];
 }
 
 /** A village answer, carried out in order: rest, buy, remove, then leave. */
@@ -229,6 +267,8 @@ export interface RunPolicy {
     chooseRest(ctx: RunRestContext): RunRestDecision;
     /** Which loot-cache offer to take. */
     chooseCacheOffer(ctx: RunCacheContext): 'card' | 'item';
+    /** What to spend at a village's anvil, asked before the rest of the village (only when it has one). */
+    visitAnvil(ctx: RunAnvilContext): RunAnvilDecision;
     /** What to do at a village before leaving. */
     visitVillage(ctx: RunVillageContext): RunVillageDecision;
     /** How to play a hazard: a `hazard.sim.ts` policy. */

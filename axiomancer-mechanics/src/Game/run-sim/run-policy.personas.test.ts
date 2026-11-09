@@ -63,7 +63,7 @@ describe('rests and beds', () => {
         expect(p.chooseRest(rest(line))).toEqual({ offer: 'upgrade', cardId: 'c1' });
         expect(p.chooseRest(rest(100, false))).toEqual({ offer: 'rest' });
         const village = (health: number, price = 5, currency = 9) => p.visitVillage({
-            health, maxHealth: 100, currency, rest: { price, enabled: true }, shop: [], removal: null, hasAnvil: false, deck: [],
+            health, maxHealth: 100, currency, rest: { price, enabled: true }, shop: [], removal: null, hasAnvil: false, deck: [], rng: () => 0.5,
         });
         expect(village(line - 1).rest).toBe(true);
         expect(village(line).rest).toBe(false);

@@ -8,10 +8,11 @@
  *
  * - open at character select as the first character of the live roster;
  * - take the first card a reward offers, and the elite upgrade when it
- *   improves a card (the pool is already the character's lanes, D108);
+ *   improves a card (the pool is already the character's lanes);
  * - take a cache's card, and the first card a hazard pays;
  * - wear every item they can, and raise the character's highest stat;
- * - buy nothing and remove nothing at a village (a bed when hurt);
+ * - spend at a village's anvil (`greedyAnvil`, favouring the highest stat's die),
+ *   buy nothing and remove nothing there (a bed when hurt);
  * - fight with the player witness (`PLAYER_WITNESS`: it kills every foe, so a
  *   persona earns XP and drafts).
  *
@@ -22,6 +23,7 @@
  */
 
 import { PLAYER_WITNESS } from './player-witness';
+import { greedyAnvil, highestStat } from './run-policy.anvil';
 import { nearestRoad } from './run-policy.wanderer';
 import type {
     RunFightContext,
@@ -90,6 +92,7 @@ function persona(spec: PersonaSpec): RunPolicy {
             return { offer: 'rest' };
         },
         chooseCacheOffer: () => 'card',
+        visitAnvil: (ctx) => greedyAnvil(ctx, { firstColor: highestStat(ctx.baseStats) }),
         visitVillage: (ctx) => ({
             rest: ctx.rest !== null && ctx.rest.enabled && ctx.rest.price <= ctx.currency
                 && below(ctx.health, ctx.maxHealth, spec.restBelow),

@@ -14,6 +14,8 @@
  * - at a rest, rests under its VITAE threshold and otherwise upgrades a card
  *   of its lane; at a village, rests under the threshold, buys its lane's
  *   cards and has off-lane cards removed while it can pay;
+ * - at a village's anvil, spends the purse (less the bed's price when under half
+ *   VITAE) on a card of its lane, then its lane's stat die (`greedyAnvil`);
  * - walks to an adjacent rest or village under its threshold, and walks away
  *   from an elite (WITHDRAW) under it;
  * - raises its lane's stat (the colour its lane's cards are paid in);
@@ -26,6 +28,7 @@
 
 import { CHARACTER_GREY_DECK } from '../../Character/roster';
 import type { CombatSimPolicy } from '../../Combat/combat.sim-policies';
+import { greedyAnvil } from './run-policy.anvil';
 import { laneFightPolicy } from './run-policy.fight';
 import {
     cardLaneId,
@@ -163,6 +166,7 @@ export function archetypePolicy(spec: ArchetypeSpec): RunPolicy {
         },
         chooseCacheOffer: (ctx) =>
             (bestLaneOffer(k, [ctx.cardCandidate]) !== null || ctx.itemIds.length === 0 ? 'card' : 'item'),
+        visitAnvil: (ctx) => greedyAnvil(ctx, { inLane: id => inLane(k, id), firstColor: laneStat(spec.laneId) }),
         visitVillage: (ctx) => {
             let currency = ctx.currency;
             const rest = ctx.rest !== null && ctx.rest.enabled && hurt(ctx.health, ctx.maxHealth)
