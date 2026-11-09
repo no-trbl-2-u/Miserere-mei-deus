@@ -239,6 +239,8 @@ fails the root `npm test` on an open row (`[ ]`, `[-]` or `[blocked: …]`) that
 names, and on a line here with no reason. **A row listed here is work the loop may still pick on its ordinary turn:
 undated is not deprioritised.** When a date is set for one, move it to an Item and delete its line.
 
+- GO1b — the second run-end test really has a scene pending (spec 161); test-only loop work, no dated T act waits on it.
+- TU1g — the Embark unmount under reduced motion and FitText's re-measure get tests (spec 159); test-only loop work, no dated T act waits on it.
 - MG1a — the merge decision re-runs when the verify gate finishes (spec 160); loop work, no dated T act waits on it.
 - AP1g — T picks which map nodes show a plate other than their region's default, after AP1f's report; date not set (T picks it).
 - B2 — the enemy revamp stays open only for Chapters 2-4's enemies and the Act Boss, from enemy sessions 3 and 4 (Nov 21, Nov 22) and their plot (Nov 23); Chapter 1's part is done (T, 2026-11-03), so nothing asks T for it before Nov 21. Chapter 1's own boss now has its face and its slot, but not its moves: T's recast (2026-11-06, spec 157) makes The Saint Beneath the sea keep's boss on the Death Beholder's inherited deck and stages, and one of its stages is still marked a draft for T to rewrite. Designing that fight is a later owner-led session, not part of this row, which is Chapters 2-4.
@@ -304,6 +306,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-08** — **three test gaps from the #1473 and #1474 reviews plotted (GO1b in spec 161, TU1g in spec 159)** (T, attended: "Yes plot the test gaps"). **Added** GO1b and TU1g under `## Unscheduled`: test-only work, no dated T act waits on it. Nothing ticked; no date moved.
 - **2026-11-08** — **T's end-gate answers after `/pilot 162` plotted: MV1e, MV1f into spec 162** (T, attended: UNBROKEN pays at the start of the player's turn, even if the foe lost its turn; "The saint beneath should be a level 8 enemy"). **Added** both to the `Waits on` of the Mid-MVP check (Nov 14). **Edited** the Nov 17 re-tune Item: the level 5 Coralback at `bw-t6`, and the player's level on reaching the Saint. Nothing ticked; no date moved.
 - **2026-11-08** — **T's follow-ups on spec 162, and the foe-attack screen dated** (T, attended: "let's not plot the UX for the enemy's attack just yet. Just add that to the deadlines", due Nov 17). **Added** the Nov 17 Item to plot that screen. **Edited** the Nov 17 re-tune Item: five named normals, since Saltwick Swarm became an elite. Nothing ticked; no date moved.
 - **2026-11-08** — **six foes get their own moves, plotted as spec 162 (MV1a-MV1d)** (T, attended, from the enemy-movesets ballot: "instead of reskinning the beholder, let's create a whole new moveset for the saint beneath"). **Added** MV1a-MV1d to the `Waits on` of the Mid-MVP check (Nov 14): SEIZED replaces UNDERTOW, SHOCK and UNBROKEN join the rules, the Saint Beneath and five recast foes get their own moves. Nothing ticked; no date moved.
