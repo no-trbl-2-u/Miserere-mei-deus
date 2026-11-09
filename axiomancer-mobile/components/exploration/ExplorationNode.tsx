@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { NodeMark } from '@/components/NodeMark';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
@@ -235,9 +235,8 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.nodeBg,
     },
     nodeLabelText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.mapName.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.4,
         textTransform: 'uppercase',
     },
 }));

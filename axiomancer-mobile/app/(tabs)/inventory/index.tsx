@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View, Text } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
@@ -248,8 +248,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     header: { padding: 14, paddingBottom: 0 },
     headerRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
-    title: { fontFamily: FONTS.gothic, fontSize: 28, lineHeight: 30, color: AXM.parchment, marginTop: 2 },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 28, lineHeight: 30, color: AXM.parchment, marginTop: 2 },
     shillingBox: { alignItems: 'flex-end' },
-    shillingLabel: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, letterSpacing: 1 },
-    shillingVal: { fontFamily: FONTS.sans, fontSize: 22, color: AXM.sulfur, lineHeight: 24 },
+    shillingLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, color: AXM.bone, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    shillingVal: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 22, color: AXM.sulfur, lineHeight: 24 },
 }));

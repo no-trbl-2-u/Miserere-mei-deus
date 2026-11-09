@@ -46,6 +46,8 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/character\//, routes: ['character'] },
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/inventory\//, routes: ['inventory'] },
     { test: /^axiomancer-mobile\/components\/inventory\//, routes: ['inventory'] },
+    { test: /^axiomancer-mobile\/app\/\(tabs\)\/deck\//, routes: ['deck'] },
+    { test: /^axiomancer-mobile\/app\/\(tabs\)\/settings\//, routes: ['settings'] },
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/exploration\//, routes: VIA_EXPLORATION },
     { test: /^axiomancer-mobile\/components\/exploration\//, routes: VIA_EXPLORATION },
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/memoir\//, routes: ['memoir'] },

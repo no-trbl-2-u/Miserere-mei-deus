@@ -97,7 +97,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned | 1 left |
 | 158 | The combat board gets a CI visual route, so the fight's brass and layout have a pixel net | [158-vr1-combat-board-visual-route.md](158-vr1-combat-board-visual-route.md) | planned | 1 left |
 | 157 | Chapter 1's enemy roster recast: six new faces onto six cut foes' nodes, four more benched, the wandering pool on the survivors | [157-en3-chapter1-enemy-recast.md](157-en3-chapter1-enemy-recast.md) | planned (**Asap**: each chunk) | 1 left |
-| 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 5 left |
+| 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 4 left |
 | 155 | The Deck tab as a reader: one card open over its own painting, the rest in tabbed thumbnails, keywords pressed in the text | [155-dr1-deck-reader.md](155-dr1-deck-reader.md) | planned (**Asap**: each chunk) | 1 left |
 | 154 | The UI kit, round 2: the node screens, new game and the endings, and T's notes on each | [154-uk2-ui-kit-round-2.md](154-uk2-ui-kit-round-2.md) | planned | 1 left |
 | 111 | The map camera holds still: a smooth pinch, a memory across fights, a gentler recentre, the whole map reachable | [111-mc1-map-camera.md](111-mc1-map-camera.md) | planned | 1 left |
@@ -121,7 +121,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 132 | A Settings tab: the gear, a music switch, a feedback form, and the dev menu moved in | [132-st1-settings-tab.md](132-st1-settings-tab.md) | planned | 1 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
-| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 5 left |
+| 135 | Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage | [135-sm2-sim-follow-ups.md](135-sm2-sim-follow-ups.md) | planned | 4 left |
 | 137 | Card faces you read without opening: one wording grammar, as words or glyphs | [137-cf1-card-face-grammar.md](137-cf1-card-face-grammar.md) | planned | 1 left |
 | 139 | Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat | [139-eq4-equipment-follow-ups.md](139-eq4-equipment-follow-ups.md) | planned | 2 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |

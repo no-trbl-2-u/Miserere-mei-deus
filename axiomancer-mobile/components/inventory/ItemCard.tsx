@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { ActionIcon } from '@/components/ActionIcon';
 import { AxmIcon } from '@/components/icons/AxmIcon';
@@ -341,20 +341,20 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    itemName: { fontFamily: FONTS.gothic, fontSize: 13, color: AXM.parchment, lineHeight: 16, marginTop: 4 },
+    itemName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 13, color: AXM.parchment, lineHeight: 16, marginTop: 4 },
     qtyBadge: { position: 'absolute', top: 2, right: 2, backgroundColor: AXM.parchment, paddingHorizontal: 4 },
-    qtyText: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bg },
+    qtyText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.bg },
     wornBadge: { position: 'absolute', top: 2, left: 2, backgroundColor: AXM.sulfur, paddingHorizontal: 3 },
-    wornText: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.bg },
+    wornText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, color: AXM.bg },
     // A carried relic whose signature is off: an outlined badge, so it reads
     // as a state to fix rather than a second WORN.
     notWornBadge: {
         position: 'absolute', top: 2, left: 2, borderWidth: 1, borderColor: AXM.rust,
         backgroundColor: AXM.bg, paddingHorizontal: 3,
     },
-    notWornText: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.bone },
+    notWornText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, color: AXM.bone },
     expandedContent: { marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: AXM.ash, borderStyle: 'dashed' },
-    itemDesc: { fontFamily: FONTS.serifItalic, fontSize: 13, color: AXM.bone },
+    itemDesc: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 13, color: AXM.bone },
     actionsRow: { flexDirection: 'row', gap: 4, marginTop: 6 },
     actionBtn: {
         flex: 1,
@@ -366,17 +366,16 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     discardBtn: { borderColor: AXM.blood },
-    actionBtnText: { fontFamily: FONTS.gothic, fontSize: 13, letterSpacing: 1.5, color: AXM.parchment },
+    actionBtnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.parchment },
     itemSlotTag: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 9,
         color: AXM.bone,
-        letterSpacing: 1.2,
         marginTop: 1,
     },
     // A weapon or armor's effect, under its slot tag: the payload only.
     itemEffect: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
         color: AXM.sulfur,
         lineHeight: 11,
@@ -391,10 +390,10 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bloodSubtle,
     },
     replacePreviewEyebrow: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
         color: AXM.bone,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         marginBottom: 4,
     },
     replacePreviewNameRow: {
@@ -403,19 +402,19 @@ const useStyles = makeStyles((AXM) => ({
         gap: 6,
     },
     replacePreviewOldName: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 12,
         color: AXM.bone,
         textDecorationLine: 'line-through',
         flexShrink: 1,
     },
     replacePreviewArrow: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 14,
         color: AXM.sulfur,
     },
     replacePreviewNewName: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 12,
         color: AXM.parchment,
         flexShrink: 1,
@@ -428,10 +427,10 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     replacePreviewLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 7,
         color: AXM.bone,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         marginRight: 2,
     },
     replaceDeltaChip: {
@@ -448,9 +447,8 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.blood,
     },
     replaceDeltaChipText: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 9,
-        letterSpacing: 0.8,
     },
     replaceDeltaChipTextPos: {
         color: AXM.sulfur,

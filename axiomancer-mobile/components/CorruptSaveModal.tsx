@@ -15,7 +15,7 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export const CORRUPT_SAVE_COPY = {
@@ -103,19 +103,19 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 18,
     },
     eyebrow: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.blood,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         color: AXM.parchment,
         marginTop: 6,
     },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         color: AXM.bone,
         marginTop: 12,
@@ -141,9 +141,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: 'transparent',
     },
     buttonLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
     confirmLabel: { color: AXM.blood },
     cancelLabel: { color: AXM.bone },

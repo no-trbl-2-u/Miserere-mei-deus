@@ -26,7 +26,7 @@ import { ENEMY_FRAME_SETS, type EnemyFrameSet } from '@/assets/images/enemies/fr
 import { EnemyFramePlayer } from '@/components/combat/frames';
 import { SYNTHETIC_FRAME_KEY, SYNTHETIC_FRAME_SET } from '@/components/combat/frames/syntheticFrameSet';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** The fixture first, then whatever the registry holds, in registry order. */
@@ -162,10 +162,9 @@ const useStyles = makeStyles((AXM) => ({
     root: { flex: 1, backgroundColor: AXM.bg },
     content: { padding: 12, paddingBottom: 48 },
     heading: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.sectionHead.fontFamily,
         fontSize: 18,
         color: AXM.sulfur,
-        letterSpacing: 2,
         marginBottom: 12,
         textAlign: 'center',
     },
@@ -178,10 +177,9 @@ const useStyles = makeStyles((AXM) => ({
     },
     player: { flex: 1 },
     readout: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 11,
         color: AXM.bone,
-        letterSpacing: 1,
         marginTop: 8,
     },
     row: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 },
@@ -194,10 +192,10 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 8,
     },
     controlOn: { borderColor: AXM.sulfur },
-    controlLabel: { fontFamily: FONTS.mono, fontSize: 11, color: AXM.bone, letterSpacing: 1 },
+    controlLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, color: AXM.bone, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
     controlLabelOn: { color: AXM.sulfur },
     note: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
         color: AXM.ash,
         lineHeight: 15,

@@ -22,7 +22,7 @@ import {
   titleLayout,
   titleWordmarkFrames,
 } from '@/state/presenters/title.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 interface TitleScreenProps {
@@ -225,7 +225,7 @@ const useStyles = makeStyles((AXM) => ({
     alignItems: 'center',
   },
   wordmark: {
-    fontFamily: FONTS.gothic,
+    fontFamily: TYPE_ROLES.chip.fontFamily,
     color: AXM.parchment,
     textAlign: 'center',
     textShadowColor: 'rgba(0,0,0,0.85)',
@@ -244,7 +244,7 @@ const useStyles = makeStyles((AXM) => ({
     maxWidth: 340,
   },
   psalmLine: {
-    fontFamily: FONTS.serifItalic,
+    fontFamily: TYPE_ROLES.narration.fontFamily,
     fontSize: 17,
     color: AXM.parchment,
     textAlign: 'center',
@@ -254,9 +254,8 @@ const useStyles = makeStyles((AXM) => ({
     textShadowRadius: 6,
   },
   psalmSource: {
-    fontFamily: FONTS.mono,
+    fontFamily: TYPE_ROLES.count.fontFamily,
     fontSize: 9,
-    letterSpacing: 3,
     color: AXM.bone,
     textTransform: 'uppercase',
   },
@@ -265,7 +264,7 @@ const useStyles = makeStyles((AXM) => ({
     maxWidth: 320,
   },
   footerText: {
-    fontFamily: FONTS.serifItalic,
+    fontFamily: TYPE_ROLES.narration.fontFamily,
     fontSize: 12,
     color: AXM.bone,
     textAlign: 'center',

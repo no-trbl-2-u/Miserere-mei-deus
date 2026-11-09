@@ -17,7 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { REST_NIGHT_SKIP_LABEL, REST_NIGHT_STAGE_WORD } from '@/state/presenters/rest.copy';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { usePalette } from '@/theme/runtime';
 
 import { NIGHT_TIMING, NIGHT_TOTAL_MS, nightStageAt, type NightStage } from './night';
@@ -76,6 +76,6 @@ export function NightPassing({ dream, onDone }: NightPassingProps) {
 const styles = StyleSheet.create({
     fill: { width: '100%' },
     sky: { minHeight: 220, alignItems: 'center', justifyContent: 'center', padding: 16, borderWidth: 2 },
-    stage: { fontFamily: FONTS.gothic, fontSize: 22, letterSpacing: 3, marginBottom: 10 },
-    dream: { fontFamily: FONTS.serifItalic, fontSize: 14, lineHeight: 20, textAlign: 'center' },
+    stage: { fontFamily: TYPE_ROLES.mapName.fontFamily, fontSize: 22, marginBottom: 10 },
+    dream: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 14, lineHeight: 20, textAlign: 'center' },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { TooltipTarget } from '@/components/tooltip/TooltipTarget';
 import type { EquipDelta, SignatureDeltaEntry } from '@mechanics';
@@ -112,10 +112,10 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.panelBg,
     },
     eyebrow: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
         color: AXM.bone,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         marginBottom: 4,
     },
     statRow: {
@@ -126,9 +126,9 @@ const useStyles = makeStyles((AXM) => ({
     },
     sideBlock: { marginTop: 6 },
     sideLabel: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 7,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         marginBottom: 3,
     },
     sideLabelPos: { color: AXM.heal },
@@ -136,13 +136,13 @@ const useStyles = makeStyles((AXM) => ({
     chip: { paddingVertical: 1, paddingHorizontal: 4, borderWidth: 1 },
     chipPos: { backgroundColor: AXM.healSubtle, borderColor: AXM.heal },
     chipNeg: { backgroundColor: AXM.bloodSubtle, borderColor: AXM.blood },
-    chipText: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.8 },
+    chipText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9},
     chipTextPos: { color: AXM.heal },
     chipTextNeg: { color: AXM.blood },
     tag: { paddingVertical: 1, paddingHorizontal: 4, borderWidth: 1 },
     tagPos: { backgroundColor: AXM.healSubtle, borderColor: AXM.heal },
     tagNeg: { backgroundColor: AXM.bloodSubtle, borderColor: AXM.blood },
-    tagText: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.6 },
+    tagText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9},
     tagTextPos: { color: AXM.heal },
     tagTextNeg: { color: AXM.blood },
 }));

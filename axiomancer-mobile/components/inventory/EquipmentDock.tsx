@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, useWindowDimensions } from 'react-native';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { SectionLabel } from '@/components/SectionLabel';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
@@ -248,10 +248,9 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 8,
     },
     dockHint: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 8,
         color: AXM.bone,
-        letterSpacing: 0.8,
     },
     dockGrid: {
         flexDirection: 'row',
@@ -271,10 +270,9 @@ const useStyles = makeStyles((AXM) => ({
     },
     // A refused drop's one-line reason, under the rows.
     dockRefusal: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         color: AXM.blood,
-        letterSpacing: 0.6,
         textAlign: 'right',
         marginTop: 2,
     },

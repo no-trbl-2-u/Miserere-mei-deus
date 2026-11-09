@@ -13,7 +13,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useRouter } from '@/lib/platform/router';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export function DevToolsLink() {
@@ -56,20 +56,18 @@ const useStyles = makeStyles((AXM) => ({
     },
     text: { flex: 1 },
     label: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 11,
-        letterSpacing: 2,
         color: AXM.sulfur,
     },
     sub: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 9,
-        letterSpacing: 0.5,
         color: AXM.bone,
         marginTop: 2,
     },
     chevron: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 20,
         color: AXM.bone,
     },

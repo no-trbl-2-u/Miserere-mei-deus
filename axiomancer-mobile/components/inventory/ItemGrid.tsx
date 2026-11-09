@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { GestureDetector, type GestureType } from 'react-native-gesture-handler';
 import { AxmIcon } from '@/components/icons/AxmIcon';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { SectionLabel } from '@/components/SectionLabel';
 import { CATEGORY_ORDER, groupByCategory, ItemCard } from '@/components/inventory/ItemCard';
@@ -112,7 +112,7 @@ const useStyles = makeStyles((AXM) => ({
         gap: 12,
     },
     emptyText: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         color: AXM.bone,
         textAlign: 'center',

@@ -39,7 +39,7 @@ import {
 } from '@/components/combat/frames';
 import { nodeArenaFor } from '@/state/exploration-maps';
 import { ARENA_PLATES_SHOWN, BLACK_ARENA_ALT, arenaAltTextFor, arenaBackdropFor } from '@/assets/images/combat';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import type {
     CombatEnemyPaneVM, CombatPlayerPaneVM, CombatEffectChipVM,
@@ -898,7 +898,7 @@ const useStyles = makeStyles((AXM) => ({
     hudNameRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 8 },
     enemyNameWrap: { flexGrow: 1, flexShrink: 1 },
     enemyName: {
-        fontFamily: FONTS.gothic, fontSize: ENEMY_NAME_SIZE, lineHeight: ENEMY_NAME_LINE, color: AXM.sulfur, letterSpacing: ENEMY_NAME_SPACING,
+        fontFamily: TYPE_ROLES.foeName.fontFamily, fontSize: ENEMY_NAME_SIZE, lineHeight: ENEMY_NAME_LINE, color: AXM.sulfur, letterSpacing: ENEMY_NAME_SPACING,
         textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 4, textShadowOffset: { width: 0, height: 1 },
     },
 
@@ -915,15 +915,15 @@ const useStyles = makeStyles((AXM) => ({
     crest: { position: 'absolute', top: -14, left: '50%', marginLeft: -31, width: 62, height: 70, alignItems: 'center' },
     crestInner: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', paddingBottom: 10 },
     crestHp: {
-        fontFamily: FONTS.gothic, fontSize: 26, lineHeight: 28, color: AXM.parchment,
+        fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 26, lineHeight: 28, color: AXM.parchment,
         textShadowColor: HUE.black, textShadowRadius: 4, textShadowOffset: { width: 0, height: 1 },
     },
-    crestMax: { fontFamily: FONTS.mono, fontSize: 9, lineHeight: 10, color: AXM.bone, marginTop: -1 },
+    crestMax: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 9, lineHeight: 10, color: AXM.bone, marginTop: -1 },
 
     // Slim meters under the VITAE bar (the DoT kill-path foresight).
     altMeter: { marginTop: 4 },
     altMeterLabel: {
-        fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1, color: AXM.bone,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone,
         textShadowColor: HUE.black, textShadowRadius: 3, textShadowOffset: { width: 0, height: 1 },
     },
     // The payoff word rides quieter than the tally it follows.
@@ -949,8 +949,8 @@ const useStyles = makeStyles((AXM) => ({
         borderWidth: 1, borderColor: AXM.blood, backgroundColor: AXM.bg,
     },
     tollButtonRefused: { opacity: 0.55 },
-    tollLabel: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.blood, letterSpacing: 0.5 },
-    tollReason: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.blood, marginTop: 2, maxWidth: 200 },
+    tollLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, color: AXM.blood, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
+    tollReason: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.blood, marginTop: 2, maxWidth: 200 },
 
     // Status tiles.
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
@@ -966,15 +966,15 @@ const useStyles = makeStyles((AXM) => ({
     },
     // A captioned chip sits beside its caption, the pair one item of the row.
     chipWithCaption: { flexDirection: 'row', alignItems: 'center', gap: 4, maxWidth: '100%' },
-    chipCaption: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.4, flexShrink: 1 },
-    chipBadgeText: { fontFamily: FONTS.sans, fontSize: 9, lineHeight: 11, color: HUE.white },
+    chipCaption: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9, letterSpacing: 0.4, flexShrink: 1 },
+    chipBadgeText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9, lineHeight: 11, color: HUE.white },
     // Remaining-duration tag (top-left), distinct from the stacks badge.
     chipDur: {
         position: 'absolute', left: -4, top: -6, minWidth: 14, height: 13, borderRadius: 7,
         paddingHorizontal: 2, backgroundColor: 'rgba(0,0,0,0.85)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)',
         alignItems: 'center', justifyContent: 'center',
     },
-    chipDurText: { fontFamily: FONTS.mono, fontSize: 8, lineHeight: 10, color: 'rgba(255,255,255,0.82)' },
+    chipDurText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 8, lineHeight: 10, color: 'rgba(255,255,255,0.82)' },
 
     // Floats.
     // The float band mirrors `sceneBand`'s geometry (no paint) so the anchor
@@ -986,7 +986,7 @@ const useStyles = makeStyles((AXM) => ({
     playerFloatLayer: { position: 'absolute', top: -26, left: 0, right: 0, alignItems: 'center', zIndex: 20 },
     floatNum: { position: 'absolute', top: 0, alignItems: 'center' },
     floatNumText: {
-        fontFamily: FONTS.gothic, fontSize: 24, letterSpacing: 0.5,
+        fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 24, 
         textShadowColor: HUE.black, textShadowRadius: 5, textShadowOffset: { width: 0, height: 1 },
     },
 
@@ -1000,5 +1000,5 @@ const useStyles = makeStyles((AXM) => ({
     },
     medallionFlash: { ...StyleSheet.absoluteFillObject, backgroundColor: HUE.damageRed },
     contactSlash: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', zIndex: 6 },
-    contactSlashText: { fontFamily: FONTS.gothic, fontSize: 34, color: HUE.white, textShadowColor: HUE.damageRed, textShadowRadius: 6 },
+    contactSlashText: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 34, color: HUE.white, textShadowColor: HUE.damageRed, textShadowRadius: 6 },
 }));

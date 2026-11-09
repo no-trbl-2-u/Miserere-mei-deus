@@ -36,7 +36,7 @@ import {
 } from '@/state/presenters/main-menu.engine';
 import { entryRoute } from '@/state/run-end';
 import { selectActiveTab } from '@/state/presenters/navigation.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** A pending destructive choice awaiting the sheet's answer. */
@@ -147,8 +147,8 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 6,
     },
     headerText: { flex: 1 },
-    title: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.sulfur, letterSpacing: 1, marginTop: 1 },
-    subtitle: { fontFamily: FONTS.serifItalic, fontSize: 12, color: AXM.bone, marginTop: 2 },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, color: AXM.sulfur, letterSpacing: TYPE_ROLES.title.letterSpacing, marginTop: 1 },
+    subtitle: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.bone, marginTop: 2 },
     backBtn: {
         width: 40,
         height: 40,
@@ -158,6 +158,6 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
         backgroundColor: AXM.panelBg,
     },
-    backLabel: { fontFamily: FONTS.mono, fontSize: 16, color: AXM.bone },
+    backLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, color: AXM.bone },
     list: { paddingHorizontal: 12, paddingTop: 10, gap: 10 },
 }));

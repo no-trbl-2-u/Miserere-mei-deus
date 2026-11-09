@@ -17,7 +17,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 interface LeaveRowProps {
@@ -59,9 +59,8 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
     },
     text: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 12,
-        letterSpacing: 2,
         color: AXM.bone,
     },
 }));

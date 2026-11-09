@@ -29,7 +29,7 @@ import React, { Suspense, lazy } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** Lazy-load a named export from a Debug* module (keeps prod bundles clean). */
@@ -76,7 +76,7 @@ function LoadingFallback() {
     const AXM = usePalette();
     return (
         <View style={{ padding: 8 }} testID="dev-tools-loading">
-            <Text style={{ fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone }}>Loading debug tools...</Text>
+            <Text style={{ fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.bone }}>Loading debug tools...</Text>
         </View>
     );
 }
@@ -195,7 +195,7 @@ const useStyles = makeStyles((AXM) => ({
         borderBottomColor: AXM.ash,
         borderStyle: 'dashed',
     },
-    sectionLabel: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 2, color: AXM.sulfur },
-    sectionHint: { fontFamily: FONTS.mono, fontSize: 9, color: AXM.bone, flexShrink: 1, textAlign: 'right' },
+    sectionLabel: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, color: AXM.sulfur },
+    sectionHint: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.bone, flexShrink: 1, textAlign: 'right' },
     sectionBody: { paddingTop: 4, paddingBottom: 6 },
 }));

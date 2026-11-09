@@ -33,7 +33,7 @@ import {
     LABYRINTH_SEALED_DOOR,
 } from '@/assets/images/labyrinth';
 import type { LabyrinthDoorVM, LabyrinthPoiVM } from '@/state/presenters/labyrinth.engine';
-import { FONTS, rnd } from '@/theme/axm';
+import { TYPE_ROLES, rnd } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 interface RoomSceneProps {
@@ -280,7 +280,7 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 3,
     },
     displayText: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         color: AXM.bg,
     },
@@ -298,9 +298,8 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 4,
     },
     plaqueText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 14,
-        letterSpacing: 1,
         color: AXM.parchment,
     },
     doorImageBox: {
@@ -340,9 +339,8 @@ const useStyles = makeStyles((AXM) => ({
     sealedText: {
         position: 'absolute',
         bottom: 26,
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
-        letterSpacing: 1,
         color: AXM.blood,
         backgroundColor: AXM.parchment,
         paddingHorizontal: 2,
@@ -371,7 +369,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     poiLabel: {
         marginTop: 3,
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.mapName.fontFamily,
         fontSize: 11,
         lineHeight: 13,
         textAlign: 'center',

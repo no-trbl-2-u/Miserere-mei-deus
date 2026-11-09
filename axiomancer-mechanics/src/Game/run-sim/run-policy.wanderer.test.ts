@@ -52,10 +52,30 @@ describe('the wanderer', () => {
             .toEqual({ offer: 'upgrade', cardId: 'u' });
     });
 
-    it('rests at a village only when hurt, and buys nothing', () => {
-        const base = { currency: 9, rest: { price: 1, enabled: true }, shop: [], removal: null, hasAnvil: false, deck: [] };
-        expect(W.visitVillage({ ...base, health: 5, maxHealth: 10 })).toEqual({ rest: true, buy: [], remove: [] });
-        expect(W.visitVillage({ ...base, health: 10, maxHealth: 10 }).rest).toBe(false);
+    it('spends at a village at random from what the purse affords, the same for one stream', () => {
+        const stream = (seed: number) => {
+            let x = seed;
+            return () => { x = (x * 1103515245 + 12345) % 2147483648; return x / 2147483648; };
+        };
+        const base = {
+            health: 5, maxHealth: 10, currency: 9, rest: { price: 4, enabled: true },
+            shop: [{ cardId: 's1', price: 3, enabled: true }, { cardId: 's2', price: 50, enabled: true }],
+            removal: { price: 2, enabled: true, cardIds: ['d1', 'd2'] }, hasAnvil: false, deck: [],
+        };
+        const seen = new Set<string>();
+        for (let seed = 1; seed <= 40; seed++) {
+            const a = W.visitVillage({ ...base, rng: stream(seed) });
+            expect(W.visitVillage({ ...base, rng: stream(seed) })).toEqual(a);
+            const price = (a.rest ? 4 : 0) + a.buy.length * 3 + a.remove.length * 2;
+            expect(price).toBeLessThanOrEqual(9);
+            expect(a.buy).not.toContain('s2');
+            for (const id of a.remove) expect(['d1', 'd2']).toContain(id);
+            seen.add(JSON.stringify(a));
+        }
+        expect(seen.size).toBeGreaterThan(1);
+        expect(W.visitVillage({ ...base, currency: 0, rng: stream(1) })).toEqual({ rest: false, buy: [], remove: [] });
+        expect(W.visitVillage({ ...base, rest: null, shop: [], removal: null, rng: stream(1) }))
+            .toEqual({ rest: false, buy: [], remove: [] });
     });
 
     it('fights with the player witness, never flees, raises heart, wears what it can', () => {

@@ -34,6 +34,11 @@ describe('TYPE_ROLES', () => {
     }
   });
 
+  it('loads no face that no role uses', () => {
+    const used = new Set<string>(Object.values(TYPE_ROLES).map((r) => r.fontFamily));
+    expect(LOADED_FACE_NAMES.filter((f) => !used.has(f))).toEqual([]);
+  });
+
   it('loads the title and body faces first', () => {
     expect(Object.keys(CORE_FACES)).toEqual(
       expect.arrayContaining([TYPE_ROLES.title.fontFamily, TYPE_ROLES.rules.fontFamily]),

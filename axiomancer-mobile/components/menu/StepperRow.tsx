@@ -14,7 +14,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { KitBackdrop, KitImage } from '@/components/experience/KitBackdrop';
 import { LOOKS } from '@/components/experience/looks';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface StepperRowProps {
@@ -87,7 +87,7 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.divider,
         backgroundColor: AXM.panelBg,
     },
-    label: { flexShrink: 1, fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.parchment },
+    label: { flexShrink: 1, fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.parchment },
     controls: { flexDirection: 'row', alignItems: 'center', flexShrink: 1, gap: 8 },
     step: {
         width: 34,
@@ -110,6 +110,6 @@ const useStyles = makeStyles((AXM) => ({
     sliderTrack: { width: '100%', height: 8 },
     sliderKnob: { position: 'absolute', top: 2, width: 18, height: 18, marginLeft: -9 },
     stepOff: { opacity: 0.35 },
-    stepLabel: { fontFamily: FONTS.mono, fontSize: 16, color: AXM.sulfur },
-    value: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.parchment, minWidth: 40, textAlign: 'center' },
+    stepLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 16, color: AXM.sulfur },
+    value: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.parchment, minWidth: 40, textAlign: 'center' },
 }));

@@ -22,7 +22,7 @@ import {
     type FeedbackFormState,
     type FeedbackKind,
 } from '@/state/presenters/settings.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export interface FeedbackSheetProps {
@@ -115,24 +115,24 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 16,
         gap: 10,
     },
-    title: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.parchment },
+    title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, color: AXM.parchment },
     input: {
         minHeight: 120,
         borderWidth: 1,
         borderColor: AXM.ash,
         backgroundColor: AXM.bg,
         color: AXM.parchment,
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         padding: 10,
     },
-    count: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone, textAlign: 'right' },
+    count: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.bone, textAlign: 'right' },
     actions: { gap: 8, marginTop: 4 },
     button: { borderWidth: 1, paddingVertical: 10, paddingHorizontal: 12, alignItems: 'center' },
     submitButton: { borderColor: AXM.sulfur, backgroundColor: AXM.selectFill },
     cancelButton: { borderColor: AXM.ash, borderStyle: 'dashed', backgroundColor: 'transparent' },
     disabled: { opacity: 0.4 },
-    buttonLabel: { fontFamily: FONTS.gothic, fontSize: 13, letterSpacing: 1.5 },
+    buttonLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.button.letterSpacing},
     submitLabel: { color: AXM.sulfur },
     cancelLabel: { color: AXM.bone },
 }));
