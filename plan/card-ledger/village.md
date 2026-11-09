@@ -27,6 +27,29 @@ Each had its black ground removed for the mockups (flood fill from the edges), s
 - The Blacksmith's opening step. Today's flow opens on an intro with SET THEM ON THE ANVIL; every mockup puts the smith's line on the working screen and drops that step.
 - The spoken lines are placeholders for T's words (`[content]`).
 
-## Verdicts
+## Round 1 verdicts
+
+Decided 2026-11-09 by T, pasted from the ballot. Verbatim:
+
+```
+BALLOT: village, blacksmith and shop (village-2026-11-09)
+answered 3 of 3
+V-01 The Village: KEEP V-01d (The host) | note: Let's see if we can do a combination of B + D
+B-01 The Blacksmith: KEEP B-01e (The smith fills the screen) | note: What is "Swap gear"? I think this looks great, but before you plot anything, let's see if we can get a combination of E and C
+S-01 The Shop: KEEP S-01d (One card at a time) | note: Let's start offering 5 cards instead of 3. Also, does the shop sell gear today?
+```
+
+The Shop is settled: S-01d, with five cards (`cardShopSize` is 3 in `World/Village/village.content.ts` today).
+
+Answers from the code, 2026-11-09:
+
+- **Swap gear** replaces a die's whole gear with a variant the smith offers (8 shillings), but `BLACKSMITH_WITNESS_VARIANTS` is empty, so no smith offers one and the button never appears in the game. Round 2 leaves it out.
+- **Gear in the shop:** yes. Every village with a card shop also sells up to two weapons or armor pieces the player does not carry, 40 shillings each (`EQUIPMENT_DROP_TUNING`), as its own counter. Where it goes in the new Shop is still open.
+
+## Round 2
+
+Ballot: `village-2.ballot.html` (id `village-round-2-2026-11-09`). Five variations each: `V-02a` to `e` blend the Village's B and D, `B-02a` to `e` blend the Blacksmith's E and C. Shots: `village/<slot><a-e>.webp`.
+
+## Round 2 verdicts
 
 Open.
