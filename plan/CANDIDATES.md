@@ -917,6 +917,71 @@
 - conflicts: SM2f (135.6) reads the same break list.
 - promote with `/plot`.
 
+### [ ] [owner] [score 3.0] Follow-ups carried from specs 111, 112, 121, 132 and 137 when they retired
+- proposed: 2026-11-09, T's session (backlog absorb); kept verbatim, some may already be done, T triages
+- trigger: T's next `/plot` or `/oversight`. The tester-scoped API token (under spec 132) comes first if an APK is ever published: the preview APK bakes in the all-routes token.
+- source signals: the Follow-ups sections of the specs deleted in this commit.
+- proposed scope: none yet; each is plotted on its own.
+
+#### From spec 111
+
+- **A device gesture harness**: driving a real two-finger pinch in CI (Android emulator or a
+  Playwright multi-touch script on the web build) so a regression like #1046's cannot pass on jest
+  alone. Its own plot if T wants it.
+- **The hint's words** (`exploration.engine.ts:613`) and whether the step count belongs in the
+  header: copy is T's.
+- **The labyrinth's map**, if it shares this camera later.
+
+#### From spec 112
+
+- **A combat track.** T supplies the file; one row adds it to the track table and decides restart vs
+  carry-on per fight.
+- **A hazard track**, the same way, if T wants one.
+- **The labyrinth's entry treatment** (no token to bleed from), if call 4 is answered "ink from the
+  centre".
+- **A critique-drive pass on `/settings`** (CRITIQUE pending, LOW): no unattended pass sees the music
+  rows; ST1a's tab is the natural place to add it.
+
+#### From spec 121
+
+- **TP1b — the plate itself** (T picked Doré's lion, 2026-11-03; now chunk 121.2). Candidates already tried and rejected in T's 2026-10-18 pass, all
+  confirmed Public domain by `acquire-art.mjs`'s own check but too pale after the ingest recipe
+  (brightness 0.62, contrast 1.08): Hiroshige daylight landscapes (print borders, light fields) and three
+  Turners — *Sun Setting over a Lake*, *The Fighting Temeraire*, *Sunrise with Sea Monsters*. The look that
+  worked: dark field, one burning light source low in the frame, silhouetted foreground, quiet upper band for
+  the wordmark. Note that torio's free Javardry pack cannot supply this — its 74 "distant view" plates are
+  abstract corridor far-planes, not scenery (`Potential Assets/torio/LICENCE-torio.md`).
+- **The launcher icon** derives from the same `shore-at-dawn` source (`art-sources.json`, category `title`).
+  Whether an icon-size legibility check is worth having is a separate question; this phase does not answer it.
+- **More viewports** for the measurement, if one reference proves too narrow.
+
+#### From spec 132
+
+- **The feedback pipeline (T, 2026-10-31; an idea, not yet designed, T: "let's not brainstorm it now").**
+  Save each submitted bug or proposal somewhere; an agent reads them in batches on a schedule, decides
+  which are real and worth acting on, and files a GitHub issue for each, labelled `Unresolved`; `/march`
+  (and its triage gate) does not act on an `Unresolved` issue until T removes the label. Constraints
+  already known from the 2026-10-31 security review, to carry into its design:
+  - tester text is untrusted input. The agent that reads it should hold no `GH_PAT`, no Claude OAuth
+    token with write tools, and no network beyond filing the issue, or the filing step should be a plain
+    script fed the agent's structured verdict;
+  - the issue body quotes the tester's text as data (fenced), so a later agent run that reads the issue
+    is not steered by it; `/march` triage and `@claude` must skip `Unresolved` issues;
+  - storage is likely a new owner-read-only route on `miserere-api` (D1), written by the app with a
+    tester-scoped token, never the current all-routes token.
+- **Tester-scoped API token** (same review): the preview APK bakes in the one `PUZZLE_API_TOKEN`, which
+  reads every route, ballot verdicts included. Split it into a POST-only tester token and an owner token,
+  and rotate the current one, before the APK goes to testers. Its own plot.
+- **Dev tools in testers' hands.** Preview builds show DEV TOOLS, so beta testers on the preview APK will
+  have it. A tester build flag (or a hidden gesture) that hides it is its own plot, or part of B10.
+
+#### From spec 137
+
+- Every FREE line as glyphs only (62 of 104 are; 35 need a rewrite, 16 of them Merciful), with T's soft rule that
+  FREE is a lighter PAID or a one-keyword effect: T's session.
+- Live resolved numbers on the face (`DEAL 14` for the board as it stands): parked in the pitch as a later layer.
+- New keywords for effects on you, when a card needs one.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
