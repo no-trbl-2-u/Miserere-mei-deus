@@ -9,8 +9,6 @@ name: android-smoke
 # docs/reports/android-smoke.md.
 
 on:
-  push:
-    branches: [loop/next-125.9]
   workflow_dispatch:
     inputs:
       build_id:
@@ -34,7 +32,6 @@ concurrency:
 jobs:
   smoke:
     name: Android smoke (${{ inputs.build_id || 'fresh preview build' }})
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:

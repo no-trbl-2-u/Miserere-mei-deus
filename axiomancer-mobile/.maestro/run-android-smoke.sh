@@ -30,9 +30,12 @@ status=0
   cd "$out/shots" &&
   maestro test "$flow" \
     --format junit --output "$out/report.xml" \
+    --test-output-dir "$out/shots" \
     --debug-output "$out/debug"
 ) > "$out/maestro.log" 2>&1 || status=$?
 cat "$out/maestro.log"
+# Maestro also keeps its per-run logs and command records under ~/.maestro/tests.
+if [ -d "$HOME/.maestro/tests" ]; then cp -r "$HOME/.maestro/tests" "$out/maestro-tests" || true; fi
 
 if [ "$status" -ne 0 ]; then
   adb exec-out screencap -p > "$out/failure.png" || true
