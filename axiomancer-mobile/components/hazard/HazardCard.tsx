@@ -189,7 +189,7 @@ const HAND_NAME_SIZE = 13;
 /** Hand-mode text width: the 90px card less its 1.5px borders and 4px padding. */
 const HAND_TEXT_W = 90 - 3 - 8;
 /** Pirata One capital width per px of font size, letter spacing included, with a little slack. */
-const GOTHIC_CAP_EM = 0.43;
+export const GOTHIC_CAP_EM = 0.43;
 
 /** Hand-mode name size. A multi-word name wraps at its spaces; a single word cannot, so
  *  one too long for the strip left beside the pips and a fanned neighbour shrinks to fit
@@ -208,7 +208,7 @@ const HAND_EFFECT_W = HAND_TEXT_W - 2 - 12;
 
 /** Bebas Neue advance per px of font size: capitals, digits and `-+` run 0.4, a space 0.25,
  *  and the fallback-font symbols (✕ → ◆) up to 1.0, so 0.9 leaves a little slack. */
-function effectGlyphEm(ch: string): number {
+export function effectGlyphEm(ch: string): number {
     if (ch === ' ') return 0.25;
     return /[A-Z0-9+\-]/.test(ch) ? 0.4 : 0.9;
 }

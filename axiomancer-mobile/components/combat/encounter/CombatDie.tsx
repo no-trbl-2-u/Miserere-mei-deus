@@ -33,6 +33,7 @@ import Svg, { Circle, ClipPath, Defs, G, LinearGradient as SvgLinearGradient, Pa
 import type { CombatDieVM } from '@/state/presenters/combat-encounter.engine';
 import { spentDieTreatment } from '@/lib/juice';
 import { HUE } from '@/theme/axm';
+import { RASTER_LAYER } from './rasterLayer';
 
 /**
  * The die's spoken state. Four dice, each showing a FACE — a special face
@@ -179,6 +180,7 @@ export const CombatDie = React.memo(function CombatDie({ die, size = 54, dimmed 
             accessibilityRole={nested ? undefined : 'button'}
             accessibilityLabel={nested ? undefined : a11yLabel}
             style={{ width: W, height: H + size * 0.18, opacity: dimmed ? 0.45 : spentTreatment.opacity }}
+            {...RASTER_LAYER}
         >
             {glow && (
                 <Svg
