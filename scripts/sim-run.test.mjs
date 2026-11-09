@@ -8,6 +8,7 @@
 
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
@@ -23,11 +24,11 @@ const sink = () => {
 }
 
 test('parseArgs reads both flag shapes and defaults', () => {
-  assert.deepEqual(parseArgs([]), { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, help: false })
+  assert.deepEqual(parseArgs([]), { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, breaks: null, help: false })
   assert.deepEqual(parseArgs(['--policy', 'wanderer', '--runs', '3', '--seed', '0', '--json']),
-    { policy: 'wanderer', runs: 3, seed: 0, json: true, post: false, help: false })
+    { policy: 'wanderer', runs: 3, seed: 0, json: true, post: false, breaks: null, help: false })
   assert.deepEqual(parseArgs(['--policy=wanderer', '--runs=2', '--seed=7', '--post']),
-    { policy: 'wanderer', runs: 2, seed: 7, json: false, post: true, help: false })
+    { policy: 'wanderer', runs: 2, seed: 7, json: false, post: true, breaks: null, help: false })
 })
 
 test('parseArgs refuses unknown flags, missing values and bad numbers', () => {
@@ -245,4 +246,27 @@ test('--compare plays both arms on the same seeds and prints one table', async (
   assert.equal(code, 0)
   assert.deepEqual(asked, [['spare-all', 2, 9], ['finish-all', 2, 9]])
   assert.match(out.text, /spare-all\s+finish-all/)
+})
+
+test('--breaks appends one JSON line per break, names the build, and only a crash or a stuck run fails', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sim-breaks-'))
+  const file = path.join(dir, 'breaks.jsonl')
+  try {
+    const finding = { key: 'explorer:breakwater/bw-l5:quest-unfinishable', kind: 'quest-unfinishable' }
+    const asked = []
+    const play = (opts) => { asked.push(opts); return { runs: [{ policy: 'explorer', seed: 1, outcome: 'chapter-clear', furthestNodeId: 'x', level: 1, vitae: 1, maxVitae: 1, fights: { won: 0, lost: 0, spared: 0 }, deckByLane: {} }], breaks: [finding] } }
+    assert.equal(await main(['--policy', 'explorer', '--breaks', file], { stdout: sink(), stderr: sink(), play, sha: () => 'f'.repeat(40) }), 0)
+    assert.equal(asked[0].build, 'f'.repeat(40))
+    assert.equal(await main(['--policy', 'explorer', '--breaks', file], { stdout: sink(), stderr: sink(), play, sha: () => null }), 0)
+    const written = fs.readFileSync(file, 'utf-8').trim().split('\n').map((l) => JSON.parse(l))
+    assert.deepEqual(written, [finding, finding])
+
+    const crash = { policy: 'explorer', seed: 2, stuck: true, kind: 'crash', node: 'bw-w2', error: 'run crashed at breakwater/bw-w2: boom', break: { key: 'explorer:breakwater/bw-w2:crash', kind: 'crash' } }
+    const out = sink()
+    assert.equal(await main(['--breaks', file], { stdout: out, stderr: sink(), play: () => ({ runs: [crash], breaks: [crash.break] }), sha: () => null }), 1)
+    assert.match(out.text, /wanderer seed=2 CRASH at bw-w2|explorer seed=2 CRASH at bw-w2/)
+    assert.equal(fs.readFileSync(file, 'utf-8').trim().split('\n').length, 3)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
 })

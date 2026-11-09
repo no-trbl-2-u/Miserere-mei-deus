@@ -146,7 +146,7 @@ export type {
 // the main questline and what its current step needs.
 export {
     poolEncounters, poolStagesElite, poolStagesBoss, nodeStagesElite, nodeStagesBoss, isExitNode,
-    bossNodes, exitNodes, questlinesOn, mainQuestline, stepNodes, currentStoryTargets,
+    bossNodes, exitNodes, questlinesOn, mainQuestline, stepNodes, currentStoryTargets, activeQuestTargets,
 } from './chapter-story';
 // Chapter 1's content as data (phase SM2b): nodes, quests, foes, hazards, items, gates, regions.
 export { chapter1Content, mapContent, storyOrderedGates } from './chapter1-content';
