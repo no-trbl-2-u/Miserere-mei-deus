@@ -73,7 +73,6 @@ export interface BlacksmithDieVM {
     specialFaces: number;
     manaFaces: number;
     missFaces: number;
-    specialConviction: number;
     /** Compact face read, e.g. "1 BOON · 2 MANA · 3 MISS". */
     faceSummary: string;
     hone: BlacksmithOfferVM;
@@ -163,8 +162,8 @@ const INTRO_BODY =
     'The forge breathes low and orange. The smith turns your dice over, '
     + 'reading the dead weight in them. “Six faces to a die. Most come up '
     + 'MISS and pay you nothing. I can beat a MISS into a MANA face — that one '
-    + 'pays for a card. Or harden a MANA face into a BOON, which pays for the '
-    + 'card and pays CONVICTION besides. Costs, of course.”';
+    + 'pays for a card. Or harden a MANA face into a BOON, which pays for a '
+    + 'card and fires your weapon\'s special. Costs, of course.”';
 
 /**
  * The legend for the per-die face read.
@@ -172,12 +171,12 @@ const INTRO_BODY =
  * Each die prints `1 BOON · 2 MANA · 3 MISS` and nothing said what those
  * three words are worth. Straight off the engine's face semantics
  * (`combat.upgradeable-dice.ts`): a MANA face powers one paid line of its
- * colour, a BOON powers a card AND fires its conviction payload, a MISS is
+ * colour, a BOON powers a card AND fires the worn weapon's special, a MISS is
  * dead.
  */
 const FACE_KEY =
-    'MANA pays for a card in its colour. BOON pays for a card and pays '
-    + 'CONVICTION besides. MISS pays nothing.';
+    'MANA pays for a card in its colour. BOON pays for a card and fires '
+    + 'your weapon\'s special. MISS pays nothing.';
 
 /** The trade each verb makes, in the same face words. */
 const HONE_EFFECT = 'MISS face → MANA';
@@ -334,7 +333,6 @@ export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): Bl
             specialFaces: gear.specialFaces,
             manaFaces: gear.manaFaces,
             missFaces: dieGearMissFaces(gear),
-            specialConviction: gear.specialConviction,
             faceSummary: faceSummary(gear),
             hone: honeOffer(s.rail, color, budget),
             temper: temperOffer(s.rail, color, budget),

@@ -16,12 +16,19 @@ import {
     blacksmithCardUpgradeRefusal,
     leaveBlacksmith,
     concreteDefaultRail,
-    HEART_RICH_PAYLOAD_VARIANT,
+    BLACKSMITH_WITNESS_VARIANTS,
     ANVIL_VERB_PRICING,
     type BlacksmithSession,
 } from '@mechanics';
 
 import { selectBlacksmithVM, selectHasActiveBlacksmith } from '@/state/presenters/blacksmith.engine';
+
+/** A local fixture: the shipped variant list is empty (EQ4a); the swap path is still generic. */
+const FIXTURE_VARIANT = {
+    id: 'fixture-heart-wide-mana',
+    name: 'Fixture Fitting',
+    gear: { dieColor: 'heart', specialFaces: 1, manaFaces: 3 },
+} as const;
 
 function forging(budget: number, variants = [] as const): BlacksmithSession {
     return beginBlacksmith(createBlacksmithSession(1, concreteDefaultRail(), budget, variants as never));
@@ -83,20 +90,33 @@ describe('forge offer VM (enabled / disabled + reason)', () => {
         expect(wild.temper.reason).toMatch(/cap/i);
     });
 
-    it('presents an affordable swap offer for the witness variant', () => {
+    it('the shipped anvil offers no swap, and the intro and face key say a BOON fires the weapon special', () => {
+        expect(BLACKSMITH_WITNESS_VARIANTS).toEqual([]);
+        const vm = selectBlacksmithVM({ blacksmith: { session: forging(100, BLACKSMITH_WITNESS_VARIANTS as never) } });
+        expect(vm.swaps).toHaveLength(0);
+        expect(vm.introBody).toContain("fires your weapon's special");
+        expect(vm.faceKey).toBe(
+            "MANA pays for a card in its colour. BOON pays for a card and fires your weapon's special. MISS pays nothing.",
+        );
+        expect(vm.introBody).not.toMatch(/CONVICTION/);
+        expect(vm.faceKey).not.toMatch(/CONVICTION/);
+        expect(vm.dice[0]).not.toHaveProperty('specialConviction');
+    });
+
+    it('presents an affordable swap offer for a local variant', () => {
         const vm = selectBlacksmithVM({
-            blacksmith: { session: forging(100, [HEART_RICH_PAYLOAD_VARIANT] as never) },
+            blacksmith: { session: forging(100, [FIXTURE_VARIANT] as never) },
         });
         expect(vm.swaps).toHaveLength(1);
         const swap = vm.swaps[0]!;
         expect(swap.offer.verb).toBe('swap');
-        expect(swap.offer.id).toBe(`swap:${HEART_RICH_PAYLOAD_VARIANT.id}`);
+        expect(swap.offer.id).toBe(`swap:${FIXTURE_VARIANT.id}`);
         expect(swap.offer.enabled).toBe(true);
     });
 
     it('disables the swap offer when the wallet cannot cover it', () => {
         const vm = selectBlacksmithVM({
-            blacksmith: { session: forging(1, [HEART_RICH_PAYLOAD_VARIANT] as never) },
+            blacksmith: { session: forging(1, [FIXTURE_VARIANT] as never) },
         });
         const swap = vm.swaps[0]!;
         expect(swap.offer.enabled).toBe(false);

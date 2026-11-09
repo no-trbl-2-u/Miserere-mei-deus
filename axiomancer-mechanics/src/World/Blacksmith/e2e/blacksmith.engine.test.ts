@@ -20,11 +20,18 @@ import {
     claimBlacksmithOutcome,
     ANVIL_VERB_PRICING as P,
 } from '../blacksmith.engine';
-import { HEART_RICH_PAYLOAD_VARIANT } from '../blacksmith.content';
+import { BLACKSMITH_WITNESS_VARIANTS } from '../blacksmith.content';
 import { concreteDefaultRail, dieGearMissFaces } from '../../../Character/dieGear.reducer';
-import type { BlacksmithSession } from '../blacksmith.types';
+import type { BlacksmithSession, BlacksmithVariantOffer } from '../blacksmith.types';
 
-const forging = (budget = 100, variants = [HEART_RICH_PAYLOAD_VARIANT]): BlacksmithSession =>
+/** A local fixture: the shipped list is empty, the swap verb is still generic machinery. */
+const FIXTURE_VARIANT: BlacksmithVariantOffer = Object.freeze({
+    id: 'fixture-heart-wide-mana',
+    name: 'Fixture Fitting (3 MANA)',
+    gear: Object.freeze({ dieColor: 'heart', specialFaces: 1, manaFaces: 3 }),
+});
+
+const forging = (budget = 100, variants = [FIXTURE_VARIANT]): BlacksmithSession =>
     beginBlacksmith(createBlacksmithSession(1, concreteDefaultRail(), budget, variants));
 
 describe('blacksmith — lifecycle + invalid calls', () => {
@@ -103,11 +110,17 @@ describe('blacksmith — TEMPER', () => {
     });
 });
 
-describe('blacksmith — SWAP (payload change)', () => {
+describe('blacksmith — the shipped variant list', () => {
+    it('is empty: the +3 fitting is retired and the anvil offers no swap', () => {
+        expect(BLACKSMITH_WITNESS_VARIANTS).toEqual([]);
+    });
+});
+
+describe('blacksmith — SWAP (gear change)', () => {
     it('swaps in an offered variant piece and charges swap price', () => {
-        const s = swapBlacksmith(forging(100), HEART_RICH_PAYLOAD_VARIANT.id);
+        const s = swapBlacksmith(forging(100), FIXTURE_VARIANT.id);
         expect(s.card?.refused).toBe(false);
-        expect(s.rail.heart.specialConviction).toBe(3);
+        expect(s.rail.heart.manaFaces).toBe(3);
         expect(s.spent).toBe(P.swap);
         expect(s.swapped).toBe(1);
     });
@@ -118,7 +131,7 @@ describe('blacksmith — outcome ledger', () => {
         let s = forging(100);
         s = continueBlacksmithCard(honeBlacksmith(s, 'heart'));
         s = continueBlacksmithCard(temperBlacksmith(s, 'body'));
-        s = continueBlacksmithCard(swapBlacksmith(s, HEART_RICH_PAYLOAD_VARIANT.id));
+        s = continueBlacksmithCard(swapBlacksmith(s, FIXTURE_VARIANT.id));
         const left = leaveBlacksmith(s);
         expect(left.phase).toBe('outcome');
         const o = left.outcome!;
@@ -127,7 +140,7 @@ describe('blacksmith — outcome ledger', () => {
         expect(o.swapped).toBe(1);
         expect(o.spent).toBe(P.hone + P.temper + P.swap);
         expect(o.rail.body.specialFaces).toBe(2);
-        expect(o.rail.heart.specialConviction).toBe(3);
+        expect(o.rail.heart.manaFaces).toBe(3);
         const done = claimBlacksmithOutcome(left);
         expect(done.phase).toBe('done');
     });
