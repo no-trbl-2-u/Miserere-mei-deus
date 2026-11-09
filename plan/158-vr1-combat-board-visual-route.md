@@ -102,10 +102,6 @@ Checked against `app/` and the 19 `ROUTES` (2026-11-07). Not expanded here excep
 
 `enterLiveFight(page, baseUrl, { seed, kind, timeout, intoBoard })`: `intoBoard` defaults to `false`; when `true` the promise resolves once `combat-board` is visible and the dice layer has detached. A `ROUTES` entry may carry `maxDiffRatio` (default `DIFF_THRESHOLD_RATIO`) and `expectTestIds` (a list the route waits on before it shoots). No other signature changes.
 
-## Acceptance
-
-- **A7** `smoke-screens` has `deck` and `settings` routes (the `/deck` and `/settings` tabs) with baselines, selection rules for `app/(tabs)/deck/` and `app/(tabs)/settings/` that select only their own route, and README rows.
-
 ## Open questions
 
 1. How tight should the board's diff line be? Default: 0.1% for this route only (about 330 px), because the board's places are small and an exact-match renderer makes it free. Or: leave the global 0.5% and accept that a small badge can change colour unflagged; or 0.05% for a still tighter net. [T to confirm #1]
@@ -116,9 +112,8 @@ Checked against `app/` and the 19 `ROUTES` (2026-11-07). Not expanded here excep
 
 ## Chunks
 
-Measure: 1 open · 6 closed · next A8
+Measure: 0 open · 7 closed · next A8
 
-- [ ] **158.2** The Deck and Settings tabs get routes · S · closes A7 · needs — · alias: VR1b
 
 ### 158.1 (VR1a) — The combat board gets a visual route · M · closes A1, A2, A3, A4, A5, A6 · requires 152.3
 
@@ -133,3 +128,5 @@ Measure: 1 open · 6 closed · next A8
 - Two `ROUTES` rows (`deck` at `/deck`, `settings` at `/settings`, unforced context like `character` and `inventory`), the `app/(tabs)/deck/` and `app/(tabs)/settings/` selection rules, the README rows. The re-stamp commits the baselines.
 - Both screens are about to change (specs 155 and 152.6), so these baselines will re-stamp as those land; that is the route working, not a flake. If the Settings tab shows anything time-dependent, wait it out and say so.
 - Measure: `SMOKE_ONLY=deck,settings SMOKE_RUNS=5 npm run verify:visual -w axiomancer-mobile` exits 2, then `npm run verify -w axiomancer-mobile`.
+
+<!-- Not chunked yet: hand absorb in progress -->

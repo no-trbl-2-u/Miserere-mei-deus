@@ -31,20 +31,14 @@
 
 - The mutation job's near-zero scores on tested code (also seen on 2026-11-08), and the other loop problems already listed under the Nov 9 cloud-container deadline item.
 
-## Acceptance
-
-- **A1** When a PR's review verdict is `pass` and its `verify-gate` turns green after the review job has finished, the PR is merged by the loop without a person. Proven by a test of the new trigger's decision path (hermetic, fixtures for: pass then gate green → go; not-pass then gate green → no go; pass with a hold label → no go; pass on an older head → no go) and by one real PR in the PR body that merged this way.
-- **A2** A PR whose gate was already green at review time still merges exactly once (no double merge, no error from the second trigger); the concurrency group and an "already merged" no-op are pinned by a test.
-
 ## Open questions
 
 none
 
 ## Chunks
 
-Measure: 2 open · 0 closed · next A3
+Measure: 0 open · 2 closed · next A3
 
-- [ ] **160.1** The merge decision re-runs when the verify gate finishes · M · closes A1, A2 · needs — · alias: MG1a
 
 ### 160.1 (MG1a) — The merge decision re-runs when the verify gate finishes · M · closes A1, A2 · requires —
 
@@ -52,3 +46,5 @@ Measure: 2 open · 0 closed · next A3
 - The `since` step (a verdict older than the run is not its verdict) must not reject the earlier pass on the new path: the new path finds the verdict by head and diff digest, as the `reuse` path already does.
 - Tests in `scripts/pr-merge.test.mjs` (or a new `*.test.mjs` added to the root `npm test`): the four A1 fixture cases and the A2 double-trigger case. Workflow YAML changes are checked by the existing workflow lint, if any.
 - Measure: root `npm test` green; the PR body links the first loop PR that merged on the new path (or, if none landed before review, a dry-run log of the decision on a past PR such as #1464 at head `a02bcc3`).
+
+<!-- Not chunked yet: hand absorb in progress -->

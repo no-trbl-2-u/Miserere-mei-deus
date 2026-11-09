@@ -44,17 +44,13 @@ The cause is not established. One lead: the run-over state has a fresh world on 
 - **T, 2026-11-08,** on the review findings left open after `/pilot 159.6 161.1`: "Yes plot the test gaps". Review verdict on PR #1473, MED at `state/e2e/run-end-no-arrival.engine.test.tsx:100`, with the LOW at line 78.
 - **Read 2026-11-08, at 42f80962c.** The test calls `actions.resolveCurrentMapEvent()` and never asserts a scene is pending. `selectPacedEventRoute` returns null first when `selectHasActivePacedEvent` is false, so with nothing pending the test passes without the guard. The first test does not pin it either: the map's own run-over guard keeps `mockPush` empty.
 
-## Acceptance
-
-- **A5** A test fails if `selectPacedEventRoute`'s run-over guard is removed: it holds a run-over state with a cutscene really pending, asserts that it is pending, and asserts the route is null.
-
 ## Open questions
 
 none
 
 ## Chunks
 
-Measure: 1 open · 4 closed · next A6
+Measure: 0 open · 5 closed · next A6
 
 
 ### 161.1 (GO1a) — A second death reaches Game Over, not the opening scene · M · closes A1, A2, A3, A4 · requires —
@@ -63,7 +59,5 @@ Measure: 1 open · 4 closed · next A6
 - Fix the routing at its cause. Candidates to read: `app/combat-encounter/index.tsx` `onExit`, `app/hazard/index.tsx`, `state/run-end.ts`, `state/game-over.ts`, and the event gate that pushes `/cutscene`. The event gate must not fire for a run-over state.
 - Tests: a run-over state routes to Game Over and starts no arrival cutscene; a first death still reaches `/death-return`; the hazard path; NEW CHARACTER reaches character select for the slot.
 - Measure: the mobile gate run piecewise with a worker cap, then the browser sequence above run once, its route log and shots of the Game Over screen and character select in the PR body.
-- [ ] **161.2** The second run-end test really has a scene pending · S · closes A5 · needs — · alias: GO1b
-  - Test only: `axiomancer-mobile/state/e2e/run-end-no-arrival.engine.test.tsx`, the case "the event gate names no route for a run-over state, even with a scene pending". No change to app code.
-  - Put a cutscene in `event.pending` on the run-over state (through `actions.resolveCurrentMapEvent()` if that really leaves one, otherwise set it on the store), assert `store.getState().event.pending?.event.kind` is `cutscene` and `selectHasActivePacedEvent` is true, then assert the route is null.
-  - Measure: delete the `state.runOver === true` line from `selectPacedEventRoute` and show the case red, restore it and show it green, both in the PR body. Jest on that file with `--maxWorkers=1`.
+
+<!-- Not chunked yet: hand absorb in progress -->

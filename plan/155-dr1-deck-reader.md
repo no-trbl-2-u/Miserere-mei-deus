@@ -100,10 +100,6 @@ In the Reader the open card **is** the detail, so `DeckCardDetailOverlay` has no
 - `TooltipKind` gains `card-keyword`, resolved from the keyword registry.
 - The tooltip `show()` call gains an optional `pinned` flag; pinned shows skip the auto-dismiss timer.
 
-## Acceptance
-
-- **A4** A keyword inside the open card's text is drawn as part of the line and is pressable: a tap shows its gloss anchored to the word, a hold pins the gloss until it is dismissed, and each keyword carries its word and gloss to a screen reader. No keyword ledger is drawn on this screen; combat, rewards and the hazard deck still draw theirs.
-
 ## Open questions
 
 None left open. All three were answered by T on 2026-11-06, in the same session that settled the numbers:
@@ -114,9 +110,8 @@ None left open. All three were answered by T on 2026-11-06, in the same session 
 
 ## Chunks
 
-Measure: 1 open · 3 closed · next A5
+Measure: 0 open · 4 closed · next A5
 
-- [ ] **155.4** Keywords tapped and held in the card's own text · M · closes A4 · needs — · alias: DR1d
 
 ### 155.1 (DR1a) — The open card: its painting as a banner, its lines under it · M · closes A1 · requires —
 
@@ -147,3 +142,5 @@ Measure: 1 open · 3 closed · next A5
 - `DeckOpenCard` renders keyword runs as pressable spans inside the line, in the keyword's ink, each carrying the word as its a11y label and the gloss as its a11y hint.
 - The Deck screen draws no `CardKeywordLedger`; the component and its other callers are untouched.
 - Measure: presenter tests (a line's runs for a card with two keywords, and for one with none, with the card's own def preferred over the registry's), a component test (tap shows the gloss; long-press shows it pinned and it survives the timer; the next press replaces it), a test that the Deck screen renders no `card-keyword-ledger`, then `npm run verify -w axiomancer-mobile`. The PR carries a screenshot of a pinned gloss.
+
+<!-- Not chunked yet: hand absorb in progress -->

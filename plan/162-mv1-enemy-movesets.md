@@ -111,10 +111,6 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 - **T's end-gate answers (2026-11-08, after `/pilot 162`), verbatim:** on UNBROKEN when the foe loses its turn, "It would depend on the payout. But typically, pays anyway. It shouldn't be on their next turn, but rather on their next <trigger> ie. DEAL (or in the future, GUARD, etc.). Also, sometimes, is just at the start of the player's turn.", then on how the payout is timed, "Every payout at your turn start unless explicitly stated \"On <enemy name> 's next <action> <effect>\"". On the Saint's level: "The saint beneath should be a level 8 enemy. The player should be level 8-10 when they reach him".
 
-## Acceptance
-
-- **A10** The Saint Beneath fights at level 8 at the Sea Keep (`bw-k2`), at its full 320 VITAE.
-
 ## Open questions
 
 1. Saltwick Swarm's SHOCK 2 move had no name on the ballot. Default: **Static Bloom**. Or: Lit Nerves; or a name of T's. Accepted at merge (default)
@@ -123,7 +119,7 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 ## Chunks
 
-Measure: 1 open · 9 closed · next A11
+Measure: 0 open · 10 closed · next A11
 
 
 ### 162.1 (MV1a) — SEIZED replaces UNDERTOW · S · closes A1 · requires —
@@ -154,6 +150,5 @@ Measure: 1 open · 9 closed · next A11
 - Saltwick Swarm: `difficulty: 'elite'`, three phases. `BW_ELITE_DRAWS['bw-c1']` gains it at level 5, and `eliteDrawPool`'s limit rises from two foes to three, equal odds. `BW_ENCOUNTER_FOES`: `bw-t2` to `bilge-stalker` and `bw-t6` to `coralback`, levels unchanged. It leaves `ACT1_POOL`. Update the pinned node tests (`breakwater-chapter-foes`, `chapter1-recast`, `chapter1-pier-town`), and keep the check that no foe appears twice in a row on any route.
 - Tests: each foe's moves and Danger lines; no foe shares a move with another among these five; the other foes' moves unchanged.
 - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim report for the Breakwater before and after, in the PR body. Label `review:rules-change`.
-- [ ] **162.6** The Saint Beneath fights at level 8 · S · closes A10 · needs — · alias: MV1f
-  - `BW_DOOR_LEVEL` to 8 in `World/MapEvents/content.ts`, used only by the Saint's `boss` case. Update `breakwater.engine.test.ts` and any pin of the old 129 VITAE. No move's numbers change.
-  - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim in the PR body before and after, saying what level the player reaches the Saint at and how often they win. T's target is level 8-10 on arrival. Report it; do not retune. Label `review:rules-change`.
+
+<!-- Not chunked yet: hand absorb in progress -->

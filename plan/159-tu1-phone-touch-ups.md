@@ -96,11 +96,6 @@
 - **T, 2026-11-08,** on the review findings left open after `/pilot 159.6 161.1`: "Yes plot the test gaps". Review verdict on PR #1474, MED at `components/__tests__/TitleScreen.test.tsx:113` and MED at `components/__tests__/FitText.test.tsx:1`.
 - **Read 2026-11-08, at 42f80962c.** `TitleScreen.tsx`'s `ctaMounted` effect has an `instant` branch no test runs. `FitText.tsx`'s `useFontEpoch` and the twin's `key` have no test, and a test that only fires a layout event passes with or without the re-key.
 
-## Acceptance
-
-- **A19** A test fails if the reduced-motion branch of the title screen's Embark unmount is removed: with motion reduced, once the menu is up, the Embark block is gone without any timer advancing.
-- **A20** Tests fail if `FitText` stops measuring again: removing the font-load count or the width from the measuring twin's key, or the `loadingdone` listener or the `fonts.ready` bump, each turns a test red, and the listener is removed on unmount.
-
 ## Open questions
 
 1. How tall is the tab bar? Default: about 76 pt plus the bottom inset. Or: 84 pt; or keep 60 and only fix width and fill. Accepted at merge (default).
@@ -109,7 +104,7 @@
 
 ## Chunks
 
-Measure: 2 open · 18 closed · next A21
+Measure: 0 open · 20 closed · next A21
 
 
 ### 159.1 (TU1a) — The Spoils and the fight · M · closes A1, A2, A3, A4 · requires 158.1
@@ -140,7 +135,5 @@ Measure: 2 open · 18 closed · next A21
 - Move `<DevToolsLink />` from Self to the end of `app/(tabs)/settings/index.tsx`; testID `settings-dev-tools-link`. Update every script that clicked `self-dev-tools-link` from `/character` to open `/settings` and click the new testID (`grep -rl self-dev-tools-link axiomancer-mobile/scripts .github`); update the docs and comments that say "the SELF tab's DEV TOOLS" (`app/dev/index.tsx` header, `scripts/live-fight-entry.mjs`, spec text is history and stays).
 - Tests: Self no longer renders the link; Settings renders it under the dev gate; the plaque layout at 360 and 390.
 - Measure: `npm run verify -w axiomancer-mobile`, then `npm run verify:visual -w axiomancer-mobile` locally on the `combat-encounter` route (its entry walks the new path) and one e2e that used the old link (`node scripts/encounter-routing-e2e.mjs` or the lightest of the seven).
-- [ ] **159.7** The Embark unmount under reduced motion and FitText's re-measure get tests · S · closes A19, A20 · needs — · alias: TU1g
-  - Tests only, unless a test finds a real fault. `components/__tests__/TitleScreen.test.tsx`: beside "unmounts the Embark block once its fade ends", a case with motion reduced (`useReducedMotion` true) where the Embark block is gone once the menu is up, with no `advanceTimersByTime`.
-  - `components/__tests__/FitText.test.tsx`: stub `globalThis.document.fonts` (`addEventListener`, `removeEventListener`, `ready`) and restore it after each test. Pin that the twin is remounted on `loadingdone`, on `ready`, and when the wrapper's width changes; a remount has to be observed directly, because firing another layout event on the twin passes with or without the re-key. Pin that the listener is removed on unmount.
-  - Measure: for each of the five mutations named in A19 and A20 (the `instant` branch; `fontEpoch` out of the key; `width` out of the key; the `loadingdone` listener; the `ready` bump), show the case red and then green in the PR body. Jest on those two files with `--maxWorkers=1`.
+
+<!-- Not chunked yet: hand absorb in progress -->

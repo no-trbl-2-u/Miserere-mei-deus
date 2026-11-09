@@ -98,22 +98,14 @@ plate that is too pale fails the check and a dark fixture passes.
 
 None. The report is a generated record, not save data.
 
-## Acceptance
-
-- **A9** The title screen's EMBARK button is T's parchment "Embark" scroll, cut from T's sheet with a clean torn-edge
-  alpha, at most 320 wide with its aspect kept; it keeps EMBARK's press (and its lockout during the lift), reads to a
-  screen reader as "Embark on your journey", dips when pressed and rings on web keyboard focus. The main menu's NEW
-  GAME and CONTINUE stay text rows (T, 2026-11-05).
-
 ## Open questions
 
 (None. A call the brief left open is accepted at merge: AGENTS.md § Building a phase, "Calls left open".)
 
 ## Chunks
 
-Measure: 1 open · 8 closed · next A10
+Measure: 0 open · 9 closed · next A10
 
-- [ ] **121.3** The title screen's EMBARK button is T's parchment Embark scroll · S · closes A9 · needs — · alias: TP1c
 
 ### 121.2 (TP1b) — The title plate: Doré's *Inferno* Plate 3, the lion · M · closes A8 · requires —
 
@@ -137,3 +129,5 @@ Measure: 1 open · 8 closed · next A10
   the Embark button on the title screen with this new embark button"), and the title plate shows undimmed: no menu dim, no foot or side fade (T, 2026-11-04: 'no overlays').
 - Measure: `npm run verify -w axiomancer-mobile`, `npm run art:legibility -w axiomancer-mobile`, and
   `node --test scripts/asset-provenance.test.mjs` pass.
+
+<!-- Not chunked yet: hand absorb in progress -->

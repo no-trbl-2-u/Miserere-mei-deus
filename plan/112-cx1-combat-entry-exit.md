@@ -183,35 +183,13 @@ walk to W2 captures the map mid-spread from W2's token and the reveal mid-draw.
 None. No setting is added (ST1a owns `musicOn`), the playback position is not saved (as MU1), and the
 map spread delays a resolve the save already treats as owed.
 
-## Acceptance
-
-- **A6** Confirming a walk to an encounter, elite or boss node starts an ink spread **on the map**: a
-  blot of ink grows out of that node's token (its on-screen point after the camera has framed it)
-  until it covers the screen, in under a second. The node's event is resolved (and the fight staged)
-  only once the ink covers, so `CombatGate` pushes into a black screen. A reload during the spread
-  lands on the map with the arrival still owed, which replays the fight (`vm.arrivalPending`, the
-  existing path).
-- **A7** The fight screen opens with no stack slide or fade of its own when an ink spread led to it,
-  and its curtain starts covered and draws back with a visible edge (the ink receding off the foe,
-  not a near-black opacity fade on a near-black screen); the reveal's portrait rises as the ink
-  leaves. Total from confirm to the reveal settled stays near two seconds (ET1 decision 8); a tap
-  skips to the end state.
-- **A8** Reduced motion and the e2e escape hatch still land the end states at once: no map spread, the
-  event resolved on confirm as today, the reveal with no curtain. The motion answer comes from the
-  caller (`components/combat/frames/__tests__/reducedMotionSource.test.ts`).
-- **A9** The trigger path is pinned without a device: a screen test on the exploration screen confirms
-  a walk to an encounter node in animate mode and sees the map ink mount at the token and
-  `resolveCurrentMapEvent` not called until the spread reports covered (and called at once in instant
-  mode); a browser drive with motion **not** reduced walks to W2 and captures the map mid-spread and
-  the reveal mid-draw (the frames ride the PR), asserting the ink element's coverage is between none
-  and full at each capture.
-
 ## Open questions
 
 (None. A call the brief left open is accepted at merge: AGENTS.md § Building a phase, "Calls left open".)
 
 ## Chunks
 
-Measure: 4 open · 5 closed · next A10
+Measure: 0 open · 9 closed · next A10
 
-- [ ] **112.2** The ink bleeds out of the token · L · closes A6, A7, A8, A9 · needs — · alias: CX1b
+
+<!-- Not chunked yet: hand absorb in progress -->

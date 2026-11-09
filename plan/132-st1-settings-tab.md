@@ -127,21 +127,13 @@ Measure: a tree grep for `self-dev-tools-link` outside `plan/` is empty and the 
 `state/settings.ts` gains `musicOn: boolean` (default `true`), read with a default so a save written
 before ST1a loads unchanged. Nothing else is saved; `FeedbackDraft` is in memory only.
 
-## Acceptance
-
-- **A6** The DEV TOOLS link moves from the SELF tab into Settings, in a DEV section at the bottom, under the
-  same `isDevToolsEnabled()` gate: present in dev and preview builds, absent (section and all) in
-  production. The SELF tab no longer mounts it. Its testID becomes `settings-dev-tools-link`.
-- **A7** Every consumer of the old id is moved to the new path (the SETTINGS tab, then the link): the six
-  e2e scripts and `audit-capture.mjs`, the link's test, the playtester agent and the five docs named under
-  Sources. `self-dev-tools-link` appears nowhere in the tree outside `plan/` history.
-
 ## Open questions
 
 (None. A call the brief left open is accepted at merge: AGENTS.md § Building a phase, "Calls left open".)
 
 ## Chunks
 
-Measure: 2 open · 5 closed · next A8
+Measure: 0 open · 7 closed · next A8
 
-- [ ] **132.2** The dev menu moves into Settings · S · closes A6, A7 · needs — · alias: ST1b
+
+<!-- Not chunked yet: hand absorb in progress -->

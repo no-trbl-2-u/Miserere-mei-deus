@@ -190,25 +190,13 @@ the tab bar, and the gesture line sits in a strip under the frame, not over the 
 
 None. The camera memory is in-memory only (A7) and never written to the save.
 
-## Acceptance
-
-- **A9** (the pane is measured on every layout) The viewport, the pan limit and the framing follow
-  every layout change of the map's pane, not only the first. A test that relayouts the wrapper
-  shorter and asserts the bounds follow.
-- **A10** (the whole region is reachable) On the web build at 360x800 the Breakwater's bottom-most
-  node and the plate's bottom edge can be panned fully into view above the tab bar; a
-  `verify:visual` baseline of the WILDS tab panned to the plate's foot shows it.
-- **A11** (nothing over the map but RECENTRE) The gesture line (the legend and step count are already
-  cut) leaves the map frame and sits directly under it, above the hint, so no furniture covers a
-  node `[T to confirm #1]`; the recentre button stays bottom-right inside the frame. A
-  `verify:visual` baseline of the WILDS tab.
-
 ## Open questions
 
 (None. A call the brief left open is accepted at merge: AGENTS.md § Building a phase, "Calls left open".)
 
 ## Chunks
 
-Measure: 3 open · 8 closed · next A12
+Measure: 0 open · 11 closed · next A12
 
-- [ ] **111.3** The map's foot in view, the gesture line off the map · S · closes A9, A10, A11 · needs — · alias: MC1c
+
+<!-- Not chunked yet: hand absorb in progress -->

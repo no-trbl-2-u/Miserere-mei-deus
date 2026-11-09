@@ -195,11 +195,6 @@ The `description` itself is the irreducible minimum — the field is required by
 - `BW_ENCOUNTER_FOES` keeps its 14 keys with new slugs; `BW_ELITE_DRAWS['bw-w5']` swaps `toll-keeper` for `wreckmaster`; the `boss` case pins `saint-beneath`.
 - `ENEMY_ART_BY_KEY` goes from 17 static `require()`s to 23; `ENEMY_FRAME_SETS` from 17 sets to 23; `ENEMY_BACKINGS` is regenerated for 23 keys.
 
-## Acceptance
-
-- **A2** Chapter 1's 18 combat nodes draw the recast roster at the levels in the Design table: the six new foes hold the nodes of the six they replace, the four benched foes' five nodes draw repeats of foes that stay (two keeper duplicates, three a new recast face's second node), the keep causeway still draws one of two, and the sea keep's boss is The Saint Beneath. No benched foe is drawn or pinned anywhere in Chapter 1.
-- **A3** A wandering Act 1 fight draws one of the six named Chapter 1 normals, never a benched foe, and `docs/reports/chapter1-enemies.md` is regenerated against the recast roster with its new commit stamp.
-
 ## Open questions
 
 1. The five new non-boss foes' names. The spec proposes **Saltwick Swarm**, **The Wreckmaster**, **Quay-Crab**, **Bilge-Stalker** and **Coralback**, following the roster's convention that elites and bosses take "The" and normals do not. The boss is **The Saint Beneath**, which is yours. Rename any of the five. [T to confirm #1]
@@ -210,9 +205,8 @@ The `description` itself is the irreducible minimum — the field is required by
 
 ## Chunks
 
-Measure: 2 open · 2 closed · next A5
+Measure: 0 open · 4 closed · next A5
 
-- [ ] **157.2** Chapter 1's nodes repointed, the benched foes' nodes refilled, the wandering pool on the survivors · M · closes A2, A3 · needs — · alias: EN3b
 
 ### 157.1 (EN3a) — The six new library entries, each on its cut foe's numbers · M · closes A1 · requires —
 
@@ -248,3 +242,5 @@ Measure: 2 open · 2 closed · next A5
 - `scripts/frame-set-portraits.test.mjs` requires each set's `anim/<key>/provenance.json` to carry a `portrait_sha256` equal to the sha256 of its portrait on disk — the six sheets must be cut from the six portraits as committed.
 - Six per-foe pane suites under `components/combat/encounter/__tests__/CombatCombatantPane.<key>.test.tsx`, matching the 17 that exist.
 - Measure: `npm run verify -w axiomancer-mobile` green, which is the whole point — name the three previously failing suites (`asset-provenance.test.mjs`, `enemy-backings.test.mjs`, `CombatCombatantPane.action-clip.test.tsx`) in the PR body with their results. Run jest with `--maxWorkers=4`. The PR carries a `devframes` screenshot of each new set's idle clip, the two floating ones included.
+
+<!-- Not chunked yet: hand absorb in progress -->

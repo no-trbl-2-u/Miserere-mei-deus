@@ -76,10 +76,6 @@
 - Screens the ballot did not cover: the village, blacksmith, rest, hazard, quest, cutscene, travel, cache and other node screens. T asked for a separate check of every other screen once spec 153's PR is open.
 - New kit art.
 
-## Acceptance
-
-- **A5** The fight summary, card offer, CONTINUE and TAKE NOTHING / TAKE CARD are on vellum. No gold or amber text sits on parchment, and every inked colour on vellum measures at least 4.5:1.
-
 ## Open questions
 
 1. When should this be built? Default: the Asap lane, after the entries already there, so T sees it at the MVP demo on Nov 16. Or: table order. [T to confirm #1]
@@ -89,9 +85,8 @@
 
 ## Chunks
 
-Measure: 1 open · 7 closed · next A9
+Measure: 0 open · 8 closed · next A9
 
-- [ ] **152.4** The Spoils on vellum, inked to read · S · closes A5 · needs — · alias: UK1d
 
 ### 152.1 (UK1a) — The look table, the kit primitives and the pieces it names · M · closes A1 · requires —
 
@@ -134,3 +129,5 @@ Measure: 1 open · 7 closed · next A9
 - `ThemeSwitcher` keeps today's code.
 - The title screen is untouched.
 - Measure: `npm run verify -w axiomancer-mobile`. The PR carries screenshots of the main menu, Settings (top and lower) and the title screen beside main's.
+
+<!-- Not chunked yet: hand absorb in progress -->

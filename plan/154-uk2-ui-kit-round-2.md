@@ -86,10 +86,6 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 - The art, transitions and animation of the travel, cache and cutscene event kinds: their own pitch Items (Nov 8 and 9). This spec makes only T's round-2 changes, which those pitches start from.
 - The blacksmith and item-reward screens: empty states only in the mixer, with nothing judged.
 
-## Acceptance
-
-- **A6** The quest panel shows no pay, and a single-step quest shows no counter, through the same helper as the quest tracker.
-
 ## Open questions
 
 1. Which animated fire does the rest screen use? Confirmed by T (2026-11-06): `campfire-05`, copied from T's checkout into `assets/images/screens/animated-fixtures/campfire-05/` (PR #1404).
@@ -98,9 +94,8 @@ G-02 and G-03 (the aftermath panel) are not skinned: the panel is gone (T, 2026-
 
 ## Chunks
 
-Measure: 1 open · 8 closed · next A10
+Measure: 0 open · 9 closed · next A10
 
-- [ ] **154.6** The quest shows no pay and no lone counter · S · closes A6 · needs — · alias: UK2f
 
 ### 154.1 (UK2a) — Round 2's looks: dialogue, travel, hazard, quest, labyrinth · M · closes A1 · requires 152.1
 
@@ -160,3 +155,5 @@ Measure: 1 open · 8 closed · next A10
 - Reduced motion shows frame 00.
 - The night-passing sequence (ET1c) still plays after a choice.
 - Measure: a screen test (no eyebrow, no spent line, the bar present, the frame player mounted, a still frame under reduced motion), then `npm run verify -w axiomancer-mobile`. The PR carries a rest screenshot.
+
+<!-- Not chunked yet: hand absorb in progress -->

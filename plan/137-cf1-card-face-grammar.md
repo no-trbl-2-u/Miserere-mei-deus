@@ -301,14 +301,6 @@ of which #1328 keeps. Built first, the rules show in both places until #1328 lan
 - `PlayerSettings.cardText: 'words' | 'glyphs'`, default `'words'`. Older saved settings without the field read as
   `'words'`; no save or schema version changes.
 
-## Acceptance
-
-- **A15** Settings, on both its route and its tab, has a RULES GLOSSARY button that opens a scrollable list and
-  closes again. The list has exactly one entry per `SYSTEM_GLOSSARY` term plus VULNERABLE and DISCARD, READING A LINE
-  and GLOBAL among them. A screen test walks `SYSTEM_GLOSSARY` and `keywordGloss` and finds each term and def on
-  screen character for character, so every entry reads from the shared data, a new glossary term appears with no edit
-  here, and the presenter and the sheet hold no copy of a rule's words. No card text or `run` body changes.
-
 ## Open questions
 
 - The pitch's six calls: T answered all of them on 2026-11-01.
@@ -318,8 +310,7 @@ of which #1328 keeps. Built first, the rules show in both places until #1328 lan
 
 ## Chunks
 
-Measure: 1 open · 14 closed · next A16
-- [ ] **137.9** The Rules Glossary button in Settings, reading the shared glossary · S · closes A15 · needs — · alias: CF1i
+Measure: 0 open · 15 closed · next A16
 
 
 ## Follow-ups (not in this spec)
@@ -328,3 +319,5 @@ Measure: 1 open · 14 closed · next A16
   FREE is a lighter PAID or a one-keyword effect: T's session.
 - Live resolved numbers on the face (`DEAL 14` for the board as it stands): parked in the pitch as a later layer.
 - New keywords for effects on you, when a card needs one.
+
+<!-- Not chunked yet: hand absorb in progress -->
