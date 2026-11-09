@@ -203,7 +203,7 @@ its act still waits on. Work the loop can finish alone, with no T act after it, 
 | [ ] | 2026-11-12 | Review the reworked travel, loot cache and cutscene screens (1.5 h) | Every event screen proper | Have Claude list each screen's gaps against its pitch; you rule | W2 | T | UK2d, UK2g |
 | [ ] | 2026-11-13 | Buffer: fixes from the event-screen reviews (1 h) | Every event screen proper | Have Claude turn your review notes into fix rows | W2 | T | - |
 | [ ] | 2026-11-14 | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | The MVP run | Claude turns your notes into `/plot` or `/messy` rows | W2 | T | CH1g, CH1f, CH1h, CH1i, CH1j, BW1c, NK1a, MU1, EN2a, EN2b, CD1a, CD1b, SM1a, SM1b, SM1c, SM1d, BUG1b, MC1a, MC1b, MC1c, CX1a, CX1b, SM2a, EQ3a, EQ3b, EQ3c, XP1a, SD1a, AN6a, AN6b, CP1a, XR1a, MR1a, MR1b, MR1c, MR1d, MR2a, MR2b, MR2c, MR2d, MR2e, TP1b, TP1c, AP1a, AP1b, AP1c, AP1d, AP1e, AP1f, AP1h, AP1i, MR3a, MR3b, MR4a, MR4b, TU1a, TU1b, TU1c, TU1d, TU1e, TU1f, GO1a, MV1a, MV1b, MV1c, MV1d, MV1e, MV1f |
-| [ ] | 2026-11-14 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule | W2 | DF1f | CA3a, CA3e |
+| [x] | 2026-11-14 | Play the Defender test deck on the preview build and check the reward pool (0.5 h) | The Defender lane | Claude sets up the `/dev` deck steps; you play and rule | W2 | DF1f | CA3a, CA3e |
 | [ ] | 2026-11-14 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | Stat scaling (`Combat/stat-scaling.ts`) | Have Claude recommend tuning from a table of each lane's numbers | W2 | T | - |
 | [ ] | 2026-11-14 | Play your quest line on the preview build and rule on its lines (0.5 h) | The Breakwater's questline | Claude turns your notes into fixes for BW1e | W2 | T | BW1e |
 | [ ] | 2026-11-15 | File what is still broken (`/plot` or `/messy`) and decide what the MVP run must show (1 h) | The MVP run | Claude lists what the mid-MVP check filed and what has shipped since; you cut or keep | W2 | T | SM2b, SM2c, SM2d, SM2e, SM2f |
@@ -309,6 +309,8 @@ here with the date; nothing is dropped silently. A window's "to plot" items are 
 attended session.
 
 ## Change log
+
+- **2026-11-09** — **CK1a closes the three confirmed checks and retires eight specs** (T confirmed Merciful, Defender and Elementalist on the APK). **Ticked** the Nov 14 Defender Item (DF1f). **Edited** the Dec 23 Item's Rows from LG1h to CK1d. **Removed** the Unscheduled lines for MF1e, EL1d, SM1i, OV1d, BE2g, FM2d and the shipped SR1a, and CK1d's line, which the Dec 23 Item now covers.
 
 - **2026-11-09** — **the prod APK plotted into spec 163 (TK1d)** (T, attended, answering 163's calls during the 163-166 pilot: preview stays T's, `production` is repurposed as the sideloadable APK with no DEV TOOLS, rows post as `human`, releases carry the prod APK only). **Added** TK1d under `## Unscheduled`; TK1c now needs it.
 - **2026-11-09** — **the API token split plotted as spec 163 (TK1a-TK1c)** (T, attended: told the preview APK holds the all-routes token, "Plot the token split now"). **Added** TK1a, TK1b and TK1c under `## Unscheduled`; no date is T's until TK1a ships.
