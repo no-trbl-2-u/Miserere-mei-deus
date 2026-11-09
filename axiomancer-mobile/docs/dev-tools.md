@@ -78,11 +78,11 @@ carries null. The poster is `lib/puzzleAttempts.ts`, called from
 each attempt by layout and clock start, so renaming the SOLVER after a solve
 never posts it twice.
 
-It posts only when **all three** hold, and otherwise makes no network call:
+It posts only when **both** of these hold, and otherwise makes no network call.
+Dev tools do not gate it: the production tester APK has them off and posts.
 
 | Needs | Where it comes from |
 |---|---|
-| dev tools on | `isDevToolsEnabled()`: a preview build, or a local dev session |
 | `EXPO_PUBLIC_PUZZLE_API_URL` | the Worker's origin, no path (a trailing slash is dropped) |
 | `EXPO_PUBLIC_PUZZLE_API_TOKEN` | the shared dev bearer token, the Worker's `PUZZLE_API_TOKEN` |
 
@@ -94,8 +94,10 @@ For a local session, export both values before `npm start`. For a preview
 APK, `.github/workflows/preview-build.yml` reads the repo secrets of the same
 names and writes them into the build profile's `env` in its checkout's
 `eas.json` (an EAS cloud build does not see the runner's env); it skips this
-for `production`, and with either secret unset the build simply never posts.
-The token ships inside the preview APK, which the brief accepts for dev-only
+for `beta` only. `production` gets the values too, for `platform: android`;
+`platform: all` with `production` is refused before a build is spent, so the
+token never reaches the iOS App Store build. With either secret unset the build
+simply never posts. The token ships inside the preview and production APKs, which the brief accepts for dev-only
 puzzle times; rotating it means a new secret and a rebuild. Tests:
 `lib/__tests__/puzzleAttempts.test.ts`,
 `components/hazard/puzzle/__tests__/HazardPuzzlePost.test.tsx`.
@@ -155,12 +157,13 @@ on only while T is the only player.** Before a preview APK goes to anyone but
 T, the default flips to off and BE1's playtester follow-up (device ids, a
 privacy note) is plotted first.
 
-**The gate** (`lib/playLog.ts`): a post goes out only when dev tools are on
-(`isDevToolsEnabled()`), the BE1 API URL and token are set, and the switch is
-on. With any one false no request is made and nothing is buffered. A failed
-post warns once in dev and is dropped (no retry, no queue). Production
-builds send nothing whatever the switch says. The puzzle poster above keeps
-its own gate; the switch does not touch it.
+**The gate** (`lib/playLog.ts`): a post goes out only when the BE1 API URL and
+token are set and, where dev tools are on (`isDevToolsEnabled()`), the switch
+is on. With either false no request is made and nothing is buffered. A failed
+post warns once in dev and is dropped (no retry, no queue). A build with dev
+tools off (the production tester APK) has no switch and posts whenever it
+carries the URL and token; a `beta` build carries neither, so it sends
+nothing. The puzzle poster above does not read the switch.
 
 **What is sent.** Both bodies carry the solver name, a session id minted per
 app launch (not a device id), the build commit (`getBuildCommit()`, null in
@@ -181,14 +184,13 @@ so T's numbers are never mixed with a machine's.
 
 | Source | Who | Stamped by |
 |---|---|---|
-| `human` | T, on a **preview APK** | a build whose `EXPO_PUBLIC_PLAY_LOG_SOURCE` is `human`; only the committed `axiomancer-mobile/eas.json` preview profile sets it (`lib/playLog.ts`, `playLogSourceKind`) |
+| `human` | T on a **preview APK**, testers on the **production APK** | a build whose `EXPO_PUBLIC_PLAY_LOG_SOURCE` is `human`; only the committed `axiomancer-mobile/eas.json` preview and production profiles set it (`lib/playLog.ts`, `playLogSourceKind`) |
 | `harness` | any other build: every web export, a dev server T opens by hand, a jest run | the same function, as its default, so a forgotten harness can never land in T's numbers |
 | `sim` | the headless bots (`npm run sim:run`) | the run driver, through the `source` dep of the recorder and poster; the app itself never sends `sim` |
 
 What makes a build `human` is that one env value and nothing else: not the
 dev-tools switch, not the API URL, not who runs it. The BE2 gate above is
-unchanged (a source is a stamp, not a gate): production and beta builds still
-send nothing. A post that leaves `source` out (an older APK) is stored `human`.
+unchanged (a source is a stamp, not a gate): a beta build still sends nothing. A post that leaves `source` out (an older APK) is stored `human`.
 Migration `0006` relabelled every fight and deck event stored before it
 `harness`, whatever its build; old puzzle attempts stay `human`.
 

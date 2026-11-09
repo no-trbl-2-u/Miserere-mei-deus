@@ -328,8 +328,19 @@ describe('the app bridges', () => {
         expect((JSON.parse(posts[0][1].body) as FightPost).runId).toBe(before);
     });
 
-    it('with dev tools off, staging and ending a fight makes no call', async () => {
+    it('with dev tools off and the API baked in, a fight posts (the production tester APK)', async () => {
         devTools.mockReturnValue(false);
+        const arrival = arriveAtRealFight();
+        arrival.actions.beginHazardEncounter();
+        expect(fightRecorder.isRecording()).toBe(true);
+        arrival.actions.endCombat('flee');
+        await flush();
+        expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('with dev tools off and no API token baked in, staging and ending a fight makes no call', async () => {
+        devTools.mockReturnValue(false);
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
         const arrival = arriveAtRealFight();
         arrival.actions.beginHazardEncounter();
         expect(fightRecorder.isRecording()).toBe(false);

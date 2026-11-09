@@ -158,7 +158,7 @@ describe('posting ended attempts (A3)', () => {
         }
     });
 
-    it('a production build makes no network call', () => {
+    it('a build with dev tools off makes no network call: the demo records no attempt to post', () => {
         devTools.mockReturnValue(false);
         const screen = mount();
         solveHardRisk(screen);

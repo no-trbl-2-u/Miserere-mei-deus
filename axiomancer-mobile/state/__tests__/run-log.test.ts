@@ -209,6 +209,7 @@ describe('a run, from its start to its end', () => {
 
     it('makes no call at all while the gate is shut', async () => {
         devTools.mockReturnValue(false);
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
         const { store, actions } = newGame();
         walkOn(store, actions);
         const { enemy, combat } = firstFight();
