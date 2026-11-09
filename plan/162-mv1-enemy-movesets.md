@@ -29,7 +29,7 @@
 
 ### The new words
 
-- **SHOCK n.** Every DEAL against a SHOCKED target does n more, per hit. It lasts 3 turns; a new SHOCK resets the turns to 3 and adds to n. Built to work on either side, since T will give it to lanes later. In this spec only foes place it, on the player. [T to confirm #2]
+- **SHOCK n.** Every DEAL against a SHOCKED target does n more, per hit. It lasts 3 turns; a new SHOCK resets the turns to 3 and adds to n. Built to work on either side, since T will give it to lanes later. In this spec only foes place it, on the player. Accepted at merge (default)
 - **UNBROKEN.** A clause on a move that raises WARD: it pays out at the start of the foe's next turn if any of that WARD is left. Broken WARD pays nothing.
 - **SEIZED** replaces UNDERTOW as the word the player reads, everywhere. The effect is unchanged: the named die, dice or a random die sit out your next roll. Nothing ties it to one colour of die. Move names stay thematic to the foe: Hear Me, Grip, and the existing Hoist, Gull-call, Undertow (the Tide-Gate's move name, not the word) and Toll for the Drowned.
 
@@ -109,9 +109,6 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 ## Acceptance
 
-- **A1** Every word the player reads as UNDERTOW now reads SEIZED, with its gloss and glyph; the effect and each move's dice are unchanged; a move named Undertow keeps that name.
-- **A2** SHOCK n adds n to each DEAL hit against the target; it lasts 3 turns; a new SHOCK resets the turns to 3 and adds to n; it shows on the status row and has a gloss.
-- **A3** UNBROKEN pays out at the start of the foe's next turn when any of that move's WARD is left, and pays nothing when it was broken; it has a gloss.
 - **A4** The Saint Beneath fights with exactly the six moves above in four phases, each Danger opening its phase at 75%, 50% and 25%; it has no enemy deck and no copied stages, and its journal entry no longer carries the Death Beholder's text; Communion and the Curse counts behave as written, with no Curses included.
 - **A5** The Death Beholder's deck, stages and fights are unchanged.
 - **A6** The Wreckmaster, Saltwick Swarm, Quay-Crab, Coralback and Bilge-Stalker play exactly the moves above, each Danger at its line, and share no move with any other foe.
@@ -121,17 +118,15 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 ## Open questions
 
 1. Saltwick Swarm's SHOCK 2 move had no name on the ballot. Default: **Static Bloom**. Or: Lit Nerves; or a name of T's. [T to confirm #1]
-2. SHOCK as written lands on the target and makes every DEAL against it worse. Default: that reading, so a foe's SHOCK makes each of its hits on you hit harder. Or: SHOCK on you makes your own DEALs stronger. [T to confirm #2]
+2. SHOCK as written lands on the target and makes every DEAL against it worse. Default: that reading, so a foe's SHOCK makes each of its hits on you hit harder. Or: SHOCK on you makes your own DEALs stronger. Accepted at merge (default)
 3. The Saint Beneath's journal text. Confirmed by T (2026-11-08): T's own story (a fisherman betrayed by the town, drowned by the gang, made the Saint by his anger), in Cormac McCarthy's voice; the text under "The leftovers" above.
 
 ## Chunks
 
-Measure: 8 open · 0 closed · next A9
+Measure: 5 open · 3 closed · next A9
 
-- [ ] **162.1** SEIZED replaces UNDERTOW · S · closes A1 · needs — · alias: MV1a
-- [ ] **162.2** SHOCK and UNBROKEN join the rules · M · closes A2, A3 · needs — · alias: MV1b
-- [ ] **162.3** The Saint Beneath's own moves · M · closes A4, A5 · needs 162.1 · alias: MV1c
-- [ ] **162.4** Five recast foes get their own moves, and Saltwick Swarm becomes an elite · M · closes A6, A7, A8 · needs 162.1, 162.2 · alias: MV1d
+- [ ] **162.3** The Saint Beneath's own moves · M · closes A4, A5 · needs — · alias: MV1c
+- [ ] **162.4** Five recast foes get their own moves, and Saltwick Swarm becomes an elite · M · closes A6, A7, A8 · needs — · alias: MV1d
 
 ### 162.1 (MV1a) — SEIZED replaces UNDERTOW · S · closes A1 · requires —
 
