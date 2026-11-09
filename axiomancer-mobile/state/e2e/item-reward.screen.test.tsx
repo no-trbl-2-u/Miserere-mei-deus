@@ -13,7 +13,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import {
     createCharacter, getConsumableById, getRelicById, FIXTURE_ARMOR, FIXTURE_TRINKETS,
-    FIXTURE_WEAPON, SLOT_CAPACITY,
+    FIXTURE_WEAPON, SLOT_CAPACITY, weaponLibrary,
 } from '@mechanics';
 import type { Character, Equipment, GameState, Item } from '@mechanics';
 
@@ -72,6 +72,16 @@ describe('/item-reward screen — lane line (LR1a A3)', () => {
     it('the Suppliant\'s Ring hands over with "Lane: Merciful (while worn)"', () => {
         mount((store) => offerItemRewardAction(store, relic(BENCHED_ACCESSORY)));
         expect(screen.getByTestId('item-reward-lane').props.children).toBe('Lane: Merciful (while worn)');
+    });
+});
+
+describe('/item-reward screen — a found weapon with an effect', () => {
+    it('still prints its description, since this screen has no effect block', () => {
+        const blade = weaponLibrary.find((w) => w.id === 'weapon-siphoning-blade')!;
+        expect(blade.effect).toBeDefined();
+        mount((store) => offerItemRewardAction(store, blade));
+        expect(screen.getByTestId('item-reward-flavor').props.children).toBe(blade.description);
+        expect(blade.description).not.toBe('');
     });
 });
 

@@ -142,4 +142,14 @@ describe('EquipmentDetailModal — the effect block (EQ3 A15)', () => {
         const second = render(<EquipmentDetailModal vm={relic} onClose={jest.fn()} />);
         expect(second.getByTestId('equip-detail-flavor').props.children).toBe(SIGNET.description);
     });
+
+    it('gear with no effect block still shows its flavor line', () => {
+        const stick: Equipment = {
+            id: 'plain-stick', name: 'Plain Stick', description: 'A stick, nothing more.', category: 'equipment', slot: 'weapon',
+        };
+        const vm = selectEquipmentDetailViewModel(stateWith([stick], [stick]), stick.id)!;
+        expect(vm.effect).toBeNull();
+        const { getByTestId } = render(<EquipmentDetailModal vm={vm} onClose={jest.fn()} />);
+        expect(getByTestId('equip-detail-flavor').props.children).toBe('A stick, nothing more.');
+    });
 });

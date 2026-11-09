@@ -93,23 +93,25 @@ describe('equipment detail view-model — lane', () => {
     });
 });
 
-describe('equipment detail view-model — flavor shows once', () => {
+describe('equipment detail view-model — flavor', () => {
     const BLADE = weaponLibrary.find((w) => w.id === GREY_WEAPON_ID)!;
     const COAT = armorLibrary.find((a) => a.id === GREY_ARMOR_ID)!;
+    const STICK: Equipment = {
+        id: 'plain-stick', name: 'Plain Stick', description: 'A stick, nothing more.', category: 'equipment', slot: 'weapon',
+    };
 
-    it('a weapon and an armor with an effect block carry no flavor line', () => {
-        const blade = selectEquipmentDetailViewModel(stateWith([BLADE], [BLADE]), BLADE.id)!;
-        expect(blade.effect).not.toBeNull();
-        expect(blade.flavor).toBe('');
-        const coat = selectEquipmentDetailViewModel(stateWith([COAT], [COAT]), COAT.id)!;
-        expect(coat.effect).not.toBeNull();
-        expect(coat.flavor).toBe('');
+    it('the view-model keeps the description as flavor for every piece (the reward screen prints it)', () => {
+        for (const piece of [BLADE, COAT, SIGNET, STICK]) {
+            const vm = selectEquipmentDetailViewModel(stateWith([piece], [piece]), piece.id)!;
+            expect(vm.flavor).toBe(piece.description);
+            expect(vm.flavor).not.toBe('');
+        }
     });
 
-    it('a relic has no effect block, so it keeps its description as flavor', () => {
-        const vm = selectEquipmentDetailViewModel(stateWith([SIGNET], [SIGNET]), SIGNET.id)!;
-        expect(vm.effect).toBeNull();
-        expect(SIGNET.description).not.toBe('');
-        expect(vm.flavor).toBe(SIGNET.description);
+    it('a piece with an effect block has an effect; a relic and a plain weapon have none', () => {
+        expect(selectEquipmentDetailViewModel(stateWith([BLADE], [BLADE]), BLADE.id)!.effect).not.toBeNull();
+        expect(selectEquipmentDetailViewModel(stateWith([COAT], [COAT]), COAT.id)!.effect).not.toBeNull();
+        expect(selectEquipmentDetailViewModel(stateWith([SIGNET], [SIGNET]), SIGNET.id)!.effect).toBeNull();
+        expect(selectEquipmentDetailViewModel(stateWith([STICK], [STICK]), STICK.id)!.effect).toBeNull();
     });
 });
