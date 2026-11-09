@@ -38,6 +38,11 @@ test('a screen change selects its own route', () => {
     )
 })
 
+test('the Deck and Settings tabs select only their own route', () => {
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/(tabs)/deck/index.tsx'], names).routes, ['deck'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/(tabs)/settings/index.tsx'], names).routes, ['settings'])
+})
+
 test('the exploration tab selects the fixture shots that boot through it', () => {
     const { routes } = routesForPaths(['axiomancer-mobile/app/(tabs)/exploration/index.tsx'], names)
     for (const n of ['exploration', 'dialogue', 'village', 'cutscene', 'hazard-board']) assert.ok(routes.includes(n), n)
