@@ -33,8 +33,6 @@
 
 ## Acceptance
 
-- **A1** Specs 115, 117 and 118 are retired, each close saying T confirmed it on the APK on 2026-11-09, with `absorb:` naming where each spec's rules went.
-- **A2** Specs 113, 125, 126, 128 and 130 are retired, each close naming the chunk here that took its check. The Dec 23 Item's `Rows` names CK1d in place of LG1h.
 - **A3** (attended) T plays a run on a preview APK and reads the human-versus-sim comparison (113's A17, at 7c7e5ada2).
 - **A4** (attended) T fights once on a preview APK and sees the play log rows (128's A11, at 7c7e5ada2).
 - **A5** (attended) T runs `.github/workflows/android-smoke.yml` by hand against a fresh preview APK and watches it through (125's A8, at 7c7e5ada2).
@@ -47,13 +45,8 @@ none
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 5 open · 2 closed · next A8
 
-- [ ] **166.1** The three confirmed checks close and the eight old specs retire · S · closes A1, A2 · needs — · alias: CK1a
-  - First: if 164.1 is not in `plan/ARCHIVE.md`, stop and say so. Settle would hold every close here.
-  - Pending closes for 115.5, 117.6, 118.4 and for 113.9, 125.8, 126.4, 128.7, 130.4 (`says:` "Moved to 166.k", with the number), each with `absorb:` after reading its spec as `skills/next/land.md` says.
-  - `plan/deadlines.md`: the Dec 23 Item's `LG1h` becomes `CK1d`, and the five old aliases' `## Unscheduled` lines go.
-  - Measure: `node scripts/plan-check.mjs`, `check-deadlines`, and `node scripts/pr-settle.mjs --dry-run` showing no held file.
 - [ ] **166.2** T reads the human-versus-sim comparison (attended) · S · closes A3 · needs — · alias: CK1b
 - [ ] **166.3** T checks the play log on a preview APK (attended) · S · closes A4 · needs — · alias: CK1c
 - [ ] **166.4** T watches the Android smoke test (attended) · S · closes A5 · needs — · alias: CK1d

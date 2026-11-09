@@ -982,6 +982,125 @@
 - Live resolved numbers on the face (`DEAL 14` for the board as it stands): parked in the pitch as a later layer.
 - New keywords for effects on you, when a card needs one.
 
+### [ ] [owner] Follow-ups carried from spec 113 when it retired: The sim playtester and its own data, kept apart from T's
+- proposed: 2026-11-09, settle retired spec 113 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/113-sm1-sim-playtester-data.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **An LLM-driven playtester** (Confirmed by T (2026-10-31) as a Follow-up): a model that plays through the same
+  driver seams, for the questions a heuristic cannot ask (is this confusing, is this fun).
+- **Chapters 2-4** for the sim, once they are playable end to end.
+- **The braindump's `runs` and `measurements` tables** (loop ticks, measured truth as a series, the candidate audit
+  online): `braindump/2026-10-21-backend-schema-plan.md` §2-4, a later `/plot`.
+- **Puzzle-board hazards in the sim**, when live hazard routing lands (the Nov 3 plot): the hazard seam then plays
+  the puzzle with `hazard-puzzle.solver.ts`.
+- **Retention** for `sim` and `harness` rows, if D1 size grows; the `sim-runs` PR records the database size after its
+  first batch.
+- **Playtester telemetry** (BE1 Follow-up): device ids and a privacy note before an APK leaves T's hands; still a hard
+  stop from BE2.
+
+### [ ] [owner] Follow-ups carried from spec 115 when it retired: The Merciful trial set (my mending is a weapon)
+- proposed: 2026-11-09, settle retired spec 115 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/115-mf1-merciful-trial-set.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **HURRY N** (T: every status on both sides ticks down N): ruled, printed by no kept card; built with the first card
+  that prints it.
+- E-09's overheal-draw card ("Whenever you heal past your max, draw a card"): a new card, and "when you heal" is not a
+  Global trigger yet.
+- The Merciful's two other relics: T picked them on 2026-11-02; see "The Merciful's two quest relics" below.
+- The enemy revision (T, 2026-10-30), then the pace and structure the sims raised: RADIANCE whiffing at full VITAE,
+  M-04b's debuff clear (no Act 1 foe debuffs you), MERCY left unburst at a fight's end.
+- Whether a Merciful card can be a character's starting lane card (T: decide at CH1).
+
+### [ ] [owner] Follow-ups carried from spec 117 when it retired: The Defender trial set (the turtle with spikes)
+- proposed: 2026-11-09, settle retired spec 117 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/117-df1-defender-trial-set.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Act 1 quests that hand out the Mirror Brooch and the Carapace Belt (unless T answers #3 otherwise).
+- T's names for the three signature skills.
+- The illegal-PAID refusal for an unpayable SACRIFICE on the board, if it is not already loud the same way (Session 0
+  Open: "an engine and UI rule for every card"); A6 builds the discard case on the shared shake.
+- The Defender's pair identities with Blood Price and the Elementalist (Session 0 Open).
+- The pace: with the shipped numbers the Defender still runs under T's 3 / 5 / 7 turn targets (the sims); and the
+  structure questions the sims raised (M-07 PAID, M-09 FREE, M-02 and M-05 PAID), for after T plays it.
+
+### [ ] [owner] Follow-ups carried from spec 118 when it retired: The Elementalist trial set (the weather in play)
+- proposed: 2026-11-09, settle retired spec 118 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/118-el1-elementalist-trial-set.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Lane-creator step 7, T's revisions:
+  - names; the INFERNO, BLIZZARD and STORM scaling;
+  - P-05 PAID (never played in the sims), and M-01 and M-02 PAID (heals rarely needed);
+  - the pace (the deck runs well under T's 3, 5 and 7 turn targets even adjusted);
+  - the real test deck, and the family relic and signature skill.
+- The lane unlock: relics naming a lane, the D71/D100 reward slot.
+
+### [ ] [owner] Follow-ups carried from spec 125 when it retired: Loop gates: the eval report's ranked fixes, built
+- proposed: 2026-11-09, settle retired spec 125 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/125-lg1-loop-gates.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **The ruleset:** T creates it (`plan/NEEDS_T.md` `verify-gate-ruleset`), then switches it to `active`.
+- **Re-run the eval** after LG1a-LG1d land, and on or after 2026-10-23 for the change-failure baseline, to see the
+  miss counts move.
+- **Mutation as a gate:** only once per-diff baselines exist.
+
+### [ ] [owner] Follow-ups carried from spec 126 when it retired: The Obsidian vault: brainstorm and plot from the phone
+- proposed: 2026-11-09, settle retired spec 126 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/126-ov1-obsidian-vault.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Teaching `rpg-mechanics-brainstorm` to write its session file into
+  `vault/Threads/` instead of `braindump/`.
+- A Canvas generator that lays out `Map.canvas` from `01 Map.md`.
+- Cloud sessions reaching the vault repo need it attached to the session
+  (`add_repo`) before `ensure` can clone it.
+
+### [ ] [owner] Follow-ups carried from spec 128 when it retired: Card and combat logging (the play log)
+- proposed: 2026-11-09, settle retired spec 128 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/128-be2-card-combat-logging.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **Upgrade events.** `upgrade` is reserved in `deck_events.kind`; the call goes in when UP1b's upgrade and
+  replace-card actions exist on mobile. That phase adds one call; no migration.
+- **The bot beside T** (`card-vs-bot`): the sims post the same per-card counts at the same commit. It needs the
+  `runs` and `measurements` tables from sections 2-4 of the pitch, which are not plotted.
+- **Build provenance on puzzle attempts and the rest of the pitch** (runs, measured truth as a series, loop
+  ticks, alerts): sections 2-4 of `braindump/2026-10-21-backend-schema-plan.md`, a later `/plot`.
+- **Playtester telemetry** (BE1 Follow-up): device ids and a privacy note, before the APK leaves T's hands.
+- **An offline outbox**, if dropped fights thin the counts.
+
+### [ ] [owner] Follow-ups carried from spec 130 when it retired: The modular feature map: a note per feature, canvases you zoom into
+- proposed: 2026-11-09, settle retired spec 130 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/130-fm2-modular-feature-map.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- A switchable coupling layer for Graph view.
+- A `Features.base` (Obsidian Bases) table over the notes' frontmatter.
+- A `/pitch` entry point from a `#needs-pitch` note (FM1 Follow-up).
+- Reviewing which pitch flags are wrong (Rest, Village, Event likely have
+  design history under other names; Settings, Saves and dev routes may never
+  need one): an alias-table or rule change to FM1b, its own `/plot`.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.

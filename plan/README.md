@@ -50,22 +50,14 @@ owner-led sessions (D88). An `until:` date is the deadline Item
 that names the chunk (`plan/deadlines.md`); past it, or past
 `max_age`, the loop asks T once (an issue), never releases it:
 
-- **113.9** · attended: T does this one (SM1i) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **156.7** · waits on T's colour ballot verdict (TY1g; built by TY1f) · since: 2026-11-06 · until: T's word · max_age: 60d
-- **115.5** · attended: T does this one (MF1e) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **116.4** · attended: T does this one (BW1d) · since: 2026-11-01 · until: 2026-11-10 · max_age: 16d
-- **117.6** · attended: T does this one (DF1f) · since: 2026-11-01 · until: 2026-11-12 · max_age: 18d
-- **118.4** · attended: T does this one (EL1d) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **119.3** · attended: T does this one (BV1c) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **122.2** · attended: T does this one (R12) · since: 2026-11-01 · until: 2026-12-12 · max_age: 48d
 - **123.1** · attended: T does this one (PF2) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **146.7** · owner-led: art is owner-only (D88) (AP1g) · since: 2026-11-04 · until: T's word · max_age: 30d
-- **125.8** · attended: T does this one (LG1h) · since: 2026-11-01 · until: 2026-12-23 · max_age: 59d
-- **126.4** · attended: T does this one (OV1d) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **128.7** · attended: T does this one (BE2g) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **129.2** · attended: T does this one (IO1b) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **129.4** · attended: T does this one (IO1d) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **130.4** · attended: T does this one (FM2d) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **131.1** · attended: T does this one (SB1) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **133.9** · attended: T does this one (NX1i) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.2** · owner-led: T's session 2026-09-28 (B1) · since: 2026-11-01 · until: 2026-12-05 · max_age: 41d
@@ -91,22 +83,14 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 |---|---|---|---|---|
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 165 | The Rules Glossary lists every keyword | [165-rg1-rules-glossary-keywords.md](165-rg1-rules-glossary-keywords.md) | planned | 1 left |
-| 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 6 left |
+| 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
-| 113 | The sim playtester and its own data, kept apart from T's | [113-sm1-sim-playtester-data.md](113-sm1-sim-playtester-data.md) | planned | 1 left |
-| 115 | The Merciful trial set (my mending is a weapon) | [115-mf1-merciful-trial-set.md](115-mf1-merciful-trial-set.md) | planned | 1 left |
 | 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 2 left |
-| 117 | The Defender trial set (the turtle with spikes) | [117-df1-defender-trial-set.md](117-df1-defender-trial-set.md) | planned | 1 left |
-| 118 | The Elementalist trial set (the weather in play) | [118-el1-elementalist-trial-set.md](118-el1-elementalist-trial-set.md) | planned | 1 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
-| 125 | Loop gates: the eval report's ranked fixes, built | [125-lg1-loop-gates.md](125-lg1-loop-gates.md) | planned | 1 left |
-| 126 | The Obsidian vault: brainstorm and plot from the phone | [126-ov1-obsidian-vault.md](126-ov1-obsidian-vault.md) | planned | 1 left |
 | 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
-| 128 | Card and combat logging (the play log) | [128-be2-card-combat-logging.md](128-be2-card-combat-logging.md) | planned | 1 left |
 | 129 | iPhone beta builds | [129-io1-iphone-beta.md](129-io1-iphone-beta.md) | planned | 2 left |
-| 130 | The modular feature map: a note per feature, canvases you zoom into | [130-fm2-modular-feature-map.md](130-fm2-modular-feature-map.md) | planned | 1 left |
 | 131 | Set bonuses: T's design session | [131-sb1-set-bonuses.md](131-sb1-set-bonuses.md) | planned | 1 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
