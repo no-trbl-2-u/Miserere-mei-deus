@@ -30,6 +30,8 @@ import { auditRoadReachability } from '../road-reachability';
 import { AUTHORED_QUESTLINES } from '../quest.library';
 import { BREAKWATER_CHAPTER_QUESTLINE_ID } from '../breakwater-chapter.questline';
 import { BW_DOOR_LEVEL } from '../MapEvents/content';
+import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
+import { scaleEnemyToLevel } from '../encounter';
 import { createNewGameState } from '../../Game/game.reducer';
 import { STARTING_REGION } from '../../Game/run-loop';
 import type { GameState } from '../../Game/types';
@@ -160,9 +162,11 @@ describe('the Breakwater\'s events (D29)', () => {
         });
     });
 
-    it('fights the Saint Beneath (EN3b) in the sea keep, pinned low, as the chapter boss (D61)', () => {
+    it('fights the Saint Beneath (EN3b) in the sea keep at level 8, its full 320 VITAE, as the chapter boss (D61)', () => {
         const payload = getNodeEventPool('coastal-continent', 'breakwater', 'bw-k2')!.entries[0]!.payload;
         expect(payload).toMatchObject({ kind: 'encounter', enemySlug: 'saint-beneath', isBoss: true, level: BW_DOOR_LEVEL });
+        expect(BW_DOOR_LEVEL).toBe(8);
+        expect(scaleEnemyToLevel(ENEMY_REGISTRY['saint-beneath'], BW_DOOR_LEVEL).health).toBe(320);
     });
 
     it('fights the Cave Choir in the sea cave (EN1j), the Lamplighter or the Wrecker on the lighthouse path (EN1k) and the Wreckmaster or the Tide-Gate on the keep causeway (EN1l, EN3b)', () => {

@@ -7,6 +7,9 @@ import { simulateHazardPatternCombat } from '../Combat/combat.encounter.sim';
 import { STARTING_CARD_IDS } from '../Combat/combat.rewards';
 import { wearGreyPair } from '../Items/equipment.library';
 
+/** The door boss of a node's map: the Saint Beneath on the Breakwater, the Death Beholder elsewhere. */
+const doorBossSlug = (nodeId: string) => (nodeId.startsWith('bw-') ? 'saint-beneath' : 'death-beholder') as 'saint-beneath' | 'death-beholder';
+
 describe('the Act 1 XP ledger (LV1)', () => {
     const ledger = act1FightLedger();
 
@@ -21,11 +24,13 @@ describe('the Act 1 XP ledger (LV1)', () => {
     // and the keep causeway's at level 8 (EN1l), so the Breakwater pays more
     // XP than its old level-2 Float-Eyes and level-3 elites did. Cutting the
     // mountain path's fight (2026-11-01) took the third door from 18 to 17.
-    it('a full clear meets the doors at levels 8, 15, 17 and 20 and ends at level 21', () => {
+    // The Saint Beneath's door fights at level 8 (MV1f), so its win pays level-8 XP and the
+    // later doors are met at 19, 20 and 22 instead of 15, 17 and 20.
+    it('a full clear meets the doors at levels 8, 19, 20 and 22 and ends at level 23', () => {
         const walk = walkAct1(ledger);
-        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 15, 17, 20]);
-        expect(walk.doors.map(d => d.doorLevel)).toEqual([1, 2, 3, 4]);
-        expect(walk.finalLevel).toBe(21);
+        expect(walk.doors.map(d => d.playerLevel)).toEqual([8, 19, 20, 22]);
+        expect(walk.doors.map(d => d.doorLevel)).toEqual([8, 2, 3, 4]);
+        expect(walk.finalLevel).toBe(23);
     });
 
     it('counts an elite node\'s pair as one fight, at the pair\'s shared level (EN1k)', () => {
@@ -45,7 +50,7 @@ describe('the Act 1 XP ledger (LV1)', () => {
     it('a door-only route meets the Breakwater door at level 1', () => {
         const walk = walkAct1(ledger.filter(f => f.isBoss));
         expect(walk.doors[0]!.playerLevel).toBe(1);
-        expect(walk.finalLevel).toBeLessThan(21);
+        expect(walk.finalLevel).toBeLessThan(23);
     });
 
     // The rebuilt Breakwater stages 19 fights, so a full clear reaches the
@@ -68,7 +73,7 @@ describe('the Act 1 XP ledger (LV1)', () => {
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
             }));
-            const foe = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], door.doorLevel!);
+            const foe = scaleEnemyToLevel(ENEMY_REGISTRY[doorBossSlug(door.nodeId)], door.doorLevel!);
             expect(simulateHazardPatternCombat(player, foe, 100, 1).winRate, door.nodeId).toBeGreaterThanOrEqual(0.9);
         }
     });
@@ -79,7 +84,7 @@ describe('the Act 1 XP ledger (LV1)', () => {
                 name: 'Stage', level: door.playerLevel,
                 baseStats: stageStats(door.playerLevel, 'even'), knownCards: [...STARTING_CARD_IDS],
             }));
-            const foe = scaleEnemyToLevel(ENEMY_REGISTRY['death-beholder'], door.doorLevel!);
+            const foe = scaleEnemyToLevel(ENEMY_REGISTRY[doorBossSlug(door.nodeId)], door.doorLevel!);
             const { winRate } = simulateHazardPatternCombat(player, foe, 100, 1);
             expect(winRate, door.nodeId).toBeGreaterThan(0.1);
             if (!FREE_UNTIL_RETUNED.has(door.nodeId)) expect(winRate, door.nodeId).toBeLessThan(0.9);
