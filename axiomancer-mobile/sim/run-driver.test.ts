@@ -19,7 +19,7 @@ import {
 } from '@mechanics';
 
 import { playRun, type PlayRunOptions } from './run-driver';
-import { describeScreen, RunStuckError } from './run-stuck';
+import { describeScreen, RunCrashError, RunStuckError } from './run-stuck';
 import { playRuns } from './sim-runs';
 
 /** A wanderer that records every seam it was asked. */
@@ -263,5 +263,63 @@ describe('the headless run driver', () => {
         expect(runs[0]).toMatchObject({ policy: 'wanderer', seed: 1, stuck: true, node: 'bw-w2' });
         expect(runs[1]).toMatchObject({ policy: 'wanderer', seed: 2 });
         expect('stuck' in runs[1]!).toBe(false);
+    });
+
+    it('clears an owed node when its node-resolved arrives: a run of many fights, rests and quests leaves no unresolved node', () => {
+        const resolved: string[] = [];
+        const result = playRun({
+            policy: WANDERER_POLICY,
+            seed: 8,
+            onStep: (store) => {
+                const here = store.getState().world.currentMap.currentNode;
+                if (!resolved.includes(here)) resolved.push(here);
+            },
+        });
+        // The run stands on many fight, rest and quest nodes, each owed on arrival and each resolved.
+        expect(resolved.length).toBeGreaterThan(20);
+        expect(result.findings.filter((f) => f.kind === 'node-unresolved')).toEqual([]);
+    });
+
+    it('throws a crash with the node, the deck, the quests and the last events when a step raises', () => {
+        // The second road: one node has been entered, so the event log has something to show.
+        let roads = 0;
+        const boom: RunPolicy = {
+            ...WANDERER_POLICY,
+            chooseRoad: (ctx) => {
+                if (++roads > 1) throw new Error('boom');
+                return WANDERER_POLICY.chooseRoad(ctx);
+            },
+        };
+        let thrown: unknown;
+        try {
+            playRun({ policy: boom, seed: 1 });
+        } catch (error) {
+            thrown = error;
+        }
+        expect(thrown).toBeInstanceOf(RunCrashError);
+        const crash = thrown as RunCrashError;
+        expect(crash.node).toBe('bw-w2');
+        expect(crash.message).toMatch(/run crashed at breakwater\/bw-w2 .*boom/);
+        expect(crash.detail!.deckSize).toBeGreaterThan(0);
+        expect(crash.detail!.lastEvents.length).toBeGreaterThan(0);
+        expect(Array.isArray(crash.detail!.quests)).toBe(true);
+    });
+
+    it('fills a stuck error with the same detail as it leaves the driver', () => {
+        let roads = 0;
+        const lost: RunPolicy = {
+            ...WANDERER_POLICY,
+            chooseRoad: (ctx) => (++roads > 1 ? null : WANDERER_POLICY.chooseRoad(ctx)),
+        };
+        let thrown: unknown;
+        try {
+            playRun({ policy: lost, seed: 1 });
+        } catch (error) {
+            thrown = error;
+        }
+        const stuck = thrown as RunStuckError;
+        expect(stuck.kind).toBe('stuck');
+        expect(stuck.detail!.deckSize).toBeGreaterThan(0);
+        expect(stuck.detail!.lastEvents.length).toBeGreaterThan(0);
     });
 });

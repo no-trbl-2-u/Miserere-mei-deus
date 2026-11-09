@@ -52,7 +52,8 @@ import {
     resolveTravel,
     resolveVillage,
 } from './run-screens';
-import { RunStuckError, stuck } from './run-stuck';
+import { detailOf, questFindings, tapRunEvents, type EventTap, type RunFinding } from './run-breaks';
+import { RunCrashError, RunStuckError, stuck, stuckStateOf } from './run-stuck';
 
 /** How a run ended. */
 export type RunOutcome = 'run-over' | 'chapter-clear';
@@ -86,6 +87,8 @@ export interface RunResult {
     readonly deckByLane: Readonly<Record<string, number>>;
     /** The end deck's card ids (what the `play_runs` close carries). */
     readonly endDeck: readonly string[];
+    /** Breaks the end-of-run checks found (phase SM2d): never thrown, never a failure. */
+    readonly findings: readonly RunFinding[];
 }
 
 export interface PlayRunOptions {
@@ -120,6 +123,38 @@ interface Tally {
     boss: BossLedger;
     /** The last state seen alive, for a run-over's summary. */
     alive: AppStoreState;
+    /** The node entered with an event still owed, until its `node-resolved` is seen (phase SM2d). */
+    owed: { nodeId: string; map: string; step: number } | null;
+    /** Findings collected as nodes are left. */
+    findings: RunFinding[];
+}
+
+/**
+ * The node kinds whose resolution logs a `node-resolved` (a fight, a rest, a
+ * cache, a hazard, a quest step). A cutscene, a village and a trip are left by
+ * dismissing, leaving or declining, and log none, so leaving one is not a break.
+ */
+const LOGS_RESOLVE: ReadonlySet<string> = new Set(['encounter', 'rest', 'loot-cache', 'hazard', 'quest']);
+
+/** The owed node left without a `node-resolved`: a finding (phase SM2d). */
+function checkOwed(store: AppStore, tally: Tally, tap: EventTap, step: number): void {
+    const owed = tally.owed;
+    tally.owed = null;
+    if (owed === null) return;
+    const state = store.getState();
+    const base = stuckStateOf(state, owed.step);
+    tally.findings.push({
+        kind: 'node-unresolved',
+        node: owed.nodeId,
+        message: `node ${owed.nodeId} was entered with an event and left before it resolved (left at step ${step})`,
+        state: { ...base, map: owed.map, node: owed.nodeId },
+        detail: detailOf(state, deckSizeOf(state), tap.recent),
+    });
+}
+
+function deckSizeOf(state: AppStoreState): number {
+    const game = state as unknown as GameState;
+    return buildCombatDeck(game.player, game.flags).length;
 }
 
 function depthOf(state: AppStoreState, nodeId: string): number {
@@ -147,7 +182,8 @@ function deckByLane(state: AppStoreState): Record<string, number> {
 }
 
 /** Walk the road the policy picks, the way the map screen walks it. */
-function takeRoad(store: AppStore, actions: AppActions, policy: RunPolicy, step: number): number {
+function takeRoad(store: AppStore, actions: AppActions, policy: RunPolicy, step: number, tally: Tally, tap: EventTap): number {
+    checkOwed(store, tally, tap, step);
     const state = store.getState();
     const game = state as unknown as GameState;
     const options = runRoadOptions(game);
@@ -183,6 +219,11 @@ function takeRoad(store: AppStore, actions: AppActions, policy: RunPolicy, step:
     if (!result.moved) throw stuck(`the road to ${choice} would not open`, state, step);
     // A quiet walk back moves at once and fires nothing.
     if (!resolves) return 0;
+    // An owed arrival with an event: the node must resolve before the run leaves it.
+    const arrived = store.getState().world.currentMap;
+    if (option.nodeKind !== null && LOGS_RESOLVE.has(option.nodeKind) && (arrived.pendingArrival ?? null) === choice) {
+        tally.owed = { nodeId: choice, map: arrived.name, step };
+    }
     actions.resolveCurrentMapEvent(node?.type);
     return 1;
 }
@@ -191,7 +232,7 @@ function takeRoad(store: AppStore, actions: AppActions, policy: RunPolicy, step:
  * One step: answer whatever is open, else spend a point, resolve an owed
  * arrival or walk a road.
  */
-function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Tally, n: number): void {
+function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Tally, tap: EventTap, n: number): void {
     const s = store.getState();
     if (resolveItemReward(store, policy)) return;
     if ((s.quest?.cardOffers.length ?? 0) > 0 && resolveQuest(store, actions, policy)) return;
@@ -226,7 +267,7 @@ function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Ta
         }
         return;
     }
-    tally.nodesResolved += takeRoad(store, actions, policy, n);
+    tally.nodesResolved += takeRoad(store, actions, policy, n, tally, tap);
 }
 
 function summarize(
@@ -236,6 +277,7 @@ function summarize(
     outcome: RunOutcome,
     tally: Tally,
     steps: number,
+    findings: readonly RunFinding[] = [],
 ): RunResult {
     const end = outcome === 'run-over' ? tally.alive : store.getState();
     const game = end as unknown as GameState;
@@ -259,6 +301,7 @@ function summarize(
         steps,
         deckByLane: deckByLane(end),
         endDeck: buildCombatDeck(game.player, game.flags),
+        findings,
     };
 }
 
@@ -274,47 +317,76 @@ export function playRun(options: PlayRunOptions): RunResult {
     const policy = tunedPolicy(options.policy, options.tuning);
     const maxSteps = options.maxSteps ?? MAX_RUN_STEPS;
     return withSeededRun(seed, () => {
+        const tap = tapRunEvents();
         const store = createAppStore({ adapter: createMemoryAdapter() });
-        const actions = createAppActions(store);
-        const roster = options.roster ?? CHARACTER_ROSTER;
-        const characterId = policy.chooseCharacter(roster);
-        // Character select's CONFIRM: a new game as the chosen character.
-        startNewGameAction(store, createMemorySlotStore(), 1, undefined, characterId, roster);
-        const undoTuning = startTuning(store, options.tuning);
         try {
-            options.onStart?.(store);
-            const startMap = store.getState().world.currentMap.name;
-            const tally: Tally = {
-                fights: { won: 0, spared: 0, lost: 0, fled: 0 },
-                nodesResolved: 0,
-                visited: new Set(),
-                furthest: { nodeId: store.getState().world.currentMap.currentNode, depth: -1 },
-                hazard: { policy: null },
-                fled: new Map(),
-                mercy: emptyMercyLedger(),
-                boss: emptyBossLedger(),
-                alive: store.getState(),
-            };
-            for (let n = 0; n < maxSteps; n++) {
-                const s = store.getState();
-                if (s.runOver === true) return summarize(store, policy, seed, 'run-over', tally, n);
-                if (s.world.currentMap.name !== startMap) return summarize(store, policy, seed, 'chapter-clear', tally, n);
-                tally.alive = s;
-                standOn(tally, s, startMap);
-                options.onStep?.(store, n);
-                try {
-                    step(store, actions, policy, tally, n);
-                } catch (error) {
-                    if (error instanceof RunStuckError) throw error;
-                    if (error instanceof FightStuckError || error instanceof ScreenStuckError) {
-                        throw stuck(error.message, store.getState(), n);
-                    }
-                    throw error;
-                }
-            }
-            throw stuck(`no run end in ${maxSteps} steps`, store.getState(), maxSteps);
+            return playOn(store, tap, { ...options, policy }, maxSteps);
         } finally {
-            undoTuning();
+            tap.restore();
         }
     });
+}
+
+function playOn(store: AppStore, tap: EventTap, options: PlayRunOptions, maxSteps: number): RunResult {
+    const { policy, seed } = options;
+    const actions = createAppActions(store);
+    const roster = options.roster ?? CHARACTER_ROSTER;
+    const characterId = policy.chooseCharacter(roster);
+    // Character select's CONFIRM: a new game as the chosen character.
+    startNewGameAction(store, createMemorySlotStore(), 1, undefined, characterId, roster);
+    const undoTuning = startTuning(store, options.tuning);
+    try {
+        options.onStart?.(store);
+        const startMap = store.getState().world.currentMap.name;
+        const tally: Tally = {
+            fights: { won: 0, spared: 0, lost: 0, fled: 0 },
+            nodesResolved: 0,
+            visited: new Set(),
+            furthest: { nodeId: store.getState().world.currentMap.currentNode, depth: -1 },
+            hazard: { policy: null },
+            fled: new Map(),
+            mercy: emptyMercyLedger(),
+            boss: emptyBossLedger(),
+            alive: store.getState(),
+            owed: null,
+            findings: [],
+        };
+        tap.onResolved = (nodeId) => {
+            if (tally.owed?.nodeId === nodeId) tally.owed = null;
+        };
+        const enriched = (error: RunStuckError): RunStuckError => {
+            const state = store.getState();
+            error.detail = detailOf(state, deckSizeOf(state), tap.recent);
+            return error;
+        };
+        for (let n = 0; n < maxSteps; n++) {
+            const s = store.getState();
+            if (s.runOver === true) return summarize(store, policy, seed, 'run-over', tally, n, tally.findings);
+            if (s.world.currentMap.name !== startMap) {
+                checkOwed(store, tally, tap, n);
+                const detail = detailOf(tally.alive, deckSizeOf(tally.alive), tap.recent);
+                const found = [...tally.findings, ...questFindings(tally.alive, n, detail)];
+                return summarize(store, policy, seed, 'chapter-clear', tally, n, found);
+            }
+            tally.alive = s;
+            standOn(tally, s, startMap);
+            options.onStep?.(store, n);
+            try {
+                step(store, actions, policy, tally, tap, n);
+            } catch (error) {
+                if (error instanceof RunStuckError) throw enriched(error);
+                if (error instanceof FightStuckError) {
+                    const e = stuck(error.message, store.getState(), n);
+                    e.kind = 'fight-stuck';
+                    throw enriched(e);
+                }
+                if (error instanceof ScreenStuckError) throw enriched(stuck(error.message, store.getState(), n));
+                const state = store.getState();
+                throw new RunCrashError(error, stuckStateOf(state, n), detailOf(state, deckSizeOf(state), tap.recent));
+            }
+        }
+        throw enriched(stuck(`no run end in ${maxSteps} steps`, store.getState(), maxSteps));
+    } finally {
+        undoTuning();
+    }
 }

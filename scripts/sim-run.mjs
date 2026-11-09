@@ -12,7 +12,10 @@
 // app's own preset and module mapping) and hands its runs back as JSON; this
 // script prints them. A run that sticks (a step with no legal move: the
 // driver's bug detector) prints as STUCK with the node and the state, and the
-// script exits 1 after printing every run. A measurement, not a gate:
+// script exits 1 after printing every run. `--breaks <file>` (phase SM2d) also appends
+// one JSON line per break to the file (a crash, stuck run or stuck fight, and the two
+// end-of-run checks, a stranded quest and a node left unresolved), for `sim:breaks`
+// to file; only the first three fail the exit code. A measurement, not a gate:
 // nothing here judges a number.
 //
 // `--post` (phase SM1g) also sends each finished run to the Worker, stamped
@@ -29,7 +32,7 @@
 //   npm run sim:run -- --policy blood-price --runs 5 --post
 
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { appendFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -38,14 +41,14 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const MOBILE = path.join(ROOT, 'axiomancer-mobile')
 
-export const USAGE = 'usage: npm run sim:run -- --policy <id|a,b|lanes> [--runs <n>] [--seed <s>] [--json] [--post]\n       tuning (never with --post): [--shillings <n>] [--boss-level <n>] [--start-relic <id>]... [--no-relic-stats] [--fight <policy>] [--no-anvil] [--no-guard]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
+export const USAGE = 'usage: npm run sim:run -- --policy <id|a,b|lanes> [--runs <n>] [--seed <s>] [--json] [--post] [--breaks <file>]\n       tuning (never with --post): [--shillings <n>] [--boss-level <n>] [--start-relic <id>]... [--no-relic-stats] [--fight <policy>] [--no-anvil] [--no-guard]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
 
 /** One batch posts at most this many bytes (A13). */
 export const POST_BATCH_CAP_BYTES = 25 * 1024 * 1024
 
 /** Parse `--key value` / `--key=value` flags. Throws on anything it does not know. */
 export function parseArgs(argv) {
-  const opts = { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, help: false }
+  const opts = { policy: 'wanderer', runs: 1, seed: 1, json: false, post: false, breaks: null, help: false }
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     if (arg === '--json') { opts.json = true; continue }
@@ -55,11 +58,12 @@ export function parseArgs(argv) {
     if (arg === '--no-anvil') { opts.noAnvil = true; continue }
     if (arg === '--no-guard') { opts.noGuard = true; continue }
     if (arg === '--help' || arg === '-h') { opts.help = true; continue }
-    const m = /^--(policy|runs|seed|shillings|boss-level|start-relic|fight)(?:=(.*))?$/.exec(arg)
+    const m = /^--(policy|runs|seed|breaks|shillings|boss-level|start-relic|fight)(?:=(.*))?$/.exec(arg)
     if (!m) throw new Error(`unknown argument '${arg}'`)
     const value = m[2] ?? argv[++i]
     if (value === undefined || value === '') throw new Error(`--${m[1]} needs a value`)
     if (m[1] === 'policy') { opts.policy = value; continue }
+    if (m[1] === 'breaks') { opts.breaks = value; continue }
     if (m[1] === 'fight') { opts.fight = value; continue }
     if (m[1] === 'start-relic') { opts.startRelic = [...(opts.startRelic ?? []), value]; continue }
     if (m[1] === 'shillings') {
@@ -91,7 +95,7 @@ export function formatLanes(deckByLane) {
 
 /** One run as one line. */
 export function formatRunLine(run) {
-  if (run.stuck) return `${run.policy} seed=${run.seed} STUCK at ${run.node}: ${run.error}`
+  if (run.stuck) return `${run.policy} seed=${run.seed} ${run.kind === 'crash' ? 'CRASH' : run.kind === 'fight-stuck' ? 'FIGHT-STUCK' : 'STUCK'} at ${run.node}: ${run.error}`
   const f = run.fights
   return [
     `${run.policy} seed=${run.seed}`,
@@ -241,7 +245,7 @@ export function playRuns(opts, { spawn = spawnSync } = {}) {
     const jest = createRequire(path.join(MOBILE, 'package.json')).resolve('jest/bin/jest')
     const res = spawn(process.execPath, [jest, '-c', 'sim/jest.config.js', '--silent', '--runInBand'], {
       cwd: MOBILE,
-      env: { ...process.env, SIM_RUN_ARGS: JSON.stringify({ policy: opts.policy, runs: opts.runs, seed: opts.seed, ...(tuningOf(opts) ? { tuning: tuningOf(opts) } : {}), ...(opts.post ? { post: opts.post } : {}) }), SIM_RUN_OUT: out },
+      env: { ...process.env, SIM_RUN_ARGS: JSON.stringify({ policy: opts.policy, runs: opts.runs, seed: opts.seed, ...(tuningOf(opts) ? { tuning: tuningOf(opts) } : {}), ...(opts.post ? { post: opts.post } : {}), ...(opts.build !== undefined ? { build: opts.build } : {}) }), SIM_RUN_OUT: out },
       encoding: 'utf-8',
       maxBuffer: 64 * 1024 * 1024,
     })
@@ -388,7 +392,9 @@ export async function main(argv, {
     stdout.write(`${formatComparison(arms[0], arms[1], opts)}\n`)
     return 0
   }
-  const run = opts.post ? { ...opts, post: { batchId: batchIdOf(env, now), buildCommit: sha() } } : opts
+  const build = opts.breaks ? sha() : undefined
+  const withBuild = build === undefined ? opts : { ...opts, build }
+  const run = opts.post ? { ...withBuild, post: { batchId: batchIdOf(env, now), buildCommit: build === undefined ? sha() : build } } : withBuild
   let body
   try {
     body = play(run)
@@ -402,7 +408,16 @@ export async function main(argv, {
     for (const line of body.runs) stdout.write(`${formatRunLine(line)}\n`)
     stdout.write(`${formatBatchTable(table)}\n`)
   }
+  // A crash, a stuck run or a stuck fight fails the step; the end-of-run checks never do.
   let code = body.runs.some((r) => r.stuck) ? 1 : 0
+  if (opts.breaks) {
+    try {
+      appendFileSync(opts.breaks, (body.breaks ?? []).map((b) => `${JSON.stringify(b)}\n`).join(''))
+    } catch (err) {
+      stderr.write(`sim-run: cannot write ${opts.breaks}: ${err.message}\n`)
+      code = 1
+    }
+  }
   if (!opts.post) return code
 
   const posts = body.posts ?? []

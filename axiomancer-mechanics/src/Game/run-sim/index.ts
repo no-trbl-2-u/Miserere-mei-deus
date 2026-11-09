@@ -26,7 +26,7 @@ export {
 } from './run-policy.lanes';
 export {
     runRoadOptions, isNodeUnfinished, isReachTarget, distanceToUnfinished, travelPassageTarget,
-    isEliteNode, isStoryNode, distanceToStory, distanceToExit, unfinishedReachable,
+    isEliteNode, isStoryNode, distanceToStory, distanceToExit, unfinishedReachable, unfinishableQuests,
 } from './run-roads';
 export { PLAYER_WITNESS, SPARE_ALL_WITNESS } from './player-witness';
 export { nextHazardStep, hazardRouteFor, type HazardStep } from './run-hazard';

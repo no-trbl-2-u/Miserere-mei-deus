@@ -224,9 +224,22 @@ id), `buildCommit` the checked-out sha, and the run id is unique to the batch,
 policy and seed (`sim-<batch>-<policy>-<seed>`). It reads `PUZZLE_API_URL` and
 `PUZZLE_API_TOKEN`; without them it prints what it would post and sends nothing.
 It prints the rows and bytes posted, stops before a run that would take the
-batch past 25 MB, and exits 1 if a post is refused. The `sim-runs` workflow
-calls it for the four archetypes, 5 runs each, at every preview build, by hand
-and nightly. **Sim numbers
+batch past 25 MB, and exits 1 if a post is refused. `sim:run --breaks <file>`
+appends one JSON line per break to the file: a `crash` (an exception out of a
+step), `stuck` (no legal move, or past the step cap), `fight-stuck`, and the
+two end-of-run checks, `quest-unfinishable` (at a chapter clear, an accepted
+quest whose next target no road reaches) and `node-unresolved` (a fight, rest,
+cache, hazard or quest node entered and left before it resolved). A broken run
+is recorded and the batch goes on with the next seed. Each line has the key
+`<persona>:<map>/<node>:<kind>`, the seed, the build and a state summary; only
+the first three kinds make the exit code 1. `npm run sim:breaks -- --file <file>`
+files one GitHub issue per new key (labels `bug` and `sim-break`, so `/triage`
+routes it as a bug), leaves a key with an open issue alone, reopens one closed
+as completed with a comment, and files at most 10 new ones per run. The
+`sim-runs` workflow plays the four personas (`cautious`, `reckless`,
+`explorer`, `rusher`), 5 runs each, nightly and at every preview build; the
+lane bots run only by hand (`bots: lanes` or `all`); the nightly and a
+dispatch at `main` file the breaks. **Sim numbers
 from before BUG1j (`0afc538bf`) are not comparable with later ones:** from
 that commit every foe could be befriended, with no XP and no card; befriending left
 the game with spec 144.
