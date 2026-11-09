@@ -67,9 +67,14 @@ describe('a run with the check answered', () => {
         expect(spare.mercy.shillings).toBeGreaterThan(0);
         expect(finish.mercy.shillings).toBeGreaterThan(0);
         // One seed's two runs diverge (a Spare changes what you meet next), so the XP is read over several.
-        const xpOver = (id: 'spare-all' | 'finish-all') => [1, 2, 3, 4, 5, 6]
-            .reduce((sum, seed) => sum + playRun({ policy: policyOf(id), seed, roster }).mercy.xp, 0);
-        expect(xpOver('finish-all')).toBeGreaterThan(xpOver('spare-all'));
+        // A seed where either run loses a fight is left out: a death cuts that run's XP for a reason that is not the Spare.
+        const seeds = [1, 2, 3, 4, 5, 6].map((seed) => ({
+            spare: playRun({ policy: policyOf('spare-all'), seed, roster }),
+            finish: playRun({ policy: policyOf('finish-all'), seed, roster }),
+        })).filter(({ spare: s, finish: f }) => s.fights.lost === 0 && f.fights.lost === 0);
+        expect(seeds.length).toBeGreaterThan(0);
+        const xpOver = (pick: 'spare' | 'finish') => seeds.reduce((sum, run) => sum + run[pick].mercy.xp, 0);
+        expect(xpOver('finish')).toBeGreaterThan(xpOver('spare'));
     });
 });
 
