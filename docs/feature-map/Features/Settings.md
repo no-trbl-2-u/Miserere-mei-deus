@@ -32,6 +32,7 @@ route in Tabs, from `axiomancer-mobile/app/(tabs)/settings/index.tsx`.
 Code it uses, as plain text so Graph view draws player flow only.
 
 - VITAE and stats
+- A fight
 - Game
 - Log
 - The world

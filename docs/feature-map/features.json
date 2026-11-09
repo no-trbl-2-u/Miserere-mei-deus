@@ -3382,6 +3382,12 @@
     {
       "kind": "coupling",
       "from": "route:(tabs)/settings",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/settings",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
     },
@@ -5916,6 +5922,12 @@
       "from": "route:settings",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/SaveSlotsProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:settings",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
     },
     {
       "kind": "coupling",

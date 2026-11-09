@@ -6,6 +6,8 @@
  * which lives in the theme runtime and is rendered through the same
  * `<ThemeSwitcher>` component.
  *
+ * RULES GLOSSARY opens a sheet of the rules a card's short lines lean on.
+ *
  * One row exists only inside a run (the store has an active slot):
  * SAVE & RETURN TO TITLE (writes the chronicle, then lands on the menu).
  *
@@ -23,6 +25,7 @@ import { OptionRow } from '@/components/menu/OptionRow';
 import { StepperRow } from '@/components/menu/StepperRow';
 import { KitDivider, KitHeader } from '@/components/experience/KitBackdrop';
 import { LOOKS } from '@/components/experience/looks';
+import { RulesGlossarySheet } from '@/components/settings/RulesGlossarySheet';
 import { ScreenBg } from '@/components/ScreenBg';
 import { SectionLabel } from '@/components/SectionLabel';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
@@ -75,6 +78,7 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
         );
 
     const [confirmReset, setConfirmReset] = useState(false);
+    const [rulesOpen, setRulesOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
     const [thanks, setThanks] = useState(false);
 
@@ -198,6 +202,15 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
                     </>
                 ) : null}
 
+                {heading(SETTINGS_COPY.sections.rules, 'star', 'divider-short-brass')}
+                <MenuButton
+                    label={SETTINGS_COPY.rulesGlossary}
+                    hint={SETTINGS_COPY.rulesGlossaryHint}
+                    onPress={() => setRulesOpen(true)}
+                    testID="settings-rules-glossary"
+                    place="O-07"
+                />
+
                 {heading(SETTINGS_COPY.sections.feedback, 'quatrefoil', 'divider-plain-brass')}
                 <MenuButton
                     label={FEEDBACK_COPY.open}
@@ -221,6 +234,8 @@ export function SettingsBody({ showClose }: SettingsBodyProps) {
 
             {/* The last row; renders nothing outside dev builds. */}
             <DevToolsLink />
+
+            <RulesGlossarySheet visible={rulesOpen} onClose={() => setRulesOpen(false)} />
 
             <FeedbackSheet
                 visible={feedbackOpen}

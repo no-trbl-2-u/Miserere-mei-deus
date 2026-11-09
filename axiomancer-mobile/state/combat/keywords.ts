@@ -216,7 +216,8 @@ export function allRegistryKeywords(): readonly string[] {
  * keywords (Conviction, Reserve/Pips, WILD/X), but that the player still
  * reads on cards and threshold lines.
  *
- * No opened card prints these (T, 2026-11-01); they are read by the board
+ * No opened card prints these (T, 2026-11-01); the Rules Glossary in Settings
+ * lists them (with VULNERABLE and DISCARD), and they are read by the board
  * glossary below and by the keyword atlas and its drift check
  * (`scripts/content-drift.mjs`), the single source of truth for system terms.
  */
