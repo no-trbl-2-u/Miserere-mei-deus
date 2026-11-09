@@ -136,7 +136,7 @@ const KEYWORD_GLOSS: Record<string, string> = {
         'Every DEAL against the bearer deals that much more, per hit, for 3 turns, and a new SHOCK resets the turns and adds to the number. '
         + 'GUARD still blocks the larger hit.',
     Unbroken:
-        "If any of this move's WARD is left at the start of the foe's next turn, the clause pays out. "
+        "If any of this move's WARD is left when your turn ends, the clause pays at the start of your next turn, even if the foe loses its turn. "
         + 'Break the WARD and it pays nothing.',
     // ── The Merciful (the trial set) ──
     Radiance: 'HEAL that much, then DEAL the VITAE it restored to the foe. At full VITAE it deals nothing.',

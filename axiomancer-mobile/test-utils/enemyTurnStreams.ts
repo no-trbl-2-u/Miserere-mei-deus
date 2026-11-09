@@ -8,7 +8,7 @@ import { getEnemyFrameSet } from '@/assets/images/enemies/frames';
 import type { CombatEnemyPaneVM, CombatPlayerPaneVM } from '@/state/presenters/combat-encounter.engine';
 import {
     EnemyLibrary, applyEffect, cardLibrary, endTurn, initializeCombatEncounter, lookupEffect, playCombatCard,
-    resolveThreatPhase, rollEncounterDice, startTurn,
+    resolveThreatPhase, rollEncounterDice, startTurn, unbrokenPayoutEvents,
     type CombatEncounterState, type CombatEvent, type Enemy,
 } from '@mechanics';
 import { Player } from '@mechanics/Character/characters.mock';
@@ -50,8 +50,13 @@ export function enemyTurn(state: CombatEncounterState): { state: CombatEncounter
     const ended = endTurn(state);
     const resolved = resolveThreatPhase(ended.state, rng);
     let next = resolved.state;
-    if (next.phase === 'phase-play' && next.dice.length === 0) next = startTurn(next, rng).state;
-    return { state: next, events: [...ended.events, ...resolved.events] };
+    const events = [...ended.events, ...resolved.events];
+    if (next.phase === 'phase-play' && next.dice.length === 0) {
+        const turn = startTurn(next, rng);
+        next = turn.state;
+        events.push(...unbrokenPayoutEvents(turn.events));
+    }
+    return { state: next, events };
 }
 
 /** A fight with these real cards in hand, played free in order, their lines' own events kept. */

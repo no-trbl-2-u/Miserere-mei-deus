@@ -1511,6 +1511,12 @@
       "kind": "coupling",
       "from": "area:Combat",
       "to": "area:Enemy",
+      "file": "axiomancer-mechanics/src/Combat/combat.enemy-words.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Combat",
+      "to": "area:Enemy",
       "file": "axiomancer-mechanics/src/Combat/combat.engine.ts"
     },
     {

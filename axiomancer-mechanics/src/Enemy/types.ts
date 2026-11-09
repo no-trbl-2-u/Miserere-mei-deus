@@ -230,8 +230,8 @@ export interface EnemyMove {
     barnacle?: number;
     /** SHOCK n: each DEAL against you deals n more, per hit, for 3 turns (a count, not scaled by level). */
     shock?: number;
-    /** UNBROKEN: on a WARD move, what pays out at the start of the foe's next
-     *  turn if any of the WARD is left. See {@link UnbrokenPayout}. */
+    /** UNBROKEN: on a WARD move, what pays out at the start of your next turn
+     *  if any of the WARD is left when your turn ends. See {@link UnbrokenPayout}. */
     unbroken?: UnbrokenPayout;
     /** The move's one conditional effect, resolved in `Combat/combat.enemy-riders.ts`.
      *  See {@link EnemyMoveRider}. */

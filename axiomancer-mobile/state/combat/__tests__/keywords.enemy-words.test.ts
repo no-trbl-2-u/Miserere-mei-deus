@@ -24,7 +24,7 @@ const COUNTER: Record<(typeof ENEMY_KEYWORDS)[number], RegExp> = {
     seized: /banked in the Reserve/,
     barnacle: /Spend a body die on a card/,
     shock: /GUARD still blocks the larger hit/,
-    unbroken: /Break the WARD and it pays nothing/,
+    unbroken: /left when your turn ends, the clause pays at the start of your next turn.*Break the WARD and it pays nothing/,
 };
 
 describe('the enemy words', () => {
