@@ -1,4 +1,4 @@
-// Spec 163 (A8): the `production` EAS profile is the tester APK. DEV TOOLS are
+// The `production` EAS profile is the tester APK. DEV TOOLS are
 // off in it, and it stamps play-log rows `human` (without the env value
 // `playLog.ts` stamps `harness`).
 

@@ -25,7 +25,7 @@ describe('Store Submission Requirements', () => {
       expect(easConfig.build.production.ios.autoIncrement).toBe('buildNumber');
       
       // Android production config  
-      // Android production is the sideloadable tester APK (spec 163, A8)
+      // Android production is the sideloadable tester APK
       expect(easConfig.build.production.android.distribution).toBe('internal');
       expect(easConfig.build.production.android.autoIncrement).toBe('versionCode');
       expect(easConfig.build.production.android.buildType).toBe('apk');
