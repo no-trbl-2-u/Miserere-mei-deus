@@ -41,6 +41,15 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
+// Loaded fail-open: a missing or broken sibling must not disable the other rules.
+let scratch = null
+try {
+  scratch = await import('./scratchpad-resolve.mjs')
+} catch {
+  /* rule off */
+}
+let hookCwd = process.cwd()
+
 const DEFAULT_BRANCH = 'main'
 
 // --- forbidden-command rules ------------------------------------------
@@ -119,7 +128,20 @@ const RULES = [
       'no Co-Authored-By trailers, no emojis. The only sanctioned ' +
       'trailer is Cloud-Run: (cloud ticks only). Rewrite the message.',
   },
+  {
+    // footgun scratchpad-script-no-resolve: a script outside the repo resolves
+    // packages from its own folder, so a bare import dies ERR_MODULE_NOT_FOUND.
+    name: 'scratchpad-script-no-resolve',
+    test: (cmd) => {
+      trap = scratch?.findScratchpadTrap(cmd, hookCwd) ?? null
+      return !!trap
+    },
+    get message() {
+      return trap ? scratch.scratchpadTrapMessage(trap) : 'guard: scratchpad-script-no-resolve'
+    },
+  },
 ]
+let trap = null
 
 // Backgrounding the gate is its own rule because it needs the
 // run_in_background flag, not just the command string. This is
@@ -223,6 +245,7 @@ function preBash() {
   markHooked(input)
   const cmd = String(input?.tool_input?.command ?? '')
   if (!cmd) return 0
+  if (typeof input?.cwd === 'string' && input.cwd) hookCwd = input.cwd
   if (backgroundedGate(input)) {
     process.stderr.write(BACKGROUND_MESSAGE + '\n')
     return 2
@@ -486,6 +509,14 @@ function selfTest() {
     ['pkill node', null],
     ['git commit -m "guard refuses an unbracketed pkill -f now"', null],
   ]
+  // scratchpad-script-no-resolve needs a real file: one that imports a package nothing holds.
+  const scratchDir = fs.mkdtempSync(path.join(os.tmpdir(), 'guard-selftest-'))
+  fs.writeFileSync(path.join(scratchDir, 'bad.mjs'), "import 'guard-selftest-ghost'\n")
+  fs.writeFileSync(path.join(scratchDir, 'ok.mjs'), "import fs from 'node:fs'\n")
+  cases.push(
+    [`node ${path.join(scratchDir, 'bad.mjs')}`, 'scratchpad-script-no-resolve'],
+    [`node ${path.join(scratchDir, 'ok.mjs')}`, null],
+  )
   let failed = 0
   for (const [cmd, expected] of cases) {
     const hit = RULES.find((r) => r.test(cmd))?.name ?? null
