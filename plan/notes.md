@@ -273,3 +273,5 @@ bundle.
 - **Trap met: a web `onLayout` read in the fallback face stays narrow.** The first layout of a hidden measuring twin landed before the game's font did, and react-native-web raised no second event, so the fit saw a 70-wide word that is 100 wide. `FitText` re-keys the twin on `document.fonts` loads and on the room's width. Pin fits against widths read from a render after the font is in, never from a first layout.
 
 - **99.9** The guard is `axiomancer-mobile/components/hazard/__tests__/StakesCard.vm-drawn.test.ts`: every `HazardStakesVM` field must be listed as drawn or rules-only, and `StakesCard.tsx` must read exactly the drawn ones. The footgun line moves from Open to Guarded.
+
+- **135.3** Defaults taken: a persona withdraws once per node (fledHere is 0), so a hurt player cannot pace between a node and a rest forever; cautious avoids an elite only while other unfinished work is one road away; at an elite the personas take the upgrade over a card; explorer and rusher buy and remove nothing at a village.

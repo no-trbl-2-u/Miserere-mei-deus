@@ -609,3 +609,4 @@
 - 2026-11-08 · 161.1 (alias: GO1a) · a second death shows Game Over, not the opening scene; NEW CHARACTER then CONFIRM opens the run · 5f5c842d..5f5c842d (#1473)
 - 2026-11-09 · 99.9 · A stakes card test fails on an undrawn VM field · 83cd0629..b9262f7a (#1505)
 - 2026-11-09 · 99.1 · A stale card-rules row now fails with the seed command · 46c09873..46c09873 (#1512)
+- 2026-11-09 · 135.3 (alias: SM2c) · Four player personas play whole Chapter 1 runs · 779feb6c..779feb6c (#1513)
