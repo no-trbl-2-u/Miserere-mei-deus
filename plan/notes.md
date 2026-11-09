@@ -359,3 +359,29 @@ already scrolled; `RulesGlossarySheet.tsx` is unchanged.
 
 Defaults taken: sort by upper-cased term with a plain code-unit comparison (not
 `localeCompare`), so the order is the same on every device.
+
+`npm run sim:report -- --build <sha>` reads `run-summary`, `run-ends`, `run-pacing`
+and `coverage` (source `sim`, that build) from the Worker plus `chapter1Content()`,
+writes `docs/reports/sim/latest.md` (stamp, then run health, pacing, how hard
+Chapter 1 is, coverage, since the last report; no cards) and appends one
+`history.jsonl` line. Everything is computed before the first write, so a refused
+read, a content failure or a missing URL or token exits non-zero and writes nothing.
+The `report` job in `sim-runs.yml` (`needs: sim`, `if: always()`, the schedule and a
+dispatch at `main`) runs it at the batch's sha and commits through `measured-truth`'s
+push path. Pinned by `scripts/sim-report.test.mjs` over a mocked Worker.
+
+The live proof (a dispatched `sim-runs` at `main` committing the report) is T's, after
+merge: `gh workflow run sim-runs.yml --ref main`.
+
+Defaults taken:
+
+- The batch's breaks reach the report job as an `sim-breaks` artifact (3 days) from the
+  sim job; a missing artifact is a night with no breaks listed.
+- A break's issue cell reads new (created that day), already open, reopened (the
+  issue's `state_reason`) or closed; a failed issue lookup drops the links and keeps
+  the report.
+- A region's level and VITAE are the player after resolving its last node on average
+  (the node with the highest nodes-resolved-before); its nodes resolved, rests and
+  withdrawals are per run.
+- A persona's `breaks` count is every break line of the night, the list is one row per key.
+- The report lists every sim policy in the build's `run-summary`, the four personas first.

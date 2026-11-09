@@ -1101,6 +1101,25 @@
   design history under other names; Settings, Saves and dev routes may never
   need one): an alias-table or rule change to FM1b, its own `/plot`.
 
+### [ ] [owner] Follow-ups carried from spec 135 when it retired: Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage
+- proposed: 2026-11-09, settle retired spec 135 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/135-sm2-sim-follow-ups.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **The Merciful lane bot kills to grow** (the first draft's chunk, dropped by T, 2026-11-01): its lane-lead check in
+  `axiomancer-mobile/sim/run-archetypes.test.ts` stays `it.failing` until a later plot, or until the game lets a
+  sparing run build.
+- **The greedy witness**: it is what `measured-truth` plays and it already finishes at the mercy check, so changing it
+  moves measured truth and needs its own plot.
+- **Cards in the nightly report**, if T wants them back: a `card-vs-bot` section at the newest build holding T's and
+  the bots' rows.
+- **The sim report and the filing on D119's PR path** once NX1e changes how generated data lands.
+- **Chapters 2-4 for the personas**, once they are playable end to end; **an LLM-driven player** (spec 113's
+  Follow-up).
+- **The retention window as data** T can change: a constant in `backend/src/retention.ts` for now.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
