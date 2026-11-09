@@ -52,6 +52,8 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
     { lens: 'item-ungranted', id: 'relic-thornback-signet' },
     { lens: 'item-ungranted', id: 'relic-carapace-belt' },
+    { lens: 'item-ungranted', id: 'relic-brimming-locket' },
+    { lens: 'item-ungranted', id: 'relic-penitents-brooch' },
 ];
 
 describe('roster health — live tree', () => {
