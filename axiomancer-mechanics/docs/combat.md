@@ -94,7 +94,15 @@ Vein (`sig-bleeding-signet`, ◆4), and the Elementalist's three: Eye of the
 Storm (`sig-elementalist-signet`, ◆6), Kindle the Gale (`sig-elementalist-brooch`,
 ◆4) and Thaw into Thunder (`sig-elementalist-belt`, ◆3), and the Defender's three: Thorn Mantle
 (`sig-defender-signet`, ◆5), Mirror Ward (`sig-defender-brooch`, ◆3) and Hold the Line
-(`sig-defender-belt`, ◆4). A worn relic's stat lines and signature are
+(`sig-defender-belt`, ◆4), and the Merciful's two quest relics: Brim Over
+(`sig-merciful-locket`, ◆3: this turn every VITAE heal you make turns what it
+could not restore into GUARD, BRINE cutting it; it ends when the foe's turn
+begins; cast armed it is refused, "You are already brimming") and Absolution
+(`sig-merciful-brooch`, ◆3: removes the debuffs in `player.effects` and BRINE,
+TANGLE, UNDERTOW and LEECH on you, one count each, leaves BARNACLE, then HEALs 2
+per condition, mind-scaled in one heal and counted in "all you healed this
+turn"; with nothing to remove it is refused, "Nothing on you to absolve").
+Neither touches MERCY. A worn relic's stat lines and signature are
 read from the relic library by id; its Heart, Body and Mind lines join the
 fighter's stats for the fight (`statsWithWorn`).
 

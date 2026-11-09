@@ -174,7 +174,9 @@ export type SignatureSkillKind =
     | 'blizzard-to-storm'         // the Elementalist's Belt: all BLIZZARD becomes STORM
     | 'guard-to-thorns'           // the Thornback Signet: THORNS equal to your GUARD
     | 'reflect-half'              // the Mirror Brooch: REFLECT 50%
-    | 'hold-guard';               // the Carapace Belt: your GUARD is kept through the foe's next turn
+    | 'hold-guard'                // the Carapace Belt: your GUARD is kept through the foe's next turn
+    | 'overheal-guard'            // the Brimming Locket: this turn, healing past max VITAE becomes GUARD
+    | 'absolve';                  // the Penitent's Brooch: remove your debuffs, then HEAL 2 for each
 
 export type SignatureSkillId =
     | 'sig-disarming-plea'
@@ -186,7 +188,9 @@ export type SignatureSkillId =
     | 'sig-elementalist-belt'
     | 'sig-defender-signet'
     | 'sig-defender-brooch'
-    | 'sig-defender-belt';
+    | 'sig-defender-belt'
+    | 'sig-merciful-locket'
+    | 'sig-merciful-brooch';
 
 /** Player archetype, derived from the dominant base stat. Drives (mobile) the
  *  portrait only. */

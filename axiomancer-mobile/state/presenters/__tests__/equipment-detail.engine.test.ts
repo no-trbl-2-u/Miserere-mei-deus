@@ -81,4 +81,12 @@ describe('equipment detail view-model — lane', () => {
         const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
         expect(vm.lane).toBe('Lane: Defender (while worn)');
     });
+
+    it.each([
+        'relic-brimming-locket', 'relic-penitents-brooch',
+    ])('the Merciful quest relic %s reads exactly "Lane: Merciful (while worn)" (MF1f, A15)', (id) => {
+        const relic = getRelicById(id)!;
+        const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
+        expect(vm.lane).toBe('Lane: Merciful (while worn)');
+    });
 });

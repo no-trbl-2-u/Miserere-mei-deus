@@ -76,6 +76,8 @@ describe('the signature kit', () => {
             [D_SIGNET, 'guard-to-thorns', 5],
             [D_BROOCH, 'reflect-half', 3],
             [D_BELT, 'hold-guard', 4],
+            ['sig-merciful-locket', 'overheal-guard', 3],
+            ['sig-merciful-brooch', 'absolve', 3],
         ]);
     });
 
