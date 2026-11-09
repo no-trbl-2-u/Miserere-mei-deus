@@ -659,3 +659,4 @@
 - 2026-11-09 · 163.1 (alias: TK1a) · The Worker takes a tester token on the app's POSTs only · 1de09fc3..affc6c7e (#1549)
 - 2026-11-09 · 164.1 (alias: SR1a) · Settle retires an emptied spec whose last close says absorb · 39e8a193..8a5806b1 (#1550)
 - 2026-11-09 · 164 · spec complete: A finished spec retires itself at settle · D184, pinned by scripts/pr-merge.test.mjs and scripts/loop-pr.test.mjs · deleted in (this commit)
+- 2026-11-09 · 163.4 (alias: TK1d) · The production profile builds a sideloadable tester APK, dev tools off · ce471d0b..9a192292 (#1553)

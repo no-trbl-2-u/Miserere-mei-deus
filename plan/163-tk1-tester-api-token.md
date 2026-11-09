@@ -45,7 +45,6 @@
 - **A5** T's rotation is done: new values in the Worker and repo secrets, a preview build made with the tester value and seen posting a row, and the old value refused by the live Worker with a 401.
 - **A6** `preview-build` fails before spending a build when the baked token equals the owner token.
 - **A7** `node scripts/release-apk.mjs <tag>` finds the finished Android production build for the tag's own commit, refuses any other commit, and attaches its APK to that release. Run on v0.7.0 as its proof.
-- **A8** The `production` profile's Android build is a sideloadable APK whose app has DEV TOOLS off and stamps play-log rows `human`; its iOS build is unchanged. Tests pin all three, and `preview-build` dispatched with `profile: production` bakes the same puzzle API values it bakes for `preview`.
 
 ## Open questions
 
@@ -54,20 +53,14 @@
 
 ## Chunks
 
-Measure: 4 open · 4 closed · next A9
+Measure: 3 open · 5 closed · next A9
 
 - [ ] **163.2** T rotates both tokens (attended) · S · closes A5 · needs — · alias: TK1b
   - An attended session: Claude generates two values and runs `gh secret set` for `PUZZLE_API_TOKEN`, `PUZZLE_TESTER_TOKEN` and `EXPO_PUBLIC_PUZZLE_API_TOKEN` (the tester value), never printing them. Then `backend-deploy` and `preview-build` by `workflow_dispatch`.
   - T re-enters the owner value on the ballot page, and `~/.config/miserere/puzzle-api.env` is updated (this also closes NEEDS_T `local-api-token-stale`).
   - T's installed APK stops posting until the new build is on the phone. Proof: T installs it, plays a fight and the row appears, and a `curl` with the old value gets 401.
-- [ ] **163.3** Preview builds refuse the owner token, and a release can carry its APK · S · closes A6, A7 · needs 163.2, 163.4 · alias: TK1c
+- [ ] **163.3** Preview builds refuse the owner token, and a release can carry its APK · S · closes A6, A7 · needs 163.2 · alias: TK1c
   - `preview-build.yml`: an early step comparing `EXPO_PUBLIC_PUZZLE_API_TOKEN` with `PUZZLE_API_TOKEN` and failing when they match.
   - `scripts/release-apk.mjs`, using `eas-cli build:list` the way `scripts/devlog-record-build.mjs` does (`EXPO_TOKEN`), matching the tag's full commit, then `gh release upload`. Its pure parts are tested.
   - The command goes where the release steps are written down, or in `docs/external-architecture.md`'s EAS section if there is no such place.
   - Measure: the workflow's guard shown failing on a run with equal values, or its shell tested locally; the script run on v0.7.0 and the asset's link in the PR.
-- [ ] **163.4** The production profile builds the prod APK, with no DEV TOOLS · S · closes A8 · needs — · alias: TK1d
-  - `axiomancer-mobile/eas.json`: `production.android` becomes `buildType: apk`, `distribution: internal` (`autoIncrement: versionCode` stays); `production.env` gains `EXPO_PUBLIC_PLAY_LOG_SOURCE: human` (without it `playLog.ts` stamps `harness`). `production.ios` does not change.
-  - `__tests__/store-submission.test.js` and `__tests__/ios-beta-config.test.ts` ("production is unchanged") pin the new Android shape and the unchanged iOS one. A test reads `app.config.ts` with `EAS_BUILD_PROFILE=production` and asserts `extra.devToolsEnabled === false`, unless one already does.
-  - `.github/workflows/preview-build.yml`: the `profile` input's description names `production` as the published APK. No other change: the puzzle API step already writes into whichever profile is dispatched.
-  - Nothing is built or published here: before T's rotation (163.2) the baked token is still the owner token.
-  - Measure: the two Jest files with `--maxWorkers=1`, and `node -e` printing the production profile, in the PR.
