@@ -74,7 +74,7 @@ import {
     programIllegalReason, programShortfall, programXRange, type ProgramShortfall,
     programElementFoeTurnStart, programFrozenCheck, programElementDrift,
     programSpikeStrike, programSpikeDrift, programDiscardShortfall, type DiscardShortfall,
-    programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart, playSpecialPayload,
+    programSpikeAttackStart, programHoldsGuard, programOnScrap, programMercyFoeTurnStart, playSpecialPayload, programEndYourTurn,
 } from './combat.card-program';
 import {
     programPaySacrifice, programSacrificeCost, programSacrificeShortfall, SACRIFICE_FLOOR_REASON,
@@ -1420,8 +1420,10 @@ function payHeldClause(stateIn: CombatEncounterState, rng: () => number): { stat
  * (`canAct` → skipTurn). This is how control "hinders the enemy" — it loses its
  * attack this phase. Then between-phases processing runs (DoT ticks, draw, advance).
  */
-export function resolveThreatPhase(stateIn: CombatEncounterState, rng: () => number = defaultRng): CombatTransition {
-    if (stateIn.phase === 'complete' || stateIn.finalOutcome) return { state: stateIn, events: [] };
+export function resolveThreatPhase(stateRaw: CombatEncounterState, rng: () => number = defaultRng): CombatTransition {
+    if (stateRaw.phase === 'complete' || stateRaw.finalOutcome) return { state: stateRaw, events: [] };
+    // Your turn is over: Brim Over lets go before anything on the foe's turn heals you.
+    const stateIn = programEndYourTurn(stateRaw);
     // The move's rider reads the board as your turn left it (your hand, your
     // TANGLE, what you dealt), before anything at the foe's turn start moves it.
     const planAction = stateIn.threatPhases[Math.min(stateIn.currentPhaseIndex, stateIn.threatPhases.length - 1)].threatAction;

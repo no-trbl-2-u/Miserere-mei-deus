@@ -2422,6 +2422,8 @@ const SIG_ICON: Record<SignatureSkill['kind'], string> = {
     'guard-to-thorns': '🌵',
     'reflect-half': '🪞',
     'hold-guard': '🛡',
+    'overheal-guard': '💧',
+    absolve: '✨',
 };
 
 function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {

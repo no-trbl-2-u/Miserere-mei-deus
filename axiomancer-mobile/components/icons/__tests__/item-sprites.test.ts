@@ -1,5 +1,5 @@
 /**
- * Every item draws its picture. `ITEM_SPRITES` holds the 23 ids of
+ * Every item draws its picture. `ITEM_SPRITES` holds the 25 ids of
  * the item icon table (the ten weapon and armor ids included, ahead of their content), each
  * with a label, and a relic or consumable in the libraries without a sprite
  * fails here. Once weapons and armors exist, the weapon and armor libraries join the check
@@ -19,6 +19,7 @@ const SPEC_IDS = [
     'relic-disarming-plea', 'relic-crimson-circlet', 'relic-ruby-signet', 'relic-bleeding-signet',
     'relic-elementalist-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt',
     'relic-thornback-signet', 'relic-mirror-brooch', 'relic-carapace-belt',
+    'relic-brimming-locket', 'relic-penitents-brooch',
     'minor-healing-potion', 'healing-potion', 'greater-healing-potion',
 ];
 
@@ -35,9 +36,9 @@ const LIBRARIES: readonly (readonly { id: string }[])[] = [
 ];
 
 describe('ITEM_SPRITES', () => {
-    it('holds the 23 ids of "The icons"', () => {
+    it('holds the 25 ids of "The icons"', () => {
         expect(Object.keys(ITEM_SPRITES).sort()).toEqual([...SPEC_IDS].sort());
-        expect(SPEC_IDS).toHaveLength(23);
+        expect(SPEC_IDS).toHaveLength(25);
     });
 
     it('every sprite is a bundled module and has a label', () => {
