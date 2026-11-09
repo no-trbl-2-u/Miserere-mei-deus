@@ -43,7 +43,7 @@ const TABLE: Readonly<Record<string, { slugs: readonly string[]; level: number; 
     'bw-c1': { slugs: ['cave-choir', 'tithe-collector', 'saltwick-swarm'], level: 5 },
     'bw-l4': { slugs: ['lamplighter', 'wrecker'], level: 7 },
     'bw-w5': { slugs: ['wreckmaster', 'tide-gate'], level: 8 },
-    'bw-k2': { slugs: ['saint-beneath'], level: 1, boss: true },
+    'bw-k2': { slugs: ['saint-beneath'], level: 8, boss: true },
 };
 
 type Staged = { enemySlug?: string; level?: number; isBoss?: boolean };

@@ -4,7 +4,8 @@
  * hand after their own two BARNACLE land.
  *
  * Numbers are the spec's at the boss's authored level 2, then pinned at the
- * chapter door's level 1, where it actually fights. Fixed RNG; no disk /
+ * level 1 (a scaling check; the chapter door now fights it at level 8, at its
+ * full VITAE, pinned in breakwater.engine.test). Fixed RNG; no disk /
  * network / TTY.
  */
 
@@ -222,7 +223,7 @@ describe('Pull Under, the renamed Drowning Mercy', () => {
     });
 });
 
-describe('at the chapter door (level 1, where it fights)', () => {
+describe('scaled to level 1 (a scaling check; the chapter door fights at level 8)', () => {
     it('scales each number as the fight applies it, measured', () => {
         const doorHits = (name: string, phase: number): number[] => {
             const s = { ...at(name, phase, DOOR), hand: hand(5) };

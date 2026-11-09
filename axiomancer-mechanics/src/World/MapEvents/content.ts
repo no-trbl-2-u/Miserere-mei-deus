@@ -185,10 +185,11 @@ const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOI
 export const BW_ELITE_LEVEL = 3;
 
 /**
- * Each region's door sits one level under the player a full clear
- * brings to it (Breakwater 1, Charcoal Wood 2, Beacon Crags 3, Lantern Deep 4).
+ * The Saint Beneath's level at the Sea Keep. T wants the player at level
+ * 8-10 on arrival, so the Saint fights at its full authored 320 VITAE
+ * (no level scaling under 8).
  */
-export const BW_DOOR_LEVEL = 1;
+export const BW_DOOR_LEVEL = 8;
 
 /** A board kind: what each node of the node list is. */
 export type BreakwaterChapterKind =
