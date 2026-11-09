@@ -12,13 +12,16 @@
  *   - REDUCED MOTION follow the OS, or force on / off;
  *   - HAPTICS        the pulses on drags and dice;
  *   - MUSIC / SOUND  volumes kept for the audio build (nothing plays yet);
+ *   - RULES GLOSSARY the rules a card's short lines lean on, read from the shared glossary;
  *   - STORY MODE     coming soon — listed so its absence is not a mystery.
  *
  * Functions (lowest → highest abstraction):
  *   volumeStep(value, delta)         clamp a 0–100 step
+ *   selectRulesGlossary()            the rules list, read from the shared glossary
  *   selectSettingsViewModel(settings, inRun)  the rows
  */
 
+import { keywordGloss, SYSTEM_GLOSSARY } from '../combat/keywords';
 import { CARD_TEXT_MODES, TEXT_SCALES, type CardTextMode, type PlayerSettings, type ReducedMotionPreference, type TextScale } from '../settings';
 
 export const SETTINGS_COPY = Object.freeze({
@@ -32,6 +35,7 @@ export const SETTINGS_COPY = Object.freeze({
         sound: 'SOUND',
         story: 'STORY',
         run: 'THE RUN',
+        rules: 'RULES',
         feedback: 'FEEDBACK',
         device: 'THIS DEVICE',
     }),
@@ -59,6 +63,9 @@ export const SETTINGS_COPY = Object.freeze({
     resetSettingsBody: 'theme, text size, motion, haptics and sound (music back on) return to their defaults. no chronicle is touched.',
     resetSettingsConfirm: 'RESET',
     cancel: 'KEEP IT',
+    rulesGlossary: 'RULES GLOSSARY',
+    rulesGlossaryHint: 'how a line reads, and what the words on a card mean',
+    rulesGlossaryClose: 'CLOSE',
     feedbackHint: 'tell us about a bug, or propose a change',
     on: 'ON',
     off: 'OFF',
@@ -120,6 +127,27 @@ export function selectFeedbackViewModel(form: FeedbackFormState): FeedbackViewMo
         canSubmit,
         draft: canSubmit && form.kind !== null ? { kind: form.kind, text } : null,
     };
+}
+
+export interface RulesGlossaryEntry {
+    readonly term: string;
+    readonly def: string;
+}
+
+/** The keywords whose gloss joins the systems glossary in the Rules Glossary. */
+const RULES_GLOSSARY_KEYWORDS: readonly string[] = Object.freeze(['Vulnerable', 'Discard']);
+
+/**
+ * The Rules Glossary list: one entry per systems-glossary term in its own
+ * order, then VULNERABLE and DISCARD. Every word is read from
+ * `state/combat/keywords.ts`; none is retyped here. Pure.
+ */
+export function selectRulesGlossary(): readonly RulesGlossaryEntry[] {
+    const keywords = RULES_GLOSSARY_KEYWORDS.flatMap((keyword) => {
+        const def = keywordGloss(keyword);
+        return def === null ? [] : [{ term: keyword.toUpperCase(), def }];
+    });
+    return [...SYSTEM_GLOSSARY.map(({ term, def }) => ({ term, def })), ...keywords];
 }
 
 export interface OptionVM<V> {

@@ -124,7 +124,7 @@ rest wait for T's FREE session (spec 137, Follow-ups).
 
 A short line leans on a few rules the glossary states once, so the line never has to. The opened card prints no
 system notes under its NO DIE / +DIE rows (T, 2026-11-01), so these sit in the systems glossary
-(`SYSTEM_GLOSSARY`) and show on no card until T places them:
+(`SYSTEM_GLOSSARY`) and show in Settings, under the RULES GLOSSARY button:
 
 - steps resolve left to right;
 - debuffs land on the foe;
