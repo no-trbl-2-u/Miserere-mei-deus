@@ -346,6 +346,7 @@ function playOn(store: AppStore, tap: EventTap, options: PlayRunOptions, maxStep
             hazard: { policy: null },
             fled: new Map(),
             mercy: emptyMercyLedger(),
+            boss: emptyBossLedger(),
             alive: store.getState(),
             owed: null,
             findings: [],
