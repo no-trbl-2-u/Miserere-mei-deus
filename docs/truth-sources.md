@@ -185,6 +185,18 @@ differently:
   migration 0006) belong to neither T nor the bots. A `sim` or `harness` row
   stays in D1 for 14 days (the Worker's nightly cron, chunk 135.7); a `human`
   row is kept for good.
+- **The nightly sim report** is **`docs/reports/sim/latest.md`** (phase
+  SM2f), with a line a night appended to `docs/reports/sim/history.jsonl`
+  so the numbers outlive the 14-day window. The four player personas play
+  Chapter 1 and the report reads their rows back from the Worker at the
+  night's build: run health (with each break and its issue), pacing, how
+  hard Chapter 1 is as plain numbers, which of its nodes, quest steps,
+  enemies, hazards and items the runs reached (and which no night has), and
+  the change since the last line. It carries its own stamp (build, date,
+  runs per persona, seed), is a measurement and not a gate (D57), and has no
+  cards (`card-vs-bot` stays on demand in `npm run api`). The `report` job
+  of `.github/workflows/sim-runs.yml` writes it after the schedule and a
+  dispatch at `main`; by hand: `npm run sim:report -- --build <sha>`.
 - **Chapter 1's enemies** (turns to kill and VITAE lost for every Breakwater
   foe at its node's level, all six elites included, against the four kitted
   lane decks at player levels 8 and 10, and the share of fights reaching each
