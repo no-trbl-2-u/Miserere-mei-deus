@@ -54,7 +54,6 @@ needs are done):
 - **161.1** · GO1a: a second death reaches Game Over, not the opening scene (T, `/plot`, 2026-11-08)
 
 
-- **162.5** · MV1e: UNBROKEN pays at the start of your next turn (T's end gate, `/plot`, 2026-11-08)
 - **162.6** · MV1f: the Saint Beneath fights at level 8 (T's end gate, `/plot`, 2026-11-08)
 
 **Held** (waits on a person's word; never picked until the
@@ -97,7 +96,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 162 | Six foes get moves of their own | [162-mv1-enemy-movesets.md](162-mv1-enemy-movesets.md) | planned | 2 left |
+| 162 | Six foes get moves of their own | [162-mv1-enemy-movesets.md](162-mv1-enemy-movesets.md) | planned | 1 left |
 | 161 | A second death reaches the Game Over screen | [161-go1-second-death-game-over.md](161-go1-second-death-game-over.md) | planned (**Asap**: 161.1) | 1 left |
 | 160 | A passed review still merges when the verify gate finishes after it | [160-mg1-merge-after-late-gate.md](160-mg1-merge-after-late-gate.md) | planned (**Asap**: 160.1) | 1 left |
 | 159 | Touch-ups from T's phone: the Spoils, the fight, card faces, the Wilds, the tab bar and Self | [159-tu1-phone-touch-ups.md](159-tu1-phone-touch-ups.md) | planned | 1 left |

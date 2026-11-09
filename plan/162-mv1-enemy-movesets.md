@@ -113,7 +113,6 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 ## Acceptance
 
-- **A9** A live UNBROKEN clause pays at the start of the player's next turn, DEAL payouts included. It pays when the foe lost its turn to a status such as petrify, and pays nothing if the WARD was broken. Its gloss and chip say so.
 - **A10** The Saint Beneath fights at level 8 at the Sea Keep (`bw-k2`), at its full 320 VITAE.
 
 ## Open questions
@@ -124,7 +123,7 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 
 ## Chunks
 
-Measure: 2 open · 8 closed · next A11
+Measure: 1 open · 9 closed · next A11
 
 
 ### 162.1 (MV1a) — SEIZED replaces UNDERTOW · S · closes A1 · requires —
@@ -155,11 +154,6 @@ Measure: 2 open · 8 closed · next A11
 - Saltwick Swarm: `difficulty: 'elite'`, three phases. `BW_ELITE_DRAWS['bw-c1']` gains it at level 5, and `eliteDrawPool`'s limit rises from two foes to three, equal odds. `BW_ENCOUNTER_FOES`: `bw-t2` to `bilge-stalker` and `bw-t6` to `coralback`, levels unchanged. It leaves `ACT1_POOL`. Update the pinned node tests (`breakwater-chapter-foes`, `chapter1-recast`, `chapter1-pier-town`), and keep the check that no foe appears twice in a row on any route.
 - Tests: each foe's moves and Danger lines; no foe shares a move with another among these five; the other foes' moves unchanged.
 - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim report for the Breakwater before and after, in the PR body. Label `review:rules-change`.
-- [ ] **162.5** UNBROKEN pays at the start of your next turn · S · closes A9 · needs — · alias: MV1e
-  - Today the clause is read at the start of the foe's turn, while its WARD still stands (`planRiderTurn` in `Combat/combat.enemy-riders.ts`, `Combat/combat.enemy-words.ts`, `combat.enemy-words.resolve.ts`), and a denied foe fires nothing. Keep the check that some WARD survived the player's turn, then hold the clause and pay it at the start of the player's next turn, including when the foe's turn was denied. Say in the PR how hits land at that moment (GUARD and SHOCK should still meet them).
-  - The gloss (`Enemy/enemy-keywords.ts`) and the chip caption (`combat-encounter.engine.ts`) stop saying "at its next turn" where they do. No move text changes. The "On <enemy name>'s next <action>" form is not built; no move uses it.
-  - Tests: pays at the start of the player's turn for a DEAL, a SHOCK and a BARNACLE payout; WARD broken pays nothing; a petrified foe still pays. Replace the tests pinning the foe-turn timing.
-  - Measure: the mechanics and mobile gates, run piecewise with a worker cap. Label `review:rules-change`.
 - [ ] **162.6** The Saint Beneath fights at level 8 · S · closes A10 · needs — · alias: MV1f
   - `BW_DOOR_LEVEL` to 8 in `World/MapEvents/content.ts`, used only by the Saint's `boss` case. Update `breakwater.engine.test.ts` and any pin of the old 129 VITAE. No move's numbers change.
   - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim in the PR body before and after, saying what level the player reaches the Saint at and how often they win. T's target is level 8-10 on arrival. Report it; do not retune. Label `review:rules-change`.

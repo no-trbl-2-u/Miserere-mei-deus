@@ -604,3 +604,4 @@
 - 2026-11-08 · 162.2 (alias: MV1b) · SHOCK and UNBROKEN join the enemy words · adea52b3..adea52b3 (#1482)
 - 2026-11-08 · 162.3 (alias: MV1c) · the Saint Beneath plays its own six moves · 4f03239d..59d95308 (#1483)
 - 2026-11-08 · 162.4 (alias: MV1d) · Five foes play own moves; Saltwick Swarm is a sea cave elite · fdf6c359..88f7e5dd (#1492)
+- 2026-11-08 · 162.5 (alias: MV1e) · UNBROKEN pays at the start of your next turn · 50cc40f4..2f39f4e2 (#1498)
