@@ -13,8 +13,12 @@ database_name = "miserere"
 database_id = "d2933f80-97b3-44bf-bfca-3958dba331b8"
 migrations_dir = "migrations"
 
-# PUZZLE_API_TOKEN is a Worker secret (`wrangler secret put PUZZLE_API_TOKEN`),
-# never a [vars] entry. Locally, `.dev.vars` holds it.
+# Two Worker secrets (`wrangler secret put <NAME>`), never [vars] entries;
+# locally, `.dev.vars` holds them:
+# - PUZZLE_API_TOKEN, the owner token: every route and method.
+# - PUZZLE_TESTER_TOKEN (spec 163), the token a published APK carries: only
+#   the POST of the app's routes (`tester: true` in src/index.ts). Optional;
+#   unset, only the owner token opens anything.
 
 # The origins the ballot routes answer CORS for: the axiomancer-ballots Pages
 # site and its branch previews (phase BV1a). Not a secret.

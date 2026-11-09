@@ -88,6 +88,24 @@ test('it migrates, deploys, then sets the Worker secret, each with the Cloudflar
   assert.match(secret.block, /printf '%s' "\$PUZZLE_API_TOKEN" \| npx wrangler secret put PUZZLE_API_TOKEN/, 'the token goes in on stdin, never as an argument')
 })
 
+test('it sets the tester token last, only when its repo secret exists, and never fails without it (TK1a A4)', () => {
+  const owner = step(/npx wrangler secret put PUZZLE_API_TOKEN/)
+  const tester = step(/npx wrangler secret put PUZZLE_TESTER_TOKEN/)
+  assert.ok(steps.indexOf(owner) < steps.indexOf(tester), 'the owner token is set first')
+  assert.equal(steps.indexOf(tester), steps.length - 1, 'the tester step is the last')
+  assert.deepEqual(secretsIn(tester.block), ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN', 'PUZZLE_TESTER_TOKEN'])
+  assert.match(tester.block, /working-directory: backend/)
+  assert.match(tester.block, /if \[ -z "\$PUZZLE_TESTER_TOKEN" \]; then\n(?:.*\n)*?\s+exit 0\n\s+fi\n/, 'an unset secret skips with exit 0')
+  assert.match(tester.block, /printf '%s' "\$PUZZLE_TESTER_TOKEN" \| npx wrangler secret put PUZZLE_TESTER_TOKEN/, 'the token goes in on stdin, never as an argument')
+  assert.doesNotMatch(tester.block, /\n        if:/, 'the step itself always runs; the shell decides')
+  assert.doesNotMatch(step(/::error::missing repo secret/).block, /PUZZLE_TESTER_TOKEN/, 'a missing tester secret is not a deploy failure')
+})
+
+test('wrangler.toml names both Worker secrets', () => {
+  assert.match(wrangler, /PUZZLE_API_TOKEN/)
+  assert.match(wrangler, /PUZZLE_TESTER_TOKEN/)
+})
+
 test('a missing secret fails the run before anything is installed or deployed', () => {
   const check = step(/::error::missing repo secret/)
   assert.ok(steps.indexOf(check) < steps.indexOf(step(/run: npm ci\b/)))

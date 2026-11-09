@@ -16,7 +16,7 @@ export default defineWorkersConfig(async () => {
                     singleWorker: true,
                     wrangler: { configPath: './wrangler.toml' },
                     miniflare: {
-                        bindings: { PUZZLE_API_TOKEN: 'test-token', TEST_MIGRATIONS: migrations },
+                        bindings: { PUZZLE_API_TOKEN: 'test-token', PUZZLE_TESTER_TOKEN: 'tester-token', TEST_MIGRATIONS: migrations },
                     },
                 },
             },

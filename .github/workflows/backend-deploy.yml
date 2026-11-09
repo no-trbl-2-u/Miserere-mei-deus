@@ -2,7 +2,8 @@ name: backend-deploy
 
 # Deploys the miserere-api Worker (backend/) to Cloudflare (phase BE1b):
 # apply the D1 migrations to the remote `miserere` database, deploy the
-# Worker, then set its PUZZLE_API_TOKEN secret from the repo secret. The
+# Worker, then set its PUZZLE_API_TOKEN secret from the repo secret, and its
+# PUZZLE_TESTER_TOKEN secret when that repo secret exists (spec 163). The
 # Worker lives at https://miserere-api.no-trbl-2-u.workers.dev.
 #
 # Tests are not repeated here: verify-mechanics owns backend/** and gates the
@@ -89,3 +90,20 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           PUZZLE_API_TOKEN: ${{ secrets.PUZZLE_API_TOKEN }}
         run: printf '%s' "$PUZZLE_API_TOKEN" | npx wrangler secret put PUZZLE_API_TOKEN
+
+      # The tester token (spec 163), the one a published APK carries: it opens
+      # only the app's POST routes. Optional until T's rotation (163.2), so a
+      # missing repo secret skips the step and the Worker refuses the tester
+      # token, as it did before the secret existed.
+      - name: Set the PUZZLE_TESTER_TOKEN Worker secret, when the repo secret exists
+        working-directory: backend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PUZZLE_TESTER_TOKEN: ${{ secrets.PUZZLE_TESTER_TOKEN }}
+        run: |
+          if [ -z "$PUZZLE_TESTER_TOKEN" ]; then
+            echo "PUZZLE_TESTER_TOKEN repo secret not set; skipping (the Worker takes only the owner token)"
+            exit 0
+          fi
+          printf '%s' "$PUZZLE_TESTER_TOKEN" | npx wrangler secret put PUZZLE_TESTER_TOKEN
