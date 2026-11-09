@@ -19,11 +19,14 @@ import {
     BLOOD_PRICE_SPEND_FLOOR,
     cardVerbs,
     foeMeansToHit,
+    guardWhenHit,
+    PERSONA_FIGHT,
     laneFightPolicy,
     newElements,
     sacrificePaysBack,
     selfBurnWouldEnd,
 } from './run-policy.fight';
+import { PLAYER_WITNESS } from './player-witness';
 import { cardKeywords } from './run-policy.lanes';
 
 const WILD = { id: 'w', color: 'wild' as const, state: 'available' as const, temporary: false, face: 'mana' as const };
@@ -126,5 +129,34 @@ describe('the lane fight rankings', () => {
             expect(Object.keys(COMBAT_SIM_POLICIES)).toContain(p.id);
             expect(p.name.toLowerCase()).toContain('lane bot');
         }
+    });
+});
+
+describe('the shared guard-when-hit rule', () => {
+    const probe = board(laneCards('defender').slice(0, 1));
+    const guard = laneCards('defender').find(id => cardVerbs(probe, id).has('guard'))!;
+    const s = board([guard, GREY]);
+    const hit = telegraph(s, 'attack', true);
+    const quiet = telegraph(s, 'buff', false);
+
+    it('every lane bot lifts a guard card above 1e10 only while the foe hits', () => {
+        for (const lane of ['blood-price', 'defender', 'merciful', 'elementalist']) {
+            expect(rank(lane, hit, guard) - rank(lane, quiet, guard), lane).toBeGreaterThan(1e10);
+        }
+    });
+
+    it('a non-guard card is not lifted, and a -Infinity refusal stays one', () => {
+        expect(guardWhenHit(hit, view(hit, GREY), 7)).toBe(7);
+        expect(guardWhenHit(hit, view(hit, guard), -Infinity)).toBe(-Infinity);
+        expect(guardWhenHit(quiet, view(quiet, guard), 7)).toBe(7);
+        expect(guardWhenHit(hit, view(hit, guard), 7)).toBeGreaterThan(1e10);
+    });
+
+    it('the persona fight guards when hit; the player witness does not', () => {
+        const rankOf = (p: typeof PERSONA_FIGHT, st: CombatEncounterState) => p.rankCard(st, view(st, guard), () => 0);
+        expect(rankOf(PERSONA_FIGHT, hit) - rankOf(PERSONA_FIGHT, quiet)).toBeGreaterThan(1e10);
+        expect(rankOf(PLAYER_WITNESS, hit)).toBe(rankOf(PLAYER_WITNESS, quiet));
+        expect(PERSONA_FIGHT.mercyCheck).toBe('finish');
+        expect(PERSONA_FIGHT.signatureKinds).toEqual(PLAYER_WITNESS.signatureKinds);
     });
 });
