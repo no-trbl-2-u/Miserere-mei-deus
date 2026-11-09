@@ -73,6 +73,8 @@ export const ROUTES = [
     { name: 'root', path: '/' },
     { name: 'character', path: '/character' },
     { name: 'inventory', path: '/inventory' },
+    { name: 'deck', path: '/deck' },
+    { name: 'settings', path: '/settings' },
     { name: 'exploration', path: '/exploration' },
     // The live fight holds only a staged fight, so it is entered through
     // /dev's encounter trigger with the engine seed pinned.

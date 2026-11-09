@@ -26,7 +26,7 @@
 import React from 'react';
 import { Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** Props for a labelled control group. */
@@ -294,8 +294,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     rowStacked: { flexDirection: 'column' },
     labelCol: { flex: 1, minWidth: 96 },
-    label: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 1.5, color: AXM.bone },
-    sub: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment, marginTop: 2 },
+    label: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.bone },
+    sub: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.parchment, marginTop: 2 },
     subOk: { color: AXM.heal },
     subErr: { color: AXM.blood },
     controls: { flexShrink: 1, alignItems: 'flex-end' },
@@ -311,7 +311,7 @@ const useStyles = makeStyles((AXM) => ({
     buttonActive: { backgroundColor: AXM.sulfur },
     buttonDanger: { borderColor: AXM.blood },
     buttonDisabled: { opacity: 0.4 },
-    buttonLabel: { fontFamily: FONTS.gothic, fontSize: 12, letterSpacing: 1.5, color: AXM.sulfur },
+    buttonLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     buttonLabelActive: { color: AXM.bg },
     buttonLabelDanger: { color: AXM.blood },
     chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, paddingTop: 4 },
@@ -324,7 +324,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     chipActive: { borderColor: AXM.sulfur, backgroundColor: AXM.sulfur },
     chipAccent: { borderColor: AXM.blood },
-    chipLabel: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 0.5, color: AXM.parchment },
+    chipLabel: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.parchment },
     chipLabelActive: { color: AXM.bg },
     chipLabelAccent: { color: AXM.blood },
     select: { flex: 1, minWidth: 140 },
@@ -339,8 +339,8 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.ash,
         backgroundColor: AXM.deepBg,
     },
-    selectLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment, flexShrink: 1 },
-    selectCaret: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone },
+    selectLabel: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.parchment, flexShrink: 1 },
+    selectCaret: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.bone },
     selectList: { borderWidth: 1, borderTopWidth: 0, borderColor: AXM.ash, backgroundColor: AXM.deepBg },
     selectOption: { paddingHorizontal: 8, paddingVertical: 6 },
     selectOptionActive: { backgroundColor: AXM.sulfur },
@@ -363,8 +363,8 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'center',
     },
     checkBoxOn: { borderColor: AXM.sulfur, backgroundColor: AXM.sulfur },
-    checkMark: { fontFamily: FONTS.mono, fontSize: 9, lineHeight: 10, color: AXM.bg },
+    checkMark: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, lineHeight: 10, color: AXM.bg },
     kv: { flexDirection: 'row', gap: 8, paddingVertical: 1 },
-    kvKey: { fontFamily: FONTS.mono, fontSize: 9, color: AXM.bone, width: 92 },
-    kvVal: { fontFamily: FONTS.mono, fontSize: 9, color: AXM.parchment, flex: 1 },
+    kvKey: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.bone, width: 92 },
+    kvVal: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.parchment, flex: 1 },
 }));

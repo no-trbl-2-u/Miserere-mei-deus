@@ -23,7 +23,7 @@ import { DeckTypeTabs } from '@/components/deck/DeckTypeTabs';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectDeckViewModel, type DeckCardVM } from '@/state/presenters/deck.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 const GRID_COLUMNS = 4;
@@ -111,6 +111,6 @@ export default function DeckScreen() {
 const useStyles = makeStyles((AXM) => ({
     fill: { flex: 1 },
     emptyPanel: { borderWidth: 1, borderColor: AXM.divider, padding: 18 },
-    emptyText: { fontFamily: FONTS.serif, fontSize: 14, lineHeight: 20, color: AXM.bone },
+    emptyText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 14, lineHeight: 20, color: AXM.bone },
     grid: { flexDirection: 'row', flexWrap: 'wrap', gap: GRID_GAP, marginTop: 12 },
 }));

@@ -21,7 +21,7 @@ import { AxmIcon } from '@/components/icons';
 import { getItemSprite, getItemSpriteLabel } from '@/components/icons/item-sprites';
 import { Splatter } from '@/components/Splatter';
 import { VictoryWreath } from '@/components/art/VictoryWreath';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 import { rarityAffordance, rarityColors } from '@/components/inventory/rarityAffordance';
 import type { AftermathVictoryViewModel } from '@/state/presenters/aftermath.engine';
@@ -306,10 +306,9 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 8,
     },
     binderGlyphs: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 8,
         color: AXM.blood,
-        letterSpacing: 2,
     },
     body: {
         flex: 1,
@@ -318,21 +317,21 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 14,
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
         color: AXM.blood,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
     },
     titleBlock: { marginTop: 6 },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 28,
         lineHeight: 30,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
     },
     epithet: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         color: AXM.bone,
         marginTop: 4,
@@ -364,9 +363,9 @@ const useStyles = makeStyles((AXM) => ({
     },
     finalBlowHeaderRow: {},
     finalBlowHeader: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     finalBlowCard: {
@@ -376,21 +375,20 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.blood,
     },
     finalBlowPhrase: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         lineHeight: 18,
         color: AXM.parchment,
         marginTop: 8,
     },
     finalBlowDescriptor: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
         // Was AXM.ash (~2.1:1 on the dock-bg box) at 8px — the "— felled
         // the foe" caption read as near-black grime on the box edge.
         // bone (~6.5:1) makes it legible without competing with the
         // parchment phrase above it.
         color: AXM.bone,
-        letterSpacing: 1.4,
         marginTop: 8,
     },
     rewardStrip: {
@@ -413,7 +411,7 @@ const useStyles = makeStyles((AXM) => ({
         justifyContent: 'flex-end',
     },
     rewardValue: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.bigNumber.fontFamily,
         fontSize: 27,
         lineHeight: 30,
         // Lift the payoff numbers off the strip so a win reads as a reward.
@@ -422,21 +420,21 @@ const useStyles = makeStyles((AXM) => ({
         textShadowRadius: 10,
     },
     rewardLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 5,
     },
     lootSection: { marginTop: 14 },
     lootHeader: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.parchment,
     },
     lootEmpty: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 13,
         color: AXM.bone,
         marginTop: 6,
@@ -460,15 +458,15 @@ const useStyles = makeStyles((AXM) => ({
     },
     lootRowText: { flex: 1 },
     lootName: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 12,
-        letterSpacing: 1.2,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         color: AXM.parchment,
     },
     lootSlot: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.4,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 2,
     },
@@ -499,9 +497,9 @@ const useStyles = makeStyles((AXM) => ({
         opacity: 0.85,
     },
     carryOnLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 16,
         color: AXM.sulfur,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
 }));

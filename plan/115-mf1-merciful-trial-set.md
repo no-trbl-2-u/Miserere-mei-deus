@@ -187,9 +187,6 @@ and the elite drop pool is unchanged. `/dev`'s relic chips hand them over, as fo
 
 - **A12** (attended) On a preview APK, T sets the Merciful test deck from `/dev`, plays a fight, and checks the reward
   pool box.
-- **A13** Brim Over (◆3, Brimming Locket): armed, a heal past max VITAE gives GUARD equal to the overflow; a heal that fits gives none; RADIANCE's DEAL stays what it restored; BRINE cuts the GUARD; it ends with your turn; casting it armed is refused and spends nothing.
-- **A14** Absolution (◆3, Penitent's Brooch): removes each debuff in `player.effects` and BRINE, TANGLE, UNDERTOW and LEECH on you, leaves BARNACLE, HEALs 2 per condition (mind-scaled), and the HEAL counts toward "all you healed this turn"; with nothing to remove it is refused and spends nothing.
-- **A15** Both relics are in the library with `laneId: 'merciful'`, `relicSource: 'quest'` and +5 Mind; the Merciful has one elite relic and two quest relics; the elite pool is unchanged; both draw a sprite, read on the signature bar, and neither relic's signature touches MERCY or the mercy check.
 
 ## Open questions
 
@@ -197,10 +194,6 @@ and the elite drop pool is unchanged. `/dev`'s relic chips hand them over, as fo
 
 ## Chunks
 
-Measure: 4 open · 11 closed · next A16
+Measure: 1 open · 14 closed · next A16
 
 - [ ] **115.5** T's check (attended) · S · closes A12 · needs — · alias: MF1e
-- [ ] **115.6** The Merciful's two quest relics · M · closes A13, A14, A15 · needs — · alias: MF1f
-  - Mechanics: the two relics, the two signatures and kinds in `combat.signature.ts` and `combat.encounter.types.ts`, the overflow hook on every counted heal, the clears in `combat.card-program.ts`, `signatureCastBlock`'s two refusals, the atlas rows, the relic-library test's counts, `docs/combat.md`.
-  - Mobile: the sprite map and labels (the Ring's sprite until T picks), `combat-encounter.engine.ts`'s signature glyph map, the equipment-detail test.
-  - Read the section "The Merciful's two quest relics"; apply T's answers to its calls.

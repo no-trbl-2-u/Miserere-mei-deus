@@ -16,7 +16,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { LABYRINTH_COPY } from '@/state/presenters/labyrinth.engine';
 import type { LabyrinthRoomVM } from '@/state/presenters/labyrinth.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 interface LabyrinthAccordionProps {
@@ -136,18 +136,18 @@ const useStyles = makeStyles((AXM) => ({
         gap: 10,
     },
     stripNumber: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.bigNumber.fontFamily,
         fontSize: 22,
         color: AXM.sulfur,
     },
     stripName: {
         flex: 1,
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.mapName.fontFamily,
         fontSize: 15,
         color: AXM.parchment,
     },
     stripChevron: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 14,
         color: AXM.bone,
     },
@@ -161,28 +161,28 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 16,
     },
     sectionLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 12,
         marginBottom: 4,
     },
     narration: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 14,
         lineHeight: 20,
         color: AXM.parchment,
     },
     riddle: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 14,
         lineHeight: 20,
         fontStyle: 'italic',
         color: AXM.sulfur,
     },
     pocketEmpty: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         color: AXM.bone,
     },
@@ -199,18 +199,17 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     chipWord: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 13,
-        letterSpacing: 1,
         color: AXM.parchment,
     },
     chipSource: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 9,
         color: AXM.bone,
     },
     debtLine: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         color: AXM.rust,
         marginBottom: 6,
@@ -230,23 +229,23 @@ const useStyles = makeStyles((AXM) => ({
         flex: 1,
     },
     hintLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 13,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.parchment,
     },
     hintDesc: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         color: AXM.bone,
     },
     hintPrice: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 12,
         color: AXM.sulfur,
     },
     hintLine: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.parchment,
@@ -260,9 +259,9 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
     },
     settleButtonText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 13,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.sulfur,
     },
 }));

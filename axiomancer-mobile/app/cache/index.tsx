@@ -37,7 +37,7 @@ import {
     cacheOutcomeCurrencyChip,
     cacheOutcomeItemChip,
 } from '@/state/presenters/cache.copy';
-import { FONTS, TYPE } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The cache column's widest extent, in points (the rest column's width). */
@@ -155,21 +155,21 @@ const useStyles = makeStyles((AXM) => ({
     // offer's face beside its label instead of across the screen.
     column: { width: '100%', maxWidth: CACHE_COLUMN_MAX_WIDTH, alignSelf: 'center' },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 12,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginBottom: 4,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
         lineHeight: 28,
         color: AXM.parchment,
         marginBottom: 10,
     },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 19,
         color: AXM.parchment,
@@ -183,11 +183,11 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     offerText: { flexShrink: 1 },
-    offerLabel: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 1.2, color: AXM.sulfur },
+    offerLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 17, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     // What you do for this choice, in the scene's own voice — not a reward, so
     // not the uppercase ledger face.
     offerAction: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 18,
         color: AXM.parchment,
@@ -200,7 +200,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 12,
     },
     cardTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         lineHeight: 26,
         color: AXM.parchment,
@@ -208,9 +208,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
         color: AXM.parchment,
         borderWidth: 1,
         borderColor: AXM.ash,
@@ -225,7 +224,7 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         backgroundColor: AXM.bg,
     },
-    bigButtonText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 2, color: AXM.sulfur },
+    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

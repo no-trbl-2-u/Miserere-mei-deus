@@ -45,7 +45,7 @@ import React from 'react';
 import { Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { ItemGlyph } from '@/components/inventory/ItemCard';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import type { EquipmentDetailViewModel } from '@/state/presenters/equipment-detail.engine';
 
@@ -230,15 +230,15 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     name: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 18,
         color: AXM.parchment,
-        letterSpacing: 0.5,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
     },
     slot: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.8,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: -6,
     },
@@ -252,9 +252,9 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 10,
     },
     blockEyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 8,
-        letterSpacing: 1.8,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
         marginBottom: 6,
     },
@@ -265,18 +265,18 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 1,
     },
     statLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     statValue: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 12,
         color: AXM.parchment,
     },
     emptyLine: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         color: AXM.bone,
     },
@@ -288,30 +288,30 @@ const useStyles = makeStyles((AXM) => ({
     },
     sigName: {
         flex: 1,
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardRules.fontFamily,
         fontSize: 13,
         color: AXM.parchment,
     },
     sigCost: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 11,
         color: AXM.sulfur,
     },
     sigDesc: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardRules.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.bone,
         marginTop: 5,
     },
     effectLine: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardRules.fontFamily,
         fontSize: 13,
         lineHeight: 18,
         color: AXM.parchment,
     },
     laneLine: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.cardRules.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.sulfur,
@@ -319,7 +319,7 @@ const useStyles = makeStyles((AXM) => ({
     },
     // Deliberately borderless — the owner's one exception to the rounded-edge rule.
     flavor: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         lineHeight: 18,
         color: AXM.bone,
@@ -349,9 +349,9 @@ const useStyles = makeStyles((AXM) => ({
         flex: 1,
     },
     closeText: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 11,
-        letterSpacing: 2.5,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
         color: AXM.parchment,
     },
 }));

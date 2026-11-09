@@ -35,7 +35,7 @@ import {
     BLACKSMITH_CARD_UPGRADE_BACK,
     blacksmithUpgradedChip,
 } from '@/state/presenters/blacksmith.copy';
-import { FONTS, TYPE } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /**
@@ -383,21 +383,21 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     eyebrow: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 12,
-        letterSpacing: 2.2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginBottom: 4,
     },
     title: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 26,
         lineHeight: 30,
         color: AXM.parchment,
         marginBottom: 10,
     },
     body: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 19,
         color: AXM.parchment,
@@ -412,12 +412,12 @@ const useStyles = makeStyles((AXM) => ({
         paddingBottom: 6,
         marginBottom: 10,
     },
-    budgetLabel: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 2, color: AXM.bone },
-    budgetValue: { fontFamily: FONTS.sans, fontSize: 20, letterSpacing: 1, color: AXM.sulfur },
+    budgetLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    budgetValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 20, color: AXM.sulfur },
     sectionLabel: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
         marginTop: 6,
         marginBottom: 6,
@@ -425,7 +425,7 @@ const useStyles = makeStyles((AXM) => ({
     // The legend for the per-die face read; chronicle voice, one
     // step quieter than the die rows it explains.
     faceKey: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.bone,
@@ -444,8 +444,8 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'baseline',
         marginBottom: 8,
     },
-    dieName: { fontFamily: FONTS.gothic, fontSize: 16, color: AXM.parchment, letterSpacing: 1.2 },
-    dieFaces: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 0.5, color: AXM.bone },
+    dieName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing},
+    dieFaces: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, color: AXM.bone },
     offerRow: { flexDirection: 'row', gap: 8 },
     offerCol: { flex: 1 },
     offerButton: {
@@ -457,19 +457,18 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     offerDisabled: { borderColor: AXM.ash, opacity: 0.5 },
-    offerLabel: { fontFamily: FONTS.gothic, fontSize: 14, letterSpacing: 1.5, color: AXM.sulfur },
-    offerPrice: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.sulfur },
+    offerLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 14, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
+    offerPrice: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.sulfur },
     // The trade a verb makes, in the die read's own mono face.
     offerEffect: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         lineHeight: 15,
-        letterSpacing: 0.5,
         color: AXM.bone,
         marginTop: 4,
     },
     offerReason: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         lineHeight: 15,
         color: AXM.bone,
@@ -482,7 +481,7 @@ const useStyles = makeStyles((AXM) => ({
         padding: 12,
     },
     cardTitle: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 22,
         lineHeight: 26,
         color: AXM.parchment,
@@ -490,9 +489,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 12,
-        letterSpacing: 1,
         color: AXM.parchment,
         borderWidth: 1,
         borderColor: AXM.ash,
@@ -507,7 +505,7 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         backgroundColor: AXM.bg,
     },
-    bigButtonText: { fontFamily: FONTS.gothic, fontSize: 18, letterSpacing: 2, color: AXM.sulfur },
+    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    inactiveText: { ...TYPE.body, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
+    inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

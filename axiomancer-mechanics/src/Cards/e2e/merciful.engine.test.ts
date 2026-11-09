@@ -210,7 +210,8 @@ describe("the Suppliant's Ring", () => {
         expect(relicLaneId(ring)).toBe('merciful');
         expect(getCardLane(ring.laneId!)!.name).toBe('Merciful');
         expect(ring.relicSource).toBe('elite');
-        expect(relicLibrary.filter(r => r.laneId === 'merciful')).toEqual([ring]);
+        // The other two Merciful relics are quest relics (MF1f); the Ring is the lane's one elite drop.
+        expect(relicLibrary.filter(r => r.laneId === 'merciful' && r.relicSource === 'elite')).toEqual([ring]);
         expect(eliteRelicPool({ inventory: [] }).map(r => r.id)).toContain('relic-disarming-plea');
     });
 });

@@ -10,7 +10,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { HazardStakesVM } from '@/state/presenters/hazard-stakes.engine';
 import { KitSurface } from '@/components/experience/KitSurface';
 import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
-import { FONTS, HUE, TYPE_ROLES } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The vellum panel the stakes card wears (H-01). */
@@ -62,5 +62,5 @@ const useStyles = makeStyles((AXM) => ({
     value: { ...TYPE_ROLES.sectionHead, color: AXM.parchment },
     valueKit: { color: HUE.hzCardInk },
     cta: { borderWidth: 1, paddingVertical: 14, alignItems: 'center' },
-    ctaText: { fontFamily: FONTS.mono, fontSize: 13, letterSpacing: 2 },
+    ctaText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.button.letterSpacing},
 }));

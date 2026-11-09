@@ -41,7 +41,7 @@ const fight = (over: Partial<RunFightContext> = {}): RunFightContext => ({
 
 describe('the archetype bots', () => {
     it('are registered by their lane ids beside the wanderer', () => {
-        expect(RUN_POLICY_IDS).toEqual(['wanderer', 'blood-price', 'defender', 'merciful', 'elementalist', 'finish-all', 'spare-all']);
+        expect(RUN_POLICY_IDS).toEqual(['wanderer', 'blood-price', 'defender', 'merciful', 'elementalist', 'finish-all', 'spare-all', 'cautious', 'reckless', 'explorer', 'rusher']);
         for (const p of ARCHETYPE_POLICIES) {
             expect(getRunPolicy(p.id)).toBe(p);
             expect(getCardLane(p.id)).toBeDefined();
@@ -155,14 +155,14 @@ describe('the archetype bots', () => {
                 { cardId: card('defender', 2), price: 99, enabled: true },
             ],
             removal: { price: 2, enabled: true, cardIds: [GREY, card('defender'), other] },
-            hasAnvil: false, deck,
+            hasAnvil: false, deck, rng: () => 0.5,
         });
         expect(visit.rest).toBe(true);
         expect(visit.buy).toEqual([card('defender', 1)]);
         // 10 - 2 (bed) - 3 (card) leaves 5: two removals, another lane's card before the grey office.
         expect(visit.remove).toEqual([other, GREY]);
         const whole = DEFENDER_POLICY.visitVillage({
-            health: 100, maxHealth: 100, currency: 0, rest: { price: 2, enabled: true }, shop: [], removal: null, hasAnvil: true, deck,
+            health: 100, maxHealth: 100, currency: 0, rest: { price: 2, enabled: true }, shop: [], removal: null, hasAnvil: true, deck, rng: () => 0.5,
         });
         expect(whole).toEqual({ rest: false, buy: [], remove: [] });
     });

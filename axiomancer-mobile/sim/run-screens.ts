@@ -7,13 +7,19 @@
  */
 
 import {
+    ANVIL_VERB_PRICING,
+    DIE_GEAR_COLORS,
     buildCombatDeck,
+    getRng,
     isEquipment,
     nextHazardStep,
     hazardRouteFor,
     unfinishedReachable,
+    upgradableCardIds,
+    type DieGearColor,
     type GameState,
     type HazardPolicyId,
+    type RunAnvilDecision,
     type RunPolicy,
 } from '@mechanics';
 
@@ -138,10 +144,102 @@ export function resolveTravel(
     return true;
 }
 
-/** `/village`: rest, buy, remove as the policy says, then LEAVE. */
+function anvilPhase(store: AppStore): string | undefined {
+    return store.getState().blacksmith?.session?.phase;
+}
+
+/** Acknowledge an open result or refusal flash; true when it was a refusal. */
+function settleAnvilCard(store: AppStore, actions: AppActions): boolean {
+    const session = store.getState().blacksmith?.session;
+    if (session?.phase !== 'card') return false;
+    const refused = session.card?.refused === true;
+    actions.continueBlacksmithCard();
+    if (anvilPhase(store) === 'card') throw new ScreenStuckError('the anvil result would not close');
+    return refused;
+}
+
+/** Throws when an anvil answer is not one the context allows. */
+function checkAnvilDecision(decision: RunAnvilDecision, currency: number, upgradable: readonly string[]): void {
+    if (!Number.isInteger(decision.budget) || decision.budget < 0 || decision.budget > currency) {
+        throw new ScreenStuckError(`the policy gave the anvil a budget of ${decision.budget} from a purse of ${currency}`);
+    }
+    if (decision.upgradeCardId !== null && !upgradable.includes(decision.upgradeCardId)) {
+        throw new ScreenStuckError(`the policy chose '${decision.upgradeCardId}' to upgrade, which cannot take one`);
+    }
+    const seen = new Set<DieGearColor>();
+    for (const color of decision.colors) {
+        if (!DIE_GEAR_COLORS.includes(color) || seen.has(color)) {
+            throw new ScreenStuckError(`the policy named the die colour '${color}' more than once or not at all`);
+        }
+        seen.add(color);
+    }
+}
+
+/**
+ * The village's anvil, the way a player's visit runs it through the blacksmith
+ * store actions: the card upgrade first, then each colour honed and then
+ * tempered until the anvil refuses (a refusal ends that step, not the run),
+ * then leave and claim.
+ */
+function visitAnvil(store: AppStore, actions: AppActions, policy: RunPolicy, variants: AnvilVariants): void {
+    const player = store.getState().player;
+    const vm = selectVillageVM({ event: store.getState().event, player, flags: (store.getState() as unknown as GameState).flags });
+    const session = store.getState().blacksmith?.session;
+    if (session) throw new ScreenStuckError('an anvil is already open at the village');
+    const deck = deckOf(store);
+    const upgradable = upgradableCardIds(deck);
+    const decision = policy.visitAnvil({
+        health: vm.health,
+        maxHealth: vm.maxHealth,
+        currency: vm.currency,
+        bedPrice: vm.rest ? vm.rest.price : null,
+        prices: { hone: ANVIL_VERB_PRICING.hone, temper: ANVIL_VERB_PRICING.temper, upgrade: ANVIL_VERB_PRICING.upgrade },
+        upgradableCardIds: upgradable,
+        deck,
+        baseStats: player.baseStats,
+        rng: () => getRng().random(),
+    });
+    checkAnvilDecision(decision, vm.currency, upgradable);
+    if (decision.budget <= 0) return;
+    if (!actions.beginBlacksmith({ variants, budget: decision.budget })) {
+        throw new ScreenStuckError('the anvil would not open');
+    }
+    actions.startBlacksmithForging();
+    if (decision.upgradeCardId !== null) {
+        actions.chooseBlacksmithCardUpgrade();
+        if (anvilPhase(store) === 'upgrade-pick') actions.pickBlacksmithCardUpgrade(decision.upgradeCardId);
+        settleAnvilCard(store, actions);
+    }
+    for (const color of decision.colors) {
+        for (const verb of ['hone', 'temper'] as const) {
+            for (let n = 0; n < ANVIL_MAX_WORKS; n++) {
+                if (anvilPhase(store) !== 'forging') break;
+                if (verb === 'hone') actions.honeBlacksmith(color);
+                else actions.temperBlacksmith(color);
+                if (settleAnvilCard(store, actions)) break;
+            }
+        }
+    }
+    actions.leaveBlacksmith();
+    if (anvilPhase(store) !== 'outcome') throw new ScreenStuckError(`the anvil would not close from '${anvilPhase(store)}'`);
+    if (!actions.claimBlacksmithOutcome().applied) throw new ScreenStuckError('the anvil outcome would not commit');
+}
+
+/** An anvil visit works a die at most this many times per verb (the caps stop it sooner). */
+const ANVIL_MAX_WORKS = 12;
+
+type AnvilVariants = NonNullable<Parameters<AppActions['beginBlacksmith']>[0]>['variants'];
+
+/** `/village`: the anvil, then rest, buy, remove as the policy says, then LEAVE. */
 export function resolveVillage(store: AppStore, actions: AppActions, policy: RunPolicy): boolean {
+    if (store.getState().event?.pending?.event.kind !== 'village') return false;
+    const first = selectVillageVM({
+        event: store.getState().event,
+        player: store.getState().player,
+        flags: (store.getState() as unknown as GameState).flags,
+    });
+    if (first.anvil) visitAnvil(store, actions, policy, first.anvil.variants);
     const state = store.getState();
-    if (state.event?.pending?.event.kind !== 'village') return false;
     const vm = selectVillageVM({ event: state.event, player: state.player, flags: (state as unknown as GameState).flags });
     const decision = policy.visitVillage({
         health: vm.health,
@@ -154,6 +252,7 @@ export function resolveVillage(store: AppStore, actions: AppActions, policy: Run
             : null,
         hasAnvil: vm.anvil !== null,
         deck: deckOf(store),
+        rng: () => getRng().random(),
     });
     if (decision.rest && vm.rest?.enabled) actions.restAtVillage();
     for (const cardId of decision.buy) actions.buyVillageCard(cardId);

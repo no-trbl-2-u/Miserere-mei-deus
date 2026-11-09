@@ -36,7 +36,7 @@ import {
     hazardPuzzleSolveSeconds,
     type HazardPuzzleLogAttempt,
 } from '@/state/presenters/hazard-puzzle-log.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 export interface HazardPuzzleLogPanelProps {
@@ -136,25 +136,25 @@ export function HazardPuzzleLogPanel({ attempts, solver, onSolverChange, onClear
 
 const useStyles = makeStyles((AXM) => ({
     root: { borderWidth: 1, borderColor: AXM.ash, borderStyle: 'dashed', padding: 10, gap: 6 },
-    label: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 1.5, color: AXM.bone },
+    label: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 9, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
     solverRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-    solverLabel: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 1.5, color: AXM.bone },
+    solverLabel: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.bone },
     solverInput: {
         flex: 1,
         borderWidth: 1,
         borderColor: AXM.ash,
         paddingHorizontal: 8,
         paddingVertical: 5,
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.count.fontFamily,
         fontSize: 11,
         color: AXM.parchment,
     },
-    summary: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment },
-    empty: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.ash },
-    attempt: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.bone },
-    feedback: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.sulfur },
+    summary: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.parchment },
+    empty: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.ash },
+    attempt: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.bone },
+    feedback: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.sulfur },
     buttons: { flexDirection: 'row', gap: 6 },
     button: { paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1, borderColor: AXM.sulfur },
-    buttonLabel: { fontFamily: FONTS.gothic, fontSize: 12, letterSpacing: 1.5, color: AXM.sulfur },
-    json: { fontFamily: FONTS.mono, fontSize: 8, color: AXM.parchment },
+    buttonLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
+    json: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 8, color: AXM.parchment },
 }));

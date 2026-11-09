@@ -17,7 +17,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { LOOKS } from '@/components/experience/looks';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 export interface MenuButtonProps {
@@ -124,22 +124,22 @@ const useStyles = makeStyles((AXM) => ({
     },
     text: { flex: 1 },
     label: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 18,
-        letterSpacing: 3,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.parchment,
     },
     labelPrimary: { color: AXM.bg },
     labelDanger: { color: AXM.blood },
     hint: {
-        fontFamily: FONTS.serifItalic,
+        fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 11,
         color: AXM.bone,
         marginTop: 2,
     },
     hintPrimary: { color: AXM.bg, opacity: 0.75 },
     chevron: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 22,
         color: AXM.bone,
         marginLeft: 10,

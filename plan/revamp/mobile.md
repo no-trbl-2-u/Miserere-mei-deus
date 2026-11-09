@@ -82,7 +82,7 @@ T, 2026-09-28 (D62): the reset leaves the dev menu alone (beyond compile
 fixes); this phase redesigns it. D19 ("keep all Debug* tools") stands until
 T revisits it here. Input — the 2026-09-28 dev-menu audit:
 
-- **CI actually drives** DevToolsLink (`self-dev-tools-link`),
+- **CI actually drives** DevToolsLink (`settings-dev-tools-link`),
   DebugTriggerEncounter, DebugPresetPicker (`debug-preset-sage`),
   DebugXpGrant, DebugHazardButton, and the `/combat-encounter` route.
   D19's count of nine does not reproduce. Non-CI scripts use DebugRestButton,

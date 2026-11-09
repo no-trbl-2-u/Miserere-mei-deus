@@ -18,7 +18,7 @@ import { KitPressable, KitSurface } from '@/components/experience/KitSurface';
 import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import type { SaveSlotRowVM } from '@/state/presenters/main-menu.engine';
 import { SAVE_SLOTS_COPY } from '@/state/presenters/main-menu.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 /** The vellum row (N-01) and the vellum button (N-02) the slot rows wear. */
@@ -123,11 +123,11 @@ const useStyles = makeStyles((AXM) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    numeral: { fontFamily: FONTS.gothic, fontSize: 22, color: AXM.sulfur },
+    numeral: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 22, color: AXM.sulfur },
     text: { flex: 1 },
-    detail: { fontFamily: FONTS.serif, fontSize: 14, color: AXM.parchment },
-    detailTorn: { color: AXM.blood, fontFamily: FONTS.serifItalic },
-    stamp: { fontFamily: FONTS.mono, fontSize: 9, letterSpacing: 1, color: AXM.bone, marginTop: 3 },
+    detail: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 14, color: AXM.parchment },
+    detailTorn: { color: AXM.blood, fontFamily: TYPE_ROLES.narration.fontFamily },
+    stamp: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, color: AXM.bone, marginTop: 3 },
     verbs: { gap: 6, alignItems: 'stretch' },
     verb: {
         paddingVertical: 7,
@@ -141,7 +141,7 @@ const useStyles = makeStyles((AXM) => ({
     verbDanger: { borderColor: AXM.blood, backgroundColor: AXM.bg },
     verbGhost: { borderColor: AXM.ash, borderStyle: 'dashed', backgroundColor: 'transparent' },
     verbPressed: { opacity: 0.7 },
-    verbLabel: { fontFamily: FONTS.gothic, fontSize: 12, letterSpacing: 1.5, color: AXM.sulfur },
+    verbLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     verbLabelDanger: { color: AXM.blood },
     verbGhostInk: { borderColor: VELLUM_INK },
     inkBody: { color: VELLUM_INK },
@@ -150,5 +150,5 @@ const useStyles = makeStyles((AXM) => ({
     // On vellum the most-recent slot inks its numeral box in oxblood, and a torn save dashes it.
     numeralBoxRecentKit: { borderColor: VELLUM_OXBLOOD, borderWidth: 2 },
     numeralBoxTornKit: { borderColor: VELLUM_OXBLOOD, borderStyle: 'dashed' },
-    verbLabelGhost: { fontFamily: FONTS.gothic, fontSize: 11, letterSpacing: 1.5, color: AXM.bone },
+    verbLabelGhost: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.bone },
 }));

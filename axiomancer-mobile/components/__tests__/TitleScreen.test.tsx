@@ -14,6 +14,9 @@ import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { TITLE_COPY, TITLE_TIMING } from '@/state/presenters/title.engine';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
+let mockReduced = false;
+jest.mock('@/hooks/useReducedMotion', () => ({ useReducedMotion: () => mockReduced }));
+
 const MENU = <Text testID="stub-menu">menu</Text>;
 
 function TestWrapper({ children }: { children: React.ReactNode }) {
@@ -38,7 +41,10 @@ function playIntro() {
 
 describe('TitleScreen', () => {
   beforeEach(() => jest.useFakeTimers());
-  afterEach(() => jest.useRealTimers());
+  afterEach(() => {
+    jest.useRealTimers();
+    mockReduced = false;
+  });
 
   it('prints the game\'s name as the wordmark, never the old title', () => {
     const { getByTestId, queryByText } = mount();
@@ -119,6 +125,18 @@ describe('TitleScreen', () => {
     act(() => {
       jest.advanceTimersByTime(TITLE_TIMING.menuMs);
     });
+    expect(queryByTestId('title-cta', { includeHiddenElements: true })).toBeNull();
+    expect(queryByTestId('title-embark', { includeHiddenElements: true })).toBeNull();
+    expect(queryByTestId('title-embark-scroll', { includeHiddenElements: true })).toBeNull();
+    expect(queryByTestId('stub-menu')).toBeTruthy();
+  });
+
+  // A19: with motion reduced there is no fade to wait out; no timer advances here.
+  it('unmounts the Embark block at once under reduced motion, with no timer advancing', () => {
+    mockReduced = true;
+    const { getByRole, queryByTestId } = mount();
+    expect(queryByTestId('title-cta', { includeHiddenElements: true })).toBeTruthy();
+    fireEvent.press(getByRole('button'));
     expect(queryByTestId('title-cta', { includeHiddenElements: true })).toBeNull();
     expect(queryByTestId('title-embark', { includeHiddenElements: true })).toBeNull();
     expect(queryByTestId('title-embark-scroll', { includeHiddenElements: true })).toBeNull();

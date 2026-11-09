@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useRouter } from '@/lib/platform/router';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 import { useGameState } from '@/state/GameStoreProvider';
 import { selectQuestTrackerVM } from '@/state/presenters/quest-tracker.engine';
@@ -89,8 +89,8 @@ const useStyles = makeStyles((AXM) => ({
     },
     row: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, marginTop: 3 },
     text: { flex: 1 },
-    name: { fontFamily: FONTS.gothic, fontSize: 13, color: AXM.parchment },
-    objective: { fontFamily: FONTS.serifItalic, fontSize: 11, color: AXM.bone },
-    progress: { fontFamily: FONTS.mono, fontSize: 11, letterSpacing: 1, color: AXM.parchment },
-    more: { fontFamily: FONTS.mono, fontSize: 10, letterSpacing: 1, color: AXM.bone, marginTop: 3 },
+    name: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 13, color: AXM.parchment },
+    objective: { fontFamily: TYPE_ROLES.entry.fontFamily, fontSize: 11, color: AXM.bone },
+    progress: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, color: AXM.parchment },
+    more: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.bone, marginTop: 3 },
 }));

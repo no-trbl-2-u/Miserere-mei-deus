@@ -41,7 +41,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, Defs, LinearGradient, Path, RadialGradient, Rect as SvgRect, Stop } from 'react-native-svg';
 
-import { FONTS, HUE, TYPE_ROLES } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { makeStyles, usePalette } from '@/theme/runtime';
@@ -67,6 +67,7 @@ import { SACRIFICE_CALLOUT_MS } from './VitaeSacrificeCallout';
 import { CARD_ENTER_MS, CARD_LAYOUT_MS } from './cardMotion';
 import type { BoardGlossLive, BoardTermId } from '@/state/combat/keywords';
 import { CombatDie, combatDieA11yLabel } from './CombatDie';
+import { RASTER_LAYER } from './rasterLayer';
 import { RollingDie } from './RollingDie';
 import { CombatGear, useGearFired } from './CombatGear';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -1641,15 +1642,17 @@ export const CombatBoard = React.memo(function CombatBoard({
                     card, and a tap still reads the card whole. */}
                 <View style={styles.dock}>
                     {/* sulfur shelf glow behind the fan */}
-                    <Svg width="100%" height={90} viewBox="0 0 100 30" preserveAspectRatio="none" style={styles.fanGlow} pointerEvents="none">
-                        <Defs>
-                            <RadialGradient id="axmFanGlow" cx="50%" cy="100%" r="80%">
-                                <Stop offset="0%" stopColor={AXM.sulfur} stopOpacity={0.16} />
-                                <Stop offset="100%" stopColor={AXM.sulfur} stopOpacity={0} />
-                            </RadialGradient>
-                        </Defs>
-                        <Circle cx={50} cy={30} r={55} fill="url(#axmFanGlow)" />
-                    </Svg>
+                    <View style={styles.fanGlow} pointerEvents="none" {...RASTER_LAYER}>
+                        <Svg width="100%" height={90} viewBox="0 0 100 30" preserveAspectRatio="none" pointerEvents="none">
+                            <Defs>
+                                <RadialGradient id="axmFanGlow" cx="50%" cy="100%" r="80%">
+                                    <Stop offset="0%" stopColor={AXM.sulfur} stopOpacity={0.16} />
+                                    <Stop offset="100%" stopColor={AXM.sulfur} stopOpacity={0} />
+                                </RadialGradient>
+                            </Defs>
+                            <Circle cx={50} cy={30} r={55} fill="url(#axmFanGlow)" />
+                        </Svg>
+                    </View>
                     <View style={styles.fan} testID="combat-hand" pointerEvents="box-none">
                         {fan.map((card, i) => (
                             <FanCard
@@ -2317,25 +2320,25 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         borderColor: 'transparent', borderRadius: 10, justifyContent: 'flex-end',
     },
     playHint: {
-        position: 'absolute', top: 8, alignSelf: 'center', fontFamily: FONTS.sans, fontSize: 11,
-        letterSpacing: 1.4, color: AXM.sulfur, textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 3,
+        position: 'absolute', top: 8, alignSelf: 'center', fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11,
+        color: AXM.sulfur, textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 3,
     },
     stagedRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: 'center', alignItems: 'flex-end' },
     stageHint: {
-        alignSelf: 'center', marginTop: 4, fontFamily: FONTS.serifItalic, fontStyle: 'italic', fontSize: 12,
+        alignSelf: 'center', marginTop: 4, fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 12,
         color: AXM.bone, textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 3,
     },
     // Loud-rejection reason line — the refusal,
     // said out loud where the drop just failed.
     rejectLine: {
-        alignSelf: 'center', marginTop: 4, paddingHorizontal: 10, fontFamily: FONTS.sans, fontSize: 11,
-        letterSpacing: 0.6, color: AXM.blood, textAlign: 'center',
+        alignSelf: 'center', marginTop: 4, paddingHorizontal: 10, fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11,
+        color: AXM.blood, textAlign: 'center',
         textShadowColor: 'rgba(0,0,0,0.95)', textShadowRadius: 3,
     },
     // Dead-tray telegraph — sits directly above the dice it describes.
     deadTrayLine: {
-        alignSelf: 'center', marginBottom: 2, paddingHorizontal: 12, fontFamily: FONTS.sans, fontSize: 10,
-        letterSpacing: 0.8, color: AXM.sulfur, textAlign: 'center',
+        alignSelf: 'center', marginBottom: 2, paddingHorizontal: 12, fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10,
+        color: AXM.sulfur, textAlign: 'center',
         textShadowColor: 'rgba(0,0,0,0.95)', textShadowRadius: 3,
     },
     stagedCol: { alignItems: 'center' },
@@ -2344,12 +2347,12 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         width: 30, height: 30, borderRadius: 15, borderWidth: 1.5, borderStyle: 'dashed', borderColor: AXM.bone,
         backgroundColor: 'rgba(0,0,0,0.6)', alignItems: 'center', justifyContent: 'center',
     },
-    dieSocketGlyph: { fontFamily: FONTS.sans, fontSize: 13, color: AXM.bone },
+    dieSocketGlyph: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 13, color: AXM.bone },
     applyRibbon: {
         marginTop: -2, borderWidth: 1.5, borderTopWidth: 0, borderBottomLeftRadius: 6, borderBottomRightRadius: 6,
         paddingVertical: 5, alignItems: 'center',
     },
-    applyText: { fontFamily: FONTS.sans, fontSize: 12, letterSpacing: 1.5 },
+    applyText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing},
 
     // ── signature rune column ──
     sigColumn: { position: 'absolute', left: 6, top: SIG_COLUMN_TOP_FALLBACK, alignItems: 'center', gap: SIG_COLUMN_GAP, zIndex: 30 },
@@ -2370,11 +2373,11 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         borderTopColor: 'transparent', borderRightColor: 'transparent',
         borderBottomColor: 'transparent', borderLeftColor: 'transparent',
     },
-    convictionText: { fontFamily: FONTS.sans, fontSize: 15, lineHeight: 18, letterSpacing: 0.5, textAlign: 'center' },
+    convictionText: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 15, lineHeight: 18, textAlign: 'center' },
     // The CONVICTION caption — small enough to stay chrome, large enough to
     // read: 9px, the floor the HUD clock line was raised past, and it scales
     // with the system text size, so the chip widens rather than shrinks it.
-    convictionCaption: { fontFamily: FONTS.sans, fontSize: 9, lineHeight: 11, letterSpacing: 0.4, color: AXM.bone, textAlign: 'center', marginTop: 1 },
+    convictionCaption: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 9, lineHeight: 11, letterSpacing: 0.4, color: AXM.bone, textAlign: 'center', marginTop: 1 },
     sigRune: {
         width: SIG_RUNE_SIZE, height: SIG_RUNE_SIZE, borderRadius: SIG_RUNE_SIZE / 2, borderWidth: 1.5, backgroundColor: 'rgba(0,0,0,0.6)',
         alignItems: 'center', justifyContent: 'center',
@@ -2384,14 +2387,14 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         position: 'absolute', right: -4, bottom: -3, backgroundColor: 'rgba(0,0,0,0.92)', borderRadius: 7,
         borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)', paddingHorizontal: 3, paddingVertical: 0,
     },
-    sigCostText: { fontFamily: FONTS.mono, fontSize: 9, lineHeight: 12 },
+    sigCostText: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 9, lineHeight: 12 },
     // The refused mark sits opposite the cost badge, inside the rune's box, so
     // the column's measured height does not move.
     sigRefusedMark: {
         position: 'absolute', left: -4, top: -3, backgroundColor: 'rgba(0,0,0,0.92)', borderRadius: 7,
         borderWidth: 1, paddingHorizontal: 3, paddingVertical: 0,
     },
-    sigRefusedText: { fontFamily: FONTS.mono, fontSize: 9, lineHeight: 12 },
+    sigRefusedText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 9, lineHeight: 12 },
 
     // ── dice row ──
     // gap 14 + wrap: four gems + the spare chip must fit a 375pt viewport
@@ -2400,8 +2403,8 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     dieAssigned: { opacity: 0.4 },
     // Drawn X/dud die — a small greyed pip, not a full slot.
     dieXPip: { width: 24, height: 24, borderRadius: 6, borderWidth: 1, borderColor: HUE.deadGrey, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center', opacity: 0.6, alignSelf: 'center' },
-    dieXGlyph: { fontFamily: FONTS.sans, fontSize: 12, color: HUE.stoneGrey },
-    dieConv: { fontFamily: FONTS.sans, fontSize: 9, color: AXM.bone, textAlign: 'center', marginTop: 2, letterSpacing: 0.5, textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 3 },
+    dieXGlyph: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 12, color: HUE.stoneGrey },
+    dieConv: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 9, color: AXM.bone, textAlign: 'center', marginTop: 2, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, textShadowColor: 'rgba(0,0,0,0.9)', textShadowRadius: 3 },
 
     // ── the hand dock ── (fits the 176pt hand card above the fan's 20pt bottom
     // padding, and keeps the FREE corner pill's overhang above the card tops
@@ -2411,35 +2414,35 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // ── momentum chip row (shared by the chain chip's nodes + SURGED tag) ──
     wheelRow: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 3, paddingHorizontal: 10, marginBottom: 2 },
     wheelGlyph: { fontSize: 12, lineHeight: 15, textShadowRadius: 6, textShadowOffset: { width: 0, height: 0 } },
-    wheelCharged: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.6, marginLeft: 7, textShadowRadius: 7, textShadowOffset: { width: 0, height: 0 } },
+    wheelCharged: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing, marginLeft: 7, textShadowRadius: 7, textShadowOffset: { width: 0, height: 0 } },
     // ── momentum chain chip ──
     chainNode: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-    chainNext: { fontFamily: FONTS.sans, fontSize: 13, marginLeft: 4 },
+    chainNext: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, marginLeft: 4 },
     // Bare "○ no momentum" text vanishes against the arena floor art. Give the
     // empty state the same
     // contrast-guaranteeing container the filled chain nodes get: dark alpha
     // fill + ash border. `overflow: 'hidden'` keeps the radius on Android
     // (the guardChip treatment).
     chainEmpty: {
-        fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 0.5,
+        fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, 
         backgroundColor: 'rgba(0,0,0,0.55)', borderWidth: 1, borderColor: AXM.ash,
         borderRadius: 5, paddingHorizontal: 7, paddingVertical: 2, overflow: 'hidden',
     },
-    chainBroke: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 1.4, textShadowRadius: 6, textShadowOffset: { width: 0, height: 0 } },
+    chainBroke: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, textShadowRadius: 6, textShadowOffset: { width: 0, height: 0 } },
     // The tap mark on the momentum chip. Quiet chrome; the chip's own colours
     // stay the loud part. It floats on the arena floor art beside the
     // readout's plate, not on it, so it carries the same contrast-guaranteeing
     // backing as the empty readout (bare, it reads ~1.5:1 against the bright
     // floor). Fixed width: `chipInfoGutter` mirrors it.
     chipInfoMark: {
-        fontFamily: FONTS.sans, fontSize: 10, lineHeight: 14, color: AXM.bone, textAlign: 'center',
+        fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, lineHeight: 14, color: AXM.bone, textAlign: 'center',
         marginLeft: CHIP_INFO_MARK_GAP, width: CHIP_INFO_MARK_W,
         backgroundColor: 'rgba(0,0,0,0.55)', borderWidth: 1, borderColor: AXM.ash,
         borderRadius: 5, paddingVertical: 2, overflow: 'hidden',
     },
     // The mark's mirror on the leading edge of the chip row.
     chipInfoGutter: { width: CHIP_INFO_MARK_W + CHIP_INFO_MARK_GAP },
-    fanGlow: { position: 'absolute', bottom: 0, left: 0 },
+    fanGlow: { position: 'absolute', bottom: 0, left: 0, width: '100%', height: 90 },
     // The fan is centred in the full board band (see `handFanLayout`): no
     // corner chrome sits beside it.
     fan: {
@@ -2452,33 +2455,33 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         position: 'absolute', left: 6, right: 6, top: '42%', alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.8)', borderWidth: 1, borderColor: AXM.blood, borderRadius: 3, paddingVertical: 2,
     },
-    stuckBadgeText: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.blood },
+    stuckBadgeText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 9, color: AXM.blood },
     typeTag: {
         position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.72)', paddingVertical: 1,
     },
-    typeTagText: { fontFamily: FONTS.sans, fontSize: 8, letterSpacing: 0.8, color: AXM.sulfur },
+    typeTagText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 8, color: AXM.sulfur },
     typeTagTextLarge: { fontSize: 12 },
     xRow: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 2,
         paddingHorizontal: 8, paddingVertical: 2, backgroundColor: 'rgba(0,0,0,0.65)', borderRadius: 4,
     },
-    xStep: { fontFamily: FONTS.sans, fontSize: 16, lineHeight: 18, color: AXM.sulfur, paddingHorizontal: 4 },
+    xStep: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 16, lineHeight: 18, color: AXM.sulfur, paddingHorizontal: 4 },
     // The middle: label then amount, centred between the buttons. `minWidth: 0`
     // lets the label shrink inside the row; the amount keeps its own width.
     xMiddle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexShrink: 1, minWidth: 0 },
-    xLabel: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment, flexShrink: 1, minWidth: 0, marginRight: 4 },
-    xAmount: { fontFamily: FONTS.mono, fontSize: 10, color: AXM.parchment, flexShrink: 0 },
+    xLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, color: AXM.parchment, flexShrink: 1, minWidth: 0, marginRight: 4 },
+    xAmount: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.parchment, flexShrink: 0 },
     globalsRow: {
         flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end',
         gap: 6, paddingHorizontal: 12, paddingBottom: 4,
     },
-    globalsLabel: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1.2, color: AXM.bone },
+    globalsLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 9, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
     globalChip: {
         borderWidth: 1, borderRadius: 4, backgroundColor: 'rgba(0,0,0,0.7)', paddingHorizontal: 6, paddingVertical: 2,
         maxWidth: 170,
     },
-    globalChipText: { fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 0.4, color: AXM.parchment },
+    globalChipText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, letterSpacing: 0.4, color: AXM.parchment },
     globalChipTurns: { color: AXM.sulfur },
 
     // ── SCRAP medallion (drag-time only) ──
@@ -2487,7 +2490,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
         borderWidth: 2, borderStyle: 'solid', borderColor: AXM.ash, backgroundColor: 'rgba(0,0,0,0.6)',
         alignItems: 'center', justifyContent: 'center',
     },
-    trashLabel: { fontFamily: FONTS.sans, fontSize: 9, letterSpacing: 1, color: AXM.bone, marginTop: 1 },
+    trashLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 9, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone, marginTop: 1 },
 
     // ── player status strip (in-flow, above the dice; RIGHT-aligned so the
     //    left signature-rune column never covers it) ──
@@ -2495,7 +2498,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // the board clips at its edge.
     statusStrip: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end', gap: 8, paddingHorizontal: 12, paddingBottom: 6 },
     guardChip: {
-        fontFamily: FONTS.sans, fontSize: 11, color: HUE.guardBlue, letterSpacing: 0.5,
+        fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, color: HUE.guardBlue, 
         backgroundColor: 'rgba(0,0,0,0.7)', borderWidth: 1, borderColor: HUE.guardBlueEdge, borderRadius: 4,
         paddingHorizontal: 5, paddingVertical: 2, overflow: 'hidden',
     },
@@ -2535,13 +2538,13 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     freePillValued: { paddingHorizontal: 6 },
     freePillValuedLarge: { paddingHorizontal: 9 },
     freePillGlyph: { textAlign: 'center' },
-    freePillValue: { fontFamily: FONTS.mono, fontSize: 11, lineHeight: 13, fontWeight: '700', color: HUE.white },
+    freePillValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, lineHeight: 13, fontWeight: '700', color: HUE.white },
     freePillValueLarge: { fontSize: 15, lineHeight: 18 },
     // The named rarity tag — `large` faces only. Sits at the band's tail, after the
     // name's `flex: 1`, so it can never squeeze the name on a small face
     // (it is not rendered there at all).
     plateRarityLabel: {
-        fontFamily: FONTS.sans, fontSize: 10, letterSpacing: 1.6,
+        fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, 
         marginLeft: 6, flexShrink: 0,
     },
     // The name draws on ONE line on every face and steps its font down to fit (`plateNameSize`
@@ -2570,7 +2573,7 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     // The die and its colon lead the line, level with its first row.
     paidLead: { flexDirection: 'row', alignItems: 'center', flexShrink: 0 },
     paidLeadSmall: { alignSelf: 'flex-start' },
-    paidLeadColon: { fontFamily: FONTS.serif, marginLeft: 1, color: AXM.parchment },
+    paidLeadColon: { fontFamily: TYPE_ROLES.cardRules.fontFamily, marginLeft: 1, color: AXM.parchment },
     paidLineSmall: { flex: 1, alignSelf: 'stretch' },
     // The large face's ledger: the die and colon level with the line's first row, the group centred in the ledger.
     plateLedgerLarge: { paddingVertical: 6 },
@@ -2578,12 +2581,12 @@ export const useCombatBoardStyles = makeStyles((AXM) => ({
     paidLineLarge: { alignSelf: 'stretch' },
     paidLineTokens: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', flexShrink: 1, overflow: 'hidden' },
     paidToken: { flexDirection: 'row', alignItems: 'center' },
-    paidRunCaps: { fontFamily: FONTS.sans, letterSpacing: PAID_CAPS_SPACING },
-    paidRunSerif: { fontFamily: FONTS.serif },
+    paidRunCaps: { fontFamily: TYPE_ROLES.chip.fontFamily, letterSpacing: PAID_CAPS_SPACING },
+    paidRunSerif: { fontFamily: TYPE_ROLES.cardRules.fontFamily },
     // The GLOBAL plate sits in the FREE pill's place and shape, text only.
     globalPlate: { paddingHorizontal: 7 },
     globalPlateLarge: { paddingHorizontal: 11 },
-    globalPlateText: { fontFamily: FONTS.sans, fontSize: 12, lineHeight: 14, letterSpacing: 1 },
+    globalPlateText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 12, lineHeight: 14},
     globalPlateTextLarge: { fontSize: 17, lineHeight: 20, letterSpacing: 1.4 },
 }));
 

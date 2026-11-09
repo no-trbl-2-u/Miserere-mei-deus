@@ -14,7 +14,7 @@ import Svg, { Circle, Line, Polygon } from 'react-native-svg';
 
 import { LABYRINTH_COPY } from '@/state/presenters/labyrinth.engine';
 import type { LabyrinthMapVM } from '@/state/presenters/labyrinth.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 const CELL = 44;
@@ -92,14 +92,14 @@ const useStyles = makeStyles((AXM) => ({
         padding: 12,
     },
     empty: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         fontStyle: 'italic',
         color: AXM.bone,
         padding: 20,
     },
     hint: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         color: AXM.bone,
         marginTop: 6,

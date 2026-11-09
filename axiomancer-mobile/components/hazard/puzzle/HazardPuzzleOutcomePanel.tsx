@@ -15,7 +15,7 @@ import {
     HAZARD_PUZZLE_PENALTY_LABEL,
     HAZARD_PUZZLE_REWARDS_LABEL,
 } from '@/state/presenters/hazard-puzzle.copy';
-import { FONTS, HUE } from '@/theme/axm';
+import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 import { LedgerMark } from '../glyphs';
@@ -70,9 +70,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: 'rgba(5,4,3,0.97)',
     },
     word: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 48,
-        letterSpacing: 3,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
         lineHeight: 52,
         marginTop: 18,
         textAlign: 'center',
@@ -80,11 +80,11 @@ const useStyles = makeStyles((AXM) => ({
         textShadowOffset: { width: 3, height: 3 },
         textShadowRadius: 0,
     },
-    sub: { fontFamily: FONTS.sans, fontSize: 13, letterSpacing: 2, color: AXM.bone, marginTop: 10 },
+    sub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.bone, marginTop: 10 },
     lists: { marginTop: 16, alignItems: 'center', gap: 3 },
-    section: { fontFamily: FONTS.sans, fontSize: 11, letterSpacing: 2, color: AXM.ash, marginTop: 8 },
-    reward: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.parchment },
-    penalty: { fontFamily: FONTS.mono, fontSize: 12, color: AXM.blood },
+    section: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.ash, marginTop: 8 },
+    reward: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.parchment },
+    penalty: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.blood },
     cta: { marginTop: 26, paddingHorizontal: 28, paddingVertical: 11, borderWidth: 2, backgroundColor: AXM.bg },
-    ctaText: { fontFamily: FONTS.gothic, fontSize: 17, letterSpacing: 2.5 },
+    ctaText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 17, letterSpacing: TYPE_ROLES.button.letterSpacing},
 }));

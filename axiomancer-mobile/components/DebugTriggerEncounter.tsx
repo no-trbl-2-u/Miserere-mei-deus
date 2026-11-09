@@ -51,7 +51,7 @@ import { useGameActions, useGameStore } from '@/state/GameStoreProvider';
 import { stageEncounter } from '@/state/dev/enemy-picker';
 import { EMPTY_EVENT_SLICE } from '@/state/store';
 import type { NodeType } from '@/state/presenters/exploration.engine';
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
 type MapKey = keyof typeof EnemiesByMap;
@@ -274,13 +274,13 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 6,
     },
     label: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 9,
-        letterSpacing: 1.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     sub: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
         color: AXM.parchment,
     },
@@ -297,9 +297,9 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.bg,
     },
     buttonLabel: {
-        fontFamily: FONTS.gothic,
+        fontFamily: TYPE_ROLES.button.fontFamily,
         fontSize: 11,
         color: AXM.rust,
-        letterSpacing: 1,
+        letterSpacing: TYPE_ROLES.button.letterSpacing,
     },
 }));

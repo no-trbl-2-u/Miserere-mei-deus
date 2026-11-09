@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { FONTS } from '@/theme/axm';
+import { TYPE_ROLES } from '@/theme/axm';
 import { THEME_ORDER, THEME_SPECS, paletteFor } from '@/theme/palette';
 import { makeStyles, usePalette, useThemeId } from '@/theme/runtime';
 import { setActiveTheme } from '@/theme/theme-switch';
@@ -116,19 +116,19 @@ const useStyles = makeStyles((AXM) => ({
         gap: 8,
     },
     label: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 2,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
     },
     current: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 11,
-        letterSpacing: 0.5,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.sulfur,
     },
     chevron: {
-        fontFamily: FONTS.mono,
+        fontFamily: TYPE_ROLES.chip.fontFamily,
         fontSize: 12,
         color: AXM.bone,
     },
@@ -155,12 +155,12 @@ const useStyles = makeStyles((AXM) => ({
         borderRadius: 5,
     },
     name: {
-        fontFamily: FONTS.sans,
+        fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 12,
-        letterSpacing: 0.5,
+        letterSpacing: TYPE_ROLES.title.letterSpacing,
     },
     blurb: {
-        fontFamily: FONTS.serif,
+        fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 10,
         lineHeight: 13,
         marginTop: 2,
