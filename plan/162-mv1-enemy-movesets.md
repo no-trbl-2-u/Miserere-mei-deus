@@ -30,7 +30,7 @@
 ### The new words
 
 - **SHOCK n.** Every DEAL against a SHOCKED target does n more, per hit. It lasts 3 turns; a new SHOCK resets the turns to 3 and adds to n. Built to work on either side, since T will give it to lanes later. In this spec only foes place it, on the player. Accepted at merge (default)
-- **UNBROKEN.** A clause on a move that raises WARD: it pays out at the start of the foe's next turn if any of that WARD is left. Broken WARD pays nothing.
+- **UNBROKEN.** A clause on a move that raises WARD. If any of that WARD is left when your turn ends, the clause pays at the start of your next turn, whether or not the foe got to act in between. Broken WARD pays nothing. A later move may name its own moment in its text, as "On <enemy name>'s next <action>: <effect>"; no move does yet (T, 2026-11-08).
 - **SEIZED** replaces UNDERTOW as the word the player reads, everywhere. The effect is unchanged: the named die, dice or a random die sit out your next roll. Nothing ties it to one colour of die. Move names stay thematic to the foe: Hear Me, Grip, and the existing Hoist, Gull-call, Undertow (the Tide-Gate's move name, not the word) and Toll for the Drowned.
 
 ### The Saint Beneath (boss, four phases)
@@ -72,7 +72,7 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 |---|---|---|
 | Attack | Many Stings | DEAL 1 five times. |
 | Defend | Drift Apart | WARD 8. UNBROKEN: SHOCK 1. |
-| Status | Static Bloom [T to confirm #1] | SHOCK 2. |
+| Status | Static Bloom | SHOCK 2. |
 | Danger 60% | Drown in Light | 3 damage per card in your hand, then TANGLE 2. |
 | Danger 30% | The Whole Bloom | DEAL 2, once per card in your discard. No minimum. |
 
@@ -107,23 +107,25 @@ Attack, defend and status are available from phase 1. It becomes `difficulty: 'e
 - SHOCK on cards (future lanes).
 - Any foe's final-blow lines (authored content, D88).
 
+## Sources
+
+- **T's end-gate answers (2026-11-08, after `/pilot 162`), verbatim:** on UNBROKEN when the foe loses its turn, "It would depend on the payout. But typically, pays anyway. It shouldn't be on their next turn, but rather on their next <trigger> ie. DEAL (or in the future, GUARD, etc.). Also, sometimes, is just at the start of the player's turn.", then on how the payout is timed, "Every payout at your turn start unless explicitly stated \"On <enemy name> 's next <action> <effect>\"". On the Saint's level: "The saint beneath should be a level 8 enemy. The player should be level 8-10 when they reach him".
+
 ## Acceptance
 
-- **A6** The Wreckmaster, Saltwick Swarm, Quay-Crab, Coralback and Bilge-Stalker play exactly the moves above, each Danger at its line, and share no move with any other foe.
-- **A7** The other animated foes' moves are unchanged.
-- **A8** Saltwick Swarm is an elite with Dangers at 60% and 30%. The sea cave draws it, the Cave Choir or the Tithe-Collector at a third each; no other elite node changes; `bw-t2` is a Bilge-Stalker and `bw-t6` a Coralback, both level 5; it is not in the wandering pool.
+- **A9** A live UNBROKEN clause pays at the start of the player's next turn, DEAL payouts included. It pays when the foe lost its turn to a status such as petrify, and pays nothing if the WARD was broken. Its gloss and chip say so.
+- **A10** The Saint Beneath fights at level 8 at the Sea Keep (`bw-k2`), at its full 320 VITAE.
 
 ## Open questions
 
-1. Saltwick Swarm's SHOCK 2 move had no name on the ballot. Default: **Static Bloom**. Or: Lit Nerves; or a name of T's. [T to confirm #1]
+1. Saltwick Swarm's SHOCK 2 move had no name on the ballot. Default: **Static Bloom**. Or: Lit Nerves; or a name of T's. Accepted at merge (default)
 2. SHOCK as written lands on the target and makes every DEAL against it worse. Default: that reading, so a foe's SHOCK makes each of its hits on you hit harder. Or: SHOCK on you makes your own DEALs stronger. Accepted at merge (default)
 3. The Saint Beneath's journal text. Confirmed by T (2026-11-08): T's own story (a fisherman betrayed by the town, drowned by the gang, made the Saint by his anger), in Cormac McCarthy's voice; the text under "The leftovers" above.
 
 ## Chunks
 
-Measure: 3 open · 5 closed · next A9
+Measure: 2 open · 8 closed · next A11
 
-- [ ] **162.4** Five recast foes get their own moves, and Saltwick Swarm becomes an elite · M · closes A6, A7, A8 · needs — · alias: MV1d
 
 ### 162.1 (MV1a) — SEIZED replaces UNDERTOW · S · closes A1 · requires —
 
@@ -153,3 +155,11 @@ Measure: 3 open · 5 closed · next A9
 - Saltwick Swarm: `difficulty: 'elite'`, three phases. `BW_ELITE_DRAWS['bw-c1']` gains it at level 5, and `eliteDrawPool`'s limit rises from two foes to three, equal odds. `BW_ENCOUNTER_FOES`: `bw-t2` to `bilge-stalker` and `bw-t6` to `coralback`, levels unchanged. It leaves `ACT1_POOL`. Update the pinned node tests (`breakwater-chapter-foes`, `chapter1-recast`, `chapter1-pier-town`), and keep the check that no foe appears twice in a row on any route.
 - Tests: each foe's moves and Danger lines; no foe shares a move with another among these five; the other foes' moves unchanged.
 - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim report for the Breakwater before and after, in the PR body. Label `review:rules-change`.
+- [ ] **162.5** UNBROKEN pays at the start of your next turn · S · closes A9 · needs — · alias: MV1e
+  - Today the clause is read at the start of the foe's turn, while its WARD still stands (`planRiderTurn` in `Combat/combat.enemy-riders.ts`, `Combat/combat.enemy-words.ts`, `combat.enemy-words.resolve.ts`), and a denied foe fires nothing. Keep the check that some WARD survived the player's turn, then hold the clause and pay it at the start of the player's next turn, including when the foe's turn was denied. Say in the PR how hits land at that moment (GUARD and SHOCK should still meet them).
+  - The gloss (`Enemy/enemy-keywords.ts`) and the chip caption (`combat-encounter.engine.ts`) stop saying "at its next turn" where they do. No move text changes. The "On <enemy name>'s next <action>" form is not built; no move uses it.
+  - Tests: pays at the start of the player's turn for a DEAL, a SHOCK and a BARNACLE payout; WARD broken pays nothing; a petrified foe still pays. Replace the tests pinning the foe-turn timing.
+  - Measure: the mechanics and mobile gates, run piecewise with a worker cap. Label `review:rules-change`.
+- [ ] **162.6** The Saint Beneath fights at level 8 · S · closes A10 · needs — · alias: MV1f
+  - `BW_DOOR_LEVEL` to 8 in `World/MapEvents/content.ts`, used only by the Saint's `boss` case. Update `breakwater.engine.test.ts` and any pin of the old 129 VITAE. No move's numbers change.
+  - Measure: the mechanics and mobile gates, run piecewise with a worker cap; the Act 1 sim in the PR body before and after, saying what level the player reaches the Saint at and how often they win. T's target is level 8-10 on arrival. Report it; do not retune. Label `review:rules-change`.
