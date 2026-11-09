@@ -17,6 +17,7 @@ export {
     ARCHETYPE_POLICIES, BLOOD_PRICE_POLICY, DEFENDER_POLICY, MERCIFUL_POLICY, ELEMENTALIST_POLICY,
     MIN_DECK_SIZE, archetypePolicy, bestLaneOffer, offLaneRemovals, type ArchetypeSpec,
 } from './run-policy.archetypes';
+export { PERSONA_POLICIES, CAUTIOUS_POLICY, RECKLESS_POLICY, EXPLORER_POLICY, RUSHER_POLICY } from './run-policy.personas';
 export { laneFightPolicy, BLOOD_PRICE_SPEND_FLOOR } from './run-policy.fight';
 export {
     cardLaneId, cardKeywords, laneKeywords, laneStat, itemLaneId,
