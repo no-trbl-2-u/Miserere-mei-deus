@@ -20,8 +20,35 @@ export const PLAN_TITLE = /^plot\s*[:(]/i
 /**
  * Labels that hold a PR for T or the loop. `review:rules-change` (D119, NX1a):
  * the PR is reviewed, but only T merges a change to the game's rules.
+ * `content` (T, 2026-11-08): the PR is reviewed, but T approves all generated
+ * game writing by merging it. On an issue the same label is a triage category
+ * and holds nothing; this list is only read for PRs.
  */
-export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change'])
+export const HOLD_LABELS = Object.freeze(['review:needs-T', 'loop:pr-stuck', 'eval:seed', 'no-auto-merge', 'review:rules-change', 'content'])
+
+/**
+ * Files that carry game writing (T, 2026-11-08): a PR changing one waits for
+ * T's merge whether or not anyone remembered the `content` label. Every
+ * `CONTENT_SURFACES` file in `check-prose.mjs` must match one of these
+ * (`pr-merge.test.mjs`), so a newly linted surface cannot slip the hold.
+ */
+export const CONTENT_PATHS = Object.freeze([
+  /^axiomancer-mechanics\/content\/story\//,
+  /^axiomancer-mechanics\/docs\/narrative\//,
+  /^docs\/card-voice\.md$/,
+  /^axiomancer-mechanics\/src\/World\/MapEvents\/(content|arrival-lines)\.ts$/,
+  /^axiomancer-mechanics\/src\/World\/Labyrinth\/content\//,
+  /^axiomancer-mechanics\/src\/World\/(Hazard\/hazard|RestChoice\/restchoice|Blacksmith\/blacksmith)\.content\.ts$/,
+  /^axiomancer-mechanics\/src\/World\/(quest\.library|breakwater-chapter\.questline|chapter1-content|chapter-story)\.ts$/,
+  /^axiomancer-mechanics\/src\/World\/Continents\/[^/]+\/(?!.*(-puzzles|\.test\.))[^/]+\.ts$/,
+  /^axiomancer-mechanics\/src\/Enemy\/enemy\.library\.ts$/,
+  /^axiomancer-mechanics\/src\/Cards\/(cards\.library\.ts|library\/[^/]+\.cards\.ts)$/,
+  /^axiomancer-mobile\/state\/presenters\/[^/]+\.copy\.ts$/,
+  /^axiomancer-mobile\/state\/exploration-maps\/[^/]+\.layout\.ts$/,
+])
+
+/** Whether this repo path carries game writing. */
+export const isContentPath = (file) => CONTENT_PATHS.some((re) => re.test(file))
 
 /**
  * The weekly nexus sync PR (phase NX1h): only T merges it. `nexus-sync.yml` labels it; the

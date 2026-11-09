@@ -55,6 +55,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { REVIEW_VERDICT } from './eval/ledger-lib.mjs'
+import { isContentPath } from './pr-policy.mjs'
 import { AUTO_MARKER, HOLD_LABELS, MERGEABLE_STATES, PIPELINE_PATHS, PLAN_LABELS, PLAN_TITLE, SYNC_HEAD, SYNC_LABEL, SYNC_TITLE, TRUSTED_AUTHORS } from './pr-policy.mjs'
 import { updateBranchIsolated } from './pr-resolve.mjs'
 import { settleFailure, settleMain } from './pr-settle.mjs'
@@ -153,6 +154,8 @@ export function mergeWanted({ state, isDraft, isCrossRepository, labels, title, 
   if (hold) return { go: false, reason: `label ${hold}` }
   const pipeline = files.find((f) => PIPELINE_PATHS.includes(f))
   if (pipeline) return { go: false, reason: `pipeline PR (changes ${pipeline}): T merges the review pipeline by hand` }
+  const writing = files.find(isContentPath)
+  if (writing) return { go: false, reason: `content PR (changes ${writing}): T approves game writing by merging it` }
   const verdict = verdictFor(comments, head, since, trusted, digest)
   if (!verdict) return { go: false, reason: `no verdict for head ${head.slice(0, 8)} posted since ${since} by a trusted account` }
   if (verdict !== 'pass') return { go: false, reason: `verdict ${verdict} on head ${head.slice(0, 8)}` }
