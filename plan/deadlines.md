@@ -242,6 +242,7 @@ undated is not deprioritised.** When a date is set for one, move it to an Item a
 - TK1a — the Worker takes a tester token (spec 163); loop work, ahead of T's rotation, date not set.
 - TK1b — T rotates both tokens (spec 163, attended); date not set (T's to pick, once TK1a has shipped).
 - TK1c — preview builds refuse the owner token, and a release can carry its APK (spec 163); loop work after T's rotation, date not set.
+- TK1d — the production profile builds the prod APK with no DEV TOOLS (spec 163); loop work, TK1c needs it, date not set.
 - RG1a — the Rules Glossary lists every keyword (spec 165); loop work, no dated T act waits on it.
 - CK1a — closes the three checks T confirmed on 2026-11-09 and moves five here (spec 166); loop work after SR1a, no dated T act waits on it.
 - CK1b — T reads the human-versus-sim comparison (spec 166, attended); date not set (T picks it).
@@ -316,6 +317,7 @@ attended session.
 
 ## Change log
 
+- **2026-11-09** — **the prod APK plotted into spec 163 (TK1d)** (T, attended, answering 163's calls during the 163-166 pilot: preview stays T's, `production` is repurposed as the sideloadable APK with no DEV TOOLS, rows post as `human`, releases carry the prod APK only). **Added** TK1d under `## Unscheduled`; TK1c now needs it.
 - **2026-11-09** — **the API token split plotted as spec 163 (TK1a-TK1c)** (T, attended: told the preview APK holds the all-routes token, "Plot the token split now"). **Added** TK1a, TK1b and TK1c under `## Unscheduled`; no date is T's until TK1a ships.
 - **2026-11-09** — **a finished spec retires itself, plotted as spec 164 (SR1a)** (T, attended: "Yes, /plot it"). **Added** SR1a under `## Unscheduled`.
 - **2026-11-09** — **the Rules Glossary's full keyword list plotted as spec 165 (RG1a)** (T, attended: "Yes, plot it", holding 137.9 to D183). **Added** RG1a under `## Unscheduled`.
