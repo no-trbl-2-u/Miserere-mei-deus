@@ -245,7 +245,8 @@ export interface EnemyMove {
  * like the move's damage; counts, percentages and thresholds do not.
  *
  *   unplayed-card-bonus      +`damage` per card you leave unplayed in your hand.
- *   hand-size-damage         one hit of `damage` per card in your hand.
+ *   hand-size-damage         one hit of `damage` per card in your hand, counting the BARNACLE the same move adds.
+ *   hand-size-tangle         TANGLE `per` per card in your hand, counting the BARNACLE the same move adds.
  *   half-dealt-last-turn     one hit of half what you dealt it last turn.
  *   below-half-vitae         under half VITAE: the hit becomes `damage` and it MENDs `mend`.
  *   if-tangled               TANGLE left at the end of your turn: the hit becomes `damage`.
@@ -297,7 +298,8 @@ export interface EnemyMove {
  *                            die and per point taken.
  *   toll-levy                +`damage` on the hit per TOLL owed.
  *   toll-seize               TOLL doubles, then one hit of `damage` per TOLL.
- *   curse-count-hit          one hit of `damage` per Curse in your hand, draw pile and discard.
+ *   curse-count-hit          one hit of `damage` per Curse in your hand, draw pile and discard;
+ *                            with none, `barnacleIfNone` Barnacles join your hand instead.
  *   distrain                 takes a random card (not a Curse) from your hand until you pay the TOLL.
  *   tide-wash                +`damage` on the hit per TIDE; at TIDE `twiceAt`+ it hits twice; TIDE
  *                            rises `rise` a turn in the phase that carries it (default 1).
@@ -308,6 +310,7 @@ export interface EnemyMove {
 export type EnemyMoveRider =
     | { kind: 'unplayed-card-bonus'; damage: number }
     | { kind: 'hand-size-damage'; damage: number }
+    | { kind: 'hand-size-tangle'; per: number }
     | { kind: 'half-dealt-last-turn' }
     | { kind: 'below-half-vitae'; damage: number; mend: number }
     | { kind: 'if-tangled'; damage: number }
@@ -359,7 +362,7 @@ export type EnemyMoveRider =
     // The Toll-Keeper (phase EN1l).
     | { kind: 'toll-levy'; damage: number }
     | { kind: 'toll-seize'; damage: number }
-    | { kind: 'curse-count-hit'; damage: number }
+    | { kind: 'curse-count-hit'; damage: number; barnacleIfNone?: number }
     | { kind: 'distrain' }
     // The Tide-Gate (phase EN1l).
     | { kind: 'tide-wash'; damage: number; twiceAt?: number; rise?: number }

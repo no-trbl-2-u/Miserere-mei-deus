@@ -69,13 +69,12 @@ describe('EN3a — Chapter 1\'s six recast faces carry their cut foes\' numbers'
         expect(now.xpReward, `${name} xpReward`).toBe(was.xpReward);
     });
 
-    it('the boss takes the Death Beholder\'s authored VITAE, deck and three stages whole', () => {
+    it('the boss keeps the Death Beholder\'s authored VITAE, on moves of its own (162.3)', () => {
         const saint = ENEMY_REGISTRY['saint-beneath'] as Enemy;
         expect(saint.difficulty).toBe('boss');
         expect(saint.maxHealth).toBe(320);
-        expect(saint.stages?.map(st => st.at.vitaePct)).toEqual([0.75, 0.5, 0.25]);
-        expect(ENEMY_DECKS['enemy-saint-beneath'])
-            .toEqual(ENEMY_DECKS['enemy-death-beholder']);
+        expect(saint.stages).toEqual([]);
+        expect(ENEMY_DECKS['enemy-saint-beneath']).toBeUndefined();
         // A boss is never spared, and must carry a journal entry of its own.
         expect(saint.mercyLines).toBeUndefined();
         expect(saint.spareStory).toBeUndefined();

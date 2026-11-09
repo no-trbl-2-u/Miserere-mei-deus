@@ -29,9 +29,10 @@ export function moveKeywords(move: EnemyMove): EnemyKeyword[] {
         brine: (move.brine ?? 0) > 0,
         vulnerable: (move.vulnerable?.pct ?? 0) > 0 && (move.vulnerable?.turns ?? 0) > 0,
         leech: (move.leech ?? 0) > 0,
-        tangle: (move.tangle ?? 0) > 0,
+        tangle: (move.tangle ?? 0) > 0 || move.rider?.kind === 'hand-size-tangle',
         seized: move.undertow !== undefined,
-        barnacle: (move.barnacle ?? 0) > 0 || (move.unbroken?.barnacle ?? 0) > 0,
+        barnacle: (move.barnacle ?? 0) > 0 || (move.unbroken?.barnacle ?? 0) > 0
+            || (move.rider?.kind === 'curse-count-hit' && (move.rider.barnacleIfNone ?? 0) > 0),
         shock: (move.shock ?? 0) > 0 || (move.unbroken?.shock ?? 0) > 0,
         unbroken: move.unbroken !== undefined,
     };

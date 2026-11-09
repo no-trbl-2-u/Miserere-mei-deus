@@ -387,6 +387,15 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   the pin. Its deck opens tier 2 on round 4 and tier 3 on round 7 (the
   default gates are 3 and 6) and its card weights sit at 0.8-1.15, so its
   damage steps up at rounds 7-8 and the fight runs about seven turns.
+- **The Saint Beneath:** the Breakwater's door boss (`bw-k2`, pinned at level 1),
+  320 VITAE at level 8, no deck and no stages: four HP phases with the boss
+  lines (75%, 50%, 25%), and the escalation clock still runs, as for every
+  boss. Attack, defend and status are Communion (2 damage per Curse you
+  carry, or a BARNACLE with none), The Faithful Gather (MEND 10, SCOUR 1) and
+  Hear Me (SEIZED on the Heart and Mind dice). Its DANGERs, in order: Swell
+  (2 BARNACLE, then TANGLE 1 per card in hand), Tithe of the Drowned (2
+  BARNACLE, then 3 damage per card in hand; both count the hand after their
+  own BARNACLE) and Pull Under (16 damage, or 24 and MEND 12 under half VITAE).
 
 ## Relics and The Open Hand
 
