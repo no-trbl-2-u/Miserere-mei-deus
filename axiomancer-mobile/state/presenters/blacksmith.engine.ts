@@ -35,6 +35,7 @@ import type {
 import type { AppStoreState } from '@/state/store';
 import {
     BLACKSMITH_CARD_UPGRADE_EFFECT,
+    BLACKSMITH_SMITH_LINE,
     BLACKSMITH_CARD_UPGRADE_LABEL,
     blacksmithCardUpgradePriceLine,
     blacksmithUpgradedChip,
@@ -66,6 +67,9 @@ export interface BlacksmithOfferVM {
     reason: string;
 }
 
+/** One face of a die in the cross net: what it pays, in the screen's face words. */
+export type BlacksmithFaceKind = 'BOON' | 'MANA' | 'MISS';
+
 /** A single die's current face table + its two service offers. */
 export interface BlacksmithDieVM {
     color: DieGearColor;
@@ -75,6 +79,12 @@ export interface BlacksmithDieVM {
     missFaces: number;
     /** Compact face read, e.g. "1 BOON · 2 MANA · 3 MISS". */
     faceSummary: string;
+    /**
+     * The six faces in net order: BOON faces first, then MANA, then MISS (the
+     * cross net draws the first one up, the next three across, the last two
+     * below).
+     */
+    faces: readonly BlacksmithFaceKind[];
     hone: BlacksmithOfferVM;
     temper: BlacksmithOfferVM;
 }
@@ -118,8 +128,8 @@ export interface BlacksmithOutcomeVM {
 export interface BlacksmithVM {
     active: boolean;
     phase: BlacksmithSession['phase'] | 'none';
-    /** The smith's opening speech; teaches the face words. */
-    introBody: string;
+    /** The smith's line, standing where the dropped intro step stood. */
+    smithLine: string;
     /** One line decoding the `1 BOON · 2 MANA · 3 MISS` read. */
     faceKey: string;
     budget: number;
@@ -154,18 +164,6 @@ const COLOR_LABELS: Record<DieGearColor, string> = Object.freeze({
 const CURRENCY_SUFFIX = ' SHILLINGS';
 
 /**
- * The smith's opening speech.
- *
- * Names the three faces the screen goes on to print, and what each one pays.
- */
-const INTRO_BODY =
-    'The forge breathes low and orange. The smith turns your dice over, '
-    + 'reading the dead weight in them. “Six faces to a die. Most come up '
-    + 'MISS and pay you nothing. I can beat a MISS into a MANA face — that one '
-    + 'pays for a card. Or harden a MANA face into a BOON, which pays for a '
-    + 'card and fires your weapon\'s special. Costs, of course.”';
-
-/**
  * The legend for the per-die face read.
  *
  * Each die prints `1 BOON · 2 MANA · 3 MISS` and nothing said what those
@@ -189,7 +187,7 @@ const TEMPER_EFFECT = 'MANA face → BOON';
 const EMPTY_VM: BlacksmithVM = Object.freeze({
     active: false,
     phase: 'none',
-    introBody: INTRO_BODY,
+    smithLine: BLACKSMITH_SMITH_LINE,
     faceKey: FACE_KEY,
     budget: 0,
     spent: 0,
@@ -209,6 +207,15 @@ export function selectHasActiveBlacksmith(state: Pick<AppStoreState, 'blacksmith
 function faceSummary(gear: UpgradeableDieGear): string {
     const miss = dieGearMissFaces(gear);
     return `${gear.specialFaces} BOON · ${gear.manaFaces} MANA · ${miss} MISS`;
+}
+
+/** The six faces in net order (BOON, MANA, MISS). */
+function faceNet(gear: UpgradeableDieGear): BlacksmithFaceKind[] {
+    return [
+        ...Array<BlacksmithFaceKind>(gear.specialFaces).fill('BOON'),
+        ...Array<BlacksmithFaceKind>(gear.manaFaces).fill('MANA'),
+        ...Array<BlacksmithFaceKind>(dieGearMissFaces(gear)).fill('MISS'),
+    ];
 }
 
 /** Combine a cap reason with the affordability reason into one loud line. */
@@ -316,7 +323,7 @@ function cardUpgradeOffer(s: BlacksmithSession): BlacksmithOfferVM {
  *
  * @param state - the blacksmith slice; `session === null` means no visit.
  * @returns the render-ready `BlacksmithVM`, or the inactive `EMPTY_VM`. Carries
- *   the smith's opening speech and the face-read key so
+ *   the smith's line and the face-read key so
  *   no forge copy lives in the screen; every other field is unchanged.
  */
 export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): BlacksmithVM {
@@ -334,6 +341,7 @@ export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): Bl
             manaFaces: gear.manaFaces,
             missFaces: dieGearMissFaces(gear),
             faceSummary: faceSummary(gear),
+            faces: faceNet(gear),
             hone: honeOffer(s.rail, color, budget),
             temper: temperOffer(s.rail, color, budget),
         };
@@ -383,7 +391,7 @@ export function selectBlacksmithVM(state: Pick<AppStoreState, 'blacksmith'>): Bl
     return {
         active: true,
         phase: s.phase,
-        introBody: INTRO_BODY,
+        smithLine: BLACKSMITH_SMITH_LINE,
         faceKey: FACE_KEY,
         budget,
         spent: s.spent,

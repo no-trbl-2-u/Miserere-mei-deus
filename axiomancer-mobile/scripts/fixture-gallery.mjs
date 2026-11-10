@@ -61,12 +61,9 @@ export const GALLERY = [
     // ── Minigames + services ─────────────────────────────────────────────
     { name: 'village-anvil', why: 'The village with its Anvil counter, on arrival.',
       fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village' },
-    { name: 'blacksmith-intro', why: 'The forge, opened from the village counter.',
-      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
-      steps: [{ jsClick: 'village-anvil' }, { waitForPath: '/blacksmith' }, { settle: 600 }] },
     { name: 'blacksmith-forging', why: 'The forge, mid-session (budget + card).',
       fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
-      steps: [{ jsClick: 'village-anvil' }, { waitForPath: '/blacksmith' }, { jsClick: 'blacksmith-begin' }, { settle: 1500 }] },
+      steps: [{ jsClick: 'village-anvil' }, { waitForPath: '/blacksmith' }, { settle: 1500 }] },
     { name: 'village-remove-sheet', why: 'Card removal at the village card shop, the deck laid out to pick from.',
       fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
       steps: [{ jsClick: 'village-remove' }, { settle: 800 }] },

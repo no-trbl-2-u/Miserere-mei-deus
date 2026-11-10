@@ -403,8 +403,7 @@ const RESOLVERS = {
         await waitFor(page, 'village-anvil', `${nodeId} village anvil counter`)
         await tap(page, 'village-anvil')
         await expectPath(page, '/blacksmith', nodeId)
-        await waitFor(page, 'blacksmith-begin', `${nodeId} anvil`)
-        await tap(page, 'blacksmith-begin')
+        
         await waitFor(page, 'blacksmith-leave', `${nodeId} anvil forging`)
         await tap(page, 'blacksmith-leave')
         await waitFor(page, 'blacksmith-claim', `${nodeId} anvil outcome`)

@@ -56,7 +56,6 @@ function renderAnvil(store: AppStore) {
             <BlacksmithScreen />
         </GameStoreProvider>,
     );
-    fireEvent.press(r.getByTestId('blacksmith-begin'));
     return r;
 }
 
@@ -119,13 +118,13 @@ describe('blacksmith: upgrade a card (Phase UP1e)', () => {
 
     it('is refused when the player cannot afford it', () => {
         const r = renderAnvil(anvilStore(4));
-        expect(r.getByTestId('blacksmith-offer-upgrade').props.accessibilityState).toEqual({ disabled: true });
+        expect(r.getByTestId('blacksmith-offer-upgrade').props.accessibilityState).toMatchObject({ disabled: true });
         expect(r.getByTestId('blacksmith-offer-upgrade-reason')).toHaveTextContent(/can't cover the 5/);
     });
 
     it('is refused when nothing can take another upgrade', () => {
         const r = renderAnvil(anvilStore(40, ['grey-strike+', 'grey-ward+', 'grey-word+']));
-        expect(r.getByTestId('blacksmith-offer-upgrade').props.accessibilityState).toEqual({ disabled: true });
+        expect(r.getByTestId('blacksmith-offer-upgrade').props.accessibilityState).toMatchObject({ disabled: true });
         expect(r.getByTestId('blacksmith-offer-upgrade-reason')).toHaveTextContent(/nothing you carry/);
     });
 });

@@ -82,6 +82,17 @@ describe('forge offer VM (enabled / disabled + reason)', () => {
         expect(heart.hone.reason).toMatch(/miss face/i);
     });
 
+    it('lays each die out as six faces in net order: BOON, then MANA, then MISS', () => {
+        const vm = selectBlacksmithVM({ blacksmith: { session: forging(100) } });
+        const heart = vm.dice.find((d) => d.color === 'heart')!;
+        const ORDER = ['BOON', 'MANA', 'MISS'];
+        expect(heart.faces).toHaveLength(6);
+        expect(heart.faces.filter((f) => f === 'BOON')).toHaveLength(heart.specialFaces);
+        expect(heart.faces.filter((f) => f === 'MANA')).toHaveLength(heart.manaFaces);
+        expect(heart.faces.filter((f) => f === 'MISS')).toHaveLength(heart.missFaces);
+        expect([...heart.faces]).toEqual([...heart.faces].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)));
+    });
+
     it('disables TEMPER on the wild die at its 1-special cap', () => {
         // Wild default is 1 special (its cap). TEMPER would push to 2 → refused.
         const vm = selectBlacksmithVM({ blacksmith: { session: forging(100) } });
@@ -90,15 +101,15 @@ describe('forge offer VM (enabled / disabled + reason)', () => {
         expect(wild.temper.reason).toMatch(/cap/i);
     });
 
-    it('the shipped anvil offers no swap, and the intro and face key say a BOON fires the weapon special', () => {
+    it('the shipped anvil offers no swap, and the smith line and face key say what they should', () => {
         expect(BLACKSMITH_WITNESS_VARIANTS).toEqual([]);
         const vm = selectBlacksmithVM({ blacksmith: { session: forging(100, BLACKSMITH_WITNESS_VARIANTS as never) } });
         expect(vm.swaps).toHaveLength(0);
-        expect(vm.introBody).toContain("fires your weapon's special");
+        expect(vm.smithLine).toContain('[content]');
         expect(vm.faceKey).toBe(
             "MANA pays for a card in its colour. BOON pays for a card and fires your weapon's special. MISS pays nothing.",
         );
-        expect(vm.introBody).not.toMatch(/CONVICTION/);
+        expect(vm.smithLine).not.toMatch(/CONVICTION/);
         expect(vm.faceKey).not.toMatch(/CONVICTION/);
         expect(vm.dice[0]).not.toHaveProperty('specialConviction');
     });

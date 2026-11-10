@@ -29,7 +29,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 | `cache-outcome` / `cache-claim` | Outcome; CLAIM |
 | `blacksmith-inactive` | `/blacksmith` with no session |
 | `blacksmith-scroll` | The scroll view |
-| `blacksmith-intro` / `blacksmith-intro-body` / `blacksmith-begin` | Intro; BEGIN starts forging |
+| `blacksmith-smith-line` / `blacksmith-tab-<color>` | The smith's line; the die tabs (no intro step since 168.5) |
 | `blacksmith-forging` / `blacksmith-budget` / `blacksmith-face-key` | Forging phase, remaining budget, face legend |
 | `blacksmith-die-<color>` / `blacksmith-die-<color>-faces` | One die and its faces |
 | `blacksmith-offer-<id>` / `blacksmith-offer-<id>-effect` / `blacksmith-offer-<id>-reason` | Hone/temper/swap offers (disabled ones carry a reason) |
@@ -43,7 +43,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 - Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (card removal is the village's now; if you chose the upgrade, press a `card-upgrade-row-<cardId>` to preview it, then `card-upgrade-confirm`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
 - Cache: tap a `cache-choice-offer-<id>`; `cache-outcome` → `cache-claim`.
-- Blacksmith: `blacksmith-begin`; tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
+- Blacksmith: tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
 
 ## 5. Looks stuck but isn't
 

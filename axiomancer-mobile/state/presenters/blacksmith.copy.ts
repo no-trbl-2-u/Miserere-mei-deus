@@ -18,3 +18,10 @@ export function blacksmithCardUpgradePriceLine(price: number): string {
 export function blacksmithUpgradedChip(fromName: string, toName: string): string {
     return `UPGRADED: ${fromName} → ${toName}`;
 }
+
+/**
+ * The smith's line over the buttons. The forge opens straight onto the work
+ * screen (168.5), so this line stands where the intro step's speech stood.
+ * Placeholder until T writes it (D88).
+ */
+export const BLACKSMITH_SMITH_LINE = '[content] Set them on the anvil.';
