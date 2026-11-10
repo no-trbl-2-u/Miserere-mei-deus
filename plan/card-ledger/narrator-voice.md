@@ -110,7 +110,16 @@ Round 5 (`narrator-voice-5.ballot.html`, ballot id
 `narrator-voice-5-2026-11-10`). Twelve slots, 36 samples. Round 4 is not
 withdrawn; T has not ruled on it.
 
-- **Sentence length.** No sentence runs past 34 words.
+- **The target.** Cormac McCarthy writing Elden Ring, in the register of
+  Blood Meridian: archaic and biblical diction, clauses chained with "and",
+  similes that open on "like some", a landscape that does not care, violence
+  told flat. His manner and never his sentences (Q-4: "calibrate freely,
+  quote never").
+- **Redrawn the same day.** The first draft of this round was plain short
+  sentences. T, 2026-11-10: "I don't see anywhere in the PR about the voice
+  being in the style of Cormac McCarthy. I'm looking for blood meridian level
+  prose". All 36 samples were rewritten; the scenes and the key did not move.
+- **Sentence length.** No sentence runs past 40 words.
 - **Sources.** Enemies follow their portraits' draft descriptions in
   `enemy.library.ts`; quests follow `breakwater-chapter.questline.ts`; S-01
   uses story-overview rulings 13 to 15 (the Covenant, the forbidden
