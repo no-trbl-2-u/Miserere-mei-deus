@@ -11,9 +11,17 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react-n
 import { State } from 'react-native-gesture-handler';
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 
+import { StyleSheet } from 'react-native';
+
+import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { CardUpgradePicker, HOLD_MS, UPGRADE_A11Y_ACTION } from '@/components/upgrade/CardUpgradePicker';
 import { getCardById, upgradableCardIds } from '@mechanics';
 import { cardUpgradePreviewVM, cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
+import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
+import { DEFAULT_THEME_ID, THEME_SPECS } from '@/theme/palette';
+
+/** The upgrade screen's gold: the default theme's sulfur. */
+const GOLD = THEME_SPECS[DEFAULT_THEME_ID].spec.sulfur;
 
 const DECK = ['grey-strike', 'grey-strike', 'grey-strike', 'grey-ward', 'grey-word', 'bp-m-01d', 'mc-e-07b'];
 const ROWS = cardUpgradeRowsVM(upgradableCardIds(DECK), DECK);
@@ -98,6 +106,34 @@ describe('CardUpgradePicker: the string of beads', () => {
         // No AS IT IS / AS IT WILL BE label, and no locked ??? slot (#6).
         expect(screen.queryByText(/AS IT/)).toBeNull();
         expect(screen.queryByText('???')).toBeNull();
+    });
+
+    it('the new card draws its moved numbers in gold, the PAID line and the FREE pill alike (A13)', () => {
+        render(<CardUpgradePicker rows={ROWS} onConfirm={jest.fn()} />);
+        // Siphon moves its PAID LEECH and its FREE HEAL.
+        const siphon = 'bp-m-01d';
+        fireEvent.press(screen.getByTestId(`card-upgrade-bead-${siphon}`));
+        const vm = cardUpgradePreviewVM(siphon)!;
+        expect(vm.changed).toEqual({ paid: [0], free: true });
+        const after = within(screen.getByTestId('card-upgrade-after'));
+        const now = within(screen.getByTestId('card-upgrade-now'));
+        const [moved] = after.getAllByTestId('combat-card-face-changed-number');
+        expect(moved).toHaveTextContent(vm.afterCard.face.paidLine.match(/\d+/)![0]);
+        expect(StyleSheet.flatten(moved.props.style).color).toBe(GOLD);
+        expect(StyleSheet.flatten(after.getByTestId('combat-card-face-free-value').props.style).color).toBe(GOLD);
+        // The old card is not marked: no gold number, a plain FREE pill.
+        expect(StyleSheet.flatten(now.getByTestId('combat-card-face-free-value').props.style).color).not.toBe(GOLD);
+    });
+
+    it('a card face with no `changed` prints every number in its own ink, as before', () => {
+        const [card] = rewardCardVMs(['bp-m-01d']);
+        render(<CombatCardFace card={card} width={120} height={176} />);
+        expect(screen.queryByTestId('combat-card-face-changed-number')).toBeNull();
+        const line = screen.getByTestId('combat-card-face-paid-line');
+        const runs = React.Children.toArray(line.props.children) as React.ReactElement<{ style: unknown }>[];
+        expect(runs.length).toBeGreaterThan(0);
+        for (const run of runs) expect(StyleSheet.flatten(run.props.style as never).color).not.toBe(GOLD);
+        expect(StyleSheet.flatten(screen.getByTestId('combat-card-face-free-value').props.style).color).not.toBe(GOLD);
     });
 
     it('letting go of HOLD before the ring closes empties it and commits nothing (A14, #2)', () => {
