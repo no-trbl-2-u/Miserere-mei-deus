@@ -255,7 +255,7 @@ deadlines tools read (`EQ3a`, `EQ3b`, ...), so `plan/deadlines.md`,
 PR titles and D-entries keep naming work the way they always have
 (`scripts/deadlines-lib.mjs` resolves an id only from an alias). A
 chunk only T can do (attended, owner-led) gets a Held line on the
-roadmap (`since:`, `until:` its Item's date or `T's word`, `max_age:`).
+roadmap (`since:`, `until:` its act's milestone date or `T's word`, `max_age:`).
 
 **Reconcile the deadline plan** (phase DL1c), in the same commit as the
 spec. `plan/deadlines.md` is edited by hand here; nothing regenerates
@@ -273,7 +273,8 @@ it except the Status cells:
   hours in its name as `(N h)`, `Goal` and `How AI helps` (`-` when
   nothing is known), and sits where its priority puts it: the table's
   order is the order T works in. Never guess hours or a place for T;
-  ask, or add it last and say so.
+  ask, or add it last within its milestone (above every act of a
+  later one) and say so.
 - **Every Item the plot supersedes, re-scopes or completes** is edited
   itself, not only its Rows cell. Read each open Item in the plot's
   window and ask whether its premise still holds once these chunks
