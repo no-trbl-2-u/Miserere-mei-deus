@@ -101,7 +101,9 @@ export function CombatRewardsOverlay({
 
     if (upgrading && upgradeRow && onUpgrade) {
         return (
-            <View style={styles.backdrop} testID="combat-rewards">
+            // A solid ground: the fight's VITAE bar does not show through above
+            // the upgrade screen (T, PR #1579).
+            <View style={[styles.backdrop, { backgroundColor: AXM.bg }]} testID="combat-rewards">
                 {/* The string of beads is taller than a short phone's overlay
                     (figure, pair, wheel, HOLD): the sheet scrolls so HOLD and
                     BACK are always reachable. */}
