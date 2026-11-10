@@ -13,5 +13,5 @@ export const VILLAGE_TUNING = Object.freeze({
     /** Shillings each card in a village's card shop costs. */
     cardPrice: 6,
     /** How many cards a village's card shop offers. */
-    cardShopSize: 3,
+    cardShopSize: 5,
 });

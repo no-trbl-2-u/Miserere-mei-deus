@@ -35,7 +35,7 @@ export const VILLAGE_SHOPKEEPER_LINE = '[content] Look all you like. Touching is
 
 /** The card shop counter. */
 export const VILLAGE_CARD_SHOP_LABEL = 'THE CARD SHOP';
-export const VILLAGE_CARD_SHOP_LINE = '[content] Three cards laid out on the counter. The same three, whenever you come.';
+export const VILLAGE_CARD_SHOP_LINE = '[content] Five cards laid out on the counter. The same five, whenever you come.';
 export const VILLAGE_CARD_BUY_LABEL = 'BUY';
 export const VILLAGE_CARD_SOLD_LABEL = 'SOLD';
 
