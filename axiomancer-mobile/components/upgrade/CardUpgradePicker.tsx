@@ -91,6 +91,8 @@ const RING_LEN = 2 * Math.PI * RING_R;
 const MAX_SHOWN = 2.75;
 /** The figure's slot and the pair's sizes. */
 const FIGURE_H = 220;
+/** The air between the figure and the pair (T, 2026-11-10: bring everything but the figure down). */
+const FIGURE_GAP = 36;
 const NEW_W = 120;
 const NEW_H = 176;
 const OLD_W = 92;
@@ -452,7 +454,7 @@ const useStyles = makeStyles((AXM) => ({
     priceLine: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 12, color: AXM.sulfur, textAlign: 'center', marginBottom: 4 },
     figureSlot: { height: FIGURE_H, alignItems: 'center', justifyContent: 'center' },
     figure: { width: '70%', height: FIGURE_H - 12 },
-    pair: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 4 },
+    pair: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: FIGURE_GAP },
     oldCard: {
         width: OLD_W,
         height: OLD_H,
