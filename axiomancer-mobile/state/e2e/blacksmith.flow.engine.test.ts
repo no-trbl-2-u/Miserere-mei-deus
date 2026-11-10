@@ -115,7 +115,9 @@ describe('blacksmith forging drives the engine', () => {
         setCurrency(store, 100);
         expect(actions.beginBlacksmith()).toBe(true);
         expect(actions.beginBlacksmith()).toBe(false); // one anvil at a time
-        actions.startBlacksmithForging();
+        // The forge opens straight onto the work screen: no intro phase (168.5).
+        expect(session(store).phase).toBe('forging');
+        actions.startBlacksmithForging(); // a no-op on a visit already forging
         expect(session(store).phase).toBe('forging');
 
         const before = session(store).rail.heart.manaFaces;
