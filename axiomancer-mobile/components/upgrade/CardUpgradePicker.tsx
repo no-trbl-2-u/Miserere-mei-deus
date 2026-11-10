@@ -134,8 +134,8 @@ function Bead({ row, index, n, pos, centre, wheelW, onTurnTo, onTurnBy, onUpgrad
     const styles = useStyles();
     const AXM = usePalette();
     const place = useAnimatedStyle(() => {
-        const d = wrappedDistance(index, pos.value, n);
-        const p = beadPlace(d);
+        const d = wrappedDistance(index, pos.value, n); // worklet-safe: the callee is marked 'worklet'
+        const p = beadPlace(d); // worklet-safe: the callee is marked 'worklet'
         return {
             opacity: Math.abs(d) > MAX_SHOWN ? 0 : 1,
             transform: [{ translateX: p.x }, { translateY: p.y }, { scale: p.scale }],
