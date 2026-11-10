@@ -63,6 +63,8 @@ import QuestScreen from './quest/index';
 import TravelScreen from './travel/index';
 import BlacksmithScreen from './blacksmith/index';
 import VillageScreen from './village/index';
+import VillageRestScreen from './village/rest';
+import VillageShopScreen from './village/shop';
 import DialogueScreen from './dialogue/index';
 import CutsceneScreen from './cutscene/index';
 import DevToolsScreen from './dev/index';
@@ -384,6 +386,16 @@ function RootLayout() {
             <Stack.Screen
               name="village/index"
               component={VillageScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="village/rest"
+              component={VillageRestScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="village/shop"
+              component={VillageShopScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen

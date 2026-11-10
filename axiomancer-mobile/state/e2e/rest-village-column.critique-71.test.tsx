@@ -29,6 +29,9 @@ import { createLootCacheChoiceSession, createRestChoiceSession } from '@mechanic
 import CacheScreen, { CACHE_COLUMN_MAX_WIDTH } from '@/app/cache/index';
 import RestScreen, { REST_COLUMN_MAX_WIDTH } from '@/app/rest/index';
 import VillageScreen, { VILLAGE_COLUMN_MAX_WIDTH } from '@/app/village/index';
+import VillageRestScreen from '@/app/village/rest';
+import VillageShopScreen from '@/app/village/shop';
+import { COUNTER_COLUMN_MAX_WIDTH } from '@/components/village/VillageCounterFrame';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -147,12 +150,31 @@ describe('rest and settlement screens hold one centred column (critique pass 71)
         );
         const column = r.getByTestId('village-column');
         expectReadingColumn(column, VILLAGE_COLUMN_MAX_WIDTH);
-        expect(column).toContainElement(r.getByTestId('village-rest'));
-        expect(column).toContainElement(r.getByTestId('village-card-shop'));
+        // 168.3: the hub holds one button per counter; the wares moved to
+        // each counter's own screen.
+        expect(column).toContainElement(r.getByTestId('village-open-rest'));
+        expect(column).toContainElement(r.getByTestId('village-open-shop'));
 
         const exit = r.getByTestId('village-exit-column');
         expectReadingColumn(exit, VILLAGE_COLUMN_MAX_WIDTH);
         expect(exit).toContainElement(r.getByTestId('village-leave'));
+    });
+
+    it('village counters: the rest and the Shop share the cap, and so do their exits (168.3)', () => {
+        for (const [Screen, prefix, ware] of [
+            [VillageRestScreen, 'village-rest-screen', 'village-rest'],
+            [VillageShopScreen, 'village-shop', 'village-card-shop'],
+        ] as const) {
+            const r = render(
+                <GameStoreProvider store={villageStore()}>
+                    <Screen />
+                </GameStoreProvider>,
+            );
+            const column = r.getByTestId(`${prefix}-column`);
+            expectReadingColumn(column, COUNTER_COLUMN_MAX_WIDTH);
+            expect(column).toContainElement(r.getByTestId(ware));
+            r.unmount();
+        }
     });
 
     it('cache: the title and both offers sit in the capped column (critique pass 108)', () => {

@@ -31,6 +31,8 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Settings | route | yes | yes | yes | no |
 | Travel | route | yes | yes | yes | no |
 | Village | route | yes | yes | yes | no |
+| Village Rest | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village Rest") |
+| Village Shop | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village Shop") |
 | The hazard minigame | route | yes | yes | yes | no |
 | The Labyrinth | route | yes | yes | yes | no |
 | Atlas | engine area | no | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Atlas") |
@@ -69,7 +71,6 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Quest (`route:quest`)
 - Rest (`route:rest`)
 - Travel (`route:travel`)
-- Village (`route:village`)
 - The Labyrinth (`route:labyrinth`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
@@ -97,6 +98,8 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Settings (`route:settings`)
 - Travel (`route:travel`)
 - Village (`route:village`)
+- Village Rest (`route:village/rest`)
+- Village Shop (`route:village/shop`)
 - Atlas (`area:Atlas`)
 - Effects (`area:Effects`)
 - Game (`area:Game`)

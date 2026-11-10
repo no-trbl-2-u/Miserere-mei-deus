@@ -179,6 +179,26 @@
 			"color": "4"
 		},
 		{
+			"id": "route:village/rest",
+			"type": "file",
+			"file": "Features/Village Rest.md",
+			"x": 340,
+			"y": 690,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
+			"id": "route:village/shop",
+			"type": "file",
+			"file": "Features/Village Shop.md",
+			"x": 640,
+			"y": 690,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
 			"id": "elsewhere:route:(tabs)/character",
 			"type": "file",
 			"file": "Features/Character.md",
@@ -355,6 +375,20 @@
 			"fromNode": "route:settings",
 			"toNode": "elsewhere:route:dev",
 			"color": "5"
+		},
+		{
+			"id": "flow:route:village->route:village/rest",
+			"fromNode": "route:village",
+			"toNode": "route:village/rest",
+			"color": "5",
+			"fromEnd": "arrow"
+		},
+		{
+			"id": "flow:route:village->route:village/shop",
+			"fromNode": "route:village",
+			"toNode": "route:village/shop",
+			"color": "5",
+			"fromEnd": "arrow"
 		}
 	]
 }

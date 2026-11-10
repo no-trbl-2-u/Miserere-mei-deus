@@ -15,7 +15,8 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
 
 import { buildCombatDeck, STARTING_CARD_IDS, type GameState } from '@mechanics';
-import VillageScreen from '@/app/village/index';
+import VillageRestScreen from '@/app/village/rest';
+import VillageShopScreen from '@/app/village/shop';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -64,10 +65,20 @@ function makeStore(currency: number): AppStore {
     return store;
 }
 
-function renderVillage(store: AppStore) {
+/** 168.3: the paid rest has its own screen, opened from the hub's REST button. */
+function renderRest(store: AppStore) {
     return render(
         <GameStoreProvider store={store}>
-            <VillageScreen />
+            <VillageRestScreen />
+        </GameStoreProvider>,
+    );
+}
+
+/** 168.3: the card shop moved, unchanged, onto the Shop's own screen. */
+function renderShop(store: AppStore) {
+    return render(
+        <GameStoreProvider store={store}>
+            <VillageShopScreen />
         </GameStoreProvider>,
     );
 }
@@ -78,7 +89,7 @@ const deckOf = (store: AppStore) => buildCombatDeck(playerOf(store), (store.getS
 describe('the village paid rest (NK1c A8)', () => {
     it('heals 25% of max VITAE for 6 shillings, once per visit', () => {
         const store = makeStore(20);
-        renderVillage(store);
+        renderRest(store);
         fireEvent.press(screen.getByTestId('village-rest'));
         expect(playerOf(store).health).toBe(45);
         expect(playerOf(store).currency).toBe(14);
@@ -90,7 +101,7 @@ describe('the village paid rest (NK1c A8)', () => {
 
     it('is shown, refused, when the purse is short', () => {
         const store = makeStore(4);
-        renderVillage(store);
+        renderRest(store);
         expect(screen.getByTestId('village-rest')).toBeTruthy();
         expect(screen.getByTestId('village-rest').props.accessibilityState).toEqual({ disabled: true });
         expect(screen.getByTestId('village-rest-refusal').props.children).toBe("you can't cover the 6 it costs");
@@ -100,7 +111,7 @@ describe('the village paid rest (NK1c A8)', () => {
 describe('the village card shop (NK1c A9, A10, A11)', () => {
     it('sells one of five cards for 6; it joins the deck and is sold for the visit', () => {
         const store = makeStore(20);
-        renderVillage(store);
+        renderShop(store);
         for (const id of CARDS) expect(screen.getByTestId(`village-card-${id}`)).toBeTruthy();
         const before = deckOf(store).length;
         fireEvent.press(screen.getByTestId('village-card-grey-word-buy'));
@@ -113,7 +124,7 @@ describe('the village card shop (NK1c A9, A10, A11)', () => {
 
     it('removes a chosen card for the removal price', () => {
         const store = makeStore(20);
-        renderVillage(store);
+        renderShop(store);
         const before = deckOf(store).length;
         fireEvent.press(screen.getByTestId('village-remove'));
         expect(screen.getByTestId('village-remove-sheet')).toBeTruthy();
@@ -126,7 +137,7 @@ describe('the village card shop (NK1c A9, A10, A11)', () => {
     });
 
     it('shows no item stall and no SELL tab', () => {
-        renderVillage(makeStore(20));
+        renderShop(makeStore(20));
         expect(screen.queryByTestId('village-tab-sell')).toBeNull();
         expect(screen.queryByTestId('village-tab-buy')).toBeNull();
         expect(screen.queryByText('THE STALLS')).toBeNull();

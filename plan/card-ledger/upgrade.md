@@ -33,3 +33,35 @@ From `Potential Assets/sorted-entity-library-base`, black ground removed. Art is
 - Whether the screen takes its host's keeper (the hermit at the fire, the smith at the Anvil) or stays host-free.
 - The locked `???` slot: today's preview shows it; no mockup does.
 - The spoken lines are placeholders for T's words (`[content]`).
+
+## Round 1 verdict
+
+Decided 2026-11-09 by T, pasted from the ballot. Verbatim:
+
+```
+BALLOT: the card upgrade screen (upgrade-2026-11-09)
+answered 1 of 1
+U-01 The card upgrade screen: KEEP U-01h (The string of beads) | note: This is the winner but I want a "hold" mechanic here. Also instead of the text underneath explaining the upgrade, we'll have it just like B.
+general: So it's essentially B + G + H with H as the main.
+Regarding the hold, so there'll be a button that says hold, the user will hold it and the progress circle will circle the bead. Furthermore, it'll only ever be the center bead that is offered for upgrade and the center bead will have a special border. In order to select a bead, the player must rotate the circle
+```
+
+Read as: H's statue and beads; B's pair of cards (as it is, tilted and greyed; as it will be, upright in gold, with the change named under it) in place of H's chip; G's hold, as a HOLD button whose progress ring circles the centre bead. Only the centre bead is offered, it wears a special border, and the player turns the wheel to bring a card there.
+
+## Round 2
+
+Ballot: `upgrade-2.ballot.html` (id `upgrade-round-2-2026-11-09`). Four layouts of the blend, `U-02a` to `d`, each caught mid-hold; `U-02-done.webp` shows the ring closed.
+
+## Round 2 verdict
+
+Decided 2026-11-09 by T, pasted from the ballot. Verbatim:
+
+```
+BALLOT: the card upgrade screen, round 2 (upgrade-round-2-2026-11-09)
+answered 1 of 1
+U-02 The string of beads, with the pair and the hold: KEEP U-02a (The rim at the foot)
+
+BUT, I want the cards to be smaller and no text all the way at the bottom. This will allow the image at the top to be bigger
+```
+
+Settled: U-02a with smaller cards, no line under HOLD and a bigger figure at the top, drawn as `upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md`.

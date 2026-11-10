@@ -39,11 +39,12 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
-- **168.1** · VL1a: keeper portraits, one role table and four stand-ins (T, `/pitch` then `/plot asap`, 2026-11-09)
 - **168.2** · VL1b: the village card shop offers five cards (T, `/plot asap`, 2026-11-09)
-- **168.3** · VL1c: the village hub, and the paid rest as its own screen (T, `/plot asap`, 2026-11-09; needs 168.1)
-- **168.4** · VL1d: the Shop, one card at a time (T, `/plot asap`, 2026-11-09; needs 168.2, 168.3)
-- **168.5** · VL1e: the Blacksmith, the smith and one die at a time (T, `/plot asap`, 2026-11-09; needs 168.1)
+- **168.4** · VL1d: the Shop, one card at a time (T, `/plot asap`, 2026-11-09; needs 168.2)
+- **168.5** · VL1e: the Blacksmith, the smith and one die at a time (T, `/plot asap`, 2026-11-09)
+
+- **127.9** · UP1i: the card upgrade screen as a string of beads, with the pair and the hold (T, `/pitch` then `/plot asap`, 2026-11-10)
+- **127.10** · UP1j: the rest site, the Anvil and the elite reward wear the beads (T, `/plot asap`, 2026-11-10; needs 127.9, 168.5)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -85,7 +86,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 168 | The village as a hub of keepers | [168-vl1-village-screens.md](168-vl1-village-screens.md) | planned (**Asap**: 168.1-168.5) | 5 left |
+| 168 | The village as a hub of keepers | [168-vl1-village-screens.md](168-vl1-village-screens.md) | planned | 3 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
@@ -93,7 +94,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
-| 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
+| 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 3 left |
 | 129 | iPhone beta builds | [129-io1-iphone-beta.md](129-io1-iphone-beta.md) | planned | 2 left |
 | 131 | Set bonuses: T's design session | [131-sb1-set-bonuses.md](131-sb1-set-bonuses.md) | planned | 1 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |

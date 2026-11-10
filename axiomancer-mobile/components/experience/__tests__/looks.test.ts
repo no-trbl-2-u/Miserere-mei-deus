@@ -127,6 +127,13 @@ describe("round 2's node screens (A1)", () => {
 /** Round 2's new-game and ending screens, written out so a dropped row fails. */
 const NEW_GAME: readonly PlaceId[] = ['N-01', 'N-02', 'N-03', 'N-04', 'N-05', 'N-06', 'N-07', 'G-01'];
 
+describe('the village screens (168, call #5)', () => {
+    it('wear the brass action plate, idle, pressed and refused', () => {
+        expect(LOOKS['V-01']).toBe('brass');
+        expect(PLACE_PIECES['V-01']).toEqual(['action-button-idle', 'action-button-selected', 'action-button-disabled']);
+    });
+});
+
 describe("round 2's new game and endings (A2)", () => {
     it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM and the ending button; brass for the cards", () => {
         const picked = (look: Look) => NEW_GAME.filter((p) => LOOKS[p] === look);

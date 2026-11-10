@@ -49,7 +49,6 @@ export function DeckCardTile({ card, onPress, open = false, size }: DeckCardTile
             testID={`deck-card-${card.cardId}`}
         >
             <Image source={card.art} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="top" transition={0} />
-            <View style={styles.nameScrim} pointerEvents="none" />
             <Text style={styles.name} numberOfLines={2}>{card.name}</Text>
             <View
                 style={[styles.mark, { backgroundColor: card.stanceColor }]}
@@ -77,14 +76,6 @@ const useStyles = makeStyles((AXM) => ({
         backgroundColor: AXM.panelBg,
     },
     tileFluid: { width: '23.5%', aspectRatio: 1 },
-    nameScrim: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: '45%',
-        backgroundColor: 'rgba(0,0,0,0.6)',
-    },
     name: {
         position: 'absolute',
         left: 4,
@@ -94,6 +85,10 @@ const useStyles = makeStyles((AXM) => ({
         fontSize: 11,
         lineHeight: 13,
         color: AXM.parchment,
+        // No band under the name (T, 2026-11-10): a shadow keeps it legible.
+        textShadowColor: 'rgba(0,0,0,0.95)',
+        textShadowRadius: 4,
+        textShadowOffset: { width: 0, height: 1 },
     },
     mark: { position: 'absolute', left: 0, top: 0, width: 10, height: 10 },
     badge: {

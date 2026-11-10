@@ -48,12 +48,8 @@
 
 ## Acceptance
 
-- **A1** Arriving at a village opens the hub: the name, the purse, the host's portrait and line, and one brass button per counter the village carries with that keeper's portrait at its right end. TAKE THE ROAD is pinned at the foot. A counter the village lacks has no button (V-02b).
-- **A2** Each hub button opens that counter's own screen. Leaving a counter's screen returns to the hub, and TAKE THE ROAD ends the village as today, from either width (375 and 1280).
 - **A3** The Shop shows one card at a time from the village's cards, swipes between them with a position counter, buys with BUY and the price, and offers REMOVE A CARD at its rising price beside the shopkeeper's portrait (S-01d). Weapons and armor are sold in the same Shop: a separate CARDS / GEAR toggle button switches the carousel between the cards and the gear, each side with its own position counter and BUY, and a village with no gear shows no toggle. Confirmed by T (2026-11-10): a separate button toggles the carousel between cards and gear. A refused buy dims and names its reason.
 - **A4** The Blacksmith shows the smith filling the screen, the HEART, BODY and MIND tabs, and the chosen die's six faces as a cross net at his shoulder. Under them come HONE and TEMPER with their trade line and price, UPGRADE A CARD, and TAKE THEM AND GO (B-02b). A refused verb dims and names its reason. The forge opens straight onto this screen, with no intro step. Confirmed by T (2026-11-10): drop the intro step; the smith's line stands in for it. The result, reckoning and card-upgrade steps keep their content and wear the brass plate.
-- **A5** REST opens the paid rest as its own keeper screen, laid out like the Shop's and not the campfire rest screen: the innkeeper's portrait, the price and what it restores, refused when VITAE is full with that reason, and back to the hub. Confirmed by T (2026-11-10): reuse the keeper screen; it is not a campfire.
-- **A6** One table keyed by role (host, innkeeper, shopkeeper, smith) supplies every keeper portrait. The four stand-ins live under `axiomancer-mobile/assets/images/` with a `provenance.json`, and nothing resolves a path into `Potential Assets/`.
 - **A7** A village card shop offers five cards (`cardShopSize: 5`), seeded per run and node as today, at today's price. Confirmed by T (2026-11-10): five cards at today's 6 shillings each.
 
 ## Open questions
@@ -66,12 +62,10 @@
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 3 open · 4 closed · next A8
 
-- [ ] **168.1** Keeper portraits: one role table and the four stand-ins, copied out with provenance · S · closes A6 · needs — · alias: VL1a
 - [ ] **168.2** The village card shop offers five cards · S · closes A7 · needs — · alias: VL1b
-- [ ] **168.3** The village hub, and the paid rest as its own screen · M · closes A1, A2, A5 · needs 168.1 · alias: VL1c
-- [ ] **168.4** The Shop, one card at a time · M · closes A3 · needs 168.2, 168.3 · alias: VL1d
-- [ ] **168.5** The Blacksmith, the smith and one die at a time · M · closes A4 · needs 168.1 · alias: VL1e
+- [ ] **168.4** The Shop, one card at a time · M · closes A3 · needs 168.2 · alias: VL1d
+- [ ] **168.5** The Blacksmith, the smith and one die at a time · M · closes A4 · needs — · alias: VL1e
 
 168.3 moves today's card shop and gear sections, unchanged, onto the SHOP button's screen so nothing is unreachable, and draws the paid rest as a keeper screen; 168.4 then redraws the Shop with the CARDS / GEAR toggle over one carousel. Each chunk adds its screen's `verify:visual` baseline and a hermetic e2e under `axiomancer-mobile/state/e2e/` (hub navigation, a buy and a refused buy, the cards/gear toggle, a hone and a refused hone).
