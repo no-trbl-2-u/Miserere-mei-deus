@@ -22,7 +22,7 @@ import { buildCombatDeck, cardLibrary, getCardById, upgradeLimit } from '@mechan
 import RestScreen from '@/app/rest/index';
 import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
-import { REST_UPGRADE_BACK_LABEL } from '@/state/presenters/rest.copy';
+import { REST_CHOICE_TITLE, REST_UPGRADE_BACK_LABEL } from '@/state/presenters/rest.copy';
 import { beginRestAction } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { bringToCentre, centreBeadLabel, holdToUpgrade, isOnWheel } from '@/test-utils/cardUpgrade';
@@ -102,6 +102,25 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         expect(within(pick).getByTestId('rest-upgrade-back')).toHaveTextContent(REST_UPGRADE_BACK_LABEL);
         // The rest site is free: no price line.
         expect(r.queryByTestId('card-upgrade-price')).toBeNull();
+    });
+
+    it('the upgrade screen opens on its figure: no title and no purse or VITAE box above it, and both return at the offers (T, PR #1579)', () => {
+        const r = render(
+            <GameStoreProvider store={restStore()}>
+                <RestScreen />
+            </GameStoreProvider>,
+        );
+        expect(r.getByTestId('rest-title')).toHaveTextContent(REST_CHOICE_TITLE);
+        expect(r.getByTestId('rest-purse')).toBeTruthy();
+        fireEvent.press(r.getByTestId('rest-choice-offer-upgrade'));
+        expect(r.getByTestId('card-upgrade-figure')).toBeTruthy();
+        expect(r.queryByTestId('rest-title')).toBeNull();
+        expect(r.queryByTestId('rest-purse')).toBeNull();
+        expect(r.queryByText('VITAE')).toBeNull();
+        fireEvent.press(r.getByTestId('rest-upgrade-back'));
+        expect(r.getByTestId('rest-title')).toHaveTextContent(REST_CHOICE_TITLE);
+        expect(r.getByTestId('rest-purse')).toBeTruthy();
+        expect(r.getByText('VITAE')).toBeTruthy();
     });
 
     it('backing out of the upgrade returns to both offers, names nothing, and the heal can still be taken (#7)', () => {
