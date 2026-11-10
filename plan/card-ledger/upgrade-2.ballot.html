@@ -44,11 +44,11 @@
   .count { color:var(--muted); margin-left:6px; }
   button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <p class="banner" role="note"><b>CLOSED</b>: T voted on 2026-11-09 (A, with smaller cards, no footer line and a bigger statue). The verdict and the settled shot are in upgrade.md.</p>
   <h1>The card upgrade screen, round 2</h1>
   <p class="sub">Your blend: H as the main, B's pair of cards, G's hold. Four layouts, each caught with the ring 60% full.</p>
   <p class="legend">
@@ -129,7 +129,6 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
 
 document.getElementById('themeBtn').addEventListener('click', () => {
   const root = document.documentElement;
