@@ -148,8 +148,10 @@ export function EquipmentDetailModal({ vm, onClose, onEquip, onUnequip }: Equipm
                                 </View>
                             </View>
 
-                            {/* The one block with no border: flavour, beneath everything. */}
-                            {vm.flavor !== '' && (
+                            {/* The one block with no border: flavour, beneath everything. A
+                                piece with an EFFECT block shows no flavour: the description
+                                would say the same thing twice. */}
+                            {vm.flavor !== '' && vm.effect === null && (
                                 <Text style={styles.flavor} testID="equip-detail-flavor">
                                     {vm.flavor}
                                 </Text>

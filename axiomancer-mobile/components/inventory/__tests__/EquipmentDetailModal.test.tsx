@@ -131,4 +131,25 @@ describe('EquipmentDetailModal — the effect block (EQ3 A15)', () => {
         expect(queryByTestId('equip-detail-effect')).toBeNull();
         expect(getByTestId('equip-detail-stats')).toBeTruthy();
     });
+
+    it('the card shows an effect block and no flavor line; a relic keeps its flavor line', () => {
+        const blade = selectEquipmentDetailViewModel(stateWith([BLADE], [BLADE]), BLADE.id)!;
+        const first = render(<EquipmentDetailModal vm={blade} onClose={jest.fn()} />);
+        expect(first.getByTestId('equip-detail-effect-0')).toBeTruthy();
+        expect(first.queryByTestId('equip-detail-flavor')).toBeNull();
+        first.unmount();
+        const relic = selectEquipmentDetailViewModel(stateWith([SIGNET], [SIGNET]), SIGNET.id)!;
+        const second = render(<EquipmentDetailModal vm={relic} onClose={jest.fn()} />);
+        expect(second.getByTestId('equip-detail-flavor').props.children).toBe(SIGNET.description);
+    });
+
+    it('gear with no effect block still shows its flavor line', () => {
+        const stick: Equipment = {
+            id: 'plain-stick', name: 'Plain Stick', description: 'A stick, nothing more.', category: 'equipment', slot: 'weapon',
+        };
+        const vm = selectEquipmentDetailViewModel(stateWith([stick], [stick]), stick.id)!;
+        expect(vm.effect).toBeNull();
+        const { getByTestId } = render(<EquipmentDetailModal vm={vm} onClose={jest.fn()} />);
+        expect(getByTestId('equip-detail-flavor').props.children).toBe('A stick, nothing more.');
+    });
 });

@@ -22,7 +22,10 @@
  *   - `signature`           — the granted signature skill's name, Conviction
  *                             cost, and EXACT in-game effect text (the engine's
  *                             own `description`; no added flare).
- *   - `flavor`              — the item's engine `description`, shown last.
+ *   - `flavor`              — the item's engine `description`. The gear card prints
+ *                             it last only when `effect` is null (a piece with an
+ *                             EFFECT block would repeat itself); the item-reward
+ *                             screen has no effect block and prints it always.
  *   - `action`              — the one loadout action the card offers: UNEQUIP
  *                             for a worn piece, WEAR for a relic or EQUIP (or <VERB> · REPLACE
  *                             <NAME>) for an unworn one, read from
