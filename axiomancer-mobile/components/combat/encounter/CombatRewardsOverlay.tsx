@@ -101,6 +101,14 @@ export function CombatRewardsOverlay({
     if (upgrading && upgradeRow && onUpgrade) {
         return (
             <View style={styles.backdrop} testID="combat-rewards">
+                {/* The string of beads is taller than a short phone's overlay
+                    (figure, pair, wheel, HOLD): the sheet scrolls so HOLD and
+                    BACK are always reachable. */}
+                <ScrollView
+                    style={styles.upgradeScroll}
+                    contentContainerStyle={styles.upgradeScrollContent}
+                    testID="combat-reward-upgrade-scroll"
+                >
                 <View style={[styles.panel, styles.upgradePanel, { borderColor: AXM.sulfur }]} testID="combat-reward-upgrade-sheet">
                     <CardUpgradePicker rows={[upgradeRow]} onConfirm={onUpgrade} />
                     <Pressable
@@ -113,6 +121,7 @@ export function CombatRewardsOverlay({
                         <Text style={[styles.btnText, { color: AXM.bone }]}>{ELITE_UPGRADE_BACK_LABEL}</Text>
                     </Pressable>
                 </View>
+                </ScrollView>
             </View>
         );
     }
@@ -287,6 +296,8 @@ const useStyles = makeStyles((AXM) => ({
     btnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 15, letterSpacing: TYPE_ROLES.button.letterSpacing},
     upgradeOpen: { flex: 0, alignSelf: 'stretch', marginTop: 10 },
     upgradePanel: { alignItems: 'stretch' },
+    upgradeScroll: { width: '100%', maxWidth: 420, maxHeight: '100%', flexGrow: 0 },
+    upgradeScrollContent: { flexGrow: 1, justifyContent: 'center' },
     upgradeBack: { flex: 0, marginTop: 12 },
     btnNote: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 9, color: AXM.bone, letterSpacing: 0.3, marginTop: 3, textAlign: 'center' },
     // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side

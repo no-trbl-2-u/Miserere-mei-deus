@@ -295,6 +295,16 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         expect(onPick).not.toHaveBeenCalled();
     });
 
+    it('the upgrade sheet scrolls inside the overlay, so HOLD and BACK stay reachable on a short phone', () => {
+        renderElite();
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
+        const scroll = screen.getByTestId('combat-reward-upgrade-scroll');
+        expect(scroll.type).toBe('RCTScrollView');
+        expect(StyleSheet.flatten(scroll.props.style).maxHeight).toBe('100%');
+        expect(within(scroll).getByTestId('card-upgrade-hold')).toBeTruthy();
+        expect(within(scroll).getByTestId('combat-reward-upgrade-back')).toBeTruthy();
+    });
+
     it('BACK returns to the cards without committing', () => {
         const { onUpgrade } = renderElite();
         fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
