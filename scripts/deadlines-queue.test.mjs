@@ -186,3 +186,21 @@ test('--remind is silent in CI, in the queue model too', () => {
     const out = execFileSync(process.execPath, ['scripts/deadlines.mjs', '--remind', '--today=2026-11-10'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, CI: 'true' } })
     assert.equal(out, '')
 })
+
+test('an attended act whose needs are not shipped names the rows the loop owes, and no owed rows prints no brackets', () => {
+    const spec = '- [ ] **51.1** a loop row · S · closes A1 · needs — · alias: QB1\n- [ ] **51.2** T reviews it (attended) · S · closes A2 · needs 51.1 · alias: QB2\n'
+    const { phases } = planRows({ specs: [{ file: 'plan/51-wait.md', md: spec }] })
+    const items = parseItems(plan().replace('| [ ] | 2026-11-17 | Write the lines (3 h) | - | - | W1 | QA1 | - |', '| [ ] | 2026-11-17 | Review the row (1 h) | - | - | W1 | QB2 | - |'))
+    const q = queuePlan(items.filter((i) => i.name === 'Review the row (1 h)'), phases, '2026-11-10', 7)
+    assert.deepEqual(q.waiting, [{ name: 'Review the row (1 h)', owes: ['QB1'] }])
+    assert.match(reminderText([], null, '2026-11-10', q), /Then: 1 wait on the loop \(QB1\)\./)
+    const bare = { ...q, waiting: [{ name: 'Review the row (1 h)', owes: [] }] }
+    assert.match(reminderText([], null, '2026-11-10', bare), /Then: 1 wait on the loop\./)
+})
+
+test('the lint in the queue model points a loop row in Rows at Waits on, never at a list the queue lacks', () => {
+    const loopInRows = plan().replace('| W1 | T | QA2 |', '| W1 | QA3 | - |')
+    const errors = checkDeadlines(loopInRows, SOURCES)
+    assert.ok(errors.some((e) => /names loop row QA3 in Rows/.test(e) && /the queue lists no loop rows of its own/.test(e)))
+    assert.ok(!errors.some((e) => /## Unscheduled/.test(e)))
+})

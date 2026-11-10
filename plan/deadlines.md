@@ -26,7 +26,9 @@
 - **Status.** An Item whose `Rows` names build-plan rows is ticked by `node scripts/deadlines.mjs --write` when they
   ship. A `T` or `needs plot` Item is ticked by hand. Spec 169 (DL3a) adds the lint that catches an open Item naming a
   merged pull request.
-- **To reorder, move the row.** To move an act to the other milestone, change its `Due` and `Window` cells.
+- **To reorder, move the row.** To move an act to the other milestone, change its `Due` and `Window` cells. Nov 17's
+  acts sit above Dec 26's. When two plots add acts at the same spot, the merge keeps them grouped by milestone and
+  in the order it met them; move a row afterwards if its place matters.
 
 ## Windows
 

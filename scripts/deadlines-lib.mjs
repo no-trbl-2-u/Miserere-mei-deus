@@ -495,6 +495,15 @@ export const itemHours = (name) => {
     return all.length ? Number(all[all.length - 1][1]) : null
 }
 
+/**
+ * The loop rows an open act waits on: its open `Waits on` rows, and for an attended row whose
+ * `needs` are not shipped (it has no `Waits on` of its own) the rows itemNeed names.
+ */
+const owesOf = ({ item, need }, phases) => {
+    const named = need.detail.match(/the loop still owes (.+)$/)?.[1].split(', ') ?? []
+    return [...new Set([...owedRows(item, phases), ...named])]
+}
+
 const addDays = (today, days) => new Date(Date.parse(`${today}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10)
 const round1 = (n) => Math.round(n * 10) / 10
 
@@ -542,7 +551,7 @@ export const queuePlan = (items, phases, today, hoursPerWeek) => {
         milestones,
         week,
         later: ready.length - week.length,
-        waiting: open.filter(blocked).map(({ item }) => ({ name: item.name, owes: owedRows(item, phases) })),
+        waiting: open.filter(blocked).map((o) => ({ name: o.item.name, owes: owesOf(o, phases) })),
         noHours: open.filter(({ hours }) => hours === null).map(({ item }) => item.name),
     }
 }
@@ -557,6 +566,11 @@ const milestoneLine = (m) =>
 
 const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
 
+const owedList = (waiting) => {
+    const ids = [...new Set(waiting.flatMap((w) => w.owes))]
+    return ids.length ? ` (${ids.join(', ')})` : ''
+}
+
 const queueReminderText = (queue, today) => {
     const head = `DEADLINE REMINDER (${today}; plan/deadlines.md, the queue in LIVE_DEADLINES.md). Lead your first reply with this list:`
     if (!queue.milestones.length) return `${head}\n- The queue is empty: nothing needs T.`
@@ -570,7 +584,7 @@ const queueReminderText = (queue, today) => {
     if (!queue.week.length) lines.push('- Nothing is ready for T: every open act waits on the loop.')
     const tail = [
         queue.later ? `${queue.later} more ready after these` : '',
-        queue.waiting.length ? `${queue.waiting.length} wait on the loop (${[...new Set(queue.waiting.flatMap((w) => w.owes))].join(', ')})` : '',
+        queue.waiting.length ? `${queue.waiting.length} wait on the loop${owedList(queue.waiting)}` : '',
         queue.noHours.length ? `${queue.noHours.length} state no hours` : '',
     ].filter(Boolean)
     if (tail.length) lines.push(`Then: ${tail.join('; ')}.`)

@@ -81,6 +81,7 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     const unscheduled = parseUnscheduled(deadlinesMd)
     const windows = parseWindows(deadlinesMd)
     const errors = resolved.errors.map((e) => `${DEADLINES}: ${e}`)
+    const queueModel = parseBudget(deadlinesMd) !== null
 
     // An id in `Rows` or in `Waits on` is named; each place is recorded so a clash names both.
     const namedBy = new Map()
@@ -98,7 +99,7 @@ export const checkDeadlines = (deadlinesMd, plan) => {
         for (const id of Array.isArray(item.rows) ? item.rows : []) {
             const row = phases.get(id)
             if (row && row.open && !row.waitsOnT) {
-                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks, or under ## Unscheduled.`)
+                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks${queueModel ? '; the queue lists no loop rows of its own' : ', or under ## Unscheduled'}.`)
             }
         }
         const want = derivedStatus(item, phases)
@@ -138,7 +139,7 @@ export const checkDeadlines = (deadlinesMd, plan) => {
 
     // The queue model (a `## Budget` section; T, 2026-11-10) lists T's acts only: a loop row needs
     // no line here, so the coverage rule below belongs to the dated model alone.
-    if (parseBudget(deadlinesMd) !== null) return errors
+    if (queueModel) return errors
 
     for (const [id, row] of phases) {
         if (!row.open || namedBy.has(id) || excused.has(id)) continue
