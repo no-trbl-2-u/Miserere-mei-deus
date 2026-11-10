@@ -89,6 +89,10 @@ function addUnscheduled(md, id) {
   return md.replace('\n## How a window closes', `- ${id} — fixture; date not set.\n\n## How a window closes`).replace(/\n\n\n## How a window closes/, '\n\n## How a window closes')
 }
 
+// The live plan is a queue: an act carries its window's milestone date, and the lint fails any other. Read W1's
+// from the plan, so moving a milestone never breaks these fixtures.
+const MILESTONE = fs.readFileSync(path.join(ROOT, DEADLINES), 'utf8').match(/^\| \[[ x]\] \| (\d{4}-\d{2}-\d{2}) \|[^\n]*\| W1 \|/m)[1]
+
 const addChangeLog = (md, what) => md.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **${what}** (T).\n`)
 
 /**
@@ -151,10 +155,10 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
   })
   try {
     assert.equal(checkDeadlines(work).length > 0, true, 'the base passes check-deadlines')
-    branchWith(work, 'plot-a', plot('ZA', '2026-11-17'))
+    branchWith(work, 'plot-a', plot('ZA', MILESTONE))
     branchWith(work, 'plot-b', (d) => {
-      plot('ZB', '2026-11-17')(d)
-      write(d, DEADLINES, addItem(read(d, DEADLINES), 'Item ZS', '2026-11-17', 'ZS1'))
+      plot('ZB', MILESTONE)(d)
+      write(d, DEADLINES, addItem(read(d, DEADLINES), 'Item ZS', MILESTONE, 'ZS1'))
     })
     // main: plot A merges by the merge button, then ZS1 ships.
     git(work, 'merge', '-q', '--no-edit', '--no-ff', 'plot-a')
@@ -176,7 +180,7 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
       assert.equal(count(dl, needle), 1, `deadlines: ${needle}`)
     }
     assert.ok(!/^(<{7}|={7}|>{7})/m.test(plan + dl), 'no conflict marker')
-    assert.match(dl, /\| \[x\] \| 2026-11-17 \| Item ZS \|/, 'the Status main made stale is re-derived')
+    assert.ok(dl.includes(`| [x] | ${MILESTONE} | Item ZS |`), 'the Status main made stale is re-derived')
     assert.ok(dl.indexOf('| Item ZB |') < dl.indexOf('| Item ZA |'), 'new Items stay in due-date order')
     const head = git(work, 'rev-list', '--parents', '-n', '1', 'HEAD').trim().split(' ')
     assert.equal(head.length, 3, 'HEAD is the merge commit')
@@ -200,7 +204,7 @@ test('the scratch repo carries the plan pending closes: without them a closed ch
     // The real pending files too: a pending plot adds Unscheduled lines whose rows live only there (plot 137, CF1e/CF1f).
     for (const n of fs.readdirSync(path.join(ROOT, 'plan', 'pending')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', 'pending', n), path.join(live, 'plan', 'pending', n))
     addSpec(live, 'ZC', ['ZC1'])
-    write(live, DEADLINES, addItem(read(live, DEADLINES), 'Item ZC', '2026-11-17', 'ZC1').replace('| [ ] | 2026-11-17 | Item ZC |', '| [x] | 2026-11-17 | Item ZC |'))
+    write(live, DEADLINES, addItem(read(live, DEADLINES), 'Item ZC', MILESTONE, 'ZC1').replace(`| [ ] | ${MILESTONE} | Item ZC |`, `| [x] | ${MILESTONE} | Item ZC |`))
     write(live, 'plan/pending/904.1.md', ['---', 'close: 904.1', 'date: 2026-11-01', 'says: fixture chunk ZC1 shipped', '---', ''].join('\n'))
     const { dir, work } = scratch(undefined, live)
     try {

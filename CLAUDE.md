@@ -20,7 +20,7 @@ or "Want to use `/messy` to file this dump?". The loop never fires either.
 **The vault:** T's Obsidian notes (goal, thread map, inbox) live in `vault/`, a separate repo; run `/vault` for a session and read [`docs/vault.md`](./docs/vault.md) for its write zones.
 
 **Deadlines (T, 2026-11-10: the queue).** `plan/deadlines.md` is the whole deadline plan: two milestones (Act 1,
-Chapter 1 on Nov 17; Act 1 on Dec 26), a `## Budget` of T's hours a week, and the Items table, an ordered queue of
+Chapter 1, then Act 1; the file holds their dates), a `## Budget` of T's hours a week, and the Items table, an ordered queue of
 T's acts. **An act has no date of its own**: its `Due` cell holds its milestone's date, its place in the table is its
 priority, and its hours are in its name as `(N h)`. **Every Item is a T act** (plot, pitch, decide, pick, author,
 play, review, merge, tag); loop rows are not listed there, except in the `Waits on` cell of the act that needs them

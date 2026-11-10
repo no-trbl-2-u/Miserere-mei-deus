@@ -301,7 +301,7 @@ ambiguity.)
   **`v0.2.0`** (commit `eb75f451`, 2026-10-11, D83) adds the Blood Price trial
   set on that core; GitHub release, no APK from the tag.
 - **DEADLINES (T, attended session 2026-11-10; replaces the 2026-10-19 windows).** `plan/deadlines.md` sets two
-  milestones (Act 1, Chapter 1 released on 2026-11-17; Act 1 released on 2026-12-26), a `## Budget` of T's hours a
+  milestones (Act 1, Chapter 1 released on 2026-11-30, moved from Nov 17 by T on 2026-11-10; Act 1 released on 2026-12-26), a `## Budget` of T's hours a
   week, and one ordered queue of T's acts with no dates of their own. The reminder forecasts each milestone against
   the budget and lists the acts that fit this week. The loop is not restricted by it: `/march` keeps picking open
   rows top to bottom from `plan/README.md`. New cards and the card-creator workflow are the lowest priority.
