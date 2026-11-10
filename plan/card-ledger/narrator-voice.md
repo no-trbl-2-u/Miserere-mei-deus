@@ -95,6 +95,56 @@ list, the false fires) are not story until T rules them in.
 | E-03 Quay-Crab | 2 middle | 1 ancient | 3 immoral |
 | E-04 Saltwick Swarm | 3 immoral | 1 ancient | 2 middle |
 
+## Round 5: plain, cruel, grief
+
+T, 2026-11-10: the Narrator covers "enemy journals, quests, story
+encounters, narration, anything but cards and NPCs". The three takes:
+"Cormac McCarthy writes elden Ring but with our story, enemies, quests, and
+locations (with plenty of extra imagination)"; "The same except turn the
+cruelty up to 11"; "Same as both except make me cry the scene is so cruel and
+violent or self loathing or hatred or just any of the many many negative
+emotions to match." And: "Try to avoid having the run on sentences go on for
+too long."
+
+Round 5 (`narrator-voice-5.ballot.html`, ballot id
+`narrator-voice-5-2026-11-10`). Twelve slots, 36 samples. Round 4 is not
+withdrawn; T has not ruled on it.
+
+- **Sentence length.** No sentence runs past 34 words.
+- **Sources.** Enemies follow their portraits' draft descriptions in
+  `enemy.library.ts`; quests follow `breakwater-chapter.questline.ts`; S-01
+  uses story-overview rulings 13 to 15 (the Covenant, the forbidden
+  prophecy); S-02 uses prologue steps 9 to 11.
+- **The feel only.** No place, character, name or sentence is taken from
+  either work.
+- **Invented, not story until T rules it in:** the boy with the bowl, the
+  three-armed gallows, the pilgrim ship, the girl at the windmill, the
+  keeper's wife, the lots drawn at the lighthouse, the town sending people
+  down to the Saint, the Saint's wife, the Wreckmaster's son and his nailed
+  hatches, the Brine-Widow's boy, the Net-Mender's daughter and partner, the
+  Cave Choir's priest, the chapel priest and the Covenant's notices, the
+  serjeant, the bottle.
+- **The assault stays off-screen** (story-overview, prologue step 9). The
+  child's death is named and never shown.
+
+The key. **Plain** is the voice as it stands. **Cruel** is the same with the
+cruelty all the way up. **Grief** is the same again, written to hurt.
+
+| Slot | a | b | c |
+|---|---|---|---|
+| P-01 Gallows Crossroads | 3 grief | 1 plain | 2 cruel |
+| P-02 The wreck | 2 cruel | 3 grief | 1 plain |
+| Q-01 The capsized boat | 1 plain | 2 cruel | 3 grief |
+| Q-02 The lighthouse | 3 grief | 2 cruel | 1 plain |
+| Q-03 The sea keep | 2 cruel | 1 plain | 3 grief |
+| E-01 The Saint Beneath | 1 plain | 3 grief | 2 cruel |
+| E-02 The Wreckmaster | 2 cruel | 3 grief | 1 plain |
+| E-03 Brine-Widow | 3 grief | 1 plain | 2 cruel |
+| E-04 Net-Mender | 1 plain | 2 cruel | 3 grief |
+| E-05 The Cave Choir | 2 cruel | 1 plain | 3 grief |
+| S-01 The clifftop chapel | 1 plain | 3 grief | 2 cruel |
+| S-02 Memory: the window | 3 grief | 2 cruel | 1 plain |
+
 ## Verdicts
 
 ### Round 1 (T, 2026-11-08)
@@ -119,5 +169,9 @@ started in.
 Everything else is redrawn in round 4.
 
 ### Round 4
+
+Not voted yet.
+
+### Round 5
 
 Not voted yet.
