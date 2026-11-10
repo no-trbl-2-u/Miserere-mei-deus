@@ -20,7 +20,7 @@
 | 2026-11-10 (today) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-10 (today) | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | needs you: your task | W2 |
 | 2026-11-11 (tomorrow) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
-| 2026-11-11 (tomorrow) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task; the loop still owes VL1b, VL1c, VL1d, VL1e | W2 |
+| 2026-11-11 (tomorrow) | Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upgrade screen (the string of beads) (1.5 h) | needs you: your task; the loop still owes VL1b, VL1d, VL1e, UP1i, UP1j | W2 |
 | 2026-11-12 (in 2 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task | W2 |
 | 2026-11-13 (in 3 days) | Buffer: fixes from the event-screen reviews (1 h) | needs you: your task | W2 |
 | 2026-11-14 (in 4 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task | W2 |

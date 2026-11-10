@@ -49,7 +49,9 @@ export type PlaceId =
     | 'X-01' | 'X-02'
     // Round 2: new game (saves, character select) and the endings (death, game over).
     | 'N-01' | 'N-02' | 'N-03' | 'N-04' | 'N-05' | 'N-06' | 'N-07'
-    | 'G-01';
+    | 'G-01'
+    // The village screens: the hub's counter buttons and the counters' own buttons.
+    | 'V-01';
 
 /** T's pick for every place. */
 export const LOOKS: Record<PlaceId, Look> = {
@@ -120,6 +122,7 @@ export const LOOKS: Record<PlaceId, Look> = {
     'N-06': 'vellum', // Character select: CONFIRM
     'N-07': 'normal', // Character select: roster grid tiles
     'G-01': 'vellum', // Death and game over: CONTINUE / NEW CHARACTER
+    'V-01': 'brass', // Village: hub and counter buttons (168, call #5: these screens only)
 };
 
 /** The converted pieces each place draws. A `normal` place draws none. */
@@ -190,6 +193,7 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'N-06': ['action-button-vellum'],
     'N-07': [],
     'G-01': ['action-button-vellum'],
+    'V-01': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
 };
 
 /** The look a place wears. */

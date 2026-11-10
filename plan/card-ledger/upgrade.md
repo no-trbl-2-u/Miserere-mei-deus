@@ -51,3 +51,17 @@ Read as: H's statue and beads; B's pair of cards (as it is, tilted and greyed; a
 ## Round 2
 
 Ballot: `upgrade-2.ballot.html` (id `upgrade-round-2-2026-11-09`). Four layouts of the blend, `U-02a` to `d`, each caught mid-hold; `U-02-done.webp` shows the ring closed.
+
+## Round 2 verdict
+
+Decided 2026-11-09 by T, pasted from the ballot. Verbatim:
+
+```
+BALLOT: the card upgrade screen, round 2 (upgrade-round-2-2026-11-09)
+answered 1 of 1
+U-02 The string of beads, with the pair and the hold: KEEP U-02a (The rim at the foot)
+
+BUT, I want the cards to be smaller and no text all the way at the bottom. This will allow the image at the top to be bigger
+```
+
+Settled: U-02a with smaller cards, no line under HOLD and a bigger figure at the top, drawn as `upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md`.
