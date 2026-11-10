@@ -9,6 +9,7 @@
 - **T, 2026-11-06** (`plan/card-ledger/ui-kit.md`, V-01): "The player, when entering the village, will have options: 'Rest', 'Card Shop', 'Blacksmith', any other options Village offers, the 'Exit'. Then, each of those options show a different screen with an NPC/Image for each, then what they offer."
 - **T, 2026-11-09, `/pitch`:** five screens each for the Village, the Blacksmith and the Shop; "Use the same menu/button background across the app"; "use harmless looking NPC portraits from potential assets ... I can always replace the image with something better, but it'll help with spacing."
 - **T's ballots, 2026-11-09** (`plan/card-ledger/village.md`, verdicts verbatim): the Village is **V-02b** (the host beside the buttons), the Blacksmith **B-02b** (the net beside him), the Shop **S-01d** (one card at a time), with "Let's start offering 5 cards instead of 3."
+- **T, 2026-11-10, on the stand-in portraits:** "for now, yes to all the images you used so far, I can always swap them out" (Hermit, Harbalist, Evil Merchant, Stonehead).
 - **The pitch:** `braindump/2026-11-09-village-screens.md`. Ballot shots: `plan/card-ledger/village/` (PR #1558).
 
 ### What exists today (read 2026-11-09, at origin/main 1c63a1891)
