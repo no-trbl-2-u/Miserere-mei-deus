@@ -265,7 +265,8 @@ it except the Status cells:
   Item is a T act (phase DL2b). A loop chunk is not listed there: it goes
   only in the `Waits on` cell of a T act that needs it, by its alias, and
   never into an Item's `Rows` (the lint fails that). A chunk that waits
-  on T is named in the `Rows` of its act. A `needs plot` Item this plot
+  on T is named in the `Rows` of its act (no lint asks for this in
+  the queue, so this step is the only guard). A `needs plot` Item this plot
   answers is ticked `[x]` by hand, or its `needs plot` becomes the new
   aliases when they wait on T. A new Item carries its milestone's date in
   `Due` (never a date of its own) and that milestone's `Window`, its

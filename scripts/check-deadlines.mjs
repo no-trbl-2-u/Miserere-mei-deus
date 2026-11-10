@@ -5,8 +5,11 @@
 //
 // Fails when plan/deadlines.md and the Status block of plan/steps/01_build_plan.md
 // disagree:
-//   - an open build-plan row (`[ ]`, `[-]`, `[blocked: …]`) that no Items row names
-//     and no `## Unscheduled` line excuses, or an `## Unscheduled` line with no reason;
+//   - in the dated model only (a file with no `## Budget`): an open build-plan row (`[ ]`, `[-]`,
+//     `[blocked: …]`) that no Items row names and no `## Unscheduled` line excuses. The queue model
+//     (T, 2026-11-10) lists T's acts only, so it has no such rule: nothing there checks that a
+//     chunk waiting on T has an act;
+//   - an `## Unscheduled` line with no reason;
 //   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row,
 //     in its `Rows` or its `Waits on` cell (phase DL2a);
 //   - one phase id named twice in the Items table (`Rows` and `Waits on` both count, in

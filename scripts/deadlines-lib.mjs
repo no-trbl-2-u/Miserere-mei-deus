@@ -562,7 +562,7 @@ const fitText = (m) =>
         : `fits, with ${round1(m.available - m.cumHours)} h to spare`
 
 const milestoneLine = (m) =>
-    `${dayName(m.due)} (${whenText(m.days)}): ${m.acts} act${m.acts === 1 ? '' : 's'} open, ${m.cumHours} h queued up to it, ${m.available} h available: ${fitText(m)}.`
+    `${dayName(m.due)} (${whenText(m.days)}): ${m.acts} act${m.acts === 1 ? '' : 's'} open (${m.openHours} h), ${m.cumHours} h queued up to it, ${m.available} h available: ${fitText(m)}.`
 
 const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
 

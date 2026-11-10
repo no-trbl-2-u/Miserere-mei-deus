@@ -6,8 +6,8 @@
 
 ## Milestones
 
-- **2026-11-17** — Tue, Nov 17 (in 7 days): 17 acts open, 15.5 h queued up to it, 6.5 h available: over by 9 h; at this pace the queue reaches it Fri, Nov 27.
-- **2026-12-26** — Sat, Dec 26 (in 46 days): 25 acts open, 47 h queued up to it, 42.7 h available: over by 4.3 h; at this pace the queue reaches it Thu, Dec 31.
+- **2026-11-17** — Tue, Nov 17 (in 7 days): 17 acts open (15.5 h), 15.5 h queued up to it, 6.5 h available: over by 9 h; at this pace the queue reaches it Fri, Nov 27.
+- **2026-12-26** — Sat, Dec 26 (in 46 days): 25 acts open (31.5 h), 47 h queued up to it, 42.7 h available: over by 4.3 h; at this pace the queue reaches it Thu, Dec 31.
 
 ## This week (6.5 h)
 

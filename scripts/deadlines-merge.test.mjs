@@ -170,6 +170,15 @@ test('two edited base rows out of date order keep their places (ticks on both ro
   assert.deepEqual(tidyItems([p2, q2], [p, q]), [p2, q2])
 })
 
+// The queue model: acts of one milestone share a `Due`, so the sort must leave them in the order the merge met them.
+test('tidyItems keeps new rows of one milestone in merge order and groups a later milestone after them', () => {
+  const [x, y, z] = [item('X', { due: '2026-11-17' }), item('Y', { due: '2026-11-17' }), item('Z', { due: '2026-11-17' })]
+  assert.deepEqual(tidyItems([y, x, z], []), [y, x, z])
+  assert.deepEqual(tidyItems([z, y, x], [y]), [z, y, x])
+  const late = item('Late', { due: '2026-12-26' })
+  assert.deepEqual(tidyItems([late, y, x], []), [y, x, late])
+})
+
 test('tidyItems sorts only the new rows, leaves base rows in place, and ignores other blocks', () => {
   const [a, b, c] = [item('A', { due: '2026-11-09' }), item('B', { due: '2026-11-01' }), item('C', { due: '2026-11-05' })]
   assert.deepEqual(tidyItems([a, c, b], [a]), [a, b, c])
@@ -342,10 +351,10 @@ test('a real git merge with the driver registered keeps both plots, and the live
       return lines.join('\n')
     }
     git('switch', '-q', '-c', 'plot-t')
-    fs.writeFileSync(file, edit('TT1', '2026-11-12'))
+    fs.writeFileSync(file, edit('TT1', '2026-11-17'))
     git('commit', '-q', '-am', 'plot T')
     git('switch', '-q', 'main')
-    fs.writeFileSync(file, edit('OO1', '2026-11-11'))
+    fs.writeFileSync(file, edit('OO1', '2026-11-17'))
     git('commit', '-q', '-am', 'plot O')
     git('merge', '-q', '--no-edit', 'plot-t')
     const text = fs.readFileSync(file, 'utf8')

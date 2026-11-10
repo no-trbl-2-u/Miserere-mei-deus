@@ -29,7 +29,7 @@
 
 - No GitHub API call, in the lint or its test.
 - No automatic tick: the lint fails and a person or a session ticks the Item, as today.
-- `LIVE_DEADLINES.md` and the reminder are unchanged; they read the table the lint now keeps honest.
+- This spec changes neither `LIVE_DEADLINES.md` nor the reminder (the queue rewrite of 2026-11-10 gave them their shape); they read the table the lint keeps honest.
 
 ### Out of scope
 

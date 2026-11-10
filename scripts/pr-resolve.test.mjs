@@ -207,7 +207,7 @@ test('the scratch repo carries the plan pending closes: without them a closed ch
       assert.ok(fs.existsSync(path.join(work, 'plan/pending/904.1.md')), 'the pending close is copied')
       checkDeadlines(work) // throws when red
       fs.rmSync(path.join(work, 'plan/pending/904.1.md'))
-      assert.throws(() => checkDeadlines(work), /Item "Item ZC"/, 'without the copy the close is lost')
+      assert.throws(() => checkDeadlines(work), /Item "Item ZC" has Status \[x\], but its rows say \[ \]/, 'without the copy the close is lost')
     } finally {
       fs.rmSync(dir, { recursive: true, force: true })
     }
