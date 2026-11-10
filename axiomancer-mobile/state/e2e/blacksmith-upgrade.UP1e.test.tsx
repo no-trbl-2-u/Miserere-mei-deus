@@ -2,8 +2,10 @@
  * Hermetic screen test — the blacksmith's card upgrade (Phase UP1e, A8).
  *
  * Drives the real anvil screen on a real store: the player sets their dice
- * on the anvil, picks UPGRADE A CARD beside HONE, TEMPER and SWAP, taps a
- * card on the shared upgrade screen, confirms, and pays. The deck then holds
+ * on the anvil, picks UPGRADE A CARD beside HONE, TEMPER and SWAP, turns the
+ * shared upgrade screen's wheel to a card (the string of beads, UP1i),
+ * upgrades it (through the centre bead's accessibility action here; the rest
+ * site's suite holds HOLD), and pays. The deck then holds
  * `<id>+` in place of one copy, the purse is 5 shillings lighter, and a
  * second upgrade in the same visit is refused. A purse short of 5, or a deck
  * with nothing left to upgrade, greys the offer and names why.
@@ -22,6 +24,7 @@ import BlacksmithScreen from '@/app/blacksmith/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { beginBlacksmithAction } from '@/state/blacksmith/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
+import { bringToCentre, centreBeadLabel, upgradeByA11yAction } from '@/test-utils/cardUpgrade';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 jest.mock('@/lib/platform/router', () => ({
@@ -81,9 +84,11 @@ describe('blacksmith: upgrade a card (Phase UP1e)', () => {
         fireEvent.press(r.getByTestId('blacksmith-offer-upgrade'));
         expect(r.getByTestId('card-upgrade-sheet')).toBeTruthy();
         expect(r.getByTestId('card-upgrade-price')).toHaveTextContent(/5 shillings/);
-        fireEvent.press(r.getByTestId('card-upgrade-row-grey-strike'));
-        expect(r.getByTestId('card-upgrade-locked')).toHaveTextContent(/\?\?\?/);
-        fireEvent.press(r.getByTestId('card-upgrade-confirm'));
+        bringToCentre('grey-strike', r);
+        expect(centreBeadLabel(r).startsWith(getCardById('grey-strike')!.name)).toBe(true);
+        // Turning the wheel commits nothing: the purse is whole until the upgrade.
+        expect((store.getState() as unknown as { player: { currency: number } }).player.currency).toBe(40);
+        upgradeByA11yAction(r);
 
         const after = getCardById('grey-strike+')!;
         expect(r.getByTestId('blacksmith-card-cost')).toHaveTextContent('−5 SHILLINGS');

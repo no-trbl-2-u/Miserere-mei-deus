@@ -1,22 +1,40 @@
 /**
- * The shared card-upgrade screen's copy (Phase UP1d). The rest site uses it
- * now; the blacksmith and the elite reward reuse it. Neutral register, so it
- * can be rethemed without touching the component or the presenter.
+ * The shared card-upgrade screen's copy (Phase UP1d; the string of beads,
+ * UP1i). The rest site, the blacksmith and the elite reward all use it.
+ * Neutral register, so it can be rethemed without touching the component or
+ * the presenter. The screen prints only HOLD and the change line; the rest is
+ * what a screen reader says.
  */
 
-export const CARD_UPGRADE_SHEET_TITLE = 'WHAT GETS SHARPER';
-export const CARD_UPGRADE_SHEET_INTRO =
-    'Pick one card. Every copy you carry stays as it is but the one you work.';
-export const CARD_UPGRADE_NOW_LABEL = 'NOW';
-export const CARD_UPGRADE_AFTER_LABEL = 'AFTER';
-export const CARD_UPGRADE_LOCKED_LABEL = '???';
-export const CARD_UPGRADE_LOCKED_NOTE = 'Another way this card could grow. Not yet.';
-export const CARD_UPGRADE_CONFIRM_LABEL = 'UPGRADE IT';
-export const CARD_UPGRADE_PICK_HINT = 'Tap a card to see what the upgrade does.';
-export const CARD_UPGRADE_FREE_TAG = 'NO DIE';
-export const CARD_UPGRADE_PAID_TAG = '+DIE';
+/** The one printed control: held, it upgrades the card on the centre bead. */
+export const CARD_UPGRADE_HOLD_LABEL = 'HOLD';
 
 /** 'UPGRADE 1 OF 3': which upgrade this is, out of the card's rarity limit. */
 export function cardUpgradeStepLabel(step: number, limit: number): string {
     return `UPGRADE ${step} OF ${limit}`;
 }
+
+/** A bead's count mark when the deck carries the card more than once: '×3'. */
+export function cardUpgradeCountMark(count: number): string | null {
+    return count > 1 ? `×${count}` : null;
+}
+
+/** What a screen reader says for a bead: the card, its copies, which upgrade. */
+export function cardUpgradeBeadA11yLabel(name: string, count: number, stepLabel: string, centre: boolean): string {
+    const copies = count > 1 ? `, ${count} copies` : '';
+    return centre ? `${name}${copies}, ${stepLabel}, on the centre bead` : `${name}${copies}`;
+}
+
+/** The hint on a side bead: tapping it turns the wheel, never upgrades. */
+export const CARD_UPGRADE_SIDE_BEAD_HINT = 'Turns the wheel to bring this card to the centre.';
+
+/** The centre bead's accessibility action, the screen reader's way to upgrade without the hold. */
+export function cardUpgradeA11yActionLabel(name: string): string {
+    return `Upgrade ${name}`;
+}
+
+/** HOLD, read aloud. */
+export function cardUpgradeHoldA11yLabel(name: string): string {
+    return `Hold to upgrade ${name}`;
+}
+export const CARD_UPGRADE_HOLD_A11Y_HINT = 'Keep holding until the ring closes. Letting go early upgrades nothing.';

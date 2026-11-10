@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import { cardLibrary, getCardById, upgradeLimit } from '@mechanics';
@@ -26,6 +26,7 @@ import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
 import { OFFER_TILE_CHROME, SPOILS_INK, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
+import { centreBeadLabel, upgradeByA11yAction } from '@/test-utils/cardUpgrade';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // The three real library cards the reward draft offers: the grey office.
@@ -283,11 +284,13 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         expect(screen.getByText(`chance picked ${name}`)).toBeTruthy();
         fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
         expect(screen.getByTestId('card-upgrade-sheet')).toBeTruthy();
-        fireEvent.press(screen.getByTestId(`card-upgrade-row-${RARE}`));
-        expect(screen.getByTestId('card-upgrade-now-name').props.children).toBe(name);
-        expect(screen.getByTestId('card-upgrade-after-name').props.children).toBe(getCardById(`${RARE}+`)!.name);
-        expect(screen.getByTestId('card-upgrade-locked')).toBeTruthy();
-        fireEvent.press(screen.getByTestId('card-upgrade-confirm'));
+        // One card: a single bead, already on the centre, and nothing to turn to.
+        expect(centreBeadLabel().startsWith(name)).toBe(true);
+        expect(screen.queryAllByTestId(/^card-upgrade-bead-/)).toHaveLength(0);
+        expect(within(screen.getByTestId('card-upgrade-now')).getByTestId('combat-card-face-name')).toHaveTextContent(name);
+        expect(within(screen.getByTestId('card-upgrade-after')).getByTestId('combat-card-face-name'))
+            .toHaveTextContent(getCardById(`${RARE}+`)!.name);
+        upgradeByA11yAction();
         expect(onUpgrade).toHaveBeenCalledWith(RARE);
         expect(onPick).not.toHaveBeenCalled();
     });
