@@ -9,7 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadConfig } from './config.mjs';
 import { parsePending, pendingFiles } from './pending.mjs';
-import { applyPlanChanges, holdBack, settleOrder, tookLastChunk } from './settle.mjs';
+import { retireSpec } from './retire-local.mjs'; // Miserere: the view retires a spec as settle does
+import { applyPlanChanges, holdBack, holdReason, settleOrder, tookLastChunk } from './settle.mjs';
 
 /**
  * The settled view of the checkout at `root`: `read(rel)` gives a repo-relative file's text (\r\n read as \n) with
@@ -19,7 +20,9 @@ import { applyPlanChanges, holdBack, settleOrder, tookLastChunk } from './settle
  * `07.10`). `only(path)` limits the changes applied to the files it accepts (a copy of plan/ alone has no root
  * README.md). `held` is each file whose changes would leave a spec with no chunk at the end, file → why: as settle
  * holds it back, its changes stay out of the view and it is no problem, so a file waiting on a hand keeps every other
- * branch's plan checks green. A close that would empty a spec needs no holding here: the view never applies a close.
+ * branch's plan checks green. The view never applies a close, but a close's `## Edit` can take a spec's last chunk line: when
+ * its `absorb:` speaks for that spec, the spec is retired in the view the way settle retires it (file, rows, archive line),
+ * so plan-check agrees with settle; one without `absorb:` is held, as settle holds it.
  */
 export function settledView(root, { only = () => true, cfg = loadConfig(root) } = {}) {
   const changed = new Map();
@@ -39,11 +42,12 @@ export function settledView(root, { only = () => true, cfg = loadConfig(root) } 
     }
   }
   const unparsed = problems.length;
+  let emptiedBy = new Map();
   const held = holdBack((out) => {
     changed.clear();
     numbers.clear();
     problems.length = unparsed;
-    const emptiedBy = new Map();
+    emptiedBy = new Map();
     for (const p of settleOrder(parsed).filter((x) => !out.has(x.file))) {
       // One file's changes land together or not at all, as settle's transaction does.
       const tx = new Map();
@@ -65,5 +69,10 @@ export function settledView(root, { only = () => true, cfg = loadConfig(root) } 
     }
     return { emptiedBy, read };
   });
+  // Miserere: a spec an absorbing close empties retires here as it does in settle (the same test, then the same writes).
+  for (const [spec, p] of emptiedBy) {
+    if (!holdReason({ ...p, absorb: null }, spec, read(spec)) || holdReason(p, spec, read(spec))) continue;
+    for (const [file, text] of retireSpec({ spec, p, read, queue: cfg.queue }).writes) if (only(file)) changed.set(file, text);
+  }
   return { read, problems, pending: parsed.length, changed: [...changed.keys()], numbers, held };
 }

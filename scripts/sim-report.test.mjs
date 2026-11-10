@@ -373,8 +373,13 @@ test('sim-runs.yml has a report job on measured-truth\'s push path', () => {
   const job = text.slice(text.indexOf('\n  report:'))
   assert.ok(job.length > 0, 'a report job')
   assert.match(job, /needs: sim\b/)
-  assert.match(job, /if: always\(\) && needs\.sim\.result != 'skipped'/)
-  assert.match(job, /github\.event_name == 'schedule' \|\| \(github\.event_name == 'workflow_dispatch' && \(inputs\.ref \|\| 'main'\) == 'main'\)/)
+  // The whole condition, so a clause dropped from it (the sha, the main-only dispatch) fails here.
+  assert.ok(
+    job.includes(
+      "    if: always() && needs.sim.result != 'skipped' && needs.sim.outputs.sha != '' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && (inputs.ref || 'main') == 'main'))\n",
+    ),
+    'the report job runs only on the schedule or a dispatch run at main on main, and only with a sha',
+  )
   assert.match(job, /permissions:\n\s+contents: write/)
   assert.match(job, /group: nexus-loop/)
   assert.match(job, /GH_PAT \|\| github\.token/)
@@ -385,4 +390,45 @@ test('sim-runs.yml has a report job on measured-truth\'s push path', () => {
   assert.match(job, /git pull --rebase origin/)
   // Only the report job writes; the batch job stays read-only.
   assert.doesNotMatch(text.slice(0, text.indexOf('\n  report:')), /contents: write/)
+})
+
+// The pieces the report job leans on across jobs: the sha the batch records, the artifact the breaks ride in, and
+// what the push does when a report queued behind another one conflicts.
+test('sim-runs.yml hands the sha and the breaks file from the batch to the report, and resolves a report conflict', () => {
+  const text = fs.readFileSync(new URL('../.github/workflows/sim-runs.yml', import.meta.url), 'utf-8')
+  const sim = text.slice(0, text.indexOf('\n  report:'))
+  const job = text.slice(text.indexOf('\n  report:'))
+  // The sha: recorded by a step with the id the output reads, passed on as SIM_SHA.
+  assert.match(sim, /outputs:\n      sha: \$\{\{ steps\.sha\.outputs\.sha \}\}/)
+  assert.match(sim, /- name: Record the sha the bots play\n        id: sha\n        run: echo "sha=\$\(git rev-parse HEAD\)" >> "\$GITHUB_OUTPUT"/)
+  assert.match(job, /SIM_SHA: \$\{\{ needs\.sim\.outputs\.sha \}\}/)
+  // The breaks: uploaded as `sim-breaks` from one file, downloaded by the same name into the directory the step reads.
+  assert.match(sim, /uses: actions\/upload-artifact@v4\n        with:\n          name: sim-breaks\n          path: \$\{\{ runner\.temp \}\}\/sim-breaks\.jsonl\n/)
+  assert.match(job, /uses: actions\/download-artifact@v4\n        with:\n          name: sim-breaks\n          path: \$\{\{ runner\.temp \}\}\/sim-breaks\n/)
+  assert.match(job, /\[ -f "\$RUNNER_TEMP\/sim-breaks\/sim-breaks\.jsonl" \] && breaks="--breaks \$RUNNER_TEMP\/sim-breaks\/sim-breaks\.jsonl"/)
+  assert.match(job, /name: Fetch the night's breaks\n        continue-on-error: true/, 'a night with no breaks has no artifact and still reports')
+  // The conflict handler: history keeps main's lines plus this run's last, latest.md is this run's, anything else gives up.
+  const resolve = job.slice(job.indexOf('resolve_report() {'), job.indexOf('for delay in'))
+  assert.match(resolve, /docs\/reports\/sim\/history\.jsonl\)\n\s+\{ git show ":2:\$f"; git show ":3:\$f" \| tail -n 1; \} > "\$f" ;;/)
+  assert.match(resolve, /docs\/reports\/sim\/latest\.md\)\n\s+git show ":3:\$f" > "\$f" ;;/)
+  assert.match(resolve, /\*\) return 1 ;;/)
+  assert.match(resolve, /GIT_EDITOR=true git rebase --continue/)
+  assert.match(job, /git pull --rebase origin "\$branch" \|\| resolve_report/)
+})
+
+test('a break whose issue was closed links it as closed, and as not planned when it was', async () => {
+  const t = setup()
+  try {
+    const file = path.join(t.dir, 'breaks.jsonl')
+    const brk = (node, seed) => ({ key: `rusher:breakwater/${node}:stuck`, kind: 'stuck', persona: 'rusher', characterId: 'the-chosen', seed, buildCommit: BUILD, message: 'm', state: { map: 'breakwater', node } })
+    fs.writeFileSync(file, [brk('n3', 2), brk('n4', 3)].map((b) => JSON.stringify(b)).join('\n') + '\n')
+    const issue = (number, state_reason) => ({ number, state: 'closed', state_reason, html_url: `https://github.test/i/${number}`, created_at: '2026-11-01T00:00:00Z' })
+    const byKey = { 'rusher:breakwater/n3:stuck': issue(8, 'completed'), 'rusher:breakwater/n4:stuck': issue(9, 'not_planned') }
+    const gh = () => ({ status: 0, stderr: '', stdout: JSON.stringify(Object.entries(byKey).map(([key, i]) => ({ ...i, body: `<!-- sim-break-key: ${key} -->` }))) })
+    const r = await run(['--build', BUILD, '--out', t.out, '--breaks', file, '--repo', 'o/r'], { gh })
+    assert.equal(r.code, 0, r.stderr)
+    const md = fs.readFileSync(path.join(t.out, 'latest.md'), 'utf-8')
+    assert.match(md, /\[#8\]\(https:\/\/github\.test\/i\/8\) closed \|/)
+    assert.match(md, /\[#9\]\(https:\/\/github\.test\/i\/9\) closed as not planned \|/)
+  } finally { t.cleanup() }
 })

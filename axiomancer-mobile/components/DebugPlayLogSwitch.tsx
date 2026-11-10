@@ -5,9 +5,10 @@
  * survives a restart. On by default only while T is the only player.
  *
  * The sub line says whether anything would actually be sent: the switch is
- * one of three gates (`lib/playLog.ts`), and a build without the API URL and
- * token sends nothing whatever the switch says. Renders null outside dev
- * builds.
+ * one of two gates (`lib/playLog.ts`: the API URL and token baked in, and this
+ * switch where dev tools are on), and a build without the API URL and token
+ * sends nothing whatever the switch says. Renders null outside dev builds,
+ * where there is no switch and a build with the URL and token posts.
  */
 
 import React from 'react';

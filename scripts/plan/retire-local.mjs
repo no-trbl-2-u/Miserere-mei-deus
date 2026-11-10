@@ -14,9 +14,9 @@
 // settle.mjs calls in here from lines marked `// Miserere:`, so a kit sync keeps them.
 import path from 'node:path';
 
-/** The words the hold adds for a close with no `absorb:` (A3): the key it is missing, and what it takes. */
+/** The words the hold adds for a close with no `absorb:` (A3): the key it is missing, and what it takes. A close that has one says nothing (its key speaks for another spec). */
 export function absorbHint(p) {
-  return p.close ? `; or give this close the missing "absorb:" key (where the spec's lasting rules went: D?<slug> decisions in this file, a file named, or none) and settle retires the spec` : '';
+  return p.close && !p.absorb ? `; or give this close the missing "absorb:" key (where the spec's lasting rules went: D?<slug> decisions in this file, a file named, or none) and settle retires the spec` : '';
 }
 
 /** Whether `p`'s `absorb:` speaks for `spec`: only the spec its own close empties. */
@@ -29,8 +29,8 @@ export function specTitle(readme, name, text) {
   const row = (readme ?? '').split('\n').find((l) => /^\|/.test(l) && l.includes(`](${name})`));
   const cell = row?.split('|')[2]?.trim();
   if (cell) return cell;
-  const head = /^# (.+)$/m.exec(text ?? '')?.[1] ?? name;
-  return head.replace(/^\d{2,}\s*[·—–-]\s*/, '').trim();
+  const head = /^# (.+)$/m.exec(text ?? '')?.[1];
+  return head ? head.replace(/^\d{2,}\s*[·—–-]\s*/, '').trim() : name;
 }
 
 /** Every section of `text` whose heading (any level) says "Follow-ups": [{ heading, level, lines }]. */
@@ -41,7 +41,8 @@ export function followUps(text) {
   for (let i = 0; i < lines.length; i++) {
     if (/^(```|~~~)/.test(lines[i])) fenced = !fenced;
     const m = !fenced && /^(#{1,6}) (.*)$/.exec(lines[i]);
-    if (!m || !/follow-ups/i.test(m[2])) continue;
+    // Not the title (`# 167 — Follow-ups from a pilot` is the whole spec, not a section of it).
+    if (!m || m[1].length === 1 || !/follow-ups/i.test(m[2])) continue;
     const level = m[1].length;
     let end = i + 1;
     for (let inner = false; end < lines.length; end++) {
@@ -56,6 +57,9 @@ export function followUps(text) {
   }
   return out;
 }
+
+// The fixed fields of a CANDIDATES row (scripts/check-plan-queues.mjs), which a carried body line must not repeat.
+const ROW_FIELD = /^- (proposed|source signals|rationale|proposed scope|conflicts|estimated phases):/;
 
 /**
  * The CANDIDATES row carrying `sections` (followUps) of spec `num`: its own `### [ ] [owner]` header and fields, then
@@ -72,11 +76,11 @@ export function followUpsRow(num, title, file, date, sections) {
   for (const s of sections) {
     const shift = 4 - s.level;
     out.push('', `#### ${s.heading}`);
-    let fenced = false;
+    // The queue lint reads every line, fences included: a fenced `#` line shifts like a heading, and a body line shaped
+    // like one of the row's own fields (`- proposed:`) is indented so it does not read as that field twice.
     for (const l of s.lines) {
-      if (/^(```|~~~)/.test(l)) fenced = !fenced;
-      const h = !fenced && /^(#{1,6}) (.*)$/.exec(l);
-      out.push(h ? `${'#'.repeat(Math.min(6, Math.max(4, h[1].length + shift)))} ${h[2]}` : l);
+      const h = /^(#{1,6}) (.*)$/.exec(l);
+      out.push(h ? `${'#'.repeat(Math.min(6, Math.max(4, h[1].length + shift)))} ${h[2]}` : ROW_FIELD.test(l) ? `  ${l}` : l);
     }
   }
   return out.join('\n');
