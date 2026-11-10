@@ -476,8 +476,7 @@ main once the PR merges. The chunk's spec, `plan/README.md` and
 `ARCHIVE.md` are not touched. In the same commit re-derive the deadline
 Items' Status cells: the deadline tools read a pending close as done, so
 if it finishes an Item, `scripts/check-deadlines.mjs` fails the root
-`npm test` until `plan/deadlines.md` says so (phase DL1b). A chunk listed
-under `## Unscheduled` loses that line in the same commit:
+`npm test` until `plan/deadlines.md` says so (phase DL1b).:
 
 ```bash
 node scripts/deadlines.mjs --write && git checkout -- LIVE_DEADLINES.md

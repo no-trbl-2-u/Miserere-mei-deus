@@ -89,17 +89,7 @@ function addUnscheduled(md, id) {
   return md.replace('\n## How a window closes', `- ${id} — fixture; date not set.\n\n## How a window closes`).replace(/\n\n\n## How a window closes/, '\n\n## How a window closes')
 }
 
-/** A line at the head of the Unscheduled list, away from the tail every plot appends to. */
-const addUnscheduledFirst = (md, id) => {
-  const at = md.indexOf('\n## Unscheduled\n')
-  const head = md.slice(0, at)
-  const tail = md.slice(at).replace(/^- (\S+) — /m, `- ${id} — fixture; date not set.\n- $1 — `)
-  return head + tail
-}
-
 const addChangeLog = (md, what) => md.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **${what}** (T).\n`)
-
-const dropUnscheduled = (md, id) => md.replace(new RegExp(`^- ${id} — .*\\n`, 'm'), '')
 
 /**
  * A scratch bare origin and a clone of it holding the live plan files, the
@@ -143,10 +133,11 @@ function branchWith(work, branch, edit) {
   git(work, 'switch', '-q', 'main')
 }
 
+// The live plan is the queue model (T, 2026-11-10): it lists T's acts only, so a plot adds an Item and a
+// change-log line, and its loop chunk (`${tag}2`) needs no line there.
 const plot = (tag, due) => (dir) => {
   addSpec(dir, tag, [`${tag}1`, `${tag}2`])
-  let d = addItem(read(dir, DEADLINES), `Item ${tag}`, due, `${tag}1`)
-  d = addUnscheduled(d, `${tag}2`)
+  const d = addItem(read(dir, DEADLINES), `Item ${tag}`, due, `${tag}1`)
   write(dir, DEADLINES, addChangeLog(d, `plot ${tag}`))
 }
 
@@ -154,22 +145,20 @@ const checkDeadlines = (dir) =>
   execFileSync(process.execPath, ['scripts/check-deadlines.mjs'], { cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
 
 test('two plot branches settle through mergeMain: no Haiku entry, every added row once, Status re-derived, check-deadlines green', () => {
-  // ZS1 is an open row under Unscheduled; plot B gives it an Item while main ships it.
+  // ZS1 is an open row with no Item; plot B gives it one while main ships it.
   const { dir, work } = scratch((d) => {
     addSpec(d, 'ZS', ['ZS1'])
-    write(d, DEADLINES, addUnscheduledFirst(read(d, DEADLINES), 'ZS1'))
   })
   try {
     assert.equal(checkDeadlines(work).length > 0, true, 'the base passes check-deadlines')
-    branchWith(work, 'plot-a', plot('ZA', '2026-10-30'))
+    branchWith(work, 'plot-a', plot('ZA', '2026-11-13'))
     branchWith(work, 'plot-b', (d) => {
-      plot('ZB', '2026-10-29')(d)
-      write(d, DEADLINES, addItem(dropUnscheduled(read(d, DEADLINES), 'ZS1'), 'Item ZS', '2026-10-31', 'ZS1'))
+      plot('ZB', '2026-11-12')(d)
+      write(d, DEADLINES, addItem(read(d, DEADLINES), 'Item ZS', '2026-11-14', 'ZS1'))
     })
-    // main: plot A merges by the merge button, then ZS1 ships (its Unscheduled line goes).
+    // main: plot A merges by the merge button, then ZS1 ships.
     git(work, 'merge', '-q', '--no-edit', '--no-ff', 'plot-a')
     shipChunk(work, 'ZS', 'ZS1')
-    write(work, DEADLINES, dropUnscheduled(read(work, DEADLINES), 'ZS1'))
     git(work, 'commit', '-q', '-am', 'ship ZS1')
     git(work, 'push', '-q', 'origin', 'main')
 
@@ -183,11 +172,11 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
     for (const needle of ['alias: ZA1', 'alias: ZA2', 'alias: ZB1', 'alias: ZB2', '(alias: ZS1)']) {
       assert.equal(count(plan, needle), 1, `plan: ${needle}`)
     }
-    for (const needle of ['| Item ZA |', '| Item ZB |', '| Item ZS |', '- ZA2 —', '- ZB2 —', 'plot ZA**', 'plot ZB**']) {
+    for (const needle of ['| Item ZA |', '| Item ZB |', '| Item ZS |', 'plot ZA**', 'plot ZB**']) {
       assert.equal(count(dl, needle), 1, `deadlines: ${needle}`)
     }
     assert.ok(!/^(<{7}|={7}|>{7})/m.test(plan + dl), 'no conflict marker')
-    assert.match(dl, /\| \[x\] \| 2026-10-31 \| Item ZS \|/, 'the Status main made stale is re-derived')
+    assert.match(dl, /\| \[x\] \| 2026-11-14 \| Item ZS \|/, 'the Status main made stale is re-derived')
     assert.ok(dl.indexOf('| Item ZB |') < dl.indexOf('| Item ZA |'), 'new Items stay in due-date order')
     const head = git(work, 'rev-list', '--parents', '-n', '1', 'HEAD').trim().split(' ')
     assert.equal(head.length, 3, 'HEAD is the merge commit')
@@ -200,8 +189,8 @@ test('two plot branches settle through mergeMain: no Haiku entry, every added ro
   }
 })
 
-test('the scratch repo carries the plan pending closes: without them a closed chunk reads open with no home', () => {
-  // A live plan with a fixture chunk (904.1, alias ZC1) closed by a pending file and carrying no Unscheduled line, as /next's close
+test('the scratch repo carries the plan pending closes: without them a closed chunk reads open and its Item goes stale', () => {
+  // A live plan with a fixture chunk (904.1, alias ZC1) closed by a pending file, and a ticked Item naming it, as /next's close
   // leaves it. A fixture, not a real chunk, so the test does not depend on which chunks the live plan has settled.
   const live = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-resolve-live-'))
   try {
@@ -211,13 +200,14 @@ test('the scratch repo carries the plan pending closes: without them a closed ch
     // The real pending files too: a pending plot adds Unscheduled lines whose rows live only there (plot 137, CF1e/CF1f).
     for (const n of fs.readdirSync(path.join(ROOT, 'plan', 'pending')).filter((n) => n.endsWith('.md'))) fs.copyFileSync(path.join(ROOT, 'plan', 'pending', n), path.join(live, 'plan', 'pending', n))
     addSpec(live, 'ZC', ['ZC1'])
+    write(live, DEADLINES, addItem(read(live, DEADLINES), 'Item ZC', '2026-11-12', 'ZC1').replace('| [ ] | 2026-11-12 | Item ZC |', '| [x] | 2026-11-12 | Item ZC |'))
     write(live, 'plan/pending/904.1.md', ['---', 'close: 904.1', 'date: 2026-11-01', 'says: fixture chunk ZC1 shipped', '---', ''].join('\n'))
     const { dir, work } = scratch(undefined, live)
     try {
       assert.ok(fs.existsSync(path.join(work, 'plan/pending/904.1.md')), 'the pending close is copied')
       checkDeadlines(work) // throws when red
       fs.rmSync(path.join(work, 'plan/pending/904.1.md'))
-      assert.throws(() => checkDeadlines(work), /open row ZC1 \[ \] has no Item/, 'without the copy the close is lost')
+      assert.throws(() => checkDeadlines(work), /Item "Item ZC"/, 'without the copy the close is lost')
     } finally {
       fs.rmSync(dir, { recursive: true, force: true })
     }

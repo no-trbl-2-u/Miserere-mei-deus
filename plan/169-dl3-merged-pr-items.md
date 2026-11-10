@@ -12,7 +12,7 @@
 
 ### What exists today
 
-- **`scripts/check-deadlines.mjs`** (in the root `npm test`): fails on an open chunk with no Item and no `## Unscheduled` line, an Item naming a missing row, a date outside its window, a stale phase Status, a loop row in an Item's `Rows`. It reads `plan/deadlines.md` and the build plan only. It never reads git history.
+- **`scripts/check-deadlines.mjs`** (in the root `npm test`): fails on an Item naming a missing row, a date outside its window, a stale phase Status, a loop row in an Item's `Rows`. It reads `plan/deadlines.md` and the build plan only. It never reads git history.
 - **`scripts/deadlines-lib.mjs`:** parses the Items table (Status, Due, Item, Rows, Waits on).
 - **A `T` or `needs plot` Item's Status** is set by hand and by nothing else.
 - **Merged pull requests on `main`:** a merge commit's subject is `Merge pull request #N from ...`; a squash merge's subject ends `(#N)`.

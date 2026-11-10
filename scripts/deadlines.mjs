@@ -16,7 +16,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readPlanSources } from './check-deadlines.mjs'
-import { dueNeeds, liveMarkdown, nextNeed, parseItems, planRows, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
+import { dueNeeds, liveMarkdown, nextNeed, parseBudget, parseItems, planRows, queuePlan, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -49,11 +49,14 @@ const main = () => {
     const items = parseItems(deadlinesMd)
     const needs = dueNeeds(items, phases, today)
     const next = nextNeed(items, phases, today)
+    // The queue model (a `## Budget` section): forecast per milestone and this week's acts.
+    const budget = parseBudget(deadlinesMd)
+    const queue = budget ? queuePlan(items, phases, today, budget) : null
     if (flag('write')) {
-        fs.writeFileSync(path.join(ROOT, 'LIVE_DEADLINES.md'), liveMarkdown(needs, next, today))
+        fs.writeFileSync(path.join(ROOT, 'LIVE_DEADLINES.md'), liveMarkdown(needs, next, today, queue))
         return
     }
-    process.stdout.write(`${reminderText(needs, next, today)}\n`)
+    process.stdout.write(`${reminderText(needs, next, today, queue)}\n`)
 }
 
 try {

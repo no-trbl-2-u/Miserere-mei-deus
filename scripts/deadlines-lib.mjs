@@ -18,6 +18,11 @@
 // act needs. They never tick the Item; the reminder names the open ones beside the act.
 // Everything the loop can finish alone stays silent.
 //
+// Since 2026-11-10 the live file is the queue model (the last section of this file): a
+// `## Budget` of hours a week, acts that carry their milestone's date, and a reminder that
+// forecasts each milestone and lists this week's acts. A file without `## Budget` keeps the
+// dated reminder above.
+//
 // A row id resolves from the build plan or, from the nexus v2 cut-over on, from a v2
 // spec chunk's `alias:` (planRows below, phase NX1c); every rule above reads the same.
 
@@ -437,8 +442,9 @@ export const nextNeed = (items, phases, today, horizon = HORIZON_DAYS) =>
 
 const dayName = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' })
 
-/** The short block the session-start hook prints. */
-export const reminderText = (needs, next, today) => {
+/** The short block the session-start hook prints. With a queue plan (queuePlan), the queue shape. */
+export const reminderText = (needs, next, today, queue = null) => {
+    if (queue) return queueReminderText(queue, today)
     const head = `DEADLINE REMINDER (${today}; plan/deadlines.md, next 2 weeks in LIVE_DEADLINES.md). Lead your first reply with this list:`
     if (!needs.length) {
         const tail = next ? ` Next: ${next.name} (${next.kind}), due ${dayName(next.due)}, ${whenText(next.days)}.` : ''
@@ -448,8 +454,9 @@ export const reminderText = (needs, next, today) => {
     return [head, ...lines].join('\n')
 }
 
-/** LIVE_DEADLINES.md: the next two weeks, regenerated daily by .github/workflows/deadlines.yml. */
-export const liveMarkdown = (needs, next, today) => {
+/** LIVE_DEADLINES.md: regenerated daily by .github/workflows/deadlines.yml. With a queue plan, the queue shape. */
+export const liveMarkdown = (needs, next, today, queue = null) => {
+    if (queue) return queueLiveMarkdown(queue, today)
     const rows = needs.map((n) => `| ${n.due} (${whenText(n.days)}) | ${n.name} | ${n.kind}: ${n.detail} | ${n.window} |`)
     const body = rows.length
         ? ['| Due | Item | What it needs | Window |', '|---|---|---|---|', ...rows].join('\n')
@@ -466,3 +473,128 @@ export const liveMarkdown = (needs, next, today) => {
         '',
     ].join('\n')
 }
+
+// The queue model (T, 2026-11-10). The Items table is an ordered queue of T's acts: every
+// act carries the date of the milestone it serves, never a date of its own, and its hours
+// in its name. `## Budget` states the hours a week T gives. The reminder then says two
+// things: whether each milestone fits the hours left before it, and which acts fit this week.
+
+const BUDGET_LINE = /^Hours a week:\s*(\d+(?:\.\d+)?)\s*$/m
+
+/** The `## Budget` section's hours a week, or null when the file has none (the dated model). */
+export const parseBudget = (md) => {
+    const m = section(md, 'Budget').match(BUDGET_LINE)
+    return m && Number(m[1]) > 0 ? Number(m[1]) : null
+}
+
+const HOURS = /\((?:[^()]*,\s*)?(\d+(?:\.\d+)?)\s*h\)/g
+
+/** The hours an act's name states in its last "(… N h)", or null when it states none. */
+export const itemHours = (name) => {
+    const all = [...name.matchAll(HOURS)]
+    return all.length ? Number(all[all.length - 1][1]) : null
+}
+
+const addDays = (today, days) => new Date(Date.parse(`${today}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10)
+const round1 = (n) => Math.round(n * 10) / 10
+
+/**
+ * The queue's state on `today` at `hoursPerWeek`.
+ * `milestones`: one per distinct due date, earliest first, each with the open acts and hours
+ * queued up to and including it (`cumHours`), the hours T has before it (`available`), the
+ * shortfall (`overBy`, 0 when it fits) and the day the queue reaches its end at this pace.
+ * `week`: the open acts T can do now, in table order, until the week's hours are spent (the
+ * first always shows). `later`: how many more T can do now. `waiting`: open acts whose
+ * `Waits on` rows the loop has not shipped. `noHours`: open acts that state no hours.
+ */
+export const queuePlan = (items, phases, today, hoursPerWeek) => {
+    const open = items
+        .map((item) => ({ item, need: itemNeed(item, phases), hours: itemHours(item.name) }))
+        .filter(({ need }) => need)
+    const dues = [...new Set(open.map(({ item }) => item.due))].sort()
+    const milestones = dues.map((due) => {
+        const upTo = open.filter(({ item }) => item.due <= due)
+        const cumHours = round1(upTo.reduce((sum, { hours }) => sum + (hours ?? 0), 0))
+        const days = daysUntil(today, due)
+        const available = round1(Math.max(0, days) * hoursPerWeek / 7)
+        return {
+            due,
+            days,
+            acts: open.filter(({ item }) => item.due === due).length,
+            openHours: round1(open.filter(({ item }) => item.due === due).reduce((sum, { hours }) => sum + (hours ?? 0), 0)),
+            cumHours,
+            available,
+            overBy: round1(Math.max(0, cumHours - available)),
+            finish: addDays(today, Math.ceil(cumHours / hoursPerWeek * 7)),
+        }
+    })
+    const blocked = ({ item, need }) => need.kind === 'waiting on the loop' || owedRows(item, phases).length > 0
+    const ready = open.filter((o) => !blocked(o))
+    const week = []
+    let spent = 0
+    for (const o of ready) {
+        if (week.length && spent + (o.hours ?? 0) > hoursPerWeek) break
+        spent += o.hours ?? 0
+        week.push({ name: o.item.name, due: o.item.due, kind: o.need.kind, detail: o.need.detail, hours: o.hours })
+    }
+    return {
+        hoursPerWeek,
+        milestones,
+        week,
+        later: ready.length - week.length,
+        waiting: open.filter(blocked).map(({ item }) => ({ name: item.name, owes: owedRows(item, phases) })),
+        noHours: open.filter(({ hours }) => hours === null).map(({ item }) => item.name),
+    }
+}
+
+const fitText = (m) =>
+    m.overBy > 0
+        ? `over by ${m.overBy} h; at this pace the queue reaches it ${dayName(m.finish)}`
+        : `fits, with ${round1(m.available - m.cumHours)} h to spare`
+
+const milestoneLine = (m) =>
+    `${dayName(m.due)} (${whenText(m.days)}): ${m.acts} act${m.acts === 1 ? '' : 's'} open, ${m.cumHours} h queued up to it, ${m.available} h available: ${fitText(m)}.`
+
+const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
+
+const queueReminderText = (queue, today) => {
+    const head = `DEADLINE REMINDER (${today}; plan/deadlines.md, the queue in LIVE_DEADLINES.md). Lead your first reply with this list:`
+    if (!queue.milestones.length) return `${head}\n- The queue is empty: nothing needs T.`
+    const lines = [
+        head,
+        `Milestones, at ${queue.hoursPerWeek} h a week:`,
+        ...queue.milestones.map((m) => `- ${milestoneLine(m)}`),
+        `This week's acts, in order (${queue.hoursPerWeek} h):`,
+        ...queue.week.map((w) => `- ${w.name} — ${w.kind} (${w.detail}).`),
+    ]
+    if (!queue.week.length) lines.push('- Nothing is ready for T: every open act waits on the loop.')
+    const tail = [
+        queue.later ? `${queue.later} more ready after these` : '',
+        queue.waiting.length ? `${queue.waiting.length} wait on the loop (${[...new Set(queue.waiting.flatMap((w) => w.owes))].join(', ')})` : '',
+        queue.noHours.length ? `${queue.noHours.length} state no hours` : '',
+    ].filter(Boolean)
+    if (tail.length) lines.push(`Then: ${tail.join('; ')}.`)
+    return lines.join('\n')
+}
+
+const queueLiveMarkdown = (queue, today) => [
+    '# Live deadlines — the queue',
+    '',
+    `> Generated ${today} by \`node scripts/deadlines.mjs --write\` from \`plan/deadlines.md\` (the whole plan) and the`,
+    '> build plan. Do not edit by hand: change `plan/deadlines.md`. An act has no date of its own: it serves a',
+    `> milestone, and the queue's order is its priority. The forecast assumes ${queue.hoursPerWeek} h a week.`,
+    '',
+    '## Milestones',
+    '',
+    ...(queue.milestones.length ? queue.milestones.map((m) => `- **${m.due}** — ${milestoneLine(m)}`) : ['The queue is empty: nothing needs T.']),
+    '',
+    `## This week (${queue.hoursPerWeek} h)`,
+    '',
+    ...(queue.week.length
+        ? ['| # | Act | Hours | What it needs |', '|---|---|---|---|', ...queue.week.map((w, i) => `| ${i + 1} | ${w.name} | ${w.hours ?? '-'} | ${w.kind}: ${w.detail} |`)]
+        : ['Nothing is ready for T.']),
+    '',
+    ...(queue.later ? [`${queue.later} more acts are ready after these.`, ''] : []),
+    ...(queue.waiting.length ? ['## Waiting on the loop', '', ...queue.waiting.map((w) => `- ${shortName(w.name)} — the loop still owes ${w.owes.join(', ') || 'its rows'}`), ''] : []),
+    ...(queue.noHours.length ? ['## No hours stated', '', ...queue.noHours.map((n) => `- ${shortName(n)}`), ''] : []),
+].join('\n')

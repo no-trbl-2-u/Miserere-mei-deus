@@ -384,25 +384,26 @@ for (const [file, step, commitStep] of [
     })
 }
 
-test('DL2b A7: /plot and /messy file a new loop row under the Waits on of a T act, never an Item of its own', () => {
+test('DL2b A7: /plot and /messy put a loop row only in the Waits on of a T act, never in an Item of its own', () => {
     const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
-    assert.match(plot, /every Item is a T act/)
-    assert.match(plot, /`Waits on` cell of the T act it\s+unblocks/)
+    assert.match(plot, /every\s+Item is a T act/)
+    assert.match(plot, /`Waits on` cell of a T act that needs it/)
     assert.match(plot, /is ticked `\[x\]` by hand/)
     const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '## 7. Miserere: kept on top of the kit')
     assert.match(messy, /Every Item is a T act/)
     assert.match(messy, /`Waits on` cell, never into an Item's\s+`Rows`/)
 })
 
-test('A9: /plot gives every chunk it adds an Item or an ## Unscheduled line', () => {
+// The queue (T, 2026-11-10): an act carries its milestone's date and its hours, and its place is its priority.
+test('A9: /plot adds a queue act with its milestone date, its hours and its place, and re-derives Status', () => {
     const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
-    assert.match(body, /Every chunk the plot added/)
-    assert.match(body, /## Unscheduled/)
+    assert.match(body, /The Items table is a queue of T's acts/)
+    assert.match(body, /milestone's date in\s+`Due` \(never a date of its own\)/)
+    assert.match(body, /hours in its name as `\(N h\)`/)
+    assert.match(body, /Never guess hours or a place for T/)
     assert.match(body, /node scripts\/deadlines\.mjs --write/)
-    // One list (T, 2026-11-03): a new Item carries its Goal and How AI helps cells and lives only in the Items table.
-    assert.match(body, /A new Item\s+fills `Goal`/)
-    assert.match(body, /`How AI helps` \(`-`\s+when nothing is known\)/)
-    assert.match(body, /lives only in the Items table/)
+    assert.match(body, /`Goal` and `How AI helps` \(`-` when\s+nothing is known\)/)
+    assert.doesNotMatch(body, /## Unscheduled/)
 })
 
 // One list (T, 2026-11-03): a dated table outside ## Items is a second schedule that ticking an Item never updates.

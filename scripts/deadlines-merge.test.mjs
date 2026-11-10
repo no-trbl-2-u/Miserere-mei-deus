@@ -332,7 +332,6 @@ test('a real git merge with the driver registered keeps both plots, and the live
     const edit = (tag, due) => {
       let text = live
       text = text.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **plot ${tag}** (T).\n`)
-      text = text.replace('\n## How a window closes', `- ${tag} — loop work; date not set.\n\n## How a window closes`)
       const lines = text.split('\n')
       const at = lines.indexOf('| Status | Due | Item | Goal | How AI helps | Window | Rows | Waits on |')
       assert.ok(at > 0)
@@ -343,14 +342,15 @@ test('a real git merge with the driver registered keeps both plots, and the live
       return lines.join('\n')
     }
     git('switch', '-q', '-c', 'plot-t')
-    fs.writeFileSync(file, edit('TT1', '2026-10-29'))
+    fs.writeFileSync(file, edit('TT1', '2026-11-12'))
     git('commit', '-q', '-am', 'plot T')
     git('switch', '-q', 'main')
-    fs.writeFileSync(file, edit('OO1', '2026-10-28'))
+    fs.writeFileSync(file, edit('OO1', '2026-11-11'))
     git('commit', '-q', '-am', 'plot O')
     git('merge', '-q', '--no-edit', 'plot-t')
     const text = fs.readFileSync(file, 'utf8')
-    for (const needle of ['Item OO1', 'Item TT1', '- OO1 —', '- TT1 —', 'plot OO1', 'plot TT1']) {
+    // The live file is the queue model: it has no `## Unscheduled` list, so a plot adds a row and a change-log line.
+    for (const needle of ['Item OO1', 'Item TT1', 'plot OO1', 'plot TT1']) {
       assert.equal(text.split(needle).length - 1, 1, needle)
     }
     assert.ok(!text.includes('<<<<<<<'))

@@ -38,7 +38,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, datedRowsOutsideItems, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, inWindow, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -135,6 +135,10 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     for (const row of datedRowsOutsideItems(deadlinesMd)) {
         errors.push(`${DEADLINES}: a dated table row sits outside ## Items ("${row}"); every dated piece is one Items row, with its Goal and How AI helps cells, so the table there is the only list to tick.`)
     }
+
+    // The queue model (a `## Budget` section; T, 2026-11-10) lists T's acts only: a loop row needs
+    // no line here, so the coverage rule below belongs to the dated model alone.
+    if (parseBudget(deadlinesMd) !== null) return errors
 
     for (const [id, row] of phases) {
         if (!row.open || namedBy.has(id) || excused.has(id)) continue

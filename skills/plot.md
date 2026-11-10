@@ -261,18 +261,18 @@ roadmap (`since:`, `until:` its Item's date or `T's word`, `max_age:`).
 spec. `plan/deadlines.md` is edited by hand here; nothing regenerates
 it except the Status cells:
 
-- **Every chunk the plot added** gets a home, and every Item is a T act
-  (phase DL2b). A loop chunk goes in the `Waits on` cell of the T act it
-  unblocks, by its alias, never into an Item of its own and never into
-  an Item's `Rows` (the lint fails that). A chunk that waits on T may be
-  named in an `## Items` row's `Rows` whose due date sits inside its
-  Window. A `needs plot` Item this plot answers is ticked `[x]` by hand.
-  A chunk with no T act after it gets a `- <alias> — <reason>` line
-  under `## Unscheduled` ("date not set" when the date is T's to pick
-  and T is not here to pick it). Never guess a date for T. A new Item
-  fills `Goal` (the high-level task it serves) and `How AI helps` (`-`
-  when nothing is known), and lives only in the Items table: the lint
-  fails a dated table row anywhere else (T, 2026-11-03, one list).
+- **The Items table is a queue of T's acts** (T, 2026-11-10), and every
+  Item is a T act (phase DL2b). A loop chunk is not listed there: it goes
+  only in the `Waits on` cell of a T act that needs it, by its alias, and
+  never into an Item's `Rows` (the lint fails that). A chunk that waits
+  on T is named in the `Rows` of its act. A `needs plot` Item this plot
+  answers is ticked `[x]` by hand, or its `needs plot` becomes the new
+  aliases when they wait on T. A new Item carries its milestone's date in
+  `Due` (never a date of its own) and that milestone's `Window`, its
+  hours in its name as `(N h)`, `Goal` and `How AI helps` (`-` when
+  nothing is known), and sits where its priority puts it: the table's
+  order is the order T works in. Never guess hours or a place for T;
+  ask, or add it last and say so.
 - **Every Item the plot supersedes, re-scopes or completes** is edited
   itself, not only its Rows cell. Read each open Item in the plot's
   window and ask whether its premise still holds once these chunks
