@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The card upgrade screen</title>
+<!--
+  The card upgrade ballot (2026-11-09). T's /pitch: eight looks for the shared
+  card upgrade screen (the rest site, the Anvil and the elite reward all open
+  it). A is today's, from T's phone. B to H are mockups at 390 x 844 from the
+  real kit art and fonts, with stand-in figures from
+  Potential Assets/sorted-entity-library-base. Every number is the engine's
+  real upgrade for the Chosen's deck; the spoken lines are placeholders.
+-->
+<style>
+  :root { --bg:#efe9dc; --ink:#1b1714; --muted:#6b6259; --card:#fbf7ee; --edge:#2a2420; --sel:#1b1714; --btn:#1b1714; --btn-ink:#fbf7ee; --shotbg:#d9cfbd; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  }
+  :root[data-theme="dark"] { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.92rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  .theme { float:right; font:inherit; padding:6px 12px; border-radius:6px; border:1px solid var(--edge); background:var(--card); color:var(--ink); cursor:pointer; }
+  .slot { margin:22px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.1rem; margin:0; }
+  .role { color:var(--muted); margin:2px 0 10px; }
+  .row { display:grid; grid-template-columns:repeat(auto-fill, minmax(232px, 1fr)); gap:12px; }
+  label.card { position:relative; display:block; background:var(--card); border:2px solid var(--edge); border-radius:10px; padding:8px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 4px var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .top { padding-right:34px; min-height:96px; }
+  .name { font-size:1.05rem; font-weight:bold; }
+  .ref { color:var(--muted); font-size:.9rem; margin:2px 0 6px; }
+  label.card img { display:block; width:100%; height:auto; border-radius:4px; background:var(--shotbg); }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  footer { margin-top:28px; padding-top:12px; border-top:2px solid var(--edge); }
+  textarea { width:100%; font:13px/1.4 ui-monospace, Menlo, Consolas, monospace; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  #general { min-height:60px; } #out { min-height:160px; margin-top:10px; }
+  button { font:inherit; padding:9px 18px; min-height:42px; border-radius:6px; border:0; background:var(--btn); color:var(--btn-ink); cursor:pointer; margin:8px 8px 0 0; }
+  .count { color:var(--muted); margin-left:6px; }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <h1>The card upgrade screen</h1>
+  <p class="sub">Eight looks for the one screen the rest site, the Anvil and the elite reward share. A is today's.</p>
+  <p class="legend">
+    <b>Tick one.</b> The note line takes a mix ("C, with D's gain badges").<br>
+    <b>The numbers are real:</b> each card's next upgrade, read from the engine for the Chosen's deck. Gold is what the upgrade changes.<br>
+    <b>The figures</b> (the hermit at the fire, the smith, the statue, the book, the swords) are stand-ins from the sorted entity library, and <b>the spoken lines</b> placeholders. B to F and H are drawn at the rest site; G at the Anvil.
+  </p>
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="A different figure, a mix of two looks, anything else…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'upgrade-2026-11-09';
+
+const SLOTS = [
+  { slot: 'U-01', label: 'The card upgrade screen', role: 'Pick one card; one copy of it gets its next upgrade. Shown with the preview open where the look has one.' },
+];
+
+/* One candidate per id; the kit reads the ticks by id. */
+const CARDS = [
+  { id: 'U-01a', look: 'Today', ref: 'A list of names. Tap one to see NOW, AFTER and a locked ??? below, then UPGRADE IT.' },
+  { id: 'U-01b', look: 'The hand, fanned', ref: 'Your cards fan at the foot like a hand. Lift one: the card as it is tilts away, the card as it will be stands up in gold.' },
+  { id: 'U-01c', look: 'One card at a time', ref: 'Swipe through the cards like the settled Shop. The old number is struck and the new one glows on the card itself. The hermit at the fire speaks.' },
+  { id: 'U-01d', look: 'Every gain at a glance', ref: 'The hermit down the left; a grid of every card, each wearing a gold badge of what it gains. No preview tap needed.' },
+  { id: 'U-01e', look: 'The blade between', ref: 'A strip of card art on top. The card as it is, a burning sword across, the card as it will be. Leave it or Upgrade.' },
+  { id: 'U-01f', look: 'The ledger', ref: 'A vellum page under a grimoire lists every card and its change in red ink. Tick a line and ink it in.' },
+  { id: 'U-01g', look: 'Hold to temper', ref: 'At the Anvil: the card in the forge glow, a ring that fills while you hold, the smith behind. Letting go early cancels.' },
+  { id: 'U-01h', look: 'The string of beads', ref: 'A gold statue blesses the card in its halo. Each card is a bead on a string at the foot; turn the beads to choose.' },
+];
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cardHtml = (c) => `
+  <label class="card" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${esc(c.look)}">
+    <div class="top"><div class="name">${c.id.slice(4).toUpperCase()}. ${esc(c.look)}</div><div class="ref">${esc(c.ref)}</div></div>
+    <img src="upgrade/${c.id}.webp" alt="${esc(c.look)}" loading="lazy" width="780" height="1688">
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${esc(s.label)} (optional)">
+  </section>`;
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered`;
+};
+/* One tick per screen: a new tick clears the others in its slot. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  refresh();
+});
+refresh();
+
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: the card upgrade screen (${BALLOT_ID})`,
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      const name = pick ? CARDS.find((c) => c.id === pick).look : null;
+      return `${s.slot} ${s.label}: ${pick ? `KEEP ${pick} (${name})` : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
