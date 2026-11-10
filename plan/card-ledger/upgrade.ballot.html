@@ -45,11 +45,11 @@
   .count { color:var(--muted); margin-left:6px; }
   button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <p class="banner" role="note"><b>CLOSED</b>: T voted on 2026-11-09 (H, with B's pair and G's hold). The verdict is in upgrade.md; round 2 is upgrade-2.ballot.html.</p>
   <h1>The card upgrade screen</h1>
   <p class="sub">Eight looks for the one screen the rest site, the Anvil and the elite reward share. A is today's.</p>
   <p class="legend">
@@ -133,7 +133,6 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
 
 document.getElementById('themeBtn').addEventListener('click', () => {
   const root = document.documentElement;
