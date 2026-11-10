@@ -13,7 +13,8 @@
 
 ## How it works
 
-- **Two dates, one queue.** An act has no date of its own. Its `Due` cell holds the date of the milestone it serves,
+- **Two dates, one queue.** An act has no date of its own. Its `Due` cell holds the date of the milestone it serves
+  (the last day of its window; the lint fails any other date, since each distinct date is forecast as a milestone),
   and its place in the Items table is its priority: T works the table top to bottom.
 - **Every Item is a T act** (plot, pitch, decide, pick, author, play, review, merge, tag), with its hours in its name
   as `(N h)`. Loop rows are not listed here: the build plan (`plan/README.md`) orders them. A loop row an act needs

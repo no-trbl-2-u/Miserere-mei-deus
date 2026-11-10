@@ -119,6 +119,9 @@ export const checkDeadlines = (deadlinesMd, plan) => {
             errors.push(`${DEADLINES}: Item "${item.name}" is in window ${item.window}, which has no row in the ## Windows table; add the window or fix the cell.`)
         } else if (!inWindow(item.due, window)) {
             errors.push(`${DEADLINES}: Item "${item.name}" is due ${item.due}, outside ${item.window}; move the date into the window or change the window.`)
+        } else if (queueModel && item.due.slice(5) !== `${String(window.to[0]).padStart(2, '0')}-${String(window.to[1]).padStart(2, '0')}`) {
+            // The queue: an act has no date of its own, and every distinct date is a milestone the reminder forecasts.
+            errors.push(`${DEADLINES}: Item "${item.name}" is due ${item.due}, which is not ${item.window}'s milestone date (the window's last day); an act carries its milestone's date, never its own.`)
         }
     }
 

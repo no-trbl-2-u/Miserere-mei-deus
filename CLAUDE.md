@@ -32,8 +32,8 @@ anything else. It is silent in GitHub Actions, so loop ticks never see it. When 
 `needs plot` with the new chunks' aliases when they wait on T, else tick it; when T finishes a `T` act, tick its
 Status `[x]`. A phase Item's Status is derived by `node scripts/deadlines.mjs --write`; never hand-edit it. To
 reprioritise, move the row; to move an act to the other milestone, change its `Due` and `Window`.
-`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an Item names a missing row, a date leaves its
-window, or a phase Status is stale. It cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a
+`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an Item names a missing row, an act's date is
+not its window's milestone date, or a phase Status is stale. It cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a
 reconcile step that edits such Items.
 
 Answering a **balance/measurement** question (win rates, engagement)? Read

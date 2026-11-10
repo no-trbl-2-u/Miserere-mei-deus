@@ -253,3 +253,13 @@ test('a Budget section with no readable hours fails the lint by name and stays t
     }
     assert.equal(hasBudgetSection('# Deadlines\n\n## Items\n'), false)
 })
+
+test('the lint in the queue model: an act dated anything but its window\'s milestone day fails, since each date is a milestone', () => {
+    const own = plan().replace('| [ ] | 2026-11-17 | Review it (4 h) |', '| [ ] | 2026-11-14 | Review it (4 h) |')
+    assert.deepEqual(checkDeadlines(own, SOURCES), ['plan/deadlines.md: Item "Review it (4 h)" is due 2026-11-14, which is not W1\'s milestone date (the window\'s last day); an act carries its milestone\'s date, never its own.'])
+    const { phases } = planRows(SOURCES)
+    assert.equal(queuePlan(parseItems(own), phases, '2026-11-10', 7).milestones.length, 3, 'the stray date would have been a third milestone')
+    // The dated model keeps a date per Item.
+    const dated = own.replace(/\n## Budget\n\n.*\n/, '\n')
+    assert.ok(!checkDeadlines(dated, SOURCES).some((e) => /milestone date/.test(e)))
+})
