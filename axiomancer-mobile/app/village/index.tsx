@@ -1,67 +1,64 @@
 /**
- * /village — the dedicated settlement screen.
+ * /village — the settlement hub (V-02b).
  *
- * A village event opens as a hub of counters: the settlement's name, its
- * merchants (their stall-calls), and whichever counters the event carries —
- * a bed for the night (the paid rest), the card shop (three cards to buy, and
- * paid card removal) and the Anvil (opens `/blacksmith`; leaving it lands back
- * here, because the village stays the pending event). Every price and refusal
- * is the engine's (`World/Village`); a refused counter shows its reason. The
- * village sells cards, weapons and armor, and buys nothing back.
+ * Arriving at a village opens this hub: the settlement's name and the purse,
+ * the host standing tall down the left edge with the host's line under the
+ * title, and one brass button per counter the village carries, each with its
+ * keeper at the button's right end: REST (the innkeeper), SHOP (the
+ * shopkeeper), BLACKSMITH (the smith). A counter the village lacks has no
+ * button. Each button opens that counter's own screen (`/village/rest`,
+ * `/village/shop`, the Anvil's `/blacksmith`); leaving it lands back here,
+ * because the village stays the pending event. TAKE THE ROAD is pinned at the
+ * foot and ends the village. The merchants' voices sit under the counters.
  *
  * The screen owns ONE scroller — the house shape (`/rest`, `/blacksmith`,
  * the inventory page) — and TAKE THE ROAD is pinned below it, so the exit
  * is whole at any counter count and at either width.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
-import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
+import { keeperPortrait } from '@/assets/images/keepers';
+import { BrassButton } from '@/components/experience/BrassButton';
 import { SCREEN_FRAME_INSET, ScreenBg } from '@/components/ScreenBg';
 import { AxmIcon } from '@/components/icons';
-import { ItemGlyph } from '@/components/inventory/ItemCard';
+import { KeeperButton } from '@/components/village/KeeperButton';
+import { VILLAGE_REST_ROUTE, VILLAGE_SHOP_ROUTE } from '@/components/village/useVillageCounter';
+import { Image } from '@/lib/platform/image';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
-    VILLAGE_EQUIPMENT_LABEL,
-    VILLAGE_EQUIPMENT_LINE,
-    VILLAGE_CARD_BUY_LABEL,
-    VILLAGE_CARD_SHOP_LABEL,
-    VILLAGE_CARD_SHOP_LINE,
-    VILLAGE_CARD_SOLD_LABEL,
-    VILLAGE_REMOVE_CANCEL_LABEL,
-    VILLAGE_REMOVE_LABEL,
-    VILLAGE_REMOVE_LINE,
-    VILLAGE_REMOVE_PICK_HINT,
-    VILLAGE_REST_LABEL,
-    VILLAGE_REST_LINE,
-    villageCounterNote,
-    villageRemovePriceLine,
+    VILLAGE_HOST_EYEBROW,
+    VILLAGE_HUB_REST_LABEL,
+    VILLAGE_HUB_SHOP_LABEL,
+    VILLAGE_HUB_SMITH_LABEL,
+    VILLAGE_LEAVE_LABEL,
+    VILLAGE_SETTLEMENT_EYEBROW,
+    VILLAGE_VOICES_LABEL,
+    villagePurseLine,
 } from '@/state/presenters/village.copy';
-import { selectVillageVM } from '@/state/presenters/village.engine';
-import type { VillageCounterResult } from '@/state/village/store-actions';
+import { selectVillageVM, villageHubCounters } from '@/state/presenters/village.engine';
 import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
-/**
- * Size for an option's description line on this screen.
- *
- * Purpose: the counters print their effect in the same uppercase mono the
- * inn (`/rest` `offerDesc`) uses, at the same size. Input: none (a constant).
- * Output: the point size both surfaces share.
- */
-const DESC_FONT_SIZE = 12;
+/** The settlement column's widest extent, in points (the main menu's width). */
+export const VILLAGE_COLUMN_MAX_WIDTH = 520;
 
-/** Card shop face size: three side by side fit a phone, the reward draft's size. */
-const SHOP_FACE_W = 100;
-const SHOP_FACE_H = 147;
+/** The host's share of the column's width, standing down its left edge. */
+export const HOST_WIDTH_SHARE = 0.5;
+/** How far in from the column's left edge the counter buttons start (V-02b). */
+export const COUNTERS_INDENT_SHARE = 0.16;
+/** The stage the host stands on: tall enough for the figure whatever the counter count. */
+const STAGE_MIN_HEIGHT = 420;
+/** Room above the first counter, so the host's head and shoulders show. */
+const STAGE_HEAD_ROOM = 96;
 
 /**
- * The settlement screen.
+ * The settlement hub.
  *
- * Purpose: render the village view-model — name, body, merchant voices and
- * the counters — with the exit pinned beneath the scrolling list. Inputs:
+ * Purpose: render the village view-model as the hub — heading, host and one
+ * button per counter — with the exit pinned beneath the scroller. Inputs:
  * none (reads the store via `useGameState`; dispatches through
  * `useGameActions`). Output: the screen's element tree.
  */
@@ -76,17 +73,10 @@ export default function VillageScreen() {
     );
     const actions = useGameActions();
     const router = useRouter();
-    const [removing, setRemoving] = useState(false);
-    const [note, setNote] = useState<string | null>(null);
 
     useEffect(() => {
         if (!vm.active && router.canGoBack()) router.back();
     }, [vm.active, router]);
-
-    /** Words a counter's result: what it cost, or why it was refused. */
-    const report = (what: string, result: VillageCounterResult) => {
-        setNote(result.ok ? villageCounterNote(what, result.spent) : `Refused: ${result.refusal}.`);
-    };
 
     // Inactive shell — visible for a frame while the router unwinds; never a
     // blank screen.
@@ -100,6 +90,8 @@ export default function VillageScreen() {
         );
     }
 
+    const counters = villageHubCounters(vm);
+
     return (
         <ScreenBg scrollable={false} art="village">
             <ScrollView
@@ -110,20 +102,60 @@ export default function VillageScreen() {
                 <View style={styles.column} testID="village-column">
                     <View style={styles.eyebrowRow}>
                         <AxmIcon name="action-village" size={18} />
-                        <Text style={styles.eyebrow}>SETTLEMENT</Text>
+                        <Text style={styles.eyebrow}>{VILLAGE_SETTLEMENT_EYEBROW}</Text>
                     </View>
                     <Text style={styles.title}>{vm.villageName.toUpperCase()}</Text>
-                    <Text style={styles.body}>{vm.body}</Text>
                     <Text style={styles.purse} testID="village-purse">
-                        {vm.currency} SHILLINGS · VITAE {vm.health}/{vm.maxHealth}
+                        {villagePurseLine(vm.currency, vm.health, vm.maxHealth)}
                     </Text>
-                    {note !== null && (
-                        <Text style={styles.note} testID="village-note">{note}</Text>
-                    )}
+                    <Text style={styles.hostEyebrow}>{VILLAGE_HOST_EYEBROW}</Text>
+                    <Text style={styles.hostLine} testID="village-host-line">“{vm.hostLine}”</Text>
+
+                    <View style={styles.stage} testID="village-stage">
+                        <View style={styles.host} pointerEvents="none" testID="village-host">
+                            <Image
+                                source={keeperPortrait('host')}
+                                style={styles.hostImage}
+                                contentFit="contain"
+                                contentPosition="left bottom"
+                                transition={0}
+                                accessible={false}
+                            />
+                        </View>
+                        <View style={styles.counters} testID="village-counters">
+                            {counters.includes('rest') && (
+                                <KeeperButton
+                                    label={VILLAGE_HUB_REST_LABEL}
+                                    role="innkeeper"
+                                    onPress={() => router.push(VILLAGE_REST_ROUTE)}
+                                    accessibilityLabel={`Rest. ${vm.rest?.effect ?? ''}`}
+                                    testID="village-open-rest"
+                                />
+                            )}
+                            {counters.includes('shop') && (
+                                <KeeperButton
+                                    label={VILLAGE_HUB_SHOP_LABEL}
+                                    role="shopkeeper"
+                                    onPress={() => router.push(VILLAGE_SHOP_ROUTE)}
+                                    accessibilityLabel="Open the shop: cards, weapons and armor"
+                                    testID="village-open-shop"
+                                />
+                            )}
+                            {counters.includes('smith') && (
+                                <KeeperButton
+                                    label={VILLAGE_HUB_SMITH_LABEL}
+                                    role="smith"
+                                    onPress={() => actions.beginBlacksmith({ variants: vm.anvil?.variants })}
+                                    accessibilityLabel={`Open the Anvil. The smith's cheapest work is ${vm.anvil?.cheapestWork ?? 0} shillings`}
+                                    testID="village-anvil"
+                                />
+                            )}
+                        </View>
+                    </View>
 
                     {vm.merchants.length > 0 && (
-                        <>
-                            <Text style={styles.sectionLabel}>VOICES OF THE PLACE</Text>
+                        <View testID="village-voices">
+                            <Text style={styles.sectionLabel}>{VILLAGE_VOICES_LABEL}</Text>
                             {vm.merchants.map(merchant => (
                                 <View key={merchant.name} style={styles.merchantCard} testID={`village-merchant-${merchant.name}`}>
                                     <Text style={styles.merchantName}>{merchant.name}</Text>
@@ -132,232 +164,27 @@ export default function VillageScreen() {
                                     )}
                                 </View>
                             ))}
-                        </>
-                    )}
-
-                    {vm.rest && (
-                        <>
-                            <Text style={styles.sectionLabel}>{VILLAGE_REST_LABEL}</Text>
-                            <TouchableOpacity
-                                accessibilityRole="button"
-                                accessibilityLabel={
-                                    vm.rest.enabled
-                                        ? `Rest for ${vm.rest.price} shillings. ${vm.rest.effect}`
-                                        : `Rest unavailable: ${vm.rest.refusal}`
-                                }
-                                accessibilityState={{ disabled: !vm.rest.enabled }}
-                                disabled={!vm.rest.enabled}
-                                onPress={() => report('Rested', actions.restAtVillage())}
-                                style={[styles.wareRow, !vm.rest.enabled && styles.wareRowUnaffordable]}
-                                testID="village-rest"
-                            >
-                                <View style={styles.flexOne}>
-                                    <Text style={styles.wareName}>REST</Text>
-                                    <Text style={styles.wareEffect} testID="village-rest-effect">{vm.rest.effect}</Text>
-                                    <Text style={styles.wareDesc} testID="village-rest-desc">{VILLAGE_REST_LINE}</Text>
-                                </View>
-                                <Text
-                                    style={[styles.warePrice, !vm.rest.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
-                                    testID="village-rest-price"
-                                >
-                                    {vm.rest.price} SHILLINGS
-                                </Text>
-                            </TouchableOpacity>
-                            {vm.rest.refusal !== null && (
-                                <Text style={styles.refusal} testID="village-rest-refusal">{vm.rest.refusal}</Text>
-                            )}
-                        </>
-                    )}
-
-                    {vm.cardShop && (
-                        <>
-                            <Text style={styles.sectionLabel}>{VILLAGE_CARD_SHOP_LABEL}</Text>
-                            <Text style={styles.wareDesc}>{VILLAGE_CARD_SHOP_LINE}</Text>
-                            <View style={styles.shopRow} testID="village-card-shop">
-                                {vm.cardShop.cards.map(card => (
-                                    <View key={card.cardId} style={styles.shopCard} testID={`village-card-${card.cardId}`}>
-                                        <CombatCardFace card={card.face} width={SHOP_FACE_W} height={SHOP_FACE_H} />
-                                        <TouchableOpacity
-                                            accessibilityRole="button"
-                                            accessibilityLabel={
-                                                card.enabled
-                                                    ? `Buy ${card.name} for ${card.price} shillings`
-                                                    : `${card.name} unavailable: ${card.refusal}`
-                                            }
-                                            accessibilityState={{ disabled: !card.enabled }}
-                                            disabled={!card.enabled}
-                                            onPress={() => report(`Bought ${card.name}`, actions.buyVillageCard(card.cardId))}
-                                            style={[styles.buyButton, !card.enabled && styles.wareRowUnaffordable]}
-                                            testID={`village-card-${card.cardId}-buy`}
-                                        >
-                                            <Text
-                                                style={[styles.buyText, !card.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
-                                                testID={`village-card-${card.cardId}-price`}
-                                            >
-                                                {card.sold ? VILLAGE_CARD_SOLD_LABEL : `${VILLAGE_CARD_BUY_LABEL} · ${card.price} SHILLINGS`}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        {card.refusal !== null && !card.sold && (
-                                            <Text style={styles.refusal} testID={`village-card-${card.cardId}-refusal`}>{card.refusal}</Text>
-                                        )}
-                                    </View>
-                                ))}
-                            </View>
-
-                            <TouchableOpacity
-                                accessibilityRole="button"
-                                accessibilityLabel={
-                                    vm.cardShop.removal.enabled
-                                        ? `Remove a card for ${vm.cardShop.removal.price} shillings`
-                                        : `Card removal unavailable: ${vm.cardShop.removal.refusal}`
-                                }
-                                accessibilityState={{ disabled: !vm.cardShop.removal.enabled, expanded: removing }}
-                                disabled={!vm.cardShop.removal.enabled}
-                                onPress={() => setRemoving(r => !r)}
-                                style={[styles.wareRow, !vm.cardShop.removal.enabled && styles.wareRowUnaffordable]}
-                                testID="village-remove"
-                            >
-                                <View style={styles.flexOne}>
-                                    <Text style={styles.wareName}>{VILLAGE_REMOVE_LABEL}</Text>
-                                    <Text style={styles.wareDesc}>{VILLAGE_REMOVE_LINE}</Text>
-                                </View>
-                                <Text
-                                    style={[styles.warePrice, !vm.cardShop.removal.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
-                                    testID="village-remove-price"
-                                >
-                                    {vm.cardShop.removal.price} SHILLINGS
-                                </Text>
-                            </TouchableOpacity>
-                            {vm.cardShop.removal.refusal !== null && (
-                                <Text style={styles.refusal} testID="village-remove-refusal">{vm.cardShop.removal.refusal}</Text>
-                            )}
-                            {removing && vm.cardShop.removal.enabled && (
-                                <View testID="village-remove-sheet">
-                                    <Text style={styles.priceHint} testID="village-remove-next">
-                                        {villageRemovePriceLine(vm.cardShop.removal.price, vm.cardShop.removal.nextPrice)}
-                                    </Text>
-                                    <Text style={styles.emptyNote}>{VILLAGE_REMOVE_PICK_HINT}</Text>
-                                    {vm.cardShop.removal.cards.map(card => (
-                                        <TouchableOpacity
-                                            key={card.cardId}
-                                            accessibilityRole="button"
-                                            accessibilityLabel={`Remove ${card.name} from the deck`}
-                                            onPress={() => {
-                                                setRemoving(false);
-                                                report(`Removed ${card.name}`, actions.removeVillageCard(card.cardId));
-                                            }}
-                                            style={styles.removeRow}
-                                            testID={`village-remove-card-${card.cardId}`}
-                                        >
-                                            <Text style={styles.removeName}>
-                                                {card.name}{card.count > 1 ? ` ×${card.count}` : ''}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                    <TouchableOpacity
-                                        accessibilityRole="button"
-                                        accessibilityLabel="Keep every card"
-                                        onPress={() => setRemoving(false)}
-                                        style={styles.removeRow}
-                                        testID="village-remove-cancel"
-                                    >
-                                        <Text style={styles.removeName}>{VILLAGE_REMOVE_CANCEL_LABEL}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        </>
-                    )}
-
-                    {vm.equipmentShop && (
-                        <>
-                            <Text style={styles.sectionLabel}>{VILLAGE_EQUIPMENT_LABEL}</Text>
-                            <Text style={styles.wareDesc}>{VILLAGE_EQUIPMENT_LINE}</Text>
-                            <View style={styles.equipmentList} testID="village-equipment-shop">
-                                {vm.equipmentShop.map(piece => (
-                                    <View key={piece.pieceId}>
-                                        <TouchableOpacity
-                                            accessibilityRole="button"
-                                            accessibilityLabel={
-                                                piece.enabled
-                                                    ? `Buy ${piece.name} for ${piece.price} shillings`
-                                                    : `${piece.name} unavailable: ${piece.refusal}`
-                                            }
-                                            accessibilityState={{ disabled: !piece.enabled }}
-                                            disabled={!piece.enabled}
-                                            onPress={() => report(`Bought ${piece.name}`, actions.buyVillageEquipment(piece.pieceId))}
-                                            style={[styles.wareRow, !piece.enabled && styles.wareRowUnaffordable]}
-                                            testID={`village-equipment-${piece.pieceId}`}
-                                        >
-                                            <ItemGlyph category="equipment" sub={piece.sub} itemId={piece.pieceId} size={36} />
-                                            <View style={styles.flexOne}>
-                                                <Text style={styles.wareName}>{piece.name}</Text>
-                                                <Text style={styles.wareDesc}>{piece.sub}</Text>
-                                                {piece.effect !== null && (
-                                                    <Text style={styles.wareEffect} testID={`village-equipment-${piece.pieceId}-effect`}>{piece.effect}</Text>
-                                                )}
-                                            </View>
-                                            <Text
-                                                style={[styles.warePrice, !piece.enabled && [styles.warePriceUnaffordable, styles.wareCtaDimmed]]}
-                                                testID={`village-equipment-${piece.pieceId}-price`}
-                                            >
-                                                {piece.sold ? VILLAGE_CARD_SOLD_LABEL : `${piece.price} SHILLINGS`}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        {piece.refusal !== null && !piece.sold && (
-                                            <Text style={styles.refusal} testID={`village-equipment-${piece.pieceId}-refusal`}>{piece.refusal}</Text>
-                                        )}
-                                    </View>
-                                ))}
-                            </View>
-                        </>
-                    )}
-
-                    {vm.anvil && (
-                        <>
-                            <Text style={styles.sectionLabel}>THE ANVIL</Text>
-                            <TouchableOpacity
-                                accessibilityRole="button"
-                                accessibilityLabel={`Open the Anvil. The smith's cheapest work is ${vm.anvil.cheapestWork} shillings`}
-                                onPress={() => actions.beginBlacksmith({ variants: vm.anvil?.variants })}
-                                style={styles.wareRow}
-                                testID="village-anvil"
-                            >
-                                <View style={styles.flexOne}>
-                                    <Text style={styles.wareName}>THE ANVIL</Text>
-                                    <Text style={styles.wareEffect} testID="village-anvil-effect">
-                                        hone, temper, swap a die, upgrade a card
-                                    </Text>
-                                </View>
-                                <Text style={styles.warePrice} testID="village-anvil-price">
-                                    FROM {vm.anvil.cheapestWork} SHILLINGS
-                                </Text>
-                            </TouchableOpacity>
-                        </>
+                        </View>
                     )}
                 </View>
             </ScrollView>
 
             {/* 14-village: the exit sits OUTSIDE the scroller, so it is whole
-                however long the counters run, at 375 and at 1280 alike. */}
+                however long the hub runs, at 375 and at 1280 alike. */}
             <View style={styles.exitBar} testID="village-exit-bar">
                 <View style={styles.column} testID="village-exit-column">
-                    <TouchableOpacity
-                        accessibilityRole="button"
-                        accessibilityLabel="Leave the village"
+                    <BrassButton
+                        label={VILLAGE_LEAVE_LABEL}
                         onPress={actions.dismissEvent}
-                        style={styles.bigButton}
+                        align="center"
+                        accessibilityLabel="Leave the village"
                         testID="village-leave"
-                    >
-                        <Text style={styles.bigButtonText}>TAKE THE ROAD</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </View>
         </ScreenBg>
     );
 }
-
-/** The settlement column's widest extent, in points (the main menu's width). */
-export const VILLAGE_COLUMN_MAX_WIDTH = 520;
 
 const useStyles = makeStyles((AXM) => ({
     // One scroller, sized to the space the pinned exit leaves it
@@ -365,10 +192,9 @@ const useStyles = makeStyles((AXM) => ({
     scrollOuter: { flex: 1 },
     // The top clears the backdrop's vignette, so the kicker and title sit
     // inside the plate rather than on its dark frame.
-    scroll: { padding: 14, paddingTop: SCREEN_FRAME_INSET, paddingBottom: 24 },
-    // A phone fills the column edge to edge; a wide window keeps each
-    // ware's name beside its price, and the pinned exit under the stalls,
-    // instead of stretching both across the screen.
+    scroll: { padding: 14, paddingTop: SCREEN_FRAME_INSET, paddingBottom: 16 },
+    // A phone fills the column edge to edge; a wide window keeps the hub at
+    // the main menu's width instead of stretching it across the screen.
     column: { width: '100%', maxWidth: VILLAGE_COLUMN_MAX_WIDTH, alignSelf: 'center' },
     eyebrowRow: {
         flexDirection: 'row',
@@ -387,21 +213,40 @@ const useStyles = makeStyles((AXM) => ({
         fontSize: 30,
         lineHeight: 34,
         color: AXM.parchment,
-        marginBottom: 8,
+        marginBottom: 4,
     },
-    body: {
-        fontFamily: TYPE_ROLES.rules.fontFamily,
-        fontSize: 13,
-        lineHeight: 19,
+    purse: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.sulfur },
+    hostEyebrow: {
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
+        fontSize: 11,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
+        color: AXM.sulfur,
+        marginTop: 12,
+    },
+    hostLine: {
+        fontFamily: TYPE_ROLES.spoken.fontFamily,
+        fontSize: 16,
+        lineHeight: 22,
         color: AXM.parchment,
-        marginBottom: 8,
+        marginTop: 2,
     },
+    // The host stands on the stage behind the counters, down its left edge.
+    stage: { position: 'relative', minHeight: STAGE_MIN_HEIGHT, paddingTop: STAGE_HEAD_ROOM, justifyContent: 'flex-end' },
+    host: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        width: `${HOST_WIDTH_SHARE * 100}%`,
+    },
+    hostImage: { width: '100%', height: '100%' },
+    counters: { marginLeft: `${COUNTERS_INDENT_SHARE * 100}%`, gap: 4 },
     sectionLabel: {
         fontFamily: TYPE_ROLES.eyebrow.fontFamily,
         fontSize: 10,
         letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
         color: AXM.bone,
-        marginTop: 12,
+        marginTop: 16,
         marginBottom: 6,
     },
     // Not an ash-bordered panel: that is this app's DISABLED grammar
@@ -418,90 +263,9 @@ const useStyles = makeStyles((AXM) => ({
     },
     merchantName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.sulfur, letterSpacing: TYPE_ROLES.title.letterSpacing},
     merchantLine: { fontFamily: TYPE_ROLES.spoken.fontFamily, fontSize: 12, color: AXM.parchment, marginTop: 4 },
-    purse: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.sulfur},
-    // A refused counter names its reason under it, in the inn's reason voice
-    // (`/rest` `offerReason`): shown, never hidden.
-    refusal: {
-        fontFamily: TYPE_ROLES.narration.fontFamily,
-        fontSize: 11,
-        lineHeight: 15,
-        color: AXM.bone,
-        marginTop: -2,
-        marginBottom: 6,
-    },
-    note: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.sulfur, marginTop: 4 },
-    priceHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.sulfur, marginBottom: 4 },
-    // Three faces side by side at the reward draft's size fit a 375pt phone.
-    shopRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginTop: 18, marginBottom: 8 },
-    shopCard: { alignItems: 'center', width: 104 },
-    buyButton: {
-        alignSelf: 'stretch',
-        borderWidth: 2,
-        borderColor: AXM.bone,
-        backgroundColor: AXM.bg,
-        paddingVertical: 4,
-        marginTop: 6,
-        alignItems: 'center',
-    },
-    buyText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur, textAlign: 'center' },
-    equipmentList: { marginTop: 6 },
-    removeRow: {
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.bg,
-        padding: 8,
-        marginBottom: 4,
-    },
-    removeName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 13, color: AXM.parchment },
-    emptyNote: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.bone, marginBottom: 6 },
-    wareRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-        borderWidth: 2,
-        borderColor: AXM.bone,
-        backgroundColor: AXM.bg,
-        padding: 10,
-        marginBottom: 6,
-    },
-    // A refused row dims only the price/CTA (below) — the border alone
-    // signals disabled so the name/description stay bone/parchment-bright
-    // and legible, matching combat's disabled-item treatment.
-    wareRowUnaffordable: { borderColor: AXM.ash },
-    wareName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing},
-    // The inn prints the identical uppercase-mono description at
-    // DESC_FONT_SIZE. One size for a description wherever it appears.
-    wareDesc: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: DESC_FONT_SIZE, color: AXM.bone, marginTop: 2, textTransform: 'uppercase' },
-    // The effect line is the row's load-bearing text, so it takes
-    // full parchment while the flavour line below keeps the quieter bone.
-    wareEffect: {
-        fontFamily: TYPE_ROLES.rules.fontFamily,
-        fontSize: DESC_FONT_SIZE,
-        color: AXM.parchment,
-        marginTop: 3,
-        letterSpacing: 0.4,
-        textTransform: 'uppercase',
-    },
-    warePrice: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 18, color: AXM.sulfur },
-    // Price tracks affordability, not just the row's opacity: value-gold
-    // is loud enough to survive the unaffordable dim, so mute the colour
-    // to bone when the player can't afford it.
-    warePriceUnaffordable: { color: AXM.bone },
-    wareCtaDimmed: { opacity: 0.6 },
-    bigButton: {
-        borderWidth: 2,
-        borderColor: AXM.parchment,
-        marginTop: 14,
-        paddingVertical: 10,
-        alignItems: 'center',
-        backgroundColor: AXM.bg,
-    },
-    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.parchment },
     // The pinned exit keeps the page's 14pt gutter and clears the
-    // vignette below it; the button's own marginTop is the gap above it,
-    // as it was inside the list.
-    exitBar: { paddingHorizontal: 14, paddingBottom: SCREEN_FRAME_INSET },
-    flexOne: { flex: 1 },
+    // vignette below it.
+    exitBar: { paddingHorizontal: 14, paddingTop: 8, paddingBottom: SCREEN_FRAME_INSET },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
     inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

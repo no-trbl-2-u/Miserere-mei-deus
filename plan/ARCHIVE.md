@@ -687,3 +687,4 @@
 - 2026-11-10 · 167.2 (alias: RD1a) · Pilot review debt paid: retire, glossary, token docs · efc1dccb..efc1dccb (#1564)
 - 2026-11-10 · 167 · spec complete: Follow-ups from the 163-166 pilot · axiomancer-mobile/state/__tests__/run-log.test.ts (a build with the URL and token posts, dev tools off), scripts/pr-merge.test.mjs (the retire and its view), scripts/backend-deploy.test.mjs · deleted in (this commit)
 - 2026-11-10 · 168.1 (alias: VL1a) · Keeper portraits: one role table, four stand-ins · 3b5fc835..3b5fc835 (#1570)
+- 2026-11-10 · 168.3 (alias: VL1c) · The village opens as a hub of keepers · 84943278..d151fb32 (#1573)
