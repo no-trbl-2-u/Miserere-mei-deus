@@ -95,8 +95,6 @@ const NEW_H = 176;
 const OLD_W = 92;
 const OLD_H = 135;
 const TURN_MS = 220;
-/** The centre's double ring: the brass of the kit's buttons. */
-const BRASS = '#a8803c';
 
 /** `i - pos`, folded into the wheel's nearest turn: [-n/2, n/2). */
 function wrappedDistance(i: number, pos: number, n: number): number {
@@ -396,9 +394,9 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine, figure = UPGRADE
                     {/* The centre's special border: a brass double ring under a gold notch. */}
                     <View
                         pointerEvents="none"
-                        style={[styles.centreRing, { left: centreX - CENTRE_BEAD / 2 - 6, top: centreY - CENTRE_BEAD / 2 - 6, borderColor: BRASS }]}
+                        style={[styles.centreRing, { left: centreX - CENTRE_BEAD / 2 - 6, top: centreY - CENTRE_BEAD / 2 - 6, borderColor: AXM.sulfur }]}
                     >
-                        <View style={[styles.centreRingInner, { borderColor: BRASS }]} />
+                        <View style={[styles.centreRingInner, { borderColor: AXM.sulfur }]} />
                     </View>
                     {holding ? (
                         <View
