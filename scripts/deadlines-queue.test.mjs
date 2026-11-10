@@ -204,3 +204,19 @@ test('the lint in the queue model points a loop row in Rows at Waits on, never a
     assert.ok(errors.some((e) => /names loop row QA3 in Rows/.test(e) && /the queue lists no loop rows of its own/.test(e)))
     assert.ok(!errors.some((e) => /## Unscheduled/.test(e)))
 })
+
+test('a milestone that is today or past has no hours left: everything queued up to it is over, and the line says overdue', () => {
+    const { phases } = planRows(SOURCES)
+    const items = parseItems(plan())
+    const onTheDay = queuePlan(items, phases, '2026-11-17', 7).milestones[0]
+    assert.deepEqual([onTheDay.days, onTheDay.available, onTheDay.overBy, onTheDay.finish], [0, 0, 10, '2026-11-27'])
+    const past = queuePlan(items, phases, '2026-11-20', 7)
+    assert.deepEqual(past.milestones.map((m) => [m.due, m.days, m.available, m.overBy, m.finish]), [
+        ['2026-11-17', -3, 0, 10, '2026-11-30'],
+        ['2026-12-26', 36, 36, 0, '2026-12-03'],
+    ])
+    const text = reminderText([], null, '2026-11-20', past)
+    assert.match(text, /Tue, Nov 17 \(3 days overdue\): 4 acts open \(10 h\), 10 h queued up to it, 0 h available: over by 10 h; at this pace the queue reaches it Mon, Nov 30\./)
+    // The acts of a past milestone stay first in this week's list.
+    assert.equal(past.week[0].name, 'Write the lines (3 h)')
+})
