@@ -102,7 +102,7 @@ export function pickRestChoiceUpgradeAction(store: AppStore, cardId: string): vo
     setSession(store, engineUpgrade(s, cardId));
 }
 
-/** upgrade-pick -> offer: the rest site's way back out of the picker (spec 127, #7). */
+/** upgrade-pick -> offer: the rest site's way back out of the picker. */
 export function cancelRestChoiceUpgradeAction(store: AppStore): void {
     const s = store.getState().rest?.session;
     if (!s) return;
