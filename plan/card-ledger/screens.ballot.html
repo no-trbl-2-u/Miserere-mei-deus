@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seven Breakwater screens: ten looks each</title>
+<!--
+  A screen ballot (copied from ballot-shell.html; the model is
+  upgrade.ballot.html). Seven screens, ten rendered looks each. A is today's
+  screen; B to J are nine directions. One tick per screen, a note per screen,
+  a general note. The ledger is screens.md; the renders are in screens/.
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1500px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+  .jump { display: flex; gap: 6px; flex-wrap: wrap; position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; max-width: 1500px; margin: 0 auto; }
+  .jump a { color: var(--ink); border: 2px solid var(--edge); border-radius: 6px; padding: 4px 10px; text-decoration: none; font-size: .9rem; }
+  .jump a.done { background: var(--btn); color: var(--btn-ink); }
+
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); scroll-margin-top: 56px; }
+  .slot h2 { font-size: 1.15rem; margin: 0; }
+  .slot h2 small { color: var(--muted); font-weight: normal; margin-left: 6px; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; max-width: 900px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; align-items: start; }
+  .note { width: 100%; margin-top: 10px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  label.card {
+    position: relative; display: block; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px; padding: 8px;
+  }
+  label.card.wide { grid-column: span 2; }
+  @media (max-width: 560px) { label.card.wide { grid-column: span 1; } }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  label.card img { display: block; width: 100%; height: auto; border-radius: 4px; background: #090706; }
+  .top { padding-right: 28px; margin-bottom: 6px; }
+  .name { font-weight: bold; }
+  .bold { display: inline-block; font-size: .7rem; font-weight: bold; letter-spacing: .08em; padding: 1px 5px;
+          border-radius: 3px; margin-left: 6px; background: var(--accent); color: var(--card); vertical-align: 1px; }
+  .ref { font-size: .88rem; color: var(--muted); margin-top: 2px; }
+  .full { display: inline-block; font-size: .8rem; margin-top: 4px; color: var(--muted); }
+  .pick { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; accent-color: var(--sel); }
+
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <h1>Seven Breakwater screens: ten looks each</h1>
+  <p class="sub">Travel, cutscene, quest, loot cache, fight reveal, combat board, and the ends of a fight and a run. In each row A is today's screen and B to J are nine directions.</p>
+  <p class="legend">
+    <b>Tick one look per screen.</b> To mix two looks, tick the nearer one and say what to borrow in the note; a mix gets a second round.
+    <b>BOLD</b> marks the two looks in each row that depart furthest from today.<br>
+    Every picture is a phone screen at 390 x 844. A wide picture holds two screens of the same look (two cases, or two moments).
+    "Full size" opens the render on its own.<br>
+    <b>Dotted gold underline</b>: a line invented for the mockup, not final copy. <b>Dashed gold box</b>: an image that does not exist yet, named in the box.
+    Every figure that is not the game's own art is a stand-in. The ledger (screens.md) lists all three.
+  </p>
+</header>
+
+<nav class="jump" id="jump" aria-label="Screens"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything across the seven screens…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA: seven screens, ten looks each. id = slot + look letter; a is today's.
+   w / h: the render's size in CSS pixels (the webp is 2x); wide: two frames.
+   ===================================================================== */
+const BALLOT_ID = 'screens-2026-11-10';
+
+const SLOTS = [
+  {
+    "slot": "S-01",
+    "label": "Travel",
+    "role": "Move to another place, or stay. Each look is drawn for both cases (the toll bridge to the Charcoal Wood, the cave shortcut) or for the open and the shut way, and says what moving costs."
+  },
+  {
+    "slot": "S-02",
+    "label": "Cutscene",
+    "role": "A told scene: the run opening, the three cutscene nodes (clifftop chapel, old watchtower, high pass) and a chapter arrival. Each look has a picture per scene, large text and a progress mark."
+  },
+  {
+    "slot": "S-03",
+    "label": "Quest",
+    "role": "One four-step chain, four givers. Between them the looks cover the four states: offer, in progress, turn in with reward, turned away."
+  },
+  {
+    "slot": "S-04",
+    "label": "Loot cache",
+    "role": "TAKE A CARD or TAKE THE GOODS. Every look names what each choice gives before you choose, and shows the card or goods you took after."
+  },
+  {
+    "slot": "S-05",
+    "label": "Fight reveal and boss title card",
+    "role": "The screen before a fight. The looks cover a normal foe, an elite and the Chapter 1 boss; each explains the hidden moves and what WITHDRAW costs."
+  },
+  {
+    "slot": "S-06",
+    "label": "Combat board",
+    "role": "The rules stay; the layout changes. In every look no card name is clipped, the foe's intent shows a number, statuses are named, and the staged card never covers the foe."
+  },
+  {
+    "slot": "S-07",
+    "label": "Ends of a fight and a run",
+    "role": "Four moments: victory (card offer, level-up, end of chapter), the defeat panel with its cause, the death return, Game Over. Each look draws two of them; each moment appears at least twice."
+  }
+];
+
+const CARDS = [
+  {"id":"S-01a","name":"Today's screen","text":"Today's screen: a round face over an empty square, one or two lines, YES · MOVE and NO · STAY. Nothing says what moving costs.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-01b","name":"Scene and cost","text":"The place you would go to fills the screen. The question and both answers sit at the foot, and the cost is the second line of YES · MOVE.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-01c","name":"Two map plates","text":"Two cut-outs of the real map side by side: a gold ring where you stand, a white ring where you arrive.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-01d","name":"Here and there","text":"The place you leave above, the place you reach below, and the question and cost on the seam between them.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-01e","name":"The keeper speaks","text":"A tall figure stands at the left and puts the question; the cost sits under it. The second frame is the shut bridge, where only STAY is offered.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-01f","name":"The toll board","text":"A posted notice listing what crossing costs and what staying keeps, as a short ledger.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-01g","name":"The threshold","text":"You see the far place through an arch that fills the screen, and hold one ring to move. The second frame is the shut way, with the arch barred.","bold":1,"w":796,"h":844,"wide":1},
+  {"id":"S-01h","name":"Screen is the map","text":"The whole screen is the real map zoomed on the crossing, the route a dashed line from where you stand to where you land. The question sits on a small plate.","bold":1,"w":796,"h":844,"wide":1},
+  {"id":"S-01i","name":"Crossing as a card","text":"One big card face: the far place's name, its picture, and rules text saying what the crossing does and costs.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-01j","name":"Letterbox band","text":"A wide band of picture, one large line under it, the cost, two buttons. Nothing else.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-02a","name":"Today's screen","text":"Today's screen: every cutscene shows the same dim ferryman engraving with one faint line and no sign of how long it runs.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02b","name":"Picture and foot panel","text":"The scene's picture fills the screen and the line sits in large type over a dark fade at the foot, with two pips, CONTINUE and a small SKIP.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02c","name":"Film still","text":"A wide band of picture between gold rules, the line as a caption under it, a progress bar, CONTINUE and SKIP.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02d","name":"Manuscript page","text":"A vellum page with a small picture set in, a red drop capital opening the line and a page number.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02e","name":"Three stacked panels","text":"Panels down the screen on a rail: the earlier beat dimmed, the current one lit in gold, and dots on the rail showing where you are.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02f","name":"One sentence, huge","text":"One sentence at a time in very large type over the dimmed picture, the sentence before it small underneath. Tap anywhere to go on.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-02g","name":"Unrolling strip","text":"The whole scene is one long strip you scroll, a picture between the paragraphs and a brass thumb on the edge showing how far down you are.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-02h","name":"The teller","text":"A hooded old man with a lantern stands in front of the scene and speaks the line from a framed plate.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02i","name":"Place on the map","text":"The picture of the place above, then its name and line, then a framed map with a red pin where it is.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-02j","name":"Scene card","text":"The scene as one big card face: its name, its picture, its line, and a counter at the top.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03a","name":"Today, redrawn","text":"Today's screen, redrawn from the code: the dim ferryman engraving, a small giver square, one small line, a vellum panel, ACCEPT and LEAVE as plain boxes.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03b","name":"Village hub","text":"The giver stands tall down the left edge, as in the village. Name, line and ask sit beside him; the four-step chain and the pay sit below. Drawn as an offer.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03c","name":"Giver fills the top","text":"The giver fills the top half with the finished work on a dark panel over his chest. Below: the chain, the pay, the next step. Drawn as a turn-in.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03d","name":"The writ","text":"The offer is a sealed letter on a large vellum sheet: step, giver, quest, ask, pay, and the chain along its foot. The giver is a round medallion at its corner.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03e","name":"The chain","text":"The four steps are a gilded track down the screen. Done steps show what they paid; the current one opens out with its giver. Drawn in progress.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03f","name":"Face to face","text":"The giver's face is close and big, his line large under it. The work and its pay follow. Drawn as a turn-in.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-03g","name":"The quest card","text":"The quest is a card face: its name, the giver's picture, the ask as rules text and the pay along the foot. Drawn as an offer.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-03h","name":"Place and person","text":"A wide picture of the place the quest sends you to, with the giver as a medallion on its edge. Drawn in progress, so only LEAVE is left.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03i","name":"The terms","text":"A dimmed giver over a three-row table: what he asks, what it pays, and why not yet. Drawn turned away.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-03j","name":"Where to go","text":"The Breakwater map with the quest's places pinned, and the giver's face under it with his refusal, the work and its pay. Drawn turned away.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-04a","name":"Today, redrawn","text":"Today's two screens, redrawn from the code: two boxes with blank second lines, then a plain ledger line and MOVE ON. The card you took is never shown.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04b","name":"Chest and brass","text":"The chest large at the top, then each choice as a line over a brass button whose second line says what it gives.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04c","name":"Two tall tiles","text":"Two tall tiles side by side, the card on the left and the potions and coin on the right. Tap one, then TAKE.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04d","name":"The scales","text":"A brass balance across the screen with the card in one pan and the goods in the other. The pan you choose sinks a little and glows.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04e","name":"Look into the chest","text":"You look down into the open chest: the card lies on one side, the goods on the other. The one you tap is ringed and the other fades.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04f","name":"Drag to the pack","text":"No menu. The card and the goods lie on the road and you drag one down into your pack at the foot of the screen.","bold":1,"w":796,"h":844,"wide":1},
+  {"id":"S-04g","name":"The trade ledger","text":"A vellum ledger page with two lines, each showing what it adds to your deck or purse. Sign one, then take it.","bold":1,"w":796,"h":844,"wide":1},
+  {"id":"S-04h","name":"One at a time","text":"One large tile at a time, the other peeking in from the right edge as in the Shop. TAKE on brass.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04i","name":"The finder","text":"A hooded old man holds the chest and offers both ways to leave it, each with a brass button naming what it gives.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-04j","name":"Picture first","text":"A wide view of the cache with the two choices as captions under it, each with its own small TAKE button.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05a","name":"Today's screen","text":"Today's screen: the foe over an empty lower half, DANGER shown as \"[ ? ? ? ]\" with no explanation, and WITHDRAW's cost as one faint line.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-05b","name":"Arena and panel","text":"The foe stands large in its arena. A dark panel under it holds name, level, VITAE, yours, and how many moves are hidden. WITHDRAW says its cost on its second line.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05c","name":"Foe as a card","text":"The foe is one big card face: name, picture, level and VITAE, then what it does as rules text. An elite has an oxblood border, the boss a gold one.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05d","name":"You versus it","text":"The foe and its VITAE bar at the top, a VS line across the middle, you and your VITAE bar below.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05e","name":"Posted warning","text":"A framed notice with the foe's sketch and short rows: what it strikes with, what it guards with, what it holds, how many moves are still hidden.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05f","name":"Held boss plate","text":"The boss title card as a full-screen plate: CHAPTER 1 BOSS, the name enormous in gold, the Saint rising from the foot. Tap to go on to the reveal.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-05g","name":"Out of the dark","text":"Almost all black: the name and two numbers on top, the foe lit from below, the buttons under it.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-05h","name":"The road","text":"A strip of map under the foe shows this place and the ones beyond it. For an elite the road beyond is drawn shut until the fight is won.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05i","name":"The reckoning","text":"Two columns, yours and its: portrait, VITAE, level and hidden moves. Under them the kind of foe as one large word with a one-line gloss.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-05j","name":"Spiked frame","text":"The frame tells the kind of foe. This elite sits in an oxblood frame set with spikes; a plain frame would hold a normal foe and a gilded arch the boss.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06a","name":"Today's screen","text":"Today's board: hand cards overlap until names clip, the staged card covers the foe, the intent has no number, statuses are bare glyphs, and nothing says to drag.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06b","name":"Repaired board","text":"The same order as today, top to bottom. The hand fits side by side, the foe says it strikes for 12, each die is named with its face, and a line says to drag.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06c","name":"Hand as a tray","text":"Five narrow columns, each a name over a small picture and its two numbers. A panel above the tray shows the card you tapped, large.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06d","name":"Three bands","text":"Foe on top, a framed staging lane in the middle holding the played card, its die and APPLY, then dice and hand below.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06e","name":"Grid and rail","text":"The hand is a grid of fully readable cards, three over two. The four dice, Conviction and Momentum stand in a rail down the right edge.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-06f","name":"Table from above","text":"The foe is a card whose rules text is its intent. A brass line divides the table: your staged card and die sit across it from the foe, your hand below.","bold":1,"w":390,"h":844,"wide":0},
+  {"id":"S-06g","name":"Dice first","text":"Four large dice in the middle, each face named and explained underneath. Cards are slim name strips; the staged one sits on top with its die and APPLY.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06h","name":"Intent banner","text":"A full-width banner under the foe says what it will do and what gets through your Guard. Statuses are named rows, the foe's at the top and yours by the hand.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06i","name":"One card, large","text":"One large card in the centre with its neighbours peeking in; swipe to choose, drag up to play. Five name tabs below keep every name in view.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-06j","name":"First turn, taught","text":"A clean board with four short numbered labels pointing at the dice, the drag, the signature and END, as the first fight would show it.","bold":0,"w":390,"h":844,"wide":0},
+  {"id":"S-07a","name":"Today, four moments","text":"The four ends as they are now, partly redrawn from the code: a card draft and a summary panel but no victory screen, a defeat panel with no cause, and placeholder lines for the death return and Game Over.","bold":0,"w":796,"h":1704,"wide":1},
+  {"id":"S-07b","name":"The spoils board","text":"Victory is one board: shillings, XP and level on three plates, the three cards, TAKE. The defeat is the same board with the cause at its head.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-07c","name":"The fallen foe","text":"The beaten foe lies dimmed and toppled, with the card offer beneath it. The death return is your own figure standing back up at 1 VITAE.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-07d","name":"The tally","text":"A ledger of what the fight paid, line by line, ending in the card pick. Game Over is the run's closing account.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-07e","name":"The enormous number","text":"A level-up fills the top of the screen with a huge 2 and what it gives. The defeat does the same with the turn limit: a huge 60 and the reason in words.","bold":1,"w":796,"h":844,"wide":1},
+  {"id":"S-07f","name":"The chapter closes","text":"The map with the road you walked drawn on it and Chapter 1 done. The death return is the same map with you set back one step and the place you fell marked.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-07g","name":"The stone","text":"Victory is carved on a monument: who fell, the chapter, the spoils. Game Over is the epitaph with the run's numbers.","bold":1,"w":796,"h":844,"wide":1},
+  {"id":"S-07h","name":"The memoir page","text":"A vellum page the fight is written into, the three cards pasted in. The defeat is the page for a withdrawal, struck through in red, with what it cost.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-07i","name":"Step by step","text":"A stepped sequence with dots: shillings, level, card, chapter, one at a time. The death return is step one of three.","bold":0,"w":796,"h":844,"wide":1},
+  {"id":"S-07j","name":"Almost nothing","text":"Black, one dim figure, one line, the three cards, one button. Game Over is a figure, one line and NEW CHARACTER.","bold":0,"w":796,"h":844,"wide":1},
+];
+
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const letter = (id) => id.slice(-1).toUpperCase();
+
+const cardHtml = (c) => `
+  <label class="card${c.wide ? ' wide' : ''}" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${c.id}: ${esc(c.name)}">
+    <div class="top">
+      <div class="name">${letter(c.id)}. ${esc(c.name)}${c.bold ? '<span class="bold">BOLD</span>' : ''}</div>
+      <div class="ref">${esc(c.text)}</div>
+      <a class="full" href="screens/${c.id}.webp" target="_blank" rel="noopener">${c.id} · full size</a>
+    </div>
+    <img src="screens/${c.id}.webp" alt="${c.id}: ${esc(c.name)}" loading="lazy" width="${c.w}" height="${c.h}">
+  </label>`;
+
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}" id="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: what to change, or what to borrow from another look (optional)">
+  </section>`;
+
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+document.getElementById('jump').innerHTML = SLOTS.map((s) => `<a href="#${s.slot}" data-jump="${s.slot}">${s.slot} ${esc(s.label)}</a>`).join('');
+
+/* One tick per screen: ticking a look unticks the others in its row. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) {
+    box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  }
+  refresh();
+});
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  SLOTS.forEach((s) => document.querySelector(`[data-jump="${s.slot}"]`).classList.toggle('done', k.some((id) => id.startsWith(s.slot))));
+  document.getElementById('count').textContent = `${k.length} of ${SLOTS.length} answered`;
+};
+refresh();
+
+/* The verdict sheet: one line per screen. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: seven Breakwater screens, ten looks each (${BALLOT_ID})`,
+    `answered ${k.length} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const id = k.find((x) => x.startsWith(s.slot));
+      const c = CARDS.find((x) => x.id === id);
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      return `${s.slot} ${s.label}: ${c ? `KEEP ${c.id} (${c.name})` : 'no answer'}` + (note ? ` | note: ${note}` : '');
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
