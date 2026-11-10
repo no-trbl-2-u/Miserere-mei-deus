@@ -26,7 +26,7 @@
 
 ## Waiting on the loop
 
-- Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes VL1d, UP1j
+- Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes UP1j
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
 
