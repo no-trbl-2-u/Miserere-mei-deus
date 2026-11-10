@@ -16,6 +16,8 @@ import { render } from '@testing-library/react-native';
 import React from 'react';
 
 import VillageScreen from '@/app/village/index';
+import VillageRestScreen from '@/app/village/rest';
+import VillageShopScreen from '@/app/village/shop';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -71,8 +73,23 @@ describe('stall prices name the currency (critique pass 84)', () => {
         );
 
         expect(flatText(r.getByTestId('village-purse').props.children)).toMatch(/^240 SHILLINGS/);
-        expect(flatText(r.getByTestId('village-rest-price').props.children)).toBe('6 SHILLINGS');
-        expect(flatText(r.getByTestId('village-card-grey-ward-price').props.children)).toBe('BUY · 6 SHILLINGS');
-        expect(flatText(r.getByTestId('village-remove-price').props.children)).toBe('5 SHILLINGS');
+        r.unmount();
+
+        // 168.3: each counter's prices live on its own screen.
+        const rest = render(
+            <GameStoreProvider store={villageStore()}>
+                <VillageRestScreen />
+            </GameStoreProvider>,
+        );
+        expect(flatText(rest.getByTestId('village-rest-price').props.children)).toBe('6 SHILLINGS');
+        rest.unmount();
+
+        const shop = render(
+            <GameStoreProvider store={villageStore()}>
+                <VillageShopScreen />
+            </GameStoreProvider>,
+        );
+        expect(flatText(shop.getByTestId('village-card-grey-ward-price').props.children)).toBe('BUY · 6 SHILLINGS');
+        expect(flatText(shop.getByTestId('village-remove-price').props.children)).toBe('5 SHILLINGS');
     });
 });

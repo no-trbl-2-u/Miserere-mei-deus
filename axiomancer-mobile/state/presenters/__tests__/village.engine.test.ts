@@ -20,7 +20,8 @@ import {
     type NPC,
     type VillageVisit,
 } from '@mechanics';
-import { removableCards, selectVillageVM } from '../village.engine';
+import { removableCards, selectVillageVM, villageHubCounters } from '../village.engine';
+import { VILLAGE_HOST_LINE } from '../village.copy';
 import type { AppStoreState } from '@/state/store';
 
 type VillageState = Pick<AppStoreState, 'event' | 'player'> & { flags?: readonly string[] };
@@ -236,5 +237,28 @@ describe('removableCards', () => {
         const rows = removableCards(deck);
         expect(rows.reduce((n, r) => n + r.count, 0)).toBe(deck.length);
         expect(new Set(rows.map(r => r.cardId)).size).toBe(rows.length);
+    });
+});
+
+describe('the hub (168 A1)', () => {
+    it('gives one counter per counter the village carries, REST, SHOP, BLACKSMITH order', () => {
+        expect(villageHubCounters(selectVillageVM(makeState({ rest: true, cardShop: true })))).toEqual(['rest', 'shop']);
+        expect(villageHubCounters(selectVillageVM(makeState({ cardShop: true })))).toEqual(['shop']);
+        expect(villageHubCounters(selectVillageVM(makeState({})))).toEqual([]);
+    });
+
+    it('opens the Shop for a gear counter alone, and the Blacksmith for an anvil', () => {
+        const vm = selectVillageVM(makeState({}));
+        const gear = { pieceId: 'p', name: 'P', sub: 'Weapon' as const, effect: null, price: 40, sold: false, enabled: true, refusal: null };
+        expect(villageHubCounters({ ...vm, equipmentShop: [gear] })).toEqual(['shop']);
+        expect(villageHubCounters({ ...vm, equipmentShop: [] })).toEqual([]);
+        expect(villageHubCounters({ ...vm, anvil: { variants: [], cheapestWork: 4 } })).toEqual(['smith']);
+    });
+
+    it("speaks the village's description as the host's line, else the placeholder", () => {
+        expect(selectVillageVM(makeState({})).hostLine).toBe(VILLAGE_HOST_LINE);
+        const state = makeState({});
+        (state.event.pending!.event as { description?: string }).description = 'Salt on everything.';
+        expect(selectVillageVM(state).hostLine).toBe('Salt on everything.');
     });
 });

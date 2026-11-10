@@ -17,7 +17,8 @@ import {
     createNewGameState,
     villageEquipmentShopFor,
 } from '@mechanics';
-import VillageScreen from '@/app/village/index';
+// 168.3: the gear counter moved, unchanged, onto the Shop's own screen.
+import VillageScreen from '@/app/village/shop';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { selectVillageVM } from '@/state/presenters/village.engine';
 import { buyVillageEquipmentAction } from '@/state/village/store-actions';
