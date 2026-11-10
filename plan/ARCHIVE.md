@@ -682,3 +682,5 @@
 - 2026-11-09 · 135.6 (alias: SM2f) · Nightly sim report written and committed after each batch · 5afe6a81..5afe6a81 (#1561)
 - 2026-11-09 · 135 · spec complete: Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage · pinned by scripts/sim-report.test.mjs · deleted in (this commit)
 - 2026-11-09 · 167.1 (alias: TK1e) · Production APK posts testers' play; bake is Android-only · 30af7656..30af7656 (#1562)
+- 2026-11-09 · 139.2 (alias: EQ4b) · Gear card shows its effect once, no repeated flavor · fc4937e4..fc4937e4 (#1560)
+- 2026-11-09 · 139 · spec complete: Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat · axiomancer-mobile/state/presenters/__tests__/equipment-detail.engine.test.ts, axiomancer-mobile/components/inventory/__tests__/EquipmentDetailModal.test.tsx · deleted in (this commit)

@@ -389,3 +389,9 @@ Defaults taken:
 - A build posts when the puzzle API URL and token are baked in; the dev menu's play-log switch applies only where DEV TOOLS are on.
 - `preview-build` bakes the production values for `platform: android` only and refuses `all` with `production` before the verify gate.
 - Defaults taken: no consent screen (T, 2026-11-09); dev-tools.md edited only on the posting lines and the lines on which profiles the workflow skips.
+
+`EquipmentDetailModal` skips the flavor line when the view-model carries an effect block; a relic or effectless gear keeps
+it. `flavor` stays the item description in the view-model, because the item-reward screen prints only `flavor` (it has
+no effect block) and would otherwise show a found weapon with no text at all. Presenter, modal and item-reward screen
+tests pin the weapon, armor, relic and effectless cases. Before and after shots at 360 wide were taken from the web export and sent to T in
+session (the proxy refuses uploads).
