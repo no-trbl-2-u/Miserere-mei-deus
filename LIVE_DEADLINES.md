@@ -7,13 +7,11 @@
 
 | Due | Item | What it needs | Window |
 |---|---|---|---|
-| 2026-11-07 (3 days overdue) | Event kind 5, village (paid rest, card shop, Anvil): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h). T, 2026-11-06: the village is a hub of options (Rest, Card Shop, Blacksmith, any other offer, Exit); each option opens its own screen with an NPC image and what it offers, and each of those screens is pitched (design and NPC image) and plotted on its own; nothing in the village is re-skinned until then | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-07 (3 days overdue) | Merge PR #1409, the six Breakwater enemy frame sets, so the recast's art chunk can wire them. `main`'s verify-mobile is red until spec 157's EN3c lands, and every open PR is gated behind it (0.1 h) | needs you: your task | W2 |
 | 2026-11-08 (2 days overdue) | Event kind 6, travel ("move to X?", secret paths): pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (1 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-08 (2 days overdue) | Find two travel images: Chapter 1 to Chapter 2, and the Chapter 1 cave shortcut (0.5 h) | needs you: your task | W2 |
 | 2026-11-08 (2 days overdue) | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | needs you: your task | W2 |
 | 2026-11-09 (1 day overdue) | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | needs a plot: no build-plan rows yet | W2 |
-| 2026-11-09 (1 day overdue) | The Blacksmith (the village's Anvil): pitch its own screen's full treatment (design, NPC image, transitions, copy, working end to end), settle it and plot it. Its UI/UX was never reworked (T, 2026-11-07), and the village row above has each option screen pitched on its own (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-09 (1 day overdue) | Event kind 7, loot cache: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-09 (1 day overdue) | Event kind 8, cutscene: pitch its full treatment (art, transitions, copy, animation, working end to end), settle it and plot it (0.5 h) | needs a plot: no build-plan rows yet | W2 |
 | 2026-11-09 (1 day overdue) | Plot cloud container enhancements, and settle the path forward for claims and cloud containers (1 h). Three live problems: a background worker cannot post PR screenshots at all (release upload is refused for its session type, the browser route needs a browser it has no access to, and only CI can upload today); `pr-autofix` fires on a branch a live session holds a claim on, so two agents push the same branch; and a claim that has lapsed or was never taken reads the same as an abandoned branch, which made a worker treat a live PR as dead | needs a plot: no build-plan rows yet | W2 |
@@ -22,7 +20,7 @@
 | 2026-11-10 (today) | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | needs you: BW1d ready for you | W2 |
 | 2026-11-10 (today) | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | needs you: your task | W2 |
 | 2026-11-11 (tomorrow) | Review the held loop-doctrine candidates (R11 watch ends, 1 h) | needs you: your task | W2 |
-| 2026-11-11 (tomorrow) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task | W2 |
+| 2026-11-11 (tomorrow) | Review the reworked quest screen (with NPC art) and village screen (rest, shop, Anvil, with NPCs) (1.5 h) | needs you: your task; the loop still owes VL1a, VL1b, VL1c, VL1d, VL1e | W2 |
 | 2026-11-12 (in 2 days) | Review the reworked travel, loot cache and cutscene screens (1.5 h) | needs you: your task | W2 |
 | 2026-11-13 (in 3 days) | Buffer: fixes from the event-screen reviews (1 h) | needs you: your task | W2 |
 | 2026-11-14 (in 4 days) | Mid-MVP check: Chapter 1 on the preview build, file what broke (1 h) | needs you: your task | W2 |
