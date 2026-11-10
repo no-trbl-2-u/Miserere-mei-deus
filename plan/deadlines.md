@@ -8,7 +8,9 @@
 
 - **Tue 2026-11-17 — Act 1, Chapter 1 released.** A full Breakwater run on the phone: Chapter 1's enemies and their art,
   the six lane relics, item icons, the questline, and all eight event screens in their full treatment (encounter,
-  hazard, rest, quest, village, travel, loot cache, cutscene; T, 2026-11-10: "All eight screens").
+  hazard, rest, quest, village, travel, loot cache, cutscene; T, 2026-11-10: "All eight screens"). **When Chapter 1
+  is complete, the version is set to v0.9.0**, the last minor before v1 (T, 2026-11-06). That is the only version
+  this plan names.
 - **Sat 2026-12-26 — Act 1 released.** All four chapters complete and playable on a phone, ending at the Act Boss.
 
 ## How it works

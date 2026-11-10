@@ -486,7 +486,12 @@ export const hasBudgetSection = (md) => /^## Budget\s*$/m.test(md)
 
 /** The `## Budget` section's hours a week, or null when it states none (or the file has no such section). */
 export const parseBudget = (md) => {
-    const m = section(md, 'Budget').match(BUDGET_LINE)
+    const lines = md.split(/\r?\n/)
+    const start = lines.findIndex((l) => /^## Budget\s*$/.test(l))
+    if (start < 0) return null
+    const rest = lines.slice(start + 1)
+    const end = rest.findIndex((l) => l.startsWith('## '))
+    const m = rest.slice(0, end < 0 ? undefined : end).map((l) => l.trimEnd()).join('\n').match(BUDGET_LINE)
     return m && Number(m[1]) > 0 ? Number(m[1]) : null
 }
 

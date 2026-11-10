@@ -6,7 +6,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { hasBudgetSection, itemHours, liveMarkdown, parseBudget, parseItems, planRows, queuePlan, reminderText } from './deadlines-lib.mjs'
 import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
@@ -262,4 +262,29 @@ test('the lint in the queue model: an act dated anything but its window\'s miles
     // The dated model keeps a date per Item.
     const dated = own.replace(/\n## Budget\n\n.*\n/, '\n')
     assert.ok(!checkDeadlines(dated, SOURCES).some((e) => /milestone date/.test(e)))
+})
+
+test('parseBudget reads the section under the same heading hasBudgetSection accepts: a trailing space, CRLF line ends', () => {
+    assert.equal(parseBudget(plan().replace('## Budget\n', '## Budget \n')), 7)
+    assert.equal(parseBudget(plan().replace(/\n/g, '\r\n')), 7)
+    assert.equal(parseBudget('## Budget\n\nnothing here\n\n## Items\n\nHours a week: 7\n'), null, 'a line under another heading is not the budget')
+})
+
+test('the CLI, given a Budget section with no readable hours, says so on stderr and prints the dated reminder', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deadlines-queue-bad-'))
+    try {
+        fs.mkdirSync(path.join(dir, 'scripts', 'plan'), { recursive: true })
+        fs.mkdirSync(path.join(dir, 'plan', 'pending'), { recursive: true })
+        for (const f of ['deadlines.mjs', 'deadlines-lib.mjs', 'check-deadlines.mjs', 'owner.mjs']) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(dir, 'scripts', f))
+        for (const f of fs.readdirSync(path.join(ROOT, 'scripts', 'plan')).filter((n) => n.endsWith('.mjs'))) fs.copyFileSync(path.join(ROOT, 'scripts', 'plan', f), path.join(dir, 'scripts', 'plan', f))
+        fs.writeFileSync(path.join(dir, 'plan', '50-queue.md'), `${SPEC}\n`)
+        fs.writeFileSync(path.join(dir, 'plan', 'deadlines.md'), plan('Hours a week: six'))
+        const run = spawnSync(process.execPath, ['scripts/deadlines.mjs', '--today=2026-11-10'], { cwd: dir, encoding: 'utf8', env: { ...process.env, CI: '', GITHUB_ACTIONS: '' } })
+        assert.equal(run.status, 0)
+        assert.match(run.stderr, /deadlines: ## Budget states no hours a week/)
+        assert.match(run.stdout, /^DEADLINE REMINDER \(2026-11-10; plan\/deadlines\.md, next 2 weeks in LIVE_DEADLINES\.md\)/)
+        assert.doesNotMatch(run.stdout, /Milestones, at/)
+    } finally {
+        fs.rmSync(dir, { recursive: true, force: true })
+    }
 })
