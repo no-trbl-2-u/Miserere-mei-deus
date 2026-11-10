@@ -356,13 +356,14 @@ where each kept deviation lives). It is live at the repo root:
   directory (D66): pre-revamp history is read with `git show
   archive-pre-revamp:plan/archive/<path>`, and only when T asks about
   history. Never read it to learn how the game works.
-- **Deadlines** (T, 2026-10-19): `plan/deadlines.md` is the whole deadline plan (the v0.3 milestone, the
-  two-week windows, and the Items table with every deadline item, done or open, its due date, its goal,
-  how AI helps, and the ids (chunk aliases) that finish it or `needs plot`). The Items table is the one dated
-  list: T ticks a piece there and nowhere else (T, 2026-11-03; the lint fails a dated row outside it). `LIVE_DEADLINES.md` at the root is the next two weeks of
-  items that need T, generated from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A
-  `/plot` of a deadline item replaces its `needs plot` with the new chunks' aliases. The loop is not
-  restricted to the current window.
+- **Deadlines** (T, 2026-11-10: the queue): `plan/deadlines.md` is the whole deadline plan: two milestones, a
+  `## Budget` of T's hours a week, and the Items table, an ordered queue of T's acts. An act has no date of its
+  own: its `Due` cell holds its milestone's date, its place in the table is its priority, its hours are in its
+  name as `(N h)`. The Items table is the one list: T ticks an act there and nowhere else (the lint fails a
+  dated row outside it). `LIVE_DEADLINES.md` at the root is the queue's forecast and this week's acts, generated
+  from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A `/plot` of a queue act replaces
+  its `needs plot` with the new chunks' aliases when they wait on T. Loop rows are not listed there and take
+  their order from `plan/README.md`.
 - `scripts/` — the kit's `plan-check.mjs`, `plan/*.mjs` (order, lanes,
   locks, settle) and `cloud/*.mjs`; ours: `deploy-check.mjs` (CI-green
   deploy gate), `notify.mjs` (pager), `loop-issue.mjs` (GitHub issue
@@ -442,11 +443,12 @@ them; update here first.
    adds it through its own `plan/pending/` file (phase NX1e).
    `plan/deadlines.md` merges through `scripts/deadlines-merge.mjs`
    (`merge.deadlines.driver`, same registration, and `MERGE_DRIVERS` in
-   `scripts/pr-resolve.mjs` for the runner): same-spot Items, Unscheduled
-   lines and Change log lines are all kept (new Items stay in date order), a
-   row both sides edited merges cell by cell, a cell changed two ways keeps
-   its markers, and a merge that would double an Unscheduled id or an Items
-   row is refused.
+   `scripts/pr-resolve.mjs` for the runner): same-spot Items and Change log lines are all kept (new
+   acts stay grouped by milestone, in the order the merge met them), a row
+   both sides edited merges cell by cell, a cell changed two ways keeps its
+   markers, and a merge that would double an Items row is refused. (The
+   driver still handles `## Unscheduled` lines for a file of the dated
+   model; the queue has none.)
 2. **No `Co-Authored-By:` trailers, no emojis** — in commits, code, or
    content.
 3. **The verify gate is non-negotiable.** No `--no-verify`, no

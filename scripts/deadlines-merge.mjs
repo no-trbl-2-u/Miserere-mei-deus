@@ -62,6 +62,10 @@ export function mergeRow(base, ours, theirs) {
 const itemName = (l) => l.split('|')[3]?.trim()
 
 /**
+ * In the queue model (T, 2026-11-10) a row's date is its milestone's, so this keeps the acts two plots
+ * added grouped by milestone, the earlier milestone first, and leaves acts of one milestone in the
+ * order the merge put them. A plot that wants a finer place moves the row after the merge.
+ *
  * Keep rows a clash added in due-date order: when the settled block is Items
  * rows only, the rows that are new (their Item name is not among the base
  * block's) are stable-sorted by date among their own slots. A base row keeps

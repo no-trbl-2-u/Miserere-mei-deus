@@ -162,7 +162,7 @@ upgrade either way.
 | bearings knobs | march 2h, timeouts, digest odd days, `/expand` bold | as cited | v2 knob slots | KEEP values |
 | lessons / reflexes | Slug ladder, 2x automate, 3x reflex | R11, D94 | v2 footguns, better | TAKE (keep D94 split) |
 | NEEDS_T | Fixes only T can make | D94 | none | KEEP |
-| deadlines | W1-W5, every Item a T act | T 2026-10-19/28 | none | KEEP: the old-id alias map is the chunk line's `alias:` (shipped: the ARCHIVE line's `(alias: …)`), read by `deadlines.mjs` and `check-deadlines.mjs` since NX1c |
+| deadlines | Two milestones, a budget, one queue of T's acts (W1-W5 until 2026-11-10) | T 2026-10-19/28, 2026-11-10 | none | KEEP: the old-id alias map is the chunk line's `alias:` (shipped: the ARCHIVE line's `(alias: …)`), read by `deadlines.mjs` and `check-deadlines.mjs` since NX1c |
 | AUDIT / CRITIQUE | 178 KB / 320 KB; stale "revamp support" bias | accreted | v2 state diet (256 KB cap) | TAKE, compact |
 | PHASE_CANDIDATES | `[owner]` rows | R11 | `CANDIDATES.md` | TAKE (renamed by the upgrader) |
 | `[blocked: owner-led]` | 9 locks with no timeout | D46/D64 | Held lines with `max_age` | TAKE |

@@ -5,8 +5,11 @@
 //
 // Fails when plan/deadlines.md and the Status block of plan/steps/01_build_plan.md
 // disagree:
-//   - an open build-plan row (`[ ]`, `[-]`, `[blocked: …]`) that no Items row names
-//     and no `## Unscheduled` line excuses, or an `## Unscheduled` line with no reason;
+//   - in the dated model only (a file with no `## Budget`): an open build-plan row (`[ ]`, `[-]`,
+//     `[blocked: …]`) that no Items row names and no `## Unscheduled` line excuses. The queue model
+//     (T, 2026-11-10) lists T's acts only, so it has no such rule: nothing there checks that a
+//     chunk waiting on T has an act;
+//   - an `## Unscheduled` line with no reason;
 //   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row,
 //     in its `Rows` or its `Waits on` cell (phase DL2a);
 //   - one phase id named twice in the Items table (`Rows` and `Waits on` both count, in
@@ -38,7 +41,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, datedRowsOutsideItems, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -81,6 +84,12 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     const unscheduled = parseUnscheduled(deadlinesMd)
     const windows = parseWindows(deadlinesMd)
     const errors = resolved.errors.map((e) => `${DEADLINES}: ${e}`)
+    // The section, not its number, marks the queue model: a mistyped hours line must say so here,
+    // never fall back to the dated model and ask every open row for a line.
+    const queueModel = hasBudgetSection(deadlinesMd)
+    if (queueModel && parseBudget(deadlinesMd) === null) {
+        errors.push(`${DEADLINES}: ## Budget states no hours a week; write one line "Hours a week: <number above 0>" under it.`)
+    }
 
     // An id in `Rows` or in `Waits on` is named; each place is recorded so a clash names both.
     const namedBy = new Map()
@@ -98,7 +107,7 @@ export const checkDeadlines = (deadlinesMd, plan) => {
         for (const id of Array.isArray(item.rows) ? item.rows : []) {
             const row = phases.get(id)
             if (row && row.open && !row.waitsOnT) {
-                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks, or under ## Unscheduled.`)
+                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks${queueModel ? '; the queue lists no loop rows of its own' : ', or under ## Unscheduled'}.`)
             }
         }
         const want = derivedStatus(item, phases)
@@ -110,6 +119,9 @@ export const checkDeadlines = (deadlinesMd, plan) => {
             errors.push(`${DEADLINES}: Item "${item.name}" is in window ${item.window}, which has no row in the ## Windows table; add the window or fix the cell.`)
         } else if (!inWindow(item.due, window)) {
             errors.push(`${DEADLINES}: Item "${item.name}" is due ${item.due}, outside ${item.window}; move the date into the window or change the window.`)
+        } else if (queueModel && item.due.slice(5) !== `${String(window.to[0]).padStart(2, '0')}-${String(window.to[1]).padStart(2, '0')}`) {
+            // The queue: an act has no date of its own, and every distinct date is a milestone the reminder forecasts.
+            errors.push(`${DEADLINES}: Item "${item.name}" is due ${item.due}, which is not ${item.window}'s milestone date (the window's last day); an act carries its milestone's date, never its own.`)
         }
     }
 
@@ -135,6 +147,10 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     for (const row of datedRowsOutsideItems(deadlinesMd)) {
         errors.push(`${DEADLINES}: a dated table row sits outside ## Items ("${row}"); every dated piece is one Items row, with its Goal and How AI helps cells, so the table there is the only list to tick.`)
     }
+
+    // The queue model (a `## Budget` section; T, 2026-11-10) lists T's acts only: a loop row needs
+    // no line here, so the coverage rule below belongs to the dated model alone.
+    if (queueModel) return errors
 
     for (const [id, row] of phases) {
         if (!row.open || namedBy.has(id) || excused.has(id)) continue

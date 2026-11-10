@@ -73,8 +73,8 @@ three).
 - **No order against B1** Accepted by T as the default (2026-10-26, "update the PRs, then merge them").. The row requires nothing and can be sat whenever T picks a date;
   sitting it before B1's session (Dec 5) lets B1 author set pieces and the first weapons and armor with the rule
   in hand, so that is the suggestion, not a gate.
-- **Not part of the Act 1 MVP.** T: "doesn't need to be part of the Act 1 MVP deadline". The row is under
-  `## Unscheduled` in `plan/deadlines.md`, "date not set"; no MVP Item changes.
+- **Not part of the Act 1 MVP.** T: "doesn't need to be part of the Act 1 MVP deadline". The row has no
+  act in `plan/deadlines.md`'s queue until T asks for the session; no release Item changes.
 - **Slot: anytime**, after the last open row (ER1). It blocks no open row and fixes no defect.
 - **Attended.** The session's answers are T's design (D88, D99); the loop never picks this row on its own turn.
 - **Prior art the agent brings:** Diablo II and III set items (tiered bonuses at 2/4/6 pieces), Hades' duo boons

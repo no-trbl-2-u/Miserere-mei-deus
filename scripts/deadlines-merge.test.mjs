@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url'
 
 import { mergeBuildPlan } from './build-plan-merge.mjs'
 import { dupCounts, mergeDeadlines, mergeRow, tidyItems } from './deadlines-merge.mjs'
-import { ITEM_ROW } from './deadlines-lib.mjs'
+import { ITEM_ROW, parseBudget, parseItems } from './deadlines-lib.mjs'
 import { rederiveStatus } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -168,6 +168,15 @@ test('two edited base rows out of date order keep their places (ticks on both ro
   )
   const [p2, q2] = [item('Pee', { mark: 'x', due: '2026-12-01', rows: 'P1' }), item('Queue', { mark: 'x', due: '2026-11-01', rows: 'Q1' })]
   assert.deepEqual(tidyItems([p2, q2], [p, q]), [p2, q2])
+})
+
+// The queue model: acts of one milestone share a `Due`, so the sort must leave them in the order the merge met them.
+test('tidyItems keeps new rows of one milestone in merge order and groups a later milestone after them', () => {
+  const [x, y, z] = [item('X', { due: '2026-11-17' }), item('Y', { due: '2026-11-17' }), item('Z', { due: '2026-11-17' })]
+  assert.deepEqual(tidyItems([y, x, z], []), [y, x, z])
+  assert.deepEqual(tidyItems([z, y, x], [y]), [z, y, x])
+  const late = item('Late', { due: '2026-12-26' })
+  assert.deepEqual(tidyItems([late, y, x], []), [y, x, late])
 })
 
 test('tidyItems sorts only the new rows, leaves base rows in place, and ignores other blocks', () => {
@@ -332,7 +341,6 @@ test('a real git merge with the driver registered keeps both plots, and the live
     const edit = (tag, due) => {
       let text = live
       text = text.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **plot ${tag}** (T).\n`)
-      text = text.replace('\n## How a window closes', `- ${tag} — loop work; date not set.\n\n## How a window closes`)
       const lines = text.split('\n')
       const at = lines.indexOf('| Status | Due | Item | Goal | How AI helps | Window | Rows | Waits on |')
       assert.ok(at > 0)
@@ -343,18 +351,25 @@ test('a real git merge with the driver registered keeps both plots, and the live
       return lines.join('\n')
     }
     git('switch', '-q', '-c', 'plot-t')
-    fs.writeFileSync(file, edit('TT1', '2026-10-29'))
+    fs.writeFileSync(file, edit('TT1', '2026-11-17'))
     git('commit', '-q', '-am', 'plot T')
     git('switch', '-q', 'main')
-    fs.writeFileSync(file, edit('OO1', '2026-10-28'))
+    fs.writeFileSync(file, edit('OO1', '2026-11-17'))
     git('commit', '-q', '-am', 'plot O')
     git('merge', '-q', '--no-edit', 'plot-t')
     const text = fs.readFileSync(file, 'utf8')
-    for (const needle of ['Item OO1', 'Item TT1', '- OO1 —', '- TT1 —', 'plot OO1', 'plot TT1']) {
+    // The live file is the queue model: it has no `## Unscheduled` list, so a plot adds a row and a change-log line.
+    for (const needle of ['Item OO1', 'Item TT1', 'plot OO1', 'plot TT1']) {
       assert.equal(text.split(needle).length - 1, 1, needle)
     }
     assert.ok(!text.includes('<<<<<<<'))
     assert.ok(text.indexOf('Item OO1') < text.indexOf('Item TT1'))
+    // The merged file is still the queue: its budget survives and both new acts parse as Items of the first milestone.
+    assert.equal(parseBudget(text), parseBudget(live))
+    assert.ok(parseBudget(text) > 0, 'the live plan states a budget')
+    const merged = parseItems(text)
+    assert.equal(merged.length, parseItems(live).length + 2)
+    assert.deepEqual(merged.filter((i) => /^Item (OO1|TT1)$/.test(i.name)).map((i) => [i.name, i.window, i.waitsOn]), [['Item OO1', 'W1', ['OO1']], ['Item TT1', 'W1', ['TT1']]])
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
