@@ -31,6 +31,7 @@ import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
 import { OFFER_TILE_CHROME, SPOILS_INK, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
 import { centreBeadLabel, upgradeByA11yAction } from '@/test-utils/cardUpgrade';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+import { DEFAULT_THEME_ID, THEME_SPECS } from '@/theme/palette';
 
 // The three real library cards the reward draft offers: the grey office.
 const OFFER_IDS = ['grey-strike', 'grey-ward', 'grey-word'];
@@ -302,6 +303,8 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         renderElite();
         fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
         expect(within(screen.getByTestId('card-upgrade-figure')).UNSAFE_getByProps({ source: UPGRADE_FIGURE_STANDIN })).toBeTruthy();
+        // A solid ground: the fight's VITAE bar does not show through (T, PR #1579).
+        expect(StyleSheet.flatten(screen.getByTestId('combat-rewards').props.style).backgroundColor).toBe(THEME_SPECS[DEFAULT_THEME_ID].spec.bg);
         // The elite reward prints no price: the card is the prize.
         expect(screen.queryByTestId('card-upgrade-price')).toBeNull();
         // No drag turns it, and no adjust action is offered to a screen reader.

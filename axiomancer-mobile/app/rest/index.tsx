@@ -121,22 +121,28 @@ export default function RestScreen() {
         <SafeAreaView style={styles.safe} edges={['top']}>
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
                 <View style={styles.column} testID="rest-column">
-                    <Text style={styles.title}>{REST_CHOICE_TITLE}</Text>
+                    {/* The upgrade screen opens on its figure (T, PR #1579): no
+                        title and no purse or VITAE box above it. */}
+                    {vm.phase !== 'upgrade-pick' && (
+                        <>
+                            <Text style={styles.title} testID="rest-title">{REST_CHOICE_TITLE}</Text>
 
-                    <View style={styles.purseRow} testID="rest-purse">
-                        <Text style={styles.purseLabel}>{REST_CHOICE_PURSE_LABEL}</Text>
-                        <Text style={styles.purseValue}>{vm.currency}</Text>
-                        <View style={styles.vitae}>
-                            <StatBar
-                                value={vm.health}
-                                max={Math.max(1, vm.maxHealth)}
-                                color={AXM.blood}
-                                label="VITAE"
-                                height={8}
-                                alarmAt={0.25}
-                            />
-                        </View>
-                    </View>
+                            <View style={styles.purseRow} testID="rest-purse">
+                                <Text style={styles.purseLabel}>{REST_CHOICE_PURSE_LABEL}</Text>
+                                <Text style={styles.purseValue}>{vm.currency}</Text>
+                                <View style={styles.vitae}>
+                                    <StatBar
+                                        value={vm.health}
+                                        max={Math.max(1, vm.maxHealth)}
+                                        color={AXM.blood}
+                                        label="VITAE"
+                                        height={8}
+                                        alarmAt={0.25}
+                                    />
+                                </View>
+                            </View>
+                        </>
+                    )}
 
                     {vm.phase === 'offer' && (
                         <View style={styles.offerPhase}>
