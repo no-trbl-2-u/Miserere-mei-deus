@@ -16,13 +16,13 @@ date: 2026-11-10
 ~~~ section Design
 ### The string of beads (T, `/pitch` then `/plot asap`, 2026-11-10)
 
-The shared upgrade screen (`components/upgrade/CardUpgradePicker.tsx`, UP1d) is reworked into the look T settled over two ballot rounds: `plan/card-ledger/upgrade.md` (both verdicts verbatim) and its settled shot `plan/card-ledger/upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md` (in PR #1574 until it merges); its Handoff block is the source of the acceptance below. The rules do not change: one card, one copy, its next upgrade (`nextUpgradeId`), every number from `cardUpgradePreviewVM`.
+The shared upgrade screen (`components/upgrade/CardUpgradePicker.tsx`, UP1d) is reworked into the look T settled over two ballot rounds: `plan/card-ledger/upgrade.md` (both verdicts verbatim) and its settled shot `plan/card-ledger/upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md`; its Handoff block is the source of the acceptance below. The rules do not change: one card, one copy, its next upgrade (`nextUpgradeId`), every number from `cardUpgradePreviewVM`.
 
 Top to bottom, on the settled shot:
 
 - The HUD's place name and purse, as today's hosts give them.
 - A large figure at the top in a gold glow: a stand-in from `Potential Assets/sorted-entity-library-base` (TOR-0007 Ahimsa, `items/Ahimsa.jpg`, black ground removed), carried into the app's assets with a provenance entry like the village keepers' (168.1). Art is T's (D88); the stand-in only holds the space.
-- B's pair: the card as it is (smaller, tilted, greyed, labelled AS IT IS) beside the card as it will be (upright, gold border and glow, the changed numbers in gold), with one line under it: `AS IT WILL BE · <change>` (for example `LEECH 4 → 5`; two changes join with ` · `). The cards are smaller than round 2's A (T's round 2 note) and use the one card face (D91).
+- B's pair: the card as it is (smaller, tilted, greyed) beside the card as it will be (upright, gold border and glow, the changed numbers in gold), with no AS IT IS or AS IT WILL BE label (T, 2026-11-10). Under the new card, one line names the change: `LEECH 4 → 5` (two changes join with ` · `) [T to confirm #9]. The cards are smaller than round 2's A (T's round 2 note) and use the one card face (D91).
 - The wheel: a wide wheel whose top rim shows at the foot, one bead per upgradable card (the card's art in a ring of its colour). Only the bead at the top centre is offered. It is larger and wears the special border: a brass double ring and a gold notch above it.
 - HOLD, the brass action button, under the wheel. Holding it fills a gold ring round the centre bead. Nothing sits under HOLD (T's round 2 note).
 
@@ -36,10 +36,11 @@ Calls for T, each with the default the build assumes (merging accepts an unanswe
 - **[T to confirm #6]** Today's locked `???` slot is dropped, replacing the UP1 decision "The ??? slot is shown, locked".
 - **[T to confirm #7]** The rest site gets a way back out of the upgrade, like the Anvil's back row; today it has none once the picker opens.
 - **[T to confirm #8]** The same stand-in figure stands at all three hosts until T supplies art.
+- **[T to confirm #9]** With the labels gone, the change alone (`LEECH 4 → 5`) stays as one line under the new card.
 ~~~
 ~~~ acceptance
 - **A?beadsonly** On the upgrade screen only the card on the centre bead can be upgraded. Dragging along the wheel's rim turns it and snaps a bead to the centre; no other control commits an upgrade.
-- **A?beadspair** Above the wheel, the card as it is (smaller, tilted, greyed) sits beside the card as it will be (upright, gold border, changed numbers in gold), with `AS IT WILL BE · <change>` under it; every number and the change line come from the card-upgrade presenter, so they cannot disagree with the card the player will draw.
+- **A?beadspair** Above the wheel, the card as it is (smaller, tilted, greyed) sits beside the card as it will be (upright, gold border, changed numbers in gold), no AS IT IS or AS IT WILL BE label, and the change alone (`LEECH 4 → 5`) under it (#9); every number and the change line come from the card-upgrade presenter, so they cannot disagree with the card the player will draw.
 - **A?beadshold** Holding HOLD fills a ring round the centre bead. Letting go before it closes empties it and commits nothing; a closed ring commits exactly one upgrade of one copy through the host's `onConfirm`.
 - **A?beadsa11y** A screen reader can reach each bead, bring it to the centre and upgrade it without the hold, through an accessibility action on the centre bead.
 - **A?beadshosts** The rest site, the Anvil and the elite reward all open the same screen. Each host keeps its own price line and way back, the rest site gains one (#7), and the card-upgrade engine and presenter tests pass unchanged.
