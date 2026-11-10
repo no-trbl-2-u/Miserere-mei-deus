@@ -2,14 +2,14 @@
 
 > Generated 2026-11-10 by `node scripts/deadlines.mjs --write` from `plan/deadlines.md` (the whole plan) and the
 > build plan. Do not edit by hand: change `plan/deadlines.md`. An act has no date of its own: it serves a
-> milestone, and the queue's order is its priority. The forecast assumes 6.5 h a week.
+> milestone, and the queue's order is its priority. The forecast assumes 10 h a week.
 
 ## Milestones
 
-- **2026-11-17** — Tue, Nov 17 (in 7 days): 17 acts open (15.5 h), 15.5 h queued up to it, 6.5 h available: over by 9 h; at this pace the queue reaches it Fri, Nov 27.
-- **2026-12-26** — Sat, Dec 26 (in 46 days): 25 acts open (31.5 h), 47 h queued up to it, 42.7 h available: over by 4.3 h; at this pace the queue reaches it Thu, Dec 31.
+- **2026-11-30** — Mon, Nov 30 (in 20 days): 17 acts open (15.5 h), 15.5 h queued up to it, 28.6 h available: fits, with 13.1 h to spare.
+- **2026-12-26** — Sat, Dec 26 (in 46 days): 25 acts open (31.5 h), 47 h queued up to it, 65.7 h available: fits, with 18.7 h to spare.
 
-## This week (6.5 h)
+## This week (10 h)
 
 | # | Act | Hours | What it needs |
 |---|---|---|---|
@@ -21,13 +21,16 @@
 | 6 | Find two travel images: Chapter 1 to Chapter 2, and the Chapter 1 cave shortcut (0.5 h) | 0.5 | needs you: your task |
 | 7 | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | 1 | needs you: your task |
 | 8 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | 1 | needs you: your task |
+| 9 | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | 1.5 | needs you: your task |
+| 10 | Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upgrade screen (the string of beads) (1.5 h) | 1.5 | needs you: your task |
+| 11 | Review the reworked travel, loot cache and cutscene screens (1.5 h) | 1.5 | needs you: your task |
 
-31 more acts are ready after these.
+28 more acts are ready after these.
 
 ## Waiting on the loop
 
-- Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes UP1j
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
+- Re-tune Chapter 1's enemies against the recast roster: levels (all under 10), how often each normal repeats... — the loop still owes MS1a, MS1b
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
 
 ## No hours stated
