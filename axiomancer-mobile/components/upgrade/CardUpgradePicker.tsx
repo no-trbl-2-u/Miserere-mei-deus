@@ -32,7 +32,7 @@ import Animated, {
     withTiming,
     type SharedValue,
 } from 'react-native-reanimated';
-import Svg, { Circle, Defs, Path, RadialGradient, Stop } from 'react-native-svg';
+import Svg, { Circle, Defs, Ellipse, Path, RadialGradient, Stop } from 'react-native-svg';
 
 import { cardArtFor } from '@/assets/images/cards';
 import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
@@ -352,7 +352,8 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine, figure = UPGRADE
                                 <Stop offset="1" stopColor={gold} stopOpacity={0} />
                             </RadialGradient>
                         </Defs>
-                        <Circle cx="50%" cy="50%" r="50%" fill="url(#cardUpgradeGlow)" />
+                        {/* Fitted to the slot, so the glow fades out before its edges. */}
+                        <Ellipse cx="50%" cy="50%" rx="50%" ry="50%" fill="url(#cardUpgradeGlow)" />
                     </Svg>
                     <Image source={figure} style={styles.figure} contentFit="contain" transition={0} />
                 </View>
