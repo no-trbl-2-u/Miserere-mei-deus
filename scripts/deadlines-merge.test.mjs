@@ -338,6 +338,8 @@ test('a real git merge with the driver registered keeps both plots, and the live
     fs.writeFileSync(file, live)
     git('add', '.')
     git('commit', '-q', '-m', 'base')
+    // Both plots add an act of the live plan's first milestone, whatever its date is today.
+    const milestone = parseItems(live).find((i) => i.window === 'W1').due
     const edit = (tag, due) => {
       let text = live
       text = text.replace('\n## Change log\n\n', `\n## Change log\n\n- **2026-10-28** — **plot ${tag}** (T).\n`)
@@ -351,10 +353,10 @@ test('a real git merge with the driver registered keeps both plots, and the live
       return lines.join('\n')
     }
     git('switch', '-q', '-c', 'plot-t')
-    fs.writeFileSync(file, edit('TT1', '2026-11-17'))
+    fs.writeFileSync(file, edit('TT1', milestone))
     git('commit', '-q', '-am', 'plot T')
     git('switch', '-q', 'main')
-    fs.writeFileSync(file, edit('OO1', '2026-11-17'))
+    fs.writeFileSync(file, edit('OO1', milestone))
     git('commit', '-q', '-am', 'plot O')
     git('merge', '-q', '--no-edit', 'plot-t')
     const text = fs.readFileSync(file, 'utf8')
