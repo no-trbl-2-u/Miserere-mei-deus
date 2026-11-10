@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url'
 
 import { lintTree, treeVerdict } from './pr-merge.mjs'
 import { driverCommand, MERGE_DRIVERS, mergeMain, updateBranch } from './pr-resolve.mjs'
+import { reportSettle, settleMain } from './pr-settle.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ARCHIVE = 'plan/ARCHIVE.md'
@@ -416,6 +417,23 @@ test('the update CLI mode uses the invoking checkout\'s drivers, never the poiso
     assert.ok(git(work, 'config', 'merge.lessons.driver').includes(path.join(work, 'scripts')), 'driver path is the invoking checkout\'s')
   } finally {
     fs.rmSync(sentinel, { force: true })
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a spec\'s last close without absorb: fails the run, and the failure names the missing key', () => {
+  // One chunk and no Acceptance section, so the only thing between the close and a retire is the key.
+  const { dir, work } = scratch((d) => {
+    write(d, specFile('ZC'), ['# 904 — fixture ZC', '', '## Chunks', '', 'Measure: 1 open · 0 closed · next A2', '', '- [ ] **904.1** fixture chunk ZC1 · S · closes A1 · needs — · alias: ZC1', ''].join('\n'))
+    write(d, 'plan/pending/904.1.md', ['---', 'close: 904.1', 'date: 2026-11-01', 'says: fixture chunk ZC1 shipped', '---', ''].join('\n'))
+  })
+  try {
+    const lines = []
+    const failure = reportSettle(() => settleMain({ root: work, lint: () => [], log: () => {} }), (s) => lines.push(s))
+    assert.match(failure, /held back plan\/pending\/904\.1\.md: it would leave plan\/904-fixture-zc\.md with no chunk: absorb the spec by hand/)
+    assert.match(failure, /or give this close the missing "absorb:" key \(where the spec's lasting rules went: D\?<slug> decisions in this file, a file named, or none\)/)
+    assert.match(lines.at(-1), /^::error::pr-settle: .*held back plan\/pending\/904\.1\.md/, 'the run goes red on it')
+  } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
 })

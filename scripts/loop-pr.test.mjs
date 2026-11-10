@@ -675,6 +675,10 @@ test('the land step names Miserere\'s landing in a marked local block; kit text 
   assert.ok(flat.includes("**Closing a spec's last chunk:** re-read the spec's Design, Decisions and Open questions; record each rule a future builder could break unknowingly as a `## Decisions` entry, unless a test or lint already enforces it; and put `absorb:` in the close's front matter"), 'the local block tells the builder what absorb: is')
   const pendingDoc = read('plan/pending/README.md').replace(/\s+/g, ' ')
   assert.ok(pendingDoc.includes("`absorb:` (Miserere, spec 164) goes on a spec's **last** close and nowhere else: where the spec's lasting rules went"), 'plan/pending/README.md documents the key')
+  // The hand-absorb bullets key on the hold, never on settle's own "lists no chunk now: settle retired it" note.
+  assert.doesNotMatch(land, /lists no chunk now"?: absorb/, 'a retire note does not send the builder to absorb by hand')
+  assert.match(land.replace(/\s+/g, ' '), /A `held back … absorb the spec by hand` line/)
+  assert.match(read('skills/next.md').replace(/\s+/g, ' '), /a spec's last close adds `absorb:`/, '/next\'s close step names the key')
   const notes = read('skills/march.lanes.md')
   const landing = notes.slice(notes.indexOf('### Landing a change'), notes.indexOf('### Retro'))
   assert.match(landing, /plan\/pending\//)

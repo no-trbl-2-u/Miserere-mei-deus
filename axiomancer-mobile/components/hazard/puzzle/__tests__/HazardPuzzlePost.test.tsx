@@ -2,7 +2,8 @@
  * The puzzle board posts each ended attempt once (phase BE1c, A3): one call
  * per attempt that reaches an end, none again when the solver is renamed
  * after the solve, a candidate's intended band on its post, and no call at
- * all in a production build or a build without the API URL and token.
+ * all in a build without the API URL and token, or from a demo that records
+ * nothing because dev tools are off (the poster itself is not gated on them).
  */
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
@@ -14,6 +15,7 @@ import { HazardPuzzleDemo } from '@/components/hazard/puzzle/HazardPuzzleDemo';
 import { createNewGameState, type GameState } from '@mechanics';
 
 import { isDevToolsEnabled } from '@/lib/buildProfile';
+import { puzzleApiConfig } from '@/lib/puzzleAttempts';
 import { hydrateStoreWithGameState } from '@/state/menu/store-actions';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -160,8 +162,12 @@ describe('posting ended attempts (A3)', () => {
 
     it('a build with dev tools off makes no network call: the demo records no attempt to post', () => {
         devTools.mockReturnValue(false);
+        // The poster is not what stays quiet: with dev tools off it still has its URL and token. The demo, which only
+        // records where dev tools are on, hands it nothing, and its MOVE LOG panel is not drawn.
+        expect(puzzleApiConfig()).not.toBeNull();
         const screen = mount();
         solveHardRisk(screen);
+        expect(screen.queryByTestId('hazard-puzzle-log')).toBeNull();
         expect(fetchMock).not.toHaveBeenCalled();
     });
 

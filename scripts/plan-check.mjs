@@ -415,7 +415,8 @@ export function loadPlanDir(dirAbs, label = 'plan', readFile = null) {
   const read = readFile || disk
   const files = fs.existsSync(dirAbs) ? fs.readdirSync(dirAbs).filter((f) => SPEC_FILE.test(f)) : []
   return {
-    specs: files.map((f) => parseSpec(`${label}/${f}`, read(f))),
+    // A spec the settled view retires (an absorbing close emptied it) reads as null: it is gone, not empty.
+    specs: files.flatMap((f) => { const md = read(f); return md === null ? [] : [parseSpec(`${label}/${f}`, md)] }),
     readme: read('README.md'),
     archive: read('ARCHIVE.md'),
     candidates: read('CANDIDATES.md'),

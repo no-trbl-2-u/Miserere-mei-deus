@@ -160,11 +160,12 @@ jobs:
           retention-days: 3
 
   # The report T reads. Runs after the batch whatever its result, on the scheduled
-  # run and a dispatch at main (a preview-build run plays and posts only).
+  # run and a dispatch at main (a preview-build run plays and posts only). A
+  # dispatch from another branch never commits there: it must run at main too.
   report:
     name: Write the nightly report
     needs: sim
-    if: always() && needs.sim.result != 'skipped' && needs.sim.outputs.sha != '' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.ref || 'main') == 'main'))
+    if: always() && needs.sim.result != 'skipped' && needs.sim.outputs.sha != '' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && (inputs.ref || 'main') == 'main'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Joins the loop's group so this commit queues behind a tick instead of racing its push.

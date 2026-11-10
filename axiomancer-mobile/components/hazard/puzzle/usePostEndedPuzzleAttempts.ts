@@ -4,8 +4,8 @@
  * the open attempt is the last entry and ends on the CONFIRM or the expiry.
  * An attempt is remembered by its layout and clock start, so a solver
  * renamed after the solve, a re-render or a second effect run never posts
- * it again. With no API config (production, or no URL or token) this does
- * nothing.
+ * it again. With no API config (no URL or token baked in) this does
+ * nothing; the demo records attempts only where dev tools are on.
  */
 
 import { useEffect, useRef } from 'react';

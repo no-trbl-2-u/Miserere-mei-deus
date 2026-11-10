@@ -6,8 +6,9 @@
  *
  * Only a build with both `EXPO_PUBLIC_PUZZLE_API_URL` and
  * `EXPO_PUBLIC_PUZZLE_API_TOKEN` baked in ever posts; anything else gets a
- * null config and makes no network call. Dev tools do not gate it: the
- * production tester APK has them off and still posts. A post that fails is
+ * null config and makes no network call. Dev tools do not gate the poster,
+ * but the demo that feeds it records attempts only where dev tools are on, so
+ * the production tester APK has nothing to post from here. A post that fails is
  * dropped with a console warning: no retry, no queue, no UI. The warning is
  * not gated on `__DEV__`, which is false in a preview APK.
  */

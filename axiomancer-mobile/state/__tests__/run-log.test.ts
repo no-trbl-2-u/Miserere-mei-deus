@@ -220,6 +220,17 @@ describe('a run, from its start to its end', () => {
         expect(calls).toEqual([]);
     });
 
+    it('a build with dev tools off and the API URL and token baked in still posts (the production tester APK)', async () => {
+        devTools.mockReturnValue(false);
+        const { store, actions, runId } = newGame();
+        const first = walkOn(store, actions);
+        actions.resetRun({ keepCharacter: true });
+        await landed();
+        expect(posts<PlayRunPost>(PLAY_RUNS_PATH)).toHaveLength(1);
+        expect(eventsOf('node-entered').map((e) => e.payload.nodeId)).toEqual([first]);
+        expect(calls.filter((c) => c.url === playRunEndPath(runId))).toHaveLength(1);
+    });
+
     it('a failed post only warns, and the game goes on', async () => {
         fetchOk = false;
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);

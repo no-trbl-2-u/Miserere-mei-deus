@@ -770,7 +770,7 @@ const slugOf = (entry) => /\*\*(\S+?)\*\*/.exec(entry)[1];
 
 /** The next free chunk number of spec `nn`: past every id it lists and every one ARCHIVE.md closed (07.4a counts as 4). */
 export function nextChunkNumber(nn, listed, archive) {
-  const archived = [...(archive ?? '').matchAll(/ · (\d{2,}\.\w+) · /g)].map((m) => m[1]);
+  const archived = [...(archive ?? '').matchAll(/ · (\d{2,}\.\w+)(?: \(alias: [^)]*\))? · /g)].map((m) => m[1]); // Miserere: a line carrying (alias: …) counts
   const nums = [...listed, ...archived].filter((id) => id.startsWith(`${nn}.`)).map((id) => Number(/^\d{2,}\.(\d+)/.exec(id)?.[1] ?? 0));
   return Math.max(0, ...nums) + 1;
 }

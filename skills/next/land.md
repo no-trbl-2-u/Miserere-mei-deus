@@ -41,11 +41,13 @@ origin HEAD:<DEFAULT_BRANCH>`.
   the message it printed.
 - A rejected push: `git fetch`, `git reset --keep
   origin/<DEFAULT_BRANCH>`, settle again.
-- A spec that "lists no chunk now": absorb it before the gate
-  (lasting rules into `identity/` or `plan/bearings.md`, the
-  file and its roadmap row deleted, the archive's `· NN · spec
-  complete: …` line): `git add` it, commit all that is staged
-  with settle's message, minus its `-- <paths>`.
+- A `held back … absorb the spec by hand` line for a spec: absorb
+  it before the gate (lasting rules into `identity/` or
+  `plan/bearings.md`, the file and its roadmap row deleted, the
+  archive's `· NN · spec complete: …` line): `git add` it,
+  commit all that is staged with settle's message, minus its
+  `-- <paths>`. Settle's own note "spec NN lists no chunk now:
+  settle retired it" is no hold: nothing to absorb.
 
 ## 2. The pending file
 
@@ -87,8 +89,9 @@ git commit -m "plan: settle <ids>"         # the message settle printed
 git push origin HEAD:<DEFAULT_BRANCH>
 ```
 
-- "Spec NN lists no chunk now": absorb it in the settle's
-  commit (§1's last bullet); the gate is red until then.
+- A `held back … absorb the spec by hand` line: absorb it in the
+  settle's commit (§1's last bullet); the gate is red until
+  then. A "settle retired it" note needs nothing.
 - Rejected (another session landed first): `git fetch`,
   `git reset --keep HEAD~1` (drops only the settle commit),
   rebase, settle, gate, push. Three rejections → stop, report.

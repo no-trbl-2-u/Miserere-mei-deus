@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import SettingsScreen from '@/app/settings/index';
@@ -109,9 +109,12 @@ describe('SettingsBody rules glossary', () => {
             ...SYSTEM_GLOSSARY,
             ...allRegistryKeywords().map((k) => ({ term: k.toUpperCase(), def: keywordGloss(k) as string })),
         ];
+        // Each term has exactly one entry, carrying its own definition.
+        const entries = screen.getAllByTestId('rules-glossary-sheet-entry');
         for (const { term, def } of expected) {
-            expect(screen.getAllByText(term).length).toBeGreaterThan(0);
-            expect(screen.getAllByText(def).length).toBeGreaterThan(0);
+            const own = entries.filter((entry) => within(entry).queryAllByText(term).length > 0);
+            expect(own).toHaveLength(1);
+            expect(within(own[0]).getByText(def)).toBeTruthy();
         }
         expect(screen.getByText('READING A LINE')).toBeTruthy();
         expect(screen.getByText('GLOBAL')).toBeTruthy();
