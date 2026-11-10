@@ -385,3 +385,7 @@ Defaults taken:
   withdrawals are per run.
 - A persona's `breaks` count is every break line of the night, the list is one row per key.
 - The report lists every sim policy in the build's `run-summary`, the four personas first.
+
+- A build posts when the puzzle API URL and token are baked in; the dev menu's play-log switch applies only where DEV TOOLS are on.
+- `preview-build` bakes the production values for `platform: android` only and refuses `all` with `production` before the verify gate.
+- Defaults taken: no consent screen (T, 2026-11-09); dev-tools.md edited only on the posting lines and the lines on which profiles the workflow skips.

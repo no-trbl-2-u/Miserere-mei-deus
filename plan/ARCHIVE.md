@@ -681,3 +681,4 @@
 - 2026-11-09 · 165 · spec complete: The Rules Glossary lists every keyword · D183, pinned by axiomancer-mobile/state/presenters/__tests__/settings.engine.test.ts · deleted in (this commit)
 - 2026-11-09 · 135.6 (alias: SM2f) · Nightly sim report written and committed after each batch · 5afe6a81..5afe6a81 (#1561)
 - 2026-11-09 · 135 · spec complete: Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage · pinned by scripts/sim-report.test.mjs · deleted in (this commit)
+- 2026-11-09 · 167.1 (alias: TK1e) · Production APK posts testers' play; bake is Android-only · 30af7656..30af7656 (#1562)

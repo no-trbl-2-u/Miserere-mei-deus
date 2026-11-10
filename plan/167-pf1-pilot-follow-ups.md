@@ -36,9 +36,6 @@
 
 ## Acceptance
 
-- **A1** A build with DEV TOOLS off posts the play log and puzzle attempts when it carries a puzzle API URL and token, and sends nothing when either is missing. A build with DEV TOOLS on still honours the dev menu's play-log switch. Tests cover all three cases.
-- **A2** `preview-build` bakes the puzzle API values into the `production` profile only for `platform: android`, and refuses `platform: all` with `profile: production` before spending a build.
-- **A3** The docs that name which profiles post are true: `axiomancer-mobile/docs/dev-tools.md`, the comment on `EXPO_PUBLIC_PLAY_LOG_SOURCE` in `lib/playLog.ts`, `docs/ios-beta.md`, `axiomancer-mobile/setup/03_store_setup.md`.
 - **A4** `nextChunkNumber` counts archived ids written with `(alias: …)`; a test adds to a spec whose highest chunk is archived with an alias and gets the next free number.
 - **A5** `settledView` retires a spec whose absorbing close's `## Edit` strips its last chunk line, so `plan-check` agrees with settle; the hold message names `absorb:` only when the emptying close lacks it; tests pin `retireSpec`'s root README row, queue-file Phase line, title fallback and nested Follow-ups headings; `followUpsRow` shifts fenced `#` lines consistently and a `- proposed:` body line does not trip `lintQueue`.
 - **A6** A `pr-resolve` test asserts the missing-`absorb:` hold text; `skills/next/land.md`'s hand-absorb bullets no longer fire on settle's own retire note; `/next`'s close step says a spec's last close needs `absorb:`.
@@ -51,14 +48,9 @@ none
 
 ## Chunks
 
-Measure: 8 open · 0 closed · next A9
+Measure: 5 open · 3 closed · next A9
 
-- [ ] **167.1** The production APK posts what testers play · S · closes A1, A2, A3 · needs — · alias: TK1e
-  - `lib/puzzleAttempts.ts` (`puzzleApiConfig`) and `lib/playLog.ts` (`playLogConfig`): gate on the baked URL and token; keep the `playLogging` switch only where DEV TOOLS are on. Their tests.
-  - `.github/workflows/preview-build.yml` and `scripts/preview-build.test.mjs`: Android-only production bake; `all` + `production` fails early.
-  - The A3 docs.
-  - Measure: each new case shown red on origin/main first; `node scripts/check-comments.mjs`; the root `npm test`.
-- [ ] **167.2** Pay the pilot's review debt · M · closes A4, A5, A6, A7, A8 · needs 167.1 · alias: RD1a
+- [ ] **167.2** Pay the pilot's review debt · M · closes A4, A5, A6, A7, A8 · needs — · alias: RD1a
   - Settle: `scripts/plan/settle.mjs` (`nextChunkNumber`, marked `// Miserere:` per `docs/nexus-deviations.md` if the kit owns it), `scripts/plan/settled.mjs`, `retire-local.mjs`, `scripts/pr-merge.test.mjs`, `scripts/pr-resolve.test.mjs` (keep `COPIED_SCRIPTS` in step), `skills/next/land.md`, `skills/next.md`.
   - Glossary: `state/presenters/__tests__/settings.engine.test.ts`, `components/settings/__tests__/SettingsBody.test.tsx`, `state/combat/keywords.ts`.
   - Token: `.github/workflows/README.md`, the tester-token lines of `axiomancer-mobile/docs/dev-tools.md` (167.1 owns its posting lines, hence `needs 167.1`), `scripts/backend-deploy.test.mjs`.

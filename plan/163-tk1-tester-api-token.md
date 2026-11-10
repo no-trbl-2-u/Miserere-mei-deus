@@ -59,7 +59,7 @@ Measure: 3 open · 5 closed · next A9
   - An attended session: Claude generates two values and runs `gh secret set` for `PUZZLE_API_TOKEN`, `PUZZLE_TESTER_TOKEN` and `EXPO_PUBLIC_PUZZLE_API_TOKEN` (the tester value), never printing them. Then `backend-deploy` and `preview-build` by `workflow_dispatch`.
   - T re-enters the owner value on the ballot page, and `~/.config/miserere/puzzle-api.env` is updated (this also closes NEEDS_T `local-api-token-stale`).
   - T's installed APK stops posting until the new build is on the phone. Proof: T installs it, plays a fight and the row appears, and a `curl` with the old value gets 401.
-- [ ] **163.3** Preview builds refuse the owner token, and a release can carry its APK · S · closes A6, A7 · needs 163.2, 167.1 · alias: TK1c
+- [ ] **163.3** Preview builds refuse the owner token, and a release can carry its APK · S · closes A6, A7 · needs 163.2 · alias: TK1c
   - `preview-build.yml`: an early step comparing `EXPO_PUBLIC_PUZZLE_API_TOKEN` with `PUZZLE_API_TOKEN` and failing when they match.
   - `scripts/release-apk.mjs`, using `eas-cli build:list` the way `scripts/devlog-record-build.mjs` does (`EXPO_TOKEN`), matching the tag's full commit, then `gh release upload`. Its pure parts are tested.
   - The command goes where the release steps are written down, or in `docs/external-architecture.md`'s EAS section if there is no such place.
