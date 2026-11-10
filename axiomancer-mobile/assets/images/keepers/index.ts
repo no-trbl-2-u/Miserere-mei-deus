@@ -29,3 +29,11 @@ export const KEEPER_PORTRAITS: Record<KeeperRole, KeeperPortraitEntry> = {
 export function keeperPortrait(role: KeeperRole): number {
     return KEEPER_PORTRAITS[role].source;
 }
+
+/**
+ * The upgrade screen's figure (UP1i, spec 127 "The string of beads"): a
+ * stand-in statue (TOR-0007 Ahimsa) that holds the space until T supplies the
+ * art (D88). Not a village keeper, so it sits outside the role table; it lives
+ * here because it is the same kind of cut-out, on a plate, with provenance.
+ */
+export const UPGRADE_FIGURE_STANDIN: number = require('./upgrade-figure.webp');

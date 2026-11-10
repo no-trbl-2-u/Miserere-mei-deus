@@ -4,7 +4,7 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { KEEPER_PORTRAITS, KEEPER_ROLES, keeperPortrait } from '../index';
+import { KEEPER_PORTRAITS, KEEPER_ROLES, UPGRADE_FIGURE_STANDIN, keeperPortrait } from '../index';
 
 const DIR = path.resolve(__dirname, '..');
 
@@ -33,5 +33,13 @@ describe('village keeper portraits', () => {
         const record = JSON.parse(fs.readFileSync(path.join(DIR, 'provenance.json'), 'utf-8'));
         const covers = record.flatMap((e: { covers: string[] }) => e.covers).join('\n');
         for (const role of KEEPER_ROLES) expect(covers).toContain(`${role}.webp`);
+    });
+
+    it('bundles the upgrade screen stand-in figure with its provenance (UP1i)', () => {
+        expect(UPGRADE_FIGURE_STANDIN).toBeDefined();
+        expect(fs.existsSync(path.join(DIR, 'upgrade-figure.webp'))).toBe(true);
+        const record = JSON.parse(fs.readFileSync(path.join(DIR, 'provenance.json'), 'utf-8'));
+        const covers = record.flatMap((e: { covers: string[] }) => e.covers).join('\n');
+        expect(covers).toContain('upgrade-figure.webp (TOR-0007 Ahimsa');
     });
 });
