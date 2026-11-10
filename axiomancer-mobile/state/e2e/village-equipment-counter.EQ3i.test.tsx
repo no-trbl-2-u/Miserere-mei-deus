@@ -78,10 +78,13 @@ describe('the village equipment counter (EQ3i)', () => {
     it('each row says what the piece does, in the shared effect line', () => {
         const store = makeStore(100);
         renderVillage(store);
-        for (const piece of selectVillageVM(store.getState()).equipmentShop ?? []) {
+        // 168.4: one piece at a time; step through the stock with the next neighbour.
+        const stock = selectVillageVM(store.getState()).equipmentShop ?? [];
+        stock.forEach((piece, i) => {
             expect(piece.effect).not.toBeNull();
             expect(screen.getByTestId(`village-equipment-${piece.pieceId}-effect`).props.children).toBe(piece.effect);
-        }
+            if (i < stock.length - 1) fireEvent.press(screen.getByTestId('village-gear-peek-next'));
+        });
     });
 
     it('a village without the counter shows none', () => {
@@ -95,11 +98,14 @@ describe('the village equipment counter (EQ3i)', () => {
         const store = makeStore(100);
         renderVillage(store);
         expect(screen.getByTestId('village-equipment-shop')).toBeTruthy();
-        for (const piece of selectVillageVM(store.getState()).equipmentShop ?? []) {
+        const stock = selectVillageVM(store.getState()).equipmentShop ?? [];
+        stock.forEach((piece, i) => {
             expect(screen.getByTestId(`village-equipment-${piece.pieceId}`)).toBeTruthy();
             expect(screen.getByTestId(`village-equipment-${piece.pieceId}-price`).props.children)
                 .toBe(`${EQUIPMENT_DROP_TUNING.shopPrice} SHILLINGS`);
-        }
+            expect(screen.getByTestId('village-gear-counter').props.children).toBe(`${i + 1} of ${stock.length}`);
+            if (i < stock.length - 1) fireEvent.press(screen.getByTestId('village-gear-peek-next'));
+        });
     });
 
     it('buying takes the price, carries the piece unworn and marks it sold', () => {
@@ -113,7 +119,8 @@ describe('the village equipment counter (EQ3i)', () => {
         expect(player.equipment.weapon?.id).toBe(GREY_WEAPON_ID);
         const sold = selectVillageVM(store.getState()).equipmentShop!.find((p) => p.pieceId === pieceId)!;
         expect([sold.sold, sold.enabled]).toEqual([true, false]);
-        expect(screen.getByTestId(`village-equipment-${pieceId}-price`).props.children).toBe('SOLD');
+        expect(screen.getByTestId(`village-equipment-${pieceId}`)).toHaveProp('accessibilityState', { disabled: true });
+        expect(screen.getByText('SOLD')).toBeTruthy();
         expect(screen.getByTestId('village-note')).toBeTruthy();
     });
 

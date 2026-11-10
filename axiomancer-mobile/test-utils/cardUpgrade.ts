@@ -1,6 +1,5 @@
 /**
- * Drives the shared card-upgrade screen, the string of beads (spec 127,
- * UP1i), the way a player does: bring a card to the centre bead (tap its
+ * Drives the shared card-upgrade screen, the string of beads, the way a player does: bring a card to the centre bead (tap its
  * side bead; a centred card stays), then hold HOLD until the ring closes,
  * or upgrade through the centre bead's accessibility action as a screen
  * reader does. The hold needs jest's fake timers.

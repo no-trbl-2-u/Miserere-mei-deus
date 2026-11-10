@@ -1,5 +1,5 @@
 /**
- * The shared card-upgrade screen: the string of beads (spec 127, UP1i; the
+ * The shared card-upgrade screen: the string of beads (the
  * look T settled in `plan/card-ledger/upgrade/U-02-settled.webp`). The rest
  * site, the blacksmith and the elite reward host it.
  *
@@ -62,7 +62,7 @@ export interface CardUpgradePickerProps {
     /** A price or a note the host shows above the figure, e.g. the anvil's cost. */
     priceLine?: string | null;
     /** The figure at the top (an image source); null leaves the slot out.
-     *  Defaults to the stand-in statue until T supplies the art (D88). */
+     *  Defaults to the stand-in statue until T supplies the art. */
     figure?: number | null;
 }
 

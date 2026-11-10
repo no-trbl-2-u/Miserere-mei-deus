@@ -1,5 +1,5 @@
 /**
- * The string of beads (spec 127, UP1i, A13): under the new card, the change
+ * The string of beads, A13: under the new card, the change
  * alone ('LEECH 4 → 5'), read off the faces the presenter already builds, so
  * the line cannot disagree with the card the player will draw.
  */

@@ -89,7 +89,8 @@ describe('stall prices name the currency (critique pass 84)', () => {
                 <VillageShopScreen />
             </GameStoreProvider>,
         );
-        expect(flatText(shop.getByTestId('village-card-grey-ward-price').props.children)).toBe('BUY · 6 SHILLINGS');
+        // 168.4: the price rides the brass BUY plate of the card in the middle.
+        expect(flatText(shop.getByTestId('village-card-grey-strike-price').props.children)).toBe('6 SHILLINGS');
         expect(flatText(shop.getByTestId('village-remove-price').props.children)).toBe('5 SHILLINGS');
     });
 });
