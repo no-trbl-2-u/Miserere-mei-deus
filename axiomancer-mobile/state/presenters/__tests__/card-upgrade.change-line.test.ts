@@ -34,6 +34,18 @@ describe('cardUpgradeLineChange', () => {
             .toBe('DEAL 6 → 8 or 14 → 20');
     });
 
+    it('when only the second number of an either-or moves, the keyword still names it', () => {
+        expect(cardUpgradeLineChange('DEAL 6 or 14 at half your VITAE', 'DEAL 6 or 20 at half your VITAE')).toEqual({
+            text: 'DEAL 14 → 20',
+            changedNumbers: [1],
+        });
+    });
+
+    it('a leading multiplier (how a FREE rider prints its intensity) is a number too', () => {
+        expect(cardUpgradeLineChange('BLEED ×2', 'BLEED ×3')).toEqual({ text: 'BLEED ×2 → ×3', changedNumbers: [0] });
+        expect(cardUpgradeLineChange('×2 your next SACRIFICE', '×3 your next SACRIFICE').text).toBe('×2 → ×3');
+    });
+
     it('a number the upgrade adds is named by its clause keyword', () => {
         expect(cardUpgradeLineChange('When you SACRIFICE X: DEAL X', 'When you SACRIFICE X: DEAL X +2')).toEqual({
             text: 'DEAL +2',

@@ -154,8 +154,9 @@ export function cardUpgradePreviewVM(cardId: string): CardUpgradePreviewVM | nul
 
 /** A run of digits: what the face counts when it colours a changed number. */
 const DIGITS = /\d+/g;
-/** A word that is only a number, a sign and a unit: '5', '+2', '25%', '3×'. */
-const NUMBER_WORD = /^[+−-]?\d+[%×]?$/;
+/** A word that is only a number, a sign and a unit: '5', '+2', '25%', '3×',
+ *  and the leading multiplier a FREE rider prints its intensity with: '×2'. */
+const NUMBER_WORD = /^[+−-]?×?\d+[%×]?$/;
 /** A printed keyword: 'LEECH', 'DEAL'. */
 const KEYWORD = /^[A-Z]{2,}$/;
 
@@ -221,6 +222,8 @@ export function cardUpgradeLineChange(
     };
     const changes: string[] = [];
     const changedNumbers: number[] = [];
+    /** The after-line word index of the number the last change names. */
+    let lastChangedAt = -1;
     let i = 0;
     let j = 0;
     while (i < a.length || j < b.length) {
@@ -249,14 +252,20 @@ export function cardUpgradeLineChange(
                 changedNumbers.push(digitRunAt(afterLine, word.start));
                 const was = oldNumbers[n];
                 const prev = nameBefore(at);
-                const name = was || (prev !== null && KEYWORD.test(prev)) ? prev : clauseKeyword(at);
+                let name = was || (prev !== null && KEYWORD.test(prev)) ? prev : clauseKeyword(at);
                 const change = was ? `${was.norm} → ${word.norm}` : word.norm;
-                // 'DEAL 4 or 8' moving both numbers reads as one change: 'DEAL 4 → 6 or 8 → 12'.
-                if (name === 'or' && changes.length > 0) {
-                    changes[changes.length - 1] += ` or ${change}`;
-                    return;
+                if (name === 'or' && at >= 2 && NUMBER_WORD.test(b[at - 2].norm)) {
+                    // 'DEAL 4 or 8' moving both numbers reads as one change: 'DEAL 4 → 6 or 8 → 12'.
+                    if (lastChangedAt === at - 2 && changes.length > 0) {
+                        changes[changes.length - 1] += ` or ${change}`;
+                        lastChangedAt = at;
+                        return;
+                    }
+                    // Only the second moved: the either-or's keyword still names it ('DEAL 14 → 20').
+                    name = nameBefore(at - 2);
                 }
                 changes.push(name ? `${name} ${change}` : change);
+                lastChangedAt = at;
             });
     }
     const unique = [...new Set(changes)];
