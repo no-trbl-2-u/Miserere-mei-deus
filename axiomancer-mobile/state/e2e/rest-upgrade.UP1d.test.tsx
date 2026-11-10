@@ -11,7 +11,7 @@
  * See docs/testing.md for the full standard.
  */
 
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, afterEach, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, within } from '@testing-library/react-native';
 import React from 'react';
 
@@ -69,6 +69,9 @@ beforeAll(() => { (globalThis as { __AXM_JUICE_INSTANT__?: unknown }).__AXM_JUIC
 afterAll(() => { delete (globalThis as { __AXM_JUICE_INSTANT__?: unknown }).__AXM_JUICE_INSTANT__; });
 
 describe('rest site: upgrade a card (Phase UP1d)', () => {
+    // The hold runs on jest's fake timers; never leak them into the next test.
+    afterEach(() => { jest.useRealTimers(); });
+
     it('offers the upgrade beside rest, and no cut (removal is at the village, NK1c)', () => {
         const r = render(
             <GameStoreProvider store={restStore()}>
@@ -109,7 +112,6 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         expect(r.getByTestId('card-upgrade-change')).toHaveTextContent(/→/);
 
         holdToUpgrade(r);
-        jest.useRealTimers();
         expect(String(r.getByTestId('rest-outcome-upgraded').props.children)).toBe(`${before.name} upgraded`);
 
         fireEvent.press(r.getByTestId('rest-claim'));
