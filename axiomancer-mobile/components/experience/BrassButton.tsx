@@ -1,5 +1,5 @@
 /**
- * BrassButton — one action on the kit's brass plate (spec 168): the
+ * BrassButton — one action on the kit's brass plate: the
  * nine-sliced `action-button-idle` plate at rest, `-selected` while pressed,
  * `-disabled` for a refused action. A refused action still renders and still
  * reads its reason aloud (owner UI doctrine: illegal actions are shown, not

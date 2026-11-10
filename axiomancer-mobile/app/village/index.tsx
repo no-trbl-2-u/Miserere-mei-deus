@@ -1,5 +1,5 @@
 /**
- * /village — the settlement hub (spec 168, V-02b).
+ * /village — the settlement hub (V-02b).
  *
  * Arriving at a village opens this hub: the settlement's name and the purse,
  * the host standing tall down the left edge with the host's line under the

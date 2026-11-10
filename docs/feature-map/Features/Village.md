@@ -21,14 +21,14 @@ route in World routes, from `axiomancer-mobile/app/village/index.tsx`.
 
 Opens from any screen.
 
-No player-flow edge leads out of it.
+- [[Features/Village Rest|Village Rest]]
+- [[Features/Village Shop|Village Shop]]
 
 ## Uses
 
 Code it uses, as plain text so Graph view draws player flow only.
 
 - Cards
-- VITAE and stats
 - A fight
 - Effects
 - The foes

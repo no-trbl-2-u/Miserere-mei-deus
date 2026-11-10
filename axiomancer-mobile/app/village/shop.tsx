@@ -1,5 +1,5 @@
 /**
- * /village/shop — the Shop's own screen (spec 168, A2), opened from the hub's
+ * /village/shop — the Shop's own screen, opened from the hub's
  * SHOP button.
  *
  * It holds today's card shop (the offered cards with BUY, and REMOVE A CARD

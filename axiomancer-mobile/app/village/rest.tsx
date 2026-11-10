@@ -1,5 +1,5 @@
 /**
- * /village/rest — the paid rest as its own keeper screen (spec 168, A5).
+ * /village/rest — the paid rest as its own keeper screen.
  *
  * Opened from the hub's REST button. The innkeeper stands at the foot with
  * the line; above sit the price and the VITAE the rest restores, and REST on

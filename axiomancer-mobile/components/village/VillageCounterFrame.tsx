@@ -1,6 +1,6 @@
 /**
  * VillageCounterFrame — the keeper screen every village counter opens onto
- * (spec 168: the paid rest, A5; the Shop, A2): the counter's name and the purse
+ * (the paid rest, the Shop): the counter's name and the purse
  * across the top, the counter's own wares in one scroller, the keeper standing
  * at the foot with their line, and the way back to the hub pinned below.
  *
@@ -28,8 +28,8 @@ import { makeStyles } from '@/theme/runtime';
 export const COUNTER_COLUMN_MAX_WIDTH = 520;
 
 /** The keeper's box at the foot of a counter screen, in points. */
-export const COUNTER_KEEPER_W = 104;
-export const COUNTER_KEEPER_H = 128;
+export const COUNTER_KEEPER_W = 120;
+export const COUNTER_KEEPER_H = 150;
 
 export interface VillageCounterFrameProps {
     title: string;
@@ -97,7 +97,9 @@ export function VillageCounterFrame({
 const useStyles = makeStyles((AXM) => ({
     scrollOuter: { flex: 1 },
     scroll: { padding: 14, paddingTop: SCREEN_FRAME_INSET, paddingBottom: 16, flexGrow: 1 },
-    column: { width: '100%', maxWidth: COUNTER_COLUMN_MAX_WIDTH, alignSelf: 'center' },
+    // The column fills the scroller's height, so the keeper stands at the foot
+    // when the wares are short (the paid rest) and below them when long (the Shop).
+    column: { width: '100%', maxWidth: COUNTER_COLUMN_MAX_WIDTH, alignSelf: 'center', flexGrow: 1 },
     headRow: {
         flexDirection: 'row',
         alignItems: 'baseline',

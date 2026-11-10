@@ -1,5 +1,5 @@
 /**
- * The village counter screens' shared wiring (spec 168): the settlement VM,
+ * The village counter screens' shared wiring: the settlement VM,
  * the way back to the hub, and the unwind when the village is gone.
  *
  * Leaving a counter returns to the hub: the hub sits below it on the stack,

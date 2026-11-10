@@ -18,8 +18,8 @@ import { Image } from '@/lib/platform/image';
 import { makeStyles } from '@/theme/runtime';
 
 /** The keeper's box at the plate's right end, in points. */
-export const KEEPER_W = 92;
-export const KEEPER_H = 104;
+export const KEEPER_W = 100;
+export const KEEPER_H = 114;
 /** How far in from the plate's right edge the keeper stands. */
 export const KEEPER_RIGHT = 6;
 /** How far the keeper's head rises above the plate. */

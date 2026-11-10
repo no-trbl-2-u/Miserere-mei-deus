@@ -50,7 +50,7 @@ export type PlaceId =
     // Round 2: new game (saves, character select) and the endings (death, game over).
     | 'N-01' | 'N-02' | 'N-03' | 'N-04' | 'N-05' | 'N-06' | 'N-07'
     | 'G-01'
-    // The village screens (spec 168): the hub's counter buttons and the counters' own buttons.
+    // The village screens: the hub's counter buttons and the counters' own buttons.
     | 'V-01';
 
 /** T's pick for every place. */
