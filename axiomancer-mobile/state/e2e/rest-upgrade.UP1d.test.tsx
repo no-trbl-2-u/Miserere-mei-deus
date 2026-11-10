@@ -2,17 +2,17 @@
  * Hermetic screen test — the rest site's "upgrade a card" (Phase UP1d, A6, A7).
  *
  * Drives the real rest screen on a real store: the player reaches a rest
- * site, picks UPGRADE A CARD, taps a card on the shared upgrade screen, sees
- * the card as it is beside the card after the upgrade and the locked "???"
- * slot, confirms, and moves on. The deck then holds `<id>+` in place of one
+ * site, picks UPGRADE A CARD, turns the shared upgrade screen's wheel to a
+ * card (the string of beads, UP1i), sees the card as it is beside the card
+ * after the upgrade, holds HOLD until the ring closes, and moves on. The deck then holds `<id>+` in place of one
  * copy, the other copies stay, and the night healed nothing.
  *
  * Hermetic = self-contained + deterministic + isolated.
  * See docs/testing.md for the full standard.
  */
 
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render } from '@testing-library/react-native';
+import { afterAll, afterEach, beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { fireEvent, render, within } from '@testing-library/react-native';
 import React from 'react';
 
 import { buildCombatDeck, cardLibrary, getCardById, upgradeLimit } from '@mechanics';
@@ -21,6 +21,7 @@ import RestScreen from '@/app/rest/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { beginRestAction } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
+import { bringToCentre, centreBeadLabel, holdToUpgrade, isOnWheel } from '@/test-utils/cardUpgrade';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 jest.mock('@/lib/platform/router', () => ({
@@ -68,6 +69,9 @@ beforeAll(() => { (globalThis as { __AXM_JUICE_INSTANT__?: unknown }).__AXM_JUIC
 afterAll(() => { delete (globalThis as { __AXM_JUICE_INSTANT__?: unknown }).__AXM_JUICE_INSTANT__; });
 
 describe('rest site: upgrade a card (Phase UP1d)', () => {
+    // The hold runs on jest's fake timers; never leak them into the next test.
+    afterEach(() => { jest.useRealTimers(); });
+
     it('offers the upgrade beside rest, and no cut (removal is at the village, NK1c)', () => {
         const r = render(
             <GameStoreProvider store={restStore()}>
@@ -79,7 +83,8 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         expect(r.queryByTestId('rest-choice-offer-cut')).toBeNull();
     });
 
-    it('previews the upgrade with a locked ??? slot, and the deck then holds <id>+', () => {
+    it('previews the upgrade on the centre bead, a full hold commits it, and the deck then holds <id>+', () => {
+        jest.useFakeTimers();
         const store = restStore();
         const r = render(
             <GameStoreProvider store={store}>
@@ -89,24 +94,24 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
 
         fireEvent.press(r.getByTestId('rest-choice-offer-upgrade'));
         expect(r.getByTestId('card-upgrade-sheet')).toBeTruthy();
-        // Each distinct card once, and only the ones that can take an upgrade.
-        expect(r.getByTestId('card-upgrade-row-grey-strike')).toBeTruthy();
-        expect(r.getByTestId(`card-upgrade-row-${RARE}`)).toBeTruthy();
-        expect(r.queryByTestId('card-upgrade-preview')).toBeNull();
-        expect(r.queryByTestId('card-upgrade-confirm')).toBeNull();
-
-        fireEvent.press(r.getByTestId('card-upgrade-row-grey-strike'));
         const before = getCardById('grey-strike')!;
         const after = getCardById('grey-strike+')!;
-        expect(r.getByTestId('card-upgrade-now-name')).toHaveTextContent(before.name);
-        expect(r.getByTestId('card-upgrade-after-name')).toHaveTextContent(after.name);
-        // The AFTER face prints different numbers from the NOW face.
-        const nowText = r.getByTestId('card-upgrade-now-free').props.children;
-        const afterText = r.getByTestId('card-upgrade-after-free').props.children;
-        expect(afterText).not.toEqual(nowText);
-        expect(r.getByTestId('card-upgrade-locked')).toHaveTextContent(/\?\?\?/);
+        // Each distinct card once, and only the ones that can take an upgrade.
+        expect(isOnWheel('grey-strike', before.name, r)).toBe(true);
+        expect(isOnWheel(RARE, getCardById(RARE)!.name, r)).toBe(true);
+        expect(isOnWheel('grey-strike+', after.name, r)).toBe(false);
 
-        fireEvent.press(r.getByTestId('card-upgrade-confirm'));
+        bringToCentre('grey-strike', r);
+        expect(centreBeadLabel(r).startsWith(before.name)).toBe(true);
+        expect(within(r.getByTestId('card-upgrade-now')).getByTestId('combat-card-face-name')).toHaveTextContent(before.name);
+        expect(within(r.getByTestId('card-upgrade-after')).getByTestId('combat-card-face-name')).toHaveTextContent(after.name);
+        // The new face prints different numbers, and the change line names them.
+        const nowLine = within(r.getByTestId('card-upgrade-now')).getByTestId('combat-card-face-paid-line').props.accessibilityLabel;
+        const afterLine = within(r.getByTestId('card-upgrade-after')).getByTestId('combat-card-face-paid-line').props.accessibilityLabel;
+        expect(afterLine).not.toEqual(nowLine);
+        expect(r.getByTestId('card-upgrade-change')).toHaveTextContent(/→/);
+
+        holdToUpgrade(r);
         expect(String(r.getByTestId('rest-outcome-upgraded').props.children)).toBe(`${before.name} upgraded`);
 
         fireEvent.press(r.getByTestId('rest-claim'));

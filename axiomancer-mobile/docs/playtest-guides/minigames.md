@@ -21,7 +21,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 | `rest-choice-offers` / `rest-choice-intro` | Offer list and the node's own line |
 | `rest-campfire` / `rest-campfire-frame-<n>` | The looping fire between the header and the offers (frame 0 held under reduced motion) |
 | `rest-choice-offer-<id>` / `rest-choice-offer-<id>-reason` | One offer (REST or UPGRADE A CARD); disabled ones state why (e.g. no card can take an upgrade) |
-| `card-upgrade-row-<cardId>` / `card-upgrade-preview` / `card-upgrade-confirm` | The upgrade sheet (`components/upgrade/CardUpgradePicker.tsx`, opened by the rest site's upgrade offer and by the blacksmith): a row only previews the card before and after; UPGRADE IT commits it |
+| `card-upgrade-sheet` / `card-upgrade-wheel` / `card-upgrade-centre` / `card-upgrade-bead-<cardId>` / `card-upgrade-preview` / `card-upgrade-change` / `card-upgrade-hold` / `card-upgrade-hold-ring` | The upgrade screen, the string of beads (`components/upgrade/CardUpgradePicker.tsx`; the rest site, the blacksmith and the elite reward open it): only the card on the centre bead is offered, its pair and change line shown above the wheel; drag the wheel's rim or tap a side bead to turn it (a tap never upgrades); press and hold HOLD for one second to upgrade, the ring filling round the centre bead |
 | `rest-outcome` / `rest-claim` | Outcome card; CLAIM returns to the map |
 | `cache-inactive` | `/cache` with no session |
 | `cache-choice-offers` / `cache-choice-intro` | Offer list |
@@ -41,7 +41,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 ## 4. A correct play, step by step
 
-- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (card removal is the village's now; if you chose the upgrade, press a `card-upgrade-row-<cardId>` to preview it, then `card-upgrade-confirm`); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
+- Rest: on `rest-choice-offers` tap an enabled `rest-choice-offer-<id>` (card removal is the village's now; if you chose the upgrade, tap the card's `card-upgrade-bead-<cardId>` to bring it to `card-upgrade-centre`, then hold `card-upgrade-hold` for one second); `rest-outcome` → `rest-claim`. A new game hands over no relic, so no `/item-reward` stacks on the start rest; a relic reward elsewhere still opens `/item-reward` over the map — `item-reward-equip` or `item-reward-confirm` to reach it.
 - Cache: tap a `cache-choice-offer-<id>`; `cache-outcome` → `cache-claim`.
 - Blacksmith: tap one enabled `blacksmith-offer-<id>` (watch `blacksmith-budget`); if `blacksmith-card` appears, `blacksmith-continue`; `blacksmith-leave`; `blacksmith-outcome` → `blacksmith-claim`.
 
@@ -49,7 +49,7 @@ Each kind starts its own session slice in `state/actions.ts` (`resolveCurrentMap
 
 - A greyed offer is `disabled` + `aria-disabled` with its reason in `*-reason` (rest's upgrade with no upgradable card; blacksmith offers over budget or with nothing to hone). Pick another.
 - `*-inactive` for a frame after CLAIM while the gate pops the route is normal.
-- The upgrade sheet with no confirm button: no row is picked yet; `card-upgrade-confirm` appears with the preview once you press a `card-upgrade-row-<cardId>`.
+- HOLD pressed and nothing upgraded: a release before one second empties `card-upgrade-hold-ring` and commits nothing, by design; hold it down (mouse down, wait, mouse up) until the ring closes.
 - One-way note (`*-intro-one-way`): there is no back button by design; the only exits are an offer or (blacksmith) `blacksmith-abandon`.
 - Blacksmith `blacksmith-card` interlude blocks the forge until `blacksmith-continue`.
 

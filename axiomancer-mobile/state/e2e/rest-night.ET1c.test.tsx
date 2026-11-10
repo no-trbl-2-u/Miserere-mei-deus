@@ -22,6 +22,7 @@ import { NIGHT_TOTAL_MS, nightStageAt } from '@/components/rest/night';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { beginRestAction } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
+import { bringToCentre, holdToUpgrade } from '@/test-utils/cardUpgrade';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 jest.mock('@/lib/platform/router', () => ({
@@ -100,8 +101,8 @@ describe('the night passes (Phase ET1c)', () => {
     it('upgrade: the dawn says "<card> upgraded" and shows no VITAE chip', () => {
         const r = mount(restStore());
         fireEvent.press(r.getByTestId('rest-choice-offer-upgrade'));
-        fireEvent.press(r.getByTestId('card-upgrade-row-grey-strike'));
-        fireEvent.press(r.getByTestId('card-upgrade-confirm'));
+        bringToCentre('grey-strike', r);
+        holdToUpgrade(r);
 
         expect(r.getByTestId('rest-night')).toBeTruthy();
         act(() => { jest.advanceTimersByTime(NIGHT_TOTAL_MS); });
