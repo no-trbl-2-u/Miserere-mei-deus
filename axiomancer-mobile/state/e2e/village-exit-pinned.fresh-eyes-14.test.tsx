@@ -24,6 +24,8 @@ import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
 import VillageScreen from '@/app/village/index';
+import VillageRestScreen from '@/app/village/rest';
+import VillageShopScreen from '@/app/village/shop';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
@@ -113,13 +115,39 @@ describe('village exit is pinned below the stalls (14-village)', () => {
         expect(flattenStyle(r.getByTestId('village-scroll').props.style).flex).toBe(1);
     });
 
-    it('keeps every counter — effect line and all — inside the scroller', () => {
+    // 168.3: the hub holds one button per counter; each counter's wares
+    // moved to its own screen, which keeps the same shape.
+    it('keeps every counter button inside the scroller', () => {
         const r = mountVillage();
         const scroll = within(r.getByTestId('village-scroll'));
 
-        expect(scroll.getByTestId('village-rest-effect')).toBeTruthy();
+        expect(scroll.getByTestId('village-open-rest')).toBeTruthy();
+        expect(scroll.getByTestId('village-open-shop')).toBeTruthy();
+        expect(scroll.getByTestId('village-anvil')).toBeTruthy();
+    });
+
+    it('pins the way back on each counter screen below its one scroller, wares inside it', () => {
+        const rest = render(
+            <GameStoreProvider store={villageStore()}>
+                <VillageRestScreen />
+            </GameStoreProvider>,
+        );
+        expect(rest.UNSAFE_getAllByType(ScrollView)).toHaveLength(1);
+        expect(within(rest.getByTestId('village-rest-screen-scroll')).getByTestId('village-rest-effect')).toBeTruthy();
+        expect(within(rest.getByTestId('village-rest-screen-scroll')).queryByTestId('village-rest-screen-back')).toBeNull();
+        expect(rest.getByTestId('village-rest-screen-back')).toBeTruthy();
+        rest.unmount();
+
+        const shop = render(
+            <GameStoreProvider store={villageStore()}>
+                <VillageShopScreen />
+            </GameStoreProvider>,
+        );
+        expect(shop.UNSAFE_getAllByType(ScrollView)).toHaveLength(1);
+        const scroll = within(shop.getByTestId('village-shop-scroll'));
         for (const id of CARDS) expect(scroll.getByTestId(`village-card-${id}-buy`)).toBeTruthy();
         expect(scroll.getByTestId('village-remove')).toBeTruthy();
-        expect(scroll.getByTestId('village-anvil-effect')).toBeTruthy();
+        expect(scroll.queryByTestId('village-shop-back')).toBeNull();
+        expect(shop.getByTestId('village-shop-back')).toBeTruthy();
     });
 });

@@ -78,8 +78,10 @@ describe('the village Anvil counter (NK1b A7)', () => {
     it('pressing the counter opens the Anvil session with the offered variants', () => {
         const store = makeStore(true);
         renderVillage(store);
-        expect(screen.getByTestId('village-anvil-price').props.children).toEqual(
-            ['FROM ', ANVIL_VERB_PRICING.hone, ' SHILLINGS'],
+        // 168.3: the hub's BLACKSMITH button carries no price on its plate
+        // (V-02b); it still reads the smith's cheapest work aloud.
+        expect(screen.getByTestId('village-anvil').props.accessibilityLabel).toContain(
+            `cheapest work is ${ANVIL_VERB_PRICING.hone} shillings`,
         );
         expect(selectHasActiveBlacksmith(store.getState())).toBe(false);
         fireEvent.press(screen.getByTestId('village-anvil'));
