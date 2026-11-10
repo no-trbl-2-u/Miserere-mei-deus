@@ -364,6 +364,12 @@ const SEAMS = {
     'route:blacksmith': { section: 'rewards', leaf: 'debug-anvil-budget-button', landing: 'blacksmith-scroll' },
     'route:rest': { section: 'encounters', leaf: 'debug-trigger-encounter-rest', landing: 'rest-column' },
     'route:village': { section: 'encounters', leaf: 'debug-trigger-encounter-village', landing: 'village-column' },
+    // The village hub's keeper buttons open the paid rest and the Shop on their
+    // own screens (VL1c). The hub shows a counter only when the village holds
+    // its stock (the gallery's fixtures stage it), so each is provoked from the
+    // fixture that arrives at the hub, then pressed.
+    'route:village/rest': { fixture: 'wanderer-staged-village', hub: 'village-open-rest', landing: 'village-rest-screen-back' },
+    'route:village/shop': { fixture: 'wanderer-bw-blacksmith', hub: 'village-open-shop', landing: 'village-shop-back' },
     'route:cutscene': { section: 'encounters', leaf: 'debug-trigger-encounter-cutscene', landing: 'cutscene-advance' },
     'route:cache': { section: 'encounters', leaf: 'debug-trigger-encounter-treasure', landing: 'cache-choice-offers' },
     'route:hazard': { section: 'encounters', leaf: 'debug-trigger-encounter-hazard', landing: 'hazard-stakes' },
@@ -413,6 +419,10 @@ async function seamLeg(page, baseUrl, id) {
         await page.goto(`${baseUrl}/exploration?fixture=${seam.fixture}`, { waitUntil: 'networkidle' })
     } else {
         await openSeamFromDevTools(page, baseUrl, seam)
+    }
+    if (seam.hub) {
+        await waitFor(page, seam.hub, `${id} hub`)
+        await tap(page, seam.hub) || fail(`${id}: the village hub has no \`${seam.hub}\` control`)
     }
     await waitForPath(page, path, id, 20000)
     const name = id.replace(/^route:/, '')
