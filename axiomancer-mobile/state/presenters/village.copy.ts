@@ -10,7 +10,7 @@ export const VILLAGE_REST_LINE = '[content] A room above the tavern, and the noi
 
 /** The card shop counter. */
 export const VILLAGE_CARD_SHOP_LABEL = 'THE CARD SHOP';
-export const VILLAGE_CARD_SHOP_LINE = '[content] Three cards laid out on the counter. The same three, whenever you come.';
+export const VILLAGE_CARD_SHOP_LINE = '[content] Five cards laid out on the counter. The same five, whenever you come.';
 export const VILLAGE_CARD_BUY_LABEL = 'BUY';
 export const VILLAGE_CARD_SOLD_LABEL = 'SOLD';
 

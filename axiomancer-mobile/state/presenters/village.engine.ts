@@ -4,7 +4,7 @@
  *
  * A village is a hub of counters, each present only when the event carries it:
  *  - the paid rest (`rest`): price, the VITAE it restores, and its refusal;
- *  - the card shop (`cardShop`): the three offered cards as real card faces,
+ *  - the card shop (`cardShop`): the five offered cards as real card faces,
  *    each with its price and refusal (sold this visit, a short purse), and
  *    card removal: the escalating price, its refusal, and the deck's cards;
  *  - the equipment counter (`equipmentShop`): the weapons and armor on offer,
