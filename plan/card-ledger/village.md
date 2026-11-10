@@ -52,4 +52,13 @@ Ballot: `village-2.ballot.html` (id `village-round-2-2026-11-09`). Five variatio
 
 ## Round 2 verdicts
 
-Open.
+Decided 2026-11-09 by T, pasted from the ballot. Verbatim:
+
+```
+BALLOT: village and blacksmith, round 2 (village-round-2-2026-11-09)
+answered 2 of 2
+V-02 The Village (B + D): KEEP V-02b (Host beside the buttons)
+B-02 The Blacksmith (E + C): KEEP B-02b (The net beside him)
+```
+
+Settled: the Village is V-02b, the Blacksmith B-02b, the Shop S-01d with five cards. The pitch is `braindump/2026-11-09-village-screens.md`.
