@@ -22,6 +22,6 @@ export function blacksmithUpgradedChip(fromName: string, toName: string): string
 /**
  * The smith's line over the buttons. The forge opens straight onto the work
  * screen (168.5), so this line stands where the intro step's speech stood.
- * Placeholder until T writes it (D88).
+ * Placeholder until T writes it.
  */
 export const BLACKSMITH_SMITH_LINE = '[content] Set them on the anvil.';
