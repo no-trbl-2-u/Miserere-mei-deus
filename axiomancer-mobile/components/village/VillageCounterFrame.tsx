@@ -10,8 +10,8 @@
  *
  * Inputs: `title` (the counter's name), `purse` (the purse line), `role` (the
  * keeper), `keeperEyebrow` and `keeperLine` (who speaks, and what), `backLabel`,
- * `onBack`, `testIDPrefix` (every testID here starts with it), `children` (the
- * counter's wares). Output: the screen's element tree.
+ * `onBack`, `testIDPrefix` (every testID here starts with it), `keeperExtra` (an
+ * optional control beside the keeper), `children` (the counter's wares). Output: the screen's element tree.
  */
 
 import React from 'react';
@@ -42,11 +42,13 @@ export interface VillageCounterFrameProps {
     testIDPrefix: string;
     /** The way back's testID, written out at the caller so the playtest guides can find it. */
     testIDBack: string;
+    /** Beside the keeper, under their line (the Shop's REMOVE A CARD). */
+    keeperExtra?: React.ReactNode;
     children: React.ReactNode;
 }
 
 export function VillageCounterFrame({
-    title, purse, role, keeperEyebrow, keeperLine, backLabel, onBack, testIDPrefix, testIDBack, children,
+    title, purse, role, keeperEyebrow, keeperLine, backLabel, onBack, testIDPrefix, testIDBack, keeperExtra, children,
 }: VillageCounterFrameProps) {
     const styles = useStyles();
     return (
@@ -76,6 +78,7 @@ export function VillageCounterFrame({
                         <View style={styles.keeperWords}>
                             <Text style={styles.keeperEyebrow}>{keeperEyebrow}</Text>
                             <Text style={styles.keeperLine} testID={`${testIDPrefix}-keeper-line`}>“{keeperLine}”</Text>
+                            {keeperExtra ? <View style={styles.keeperExtra}>{keeperExtra}</View> : null}
                         </View>
                     </View>
                 </View>
@@ -127,6 +130,7 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.sulfur,
         marginBottom: 2,
     },
+    keeperExtra: { marginTop: 10, alignSelf: 'stretch' },
     keeperLine: { fontFamily: TYPE_ROLES.spoken.fontFamily, fontSize: 14, lineHeight: 20, color: AXM.parchment },
     // The pinned exit keeps the page's 14pt gutter and clears the vignette below it.
     exitBar: { paddingHorizontal: 14, paddingTop: 8, paddingBottom: SCREEN_FRAME_INSET },

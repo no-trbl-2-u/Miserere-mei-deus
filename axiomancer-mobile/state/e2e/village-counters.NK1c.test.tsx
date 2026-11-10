@@ -112,12 +112,16 @@ describe('the village card shop (NK1c A9, A10, A11)', () => {
     it('sells one of five cards for 6; it joins the deck and is sold for the visit', () => {
         const store = makeStore(20);
         renderShop(store);
-        for (const id of CARDS) expect(screen.getByTestId(`village-card-${id}`)).toBeTruthy();
+        // 168.4: one card in the middle at a time; step to the third to buy it.
+        expect(screen.getByTestId(`village-card-${CARDS[0]}`)).toBeTruthy();
+        fireEvent.press(screen.getByTestId('village-shop-peek-next'));
+        fireEvent.press(screen.getByTestId('village-shop-peek-next'));
         const before = deckOf(store).length;
         fireEvent.press(screen.getByTestId('village-card-grey-word-buy'));
         expect(playerOf(store).currency).toBe(14);
         expect(deckOf(store)).toHaveLength(before + 1);
-        expect(screen.getByTestId('village-card-grey-word-price').props.children).toBe('SOLD');
+        expect(screen.getByTestId('village-card-grey-word-buy')).toHaveProp('accessibilityState', { disabled: true });
+        expect(screen.getByText('SOLD')).toBeTruthy();
         fireEvent.press(screen.getByTestId('village-card-grey-word-buy'));
         expect(deckOf(store)).toHaveLength(before + 1);
     });
