@@ -113,6 +113,10 @@ export const ROUTES = [
     // its dice at rest and its clock held.
     { name: 'hazard-puzzle-stakes', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', puzzleNode: true, waitForTestId: 'hazard-stakes' },
     { name: 'hazard-puzzle-node', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', puzzleNode: true, hazardPuzzle: true },
+    // The shared card-upgrade screen, the string of beads (spec 127, UP1j A17),
+    // at the rest site: the fixture's arrival opens /rest, `tapTestId` picks
+    // UPGRADE A CARD, and the shot waits for HOLD and the way back under it.
+    { name: 'rest-upgrade', path: '/exploration', fixture: 'apprentice-bw-rest', waitForPath: '/rest', tapTestId: 'rest-choice-offer-upgrade', expectTestIds: ['card-upgrade-sheet', 'card-upgrade-figure', 'card-upgrade-centre', 'card-upgrade-hold', 'rest-upgrade-back'] },
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
@@ -337,6 +341,9 @@ export async function loadRoute(target, baseUrl, route, { enter = enterLiveFight
         await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
     }
     await waitForReady(target)
+    // One tap that moves the screen to the state shot (e.g. an offer that opens a
+    // sheet). The web stack can keep a hidden copy of the screen, so the visible one.
+    if (route.tapTestId) await target.getByTestId(route.tapTestId).filter({ visible: true }).first().click()
     if (route.waitForTestId) await target.getByTestId(route.waitForTestId).waitFor({ state: 'visible', timeout: 10_000 })
     await expectPlaces(target, route.expectTestIds)
     if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)

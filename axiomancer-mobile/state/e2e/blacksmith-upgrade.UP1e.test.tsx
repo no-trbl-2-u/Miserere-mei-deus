@@ -15,12 +15,13 @@
  */
 
 import { describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, within } from '@testing-library/react-native';
 import React from 'react';
 
 import { ANVIL_VERB_PRICING, buildCombatDeck, getCardById } from '@mechanics';
 
 import BlacksmithScreen from '@/app/blacksmith/index';
+import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { beginBlacksmithAction } from '@/state/blacksmith/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
@@ -110,6 +111,18 @@ describe('blacksmith: upgrade a card (Phase UP1e)', () => {
         expect(deck).toHaveLength(KNOWN.length);
         expect(player.currency).toBe(35);
         expect(store.getState().blacksmith.session).toBeNull();
+    });
+
+    it('the anvil hosts the shared screen: its price line, the stand-in figure, and its back row in the scroll (A16, #8)', () => {
+        const r = renderAnvil(anvilStore(40));
+        fireEvent.press(r.getByTestId('blacksmith-offer-upgrade'));
+        const scroll = r.getByTestId('blacksmith-scroll');
+        const pick = within(scroll).getByTestId('blacksmith-upgrade-pick');
+        expect(within(pick).getByTestId('card-upgrade-price')).toHaveTextContent(/5 shillings/);
+        expect(within(within(pick).getByTestId('card-upgrade-figure')).UNSAFE_getByProps({ source: UPGRADE_FIGURE_STANDIN })).toBeTruthy();
+        expect(within(pick).getByTestId('card-upgrade-hold')).toBeTruthy();
+        // The taller screen scrolls, so the back row under HOLD stays reachable.
+        expect(within(pick).getByTestId('blacksmith-upgrade-back')).toBeTruthy();
     });
 
     it('backing out of the picker charges nothing', () => {

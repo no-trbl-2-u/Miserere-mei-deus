@@ -13,6 +13,7 @@ import {
     chooseRestChoiceOffer,
     previewRestChoiceHeal,
     pickRestChoiceUpgrade,
+    cancelRestChoiceUpgrade,
     claimRestChoiceOutcome,
     RESTCHOICE_TUNING,
     createCharacter,
@@ -189,6 +190,25 @@ describe('rest-choice — `upgrade` offer (Phase UP1d: names a card; the host up
         expect(pickRestChoiceUpgrade(s, 'no-such-card')).toBe(s);
         const offer = upgradeSession();
         expect(pickRestChoiceUpgrade(offer, 'grey-strike')).toBe(offer);
+    });
+
+    it('backing out of the picker returns to both offers and names nothing (#7)', () => {
+        const offer = upgradeSession({ health: 40 });
+        const picking = chooseRestChoiceOffer(offer, 'upgrade');
+        const back = cancelRestChoiceUpgrade(picking);
+        expect(back.phase).toBe('offer');
+        expect(back.outcome).toBeNull();
+        expect(back.offers).toEqual(offer.offers);
+        // Either offer can still be taken, the heal included.
+        expect(chooseRestChoiceOffer(back, 'rest').outcome?.chosen).toBe('rest');
+        expect(chooseRestChoiceOffer(back, 'upgrade').phase).toBe('upgrade-pick');
+    });
+
+    it('backing out outside upgrade-pick is a silent no-op', () => {
+        const offer = upgradeSession();
+        expect(cancelRestChoiceUpgrade(offer)).toBe(offer);
+        const picked = pickRestChoiceUpgrade(chooseRestChoiceOffer(offer, 'upgrade'), 'grey-ward');
+        expect(cancelRestChoiceUpgrade(picked)).toBe(picked);
     });
 
     it('committing the upgrade locks rest', () => {

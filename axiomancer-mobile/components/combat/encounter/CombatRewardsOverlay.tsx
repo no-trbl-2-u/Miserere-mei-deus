@@ -43,6 +43,7 @@ import { lookOf } from '@/components/experience/looks';
 import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
 import { OFFER_FRAME_BORDER, OFFER_FRAME_PAD, SPOILS_INK, VELLUM_OFFER_H, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
+import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
 import {
@@ -110,7 +111,7 @@ export function CombatRewardsOverlay({
                     testID="combat-reward-upgrade-scroll"
                 >
                 <View style={[styles.panel, styles.upgradePanel, { borderColor: AXM.sulfur }]} testID="combat-reward-upgrade-sheet">
-                    <CardUpgradePicker rows={[upgradeRow]} onConfirm={onUpgrade} />
+                    <CardUpgradePicker rows={[upgradeRow]} figure={UPGRADE_FIGURE_STANDIN} onConfirm={onUpgrade} />
                     <Pressable
                         onPress={() => setUpgrading(false)}
                         testID="combat-reward-upgrade-back"

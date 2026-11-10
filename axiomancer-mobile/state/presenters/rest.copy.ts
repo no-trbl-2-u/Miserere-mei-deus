@@ -49,6 +49,10 @@ export function restOfferDesc(healed: number, shelter: RestShelter = 'camp'): st
 export const REST_CHOICE_PURSE_LABEL = 'PURSE';
 export const REST_CHOICE_FREE_LABEL = 'FREE';
 
+/** The rest site's way back out of the upgrade screen to both offers (spec 127, #7); the Anvil's words. */
+export const REST_UPGRADE_BACK_LABEL = 'NOT THIS ONE';
+export const REST_UPGRADE_BACK_A11Y = 'Back to the fire without upgrading a card';
+
 export const REST_OUTCOME_EYEBROW = 'SETTLED';
 export const REST_OUTCOME_CLAIM_LABEL = 'MOVE ON';
 

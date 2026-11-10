@@ -21,5 +21,6 @@ export {
     previewRestChoiceHeal,
     chooseRestChoiceOffer,
     pickRestChoiceUpgrade,
+    cancelRestChoiceUpgrade,
     claimRestChoiceOutcome,
 } from './restchoice.engine';
