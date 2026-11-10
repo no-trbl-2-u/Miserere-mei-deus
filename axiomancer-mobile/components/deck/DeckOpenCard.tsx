@@ -4,7 +4,7 @@
  *
  * T's numbers, kept to the half point and not retuned: banner 340 pt tall,
  * covering, the crop anchored at the TOP (a square painting keeps its face and
- * weapon and loses its bottom), name 23 pt, lines 16.5 pt.
+ * weapon and loses its bottom), name 23 pt, lines 15 pt (T, 2026-11-10: down from 16.5 so the longest card fits the vellum unscrolled).
  *
  * The whole block is a FIXED height (`OPEN_CARD_HEIGHT`): the lines area
  * scrolls inside its own box rather than growing, so whatever sits under the
@@ -138,20 +138,20 @@ const useStyles = makeStyles((AXM) => ({
     // The vellum panel draws 26pt of ornament top and bottom and 42pt a side
     // (741x437 art at 0.3); the scroll is inset to clear it.
     textBox: { height: OPEN_CARD_TEXT_HEIGHT, marginHorizontal: 4 },
-    textScroll: { flex: 1, marginHorizontal: 34, marginVertical: 24 },
-    textContent: { paddingVertical: 2, gap: 6 },
+    textScroll: { flex: 1, marginHorizontal: 34, marginVertical: 22 },
+    textContent: { paddingVertical: 2, gap: 4 },
     line: {},
-    lineLabel: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: SPOILS_INK.soft },
+    lineLabel: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 13, color: SPOILS_INK.soft },
     lineText: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
-        fontSize: 16.5,
-        lineHeight: 23,
+        fontSize: 15,
+        lineHeight: 19,
         color: SPOILS_INK.body,
     },
     keyword: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
-        fontSize: 16.5,
-        lineHeight: 23,
+        fontSize: 15,
+        lineHeight: 19,
         color: SPOILS_INK.accent,
         textDecorationLine: 'underline',
     },
