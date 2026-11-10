@@ -11,7 +11,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react-n
 import { State } from 'react-native-gesture-handler';
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, type StyleProp, type TextStyle } from 'react-native';
 
 import { CombatCardFace } from '@/components/combat/encounter/CombatBoard';
 import { CardUpgradePicker, HOLD_MS, UPGRADE_A11Y_ACTION } from '@/components/upgrade/CardUpgradePicker';
@@ -130,9 +130,9 @@ describe('CardUpgradePicker: the string of beads', () => {
         render(<CombatCardFace card={card} width={120} height={176} />);
         expect(screen.queryByTestId('combat-card-face-changed-number')).toBeNull();
         const line = screen.getByTestId('combat-card-face-paid-line');
-        const runs = React.Children.toArray(line.props.children) as React.ReactElement<{ style: unknown }>[];
+        const runs = React.Children.toArray(line.props.children) as React.ReactElement<{ style: StyleProp<TextStyle> }>[];
         expect(runs.length).toBeGreaterThan(0);
-        for (const run of runs) expect(StyleSheet.flatten(run.props.style as never).color).not.toBe(GOLD);
+        for (const run of runs) expect(StyleSheet.flatten(run.props.style)?.color).not.toBe(GOLD);
         expect(StyleSheet.flatten(screen.getByTestId('combat-card-face-free-value').props.style).color).not.toBe(GOLD);
     });
 
