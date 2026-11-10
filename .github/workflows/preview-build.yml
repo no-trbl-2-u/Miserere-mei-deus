@@ -60,6 +60,15 @@ jobs:
             exit 1
           fi
 
+      # The production profile carries the puzzle API token (it is the tester
+      # APK), so it is baked for Android only: an `all` run would put the token
+      # in the iOS App Store build. Refuse it before the verify gate.
+      - name: Check the production platform
+        if: inputs.profile == 'production' && inputs.platform == 'all'
+        run: |
+          echo "::error::profile production is the Android tester APK: run platform android, not all (the puzzle API token is baked for Android only)"
+          exit 1
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -81,16 +90,17 @@ jobs:
         env:
           SMOKE_ROUTES: all
 
-      # The solve-time API (phase BE1c): a dev-tools build posts each ended
-      # /devpuzzle attempt when both EXPO_PUBLIC_PUZZLE_API_* values are baked
-      # in. An EAS cloud build does not see this runner's env, but it archives
+      # The solve-time API (phase BE1c): a build posts when both
+      # EXPO_PUBLIC_PUZZLE_API_* values are baked in, whether or not it has dev
+      # tools. An EAS cloud build does not see this runner's env, but it archives
       # the working tree, so the values go into the profile's `env` in this
       # checkout's eas.json (never committed). Skipped for beta, the TestFlight
       # build friends install, which posts no play data; production is the
-      # tester APK and gets the same values as preview;
-      # when either secret is unset the build simply never posts.
+      # tester APK and gets the same values as preview, on Android only (an iOS
+      # production run bakes nothing); when either secret is unset the build
+      # simply never posts.
       - name: Pass the puzzle API values to the build
-        if: env.PREVIEW_PROFILE != 'beta'
+        if: env.PREVIEW_PROFILE != 'beta' && (env.PREVIEW_PROFILE != 'production' || env.PREVIEW_PLATFORM == 'android')
         working-directory: axiomancer-mobile
         env:
           EXPO_PUBLIC_PUZZLE_API_URL: ${{ secrets.EXPO_PUBLIC_PUZZLE_API_URL }}

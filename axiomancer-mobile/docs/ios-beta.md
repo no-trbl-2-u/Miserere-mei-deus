@@ -128,7 +128,9 @@ counts once against the Expo build cap, however many testers there are.
 ## Friends' builds post no play data
 
 A `beta` build carries no `EXPO_PUBLIC_PUZZLE_API_*` values (the workflow skips
-them for `beta` as it does for `production`, phase IO1c), so neither the puzzle
+them for `beta`, phase IO1c; `production` gets them for Android only, and
+`platform: all` with `production` is refused, so the App Store build never
+carries the token), so neither the puzzle
 API poster (BE1) nor the card play log (BE2) can send anything. Phase BE2's DoD
 holds play logging back from anyone but T until BE1's playtester follow-up
 (device ids, a privacy note) is plotted. Sentry crash reports still flow, as

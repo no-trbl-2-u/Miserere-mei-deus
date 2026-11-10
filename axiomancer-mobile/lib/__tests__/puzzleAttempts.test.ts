@@ -68,8 +68,17 @@ describe('puzzleApiConfig', () => {
         expect(puzzleApiConfig()).toEqual(CONFIG);
     });
 
-    it('is null in a production build, even with both values set', () => {
+    it('reads the same config with dev tools off: the production tester APK posts', () => {
         devTools.mockReturnValue(false);
+        expect(puzzleApiConfig()).toEqual(CONFIG);
+    });
+
+    it('is null with dev tools off when the URL or the token is missing', () => {
+        devTools.mockReturnValue(false);
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_URL;
+        expect(puzzleApiConfig()).toBeNull();
+        process.env.EXPO_PUBLIC_PUZZLE_API_URL = CONFIG.url;
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
         expect(puzzleApiConfig()).toBeNull();
     });
 

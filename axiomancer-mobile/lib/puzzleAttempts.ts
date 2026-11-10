@@ -4,17 +4,17 @@
  * as the shared `PuzzleAttemptPost` (`@mechanics`), so the Worker's validator
  * and this module read one shape.
  *
- * Only a build with dev tools on, and with both `EXPO_PUBLIC_PUZZLE_API_URL`
- * and `EXPO_PUBLIC_PUZZLE_API_TOKEN` baked in, ever posts; anything else gets
- * a null config and makes no network call. A post that fails is dropped with
- * a console warning: no retry, no queue, no UI. The warning is not gated on
- * `__DEV__`, which is false in a preview APK; the dev-tools gate already keeps
- * it out of production.
+ * Only a build with both `EXPO_PUBLIC_PUZZLE_API_URL` and
+ * `EXPO_PUBLIC_PUZZLE_API_TOKEN` baked in ever posts; anything else gets a
+ * null config and makes no network call. Dev tools do not gate it: the
+ * production tester APK has them off and still posts. A post that fails is
+ * dropped with a console warning: no retry, no queue, no UI. The warning is
+ * not gated on `__DEV__`, which is false in a preview APK.
  */
 
 import { PUZZLE_ATTEMPTS_PATH, type HazardPuzzleBand, type PlayLogSourceKind, type PuzzleAttemptPost } from '@mechanics';
 
-import { getBuildProfile, isDevToolsEnabled } from '@/lib/buildProfile';
+import { getBuildProfile } from '@/lib/buildProfile';
 import Constants from '@/lib/platform/constants';
 import type { HazardPuzzleLogAttempt } from '@/state/presenters/hazard-puzzle-log.engine';
 
@@ -29,7 +29,6 @@ export type PuzzleFetch = (url: string, init: { method: string; headers: Record<
 
 /** Where and how to post, or null when this build must not post at all. */
 export function puzzleApiConfig(): PuzzleApiConfig | null {
-    if (!isDevToolsEnabled()) return null;
     // Each name written out in full: Expo inlines an EXPO_PUBLIC_ value only
     // where the literal `process.env.EXPO_PUBLIC_...` appears.
     const url = process.env.EXPO_PUBLIC_PUZZLE_API_URL?.trim();

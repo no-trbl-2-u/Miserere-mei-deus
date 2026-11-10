@@ -5,11 +5,12 @@
  * `getBuildCommit()` and `playSessionId()` (`playLogSource()`), through
  * `postPlayLog()`.
  *
- * Three conditions, all required: a dev-tools build, the BE1 API URL and
- * token baked in (`puzzleApiConfig()`, which already checks the first), and
- * the dev menu's "Card & combat logging" switch on. With any one false the
- * gate is shut: no request is made and nothing is buffered. The BE1 puzzle
- * poster keeps its own gate, untouched by the switch.
+ * The BE1 API URL and token must be baked in (`puzzleApiConfig()`). Where dev
+ * tools are on, the dev menu's "Card & combat logging" switch must also be on;
+ * where they are off (the production tester APK) there is no switch and the
+ * build posts. With either condition false the gate is shut: no request is
+ * made and nothing is buffered. The BE1 puzzle poster is untouched by the
+ * switch.
  */
 
 import type {
@@ -51,8 +52,7 @@ export function setPlayLogOverride(next: PlayLogOverride | null): PlayLogOverrid
 /** Where and how to post the play log, or null when this build must send nothing. */
 export function playLogConfig(store: DevSettingsStore = devSettingsStore): PuzzleApiConfig | null {
     if (override !== null) return override.config;
-    if (!isDevToolsEnabled()) return null;
-    if (!store.get().playLogging) return null;
+    if (isDevToolsEnabled() && !store.get().playLogging) return null;
     return puzzleApiConfig();
 }
 
@@ -81,7 +81,7 @@ export type PlayLogStamps = PlayLogSource & { source: PlayLogSourceKind };
 /**
  * Who played this build (phase SM1b, acceptance A4): `human` only when the
  * build carries `EXPO_PUBLIC_PLAY_LOG_SOURCE=human`, which only the committed
- * `eas.json` preview profile sets; every other build (a web export, a dev
+ * `eas.json` preview and production profiles set; every other build (a web export, a dev
  * server T opens by hand, a jest run) is `harness`, so a forgotten harness can
  * never land in T's numbers. The app never sends `sim`: the headless run driver
  * stamps that itself. The name is written out in full because Expo inlines an
