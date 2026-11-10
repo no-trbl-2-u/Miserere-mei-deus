@@ -395,3 +395,9 @@ it. `flavor` stays the item description in the view-model, because the item-rewa
 no effect block) and would otherwise show a found weapon with no text at all. Presenter, modal and item-reward screen
 tests pin the weapon, armor, relic and effectless cases. Before and after shots at 360 wide were taken from the web export and sent to T in
 session (the proxy refuses uploads).
+
+- Defaults taken: the settled view retires the spec an absorbing close empties (A5), `plan-check` skips a spec the view retired; the hold hint names `absorb:` only for a close without one; `followUpsRow` shifts every `#` line (fenced too) and indents a body line shaped like a row field.
+- Found on the dry run: `followUps` took a spec title that says "Follow-ups" (this spec's own) as a section and would have carried the whole spec to CANDIDATES; level-1 headings are skipped now, with a test.
+- Also paid (#1562): the run-log test with dev tools off and the URL and token baked in; `HazardPuzzlePost` now shows the poster still has its config with dev tools off; stale comments and docs (`dev-tools.md`, `DebugPlayLogSwitch.tsx`, `usePostEndedPuzzleAttempts.ts`, `puzzleAttempts.ts`).
+- Also paid (#1561): the `sim-runs.yml` report job also needs `github.ref_name == 'main'`; `sim-report.test.mjs` pins the whole `if:`, the sha output, the `sim-breaks` artifact on both ends and the `resolve_report` handler, and a closed-issue break link.
+- Left as notes, not fixed (design calls): the nexus-loop concurrency group the report job joins, and any dispatch counting as a night.
