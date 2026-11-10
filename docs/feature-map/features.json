@@ -896,9 +896,9 @@
         "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-campfire.UK2i.test.tsx, ..."
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Rest\", \"RestChoice\", \"rest node\", \"rest site\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-11-09-village-screens.md"
       }
     },
     {
