@@ -401,3 +401,7 @@ session (the proxy refuses uploads).
 - Also paid (#1562): the run-log test with dev tools off and the URL and token baked in; `HazardPuzzlePost` now shows the poster still has its config with dev tools off; stale comments and docs (`dev-tools.md`, `DebugPlayLogSwitch.tsx`, `usePostEndedPuzzleAttempts.ts`, `puzzleAttempts.ts`).
 - Also paid (#1561): the `sim-runs.yml` report job also needs `github.ref_name == 'main'`; `sim-report.test.mjs` pins the whole `if:`, the sha output, the `sim-breaks` artifact on both ends and the `resolve_report` handler, and a closed-issue break link.
 - Left as notes, not fixed (design calls): the nexus-loop concurrency group the report job joins, and any dispatch counting as a night.
+
+Built inline (the run's worker is the builder). Defaults: cut-outs resized to
+640 px longest edge and WebP q44 (alpha q80) per the ingest recipe; table is
+`assets/images/keepers/index.ts` (`KEEPER_PORTRAITS`, `keeperPortrait(role)`).
