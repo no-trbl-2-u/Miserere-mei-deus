@@ -68,6 +68,10 @@ export const GALLERY = [
     { name: 'village-shop', why: 'The Shop, opened from the village hub: the cards, removal and the gear.',
       fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
       steps: [{ jsClick: 'village-open-shop' }, { waitForPath: '/village/shop' }, { settle: 800 }] },
+    // 168.4: the CARDS / GEAR button switches the carousel to the weapons and armor.
+    { name: 'village-shop-gear', why: 'The Shop on its GEAR side: one weapon or armor piece at a time.',
+      fixture: 'wanderer-bw-blacksmith', path: '/exploration', waitForPath: '/village',
+      steps: [{ jsClick: 'village-open-shop' }, { waitForPath: '/village/shop' }, { jsClick: 'village-shop-toggle' }, { settle: 800 }] },
     { name: 'village-rest', why: 'The paid rest, its own keeper screen, opened from the village hub.',
       fixture: 'wanderer-staged-village', path: '/exploration', waitForPath: '/village',
       steps: [{ jsClick: 'village-open-rest' }, { waitForPath: '/village/rest' }, { settle: 800 }] },
