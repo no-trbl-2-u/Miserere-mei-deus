@@ -10,6 +10,9 @@
  * scrolls inside its own box rather than growing, so whatever sits under the
  * open card (the type tabs, 155.3) is at the same place whichever card is open.
  *
+ * The lines sit on the Spoils' vellum panel (`modal-panel-vellum`, T,
+ * 2026-11-10) in the Spoils' inks: iron-gall body, oxblood keywords.
+ *
  * Lines arrive as `DeckLineVM`s (an optional label, then ordered runs); this
  * component assembles no card text. Keyword runs are pressable spans: tap
  * for the gloss, hold to pin it.
@@ -18,6 +21,8 @@
 import React, { useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { SPOILS_INK } from '@/components/combat/encounter/spoils-ink';
+import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { useTooltip } from '@/hooks/useTooltip';
 import { Image } from '@/lib/platform/image';
 import type { DeckCardVM, DeckLineVM, DeckRunVM } from '@/state/presenters/deck.engine';
@@ -52,8 +57,10 @@ export function DeckOpenCard({ card }: DeckOpenCardProps) {
                     {card.name}
                 </Text>
             </View>
+            <View style={styles.textBox} testID="deck-open-card-vellum">
+                <KitBackdrop piece="modal-panel-vellum" />
             <ScrollView
-                style={styles.textBox}
+                style={styles.textScroll}
                 contentContainerStyle={styles.textContent}
                 nestedScrollEnabled
                 showsVerticalScrollIndicator={false}
@@ -66,6 +73,7 @@ export function DeckOpenCard({ card }: DeckOpenCardProps) {
                     <Text style={styles.footnote} testID="deck-open-card-stacks">{card.stacksText}</Text>
                 )}
             </ScrollView>
+            </View>
         </View>
     );
 }
@@ -127,23 +135,26 @@ const useStyles = makeStyles((AXM) => ({
         textShadowRadius: 8,
         textShadowOffset: { width: 0, height: 1 },
     },
-    textBox: { height: OPEN_CARD_TEXT_HEIGHT },
-    textContent: { paddingHorizontal: 14, paddingVertical: 12, gap: 8 },
+    // The vellum panel draws 26pt of ornament top and bottom and 42pt a side
+    // (741x437 art at 0.3); the scroll is inset to clear it.
+    textBox: { height: OPEN_CARD_TEXT_HEIGHT, marginHorizontal: 4 },
+    textScroll: { flex: 1, marginHorizontal: 34, marginVertical: 24 },
+    textContent: { paddingVertical: 2, gap: 6 },
     line: {},
-    lineLabel: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: AXM.bone },
+    lineLabel: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: SPOILS_INK.soft },
     lineText: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 16.5,
         lineHeight: 23,
-        color: AXM.parchment,
+        color: SPOILS_INK.body,
     },
     keyword: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 16.5,
         lineHeight: 23,
-        color: AXM.sulfur,
+        color: SPOILS_INK.accent,
         textDecorationLine: 'underline',
     },
-    keywordMinor: { color: AXM.bone },
-    footnote: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, lineHeight: 18, color: AXM.bone },
+    keywordMinor: { color: SPOILS_INK.soft },
+    footnote: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, lineHeight: 18, color: SPOILS_INK.soft },
 }));
