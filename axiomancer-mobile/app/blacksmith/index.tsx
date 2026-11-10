@@ -29,7 +29,7 @@ import { BrassPlate } from '@/components/blacksmith/BrassPlate';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { ScreenBg } from '@/components/ScreenBg';
 import { Image } from '@/lib/platform/image';
-import { keeperPortrait } from '@/assets/images/keepers';
+import { UPGRADE_FIGURE_STANDIN, keeperPortrait } from '@/assets/images/keepers';
 import { mapBackdropFor } from '@/state/exploration-maps';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
@@ -284,6 +284,7 @@ export default function BlacksmithScreen() {
                         <CardUpgradePicker
                             rows={vm.upgradeRows}
                             priceLine={vm.upgradePriceLine}
+                            figure={UPGRADE_FIGURE_STANDIN}
                             onConfirm={(cardId) => actions.pickBlacksmithCardUpgrade(cardId)}
                         />
                         <LeaveRow

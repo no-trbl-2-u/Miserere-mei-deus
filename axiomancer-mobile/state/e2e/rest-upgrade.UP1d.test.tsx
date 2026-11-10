@@ -5,7 +5,9 @@
  * site, picks UPGRADE A CARD, turns the shared upgrade screen's wheel to a
  * card (the string of beads, UP1i), sees the card as it is beside the card
  * after the upgrade, holds HOLD until the ring closes, and moves on. The deck then holds `<id>+` in place of one
- * copy, the other copies stay, and the night healed nothing.
+ * copy, the other copies stay, and the night healed nothing. The rest site's
+ * back row (UP1j, #7) leaves the upgrade screen for both offers, naming
+ * nothing, so the heal can still be taken.
  *
  * Hermetic = self-contained + deterministic + isolated.
  * See docs/testing.md for the full standard.
@@ -18,7 +20,9 @@ import React from 'react';
 import { buildCombatDeck, cardLibrary, getCardById, upgradeLimit } from '@mechanics';
 
 import RestScreen from '@/app/rest/index';
+import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
+import { REST_UPGRADE_BACK_LABEL } from '@/state/presenters/rest.copy';
 import { beginRestAction } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { bringToCentre, centreBeadLabel, holdToUpgrade, isOnWheel } from '@/test-utils/cardUpgrade';
@@ -81,6 +85,47 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         expect(r.getByTestId('rest-choice-offer-rest')).toBeTruthy();
         expect(r.getByTestId('rest-choice-offer-upgrade')).toBeTruthy();
         expect(r.queryByTestId('rest-choice-offer-cut')).toBeNull();
+    });
+
+    it('the upgrade screen stands the figure over the pair and the wheel, with a way back under HOLD (A16, #7, #8)', () => {
+        const r = render(
+            <GameStoreProvider store={restStore()}>
+                <RestScreen />
+            </GameStoreProvider>,
+        );
+        fireEvent.press(r.getByTestId('rest-choice-offer-upgrade'));
+        const pick = r.getByTestId('rest-upgrade-pick');
+        // The figure slot carries the stand-in all three hosts share until T's art (#8).
+        const figure = within(within(pick).getByTestId('card-upgrade-figure')).UNSAFE_getByProps({ source: UPGRADE_FIGURE_STANDIN });
+        expect(figure).toBeTruthy();
+        expect(within(pick).getByTestId('card-upgrade-hold')).toBeTruthy();
+        expect(within(pick).getByTestId('rest-upgrade-back')).toHaveTextContent(REST_UPGRADE_BACK_LABEL);
+        // The rest site is free: no price line.
+        expect(r.queryByTestId('card-upgrade-price')).toBeNull();
+    });
+
+    it('backing out of the upgrade returns to both offers, names nothing, and the heal can still be taken (#7)', () => {
+        const store = restStore();
+        const r = render(
+            <GameStoreProvider store={store}>
+                <RestScreen />
+            </GameStoreProvider>,
+        );
+        fireEvent.press(r.getByTestId('rest-choice-offer-upgrade'));
+        fireEvent.press(r.getByTestId('rest-upgrade-back'));
+        expect(r.queryByTestId('card-upgrade-sheet')).toBeNull();
+        expect(store.getState().rest.session?.phase).toBe('offer');
+        expect(store.getState().rest.session?.outcome).toBeNull();
+        // The heal is still there to take, and it pays.
+        fireEvent.press(r.getByTestId('rest-choice-offer-rest'));
+        fireEvent.press(r.getByTestId('rest-claim'));
+        const { player, flags } = store.getState() as unknown as {
+            player: { health: number; knownCards: string[]; combatRewardCards?: string[] };
+            flags: string[];
+        };
+        expect(player.health).toBe(130);
+        const deck = buildCombatDeck(player as never, flags);
+        expect(deck.some((id) => id.endsWith('+'))).toBe(false);
     });
 
     it('previews the upgrade on the centre bead, a full hold commits it, and the deck then holds <id>+', () => {

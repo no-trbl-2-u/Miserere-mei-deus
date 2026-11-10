@@ -19,9 +19,12 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
+import { getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 
 import { cardLibrary, getCardById, upgradeLimit } from '@mechanics';
+import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
+import { UPGRADE_A11Y_ACTION } from '@/components/upgrade/CardUpgradePicker';
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
@@ -293,6 +296,19 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         upgradeByA11yAction();
         expect(onUpgrade).toHaveBeenCalledWith(RARE);
         expect(onPick).not.toHaveBeenCalled();
+    });
+
+    it('the one-bead wheel sits at the centre under the stand-in figure and does not turn (A16, #8)', () => {
+        renderElite();
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
+        expect(within(screen.getByTestId('card-upgrade-figure')).UNSAFE_getByProps({ source: UPGRADE_FIGURE_STANDIN })).toBeTruthy();
+        // The elite reward prints no price: the card is the prize.
+        expect(screen.queryByTestId('card-upgrade-price')).toBeNull();
+        // No drag turns it, and no adjust action is offered to a screen reader.
+        const pan = getByGestureTestId('card-upgrade-wheel-pan') as unknown as { config: { enabled?: boolean } };
+        expect(pan.config.enabled).toBe(false);
+        const actions = screen.getByTestId('card-upgrade-centre').props.accessibilityActions as { name: string }[];
+        expect(actions.map((a) => a.name)).toEqual([UPGRADE_A11Y_ACTION]);
     });
 
     it('the upgrade sheet scrolls inside the overlay, so HOLD and BACK stay reachable on a short phone', () => {
