@@ -88,6 +88,9 @@ export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   cache: { screen: 'cache/index', tab: false },
   blacksmith: { screen: 'blacksmith/index', tab: false },
   village: { screen: 'village/index', tab: false },
+  // The village's counter screens (spec 168): the hub stays below them.
+  'village/rest': { screen: 'village/rest', tab: false },
+  'village/shop': { screen: 'village/shop', tab: false },
   dialogue: { screen: 'dialogue/index', tab: false },
   cutscene: { screen: 'cutscene/index', tab: false },
   dev: { screen: 'dev/index', tab: false },
@@ -137,6 +140,8 @@ export const linking = {
       'cache/index': 'cache',
       'blacksmith/index': 'blacksmith',
       'village/index': 'village',
+      'village/rest': 'village/rest',
+      'village/shop': 'village/shop',
       'dialogue/index': 'dialogue',
       'cutscene/index': 'cutscene',
       'dev/index': 'dev',
