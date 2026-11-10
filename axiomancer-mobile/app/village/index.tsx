@@ -432,7 +432,7 @@ const useStyles = makeStyles((AXM) => ({
     note: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 12, color: AXM.sulfur, marginTop: 4 },
     priceHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.sulfur, marginBottom: 4 },
     // Three faces side by side at the reward draft's size fit a 375pt phone.
-    shopRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, marginTop: 18, marginBottom: 8 },
+    shopRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 12, columnGap: 6, marginTop: 18, marginBottom: 8 },
     shopCard: { alignItems: 'center', width: 104 },
     buyButton: {
         alignSelf: 'stretch',

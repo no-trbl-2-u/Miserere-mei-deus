@@ -98,7 +98,7 @@ describe('the village paid rest (NK1c A8)', () => {
 });
 
 describe('the village card shop (NK1c A9, A10, A11)', () => {
-    it('sells one of three cards for 6; it joins the deck and is sold for the visit', () => {
+    it('sells one of five cards for 6; it joins the deck and is sold for the visit', () => {
         const store = makeStore(20);
         renderVillage(store);
         for (const id of CARDS) expect(screen.getByTestId(`village-card-${id}`)).toBeTruthy();
