@@ -481,7 +481,10 @@ export const liveMarkdown = (needs, next, today, queue = null) => {
 
 const BUDGET_LINE = /^Hours a week:\s*(\d+(?:\.\d+)?)\s*$/m
 
-/** The `## Budget` section's hours a week, or null when the file has none (the dated model). */
+/** Whether the file has a `## Budget` section at all: the mark of the queue model, whatever the section says. */
+export const hasBudgetSection = (md) => /^## Budget\s*$/m.test(md)
+
+/** The `## Budget` section's hours a week, or null when it states none (or the file has no such section). */
 export const parseBudget = (md) => {
     const m = section(md, 'Budget').match(BUDGET_LINE)
     return m && Number(m[1]) > 0 ? Number(m[1]) : null

@@ -443,11 +443,12 @@ them; update here first.
    adds it through its own `plan/pending/` file (phase NX1e).
    `plan/deadlines.md` merges through `scripts/deadlines-merge.mjs`
    (`merge.deadlines.driver`, same registration, and `MERGE_DRIVERS` in
-   `scripts/pr-resolve.mjs` for the runner): same-spot Items, Unscheduled
-   lines and Change log lines are all kept (new Items stay in date order), a
-   row both sides edited merges cell by cell, a cell changed two ways keeps
-   its markers, and a merge that would double an Unscheduled id or an Items
-   row is refused.
+   `scripts/pr-resolve.mjs` for the runner): same-spot Items and Change log lines are all kept (new
+   acts stay grouped by milestone, in the order the merge met them), a row
+   both sides edited merges cell by cell, a cell changed two ways keeps its
+   markers, and a merge that would double an Items row is refused. (The
+   driver still handles `## Unscheduled` lines for a file of the dated
+   model; the queue has none.)
 2. **No `Co-Authored-By:` trailers, no emojis** — in commits, code, or
    content.
 3. **The verify gate is non-negotiable.** No `--no-verify`, no

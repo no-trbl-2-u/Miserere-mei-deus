@@ -41,7 +41,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, inWindow, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -84,7 +84,12 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     const unscheduled = parseUnscheduled(deadlinesMd)
     const windows = parseWindows(deadlinesMd)
     const errors = resolved.errors.map((e) => `${DEADLINES}: ${e}`)
-    const queueModel = parseBudget(deadlinesMd) !== null
+    // The section, not its number, marks the queue model: a mistyped hours line must say so here,
+    // never fall back to the dated model and ask every open row for a line.
+    const queueModel = hasBudgetSection(deadlinesMd)
+    if (queueModel && parseBudget(deadlinesMd) === null) {
+        errors.push(`${DEADLINES}: ## Budget states no hours a week; write one line "Hours a week: <number above 0>" under it.`)
+    }
 
     // An id in `Rows` or in `Waits on` is named; each place is recorded so a clash names both.
     const namedBy = new Map()

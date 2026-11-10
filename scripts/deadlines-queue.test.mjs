@@ -8,7 +8,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { itemHours, liveMarkdown, parseBudget, parseItems, planRows, queuePlan, reminderText } from './deadlines-lib.mjs'
+import { hasBudgetSection, itemHours, liveMarkdown, parseBudget, parseItems, planRows, queuePlan, reminderText } from './deadlines-lib.mjs'
 import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -219,4 +219,37 @@ test('a milestone that is today or past has no hours left: everything queued up 
     assert.match(text, /Tue, Nov 17 \(3 days overdue\): 4 acts open \(10 h\), 10 h queued up to it, 0 h available: over by 10 h; at this pace the queue reaches it Mon, Nov 30\./)
     // The acts of a past milestone stay first in this week's list.
     assert.equal(past.week[0].name, 'Write the lines (3 h)')
+})
+
+test('when every open act waits on the loop, the reminder and the live file say nothing is ready', () => {
+    const { phases } = planRows(SOURCES)
+    const q = queuePlan(parseItems(plan()).filter((i) => i.name === 'Play the lines (1 h)'), phases, '2026-11-10', 7)
+    assert.deepEqual([q.week, q.later, q.waiting.length], [[], 0, 1])
+    assert.match(reminderText([], null, '2026-11-10', q), /- Nothing is ready for T: every open act waits on the loop\.\nThen: 1 wait on the loop \(QA2\)\./)
+    assert.match(liveMarkdown([], null, '2026-11-10', q), /## This week \(7 h\)\n\nNothing is ready for T\.\n/)
+})
+
+test('the live file cuts a long act name in its waiting and no-hours lists, and never in this week\'s table', () => {
+    const long = `Review ${'a very long act name '.repeat(8)}to the end`
+    const md = plan()
+        .replace('| Play the lines (1 h) |', `| ${long} (1 h) |`)
+        .replace('| Decide a thing |', `| ${long} |`)
+        .replace('| Review it (4 h) |', `| ${long} it (1 h) |`)
+    const { phases } = planRows(SOURCES)
+    const live = liveMarkdown([], null, '2026-11-10', queuePlan(parseItems(md), phases, '2026-11-10', 7))
+    const cut = `${`${long} (1 h)`.slice(0, 107).trimEnd()}...`
+    assert.ok(live.includes(`- ${cut} — the loop still owes QA2`))
+    assert.ok(live.includes(`\n- ${long.slice(0, 107).trimEnd()}...\n`))
+    assert.ok(live.includes(`| ${long} it (1 h) | 1 |`), 'the table keeps the whole name')
+})
+
+test('a Budget section with no readable hours fails the lint by name and stays the queue model', () => {
+    for (const bad of ['Hours a week: six', 'Hours per week: 6', 'Hours a week: 0', '']) {
+        const md = plan(bad)
+        assert.equal(hasBudgetSection(md), true)
+        assert.equal(parseBudget(md), null)
+        const errors = checkDeadlines(md, SOURCES)
+        assert.deepEqual(errors, ['plan/deadlines.md: ## Budget states no hours a week; write one line "Hours a week: <number above 0>" under it.'])
+    }
+    assert.equal(hasBudgetSection('# Deadlines\n\n## Items\n'), false)
 })
