@@ -197,7 +197,8 @@ describe('hub navigation (168 A2)', () => {
 
     it('the Shop keeps every ware the old page sold: the cards, BUY and REMOVE A CARD', () => {
         mount(makeStore(ALL), VillageShopScreen);
-        for (const id of CARDS) expect(screen.getByTestId(`village-card-${id}-buy`)).toBeTruthy();
+        // 168.4: one card at a time; the first is in the middle with BUY under it.
+        expect(screen.getByTestId(`village-card-${CARDS[0]}-buy`)).toBeTruthy();
         expect(screen.getByTestId('village-remove')).toBeTruthy();
         expect(screen.getByTestId('village-shop-keeper')).toBeTruthy();
     });
