@@ -48,6 +48,7 @@ import {
     cardUpgradeBeadA11yLabel,
     cardUpgradeCountMark,
     cardUpgradeHoldA11yLabel,
+    cardUpgradePairA11yLabel,
 } from '@/state/presenters/card-upgrade.copy';
 import { cardUpgradePreviewVM, type CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
 import { TYPE_ROLES } from '@/theme/axm';
@@ -120,12 +121,14 @@ function beadPlace(d: number): { x: number; y: number; scale: number } {
     return { x, y, scale };
 }
 
-function Bead({ row, index, n, pos, centre, wheelW, onTurnTo, onTurnBy, onUpgrade }: {
+function Bead({ row, index, n, pos, centre, hidden, wheelW, onTurnTo, onTurnBy, onUpgrade }: {
     row: CardUpgradeRowVM;
     index: number;
     n: number;
     pos: SharedValue<number>;
     centre: boolean;
+    /** Too far round the wheel to be drawn: neither touchable nor read aloud. */
+    hidden: boolean;
     wheelW: number;
     onTurnTo: (index: number) => void;
     onTurnBy: (steps: number) => void;
@@ -151,6 +154,10 @@ function Bead({ row, index, n, pos, centre, wheelW, onTurnTo, onTurnBy, onUpgrad
     return (
         <Animated.View
             style={[styles.beadSlot, { left: wheelW / 2 - CENTRE_BEAD / 2, zIndex: centre ? 2 : 1 }, place]}
+            pointerEvents={hidden ? 'none' : 'box-none'}
+            accessibilityElementsHidden={hidden}
+            importantForAccessibility={hidden ? 'no-hide-descendants' : 'auto'}
+            testID={`card-upgrade-slot-${row.cardId}`}
         >
             <Pressable
                 // #4: a side bead turns the wheel to itself; no bead upgrades on a tap.
@@ -280,13 +287,22 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine, figure = UPGRADE
         if (n > 1) settleOn(Math.round(pos.value) + steps);
     }, [n, pos, settleOn]);
 
-    // A host that swaps the rows keeps the wheel on a bead that exists.
+    // A host that swaps the rows keeps the same card on the centre bead if it
+    // is still there, wherever it moved to, and else re-seats the first card.
+    const prevRows = useRef(rows);
     useEffect(() => {
-        if (n > 0 && centre >= n) {
-            pos.value = 0;
-            setCentre(0);
-        }
-    }, [n, centre, pos]);
+        const before = prevRows.current;
+        prevRows.current = rows;
+        if (before === rows || n === 0) return;
+        const centredId = before.length > 0 ? before[Math.min(centre, before.length - 1)].cardId : null;
+        if (centredId !== null && rows[centre]?.cardId === centredId) return;
+        const found = centredId === null ? -1 : rows.findIndex((r) => r.cardId === centredId);
+        const target = found >= 0 ? found : 0;
+        if (holdTimer.current !== null) emptyRing();
+        cancelAnimation(pos);
+        pos.value = target;
+        setCentre(target);
+    }, [rows, n, centre, pos, emptyRing]);
 
     const pan = Gesture.Pan()
         .withTestId('card-upgrade-wheel-pan')
@@ -347,7 +363,7 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine, figure = UPGRADE
                     <View
                         style={styles.oldCard}
                         accessible
-                        accessibilityLabel={`${preview.before.name}, as it is: ${preview.beforeCard.face.paidLine}`}
+                        accessibilityLabel={cardUpgradePairA11yLabel(preview.before.name, 'before')}
                         testID="card-upgrade-now"
                     >
                         <CombatCardFace card={preview.beforeCard} width={OLD_W} height={OLD_H} />
@@ -356,7 +372,7 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine, figure = UPGRADE
                     <View
                         style={[styles.newCard, { borderColor: gold, shadowColor: gold }]}
                         accessible
-                        accessibilityLabel={`${preview.after.name}, as it will be: ${preview.afterCard.face.paidLine}`}
+                        accessibilityLabel={cardUpgradePairA11yLabel(preview.after.name, 'after')}
                         testID="card-upgrade-after"
                     >
                         <CombatCardFace
@@ -385,6 +401,7 @@ export function CardUpgradePicker({ rows, onConfirm, priceLine, figure = UPGRADE
                             n={n}
                             pos={pos}
                             centre={i === centreIndex}
+                            hidden={Math.abs(wrappedDistance(i, centreIndex, n)) > MAX_SHOWN}
                             wheelW={wheelW}
                             onTurnTo={turnTo}
                             onTurnBy={turnBy}

@@ -38,3 +38,9 @@ export function cardUpgradeHoldA11yLabel(name: string): string {
     return `Hold to upgrade ${name}`;
 }
 export const CARD_UPGRADE_HOLD_A11Y_HINT = 'Keep holding until the ring closes. Letting go early upgrades nothing.';
+
+/** The pair, read aloud: which card and which side of the upgrade. The
+ *  face's own lines are read from the face, so this names the card only. */
+export function cardUpgradePairA11yLabel(name: string, side: 'before' | 'after'): string {
+    return side === 'before' ? `The card as it is: ${name}` : `The card as it will be: ${name}`;
+}

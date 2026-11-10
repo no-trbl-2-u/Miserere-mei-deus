@@ -136,6 +136,57 @@ describe('CardUpgradePicker: the string of beads', () => {
         expect(StyleSheet.flatten(screen.getByTestId('combat-card-face-free-value').props.style).color).not.toBe(GOLD);
     });
 
+    it('the pair wrappers name their side and card, and say nothing a face inside them already says', () => {
+        render(<CardUpgradePicker rows={ROWS} onConfirm={jest.fn()} />);
+        for (const id of ['card-upgrade-now', 'card-upgrade-after']) {
+            const wrapper = screen.getByTestId(id);
+            const label = String(wrapper.props.accessibilityLabel);
+            const inner = within(wrapper)
+                .UNSAFE_queryAllByProps({})
+                .filter((el) => el !== wrapper)
+                .map((el) => el.props.accessibilityLabel)
+                .filter((l): l is string => typeof l === 'string');
+            expect(inner).not.toContain(label);
+            const paidLine = within(wrapper).getByTestId('combat-card-face-paid-line').props.accessibilityLabel;
+            expect(label).not.toContain(paidLine);
+        }
+        expect(screen.getByTestId('card-upgrade-now').props.accessibilityLabel)
+            .not.toBe(screen.getByTestId('card-upgrade-after').props.accessibilityLabel);
+    });
+
+    it('a bead too far round the wheel to be drawn cannot be touched or read aloud', () => {
+        const deck = ['grey-strike', 'grey-ward', 'grey-word', 'bp-m-01d', 'mc-e-07b', 'bp-p-01a', 'bp-p-02a'];
+        const seven = cardUpgradeRowsVM(upgradableCardIds(deck), deck);
+        expect(seven).toHaveLength(7);
+        render(<CardUpgradePicker rows={seven} onConfirm={jest.fn()} />);
+        // Three beads round either way from the centre is past what the rim shows.
+        for (const far of [seven[3], seven[4]]) {
+            // Hidden from accessibility, so the query has to ask for hidden elements.
+            expect(screen.queryByTestId(`card-upgrade-slot-${far.cardId}`)).toBeNull();
+            const slot = screen.getByTestId(`card-upgrade-slot-${far.cardId}`, { includeHiddenElements: true });
+            expect(slot.props.pointerEvents).toBe('none');
+            expect(slot.props.accessibilityElementsHidden).toBe(true);
+            expect(slot.props.importantForAccessibility).toBe('no-hide-descendants');
+        }
+        const near = screen.getByTestId(`card-upgrade-slot-${seven[1].cardId}`);
+        expect(near.props.pointerEvents).toBe('box-none');
+        expect(near.props.accessibilityElementsHidden).toBe(false);
+    });
+
+    it('when the host swaps the rows, the centred card stays centred, else the first card is', () => {
+        const { rerender } = render(<CardUpgradePicker rows={ROWS} onConfirm={jest.fn()} />);
+        fireEvent.press(screen.getByTestId(`card-upgrade-bead-${ROWS[2].cardId}`));
+        expectCentre(ROWS[2].cardId);
+        // The same card, now first in a reordered list.
+        const reordered = [ROWS[2], ROWS[0], ROWS[1], ROWS[3], ROWS[4]];
+        rerender(<CardUpgradePicker rows={reordered} onConfirm={jest.fn()} />);
+        expectCentre(ROWS[2].cardId);
+        // The centred card gone: the first card takes the centre.
+        const without = [ROWS[0], ROWS[1], ROWS[3], ROWS[4]];
+        rerender(<CardUpgradePicker rows={without} onConfirm={jest.fn()} />);
+        expectCentre(ROWS[0].cardId);
+    });
+
     it('letting go of HOLD before the ring closes empties it and commits nothing (A14, #2)', () => {
         const onConfirm = jest.fn();
         render(<CardUpgradePicker rows={ROWS} onConfirm={onConfirm} />);
