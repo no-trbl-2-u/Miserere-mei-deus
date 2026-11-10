@@ -10,7 +10,7 @@
  * and the combat detail print, so the preview cannot disagree with the card
  * the player will draw.
  *
- * The string of beads (UP1i) adds the pair as the one card face (D91) and the
+ * The string of beads adds the pair as the one card face and the
  * change line under the new card ('LEECH 4 → 5'), diffed from those faces.
  */
 
@@ -63,7 +63,7 @@ export interface CardUpgradePreviewVM {
     before: CardUpgradeFaceVM;
     after: CardUpgradeFaceVM;
     stepLabel: string;
-    /** The one card face (D91) of the card as it is, numbers as authored. */
+    /** The one card face of the card as it is, numbers as authored. */
     beforeCard: CombatCardVM;
     /** The one card face of the card after this upgrade. */
     afterCard: CombatCardVM;

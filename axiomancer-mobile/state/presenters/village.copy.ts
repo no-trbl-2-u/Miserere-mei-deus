@@ -43,11 +43,20 @@ export const VILLAGE_CARD_SOLD_LABEL = 'SOLD';
 export const VILLAGE_EQUIPMENT_LABEL = 'WEAPONS AND ARMOR';
 export const VILLAGE_EQUIPMENT_LINE = '[content] Gear laid out on the counter, whatever you do not already carry.';
 
+/** The Shop's carousel: the CARDS / GEAR toggle and the position counter. */
+export const VILLAGE_SHOP_CARDS_LABEL = 'CARDS';
+export const VILLAGE_SHOP_GEAR_LABEL = 'GEAR';
+
 /** Card removal, the card shop's second service. */
 export const VILLAGE_REMOVE_LABEL = 'REMOVE A CARD';
 export const VILLAGE_REMOVE_LINE = 'One card, gone for the run. The price climbs every time.';
 export const VILLAGE_REMOVE_PICK_HINT = 'Tap the card to remove it.';
 export const VILLAGE_REMOVE_CANCEL_LABEL = 'KEEP THEM ALL';
+
+/** The carousel's position counter: "2 of 5". */
+export function villageShopPosition(index: number, count: number): string {
+    return `${index + 1} of ${count}`;
+}
 
 /** The rest counter's effect line: what the shillings buy. */
 export function villageRestEffect(heal: number): string {

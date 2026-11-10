@@ -1,5 +1,5 @@
 /**
- * The string of beads (spec 127, UP1i): A12 only the centre bead is offered,
+ * The string of beads: A12 only the centre bead is offered,
  * and the wheel turns by dragging its rim or tapping a side bead; A13 the
  * pair and the change line come from the presenter; A14 the hold commits
  * once and an early release commits nothing; A15 a screen reader upgrades
