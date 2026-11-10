@@ -3,8 +3,15 @@
 // reminder that lists only this week's acts. Fixtures only; no clock, no network.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { execFileSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 import { itemHours, liveMarkdown, parseBudget, parseItems, planRows, queuePlan, reminderText } from './deadlines-lib.mjs'
-import { checkDeadlines } from './check-deadlines.mjs'
+import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 const SPEC = [
     '- [ ] **50.1** T writes the lines (attended) · S · closes A1 · needs — · alias: QA1',
@@ -121,4 +128,61 @@ test('the lint in the queue model: a loop row needs no line, and the other rules
     assert.ok(checkDeadlines(outside, SOURCES).some((e) => /is due 2026-12-26, outside W1/.test(e)))
     const missing = plan().replace('| W1 | T | QA2 |', '| W1 | T | QZ9 |')
     assert.ok(checkDeadlines(missing, SOURCES).some((e) => /names QZ9, which has no row/.test(e)))
+})
+
+// The CLI's wiring, on the live plan: scripts/deadlines.mjs reads the budget, builds the queue and hands
+// it to the reminder and to --write. A dropped or mis-ordered argument in main() fails here.
+const liveQueue = (today) => {
+    const md = fs.readFileSync(path.join(ROOT, 'plan/deadlines.md'), 'utf8')
+    const budget = parseBudget(md)
+    assert.ok(budget > 0, 'the live plan states a budget')
+    return queuePlan(parseItems(md), planRows(readPlanSources(ROOT)).phases, today, budget)
+}
+
+test('the CLI prints the queue reminder for the live plan, at the live budget', () => {
+    const today = '2026-11-10'
+    const out = execFileSync(process.execPath, ['scripts/deadlines.mjs', `--today=${today}`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, CI: '', GITHUB_ACTIONS: '' } })
+    assert.equal(out, `${reminderText([], null, today, liveQueue(today))}\n`)
+    assert.match(out, /Milestones, at \d+(\.\d+)? h a week:/)
+    assert.doesNotMatch(out, /next 2 weeks in LIVE_DEADLINES\.md/)
+})
+
+test('--write, in a scratch checkout: the Status of a shipped act is ticked and LIVE_DEADLINES.md is the queue at the budget the file states', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'deadlines-queue-'))
+    try {
+        fs.mkdirSync(path.join(dir, 'scripts', 'plan'), { recursive: true })
+        fs.mkdirSync(path.join(dir, 'plan', 'pending'), { recursive: true })
+        for (const f of ['deadlines.mjs', 'deadlines-lib.mjs', 'check-deadlines.mjs', 'owner.mjs']) fs.copyFileSync(path.join(ROOT, 'scripts', f), path.join(dir, 'scripts', f))
+        for (const f of fs.readdirSync(path.join(ROOT, 'scripts', 'plan')).filter((n) => n.endsWith('.mjs'))) fs.copyFileSync(path.join(ROOT, 'scripts', 'plan', f), path.join(dir, 'scripts', 'plan', f))
+        // QA1 has shipped: its line left the spec and the archive keeps its alias.
+        const spec = SPEC.split('\n').slice(1).join('\n')
+        fs.writeFileSync(path.join(dir, 'plan', '50-queue.md'), `${spec}\n`)
+        fs.writeFileSync(path.join(dir, 'plan', 'ARCHIVE.md'), '- 2026-11-09 · 50.1 (alias: QA1) · the lines are written · (#9001)\n')
+        fs.writeFileSync(path.join(dir, 'plan', 'deadlines.md'), plan('Hours a week: 4'))
+        const env = { ...process.env, CI: '', GITHUB_ACTIONS: '' }
+        execFileSync(process.execPath, ['scripts/deadlines.mjs', '--write', '--today=2026-11-10'], { cwd: dir, encoding: 'utf8', env })
+
+        const md = fs.readFileSync(path.join(dir, 'plan', 'deadlines.md'), 'utf8')
+        assert.match(md, /\| \[x\] \| 2026-11-17 \| Write the lines \(3 h\) \|/, 'the shipped act is ticked')
+        const sources = { specs: [{ file: 'plan/50-queue.md', md: `${spec}\n` }], archive: fs.readFileSync(path.join(dir, 'plan', 'ARCHIVE.md'), 'utf8') }
+        const queue = queuePlan(parseItems(md), planRows(sources).phases, '2026-11-10', 4)
+        const live = fs.readFileSync(path.join(dir, 'LIVE_DEADLINES.md'), 'utf8')
+        assert.equal(live, liveMarkdown([], null, '2026-11-10', queue))
+        assert.match(live, /The forecast assumes 4 h a week\./)
+        assert.match(live, /\| 1 \| Pitch the screen \(plot, 2 h\) \| 2 \| needs a plot: no build-plan rows yet \|/)
+        assert.ok(!live.includes('Write the lines'), 'a ticked act leaves the queue')
+        // With QA1 shipped the loop can build QA2, which "Play the lines" still waits on.
+        assert.match(live, /- Play the lines \(1 h\) — the loop still owes QA2/)
+
+        const out = execFileSync(process.execPath, ['scripts/deadlines.mjs', '--today=2026-11-10'], { cwd: dir, encoding: 'utf8', env })
+        assert.equal(out, `${reminderText([], null, '2026-11-10', queue)}\n`)
+        assert.match(out, /Milestones, at 4 h a week:/)
+    } finally {
+        fs.rmSync(dir, { recursive: true, force: true })
+    }
+})
+
+test('--remind is silent in CI, in the queue model too', () => {
+    const out = execFileSync(process.execPath, ['scripts/deadlines.mjs', '--remind', '--today=2026-11-10'], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, CI: 'true' } })
+    assert.equal(out, '')
 })

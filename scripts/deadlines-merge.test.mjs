@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url'
 
 import { mergeBuildPlan } from './build-plan-merge.mjs'
 import { dupCounts, mergeDeadlines, mergeRow, tidyItems } from './deadlines-merge.mjs'
-import { ITEM_ROW } from './deadlines-lib.mjs'
+import { ITEM_ROW, parseBudget, parseItems } from './deadlines-lib.mjs'
 import { rederiveStatus } from './pr-resolve.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -355,6 +355,12 @@ test('a real git merge with the driver registered keeps both plots, and the live
     }
     assert.ok(!text.includes('<<<<<<<'))
     assert.ok(text.indexOf('Item OO1') < text.indexOf('Item TT1'))
+    // The merged file is still the queue: its budget survives and both new acts parse as Items of the first milestone.
+    assert.equal(parseBudget(text), parseBudget(live))
+    assert.ok(parseBudget(text) > 0, 'the live plan states a budget')
+    const merged = parseItems(text)
+    assert.equal(merged.length, parseItems(live).length + 2)
+    assert.deepEqual(merged.filter((i) => /^Item (OO1|TT1)$/.test(i.name)).map((i) => [i.name, i.window, i.waitsOn]), [['Item OO1', 'W1', ['OO1']], ['Item TT1', 'W1', ['TT1']]])
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
