@@ -37,14 +37,14 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 - **Under the art:** the ask (the step's objective line), and its counter when the objective counts more than one (`questCounterText`, as today).
 - **Foot:** the pay, in one row: `+40 XP` in gold, then each item with its icon (`ItemGlyph`) and its name. Shillings, when a step pays them, read `+N shillings` beside the XP. Step 2's three things wrap to a second row.
 - **Under the card:** the giver's name, large; the giver's spoken line (the node's `description`); then four beads joined by a line: a finished step's bead is gold and filled, the shown step's bead is larger with a gold ring, a step ahead is dim. The beads carry an accessibility label ("Step 4 of 4") but no visible count.
-- **Buttons:** ACCEPT and LEAVE side by side on the brass plate (`BrassButton`).
+- **Buttons:** LEAVE and ACCEPT side by side on the brass plate (`BrassButton`), LEAVE on the left and ACCEPT on the right: the settled shot's order swapped (T, 2026-11-11, on PR #1587: "Just swap accept and leave").
 - **Gone:** the "A QUEST" eyebrow, the "STEP n OF N" title, the stage heads (THE NEXT WORK, THE WORK IS DONE, YOUR WORK, SO FAR), the vellum `StepBlock`, the 72-point portrait row.
 
 ### The other three states, from the same card
 
 | State | Stage | The card shows | Under the card | Buttons |
 |---|---|---|---|---|
-| Offer (settled shot) | `offer`, step unaccepted | the step this node offers, its pay | name, spoken line, beads (this step current) | ACCEPT, LEAVE |
+| Offer (settled shot) | `offer`, step unaccepted | the step this node offers, its pay | name, spoken line, beads (this step current) | LEAVE, ACCEPT (LEAVE on the left) |
 | In progress | `waiting`, or `offer` with the step already accepted | the step being worked: the same card, the ask with its counter | name, spoken line, beads (the worked step current) | LEAVE only, full width |
 | Turn in with reward | `turn-in` | the finished step: the ask marked done in gold (the counter, or a gold tick when it has none) and the pay at the foot lit | name, spoken line, beads (the finished step current) | TURN IN, LEAVE |
 | Turned away | `locked` | the step this node would offer, with its pay; the art is the giver's figure dimmed (ET1d's `turnedAway`) | name, then the refusal reason in the spoken line's place, kept visible (owner UI doctrine); beads | LEAVE only, full width |
@@ -63,7 +63,7 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 
 ### Decisions made upfront (do not ask)
 
-- S-03g as voted, with T's note: no "A QUEST", no "STEP n OF N". The settled shot is the reference picture.
+- S-03g as voted, with T's note: no "A QUEST", no "STEP n OF N". The settled shot is the reference picture, except its buttons: the offer reads LEAVE, ACCEPT, left to right (T, 2026-11-11).
 - The rules stay: the stages, what each step asks and pays, when it pays (turn-in or on arrival), the gates the steps open. Only the presentation changes. Showing the pay before ACCEPT is presentation (the ledger, "Open for the plot").
 - In progress and turned away offer only LEAVE, as today.
 - Every name, ask, spoken line, refusal and item name stays the game's `[content]` placeholder until T writes them (BW1d, D88). The screen adds no new copy except the button labels it already has.
@@ -81,7 +81,7 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 
 - **A1** The quest presenter gives, for the step the card shows, its pay (XP, shillings, and each item's id, name and category) and the chain's beads (one per step: done, current or ahead), and no longer gives the "STEP n OF N" eyebrow. The engine is read, never changed: the pay is the step's `rewards`, the bead states are `questStepState`.
 - **A2** One table keyed by giver id supplies the four givers' figures, with the ballot's stand-ins copied out and recorded in `provenance.json`; the four quest nodes name those ids; an unknown id falls back to a stand-in.
-- **A3** The offer shows one tall card in the card frame (the step's name, the giver's figure as its art, the ask, the pay with item icons at its foot), then the giver's name, the spoken line, the four beads and ACCEPT and LEAVE on the brass plate. No "A QUEST", no "STEP n OF N", no stage head. A `verify:visual` route shot of the gate warden's offer at the keep gate matches the settled shot's layout.
+- **A3** The offer shows one tall card in the card frame (the step's name, the giver's figure as its art, the ask, the pay with item icons at its foot), then the giver's name, the spoken line, the four beads and LEAVE and ACCEPT on the brass plate, LEAVE on the left. No "A QUEST", no "STEP n OF N", no stage head. A `verify:visual` route shot of the gate warden's offer at the keep gate matches the settled shot's layout, with the two buttons swapped.
 - **A4** In progress (`waiting`, or an offer already accepted) shows the same card for the step being worked, with its counter, and LEAVE only.
 - **A5** Turn in shows the finished step's card with the ask marked done and the pay lit, with TURN IN and LEAVE. TURN IN pays as today; the item rises off the card's foot (instant under reduced motion), a one-line ledger of what was paid stays above the card, and the card turns to the next step's offer. At the bridge, the last step's card stays, marked paid, with LEAVE only.
 - **A6** Turned away (`locked`) shows the card of the step this node would offer, with its pay and the giver's figure dimmed, and the refusal reason in the spoken line's place, with LEAVE only.
@@ -102,11 +102,11 @@ Measure: 6 open · 0 closed · next A7
   - Tests: presenter cases for each stage on the live chain (pay on offer at `bw-k1`, three items on step 2, beads at nodes 2 to 5, the chain's end at `bw-b1`); the table resolves all four ids and falls back on an unknown one.
   - Measure: the presenter tests pass; `npm test` in both packages green.
 - [ ] **173.2** The quest card: the offer and the work in progress · M · closes A3, A4 · needs 173.1 · alias: QS1b
-  - A `QuestCard` component (`components/quest/`) in the D91 frame (border, name band, edge-to-edge art, text, pay foot) and a `QuestBeads` row; `app/quest/index.tsx` drops the eyebrow, the title, the heads, `StepBlock` and the portrait row (`QuestGiverScene` folds into the card's art; keep its testIDs `quest-giver`, `quest-giver-portrait`, `quest-giver-name`), moves to a dark ground, and wears `BrassButton` for ACCEPT and LEAVE.
+  - A `QuestCard` component (`components/quest/`) in the D91 frame (border, name band, edge-to-edge art, text, pay foot) and a `QuestBeads` row; `app/quest/index.tsx` drops the eyebrow, the title, the heads, `StepBlock` and the portrait row (`QuestGiverScene` folds into the card's art; keep its testIDs `quest-giver`, `quest-giver-portrait`, `quest-giver-name`), moves to a dark ground, and wears `BrassButton` for LEAVE and ACCEPT (LEAVE on the left).
   - In progress: the same card, LEAVE only. An offer already accepted reads the same way.
   - A `quest` route in `scripts/smoke-screens.mjs` `ROUTES`, on a fixture that stands at the keep gate (`bw-k1`) with step 3 turned in and step 4 not yet accepted (a new entry in `state-fixture.registry.ts` if none fits), and its baseline approved.
-  - Hermetic e2e under `state/e2e/` (extend `quest.screen.test.tsx` / `quest-giver.screen.test.tsx`): no "A QUEST" or "STEP" text; the pay and its item show before ACCEPT; ACCEPT then LEAVE only; waiting shows LEAVE only.
-  - Measure: the `quest` route shot in the PR beside `plan/card-ledger/screens/S-03-settled.webp`, the same layout; the e2e passes.
+  - Hermetic e2e under `state/e2e/` (extend `quest.screen.test.tsx` / `quest-giver.screen.test.tsx`): no "A QUEST" or "STEP" text; the pay and its item show before ACCEPT; LEAVE left of ACCEPT; after ACCEPT, LEAVE only; waiting shows LEAVE only.
+  - Measure: the `quest` route shot in the PR beside `plan/card-ledger/screens/S-03-settled.webp`, the same layout with LEAVE and ACCEPT swapped; the e2e passes.
 - [ ] **173.3** The quest card: the turn-in with its reward, and the giver turning the player away · M · closes A5, A6 · needs 173.2 · alias: QS1c
   - Turn in: the ask marked done and the pay lit; TURN IN on the brass plate; `RelicRise` lifts off the card's foot; the one-line paid ledger above the next offer's card (or what #1 rules); at `bw-b1` the last card stays marked paid, beads all gold, LEAVE only. The on-arrival step's ledger on the lighthouse offer, as today from `paid`.
   - Turned away: the card with the giver's figure dimmed and the refusal reason in the spoken line's place (`quest-locked-line` kept), LEAVE only.
