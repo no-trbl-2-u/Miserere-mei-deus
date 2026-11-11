@@ -17,6 +17,14 @@ When a brainstorm or design conversation ends with buildable direction, offer
 it in one `AskUserQuestion`: "Want to use `/plot` to turn this into a phase?"
 or "Want to use `/messy` to file this dump?". The loop never fires either.
 
+**When T pastes ballot results, ask before recording them (T, 2026-11-11).** A paste that opens `BALLOT:` or
+names a ballot id from `plan/ballots/index.html` is a verdict text, from a ballot's Generate, Copy or Mark
+complete. Before writing anything, ask in one `AskUserQuestion`: (1) "Is this paste partial or complete?" and
+(2) "Mark this ballot complete?". Then follow `plan/ballots/README.md` "When T pastes results": a partial paste
+records nothing and the ballot stays open; a complete one T says yes to is written verbatim into the ledger and
+the entry set `closed`, and then you offer `/plot` in a second `AskUserQuestion`. Never mark a ballot from a
+paste without both answers. The loop never does this.
+
 **The vault:** T's Obsidian notes (goal, thread map, inbox) live in `vault/`, a separate repo; run `/vault` for a session and read [`docs/vault.md`](./docs/vault.md) for its write zones.
 
 **Deadlines (T, 2026-11-10: the queue).** `plan/deadlines.md` is the whole deadline plan: two milestones (Act 1,

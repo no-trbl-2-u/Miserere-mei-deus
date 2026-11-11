@@ -80,3 +80,28 @@ On the device, the draft lives in `localStorage` under
 `ballot:<ballotId>:draft` (stamped `savedAt`), and the API URL and token under
 `ballot:api`, shared by every ballot. A 401 forgets the token, so the next Save
 or Submit asks for it again.
+
+## When T pastes results
+
+T may paste a ballot's verdict text into a session instead of submitting it
+(Generate, Copy or Mark complete all produce it; it opens `BALLOT:` and names
+the ballot id). The session then, in this order (T, 2026-11-11):
+
+1. **Ask first**, in one `AskUserQuestion`, before writing anything:
+   "Is this paste partial or complete?" and "Mark this ballot complete?".
+2. **Partial, or T says no:** record no verdict. The ballot stays `open` and
+   its page keeps the kit. Answer what T asked about the paste and stop.
+3. **Complete and yes:** write the pasted text verbatim into the ledger's
+   Verdicts section (dated, "pasted by T"), set the `BALLOTS` entry to
+   `status: 'closed'`, take the `<script src="ballot-kit.js"></script>` tag
+   and the `BallotKit.mount` call out of the ballot page (a closed ballot
+   does not load the kit), run `node --test scripts/ballot-kit.test.mjs`, and
+   land it as a plan PR.
+4. **Then offer the plot**, in a second `AskUserQuestion`: "Want to use
+   `/plot` to turn this verdict into a phase?". On yes, run `/plot`; set the
+   entry to `status: 'complete'` when the verdict is plotted. A card
+   family's ballot goes on through `/lane-creator` (the sims, the revisions,
+   the trial set) instead of straight to `/plot`.
+
+A pasted verdict T marked complete stands as the verdict in force even with
+no `final` row in D1; say so in the ledger.
