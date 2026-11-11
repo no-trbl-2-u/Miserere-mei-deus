@@ -1,5 +1,5 @@
 /**
- * Cutscene pictures and the narrator (CU1a, spec 172).
+ * Cutscene pictures and the narrator.
  *
  * A cutscene's content names a `scene` id and nothing else; this module is the
  * one place the app maps that id to a picture and holds the one narrator
