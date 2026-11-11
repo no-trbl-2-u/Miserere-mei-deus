@@ -4615,6 +4615,24 @@
     {
       "kind": "coupling",
       "from": "route:death-return",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
     },

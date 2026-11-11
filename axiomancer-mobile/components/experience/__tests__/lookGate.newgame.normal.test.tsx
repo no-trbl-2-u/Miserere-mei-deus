@@ -61,7 +61,8 @@ describe('a new-game or ending place set to normal draws no kit piece', () => {
     });
 
     it('G-01: the death screen button', () => {
-        const view = render(<DeathReturnScreen />);
+        const { tree } = withAllProviders(<DeathReturnScreen />);
+        const view = render(tree);
         expect(view.getByTestId('death-return-continue')).toBeTruthy();
         expect(kitImagesIn(view)).toBe(0);
     });
