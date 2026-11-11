@@ -64,6 +64,8 @@ import { rarityFor, RARITY_LABEL, RARITY_COLOR } from '@/state/presenters/card-r
 
 /** Offer-tile face size. Smaller than the hand card (three must fit a phone
  *  width side by side) but the SAME face component at the same aspect. */
+/** The offer row's two brass plates share a phone width: their labels run smaller than a lone plate's. */
+const GROUND_BTN_LABEL_SIZE = 15;
 const OFFER_W = 100;
 const OFFER_H = 147;
 /** Inspect-preview face size. */
@@ -199,7 +201,7 @@ export function CombatRewardsOverlay({
 
                 {ground ? (
                     <>
-                        <View style={styles.btnRow}>
+                        <View style={[styles.btnRow, styles.groundBtnRow]}>
                             <BrassButton
                                 label={SPOILS_SKIP_LABEL}
                                 align="center"
@@ -207,6 +209,7 @@ export function CombatRewardsOverlay({
                                 testID="combat-reward-skip"
                                 accessibilityLabel={SPOILS_SKIP_A11Y}
                                 style={styles.groundBtn}
+                                labelSize={GROUND_BTN_LABEL_SIZE}
                             />
                             <BrassButton
                                 label={SPOILS_TAKE_LABEL}
@@ -216,6 +219,7 @@ export function CombatRewardsOverlay({
                                 testID="combat-reward-confirm"
                                 accessibilityLabel={SPOILS_TAKE_A11Y}
                                 style={styles.groundBtn}
+                                labelSize={GROUND_BTN_LABEL_SIZE}
                             />
                         </View>
                         {upgradeRow && (
@@ -359,6 +363,7 @@ const useStyles = makeStyles((AXM) => ({
     groundScroll: { flex: 1 },
     groundScrollContent: { flexGrow: 1, alignItems: 'center', paddingBottom: 24 },
     groundPanel: { width: '100%', maxWidth: 420, paddingHorizontal: 12, paddingTop: 14, alignItems: 'center' },
+    groundBtnRow: { alignSelf: 'stretch' },
     groundBtn: { flex: 1, paddingHorizontal: 16 },
     groundUpgrade: { alignSelf: 'stretch', marginTop: 10, paddingHorizontal: 16 },
     backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 60 },

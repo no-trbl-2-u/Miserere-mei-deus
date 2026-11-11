@@ -42,6 +42,8 @@ export interface BrassButtonProps {
     accessibilityLabel?: string;
     accessibilityHint?: string;
     style?: StyleProp<ViewStyle>;
+    /** The label's size in points, for a plate narrower than the default label fits (two side by side). */
+    labelSize?: number;
 }
 
 /** The plate's height: the art's ornaments want about this much to sit whole. */
@@ -49,7 +51,7 @@ export const BRASS_BUTTON_HEIGHT = 56;
 
 export function BrassButton({
     label, detail, onPress, disabled = false, place = 'V-01', align = 'left', labelInsetRight = 0, testID, testIDDetail,
-    accessibilityLabel, accessibilityHint, style,
+    accessibilityLabel, accessibilityHint, style, labelSize,
 }: BrassButtonProps) {
     const styles = useStyles();
     const kit = LOOKS[place] === 'brass';
@@ -78,7 +80,7 @@ export function BrassButton({
                         />
                     ) : null}
                     <View style={[styles.text, align === 'center' && styles.textCenter, { paddingRight: labelInsetRight }]}>
-                        <Text style={[styles.label, disabled && styles.labelDisabled]} numberOfLines={1}>
+                        <Text style={[styles.label, labelSize !== undefined && { fontSize: labelSize }, disabled && styles.labelDisabled]} numberOfLines={1}>
                             {label}
                         </Text>
                         {detail ? (
