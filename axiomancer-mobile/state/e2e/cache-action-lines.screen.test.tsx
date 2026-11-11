@@ -62,9 +62,12 @@ function renderCache(store: AppStore) {
 }
 
 describe('/cache — the choices say what you do', () => {
-    it('shows the title, the flavour line and both action lines', () => {
+    it('shows the title, the purse, the flavour line, both action lines and a brass TAKE on each', () => {
         renderCache(cacheStore());
         expect(screen.getByText('TWO WAYS TO LEAVE IT')).toBeTruthy();
+        expect(screen.getByTestId('cache-purse')).toBeTruthy();
+        expect(screen.getByTestId('cache-band-choice')).toBeTruthy();
+        expect(screen.getAllByText('TAKE')).toHaveLength(2);
         expect(screen.getByTestId('cache-choice-intro')).toBeTruthy();
         expect(screen.getByText(FLAVOUR)).toBeTruthy();
         expect(screen.getByTestId('cache-choice-action-card').props.children).toBe(CARD_ACTION);
@@ -91,15 +94,16 @@ describe('/cache — the choices say what you do', () => {
         expect(screen.queryByText(getCardById(CARD_ID)!.name.toUpperCase())).toBeNull();
     });
 
-    it('choosing the card still settles to the ledger naming the same card', () => {
+    it('choosing the card settles to the same card drawn in the card face', () => {
         const store = cacheStore();
         renderCache(store);
         fireEvent.press(screen.getByTestId('cache-choice-offer-card'));
         expect(screen.getByTestId('cache-outcome')).toBeTruthy();
-        expect(screen.getByText(`+ ${getCardById(CARD_ID)!.name.toUpperCase()}`)).toBeTruthy();
+        expect(screen.getByTestId('cache-outcome-card')).toBeTruthy();
+        expect(screen.getByText(getCardById(CARD_ID)!.name)).toBeTruthy();
     });
 
-    it('choosing the goods still settles to the ledger naming the haul', () => {
+    it('choosing the goods settles to the haul and the shillings', () => {
         const store = cacheStore();
         renderCache(store);
         fireEvent.press(screen.getByTestId('cache-choice-offer-item'));

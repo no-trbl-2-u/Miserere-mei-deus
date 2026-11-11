@@ -191,6 +191,13 @@
       "why": "Martin, The Great Day of His Wrath. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
     },
     {
+      "key": "cache-card-cavern",
+      "category": "treasure",
+      "title": "File:Joseph Wright of Derby - Cavern, near Naples - Google Art Project.jpg",
+      "region": "the loot cache, card taken (ledger row 14)",
+      "why": "Wright of Derby, Cavern, near Naples. TEMP stand-in (T, 2026-11-11) for row 14, the runes cut into the cave wall lit by one lantern: a cave interior under a single light, graded to grey dusk. T's art replaces it in the card slot of assets/images/treasure/cache-pictures.ts."
+    },
+    {
       "key": "bridge",
       "category": "travel",
       "title": "File:Théodore Rousseau (1812-1867) - Pont de Batignies in the Forest of Compiègne - CAI.56 - Victoria and Albert Museum.jpg",

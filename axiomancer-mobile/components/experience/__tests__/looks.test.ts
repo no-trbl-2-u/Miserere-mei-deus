@@ -134,6 +134,13 @@ describe('the village screens (168, call #5)', () => {
     });
 });
 
+describe('the loot cache (174)', () => {
+    it('wears the brass action plate on TAKE and MOVE ON', () => {
+        expect(LOOKS['K-01']).toBe('brass');
+        expect(PLACE_PIECES['K-01']).toEqual(['action-button-idle', 'action-button-selected', 'action-button-disabled']);
+    });
+});
+
 describe("round 2's new game and endings (A2)", () => {
     it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM ; brass for the cards and the death return's button", () => {
         const picked = (look: Look) => NEW_GAME.filter((p) => LOOKS[p] === look);

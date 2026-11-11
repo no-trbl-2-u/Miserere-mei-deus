@@ -122,6 +122,14 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         arrive: true,
     },
     {
+        id: 'apprentice-cw-cache',
+        description: 'Apprentice on the Charcoal Wood\'s cave cache (cw-6), the one cache with T\'s action lines; `arrive` starts the cache session → /cache. `verify:visual`\'s cache routes (seed pinned by the injector).',
+        seed: 'fixture-apprentice-cw-cache',
+        preset: 'apprentice',
+        world: { continent: 'coastal-continent', map: 'charcoal-wood', node: 'cw-6' },
+        arrive: true,
+    },
+    {
         id: 'wanderer-bw-blacksmith',
         description: 'Wanderer (L8) with shillings on the Breakwater\'s harbour town (bw-t4), a village with the Anvil; `arrive` opens the village hub → /village, whose Anvil counter opens /blacksmith.',
         seed: 'fixture-wanderer-bw-blacksmith',

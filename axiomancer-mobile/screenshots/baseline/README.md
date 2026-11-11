@@ -33,6 +33,9 @@ One PNG per route, named after the route's stable `name` in
 | `hazard-puzzle-stakes.png` | `/exploration` + fixture `l30-bw-hazard-arrive`, hazard-id pin dropped → `/hazard`, the stakes card with the one goal | `components/hazard/puzzle/HazardPuzzleNodeBoard.tsx`, `state/presenters/hazard-stakes.engine.ts` (HP6c) |
 | `hazard-puzzle-node.png` | `/exploration` + fixture `l30-bw-hazard-arrive`, hazard-id pin dropped → `/hazard`, Face it pressed, dice settled, clock held | `components/hazard/puzzle/HazardPuzzleNodeBoard.tsx` (a Breakwater hazard's puzzle, HP6c) |
 | `rest-upgrade.png` | `/exploration` + fixture `apprentice-bw-rest` → `/rest`, UPGRADE A CARD tapped (`tapTestId`), waits on the figure, the centre bead, HOLD and the way back | `components/upgrade/CardUpgradePicker.tsx` at `app/rest/index.tsx` (the string of beads, spec 127 A17; the Anvil and the elite reward host the same screen) |
+| `cache.png` | `/exploration` + fixture `apprentice-cw-cache` (the cave cache, cw-6) → `/cache`, the choice, seed pinned by the injector | `app/cache/index.tsx` (plan 174: top bar, picture band, two rows each with a brass TAKE) |
+| `cache-goods.png` | the same, TAKE THE GOODS tapped (`tapTestId`) | `app/cache/index.tsx` (the gold band, a row per good, the shillings, MOVE ON) |
+| `cache-card.png` | the same, TAKE A CARD tapped (`tapTestId`) | `app/cache/index.tsx` (the card picture band, the one card in `CombatCardFace`, MOVE ON) |
 | `devpuzzle-list.png` | `/devpuzzle` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (the demos, then the candidates grouped easy, medium, hard) |
 | `devpuzzle-board.png` | `/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (the puzzle on the live board) |
 | `devpuzzle-outcome.png` | `/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (outcome panel) |

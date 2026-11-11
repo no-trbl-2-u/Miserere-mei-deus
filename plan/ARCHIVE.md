@@ -713,3 +713,5 @@
 - 2026-11-11 · 172.2 (alias: CU1b) · Cutscene is a narrator over a vellum panel, tap to continue · b657e08f..b657e08f (#1610)
 - 2026-11-11 · 171 · spec complete: The travel screen: a picture, a question, MOVE or STAY · none · deleted in (this commit)
 - 2026-11-11 · 172 · spec complete: The cutscene as a teller over a vellum panel · none · deleted in (this commit)
+- 2026-11-11 · 174.2 (alias: LC1b) · Loot cache opens picture first, brass TAKE, outcome shows goods or card · b3e07d83..0d5b8bd5 (#1612)
+- 2026-11-11 · 174 · spec complete: The loot cache, picture first · D185 · deleted in (this commit)

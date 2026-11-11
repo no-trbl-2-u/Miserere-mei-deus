@@ -454,3 +454,6 @@ A1's driven half is not met: `combat-round-e2e.mjs` with `PRESET=l30` (seeds 8 a
 - A dev-only `/devdefeat` route feeds the new `defeat-panel` verify:visual route; the `defeat-panel` and `game-over` baselines are approved by the visual job (no browser in the build worktree).
 
 Defaults: T unheld this chunk (2026-11-11) and asked for a TEMP stand-in. The bridge entry (`bw-b2`) now draws Rousseau's Pont de Batignies in the Forest of Compiegne (Commons, public domain, via `scripts/acquire-art.mjs`, key `bridge`), replacing the Charcoal Wood arena copy; provenance and the table comment mark it temporary. T will still replace it with their own image, and the deadline Item "Find the bridge travel image" stays T's act (not ticked). The far-bank travel baseline was not re-rendered on this Windows box; CI re-stamps it (`_visual-restamp`).
+
+- Defaults taken: the `cw-6` fixture is `apprentice-cw-cache` (the cave cache with T's lines); the card is drawn in `CombatCardFace` at 170 wide; the existing chest picture has a near-opaque black ground, so it shows a dark box over the region plate (T's art, not re-keyed here).
+- `cache.png`, `cache-goods.png` and `cache-card.png` baselines are new routes: CI's `_visual-restamp` stamps them (a Windows capture is advisory, never approved).
