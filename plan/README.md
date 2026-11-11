@@ -43,7 +43,6 @@ needs are done):
 
 
 
-- **174.2** · LC1b: the cache screen, picture first (T's screens ballot, then `/plot asap`, 2026-11-10)
 
 - **173.2** · QS1b: the quest card, the offer and the work in progress (screens ballot S-03, `/plot`, 2026-11-10)
 - **173.3** · QS1c: the quest card, the turn-in and the giver turning the player away (screens ballot S-03, `/plot`, 2026-11-10; needs 173.2)
@@ -89,7 +88,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 173 | The quest as one card | [173-qs1-quest-screen.md](173-qs1-quest-screen.md) | planned (**Asap**: 173.2 and 173.3) | 2 left |
-| 174 | The loot cache, picture first | [174-lc1-loot-cache-screen.md](174-lc1-loot-cache-screen.md) | planned | 1 left |
 | 176 | The ends of a fight and a run | [176-fe1-fight-ends.md](176-fe1-fight-ends.md) | planned | 1 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 2 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
