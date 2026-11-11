@@ -10,15 +10,15 @@ import { Image, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { ItemGlyph } from '@/components/inventory/ItemCard';
-import { PLAYER_PORTRAITS } from '@/assets/images/portraits';
+import { giverFigure } from '@/assets/images/givers';
 import { resolveJuiceMode } from '@/lib/juice/instant';
 import type { QuestGiverVM } from '@/state/presenters/quest.engine';
 import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
-/** The portrait art for a slug; the first gallery entry stands in for an unknown one. */
+/** The giver's figure for a giver id; the table's stand-in answers an unknown one. */
 export function giverPortraitSource(slug: string): number {
-    return (PLAYER_PORTRAITS.find(p => p.id === slug) ?? PLAYER_PORTRAITS[0]!).source;
+    return giverFigure(slug);
 }
 
 export interface QuestGiverSceneProps {

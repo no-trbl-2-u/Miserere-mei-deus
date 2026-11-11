@@ -64,7 +64,7 @@ export function mountQuest(): RenderAPI {
     });
     handle.actions.resolveCurrentMapEvent(undefined, {
         kind: 'quest', questline: FIXTURE_LINE, node: 1, description: 'A line.', lockedLine: 'Not yet.',
-        giver: { name: '[content] The Ferryman', portrait: 'biwa-houshi' },
+        giver: { name: '[content] The Ferryman', portrait: 'fishermen-elder' },
     });
     return render(<GameStoreProvider store={handle.store}><QuestScreen /></GameStoreProvider>);
 }
