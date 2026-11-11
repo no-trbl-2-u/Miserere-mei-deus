@@ -652,6 +652,31 @@
       }
     },
     {
+      "id": "route:devdefeat",
+      "name": "Devdefeat",
+      "kind": "dev-route",
+      "group": "dev",
+      "source": "axiomancer-mobile/app/devdefeat/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": false,
+        "source": "no flow path from route:index"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": false,
+        "source": null
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devdefeat\")",
+        "source": null
+      }
+    },
+    {
       "id": "route:devframes",
       "name": "Devframes",
       "kind": "dev-route",
@@ -5021,6 +5046,36 @@
     },
     {
       "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/app/devdefeat/index.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatSummaryModal.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/spare-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/spare-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
       "from": "route:devframes",
       "to": "area:Log",
       "file": "axiomancer-mobile/state/settings.ts"
@@ -8046,6 +8101,78 @@
     {
       "kind": "flow",
       "from": "route:devart/rooms",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },

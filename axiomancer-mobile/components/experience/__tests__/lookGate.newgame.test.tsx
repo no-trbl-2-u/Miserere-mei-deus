@@ -13,6 +13,7 @@ import type { CharacterDefinition } from '@mechanics';
 
 import { KIT } from '@/assets/images/experience/kit';
 import CharacterSelectScreen from '@/app/character-select/index';
+import DeathReturnScreen from '@/app/death-return/index';
 import GameOverScreen from '@/app/game-over/index';
 import { SaveSlotRow } from '@/components/menu/SaveSlotRow';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
@@ -58,7 +59,13 @@ describe('the new-game and ending screens on their kit looks', () => {
         expect(kitImagesIn(view)).toBeGreaterThan(0);
     });
 
-    it('G-01: the game over button', () => {
+    it('G-01: the death screen button', () => {
+        const view = render(<DeathReturnScreen />);
+        expect(view.getByTestId('death-return-continue')).toBeTruthy();
+        expect(kitImagesIn(view)).toBeGreaterThan(0);
+    });
+
+    it('G-02: the game over button', () => {
         const view = render(<GameOverScreen />);
         expect(view.getByTestId('game-over-new-character')).toBeTruthy();
         expect(kitImagesIn(view)).toBeGreaterThan(0);

@@ -7,7 +7,7 @@ date: 2026-11-10
 ~~~
 ~~~ new
 - **175.1** · FR1a: the fight reveal for normal and elite foes, look G (T, screens ballot then `/plot asap`, 2026-11-10)
-- **175.2** · FR1b: the boss's held title card, look F (T, screens ballot then `/plot asap`, 2026-11-10; needs 175.1)
+- **175.2** · FR1b: the boss's held title card, look F (T, screens ballot then `/plot asap`, 2026-11-10)
 
 **Held** (waits on a person's word; never picked until the
 ~~~

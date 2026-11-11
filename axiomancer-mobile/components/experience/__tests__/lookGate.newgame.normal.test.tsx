@@ -13,6 +13,7 @@ import React from 'react';
 import type { CharacterDefinition } from '@mechanics';
 
 import CharacterSelectScreen from '@/app/character-select/index';
+import DeathReturnScreen from '@/app/death-return/index';
 import GameOverScreen from '@/app/game-over/index';
 import { SaveSlotRow } from '@/components/menu/SaveSlotRow';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
@@ -48,6 +49,8 @@ afterEach(() => { clearGameOver(); clearDeathReturn(); });
 jest.mock('@/components/experience/looks', () => ({
     ...(jest.requireActual('@/components/experience/looks') as object),
     lookOf: () => 'normal',
+    // BrassButton (the game over button, G-02) reads the table itself, not lookOf.
+    LOOKS: new Proxy({}, { get: () => 'normal' }),
 }));
 
 describe('a new-game or ending place set to normal draws no kit piece', () => {
@@ -57,7 +60,13 @@ describe('a new-game or ending place set to normal draws no kit piece', () => {
         expect(kitImagesIn(view)).toBe(0);
     });
 
-    it('G-01: the game over button', () => {
+    it('G-01: the death screen button', () => {
+        const view = render(<DeathReturnScreen />);
+        expect(view.getByTestId('death-return-continue')).toBeTruthy();
+        expect(kitImagesIn(view)).toBe(0);
+    });
+
+    it('G-02: the game over button', () => {
         const view = render(<GameOverScreen />);
         expect(view.getByTestId('game-over-new-character')).toBeTruthy();
         expect(kitImagesIn(view)).toBe(0);

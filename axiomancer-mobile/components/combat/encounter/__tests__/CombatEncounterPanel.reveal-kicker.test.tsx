@@ -1,7 +1,7 @@
 /**
- * The pre-combat reveal has no kicker line above the foe (UX1d), for any
- * tier. The portrait, the foe's name, both VITAE figures and the threat
- * section stay.
+ * The fight reveal (FR1a): name, LEVEL and VITAE, the figure on its ground,
+ * ENTER COMBAT and WITHDRAW with its cost. No kicker, place, FIGHT chip,
+ * YOURS line, DANGER or THREAT SEQUENCE.
  */
 
 import React from 'react';
@@ -9,6 +9,7 @@ import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
 import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
+import { WITHDRAW_COST } from '@/components/combat/encounter/reveal.copy';
 import { buildRevealFrame } from '@/state/presenters/encounter-reveal.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -21,24 +22,32 @@ function mount() {
     });
     const bootstrapPlayer = store.getState().player;
     const { tree } = withAllProviders(
-        <CombatEncounterPanel enemy={enemy} bootstrapPlayer={bootstrapPlayer} deck={CARDS} seed={7} onExit={() => undefined} />,
+        <CombatEncounterPanel enemy={enemy} bootstrapPlayer={bootstrapPlayer} deck={CARDS} seed={7} onExit={() => undefined} onWithdraw={() => undefined} />,
         { store },
     );
     render(tree);
     return { enemy };
 }
 
-describe('UX1d — the reveal carries no kicker line', () => {
-    it('shows the foe with no line above it', () => {
+describe('FR1a: the fight reveal', () => {
+    it('shows the foe whole and nothing of the old column', () => {
         const { enemy } = mount();
         expect(screen.getByTestId('combat-reveal')).toBeTruthy();
-        expect(screen.queryByTestId('combat-reveal-eyebrow')).toBeNull();
-        expect(screen.queryByText(/A FOE|BARS THE WAY|HOLDS THE WAY|THE WAY ENDS HERE/)).toBeNull();
-        // What stays: the foe's name, both VITAE figures and the threat
-        // section (DANGER on a foe already met, THREAT SEQUENCE otherwise).
         expect(screen.getAllByText(enemy.name).length).toBeGreaterThan(0);
-        expect(screen.getByTestId('combat-reveal-player-vitae')).toBeTruthy();
-        expect(screen.getAllByText(/^(THREAT SEQUENCE|DANGER)$/).length).toBe(1);
+        expect(screen.getByTestId('combat-reveal-stats')).toBeTruthy();
+        expect(screen.getByText(/VITAE/)).toBeTruthy();
+        expect(screen.getByTestId('combat-reveal-ground-fight')).toBeTruthy();
+        expect(screen.queryByTestId('combat-reveal-chip')).toBeNull();
+        expect(screen.queryByTestId('combat-reveal-player-vitae')).toBeNull();
+        expect(screen.queryByText(/YOURS|FIGHT|THREAT SEQUENCE|DANGER/)).toBeNull();
+        expect(screen.queryByTestId('combat-reveal-held')).toBeNull();
+        expect(screen.queryByTestId('combat-reveal-arrival')).toBeNull();
+    });
+
+    it('prints what withdrawing costs inside the WITHDRAW plate', () => {
+        mount();
+        expect(screen.getByTestId('combat-withdraw')).toBeTruthy();
+        expect(screen.getByText(WITHDRAW_COST)).toBeTruthy();
     });
 
     it('the reveal frame no longer carries a kicker for any tier', () => {
