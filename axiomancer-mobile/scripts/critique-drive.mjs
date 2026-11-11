@@ -276,6 +276,19 @@ export const SCREENS = [
         devTools: true,
         why: 'The moment after a first death — whether the player knows they are back on the map, dying.',
     },
+    {
+        name: 'victory-levelled',
+        // A dev route mounts the victory screen from a fixed fight, at the bar's settled end.
+        path: '/devvictory?levelled=1',
+        devTools: true,
+        why: 'A won fight that raised the level — whether the fallen foe, the pay, "LEVEL 2" and the card offer read as one ending.',
+    },
+    {
+        name: 'victory-plain',
+        path: '/devvictory',
+        devTools: true,
+        why: 'A won fight with no level — whether the XP still owed reads, and the offer sits under it.',
+    },
 ]
 
 const MIME = {

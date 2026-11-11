@@ -137,6 +137,10 @@ export const ROUTES = [
     // The post-fight summary on a lost fight, with its cause line:
     // a dev route mounts the panel from a fixed summary.
     { name: 'defeat-panel', path: '/devdefeat', fixture: 'fresh-start', expectTestIds: ['combat-summary', 'combat-summary-cause', 'combat-summary-close'] },
+    // The victory screen, with a level-up and without one: a dev route
+    // mounts it from a fixed fight, drawn at the level panel's settled end.
+    { name: 'victory-levelled', path: '/devvictory?levelled=1', fixture: 'fresh-start', expectTestIds: ['combat-victory', 'victory-level-panel', 'combat-rewards', 'combat-reward-skip', 'combat-reward-confirm'] },
+    { name: 'victory-plain', path: '/devvictory', fixture: 'fresh-start', expectTestIds: ['combat-victory', 'victory-level-panel', 'combat-rewards', 'combat-reward-skip', 'combat-reward-confirm'] },
     // The full-screen moment after a run end (CH1j); `preview=1` shows it on a dev build.
     { name: 'game-over', path: '/game-over?slot=1&preview=1', fixture: 'fresh-start' },
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,

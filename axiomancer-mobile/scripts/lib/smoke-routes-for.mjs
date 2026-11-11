@@ -12,7 +12,7 @@ import { spawnSync } from 'node:child_process'
 export const ALL = 'all'
 
 // The reveal and the board behind it: the same fight, two shots.
-const COMBAT = ['combat-encounter', 'combat-board', 'combat-elite', 'combat-boss', 'defeat-panel']
+const COMBAT = ['combat-encounter', 'combat-board', 'combat-elite', 'combat-boss', 'defeat-panel', 'victory-levelled', 'victory-plain']
 const CACHE = ['cache', 'cache-goods', 'cache-card']
 const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
@@ -54,6 +54,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/\(tabs\)\/memoir\//, routes: ['memoir'] },
     { test: /^axiomancer-mobile\/app\/combat-encounter\//, routes: COMBAT },
     { test: /^axiomancer-mobile\/app\/devdefeat\//, routes: ['defeat-panel'] },
+    { test: /^axiomancer-mobile\/app\/devvictory\//, routes: ['victory-levelled', 'victory-plain'] },
     { test: /^axiomancer-mobile\/components\/combat\//, routes: COMBAT },
     { test: /^axiomancer-mobile\/app\/labyrinth\//, routes: ['labyrinth'] },
     { test: /^axiomancer-mobile\/components\/labyrinth\//, routes: ['labyrinth'] },

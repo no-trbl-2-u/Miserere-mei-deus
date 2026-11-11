@@ -206,6 +206,9 @@ async function settleOnMap(page, what) {
         }
         await sleep(400)
         if (await tap(page, 'combat-summary-close')) continue
+        // A won fight ends on the victory screen (FE1b): refusing the card or CONTINUE closes it.
+        if (await tap(page, 'combat-reward-skip')) continue
+        if (await tap(page, 'combat-victory-continue')) continue
         if (await tap(page, 'death-return-continue')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
         if (await tap(page, 'item-reward-confirm')) continue
@@ -326,12 +329,17 @@ async function fight(page) {
     // defeat), so the budget is 1000.
     for (let k = 0; k < 1000; k++) {
         if (await page.getByTestId('combat-summary').count()) break
+        // A foe that falls ends on the victory screen (FE1b), not the summary.
+        if (await page.getByTestId('combat-victory').count()) break
         if (await tap(page, 'combat-mercy-spare')) continue
         await tap(page, 'combat-end-phase')
         await sleep(150)
     }
-    await waitFor(page, 'combat-summary', 'bw-w3 combat summary', 10000)
-    const verdict = (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
+    const won = (await page.getByTestId('combat-victory').count()) > 0
+    if (!won) await waitFor(page, 'combat-summary', 'bw-w3 combat summary', 10000)
+    const verdict = won
+        ? await page.getByTestId('combat-victory-headline').innerText()
+        : (await page.getByTestId('combat-summary').innerText()).split('\n')[0]
     log(`bw-w3 fight: over (${verdict})`)
     if (/defeat/i.test(verdict)) {
         // The first death: the return moment, then the node walked from.

@@ -52,6 +52,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Devdefeat | dev route | no | yes | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devdefeat") |
 | Devframes | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devframes") |
 | The hazard puzzle demos | dev route | yes | yes | yes | no |
+| Devvictory | dev route | no | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devvictory") |
 <!-- feature-table:end -->
 
 ## Anomalies
@@ -60,6 +61,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 
 - Game Over (`route:game-over`)
 - Devdefeat (`route:devdefeat`)
+- Devvictory (`route:devvictory`)
 
 ### Routes with no way out but back
 
@@ -79,6 +81,7 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Devdefeat (`route:devdefeat`)
 - Devframes (`route:devframes`)
 - The hazard puzzle demos (`route:devpuzzle`)
+- Devvictory (`route:devvictory`)
 
 ### game-model.md sections that match no feature
 
@@ -112,3 +115,4 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Devart Rooms (`route:devart/rooms`)
 - Devdefeat (`route:devdefeat`)
 - Devframes (`route:devframes`)
+- Devvictory (`route:devvictory`)

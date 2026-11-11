@@ -73,6 +73,7 @@ import DevArtGallery from './devart/index';
 import DevRoomGallery from './devart/rooms';
 import DevHazardPuzzles from './devpuzzle/index';
 import DevDefeatPreview from './devdefeat/index';
+import DevVictoryPreview from './devvictory/index';
 import DevFrameHarness from './devframes/index';
 
 // Faces come from the @expo-google-fonts packages, registered in theme/fontFaces.ts under the exact
@@ -437,6 +438,11 @@ function RootLayout() {
             <Stack.Screen
               name="devdefeat/index"
               component={DevDefeatPreview}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="devvictory/index"
+              component={DevVictoryPreview}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen

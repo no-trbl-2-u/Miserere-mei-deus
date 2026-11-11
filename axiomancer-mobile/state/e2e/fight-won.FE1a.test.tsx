@@ -46,7 +46,7 @@ function board(): CombatBoardProps {
 }
 
 /** Mount a live fight against a 1-VITAE foe of `difficulty`, play a strike on the board and let it land. */
-function winTheFight(difficulty: EnemyDifficulty) {
+function winTheFight(difficulty: EnemyDifficulty, eliteDraw = 0.99) {
     const { store, enemy } = startRealFight(REAL_FIGHT_FIXTURE, {
         player: { knownCards: CARDS, baseStats: { heart: 8, body: 8, mind: 8 }, health: 160, maxHealth: 160 },
     });
@@ -65,7 +65,7 @@ function winTheFight(difficulty: EnemyDifficulty) {
     act(() => { jest.advanceTimersByTime(5000); });
     // An elite's relic roll (and its lane piece) reads Math.random: pin it to miss,
     // so the card offer opens. The fight itself runs on the engine's seeded rng.
-    if (difficulty === 'elite') jest.spyOn(Math, 'random').mockReturnValue(0.99);
+    if (difficulty === 'elite') jest.spyOn(Math, 'random').mockReturnValue(eliteDraw);
     const card = board().vm.hand[0];
     act(() => { board().onStage(card.uid); });
     act(() => { board().onApply(card.uid, null, false); });
@@ -81,8 +81,10 @@ describe.each(['normal', 'elite'] as const)('a won fight, the foe %s', (difficul
     it('falls, opens the offer, takes a card and leaves the fight', () => {
         const { store, enemy, before, onExit } = winTheFight(difficulty);
 
-        // The foe fell to the strike: the engine ended the fight as a win.
+        // The foe fell to the strike: the engine ended the fight as a win, on
+        // the victory screen with the offer under it (FE1b).
         expect(board().vm).toBeDefined();
+        expect(screen.getByTestId('combat-victory')).toBeTruthy();
         expect(screen.getByTestId('combat-rewards')).toBeTruthy();
         expect(screen.queryByTestId('combat-summary')).toBeNull();
         if (difficulty === 'elite') expect(screen.getByTestId('combat-reward-upgrade-open')).toBeTruthy();
@@ -99,14 +101,38 @@ describe.each(['normal', 'elite'] as const)('a won fight, the foe %s', (difficul
         const taken = offers[0]!;
         act(() => { fireEvent.press(screen.getByTestId(`combat-reward-${taken}`)); });
         act(() => { fireEvent.press(screen.getByTestId('combat-reward-confirm')); });
-        expect(screen.queryByTestId('combat-rewards')).toBeNull();
-        expect(store.getState().combatReward?.claimed).toBe(true);
         expect(store.getState().player.combatRewardCards ?? []).toContain(taken);
 
-        // And out of the fight.
-        act(() => { fireEvent.press(screen.getByTestId('combat-summary-close')); });
+        // Taking the card closes the fight (T's call #3): no summary after a win.
+        expect(onExit).toHaveBeenCalledTimes(1);
         expect(onExit).toHaveBeenCalledWith('victory');
+        expect(screen.queryByTestId('combat-rewards')).toBeNull();
+        expect(screen.queryByTestId('combat-victory')).toBeNull();
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
         expect(store.getState().currentEncounter).toBeUndefined();
+    });
+
+    it('refusing the card closes the fight too', () => {
+        const { store, before, onExit } = winTheFight(difficulty);
+        act(() => { fireEvent.press(screen.getByTestId('combat-reward-skip')); });
+        expect(onExit).toHaveBeenCalledTimes(1);
+        expect(onExit).toHaveBeenCalledWith('victory');
+        expect(store.getState().player.combatRewardCards ?? []).toEqual(before.combatRewardCards ?? []);
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
+        expect(screen.queryByTestId('combat-victory')).toBeNull();
+    });
+
+    it('the victory screen shows the band, the headline, the paid line and the level panel', () => {
+        const { store, enemy, before } = winTheFight(difficulty);
+        const after = store.getState().player;
+        const vm = selectFightEndVM(fightPaidFrom(before, after, fightWage(enemy.level)));
+        expect(screen.getByTestId('combat-victory-foe')).toBeTruthy();
+        expect(screen.getByTestId('combat-victory-purse').props.children).toBe(`Shillings ${after.currency}`);
+        expect(screen.getByTestId('combat-victory-headline').props.children).toBe('Victory — the enemy falls');
+        expect(screen.getByTestId('combat-victory-paid').props.children).toBe(vm.paidLine);
+        // The panel plays to its settled end.
+        act(() => { jest.advanceTimersByTime(30_000); });
+        expect(screen.getByTestId('victory-level-line').props.children).toBe(vm.levelLine);
     });
 
     it('the settle record reads as the victory screen shows it', () => {
@@ -121,5 +147,24 @@ describe.each(['normal', 'elite'] as const)('a won fight, the foe %s', (difficul
         } else {
             expect(vm.levelLine).toBe(`${experienceForLevel(after.level + 1) - after.experience} XP to level ${after.level + 1}`);
         }
+    });
+});
+
+describe('a won elite whose relic drops (FE1b)', () => {
+    it('shows the victory screen with CONTINUE in the offer\'s place, which leaves the fight and keeps the relic queued', () => {
+        // The relic roll reads Math.random: pin it to hit.
+        const { store, onExit } = winTheFight('elite', 0);
+        expect(store.getState().combatReward?.relicDrop).toBeTruthy();
+        expect(screen.getByTestId('combat-victory')).toBeTruthy();
+        expect(screen.queryByTestId('combat-rewards')).toBeNull();
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
+        // The relic took the XP's place: the paid line has no XP half.
+        expect(String(screen.getByTestId('combat-victory-paid').props.children)).not.toMatch(/XP/);
+
+        act(() => { fireEvent.press(screen.getByTestId('combat-victory-continue')); });
+        expect(onExit).toHaveBeenCalledTimes(1);
+        expect(onExit).toHaveBeenCalledWith('victory');
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
+        expect(store.getState().itemReward.queue.length).toBeGreaterThan(0);
     });
 });

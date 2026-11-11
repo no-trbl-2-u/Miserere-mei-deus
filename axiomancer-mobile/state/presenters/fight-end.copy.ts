@@ -20,3 +20,19 @@ export function fightEndLevelLine(level: number): string {
 export function fightEndXpToLevelLine(xpOwed: number, nextLevel: number): string {
     return `${xpOwed} XP to level ${nextLevel}`;
 }
+
+/** The purse in the victory screen's top band: "Shillings 41". */
+export function fightEndPurseLine(shillings: number): string {
+    return `${FIGHT_END_SHILLINGS_LABEL} ${shillings}`;
+}
+
+/** CONTINUE on the brass plate, where the offer sits when a win offers no card (an elite's relic). */
+export const FIGHT_END_CONTINUE_LABEL = 'CONTINUE';
+
+/** What a screen reader hears on the level panel: a tap skips the bar to its end. */
+export const FIGHT_END_PANEL_A11Y_HINT = 'Tap to skip to the end';
+
+/** What a screen reader hears for the fallen foe in the top band. */
+export function fightEndFoeA11yLabel(foeName: string): string {
+    return `${foeName}, fallen`;
+}

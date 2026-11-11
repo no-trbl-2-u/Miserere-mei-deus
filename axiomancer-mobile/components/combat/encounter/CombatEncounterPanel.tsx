@@ -44,7 +44,9 @@ import { type CombatFx } from '@/components/combat/encounter/CombatCombatantPane
 import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/CombatDie';
 import { RASTER_LAYER } from '@/components/combat/encounter/rasterLayer';
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
-import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
+import { VictoryScreen } from '@/components/combat/encounter/VictoryScreen';
+import { ARENA_PLATES_SHOWN, arenaBackdropFor } from '@/assets/images/combat';
+import { nodeArenaFor } from '@/state/exploration-maps';
 import { Image } from '@/lib/platform/image';
 import { INK_DRAW_MS, INK_HOLD_MS, InkCurtain } from '@/components/combat/encounter/InkCurtain';
 import { clearMapInk } from '@/state/map-ink';
@@ -69,7 +71,7 @@ import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { devSettingsStore } from '@/state/dev/dev-settings';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { recordFightSettled } from '@/state/run-log';
-import { fightPaidFrom, NOTHING_PAID, type FightPaid } from '@/state/presenters/fight-end.engine';
+import { fightPaidFrom, NOTHING_PAID, victoryChapterName, type FightPaid } from '@/state/presenters/fight-end.engine';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -375,8 +377,10 @@ export function CombatEncounterPanel({
     const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
     const spare = useGameState((s) => s.combatReward?.spare ?? null);
     // What the engine paid for this fight (shillings, XP, levels), for the
-    // summary and the victory screen.
-    const [fightPaid, setFightPaid] = useState<FightPaid>(NOTHING_PAID);
+    // summary and the victory screen; null until the settle has run.
+    const [fightPaid, setFightPaid] = useState<FightPaid | null>(null);
+    // The fight was left (the victory screen steps aside once it closes it).
+    const [exited, setExited] = useState(false);
 
     const [state, setState] = useState<CombatEncounterState | null>(null);
     // Multi-card staging (hazard model): several cards can be staged at once; each
@@ -691,6 +695,7 @@ export function CombatEncounterPanel({
     const handleExit = useCallback(() => {
         if (exitedRef.current) return;
         exitedRef.current = true;
+        setExited(true);
         // Clear the draft slate for the NEXT encounter. Deliberately here and
         // not on mount: the store slice has to outlive a panel remount, or it
         // would drop the offer exactly when it is meant to preserve it.
@@ -711,7 +716,7 @@ export function CombatEncounterPanel({
     useEffect(() => {
         if (!live.finalOutcome || wroteBackRef.current || !mercyCheckSettled(live)) return;
         wroteBackRef.current = true;
-        if (persistOutcome) setFightPaid(applyHazardOutcome(store, live.finalOutcome, live, enemy));
+        setFightPaid(persistOutcome ? applyHazardOutcome(store, live.finalOutcome, live, enemy) : NOTHING_PAID);
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
 
     // The play log (phase BE2c): every live state goes to the fight recorder,
@@ -731,13 +736,17 @@ export function CombatEncounterPanel({
     }, [live, store, enemy]);
 
     // Claim (or skip) — the action appends the card AND persists, so the pick
-    // does not wait on some unrelated save() to happen along.
+    // does not wait on some unrelated save() to happen along. Taking or
+    // refusing the card, or taking the elite's upgrade, closes the fight: the
+    // summary no longer opens after a win (FE1b, T's call #3).
     const onRewardPick = useCallback((cardId: string | null) => {
         claimCombatRewardAction(store, cardId);
-    }, [store]);
+        handleExit();
+    }, [store, handleExit]);
     const onRewardUpgrade = useCallback((cardId: string) => {
         claimCombatUpgradeAction(store, cardId);
-    }, [store]);
+        handleExit();
+    }, [store, handleExit]);
     // The elite reward's upgrade as the shared picker's one row (null hides it).
     const rewardUpgradeRows = useMemo(
         () => (rewardUpgrade && player
@@ -793,6 +802,8 @@ export function CombatEncounterPanel({
     const mercyCheckOpen = live.mercyCheck === 'offered';
     const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
     const mercyLine = mercyLineFor(enemy.mercyLines, live.mercyCheck);
+    // The foe fell (a win, the mercy check settled, not spared): the victory screen's.
+    const fell = live.finalOutcome === 'victory' && mercyCheckSettled(live) && live.mercyCheck !== 'spared';
     const showReveal = live.phase === 'reveal';
     // The commit pair's look is the place's. The reveal's own column, portrait
     // and threat list are not kit places and keep today's code.
@@ -1259,18 +1270,29 @@ export function CombatEncounterPanel({
                 );
             })()}
 
-            {/* deckbuilder reward — claimed before the summary on a win */}
-            {live.finalOutcome === 'victory' && mercyCheckSettled(live) && !rewardsClaimed && rewardOffers.length > 0 && (
-                <CombatRewardsOverlay
-                    offers={rewardCardVMs(rewardOffers, live.player.baseStats)}
+            {/* The victory screen (FE1b): a foe that falls ends here, the card
+                offer under the level panel; taking or refusing it closes the
+                fight, and a win with no offer shows CONTINUE. */}
+            {fell && summary && fightPaid && !exited && (
+                <VictoryScreen
+                    headline={summary.headline}
+                    paid={fightPaid}
+                    chapter={victoryChapterName(region)}
+                    purse={player?.currency ?? 0}
+                    arena={ARENA_PLATES_SHOWN ? arenaBackdropFor(region, nodeArenaFor(region, nodeId)) : null}
+                    foeArt={getEncounterEnemyArt(vm.enemy.artKey, vm.enemy.artNonce)}
+                    foeName={vm.enemy.name}
+                    offers={rewardsClaimed ? [] : rewardCardVMs(rewardOffers, live.player.baseStats)}
                     onPick={onRewardPick}
                     upgradeRows={rewardUpgradeRows}
                     onUpgrade={onRewardUpgrade}
+                    onContinue={handleExit}
                 />
             )}
 
-            {summary && mercyCheckSettled(live) && (rewardsClaimed || live.finalOutcome !== 'victory') && (
-                <CombatSummaryModal summary={summary} shillings={fightPaid.shillings} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
+            {/* The summary: a defeat, or a spared foe's mercy ending. */}
+            {summary && mercyCheckSettled(live) && !fell && (
+                <CombatSummaryModal summary={summary} shillings={fightPaid?.shillings ?? 0} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
             )}
 
             {/* drag ghost — persistently mounted after the first drag; dragShown
