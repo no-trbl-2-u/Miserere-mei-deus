@@ -708,3 +708,4 @@
 - 2026-11-10 · 168 · spec complete: The village as a hub of keepers · none · deleted in (this commit)
 - 2026-11-11 · 170 · spec complete: Chapter 1's unmeasured numbers · none · deleted in (this commit)
 - 2026-11-11 · 175 · spec complete: The fight reveal, and the boss's title card · none · deleted in (this commit)
+- 2026-11-11 · 172.3 (alias: CU1c) · Cutscenes draw five painted scenes and a Friar narrator · 292396da..292396da (#1609)
