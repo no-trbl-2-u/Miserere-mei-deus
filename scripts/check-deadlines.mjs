@@ -27,6 +27,9 @@
 //     merged #N (a merge commit or a squash); a T Item is only ever ticked by hand, so it would lead
 //     every reminder after the work is done. The subjects come from git log, never the network; a
 //     history that does not reach the merge, or no git at all, finds nothing.
+//   - an act whose `Rows` is `T: pr #N`, `T: spec <family>` or `T: file <path>` (spec 169, A5): ticked
+//     while the proof does not hold (a `pr` proof is exempt: a shallow clone may not reach the merge),
+//     or a `T:` cell that is none of the three. `--write` ticks the act once the proof holds.
 //   - one row id with two homes (phase NX1c): a v2 spec chunk's `alias:` named twice,
 //     on a chunk and an ARCHIVE.md line, or matching a build-plan row.
 // Both files are read through scripts/deadlines-lib.mjs's parsers, never re-parsed here.
@@ -46,7 +49,7 @@ import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, mergedPrItems, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, mergedPrItems, parseBudget, proofHolds, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -83,7 +86,7 @@ export const readPlanSources = (root) => {
  * @param {string[]} [subjects] commit subjects of main (git log --format=%s); none by default
  * @returns {string[]}
  */
-export const checkDeadlines = (deadlinesMd, plan, subjects = []) => {
+export const checkDeadlines = (deadlinesMd, plan, subjects = [], exists = () => false) => {
     const items = parseItems(deadlinesMd)
     const resolved = planRows(typeof plan === 'string' ? { buildPlan: plan } : plan)
     const phases = resolved.phases
@@ -116,7 +119,12 @@ export const checkDeadlines = (deadlinesMd, plan, subjects = []) => {
                 errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks${queueModel ? '; the queue lists no loop rows of its own' : ', or under ## Unscheduled'}.`)
             }
         }
-        const want = derivedStatus(item, phases)
+        if (item.proof?.error) errors.push(`${DEADLINES}: Item "${item.name}" has an unreadable proof: ${item.proof.error}.`)
+        else if (item.proof && item.done && item.proof.kind !== 'pr' && !proofHolds(item.proof, phases, { subjects, exists })) {
+            // A pr proof is exempt: a shallow clone may not reach the merge, so its absence proves nothing.
+            errors.push(`${DEADLINES}: Item "${item.name}" is ticked, but its proof \`T: ${item.proof.kind} ${item.proof.arg}\` does not hold; untick it or fix the proof.`)
+        }
+        const want = derivedStatus(item, phases, { subjects, exists })
         if (want && want !== (item.done ? '[x]' : '[ ]')) {
             errors.push(`${DEADLINES}: Item "${item.name}" has Status ${item.done ? '[x]' : '[ ]'}, but its rows say ${want}; run \`node scripts/deadlines.mjs --write\` instead of editing the cell.`)
         }
@@ -192,7 +200,7 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
     const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8')
-    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root), mainSubjects(root))
+    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root), mainSubjects(root), (rel) => fs.existsSync(path.join(root, rel)))
     if (errors.length) {
         process.stderr.write(`check-deadlines: ${errors.length} disagreement(s)\n${errors.map((e) => `  - ${e}`).join('\n')}\n`)
         process.exit(1)

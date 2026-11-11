@@ -15,7 +15,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readPlanSources } from './check-deadlines.mjs'
+import { mainSubjects, readPlanSources } from './check-deadlines.mjs'
 import { dueNeeds, hasBudgetSection, liveMarkdown, nextNeed, parseBudget, parseItems, planRows, queuePlan, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -38,7 +38,7 @@ const main = () => {
     const { phases } = planRows(readPlanSources(ROOT))
     let deadlinesMd = read('plan/deadlines.md')
     if (flag('write')) {
-        const rewrite = rewriteItemStatus(deadlinesMd, phases)
+        const rewrite = rewriteItemStatus(deadlinesMd, phases, { subjects: mainSubjects(ROOT), exists: (rel) => fs.existsSync(path.join(ROOT, rel)) })
         for (const line of rewrite.unmatched) process.stderr.write(`deadlines: Items row not understood, left as is: ${line}\n`)
         if (rewrite.changed.length) {
             fs.writeFileSync(path.join(ROOT, 'plan/deadlines.md'), rewrite.md)
