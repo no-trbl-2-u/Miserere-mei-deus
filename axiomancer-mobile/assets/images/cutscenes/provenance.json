@@ -3,16 +3,106 @@
     "generated_by": "user-supplied",
     "date": "2026-11-11",
     "tool": "external-illustration (torio, Javardry free material pack), cut out and re-encoded",
-    "prompt": "Stand-in narrator for every cutscene (T, 2026-11-11: \"All cutscenes should have the same narrator for now\"). A copy of the Hermit cut-out (keepers/host.webp), which holds the space until T supplies the narrator figure (spec 172, CU1a, A2).",
-    "spec_section": "172 (CU1a), A2",
+    "prompt": "The narrator for every cutscene (T, 2026-11-11: \"All cutscenes should have the same narrator for now\"). TEMP stand-in: the TOR Friar, supplied by T in the pilot run for 172.3 until T makes the narrator figure. Copied out of the sorted entity library (Potential Assets store, portraits/Friar.jpg) and never read from it by code.",
+    "spec_section": "172 (CU1c), A6",
     "covers": [
-      "narrator-standin.webp (TOR-0424 Hermit, Hermit A.png; copy of ../keepers/host.webp)"
+      "narrator.webp (TOR Friar, Friar.jpg; temp stand-in, T will replace it)"
     ],
     "used_by": [
       "assets/images/cutscenes/index.ts (CUTSCENE_NARRATOR)"
     ],
     "license": "open source (T, 2026-10-29, D115); artist's free-material grant in docs/licences/torio-javardry.md",
     "license_note": "Art by torio. T, 2026-10-29, D115: all game images are open source. The artist's own licence note is docs/licences/torio-javardry.md.",
-    "post_process": "Same file as keepers/host.webp: black ground removed, cropped to the figure, longest edge <= 640 px, WebP q44 (alpha q80). Deleted when T's narrator replaces it (172.3)."
+    "post_process": "Black ground flood-filled away from the edges (max channel < 12), alpha blurred 1.2 px, trimmed to the figure, 249x640, WebP q44 (alpha q80, sharp). Replaces the Hermit copy narrator-standin.webp."
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Windmill_at_Wijk_bij_Duurstede_1670_Ruisdael.jpg",
+    "artist": "Jacob van Ruisdael",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "scene-windmill-headland.webp"
+    ],
+    "used_by": [
+      "assets/images/cutscenes/index.ts (CUTSCENE_SCENES)"
+    ],
+    "prompt": "TEMP stand-in scene picture (T, 2026-11-11: use a public-domain painting for now; T will still replace it). ",
+    "spec_section": "172 (CU1c), A6"
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Karl_Friedrich_Schinkel_Gotische_Kirche_auf_einem_Felsen_am_Meer.jpg",
+    "artist": "Karl Friedrich Schinkel",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "scene-clifftop-chapel.webp"
+    ],
+    "used_by": [
+      "assets/images/cutscenes/index.ts (CUTSCENE_SCENES)"
+    ],
+    "prompt": "TEMP stand-in scene picture (T, 2026-11-11: use a public-domain painting for now; T will still replace it). ",
+    "spec_section": "172 (CU1c), A6"
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:John_Constable_-_Hadleigh_Castle_-_Google_Art_Project.jpg",
+    "artist": "John Constable",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "scene-old-watchtower.webp"
+    ],
+    "used_by": [
+      "assets/images/cutscenes/index.ts (CUTSCENE_SCENES)"
+    ],
+    "prompt": "TEMP stand-in scene picture (T, 2026-11-11: use a public-domain painting for now; T will still replace it). ",
+    "spec_section": "172 (CU1c), A6"
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_Der_Watzmann.jpg",
+    "artist": "Caspar David Friedrich",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "scene-high-pass.webp"
+    ],
+    "used_by": [
+      "assets/images/cutscenes/index.ts (CUTSCENE_SCENES)"
+    ],
+    "prompt": "TEMP stand-in scene picture (T, 2026-11-11: use a public-domain painting for now; T will still replace it). ",
+    "spec_section": "172 (CU1c), A6"
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Jacob_van_Ruisdael_-_The_Great_Forest_-_Google_Art_Project.jpg",
+    "artist": "Jacob van Ruisdael",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "scene-charcoal-wood-arrival.webp"
+    ],
+    "used_by": [
+      "assets/images/cutscenes/index.ts (CUTSCENE_SCENES)"
+    ],
+    "prompt": "TEMP stand-in scene picture (T, 2026-11-11: use a public-domain painting for now; T will still replace it). ",
+    "spec_section": "172 (CU1c), A6"
   }
 ]
