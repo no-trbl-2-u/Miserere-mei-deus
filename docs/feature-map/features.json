@@ -568,7 +568,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, ..."
+        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/components/experience/__tests__/lookGate.newgame.normal.test.tsx, ..."
       },
       "needsPitch": {
         "value": true,
