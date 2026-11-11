@@ -6,8 +6,7 @@ date: 2026-11-10
 **Held** (waits on a person's word; never picked until the
 ~~~
 ~~~ new
-- **174.1** · LC1a: the cache outcome knows what was taken, and the picture table (T's screens ballot, then `/plot asap`, 2026-11-10)
-- **174.2** · LC1b: the cache screen, picture first (T's screens ballot, then `/plot asap`, 2026-11-10; needs 174.1)
+- **174.2** · LC1b: the cache screen, picture first (T's screens ballot, then `/plot asap`, 2026-11-10)
 
 **Held** (waits on a person's word; never picked until the
 ~~~

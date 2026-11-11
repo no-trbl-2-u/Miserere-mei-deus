@@ -40,7 +40,7 @@ needs are done):
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
 - **168.2** · VL1b: the village card shop offers five cards (T, `/plot asap`, 2026-11-09)
-- **168.4** · VL1d: the Shop, one card at a time (T, `/plot asap`, 2026-11-09; needs 168.2)
+- **168.4** · VL1d: the Shop, one card at a time (T, `/plot asap`, 2026-11-09)
 - **168.5** · VL1e: the Blacksmith, the smith and one die at a time (T, `/plot asap`, 2026-11-09)
 
 - **127.9** · UP1i: the card upgrade screen as a string of beads, with the pair and the hold (T, `/pitch` then `/plot asap`, 2026-11-10)
