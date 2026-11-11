@@ -19,7 +19,8 @@ date: 2026-11-11
 ~~~ new
 `max_age`, the loop asks T once (an issue), never releases it:
 
-- **177.3** · attended: T reviews the Chapter 1 drafts (NV1c) · since: 2026-11-11 · until: 2026-11-30 · max_age: 30d
+- **177.3** · attended: T reviews the Chapter 1 drafts, after the Act 1 story is written (NV1c) · since: 2026-11-11 · until: T's word · max_age: 30d
+- **177.9** · waits on T's Act 1 story (NV1i) · since: 2026-11-11 · until: T's word · max_age: 30d
 ~~~
 
 ## Edit plan/README.md
@@ -30,7 +31,7 @@ date: 2026-11-11
 ~~~ new
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned (**Asap**: 177.1-177.2) | 8 left |
+| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned (**Asap**: 177.1-177.2) | 9 left |
 ~~~
 
 ## Add plan/116-bw1-breakwater-rebuild.md
