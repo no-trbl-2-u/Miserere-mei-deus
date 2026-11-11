@@ -7,8 +7,9 @@
 ### Sources
 
 - **T's ballot verdict, 2026-11-10** (`plan/card-ledger/screens.md`, Verdict, slot S-04), verbatim: "S-04 Loot cache: KEEP S-04j (Picture first) | note: Don't show the actual reward. Only Take a/the ___ and the flavor text. Reward should be hidden until the selection is made. Furthermore, goods? Show goods as you have it  Show Card? We replace the gold with a different image and the card will go right above move on."
+- **T on the PR, 2026-11-11**, verbatim: "Maybe not the right place but \"Take a card\" should be a random card from their worn relic reward pool".
 - **The settled shot:** `plan/card-ledger/screens/S-04-settled.webp` (three screens: the choice, goods taken, card taken). It lands with PR #1584 and is the Source picture of this spec. The winning look is `screens/S-04j.webp`; today's screen, redrawn from the code, is `screens/S-04a.webp`.
-- **The ledger's notes for the plot** (`plan/card-ledger/screens.md`, "Open for the plot", S-04): both rewards are rolled before the choice; a doctrine comment says the screen states what you do, never what you get; only the cave cache (`cw-6`) has action lines; the card pool is the three grey cards.
+- **The ledger's notes for the plot** (`plan/card-ledger/screens.md`, "Open for the plot", S-04): both rewards are rolled before the choice; a doctrine comment says the screen states what you do, never what you get; only the cave cache (`cw-6`) has action lines; the card pool is the three grey cards (stale: since RW1a the cache draws from the reward pool and never a grey card; see "The card comes from the player's reward pool" below).
 - **New image, ledger row 14:** "the runes cut into the cave wall, lit by one lantern; grey dusk, engraved; landscape, 780x540; the picture band at the top of the card outcome, in place of the gold." Art is T's (D88).
 - **The deadline act** "Event kind 7, loot cache: pitch its full treatment ... settle it and plot it" (`plan/deadlines.md`), which this plot answers.
 
@@ -37,6 +38,7 @@ Three moments, one screen, as the settled shot draws them.
 
 - **The choice stays blind.** T's note keeps 154.7's doctrine for the choice: the offer VM gains no reward field. Only the outcome shows what was taken.
 - **One card.** TAKE A CARD grants the one card rolled today, so the card outcome draws one face. No pick, no reroll.
+- **The card comes from the player's reward pool.** Confirmed by T (2026-11-11): TAKE A CARD is a random card from the player's worn relic reward pool. The roll already does this, so this spec changes no rule: `rollCombatCardRewards(player, cacheCardRng(seed), 1)` draws the one card the way a combat reward draws its lane slot, from the lane the player wears the most relics from (a tie broken by the seed), never grey; with no lane relic worn it draws from the character's starting lanes. `state/e2e/cache.flow.engine.test.ts` ("the card follows the reward rule (RW1a A6)") already pins all three cases (no relic, a relic carried but not worn, a relic worn). The builder keeps that roll and that test as they are.
 - **The rules are untouched.** The rolls, the tiers, the currency, the equipment drop and paying on MOVE ON stay `World/LootCacheChoice`'s and `store-actions.ts`'s.
 - **The purse in the bar reads what the purse will hold once the take is paid** (today's purse plus the goods' shillings), as the settled shot draws it (15 on the choice and after a card, 21 after goods worth 6). The payment itself still happens on MOVE ON.
 - **What a good does** is one line built from the item's own numbers: a weapon or armor reads `equipmentEffectLine`; a potion reads its heal and its below-half heal in the inventory's terms (`Heal 20 VITAE`, `30 below half VITAE`). No new wording, no new rule.
