@@ -1,9 +1,9 @@
 /**
  * Hermetic E2E — the grey office (the fresh-run starter shapes).
  *
- * `grey-strike` ("A Plain Blow") and `grey-ward` ("A Plain Ward") are the
+ * `grey-strike` ("Blow") and `grey-ward` ("Ward") are the
  * two colourless cards (`color: 'any'`) every brand-new run
- * seeds ten copies of (5 + 3 + 2 with A Plain Word — see `STARTING_CARD_IDS`,
+ * seeds ten copies of (5 + 3 + 2 with Word — see `STARTING_CARD_IDS`,
  * `Combat/combat.rewards.ts`). This suite pins:
  *
  *   - both resolve with the right shape (colourless aspect, `theme: 'grey'`,

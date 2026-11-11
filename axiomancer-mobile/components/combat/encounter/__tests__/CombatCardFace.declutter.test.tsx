@@ -24,7 +24,7 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 
 // The grey office — the whole card library: a DEAL, a GUARD and a VULNERABLE
-// face. A Plain Word's PAID sentence ('VULNERABLE +25% for 2 turns.') is long
+// face. Word's PAID sentence ('VULNERABLE +25% for 2 turns.') is long
 // enough that the sentence sweep below is not vacuous.
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word'];
 

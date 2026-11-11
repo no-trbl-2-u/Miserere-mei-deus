@@ -12,8 +12,8 @@
  *     than the same player who played an offensive card instead;
  *   - the library's defense card is real + reachable via COMBAT_REWARD_POOL.
  *
- * A Plain Ward (grey-ward, GUARD 5, colourless) is the library's defense
- * card and A Plain Blow (grey-strike) the offensive control case.
+ * Ward (grey-ward, GUARD 5, colourless) is the library's defense
+ * card and Blow (grey-strike) the offensive control case.
  *
  * Doctrine: defense never out-damages STATUS. It deals no HP and spends the turn's
  * die, so DoT erosion stays the efficient path to the enemy's only bar (HP).
@@ -117,7 +117,7 @@ describe('Spec 26b — defense cards classify as `defend`', () => {
 describe('Spec 26b — playing a defense card grants GUARD', () => {
     it('a POWERED brace grants its printed GUARD', () => {
         mockSequentialRng(0.05);
-        // Every play lands printed (1.0×): a Plain Ward's printed GUARD 5
+        // Every play lands printed (1.0×): a Ward's printed GUARD 5
         // lands as 5 at 5/5/5 stats, whatever die powers it.
         const state = openPhase(initializeCombatEncounter(makePlayer([BRACE]), makeEnemy(80, 'mind'), [BRACE, BRACE, BRACE, BRACE, BRACE], 7));
 

@@ -22,7 +22,7 @@ import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
 import { tapCombatDie } from '@/test-utils/tapCombatDie';
 
-// Two copies of A Plain Blow (the grey office is the whole library) share one
+// Two copies of Blow (the grey office is the whole library) share one
 // colour, 'any' — exactly the pairing where a stale re-attach would show:
 // play A with a die, stage B (same colour) → B lights up.
 const CARDS = ['grey-strike', 'grey-ward', 'grey-word', 'grey-strike'];

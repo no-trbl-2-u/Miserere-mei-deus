@@ -4,9 +4,9 @@
  *
  * Fixtures are live library cards, read live from the sibling engine so the
  * assertions stay true to real data. The library is the grey office:
- *   - grey-strike   A Plain Blow   FREE Deal 2 · PAID DEAL 5       → a mechanic face, no read
- *   - grey-ward     A Plain Ward   FREE Guard 2 · PAID GUARD 5     → the read-scaled Guard face
- *   - grey-word     A Plain Word   FREE VULN 10% 1t · PAID 25% 2t  → the status face
+ *   - grey-strike   Blow   FREE Deal 2 · PAID DEAL 5       → a mechanic face, no read
+ *   - grey-ward     Ward   FREE Guard 2 · PAID GUARD 5     → the read-scaled Guard face
+ *   - grey-word     Word   FREE VULN 10% 1t · PAID 25% 2t  → the status face
  *   - fx-ember (synthetic)         round-clock kindling ember      → the "N over M turns" face
  *
  * Presenter branches for faces no live card prints have no coverage here.
@@ -89,7 +89,7 @@ describe('faceStats — honest real-unit faces', () => {
         expect(f.heroSub).toBe('over 3 turns');
         expect(f.verbLine).toBe('foe loses VITAE each turn');
     });
-    it('A Plain Ward (Guard) → Guard 5 · the authored FREE Guard 2', () => {
+    it('Ward (Guard) → Guard 5 · the authored FREE Guard 2', () => {
         const { card, sourceCard } = cardOf('grey-ward');
         const f = faceStats(card, sourceCard);
         expect(f.kind).toBe('guard');
@@ -99,7 +99,7 @@ describe('faceStats — honest real-unit faces', () => {
         expect(f.armable).toBe(true);
         expect(f.guardBase).toBe(5);
     });
-    it('A Plain Blow (DEAL) → the printed number, no read — never a fabricated one', () => {
+    it('Blow (DEAL) → the printed number, no read — never a fabricated one', () => {
         const { card, sourceCard } = cardOf('grey-strike');
         const f = faceStats(card, sourceCard);
         expect(f.heroText).toBe('Deal 5');
@@ -108,7 +108,7 @@ describe('faceStats — honest real-unit faces', () => {
         expect(f.armable).toBe(false);
         expect(f.inert).toBe(false);
     });
-    it('A Plain Word (VULNERABLE +25% 2t) → a real percentage, real turns', () => {
+    it('Word (VULNERABLE +25% 2t) → a real percentage, real turns', () => {
         const { card, sourceCard } = cardOf('grey-word');
         const f = faceStats(card, sourceCard);
         expect(f.kind).toBe('vulnerable');
@@ -122,14 +122,14 @@ describe('faceStats — honest real-unit faces', () => {
 });
 
 describe('Option A split rail — freeKeyword/freeValue + typeStrip (owner-picked 2026-07-09)', () => {
-    it('A Plain Ward → ◇ GUARD · 2 (the authored free rider, never halved) | ANY · SKILL foot strip', () => {
+    it('Ward → ◇ GUARD · 2 (the authored free rider, never halved) | ANY · SKILL foot strip', () => {
         const { card, sourceCard } = cardOf('grey-ward');
         const f = faceStats(card, sourceCard);
         expect(f.freeKeyword).toBe('GUARD');
         expect(f.freeValue).toBe('2');
         expect(f.typeStrip).toBe('ANY · SKILL');
     });
-    it("A Plain Word → ◇ VULNERABLE · ×10 · 1t, never the 'i10 d1' code", () => {
+    it("Word → ◇ VULNERABLE · ×10 · 1t, never the 'i10 d1' code", () => {
         // '×N · Mt', never the 'iN dM' code.
         const { card, sourceCard } = cardOf('grey-word');
         const f = faceStats(card, sourceCard);
@@ -140,7 +140,7 @@ describe('Option A split rail — freeKeyword/freeValue + typeStrip (owner-picke
 });
 
 describe('D91 FREE corner pill — a pill whenever the card has a FREE line', () => {
-    it('A Plain Blow → the DEAL pill with its free damage (critique pass 85)', () => {
+    it('Blow → the DEAL pill with its free damage (critique pass 85)', () => {
         // FREE "Deal 2": the face carries the DEAL glyph and value, so the
         // corner pill draws (the board renders it when freeGlyph is set).
         const { card, sourceCard } = cardOf('grey-strike');
@@ -153,7 +153,7 @@ describe('D91 FREE corner pill — a pill whenever the card has a FREE line', ()
         expect(glyphShapeFor(f.freeGlyphKey)).toBeTruthy();
     });
 
-    it('A Plain Blow pill carries the stat-scaled free damage the engine deals', () => {
+    it('Blow pill carries the stat-scaled free damage the engine deals', () => {
         const stats = { body: 10, mind: 5, heart: 5 };
         const { card, sourceCard } = cardOf('grey-strike');
         const scaled = faceStats(card, scaleCardForStats(sourceCard!, stats));
@@ -194,7 +194,7 @@ describe('rank / rarity projection (spec 32 v3 §4)', () => {
 });
 
 describe('detailStats — same numbers as the face', () => {
-    it('A Plain Word detail + pill agree with the face', () => {
+    it('Word detail + pill agree with the face', () => {
         const { card, sourceCard } = cardOf('grey-word');
         const d = detailStats(card, sourceCard);
         expect(d.outcomeStats.find(st => st.label === 'DMG TAKEN')?.value).toBe('+25%');
@@ -207,7 +207,7 @@ describe('detailStats — same numbers as the face', () => {
         // No meta chip rides the detail: no screen prints one (T, 2026-11-02).
         expect(d).not.toHaveProperty('metaChip');
     });
-    it('A Plain Ward (Guard) → terse "Gain Guard 5."', () => {
+    it('Ward (Guard) → terse "Gain Guard 5."', () => {
         const { card, sourceCard } = cardOf('grey-ward');
         const d = detailStats(card, sourceCard);
         expect(d.outcomeLine).toBe('Gain Guard 5.');

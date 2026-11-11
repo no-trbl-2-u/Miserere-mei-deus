@@ -86,7 +86,7 @@ test('a blank run past the file\'s norm is a finding', () => {
 test('the c95114a2 split fails', () => {
   const split = [
     '# Critique log', '', '## Pending', '',
-    '### [MED] combat / hand — A Plain Blow draws no FREE pill, so one of the three grey cards looks like it has no free play',
+    '### [MED] combat / hand — Blow draws no FREE pill, so one of the three grey cards looks like it has no free play',
     '- pass: 85 (commit 93f05dfe)',
     '### [LOW] ci / pr-resolve — a hand dispatch with a non-`loop/` branch exits green having done nothing',
     '- pass: antagonist on PR #526 (commit efc7f371)',
@@ -99,7 +99,7 @@ test('the c95114a2 split fails', () => {
     '- pass: 84 (commit dd61ec90)',
     '- viewport: both (375x812 and 1280x800)',
     '- category: comprehension',
-    '- observation: on the Green Jelly board, A Plain Ward shows its FREE pill ("+4")',
+    '- observation: on the Green Jelly board, Ward shows its FREE pill ("+4")',
     '- evidence: `.critique-artifacts/mobile/04-combat-board.png`',
     '- suggested fix: add a `DEAL` pair for `r.damage` in `riderPairs`',
     '- observation: on the walked Breakwater sheet ("18 nodes · 12 sealed")',

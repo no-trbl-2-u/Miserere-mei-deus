@@ -122,7 +122,7 @@ describe('DeckOpenCard keywords', () => {
 });
 
 describe('DeckOpenCard keyword case on a real card', () => {
-    it('A Plain Word prints VULNERABLE in capitals in both play lines, and each is pressable', () => {
+    it('Word prints VULNERABLE in capitals in both play lines, and each is pressable', () => {
         const player = createNewGameState().player as Character;
         const run = { player: { ...player, knownCards: ['grey-word'], combatRewardCards: [] }, flags: [] } as never;
         const word = selectDeckViewModel(run).groups.flatMap((g) => g.cards).find((c) => c.cardId === 'grey-word')!;

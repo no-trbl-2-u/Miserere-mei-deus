@@ -18,7 +18,7 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **The library is three grey cards and four trial sets, Blood Price, the
   Elementalist, the Defender and the Merciful.** The
   grey office (`GREY_OFFICE_CARDS`, `Cards/library/starters.cards.ts`): A
-  Plain Blow (attack, DEAL), A Plain Ward (skill, GUARD), A Plain Word
+  Blow (attack, DEAL), Ward (skill, GUARD), Word
   (spell, VULNERABLE), all colour `any`, rank 1 (Ash), tier 1. The trial
   set (`BLOOD_PRICE_SET`, `Cards/library/blood-price.cards.ts`, D80, D81):
   30 cards (11 body, 8 mind, 11 heart, all rank 1 but one): 25 kept from the Blood
@@ -58,7 +58,7 @@ the Expo app (`axiomancer-mobile`) presents it.
 - **Card types** (`CardType`) are lifecycle rules. Attack and Skill play
   FREE or PAID, then discard. A **Spell** plays FREE and discards, or PAID
   and EXILEs, and its PAID line is a step stronger to pay for it (the Spell
-  law, D103; A Plain Word is held out of it for T, so today it discards on
+  law, D103; Word is held out of it for T, so today it discards on
   both lines). A **Global** stays in play and fires on
   its trigger (⟳ start of your turn, 🩸 when you SACRIFICE n, 📜 when you
   play a Curse): FREE for `GLOBAL_FREE_TURNS` = 3 turn starts, PAID for the

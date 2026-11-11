@@ -146,7 +146,7 @@ describe('combat card detail — the VM behind the shape', () => {
     });
 
     it('folds the colour law into the ◆ tag on a spell', () => {
-        // A Plain Blow is colourless: its tag names the 'any' aspect.
+        // Blow is colourless: its tag names the 'any' aspect.
         const d = detailFor('grey-strike');
         expect(d.freeTag).toBe('NO DIE');
         expect(d.paidTag).toBe('+DIE · ANY/WILD');

@@ -84,8 +84,8 @@ describe('card-text projection', () => {
         // other verbs lost its DEAL clause, because DEAL carries no keyword
         // badge and the old presenter walk was keyed on badges. After the card
         // purge (P1, 2026-09-27) no library card pairs DEAL with another verb,
-        // so the witness is A Plain Blow widened in place: DEAL 20 plus
-        // A Plain Word's VULNERABLE status.
+        // so the witness is Blow widened in place: DEAL 20 plus
+        // Word's VULNERABLE status.
         const strike = cardLibrary.find(c => c.id === 'grey-strike');
         const word = cardLibrary.find(c => c.id === 'grey-word');
         expect(strike).toBeDefined();

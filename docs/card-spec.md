@@ -40,7 +40,7 @@ discard card. A program card marks it on the line (`ProgramLine.exile`), a
 plain card with `paidExile` (`M/Combat/combat.engine.ts` sends it to the
 EXILE pile). `checkSpellLaw` (`M/Cards/card-rules.ts`) holds both halves
 against each Spell's `spellLawBaseline`; §17 maps it. Built by SP1 for the
-17 trial-lane Spells; A Plain Word is pinned as held for T (it would take
+17 trial-lane Spells; Word is pinned as held for T (it would take
 the first Act 1 door under the LV1 floor).
 
 **Ratified, not built.**
@@ -484,7 +484,7 @@ in `axiomancer-mechanics`.
 | Scrap floor | §6 | `card-rules.engine.test.ts` → "rule: scrap-floor" (`checkScrapFloor`) | same |
 | Global text template | §6 | `card-rules.engine.test.ts` → "rule: global-template" (`checkGlobalTemplate`) | same |
 | Carrier rule and admission bar | §8 | `card-rules.engine.test.ts` → "rule: carrier-rule" (`checkCarrierRule`) | same |
-| The Spell law: PAID EXILEs, FREE does not, PAID a step up (D103) | §1 | `card-rules.engine.test.ts` → "rule: spell-law" and "the Spell law" (`checkSpellLaw`) | same (A Plain Word, held for T) |
+| The Spell law: PAID EXILEs, FREE does not, PAID a step up (D103) | §1 | `card-rules.engine.test.ts` → "rule: spell-law" and "the Spell law" (`checkSpellLaw`) | same (Word, held for T) |
 | Card voice: keywords in capitals, closed logic words, no retired form (`docs/card-voice.md`) | §6 | `card-rules.engine.test.ts` → "rule: face-grammar" (`checkFaceGrammar`) | same (today's lines, until the rewrite) |
 | Card voice: printed keyword order is the program's call order | §6 | `card-rules.engine.test.ts` → "rule: text-order" (`checkTextOrder`) | same |
 | House voice and retired terms on card text | §6 | `scripts/check-prose.mjs` (the card libraries are content surfaces) | none needed: the text is clean |

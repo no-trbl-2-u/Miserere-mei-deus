@@ -135,7 +135,7 @@ const RARITY_META = {
 const KEYWORD_WORDS = [
   "HEAL SELF", "BLEED", "GUARD",
   "DOT", "PIP", "PIPS", "HEAL",
-  // S3 (D43) — A Plain Word's VULNERABLE.
+  // S3 (D43) — Word's VULNERABLE.
   "VULNERABLE",
   // Revamp R5 (D49) dropped MARK, DRAW and CLEANSE with the consumables.
   // Revamp R4 (D45) dropped POISON, DOOM, QUARTER, STAGGER, PLEA, WRATH and

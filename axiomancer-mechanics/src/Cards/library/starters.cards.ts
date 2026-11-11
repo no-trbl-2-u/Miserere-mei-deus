@@ -20,7 +20,7 @@ const GREY_ADDED = '2026-09-20';
 
 const greyStrike: Card = {
     id: 'grey-strike',
-    name: 'A Plain Blow',
+    name: 'Blow',
     color: 'any',
     description:
         'No flourish, no colour, no argument. You hit the thing that is ' +
@@ -36,7 +36,7 @@ const greyStrike: Card = {
 
 const greyWard: Card = {
     id: 'grey-ward',
-    name: 'A Plain Ward',
+    name: 'Ward',
     color: 'any',
     description:
         'No flourish, no colour, no argument. You put something solid ' +
@@ -50,11 +50,11 @@ const greyWard: Card = {
     tags: ['grey', 'starter'],
 };
 
-// A Plain Word — the grey office's heart verb: VULNERABLE lands on the foe, so heart scales its
+// Word — the grey office's heart verb: VULNERABLE lands on the foe, so heart scales its
 // percentage (`stat-scaling.ts`). Grey frame like its siblings.
 const greyWord: Card = {
     id: 'grey-word',
-    name: 'A Plain Word',
+    name: 'Word',
     color: 'any',
     description:
         'No flourish, no colour, no argument. You tell it plainly what it ' +
