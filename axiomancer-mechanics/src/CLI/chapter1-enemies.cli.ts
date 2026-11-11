@@ -29,7 +29,9 @@ import { relicLibrary } from '../Items/relic.library';
 import type { Equipment } from '../Items/types';
 import { scaleEnemyToLevel } from '../World/encounter';
 import { sourceAtTier } from '../World/encounter-tier';
-import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES, type ActOneFoe } from '../World/MapEvents/content';
+import {
+    BW_ELITE_DRAWS, BW_ENCOUNTER_FOES, BREAKWATER_CHAPTER_KINDS, BREAKWATER_CHAPTER_POOLS, type ActOneFoe,
+} from '../World/MapEvents/content';
 import {
     simulatePacing, LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, type PacingPolicy, type PacingSummary,
 } from '../Combat/combat.pacing.sim';
@@ -45,6 +47,8 @@ export interface TuningFoe {
     slug: EnemySlug;
     level: number;
     elite: boolean;
+    /** The chapter boss, found from the map's board kinds. */
+    boss: boolean;
     /** The nodes that stage it, in map order, an elite pair node marked with the pair. */
     nodes: string[];
     enemy: Enemy;
@@ -55,19 +59,42 @@ function stage(foe: ActOneFoe): Enemy {
 }
 
 /**
+ * The foe each of the chapter's boss nodes stages, read from the map's board
+ * kinds and the node's own pool, so the report never types a node id.
+ */
+export function bossFoes(): { nodeId: string; foe: ActOneFoe }[] {
+    const out: { nodeId: string; foe: ActOneFoe }[] = [];
+    for (const [nodeId, { kind }] of Object.entries(BREAKWATER_CHAPTER_KINDS)) {
+        if (kind !== 'boss') continue;
+        const entry = BREAKWATER_CHAPTER_POOLS.find(p => p.nodeId === nodeId)?.pool.entries[0];
+        const payload = entry?.payload;
+        if (!payload || payload.kind !== 'encounter' || !payload.enemySlug) {
+            throw new Error(`chapter1-enemies: boss node ${nodeId} stages no foe`);
+        }
+        out.push({
+            nodeId,
+            foe: { slug: payload.enemySlug as EnemySlug, level: payload.level ?? 1, difficulty: payload.difficulty },
+        });
+    }
+    return out;
+}
+
+/**
  * Every Breakwater foe, one row each, read from the node tables so none can be
- * missed. Normals first, then each elite pair node's foes one by one.
+ * missed. Normals first, then each elite pair node's foes one by one, then the
+ * chapter boss.
  */
 export function tuningFoes(): TuningFoe[] {
     const rows = new Map<string, TuningFoe>();
-    const add = (nodeId: string, foe: ActOneFoe, elite: boolean): void => {
-        const key = `${foe.slug}@${foe.level}@${elite ? 'elite' : 'normal'}`;
+    const add = (nodeId: string, foe: ActOneFoe, elite: boolean, boss = false): void => {
+        const key = `${foe.slug}@${foe.level}@${boss ? 'boss' : elite ? 'elite' : 'normal'}`;
         const row = rows.get(key);
         if (row) { row.nodes.push(nodeId); return; }
-        rows.set(key, { slug: foe.slug, level: foe.level, elite, nodes: [nodeId], enemy: stage(foe) });
+        rows.set(key, { slug: foe.slug, level: foe.level, elite, boss, nodes: [nodeId], enemy: stage(foe) });
     };
     for (const [nodeId, foe] of Object.entries(BW_ENCOUNTER_FOES)) add(nodeId, foe, false);
     for (const [nodeId, draw] of Object.entries(BW_ELITE_DRAWS)) for (const foe of draw) add(nodeId, foe, true);
+    for (const { nodeId, foe } of bossFoes()) add(nodeId, foe, false, true);
     return [...rows.values()];
 }
 
@@ -123,7 +150,7 @@ const pct = (x: number): string => `${Math.round(x * 100)}%`;
 const num = (x: number): string => (Number.isNaN(x) ? 'n/a' : x.toFixed(1));
 
 function foeLabel(f: TuningFoe): string {
-    return `${f.slug}${f.elite ? ' (elite)' : ''}`;
+    return `${f.slug}${f.elite ? ' (elite)' : ''}${f.boss ? ' (boss)' : ''}`;
 }
 
 function cellText(c: TuningCell): string {
@@ -141,7 +168,7 @@ function table(cells: TuningCell[], policy: PacingPolicy): string[] {
     for (const foe of tuningFoes()) {
         const row = cols.map(col => {
             const c = cells.find(x => x.policy === policy && x.lane === col.lane && x.level === col.level
-                && x.foe.slug === foe.slug && x.foe.level === foe.level && x.foe.elite === foe.elite);
+                && x.foe.slug === foe.slug && x.foe.level === foe.level && x.foe.elite === foe.elite && x.foe.boss === foe.boss);
             return c ? cellText(c) : '-';
         });
         const vitae = Math.round(foe.enemy.maxHealth * LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER);
@@ -166,7 +193,7 @@ function phaseTable(cells: TuningCell[], policy: PacingPolicy): string[] {
         if (!foe.enemy.phases) continue;
         const row = cols.map(col => {
             const c = cells.find(x => x.policy === policy && x.lane === col.lane && x.level === col.level
-                && x.foe.slug === foe.slug && x.foe.level === foe.level && x.foe.elite === foe.elite);
+                && x.foe.slug === foe.slug && x.foe.level === foe.level && x.foe.elite === foe.elite && x.foe.boss === foe.boss);
             return c ? paddedShares(c).map(pct).join(' / ') : '-';
         });
         lines.push(`| ${foeLabel(foe)} | L${foe.level} | ${row.join(' | ')} |`);
@@ -190,7 +217,7 @@ export function renderReport(cells: TuningCell[], o: { runs: number; seed: numbe
         '',
         `> measured at ${o.commit}, ${o.date}, ${o.runs} runs per cell, seed ${o.seed}`,
         '',
-        'Every Breakwater foe at its node\'s level (`BW_ENCOUNTER_FOES` and `BW_ELITE_DRAWS`, so a foe added to either',
+        'Every Breakwater foe at its node\'s level (`BW_ENCOUNTER_FOES`, `BW_ELITE_DRAWS` and the chapter boss node, so a foe added to any',
         'appears on the next run), against the four lane decks kitted at player levels 8 and 10. A measurement, not a',
         'gate (D57), and not a licence to tune (D88). Cite it with its commit.',
         '',
@@ -206,6 +233,7 @@ export function renderReport(cells: TuningCell[], o: { runs: number; seed: numbe
         `- Player max VITAE: ${maxVitae.join('; ')}.`,
         '- Each elite node (`bw-c1`, `bw-l4`, `bw-w5`) gets one row per foe it draws, since the node draws one of them with equal odds (a third each at the sea cave, a half at the others).',
         '- A foe staged at two nodes shares one row, its nodes listed.',
+        '- The chapter boss (the map\'s `boss` node) has its own row, marked (boss), staged at the level its node pins.',
         '',
         '## Limits',
         '',
