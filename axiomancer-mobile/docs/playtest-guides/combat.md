@@ -17,7 +17,11 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 |---|---|
 | `combat-encounter-live` | The live fight route (`/combat-encounter`) |
 | `combat-reveal` | Pre-fight reveal (foe, phases, your vitae) |
-| `combat-reveal-phase-<i>` | One phase card on the reveal |
+| `combat-reveal-column` | The reveal's name, LEVEL and VITAE column |
+| `combat-reveal-stats` | The reveal's LEVEL and VITAE line |
+| `combat-reveal-frame-<tier>` | The foe's figure frame on the reveal |
+| `combat-reveal-ground-<tier>` | The fading ground behind the figure |
+| `combat-reveal-boss-card` | The boss's held title card |
 | `combat-enter` | ENTER — starts the fight and rolls the first tray |
 | `combat-withdraw` | WITHDRAW on the reveal — flee the fight |
 | `combat-reveal-boss-card` | A boss's held title card, the whole reveal; one tap starts the fight (no ENTER, no WITHDRAW) |
