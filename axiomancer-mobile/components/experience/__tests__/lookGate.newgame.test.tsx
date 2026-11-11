@@ -65,7 +65,7 @@ describe('the new-game and ending screens on their kit looks', () => {
         expect(kitImagesIn(view)).toBeGreaterThan(0);
     });
 
-    it('G-01: the game over button', () => {
+    it('G-02: the game over button', () => {
         const view = render(<GameOverScreen />);
         expect(view.getByTestId('game-over-new-character')).toBeTruthy();
         expect(kitImagesIn(view)).toBeGreaterThan(0);

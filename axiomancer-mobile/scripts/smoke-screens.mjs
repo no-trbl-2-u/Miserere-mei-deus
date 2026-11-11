@@ -125,6 +125,9 @@ export const ROUTES = [
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
+    // The post-fight summary on a lost fight, with its cause line:
+    // a dev route mounts the panel from a fixed summary.
+    { name: 'defeat-panel', path: '/devdefeat', fixture: 'fresh-start', expectTestIds: ['combat-summary', 'combat-summary-cause', 'combat-summary-close'] },
     // The full-screen moment after a run end (CH1j); `preview=1` shows it on a dev build.
     { name: 'game-over', path: '/game-over?slot=1&preview=1', fixture: 'fresh-start' },
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
