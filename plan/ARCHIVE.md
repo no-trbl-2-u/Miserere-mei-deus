@@ -716,3 +716,5 @@
 - 2026-11-11 · 174.2 (alias: LC1b) · Loot cache opens picture first, brass TAKE, outcome shows goods or card · b3e07d83..0d5b8bd5 (#1612)
 - 2026-11-11 · 174 · spec complete: The loot cache, picture first · D185 · deleted in (this commit)
 - 2026-11-11 · 173.2 (alias: QS1b) · Quest screen shows one gold-framed card, beads, brass buttons · 5ca08823..5ca08823 (#1611)
+- 2026-11-11 · 176.2 (alias: FE1b) · A won fight ends on the victory screen, XP bar animating · bbd04641..96fd0e04 (#1613)
+- 2026-11-11 · 176 · spec complete: The ends of a fight and a run · D187, pinned by state/e2e/fight-won.FE1a.test.tsx and VictoryLevelPanel.test.tsx · deleted in (this commit)

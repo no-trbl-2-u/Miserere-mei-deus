@@ -87,7 +87,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 173 | The quest as one card | [173-qs1-quest-screen.md](173-qs1-quest-screen.md) | planned (**Asap**: 173.3) | 1 left |
-| 176 | The ends of a fight and a run | [176-fe1-fight-ends.md](176-fe1-fight-ends.md) | planned | 1 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 2 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
