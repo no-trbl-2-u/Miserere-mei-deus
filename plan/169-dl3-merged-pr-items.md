@@ -47,7 +47,6 @@ T asked how the deadline queue stays current by itself. Two parts of it can, fro
 ## Acceptance
 
 - **A4** An open Held chunk that no Item names appears in the reminder and in `LIVE_DEADLINES.md` as an act marked "from the build plan", counts in the forecast with the hours its title states (or under "no hours"), and leaves both when it ships. One an Item names appears once.
-- **A5** An Item whose `Rows` is `T: pr #N`, `T: spec <family>` or `T: file <path>` is ticked by `--write` when the proof holds; the lint fails a ticked act whose proof does not hold and an unreadable proof; a plain `T` is untouched.
 - **A6** The reminder states the number of open acts that only a hand can tick.
 
 ## Open questions
@@ -56,7 +55,7 @@ T asked how the deadline queue stays current by itself. Two parts of it can, fro
 
 ## Chunks
 
-Measure: 3 open · 3 closed · next A7
+Measure: 2 open · 4 closed · next A7
 
 - [ ] **169.2** Held chunks join the queue by themselves · M · closes A4, A6 · needs — · alias: DL3b
   - `scripts/deadlines-lib.mjs`: `queuePlan` takes the open Held chunks (`parseHeld`, already there) and adds the ones no Item names as acts of the first milestone, after the written ones.
@@ -64,9 +63,3 @@ Measure: 3 open · 3 closed · next A7
   - `scripts/deadlines-queue.test.mjs`: a Held chunk with and without an Item, with and without hours, shipped and open.
   - `CLAUDE.md`, `AGENTS.md` and `skills/plot.md` 7.2: a plot no longer copies a Held chunk into the queue unless T wants it placed.
   - Measure: the new tests pass; the live reminder, quoted in the PR body, lists today's Held chunks that no Item names.
-- [ ] **169.3** An act may carry a proof that ticks it · M · closes A5 · needs — · alias: DL3c
-  - `scripts/deadlines-lib.mjs`: parse `T: <proof>` in `Rows`; `derivedStatus` and `rewriteItemStatus` use it. The `pr` proof shares 169.1's reader of commit subjects.
-  - `scripts/check-deadlines.mjs`: the two failures of A5.
-  - Tests with fixture subjects, fixture specs and a scratch file; no network.
-  - `plan/deadlines.md`: give each act that has one its proof (the pitch-and-plot acts, the travel images), in the same PR.
-  - Measure: the tests pass; the PR body lists each act that gained a proof.

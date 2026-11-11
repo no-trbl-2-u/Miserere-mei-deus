@@ -44,7 +44,6 @@ needs are done):
 
 
 
-- **173.3** · QS1c: the quest card, the turn-in and the giver turning the player away (screens ballot S-03, `/plot`, 2026-11-10)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -86,8 +85,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 173 | The quest as one card | [173-qs1-quest-screen.md](173-qs1-quest-screen.md) | planned (**Asap**: 173.3) | 1 left |
-| 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 2 left |
+| 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
