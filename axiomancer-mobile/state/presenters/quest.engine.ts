@@ -8,8 +8,9 @@
  */
 
 import { getCardById, getQuestline, questNodeStage, questStepState, questlineStep, resolveQuestNodeEvent } from '@mechanics';
-import type { Quest, QuestNodeStage, Reward } from '@mechanics';
+import type { Item, Quest, QuestNodeStage, QuestlineStep, Reward } from '@mechanics';
 import type { AppStoreState, MobileQuestPaid } from '@/state/store';
+import { slotSubLabel } from './inventory.engine';
 import { objectiveText, rewardItem, rewardItemName } from './quest-tracker.engine';
 import {
     QUEST_GIVER_FALLBACK,
@@ -38,6 +39,31 @@ export interface QuestStepVM {
     status: 'unaccepted' | 'active' | 'ready' | 'completed';
 }
 
+/** One item a step pays, with what `ItemGlyph` needs to draw its icon. */
+export interface QuestPayItemVM {
+    id: string;
+    name: string;
+    category: Item['category'];
+    /** The slot label of a piece of equipment ('Weapon', 'Armor', 'Relic'), else null. */
+    sub: string | null;
+}
+
+/** What a step pays: XP, shillings and each item, as the step's own `rewards` list them. */
+export interface QuestPayVM {
+    experience: number;
+    currency: number;
+    items: readonly QuestPayItemVM[];
+}
+
+/** One bead of the chain: a step of the questline. */
+export interface QuestBeadVM {
+    step: number;
+    /** `current` is the step the card shows; the rest are done or ahead. */
+    state: 'done' | 'current' | 'ahead';
+    /** True when the step is turned in (the current bead too, at the chain's end). */
+    done: boolean;
+}
+
 export interface QuestGiverVM {
     name: string;
     /** A portrait slug the screen resolves to art. */
@@ -53,6 +79,12 @@ export interface QuestVM {
     stage: QuestNodeStage;
     /** "STEP 2 OF 4". */
     eyebrow: string;
+    /** The step the card shows: the one worked or turned in, else the one offered; null for no step. */
+    card: QuestStepVM | null;
+    /** The pay of the step the card shows; null when the card shows no step. */
+    pay: QuestPayVM | null;
+    /** One bead per step of the questline, the card's step marked current. */
+    beads: readonly QuestBeadVM[];
     /** The giver's line (the node's authored line, else a placeholder). */
     giverLine: string;
     /** The step this node turns in (node 2-4). */
@@ -73,6 +105,9 @@ const EMPTY_VM: QuestVM = Object.freeze({
     giver: null,
     lockedLine: QUEST_LOCKED_LINE,
     eyebrow: '',
+    card: null,
+    pay: null,
+    beads: Object.freeze([]),
     giverLine: '',
     behind: null,
     ahead: null,
@@ -102,6 +137,27 @@ export function questRewardLine(reward: Reward): string | null {
         }
     }
     return reward.name;
+}
+
+/** The pay of a questline step, read off its `rewards`. */
+export function questStepPay(step: QuestlineStep): QuestPayVM {
+    const items: QuestPayItemVM[] = [];
+    let experience = 0;
+    let currency = 0;
+    for (const r of step.rewards) {
+        if (typeof r !== 'string' && 'kind' in r && r.kind === 'experience') experience += r.amount;
+        else if (typeof r !== 'string' && 'kind' in r && r.kind === 'currency') currency += r.amount;
+        if (rewardItem(r) === null) continue;
+        const full = (typeof r !== 'string' && 'kind' in r ? (r.kind === 'item' ? r.item : null) : r) as Item | null;
+        if (full === null) continue;
+        items.push({
+            id: full.id,
+            name: full.name,
+            category: full.category,
+            sub: full.category === 'equipment' ? slotSubLabel(full.slot) : null,
+        });
+    }
+    return { experience, currency, items };
 }
 
 function stepVM(
@@ -146,6 +202,15 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         ? stepVM(event.ahead, event.ahead.step, stepStatus(event.ahead.step))
         : null;
     const total = questline?.steps.length ?? open.node;
+    // The card shows the step being worked or turned in (waiting, turn-in); on
+    // an offer or a refusal it shows the step the node offers, and at the
+    // chain's end (a turn-in with nothing after it) it stays on the last step.
+    const card = stage === 'waiting' || stage === 'turn-in' ? (behind ?? ahead) : (ahead ?? behind);
+    const cardStep = card && questline ? questlineStep(questline, card.step) : undefined;
+    const beads: QuestBeadVM[] = (questline?.steps ?? []).map(s => {
+        const done = questStepState(state.quests, s) === 'completed';
+        return { step: s.step, state: card?.step === s.step ? 'current' : done ? 'done' : 'ahead', done };
+    });
     // A step paid on ARRIVAL has no turn-in to leave a ledger: the node that
     // offers the next step shows what the arrival paid, from the step's own
     // rewards (the settle seam paid exactly these).
@@ -173,6 +238,9 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         lockedLine: open.lockedLine ?? QUEST_LOCKED_LINE,
         stage,
         eyebrow: questStepEyebrow(open.node, total),
+        card,
+        pay: cardStep ? questStepPay(cardStep) : null,
+        beads,
         giverLine: open.description ?? QUEST_GIVER_FALLBACK,
         behind,
         ahead,

@@ -249,25 +249,25 @@ const QUEST_NODES: Readonly<Record<string, { node: number; description: string; 
         node: 2,
         description: '[content] The fishermen huddle round a driftwood fire.',
         lockedLine: '[content] The fishermen do not know you. They keep to their fire.',
-        giver: { name: '[content] The fishermen elder', portrait: 'biwa-houshi' },
+        giver: { name: '[content] The fishermen elder', portrait: 'fishermen-elder' },
     },
     'bw-l5': {
         node: 3,
         description: '[content] The lighthouse door stands open.',
         lockedLine: '[content] The lighthouse keeper sends you back down the path. No one told him to expect you.',
-        giver: { name: '[content] The lighthouse keeper', portrait: 'gignos-male' },
+        giver: { name: '[content] The lighthouse keeper', portrait: 'lighthouse-keeper' },
     },
     'bw-k1': {
         node: 4,
         description: '[content] The keep gate, barred from the inside.',
         lockedLine: '[content] The keep gate does not open for strangers.',
-        giver: { name: '[content] The gate warden', portrait: 'paladin-cursed' },
+        giver: { name: '[content] The gate warden', portrait: 'gate-warden' },
     },
     'bw-b1': {
         node: 5,
         description: '[content] The river bridge. The far bank is close.',
         lockedLine: '[content] The bridge-keeper will not lift the bar while the sea keep stands.',
-        giver: { name: '[content] The bridge-keeper', portrait: 'dwarf-lordess' },
+        giver: { name: '[content] The bridge-keeper', portrait: 'bridge-keeper' },
     },
 };
 
