@@ -20,7 +20,7 @@ import {
     type LootCacheChoiceSession,
 } from '@mechanics';
 import { cachePicture } from '@/assets/images/treasure/cache-pictures';
-import { TREASURE_CHEST_CLOSED, TREASURE_GOLD_HOARD } from '@/assets/images/treasure';
+import { TREASURE_CACHE_CARD_CAVERN, TREASURE_CHEST_CLOSED, TREASURE_GOLD_HOARD } from '@/assets/images/treasure';
 import { selectCacheVM } from '@/state/presenters/cache.engine';
 
 const CAVE_ACTIONS: LootCacheActionLines = {
@@ -160,6 +160,7 @@ describe('selectCacheVM - the outcome carries what the screen draws (LC1a)', () 
         expect(o.card).toBeNull();
         expect(o.goods).toEqual([{
             itemId: 'healing-potion', name: 'Healing Potion', spriteKey: 'healing-potion',
+            category: 'consumable', sub: null,
             line: 'Heal 20 VITAE · 30 below half VITAE',
         }]);
         expect(o.currency).toBe(6);
@@ -180,7 +181,7 @@ describe('cachePicture - one table keyed by moment', () => {
     it('the choice wears the closed chest, goods the hoard, the card slot the stand-in', () => {
         expect(cachePicture('choice')).toBe(TREASURE_CHEST_CLOSED);
         expect(cachePicture('goods')).toBe(TREASURE_GOLD_HOARD);
-        expect(cachePicture('card')).toBeNull();
-        expect(cachePicture('card', 'cw-6')).toBeNull();
+        expect(cachePicture('card')).toBe(TREASURE_CACHE_CARD_CAVERN);
+        expect(cachePicture('card', 'cw-6')).toBe(TREASURE_CACHE_CARD_CAVERN);
     });
 });

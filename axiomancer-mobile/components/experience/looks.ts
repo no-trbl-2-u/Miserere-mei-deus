@@ -51,7 +51,9 @@ export type PlaceId =
     | 'N-01' | 'N-02' | 'N-03' | 'N-04' | 'N-05' | 'N-06' | 'N-07'
     | 'G-01' | 'G-02'
     // The village screens: the hub's counter buttons and the counters' own buttons.
-    | 'V-01';
+    | 'V-01'
+    // The loot cache: its TAKE buttons and MOVE ON (174, S-04).
+    | 'K-01';
 
 /** T's pick for every place. */
 export const LOOKS: Record<PlaceId, Look> = {
@@ -124,6 +126,7 @@ export const LOOKS: Record<PlaceId, Look> = {
     'G-01': 'brass', // Death return: CONTINUE (the house look's brass plate; Game over's button is G-02)
     'G-02': 'brass', // Game over: NEW CHARACTER (the house look's brass plate)
     'V-01': 'brass', // Village: hub and counter buttons (168, call #5: these screens only)
+    'K-01': 'brass', // Loot cache: TAKE and MOVE ON (174, S-04)
 };
 
 /** The converted pieces each place draws. A `normal` place draws none. */
@@ -196,6 +199,7 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'G-01': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
     'G-02': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
     'V-01': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
+    'K-01': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
 };
 
 /** The look a place wears. */
