@@ -180,6 +180,30 @@ Measure: the report's Act 1 boss row shows half-upgraded above 50% and plain at 
 - Scope: the report and its test. If the numbers miss, the phase records them and files a CRITIQUE row; it does
   not tune cards (D37).
 
+### The string of beads (T, `/pitch` then `/plot asap`, 2026-11-10)
+
+The shared upgrade screen (`components/upgrade/CardUpgradePicker.tsx`, UP1d) is reworked into the look T settled over two ballot rounds: `plan/card-ledger/upgrade.md` (both verdicts verbatim) and its settled shot `plan/card-ledger/upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md`; its Handoff block is the source of the acceptance below. The rules do not change: one card, one copy, its next upgrade (`nextUpgradeId`), every number from `cardUpgradePreviewVM`.
+
+Top to bottom, on the settled shot:
+
+- The HUD's place name and purse, as today's hosts give them.
+- A large figure at the top in a gold glow: a stand-in from `Potential Assets/sorted-entity-library-base` (TOR-0007 Ahimsa, `items/Ahimsa.jpg`, black ground removed), carried into the app's assets with a provenance entry like the village keepers' (168.1). Art is T's (D88); the stand-in only holds the space.
+- B's pair: the card as it is (smaller, tilted, greyed) beside the card as it will be (upright, gold border and glow, the changed numbers in gold), with no AS IT IS or AS IT WILL BE label (T, 2026-11-10). Under the new card, one line names the change: `LEECH 4 → 5` (two changes join with ` · `) (#9, accepted at merge). The cards are smaller than round 2's A (T's round 2 note) and use the one card face (D91).
+- The wheel: a wide wheel whose top rim shows at the foot, one bead per upgradable card (the card's art in a ring of its colour). Only the bead at the top centre is offered. It is larger and wears the special border: a brass double ring and a gold notch above it.
+- HOLD, the brass action button, under the wheel. Holding it fills a gold ring round the centre bead. Nothing sits under HOLD (T's round 2 note).
+
+Calls for T, each with the default the build assumes (merging accepts an unanswered default):
+
+- **Accepted at merge (default), #1:** The hold lasts 1 second.
+- **Accepted at merge (default), #2:** Letting go before the ring closes empties it; nothing is upgraded.
+- **Accepted at merge (default), #3:** The wheel wraps round: the last card sits next to the first.
+- **Accepted at merge (default), #4:** Tapping a side bead turns the wheel to bring it to the centre; it never upgrades.
+- **Accepted at merge (default), #5:** A card carried more than once shows its count on its bead (×3).
+- **Accepted at merge (default), #6:** Today's locked `???` slot is dropped, replacing the UP1 decision "The ??? slot is shown, locked".
+- **Accepted at merge (default), #7:** The rest site gets a way back out of the upgrade, like the Anvil's back row (NOT THIS ONE, `cancelRestChoiceUpgrade`).
+- **Accepted at merge (default), #8:** The same stand-in figure stands at all three hosts until T supplies art.
+- **Accepted at merge (default), #9:** With the labels gone, the change alone (`LEECH 4 → 5`) stays as one line under the new card.
+
 ## Contracts
 
 - Owned cards stay plain id strings, so an upgraded copy is `<id>+`, `<id>++` or `<id>+++`. `dropUnknownCardIds`
@@ -197,6 +221,6 @@ Measure: the report's Act 1 boss row shows half-upgraded above 50% and plain at 
 
 ## Chunks
 
-Measure: 1 open · 10 closed · next A12
+Measure: 1 open · 16 closed · next A18
 
 - [ ] **127.8** The boss check · S · closes A11 · needs 134.5 · alias: UP1h

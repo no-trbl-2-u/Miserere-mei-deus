@@ -17,17 +17,29 @@ One PNG per route, named after the route's stable `name` in
 | `settings.png` | `/settings` | `app/(tabs)/settings/index.tsx` |
 | `exploration.png` | `/exploration` | `app/(tabs)/exploration/index.tsx` |
 | `combat-encounter.png` | `/combat-encounter` | `app/combat-encounter/index.tsx` |
+| `combat-elite.png` | `/exploration` + fixture `wanderer-bw-elite-arrive` → `/combat-encounter`, the elite's reveal with its ELITE chip | `components/combat/encounter/CombatEncounterPanel.tsx`, `RevealGround.tsx` |
+| `combat-boss.png` | `/exploration` + fixture `wanderer-bw-boss-arrive` → `/combat-encounter`, the boss's held title card | `components/combat/encounter/BossTitleCard.tsx`, `RevealGround.tsx` |
 | `combat-board.png` | `/combat-encounter` entered as `combat-encounter` is (seed 16, the lowest-level standard foe), then ENTER COMBAT pressed, dice at rest; waits on a testID for each brass place (intent badge, conviction chip, momentum chip, dock, END, player medallion, player VITAE bar) and carries its own 0.1% diff line | `components/combat/encounter/CombatBoard.tsx`, `CombatFooterDock.tsx`, `CombatCombatantPane.tsx` (the fight's board) |
 | `memoir.png` | `/memoir` | `app/(tabs)/memoir/index.tsx` |
 | `labyrinth.png` | `/labyrinth` | `app/labyrinth/index.tsx` |
 | `dialogue.png` | `/exploration` + fixture `apprentice-staged-dialogue` → `/dialogue` | `app/dialogue/index.tsx` |
 | `village.png` | `/exploration` + fixture `wanderer-staged-village` → `/village` | `app/village/index.tsx` |
 | `cutscene.png` | `/exploration` + fixture `wanderer-staged-cutscene` → `/cutscene` | `app/cutscene/index.tsx` |
+| `quest-locked.png` | `/exploration` + fixture `wanderer-bw-keep-gate-locked` → `/quest`, the gate warden turning the player away (only step 1 turned in), waits on `quest-locked` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` |
+| `quest-paid.png` | `/exploration` + fixture `wanderer-bw-bridge-paid` → `/quest`, the chain's last card marked paid (all four steps turned in), waits on `quest-card-paid` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` |
+| `quest.png` | `/exploration` + fixture `wanderer-bw-keep-gate-offer` → `/quest`, the gate warden's offer (steps 1 to 3 turned in), waits on `quest-offer` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` (the quest card, spec 173) |
 | `travel.png` | `/exploration` + fixture `wanderer-bw-door-arrive` → `/travel` | `app/travel/index.tsx` (the river bridge's "Move to The Charcoal Wood?") |
+| `travel-cave.png` | `/exploration` + fixture `wanderer-bw-cave-mouth-arrive` → `/travel` | `app/travel/index.tsx` (the sea cave mouth's "Move to The Cave Face?", the map zoomed on the Cave Face) |
 | `death-return.png` | `/death-return?preview=1` + fixture `fresh-start` | `app/death-return/index.tsx` (the full-screen moment after a first death) |
+| `victory-levelled.png` | `/devvictory?levelled=1` + fixture `fresh-start` | `components/combat/encounter/VictoryScreen.tsx`, `VictoryLevelPanel.tsx` (a won fight with a level-up, the bar at its settled end) |
+| `victory-plain.png` | `/devvictory` + fixture `fresh-start` | `components/combat/encounter/VictoryScreen.tsx`, `VictoryLevelPanel.tsx` (a won fight with no level-up, "k XP to level n+1") |
 | `hazard-board.png` | `/exploration` + fixture `l30-bw-hazard-arrive` → `/hazard` (the injector's pinned hazard id keeps the three-round board), risk route picked, dice settled | `app/hazard/index.tsx` (the three-round board, still on every non-Breakwater hazard; the puzzle board's parity baseline) |
 | `hazard-puzzle-stakes.png` | `/exploration` + fixture `l30-bw-hazard-arrive`, hazard-id pin dropped → `/hazard`, the stakes card with the one goal | `components/hazard/puzzle/HazardPuzzleNodeBoard.tsx`, `state/presenters/hazard-stakes.engine.ts` (HP6c) |
 | `hazard-puzzle-node.png` | `/exploration` + fixture `l30-bw-hazard-arrive`, hazard-id pin dropped → `/hazard`, Face it pressed, dice settled, clock held | `components/hazard/puzzle/HazardPuzzleNodeBoard.tsx` (a Breakwater hazard's puzzle, HP6c) |
+| `rest-upgrade.png` | `/exploration` + fixture `apprentice-bw-rest` → `/rest`, UPGRADE A CARD tapped (`tapTestId`), waits on the figure, the centre bead, HOLD and the way back | `components/upgrade/CardUpgradePicker.tsx` at `app/rest/index.tsx` (the string of beads, spec 127 A17; the Anvil and the elite reward host the same screen) |
+| `cache.png` | `/exploration` + fixture `apprentice-cw-cache` (the cave cache, cw-6) → `/cache`, the choice, seed pinned by the injector | `app/cache/index.tsx` (plan 174: top bar, picture band, two rows each with a brass TAKE) |
+| `cache-goods.png` | the same, TAKE THE GOODS tapped (`tapTestId`) | `app/cache/index.tsx` (the gold band, a row per good, the shillings, MOVE ON) |
+| `cache-card.png` | the same, TAKE A CARD tapped (`tapTestId`) | `app/cache/index.tsx` (the card picture band, the one card in `CombatCardFace`, MOVE ON) |
 | `devpuzzle-list.png` | `/devpuzzle` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (the demos, then the candidates grouped easy, medium, hard) |
 | `devpuzzle-board.png` | `/devpuzzle?id=demo-undercroft-hard&route=risk&paused=1` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (the puzzle on the live board) |
 | `devpuzzle-outcome.png` | `/devpuzzle?id=demo-undercroft-hard&route=risk&confirm=1` + fixture `fresh-start` | `app/devpuzzle/index.tsx` (outcome panel) |

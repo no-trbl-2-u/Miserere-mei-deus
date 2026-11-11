@@ -92,6 +92,7 @@ import type { HazardPuzzleLayout, HazardPuzzleSession, HazardRouteKey } from '@m
 import type { LootCacheChoiceOfferId, RestChoiceOfferId } from '@mechanics';
 import {
     beginRestAction,
+    cancelRestChoiceUpgradeAction,
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
     pickRestChoiceUpgradeAction,
@@ -515,6 +516,8 @@ export interface AppActions {
     chooseRestChoiceOffer: (offer: RestChoiceOfferId) => void;
     /** Pick a card to upgrade (`upgrade` sub-step). Must be one of the upgradable ids. */
     pickRestChoiceUpgrade: (cardId: string) => void;
+    /** Back out of the rest site's card picker to both offers; nothing is chosen. */
+    cancelRestChoiceUpgrade: () => void;
     /** Confirm the settled ledger; applies heal/upgrade and persists. */
     claimRestOutcome: () => ClaimRestChoiceResult;
 
@@ -952,6 +955,7 @@ export function createAppActions(store: AppStore): AppActions {
         beginRest: (options) => beginRestAction(store, options),
         chooseRestChoiceOffer: (offer) => chooseRestChoiceOfferAction(store, offer),
         pickRestChoiceUpgrade: (cardId) => pickRestChoiceUpgradeAction(store, cardId),
+        cancelRestChoiceUpgrade: () => cancelRestChoiceUpgradeAction(store),
         claimRestOutcome: () => claimRestChoiceOutcomeAction(store),
         acceptQuestStep: () => acceptQuestStepAction(store),
         turnInQuestStep: () => turnInQuestStepAction(store),

@@ -1,0 +1,36 @@
+[
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-11-11",
+    "tool": "external-illustration (torio, Javardry free material pack), re-used from a file already in the repo",
+    "prompt": "Stand-in quest giver figure for the quest card (spec 173, QS1a): the lighthouse keeper is the Hermit, the same figure as the village host (keepers/host.webp). T swaps it in the one table (D88).",
+    "spec_section": "173 (QS1a), A2",
+    "covers": [
+      "lighthouse-keeper.webp (copy of keepers/host.webp, TOR-0424 Hermit, Hermit A.png)"
+    ],
+    "used_by": [
+      "assets/images/givers/index.ts (id table: lighthouse-keeper)"
+    ],
+    "license": "open source (T, 2026-10-29, D115); artist's free-material grant in docs/licences/torio-javardry.md",
+    "license_note": "Art by torio (とり夫). T, 2026-10-29, D115: all game images are open source. The artist's own licence note is docs/licences/torio-javardry.md.",
+    "post_process": "None: byte copy of an already-processed WebP file (longest edge <= 640 px, WebP q44)."
+  },
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-11-11",
+    "tool": "external-illustration (torio, Javardry free material pack), re-encoded",
+    "prompt": "The ballot's stand-in quest giver figures for the quest card (spec 173, QS1a), approved by T 2026-11-11. Copied out of the sorted entity library (Potential Assets store) and never read from it by code. T swaps each in the one table (D88).",
+    "spec_section": "173 (QS1a), A2",
+    "covers": [
+      "fishermen-elder.webp (TOR-0702 Prophet, Prophet.jpg)",
+      "gate-warden.webp (TOR-0405 Guard A, Guard A.jpg)",
+      "bridge-keeper.webp (TOR-0843 Sword Master A, Sword Master A.png)"
+    ],
+    "used_by": [
+      "assets/images/givers/index.ts (id table: fishermen-elder, gate-warden, bridge-keeper)"
+    ],
+    "license": "open source (T, 2026-10-29, D115); artist's free-material grant in docs/licences/torio-javardry.md",
+    "license_note": "Art by torio (とり夫). T, 2026-10-29, D115: all game images are open source. The artist's own licence note is docs/licences/torio-javardry.md.",
+    "post_process": "Black ground kept (the quest card's art well is dark); resized to 640x640 and encoded WebP q44 with sharp."
+  }
+]

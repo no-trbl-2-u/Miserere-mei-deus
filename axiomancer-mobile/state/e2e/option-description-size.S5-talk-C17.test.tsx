@@ -17,7 +17,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 import DialogueScreen from '@/app/dialogue/index';
-import VillageScreen from '@/app/village/index';
+// 168.3: the paid rest's description lives on its own screen.
+import VillageScreen from '@/app/village/rest';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';

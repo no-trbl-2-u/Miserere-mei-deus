@@ -6,7 +6,7 @@
 			"x": 0,
 			"y": 0,
 			"width": 940,
-			"height": 300,
+			"height": 430,
 			"label": "Dev routes"
 		},
 		{
@@ -49,10 +49,20 @@
 			"color": "1"
 		},
 		{
+			"id": "route:devdefeat",
+			"type": "file",
+			"file": "Features/Devdefeat.md",
+			"x": 40,
+			"y": 170,
+			"width": 260,
+			"height": 90,
+			"color": "1"
+		},
+		{
 			"id": "route:devframes",
 			"type": "file",
 			"file": "Features/Devframes.md",
-			"x": 40,
+			"x": 340,
 			"y": 170,
 			"width": 260,
 			"height": 90,
@@ -62,11 +72,21 @@
 			"id": "route:devpuzzle",
 			"type": "file",
 			"file": "Features/The hazard puzzle demos.md",
-			"x": 340,
+			"x": 640,
 			"y": 170,
 			"width": 260,
 			"height": 90,
 			"color": "4"
+		},
+		{
+			"id": "route:devvictory",
+			"type": "file",
+			"file": "Features/Devvictory.md",
+			"x": 40,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "elsewhere:route:(tabs)/exploration",

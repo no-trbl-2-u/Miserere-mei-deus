@@ -3,7 +3,7 @@ kind: "dev-route"
 group: "dev"
 reachable: "yes"
 driven: "no"
-tested: "no"
+tested: "yes"
 needsPitch: "yes"
 source: "axiomancer-mobile/app/devart/index.tsx"
 generated: feature-map

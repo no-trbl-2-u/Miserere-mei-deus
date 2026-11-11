@@ -226,6 +226,7 @@ async function settleOnMap(page, what) {
         if (await tap(page, 'combat-mercy-finish')) continue
         if (await tap(page, 'combat-reward-skip')) continue
         if (await tap(page, 'combat-summary-close')) continue
+        if (await tap(page, 'combat-victory-continue')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
         if (await tap(page, 'item-reward-confirm')) continue
         if (await tap(page, 'rest-claim')) continue
@@ -272,8 +273,8 @@ async function walkBack(page, nodeId, { takePassage = false } = {}) {
         await sleep(150)
     }
     if (confirmed) {
-        if (await waitForAny(page, ['travel-yes', 'travel-no'], 4000)) {
-            await tap(page, takePassage ? 'travel-yes' : 'travel-no')
+        if (await waitForAny(page, ['travel-move', 'travel-stay'], 4000)) {
+            await tap(page, takePassage ? 'travel-move' : 'travel-stay')
             await settleOnMap(page, `${nodeId} travel`)
             log(`walked back onto ${nodeId}${takePassage ? ' and took its passage' : ', the trip declined'}`)
             return
@@ -403,8 +404,7 @@ const RESOLVERS = {
         await waitFor(page, 'village-anvil', `${nodeId} village anvil counter`)
         await tap(page, 'village-anvil')
         await expectPath(page, '/blacksmith', nodeId)
-        await waitFor(page, 'blacksmith-begin', `${nodeId} anvil`)
-        await tap(page, 'blacksmith-begin')
+        
         await waitFor(page, 'blacksmith-leave', `${nodeId} anvil forging`)
         await tap(page, 'blacksmith-leave')
         await waitFor(page, 'blacksmith-claim', `${nodeId} anvil outcome`)
@@ -449,7 +449,7 @@ const RESOLVERS = {
         }
         if (await waitForAny(page, ['quest-accept-button'], 4000)) {
             await tap(page, 'quest-accept-button')
-            await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
+            await waitFor(page, 'quest-card-underway', `${nodeId} accepted`)
         } else if (!turnedIn) {
             fail(`${nodeId}: the quest node offered nothing and took nothing`)
         }
@@ -459,10 +459,10 @@ const RESOLVERS = {
     // A travel node on the path: YES takes its passage when the plan's next
     // step is the far end, else NO leaves the player on it.
     async travel(page, nodeId, { next } = {}) {
-        await waitFor(page, 'travel-no', `${nodeId} travel screen`)
+        await waitFor(page, 'travel-stay', `${nodeId} travel screen`)
         await expectPath(page, '/travel', nodeId)
         const go = next?.role === 'passage'
-        await tap(page, go ? 'travel-yes' : 'travel-no') || fail(`${nodeId}: the travel screen has no ${go ? 'YES' : 'NO'}`)
+        await tap(page, go ? 'travel-move' : 'travel-stay') || fail(`${nodeId}: the travel screen has no ${go ? 'MOVE' : 'STAY'}`)
         return 'screen'
     },
     async hazard(page, nodeId) {
@@ -519,9 +519,9 @@ async function newGame(page, baseUrl, plan) {
 async function crossExit(page, region, next) {
     await travelTo(page, region.exit)
     if (next) {
-        await waitFor(page, 'travel-yes', `${region.exit} travel screen`)
+        await waitFor(page, 'travel-move', `${region.exit} travel screen`)
         await expectPath(page, '/travel', `${region.exit} travel screen`)
-        await page.evaluate(() => document.querySelector('[data-testid="travel-yes"]').click())
+        await page.evaluate(() => document.querySelector('[data-testid="travel-move"]').click())
         await waitFor(page, 'cutscene-advance', `${region.exit} crossing to ${next.map}`)
         await expectPath(page, '/cutscene', `${next.map} arrival`)
         await playOutCutscene(page)

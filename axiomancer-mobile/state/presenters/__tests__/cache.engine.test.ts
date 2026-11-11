@@ -19,6 +19,8 @@ import {
     type LootCacheActionLines,
     type LootCacheChoiceSession,
 } from '@mechanics';
+import { cachePicture } from '@/assets/images/treasure/cache-pictures';
+import { TREASURE_CACHE_CARD_CAVERN, TREASURE_CHEST_CLOSED, TREASURE_GOLD_HOARD } from '@/assets/images/treasure';
 import { selectCacheVM } from '@/state/presenters/cache.engine';
 
 const CAVE_ACTIONS: LootCacheActionLines = {
@@ -124,5 +126,62 @@ describe('selectCacheVM — the outcome ledger still names the rewards', () => {
         }).outcome!;
         expect(outcome.itemNames).toEqual([getConsumableById('healing-potion')!.name]);
         expect(outcome.currency).toBe(5);
+    });
+});
+
+describe('selectCacheVM - the outcome carries what the screen draws (LC1a)', () => {
+    function outcomeState(
+        outcome: NonNullable<LootCacheChoiceSession['outcome']>,
+        currency?: number,
+    ) {
+        const { session } = cacheState({ actions: CAVE_ACTIONS }).cache;
+        return {
+            cache: { session: { ...session, phase: 'outcome' as const, outcome } },
+            ...(currency === undefined ? {} : { player: { currency } as never }),
+        };
+    }
+
+    it('a card outcome carries its one card face and the purse unchanged', () => {
+        const vm = selectCacheVM(outcomeState({ chosen: 'card', rewardCardId: 'grey-strike', items: [], currency: 0 }, 15));
+        const o = vm.outcome!;
+        expect(o.moment).toBe('card');
+        expect(o.card?.cardId).toBe('grey-strike');
+        expect(o.goods).toEqual([]);
+        expect(o.purseAfter).toBe(15);
+        expect(vm.purse).toBe(15);
+        expect(vm.moment).toBe('card');
+    });
+
+    it('a goods outcome carries one row per item with sprite and line, and the purse after paying', () => {
+        const potion = getConsumableById('healing-potion')!;
+        const vm = selectCacheVM(outcomeState({ chosen: 'item', rewardCardId: null, items: [potion], currency: 6 }, 15));
+        const o = vm.outcome!;
+        expect(o.moment).toBe('goods');
+        expect(o.card).toBeNull();
+        expect(o.goods).toEqual([{
+            itemId: 'healing-potion', name: 'Healing Potion', spriteKey: 'healing-potion',
+            category: 'consumable', sub: null,
+            line: 'Heal 20 VITAE · 30 below half VITAE',
+        }]);
+        expect(o.currency).toBe(6);
+        expect(o.purseAfter).toBe(21);
+        expect(vm.purse).toBe(21);
+    });
+
+    it("the offer shows today's purse and the choice moment, and names no reward", () => {
+        const vm = selectCacheVM({ ...cacheState({ actions: CAVE_ACTIONS }), player: { currency: 15 } as never });
+        expect(vm.moment).toBe('choice');
+        expect(vm.purse).toBe(15);
+        expect(vm.outcome).toBeNull();
+        for (const offer of vm.offers) expect(Object.keys(offer).sort()).toEqual(['action', 'id', 'label']);
+    });
+});
+
+describe('cachePicture - one table keyed by moment', () => {
+    it('the choice wears the closed chest, goods the hoard, the card slot the stand-in', () => {
+        expect(cachePicture('choice')).toBe(TREASURE_CHEST_CLOSED);
+        expect(cachePicture('goods')).toBe(TREASURE_GOLD_HOARD);
+        expect(cachePicture('card')).toBe(TREASURE_CACHE_CARD_CAVERN);
+        expect(cachePicture('card', 'cw-6')).toBe(TREASURE_CACHE_CARD_CAVERN);
     });
 });

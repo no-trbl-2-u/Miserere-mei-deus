@@ -14,6 +14,7 @@ import type { GameState } from '@mechanics';
 
 import {
     buildCombatDeck,
+    cancelRestChoiceUpgrade as engineCancelUpgrade,
     chooseRestChoiceOffer as engineChooseOffer,
     claimRestChoiceOutcome as engineClaim,
     createRestChoiceSession,
@@ -99,6 +100,13 @@ export function pickRestChoiceUpgradeAction(store: AppStore, cardId: string): vo
     const s = store.getState().rest?.session;
     if (!s) return;
     setSession(store, engineUpgrade(s, cardId));
+}
+
+/** upgrade-pick -> offer: the rest site's way back out of the picker. */
+export function cancelRestChoiceUpgradeAction(store: AppStore): void {
+    const s = store.getState().rest?.session;
+    if (!s) return;
+    setSession(store, engineCancelUpgrade(s));
 }
 
 export interface ClaimRestChoiceResult {

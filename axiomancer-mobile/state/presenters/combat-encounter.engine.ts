@@ -300,6 +300,8 @@ export interface CombatIntentVM {
 }
 export interface CombatEnemyPaneVM {
     name: string; artKey: string; isBoss: boolean;
+    /** The foe's level (`Enemy.level`), shown on the fight reveal (FR1a). */
+    level?: number;
     /** Encounter-varying nonce (the encounter seed) — salts the random art pick
      *  so the same foe wears a different painting from fight to fight. */
     artNonce: number;
@@ -1203,6 +1205,7 @@ function enemyPane(state: CombatEncounterState, seen: SeenDangerNames): CombatEn
     const toll = tollVM(state);
     return {
         name: e.name,
+        level: e.level,
         artKey: e.portraitAsset ?? e.id,
         artNonce: state.seed ?? 0,
         isBoss,

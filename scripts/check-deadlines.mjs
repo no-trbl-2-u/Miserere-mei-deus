@@ -5,8 +5,11 @@
 //
 // Fails when plan/deadlines.md and the Status block of plan/steps/01_build_plan.md
 // disagree:
-//   - an open build-plan row (`[ ]`, `[-]`, `[blocked: …]`) that no Items row names
-//     and no `## Unscheduled` line excuses, or an `## Unscheduled` line with no reason;
+//   - in the dated model only (a file with no `## Budget`): an open build-plan row (`[ ]`, `[-]`,
+//     `[blocked: …]`) that no Items row names and no `## Unscheduled` line excuses. The queue model
+//     (T, 2026-11-10) lists T's acts only, so it has no such rule: nothing there checks that a
+//     chunk waiting on T has an act;
+//   - an `## Unscheduled` line with no reason;
 //   - an Items row (or `## Unscheduled` line) naming a phase id with no build-plan row,
 //     in its `Rows` or its `Waits on` cell (phase DL2a);
 //   - one phase id named twice in the Items table (`Rows` and `Waits on` both count, in
@@ -20,6 +23,13 @@
 //     or whose window has no row there;
 //   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
 //     derives from the build plan (a hand edit; `T` Items are hand-ticked and exempt).
+//   - an open Item whose text names `PR #N` where the checkout's history of main holds a commit that
+//     merged #N (a merge commit or a squash); a T Item is only ever ticked by hand, so it would lead
+//     every reminder after the work is done. The subjects come from git log, never the network; a
+//     history that does not reach the merge, or no git at all, finds nothing.
+//   - an act whose `Rows` is `T: pr #N`, `T: spec <family>` or `T: file <path>` (spec 169, A5): ticked
+//     while the proof does not hold (a `pr` proof is exempt: a shallow clone may not reach the merge),
+//     or a `T:` cell that is none of the three. `--write` ticks the act once the proof holds.
 //   - one row id with two homes (phase NX1c): a v2 spec chunk's `alias:` named twice,
 //     on a chunk and an ARCHIVE.md line, or matching a build-plan row.
 // Both files are read through scripts/deadlines-lib.mjs's parsers, never re-parsed here.
@@ -35,10 +45,11 @@
 // three demos" Item named live rows after that playthrough had already happened).
 // No lint sees that drift; the reconcile step in /plot and /messy is the only guard.
 
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, datedRowsOutsideItems, derivedStatus, inWindow, parseItems, planRows, parseUnscheduled, parseWindows, SPEC_FILE } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, mergedPrItems, parseBudget, proofHolds, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -72,15 +83,22 @@ export const readPlanSources = (root) => {
  * @param {string} deadlinesMd
  * @param {string | {buildPlan?: string | null, specs?: {file: string, md: string}[], readme?: string | null, archive?: string | null}} plan
  *   the build plan's text, or every source readPlanSources returns
+ * @param {string[]} [subjects] commit subjects of main (git log --format=%s); none by default
  * @returns {string[]}
  */
-export const checkDeadlines = (deadlinesMd, plan) => {
+export const checkDeadlines = (deadlinesMd, plan, subjects = [], exists = () => false) => {
     const items = parseItems(deadlinesMd)
     const resolved = planRows(typeof plan === 'string' ? { buildPlan: plan } : plan)
     const phases = resolved.phases
     const unscheduled = parseUnscheduled(deadlinesMd)
     const windows = parseWindows(deadlinesMd)
     const errors = resolved.errors.map((e) => `${DEADLINES}: ${e}`)
+    // The section, not its number, marks the queue model: a mistyped hours line must say so here,
+    // never fall back to the dated model and ask every open row for a line.
+    const queueModel = hasBudgetSection(deadlinesMd)
+    if (queueModel && parseBudget(deadlinesMd) === null) {
+        errors.push(`${DEADLINES}: ## Budget states no hours a week; write one line "Hours a week: <number above 0>" under it.`)
+    }
 
     // An id in `Rows` or in `Waits on` is named; each place is recorded so a clash names both.
     const namedBy = new Map()
@@ -98,10 +116,15 @@ export const checkDeadlines = (deadlinesMd, plan) => {
         for (const id of Array.isArray(item.rows) ? item.rows : []) {
             const row = phases.get(id)
             if (row && row.open && !row.waitsOnT) {
-                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks, or under ## Unscheduled.`)
+                errors.push(`${DEADLINES}: Item "${item.name}" names loop row ${id} in Rows; every Item is a T act, so move ${id} to the Waits on cell of the T act it unblocks${queueModel ? '; the queue lists no loop rows of its own' : ', or under ## Unscheduled'}.`)
             }
         }
-        const want = derivedStatus(item, phases)
+        if (item.proof?.error) errors.push(`${DEADLINES}: Item "${item.name}" has an unreadable proof: ${item.proof.error}.`)
+        else if (item.proof && item.done && item.proof.kind !== 'pr' && !proofHolds(item.proof, phases, { subjects, exists })) {
+            // A pr proof is exempt: a shallow clone may not reach the merge, so its absence proves nothing.
+            errors.push(`${DEADLINES}: Item "${item.name}" is ticked, but its proof \`T: ${item.proof.kind} ${item.proof.arg}\` does not hold; untick it or fix the proof.`)
+        }
+        const want = derivedStatus(item, phases, { subjects, exists })
         if (want && want !== (item.done ? '[x]' : '[ ]')) {
             errors.push(`${DEADLINES}: Item "${item.name}" has Status ${item.done ? '[x]' : '[ ]'}, but its rows say ${want}; run \`node scripts/deadlines.mjs --write\` instead of editing the cell.`)
         }
@@ -110,7 +133,14 @@ export const checkDeadlines = (deadlinesMd, plan) => {
             errors.push(`${DEADLINES}: Item "${item.name}" is in window ${item.window}, which has no row in the ## Windows table; add the window or fix the cell.`)
         } else if (!inWindow(item.due, window)) {
             errors.push(`${DEADLINES}: Item "${item.name}" is due ${item.due}, outside ${item.window}; move the date into the window or change the window.`)
+        } else if (queueModel && item.due.slice(5) !== `${String(window.to[0]).padStart(2, '0')}-${String(window.to[1]).padStart(2, '0')}`) {
+            // The queue: an act has no date of its own, and every distinct date is a milestone the reminder forecasts.
+            errors.push(`${DEADLINES}: Item "${item.name}" is due ${item.due}, which is not ${item.window}'s milestone date (the window's last day); an act carries its milestone's date, never its own.`)
         }
+    }
+
+    for (const { item, due, pr, subject } of mergedPrItems(items, subjects)) {
+        errors.push(`${DEADLINES}: open Item "${item}" (due ${due}) names PR #${pr}, which merged in "${subject}"; tick the Item, or rewrite it to drop the pull request number.`)
     }
 
     for (const [id, places] of namedBy) {
@@ -136,6 +166,10 @@ export const checkDeadlines = (deadlinesMd, plan) => {
         errors.push(`${DEADLINES}: a dated table row sits outside ## Items ("${row}"); every dated piece is one Items row, with its Goal and How AI helps cells, so the table there is the only list to tick.`)
     }
 
+    // The queue model (a `## Budget` section; T, 2026-11-10) lists T's acts only: a loop row needs
+    // no line here, so the coverage rule below belongs to the dated model alone.
+    if (queueModel) return errors
+
     for (const [id, row] of phases) {
         if (!row.open || namedBy.has(id) || excused.has(id)) continue
         errors.push(`${row.source ?? BUILD_PLAN}: open row ${id} [${row.status || ' '}] has no Item in ${DEADLINES}; give it an Items row with a date, or a "- ${id} — <reason>" line under ## Unscheduled.`)
@@ -144,12 +178,29 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     return errors
 }
 
+/**
+ * The commit subjects of main in this checkout: origin/main when that ref exists, else HEAD.
+ * Any git failure (no git, no repository, a shallow clone) reads as an empty list.
+ * @returns {string[]}
+ */
+export const mainSubjects = (root) => {
+    for (const ref of ['origin/main', 'HEAD']) {
+        try {
+            const out = execFileSync('git', ['log', '--format=%s', ref], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 256 * 1024 * 1024 })
+            return out.split('\n').filter(Boolean)
+        } catch {
+            // try the next ref
+        }
+    }
+    return []
+}
+
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 
 if (isMain) {
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
     const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8')
-    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root))
+    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root), mainSubjects(root), (rel) => fs.existsSync(path.join(root, rel)))
     if (errors.length) {
         process.stderr.write(`check-deadlines: ${errors.length} disagreement(s)\n${errors.map((e) => `  - ${e}`).join('\n')}\n`)
         process.exit(1)

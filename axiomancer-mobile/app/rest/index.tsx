@@ -2,7 +2,8 @@
  * /rest — the rest-choice screen.
  *
  * One irreversible choice of two: REST (free, flat 25% heal) or UPGRADE A
- * CARD (free, one card upgraded on the shared upgrade screen, no heal).
+ * CARD (free, one card upgraded on the shared upgrade screen, no heal; its back
+ * row returns to both offers until a card is upgraded).
  * Card removal is the village's (`/village`). `resolveMapEvent` consumes the node on entry,
  * before any choice — there is no back-out: no header back, no
  * swipe-dismiss (`gestureEnabled: false` in the root layout), no Android
@@ -19,10 +20,12 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { LeaveRow } from '@/components/LeaveRow';
 import { StatBar } from '@/components/StatBar';
 import { CampfireFrames } from '@/components/rest/CampfireFrames';
 import { NightPassing } from '@/components/rest/NightPassing';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
+import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
@@ -36,6 +39,8 @@ import {
     REST_CHOICE_TITLE,
     REST_OUTCOME_CLAIM_LABEL,
     REST_OUTCOME_EYEBROW,
+    REST_UPGRADE_BACK_A11Y,
+    REST_UPGRADE_BACK_LABEL,
     restOutcomeHealChip,
     restDawnUpgradedChip,
 } from '@/state/presenters/rest.copy';
@@ -116,22 +121,28 @@ export default function RestScreen() {
         <SafeAreaView style={styles.safe} edges={['top']}>
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
                 <View style={styles.column} testID="rest-column">
-                    <Text style={styles.title}>{REST_CHOICE_TITLE}</Text>
+                    {/* The upgrade screen opens on its figure (T, PR #1579): no
+                        title and no purse or VITAE box above it. */}
+                    {vm.phase !== 'upgrade-pick' && (
+                        <>
+                            <Text style={styles.title} testID="rest-title">{REST_CHOICE_TITLE}</Text>
 
-                    <View style={styles.purseRow} testID="rest-purse">
-                        <Text style={styles.purseLabel}>{REST_CHOICE_PURSE_LABEL}</Text>
-                        <Text style={styles.purseValue}>{vm.currency}</Text>
-                        <View style={styles.vitae}>
-                            <StatBar
-                                value={vm.health}
-                                max={Math.max(1, vm.maxHealth)}
-                                color={AXM.blood}
-                                label="VITAE"
-                                height={8}
-                                alarmAt={0.25}
-                            />
-                        </View>
-                    </View>
+                            <View style={styles.purseRow} testID="rest-purse">
+                                <Text style={styles.purseLabel}>{REST_CHOICE_PURSE_LABEL}</Text>
+                                <Text style={styles.purseValue}>{vm.currency}</Text>
+                                <View style={styles.vitae}>
+                                    <StatBar
+                                        value={vm.health}
+                                        max={Math.max(1, vm.maxHealth)}
+                                        color={AXM.blood}
+                                        label="VITAE"
+                                        height={8}
+                                        alarmAt={0.25}
+                                    />
+                                </View>
+                            </View>
+                        </>
+                    )}
 
                     {vm.phase === 'offer' && (
                         <View style={styles.offerPhase}>
@@ -158,10 +169,20 @@ export default function RestScreen() {
                     )}
 
                     {vm.phase === 'upgrade-pick' && vm.upgrade !== null && (
-                        <CardUpgradePicker
-                            rows={vm.upgrade}
-                            onConfirm={(cardId) => actions.pickRestChoiceUpgrade(cardId)}
-                        />
+                        <View testID="rest-upgrade-pick">
+                            <CardUpgradePicker
+                                rows={vm.upgrade}
+                                figure={UPGRADE_FIGURE_STANDIN}
+                                onConfirm={(cardId) => actions.pickRestChoiceUpgrade(cardId)}
+                            />
+                            {/* #7: the way back to both offers, like the Anvil's back row. */}
+                            <LeaveRow
+                                label={REST_UPGRADE_BACK_LABEL}
+                                accessibilityLabel={REST_UPGRADE_BACK_A11Y}
+                                onPress={actions.cancelRestChoiceUpgrade}
+                                testID="rest-upgrade-back"
+                            />
+                        </View>
                     )}
 
                     {nightPassing && (

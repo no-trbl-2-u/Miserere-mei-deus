@@ -4,7 +4,7 @@
  *
  * A village is a hub of counters, each present only when the event carries it:
  *  - the paid rest (`rest`): price, the VITAE it restores, and its refusal;
- *  - the card shop (`cardShop`): the three offered cards as real card faces,
+ *  - the card shop (`cardShop`): the five offered cards as real card faces,
  *    each with its price and refusal (sold this visit, a short purse), and
  *    card removal: the escalating price, its refusal, and the deck's cards;
  *  - the equipment counter (`equipmentShop`): the weapons and armor on offer,
@@ -31,7 +31,7 @@ import {
 import type { AppStoreState } from '@/state/store';
 import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
 import { equipmentEffectLine } from './equipment-effect-line';
-import { villageRestEffect } from './village.copy';
+import { VILLAGE_HOST_LINE, villageRestEffect } from './village.copy';
 
 export interface VillageMerchantVM {
     name: string;
@@ -117,6 +117,11 @@ export interface VillageVM {
     active: boolean;
     villageName: string;
     body: string;
+    /**
+     * The host's line on the hub (V-02b): the village's own description when
+     * the event carries one, else the `[content]` placeholder until T writes it.
+     */
+    hostLine: string;
     merchants: readonly VillageMerchantVM[];
     currency: number;
     health: number;
@@ -131,10 +136,30 @@ export interface VillageVM {
     anvil: VillageAnvilVM | null;
 }
 
+/** A counter the hub can open: the paid rest, the Shop (cards and gear), the Blacksmith. */
+export type VillageCounterId = 'rest' | 'shop' | 'smith';
+
+/**
+ * The hub's counter buttons, in the hub's order: one per counter the village
+ * carries, none for a counter it lacks (168 A1). The Shop stands for the card
+ * shop and the weapons-and-armor counter alike, so a village with either has it.
+ *
+ * @param vm - the settlement view-model.
+ * @returns the counters to draw a button for, REST, SHOP, BLACKSMITH order.
+ */
+export function villageHubCounters(vm: Pick<VillageVM, 'rest' | 'cardShop' | 'equipmentShop' | 'anvil'>): VillageCounterId[] {
+    const out: VillageCounterId[] = [];
+    if (vm.rest) out.push('rest');
+    if (vm.cardShop || (vm.equipmentShop && vm.equipmentShop.length > 0)) out.push('shop');
+    if (vm.anvil) out.push('smith');
+    return out;
+}
+
 const EMPTY_VM: VillageVM = Object.freeze({
     active: false,
     villageName: '',
     body: '',
+    hostLine: '',
     merchants: Object.freeze([]),
     currency: 0,
     health: 0,
@@ -253,6 +278,7 @@ export function selectVillageVM(
     return {
         active: true,
         villageName: event.villageName,
+        hostLine: event.description && event.description.length > 0 ? event.description : VILLAGE_HOST_LINE,
         body: event.description && event.description.length > 0
             ? event.description
             : 'Roofs and smoke and the particular noise of people who all know ' +

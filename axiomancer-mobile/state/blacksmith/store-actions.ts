@@ -87,7 +87,8 @@ export interface BeginBlacksmithOptions {
 }
 
 /**
- * Start a blacksmith visit from the player's current rail + wallet.
+ * Start a blacksmith visit from the player's current rail + wallet, already in
+ * the `forging` phase (no intro step).
  * Returns false if one is already open (one anvil at a time).
  */
 export function beginBlacksmithAction(store: AppStore, options: BeginBlacksmithOptions = {}): boolean {
@@ -106,13 +107,19 @@ export function beginBlacksmithAction(store: AppStore, options: BeginBlacksmithO
 
     store.setState({
         blacksmith: {
-            session: createBlacksmithSession(seed, rail, budget, variants, deck),
+            // The forge opens straight onto the work screen (168.5): the
+            // engine's `intro` phase is stepped past here, so no screen ever
+            // shows it. The engine itself still starts in `intro`.
+            session: engineBegin(createBlacksmithSession(seed, rail, budget, variants, deck)),
         },
     });
     return true;
 }
 
-/** The anvil acknowledged: intro → forging. */
+/**
+ * intro → forging. A visit now opens already forging (`beginBlacksmithAction`),
+ * so this is a no-op on a live visit; kept for the dev skip and the sim.
+ */
 export function startBlacksmithForgingAction(store: AppStore): void {
     const s = store.getState().blacksmith?.session;
     if (!s) return;

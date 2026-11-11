@@ -2,8 +2,9 @@
 // the `submit` input, that a submit is the iOS beta build only, that the App
 // Store Connect key reaches only the step that writes it and fails naming a
 // missing secret or a placeholder app id, that `--auto-submit` runs only
-// behind `submit`, and that the beta and production profiles never get the
-// puzzle API values, so a friend's build posts no play data.
+// behind `submit`, and that the beta profile never gets the puzzle API values
+// (a friend's build posts no play data) while production gets them like preview,
+// on Android only, and `all` with `production` is refused.
 
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -95,8 +96,18 @@ test('--auto-submit appears only in the EAS build step, only behind submit, afte
   assert.ok(indexOf(step(/ASC_API_KEY_P8: \$\{\{ secrets\.ASC_API_KEY_P8 \}\}/)) < indexOf(build))
 })
 
-test('the puzzle API values skip the beta and production profiles', () => {
+test('the puzzle API values skip beta, and bake into production for Android only', () => {
   const puzzle = step(/EXPO_PUBLIC_PUZZLE_API_URL: \$\{\{ secrets\.EXPO_PUBLIC_PUZZLE_API_URL \}\}/)
-  assert.equal(condition(puzzle), "env.PREVIEW_PROFILE != 'production' && env.PREVIEW_PROFILE != 'beta'")
+  assert.equal(
+    condition(puzzle),
+    "env.PREVIEW_PROFILE != 'beta' && (env.PREVIEW_PROFILE != 'production' || env.PREVIEW_PLATFORM == 'android')",
+  )
   assert.ok(indexOf(puzzle) < indexOf(step(/npx eas-cli@latest build /)))
+})
+
+test('platform all with profile production is refused before the verify gate', () => {
+  const check = step(/the Android tester APK: run platform android, not all/)
+  assert.equal(condition(check), "inputs.profile == 'production' && inputs.platform == 'all'")
+  assert.match(check.block, /exit 1/)
+  assert.ok(indexOf(check) < indexOf(step(/run: npm run verify --workspace axiomancer-mobile/)))
 })

@@ -16,9 +16,14 @@
  */
 
 import { CACHE_ACTION_PLACEHOLDER, getCardById } from '@mechanics';
-import type { LootCacheChoiceOfferId, LootCacheChoiceSession } from '@mechanics';
+import type { Consumable, Equipment, Item, LootCacheChoiceOfferId, LootCacheChoiceSession } from '@mechanics';
+import { getItemSprite } from '@/components/icons/item-sprites';
 import type { AppStoreState } from '@/state/store';
-import { CACHE_CHOICE_OFFER_LABEL } from './cache.copy';
+import type { CacheMoment } from '@/assets/images/treasure/cache-pictures';
+import { CACHE_CHOICE_OFFER_LABEL, cacheGoodHealLine } from './cache.copy';
+import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
+import type { InventoryCategory } from './inventory.engine';
+import { equipmentEffectLine } from './equipment-effect-line';
 
 // ---------------------------------------------------------------------------
 // VM shapes
@@ -31,9 +36,30 @@ export interface CacheChoiceOfferVM {
     action: string;
 }
 
+/** One good taken: its icon key, its name, and one line saying what it does. */
+export interface CacheGoodVM {
+    itemId: string;
+    name: string;
+    /** The item id when it has a sprite (`getItemSprite`), else `null` (the glyph chain draws). */
+    spriteKey: string | null;
+    /** The glyph's category and sub label (`ItemGlyph`), for an item with no sprite. */
+    category: InventoryCategory;
+    sub: string | null;
+    /** What it does, from the item's own numbers; `null` when it has no effect to word. */
+    line: string | null;
+}
+
 export interface CacheChoiceOutcomeVM {
     chosen: LootCacheChoiceOfferId;
     label: string;
+    /** The picture moment the band wears: `goods` or `card`. */
+    moment: CacheMoment;
+    /** The one card taken, in the one card face; set iff `chosen === 'card'` and the card exists. */
+    card: CombatCardVM | null;
+    /** One row per item taken; empty for a card. */
+    goods: readonly CacheGoodVM[];
+    /** The purse once the take is paid (today's purse plus the goods' shillings). */
+    purseAfter: number;
     /** Set iff `chosen === 'card'`. */
     cardName: string | null;
     /** Non-empty iff `chosen === 'item'`. */
@@ -47,6 +73,10 @@ export interface CacheChoiceVM {
     phase: LootCacheChoiceSession['phase'] | 'none';
     offers: readonly CacheChoiceOfferVM[];
     outcome: CacheChoiceOutcomeVM | null;
+    /** The picture moment: `choice` on the offer, else the outcome's. */
+    moment: CacheMoment;
+    /** The purse the bar shows: today's on the offer, as it will stand once paid on the outcome. */
+    purse: number;
     /** The authored MapEvent one-liner — the cache's flavour line; `null` when the node authored none. */
     description: string | null;
 }
@@ -71,23 +101,54 @@ const EMPTY_VM: CacheChoiceVM = Object.freeze({
     phase: 'none',
     offers: Object.freeze([]),
     outcome: null,
+    moment: 'choice',
+    purse: 0,
     description: null,
 });
+
+function goodLine(item: Item): string | null {
+    if (item.category === 'equipment') return equipmentEffectLine(item.effect) ?? null;
+    if (item.category === 'consumable') {
+        const c = item as Consumable;
+        if ((c.healAmount ?? 0) > 0) return cacheGoodHealLine(c.healAmount!, c.healAmountBelowHalf);
+    }
+    return item.description || null;
+}
+
+const SLOT_SUB: Record<string, string> = { weapon: 'Weapon', armor: 'Armor', relic: 'Relic' };
+
+function goodVM(item: Item): CacheGoodVM {
+    return {
+        itemId: item.id,
+        name: item.name,
+        spriteKey: getItemSprite(item.id) === null ? null : item.id,
+        category: item.category === 'equipment' ? 'equipment' : 'consumable',
+        sub: item.category === 'equipment' ? SLOT_SUB[(item as Equipment).slot] ?? null : null,
+        line: goodLine(item),
+    };
+}
 
 export function selectHasActiveCache(state: Pick<AppStoreState, 'cache'>): boolean {
     return state.cache?.session != null;
 }
 
-export function selectCacheVM(state: Pick<AppStoreState, 'cache'>): CacheChoiceVM {
+export function selectCacheVM(state: Pick<AppStoreState, 'cache'> & Partial<Pick<AppStoreState, 'player'>>): CacheChoiceVM {
     const s = state.cache?.session;
     if (!s) return EMPTY_VM;
 
-    const outcome: CacheChoiceOutcomeVM | null = s.outcome === null ? null : {
-        chosen: s.outcome.chosen,
-        label: CACHE_CHOICE_OFFER_LABEL[s.outcome.chosen],
-        cardName: s.outcome.rewardCardId === null ? null : (getCardById(s.outcome.rewardCardId)?.name ?? s.outcome.rewardCardId),
-        itemNames: s.outcome.items.map(i => i.name),
-        currency: s.outcome.currency,
+    const purseNow = state.player?.currency ?? 0;
+    const o = s.outcome;
+    const purseAfter = purseNow + (o?.chosen === 'item' ? o.currency : 0);
+    const outcome: CacheChoiceOutcomeVM | null = o === null ? null : {
+        chosen: o.chosen,
+        label: CACHE_CHOICE_OFFER_LABEL[o.chosen],
+        moment: o.chosen === 'item' ? 'goods' : 'card',
+        card: o.rewardCardId === null ? null : (rewardCardVMs([o.rewardCardId], state.player?.baseStats)[0] ?? null),
+        goods: o.items.map(goodVM),
+        purseAfter,
+        cardName: o.rewardCardId === null ? null : (getCardById(o.rewardCardId)?.name ?? o.rewardCardId),
+        itemNames: o.items.map(i => i.name),
+        currency: o.currency,
     };
 
     return {
@@ -95,6 +156,8 @@ export function selectCacheVM(state: Pick<AppStoreState, 'cache'>): CacheChoiceV
         phase: s.phase,
         offers: offersFor(s),
         outcome,
+        moment: outcome ? outcome.moment : 'choice',
+        purse: outcome ? outcome.purseAfter : purseNow,
         description: s.description,
     };
 }

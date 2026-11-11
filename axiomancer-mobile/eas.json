@@ -1,5 +1,8 @@
 {
-  "cli": { "version": ">= 16.0.0", "appVersionSource": "remote" },
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
   "build": {
     "preview": {
       "env": {
@@ -17,14 +20,17 @@
       }
     },
     "production": {
+      "env": {
+        "EXPO_PUBLIC_PLAY_LOG_SOURCE": "human"
+      },
       "ios": {
         "distribution": "store",
         "autoIncrement": "buildNumber"
       },
       "android": {
-        "distribution": "store",
+        "distribution": "internal",
         "autoIncrement": "versionCode",
-        "buildType": "app-bundle"
+        "buildType": "apk"
       }
     }
   },

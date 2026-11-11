@@ -9,9 +9,10 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { CombatSummary } from '@mechanics';
-import { summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
+import { DEFEAT_CONTINUE_LABEL, defeatCauseLine, summaryShillingsLabel, summaryShillingsValue } from '@/components/combat/encounter/combat-summary.copy';
 import type { SpareSummaryLine } from '@/state/presenters/spare-reward.engine';
 import { HUE, TYPE_ROLES } from '@/theme/axm';
+import { BrassButton } from '@/components/experience/BrassButton';
 import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { lookOf } from '@/components/experience/looks';
 import { SpoilsButton } from '@/components/combat/encounter/SpoilsButton';
@@ -36,14 +37,21 @@ const VELLUM_CONTINUE = lookOf('P-02') === 'vellum';
 export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLine, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; mercyLine?: string; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
-    const v = VELLUM_PANEL;
+    // A lost fight and a spared foe wear the house look: the dark ground in
+    // place of the vellum panel, and CONTINUE on the brass plate. A foe that
+    // falls ends on the victory screen (FE1b) and never reaches this panel.
+    const house = summary.outcome === 'defeat' || summary.outcome === 'mercy';
+    const v = VELLUM_PANEL && !house;
     const color = v ? (OUTCOME_INK[summary.outcome] ?? SPOILS_INK.body) : (OUTCOME_COLOR[summary.outcome] ?? AXM.parchment);
     const btnColor = VELLUM_CONTINUE ? (OUTCOME_INK[summary.outcome] ?? SPOILS_INK.body) : color;
     return (
-        <View style={styles.backdrop} testID="combat-summary">
-            <View style={v ? styles.vPanel : [styles.panel, { borderColor: color }]}>
+        <View style={[styles.backdrop, house && styles.houseBackdrop]} testID="combat-summary">
+            <View style={house ? styles.housePanel : v ? styles.vPanel : [styles.panel, { borderColor: color }]}>
                 {v && <KitBackdrop piece="modal-panel-vellum" />}
                 <Text style={[styles.headline, v && styles.vHeadline, { color }]}>{summary.headline}</Text>
+                {house && defeatCauseLine(summary.defeatCause) !== '' && (
+                    <Text style={styles.cause} testID="combat-summary-cause">{defeatCauseLine(summary.defeatCause)}</Text>
+                )}
 
                 {summary.rows.length > 0 && <Text style={[styles.rowsHead, v && styles.vRowsHead]}>DAMAGE BY CARD</Text>}
                 <View style={styles.rows}>
@@ -85,7 +93,9 @@ export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLi
                     <Text style={[styles.best, { color }]} testID="combat-summary-best">★ Best card: {summary.bestCard}</Text>
                 )}
 
-                {VELLUM_CONTINUE ? (
+                {house ? (
+                    <BrassButton label={DEFEAT_CONTINUE_LABEL} align="center" onPress={onClose} testID="combat-summary-close" accessibilityLabel="Continue" style={styles.houseBtn} />
+                ) : VELLUM_CONTINUE ? (
                     <SpoilsButton onPress={onClose} testID="combat-summary-close" accessibilityRole="button" accessibilityLabel="Continue" style={styles.vBtn}>
                         <Text style={[styles.btnText, { color: btnColor }]}>CONTINUE</Text>
                     </SpoilsButton>
@@ -116,6 +126,12 @@ const useStyles = makeStyles((AXM) => ({
     best: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 13, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, textAlign: 'center', marginBottom: 12 },
     btn: { borderWidth: 2, paddingVertical: 9, alignItems: 'center' },
     btnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 16, letterSpacing: TYPE_ROLES.button.letterSpacing},
+
+    // The house look: the screen's dark ground, no panel, the brass plate.
+    houseBackdrop: { backgroundColor: AXM.deepBg },
+    housePanel: { width: '100%', maxWidth: 420, padding: 16 },
+    cause: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 14, color: AXM.bone, textAlign: 'center', marginTop: -4, marginBottom: 14 },
+    houseBtn: { alignSelf: 'stretch', marginTop: 4 },
 
     // Vellum & Ink. The panel art is 741x437 drawn at 0.3: 42pt of side
     // ornament, 26pt of top and bottom. Body faces are today's size or larger.

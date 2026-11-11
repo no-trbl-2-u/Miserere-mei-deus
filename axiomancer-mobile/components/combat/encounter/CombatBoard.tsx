@@ -1815,12 +1815,14 @@ export const NARROW_FACE_W = 112;
  * value in white, straddling the face's top-left corner. Rendered by
  * `CombatCardFace` as a sibling of the frame, never inside it.
  */
-function FreeCornerPill({ shape, glyph, value, ink, large }: {
+function FreeCornerPill({ shape, glyph, value, ink, large, valueInk }: {
     shape: ReturnType<typeof glyphShapeFor>;
     glyph: string;
     value: string;
     ink: string;
     large: boolean;
+    /** The value's ink when an upgrade changed it. */
+    valueInk?: string;
 }) {
     const styles = useStyles();
     const size = large ? FREE_PILL_GLYPH_LARGE : FREE_PILL_GLYPH;
@@ -1850,7 +1852,7 @@ function FreeCornerPill({ shape, glyph, value, ink, large }: {
             )}
             {value ? (
                 <Text
-                    style={[styles.freePillValue, large && styles.freePillValueLarge]}
+                    style={[styles.freePillValue, large && styles.freePillValueLarge, valueInk ? { color: valueInk } : null]}
                     allowFontScaling={false}
                     testID="combat-card-face-free-value"
                 >
@@ -1887,11 +1889,22 @@ function GlobalPlate({ ink, large }: { ink: string; large: boolean }) {
 }
 
 /**
+ * The numbers an upgrade changed on a face, printed in `ink` (the upgrade
+ * screen's gold): the PAID line's by their order among its numbers, and the
+ * FREE pill's value.
+ */
+export interface CardFaceChanged {
+    paid: readonly number[];
+    free: boolean;
+    ink: string;
+}
+
+/**
  * The PAID line as the card's text mode prints it: all words, or a glyph for
  * every keyword that has one. `rows` caps it (the small face); left out, it
  * wraps as far as it needs (the large face).
  */
-function PaidLineText({ line, mode, size, ink, glyphInk, rows, style, testID }: {
+function PaidLineText({ line, mode, size, ink, glyphInk, rows, style, testID, changed }: {
     line: string;
     mode: CardTextMode;
     size: number;
@@ -1901,13 +1914,26 @@ function PaidLineText({ line, mode, size, ink, glyphInk, rows, style, testID }: 
     rows?: number;
     style: StyleProp<ViewStyle>;
     testID: string;
+    /** Numbers to print in `ink` instead, by their order in the line (the upgrade's changed numbers). */
+    changed?: CardFaceChanged | null;
 }) {
     const styles = useStyles();
     const rowH = Math.round(size * PAID_LINE_LEADING);
-    const runStyle = (caps: boolean) => [
-        caps ? styles.paidRunCaps : styles.paidRunSerif,
-        { fontSize: size, lineHeight: rowH, color: ink },
-    ];
+    // Every run of digits is its own capital run, so counting the runs that
+    // hold a digit counts the line's numbers in order.
+    let numberAt = -1;
+    const runProps = (caps: boolean, text: string) => {
+        const isNumber = /\d/.test(text);
+        if (isNumber) numberAt += 1;
+        const lit = isNumber && changed != null && changed.paid.includes(numberAt);
+        return {
+            style: [
+                caps ? styles.paidRunCaps : styles.paidRunSerif,
+                { fontSize: size, lineHeight: rowH, color: lit ? changed.ink : ink },
+            ],
+            testID: lit ? 'combat-card-face-changed-number' : undefined,
+        };
+    };
     if (mode === 'glyphs') {
         // A glyph is a view, which a Text cannot hold: each word is a token in a wrapping row.
         return (
@@ -1924,7 +1950,7 @@ function PaidLineText({ line, mode, size, ink, glyphInk, rows, style, testID }: 
                                 <KeywordGlyph keyword={run.glyph} size={Math.round(GLYPH_EM * size)} color={glyphInk} />
                             </View>
                         ) : (
-                            <Text key={i} style={runStyle(run.caps)} allowFontScaling={false}>{run.text}</Text>
+                            <Text key={i} {...runProps(run.caps, run.text)} allowFontScaling={false}>{run.text}</Text>
                         ))}
                     </View>
                 ))}
@@ -1939,7 +1965,7 @@ function PaidLineText({ line, mode, size, ink, glyphInk, rows, style, testID }: 
             accessibilityLabel={line}
             testID={testID}
         >
-            {paidLineRuns(line).map((run, i) => <Text key={i} style={runStyle(run.caps)}>{run.text}</Text>)}
+            {paidLineRuns(line).map((run, i) => <Text key={i} {...runProps(run.caps, run.text)}>{run.text}</Text>)}
         </Text>
     );
 }
@@ -2029,7 +2055,7 @@ const styles0 = StyleSheet.create({
 });
 
 export const CombatCardFace = React.memo(function CombatCardFace({
-    card, width, height, large = false, accent = null, children,
+    card, width, height, large = false, accent = null, changed = null, children,
 }: {
     card: CombatCardVM;
     width: number;
@@ -2037,6 +2063,8 @@ export const CombatCardFace = React.memo(function CombatCardFace({
     large?: boolean;
     /** Override the border and PAID line colour (the armed staged-card read tint). */
     accent?: string | null;
+    /** The upgrade screen: the numbers this upgrade changed, drawn in its ink. */
+    changed?: CardFaceChanged | null;
     children?: React.ReactNode;
 }) {
     const AXM = usePalette();
@@ -2178,7 +2206,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                                 <Text style={[styles.paidLeadColon, { fontSize: paidSize, lineHeight: paidRowH, color: ledgerInk }]} allowFontScaling={false}>:</Text>
                             </View>
                             <View style={styles.paidColumn}>
-                                <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} style={styles.paidLineLarge} testID="combat-card-face-paid-line" />
+                                <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} style={styles.paidLineLarge} testID="combat-card-face-paid-line" changed={changed} />
                             </View>
                         </View>
                     </View>
@@ -2195,7 +2223,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
                                 :
                             </Text>
                         </View>
-                        <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} rows={PAID_LINE_ROWS} style={styles.paidLineSmall} testID="combat-card-face-paid-line" />
+                        <PaidLineText line={f.paidLine} mode={cardText} size={paidSize} ink={ledgerInk} glyphInk={legibleAccent} rows={PAID_LINE_ROWS} style={styles.paidLineSmall} testID="combat-card-face-paid-line" changed={changed} />
                     </View>
                 )}
                 {children}
@@ -2206,7 +2234,7 @@ export const CombatCardFace = React.memo(function CombatCardFace({
             {f.isGlobal ? (
                 <GlobalPlate ink={cardInk} large={large} />
             ) : hasFree ? (
-                <FreeCornerPill shape={freeShape} glyph={f.freeGlyph} value={freeInner} ink={cardInk} large={large} />
+                <FreeCornerPill shape={freeShape} glyph={f.freeGlyph} value={freeInner} ink={cardInk} large={large} valueInk={changed?.free ? changed.ink : undefined} />
             ) : null}
         </View>
     );

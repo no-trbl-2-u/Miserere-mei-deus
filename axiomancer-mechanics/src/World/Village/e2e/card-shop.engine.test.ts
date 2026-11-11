@@ -43,14 +43,15 @@ function game(currency: number, overrides: Partial<GameState['player']> = {}): G
 }
 
 describe('the card shop offer (A9)', () => {
-    it('draws three distinct cards from the pool', () => {
+    it('draws five distinct cards from the pool', () => {
         const offer = rollVillageCardShop(POOL, 7);
         expect(offer).toHaveLength(VILLAGE_TUNING.cardShopSize);
-        expect(new Set(offer).size).toBe(3);
+        expect(VILLAGE_TUNING.cardShopSize).toBe(5);
+        expect(new Set(offer).size).toBe(5);
         for (const id of offer) expect(POOL).toContain(id);
     });
 
-    it('is the same three for the same run and node, whatever else happened', () => {
+    it('is the same five for the same run and node, whatever else happened', () => {
         const seed = villageCardShopSeed('run-1', 'bw-t4');
         expect(rollVillageCardShop(POOL, seed)).toEqual(rollVillageCardShop(POOL, seed));
         expect(villageCardShopSeed('run-1', 'bw-t4')).toBe(seed);
@@ -68,6 +69,7 @@ describe('the card shop offer (A9)', () => {
     it('offers fewer when the pool is smaller, never a duplicate', () => {
         expect(rollVillageCardShop(['a', 'a', 'b'], 1).sort()).toEqual(['a', 'b']);
         expect(rollVillageCardShop([], 1)).toEqual([]);
+        expect(rollVillageCardShop(['a', 'b', 'c', 'd'], 1).sort()).toEqual(['a', 'b', 'c', 'd']);
     });
 
     it("draws from the player's own reward pool at the tuned price", () => {
@@ -75,7 +77,7 @@ describe('the card shop offer (A9)', () => {
         const shop = villageCardShopFor(state, 'bw-t4');
         const pool = rewardPoolFor(state.player);
         expect(shop.price).toBe(6);
-        expect(shop.cardIds.length).toBe(Math.min(3, new Set(pool).size));
+        expect(shop.cardIds.length).toBe(Math.min(VILLAGE_TUNING.cardShopSize, new Set(pool).size));
         for (const id of shop.cardIds) expect(pool).toContain(id);
         expect(villageCardShopFor(state, 'bw-t4')).toEqual(shop);
     });

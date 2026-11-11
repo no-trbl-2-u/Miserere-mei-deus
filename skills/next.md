@@ -129,9 +129,9 @@ goes back once, then the lead finishes it.
    in the worktree, **foreground**, by the lead. Red → the
    builder's brief gets the log; ≤ 3 rounds on one root cause.
 2. Write `plan/pending/<id>.md` (`next/land.md` §2): `close`,
-   `date`, `says` (≤ 10 words, what now works), `footguns:`,
-   and only when needed `## Edit`, `## Decisions`,
-   `## Footguns`. Never edit a shared plan file yourself.
+   `date`, `says` (≤ 10 words), `footguns:`, only if needed
+   `## Edit`, `## Decisions`, `## Footguns`; a spec's last close
+   adds `absorb:` (land.md). Never edit a shared plan file.
 3. Gate again; commit `plan: close <id>` alone.
 
 ### Step 5 — Land per owner mode

@@ -12,6 +12,7 @@
 //   says: Empty query shows the empty state   ≤ 10 words, what now works (the close's archive line)
 //   commits: 30a55bdc..4c99eb6e     optional: settle works the range out from git when it's left out
 //   footguns: guard-test-noop, clock-edge-test   optional: sightings to bump (seen +1, last = date)
+//   absorb: D?empty-copy            Miserere: a spec's last close, where its lasting rules went (scripts/plan/retire-local.mjs)
 //   ---
 //   ## Edit plan/07-search.md               exact text, applied once at settle (the config's `editable` only)
 //   ~~~ old
@@ -42,7 +43,7 @@ import { DEFAULTS, mayEdit } from './config.mjs';
 import { FOOTGUN_LINE } from './footguns.mjs';
 
 export const PENDING_DIR = 'plan/pending';
-const KEYS = new Set(['close', 'date', 'says', 'commits', 'footguns']);
+const KEYS = new Set(['close', 'date', 'says', 'commits', 'footguns', 'absorb']); // Miserere: absorb (spec 164, scripts/plan/retire-local.mjs)
 /** A chunk id: the spec's number, a dot, a sequence and an optional suffix (07.3, 07.3a). */
 export const CLOSE_ID = /^\d{2,}\.\w+$/;
 
@@ -75,7 +76,10 @@ export function parsePending(raw, name, cfg = DEFAULTS) {
   if (meta.close !== undefined && !CLOSE_ID.test(meta.close)) throw new Error(`${name}: close "${meta.close}" isn't a chunk id`);
   if (meta.close && !meta.says) throw new Error(`${name}: a close needs "says:" (≤ 10 words, what now works)`);
   if (meta.commits && !/^[0-9a-f]{7,40}\.\.[0-9a-f]{7,40}$/.test(meta.commits)) throw new Error(`${name}: commits "${meta.commits}" isn't <sha>..<sha>`);
-  const footguns = (meta.footguns ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  // Miserere: a last close's `absorb:` (scripts/plan/retire-local.mjs): it rides a close, and says something.
+  if (meta.absorb !== undefined && (!meta.close || !meta.absorb)) throw new Error(`${name}: "absorb:" goes on a spec's last close and says where its lasting rules went (D?<slug>, a file, or none)`);
+  // Miserere: `footguns: none` is read as no sightings; /next builders write it for a run that hit no trap.
+  const footguns = (meta.footguns ?? '').split(',').map((s) => s.trim()).filter((s) => s && s.toLowerCase() !== 'none');
   for (const f of footguns) if (!/^[a-z0-9-]+$/.test(f)) throw new Error(`${name}: footgun "${f}" isn't a slug`);
 
   const edits = [];
@@ -132,7 +136,9 @@ export function parsePending(raw, name, cfg = DEFAULTS) {
     if (!slugs.has(ref)) throw new Error(`${name}: ${ref} is used but no "## Add" part defines it`);
   }
   if (!meta.close && !edits.length && !adds.length && !decisions.length && !newFootguns.length && !footguns.length && !notes.length) throw new Error(`${name}: nothing to settle`);
-  return { name, close: meta.close ?? null, date: meta.date, says: meta.says ?? '', commits: meta.commits ?? null, footguns, edits, adds, decisions, newFootguns, notes };
+  // Miserere: each D?<slug> an absorb names is one of this file's own decisions, so settle numbers it in the archive line.
+  for (const d of (meta.absorb ?? '').match(/D\?[a-z0-9-]+/g) ?? []) if (!decisions.some((e) => e.startsWith(`- **${d}** `))) throw new Error(`${name}: absorb names ${d}, but no "## Decisions" entry here defines it`);
+  return { name, close: meta.close ?? null, date: meta.date, says: meta.says ?? '', commits: meta.commits ?? null, footguns, edits, adds, decisions, newFootguns, notes, absorb: meta.absorb ?? null }; // Miserere: absorb
 }
 
 /** An A-ID or chunk id a pending file names before settle numbers it: `A?strip`, `07.?strip`. */

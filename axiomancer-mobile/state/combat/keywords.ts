@@ -217,7 +217,7 @@ export function allRegistryKeywords(): readonly string[] {
  * reads on cards and threshold lines.
  *
  * No opened card prints these (T, 2026-11-01); the Rules Glossary in Settings
- * lists them (with VULNERABLE and DISCARD), and they are read by the board
+ * lists them first, ahead of every registered keyword, and they are read by the board
  * glossary below and by the keyword atlas and its drift check
  * (`scripts/content-drift.mjs`), the single source of truth for system terms.
  */

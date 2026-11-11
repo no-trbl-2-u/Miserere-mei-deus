@@ -45,12 +45,11 @@ function textOf(node: { props: { children?: unknown } }): string {
         .join('');
 }
 
-/** An anvil session at `phase`, rendered. */
-function forge(phase: 'intro' | 'forging') {
+/** An anvil visit, rendered. It opens straight onto the work screen (168.5). */
+function forge() {
     const store: AppStore = createAppStore({ adapter: createMemoryAdapter() });
     const actions = createAppActions(store);
     actions.beginBlacksmith({ budget: FAT_PURSE });
-    if (phase === 'forging') actions.startBlacksmithForging();
     return render(
         <GameStoreProvider store={store}>
             <BlacksmithScreen />
@@ -59,20 +58,26 @@ function forge(phase: 'intro' | 'forging') {
 }
 
 describe('the smith names the faces he is selling (S5-talk-C12)', () => {
-    it('opens by saying what MISS, MANA and BOON each pay', () => {
-        const body = textOf(forge('intro').getByTestId('blacksmith-intro-body'));
+    it('opens straight onto the work screen, the smith\'s line where the intro was', () => {
+        const r = forge();
 
-        expect(body).toContain('MISS');
-        expect(body).toContain('MANA');
-        expect(body).toContain('BOON');
-        expect(body).toContain("fires your weapon's special");
-        expect(body).not.toContain('CONVICTION');
+        expect(r.queryByTestId('blacksmith-intro')).toBeNull();
+        expect(r.queryByTestId('blacksmith-begin')).toBeNull();
+        expect(textOf(r.getByTestId('blacksmith-smith-line'))).toContain('[content]');
+        expect(r.getByTestId('blacksmith-forging')).toBeTruthy();
+    });
+
+    it('says what MISS, MANA and BOON each pay in the face key under the line', () => {
+        const key = textOf(forge().getByTestId('blacksmith-face-key'));
+
+        expect(key).toContain("fires your weapon's special");
+        expect(key).not.toContain('CONVICTION');
     });
 });
 
 describe('the forging table decodes its own readouts (S5-talk-C12)', () => {
     it('keys the per-die face read', () => {
-        const key = textOf(forge('forging').getByTestId('blacksmith-face-key'));
+        const key = textOf(forge().getByTestId('blacksmith-face-key'));
 
         expect(key).toContain('MANA');
         expect(key).toContain('BOON');
@@ -80,7 +85,7 @@ describe('the forging table decodes its own readouts (S5-talk-C12)', () => {
     });
 
     it('states the trade HONE and TEMPER each make', () => {
-        const r = forge('forging');
+        const r = forge();
 
         expect(textOf(r.getByTestId('blacksmith-offer-hone:heart-effect')))
             .toBe('MISS face → MANA');
@@ -89,14 +94,14 @@ describe('the forging table decodes its own readouts (S5-talk-C12)', () => {
     });
 
     it('spells the purse out in SHILLINGS, the unit the prices are in', () => {
-        const purse = textOf(forge('forging').getByTestId('blacksmith-budget'));
+        const purse = textOf(forge().getByTestId('blacksmith-budget'));
 
         expect(purse).toContain('SHILLINGS');
         expect(purse).toContain(`${FAT_PURSE}`);
     });
 
     it('prints each offer\'s price in SHILLINGS, not a bare `s`', () => {
-        const r = forge('forging');
+        const r = forge();
 
         for (const id of ['hone:heart', 'temper:heart']) {
             const price = textOf(r.getByTestId(`blacksmith-offer-${id}-price`));
@@ -105,7 +110,7 @@ describe('the forging table decodes its own readouts (S5-talk-C12)', () => {
     });
 
     it('never offers to charge a screen reader in diamonds', () => {
-        const label = forge('forging').getByTestId('blacksmith-offer-hone:heart')
+        const label = forge().getByTestId('blacksmith-offer-hone:heart')
             .props.accessibilityLabel as string;
 
         expect(label).not.toMatch(/diamond/i);

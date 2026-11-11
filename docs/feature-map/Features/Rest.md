@@ -4,12 +4,11 @@ group: "world"
 reachable: "yes"
 driven: "yes"
 tested: "yes"
-needsPitch: "yes"
+needsPitch: "no"
 source: "axiomancer-mobile/app/rest/index.tsx"
 generated: feature-map
 tags:
   - feature-map/world
-  - needs-pitch
 ---
 
 # Rest
@@ -29,13 +28,15 @@ No player-flow edge leads out of it.
 Code it uses, as plain text so Graph view draws player flow only.
 
 - Cards
+- VITAE and stats
 - A fight
 - Effects
 - The foes
 - Game
+- Items
 - Log
 - The world
 
 ## Pitch
 
-Needs a pitch. Missing: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site")
+Has a pitch.

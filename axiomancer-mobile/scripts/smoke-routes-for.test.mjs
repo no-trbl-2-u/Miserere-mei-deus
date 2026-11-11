@@ -18,6 +18,11 @@ test('every ROUTES name is produced by at least one rule', () => {
     assert.deepEqual(names.filter((n) => !reached.has(n)), [])
 })
 
+test('the upgrade screen and the rest site select the rest-upgrade shot (UP1j)', () => {
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/components/upgrade/CardUpgradePicker.tsx'], names).routes, ['rest-upgrade'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/rest/index.tsx'], names).routes, ['rest-upgrade'])
+})
+
 test('every rule names only real routes', () => {
     for (const rule of RULES.filter((r) => r.routes !== ALL)) {
         for (const n of rule.routes) assert.ok(names.includes(n), `${rule.test} names ${n}`)
@@ -26,11 +31,12 @@ test('every rule names only real routes', () => {
 
 test('a screen change selects its own route', () => {
     assert.deepEqual(routesForPaths(['axiomancer-mobile/app/(tabs)/memoir/index.tsx'], names).routes, ['memoir'])
-    assert.deepEqual(routesForPaths(['axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx'], names).routes, ['combat-board', 'combat-encounter'])
-    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/combat-encounter/index.tsx'], names).routes, ['combat-board', 'combat-encounter'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx'], names).routes, ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'victory-levelled', 'victory-plain'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/combat-encounter/index.tsx'], names).routes, ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'victory-levelled', 'victory-plain'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/devvictory/index.tsx'], names).routes, ['victory-levelled', 'victory-plain'])
     assert.deepEqual(
         routesForPaths(['axiomancer-mobile/components/hazard/HazardBoard.tsx'], names).routes,
-        ['combat-board', 'combat-encounter', 'devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board', 'hazard-puzzle-node', 'hazard-puzzle-stakes'],
+        ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board', 'hazard-puzzle-node', 'hazard-puzzle-stakes', 'victory-levelled', 'victory-plain'],
     )
     assert.deepEqual(
         routesForPaths(['axiomancer-mobile/app/devpuzzle/index.tsx'], names).routes,
@@ -56,13 +62,16 @@ test('several paths select the union', () => {
     assert.deepEqual(routes, ['labyrinth', 'memoir'])
 })
 
+test('the cache screen selects the three cache shots (plan 174)', () => {
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/cache/index.tsx'], names).routes, ['cache', 'cache-card', 'cache-goods'])
+})
+
 test('app-wide code, the engine and the lockfile select all', () => {
     for (const path of [
         'axiomancer-mobile/app/_layout.tsx',
         'axiomancer-mobile/app/(tabs)/_layout.tsx',
         'axiomancer-mobile/components/StatBar.tsx',
         'axiomancer-mobile/components/CombatGate.tsx',
-        'axiomancer-mobile/app/rest/index.tsx',
         'axiomancer-mobile/state/game-store.ts',
         'axiomancer-mobile/lib/platform/image.ts',
         'axiomancer-mobile/assets/images/title.webp',

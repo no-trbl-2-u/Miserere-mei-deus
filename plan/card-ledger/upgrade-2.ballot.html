@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The card upgrade screen, round 2</title>
+<!--
+  The card upgrade ballot, round 2 (2026-11-09). T kept H (the string of
+  beads) and asked for B's card pair and G's hold: only the centre bead is
+  offered, it wears a special border, the player turns the wheel to choose,
+  and a HOLD button fills a ring around that bead. Four layouts of that, each
+  caught mid-hold; U-02-done shows the moment the ring closes.
+-->
+<style>
+  :root { --bg:#efe9dc; --ink:#1b1714; --muted:#6b6259; --card:#fbf7ee; --edge:#2a2420; --sel:#1b1714; --btn:#1b1714; --btn-ink:#fbf7ee; --shotbg:#d9cfbd; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  }
+  :root[data-theme="dark"] { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.92rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  .theme { float:right; font:inherit; padding:6px 12px; border-radius:6px; border:1px solid var(--edge); background:var(--card); color:var(--ink); cursor:pointer; }
+  .slot { margin:22px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.1rem; margin:0; }
+  .role { color:var(--muted); margin:2px 0 10px; }
+  .row { display:grid; grid-template-columns:repeat(auto-fill, minmax(232px, 1fr)); gap:12px; }
+  label.card { position:relative; display:block; background:var(--card); border:2px solid var(--edge); border-radius:10px; padding:8px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 4px var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .top { padding-right:34px; min-height:96px; }
+  .name { font-size:1.05rem; font-weight:bold; }
+  .ref { color:var(--muted); font-size:.9rem; margin:2px 0 6px; }
+  label.card img { display:block; width:100%; height:auto; border-radius:4px; background:var(--shotbg); }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  footer { margin-top:28px; padding-top:12px; border-top:2px solid var(--edge); }
+  textarea { width:100%; font:13px/1.4 ui-monospace, Menlo, Consolas, monospace; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  #general { min-height:60px; } #out { min-height:160px; margin-top:10px; }
+  button { font:inherit; padding:9px 18px; min-height:42px; border-radius:6px; border:0; background:var(--btn); color:var(--btn-ink); cursor:pointer; margin:8px 8px 0 0; }
+  .count { color:var(--muted); margin-left:6px; }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
+</style>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <p class="banner" role="note"><b>CLOSED</b>: T voted on 2026-11-09 (A, with smaller cards, no footer line and a bigger statue). The verdict and the settled shot are in upgrade.md.</p>
+  <h1>The card upgrade screen, round 2</h1>
+  <p class="sub">Your blend: H as the main, B's pair of cards, G's hold. Four layouts, each caught with the ring 60% full.</p>
+  <p class="legend">
+    <b>The same in all four:</b> only the bead at the centre is offered and it wears the special border; you turn the wheel to bring a card there; HOLD fills a ring round that bead, and letting go early empties it.<br>
+    <b>They differ in</b> how much of the wheel shows, where HOLD sits, and how big the statue is.<br>
+    <b>When the ring closes</b> (all four): the old card goes and the new one flares, as below.
+  </p>
+  <img src="upgrade/U-02-done.webp" alt="The moment the ring closes" width="195" height="422" style="border-radius:6px;display:block">
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="A different figure, a mix of two looks, anything else…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'upgrade-round-2-2026-11-09';
+
+const SLOTS = [
+  { slot: 'U-02', label: 'The string of beads, with the pair and the hold', role: 'Turn the wheel, hold to upgrade the centre bead.' },
+];
+
+/* One candidate per id; the kit reads the ticks by id. */
+const CARDS = [
+  { id: 'U-02a', look: 'The rim at the foot', ref: 'A wide wheel, only its top rim showing under the cards. A notch and a brass double ring mark the centre bead. HOLD below.' },
+  { id: 'U-02b', look: 'The whole wheel', ref: 'A small wheel, more of it showing; the centre bead sits at the top and HOLD sits in the hub.' },
+  { id: 'U-02c', look: 'The statue behind', ref: 'The statue grows faint behind the cards. The centre bead glows in a halo. HOLD TO OFFER across the foot.' },
+  { id: 'U-02d', look: 'The wheel at the thumb', ref: 'The wheel runs down the left edge, turned up and down with the thumb; an arrow points from the centre bead to the cards.' },
+];
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cardHtml = (c) => `
+  <label class="card" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${esc(c.look)}">
+    <div class="top"><div class="name">${c.id.slice(4).toUpperCase()}. ${esc(c.look)}</div><div class="ref">${esc(c.ref)}</div></div>
+    <img src="upgrade/${c.id}.webp" alt="${esc(c.look)}" loading="lazy" width="780" height="1688">
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${esc(s.label)} (optional)">
+  </section>`;
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered`;
+};
+/* One tick per screen: a new tick clears the others in its slot. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  refresh();
+});
+refresh();
+
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: the card upgrade screen, round 2 (${BALLOT_ID})`,
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      const name = pick ? CARDS.find((c) => c.id === pick).look : null;
+      return `${s.slot} ${s.label}: ${pick ? `KEEP ${pick} (${name})` : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>

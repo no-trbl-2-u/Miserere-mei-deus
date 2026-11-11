@@ -18,8 +18,15 @@
 // act needs. They never tick the Item; the reminder names the open ones beside the act.
 // Everything the loop can finish alone stays silent.
 //
+// Since 2026-11-10 the live file is the queue model (the last section of this file): a
+// `## Budget` of hours a week, acts that carry their milestone's date, and a reminder that
+// forecasts each milestone and lists this week's acts. A file without `## Budget` keeps the
+// dated reminder above.
+//
 // A row id resolves from the build plan or, from the nexus v2 cut-over on, from a v2
 // spec chunk's `alias:` (planRows below, phase NX1c); every rule above reads the same.
+
+import path from 'node:path'
 
 export const HORIZON_DAYS = 14
 export const BUILD_PLAN_FILE = 'plan/steps/01_build_plan.md'
@@ -53,6 +60,7 @@ export const parseItems = (md) => {
             name,
             window,
             rows: parseRowsCell(rowsCell),
+            proof: parseProof(rowsCell),
             waitsOn: parseWaitsCell(waitsCell),
             goal: goalCell ?? '',
             aiHelp: aiCell ?? '',
@@ -85,8 +93,26 @@ export const parseWaitsCell = (cell) => {
 const parseRowsCell = (cell) => {
     const plain = cell.replace(/`/g, '').trim()
     if (/^needs plot$/i.test(plain)) return 'needs plot'
-    if (plain === 'T') return 'T'
+    if (plain === 'T' || /^T:/.test(plain)) return 'T'
     return plain.split(',').map((id) => id.trim()).filter(Boolean)
+}
+
+/**
+ * The proof a `T: <proof>` Rows cell carries (spec 169, A5): `pr #N`, `spec <alias family>` or
+ * `file <path>`. Null for any other cell; `{error}` for a `T:` cell that is none of the three.
+ * @returns {null | {kind: 'pr' | 'spec' | 'file', arg: string} | {error: string}}
+ */
+export const parseProof = (cell) => {
+    const plain = (cell ?? '').replace(/`/g, '').trim()
+    if (!/^T:/.test(plain)) return null
+    const body = plain.slice(2).trim()
+    let m = body.match(/^pr\s+#(\d+)$/)
+    if (m) return { kind: 'pr', arg: m[1] }
+    m = body.match(/^spec\s+([A-Za-z]+\d+)$/)
+    if (m) return { kind: 'spec', arg: m[1] }
+    m = body.match(/^file\s+(\S.*)$/)
+    if (m && !path.isAbsolute(m[1]) && !m[1].split(/[\\/]/).includes('..')) return { kind: 'file', arg: m[1] }
+    return { error: `"${plain}" is not a proof; write \`T: pr #N\`, \`T: spec <alias family>\` or \`T: file <repo path>\`` }
 }
 
 /** The build plan's "## Status (at-a-glance)" block, or the whole text when it has none (fixtures). */
@@ -336,12 +362,25 @@ export const inWindow = (due, window) => {
 }
 
 /**
+ * Whether an act's proof holds. `evidence`: `subjects` (git log --format=%s of main) and `exists`
+ * (a repo-relative path test); with none given nothing holds. A `spec` proof holds when any row id
+ * (a chunk alias, shipped or open) is the family plus lowercase letters: `DL3` holds for `DL3c`.
+ */
+export const proofHolds = (proof, phases, { subjects = [], exists = () => false } = {}) => {
+    if (!proof || proof.error) return false
+    if (proof.kind === 'pr') return Boolean(mergeSubject(subjects, proof.arg))
+    if (proof.kind === 'spec') return [...phases.keys()].some((id) => id.startsWith(proof.arg) && /^[a-z]+$/.test(id.slice(proof.arg.length)))
+    return exists(proof.arg)
+}
+
+/**
  * A phase Item's Status, derived from the build plan: `[x]` when every phase id it names
  * is shipped or skipped, `[ ]` otherwise (an id with no row counts as open). Null for a
  * `T` or `needs plot` Item, whose Status nothing derives.
  * @returns {'[x]' | '[ ]' | null}
  */
-export const derivedStatus = (item, phases) => {
+export const derivedStatus = (item, phases, evidence = {}) => {
+    if (item.proof && !item.proof.error) return proofHolds(item.proof, phases, evidence) ? '[x]' : null
     if (!Array.isArray(item.rows)) return null
     return item.rows.every((id) => phases.get(id)?.shipped) ? '[x]' : '[ ]'
 }
@@ -356,7 +395,7 @@ const TABLE_SCAFFOLD = /^\|\s*(?:Status\s*\||-)/
  * @param {string} md plan/deadlines.md
  * @returns {{md: string, changed: string[], unmatched: string[]}}
  */
-export const rewriteItemStatus = (md, phases) => {
+export const rewriteItemStatus = (md, phases, evidence = {}) => {
     const start = md.indexOf('\n## Items')
     if (start < 0) return { md, changed: [], unmatched: [] }
     const nextHeading = md.indexOf('\n## ', start + 1)
@@ -371,13 +410,36 @@ export const rewriteItemStatus = (md, phases) => {
             return line
         }
         const [, status, due, name, , , window, rowsCell, waitsCell] = m
-        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell), waitsOn: parseWaitsCell(waitsCell) }, phases)
+        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell), proof: parseProof(rowsCell), waitsOn: parseWaitsCell(waitsCell) }, phases, evidence)
         if (!want || want === status) return line
         changed.push(`${name}: ${status} -> ${want}`)
         return line.replace(STATUS_CELL, `$1${want}`)
     })
     return { md: md.slice(0, start) + lines.join('\n') + md.slice(end), changed, unmatched }
 }
+
+/** Every pull request number an Item's text names as `PR #N` (or `PRs #N, #M and #K`). */
+const namedPrs = (name) => [...name.matchAll(/\bPRs?\s+#(\d+)((?:\s*(?:,|and|&)\s*#\d+)*)/gi)].flatMap((m) => [m[1], ...[...m[2].matchAll(/#(\d+)/g)].map((n) => n[1])])
+
+/** The first commit subject that merged pull request `n`: a merge commit (`Merge pull request #N from …`) or a squash (`… (#N)`). */
+const mergeSubject = (subjects, n) =>
+    subjects.find((s) => new RegExp(`^Merge pull request #${n}(?!\\d)|\\(#${n}\\)\\s*$`).test(s.trim()))
+
+/**
+ * The open Items whose text names `PR #N` where main's history holds a commit that merged #N, one
+ * failure per Item and pull request. The caller supplies the subjects (git log --format=%s), so this
+ * never reads git; an empty list finds nothing.
+ * @param {{done: boolean, due: string, name: string}[]} items
+ * @param {string[]} subjects
+ * @returns {{item: string, due: string, pr: string, subject: string}[]}
+ */
+export const mergedPrItems = (items, subjects) =>
+    items
+        .filter((item) => !item.done)
+        .flatMap((item) => [...new Set(namedPrs(item.name))].flatMap((pr) => {
+            const subject = mergeSubject(subjects, pr)
+            return subject ? [{ item: item.name, due: item.due, pr, subject: subject.trim() }] : []
+        }))
 
 /** Whole days from `today` to `due` (both YYYY-MM-DD); negative when overdue. */
 export const daysUntil = (today, due) =>
@@ -437,8 +499,9 @@ export const nextNeed = (items, phases, today, horizon = HORIZON_DAYS) =>
 
 const dayName = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' })
 
-/** The short block the session-start hook prints. */
-export const reminderText = (needs, next, today) => {
+/** The short block the session-start hook prints. With a queue plan (queuePlan), the queue shape. */
+export const reminderText = (needs, next, today, queue = null) => {
+    if (queue) return queueReminderText(queue, today)
     const head = `DEADLINE REMINDER (${today}; plan/deadlines.md, next 2 weeks in LIVE_DEADLINES.md). Lead your first reply with this list:`
     if (!needs.length) {
         const tail = next ? ` Next: ${next.name} (${next.kind}), due ${dayName(next.due)}, ${whenText(next.days)}.` : ''
@@ -448,8 +511,9 @@ export const reminderText = (needs, next, today) => {
     return [head, ...lines].join('\n')
 }
 
-/** LIVE_DEADLINES.md: the next two weeks, regenerated daily by .github/workflows/deadlines.yml. */
-export const liveMarkdown = (needs, next, today) => {
+/** LIVE_DEADLINES.md: regenerated daily by .github/workflows/deadlines.yml. With a queue plan, the queue shape. */
+export const liveMarkdown = (needs, next, today, queue = null) => {
+    if (queue) return queueLiveMarkdown(queue, today)
     const rows = needs.map((n) => `| ${n.due} (${whenText(n.days)}) | ${n.name} | ${n.kind}: ${n.detail} | ${n.window} |`)
     const body = rows.length
         ? ['| Due | Item | What it needs | Window |', '|---|---|---|---|', ...rows].join('\n')
@@ -466,3 +530,150 @@ export const liveMarkdown = (needs, next, today) => {
         '',
     ].join('\n')
 }
+
+// The queue model (T, 2026-11-10). The Items table is an ordered queue of T's acts: every
+// act carries the date of the milestone it serves, never a date of its own, and its hours
+// in its name. `## Budget` states the hours a week T gives. The reminder then says two
+// things: whether each milestone fits the hours left before it, and which acts fit this week.
+
+const BUDGET_LINE = /^Hours a week:\s*(\d+(?:\.\d+)?)\s*$/m
+
+/** Whether the file has a `## Budget` section at all: the mark of the queue model, whatever the section says. */
+export const hasBudgetSection = (md) => /^## Budget\s*$/m.test(md)
+
+/** The `## Budget` section's hours a week, or null when it states none (or the file has no such section). */
+export const parseBudget = (md) => {
+    const lines = md.split(/\r?\n/)
+    const start = lines.findIndex((l) => /^## Budget\s*$/.test(l))
+    if (start < 0) return null
+    const rest = lines.slice(start + 1)
+    const end = rest.findIndex((l) => l.startsWith('## '))
+    const m = rest.slice(0, end < 0 ? undefined : end).map((l) => l.trimEnd()).join('\n').match(BUDGET_LINE)
+    return m && Number(m[1]) > 0 ? Number(m[1]) : null
+}
+
+const HOURS = /\((?:[^()]*,\s*)?(\d+(?:\.\d+)?)\s*h\)/g
+
+/** The hours an act's name states in its last "(… N h)", or null when it states none. */
+export const itemHours = (name) => {
+    const all = [...name.matchAll(HOURS)]
+    return all.length ? Number(all[all.length - 1][1]) : null
+}
+
+/**
+ * The loop rows an open act waits on: its open `Waits on` rows, and for an attended row whose
+ * `needs` are not shipped (it has no `Waits on` of its own) the rows itemNeed names.
+ */
+const owesOf = ({ item, need }, phases) => {
+    const named = need.detail.match(/the loop still owes (.+)$/)?.[1].split(', ') ?? []
+    return [...new Set([...owedRows(item, phases), ...named])]
+}
+
+const addDays = (today, days) => new Date(Date.parse(`${today}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10)
+const round1 = (n) => Math.round(n * 10) / 10
+
+/**
+ * The queue's state on `today` at `hoursPerWeek`.
+ * `milestones`: one per distinct due date, earliest first, each with the open acts and hours
+ * queued up to and including it (`cumHours`), the hours T has before it (`available`), the
+ * shortfall (`overBy`, 0 when it fits) and the day the queue reaches its end at this pace.
+ * `week`: the open acts T can do now, in table order, until the week's hours are spent (the
+ * first always shows). `later`: how many more T can do now. `waiting`: open acts whose
+ * `Waits on` rows the loop has not shipped. `noHours`: open acts that state no hours.
+ */
+export const queuePlan = (items, phases, today, hoursPerWeek) => {
+    const open = items
+        .map((item) => ({ item, need: itemNeed(item, phases), hours: itemHours(item.name) }))
+        .filter(({ need }) => need)
+    const dues = [...new Set(open.map(({ item }) => item.due))].sort()
+    const milestones = dues.map((due) => {
+        const upTo = open.filter(({ item }) => item.due <= due)
+        const cumHours = round1(upTo.reduce((sum, { hours }) => sum + (hours ?? 0), 0))
+        const days = daysUntil(today, due)
+        const available = round1(Math.max(0, days) * hoursPerWeek / 7)
+        return {
+            due,
+            days,
+            acts: open.filter(({ item }) => item.due === due).length,
+            openHours: round1(open.filter(({ item }) => item.due === due).reduce((sum, { hours }) => sum + (hours ?? 0), 0)),
+            cumHours,
+            available,
+            overBy: round1(Math.max(0, cumHours - available)),
+            finish: addDays(today, Math.ceil(cumHours / hoursPerWeek * 7)),
+        }
+    })
+    const blocked = ({ item, need }) => need.kind === 'waiting on the loop' || owedRows(item, phases).length > 0
+    const ready = open.filter((o) => !blocked(o))
+    const week = []
+    let spent = 0
+    for (const o of ready) {
+        if (week.length && spent + (o.hours ?? 0) > hoursPerWeek) break
+        spent += o.hours ?? 0
+        week.push({ name: o.item.name, due: o.item.due, kind: o.need.kind, detail: o.need.detail, hours: o.hours })
+    }
+    return {
+        hoursPerWeek,
+        milestones,
+        week,
+        later: ready.length - week.length,
+        waiting: open.filter(blocked).map((o) => ({ name: o.item.name, owes: owesOf(o, phases) })),
+        noHours: open.filter(({ hours }) => hours === null).map(({ item }) => item.name),
+    }
+}
+
+const fitText = (m) =>
+    m.overBy > 0
+        ? `over by ${m.overBy} h; at this pace the queue reaches it ${dayName(m.finish)}`
+        : `fits, with ${round1(m.available - m.cumHours)} h to spare`
+
+const milestoneLine = (m) =>
+    `${dayName(m.due)} (${whenText(m.days)}): ${m.acts} act${m.acts === 1 ? '' : 's'} open (${m.openHours} h), ${m.cumHours} h queued up to it, ${m.available} h available: ${fitText(m)}.`
+
+const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
+
+const owedList = (waiting) => {
+    const ids = [...new Set(waiting.flatMap((w) => w.owes))]
+    return ids.length ? ` (${ids.join(', ')})` : ''
+}
+
+const queueReminderText = (queue, today) => {
+    const head = `DEADLINE REMINDER (${today}; plan/deadlines.md, the queue in LIVE_DEADLINES.md). Lead your first reply with this list:`
+    if (!queue.milestones.length) return `${head}\n- The queue is empty: nothing needs T.`
+    const lines = [
+        head,
+        `Milestones, at ${queue.hoursPerWeek} h a week:`,
+        ...queue.milestones.map((m) => `- ${milestoneLine(m)}`),
+        `This week's acts, in order (${queue.hoursPerWeek} h):`,
+        ...queue.week.map((w) => `- ${w.name} — ${w.kind} (${w.detail}).`),
+    ]
+    if (!queue.week.length) lines.push('- Nothing is ready for T: every open act waits on the loop.')
+    const tail = [
+        queue.later ? `${queue.later} more ready after these` : '',
+        queue.waiting.length ? `${queue.waiting.length} wait on the loop${owedList(queue.waiting)}` : '',
+        queue.noHours.length ? `${queue.noHours.length} state no hours` : '',
+    ].filter(Boolean)
+    if (tail.length) lines.push(`Then: ${tail.join('; ')}.`)
+    return lines.join('\n')
+}
+
+const queueLiveMarkdown = (queue, today) => [
+    '# Live deadlines — the queue',
+    '',
+    `> Generated ${today} by \`node scripts/deadlines.mjs --write\` from \`plan/deadlines.md\` (the whole plan) and the`,
+    '> build plan. Do not edit by hand: change `plan/deadlines.md`. An act has no date of its own: it serves a',
+    `> milestone, and the queue's order is its priority. The forecast assumes ${queue.hoursPerWeek} h a week.`,
+    '',
+    '## Milestones',
+    '',
+    ...(queue.milestones.length ? queue.milestones.map((m) => `- **${m.due}** — ${milestoneLine(m)}`) : ['The queue is empty: nothing needs T.']),
+    '',
+    `## This week (${queue.hoursPerWeek} h)`,
+    '',
+    ...(queue.week.length
+        ? ['| # | Act | Hours | What it needs |', '|---|---|---|---|', ...queue.week.map((w, i) => `| ${i + 1} | ${w.name} | ${w.hours ?? '-'} | ${w.kind}: ${w.detail} |`)]
+        : ['Nothing is ready for T.']),
+    '',
+    ...(queue.later ? [`${queue.later} more acts are ready after these.`, ''] : []),
+    ...(queue.waiting.length ? ['## Waiting on the loop', '', ...queue.waiting.map((w) => `- ${shortName(w.name)} — the loop still owes ${w.owes.join(', ') || 'its rows'}`), ''] : []),
+    ...(queue.noHours.length ? ['## No hours stated', '', ...queue.noHours.map((n) => `- ${shortName(n)}`), ''] : []),
+].join('\n')

@@ -335,6 +335,8 @@ const terminal = async (page) =>
     // gated on the claim), so without this arm a victory read as "still live"
     // and the play loop burned its remaining rounds no-oping under the overlay.
     || (await has(page.getByTestId('combat-rewards')))
+    // A won fight with no offer (an elite's relic) ends on the victory screen's CONTINUE (FE1b).
+    || (await has(page.getByTestId('combat-victory')))
 
 /** Skip the dice-roll ritual so the round does not burn wall clock on it. */
 async function skipRoll(page) {
@@ -602,9 +604,9 @@ async function answerMercyCheck(page, sink, tag, mode, seed) {
         await page.getByTestId('combat-reward-skip').click({ timeout: 3000, force: true })
         await page.waitForTimeout(500)
         await assertAlive(page, sink, `${tag}, skipping the card after a finish`)
-        check(await has(page.getByTestId('combat-summary')), 'Finish did not reach the summary')
-        check(!(await has(page.getByTestId('combat-summary-spare-reward'))), 'the finished summary reveals a roll')
-        await shot(page, `${mode}-seed-${seed}-mercy-finished-summary`)
+        // Refusing the card closes the fight: no summary after a win (FE1b, call #3).
+        check(!(await has(page.getByTestId('combat-summary'))), 'Finish opened the summary after the card')
+        check(!(await has(page.getByTestId('combat-victory'))), 'the victory screen stayed up after the card')
     }
 }
 
@@ -714,11 +716,17 @@ async function playSeed(browser, baseUrl, seed, mode) {
             // picked, so every prior run silently skipped. That hole shipped a
             // real crash-on-accept. Tap the first offer tile once, so the
             // walk's confirm click lands on a real pick.
+            // A foe that falls ends on the victory screen (FE1b); the summary is a defeat's or a spare's.
             const outcomeLine = (await page.getByTestId('combat-summary').innerText().catch(() => ''))
-                .split('\n')[0] || '(no summary yet)'
+                .split('\n')[0]
+                || (await page.getByTestId('combat-victory-headline').innerText().catch(() => ''))
+                || '(no summary yet)'
             log(`${tag} — outcome read: ${outcomeLine}`)
             const rewards = page.getByTestId('combat-rewards')
             if (await has(rewards)) {
+                // The won fight's offer, as the player meets it (phase FE1a: the
+                // driven win's victory shot).
+                await shot(page, `${mode}-seed-${seed}-victory`)
                 const tile = rewards.locator(
                     '[data-testid^="combat-reward-"]'
                     + ':not([data-testid="combat-reward-skip"])'
@@ -738,6 +746,7 @@ async function playSeed(browser, baseUrl, seed, mode) {
             // because a silently-missing id turns this whole block into a no-op.
             const AFTERMATH = [
                 'combat-summary-close',
+                'combat-victory-continue',
                 'combat-victory-panel-carry-on',
                 'combat-reward-confirm',
                 'combat-reward-skip',

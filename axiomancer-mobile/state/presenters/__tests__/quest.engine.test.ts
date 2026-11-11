@@ -37,7 +37,6 @@ describe('selectQuestVM', () => {
     it('node 1 offers step 1: the requirement, a 0 count, no counter on a single step, no pay lines, ACCEPT', () => {
         const vm = selectQuestVM({ quest: slice(1), quests: base.quests });
         expect(vm.stage).toBe('offer');
-        expect(vm.eyebrow).toBe('STEP 1 OF 4');
         expect(vm.canAccept).toBe(true);
         expect(vm.canTurnIn).toBe(false);
         expect(vm.behind).toBeNull();
@@ -70,7 +69,6 @@ describe('selectQuestVM', () => {
     it('node 2 reads waiting while step 1 is accepted and unmet, with its progress', () => {
         const vm = selectQuestVM({ quest: slice(2), quests: startFixtureStep(base, 1) });
         expect(vm.stage).toBe('waiting');
-        expect(vm.eyebrow).toBe('STEP 2 OF 4');
         expect(vm.behind?.name).toBe('Cross the Gallows');
         expect(vm.behind?.status).toBe('active');
         expect(vm.canAccept).toBe(false);
@@ -95,7 +93,6 @@ describe('selectQuestVM', () => {
     it('a later node reads locked while the step before it is not accepted', () => {
         const vm = selectQuestVM({ quest: slice(3), quests: base.quests });
         expect(vm.stage).toBe('locked');
-        expect(vm.eyebrow).toBe('STEP 3 OF 4');
         expect(vm.canAccept).toBe(false);
         expect(vm.canTurnIn).toBe(false);
     });

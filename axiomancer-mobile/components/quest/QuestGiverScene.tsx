@@ -1,46 +1,23 @@
 /**
- * The quest screen's giver scene (phase ET1d): the giver's portrait and name
- * above their lines, and the relic that rises into view on a turn-in. Both
- * motions take the reduced-motion answer from their caller (the screen asks
+ * The quest screen's relic rise (phase ET1d): the relic that lifts into view
+ * on a turn-in. The giver's figure lives in the quest card. The
+ * motion takes the reduced-motion answer from their caller (the screen asks
  * the platform once); with it on the relic lands its end state at once.
  */
 
 import React, { useEffect } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { ItemGlyph } from '@/components/inventory/ItemCard';
-import { PLAYER_PORTRAITS } from '@/assets/images/portraits';
+import { giverFigure } from '@/assets/images/givers';
 import { resolveJuiceMode } from '@/lib/juice/instant';
-import type { QuestGiverVM } from '@/state/presenters/quest.engine';
 import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
-/** The portrait art for a slug; the first gallery entry stands in for an unknown one. */
+/** The giver's figure for a giver id; the table's stand-in answers an unknown one. */
 export function giverPortraitSource(slug: string): number {
-    return (PLAYER_PORTRAITS.find(p => p.id === slug) ?? PLAYER_PORTRAITS[0]!).source;
-}
-
-export interface QuestGiverSceneProps {
-    giver: QuestGiverVM;
-    /** True while the giver turns the player away: the portrait dims. */
-    turnedAway: boolean;
-}
-
-export function QuestGiverScene({ giver, turnedAway }: QuestGiverSceneProps) {
-    const styles = useStyles();
-    return (
-        <View style={styles.row} testID={turnedAway ? 'quest-giver-turned-away' : 'quest-giver'}>
-            <Image
-                source={giverPortraitSource(giver.portrait)}
-                style={[styles.portrait, turnedAway && styles.portraitAway]}
-                accessibilityLabel={giver.name}
-                testID="quest-giver-portrait"
-                resizeMode="cover"
-            />
-            <Text style={styles.name} testID="quest-giver-name">{giver.name}</Text>
-        </View>
-    );
+    return giverFigure(slug);
 }
 
 export interface RelicRiseProps {
@@ -49,7 +26,7 @@ export interface RelicRiseProps {
     reducedMotion: boolean;
 }
 
-/** The turned-in step's relic, rising into view before the paid card. */
+/** The turned-in step's relic, rising into view off the card's foot. */
 export function RelicRise({ itemId, name, reducedMotion }: RelicRiseProps) {
     const styles = useStyles();
     const instant = resolveJuiceMode({ reducedMotion }) === 'instant';
@@ -70,10 +47,6 @@ export function RelicRise({ itemId, name, reducedMotion }: RelicRiseProps) {
 }
 
 const useStyles = makeStyles((AXM) => ({
-    row: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
-    portrait: { width: 72, height: 72, borderWidth: 2, borderColor: AXM.ash },
-    portraitAway: { opacity: 0.35 },
-    name: { flex: 1, fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 22, lineHeight: 26, color: AXM.parchment },
     relic: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -82,7 +55,6 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.sulfur,
         backgroundColor: AXM.panelBg,
         padding: 10,
-        marginBottom: 10,
     },
     relicName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 20, color: AXM.sulfur },
 }));

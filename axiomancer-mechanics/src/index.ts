@@ -129,7 +129,7 @@ export type {
     CombatCard, CombatVerbClass, CardEffectKind,
     CombatThreatPhase, CombatThreatAction, CombatThreatEffect,
     CombatOutcome, CombatEvent,
-    CombatSummary,
+    CombatSummary, DefeatCause,
     CombatIntentType,
     SignatureSkill,
     // The three chain colours (momentum chain)
@@ -471,7 +471,7 @@ export type {
 // `rest` / `upgrade`.
 export {
     RESTCHOICE_TUNING, createRestChoiceSession, previewRestChoiceHeal,
-    chooseRestChoiceOffer, pickRestChoiceUpgrade, claimRestChoiceOutcome,
+    chooseRestChoiceOffer, pickRestChoiceUpgrade, cancelRestChoiceUpgrade, claimRestChoiceOutcome,
 } from './World/RestChoice';
 // Village counters — the paid rest and the card shop (buy a card, or pay to
 // remove one), beside the Anvil.

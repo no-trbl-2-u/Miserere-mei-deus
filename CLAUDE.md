@@ -19,18 +19,22 @@ or "Want to use `/messy` to file this dump?". The loop never fires either.
 
 **The vault:** T's Obsidian notes (goal, thread map, inbox) live in `vault/`, a separate repo; run `/vault` for a session and read [`docs/vault.md`](./docs/vault.md) for its write zones.
 
-**Deadlines (T, 2026-10-19).** `plan/deadlines.md` is the whole deadline plan; `LIVE_DEADLINES.md` is the
-next two weeks of items that need T, regenerated daily (never edit it by hand). **Every Item is a T act**
-(plot, pitch, decide, pick, author, play, review, merge, tag; T, 2026-10-28): loop rows have no dates of their own and
-sit in the `Waits on` cell of the T act they unblock, and the lint fails a loop row in an Item's `Rows`. When a chat starts, the
-session-start hook runs `node scripts/deadlines.mjs --remind` and prints a **DEADLINE REMINDER**: lead your
-first reply to T with that list (what needs a plot, what needs T, and when it is due) before anything else.
-It is silent in GitHub Actions, so loop ticks never see it. When you `/plot` a deadline item, replace its
-`needs plot` in the Items table with the new chunks' aliases; when T finishes a `T` task, tick its Status `[x]`.
-A phase Item's Status is derived by `node scripts/deadlines.mjs --write`; never hand-edit it.
-`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an open chunk (by its `alias:`) has no Item and no
-`## Unscheduled` line, an Item names a missing row, a date leaves its window, or a phase Status is stale. It
-cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a reconcile step that edits such Items.
+**Deadlines (T, 2026-11-10: the queue).** `plan/deadlines.md` is the whole deadline plan: two milestones (Act 1,
+Chapter 1, then Act 1; the file holds their dates), a `## Budget` of T's hours a week, and the Items table, an ordered queue of
+T's acts. **An act has no date of its own**: its `Due` cell holds its milestone's date, its place in the table is its
+priority, and its hours are in its name as `(N h)`. **Every Item is a T act** (plot, pitch, decide, pick, author,
+play, review, merge, tag); loop rows are not listed there, except in the `Waits on` cell of the act that needs them
+(the lint fails a loop row in an Item's `Rows`, and an open Item naming a `PR #N` that `main` has merged: tick it or drop the number). `LIVE_DEADLINES.md` is the same queue's forecast and this week's
+acts, regenerated daily (never edit it by hand). When a chat starts, the session-start hook runs
+`node scripts/deadlines.mjs --remind` and prints a **DEADLINE REMINDER**: for each milestone whether the hours queued
+up to it fit the hours T has before it, then the acts that fit this week. Lead your first reply to T with it, before
+anything else. It is silent in GitHub Actions, so loop ticks never see it. When you `/plot` a queue act, replace its
+`needs plot` with the new chunks' aliases when they wait on T, else tick it; when T finishes a `T` act, tick its
+Status `[x]`. A phase Item's Status is derived by `node scripts/deadlines.mjs --write`; never hand-edit it. To
+reprioritise, move the row; to move an act to the other milestone, change its `Due` and `Window`.
+`scripts/check-deadlines.mjs` (in the root `npm test`) fails when an Item names a missing row, an act's date is
+not its window's milestone date, or a phase Status is stale. It cannot see an Item whose premise is gone, so `/plot` and `/messy` carry a
+reconcile step that edits such Items.
 
 Answering a **balance/measurement** question (win rates, engagement)? Read
 `docs/reports/measured/latest.md` (phase R12a: the grey, Blood Price and Elementalist

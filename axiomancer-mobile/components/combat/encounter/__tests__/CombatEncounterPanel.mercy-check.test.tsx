@@ -177,11 +177,16 @@ describe('Finish', () => {
         expect(after.player.experience).toBeGreaterThan(before.experience);
         expect(after.combatReward?.spare ?? null).toBeNull();
 
+        // The foe fell: the victory screen, its headline over the offer.
+        expect(screen.getByTestId('combat-victory')).toBeTruthy();
+        expect(textsUnder('combat-victory-headline').join(' ')).toMatch(/falls/);
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
+
+        // Refusing the card closes the fight; the summary never opens after a win.
         act(() => { fireEvent.press(screen.getByTestId('combat-reward-skip')); });
-        expect(screen.getByTestId('combat-summary')).toBeTruthy();
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
         expect(screen.queryByTestId('combat-summary-spare-reward')).toBeNull();
-        expect(textsUnder('combat-summary').join(' ')).toMatch(/falls/);
-        expect(textsUnder('combat-summary-mercy-line')).toEqual([QuayCrab.mercyLines!.finish]);
+        expect(screen.queryByTestId('combat-victory')).toBeNull();
     });
 });
 
@@ -196,7 +201,7 @@ describe('who never asks', () => {
         expect(screen.queryByTestId('combat-mercy')).toBeNull();
         expect(screen.getByTestId('combat-rewards')).toBeTruthy();
         act(() => { fireEvent.press(screen.getByTestId('combat-reward-skip')); });
-        expect(screen.getByTestId('combat-summary')).toBeTruthy();
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
         expect(screen.queryByTestId('combat-summary-mercy-line')).toBeNull();
     });
 });

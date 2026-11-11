@@ -1,8 +1,8 @@
 name: deadlines
 
-# Keeps LIVE_DEADLINES.md current (T, 2026-10-19): the items from plan/deadlines.md
-# due in the next two weeks that need T (a plot, a task, or an attended row ready
-# for T). The same run recomputes every phase Item's Status cell in
+# Keeps LIVE_DEADLINES.md current (T, 2026-10-19; the queue since 2026-11-10): for each
+# milestone of plan/deadlines.md whether the hours queued up to it fit T's budget, then
+# the acts that fit this week and the ones waiting on the loop. The same run recomputes every phase Item's Status cell in
 # plan/deadlines.md from the build plan (phase DL1b). Regenerated every morning and
 # whenever the plan or the build plan changes on main; both files are committed to
 # main together, in one commit, only when either changed. It joins the

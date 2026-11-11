@@ -1,7 +1,7 @@
 /**
  * The play-log gate and stamps (phase BE2b, A5): `canSendPlayLog()` is true
- * only with dev tools on, the BE1 URL and token set, and the switch on; each
- * of the three false shuts it. The session id is minted once per launch.
+ * with the BE1 URL and token set, and (where dev tools are on) the switch on;
+ * each false shuts it. The session id is minted once per launch.
  * The puzzle poster's own gate ignores the switch.
  */
 
@@ -45,10 +45,25 @@ describe('canSendPlayLog', () => {
         expect(playLogConfig(store)).toEqual({ url: 'https://miserere-api.example.workers.dev', token: 'dev-token' });
     });
 
-    it('is shut in a build without dev tools', () => {
+    it('is open in a build without dev tools: the production tester APK posts', () => {
         devTools.mockReturnValue(false);
+        expect(canSendPlayLog(store)).toBe(true);
+        expect(playLogConfig(store)).toEqual({ url: 'https://miserere-api.example.workers.dev', token: 'dev-token' });
+    });
+
+    it('is shut without dev tools when the URL or the token is missing', () => {
+        devTools.mockReturnValue(false);
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_URL;
         expect(canSendPlayLog(store)).toBe(false);
-        expect(playLogConfig(store)).toBeNull();
+        process.env.EXPO_PUBLIC_PUZZLE_API_URL = 'https://miserere-api.example.workers.dev';
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
+        expect(canSendPlayLog(store)).toBe(false);
+    });
+
+    it('without dev tools the dev menu switch does not apply, so a stored off still posts', () => {
+        devTools.mockReturnValue(false);
+        store.set({ playLogging: false });
+        expect(canSendPlayLog(store)).toBe(true);
     });
 
     it('is shut without the API URL, and without the token', () => {
@@ -59,7 +74,7 @@ describe('canSendPlayLog', () => {
         expect(canSendPlayLog(store)).toBe(false);
     });
 
-    it('is shut with the switch off', () => {
+    it('is shut with the switch off while dev tools are on', () => {
         store.set({ playLogging: false });
         expect(canSendPlayLog(store)).toBe(false);
         expect(playLogConfig(store)).toBeNull();

@@ -8,6 +8,8 @@
  *   offer ──chooseRestChoiceOffer('rest')────────────────────────────▶ outcome
  *     │                                                                   │
  *     └──chooseRestChoiceOffer('upgrade')──▶ upgrade-pick ──pickRestChoiceUpgrade──▶ outcome
+ *     ▲                                          │
+ *     └──────────cancelRestChoiceUpgrade─────────┘
  *                                                                              │
  *                                                                    claimRestChoiceOutcome
  *                                                                              ▼
@@ -152,6 +154,16 @@ export function pickRestChoiceUpgrade(s: RestChoiceSession, cardId: string): Res
         upgradedCardId: cardId,
         upgradedToCardId: to,
     });
+}
+
+/**
+ * upgrade-pick → offer. Backs out of the picker before a card is named, so
+ * both offers stand again (the Anvil's
+ * `cancelBlacksmithCardUpgrade` does the same). Nothing is chosen until a card is.
+ */
+export function cancelRestChoiceUpgrade(s: RestChoiceSession): RestChoiceSession {
+    if (s.phase !== 'upgrade-pick') return s;
+    return { ...s, phase: 'offer' };
 }
 
 // ---------------------------------------------------------------------------

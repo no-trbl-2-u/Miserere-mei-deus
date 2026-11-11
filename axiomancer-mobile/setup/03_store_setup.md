@@ -99,9 +99,17 @@ Ensure `eas.json` has production profiles:
 }
 ```
 
+The committed `eas.json` `production` profile is the tester APK, not a store
+build: Android is a sideloadable APK with DEV TOOLS off, and it posts the
+testers' play (stamped `human`) when `preview-build` baked in the puzzle API
+URL and token, which it does for `platform: android` only. `preview-build`
+refuses `platform: all` with `production`, so the token never reaches an App
+Store build, and the `beta` iOS build posts nothing. The Data safety answer
+above is for a store listing that carries no token.
+
 ### 2. Building for Stores
 ```bash
-# Build for both platforms
+# Build for both platforms (by hand; preview-build refuses this for production)
 eas build --platform all --profile production
 
 # Build iOS only  

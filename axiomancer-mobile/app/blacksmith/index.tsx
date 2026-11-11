@@ -1,37 +1,45 @@
 /**
  * /blacksmith — the Blacksmith encounter screen ("The Anvil").
  *
- * The die-gear upgrade surface: HONE (add a mana face),
- * TEMPER (mana face → special face), gear SWAP, and one card UPGRADE a
- * visit on the shared upgrade screen (Phase UP1e). All rules live in
- * `axiomancer-mechanics` (World/Blacksmith); this screen renders the
- * presenter VM and dispatches store actions only.
+ * The smith fills the screen from the top; HEART, BODY, MIND (and WILD) tabs
+ * choose one die, whose six faces unfold as a cross net at his shoulder, and
+ * the verbs below work that one die (168.5, ballot shot B-02b). The forge
+ * opens straight onto this screen: the engine's intro step is skipped in the
+ * store (`beginBlacksmithAction`), and the smith's line stands in for it.
+ * Buttons wear the brass action plate.
  *
- * Owner-UI doctrine: a cap-violating OR unaffordable offer is greyed AND
- * names its reason out loud (never a silent no-op) — the greyed-offer
- * copy is the SAME cap authority the engine's refusal card uses, so they
- * always agree.
+ * The die-gear upgrade surface: HONE (add a mana face), TEMPER (mana face →
+ * special face), gear SWAP, and one card UPGRADE a visit on the shared
+ * upgrade screen (Phase UP1e). All rules live in `axiomancer-mechanics`
+ * (World/Blacksmith); this screen renders the presenter VM and dispatches
+ * store actions only.
+ *
+ * Owner-UI doctrine: a cap-violating OR unaffordable offer wears the disabled
+ * plate AND names its reason out loud (never a silent no-op) — the reason is
+ * the SAME cap authority the engine's refusal card uses, so they always agree.
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { Haptics, ImpactFeedbackStyle } from '@/lib/platform/haptics';
 
 import { LeaveRow } from '@/components/LeaveRow';
+import { BrassPlate } from '@/components/blacksmith/BrassPlate';
 import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { ScreenBg } from '@/components/ScreenBg';
+import { Image } from '@/lib/platform/image';
+import { UPGRADE_FIGURE_STANDIN, keeperPortrait } from '@/assets/images/keepers';
 import { mapBackdropFor } from '@/state/exploration-maps';
-import { AxmIcon } from '@/components/icons';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import {
     selectBlacksmithVM,
     type BlacksmithDieVM,
+    type BlacksmithFaceKind,
     type BlacksmithOfferVM,
     type BlacksmithSwapVM,
 } from '@/state/presenters/blacksmith.engine';
 import {
-    BLACKSMITH_CARD_SECTION_LABEL,
     BLACKSMITH_CARD_UPGRADE_BACK,
     blacksmithUpgradedChip,
 } from '@/state/presenters/blacksmith.copy';
@@ -48,6 +56,9 @@ import { makeStyles, usePalette } from '@/theme/runtime';
  */
 const SCENE_MAX_WIDTH = 560;
 
+/** One face tile's side, in points. Three across plus gaps stay left of the smith's face at 375. */
+const FACE = 46;
+
 function hapticImpact(style: ImpactFeedbackStyle): void {
     try {
         Haptics.impactAsync(style).catch(() => undefined);
@@ -57,18 +68,17 @@ function hapticImpact(style: ImpactFeedbackStyle): void {
 }
 
 /**
- * A single service offer as a button: its label over its price in SHILLINGS, the trade
- * it makes (`MISS face → MANA`), and, when the offer is
- * greyed, the LOUD reason. Reads one `BlacksmithOfferVM` off the presenter;
- * mounted by `DieRow` (HONE + TEMPER) and `SwapRow` (SWAP) below.
+ * A single service offer as a brass plate: its label over its price in
+ * SHILLINGS, the trade it makes (`MISS face → MANA`) under it, and, when the
+ * offer is refused, the disabled plate and the LOUD reason. Reads one
+ * `BlacksmithOfferVM` off the presenter; mounted for HONE, TEMPER, the card
+ * upgrade and SWAP.
  */
 function OfferButton({ offer, onPress }: { offer: BlacksmithOfferVM; onPress: () => void }) {
     const styles = useStyles();
-    const AXM = usePalette();
     return (
         <View style={styles.offerCol}>
-            <TouchableOpacity
-                accessibilityRole="button"
+            <BrassPlate
                 accessibilityLabel={
                     offer.enabled
                         // The forge prices in SHILLINGS, not the combat board's
@@ -77,31 +87,19 @@ function OfferButton({ offer, onPress }: { offer: BlacksmithOfferVM; onPress: ()
                             + (offer.effect ? `: ${offer.effect}` : '')
                         : `${offer.label} unavailable: ${offer.reason}`
                 }
-                accessibilityState={{ disabled: !offer.enabled }}
                 disabled={!offer.enabled}
+                label={offer.label}
                 onPress={() => {
                     hapticImpact(Haptics.ImpactFeedbackStyle.Medium);
                     onPress();
                 }}
-                style={[styles.offerButton, !offer.enabled && styles.offerDisabled]}
+                sub={`${offer.price} SHILLINGS`}
+                subTestID={`blacksmith-offer-${offer.id}-price`}
                 testID={`blacksmith-offer-${offer.id}`}
-            >
-                <Text style={[styles.offerLabel, !offer.enabled && { color: AXM.bone }]}>
-                    {offer.label}
-                </Text>
-                {/* Shillings, not ◆ — that glyph is combat's CONVICTION. The
-                    unit is spelled out on its own line under the verb, so
-                    HONE and TEMPER side by side still fit a phone. */}
-                <Text
-                    style={[styles.offerPrice, !offer.enabled && { color: AXM.bone }]}
-                    testID={`blacksmith-offer-${offer.id}-price`}
-                >
-                    {offer.price} SHILLINGS
-                </Text>
-            </TouchableOpacity>
-            {/* HONE and TEMPER are the smith's words, not the
-                game's — each offer states the trade it makes in the same face
-                vocabulary the die read above it uses. */}
+            />
+            {/* HONE and TEMPER are the smith's words, not the game's: each
+                offer states the trade it makes in the face vocabulary the net
+                above uses. */}
             {offer.effect.length > 0 && (
                 <Text style={styles.offerEffect} testID={`blacksmith-offer-${offer.id}-effect`}>
                     {offer.effect}
@@ -116,28 +114,43 @@ function OfferButton({ offer, onPress }: { offer: BlacksmithOfferVM; onPress: ()
     );
 }
 
-function DieRow({
-    die,
-    onHone,
-    onTemper,
-}: {
-    die: BlacksmithDieVM;
-    onHone: () => void;
-    onTemper: () => void;
-}) {
+/** One face tile of the net. */
+function FaceTile({ kind, testID }: { kind: BlacksmithFaceKind; testID: string }) {
     const styles = useStyles();
     return (
-        <View style={styles.die} testID={`blacksmith-die-${die.color}`}>
-            <View style={styles.dieHead}>
-                <Text style={styles.dieName}>{die.label}</Text>
-                <Text style={styles.dieFaces} testID={`blacksmith-die-${die.color}-faces`}>
-                    {die.faceSummary}
-                </Text>
-            </View>
-            <View style={styles.offerRow}>
-                <OfferButton offer={die.hone} onPress={onHone} />
-                <OfferButton offer={die.temper} onPress={onTemper} />
-            </View>
+        <View
+            style={[styles.face, kind === 'BOON' && styles.faceBoon, kind === 'MISS' && styles.faceMiss]}
+            testID={testID}
+        >
+            <Text style={[styles.faceText, kind === 'BOON' && styles.faceTextBoon]}>{kind}</Text>
+        </View>
+    );
+}
+
+/**
+ * The die's six faces as a cross net: one face up, three across, one below
+ * the middle, then one more below (the ballot's B-02b). Faces arrive in net
+ * order from the presenter.
+ */
+function FaceNet({ die }: { die: BlacksmithDieVM }) {
+    const styles = useStyles();
+    const at = (i: number) => (
+        <FaceTile kind={die.faces[i]!} testID={`blacksmith-die-${die.color}-face-${i}`} />
+    );
+    return (
+        <View
+            style={styles.net}
+            testID={`blacksmith-die-${die.color}`}
+            accessible
+            accessibilityLabel={`${die.label} die: ${die.faceSummary}`}
+        >
+            <View style={styles.netRow}><View style={styles.netGap} />{at(0)}<View style={styles.netGap} /></View>
+            <View style={styles.netRow}>{at(1)}{at(2)}{at(3)}</View>
+            <View style={styles.netRow}><View style={styles.netGap} />{at(4)}<View style={styles.netGap} /></View>
+            <View style={styles.netRow}><View style={styles.netGap} />{at(5)}<View style={styles.netGap} /></View>
+            <Text style={styles.dieFaces} testID={`blacksmith-die-${die.color}-faces`}>
+                {die.faceSummary}
+            </Text>
         </View>
     );
 }
@@ -145,14 +158,12 @@ function DieRow({
 function SwapRow({ swap, onSwap }: { swap: BlacksmithSwapVM; onSwap: () => void }) {
     const styles = useStyles();
     return (
-        <View style={styles.die} testID={`blacksmith-swap-${swap.offer.id}`}>
-            <View style={styles.dieHead}>
+        <View style={styles.swap} testID={`blacksmith-swap-${swap.offer.id}`}>
+            <View style={styles.swapHead}>
                 <Text style={styles.dieName}>{swap.name}</Text>
                 <Text style={styles.dieFaces}>{swap.faceSummary}</Text>
             </View>
-            <View style={styles.offerRow}>
-                <OfferButton offer={swap.offer} onPress={onSwap} />
-            </View>
+            <OfferButton offer={swap.offer} onPress={onSwap} />
         </View>
     );
 }
@@ -165,6 +176,7 @@ export default function BlacksmithScreen() {
     const vm = useMemo(() => selectBlacksmithVM({ blacksmith: slice }), [slice]);
     const actions = useGameActions();
     const router = useRouter();
+    const [chosen, setChosen] = useState<BlacksmithDieVM['color']>('heart');
 
     useEffect(() => {
         if (!vm.active && router.canGoBack()) router.back();
@@ -182,6 +194,8 @@ export default function BlacksmithScreen() {
         );
     }
 
+    const die = vm.dice.find((d) => d.color === chosen) ?? vm.dice[0]!;
+
     return (
         <ScreenBg scrollable={false} art="blacksmith" regionPlate={regionPlate}>
             <ScrollView
@@ -189,68 +203,56 @@ export default function BlacksmithScreen() {
                 contentContainerStyle={styles.scroll}
                 testID="blacksmith-scroll"
             >
-                <View style={styles.eyebrowRow}>
-                    <AxmIcon name="action-anvil" size={18} />
-                    <Text style={styles.eyebrow}>THE ANVIL</Text>
-                </View>
-                <Text style={styles.title}>A SMITH FOR YOUR DICE</Text>
-
-                {vm.phase === 'intro' && (
-                    <View testID="blacksmith-intro">
-                        <Text style={styles.body} testID="blacksmith-intro-body">
-                            {vm.introBody}
-                        </Text>
-                        <TouchableOpacity
-                            accessibilityRole="button"
-                            accessibilityLabel="Set your dice on the anvil"
-                            onPress={actions.startBlacksmithForging}
-                            style={styles.bigButton}
-                            testID="blacksmith-begin"
-                        >
-                            <Text style={styles.bigButtonText}>SET THEM ON THE ANVIL</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-
                 {vm.phase === 'forging' && (
-                    <View testID="blacksmith-forging">
-                        <View style={styles.budgetRow}>
-                            <Text style={styles.budgetLabel}>PURSE</Text>
-                            {/* Spelled out once, the way the village
-                                stall head spells its own purse, so the `12s` on
-                                every offer below has something to decode against. */}
+                    <View style={styles.forge} testID="blacksmith-forging">
+                        <View style={styles.topRow}>
+                            <Text style={styles.eyebrow}>THE ANVIL</Text>
                             <Text style={styles.budgetValue} testID="blacksmith-budget">
                                 {vm.budget} SHILLINGS
                             </Text>
                         </View>
-
-                        <Text style={styles.sectionLabel}>YOUR DICE</Text>
+                        <View style={styles.tabs}>
+                            {vm.dice.map((d) => (
+                                <BrassPlate
+                                    key={d.color}
+                                    label={d.label}
+                                    selected={d.color === die.color}
+                                    onPress={() => setChosen(d.color)}
+                                    style={styles.tab}
+                                    accessibilityLabel={`Work the ${d.color} die`}
+                                    testID={`blacksmith-tab-${d.color}`}
+                                />
+                            ))}
+                        </View>
+                        {/* The smith fills the stage; the net sits at his
+                            shoulder, clear of his face. */}
+                        <View style={styles.stage}>
+                            <Image
+                                source={keeperPortrait('smith')}
+                                style={styles.smith}
+                                contentFit="contain"
+                                testID="blacksmith-smith"
+                            />
+                            <FaceNet die={die} />
+                        </View>
+                        <Text style={styles.smithLine} testID="blacksmith-smith-line">{vm.smithLine}</Text>
                         {/* Every die prints `1 BOON · 2 MANA · 3 MISS`; this key
                             says what those three words are worth. */}
                         <Text style={styles.faceKey} testID="blacksmith-face-key">
                             {vm.faceKey}
                         </Text>
-                        {vm.dice.map((die) => (
-                            <DieRow
-                                key={die.color}
-                                die={die}
-                                onHone={() => actions.honeBlacksmith(die.color)}
-                                onTemper={() => actions.temperBlacksmith(die.color)}
-                            />
-                        ))}
+                        <View style={styles.offerRow}>
+                            <OfferButton offer={die.hone} onPress={() => actions.honeBlacksmith(die.color)} />
+                            <OfferButton offer={die.temper} onPress={() => actions.temperBlacksmith(die.color)} />
+                        </View>
 
                         {vm.cardUpgrade !== null && (
-                            <>
-                                <Text style={styles.sectionLabel}>{BLACKSMITH_CARD_SECTION_LABEL}</Text>
-                                <View style={styles.die} testID="blacksmith-card-upgrade">
-                                    <View style={styles.offerRow}>
-                                        <OfferButton
-                                            offer={vm.cardUpgrade}
-                                            onPress={actions.chooseBlacksmithCardUpgrade}
-                                        />
-                                    </View>
-                                </View>
-                            </>
+                            <View style={styles.wide} testID="blacksmith-card-upgrade">
+                                <OfferButton
+                                    offer={vm.cardUpgrade}
+                                    onPress={actions.chooseBlacksmithCardUpgrade}
+                                />
+                            </View>
                         )}
 
                         {vm.swaps.length > 0 && (
@@ -266,15 +268,14 @@ export default function BlacksmithScreen() {
                             </>
                         )}
 
-                        <TouchableOpacity
-                            accessibilityRole="button"
-                            accessibilityLabel="Take your dice and leave the anvil"
-                            onPress={actions.leaveBlacksmith}
-                            style={styles.bigButton}
-                            testID="blacksmith-leave"
-                        >
-                            <Text style={styles.bigButtonText}>TAKE THEM AND GO</Text>
-                        </TouchableOpacity>
+                        <View style={styles.wide}>
+                            <BrassPlate
+                                accessibilityLabel="Take your dice and leave the anvil"
+                                label="TAKE THEM AND GO"
+                                onPress={actions.leaveBlacksmith}
+                                testID="blacksmith-leave"
+                            />
+                        </View>
                     </View>
                 )}
 
@@ -283,6 +284,7 @@ export default function BlacksmithScreen() {
                         <CardUpgradePicker
                             rows={vm.upgradeRows}
                             priceLine={vm.upgradePriceLine}
+                            figure={UPGRADE_FIGURE_STANDIN}
                             onConfirm={(cardId) => actions.pickBlacksmithCardUpgrade(cardId)}
                         />
                         <LeaveRow
@@ -315,17 +317,14 @@ export default function BlacksmithScreen() {
                                 )}
                             </View>
                         )}
-                        <TouchableOpacity
-                            accessibilityRole="button"
-                            accessibilityLabel="Continue"
-                            onPress={actions.continueBlacksmithCard}
-                            style={styles.bigButton}
-                            testID="blacksmith-continue"
-                        >
-                            <Text style={styles.bigButtonText}>
-                                {vm.card.refused ? 'HEAR HIM OUT' : 'GOOD'}
-                            </Text>
-                        </TouchableOpacity>
+                        <View style={styles.wide}>
+                            <BrassPlate
+                                accessibilityLabel="Continue"
+                                label={vm.card.refused ? 'HEAR HIM OUT' : 'GOOD'}
+                                onPress={actions.continueBlacksmithCard}
+                                testID="blacksmith-continue"
+                            />
+                        </View>
                     </View>
                 )}
 
@@ -338,20 +337,19 @@ export default function BlacksmithScreen() {
                                 <Text key={i} style={styles.chip}>{chip}</Text>
                             ))}
                         </View>
-                        <TouchableOpacity
-                            accessibilityRole="button"
-                            accessibilityLabel="Pay the smith and pocket your dice"
-                            onPress={actions.claimBlacksmithOutcome}
-                            style={styles.bigButton}
-                            testID="blacksmith-claim"
-                        >
-                            <Text style={styles.bigButtonText}>PAY AND POCKET THEM</Text>
-                        </TouchableOpacity>
+                        <View style={styles.wide}>
+                            <BrassPlate
+                                accessibilityLabel="Pay the smith and pocket your dice"
+                                label="PAY AND POCKET THEM"
+                                onPress={actions.claimBlacksmithOutcome}
+                                testID="blacksmith-claim"
+                            />
+                        </View>
                     </View>
                 )}
 
                 {/* Shared bordered control — see LeaveRow. */}
-                {vm.phase !== 'outcome' && vm.phase !== 'card' && vm.phase !== 'upgrade-pick' && (
+                {vm.phase === 'forging' && (
                     <LeaveRow
                         label="LET THE COALS DIE"
                         accessibilityLabel="Leave the forge untouched"
@@ -372,15 +370,45 @@ const useStyles = makeStyles((AXM) => ({
         padding: 14,
         paddingBottom: 24,
         flexGrow: 1,
-        justifyContent: 'center',
         width: '100%',
         maxWidth: SCENE_MAX_WIDTH,
         alignSelf: 'center',
     },
-    eyebrowRow: {
+    forge: { flexGrow: 1 },
+    topRow: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginBottom: 8,
+    },
+    tabs: { flexDirection: 'row', gap: 6 },
+    tab: { flex: 1, paddingHorizontal: 8 },
+    stage: { flexGrow: 1, minHeight: 280, marginVertical: 4 },
+    smith: { position: 'absolute', right: 0, top: 0, bottom: 0, width: '64%' },
+    net: { position: 'absolute', left: 0, top: 8, width: FACE * 3 + 8 },
+    netRow: { flexDirection: 'row', gap: 4, marginBottom: 4 },
+    netGap: { width: FACE },
+    face: {
+        width: FACE,
+        height: FACE,
+        borderWidth: 2,
+        borderColor: AXM.bone,
+        backgroundColor: AXM.panelBg,
+        borderRadius: 6,
         alignItems: 'center',
-        gap: 8,
+        justifyContent: 'center',
+    },
+    faceBoon: { backgroundColor: AXM.sulfur, borderColor: AXM.parchment },
+    faceMiss: { backgroundColor: AXM.bg, borderColor: AXM.ash },
+    faceText: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, color: AXM.parchment },
+    faceTextBoon: { color: AXM.bg },
+    smithLine: {
+        fontFamily: TYPE_ROLES.narration.fontFamily,
+        fontSize: 18,
+        lineHeight: 24,
+        color: AXM.parchment,
+        textAlign: 'center',
+        marginBottom: 4,
     },
     eyebrow: {
         fontFamily: TYPE_ROLES.eyebrow.fontFamily,
@@ -389,13 +417,6 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.bone,
         marginBottom: 4,
     },
-    title: {
-        fontFamily: TYPE_ROLES.title.fontFamily,
-        fontSize: 26,
-        lineHeight: 30,
-        color: AXM.parchment,
-        marginBottom: 10,
-    },
     body: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
@@ -403,16 +424,6 @@ const useStyles = makeStyles((AXM) => ({
         color: AXM.parchment,
         marginBottom: 8,
     },
-    budgetRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        borderBottomWidth: 1,
-        borderBottomColor: AXM.ash,
-        paddingBottom: 6,
-        marginBottom: 10,
-    },
-    budgetLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
     budgetValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 20, color: AXM.sulfur },
     sectionLabel: {
         fontFamily: TYPE_ROLES.eyebrow.fontFamily,
@@ -423,49 +434,30 @@ const useStyles = makeStyles((AXM) => ({
         marginBottom: 6,
     },
     // The legend for the per-die face read; chronicle voice, one
-    // step quieter than the die rows it explains.
+    // step quieter than the plates it explains.
     faceKey: {
         fontFamily: TYPE_ROLES.narration.fontFamily,
         fontSize: 12,
         lineHeight: 17,
         color: AXM.bone,
+        textAlign: 'center',
         marginBottom: 8,
     },
-    die: {
-        borderWidth: 2,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
-        padding: 10,
-        marginBottom: 8,
-    },
-    dieHead: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 8,
-    },
-    dieName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing},
-    dieFaces: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, color: AXM.bone },
+    dieName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 16, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing },
+    dieFaces: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 10, color: AXM.bone, marginTop: 2 },
+    swap: { marginTop: 8 },
+    swapHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 },
+    wide: { marginTop: 8 },
     offerRow: { flexDirection: 'row', gap: 8 },
     offerCol: { flex: 1 },
-    offerButton: {
-        borderWidth: 1,
-        borderColor: AXM.sulfur,
-        paddingVertical: 8,
-        paddingHorizontal: 8,
-        gap: 2,
-        backgroundColor: AXM.bg,
-    },
-    offerDisabled: { borderColor: AXM.ash, opacity: 0.5 },
-    offerLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 14, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
-    offerPrice: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 12, color: AXM.sulfur },
-    // The trade a verb makes, in the die read's own mono face.
+    // The trade a verb makes, in the die read's own face.
     offerEffect: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 11,
         lineHeight: 15,
         color: AXM.bone,
         marginTop: 4,
+        textAlign: 'center',
     },
     offerReason: {
         fontFamily: TYPE_ROLES.narration.fontFamily,
@@ -473,6 +465,7 @@ const useStyles = makeStyles((AXM) => ({
         lineHeight: 15,
         color: AXM.bone,
         marginTop: 4,
+        textAlign: 'center',
     },
     card: {
         borderWidth: 2,
@@ -497,15 +490,6 @@ const useStyles = makeStyles((AXM) => ({
         paddingHorizontal: 5,
         paddingVertical: 2,
     },
-    bigButton: {
-        borderWidth: 2,
-        borderColor: AXM.sulfur,
-        marginTop: 10,
-        paddingVertical: 10,
-        alignItems: 'center',
-        backgroundColor: AXM.bg,
-    },
-    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
     inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

@@ -25,20 +25,29 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 | `dialogue-choice-<id>-confirmed` | The armed state marker |
 | `dialogue-choice-<id>-consequences` | Consequence chips under a choice |
 | `village-inactive` | `/village` with no event |
-| `village-scroll` | Scroll view |
-| `village-merchant-<name>` | Merchant card |
-| `village-purse` | Shillings and VITAE |
-| `village-note` | What the last counter did, or why it refused |
+| `village-scroll` | The hub's scroll view |
+| `village-host` / `village-host-line` | The host's portrait and line on the hub |
+| `village-merchant-<name>` | Merchant card, under the hub's counters |
+| `village-purse` | Shillings and VITAE (hub and each counter screen) |
+| `village-open-rest` | Tap to open the paid rest's screen (`/village/rest`) |
+| `village-open-shop` | Tap to open the Shop's screen (`/village/shop`) |
+| `village-rest-screen-back` / `village-shop-back` | BACK TO THE VILLAGE / LEAVE THE SHOP: back to the hub |
+| `village-note` | What the last counter did, or why it refused (on that counter's screen) |
 | `village-rest` | Tap to rest for shillings (disabled when refused) |
 | `village-rest-price` / `village-rest-effect` / `village-rest-refusal` | Rest counter copy |
-| `village-card-<cardId>` | A card on the card shop's counter |
+| `village-card-<cardId>` | The card in the middle of the Shop's carousel (one at a time) |
+| `village-shop-counter` / `village-gear-counter` | Position counter, e.g. `2 of 5`, on the cards / gear side |
+| `village-shop-peek-prev` / `village-shop-peek-next` | The neighbours peeking at the sides: press one to step to it (a swipe does the same) |
+| `village-shop-toggle` | Tap to switch the carousel between CARDS and GEAR (absent when the village has no gear) |
+| `village-equipment-<pieceId>` | Tap to buy the gear piece in the middle (disabled when refused) |
+| `village-equipment-<pieceId>-price` / `village-equipment-<pieceId>-effect` / `village-equipment-<pieceId>-refusal` | Gear price (SOLD once bought), effect line and refusal |
 | `village-card-<cardId>-buy` | Tap to buy (disabled when refused) |
 | `village-card-<cardId>-price` / `village-card-<cardId>-refusal` | Card price (SOLD once bought) and refusal |
 | `village-remove` | Tap to open card removal (disabled when refused) |
 | `village-remove-card-<cardId>` | Tap to remove that card |
 | `village-remove-cancel` | Tap to close removal |
-| `village-anvil` | Tap to open the Anvil |
-| `village-leave` | LEAVE |
+| `village-anvil` | Tap to open the Anvil (the hub's BLACKSMITH button) |
+| `village-leave` | TAKE THE ROAD |
 | `cutscene-inactive` | `/cutscene` with no event |
 | `cutscene-plate` | The fading plate |
 | `cutscene-line-<index>` | The current line |
@@ -48,7 +57,7 @@ Paced (narrative-choice) events sit in the event slice and `<EventGate>` (`compo
 ## 4. A correct play, step by step
 
 - Dialogue: read `dialogue-speech`; tap `dialogue-choice-<id>` twice (arm, confirm) until a reply ends the talk. Map returns.
-- Village: tap `village-rest` (purse drops, VITAE rises); tap a `village-card-<cardId>-buy` (it reads SOLD); tap `village-remove` then a `village-remove-card-<cardId>`; `village-leave`.
+- Village: tap `village-open-rest`, then `village-rest` (purse drops, VITAE rises), then `village-rest-screen-back`; tap `village-open-shop`, then `village-shop-peek-next` to step through the cards, a `village-card-<cardId>-buy` (it reads SOLD), `village-shop-toggle` for the gear, then `village-remove` and a `village-remove-card-<cardId>`, then `village-shop-back`; `village-leave`.
 - Cutscene: tap `cutscene-advance` once per line (or `cutscene-skip`). Map returns.
 
 ## 5. Looks stuck but isn't

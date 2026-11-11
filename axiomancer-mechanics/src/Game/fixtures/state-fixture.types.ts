@@ -71,6 +71,12 @@ export interface StateFixture {
     /** Flags appended to the new-game flag set (deduped). */
     flags?: string[];
     /**
+     * Quest names written into the quest log's `completed` list: steps already
+     * turned in (a fixture that stands at a questline's later node). Nothing is
+     * paid: only the log is set.
+     */
+    questsCompleted?: string[];
+    /**
      * Ask the consumer to fire the current node's authored event on boot,
      * so state-gated screens (`/event`, `/village`, `/dialogue`, `/cutscene`)
      * are reachable without a walk. The engine only records the intent;

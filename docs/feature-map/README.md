@@ -26,11 +26,13 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Index | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Index") |
 | Reward | route | yes | no | yes | no |
 | Quest | route | yes | yes | yes | no |
-| Rest | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Rest", "RestChoice", "rest node", "rest site") |
+| Rest | route | yes | yes | yes | no |
 | Saves | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Saves") |
 | Settings | route | yes | yes | yes | no |
 | Travel | route | yes | yes | yes | no |
 | Village | route | yes | yes | yes | no |
+| Village Rest | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village Rest") |
+| Village Shop | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Village Shop") |
 | The hazard minigame | route | yes | yes | yes | no |
 | The Labyrinth | route | yes | yes | yes | no |
 | Atlas | engine area | no | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Atlas") |
@@ -45,10 +47,12 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | NPCs | engine area | yes | yes | yes | no |
 | The world | engine area | yes | yes | yes | no |
 | The dev menu | dev route | yes | yes | yes | no |
-| Devart | dev route | yes | no | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
+| Devart | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
 | Devart Rooms | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart Rooms") |
+| Devdefeat | dev route | no | yes | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devdefeat") |
 | Devframes | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devframes") |
 | The hazard puzzle demos | dev route | yes | yes | yes | no |
+| Devvictory | dev route | no | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devvictory") |
 <!-- feature-table:end -->
 
 ## Anomalies
@@ -56,6 +60,8 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 ### Built but unreachable
 
 - Game Over (`route:game-over`)
+- Devdefeat (`route:devdefeat`)
+- Devvictory (`route:devvictory`)
 
 ### Routes with no way out but back
 
@@ -69,12 +75,13 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - Quest (`route:quest`)
 - Rest (`route:rest`)
 - Travel (`route:travel`)
-- Village (`route:village`)
 - The Labyrinth (`route:labyrinth`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
+- Devdefeat (`route:devdefeat`)
 - Devframes (`route:devframes`)
 - The hazard puzzle demos (`route:devpuzzle`)
+- Devvictory (`route:devvictory`)
 
 ### game-model.md sections that match no feature
 
@@ -97,6 +104,8 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Settings (`route:settings`)
 - Travel (`route:travel`)
 - Village (`route:village`)
+- Village Rest (`route:village/rest`)
+- Village Shop (`route:village/shop`)
 - Atlas (`area:Atlas`)
 - Effects (`area:Effects`)
 - Game (`area:Game`)
@@ -104,4 +113,6 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - NPCs (`area:NPCs`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
+- Devdefeat (`route:devdefeat`)
 - Devframes (`route:devframes`)
+- Devvictory (`route:devvictory`)

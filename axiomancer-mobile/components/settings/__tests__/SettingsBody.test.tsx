@@ -4,12 +4,12 @@
  */
 
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import SettingsScreen from '@/app/settings/index';
 import SettingsTabScreen from '@/app/(tabs)/settings';
-import { keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
+import { allRegistryKeywords, keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import { createSettingsStore } from '@/state/settings';
 import { createAppStore } from '@/state/store';
@@ -102,15 +102,19 @@ describe('SettingsBody rules glossary', () => {
         render(withAllProviders(<Screen />, { store, slots, settings }).tree);
         expect(screen.queryByTestId('rules-glossary-sheet-list')).toBeNull();
         fireEvent.press(screen.getByTestId('settings-rules-glossary'));
-        expect(screen.getAllByTestId('rules-glossary-sheet-entry')).toHaveLength(SYSTEM_GLOSSARY.length + 2);
+        expect(screen.getAllByTestId('rules-glossary-sheet-entry')).toHaveLength(
+            SYSTEM_GLOSSARY.length + allRegistryKeywords().length,
+        );
         const expected = [
             ...SYSTEM_GLOSSARY,
-            { term: 'VULNERABLE', def: keywordGloss('Vulnerable') as string },
-            { term: 'DISCARD', def: keywordGloss('Discard') as string },
+            ...allRegistryKeywords().map((k) => ({ term: k.toUpperCase(), def: keywordGloss(k) as string })),
         ];
+        // Each term has exactly one entry, carrying its own definition.
+        const entries = screen.getAllByTestId('rules-glossary-sheet-entry');
         for (const { term, def } of expected) {
-            expect(screen.getByText(term)).toBeTruthy();
-            expect(screen.getByText(def)).toBeTruthy();
+            const own = entries.filter((entry) => within(entry).queryAllByText(term).length > 0);
+            expect(own).toHaveLength(1);
+            expect(within(own[0]).getByText(def)).toBeTruthy();
         }
         expect(screen.getByText('READING A LINE')).toBeTruthy();
         expect(screen.getByText('GLOBAL')).toBeTruthy();

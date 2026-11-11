@@ -14,6 +14,14 @@ review labels, stopping at the cap (5). The pending close
 rides in the PR; the merge job settles it on main
 (`node scripts/pr-merge.mjs settle`, from `pr-resolve`'s scan).
 `plot`, `review:rules-change` and `nexus-sync` PRs wait for T.
+**Closing a spec's last chunk:** re-read the spec's Design,
+Decisions and Open questions; record each rule a future builder
+could break unknowingly as a `## Decisions` entry, unless a test
+or lint already enforces it; and put `absorb:` in the close's
+front matter: those `D?<slug>`s, that test or file, or `none`.
+Settle then retires the spec (file, row, a `spec complete`
+archive line, any `Follow-ups` to `plan/CANDIDATES.md`); with
+no `absorb:` the close is held and `pr-resolve` goes red.
 <!-- /miserere:local -->
 
 ## 1. Settle at orient (owner only)
@@ -33,11 +41,13 @@ origin HEAD:<DEFAULT_BRANCH>`.
   the message it printed.
 - A rejected push: `git fetch`, `git reset --keep
   origin/<DEFAULT_BRANCH>`, settle again.
-- A spec that "lists no chunk now": absorb it before the gate
-  (lasting rules into `identity/` or `plan/bearings.md`, the
-  file and its roadmap row deleted, the archive's `· NN · spec
-  complete: …` line): `git add` it, commit all that is staged
-  with settle's message, minus its `-- <paths>`.
+- A `held back … absorb the spec by hand` line for a spec: absorb
+  it before the gate (lasting rules into `identity/` or
+  `plan/bearings.md`, the file and its roadmap row deleted, the
+  archive's `· NN · spec complete: …` line): `git add` it,
+  commit all that is staged with settle's message, minus its
+  `-- <paths>`. Settle's own note "spec NN lists no chunk now:
+  settle retired it" is no hold: nothing to absorb.
 
 ## 2. The pending file
 
@@ -79,8 +89,9 @@ git commit -m "plan: settle <ids>"         # the message settle printed
 git push origin HEAD:<DEFAULT_BRANCH>
 ```
 
-- "Spec NN lists no chunk now": absorb it in the settle's
-  commit (§1's last bullet); the gate is red until then.
+- A `held back … absorb the spec by hand` line: absorb it in the
+  settle's commit (§1's last bullet); the gate is red until
+  then. A "settle retired it" note needs nothing.
 - Rejected (another session landed first): `git fetch`,
   `git reset --keep HEAD~1` (drops only the settle commit),
   rebase, settle, gate, push. Three rejections → stop, report.

@@ -21,6 +21,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 import VillageScreen from '@/app/village/index';
+import VillageRestScreen from '@/app/village/rest';
+import VillageShopScreen from '@/app/village/shop';
 import { SCREEN_FRAME_INSET } from '@/components/ScreenBg';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
@@ -86,5 +88,20 @@ describe('village rows sit inside the vignette frame (critique pass 72)', () => 
     it('pads the exit bar bottom by at least the frame inset', () => {
         const bar = mount().getByTestId('village-exit-bar');
         expect(flattenStyle(bar.props.style).paddingBottom).toBeGreaterThanOrEqual(SCREEN_FRAME_INSET);
+    });
+
+    it('clears the frame on each counter screen too (168.3)', () => {
+        for (const [Screen, prefix] of [[VillageRestScreen, 'village-rest-screen'], [VillageShopScreen, 'village-shop']] as const) {
+            const r = render(
+                <GameStoreProvider store={villageStore()}>
+                    <Screen />
+                </GameStoreProvider>,
+            );
+            const top = flattenStyle(r.getByTestId(`${prefix}-scroll`).props.contentContainerStyle).paddingTop;
+            expect(top).toBeGreaterThanOrEqual(SCREEN_FRAME_INSET);
+            const bottom = flattenStyle(r.getByTestId(`${prefix}-exit-bar`).props.style).paddingBottom;
+            expect(bottom).toBeGreaterThanOrEqual(SCREEN_FRAME_INSET);
+            r.unmount();
+        }
     });
 });

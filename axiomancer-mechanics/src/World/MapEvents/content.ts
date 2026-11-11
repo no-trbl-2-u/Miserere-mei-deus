@@ -243,31 +243,41 @@ export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: Breakwate
     'bw-p3': { kind: 'cutscene', place: 'High pass' },
 };
 
+/**
+ * The Breakwater cutscene nodes' scene ids (CU1a): the app maps each to its
+ * picture. The windmill's id sits on `windmillArrival`.
+ */
+export const BW_CUTSCENE_SCENES: Readonly<Record<string, string>> = {
+    'bw-l2': 'clifftop-chapel',
+    'bw-d5': 'old-watchtower',
+    'bw-p3': 'high-pass',
+};
+
 /** The four quest nodes: their place in the chain and their refusal line. */
 const QUEST_NODES: Readonly<Record<string, { node: number; description: string; lockedLine: string; giver: QuestGiver }>> = {
     'bw-c2': {
         node: 2,
         description: '[content] The fishermen huddle round a driftwood fire.',
         lockedLine: '[content] The fishermen do not know you. They keep to their fire.',
-        giver: { name: '[content] The fishermen elder', portrait: 'biwa-houshi' },
+        giver: { name: '[content] The fishermen elder', portrait: 'fishermen-elder' },
     },
     'bw-l5': {
         node: 3,
         description: '[content] The lighthouse door stands open.',
         lockedLine: '[content] The lighthouse keeper sends you back down the path. No one told him to expect you.',
-        giver: { name: '[content] The lighthouse keeper', portrait: 'gignos-male' },
+        giver: { name: '[content] The lighthouse keeper', portrait: 'lighthouse-keeper' },
     },
     'bw-k1': {
         node: 4,
         description: '[content] The keep gate, barred from the inside.',
         lockedLine: '[content] The keep gate does not open for strangers.',
-        giver: { name: '[content] The gate warden', portrait: 'paladin-cursed' },
+        giver: { name: '[content] The gate warden', portrait: 'gate-warden' },
     },
     'bw-b1': {
         node: 5,
         description: '[content] The river bridge. The far bank is close.',
         lockedLine: '[content] The bridge-keeper will not lift the bar while the sea keep stands.',
-        giver: { name: '[content] The bridge-keeper', portrait: 'dwarf-lordess' },
+        giver: { name: '[content] The bridge-keeper', portrait: 'bridge-keeper' },
     },
 };
 
@@ -277,6 +287,7 @@ const LOOT_NODES: Readonly<Record<string, number>> = { 'bw-h8': 0, 'bw-d2': 1, '
 /** The windmill's arrival: the scene, and the chain's first step given. */
 const windmillArrival: MapEventPayload = {
     kind: 'cutscene',
+    scene: 'windmill-headland',
     lines: [
         'A windmill on the headland, its sails lashed down. The sea is loud below it.',
         '[content] A fishing boat capsized off the harbour. Its crew never came home. Find them.',
@@ -400,7 +411,7 @@ function poolFor(nodeId: string): MapEventPool {
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`, BREAKWATER_REST_DREAMS[nodeId]);
         case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
         case 'village':  return breakwaterVillagePool(nodeId, place);
-        case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`] });
+        case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`], scene: BW_CUTSCENE_SCENES[nodeId] });
         case 'travel':   return single(nodeId, TRAVEL[nodeId]!);
         case 'quest': {
             const q = QUEST_NODES[nodeId]!;
@@ -467,6 +478,7 @@ const cwArrival: MapEventPool = {
         kind: 'cutscene', weight: 1,
         payload: {
             kind: 'cutscene',
+            scene: 'charcoal-wood-arrival',
             lines: [
                 'The bridge ends in pine. Smoke hangs under the branches and does not lift.',
                 'Somewhere ahead, the burners are working the clearings.',

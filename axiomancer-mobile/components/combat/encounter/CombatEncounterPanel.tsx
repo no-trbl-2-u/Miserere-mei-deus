@@ -44,19 +44,23 @@ import { type CombatFx } from '@/components/combat/encounter/CombatCombatantPane
 import { CombatDie, combatDieFootprint } from '@/components/combat/encounter/CombatDie';
 import { RASTER_LAYER } from '@/components/combat/encounter/rasterLayer';
 import { CombatSummaryModal } from '@/components/combat/encounter/CombatSummaryModal';
-import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
+import { VictoryScreen } from '@/components/combat/encounter/VictoryScreen';
+import { ARENA_PLATES_SHOWN, arenaBackdropFor } from '@/assets/images/combat';
+import { nodeArenaFor } from '@/state/exploration-maps';
 import { Image } from '@/lib/platform/image';
 import { INK_DRAW_MS, INK_HOLD_MS, InkCurtain } from '@/components/combat/encounter/InkCurtain';
 import { clearMapInk } from '@/state/map-ink';
-import { BOSS_CARD_HINT } from '@/components/combat/encounter/reveal.copy';
+import { BOSS_CARD_HINT, WITHDRAW_COST } from '@/components/combat/encounter/reveal.copy';
+import { BossTitleCard } from '@/components/combat/encounter/BossTitleCard';
+import { RevealGround } from '@/components/combat/encounter/RevealGround';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
-import { buildRevealFrame } from '@/state/presenters/encounter-reveal.engine';
+import { buildRevealVM } from '@/state/presenters/encounter-reveal.engine';
 import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
-    INTENT_ICONS, buildCombatViewModel, rewardCardVMs, STANCE_COLORS, threatPhaseHeader, telegraphName,
-    selectCombatLogHistory, revealDangers, NO_DANGERS_SEEN, signatureInfoLines, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
+    buildCombatViewModel, rewardCardVMs, STANCE_COLORS,
+    selectCombatLogHistory, NO_DANGERS_SEEN, signatureInfoLines, COMBAT_LOG_TOGGLE_TEXT, COMBAT_LOG_TOGGLE_A11Y, COMBAT_LOG_CLOSE_A11Y, COMBAT_LOG_BACK_TEXT,
     type CombatCardVM, type CombatEffectChipVM, type CombatSignatureVM,
 } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
@@ -67,6 +71,7 @@ import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { devSettingsStore } from '@/state/dev/dev-settings';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { recordFightSettled } from '@/state/run-log';
+import { fightPaidFrom, NOTHING_PAID, victoryChapterName, type FightPaid } from '@/state/presenters/fight-end.engine';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -203,7 +208,10 @@ function mapHazardOutcomeToEndCombat(
  * on a drop the relic takes the XP's place and `endCombat` withholds it; the
  * shillings stand. A foe spared at the mercy check (`finalState.mercyCheck`) pays
  * the Spare ending instead: no XP, no card reward, the spare wage and one table
- * roll. Returns the shillings the fight paid, for the summary.
+ * roll. Returns what the fight paid (`FightPaid`, phase FE1a): the shillings,
+ * the XP gained (experience after the settle and its level-ups minus before, so
+ * a quest step paid at the kill counts too), the experience and level before
+ * and after, and the XP still owed for the next level.
  */
 export function applyHazardOutcome(
     store: StoreLike,
@@ -211,7 +219,7 @@ export function applyHazardOutcome(
     finalState: CombatEncounterState,
     enemy: Enemy,
     relics?: readonly Equipment[],
-): number {
+): FightPaid {
     const finalHp = finalState.player.health;
     // The surviving floating dice, in engine truth (spent dice
     // are gone forever; unspent ones arrive in the next battle's opening tray).
@@ -274,7 +282,7 @@ export function applyHazardOutcome(
     }
     // The run log: the node, the XP, the levels and the drops this fight paid.
     recordFightSettled(store, playerBefore, report ?? null, outcome);
-    return report?.shillings ?? 0;
+    return fightPaidFrom(playerBefore, (store.getState() as unknown as GameState).player, report?.shillings ?? 0);
 }
 
 // Per-keyword type tag for the inspect-modal definition panels. The PRIMARY keyword
@@ -368,8 +376,11 @@ export function CombatEncounterPanel({
     const rewardsClaimed = useGameState((s) => s.combatReward?.claimed ?? false);
     const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
     const spare = useGameState((s) => s.combatReward?.spare ?? null);
-    // What the engine paid for this fight, printed on the summary.
-    const [shillingsPaid, setShillingsPaid] = useState(0);
+    // What the engine paid for this fight (shillings, XP, levels), for the
+    // summary and the victory screen; null until the settle has run.
+    const [fightPaid, setFightPaid] = useState<FightPaid | null>(null);
+    // The fight was left (the victory screen steps aside once it closes it).
+    const [exited, setExited] = useState(false);
 
     const [state, setState] = useState<CombatEncounterState | null>(null);
     // Multi-card staging (hazard model): several cards can be staged at once; each
@@ -380,24 +391,6 @@ export function CombatEncounterPanel({
     // instantly ("blink"). Ignore backdrop dismiss for a moment after open (the ✕ always works).
     const detailOpenedAt = useRef(0);
     const [tipEffect, setTipEffect] = useState<CombatEffectChipVM | null>(null);
-    /**
-     * Which threat phases are expanded in the pre-combat reveal (an accordion).
-     * Holds the 1-based `phase.index` of every OPEN row. Seeded with `1` so the
-     * imminent phase — the only one that can hurt you this turn — is still read
-     * at a glance, while the rest of the sequence collapses to its headers.
-     */
-    const [openThreatPhases, setOpenThreatPhases] = useState<ReadonlySet<number>>(
-        () => new Set([1]),
-    );
-    /** Toggle one threat phase row open/closed by its 1-based phase index. */
-    const toggleThreatPhase = useCallback((phaseIndex: number) => {
-        setOpenThreatPhases((prev) => {
-            const next = new Set(prev);
-            if (next.has(phaseIndex)) next.delete(phaseIndex);
-            else next.add(phaseIndex);
-            return next;
-        });
-    }, []);
     // Signature-rune info popup (long-press / unaffordable tap) + pilgrim modal.
     const [sigInfo, setSigInfo] = useState<CombatSignatureVM | null>(null);
     const sigLines = sigInfo ? signatureInfoLines(sigInfo) : null;
@@ -702,6 +695,7 @@ export function CombatEncounterPanel({
     const handleExit = useCallback(() => {
         if (exitedRef.current) return;
         exitedRef.current = true;
+        setExited(true);
         // Clear the draft slate for the NEXT encounter. Deliberately here and
         // not on mount: the store slice has to outlive a panel remount, or it
         // would drop the offer exactly when it is meant to preserve it.
@@ -722,7 +716,7 @@ export function CombatEncounterPanel({
     useEffect(() => {
         if (!live.finalOutcome || wroteBackRef.current || !mercyCheckSettled(live)) return;
         wroteBackRef.current = true;
-        if (persistOutcome) setShillingsPaid(applyHazardOutcome(store, live.finalOutcome, live, enemy));
+        setFightPaid(persistOutcome ? applyHazardOutcome(store, live.finalOutcome, live, enemy) : NOTHING_PAID);
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
 
     // The play log (phase BE2c): every live state goes to the fight recorder,
@@ -742,13 +736,17 @@ export function CombatEncounterPanel({
     }, [live, store, enemy]);
 
     // Claim (or skip) — the action appends the card AND persists, so the pick
-    // does not wait on some unrelated save() to happen along.
+    // does not wait on some unrelated save() to happen along. Taking or
+    // refusing the card, or taking the elite's upgrade, closes the fight: the
+    // summary no longer opens after a win (FE1b, T's call #3).
     const onRewardPick = useCallback((cardId: string | null) => {
         claimCombatRewardAction(store, cardId);
-    }, [store]);
+        handleExit();
+    }, [store, handleExit]);
     const onRewardUpgrade = useCallback((cardId: string) => {
         claimCombatUpgradeAction(store, cardId);
-    }, [store]);
+        handleExit();
+    }, [store, handleExit]);
     // The elite reward's upgrade as the shared picker's one row (null hides it).
     const rewardUpgradeRows = useMemo(
         () => (rewardUpgrade && player
@@ -785,10 +783,8 @@ export function CombatEncounterPanel({
     // the finger was already moving — the start-of-drag stutter.
     // The ink curtain and tier frame (ET1a): the motion answer comes from the
     // reduced-motion hook here and is handed down, never asked for below.
-    const revealFrame = useMemo(() => buildRevealFrame(nodeId), [nodeId]);
     const inkInstant = resolveJuiceMode({ reducedMotion: useReducedMotion() }) === 'instant';
     const [inkDone, setInkDone] = useState(nodeId === undefined);
-    const [bossCardHeld, setBossCardHeld] = useState(true);
     const onInkDone = useCallback(() => setInkDone(true), []);
     // The map's ink (CX1b) covered the window until this screen was up; its own
     // curtain now starts covered beneath it, so the map's is lifted.
@@ -806,12 +802,13 @@ export function CombatEncounterPanel({
     const mercyCheckOpen = live.mercyCheck === 'offered';
     const spareLines = spare ? spareSummaryLines(spare.reward, spare.journalTitle) : undefined;
     const mercyLine = mercyLineFor(enemy.mercyLines, live.mercyCheck);
+    // The foe fell (a win, the mercy check settled, not spared): the victory screen's.
+    const fell = live.finalOutcome === 'victory' && mercyCheckSettled(live) && live.mercyCheck !== 'spared';
     const showReveal = live.phase === 'reveal';
     // The commit pair's look is the place's. The reveal's own column, portrait
     // and threat list are not kit places and keep today's code.
     const revealBrass = lookOf('S-01') === 'brass';
-    // A `phases` foe's reveal shows its DANGER lines and nothing else.
-    const revealDangerLines = showReveal ? revealDangers(live, seen) : null;
+    const revealVM = buildRevealVM(nodeId, { name: vm.enemy.name, level: vm.enemy.level ?? 1, hp: vm.enemy.hp });
     // The log toggle/sheet never shows over the
     // reveal (nothing has happened yet) or once the fight is over (the
     // summary owns that screen).
@@ -844,129 +841,54 @@ export function CombatEncounterPanel({
                 />
             )}
 
-            {/* The held title card (boss) and the ink curtain sit over the reveal below. */}
-            {showReveal && inkDone && revealFrame.bossCard && bossCardHeld && (
-                <Pressable
-                    style={styles.bossCard}
-                    onPress={() => setBossCardHeld(false)}
-                    testID="combat-reveal-boss-card"
-                    accessibilityRole="button"
-                    accessibilityLabel={`${revealFrame.bossCard.place}. ${revealFrame.bossCard.subtitle}. ${BOSS_CARD_HINT}`}
-                >
-                    <Text style={styles.bossCardPlace}>{revealFrame.bossCard.place}</Text>
-                    <Text style={styles.bossCardSub}>{revealFrame.bossCard.subtitle}</Text>
-                    <Text style={styles.bossCardHint}>{BOSS_CARD_HINT}</Text>
-                </Pressable>
-            )}
+            {/* The ink curtain sits over the reveal below. */}
             {showReveal && !inkDone && <InkCurtain instant={inkInstant} onDone={onInkDone} />}
 
             {/* CombatRevealOverlay — read the foe before you commit */}
-            {showReveal && (
+            {showReveal && revealVM.bossCard && (
                 <View style={styles.reveal} testID="combat-reveal">
-                    <ScrollView contentContainerStyle={styles.revealScroll} testID="combat-reveal-column">
+                    <BossTitleCard
+                        name={revealVM.name}
+                        place={revealVM.bossCard.place}
+                        eyebrow={revealVM.bossCard.subtitle}
+                        hint={BOSS_CARD_HINT}
+                        art={getEncounterEnemyArt(vm.enemy.artKey, vm.enemy.artNonce)}
+                        instant={inkInstant}
+                        onPress={onEnter}
+                    />
+                </View>
+            )}
+            {showReveal && !revealVM.bossCard && (
+                <View style={styles.reveal} testID="combat-reveal">
+                    <View style={styles.revealCol} testID="combat-reveal-column">
+                        <Text style={styles.revealName} numberOfLines={2} adjustsFontSizeToFit>{revealVM.name}</Text>
+                        <Text style={styles.revealStats} testID="combat-reveal-stats">
+                            <Text style={styles.revealStatWord}>LEVEL </Text>
+                            <Text style={styles.revealStatNum}>{revealVM.level}</Text>
+                            <Text style={styles.revealStatWord}>{'   '}</Text>
+                            <Text style={styles.revealStatNum}>{revealVM.vitae}</Text>
+                            <Text style={styles.revealStatWord}> VITAE</Text>
+                        </Text>
+                        {revealVM.chip && (
+                            <Text style={styles.revealChip} testID="combat-reveal-chip">{revealVM.chip}</Text>
+                        )}
                         <Animated.View
                             entering={inkInstant ? undefined : (inkDone
                                 ? FadeInDown.delay(600).duration(500)
                                 // The portrait rises as the ink draws back off it (CX1b, A7).
                                 : FadeInDown.delay(INK_HOLD_MS).duration(INK_DRAW_MS))}
-                            style={[
-                                styles.revealPortrait,
-                                { borderColor: revealFrame.tier === 'elite' ? AXM.kindElite : AXM.blood },
-                                revealFrame.tier === 'elite' ? styles.revealPortraitElite : null,
-                            ]}
-                            testID={`combat-reveal-frame-${revealFrame.tier}`}
+                            style={styles.revealStage}
+                            testID={`combat-reveal-frame-${revealVM.tier}`}
                         >
+                            <RevealGround tier={revealVM.tier} />
                             <Image
                                 source={getEncounterEnemyArt(vm.enemy.artKey, vm.enemy.artNonce)}
-                                style={{ width: 120, height: 140 }}
+                                style={styles.revealFigure}
                                 contentFit="contain"
                                 transition={0}
                                 accessibilityLabel={vm.enemy.name}
                             />
                         </Animated.View>
-                        <Text style={styles.revealName}>{vm.enemy.name}</Text>
-                        {revealFrame.heldLine && (
-                            <Text style={styles.revealHeld} testID="combat-reveal-held">{revealFrame.heldLine}</Text>
-                        )}
-                        {revealFrame.arrivalLine && (
-                            <Text style={styles.revealArrival} testID="combat-reveal-arrival">{revealFrame.arrivalLine}</Text>
-                        )}
-                        <Text style={styles.revealHp}>♥ {vm.enemy.hp} / {vm.enemy.maxHp}</Text>
-                        {/* This screen is the commit gate for a fight: beside the
-                          * foe's VITAE and threat sequence, show the player's own
-                          * VITAE, the figure that decides whether to fight or turn back. */}
-                        <Text style={styles.revealYours} testID="combat-reveal-player-vitae">
-                            YOURS ♥ {vm.player.hp} / {vm.player.maxHp}
-                        </Text>
-                        {revealDangerLines && revealDangerLines.length > 0 ? (
-                            <View testID="combat-reveal-dangers">
-                                <Text style={styles.revealSection}>DANGER</Text>
-                                {revealDangerLines.map((d) => (
-                                    <Text
-                                        key={d.phase}
-                                        style={styles.revealPhaseText}
-                                        accessibilityLabel={d.a11y}
-                                        testID={`combat-reveal-danger-${d.phase}`}
-                                    >
-                                        {d.line}
-                                    </Text>
-                                ))}
-                            </View>
-                        ) : (<>
-                        <Text style={styles.revealSection}>THREAT SEQUENCE</Text>
-                        {/* No line clamp on the threat text: a multi-clause phase
-                            ("Deals 12. Applies BLEED 2.") must read in full on the
-                            one screen whose whole job is to telegraph it. */}
-                        {live.threatPhases.map((p, i) => {
-                            const meta = INTENT_ICONS[p.intentType ?? 'pass'];
-                            // Accordion row: the header (icon + PHASE n · INTENT · damage +
-                            // chevron) is always present and is the whole touch
-                            // target; the threat text only mounts when open.
-                            const open = openThreatPhases.has(p.index);
-                            const header = threatPhaseHeader(p, seen);
-                            const moveName = p.enemyMove ? telegraphName(p, seen) : null;
-                            return (
-                                <View key={i} style={styles.revealPhase}>
-                                    <Pressable
-                                        onPress={() => toggleThreatPhase(p.index)}
-                                        accessibilityRole="button"
-                                        accessibilityState={{ expanded: open }}
-                                        accessibilityLabel={header.a11y}
-                                        accessibilityHint={open ? 'tap to collapse this phase' : 'tap to read this phase'}
-                                        testID={`combat-reveal-phase-${p.index}`}
-                                        style={styles.revealPhaseHead}
-                                    >
-                                        <Text style={[styles.revealPhaseIcon, { color: meta.color }]}>{meta.icon}</Text>
-                                        <Text style={[styles.revealPhaseLabel, styles.revealPhaseHeadLabel]}>
-                                            {header.text}
-                                        </Text>
-                                        <Text style={styles.revealPhaseChevron}>{open ? '▾' : '▸'}</Text>
-                                    </Pressable>
-                                    <View style={[styles.revealPhaseBody, open ? null : styles.revealPhaseBodyHidden]}>
-                                        {open ? (p.branch ? (
-                                            /* A branch phase telegraphs its condition + BOTH
-                                               outcomes before commit; the taken fork is marked after. */
-                                            <View>
-                                                <Text style={styles.revealBranchCond}>⑂ {p.branch.conditionText}</Text>
-                                                <Text style={[styles.revealPhaseText, p.branch.taken === 'then' ? styles.revealBranchTaken : null]}>
-                                                    {p.branch.taken === 'then' ? '▶ ' : ''}then: {p.branch.then.threatAction.description}
-                                                </Text>
-                                                <Text style={[styles.revealPhaseText, p.branch.taken === 'else' ? styles.revealBranchTaken : null]}>
-                                                    {p.branch.taken === 'else' ? '▶ ' : ''}otherwise: {p.branch.else.threatAction.description}
-                                                </Text>
-                                            </View>
-                                        ) : p.enemyMove ? (
-                                            // An unseen DANGER has no name to show, as IntentIcon's
-                                            // badge also shows nothing for it.
-                                            moveName ? <Text style={styles.revealPhaseText}>{moveName}</Text> : null
-                                        ) : (
-                                            <Text style={styles.revealPhaseText}>{p.threatAction.description}</Text>
-                                        )) : null}
-                                    </View>
-                                </View>
-                            );
-                        })}
-                        </>)}
                         <Pressable
                             onPress={onEnter}
                             testID="combat-enter"
@@ -974,11 +896,6 @@ export function CombatEncounterPanel({
                             accessibilityLabel="Enter combat and roll your first dice"
                             style={[styles.revealBtn, revealBrass ? styles.revealBtnBare : { borderColor: AXM.sulfur }]}
                         >
-                            {/* The commit takes the struck button, the retreat
-                              * the plain one, so the pair reads as a primary
-                              * and a lesser road without changing either box.
-                              * Both plates' end ornaments are 13pt wide, inside
-                              * the paddings these buttons already had. */}
                             {revealBrass ? <KitBackdrop piece="action-button-selected" /> : null}
                             <Text style={[styles.revealBtnText, { color: revealBrass ? AXM.bg : AXM.sulfur }]}>ENTER COMBAT ›</Text>
                         </Pressable>
@@ -994,10 +911,10 @@ export function CombatEncounterPanel({
                             >
                                 {revealBrass ? <KitBackdrop piece="action-button-idle" /> : null}
                                 <Text style={[styles.withdrawBtnText, { color: AXM.bone }]}>WITHDRAW</Text>
-                                <Text style={styles.withdrawSub}>forfeit the path</Text>
+                                <Text style={styles.withdrawSub}>{WITHDRAW_COST}</Text>
                             </Pressable>
                         )}
-                    </ScrollView>
+                    </View>
                 </View>
             )}
 
@@ -1353,18 +1270,29 @@ export function CombatEncounterPanel({
                 );
             })()}
 
-            {/* deckbuilder reward — claimed before the summary on a win */}
-            {live.finalOutcome === 'victory' && mercyCheckSettled(live) && !rewardsClaimed && rewardOffers.length > 0 && (
-                <CombatRewardsOverlay
-                    offers={rewardCardVMs(rewardOffers, live.player.baseStats)}
+            {/* The victory screen (FE1b): a foe that falls ends here, the card
+                offer under the level panel; taking or refusing it closes the
+                fight, and a win with no offer shows CONTINUE. */}
+            {fell && summary && fightPaid && !exited && (
+                <VictoryScreen
+                    headline={summary.headline}
+                    paid={fightPaid}
+                    chapter={victoryChapterName(region)}
+                    purse={player?.currency ?? 0}
+                    arena={ARENA_PLATES_SHOWN ? arenaBackdropFor(region, nodeArenaFor(region, nodeId)) : null}
+                    foeArt={getEncounterEnemyArt(vm.enemy.artKey, vm.enemy.artNonce)}
+                    foeName={vm.enemy.name}
+                    offers={rewardsClaimed ? [] : rewardCardVMs(rewardOffers, live.player.baseStats)}
                     onPick={onRewardPick}
                     upgradeRows={rewardUpgradeRows}
                     onUpgrade={onRewardUpgrade}
+                    onContinue={handleExit}
                 />
             )}
 
-            {summary && mercyCheckSettled(live) && (rewardsClaimed || live.finalOutcome !== 'victory') && (
-                <CombatSummaryModal summary={summary} shillings={shillingsPaid} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
+            {/* The summary: a defeat, or a spared foe's mercy ending. */}
+            {summary && mercyCheckSettled(live) && !fell && (
+                <CombatSummaryModal summary={summary} shillings={fightPaid?.shillings ?? 0} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
             )}
 
             {/* drag ghost — persistently mounted after the first drag; dragShown
@@ -1508,19 +1436,16 @@ const useStyles = makeStyles((AXM) => ({
     pilgrimRowDef: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 12, lineHeight: 16, color: AXM.bone, marginTop: 2 },
 
     reveal: { flex: 1, backgroundColor: HUE.inkBg },
-    // A phone fills the column edge to edge; a wide window keeps the
-    // threat rows under the foe at a reading width instead of running each
-    // row (label at one edge, chevron at the other) across the screen.
-    revealScroll: { alignItems: 'center', padding: 22, paddingBottom: 40, width: '100%', maxWidth: REVEAL_COLUMN_MAX_WIDTH, alignSelf: 'center' },
-    revealPortrait: { borderWidth: 2, borderRadius: 6, padding: 6, backgroundColor: AXM.deepBg },
-    revealPortraitElite: { borderWidth: 4 },
-    revealHeld: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.kindElite, marginTop: 6, textAlign: 'center' },
-    revealArrival: { fontFamily: TYPE_ROLES.narration.fontFamily, fontSize: 13, color: AXM.bone, marginTop: 8, textAlign: 'center' },
-    bossCard: { ...StyleSheet.absoluteFillObject, zIndex: 20, backgroundColor: HUE.inkBg, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    bossCardPlace: { fontFamily: TYPE_ROLES.foeName.fontFamily, fontSize: 32, color: AXM.parchment, textAlign: 'center' },
-    bossCardSub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.blood, marginTop: 10, textTransform: 'uppercase' },
-    bossCardHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.bone, marginTop: 28 },
-    revealName: { fontFamily: TYPE_ROLES.foeName.fontFamily, fontSize: 24, color: AXM.parchment, marginTop: 12, textAlign: 'center' },
+    // One screen, no scroll: name, stats, chip, then the figure stage takes
+    // whatever height the buttons leave (the figure shrinks first, FR1a).
+    revealCol: { flex: 1, alignItems: 'center', padding: 22, paddingBottom: 28, width: '100%', maxWidth: REVEAL_COLUMN_MAX_WIDTH, alignSelf: 'center' },
+    revealStage: { flex: 1, alignSelf: 'stretch', marginHorizontal: -22, minHeight: 0, marginTop: 8, justifyContent: 'flex-end', alignItems: 'center' },
+    revealFigure: { width: '100%', height: '88%' },
+    revealStats: { marginTop: 6, textAlign: 'center' },
+    revealStatWord: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
+    revealStatNum: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 22, color: AXM.parchment },
+    revealChip: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.parchment, backgroundColor: AXM.kindElite, paddingHorizontal: 10, paddingVertical: 3, marginTop: 8, overflow: 'hidden' },
+    revealName: { fontFamily: TYPE_ROLES.foeName.fontFamily, fontSize: 32, color: AXM.parchment, marginTop: 4, textAlign: 'center' },
     revealHp: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.blood, marginTop: 2 },
     // The player's side of the same trade, quieter than the foe's.
     revealYours: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 12, color: AXM.bone, marginTop: 2 },
@@ -1539,7 +1464,7 @@ const useStyles = makeStyles((AXM) => ({
     // Branch fork rows in the threat sequence
     revealBranchCond: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.sulfur, marginTop: 2 },
     revealBranchTaken: { color: AXM.parchment },
-    revealBtn: { borderWidth: 2, paddingHorizontal: 30, paddingVertical: 12, marginTop: 22, backgroundColor: 'rgba(212,192,38,0.12)' },
+    revealBtn: { alignSelf: 'stretch', alignItems: 'center', borderWidth: 2, paddingHorizontal: 30, paddingVertical: 12, marginTop: 16, backgroundColor: 'rgba(212,192,38,0.12)' },
     // Both buttons are sized by padding and content, so the border widths stay
     // and only the ink goes; the plate draws the frame instead.
     revealBtnBare: {
@@ -1550,7 +1475,7 @@ const useStyles = makeStyles((AXM) => ({
     revealBtnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing},
     // Retreat reads QUIETER than the commit — it is the lesser road, not the
     // symmetric other half of a fight-or-flight binary.
-    withdrawBtn: { borderWidth: 1, borderColor: AXM.ash, paddingHorizontal: 20, paddingVertical: 8, marginTop: 12, alignItems: 'center' },
+    withdrawBtn: { borderWidth: 1, borderColor: AXM.ash, alignSelf: 'stretch', paddingHorizontal: 20, paddingVertical: 16, marginTop: 10, alignItems: 'center' },
     withdrawBtnBare: {
         backgroundColor: 'transparent', borderColor: 'transparent',
         borderTopColor: 'transparent', borderRightColor: 'transparent',

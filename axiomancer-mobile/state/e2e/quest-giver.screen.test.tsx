@@ -34,7 +34,7 @@ jest.mock('@/lib/platform/router', () => ({
 beforeAll(() => { registerFixtureQuestline(); });
 afterAll(() => { unregisterFixtureQuestline(); });
 
-const GIVER = { name: '[content] The Ferryman', portrait: 'biwa-houshi' };
+const GIVER = { name: '[content] The Ferryman', portrait: 'fishermen-elder' };
 const REFUSAL = 'The Ferryman turns his back to you.';
 
 function open(node: number) {

@@ -31,7 +31,9 @@ Code it uses, as plain text so Graph view draws player flow only.
 - VITAE and stats
 - A fight
 - Effects
+- The foes
 - Game
+- Items
 - Log
 - The world
 

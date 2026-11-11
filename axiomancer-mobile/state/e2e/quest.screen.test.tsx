@@ -58,32 +58,38 @@ function open(node: number, description?: string) {
 }
 
 describe('/quest - offer', () => {
-    it('shows the giver, "Step 1 of 4", the requirement, no counter and no pay, with ACCEPT and LEAVE', () => {
+    it('shows the card: the requirement, no counter, the pay before ACCEPT, no eyebrow or step count, LEAVE left of ACCEPT', () => {
         const { resolve, view } = open(1, 'A sailor wants the Gallows crossed.');
         resolve();
         view();
         expect(screen.getByTestId('quest-giver-line').props.children).toBe('A sailor wants the Gallows crossed.');
-        expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 1 OF 4');
+        expect(screen.queryByText('A QUEST')).toBeNull();
+        expect(screen.queryByText(/STEP/)).toBeNull();
+        expect(screen.queryByTestId('quest-step-eyebrow')).toBeNull();
         expect(screen.getByTestId('quest-offer')).toBeTruthy();
+        expect(screen.getByTestId('quest-card-name').props.children).toBe('Cross the Gallows');
         expect(screen.getByText('Cross a hazard')).toBeTruthy();
         expect(screen.queryByText('0 of 1')).toBeNull();
         expect(screen.queryByText('0/1')).toBeNull();
-        expect(screen.queryByText('THE PAY')).toBeNull();
-        expect(screen.queryByText('+40 XP')).toBeNull();
-        expect(screen.queryByText('+10 shillings')).toBeNull();
+        expect(screen.getByText('+40 XP')).toBeTruthy();
+        expect(screen.getByText('+10 shillings')).toBeTruthy();
+        expect(screen.queryByTestId('quest-card-underway')).toBeNull();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
         expect(screen.getByTestId('quest-leave-button')).toBeTruthy();
         expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
+        const order = screen.getAllByRole('button').map(b => b.props.testID);
+        expect(order.indexOf('quest-leave-button')).toBeLessThan(order.indexOf('quest-accept-button'));
     });
 
-    it('ACCEPT starts the step and swaps the button for the accepted line', () => {
+    it('ACCEPT starts the step: the gold mark shows and only LEAVE is left', () => {
         const { store, resolve, view } = open(1);
         resolve();
         view();
         fireEvent.press(screen.getByTestId('quest-accept-button'));
         expect(gs(store).quests.active.map(q => q.name)).toEqual(['Cross the Gallows']);
         expect(screen.queryByTestId('quest-accept-button')).toBeNull();
-        expect(screen.getByTestId('quest-accepted-line')).toBeTruthy();
+        expect(screen.queryByTestId('quest-accepted-line')).toBeNull();
+        expect(screen.getByTestId('quest-card-underway')).toBeTruthy();
         expect(screen.getByTestId('quest-leave-button')).toBeTruthy();
     });
 
@@ -105,8 +111,16 @@ describe('/quest - turn-in', () => {
         fillFixtureStep(store, 1);
         resolve();
         view();
-        expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 2 OF 4');
         expect(screen.getByTestId('quest-turn-in')).toBeTruthy();
+        expect(screen.queryByTestId('quest-card-underway')).toBeNull();
+        // The ask is marked done with a gold tick (it has no counter) and the pay is lit.
+        expect(screen.getByTestId('quest-turn-in-objective-goal')).toBeTruthy();
+        expect(screen.getByTestId('quest-turn-in-tick-goal')).toBeTruthy();
+        expect(screen.getByTestId('quest-card-pay-lit')).toBeTruthy();
+        expect(screen.queryByTestId('quest-card-paid')).toBeNull();
+        expect(screen.queryByTestId('quest-paid')).toBeNull();
+        const order = screen.getAllByRole('button').map(b => b.props.testID);
+        expect(order.indexOf('quest-leave-button')).toBeLessThan(order.indexOf('quest-turn-in-button'));
         expect(screen.getByText('Cross the Gallows')).toBeTruthy();
         expect(screen.queryByText('1 of 1')).toBeNull();
         expect(screen.queryByText('1/1')).toBeNull();
@@ -118,7 +132,10 @@ describe('/quest - turn-in', () => {
         expect(gs(store).player.currency).toBe(before + 10);
         // The ledger of what was paid, and the next offer, on the same screen.
         expect(screen.getByTestId('quest-paid')).toBeTruthy();
+        const line = screen.getByTestId('quest-paid').props.children;
+        expect(Array.isArray(line) ? line.join('') : line).toBe('+40 XP · +10 shillings');
         expect(screen.getByTestId('quest-offer')).toBeTruthy();
+        expect(screen.queryByTestId('quest-card-pay-lit')).toBeNull();
         expect(screen.getByText('Thin the Quay')).toBeTruthy();
         expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
@@ -141,6 +158,28 @@ describe('/quest - turn-in', () => {
     });
 });
 
+describe("/quest - the chain's end", () => {
+    it('keeps the last card marked paid, all four beads gold, and offers only LEAVE', () => {
+        const { store, resolve, view } = open(5);
+        store.setState({
+            quests: {
+                ...gs(store).quests,
+                completed: ['Cross the Gallows', 'Thin the Quay', 'Break the Elite', 'Fell the Warden'],
+            },
+        } as never);
+        resolve();
+        view();
+        expect(screen.getByTestId('quest-card-name').props.children).toBe('Fell the Warden');
+        expect(screen.getByTestId('quest-card-paid')).toBeTruthy();
+        expect(screen.getByTestId('quest-card-pay-lit')).toBeTruthy();
+        expect(screen.getByTestId('quest-bead-4-current-done')).toBeTruthy();
+        expect(screen.getByTestId('quest-bead-1-done-done')).toBeTruthy();
+        expect(screen.queryByTestId('quest-accept-button')).toBeNull();
+        expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
+        expect(screen.getByTestId('quest-leave-button')).toBeTruthy();
+    });
+});
+
 describe('/quest - waiting', () => {
     it('shows the step so far and only LEAVE', () => {
         const { store, resolve, view } = open(2);
@@ -148,6 +187,7 @@ describe('/quest - waiting', () => {
         resolve();
         view();
         expect(screen.getByTestId('quest-waiting')).toBeTruthy();
+        expect(screen.getByTestId('quest-card-underway')).toBeTruthy();
         expect(screen.queryByText('0 of 1')).toBeNull();
         expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
         expect(screen.queryByTestId('quest-accept-button')).toBeNull();
@@ -160,13 +200,49 @@ describe('/quest - locked', () => {
         const { resolve, view } = open(3);
         resolve();
         view();
-        expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 3 OF 4');
         expect(screen.getByTestId('quest-locked-line')).toBeTruthy();
+        expect(screen.getByTestId('quest-locked')).toBeTruthy();
+        expect(screen.queryByTestId('quest-giver-line')).toBeNull();
+        expect(screen.getByTestId('quest-card-pay')).toBeTruthy();
+        expect(screen.queryByTestId('quest-card-pay-lit')).toBeNull();
+        expect(screen.queryByTestId('quest-card-underway')).toBeNull();
         expect(screen.queryByTestId('quest-offer')).toBeNull();
         expect(screen.queryByTestId('quest-waiting')).toBeNull();
         expect(screen.queryByTestId('quest-accept-button')).toBeNull();
         expect(screen.queryByTestId('quest-turn-in-button')).toBeNull();
         expect(screen.getByTestId('quest-leave-button')).toBeTruthy();
+    });
+});
+
+describe('/quest - the card', () => {
+    it('shows an item a step pays, with its name, on the card', () => {
+        const { resolve, view } = open(3);
+        resolve();
+        view();
+        // Node 3 turns the giver away; the card shows the step it would offer, with its pay.
+        expect(screen.getByTestId('quest-card-pay-item-minor-healing-potion')).toBeTruthy();
+        expect(screen.getByText('+40 XP')).toBeTruthy();
+    });
+
+    it('draws four beads labelled for a screen reader and no visible count', () => {
+        const { resolve, view } = open(1);
+        resolve();
+        view();
+        expect(screen.getByTestId('quest-beads').props.accessibilityLabel).toBe('Step 1 of 4');
+        expect(screen.getByTestId('quest-bead-1-current')).toBeTruthy();
+        expect(screen.getByTestId('quest-bead-2-ahead')).toBeTruthy();
+        expect(screen.queryByText(/of 4/)).toBeNull();
+    });
+
+    it('a finished step reads as a gold filled bead', () => {
+        const { store, resolve, view } = open(2);
+        acceptFixtureStep(store, 1);
+        fillFixtureStep(store, 1);
+        resolve();
+        view();
+        fireEvent.press(screen.getByTestId('quest-turn-in-button'));
+        expect(screen.getByTestId('quest-bead-1-done-done')).toBeTruthy();
+        expect(screen.getByTestId('quest-bead-2-current')).toBeTruthy();
     });
 });
 

@@ -5,7 +5,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import os from 'node:os'
-import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
+import { checkDeadlines, mainSubjects, readPlanSources } from './check-deadlines.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -384,25 +384,26 @@ for (const [file, step, commitStep] of [
     })
 }
 
-test('DL2b A7: /plot and /messy file a new loop row under the Waits on of a T act, never an Item of its own', () => {
+test('DL2b A7: /plot and /messy put a loop row only in the Waits on of a T act, never in an Item of its own', () => {
     const plot = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
-    assert.match(plot, /every Item is a T act/)
-    assert.match(plot, /`Waits on` cell of the T act it\s+unblocks/)
+    assert.match(plot, /every\s+Item is a T act/)
+    assert.match(plot, /`Waits on` cell of a T act that needs it/)
     assert.match(plot, /is ticked `\[x\]` by hand/)
     const messy = section(fs.readFileSync(path.join(ROOT, 'skills/messy.md'), 'utf8'), '## 7. Miserere: kept on top of the kit')
     assert.match(messy, /Every Item is a T act/)
     assert.match(messy, /`Waits on` cell, never into an Item's\s+`Rows`/)
 })
 
-test('A9: /plot gives every chunk it adds an Item or an ## Unscheduled line', () => {
+// The queue (T, 2026-11-10): an act carries its milestone's date and its hours, and its place is its priority.
+test('A9: /plot adds a queue act with its milestone date, its hours and its place, and re-derives Status', () => {
     const body = section(fs.readFileSync(path.join(ROOT, 'skills/plot.md'), 'utf8'), '### 7.2 Aliases, Held lines and the deadline plan')
-    assert.match(body, /Every chunk the plot added/)
-    assert.match(body, /## Unscheduled/)
+    assert.match(body, /The Items table is a queue of T's acts/)
+    assert.match(body, /milestone's date in\s+`Due` \(never a date of its own\)/)
+    assert.match(body, /hours in its name as `\(N h\)`/)
+    assert.match(body, /Never guess hours or a place for T/)
     assert.match(body, /node scripts\/deadlines\.mjs --write/)
-    // One list (T, 2026-11-03): a new Item carries its Goal and How AI helps cells and lives only in the Items table.
-    assert.match(body, /A new Item\s+fills `Goal`/)
-    assert.match(body, /`How AI helps` \(`-`\s+when nothing is known\)/)
-    assert.match(body, /lives only in the Items table/)
+    assert.match(body, /`Goal` and `How AI helps` \(`-` when\s+nothing is known\)/)
+    assert.doesNotMatch(body, /## Unscheduled/)
 })
 
 // One list (T, 2026-11-03): a dated table outside ## Items is a second schedule that ticking an Item never updates.
@@ -427,4 +428,52 @@ test('an eight-column Items table names each Item by its own cell, and the Windo
     assert.deepEqual(checkDeadlines(deadlines(rows, EXCUSE_REST), BUILD_PLAN), [
         'plan/deadlines.md: Item "Play it" is due 2026-10-24, outside W2; move the date into the window or change the window.',
     ])
+})
+
+// An open Item naming a merged pull request (the 2026-11-07 "Merge PR #1409" case) stays open until ticked by hand.
+const PR_ITEM = (status, text) => [`| ${status} | 2026-11-07 | ${text} | W2 | T |`]
+const MERGE_FORM = 'Merge pull request #1409 from no-trbl-2-u/loop/next-157.1'
+const SQUASH_FORM = 'enemies: the six Breakwater frame sets (#1409)'
+
+// The fixture plan leaves other rows uncovered; only the merged-PR failures matter here.
+const prErrors = (rows, subjects) => checkDeadlines(deadlines(rows), BUILD_PLAN, subjects).filter((e) => /names PR #/.test(e))
+
+test('A1: an open Item naming a merged PR fails, naming the due date, the PR and the commit (merge form)', () => {
+    const errors = prErrors(PR_ITEM('[ ]', 'Merge PR #1409, the six Breakwater enemy frame sets'), ['unrelated', MERGE_FORM])
+    assert.equal(errors.length, 1)
+    assert.match(errors[0], /open Item "Merge PR #1409, the six Breakwater enemy frame sets" \(due 2026-11-07\) names PR #1409/)
+    assert.ok(errors[0].includes(`"${MERGE_FORM}"`))
+    assert.match(errors[0], /tick the Item, or rewrite it/)
+})
+
+test('A1: the squash form (a subject ending (#N)) matches too', () => {
+    const errors = prErrors(PR_ITEM('[ ]', 'Merge PR #1409 now'), [SQUASH_FORM])
+    assert.equal(errors.length, 1)
+    assert.ok(errors[0].includes(SQUASH_FORM))
+})
+
+test('A1: one failure per merged PR an Item names, and #14 never matches #1409', () => {
+    const subjects = [MERGE_FORM, 'a fix (#14000)', 'Merge pull request #140 from x/y']
+    assert.deepEqual(prErrors(PR_ITEM('[ ]', 'Merge PR #14'), subjects), [])
+    assert.deepEqual(prErrors(PR_ITEM('[ ]', 'Merge PR #140000'), subjects), [])
+    const both = prErrors(PR_ITEM('[ ]', 'Merge PRs #140 and #1409'), subjects)
+    assert.equal(both.length, 2)
+})
+
+test('A2: a ticked Item, an unmerged PR, an Item naming no PR, and an empty history all pass', () => {
+    assert.deepEqual(prErrors(PR_ITEM('[x]', 'Merge PR #1409'), [MERGE_FORM]), [])
+    assert.deepEqual(prErrors(PR_ITEM('[ ]', 'Merge PR #1410'), [MERGE_FORM, SQUASH_FORM]), [])
+    assert.deepEqual(prErrors(PR_ITEM('[ ]', 'Review what shipped in #1409'), [MERGE_FORM]), [])
+    assert.deepEqual(prErrors(PR_ITEM('[ ]', 'Merge PR #1409'), []), [])
+    assert.deepEqual(prErrors(PR_ITEM('[ ]', 'Merge PR #1409')), [])
+})
+
+test('A2: a checkout with no git history reads as an empty list and passes', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nogit-'))
+    assert.deepEqual(mainSubjects(dir), [])
+})
+
+test('A3: the pure check reads no git and no network', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'scripts/deadlines-lib.mjs'), 'utf8')
+    assert.doesNotMatch(src, /child_process|fetch\(|https?:\/\/api\./)
 })

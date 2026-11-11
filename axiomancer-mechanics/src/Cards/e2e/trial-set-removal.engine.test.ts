@@ -87,6 +87,10 @@ const ALLOWED = new Set([
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'merciful.engine.test.ts'),
     path.join('axiomancer-mechanics', 'src', 'Cards', 'e2e', 'merciful-lines.engine.test.ts'),
     path.join('axiomancer-mobile', 'assets', 'images', 'cards', 'index.ts'),
+    // The upgrade picker's test needs upgradable cards with paid and free changes; only trial cards have them.
+    path.join('axiomancer-mobile', 'components', 'upgrade', '__tests__', 'CardUpgradePicker.test.tsx'),
+    // The village Shop's carousel test stocks five cards, two of them trial cards, to fill the five slots.
+    path.join('axiomancer-mobile', 'state', 'e2e', 'village-shop-carousel.VL1d.test.tsx'),
 ]);
 const SKIP_DIRS = new Set(['node_modules', '.expo', '.audit-dist', '.smoke-dist', 'dist', 'android', 'ios', 'screenshots']);
 

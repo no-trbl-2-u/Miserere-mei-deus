@@ -9,6 +9,12 @@ export const BOSS_CARD_SUBTITLE = 'Chapter 1 boss';
 /** The tap hint under the held title card. */
 export const BOSS_CARD_HINT = 'tap to face it';
 
+/** The elite's tier chip. */
+export const ELITE_CHIP = 'ELITE';
+
+/** What withdrawing costs, on WITHDRAW's second line. */
+export const WITHDRAW_COST = '[content] No reward. You may try again.';
+
 /** The elite's held-road line. */
 export function heldRoadLine(place: string): string {
     return `Holds the road to ${place}`;

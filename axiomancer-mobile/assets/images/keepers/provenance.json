@@ -1,0 +1,38 @@
+[
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-11-10",
+    "tool": "external-illustration (torio, Javardry free material pack), cut out and re-encoded",
+    "prompt": "Stand-in village keeper portraits, approved by T 2026-11-10 (\"for now, yes to all the images you used so far, I can always swap them out\"). Copied out of the sorted entity library (Potential Assets store) and never read from it by code.",
+    "spec_section": "168 (VL1a), A6",
+    "covers": [
+      "host.webp (TOR-0424 Hermit, Hermit A.png)",
+      "innkeeper.webp (TOR-0413 Harbalist, Harbalist A.png)",
+      "shopkeeper.webp (TOR-0275 Evil Merchant, Evil Merchant A.png)",
+      "smith.webp (TOR-0821 Stonehead, Stonehead.jpg)"
+    ],
+    "used_by": [
+      "assets/images/keepers/index.ts (role table: host, innkeeper, shopkeeper, smith)"
+    ],
+    "license": "open source (T, 2026-10-29, D115); artist's free-material grant in docs/licences/torio-javardry.md",
+    "license_note": "Art by torio (とり夫). T, 2026-10-29, D115: all game images are open source. The artist's own licence note is docs/licences/torio-javardry.md.",
+    "post_process": "Black ground removed so the figure stands on the screen's plate: flood fill from the image edges at max channel < 34, alpha blurred 1.2 px, cropped to the figure, ~900 px tall transparent PNG; then resized to longest edge <= 640 px and encoded WebP q44 (alpha q80) with sharp."
+  },
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-11-10",
+    "tool": "external-illustration (torio, Javardry free material pack), cut out and re-encoded",
+    "prompt": "Stand-in figure for the card upgrade screen (the string of beads), named by T's settled pitch (braindump/2026-11-09-card-upgrade-screen.md; spec 127, The string of beads). Copied out of the sorted entity library (Potential Assets store) and never read from it by code.",
+    "spec_section": "127 (UP1i), The string of beads",
+    "covers": [
+      "upgrade-figure.webp (TOR-0007 Ahimsa, items/Ahimsa.jpg)"
+    ],
+    "used_by": [
+      "assets/images/keepers/index.ts (UPGRADE_FIGURE_STANDIN)",
+      "components/upgrade/CardUpgradePicker.tsx (the default figure)"
+    ],
+    "license": "open source (T, 2026-10-29, D115); artist's free-material grant in docs/licences/torio-javardry.md",
+    "license_note": "Art by torio (とり夫). T, 2026-10-29, D115: all game images are open source. The artist's own licence note is docs/licences/torio-javardry.md.",
+    "post_process": "Black ground removed so the figure stands on the screen's plate (900 px transparent PNG); cropped to the figure, resized to longest edge <= 640 px (311x640) and encoded WebP q60 (alpha q80) with Pillow."
+  }
+]

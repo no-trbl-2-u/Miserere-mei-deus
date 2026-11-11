@@ -85,6 +85,11 @@ export const ROUTES = [
     // re-stamped, and it carries a tighter diff line (0.1%) than the other routes
     // because the places are small. See screenshots/baseline/README.md.
     { name: 'combat-board', path: '/combat-encounter', liveFight: true, intoBoard: true, maxDiffRatio: 0.001, expectTestIds: BOARD_PLACES },
+    // The reveal for an elite and for the boss, entered at their Breakwater nodes
+    // by a fixture whose arrival stages the fight: the elite wears its chip, the
+    // boss is the held title card. Both wait out the ink curtain.
+    { name: 'combat-elite', path: '/exploration', fixture: 'wanderer-bw-elite-arrive', waitForPath: '/combat-encounter', waitForTestId: 'combat-reveal-chip' },
+    { name: 'combat-boss', path: '/exploration', fixture: 'wanderer-bw-boss-arrive', waitForPath: '/combat-encounter', waitForTestId: 'combat-reveal-boss-card' },
     { name: 'memoir', path: '/memoir' },
     // THE APORIA act select (no session on a fresh boot).
     { name: 'labyrinth', path: '/labyrinth' },
@@ -99,7 +104,14 @@ export const ROUTES = [
     { name: 'dialogue', path: '/exploration', fixture: 'apprentice-staged-dialogue', waitForPath: '/dialogue' },
     { name: 'village', path: '/exploration', fixture: 'wanderer-staged-village', waitForPath: '/village' },
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
+    // The quest card: the gate warden's offer at the keep gate, steps 1 to 3 turned in.
+    { name: 'quest', path: '/exploration', fixture: 'wanderer-bw-keep-gate-offer', waitForPath: '/quest', waitForTestId: 'quest-offer' },
+    // The gate warden turning the player away, and the chain's last card marked paid.
+    { name: 'quest-locked', path: '/exploration', fixture: 'wanderer-bw-keep-gate-locked', waitForPath: '/quest', waitForTestId: 'quest-locked' },
+    { name: 'quest-paid', path: '/exploration', fixture: 'wanderer-bw-bridge-paid', waitForPath: '/quest', waitForTestId: 'quest-card-paid' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
+    // The cave shortcut: the map zoomed on the Cave Face.
+    { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },
     // The live hazard on its board, the parity baseline for the puzzle
     // board: the fixture's arrival starts the hazard (seed pinned by the
     // minigame-seed injector), `hazardRoute` picks the route, and the shot
@@ -113,9 +125,25 @@ export const ROUTES = [
     // its dice at rest and its clock held.
     { name: 'hazard-puzzle-stakes', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', puzzleNode: true, waitForTestId: 'hazard-stakes' },
     { name: 'hazard-puzzle-node', path: '/exploration', fixture: 'l30-bw-hazard-arrive', waitForPath: '/hazard', puzzleNode: true, hazardPuzzle: true },
+    // The shared card-upgrade screen, the string of beads (spec 127, UP1j A17),
+    // at the rest site: the fixture's arrival opens /rest, `tapTestId` picks
+    // UPGRADE A CARD, and the shot waits for HOLD and the way back under it.
+    { name: 'rest-upgrade', path: '/exploration', fixture: 'apprentice-bw-rest', waitForPath: '/rest', tapTestId: 'rest-choice-offer-upgrade', expectTestIds: ['card-upgrade-sheet', 'card-upgrade-figure', 'card-upgrade-centre', 'card-upgrade-hold', 'rest-upgrade-back'] },
+    // The cave cache (cw-6, T's action lines), seed pinned by the injector (plan 174, A6):
+    // the choice, then each TAKE tapped (`tapTestId`) to its outcome.
+    { name: 'cache', path: '/exploration', fixture: 'apprentice-cw-cache', waitForPath: '/cache', expectTestIds: ['cache-choice-offer-card', 'cache-choice-offer-item'] },
+    { name: 'cache-goods', path: '/exploration', fixture: 'apprentice-cw-cache', waitForPath: '/cache', tapTestId: 'cache-choice-offer-item', expectTestIds: ['cache-outcome', 'cache-claim'] },
+    { name: 'cache-card', path: '/exploration', fixture: 'apprentice-cw-cache', waitForPath: '/cache', tapTestId: 'cache-choice-offer-card', expectTestIds: ['cache-outcome-card', 'cache-claim'] },
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
+    // The post-fight summary on a lost fight, with its cause line:
+    // a dev route mounts the panel from a fixed summary.
+    { name: 'defeat-panel', path: '/devdefeat', fixture: 'fresh-start', expectTestIds: ['combat-summary', 'combat-summary-cause', 'combat-summary-close'] },
+    // The victory screen, with a level-up and without one: a dev route
+    // mounts it from a fixed fight, drawn at the level panel's settled end.
+    { name: 'victory-levelled', path: '/devvictory?levelled=1', fixture: 'fresh-start', expectTestIds: ['combat-victory', 'victory-level-panel', 'combat-rewards', 'combat-reward-skip', 'combat-reward-confirm'] },
+    { name: 'victory-plain', path: '/devvictory', fixture: 'fresh-start', expectTestIds: ['combat-victory', 'victory-level-panel', 'combat-rewards', 'combat-reward-skip', 'combat-reward-confirm'] },
     // The full-screen moment after a run end (CH1j); `preview=1` shows it on a dev build.
     { name: 'game-over', path: '/game-over?slot=1&preview=1', fixture: 'fresh-start' },
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,
@@ -337,6 +365,9 @@ export async function loadRoute(target, baseUrl, route, { enter = enterLiveFight
         await target.waitForURL((u) => u.pathname.endsWith(route.waitForPath), { timeout: 15_000 })
     }
     await waitForReady(target)
+    // One tap that moves the screen to the state shot (e.g. an offer that opens a
+    // sheet). The web stack can keep a hidden copy of the screen, so the visible one.
+    if (route.tapTestId) await target.getByTestId(route.tapTestId).filter({ visible: true }).first().click()
     if (route.waitForTestId) await target.getByTestId(route.waitForTestId).waitFor({ state: 'visible', timeout: 10_000 })
     await expectPlaces(target, route.expectTestIds)
     if (route.hazardRoute) await pickHazardRoute(target, route.hazardRoute)

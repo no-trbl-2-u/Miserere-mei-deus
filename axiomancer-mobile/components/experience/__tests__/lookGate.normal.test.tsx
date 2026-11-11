@@ -18,6 +18,8 @@ jest.mock('@/lib/platform/router', () => ({
 jest.mock('@/components/experience/looks', () => ({
     ...(jest.requireActual('@/components/experience/looks') as object),
     lookOf: () => 'normal',
+    // BrassButton reads the table directly, so the table itself reads normal.
+    LOOKS: new Proxy({}, { get: () => 'normal' }),
 }));
 
 beforeAll(() => { registerFixtureQuestline(); });
@@ -32,7 +34,7 @@ describe('a place set to normal draws no kit piece', () => {
 
     it('T-02: the travel buttons', () => {
         const view = mountTravel();
-        expect(view.getByTestId('travel-yes')).toBeTruthy();
+        expect(view.getByTestId('travel-move')).toBeTruthy();
         expect(kitImagesIn(view)).toBe(0);
     });
 
@@ -42,7 +44,7 @@ describe('a place set to normal draws no kit piece', () => {
         expect(kitImagesIn(view)).toBe(0);
     });
 
-    it('Q-01: the quest panel', () => {
+    it('the quest card and its brass buttons', () => {
         const view = mountQuest();
         expect(view.getByTestId('quest-offer')).toBeTruthy();
         expect(kitImagesIn(view)).toBe(0);

@@ -917,6 +917,334 @@
 - conflicts: SM2f (135.6) reads the same break list.
 - promote with `/plot`.
 
+### [ ] [owner] [score 3.0] Follow-ups carried from specs 111, 112, 121, 132 and 137 when they retired
+- proposed: 2026-11-09, T's session (backlog absorb); kept verbatim, some may already be done, T triages
+- trigger: T's next `/plot` or `/oversight`. The tester-scoped API token (under spec 132) comes first if an APK is ever published: the preview APK bakes in the all-routes token.
+- source signals: the Follow-ups sections of the specs deleted in this commit.
+- proposed scope: none yet; each is plotted on its own.
+
+#### From spec 111
+
+- **A device gesture harness**: driving a real two-finger pinch in CI (Android emulator or a
+  Playwright multi-touch script on the web build) so a regression like #1046's cannot pass on jest
+  alone. Its own plot if T wants it.
+- **The hint's words** (`exploration.engine.ts:613`) and whether the step count belongs in the
+  header: copy is T's.
+- **The labyrinth's map**, if it shares this camera later.
+
+#### From spec 112
+
+- **A combat track.** T supplies the file; one row adds it to the track table and decides restart vs
+  carry-on per fight.
+- **A hazard track**, the same way, if T wants one.
+- **The labyrinth's entry treatment** (no token to bleed from), if call 4 is answered "ink from the
+  centre".
+- **A critique-drive pass on `/settings`** (CRITIQUE pending, LOW): no unattended pass sees the music
+  rows; ST1a's tab is the natural place to add it.
+
+#### From spec 121
+
+- **TP1b — the plate itself** (T picked Doré's lion, 2026-11-03; now chunk 121.2). Candidates already tried and rejected in T's 2026-10-18 pass, all
+  confirmed Public domain by `acquire-art.mjs`'s own check but too pale after the ingest recipe
+  (brightness 0.62, contrast 1.08): Hiroshige daylight landscapes (print borders, light fields) and three
+  Turners — *Sun Setting over a Lake*, *The Fighting Temeraire*, *Sunrise with Sea Monsters*. The look that
+  worked: dark field, one burning light source low in the frame, silhouetted foreground, quiet upper band for
+  the wordmark. Note that torio's free Javardry pack cannot supply this — its 74 "distant view" plates are
+  abstract corridor far-planes, not scenery (`Potential Assets/torio/LICENCE-torio.md`).
+- **The launcher icon** derives from the same `shore-at-dawn` source (`art-sources.json`, category `title`).
+  Whether an icon-size legibility check is worth having is a separate question; this phase does not answer it.
+- **More viewports** for the measurement, if one reference proves too narrow.
+
+#### From spec 132
+
+- **The feedback pipeline (T, 2026-10-31; an idea, not yet designed, T: "let's not brainstorm it now").**
+  Save each submitted bug or proposal somewhere; an agent reads them in batches on a schedule, decides
+  which are real and worth acting on, and files a GitHub issue for each, labelled `Unresolved`; `/march`
+  (and its triage gate) does not act on an `Unresolved` issue until T removes the label. Constraints
+  already known from the 2026-10-31 security review, to carry into its design:
+  - tester text is untrusted input. The agent that reads it should hold no `GH_PAT`, no Claude OAuth
+    token with write tools, and no network beyond filing the issue, or the filing step should be a plain
+    script fed the agent's structured verdict;
+  - the issue body quotes the tester's text as data (fenced), so a later agent run that reads the issue
+    is not steered by it; `/march` triage and `@claude` must skip `Unresolved` issues;
+  - storage is likely a new owner-read-only route on `miserere-api` (D1), written by the app with a
+    tester-scoped token, never the current all-routes token.
+- **Tester-scoped API token** (same review): the preview APK bakes in the one `PUZZLE_API_TOKEN`, which
+  reads every route, ballot verdicts included. Split it into a POST-only tester token and an owner token,
+  and rotate the current one, before the APK goes to testers. Its own plot.
+- **Dev tools in testers' hands.** Preview builds show DEV TOOLS, so beta testers on the preview APK will
+  have it. A tester build flag (or a hidden gesture) that hides it is its own plot, or part of B10.
+
+#### From spec 137
+
+- Every FREE line as glyphs only (62 of 104 are; 35 need a rewrite, 16 of them Merciful), with T's soft rule that
+  FREE is a lighter PAID or a one-keyword effect: T's session.
+- Live resolved numbers on the face (`DEAL 14` for the board as it stands): parked in the pitch as a later layer.
+- New keywords for effects on you, when a card needs one.
+
+### [ ] [owner] Follow-ups carried from spec 113 when it retired: The sim playtester and its own data, kept apart from T's
+- proposed: 2026-11-09, settle retired spec 113 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/113-sm1-sim-playtester-data.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **An LLM-driven playtester** (Confirmed by T (2026-10-31) as a Follow-up): a model that plays through the same
+  driver seams, for the questions a heuristic cannot ask (is this confusing, is this fun).
+- **Chapters 2-4** for the sim, once they are playable end to end.
+- **The braindump's `runs` and `measurements` tables** (loop ticks, measured truth as a series, the candidate audit
+  online): `braindump/2026-10-21-backend-schema-plan.md` §2-4, a later `/plot`.
+- **Puzzle-board hazards in the sim**, when live hazard routing lands (the Nov 3 plot): the hazard seam then plays
+  the puzzle with `hazard-puzzle.solver.ts`.
+- **Retention** for `sim` and `harness` rows, if D1 size grows; the `sim-runs` PR records the database size after its
+  first batch.
+- **Playtester telemetry** (BE1 Follow-up): device ids and a privacy note before an APK leaves T's hands; still a hard
+  stop from BE2.
+
+### [ ] [owner] Follow-ups carried from spec 115 when it retired: The Merciful trial set (my mending is a weapon)
+- proposed: 2026-11-09, settle retired spec 115 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/115-mf1-merciful-trial-set.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **HURRY N** (T: every status on both sides ticks down N): ruled, printed by no kept card; built with the first card
+  that prints it.
+- E-09's overheal-draw card ("Whenever you heal past your max, draw a card"): a new card, and "when you heal" is not a
+  Global trigger yet.
+- The Merciful's two other relics: T picked them on 2026-11-02; see "The Merciful's two quest relics" below.
+- The enemy revision (T, 2026-10-30), then the pace and structure the sims raised: RADIANCE whiffing at full VITAE,
+  M-04b's debuff clear (no Act 1 foe debuffs you), MERCY left unburst at a fight's end.
+- Whether a Merciful card can be a character's starting lane card (T: decide at CH1).
+
+### [ ] [owner] Follow-ups carried from spec 117 when it retired: The Defender trial set (the turtle with spikes)
+- proposed: 2026-11-09, settle retired spec 117 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/117-df1-defender-trial-set.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Act 1 quests that hand out the Mirror Brooch and the Carapace Belt (unless T answers #3 otherwise).
+- T's names for the three signature skills.
+- The illegal-PAID refusal for an unpayable SACRIFICE on the board, if it is not already loud the same way (Session 0
+  Open: "an engine and UI rule for every card"); A6 builds the discard case on the shared shake.
+- The Defender's pair identities with Blood Price and the Elementalist (Session 0 Open).
+- The pace: with the shipped numbers the Defender still runs under T's 3 / 5 / 7 turn targets (the sims); and the
+  structure questions the sims raised (M-07 PAID, M-09 FREE, M-02 and M-05 PAID), for after T plays it.
+
+### [ ] [owner] Follow-ups carried from spec 118 when it retired: The Elementalist trial set (the weather in play)
+- proposed: 2026-11-09, settle retired spec 118 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/118-el1-elementalist-trial-set.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Lane-creator step 7, T's revisions:
+  - names; the INFERNO, BLIZZARD and STORM scaling;
+  - P-05 PAID (never played in the sims), and M-01 and M-02 PAID (heals rarely needed);
+  - the pace (the deck runs well under T's 3, 5 and 7 turn targets even adjusted);
+  - the real test deck, and the family relic and signature skill.
+- The lane unlock: relics naming a lane, the D71/D100 reward slot.
+
+### [ ] [owner] Follow-ups carried from spec 125 when it retired: Loop gates: the eval report's ranked fixes, built
+- proposed: 2026-11-09, settle retired spec 125 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/125-lg1-loop-gates.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **The ruleset:** T creates it (`plan/NEEDS_T.md` `verify-gate-ruleset`), then switches it to `active`.
+- **Re-run the eval** after LG1a-LG1d land, and on or after 2026-10-23 for the change-failure baseline, to see the
+  miss counts move.
+- **Mutation as a gate:** only once per-diff baselines exist.
+
+### [ ] [owner] Follow-ups carried from spec 126 when it retired: The Obsidian vault: brainstorm and plot from the phone
+- proposed: 2026-11-09, settle retired spec 126 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/126-ov1-obsidian-vault.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Teaching `rpg-mechanics-brainstorm` to write its session file into
+  `vault/Threads/` instead of `braindump/`.
+- A Canvas generator that lays out `Map.canvas` from `01 Map.md`.
+- Cloud sessions reaching the vault repo need it attached to the session
+  (`add_repo`) before `ensure` can clone it.
+
+### [ ] [owner] Follow-ups carried from spec 128 when it retired: Card and combat logging (the play log)
+- proposed: 2026-11-09, settle retired spec 128 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/128-be2-card-combat-logging.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **Upgrade events.** `upgrade` is reserved in `deck_events.kind`; the call goes in when UP1b's upgrade and
+  replace-card actions exist on mobile. That phase adds one call; no migration.
+- **The bot beside T** (`card-vs-bot`): the sims post the same per-card counts at the same commit. It needs the
+  `runs` and `measurements` tables from sections 2-4 of the pitch, which are not plotted.
+- **Build provenance on puzzle attempts and the rest of the pitch** (runs, measured truth as a series, loop
+  ticks, alerts): sections 2-4 of `braindump/2026-10-21-backend-schema-plan.md`, a later `/plot`.
+- **Playtester telemetry** (BE1 Follow-up): device ids and a privacy note, before the APK leaves T's hands.
+- **An offline outbox**, if dropped fights thin the counts.
+
+### [ ] [owner] Follow-ups carried from spec 130 when it retired: The modular feature map: a note per feature, canvases you zoom into
+- proposed: 2026-11-09, settle retired spec 130 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/130-fm2-modular-feature-map.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- A switchable coupling layer for Graph view.
+- A `Features.base` (Obsidian Bases) table over the notes' frontmatter.
+- A `/pitch` entry point from a `#needs-pitch` note (FM1 Follow-up).
+- Reviewing which pitch flags are wrong (Rest, Village, Event likely have
+  design history under other names; Settings, Saves and dev routes may never
+  need one): an alias-table or rule change to FM1b, its own `/plot`.
+
+### [ ] [owner] Follow-ups carried from spec 135 when it retired: Sims that play the game: player personas, breaks filed, a nightly report of run health, pacing and coverage
+- proposed: 2026-11-09, settle retired spec 135 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/135-sm2-sim-follow-ups.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **The Merciful lane bot kills to grow** (the first draft's chunk, dropped by T, 2026-11-01): its lane-lead check in
+  `axiomancer-mobile/sim/run-archetypes.test.ts` stays `it.failing` until a later plot, or until the game lets a
+  sparing run build.
+- **The greedy witness**: it is what `measured-truth` plays and it already finishes at the mercy check, so changing it
+  moves measured truth and needs its own plot.
+- **Cards in the nightly report**, if T wants them back: a `card-vs-bot` section at the newest build holding T's and
+  the bots' rows.
+- **The sim report and the filing on D119's PR path** once NX1e changes how generated data lands.
+- **Chapters 2-4 for the personas**, once they are playable end to end; **an LLM-driven player** (spec 113's
+  Follow-up).
+- **The retention window as data** T can change: a constant in `backend/src/retention.ts` for now.
+
+### [ ] [owner] Follow-ups carried from spec 139 when it retired: Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat
+- proposed: 2026-11-09, settle retired spec 139 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/139-eq4-equipment-follow-ups.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### 139 — Equipment follow-ups: the Blacksmith's dead +3 upgrade retired, and the gear card without its repeat
+
+> The Blacksmith no longer sells a "+3 Conviction on a die special" upgrade that pays nothing, its copy says a BOON fires your weapon's special, and a weapon's or armor's detail card shows its EFFECT once instead of twice. The deadline plan's Chapters 2-4 quest Item stops saying every quest pays a relic.
+
+Plotted by T's pilot run on 2026-11-01 (`/plot anytime`), after spec 136 (equipment) merged in full. Every call below was
+answered by T in the session, so nothing here waits on T.
+
+##### Why
+
+###### Sources
+
+- Spec 136 chunk 136.5 (EQ3e) moved what a die special pays onto the worn weapon (`state.equipmentDice.special`). Its
+  pending close recorded the footgun `rail-special-conviction-inert`: `UpgradeableDieGear.specialConviction` (the die
+  gear rail, and the Blacksmith's `HEART_RICH_PAYLOAD_VARIANT`, "Sanguine Fitting (+3◆ payload)") no longer sets any
+  payout. The Blacksmith still sells the +3 fitting, so a player can pay shillings for a change that pays nothing.
+- Spec 136 chunk 136.7 (EQ3g) gave the gear detail card an EFFECT block. The card still prints the library
+  `description` as a flavor line under it, which says the same thing again for a weapon or armor.
+- Spec 136 chunk 136.8 (EQ3h) amended D114: Breakwater quest rewards alternate, a relic, then a weapon or armor. The
+  deadline plan's Nov 25 Item for Chapters 2-4's quest lines still says "every quest pays a relic".
+- Code read while shaping this (already built / new):
+  - Built: `World/Blacksmith/blacksmith.content.ts` (`HEART_RICH_PAYLOAD_VARIANT`, `BLACKSMITH_WITNESS_VARIANTS`),
+    read by `World/MapEvents/content.ts` (the village's `anvil.variants`), `DebugRewardTriggers.tsx`, and
+    `chapter1-content.ts`; the swap verb itself (`blacksmith.engine.ts`, `swapVariant`) is generic and stays.
+  - Built: `UpgradeableDieGear.specialConviction` (`Combat/combat.encounter.types.ts`), `DEFAULT_DIE_GEAR`
+    (`Combat/combat.upgradeable-dice.ts`), the Blacksmith presenter's `specialConviction` row field
+    (`state/presenters/blacksmith.engine.ts`), and the combat gear rail's `payload` / `specialConviction`
+    (`state/presenters/combat-encounter.engine.ts`, `gearSlotVM`, which prints "+N ◆" from the inert field).
+  - Built: the Blacksmith copy `INTRO_BODY` and `FACE_KEY` say a BOON "pays CONVICTION besides", which is no longer
+    true; `specialFaceText` (`state/presenters/equipment-effect-line.ts`) is the wording for what the worn weapon's
+    special pays.
+  - Built: `selectEquipmentDetailViewModel` sets `flavor: item.description` (`state/presenters/equipment-detail.engine.ts`);
+    `EquipmentDetailModal.tsx` prints the EFFECT block, then the flavor under everything.
+  - Saves: only the current `GAME_STATE_VERSION` loads and a bump deletes every save, so no version bump. A save that
+    already carries the +3 fitting on `Character.dieGear` holds an object with an extra `specialConviction` key; the
+    engine never validates keys on load, so the key simply goes unread.
+
+###### Confirmed by T (2026-11-01)
+
+1. **Retire the +3 upgrade.** Confirmed by T (2026-11-01): "Retire it". Since the worn weapon decides what a special
+   pays, the upgrade and the rail's `specialConviction` change no payout; the Blacksmith stops offering the upgrade,
+   its copy stops saying a BOON pays its own Conviction, and the inert field goes.
+2. **Hide flavor when an effect shows.** Confirmed by T (2026-11-01): "Hide flavor when effect shows". A weapon's or
+   armor's card shows its EFFECT block and no flavor line; a relic's card is unchanged.
+3. **Reword the Nov 25 deadline Item.** Confirmed by T (2026-11-01): "Reword it". Chapters 2-4's quests alternate a
+   relic, then a weapon or armor (D114 as amended by 136.8).
+
+##### Design
+
+###### The Blacksmith retires the +3 fitting (139.1)
+
+- `BLACKSMITH_WITNESS_VARIANTS` becomes `[]` and `HEART_RICH_PAYLOAD_VARIANT` is deleted, with its export in
+  `World/Blacksmith/index.ts` and `src/index.ts`. The village anvil (`MapEvents/content.ts`) and the debug trigger
+  keep passing the (now empty) list; `anvil.variants` stays on the event payload type. The Blacksmith screen shows no
+  swap section when there are no variants (the builder checks this and hides the section if it renders an empty one).
+  The swap verb and its pricing (`ANVIL_VERB_PRICING.swap`) stay as engine machinery; their tests build a local
+  fixture variant instead of the deleted constant.
+- `UpgradeableDieGear.specialConviction` is removed from the type, from `DEFAULT_DIE_GEAR`, from the Blacksmith presenter's row (`BlacksmithDieVM.specialConviction`) and from the
+  combat gear rail (`CombatDieGearSlotVM.specialConviction` and `payload`); `SPECIAL_CONVICTION_DEFAULT` stays, since
+  the grey sword's special reads it (`Items/equipment.library.ts`). The rail's "upgraded from stock" test compares
+  faces only, and its a11y line stops saying "Boon face grants +N ◆".
+- Saves: the field is never read after this chunk, so an old save carrying it loads and plays the same. A test loads
+  a save fixture whose `dieGear.heart` still has `specialConviction: 3` and asserts it loads and a special pays the
+  worn weapon's amount.
+- Copy: `INTRO_BODY` and `FACE_KEY` in `state/presenters/blacksmith.engine.ts` say a BOON "pays for a card and fires
+  your weapon's special" (no Conviction promise of its own). Wording follows `specialFaceText`'s "weapon special"
+  phrasing, and the line stays Dawncaster-terse.
+
+###### The gear card shows its effect once (139.2)
+
+`selectEquipmentDetailViewModel` sets `flavor` to `''` when `effect` is not null, else to `item.description`. The modal
+already prints no flavor line for `''`. A relic has no effect block, so its flavor line stays. The header comment of
+`equipment-detail.engine.ts` says so.
+
+###### The deadline plan
+
+`plan/deadlines.md`'s Nov 25 Item reads "every quest pays a relic, any lane relic not already paid by Chapter 1
+(D114)". It becomes: quests alternate a relic, then a weapon or armor (D114 as amended by 136.8); a relic quest pays
+a lane relic not already paid by Chapter 1. This plot edits it, and puts EQ4a and EQ4b in the `Waits on` of the Nov 16
+MVP demo Item (the demo plays the Blacksmith and the gear card).
+
+##### Open questions
+
+- None. T answered all three calls in the session (2026-11-01).
+
+##### Chunks
+
+Measure: 0 open · 4 closed · next A5
+
+
+###### 139.1 (EQ4a) — Retire the Blacksmith's +3 upgrade and the inert die-gear payout · M · closes A1, A2, A3 · requires —
+
+Measure: the A1-A3 engine and presenter tests pass; a dev-menu Blacksmith visit shows no swap offer and the new intro
+and face key.
+
+- Scope: `World/Blacksmith/blacksmith.content.ts`, `World/Blacksmith/index.ts`, `src/index.ts`,
+  `Combat/combat.encounter.types.ts`, `Combat/combat.upgradeable-dice.ts`, `Combat/combat.upgradeable-economy.sim.ts`
+  if it names the field, `state/presenters/blacksmith.engine.ts` (row field and the two copy strings),
+  `state/presenters/combat-encounter.engine.ts` (`gearSlotVM`), `axiomancer-mobile/docs/dev-tools.md` (the
+  `DebugBlacksmithButton` row names the constant), the tests that name the constant or the field (the die-gear,
+  blacksmith, village-counter and momentum-stance tests).
+- Consumers: the village anvil, the debug Blacksmith trigger, the combat gear rail, the Blacksmith screen.
+- Save / schema: none; no version bump. An old save keeps its extra key unread.
+- Tests matrix: `Blacksmith/e2e/blacksmith.engine.test.ts` (A1, with a local variant fixture),
+  `Character/e2e/die-gear-reducer.engine.test.ts` and `Combat/e2e/die-gear-rail.engine.test.ts` (A2 and the save
+  fixture), `state/presenters/__tests__/blacksmith.engine.test.ts` (A3).
+- Verify gate: both workspaces.
+
+###### 139.2 (EQ4b) — The gear card shows its effect once · S · closes A4 · requires —
+
+Measure: the A4 tests pass; the web export shows the grey sword's card with an EFFECT block and no italic line under
+it.
+
+- Scope: `state/presenters/equipment-detail.engine.ts` (`flavor`, header comment),
+  `components/inventory/EquipmentDetailModal.tsx` only if its test needs a guard.
+- Consumers: every surface that opens the gear card (satchel, dock, village equipment rows).
+- Save / schema: none.
+- Tests matrix: `state/presenters/__tests__/equipment-detail.engine.test.ts` (weapon, armor and relic), the modal's
+  component test.
+- Verify gate: the mobile workspace.
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.

@@ -5,7 +5,9 @@
  * registry, never re-derived here.
  */
 
-import { createCharacter, getRelicById, type Equipment } from '@mechanics';
+import {
+    armorLibrary, createCharacter, getRelicById, GREY_ARMOR_ID, GREY_WEAPON_ID, weaponLibrary, type Equipment,
+} from '@mechanics';
 
 import { selectEquipmentDetailViewModel } from '@/state/presenters/equipment-detail.engine';
 import { createAppStore } from '@/state/store';
@@ -88,5 +90,28 @@ describe('equipment detail view-model — lane', () => {
         const relic = getRelicById(id)!;
         const vm = selectEquipmentDetailViewModel(stateWith([relic], [relic]), id)!;
         expect(vm.lane).toBe('Lane: Merciful (while worn)');
+    });
+});
+
+describe('equipment detail view-model — flavor', () => {
+    const BLADE = weaponLibrary.find((w) => w.id === GREY_WEAPON_ID)!;
+    const COAT = armorLibrary.find((a) => a.id === GREY_ARMOR_ID)!;
+    const STICK: Equipment = {
+        id: 'plain-stick', name: 'Plain Stick', description: 'A stick, nothing more.', category: 'equipment', slot: 'weapon',
+    };
+
+    it('the view-model keeps the description as flavor for every piece (the reward screen prints it)', () => {
+        for (const piece of [BLADE, COAT, SIGNET, STICK]) {
+            const vm = selectEquipmentDetailViewModel(stateWith([piece], [piece]), piece.id)!;
+            expect(vm.flavor).toBe(piece.description);
+            expect(vm.flavor).not.toBe('');
+        }
+    });
+
+    it('a piece with an effect block has an effect; a relic and a plain weapon have none', () => {
+        expect(selectEquipmentDetailViewModel(stateWith([BLADE], [BLADE]), BLADE.id)!.effect).not.toBeNull();
+        expect(selectEquipmentDetailViewModel(stateWith([COAT], [COAT]), COAT.id)!.effect).not.toBeNull();
+        expect(selectEquipmentDetailViewModel(stateWith([SIGNET], [SIGNET]), SIGNET.id)!.effect).toBeNull();
+        expect(selectEquipmentDetailViewModel(stateWith([STICK], [STICK]), STICK.id)!.effect).toBeNull();
     });
 });

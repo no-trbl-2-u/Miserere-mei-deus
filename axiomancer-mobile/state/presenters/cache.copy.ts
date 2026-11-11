@@ -18,9 +18,12 @@ export const CACHE_CHOICE_OFFER_LABEL: Record<LootCacheChoiceOfferId, string> = 
 
 export const CACHE_OUTCOME_EYEBROW = 'SETTLED';
 export const CACHE_OUTCOME_CLAIM_LABEL = 'MOVE ON';
+/** The brass button at the right end of each choice row. */
+export const CACHE_CHOICE_TAKE_LABEL = 'TAKE';
 
-export function cacheOutcomeCardChip(cardName: string): string {
-    return `+ ${cardName.toUpperCase()}`;
+/** The purse in the top bar: "15 shillings". */
+export function cachePurseLine(shillings: number): string {
+    return `${shillings} shillings`;
 }
 
 export function cacheOutcomeItemChip(itemName: string): string {
@@ -29,4 +32,10 @@ export function cacheOutcomeItemChip(itemName: string): string {
 
 export function cacheOutcomeCurrencyChip(currency: number): string {
     return `+${currency} SHILLINGS`;
+}
+
+/** A potion's line in the inventory's terms: "Heal 20 VITAE · 30 below half VITAE". */
+export function cacheGoodHealLine(heal: number, belowHalf?: number): string {
+    const base = `Heal ${heal} VITAE`;
+    return belowHalf && belowHalf > 0 ? `${base} · ${belowHalf} below half VITAE` : base;
 }

@@ -5,12 +5,17 @@
 // real D1 database id in backend/wrangler.toml.
 
 import assert from 'node:assert/strict'
-import { readdirSync, readFileSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import { chmodSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import test from 'node:test'
 
 const root = new URL('../', import.meta.url)
 const workflow = readFileSync(new URL('.github/workflows/backend-deploy.yml', root), 'utf8').replace(/\r\n/g, '\n')
-const wrangler = readFileSync(new URL('backend/wrangler.toml', root), 'utf8').replace(/\r\n/g, '\n')
+// Comments out: a name that only a comment mentions is not a secret the Worker declares.
+const wranglerRaw = readFileSync(new URL('backend/wrangler.toml', root), 'utf8').replace(/\r\n/g, '\n')
+const wrangler = wranglerRaw.replace(/^\s*#.*$/gm, '').replace(/\s+#.*$/gm, '')
 
 const SECRET_REF = /\$\{\{\s*secrets\.(\w+)\s*\}\}/g
 
@@ -86,6 +91,63 @@ test('it migrates, deploys, then sets the Worker secret, each with the Cloudflar
   assert.deepEqual(secretsIn(secret.block), ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN', 'PUZZLE_API_TOKEN'])
   assert.match(secret.block, /working-directory: backend/)
   assert.match(secret.block, /printf '%s' "\$PUZZLE_API_TOKEN" \| npx wrangler secret put PUZZLE_API_TOKEN/, 'the token goes in on stdin, never as an argument')
+})
+
+test('it sets the tester token last, only when its repo secret exists, and never fails without it (TK1a A4)', () => {
+  const owner = step(/npx wrangler secret put PUZZLE_API_TOKEN/)
+  const tester = step(/npx wrangler secret put PUZZLE_TESTER_TOKEN/)
+  assert.ok(steps.indexOf(owner) < steps.indexOf(tester), 'the owner token is set first')
+  assert.equal(steps.indexOf(tester), steps.length - 1, 'the tester step is the last')
+  assert.deepEqual(secretsIn(tester.block), ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN', 'PUZZLE_TESTER_TOKEN'])
+  assert.match(tester.block, /working-directory: backend/)
+  assert.match(tester.block, /if \[ -z "\$PUZZLE_TESTER_TOKEN" \]; then\n(?:.*\n)*?\s+exit 0\n\s+fi\n/, 'an unset secret skips with exit 0')
+  assert.match(tester.block, /printf '%s' "\$PUZZLE_TESTER_TOKEN" \| npx wrangler secret put PUZZLE_TESTER_TOKEN/, 'the token goes in on stdin, never as an argument')
+  assert.doesNotMatch(tester.block, /\n        if:/, 'the step itself always runs; the shell decides')
+  assert.doesNotMatch(step(/::error::missing repo secret/).block, /PUZZLE_TESTER_TOKEN/, 'a missing tester secret is not a deploy failure')
+})
+
+test('wrangler.toml documents both Worker secrets in its comments and declares neither as a plain var', () => {
+  assert.match(wranglerRaw, /# - PUZZLE_API_TOKEN, the owner token/)
+  assert.match(wranglerRaw, /# - PUZZLE_TESTER_TOKEN /)
+  assert.doesNotMatch(wrangler, /PUZZLE_(?:API|TESTER)_TOKEN/, 'a secret is set with wrangler secret put, never written into the file')
+  const vars = wrangler.match(/^\[vars\]\n((?:.+\n)*)/m)?.[1] ?? ''
+  assert.deepEqual([...vars.matchAll(/^(\w+) =/gm)].map((m) => m[1]), ['BALLOT_ORIGINS'], 'the vars table holds the one public setting, no token')
+})
+
+/** Run the tester step's own shell with a fake `npx` that records its arguments and stdin; `env` is the step's env. */
+function runTesterStep(env) {
+  const dir = mkdtempSync(join(tmpdir(), 'backend-deploy-'))
+  try {
+    const run = step(/npx wrangler secret put PUZZLE_TESTER_TOKEN/).block.split(/\n        run: \|\n/)[1]
+    assert.ok(run, 'the step has a multi-line run')
+    const script = run.split('\n').map((l) => l.replace(/^          /, '')).join('\n')
+    writeFileSync(join(dir, 'npx'), '#!/bin/sh\necho "$@" > "$CALLS"\ncat > "$STDIN"\n')
+    chmodSync(join(dir, 'npx'), 0o755)
+    const r = spawnSync('bash', ['-e', '-c', script], {
+      encoding: 'utf8',
+      env: { PATH: `${dir}:${process.env.PATH}`, CALLS: join(dir, 'calls'), STDIN: join(dir, 'stdin'), ...env },
+    })
+    const read = (n) => { try { return readFileSync(join(dir, n), 'utf8') } catch { return null } }
+    return { status: r.status, stdout: r.stdout, calls: read('calls'), stdin: read('stdin') }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
+test("the tester step's shell skips with exit 0, and never calls wrangler, when the secret is unset or empty", () => {
+  for (const env of [{}, { PUZZLE_TESTER_TOKEN: '' }]) {
+    const r = runTesterStep(env)
+    assert.equal(r.status, 0, JSON.stringify(r))
+    assert.match(r.stdout, /PUZZLE_TESTER_TOKEN repo secret not set; skipping/)
+    assert.equal(r.calls, null, 'wrangler never ran')
+  }
+})
+
+test("the tester step's shell sets the secret on stdin when it exists", () => {
+  const r = runTesterStep({ PUZZLE_TESTER_TOKEN: 'tester-value' })
+  assert.equal(r.status, 0, JSON.stringify(r))
+  assert.equal(r.calls.trim(), 'wrangler secret put PUZZLE_TESTER_TOKEN', 'the value is not an argument')
+  assert.equal(r.stdin, 'tester-value')
 })
 
 test('a missing secret fails the run before anything is installed or deployed', () => {

@@ -21,11 +21,13 @@ import { headMarker, reviewWanted } from './pr-review.mjs'
 import { dropClosedNeeds, reportSettle, settleFailure, settleMain, settleMessage, shapeArchive } from './pr-settle.mjs'
 import { loadConfig } from './plan/config.mjs'
 import { lintFootguns } from './plan/footguns.mjs'
-import { pendingFiles } from './plan/pending.mjs'
-import { listedChunks } from './plan/settle.mjs'
+import { parsePending, pendingFiles } from './plan/pending.mjs'
+import { followUps, followUpsRow, addCandidate, retireSpec, specTitle } from './plan/retire-local.mjs'
+import { holdReason, listedChunks, nextChunkNumber } from './plan/settle.mjs'
 import { settledView } from './plan/settled.mjs'
 import { readPlanSources } from './check-deadlines.mjs'
 import { runCheck } from './plan-check.mjs'
+import { lintQueue } from './check-plan-queues.mjs'
 
 const HEAD = 'a'.repeat(40)
 const OLD = 'b'.repeat(40)
@@ -736,6 +738,297 @@ test('the view judges on the end state as settle does: an edit that empties a sp
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+// --- a finished spec retires itself (spec 164, SR1a) --------------------------------------------
+//
+// A spec's last close carries `absorb:` (where its lasting rules went), and settle retires the spec
+// it empties: the file, its row and lane lines go, its Follow-ups reach CANDIDATES, and a spec-complete
+// line holds the absorb text. Without the key the close is held as before (D168), and says so.
+
+const absorbing = (id, absorb, extra = '', date = '2026-11-01') => ['---', `close: ${id}`, `date: ${date}`, 'says: It works', `absorb: ${absorb}`, '---', extra].join('\n')
+const FOLLOW_UPS = ['', '## Follow-ups', '', '- **A map legend**, if T wants one.', '', '### Later', '', '- The labyrinth, someday.', ''].join('\n')
+const CANDIDATES = ['# Phase candidates', '', '## Pending', '', '### [ ] [owner] An old idea', '- proposed: 2026-10-01', '', '## Promoted', '', '- none', ''].join('\n')
+const README_LANE = README_TWO.replace('- (none yet)', '- **08.1** · XY2a: the map (T, 2026-11-01)')
+
+test('a last close with absorb: retires its spec: file, row and lane line gone, spec complete archived, Follow-ups carried', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const decided = absorbing('08.1', 'D?map-rule, pinned by maps.test.mjs', '## Decisions\n- **D?map-rule** · 2026-11-01 · Maps stay square. *Why:* a reason.\n')
+    landOnMain(work, g, {
+      'plan/08-maps.md': SPEC_ONE + FOLLOW_UPS,
+      'plan/README.md': README_LANE,
+      'plan/CANDIDATES.md': CANDIDATES,
+      'identity/decisions/2026.md': '# 2026\n\n- **D5** · 2026-01-01 · Old.\n',
+      'plan/pending/07.1.md': PENDING,
+      'plan/pending/08.1.md': decided,
+    })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'settled', JSON.stringify(r))
+    assert.deepEqual(r.ids.sort(), ['07.1', '08.1'])
+    assert.deepEqual(r.left, [])
+    assert.equal(settleFailure(r), null)
+    g(work, 'pull', '-q', 'origin', 'main')
+    assert.ok(!fs.existsSync(path.join(work, 'plan/08-maps.md')), 'the spec file is deleted')
+    const readme = fs.readFileSync(path.join(work, 'plan/README.md'), 'utf8')
+    assert.doesNotMatch(readme, /08-maps\.md|\*\*08\.1\*\*/, 'its row and lane line are gone')
+    assert.match(readme, /07-search\.md\) \| planned \| 1 left \|/, 'the other spec is untouched')
+    const archive = fs.readFileSync(path.join(work, 'plan/ARCHIVE.md'), 'utf8').trimEnd().split('\n')
+    assert.match(archive.at(-2), /^- 2026-11-01 · 08\.1 \(alias: XY2a\) · It works · [0-9a-f]+\.\.[0-9a-f]+$/, 'the close is shaped as usual')
+    assert.equal(archive.at(-1), '- 2026-11-01 · 08 · spec complete: Maps · D6, pinned by maps.test.mjs · deleted in (this commit)')
+    assert.match(fs.readFileSync(path.join(work, 'identity/decisions/2026.md'), 'utf8'), /\*\*D6\*\* · 2026-11-01 · Maps stay square/)
+    const candidates = fs.readFileSync(path.join(work, 'plan/CANDIDATES.md'), 'utf8')
+    const row = candidates.slice(candidates.indexOf('### [ ] [owner] Follow-ups'), candidates.indexOf('## Promoted'))
+    assert.match(row, /^### \[ \] \[owner\] Follow-ups carried from spec 08 when it retired: Maps\n- proposed: 2026-11-01/)
+    assert.match(row, /#### Follow-ups\n\n- \*\*A map legend\*\*, if T wants one\.\n\n##### Later\n\n- The labyrinth, someday\.\n\n$/, 'the section verbatim, its headings moved under the row')
+    assert.deepEqual(lintQueue(candidates, 'candidates').findings, [])
+    assert.deepEqual(lintsOf(work), [], 'plan-check and the deadline view stay green')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: none retires a spec with no Follow-ups and writes nothing to CANDIDATES', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/CANDIDATES.md': CANDIDATES, 'plan/pending/08.1.md': absorbing('08.1', 'none') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(settleFailure(r), null, JSON.stringify(r))
+    g(work, 'fetch', '-q', 'origin')
+    assert.equal(g(work, 'show', 'origin/main:plan/CANDIDATES.md'), CANDIDATES.trimEnd())
+    assert.doesNotMatch(g(work, 'ls-tree', '-r', '--name-only', 'origin/main', 'plan/'), /08-maps\.md|pending\/08\.1/)
+    assert.match(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /^- 2026-11-01 · 08 · spec complete: Maps · none · deleted in \(this commit\)$/m)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a last close without absorb: is held as before, and the hold names the missing key', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': closeOf('08.1') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.left, ['plan/pending/08.1.md'], JSON.stringify(r))
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk: absorb the spec by hand .*the missing "absorb:" key/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a spec emptied by an absorbing close and refilled later in the run stands, and nothing is archived as complete', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE + FOLLOW_UPS, 'plan/README.md': README_TWO, 'plan/CANDIDATES.md': CANDIDATES, 'plan/pending/08.1.md': absorbing('08.1', 'none'), 'plan/pending/plot-more.md': PLOT_MORE })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(settleFailure(r), null, JSON.stringify(r))
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.2\*\* More/)
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+    assert.equal(g(work, 'show', 'origin/main:plan/CANDIDATES.md'), CANDIDATES.trimEnd())
+    assert.match(g(work, 'show', 'origin/main:plan/README.md'), /08-maps\.md\)/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: rides only a close, says something, and names only its own decisions', () => {
+  const head = (lines) => ['---', ...lines, '---', ''].join('\n')
+  assert.throws(() => parsePending(head(['date: 2026-11-01', 'absorb: none', 'footguns: a']), 'x.md'), /"absorb:" goes on a spec's last close/)
+  assert.throws(() => parsePending(head(['close: 08.1', 'date: 2026-11-01', 'says: It works', 'absorb:']), 'x.md'), /"absorb:" goes on a spec's last close/)
+  assert.throws(() => parsePending(absorbing('08.1', 'D?nowhere'), 'x.md'), /absorb names D\?nowhere, but no "## Decisions" entry here defines it/)
+  assert.equal(parsePending(absorbing('08.1', 'none'), 'x.md').absorb, 'none')
+  assert.equal(parsePending(closeOf('08.1'), 'x.md').absorb, null)
+})
+
+test('footguns: none is no sightings, and a real slug still counts', () => {
+  const head = (lines) => ['---', ...lines, '---', ''].join('\n')
+  const close = ['close: 08.1', 'date: 2026-11-01', 'says: It works']
+  assert.deepEqual(parsePending(head([...close, 'footguns: none']), 'x.md').footguns, [])
+  assert.deepEqual(parsePending(head([...close, 'footguns: none, guard-test-noop']), 'x.md').footguns, ['guard-test-noop'])
+})
+
+test('an absorbing close that empties a spec under open acceptance is held for chunks, and nothing retires', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const partial = SPEC_ONE.replace('closes A1 ·', 'closes A1 (partial) ·')
+    landOnMain(work, g, { 'plan/08-maps.md': partial, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': PENDING, 'plan/pending/08.1.md': absorbing('08.1', 'none') })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.deepEqual(r.ids, ['07.1'], JSON.stringify(r))
+    assert.deepEqual(r.left, ['plan/pending/08.1.md'])
+    assert.match(settleFailure(r), /held back plan\/pending\/08\.1\.md: it would leave plan\/08-maps\.md with no chunk under open acceptance: chunk the spec/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'the spec stands')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('absorb: speaks only for its own close\'s spec: emptying another spec holds, and so does a file with no close', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    // A close of 07.1 (spec 07 keeps 07.2) whose Edit empties spec 08: its absorb: is spec 07's, not 08's.
+    // The Edit takes its acceptance too, so only the guard stands between spec 08 and a retire.
+    const edit = EDIT_EMPTIES.slice(EDIT_EMPTIES.indexOf('## Edit')).replace('~~~ new\n~~~\n', '~~~ new\n~~~\n~~~ old\n## Acceptance\n\n- **A1** A map.\n~~~\n~~~ new\n~~~\n')
+    const elsewhere = absorbing('07.1', 'none', edit)
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/pending/07.1.md': elsewhere })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(r.state, 'refused', JSON.stringify(r))
+    assert.match(settleFailure(r), /held back plan\/pending\/07\.1\.md: it would leave plan\/08-maps\.md with no chunk: absorb the spec by hand/)
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.1\*\*/, 'spec 08 stands')
+    assert.doesNotMatch(g(work, 'show', 'origin/main:plan/ARCHIVE.md'), /spec complete/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+  // A file with no close (the parser refuses absorb: there; this is the guard behind it) never exempts a spec.
+  const empty = '# 08 · Maps\n\n## Chunks\n\nMeasure: 0 open · 1 closed · next A2\n'
+  assert.match(holdReason({ close: null, absorb: 'none' }, 'plan/08-maps.md', empty), /with no chunk: absorb the spec by hand/)
+  assert.match(holdReason({ close: '07.1', absorb: 'none' }, 'plan/08-maps.md', empty), /with no chunk: absorb the spec by hand/)
+  assert.equal(holdReason({ close: '08.1', absorb: 'none' }, 'plan/08-maps.md', empty), null)
+})
+
+// --- the review debt of the retire (settle numbering, the settled view, the retire's own writes) ------
+
+test('nextChunkNumber counts an archived chunk written with (alias: …): the next add does not reuse its number', () => {
+  const archive = '# Archive\n\n- 2026-11-09 · 08.4 (alias: XY2d) · Done long ago · abc1234 (#9)\n- 2026-10-01 · 06.1 (alias: OLD1) · Old · 1234567 (#7)\n'
+  assert.equal(nextChunkNumber('08', ['08.1'], archive), 5, 'past 08.4, which only the archive holds')
+  assert.equal(nextChunkNumber('08', [], '- 2026-11-09 · 08.4a · No alias on this one · abc1234\n'), 5, 'a line with no alias counted before and still does')
+  assert.equal(nextChunkNumber('06', [], archive), 2, 'another spec\'s lines stay its own')
+  // Through the real settle: a plot adds a chunk to spec 08, whose highest chunk is archived with an alias.
+  const { dir, work, g } = scratchOrigin()
+  try {
+    const archived = `${fs.readFileSync(path.join(work, 'plan/ARCHIVE.md'), 'utf8')}- 2026-10-20 · 08.3 (alias: XY2c) · Third map · abc1234 (#9)\n`
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_TWO, 'plan/ARCHIVE.md': archived, 'plan/pending/plot-more.md': PLOT_MORE })
+    const r = settleMain({ root: work, lint: () => [], log: () => {} })
+    assert.equal(settleFailure(r), null, JSON.stringify(r))
+    g(work, 'fetch', '-q', 'origin')
+    assert.match(g(work, 'show', 'origin/main:plan/08-maps.md'), /\*\*08\.4\*\* More ·/, 'numbered past the archived 08.3')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// The close edits spec 08's acceptance and its only chunk line away: the spec is empty once the close settles.
+const EDIT_EMPTIES_ALL = EDIT_EMPTIES.slice(EDIT_EMPTIES.indexOf('## Edit')).replace('~~~ new\n~~~\n', '~~~ new\n~~~\n~~~ old\n## Acceptance\n\n- **A1** A map.\n~~~\n~~~ new\n~~~\n')
+
+test('the settled view retires a spec an absorbing close\'s Edit empties, so plan-check agrees with settle', () => {
+  const { dir, work, g } = scratchOrigin()
+  try {
+    landOnMain(work, g, { 'plan/08-maps.md': SPEC_ONE, 'plan/README.md': README_LANE, 'plan/pending/08.1.md': absorbing('08.1', 'none', EDIT_EMPTIES_ALL) })
+    const view = settledView(work)
+    assert.deepEqual(view.problems, [])
+    assert.deepEqual([...view.held.keys()], [], 'an absorbing close is not held')
+    assert.equal(view.read('plan/08-maps.md'), null, 'the spec is retired in the view')
+    assert.doesNotMatch(view.read('plan/README.md'), /08-maps\.md|\*\*08\.1\*\*/, 'its row and lane line are gone')
+    assert.match(view.read('plan/ARCHIVE.md'), /^- 2026-11-01 · 08 · spec complete: Maps · none · deleted in \(this commit\)$/m)
+    assert.deepEqual(lintsOf(work), [], 'plan-check and the deadline view stay green')
+    // Without absorb: the same close is held, and the view keeps the spec as it stands.
+    fs.writeFileSync(path.join(work, 'plan/pending/08.1.md'), absorbing('08.1', 'none', EDIT_EMPTIES_ALL).replace('absorb: none\n', ''))
+    const held = settledView(work)
+    assert.deepEqual([...held.held.keys()], ['plan/pending/08.1.md'])
+    assert.match(held.read('plan/08-maps.md'), /\*\*08\.1\*\*/)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the hold names the missing absorb: key only when the emptying close lacks one', () => {
+  const empty = '# 08 · Maps\n\n## Chunks\n\nMeasure: 0 open · 1 closed · next A2\n'
+  assert.match(holdReason({ close: '08.1', absorb: null }, 'plan/08-maps.md', empty), /the missing "absorb:" key/)
+  const other = holdReason({ close: '07.1', absorb: 'none' }, 'plan/08-maps.md', empty)
+  assert.match(other, /with no chunk: absorb the spec by hand/)
+  assert.doesNotMatch(other, /absorb:" key/, 'a close that has the key is not told to add it')
+  assert.doesNotMatch(holdReason({ close: null, absorb: null }, 'plan/08-maps.md', empty), /absorb:" key/, 'no close, no key to add')
+})
+
+test('retireSpec: the root README row, the queue file\'s Phase line, the roadmap row and the lane line go; the rest stays', () => {
+  const files = {
+    'plan/README.md': README_LANE,
+    'README.md': '| Phase | Spec |\n| A | [other](plan/07-search.md) |\n| B | [maps](plan/08-maps.md) |\n',
+    'plan/steps/01_build_plan.md': '- [ ] Phase A (../07-search.md): search\n- [ ] Phase B (../08-maps.md): maps\n',
+    'plan/08-maps.md': SPEC_ONE,
+    'plan/ARCHIVE.md': '# Archive\n',
+  }
+  const p = { close: '08.1', date: '2026-11-01', absorb: 'none' }
+  const { writes } = retireSpec({ spec: 'plan/08-maps.md', p, read: (f) => files[f] ?? null, queue: 'plan/steps/01_build_plan.md' })
+  assert.equal(writes.get('plan/08-maps.md'), null, 'the spec file is deleted')
+  assert.equal(writes.get('README.md'), '| Phase | Spec |\n| A | [other](plan/07-search.md) |\n', 'the root README row')
+  assert.equal(writes.get('plan/steps/01_build_plan.md'), '- [ ] Phase A (../07-search.md): search\n', 'the queue file\'s Phase line')
+  const roadmap = writes.get('plan/README.md')
+  assert.doesNotMatch(roadmap, /08-maps\.md|\*\*08\.1\*\*/)
+  assert.match(roadmap, /07-search\.md\) \| planned/, 'the other spec\'s row stays')
+  // Without a queue file the Phase line is left alone, and a file with no matching row is not rewritten.
+  const bare = retireSpec({ spec: 'plan/08-maps.md', p, read: (f) => files[f] ?? null })
+  assert.equal(bare.writes.has('plan/steps/01_build_plan.md'), false)
+  const quiet = retireSpec({ spec: 'plan/08-maps.md', p, read: (f) => (f === 'README.md' ? '| x | y |\n' : files[f] ?? null) })
+  assert.equal(quiet.writes.has('README.md'), false)
+})
+
+test('the retire\'s title: the roadmap row\'s Initiative, else the spec\'s own heading without its number', () => {
+  const row = (cell) => `| 08 | ${cell} | [08-maps.md](08-maps.md) | planned | 1 left |\n`
+  assert.equal(specTitle(row('Map room'), '08-maps.md', '# 08 · Maps\n'), 'Map room')
+  assert.equal(specTitle(README, '08-maps.md', '# 08 · Maps\n'), 'Maps', 'no row for it: the heading')
+  assert.equal(specTitle(null, '08-maps.md', '# 167 — Follow-ups from the pilot\n'), 'Follow-ups from the pilot')
+  assert.equal(specTitle(null, '08-maps.md', '# 08 - Maps\n'), 'Maps')
+  assert.equal(specTitle(row(''), '08-maps.md', '# Maps\n'), 'Maps', 'an empty cell falls back too')
+  assert.equal(specTitle(null, '08-maps.md', 'no heading\n'), '08-maps.md', 'no heading: the file name')
+  const files = { 'plan/08-maps.md': '# 08 · Maps\n', 'plan/ARCHIVE.md': '' }
+  const { writes } = retireSpec({ spec: 'plan/08-maps.md', p: { close: '08.1', date: '2026-11-01', absorb: 'none' }, read: (f) => files[f] ?? null })
+  assert.match(writes.get('plan/ARCHIVE.md'), /· 08 · spec complete: Maps · none · deleted in \(this commit\)\n$/)
+})
+
+const NESTED = [
+  '# 09 · Follow-ups from a pilot',
+  '',
+  '## Notes',
+  '',
+  '### Follow-ups',
+  '',
+  '- Level three, carried.',
+  '',
+  '#### Deeper',
+  '',
+  '- Under it.',
+  '',
+  '```sh',
+  '# a shell comment',
+  '### not a heading',
+  '```',
+  '',
+  '- proposed: a body line shaped like the row\'s own field',
+  '',
+  '### Other notes',
+  '',
+  '- left behind',
+  '',
+  '## Follow-ups',
+  '',
+  '- Level two, carried.',
+  '',
+  '### Sub',
+  '',
+  '- sub bullet',
+  '',
+  '## After',
+  '',
+  '- never carried',
+  '',
+].join('\n')
+
+test('Follow-ups at any depth are carried: headings moved under the row, fenced # lines too, a field-shaped body line indented', () => {
+  const sections = followUps(NESTED)
+  assert.deepEqual(sections.map((s) => [s.heading, s.level]), [['Follow-ups', 3], ['Follow-ups', 2]], 'both sections, each ending at a heading of its level or above; the title that says Follow-ups is no section')
+  assert.ok(!sections.some((s) => s.lines.some((l) => /left behind|never carried/.test(l))))
+  assert.ok(sections[0].lines.includes('```sh'), 'a fence inside a section stays in it')
+  const row = followUpsRow('09', 'Nested', '09-nested.md', '2026-11-01', sections).split('\n')
+  const heads = row.filter((l) => /^#{1,6} /.test(l))
+  assert.deepEqual(heads, ['### [ ] [owner] Follow-ups carried from spec 09 when it retired: Nested', '#### Follow-ups', '##### Deeper', '#### a shell comment', '#### not a heading', '#### Follow-ups', '##### Sub'], 'every # line sits at #### or lower, fenced ones shifted as headings are')
+  assert.ok(row.includes("  - proposed: a body line shaped like the row's own field"), 'the field-shaped line is indented')
+  const candidates = addCandidate(CANDIDATES, row.join('\n'))
+  assert.deepEqual(lintQueue(candidates, 'candidates').findings, [], 'one proposed field, no stray heading')
 })
 
 // The CLI itself, spawned. Its root is its own file's parent, so a scratch repo gets a copy of the script and what it imports.

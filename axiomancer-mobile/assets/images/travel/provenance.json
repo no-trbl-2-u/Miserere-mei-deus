@@ -1,0 +1,20 @@
+[
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Th%C3%A9odore_Rousseau_(1812-1867)_-_Pont_de_Batignies_in_the_Forest_of_Compi%C3%A8gne_-_CAI.56_-_Victoria_and_Albert_Museum.jpg",
+    "artist": "Théodore Rousseau",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "bridge.webp"
+    ],
+    "used_by": [
+      "assets/images/travel/index.ts (TRAVEL_SCENES['bw-b2'])"
+    ],
+    "temp_stand_in": "TEMP stand-in (T, 2026-11-11): Rousseau's Pont de Batignies in the Forest of Compiegne, a bridge crossing into a wood. T will still replace it with their own bridge travel image (act 'Find the bridge travel image'; spec 171, chunk 171.2). It replaces the earlier Charcoal Wood arena copy.",
+    "note": "The two cave entries (bw-h6, bw-c0) in index.ts are crops of the Breakwater coast plate drawn at render time (assets/images/maps/act1-coast.webp, provenance in that directory); no file is written for them."
+  }
+]

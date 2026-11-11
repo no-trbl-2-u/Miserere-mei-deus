@@ -150,11 +150,10 @@ kit's steps above disagree, this section wins for Miserere.
   (recommendation first, `docs/asking-well.md`) and record the answers
   there.
 - **Reconcile the deadline plan** (phase DL1c), in the same commit as
-  the candidates. A dump adds no chunks, so it owes no `## Items` or
-  `## Unscheduled` line; the `/plot` that promotes a candidate gives its
-  chunks one (`skills/plot.md` §7). But a theme that
+  the candidates. A dump adds no chunks, so it owes no `## Items` row; the `/plot`
+  that promotes a candidate reconciles the queue (`skills/plot.md` §7). But a theme that
   **supersedes, re-scopes or completes** an open Item in `plan/deadlines.md` edits
-  that Item itself (its name, date or rows; `needs plot` when the work
+  that Item itself (its name, hours, milestone or rows; `needs plot` when the work
   is only a candidate), or a `T` Item T says is done is ticked `[x]`.
   Every Item is a T act (phase DL2b): loop work the Item needs goes in
   its `Waits on` cell, never into an Item's `Rows`. No lint sees an

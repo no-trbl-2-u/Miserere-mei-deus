@@ -54,8 +54,8 @@ describe('/quest - a step paid on arrival', () => {
         open(LONG_MAIN_LINE, 3, [LONG_STEP_1, LONG_STEP_2]);
         const paid = screen.getByTestId('quest-paid');
         expect(paid).toBeTruthy();
-        expect(screen.getByText(LONG_STEP_2)).toBeTruthy();
-        expect(screen.getByText('+30 XP')).toBeTruthy();
+        const line = paid.props.children;
+        expect(Array.isArray(line) ? line.join('') : line).toBe(`+30 XP · ${CASTLE_KEY.name}`);
         expect(screen.getByTestId('quest-relic-name').props.children).toBe(CASTLE_KEY.name);
         expect(screen.getByTestId('quest-offer')).toBeTruthy();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
@@ -80,18 +80,18 @@ describe('/quest - a carry objective', () => {
 });
 
 describe('/quest - a node of the second questline', () => {
-    it('offers the side quest as step 1 of 1, without its pay', () => {
+    it('offers the side quest on its card, one bead, with its pay', () => {
         open(LONG_SIDE_LINE, 1);
-        expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 1 OF 1');
+        expect(screen.getByTestId('quest-beads').props.accessibilityLabel).toBe('Step 1 of 1');
         expect(screen.getByText(LONG_SIDE_STEP)).toBeTruthy();
-        expect(screen.queryByText('+25 XP')).toBeNull();
+        expect(screen.getByText('+25 XP')).toBeTruthy();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();
     });
 
-    it('its turn-in node reads the last step ("1 OF 1", never "2 OF 1") and is locked until the side quest is taken', () => {
+    it('its turn-in node reads the last step ("1 of 1", never "2 of 1") and is locked until the side quest is taken', () => {
         const handle = open(LONG_SIDE_LINE, 2);
         expect(screen.getByTestId('quest-locked-line')).toBeTruthy();
-        expect(screen.getByTestId('quest-step-eyebrow').props.children).toBe('STEP 1 OF 1');
+        expect(screen.getByTestId('quest-beads').props.accessibilityLabel).toBe('Step 1 of 1');
         expect(gs(handle.store).quests.active).toEqual([]);
         fireEvent.press(screen.getByTestId('quest-leave-button'));
         expect(screen.getByTestId('quest-inactive')).toBeTruthy();

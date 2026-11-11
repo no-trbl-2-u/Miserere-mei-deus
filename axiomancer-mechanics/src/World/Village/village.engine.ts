@@ -162,7 +162,7 @@ export function rollVillageCardShop(
 }
 
 /**
- * The card shop a village offers this player: three cards from their reward
+ * The card shop a village offers this player: five cards from their reward
  * pool (`rewardPoolFor`), seeded by the run and the village's node.
  *
  * @param state  - the run id and the player (whose reward pool is read).

@@ -209,6 +209,7 @@ describe('a run, from its start to its end', () => {
 
     it('makes no call at all while the gate is shut', async () => {
         devTools.mockReturnValue(false);
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
         const { store, actions } = newGame();
         walkOn(store, actions);
         const { enemy, combat } = firstFight();
@@ -217,6 +218,17 @@ describe('a run, from its start to its end', () => {
         actions.resetRun({ keepCharacter: true });
         await landed();
         expect(calls).toEqual([]);
+    });
+
+    it('a build with dev tools off and the API URL and token baked in still posts (the production tester APK)', async () => {
+        devTools.mockReturnValue(false);
+        const { store, actions, runId } = newGame();
+        const first = walkOn(store, actions);
+        actions.resetRun({ keepCharacter: true });
+        await landed();
+        expect(posts<PlayRunPost>(PLAY_RUNS_PATH)).toHaveLength(1);
+        expect(eventsOf('node-entered').map((e) => e.payload.nodeId)).toEqual([first]);
+        expect(calls.filter((c) => c.url === playRunEndPath(runId))).toHaveLength(1);
     });
 
     it('a failed post only warns, and the game goes on', async () => {

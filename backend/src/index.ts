@@ -21,8 +21,13 @@
  *   GET  /v1/ballot-verdicts[?ballot=][&status=]
  *                                      the stored rows, newest first  -> 200 { ballotVerdicts }
  *
- * Every route needs `Authorization: Bearer <PUZZLE_API_TOKEN>` (401 without
- * it). A POST body over its route's cap is a 413; one the route's validator
+ * Every route needs `Authorization: Bearer <PUZZLE_API_TOKEN>`, the owner token
+ * (401 without it). The tester token, `PUZZLE_TESTER_TOKEN`, is the
+ * one a published APK carries: it opens only the POST of a route marked
+ * `tester: true`, the six the app posts to (puzzle attempts, fights, deck
+ * events, play runs, run events and a run's end), and is a 401 on every GET,
+ * every report and the ballot routes. A route is owner-only unless it opts in.
+ * With the tester secret unset only the owner token opens anything. A POST body over its route's cap is a 413; one the route's validator
  * rejects is a 400 naming each problem. Only preview builds post the puzzle
  * and play-log routes; production never does.
  *
@@ -59,7 +64,7 @@
  */
 
 import { insertAttempt, listAttempts } from './attempts';
-import { isAuthorized } from './auth';
+import { isAllowed } from './auth';
 import { BALLOT_LIMITS, BALLOT_VERDICTS_PATH, isBallotVerdictStatus, validateBallotVerdictPost } from './ballot';
 import type { BallotVerdictList } from './ballot';
 import { insertBallotVerdict, listBallotVerdicts } from './ballot-verdicts';
@@ -100,12 +105,14 @@ import { retentionLogLine, runRetention } from './retention';
 import { insertRunEvents, listRunEvents } from './run-events';
 
 /** One path's two methods. `post` gets a parsed body already under the route's byte cap. */
-interface Route {
+export interface Route {
     maxBytes: number;
     /** The 400's message for a body this route refuses. */
     invalid: string;
     /** Called from a browser page on another origin: answers a preflight and echoes an allowed origin. */
     cors?: boolean;
+    /** The app posts here: its POST also takes the tester token. Absent, the route is owner-only. */
+    tester?: boolean;
     post(body: unknown, env: Env): Promise<Response>;
     get(url: URL, env: Env): Promise<Response>;
 }
@@ -129,10 +136,12 @@ function listSource(url: URL): { source: PlayLogSourceKind | null } | { response
     return isSourceFilter(value) ? { source: value as PlayLogSourceKind } : { response: badSource(value) };
 }
 
-const ROUTES: Record<string, Route> = {
+/** Exported so the auth test walks it: a route added here is checked without editing that test. */
+export const ROUTES: Record<string, Route> = {
     [PUZZLE_ATTEMPTS_PATH]: {
         maxBytes: 256 * 1024,
         invalid: 'invalid attempt',
+        tester: true,
         async post(body, env) {
             const checked = validatePuzzleAttemptPost(body);
             if (!checked.ok) return error(400, this.invalid, checked.reasons);
@@ -149,6 +158,7 @@ const ROUTES: Record<string, Route> = {
     [PLAY_LOG_FIGHTS_PATH]: {
         maxBytes: PLAY_LOG_LIMITS.fightBytes,
         invalid: 'invalid fight',
+        tester: true,
         async post(body, env) {
             const checked = validateFightPost(body);
             if (!checked.ok) return error(400, this.invalid, checked.reasons);
@@ -165,6 +175,7 @@ const ROUTES: Record<string, Route> = {
     [PLAY_LOG_DECK_EVENTS_PATH]: {
         maxBytes: PLAY_LOG_LIMITS.deckEventBytes,
         invalid: 'invalid deck event',
+        tester: true,
         async post(body, env) {
             const checked = validateDeckEventPost(body);
             if (!checked.ok) return error(400, this.invalid, checked.reasons);
@@ -181,6 +192,7 @@ const ROUTES: Record<string, Route> = {
     [PLAY_RUNS_PATH]: {
         maxBytes: PLAY_LOG_LIMITS.playRunBytes,
         invalid: 'invalid play run',
+        tester: true,
         async post(body, env) {
             const checked = validatePlayRunPost(body);
             if (!checked.ok) return error(400, this.invalid, checked.reasons);
@@ -197,6 +209,7 @@ const ROUTES: Record<string, Route> = {
     [RUN_EVENTS_PATH]: {
         maxBytes: PLAY_LOG_LIMITS.runEventBytes,
         invalid: 'invalid run events',
+        tester: true,
         async post(body, env) {
             const checked = validateRunEventsPost(body);
             if (!checked.ok) return error(400, this.invalid, checked.reasons);
@@ -237,10 +250,12 @@ const ROUTES: Record<string, Route> = {
     },
 };
 
+function unauthorized(): Response {
+    return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
+}
+
 async function handle(route: Route, request: Request, url: URL, env: Env): Promise<Response> {
-    if (!isAuthorized(request, env.PUZZLE_API_TOKEN)) {
-        return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
-    }
+    if (!isAllowed(request, env, route)) return unauthorized();
     if (request.method === 'POST') {
         const read = await readJsonBody(request, route.maxBytes, route.invalid);
         return read.ok ? route.post(read.body, env) : read.response;
@@ -250,6 +265,12 @@ async function handle(route: Route, request: Request, url: URL, env: Env): Promi
 }
 
 const PLAY_RUN_END_PATH = /^\/v1\/play-runs\/([^/]+)\/end$/;
+
+/** `POST /v1/play-runs/<runId>/end`, the app's sixth POST: it takes the tester token too. */
+export const PLAY_RUN_END_ROUTE: { tester?: boolean } = { tester: true };
+
+/** `GET /v1/reports/<name>`: owner-only. */
+export const REPORTS_ROUTE: { tester?: boolean } = {};
 
 /** The run id in a `POST /v1/play-runs/<runId>/end` path, or null when the path is not one. */
 function playRunEndId(pathname: string): string | null {
@@ -264,9 +285,7 @@ function playRunEndId(pathname: string): string | null {
 
 /** `POST /v1/play-runs/<runId>/end`: token first, then the method, then the body; a second close is a 409. */
 async function handlePlayRunEnd(runId: string, request: Request, env: Env): Promise<Response> {
-    if (!isAuthorized(request, env.PUZZLE_API_TOKEN)) {
-        return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
-    }
+    if (!isAllowed(request, env, PLAY_RUN_END_ROUTE)) return unauthorized();
     if (request.method !== 'POST') return error(405, 'method not allowed', undefined, { Allow: 'POST' });
     const invalid = 'invalid play run end';
     const read = await readJsonBody(request, PLAY_LOG_LIMITS.playRunBytes, invalid);
@@ -283,9 +302,7 @@ const EVERY_SOURCE_REPORTS: readonly string[] = ['run-summary', 'run-ends', 'run
 
 /** `GET /v1/reports/<name>`: token first, then the name, then the method. */
 async function handleReport(request: Request, url: URL, env: Env): Promise<Response> {
-    if (!isAuthorized(request, env.PUZZLE_API_TOKEN)) {
-        return error(401, 'unauthorized', undefined, { 'WWW-Authenticate': 'Bearer' });
-    }
+    if (!isAllowed(request, env, REPORTS_ROUTE)) return unauthorized();
     const name = url.pathname.slice(REPORTS_PATH_PREFIX.length);
     if (!isReportName(name)) return error(404, 'not found', [`report: expected ${REPORT_NAMES.join(', ')}, got ${JSON.stringify(name)}`]);
     if (request.method !== 'GET') return error(405, 'method not allowed', undefined, { Allow: 'GET' });

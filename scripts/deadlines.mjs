@@ -15,8 +15,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readPlanSources } from './check-deadlines.mjs'
-import { dueNeeds, liveMarkdown, nextNeed, parseItems, planRows, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
+import { mainSubjects, readPlanSources } from './check-deadlines.mjs'
+import { dueNeeds, hasBudgetSection, liveMarkdown, nextNeed, parseBudget, parseItems, planRows, queuePlan, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -38,7 +38,7 @@ const main = () => {
     const { phases } = planRows(readPlanSources(ROOT))
     let deadlinesMd = read('plan/deadlines.md')
     if (flag('write')) {
-        const rewrite = rewriteItemStatus(deadlinesMd, phases)
+        const rewrite = rewriteItemStatus(deadlinesMd, phases, { subjects: mainSubjects(ROOT), exists: (rel) => fs.existsSync(path.join(ROOT, rel)) })
         for (const line of rewrite.unmatched) process.stderr.write(`deadlines: Items row not understood, left as is: ${line}\n`)
         if (rewrite.changed.length) {
             fs.writeFileSync(path.join(ROOT, 'plan/deadlines.md'), rewrite.md)
@@ -49,11 +49,15 @@ const main = () => {
     const items = parseItems(deadlinesMd)
     const needs = dueNeeds(items, phases, today)
     const next = nextNeed(items, phases, today)
+    // The queue model (a `## Budget` section): forecast per milestone and this week's acts.
+    const budget = parseBudget(deadlinesMd)
+    const queue = budget ? queuePlan(items, phases, today, budget) : null
+    if (!budget && hasBudgetSection(deadlinesMd)) process.stderr.write('deadlines: ## Budget states no hours a week ("Hours a week: <number>"); showing the dated reminder until it does.\n')
     if (flag('write')) {
-        fs.writeFileSync(path.join(ROOT, 'LIVE_DEADLINES.md'), liveMarkdown(needs, next, today))
+        fs.writeFileSync(path.join(ROOT, 'LIVE_DEADLINES.md'), liveMarkdown(needs, next, today, queue))
         return
     }
-    process.stdout.write(`${reminderText(needs, next, today)}\n`)
+    process.stdout.write(`${reminderText(needs, next, today, queue)}\n`)
 }
 
 try {

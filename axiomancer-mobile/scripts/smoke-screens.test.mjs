@@ -173,6 +173,7 @@ function recordingPage(log) {
     const locator = (id) => {
         const l = {
             first: () => l,
+            filter: () => l,
             waitFor: async (o) => { log.push(`waitFor ${id} ${o?.state ?? ''}`.trim()) },
             click: async () => { log.push(`click ${id}`) },
         }
@@ -206,6 +207,19 @@ test('loadRoute stops at the reveal for combat-encounter and loads a plain route
     const plain = []
     await loadRoute(recordingPage(plain), 'http://x', ROUTES.find((r) => r.name === 'character'), { enter })
     assert.equal(plain[0], 'goto http://x/character')
+})
+
+test('loadRoute opens the rest site upgrade screen with one tap, then waits for the sheet and its places (UP1j)', async () => {
+    const log = []
+    const route = ROUTES.find((r) => r.name === 'rest-upgrade')
+    assert.equal(route.fixture, 'apprentice-bw-rest')
+    assert.equal(route.waitForPath, '/rest')
+    await loadRoute(recordingPage(log), 'http://x', route, { enter: async () => assert.fail('not a live fight') })
+    const tap = log.indexOf('click rest-choice-offer-upgrade')
+    assert.ok(tap > 0, 'the offer is tapped')
+    assert.ok(log.indexOf('waitFor card-upgrade-sheet visible') > tap, 'the sheet is waited for after the tap')
+    for (const id of ['card-upgrade-sheet', 'card-upgrade-figure', 'card-upgrade-centre', 'card-upgrade-hold', 'rest-upgrade-back']) assert.ok(log.includes(`waitFor ${id} visible`), id)
+    assert.equal(log.at(-1), 'ready')
 })
 
 test('loadRoute rejects when a place never shows, so the route is load-failed and not stamped', async () => {

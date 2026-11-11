@@ -304,8 +304,17 @@ describe('the four call sites', () => {
         }
     });
 
-    it('in a build without dev tools, no call site makes a request', async () => {
+    it('in a build without dev tools but with the API baked in, a call site posts', async () => {
         devTools.mockReturnValue(false);
+        const store = storeWithDeck();
+        claimCombatRewardAction(store, rollCombatRewardAction(store)[0]!);
+        await flush();
+        expect(calls).toHaveLength(1);
+    });
+
+    it('in a build without dev tools and without the token, no call site makes a request', async () => {
+        devTools.mockReturnValue(false);
+        delete process.env.EXPO_PUBLIC_PUZZLE_API_TOKEN;
         const store = storeWithDeck();
         claimCombatRewardAction(store, rollCombatRewardAction(store)[0]!);
         await flush();

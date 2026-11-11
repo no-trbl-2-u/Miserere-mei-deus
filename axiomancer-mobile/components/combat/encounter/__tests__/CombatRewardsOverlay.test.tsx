@@ -17,16 +17,21 @@
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
+import { getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 
 import { cardLibrary, getCardById, upgradeLimit } from '@mechanics';
+import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
+import { UPGRADE_A11Y_ACTION } from '@/components/upgrade/CardUpgradePicker';
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
 import { cardUpgradeRowsVM } from '@/state/presenters/card-upgrade.engine';
 import { RARITY_LABEL, rarityFor } from '@/state/presenters/card-rarity.engine';
 import { OFFER_TILE_CHROME, SPOILS_INK, VELLUM_OFFER_W, VELLUM_PANEL_PAD } from '@/components/combat/encounter/spoils-ink';
+import { centreBeadLabel, upgradeByA11yAction } from '@/test-utils/cardUpgrade';
 import { withAllProviders } from '@/test-utils/withAllProviders';
+import { DEFAULT_THEME_ID, THEME_SPECS } from '@/theme/palette';
 
 // The three real library cards the reward draft offers: the grey office.
 const OFFER_IDS = ['grey-strike', 'grey-ward', 'grey-word'];
@@ -283,13 +288,40 @@ describe('CombatRewardsOverlay — the elite upgrade', () => {
         expect(screen.getByText(`chance picked ${name}`)).toBeTruthy();
         fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
         expect(screen.getByTestId('card-upgrade-sheet')).toBeTruthy();
-        fireEvent.press(screen.getByTestId(`card-upgrade-row-${RARE}`));
-        expect(screen.getByTestId('card-upgrade-now-name').props.children).toBe(name);
-        expect(screen.getByTestId('card-upgrade-after-name').props.children).toBe(getCardById(`${RARE}+`)!.name);
-        expect(screen.getByTestId('card-upgrade-locked')).toBeTruthy();
-        fireEvent.press(screen.getByTestId('card-upgrade-confirm'));
+        // One card: a single bead, already on the centre, and nothing to turn to.
+        expect(centreBeadLabel().startsWith(name)).toBe(true);
+        expect(screen.queryAllByTestId(/^card-upgrade-bead-/)).toHaveLength(0);
+        expect(within(screen.getByTestId('card-upgrade-now')).getByTestId('combat-card-face-name')).toHaveTextContent(name);
+        expect(within(screen.getByTestId('card-upgrade-after')).getByTestId('combat-card-face-name'))
+            .toHaveTextContent(getCardById(`${RARE}+`)!.name);
+        upgradeByA11yAction();
         expect(onUpgrade).toHaveBeenCalledWith(RARE);
         expect(onPick).not.toHaveBeenCalled();
+    });
+
+    it('the one-bead wheel sits at the centre under the stand-in figure and does not turn (A16, #8)', () => {
+        renderElite();
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
+        expect(within(screen.getByTestId('card-upgrade-figure')).UNSAFE_getByProps({ source: UPGRADE_FIGURE_STANDIN })).toBeTruthy();
+        // A solid ground: the fight's VITAE bar does not show through (T, PR #1579).
+        expect(StyleSheet.flatten(screen.getByTestId('combat-rewards').props.style).backgroundColor).toBe(THEME_SPECS[DEFAULT_THEME_ID].spec.bg);
+        // The elite reward prints no price: the card is the prize.
+        expect(screen.queryByTestId('card-upgrade-price')).toBeNull();
+        // No drag turns it, and no adjust action is offered to a screen reader.
+        const pan = getByGestureTestId('card-upgrade-wheel-pan') as unknown as { config: { enabled?: boolean } };
+        expect(pan.config.enabled).toBe(false);
+        const actions = screen.getByTestId('card-upgrade-centre').props.accessibilityActions as { name: string }[];
+        expect(actions.map((a) => a.name)).toEqual([UPGRADE_A11Y_ACTION]);
+    });
+
+    it('the upgrade sheet scrolls inside the overlay, so HOLD and BACK stay reachable on a short phone', () => {
+        renderElite();
+        fireEvent.press(screen.getByTestId('combat-reward-upgrade-open'));
+        const scroll = screen.getByTestId('combat-reward-upgrade-scroll');
+        expect(scroll.type).toBe('RCTScrollView');
+        expect(StyleSheet.flatten(scroll.props.style).maxHeight).toBe('100%');
+        expect(within(scroll).getByTestId('card-upgrade-hold')).toBeTruthy();
+        expect(within(scroll).getByTestId('combat-reward-upgrade-back')).toBeTruthy();
     });
 
     it('BACK returns to the cards without committing', () => {

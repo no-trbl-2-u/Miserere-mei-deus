@@ -2,8 +2,9 @@
  * Hermetic — the settings presenter (`settings.engine.ts`).
  */
 
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, jest } from '@jest/globals';
 
+import { allRegistryKeywords, keywordGloss, SYSTEM_GLOSSARY } from '@/state/combat/keywords';
 import { DEFAULT_SETTINGS, TEXT_SCALES } from '@/state/settings';
 import {
     CARD_TEXT_OPTIONS,
@@ -12,9 +13,20 @@ import {
     TOGGLE_OPTIONS,
     FEEDBACK_MAX_CHARS,
     selectFeedbackViewModel,
+    selectRulesGlossary,
     selectSettingsViewModel,
     volumeStep,
 } from '../settings.engine';
+
+// A registry the test can hand back in any order: the glossary must sort what it reads, not trust the registry's order.
+let mockRegistryOrder: 'registry' | 'reversed' = 'registry';
+jest.mock('@/state/combat/keywords', () => {
+    const actual = jest.requireActual('@/state/combat/keywords') as typeof import('@/state/combat/keywords');
+    return {
+        ...actual,
+        allRegistryKeywords: () => (mockRegistryOrder === 'reversed' ? [...actual.allRegistryKeywords()].reverse() : actual.allRegistryKeywords()),
+    };
+});
 
 describe('option lists', () => {
     it('offer exactly the store\'s legal values', () => {
@@ -24,6 +36,35 @@ describe('option lists', () => {
         expect(selectSettingsViewModel(DEFAULT_SETTINGS, false).cardText).toBe('words');
         expect(REDUCED_MOTION_OPTIONS.map((o) => o.value)).toEqual(['system', 'on', 'off']);
         expect(TOGGLE_OPTIONS.map((o) => o.value)).toEqual([true, false]);
+    });
+});
+
+describe('selectRulesGlossary', () => {
+    it('lists the systems glossary in order, then every registered keyword alphabetically', () => {
+        const entries = selectRulesGlossary();
+        const systems = SYSTEM_GLOSSARY.map(({ term, def }) => ({ term, def }));
+        expect(entries.slice(0, systems.length)).toEqual(systems);
+        const keywordEntries = entries.slice(systems.length);
+        const names = allRegistryKeywords().map((k) => k.toUpperCase());
+        expect(keywordEntries.map((e) => e.term)).toEqual([...names].sort());
+        expect(keywordEntries.length).toBe(allRegistryKeywords().length);
+        for (const keyword of allRegistryKeywords()) {
+            expect(keywordEntries.find((e) => e.term === keyword.toUpperCase())?.def).toBe(keywordGloss(keyword));
+        }
+    });
+});
+
+describe('selectRulesGlossary on an unsorted registry', () => {
+    it('sorts the keywords alphabetically whatever order the registry lists them in', () => {
+        mockRegistryOrder = 'reversed';
+        try {
+            const names = allRegistryKeywords().map((k) => k.toUpperCase());
+            expect(names).not.toEqual([...names].sort());
+            const terms = selectRulesGlossary().slice(SYSTEM_GLOSSARY.length).map((e) => e.term);
+            expect(terms).toEqual([...names].sort());
+        } finally {
+            mockRegistryOrder = 'registry';
+        }
     });
 });
 

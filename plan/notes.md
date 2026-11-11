@@ -298,3 +298,164 @@ Defaults taken (T's calls #1 to #5 not yet answered): Brim Over counts every VIT
 - **139.1 (EQ4a) defaults.** The shipped `BLACKSMITH_WITNESS_VARIANTS` is `[]`; the village anvil and the debug trigger still pass it, and the Blacksmith screen already hides its swap section when `vm.swaps` is empty. The swap-path tests use a local fixture variant (heart, 1 BOON / 3 MANA). The legacy-save test (A2) puts the old `specialConviction: 3` key on the body rail (the test card is body-coloured) and loads it through `migrate`; a special still pays `SPECIAL_CONVICTION_DEFAULT` from the worn grey sword. `docs/keyword-atlas.md` and `docs/combat.md` already say the equipped gear sets the amount, so they are unchanged.
 
 - **156.6 (TY1f) defaults, taken under the loop.** Five palettes plus "now": Night of the Hours (Limbourg), Apocalypse Woodcut (Durer), Scrovegni Green Earth (Giotto), Isenheim Night (Grunewald), Purple Vellum, Silver Ink (Rossano Gospels). All dark-ground: the world plates are graded toward the void and a light ground would fail the art and the overlay text. The ThemeSpecs live in `plan/card-ledger/colours.md` only; no theme was added to `theme/palette.ts`, so Settings and the default are unchanged. The shots came from a throwaway local patch of `THEME_SPECS` with `__AXM_THEME__` set per context; the patch was reverted before the commit. The kit pieces are art and stay as drawn in every shot; each palette's Brass line says its treatment, and P-02 takes the T pick on it. 156.7 reads the verdict, pastes the winner into `THEME_SPECS` from `colours.md` and tightens the accent.
+
+- **152.4 (UK1d) defaults, taken under the loop.** `CombatSummaryModal` (P-01, P-02) and `CombatRewardsOverlay` (P-03, P-04) gate each vellum style on `lookOf('<place>') === 'vellum'`, so a one-line table edit restores today's code. The inks are `HUE` constants read through `spoils-ink.ts`: the body ink, oxblood for what was gold or amber, and two new outcome inks, `vellumVictory` and `vellumMercy`, darkened from `boonGreen` and `tickPurple`. `spoils-ink.test.ts` measures each ink against `vellumShadow`, the darkest parchment tone, a pure function over constants. The vellum stylesheet raises the small faces (row, totals, sub-line, rarity word and button note) by one to two points; none is smaller than today's. The rarity word on a tile is inked in the body ink, since the frame still carries the rarity hue.
+- **Left on today's code.** The upgrade sheet (`CardUpgradePicker`, shared and dark) and the tap-to-inspect preview panel are not in the Spoils' two places, so they keep the dark panel; the offer overlay's backdrop padding drops from 12 to 2 on vellum, and the vellum panel pads 40pt a side (the art's 42pt ornament band) with the offer faces narrowed to 80pt (90pt tiles, 270pt in all) so three clear the border at 360 (`VELLUM_*` in `spoils-ink.ts`, pinned in `spoils-ink.test.ts`). UPGRADE INSTEAD, an elite-only button on the same panel, wears the vellum plate with the other two.
+- **`hue.ts` and the spec's oxblood.** `vellumOxblood` is `#6e1a10`, as in 152.2's branch, not the spec's `#7a1f14`, which measures 4.35:1 on the darkest parchment. The spec's Design paragraph still names `#7a1f14` and needs one amendment.
+
+- **153.4 (UX1d) defaults, taken under the loop.** The app never printed "A FOE RISES" itself (that was the kit mixer's mock); the reveal's kicker line was the eyebrow above the portrait ("⚔ A FOE BARS THE WAY", and its elite and boss forms). All three tiers lose it: `RevealFrameVM.eyebrow` and the three `REVEAL_EYEBROW_*` copies are deleted, and the tier still reads off the portrait's frame and the boss's held title card. With the marks gone, the dock's `ledger` gloss term (`BOARD_GLOSSARY.ledger`, `BoardGlossLive.ledger`) and `ledgerA11y` had no reader and went too. `LedgerMark` itself stays in `components/hazard/glyphs.tsx`: the hazard board, its overlays and the puzzle outcome panel still draw it. `DOCK_LEDGER_MARK` is deleted. `CombatViewModel.ledger` stays (presenter data, also compared by the paid-column test). The new geometry: END 88 x 56 (was 116 x 56), the dock row 66 (was END's 56), so the dock's minimum at a 34pt inset is 116 (was 106); the cells centre in the taller row and keep their order. 66 is the most the row can grow while a five-rune signature column still fits above the tray at 375x667 (the sig-column pins); the tray top at 812 moves from 453 to 443.
+
+- **154.6 (UK2f) defaults, taken under the loop.** `QuestStepVM` lost its `rewards` lines, and `QUEST_REWARDS_HEAD` and `questProgressLine` were deleted, so nothing on the panel can name the pay again by accident. The objective counter now reads `questCounterText`, so it shows the short "2/3" form and is empty for a single-step objective; the screen skips the counter when it is empty. The rewards themselves are unchanged and still paid on turn-in (the presenter test reads them from the step). The PAID ledger shown after a turn-in is untouched. `questRewardLine` stays exported for its own test and has no screen reader now.
+
+- **155.4 (DR1d) defaults, taken under the loop.** `DeckRunVM` gains `{ kind: 'keyword'; word; keyword; gloss; minor }`; `runsFor` in `deck.engine.ts` splits each line on UPPERCASE words `keywordsInText` finds, the card's own `keywords[]` entry first (keeping `minor`), then `keywordGloss`. `TooltipKind` gains `card-keyword` (id is the registry name, resolved by `keywordGloss`). `show()` takes `pinned`, which skips the 6 s timer; a hold on a word whose timed tooltip is already up pins it instead of closing it. `TooltipTarget` takes `pinOnLongPress`. The keyword is a nested Text with onPress and onLongPress (accessibilityRole link), and its gloss is anchored to the line block, since a nested Text cannot be measured on native. The tooltip body is the registry gloss; the card-own `minor` note shows in the a11y hint and in the dimmer ink, not in the tooltip. The Deck screen already drew no `CardKeywordLedger` after 155.1; a test now pins it.
+
+- **157.2 (EN3b) defaults, taken under the loop.** The Design table was built unchanged (T's Q2 answer): 14 normal nodes, the `bw-w5` pair is Wreckmaster or Tide-Gate, the sea keep boss is `saint-beneath` at `BW_DOOR_LEVEL` 1 (Q5: live VITAE stays 129, no number moved). `ACT1_POOL` is the six normals on all seven maps. Float-Eye, Green Jelly and Death Beholder stay staged by the later Act 1 maps' tables, so `roster-health` pins seven orphans (Gallows Crow, Crane-Hook, Lamprey-Knot, Curfew-Ringer, Wreck-Picker, Smokehouse Gutter, Toll-Keeper), not ten. The Toll-Keeper's toll and DANGER walk was kept as its own test off the node tables. Reports `chapter1-enemies.md` (200 runs, seed 1) and `arena-separation.md` regenerated at de0628add. `DebugTriggerEncounter`'s COMBAT button now stages the lowest of the pool (Quay-Crab, level 3, was Float-Eye level 1); its test derives the level from the pool.
+
+- **157.2 review park.** `lane-pacing.cli.ts` measures the pre-recast trio (Float-Eye, Green Jelly, Death Beholder) at three player levels; its L1 Breakwater row no longer describes the live Breakwater. Its header now says so. Whether to recalibrate it now or in T's Breakwater re-tune (Nov 17) is T's call.
+
+- **162.6 (MV1f) defaults.** `BW_DOOR_LEVEL` is 8. The door fight now pays level-8 XP, so a full clear meets the later doors at levels 19, 20 and 22 (was 15, 17 and 20) and ends at 23 (was 21); `act1-progression.test` and `combat.measured-truth.test` pin the new levels. `act1-progression.test` staged the Death Beholder at every door, bw-k2 included; at level 8 that placeholder is unwinnable, so the test now stages the door's own boss (the Saint on `bw-`, the Beholder elsewhere), as the CLI already did. Win rates and arrival level are in the PR body; nothing was retuned.
+
+Defaults taken: both the legend and the gesture line leave the map frame (T's answer to confirm #1); RECENTRE stays bottom-right inside the frame. The viewport now tracks every layout, and the re-frame closures take the pane as an argument so a relayout never frames against a stale pane. No WILDS panned-foot verify:visual baseline was added: the harness has no map route (its exploration shot is the arrival cutscene) and the local renderer drifts every baseline.
+
+- 112.2 was built inline by its pilot worker (no Agent tool in that harness). Defaults it took under the pilot:
+  - The map ink is drawn by a root host (`MapInkHost`, beside `ToastHost`), not inside the exploration screen, so it covers the tab bar too; the screen only starts it.
+  - The fight route reads a one-shot handoff (`isMapInkHandoff`) in its options to open with `animation: 'none'`; the fight panel lifts the map ink on mount, and a covered spread clears itself after 2.5 s if no fight screen comes.
+  - The curtain recedes downward with a feathered lip and a thin bone sheen on its edge (ink colour unchanged, decision 10); hold trimmed 250 to 200 ms so confirm-to-settled stays near two seconds.
+  - With no host mounted (a test rendering the screen alone) a fight walk resolves on confirm, as before.
+
+Defaults taken: rules only, no per-keyword list (open question 1's default); the button sits in its own RULES section above FEEDBACK, with a short brass divider, so the divider count in the Settings test rose by one.
+
+- **99.6 defaults.** The guard reads advance widths from the shipped `@expo-google-fonts` TTFs and compares each estimate with the mean advance of its glyph class. It found five sites still short of the faces they now use (Uncial Antiqua capitals run about 0.78 em against 0.40 and 0.43; Rosarivo lowercase 0.53 against 0.41; Rosarivo space 0.31 against 0.24), parked on the test's STALE list rather than changed, since remeasuring moves layout and needs a screenshot. The list only shrinks: the test fails once a listed site covers its face. `tabs.engine.ts` no longer holds an estimate. Remeasuring the five sites is a follow-up for a plot.
+
+- **163.1 (TK1a), built inline under the pilot (no Agent tool in the worker's harness).** `isAllowed(request, env, route)` in `backend/src/auth.ts`: the owner token opens everything; `PUZZLE_TESTER_TOKEN` opens only a POST to a route with `tester: true` (the five `ROUTES` entries the app posts to, and `PLAY_RUN_END_ROUTE`). Reports (`REPORTS_ROUTE`) and the ballot route stay owner-only. Both comparisons use the existing constant-time `isAuthorized`; an empty or unset tester secret opens nothing.
+- **Defaults taken under the loop.** `ROUTES`, `PLAY_RUN_END_ROUTE` and `REPORTS_ROUTE` are exported from `backend/src/index.ts` so `backend/test/tester-token.test.ts` walks them; the test's own list of the six app paths is written out by hand, so `tester: true` on any other route turns it red (shown with the ballot route: 2 tests red). The deploy's tester step always runs and skips in the shell (`exit 0`) when the repo secret is empty, since a step `if:` cannot read a secret; `scripts/backend-deploy.test.mjs` pins it. 163.2 (the rotation) sets the repo secret, after which the next deploy sets the Worker secret.
+
+Defaults taken: `preview-build`'s puzzle API step also ran only for non-production profiles; its `if` is now `!= 'beta'` so a production dispatch bakes the same values as preview (A8). With `platform: all` that also bakes the tester token into the iOS production build.
+
+T's read of the human-versus-sim comparison (113's A17) stays unchecked: spec 166 took it as 166.2 (A3), attended and Held, so T can take it in any session. This close retires spec 113, which keeps its acceptance line in git. Its lasting rules are pinned by backend/test/play-log-source.test.ts (the human, sim and harness stamps) and the preview profile in axiomancer-mobile/eas.json; its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T confirmed the Merciful trial-set check (A12) on the APK on 2026-11-09: his word in the session, no replay and no screenshot (spec 166 Decisions). Spec 115 had no other chunk and no open acceptance, so this close retires it. Its lasting rules are pinned by merciful.engine.test.ts and merciful-quest-relics.engine.test.ts (the lane's rules, the two quest relics and their no-mercy caveat); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T confirmed the Defender trial-set check (A11) on the APK on 2026-11-09: his word in the session, no replay and no screenshot (spec 166 Decisions). Spec 117 had no other chunk and no open acceptance, so this close retires it. Its lasting rules are pinned by defender.engine.test.ts and defender-verbs.engine.test.ts (THORNS, REFLECT and the discard cost); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T confirmed the Elementalist trial-set check (A8) on the APK on 2026-11-09: his word in the session, no replay and no screenshot (spec 166 Decisions). Spec 118 had no other chunk and no open acceptance, so this close retires it. Its lasting rules are pinned by elementalist.engine.test.ts and weather.engine.test.ts (the weather rules); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T's watched run of the Android smoke test (125's A8) stays unchecked: spec 166 took it as 166.4 (A5), attended and Held, so T can take it in any session. This close retires spec 125, which keeps its acceptance line in git. Its lasting rules are pinned by scripts/android-smoke.test.mjs and recorded in docs/reports/android-smoke.md (the workflow, which stays attended); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T's proof of the vault's conflict test (126's A11) stays unchecked: spec 166 took it as 166.5 (A6), attended and Held, so T can take it in any session. This close retires spec 126, which keeps its acceptance line in git. Its lasting rules are in docs/vault.md (the vault is a separate repo, its working copy ignored inside Miserere); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T's check of the play log rows (128's A11) stays unchecked: spec 166 took it as 166.3 (A4), attended and Held, so T can take it in any session. This close retires spec 128, which keeps its acceptance line in git. Its lasting rules are pinned by backend/test/play-log.test.ts (caps, whitelist, 413 on a big fight) and axiomancer-mobile/lib/__tests__/playLog.test.ts (the switch and the stamps); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+T's look at the feature map (130's A10) stays unchecked: spec 166 took it as 166.6 (A7), attended and Held, so T can take it in any session. This close retires spec 130, which keeps its acceptance line in git. Its lasting rules are pinned by scripts/feature-map.test.mjs (the generated notes and canvases); its Follow-ups section goes to plan/CANDIDATES.md at settle.
+
+Wrote the eight last-chunk closes (115.5, 117.6, 118.4 confirmed by T on the APK on 2026-11-09; 113.9, 125.8, 126.4, 128.7 and 130.4 moved to 166.2, 166.4, 166.5, 166.3 and 166.6), each with an `absorb:` naming the tests or files that pin the spec's rules. `plan/deadlines.md`: the Dec 23 Item's Rows and the W5 line name CK1d in place of LG1h; the Unscheduled lines for the seven closed aliases (and the shipped SR1a) are gone, and CK1d's own line goes because the Item now names it.
+
+Defaults taken: no `## Decisions` entries on the eight closes, because each spec's rules already sit in a named test or file; the Held lines for the eight chunks leave with their specs (settle's retire step drops a retired spec's lane lines).
+
+The Rules Glossary now reads `allRegistryKeywords()` (42 entries at 360 wide,
+scrolling to the last), so a keyword added to the registry appears with no
+edit in `settings.engine.ts`. `RULES_GLOSSARY_KEYWORDS` is gone. The sheet
+already scrolled; `RulesGlossarySheet.tsx` is unchanged.
+
+Defaults taken: sort by upper-cased term with a plain code-unit comparison (not
+`localeCompare`), so the order is the same on every device.
+
+`npm run sim:report -- --build <sha>` reads `run-summary`, `run-ends`, `run-pacing`
+and `coverage` (source `sim`, that build) from the Worker plus `chapter1Content()`,
+writes `docs/reports/sim/latest.md` (stamp, then run health, pacing, how hard
+Chapter 1 is, coverage, since the last report; no cards) and appends one
+`history.jsonl` line. Everything is computed before the first write, so a refused
+read, a content failure or a missing URL or token exits non-zero and writes nothing.
+The `report` job in `sim-runs.yml` (`needs: sim`, `if: always()`, the schedule and a
+dispatch at `main`) runs it at the batch's sha and commits through `measured-truth`'s
+push path. Pinned by `scripts/sim-report.test.mjs` over a mocked Worker.
+
+The live proof (a dispatched `sim-runs` at `main` committing the report) is T's, after
+merge: `gh workflow run sim-runs.yml --ref main`.
+
+Defaults taken:
+
+- The batch's breaks reach the report job as an `sim-breaks` artifact (3 days) from the
+  sim job; a missing artifact is a night with no breaks listed.
+- A break's issue cell reads new (created that day), already open, reopened (the
+  issue's `state_reason`) or closed; a failed issue lookup drops the links and keeps
+  the report.
+- A region's level and VITAE are the player after resolving its last node on average
+  (the node with the highest nodes-resolved-before); its nodes resolved, rests and
+  withdrawals are per run.
+- A persona's `breaks` count is every break line of the night, the list is one row per key.
+- The report lists every sim policy in the build's `run-summary`, the four personas first.
+
+- A build posts when the puzzle API URL and token are baked in; the dev menu's play-log switch applies only where DEV TOOLS are on.
+- `preview-build` bakes the production values for `platform: android` only and refuses `all` with `production` before the verify gate.
+- Defaults taken: no consent screen (T, 2026-11-09); dev-tools.md edited only on the posting lines and the lines on which profiles the workflow skips.
+
+`EquipmentDetailModal` skips the flavor line when the view-model carries an effect block; a relic or effectless gear keeps
+it. `flavor` stays the item description in the view-model, because the item-reward screen prints only `flavor` (it has
+no effect block) and would otherwise show a found weapon with no text at all. Presenter, modal and item-reward screen
+tests pin the weapon, armor, relic and effectless cases. Before and after shots at 360 wide were taken from the web export and sent to T in
+session (the proxy refuses uploads).
+
+- Defaults taken: the settled view retires the spec an absorbing close empties (A5), `plan-check` skips a spec the view retired; the hold hint names `absorb:` only for a close without one; `followUpsRow` shifts every `#` line (fenced too) and indents a body line shaped like a row field.
+- Found on the dry run: `followUps` took a spec title that says "Follow-ups" (this spec's own) as a section and would have carried the whole spec to CANDIDATES; level-1 headings are skipped now, with a test.
+- Also paid (#1562): the run-log test with dev tools off and the URL and token baked in; `HazardPuzzlePost` now shows the poster still has its config with dev tools off; stale comments and docs (`dev-tools.md`, `DebugPlayLogSwitch.tsx`, `usePostEndedPuzzleAttempts.ts`, `puzzleAttempts.ts`).
+- Also paid (#1561): the `sim-runs.yml` report job also needs `github.ref_name == 'main'`; `sim-report.test.mjs` pins the whole `if:`, the sha output, the `sim-breaks` artifact on both ends and the `resolve_report` handler, and a closed-issue break link.
+- Left as notes, not fixed (design calls): the nexus-loop concurrency group the report job joins, and any dispatch counting as a night.
+
+Built inline (the run's worker is the builder). Defaults: cut-outs resized to
+640 px longest edge and WebP q44 (alpha q80) per the ingest recipe; table is
+`assets/images/keepers/index.ts` (`KEEPER_PORTRAITS`, `keeperPortrait(role)`).
+
+Built inline (the run's worker is the builder). The hub is `app/village/index.tsx`;
+the counters are `/village/rest` and `/village/shop` (`app/village/rest.tsx`,
+`shop.tsx`) on a shared keeper frame, `components/village/VillageCounterFrame.tsx`.
+Defaults: the paid rest is a keeper screen, not the campfire (the spec's A5 as T
+confirmed it, over the brief's older wording); the host speaks the village's own
+description when the event carries one, else a `[content]` placeholder; the
+merchants' voices sit under the hub's counters; the BLACKSMITH button keeps
+testID `village-anvil` and no price on its plate (the price is read aloud);
+the reusable brass action is `components/experience/BrassButton.tsx` on the new
+look-table place V-01. 168.4 redraws `app/village/shop.tsx` in place.
+
+- Defaults taken: the forge's intro phase is stepped past in the store (`beginBlacksmithAction` calls the engine's `beginBlacksmith`), so the engine and its tests are unchanged; the smith's line is a `[content]` placeholder in `blacksmith.copy.ts`; a fourth WILD tab keeps the wild die reachable; the brass plate is a local `components/blacksmith/BrassPlate.tsx` (a later cleanup can merge it with the village hub's plate); `blacksmith-intro` is gone from the fixture gallery.
+- The net draws six faces (one up, three across, two below the middle) as in ballot shot B-02b.
+
+Defaults: the shop row wraps (flexWrap) so five 104 pt cards fit 375 pt until 168.4 replaces the screen. The sim's economy reading at five cards is a follow-up, not part of this chunk.
+
+The lane-line edit this close carried (dropping `needs 168.2` from 168.4's line) is gone: 168.4 has closed, and settle drops its whole lane entry, so the edit had nothing left to match.
+
+- Defaults taken: the carousel is a stage with a pan responder (swipe) and two tappable neighbours (web and accessibility), not a paging ScrollView, so one tree serves web and native and the test renderer can step it by tapping a neighbour; the CARDS / GEAR toggle is one two-half button that flips sides, each side keeps its own position, and it is absent when the village has no gear; REMOVE A CARD moved beside the shopkeeper through a new `keeperExtra` slot on `VillageCounterFrame`; a sold ware reads SOLD on the brass plate, a refused one dims it and names the engine's reason under it.
+- Test ids moved with the redraw: only the card or piece in the middle has `village-card-<id>` / `village-equipment-<id>`; the price now rides the plate's detail line (`-price`), so it reads `6 SHILLINGS` (no `BUY ·`) and SOLD is the plate label.
+- A swipe is not exercised in jest (the renderer sends no touches); the neighbour tap calls the same step.
+
+- Default taken ([T to confirm #1]): every open Item naming a merged `PR #N` fails, whatever its verb.
+- The lint matches `PR #N` and `PRs #N, #M and #K` in the Item text; a bare `#N` names nothing. The merge is found in `git log --format=%s` of `origin/main`, else `HEAD`; this session's checkout is shallow, so the #1409 case was shown with its real merge subject added by hand.
+
+Defaults: the personas play as they do today (open question 1). The arrival and money numbers ride a run ledger file (`sim:run --ledger`, uploaded beside the breaks file) to `sim:report`, not the Worker. The regenerated report's ledger was played at the branch base, whose game code equals the Worker rows' build 2a77e8c8; the report prints both shas. The personas buy no shop card or gear and pay no removal, so those columns read 0.
+
+Defaults: the boss is found from the map's `boss` board kind and its node's own pool (not typed), staged the way the live node stages it (`sourceAtTier` then `scaleEnemyToLevel`), and printed once at its node's level (L8) against the four lanes at player levels 8 and 10. Regenerated at 100 runs, seed 1; a few non-boss cells moved by a tenth of a point from code changes since the last stamp.
+
+Defaults: [T to confirm #1] took the stated default, a shut way keeps the picture and scene line, shows the shut line in the question's place and MOVE disabled above STAY. Look place T-02 now wears the brass plate (T-01 stays normal, id kept). Test ids renamed travel-yes/travel-no to travel-move/travel-stay (act1-walk-e2e updated). The baselines were rendered locally on Linux Chromium; CI re-stamps them.
+
+- Defaults taken: the stand-in images the ballot names (Prophet, Guard A, Sword Master A) live in the Potential Assets store, which the build sandbox does not hold. The lighthouse keeper uses the Hermit (a copy of `keepers/host.webp`, as the spec wants); the other three are copies of the portraits the nodes already named. Recorded in `assets/images/givers/provenance.json`. T swaps each in the one table.
+- `eyebrow` and `questStepEyebrow` stay on the VM until 173.2 stops reading them.
+
+Defaults: the tap starts the fight straight onto the board (T confirmed). RevealGround gained a thin black side fade (8 percent each side) so the ground has no hard left or right edge on a wide window; the fight baseline was re-stamped for it. Elite and boss verify:visual routes enter through new fixtures `wanderer-bw-elite-arrive` (bw-w5) and `wanderer-bw-boss-arrive` (bw-k2).
+
+Left for later: "LEVEL " and " VITAE" are still literals in CombatEncounterPanel (moving them to reveal.copy.ts would make a content PR); buildRevealVM is not memoised.
+
+Defaults: `applyHazardOutcome` returns a `FightPaid` record (`state/presenters/fight-end.engine.ts`) and the panel keeps it in place of `shillingsPaid`; the summary still opens after a win (its removal is FE1b, call #3). The paid-line labels and the "LEVEL n" / "k XP to level n+1" lines print as the settled shot prints them, not as `[content]`. A level reached exactly ends the bar on a fresh, empty step (fillMs 0); XP withheld is one still step. The VM carries no headline: FE1b reads the engine summary's. `combat-round-e2e.mjs` now shoots `<mode>-seed-<n>-victory` when the offer opens.
+
+A1's driven half is not met: `combat-round-e2e.mjs` with `PRESET=l30` (seeds 8 and 16, 40 and 59 rounds) never wins (the Quay-Crab stands at 98/108 at the cap), so no driven victory shot exists; the harness now shoots `<mode>-seed-<n>-victory` when an offer opens, for FE1b or a stronger preset to fill.
+
+- Defaults taken (standing: every open call in spec 176 takes its stated default): #1 house look only, #2 the defeat panel names its cause.
+- `buildCombatSummary` now carries `defeatCause` ('vitae' | 'turn-limit') on a defeat, read from the final player VITAE; the two lines are `[content]` placeholders in `combat-summary.copy.ts`.
+- Game Over's button is a new look place `G-02` (brass) so G-01 stays the death return's vellum button until 176.3 moves it; the defeat panel wears the dark ground and `BrassButton` for defeats only (wins and spares wait for 176.2).
+- A dev-only `/devdefeat` route feeds the new `defeat-panel` verify:visual route; the `defeat-panel` and `game-over` baselines are approved by the visual job (no browser in the build worktree).
+
+Defaults: T unheld this chunk (2026-11-11) and asked for a TEMP stand-in. The bridge entry (`bw-b2`) now draws Rousseau's Pont de Batignies in the Forest of Compiegne (Commons, public domain, via `scripts/acquire-art.mjs`, key `bridge`), replacing the Charcoal Wood arena copy; provenance and the table comment mark it temporary. T will still replace it with their own image, and the deadline Item "Find the bridge travel image" stays T's act (not ticked). The far-bank travel baseline was not re-rendered on this Windows box; CI re-stamps it (`_visual-restamp`).
+
+- Defaults taken: the `cw-6` fixture is `apprentice-cw-cache` (the cave cache with T's lines); the card is drawn in `CombatCardFace` at 170 wide; the existing chest picture has a near-opaque black ground, so it shows a dark box over the region plate (T's art, not re-keyed here).
+- `cache.png`, `cache-goods.png` and `cache-card.png` baselines are new routes: CI's `_visual-restamp` stamps them (a Windows capture is advisory, never approved).
+
+Defaults: the chapter name is the map region without its leading "The", uppercased (empty off the map); the purse is `player.currency`; the panel's line is empty while a fill runs, "LEVEL n" during the hold, the settled line after. The dev preview is `/devvictory` (no level) and `/devvictory?levelled=1`, drawn settled; routes `victory-plain` and `victory-levelled` in `smoke-screens.mjs` and `critique-drive.mjs`. `BrassButton` gained an optional `labelSize` so two plates side by side fit TAKE NOTHING at 360-390 pt. The "finish" mercy line no longer shows anywhere: the victory screen carries no ledger line. The Playwright walks (`combat-round-e2e`, `act1-walk-e2e`, `map-walk-e2e`, `feature-map-e2e`, `perf-web`) tap the victory screen's buttons; they were syntax-checked, not driven.

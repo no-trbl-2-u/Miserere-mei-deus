@@ -443,7 +443,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/LeaveRow.test.tsx, axiomancer-mobile/state/e2e/blacksmith-upgrade.UP1e.test.tsx, axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, ..."
+        "source": "axiomancer-mobile/state/e2e/blacksmith-forge.VL1e.test.tsx, axiomancer-mobile/state/e2e/blacksmith-upgrade.UP1e.test.tsx, axiomancer-mobile/state/e2e/forge-vocabulary.S5-talk-C12.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
@@ -464,7 +464,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
@@ -617,8 +617,8 @@
         "source": null
       },
       "tested": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/components/event/enemy-art/__tests__/EnemyIllustration.test.tsx, axiomancer-mobile/state/presenters/__tests__/enemy-art.test.ts"
       },
       "needsPitch": {
         "value": true,
@@ -648,6 +648,31 @@
       "needsPitch": {
         "value": true,
         "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devart Rooms\")",
+        "source": null
+      }
+    },
+    {
+      "id": "route:devdefeat",
+      "name": "Devdefeat",
+      "kind": "dev-route",
+      "group": "dev",
+      "source": "axiomancer-mobile/app/devdefeat/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": false,
+        "source": "no flow path from route:index"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": false,
+        "source": null
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devdefeat\")",
         "source": null
       }
     },
@@ -699,6 +724,31 @@
         "value": false,
         "missing": null,
         "source": "braindump/2026-10-15-hazard-fixed-puzzle.md"
+      }
+    },
+    {
+      "id": "route:devvictory",
+      "name": "Devvictory",
+      "kind": "dev-route",
+      "group": "dev",
+      "source": "axiomancer-mobile/app/devvictory/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": false,
+        "source": "no flow path from route:index"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/__tests__/devvictory.screen.test.tsx"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Devvictory\")",
+        "source": null
       }
     },
     {
@@ -864,11 +914,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/quest-chain.screen.test.tsx, ..."
+        "source": "axiomancer-mobile/assets/images/givers/__tests__/givers.test.ts, axiomancer-mobile/components/__tests__/QuestGate.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, ..."
       },
       "needsPitch": {
         "value": false,
@@ -889,16 +939,16 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, axiomancer-mobile/state/e2e/rest-campfire.UK2i.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/RestGate.test.tsx, axiomancer-mobile/scripts/smoke-screens.test.mjs, axiomancer-mobile/state/e2e/elite-respawn.ER1.test.tsx, ..."
       },
       "needsPitch": {
-        "value": true,
-        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Rest\", \"RestChoice\", \"rest node\", \"rest site\")",
-        "source": null
+        "value": false,
+        "missing": null,
+        "source": "braindump/2026-11-09-card-upgrade-screen.md"
       }
     },
     {
@@ -968,7 +1018,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/components/event/__tests__/EventArt.test.tsx, axiomancer-mobile/components/event/__tests__/PlaceholderIllustration.test.tsx"
+        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/assets/images/travel/__tests__/travel-scenes.test.ts"
       },
       "needsPitch": {
         "value": false,
@@ -999,6 +1049,56 @@
         "value": false,
         "missing": null,
         "source": "braindump/2026-10-28-breakwater-chapter-1-map.md"
+      }
+    },
+    {
+      "id": "route:village/rest",
+      "name": "Village Rest",
+      "kind": "route",
+      "group": "world",
+      "source": "axiomancer-mobile/app/village/rest.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:village -> route:village/rest"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/option-description-size.S5-talk-C17.test.tsx, axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx, axiomancer-mobile/state/e2e/stall-price-shillings.critique-84.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Village Rest\")",
+        "source": null
+      }
+    },
+    {
+      "id": "route:village/shop",
+      "name": "Village Shop",
+      "kind": "route",
+      "group": "world",
+      "source": "axiomancer-mobile/app/village/shop.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:village -> route:village/shop"
+      },
+      "driven": {
+        "value": false,
+        "source": null
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/state/e2e/rest-village-column.critique-71.test.tsx, axiomancer-mobile/state/e2e/stall-price-shillings.critique-84.test.tsx, axiomancer-mobile/state/e2e/village-counters.NK1c.test.tsx, ..."
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Village Shop\")",
+        "source": null
       }
     }
   ],
@@ -2939,7 +3039,19 @@
       "kind": "coupling",
       "from": "route:(tabs)/exploration",
       "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3209,12 +3321,6 @@
       "kind": "coupling",
       "from": "route:(tabs)/inventory",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/inventory",
-      "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/inventory.drag.ts"
     },
     {
@@ -3425,7 +3531,25 @@
       "kind": "coupling",
       "from": "route:blacksmith",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
     },
     {
       "kind": "coupling",
@@ -3436,6 +3560,30 @@
     {
       "kind": "coupling",
       "from": "route:blacksmith",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/blacksmith.engine.ts"
     },
@@ -3448,14 +3596,62 @@
     {
       "kind": "coupling",
       "from": "route:blacksmith",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:blacksmith",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3477,9 +3673,87 @@
     },
     {
       "kind": "coupling",
+      "from": "route:blacksmith",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
       "from": "route:cache",
       "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3490,8 +3764,38 @@
     {
       "kind": "coupling",
       "from": "route:cache",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
     },
     {
       "kind": "coupling",
@@ -3504,6 +3808,12 @@
       "from": "route:cache",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3558,12 +3868,6 @@
       "from": "route:character-select",
       "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:character-select",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -3653,13 +3957,13 @@
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3671,7 +3975,7 @@
       "kind": "coupling",
       "from": "route:character-select",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+      "file": "axiomancer-mobile/state/presenters/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -3851,13 +4155,13 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+      "file": "axiomancer-mobile/state/presenters/fight-end.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4169,13 +4473,13 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4187,7 +4491,7 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+      "file": "axiomancer-mobile/state/presenters/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4398,6 +4702,24 @@
       "from": "route:cutscene",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4839,6 +5161,36 @@
     },
     {
       "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/app/devdefeat/index.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatSummaryModal.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/spare-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/spare-reward.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devdefeat",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
       "from": "route:devframes",
       "to": "area:Log",
       "file": "axiomancer-mobile/state/settings.ts"
@@ -4938,6 +5290,150 @@
       "from": "route:devpuzzle",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/hazard.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/fight-end.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/app/devvictory/index.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:devvictory",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5255,6 +5751,18 @@
       "kind": "coupling",
       "from": "route:index",
       "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/quest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Items",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -5368,12 +5876,6 @@
     {
       "kind": "coupling",
       "from": "route:item-reward",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:item-reward",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
@@ -5417,12 +5919,6 @@
       "kind": "coupling",
       "from": "route:item-reward",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:item-reward",
-      "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
@@ -5430,12 +5926,6 @@
       "from": "route:item-reward",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/item-reward.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:item-reward",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -5566,12 +6056,6 @@
     {
       "kind": "coupling",
       "from": "route:quest",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:quest",
       "to": "area:Combat",
       "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
     },
@@ -5645,19 +6129,13 @@
       "kind": "coupling",
       "from": "route:quest",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:quest",
-      "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:quest",
       "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
+      "file": "axiomancer-mobile/state/presenters/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5687,7 +6165,19 @@
       "kind": "coupling",
       "from": "route:rest",
       "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Cards",
       "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5698,14 +6188,74 @@
     {
       "kind": "coupling",
       "from": "route:rest",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/card-upgrade.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5718,6 +6268,24 @@
       "from": "route:rest",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5742,6 +6310,12 @@
       "from": "route:rest",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/rest.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:rest",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5844,6 +6418,18 @@
       "from": "route:saves",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/quest.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5975,19 +6561,7 @@
       "kind": "coupling",
       "from": "route:travel",
       "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/event-assets.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:travel",
-      "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/travel.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Cards",
-      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6004,50 +6578,8 @@
     {
       "kind": "coupling",
       "from": "route:village",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Character",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/combat/keywords.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
       "to": "area:Combat",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Combat",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6066,12 +6598,6 @@
       "from": "route:village",
       "to": "area:Effects",
       "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Effects",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6089,43 +6615,13 @@
       "kind": "coupling",
       "from": "route:village",
       "to": "area:Game",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Game",
-      "file": "axiomancer-mobile/state/village/store-actions.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",
       "from": "route:village",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:Items",
-      "file": "axiomancer-mobile/state/presenters/loadout.ts"
     },
     {
       "kind": "coupling",
@@ -6148,20 +6644,8 @@
     {
       "kind": "coupling",
       "from": "route:village",
-      "to": "area:Log",
-      "file": "axiomancer-mobile/state/settings.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
       "to": "area:NPCs",
       "file": "axiomancer-mobile/state/store.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:village",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
     },
     {
       "kind": "coupling",
@@ -6177,7 +6661,283 @@
     },
     {
       "kind": "coupling",
-      "from": "route:village",
+      "from": "route:village/rest",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:NPCs",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/rest",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/card-rarity.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Cards",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/components/inventory/EquipDeltaPanel.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/combat/keywords.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Effects",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Enemy",
+      "file": "axiomancer-mobile/state/presenters/combat-encounter.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/village/store-actions.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/equipment-effect-line.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/state/settings.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:NPCs",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/village.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:village/shop",
       "to": "area:World",
       "file": "axiomancer-mobile/state/village/store-actions.ts"
     },
@@ -7563,6 +8323,78 @@
     },
     {
       "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
       "from": "route:devframes",
       "to": "route:blacksmith",
       "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
@@ -7702,6 +8534,78 @@
     {
       "kind": "flow",
       "from": "route:devpuzzle",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
@@ -8598,6 +9502,174 @@
       "from": "route:village",
       "to": "route:travel",
       "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village",
+      "to": "route:village/rest",
+      "file": "axiomancer-mobile/app/village/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village",
+      "to": "route:village/shop",
+      "file": "axiomancer-mobile/app/village/index.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/village/useVillageCounter.ts"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/village/useVillageCounter.ts"
     }
   ]
 }

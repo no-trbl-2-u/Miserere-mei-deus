@@ -88,6 +88,9 @@ export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   cache: { screen: 'cache/index', tab: false },
   blacksmith: { screen: 'blacksmith/index', tab: false },
   village: { screen: 'village/index', tab: false },
+  // The village's counter screens: the hub stays below them.
+  'village/rest': { screen: 'village/rest', tab: false },
+  'village/shop': { screen: 'village/shop', tab: false },
   dialogue: { screen: 'dialogue/index', tab: false },
   cutscene: { screen: 'cutscene/index', tab: false },
   dev: { screen: 'dev/index', tab: false },
@@ -95,6 +98,8 @@ export const ROUTE_TABLE: Readonly<Record<string, RouteEntry>> = {
   devart: { screen: 'devart/index', tab: false },
   'devart/rooms': { screen: 'devart/rooms', tab: false },
   devpuzzle: { screen: 'devpuzzle/index', tab: false },
+  devdefeat: { screen: 'devdefeat/index', tab: false },
+  devvictory: { screen: 'devvictory/index', tab: false },
   devframes: { screen: 'devframes/index', tab: false },
   exploration: { screen: 'exploration/index', tab: true },
   character: { screen: 'character/index', tab: true },
@@ -137,6 +142,8 @@ export const linking = {
       'cache/index': 'cache',
       'blacksmith/index': 'blacksmith',
       'village/index': 'village',
+      'village/rest': 'village/rest',
+      'village/shop': 'village/shop',
       'dialogue/index': 'dialogue',
       'cutscene/index': 'cutscene',
       'dev/index': 'dev',
@@ -144,6 +151,8 @@ export const linking = {
       'devart/index': 'devart',
       'devart/rooms': 'devart/rooms',
       'devpuzzle/index': 'devpuzzle',
+      'devdefeat/index': 'devdefeat',
+      'devvictory/index': 'devvictory',
       'devframes/index': 'devframes',
       '(tabs)': {
         screens: {

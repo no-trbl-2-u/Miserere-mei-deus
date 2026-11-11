@@ -78,13 +78,14 @@ carries null. The poster is `lib/puzzleAttempts.ts`, called from
 each attempt by layout and clock start, so renaming the SOLVER after a solve
 never posts it twice.
 
-It posts only when **all three** hold, and otherwise makes no network call:
+It posts only when **both** of these hold, and otherwise makes no network call.
+Dev tools do not gate the poster, but the demo records attempts only where
+dev tools are on, so the production tester APK has none to post.
 
 | Needs | Where it comes from |
 |---|---|
-| dev tools on | `isDevToolsEnabled()`: a preview build, or a local dev session |
 | `EXPO_PUBLIC_PUZZLE_API_URL` | the Worker's origin, no path (a trailing slash is dropped) |
-| `EXPO_PUBLIC_PUZZLE_API_TOKEN` | the shared dev bearer token, the Worker's `PUZZLE_API_TOKEN` |
+| `EXPO_PUBLIC_PUZZLE_API_TOKEN` | the bearer token the build carries: the Worker's `PUZZLE_API_TOKEN` (the owner token, every route) until T's rotation, then its POST-only `PUZZLE_TESTER_TOKEN` (the one a published APK should hold) |
 
 A failed post (network, or any non-2xx) is dropped with one
 `[puzzleAttempts] attempt not posted` console warning: no retry, no queue,
@@ -94,8 +95,10 @@ For a local session, export both values before `npm start`. For a preview
 APK, `.github/workflows/preview-build.yml` reads the repo secrets of the same
 names and writes them into the build profile's `env` in its checkout's
 `eas.json` (an EAS cloud build does not see the runner's env); it skips this
-for `production`, and with either secret unset the build simply never posts.
-The token ships inside the preview APK, which the brief accepts for dev-only
+for `beta` only. `production` gets the values too, for `platform: android`;
+`platform: all` with `production` is refused before a build is spent, so the
+token never reaches the iOS App Store build. With either secret unset the build
+simply never posts. The token ships inside the preview and production APKs, which the brief accepts for dev-only
 puzzle times; rotating it means a new secret and a rebuild. Tests:
 `lib/__tests__/puzzleAttempts.test.ts`,
 `components/hazard/puzzle/__tests__/HazardPuzzlePost.test.tsx`.
@@ -104,7 +107,7 @@ puzzle times; rotating it means a new secret and a rebuild. Tests:
 **https://miserere-api.no-trbl-2-u.workers.dev**, backed by the D1 database
 `miserere` on T's Cloudflare account (its id is in `backend/wrangler.toml`).
 `.github/workflows/backend-deploy.yml` applies the D1 migrations, deploys the
-Worker and sets its `PUZZLE_API_TOKEN` secret on every push to `main` touching
+Worker and sets its `PUZZLE_API_TOKEN` secret (and `PUZZLE_TESTER_TOKEN`, only when that repo secret exists) on every push to `main` touching
 `backend/**`, or from the Actions tab (`workflow_dispatch`). The repo secrets
 `EXPO_PUBLIC_PUZZLE_API_URL` and `EXPO_PUBLIC_PUZZLE_API_TOKEN` hold that URL
 and the same token. To read the stored attempts by hand:
@@ -151,16 +154,17 @@ below.
 (`components/DebugPlayLogSwitch.tsx`) reads and flips `playLogging`, kept in
 the dev-settings store (`state/dev/dev-settings.ts`) under its own
 AsyncStorage key, never in the save or the player settings. It **defaults to
-on only while T is the only player.** Before a preview APK goes to anyone but
-T, the default flips to off and BE1's playtester follow-up (device ids, a
-privacy note) is plotted first.
+on only while T is the only player.** The production tester APK has dev tools off, so
+it has no switch at all and posts whenever it carries the URL and token (see
+"The gate" below); the switch matters only on T's own preview APK.
 
-**The gate** (`lib/playLog.ts`): a post goes out only when dev tools are on
-(`isDevToolsEnabled()`), the BE1 API URL and token are set, and the switch is
-on. With any one false no request is made and nothing is buffered. A failed
-post warns once in dev and is dropped (no retry, no queue). Production
-builds send nothing whatever the switch says. The puzzle poster above keeps
-its own gate; the switch does not touch it.
+**The gate** (`lib/playLog.ts`): a post goes out only when the BE1 API URL and
+token are set and, where dev tools are on (`isDevToolsEnabled()`), the switch
+is on. With either false no request is made and nothing is buffered. A failed
+post warns once in dev and is dropped (no retry, no queue). A build with dev
+tools off (the production tester APK) has no switch and posts whenever it
+carries the URL and token; a `beta` build carries neither, so it sends
+nothing. The puzzle poster above does not read the switch.
 
 **What is sent.** Both bodies carry the solver name, a session id minted per
 app launch (not a device id), the build commit (`getBuildCommit()`, null in
@@ -181,14 +185,13 @@ so T's numbers are never mixed with a machine's.
 
 | Source | Who | Stamped by |
 |---|---|---|
-| `human` | T, on a **preview APK** | a build whose `EXPO_PUBLIC_PLAY_LOG_SOURCE` is `human`; only the committed `axiomancer-mobile/eas.json` preview profile sets it (`lib/playLog.ts`, `playLogSourceKind`) |
+| `human` | T on a **preview APK**, testers on the **production APK** | a build whose `EXPO_PUBLIC_PLAY_LOG_SOURCE` is `human`; only the committed `axiomancer-mobile/eas.json` preview and production profiles set it (`lib/playLog.ts`, `playLogSourceKind`) |
 | `harness` | any other build: every web export, a dev server T opens by hand, a jest run | the same function, as its default, so a forgotten harness can never land in T's numbers |
 | `sim` | the headless bots (`npm run sim:run`) | the run driver, through the `source` dep of the recorder and poster; the app itself never sends `sim` |
 
 What makes a build `human` is that one env value and nothing else: not the
 dev-tools switch, not the API URL, not who runs it. The BE2 gate above is
-unchanged (a source is a stamp, not a gate): production and beta builds still
-send nothing. A post that leaves `source` out (an older APK) is stored `human`.
+unchanged (a source is a stamp, not a gate): a beta build still sends nothing. A post that leaves `source` out (an older APK) is stored `human`.
 Migration `0006` relabelled every fight and deck event stored before it
 `harness`, whatever its build; old puzzle attempts stay `human`.
 
@@ -350,7 +353,7 @@ shaping who the player is.
 | Leaf | What it does | Test ids |
 |---|---|---|
 | `DebugHazardButton` | Start a hazard (BRAVE IT) | `debug-hazard-button` |
-| `DebugHazardPuzzlesButton` | Open the HAZARD PUZZLES board (`/devpuzzle`): three fixed demo puzzles (`HAZARD_PUZZLE_LIBRARY`) played on the live hazard surface. Below the demos the list shows the labelled candidate puzzles (`HAZARD_PUZZLE_CANDIDATES`, phase HP4b: each with a `label`, an `intendedBand` and one nominated `route`, checked by `auditHazardPuzzleCandidate` and never by the library's band gate) in three groups, EASY, MEDIUM and HARD by `intendedBand`, each headed with its count and each row headed by the candidate's label (phase HP4d); a band with no candidate shows "None authored yet.". The set is thirty: the ten hard (`cand-hard-01..10`) and the twenty cost-card candidates of phase HP5d (`cand-cost-medium-01..10` under MEDIUM, `cand-cost-hard-01..10` under HARD, each built on the five puzzle-only cost cards); the twenty easy and medium candidates were deleted in phase HP5c, so EASY reads empty. Picking a candidate skips the route select and starts the live board on its nominated route, on its intended band's clock (`?id=<candidate id>` deep-links the same). The board is the live route select, the live hazard board with its drag controls (shared with `/hazard`, less the bin: a puzzle has no discard) under the puzzle's clock, and the outcome. The board rolls in like a live hazard: the live dice roll lands on the layout's own faces and the clock starts after it, and a DRAW's cards enter the hand with the live hand animation in reserve order, a reroll replays the cast tumble in the tray on each die it turns (landing on the layout's next set face), and a gained die arrives conjured like a live salvage die; nothing is random (`?id=<demo>&route=safe\|risk` deep-links a demo; `&confirm=1` confirms at once, `&paused=1` holds the clock). The list screen also carries the dev-only MOVE LOG (phase HP2c): a SOLVER field typed once for the session, one line per attempt with its moves and solve time, COPY LOG (the log as JSON, through the `copyText` seam (`lib/clipboard.ts`) — the web Clipboard API, or the native share sheet; when neither takes it the JSON is printed selectable) and CLEAR. An attempt's clock starts when the opening roll settles, which is when the puzzle clock starts, and ends on the CONFIRM or the expiry with the result, so `end.ms` is the solve time the clock-tuning and calibration phases read. Each ended attempt is also posted to the solve-time API when the build carries its URL and token (see "Post puzzle attempts to the solve-time API" above). Production builds record nothing, post nothing and render no panel | `debug-hazard-puzzles-button`, `hazard-puzzle-candidates`, `hazard-puzzle-candidate-group-<band>`, `hazard-puzzle-candidate-<id>`, `hazard-puzzle-log`, `hazard-puzzle-log-solver`, `hazard-puzzle-log-copy`, `hazard-puzzle-log-clear` |
+| `DebugHazardPuzzlesButton` | Open the HAZARD PUZZLES board (`/devpuzzle`): three fixed demo puzzles (`HAZARD_PUZZLE_LIBRARY`) played on the live hazard surface. Below the demos the list shows the labelled candidate puzzles (`HAZARD_PUZZLE_CANDIDATES`, phase HP4b: each with a `label`, an `intendedBand` and one nominated `route`, checked by `auditHazardPuzzleCandidate` and never by the library's band gate) in three groups, EASY, MEDIUM and HARD by `intendedBand`, each headed with its count and each row headed by the candidate's label (phase HP4d); a band with no candidate shows "None authored yet.". The set is thirty: the ten hard (`cand-hard-01..10`) and the twenty cost-card candidates of phase HP5d (`cand-cost-medium-01..10` under MEDIUM, `cand-cost-hard-01..10` under HARD, each built on the five puzzle-only cost cards); the twenty easy and medium candidates were deleted in phase HP5c, so EASY reads empty. Picking a candidate skips the route select and starts the live board on its nominated route, on its intended band's clock (`?id=<candidate id>` deep-links the same). The board is the live route select, the live hazard board with its drag controls (shared with `/hazard`, less the bin: a puzzle has no discard) under the puzzle's clock, and the outcome. The board rolls in like a live hazard: the live dice roll lands on the layout's own faces and the clock starts after it, and a DRAW's cards enter the hand with the live hand animation in reserve order, a reroll replays the cast tumble in the tray on each die it turns (landing on the layout's next set face), and a gained die arrives conjured like a live salvage die; nothing is random (`?id=<demo>&route=safe\|risk` deep-links a demo; `&confirm=1` confirms at once, `&paused=1` holds the clock). The list screen also carries the dev-only MOVE LOG (phase HP2c): a SOLVER field typed once for the session, one line per attempt with its moves and solve time, COPY LOG (the log as JSON, through the `copyText` seam (`lib/clipboard.ts`) — the web Clipboard API, or the native share sheet; when neither takes it the JSON is printed selectable) and CLEAR. An attempt's clock starts when the opening roll settles, which is when the puzzle clock starts, and ends on the CONFIRM or the expiry with the result, so `end.ms` is the solve time the clock-tuning and calibration phases read. Each ended attempt is also posted to the solve-time API when the build carries its URL and token (see "Post puzzle attempts to the solve-time API" above). The demo records only where dev tools are on, so a production build (dev tools off) renders no panel, records no attempt and posts none from here, API URL and token or not | `debug-hazard-puzzles-button`, `hazard-puzzle-candidates`, `hazard-puzzle-candidate-group-<band>`, `hazard-puzzle-candidate-<id>`, `hazard-puzzle-log`, `hazard-puzzle-log-solver`, `hazard-puzzle-log-copy`, `hazard-puzzle-log-clear` |
 | `DebugRestButton` | Start the night watch at a camp or an inn | `debug-rest-button`, `debug-rest-inn-button` |
 | `DebugRewardTriggers` | RELIQUARY MODEST / RICH (loot-cache tiers), ANVIL ×500 (fixed budget), UNLOCK JOURNAL (every foe codex entry), RELIC REWARD (the Bleeding Signet on the item-reward screen, its only way in until relic sources land), and one chip per authored hazard id (`state/dev/rewards.ts`) | `debug-cache-button`, `debug-cache-rich-button`, `debug-anvil-budget-button`, `debug-journal-unlock-button`, `debug-relic-reward-button`, `debug-hazard-id-<id>` |
 

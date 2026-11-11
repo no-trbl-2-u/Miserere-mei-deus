@@ -105,10 +105,10 @@ describe("round 2's node screens (A1)", () => {
         }
     });
 
-    it("matches T's picks: vellum for the spoken line, travel buttons, stakes card and quest panel; brass for the choices, act rows and LEAVE", () => {
+    it("matches T's picks: vellum for the spoken line, stakes card and quest panel; brass for the choices, travel buttons, act rows and LEAVE", () => {
         const picked = (look: Look) => ROUND_TWO.filter((p) => LOOKS[p] === look);
-        expect(picked('vellum')).toEqual(['E-02', 'T-02', 'H-01', 'Q-01']);
-        expect(picked('brass')).toEqual(['E-03', 'X-01', 'X-02']);
+        expect(picked('vellum')).toEqual(['E-02', 'H-01', 'Q-01']);
+        expect(picked('brass')).toEqual(['E-03', 'T-02', 'X-01', 'X-02']);
         expect(picked('normal')).toEqual(['E-01', 'C-01', 'C-02', 'T-01', 'H-02', 'Q-02']);
     });
 
@@ -127,11 +127,25 @@ describe("round 2's node screens (A1)", () => {
 /** Round 2's new-game and ending screens, written out so a dropped row fails. */
 const NEW_GAME: readonly PlaceId[] = ['N-01', 'N-02', 'N-03', 'N-04', 'N-05', 'N-06', 'N-07', 'G-01'];
 
+describe('the village screens (168, call #5)', () => {
+    it('wear the brass action plate, idle, pressed and refused', () => {
+        expect(LOOKS['V-01']).toBe('brass');
+        expect(PLACE_PIECES['V-01']).toEqual(['action-button-idle', 'action-button-selected', 'action-button-disabled']);
+    });
+});
+
+describe('the loot cache (174)', () => {
+    it('wears the brass action plate on TAKE and MOVE ON', () => {
+        expect(LOOKS['K-01']).toBe('brass');
+        expect(PLACE_PIECES['K-01']).toEqual(['action-button-idle', 'action-button-selected', 'action-button-disabled']);
+    });
+});
+
 describe("round 2's new game and endings (A2)", () => {
-    it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM and the ending button; brass for the cards", () => {
+    it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM ; brass for the cards and the death return's button", () => {
         const picked = (look: Look) => NEW_GAME.filter((p) => LOOKS[p] === look);
-        expect(picked('vellum')).toEqual(['N-01', 'N-02', 'N-05', 'N-06', 'G-01']);
-        expect(picked('brass')).toEqual(['N-04']);
+        expect(picked('vellum')).toEqual(['N-01', 'N-02', 'N-05', 'N-06']);
+        expect(picked('brass')).toEqual(['N-04', 'G-01']);
         expect(picked('normal')).toEqual(['N-03', 'N-07']);
     });
 

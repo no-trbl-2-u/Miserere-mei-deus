@@ -63,6 +63,8 @@ import QuestScreen from './quest/index';
 import TravelScreen from './travel/index';
 import BlacksmithScreen from './blacksmith/index';
 import VillageScreen from './village/index';
+import VillageRestScreen from './village/rest';
+import VillageShopScreen from './village/shop';
 import DialogueScreen from './dialogue/index';
 import CutsceneScreen from './cutscene/index';
 import DevToolsScreen from './dev/index';
@@ -70,6 +72,8 @@ import LabyrinthScreen from './labyrinth/index';
 import DevArtGallery from './devart/index';
 import DevRoomGallery from './devart/rooms';
 import DevHazardPuzzles from './devpuzzle/index';
+import DevDefeatPreview from './devdefeat/index';
+import DevVictoryPreview from './devvictory/index';
 import DevFrameHarness from './devframes/index';
 
 // Faces come from the @expo-google-fonts packages, registered in theme/fontFaces.ts under the exact
@@ -387,6 +391,16 @@ function RootLayout() {
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen
+              name="village/rest"
+              component={VillageRestScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="village/shop"
+              component={VillageShopScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
               name="dialogue/index"
               component={DialogueScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
@@ -419,6 +433,16 @@ function RootLayout() {
             <Stack.Screen
               name="devpuzzle/index"
               component={DevHazardPuzzles}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="devdefeat/index"
+              component={DevDefeatPreview}
+              options={{ headerShown: false, presentation: 'fullScreenModal' }}
+            />
+            <Stack.Screen
+              name="devvictory/index"
+              component={DevVictoryPreview}
               options={{ headerShown: false, presentation: 'fullScreenModal' }}
             />
             <Stack.Screen

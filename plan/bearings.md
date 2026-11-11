@@ -300,10 +300,11 @@ ambiguity.)
   it: `git switch -c <branch> v0.1.0-checkpoint`.
   **`v0.2.0`** (commit `eb75f451`, 2026-10-11, D83) adds the Blood Price trial
   set on that core; GitHub release, no APK from the tag.
-- **DEADLINES (T, attended session 2026-10-19).** `plan/deadlines.md` sets the v0.3 milestone ("Act 1 complete,
-  playable", by 2026-12-28) in five two-week windows, each with a goal and a demo T checks. The loop is not
-  restricted to the current window: `/march` keeps picking open rows top to bottom. New cards and the card-creator
-  workflow are the lowest priority.
+- **DEADLINES (T, attended session 2026-11-10; replaces the 2026-10-19 windows).** `plan/deadlines.md` sets two
+  milestones (Act 1, Chapter 1 released on 2026-11-30, moved from Nov 17 by T on 2026-11-10; Act 1 released on 2026-12-26), a `## Budget` of T's hours a
+  week, and one ordered queue of T's acts with no dates of their own. The reminder forecasts each milestone against
+  the budget and lists the acts that fit this week. The loop is not restricted by it: `/march` keeps picking open
+  rows top to bottom from `plan/README.md`. New cards and the card-creator workflow are the lowest priority.
 - **THE CARD HOLD IS LIFTED (T, attended session 2026-10-22, D99;
   supersedes D37).** Cards, keywords and art are ordinary content under
   D88: built only from a build-plan row whose brief T wrote or approved
