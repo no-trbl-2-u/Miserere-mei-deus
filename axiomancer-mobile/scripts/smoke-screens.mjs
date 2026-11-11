@@ -104,6 +104,8 @@ export const ROUTES = [
     { name: 'dialogue', path: '/exploration', fixture: 'apprentice-staged-dialogue', waitForPath: '/dialogue' },
     { name: 'village', path: '/exploration', fixture: 'wanderer-staged-village', waitForPath: '/village' },
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
+    // The quest card: the gate warden's offer at the keep gate, steps 1 to 3 turned in.
+    { name: 'quest', path: '/exploration', fixture: 'wanderer-bw-keep-gate-offer', waitForPath: '/quest', waitForTestId: 'quest-offer' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
     // The cave shortcut: the map zoomed on the Cave Face.
     { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },

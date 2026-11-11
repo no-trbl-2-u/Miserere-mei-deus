@@ -92,6 +92,19 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         stagedEvent: FIXTURE_QUEST_EVENT,
     },
     {
+        id: 'wanderer-bw-keep-gate-offer',
+        description: 'Wanderer (L8) on the Breakwater\'s keep gate (bw-k1) with chain steps 1 to 3 turned in and step 4 not yet accepted; `arrive` opens the gate warden\'s offer → /quest (the quest card\'s route shot).',
+        seed: 'fixture-wanderer-bw-keep-gate-offer',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k1' },
+        questsCompleted: [
+            '[content] Chapter 1: the capsized boat',
+            '[content] Chapter 1: the lighthouse',
+            '[content] Chapter 1: the keep key',
+        ],
+        arrive: true,
+    },
+    {
         id: 'apprentice-bw-rest',
         description: 'Apprentice on the Breakwater\'s first rest node (bw-w4), hurt; `arrive` starts the night-watch session → /rest.',
         seed: 'fixture-apprentice-bw-rest',

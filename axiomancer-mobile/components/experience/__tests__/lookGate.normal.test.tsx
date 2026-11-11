@@ -44,7 +44,7 @@ describe('a place set to normal draws no kit piece', () => {
         expect(kitImagesIn(view)).toBe(0);
     });
 
-    it('Q-01: the quest panel', () => {
+    it('the quest card and its brass buttons', () => {
         const view = mountQuest();
         expect(view.getByTestId('quest-offer')).toBeTruthy();
         expect(kitImagesIn(view)).toBe(0);
