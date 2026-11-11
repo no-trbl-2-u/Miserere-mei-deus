@@ -19,16 +19,18 @@
 | 4 | Find the bridge travel image: Chapter 1 to Chapter 2 (the cave shortcut uses the Breakwater map, zoomed; T, 2026-11-11) (0.5 h) | 0.5 | needs you: your task |
 | 5 | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | 1 | needs you: your task |
 | 6 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | 1 | needs you: your task |
-| 7 | Review the reworked encounter (combat start), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | 1.5 | needs you: your task |
-| 8 | Buffer: fixes from the event-screen reviews (1 h) | 1 | needs you: your task |
-| 9 | Mid-release check: Chapter 1 on the preview build, file what broke (1 h) | 1 | needs you: your task |
-| 10 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | 0.5 | needs you: your task |
-| 11 | File what is still broken (`/plot` or `/messy`) and decide what the release run must show (1 h) | 1 | needs you: your task |
+| 7 | Buffer: fixes from the event-screen reviews (1 h) | 1 | needs you: your task |
+| 8 | Mid-release check: Chapter 1 on the preview build, file what broke (1 h) | 1 | needs you: your task |
+| 9 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | 0.5 | needs you: your task |
+| 10 | File what is still broken (`/plot` or `/messy`) and decide what the release run must show (1 h) | 1 | needs you: your task |
+| 11 | Chapter 1 release check: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards, Chapter 1's enemies and art, lane relics, icons, new event UI (1.5 h) | 1.5 | needs you: your task |
+| 12 | Live hazard routing for the other five Act 1 hazard nodes (Charcoal Wood 1, Beacon Crags 2, Lantern Deep 2; each draws a random puzzle from the thirty; the Breakwater's six are HP6) and the cuts (plot, 1 h) | 1 | needs a plot: no build-plan rows yet |
 
-24 more acts are ready after these.
+22 more acts are ready after these.
 
 ## Waiting on the loop
 
+- Review the reworked fight reveal (look G for normal and elite foes, the boss's held title card F; spec 175)... — the loop still owes FR1a, FR1b
 - Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes QS1a, QS1b, QS1c
 - Review the reworked travel, loot cache and cutscene screens (1.5 h) — the loop still owes TV1a, TV1b
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
