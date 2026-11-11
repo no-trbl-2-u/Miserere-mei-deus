@@ -26,7 +26,7 @@ export interface RelicRiseProps {
     reducedMotion: boolean;
 }
 
-/** The turned-in step's relic, rising into view before the paid card. */
+/** The turned-in step's relic, rising into view off the card's foot. */
 export function RelicRise({ itemId, name, reducedMotion }: RelicRiseProps) {
     const styles = useStyles();
     const instant = resolveJuiceMode({ reducedMotion }) === 'instant';
@@ -55,7 +55,6 @@ const useStyles = makeStyles((AXM) => ({
         borderColor: AXM.sulfur,
         backgroundColor: AXM.panelBg,
         padding: 10,
-        marginBottom: 10,
     },
     relicName: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 20, color: AXM.sulfur },
 }));

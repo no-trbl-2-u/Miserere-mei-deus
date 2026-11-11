@@ -19,7 +19,6 @@ import {
     questCardPickLine,
     questCounterText,
     questShillingsLine,
-    questStepEyebrow,
     questXpLine,
 } from './quest.copy';
 
@@ -77,8 +76,6 @@ export interface QuestVM {
     /** The refusal line while the stage is `locked`: the node's own, else the shared one. */
     lockedLine: string;
     stage: QuestNodeStage;
-    /** "STEP 2 OF 4". */
-    eyebrow: string;
     /** The step the card shows: the one worked or turned in, else the one offered; null for no step. */
     card: QuestStepVM | null;
     /** The pay of the step the card shows; null when the card shows no step. */
@@ -104,7 +101,6 @@ const EMPTY_VM: QuestVM = Object.freeze({
     stage: 'locked',
     giver: null,
     lockedLine: QUEST_LOCKED_LINE,
-    eyebrow: '',
     card: null,
     pay: null,
     beads: Object.freeze([]),
@@ -201,7 +197,6 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
     const ahead = event.ahead && event.ahead.step !== undefined
         ? stepVM(event.ahead, event.ahead.step, stepStatus(event.ahead.step))
         : null;
-    const total = questline?.steps.length ?? open.node;
     // The card shows the step being worked or turned in (waiting, turn-in); on
     // an offer or a refusal it shows the step the node offers, and at the
     // chain's end (a turn-in with nothing after it) it stays on the last step.
@@ -237,7 +232,6 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         giver: open.giver ? { name: open.giver.name, portrait: open.giver.portrait } : null,
         lockedLine: open.lockedLine ?? QUEST_LOCKED_LINE,
         stage,
-        eyebrow: questStepEyebrow(open.node, total),
         card,
         pay: cardStep ? questStepPay(cardStep) : null,
         beads,

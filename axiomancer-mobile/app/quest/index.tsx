@@ -33,19 +33,13 @@ import { selectHasActiveQuest, selectQuestVM } from '@/state/presenters/quest.en
 import {
     QUEST_ACCEPT_LABEL,
     QUEST_LEAVE_LABEL,
-    QUEST_PAID_HEAD,
     QUEST_TURN_IN_LABEL,
+    questPaidLine,
     questShillingsLine,
     questXpLine,
 } from '@/state/presenters/quest.copy';
-import { KitSurface } from '@/components/experience/KitSurface';
-import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
-import { HUE, TYPE_ROLES } from '@/theme/axm';
-import { makeStyles, usePalette } from '@/theme/runtime';
-
-/** The vellum panel the paid ledger wears (Q-01); the card itself is not a panel. */
-const [PANEL] = PLACE_PIECES['Q-01'];
-const WANTS_KIT = lookOf('Q-01') !== 'normal';
+import { TYPE_ROLES } from '@/theme/axm';
+import { makeStyles } from '@/theme/runtime';
 
 /** The card's shape: width over height, and its widest extent in points. */
 const CARD_RATIO = 0.62;
@@ -55,7 +49,6 @@ const CARD_FALLBACK = { width: 260, height: 420 };
 
 export default function QuestScreen() {
     const styles = useStyles();
-    const AXM = usePalette();
     const slice = useGameState(s => s.quest);
     const quests = useGameState(s => s.quests);
     const baseStats = useGameState(s => s.player?.baseStats);
@@ -91,6 +84,9 @@ export default function QuestScreen() {
     // An offer already accepted reads as the work in progress.
     const accepted = vm.stage === 'offer' && vm.ahead !== null && vm.ahead.status !== 'unaccepted';
     const underway = vm.stage === 'waiting' || accepted;
+    // A step turned in stays on the card only at the chain's end (nothing follows it).
+    const paid = vm.card?.status === 'completed';
+    const lit = vm.stage === 'turn-in' || paid;
     const cardTestID = vm.stage === 'waiting' ? 'quest-waiting'
         : vm.stage === 'turn-in' ? 'quest-turn-in'
             : vm.stage === 'locked' ? 'quest-locked' : 'quest-offer';
@@ -100,32 +96,14 @@ export default function QuestScreen() {
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
                 {vm.active && (
                     <View style={styles.column} testID="quest-column">
-                        {vm.paid && vm.paid.itemNames.length > 0 && (
-                            <RelicRise
-                                key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
-                                itemId={vm.paid.itemIds?.[0] ?? null}
-                                name={vm.paid.itemNames[0]!}
-                                reducedMotion={reducedMotion}
-                            />
-                        )}
-
                         {vm.paid && (
-                            <KitSurface wear={WANTS_KIT} piece={PANEL} style={WANTS_KIT ? styles.paidKit : styles.paid} testID="quest-paid">
-                                <Text style={[styles.paidHead, WANTS_KIT && styles.paidHeadKit]}>{QUEST_PAID_HEAD}</Text>
-                                <Text style={[styles.paidTitle, { color: WANTS_KIT ? HUE.hzForceInk : AXM.sulfur }]}>{vm.paid.questName}</Text>
-                                <View style={styles.chipRow}>
-                                    {vm.paid.experience > 0 && (
-                                        <Text style={[styles.chip, WANTS_KIT && styles.chipKit]}>{questXpLine(vm.paid.experience)}</Text>
-                                    )}
-                                    {vm.paid.currency > 0 && (
-                                        <Text style={[styles.chip, WANTS_KIT && styles.chipKit]}>{questShillingsLine(vm.paid.currency)}</Text>
-                                    )}
-                                    {/* The first item rises into view above; the rest ride as chips. */}
-                                    {vm.paid.itemNames.slice(1).map(name => (
-                                        <Text key={name} style={[styles.chip, WANTS_KIT && styles.chipKit]}>{name}</Text>
-                                    ))}
-                                </View>
-                            </KitSurface>
+                            <Text style={styles.paidLine} testID="quest-paid">
+                                {questPaidLine([
+                                    ...(vm.paid.experience > 0 ? [questXpLine(vm.paid.experience)] : []),
+                                    ...(vm.paid.currency > 0 ? [questShillingsLine(vm.paid.currency)] : []),
+                                    ...vm.paid.itemNames,
+                                ])}
+                            </Text>
                         )}
 
                         <View style={styles.cardWrap} onLayout={onWrapLayout}>
@@ -136,10 +114,22 @@ export default function QuestScreen() {
                                     giver={vm.giver}
                                     turnedAway={vm.stage === 'locked'}
                                     underway={underway}
+                                    lit={lit}
+                                    paid={paid}
                                     width={size.width}
                                     height={size.height}
                                     testID={cardTestID}
                                 />
+                            )}
+                            {vm.paid && vm.paid.itemNames.length > 0 && (
+                                <View style={styles.relicFoot} pointerEvents="none">
+                                    <RelicRise
+                                        key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
+                                        itemId={vm.paid.itemIds?.[0] ?? null}
+                                        name={vm.paid.itemNames[0]!}
+                                        reducedMotion={reducedMotion}
+                                    />
+                                </View>
                             )}
                         </View>
 
@@ -225,40 +215,15 @@ const useStyles = makeStyles((AXM) => ({
     },
     buttons: { flexDirection: 'row', gap: 10 },
     button: { flex: 1 },
-    paid: {
-        borderWidth: 2,
-        borderColor: AXM.ash,
-        backgroundColor: AXM.panelBg,
-        padding: 12,
-        marginBottom: 10,
-    },
-    // Worn on the vellum panel: padding that clears its drawn corners.
-    paidKit: { paddingVertical: 30, paddingHorizontal: 44, marginBottom: 10 },
-    paidHead: {
-        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
-        fontSize: 12,
-        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
-        color: AXM.bone,
-        marginBottom: 4,
-    },
-    paidHeadKit: { color: HUE.hzCardInk2 },
-    paidTitle: {
-        fontFamily: TYPE_ROLES.title.fontFamily,
-        fontSize: 20,
-        lineHeight: 24,
-        marginBottom: 6,
-    },
-    chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
-    chip: {
+    // What the last turn-in paid: one line above the next card, until LEAVE.
+    paidLine: {
         fontFamily: TYPE_ROLES.chip.fontFamily,
-        fontSize: 12,
-        color: AXM.parchment,
-        borderWidth: 1,
-        borderColor: AXM.ash,
-        paddingHorizontal: 5,
-        paddingVertical: 2,
+        fontSize: 14,
+        color: AXM.sulfur,
+        textAlign: 'center',
+        marginBottom: 8,
     },
-    chipKit: { color: HUE.hzCardInk, borderColor: HUE.hzCardEdge },
+    relicFoot: { position: 'absolute', left: 0, right: 0, bottom: 8, alignItems: 'center' },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
     inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));
