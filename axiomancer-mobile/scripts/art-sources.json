@@ -189,6 +189,14 @@
       "title": "File:John_Martin_-_Great_Day_of_His_Wrath_-_WGA14150.jpg",
       "region": "The Lantern Deep",
       "why": "Martin, The Great Day of His Wrath. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "bridge",
+      "category": "travel",
+      "title": "File:Théodore Rousseau (1812-1867) - Pont de Batignies in the Forest of Compiègne - CAI.56 - Victoria and Albert Museum.jpg",
+      "region": "The Far Bank (travel node bw-b2)",
+      "why": "TEMP stand-in (T, 2026-11-11) for T's own bridge travel image: Rousseau, a bridge crossing into the forest. T will still replace it (spec 171, chunk 171.2). Travel scene table entry bw-b2.",
+      "maxEdge": 640
     }
   ]
 }
