@@ -1,6 +1,6 @@
 /**
  * The loot cache's pictures, from one table keyed by moment, so T swaps an
- * image in one place (spec 174, A2).
+ * image in one place.
  *
  *   choice  the closed chest, while the two blind rows are on the table
  *   goods   the gold hoard, once the goods are taken
