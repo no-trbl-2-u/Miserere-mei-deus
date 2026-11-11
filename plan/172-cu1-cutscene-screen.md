@@ -68,7 +68,6 @@ The narrator is one stand-in until T supplies the figure: the Hermit cut-out, co
 - **A3** The screen matches the settled shot: the scene picture at the top fading to black, the chapter's name at the top left, SKIP on the brass plate at the top right, the vellum panel at the foot with the line inside it in Eagle Lake in dark ink and the "n of m" count under it, and the narrator standing over the panel's top edge in front of it. There is no CONTINUE, no bottom SKIP, no "▶ OMEN" eyebrow and no hint line (`CUTSCENE_HINT` is retired). A line longer than five lines at the default size steps down to the 20pt floor and stays inside the panel.
 - **A4** A tap anywhere but SKIP moves to the next beat with today's fades; the last tap ends the scene; SKIP ends it at once; a tap during a fade is ignored; reduce motion snaps. The screen test (`cutscene-skip.S4-world-C17.test.tsx`, rewritten) pins the taps through a two-beat scene, the count reading "1 of 2" then "2 of 2", SKIP's 44pt box, and that no CONTINUE or hint text renders.
 - **A5** `verify:visual` re-shoots the `cutscene` route: the fixture `wanderer-staged-cutscene` stages a two-beat scene carrying the windmill's ids, and the new baseline is shown beside the settled shot in the build's PR.
-- **A6** T's five pictures and the narrator figure replace the stand-ins in the one module, each with a provenance entry; the stand-in narrator copy is deleted; the `cutscene` baseline is re-shot.
 
 ## Open questions
 
@@ -79,9 +78,8 @@ The narrator is one stand-in until T supplies the figure: the Hermit cut-out, co
 
 ## Chunks
 
-Measure: 4 open · 2 closed · next A7
+Measure: 3 open · 3 closed · next A7
 
 - [ ] **172.2** The cutscene screen: the teller over the vellum panel · M · closes A3, A4, A5 · needs — · alias: CU1b
-- [ ] **172.3** T's cutscene pictures and narrator · S · closes A6 · needs — · alias: CU1c
 
 172.1 is the contract: the engine field, the five scenes' ids, the image module with stand-ins and the narrator, and the presenter, with no change on screen. 172.2 redraws the screen on that presenter and re-shoots its baseline against the settled shot. 172.3 waits on T's art (Held until T supplies it); it is a table swap, and it can land before or after 172.2.

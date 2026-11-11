@@ -96,6 +96,7 @@ T, 2026-11-10: "10 as an average", between about 16 hours in the week to Nov 17 
 
 ## Change log
 
+- **2026-11-11** — **CU1c built with temp art** (T unheld it in the pilot run: public-domain paintings for the five scenes and the TOR Friar as narrator). **Removed** the `## Unscheduled` CU1c line, because the check ties that list to open chunks and CU1c closes; T's own replacement pictures and narrator figure stay undated and have no row.
 - **2026-11-11** — **Edited the ends-of-a-fight review act** (T on PR #1586: the victory's level panel animates an XP bar that fills to 100%, shows "Level n" briefly, then fills a fresh bar with the rest). The act's name now says the animated XP bar; its date, hours, window and `Waits on` (FE1a to FE1d) are unchanged.
 - **2026-11-10** — **The loot cache plotted** (T's screens ballot verdict, S-04j). **Ticked** the act "Event kind 7, loot cache ... settle it and plot it" and named its plot, spec 174 (LC1a, LC1b: the choice stays blind, the outcome shows the goods or the one card taken). **Added** LC1a and LC1b to the `Waits on` of the act "Review the reworked travel, loot cache and cutscene screens".
 - **2026-11-11** — **spec 172 call 2 answered** (T on PR #1590: "All cutscenes should have the same narrator for now"). **Edited** the `## Unscheduled` CU1c line: T's art is now five pictures and one narrator figure, not a teller per scene. No Item moved.
@@ -110,4 +111,3 @@ T, 2026-11-10: "10 as an average", between about 16 hours in the week to Nov 17 
 
 ## Unscheduled
 
-- CU1c — waits on T's five cutscene pictures and the one narrator figure (art is T's, D88); date not set
