@@ -2989,6 +2989,12 @@
       "kind": "coupling",
       "from": "route:(tabs)/exploration",
       "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:(tabs)/exploration",
+      "to": "area:Items",
       "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
@@ -3654,6 +3660,12 @@
     {
       "kind": "coupling",
       "from": "route:cache",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cache",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
     },
@@ -3812,6 +3824,12 @@
       "from": "route:character-select",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:character-select",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
       "kind": "coupling",
@@ -4328,6 +4346,12 @@
       "from": "route:combat-encounter",
       "to": "area:Items",
       "file": "axiomancer-mobile/state/item-reward/relic-sources.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
       "kind": "coupling",
@@ -5419,6 +5443,12 @@
       "kind": "coupling",
       "from": "route:index",
       "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:index",
+      "to": "area:Items",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {
@@ -6122,6 +6152,12 @@
       "from": "route:saves",
       "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:saves",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/cache.engine.ts"
     },
     {
       "kind": "coupling",
