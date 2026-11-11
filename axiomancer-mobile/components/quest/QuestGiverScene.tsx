@@ -1,6 +1,6 @@
 /**
  * The quest screen's relic rise (phase ET1d): the relic that lifts into view
- * on a turn-in. The giver's figure now lives in the quest card (spec 173). The
+ * on a turn-in. The giver's figure lives in the quest card. The
  * motion takes the reduced-motion answer from their caller (the screen asks
  * the platform once); with it on the relic lands its end state at once.
  */

@@ -2,7 +2,7 @@
  * The chain's beads: one per step of the questline, joined by a line. A
  * finished step's bead is gold and filled, the step the card shows is larger
  * with a gold ring, a step ahead is dim. No visible count: the row carries
- * "Step n of N" for a screen reader only (spec 173).
+ * "Step n of N" for a screen reader only.
  */
 
 import React from 'react';

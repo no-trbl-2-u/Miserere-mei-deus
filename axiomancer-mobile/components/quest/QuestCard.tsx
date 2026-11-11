@@ -1,5 +1,5 @@
 /**
- * The quest card: one tall card in the card face's frame (D91): the gold
+ * The quest card: one tall card in the card face's frame: the gold
  * border and rounded corners, the step's name on a band at the top, the
  * giver's figure edge to edge as its art, the ask under it and the pay at its
  * foot. It is not a playable card: no FREE pill, no die line.

@@ -1,5 +1,5 @@
 /**
- * /quest - the quest screen (phase QL1c, the card from spec 173).
+ * /quest - the quest screen.
  *
  * A quest node has no card of the deck's kind: `resolveCurrentMapEvent` opens
  * this screen on it. It shows one tall quest card (the step's name, the
