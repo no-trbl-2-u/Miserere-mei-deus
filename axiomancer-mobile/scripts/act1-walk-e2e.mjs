@@ -448,7 +448,7 @@ const RESOLVERS = {
         }
         if (await waitForAny(page, ['quest-accept-button'], 4000)) {
             await tap(page, 'quest-accept-button')
-            await waitFor(page, 'quest-accepted-line', `${nodeId} accepted`)
+            await waitFor(page, 'quest-card-underway', `${nodeId} accepted`)
         } else if (!turnedIn) {
             fail(`${nodeId}: the quest node offered nothing and took nothing`)
         }
