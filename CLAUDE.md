@@ -24,7 +24,7 @@ Chapter 1, then Act 1; the file holds their dates), a `## Budget` of T's hours a
 T's acts. **An act has no date of its own**: its `Due` cell holds its milestone's date, its place in the table is its
 priority, and its hours are in its name as `(N h)`. **Every Item is a T act** (plot, pitch, decide, pick, author,
 play, review, merge, tag); loop rows are not listed there, except in the `Waits on` cell of the act that needs them
-(the lint fails a loop row in an Item's `Rows`). `LIVE_DEADLINES.md` is the same queue's forecast and this week's
+(the lint fails a loop row in an Item's `Rows`, and an open Item naming a `PR #N` that `main` has merged: tick it or drop the number). `LIVE_DEADLINES.md` is the same queue's forecast and this week's
 acts, regenerated daily (never edit it by hand). When a chat starts, the session-start hook runs
 `node scripts/deadlines.mjs --remind` and prints a **DEADLINE REMINDER**: for each milestone whether the hours queued
 up to it fit the hours T has before it, then the acts that fit this week. Lead your first reply to T with it, before
