@@ -7,7 +7,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
-import { GROUND_STOPS, RevealGround } from '@/components/combat/encounter/RevealGround';
+import { GROUND_STOPS, RevealGround, SIDE_FADE } from '@/components/combat/encounter/RevealGround';
 import { REVEAL_GROUND } from '@/theme/reveal-ground';
 
 describe('RevealGround', () => {
@@ -19,6 +19,15 @@ describe('RevealGround', () => {
         for (let i = 1; i < GROUND_STOPS.length; i++) {
             expect(GROUND_STOPS[i]![0]).toBeGreaterThan(GROUND_STOPS[i - 1]![0]);
         }
+    });
+
+    it('fades its left and right edges into the black, a thin band each side', () => {
+        expect(SIDE_FADE).toBeGreaterThan(0);
+        expect(SIDE_FADE).toBeLessThan(25);
+        const { toJSON } = render(<RevealGround tier="fight" />);
+        const tree = JSON.stringify(toJSON());
+        expect(tree).toContain('axmRevealGroundL');
+        expect(tree).toContain('axmRevealGroundR');
     });
 
     it('keys its colour by tier, warm for the boss', () => {
