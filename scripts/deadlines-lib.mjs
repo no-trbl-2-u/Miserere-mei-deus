@@ -26,6 +26,8 @@
 // A row id resolves from the build plan or, from the nexus v2 cut-over on, from a v2
 // spec chunk's `alias:` (planRows below, phase NX1c); every rule above reads the same.
 
+import path from 'node:path'
+
 export const HORIZON_DAYS = 14
 export const BUILD_PLAN_FILE = 'plan/steps/01_build_plan.md'
 export const ARCHIVE_FILE = 'plan/ARCHIVE.md'
@@ -58,6 +60,7 @@ export const parseItems = (md) => {
             name,
             window,
             rows: parseRowsCell(rowsCell),
+            proof: parseProof(rowsCell),
             waitsOn: parseWaitsCell(waitsCell),
             goal: goalCell ?? '',
             aiHelp: aiCell ?? '',
@@ -90,8 +93,26 @@ export const parseWaitsCell = (cell) => {
 const parseRowsCell = (cell) => {
     const plain = cell.replace(/`/g, '').trim()
     if (/^needs plot$/i.test(plain)) return 'needs plot'
-    if (plain === 'T') return 'T'
+    if (plain === 'T' || /^T:/.test(plain)) return 'T'
     return plain.split(',').map((id) => id.trim()).filter(Boolean)
+}
+
+/**
+ * The proof a `T: <proof>` Rows cell carries (spec 169, A5): `pr #N`, `spec <alias family>` or
+ * `file <path>`. Null for any other cell; `{error}` for a `T:` cell that is none of the three.
+ * @returns {null | {kind: 'pr' | 'spec' | 'file', arg: string} | {error: string}}
+ */
+export const parseProof = (cell) => {
+    const plain = (cell ?? '').replace(/`/g, '').trim()
+    if (!/^T:/.test(plain)) return null
+    const body = plain.slice(2).trim()
+    let m = body.match(/^pr\s+#(\d+)$/)
+    if (m) return { kind: 'pr', arg: m[1] }
+    m = body.match(/^spec\s+([A-Za-z]+\d+)$/)
+    if (m) return { kind: 'spec', arg: m[1] }
+    m = body.match(/^file\s+(\S.*)$/)
+    if (m && !path.isAbsolute(m[1]) && !m[1].split(/[\\/]/).includes('..')) return { kind: 'file', arg: m[1] }
+    return { error: `"${plain}" is not a proof; write \`T: pr #N\`, \`T: spec <alias family>\` or \`T: file <repo path>\`` }
 }
 
 /** The build plan's "## Status (at-a-glance)" block, or the whole text when it has none (fixtures). */
@@ -341,12 +362,25 @@ export const inWindow = (due, window) => {
 }
 
 /**
+ * Whether an act's proof holds. `evidence`: `subjects` (git log --format=%s of main) and `exists`
+ * (a repo-relative path test); with none given nothing holds. A `spec` proof holds when any row id
+ * (a chunk alias, shipped or open) is the family plus lowercase letters: `DL3` holds for `DL3c`.
+ */
+export const proofHolds = (proof, phases, { subjects = [], exists = () => false } = {}) => {
+    if (!proof || proof.error) return false
+    if (proof.kind === 'pr') return Boolean(mergeSubject(subjects, proof.arg))
+    if (proof.kind === 'spec') return [...phases.keys()].some((id) => id.startsWith(proof.arg) && /^[a-z]+$/.test(id.slice(proof.arg.length)))
+    return exists(proof.arg)
+}
+
+/**
  * A phase Item's Status, derived from the build plan: `[x]` when every phase id it names
  * is shipped or skipped, `[ ]` otherwise (an id with no row counts as open). Null for a
  * `T` or `needs plot` Item, whose Status nothing derives.
  * @returns {'[x]' | '[ ]' | null}
  */
-export const derivedStatus = (item, phases) => {
+export const derivedStatus = (item, phases, evidence = {}) => {
+    if (item.proof && !item.proof.error) return proofHolds(item.proof, phases, evidence) ? '[x]' : null
     if (!Array.isArray(item.rows)) return null
     return item.rows.every((id) => phases.get(id)?.shipped) ? '[x]' : '[ ]'
 }
@@ -361,7 +395,7 @@ const TABLE_SCAFFOLD = /^\|\s*(?:Status\s*\||-)/
  * @param {string} md plan/deadlines.md
  * @returns {{md: string, changed: string[], unmatched: string[]}}
  */
-export const rewriteItemStatus = (md, phases) => {
+export const rewriteItemStatus = (md, phases, evidence = {}) => {
     const start = md.indexOf('\n## Items')
     if (start < 0) return { md, changed: [], unmatched: [] }
     const nextHeading = md.indexOf('\n## ', start + 1)
@@ -376,7 +410,7 @@ export const rewriteItemStatus = (md, phases) => {
             return line
         }
         const [, status, due, name, , , window, rowsCell, waitsCell] = m
-        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell), waitsOn: parseWaitsCell(waitsCell) }, phases)
+        const want = derivedStatus({ done: status === '[x]', due, name, window, rows: parseRowsCell(rowsCell), proof: parseProof(rowsCell), waitsOn: parseWaitsCell(waitsCell) }, phases, evidence)
         if (!want || want === status) return line
         changed.push(`${name}: ${status} -> ${want}`)
         return line.replace(STATUS_CELL, `$1${want}`)
