@@ -1,5 +1,5 @@
 /**
- * The victory screen's view model (phase FE1a, spec 176): what a won fight
+ * The victory screen's view model (phase FE1a): what a won fight
  * paid, and the level panel's XP bar and line.
  *
  * The settle (`applyHazardOutcome`) reports a {@link FightPaid} record read off

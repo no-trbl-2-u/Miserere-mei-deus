@@ -1,6 +1,5 @@
 /**
- * Hermetic E2E — a won fight reaches the card offer and closes (phase FE1a,
- * spec 176 A1).
+ * Hermetic E2E — a won fight reaches the card offer and closes (phase FE1a).
  *
  * A real fight (the Breakwater's bw-w2, staged as the app stages it) is
  * mounted on the board, and its foe, set to 1 VITAE, falls to a real strike

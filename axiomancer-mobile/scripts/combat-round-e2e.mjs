@@ -719,6 +719,9 @@ async function playSeed(browser, baseUrl, seed, mode) {
             log(`${tag} — outcome read: ${outcomeLine}`)
             const rewards = page.getByTestId('combat-rewards')
             if (await has(rewards)) {
+                // The won fight's offer, as the player meets it (phase FE1a: the
+                // driven win's victory shot).
+                await shot(page, `${mode}-seed-${seed}-victory`)
                 const tile = rewards.locator(
                     '[data-testid^="combat-reward-"]'
                     + ':not([data-testid="combat-reward-skip"])'

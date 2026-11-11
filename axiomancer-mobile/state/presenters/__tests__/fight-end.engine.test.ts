@@ -1,5 +1,5 @@
 /**
- * The victory screen's view model (phase FE1a, spec 176 A2): the paid line, the
+ * The victory screen's view model (phase FE1a): the paid line, the
  * level panel's settled line and the XP bar's fills and "LEVEL n" beats, for no
  * level, one level, two at once, a level reached exactly and XP withheld, on
  * the engine's own curve.
