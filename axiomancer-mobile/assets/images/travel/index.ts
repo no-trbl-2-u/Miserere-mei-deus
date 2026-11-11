@@ -36,7 +36,11 @@ export interface TravelCropScene {
 
 export type TravelScene = TravelImageScene | TravelCropScene;
 
-/** The stand-in for T's bridge image: the Charcoal Wood arena, as in the settled shot. */
+/**
+ * TEMP stand-in for T's bridge image: Rousseau's Pont de Batignies (public
+ * domain, acquired via scripts/acquire-art.mjs; see provenance.json). T will
+ * still replace it.
+ */
 const BRIDGE_STAND_IN: number = require('./bridge.webp');
 
 export const TRAVEL_SCENES: Readonly<Record<string, TravelScene>> = {

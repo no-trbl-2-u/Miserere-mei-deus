@@ -29,7 +29,7 @@
 ## Waiting on the loop
 
 - Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes QS1b, QS1c
-- Review the reworked travel, loot cache and cutscene screens (1.5 h) — the loop still owes TV1b, LC1b, CU1b
+- Review the reworked travel, loot cache and cutscene screens (1.5 h) — the loop still owes LC1b
 - Review the reworked ends of a fight (victory with the animated XP bar and level line, death return) against... — the loop still owes FE1b
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
