@@ -37,10 +37,10 @@ const VELLUM_CONTINUE = lookOf('P-02') === 'vellum';
 export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLine, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; mercyLine?: string; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
-    // A lost fight wears the house look: the dark ground in place of
-    // the vellum panel, and CONTINUE on the brass plate. Wins and spares keep
-    // today's panel until the victory screen (FE1b) takes them.
-    const house = summary.outcome === 'defeat';
+    // A lost fight and a spared foe wear the house look: the dark ground in
+    // place of the vellum panel, and CONTINUE on the brass plate. A foe that
+    // falls ends on the victory screen (FE1b) and never reaches this panel.
+    const house = summary.outcome === 'defeat' || summary.outcome === 'mercy';
     const v = VELLUM_PANEL && !house;
     const color = v ? (OUTCOME_INK[summary.outcome] ?? SPOILS_INK.body) : (OUTCOME_COLOR[summary.outcome] ?? AXM.parchment);
     const btnColor = VELLUM_CONTINUE ? (OUTCOME_INK[summary.outcome] ?? SPOILS_INK.body) : color;

@@ -46,9 +46,15 @@ import { CardUpgradePicker } from '@/components/upgrade/CardUpgradePicker';
 import { UPGRADE_FIGURE_STANDIN } from '@/assets/images/keepers';
 import type { CombatCardVM } from '@/state/presenters/combat-encounter.engine';
 import type { CardUpgradeRowVM } from '@/state/presenters/card-upgrade.engine';
+import { BrassButton } from '@/components/experience/BrassButton';
 import {
     ELITE_UPGRADE_BACK_LABEL,
     ELITE_UPGRADE_OPEN_LABEL,
+    SPOILS_OFFER_TITLE,
+    SPOILS_SKIP_A11Y,
+    SPOILS_SKIP_LABEL,
+    SPOILS_TAKE_A11Y,
+    SPOILS_TAKE_LABEL,
     SPOILS_TILE_HINT,
     eliteUpgradeNote,
 } from '@/state/presenters/combat-reward.copy';
@@ -80,6 +86,8 @@ export function CombatRewardsOverlay({
     onPick,
     upgradeRows = null,
     onUpgrade,
+    ground = false,
+    header = null,
 }: {
     offers: CombatCardVM[];
     onPick: (cardId: string | null) => void;
@@ -88,6 +96,11 @@ export function CombatRewardsOverlay({
     upgradeRows?: readonly CardUpgradeRowVM[] | null;
     /** Commits the upgrade of `cardId`, from the shared picker's confirm. */
     onUpgrade?: (cardId: string) => void;
+    /** The victory screen's offer (FE1b): the screen's dark ground, no vellum,
+     *  the buttons on the brass plate, the whole screen scrolling under `header`. */
+    ground?: boolean;
+    /** What stands above the offer on the ground (the victory screen's top). */
+    header?: React.ReactNode;
 }) {
     const AXM = usePalette();
     const styles = useStyles();
@@ -95,8 +108,8 @@ export function CombatRewardsOverlay({
     const [preview, setPreview] = useState<string | null>(null);
     const [upgrading, setUpgrading] = useState(false);
     const previewCard = preview ? offers.find((o) => o.cardId === preview) ?? null : null;
-    const v = VELLUM_PANEL;
-    const vb = VELLUM_BUTTONS;
+    const v = VELLUM_PANEL && !ground;
+    const vb = VELLUM_BUTTONS && !ground;
     const upgradeRow = upgradeRows && upgradeRows.length > 0 && onUpgrade ? upgradeRows[0] : null;
 
     if (upgrading && upgradeRow && onUpgrade) {
@@ -129,11 +142,10 @@ export function CombatRewardsOverlay({
         );
     }
 
-    return (
-        <View style={[styles.backdrop, v && styles.vBackdrop]} testID="combat-rewards">
-            <View style={v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]} testID="combat-rewards-panel">
+    const panel = (
+            <View style={ground ? styles.groundPanel : v ? styles.vPanel : [styles.panel, { borderColor: AXM.sulfur }]} testID="combat-rewards-panel">
                 {v && <KitBackdrop piece="modal-panel-vellum" />}
-                <Text style={[styles.title, v && styles.vBody, styles.titleGap]}>Add a card to your deck</Text>
+                <Text style={[styles.title, v && styles.vBody, styles.titleGap]}>{SPOILS_OFFER_TITLE}</Text>
 
                 <View style={[styles.offerRow, v && styles.vOfferRow]}>
                     {offers.map((card) => {
@@ -185,15 +197,50 @@ export function CombatRewardsOverlay({
                     })}
                 </View>
 
+                {ground ? (
+                    <>
+                        <View style={styles.btnRow}>
+                            <BrassButton
+                                label={SPOILS_SKIP_LABEL}
+                                align="center"
+                                onPress={() => onPick(null)}
+                                testID="combat-reward-skip"
+                                accessibilityLabel={SPOILS_SKIP_A11Y}
+                                style={styles.groundBtn}
+                            />
+                            <BrassButton
+                                label={SPOILS_TAKE_LABEL}
+                                align="center"
+                                disabled={!picked}
+                                onPress={() => onPick(picked)}
+                                testID="combat-reward-confirm"
+                                accessibilityLabel={SPOILS_TAKE_A11Y}
+                                style={styles.groundBtn}
+                            />
+                        </View>
+                        {upgradeRow && (
+                            <BrassButton
+                                label={ELITE_UPGRADE_OPEN_LABEL}
+                                detail={eliteUpgradeNote(upgradeRow.name)}
+                                align="center"
+                                onPress={() => setUpgrading(true)}
+                                testID="combat-reward-upgrade-open"
+                                accessibilityLabel={`Upgrade ${upgradeRow.name} instead of taking a card`}
+                                style={styles.groundUpgrade}
+                            />
+                        )}
+                    </>
+                ) : (
+                <>
                 <View style={styles.btnRow}>
                     <PlateButton
                         plain={[styles.btn, { borderColor: AXM.bone }]}
                         onPress={() => onPick(null)}
                         testID="combat-reward-skip"
                         accessibilityRole="button"
-                        accessibilityLabel="Take nothing — keep the deck lean"
+                        accessibilityLabel={SPOILS_SKIP_A11Y}
                     >
-                        <Text style={[styles.btnText, { color: vb ? SPOILS_INK.body : AXM.parchment }, vb && styles.vBtnText]}>TAKE NOTHING</Text>
+                        <Text style={[styles.btnText, { color: vb ? SPOILS_INK.body : AXM.parchment }, vb && styles.vBtnText]}>{SPOILS_SKIP_LABEL}</Text>
                     </PlateButton>
                     <PlateButton
                         plain={[styles.btn, { borderColor: picked ? AXM.sulfur : AXM.ash, opacity: picked ? 1 : 0.55 }]}
@@ -202,9 +249,9 @@ export function CombatRewardsOverlay({
                         testID="combat-reward-confirm"
                         accessibilityRole="button"
                         accessibilityState={{ disabled: !picked }}
-                        accessibilityLabel="Take the selected card"
+                        accessibilityLabel={SPOILS_TAKE_A11Y}
                     >
-                        <Text style={[styles.btnText, { color: vb ? (picked ? SPOILS_INK.accent : SPOILS_INK.body) : (picked ? AXM.sulfur : AXM.bone) }, vb && styles.vBtnText]}>TAKE CARD</Text>
+                        <Text style={[styles.btnText, { color: vb ? (picked ? SPOILS_INK.accent : SPOILS_INK.body) : (picked ? AXM.sulfur : AXM.bone) }, vb && styles.vBtnText]}>{SPOILS_TAKE_LABEL}</Text>
                     </PlateButton>
                 </View>
 
@@ -221,8 +268,13 @@ export function CombatRewardsOverlay({
                         <Text style={[styles.btnNote, vb && styles.vBtnNote]}>{eliteUpgradeNote(upgradeRow.name)}</Text>
                     </PlateButton>
                 )}
+                </>
+                )}
             </View>
+    );
 
+    const previewLayer = (
+        <>
             {/* tap-to-inspect — the FULL face plus its keyword definitions, so
                 nothing is committed to the run unread. */}
             {previewCard && (
@@ -278,11 +330,37 @@ export function CombatRewardsOverlay({
                     </View>
                 </View>
             )}
+        </>
+    );
+
+    if (ground) {
+        return (
+            <View style={[styles.groundBackdrop, { backgroundColor: AXM.deepBg }]} testID="combat-rewards">
+                <ScrollView style={styles.groundScroll} contentContainerStyle={styles.groundScrollContent} testID="combat-rewards-scroll">
+                    {header}
+                    {panel}
+                </ScrollView>
+                {previewLayer}
+            </View>
+        );
+    }
+
+    return (
+        <View style={[styles.backdrop, v && styles.vBackdrop]} testID="combat-rewards">
+            {panel}
+            {previewLayer}
         </View>
     );
 }
 
 const useStyles = makeStyles((AXM) => ({
+    // The victory screen's ground (FE1b): the whole screen, scrolling, no panel.
+    groundBackdrop: { ...StyleSheet.absoluteFillObject, zIndex: 60 },
+    groundScroll: { flex: 1 },
+    groundScrollContent: { flexGrow: 1, alignItems: 'center', paddingBottom: 24 },
+    groundPanel: { width: '100%', maxWidth: 420, paddingHorizontal: 12, paddingTop: 14, alignItems: 'center' },
+    groundBtn: { flex: 1, paddingHorizontal: 16 },
+    groundUpgrade: { alignSelf: 'stretch', marginTop: 10, paddingHorizontal: 16 },
     backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 60 },
     panel: { width: '100%', maxWidth: 420, borderWidth: 2, backgroundColor: AXM.panelBg, paddingHorizontal: 12, paddingVertical: 16, alignItems: 'center' },
     title: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 20, color: AXM.parchment, textAlign: 'center' },

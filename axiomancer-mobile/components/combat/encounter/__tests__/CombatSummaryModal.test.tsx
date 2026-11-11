@@ -151,4 +151,27 @@ describe('CombatSummaryModal', () => {
             expect(screen.getByText('CONTINUE')).toBeTruthy();
         });
     });
+
+    describe('a spared foe (176 FE1b): its mercy ending, in the house look', () => {
+        const MERCY: CombatSummary = { ...SUMMARY, outcome: 'mercy', headline: 'Mercy — the enemy is spared' };
+        const LINES = [{ key: 'reward', label: 'Found:', value: 'a phial' }];
+
+        it('keeps its headline, spare lines, mercy line and CONTINUE', () => {
+            const onClose = jest.fn();
+            render(withAllProviders(
+                <CombatSummaryModal summary={MERCY} shillings={6} spareLines={LINES} mercyLine="It limps away." onClose={onClose as () => void} />,
+            ).tree);
+            expect(screen.getByText(MERCY.headline)).toBeTruthy();
+            expect(screen.getByTestId('combat-summary-shillings')).toBeTruthy();
+            expect(screen.getByTestId('combat-summary-spare-reward')).toBeTruthy();
+            expect(screen.getByTestId('combat-summary-mercy-line')).toHaveTextContent('It limps away.');
+            fireEvent.press(screen.getByTestId('combat-summary-close'));
+            expect(onClose).toHaveBeenCalledTimes(1);
+        });
+
+        it('wears the dark ground, not the vellum: its headline is not in vellum ink', () => {
+            renderSummary(MERCY);
+            expect(screen.getByText(MERCY.headline)).toHaveStyle({ color: HUE.tickPurple });
+        });
+    });
 });
