@@ -15,8 +15,10 @@
 // script exits 1 after printing every run. `--breaks <file>` (phase SM2d) also appends
 // one JSON line per break to the file (a crash, stuck run or stuck fight, and the two
 // end-of-run checks, a stranded quest and a node left unresolved), for `sim:breaks`
-// to file; only the first three fail the exit code. A measurement, not a gate:
-// nothing here judges a number.
+// to file; only the first three fail the exit code. `--ledger <file>` appends one
+// JSON line per run (see `ledgerLines`): the player on first reaching each node,
+// the shillings gained and spent by kind, and the game's prices, for `sim:report`'s
+// arrival and money tables. A measurement, not a gate: nothing here judges a number.
 //
 // `--post` (phase SM1g) also sends each finished run to the Worker, stamped
 // `sim`: the driver plays it through the app's own posters, which collect the
@@ -41,7 +43,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const MOBILE = path.join(ROOT, 'axiomancer-mobile')
 
-export const USAGE = 'usage: npm run sim:run -- --policy <id|a,b|lanes> [--runs <n>] [--seed <s>] [--json] [--post] [--breaks <file>]\n       tuning (never with --post): [--shillings <n>] [--boss-level <n>] [--start-relic <id>]... [--no-relic-stats] [--fight <policy>] [--no-anvil] [--no-guard]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
+export const USAGE = 'usage: npm run sim:run -- --policy <id|a,b|lanes> [--runs <n>] [--seed <s>] [--json] [--post] [--breaks <file>] [--ledger <file>]\n       tuning (never with --post): [--shillings <n>] [--boss-level <n>] [--start-relic <id>]... [--no-relic-stats] [--fight <policy>] [--no-anvil] [--no-guard]\n       npm run sim:run -- --compare [--runs <n>] [--seed <s>]   (spare-all against finish-all)'
 
 /** One batch posts at most this many bytes (A13). */
 export const POST_BATCH_CAP_BYTES = 25 * 1024 * 1024
@@ -58,12 +60,13 @@ export function parseArgs(argv) {
     if (arg === '--no-anvil') { opts.noAnvil = true; continue }
     if (arg === '--no-guard') { opts.noGuard = true; continue }
     if (arg === '--help' || arg === '-h') { opts.help = true; continue }
-    const m = /^--(policy|runs|seed|breaks|shillings|boss-level|start-relic|fight)(?:=(.*))?$/.exec(arg)
+    const m = /^--(policy|runs|seed|breaks|ledger|shillings|boss-level|start-relic|fight)(?:=(.*))?$/.exec(arg)
     if (!m) throw new Error(`unknown argument '${arg}'`)
     const value = m[2] ?? argv[++i]
     if (value === undefined || value === '') throw new Error(`--${m[1]} needs a value`)
     if (m[1] === 'policy') { opts.policy = value; continue }
     if (m[1] === 'breaks') { opts.breaks = value; continue }
+    if (m[1] === 'ledger') { opts.ledger = value; continue }
     if (m[1] === 'fight') { opts.fight = value; continue }
     if (m[1] === 'start-relic') { opts.startRelic = [...(opts.startRelic ?? []), value]; continue }
     if (m[1] === 'shillings') {
@@ -160,6 +163,21 @@ export function formatBatchTable(rows) {
     ].join(' | '))
   }
   return lines.join('\n')
+}
+
+/**
+ * The ledger lines of a batch, one per run in order: the persona, seed and
+ * build, then for a finished run its outcome, the player on first reaching each
+ * node (`arrivals`), its shillings (`money`: the start purse, every gain, the
+ * spends by kind) and the prices the game charged; a broken run carries only
+ * `stuck` and its node, so a reader still counts it.
+ */
+export function ledgerLines(body, build) {
+  return (body.runs ?? []).map((run) => {
+    const head = { persona: run.policy, seed: run.seed, build: build ?? null }
+    if (run.stuck) return { ...head, stuck: true, node: run.node }
+    return { ...head, outcome: run.outcome, arrivals: run.arrivals ?? {}, money: run.money ?? null, prices: body.prices ?? null }
+  })
 }
 
 /** The tuning flags the options carry, in the shape the run driver takes; null when none is set. */
@@ -392,7 +410,7 @@ export async function main(argv, {
     stdout.write(`${formatComparison(arms[0], arms[1], opts)}\n`)
     return 0
   }
-  const build = opts.breaks ? sha() : undefined
+  const build = opts.breaks || opts.ledger ? sha() : undefined
   const withBuild = build === undefined ? opts : { ...opts, build }
   const run = opts.post ? { ...withBuild, post: { batchId: batchIdOf(env, now), buildCommit: build === undefined ? sha() : build } } : withBuild
   let body
@@ -415,6 +433,14 @@ export async function main(argv, {
       appendFileSync(opts.breaks, (body.breaks ?? []).map((b) => `${JSON.stringify(b)}\n`).join(''))
     } catch (err) {
       stderr.write(`sim-run: cannot write ${opts.breaks}: ${err.message}\n`)
+      code = 1
+    }
+  }
+  if (opts.ledger) {
+    try {
+      appendFileSync(opts.ledger, ledgerLines(body, build).map((l) => `${JSON.stringify(l)}\n`).join(''))
+    } catch (err) {
+      stderr.write(`sim-run: cannot write ${opts.ledger}: ${err.message}\n`)
       code = 1
     }
   }

@@ -111,6 +111,49 @@ Plain numbers, never a test or a bar: chapter clears over runs, and the average 
 | explorer | 5 | 5 | 100% | 21.6 | 284.8 |
 | rusher | 5 | 5 | 100% | 18.8 | 251.4 |
 
+## Arrival at the boss
+
+The player the first time a run stands on `bw-k2` (Sea keep), the node the map marks as the boss, before its fight: mean (lowest-highest) over the runs that reached it. A broken run carries no numbers.
+
+The ledger's runs were played at b3407272; the Worker's rows above are at 2a77e8c8.
+
+| persona | runs | broke | reached the boss | level | VITAE | shillings |
+| --- | --- | --- | --- | --- | --- | --- |
+| cautious | 5 | 0 | 5/5 | 16.4 (13-18) | 252.6 (247-260) | 237.6 (200-256) |
+| reckless | 5 | 0 | 5/5 | 14.4 (13-15) | 238.4 (210-256) | 192.6 (175-207) |
+| explorer | 5 | 0 | 5/5 | 14.4 (13-15) | 238.2 (221-256) | 183.8 (175-207) |
+| rusher | 5 | 0 | 5/5 | 13.6 (11-16) | 230 (220-240) | 218.8 (210-234) |
+
+## A run's money
+
+Shillings per run, as means over the finished runs (earned as mean (lowest-highest)). A spend is booked by the counter that took it; other is any loss no village counter made. The end purse is start plus earned less spent.
+
+| persona | runs | start | earned | village rest | shop card | shop gear | card removal | Anvil action | other | end purse |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| cautious | 5/5 | 0 | 313.6 (276-332) | 0 | 0 | 0 | 0 | 52 | 0 | 261.6 |
+| reckless | 5/5 | 0 | 298.4 (284-308) | 0 | 0 | 0 | 0 | 52 | 0 | 246.4 |
+| explorer | 5/5 | 0 | 316.2 (300-332) | 0 | 0 | 0 | 0 | 52 | 0 | 264.2 |
+| rusher | 5/5 | 0 | 254.8 (234-273) | 0 | 0 | 0 | 0 | 0 | 0 | 254.8 |
+
+The purse the first time a run reaches each village (the map's village nodes): mean (lowest-highest), and the runs that reached it.
+
+| persona | `bw-t4` Harbour town | `bw-m5` Walled manor |
+| --- | --- | --- |
+| cautious | 141.6 (132-144), 5/5 | 221 (181-237), 5/5 |
+| reckless | 215.6 (198-230), 5/5 | 244.2 (237-249), 5/5 |
+| explorer | 110.4 (108-120), 5/5 | 229 (205-237), 5/5 |
+| rusher | not reached (0/5) | not reached (0/5) |
+
+What each kind costs now, read from the game's price tables when the runs were played:
+
+| kind | price in shillings |
+| --- | --- |
+| village rest | 6 |
+| shop card | 6 |
+| shop gear | 40 |
+| card removal | 5 for the first, 5 more for each after |
+| Anvil action | hone 3, temper 5, swap 8, card upgrade 5 |
+
 ## Coverage
 
 What the night's runs reached of Chapter 1, against what the chapter holds (a node counts when entered, a quest step when taken, a foe when fought).

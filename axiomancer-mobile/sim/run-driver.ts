@@ -39,6 +39,7 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
 import { withSeededRun } from './run-env';
 import { startTuning, tunedPolicy, type RunTuning } from './run-options';
+import { bookStep, emptyMoneyLedger, spentTotal, type MoneyLedger, type NodeArrival } from './run-money';
 import { emptyBossLedger, emptyMercyLedger, FightStuckError, playFight, type BossLedger, type MercyLedger, type RunFightResult } from './run-fight';
 import {
     ScreenStuckError,
@@ -89,6 +90,10 @@ export interface RunResult {
     readonly endDeck: readonly string[];
     /** Breaks the end-of-run checks found (phase SM2d): never thrown, never a failure. */
     readonly findings: readonly RunFinding[];
+    /** The player the first time the run stood on each node of its starting map, by node id. */
+    readonly arrivals: Readonly<Record<string, NodeArrival>>;
+    /** The purse at the start, the shillings gained and those spent by kind. */
+    readonly money: MoneyLedger;
 }
 
 export interface PlayRunOptions {
@@ -127,6 +132,10 @@ interface Tally {
     owed: { nodeId: string; map: string; step: number } | null;
     /** Findings collected as nodes are left. */
     findings: RunFinding[];
+    /** The player on first standing on each node. */
+    arrivals: Record<string, NodeArrival>;
+    /** Shillings gained and spent. */
+    money: MoneyLedger;
 }
 
 /**
@@ -166,6 +175,10 @@ function depthOf(state: AppStoreState, nodeId: string): number {
 function standOn(tally: Tally, state: AppStoreState, startMap: string): void {
     if (state.world.currentMap.name !== startMap) return;
     const here = state.world.currentMap.currentNode;
+    if (!(here in tally.arrivals)) {
+        const p = state.player;
+        tally.arrivals[here] = { level: p.level, vitae: Math.max(0, p.health), maxVitae: p.maxHealth, purse: p.currency ?? 0 };
+    }
     tally.visited.add(here);
     const depth = depthOf(state, here);
     if (depth > tally.furthest.depth) tally.furthest = { nodeId: here, depth };
@@ -254,7 +267,7 @@ function step(store: AppStore, actions: AppActions, policy: RunPolicy, tally: Ta
         tally.fights[result]++;
         return;
     }
-    if (resolveVillage(store, actions, policy)) return;
+    if (resolveVillage(store, actions, policy, tally.money)) return;
     if (resolvePacedEvent(store, actions)) return;
     if (resolveStatPoints(store, actions, policy)) return;
     const vm = selectExplorationViewModel(s);
@@ -302,6 +315,8 @@ function summarize(
         deckByLane: deckByLane(end),
         endDeck: buildCombatDeck(game.player, game.flags),
         findings,
+        arrivals: { ...tally.arrivals },
+        money: { ...tally.money, spent: { ...tally.money.spent } },
     };
 }
 
@@ -350,6 +365,8 @@ function playOn(store: AppStore, tap: EventTap, options: PlayRunOptions, maxStep
             alive: store.getState(),
             owed: null,
             findings: [],
+            arrivals: {},
+            money: emptyMoneyLedger(store.getState().player?.currency ?? 0),
         };
         tap.onResolved = (nodeId) => {
             if (tally.owed?.nodeId === nodeId) tally.owed = null;
@@ -371,8 +388,13 @@ function playOn(store: AppStore, tap: EventTap, options: PlayRunOptions, maxStep
             tally.alive = s;
             standOn(tally, s, startMap);
             options.onStep?.(store, n);
+            const purseBefore = s.player?.currency ?? 0;
+            const bookedBefore = spentTotal(tally.money);
             try {
                 step(store, actions, policy, tally, tap, n);
+                // A death's step is not a spend: the run's purse ends with it.
+                const after = store.getState();
+                if (after.runOver !== true) bookStep(tally.money, purseBefore, after.player?.currency ?? 0, bookedBefore);
             } catch (error) {
                 if (error instanceof RunStuckError) throw enriched(error);
                 if (error instanceof FightStuckError) {

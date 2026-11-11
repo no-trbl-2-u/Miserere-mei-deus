@@ -14,6 +14,7 @@
 import * as fs from 'fs';
 
 import { playRun } from './run-driver';
+import { priceTable } from './run-money';
 import { checkTuning, expandPolicies } from './run-options';
 import { breaksOf, playRuns, playRunsPosted, type SimRunRequest } from './sim-runs';
 
@@ -31,7 +32,7 @@ const out = process.env.SIM_RUN_OUT;
     const played = request.post
         ? { policy: first!.id, ...(await playRunsPosted(first!, request, request.post, playRun)) }
         : { policy: policies.map((p) => p.id).join(','), runs: policies.flatMap((p) => playRuns(p, request, playRun)) };
-    const body = { ...played, breaks: breaksOf(played.runs, request.build ?? null) };
+    const body = { ...played, breaks: breaksOf(played.runs, request.build ?? null), prices: priceTable() };
     // The collected request bodies are large and nobody reads them here: no indent with `post`.
     fs.writeFileSync(out as string, JSON.stringify(body, null, request.post ? 0 : 2));
 });
