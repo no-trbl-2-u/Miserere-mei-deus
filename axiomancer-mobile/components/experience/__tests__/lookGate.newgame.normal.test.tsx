@@ -49,6 +49,8 @@ afterEach(() => { clearGameOver(); clearDeathReturn(); });
 jest.mock('@/components/experience/looks', () => ({
     ...(jest.requireActual('@/components/experience/looks') as object),
     lookOf: () => 'normal',
+    // BrassButton (the game over button, G-02) reads the table itself, not lookOf.
+    LOOKS: new Proxy({}, { get: () => 'normal' }),
 }));
 
 describe('a new-game or ending place set to normal draws no kit piece', () => {
@@ -64,7 +66,7 @@ describe('a new-game or ending place set to normal draws no kit piece', () => {
         expect(kitImagesIn(view)).toBe(0);
     });
 
-    it('G-01: the game over button', () => {
+    it('G-02: the game over button', () => {
         const view = render(<GameOverScreen />);
         expect(view.getByTestId('game-over-new-character')).toBeTruthy();
         expect(kitImagesIn(view)).toBe(0);

@@ -36,7 +36,7 @@ export type {
     CombatCard, CombatVerbClass, CardEffectKind,
     CombatThreatPhase, CombatThreatAction, CombatThreatEffect,
     CombatOutcome, CombatEvent,
-    CombatSummary,
+    CombatSummary, DefeatCause,
     // Intents and signature skills
     CombatIntentType,
     SignatureSkill,
