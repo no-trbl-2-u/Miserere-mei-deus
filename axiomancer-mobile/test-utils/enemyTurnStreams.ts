@@ -83,7 +83,7 @@ export function stunned(state: CombatEncounterState): CombatEncounterState {
 /** The pane's enemy, reporting `nextDamage` as the intent the turn has already moved on to. */
 export function enemyVM(enemy: Enemy, nextDamage = 0): CombatEnemyPaneVM {
     return {
-        name: enemy.name, artKey: enemy.portraitAsset as string, isBoss: false, artNonce: 3,
+        name: enemy.name, level: enemy.level, artKey: enemy.portraitAsset as string, isBoss: false, artNonce: 3,
         hp: 100000, maxHp: 100000, hpPct: 1, effects: [],
         // What a `phases` foe reports on the commit its move resolves: nothing,
         // because the intent has already moved on. The clip must not care.

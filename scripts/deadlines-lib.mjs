@@ -384,6 +384,29 @@ export const rewriteItemStatus = (md, phases) => {
     return { md: md.slice(0, start) + lines.join('\n') + md.slice(end), changed, unmatched }
 }
 
+/** Every pull request number an Item's text names as `PR #N` (or `PRs #N, #M and #K`). */
+const namedPrs = (name) => [...name.matchAll(/\bPRs?\s+#(\d+)((?:\s*(?:,|and|&)\s*#\d+)*)/gi)].flatMap((m) => [m[1], ...[...m[2].matchAll(/#(\d+)/g)].map((n) => n[1])])
+
+/** The first commit subject that merged pull request `n`: a merge commit (`Merge pull request #N from …`) or a squash (`… (#N)`). */
+const mergeSubject = (subjects, n) =>
+    subjects.find((s) => new RegExp(`^Merge pull request #${n}(?!\\d)|\\(#${n}\\)\\s*$`).test(s.trim()))
+
+/**
+ * The open Items whose text names `PR #N` where main's history holds a commit that merged #N, one
+ * failure per Item and pull request. The caller supplies the subjects (git log --format=%s), so this
+ * never reads git; an empty list finds nothing.
+ * @param {{done: boolean, due: string, name: string}[]} items
+ * @param {string[]} subjects
+ * @returns {{item: string, due: string, pr: string, subject: string}[]}
+ */
+export const mergedPrItems = (items, subjects) =>
+    items
+        .filter((item) => !item.done)
+        .flatMap((item) => [...new Set(namedPrs(item.name))].flatMap((pr) => {
+            const subject = mergeSubject(subjects, pr)
+            return subject ? [{ item: item.name, due: item.due, pr, subject: subject.trim() }] : []
+        }))
+
 /** Whole days from `today` to `due` (both YYYY-MM-DD); negative when overdue. */
 export const daysUntil = (today, due) =>
     Math.round((Date.parse(`${due}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86_400_000)

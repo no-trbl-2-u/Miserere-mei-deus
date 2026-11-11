@@ -12,6 +12,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import type { CombatSummary } from '@mechanics';
+import { DEFEAT_CAUSE_LINES } from '@/components/combat/encounter/combat-summary.copy';
 import { CombatSummaryModal, playsLabel } from '@/components/combat/encounter/CombatSummaryModal';
 import { HUE } from '@/theme/hue';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -120,5 +121,34 @@ describe('CombatSummaryModal', () => {
             expect(onClose).toHaveBeenCalledTimes(1);
             view.unmount();
         }
+    });
+
+    describe('a defeat (176 FE1d)', () => {
+        const DEFEAT: CombatSummary = { ...SUMMARY, outcome: 'defeat', headline: 'Defeat' };
+
+        it('names VITAE 0 as the cause under the headline', () => {
+            renderSummary({ ...DEFEAT, defeatCause: 'vitae' });
+            expect(screen.getByTestId('combat-summary-cause')).toHaveTextContent(DEFEAT_CAUSE_LINES.vitae);
+        });
+
+        it('names the turn limit as the cause when the fight ran out with the player standing', () => {
+            renderSummary({ ...DEFEAT, defeatCause: 'turn-limit' });
+            expect(screen.getByTestId('combat-summary-cause')).toHaveTextContent(DEFEAT_CAUSE_LINES['turn-limit']);
+        });
+
+        it('names no cause when the summary carries none, and never on a win', () => {
+            renderSummary(DEFEAT);
+            expect(screen.queryByTestId('combat-summary-cause')).toBeNull();
+            screen.unmount();
+            renderSummary({ ...SUMMARY, defeatCause: 'vitae' });
+            expect(screen.queryByTestId('combat-summary-cause')).toBeNull();
+        });
+
+        it('keeps its content: headline, rows and totals', () => {
+            renderSummary({ ...DEFEAT, defeatCause: 'vitae' });
+            expect(screen.getByText('Defeat')).toBeTruthy();
+            expect(screen.getByTestId('combat-summary-row-thin-hymn')).toBeTruthy();
+            expect(screen.getByText('CONTINUE')).toBeTruthy();
+        });
     });
 });
