@@ -7,7 +7,7 @@ date: 2026-11-10
 ~~~
 ~~~ new
 - **172.1** · CU1a: cutscene content names its picture, one narrator tells them all (T's screens ballot, `/plot`, 2026-11-10)
-- **172.2** · CU1b: the cutscene screen, the teller over the vellum panel (T's screens ballot, `/plot`, 2026-11-10; needs 172.1)
+- **172.2** · CU1b: the cutscene screen, the teller over the vellum panel (T's screens ballot, `/plot`, 2026-11-10)
 
 **Held** (waits on a person's word; never picked until the
 ~~~
