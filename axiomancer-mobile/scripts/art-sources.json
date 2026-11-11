@@ -198,6 +198,14 @@
       "why": "Wright of Derby, Cavern, near Naples. TEMP stand-in (T, 2026-11-11) for row 14, the runes cut into the cave wall lit by one lantern: a cave interior under a single light, graded to grey dusk. T's art replaces it in the card slot of assets/images/treasure/cache-pictures.ts."
     },
     {
+      "key": "bridge",
+      "category": "travel",
+      "title": "File:Théodore Rousseau (1812-1867) - Pont de Batignies in the Forest of Compiègne - CAI.56 - Victoria and Albert Museum.jpg",
+      "region": "The Far Bank (travel node bw-b2)",
+      "why": "TEMP stand-in (T, 2026-11-11) for T's own bridge travel image: Rousseau, a bridge crossing into the forest. T will still replace it (spec 171, chunk 171.2). Travel scene table entry bw-b2.",
+      "maxEdge": 640
+    },
+    {
       "key": "scene-windmill-headland",
       "category": "cutscenes",
       "title": "File:The Windmill at Wijk bij Duurstede 1670 Ruisdael.jpg",
