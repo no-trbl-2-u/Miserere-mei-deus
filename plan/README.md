@@ -47,7 +47,7 @@ needs are done):
 - **174.2** · LC1b: the cache screen, picture first (T's screens ballot, then `/plot asap`, 2026-11-10)
 
 - **173.2** · QS1b: the quest card, the offer and the work in progress (screens ballot S-03, `/plot`, 2026-11-10)
-- **173.3** · QS1c: the quest card, the turn-in and the giver turning the player away (screens ballot S-03, `/plot`, 2026-11-10; needs 173.2)
+- **173.3** · QS1c: the quest card, the turn-in and the giver turning the player away (screens ballot S-03, `/plot`, 2026-11-10)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
