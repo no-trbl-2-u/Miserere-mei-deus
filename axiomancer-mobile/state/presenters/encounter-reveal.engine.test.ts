@@ -3,7 +3,37 @@
  */
 import { describe, expect, it } from '@jest/globals';
 
-import { buildRevealFrame } from './encounter-reveal.engine';
+import { buildRevealFrame, buildRevealVM } from './encounter-reveal.engine';
+
+describe('buildRevealVM', () => {
+    const foe = { name: 'Quay Crab', level: 3, hp: 42 };
+
+    it('gives a normal fight its numbers and no chip', () => {
+        expect(buildRevealVM('bw-w2', foe)).toEqual({
+            tier: 'fight', name: 'Quay Crab', level: 3, vitae: 42, chip: null, bossCard: null,
+        });
+    });
+
+    it('chips an elite ELITE', () => {
+        const v = buildRevealVM('bw-w5', foe);
+        expect(v.tier).toBe('elite');
+        expect(v.chip).toBe('ELITE');
+        expect(v.bossCard).toBeNull();
+    });
+
+    it('carries the boss card with its place and no chip', () => {
+        const v = buildRevealVM('bw-k2', foe);
+        expect(v.tier).toBe('boss');
+        expect(v.chip).toBeNull();
+        expect(v.bossCard).toEqual({ place: 'Sea keep', subtitle: 'Chapter 1 boss' });
+    });
+
+    it('reads a node off the chapter as a plain fight', () => {
+        for (const id of ['mw-3', undefined]) {
+            expect(buildRevealVM(id, foe)).toMatchObject({ tier: 'fight', chip: null, bossCard: null, level: 3, vitae: 42 });
+        }
+    });
+});
 
 describe('buildRevealFrame', () => {
     it('leaves a normal fight as it was, with its arrival line', () => {
