@@ -6,15 +6,15 @@
 
 ## Milestones
 
-- **2026-11-30** — Mon, Nov 30 (in 19 days): 14 acts open (14 h), 14 h queued up to it, 27.1 h available: fits, with 13.1 h to spare.
-- **2026-12-26** — Sat, Dec 26 (in 45 days): 25 acts open (31.5 h), 45.5 h queued up to it, 64.3 h available: fits, with 18.8 h to spare.
+- **2026-11-30** — Mon, Nov 30 (in 19 days): 14 acts open (14.5 h), 14.5 h queued up to it, 27.1 h available: fits, with 12.6 h to spare.
+- **2026-12-26** — Sat, Dec 26 (in 45 days): 25 acts open (31.5 h), 46 h queued up to it, 64.3 h available: fits, with 18.3 h to spare.
 
 ## This week (10 h)
 
 | # | Act | Hours | What it needs |
 |---|---|---|---|
 | 1 | Write Chapter 1's quest chain lines: quest names and asks, giver and turn-in lines, the four refusal lines, gate reasons, every step's XP and reward (0.5 h) | 0.5 | needs you: BW1d ready for you |
-| 2 | Find the bridge travel image: Chapter 1 to Chapter 2 (the cave shortcut uses the Breakwater map, zoomed; T, 2026-11-11) (0.5 h) | 0.5 | needs you: your task |
+| 2 | Find your art to replace the temp stand-ins: the bridge travel image (Chapter 1 to Chapter 2; the cave shortcut uses the Breakwater map, zoomed), the five cutscene pictures (windmill headland, clifftop chapel, old watchtower, high pass, Charcoal Wood arrival) and the narrator figure. Public-domain stand-ins shipped in TV1b and CU1c, marked TEMP in their provenance (T, 2026-11-11) (1 h) | 1 | needs you: your task |
 | 3 | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | 1 | needs you: your task |
 | 4 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | 1 | needs you: your task |
 | 5 | Review the reworked fight reveal (look G for normal and elite foes, the boss's held title card F; spec 175), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | 1.5 | needs you: your task |
