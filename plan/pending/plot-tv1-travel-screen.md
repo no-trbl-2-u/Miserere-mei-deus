@@ -16,7 +16,7 @@ date: 2026-11-10
 ~~~
 ~~~ new
 - **156.7** · waits on T's colour ballot verdict (TY1g; built by TY1f) · since: 2026-11-06 · until: T's word · max_age: 60d
-- **171.2** · waits on T's two travel images, the bridge and the cave mouth (TV1b; built by TV1a) · since: 2026-11-10 · until: 2026-11-30 · max_age: 21d
+- **171.2** · waits on T's bridge travel image (TV1b; built by TV1a; the cave uses the map, T 2026-11-11) · since: 2026-11-10 · until: 2026-11-30 · max_age: 21d
 ~~~
 
 ## Edit plan/README.md
