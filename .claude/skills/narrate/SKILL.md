@@ -10,7 +10,7 @@ Drafts narration as **proposals for T**. T approves all writing; this skill
 never writes a line into game source. It asks one question first, **"How
 cruel?"**, and writes at the stop T picks.
 
-Read before drafting: `plan/card-ledger/narrator-voice.md` (the target, T's
+Read before drafting: `plan/ballots/narrator-voice.md` (the target, T's
 locked passages and rejections) and, once it exists,
 `axiomancer-mechanics/docs/narrative/NARRATOR.md` (the voice bible; it wins
 where it and this file disagree).
@@ -73,7 +73,7 @@ it a journal.
 5. **Check it** against section 7 before showing it.
 6. **Show it** as in section 8, with what it invented and a confidence score.
 7. **On T's word**, record the approved text. A Chapter 1 line goes in
-   `plan/card-ledger/narrator-chapter1.md` under `## Verdicts`; anything else
+   `plan/ballots/narrator-chapter1.md` under `## Verdicts`; anything else
    goes in the ledger T names. Putting it in the game is a plotted chunk's
    job (spec 177), never this skill's.
 

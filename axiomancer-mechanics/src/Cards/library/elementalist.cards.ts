@@ -2,8 +2,8 @@
  * THE ELEMENTALIST TRIAL SET — the weather in play.
  *
  * The 30 kept cards of the Elementalist rehearsal ballot
- * (`plan/card-ledger/rehearsal-elementalist.md`, "as kept, with T's notes
- * applied"), at the sims' adjusted numbers (`plan/card-ledger/elementalist-sims.md`:
+ * (`plan/ballots/rehearsal-elementalist.md`, "as kept, with T's notes
+ * applied"), at the sims' adjusted numbers (`plan/ballots/elementalist-sims.md`:
  * DEAL and INFERNO halved, STORM trimmed, M-07's VULNERABLE per STORM doubled).
  * Three sub-lanes of ten: Payoff (P), Engine (E) and Misc (M). Ids are
  * `el-<slot><option>`; T's own M-10 is `el-m-10n`. Each card carries its action

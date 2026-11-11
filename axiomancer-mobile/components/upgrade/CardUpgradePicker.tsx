@@ -1,6 +1,6 @@
 /**
  * The shared card-upgrade screen: the string of beads (the
- * look T settled in `plan/card-ledger/upgrade/U-02-settled.webp`). The rest
+ * look T settled in `plan/ballots/upgrade/U-02-settled.webp`). The rest
  * site, the blacksmith and the elite reward host it.
  *
  * Top to bottom: a figure in a gold glow (a slot the host fills; a stand-in

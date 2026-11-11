@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Village and Blacksmith, round 2</title>
+<!--
+  The village ballot, round 2 (2026-11-09). T's round 1 picks asked for two
+  blends, so five variations of each: the Village as B + D (keepers on the
+  buttons, plus the host), the Blacksmith as E + C (the smith fills the screen,
+  one die at a time). The Shop was settled in round 1.
+
+  Mockups at 390 x 844 from the real kit art. The portraits are stand-ins and
+  the spoken lines placeholders; prices are the engine's.
+-->
+<style>
+  :root { --bg:#efe9dc; --ink:#1b1714; --muted:#6b6259; --card:#fbf7ee; --edge:#2a2420; --sel:#1b1714; --btn:#1b1714; --btn-ink:#fbf7ee; --shotbg:#d9cfbd; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  }
+  :root[data-theme="dark"] { --bg:#141110; --ink:#ece4d6; --muted:#a39887; --card:#1f1a17; --edge:#4a3f33; --sel:#ece4d6; --btn:#ece4d6; --btn-ink:#141110; --shotbg:#0a0908; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--ink); font:16px/1.45 Georgia, "Times New Roman", serif; }
+  header, main, footer { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size:1.45rem; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 10px; }
+  .legend { font-size:.92rem; color:var(--muted); margin:0 0 12px; }
+  .legend b { color:var(--ink); }
+  .theme { float:right; font:inherit; padding:6px 12px; border-radius:6px; border:1px solid var(--edge); background:var(--card); color:var(--ink); cursor:pointer; }
+  .slot { margin:22px 0 8px; padding-top:10px; border-top:2px solid var(--edge); }
+  .slot h2 { font-size:1.1rem; margin:0; }
+  .role { color:var(--muted); margin:2px 0 10px; }
+  .row { display:grid; grid-template-columns:repeat(auto-fill, minmax(232px, 1fr)); gap:12px; }
+  label.card { position:relative; display:block; background:var(--card); border:2px solid var(--edge); border-radius:10px; padding:8px; cursor:pointer; }
+  label.card.on { box-shadow:0 0 0 4px var(--sel); }
+  .pick { position:absolute; top:10px; right:10px; width:24px; height:24px; accent-color:var(--sel); }
+  .top { padding-right:34px; min-height:96px; }
+  .name { font-size:1.05rem; font-weight:bold; }
+  .ref { color:var(--muted); font-size:.9rem; margin:2px 0 6px; }
+  label.card img { display:block; width:100%; height:auto; border-radius:4px; background:var(--shotbg); }
+  .note { width:100%; margin-top:8px; padding:8px; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; }
+  footer { margin-top:28px; padding-top:12px; border-top:2px solid var(--edge); }
+  textarea { width:100%; font:13px/1.4 ui-monospace, Menlo, Consolas, monospace; background:var(--card); color:var(--ink); border:1px solid var(--muted); border-radius:4px; padding:8px; }
+  #general { min-height:60px; } #out { min-height:160px; margin-top:10px; }
+  button { font:inherit; padding:9px 18px; min-height:42px; border-radius:6px; border:0; background:var(--btn); color:var(--btn-ink); cursor:pointer; margin:8px 8px 0 0; }
+  .count { color:var(--muted); margin-left:6px; }
+  button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle page theme">◐</button>
+  <h1>The Village and the Blacksmith, round 2</h1>
+  <p class="sub">Five variations of each blend you asked for. The Shop is settled: One card at a time, with five cards.</p>
+  <p class="legend">
+    <b>Tick one per screen.</b> Each screen has a note line for a mix.<br>
+    <b>Swap gear is gone from these mockups:</b> it replaces a die's whole gear with one the smith offers, but no smith offers any today, so the button never appears in the game.<br>
+    <b>The portraits</b> are still stand-ins, <b>the spoken lines</b> placeholders, and <b>the prices</b> the engine's.
+  </p>
+</header>
+<main id="slots"></main>
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="A different NPC, a mix of two variations, anything else…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+<script>
+const BALLOT_ID = 'village-round-2-2026-11-09';
+
+const SLOTS = [
+  { slot: 'V-02', label: 'The Village (B + D)', role: 'The host greets you, and each option keeps its keeper on the button.' },
+  { slot: 'B-02', label: 'The Blacksmith (E + C)', role: 'The smith fills the screen, and you work one die at a time with its six faces in view. D shows a refused HONE.' },
+];
+
+/* One candidate per id; the kit reads the ticks by id. */
+const CARDS = [
+  { id: 'V-02a', look: 'Host up top', ref: 'The host and the line sit under the title. The three keepers stand on their buttons at the foot.' },
+  { id: 'V-02b', look: 'Host beside the buttons', ref: 'A tall host down the left edge, with shorter buttons and the keepers at their right ends.' },
+  { id: 'V-02c', look: 'Medallions', ref: 'The host is centred and largest. Each keeper shrinks to a round portrait inside the button.' },
+  { id: 'V-02d', look: 'Host by the road', ref: 'The keepers come first. The host stands at the bottom, beside the way out.' },
+  { id: 'V-02e', look: 'Host in a frame', ref: 'The host and the line in a brass frame. Bigger keepers alternate left and right.' },
+  { id: 'B-02a', look: 'Tabs and a strip', ref: 'Die tabs, then all six faces in one row, the verbs under them.' },
+  { id: 'B-02b', look: 'The net beside him', ref: 'The unfolded die stands at the smith’s shoulder, the closest to C.' },
+  { id: 'B-02c', look: 'One die open', ref: 'No tabs. The open die shows its faces and verbs; the other two fold to a row of pips.' },
+  { id: 'B-02d', look: 'On the anvil plate', ref: 'A brass frame holds the tabs and faces. A smaller smith above it.' },
+  { id: 'B-02e', look: 'Swipe the die', ref: 'One unfolded die in the middle, the others peeking at the sides, like the Shop’s cards.' },
+];
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cardHtml = (c) => `
+  <label class="card" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${esc(c.look)}">
+    <div class="top"><div class="name">${c.id.slice(4).toUpperCase()}. ${esc(c.look)}</div><div class="ref">${esc(c.ref)}</div></div>
+    <img src="village/${c.id}.webp" alt="${esc(c.look)}" loading="lazy" width="780" height="1688">
+  </label>`;
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${esc(s.label)} (optional)">
+  </section>`;
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length} answered`;
+};
+/* One tick per screen: a new tick clears the others in its slot. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  refresh();
+});
+refresh();
+
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: village and blacksmith, round 2 (${BALLOT_ID})`,
+    `answered ${new Set(k.map((id) => id.slice(0, 4))).size} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const pick = k.find((id) => id.startsWith(s.slot));
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      const name = pick ? CARDS.find((c) => c.id === pick).look : null;
+      return `${s.slot} ${s.label}: ${pick ? `KEEP ${pick} (${name})` : 'no answer'}${note ? ` | note: ${note}` : ''}`;
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>

@@ -49,7 +49,7 @@ Measure: 8 open · 0 closed · next A9
 - [ ] **134.6** Dev menu revamp (owner-led) · M · closes A5 · needs — · alias: B10
   - Note for T's next owner-led session (150.2): ST1b (132.2) moves the dev menu into Settings, so this row may shrink. Check ST1b first.
 - [ ] **134.7** Deck tab UI revamp (owner-led) · M · closes A6 · needs — · alias: B7
-  - T's brief (2026-11-06, kit mixer): "provoke a feeling of minimalist order while still providing images". Start from the three directions 153.7 mocks (`plan/card-ledger/deck-directions.html`): open the page, flip between A Ledger, B Contact sheet and C Reader on a real Blood Price deck, and pick one (or a mix) here; this session builds it.
+  - T's brief (2026-11-06, kit mixer): "provoke a feeling of minimalist order while still providing images". Start from the three directions 153.7 mocks (`plan/ballots/deck-directions.html`): open the page, flip between A Ledger, B Contact sheet and C Reader on a real Blood Price deck, and pick one (or a mix) here; this session builds it.
 - [ ] **134.8** Card art revamp (owner-led) · M · closes A7 · needs — · alias: B8
   - Note for T's next owner-led session (150.2): CA3a-e painted all four lanes' cards, so this row may be down to the title wordmark. Check CA3 first.
 - [ ] **134.9** Labyrinth re-theme (owner-led) · M · closes A8 · needs 134.5 · alias: B9

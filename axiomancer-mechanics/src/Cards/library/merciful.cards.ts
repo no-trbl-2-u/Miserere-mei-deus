@@ -2,7 +2,7 @@
  * THE MERCIFUL TRIAL SET — my mending is a weapon.
  *
  * The 29 kept cards of the Merciful rehearsal ballot
- * (`plan/card-ledger/rehearsal-merciful.md`: "As kept, with T's notes applied",
+ * (`plan/ballots/rehearsal-merciful.md`: "As kept, with T's notes applied",
  * "Rulings after the vote" and "Revisions"), at the numbers T chose to ship
  * (2026-10-30, "make your recommended changes": P-03, P-05, P-08, M-05, E-03 and
  * E-01 change as the ledger's "The numbers" table lists), the drafted names and

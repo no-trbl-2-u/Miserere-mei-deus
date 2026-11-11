@@ -5,17 +5,17 @@ description: Run the lane-creator v1 flow with T for one card family (a new lane
 You are running the lane-creator flow with T. Read `docs/lane-creator.md` end
 to end first: it is the single source of truth for the nine steps, the rules a
 lane meets and how colours are split after T picks (D102, D110). Then read the newest
-family's ledger as a worked example (`plan/card-ledger/rehearsal-elementalist.md`,
+family's ledger as a worked example (`plan/ballots/rehearsal-elementalist.md`,
 and `rehearsal-blood-price.md` when a step's shape is unclear) and
-`plan/card-ledger/README.md` for the ballot kit. This command is attended
+`plan/ballots/README.md` for the ballot kit. This command is attended
 only; no loop verb, cron or workflow fires it.
 
 Argument handling:
-- no argument → list every family ledger in `plan/card-ledger/` with the step
+- no argument → list every family ledger in `plan/ballots/` with the step
   it is on (below, "Where a family is"), then ask T which to work on or
   whether to start a new one.
 - `new` → step 1 for a new family.
-- `<family>` → resume that family (`plan/card-ledger/rehearsal-<family>.md`)
+- `<family>` → resume that family (`plan/ballots/rehearsal-<family>.md`)
   at the step it is on.
 - `<family> <step number>` → run that step for that family, after checking
   the steps before it are done; if one is not, say which and stop.
@@ -29,7 +29,7 @@ Read from the ledger and the ballot index, never from memory:
 | no file | step 1 |
 | `## Session 0`, no `## Sub-lane pitches` | step 2 |
 | pitches T approved, no `rehearsal-<family>.ballot.html` | step 3 |
-| a ballot whose `BALLOTS` entry (`plan/card-ledger/index.html`) is `open` | step 4, or step 5 once D1 holds a `final` row for it |
+| a ballot whose `BALLOTS` entry (`plan/ballots/index.html`) is `open` | step 4, or step 5 once D1 holds a `final` row for it |
 | `## Verdicts` complete, the entry `closed`, no sims section | step 6 |
 | sims numbers, no `## Revisions` (or T's revisions still open) | step 7 |
 | revisions settled, no trial-set `plot` PR | step 8 |
@@ -54,7 +54,7 @@ Say the step back to T in one line before doing anything.
    sub-lane are typed Spell (`docs/lane-creator.md` "Spells"). Show T
    the thirty and ask for approval or edits; record "approved (T, <date>)".
 3. **The ballot (session).** Three candidates per slot, ninety in all, on
-   the ballot shell per `plan/card-ledger/README.md` "Adding the next
+   the ballot shell per `plan/ballots/README.md` "Adding the next
    ballot": the data file (no `job` or colour on any candidate, D110), the
    kit tag and the `BALLOTS` entry. Every
    line clears the scrap floor, every Global opens on a trigger from the

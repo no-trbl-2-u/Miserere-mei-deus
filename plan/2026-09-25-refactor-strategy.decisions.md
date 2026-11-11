@@ -740,7 +740,7 @@ one lane per card, free multi-lane tags, bridges across families.
   format): 3 tabs × 10 slots × 3 candidates = 90 candidates, with about 30
   surviving.
 - Everything stays on paper until B4, B5 and RC.
-- Ledger: `plan/card-ledger/rehearsal-blood-price.md`.
+- Ledger: `plan/ballots/rehearsal-blood-price.md`.
 
 *Rejected:* 36 exactly (12 per lane); three separate families for the
 first pool; a Heal sub-lane (folded into Misc). The other fantasies (The Vigil, Rot and Omen, Loaded Dice)
@@ -876,7 +876,7 @@ satisfied for exactly these.)
   red, 8 blue, 11 purple). The grey Curse stays defined for foes to add
   later and sits in no lane, deck or reward pool. The full list, the new
   test deck and each card's role are in
-  `plan/card-ledger/rehearsal-blood-price.md` → "Revision 2".
+  `plan/ballots/rehearsal-blood-price.md` → "Revision 2".
 - **LEECH is a stacking debuff (replaces D80's decaying LEECH).** Each LEECH
   n adds 3 turns and adds n (heart-scaled when applied) to its potency, the
   first included. Each foe turn the foe loses the potency (plain loss, not

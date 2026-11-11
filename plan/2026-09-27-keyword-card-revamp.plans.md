@@ -111,7 +111,7 @@ lets it die before the next slice starts.
 - **Residue is filed in two places.** Design rulings (a keyword extracted,
   a grant path, a type verdict, the pool-size target) go to
   `plan/2026-09-25-refactor-strategy.decisions.md` (D45+) as today. Per-card
-  outcomes go to a slice ledger, `plan/card-ledger/<slice-id>.md`, with
+  outcomes go to a slice ledger, `plan/ballots/<slice-id>.md`, with
   three tables: ballot (every candidate seen: slot code, one line, persona
   and mode, verdict, reason), outtakes (every CUT and PARK with its reason),
   revisions (each TWEAK; a card is replaced at its third revision). The next
@@ -548,7 +548,7 @@ Must.
 4. §1 and B1. Three artefacts on one ladder: ballot, then a named sandbox set in cards.sandbox-sets.ts behind a deterministic lint, then the wired slice at the kill session; the editor write-back is used at the last rung only. Sources R6-07, R3-07, R3-09, R3-10, R3-11, R3-14, R2-10, RC-04, A6.
 5. §3 Plan B. Split B1 into pitch plus ballot and sandbox play; B2 becomes batch sheet, two cuts, extraction from three KEEP cards, promotion in the same PR, ledger updated. Sources R2-04, R6-05, R2-06, R6-02, R3-14, R1-01, R7-04 contests, R2-12.
 6. §1. Session shape and clock: a build session under ninety minutes and a kill session under sixty, with a fixed agenda; no tuning in build, no new cards in kill. Sources R6-14, R6-13, R2-07, R2-04, R6-05, A1.
-7. §1. Residue is filed in two places: rulings to the decisions file, per-card outcomes to plan/card-ledger/<slice-id>.md with ballot, outtakes and revision tables; replace at revision three. Sources R2-02, R2-03, R6-04, R2-11, R7-02 contests, R7-05 contests, R6-01.
+7. §1. Residue is filed in two places: rulings to the decisions file, per-card outcomes to plan/ballots/<slice-id>.md with ballot, outtakes and revision tables; replace at revision three. Sources R2-02, R2-03, R6-04, R2-11, R7-02 contests, R7-05 contests, R6-01.
 8. §5.3 p3 and the linear upgrade row. One axis owns each printed number and the harness prints the ceiling; the computed magnitude bucket fails p3; keep the computed default with an opt-out, lint each upgrade for cost, count, rider or downside, and author only where flagged. Sources GAP-1 R6-01, GAP-1 R6-02, GAP-1 R6-03, GAP-1 R6-04, KB-03, R4-13, R4-03, R4-01, R2-13.
 9. §5.3 reading paragraph. Align with §7 ballot outcome four: nothing beyond the upgrade and die growth is prototyped in the first pool; use-XP is a paper verdict. Sources R2-11, R6-09, RC-05, R4-04.
 10. §5.3 transform row and §6 D8. Mark chains verified from the Blightbane API, note the transforming object is a persistent self-buff, drop the missing chain citation, add the unique flag and stage rules. Sources KB-01, KB-02, KB-05, R5-08, R5-10.

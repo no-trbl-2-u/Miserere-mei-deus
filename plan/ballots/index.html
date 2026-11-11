@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Miserere Mei, Deus — ballots</title>
+<!--
+  The ballot index (phase BV1b; regrouped 2026-11-11): one entry per ballot,
+  from the BALLOTS array below, grouped by status (needs your vote, settled,
+  built) and tagged by kind (cards, screens, look, voice, enemies). Served as
+  the front page of the ballots Pages site; it also works opened from disk.
+  Adding a ballot: plan/ballots/README.md.
+-->
+<style>
+  :root {
+    --bg: #efe9dc; --ink: #1b1714; --muted: #6b6259; --card: #fbf7ee;
+    --edge: #2a2420; --open: #3d5a40; --closed: #6b6259; --complete: #4a4f7a;
+    --tile: #e2d9c6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --open: #8fbf8f; --closed: #a39887; --complete: #a3a9e0;
+      --tile: #2b2420;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 16px/1.45 Georgia, "Times New Roman", serif;
+  }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+
+  /* The tally strip: three counts, one per status. */
+  .tally { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 12px; }
+  .tally a { display: block; text-decoration: none; color: var(--ink); background: var(--card);
+             border: 2px solid var(--edge); border-radius: 10px; padding: 8px 10px; }
+  .tally b { display: block; font-size: 1.6rem; line-height: 1.1; }
+  .tally span { font-size: .8rem; color: var(--muted); }
+  .tally .open { border-left: 8px solid var(--open); }
+  .tally .closed { border-left: 8px solid var(--closed); }
+  .tally .complete { border-left: 8px solid var(--complete); }
+
+  /* The kind filter. */
+  .kinds { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; }
+  .kinds button { font: inherit; font-size: .9rem; color: var(--ink); background: transparent;
+                  border: 2px solid var(--edge); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+  .kinds button[aria-pressed="true"] { background: var(--edge); color: var(--bg); }
+
+  section { margin: 0 0 24px; }
+  section[hidden] { display: none; }
+  h2 { font-size: 1.05rem; margin: 0 0 2px; display: flex; align-items: center; gap: 8px; }
+  h2 i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  h2 i.open { background: var(--open); } h2 i.closed { background: var(--closed); } h2 i.complete { background: var(--complete); }
+  .lead { color: var(--muted); font-size: .9rem; margin: 0 0 10px; }
+
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px;
+       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  li { background: var(--card); border: 2px solid var(--edge); border-radius: 10px; overflow: hidden;
+       display: flex; flex-direction: column; }
+  li[hidden] { display: none; }
+  a.shot { display: block; height: 150px; background: var(--tile); border-bottom: 2px solid var(--edge);
+           text-decoration: none; color: var(--muted); overflow: hidden; }
+  a.shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  a.shot .glyph { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  a.shot .glyph b { font-size: 3rem; line-height: 1; color: var(--ink); font-weight: normal; }
+  a.shot .glyph span { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
+  .body { padding: 10px 12px 12px; }
+  a.go { display: block; font-weight: bold; font-size: 1.05rem; color: var(--ink); }
+  .meta { color: var(--muted); font-size: .85rem; margin: 6px 0 0; }
+  .tag { display: inline-block; font-size: .7rem; font-weight: bold; letter-spacing: .08em;
+         text-transform: uppercase; padding: 1px 6px; border-radius: 3px; }
+  .tag.status { color: var(--card); }
+  .tag.status.open { background: var(--open); }
+  .tag.status.closed { background: var(--closed); }
+  .tag.status.complete { background: var(--complete); }
+  .tag.kind { border: 1px solid var(--muted); color: var(--muted); }
+  .empty { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ballots</h1>
+  <p class="sub">Every ballot, grouped by where it stands. An open ballot saves your ticks on this device as you go and submits the verdict from its footer.</p>
+  <nav class="tally" id="tally" aria-label="Ballots by status"></nav>
+  <div class="kinds" id="kinds" role="group" aria-label="Show one kind of ballot"></div>
+  <div id="groups"></div>
+</main>
+<script>
+/* One entry per ballot. status: open (taking a verdict) | closed (verdicts
+   recorded; the entry links to the ledger that holds them) | complete (the
+   lane is in the build: its trial set is plotted; T, 2026-10-30). date: the day
+   the ballot opened. kind: one of KINDS below. thumb (optional): a picture
+   from the ballot, next to this file; an entry without one shows its kind's
+   glyph. */
+const BALLOTS = [
+  { id: 'screens-2026-11-10', family: 'Seven Breakwater screens: ten looks each', file: 'screens.ballot.html', ledger: 'screens.md', status: 'closed', date: '2026-11-10', kind: 'screens', thumb: 'screens/S-07-settled.webp' },
+  { id: 'upgrade-round-2-2026-11-09', family: 'The card upgrade screen, round 2: beads, pair and hold', file: 'upgrade-2.ballot.html', ledger: 'upgrade.md', status: 'closed', date: '2026-11-09', kind: 'screens', thumb: 'upgrade/U-02-settled.webp' },
+  { id: 'upgrade-2026-11-09', family: 'The card upgrade screen: eight looks', file: 'upgrade.ballot.html', ledger: 'upgrade.md', status: 'closed', date: '2026-11-09', kind: 'screens', thumb: 'upgrade/U-01a.webp' },
+  { id: 'village-round-2-2026-11-09', family: 'Village and Blacksmith, round 2: the blends', file: 'village-2.ballot.html', ledger: 'village.md', status: 'open', date: '2026-11-09', kind: 'screens', thumb: 'village/V-02a.webp' },
+  { id: 'village-2026-11-09', family: 'Village, Blacksmith and Shop: which screens', file: 'village.ballot.html', ledger: 'village.md', status: 'open', date: '2026-11-09', kind: 'screens', thumb: 'village/V-01b.webp' },
+  { id: 'colours-2026-11-09', family: 'Colour: which whole palette', file: 'colours.ballot.html', ledger: 'colours.md', status: 'open', date: '2026-11-09', kind: 'look', thumb: 'colours/durer-fight.webp' },
+  { id: 'narrator-chapter1-2026-11-11', family: 'The Narrator: Chapter 1, every line', file: 'narrator-chapter1.ballot.html', ledger: 'narrator-chapter1.md', status: 'open', date: '2026-11-11', kind: 'voice' },
+  { id: 'narrator-voice-5-2026-11-10', family: 'The Narrator, round 5: plain, cruel, grief', file: 'narrator-voice-5.ballot.html', ledger: 'narrator-voice.md', status: 'open', date: '2026-11-10', kind: 'voice' },
+  { id: 'narrator-voice-4-2026-11-09', family: 'The Narrator, round 4: our quests, our enemies', file: 'narrator-voice-4.ballot.html', ledger: 'narrator-voice.md', status: 'open', date: '2026-11-09', kind: 'voice' },
+  { id: 'narrator-voice-2026-11-08', family: 'The Narrator: how far into McCarthy', file: 'narrator-voice.ballot.html', ledger: 'narrator-voice.md', status: 'open', date: '2026-11-08', kind: 'voice' },
+  { id: 'enemy-movesets-2026-11-08', family: 'Enemy movesets: six foes get their own', file: 'enemy-movesets.ballot.html', ledger: 'enemy-movesets.md', status: 'closed', date: '2026-11-08', kind: 'enemies' },
+  { id: 'fonts-2026-11-06', family: 'Fonts: which type does which job', file: 'fonts.ballot.html', ledger: 'fonts.md', status: 'closed', date: '2026-11-06', kind: 'look', thumb: 'fonts/act1-coast.webp' },
+  { id: 'ui-kit-2026-11-05', family: 'UI kit: which look', file: 'ui-kit.ballot.html', ledger: 'ui-kit.md', status: 'complete', date: '2026-11-05', kind: 'look', thumb: 'ui-kit/B-01a.jpg' },
+  { id: 'merciful-2026-10-29', family: 'The Merciful', file: 'rehearsal-merciful.ballot.html', ledger: 'rehearsal-merciful.md', status: 'closed', date: '2026-10-29', kind: 'cards' },
+  { id: 'defender-2026-10-26', family: 'The Defender', file: 'rehearsal-defender.ballot.html', ledger: 'rehearsal-defender.md', status: 'complete', date: '2026-10-26', kind: 'cards' },
+  { id: 'elementalist-2026-10-22', family: 'The Elementalist', file: 'rehearsal-elementalist.ballot.html', ledger: 'rehearsal-elementalist.md', status: 'complete', date: '2026-10-22', kind: 'cards' },
+  { id: 'blood-price-2026-09-30', family: 'Blood Price', file: 'rehearsal-blood-price.ballot.html', ledger: 'rehearsal-blood-price.md', status: 'complete', date: '2026-09-30', kind: 'cards' },
+];
+
+/* The three groups, in the order T needs them: what waits on a vote first. */
+const STATUSES = [
+  { key: 'open', title: 'Needs your vote', lead: 'Open ballots. Tick, note, submit.' },
+  { key: 'closed', title: 'Settled', lead: 'Verdicts are recorded in the ledger; the build has not caught up yet.' },
+  { key: 'complete', title: 'Built', lead: 'The verdict is plotted into the build.' },
+];
+
+/* What a ballot is about. glyph stands in for a picture on a ballot of words. */
+const KINDS = [
+  { key: 'cards', label: 'Card families', glyph: '♠' },
+  { key: 'screens', label: 'Screens', glyph: '▣' },
+  { key: 'look', label: 'Type and colour', glyph: 'Aa' },
+  { key: 'voice', label: 'Voice', glyph: '“' },
+  { key: 'enemies', label: 'Enemies', glyph: '☠' },
+];
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** The ledger's address on GitHub: the Pages site serves the ballots, not the markdown. */
+const ledgerUrl = (b) => `https://github.com/no-trbl-2-u/Miserere-mei-deus/blob/main/plan/ballots/${b.ledger}`;
+
+const kindOf = (b) => KINDS.find((k) => k.key === b.kind) || { key: b.kind, label: b.kind, glyph: '?' };
+
+const shot = (b) => b.thumb
+  ? `<img src="${esc(b.thumb)}" alt="" loading="lazy">`
+  : `<span class="glyph"><b>${esc(kindOf(b).glyph)}</b><span>${esc(kindOf(b).label)}</span></span>`;
+
+const entry = (b) => `
+  <li data-kind="${esc(b.kind)}">
+    <a class="shot" href="${esc(b.file)}" tabindex="-1" aria-hidden="true">${shot(b)}</a>
+    <div class="body">
+      <a class="go" href="${esc(b.file)}">${esc(b.family)}</a>
+      <p class="meta"><span class="tag status ${esc(b.status)}">${esc(b.status)}</span> <span class="tag kind">${esc(kindOf(b).label)}</span> opened ${esc(b.date)}</p>
+      ${b.status !== 'open'
+        ? `<p class="meta">verdicts recorded: <a href="${esc(ledgerUrl(b))}">the ledger</a></p>`
+        : ''}
+    </div>
+  </li>`;
+
+const inStatus = (key) => BALLOTS.filter((b) => b.status === key);
+
+const group = (s) => `
+  <section id="${esc(s.key)}" data-status="${esc(s.key)}">
+    <h2><i class="${esc(s.key)}"></i>${esc(s.title)} <span class="lead">(${inStatus(s.key).length})</span></h2>
+    <p class="lead">${esc(s.lead)}</p>
+    <ul>${inStatus(s.key).map(entry).join('')}</ul>
+  </section>`;
+
+const tally = (s) => `<a class="${esc(s.key)}" href="#${esc(s.key)}"><b>${inStatus(s.key).length}</b><span>${esc(s.title)}</span></a>`;
+
+const chip = (k, pressed) => `<button type="button" data-kind="${esc(k.key)}" aria-pressed="${pressed}">${esc(k.label)}</button>`;
+
+document.getElementById('tally').innerHTML = STATUSES.map(tally).join('');
+document.getElementById('kinds').innerHTML = chip({ key: '', label: 'Everything' }, true)
+  + KINDS.filter((k) => BALLOTS.some((b) => b.kind === k.key)).map((k) => chip(k, false)).join('');
+document.getElementById('groups').innerHTML = BALLOTS.length
+  ? STATUSES.filter((s) => inStatus(s.key).length).map(group).join('')
+  : '<p class="empty">No ballots yet.</p>';
+
+/* The filter: show one kind, hide a group left empty by it. */
+document.getElementById('kinds').addEventListener('click', (e) => {
+  const button = e.target.closest('button');
+  if (!button) return;
+  const kind = button.dataset.kind;
+  document.querySelectorAll('#kinds button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+  document.querySelectorAll('#groups li').forEach((li) => { li.hidden = Boolean(kind) && li.dataset.kind !== kind; });
+  document.querySelectorAll('#groups section').forEach((s) => { s.hidden = !s.querySelector('li:not([hidden])'); });
+});
+</script>
+</body>
+</html>

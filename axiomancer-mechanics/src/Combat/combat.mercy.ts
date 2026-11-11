@@ -1,7 +1,7 @@
 /**
  * MERCY on the foe — the Merciful's foe-side status (Phase MF1a).
  *
- * On T's rulings of 2026-10-29 and 2026-10-30 (`plan/card-ledger/rehearsal-merciful.md`,
+ * On T's rulings of 2026-10-29 and 2026-10-30 (`plan/ballots/rehearsal-merciful.md`,
  * "Rulings after the vote" and "Revisions"; `plan/phases/phase_MF1_merciful_trial_set.md`):
  *
  *   MERCY N   heal the foe N (heart-scaled, as LEECH), stopping at its max

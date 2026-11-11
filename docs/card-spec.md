@@ -9,7 +9,7 @@
 >
 > Written by Phase CS1 (`plan/phases/phase_CS1_card_spec_scaffold.md`) from
 > the B4 inventory, [`plan/revamp/card-rules-inventory.md`](../plan/revamp/card-rules-inventory.md),
-> and T's ballot, [`plan/card-ledger/card-spec-ballot-2026-10-13.md`](../plan/card-ledger/card-spec-ballot-2026-10-13.md).
+> and T's ballot, [`plan/ballots/card-spec-ballot-2026-10-13.md`](../plan/ballots/card-spec-ballot-2026-10-13.md).
 > It states no rule the inventory does not record. The inventory was taken
 > at `04130195` (2026-10-01), before Phase BT (D80) wired in the Blood Price
 > trial set; where BT changed a rule, the paragraph says so and names its
@@ -363,7 +363,7 @@ T's call (ballot, 2026-10-13):
 
 **Live rule.** The inventory found no save hop that drops purged player
 card ids (F2). For the trial set, saves drop removed trial card ids on load
-(`dropUnknownCardIds`, `plan/card-ledger/rehearsal-blood-price.md`
+(`dropUnknownCardIds`, `plan/ballots/rehearsal-blood-price.md`
 Revision 2). Pointers: `M/Game/game.migrate.ts:228`, `:416`, `:519`,
 `:758`; `M/Game/game.reducer.ts:174`.
 
@@ -382,7 +382,7 @@ T's call (ballot, 2026-10-13):
 **Live rule.** A lane is a named group of library cards and a test deck
 (`M/Cards/card.lanes.ts`); the grey office is the permanent lane and each
 trial set registers its own in one line. The Blood Price ledger,
-`plan/card-ledger/rehearsal-blood-price.md`, is T's ruling on which slots
+`plan/ballots/rehearsal-blood-price.md`, is T's ruling on which slots
 the lane keeps (ids `bp-<slot><option>`); CS1 checks the library against it
 (§17).
 
