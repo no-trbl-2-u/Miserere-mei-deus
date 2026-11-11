@@ -842,6 +842,13 @@ test('absorb: rides only a close, says something, and names only its own decisio
   assert.equal(parsePending(closeOf('08.1'), 'x.md').absorb, null)
 })
 
+test('footguns: none is no sightings, and a real slug still counts', () => {
+  const head = (lines) => ['---', ...lines, '---', ''].join('\n')
+  const close = ['close: 08.1', 'date: 2026-11-01', 'says: It works']
+  assert.deepEqual(parsePending(head([...close, 'footguns: none']), 'x.md').footguns, [])
+  assert.deepEqual(parsePending(head([...close, 'footguns: none, guard-test-noop']), 'x.md').footguns, ['guard-test-noop'])
+})
+
 test('an absorbing close that empties a spec under open acceptance is held for chunks, and nothing retires', () => {
   const { dir, work, g } = scratchOrigin()
   try {

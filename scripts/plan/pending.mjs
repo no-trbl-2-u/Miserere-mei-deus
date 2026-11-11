@@ -78,7 +78,8 @@ export function parsePending(raw, name, cfg = DEFAULTS) {
   if (meta.commits && !/^[0-9a-f]{7,40}\.\.[0-9a-f]{7,40}$/.test(meta.commits)) throw new Error(`${name}: commits "${meta.commits}" isn't <sha>..<sha>`);
   // Miserere: a last close's `absorb:` (scripts/plan/retire-local.mjs): it rides a close, and says something.
   if (meta.absorb !== undefined && (!meta.close || !meta.absorb)) throw new Error(`${name}: "absorb:" goes on a spec's last close and says where its lasting rules went (D?<slug>, a file, or none)`);
-  const footguns = (meta.footguns ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  // Miserere: `footguns: none` is read as no sightings; /next builders write it for a run that hit no trap.
+  const footguns = (meta.footguns ?? '').split(',').map((s) => s.trim()).filter((s) => s && s.toLowerCase() !== 'none');
   for (const f of footguns) if (!/^[a-z0-9-]+$/.test(f)) throw new Error(`${name}: footgun "${f}" isn't a slug`);
 
   const edits = [];
