@@ -1,0 +1,38 @@
+{
+  "generated_by": "scripts/devlog-shots.mjs",
+  "date": "2026-11-11",
+  "since": "d151fb323d6991f9d516a37b8c49e33a67de9462",
+  "sinceDate": "2026-11-10",
+  "shots": [
+    {
+      "screen": "combat-boss",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "combat-elite",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "combat-encounter",
+      "before": true,
+      "ratio": 0.39178515007898895
+    },
+    {
+      "screen": "defeat-panel",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "game-over",
+      "before": true,
+      "ratio": 0.04417912261514157
+    },
+    {
+      "screen": "rest-upgrade",
+      "before": false,
+      "ratio": null
+    }
+  ]
+}
