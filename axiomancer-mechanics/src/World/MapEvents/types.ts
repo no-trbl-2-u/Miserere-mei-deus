@@ -114,6 +114,12 @@ export interface CutscenePayload {
     kind: 'cutscene';
     /** Ordered narration lines. */
     lines: readonly string[];
+    /**
+     * The scene's picture id (CU1a): the app maps it to an image
+     * (`assets/images/cutscenes`). Absent: the app draws its fallback picture.
+     * The content names no teller; one narrator tells every scene.
+     */
+    scene?: string;
     description?: string;
     /**
      * What the scene does as it plays: `giveQuestStep` starts that step of a
@@ -309,7 +315,7 @@ export type ResolvedEvent =
         anvil?: VillageAnvil;
         description?: string;
     }
-    | { kind: 'cutscene';    lines: readonly string[] }
+    | { kind: 'cutscene';    lines: readonly string[]; scene?: string }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
     | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string; actions?: LootCacheActionLines }
     // The OFFER: the state has not moved. `open` is false while the

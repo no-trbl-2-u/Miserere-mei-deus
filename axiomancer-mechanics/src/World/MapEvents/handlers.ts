@@ -146,7 +146,9 @@ export function resolveCutscene(
     const give = payload.effect?.giveQuestStep;
     return {
         state: give ? giveQuestStep(state, give.questline, give.step) : state,
-        event: { kind: 'cutscene', lines: payload.lines },
+        event: payload.scene === undefined
+            ? { kind: 'cutscene', lines: payload.lines }
+            : { kind: 'cutscene', lines: payload.lines, scene: payload.scene },
     };
 }
 

@@ -1,0 +1,18 @@
+[
+  {
+    "generated_by": "user-supplied",
+    "date": "2026-11-11",
+    "tool": "external-illustration (torio, Javardry free material pack), cut out and re-encoded",
+    "prompt": "Stand-in narrator for every cutscene (T, 2026-11-11: \"All cutscenes should have the same narrator for now\"). A copy of the Hermit cut-out (keepers/host.webp), which holds the space until T supplies the narrator figure (spec 172, CU1a, A2).",
+    "spec_section": "172 (CU1a), A2",
+    "covers": [
+      "narrator-standin.webp (TOR-0424 Hermit, Hermit A.png; copy of ../keepers/host.webp)"
+    ],
+    "used_by": [
+      "assets/images/cutscenes/index.ts (CUTSCENE_NARRATOR)"
+    ],
+    "license": "open source (T, 2026-10-29, D115); artist's free-material grant in docs/licences/torio-javardry.md",
+    "license_note": "Art by torio. T, 2026-10-29, D115: all game images are open source. The artist's own licence note is docs/licences/torio-javardry.md.",
+    "post_process": "Same file as keepers/host.webp: black ground removed, cropped to the figure, longest edge <= 640 px, WebP q44 (alpha q80). Deleted when T's narrator replaces it (172.3)."
+  }
+]
