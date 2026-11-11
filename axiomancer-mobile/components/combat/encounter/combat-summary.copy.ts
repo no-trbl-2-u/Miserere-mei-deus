@@ -8,8 +8,8 @@ export function summaryShillingsValue(shillings: number): string {
 }
 
 /**
- * Why a fight was lost, one line under "Defeat" (176 FE1d). Placeholder lines
- * marked `[content]` until T writes the real ones (D88). The cause is read
+ * Why a fight was lost, one line under "Defeat". Placeholder lines
+ * marked `[content]` until T writes the real ones. The cause is read
  * from the final fight state by the engine (`defeatCause`), never stored.
  */
 export const DEFEAT_CAUSE_LINES: Record<'vitae' | 'turn-limit', string> = {

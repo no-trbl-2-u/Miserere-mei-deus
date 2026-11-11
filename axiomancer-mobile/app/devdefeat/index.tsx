@@ -1,5 +1,5 @@
 /**
- * Dev-only DEFEAT PANEL preview (176 FE1d): the post-fight summary on a lost
+ * Dev-only DEFEAT PANEL preview: the post-fight summary on a lost
  * fight, with its cause line, on the house look. A real defeat needs a lost
  * fight; this route mounts the same `CombatSummaryModal` from a fixed summary
  * so `verify:visual` can shoot it. Gated to dev-tools builds; production

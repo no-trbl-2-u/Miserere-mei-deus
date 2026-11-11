@@ -37,7 +37,7 @@ const VELLUM_CONTINUE = lookOf('P-02') === 'vellum';
 export function CombatSummaryModal({ summary, shillings = 0, spareLines, mercyLine, onClose }: { summary: CombatSummary; shillings?: number; spareLines?: readonly SpareSummaryLine[]; mercyLine?: string; onClose: () => void }) {
     const styles = useStyles();
     const AXM = usePalette();
-    // A lost fight wears the house look (176 FE1d): the dark ground in place of
+    // A lost fight wears the house look: the dark ground in place of
     // the vellum panel, and CONTINUE on the brass plate. Wins and spares keep
     // today's panel until the victory screen (FE1b) takes them.
     const house = summary.outcome === 'defeat';

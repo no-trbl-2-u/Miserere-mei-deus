@@ -122,7 +122,7 @@ export const LOOKS: Record<PlaceId, Look> = {
     'N-06': 'vellum', // Character select: CONFIRM
     'N-07': 'normal', // Character select: roster grid tiles
     'G-01': 'vellum', // Death return: CONTINUE (Game over's button is G-02)
-    'G-02': 'brass', // Game over: NEW CHARACTER (176 FE1d: the house look's brass plate)
+    'G-02': 'brass', // Game over: NEW CHARACTER (the house look's brass plate)
     'V-01': 'brass', // Village: hub and counter buttons (168, call #5: these screens only)
 };
 
