@@ -135,10 +135,10 @@ describe('the village screens (168, call #5)', () => {
 });
 
 describe("round 2's new game and endings (A2)", () => {
-    it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM and the ending button; brass for the cards", () => {
+    it("matches T's picks: vellum for rows, BEGIN, stat tiles, CONFIRM ; brass for the cards and the death return's button", () => {
         const picked = (look: Look) => NEW_GAME.filter((p) => LOOKS[p] === look);
-        expect(picked('vellum')).toEqual(['N-01', 'N-02', 'N-05', 'N-06', 'G-01']);
-        expect(picked('brass')).toEqual(['N-04']);
+        expect(picked('vellum')).toEqual(['N-01', 'N-02', 'N-05', 'N-06']);
+        expect(picked('brass')).toEqual(['N-04', 'G-01']);
         expect(picked('normal')).toEqual(['N-03', 'N-07']);
     });
 

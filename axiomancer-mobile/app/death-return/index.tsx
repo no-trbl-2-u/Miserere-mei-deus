@@ -77,6 +77,7 @@ export default function DeathReturnScreen() {
                     label={vm.continueLabel}
                     accessibilityLabel={vm.continueA11yLabel}
                     onPress={toMap}
+                    place="G-01"
                     align="center"
                     style={styles.button}
                     testID="death-return-continue"
