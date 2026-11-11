@@ -1,6 +1,6 @@
 # 175 — The fight reveal, and the boss's title card
 
-> Walking to a fight shows the foe whole: the place small, its name large, its LEVEL and VITAE, a FIGHT or ELITE chip, its figure cut out on a ground that fades into the dark, your own VITAE, then ENTER COMBAT and WITHDRAW with what withdrawing costs. A boss gets a held title card instead: two gold rules, CHAPTER 1 BOSS, its name huge in gold, the place, its figure rising from below, "tap to face it". No ground stops on a hard line.
+> Walking to a fight shows the foe whole: its name large, its LEVEL and VITAE, an ELITE chip for an elite (none for a normal foe), its figure cut out on a ground that fades into the dark, then ENTER COMBAT and WITHDRAW with what withdrawing costs. A boss gets a held title card instead: two gold rules, CHAPTER 1 BOSS, its name huge in gold, the place, its figure rising from below, "tap to face it". No ground stops on a hard line.
 
 ## Why
 
@@ -10,6 +10,7 @@
 - **The settled shot:** `plan/card-ledger/screens/S-05-settled.webp` (left: look G for normal and elite foes; right: look F for the boss). The winning looks are `S-05g.webp` and `S-05f.webp`; today's screen is `S-05a.webp`. All land with PR #1584 (the screens ballot), not merged when this spec was written.
 - **The ledger's reading** ("Open for the plot", S-05): DANGER is the count of the foe's hidden phase-opening moves (`revealDangers`). WITHDRAW is `fleeEncounter`: no reward, the node stays unspent, you may come back. Bosses have no WITHDRAW. Look f prints the boss's name where today's card prints the place. The VITAE figures in the shots are samples, and WITHDRAW's second line is an invented placeholder ("Invented lines", S-05).
 - **T, 2026-11-10:** plot each screen separately; the art needs no new images (the foes' own paintings carry S-05).
+- **T, on PR #1588, 2026-11-11** (verbatim): "Perfect! Except for the normal/elite fights, don't put the region in the top left, don't put "fight", and don't show "yours<VITAE>"". This overrides the settled shot's left half: look G drops the place eyebrow, the FIGHT chip and the player's `YOURS <hp> VITAE` line. The boss card (F) keeps its place line; the elite keeps its ELITE chip.
 
 ### What exists today (read 2026-11-10, at origin/main 2a77e8c8a)
 
@@ -32,12 +33,12 @@
 
 **G, for a normal foe and an elite** (the settled shot's left half), top to bottom, on one screen with no scroll:
 
-- The place, small, as an eyebrow at the top left (`breakwaterPlaceAt`); none off the chapter.
+- No place eyebrow (T, 2026-11-11).
 - The foe's name, large, centred.
 - `LEVEL <n>` and `<hp> VITAE` on one line, the numbers large and the words small.
-- A tier chip: FIGHT in a grey frame, ELITE in oxblood (`AXM.kindElite`).
-- The foe's painting, cut out (no box, no border), as large as the space between the chip and `YOURS` allows, standing on a coloured ground. The ground fades out at its top into the screen's black and fades out again at its foot, so no hard line shows anywhere; the buttons sit on the black below it.
-- `YOURS <hp> VITAE`, with YOURS in gold.
+- An elite's tier chip: ELITE in oxblood (`AXM.kindElite`). A normal foe carries no chip (no FIGHT; T, 2026-11-11).
+- The foe's painting, cut out (no box, no border), as large as the space between the stats line (or an elite's chip) and ENTER COMBAT allows, standing on a coloured ground. The ground fades out at its top into the screen's black and fades out again at its foot, so no hard line shows anywhere; the buttons sit on the black below it.
+- No `YOURS <hp> VITAE` line (T, 2026-11-11); the board shows the player's VITAE once the fight starts.
 - ENTER COMBAT on the pressed brass plate (`action-button-selected`), full width.
 - WITHDRAW on the plain brass plate (`action-button-idle`), full width, with its cost on a second line inside the plate: `[content] No reward. You may try again.` (the ledger's stand-in, kept as a placeholder for T's voice; D88).
 
@@ -54,13 +55,13 @@
 - The ink curtain plays first, as today, for both looks.
 - One ground component draws both grounds (a vertical SVG gradient, transparent at both ends, like `SeamFog`), with its colour from one table keyed by tier (fight, elite, boss) in the theme, so T retunes a ground in one place. The fight and elite grounds start as the settled shot's cold sea-green; the boss's as its warm brown.
 - The figure keeps the art registry (`getEncounterEnemyArt`), so T's portrait swap changes both looks with no edit here.
-- Every number comes from the presenter: the foe's level and VITAE, the player's VITAE, the tier, the place.
+- Every number comes from the presenter: the foe's level and VITAE, the tier, and (for the boss card) the place.
 
 ### Decisions made upfront (do not ask)
 
 - F for the boss, G for every other foe, as T voted. The settled shot is the reference picture for both.
 - The rules do not change: the boss still has no WITHDRAW; WITHDRAW still pays nothing and leaves the node unspent; the fight is the same fight.
-- The foe's VITAE and the player's are the current figure only (`108 VITAE`, `YOURS 170 VITAE`), as in the shot; the board shows the maximum once the fight starts.
+- The foe's VITAE is the current figure only (`108 VITAE`), as in the shot; the board shows the maximum once the fight starts.
 - The reveal loses its scroll: G fits one 390x844 screen, and a smaller window shrinks the figure first, never the words or the buttons.
 - No new images: the foes' own paintings carry both looks.
 - The words that are not the game's (the WITHDRAW cost line) are `[content]` placeholders in `reveal.copy.ts`; T is writing the voice separately.
@@ -74,7 +75,7 @@
 
 ## Acceptance
 
-- **A1** A normal or elite fight's reveal shows, on one screen without scrolling, the place as an eyebrow, the foe's name, `LEVEL <n>` and `<hp> VITAE`, a FIGHT (grey) or ELITE (oxblood) chip, the foe's painting with no box or border round it, `YOURS <hp> VITAE`, ENTER COMBAT on the pressed brass plate and WITHDRAW on the plain plate. The level, VITAE, tier and place come from one reveal view-model built by `state/presenters/encounter-reveal.engine.ts`, unit-tested for a fight, an elite, a boss and a node off the chapter.
+- **A1** A normal or elite fight's reveal shows, on one screen without scrolling, the foe's name, `LEVEL <n>` and `<hp> VITAE`, an ELITE (oxblood) chip for an elite only, the foe's painting with no box or border round it, ENTER COMBAT on the pressed brass plate and WITHDRAW on the plain plate. It shows no place eyebrow, no FIGHT chip and no `YOURS` VITAE line (T, 2026-11-11). The level, VITAE, tier and the boss card's place come from one reveal view-model built by `state/presenters/encounter-reveal.engine.ts`, unit-tested for a fight, an elite, a boss and a node off the chapter.
 - **A2** WITHDRAW carries its cost on a second line inside its plate, from `reveal.copy.ts` (`[content]`); pressing it still runs `fleeEncounter` and `endCombat('flee')`, and the node stays unspent (today's e2e for a withdrawal passes unchanged).
 - **A3** The ground behind the figure fades out at its top and its foot on both looks: a pixel probe of the reveal's shot finds no row where the ground's colour steps by more than a small threshold from one row to the next (the hard cutoff T named is gone). The ground's colour is read from one tier-keyed table in the theme.
 - **A4** The reveal shows no DANGER line and no THREAT SEQUENCE for any foe (#1), and no held-road or arrival line (#2). `revealDangers` and the board's own naming of a landed move are unchanged.
@@ -83,15 +84,15 @@
 
 ## Open questions
 
-- **[T to confirm #1]** DANGER leaves the reveal, as settled. Default: dropped; the board names each hidden move when it first lands, as today. Or: keep one line under the tier chip ("2 hidden moves"); or keep today's DANGER block under `YOURS`.
-- **[T to confirm #2]** The elite's "Holds the road to <place>" line and the node's arrival line (still a `[content]` placeholder) leave the reveal, as settled. Default: dropped from the reveal; the engine keeps both. Or: keep the held-road line under the ELITE chip.
-- **[T to confirm #3]** Tapping the boss's title card starts the fight. Default: yes, straight onto the board (with no WITHDRAW, a second screen would only repeat ENTER COMBAT). Or: the tap opens G's panel for the boss with ENTER COMBAT and no WITHDRAW.
+- Confirmed by T (2026-11-11): DANGER leaves the reveal, as settled; the board names each hidden move when it first lands, as today.
+- Confirmed by T (2026-11-11): the elite's "Holds the road to <place>" line and the node's arrival line leave the reveal, as settled; the engine keeps both.
+- Confirmed by T (2026-11-11): tapping the boss's title card starts the fight, straight onto the board.
 
 ## Chunks
 
 Measure: 6 open · 0 closed · next A7
 
 - [ ] **175.1** The fight reveal for normal and elite foes (look G) · M · closes A1, A2, A3, A4 · needs — · alias: FR1a
-  - Extend `buildRevealFrame` into the reveal view-model (place, level, VITAE, player VITAE, tier, boss card fields) and add the foe's level to what the panel reads; the ground component and its tier-keyed colour table; redraw the reveal column; WITHDRAW's second line in `reveal.copy.ts`; drop the DANGER and THREAT SEQUENCE block and the held and arrival lines from the reveal (their presenters stay); re-stamp `combat-encounter` and add the elite route (A6).
+  - Extend `buildRevealFrame` into the reveal view-model (level, VITAE, tier, boss card fields with the place) and add the foe's level to what the panel reads; the ground component and its tier-keyed colour table; redraw the reveal column; WITHDRAW's second line in `reveal.copy.ts`; drop the DANGER and THREAT SEQUENCE block and the held and arrival lines from the reveal (their presenters stay); re-stamp `combat-encounter` and add the elite route (A6).
 - [ ] **175.2** The boss's held title card (look F) · M · closes A5, A6 · needs 175.1 · alias: FR1b
   - Redraw the held card as F on the shared ground; a tap starts the fight (#3); add the boss route to `verify:visual` and an e2e that the boss card offers no WITHDRAW and its tap reaches the board.
