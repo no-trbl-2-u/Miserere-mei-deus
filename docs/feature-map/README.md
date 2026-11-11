@@ -49,6 +49,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | The dev menu | dev route | yes | yes | yes | no |
 | Devart | dev route | yes | no | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
 | Devart Rooms | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart Rooms") |
+| Devdefeat | dev route | no | yes | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devdefeat") |
 | Devframes | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devframes") |
 | The hazard puzzle demos | dev route | yes | yes | yes | no |
 <!-- feature-table:end -->
@@ -58,6 +59,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 ### Built but unreachable
 
 - Game Over (`route:game-over`)
+- Devdefeat (`route:devdefeat`)
 
 ### Routes with no way out but back
 
@@ -74,6 +76,7 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 - The Labyrinth (`route:labyrinth`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
+- Devdefeat (`route:devdefeat`)
 - Devframes (`route:devframes`)
 - The hazard puzzle demos (`route:devpuzzle`)
 
@@ -107,4 +110,5 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - NPCs (`area:NPCs`)
 - Devart (`route:devart`)
 - Devart Rooms (`route:devart/rooms`)
+- Devdefeat (`route:devdefeat`)
 - Devframes (`route:devframes`)
