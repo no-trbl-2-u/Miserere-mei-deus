@@ -18,7 +18,13 @@
       when it is newer than the device's draft;
     - Clear (with a confirm) empties the draft;
     - Generate and Copy, which need no network;
-    - Save, which posts the ballot unfinished as a `draft` row, and Submit,
+    - Mark complete, which needs no token: it records on this device that
+      the ballot is done (localStorage `ballot:<ballotId>:complete`), writes
+      the verdict text into `#out`, copies it and offers the phone's share
+      sheet. When the device already holds the token it also submits; it
+      never asks for one.
+    - Save, which posts the ballot unfinished as a `draft` row, and Submit
+      (the button reads "Save and submit"),
       which posts the verdict as a `final` row, to the miserere-api Worker.
       Whichever runs first asks for the API URL and the token and keeps them
       on the device (localStorage `ballot:api`, shared by every ballot). The
@@ -26,7 +32,8 @@
 
   DOM the kit reads: `.pick` checkboxes (value = candidate id), `[data-note]`
   inputs (value of the attribute = slot id), `#general`, `#gen`, `#copy` and
-  `#out`. It adds the Save, Submit and Clear buttons and a status line after Copy.
+  `#out`. It adds the Save, Save and submit, Mark complete and Clear buttons and a
+  status line after Copy.
 
   The pure parts (draft serialise and restore, payload build, error to words,
   post and fetch with an injected fetch, the newer-wins choice and the
@@ -43,6 +50,35 @@
   /** The localStorage key one ballot's draft lives under. */
   function draftKey(ballotId) {
     return 'ballot:' + ballotId + ':draft';
+  }
+
+  /** The localStorage key one ballot's Mark complete stamp lives under. */
+  function completeKey(ballotId) {
+    return 'ballot:' + ballotId + ':complete';
+  }
+
+  /** The stamp Mark complete stores: when, as an ISO time. */
+  function serialiseComplete(at) {
+    return JSON.stringify({ at: at });
+  }
+
+  /** A stored Mark complete stamp's time, or null when there is none or it is not ours. */
+  function restoreComplete(text) {
+    try {
+      var raw = JSON.parse(text);
+      return raw && typeof raw.at === 'string' && !isNaN(Date.parse(raw.at)) ? raw.at : null;
+    } catch (e) { return null; }
+  }
+
+  /**
+   * The status line after Mark complete. `sent` is null when the device holds
+   * no token (nothing was sent), or the result of the submit it made.
+   */
+  function completeWords(at, sent) {
+    var lead = 'Marked complete on this device at ' + formatTime(at) + '. The verdict text is below and copied. ';
+    if (!sent) return lead + 'Nothing was sent: this device has no API token. Paste the text to Claude, or press Save and submit.';
+    if (sent.ok) return lead + 'Submitted too: verdict #' + sent.id + '.';
+    return lead + 'It was not submitted. ' + sent.words;
   }
 
   /** Slot notes with the blank ones dropped and the rest trimmed. */
@@ -316,7 +352,8 @@
     var copy = doc.getElementById('copy');
 
     var saveButton = button(doc, 'save', 'Save');
-    var submit = button(doc, 'submit', 'Submit');
+    var submit = button(doc, 'submit', 'Save and submit');
+    var complete = button(doc, 'complete', 'Mark complete');
     var clear = button(doc, 'clear', 'Clear');
     var status = doc.getElementById('status');
     if (!status) {
@@ -327,7 +364,8 @@
     }
     if (!saveButton.parentNode) copy.insertAdjacentElement('afterend', saveButton);
     if (!submit.parentNode) saveButton.insertAdjacentElement('afterend', submit);
-    if (!clear.parentNode) submit.insertAdjacentElement('afterend', clear);
+    if (!complete.parentNode) submit.insertAdjacentElement('afterend', complete);
+    if (!clear.parentNode) complete.insertAdjacentElement('afterend', clear);
     if (!status.parentNode) out.insertAdjacentElement('beforebegin', status);
 
     var say = function (text) { status.textContent = text; };
@@ -369,6 +407,15 @@
     } else if (!store) {
       say('This browser will not save drafts: keep the page open until you submit.');
     }
+
+    var doneKey = completeKey(ballotId);
+    var markedAt = function () { return store ? restoreComplete(store.getItem(doneKey)) : null; };
+    var showMark = function () {
+      var at = markedAt();
+      complete.textContent = at ? 'Marked complete \u2713' : 'Mark complete';
+      complete.setAttribute('aria-pressed', String(!!at));
+    };
+    showMark();
 
     // Load from the save: the device's draft is on screen already; the newest
     // online row replaces it only when it is newer. The draft is read again
@@ -416,6 +463,8 @@
       apply({ kept: [], notes: {}, general: '' });
       autosave();
       out.value = '';
+      if (store) { try { store.removeItem(doneKey); } catch (e) { /* nothing to remove */ } }
+      showMark();
       say('Draft cleared.');
     });
 
@@ -438,10 +487,12 @@
       });
       saveButton.disabled = true;
       submit.disabled = true;
+      complete.disabled = true;
       say(rowStatus === 'draft' ? 'Saving...' : 'Submitting...');
       submitVerdict(root.fetch.bind(root), api, payload).then(function (result) {
         saveButton.disabled = false;
         submit.disabled = false;
+        complete.disabled = false;
         if (result.ok) {
           say(rowStatus === 'draft'
             ? savedWords(result)
@@ -455,6 +506,49 @@
 
     saveButton.addEventListener('click', function () { post('draft'); });
     submit.addEventListener('click', function () { post('final'); });
+
+    // Mark complete: no token asked. The stamp and the text stay on the
+    // device; the text is copied and offered to the share sheet; a device
+    // that already holds the token submits as well.
+    complete.addEventListener('click', function () {
+      var at = new Date().toISOString();
+      var text = sheet();
+      out.value = text;
+      autosave();
+      if (store) {
+        try { store.setItem(doneKey, serialiseComplete(at)); }
+        catch (e) { /* the status line still says it is complete for this visit */ }
+      }
+      showMark();
+      var nav = root.navigator;
+      var fallback = function () { out.select(); if (doc.execCommand) doc.execCommand('copy'); };
+      if (nav && nav.clipboard) nav.clipboard.writeText(text).catch(fallback);
+      else fallback();
+      var held = readApi(store);
+      if (!held || typeof root.fetch !== 'function') {
+        say(completeWords(at, null));
+        if (nav && typeof nav.share === 'function') {
+          nav.share({ title: 'Ballot ' + ballotId, text: text }).catch(function () { /* the share sheet was closed */ });
+        }
+        return;
+      }
+      var state = read();
+      complete.disabled = true;
+      say('Marked complete. Submitting...');
+      submitVerdict(root.fetch.bind(root), held, buildPayload({
+        ballotId: ballotId,
+        verdictText: text,
+        kept: state.kept,
+        notes: state.notes,
+        general: state.general,
+        client: nav ? nav.userAgent : null,
+        status: 'final',
+      })).then(function (result) {
+        complete.disabled = false;
+        if (!result.ok && result.status === 401 && store) store.removeItem(API_KEY);
+        say(completeWords(at, result));
+      });
+    });
   }
 
   root.BallotKit = {
@@ -462,6 +556,10 @@
     DEFAULT_API_URL: DEFAULT_API_URL,
     VERDICTS_PATH: VERDICTS_PATH,
     draftKey: draftKey,
+    completeKey: completeKey,
+    serialiseComplete: serialiseComplete,
+    restoreComplete: restoreComplete,
+    completeWords: completeWords,
     serialiseDraft: serialiseDraft,
     restoreDraft: restoreDraft,
     rowToDraft: rowToDraft,

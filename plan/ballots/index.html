@@ -77,6 +77,7 @@
   .tag.status.closed { background: var(--closed); }
   .tag.status.complete { background: var(--complete); }
   .tag.kind { border: 1px solid var(--muted); color: var(--muted); }
+  .tag.done { border: 1px solid var(--open); color: var(--open); }
   .empty { color: var(--muted); }
 </style>
 </head>
@@ -173,6 +174,18 @@ document.getElementById('kinds').innerHTML = chip({ key: '', label: 'Everything'
 document.getElementById('groups').innerHTML = BALLOTS.length
   ? STATUSES.filter((s) => inStatus(s.key).length).map(group).join('')
   : '<p class="empty">No ballots yet.</p>';
+
+/* Marked complete on this device (the kit's Mark complete, which needs no
+   token): an open ballot whose stamp this browser holds wears a tag. The
+   stamp never leaves the device, so another device shows none. */
+const markedHere = (b) => {
+  try { return Boolean(JSON.parse(localStorage.getItem(`ballot:${b.id}:complete`)).at); }
+  catch (e) { return false; }
+};
+BALLOTS.filter((b) => b.status === 'open' && markedHere(b)).forEach((b) => {
+  const meta = document.querySelector(`#groups a.go[href="${b.file}"] + .meta`);
+  if (meta) meta.insertAdjacentHTML('beforeend', ' <span class="tag done">marked complete here</span>');
+});
 
 /* The filter: show one kind, hide a group left empty by it. */
 document.getElementById('kinds').addEventListener('click', (e) => {

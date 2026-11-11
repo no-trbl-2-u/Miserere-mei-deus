@@ -17,7 +17,12 @@ type, colour, voice and enemy ballots as well as the card families.
   draft, saves the ballot unfinished online (Save, a `draft` row), loads the
   newest online save when it is newer than the device's draft, and submits the
   verdict (Submit, a `final` row) to the `miserere-api` Worker
-  (`POST /v1/ballot-verdicts`, `backend/src/index.ts`).
+  (`POST /v1/ballot-verdicts`, `backend/src/index.ts`). The Submit button reads
+  **Save and submit**. **Mark complete** finishes a ballot with no token: it
+  stamps the ballot done on that device, writes and copies the verdict text,
+  and opens the phone's share sheet; the index then tags the ballot "marked
+  complete here". It reaches the Worker only when the device already holds
+  the token, and never asks for one.
 
 The `axiomancer-ballots` Cloudflare Pages project serves this directory as it
 stands on `main`, with branch previews (`docs/external-architecture.md`).
@@ -63,6 +68,9 @@ query tool on database `miserere`, table `ballot_verdicts`, `WHERE status =
 'final'`. A `draft` row is progress, never a verdict, even when it is newer
 than the last `final` one (T is revising). The session running the ballot
 writes the ledger's Verdicts section from it by hand.
+
+A ballot T finished with **Mark complete** on a device with no token has no
+`final` row: its verdict is the text T pastes into the session.
 
 On load, a ballot fetches the newest row of either status for its id and
 applies it when it was received after the device's draft was saved; the status

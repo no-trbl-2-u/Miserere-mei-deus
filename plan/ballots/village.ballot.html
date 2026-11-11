@@ -68,7 +68,7 @@
   <button id="gen" type="button">Generate</button>
   <button id="copy" type="button">Copy</button>
   <span class="count" id="count"></span>
-  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+  <textarea id="out" readonly placeholder="Press Save and submit or Mark complete, or Generate and copy this text back to Claude."></textarea>
 </footer>
 <script>
 const BALLOT_ID = 'village-2026-11-09';
@@ -144,7 +144,7 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+/* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
 BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
 
 document.getElementById('themeBtn').addEventListener('click', () => {

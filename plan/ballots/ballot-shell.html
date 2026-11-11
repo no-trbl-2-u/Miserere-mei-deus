@@ -20,8 +20,10 @@
        ticking two in one slot reads as "merge these").
     3. Optional: type a per-slot note (a TWEAK number, a merge rule, or a
        colour overrule such as "make it blue").
-    4. Press "Submit" to send the verdict (the first time, it asks for the
-       API URL and the token), or "Generate" and copy the plain-text sheet.
+    4. Press "Save and submit" to send the verdict (the first time, it asks
+       for the API URL and the token), or "Mark complete" to finish with no
+       token (the text is copied to paste to Claude), or "Generate" and
+       copy the plain-text sheet.
   Unticked cards are CUT by default.
 -->
 <style>
@@ -155,7 +157,7 @@
   <button id="gen" type="button">Generate</button>
   <button id="copy" type="button">Copy</button>
   <span class="count" id="count"></span>
-  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+  <textarea id="out" readonly placeholder="Press Save and submit or Mark complete, or Generate and copy this text back to Claude."></textarea>
 </footer>
 
 <script>
@@ -330,7 +332,7 @@ const sheet = () => {
   ].filter(Boolean).join('\n');
 };
 
-/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+/* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
 BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
 
 /* Theme toggle: flips data-theme on <html>; no storage. */

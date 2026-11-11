@@ -27,6 +27,23 @@ test('loads as a classic script without a DOM and exposes BallotKit', () => {
   assert.equal(kit.draftKey('elementalist-2026-10-22'), 'ballot:elementalist-2026-10-22:draft');
 });
 
+test('Mark complete keeps its stamp per ballot and reads only its own', () => {
+  assert.equal(kit.completeKey('village-2026-11-09'), 'ballot:village-2026-11-09:complete');
+  const at = '2026-11-11T20:30:00.000Z';
+  assert.equal(kit.restoreComplete(kit.serialiseComplete(at)), at);
+  assert.equal(kit.restoreComplete(null), null);
+  assert.equal(kit.restoreComplete('{"at":"soon"}'), null);
+  assert.equal(kit.restoreComplete('not json'), null);
+});
+
+test('Mark complete says whether anything was sent', () => {
+  const at = '2026-11-11T20:30:00.000Z';
+  assert.match(kit.completeWords(at, null), /^Marked complete on this device at 2026-11-11 20:30 UTC\./);
+  assert.match(kit.completeWords(at, null), /Nothing was sent: this device has no API token/);
+  assert.match(kit.completeWords(at, { ok: true, id: 7 }), /Submitted too: verdict #7\./);
+  assert.match(kit.completeWords(at, { ok: false, words: 'No answer.' }), /It was not submitted\. No answer\./);
+});
+
 test('a draft round trips, dropping blank notes', () => {
   const draft = { kept: ['P-01a', 'E-03c'], notes: { 'P-01': ' TWEAK 3 ', 'P-02': '  ' }, general: 'more frost' };
   const back = plain(kit.restoreDraft(kit.serialiseDraft(draft)));
