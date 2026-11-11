@@ -157,16 +157,6 @@ export const EVENT_CHROME: EventChrome = {
     emptyBackSub: 'RETURN',
 };
 
-/**
- * The hint under each cutscene line: one for a line with more to follow, one
- * for the last. Pointer-neutral (critique pass 93): the plate runs under a
- * mouse on web as well as a finger on the phone, so it names no gesture.
- */
-export const CUTSCENE_HINT = {
-    next: '· continue ·',
-    last: '· walk on ·',
-} as const;
-
 /** One beat of a cutscene: its line and its "n of m" count. */
 export interface CutsceneBeat {
     line: string;
