@@ -2,7 +2,7 @@
  * THE DEFENDER TRIAL SET — the turtle with spikes.
  *
  * The 30 kept cards of the Defender rehearsal ballot
- * (`plan/card-ledger/rehearsal-defender.md`: "The kept family, with T's notes
+ * (`plan/ballots/rehearsal-defender.md`: "The kept family, with T's notes
  * applied", "Revisions" and "The numbers"), at the numbers T chose to ship
  * (2026-10-27, "Ship the sims' fixes": P-01, P-03, P-04, P-06, E-01, E-04, E-07,
  * M-04, M-08 and M-09 change as the ledger's table lists), T's names and T's

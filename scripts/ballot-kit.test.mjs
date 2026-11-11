@@ -1,4 +1,4 @@
-// Tests for plan/card-ledger/ballot-kit.js (phases BV1b, BV2b): the kit's pure parts,
+// Tests for plan/ballots/ballot-kit.js (phases BV1b, BV2b): the kit's pure parts,
 // loaded in a vm the way a browser loads a classic script, plus the index and
 // the ballots it lists.
 import { test } from 'node:test';
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const LEDGER = join(ROOT, 'plan/card-ledger');
+const LEDGER = join(ROOT, 'plan/ballots');
 
 function loadKit() {
   const context = vm.createContext({});
@@ -184,6 +184,8 @@ test('the index lists every ballot file once, one entry per family', () => {
     assert.ok(['open', 'closed', 'complete'].includes(b.status), `${b.id} status`);
     assert.match(b.date, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(existsSync(join(LEDGER, b.ledger)), `${b.ledger} exists`);
+    assert.ok(['cards', 'screens', 'look', 'voice', 'enemies'].includes(b.kind), `${b.id} kind`);
+    if (b.thumb) assert.ok(existsSync(join(LEDGER, b.thumb)), `${b.thumb} exists`);
   }
 });
 

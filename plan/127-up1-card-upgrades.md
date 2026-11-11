@@ -182,7 +182,7 @@ Measure: the report's Act 1 boss row shows half-upgraded above 50% and plain at 
 
 ### The string of beads (T, `/pitch` then `/plot asap`, 2026-11-10)
 
-The shared upgrade screen (`components/upgrade/CardUpgradePicker.tsx`, UP1d) is reworked into the look T settled over two ballot rounds: `plan/card-ledger/upgrade.md` (both verdicts verbatim) and its settled shot `plan/card-ledger/upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md`; its Handoff block is the source of the acceptance below. The rules do not change: one card, one copy, its next upgrade (`nextUpgradeId`), every number from `cardUpgradePreviewVM`.
+The shared upgrade screen (`components/upgrade/CardUpgradePicker.tsx`, UP1d) is reworked into the look T settled over two ballot rounds: `plan/ballots/upgrade.md` (both verdicts verbatim) and its settled shot `plan/ballots/upgrade/U-02-settled.webp`. The pitch is `braindump/2026-11-09-card-upgrade-screen.md`; its Handoff block is the source of the acceptance below. The rules do not change: one card, one copy, its next upgrade (`nextUpgradeId`), every number from `cardUpgradePreviewVM`.
 
 Top to bottom, on the settled shot:
 

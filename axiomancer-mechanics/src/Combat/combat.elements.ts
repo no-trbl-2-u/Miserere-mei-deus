@@ -2,7 +2,7 @@
  * THE WEATHER — the Elementalist's elements (Phase EL1a).
  *
  * The weather the Elementalist trial set puts on the foe, on T's rulings of
- * 2026-10-24 (`plan/card-ledger/rehearsal-elementalist.md`, "The weather";
+ * 2026-10-24 (`plan/ballots/rehearsal-elementalist.md`, "The weather";
  * `plan/phases/phase_EL1_elementalist_trial_set.md`):
  *
  *   INFERNO n   both sides burn. At the start of each foe turn the foe loses

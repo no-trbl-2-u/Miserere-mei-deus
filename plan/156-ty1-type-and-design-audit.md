@@ -20,7 +20,7 @@
 - **The type system** (`axiomancer-mobile/theme/axm.ts`): five faces in `FONTS` (`gothic` Pirata One, `serif` and `serifItalic` IM Fell English, `sans` Bebas Neue, `mono` JetBrains Mono) and six `TYPE` sizes. Components mostly set `fontFamily: FONTS.<face>` directly, not through `TYPE`. Counts over `app/` and `components/`: `FONTS.sans` about 243, `FONTS.mono` about 220, `FONTS.gothic` about 181, `FONTS.serif` and `serifItalic` about 177. `letterSpacing` of 1 to 2 is set on about 290 styles, nearly always on Bebas capitals.
 - **Font loading** (`app/_layout.tsx`): Pirata One and both IM Fell faces load first; the rest load after start.
 - **The tells in the code** (the same session's read): monospace on labels and numbers, tracked condensed capitals, cards with a hairline border and a 6 to 10 radius on nearly every panel, translucent washes derived from each accent (`sulfurSubtle`, `bloodSubtle`, ...), and screens built as centred stacks of like panels.
-- **The ballot** `plan/card-ledger/fonts.ballot.html` (id `fonts-2026-11-06`, ledger `fonts.md`), added by this plot: 15 places, 8 to 10 live Google Fonts each from a pool of 43, a Browse tab, and a running count of font families picked. It saves and submits through the ballot kit.
+- **The ballot** `plan/ballots/fonts.ballot.html` (id `fonts-2026-11-06`, ledger `fonts.md`), added by this plot: 15 places, 8 to 10 live Google Fonts each from a pool of 43, a Browse tab, and a running count of font families picked. It saves and submits through the ballot kit.
 - **The UI rounds in flight:** spec 152 (looks, round 1), 153 (layout notes), 154 (looks, round 2), 155 (the Deck reader). The Brass Gothic and Vellum & Ink kit pieces they place are hand-made art. They are the largest step away from the generated look already under way.
 - **Mock pages for a pick:** 153.7 built a three-direction mock page for the Deck that T picked from. 156.5 reuses that shape.
 
@@ -50,7 +50,7 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 ### Type
 
 - **Roles, not faces.** `theme/axm.ts` gains `TYPE_ROLES`, one entry per ballot place: title, eyebrow, sectionHead, narration, spoken, rules, button, chip, mapName, bigNumber, count, cardName, cardRules, foeName, entry. Each sets family, size, line height, case and letter spacing. A component names the job (`TYPE_ROLES.button`), never a face.
-- **T's picks fill the roles** (voted 2026-11-06; the table is in `plan/card-ledger/fonts.md`). Eight families: Uncial Antiqua carries titles, buttons, chips, map names, card names and foe names; Eagle Lake the omens and the spoken line; Rosarivo the rules and card rules; Marcellus SC the small labels; MedievalSharp the section headings; Spectral the big numbers; Grenze the small counts; Fondamento the quest and ledger entries.
+- **T's picks fill the roles** (voted 2026-11-06; the table is in `plan/ballots/fonts.md`). Eight families: Uncial Antiqua carries titles, buttons, chips, map names, card names and foe names; Eagle Lake the omens and the spoken line; Rosarivo the rules and card rules; Marcellus SC the small labels; MedievalSharp the section headings; Spectral the big numbers; Grenze the small counts; Fondamento the quest and ledger entries.
 - **Fonts load from their `@expo-google-fonts` packages.** The faces the title and body roles use load first, the rest after start, as today. A face no role uses is removed with its package (`[T to confirm #2]`).
 - **Letter spacing follows the face.** The 1 to 2 point tracking stays only where T's pick for that role is a condensed capital face.
 
@@ -86,7 +86,7 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
   It is a number to watch, not a gate.
 - **Words are flagged, not rewritten.** Copy that sounds generated is listed by screen; T writes the replacements (D88).
-- **The three worst screens get three directions each** as a mock page in `plan/card-ledger/`, like 153.7, each direction from a different named reference (a manuscript, a printed book, a game). T picks; the picks are plotted.
+- **The three worst screens get three directions each** as a mock page in `plan/ballots/`, like 153.7, each direction from a different named reference (a manuscript, a printed book, a game). T picks; the picks are plotted.
 
 ### Decisions made upfront (do not ask)
 
@@ -133,7 +133,7 @@ Measure: 3 open · 4 closed · next A8
 
 ### 156.2 (TY1b) — The type roles, filled from T's font ballot · M · closes A2 · requires —
 
-- T's verdict is in `plan/card-ledger/fonts.md` (voted and pasted 2026-11-06, written there by the plot's session; the ballot is closed).
+- T's verdict is in `plan/ballots/fonts.md` (voted and pasted 2026-11-06, written there by the plot's session; the ballot is closed).
 - Add `TYPE_ROLES` to `theme/axm.ts` and the picked faces' `@expo-google-fonts` packages. Load them in `app/_layout.tsx`, the title and body faces first.
 - Keep `FONTS` and `TYPE` working. T's answer at the pilot gate (2026-11-07) overrides "no screen changes": this chunk also repoints today's five `FONTS` slots to T's picks (gothic and sans to Uncial Antiqua, serif to Rosarivo, serifItalic to Eagle Lake, mono to Grenze), so every screen shows T's fonts on the next build. 156.3 does the exact per-job mapping (Marcellus SC labels, MedievalSharp headings, Spectral big numbers, Fondamento quests) by moving components to `TYPE_ROLES`.
 - Measure: a test that every role names a loaded face, then `npm run verify -w axiomancer-mobile`. The PR carries a 390×844 specimen page of the 15 roles.
@@ -154,7 +154,7 @@ Measure: 3 open · 4 closed · next A8
 
 ### 156.5 (TY1e) — Three directions for the three worst screens · M · closes A5 · requires 156.4
 
-- For each of the three worst screens, mock three directions, each from a different named reference, as one ballot page under `plan/card-ledger/` (the kit, an index entry, no colours on candidates).
+- For each of the three worst screens, mock three directions, each from a different named reference, as one ballot page under `plan/ballots/` (the kit, an index entry, no colours on candidates).
 - Each direction is a still at 390×844 with a one-line idea and its reference.
 - Measure: `node --test scripts/ballot-kit.test.mjs`. The PR links the page's branch preview.
 
@@ -162,7 +162,7 @@ Measure: 3 open · 4 closed · next A8
 
 - Draft 4 to 6 palettes per the Design section's "Colour", each from a named reference, plus today's as "now". Write each as a `ThemeSpec` on the branch only; no default changes.
 - Shoot the Wilds, a fight, Self, the Deck and one node screen at 390×844 under each palette, kit pieces in place.
-- Build `plan/card-ledger/colours.ballot.html` with the kit, an index entry and a ledger `colours.md`. It takes one pick, plus a note on how the brass pieces are treated.
+- Build `plan/ballots/colours.ballot.html` with the kit, an index entry and a ledger `colours.md`. It takes one pick, plus a note on how the brass pieces are treated.
 - Measure: `node --test scripts/ballot-kit.test.mjs`. The PR links the page's branch preview.
 
 ### 156.7 (TY1g) — T's palette, the default theme · M · closes A7 · requires 156.6

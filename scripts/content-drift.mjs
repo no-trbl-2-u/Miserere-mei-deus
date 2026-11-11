@@ -25,7 +25,7 @@ export const PATHS = {
   catalogGlyphs: 'scripts/build-catalog.mjs',
   mobileKeywords: 'axiomancer-mobile/state/combat/keywords.ts',
   keywordAtlas: 'axiomancer-mechanics/docs/keyword-atlas.md',
-  bloodPriceLedger: 'plan/card-ledger/rehearsal-blood-price.md',
+  bloodPriceLedger: 'plan/ballots/rehearsal-blood-price.md',
   bloodPriceCards: 'axiomancer-mechanics/src/Cards/library/blood-price.cards.ts',
 }
 

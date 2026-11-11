@@ -1,7 +1,7 @@
 /**
  * THE SPIKES — the Defender's THORNS and REFLECT (Phase DF1a).
  *
- * On T's rulings of 2026-10-26 (`plan/card-ledger/rehearsal-defender.md`,
+ * On T's rulings of 2026-10-26 (`plan/ballots/rehearsal-defender.md`,
  * Session 0 and the revisions; `plan/phases/phase_DF1_defender_trial_set.md`):
  *
  *   THORNS n    each foe strike deals n back to the foe, per strike. A DEAL:

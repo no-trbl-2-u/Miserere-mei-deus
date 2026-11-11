@@ -9,14 +9,14 @@ Carried from the v1 brief `phase_BV1_ballot_verdicts.md` at the nexus v2 cut-ove
 ### Sources
 
 - `/plot` from T, 2026-10-23 (attended). T works mainly on a phone and cannot open the ballot sheets the sessions
-  write (`plan/card-ledger/*.ballot.html`), and the verdict currently travels by copy-paste. T asked for "a
+  write (`plan/ballots/*.ballot.html`), and the verdict currently travels by copy-paste. T asked for "a
   dedicated webpage hosted on cloudflare with a tab for each lane", then whether the decisions and notes made on
   the page could be saved or sent; of the two routes offered (the `miserere-api` Worker, or a pre-filled GitHub
   issue) T chose the Worker: "I love #2! Let's plot it!"
 - T's calls in the same session: slot **asap**; BV1 **waits for BE2a** and builds on its router (migration
   `0003`); the page sends the existing **`PUZZLE_API_TOKEN`**, no new secret.
-- The process this serves: the card-family rehearsal (`plan/card-ledger/rehearsal-blood-price.md`, and the
-  Elementalist run opened in PR #809, `plan/card-ledger/rehearsal-elementalist.md`). T will lock that process in
+- The process this serves: the card-family rehearsal (`plan/ballots/rehearsal-blood-price.md`, and the
+  Elementalist run opened in PR #809, `plan/ballots/rehearsal-elementalist.md`). T will lock that process in
   if the Elementalist run succeeds; a ballot T can vote on from the phone is part of it (B5's ruled shape,
   `docs/card-spec.md` §15: the skill "renders an HTML artifact").
 - Phase BE1 (`plan/phases/phase_BE1_solve_time_backend.md`): the `miserere-api` Worker, D1 `miserere`, the bearer
@@ -33,7 +33,7 @@ Carried from the v1 brief `phase_BV1_ballot_verdicts.md` at the nexus v2 cut-ove
     `backend/test/` (Workers pool, local D1 via `apply-migrations.ts`); `backend/wrangler.toml` (no `[vars]`).
   - `.github/workflows/backend-deploy.yml`: on a push to `main` touching `backend/**`, applies migrations
     remotely and deploys.
-  - `plan/card-ledger/rehearsal-blood-price.ballot.html`: the ballot shell. Self-contained, "no network, no
+  - `plan/ballots/rehearsal-blood-price.ballot.html`: the ballot shell. Self-contained, "no network, no
     storage"; the verdict is built by `sheet()` from the DOM and copied by hand. A reload loses every tick.
   - `docs/external-architecture.md`: Cloudflare Pages projects are created at the dashboard; the repo holds no
     Cloudflare token and no Pages config (the `axiomancer-devlog` precedent).
@@ -50,7 +50,7 @@ presses Submit; the verdict lands in D1, and a session reads it back with no cop
 - `backend/`: migration `0003_ballot_verdicts.sql`; the ballot contract and validator (`src/ballot.ts`, backend
   only: no app shares it, so it does not go through `axiomancer-mechanics`); the table module; the two routes on
   BE2a's router; `src/cors.ts`; `BALLOT_ORIGINS` under `[vars]` in `wrangler.toml`; tests.
-- `plan/card-ledger/`: `ballot-kit.js`, `index.html`, `README.md`; the Elementalist ballot gains one `<script
+- `plan/ballots/`: `ballot-kit.js`, `index.html`, `README.md`; the Elementalist ballot gains one `<script
   src>` tag and a `BALLOT_ID`, and its inline Generate/Copy wiring moves into the kit.
 - Root: `scripts/ballot-kit.test.mjs` in the root `npm test` list.
 - Docs per A9.
@@ -60,7 +60,7 @@ presses Submit; the verdict lands in D1, and a session reads it back with no cop
 
 - BE2a's router (`backend/src/index.ts` after BE2a): two more routes.
 - `package.json` root `test` script (the kit's test).
-- `docs/external-architecture.md`, `AGENTS.md` (`backend/` line), `plan/card-ledger/README.md`.
+- `docs/external-architecture.md`, `AGENTS.md` (`backend/` line), `plan/ballots/README.md`.
 
 ### Decisions made upfront — DO NOT ASK
 
@@ -119,7 +119,7 @@ Verify: <commands and results>
 
 Measure: T's phone verdict is read back from D1 word for word (the phase Measure above).
 - Scope: T creates the `axiomancer-ballots` Pages project at the dashboard (connect the repo, no build command,
-  output directory `plan/card-ledger`, branch previews on); the session edits `BALLOT_ORIGINS` if the name
+  output directory `plan/ballots`, branch previews on); the session edits `BALLOT_ORIGINS` if the name
   differs; T submits from the production URL and from a preview URL; the session reads both rows back.
 - Consumers: none.
 - Tests: none (the round trip is the test).
@@ -138,7 +138,7 @@ Measure: T's phone verdict is read back from D1 word for word (the phase Measure
 
 ## Acceptance
 
-- **A10** (attended) The `axiomancer-ballots` Pages project exists, serving `plan/card-ledger/` from `main` with
+- **A10** (attended) The `axiomancer-ballots` Pages project exists, serving `plan/ballots/` from `main` with
   branch previews; T submits one real verdict from the phone on the production URL and one from a branch preview
   URL, and a session reads both back from D1 (the D1 query tool or `GET`).
 

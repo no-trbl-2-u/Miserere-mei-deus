@@ -1,10 +1,14 @@
-# Card ledger
+# Ballots
 
-One ledger per card family (`rehearsal-<family>.md`), the ballot T votes on
-(`rehearsal-<family>.ballot.html`), and the pages that serve the ballots:
+Every ballot T votes on (`<name>.ballot.html`), the ledger that records its
+verdicts (`<name>.md`; a card family's is `rehearsal-<family>.md`), the
+pictures a ballot shows (one folder per ballot) and the pages that serve them.
+This directory was `plan/card-ledger/` until 2026-11-11; it holds screens,
+type, colour, voice and enemy ballots as well as the card families.
 
-- `index.html` lists every ballot, one entry per family, from its `BALLOTS`
-  array.
+- `index.html` lists every ballot from its `BALLOTS` array, grouped by status
+  (needs your vote, settled, built) and tagged by kind (`cards`, `screens`,
+  `look`, `voice`, `enemies`).
 - `ballot-shell.html` is the page a new ballot is copied from (phase BV3):
   sample candidates, live kept counts and a Generate text; no candidate
   carries a colour (phase CL1).
@@ -37,7 +41,9 @@ the load from the save need the Pages site.
    and hyphens, 3 to 64), and end the script with
    `BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });`.
 4. **The `BALLOTS` entry.** Add `{ id, family, file, ledger, status: 'open',
-   date }` to `index.html`, with `id` equal to the page's `BALLOT_ID`. When
+   date, kind }` to `index.html`, with `id` equal to the page's `BALLOT_ID`
+   and `kind` one of the index's `KINDS`; add `thumb` (a picture next to the
+   index) when the ballot has one. When
    the family's verdicts are written into its ledger, set `status: 'closed'`. When the lane's trial set is plotted into the build, set `status: 'complete'` (T, 2026-10-30).
 
 `node --test scripts/ballot-kit.test.mjs` (in the root `npm test`) fails when a

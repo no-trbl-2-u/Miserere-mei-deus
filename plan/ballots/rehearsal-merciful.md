@@ -325,7 +325,7 @@ T answered the vote's Open lines and the remaining Session 0 Open lines in four 
 ## Sims (lane-creator step 6)
 
 Branch `sandbox/merciful-sims` (head `227755148`, cut from `origin/main` at `8f35a2c93`), report
-`plan/card-ledger/merciful-sims.md` on that branch; never merged. 300 seeded runs per cell, the 39 Act 1 ledger fights
+`plan/ballots/merciful-sims.md` on that branch; never merged. 300 seeded runs per cell, the 39 Act 1 ledger fights
 (the ledger has grown from 26), the three stat spreads. Grey, Blood Price and the Elementalist re-measured on the branch
 match the last measured line (3993f2a) in all 351 cells; the Defender's 117 cells match unmodified main. Two decks:
 `merciful-29` (the 29 kept cards, no grey base) and a 20-card test deck **the session picked** (every Global and

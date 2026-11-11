@@ -3,7 +3,7 @@
  * (`expo-font` keys a face by property name). One registry so `_layout.tsx`
  * and the A2 test read the same list. Each face comes from its own
  * `@expo-google-fonts/*` package, imported by weight so Metro bundles only
- * the weights a role uses (T's ballot, `plan/card-ledger/fonts.md`).
+ * the weights a role uses (T's ballot, `plan/ballots/fonts.md`).
  */
 import { UncialAntiqua_400Regular } from '@expo-google-fonts/uncial-antiqua/400Regular';
 import { Rosarivo_400Regular } from '@expo-google-fonts/rosarivo/400Regular';

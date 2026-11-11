@@ -240,7 +240,7 @@ the live library prints it (Blood Price: "VULNERABLE +25% for 1 turn"); T rememb
 
 ## Revisions (T, 2026-10-26, in session)
 
-Settled in the same sitting as the verdicts; the sims (`sandbox/defender-sims`, `plan/card-ledger/defender-sims.md`)
+Settled in the same sitting as the verdicts; the sims (`sandbox/defender-sims`, `plan/ballots/defender-sims.md`)
 ran alongside and inform the number changes the trial-set plot carries.
 
 ### Rules
@@ -310,7 +310,7 @@ no copies; 7 red, 6 blue, 7 purple.
 ## Sims (lane-creator step 6)
 
 Branch `sandbox/defender-sims` (head `2cafd40df`, cut from `origin/main` at `72b0186b7`), report
-`plan/card-ledger/defender-sims.md` on that branch; never merged. 300 seeded runs per cell, the 26 Act 1 ledger fights,
+`plan/ballots/defender-sims.md` on that branch; never merged. 300 seeded runs per cell, the 26 Act 1 ledger fights,
 the three stat spreads; grey, Blood Price and the Elementalist re-measured on the branch match the last measured line
 exactly. The relics are not modelled.
 
