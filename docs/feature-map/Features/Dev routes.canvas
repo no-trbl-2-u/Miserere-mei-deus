@@ -6,7 +6,7 @@
 			"x": 0,
 			"y": 0,
 			"width": 940,
-			"height": 300,
+			"height": 430,
 			"label": "Dev routes"
 		},
 		{
@@ -77,6 +77,16 @@
 			"width": 260,
 			"height": 90,
 			"color": "4"
+		},
+		{
+			"id": "route:devvictory",
+			"type": "file",
+			"file": "Features/Devvictory.md",
+			"x": 40,
+			"y": 300,
+			"width": 260,
+			"height": 90,
+			"color": "1"
 		},
 		{
 			"id": "elsewhere:route:(tabs)/exploration",

@@ -209,6 +209,7 @@ const terminal = async (page) =>
     (await has(page.getByTestId('combat-summary')))
     || (await has(page.getByTestId('combat-mercy')))
     || (await has(page.getByTestId('combat-rewards')))
+    || (await has(page.getByTestId('combat-victory')))
 
 /** One round: stage the rightmost hand card, APPLY it free, END PHASE, ride the enemy turn. */
 async function playRound(page) {

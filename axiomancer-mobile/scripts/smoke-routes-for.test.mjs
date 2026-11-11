@@ -31,11 +31,12 @@ test('every rule names only real routes', () => {
 
 test('a screen change selects its own route', () => {
     assert.deepEqual(routesForPaths(['axiomancer-mobile/app/(tabs)/memoir/index.tsx'], names).routes, ['memoir'])
-    assert.deepEqual(routesForPaths(['axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx'], names).routes, ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel'])
-    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/combat-encounter/index.tsx'], names).routes, ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/components/combat/encounter/CombatCombatantPane.tsx'], names).routes, ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'victory-levelled', 'victory-plain'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/combat-encounter/index.tsx'], names).routes, ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'victory-levelled', 'victory-plain'])
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/devvictory/index.tsx'], names).routes, ['victory-levelled', 'victory-plain'])
     assert.deepEqual(
         routesForPaths(['axiomancer-mobile/components/hazard/HazardBoard.tsx'], names).routes,
-        ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board', 'hazard-puzzle-node', 'hazard-puzzle-stakes'],
+        ['combat-board', 'combat-boss', 'combat-elite', 'combat-encounter', 'defeat-panel', 'devpuzzle-board', 'devpuzzle-list', 'devpuzzle-outcome', 'hazard-board', 'hazard-puzzle-node', 'hazard-puzzle-stakes', 'victory-levelled', 'victory-plain'],
     )
     assert.deepEqual(
         routesForPaths(['axiomancer-mobile/app/devpuzzle/index.tsx'], names).routes,

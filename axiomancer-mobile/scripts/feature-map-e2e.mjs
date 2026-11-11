@@ -265,6 +265,7 @@ async function settleOnMap(page, what) {
         if (await tap(page, 'combat-mercy-finish')) continue
         if (await tap(page, 'combat-reward-skip')) continue
         if (await tap(page, 'combat-summary-close')) continue
+        if (await tap(page, 'combat-victory-continue')) continue
         if (await page.getByTestId('cutscene-advance').count()) { await playOutCutscene(page); continue }
         if (await tap(page, 'death-return-continue')) continue
         if (await tap(page, 'item-reward-confirm')) continue
