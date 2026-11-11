@@ -18,17 +18,15 @@
 | 3 | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | 1 | needs you: your task |
 | 4 | Answer Chapter 1's `[content]` rows (node copy, map fixes) (1 h) | 1 | needs you: your task |
 | 5 | Review the reworked fight reveal (look G for normal and elite foes, the boss's held title card F; spec 175), hazard (hazard start) and rest screens against their settled pitches (1.5 h) | 1.5 | needs you: your task |
-| 6 | Review the reworked travel, loot cache and cutscene screens (1.5 h) | 1.5 | needs you: your task |
-| 7 | Review the reworked ends of a fight (victory with the animated XP bar and level line, death return) against the settled shot (1 h) | 1 | needs you: your task |
-| 8 | Buffer: fixes from the event-screen reviews (1 h) | 1 | needs you: your task |
-| 9 | Mid-release check: Chapter 1 on the preview build, file what broke (1 h) | 1 | needs you: your task |
-| 10 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | 0.5 | needs you: your task |
+| 6 | Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upgrade screen (the string of beads) (1.5 h) | 1.5 | needs you: your task |
+| 7 | Review the reworked travel, loot cache and cutscene screens (1.5 h) | 1.5 | needs you: your task |
+| 8 | Review the reworked ends of a fight (victory with the animated XP bar and level line, death return) against the settled shot (1 h) | 1 | needs you: your task |
+| 9 | Buffer: fixes from the event-screen reviews (1 h) | 1 | needs you: your task |
 
-26 more acts are ready after these.
+28 more acts are ready after these.
 
 ## Waiting on the loop
 
-- Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes QS1c
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
 
