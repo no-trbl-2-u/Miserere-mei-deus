@@ -85,6 +85,11 @@ export const ROUTES = [
     // re-stamped, and it carries a tighter diff line (0.1%) than the other routes
     // because the places are small. See screenshots/baseline/README.md.
     { name: 'combat-board', path: '/combat-encounter', liveFight: true, intoBoard: true, maxDiffRatio: 0.001, expectTestIds: BOARD_PLACES },
+    // The reveal for an elite and for the boss, entered at their Breakwater nodes
+    // by a fixture whose arrival stages the fight: the elite wears its chip, the
+    // boss is the held title card. Both wait out the ink curtain.
+    { name: 'combat-elite', path: '/exploration', fixture: 'wanderer-bw-elite-arrive', waitForPath: '/combat-encounter', waitForTestId: 'combat-reveal-chip' },
+    { name: 'combat-boss', path: '/exploration', fixture: 'wanderer-bw-boss-arrive', waitForPath: '/combat-encounter', waitForTestId: 'combat-reveal-boss-card' },
     { name: 'memoir', path: '/memoir' },
     // THE APORIA act select (no session on a fresh boot).
     { name: 'labyrinth', path: '/labyrinth' },

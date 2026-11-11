@@ -12,7 +12,7 @@ import { spawnSync } from 'node:child_process'
 export const ALL = 'all'
 
 // The reveal and the board behind it: the same fight, two shots.
-const COMBAT = ['combat-encounter', 'combat-board']
+const COMBAT = ['combat-encounter', 'combat-board', 'combat-elite', 'combat-boss']
 const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.

@@ -134,6 +134,22 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         arrive: true,
     },
     {
+        id: 'wanderer-bw-elite-arrive',
+        description: 'Wanderer (L8) on the Breakwater\'s keep-causeway elite (bw-w5); `arrive` stages the elite fight → /combat-encounter, its reveal wearing the ELITE chip.',
+        seed: 'fixture-wanderer-bw-elite-arrive',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w5' },
+        arrive: true,
+    },
+    {
+        id: 'wanderer-bw-boss-arrive',
+        description: 'Wanderer (L8) on the Breakwater\'s sea-keep boss (bw-k2); `arrive` stages the boss fight → /combat-encounter, behind its held title card.',
+        seed: 'fixture-wanderer-bw-boss-arrive',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k2' },
+        arrive: true,
+    },
+    {
         id: 'wanderer-bw-door-arrive',
         description: 'Wanderer (L8) on the Breakwater\'s far bank (bw-b2), the door to the Charcoal Wood; `arrive` offers the trip and pushes /travel ("Move to The Charcoal Wood?").',
         seed: 'fixture-wanderer-bw-door-arrive',

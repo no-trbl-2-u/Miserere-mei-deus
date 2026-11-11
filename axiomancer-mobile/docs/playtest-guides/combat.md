@@ -20,6 +20,7 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-reveal-phase-<i>` | One phase card on the reveal |
 | `combat-enter` | ENTER — starts the fight and rolls the first tray |
 | `combat-withdraw` | WITHDRAW on the reveal — flee the fight |
+| `combat-reveal-boss-card` | A boss's held title card, the whole reveal; one tap starts the fight (no ENTER, no WITHDRAW) |
 | `combat-board` | The board |
 | `combat-hud` | Enemy HUD block (vitae, intent) |
 | `combat-intent` | Enemy intent icon |
