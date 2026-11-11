@@ -6,11 +6,11 @@
 
 ### Sources
 
-- **T, 2026-11-08** (`plan/card-ledger/narrator-voice.md`): player-facing text has three voices. The Narrator ("like Cormac McCarthy wrote it") covers narration, map text, enemy journals and flavor; the Rulebook covers cards and rules; the People covers NPC lines.
+- **T, 2026-11-08** (`plan/ballots/narrator-voice.md`): player-facing text has three voices. The Narrator ("like Cormac McCarthy wrote it") covers narration, map text, enemy journals and flavor; the Rulebook covers cards and rules; the People covers NPC lines.
 - **T, 2026-11-10:** the Narrator is for "enemy journals, quests, story encounters, narration, anything but cards and NPCs", and "I'm looking for blood meridian level prose".
 - **T, 2026-11-11:** "determine every single \"content\" item in chapter 1 (except for NPCs and cards), then write a piece of content for each in this voice ... Then plot all the rows in order to add these content items." Scope: "Every content tag, BUT, if you decide an NPC will need to speak, just put [NPC Content Needed]".
 - **T, 2026-11-11, on the rules the voice breaks:** "Yes, plot them first", and for how: "Narrator exemption" (the rules stay for cards, rules text and NPC lines; the Narrator's surfaces get their own).
-- **The drafts:** `plan/card-ledger/narrator-chapter1.md` (113 prose lines, 13 names, 4 spoken lines marked `[NPC Content Needed]`) and its review page `plan/card-ledger/narrator-chapter1.ballot.html`.
+- **The drafts:** `plan/ballots/narrator-chapter1.md` (113 prose lines, 13 names, 4 spoken lines marked `[NPC Content Needed]`) and its review page `plan/ballots/narrator-chapter1.ballot.html`.
 
 ### What exists today
 
@@ -18,6 +18,7 @@
 - **Rules that forbid the voice.** `axiomancer-mechanics/docs/narrative/ANTI_IMITATION.md` bans a named author's style, chained "and" clauses, biblical narration and archaic inversion. `DELIVERY_REGISTER.md` MB-1 caps a narration sentence at 20 words and MB-2 forbids a narrator who sympathizes. `scripts/check-prose.mjs` enforces MB-1 and bans faux-archaic words on 15 listed files.
 - **Files the lint does not read.** `World/MapEvents/arrival-lines.ts`, `World/breakwater-chapter.questline.ts`, `World/Continents/Coastal-Village/breakwater-chapter.ts`, the mobile `breakwater.layout.ts` and the mobile copy files the drafts touch are not in its list.
 - **Already planned, not replanned here.** Spec 116 owns the quest chain: 116.4 (BW1d) is T writing the chain's lines and 116.5 (BW1e) puts them in the game. The drafts' Quest nodes, Quest chain and Names sections are options for BW1d. This spec adds only a note to 116 (see the pending file).
+- **Where the ledgers are.** `plan/ballots/` arrives on `main` with PR #1617 (the one ballots folder), and the drafts' ledger and review page with the PR stacked on it. Until both merge, the `plan/ballots/narrator-*` paths this spec names are not on `main`; 177.1 and 177.2 do not read them, and 177.3 onward wait on T's review, which needs them merged.
 - **The voice is not voted.** Round 5 of the voice ballot is open. The rules below do not depend on which take T picks; the voice bible's examples do.
 
 ## Design
@@ -56,7 +57,7 @@
 
 - **A1** The exemption is written down. `NARRATOR.md` exists with the scope, the rules, the five stops and the calibration set; the three older narrative docs point at it; the decision is recorded.
 - **A2** The lint knows the Narrator. On a Narrator field, a 41-word sentence, a line over its surface cap and a quotation mark each fail, and a 30-word sentence with "yet" or "bade" passes. On every other field the old rules still fail what they failed. The files the drafts touch are in the content list.
-- **A3** T's verdict on the drafts is in `plan/card-ledger/narrator-chapter1.md` (attended).
+- **A3** T's verdict on the drafts is in `plan/ballots/narrator-chapter1.md` (attended).
 - **A4** Map blurbs. Every approved map blurb is in `breakwater.layout.ts`; the map sheet shows the longest one unclipped at phone width.
 - **A5** Arrival lines. Every approved arrival line is in `arrival-lines.ts`, keyed by node; the fight reveal shows the longest one unclipped.
 - **A6** Event lines. Every approved hazard, rest, dream, cutscene, travel, village and loot cache action line is in `content.ts`; each event screen shows its longest line unclipped.
@@ -75,14 +76,14 @@ Measure: 9 open · 0 closed · next A10
 
 - [ ] **177.1** The Narrator exemption and the voice bible · S · closes A1 · needs — · alias: NV1a
   - `axiomancer-mechanics/docs/narrative/NARRATOR.md` (new); one pointer paragraph each in `ANTI_IMITATION.md`, `DELIVERY_REGISTER.md`, `VOICE_REGISTERS.md`.
-  - The calibration set is copied from `plan/card-ledger/narrator-voice.md` (locked passages, T's reasons) as it stands on the day; a later verdict adds to it.
+  - The calibration set is copied from `plan/ballots/narrator-voice.md` (locked passages, T's reasons) as it stands on the day; a later verdict adds to it.
   - Measure: the docs exist and `scripts/check-lexicon.mjs` passes.
 - [ ] **177.2** The prose lint learns the Narrator's fields · M · closes A2 · needs 177.1 · alias: NV1b
   - `scripts/check-prose.mjs`: the Narrator field table and its rules; the new content files; `--list` prints both rule sets.
   - `scripts/check-prose.test.mjs`: the cases of A2, and one per old rule on a non-Narrator field.
   - Measure: the new tests pass; root `npm test` passes with every `[content]` placeholder still in place.
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
-  - T ticks and notes on the review page, presses Generate and pastes the sheet; the session writes the verdict under `## Verdicts` in `plan/card-ledger/narrator-chapter1.md`, redraws any line T asks for at another stop, and repeats until T is done.
+  - T ticks and notes on the review page, presses Generate and pastes the sheet; the session writes the verdict under `## Verdicts` in `plan/ballots/narrator-chapter1.md`, redraws any line T asks for at another stop, and repeats until T is done.
   - Measure: every line in the ledger is approved (with its final text), rejected, or left for later, by T's word.
 - [ ] **177.4** Map blurbs in the game · S · closes A4, A9 · needs 177.2, 177.3 · alias: NV1d
   - `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`, 33 lines.
