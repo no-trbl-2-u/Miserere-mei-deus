@@ -21,10 +21,10 @@ An encounter node resolves to a `combat-prelude` event. `<CombatGate>` (`compone
 | `combat-reveal-stats` | The reveal's LEVEL and VITAE line |
 | `combat-reveal-frame-<tier>` | The foe's figure frame on the reveal |
 | `combat-reveal-ground-<tier>` | The fading ground behind the figure |
-| `combat-reveal-boss-card` | The boss's held title card |
+| `combat-reveal-chip` | An elite's ELITE chip on the reveal |
+| `combat-reveal-boss-card` | A boss's held title card, the whole reveal; one tap starts the fight (no ENTER, no WITHDRAW) |
 | `combat-enter` | ENTER — starts the fight and rolls the first tray |
 | `combat-withdraw` | WITHDRAW on the reveal — flee the fight |
-| `combat-reveal-boss-card` | A boss's held title card, the whole reveal; one tap starts the fight (no ENTER, no WITHDRAW) |
 | `combat-board` | The board |
 | `combat-hud` | Enemy HUD block (vitae, intent) |
 | `combat-intent` | Enemy intent icon |
