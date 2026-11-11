@@ -157,6 +157,14 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-b2' },
         arrive: true,
     },
+    {
+        id: 'wanderer-bw-cave-mouth-arrive',
+        description: 'Wanderer (L8) on the Breakwater\'s sea cave mouth (bw-h6), the shortcut to the cave face; `arrive` offers the trip and pushes /travel ("Move to The Cave Face?", the map zoomed on the Cave Face).',
+        seed: 'fixture-wanderer-bw-cave-mouth-arrive',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-h6' },
+        arrive: true,
+    },
 ]);
 
 /** Lookup by id; `undefined` when unknown. */

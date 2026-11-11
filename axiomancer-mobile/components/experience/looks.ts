@@ -106,8 +106,8 @@ export const LOOKS: Record<PlaceId, Look> = {
     'E-03': 'brass', // Dialogue: choice rows
     'C-01': 'normal', // Cutscene: omen
     'C-02': 'normal', // Cutscene: SKIP
-    'T-01': 'normal', // Travel: THE WAY ON tag
-    'T-02': 'vellum', // Travel: YES / NO buttons
+    'T-01': 'normal', // Travel: retired: the tag is gone; id kept so the catalog stays stable
+    'T-02': 'brass', // Travel: MOVE / STAY buttons
     'H-01': 'vellum', // Hazard: stakes card
     'H-02': 'normal', // Hazard: FACE IT
     'Q-01': 'vellum', // Quest: panel
@@ -179,7 +179,7 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'C-01': [],
     'C-02': [],
     'T-01': [],
-    'T-02': ['action-button-vellum'],
+    'T-02': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
     'H-01': ['modal-panel-vellum'],
     'H-02': [],
     'Q-01': ['modal-panel-vellum'],

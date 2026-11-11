@@ -47,7 +47,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | NPCs | engine area | yes | yes | yes | no |
 | The world | engine area | yes | yes | yes | no |
 | The dev menu | dev route | yes | yes | yes | no |
-| Devart | dev route | yes | no | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
+| Devart | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart") |
 | Devart Rooms | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devart Rooms") |
 | Devdefeat | dev route | no | yes | no | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devdefeat") |
 | Devframes | dev route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Devframes") |

@@ -16,7 +16,7 @@ const COMBAT = ['combat-encounter', 'combat-board', 'combat-elite', 'combat-boss
 const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.
-const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node']
+const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'travel-cave', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node']
 
 /**
  * Paths that cannot change a pixel: tests, prose, plans, tooling outside the
@@ -59,7 +59,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/dialogue\//, routes: ['dialogue'] },
     { test: /^axiomancer-mobile\/app\/village\//, routes: ['village'] },
     { test: /^axiomancer-mobile\/app\/cutscene\//, routes: ['cutscene'] },
-    { test: /^axiomancer-mobile\/app\/travel\//, routes: ['travel'] },
+    { test: /^axiomancer-mobile\/app\/travel\//, routes: ['travel', 'travel-cave'] },
     { test: /^axiomancer-mobile\/app\/death-return\//, routes: ['death-return'] },
     { test: /^axiomancer-mobile\/app\/game-over\//, routes: ['game-over'] },
     { test: /^axiomancer-mobile\/app\/rest\//, routes: ['rest-upgrade'] },
