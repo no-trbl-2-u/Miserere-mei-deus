@@ -11,7 +11,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import {
-    createCharacter, initializeCombatEncounter, type CombatEncounterState, type CombatOutcome,
+    createCharacter, experienceForLevel, initializeCombatEncounter, type CombatEncounterState, type CombatOutcome,
     ENEMY_REGISTRY, FIXTURE_QUEST, emptyQuestLog, fightWage, spareWage, startQuest, type Enemy,
 } from '@mechanics';
 
@@ -42,7 +42,7 @@ describe('applyHazardOutcome: the mercy check', () => {
     it('a spared fight pays no XP and the spare wage, closes the draft and reaches the save', () => {
         const { store, enemy, combat } = realFight();
         const before = store.getState().player!;
-        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, { ...combat, mercyCheck: 'spared' }, enemy);
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, { ...combat, mercyCheck: 'spared' }, enemy).shillings;
 
         const after = store.getState();
         expect(paid).toBe(spareWage(enemy.level));
@@ -56,7 +56,7 @@ describe('applyHazardOutcome: the mercy check', () => {
     it('a finished fight pays as any win, and leaves the draft open', () => {
         const { store, enemy, combat } = realFight();
         const before = store.getState().player!;
-        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, { ...combat, mercyCheck: 'finished' }, enemy);
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, { ...combat, mercyCheck: 'finished' }, enemy).shillings;
 
         expect(paid).toBe(fightWage(enemy.level));
         expect(store.getState().player!.experience).toBe(before.experience + (enemy.xpReward ?? 0));
@@ -82,15 +82,44 @@ describe('applyHazardOutcome: routes through endCombat (phase 54)', () => {
         const { store, enemy, combat: finalState } = realFight();
         const before = store.getState().player!.currency;
 
-        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy).shillings;
 
         expect(paid).toBe(3 * enemy.level);
         expect(store.getState().player!.currency).toBe(before + paid);
     });
 
+    it('victory reports what it paid: XP gained, the experience and level before and after, the XP owed (FE1a)', () => {
+        const { store, enemy, combat: finalState } = realFight();
+        const before = store.getState().player!;
+
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
+
+        const after = store.getState().player!;
+        expect(paid.xpGained).toBe(after.experience - before.experience);
+        expect(paid.xpGained).toBe(enemy.xpReward ?? 0);
+        expect(paid).toMatchObject({
+            experienceBefore: before.experience, experienceAfter: after.experience,
+            levelBefore: before.level, levelAfter: after.level,
+            xpToNext: experienceForLevel(after.level + 1) - after.experience,
+        });
+    });
+
+    it('a level crossed shows in the record, after the level-ups', () => {
+        const { store, enemy, combat: finalState } = realFight();
+        // One XP short of the next level: the foe's XP crosses it.
+        store.setState((s) => ({ player: { ...s.player!, experience: s.player!.experienceToNextLevel - 1 } }));
+        const levelBefore = store.getState().player!.level;
+
+        const paid = applyHazardOutcome(store, 'victory' as CombatOutcome, finalState, enemy);
+
+        expect(paid.levelBefore).toBe(levelBefore);
+        expect(paid.levelAfter).toBe(store.getState().player!.level);
+        expect(paid.levelAfter).toBeGreaterThan(levelBefore);
+    });
+
     it('defeat returns no wage', () => {
         const { store, enemy, combat: finalState } = realFight();
-        expect(applyHazardOutcome(store, 'defeat' as CombatOutcome, finalState, enemy)).toBe(0);
+        expect(applyHazardOutcome(store, 'defeat' as CombatOutcome, finalState, enemy).shillings).toBe(0);
     });
 
     it('defeat routes through endCombat too (no XP, encounter still clears)', () => {

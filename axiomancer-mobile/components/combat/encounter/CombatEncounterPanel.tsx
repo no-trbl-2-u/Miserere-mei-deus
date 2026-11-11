@@ -67,6 +67,7 @@ import { offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
 import { devSettingsStore } from '@/state/dev/dev-settings';
 import { isDevToolsEnabled } from '@/lib/buildProfile';
 import { recordFightSettled } from '@/state/run-log';
+import { fightPaidFrom, NOTHING_PAID, type FightPaid } from '@/state/presenters/fight-end.engine';
 import { PlayerPortraitImage } from '@/components/art/PlayerPortraitImage';
 import { useGameState, useGameStore } from '@/state/GameStoreProvider';
 import {
@@ -203,7 +204,10 @@ function mapHazardOutcomeToEndCombat(
  * on a drop the relic takes the XP's place and `endCombat` withholds it; the
  * shillings stand. A foe spared at the mercy check (`finalState.mercyCheck`) pays
  * the Spare ending instead: no XP, no card reward, the spare wage and one table
- * roll. Returns the shillings the fight paid, for the summary.
+ * roll. Returns what the fight paid (`FightPaid`, phase FE1a): the shillings,
+ * the XP gained (experience after the settle and its level-ups minus before, so
+ * a quest step paid at the kill counts too), the experience and level before
+ * and after, and the XP still owed for the next level.
  */
 export function applyHazardOutcome(
     store: StoreLike,
@@ -211,7 +215,7 @@ export function applyHazardOutcome(
     finalState: CombatEncounterState,
     enemy: Enemy,
     relics?: readonly Equipment[],
-): number {
+): FightPaid {
     const finalHp = finalState.player.health;
     // The surviving floating dice, in engine truth (spent dice
     // are gone forever; unspent ones arrive in the next battle's opening tray).
@@ -274,7 +278,7 @@ export function applyHazardOutcome(
     }
     // The run log: the node, the XP, the levels and the drops this fight paid.
     recordFightSettled(store, playerBefore, report ?? null, outcome);
-    return report?.shillings ?? 0;
+    return fightPaidFrom(playerBefore, (store.getState() as unknown as GameState).player, report?.shillings ?? 0);
 }
 
 // Per-keyword type tag for the inspect-modal definition panels. The PRIMARY keyword
@@ -368,8 +372,9 @@ export function CombatEncounterPanel({
     const rewardsClaimed = useGameState((s) => s.combatReward?.claimed ?? false);
     const rewardUpgrade = useGameState((s) => s.combatReward?.upgrade ?? null);
     const spare = useGameState((s) => s.combatReward?.spare ?? null);
-    // What the engine paid for this fight, printed on the summary.
-    const [shillingsPaid, setShillingsPaid] = useState(0);
+    // What the engine paid for this fight (shillings, XP, levels), for the
+    // summary and the victory screen.
+    const [fightPaid, setFightPaid] = useState<FightPaid>(NOTHING_PAID);
 
     const [state, setState] = useState<CombatEncounterState | null>(null);
     // Multi-card staging (hazard model): several cards can be staged at once; each
@@ -722,7 +727,7 @@ export function CombatEncounterPanel({
     useEffect(() => {
         if (!live.finalOutcome || wroteBackRef.current || !mercyCheckSettled(live)) return;
         wroteBackRef.current = true;
-        if (persistOutcome) setShillingsPaid(applyHazardOutcome(store, live.finalOutcome, live, enemy));
+        if (persistOutcome) setFightPaid(applyHazardOutcome(store, live.finalOutcome, live, enemy));
     }, [live.finalOutcome, live, persistOutcome, store, enemy]);
 
     // The play log (phase BE2c): every live state goes to the fight recorder,
@@ -1364,7 +1369,7 @@ export function CombatEncounterPanel({
             )}
 
             {summary && mercyCheckSettled(live) && (rewardsClaimed || live.finalOutcome !== 'victory') && (
-                <CombatSummaryModal summary={summary} shillings={shillingsPaid} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
+                <CombatSummaryModal summary={summary} shillings={fightPaid.shillings} spareLines={spareLines} mercyLine={mercyLine} onClose={handleExit} />
             )}
 
             {/* drag ghost — persistently mounted after the first drag; dragShown
