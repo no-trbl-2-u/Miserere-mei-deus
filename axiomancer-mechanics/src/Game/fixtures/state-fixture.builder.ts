@@ -10,6 +10,7 @@
  *   applyPlayer      → `createCharacter` rebuild for level / stats, then clamps
  *   applyWorld       → `changeContinent` / `unlockMap` / `changeMap` / `completeMap` / `placeOnNode`
  *   applyFlags       → deduped append
+ *   applyQuestsCompleted → deduped append to the quest log's completed list
  *   stampRng         → `rngState` re-read after every roll above
  *
  * The one side effect is the RNG seed (the engine RNG is a process-wide
@@ -99,6 +100,9 @@ const applyWorld = (target: StateFixtureWorld | undefined) => (state: GameState)
 const applyFlags = (flags: readonly string[] | undefined) => (state: GameState): GameState =>
     flags ? { ...state, flags: dedupe([...state.flags, ...flags]) } : state;
 
+const applyQuestsCompleted = (names: readonly string[] | undefined) => (state: GameState): GameState =>
+    names ? { ...state, quests: { ...state.quests, completed: dedupe([...state.quests.completed, ...names]) } } : state;
+
 /** A fixture player always has a reward pool: no lane of its own gets the dev preset lanes. */
 const withRewardLanes = (state: GameState): GameState =>
     state.player.startingLaneIds && state.player.startingLaneIds.length > 0
@@ -130,6 +134,7 @@ export function buildStateFromFixture(fixture: StateFixture): GameState {
         applyPlayer(fixture.player),
         applyWorld(fixture.world),
         applyFlags(fixture.flags),
+        applyQuestsCompleted(fixture.questsCompleted),
         withRewardLanes,
         stampRng,
     )(createNewGameState());

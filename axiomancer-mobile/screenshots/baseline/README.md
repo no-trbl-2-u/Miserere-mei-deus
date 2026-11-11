@@ -25,6 +25,7 @@ One PNG per route, named after the route's stable `name` in
 | `dialogue.png` | `/exploration` + fixture `apprentice-staged-dialogue` → `/dialogue` | `app/dialogue/index.tsx` |
 | `village.png` | `/exploration` + fixture `wanderer-staged-village` → `/village` | `app/village/index.tsx` |
 | `cutscene.png` | `/exploration` + fixture `wanderer-staged-cutscene` → `/cutscene` | `app/cutscene/index.tsx` |
+| `quest.png` | `/exploration` + fixture `wanderer-bw-keep-gate-offer` → `/quest`, the gate warden's offer (steps 1 to 3 turned in), waits on `quest-offer` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` (the quest card, spec 173) |
 | `travel.png` | `/exploration` + fixture `wanderer-bw-door-arrive` → `/travel` | `app/travel/index.tsx` (the river bridge's "Move to The Charcoal Wood?") |
 | `travel-cave.png` | `/exploration` + fixture `wanderer-bw-cave-mouth-arrive` → `/travel` | `app/travel/index.tsx` (the sea cave mouth's "Move to The Cave Face?", the map zoomed on the Cave Face) |
 | `death-return.png` | `/death-return?preview=1` + fixture `fresh-start` | `app/death-return/index.tsx` (the full-screen moment after a first death) |

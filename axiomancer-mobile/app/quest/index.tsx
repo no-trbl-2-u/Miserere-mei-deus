@@ -1,12 +1,13 @@
 /**
- * /quest - the quest screen (phase QL1c).
+ * /quest - the quest screen.
  *
- * A quest node has no card: `resolveCurrentMapEvent` opens this screen on it.
- * It shows the giver's line, "Step n of N", the requirement, the progress and
- * the pay, per stage the engine reads off the quest log: `offer` (ACCEPT and
- * LEAVE), `turn-in` (the finished step with its pay and TURN IN, then the next
- * offer on the same screen), `waiting` (progress and LEAVE) and `locked` (one
- * line and LEAVE). All rules live in `axiomancer-mechanics`
+ * A quest node has no card of the deck's kind: `resolveCurrentMapEvent` opens
+ * this screen on it. It shows one tall quest card (the step's name, the
+ * giver's figure, the ask, the pay), then the giver's name and line, the
+ * chain's four beads and the brass buttons, per stage the engine reads off the
+ * quest log: `offer` (LEAVE, ACCEPT), `turn-in` (the finished step and TURN IN,
+ * then the next offer on the same screen), `waiting` (LEAVE) and `locked` (the
+ * refusal and LEAVE). All rules live in `axiomancer-mechanics`
  * (`World/questline.ts`); this screen renders the presenter VM and dispatches
  * store actions only. The map shows none of this.
  *
@@ -14,27 +15,26 @@
  * a fight's reward does (TAKE CARD, or take nothing).
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import type { LayoutChangeEvent } from 'react-native';
 
 import { ScreenBg } from '@/components/ScreenBg';
-import { QuestGiverScene, RelicRise } from '@/components/quest/QuestGiverScene';
+import { BrassButton } from '@/components/experience/BrassButton';
+import { QuestBeads } from '@/components/quest/QuestBeads';
+import { QuestCard } from '@/components/quest/QuestCard';
+import { RelicRise } from '@/components/quest/QuestGiverScene';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { CombatRewardsOverlay } from '@/components/combat/encounter/CombatRewardsOverlay';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { rewardCardVMs } from '@/state/presenters/combat-encounter.engine';
-import { selectHasActiveQuest, selectQuestVM, type QuestStepVM } from '@/state/presenters/quest.engine';
+import { selectHasActiveQuest, selectQuestVM } from '@/state/presenters/quest.engine';
 import {
     QUEST_ACCEPT_LABEL,
-    QUEST_ACCEPTED_LINE,
-    QUEST_EYEBROW,
     QUEST_LEAVE_LABEL,
-    QUEST_OFFER_HEAD,
     QUEST_PAID_HEAD,
-    QUEST_TURN_IN_HEAD,
     QUEST_TURN_IN_LABEL,
-    QUEST_WAITING_HEAD,
     questShillingsLine,
     questXpLine,
 } from '@/state/presenters/quest.copy';
@@ -43,36 +43,15 @@ import { PLACE_PIECES, lookOf } from '@/components/experience/looks';
 import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
-/** The vellum panel the quest's cards wear (Q-01). */
+/** The vellum panel the paid ledger wears (Q-01); the card itself is not a panel. */
 const [PANEL] = PLACE_PIECES['Q-01'];
 const WANTS_KIT = lookOf('Q-01') !== 'normal';
 
-function StepBlock({ head, step, testID }: { head: string; step: QuestStepVM; testID: string }) {
-    const styles = useStyles();
-    return (
-        <KitSurface wear={WANTS_KIT} piece={PANEL} style={WANTS_KIT ? styles.cardKit : styles.card} testID={testID}>
-            <Text style={[styles.eyebrow, WANTS_KIT && styles.eyebrowKit]}>{head}</Text>
-            <Text style={[styles.cardTitle, WANTS_KIT && styles.cardTitleKit]}>{step.name}</Text>
-            {step.objectives.map(o => (
-                <View key={o.id} style={styles.objectiveRow} testID={`${testID}-objective-${o.id}`}>
-                    <Text style={[styles.body, WANTS_KIT && styles.bodyKit]}>{o.description}</Text>
-                    {o.progress !== '' && (
-                        <Text
-                            style={[
-                                styles.progress,
-                                WANTS_KIT && styles.progressKit,
-                                o.done && styles.progressDone,
-                                o.done && WANTS_KIT && styles.progressDoneKit,
-                            ]}
-                        >
-                            {o.progress}
-                        </Text>
-                    )}
-                </View>
-            ))}
-        </KitSurface>
-    );
-}
+/** The card's shape: width over height, and its widest extent in points. */
+const CARD_RATIO = 0.62;
+const CARD_MAX_WIDTH = 340;
+/** Before the first layout pass (and in a test, which never lays out). */
+const CARD_FALLBACK = { width: 260, height: 420 };
 
 export default function QuestScreen() {
     const styles = useStyles();
@@ -85,6 +64,7 @@ export default function QuestScreen() {
     const actions = useGameActions();
     const router = useRouter();
     const reducedMotion = useReducedMotion();
+    const [size, setSize] = useState(CARD_FALLBACK);
 
     useEffect(() => {
         if (!active && router.canGoBack()) router.back();
@@ -92,7 +72,7 @@ export default function QuestScreen() {
 
     if (!active) {
         return (
-            <ScreenBg scrollable={false} art="event">
+            <ScreenBg scrollable={false}>
                 <View style={styles.inactiveWrap} testID="quest-inactive">
                     <Text style={styles.inactiveText}>No one is waiting here.</Text>
                 </View>
@@ -100,22 +80,26 @@ export default function QuestScreen() {
         );
     }
 
+    const onWrapLayout = (e: LayoutChangeEvent) => {
+        const { width, height } = e.nativeEvent.layout;
+        if (width <= 0 || height <= 0) return;
+        const w = Math.round(Math.min(width, CARD_MAX_WIDTH, height * CARD_RATIO));
+        const h = Math.round(height);
+        setSize(prev => (prev.width === w && prev.height === h ? prev : { width: w, height: h }));
+    };
+
+    // An offer already accepted reads as the work in progress.
     const accepted = vm.stage === 'offer' && vm.ahead !== null && vm.ahead.status !== 'unaccepted';
+    const underway = vm.stage === 'waiting' || accepted;
+    const cardTestID = vm.stage === 'waiting' ? 'quest-waiting'
+        : vm.stage === 'turn-in' ? 'quest-turn-in'
+            : vm.stage === 'locked' ? 'quest-locked' : 'quest-offer';
 
     return (
-        <ScreenBg scrollable={false} art="event">
+        <ScreenBg scrollable={false}>
             <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
                 {vm.active && (
                     <View style={styles.column} testID="quest-column">
-                        <Text style={styles.eyebrow}>{QUEST_EYEBROW}</Text>
-                        <Text style={styles.title} testID="quest-step-eyebrow">{vm.eyebrow}</Text>
-                        {vm.giver && (
-                            <QuestGiverScene giver={vm.giver} turnedAway={vm.stage === 'locked'} />
-                        )}
-                        {vm.stage !== 'locked' && (
-                            <Text style={styles.body} testID="quest-giver-line">{vm.giverLine}</Text>
-                        )}
-
                         {vm.paid && vm.paid.itemNames.length > 0 && (
                             <RelicRise
                                 key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
@@ -126,9 +110,9 @@ export default function QuestScreen() {
                         )}
 
                         {vm.paid && (
-                            <KitSurface wear={WANTS_KIT} piece={PANEL} style={WANTS_KIT ? styles.cardKit : styles.card} testID="quest-paid">
-                                <Text style={[styles.eyebrow, WANTS_KIT && styles.eyebrowKit]}>{QUEST_PAID_HEAD}</Text>
-                                <Text style={[styles.cardTitle, { color: WANTS_KIT ? HUE.hzForceInk : AXM.sulfur }]}>{vm.paid.questName}</Text>
+                            <KitSurface wear={WANTS_KIT} piece={PANEL} style={WANTS_KIT ? styles.paidKit : styles.paid} testID="quest-paid">
+                                <Text style={[styles.paidHead, WANTS_KIT && styles.paidHeadKit]}>{QUEST_PAID_HEAD}</Text>
+                                <Text style={[styles.paidTitle, { color: WANTS_KIT ? HUE.hzForceInk : AXM.sulfur }]}>{vm.paid.questName}</Text>
                                 <View style={styles.chipRow}>
                                     {vm.paid.experience > 0 && (
                                         <Text style={[styles.chip, WANTS_KIT && styles.chipKit]}>{questXpLine(vm.paid.experience)}</Text>
@@ -144,58 +128,62 @@ export default function QuestScreen() {
                             </KitSurface>
                         )}
 
-                        {vm.stage === 'locked' && (
-                            <Text style={styles.body} testID="quest-locked-line">{vm.lockedLine}</Text>
+                        <View style={styles.cardWrap} onLayout={onWrapLayout}>
+                            {vm.card && (
+                                <QuestCard
+                                    step={vm.card}
+                                    pay={vm.pay}
+                                    giver={vm.giver}
+                                    turnedAway={vm.stage === 'locked'}
+                                    underway={underway}
+                                    width={size.width}
+                                    height={size.height}
+                                    testID={cardTestID}
+                                />
+                            )}
+                        </View>
+
+                        {vm.giver && (
+                            <Text style={styles.giverName} testID="quest-giver-name">{vm.giver.name}</Text>
+                        )}
+                        {vm.stage === 'locked' ? (
+                            <Text style={styles.line} testID="quest-locked-line">{vm.lockedLine}</Text>
+                        ) : (
+                            <Text style={styles.line} testID="quest-giver-line">{vm.giverLine}</Text>
                         )}
 
-                        {vm.stage === 'waiting' && vm.behind && (
-                            <StepBlock head={QUEST_WAITING_HEAD} step={vm.behind} testID="quest-waiting" />
-                        )}
+                        <QuestBeads beads={vm.beads} />
 
-                        {vm.stage === 'turn-in' && vm.behind && (
-                            <>
-                                <StepBlock head={QUEST_TURN_IN_HEAD} step={vm.behind} testID="quest-turn-in" />
-                                <TouchableOpacity
-                                    accessibilityRole="button"
+                        <View style={styles.buttons}>
+                            <BrassButton
+                                label={QUEST_LEAVE_LABEL}
+                                accessibilityLabel="Leave"
+                                align="center"
+                                onPress={actions.closeQuest}
+                                style={styles.button}
+                                testID="quest-leave-button"
+                            />
+                            {vm.stage === 'turn-in' && (
+                                <BrassButton
+                                    label={QUEST_TURN_IN_LABEL}
                                     accessibilityLabel="Turn in the finished work"
+                                    align="center"
                                     onPress={actions.turnInQuestStep}
-                                    style={styles.bigButton}
+                                    style={styles.button}
                                     testID="quest-turn-in-button"
-                                >
-                                    <Text style={styles.bigButtonText}>{QUEST_TURN_IN_LABEL}</Text>
-                                </TouchableOpacity>
-                            </>
-                        )}
-
-                        {vm.stage === 'offer' && vm.ahead && (
-                            <>
-                                <StepBlock head={QUEST_OFFER_HEAD} step={vm.ahead} testID="quest-offer" />
-                                {accepted && (
-                                    <Text style={styles.body} testID="quest-accepted-line">{QUEST_ACCEPTED_LINE}</Text>
-                                )}
-                                {vm.canAccept && (
-                                    <TouchableOpacity
-                                        accessibilityRole="button"
-                                        accessibilityLabel="Accept the work"
-                                        onPress={actions.acceptQuestStep}
-                                        style={styles.bigButton}
-                                        testID="quest-accept-button"
-                                    >
-                                        <Text style={styles.bigButtonText}>{QUEST_ACCEPT_LABEL}</Text>
-                                    </TouchableOpacity>
-                                )}
-                            </>
-                        )}
-
-                        <TouchableOpacity
-                            accessibilityRole="button"
-                            accessibilityLabel="Leave"
-                            onPress={actions.closeQuest}
-                            style={[styles.bigButton, styles.leaveButton]}
-                            testID="quest-leave-button"
-                        >
-                            <Text style={[styles.bigButtonText, { color: AXM.bone }]}>{QUEST_LEAVE_LABEL}</Text>
-                        </TouchableOpacity>
+                                />
+                            )}
+                            {vm.stage === 'offer' && vm.canAccept && (
+                                <BrassButton
+                                    label={QUEST_ACCEPT_LABEL}
+                                    accessibilityLabel="Accept the work"
+                                    align="center"
+                                    onPress={actions.acceptQuestStep}
+                                    style={styles.button}
+                                    testID="quest-accept-button"
+                                />
+                            )}
+                        </View>
                     </View>
                 )}
             </ScrollView>
@@ -215,59 +203,51 @@ export const QUEST_COLUMN_MAX_WIDTH = 520;
 
 const useStyles = makeStyles((AXM) => ({
     scrollOuter: { flex: 1 },
-    scroll: { padding: 14, paddingBottom: 24, flexGrow: 1, justifyContent: 'center' },
-    column: { width: '100%', maxWidth: QUEST_COLUMN_MAX_WIDTH, alignSelf: 'center' },
-    eyebrow: {
-        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
-        fontSize: 12,
-        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
-        color: AXM.bone,
-        marginTop: 6,
-        marginBottom: 4,
-    },
-    title: {
+    scroll: { padding: 14, paddingBottom: 18, flexGrow: 1 },
+    column: { flex: 1, width: '100%', maxWidth: QUEST_COLUMN_MAX_WIDTH, alignSelf: 'center' },
+    // The card takes whatever height the name, line, beads and buttons leave.
+    cardWrap: { flex: 1, minHeight: 280, alignItems: 'center', justifyContent: 'center' },
+    giverName: {
         fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
         lineHeight: 28,
         color: AXM.parchment,
-        marginBottom: 10,
+        textAlign: 'center',
+        marginTop: 10,
     },
-    body: {
+    line: {
         fontFamily: TYPE_ROLES.rules.fontFamily,
         fontSize: 13,
         lineHeight: 19,
         color: AXM.parchment,
-        marginBottom: 8,
+        textAlign: 'center',
+        marginTop: 4,
     },
-    card: {
+    buttons: { flexDirection: 'row', gap: 10 },
+    button: { flex: 1 },
+    paid: {
         borderWidth: 2,
         borderColor: AXM.ash,
         backgroundColor: AXM.panelBg,
         padding: 12,
         marginBottom: 10,
     },
-    // Worn on the vellum panel instead of `card`: padding that clears its
-    // drawn corners (about 26 high, 42 wide).
-    cardKit: {
-        paddingVertical: 30,
-        paddingHorizontal: 44,
-        marginBottom: 10,
+    // Worn on the vellum panel: padding that clears its drawn corners.
+    paidKit: { paddingVertical: 30, paddingHorizontal: 44, marginBottom: 10 },
+    paidHead: {
+        fontFamily: TYPE_ROLES.eyebrow.fontFamily,
+        fontSize: 12,
+        letterSpacing: TYPE_ROLES.eyebrow.letterSpacing,
+        color: AXM.bone,
+        marginBottom: 4,
     },
-    eyebrowKit: { color: HUE.hzCardInk2 },
-    bodyKit: { flex: 1, color: HUE.hzCardInk },
-    cardTitle: {
+    paidHeadKit: { color: HUE.hzCardInk2 },
+    paidTitle: {
         fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 20,
         lineHeight: 24,
-        color: AXM.parchment,
         marginBottom: 6,
     },
-    cardTitleKit: { color: HUE.hzCardInk },
-    objectiveRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 },
-    progress: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.bone },
-    progressKit: { color: HUE.hzCardInk2 },
-    progressDone: { color: AXM.sulfur },
-    progressDoneKit: { color: HUE.hzForceInk },
     chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
     chip: {
         fontFamily: TYPE_ROLES.chip.fontFamily,
@@ -279,17 +259,6 @@ const useStyles = makeStyles((AXM) => ({
         paddingVertical: 2,
     },
     chipKit: { color: HUE.hzCardInk, borderColor: HUE.hzCardEdge },
-    bigButton: {
-        borderWidth: 2,
-        borderColor: AXM.sulfur,
-        marginTop: 4,
-        marginBottom: 8,
-        paddingVertical: 10,
-        alignItems: 'center',
-        backgroundColor: AXM.bg,
-    },
-    leaveButton: { borderColor: AXM.ash },
-    bigButtonText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 18, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.sulfur },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
     inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));

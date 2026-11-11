@@ -889,7 +889,7 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs"
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/smoke-screens.mjs"
       },
       "tested": {
         "value": true,

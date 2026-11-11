@@ -29,7 +29,7 @@ describe('a place on a kit look draws its kit piece', () => {
         expect(kitImagesIn(mountStakes())).toBeGreaterThan(0);
     });
 
-    it('Q-01: the quest panel', () => {
+    it('the quest card and its brass buttons', () => {
         expect(kitImagesIn(mountQuest())).toBeGreaterThan(0);
     });
 
