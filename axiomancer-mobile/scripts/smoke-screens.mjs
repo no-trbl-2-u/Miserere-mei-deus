@@ -100,6 +100,8 @@ export const ROUTES = [
     { name: 'village', path: '/exploration', fixture: 'wanderer-staged-village', waitForPath: '/village' },
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
+    // The cave shortcut: the map zoomed on the Cave Face.
+    { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },
     // The live hazard on its board, the parity baseline for the puzzle
     // board: the fixture's arrival starts the hazard (seed pinned by the
     // minigame-seed injector), `hazardRoute` picks the route, and the shot

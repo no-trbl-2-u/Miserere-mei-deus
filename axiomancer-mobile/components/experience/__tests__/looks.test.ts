@@ -105,10 +105,10 @@ describe("round 2's node screens (A1)", () => {
         }
     });
 
-    it("matches T's picks: vellum for the spoken line, travel buttons, stakes card and quest panel; brass for the choices, act rows and LEAVE", () => {
+    it("matches T's picks: vellum for the spoken line, stakes card and quest panel; brass for the choices, travel buttons, act rows and LEAVE", () => {
         const picked = (look: Look) => ROUND_TWO.filter((p) => LOOKS[p] === look);
-        expect(picked('vellum')).toEqual(['E-02', 'T-02', 'H-01', 'Q-01']);
-        expect(picked('brass')).toEqual(['E-03', 'X-01', 'X-02']);
+        expect(picked('vellum')).toEqual(['E-02', 'H-01', 'Q-01']);
+        expect(picked('brass')).toEqual(['E-03', 'T-02', 'X-01', 'X-02']);
         expect(picked('normal')).toEqual(['E-01', 'C-01', 'C-02', 'T-01', 'H-02', 'Q-02']);
     });
 

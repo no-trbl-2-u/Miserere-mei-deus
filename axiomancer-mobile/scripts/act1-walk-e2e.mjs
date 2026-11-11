@@ -272,8 +272,8 @@ async function walkBack(page, nodeId, { takePassage = false } = {}) {
         await sleep(150)
     }
     if (confirmed) {
-        if (await waitForAny(page, ['travel-yes', 'travel-no'], 4000)) {
-            await tap(page, takePassage ? 'travel-yes' : 'travel-no')
+        if (await waitForAny(page, ['travel-move', 'travel-stay'], 4000)) {
+            await tap(page, takePassage ? 'travel-move' : 'travel-stay')
             await settleOnMap(page, `${nodeId} travel`)
             log(`walked back onto ${nodeId}${takePassage ? ' and took its passage' : ', the trip declined'}`)
             return
@@ -458,10 +458,10 @@ const RESOLVERS = {
     // A travel node on the path: YES takes its passage when the plan's next
     // step is the far end, else NO leaves the player on it.
     async travel(page, nodeId, { next } = {}) {
-        await waitFor(page, 'travel-no', `${nodeId} travel screen`)
+        await waitFor(page, 'travel-stay', `${nodeId} travel screen`)
         await expectPath(page, '/travel', nodeId)
         const go = next?.role === 'passage'
-        await tap(page, go ? 'travel-yes' : 'travel-no') || fail(`${nodeId}: the travel screen has no ${go ? 'YES' : 'NO'}`)
+        await tap(page, go ? 'travel-move' : 'travel-stay') || fail(`${nodeId}: the travel screen has no ${go ? 'MOVE' : 'STAY'}`)
         return 'screen'
     },
     async hazard(page, nodeId) {
@@ -518,9 +518,9 @@ async function newGame(page, baseUrl, plan) {
 async function crossExit(page, region, next) {
     await travelTo(page, region.exit)
     if (next) {
-        await waitFor(page, 'travel-yes', `${region.exit} travel screen`)
+        await waitFor(page, 'travel-move', `${region.exit} travel screen`)
         await expectPath(page, '/travel', `${region.exit} travel screen`)
-        await page.evaluate(() => document.querySelector('[data-testid="travel-yes"]').click())
+        await page.evaluate(() => document.querySelector('[data-testid="travel-move"]').click())
         await waitFor(page, 'cutscene-advance', `${region.exit} crossing to ${next.map}`)
         await expectPath(page, '/cutscene', `${next.map} arrival`)
         await playOutCutscene(page)

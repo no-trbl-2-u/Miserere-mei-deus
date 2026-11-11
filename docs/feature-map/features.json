@@ -617,8 +617,8 @@
         "source": null
       },
       "tested": {
-        "value": false,
-        "source": null
+        "value": true,
+        "source": "axiomancer-mobile/components/event/enemy-art/__tests__/EnemyIllustration.test.tsx, axiomancer-mobile/state/presenters/__tests__/enemy-art.test.ts"
       },
       "needsPitch": {
         "value": true,
@@ -968,7 +968,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/components/event/__tests__/EventArt.test.tsx, axiomancer-mobile/components/event/__tests__/PlaceholderIllustration.test.tsx"
+        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/assets/images/travel/__tests__/travel-scenes.test.ts"
       },
       "needsPitch": {
         "value": false,
@@ -6248,12 +6248,6 @@
       "from": "route:travel",
       "to": "area:Log",
       "file": "axiomancer-mobile/lib/platform/router.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:travel",
-      "to": "area:World",
-      "file": "axiomancer-mobile/state/presenters/event-assets.ts"
     },
     {
       "kind": "coupling",

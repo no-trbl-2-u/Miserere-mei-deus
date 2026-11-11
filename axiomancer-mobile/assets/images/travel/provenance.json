@@ -1,0 +1,20 @@
+[
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "copied from assets/images/combat/arena-charcoal-wood-sacred-grove.webp (scripts/acquire-art.mjs, Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Sacred_Grove_(1882)_-_Arnold_B%C3%B6cklin_(Kunstmuseum_Basel).jpg",
+    "artist": "Arnold Böcklin",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition (see assets/images/combat/provenance.json), not asserted by the operator",
+    "post_process": "none beyond the combat arena's own: grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "stand_in_for": "T's bridge travel image (act 'Find the bridge travel image'; spec 171, chunk 171.2 swaps it in)",
+    "covers": [
+      "bridge.webp"
+    ],
+    "used_by": [
+      "assets/images/travel/index.ts (TRAVEL_SCENES['bw-b2'])"
+    ],
+    "note": "The two cave entries (bw-h6, bw-c0) in index.ts are crops of the Breakwater coast plate drawn at render time (assets/images/maps/act1-coast.webp, provenance in that directory); no file is written for them."
+  }
+]

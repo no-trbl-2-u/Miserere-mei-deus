@@ -24,6 +24,7 @@ One PNG per route, named after the route's stable `name` in
 | `village.png` | `/exploration` + fixture `wanderer-staged-village` → `/village` | `app/village/index.tsx` |
 | `cutscene.png` | `/exploration` + fixture `wanderer-staged-cutscene` → `/cutscene` | `app/cutscene/index.tsx` |
 | `travel.png` | `/exploration` + fixture `wanderer-bw-door-arrive` → `/travel` | `app/travel/index.tsx` (the river bridge's "Move to The Charcoal Wood?") |
+| `travel-cave.png` | `/exploration` + fixture `wanderer-bw-cave-mouth-arrive` → `/travel` | `app/travel/index.tsx` (the sea cave mouth's "Move to The Cave Face?", the map zoomed on the Cave Face) |
 | `death-return.png` | `/death-return?preview=1` + fixture `fresh-start` | `app/death-return/index.tsx` (the full-screen moment after a first death) |
 | `hazard-board.png` | `/exploration` + fixture `l30-bw-hazard-arrive` → `/hazard` (the injector's pinned hazard id keeps the three-round board), risk route picked, dice settled | `app/hazard/index.tsx` (the three-round board, still on every non-Breakwater hazard; the puzzle board's parity baseline) |
 | `hazard-puzzle-stakes.png` | `/exploration` + fixture `l30-bw-hazard-arrive`, hazard-id pin dropped → `/hazard`, the stakes card with the one goal | `components/hazard/puzzle/HazardPuzzleNodeBoard.tsx`, `state/presenters/hazard-stakes.engine.ts` (HP6c) |
