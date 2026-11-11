@@ -7,18 +7,22 @@
 // listed against, and the regions the pacing groups by), then:
 //
 //   - writes `docs/reports/sim/latest.md`: a generated-file comment, a stamp, and
-//     five sections in order (run health, pacing, how hard is Chapter 1, coverage,
-//     since the last report). No cards: `card-vs-bot` stays on demand in `npm run api`.
+//     seven sections in order (run health, pacing, how hard is Chapter 1, arrival
+//     at the boss, a run's money, coverage, since the last report). No cards:
+//     `card-vs-bot` stays on demand in `npm run api`.
 //   - appends ONE line to `docs/reports/sim/history.jsonl`, so the numbers outlive
 //     the Worker's 14-day window.
 //
-//   npm run sim:report -- --build <sha> [--breaks <file>] [--repo owner/name]
+//   npm run sim:report -- --build <sha> [--breaks <file>] [--ledger <file>] [--repo owner/name]
 //
 // A measurement, never a gate: every number is a count or a mean for T to read.
 // It exits non-zero only on a crash, a refused or failed read, or a missing URL
 // or token, and then writes nothing (everything is computed before the first
 // write). The breaks file (`sim:run --breaks`) is optional; with a repo the
 // report links each break to its issue (a failed issue lookup only drops the links).
+// The ledger file (`sim:run --ledger`) is optional too: it feeds the arrival and
+// money sections (the boss and the villages are read from the content, never
+// named here), which say so when there is none.
 //
 // The Worker URL and token are the solve-time API's: `PUZZLE_API_URL` and
 // `PUZZLE_API_TOKEN` (see `scripts/api.mjs`). Exit codes: 0 ok; 1 a read, a
@@ -35,7 +39,7 @@ import { indexIssues, runGh } from './sim-breaks.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-export const USAGE = 'usage: npm run sim:report -- --build <sha> [--breaks <file>] [--repo owner/name] [--seed <n>] [--out <dir>] [--date YYYY-MM-DD] [--content <chapter1.json>]'
+export const USAGE = 'usage: npm run sim:report -- --build <sha> [--breaks <file>] [--ledger <file>] [--repo owner/name] [--seed <n>] [--out <dir>] [--date YYYY-MM-DD] [--content <chapter1.json>]'
 
 export const OUT_DIR = 'docs/reports/sim'
 export const LATEST = 'latest.md'
@@ -58,7 +62,7 @@ export function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     if (arg === '-h' || arg === '--help') { opts.help = true; continue }
-    const m = /^--(build|breaks|repo|seed|out|date|content)(?:=(.*))?$/.exec(arg)
+    const m = /^--(build|breaks|ledger|repo|seed|out|date|content)(?:=(.*))?$/.exec(arg)
     if (!m) throw new Error(`unknown argument '${arg}'`)
     const value = m[2] ?? argv[++i]
     if (value === undefined || value === '' || value.startsWith('--')) throw new Error(`--${m[1]} needs a value`)
@@ -95,6 +99,20 @@ export function readBreakLines(file, { read = fs.readFileSync, exists = fs.exist
   return out
 }
 
+/** The ledger lines of a file (`sim:run --ledger`), in order; null when there is no path or no file. */
+export function readLedgerLines(file, { read = fs.readFileSync, exists = fs.existsSync } = {}) {
+  if (!file || !exists(file)) return null
+  const out = []
+  for (const line of read(file, 'utf-8').split('\n')) {
+    if (line.trim() === '') continue
+    const l = JSON.parse(line)
+    if (typeof l.persona !== 'string' || typeof l.seed !== 'number') throw new Error(`not a ledger line: ${line.slice(0, 80)}`)
+    if (l.stuck !== true && (typeof l.arrivals !== 'object' || l.arrivals === null)) throw new Error(`a ledger line with no arrivals: ${line.slice(0, 80)}`)
+    out.push(l)
+  }
+  return out
+}
+
 /** The history lines of a file, oldest first. */
 export function readHistory(text) {
   const out = []
@@ -127,7 +145,7 @@ export function policiesOf(runSummary) {
 }
 
 /** The night's numbers, computed from the four reports, the content and the break lines. Pure. */
-export function buildFacts({ build, date, seed, runSummary, runEnds, runPacing, coverage, content, breaks }) {
+export function buildFacts({ build, date, seed, runSummary, runEnds, runPacing, coverage, content, breaks, ledger = null }) {
   const policies = policiesOf(runSummary)
   const ids = policies.map((p) => p.policyId)
   const breakCount = (id) => breaks.filter((b) => b.persona === id).length
@@ -147,7 +165,7 @@ export function buildFacts({ build, date, seed, runSummary, runEnds, runPacing, 
     return [key, universe[key].filter((id) => seen.has(id))]
   }))
   return {
-    build, date, seed, runsPerPersona, ids, personas, reached, universe, content, breaks,
+    build, date, seed, runsPerPersona, ids, personas, reached, universe, content, breaks, ledger,
     summaryRows: Object.fromEntries(policies.map((p) => [p.policyId, p])),
     ends: runEnds.ends.filter((r) => r.source === 'sim'),
     pacing: runPacing.pacing.filter((r) => r.source === 'sim'),
@@ -247,6 +265,128 @@ function difficulty(f) {
   return out
 }
 
+/** The spend kinds the ledger books, in table order, with their labels. */
+export const SPEND_KINDS = [
+  { key: 'rest', label: 'village rest' },
+  { key: 'card', label: 'shop card' },
+  { key: 'gear', label: 'shop gear' },
+  { key: 'removal', label: 'card removal' },
+  { key: 'anvil', label: 'Anvil action' },
+  { key: 'other', label: 'other' },
+]
+
+/** Mean (one decimal), lowest and highest of a list; null for an empty one. */
+export function spread(xs) {
+  if (xs.length === 0) return null
+  return { mean: round1(xs.reduce((a, b) => a + b, 0) / xs.length), low: Math.min(...xs), high: Math.max(...xs) }
+}
+
+const spreadCell = (s) => (s === null ? 'not reached' : `${s.mean} (${s.low}-${s.high})`)
+const mean1 = (xs) => (xs.length === 0 ? null : round1(xs.reduce((a, b) => a + b, 0) / xs.length))
+
+/** The node the map marks as the boss's (the first, in map order), or null. */
+export function bossNodeOf(content) {
+  return content.nodes.find((n) => n.boss === true) ?? null
+}
+
+/** The map's village nodes, in map order. */
+export function villageNodesOf(content) {
+  return content.nodes.filter((n) => n.kind === 'village')
+}
+
+const ledgerPersonas = (ledger) => [...new Set(ledger.map((l) => l.persona))].sort(byPersona)
+
+/**
+ * Per persona: the runs the ledger holds, how many broke (they carry no
+ * numbers), how many reached the node, and the player's level, VITAE and purse
+ * the first time each stood on it.
+ */
+export function arrivalRows(ledger, nodeId) {
+  return ledgerPersonas(ledger).map((persona) => {
+    const lines = ledger.filter((l) => l.persona === persona)
+    const played = lines.filter((l) => l.stuck !== true)
+    const at = played.map((l) => l.arrivals?.[nodeId]).filter((a) => a !== undefined && a !== null)
+    return {
+      persona, runs: lines.length, broke: lines.length - played.length, reached: at.length,
+      level: spread(at.map((a) => a.level)), vitae: spread(at.map((a) => a.vitae)), purse: spread(at.map((a) => a.purse)),
+    }
+  })
+}
+
+/** Per persona, over its finished runs: the start purse, shillings earned, spent by kind and held at the end (means per run). */
+export function moneyRows(ledger) {
+  return ledgerPersonas(ledger).map((persona) => {
+    const lines = ledger.filter((l) => l.persona === persona)
+    const played = lines.filter((l) => l.stuck !== true && l.money)
+    const spent = Object.fromEntries(SPEND_KINDS.map(({ key }) => [key, mean1(played.map((l) => l.money.spent?.[key] ?? 0))]))
+    const ends = played.map((l) => l.money.start + l.money.earned - SPEND_KINDS.reduce((n, { key }) => n + (l.money.spent?.[key] ?? 0), 0))
+    return {
+      persona, runs: lines.length, finished: played.length,
+      start: mean1(played.map((l) => l.money.start)), earned: spread(played.map((l) => l.money.earned)), spent, end: mean1(ends),
+    }
+  })
+}
+
+/** The prices the ledger's runs were charged, as rows of kind and price; null when no line carries them. */
+export function priceRows(ledger) {
+  const p = ledger.find((l) => l.prices)?.prices
+  if (!p) return null
+  return [
+    ['village rest', p.rest],
+    ['shop card', p.card],
+    ['shop gear', p.gear],
+    ['card removal', `${p.removal.first} for the first, ${p.removal.step} more for each after`],
+    ['Anvil action', `hone ${p.anvil.hone}, temper ${p.anvil.temper}, swap ${p.anvil.swap}, card upgrade ${p.anvil.upgrade}`],
+  ]
+}
+
+const NO_LEDGER = 'No run ledger this night (`sim:run --ledger`), so this section has no numbers.'
+
+function ledgerBuildNote(f) {
+  const builds = [...new Set(f.ledger.map((l) => l.build).filter((b) => b))]
+  if (builds.length === 0 || (builds.length === 1 && builds[0] === f.build)) return []
+  return [`The ledger's runs were played at ${builds.map(short).join(', ')}; the Worker's rows above are at ${short(f.build)}.`, '']
+}
+
+function arrivalSection(f) {
+  const out = ['## Arrival at the boss', '']
+  if (f.ledger === null) return [...out, NO_LEDGER]
+  const boss = bossNodeOf(f.content)
+  if (boss === null) return [...out, 'The map marks no node as the boss.']
+  out.push(`The player the first time a run stands on \`${boss.id}\`${boss.place ? ` (${boss.place})` : ''}, the node the map marks as the boss, before its fight: mean (lowest-highest) over the runs that reached it. A broken run carries no numbers.`, '')
+  out.push(...ledgerBuildNote(f))
+  const rows = arrivalRows(f.ledger, boss.id)
+  if (rows.length === 0) return [...out, 'The ledger holds no runs.']
+  out.push(mdTable(['persona', 'runs', 'broke', 'reached the boss', 'level', 'VITAE', 'shillings'],
+    rows.map((r) => [r.persona, r.runs, r.broke, `${r.reached}/${r.runs}`, spreadCell(r.level), spreadCell(r.vitae), spreadCell(r.purse)])))
+  return out
+}
+
+function moneySection(f) {
+  const out = ['## A run\'s money', '']
+  if (f.ledger === null) return [...out, NO_LEDGER]
+  const rows = moneyRows(f.ledger)
+  if (rows.length === 0) return [...out, 'The ledger holds no runs.']
+  out.push('Shillings per run, as means over the finished runs (earned as mean (lowest-highest)). A spend is booked by the counter that took it; other is any loss no village counter made. The end purse is start plus earned less spent.', '')
+  out.push(mdTable(['persona', 'runs', 'start', 'earned', ...SPEND_KINDS.map((k) => k.label), 'end purse'],
+    rows.map((r) => [r.persona, `${r.finished}/${r.runs}`, dash(r.start), r.earned === null ? '-' : spreadCell(r.earned), ...SPEND_KINDS.map(({ key }) => dash(r.spent[key])), dash(r.end)])), '')
+  const villages = villageNodesOf(f.content)
+  out.push('The purse the first time a run reaches each village (the map\'s village nodes): mean (lowest-highest), and the runs that reached it.', '')
+  if (villages.length === 0) out.push('The map has no village.', '')
+  else {
+    const byVillage = villages.map((v) => arrivalRows(f.ledger, v.id))
+    out.push(mdTable(['persona', ...villages.map((v) => `\`${v.id}\`${v.place ? ` ${v.place}` : ''}`)],
+      rows.map((r, i) => [r.persona, ...byVillage.map((vr) => {
+        const a = vr[i]
+        return a.reached === 0 ? `not reached (0/${a.runs})` : `${spreadCell(a.purse)}, ${a.reached}/${a.runs}`
+      })])), '')
+  }
+  const prices = priceRows(f.ledger)
+  out.push('What each kind costs now, read from the game\'s price tables when the runs were played:', '')
+  out.push(prices === null ? 'No ledger line carries the prices.' : mdTable(['kind', 'price in shillings'], prices))
+  return out
+}
+
 /** Every id of a kind reached in any night the history holds, tonight's line included. */
 export function everReached(history, tonight, key) {
   const ever = new Set(tonight[key])
@@ -304,6 +444,8 @@ export function renderReport(f, history, issues = null) {
     ...runHealth(f, issues), '',
     ...pacing(f), '',
     ...difficulty(f), '',
+    ...arrivalSection(f), '',
+    ...moneySection(f), '',
     ...coverageSection(f, history), '',
     ...sinceLast(f, history), '',
   ].join('\n')
@@ -348,10 +490,11 @@ export async function main(argv, {
     const [runSummary, runEnds, runPacing, coverage] = await Promise.all(['run-summary', 'run-ends', 'run-pacing', 'coverage'].map(read))
     const chapter = content(opts.content)
     const breaks = readBreakLines(opts.breaks)
+    const ledger = readLedgerLines(opts.ledger)
     const date = opts.date ?? now().toISOString().slice(0, 10)
     const historyFile = path.join(outDir, HISTORY)
     const history = fs.existsSync(historyFile) ? readHistory(fs.readFileSync(historyFile, 'utf-8')) : []
-    const facts = buildFacts({ build: opts.build, date, seed: opts.seed, runSummary, runEnds, runPacing, coverage, content: chapter, breaks })
+    const facts = buildFacts({ build: opts.build, date, seed: opts.seed, runSummary, runEnds, runPacing, coverage, content: chapter, breaks, ledger })
     const issues = lookupIssues(breaks, opts.repo ?? env.GITHUB_REPOSITORY, gh, (m) => stderr.write(m))
     text = renderReport(facts, history, issues)
     line = JSON.stringify(historyLine(facts))

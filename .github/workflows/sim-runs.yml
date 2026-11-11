@@ -131,11 +131,13 @@ jobs:
             *) echo "::error::bots must be personas, lanes or all, not '$SIM_BOTS'"; exit 1 ;;
           esac
           SIM_BREAKS_FILE="$RUNNER_TEMP/sim-breaks.jsonl"
+          SIM_LEDGER_FILE="$RUNNER_TEMP/sim-ledger.jsonl"
           : > "$SIM_BREAKS_FILE"
+          : > "$SIM_LEDGER_FILE"
           failed=""
           for policy in $policies; do
             echo "::group::$policy"
-            npm run sim:run -- --policy "$policy" --runs "$SIM_RUNS" --seed 1 --post --breaks "$SIM_BREAKS_FILE" || failed="$failed $policy"
+            npm run sim:run -- --policy "$policy" --runs "$SIM_RUNS" --seed 1 --post --breaks "$SIM_BREAKS_FILE" --ledger "$SIM_LEDGER_FILE" || failed="$failed $policy"
             echo "::endgroup::"
           done
           if [ -n "$failed" ]; then
@@ -149,13 +151,16 @@ jobs:
         if: always() && env.SIM_FILES_BREAKS == 'true'
         run: npm run sim:breaks -- --file "$RUNNER_TEMP/sim-breaks.jsonl"
 
-      # The breaks file rides to the report job, which lists each break with its issue.
+      # The breaks file rides to the report job, which lists each break with its issue;
+      # the run ledger rides with it, for the arrival and money tables.
       - name: Keep the breaks for the report
         if: always() && env.SIM_FILES_BREAKS == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: sim-breaks
-          path: ${{ runner.temp }}/sim-breaks.jsonl
+          path: |
+            ${{ runner.temp }}/sim-breaks.jsonl
+            ${{ runner.temp }}/sim-ledger.jsonl
           if-no-files-found: ignore
           retention-days: 3
 
@@ -210,7 +215,9 @@ jobs:
         run: |
           breaks=""
           [ -f "$RUNNER_TEMP/sim-breaks/sim-breaks.jsonl" ] && breaks="--breaks $RUNNER_TEMP/sim-breaks/sim-breaks.jsonl"
-          npm run sim:report -- --build "$SIM_SHA" $breaks
+          ledger=""
+          [ -f "$RUNNER_TEMP/sim-breaks/sim-ledger.jsonl" ] && ledger="--ledger $RUNNER_TEMP/sim-breaks/sim-ledger.jsonl"
+          npm run sim:report -- --build "$SIM_SHA" $breaks $ledger
 
       - name: Commit the report
         shell: bash

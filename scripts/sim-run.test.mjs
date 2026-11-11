@@ -13,7 +13,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, batchTable, formatBatchTable, formatLanes, formatComparison, formatRunLine, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally, tuningOf } from './sim-run.mjs'
+import { POST_BATCH_CAP_BYTES, batchIdOf, checkedOutSha, batchTable, formatBatchTable, formatLanes, formatComparison, formatRunLine, ledgerLines, main, parseArgs, playRuns, rowsOf, sendRuns, summarizeArm, tally, tuningOf } from './sim-run.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURE = JSON.parse(fs.readFileSync(path.join(HERE, 'fixtures', 'sim-runs.json'), 'utf-8'))
@@ -294,6 +294,33 @@ test('--breaks appends one JSON line per break, names the build, and only a cras
     assert.equal(await main(['--breaks', file], { stdout: out, stderr: sink(), play: () => ({ runs: [crash], breaks: [crash.break] }), sha: () => null }), 1)
     assert.match(out.text, /^explorer seed=2 CRASH at bw-w2: /)
     assert.equal(fs.readFileSync(file, 'utf-8').trim().split('\n').length, 3)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('--ledger appends one line per run: arrivals, money and prices for a finished run, only the node for a broken one', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sim-ledger-'))
+  const file = path.join(dir, 'ledger.jsonl')
+  try {
+    const arrivals = { 'bw-a1': { level: 1, vitae: 40, maxVitae: 40, purse: 0 }, 'bw-k2': { level: 9, vitae: 80, maxVitae: 120, purse: 31 } }
+    const money = { start: 0, earned: 60, spent: { rest: 6, card: 12, gear: 0, removal: 5, anvil: 8, other: 0 } }
+    const prices = { rest: 6, card: 6, gear: 40, removal: { first: 5, step: 5 }, anvil: { hone: 3, temper: 5, swap: 8, upgrade: 5 } }
+    const done = { policy: 'cautious', seed: 1, outcome: 'chapter-clear', furthestNodeId: 'x', level: 9, vitae: 1, maxVitae: 1, fights: { won: 0, lost: 0, spared: 0 }, deckByLane: {}, arrivals, money }
+    const crash = { policy: 'cautious', seed: 2, stuck: true, kind: 'crash', node: 'bw-w2', error: 'boom', break: { key: 'k', kind: 'crash' } }
+    const asked = []
+    const play = (opts) => { asked.push(opts); return { runs: [done, crash], breaks: [crash.break], prices } }
+    assert.equal(await main(['--policy', 'cautious', '--ledger', file], { stdout: sink(), stderr: sink(), play, sha: () => 'e'.repeat(40) }), 1)
+    assert.equal(asked[0].build, 'e'.repeat(40))
+    const written = fs.readFileSync(file, 'utf-8').trim().split('\n').map((l) => JSON.parse(l))
+    assert.deepEqual(written, [
+      { persona: 'cautious', seed: 1, build: 'e'.repeat(40), outcome: 'chapter-clear', arrivals, money, prices },
+      { persona: 'cautious', seed: 2, build: 'e'.repeat(40), stuck: true, node: 'bw-w2' },
+    ])
+    // A second batch appends; no ledger flag writes nothing.
+    assert.equal(await main(['--policy', 'cautious', '--ledger', file], { stdout: sink(), stderr: sink(), play, sha: () => null }), 1)
+    assert.equal(fs.readFileSync(file, 'utf-8').trim().split('\n').length, 4)
+    assert.equal(ledgerLines({ runs: [done] }, null)[0].prices, null)
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
