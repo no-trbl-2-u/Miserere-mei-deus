@@ -4058,6 +4058,12 @@
       "kind": "coupling",
       "from": "route:combat-encounter",
       "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/fight-end.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:combat-encounter",
+      "to": "area:Character",
       "file": "axiomancer-mobile/state/presenters/inventory.engine.ts"
     },
     {
