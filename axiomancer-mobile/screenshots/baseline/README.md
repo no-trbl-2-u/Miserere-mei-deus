@@ -17,6 +17,8 @@ One PNG per route, named after the route's stable `name` in
 | `settings.png` | `/settings` | `app/(tabs)/settings/index.tsx` |
 | `exploration.png` | `/exploration` | `app/(tabs)/exploration/index.tsx` |
 | `combat-encounter.png` | `/combat-encounter` | `app/combat-encounter/index.tsx` |
+| `combat-elite.png` | `/exploration` + fixture `wanderer-bw-elite-arrive` → `/combat-encounter`, the elite's reveal with its ELITE chip | `components/combat/encounter/CombatEncounterPanel.tsx`, `RevealGround.tsx` |
+| `combat-boss.png` | `/exploration` + fixture `wanderer-bw-boss-arrive` → `/combat-encounter`, the boss's held title card | `components/combat/encounter/BossTitleCard.tsx`, `RevealGround.tsx` |
 | `combat-board.png` | `/combat-encounter` entered as `combat-encounter` is (seed 16, the lowest-level standard foe), then ENTER COMBAT pressed, dice at rest; waits on a testID for each brass place (intent badge, conviction chip, momentum chip, dock, END, player medallion, player VITAE bar) and carries its own 0.1% diff line | `components/combat/encounter/CombatBoard.tsx`, `CombatFooterDock.tsx`, `CombatCombatantPane.tsx` (the fight's board) |
 | `memoir.png` | `/memoir` | `app/(tabs)/memoir/index.tsx` |
 | `labyrinth.png` | `/labyrinth` | `app/labyrinth/index.tsx` |

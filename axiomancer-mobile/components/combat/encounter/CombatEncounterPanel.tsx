@@ -49,10 +49,11 @@ import { Image } from '@/lib/platform/image';
 import { INK_DRAW_MS, INK_HOLD_MS, InkCurtain } from '@/components/combat/encounter/InkCurtain';
 import { clearMapInk } from '@/state/map-ink';
 import { BOSS_CARD_HINT, WITHDRAW_COST } from '@/components/combat/encounter/reveal.copy';
+import { BossTitleCard } from '@/components/combat/encounter/BossTitleCard';
 import { RevealGround } from '@/components/combat/encounter/RevealGround';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveJuiceMode } from '@/lib/juice/instant';
-import { buildRevealFrame, buildRevealVM } from '@/state/presenters/encounter-reveal.engine';
+import { buildRevealVM } from '@/state/presenters/encounter-reveal.engine';
 import { fightRecorder } from '@/lib/fightRecorder';
 import { getEncounterEnemyArt } from '@/assets/images/enemies';
 import {
@@ -768,10 +769,8 @@ export function CombatEncounterPanel({
     // the finger was already moving — the start-of-drag stutter.
     // The ink curtain and tier frame (ET1a): the motion answer comes from the
     // reduced-motion hook here and is handed down, never asked for below.
-    const revealFrame = useMemo(() => buildRevealFrame(nodeId), [nodeId]);
     const inkInstant = resolveJuiceMode({ reducedMotion: useReducedMotion() }) === 'instant';
     const [inkDone, setInkDone] = useState(nodeId === undefined);
-    const [bossCardHeld, setBossCardHeld] = useState(true);
     const onInkDone = useCallback(() => setInkDone(true), []);
     // The map's ink (CX1b) covered the window until this screen was up; its own
     // curtain now starts covered beneath it, so the map's is lifted.
@@ -826,24 +825,24 @@ export function CombatEncounterPanel({
                 />
             )}
 
-            {/* The held title card (boss) and the ink curtain sit over the reveal below. */}
-            {showReveal && inkDone && revealFrame.bossCard && bossCardHeld && (
-                <Pressable
-                    style={styles.bossCard}
-                    onPress={() => setBossCardHeld(false)}
-                    testID="combat-reveal-boss-card"
-                    accessibilityRole="button"
-                    accessibilityLabel={`${revealFrame.bossCard.place}. ${revealFrame.bossCard.subtitle}. ${BOSS_CARD_HINT}`}
-                >
-                    <Text style={styles.bossCardPlace}>{revealFrame.bossCard.place}</Text>
-                    <Text style={styles.bossCardSub}>{revealFrame.bossCard.subtitle}</Text>
-                    <Text style={styles.bossCardHint}>{BOSS_CARD_HINT}</Text>
-                </Pressable>
-            )}
+            {/* The ink curtain sits over the reveal below. */}
             {showReveal && !inkDone && <InkCurtain instant={inkInstant} onDone={onInkDone} />}
 
             {/* CombatRevealOverlay — read the foe before you commit */}
-            {showReveal && (
+            {showReveal && revealVM.bossCard && (
+                <View style={styles.reveal} testID="combat-reveal">
+                    <BossTitleCard
+                        name={revealVM.name}
+                        place={revealVM.bossCard.place}
+                        eyebrow={revealVM.bossCard.subtitle}
+                        hint={BOSS_CARD_HINT}
+                        art={getEncounterEnemyArt(vm.enemy.artKey, vm.enemy.artNonce)}
+                        instant={inkInstant}
+                        onPress={onEnter}
+                    />
+                </View>
+            )}
+            {showReveal && !revealVM.bossCard && (
                 <View style={styles.reveal} testID="combat-reveal">
                     <View style={styles.revealCol} testID="combat-reveal-column">
                         <Text style={styles.revealName} numberOfLines={2} adjustsFontSizeToFit>{revealVM.name}</Text>
@@ -1419,10 +1418,6 @@ const useStyles = makeStyles((AXM) => ({
     revealStatWord: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
     revealStatNum: { fontFamily: TYPE_ROLES.bigNumber.fontFamily, fontSize: 22, color: AXM.parchment },
     revealChip: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.parchment, backgroundColor: AXM.kindElite, paddingHorizontal: 10, paddingVertical: 3, marginTop: 8, overflow: 'hidden' },
-    bossCard: { ...StyleSheet.absoluteFillObject, zIndex: 20, backgroundColor: HUE.inkBg, alignItems: 'center', justifyContent: 'center', padding: 24 },
-    bossCardPlace: { fontFamily: TYPE_ROLES.foeName.fontFamily, fontSize: 32, color: AXM.parchment, textAlign: 'center' },
-    bossCardSub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 13, color: AXM.blood, marginTop: 10, textTransform: 'uppercase' },
-    bossCardHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.bone, marginTop: 28 },
     revealName: { fontFamily: TYPE_ROLES.foeName.fontFamily, fontSize: 32, color: AXM.parchment, marginTop: 4, textAlign: 'center' },
     revealHp: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.blood, marginTop: 2 },
     // The player's side of the same trade, quieter than the foe's.
