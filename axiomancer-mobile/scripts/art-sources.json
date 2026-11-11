@@ -196,6 +196,41 @@
       "title": "File:Joseph Wright of Derby - Cavern, near Naples - Google Art Project.jpg",
       "region": "the loot cache, card taken (ledger row 14)",
       "why": "Wright of Derby, Cavern, near Naples. TEMP stand-in (T, 2026-11-11) for row 14, the runes cut into the cave wall lit by one lantern: a cave interior under a single light, graded to grey dusk. T's art replaces it in the card slot of assets/images/treasure/cache-pictures.ts."
+    },
+    {
+      "key": "scene-windmill-headland",
+      "category": "cutscenes",
+      "title": "File:The Windmill at Wijk bij Duurstede 1670 Ruisdael.jpg",
+      "region": "The Breakwater",
+      "why": "Ruisdael, The Windmill at Wijk bij Duurstede. TEMP stand-in for the cutscene scene windmill-headland (spec 172, CU1c); T will replace it with their own picture."
+    },
+    {
+      "key": "scene-clifftop-chapel",
+      "category": "cutscenes",
+      "title": "File:Karl Friedrich Schinkel Gotische Kirche auf einem Felsen am Meer.jpg",
+      "region": "The Breakwater",
+      "why": "Schinkel, Gotische Kirche auf einem Felsen am Meer. TEMP stand-in for the cutscene scene clifftop-chapel (spec 172, CU1c); T will replace it with their own picture."
+    },
+    {
+      "key": "scene-old-watchtower",
+      "category": "cutscenes",
+      "title": "File:John Constable - Hadleigh Castle.jpg",
+      "region": "The Breakwater",
+      "why": "Constable, Hadleigh Castle (a ruined tower over the sea). TEMP stand-in for the cutscene scene old-watchtower (spec 172, CU1c); T will replace it with their own picture."
+    },
+    {
+      "key": "scene-high-pass",
+      "category": "cutscenes",
+      "title": "File:Caspar David Friedrich - Der Watzmann.jpg",
+      "region": "The Beacon Crags",
+      "why": "Friedrich, Der Watzmann (a mountain range seen across a valley). TEMP stand-in for the cutscene scene high-pass (spec 172, CU1c); T will replace it with their own picture."
+    },
+    {
+      "key": "scene-charcoal-wood-arrival",
+      "category": "cutscenes",
+      "title": "File:Jacob van Ruisdael - The Great Forest - Google Art Project.jpg",
+      "region": "The Charcoal Wood",
+      "why": "Ruisdael, The Great Forest. TEMP stand-in for the cutscene scene charcoal-wood-arrival (spec 172, CU1c); T will replace it with their own picture."
     }
   ]
 }

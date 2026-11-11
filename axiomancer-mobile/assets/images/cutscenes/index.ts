@@ -6,9 +6,11 @@
  * figure who tells every cutscene. T swaps an image here: a file, a line, and
  * its provenance entry. Nothing here resolves into `Potential Assets/`.
  *
- * The scene pictures are stand-ins: the dim combat arenas the ballot used, until
- * T's own landscapes arrive (172.3). The narrator is a copy of the Hermit
- * cut-out.
+ * Everything here is a TEMP stand-in (T, 2026-11-11), each with a provenance
+ * entry, until T's own art arrives: the five scenes are public-domain
+ * paintings (Ruisdael, Schinkel, Constable, Friedrich, Ruisdael) acquired
+ * through scripts/acquire-art.mjs, and the narrator is the TOR Friar cut-out.
+ * T will still replace them: a file, a line, and its provenance entry.
  */
 
 /** A scene's picture and the chapter's name drawn at the top left. */
@@ -26,23 +28,23 @@ const CHARCOAL_WOOD = 'THE CHARCOAL WOOD';
 export const CUTSCENE_SCENES: Readonly<Record<string, CutsceneScene>> = {
     'windmill-headland': {
         id: 'windmill-headland', chapter: BREAKWATER,
-        source: require('../combat/arena-breakwater-kuste-bei-mondschein.webp'),
+        source: require('./scene-windmill-headland.webp'),
     },
     'clifftop-chapel': {
         id: 'clifftop-chapel', chapter: BREAKWATER,
-        source: require('../combat/arena-breakwater-mondscheinnacht-ruegen.webp'),
+        source: require('./scene-clifftop-chapel.webp'),
     },
     'old-watchtower': {
         id: 'old-watchtower', chapter: BREAKWATER,
-        source: require('../combat/arena-breakwater-northern-sea.webp'),
+        source: require('./scene-old-watchtower.webp'),
     },
     'high-pass': {
         id: 'high-pass', chapter: BREAKWATER,
-        source: require('../combat/arena-beacon-crags-riesengebirge.webp'),
+        source: require('./scene-high-pass.webp'),
     },
     'charcoal-wood-arrival': {
         id: 'charcoal-wood-arrival', chapter: CHARCOAL_WOOD,
-        source: require('../combat/arena-charcoal-wood-eldena.webp'),
+        source: require('./scene-charcoal-wood-arrival.webp'),
     },
 };
 
@@ -52,8 +54,8 @@ export const CUTSCENE_FALLBACK: CutsceneScene = {
     source: require('../maps/charon-crossing.webp'),
 };
 
-/** The one narrator, a full-figure cut-out standing over the panel (stand-in until 172.3). */
-export const CUTSCENE_NARRATOR: number = require('./narrator-standin.webp');
+/** The one narrator, a full-figure cut-out standing over the panel (temp stand-in: the TOR Friar). */
+export const CUTSCENE_NARRATOR: number = require('./narrator.webp');
 
 /** The scene for an id; the fallback for an absent or unknown one. */
 export function cutsceneScene(id: string | undefined | null): CutsceneScene {
