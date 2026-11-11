@@ -124,6 +124,11 @@ export const ROUTES = [
     // at the rest site: the fixture's arrival opens /rest, `tapTestId` picks
     // UPGRADE A CARD, and the shot waits for HOLD and the way back under it.
     { name: 'rest-upgrade', path: '/exploration', fixture: 'apprentice-bw-rest', waitForPath: '/rest', tapTestId: 'rest-choice-offer-upgrade', expectTestIds: ['card-upgrade-sheet', 'card-upgrade-figure', 'card-upgrade-centre', 'card-upgrade-hold', 'rest-upgrade-back'] },
+    // The cave cache (cw-6, T's action lines), seed pinned by the injector (plan 174, A6):
+    // the choice, then each TAKE tapped (`tapTestId`) to its outcome.
+    { name: 'cache', path: '/exploration', fixture: 'apprentice-cw-cache', waitForPath: '/cache', expectTestIds: ['cache-choice-offer-card', 'cache-choice-offer-item'] },
+    { name: 'cache-goods', path: '/exploration', fixture: 'apprentice-cw-cache', waitForPath: '/cache', tapTestId: 'cache-choice-offer-item', expectTestIds: ['cache-outcome', 'cache-claim'] },
+    { name: 'cache-card', path: '/exploration', fixture: 'apprentice-cw-cache', waitForPath: '/cache', tapTestId: 'cache-choice-offer-card', expectTestIds: ['cache-outcome-card', 'cache-claim'] },
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },

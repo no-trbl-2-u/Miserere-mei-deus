@@ -12,5 +12,22 @@
     "license": "open source (T, 2026-10-29, D115)",
     "license_note": "Owner-supplied external illustration (no source traced). T, 2026-10-29, D115: \"The images we use for everything are open source.\"",
     "post_process": "2026-09-22 build-size pass: re-encoded in place to the ingest recipe (longest edge <= 640px, WebP q44) by scripts/shrink-art.mjs"
+  },
+  {
+    "generated_by": "public-domain-acquisition",
+    "date": "2026-11-11",
+    "tool": "scripts/acquire-art.mjs (Commons API + sharp)",
+    "source": "https://commons.wikimedia.org/wiki/File:Joseph_Wright_of_Derby_-_Cavern,_near_Naples_-_Google_Art_Project.jpg",
+    "artist": "Joseph Wright of Derby",
+    "license": "Public domain",
+    "license_verified": "read from the Commons imageinfo extmetadata at acquisition, not asserted by the operator",
+    "status": "TEMP stand-in (T, 2026-11-11) for ledger row 14, the runes cut into the cave wall lit by one lantern; T's art replaces it",
+    "post_process": "grayscale, brightness 0.62 / contrast 1.08 toward the void, longest edge <= 640px, WebP q44",
+    "covers": [
+      "cache-card-cavern.webp"
+    ],
+    "used_by": [
+      "assets/images/treasure/index.ts"
+    ]
   }
 ]

@@ -62,13 +62,16 @@ test('several paths select the union', () => {
     assert.deepEqual(routes, ['labyrinth', 'memoir'])
 })
 
+test('the cache screen selects the three cache shots (plan 174)', () => {
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/cache/index.tsx'], names).routes, ['cache', 'cache-card', 'cache-goods'])
+})
+
 test('app-wide code, the engine and the lockfile select all', () => {
     for (const path of [
         'axiomancer-mobile/app/_layout.tsx',
         'axiomancer-mobile/app/(tabs)/_layout.tsx',
         'axiomancer-mobile/components/StatBar.tsx',
         'axiomancer-mobile/components/CombatGate.tsx',
-        'axiomancer-mobile/app/cache/index.tsx',
         'axiomancer-mobile/state/game-store.ts',
         'axiomancer-mobile/lib/platform/image.ts',
         'axiomancer-mobile/assets/images/title.webp',

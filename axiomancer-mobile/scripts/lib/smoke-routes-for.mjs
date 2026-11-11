@@ -13,10 +13,11 @@ export const ALL = 'all'
 
 // The reveal and the board behind it: the same fight, two shots.
 const COMBAT = ['combat-encounter', 'combat-board', 'combat-elite', 'combat-boss', 'defeat-panel', 'victory-levelled', 'victory-plain']
+const CACHE = ['cache', 'cache-goods', 'cache-card']
 const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.
-const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'travel-cave', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node']
+const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'travel', 'travel-cave', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'cache', 'cache-goods', 'cache-card']
 
 /**
  * Paths that cannot change a pixel: tests, prose, plans, tooling outside the
@@ -64,6 +65,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/death-return\//, routes: ['death-return'] },
     { test: /^axiomancer-mobile\/app\/game-over\//, routes: ['game-over'] },
     { test: /^axiomancer-mobile\/app\/rest\//, routes: ['rest-upgrade'] },
+    { test: /^axiomancer-mobile\/app\/cache\//, routes: CACHE },
     // The shared upgrade screen: shot at the rest site (the Anvil and the elite
     // reward host the same screen).
     { test: /^axiomancer-mobile\/components\/upgrade\//, routes: ['rest-upgrade'] },

@@ -16,12 +16,13 @@
  */
 
 import { CACHE_ACTION_PLACEHOLDER, getCardById } from '@mechanics';
-import type { Consumable, Item, LootCacheChoiceOfferId, LootCacheChoiceSession } from '@mechanics';
+import type { Consumable, Equipment, Item, LootCacheChoiceOfferId, LootCacheChoiceSession } from '@mechanics';
 import { getItemSprite } from '@/components/icons/item-sprites';
 import type { AppStoreState } from '@/state/store';
 import type { CacheMoment } from '@/assets/images/treasure/cache-pictures';
 import { CACHE_CHOICE_OFFER_LABEL, cacheGoodHealLine } from './cache.copy';
 import { rewardCardVMs, type CombatCardVM } from './combat-encounter.engine';
+import type { InventoryCategory } from './inventory.engine';
 import { equipmentEffectLine } from './equipment-effect-line';
 
 // ---------------------------------------------------------------------------
@@ -41,6 +42,9 @@ export interface CacheGoodVM {
     name: string;
     /** The item id when it has a sprite (`getItemSprite`), else `null` (the glyph chain draws). */
     spriteKey: string | null;
+    /** The glyph's category and sub label (`ItemGlyph`), for an item with no sprite. */
+    category: InventoryCategory;
+    sub: string | null;
     /** What it does, from the item's own numbers; `null` when it has no effect to word. */
     line: string | null;
 }
@@ -111,11 +115,15 @@ function goodLine(item: Item): string | null {
     return item.description || null;
 }
 
+const SLOT_SUB: Record<string, string> = { weapon: 'Weapon', armor: 'Armor', relic: 'Relic' };
+
 function goodVM(item: Item): CacheGoodVM {
     return {
         itemId: item.id,
         name: item.name,
         spriteKey: getItemSprite(item.id) === null ? null : item.id,
+        category: item.category === 'equipment' ? 'equipment' : 'consumable',
+        sub: item.category === 'equipment' ? SLOT_SUB[(item as Equipment).slot] ?? null : null,
         line: goodLine(item),
     };
 }
