@@ -31,6 +31,8 @@ import type {
 } from '@mechanics';
 import { getDialogueNode, visibleChoices } from '@mechanics';
 
+import { CUTSCENE_NARRATOR, cutsceneScene } from '@/assets/images/cutscenes';
+
 import { ENCOUNTER_ENEMY_HP_MULTIPLIER, withScaledEnemyHp } from '../actions';
 import type { AppStoreState } from '../store';
 import {
@@ -164,6 +166,44 @@ export const CUTSCENE_HINT = {
     next: '· continue ·',
     last: '· walk on ·',
 } as const;
+
+/** One beat of a cutscene: its line and its "n of m" count. */
+export interface CutsceneBeat {
+    line: string;
+    /** "1 of 2". */
+    count: string;
+}
+
+/** What the cutscene screen draws (CU1a): the picture, the narrator, the chapter and the beats. */
+export interface CutsceneView {
+    /** The scene's picture (the fallback engraving when the scene id is absent or unknown). */
+    picture: number;
+    /** Whether `picture` is the fallback. */
+    isFallback: boolean;
+    /** The one narrator figure: the same for every cutscene. */
+    narrator: number;
+    /** The chapter's name for the top left; null when the scene has none. */
+    chapter: string | null;
+    beats: readonly CutsceneBeat[];
+}
+
+/**
+ * Turns the pending cutscene (a `ResolvedEvent`) into the screen's view. A
+ * non-cutscene event gives no beats. Content names the scene; the app owns the
+ * images and the one narrator (`assets/images/cutscenes`).
+ */
+export function cutsceneView(event: ResolvedEvent | null | undefined): CutsceneView {
+    const lines = event && event.kind === 'cutscene' ? event.lines : [];
+    const sceneId = event && event.kind === 'cutscene' ? event.scene : undefined;
+    const scene = cutsceneScene(sceneId);
+    return {
+        picture: scene.source,
+        isFallback: scene.id === 'fallback',
+        narrator: CUTSCENE_NARRATOR,
+        chapter: scene.chapter,
+        beats: lines.map((line, i) => ({ line, count: `${i + 1} of ${lines.length}` })),
+    };
+}
 
 /**
  * Single source of truth for the non-boss encounter label that the
