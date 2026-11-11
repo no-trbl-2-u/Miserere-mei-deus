@@ -143,6 +143,16 @@ export function xpBarSteps(paid: FightPaid): XpBarStep[] {
     return steps;
 }
 
+/**
+ * The chapter's name for the victory screen's top band, from the map's region
+ * ("The Breakwater" reads "BREAKWATER", as the settled shot prints it). Empty
+ * when the fight stands on no map (the labyrinth, the dev sandbox).
+ */
+export function victoryChapterName(region: string | undefined | null): string {
+    if (!region || !/[a-z]/i.test(region)) return '';
+    return region.replace(/^the\s+/i, '').toUpperCase();
+}
+
 /** The victory screen's view model from what the settle paid. */
 export function selectFightEndVM(paid: FightPaid): FightEndVM {
     const leveled = paid.levelAfter > paid.levelBefore;
