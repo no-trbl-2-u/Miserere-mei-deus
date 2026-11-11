@@ -1,6 +1,6 @@
 # 176 — The ends of a fight and a run
 
-> A won fight ends on one screen: the fallen foe stands greyed at the top, the headline, what the fight paid in shillings and XP, one panel that says either the new level or how much XP the next level needs, and the card offer. A first death ends on the player's own figure, YOU FELL, the VITAE bar at 1 and CONTINUE. The defeat panel and Game Over keep their content and take the same look.
+> A won fight ends on one screen: the fallen foe stands greyed at the top, the headline, what the fight paid in shillings and XP, one panel whose XP bar fills from where the player stood to where the fight left them (reaching the end shows "LEVEL n" briefly, then a fresh bar fills with the rest) and says either the new level or how much XP the next level needs, and the card offer. A first death ends on the player's own figure, YOU FELL, the VITAE bar at 1 and CONTINUE. The defeat panel and Game Over keep their content and take the same look.
 
 ## Why
 
@@ -10,6 +10,7 @@
 - **The settled shot:** `plan/card-ledger/screens/S-07-settled.webp` (it lands with PR #1584): three screens, a victory with a level-up, a victory without one, and the death return. It is the reference picture for this spec. The winning look is `screens/S-07c.webp`; today's four moments, redrawn from the code, are `screens/S-07a.webp`.
 - **The ledger's reading of the shot:** "S-07c. The fallen foe stays upright, greyed. The ledger line ("the page turned itself") is gone: the panel says either the new level ("LEVEL 2") or how much XP the next level needs ("30 XP to level 2"). Victory drawn both ways, then the death return as drawn."
 - **T, 2026-11-09:** one button across the screens, the brass action plate.
+- **T, 2026-11-11** (PR #1586, verbatim): "For the victory, for the experience, show an animation where it's like a progress bar that animates their experience bar up where 100% is leveling up, then show "Level <n>" like you have, briefly, before showing another animated experience bar of the player got more than 100% of the needed experience." This adds an XP bar to the level panel that the settled shot does not draw; where they differ, this line wins.
 
 ### What exists today (read 2026-11-10, at origin/main 2a77e8c8a)
 
@@ -32,7 +33,12 @@
 - **The top band.** The chapter's name at the left and the purse ("Shillings 41") at the right, over the node's arena plate fading into the ground. The fallen foe stands in the band, upright and greyed: its own art, desaturated and dimmed, never rotated, tipped over or animated away (T's note). Where a platform has no image filter, a grey wash over the dimmed art stands in.
 - **The headline:** "Victory — the enemy falls", the engine's own headline, in the title face and gold.
 - **What the fight paid:** one line, "Shillings +n · XP +n". XP is the experience gained across the settle (experience after minus before), so a quest step paid at the kill counts too. When the fight paid no XP (an elite's relic took its place), the XP half is left off.
-- **The level panel:** one bordered panel holding one thing. If the fight raised the player's level: "LEVEL n", the level now reached (the highest, when several were gained at once). If not: "k XP to level n+1", the XP still owed for the next level. Nothing else: no ledger line, no flourish, no stat point prompt. The stat point and ascend choice keep waiting on the Character tab as today.
+- **The level panel:** one bordered panel holding an XP bar and one line. Nothing else: no ledger line, no flourish, no stat point prompt. The stat point and ascend choice keep waiting on the Character tab as today.
+  - **The XP bar animates the fight's XP** (Confirmed by T (2026-11-11): "a progress bar that animates their experience bar up where 100% is leveling up"). It is the player's progress through their current level: empty at the level's start (`experienceForLevel(L)`), full at the next (`experienceForLevel(L+1)`). When the screen opens it stands where the player was before the fight and fills to where the fight left them.
+  - **Reaching 100% is the level-up.** The bar fills to full, then "LEVEL n" shows in the panel briefly (the level just reached), then a fresh, empty bar for the new level fills with the XP left over (T: "another animated experience bar" when the XP passes 100%). Two levels at once repeat the step: full, "LEVEL n", fresh bar, full, "LEVEL n+1", fresh bar with the rest. The bar ends on the player's true progress in the level they now hold.
+  - **The line under the bar, once it settles:** "LEVEL n" (the highest level reached) when the fight raised the level, else "k XP to level n+1", the XP still owed. A fight that paid no XP (an elite's relic) shows the bar standing still with "k XP to level n+1".
+  - **Timing:** each fill about 0.8 s, eased; "LEVEL n" holds about 1 s before the fresh bar. The numbers live in one constants block beside the presenter, not in the component. A tap on the panel jumps to the settled end [T to confirm #5]. The card offer below is live from the start; taking a card mid-animation closes the fight as usual.
+  - **Reduced motion** (`hooks/useReducedMotion.ts`, as the other screens use it): no fill; the bar is drawn at its settled place and the line reads its settled words at once.
 - **The card offer** stays as built: "Add a card to your deck", three cards in the one card face (D91) with the rarity word under each, the second tap's inspect, TAKE NOTHING and TAKE CARD side by side, and UPGRADE INSTEAD with its note after an elite. Its buttons move to the brass plate and the panel loses its vellum: the offer sits on the screen's dark ground under the level panel.
 - **Closing.** TAKE CARD or TAKE NOTHING closes the fight [T to confirm #3]. A win with no card offer (an elite's relic) shows CONTINUE on the brass plate where the offer sits. The relic's own screen follows as today.
 
@@ -72,12 +78,12 @@
 ## Acceptance
 
 - **A1** A won fight reaches the card offer and then closes, proven twice: a hermetic test under `axiomancer-mobile/state/e2e/` that plays a live fight state on the board to the foe's fall (a normal foe and an elite) through the engine, sees the offer, takes a card and leaves the fight; and a driven session (`combat-round-e2e.mjs` with a preset that wins) whose victory screenshot is in the PR.
-- **A2** The fight's settle reports what it paid: shillings, XP gained (experience after minus before), the level before and after, and the XP still owed for the next level. One presenter builds the victory screen's view model from it, with its words in a `.copy.ts` file. Unit tests cover no level, one level, two levels at once, XP withheld (relic) and the curve's own figures (`experienceForLevel`).
-- **A3** The victory screen shows the top band (chapter name, purse, arena plate, the foe upright and greyed, never rotated), the headline, "Shillings +n · XP +n", and the level panel holding only "LEVEL n" after a level-up or "k XP to level n+1" otherwise, then the card offer on the brass plate (TAKE NOTHING, TAKE CARD; UPGRADE INSTEAD after an elite) (S-07c, settled shot).
+- **A2** The fight's settle reports what it paid: shillings, XP gained (experience after minus before), the experience and level before and after, and the XP still owed for the next level. One presenter builds the victory screen's view model from it, with its words in a `.copy.ts` file, including the XP bar's steps: an ordered list of fills (from and to, as fractions of a level, each ending full or at the settled place) with a "LEVEL n" beat after each fill that ends full. Unit tests cover no level, one level, two levels at once, a level reached exactly (the fresh bar stays empty), XP withheld (relic, no fill) and the curve's own figures (`experienceForLevel`).
+- **A3** The victory screen shows the top band (chapter name, purse, arena plate, the foe upright and greyed, never rotated), the headline, "Shillings +n · XP +n", and the level panel holding only the XP bar and one line: the bar fills from the player's place before the fight to their place after it, and each time it reaches full it shows "LEVEL n" briefly and starts a fresh bar with the rest (T, 2026-11-11); it settles on "LEVEL n" after a level-up or "k XP to level n+1" otherwise; a tap jumps to the settled end [T to confirm #5]; with reduced motion the settled state shows at once. Then the card offer on the brass plate (TAKE NOTHING, TAKE CARD; UPGRADE INSTEAD after an elite) (S-07c, settled shot).
 - **A4** After a win, taking or refusing the card closes the fight; the summary panel no longer opens after a win [T to confirm #3]. A win with no offer shows CONTINUE in its place. A spared foe's ending is unchanged but for the house look.
 - **A5** The death return shows the player's chosen figure, YOU FELL, one `[content]` line, the VITAE bar at 1 of the maximum with its figure, one `[content]` line on what is kept, and CONTINUE on the brass plate (settled shot, right).
 - **A6** The defeat panel keeps its content, names its cause (VITAE 0 or the turn limit) [T to confirm #2], and wears the house look; Game Over keeps its content and wears the house look [T to confirm #1].
-- **A7** Each reworked screen has a `verify:visual` route shot (the victory both ways through a dev-only preview, as `/death-return?preview=1` does today; the death return; the defeat panel; Game Over), compared with the settled shot in the PR, and the baselines are updated.
+- **A7** Each reworked screen has a `verify:visual` route shot (the victory both ways through a dev-only preview, as `/death-return?preview=1` does today, shot at the bar's settled end; the death return; the defeat panel; Game Over), compared with the settled shot in the PR, and the baselines are updated.
 
 ## Open questions
 
@@ -85,6 +91,7 @@
 - [T to confirm #2] The defeat panel names its cause: "VITAE 0" or "the turn limit", with no withdraw. Or: it names no cause, as today.
 - [T to confirm #3] The summary panel after a win goes: the victory screen already carries the shillings and XP, so taking the card closes the fight. Or: keep the damage-by-card rows and best card as a short panel after the card.
 - [T to confirm #4] The end of a chapter gets no screen in this spec. Or: plot one here.
+- [T to confirm #5] The XP bar's animation: a tap on the level panel skips it to the settled end. Or: it always plays through (a few seconds at most for several levels).
 
 ## Chunks
 
@@ -92,15 +99,16 @@ Measure: 7 open · 0 closed · next A8
 
 - [ ] **176.1** A won fight reaches the offer, and the settle says what it paid · M · closes A1, A2 · needs — · alias: FE1a
   - `CombatEncounterPanel.tsx`: `applyHazardOutcome` returns what the fight paid (shillings, XP gained, level before and after, XP to next) instead of shillings alone; the panel keeps it in place of `shillingsPaid`.
-  - `state/presenters/fight-end.engine.ts` and `fight-end.copy.ts`: the victory view model (paid line, level panel text) from that record and `experience.ts`; tests for each case in A2.
+  - `state/presenters/fight-end.engine.ts` and `fight-end.copy.ts`: the victory view model (paid line, level panel text, the XP bar's fill steps and "LEVEL n" beats, the timing constants) from that record and `experience.ts`; tests for each case in A2.
   - `state/e2e/fight-won.FE1a.test.tsx`: the hermetic win, normal and elite, to the offer and out.
   - Run `combat-round-e2e.mjs` with a winning preset; the victory screenshot goes in the PR.
   - Measure: the new tests pass, and the PR shows the driven win's screenshot.
 - [ ] **176.2** The victory screen: the fallen foe, the paid line, the level panel and the offer · M · closes A3, A4, A7 · needs 176.1 · alias: FE1b
-  - A victory screen component over the board: the top band (chapter name, purse, `arenaBackdropFor`, `getEncounterEnemyArt` greyed and upright), the headline, the paid line and the level panel from FE1a's view model, and `CombatRewardsOverlay`'s offer below it on `BrassButton`, without the vellum.
+  - A victory screen component over the board: the top band (chapter name, purse, `arenaBackdropFor`, `getEncounterEnemyArt` greyed and upright), the headline, the paid line and the level panel from FE1a's view model, the panel's XP bar playing FE1a's fill steps (fill, "LEVEL n" hold, fresh bar; tap to skip, call #5; `useReducedMotion` draws the settled end), and `CombatRewardsOverlay`'s offer below it on `BrassButton`, without the vellum.
   - The summary no longer opens after a win (call #3); CONTINUE when there is no offer; the spared ending in the house look.
   - A dev-only preview of the victory, levelled and not, for `verify:visual` (`scripts/critique-drive.mjs` routes), and the baseline.
-  - Measure: the route shots beside the settled shot's left and middle screens in the PR.
+  - A component test that steps the bar's animation with fake timers: one fill with no level, a fill to full then "LEVEL n" then a fresh fill, the tap skip, and reduced motion.
+  - Measure: the route shots beside the settled shot's left and middle screens in the PR, and the bar's component test passing.
 - [ ] **176.3** The death return: the player's figure and the VITAE bar · S · closes A5 · needs — · alias: FE1c
   - `app/death-return/index.tsx` and its presenter: the chosen figure (`getPlayerPortrait`), the VITAE bar at 1 of the maximum, the kept line in `death-return.copy.ts` as `[content]`, CONTINUE on `BrassButton`.
   - Update `screenshots/baseline/death-return.png`.
