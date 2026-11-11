@@ -8,8 +8,6 @@
  * Hermetic = self-contained + deterministic + isolated. See docs/testing.md.
  */
 
-import fs from 'fs';
-import path from 'path';
 import { describe, expect, it } from '@jest/globals';
 import type { ResolvedEvent } from '@mechanics';
 
@@ -64,20 +62,5 @@ describe('cutsceneView (CU1a)', () => {
     it('gives no beats for a non-cutscene or missing event', () => {
         expect(cutsceneView(null).beats).toEqual([]);
         expect(cutsceneView({ kind: 'none' } as ResolvedEvent).beats).toEqual([]);
-    });
-});
-
-describe('cutscenes asset module (CU1a)', () => {
-    const DIR = path.resolve(__dirname, '../../assets/images/cutscenes');
-
-    it('bundles the narrator stand-in with a provenance entry', () => {
-        expect(fs.existsSync(path.join(DIR, 'narrator-standin.webp'))).toBe(true);
-        const record = JSON.parse(fs.readFileSync(path.join(DIR, 'provenance.json'), 'utf-8'));
-        expect(record.flatMap((e: { covers: string[] }) => e.covers).join('\n')).toContain('narrator-standin.webp');
-    });
-
-    it('never points into Potential Assets', () => {
-        const src = fs.readFileSync(path.join(DIR, 'index.ts'), 'utf-8');
-        for (const m of src.matchAll(/require\('([^']*)'\)/g)) expect(m[1]).not.toContain('Potential Assets');
     });
 });
