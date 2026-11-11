@@ -162,6 +162,7 @@ describe('createFixtureStore + arriveFromFixture (test-utils/fixtureStore.ts)', 
         ['wanderer-staged-cutscene', (s: ReturnType<AppStore['getState']>) => selectPacedEventRoute(s) === '/cutscene'],
         ['apprentice-bw-rest', (s: ReturnType<AppStore['getState']>) => s.rest.session !== null],
         ['apprentice-bw-cache', (s: ReturnType<AppStore['getState']>) => s.cache.session !== null],
+        ['apprentice-cw-cache', (s: ReturnType<AppStore['getState']>) => s.cache.session !== null && s.cache.session.actions?.card === 'Read the runes inside the cave'],
         ['wanderer-bw-blacksmith', (s: ReturnType<AppStore['getState']>) => s.event.pending?.event.kind === 'village'],
         // A Breakwater hazard opens its puzzle (HP6c); the Charcoal Wood's keeps the three-round board.
         ['l30-bw-hazard-arrive', (s: ReturnType<AppStore['getState']>) => s.hazard.puzzle?.nodeId === 'bw-m2'],

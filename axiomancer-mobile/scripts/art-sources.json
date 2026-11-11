@@ -189,6 +189,13 @@
       "title": "File:John_Martin_-_Great_Day_of_His_Wrath_-_WGA14150.jpg",
       "region": "The Lantern Deep",
       "why": "Martin, The Great Day of His Wrath. Kept alternate (T, 2026-11-03). One of the twelve arena plates kept by plan 146 (chunk 146.1); a node may name any of them, each region opens on its default."
+    },
+    {
+      "key": "cache-card-cavern",
+      "category": "treasure",
+      "title": "File:Joseph Wright of Derby - Cavern, near Naples - Google Art Project.jpg",
+      "region": "the loot cache, card taken (ledger row 14)",
+      "why": "Wright of Derby, Cavern, near Naples. TEMP stand-in (T, 2026-11-11) for row 14, the runes cut into the cave wall lit by one lantern: a cave interior under a single light, graded to grey dusk. T's art replaces it in the card slot of assets/images/treasure/cache-pictures.ts."
     }
   ]
 }
