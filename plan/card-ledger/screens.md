@@ -120,4 +120,38 @@ What the code says today, where a look shows more than the game can.
 
 ## Verdict
 
-Open. T votes on the ballot; the final verdict row is pasted here verbatim when it lands.
+Decided 2026-11-10 by T, pasted from the ballot. Verbatim:
+
+```
+BALLOT: seven Breakwater screens, ten looks each (screens-2026-11-10)
+answered 7 of 7
+S-01 Travel: KEEP S-01b (Scene and cost) | note: Only text is the "Move" and "Stay", Move to the Cave Face? and the flavor text underneath
+S-02 Cutscene: KEEP S-02h (The teller) | note: No continue or bottom skip. Taps continue the story. Text should be inside the vellum scroll thing and the image of the teller should be on top of the vellum card.
+S-03 Quest: KEEP S-03g (The quest card) | note: Get rid of "A Quest" and Step 4 of 4
+S-04 Loot cache: KEEP S-04j (Picture first) | note: Don't show the actual reward. Only Take a/the ___ and the flavor text. Reward should be hidden until the selection is made. Furthermore, goods? Show goods as you have it  Show Card? We replace the gold with a different image and the card will go right above move on.
+S-05 Fight reveal and boss title card: KEEP S-05f (Held boss plate) | note: F for bosses, G for everything else. Do what you can do that there's not such a clear cutoff at the bottom.
+S-06 Combat board: KEEP S-06a (Today's screen)
+S-07 Ends of a fight and a run: KEEP S-07c (The fallen foe) | note: Don't rotate the enemy after they fell, and none of that "The page turned itself" nonsense. Only mention how much experience is needed to level and if they leveled up.
+```
+
+No slot asked for a mix of two looks, so there is no second round. Each settled shot below is the winning look with T's note applied; it is the Source of that screen's plot.
+
+| Slot | Settled shot | Read as |
+|---|---|---|
+| S-01 | `screens/S-01-settled.webp` | S-01b. The only words are the question ("Move to The Cave Face?"), the scene line under it, and two plain buttons, MOVE and STAY. No eyebrow, no purse, no cost line, no YES/NO. Both cases drawn. |
+| S-02 | `screens/S-02-settled.webp` | S-02h. No CONTINUE and no bottom SKIP: a tap anywhere moves the story on. The line sits inside a vellum panel (the kit's `modal-panel-vellum`), dark ink on vellum; the teller stands over the panel's top edge, in front of it. The top SKIP and the "2 of 2" count stay. |
+| S-03 | `screens/S-03-settled.webp` | S-03g with the "A QUEST" eyebrow and the "STEP 4 OF 4" count removed; the four beads still show the step. |
+| S-04 | `screens/S-04-settled.webp` | S-04j. The choice shows only TAKE A CARD and TAKE THE GOODS, each with its flavour line; the reward is hidden until the player takes one. Goods taken: today's goods outcome, as drawn. Card taken: a different picture replaces the gold (image needed), and the card face sits just above MOVE ON. |
+| S-05 | `screens/S-05-settled.webp` | S-05f for the boss, S-05g for every other foe (normal and elite). Both grounds now fade out instead of stopping hard at the foot, and G's foe is cut out of its black box. |
+| S-06 | `screens/S-06a.webp` | Today's combat board stays. No rework, no plot. |
+| S-07 | `screens/S-07-settled.webp` | S-07c. The fallen foe stays upright, greyed. The ledger line ("the page turned itself") is gone: the panel says either the new level ("LEVEL 2") or how much XP the next level needs ("30 XP to level 2"). Victory drawn both ways, then the death return as drawn. |
+
+Images the winners still need (rows of "Images to generate" above, plus one new):
+
+- S-01: rows 1 and 2 (the bridge, the cave mouth).
+- S-02: rows 6 to 9, and one picture each for the chapter arrival; the teller figure per scene is T's.
+- S-03: the four givers' figures (T's own; stand-ins hold the places).
+- S-04: **new row 14**: the runes cut into the cave wall, lit by one lantern; grey dusk, engraved; landscape, 780x540; the picture band at the top of the card outcome, in place of the gold.
+- S-05 and S-07: none new; the foes' own art carries them.
+
+Closed 2026-11-10. Plotted one screen per plot PR (T: "Plot each one separately"), S-06 excepted.
