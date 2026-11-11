@@ -52,7 +52,7 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 - **Turning in.** TURN IN pays as today (`turnInQuestStep`). The paid item rises off the card's foot (`RelicRise`, reduced motion lands it at once), then the card turns to the next step's offer on the same screen, as the engine already resolves it (`stage` becomes `offer`, `paid` set). What the turn-in paid stays on screen as one line above the new card until LEAVE: `+40 XP · Ruby Signet` [T to confirm #1]. An on-arrival step (step 2, the lighthouse) shows the same line on the next node's offer, from `paid` as today.
 - **The chain's end.** At the bridge (`bw-b1`, node 5) the step turned in is step 4 and nothing follows: after TURN IN the card stays on step 4 with its pay marked paid, all four beads gold, and LEAVE only.
 - **A step that pays a card pick** still opens the spoils tiles over the screen (`CombatRewardsOverlay`), unchanged. No Breakwater step pays one.
-- **Nothing tells offer from in progress but the buttons and the giver's line** (no head on the card, per T's note) [T to confirm #2].
+- **A step under way wears a small gold mark on the card's name band** (T, 2026-11-11, ruling #2): accepted, not yet turned in (`waiting`, or an `offer` already accepted). No other state wears a mark or a head, and the offer has none (shipped in 173.2, `QuestCard`, testID `quest-card-underway`).
 - **It fits a phone without scrolling** at 390x844: the card takes what the giver's name, line, beads and buttons leave. A long ask wraps inside the card; the screen scrolls only past that.
 
 ### The giver figure table
@@ -79,28 +79,20 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 
 ## Acceptance
 
-- **A3** The offer shows one tall card in the card frame (the step's name, the giver's figure as its art, the ask, the pay with item icons at its foot), then the giver's name, the spoken line, the four beads and LEAVE and ACCEPT on the brass plate, LEAVE on the left. No "A QUEST", no "STEP n OF N", no stage head. A `verify:visual` route shot of the gate warden's offer at the keep gate matches the settled shot's layout, with the two buttons swapped.
-- **A4** In progress (`waiting`, or an offer already accepted) shows the same card for the step being worked, with its counter, and LEAVE only.
 - **A5** Turn in shows the finished step's card with the ask marked done and the pay lit, with TURN IN and LEAVE. TURN IN pays as today; the item rises off the card's foot (instant under reduced motion), a one-line ledger of what was paid stays above the card, and the card turns to the next step's offer. At the bridge, the last step's card stays, marked paid, with LEAVE only.
 - **A6** Turned away (`locked`) shows the card of the step this node would offer, with its pay and the giver's figure dimmed, and the refusal reason in the spoken line's place, with LEAVE only.
 
 ## Open questions
 
 1. [T to confirm #1] After a turn-in, what the step paid stays on screen as one line above the next step's card (`+40 XP · Ruby Signet`) until LEAVE. Default: yes, one line. Or: no line, only the item rising off the card.
-2. [T to confirm #2] The card carries no head in any state, so the offer and the work in progress differ only by their buttons and the giver's spoken line. Default: no head, per the note on the ballot. Or: a small gold mark on the card's name band while the step is under way.
+2. [T ruled 2026-11-11] The card carries no head in any state; while a step is under way (accepted, not yet turned in) a small gold mark rides its name band, and no other state has one.
 3. [T to confirm #3] The lighthouse keeper's stand-in is the Hermit, the same figure the village host stands in with. Default: keep it, as the ballot drew it. Or: another figure from the library for one of them.
 
 ## Chunks
 
-Measure: 4 open · 2 closed · next A7
+Measure: 2 open · 4 closed · next A7
 
-- [ ] **173.2** The quest card: the offer and the work in progress · M · closes A3, A4 · needs — · alias: QS1b
-  - A `QuestCard` component (`components/quest/`) in the D91 frame (border, name band, edge-to-edge art, text, pay foot) and a `QuestBeads` row; `app/quest/index.tsx` drops the eyebrow, the title, the heads, `StepBlock` and the portrait row (`QuestGiverScene` folds into the card's art; keep its testIDs `quest-giver`, `quest-giver-portrait`, `quest-giver-name`), moves to a dark ground, and wears `BrassButton` for LEAVE and ACCEPT (LEAVE on the left).
-  - In progress: the same card, LEAVE only. An offer already accepted reads the same way.
-  - A `quest` route in `scripts/smoke-screens.mjs` `ROUTES`, on a fixture that stands at the keep gate (`bw-k1`) with step 3 turned in and step 4 not yet accepted (a new entry in `state-fixture.registry.ts` if none fits), and its baseline approved.
-  - Hermetic e2e under `state/e2e/` (extend `quest.screen.test.tsx` / `quest-giver.screen.test.tsx`): no "A QUEST" or "STEP" text; the pay and its item show before ACCEPT; LEAVE left of ACCEPT; after ACCEPT, LEAVE only; waiting shows LEAVE only.
-  - Measure: the `quest` route shot in the PR beside `plan/card-ledger/screens/S-03-settled.webp`, the same layout with LEAVE and ACCEPT swapped; the e2e passes.
-- [ ] **173.3** The quest card: the turn-in with its reward, and the giver turning the player away · M · closes A5, A6 · needs 173.2 · alias: QS1c
+- [ ] **173.3** The quest card: the turn-in with its reward, and the giver turning the player away · M · closes A5, A6 · needs — · alias: QS1c
   - Turn in: the ask marked done and the pay lit; TURN IN on the brass plate; `RelicRise` lifts off the card's foot; the one-line paid ledger above the next offer's card (or what #1 rules); at `bw-b1` the last card stays marked paid, beads all gold, LEAVE only. The on-arrival step's ledger on the lighthouse offer, as today from `paid`.
   - Turned away: the card with the giver's figure dimmed and the refusal reason in the spoken line's place (`quest-locked-line` kept), LEAVE only.
   - Hermetic e2e: a turn-in at `bw-c2` (the Ruby Signet rises, the ledger line shows, the next offer follows), the chain's end at `bw-b1`, and a turned-away arrival at `bw-l5` that names its reason. Each state's shot (turn in, turned away) in the PR, beside S-03f and S-03i for the states the settled shot does not draw.

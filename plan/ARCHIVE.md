@@ -715,3 +715,4 @@
 - 2026-11-11 · 172 · spec complete: The cutscene as a teller over a vellum panel · none · deleted in (this commit)
 - 2026-11-11 · 174.2 (alias: LC1b) · Loot cache opens picture first, brass TAKE, outcome shows goods or card · b3e07d83..0d5b8bd5 (#1612)
 - 2026-11-11 · 174 · spec complete: The loot cache, picture first · D185 · deleted in (this commit)
+- 2026-11-11 · 173.2 (alias: QS1b) · Quest screen shows one gold-framed card, beads, brass buttons · 5ca08823..5ca08823 (#1611)
