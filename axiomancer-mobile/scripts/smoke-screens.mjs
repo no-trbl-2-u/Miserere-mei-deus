@@ -106,6 +106,9 @@ export const ROUTES = [
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
     // The quest card: the gate warden's offer at the keep gate, steps 1 to 3 turned in.
     { name: 'quest', path: '/exploration', fixture: 'wanderer-bw-keep-gate-offer', waitForPath: '/quest', waitForTestId: 'quest-offer' },
+    // The gate warden turning the player away, and the chain's last card marked paid.
+    { name: 'quest-locked', path: '/exploration', fixture: 'wanderer-bw-keep-gate-locked', waitForPath: '/quest', waitForTestId: 'quest-locked' },
+    { name: 'quest-paid', path: '/exploration', fixture: 'wanderer-bw-bridge-paid', waitForPath: '/quest', waitForTestId: 'quest-card-paid' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
     // The cave shortcut: the map zoomed on the Cave Face.
     { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },

@@ -4,36 +4,24 @@
  * node's payload (`MapEvents/content.ts`), not here.
  */
 
-export const QUEST_EYEBROW = 'A QUEST';
-export const QUEST_TITLE = 'The giver waits';
-
 /** The giver's line when the node's payload carries none. */
 export const QUEST_GIVER_FALLBACK = '[content] Someone here has work for the willing.';
 
-/**
- * "STEP 2 OF 4". The node past the last step (where it is turned in, or a
- * side quest's turn-in node) reads the last step, never "STEP 5 OF 4".
- */
-export function questStepEyebrow(step: number, total: number): string {
-    return `STEP ${Math.min(step, total)} OF ${total}`;
-}
-
 export const QUEST_LOCKED_LINE = '[content] Not yet. Finish the work you were given first.';
-export const QUEST_WAITING_HEAD = 'YOUR WORK, SO FAR';
-export const QUEST_TURN_IN_HEAD = 'THE WORK IS DONE';
-export const QUEST_OFFER_HEAD = 'THE NEXT WORK';
-export const QUEST_ACCEPTED_LINE = 'Accepted. The count begins now.';
-export const QUEST_DONE_LINE = 'Done and paid.';
-export const QUEST_PAID_HEAD = 'PAID';
+/** The mark on a card whose step is turned in and paid (the chain's last card). */
+export const QUEST_PAID_MARK = 'PAID';
 
 export const QUEST_ACCEPT_LABEL = 'ACCEPT';
 export const QUEST_TURN_IN_LABEL = 'TURN IN';
 export const QUEST_LEAVE_LABEL = 'LEAVE';
 
-export const QUEST_PAID_NOTHING = 'Nothing more is owed.';
-
 export function questXpLine(amount: number): string {
     return `+${amount} XP`;
+}
+
+/** The ledger line above the next card: "+40 XP · Ruby Signet". */
+export function questPaidLine(parts: readonly string[]): string {
+    return parts.join(' · ');
 }
 
 export function questShillingsLine(amount: number): string {

@@ -54,8 +54,8 @@ describe('/quest - a step paid on arrival', () => {
         open(LONG_MAIN_LINE, 3, [LONG_STEP_1, LONG_STEP_2]);
         const paid = screen.getByTestId('quest-paid');
         expect(paid).toBeTruthy();
-        expect(screen.getByText(LONG_STEP_2)).toBeTruthy();
-        expect(screen.getByText('+30 XP')).toBeTruthy();
+        const line = paid.props.children;
+        expect(Array.isArray(line) ? line.join('') : line).toBe(`+30 XP · ${CASTLE_KEY.name}`);
         expect(screen.getByTestId('quest-relic-name').props.children).toBe(CASTLE_KEY.name);
         expect(screen.getByTestId('quest-offer')).toBeTruthy();
         expect(screen.getByTestId('quest-accept-button')).toBeTruthy();

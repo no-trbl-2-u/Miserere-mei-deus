@@ -7,7 +7,10 @@
  * It carries every moment of a step; the screen picks what to show. The
  * giver's figure dims while the giver turns the player away. While a step is
  * under way (accepted, not yet turned in) a small gold mark rides the name
- * band; no other state wears a head (T, 2026-11-11, on the spec's #2).
+ * band; no other state wears a head (T, 2026-11-11, on the spec's #2). A
+ * finished step (`lit`) marks its ask done in gold (the counter, or a tick
+ * when the ask has none) and lights the pay; a step turned in (`paid`) also
+ * wears the PAID mark at the pay's end.
  */
 
 import React from 'react';
@@ -16,7 +19,7 @@ import { Image, Text, View } from 'react-native';
 import { giverFigure } from '@/assets/images/givers';
 import { ItemGlyph } from '@/components/inventory/ItemCard';
 import type { QuestGiverVM, QuestPayVM, QuestStepVM } from '@/state/presenters/quest.engine';
-import { questShillingsLine, questXpLine } from '@/state/presenters/quest.copy';
+import { QUEST_PAID_MARK, questShillingsLine, questXpLine } from '@/state/presenters/quest.copy';
 import { TYPE_ROLES } from '@/theme/axm';
 import { makeStyles } from '@/theme/runtime';
 
@@ -28,12 +31,16 @@ export interface QuestCardProps {
     turnedAway: boolean;
     /** True while the step is accepted and not turned in: the name band wears the gold mark. */
     underway: boolean;
+    /** True when the step is finished (turn-in, or paid): the ask is marked done and the pay lit. */
+    lit?: boolean;
+    /** True when the step is turned in and paid: the chain's last card stays so. */
+    paid?: boolean;
     width: number;
     height: number;
     testID: string;
 }
 
-export function QuestCard({ step, pay, giver, turnedAway, underway, width, height, testID }: QuestCardProps) {
+export function QuestCard({ step, pay, giver, turnedAway, underway, lit = false, paid = false, width, height, testID }: QuestCardProps) {
     const styles = useStyles();
     return (
         <View style={[styles.outer, { width, height }]} testID={testID}>
@@ -64,14 +71,17 @@ export function QuestCard({ step, pay, giver, turnedAway, underway, width, heigh
                     {step.objectives.map(o => (
                         <View key={o.id} style={styles.objectiveRow} testID={`${testID}-objective-${o.id}`}>
                             <Text style={styles.ask}>{o.description}</Text>
-                            {o.progress !== '' && (
+                            {o.progress !== '' ? (
                                 <Text style={[styles.progress, o.done && styles.progressDone]}>{o.progress}</Text>
-                            )}
+                            ) : lit && o.done ? (
+                                <Text style={styles.progressDone} accessibilityLabel="Done" testID={`${testID}-tick-${o.id}`}>{'✓'}</Text>
+                            ) : null}
                         </View>
                     ))}
                 </View>
                 {pay && (
-                    <View style={styles.pay} testID="quest-card-pay">
+                    <View style={[styles.pay, lit && styles.payLit]} testID="quest-card-pay">
+                        {lit && <View style={styles.payRule} testID="quest-card-pay-lit" />}
                         {pay.experience > 0 && <Text style={styles.xp}>{questXpLine(pay.experience)}</Text>}
                         {pay.currency > 0 && <Text style={styles.xp}>{questShillingsLine(pay.currency)}</Text>}
                         {pay.items.map(item => (
@@ -80,6 +90,7 @@ export function QuestCard({ step, pay, giver, turnedAway, underway, width, heigh
                                 <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
                             </View>
                         ))}
+                        {paid && <Text style={styles.paidMark} testID="quest-card-paid">{QUEST_PAID_MARK}</Text>}
                     </View>
                 )}
             </View>
@@ -102,6 +113,9 @@ const useStyles = makeStyles((AXM) => ({
     progress: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 13, color: AXM.bone },
     progressDone: { color: AXM.sulfur },
     pay: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, paddingHorizontal: 10, paddingVertical: 8 },
+    payLit: { backgroundColor: AXM.panelBg },
+    payRule: { position: 'absolute', top: 0, left: 0, right: 0, height: 2, backgroundColor: AXM.sulfur },
+    paidMark: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.sulfur, marginLeft: 'auto' },
     xp: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 14, color: AXM.sulfur },
     item: { flexDirection: 'row', alignItems: 'center', gap: 4 },
     itemName: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 13, color: AXM.parchment, flexShrink: 1 },

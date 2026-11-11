@@ -17,7 +17,7 @@ const CACHE = ['cache', 'cache-goods', 'cache-card']
 const HAZARD = ['hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'devpuzzle-list', 'devpuzzle-board', 'devpuzzle-outcome']
 // The fixture shots boot on /exploration and wait for the screen its
 // event gate pushes, so the exploration tab is under each of them.
-const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'quest', 'travel', 'travel-cave', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'cache', 'cache-goods', 'cache-card']
+const VIA_EXPLORATION = ['exploration', 'dialogue', 'village', 'cutscene', 'quest', 'quest-locked', 'quest-paid', 'travel', 'travel-cave', 'hazard-board', 'hazard-puzzle-stakes', 'hazard-puzzle-node', 'cache', 'cache-goods', 'cache-card']
 
 /**
  * Paths that cannot change a pixel: tests, prose, plans, tooling outside the
@@ -60,7 +60,7 @@ export const RULES = [
     { test: /^axiomancer-mobile\/app\/dialogue\//, routes: ['dialogue'] },
     { test: /^axiomancer-mobile\/app\/village\//, routes: ['village'] },
     { test: /^axiomancer-mobile\/app\/cutscene\//, routes: ['cutscene'] },
-    { test: /^axiomancer-mobile\/(app|components)\/quest\//, routes: ['quest'] },
+    { test: /^axiomancer-mobile\/(app|components)\/quest\//, routes: ['quest', 'quest-locked', 'quest-paid'] },
     { test: /^axiomancer-mobile\/app\/travel\//, routes: ['travel', 'travel-cave'] },
     { test: /^axiomancer-mobile\/app\/death-return\//, routes: ['death-return'] },
     { test: /^axiomancer-mobile\/app\/game-over\//, routes: ['game-over'] },
