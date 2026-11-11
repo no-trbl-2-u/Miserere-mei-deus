@@ -6,11 +6,11 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-    tuningFoes, kittedLane, kittedPlayer, renderReport, paddedShares, TUNING_LANES, TUNING_LEVELS, TUNING_POLICIES,
+    tuningFoes, bossFoes, kittedLane, kittedPlayer, renderReport, paddedShares, TUNING_LANES, TUNING_LEVELS, TUNING_POLICIES,
     type TuningCell,
 } from './chapter1-enemies.cli';
 import { getCardLane } from '../Cards/card.lanes';
-import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../World/MapEvents/content';
+import { BREAKWATER_CHAPTER_KINDS, BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../World/MapEvents/content';
 import { isUpgradedCardId, nextUpgradeId } from '../Cards/card-upgrades';
 
 describe('chapter1-enemies tuning table', () => {
@@ -25,6 +25,28 @@ describe('chapter1-enemies tuning table', () => {
                 const row = rows.find(r => r.slug === foe.slug && r.level === foe.level && r.elite);
                 expect(row?.nodes, `${node}/${foe.slug}`).toContain(node);
             }
+        }
+    });
+
+    it('has a boss row for the map boss node, staged at its node level', () => {
+        const bosses = bossFoes();
+        expect(bosses.length).toBeGreaterThan(0);
+        for (const { nodeId, foe } of bosses) {
+            expect(BREAKWATER_CHAPTER_KINDS[nodeId]?.kind).toBe('boss');
+            const row = tuningFoes().find(r => r.boss && r.slug === foe.slug && r.level === foe.level);
+            expect(row?.nodes, nodeId).toEqual([nodeId]);
+            expect(row?.enemy.level).toBe(foe.level);
+        }
+    });
+
+    it('renders the boss in every lane and level column, under both drivers', () => {
+        const md = renderReport(fakeCells(() => [1]), opts);
+        const boss = tuningFoes().find(r => r.boss)!;
+        const parts = md.split('## Witness driver');
+        for (const body of parts) {
+            const row = body.split('\n').find(l => l.startsWith(`| ${boss.slug} (boss) | L${boss.level} |`));
+            expect(row).toBeDefined();
+            expect(row!.match(/ t \/ /g)).toHaveLength(TUNING_LANES.length * TUNING_LEVELS.length);
         }
     });
 
@@ -80,7 +102,7 @@ describe('chapter1-enemies tuning table', () => {
             const rows = bodies[policy].split('\n').filter(l => l.startsWith('| ') && l.includes(' t / '));
             expect(rows.length, policy).toBe(foes.length);
             foes.forEach((foe, fi) => {
-                const label = `${foe.slug}${foe.elite ? ' (elite)' : ''}`;
+                const label = `${foe.slug}${foe.elite ? ' (elite)' : ''}${foe.boss ? ' (boss)' : ''}`;
                 const row = rows.find(r => r.startsWith(`| ${label} | L${foe.level} |`));
                 expect(row, `${policy}/${label}`).toBeDefined();
                 const cols = row!.split(' | ').slice(-TUNING_LANES.length * TUNING_LEVELS.length);
@@ -105,7 +127,7 @@ describe('chapter1-enemies tuning table', () => {
         }
         const md = renderReport(cells, opts);
         const foe = phased[0];
-        const label = `${foe.slug}${foe.elite ? ' (elite)' : ''}`;
+        const label = `${foe.slug}${foe.elite ? ' (elite)' : ''}${foe.boss ? ' (boss)' : ''}`;
         const zeros = Array.from({ length: (foe.enemy.phases as unknown[]).length - 1 }, () => '0%');
         const expected = ['100%', ...zeros].join(' / ');
         const row = md.split('\n').find(l => l.startsWith(`| ${label} | L${foe.level} | ${expected} |`));

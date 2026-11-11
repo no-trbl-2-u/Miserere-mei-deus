@@ -23,6 +23,10 @@
 //     or whose window has no row there;
 //   - a phase Item whose Status cell disagrees with the one `deadlines.mjs --write`
 //     derives from the build plan (a hand edit; `T` Items are hand-ticked and exempt).
+//   - an open Item whose text names `PR #N` where the checkout's history of main holds a commit that
+//     merged #N (a merge commit or a squash); a T Item is only ever ticked by hand, so it would lead
+//     every reminder after the work is done. The subjects come from git log, never the network; a
+//     history that does not reach the merge, or no git at all, finds nothing.
 //   - one row id with two homes (phase NX1c): a v2 spec chunk's `alias:` named twice,
 //     on a chunk and an ARCHIVE.md line, or matching a build-plan row.
 // Both files are read through scripts/deadlines-lib.mjs's parsers, never re-parsed here.
@@ -38,10 +42,11 @@
 // three demos" Item named live rows after that playthrough had already happened).
 // No lint sees that drift; the reconcile step in /plot and /messy is the only guard.
 
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
+import { ARCHIVE_FILE, SPEC_FILE, datedRowsOutsideItems, derivedStatus, hasBudgetSection, inWindow, mergedPrItems, parseBudget, parseItems, parseUnscheduled, parseWindows, planRows } from './deadlines-lib.mjs'
 import { pendingCloses, pendingFiles } from './plan/pending.mjs'
 import { settledView } from './plan/settled.mjs'
 
@@ -75,9 +80,10 @@ export const readPlanSources = (root) => {
  * @param {string} deadlinesMd
  * @param {string | {buildPlan?: string | null, specs?: {file: string, md: string}[], readme?: string | null, archive?: string | null}} plan
  *   the build plan's text, or every source readPlanSources returns
+ * @param {string[]} [subjects] commit subjects of main (git log --format=%s); none by default
  * @returns {string[]}
  */
-export const checkDeadlines = (deadlinesMd, plan) => {
+export const checkDeadlines = (deadlinesMd, plan, subjects = []) => {
     const items = parseItems(deadlinesMd)
     const resolved = planRows(typeof plan === 'string' ? { buildPlan: plan } : plan)
     const phases = resolved.phases
@@ -125,6 +131,10 @@ export const checkDeadlines = (deadlinesMd, plan) => {
         }
     }
 
+    for (const { item, due, pr, subject } of mergedPrItems(items, subjects)) {
+        errors.push(`${DEADLINES}: open Item "${item}" (due ${due}) names PR #${pr}, which merged in "${subject}"; tick the Item, or rewrite it to drop the pull request number.`)
+    }
+
     for (const [id, places] of namedBy) {
         if (places.length > 1 && places.every((p) => p.item === places[0].item)) {
             errors.push(`${DEADLINES}: Item "${places[0].item}" names ${id} twice (${places.map((p) => p.label).join(', ')}); keep it in one cell.`)
@@ -160,12 +170,29 @@ export const checkDeadlines = (deadlinesMd, plan) => {
     return errors
 }
 
+/**
+ * The commit subjects of main in this checkout: origin/main when that ref exists, else HEAD.
+ * Any git failure (no git, no repository, a shallow clone) reads as an empty list.
+ * @returns {string[]}
+ */
+export const mainSubjects = (root) => {
+    for (const ref of ['origin/main', 'HEAD']) {
+        try {
+            const out = execFileSync('git', ['log', '--format=%s', ref], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 256 * 1024 * 1024 })
+            return out.split('\n').filter(Boolean)
+        } catch {
+            // try the next ref
+        }
+    }
+    return []
+}
+
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 
 if (isMain) {
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
     const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8')
-    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root))
+    const errors = checkDeadlines(read(DEADLINES), readPlanSources(root), mainSubjects(root))
     if (errors.length) {
         process.stderr.write(`check-deadlines: ${errors.length} disagreement(s)\n${errors.map((e) => `  - ${e}`).join('\n')}\n`)
         process.exit(1)
