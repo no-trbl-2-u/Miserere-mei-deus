@@ -708,3 +708,8 @@
 - 2026-11-10 · 168 · spec complete: The village as a hub of keepers · none · deleted in (this commit)
 - 2026-11-11 · 170 · spec complete: Chapter 1's unmeasured numbers · none · deleted in (this commit)
 - 2026-11-11 · 175 · spec complete: The fight reveal, and the boss's title card · none · deleted in (this commit)
+- 2026-11-11 · 172.3 (alias: CU1c) · Cutscenes draw five painted scenes and a Friar narrator · 292396da..292396da (#1609)
+- 2026-11-11 · 171.2 (alias: TV1b) · Bridge travel scene wears a temp public-domain wood bridge · 0e9ad79c..bccac2a5 (#1608)
+- 2026-11-11 · 172.2 (alias: CU1b) · Cutscene is a narrator over a vellum panel, tap to continue · b657e08f..b657e08f (#1610)
+- 2026-11-11 · 171 · spec complete: The travel screen: a picture, a question, MOVE or STAY · none · deleted in (this commit)
+- 2026-11-11 · 172 · spec complete: The cutscene as a teller over a vellum panel · none · deleted in (this commit)

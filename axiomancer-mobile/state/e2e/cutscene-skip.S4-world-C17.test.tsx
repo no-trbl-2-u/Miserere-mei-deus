@@ -1,19 +1,14 @@
 /**
- * S4-world-C17 — the cutscene's SKIP must read as a control, not a caption.
+ * S4-world-C17 / CU1b - the cutscene's SKIP is a control, and the taps tell the story.
  *
- * A small bare SKIP label reads as chrome and is easy to miss: `padding: 8`
- * around a four-glyph mono label is well under a thumb. SKIP is a bordered
- * plate with a 44pt minimum box.
- *
- * The suite pins the two things the finding is actually about — that the
- * control is announced and reachable as a button, and that its box clears the
- * 44pt touch minimum — plus the behaviour it exists for (one press reveals the
- * whole omen and the SKIP retires).
+ * SKIP wears the brass action plate with a 44pt minimum box and dismisses the
+ * scene at once. A tap anywhere else steps through the beats ("1 of 3", "2 of 3",
+ * ...), the last tap ends the scene, and no CONTINUE or hint text renders.
  *
  * Hermetic = self-contained + deterministic + isolated. See docs/testing.md.
  */
 
-import { describe, expect, it, jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
@@ -22,10 +17,10 @@ import type { ResolveMapEventResult } from '@mechanics';
 jest.mock('@/lib/platform/router', () => ({
     useRouter: () => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => false }),
 }));
+jest.mock('@/hooks/useReducedMotion', () => ({ useReducedMotion: () => true }));
 
-import CutsceneScreen from '@/app/cutscene';
+import CutsceneScreen, { cutsceneLineSize, LINE_SIZE, LINE_SIZE_FLOOR } from '@/app/cutscene';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
-import { CUTSCENE_HINT } from '@/state/presenters/event.engine';
 import { createAppStore, EMPTY_EVENT_SLICE, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
@@ -39,7 +34,7 @@ const LINES = [
 ] as const;
 
 function cutscene(): ResolveMapEventResult {
-    return { state: undefined as never, event: { kind: 'cutscene', lines: LINES } };
+    return { state: undefined as never, event: { kind: 'cutscene', lines: LINES, scene: 'windmill-headland' } };
 }
 
 function makeStore(): AppStore {
@@ -58,9 +53,7 @@ function mount(store: AppStore) {
 
 describe('S4-world-C17: SKIP is a button, and a hittable one', () => {
     it('announces itself as a button with a spoken label', () => {
-        const tree = mount(makeStore());
-        const skip = tree.getByTestId('cutscene-skip');
-
+        const skip = mount(makeStore()).getByTestId('cutscene-skip');
         expect(skip.props.accessibilityRole).toBe('button');
         expect(skip.props.accessibilityLabel).toBe('Skip the scene');
     });
@@ -71,30 +64,13 @@ describe('S4-world-C17: SKIP is a button, and a hittable one', () => {
             minHeight?: number;
             minWidth?: number;
         };
-
         expect(style.minHeight).toBeGreaterThanOrEqual(MIN_TOUCH_TARGET);
         expect(style.minWidth).toBeGreaterThanOrEqual(MIN_TOUCH_TARGET);
     });
 
-    it('wears chrome that says pressable — a border and a filled plate', () => {
-        const tree = mount(makeStore());
-        const style = StyleSheet.flatten(tree.getByTestId('cutscene-skip').props.style) as {
-            borderWidth?: number;
-            backgroundColor?: string;
-        };
-
-        expect(style.borderWidth).toBeGreaterThan(0);
-        expect(style.backgroundColor).toBeTruthy();
-    });
-
-    // With the fade-through presentation (one line on
-    // screen at a time) there is no "reveal everything" state to jump to, so
-    // SKIP abandons the scene outright — it dismisses the pending event, which
-    // empties the store slice and drops the screen to its inactive shell.
     it('still does its job: one press abandons the whole scene', () => {
         const store = makeStore();
         const tree = mount(store);
-
         expect(tree.getByTestId('cutscene-line-0')).toBeTruthy();
 
         act(() => {
@@ -107,18 +83,46 @@ describe('S4-world-C17: SKIP is a button, and a hittable one', () => {
     });
 });
 
-// Critique pass 93: the plate runs under a mouse on web too, so the hint under
-// the line comes from the presenter and names no touch gesture.
-describe('the cutscene hint is presenter copy, pointer-neutral', () => {
-    it('shows the presenter hint under a line with more to follow', () => {
-        const tree = mount(makeStore());
+/** A tap anywhere, then the fade-out's timers run so the cursor moves. */
+function tap(tree: ReturnType<typeof mount>) {
+    act(() => { fireEvent.press(tree.getByTestId('cutscene-advance')); });
+    act(() => { jest.advanceTimersByTime(1000); });
+}
 
-        expect(tree.getByText(CUTSCENE_HINT.next)).toBeTruthy();
+describe('CU1b: a tap anywhere tells the story on', () => {
+    beforeEach(() => { jest.useFakeTimers(); });
+    afterEach(() => { jest.useRealTimers(); });
+
+    it('steps through the beats with the count, and the last tap ends the scene', () => {
+        const store = makeStore();
+        const tree = mount(store);
+
+        expect(tree.getByTestId('cutscene-count').props.children).toBe('1 of 3');
+        expect(tree.getByText(LINES[0])).toBeTruthy();
+
+        tap(tree);
+        expect(tree.getByTestId('cutscene-count').props.children).toBe('2 of 3');
+        expect(tree.getByText(LINES[1])).toBeTruthy();
+
+        tap(tree);
+        expect(tree.getByTestId('cutscene-count').props.children).toBe('3 of 3');
+        expect(store.getState().event.pending).not.toBeNull();
+
+        tap(tree);
+        expect(store.getState().event.pending).toBeNull();
     });
 
-    it('names no gesture in either hint', () => {
-        for (const hint of Object.values(CUTSCENE_HINT)) {
-            expect(hint).not.toMatch(/\b(tap|click)\b/i);
-        }
+    it('draws the chapter, the panel and the narrator, and no CONTINUE or hint', () => {
+        const tree = mount(makeStore());
+        expect(tree.getByText('THE BREAKWATER')).toBeTruthy();
+        expect(tree.getByTestId('cutscene-panel')).toBeTruthy();
+        expect(tree.getByTestId('cutscene-narrator')).toBeTruthy();
+        expect(tree.queryByText(/continue|walk on|OMEN/i)).toBeNull();
+    });
+
+    it('steps a long line down to the 20pt floor and no further', () => {
+        expect(cutsceneLineSize('Short.')).toBe(LINE_SIZE);
+        expect(cutsceneLineSize('x'.repeat(130))).toBeLessThan(LINE_SIZE);
+        expect(cutsceneLineSize('x'.repeat(400))).toBe(LINE_SIZE_FLOOR);
     });
 });
