@@ -416,3 +416,39 @@ merchants' voices sit under the hub's counters; the BLACKSMITH button keeps
 testID `village-anvil` and no price on its plate (the price is read aloud);
 the reusable brass action is `components/experience/BrassButton.tsx` on the new
 look-table place V-01. 168.4 redraws `app/village/shop.tsx` in place.
+
+- Defaults taken: the forge's intro phase is stepped past in the store (`beginBlacksmithAction` calls the engine's `beginBlacksmith`), so the engine and its tests are unchanged; the smith's line is a `[content]` placeholder in `blacksmith.copy.ts`; a fourth WILD tab keeps the wild die reachable; the brass plate is a local `components/blacksmith/BrassPlate.tsx` (a later cleanup can merge it with the village hub's plate); `blacksmith-intro` is gone from the fixture gallery.
+- The net draws six faces (one up, three across, two below the middle) as in ballot shot B-02b.
+
+Defaults: the shop row wraps (flexWrap) so five 104 pt cards fit 375 pt until 168.4 replaces the screen. The sim's economy reading at five cards is a follow-up, not part of this chunk.
+
+The lane-line edit this close carried (dropping `needs 168.2` from 168.4's line) is gone: 168.4 has closed, and settle drops its whole lane entry, so the edit had nothing left to match.
+
+- Defaults taken: the carousel is a stage with a pan responder (swipe) and two tappable neighbours (web and accessibility), not a paging ScrollView, so one tree serves web and native and the test renderer can step it by tapping a neighbour; the CARDS / GEAR toggle is one two-half button that flips sides, each side keeps its own position, and it is absent when the village has no gear; REMOVE A CARD moved beside the shopkeeper through a new `keeperExtra` slot on `VillageCounterFrame`; a sold ware reads SOLD on the brass plate, a refused one dims it and names the engine's reason under it.
+- Test ids moved with the redraw: only the card or piece in the middle has `village-card-<id>` / `village-equipment-<id>`; the price now rides the plate's detail line (`-price`), so it reads `6 SHILLINGS` (no `BUY ·`) and SOLD is the plate label.
+- A swipe is not exercised in jest (the renderer sends no touches); the neighbour tap calls the same step.
+
+- Default taken ([T to confirm #1]): every open Item naming a merged `PR #N` fails, whatever its verb.
+- The lint matches `PR #N` and `PRs #N, #M and #K` in the Item text; a bare `#N` names nothing. The merge is found in `git log --format=%s` of `origin/main`, else `HEAD`; this session's checkout is shallow, so the #1409 case was shown with its real merge subject added by hand.
+
+Defaults: the personas play as they do today (open question 1). The arrival and money numbers ride a run ledger file (`sim:run --ledger`, uploaded beside the breaks file) to `sim:report`, not the Worker. The regenerated report's ledger was played at the branch base, whose game code equals the Worker rows' build 2a77e8c8; the report prints both shas. The personas buy no shop card or gear and pay no removal, so those columns read 0.
+
+Defaults: the boss is found from the map's `boss` board kind and its node's own pool (not typed), staged the way the live node stages it (`sourceAtTier` then `scaleEnemyToLevel`), and printed once at its node's level (L8) against the four lanes at player levels 8 and 10. Regenerated at 100 runs, seed 1; a few non-boss cells moved by a tenth of a point from code changes since the last stamp.
+
+Defaults: [T to confirm #1] took the stated default, a shut way keeps the picture and scene line, shows the shut line in the question's place and MOVE disabled above STAY. Look place T-02 now wears the brass plate (T-01 stays normal, id kept). Test ids renamed travel-yes/travel-no to travel-move/travel-stay (act1-walk-e2e updated). The baselines were rendered locally on Linux Chromium; CI re-stamps them.
+
+- Defaults taken: the stand-in images the ballot names (Prophet, Guard A, Sword Master A) live in the Potential Assets store, which the build sandbox does not hold. The lighthouse keeper uses the Hermit (a copy of `keepers/host.webp`, as the spec wants); the other three are copies of the portraits the nodes already named. Recorded in `assets/images/givers/provenance.json`. T swaps each in the one table.
+- `eyebrow` and `questStepEyebrow` stay on the VM until 173.2 stops reading them.
+
+Defaults: the tap starts the fight straight onto the board (T confirmed). RevealGround gained a thin black side fade (8 percent each side) so the ground has no hard left or right edge on a wide window; the fight baseline was re-stamped for it. Elite and boss verify:visual routes enter through new fixtures `wanderer-bw-elite-arrive` (bw-w5) and `wanderer-bw-boss-arrive` (bw-k2).
+
+Left for later: "LEVEL " and " VITAE" are still literals in CombatEncounterPanel (moving them to reveal.copy.ts would make a content PR); buildRevealVM is not memoised.
+
+Defaults: `applyHazardOutcome` returns a `FightPaid` record (`state/presenters/fight-end.engine.ts`) and the panel keeps it in place of `shillingsPaid`; the summary still opens after a win (its removal is FE1b, call #3). The paid-line labels and the "LEVEL n" / "k XP to level n+1" lines print as the settled shot prints them, not as `[content]`. A level reached exactly ends the bar on a fresh, empty step (fillMs 0); XP withheld is one still step. The VM carries no headline: FE1b reads the engine summary's. `combat-round-e2e.mjs` now shoots `<mode>-seed-<n>-victory` when the offer opens.
+
+A1's driven half is not met: `combat-round-e2e.mjs` with `PRESET=l30` (seeds 8 and 16, 40 and 59 rounds) never wins (the Quay-Crab stands at 98/108 at the cap), so no driven victory shot exists; the harness now shoots `<mode>-seed-<n>-victory` when an offer opens, for FE1b or a stronger preset to fill.
+
+- Defaults taken (standing: every open call in spec 176 takes its stated default): #1 house look only, #2 the defeat panel names its cause.
+- `buildCombatSummary` now carries `defeatCause` ('vitae' | 'turn-limit') on a defeat, read from the final player VITAE; the two lines are `[content]` placeholders in `combat-summary.copy.ts`.
+- Game Over's button is a new look place `G-02` (brass) so G-01 stays the death return's vellum button until 176.3 moves it; the defeat panel wears the dark ground and `BrassButton` for defeats only (wins and spares wait for 176.2).
+- A dev-only `/devdefeat` route feeds the new `defeat-panel` verify:visual route; the `defeat-panel` and `game-over` baselines are approved by the visual job (no browser in the build worktree).

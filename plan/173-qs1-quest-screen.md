@@ -79,8 +79,6 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 
 ## Acceptance
 
-- **A1** The quest presenter gives, for the step the card shows, its pay (XP, shillings, and each item's id, name and category) and the chain's beads (one per step: done, current or ahead), and no longer gives the "STEP n OF N" eyebrow. The engine is read, never changed: the pay is the step's `rewards`, the bead states are `questStepState`.
-- **A2** One table keyed by giver id supplies the four givers' figures, with the ballot's stand-ins copied out and recorded in `provenance.json`; the four quest nodes name those ids; an unknown id falls back to a stand-in.
 - **A3** The offer shows one tall card in the card frame (the step's name, the giver's figure as its art, the ask, the pay with item icons at its foot), then the giver's name, the spoken line, the four beads and LEAVE and ACCEPT on the brass plate, LEAVE on the left. No "A QUEST", no "STEP n OF N", no stage head. A `verify:visual` route shot of the gate warden's offer at the keep gate matches the settled shot's layout, with the two buttons swapped.
 - **A4** In progress (`waiting`, or an offer already accepted) shows the same card for the step being worked, with its counter, and LEAVE only.
 - **A5** Turn in shows the finished step's card with the ask marked done and the pay lit, with TURN IN and LEAVE. TURN IN pays as today; the item rises off the card's foot (instant under reduced motion), a one-line ledger of what was paid stays above the card, and the card turns to the next step's offer. At the bridge, the last step's card stays, marked paid, with LEAVE only.
@@ -94,14 +92,9 @@ Built on ET1d, not redone: the giver's figure, its dimming when the giver turns 
 
 ## Chunks
 
-Measure: 6 open · 0 closed · next A7
+Measure: 4 open · 2 closed · next A7
 
-- [ ] **173.1** The quest presenter carries the pay and the beads, and the givers get a figure table · M · closes A1, A2 · needs — · alias: QS1a
-  - `selectQuestVM` (`state/presenters/quest.engine.ts`) gains the shown step's pay (from the questline step's `rewards`, the way `arrivalPaid` already sums them; items with id, name and category for `ItemGlyph`) and `beads` (from `questStepState` per step; the current bead is the step the card shows: `ahead` on offer and locked, `behind` on waiting and turn-in, `ahead` again after a turn-in that has a next step, and step 4 at the chain's end). `eyebrow` and `questStepEyebrow` go once the screen stops reading them (in 173.2), or stay as the beads' accessibility label.
-  - `assets/images/givers/index.ts` (id-keyed table, typed ids) with the four stand-ins and `provenance.json`; `QUEST_NODES` in `axiomancer-mechanics/src/World/MapEvents/content.ts` names the ids; `giverPortraitSource` reads the new table with a fallback.
-  - Tests: presenter cases for each stage on the live chain (pay on offer at `bw-k1`, three items on step 2, beads at nodes 2 to 5, the chain's end at `bw-b1`); the table resolves all four ids and falls back on an unknown one.
-  - Measure: the presenter tests pass; `npm test` in both packages green.
-- [ ] **173.2** The quest card: the offer and the work in progress · M · closes A3, A4 · needs 173.1 · alias: QS1b
+- [ ] **173.2** The quest card: the offer and the work in progress · M · closes A3, A4 · needs — · alias: QS1b
   - A `QuestCard` component (`components/quest/`) in the D91 frame (border, name band, edge-to-edge art, text, pay foot) and a `QuestBeads` row; `app/quest/index.tsx` drops the eyebrow, the title, the heads, `StepBlock` and the portrait row (`QuestGiverScene` folds into the card's art; keep its testIDs `quest-giver`, `quest-giver-portrait`, `quest-giver-name`), moves to a dark ground, and wears `BrassButton` for LEAVE and ACCEPT (LEAVE on the left).
   - In progress: the same card, LEAVE only. An offer already accepted reads the same way.
   - A `quest` route in `scripts/smoke-screens.mjs` `ROUTES`, on a fixture that stands at the keep gate (`bw-k1`) with step 3 turned in and step 4 not yet accepted (a new entry in `state-fixture.registry.ts` if none fits), and its baseline approved.

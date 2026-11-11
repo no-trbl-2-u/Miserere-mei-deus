@@ -77,12 +77,8 @@
 
 ## Acceptance
 
-- **A1** A won fight reaches the card offer and then closes, proven twice: a hermetic test under `axiomancer-mobile/state/e2e/` that plays a live fight state on the board to the foe's fall (a normal foe and an elite) through the engine, sees the offer, takes a card and leaves the fight; and a driven session (`combat-round-e2e.mjs` with a preset that wins) whose victory screenshot is in the PR.
-- **A2** The fight's settle reports what it paid: shillings, XP gained (experience after minus before), the experience and level before and after, and the XP still owed for the next level. One presenter builds the victory screen's view model from it, with its words in a `.copy.ts` file, including the XP bar's steps: an ordered list of fills (from and to, as fractions of a level, each ending full or at the settled place) with a "LEVEL n" beat after each fill that ends full. Unit tests cover no level, one level, two levels at once, a level reached exactly (the fresh bar stays empty), XP withheld (relic, no fill) and the curve's own figures (`experienceForLevel`).
 - **A3** The victory screen shows the top band (chapter name, purse, arena plate, the foe upright and greyed, never rotated), the headline, "Shillings +n · XP +n", and the level panel holding only the XP bar and one line: the bar fills from the player's place before the fight to their place after it, and each time it reaches full it shows "LEVEL n" briefly and starts a fresh bar with the rest (T, 2026-11-11); it settles on "LEVEL n" after a level-up or "k XP to level n+1" otherwise; a tap jumps to the settled end [T to confirm #5]; with reduced motion the settled state shows at once. Then the card offer on the brass plate (TAKE NOTHING, TAKE CARD; UPGRADE INSTEAD after an elite) (S-07c, settled shot).
 - **A4** After a win, taking or refusing the card closes the fight; the summary panel no longer opens after a win [T to confirm #3]. A win with no offer shows CONTINUE in its place. A spared foe's ending is unchanged but for the house look.
-- **A5** The death return shows the player's chosen figure, YOU FELL, one `[content]` line, the VITAE bar at 1 of the maximum with its figure, one `[content]` line on what is kept, and CONTINUE on the brass plate (settled shot, right).
-- **A6** The defeat panel keeps its content, names its cause (VITAE 0 or the turn limit) [T to confirm #2], and wears the house look; Game Over keeps its content and wears the house look [T to confirm #1].
 - **A7** Each reworked screen has a `verify:visual` route shot (the victory both ways through a dev-only preview, as `/death-return?preview=1` does today, shot at the bar's settled end; the death return; the defeat panel; Game Over), compared with the settled shot in the PR, and the baselines are updated.
 
 ## Open questions
@@ -95,28 +91,13 @@
 
 ## Chunks
 
-Measure: 7 open · 0 closed · next A8
+Measure: 3 open · 4 closed · next A8
 
-- [ ] **176.1** A won fight reaches the offer, and the settle says what it paid · M · closes A1, A2 · needs — · alias: FE1a
-  - `CombatEncounterPanel.tsx`: `applyHazardOutcome` returns what the fight paid (shillings, XP gained, level before and after, XP to next) instead of shillings alone; the panel keeps it in place of `shillingsPaid`.
-  - `state/presenters/fight-end.engine.ts` and `fight-end.copy.ts`: the victory view model (paid line, level panel text, the XP bar's fill steps and "LEVEL n" beats, the timing constants) from that record and `experience.ts`; tests for each case in A2.
-  - `state/e2e/fight-won.FE1a.test.tsx`: the hermetic win, normal and elite, to the offer and out.
-  - Run `combat-round-e2e.mjs` with a winning preset; the victory screenshot goes in the PR.
-  - Measure: the new tests pass, and the PR shows the driven win's screenshot.
-- [ ] **176.2** The victory screen: the fallen foe, the paid line, the level panel and the offer · M · closes A3, A4, A7 · needs 176.1 · alias: FE1b
+- [ ] **176.2** The victory screen: the fallen foe, the paid line, the level panel and the offer · M · closes A3, A4, A7 · needs — · alias: FE1b
   - A victory screen component over the board: the top band (chapter name, purse, `arenaBackdropFor`, `getEncounterEnemyArt` greyed and upright), the headline, the paid line and the level panel from FE1a's view model, the panel's XP bar playing FE1a's fill steps (fill, "LEVEL n" hold, fresh bar; tap to skip, call #5; `useReducedMotion` draws the settled end), and `CombatRewardsOverlay`'s offer below it on `BrassButton`, without the vellum.
   - The summary no longer opens after a win (call #3); CONTINUE when there is no offer; the spared ending in the house look.
   - A dev-only preview of the victory, levelled and not, for `verify:visual` (`scripts/critique-drive.mjs` routes), and the baseline.
   - A component test that steps the bar's animation with fake timers: one fill with no level, a fill to full then "LEVEL n" then a fresh fill, the tap skip, and reduced motion.
   - Measure: the route shots beside the settled shot's left and middle screens in the PR, and the bar's component test passing.
-- [ ] **176.3** The death return: the player's figure and the VITAE bar · S · closes A5 · needs — · alias: FE1c
-  - `app/death-return/index.tsx` and its presenter: the chosen figure (`getPlayerPortrait`), the VITAE bar at 1 of the maximum, the kept line in `death-return.copy.ts` as `[content]`, CONTINUE on `BrassButton`.
-  - Update `screenshots/baseline/death-return.png`.
-  - Measure: the route shot beside the settled shot's right screen in the PR.
-- [ ] **176.4** The defeat panel names its cause; the defeat panel and Game Over in the house look · S · closes A6 · needs — · alias: FE1d
-  - `buildCombatSummary` (or the mobile presenter) gives a defeat cause from the final state: VITAE 0 or the turn limit; the two cause lines as `[content]`.
-  - `CombatSummaryModal` on a defeat and `app/game-over/index.tsx`: the dark ground and `BrassButton`.
-  - Update `screenshots/baseline/game-over.png`; a route shot of the defeat panel.
-  - Measure: the two route shots in the PR, and a test for each cause.
 
 FE1c and FE1d need nothing and can be built beside FE1a. FE1b builds on FE1a's view model. Each visual chunk's PR places its route shot beside the matching screen of the settled shot.

@@ -29,8 +29,9 @@
   round flash auto-clears; the board is drag-only (`HazardBoard.tsx:6-12`)
   and the flash is a `Pressable` with no timer (`HazardOverlays.tsx:153-197`).
   `combat.md:48,61` name `combat-victory-panel-carry-on`, which never mounts on
-  the live route. `minigames.md` lacks the rest upgrade sheet's
-  `card-upgrade-row-*` / `card-upgrade-confirm`; `dev-section-*-toggle` is
+  the live route. `minigames.md` lacked the rest upgrade sheet's testIDs
+  until 127.9 named the string of beads' (`card-upgrade-bead-*`,
+  `card-upgrade-hold`); `dev-section-*-toggle` is
   undocumented. `scripts/playtest-guides.test.mjs` checks that a named testID
   exists and that the seven sections are present; it cannot check that a
   sentence is true.

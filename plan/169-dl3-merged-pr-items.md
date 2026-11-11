@@ -36,11 +36,19 @@
 - Items that are done but name no pull request (a pitch held, an image found, a review made). Nothing in the repo records those acts.
 - Pull requests closed without merging.
 
+### The queue fills and ticks itself (T, `/plot`, 2026-11-10)
+
+T asked how the deadline queue stays current by itself. Two parts of it can, from records the repo already holds.
+
+- **Held rows are acts already.** Every line under **Held** in `plan/README.md` is a chunk only T can do, with an alias. The reminder and `LIVE_DEADLINES.md` list each open Held chunk as an act without anyone copying it into `plan/deadlines.md`: its name is the chunk's title, its hours are an `(N h)` in that title when it has one, and it ticks when the chunk ships. A Held chunk an Item already names in `Rows` appears once, as that Item. A Held chunk no Item names is placed after the hand-written acts of the first milestone and marked "from the build plan", so T sees it and can give it a place by writing an Item.
+- **An act may carry a proof.** An Item's `Rows` cell may hold `T: <proof>`, where the proof is one of: `pr #N` (that pull request merged, read from the checkout's history as 169.1 does), `spec <alias family>` (a spec whose chunks carry that alias family exists, for a pitch-and-plot act), or `file <path>` (that path exists, for an image T picks). `node scripts/deadlines.mjs --write` ticks an act whose proof holds; the lint fails an act that is ticked while its proof does not hold, and a proof it cannot parse. A plain `T` stays hand-ticked.
+- **What stays by hand.** A review, a play session and a decision leave no record, so their acts keep a plain `T`. The reminder says how many open acts are hand-ticked.
+
 ## Acceptance
 
-- **A1** With an open Item naming `PR #N` and a commit subject on `main` that merged `#N` (merge or squash form), `scripts/check-deadlines.mjs` exits non-zero and its message names the Item's due date, `#N` and the commit.
-- **A2** The same Item ticked `[x]`, or an open Item naming a pull request with no merge in the history, passes. A checkout without git history passes.
-- **A3** The check's test runs with no network and no dependence on this repo's own history (fixture subjects only), inside the root `npm test`.
+- **A4** An open Held chunk that no Item names appears in the reminder and in `LIVE_DEADLINES.md` as an act marked "from the build plan", counts in the forecast with the hours its title states (or under "no hours"), and leaves both when it ships. One an Item names appears once.
+- **A5** An Item whose `Rows` is `T: pr #N`, `T: spec <family>` or `T: file <path>` is ticked by `--write` when the proof holds; the lint fails a ticked act whose proof does not hold and an unreadable proof; a plain `T` is untouched.
+- **A6** The reminder states the number of open acts that only a hand can tick.
 
 ## Open questions
 
@@ -48,11 +56,17 @@
 
 ## Chunks
 
-Measure: 3 open · 0 closed · next A4
+Measure: 3 open · 3 closed · next A7
 
-- [ ] **169.1** The deadline lint fails an open Item naming a merged pull request · S · closes A1, A2, A3 · needs — · alias: DL3a
-  - `scripts/deadlines-lib.mjs`: a pure `mergedPrItems(items, subjects)` returning one failure per open Item naming a merged `PR #N`; both subject forms matched, `#14` never matching `#1409`.
-  - `scripts/check-deadlines.mjs`: reads the subjects with `git log --format=%s` (`origin/main`, else `HEAD`; an error reads as an empty list) and adds the failures to its report.
-  - `scripts/check-deadlines.test.mjs`: fixture cases for A1-A3, including the prefix case and the no-git case.
-  - `CLAUDE.md` and `AGENTS.md`, Deadlines: one clause adding this to what the lint fails on.
-  - Measure: the test's new cases pass; `node scripts/check-deadlines.mjs` is clean on `main`; the PR shows the failure message produced by re-opening the #1409 Item in a scratch copy.
+- [ ] **169.2** Held chunks join the queue by themselves · M · closes A4, A6 · needs — · alias: DL3b
+  - `scripts/deadlines-lib.mjs`: `queuePlan` takes the open Held chunks (`parseHeld`, already there) and adds the ones no Item names as acts of the first milestone, after the written ones.
+  - The reminder and the live file mark them, and print the hand-ticked count.
+  - `scripts/deadlines-queue.test.mjs`: a Held chunk with and without an Item, with and without hours, shipped and open.
+  - `CLAUDE.md`, `AGENTS.md` and `skills/plot.md` 7.2: a plot no longer copies a Held chunk into the queue unless T wants it placed.
+  - Measure: the new tests pass; the live reminder, quoted in the PR body, lists today's Held chunks that no Item names.
+- [ ] **169.3** An act may carry a proof that ticks it · M · closes A5 · needs — · alias: DL3c
+  - `scripts/deadlines-lib.mjs`: parse `T: <proof>` in `Rows`; `derivedStatus` and `rewriteItemStatus` use it. The `pr` proof shares 169.1's reader of commit subjects.
+  - `scripts/check-deadlines.mjs`: the two failures of A5.
+  - Tests with fixture subjects, fixture specs and a scratch file; no network.
+  - `plan/deadlines.md`: give each act that has one its proof (the pitch-and-plot acts, the travel images), in the same PR.
+  - Measure: the tests pass; the PR body lists each act that gained a proof.

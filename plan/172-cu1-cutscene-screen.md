@@ -65,8 +65,6 @@ The narrator is one stand-in until T supplies the figure: the Hermit cut-out, co
 
 ## Acceptance
 
-- **A1** `CutscenePayload` and the resolved cutscene event carry an optional `scene` id, and `resolveCutscene` passes it through. The five scenes in the table carry their scene ids; their lines and effects are unchanged. An engine test pins the five ids and that a cutscene without one resolves as today.
-- **A2** One app module (`assets/images/cutscenes/index.ts`) maps each scene id to a picture and holds the one narrator figure, with the stand-ins in the table and a provenance entry for the copied narrator. A presenter (`cutsceneView`, beside `composeCutscene` in `state/presenters/event.engine.ts`) turns the pending cutscene into the picture, the narrator figure, the chapter's name, the beats and each beat's "n of m" count. A test asserts every id the five scenes author resolves without the fallback, that an absent or unknown scene id gives the fallback picture, and that every cutscene (the five, one without a scene id, and a Labyrinth Sophist cutscene) gets the same narrator figure.
 - **A3** The screen matches the settled shot: the scene picture at the top fading to black, the chapter's name at the top left, SKIP on the brass plate at the top right, the vellum panel at the foot with the line inside it in Eagle Lake in dark ink and the "n of m" count under it, and the narrator standing over the panel's top edge in front of it. There is no CONTINUE, no bottom SKIP, no "▶ OMEN" eyebrow and no hint line (`CUTSCENE_HINT` is retired). A line longer than five lines at the default size steps down to the 20pt floor and stays inside the panel.
 - **A4** A tap anywhere but SKIP moves to the next beat with today's fades; the last tap ends the scene; SKIP ends it at once; a tap during a fade is ignored; reduce motion snaps. The screen test (`cutscene-skip.S4-world-C17.test.tsx`, rewritten) pins the taps through a two-beat scene, the count reading "1 of 2" then "2 of 2", SKIP's 44pt box, and that no CONTINUE or hint text renders.
 - **A5** `verify:visual` re-shoots the `cutscene` route: the fixture `wanderer-staged-cutscene` stages a two-beat scene carrying the windmill's ids, and the new baseline is shown beside the settled shot in the build's PR.
@@ -81,10 +79,9 @@ The narrator is one stand-in until T supplies the figure: the Hermit cut-out, co
 
 ## Chunks
 
-Measure: 6 open · 0 closed · next A7
+Measure: 4 open · 2 closed · next A7
 
-- [ ] **172.1** Cutscene content names its picture, one narrator tells them all · M · closes A1, A2 · needs — · alias: CU1a
-- [ ] **172.2** The cutscene screen: the teller over the vellum panel · M · closes A3, A4, A5 · needs 172.1 · alias: CU1b
-- [ ] **172.3** T's cutscene pictures and narrator · S · closes A6 · needs 172.1 · alias: CU1c
+- [ ] **172.2** The cutscene screen: the teller over the vellum panel · M · closes A3, A4, A5 · needs — · alias: CU1b
+- [ ] **172.3** T's cutscene pictures and narrator · S · closes A6 · needs — · alias: CU1c
 
 172.1 is the contract: the engine field, the five scenes' ids, the image module with stand-ins and the narrator, and the presenter, with no change on screen. 172.2 redraws the screen on that presenter and re-shoots its baseline against the settled shot. 172.3 waits on T's art (Held until T supplies it); it is a table swap, and it can land before or after 172.2.

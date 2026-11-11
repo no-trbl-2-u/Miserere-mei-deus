@@ -55,8 +55,6 @@ Three moments, one screen, as the settled shot draws them.
 
 ## Acceptance
 
-- **A1** The cache presenter's outcome carries what the outcome screen draws: for a card, its one-card-face VM (`rewardCardVMs`); for goods, one row per item with its id, name, sprite key and what-it-does line, then the shillings; and the purse as it will stand once paid. The offer VM is unchanged and still names no reward (154.7's guard holds).
-- **A2** The cache's pictures come from one table keyed by moment (`choice`, `goods`, `card`), the card picture overridable per cache node; the choice wears `TREASURE_CHEST_CLOSED`, goods `TREASURE_GOLD_HOARD`, and the card slot a stand-in until T's row 14 lands (`[T to confirm #1]`, `[T to confirm #2]`).
 - **A3** The choice screen draws the top bar (eyebrow and purse), the picture band, the flavour line, and the two rows each with its label, its action line and a brass TAKE; nothing on it names the reward (S-04-settled, left).
 - **A4** Goods taken draws the gold band, `TAKE THE GOODS`, one row per item (icon, `+ NAME`, its line), the shillings row, and MOVE ON on the brass plate (S-04-settled, middle).
 - **A5** Card taken draws the card picture band, `TAKE A CARD`, the one card taken in `CombatCardFace` just above MOVE ON (S-04-settled, right).
@@ -70,9 +68,7 @@ Three moments, one screen, as the settled shot draws them.
 
 ## Chunks
 
-Measure: 6 open · 0 closed · next A7
+Measure: 4 open · 2 closed · next A7
 
-- [ ] **174.1** The cache outcome knows what was taken, and the picture table · S · closes A1, A2 · needs — · alias: LC1a
-  - Extend `CacheChoiceOutcomeVM` (card face, goods rows, purse after); keep `CacheChoiceOfferVM` as is. The picture table lives beside `assets/images/treasure/index.ts`. Presenter unit tests in `state/presenters/__tests__/cache.engine.test.ts`.
-- [ ] **174.2** The cache screen, picture first · M · closes A3, A4, A5, A6 · needs 174.1 · alias: LC1b
+- [ ] **174.2** The cache screen, picture first · M · closes A3, A4, A5, A6 · needs — · alias: LC1b
   - Redraw `app/cache/index.tsx` on the brass plate and the picture band; add the look-table place; add the `cw-6` cache fixture and the three `verify:visual` routes; extend `cache-action-lines.screen.test.tsx` and add the outcome e2e. Regenerate `docs/feature-map/` if the route's couplings change (the card face brings `CombatBoard` back into `route:cache`).

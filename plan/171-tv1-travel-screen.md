@@ -55,11 +55,6 @@
 
 ## Acceptance
 
-- **A1** A travel node's screen shows, top to bottom: the destination picture from the node's entry in the travel scene table (or the dark ground when it has none), the question "Move to {destination}?" in the title type, the node's scene line in the narration type, and MOVE above STAY on the brass action plate. It shows no eyebrow, no purse, no cost line and no other words (S-01b with T's note).
-- **A2** MOVE takes the trip and STAY leaves the player on the node, exactly as YES and NO did (`takeTravel`, `closeTravel`); the hermetic travel e2e still passes with the buttons renamed.
-- **A3** A shut way (`opensAfter` unspent) shows the shut line in the question's place and MOVE on the disabled brass plate above STAY; pressing MOVE does nothing and the shut line stays on screen [T to confirm #1].
-- **A4** One table keyed by travel node id (`bw-b2`, `bw-h6`, `bw-c0`) supplies every travel picture, with a `provenance.json` beside it; the bridge's entry is the Charcoal Wood arena stand-in, and both cave entries are crops of the coast plate (`ACT1_PLATES.coast`) centred on the destination's landmark (`bw-h6` on `cave-face`, `bw-c0` on `sea-cave-mouth`) at the table's one zoom constant (2x). A test pins that every Breakwater travel node has an entry, that each crop's landmark is the destination node's own (read from the layout, not typed twice), and that nothing resolves into `Potential Assets/`.
-- **A5** `verify:visual` holds two travel baselines, the far bank (fixture `wanderer-bw-door-arrive`) and the cave mouth (a new fixture on `bw-h6`, showing the map zoomed on the Cave Face), each compared by eye against its half of the settled shot, the cave's picture excepted (T's answer replaces it).
 - **A6** T's bridge image replaces the Charcoal Wood stand-in in the scene table, with provenance, and the far-bank travel baseline is re-approved. The cave entries are untouched.
 
 ## Open questions
@@ -70,9 +65,8 @@
 
 ## Chunks
 
-Measure: 6 open · 0 closed · next A7
+Measure: 1 open · 5 closed · next A7
 
-- [ ] **171.1** The travel screen redrawn: the picture, the question, MOVE and STAY · M · closes A1, A2, A3, A4, A5 · needs — · alias: TV1a
-- [ ] **171.2** T's bridge image in the travel scene table · S · closes A6 · needs 171.1 · alias: TV1b
+- [ ] **171.2** T's bridge image in the travel scene table · S · closes A6 · needs — · alias: TV1b
 
 171.1 adds the travel scene table (`axiomancer-mobile/assets/images/travel/`, keyed by node id: the bridge stand-in copied from the combat arenas with provenance, the two cave entries as crops of `ACT1_PLATES.coast` on their destination landmarks), reshapes `TravelVM` (drops `eyebrow`, `yesLabel`, `noLabel` for `moveLabel`, `stayLabel` and a scene image source), rewrites `TRAVEL_COPY` (MOVE, STAY; the eyebrow gone), redraws `app/travel/index.tsx` on `BrassButton`, retires look places `T-01` and `T-02` from `components/experience/looks.ts` (or points `T-02` at the brass plate), adds a state fixture on `bw-h6`, updates `travel.screen.test.tsx` and the e2e, and approves both baselines. 171.2 waits on T's act "Find the bridge travel image" (Held until T supplies it); it only swaps the bridge's entry and re-approves the far-bank baseline.

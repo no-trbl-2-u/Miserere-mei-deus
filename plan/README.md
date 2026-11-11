@@ -39,12 +39,15 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
-- **168.2** · VL1b: the village card shop offers five cards (T, `/plot asap`, 2026-11-09)
-- **168.4** · VL1d: the Shop, one card at a time (T, `/plot asap`, 2026-11-09)
-- **168.5** · VL1e: the Blacksmith, the smith and one die at a time (T, `/plot asap`, 2026-11-09)
 
-- **127.9** · UP1i: the card upgrade screen as a string of beads, with the pair and the hold (T, `/pitch` then `/plot asap`, 2026-11-10)
-- **127.10** · UP1j: the rest site, the Anvil and the elite reward wear the beads (T, `/plot asap`, 2026-11-10; needs 127.9, 168.5)
+
+- **172.2** · CU1b: the cutscene screen, the teller over the vellum panel (T's screens ballot, `/plot`, 2026-11-10)
+
+
+- **174.2** · LC1b: the cache screen, picture first (T's screens ballot, then `/plot asap`, 2026-11-10)
+
+- **173.2** · QS1b: the quest card, the offer and the work in progress (screens ballot S-03, `/plot`, 2026-11-10)
+- **173.3** · QS1c: the quest card, the turn-in and the giver turning the player away (screens ballot S-03, `/plot`, 2026-11-10; needs 173.2)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -55,7 +58,10 @@ owner-led sessions (D88). An `until:` date is the deadline Item
 that names the chunk (`plan/deadlines.md`); past it, or past
 `max_age`, the loop asks T once (an issue), never releases it:
 
+- **172.3** · waits on T's cutscene pictures and narrator figure (CU1c) · since: 2026-11-10 · until: T's word · max_age: 30d
+
 - **156.7** · waits on T's colour ballot verdict (TY1g; built by TY1f) · since: 2026-11-06 · until: T's word · max_age: 60d
+- **171.2** · waits on T's bridge travel image (TV1b; built by TV1a; the cave uses the map, T 2026-11-11) · since: 2026-11-10 · until: 2026-11-30 · max_age: 21d
 - **116.4** · attended: T does this one (BW1d) · since: 2026-11-01 · until: 2026-11-10 · max_age: 16d
 - **119.3** · attended: T does this one (BV1c) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **122.2** · attended: T does this one (R12) · since: 2026-11-01 · until: 2026-12-12 · max_age: 48d
@@ -86,7 +92,12 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 168 | The village as a hub of keepers | [168-vl1-village-screens.md](168-vl1-village-screens.md) | planned | 3 left |
+| 171 | The travel screen: a picture, a question, MOVE or STAY | [171-tv1-travel-screen.md](171-tv1-travel-screen.md) | planned | 1 left |
+| 173 | The quest as one card | [173-qs1-quest-screen.md](173-qs1-quest-screen.md) | planned (**Asap**: 173.2 and 173.3) | 2 left |
+| 174 | The loot cache, picture first | [174-lc1-loot-cache-screen.md](174-lc1-loot-cache-screen.md) | planned | 1 left |
+| 176 | The ends of a fight and a run | [176-fe1-fight-ends.md](176-fe1-fight-ends.md) | planned | 1 left |
+| 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 2 left |
+| 172 | The cutscene as a teller over a vellum panel | [172-cu1-cutscene-screen.md](172-cu1-cutscene-screen.md) | planned | 2 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
@@ -94,7 +105,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |
-| 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 3 left |
+| 127 | Card upgrades carry the Act 1 power curve | [127-up1-card-upgrades.md](127-up1-card-upgrades.md) | planned | 1 left |
 | 129 | iPhone beta builds | [129-io1-iphone-beta.md](129-io1-iphone-beta.md) | planned | 2 left |
 | 131 | Set bonuses: T's design session | [131-sb1-set-bonuses.md](131-sb1-set-bonuses.md) | planned | 1 left |
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
