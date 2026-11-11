@@ -6,8 +6,8 @@
 
 ## Milestones
 
-- **2026-11-30** — Mon, Nov 30 (in 19 days): 13 acts open (13 h), 13 h queued up to it, 27.1 h available: fits, with 14.1 h to spare.
-- **2026-12-26** — Sat, Dec 26 (in 45 days): 25 acts open (31.5 h), 44.5 h queued up to it, 64.3 h available: fits, with 19.8 h to spare.
+- **2026-11-30** — Mon, Nov 30 (in 19 days): 14 acts open (14 h), 14 h queued up to it, 27.1 h available: fits, with 13.1 h to spare.
+- **2026-12-26** — Sat, Dec 26 (in 45 days): 25 acts open (31.5 h), 45.5 h queued up to it, 64.3 h available: fits, with 18.8 h to spare.
 
 ## This week (10 h)
 
@@ -32,6 +32,7 @@
 - Review the reworked fight reveal (look G for normal and elite foes, the boss's held title card F; spec 175)... — the loop still owes FR1a, FR1b
 - Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upg... — the loop still owes QS1a, QS1b, QS1c
 - Review the reworked travel, loot cache and cutscene screens (1.5 h) — the loop still owes TV1a, TV1b, LC1a, LC1b, CU1a, CU1b
+- Review the reworked ends of a fight (victory with the animated XP bar and level line, death return) against... — the loop still owes FE1a, FE1b, FE1c, FE1d
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
 - Re-tune Chapter 1's enemies against the recast roster: levels (all under 10), how often each normal repeats... — the loop still owes MS1a, MS1b
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
