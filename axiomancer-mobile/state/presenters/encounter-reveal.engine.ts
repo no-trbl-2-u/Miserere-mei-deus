@@ -10,7 +10,7 @@
 
 import { arrivalLineAt, breakwaterEncounterTier, breakwaterPlaceAt, heldRoadPlaceAt } from '@mechanics';
 import {
-    BOSS_CARD_SUBTITLE, heldRoadLine,
+    BOSS_CARD_SUBTITLE, ELITE_CHIP, heldRoadLine,
 } from '@/components/combat/encounter/reveal.copy';
 
 export type RevealTier = 'fight' | 'elite' | 'boss';
@@ -35,5 +35,34 @@ export function buildRevealFrame(nodeId: string | undefined): RevealFrameVM {
         arrivalLine: arrivalLineAt(nodeId) ?? null,
         heldLine: heldPlace === undefined ? null : heldRoadLine(heldPlace),
         bossCard: tier === 'boss' ? { place: place ?? '', subtitle: BOSS_CARD_SUBTITLE } : null,
+    };
+}
+
+/** What the reveal reads (FR1a): tier, the foe's numbers and, for a boss, the card. */
+export interface RevealVM {
+    readonly tier: RevealTier;
+    readonly name: string;
+    readonly level: number;
+    /** The foe's current VITAE (the board shows the maximum). */
+    readonly vitae: number;
+    /** The tier chip's word: ELITE for an elite, null for a normal foe or a boss. */
+    readonly chip: string | null;
+    /** The boss card's place and eyebrow, else null. */
+    readonly bossCard: { readonly place: string; readonly subtitle: string } | null;
+}
+
+/** The reveal view-model for the foe walked to at `nodeId`; off the chapter it is a plain fight. */
+export function buildRevealVM(
+    nodeId: string | undefined,
+    foe: { readonly name: string; readonly level: number; readonly hp: number },
+): RevealVM {
+    const frame = buildRevealFrame(nodeId);
+    return {
+        tier: frame.tier,
+        name: foe.name,
+        level: foe.level,
+        vitae: foe.hp,
+        chip: frame.tier === 'elite' ? ELITE_CHIP : null,
+        bossCard: frame.bossCard,
     };
 }

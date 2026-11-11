@@ -26,6 +26,9 @@ route in World routes, from `axiomancer-mobile/app/death-return/index.tsx`.
 
 Code it uses, as plain text so Graph view draws player flow only.
 
+- VITAE and stats
+- Game
+- Items
 - Log
 
 ## Pitch

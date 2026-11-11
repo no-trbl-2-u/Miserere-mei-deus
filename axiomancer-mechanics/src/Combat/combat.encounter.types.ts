@@ -486,7 +486,12 @@ export interface CombatSummary {
     directDamage: number;
     /** Card that dealt the most enemy HP damage ('' if none). */
     bestCard: string;
+    /** Why a lost fight was lost; present only on a `defeat`. Read from the final state, never stored. */
+    defeatCause?: DefeatCause;
 }
+
+/** The two ways a fight is lost: the player's VITAE reached 0, or the round limit ran out with the player standing. */
+export type DefeatCause = 'vitae' | 'turn-limit';
 
 // ---------------------------------------------------------------------------
 // Outcome + phase

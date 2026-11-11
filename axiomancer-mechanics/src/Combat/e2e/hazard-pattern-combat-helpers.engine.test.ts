@@ -446,6 +446,34 @@ describe('buildCombatSummary — DoT is summed from emitted ticks, not projected
     });
 });
 
+// ── FE1d — a defeat names its cause from the final state ────────────────────
+
+describe('buildCombatSummary — defeat cause (FE1d)', () => {
+    const lost = (playerHealth: number) => {
+        const base = initializeCombatEncounter(makePlayer([DOT_BODY]), makeEnemy(100), undefined, SEED);
+        return {
+            ...base,
+            phase: 'complete' as const,
+            finalOutcome: 'defeat' as const,
+            player: { ...base.player, health: playerHealth },
+        };
+    };
+
+    it('VITAE at 0 reads as the vitae cause', () => {
+        expect(buildCombatSummary(lost(0)).defeatCause).toBe('vitae');
+    });
+
+    it('a fight lost with the player standing reads as the turn limit', () => {
+        expect(buildCombatSummary(lost(12)).defeatCause).toBe('turn-limit');
+    });
+
+    it('a win or a spare carries no cause', () => {
+        const won = { ...lost(12), finalOutcome: 'victory' as const };
+        expect(buildCombatSummary(won).defeatCause).toBeUndefined();
+        expect(buildCombatSummary({ ...won, mercyCheck: 'spared' as const }).defeatCause).toBeUndefined();
+    });
+});
+
 // ── Post-combat summary (§7.7) — `buildCombatSummary` ───────────────────────
 
 describe('Spec 25 §7.7 — buildCombatSummary field shape', () => {

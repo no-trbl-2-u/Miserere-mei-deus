@@ -32,6 +32,8 @@ import { selectQuestVM } from '@/state/presenters/quest.engine';
 import { selectVillageVM } from '@/state/presenters/village.engine';
 import type { AppStore } from '@/state/store';
 
+import { spendAs, type MoneyLedger } from './run-money';
+
 /** Thrown by a resolver whose screen has no legal tap; the driver adds the state. */
 export class ScreenStuckError extends Error {}
 
@@ -230,15 +232,18 @@ const ANVIL_MAX_WORKS = 12;
 
 type AnvilVariants = NonNullable<Parameters<AppActions['beginBlacksmith']>[0]>['variants'];
 
-/** `/village`: the anvil, then rest, buy, remove as the policy says, then LEAVE. */
-export function resolveVillage(store: AppStore, actions: AppActions, policy: RunPolicy): boolean {
+/** `/village`: the anvil, then rest, buy, remove as the policy says, then LEAVE; each spend is booked on `money` by kind. */
+export function resolveVillage(store: AppStore, actions: AppActions, policy: RunPolicy, money?: MoneyLedger): boolean {
     if (store.getState().event?.pending?.event.kind !== 'village') return false;
     const first = selectVillageVM({
         event: store.getState().event,
         player: store.getState().player,
         flags: (store.getState() as unknown as GameState).flags,
     });
-    if (first.anvil) visitAnvil(store, actions, policy, first.anvil.variants);
+    if (first.anvil) {
+        const variants = first.anvil.variants;
+        spendAs(store, money, 'anvil', () => visitAnvil(store, actions, policy, variants));
+    }
     const state = store.getState();
     const vm = selectVillageVM({ event: state.event, player: state.player, flags: (state as unknown as GameState).flags });
     const decision = policy.visitVillage({
@@ -254,9 +259,9 @@ export function resolveVillage(store: AppStore, actions: AppActions, policy: Run
         deck: deckOf(store),
         rng: () => getRng().random(),
     });
-    if (decision.rest && vm.rest?.enabled) actions.restAtVillage();
-    for (const cardId of decision.buy) actions.buyVillageCard(cardId);
-    for (const cardId of decision.remove) actions.removeVillageCard(cardId);
+    if (decision.rest && vm.rest?.enabled) spendAs(store, money, 'rest', () => actions.restAtVillage());
+    for (const cardId of decision.buy) spendAs(store, money, 'card', () => actions.buyVillageCard(cardId));
+    for (const cardId of decision.remove) spendAs(store, money, 'removal', () => actions.removeVillageCard(cardId));
     actions.dismissEvent();
     return true;
 }

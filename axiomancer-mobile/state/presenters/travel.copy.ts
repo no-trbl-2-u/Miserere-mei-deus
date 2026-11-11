@@ -1,21 +1,19 @@
 /**
- * The travel screen's words (phase NK1d). The flavor text is each node's own
- * authored `prompt` (the engine's content); this file holds only the chrome:
- * the question, the two answers, the shut line and the crossing toast.
+ * The travel screen's words. The scene line
+ * is each node's own authored `prompt` (the engine's content); this file holds
+ * only the chrome: the question, the two buttons, the shut line and the
+ * crossing toast. Nothing else is written on the screen: no tag, no purse, no
+ * cost (T's verdict on S-01, 2026-11-10).
  */
 export const TRAVEL_COPY = {
-    /** The eyebrow over the art. */
-    eyebrow: 'THE WAY ON',
-    /** The question under the flavor text. */
+    /** The question over the scene line. */
     question: (destination: string): string => `Move to ${destination}?`,
-    /** The yes button. */
-    yes: 'YES · MOVE',
-    /** The no button: the player stays on the node. */
-    no: 'NO · STAY',
+    /** The button that takes the trip. */
+    move: 'MOVE',
+    /** The button that leaves the player on the node. */
+    stay: 'STAY',
     /** Shown in place of the question while `opensAfter` is unspent. */
     shut: 'The way is shut.',
-    /** The one button a shut way offers. */
-    leave: 'STAY',
     /** A place with no drawn name (a map with no layout). */
     unnamedPlace: 'the far side',
     /** The toast a crossing to another map shows. */

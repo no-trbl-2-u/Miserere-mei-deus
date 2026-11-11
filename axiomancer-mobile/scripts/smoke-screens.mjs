@@ -85,6 +85,11 @@ export const ROUTES = [
     // re-stamped, and it carries a tighter diff line (0.1%) than the other routes
     // because the places are small. See screenshots/baseline/README.md.
     { name: 'combat-board', path: '/combat-encounter', liveFight: true, intoBoard: true, maxDiffRatio: 0.001, expectTestIds: BOARD_PLACES },
+    // The reveal for an elite and for the boss, entered at their Breakwater nodes
+    // by a fixture whose arrival stages the fight: the elite wears its chip, the
+    // boss is the held title card. Both wait out the ink curtain.
+    { name: 'combat-elite', path: '/exploration', fixture: 'wanderer-bw-elite-arrive', waitForPath: '/combat-encounter', waitForTestId: 'combat-reveal-chip' },
+    { name: 'combat-boss', path: '/exploration', fixture: 'wanderer-bw-boss-arrive', waitForPath: '/combat-encounter', waitForTestId: 'combat-reveal-boss-card' },
     { name: 'memoir', path: '/memoir' },
     // THE APORIA act select (no session on a fresh boot).
     { name: 'labyrinth', path: '/labyrinth' },
@@ -100,6 +105,8 @@ export const ROUTES = [
     { name: 'village', path: '/exploration', fixture: 'wanderer-staged-village', waitForPath: '/village' },
     { name: 'cutscene', path: '/exploration', fixture: 'wanderer-staged-cutscene', waitForPath: '/cutscene' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
+    // The cave shortcut: the map zoomed on the Cave Face.
+    { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },
     // The live hazard on its board, the parity baseline for the puzzle
     // board: the fixture's arrival starts the hazard (seed pinned by the
     // minigame-seed injector), `hazardRoute` picks the route, and the shot
@@ -120,6 +127,9 @@ export const ROUTES = [
     // The full-screen moment after a first death; `preview=1` shows it on a
     // dev build (a real revive arms it in memory), hence the forced context.
     { name: 'death-return', path: '/death-return?preview=1', fixture: 'fresh-start' },
+    // The post-fight summary on a lost fight, with its cause line:
+    // a dev route mounts the panel from a fixed summary.
+    { name: 'defeat-panel', path: '/devdefeat', fixture: 'fresh-start', expectTestIds: ['combat-summary', 'combat-summary-cause', 'combat-summary-close'] },
     // The full-screen moment after a run end (CH1j); `preview=1` shows it on a dev build.
     { name: 'game-over', path: '/game-over?slot=1&preview=1', fixture: 'fresh-start' },
     // Dev-menu HAZARD PUZZLES board on the live hazard board (a dev route,

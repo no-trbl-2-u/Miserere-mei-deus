@@ -19,6 +19,7 @@ import {
 } from '@mechanics';
 
 import { playRun, type PlayRunOptions } from './run-driver';
+import { spentTotal } from './run-money';
 import { describeScreen, RunCrashError, RunStuckError } from './run-stuck';
 import { playRuns } from './sim-runs';
 
@@ -85,6 +86,16 @@ describe('the headless run driver', () => {
         expect(Object.values(result.deckByLane).reduce((a, b) => a + b, 0)).toBeGreaterThanOrEqual(dealt);
         // It posts nothing: the play-log gate is shut under the driver.
         expect(fetchSpy?.mock.calls.length ?? 0).toBe(0);
+        // The player on first standing on each node: the start node at level 1, every stood-on node kept.
+        expect(Object.values(result.arrivals)[0]?.level).toBe(1);
+        expect(result.arrivals[result.furthestNodeId]).toBeDefined();
+        for (const a of Object.values(result.arrivals)) expect(a.vitae).toBeLessThanOrEqual(a.maxVitae);
+        // The money balances: the end purse is the start plus every gain less every spend, and the village visited took some.
+        if (result.outcome === 'chapter-clear') {
+            expect(result.money.start + result.money.earned - spentTotal(result.money)).toBe(result.currency);
+        }
+        expect(result.money.earned).toBeGreaterThan(0);
+        expect(result.money.spent.gear).toBe(0);
     });
 
     it('plays a Breakwater hazard as its puzzle with the noisy-greedy bot, never the three-round board', () => {

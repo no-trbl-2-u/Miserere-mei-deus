@@ -54,34 +54,52 @@ function onPassageNode(nodeId: 'ward' | 'trail') {
 }
 
 describe('/travel - "Move to X?"', () => {
-    it('shows the art, the flavor text and the question', () => {
+    it('shows the picture, the question, the scene line and MOVE and STAY', () => {
         onTheBridge();
         expect(screen.getByTestId('travel-art')).toBeTruthy();
+        expect(screen.getByTestId('travel-image')).toBeTruthy();
         expect(screen.getByTestId('travel-prompt').props.children).toMatch(/toll-house/);
         expect(screen.getByTestId('travel-question').props.children).toBe('Move to The Charcoal Wood?');
-        expect(screen.getByTestId('travel-yes')).toBeTruthy();
-        expect(screen.getByTestId('travel-no')).toBeTruthy();
+        expect(screen.getByText('MOVE')).toBeTruthy();
+        expect(screen.getByText('STAY')).toBeTruthy();
     });
 
-    it('YES moves the player', () => {
+    it('writes no eyebrow, no YES or NO', () => {
+        onTheBridge();
+        expect(screen.queryByText('THE WAY ON')).toBeNull();
+        expect(screen.queryByText(/YES|NO ·/)).toBeNull();
+    });
+
+    it('MOVE moves the player', () => {
         const { store } = onTheBridge();
-        fireEvent.press(screen.getByTestId('travel-yes'));
+        fireEvent.press(screen.getByTestId('travel-move'));
         expect(store.getState().world.currentMap.name).toBe('charcoal-wood');
         expect(store.getState().travel.open).toBeNull();
     });
 
-    it('NO keeps the player on the node', () => {
+    it('STAY keeps the player on the node', () => {
         const { store } = onTheBridge();
-        fireEvent.press(screen.getByTestId('travel-no'));
+        fireEvent.press(screen.getByTestId('travel-stay'));
         expect(store.getState().world.currentMap.name).toBe('breakwater');
         expect(store.getState().world.currentMap.currentNode).toBe('bw-b2');
         expect(store.getState().travel.open).toBeNull();
     });
 
-    it('a shut way says so and offers no YES', () => {
-        onPassageNode('ward');
+    it('a shut way shows the shut line and MOVE disabled; pressing MOVE does nothing', () => {
+        const { store } = onPassageNode('ward');
         expect(screen.getByTestId('travel-shut').props.children).toBe('The way is shut.');
-        expect(screen.queryByTestId('travel-yes')).toBeNull();
-        expect(screen.getByTestId('travel-no')).toBeTruthy();
+        const move = screen.getByTestId('travel-move');
+        expect(move.props.accessibilityState.disabled).toBe(true);
+        fireEvent.press(move);
+        expect(store.getState().travel.open).not.toBeNull();
+        expect(screen.getByTestId('travel-shut')).toBeTruthy();
+        expect(screen.getByTestId('travel-stay')).toBeTruthy();
+    });
+
+    it('a node with no entry shows the dark ground alone', () => {
+        onPassageNode('ward');
+        expect(screen.getByTestId('travel-art')).toBeTruthy();
+        expect(screen.queryByTestId('travel-image')).toBeNull();
+        expect(screen.queryByTestId('travel-crop')).toBeNull();
     });
 });

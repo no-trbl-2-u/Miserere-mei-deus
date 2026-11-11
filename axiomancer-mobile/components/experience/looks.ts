@@ -49,7 +49,7 @@ export type PlaceId =
     | 'X-01' | 'X-02'
     // Round 2: new game (saves, character select) and the endings (death, game over).
     | 'N-01' | 'N-02' | 'N-03' | 'N-04' | 'N-05' | 'N-06' | 'N-07'
-    | 'G-01'
+    | 'G-01' | 'G-02'
     // The village screens: the hub's counter buttons and the counters' own buttons.
     | 'V-01';
 
@@ -106,8 +106,8 @@ export const LOOKS: Record<PlaceId, Look> = {
     'E-03': 'brass', // Dialogue: choice rows
     'C-01': 'normal', // Cutscene: omen
     'C-02': 'normal', // Cutscene: SKIP
-    'T-01': 'normal', // Travel: THE WAY ON tag
-    'T-02': 'vellum', // Travel: YES / NO buttons
+    'T-01': 'normal', // Travel: retired: the tag is gone; id kept so the catalog stays stable
+    'T-02': 'brass', // Travel: MOVE / STAY buttons
     'H-01': 'vellum', // Hazard: stakes card
     'H-02': 'normal', // Hazard: FACE IT
     'Q-01': 'vellum', // Quest: panel
@@ -121,7 +121,8 @@ export const LOOKS: Record<PlaceId, Look> = {
     'N-05': 'vellum', // Character select: HEART / BODY / MIND tiles
     'N-06': 'vellum', // Character select: CONFIRM
     'N-07': 'normal', // Character select: roster grid tiles
-    'G-01': 'vellum', // Death and game over: CONTINUE / NEW CHARACTER
+    'G-01': 'brass', // Death return: CONTINUE (the house look's brass plate; Game over's button is G-02)
+    'G-02': 'brass', // Game over: NEW CHARACTER (the house look's brass plate)
     'V-01': 'brass', // Village: hub and counter buttons (168, call #5: these screens only)
 };
 
@@ -178,7 +179,7 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'C-01': [],
     'C-02': [],
     'T-01': [],
-    'T-02': ['action-button-vellum'],
+    'T-02': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
     'H-01': ['modal-panel-vellum'],
     'H-02': [],
     'Q-01': ['modal-panel-vellum'],
@@ -192,7 +193,8 @@ export const PLACE_PIECES: Record<PlaceId, readonly KitPiece[]> = {
     'N-05': ['vellum-chip'],
     'N-06': ['action-button-vellum'],
     'N-07': [],
-    'G-01': ['action-button-vellum'],
+    'G-01': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
+    'G-02': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
     'V-01': ['action-button-idle', 'action-button-selected', 'action-button-disabled'],
 };
 

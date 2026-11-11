@@ -60,12 +60,13 @@ describe('the new-game and ending screens on their kit looks', () => {
     });
 
     it('G-01: the death screen button', () => {
-        const view = render(<DeathReturnScreen />);
+        const { tree } = withAllProviders(<DeathReturnScreen />);
+        const view = render(tree);
         expect(view.getByTestId('death-return-continue')).toBeTruthy();
         expect(kitImagesIn(view)).toBeGreaterThan(0);
     });
 
-    it('G-01: the game over button', () => {
+    it('G-02: the game over button', () => {
         const view = render(<GameOverScreen />);
         expect(view.getByTestId('game-over-new-character')).toBeTruthy();
         expect(kitImagesIn(view)).toBeGreaterThan(0);

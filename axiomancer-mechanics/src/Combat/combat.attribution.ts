@@ -9,7 +9,7 @@
 
 import type {
     CombatAttributionRow, CombatEncounterState,
-    CombatSummary, LandedEffect,
+    CombatSummary, DefeatCause, LandedEffect,
 } from './combat.encounter.types';
 
 /**
@@ -144,7 +144,13 @@ export function buildCombatSummary(state: CombatEncounterState): CombatSummary {
         totalDotDamage,
         directDamage,
         bestCard: best?.name ?? '',
+        ...(outcome === 'defeat' ? { defeatCause: defeatCauseOf(state) } : {}),
     };
+}
+
+/** VITAE 0 when the player fell; otherwise the fight ran past the round limit with the player standing. */
+export function defeatCauseOf(state: CombatEncounterState): DefeatCause {
+    return state.player.health <= 0 ? 'vitae' : 'turn-limit';
 }
 
 /**

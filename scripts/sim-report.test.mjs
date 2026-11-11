@@ -12,7 +12,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 
-import { buildFacts, historyLine, main, parseArgs, readBreakLines, regionPacing, universeOf } from './sim-report.mjs'
+import { arrivalRows, bossNodeOf, buildFacts, historyLine, main, moneyRows, parseArgs, priceRows, readBreakLines, readLedgerLines, regionPacing, renderReport, spread, universeOf, villageNodesOf } from './sim-report.mjs'
 
 const sink = () => {
   const s = { text: '', write: (chunk) => { s.text += chunk } }
@@ -92,7 +92,7 @@ const run = async (argv, extra = {}) => {
   return { code, stdout: stdout.text, stderr: stderr.text }
 }
 
-const SECTIONS = ['## Run health', '## Pacing', '## How hard is Chapter 1', '## Coverage', '## Since the last report']
+const SECTIONS = ['## Run health', '## Pacing', '## How hard is Chapter 1', '## Arrival at the boss', '## A run\'s money', '## Coverage', '## Since the last report']
 
 test('parseArgs needs a build and refuses unknown flags', () => {
   assert.equal(parseArgs(['--build', 'abc']).build, 'abc')
@@ -103,7 +103,7 @@ test('parseArgs needs a build and refuses unknown flags', () => {
   assert.throws(() => parseArgs(['--build']), /needs a value/)
 })
 
-test('the first night writes the stamp, the five sections in order and one history line', async () => {
+test('the first night writes the stamp, the seven sections in order and one history line', async () => {
   const t = setup()
   try {
     const calls = []
@@ -122,8 +122,10 @@ test('the first night writes the stamp, the five sections in order and one histo
     const at = SECTIONS.map((s) => md.indexOf(s))
     assert.ok(at.every((i) => i >= 0), 'every section is present')
     assert.deepEqual([...at].sort((a, b) => a - b), at, 'sections in the Design order')
-    assert.equal(md.split('\n').filter((l) => l.startsWith('## ')).length, 5, 'five sections, no cards')
+    assert.equal(md.split('\n').filter((l) => l.startsWith('## ')).length, 7, 'seven sections, no cards')
     assert.doesNotMatch(md, /card/i)
+    // No ledger file: the arrival and money sections say so rather than print an empty table.
+    assert.equal(md.split('No run ledger this night').length - 1, 2)
     assert.match(md, /First report/)
     const lines = fs.readFileSync(path.join(t.out, 'history.jsonl'), 'utf-8').trim().split('\n')
     assert.equal(lines.length, 1)
@@ -357,6 +359,85 @@ test('readBreakLines rejects a line that is not a break', () => {
   assert.deepEqual(readBreakLines(null), [])
 })
 
+// The ledger fixture: the map marks n4 as the boss and n2 as a village (both read from the content, never named in the
+// report's code). Cautious reaches the boss twice and breaks once; rusher never reaches it.
+const BOSS_CONTENT = {
+  ...CONTENT,
+  nodes: CONTENT.nodes.map((n) => (n.id === 'n4' ? { ...n, kind: 'encounter', place: 'Keep', boss: true } : n.id === 'n2' ? { ...n, kind: 'village', place: 'Town' } : n)),
+}
+const PRICES = { rest: 6, card: 6, gear: 40, removal: { first: 5, step: 5 }, anvil: { hone: 3, temper: 5, swap: 8, upgrade: 5 } }
+const at = (level, vitae, purse) => ({ level, vitae, maxVitae: 100, purse })
+const spent = (o) => ({ rest: 0, card: 0, gear: 0, removal: 0, anvil: 0, other: 0, ...o })
+const LEDGER = [
+  { persona: 'cautious', seed: 1, build: BUILD, outcome: 'chapter-clear', arrivals: { n1: at(1, 40, 0), n2: at(3, 30, 10), n4: at(8, 50, 20) }, money: { start: 0, earned: 60, spent: spent({ rest: 6, card: 12, anvil: 8 }) }, prices: PRICES },
+  { persona: 'cautious', seed: 2, build: BUILD, outcome: 'chapter-clear', arrivals: { n1: at(1, 40, 0), n2: at(4, 35, 30), n4: at(10, 70, 40) }, money: { start: 0, earned: 80, spent: spent({ card: 6, removal: 5 }) }, prices: PRICES },
+  { persona: 'cautious', seed: 3, build: BUILD, stuck: true, node: 'n3' },
+  { persona: 'rusher', seed: 1, build: BUILD, outcome: 'run-over', arrivals: { n1: at(1, 40, 0), n2: at(2, 20, 5) }, money: { start: 0, earned: 9, spent: spent({ other: 1 }) }, prices: PRICES },
+  { persona: 'rusher', seed: 2, build: BUILD, outcome: 'run-over', arrivals: { n1: at(1, 40, 0) }, money: { start: 0, earned: 3, spent: spent({}) }, prices: PRICES },
+]
+
+test('the arrival and money tables read the boss and the villages from the map, with run counts and "not reached"', async () => {
+  const t = setup()
+  try {
+    const file = path.join(t.dir, 'ledger.jsonl')
+    fs.writeFileSync(file, LEDGER.map((l) => JSON.stringify(l)).join('\n') + '\n')
+    const r = await run(['--build', BUILD, '--out', t.out, '--ledger', file], { content: () => BOSS_CONTENT })
+    assert.equal(r.code, 0, r.stderr)
+    const md = fs.readFileSync(path.join(t.out, 'latest.md'), 'utf-8')
+    const arrival = md.slice(md.indexOf('## Arrival at the boss'), md.indexOf('## A run\'s money'))
+    assert.match(arrival, /`n4` \(Keep\), the node the map marks as the boss/)
+    assert.match(arrival, /\| persona \| runs \| broke \| reached the boss \| level \| VITAE \| shillings \|/)
+    assert.match(arrival, /\| cautious \| 3 \| 1 \| 2\/3 \| 9 \(8-10\) \| 60 \(50-70\) \| 30 \(20-40\) \|/)
+    assert.match(arrival, /\| rusher \| 2 \| 0 \| 0\/2 \| not reached \| not reached \| not reached \|/)
+    assert.doesNotMatch(arrival, /played at/, 'the ledger is at the report\'s build')
+    const money = md.slice(md.indexOf('## A run\'s money'), md.indexOf('## Coverage'))
+    assert.match(money, /\| persona \| runs \| start \| earned \| village rest \| shop card \| shop gear \| card removal \| Anvil action \| other \| end purse \|/)
+    // Cautious: two finished runs of three; earned 60 and 80; rest 6/2, card 18/2, removal 5/2, anvil 8/2; end (34 + 69)/2.
+    assert.match(money, /\| cautious \| 2\/3 \| 0 \| 70 \(60-80\) \| 3 \| 9 \| 0 \| 2\.5 \| 4 \| 0 \| 51\.5 \|/)
+    assert.match(money, /\| rusher \| 2\/2 \| 0 \| 6 \(3-9\) \| 0 \| 0 \| 0 \| 0 \| 0 \| 0\.5 \| 5\.5 \|/)
+    // The purse on reaching the village: the village is the map's, and a persona that never reached it says so.
+    assert.match(money, /\| persona \| `n2` Town \|/)
+    assert.match(money, /\| cautious \| 20 \(10-30\), 2\/3 \|/)
+    assert.match(money, /\| rusher \| 5 \(5-5\), 1\/2 \|/)
+    assert.match(money, /\| village rest \| 6 \|/)
+    assert.match(money, /\| shop gear \| 40 \|/)
+    assert.match(money, /\| card removal \| 5 for the first, 5 more for each after \|/)
+    assert.match(money, /\| Anvil action \| hone 3, temper 5, swap 8, card upgrade 5 \|/)
+    // The history line is unchanged by the ledger.
+    const h = JSON.parse(fs.readFileSync(path.join(t.out, 'history.jsonl'), 'utf-8').trim())
+    assert.deepEqual(Object.keys(h), ['date', 'commit', 'runsPerPersona', 'seed', 'personas', 'reached'])
+  } finally { t.cleanup() }
+})
+
+test('a ledger from another build says so; a village no run reached and a map with no boss read plainly', () => {
+  const t = reports()
+  const base = { build: BUILD, date: '2026-11-10', seed: 1, runSummary: t['run-summary'], runEnds: t['run-ends'], runPacing: t['run-pacing'], coverage: t.coverage, breaks: [] }
+  const other = LEDGER.map((l) => ({ ...l, build: 'abcdef0123456789' }))
+  const md = renderReport(buildFacts({ ...base, content: BOSS_CONTENT, ledger: other }), [])
+  assert.match(md, /The ledger's runs were played at abcdef01; the Worker's rows above are at 01234567\./)
+  const unreached = renderReport(buildFacts({ ...base, content: BOSS_CONTENT, ledger: LEDGER.filter((l) => l.persona === 'rusher').map((l) => ({ ...l, arrivals: { n1: at(1, 40, 0) } })) }), [])
+  assert.match(unreached, /\| rusher \| not reached \(0\/2\) \|/)
+  const noBoss = renderReport(buildFacts({ ...base, content: CONTENT, ledger: LEDGER }), [])
+  assert.match(noBoss, /The map marks no node as the boss\./)
+  assert.match(noBoss, /The map has no village\./)
+  assert.equal(bossNodeOf(BOSS_CONTENT).id, 'n4')
+  assert.deepEqual(villageNodesOf(BOSS_CONTENT).map((n) => n.id), ['n2'])
+  assert.deepEqual(spread([]), null)
+  assert.deepEqual(arrivalRows(LEDGER, 'n4').map((r) => r.reached), [2, 0])
+  assert.equal(moneyRows([])[0], undefined)
+  assert.equal(priceRows([{ persona: 'x', seed: 1, stuck: true }]), null)
+})
+
+test('readLedgerLines reads every line, refuses a line that is not one, and is null with no file', () => {
+  const text = LEDGER.map((l) => JSON.stringify(l)).join('\n') + '\n\n'
+  assert.equal(readLedgerLines('f', { read: () => text, exists: () => true }).length, 5)
+  assert.throws(() => readLedgerLines('f', { read: () => '{"nope":1}\n', exists: () => true }), /not a ledger line/)
+  assert.throws(() => readLedgerLines('f', { read: () => '{"persona":"x","seed":1}\n', exists: () => true }), /no arrivals/)
+  assert.equal(readLedgerLines(null), null)
+  assert.equal(readLedgerLines('f', { exists: () => false }), null)
+  assert.deepEqual(readLedgerLines('f', { read: () => '', exists: () => true }), [])
+})
+
 test('the pure helpers agree with the rendered numbers', () => {
   const t = reports()
   const f = buildFacts({ build: BUILD, date: '2026-11-10', seed: 1, runSummary: t['run-summary'], runEnds: t['run-ends'], runPacing: t['run-pacing'], coverage: t.coverage, content: CONTENT, breaks: [] })
@@ -402,8 +483,12 @@ test('sim-runs.yml hands the sha and the breaks file from the batch to the repor
   assert.match(sim, /outputs:\n      sha: \$\{\{ steps\.sha\.outputs\.sha \}\}/)
   assert.match(sim, /- name: Record the sha the bots play\n        id: sha\n        run: echo "sha=\$\(git rev-parse HEAD\)" >> "\$GITHUB_OUTPUT"/)
   assert.match(job, /SIM_SHA: \$\{\{ needs\.sim\.outputs\.sha \}\}/)
-  // The breaks: uploaded as `sim-breaks` from one file, downloaded by the same name into the directory the step reads.
-  assert.match(sim, /uses: actions\/upload-artifact@v4\n        with:\n          name: sim-breaks\n          path: \$\{\{ runner\.temp \}\}\/sim-breaks\.jsonl\n/)
+  // The breaks and the run ledger: written by every bot's batch, uploaded as `sim-breaks` together, downloaded by the
+  // same name into the directory the step reads.
+  assert.match(sim, /--breaks "\$SIM_BREAKS_FILE" --ledger "\$SIM_LEDGER_FILE"/)
+  assert.match(sim, /uses: actions\/upload-artifact@v4\n        with:\n          name: sim-breaks\n          path: \|\n            \$\{\{ runner\.temp \}\}\/sim-breaks\.jsonl\n            \$\{\{ runner\.temp \}\}\/sim-ledger\.jsonl\n/)
+  assert.match(job, /\[ -f "\$RUNNER_TEMP\/sim-breaks\/sim-ledger\.jsonl" \] && ledger="--ledger \$RUNNER_TEMP\/sim-breaks\/sim-ledger\.jsonl"/)
+  assert.match(job, /npm run sim:report -- --build "\$SIM_SHA" \$breaks \$ledger/)
   assert.match(job, /uses: actions\/download-artifact@v4\n        with:\n          name: sim-breaks\n          path: \$\{\{ runner\.temp \}\}\/sim-breaks\n/)
   assert.match(job, /\[ -f "\$RUNNER_TEMP\/sim-breaks\/sim-breaks\.jsonl" \] && breaks="--breaks \$RUNNER_TEMP\/sim-breaks\/sim-breaks\.jsonl"/)
   assert.match(job, /name: Fetch the night's breaks\n        continue-on-error: true/, 'a night with no breaks has no artifact and still reports')

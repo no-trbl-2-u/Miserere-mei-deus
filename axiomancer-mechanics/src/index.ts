@@ -129,7 +129,7 @@ export type {
     CombatCard, CombatVerbClass, CardEffectKind,
     CombatThreatPhase, CombatThreatAction, CombatThreatEffect,
     CombatOutcome, CombatEvent,
-    CombatSummary,
+    CombatSummary, DefeatCause,
     CombatIntentType,
     SignatureSkill,
     // The three chain colours (momentum chain)

@@ -30,3 +30,9 @@ export function cacheOutcomeItemChip(itemName: string): string {
 export function cacheOutcomeCurrencyChip(currency: number): string {
     return `+${currency} SHILLINGS`;
 }
+
+/** A potion's line in the inventory's terms: "Heal 20 VITAE · 30 below half VITAE". */
+export function cacheGoodHealLine(heal: number, belowHalf?: number): string {
+    const base = `Heal ${heal} VITAE`;
+    return belowHalf && belowHalf > 0 ? `${base} · ${belowHalf} below half VITAE` : base;
+}
