@@ -568,7 +568,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/components/experience/__tests__/lookGate.newgame.normal.test.tsx, ..."
+        "source": "axiomancer-mobile/app/__tests__/death-return.screen.test.tsx, axiomancer-mobile/components/__tests__/DebugSkipEvent.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, ..."
       },
       "needsPitch": {
         "value": true,
@@ -4562,6 +4562,24 @@
       "from": "route:cutscene",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/event.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:death-return",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/character-select.engine.ts"
     },
     {
       "kind": "coupling",

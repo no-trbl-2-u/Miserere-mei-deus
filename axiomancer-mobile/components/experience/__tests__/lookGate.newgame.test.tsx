@@ -13,7 +13,6 @@ import type { CharacterDefinition } from '@mechanics';
 
 import { KIT } from '@/assets/images/experience/kit';
 import CharacterSelectScreen from '@/app/character-select/index';
-import DeathReturnScreen from '@/app/death-return/index';
 import GameOverScreen from '@/app/game-over/index';
 import { SaveSlotRow } from '@/components/menu/SaveSlotRow';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
@@ -56,12 +55,6 @@ describe('the new-game and ending screens on their kit looks', () => {
     it('N-01 and N-02: a save slot row and its BEGIN', () => {
         const view = render(<SaveSlotRow row={ROW as never} onAction={() => undefined} onClear={() => undefined} />);
         expect(view.getByTestId('save-slot-1-action')).toBeTruthy();
-        expect(kitImagesIn(view)).toBeGreaterThan(0);
-    });
-
-    it('G-01: the death screen button', () => {
-        const view = render(<DeathReturnScreen />);
-        expect(view.getByTestId('death-return-continue')).toBeTruthy();
         expect(kitImagesIn(view)).toBeGreaterThan(0);
     });
 
