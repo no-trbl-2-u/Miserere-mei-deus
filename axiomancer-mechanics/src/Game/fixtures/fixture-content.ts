@@ -68,6 +68,7 @@ export const FIXTURE_VILLAGE_EVENT: MapEventPayload = {
 export const FIXTURE_CUTSCENE_EVENT: MapEventPayload = {
     kind: 'cutscene',
     lines: ['A placeholder line.', 'A second placeholder line.'],
+    scene: 'windmill-headland',
 };
 
 /**
