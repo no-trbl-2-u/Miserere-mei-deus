@@ -46,7 +46,7 @@ export const TRIAL_SETS: readonly TrialSet[] = Object.freeze([
 ]);
 
 /**
- * The player library: the grey office (A Plain Blow, A Plain Ward, A Plain
+ * The player library: the grey office (Blow, Ward, A Plain
  * Word) and the registered trial sets. New cards arrive only from a brief
  * T wrote or approved.
  */

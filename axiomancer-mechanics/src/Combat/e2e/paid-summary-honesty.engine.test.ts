@@ -29,7 +29,7 @@ const KNOWN_UPPER = new Set([
     'PIP', 'STAGGER', 'FORETELL', 'QUARTER', 'RIPOSTE',
     // direct damage and its family
     'DEAL', 'PIERCE', 'WRATH', 'CHAIN', 'BARRIER',
-    // VULNERABLE, printed by the grey office's A Plain Word
+    // VULNERABLE, printed by the grey office's Word
     'VULNERABLE',
     // structural / system words the faces already print in caps
     'FREE', 'ALL', 'WILD', 'VITAE', 'DOT', 'DOTS', 'HP',

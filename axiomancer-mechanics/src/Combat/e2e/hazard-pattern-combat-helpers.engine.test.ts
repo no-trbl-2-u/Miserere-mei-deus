@@ -43,7 +43,7 @@ import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { CombatManaDie, CombatEvent } from '../combat.encounter.types';
 
 // The library is the grey office. A Plain
-// Word is its control-track card (VULNERABLE, stat-debuff) and A Plain Blow
+// Word is its control-track card (VULNERABLE, stat-debuff) and Blow
 // its direct-damage card; no library card prints a DoT, so a minimal
 // sandbox POISON card (poison stays live — enemies inflict it) holds the DoT
 // seat for the adapter and presenter contracts.

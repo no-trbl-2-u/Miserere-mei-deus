@@ -88,7 +88,7 @@ test('axio_overview publishes live doctrine, not the retired STRIKE IS DEAD ban'
 
 test('axio_cards finds a known card by keyword substring', async () => {
   const replies = await drive([
-    { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'axio_cards', arguments: { query: 'plain', limit: 3 } } },
+    { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'axio_cards', arguments: { query: 'blow', limit: 3 } } },
   ])
   const text = replies.get(1)?.result?.content?.[0]?.text ?? ''
   assert.ok(text.length > 0)

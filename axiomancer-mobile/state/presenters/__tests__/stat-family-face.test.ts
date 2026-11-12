@@ -25,7 +25,7 @@ describe('S3 — stat family on the card face', () => {
         expect(fam.freeStatScaled).toBe('up');
     });
 
-    it('VULNERABLE is heart: A Plain Word prints +50% at heart 10', () => {
+    it('VULNERABLE is heart: Word prints +50% at heart 10', () => {
         const { scaled, fam } = faces('grey-word', { body: 5, mind: 5, heart: 10 });
         expect(scaled.heroText).toBe('+50%');
         expect(fam.statFamily).toBe('heart');

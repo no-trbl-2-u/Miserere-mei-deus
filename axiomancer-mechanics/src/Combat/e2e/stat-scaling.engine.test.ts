@@ -4,7 +4,7 @@
  * Pins, through the real engine:
  *   - the formula (`scaleAmount`): one-shot `base × stat ÷ 5`, repeating at
  *     half rate, flat never scales, floored, never below 1;
- *   - the worked numbers: A Plain Blow, A Plain Ward, A Plain
+ *   - the worked numbers: Blow, Ward, A Plain
  *     Word's VULNERABLE, and a Blow on a marked foe, at four builds;
  *   - VULNERABLE: lasts 2 turns, adds up and refreshes, uncapped;
  *   - the guard: every mechanic kind, rider field and payload key has a

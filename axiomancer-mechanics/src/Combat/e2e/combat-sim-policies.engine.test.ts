@@ -62,8 +62,8 @@ function loadout(cards: string[]): Character {
     return p;
 }
 
-// The starter mix: the grey office's three roles — A Plain Word (the
-// VULNERABLE status card), two Plain Blows (direct damage), A Plain Ward
+// The starter mix: the grey office's three roles — Word (the
+// VULNERABLE status card), two Blows (direct damage), Ward
 // (GUARD).
 const MIX = ['grey-word', 'grey-strike', 'grey-strike', 'grey-ward'];
 /** The status card of MIX (VULNERABLE) — the seat the DoT starter held. */
@@ -155,7 +155,7 @@ describe('greedy object reproduces the pinned decision sequences', () => {
     // not tune the game to them.
     //
     // Seed 11 vs Float-Eye (its HP phases since EN1f): a five-round victory,
-    // 23 plays, 5 VULNERABLE lands, all from A Plain Word.
+    // 23 plays, 5 VULNERABLE lands, all from Word.
     it('seed 11 vs FloatEye: a status victory', () => {
         const r = runOneEncounter(loadout(MIX), FloatEye, 11, 'greedy');
         expect({ outcome: r.outcome, rounds: r.rounds, plays: r.plays, statusPlays: r.statusPlays })

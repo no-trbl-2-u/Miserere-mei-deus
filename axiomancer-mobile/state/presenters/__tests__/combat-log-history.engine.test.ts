@@ -28,7 +28,7 @@ describe('selectCombatLogHistory — damage-dealt is narrated on both sides', ()
         expect(history).toHaveLength(1);
         expect(history[0].side).toBe('enemy');
         expect(history[0].text).toContain('You deal 9');
-        expect(history[0].text).toContain('A Plain Blow');
+        expect(history[0].text).toContain('Blow');
     });
 
     it('damage dealt TO the player reads as "It deals N to you"', () => {
@@ -54,7 +54,7 @@ describe('selectCombatLogHistory — card-played: FREE vs die-powered', () => {
     it('dieId === null reads as FREE', () => {
         const events: CombatEvent[] = [{ kind: 'card-played', cardId: 'grey-strike', useBottom: false, dieId: null }];
         const [line] = selectCombatLogHistory(stateWith(events));
-        expect(line.text).toContain('A Plain Blow');
+        expect(line.text).toContain('Blow');
         expect(line.text).toContain('FREE');
         expect(line.text).not.toContain('die-powered');
     });

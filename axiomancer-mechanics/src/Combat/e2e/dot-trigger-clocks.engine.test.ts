@@ -226,7 +226,7 @@ describe("engine call site — 'card-played' (player-side plays only, ratified)"
         const { state: after, events } = playCombatCard(before, { uid: 't1' }, true, 'fx-die');
 
         // Everything the foe lost beyond the card's own hit IS the clock tick
-        // (A Plain Blow lands no DoT of its own).
+        // (Blow lands no DoT of its own).
         expect(before.enemy.health - after.enemy.health).toBe(directDamageToEnemy(events) + 6);
         const ticks = findEvents(events, 'dot-tick').filter(e => e.effectId === 'ws3x_card_played');
         expect(ticks).toEqual([{ kind: 'dot-tick', effectId: 'ws3x_card_played', label: 'ws3x_card_played', amount: 6, target: 'enemy' }]);
@@ -241,7 +241,7 @@ describe("engine call site — 'card-played' (player-side plays only, ratified)"
         mockSequentialRng(0.5);
         const before = stateWithEnemyEffects(
             [ae('ws3x_card_played', 2, 4)],
-            // A Plain Ward's FREE line (GUARD 2) deals nothing itself, so the
+            // Ward's FREE line (GUARD 2) deals nothing itself, so the
             // whole enemy delta is the clock tick.
             [{ uid: 't1', cardId: 'grey-ward' }],
         );

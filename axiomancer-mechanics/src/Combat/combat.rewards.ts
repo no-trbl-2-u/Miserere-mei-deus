@@ -44,7 +44,7 @@ export const COMBAT_REWARD_POOL: readonly string[] = Object.freeze(
  * deck: three colourless shapes (`color: 'any'` — every die
  * colour powers each), so fight one teaches STRIKE, WARD, FREE-vs-PAID, and
  * the die-spend loop with zero colour arithmetic: Blow 5, Ward 3, and 2 of
- * A Plain Word.
+ * Word.
  *
  * `ensureStarterCards` writes this list VERBATIM (copies kept — 5 + 3 + 2, not
  * deduplicated) into a fresh character's `knownCards`, and every sim and
