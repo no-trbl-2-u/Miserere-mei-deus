@@ -17,8 +17,9 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, View } from 'react-native';
-import type { LayoutChangeEvent } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { ScreenBg } from '@/components/ScreenBg';
 import { BrassButton } from '@/components/experience/BrassButton';
@@ -39,13 +40,47 @@ import {
     questXpLine,
 } from '@/state/presenters/quest.copy';
 import { TYPE_ROLES } from '@/theme/axm';
-import { makeStyles } from '@/theme/runtime';
+import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The card's shape: width over height, and its widest extent in points. */
 const CARD_RATIO = 0.62;
 const CARD_MAX_WIDTH = 340;
 /** Before the first layout pass (and in a test, which never lays out). */
 const CARD_FALLBACK = { width: 260, height: 420 };
+/** Points of column left below the screen's foot before the scroll cue goes. */
+const CUE_SLACK = 6;
+
+/** True when the scrolled column still hides more than `CUE_SLACK` points below the screen. */
+export function hasMoreBelow(viewportHeight: number, contentHeight: number, offsetY: number): boolean {
+    return viewportHeight > 0 && contentHeight - viewportHeight - offsetY > CUE_SLACK;
+}
+
+/**
+ * The cue that the column scrolls: a fade up from the screen's foot with a
+ * chevron on it, shown while buttons or rows sit below the edge. It takes no touches.
+ */
+function ScrollCue() {
+    const AXM = usePalette();
+    return (
+        <View style={cueStyles.cue} pointerEvents="none" testID="quest-scroll-cue">
+            <Svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" pointerEvents="none" style={StyleSheet.absoluteFill}>
+                <Defs>
+                    <LinearGradient id="axmQuestCue" x1="0" y1="0" x2="0" y2="1">
+                        <Stop offset="0" stopColor={AXM.bg} stopOpacity={0} />
+                        <Stop offset="1" stopColor={AXM.bg} stopOpacity={0.96} />
+                    </LinearGradient>
+                </Defs>
+                <Rect x={0} y={0} width={100} height={100} fill="url(#axmQuestCue)" />
+            </Svg>
+            <Text style={[cueStyles.chevron, { color: AXM.sulfur }]} accessibilityElementsHidden>{'▾'}</Text>
+        </View>
+    );
+}
+
+const cueStyles = StyleSheet.create({
+    cue: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 56, alignItems: 'center', justifyContent: 'flex-end' },
+    chevron: { fontSize: 22, lineHeight: 24, marginBottom: 4 },
+});
 
 export default function QuestScreen() {
     const styles = useStyles();
@@ -58,6 +93,8 @@ export default function QuestScreen() {
     const router = useRouter();
     const reducedMotion = useReducedMotion();
     const [size, setSize] = useState(CARD_FALLBACK);
+    // The column's scroll: the screen's height, the column's height and how far it is scrolled.
+    const [scrollBox, setScrollBox] = useState({ view: 0, content: 0, y: 0 });
 
     useEffect(() => {
         if (!active && router.canGoBack()) router.back();
@@ -81,6 +118,19 @@ export default function QuestScreen() {
         setSize(prev => (prev.width === w && prev.height === h ? prev : { width: w, height: h }));
     };
 
+    const onScrollLayout = (e: LayoutChangeEvent) => {
+        const view = Math.round(e.nativeEvent.layout.height);
+        setScrollBox(prev => (prev.view === view ? prev : { ...prev, view }));
+    };
+    const onContentSize = (_w: number, content: number) => {
+        const next = Math.round(content);
+        setScrollBox(prev => (prev.content === next ? prev : { ...prev, content: next }));
+    };
+    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const y = Math.round(e.nativeEvent.contentOffset.y);
+        setScrollBox(prev => (prev.y === y ? prev : { ...prev, y }));
+    };
+
     // An offer already accepted reads as the work in progress.
     const accepted = vm.stage === 'offer' && vm.ahead !== null && vm.ahead.status !== 'unaccepted';
     const underway = vm.stage === 'waiting' || accepted;
@@ -93,7 +143,16 @@ export default function QuestScreen() {
 
     return (
         <ScreenBg scrollable={false}>
-            <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
+            <View style={styles.scrollFrame}>
+            <ScrollView
+                style={styles.scrollOuter}
+                contentContainerStyle={styles.scroll}
+                onLayout={onScrollLayout}
+                onContentSizeChange={onContentSize}
+                onScroll={onScroll}
+                scrollEventThrottle={32}
+                testID="quest-scroll"
+            >
                 {vm.active && (
                     <View style={styles.column} testID="quest-column">
                         {vm.paid && (
@@ -121,17 +180,18 @@ export default function QuestScreen() {
                                     testID={cardTestID}
                                 />
                             )}
-                            {vm.paid && vm.paid.itemNames.length > 0 && (
-                                <View style={styles.relicFoot} pointerEvents="none">
-                                    <RelicRise
-                                        key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
-                                        itemId={vm.paid.itemIds?.[0] ?? null}
-                                        name={vm.paid.itemNames[0]!}
-                                        reducedMotion={reducedMotion}
-                                    />
-                                </View>
-                            )}
                         </View>
+
+                        {vm.paid && vm.paid.itemNames.length > 0 && (
+                            <View style={styles.relicRow} pointerEvents="none">
+                                <RelicRise
+                                    key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
+                                    itemId={vm.paid.itemIds?.[0] ?? null}
+                                    name={vm.paid.itemNames[0]!}
+                                    reducedMotion={reducedMotion}
+                                />
+                            </View>
+                        )}
 
                         {vm.giver && (
                             <Text style={styles.giverName} testID="quest-giver-name">{vm.giver.name}</Text>
@@ -177,6 +237,8 @@ export default function QuestScreen() {
                     </View>
                 )}
             </ScrollView>
+            {hasMoreBelow(scrollBox.view, scrollBox.content, scrollBox.y) && <ScrollCue />}
+            </View>
 
             {vm.cardOffers.length > 0 && (
                 <CombatRewardsOverlay
@@ -192,6 +254,7 @@ export default function QuestScreen() {
 export const QUEST_COLUMN_MAX_WIDTH = 520;
 
 const useStyles = makeStyles((AXM) => ({
+    scrollFrame: { flex: 1 },
     scrollOuter: { flex: 1 },
     scroll: { padding: 14, paddingBottom: 18, flexGrow: 1 },
     column: { flex: 1, width: '100%', maxWidth: QUEST_COLUMN_MAX_WIDTH, alignSelf: 'center' },
@@ -223,7 +286,8 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
         marginBottom: 8,
     },
-    relicFoot: { position: 'absolute', left: 0, right: 0, bottom: 8, alignItems: 'center' },
+    // The turned-in relic sits in the column under the card, never over its rows.
+    relicRow: { alignItems: 'center', marginTop: 10 },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
     inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));
