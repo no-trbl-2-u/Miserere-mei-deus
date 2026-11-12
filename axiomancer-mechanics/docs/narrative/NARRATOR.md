@@ -17,20 +17,23 @@ places. T approves every line; nothing the Narrator drafts ships unapproved.
 | The Narrator writes | The Narrator never writes |
 |---|---|
 | Place and map lines, arrival lines, hazards, rests, dreams, cutscenes, travel prompts | Card text, keywords, rules text (the Rulebook) |
-| Quest names, quest log text, gate reasons, refusal lines told as narration | Anything someone speaks (the People) |
-| Enemy descriptions and journals, item flavor | Button labels |
-| Narration on the app's screens (defeat, death return, game over) | Story: what happened, who someone is |
+| Quest names, quest log text, gate reasons, refusal lines told as narration | Button labels |
+| Enemy descriptions and journals, item flavor | Story the overview does not carry: what happened, who someone is |
+| Narration on the app's screens (defeat, death return, game over) | |
+| Speech by a person on the story overview's cast sheet, inside the telling | |
 
-- A piece that needs someone to speak carries `[NPC Content Needed]` in place
-  of the speech, and says who would speak.
+- The Narrator is the Keeper (story overview, ruling 5), and a person on the
+  overview's cast sheet speaks inside his telling (ruling 11). The speech is
+  written, in the voice the cast sheet gives that person. `[NPC Content Needed]`
+  stays only for a speaker with no cast entry, and the piece says who would
+  speak.
 - An enemy with no story gets a description from its portrait line only, and
   no journal.
-- The story is `content/story/story-overview.md`. A fact it does not carry
+- The story is `content/story/story-overview.md` as it stands. A fact it does not carry
   does not exist; a detail a draft invents is listed as invented and ships
   only inside a line T approved.
 - Enemy descriptions: T ruled (2026-11-12) that the six `DRAFT (Claude)`
-  descriptions are replaced by approved drafts, and that his own description
-  of the saint beneath is kept as he wrote it. This binds chunk 177.8.
+  descriptions are replaced by approved drafts.
 
 ## The rules
 
@@ -55,25 +58,26 @@ Lintable ones are marked; `scripts/check-prose.mjs` learns them in chunk 177.2.
    (lint). They are told in panels, one paragraph a panel. A story panel holds
    at most 80 words and a screen at most six panels (T, 2026-11-12: "80 words,
    6 panels").
-4. No quotation marks; reported speech is set off with a comma. No
-   exclamation marks and no semicolons (lint).
+4. No quotation marks; speech, reported or a cast member's own, is set off
+   with a comma, as "Ann Greave says, ..." (lint). No exclamation marks and no
+   semicolons (lint).
 5. Canonical player terms keep their spelling (`VITAE`, `GUARD`) (review).
 6. No sentence of McCarthy's or Elden Ring's is reused, and no name, place or
    character of theirs (review; the lint cannot see this).
-7. Violence is told flat and never dwelt on. The prologue's assault stays
-   off-screen and the child's death is named, never shown (review; story
-   overview, prologue step 9).
+7. Violence is told flat and never dwelt on. A child's death is named, never
+   shown (review; story overview, ruling 12).
 8. Diction. Archaic and biblical words are used sparingly ("bade", "yet",
    "whence"); never "thee", "thou", "hath". Clauses may chain with "and",
    inside the 40-word ceiling. One long simile at most per piece. The land and
-   the sea do not care. Second person for what the player meets; third person,
-   past tense, for journals and memories.
+   the sea do not care. The Narrator is the Keeper and may say "I". He
+   addresses the player as "you", in the present tense, for what the player
+   meets; journals and memories are third person, past tense.
 
 ## The five cruelty stops
 
 Every draft is written at a stop T picks ("How cruel?"). The same scene at
 each is in `.claude/skills/narrate/SKILL.md`. Stops stack: a higher stop is
-never more gore, and the prologue's assault stays off-screen at every stop.
+never more gore, and a child's death is named, never shown, at every stop.
 
 | Stop | Name | What it means |
 |---|---|---|
@@ -85,8 +89,8 @@ never more gore, and the prologue's assault stays off-screen at every stop.
 
 Stops 2 and 3 were not on any ballot. T approved them as written, with their
 samples in `.claude/skills/narrate/SKILL.md` (T, 2026-11-12: "approve stops 2
-and 3 as written"). When T asks for many pieces and says `mix`, the rotation (T, 2026-11-11)
-is plain, cruel, plain, grief, and round again.
+and 3 as written"). When T asks for many pieces at once, the rotation (story overview, ruling 12)
+is stops 1, 2, 1, 3, 1, 4, 1, 5, and round again.
 
 ## The calibration set
 
