@@ -10,7 +10,7 @@
 - **T, 2026-11-10:** the Narrator is for "enemy journals, quests, story encounters, narration, anything but cards and NPCs", and "I'm looking for blood meridian level prose".
 - **T, 2026-11-11:** "determine every single \"content\" item in chapter 1 (except for NPCs and cards), then write a piece of content for each in this voice ... Then plot all the rows in order to add these content items." Scope: "Every content tag, BUT, if you decide an NPC will need to speak, just put [NPC Content Needed]".
 - **T, 2026-11-11, on the rules the voice breaks:** "Yes, plot them first", and for how: "Narrator exemption" (the rules stay for cards, rules text and NPC lines; the Narrator's surfaces get their own).
-- **The drafts:** `plan/ballots/narrator-chapter1.md` (113 prose lines, 13 names, 4 spoken lines marked `[NPC Content Needed]`) and its review page `plan/ballots/narrator-chapter1.ballot.html`.
+- **The drafts:** withdrawn unvoted on 2026-11-12 (T: the story is rewritten from scratch). The ledger `plan/ballots/narrator-chapter1.md` (113 prose lines, 13 names) and its review page were deleted; both are redrawn from the new Act 1 story.
 
 ### What exists today
 
@@ -57,7 +57,7 @@
 
 ## Acceptance
 
-- **A3** T's verdict on the drafts is in `plan/ballots/narrator-chapter1.md` (attended).
+- **A3** T's verdict on the drafts is in `plan/ballots/narrator-chapter1.md` (attended; the ledger is redrawn from the new Act 1 story first, 2026-11-12).
 - **A4** Map blurbs. Every approved map blurb is in `breakwater.layout.ts`; the map sheet shows the longest one unclipped at phone width.
 - **A5** Arrival lines. Every approved arrival line is in `arrival-lines.ts`, keyed by node; the fight reveal shows the longest one unclipped.
 - **A6** Event lines. Every approved hazard, rest, dream, travel, village and loot cache action line is in `content.ts`; each event screen shows its longest line unclipped.
@@ -76,7 +76,7 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 Measure: 9 open · 2 closed · next A12
 
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
-  - T ticks and notes on the review page, presses Generate and pastes the sheet; the session writes the verdict under `## Verdicts` in `plan/ballots/narrator-chapter1.md`, redraws any line T asks for at another stop, and repeats until T is done.
+  - Waits on the redrawn ledger and review page (the first set was withdrawn on 2026-11-12, before any verdict). T ticks and notes on the review page, presses Generate and pastes the sheet; the session writes the verdict under `## Verdicts` in `plan/ballots/narrator-chapter1.md`, redraws any line T asks for at another stop, and repeats until T is done.
   - Measure: every line in the ledger is approved (with its final text), rejected, or left for later, by T's word.
 - [ ] **177.4** Map blurbs in the game · S · closes A4, A9 · needs 177.3, 177.10 · alias: NV1d
   - `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`, 33 lines.

@@ -11,10 +11,9 @@ Carried from the v1 brief `phase_BW1_breakwater_rebuild.md` at the nexus v2 cut-
 - The `/plot` request (T, 2026-10-28, attended): "plan and plot how to go from where we are now to the result we
   just spoke of", and "make each node kind stand out so the player knows more about the node more quickly ...
   different color, thematic SVGs ... some way to hide the intersecting lines between the map and the icon".
-- The pitch `braindump/2026-10-28-breakwater-chapter-1-map.md`: the node list (44 nodes, 42 roads and one travel pair, kinds, plate
-  positions), T's rulings, the open-PR alignment check, the Handoff block this brief carries over.
-- T's vision, `plan/revamp/breakwater-vision.md` (T: "I REALLY need you to take this down as an important note").
-  It outranks QL1d's routing in `plan/revamp/breakwater-map.md` where they differ.
+- The pitch (`braindump/2026-10-28-breakwater-chapter-1-map.md`) and T's vision (`plan/revamp/breakwater-vision.md`):
+  both deleted on 2026-11-12 with the story wipe (T). The node list they held is the table below; the gate rules
+  they held are this spec's Design. Both are recoverable at commit `f2e4482`.
 - The node board, https://claude.ai/artifact/1jCcmhZbyaWXyE2SZgFRmz (T's private artifact; v3 is the list below).
 - Rules this builds on, open as plot PRs when this was plotted: NK1 (#1049, D112: the kinds, the Anvil in the
   village, same-map travel), WR1 (#1050, D113: walk the roads, revisit), MQ1 (#1051: several quests, quest gates,
@@ -135,10 +134,60 @@ for BW1b and BW1c (the map screen changes).
 
 ### The node list
 
-The pitch's table is the source (`braindump/2026-10-28-breakwater-chapter-1-map.md`, "The node list"): code, place,
+The table below is the source (board v4, moved here from the deleted pitch on 2026-11-12): code, place,
 kind, plate position, roads. Kinds by count: start 1, village 2, quest 4, chapter boss 1, elite 3, hazard 6,
 fight 15, rest 3, loot cache 3, cutscene 3, travel 3 (44). A call answered on the PR that changes a kind or a road
 edits that table in this branch.
+
+| Code | Place | Kind | Whose call | Plate x, y | Roads to |
+|---|---|---|---|---|---|
+| W1 | Windmill | start | T | 0.497, 0.657 | W2 |
+| W2 | Gallows crossroads | fight | T (confirmed v3) | 0.586, 0.680 | W1, W3, W4, M1 |
+| W3 | Field road | fight | T (confirmed v3) | 0.633, 0.592 | W2, H1 |
+| W4 | West cliff road | rest | T (confirmed v3) | 0.305, 0.665 | W2, W5 |
+| W5 | Keep causeway | elite fight | T (confirmed v3) | 0.338, 0.607 | W4, K1 |
+| K1 | Keep gate (needs the key) | quest | T | 0.205, 0.559 | W5, K2 |
+| K2 | Sea keep | chapter boss | T | 0.160, 0.499 | K1 |
+| H1 | Quay end | fight | T (confirmed v3) | 0.639, 0.499 | W3, H2, T1 |
+| H2 | Crane quay | fight | T (confirmed v3) | 0.516, 0.500 | H1, H3 |
+| H3 | Harbour light pier | fight | T (confirmed v3) | 0.291, 0.439 | H2, H4 |
+| H4 | The wreck (quest hazard) | hazard | T | 0.121, 0.356 | H3, H5 |
+| H5 | Moored ship | rest | T (confirmed v3) | 0.400, 0.386 | H4, H6, H7 |
+| H6 | Sea cave mouth (to the cove) | travel | T | 0.459, 0.303 | H5, C0 (travel) |
+| H7 | Long pier | fight | T (confirmed v3) | 0.533, 0.383 | H5, H8 |
+| H8 | Pier end | loot cache | T (confirmed v3) | 0.605, 0.415 | H7 |
+| C0 | Cave face (back to the sea cave) | travel | T | 0.332, 0.752 | H6 (travel), C1 |
+| C1 | Sea cave | elite fight | T | 0.301, 0.797 | C0, C2 |
+| C2 | Fishermen’s camp | quest | T | 0.369, 0.819 | C1 |
+| T1 | Harbour steps | fight | T (confirmed v3) | 0.705, 0.471 | H1, T2 |
+| T2 | Bridge approach | fight | T (confirmed v3) | 0.762, 0.443 | T1, B1, T3 |
+| T3 | Town gate | fight | T (confirmed v3) | 0.707, 0.414 | T2, T4, T5 |
+| T4 | Harbour town | village | T | 0.608, 0.328 | T3 |
+| T5 | Back lanes | hazard | T (confirmed v3) | 0.749, 0.340 | T3, T6 |
+| T6 | Upper town | fight | T (confirmed v3) | 0.664, 0.295 | T5, L1 |
+| B1 | River bridge | quest | T | 0.819, 0.421 | T2, B2 |
+| B2 | Far bank (to Chapter 2) | travel | T | 0.963, 0.423 | B1 |
+| L1 | Cliff crossroads | fight | T (confirmed v3) | 0.579, 0.225 | T6, L2, L3, D1 |
+| L2 | Clifftop chapel | cutscene | T (confirmed v3) | 0.551, 0.179 | L1 |
+| L3 | Cliff road | rest | T (confirmed v3) | 0.450, 0.197 | L1, L4 |
+| L4 | Lighthouse path | elite fight | T | 0.353, 0.147 | L3, L5 |
+| L5 | Lighthouse (gives the key) | quest | T | 0.262, 0.108 | L4 |
+| D1 | Fishing hamlet | fight | T (confirmed v3) | 0.767, 0.229 | L1, D2, D3 |
+| D2 | Boat sheds | loot cache | T (confirmed v3) | 0.682, 0.241 | D1 |
+| D3 | Hamlet rise | fight | T (confirmed v3) | 0.867, 0.191 | D1, D4 |
+| D4 | Tower switchbacks | hazard | T (confirmed v3) | 0.827, 0.129 | D3, D5 |
+| D5 | Old watchtower | cutscene | T (confirmed v3) | 0.841, 0.068 | D4 |
+| M1 | South fork | fight | T (confirmed v3) | 0.649, 0.790 | W2, M2, P1 |
+| M2 | River meadow | hazard | T (confirmed v3) | 0.854, 0.739 | M1, M3, M4 |
+| M3 | Riverbank | loot cache | T (confirmed v3) | 0.858, 0.803 | M2 |
+| M4 | Manor road | hazard | T (confirmed v3) | 0.777, 0.645 | M2, M5 |
+| M5 | Walled manor | village | T | 0.740, 0.571 | M4 |
+| P1 | Foothills | hazard | T (confirmed v3) | 0.561, 0.894 | M1, P2 |
+| P2 | Mountain path | fight | T (confirmed v3) | 0.450, 0.924 | P1, P3 |
+| P3 | High pass | cutscene | T (confirmed v3) | 0.277, 0.994 | P2 |
+
+Positions are fractions of the 2400px coast plate (`act1-coast.webp`), read from T's sketch. Board:
+https://claude.ai/artifact/1jCcmhZbyaWXyE2SZgFRmz (private to T).
 
 ### T's Chapter 1 lines (filled by T in BW1d)
 
@@ -170,7 +219,7 @@ and the questline library test pass.
 
 ### The Narrator's drafts for the chain (spec 177, 2026-11-11)
 
-`plan/ballots/narrator-chapter1.md` holds drafted options for BW1d: its Quest nodes (Q), Quest chain (C) and Names (N-01 to N-10) sections cover each quest node's description and refusal line, the four steps' names, asks and objectives, the key, and the two gate reasons. They are options for T, not T's text. Lines T approves there run past MB-1's 20 words, so BW1e lands after spec 177's lint chunk (alias NV1b), which gives Narrator fields their own caps. Giver and turn-in lines someone speaks are not drafted there; they belong to the People voice.
+**Withdrawn 2026-11-12 (T: the story is rewritten from scratch); the drafts are redrawn from the new Act 1 story.** `plan/ballots/narrator-chapter1.md` held drafted options for BW1d: its Quest nodes (Q), Quest chain (C) and Names (N-01 to N-10) sections cover each quest node's description and refusal line, the four steps' names, asks and objectives, the key, and the two gate reasons. They are options for T, not T's text. Lines T approves there run past MB-1's 20 words, so BW1e lands after spec 177's lint chunk (alias NV1b), which gives Narrator fields their own caps. Giver and turn-in lines someone speaks are not drafted there; they belong to the People voice.
 
 ## Contracts
 
