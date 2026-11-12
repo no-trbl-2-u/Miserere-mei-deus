@@ -92,7 +92,7 @@ Each map asks one question and answers it.
 
 ## Chapter 1, the Breakwater: the beat sheet
 
-22 of the 44 nodes carry a scene that plays before the node's own event
+22 of the 43 nodes carry a scene that plays before the node's own event
 (spec 178). The order below is the order the stop rotation runs in.
 
 | # | Node | Stop | Job | What the scene tells | Must already know | Who speaks |
@@ -127,7 +127,7 @@ an early visit; the ordered story sits in the quest lines, which the engine
 gates. Four scenes lean on earlier ones and the graph forces each order: the
 moored ship, the cave face and the fishermen's camp follow the wreck; the sea
 keep needs the key; the far bank needs the keep beaten. The mandatory road is
-27 nodes and carries 16 of the 22 scenes.
+27 nodes and carries 17 of the 22 scenes.
 
 ## The cast of Chapter 1
 
@@ -152,7 +152,7 @@ One person per portrait the game holds today (stand-ins; T swaps art, D88).
 | 1 | The Boat on the Rocks | Windmill, Ann Greave | A town boat did not come in. Find her men. | Fishermen's camp, Abel Corse |
 | 2 | The Light He Saw | Fishermen's camp, Abel Corse | The master steered for a light on the head. Ask the warden of the tower who lit it. | Lighthouse, on arrival. Pays the key. |
 | 3 | The Paid Key | Lighthouse, Enoch Marrable | No one lit the tower. The light showed from under the keep. The key he was paid opens the keep gate. | Keep gate, Serjeant Dunmore. Opens the sea keep. |
-| 4 | The Saint Beneath | Keep gate | Go down to the lord the town prays to and take what he bought. | Sea keep, the boss. Then the bridge opens. |
+| 4 | The Saint Beneath | Keep gate | Go down to the lord the town prays to and take what he bought. | The boss is beaten at the sea keep (`bw-k2`); turned in at the river bridge (`bw-b1`), Tolliver Pease, which opens the bridge. |
 
 XP and rewards for each step are T's to set and are not ruled here.
 
