@@ -29,7 +29,7 @@ import { createEventEmitter } from '../Game/events';
 import { nullAdapter } from '../Game/persistence/null.adapter';
 import { devSetLevel } from './dev-tools';
 import { getMapDefinition, createMapState } from '../World/map.registry';
-import { resolveMapEvent, settleArrival } from '../World';
+import { resolveMapEvent, settleArrival, isBeforeScene } from '../World';
 import { moveToNode, unblockMapRoute, teleportToNode } from '../World/world.reducer';
 import type { ResolvedEvent } from '../World/MapEvents/types';
 import type { WorldState } from '../World/types';
@@ -114,16 +114,23 @@ async function arrive(
         }
     }
 
-    const before = store.getState();
-    const result = resolveMapEvent(before);
-    store.setState({
-        player: result.state.player,
-        world: result.state.world,
-        quests: result.state.quests,
-        flags: result.state.flags,
-    });
-    logState('labyrinth:resolveMapEvent', before, store.getState(), { nodeId, event: result.event });
-    log(describeEvent(result.event));
+    const resolveOnce = (): ReturnType<typeof resolveMapEvent> => {
+        const before = store.getState();
+        const resolved = resolveMapEvent(before);
+        store.setState({
+            player: resolved.state.player,
+            world: resolved.state.world,
+            quests: resolved.state.quests,
+            flags: resolved.state.flags,
+        });
+        logState('labyrinth:resolveMapEvent', before, store.getState(), { nodeId, event: resolved.event });
+        log(describeEvent(resolved.event));
+        return resolved;
+    };
+    // A labyrinth reads no scene table, so no before-scene comes
+    // back here today; the rule matches the gauntlet walker all the same.
+    const first = resolveOnce();
+    const result = isBeforeScene(first.event) ? resolveOnce() : first;
 
     let combatOutcome: CombatOutcome | null = null;
     if (result.event.kind === 'encounter') {

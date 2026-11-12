@@ -165,7 +165,7 @@ function scrubMap(map: MapState): MapState {
     const gone = (id: NodeId | null | undefined): boolean => id != null && id in cut;
     const lists = [
         map.completedNodes, map.availableNodes, map.lockedNodes, map.discoveredNodes, map.consumedNodes,
-        map.retiredEliteNodes ?? [], map.eliteUpgradeTakenNodes ?? [],
+        map.retiredEliteNodes ?? [], map.eliteUpgradeTakenNodes ?? [], map.seenScenes ?? [],
     ];
     const touched = gone(map.currentNode) || gone(map.pendingArrival) || gone(map.arrivedFrom)
         || lists.some(l => l.some(gone))
@@ -183,6 +183,7 @@ function scrubMap(map: MapState): MapState {
         consumedNodes: keep(map.consumedNodes),
         ...(map.retiredEliteNodes ? { retiredEliteNodes: keep(map.retiredEliteNodes) } : {}),
         ...(map.eliteUpgradeTakenNodes ? { eliteUpgradeTakenNodes: keep(map.eliteUpgradeTakenNodes) } : {}),
+        ...(map.seenScenes ? { seenScenes: keep(map.seenScenes) } : {}),
         ...(gone(map.pendingArrival) ? { pendingArrival: null } : {}),
         ...(gone(map.arrivedFrom) ? { arrivedFrom: cut[map.arrivedFrom!]! } : {}),
         hazardOutcomes: map.hazardOutcomes.filter(o => !gone(o.nodeId)),

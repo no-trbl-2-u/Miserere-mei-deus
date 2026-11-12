@@ -39,7 +39,7 @@ import { learnCard, replaceCard } from '../Cards';
 import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
-import { resolveMapEvent, settleArrival } from '../World';
+import { resolveMapEvent, settleArrival, isBeforeScene } from '../World';
 import { answerUnsettledArrival } from '../World/MapEvents/resolve-map-event';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
 import { acceptQuestStep, advanceEncounterKills, settleQuestLog, turnInQuestStep } from '../World/questline';
@@ -448,7 +448,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         }
 
         case 'PROCESS_NODE': {
-            return resolveMapEvent(state).state;
+            // A node's before-scene plays and leaves the node
+            // owed: resolve again so the action reaches the node's own event.
+            const first = resolveMapEvent(state);
+            return isBeforeScene(first.event) ? resolveMapEvent(first.state).state : first.state;
         }
 
         case 'APPLY_DIALOGUE': {
