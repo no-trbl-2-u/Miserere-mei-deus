@@ -1,5 +1,5 @@
 /**
- * NV1o: a long cutscene panel is shown as pages (spec 177, A16).
+ * A long cutscene panel is shown as pages, split only at sentence ends.
  *
  * Pure: the split function, then the real Chapter 1 scenes through it.
  * Hermetic = self-contained + deterministic + isolated. See docs/testing.md.

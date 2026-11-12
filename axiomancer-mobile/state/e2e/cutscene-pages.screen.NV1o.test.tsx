@@ -1,5 +1,5 @@
 /**
- * NV1o: the cutscene screen steps through the pages of a long panel (spec 177, A16).
+ * The cutscene screen steps through the pages of a long panel.
  *
  * S-09 (`bw-t2`, one panel of 383 characters) is played from the real scene text.
  * No sentence end puts it into two pages of 240 or fewer, so it reads as three:
@@ -42,6 +42,7 @@ beforeEach(() => { jest.useFakeTimers(); mockBack.mockReset(); });
 afterEach(() => { jest.useRealTimers(); });
 
 describe('S-09, one panel of 383 characters', () => {
+    // guard-test: the scene text is unchanged by this chunk; this pins the one-panel, 383-character premise the page test relies on.
     it('is one ledger panel over the page limit', () => {
         expect(S09.lines).toHaveLength(1);
         expect(S09.lines[0].length).toBe(383);
@@ -75,6 +76,7 @@ describe('S-09, one panel of 383 characters', () => {
         expect(store.getState().event.pending).toBeNull();
     });
 
+    // guard-test: SKIP already ended a scene before paging; this pins that paging leaves it unchanged.
     it('SKIP still ends the scene from the first page', () => {
         const store = makeStore();
         const tree = render(
@@ -86,6 +88,7 @@ describe('S-09, one panel of 383 characters', () => {
         expect(store.getState().event.pending).toBeNull();
     });
 
+    // guard-test: the size function is unchanged; this pins that a shorter page steps up from the whole panel's size.
     it('a page sets at a larger type size than the whole panel did', () => {
         expect(cutsceneLineSize(S09.lines[0].slice(0, 130))).toBeGreaterThan(cutsceneLineSize(S09.lines[0]));
     });
