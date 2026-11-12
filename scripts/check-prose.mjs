@@ -163,7 +163,7 @@ export const NARRATOR_SURFACES = {
   'cache-action': { cap: 30, label: 'loot cache action' },
   'line':         { cap: 45, label: 'hazard, rest, dream, travel, quest and description line' },
   'screen':       { cap: 40, label: 'screen copy' },
-  'journal':      { cap: 110, label: 'journal' },
+  'journal':      { cap: 200, label: 'journal' },
   'story':        { cap: null, label: 'story screen or cutscene panel', panels: true },
 }
 
@@ -177,9 +177,8 @@ export const NARRATOR_MAX_PANELS = 6
  * Where the Narrator writes. `fields` maps a name to a surface; a literal is a
  * Narrator literal when the object key it sits under, or else the top-level
  * `const`/`function` that holds it, is named here. Literals joined with `+`
- * are one line. Enemy journal bodies are deliberately absent: T's own page for
- * the saint beneath is longer than the journal cap, so it stays on the old
- * rules until T rules (spec 177 PARKED).
+ * are one line. Enemy journal bodies are the `journal` surface (cap 200: T,
+ * 2026-11-12, raised so his own saint beneath page passes unchanged).
  */
 export const NARRATOR_FIELDS = [
   { file: 'axiomancer-mechanics/src/World/MapEvents/content.ts', fields: {
@@ -221,7 +220,7 @@ export const NARRATOR_FIELDS = [
     questRewardSource: 'screen', spareGearSource: 'screen', eliteDropSource: 'screen',
   } },
   { file: 'axiomancer-mechanics/src/Enemy/enemy.library.ts', fields: {
-    description: 'line',
+    description: 'line', body: 'journal',
   } },
 ]
 

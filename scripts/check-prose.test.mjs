@@ -175,13 +175,14 @@ test('Narrator field: a line over its surface cap fails, at the cap passes', () 
   assert.deepEqual(rules(onField('description', 'map-blurb', short(19))), ['narrator-line-cap'])
   assert.deepEqual(rules(onField('description', 'screen', short(41))), ['narrator-line-cap'])
   assert.deepEqual(rules(onField('description', 'cache-action', short(31))), ['narrator-line-cap'])
-  assert.deepEqual(rules(onField('description', 'journal', short(111))), ['narrator-line-cap'])
+  assert.deepEqual(rules(onField('description', 'journal', short(201))), ['narrator-line-cap'])
+  assert.deepEqual(onField('description', 'journal', short(200)), [])
 })
 
 test('the surface caps are the ones T kept (2026-11-12)', () => {
   const caps = Object.fromEntries(Object.entries(NARRATOR_SURFACES).map(([k, v]) => [k, v.cap]))
   assert.deepEqual(caps, {
-    'map-blurb': 18, 'arrival-line': 32, 'cache-action': 30, line: 45, screen: 40, journal: 110, story: null,
+    'map-blurb': 18, 'arrival-line': 32, 'cache-action': 30, line: 45, screen: 40, journal: 200, story: null,
   })
 })
 
@@ -330,6 +331,18 @@ test('the saint beneath description passes the Narrator rules unchanged', () => 
   const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
   assert.match(text, /A great fish with an old man/)
   assert.deepEqual(scanSource(text, retired, { file }), [])
+})
+
+test('the saint beneath journal page passes the journal surface unchanged, and enemy journal bodies are Narrator fields', () => {
+  const file = 'axiomancer-mechanics/src/Enemy/enemy.library.ts'
+  const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
+  assert.equal(NARRATOR_FIELDS.find((r) => r.file === file).fields.body, 'journal')
+  assert.match(text, /Something in the dark took up his anger/)
+  assert.deepEqual(scanSource(text, retired, { file }), [])
+  // The page is far past the old 110 cap, so the pin is real.
+  const page = text.slice(text.indexOf("id: 'codex-saint-beneath'"), text.indexOf("addedIn: RECAST_ADDED", text.indexOf("id: 'codex-saint-beneath'")))
+  const body = [...page.matchAll(/'((?:[^'\\]|\\.)*)'/g)].slice(2).map((m) => m[1]).join('')
+  assert.ok(body.split(/\s+/).length > 110)
 })
 
 test('--list prints both rule sets and the Narrator fields', () => {
