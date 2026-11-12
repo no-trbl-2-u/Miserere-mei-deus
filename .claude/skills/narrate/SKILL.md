@@ -11,7 +11,8 @@ never writes a line into game source. It asks one question first, **"How
 cruel?"**, and writes at the stop T picks.
 
 Read before drafting: `plan/ballots/narrator-voice.md` (the target, T's
-locked passages and rejections) and, once it exists,
+locked passages and rejections), `plan/ballots/narrator-chapter1.md` (the
+approved Chapter 1 ledger, the worked example of the voice) and
 `axiomancer-mechanics/docs/narrative/NARRATOR.md` (the voice bible; it wins
 where it and this file disagree).
 
@@ -30,10 +31,12 @@ quote never").
 - The land and the sea do not care. Things are older than the people who
   named them.
 - Violence is told flat, in few words, and the sentence moves on.
-- No quotation marks. Reported speech is set off with a comma. No exclamation
-  marks, no semicolons, no dashes.
-- Second person ("you") for what the player meets. Third person, past tense,
-  for journals and memories.
+- No quotation marks. Speech, reported or a cast member's own, is set off
+  with a comma ("Ann Greave says, ..."). No exclamation marks, no semicolons,
+  no dashes.
+- The Narrator is the Keeper (story overview, ruling 5) and may say "I". He
+  addresses the player as "you", in the present tense, for what the player
+  meets. Third person, past tense, for journals and memories.
 - Canonical player terms keep their spelling: `VITAE`, `GUARD`.
 
 ## 2. Scope
@@ -41,12 +44,15 @@ quote never").
 | The Narrator writes | The Narrator never writes |
 |---|---|
 | Place and map lines, arrival lines, hazards, rests, dreams, cutscenes, travel prompts | Card text, keywords, rules text (the Rulebook) |
-| Quest names, quest log text, gate reasons, refusal lines told as narration | Anything someone speaks (the People) |
-| Enemy descriptions and journals, item flavor | Button labels |
-| Narration on the app's screens (defeat, death return, game over) | Story: what happened, who someone is |
+| Quest names, quest log text, gate reasons, refusal lines told as narration | Button labels |
+| Enemy descriptions and journals, item flavor | Story the overview does not carry: what happened, who someone is |
+| Narration on the app's screens (defeat, death return, game over) | |
+| Speech by a person on the story overview's cast sheet, inside the telling | |
 
-If the piece needs someone to speak, do not write the speech. Put
-`[NPC Content Needed]` in its place and say who would speak.
+A person on the overview's cast sheet speaks inside the Keeper's telling
+(ruling 11): write the speech, in the voice the cast sheet gives that person.
+Put `[NPC Content Needed]` in place of the speech only for a speaker with no
+cast entry, and say who would speak.
 
 If an enemy has no story in `axiomancer-mechanics/content/story/` or its
 library entry, write a description from its portrait line only. Do not give
@@ -60,22 +66,22 @@ it a journal.
    T gave a stop in the request ("at 4", "--stop 2", "grief", "plain"). The
    tool takes four options, so offer stops 1, 3, 4 and 5 with their one-line
    meanings from section 4 and say in the question that typing `2` picks
-   Hard and typing `mix` picks the rotation (section 6). Recommend the stop
+   Hard and that many pieces at once take the rotation (section 6). Recommend the stop
    that fits the surface (section 5) and mark it "(Recommended)".
 3. **Read the canon** for the subject before writing: the node's row in
    `World/MapEvents/content.ts` (`BREAKWATER_CHAPTER_KINDS` and its foe), the
    foe's entry in `Enemy/enemy.library.ts`, the quest in
    `World/breakwater-chapter.questline.ts`, the story overview
-   (`axiomancer-mechanics/content/story/story-overview.md`). Use only facts
-   found there, plus small physical detail.
+   (`axiomancer-mechanics/content/story/story-overview.md`, as it stands,
+   including its cast sheet for who speaks and how). Use only facts found
+   there, plus small physical detail.
 4. **Draft one piece** at the stop, inside the surface's word cap (section
    5). If T asked for options, draft the same piece at the stops asked for.
 5. **Check it** against section 7 before showing it.
 6. **Show it** as in section 8, with what it invented and a confidence score.
-7. **On T's word**, record the approved text. It goes in the ledger T names (the Chapter 1
-   ledger `plan/ballots/narrator-chapter1.md` was withdrawn on 2026-11-12
-   and is redrawn once the Act 1 story is written). Putting it in the game is a plotted chunk's
-   job (spec 177), never this skill's.
+7. **On T's word**, record the approved text. It goes in the ledger T names
+   (Chapter 1's is `plan/ballots/narrator-chapter1.md`). Putting it in the
+   game is a plotted chunk's job (spec 177), never this skill's.
 
 ## 4. The five stops
 
@@ -127,9 +133,8 @@ hurt.
 > at each dawn that she might not sleep through the boat.
 
 Stops stack: 4 keeps what 3 has, and 5 may be as cruel as 4. What changes at
-5 is where the weight falls. A higher stop is never more gore. The prologue's
-assault stays off-screen at every stop, and a child's death is named and
-never shown (story overview, prologue step 9).
+5 is where the weight falls. A higher stop is never more gore. A child's death
+is named and never shown, at every stop (story overview, ruling 12).
 
 ## 5. Surfaces: caps and the stop that usually fits
 
@@ -146,12 +151,11 @@ never shown (story overview, prologue step 9).
 The usual stop is the recommendation offered in the question. T's pick wins.
 An elite node draws one of several foes, so its arrival line names none.
 
-## 6. The mix
+## 6. The rotation
 
-When T asks for many pieces at once and says `mix`, rotate as T set it on
-2026-11-11: plain, cruel, plain, grief, and round again (every other piece
-at stop 1; the ones between alternate stops 4 and 5). Label each piece with
-its stop.
+When T asks for many pieces at once, rotate through the stops 1, 2, 1, 3, 1,
+4, 1, 5, and round again (story overview, ruling 12; every other piece is at
+stop 1). Label each piece with its stop.
 
 ## 7. Checks before showing a draft
 
@@ -159,10 +163,11 @@ its stop.
 - No quotation mark, exclamation mark, semicolon or dash.
 - No sentence, name, place or character from McCarthy or from Elden Ring.
 - Every fact is in the canon files, or is listed as invented.
-- Nothing is spoken. Speech is `[NPC Content Needed]`.
+- Speech belongs to a person on the overview's cast sheet, set off with a
+  comma, in the voice the sheet gives. A speaker with no cast entry is
+  `[NPC Content Needed]`.
 - It is at the stop asked for: read section 4's five and place it.
-- It does not reveal the prologue outright (story overview, ruling 10),
-  unless the surface is a memory.
+- A child's death is named, never shown.
 
 ## 8. What to show T
 
