@@ -127,7 +127,7 @@ async function arrive(
         log(describeEvent(resolved.event));
         return resolved;
     };
-    // A labyrinth reads no scene table (spec 178), so no before-scene comes
+    // A labyrinth reads no scene table, so no before-scene comes
     // back here today; the rule matches the gauntlet walker all the same.
     const first = resolveOnce();
     const result = isBeforeScene(first.event) ? resolveOnce() : first;

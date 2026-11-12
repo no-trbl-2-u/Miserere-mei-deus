@@ -1,5 +1,5 @@
 /**
- * SS1a (spec 178) - the scene slot: a node's scene, then its event.
+ * The scene slot: a node's scene, then its event.
  *
  * Fixture nodes on the Breakwater's opening road, over a cleared registry (no
  * authored content): the windmill `bw-w1` as an empty waypoint, `bw-w2` a

@@ -2,7 +2,7 @@
  * `resolveMapEvent` — the map-event dispatcher.
  *
  * Walks the contract:
- *   S. The scene slot (spec 178, SS1a): a node whose `before` scene
+ *   S. The scene slot: a node whose `before` scene
  *      (`registerNodeScene`) has not played this run returns that scene as
  *      `{ kind: 'cutscene', slot: 'before' }`, applies its effect and records
  *      the node in `seenScenes`, and does nothing else: the arrival stays
@@ -159,7 +159,7 @@ export function _clearMapEventPoolRegistry(): void {
     nodeScenes.clear();
 }
 
-// ─── The scene slot (spec 178, SS1a) ──────────────────────────────────────────
+// ─── The scene slot ──────────────────────────────────────────────────────────────
 
 /**
  * Node scenes, keyed `continent:map:node` like the node overrides. A node with

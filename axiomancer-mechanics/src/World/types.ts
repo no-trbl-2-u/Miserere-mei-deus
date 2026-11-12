@@ -291,7 +291,7 @@ export interface BlockedRoute {
  *                             offers cards only (`markEliteUpgradeTaken`).
  *                             Absent = none taken, the same way.
  * @property seenScenes      - Nodes whose scene slot (`NodeScene.before`) has
- *                             played this run (spec 178): a seen scene never
+ *                             played this run: a seen scene never
  *                             plays again. Absent = none seen; saves written
  *                             before this field default to that, with no
  *                             migration.

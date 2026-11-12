@@ -448,7 +448,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         }
 
         case 'PROCESS_NODE': {
-            // A node's before-scene (spec 178) plays and leaves the node
+            // A node's before-scene plays and leaves the node
             // owed: resolve again so the action reaches the node's own event.
             const first = resolveMapEvent(state);
             return isBeforeScene(first.event) ? resolveMapEvent(first.state).state : first.state;

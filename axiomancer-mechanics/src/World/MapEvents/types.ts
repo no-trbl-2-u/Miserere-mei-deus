@@ -130,7 +130,7 @@ export interface CutscenePayload {
 }
 
 /**
- * A node's scene slot (spec 178, SS1a): story placed on any map node, played
+ * A node's scene slot: story placed on any map node, played
  * before the node's own event. Registered per node beside the pools
  * (`registerNodeScene`); plays once a run (`MapState.seenScenes`). One field
  * per moment, so a later "after" scene is a new optional field.

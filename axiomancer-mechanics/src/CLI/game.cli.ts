@@ -195,7 +195,7 @@ async function resolveCurrentNodeEvent(
         log(describeResolvedEvent(resolved.event));
         return resolved;
     };
-    // A node's before-scene (spec 178) plays first and leaves the node owed:
+    // A node's before-scene plays first and leaves the node owed:
     // resolve again so the walk reaches the node's own event.
     const first = resolveOnce();
     const result = isBeforeScene(first.event) ? resolveOnce() : first;
