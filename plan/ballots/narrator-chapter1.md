@@ -13,7 +13,8 @@
 | The 22 scenes (S-01 to S-22) | approved, text below | 177.9 (NV1i), after spec 178 |
 | Quest names, quest log lines, giver and turn-in lines (C-01 to C-04) | approved, text below | 116.5 (BW1e) |
 | The four refusal lines (R-01 to R-04) and two gate lines (G-01, G-02) | approved, text below | 116.5 (BW1e) |
-| XP and reward for each quest step | T's to set; not drafted | 116.4 (BW1d) |
+| XP and reward for each quest step, the key and the questline's name (W-01 to W-06) | set by T's word on 2026-11-12: the engine's numbers stay, the lines below name them | 116.5 (BW1e) |
+| The Saint Beneath's description and journal (E-01) | redrawn to fit the story on T's word, 2026-11-12, text below | 177.8 (NV1h) |
 | Map blurbs, arrival lines, hazard, rest, dream, travel, village and loot lines, screen copy, enemy descriptions | not drafted from the new story | drafted with `/narrate`, reviewed in 177.3 (NV1c) |
 
 ## How it was checked
@@ -206,6 +207,37 @@ Step 4 is turned in at the river bridge (`bw-b1`), as the engine has it.
 - **G-01** · Keep gate: The keep gate is barred and the serjeant has his orders.
 - **G-02** · River bridge: The chain is drawn across the bridge while the lord of the keep lives.
 
+## Quest rewards
+
+T, 2026-11-12: "Yes to the quest rewards, you figure them out now", then in
+session: keep the engine's numbers and name them. Nothing the engine pays
+changes: every step pays 40 XP and the item below, as
+`breakwater-chapter.questline.ts` has it today. Relic and equipment names are
+rules text and stay as they are.
+
+- **W-01** · the questline's name: The Breakwater
+- **W-02** · the key (`bw-keep-key`), name: The Paid Key. Description: An iron key, never turned. Enoch Marrable was paid it for the lamp of the harbour.
+- **W-03** · step 1, 40 XP and the Ruby Signet, at the fishermen's camp: Abel Corse works a ring loose from the boy's bow line, where it was knotted for luck, and holds it out without looking at it. The master has no use for it, he says.
+- **W-04** · step 2, 40 XP, the Paid Key and the weapon of the Ruby Signet's lane, at the lighthouse: Marrable lifts it down from the wall of the lamp room, where it has hung since the last night there was anything in that room to guard.
+- **W-05** · step 3, 40 XP and the Mirror Brooch, at the keep gate: The serjeant unpins the brooch from his coat. It was the boy's mother's, he says. He will not be wanting it back.
+- **W-06** · step 4, 40 XP and the armor of the Mirror Brooch's lane, at the river bridge: Pease drags it out from under his stool. Left as a toll, he says, by one who crossed the other way and has not come back for it.
+
+W-03 to W-06 are reward lines for the quest screen. If that screen has no
+place for a reward line, they are not shown and nothing else changes.
+
+## The Saint Beneath
+
+T, 2026-11-12: "Adjust the saint beneath's entry to fit the new story." This
+replaces the description drafted off the portrait and T's journal page of
+2026-11-08, which told the story T removed. The portrait does not change: a
+great fish with an old man's face set in the front of it.
+
+- **E-01 description** (45 words): The lord who bought the harbour's lamp, thirty years beside it. He has grown long and pale and scaled, with the old man's face still set in the front of him, eyes shut, and the mouth beneath it open on a double row of teeth.
+- **E-01 journal** (165 words; title: The Saint Beneath): He was lord of the sea keep and no worse than the lords before him. When the council of the town came to sell the lamp from the tower he paid what they asked. He had it carried across the causeway at the ebb and set on the floor of a room with no window, and he sat down beside it to see what a man looked like who cast no shadow. He did not get up. The light took the edges from him year by year. It took his hands first and then his name, and it lengthened him and paled him and set scale upon him as the sea does with what it is given. The town fed him its drowned through the sea door and he kept each one whole, laid out in rows, and looked upon them with his eyes shut. They called him a saint because the ships still came. He never asked for anything. He never refused anything either.
+
+`Enemy/e2e/saint-beneath.engine.test.ts` asserts the old journal word for
+word; the chunk that lands E-01 changes that test with it.
+
 ## Portrait prompts
 
 For T's own image generation; none is in the game. Each is used with the shared style block.
@@ -234,3 +266,7 @@ years ago by a show of hands; every name on the cast sheet.
 
 - **2026-11-12, T, attended:** every line under Scenes, Quest chain, Refusals
   and Gate lines is approved as written above ("Approved and yes").
+- **2026-11-12, T, on plot PR #1635 and confirmed in session:** the quest
+  rewards keep the engine's numbers and take the names and lines W-01 to W-06;
+  the Saint Beneath's entry is redrawn as E-01. T delegated the wording of
+  both and has not read these lines; a redraw is T's word away.

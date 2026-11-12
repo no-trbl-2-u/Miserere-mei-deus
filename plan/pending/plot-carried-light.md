@@ -41,6 +41,14 @@ date: 2026-11-12
   - T's Act 1 story is ruled (`axiomancer-mechanics/content/story/story-overview.md`, The Carried Light) and its 22 Chapter 1 scenes are approved, word for word, in `plan/ballots/narrator-chapter1.md` (S-01 to S-22; T, 2026-11-12). This chunk puts exactly those panels in the game and writes none. Each scene sits in the scene slot of the node the ledger names and plays before that node's own event (spec 178); the windmill's scene (S-01) keeps the `giveQuestStep` effect. People speak inside the Keeper's telling, so no `[NPC Content Needed]` marker is left in a scene. [T to confirm #1] A scene with no picture of its own shows the picture of the nearest scene that has one (windmill headland, clifftop chapel, old watchtower, high pass) until T supplies art. If `scripts/narrator-verdicts.test.mjs` does not exist yet (177.4 writes it), this chunk writes it for the scene surface.
 ~~~
 
+## Edit plan/177-nv1-narrator-voice.md
+~~~ old
+  - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions, each `DRAFT (Claude)` comment removed with it.
+~~~
+~~~ new
+  - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions, each `DRAFT (Claude)` comment removed with it. The Saint Beneath's description and journal are among them since T's word of 2026-11-12 ("Adjust the saint beneath's entry to fit the new story"): both land as the ledger's E-01, and `Enemy/e2e/saint-beneath.engine.test.ts`, which asserts the old journal word for word, changes with them.
+~~~
+
 ## Add plan/177-nv1-narrator-voice.md
 ~~~ acceptance
 - **A?speech** The voice rules match the story T ruled. `axiomancer-mechanics/docs/narrative/NARRATOR.md` and `.claude/skills/narrate/SKILL.md` say that the Narrator is the Keeper, who may say "I" and addresses the player as "you" in the present tense; that a person named on the story overview's cast sheet speaks inside his telling, set off by a comma and with no quotation marks, in the voice the cast sheet gives; that the story is the overview as it stands; and that many pieces at once rotate through the stops 1, 2, 1, 3, 1, 4, 1, 5. Neither file names the withdrawn prologue or a rule the overview no longer holds.
@@ -49,7 +57,7 @@ date: 2026-11-12
 ~~~ chunks
 - [ ] **177.?speech** The voice rules take the Keeper and the people who speak · S · closes A?speech · needs — · alias: NV1k
   - Source: the story overview's rulings 5, 11 and 12 (T, 2026-11-12), and the approved ledger `plan/ballots/narrator-chapter1.md`, which is the worked example of all three.
-  - `axiomancer-mechanics/docs/narrative/NARRATOR.md`: the scope table (speech by a cast member is written, inside the narration; `[NPC Content Needed]` stays only for a speaker with no cast entry), rule 4 (speech is set off with a comma, as "Ann Greave says, ..."), rule 7 and the stops section (drop the prologue; keep "a child's death is named, never shown"), rule 8 (the Keeper's first person, present tense), and the rotation. The five stops and their word caps do not change.
+  - `axiomancer-mechanics/docs/narrative/NARRATOR.md`: the scope table (speech by a cast member is written, inside the narration; `[NPC Content Needed]` stays only for a speaker with no cast entry), rule 4 (speech is set off with a comma, as "Ann Greave says, ..."), rule 7 and the stops section (drop the prologue; keep "a child's death is named, never shown"), rule 8 (the Keeper's first person, present tense), and the rotation. The five stops and their word caps do not change. The line saying T's own description of the saint beneath is kept goes: T had it redrawn on 2026-11-12 (ledger E-01).
   - `.claude/skills/narrate/SKILL.md`: sections 2, 3, 6 and 7 to match, and the ledger path. Section 4's five samples are T's approved calibration and stay as written.
   - `scripts/check-prose.mjs` and its test only if a rule there now contradicts the above; say in the PR which rule, or that none did.
   - No game string changes in this chunk.
@@ -65,6 +73,6 @@ date: 2026-11-12
 ~~~ questions
 - [T to confirm #1] Pictures for the 18 scenes that have none: each shows the nearest existing scene picture until T supplies art (177.9).
 - [T to confirm #2] Chapters 2 to 4's old lines become placeholders now, before those maps are redesigned (177.?old).
-- [T to confirm #3] The Saint Beneath's description and journal stay as T wrote them, although the story now makes him the lord who bought the harbour's lamp (overview, ruling 9); a redraw is a `/narrate` sitting T asks for.
-- [T to confirm #4] XP and reward for each quest step keep the engine's present numbers until T sets them in 116.4.
+- Confirmed by T (2026-11-12): the Saint Beneath's description and journal are redrawn to fit the story (ledger E-01) and land with the enemy descriptions in 177.8.
+- Confirmed by T (2026-11-12): XP and reward for each quest step keep the engine's present numbers; the key, the questline and each reward take the names and lines W-01 to W-06 in the ledger.
 ~~~
