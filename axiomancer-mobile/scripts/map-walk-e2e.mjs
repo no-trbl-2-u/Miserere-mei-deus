@@ -16,7 +16,7 @@
 //      then the dev skip seam wins it, so the walk can go on;
 //   3. bw-w4, a rest: REST, claim, back on the map;
 //   4. bw-m1, a fight (walked back through bw-w2, one tap): won by the seam;
-//   5. bw-m2, a hazard: one of the Breakwater's six puzzle nodes (HP6c), so
+//   5. bw-m2, a hazard: one of the Breakwater's seven puzzle nodes (HP6c), so
 //      Face it opens the puzzle board with no route select; the walk confirms
 //      it as it stands and takes the outcome back to the map. (An old-board
 //      hazard lands on the route select, crossed by the dev skip seam;
@@ -404,7 +404,7 @@ async function hazard(page) {
     await travelTo(page, 'bw-m2')
     await waitFor(page, 'hazard-stakes', 'bw-m2 hazard stakes card')
     await page.getByTestId('hazard-stakes-face').click()
-    // bw-m2 is one of the Breakwater's six puzzle nodes (HP6c); any other
+    // bw-m2 is one of the Breakwater's seven puzzle nodes (HP6c); any other
     // hazard still opens the three-round route select, crossed by the skip seam.
     const board = await page.locator('[data-testid="hazard-puzzle-node"], [data-testid="hazard-route-select"]').first()
         .waitFor({ state: 'visible', timeout: 15000 })
