@@ -1245,6 +1245,18 @@ it.
   component test.
 - Verify gate: the mobile workspace.
 
+### [ ] [owner] Follow-ups carried from spec 116 when it retired: The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node
+- proposed: 2026-11-12, settle retired spec 116 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/116-bw1-breakwater-rebuild.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- Chapter 1's real foes (enemy sessions 1-2, B2) and the hazard routing's puzzles on the six hazard nodes.
+- Side quests on the Breakwater (MQ1 supports them; none is authored here).
+- Cutscenes folded into other nodes (T: "another time").
+- The event-node screens per kind (NK1's per-kind sittings).
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.

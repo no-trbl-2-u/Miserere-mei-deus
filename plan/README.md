@@ -46,7 +46,6 @@ needs are done):
 
 
 - **178.3** · SS1c: the Breakwater's cutscene nodes become a fight and two caches, their scenes in slots (T, `/plot`, 2026-11-12)
-- **177.11** · NV1k: the voice rules take the Keeper and the people who speak (T, `/plot`, 2026-11-12)
 
 
 **Held** (waits on a person's word; never picked until the
@@ -90,12 +89,11 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
 | 178 | A scene before any node, and no more cutscene nodes | [178-ss1-scene-slots.md](178-ss1-scene-slots.md) | planned | 1 left |
-| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 9 left |
+| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 8 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 1 left |
-| 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 1 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |
 | 123 | Combat SVG rasterisation | [123-pf2-combat-svg-raster.md](123-pf2-combat-svg-raster.md) | planned | 1 left |

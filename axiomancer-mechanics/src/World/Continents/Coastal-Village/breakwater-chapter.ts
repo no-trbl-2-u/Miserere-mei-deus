@@ -102,11 +102,11 @@ const NODES: MapNode[] = [
     { id: 'bw-p3', location: [4, 5],  connectedNodes: [] },
 ];
 
-/** The keep gate's reason (`[content]` until T's lines, BW1e). */
-export const KEEP_GATE_REASON = '[content] The keep gate is barred. It wants a key.';
+/** The keep gate's reason (T's line G-01, `plan/ballots/narrator-chapter1.md`). */
+export const KEEP_GATE_REASON = 'The keep gate is barred and the serjeant has his orders.';
 
-/** The river bridge's reason (`[content]` until T's lines, BW1e). */
-export const BRIDGE_GATE_REASON = '[content] The bridge will not take you while the keep stands.';
+/** The river bridge's reason (T's line G-02, `plan/ballots/narrator-chapter1.md`). */
+export const BRIDGE_GATE_REASON = 'The chain is drawn across the bridge while the lord of the keep lives.';
 
 const breakwaterChapter: MapDefinition = {
     name: 'breakwater',

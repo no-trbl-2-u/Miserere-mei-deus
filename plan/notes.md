@@ -487,3 +487,16 @@ Defaults taken (pilot worker, no questions asked):
 - The three arrivals are `CutscenePayload` constants now, not pools; a `NODE_SCENES` table in `content.ts` lists each map's start-node scene and `registerMapEventContent()` walks it after the pool loops. Their start nodes have no pool, so the scene is followed by an empty waypoint (`none`).
 - The map e2e tests compute each node's kind past its scene (`ownEvent`), so the kind tallies count the start node as `none` and the Lantern Deep keeps only its two sealed-door cutscenes.
 - `ld-15` and `ld-18` are untouched.
+
+Defaults taken: a quest node's one `description` field (the giver line) takes the ledger's Given line (C-02, C-03) at the camp and the lighthouse, and C-04's turn-in line at the bridge, the only line that node speaks. Turn-in lines C-01 to C-03 and reward lines W-03 to W-06 have no field and stay in the ledger. The four objective descriptions and the keep gate's giver line (step 4 Given is not a line) keep their `[content]` placeholders.
+
+Retro: clean.
+
+Docs only: `NARRATOR.md` and the `/narrate` skill now say the Narrator is the
+Keeper (first person allowed, "you", present tense), that a cast-sheet person
+speaks inside his telling set off by a comma, that `[NPC Content Needed]`
+stays only for a speaker with no cast entry, and that many pieces rotate
+through the stops 1, 2, 1, 3, 1, 4, 1, 5. The withdrawn prologue is gone; a
+child's death is named, never shown. Default taken: the build ran inline (a
+docs edit of two files, no builder subagent). `scripts/check-prose.mjs` and its
+test: no rule there contradicted the above, so neither changed.
