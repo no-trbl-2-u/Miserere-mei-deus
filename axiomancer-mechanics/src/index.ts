@@ -521,13 +521,16 @@ export {
     getNodePrimaryEventKind,
     actsOnRevisit,
     isQuietWalkBack,
+    registerNodeScene,
+    getNodeScene,
+    isBeforeScene,
     takeTravel,
     travelPayloadAt,
     isTravelOpen,
 } from './World';
 export type {
     MapEventKind, QuestPayload, QuestGiver, TravelPayload, TravelDestination,
-    MapEventPayload, ResolvedEvent, ResolveMapEventResult,
+    MapEventPayload, ResolvedEvent, ResolveMapEventResult, NodeScene, CutscenePayload,
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,
     QuestStepState,
 } from './World';
