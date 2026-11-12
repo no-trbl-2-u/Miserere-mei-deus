@@ -32,6 +32,7 @@ import {
     healCharacter,
     isConsumable,
     arriveAtNode,
+    isBeforeScene,
     isEquipment,
     markNodeConsumed,
     resolveMapEvent,
@@ -441,6 +442,12 @@ export interface AppActions {
     fleeEncounter: () => void;
     /** Clear the pending event without dispatching any engine call. */
     dismissEvent: () => void;
+    /**
+     * Leave a node's before-scene for the node's own event: clears the event
+     * slice and resolves the same node again, with the node type the scene was
+     * resolved for. Returns `true` when that event is not `none`.
+     */
+    continueToNode: () => boolean;
 
     // -----------------------------------------------------------------
     // Hazard minigame (engine: axiomancer-mechanics World/Hazard). The pure
@@ -902,6 +909,7 @@ export function createAppActions(store: AppStore): AppActions {
         pickEventChoice: (choiceId) => pickEventChoiceAction(store, choiceId),
         fleeEncounter: () => fleeEncounterAction(store),
         dismissEvent: () => dismissEventAction(store),
+        continueToNode: () => continueToNodeAction(store),
         beginHazard: (options) => beginHazardAction(store, options),
         selectHazardRoute: (route) => selectHazardRouteAction(store, route),
         finishHazardRolling: () => finishHazardRollingAction(store),
@@ -1522,8 +1530,10 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
         // `worldCompleteNode` call).
         let resolvedState: GameState = result.state;
         // 'travel' must never consume: a door offers its trip on every
-        // entry, as the engine dispatcher keeps it.
+        // entry, as the engine dispatcher keeps it. A before-scene never
+        // consumes either: the node's own event is still to come.
         const shouldConsumeNode = result.event.kind !== 'none' &&
+            !isBeforeScene(result.event) &&
             !['encounter', 'travel', 'labyrinth', 'quest'].includes(result.event.kind);
         if (shouldConsumeNode) {
             const currentNodeId = resolvedState.world?.currentMap?.currentNode;
@@ -1830,4 +1840,15 @@ function pickEventChoiceAction(store: AppStore, choiceId: string): void {
 
 function dismissEventAction(store: AppStore): void {
     clearEventSlice(store);
+}
+
+/**
+ * The end of a node's before-scene: drop the scene and resolve the same node
+ * again so its own screen follows (the fight reveal, the hazard, the cache; a
+ * node with no event of its own resolves `none` and the map shows).
+ */
+function continueToNodeAction(store: AppStore): boolean {
+    const sourceNodeType = store.getState().event?.sourceNodeType ?? undefined;
+    clearEventSlice(store);
+    return resolveCurrentMapEventAction(store, sourceNodeType);
 }

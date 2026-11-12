@@ -41,7 +41,7 @@ Built from what exists, the slot is the cutscene payload and screen already ship
 
 - **The flow:** the player taps a node and confirms (the confirm panel shows the node's own kind, unchanged), the cutscene screen plays the scene, its last tap or SKIP continues to the node's own screen (the fight reveal for a fight, then combat; the hazard, rest, loot cache, quest, village or travel screen), and a node with no event of its own returns to the map.
 - `resolveCurrentMapEventAction` does not mark the node consumed for a `slot: 'before'` cutscene and routes it to `/cutscene` as today. The event slice keeps the `sourceNodeType`. On a before-scene, the cutscene screen's end (last tap or SKIP) calls a new action (`continueToNode`) that clears the slice and calls `resolveCurrentMapEvent(sourceNodeType)` again; on any other cutscene it calls `dismissEvent()` as today.
-- **[T to confirm #6] No mark on the map** says a node carries a scene: the scene is met, not chosen.
+- **No mark on the map (T, 2026-11-12)** says a node carries a scene: the scene is met, not chosen.
 - The cutscene screen itself (picture, narrator, vellum panel, beats) is unchanged.
 
 ### The Breakwater (178.3)
@@ -81,7 +81,6 @@ Built from what exists, the slot is the cutscene payload and screen already ship
 
 ## Acceptance
 
-- **A5** On the phone, tapping a node with a scene opens the cutscene screen; its last tap, and SKIP, open the node's own screen (the fight reveal, then combat, for a fight); a node with no event returns to the map; the node is not marked consumed by its scene. A phone-width screenshot of a fight node's scene and of the fight reveal after it is in the PR.
 - **A6** No Breakwater node's own kind is `cutscene`: `bw-l2` is a fight (Brine-Widow, level 6), `bw-d5` and `bw-p3` are loot caches; the map shows their fight and treasure tokens; the plate marks are unchanged; the chapter's foe and cache tables have a row for each.
 - **A7** The windmill plays its opening scene from its slot and gives quest step 1; `World/e2e/breakwater-chapter.engine.test.ts` walks `bw-w1` to `bw-b2` green.
 - **A8** `bw-l2`, `bw-d5` and `bw-p3` play their scene (today's line and picture) before their own event.
@@ -94,18 +93,13 @@ Built from what exists, the slot is the cutscene payload and screen already ship
 3. Settled (T, 2026-11-12): a node's scene plays once a run, on first arrival.
 4. **[T to confirm #4]** Do the removed nodes' scenes and pictures carry over? Default: yes, each converted node plays its old scene before its own event. Or: their slots start empty until the Act 1 story places scenes.
 5. **[T to confirm #5]** Do the other Act 1 maps change now? Default: their three arrival scenes move into start-node slots; the sealed doors wait for the Chapters 2-4 map design. Or: leave those maps until that design.
-6. **[T to confirm #6]** Does the map mark a node that carries a scene? Default: no. Or: a small mark on the node.
+6. Settled (T, 2026-11-12): the map does not mark a node that carries a scene.
 
 ## Chunks
 
-Measure: 5 open · 4 closed · next A10
+Measure: 4 open · 5 closed · next A10
 
-- [ ] **178.2** The phone plays a node's scene, then the node's own screen · M · closes A5 · needs — · alias: SS1b
-  - `axiomancer-mobile/state/actions.ts`: a before-scene is not consumed; the slice keeps `sourceNodeType`; `continueToNode`.
-  - `app/cutscene/index.tsx`: on a before-scene the last tap and SKIP call `continueToNode`; any other cutscene keeps `dismissEvent`.
-  - `state/e2e/scene-slot.SS1b.engine.test.tsx` (new): a fixture fight node with a scene routes `/cutscene`, then the fight reveal, then combat; a hazard node routes to `/hazard`; an empty node returns to the map. `start-node-arrival.engine.test.tsx` and `cutscene-skip.S4-world-C17.test.tsx` keep passing.
-  - Measure: the tests pass; `npm run verify -w axiomancer-mobile` passes; a phone-width screenshot of the scene and of the fight reveal after it is in the PR.
-- [ ] **178.3** The Breakwater: no cutscene nodes, and its scenes in slots · M · closes A6, A7, A8 · needs 178.2 · alias: SS1c
+- [ ] **178.3** The Breakwater: no cutscene nodes, and its scenes in slots · M · closes A6, A7, A8 · needs — · alias: SS1c
   - `axiomancer-mechanics/src/World/MapEvents/content.ts`: `BREAKWATER_CHAPTER_KINDS` (`bw-l2` fight, `bw-d5` and `bw-p3` loot; `'cutscene'` out of `BreakwaterChapterKind`), `BW_ENCOUNTER_FOES` (`bw-l2`), `COAST_LOOT_CACHES` and `LOOT_NODES` (two caches), `BW_NODE_SCENES` (the windmill and the three converted nodes) registered beside the pools; `bw-w1`'s own pool goes.
   - Tests that name the old kinds: `chapter1-content.test.ts`, `World/e2e/breakwater.engine.test.ts`, `breakwater-chapter.engine.test.ts` (the windmill: scene, then nothing), `cutscene-scene.CU1a.engine.test.ts`, the mobile `start-node-arrival` and `cutscene-view.CU1a` tests, and `scripts/fixtures/sim-runs.json` where a seeded run changes. A test fails if any Breakwater node's own kind is `cutscene`.
   - Measure: the chapter e2e walks `bw-w1` to `bw-b2` green; `npm run verify` (both workspaces) and root `npm test` pass; a phone-width screenshot of the map with the three new tokens, and of the chapel's scene then its fight reveal, is in the PR.

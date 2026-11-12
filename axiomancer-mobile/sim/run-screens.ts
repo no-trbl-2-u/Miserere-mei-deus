@@ -11,6 +11,7 @@ import {
     DIE_GEAR_COLORS,
     buildCombatDeck,
     getRng,
+    isBeforeScene,
     isEquipment,
     nextHazardStep,
     hazardRouteFor,
@@ -277,7 +278,9 @@ export function resolvePacedEvent(store: AppStore, actions: AppActions): boolean
         if (store.getState().event?.dialogueCursor === before) actions.dismissEvent();
         return true;
     }
-    actions.dismissEvent();
+    // A node's before-scene is read, then the node's own event follows.
+    if (isBeforeScene(slice.pending.event)) actions.continueToNode();
+    else actions.dismissEvent();
     return true;
 }
 
