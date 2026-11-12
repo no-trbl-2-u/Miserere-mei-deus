@@ -1,0 +1,107 @@
+# Ballots
+
+Every ballot T votes on (`<name>.ballot.html`), the ledger that records its
+verdicts (`<name>.md`; a card family's is `rehearsal-<family>.md`), the
+pictures a ballot shows (one folder per ballot) and the pages that serve them.
+This directory was `plan/card-ledger/` until 2026-11-11; it holds screens,
+type, colour, voice and enemy ballots as well as the card families.
+
+- `index.html` lists every ballot from its `BALLOTS` array, grouped by status
+  (needs your vote, settled, built) and tagged by kind (`cards`, `screens`,
+  `look`, `voice`, `enemies`).
+- `ballot-shell.html` is the page a new ballot is copied from (phase BV3):
+  sample candidates, live kept counts and a Generate text; no candidate
+  carries a colour (phase CL1).
+- `ballot-kit.js` is the shared ballot kit (phases BV1b, BV2b, BV3): it autosaves
+  every tick and note on the device, restores them on a reload, clears the
+  draft, saves the ballot unfinished online (Save, a `draft` row), loads the
+  newest online save when it is newer than the device's draft, and submits the
+  verdict (Submit, a `final` row) to the `miserere-api` Worker
+  (`POST /v1/ballot-verdicts`, `backend/src/index.ts`). The Submit button reads
+  **Save and submit**. **Mark complete** finishes a ballot with no token: it
+  stamps the ballot done on that device, writes and copies the verdict text,
+  and opens the phone's share sheet; the index then tags the ballot "marked
+  complete here". It reaches the Worker only when the device already holds
+  the token, and never asks for one.
+
+The `axiomancer-ballots` Cloudflare Pages project serves this directory as it
+stands on `main`, with branch previews (`docs/external-architecture.md`).
+A ballot also works opened straight from disk; it can then Generate and Copy,
+but the Worker does not answer a page with no web address, so Save, Submit and
+the load from the save need the Pages site.
+
+## Adding the next ballot
+
+1. **The data file.** Copy the ballot shell, `ballot-shell.html` (phase
+   BV3), to `rehearsal-<family>.ballot.html` and replace its `TABS`, `SLOTS`
+   and `CARDS` data and its header copy. Keep
+   the DOM the kit reads: `.pick` checkboxes whose value is the candidate id
+   (`P-01a`), `[data-note]` inputs whose attribute is the slot id (`P-01`),
+   `#general`, `#gen`, `#copy` and `#out`.
+2. **No colours.** Give no candidate a `job`, `color` or `colour` (D110): T
+   votes on the text, and colours are split after the picks, at the
+   revisions step (`docs/lane-creator.md` "Colours after the picks").
+3. **The kit tag.** Keep `<script src="ballot-kit.js"></script>` in the head,
+   set `const BALLOT_ID = '<family>-<YYYY-MM-DD>';` (lowercase letters, digits
+   and hyphens, 3 to 64), and end the script with
+   `BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });`.
+4. **The `BALLOTS` entry.** Add `{ id, family, file, ledger, status: 'open',
+   date, kind }` to `index.html`, with `id` equal to the page's `BALLOT_ID`
+   and `kind` one of the index's `KINDS`; add `thumb` (a picture next to the
+   index) when the ballot has one. When
+   the family's verdicts are written into its ledger, set `status: 'closed'`. When the lane's trial set is plotted into the build, set `status: 'complete'` (T, 2026-10-30).
+
+`node --test scripts/ballot-kit.test.mjs` (in the root `npm test`) fails when a
+ballot file has no `BALLOTS` entry, an open ballot does not load the kit
+under its index id, or an open ballot has a candidate carrying a colour. The
+Blood Price and Elementalist ballots, voted before CL1, are exempt and stand as
+voted.
+
+The whole flow a ballot sits in is `docs/lane-creator.md` (lane-creator v1, D102).
+
+## Reading a verdict back
+
+Every Save and every Submit appends a row; nothing is overwritten. The verdict
+in force is the **newest `final` row** for a ballot id: read it with
+`GET /v1/ballot-verdicts?ballot=<id>&status=final` (the bearer token) or the D1
+query tool on database `miserere`, table `ballot_verdicts`, `WHERE status =
+'final'`. A `draft` row is progress, never a verdict, even when it is newer
+than the last `final` one (T is revising). The session running the ballot
+writes the ledger's Verdicts section from it by hand.
+
+A ballot T finished with **Mark complete** on a device with no token has no
+`final` row: its verdict is the text T pastes into the session.
+
+On load, a ballot fetches the newest row of either status for its id and
+applies it when it was received after the device's draft was saved; the status
+line says whether it loaded a save or a submitted verdict.
+
+On the device, the draft lives in `localStorage` under
+`ballot:<ballotId>:draft` (stamped `savedAt`), and the API URL and token under
+`ballot:api`, shared by every ballot. A 401 forgets the token, so the next Save
+or Submit asks for it again.
+
+## When T pastes results
+
+T may paste a ballot's verdict text into a session instead of submitting it
+(Generate, Copy or Mark complete all produce it; it opens `BALLOT:` and names
+the ballot id). The session then, in this order (T, 2026-11-11):
+
+1. **Ask first**, in one `AskUserQuestion`, before writing anything:
+   "Is this paste partial or complete?" and "Mark this ballot complete?".
+2. **Partial, or T says no:** record no verdict. The ballot stays `open` and
+   its page keeps the kit. Answer what T asked about the paste and stop.
+3. **Complete and yes:** write the pasted text verbatim into the ledger's
+   Verdicts section (dated, "pasted by T"), set the `BALLOTS` entry to
+   `status: 'closed'`, take the `<script src="ballot-kit.js"></script>` tag
+   and the `BallotKit.mount` call out of the ballot page (a closed ballot
+   does not load the kit), run `node --test scripts/ballot-kit.test.mjs`, and
+   land it as a plan PR.
+4. **Then offer the plot**, in a second `AskUserQuestion`: "Want to use
+   `/plot` to turn this verdict into a phase?". On yes, run `/plot`; set the
+   entry to `status: 'complete'` when the verdict is plotted. A card
+   family's ballot goes on through `/lane-creator` (the sims, the revisions,
+   the trial set) instead of straight to `/plot`.
+
+A pasted verdict T marked complete stands as the verdict in force even with
+no `final` row in D1; say so in the ledger.

@@ -1,7 +1,7 @@
 /**
  * THE BLOOD PRICE TRIAL SET — "I pay in my own blood for power."
  *
- * The 30 cards of the Blood Price trial set (`plan/card-ledger/rehearsal-blood-price.md`):
+ * The 30 cards of the Blood Price trial set (`plan/ballots/rehearsal-blood-price.md`):
  * 25 kept from the rehearsal ballot on 2026-10-11 and five SACRIFICE cards T
  * added in revision 2 the same day (ids ending `n`, in the slots of the five
  * Curse cards that revision cut), plus the grey Curse. Three sub-lanes of

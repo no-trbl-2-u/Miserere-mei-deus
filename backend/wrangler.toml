@@ -20,10 +20,12 @@ migrations_dir = "migrations"
 #   the POST of the app's routes (`tester: true` in src/index.ts). Optional;
 #   unset, only the owner token opens anything.
 
-# The origins the ballot routes answer CORS for: the axiomancer-ballots Pages
-# site and its branch previews (phase BV1a). Not a secret.
+# The origins the ballot routes answer CORS for (phase BV1a): the ballots
+# Pages site and its branch previews. The site is the `card-ledger` Pages
+# project, served at miserere-mei-deus.pages.dev; the axiomancer-ballots name
+# is the one the docs first gave it and stays allowed. Not a secret.
 [vars]
-BALLOT_ORIGINS = "https://axiomancer-ballots.pages.dev,https://*.axiomancer-ballots.pages.dev"
+BALLOT_ORIGINS = "https://miserere-mei-deus.pages.dev,https://*.miserere-mei-deus.pages.dev,https://axiomancer-ballots.pages.dev,https://*.axiomancer-ballots.pages.dev"
 
 # The retention cron (chunk 135.7): 05:17 UTC, after the 03:43 sim batch. It deletes sim and
 # harness rows older than 14 days (src/retention.ts); human rows stay.

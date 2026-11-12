@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Narrator voice ballot, round 5</title>
+<!-- The Narrator voice ballot, round 5 (plan/ballots/narrator-voice.md). -->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .hue { font-weight: bold; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+  .words { margin: 8px 0 2px; font-size: 1.02rem; line-height: 1.55; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <p class="banner" role="note"><b>Samples only.</b> Nothing here ships. The Breakwater and the Charcoal Wood are locked with your edits and are not on this ballot. Heavy content: hanging, drowning, a child's death, the prologue.</p>
+  <h1>The Narrator: McCarthy writes Elden Ring</h1>
+  <p class="sub">The target is Cormac McCarthy writing Elden Ring, in the register of Blood Meridian, on our story. Twelve pieces of the real Chapter 1 and the prologue, three takes each, shuffled and unlabelled: that voice as it stands, the same with the cruelty all the way up, and the same again written to hurt. His manner, never his sentences. Invented details (the boy with the bowl, the pilgrim ship, the keeper's wife) are samples, not story.</p>
+  <p class="legend"><b>Tick</b> the take you like. Ticking two means "somewhere between these". <b>Leave all three blank</b> if none is right, and say why in the note box: rejections teach the voice as much as picks. When you are done press <b>Generate</b>, then <b>Copy</b>, and paste it to Claude. <b>Submit and Save do not work right now.</b></p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the voice as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Save and submit or Mark complete, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   ===================================================================== */
+const BALLOT_ID = 'narrator-voice-5-2026-11-10';
+
+const TABS = [
+  {
+    "key": "P",
+    "name": "Places",
+    "blurb": "Two arrival lines on the Breakwater."
+  },
+  {
+    "key": "Q",
+    "name": "Quests",
+    "blurb": "Three steps of the Breakwater chain."
+  },
+  {
+    "key": "E",
+    "name": "Enemies",
+    "blurb": "The Saint's journal and four of the Chapter 1 roster, drawn from their portraits."
+  },
+  {
+    "key": "S",
+    "name": "Story",
+    "blurb": "One story encounter and one memory from the prologue."
+  }
+];
+
+const SLOTS = [
+  {
+    "slot": "P-01",
+    "role": "Arrival line: reaching the Gallows Crossroads."
+  },
+  {
+    "slot": "P-02",
+    "role": "Arrival line: the wreck under the lighthouse."
+  },
+  {
+    "slot": "Q-01",
+    "role": "Quest: the capsized boat. Sends you through the sea cave to the fishermen's camp."
+  },
+  {
+    "slot": "Q-02",
+    "role": "Quest: climb to the lighthouse, where the keep key is."
+  },
+  {
+    "slot": "Q-03",
+    "role": "Quest: beat what holds the sea keep, then cross the bridge. The chapter's last step."
+  },
+  {
+    "slot": "E-01",
+    "role": "Enemy journal: the Saint Beneath, the chapter boss. Your story, three ways."
+  },
+  {
+    "slot": "E-02",
+    "role": "Enemy description: the Wreckmaster, the elite on the Keep Causeway. He takes a toll."
+  },
+  {
+    "slot": "E-03",
+    "role": "Enemy description: the Brine-Widow, at the end of the Long Pier."
+  },
+  {
+    "slot": "E-04",
+    "role": "Enemy description: the Net-Mender, at the Quay End."
+  },
+  {
+    "slot": "E-05",
+    "role": "Enemy description: the Cave Choir, the drowned congregation in the sea cave."
+  },
+  {
+    "slot": "S-01",
+    "role": "Story encounter: the clifftop chapel."
+  },
+  {
+    "slot": "S-02",
+    "role": "Memory (Memoir tab): the window. The end of the prologue, where the adventure starts."
+  }
+];
+
+const CARDS = [
+  {
+    "id": "P-01a",
+    "text": "Four roads meet under the hill. A woman hangs from the crosstree blackened and gaunt as a thing dug from a bog, and beneath her in the dust sits a boy with a bowl in his lap. He has been told she sleeps off a fever. He has been told she will want her supper when she comes down. Nine days he has fanned the flies from it. He asks are you tall enough to reach the knot, and he holds the bowl up in his two hands like some small priest at an offertory to show that it is good yet."
+  },
+  {
+    "id": "P-01b",
+    "text": "Four roads meet under the hill in a waste of thistle and salt grass and none of them is kept. The gallows stands at the joining black as a thing burned, hewn from the keel of some vessel too vast for any harbour on that coast. What hangs there has hung so long that the rope has grown into the neck like a root. No crow will light upon it. In the ditch below a thing crouches armored in pale chitin, patient as a mendicant at a church door, and it feeds on what the wind shakes down."
+  },
+  {
+    "id": "P-01c",
+    "text": "Four roads meet under the hill and the gallows there has three arms, for in that country they hang by household. The father is sent up first that he be spared the watching and the mother last that she not be. The children hold the ladder. They are given each a loaf for it, and they eat standing in the long shadows of their people turning slowly in the sea wind like tallow dips hung to cure. By the next feast day they are pitching stones at the rope with the rest."
+  },
+  {
+    "id": "P-02a",
+    "text": "Every pier in that harbour charges for the calm and this ship did not pay. They cut her cable in the dark and stood along the wall with lanterns to watch her go onto the rocks, and she went on them. Forty souls were aboard and the water no deeper than a man's chest. The town went down with boathooks and worked among them until dawn, methodical, wading, like men at a fish weir. By noon her cargo was laid out on the quay and priced fairly."
+  },
+  {
+    "id": "P-02b",
+    "text": "She was a pilgrim ship and she could not pay the pier, and the harbour men cut her cable and the town came down to the wall to see it. A man stood in the shallows with his arm hanging broken and called up to them by their trades. Baker. Cooper. You there with the lamp. He asked for nothing but a rope's end. They stood above him in the lanternlight mute as a jury and the sea took him by inches. No man on that wall has answered to his trade since, and their children think it is the custom of the place."
+  },
+  {
+    "id": "P-02c",
+    "text": "It is no ship. It lies canted in the shingle under the lighthouse like the carcass of some leviathan flensed by the ages, and the ribs of it are too many and they are not timber. The tide goes in through that cage and comes out slower and darker. The town calls it a wreck, for a wreck is a thing that has finished. No weed will grow there. At the lowest ebb you may see the great links, green and furred, where something saw fit to chain it."
+  },
+  {
+    "id": "Q-01a",
+    "text": "A boat went over off the Cave Face in a dead calm with four men in her. The hull came in on the next tide keel up and scored the length of it, as if some thing with more teeth than patience had tried her and found her wanting. The nets came in after, and they were mended. No man in that boat could mend. Go through the sea cave to the camp and find them, or find what sits at their fire in their stead."
+  },
+  {
+    "id": "Q-01b",
+    "text": "Four went out and the boat went over and three swam for the shingle. The fourth was the boy. He had the keel in his arms and he called to each of them by name across that flat grey water, and they sat steaming on the stones and watched him, for the swim was long and the sea cold. He called till dark. In the town they have said he went down at once like a stone. Go through the sea cave and find them, and mark which among them will not look at the water."
+  },
+  {
+    "id": "Q-01c",
+    "text": "The boat went over off the Cave Face and the fishermen have not come back. A girl waits at the windmill with her father's dinner tied in a cloth. She has carried it down each day since, and each evening carried it home. She asks are you going that way. She asks would you take it, and would you tell him she is sorry for the knife she lost. Go through the sea cave to the camp. He is there, and hale, and he sits at the fire with other men. He has not spoken her name and he will not take the cloth."
+  },
+  {
+    "id": "Q-02a",
+    "text": "The keeper's wife went out in the skiff for oil and the weather came down behind her like a wall. He lit the lamp. He was drunk, and he lit it in the wrong window, and he stood in the gallery in the howling dark and watched her steer for it with great skill onto the rocks. Every night since he has lit it in that same window, that no man may call it a mistake. The key is at his belt. Climb, and do not be gentle with him. He has waited years for one who would not be."
+  },
+  {
+    "id": "Q-02b",
+    "text": "The light failed the year the oil money went to the keep, and the keepers were told to burn what they had. They burned the chairs and the bedsteads and at last the stair rail. They were three in that tower and then they were two. All that winter the lamp burned fat and yellow, and ships came safe to harbour by it and their masters blessed the light. He that remains holds the key. He will tell you it was done by lot. Climb."
+  },
+  {
+    "id": "Q-02c",
+    "text": "The lighthouse stands on the last of the cliff like the chimney of a burned world, and its lamp has been dark longer than the town has had a name. Yet at each dusk something climbs that stair to trim it. The key to the keep hangs in the lamp room on a nail. Climb. The light you see abroad on the cliff path, small and swinging, is no lamp of that tower. It has stopped. It has seen you."
+  },
+  {
+    "id": "Q-03a",
+    "text": "They raised the keep over him as a man sets his boot upon a snake, and it did not hold. So they took to sending down such as the town could spare. The lame went first and the simple after and then whoever owed, each one told that the Saint wants only a kind word. They went down singly with candles into that dark like the shriven. The stair is worn hollow in the middle with their going. On the side where a man would come up the stone is square and clean as the day it was cut. Go down."
+  },
+  {
+    "id": "Q-03b",
+    "text": "The keep stands in the sea at the end of its causeway, tier upon tier of weeping stone, and no tide in all the ages has shifted one course of it. It was not raised to keep a thing out. Below the last stair the floor is water, black and without motion. Under that water a face broad as a church door lies looking up through the fathoms like some idol sunk by a people who repented of their god. The mouth stands open. Go down. The bridge will not have you while it lives."
+  },
+  {
+    "id": "Q-03c",
+    "text": "Go down the stair. He will know by your tread that you are not of the town, and he will ask of you what he has asked of each of them. Did any man open his door. You may lie. They all of them lied. He was a fisherman, and he called to them from the water by their christened names, and down there in the cold and the dark he listens yet for one bolt drawn back. Kill him before he asks it twice. The bridge will not have you while he lives."
+  },
+  {
+    "id": "E-01a",
+    "text": "He was a fisherman, and he stood up in the square against the men who held that town and bade the others stand with him. They watched from their doorways. He was held under at the foot of the quay until he was done, and what remained was given to the river. Out past the shelf lie things that were old before there were shores to name them, and one such marked his coming down. It took his anger as a seed. It grew about it a great length of scale and gristle and set his face in the fore of it like a mask nailed to a prow. They call it a saint. It has never forgiven anyone."
+  },
+  {
+    "id": "E-01b",
+    "text": "He bade them stand with him and they went in and shut their doors. From under the water at the quay he could see their windows yet, shuddering and gold. He watched the lamps go out one house and then the next along the whole dark front of the town, so that no man could be said to have seen. His wife's was the last. She put it out herself. Whatever raised a body for his rage left the eyes shut, and in all that work it was the one mercy. They call it a saint. Each night some hand sets a lamp in a window, and each night it does not look."
+  },
+  {
+    "id": "E-01c",
+    "text": "He stood up in the square and bade them stand with him, and they would not, and that was the least of it. The gang wanted hands for the work and the town gave hands. His neighbour had him by the legs. The man he had taught to splice held his head. It was shallow water and slow labor. They were bidden to sing that the children not hear, and they sang, standing to their knees in the harbour like some terrible baptism. They were paid out of his own catch. It lies beneath the Breakwater now and wears his face, and when the timbers hum the old ones know the tune."
+  },
+  {
+    "id": "E-02a",
+    "text": "He wrecked his own ship. The owners paid better for her lost than landed, so at the top of the tide he laid her on the causeway rocks with her hatches nailed. He stood at the stern rail in his good coat with his watch in his hand and listened to the knocking below, and he noted the hour it ceased. He listens for it yet. He will ask a toll of you and it is not coin he lacks. It is crew. There is a hammer at his belt, and the nails he carries in his mouth like a joiner."
+  },
+  {
+    "id": "E-02b",
+    "text": "His son was fourteen and it was the boy's first voyage. When she struck, the captain set him in the one boat and cut it loose with his own sabre, and he watched it turn over in the surf not forty yards out, lightly, like a cup. He went in after it. The sea would not keep him. Now he stands the causeway in the grey of every dawn and gives the order to lower away, and gives it again, to a crew of weed and air. Pay his toll or do not. He will not see you. He is watching the boat."
+  },
+  {
+    "id": "E-02c",
+    "text": "A drowned captain holds the causeway in a good coat gone green at the seams, sabre drawn and pistol raised, and he is giving orders. The crew he gives them to went into the sea in pieces an age ago. Yet the tide draws back at his word, and the wet stones stir and shift in the dusk like men turning out to quarters. He will take his toll and let you by. He has been told the ship sails when her hold is full, and he is a man who keeps a ledger."
+  },
+  {
+    "id": "E-03a",
+    "text": "She sent him out. There was no bread in the house and the glass was falling and he did not want to go. She called him coward before the boy, so he took the boy with him. She stood in the door and watched the two of them go down to the boats, and she did not call them back. She has had long years at the pier end to choose her words. She has them by heart. The salt is not for you. She grinds it into her own eyes at each dawn that she might not sleep through the boat."
+  },
+  {
+    "id": "E-03b",
+    "text": "She stands at the end of the Long Pier in a black veil stiff with salt, and she stood there before ever the piers were stone. The boats she waits upon were hollowed out of single trees by men who had no word for iron. Barnacles have closed the one hand like a gauntlet. The other holds a fist of salt for whoever comes back. None has. You are coming down the pier toward her out of the fog, and to her dim reckoning that is near enough."
+  },
+  {
+    "id": "E-03c",
+    "text": "The town set her there. A widow's share comes out of every other share, so when her man drowned they walked her to the pier end and told her he had been seen. They told her so each morning for a year. They brought their children down to watch her look, and held the small ones up to see, and laughed quietly among themselves like folk at a fair. Then they tired of it and came no more, and nobody told her that either. The salt in her fist is for the first face she knows."
+  },
+  {
+    "id": "E-04a",
+    "text": "A drowned man sits at the quay end mending the net he went down in. His needle is a rib and he does not raise his head. The net runs off his knees and over the stones and down, and it goes out along the floor of the harbour farther than any net was ever made. Things hang in the far meshes that have not swum in this age of the world, blind and plated things, turning. When he draws a knot tight every boat in the harbour leans to him."
+  },
+  {
+    "id": "E-04b",
+    "text": "The net was cut. His partner did it at the rail for the sake of a whole share, one stroke, and watched him go down wound in the mesh with his hands working yet. He mends it now at the quay end. He wants gut for the cord and he is not particular whence it comes. The partner he found first. That man is in the weave now somewhere toward the middle, drawn fine, and not all of him has stopped. There is a great deal of net left to mend, and the town is not large."
+  },
+  {
+    "id": "E-04c",
+    "text": "His daughter tied the net. Her knots were poor and he told her so, and he cut them out and tied them over while she stood and watched him. It was one of his own that fouled the cleat and bore him down. He sits now at the quay end in the rain picking out each good knot he ever made. In its place he ties the bad one she made at six years old, as near as memory serves him. He cannot get them right. His hands are too good. They were always too good."
+  },
+  {
+    "id": "E-05a",
+    "text": "The priest led them down at the spring tide and told them the waters would part. They did not part. He kept the one place above the tideline, upon the rock where the pulpit stands, and he preached down to them while the sea came up their bodies. He bade the mothers lift the small ones higher. He kept them singing to the very last, a hundred mouths at the level of the water. He sings among them now. Of all that was done in that cave it is the one thing he did not intend."
+  },
+  {
+    "id": "E-05b",
+    "text": "Under the cliff the sea has hollowed a nave, and there the drowned stand to their chests in the black swell, rank on rank, with their mouths open upon the one note. The service was begun in a tongue the land has since forgot. It has not yet come to the amen. Their faces are worn smooth as the faces on old coins. There is a gap in the foremost rank the width of one man, and the note alters as you enter, as a room alters when the last guest is seated."
+  },
+  {
+    "id": "E-05c",
+    "text": "They went down to pray for the boats and the tide shut the cave behind them like a door. In the third row stands a woman with her arms raised straight above her head. She held the child up out of the water until the water was above her arms. She holds them so yet. They are empty and have been empty this long age, and she has not once looked up to learn it. If you must go among them with a blade, do not strike down her arms. Let her think it."
+  },
+  {
+    "id": "S-01a",
+    "text": "The chapel on the cliff has no door, and whatever god was kept there has no name left to answer to. Some hand has scraped the faces from the saints, patiently, with a spoon. Upon the altar the Covenant has nailed its notice. Beneath it is an older notice, and beneath that another in a script like the tracks of birds. Each of them forbids the same thing. Beyond the empty window the sea stands at the wrong height, grey and enormous and very still, like a thing that has been told to wait."
+  },
+  {
+    "id": "S-01b",
+    "text": "A man kneels in the chapel and he is not at prayer. He is practising. He says, I was too drunk to stand. He says, the child would not hold still. Then he says it over with the words set in another order, as a man turns a coin to find the better face. None of the ways will serve. The flags are worn in two hollows where his knees are. When he lifts his head you see that he has your coat and your hands, and the bottle at his side is the one you carry."
+  },
+  {
+    "id": "S-01c",
+    "text": "The priest of this place said from his pulpit that the end was coming, and the Covenant came in its stead. They did not hang him. They sat him in the front pew and brought his parish up the cliff road one at a time, and each was asked had they heard him say it. Those who said yes went off the cliff. Those who said no were handed the stone for the next. It took the better part of two days, and they broke at noon to eat. Him they let live. He sweeps the chapel yet, and he will tell you that nothing is coming."
+  },
+  {
+    "id": "S-02a",
+    "text": "He did not go to the window. He has told it since as though there were no time, but there was time. He stood in that room among those men and thought, plainly and in words, that if she were dead there was none left living who knew. Then he went out by the door. The bottle stood on the table and he went back in for it. That is the part no drink will drown. He went back for the bottle, and he passed within a yard of the sill, and he did not look out."
+  },
+  {
+    "id": "S-02b",
+    "text": "They made him watch and after it they made her listen. The serjeant told it slowly, how the child had died and under whose hands, and at each part he had the man nod. He nodded. She was looking at him the whole of that time out of her ruined face and he nodded. When she went to the window not one of them moved to stay her. The serjeant allowed it was the one honest thing done in that house. Then he sent a man to see was there anything to drink."
+  },
+  {
+    "id": "S-02c",
+    "text": "The window of that house gave upon the sea and upon nothing else. When the guards had done telling her she rose from the floor, and she did not look at him. She crossed to the window as a woman goes to see about the weather. Then the frame stood empty and the curtain moved in it. The guards went and leaned out over the sill, pointing, like men at the rail of a ship. He went out by the door. He did not run until the lane."
+  }
+];
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Build one sample as an HTML string. */
+const cardHtml = (card) => `
+  <label class="card" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span></div>
+    <p class="words">${esc(card.text)}</p>
+  </label>`;
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: what is right or wrong here (optional)">
+  </section>`;
+
+/** One tab panel: blurb and its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** Update the selected-card ring and the running counts. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'CUT slot'
+    : keep.length === 1 ? `KEEP ${keep[0]}`
+    : `MERGE ${keep.join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the kept count, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'BALLOT — the Narrator voice, round 5',
+    `kept ${k.length} of ${CARDS.length}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>

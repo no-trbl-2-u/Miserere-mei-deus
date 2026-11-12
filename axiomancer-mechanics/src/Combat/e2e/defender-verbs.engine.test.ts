@@ -4,7 +4,7 @@
  *
  * Pins each card-program piece the Defender's 30 cards need to T's rulings of
  * 2026-10-26 (`plan/phases/phase_DF1_defender_trial_set.md`, Sources; the
- * ledger `plan/card-ledger/rehearsal-defender.md`):
+ * ledger `plan/ballots/rehearsal-defender.md`):
  *   · RETRIEVE n: a random card from your discard back to your hand.
  *   · A random EXILED card back into your draw pile (M-07 PAID).
  *   · "If this card is discarded" (M-09): fires on a random discard and on

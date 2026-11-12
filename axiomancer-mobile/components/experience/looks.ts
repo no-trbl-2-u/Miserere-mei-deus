@@ -6,7 +6,7 @@
  * ledger's ids, each with one of three looks: Brass Gothic, Vellum & Ink, or
  * Normal (today's code path, untouched). The values are T's picks in the kit
  * mixer, pasted 2026-11-06; the picks and T's notes verbatim are the Verdicts
- * section of `plan/card-ledger/ui-kit.md`.
+ * section of `plan/ballots/ui-kit.md`.
  *
  * A component NEVER hard-codes a look: it reads its place's look from `LOOKS`
  * (or `lookOf`), so a change of heart is a one-line edit here rather than a

@@ -38,7 +38,7 @@ export const FONTS = {
 };
 
 /**
- * The 15 jobs type does, one per ballot place (T's verdict in `plan/card-ledger/fonts.md`).
+ * The 15 jobs type does, one per ballot place (T's verdict in `plan/ballots/fonts.md`).
  * A component names the job, never a face. None of T's faces is a
  * condensed capital face, so no role tracks out; Marcellus SC is small caps
  * already. `fontFamily` must name a face in `theme/fontFaces.ts`.

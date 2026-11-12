@@ -169,7 +169,7 @@ upgrade either way.
 | `(attended)` rows | 17 open rows T does himself | march §3 | no native type | ruling R2 |
 | asap | LIFO (newest asap first) | `skills/plot.md` | Asap lane, FIFO | TAKE (order flips; written in today's order) |
 | Decisions log | One file, D1-D118, gaps and collisions | accreted | `identity/decisions/2026.md` | TAKE (candidate held to 11-11) |
-| Part plans | `loop-gates`, dated prompt/decision files, `revamp/`, `labyrinth/`, `ideas/`, `card-ledger/` (a deployed Pages dir) | /messy, D46, D102 | partial | MERGE (`card-ledger/` stays put) |
+| Part plans | `loop-gates`, dated prompt/decision files, `revamp/`, `labyrinth/`, `ideas/`, `ballots/` (a deployed Pages dir; `card-ledger/` until 2026-11-11) | /messy, D46, D102 | partial | MERGE (`ballots/` stays put) |
 
 ## The open queue the conversion must carry
 
@@ -265,7 +265,7 @@ finishes the row.
 | AGENTS rules 1, 5, 7, 8, 9; THE OPEN GATE | KEEP | `AGENTS.md` (rule 1 loses the build-plan driver; rule 7 files chunks through `/plot`) | kept |
 | CLAUDE.md | MERGE | refs updated in place | move to AGENTS left for a later chunk |
 | bearings: D-citing loop law; knob values | MERGE / KEEP | `plan/bearings.md` (unchanged values, `## Loop knobs` added) | `identity/decisions/` not adopted yet |
-| deadlines, NEEDS_T, DevLog, part plans, `card-ledger/` | KEEP | unchanged; aliases resolve through `deadlines-lib.mjs` (NX1c) | kept |
+| deadlines, NEEDS_T, DevLog, part plans, `ballots/` | KEEP | unchanged; aliases resolve through `deadlines-lib.mjs` (NX1c) | kept |
 | `[blocked: owner-led]`, `(attended)` rows (R2) | TAKE | Held lines in `plan/README.md` with `since`/`until`/`max_age` | carried |
 | the ten `[-]` rows (R7) | archive as dropped | `plan/ARCHIVE.md` dropped lines; one `plan/AUDIT.md` row for the carry-overs | carried |
 

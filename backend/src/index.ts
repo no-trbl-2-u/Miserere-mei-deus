@@ -57,7 +57,7 @@
  * from the play-log tables; `human` rows are never touched.
  *
  * The ballot routes alone are called from a browser page on another origin
- * (the card-ledger ballots, `plan/card-ledger/ballot-kit.js`, phase BV1b):
+ * (the ballots, `plan/ballots/ballot-kit.js`, phase BV1b):
  * they answer an `OPTIONS` preflight before the token check and echo an origin
  * the `BALLOT_ORIGINS` var allows on every response. The other routes send no
  * CORS header.

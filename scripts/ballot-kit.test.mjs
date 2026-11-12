@@ -1,4 +1,4 @@
-// Tests for plan/card-ledger/ballot-kit.js (phases BV1b, BV2b): the kit's pure parts,
+// Tests for plan/ballots/ballot-kit.js (phases BV1b, BV2b): the kit's pure parts,
 // loaded in a vm the way a browser loads a classic script, plus the index and
 // the ballots it lists.
 import { test } from 'node:test';
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const LEDGER = join(ROOT, 'plan/card-ledger');
+const LEDGER = join(ROOT, 'plan/ballots');
 
 function loadKit() {
   const context = vm.createContext({});
@@ -25,6 +25,23 @@ test('loads as a classic script without a DOM and exposes BallotKit', () => {
   assert.equal(typeof kit.mount, 'function');
   assert.equal(kit.API_KEY, 'ballot:api');
   assert.equal(kit.draftKey('elementalist-2026-10-22'), 'ballot:elementalist-2026-10-22:draft');
+});
+
+test('Mark complete keeps its stamp per ballot and reads only its own', () => {
+  assert.equal(kit.completeKey('village-2026-11-09'), 'ballot:village-2026-11-09:complete');
+  const at = '2026-11-11T20:30:00.000Z';
+  assert.equal(kit.restoreComplete(kit.serialiseComplete(at)), at);
+  assert.equal(kit.restoreComplete(null), null);
+  assert.equal(kit.restoreComplete('{"at":"soon"}'), null);
+  assert.equal(kit.restoreComplete('not json'), null);
+});
+
+test('Mark complete says whether anything was sent', () => {
+  const at = '2026-11-11T20:30:00.000Z';
+  assert.match(kit.completeWords(at, null), /^Marked complete on this device at 2026-11-11 20:30 UTC\./);
+  assert.match(kit.completeWords(at, null), /Nothing was sent: this device has no API token/);
+  assert.match(kit.completeWords(at, { ok: true, id: 7 }), /Submitted too: verdict #7\./);
+  assert.match(kit.completeWords(at, { ok: false, words: 'No answer.' }), /It was not submitted\. No answer\./);
 });
 
 test('a draft round trips, dropping blank notes', () => {
@@ -184,6 +201,8 @@ test('the index lists every ballot file once, one entry per family', () => {
     assert.ok(['open', 'closed', 'complete'].includes(b.status), `${b.id} status`);
     assert.match(b.date, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(existsSync(join(LEDGER, b.ledger)), `${b.ledger} exists`);
+    assert.ok(['cards', 'screens', 'look', 'voice', 'enemies'].includes(b.kind), `${b.id} kind`);
+    if (b.thumb) assert.ok(existsSync(join(LEDGER, b.thumb)), `${b.thumb} exists`);
   }
 });
 

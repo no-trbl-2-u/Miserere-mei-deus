@@ -318,7 +318,7 @@ T's own pieces (`experience/provenance.json`: owner-supplied, T).
 
 ### Type
 
-T's ballot picks (`plan/card-ledger/fonts.md`, voted 2026-11-06), with how to
+T's ballot picks (`plan/ballots/fonts.md`, voted 2026-11-06), with how to
 set each so it does not fall back into the tells. Spec 156.2 builds the roles;
 this is how to use them.
 
@@ -424,7 +424,7 @@ Before a UI PR asks for review, against its own 390×844 screenshot:
   https://itch.io/devlog/717434/using-ai-as-a-consultant-for-ui.amp
   (game developers told their UI looks AI-made: use real art).
 - The game's own art and its records, listed under "What the art does".
-- T's font verdict: `plan/card-ledger/fonts.md`. Spec:
+- T's font verdict: `plan/ballots/fonts.md`. Spec:
   `plan/156-ty1-type-and-design-audit.md`.
 
 Evidence across these is thin: no controlled comparisons, mostly
