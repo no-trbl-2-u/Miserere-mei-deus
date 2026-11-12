@@ -39,7 +39,17 @@ describe('the empty waypoint on the map', () => {
         const nodes = ACT_1_MAPS.flatMap((m) => nodesOf(m));
         const waypoints = nodes.filter((n) => n.type === 'waypoint').map((n) => n.id).sort();
         expect(waypoints).toEqual(['bc-7', 'cw-14', 'cw-4', 'cw-8', 'ld-7']);
-        expect(nodes.filter((n) => (n.type === 'waypoint') === n.pooled).map((n) => n.id)).toEqual([]);
+        // A map's start node draws as `start` whatever its pool (a start node may hold only a slot scene).
+        expect(nodes.filter((n) => n.type !== 'start' && (n.type === 'waypoint') === n.pooled).map((n) => n.id)).toEqual([]);
+    });
+
+    it('draws a pool-less start node as start, not a waypoint', () => {
+        const starts = ACT_1_MAPS.flatMap((m) => nodesOf(m)).filter((n) => ['cw-1', 'bc-1', 'ld-1'].includes(n.id));
+        expect(starts.map((n) => n.id).sort()).toEqual(['bc-1', 'cw-1', 'ld-1']);
+        for (const n of starts) {
+            expect(n.pooled).toBe(false);
+            expect(n.type).toBe('start');
+        }
     });
 
     it('never commits combat', () => {

@@ -18,7 +18,7 @@
 import { describe, expect, it } from 'vitest';
 import { takeTravel } from '../MapEvents/travel';
 
-import { getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool } from '../index';
+import { getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool, isBeforeScene } from '../index';
 import { auditMapTraversal } from '../world.reducer';
 import { createNewGameState } from '../../Game/game.reducer';
 import { EnemiesByMap } from '../../Enemy/enemy.library';
@@ -37,6 +37,12 @@ function standingOn(map: typeof charcoalWood, nodeId: string): GameState {
             currentMap: { ...createMapState(map), currentNode: nodeId },
         },
     };
+}
+
+/** A node's own event: a start node's scene plays first, so resolve past it. */
+function ownEvent(state: GameState) {
+    const first = resolveMapEvent(state);
+    return isBeforeScene(first.event) ? resolveMapEvent(first.state) : first;
 }
 
 describe('the Charcoal Wood map', () => {
@@ -59,7 +65,7 @@ describe('the Charcoal Wood map', () => {
 
 describe('the Charcoal Wood\'s events (D29)', () => {
     const kinds = Object.fromEntries(
-        charcoalWood.nodes.map(n => [n.id, resolveMapEvent(standingOn(charcoalWood, n.id)).event.kind]),
+        charcoalWood.nodes.map(n => [n.id, ownEvent(standingOn(charcoalWood, n.id)).event.kind]),
     );
     /** Each node's authored payload (every Charcoal Wood pool has one entry). */
     const payloads = charcoalWood.nodes.flatMap(
@@ -71,11 +77,11 @@ describe('the Charcoal Wood\'s events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(20);
     });
 
-    it('spreads 7 encounters, 3 rests, 3 loot caches, 3 waypoints, 1 hazard, 1 Anvil, an arrival and a door', () => {
+    it('spreads 7 encounters, 3 rests, 3 loot caches, 3 waypoints, 1 hazard, 1 Anvil, an arrival scene and a door', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 3, none: 3, hazard: 1, village: 1, cutscene: 1, travel: 1,
+            encounter: 7, rest: 3, 'loot-cache': 3, none: 4, hazard: 1, village: 1, travel: 1,
         });
     });
 
@@ -83,8 +89,12 @@ describe('the Charcoal Wood\'s events (D29)', () => {
         expect(kinds['cw-18']).toBe('village');
     });
 
-    it('opens on the arrival over the river bridge', () => {
-        expect(kinds['cw-1']).toBe('cutscene');
+    it('opens on the arrival over the river bridge: a slot scene, then an empty waypoint', () => {
+        const first = resolveMapEvent(standingOn(charcoalWood, 'cw-1'));
+        expect(isBeforeScene(first.event)).toBe(true);
+        expect(first.event).toMatchObject({ kind: 'cutscene', scene: 'charcoal-wood-arrival', slot: 'before' });
+        expect(getNodeEventPool('coastal-continent', 'charcoal-wood', 'cw-1')).toBeUndefined();
+        expect(resolveMapEvent(first.state).event.kind).toBe('none');
     });
 
     it('pins every fight to a low level, never above the Act 1 door fight\'s level (3)', () => {

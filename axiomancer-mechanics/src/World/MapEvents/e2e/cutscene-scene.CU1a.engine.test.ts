@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { listRegisteredMapEventPools } from '../resolve-map-event';
+import { getNodeScene, listRegisteredMapEventPools } from '../resolve-map-event';
 import { resolveCutscene } from '../handlers';
 import '../content';
 import { createStartingWorld } from '../../index';
@@ -33,7 +33,6 @@ const FIVE: ReadonlyArray<readonly [string, string]> = [
     ['bw-l2', 'clifftop-chapel'],
     ['bw-d5', 'old-watchtower'],
     ['bw-p3', 'high-pass'],
-    ['cw-1.cutscene', 'charcoal-wood-arrival'],
 ];
 
 describe('cutscene scene ids (CU1a)', () => {
@@ -42,6 +41,14 @@ describe('cutscene scene ids (CU1a)', () => {
         expect(payload.scene).toBe(scene);
         const { event } = resolveCutscene(freshState(), payload);
         expect(event).toMatchObject({ kind: 'cutscene', scene });
+    });
+
+    it('cw-1 carries the scene id charcoal-wood-arrival in its slot and on its resolved event', () => {
+        const payload = getNodeScene('coastal-continent', 'charcoal-wood', 'cw-1')?.before;
+        if (!payload) throw new Error('cw-1 has no scene');
+        expect(payload.scene).toBe('charcoal-wood-arrival');
+        const { event } = resolveCutscene(freshState(), payload);
+        expect(event).toMatchObject({ kind: 'cutscene', scene: 'charcoal-wood-arrival' });
     });
 
     it('keeps the windmill lines and its quest step effect', () => {
