@@ -303,3 +303,41 @@ describe('A13: the rewards alternate', () => {
         for (const step of [2, 4]) expect(EQUIPMENT_LANE[gearOf(step).id]).toBeDefined();
     });
 });
+
+describe('Chapter 1 quest lines are pinned exactly (ledger plan/ballots/narrator-chapter1.md)', () => {
+    const questPayload = (id: string) => {
+        const p = payloadOf(id);
+        if (p.kind !== 'quest') throw new Error(`${id} is not a quest node`);
+        return p;
+    };
+
+    it('names the four givers', () => {
+        expect(questPayload('bw-c2').giver?.name).toBe('Abel Corse');
+        expect(questPayload('bw-l5').giver?.name).toBe('Enoch Marrable');
+        expect(questPayload('bw-k1').giver?.name).toBe('Serjeant Dunmore');
+        expect(questPayload('bw-b1').giver?.name).toBe('Tolliver Pease');
+    });
+
+    it('pins the four refusal lines R-01 to R-04', () => {
+        expect(questPayload('bw-c2').lockedLine).toBe("The men by the fire look past you. You were not sent, and they have nothing for one who was not sent.");
+        expect(questPayload('bw-l5').lockedLine).toBe("Enoch Marrable is at his log and does not lift his head. He has no word for one who brings him no question.");
+        expect(questPayload('bw-k1').lockedLine).toBe("The serjeant does not move from the gate. None to pass without the key, he says, and you have no key.");
+        expect(questPayload('bw-b1').lockedLine).toBe("Tolliver Pease pats the chain as he would a dog. Not while he sits in that house, he says, and offers you the stool.");
+    });
+
+    it('pins the questline name W-01 and the four quest names and log lines C-01 to C-04', () => {
+        expect(BREAKWATER_CHAPTER_QUESTLINE.name).toBe('The Breakwater');
+        const quests = BREAKWATER_CHAPTER_QUESTLINE.steps.map(s => [s.quest.name, s.quest.description]);
+        expect(quests).toEqual([
+            ['The Boat on the Rocks', "A town boat went onto the outer reef in the night. Her men are not aboard and the town will not look. Find them."],
+            ['The Light He Saw', "Abel Corse steered for a light on the head. No lamp has burned in that tower for thirty years. Ask its warden who lit it."],
+            ['The Paid Key', "No one lit the tower. A sea door stands open under the keep on certain nights, and the light is there. The key Marrable was paid fits the keep gate."],
+            ['The Saint Beneath', "The lamp of the harbour burns under the keep, and the lord who bought it sits beside it. Go down."],
+        ]);
+    });
+
+    it('pins the key W-02: its name and description', () => {
+        expect(BREAKWATER_KEEP_KEY.name).toBe('The Paid Key');
+        expect(BREAKWATER_KEEP_KEY.description).toBe("An iron key, never turned. Enoch Marrable was paid it for the lamp of the harbour.");
+    });
+});
