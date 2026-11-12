@@ -66,15 +66,15 @@ function mountExploration(store: AppStore) {
     return tree;
 }
 
-const STARTS = [
+const STARTS: Array<[string, string, string, string]> = [
     ['charcoal-wood', 'coastal-continent', 'cw-1', 'cw-2'],
     ['beacon-crags', 'northern-continent', 'bc-1', 'bc-2'],
     ['lantern-deep', 'northern-continent', 'ld-1', 'ld-2'],
-] as const;
+];
 
 describe.each(STARTS)('%s: a slot-only start node', (map, continent, startId, nextId) => {
     function makeStore(): AppStore {
-        return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld(map) } });
+        return createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld(map as Parameters<typeof createStartingWorld>[0]) } });
     }
 
     it('has no pool, draws as the start and is owed its arrival', () => {

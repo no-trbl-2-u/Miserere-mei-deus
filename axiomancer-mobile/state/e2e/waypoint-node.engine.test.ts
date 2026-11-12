@@ -47,8 +47,8 @@ describe('the empty waypoint on the map', () => {
         const starts = ACT_1_MAPS.flatMap((m) => nodesOf(m)).filter((n) => ['cw-1', 'bc-1', 'ld-1'].includes(n.id));
         expect(starts.map((n) => n.id).sort()).toEqual(['bc-1', 'cw-1', 'ld-1']);
         for (const n of starts) {
-            expect(n.pooled, n.id).toBe(false);
-            expect(n.type, n.id).toBe('start');
+            expect(n.pooled).toBe(false);
+            expect(n.type).toBe('start');
         }
     });
 
