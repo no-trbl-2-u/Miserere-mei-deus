@@ -2,6 +2,13 @@
  * `resolveMapEvent` — the map-event dispatcher.
  *
  * Walks the contract:
+ *   S. The scene slot (spec 178, SS1a): a node whose `before` scene
+ *      (`registerNodeScene`) has not played this run returns that scene as
+ *      `{ kind: 'cutscene', slot: 'before' }`, applies its effect and records
+ *      the node in `seenScenes`, and does nothing else: the arrival stays
+ *      owed, the node unspent, its adjacents as they were. The next call
+ *      resolves the node's own event as if it had no scene. Read after the
+ *      spent check (a spent node plays no scene) and never on a labyrinth.
  *   0. Answer the node's arrival: clear `pendingArrival` if it names this
  *      node. Resolving IS the answer, whatever the roll produces, so this
  *      happens before any handler runs.
@@ -42,14 +49,15 @@ import {
 } from '../world.reducer';
 import { getMapDefinition } from '../map.registry';
 import { getRng } from '../../Utils/rng';
-import { applyPayload } from './handlers';
+import { applyPayload, resolveCutscene } from './handlers';
 import { resolveDeath } from '../../Game/death';
 import { reachableObjectives, progressQuest, advanceHazardObjectives } from '../quest.engine';
 import { settleQuestLog, questNodeStage, getQuestline, questlineStep, questStepState } from '../questline';
 import type { QuestLog, NodeId } from '../types';
+import type { ContinentName, MapName } from '../map.library';
 import type {
     MapEventPayload, MapEventPool, MapEventPoolEntry, MapEventKind, ResolveMapEventResult, ResolvedEvent,
-    QuestPayload,
+    QuestPayload, NodeScene,
 } from './types';
 
 /**
@@ -142,12 +150,73 @@ export function getShadowedNodeOverrideKeys(): string[] {
     return shadowed.sort();
 }
 
-/** Test-only: clear every pool registration. Used by hermetic tests. */
+/** Test-only: clear every pool registration and every node scene. Used by hermetic tests. */
 export function _clearMapEventPoolRegistry(): void {
     poolRegistry.clear();
     defaultPoolByMap.clear();
     nodePoolOverrides.clear();
     nodePoolOverrideWrites.clear();
+    nodeScenes.clear();
+}
+
+// ─── The scene slot (spec 178, SS1a) ──────────────────────────────────────────
+
+/**
+ * Node scenes, keyed `continent:map:node` like the node overrides. A node with
+ * no pool (an empty waypoint) can carry one. Last write wins.
+ */
+const nodeScenes = new Map<string, NodeScene>();
+
+/**
+ * Places `scene` on a map node: its `before` cutscene plays on the first
+ * arrival of a run, ahead of the node's own event (`resolveMapEvent`).
+ */
+export function registerNodeScene(
+    continent: string,
+    mapName: string,
+    nodeId: string,
+    scene: NodeScene,
+): void {
+    nodeScenes.set(poolKey(continent, mapName, nodeId), scene);
+}
+
+/**
+ * Read-only: the scene registered on a node, or `undefined`. A labyrinth map
+ * reads no scene table, so it always answers `undefined` there.
+ */
+export function getNodeScene(
+    continent: string,
+    mapName: string,
+    nodeId: string,
+): NodeScene | undefined {
+    if (isLabyrinthMap(continent, mapName)) return undefined;
+    return nodeScenes.get(poolKey(continent, mapName, nodeId));
+}
+
+/**
+ * True when `event` is a node's before-scene: the host plays it, then
+ * resolves the same node again for its own event.
+ */
+export function isBeforeScene(event: ResolvedEvent): boolean {
+    return event.kind === 'cutscene' && event.slot === 'before';
+}
+
+/**
+ * The before-scene step: the node's unseen `before` scene as a cutscene with
+ * `slot: 'before'`, its effect applied and the node added to `seenScenes`.
+ * Nothing else moves. `undefined` when the node has no scene or it was seen.
+ */
+function playBeforeScene(state: GameState, nodeId: NodeId): ResolveMapEventResult | undefined {
+    const map = state.world.currentMap;
+    const scene = getNodeScene(map.continent, map.name, nodeId);
+    if (!scene || (map.seenScenes ?? []).includes(nodeId)) return undefined;
+    const played = resolveCutscene(state, scene.before);
+    const after = played.state.world.currentMap;
+    const seen = { ...after, seenScenes: [...(after.seenScenes ?? []), nodeId] };
+    return {
+        state: { ...played.state, world: { ...played.state.world, currentMap: seen } },
+        event: played.event.kind === 'cutscene' ? { ...played.event, slot: 'before' } : played.event,
+    };
 }
 
 function lookupPool(
@@ -219,12 +288,16 @@ export function getNodePrimaryEventKind(
 // ─── Revisits (phase WR1b) ────────────────────────────────────────────────────
 
 /** True on a labyrinth map; false on a gauntlet or a map the registry does not hold. */
-function onLabyrinth(map: GameState['world']['currentMap']): boolean {
+function isLabyrinthMap(continent: string, mapName: string): boolean {
     try {
-        return getMapDefinition(map.continent, map.name).traversal === 'labyrinth';
+        return getMapDefinition(continent as ContinentName, mapName as MapName).traversal === 'labyrinth';
     } catch {
         return false;
     }
+}
+
+function onLabyrinth(map: GameState['world']['currentMap']): boolean {
+    return isLabyrinthMap(map.continent, map.name);
 }
 
 /**
@@ -387,6 +460,14 @@ export function resolveMapEvent(
     if (resolvesNothing(state, nodeId)) {
         const none: ResolvedEvent = { kind: 'none' };
         return { state: answered, event: none };
+    }
+
+    // S. The scene slot: an unseen before-scene plays first, and that is the
+    //    whole call (no arrival answered, nothing spent, nothing opened). A
+    //    staged payload stands in for the node, scene and all.
+    if (!staged) {
+        const scene = playBeforeScene(state, nodeId);
+        if (scene) return scene;
     }
 
     // Restore the pre-Phase-25 reach-objective auto-advance — any active

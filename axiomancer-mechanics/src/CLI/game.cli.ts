@@ -57,7 +57,7 @@ import type { PersistenceAdapter } from '../Game/persistence/types';
 import type { TypedLevelUpEvent } from '../Game/events.types';
 import { getMapDefinition } from '../World/map.registry';
 import {
-    resolveMapEvent, settleArrival, MAP_REGISTRY, getNodePrimaryEventKind, takeTravel,
+    resolveMapEvent, settleArrival, isBeforeScene, MAP_REGISTRY, getNodePrimaryEventKind, takeTravel,
     legalMovesFrom, roadRouteTo, roadReachable, syncWorldMoveLists, acceptQuestStep, turnInQuestStep,
 } from '../World';
 import { resolveDeath } from '../Game/death';
@@ -182,16 +182,23 @@ async function resolveCurrentNodeEvent(
     flags: CliFlags,
     nodeLabel: string,
 ): Promise<NodeResolutionResult> {
-    const before = store.getState();
-    const result = resolveMapEvent(before);
-    store.setState({
-        player: result.state.player,
-        world:  result.state.world,
-        quests: result.state.quests,
-        flags:  result.state.flags,
-    });
-    logState('resolveMapEvent', before, store.getState(), result.event);
-    log(describeResolvedEvent(result.event));
+    const resolveOnce = (): ReturnType<typeof resolveMapEvent> => {
+        const before = store.getState();
+        const resolved = resolveMapEvent(before);
+        store.setState({
+            player: resolved.state.player,
+            world:  resolved.state.world,
+            quests: resolved.state.quests,
+            flags:  resolved.state.flags,
+        });
+        logState('resolveMapEvent', before, store.getState(), resolved.event);
+        log(describeResolvedEvent(resolved.event));
+        return resolved;
+    };
+    // A node's before-scene (spec 178) plays first and leaves the node owed:
+    // resolve again so the walk reaches the node's own event.
+    const first = resolveOnce();
+    const result = isBeforeScene(first.event) ? resolveOnce() : first;
 
     let combatOutcome: CombatOutcome | null = null;
     if (result.event.kind === 'encounter') {

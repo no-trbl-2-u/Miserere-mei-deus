@@ -129,6 +129,17 @@ export interface CutscenePayload {
     effect?: CutsceneEffect;
 }
 
+/**
+ * A node's scene slot (spec 178, SS1a): story placed on any map node, played
+ * before the node's own event. Registered per node beside the pools
+ * (`registerNodeScene`); plays once a run (`MapState.seenScenes`). One field
+ * per moment, so a later "after" scene is a new optional field.
+ */
+export interface NodeScene {
+    /** Played on the first arrival, before the node's own event resolves. */
+    before: CutscenePayload;
+}
+
 /** A cutscene's effect on the state (see `CutscenePayload.effect`). */
 export interface CutsceneEffect {
     giveQuestStep?: { questline: QuestlineId; step: number };
@@ -315,7 +326,10 @@ export type ResolvedEvent =
         anvil?: VillageAnvil;
         description?: string;
     }
-    | { kind: 'cutscene';    lines: readonly string[]; scene?: string }
+    // `slot: 'before'`: a node's scene (`NodeScene.before`), played ahead of the
+    // node's own event; the node is not spent and its arrival is still owed, so
+    // the host resolves the node again for its own event.
+    | { kind: 'cutscene';    lines: readonly string[]; scene?: string; slot?: 'before' }
     | { kind: 'hazard';      effects: ActiveEffect[]; damage: number; description?: string }
     | { kind: 'loot-cache';  items: Item[]; currency: number; description?: string; actions?: LootCacheActionLines }
     // The OFFER: the state has not moved. `open` is false while the

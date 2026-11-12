@@ -76,13 +76,16 @@ export {
     getNodePrimaryEventKind,
     actsOnRevisit,
     isQuietWalkBack,
+    registerNodeScene,
+    getNodeScene,
+    isBeforeScene,
 } from './MapEvents/resolve-map-event';
 // Travel: the yes to a "move to X?" (phase NK1d).
 export { takeTravel, travelPayloadAt } from './MapEvents/travel';
 export { isTravelOpen } from './MapEvents/handlers';
 export type {
     MapEventKind, QuestPayload, QuestGiver, TravelPayload, TravelDestination,
-    MapEventPayload, ResolvedEvent, ResolveMapEventResult,
+    MapEventPayload, ResolvedEvent, ResolveMapEventResult, NodeScene, CutscenePayload,
 } from './MapEvents/types';
 export type {
     Questline, QuestlineStep, QuestlineId, QuestlineSettle, QuestNodeStage, QuestStepView, RouteRef,

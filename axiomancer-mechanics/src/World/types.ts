@@ -290,6 +290,11 @@ export interface BlockedRoute {
  *                             player already took; a later win over that elite
  *                             offers cards only (`markEliteUpgradeTaken`).
  *                             Absent = none taken, the same way.
+ * @property seenScenes      - Nodes whose scene slot (`NodeScene.before`) has
+ *                             played this run (spec 178): a seen scene never
+ *                             plays again. Absent = none seen; saves written
+ *                             before this field default to that, with no
+ *                             migration.
  * @property hazardOutcomes  - Persistent hazard effects applied to this map.
  *                             Tracks modifier effects and cleared/blocked/modified states.
  * @property blockedRoutes    - Routes blocked by hazard outcomes (e.g., collapsed bridge).
@@ -309,6 +314,7 @@ export interface MapState {
     arrivedFrom?: NodeId | null;
     retiredEliteNodes?: NodeId[];
     eliteUpgradeTakenNodes?: NodeId[];
+    seenScenes?: NodeId[];
     hazardOutcomes: HazardNodeOutcome[];
     blockedRoutes: BlockedRoute[];
 }
