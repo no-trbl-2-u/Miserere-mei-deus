@@ -1257,6 +1257,16 @@ it.
 - Cutscenes folded into other nodes (T: "another time").
 - The event-node screens per kind (NK1's per-kind sittings).
 
+### [ ] [owner] Follow-ups carried from spec 178 when it retired: A scene before any node, and no more cutscene nodes
+- proposed: 2026-11-12, settle retired spec 178 (its last close's `absorb:`); kept verbatim, some may already be done, T triages
+- source signals: the Follow-ups section of `plan/178-ss1-scene-slots.md`, deleted in the settle commit that added this row.
+- proposed scope: none yet; each is plotted on its own.
+
+#### Follow-ups (out of scope)
+
+- **Scene after (B).** `NodeScene.after`: a scene played after a node's event settles (after a won fight, a taken cache), on the same table and the same once-a-run record. T agreed to it sharing the mechanism (2026-11-12); plot it when the story asks for one.
+- **Scenes fired by game state (C).** A scene that plays on a condition (a quest step done, a level reached) wherever the player stands. Deferred by T (2026-11-12).
+
 ## Promoted
 
 Earlier entries are archived verbatim in `archive-pre-revamp:plan/archive/PHASE_CANDIDATES_2026.md`.
