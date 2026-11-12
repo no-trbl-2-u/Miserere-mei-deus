@@ -39,6 +39,9 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
+- **177.15** · NV1o: the cutscene screen pages a long panel so the Keeper stays on screen (T, `/plot asap`, 2026-11-12)
+- **177.16** · NV1p: the quest card fits at 360x740 (T, `/plot asap`, 2026-11-12)
+- **177.17** · NV1q: S-17 matches the Saint Beneath's portrait; the pilot's test gaps close (T, `/plot asap`, 2026-11-12)
 
 
 
@@ -87,7 +90,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 6 left |
+| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 9 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
