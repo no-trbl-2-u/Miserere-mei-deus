@@ -5,7 +5,58 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { PR_MARKER, parseChangedLines, prOutcome, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { execFileSync } from 'node:child_process'
+import { dirname, join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+import { PR_MARKER, mutatedFiles, parseChangedLines, prOutcome, rangeConfigSource, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
+
+test('rangeConfigSource hands the changed files to the base config through EVAL_STRYKER_MUTATE, then replaces mutate', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'range-config-'))
+  const before = process.env.EVAL_STRYKER_MUTATE
+  try {
+    // A base config that records the env it saw while loading.
+    writeFileSync(join(dir, 'base.mjs'), 'export default { seen: process.env.EVAL_STRYKER_MUTATE, mutate: ["old.ts"], keep: 1 }\n')
+    const entries = ['app/cutscene/index.tsx:10-20', 'state/x.ts:3-3']
+    writeFileSync(join(dir, 'range.mjs'), rangeConfigSource(pathToFileURL(join(dir, 'base.mjs')).href, entries))
+    const config = (await import(pathToFileURL(join(dir, 'range.mjs')).href)).default
+    assert.deepEqual(JSON.parse(config.seen), entries)
+    assert.deepEqual(config.mutate, entries)
+    assert.equal(config.keep, 1)
+  } finally {
+    if (before === undefined) delete process.env.EVAL_STRYKER_MUTATE
+    else process.env.EVAL_STRYKER_MUTATE = before
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('the mobile config relates its jest tests to the files in EVAL_STRYKER_MUTATE, else to the two presenters', () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
+  const config = pathToFileURL(join(root, 'scripts/eval/stryker/mobile.config.mjs')).href
+  const tests = (env) => {
+    const code = `const { default: c } = await import(${JSON.stringify(config)}); console.log(JSON.stringify(c.jest.config.testMatch))`
+    const out = execFileSync(process.execPath, ['--input-type=module', '-e', code], {
+      cwd: join(root, 'axiomancer-mobile'),
+      env: { ...process.env, EVAL_STRYKER_MUTATE: env },
+      encoding: 'utf8',
+      maxBuffer: 16 * 1024 * 1024,
+    })
+    return JSON.parse(out.trim().split('\n').at(-1))
+  }
+  const set = tests(JSON.stringify(['app/cutscene/index.tsx:10-20']))
+  assert.ok(set.some((t) => t.endsWith('state/e2e/cutscene-leaves-first.test.tsx')), 'the changed file\'s own test is run')
+  const fixed = tests('')
+  assert.ok(!fixed.some((t) => t.endsWith('state/e2e/cutscene-leaves-first.test.tsx')), 'unset, only the presenters\' tests are run')
+  assert.ok(fixed.length > 0)
+})
+
+test('mutatedFiles strips the line ranges from EVAL_STRYKER_MUTATE and falls back to the fixed list when it is unset', () => {
+  assert.deepEqual(mutatedFiles(['fixed.ts'], '["app/cutscene/index.tsx:10-20","state/x.ts:3-3","bare.ts"]'), ['app/cutscene/index.tsx', 'state/x.ts', 'bare.ts'])
+  assert.deepEqual(mutatedFiles(['fixed.ts'], undefined), ['fixed.ts'])
+  assert.deepEqual(mutatedFiles(['fixed.ts'], ''), ['fixed.ts'])
+})
 
 const DIFF = [
   'diff --git a/axiomancer-mechanics/src/Combat/health.ts b/axiomancer-mechanics/src/Combat/health.ts',

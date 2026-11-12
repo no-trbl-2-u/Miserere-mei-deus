@@ -230,6 +230,33 @@ export function scopeChangedLines(changed, scopes = PR_SCOPES) {
 }
 
 /**
+ * The source of a Stryker config that is the workspace's base config with `mutate` replaced. It sets
+ * EVAL_STRYKER_MUTATE (a JSON array of the `file:from-to` entries) before the base loads, because the mobile
+ * config reads it to relate tests to the changed files and not to its fixed list.
+ *
+ * @param {string} baseUrl the base config's file URL.
+ * @param {string[]} mutate Stryker `mutate` entries.
+ * @returns {string} the config module's text.
+ */
+export function rangeConfigSource(baseUrl, mutate) {
+  const json = JSON.stringify(mutate)
+  return `process.env.EVAL_STRYKER_MUTATE = ${JSON.stringify(json)}\nconst { default: base } = await import(${JSON.stringify(baseUrl)})\nexport default { ...base, mutate: ${json} }\n`
+}
+
+/**
+ * The files a mobile config relates tests to: the `mutate` entries in EVAL_STRYKER_MUTATE with their `:from-to`
+ * line ranges stripped, else the config's own fixed list.
+ *
+ * @param {string[]} fallback the config's fixed list.
+ * @param {string|undefined} env EVAL_STRYKER_MUTATE.
+ * @returns {string[]} the files.
+ * @example mutatedFiles(['a.ts'], '["app/x.tsx:3-9"]') // ['app/x.tsx']
+ */
+export function mutatedFiles(fallback, env) {
+  return env ? JSON.parse(env).map((m) => m.replace(/:\d+-\d+$/, '')) : fallback
+}
+
+/**
  * A run outcome fit for a table cell: colour codes stripped, and Stryker's
  * refusal to run with no related test said plainly.
  *

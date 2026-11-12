@@ -56,6 +56,9 @@ of storytelling of Cormac McCarthy."
     narrate skill and spec 177 are amended when this story is plotted.
 12. **Cruelty.** Scenes rotate through the stops 1, 2, 1, 3, 1, 4, 1, 5 and
     round again. A child's death is named and never shown.
+13. **Portraits are canon (T, 2026-11-12: "Portrait wins").** A creature's or
+    person's approved portrait is canon for how it looks; a scene or
+    description that disagrees is redrawn through `/narrate`.
 
 ## Act 1, map by map
 

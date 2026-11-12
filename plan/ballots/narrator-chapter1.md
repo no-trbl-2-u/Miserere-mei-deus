@@ -135,9 +135,11 @@
 
 ### S-17 · `bw-k2` Sea keep · stop 1 (plain)
 
+T, 2026-11-12: "Portrait wins"; panel 2 redrawn through /narrate at stop 1 and approved.
+
 1. The stair goes down and not up. Under the keep is a round room with one door to the sea, shut now, and the lamp of the harbour burns on the bare floor, white and soundless. You look for your shadow and there is the floor and the light upon it.
 
-2. The lord of the place sits beyond the lamp. Thirty years in that light have taken the edges from him, and he is grown pale and manifold as coral grows, branched and rebranched, and through him you can see the wall. About him on the floor lie the tithes of all those years, laid out in rows, and not one of them has been let to rot.
+2. The lord of the place lies beyond the lamp. Thirty years in that light have taken the edges from him, and he is grown long and pale and scaled, with an old man's face still set in the front of him, its eyes shut. About him on the floor lie the tithes of all those years, laid out in rows, and not one of them has been let to rot.
 
 3. He turns toward you what serves him for a face. I have stood in that room. I will not tell you when.
 

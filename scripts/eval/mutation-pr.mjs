@@ -23,7 +23,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { PR_SCOPES, parseChangedLines, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
+import { PR_SCOPES, parseChangedLines, rangeConfigSource, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
 import { closeWorktree, openWorktree, runTarget } from './mutation.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -45,7 +45,7 @@ function scopeOf(base, head) {
 function rangeConfig(dir, scope) {
   const file = join(dir, `stryker-pr-${scope.key}.config.mjs`)
   const base = pathToFileURL(resolve(ROOT, scope.config)).href
-  writeFileSync(file, `import base from ${JSON.stringify(base)}\nexport default { ...base, mutate: ${JSON.stringify(scope.mutate)} }\n`)
+  writeFileSync(file, rangeConfigSource(base, scope.mutate))
   return file
 }
 
