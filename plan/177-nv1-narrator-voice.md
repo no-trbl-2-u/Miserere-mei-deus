@@ -64,7 +64,7 @@
 - **A6** Event lines. Every approved hazard, rest, dream, travel, village and loot cache action line is in `content.ts`; each event screen shows its longest line unclipped.
 - **A7** Screen copy. Every approved defeat, withdraw, death return, game over, quest screen and village counter line, and each approved reward eyebrow, is in its copy file; each screen shows it unclipped.
 - **A8** Enemy descriptions. Every approved description is in `enemy.library.ts` with its `DRAFT (Claude)` comment removed.
-- **A10** Story screens and cutscenes. Each Chapter 1 cutscene tells its part of the Act 1 story as T ruled it, in panels, with no sentence past 40 words; none is a one-line hint. The cutscene screen shows a six-panel scene unclipped.
+- **A10** Story screens and cutscenes. Each Chapter 1 scene tells its part of the Act 1 story as T ruled it, in panels, with no sentence past 40 words; none is a one-line hint. Every scene plays from a node's scene slot (spec 178), on the node the story places it on; no node is a cutscene by kind. The cutscene screen shows a six-panel scene unclipped.
 - **A9** No approved line is left as a placeholder, and no unapproved draft is in the game: a test reads the ledger's verdicts and the sources and fails on either.
 
 ## Open questions
@@ -90,7 +90,7 @@ Measure: 9 open · 1 closed · next A11
   - `axiomancer-mechanics/src/World/MapEvents/arrival-lines.ts`: a table keyed by node id in place of the generated placeholder; a node with no approved line keeps `[content] <place>.`
   - Measure: the verdicts test passes for this surface; a screenshot of the fight reveal with the longest line is in the PR.
 - [ ] **177.6** Hazard, rest, dream, travel, village and loot lines in the game · M · closes A6 · needs 177.2, 177.3 · alias: NV1f
-  - `axiomancer-mechanics/src/World/MapEvents/content.ts`: per-node tables for the hazard and rest lines (they are built from the place name today), the three dreams, the two cave travel prompts, a village line each for `bw-t4` and `bw-m5`, and the two action lines of each of the three caches.
+  - `axiomancer-mechanics/src/World/MapEvents/content.ts`: per-node tables for the hazard and rest lines (they are built from the place name today), the three dreams, the two cave travel prompts, a village line each for `bw-t4` and `bw-m5`, and the two action lines of each of the five caches (spec 178's 178.3 makes the old watchtower and the high pass caches).
   - Measure: the verdicts test passes for these surfaces; `cache-action-lines.engine.test.ts` and the chapter e2e pass; one screenshot per event screen with its longest line is in the PR.
 - [ ] **177.7** Screen copy in the game · S · closes A7 · needs 177.2, 177.3 · alias: NV1g
   - Mobile: `combat-summary.copy.ts`, `reveal.copy.ts`, `death-return.copy.ts`, `game-over.copy.ts`, `quest.copy.ts`, `village.copy.ts` (the three counter lines only), `relic-source.copy.ts`.
@@ -99,7 +99,7 @@ Measure: 9 open · 1 closed · next A11
 - [ ] **177.8** Enemy descriptions in the game · S · closes A8 · needs 177.2, 177.3 · alias: NV1h
   - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions, each `DRAFT (Claude)` comment removed with it.
   - Measure: the verdicts test passes for this surface; the enemy library tests pass.
-- [ ] **177.9** Story screens and cutscenes tell the Act 1 story · M · closes A10 · needs 177.2 · alias: NV1i
-  - Waits on T's Act 1 story (T, 2026-11-11: "let's actually write the ACT 1 story together"). The three cutscene drafts in the ledger (`bw-l2`, `bw-d5`, `bw-p3`) and the windmill's opening were written before the story and are redrawn from it, then approved by T.
-  - `axiomancer-mechanics/src/World/MapEvents/content.ts`: the windmill's opening and the three cutscenes, each as panels (`lines`); the cutscene screen's fit at six panels.
+- [ ] **177.9** Story screens and cutscenes tell the Act 1 story · M · closes A10 · needs 177.2, 178.3 · alias: NV1i
+  - Waits on T's Act 1 story (T, 2026-11-11: "let's actually write the ACT 1 story together"). The three cutscene drafts in the ledger (`bw-l2`, `bw-d5`, `bw-p3`) and the windmill's opening were written before the story and are redrawn from it, then approved by T. Since spec 178 (T, 2026-11-12) there are no cutscene nodes: each scene sits in a node's scene slot and plays before that node's own event, so the story may place a scene on any node, and the three drafts' nodes are now a fight and two loot caches that keep their old scene until this chunk rewrites or moves it.
+  - `axiomancer-mechanics/src/World/MapEvents/content.ts`: each scene the story places, as panels (`lines`), in the Breakwater's slot table (`BW_NODE_SCENES`, spec 178), keyed by the node it plays before; the windmill's opening keeps its `giveQuestStep` effect; a slot the story leaves empty is removed. The cutscene screen's fit at six panels.
   - Measure: the verdicts test passes for these surfaces; a screenshot of the longest scene is in the PR.
