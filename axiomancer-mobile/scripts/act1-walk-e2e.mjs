@@ -198,7 +198,7 @@ async function nodeLabel(page, nodeId) {
 
 async function playOutCutscene(page) {
     await tap(page, 'cutscene-skip')
-    for (let k = 0; k < 12; k++) {
+    for (let k = 0; k < 30; k++) {
         if (!(await tap(page, 'cutscene-advance'))) break
         await sleep(250)
     }
@@ -240,7 +240,7 @@ async function playSceneIfAny(page, nodeId) {
     if (!scene) return
     log(`${nodeId}: scene played through`)
     // Tap panel by panel, as a player does (SKIP and a last tap racing would dismiss twice).
-    for (let k = 0; k < 8 && (await page.getByTestId('cutscene-advance').count()); k++) {
+    for (let k = 0; k < 24 && (await page.getByTestId('cutscene-advance').count()); k++) {
         await tap(page, 'cutscene-advance')
         await sleep(900)
     }

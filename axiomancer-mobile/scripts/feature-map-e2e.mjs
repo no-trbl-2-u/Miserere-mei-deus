@@ -248,7 +248,7 @@ async function walkBack(page, nodeId) {
 
 async function playOutCutscene(page) {
     await tap(page, 'cutscene-skip')
-    for (let k = 0; k < 12; k++) {
+    for (let k = 0; k < 30; k++) {
         if (!(await tap(page, 'cutscene-advance'))) break
         await sleep(250)
     }

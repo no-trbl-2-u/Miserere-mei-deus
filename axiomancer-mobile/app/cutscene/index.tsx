@@ -20,6 +20,11 @@
  * fade. SKIP dismisses the event outright (the scene's effect already applied
  * when it resolved, so SKIP loses nothing).
  *
+ * PAGES (NV1o): a ledger panel over 240 characters arrives from `cutsceneView`
+ * as two or more pages, split at sentence ends (`state/presenters/cutscene-pages`),
+ * so the panel stays short enough to keep the narrator on screen at 360x740.
+ * "Line" above means one page, and the count at the foot counts pages.
+ *
  * ACCESSIBILITY: reduce motion collapses every fade to 0; taps are unchanged.
  *
  * STATE OWNERSHIP: component-local cursor only. What the screen draws comes

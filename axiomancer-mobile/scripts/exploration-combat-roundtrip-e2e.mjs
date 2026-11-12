@@ -260,7 +260,7 @@ async function runRoundTrip(page, baseUrl) {
         // SKIP only reveals the remaining lines; the scene ends on a tap of the
         // body once every line is up (`cutscene-advance` → `dismissEvent`).
         await page.getByTestId('cutscene-skip').click({ timeout: 5000, force: true }).catch(() => {})
-        for (let k = 0; k < 12; k++) {
+        for (let k = 0; k < 30; k++) {
             if (!(await page.getByTestId('cutscene-advance').count())) break
             await page.getByTestId('cutscene-advance').click({ timeout: 3000, force: true }).catch(() => {})
             await page.waitForTimeout(250)
