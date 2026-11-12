@@ -5,16 +5,16 @@
  * node `createMapState` places them on — so whatever a map authored for its
  * starting node would be unreachable content.
  *
- * Two halves make it reachable and this file pins both: a map's start node is
- * authored as an arrival CUTSCENE (a kind that is safe to fire the moment
- * the map opens, unlike a fight nobody has had a chance to prepare for) —
- * the Breakwater's bw-w1 today — and `ExplorationScreen` resolves the start
- * node once on entry.
+ * Two halves make it reachable and this file pins both: a map's start node
+ * carries an arrival SCENE in its slot (safe to play the moment the map
+ * opens, unlike a fight nobody has had a chance to prepare for), followed by
+ * its own event, none — the Breakwater's bw-w1 — and `ExplorationScreen`
+ * resolves the start node once on entry.
  *
  * Hermetic = self-contained + deterministic + isolated. See `docs/testing.md`.
  */
 
-import { createStartingWorld } from '@mechanics';
+import { createStartingWorld, isBeforeScene } from '@mechanics';
 import { settledBreakwater } from '@/test-utils/settledBreakwater';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
@@ -87,18 +87,21 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
         expect(vm.startNodePending).toBe(true);
     });
 
-    it('resolves bw-w1 into a live cutscene event when the map screen mounts', () => {
+    it('resolves bw-w1 into its live arrival scene when the map screen mounts', () => {
         const store = makeStore();
         mountExploration(store);
 
         const pending = store.getState().event?.pending;
         expect(pending).not.toBeNull();
-        expect(pending?.event.kind).toBe('cutscene');
+        expect(pending?.event).toMatchObject({ kind: 'cutscene', scene: 'windmill-headland', slot: 'before' });
     });
 
-    it('consumes the start node so the arrival is a one-shot', () => {
+    it('consumes the start node once its scene continues, so the arrival is a one-shot', () => {
         const store = makeStore();
         mountExploration(store);
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w1');
+
+        createAppActions(store).continueToNode();
 
         expect(store.getState().world.currentMap.consumedNodes).toContain('bw-w1');
         expect(selectExplorationViewModel(store.getState()).startNodePending).toBe(false);
@@ -149,9 +152,13 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
     it('does not fire again on a re-mount of the same map', () => {
         const store = makeStore();
         mountExploration(store).unmount();
+        const scene = store.getState().event?.pending?.event;
+        expect(scene && isBeforeScene(scene)).toBe(true);
 
-        // Clear the event slice as the cutscene screen's dismissal would, then
-        // come back to the map. Nothing should re-arm.
+        // End the scene as the cutscene screen does (on to the node's own
+        // event, none), clear the slice, then come back to the map. Nothing
+        // should re-arm.
+        createAppActions(store).continueToNode();
         store.setState({ event: EMPTY_EVENT_SLICE });
         mountExploration(store);
 
@@ -191,7 +198,7 @@ describe('an arrival the player never answered survives a reload', () => {
         // `beginHazardEncounter` clears the event slice on the way in, so
         // `pending` is null by the time this line runs — before AND after the
         // fix. The sibling start-node case can assert `pending` only because
-        // bw-w1 is a CUTSCENE, which has no engage.
+        // bw-w1 opens on a SCENE, which has no engage.
         expect(reloaded.getState().world.currentMap.consumedNodes).not.toContain('bw-w2');
         expect(reloaded.getState().currentEncounter).toBeDefined();
         // The map never hosts the fight: it stays on screen under the route.

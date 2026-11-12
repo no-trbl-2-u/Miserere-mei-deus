@@ -173,7 +173,7 @@ function hazardDeckPresetById(presetId: HazardDeckPresetId): HazardDeckPreset {
 
 /**
  * Opens the hazard on the node underfoot. A node that names a puzzle (the
- * Breakwater's six, `BREAKWATER_HAZARD_PUZZLES`) opens that puzzle's
+ * Breakwater's seven, `BREAKWATER_HAZARD_PUZZLES`) opens that puzzle's
  * one-round board (HP6c); every other node draws a three-round hazard. A
  * pinned hazard id (an option, the dev global or a URL param) always draws
  * the three-round board, so the dev entries and the old-board tests keep it.

@@ -64,6 +64,10 @@ export const COAST_LOOT_CACHES: ReadonlyArray<AuthoredLootCache> = [
     { currency: 8,  description: 'A purse of shillings snagged in the netting, its owner long gone.', actions: PLACEHOLDER_CACHE_ACTIONS },
     { currency: 12, description: 'A waterlogged strongbox wedged under the pilings.', actions: PLACEHOLDER_CACHE_ACTIONS },
     { currency: 6,  description: 'Loose shillings spill from a cracked jar in the rocks.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    // The old watchtower (level 6 country, as the strongbox) and the high pass
+    // (level 2 country, as the cracked jar): placeholders until T's loot pass.
+    { currency: 12, description: '[content] A coin box behind the watchtower\'s fallen stair.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    { currency: 6,  description: '[content] A traveller\'s purse caught in the rocks of the high pass.', actions: PLACEHOLDER_CACHE_ACTIONS },
 ];
 export function lootCachePool(nodeId: string, cache: AuthoredLootCache): MapEventPool {
     return {
@@ -169,18 +173,22 @@ export const ACT1_WAYPOINT_NODES: Readonly<Record<string, readonly string[]>> = 
 };
 const WAYPOINT_NODE_IDS: ReadonlySet<string> = new Set(Object.values(ACT1_WAYPOINT_NODES).flat());
 
+/** One node's scene slot, keyed by its map: a row of `NODE_SCENES`. */
+export interface NodeSceneEntry { continent: string; map: string; nodeId: string; scene: NodeScene }
+
 // ─── The Breakwater (Act 1, map 1) ───────────────────────────────────────────
 //
-// T's Chapter 1 map (`Continents/Coastal-Village/breakwater-chapter.ts`): 44
-// nodes, one pool each, by the node list's board kind
+// T's Chapter 1 map (`Continents/Coastal-Village/breakwater-chapter.ts`): 43
+// nodes, one pool each but the windmill, by the node list's board kind
 // (`braindump/2026-10-28-breakwater-chapter-1-map.md`, "The node list").
 //
 // Each fight node binds one foe at one level (`BW_ENCOUNTER_FOES`, T's
 // Breakwater table). Placeholders until T's sessions: the elites are the
 // Green Jelly, the Saint Beneath is the chapter boss at the door fight's
 // level (EN3b, 2026-11-07);
-// hazards are the shared damage hazard; rests, loot caches, villages and
-// cutscenes come from the shared builders. Every new line is `[content]`.
+// hazards are the shared damage hazard; rests, loot caches and villages
+// come from the shared builders, and the scenes sit in `BW_NODE_SCENES`.
+// Every new line is `[content]`.
 
 /** The Breakwater's elite, pinned low like every Act 1 fight. */
 export const BW_ELITE_LEVEL = 3;
@@ -195,7 +203,7 @@ export const BW_DOOR_LEVEL = 8;
 /** A board kind: what each node of the node list is. */
 export type BreakwaterChapterKind =
     | 'start' | 'village' | 'quest' | 'boss' | 'elite' | 'hazard'
-    | 'fight' | 'rest' | 'loot' | 'cutscene' | 'travel';
+    | 'fight' | 'rest' | 'loot' | 'travel';
 
 /** Each node's board kind and place (the node list's Kind and Place columns). */
 export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: BreakwaterChapterKind; place: string }>> = {
@@ -226,7 +234,7 @@ export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: Breakwate
     'bw-b1': { kind: 'quest',    place: 'River bridge' },
     'bw-b2': { kind: 'travel',   place: 'Far bank' },
     'bw-l1': { kind: 'fight',    place: 'Cliff crossroads' },
-    'bw-l2': { kind: 'cutscene', place: 'Clifftop chapel' },
+    'bw-l2': { kind: 'hazard',   place: 'Clifftop chapel' },
     'bw-l3': { kind: 'rest',     place: 'Cliff road' },
     'bw-l4': { kind: 'elite',    place: 'Lighthouse path' },
     'bw-l5': { kind: 'quest',    place: 'Lighthouse' },
@@ -234,24 +242,14 @@ export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: Breakwate
     'bw-d2': { kind: 'loot',     place: 'Boat sheds' },
     'bw-d3': { kind: 'fight',    place: 'Hamlet rise' },
     'bw-d4': { kind: 'hazard',   place: 'Tower switchbacks' },
-    'bw-d5': { kind: 'cutscene', place: 'Old watchtower' },
+    'bw-d5': { kind: 'loot',     place: 'Old watchtower' },
     'bw-m1': { kind: 'fight',    place: 'South fork' },
     'bw-m2': { kind: 'hazard',   place: 'River meadow' },
     'bw-m3': { kind: 'loot',     place: 'Riverbank' },
     'bw-m4': { kind: 'hazard',   place: 'Manor road' },
     'bw-m5': { kind: 'village',  place: 'Walled manor' },
     'bw-p1': { kind: 'hazard',   place: 'Foothills' },
-    'bw-p3': { kind: 'cutscene', place: 'High pass' },
-};
-
-/**
- * The Breakwater cutscene nodes' scene ids (CU1a): the app maps each to its
- * picture. The windmill's id sits on `windmillArrival`.
- */
-export const BW_CUTSCENE_SCENES: Readonly<Record<string, string>> = {
-    'bw-l2': 'clifftop-chapel',
-    'bw-d5': 'old-watchtower',
-    'bw-p3': 'high-pass',
+    'bw-p3': { kind: 'loot',     place: 'High pass' },
 };
 
 /** The four quest nodes: their place in the chain and their refusal line. */
@@ -283,10 +281,10 @@ const QUEST_NODES: Readonly<Record<string, { node: number; description: string; 
 };
 
 /** The loot caches, as indexes into the shared coastal caches. */
-const LOOT_NODES: Readonly<Record<string, number>> = { 'bw-h8': 0, 'bw-d2': 1, 'bw-m3': 2 };
+const LOOT_NODES: Readonly<Record<string, number>> = { 'bw-h8': 0, 'bw-d2': 1, 'bw-m3': 2, 'bw-d5': 3, 'bw-p3': 4 };
 
 /** The windmill's arrival: the scene, and the chain's first step given. */
-const windmillArrival: MapEventPayload = {
+const windmillArrival: CutscenePayload = {
     kind: 'cutscene',
     scene: 'windmill-headland',
     lines: [
@@ -392,11 +390,11 @@ export function eliteDrawPool(nodeId: string, foes: readonly ActOneFoe[]): MapEv
     return { id: `${nodeId}.encounter`, entries: foes.map(foe => cwEncounterPool(nodeId, foe).entries[0]!) };
 }
 
-/** The pool for one node of the new map, by its board kind. */
-function poolFor(nodeId: string): MapEventPool {
+/** The pool for one node of the new map, by its board kind; the start node has none. */
+function poolFor(nodeId: string): MapEventPool | null {
     const { kind, place } = BREAKWATER_CHAPTER_KINDS[nodeId]!;
     switch (kind) {
-        case 'start':    return single(nodeId, windmillArrival);
+        case 'start':    return null;
         case 'fight': {
             const foe = BW_ENCOUNTER_FOES[nodeId];
             if (!foe) throw new Error(`breakwater: fight ${nodeId} has no row in BW_ENCOUNTER_FOES`);
@@ -412,7 +410,6 @@ function poolFor(nodeId: string): MapEventPool {
         case 'rest':     return campRestPool(nodeId, `[content] ${place}.`, BREAKWATER_REST_DREAMS[nodeId]);
         case 'loot':     return lootCachePool(nodeId, COAST_LOOT_CACHES[LOOT_NODES[nodeId]!]!);
         case 'village':  return breakwaterVillagePool(nodeId, place);
-        case 'cutscene': return single(nodeId, { kind: 'cutscene', lines: [`[content] ${place}.`], scene: BW_CUTSCENE_SCENES[nodeId] });
         case 'travel':   return single(nodeId, TRAVEL[nodeId]!);
         case 'quest': {
             const q = QUEST_NODES[nodeId]!;
@@ -434,9 +431,30 @@ export const BREAKWATER_REST_DREAMS: Readonly<Record<string, string>> = Object.f
     'bw-l3': '[content] A dream of the Cliff road.',
 });
 
-/** The 44 pools, in map-definition order. */
+/** The 42 pools, in map-definition order: every node but the windmill, whose own event is none. */
 export const BREAKWATER_CHAPTER_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> =
-    breakwaterChapter.nodes.map(n => ({ nodeId: n.id, pool: poolFor(n.id) }));
+    breakwaterChapter.nodes.flatMap(n => {
+        const pool = poolFor(n.id);
+        return pool ? [{ nodeId: n.id, pool }] : [];
+    });
+
+/** One Breakwater place's scene: its `[content]` line over its picture. */
+function placeScene(nodeId: string, scene: string): NodeScene {
+    return { before: { kind: 'cutscene', lines: [`[content] ${BREAKWATER_CHAPTER_KINDS[nodeId]!.place}.`], scene } };
+}
+
+/**
+ * The Breakwater's scene slots, played once a run before each node's own
+ * event. The windmill opens the chapter and gives the chain's first step; the
+ * chapel, the watchtower and the high pass keep the line and picture they
+ * played when they were story nodes, before their hazard or cache.
+ */
+export const BW_NODE_SCENES: ReadonlyArray<NodeSceneEntry> = [
+    { continent: 'coastal-continent', map: 'breakwater', nodeId: 'bw-w1', scene: { before: windmillArrival } },
+    { continent: 'coastal-continent', map: 'breakwater', nodeId: 'bw-l2', scene: placeScene('bw-l2', 'clifftop-chapel') },
+    { continent: 'coastal-continent', map: 'breakwater', nodeId: 'bw-d5', scene: placeScene('bw-d5', 'old-watchtower') },
+    { continent: 'coastal-continent', map: 'breakwater', nodeId: 'bw-p3', scene: placeScene('bw-p3', 'high-pass') },
+];
 
 // ─── The Charcoal Wood (Act 1, map 2) ────────────────────────────────────────
 //
@@ -812,14 +830,12 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
 // ─── node scenes (the slot before a node's own event) ───────────────────────
 //
 // A scene is registered per (continent, map, node) and plays once a run before
-// the node's own event. The Charcoal Wood, Beacon Crags and Lantern Deep open
-// on one at their start nodes; those have no pool, so the scene is followed by
-// an empty waypoint.
+// the node's own event. Every Act 1 map opens on one at its start node; those
+// have no pool, so the scene is followed by an empty waypoint.
 // Add a map's scenes as rows of this table: `registerMapEventContent` walks it.
 
-interface NodeSceneEntry { continent: string; map: string; nodeId: string; scene: NodeScene }
-
 const NODE_SCENES: ReadonlyArray<NodeSceneEntry> = [
+    ...BW_NODE_SCENES,
     { continent: 'coastal-continent', map: 'charcoal-wood', nodeId: 'cw-1', scene: { before: cwArrival } },
     { continent: 'northern-continent', map: 'beacon-crags', nodeId: 'bc-1', scene: { before: bcArrival } },
     { continent: 'northern-continent', map: 'lantern-deep', nodeId: 'ld-1', scene: { before: ldArrival } },

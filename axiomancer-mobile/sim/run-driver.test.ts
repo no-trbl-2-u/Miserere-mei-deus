@@ -137,7 +137,7 @@ describe('the headless run driver', () => {
     });
 
     it('reads how much of the boss a run took when it fell to it, from the last fight with it', () => {
-        const result = playRun({ policy: getRunPolicy('merciful')!, seed: 9, tuning: { bossLevel: 30 } });
+        const result = playRun({ policy: getRunPolicy('merciful')!, seed: 2, tuning: { bossLevel: 30 } });
         expect(result.outcome).toBe('run-over');
         expect(result.endNodeId).toBe('bw-k2');
         expect(result.bossDamagePct).toBeGreaterThan(0);
@@ -269,8 +269,9 @@ describe('the headless run driver', () => {
 
     it('records a stuck run in a batch and plays the rest', () => {
         const runs = playRuns(WANDERER_POLICY, { runs: 2, seed: 1 }, (options) =>
-            options.seed === 1 ? playRun({ ...options, maxSteps: 3 }) : playRun(options));
-        // Three steps: the windmill's cutscene, its dismissal, the road to the first fight.
+            options.seed === 1 ? playRun({ ...options, maxSteps: 4 }) : playRun(options));
+        // Four steps: the windmill's scene, the continue to its own event (none),
+        // that event's dismissal, the road to the first fight.
         expect(runs[0]).toMatchObject({ policy: 'wanderer', seed: 1, stuck: true, node: 'bw-w2' });
         expect(runs[1]).toMatchObject({ policy: 'wanderer', seed: 2 });
         expect('stuck' in runs[1]!).toBe(false);

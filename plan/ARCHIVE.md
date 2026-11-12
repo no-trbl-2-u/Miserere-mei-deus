@@ -733,3 +733,5 @@
 - 2026-11-12 · 116.5 (alias: BW1e) · T's Chapter 1 quest lines now in the game · 103b5076..0afed2ae (#1637)
 - 2026-11-12 · 177.11 (alias: NV1k) · Voice rules take the Keeper and speaking cast · aeafbf0e..aeafbf0e (#1636)
 - 2026-11-12 · 116 · spec complete: The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node · none · deleted in (this commit)
+- 2026-11-12 · 178.3 (alias: SS1c) · The Breakwater has no cutscene nodes; four scenes play from slots · 101e9903..b1ff67a7 (#1638)
+- 2026-11-12 · 178 · spec complete: A scene before any node, and no more cutscene nodes · D192 · deleted in (this commit)

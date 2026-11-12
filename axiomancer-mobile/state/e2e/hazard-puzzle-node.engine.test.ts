@@ -1,7 +1,7 @@
 /**
  * Hermetic E2E Tests — a puzzle hazard node (phase HP6c, A6-A8).
  *
- * The Breakwater's six hazard nodes each open their candidate's one-round
+ * The Breakwater's seven hazard nodes each open their candidate's one-round
  * puzzle on its graded route; every other hazard node still draws the
  * three-round board. The walk into the wreck (`bw-h4`) goes the way the map
  * screen goes (move, then resolve the arrival), plays the puzzle with the

@@ -33,9 +33,13 @@ function seededRng(seed: number): () => number {
 
 const map = (s: GameState) => s.world.currentMap;
 
-/** A new game on the Breakwater, the windmill's arrival played (it gives step 1). */
+/**
+ * A new game on the Breakwater, the windmill's arrival played: its scene (it
+ * gives step 1), then its own event (none), which spends the node.
+ */
 function freshGame(): GameState {
-    return resolveMapEvent(createNewGameState({ startMap: 'breakwater' }), seededRng(1)).state;
+    const scene = resolveMapEvent(createNewGameState({ startMap: 'breakwater' }), seededRng(1));
+    return resolveMapEvent(scene.state, seededRng(1)).state;
 }
 
 function arrive(state: GameState, nodeId: string) {
@@ -100,7 +104,7 @@ function atTheCamp(): { state: GameState; stage: string | undefined } {
 }
 
 describe('A6: a spent fight, hazard, rest, cache or cutscene node resolves nothing', () => {
-    it('a spent hazard and a spent cutscene (the windmill) fire nothing on a walk back', () => {
+    it('a spent hazard and a spent start node (the windmill, its scene seen) fire nothing on a walk back', () => {
         let s = walkedToHazard();
         s = expectQuietWalkBack(s, 'bw-m1');
         s = expectQuietWalkBack(s, 'bw-w2');
