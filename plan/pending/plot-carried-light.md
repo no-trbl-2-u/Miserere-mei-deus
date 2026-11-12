@@ -54,9 +54,9 @@ date: 2026-11-12
   - `scripts/check-prose.mjs` and its test only if a rule there now contradicts the above; say in the PR which rule, or that none did.
   - No game string changes in this chunk.
   - Measure: `node scripts/check-prose.mjs` and the root `npm test` pass; the two files agree with each other and with the overview's rulings 5, 11 and 12.
-- [ ] **177.?old** The removed story's lines leave Chapters 2 to 4 · S · closes A?old · needs 178.4 · alias: NV1l
+- [ ] **177.?old** The removed story's lines leave Chapters 2 to 4 · S · closes A?old · needs — · alias: NV1l
   - T ruled the old story removed on 2026-11-12; PR #1629 took it out of the docs and the plan and left the code for after spec 178. [T to confirm #2] These lines become placeholders now, although Chapters 2 to 4's maps are due to be redesigned.
-  - Engine, `axiomancer-mechanics/src/World/`: the four maps' `description` strings; `cwArrival`, `bcArrival`, `ldArrival`, `ldVaultDoor` and `ldDeepStair` in `MapEvents/content.ts`; `CW_CAMP_NODES`, `CW_HAZARD_NODES`, `CW_LOOT_NODES`, `cwStairCave`, the `BC_*` and `LD_*` tables beside them. Symbols and shapes stay; only the text changes.
+  - Engine, `axiomancer-mechanics/src/World/`: the four maps' `description` strings; the three arrival scenes where 178.4 (closed 2026-11-12) left them, in the slot tables of `MapEvents/content.ts`, and `ldVaultDoor` and `ldDeepStair` there; `CW_CAMP_NODES`, `CW_HAZARD_NODES`, `CW_LOOT_NODES`, `cwStairCave`, the `BC_*` and `LD_*` tables beside them. Symbols and shapes stay; only the text changes.
   - Mobile: the node descriptions in `charcoal-wood.layout.ts`, `beacon-crags.layout.ts` and `lantern-deep.layout.ts`. Node labels (place names) stay.
   - Tests that assert the old text change with it: `World/e2e/lantern-deep.engine.test.ts` (the two sealed-door lines), `state/exploration-maps/__tests__/node-blurb-event.test.ts`, `state/presenters/__tests__/cache.engine.test.ts`. No test is skipped or deleted.
   - Comments naming `braindump/2026-10-28-breakwater-chapter-1-map.md` or `plan/revamp/breakwater-vision.md` (in `breakwater-chapter.ts`, `breakwater-chapter.test.ts`, `MapEvents/content.ts`, `e2e/map-traversal.engine.test.ts`, `breakwater.layout.ts`) point at `plan/116-bw1-breakwater-rebuild.md`. The Breakwater's own lines are not this chunk's: 177.4 to 177.9 and 116.5 own them.
