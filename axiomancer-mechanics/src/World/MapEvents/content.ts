@@ -16,10 +16,11 @@
 
 import {
     registerMapEventPool,
+    registerNodeScene,
     setNodeEventPoolOverride,
 } from './resolve-map-event';
 import { PLACEHOLDER_CACHE_ACTIONS } from './types';
-import type { LootCacheActionLines, MapEventPayload, MapEventPool, QuestGiver } from './types';
+import type { CutscenePayload, LootCacheActionLines, MapEventPayload, MapEventPool, NodeScene, QuestGiver } from './types';
 import type { EnemySlug } from '../../Enemy/enemy.library';
 import type { EnemyDifficulty } from '../../Enemy/types';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../Blacksmith/blacksmith.content';
@@ -446,8 +447,8 @@ export const BREAKWATER_CHAPTER_POOLS: ReadonlyArray<{ nodeId: string; pool: Map
 // `Continents/Coastal-Village/charcoal-wood.ts`).
 //
 // Kind spread over 20 nodes: 7 encounter, 3 rest, 3 loot-cache,
-// 3 empty waypoints, 1 hazard, 1 village (the Anvil, cw-18), 1 arrival
-// cutscene, 1 travel. The northern forest's roster is level 9 and up, so
+// 3 empty waypoints, 1 hazard, 1 village (the Anvil, cw-18), 1 start node
+// (an empty waypoint with an arrival scene in its slot), 1 travel. The northern forest's roster is level 9 and up, so
 // every fight here is pinned to a low absolute level,
 // ramping ring by ring from 2 to 3.
 
@@ -472,20 +473,14 @@ const CW_FIGHT_LEVEL_LATE = 3;
 const CW_DOOR_LEVEL = 2;
 
 /** Arrival over the river bridge from the Breakwater. */
-const cwArrival: MapEventPool = {
-    id: 'cw-1.cutscene',
-    entries: [{
-        kind: 'cutscene', weight: 1,
-        payload: {
-            kind: 'cutscene',
-            scene: 'charcoal-wood-arrival',
-            lines: [
-                'The bridge ends in pine. Smoke hangs under the branches and does not lift.',
-                'Somewhere ahead, the burners are working the clearings.',
-            ],
-            description: 'You cross into the Charcoal Wood.',
-        },
-    }],
+const cwArrival: CutscenePayload = {
+    kind: 'cutscene',
+    scene: 'charcoal-wood-arrival',
+    lines: [
+        'The bridge ends in pine. Smoke hangs under the branches and does not lift.',
+        'Somewhere ahead, the burners are working the clearings.',
+    ],
+    description: 'You cross into the Charcoal Wood.',
 };
 
 export function cwEncounterPool(nodeId: string, foe: ActOneFoe): MapEventPool {
@@ -561,7 +556,7 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
         for (let i = 1; i <= 20; i++) {
             const nodeId = `cw-${i}`;
             if (nodeId === 'cw-1') {
-                out.push({ nodeId, pool: cwArrival });
+                continue;
             } else if (nodeId === 'cw-20') {
                 out.push({ nodeId, pool: cwStairCave });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
@@ -591,7 +586,8 @@ const CHARCOAL_WOOD_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }>
 // `Continents/Northern-Continent/beacon-crags.ts`).
 //
 // Kind spread over 17 nodes: 6 encounter, 3 rest, 2 loot-cache, 1 empty waypoint,
-// 2 hazard, 1 village (the Anvil, bc-12), 1 arrival cutscene, 1 travel.
+// 2 hazard, 1 village (the Anvil, bc-12), 1 start node (an empty waypoint with
+// an arrival scene in its slot), 1 travel.
 // The caverns' roster is level 13 and up, so every fight is pinned low, one
 // step above the Charcoal Wood: 3 on the upper mountain, 4 below
 // the gorge.
@@ -601,19 +597,13 @@ const BC_FIGHT_LEVEL_LATE = 4;
 const BC_DOOR_LEVEL = 3;
 
 /** Arrival up the Charcoal Wood's stair, on the crag road. */
-const bcArrival: MapEventPool = {
-    id: 'bc-1.cutscene',
-    entries: [{
-        kind: 'cutscene', weight: 1,
-        payload: {
-            kind: 'cutscene',
-            lines: [
-                'The stair comes up into wind and snow, on a road over the crags.',
-                'On the summit to the west, a fire is burning. Someone down in the valley can see it.',
-            ],
-            description: 'You come up into the Beacon Crags.',
-        },
-    }],
+const bcArrival: CutscenePayload = {
+    kind: 'cutscene',
+    lines: [
+        'The stair comes up into wind and snow, on a road over the crags.',
+        'On the summit to the west, a fire is burning. Someone down in the valley can see it.',
+    ],
+    description: 'You come up into the Beacon Crags.',
 };
 
 /** Every Beacon Crags fight, pinned (`cwEncounterPool` builds the pool). */
@@ -670,7 +660,7 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
         for (let i = 1; i <= 17; i++) {
             const nodeId = `bc-${i}`;
             if (nodeId === 'bc-1') {
-                out.push({ nodeId, pool: bcArrival });
+                continue;
             } else if (nodeId === 'bc-17') {
                 out.push({ nodeId, pool: bcGlacierShrine });
             } else if (ANVIL_NODE_IDS.has(nodeId)) {
@@ -703,7 +693,8 @@ const BEACON_CRAGS_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
 // `Continents/Northern-Continent/lantern-deep.ts`).
 //
 // Kind spread over 18 nodes: 7 encounter, 3 rest, 1 loot-cache, 1 empty waypoint,
-// 2 hazard, 1 village (the Anvil, ld-14), 1 arrival cutscene, 2 sealed
+// 2 hazard, 1 village (the Anvil, ld-14), 1 start node (an empty waypoint with
+// an arrival scene in its slot), 2 sealed
 // doors (the vault door and the deep stair). No boss; one elite on the last
 // fight column. Every fight pinned low, level with the Beacon Crags: 3 above
 // the aqueducts, 4 below them.
@@ -713,19 +704,13 @@ const LD_FIGHT_LEVEL_LATE = 4;
 const LD_DOOR_LEVEL = 4;
 
 /** Arrival down the Beacon Crags' stair, through the cavern roof. */
-const ldArrival: MapEventPool = {
-    id: 'ld-1.cutscene',
-    entries: [{
-        kind: 'cutscene', weight: 1,
-        payload: {
-            kind: 'cutscene',
-            lines: [
-                'The stair comes down out of the ice and through a hole in a cavern roof. The daylight stops at the last step.',
-                'Below, a lake, and lanterns on the far shore. Somebody carried every one of them down.',
-            ],
-            description: 'You come down into the Lantern Deep.',
-        },
-    }],
+const ldArrival: CutscenePayload = {
+    kind: 'cutscene',
+    lines: [
+        'The stair comes down out of the ice and through a hole in a cavern roof. The daylight stops at the last step.',
+        'Below, a lake, and lanterns on the far shore. Somebody carried every one of them down.',
+    ],
+    description: 'You come down into the Lantern Deep.',
 };
 
 /** Every Lantern Deep fight, pinned (`cwEncounterPool` builds the pool). */
@@ -798,7 +783,7 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
         for (let i = 1; i <= 18; i++) {
             const nodeId = `ld-${i}`;
             if (nodeId === 'ld-1') {
-                out.push({ nodeId, pool: ldArrival });
+                continue;
             } else if (nodeId === 'ld-15') {
                 out.push({ nodeId, pool: ldVaultDoor });
             } else if (nodeId === 'ld-18') {
@@ -823,6 +808,21 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
         }
         return out;
     })();
+
+// ─── node scenes (the slot before a node's own event) ───────────────────────
+//
+// A scene is registered per (continent, map, node) and plays once a run before
+// the node's own event. Each Act 1 map opens on one at its start node; the
+// start node has no pool, so the scene is followed by an empty waypoint.
+// Add a map's scenes as rows of this table: `registerMapEventContent` walks it.
+
+interface NodeSceneEntry { continent: string; map: string; nodeId: string; scene: NodeScene }
+
+const NODE_SCENES: ReadonlyArray<NodeSceneEntry> = [
+    { continent: 'coastal-continent', map: 'charcoal-wood', nodeId: 'cw-1', scene: { before: cwArrival } },
+    { continent: 'northern-continent', map: 'beacon-crags', nodeId: 'bc-1', scene: { before: bcArrival } },
+    { continent: 'northern-continent', map: 'lantern-deep', nodeId: 'ld-1', scene: { before: ldArrival } },
+];
 
 // ─── single registration entry point ─────────────────────────────────────────
 //
@@ -853,6 +853,9 @@ export function registerMapEventContent(): void {
     for (const { nodeId, pool } of LANTERN_DEEP_POOLS) {
         registerMapEventPool(pool);
         setNodeEventPoolOverride('northern-continent', 'lantern-deep', nodeId, pool.id);
+    }
+    for (const { continent, map, nodeId, scene } of NODE_SCENES) {
+        registerNodeScene(continent, map, nodeId, scene);
     }
 }
 
