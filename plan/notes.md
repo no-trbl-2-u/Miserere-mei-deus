@@ -471,3 +471,8 @@ Defaults taken (pilot worker, no questions asked):
 - A staged payload (`StateFixture.stagedEvent`) skips the scene slot: it stands in for the whole node.
 - `_clearMapEventPoolRegistry()` also clears the scene table, so `registerMapEventContent()` replays both.
 - The CLIs resolve again after a before-scene in code; their A4 proof is the reducer case in the SS1a e2e (the CLIs run no in-process route test).
+
+Defaults taken (pilot worker, no questions asked):
+- The sim driver (`sim/run-screens.ts`, `resolvePacedEvent`) calls `continueToNode` on a before-scene, so a scripted run reaches the node's own event instead of dropping it.
+- A fight node walked in animate mode still plays its ink spread before the scene (the resolve is deferred to the ink's cover); the scene then opens over the covered map. Left as is: the ink belongs to the walk onto a fight, and the scene is that fight's first beat.
+- The test registers its fixture scene and pool in the file's module registry (no registry clear), last-write-wins per test, as `quest-node-map.engine.test.ts` does.
