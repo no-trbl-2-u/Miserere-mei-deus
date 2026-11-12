@@ -108,7 +108,7 @@ too long."
 
 Round 5 (`narrator-voice-5.ballot.html`, ballot id
 `narrator-voice-5-2026-11-10`). Twelve slots, 36 samples. Round 4 is not
-withdrawn; T has not ruled on it.
+withdrawn; T has not ruled on it. (Both closed 2026-11-12; round 5 is the voice.)
 
 - **The target.** Cormac McCarthy writing Elden Ring, in the register of
   Blood Meridian: archaic and biblical diction, clauses chained with "and",
@@ -200,8 +200,8 @@ Everything else is redrawn in round 4.
 
 ### Round 4
 
-Closed unvoted by T, 2026-11-12.
+Closed unvoted by T, 2026-11-12; round 5, the most recent, is the voice.
 
 ### Round 5
 
-Closed unvoted by T, 2026-11-12.
+Closed by T, 2026-11-12, with no per-slot picks: "Leave on the most recent narrator voice." Round 5 is the Narrator's voice: plain, cruel, grief, as its three takes set out above. The cruelty stop is picked per line (`/narrate`).

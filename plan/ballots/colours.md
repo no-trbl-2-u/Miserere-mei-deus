@@ -203,4 +203,4 @@ The Rossano Gospels (6th century). Ground `#150e1c`, panel `#1d1428`, ink `#ebe7
 
 ## Verdicts
 
-Closed unvoted by T, 2026-11-12: no palette was picked on this ballot. 156.7, which waits on this verdict, needs a new source for T's palette.
+Closed unvoted by T, 2026-11-12: "the current coloring is fine." Today's palette stays the default; 156.7 (TY1g), which waited on this verdict, is dropped.
