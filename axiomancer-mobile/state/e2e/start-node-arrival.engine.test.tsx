@@ -99,7 +99,10 @@ describe('start-node arrival: the map resolves the node it puts you on', () => {
     it('consumes the start node once its scene continues, so the arrival is a one-shot', () => {
         const store = makeStore();
         mountExploration(store);
+        // After the scene only: it is seen, the node unspent, the arrival still owed.
         expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w1');
+        expect(store.getState().world.currentMap.seenScenes).toContain('bw-w1');
+        expect(selectExplorationViewModel(store.getState()).startNodePending).toBe(true);
 
         createAppActions(store).continueToNode();
 
