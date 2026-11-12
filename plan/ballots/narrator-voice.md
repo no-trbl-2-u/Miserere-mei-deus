@@ -154,6 +154,27 @@ cruelty all the way up. **Grief** is the same again, written to hurt.
 | S-01 The clifftop chapel | 1 plain | 3 grief | 2 cruel |
 | S-02 Memory: the window | 3 grief | 2 cruel | 1 plain |
 
+## The cruelty slider
+
+T, 2026-11-11: "create the narration voice that essentially will have a
+slider on cruelty. So that when I ask for a specific proposal for a piece of
+new content, I'm asked \"How cruel?\"" T chose five stops with grief on top.
+
+The skill is `.claude/skills/narrate/SKILL.md` (`/narrate`). It asks "How
+cruel?" before drafting, unless the request already names a stop. The page
+`narrator-slider.html` shows one scene at all five.
+
+| Stop | Name | What it means | Round 5 take |
+|---|---|---|---|
+| 1 | Plain | The world is old and does not care. Nobody is hurt on the page. | plain |
+| 2 | Hard | Loss and harm, done by weather, hunger or time. No one chose it. | none |
+| 3 | Cruel | Someone chose it, for gain or ease. One cruel fact, told flat. | none |
+| 4 | Cruelty at 11 | Shared, habitual, enjoyed or administered. | cruel |
+| 5 | Grief | It lands on someone the reader cares for, or is the subject's own doing. | grief |
+
+Stops 2 and 3 were not on any ballot. Their samples in the skill are Claude's
+and not yet T's.
+
 ## Verdicts
 
 ### Round 1 (T, 2026-11-08)

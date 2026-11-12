@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Narrator: Chapter 1, every line</title>
+<!-- The Narrator: Chapter 1 drafts (plan/ballots/narrator-chapter1.md). -->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .hue { font-weight: bold; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+  .words { margin: 8px 0 2px; font-size: 1.02rem; line-height: 1.55; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: static; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <p class="banner" role="note"><b>Drafts only.</b> Nothing here is in the game. Heavy content: hanging, drowning, a child's death, the prologue.</p>
+  <h1>The Narrator: Chapter 1, every line</h1>
+  <p class="sub">Every unwritten line in Chapter 1 except cards and spoken lines, drafted in the round 5 voice: Cormac McCarthy writing Elden Ring, in the register of Blood Meridian. One take per line. Every other line is plain; the ones between alternate cruel and grief. Each line shows its take, so you can ask for it at another stop.</p>
+  <p class="legend"><b>Tick</b> a line to approve it. <b>Leave it blank</b> to reject it, and use the note box to say why or to ask for another stop ("redo at 2"). When you are done press <b>Generate</b>, then <b>Copy</b>, and paste it to Claude. <b>Submit and Save do not work right now.</b></p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the voice as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Submit, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   ===================================================================== */
+const BALLOT_ID = 'narrator-chapter1-2026-11-11';
+
+const TABS = [
+  {
+    "key": "M",
+    "name": "Map blurbs",
+    "blurb": "The one line under a node's name on the map. Cap 18 words."
+  },
+  {
+    "key": "A",
+    "name": "Arrival lines",
+    "blurb": "The line on a fight's reveal. An elite node draws one of several foes, so its line names none. Cap 32 words."
+  },
+  {
+    "key": "H",
+    "name": "Hazards",
+    "blurb": "The line that opens a hazard node. Cap 45 words."
+  },
+  {
+    "key": "R",
+    "name": "Rests and dreams",
+    "blurb": "A rest node's line, and the dream shown while the night passes. Cap 45 words."
+  },
+  {
+    "key": "S",
+    "name": "Cutscenes, travel and villages",
+    "blurb": "Story encounters and the lines that move you between places. Cap 110 words for a cutscene, 45 otherwise."
+  },
+  {
+    "key": "L",
+    "name": "Loot cache actions",
+    "blurb": "What you do to earn each side of a cache, never what you get. Cap 30 words."
+  },
+  {
+    "key": "Q",
+    "name": "Quest nodes",
+    "blurb": "What you see on reaching a quest node, and the line shown when it will not deal with you yet. Narration, not speech. Cap 45 words."
+  },
+  {
+    "key": "C",
+    "name": "Quest chain",
+    "blurb": "The quest log's text for the four steps, the key, and the two gate reasons. Cap 45 words."
+  },
+  {
+    "key": "U",
+    "name": "Screens",
+    "blurb": "Narration on the app's own screens: defeat, withdrawing, coming back from death, game over, the quest screen, the village counters. Cap 40 words."
+  },
+  {
+    "key": "E",
+    "name": "Enemy descriptions",
+    "blurb": "The six Chapter 1 foes whose description is marked DRAFT for T to rewrite. Cap 45 words."
+  },
+  {
+    "key": "N",
+    "name": "Names",
+    "blurb": "Names carry no cruelty level. Spoken lines are not here: four are marked [NPC Content Needed] in the ledger."
+  }
+];
+
+const SLOTS = [
+  {
+    "slot": "M-01",
+    "role": "bw-w2 The Gallows Crossroads. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-02",
+    "role": "bw-w3 The Field Road. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-03",
+    "role": "bw-w4 The West Cliff Road. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-04",
+    "role": "bw-w5 The Keep Causeway. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-05",
+    "role": "bw-k1 The Keep Gate. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-06",
+    "role": "bw-k2 The Sea Keep. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-07",
+    "role": "bw-h1 The Quay End. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-08",
+    "role": "bw-h3 The Harbour Light Pier. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-09",
+    "role": "bw-h5 The Moored Ship. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-10",
+    "role": "bw-h6 The Sea Cave Mouth. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-11",
+    "role": "bw-h7 The Long Pier. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-12",
+    "role": "bw-h8 The Pier End. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-13",
+    "role": "bw-c0 The Cave Face. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-14",
+    "role": "bw-c2 The Fishermen's Camp. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-15",
+    "role": "bw-t1 The Harbour Steps. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-16",
+    "role": "bw-t2 The Bridge Approach. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-17",
+    "role": "bw-t3 The Town Gate. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-18",
+    "role": "bw-t5 The Back Lanes. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-19",
+    "role": "bw-t6 The Upper Town. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-20",
+    "role": "bw-b2 The Far Bank. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-21",
+    "role": "bw-l1 The Cliff Crossroads. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-22",
+    "role": "bw-l3 The Cliff Road. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-23",
+    "role": "bw-l4 The Lighthouse Path. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-24",
+    "role": "bw-d2 The Boat Sheds. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-25",
+    "role": "bw-d3 The Hamlet Rise. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-26",
+    "role": "bw-d4 The Tower Switchbacks. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-27",
+    "role": "bw-d5 The Old Watchtower. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-28",
+    "role": "bw-m1 The South Fork. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-29",
+    "role": "bw-m2 The River Meadow. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-30",
+    "role": "bw-m3 The Riverbank. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "M-31",
+    "role": "bw-m4 The Manor Road. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "M-32",
+    "role": "bw-p1 The Foothills. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "M-33",
+    "role": "bw-p3 The High Pass. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-01",
+    "role": "bw-w2 Gallows crossroads (Quay-Crab). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "A-02",
+    "role": "bw-w3 Field road (Coralback). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-03",
+    "role": "bw-w5 Keep causeway (elite). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "A-04",
+    "role": "bw-k2 Sea keep (the Saint Beneath). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-05",
+    "role": "bw-h1 Quay end (Net-Mender). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "A-06",
+    "role": "bw-h2 Crane quay (Quay-Crab). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-07",
+    "role": "bw-h3 Harbour light pier (Net-Mender). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "A-08",
+    "role": "bw-h7 Long pier (Brine-Widow). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-09",
+    "role": "bw-c1 Sea cave (elite). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "A-10",
+    "role": "bw-t1 Harbour steps (Coralback). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-11",
+    "role": "bw-t2 Bridge approach (Bilge-Stalker). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "A-12",
+    "role": "bw-t3 Town gate (Brine-Widow). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-13",
+    "role": "bw-t6 Upper town (Coralback). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "A-14",
+    "role": "bw-l1 Cliff crossroads (Bilge-Stalker). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-15",
+    "role": "bw-l4 Lighthouse path (elite). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "A-16",
+    "role": "bw-d1 Fishing hamlet (Net-Mender). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "A-17",
+    "role": "bw-d3 Hamlet rise (Bilge-Stalker). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "A-18",
+    "role": "bw-m1 South fork (Quay-Crab). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "H-01",
+    "role": "bw-h4 The wreck. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "H-02",
+    "role": "bw-t5 Back lanes. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "H-03",
+    "role": "bw-d4 Tower switchbacks. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "H-04",
+    "role": "bw-m2 River meadow. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "H-05",
+    "role": "bw-m4 Manor road. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "H-06",
+    "role": "bw-p1 Foothills. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "R-01",
+    "role": "bw-w4 West cliff road, rest. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "R-02",
+    "role": "bw-h5 Moored ship, rest. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "R-03",
+    "role": "bw-l3 Cliff road, rest. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "R-04",
+    "role": "bw-w4 West cliff road, dream. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "R-05",
+    "role": "bw-h5 Moored ship, dream. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "R-06",
+    "role": "bw-l3 Cliff road, dream. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "S-01",
+    "role": "bw-l2 Clifftop chapel, cutscene. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "S-02",
+    "role": "bw-d5 Old watchtower, cutscene. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "S-03",
+    "role": "bw-p3 High pass, cutscene. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "S-04",
+    "role": "bw-w1 Windmill, the quest line of the opening cutscene. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "S-05",
+    "role": "bw-h6 Sea cave mouth, travel prompt. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "S-06",
+    "role": "bw-c0 Cave face, travel prompt. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "S-07",
+    "role": "bw-t4 Harbour town, village line (untagged gap: it shows the shared Anvil line today). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "S-08",
+    "role": "bw-m5 Walled manor, village line (untagged gap: it shows the shared Anvil line today). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "L-01",
+    "role": "bw-h8 Pier end, take a card. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "L-02",
+    "role": "bw-h8 Pier end, take the goods. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "L-03",
+    "role": "bw-d2 Boat sheds, take a card. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "L-04",
+    "role": "bw-d2 Boat sheds, take the goods. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "L-05",
+    "role": "bw-m3 Riverbank, take a card. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "L-06",
+    "role": "bw-m3 Riverbank, take the goods. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "Q-01",
+    "role": "bw-c2 Fishermen's camp, description. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "Q-02",
+    "role": "bw-c2 Fishermen's camp, locked line. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "Q-03",
+    "role": "bw-l5 Lighthouse, description. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "Q-04",
+    "role": "bw-l5 Lighthouse, locked line. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "Q-05",
+    "role": "bw-k1 Keep gate, description. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "Q-06",
+    "role": "bw-k1 Keep gate, locked line. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "Q-07",
+    "role": "bw-b1 River bridge, description. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "Q-08",
+    "role": "bw-b1 River bridge, locked line. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "C-01",
+    "role": "Step 1 the capsized boat, description. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "C-02",
+    "role": "Step 1, objective. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "C-03",
+    "role": "Step 2 the lighthouse, description. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "C-04",
+    "role": "Step 2, objective. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "C-05",
+    "role": "Step 3 the keep key, description. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "C-06",
+    "role": "Step 3, objective. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "C-07",
+    "role": "Step 4 the sea keep, description. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "C-08",
+    "role": "Step 4, objective. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "C-09",
+    "role": "The keep key, item description. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "C-10",
+    "role": "Keep gate, gate reason (breakwater-chapter.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "C-11",
+    "role": "River bridge, gate reason (breakwater-chapter.ts). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "U-01",
+    "role": "Defeat summary, cause: VITAE (combat-summary.copy.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "U-02",
+    "role": "Defeat summary, cause: turn limit (combat-summary.copy.ts). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "U-03",
+    "role": "Withdraw, second line (reveal.copy.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "U-04",
+    "role": "Death return, headline (death-return.copy.ts). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "U-05",
+    "role": "Death return, what is kept (death-return.copy.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "U-06",
+    "role": "Game over (game-over.copy.ts). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "U-07",
+    "role": "Quest screen, giver fallback (quest.copy.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "U-08",
+    "role": "Quest screen, locked line (quest.copy.ts). Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "U-09",
+    "role": "Village, paid rest line (village.copy.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "U-10",
+    "role": "Village, card shop line (village.copy.ts). Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "U-11",
+    "role": "Village, weapons and armor line (village.copy.ts). Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "E-01",
+    "role": "The Saint Beneath. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "E-02",
+    "role": "Saltwick Swarm. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "E-03",
+    "role": "The Wreckmaster. Take: cruel (stop 4 of 5)."
+  },
+  {
+    "slot": "E-04",
+    "role": "Quay-Crab. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "E-05",
+    "role": "Bilge-Stalker. Take: grief (stop 5 of 5)."
+  },
+  {
+    "slot": "E-06",
+    "role": "Coralback. Take: plain (stop 1 of 5)."
+  },
+  {
+    "slot": "N-01",
+    "role": "Questline name. Today: [content] Chapter 1"
+  },
+  {
+    "slot": "N-02",
+    "role": "Step 1 name. Today: [content] Chapter 1: the capsized boat"
+  },
+  {
+    "slot": "N-03",
+    "role": "Step 2 name. Today: [content] Chapter 1: the lighthouse"
+  },
+  {
+    "slot": "N-04",
+    "role": "Step 3 name. Today: [content] Chapter 1: the keep key"
+  },
+  {
+    "slot": "N-05",
+    "role": "Step 4 name. Today: [content] Chapter 1: the sea keep"
+  },
+  {
+    "slot": "N-06",
+    "role": "Keep key, item name. Today: [content] Keep key"
+  },
+  {
+    "slot": "N-07",
+    "role": "bw-c2 giver name. Today: [content] The fishermen elder"
+  },
+  {
+    "slot": "N-08",
+    "role": "bw-l5 giver name. Today: [content] The lighthouse keeper"
+  },
+  {
+    "slot": "N-09",
+    "role": "bw-k1 giver name. Today: [content] The gate warden"
+  },
+  {
+    "slot": "N-10",
+    "role": "bw-b1 giver name. Today: [content] The bridge-keeper"
+  },
+  {
+    "slot": "N-11",
+    "role": "Reward eyebrow, quest (relic-source.copy.ts). Today: QUEST REWARD: <QUEST>"
+  },
+  {
+    "slot": "N-12",
+    "role": "Reward eyebrow, spared foe (relic-source.copy.ts). Today: SPARED: <FOE>"
+  },
+  {
+    "slot": "N-13",
+    "role": "Reward eyebrow, elite drop (relic-source.copy.ts). Today: DROPPED BY <ELITE>"
+  }
+];
+
+const CARDS = [
+  {
+    "id": "M-01a",
+    "text": "Four roads and a gallows older than any of them. No crow will light there."
+  },
+  {
+    "id": "M-02a",
+    "text": "Barley no hand has cut in three years. The reapers are in it still."
+  },
+  {
+    "id": "M-03a",
+    "text": "The road keeps to the lip of the cliff. Below, the sea works at the stone."
+  },
+  {
+    "id": "M-04a",
+    "text": "A captain stands the causeway calling in a boat that is not coming."
+  },
+  {
+    "id": "M-05a",
+    "text": "Iron doors gone green and barred from within. Something behind them breathes with the tide."
+  },
+  {
+    "id": "M-06a",
+    "text": "The town built it over him, and sends down such as it can spare."
+  },
+  {
+    "id": "M-07a",
+    "text": "The last stones of the quay. A man sits there mending and does not look up."
+  },
+  {
+    "id": "M-08a",
+    "text": "The lamp is lit each dusk by a child who believes it brings them home."
+  },
+  {
+    "id": "M-09a",
+    "text": "A ship at her moorings with no crew and a lit galley. The ropes are new."
+  },
+  {
+    "id": "M-10a",
+    "text": "The cave takes the tide twice daily, and whatever the town leaves at its mouth."
+  },
+  {
+    "id": "M-11a",
+    "text": "Half a mile of black planking into the fog. Someone waits at the end of it."
+  },
+  {
+    "id": "M-12a",
+    "text": "A dinner pail on the last plank, packed by someone and fetched by no one."
+  },
+  {
+    "id": "M-13a",
+    "text": "Wet stone sheer above the cove. The cave behind you sounds like a throat."
+  },
+  {
+    "id": "M-14a",
+    "text": "Three men at a driftwood fire. There were four in the boat."
+  },
+  {
+    "id": "M-15a",
+    "text": "Steps cut by a people who built for something with a longer stride."
+  },
+  {
+    "id": "M-16a",
+    "text": "Shoes set out in pairs along the road, the small ones foremost. No one says whose."
+  },
+  {
+    "id": "M-17a",
+    "text": "A gate with no leaf in it, and a toll booth manned by habit alone."
+  },
+  {
+    "id": "M-18a",
+    "text": "Lanes too narrow to turn in. The town does its collecting here, by night."
+  },
+  {
+    "id": "M-19a",
+    "text": "Tall shuttered houses above the smoke. Every sill carries a dish of salt."
+  },
+  {
+    "id": "M-20a",
+    "text": "The far bank. You will not look back, and you know what that is called."
+  },
+  {
+    "id": "M-21a",
+    "text": "Three ways part on the bare headland under a wind that has never stopped."
+  },
+  {
+    "id": "M-22a",
+    "text": "Cairns line the cliff road, one to each keeper. The newest are small."
+  },
+  {
+    "id": "M-23a",
+    "text": "A stair of slick rock up the last of the cliff. A light walks it."
+  },
+  {
+    "id": "M-24a",
+    "text": "Four hulls tarred and readied each spring by a father with no sons left."
+  },
+  {
+    "id": "M-25a",
+    "text": "Bent grass above the hamlet, and a path trodden by nothing with feet."
+  },
+  {
+    "id": "M-26a",
+    "text": "The path doubles up the scarp. The fallen were left where they lay, for markers."
+  },
+  {
+    "id": "M-27a",
+    "text": "A tower raised to watch the sea for something. No one recalls if it came."
+  },
+  {
+    "id": "M-28a",
+    "text": "A dog waits at the fork beside a bundle. It has waited two winters."
+  },
+  {
+    "id": "M-29a",
+    "text": "Deep grass by the slow river, and not one beast in all of it grazing."
+  },
+  {
+    "id": "M-30a",
+    "text": "Where the river turns it gives back what the town put in upstream."
+  },
+  {
+    "id": "M-31a",
+    "text": "A straight road between dead elms to a wall with glass along its top."
+  },
+  {
+    "id": "M-32a",
+    "text": "Stone pens on the slope, the gates wired shut from without. The flock was left in."
+  },
+  {
+    "id": "M-33a",
+    "text": "The pass, and beyond it a country the colour of ash."
+  },
+  {
+    "id": "A-01a",
+    "text": "Something comes up out of the ditch beneath the hanged, slow and plated, its mouthparts working yet on what it was given."
+  },
+  {
+    "id": "A-02a",
+    "text": "The barley parts before you and a pale thing comes sidelong through it, crowned in coral like the king of some drowned country."
+  },
+  {
+    "id": "A-03a",
+    "text": "The causeway runs out wet and narrow to the keep. What holds it was a man once and was loved, and none of that will stay its hand."
+  },
+  {
+    "id": "A-04a",
+    "text": "The last stair ends in black water. Beneath it a face broad as a church door lies looking up, and the mouth of it opens."
+  },
+  {
+    "id": "A-05a",
+    "text": "The mender has run short of cord. He looks you over as a man looks over a hide, for the length in it."
+  },
+  {
+    "id": "A-06a",
+    "text": "The mud beneath the cranes heaves and sheds itself and stands up on jointed legs, streaming."
+  },
+  {
+    "id": "A-07a",
+    "text": "He is mending by the harbour lamp. He holds a knot to the light and it is wrong, and he begins again, and he does not weep."
+  },
+  {
+    "id": "A-08a",
+    "text": "She turns at the pier's end in her stiff black veil. She has waited long, and you are not him, and it does not matter."
+  },
+  {
+    "id": "A-09a",
+    "text": "The cave closes over you like a mouth. What keeps this place has been fed here before, and it knows the sound of feet."
+  },
+  {
+    "id": "A-10a",
+    "text": "On the worn steps a thing sits sunning its crown of stolen coral. It raises one claw as if to bid you kneel."
+  },
+  {
+    "id": "A-11a",
+    "text": "It comes low along the bridge road past the little shoes, and it steps around them. It has learned that much."
+  },
+  {
+    "id": "A-12a",
+    "text": "A woman in black stands in the gate where the toll was taken. Her fist is closed on something white."
+  },
+  {
+    "id": "A-13a",
+    "text": "It has come up from the harbour to the tall houses for the salt on their sills, and for what sleeps behind them."
+  },
+  {
+    "id": "A-14a",
+    "text": "A green shape stands upright in the crossroads grass, finned along the spine, bright eyed and entirely still."
+  },
+  {
+    "id": "A-15a",
+    "text": "A light swings on the path above. Whoever carries it has called ships onto these rocks, and one of them carried his own."
+  },
+  {
+    "id": "A-16a",
+    "text": "Between the drying racks a drowned man sits with a net across his knees, and the hamlet has let him sit."
+  },
+  {
+    "id": "A-17a",
+    "text": "It has been at the hamlet's edge by night. The grass is pressed flat where it lay watching the doors."
+  },
+  {
+    "id": "A-18a",
+    "text": "Under the signpost the road mud stirs. A claw comes out of it the size of a spade, and then the rest."
+  },
+  {
+    "id": "H-01a",
+    "text": "The wreck lies open to the tide. In her hold the sea turns over what the pilgrims carried, a child's shoe, a psalter, a comb. Mind the hull. It is the last thing in that harbour that was never sold."
+  },
+  {
+    "id": "H-02a",
+    "text": "The lanes close in until the eaves meet overhead and the daylight goes. Doors stand on either hand with no handles to the street. Something has gone before you and marked the turnings in tallow."
+  },
+  {
+    "id": "H-03a",
+    "text": "The switchbacks climb the scarp in a score of turnings. At each the watch once set a man with a horn. They were never relieved. They are there yet, and the horns are full of rain."
+  },
+  {
+    "id": "H-04a",
+    "text": "The meadow lies green and windless by the river. Under the grass the ground is soft as a bed, and it has kept the shape of everything that ever lay down in it."
+  },
+  {
+    "id": "H-05a",
+    "text": "The manor road runs straight between the elms. From each a rope end hangs, cut short. The tenants were brought here at rent day, and their children walk this road to their work and do not look up."
+  },
+  {
+    "id": "H-06a",
+    "text": "The foothills rise in broken shelves of slate. Old walls cross them going nowhere, raised by a people who fenced the mountain against something and then were gone."
+  },
+  {
+    "id": "R-01a",
+    "text": "A hollow under the cliff road, out of the wind. Others have camped here. Their fire ring is cold, and their boots stand beside it in a row."
+  },
+  {
+    "id": "R-02a",
+    "text": "The moored ship lies quiet at her ropes. There is a berth below with the blanket turned back, and a lamp, and no hand aboard to say who lit it."
+  },
+  {
+    "id": "R-03a",
+    "text": "A keeper's hut stands by the cliff road with the door off. On the wall within some hand has scored the days, hundreds of them, and after the last a single word. Sorry."
+  },
+  {
+    "id": "R-04a",
+    "text": "You dream the road goes on along the cliff with no sea beneath it, only a white depth, and far down in it something vast turns over once in its sleep."
+  },
+  {
+    "id": "R-05a",
+    "text": "You dream the ship is under way. The crew stand to their stations and none of them has a face, and the captain asks you kindly which of them you would have put over the side."
+  },
+  {
+    "id": "R-06a",
+    "text": "You dream of a window that gives on the sea and on nothing else. A woman stands at it with her back to you. The curtain moves. You wake before she turns."
+  },
+  {
+    "id": "S-01a",
+    "text": "A man kneels in the chapel and he is not at prayer. He is practising. He says, I was too drunk to stand. He says, the child would not hold still. Then he says it over with the words set in another order, as a man turns a coin to find the better face. None of the ways will serve. The flags are worn in two hollows where his knees are. When he lifts his head you see that he has your coat and your hands, and the bottle at his side is the one you carry."
+  },
+  {
+    "id": "S-02a",
+    "text": "The watchtower stands roofless on its crag. It was raised to watch the sea for something, and a beacon basket hangs there yet, never lit. Whoever kept this watch scored the wall with a tally of nights that runs down to the floor and stops. The sea is empty. It has the look of a thing waiting to be otherwise."
+  },
+  {
+    "id": "S-03a",
+    "text": "From the pass the coast lies below you, small. Beyond the mountains the land goes on grey under no weather, and smoke stands in it straight as columns. The Covenant has been through that country. At the roadside they have left the people of the last village seated in rows as if at a lesson, and the birds are not yet done."
+  },
+  {
+    "id": "S-04a",
+    "text": "A fishing boat went over off the harbour in a dead calm, and her crew have not come home. Find them."
+  },
+  {
+    "id": "S-05a",
+    "text": "The sea cave runs down under the cliff to a cove. Names are cut in the rock at its mouth, with dates, by those who waited here on the boats. The last is cut small, and low, and badly."
+  },
+  {
+    "id": "S-06a",
+    "text": "The cave runs back up under the cliff toward the harbour, black and breathing."
+  },
+  {
+    "id": "S-07a",
+    "text": "The harbour town. Warm windows and smoke, and a welcome for any man with shillings. They hanged a household at the crossroads this month, and the tavern is full."
+  },
+  {
+    "id": "S-08a",
+    "text": "The walled manor. A bell rings in the yard and no one is at service. Behind the glass along the wall there is a forge, and a bed to be had at a price."
+  },
+  {
+    "id": "L-01a",
+    "text": "Cut the purse from the net. A name is stitched inside it in a mother's careful hand."
+  },
+  {
+    "id": "L-02a",
+    "text": "Wade under the planking and feel along the piles for whatever else the tide has hung there."
+  },
+  {
+    "id": "L-03a",
+    "text": "Break the hasp with a stone. The box was nailed shut from within, and you need not ask by what."
+  },
+  {
+    "id": "L-04a",
+    "text": "Drag the box up the shingle to the light and work the swollen lid off with your knife."
+  },
+  {
+    "id": "L-05a",
+    "text": "Gather the coins from the rocks. They were someone's whole saving, counted out here the night before the river."
+  },
+  {
+    "id": "L-06a",
+    "text": "Turn the cracked jar over and reach into it to the shoulder."
+  },
+  {
+    "id": "Q-01a",
+    "text": "The fishermen sit round a driftwood fire and feed it with the strakes of their own boat. There is a place left at the fire, and none of them will sit near it."
+  },
+  {
+    "id": "Q-02a",
+    "text": "The fishermen do not know you. They keep to their fire and their silence, like men who have agreed upon a story."
+  },
+  {
+    "id": "Q-03a",
+    "text": "The lighthouse door stands open. On the table within are two bowls, set out as they are set out every night, and one of them has never once been used."
+  },
+  {
+    "id": "Q-04a",
+    "text": "The keeper turns you back down the path. No word was sent ahead of you, and he opens to none unsent."
+  },
+  {
+    "id": "Q-05a",
+    "text": "The keep gate, barred from within. The bar is on the wrong side for a gate meant to keep men out, and the scratches in the iron are at the height of a man's hands."
+  },
+  {
+    "id": "Q-06a",
+    "text": "The keep gate does not open to strangers. It scarce opens to those it knows."
+  },
+  {
+    "id": "Q-07a",
+    "text": "The river bridge. The far bank lies a stone's throw off, and people stand upon it who have stood there for days looking back at this one, waiting on someone."
+  },
+  {
+    "id": "Q-08a",
+    "text": "The bar is down across the bridge, and it will not be lifted while the sea keep stands."
+  },
+  {
+    "id": "C-01a",
+    "text": "Four went out and the boat came back without them. Go through the sea cave and find the fishermen, and count them."
+  },
+  {
+    "id": "C-02a",
+    "text": "Find the fishermen at their camp beyond the sea cave."
+  },
+  {
+    "id": "C-03a",
+    "text": "Climb to the lighthouse. The keeper lights it nightly for one who will not come, and he has the key."
+  },
+  {
+    "id": "C-04a",
+    "text": "Reach the lighthouse on the last of the cliff."
+  },
+  {
+    "id": "C-05a",
+    "text": "Carry the key down to the keep gate. It has opened that door for a great many, and it was never once wanted to let them out."
+  },
+  {
+    "id": "C-06a",
+    "text": "Bring the keep key to the gate."
+  },
+  {
+    "id": "C-07a",
+    "text": "Go down to what the town calls a saint and end it. He was a man once and he asked for help, and you are the first who came. Then cross the bridge."
+  },
+  {
+    "id": "C-08a",
+    "text": "Kill the Saint Beneath."
+  },
+  {
+    "id": "C-09a",
+    "text": "An iron key, black and cold past reason. The last man to bear it bore it in his mouth, that they not take it from his hands."
+  },
+  {
+    "id": "C-10a",
+    "text": "The keep gate is barred, and it wants a key."
+  },
+  {
+    "id": "C-11a",
+    "text": "The bridge will not have you while the keep stands. Those waiting on the far bank have learned as much."
+  },
+  {
+    "id": "U-01a",
+    "text": "Your VITAE is spent. You go down in that place as others have before you."
+  },
+  {
+    "id": "U-02a",
+    "text": "The turns ran out. It let you tire as a cat lets a thing tire, and then it was done with waiting."
+  },
+  {
+    "id": "U-03a",
+    "text": "No reward. The road is held yet, and you may come at it again."
+  },
+  {
+    "id": "U-04a",
+    "text": "You come back to the road with a thread of breath in you. You did not earn it. Others were owed it more and did not come back."
+  },
+  {
+    "id": "U-05a",
+    "text": "What you carried is yours yet. Only the breath is spent."
+  },
+  {
+    "id": "U-06a",
+    "text": "This one is finished. The road does not grieve. Another walks it already who will learn what you learned and die of something else."
+  },
+  {
+    "id": "U-07a",
+    "text": "There is work here for the willing, and no shortage of it."
+  },
+  {
+    "id": "U-08a",
+    "text": "Not yet. There is work you swore to and have not done, and you of all men know what such a promise is worth."
+  },
+  {
+    "id": "U-09a",
+    "text": "A room above the tavern with a door that bolts, and the noise of the living coming up through the boards."
+  },
+  {
+    "id": "U-10a",
+    "text": "Five cards laid out on the counter, the same five whenever you come. Those who last held them have no further use for them."
+  },
+  {
+    "id": "U-11a",
+    "text": "Arms and harness laid out on the counter, such as you do not already carry."
+  },
+  {
+    "id": "E-01a",
+    "text": "A great fish with an old man's face grown into the fore of it. The eyes are shut. They were shut for him, that he need not see the windows, and he has prayed to be answered ever since."
+  },
+  {
+    "id": "E-02a",
+    "text": "Five lit jellies adrift as one body, the largest broad as a cartwheel and the least no bigger than a thumb. Nothing among them commands. They sting alike."
+  },
+  {
+    "id": "E-03a",
+    "text": "A drowned captain in a good coat, sabre out and pistol up. He put his ship on the rocks with her hatches nailed, and he is short of crew yet."
+  },
+  {
+    "id": "E-04a",
+    "text": "A dark green crab the size of a dog, one claw grown monstrous from a life of holding fast to things that wished to leave."
+  },
+  {
+    "id": "E-05a",
+    "text": "A green thing that learned to stand. It was something's young once, left below decks when the ship was quit, and it has not forgiven the light."
+  },
+  {
+    "id": "E-06a",
+    "text": "A pale crab under a crown of coral it did not grow. The colours are a warning, and the warning is honest."
+  },
+  {
+    "id": "N-01a",
+    "text": "The Breakwater"
+  },
+  {
+    "id": "N-02a",
+    "text": "The Capsized Boat"
+  },
+  {
+    "id": "N-03a",
+    "text": "The Light on the Cliff"
+  },
+  {
+    "id": "N-04a",
+    "text": "The Black Key"
+  },
+  {
+    "id": "N-05a",
+    "text": "The Saint Beneath"
+  },
+  {
+    "id": "N-06a",
+    "text": "The Keep Key"
+  },
+  {
+    "id": "N-07a",
+    "text": "The Eldest at the Fire"
+  },
+  {
+    "id": "N-08a",
+    "text": "The Keeper of the Light"
+  },
+  {
+    "id": "N-09a",
+    "text": "The Warden of the Gate"
+  },
+  {
+    "id": "N-10a",
+    "text": "The Bridgeward"
+  },
+  {
+    "id": "N-11a",
+    "text": "EARNED: <QUEST>"
+  },
+  {
+    "id": "N-12a",
+    "text": "LEFT BY THE SPARED: <FOE>"
+  },
+  {
+    "id": "N-13a",
+    "text": "TAKEN FROM <ELITE>"
+  }
+];
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Build one sample as an HTML string. */
+const cardHtml = (card) => `
+  <label class="card" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span></div>
+    <p class="words">${esc(card.text)}</p>
+  </label>`;
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: what is right or wrong here (optional)">
+  </section>`;
+
+/** One tab panel: blurb and its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** Update the selected-card ring and the running counts. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'CUT slot'
+    : keep.length === 1 ? `KEEP ${keep[0]}`
+    : `MERGE ${keep.join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the kept count, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    'REVIEW — the Narrator, Chapter 1 drafts',
+    `kept ${k.length} of ${CARDS.length}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear and Submit come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
