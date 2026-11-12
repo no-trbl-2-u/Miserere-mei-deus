@@ -519,3 +519,5 @@ PR body mutations: M1 register each scene as the node's own cutscene event inste
 Defaults taken: the reward lines W-03 to W-06 add no field; `bw-b1` waits on the `[content]` placeholder. Old saves are unsupported; `turnInLine` is authored and never saved. The turn-in line shows at stage `turn-in` and once the node's step is paid.
 
 Defaults taken: ids H-01, F-01, S-01 with letters a to c, one tick per screen; stills are static HTML mocks on today's palette with a system serif (the fonts of record are not installed on the runner); the mock sources were not committed. The design direction already lives in docs/design-direction.md (156.1), so nothing else to absorb.
+
+Defaults taken: a scene with no picture shows the picture of the nearest of the four with one (fewest roads on the Breakwater, the sea cave passage counted as a road, a tie to the first of windmill, chapel, watchtower, pass); a cutscene `description` is optional in the type, so none is written; `seenScenes` is still keyed by node id (no save change, old saves unsupported); the new `scripts/narrator-verdicts.test.mjs` is in the root `npm test` and 177.4 to 177.8 add their surfaces to it.

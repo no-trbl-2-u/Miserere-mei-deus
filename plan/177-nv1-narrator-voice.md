@@ -63,7 +63,6 @@
 - **A6** Event lines. Every approved hazard, rest, dream, travel, village and loot cache action line is in `content.ts`; each event screen shows its longest line unclipped.
 - **A7** Screen copy. Every approved defeat, withdraw, death return, game over, quest screen and village counter line, and each approved reward eyebrow, is in its copy file; each screen shows it unclipped.
 - **A8** Enemy descriptions. Every approved description is in `enemy.library.ts` with its `DRAFT (Claude)` comment removed.
-- **A10** Story screens and cutscenes. Each Chapter 1 scene tells its part of the Act 1 story as T ruled it, in panels, with no sentence past 40 words; none is a one-line hint. Every scene plays from a node's scene slot (spec 178), on the node the story places it on; no node is a cutscene by kind. The cutscene screen shows a six-panel scene unclipped.
 - **A9** No approved line is left as a placeholder, and no unapproved draft is in the game: a test reads the ledger's verdicts and the sources and fails on either.
 
 ## Open questions
@@ -76,7 +75,7 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 
 ## Chunks
 
-Measure: 8 open · 7 closed · next A16
+Measure: 7 open · 8 closed · next A16
 
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
   - T approved the 22 scenes, the quest names and lines, the four refusals and the two gate lines on 2026-11-12; they are in `plan/ballots/narrator-chapter1.md` and need no further review. What is left for this chunk is every other Chapter 1 surface, none of it drafted from the new story yet: the map blurbs, the arrival lines, the hazard, rest, dream, travel, village and loot lines, the screen copy and the enemy descriptions. They are drafted with `/narrate` from `axiomancer-mechanics/content/story/story-overview.md` once 177.11 has amended the voice rules, added to that ledger, and reviewed by T there (a review page is redrawn only if T asks for one); the session writes each verdict under `## Verdicts`.
@@ -98,7 +97,3 @@ Measure: 8 open · 7 closed · next A16
 - [ ] **177.8** Enemy descriptions in the game · S · closes A8 · needs 177.3 · alias: NV1h
   - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions, each `DRAFT (Claude)` comment removed with it. The Saint Beneath's description and journal are among them since T's word of 2026-11-12 ("Adjust the saint beneath's entry to fit the new story"): both land as the ledger's E-01, and `Enemy/e2e/saint-beneath.engine.test.ts`, which asserts the old journal word for word, changes with them.
   - Measure: the verdicts test passes for this surface; the enemy library tests pass.
-- [ ] **177.9** Story screens and cutscenes tell the Act 1 story · M · closes A10 · needs — · alias: NV1i
-  - T's Act 1 story is ruled (`axiomancer-mechanics/content/story/story-overview.md`, The Carried Light) and its 22 Chapter 1 scenes are approved, word for word, in `plan/ballots/narrator-chapter1.md` (S-01 to S-22; T, 2026-11-12). This chunk puts exactly those panels in the game and writes none. Each scene sits in the scene slot of the node the ledger names and plays before that node's own event (spec 178); the windmill's scene (S-01) keeps the `giveQuestStep` effect. People speak inside the Keeper's telling, so no `[NPC Content Needed]` marker is left in a scene. [T to confirm #1] A scene with no picture of its own shows the picture of the nearest scene that has one (windmill headland, clifftop chapel, old watchtower, high pass) until T supplies art. If `scripts/narrator-verdicts.test.mjs` does not exist yet (177.4 writes it), this chunk writes it for the scene surface.
-  - `axiomancer-mechanics/src/World/MapEvents/content.ts`: each scene the story places, as panels (`lines`), in the Breakwater's slot table (`BW_NODE_SCENES`, spec 178), keyed by the node it plays before; the windmill's opening keeps its `giveQuestStep` effect; a slot the story leaves empty is removed. The cutscene screen's fit at six panels.
-  - Measure: the verdicts test passes for these surfaces; a screenshot of the longest scene is in the PR.
