@@ -54,8 +54,12 @@ import type {
 // ---------------------------------------------------------------------------
 
 /**
- * Upgrade prices in shillings, sized against measured loot-cache income (~26 shillings/act) — sized so a single anvil visit
- * (hone + temper + swap once each = 16) still leaves room for shop wares,
+ * Upgrade prices in shillings, set against a full Breakwater walk's guaranteed
+ * 296 shillings (`BREAKWATER_SHILLINGS_FLOOR`: 44 from the five loot caches plus
+ * 252 in fight, elite and boss wages; hazard purses are upside, not floor).
+ * The prices were sized when that figure was thought to be 26 and stay as set;
+ * a single anvil visit (hone + temper + swap once each = 16) still leaves room
+ * for shop wares,
  * while HONE < TEMPER < SWAP keeps the ordering (a full gear
  * swap costs more than one face upgrade).
  */
