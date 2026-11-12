@@ -8,7 +8,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { hasBudgetSection, itemHours, liveMarkdown, parseBudget, parseItems, planRows, queuePlan, reminderText } from './deadlines-lib.mjs'
+import { hasBudgetSection, itemHours, liveMarkdown, openHeldChunks, parseBudget, parseItems, planRows, queuePlan, reminderText } from './deadlines-lib.mjs'
 import { checkDeadlines, readPlanSources } from './check-deadlines.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -135,8 +135,9 @@ test('the lint in the queue model: a loop row needs no line, and the other rules
 const liveQueue = (today) => {
     const md = fs.readFileSync(path.join(ROOT, 'plan/deadlines.md'), 'utf8')
     const budget = parseBudget(md)
+    const sources = readPlanSources(ROOT)
     assert.ok(budget > 0, 'the live plan states a budget')
-    return queuePlan(parseItems(md), planRows(readPlanSources(ROOT)).phases, today, budget)
+    return queuePlan(parseItems(md), planRows(sources).phases, today, budget, openHeldChunks(sources))
 }
 
 test('the CLI prints the queue reminder for the live plan, at the live budget', () => {
@@ -287,4 +288,69 @@ test('the CLI, given a Budget section with no readable hours, says so on stderr 
     } finally {
         fs.rmSync(dir, { recursive: true, force: true })
     }
+})
+
+// Spec 169 A4 / A6: Held chunks join the queue by themselves.
+const HELD_SPEC = [
+    '- [ ] **60.1** T reviews the opening (attended) (2 h) · S · closes A1 · needs — · alias: QH1',
+    '- [ ] **60.2** T picks the art, no hours stated · S · closes A2 · needs — · alias: QH2',
+    '- [ ] **60.3** T plays the build (1.5 h) · S · closes A3 · needs — · alias: QH3',
+    '- [ ] **60.4** a loop row · S · closes A4 · needs — · alias: QH4',
+].join('\n')
+const README = '**Held** (waits)\n\n- **60.1** · attended · since: 2026-11-01 · until: T\'s word · max_age: 30d\n- **60.2** · attended · since: 2026-11-01 · until: T\'s word · max_age: 30d\n- **60.3** · attended · since: 2026-11-01 · until: T\'s word · max_age: 30d\n\n**Lane**\n'
+const heldSources = (spec = HELD_SPEC) => ({ specs: [{ file: 'plan/60-held.md', md: spec }], readme: README })
+const heldQueue = (md, sources = heldSources()) => queuePlan(parseItems(md), planRows(sources).phases, '2026-11-10', 40, openHeldChunks(sources))
+
+test('openHeldChunks: open Held chunks with title, hours and aliases; a shipped or pending-closed one is gone', () => {
+    const held = openHeldChunks(heldSources())
+    assert.deepEqual(held.map((h) => h.chunk), ['60.1', '60.2', '60.3'])
+    assert.equal(held[0].title, 'T reviews the opening (attended) (2 h)')
+    assert.deepEqual(held[0].aliases, ['QH1'])
+    const shipped = openHeldChunks(heldSources(HELD_SPEC.split('\n').slice(1).join('\n')))
+    assert.deepEqual(shipped.map((h) => h.chunk), ['60.2', '60.3'])
+    assert.deepEqual(openHeldChunks({ ...heldSources(), pending: new Set(['60.2']) }).map((h) => h.chunk), ['60.1', '60.3'])
+})
+
+test('queuePlan: a Held chunk no Item names is an act of the first milestone, after the written ones, with its hours', () => {
+    const q = heldQueue(plan())
+    assert.equal(q.milestones[0].acts, 4 + 3, 'four written acts open in W1 plus three Held')
+    assert.equal(q.milestones[0].openHours, 3 + 2 + 1 + 4 + 2 + 1.5)
+    const names = q.week.map((w) => w.name)
+    assert.ok(names.indexOf('Write the lines (3 h)') < names.indexOf('T reviews the opening (attended) (2 h)'))
+    assert.equal(q.week.find((w) => w.name.startsWith('T reviews')).fromPlan, true)
+    assert.equal(q.week.find((w) => w.name === 'Write the lines (3 h)').fromPlan, undefined)
+    assert.ok(q.noHours.includes('T picks the art, no hours stated'))
+})
+
+test('queuePlan: a Held chunk an Item names appears once, as that Item', () => {
+    const named = plan().replace('| Write the lines (3 h) | - | - | W1 | QA1 |', '| Write the lines (3 h) | - | - | W1 | QH1 |')
+    const sources = { specs: [{ file: 'plan/60-held.md', md: HELD_SPEC }, ...SOURCES.specs], readme: README }
+    const q = queuePlan(parseItems(named), planRows(sources).phases, '2026-11-10', 40, openHeldChunks(sources))
+    const all = [...q.week.map((w) => w.name), ...q.waiting.map((w) => w.name)]
+    assert.equal(all.filter((n) => n.startsWith('T reviews')).length, 0)
+    assert.equal(q.milestones[0].acts, 4 + 2)
+})
+
+test('queuePlan: with no Held chunk open the queue is what it was; a shipped one leaves', () => {
+    const base = queuePlan(parseItems(plan()), planRows(SOURCES).phases, '2026-11-10', 7)
+    assert.deepEqual(queuePlan(parseItems(plan()), planRows(SOURCES).phases, '2026-11-10', 7, []), base)
+    const gone = heldQueue(plan(), heldSources('- [ ] **60.4** a loop row · S · closes A4 · needs — · alias: QH4'))
+    assert.ok(!gone.week.some((w) => w.fromPlan))
+})
+
+test('the reminder and the live file mark a Held act "from the build plan" and state the hand-ticked count', () => {
+    const q = heldQueue(plan())
+    const text = reminderText([], null, '2026-11-10', q)
+    assert.match(text, /T reviews the opening \(attended\) \(2 h\) \(from the build plan\)/)
+    assert.match(text, /Open acts only a hand can tick: 4\./, 'Play the lines, Review it, Decide a thing and The last session')
+    assert.equal(q.handTicked, 4)
+    assert.match(text, /From the build plan \(Held chunks no Item names\): T reviews the opening/)
+    const live = liveMarkdown([], null, '2026-11-10', q)
+    assert.match(live, /T reviews the opening \(attended\) \(2 h\) \(from the build plan\)/)
+    assert.match(live, /Open acts only a hand can tick: 4\./)
+})
+
+test('a proof-carrying T act is not hand-ticked', () => {
+    const md = plan().replace('| Review it (4 h) | - | - | W1 | T |', '| Review it (4 h) | - | - | W1 | T: pr #12 |')
+    assert.equal(queuePlan(parseItems(md), planRows(SOURCES).phases, '2026-11-10', 7).handTicked, 3)
 })
