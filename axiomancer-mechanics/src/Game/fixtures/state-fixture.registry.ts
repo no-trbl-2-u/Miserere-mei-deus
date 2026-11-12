@@ -163,7 +163,7 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
     },
     {
         id: 'l30-bw-hazard-arrive',
-        description: 'L30 ladder kit on the Breakwater\'s river-meadow hazard (bw-m2); `arrive` opens its puzzle (HP6c: one of the six puzzle hazard nodes) → /hazard.',
+        description: 'L30 ladder kit on the Breakwater\'s river-meadow hazard (bw-m2); `arrive` opens its puzzle (HP6c: one of the seven puzzle hazard nodes) → /hazard.',
         seed: 'fixture-l30-bw-hazard-arrive',
         preset: 'kid-l30',
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-m2' },
