@@ -507,3 +507,5 @@ Defaults taken (pilot worker, no questions asked; built inline, no builder subag
 - The two new caches' descriptions are `[content]` placeholders; their pictures fall to the cache picture table's default (D185).
 - The atlas's node kind stays the node's own kind (`none` for a start node whose only content is a scene).
 - The dev SKIP EVENT now owes a start node's arrival when it has a pool or a scene (as the map presenter does), and a before-scene skip continues to the node's own event instead of dismissing it.
+
+Tests only plus the narrate skill's last description sentence. Every landed string already matched the ledger, so no game string changed. Giver lines (`description` of bw-c2, bw-l5, bw-b1) left unpinned for 177.13.
