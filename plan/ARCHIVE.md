@@ -737,3 +737,5 @@
 - 2026-11-12 · 178 · spec complete: A scene before any node, and no more cutscene nodes · D192 · deleted in (this commit)
 - 2026-11-12 · 177.14 (alias: NV1n) · Chapter 1's quest lines are pinned exactly in tests · 8894ce57..8894ce57 (#1644)
 - 2026-11-12 · 177.12 (alias: NV1l) · Removed story's lines in Chapters 2 to 4 are placeholders · 580b0e3e..f8c6c129 (#1642)
+- 2026-11-12 · 179.1 (alias: SL1a) · Seven hazards said once; shillings floor recounted to 296 and pinned · c5e05f9f..7d6ba8c6 (#1645)
+- 2026-11-12 · 179 · spec complete: Seven hazards, a true shillings floor, and tests that can fail · D194, pinned by card.removal.pricing.engine.test.ts · deleted in (this commit)
