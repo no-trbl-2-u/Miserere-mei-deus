@@ -28,7 +28,7 @@
 - **The voice bible.** A new `axiomancer-mechanics/docs/narrative/NARRATOR.md`: the scope (what the Narrator writes and what it never writes), the rules below, the five cruelty stops, and the calibration set (T's locked passages and T's rejections with reasons, copied from the ledgers). `ANTI_IMITATION.md`, `DELIVERY_REGISTER.md` and `VOICE_REGISTERS.md` each gain one paragraph pointing at it.
 - **The Narrator's rules** (lintable ones marked):
   - A sentence runs at most 40 words (lint).
-  - Each surface has a word cap for the whole line (lint): map blurb 18, arrival line 32, loot cache action 30, hazard, rest, dream, travel, quest and description lines 45, screen copy 40, journal 110. A story screen or a cutscene has no cap on the whole: see the next rule.
+  - Each surface has a word cap for the whole line (lint): map blurb 18, arrival line 32, loot cache action 30, hazard, rest, dream, travel, quest and description lines 45, screen copy 40, journal 200 (T, 2026-11-12). A story screen or a cutscene has no cap on the whole: see the next rule.
   - **Story screens and cutscenes tell their part of the story** (T, 2026-11-11: "When we have a story screen, it shouldn't be so short ... set it to 40 ... Let's actually tell the part of the story, not just an ambiguous line or two"). Their sentence ceiling is 40 words where MB-1 says 20 (lint). Each is told in panels, one paragraph a panel, and says what happens, to whom and what it costs, as the Act 1 story rules it (review). A panel holds at most 80 words and a screen at most six panels (T, 2026-11-12: "80 words, 6 panels").
   - No quotation marks; reported speech is set off with a comma (lint). No exclamation marks and no semicolons (lint, as today).
   - Canonical player terms keep their spelling (`VITAE`, `GUARD`) (review).
@@ -57,7 +57,6 @@
 
 ## Acceptance
 
-- **A2** The lint knows the Narrator. On a Narrator field, a 41-word sentence, a line over its surface cap and a quotation mark each fail, and a 30-word sentence with "yet" or "bade" passes. On every other field the old rules still fail what they failed. The files the drafts touch are in the content list.
 - **A3** T's verdict on the drafts is in `plan/ballots/narrator-chapter1.md` (attended).
 - **A4** Map blurbs. Every approved map blurb is in `breakwater.layout.ts`; the map sheet shows the longest one unclipped at phone width.
 - **A5** Arrival lines. Every approved arrival line is in `arrival-lines.ts`, keyed by node; the fight reveal shows the longest one unclipped.
@@ -73,33 +72,29 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 
 ## Chunks
 
-Measure: 9 open · 1 closed · next A11
+Measure: 8 open · 2 closed · next A11
 
-- [ ] **177.2** The prose lint learns the Narrator's fields · M · closes A2 · needs — · alias: NV1b
-  - `scripts/check-prose.mjs`: the Narrator field table and its rules; the new content files; `--list` prints both rule sets.
-  - `scripts/check-prose.test.mjs`: the cases of A2, and one per old rule on a non-Narrator field.
-  - Measure: the new tests pass; root `npm test` passes with every `[content]` placeholder still in place.
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
   - T ticks and notes on the review page, presses Generate and pastes the sheet; the session writes the verdict under `## Verdicts` in `plan/ballots/narrator-chapter1.md`, redraws any line T asks for at another stop, and repeats until T is done.
   - Measure: every line in the ledger is approved (with its final text), rejected, or left for later, by T's word.
-- [ ] **177.4** Map blurbs in the game · S · closes A4, A9 · needs 177.2, 177.3 · alias: NV1d
+- [ ] **177.4** Map blurbs in the game · S · closes A4, A9 · needs 177.3 · alias: NV1d
   - `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`, 33 lines.
   - `scripts/narrator-verdicts.test.mjs` (new, in root `npm test`): reads the ledger's verdicts and fails on an approved line still tagged `[content]` in a surface a closed chunk owns, and on an unapproved draft found in any source.
   - Measure: the test passes; a phone-width screenshot of the map sheet with the longest blurb is in the PR.
-- [ ] **177.5** Arrival lines in the game · S · closes A5 · needs 177.2, 177.3 · alias: NV1e
+- [ ] **177.5** Arrival lines in the game · S · closes A5 · needs 177.3 · alias: NV1e
   - `axiomancer-mechanics/src/World/MapEvents/arrival-lines.ts`: a table keyed by node id in place of the generated placeholder; a node with no approved line keeps `[content] <place>.`
   - Measure: the verdicts test passes for this surface; a screenshot of the fight reveal with the longest line is in the PR.
-- [ ] **177.6** Hazard, rest, dream, travel, village and loot lines in the game · M · closes A6 · needs 177.2, 177.3 · alias: NV1f
+- [ ] **177.6** Hazard, rest, dream, travel, village and loot lines in the game · M · closes A6 · needs 177.3 · alias: NV1f
   - `axiomancer-mechanics/src/World/MapEvents/content.ts`: per-node tables for the hazard and rest lines (they are built from the place name today), the three dreams, the two cave travel prompts, a village line each for `bw-t4` and `bw-m5`, and the two action lines of each of the five caches (spec 178's 178.3 makes the old watchtower and the high pass caches).
   - Measure: the verdicts test passes for these surfaces; `cache-action-lines.engine.test.ts` and the chapter e2e pass; one screenshot per event screen with its longest line is in the PR.
-- [ ] **177.7** Screen copy in the game · S · closes A7 · needs 177.2, 177.3 · alias: NV1g
+- [ ] **177.7** Screen copy in the game · S · closes A7 · needs 177.3 · alias: NV1g
   - Mobile: `combat-summary.copy.ts`, `reveal.copy.ts`, `death-return.copy.ts`, `game-over.copy.ts`, `quest.copy.ts`, `village.copy.ts` (the three counter lines only), `relic-source.copy.ts`.
   - `VITAE` keeps its spelling in the defeat line. The four spoken lines keep their placeholders.
   - Measure: the verdicts test passes for these surfaces; one screenshot per screen is in the PR.
-- [ ] **177.8** Enemy descriptions in the game · S · closes A8 · needs 177.2, 177.3 · alias: NV1h
+- [ ] **177.8** Enemy descriptions in the game · S · closes A8 · needs 177.3 · alias: NV1h
   - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions, each `DRAFT (Claude)` comment removed with it.
   - Measure: the verdicts test passes for this surface; the enemy library tests pass.
-- [ ] **177.9** Story screens and cutscenes tell the Act 1 story · M · closes A10 · needs 177.2, 178.3 · alias: NV1i
+- [ ] **177.9** Story screens and cutscenes tell the Act 1 story · M · closes A10 · needs 178.3 · alias: NV1i
   - Waits on T's Act 1 story (T, 2026-11-11: "let's actually write the ACT 1 story together"). The three cutscene drafts in the ledger (`bw-l2`, `bw-d5`, `bw-p3`) and the windmill's opening were written before the story and are redrawn from it, then approved by T. Since spec 178 (T, 2026-11-12) there are no cutscene nodes: each scene sits in a node's scene slot and plays before that node's own event, so the story may place a scene on any node, and the three drafts' nodes are now a fight and two loot caches that keep their old scene until this chunk rewrites or moves it.
   - `axiomancer-mechanics/src/World/MapEvents/content.ts`: each scene the story places, as panels (`lines`), in the Breakwater's slot table (`BW_NODE_SCENES`, spec 178), keyed by the node it plays before; the windmill's opening keeps its `giveQuestStep` effect; a slot the story leaves empty is removed. The cutscene screen's fit at six panels.
   - Measure: the verdicts test passes for these surfaces; a screenshot of the longest scene is in the PR.

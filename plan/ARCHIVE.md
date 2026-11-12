@@ -723,3 +723,4 @@
 - 2026-11-11 · 173 · spec complete: The quest as one card · none · deleted in (this commit)
 - 2026-11-12 · 177.1 (alias: NV1a) · The Narrator exemption and voice bible are written down · a21c137a..a21c137a (#1620)
 - 2026-11-12 · 156.7 (alias: TY1g) · dropped: T's palette, the default theme; today's colouring stays (T) · (this commit)
+- 2026-11-12 · 177.2 (alias: NV1b) · Prose lint reads Narrator fields by their own rules · 20cff160..20cff160 (#1623)
