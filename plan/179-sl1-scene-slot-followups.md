@@ -63,7 +63,7 @@ All of it is wording, one recount and test edits. No engine behaviour, no price 
 
 Measure: 3 open · 0 closed · next A4
 
-- [ ] **179.1** Seven hazards said once, the shillings floor recounted, three tests made real · S · closes A1, A2, A3 · needs 178.3 · alias: SL1a
+- [ ] **179.1** Seven hazards said once, the shillings floor recounted, three tests made real · S · closes A1, A2, A3 · needs — · alias: SL1a
   - Wording: `docs/game-model.md`, `axiomancer-mobile/docs/playtest-guides/hazard.md`, `axiomancer-mobile/scripts/map-walk-e2e.mjs` (two comments); the pending file's amending decision.
   - Floor: recount in the `card.removal.pricing.ts` and `blacksmith.engine.ts` comments; a test in `axiomancer-mechanics` pins the figure to the tables; `plan/127-up1-card-upgrades.md` is history and stays.
   - Tests: `game.cli.route-audit.engine.test.ts`, `hazard-puzzle-node.engine.test.ts` (mobile), `start-node-arrival.engine.test.tsx`, `beacon-crags.engine.test.ts`, `lantern-deep.engine.test.ts`; each mutation named in the PR body.
