@@ -543,7 +543,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/components/__tests__/EventGate.test.tsx, axiomancer-mobile/state/e2e/cutscene-skip.S4-world-C17.test.tsx, ..."
+        "source": "axiomancer-mobile/components/__tests__/DebugTriggerEncounter.test.tsx, axiomancer-mobile/components/__tests__/EventGate.test.tsx, axiomancer-mobile/state/e2e/cutscene-leaves-first.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,

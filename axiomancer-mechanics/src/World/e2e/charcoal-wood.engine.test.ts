@@ -23,6 +23,7 @@ import { auditMapTraversal } from '../world.reducer';
 import { createNewGameState } from '../../Game/game.reducer';
 import { EnemiesByMap } from '../../Enemy/enemy.library';
 import type { GameState } from '../../Game/types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 const charcoalWood = getMapDefinition('coastal-continent', 'charcoal-wood');
 const breakwater = getMapDefinition('coastal-continent', 'breakwater');
@@ -124,7 +125,7 @@ describe('the Charcoal Wood\'s events (D29)', () => {
 
 describe('the Act 1 chain so far', () => {
     it('crosses the Breakwater\'s river bridge into the Charcoal Wood, at the bridge end', () => {
-        const offer = resolveMapEvent(standingOn(breakwater, 'bw-b2'));
+        const offer = resolvePastScene(standingOn(breakwater, 'bw-b2'));
         expect(offer.event.kind).toBe('travel');
         const r = { state: takeTravel(offer.state) };
         expect(r.state.world.currentMap.name).toBe('charcoal-wood');

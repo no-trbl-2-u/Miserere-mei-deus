@@ -14,7 +14,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 
 import { markNodeConsumed, moveToNode, placeOnNode, unlockAdjacent } from '../world.reducer';
 import { createStartingWorld } from '../index';
-import { resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
+import { settleArrival } from '../MapEvents/resolve-map-event';
 import { createGameStore } from '../../Game/store';
 import type { GameState } from '../../Game/types';
 import type { PersistenceAdapter } from '../../Game/persistence/types';
@@ -24,6 +24,7 @@ import { mockSequentialRng } from '../../test-utils/rng';
 import '../MapEvents/content';
 import { questNodeIdsOn, settleQuestNodes } from '../../Game/fixtures/quest-nodes';
 import { legalMovesFrom } from '../world.reducer';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -63,7 +64,7 @@ function saveMidFight(approach: WorldState, fightNode: string) {
     const store = createGameStore(disk, { player: Player, world: approach });
     store.getState().moveToNode(fightNode);
 
-    const { state, event } = resolveMapEvent(store.getState());
+    const { state, event } = resolvePastScene(store.getState());
     if (event.kind !== 'encounter') throw new Error(`expected a fight at ${fightNode}, got ${event.kind}`);
     store.setState({ world: state.world, quests: state.quests });
     store.getState().startCombat(event.encounter);
@@ -122,7 +123,7 @@ describe.each(cases)('a save taken during $name', ({ approach, node, onward, bos
         const { disk, foe, isBoss } = saveMidFight(approach(), node);
 
         const reloaded = createGameStore(disk).getState();
-        const { event } = resolveMapEvent(reloaded);
+        const { event } = resolvePastScene(reloaded);
 
         expect(event.kind).toBe('encounter');
         if (event.kind !== 'encounter') return;

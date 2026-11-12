@@ -10,7 +10,6 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from '../MapEvents/content';
 import { getNodeEventPool } from '../../World';
 import { scaleEnemyToLevel } from '../encounter';
@@ -22,6 +21,7 @@ import {
 } from '../../Combat/combat.engine';
 import { tollOwed } from '../../Combat/combat.enemy-riders';
 import type { CombatEncounterState, CombatEvent } from '../../Combat/combat.encounter.types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 const rng = (): number => 0.5;
 
@@ -33,7 +33,7 @@ function fightAt(nodeId: string, poolRng: () => number = rng): CombatEncounterSt
         player: { ...fresh.player, health: 5000, maxHealth: 5000 },
         world: { ...fresh.world, currentMap: { ...fresh.world.currentMap, currentNode: nodeId } },
     };
-    const { event } = resolveMapEvent(state, poolRng);
+    const { event } = resolvePastScene(state, poolRng);
     expect(event.kind, nodeId).toBe('encounter');
     if (event.kind !== 'encounter') throw new Error(nodeId);
     const foe = event.encounter.enemies[0]!;

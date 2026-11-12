@@ -45,7 +45,7 @@ describe('cutscene scene ids (CU1a)', () => {
 
     it('keeps the windmill lines and its quest step effect', () => {
         const payload = getNodeScene('coastal-continent', 'breakwater', 'bw-w1')!.before;
-        expect(payload.lines).toHaveLength(2);
+        expect(payload.lines).toHaveLength(4);
         expect(payload.effect?.giveQuestStep?.step).toBe(1);
     });
 

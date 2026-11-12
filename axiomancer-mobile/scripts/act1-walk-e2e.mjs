@@ -234,7 +234,22 @@ async function settleOnMap(page, what) {
     fail(`${what}: never got back to the map (stuck at ${pathname(page)})`)
 }
 
-async function travelTo(page, nodeId) {
+/** A node with a scene in its slot plays it first, once a run: tap it through, then the node's own screen follows. */
+async function playSceneIfAny(page, nodeId) {
+    const scene = await page.getByTestId('cutscene-advance').first().waitFor({ state: 'visible', timeout: 2000 }).then(() => true, () => false)
+    if (!scene) return
+    log(`${nodeId}: scene played through`)
+    // Tap panel by panel, as a player does (SKIP and a last tap racing would dismiss twice).
+    for (let k = 0; k < 8 && (await page.getByTestId('cutscene-advance').count()); k++) {
+        await tap(page, 'cutscene-advance')
+        await sleep(900)
+    }
+    // The node's own screen replaces the scene: wait for the scene to go before the caller looks.
+    await page.getByTestId('cutscene-advance').first().waitFor({ state: 'detached', timeout: 5000 })
+        .catch(() => fail(`${nodeId}: the scene never closed`))
+}
+
+async function travelTo(page, nodeId, { playScene = true } = {}) {
     const label = await nodeLabel(page, nodeId)
     if (!label) fail(`node-${nodeId} is not on the map`)
     if (!/open/.test(label)) fail(`node-${nodeId} is not open (label: "${label}")`)
@@ -242,6 +257,8 @@ async function travelTo(page, nodeId) {
     await waitFor(page, 'node-confirm-go', `${nodeId} confirm panel`, 5000)
     await page.evaluate(() => document.querySelector('[data-testid="node-confirm-go"]').click())
     log(`travelling to ${nodeId} (${label})`)
+    // A cutscene step is walked to see that scene itself: its resolver plays it.
+    if (playScene) await playSceneIfAny(page, nodeId)
 }
 
 async function expectHere(page, nodeId) {
@@ -273,6 +290,7 @@ async function walkBack(page, nodeId, { takePassage = false } = {}) {
         await sleep(150)
     }
     if (confirmed) {
+        await playSceneIfAny(page, nodeId)
         if (await waitForAny(page, ['travel-move', 'travel-stay'], 4000)) {
             await tap(page, takePassage ? 'travel-move' : 'travel-stay')
             await settleOnMap(page, `${nodeId} travel`)
@@ -517,7 +535,7 @@ async function newGame(page, baseUrl, plan) {
  * lands on the next region's arrival scene.
  */
 async function crossExit(page, region, next) {
-    await travelTo(page, region.exit)
+    await travelTo(page, region.exit, { playScene: Boolean(next) })
     if (next) {
         await waitFor(page, 'travel-move', `${region.exit} travel screen`)
         await expectPath(page, '/travel', `${region.exit} travel screen`)
@@ -574,7 +592,7 @@ async function walk(page, baseUrl, plan, tally) {
             const resolve = RESOLVERS[step.kind]
             if (!resolve) fail(`${step.nodeId}: the walk has no way to resolve a ${step.kind} node`)
             if (step.kind === 'encounter' || step.kind === 'hazard') await mendIfLow(page, step.nodeId)
-            await travelTo(page, step.nodeId)
+            await travelTo(page, step.nodeId, { playScene: step.kind !== 'cutscene' })
             const how = await resolve(page, step.nodeId, { next: nextStep })
             await settleOnMap(page, step.nodeId)
             if (nextStep?.role !== 'passage') await expectHere(page, step.nodeId)

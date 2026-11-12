@@ -31,6 +31,7 @@ import '../index';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import type { Encounter } from '../types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 function seededRng(seed: number): () => number {
     let state = seed % 2147483647 || 1;
@@ -61,7 +62,7 @@ function freshGame(): GameState {
 /** Walks the roads to `nodeId` and resolves its arrival. */
 function arrive(state: GameState, nodeId: string) {
     const moved: GameState = { ...state, world: walkRoadTo(state.world, nodeId) };
-    return resolveMapEvent(moved, seededRng(7));
+    return resolvePastScene(moved, seededRng(7));
 }
 
 function quest(state: GameState, nodeId: string): GameState {

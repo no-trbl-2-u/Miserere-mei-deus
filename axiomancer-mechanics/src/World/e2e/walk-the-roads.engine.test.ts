@@ -27,6 +27,7 @@ import { createStartingWorld } from '../index';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import type { Encounter, MapState, WorldState } from '../types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 function seededRng(seed: number): () => number {
     let state = seed % 2147483647 || 1;
@@ -53,7 +54,7 @@ function freshGame(): GameState {
 }
 
 function arrive(state: GameState, nodeId: string) {
-    return resolveMapEvent({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
+    return resolvePastScene({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
 }
 
 function endFight(state: GameState, target: Encounter, outcome: 'victory' | 'flee' | 'defeat'): GameState {
@@ -64,7 +65,7 @@ function endFight(state: GameState, target: Encounter, outcome: 'victory' | 'fle
 /** Opens the fight at `nodeId` (walking there, or retrying it in place) and ends it with `outcome`. */
 function fightAt(state: GameState, nodeId: string, outcome: 'victory' | 'flee' | 'defeat' = 'victory'): GameState {
     const world = map(state).currentNode === nodeId ? moveToNode(state.world, nodeId) : walkRoadTo(state.world, nodeId);
-    const { state: owed, event } = resolveMapEvent({ ...state, world }, seededRng(7));
+    const { state: owed, event } = resolvePastScene({ ...state, world }, seededRng(7));
     if (event.kind !== 'encounter') throw new Error(`expected a fight at ${nodeId}, got ${event.kind}`);
     return endFight(owed, event.encounter, outcome);
 }
@@ -143,7 +144,7 @@ describe('A2: the move lists follow the rule after every move, resolve, respawn 
         for (const id of ['bw-w4', 'bw-w2', 'bw-w1', 'bw-w2', 'bw-w4']) {
             const moved: GameState = { ...s, world: moveToNode(s.world, id) };
             expectListsFollowTheRule(syncMoveLists(map(moved)));
-            s = resolveMapEvent(moved, seededRng(5)).state;
+            s = resolvePastScene(moved, seededRng(5)).state;
             expectListsFollowTheRule(map(s));
         }
     });

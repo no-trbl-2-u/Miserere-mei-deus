@@ -22,6 +22,7 @@ import { settleQuestNodes } from '../../Game/fixtures/quest-nodes';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import type { Encounter, MapState } from '../types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 function seededRng(seed: number): () => number {
     let state = seed % 2147483647 || 1;
@@ -43,13 +44,13 @@ function freshGame(): GameState {
 }
 
 function arrive(state: GameState, nodeId: string) {
-    return resolveMapEvent({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
+    return resolvePastScene({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
 }
 
 /** One road onto `nodeId` and its resolve: the host's move-then-resolve. */
 function step(state: GameState, nodeId: string) {
     const moved: GameState = { ...state, world: moveToNode(state.world, nodeId) };
-    return { moved, ...resolveMapEvent(moved, seededRng(11)) };
+    return { moved, ...resolvePastScene(moved, seededRng(11)) };
 }
 
 function endFight(state: GameState, target: Encounter, outcome: 'victory' | 'flee' | 'defeat'): GameState {
@@ -156,7 +157,7 @@ describe('A6: a spent fight, hazard, rest, cache or cutscene node resolves nothi
         let s = walkedToHazard();
         s = { ...s, world: moveToNode(s.world, 'bw-m3') };
         s = { ...s, world: completeCurrentNode(s.world) };
-        expect(resolveMapEvent(s, seededRng(3)).event.kind).toBe('loot-cache');
+        expect(resolvePastScene(s, seededRng(3)).event.kind).toBe('loot-cache');
     });
 });
 

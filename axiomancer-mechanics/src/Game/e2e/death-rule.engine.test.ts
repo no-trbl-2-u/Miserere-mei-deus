@@ -28,6 +28,7 @@ import { Player } from '../../Character/characters.mock';
 import { mockSequentialRng } from '../../test-utils/rng';
 import '../../World/MapEvents/content';
 import { settleQuestNodes } from '../fixtures/quest-nodes';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -85,7 +86,7 @@ const FIGHTS = [
 /** Walk onto `node` from the approach, roll the arrival and stage the fight. */
 function enterFight(store: ReturnType<typeof createGameStore>, node: string, boss: boolean) {
     store.getState().moveToNode(node);
-    const { state, event } = resolveMapEvent(store.getState());
+    const { state, event } = resolvePastScene(store.getState());
     if (event.kind !== 'encounter') throw new Error(`expected a fight at ${node}, got ${event.kind}`);
     expect(event.isBoss).toBe(boss);
     store.setState({ world: state.world, quests: state.quests });
@@ -189,7 +190,7 @@ describe.each(FIGHTS)('A2, A5 - $name', ({ approach, from, node, onward, boss })
         expect(legalMovesFrom(map)).toContain(node);
 
         store.getState().moveToNode(node);
-        const { event } = resolveMapEvent(store.getState());
+        const { event } = resolvePastScene(store.getState());
         expect(event.kind).toBe('encounter');
     });
 

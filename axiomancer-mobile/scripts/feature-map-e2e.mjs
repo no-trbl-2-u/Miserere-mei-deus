@@ -335,6 +335,13 @@ async function walk(page) {
     // fight and stops at its reveal; the seam leg provokes the cache, hazard,
     // rest and quest routes the map holds past it.
     await travelTo(page, 'bw-w2')
+    // bw-w2 holds a scene in its slot (177.9): the scene resolves first, and
+    // the fight's reveal comes once it is tapped through (test-utils/pastScene.ts).
+    for (let i = 0; i < 40; i++) {
+        if (await page.getByTestId('combat-reveal').count()) break
+        if (await page.getByTestId('cutscene-advance').count()) await playOutCutscene(page)
+        else await sleep(300)
+    }
     await waitFor(page, 'combat-reveal', 'bw-w2 encounter reveal')
     log('play: bw-w2 fight reveal')
 }

@@ -85,6 +85,7 @@ function atTheBridgeWithTheFarBankWalked(): WorldState {
             pendingArrival: null,
             completedNodes: [...settled.completedNodes, 'bw-b1', 'bw-b2'],
             consumedNodes: [...settled.consumedNodes, 'bw-b1'],
+            seenScenes: ['bw-b1', 'bw-b2'], // walked nodes have played their scenes
         }),
     };
 }
@@ -247,6 +248,7 @@ describe('A10: from a dead end back across walked nodes, then on to a new branch
                 pendingArrival: null,
                 completedNodes: [...settled.completedNodes, 'bw-t3', 'bw-t4'],
                 consumedNodes: [...settled.consumedNodes, 'bw-t3', 'bw-t4'],
+                seenScenes: ['bw-t4'], // walked nodes have played their scenes
             }),
         });
         const vm = selectExplorationViewModel(store.getState());

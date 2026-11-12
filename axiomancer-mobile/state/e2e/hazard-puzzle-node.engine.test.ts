@@ -25,6 +25,7 @@ import { createAppActions } from '@/state/actions';
 import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { settledBreakwater } from '@/test-utils/settledBreakwater';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 afterEach(() => {
     delete (globalThis as { __AXM_HAZARD_ID__?: string }).__AXM_HAZARD_ID__;
@@ -46,7 +47,7 @@ describe('a puzzle hazard node: the walk into the wreck', () => {
     it('opens the wreck\'s puzzle on arrival, and the claim leaves the sea-cave road open', () => {
         const { store, actions } = storeOn(settledBreakwater('bw-h3'));
         expect(actions.moveTo('bw-h4').moved).toBe(true);
-        actions.resolveCurrentMapEvent('hazard');
+        resolvePastScene(store, actions, 'hazard');
 
         const play = store.getState().hazard.puzzle;
         expect(store.getState().hazard.session).toBeNull();
@@ -84,6 +85,8 @@ describe('a puzzle hazard node: the walk into the wreck', () => {
                     ...store.getState().world.currentMap,
                     completedNodes: [...store.getState().world.currentMap.completedNodes, 'bw-l1'],
                     consumedNodes: [...store.getState().world.currentMap.consumedNodes, 'bw-l1'],
+                    // The settled Breakwater has the scenes seen; this case plays the chapel's.
+                    seenScenes: (store.getState().world.currentMap.seenScenes ?? []).filter(id => id !== 'bw-l2'),
                 }),
             },
         } as never);

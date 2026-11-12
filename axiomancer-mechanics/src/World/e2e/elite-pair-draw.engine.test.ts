@@ -14,7 +14,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
-    getNodeEventPool, registerMapEventPool, resolveMapEvent, setNodeEventPoolOverride,
+    getNodeEventPool, registerMapEventPool, setNodeEventPoolOverride,
 } from '../MapEvents/resolve-map-event';
 import { BREAKWATER_CHAPTER_KINDS, BW_ELITE_DRAWS, eliteDrawPool } from '../MapEvents/content';
 import type { ActOneFoe } from '../MapEvents/content';
@@ -24,6 +24,7 @@ import { createNewGameState } from '../../Game/game.reducer';
 import type { GameState } from '../../Game/types';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import { getRng, setRng, setSeed } from '../../Utils/rng';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 const CONTINENT = 'coastal-continent';
 const MAP = 'breakwater';
@@ -38,7 +39,7 @@ function standingOn(nodeId: string): GameState {
 /** The foe id the map's resolver draws at `nodeId` with the run seeded to `seed`. */
 function drawnAt(nodeId: string, seed: number): string {
     setSeed(seed);
-    const { event } = resolveMapEvent(standingOn(nodeId));
+    const { event } = resolvePastScene(standingOn(nodeId));
     if (event.kind !== 'encounter') throw new Error(`${nodeId}: ${event.kind}`);
     return event.encounter.enemies[0]!.id;
 }
@@ -124,7 +125,7 @@ describe('A14 — a pair is drawn 50/50 by the seeded pool roll', () => {
         const seen = new Set<string>();
         for (const seed of SEEDS) {
             setSeed(seed);
-            const { event } = resolveMapEvent(standingOn('bw-c1'));
+            const { event } = resolvePastScene(standingOn('bw-c1'));
             if (event.kind !== 'encounter') throw new Error(event.kind);
             const foe = event.encounter.enemies[0]!;
             expect(foe.level, foe.id).toBe(5);

@@ -21,6 +21,7 @@ import { settleQuestNodesIn } from '../../Game/fixtures/quest-nodes';
 import {
     FIXTURE_NPC, FIXTURE_QUEST, FIXTURE_VILLAGE_EVENT,
 } from '../../Game/fixtures/fixture-content';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -111,7 +112,7 @@ describe('per-objective quest engine', () => {
     it('a reach objective ticks on arrival at its node', () => {
         mockSequentialRng(0.5);
         const state = bwStateAt('bw-w2');
-        const result = resolveMapEvent({ ...state, quests: startQuest(emptyQuestLog(), FIXTURE_QUEST) });
+        const result = resolvePastScene({ ...state, quests: startQuest(emptyQuestLog(), FIXTURE_QUEST) });
         expect(result.state.quests.completed).toContain(FIXTURE_QUEST.name);
     });
 });
@@ -164,7 +165,7 @@ describe('resolveMapEvent dispatch', () => {
             state = { ...state, world: moveToNode(state.world, target) };
             if (target !== 'bw-k2') state = { ...state, world: completeCurrentNode(state.world) };
         }
-        const result = resolveMapEvent(state);
+        const result = resolvePastScene(state);
         expect(result.event.kind).toBe('encounter');
         if (result.event.kind === 'encounter') {
             expect(result.event.isBoss).toBe(true);

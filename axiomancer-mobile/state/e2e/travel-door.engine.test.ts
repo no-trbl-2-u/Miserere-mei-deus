@@ -28,6 +28,7 @@ import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
 import { selectPacedEventRoute, selectHasActiveEvent } from '@/state/presenters/event.engine';
 import { selectHasActiveTravel, selectTravelVM } from '@/state/presenters/travel.engine';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 beforeAll(() => { registerTravelPassageFixture(); });
 
@@ -55,7 +56,7 @@ function onPassageMap() {
 /** Walks one road through the store and answers the arrival, as the map's confirm does. */
 function walk(handle: ReturnType<typeof onPassageMap>, nodeId: string): void {
     expect(handle.actions.moveTo(nodeId).moved).toBe(true);
-    handle.actions.resolveCurrentMapEvent();
+    resolvePastScene(handle.store, handle.actions);
 }
 
 function here(handle: { store: { getState: () => unknown } }): string {
@@ -66,7 +67,7 @@ describe('inter-map travel doors ask before they cross', () => {
     it('bw-b2 offers the Charcoal Wood and moves no one', () => {
         const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2');
 
-        expect(actions.resolveCurrentMapEvent('travel')).toBe(true);
+        expect(resolvePastScene(store, actions, 'travel')).toBe(true);
 
         const after = store.getState();
         expect(after.world.currentMap.name).toBe('breakwater');
@@ -82,7 +83,7 @@ describe('inter-map travel doors ask before they cross', () => {
     it('YES crosses onto the Charcoal Wood with a toast and a checkpoint save', () => {
         const adapter = createMemoryAdapter();
         const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2', adapter);
-        actions.resolveCurrentMapEvent('travel');
+        resolvePastScene(store, actions, 'travel');
         const savesBefore = adapter.saveCount;
 
         expect(actions.takeTravel()).toBe(true);
@@ -99,7 +100,7 @@ describe('inter-map travel doors ask before they cross', () => {
     it('cw-20 crosses the continent onto the Beacon Crags', () => {
         const { store, actions } = seatAt('coastal-continent', 'charcoal-wood', 'cw-20');
 
-        actions.resolveCurrentMapEvent('travel');
+        resolvePastScene(store, actions, 'travel');
         expect(actions.takeTravel()).toBe(true);
 
         const after = store.getState();
@@ -110,7 +111,7 @@ describe('inter-map travel doors ask before they cross', () => {
 
     it('NO keeps the player on the door, owing nothing; a tap on it offers the trip again', () => {
         const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2');
-        actions.resolveCurrentMapEvent('travel');
+        resolvePastScene(store, actions, 'travel');
 
         actions.closeTravel();
 
@@ -134,7 +135,7 @@ describe('inter-map travel doors ask before they cross', () => {
 describe('the Breakwater\'s sea cave, a same-map passage on a live map', () => {
     it('the cave mouth bw-h6 asks, moves no one, and YES steps through to the cave face bw-c0 and back', () => {
         const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-h6');
-        expect(actions.resolveCurrentMapEvent('travel')).toBe(true);
+        expect(resolvePastScene(store, actions, 'travel')).toBe(true);
         expect(here({ store })).toBe('bw-h6');
         expect(selectTravelVM(store.getState()).open).toBe(true);
 
@@ -145,6 +146,9 @@ describe('the Breakwater\'s sea cave, a same-map passage on a live map', () => {
         expect(store.getState().notifications?.toast?.text ?? null).toBeNull();
 
         expect(actions.offerTravelHere()).toBe(true);
+        // The cave face plays its scene (S-07) before the way back is offered.
+        expect(store.getState().event.pending?.event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+        expect(actions.continueToNode()).toBe(true);
         expect(actions.takeTravel()).toBe(true);
         expect(here({ store })).toBe('bw-h6');
     });
@@ -205,7 +209,7 @@ describe('a same-map passage pair (the fixture map)', () => {
         const world = handle.store.getState().world;
         handle.store.setState({ world: { ...world, currentMap: moveToNode(world, 'ledge').currentMap } } as never);
         expect(handle.actions.moveTo('face').moved).toBe(true);
-        handle.actions.resolveCurrentMapEvent();
+        resolvePastScene(handle.store, handle.actions);
         expect(selectTravelVM(handle.store.getState()).nodeId).toBe('face');
     });
 });

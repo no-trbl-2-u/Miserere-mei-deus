@@ -31,6 +31,7 @@ import { selectHasActiveBlacksmith, selectBlacksmithVM } from '@/state/presenter
 import { selectPacedEventRoute } from '@/state/presenters/event.engine';
 import { selectVillageVM } from '@/state/presenters/village.engine';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 afterEach(() => {
     jest.restoreAllMocks();
@@ -85,7 +86,7 @@ describe('the village Anvil counter', () => {
         seatAt(store, firstBlacksmithNode());
 
         // The node resolves to a village hub; no anvil session opens by itself.
-        expect(actions.resolveCurrentMapEvent('village')).toBe(true);
+        expect(resolvePastScene(store, actions, 'village')).toBe(true);
         expect(selectHasActiveBlacksmith(store.getState())).toBe(false);
         const vm = selectVillageVM(store.getState());
         expect(vm.active).toBe(true);

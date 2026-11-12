@@ -23,12 +23,13 @@ import type { GameState } from '../../../Game/types';
 import type { MapState } from '../../types';
 // Import for side effect — registers the pools when the test loads.
 import '../content';
+import { resolvePastScene } from '../../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
 /** Resolves the door underfoot (the offer) and takes it (the yes). */
 function cross(state: GameState): ReturnType<typeof resolveMapEvent> {
-    const offered = resolveMapEvent(state);
+    const offered = resolvePastScene(state);
     return { state: takeTravel(offered.state), event: offered.event };
 }
 
@@ -57,7 +58,7 @@ function atStairCave(): GameState {
 
 describe("the bw-b2 door — Breakwater → Charcoal Wood (same continent)", () => {
     it('offers the Charcoal Wood, and crosses the world there on the yes', () => {
-        const offer = resolveMapEvent(atRiverBridge());
+        const offer = resolvePastScene(atRiverBridge());
         expect(offer.state.world.currentMap.name).toBe('breakwater');
         const result = cross(atRiverBridge());
 
@@ -87,7 +88,7 @@ describe("the bw-b2 door — Breakwater → Charcoal Wood (same continent)", () 
     });
 
     it('preserves the departed MapState — the Breakwater is a place, not a checklist', () => {
-        const offered = resolveMapEvent(atRiverBridge()).state;
+        const offered = resolvePastScene(atRiverBridge()).state;
         const departed = offered.world.currentMap;
         const state = takeTravel(offered);
 

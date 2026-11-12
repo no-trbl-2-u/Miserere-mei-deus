@@ -16,7 +16,7 @@ import '../MapEvents/content';
 import { createStartingWorld } from '../index';
 import { getMapDefinition } from '../map.registry';
 import { markNodeConsumed, moveToNode, placeOnNode } from '../world.reducer';
-import { getNodeEventPool, resolveMapEvent, settleArrival } from '../MapEvents/resolve-map-event';
+import { getNodeEventPool, settleArrival } from '../MapEvents/resolve-map-event';
 import { takeTravel } from '../MapEvents/travel';
 import {
     isEliteNode, isEliteUpgradeTaken, markEliteUpgradeTaken, respawnElites,
@@ -35,6 +35,7 @@ import { FIXTURE_ELITE_RELICS, FIXTURE_QUEST_RELIC } from '../../Game/fixtures/f
 import { deepClone } from '../../Utils';
 import type { Character } from '../../Character/types';
 import type { Equipment } from '../../Items/types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -77,7 +78,7 @@ function arriveAt(state: GameState, nodeId: string) {
     let world = placeOnNode(state.world, approach);
     world = { ...world, currentMap: markNodeConsumed(world.currentMap, approach) };
     world = moveToNode(world, nodeId);
-    return resolveMapEvent({ ...state, world }, () => 0.5);
+    return resolvePastScene({ ...state, world }, () => 0.5);
 }
 
 /** Walks onto the elite, enters the fight and settles it (any outcome). */
@@ -93,7 +94,7 @@ function fightElite(state: GameState, nodeId: string): { state: GameState; slug:
 function leaveRegion(state: GameState, map: MapName): GameState {
     const exit = EXITS[map]!;
     const placed = placeOnNode(state.world, exit);
-    const { state: next, event } = resolveMapEvent({ ...state, world: placed }, () => 0.5);
+    const { state: next, event } = resolvePastScene({ ...state, world: placed }, () => 0.5);
     expect(event.kind).toBe('travel');
     return takeTravel(next);
 }
@@ -122,7 +123,7 @@ function walkAct1(fight: ReadonlySet<string>) {
     // Claim a rest on the last region: arrive, resolve (consumed on arrival).
     const rest = restNodeOf(state.world.currentMap);
     const placed = placeOnNode(state.world, rest);
-    const rested = resolveMapEvent({ ...state, world: placed }, () => 0.5);
+    const rested = resolvePastScene({ ...state, world: placed }, () => 0.5);
     expect(rested.event.kind).toBe('rest');
     return { state: rested.state, rest, firstFights };
 }

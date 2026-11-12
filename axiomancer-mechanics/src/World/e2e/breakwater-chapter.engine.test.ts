@@ -34,6 +34,7 @@ import {
     BREAKWATER_CHAPTER_QUESTLINE_ID as LINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_PIECES, BREAKWATER_CHAPTER_STEPS as STEPS,
     BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_QUESTLINE,
 } from '../breakwater-chapter.questline';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 function seededRng(seed: number): () => number {
     let state = seed % 2147483647 || 1;
@@ -64,13 +65,13 @@ function newGame(): { scene: ResolvedEvent; state: GameState; event: ResolvedEve
 
 /** Walks the roads to `nodeId` and answers the arrival there. */
 function arrive(state: GameState, nodeId: string) {
-    return resolveMapEvent({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
+    return resolvePastScene({ ...state, world: walkRoadTo(state.world, nodeId) }, seededRng(7));
 }
 
 /** Opens the fight at `nodeId` (walking there, or retrying it in place) and ends it with `outcome`. */
 function fight(state: GameState, nodeId: string, outcome: 'victory' | 'flee'): GameState {
     const world = here(state) === nodeId ? moveToNode(state.world, nodeId) : walkRoadTo(state.world, nodeId);
-    const { state: owed, event } = resolveMapEvent({ ...state, world }, seededRng(7));
+    const { state: owed, event } = resolvePastScene({ ...state, world }, seededRng(7));
     if (event.kind !== 'encounter') throw new Error(`expected a fight at ${nodeId}, got ${event.kind}`);
     const fighting = gameReducer(owed, { type: 'START_COMBAT', payload: { target: event.encounter } });
     return outcome === 'victory'
@@ -118,7 +119,7 @@ describe('the chapter, windmill to far bank', () => {
         s = { ...s, world: moveToNode(s.world, 'bw-h4') };
         expect(legal(s)).toEqual(['bw-h3']);
         expect(() => moveToNode(s.world, 'bw-h5')).toThrow(/held until its node is settled/);
-        s = resolveMapEvent(s, seededRng(3)).state;
+        s = resolvePastScene(s, seededRng(3)).state;
         expect(legal(s)).toContain('bw-h5');
 
         // ── The sea cave: a passage down to the cove (A4) ───────────────

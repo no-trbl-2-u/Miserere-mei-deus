@@ -31,6 +31,7 @@ import { FIXTURE_QUESTLINE } from './fixture-content';
 import {
     changeContinent, changeMap, completeMap, placeOnNode, unlockMap,
 } from '../../World/world.reducer';
+import { getNodeScene } from '../../World/MapEvents/resolve-map-event';
 import { settleQuestNodes } from './quest-nodes';
 import type { WorldState } from '../../World/types';
 import { createNewGameState } from '../game.reducer';
@@ -90,7 +91,12 @@ const applyWorld = (target: StateFixtureWorld | undefined) => (state: GameState)
         onContinent,
     );
     const onMap = changeMap(unlockMap(withCompleted, target.map), createMapState(def));
-    const placed = target.node === undefined ? onMap : placeOnNode(onMap, target.node);
+    const onNode = target.node === undefined ? onMap : placeOnNode(onMap, target.node);
+    // A fixture stages the node's own event: a scene in its slot is already seen.
+    const sceneSeen = target.node !== undefined && getNodeScene(target.continent, target.map, target.node) !== undefined;
+    const placed = sceneSeen
+        ? { ...onNode, currentMap: { ...onNode.currentMap, seenScenes: [...(onNode.currentMap.seenScenes ?? []), target.node!] } }
+        : onNode;
     const settled = target.questNodesSettled
         ? { ...placed, currentMap: settleQuestNodes(placed.currentMap) }
         : placed;
