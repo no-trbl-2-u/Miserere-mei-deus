@@ -16,10 +16,7 @@ export function ItemRewardGate() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!hasPending) return;
-        // Deferred like <HazardGate>, so a scene screen backing out cannot pop it.
-        const timeoutId = setTimeout(() => router.push('/item-reward' as never), 0);
-        return () => clearTimeout(timeoutId);
+        if (hasPending) router.push('/item-reward' as never);
     }, [hasPending, router]);
 
     return null;

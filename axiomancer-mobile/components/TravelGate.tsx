@@ -22,9 +22,7 @@ export function TravelGate() {
         }
         if (pushed.current) return;
         pushed.current = true;
-        // Deferred like <HazardGate>: a trip offered after a node's scene opens as the
-        // scene screen backs out, and an immediate push would be popped by that back.
-        setTimeout(() => router.push('/travel' as never), 0);
+        router.push('/travel' as never);
     }, [hasTravel, router]);
 
     return null;

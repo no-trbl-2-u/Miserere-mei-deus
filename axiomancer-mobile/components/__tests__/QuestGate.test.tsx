@@ -6,7 +6,7 @@
  * when the router object changes identity between renders.
  */
 
-import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import React from 'react';
 
@@ -22,14 +22,7 @@ jest.mock('@/lib/platform/router', () => ({
     useRouter: () => ({ push: mockPush, replace: jest.fn(), back: jest.fn(), canGoBack: () => true }),
 }));
 
-beforeEach(() => { jest.useFakeTimers(); });
-
-/** The push is deferred one tick (like HazardGate), so the scene screen's back cannot pop it. */
-function flushPush() {
-    act(() => { jest.runOnlyPendingTimers(); });
-}
-
-afterEach(() => { jest.useRealTimers(); mockPush.mockClear(); });
+afterEach(() => { mockPush.mockClear(); });
 
 function makeStore(): AppStore {
     return createAppStore({ adapter: createMemoryAdapter() });
@@ -40,7 +33,6 @@ const open = { questline: 'fixture-line', node: 1 };
 describe('QuestGate', () => {
     it('does not push with nothing open', () => {
         render(<GameStoreProvider store={makeStore()}><QuestGate /></GameStoreProvider>);
-        flushPush();
         expect(mockPush).not.toHaveBeenCalled();
     });
 
@@ -50,9 +42,7 @@ describe('QuestGate', () => {
         const view = render(<GameStoreProvider store={store}><QuestGate /></GameStoreProvider>);
         view.rerender(<GameStoreProvider store={store}><QuestGate /></GameStoreProvider>);
         act(() => { store.setState({ quest: { ...EMPTY_QUEST_SLICE, open: { ...open } } }); });
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
-        flushPush();
         expect(mockPush).toHaveBeenCalledWith('/quest');
     });
 
@@ -60,7 +50,6 @@ describe('QuestGate', () => {
         const store = makeStore();
         store.setState({ quest: { ...EMPTY_QUEST_SLICE, cardOffers: ['grey-ward'] } });
         render(<GameStoreProvider store={store}><QuestGate /></GameStoreProvider>);
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
     });
 
@@ -70,7 +59,6 @@ describe('QuestGate', () => {
         act(() => { store.setState({ quest: { ...EMPTY_QUEST_SLICE, open } }); });
         act(() => { store.setState({ quest: EMPTY_QUEST_SLICE }); });
         act(() => { store.setState({ quest: { ...EMPTY_QUEST_SLICE, open } }); });
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(2);
     });
 });

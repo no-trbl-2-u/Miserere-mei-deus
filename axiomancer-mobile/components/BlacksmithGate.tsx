@@ -15,10 +15,7 @@ export function BlacksmithGate() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!hasBlacksmith) return;
-        // Deferred like <HazardGate>, so a scene screen backing out cannot pop it.
-        const timeoutId = setTimeout(() => router.push('/blacksmith' as never), 0);
-        return () => clearTimeout(timeoutId);
+        if (hasBlacksmith) router.push('/blacksmith' as never);
     }, [hasBlacksmith, router]);
 
     return null;

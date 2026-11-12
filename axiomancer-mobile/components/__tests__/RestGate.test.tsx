@@ -6,7 +6,7 @@
  * `selectHasActiveRest` flips true.
  */
 
-import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import React from 'react';
 import type { RestChoiceSession } from '@mechanics';
@@ -35,21 +35,9 @@ jest.mock('@/lib/platform/router', () => ({
     useRouter: () => mockRouter,
 }));
 
-beforeEach(() => {
-    jest.useFakeTimers();
-});
-
 afterEach(() => {
-    jest.useRealTimers();
     mockPush.mockClear();
 });
-
-/** The push is deferred one tick (like HazardGate), so the scene screen's back cannot pop it. */
-function flushPush() {
-    act(() => {
-        jest.runOnlyPendingTimers();
-    });
-}
 
 function makeStore(): AppStore {
     return createAppStore({ adapter: createMemoryAdapter() });
@@ -95,8 +83,6 @@ describe('RestGate: active rest sessions route to /rest', () => {
         const store = makeStore();
         setActiveRestSession(store, makeActiveRestSession());
         render(withProvider(store, <RestGate />));
-        expect(mockPush).not.toHaveBeenCalled();
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
         expect(mockPush).toHaveBeenCalledWith('/rest');
     });
@@ -109,7 +95,6 @@ describe('RestGate: active rest sessions route to /rest', () => {
         act(() => {
             setActiveRestSession(store, makeActiveRestSession());
         });
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
         expect(mockPush).toHaveBeenCalledWith('/rest');
     });
@@ -118,7 +103,6 @@ describe('RestGate: active rest sessions route to /rest', () => {
         const store = makeStore();
         setActiveRestSession(store, makeActiveRestSession());
         const tree = render(withProvider(store, <RestGate />));
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
 
         // Force a re-render of the gate without changing the selector value.
@@ -127,7 +111,6 @@ describe('RestGate: active rest sessions route to /rest', () => {
         });
         // The useEffect dep is the boolean from the selector, which is
         // stable across this re-render — no additional push.
-        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
     });
 

@@ -91,8 +91,16 @@ export default function CutsceneScreen() {
 
     const isLastLine = index >= beats.length - 1;
 
+    /**
+     * A node's before-scene leaves the stack itself, before the node's own event
+     * resolves (`dismiss`): the node's screen is then pushed onto the map, in the
+     * order the store resolves it, and this effect must not pop it again.
+     */
+    const leftForNode = useRef(false);
+
     useEffect(() => {
-        if (!active && router.canGoBack()) router.back();
+        if (active) leftForNode.current = false;
+        else if (!leftForNode.current && router.canGoBack()) router.back();
     }, [active, router]);
 
     // Fade the current line in whenever the cursor moves (and on first mount).
@@ -116,9 +124,14 @@ export default function CutsceneScreen() {
      */
     const dismiss = useCallback(() => {
         const event = slice?.pending?.event;
-        if (event && isBeforeScene(event)) actions.continueToNode();
-        else actions.dismissEvent();
-    }, [actions, slice]);
+        if (event && isBeforeScene(event)) {
+            // Pop the scene first, then let the node's own event push its screen: a push
+            // made while the scene is still on the stack would be popped by this back.
+            leftForNode.current = true;
+            if (router.canGoBack()) router.back();
+            actions.continueToNode();
+        } else actions.dismissEvent();
+    }, [actions, router, slice]);
 
     /**
      * Tap handler: fade the current line out, then either step to the next

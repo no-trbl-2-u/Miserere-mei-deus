@@ -15,11 +15,7 @@ export function CacheGate() {
     const router = useRouter();
 
     useEffect(() => {
-        if (!hasCache) return;
-        // Deferred like <HazardGate>: a cache that follows a node's scene opens as the
-        // scene screen backs out, and an immediate push would be popped by that back.
-        const timeoutId = setTimeout(() => router.push('/cache' as never), 0);
-        return () => clearTimeout(timeoutId);
+        if (hasCache) router.push('/cache' as never);
     }, [hasCache, router]);
 
     return null;
