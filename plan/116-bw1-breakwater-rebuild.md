@@ -191,6 +191,8 @@ https://claude.ai/artifact/1jCcmhZbyaWXyE2SZgFRmz (private to T).
 
 ### T's Chapter 1 lines (filled by T in BW1d)
 
+Filled on 2026-11-12, in `plan/ballots/narrator-chapter1.md` and not in the table below: T approved the quest names, log lines, giver and turn-in lines (C-01 to C-04), the four refusals (R-01 to R-04) and the two gate lines (G-01, G-02), and ruled that every step's XP and reward keep the engine's numbers under the names and lines W-01 to W-06. The story they tell is `axiomancer-mechanics/content/story/story-overview.md`.
+
 | Node | Line | T's text |
 |---|---|---|
 | bw-w1 | Arrival; gives quest 1 (its name and ask) | |
@@ -213,7 +215,7 @@ Measure: the brief's "T's Chapter 1 lines" table is filled by T.
 
 Measure: no `[content]` string is left in the Breakwater's chain, refusal lines or gate reasons; the chapter e2e
 and the questline library test pass.
-- Scope: `quest.library.ts`, `content.ts`, `breakwater.ts` reasons, the step rewards.
+- Scope: `quest.library.ts`, `content.ts`, `breakwater.ts` reasons, the step rewards. Every line is copied from `plan/ballots/narrator-chapter1.md` (C, R, G and W rows); the rewards and XP themselves do not change. People speak in the giver and turn-in lines (story overview, ruling 11), so those lines replace their placeholders too.
 - Tests: the library test asserts no `[content]` in the chain.
 - Verify gate: `npm run verify -w axiomancer-mechanics`, root `npm test`.
 
@@ -229,8 +231,6 @@ to the delete offer, and NEW GAME after it starts on `bw-w1`.
 
 ## Acceptance
 
-- **A10** T's lines (attended). The brief's "T's Chapter 1 lines" table is filled by T: each quest node's giver and
-  turn-in lines, each quest's name, the four refusal lines, step XP and rewards.
 - **A11** T's lines in the game. Every `[content]` line of the chain, the refusal lines and the gate reasons is
   replaced by T's table; the library test and the chapter e2e still pass.
 
@@ -240,7 +240,6 @@ to the delete offer, and NEW GAME after it starts on `bw-w1`.
 
 ## Chunks
 
-Measure: 2 open · 10 closed · next A13
+Measure: 1 open · 11 closed · next A13
 
-- [ ] **116.4** T writes Chapter 1's lines (attended) · S · closes A10 · needs — · alias: BW1d
-- [ ] **116.5** T's lines in the game · M · closes A11 · needs 116.4 · alias: BW1e
+- [ ] **116.5** T's lines in the game · M · closes A11 · needs — · alias: BW1e
