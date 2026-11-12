@@ -21,7 +21,7 @@
 
 - Every sentence is 40 words or fewer, every panel 80 or fewer, no scene has
   more than six panels, and there is no quotation mark, exclamation mark,
-  semicolon or dash. Quest, refusal and gate lines are 45 words or fewer.
+  semicolon or dash. Quest, refusal and gate lines are 45 spoken words or fewer, the "X says," tag not counted.
 - The stops run 1, 2, 1, 3, 1, 4, 1, 5 across the 22 scenes (story overview,
   ruling 12).
 - Drafts 1 and 3 were each read by a reviewer with no part in writing them.

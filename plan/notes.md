@@ -515,3 +515,5 @@ Tests only plus the narrate skill's last description sentence. Every landed stri
 Defaults taken: no price changed; the recounted floor (caches 44 + wages 252 = 296) makes the old "fourth and fifth cut approach a full act's income" reasoning false, so the comment says so and prices stay for T's tuning pass ([T to confirm #1]). The new pricing test reads two source files, so it is on the hermeticity IO allowlist.
 
 PR body mutations: M1 register each scene as the node's own cutscene event instead of a slot; M2 `playBeforeScene` also consumes the node; M3 `playBeforeScene` skips `seenScenes`. Each new assertion fails under them.
+
+Defaults taken: the reward lines W-03 to W-06 add no field; `bw-b1` waits on the `[content]` placeholder. Old saves are unsupported; `turnInLine` is authored and never saved. The turn-in line shows at stage `turn-in` and once the node's step is paid.

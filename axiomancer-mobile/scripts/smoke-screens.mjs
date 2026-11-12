@@ -109,6 +109,8 @@ export const ROUTES = [
     // The gate warden turning the player away, and the chain's last card marked paid.
     { name: 'quest-locked', path: '/exploration', fixture: 'wanderer-bw-keep-gate-locked', waitForPath: '/quest', waitForTestId: 'quest-locked' },
     { name: 'quest-paid', path: '/exploration', fixture: 'wanderer-bw-bridge-paid', waitForPath: '/quest', waitForTestId: 'quest-card-paid' },
+    // The lighthouse after step 2 paid on arrival with step 3 on offer: the turn-in line, then the offer line.
+    { name: 'quest-two-lines', path: '/exploration', fixture: 'wanderer-bw-lighthouse-paid', waitForPath: '/quest', waitForTestId: 'quest-giver-line' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
     // The cave shortcut: the map zoomed on the Cave Face.
     { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },

@@ -22,7 +22,7 @@ import {
 import { isBeforeScene, resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { takeTravel } from '../MapEvents/travel';
 import { respawnElites } from '../elite-respawn';
-import { acceptQuestStep, turnInQuestStep } from '../questline';
+import { acceptQuestStep, resolveQuestNodeEvent, stepQuest, turnInQuestStep } from '../questline';
 import { carriedCount } from '../quest.engine';
 import { eliteRelicPool } from '../../Combat/combat.rewards';
 import { relicLibrary } from '../../Items/relic.library';
@@ -32,7 +32,7 @@ import type { ResolvedEvent } from '../MapEvents/types';
 import { BRIDGE_GATE_REASON, KEEP_GATE_REASON } from '../Continents/Coastal-Village/breakwater-chapter';
 import {
     BREAKWATER_CHAPTER_QUESTLINE_ID as LINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_PIECES, BREAKWATER_CHAPTER_STEPS as STEPS,
-    BREAKWATER_KEEP_KEY,
+    BREAKWATER_KEEP_KEY, BREAKWATER_CHAPTER_QUESTLINE,
 } from '../breakwater-chapter.questline';
 import { resolvePastScene } from '../../test-utils/past-scene';
 
@@ -301,6 +301,46 @@ describe('the gate lines and R-04 are pinned exactly (ledger plan/ballots/narrat
         expect(early.event.kind === 'quest' && early.event.lockedLine).toBe(
             "Tolliver Pease pats the chain as he would a dog. Not while he sits in that house, he says, and offers you the stool.",
         );
+    });
+});
+
+describe('A14: the bridge speaks by stage', () => {
+    /** A game at the bridge's near side with step 4 held, its boss kill counted or not. */
+    function bridgeWith(killed: boolean) {
+        let s = newGame().state;
+        for (const id of ['bw-w2', 'bw-w3', 'bw-h1', 'bw-t1', 'bw-t2']) s = win(s, id);
+        const line = BREAKWATER_CHAPTER_QUESTLINE;
+        const step = line.steps[3]!;
+        const held = stepQuest(line, step);
+        const quest = killed
+            ? { ...held, objectives: held.objectives.map(o => ({ ...o, currentCount: o.requiredCount })) }
+            : held;
+        const forged: GameState = { ...s, quests: { ...s.quests, active: [quest] } };
+        const arrived = arrive(forged, 'bw-b1');
+        if (arrived.event.kind !== 'quest') throw new Error('expected a quest node at bw-b1');
+        return arrived.event;
+    }
+
+    it('waits on the placeholder while the master lives, and turns in on his line once he is beaten', () => {
+        const waiting = bridgeWith(false);
+        expect(waiting.stage).toBe('waiting');
+        expect(waiting.description).toBe("[content] The River Bridge.");
+        expect(waiting.turnInLine).toBe(
+            "Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow's purse. Cross. No charge. There is no one left to charge it to.",
+        );
+
+        const turnIn = bridgeWith(true);
+        expect(turnIn.stage).toBe('turn-in');
+        expect(turnIn.turnInLine).toBe(waiting.turnInLine);
+        expect(turnIn.description).not.toBe(turnIn.turnInLine);
+    });
+
+    it('carries no turn-in line for a node that has none, and passes one through when it has one', () => {
+        const log = createNewGameState({ startMap: 'breakwater' }).quests;
+        const bare = resolveQuestNodeEvent(log, { kind: 'quest', questline: LINE, node: 2, description: 'A line.' });
+        expect('turnInLine' in bare).toBe(false);
+        const lined = resolveQuestNodeEvent(log, { kind: 'quest', questline: LINE, node: 2, description: 'A line.', turnInLine: 'Done.' });
+        expect(lined.turnInLine).toBe('Done.');
     });
 });
 

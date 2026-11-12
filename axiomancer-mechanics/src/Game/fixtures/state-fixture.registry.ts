@@ -128,6 +128,18 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         arrive: true,
     },
     {
+        id: 'wanderer-bw-lighthouse-paid',
+        description: 'Wanderer (L8) on the Breakwater\'s lighthouse (bw-l5) with chain steps 1 and 2 turned in (step 2 settles on arrival) and step 3 on offer; `arrive` opens the keeper\'s card: the turn-in line, then the offer line → /quest (the two-paragraph shot).',
+        seed: 'fixture-wanderer-bw-lighthouse-paid',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-l5' },
+        questsCompleted: [
+            'The Boat on the Rocks',
+            'The Light He Saw',
+        ],
+        arrive: true,
+    },
+    {
         id: 'apprentice-bw-rest',
         description: 'Apprentice on the Breakwater\'s first rest node (bw-w4), hurt; `arrive` starts the night-watch session → /rest.',
         seed: 'fixture-apprentice-bw-rest',

@@ -182,7 +182,7 @@ export const NARRATOR_MAX_PANELS = 6
  */
 export const NARRATOR_FIELDS = [
   { file: 'axiomancer-mechanics/src/World/MapEvents/content.ts', fields: {
-    description: 'line', prompt: 'line', lockedLine: 'line', BREAKWATER_REST_DREAMS: 'line',
+    description: 'line', prompt: 'line', lockedLine: 'line', turnInLine: 'line', BREAKWATER_REST_DREAMS: 'line',
     card: 'cache-action', item: 'cache-action', lines: 'story',
   } },
   { file: 'axiomancer-mechanics/src/World/MapEvents/arrival-lines.ts', fields: {
@@ -224,6 +224,20 @@ export const NARRATOR_FIELDS = [
   } },
 ]
 
+/**
+ * The cast who speak in quest lines (the story overview's cast sheet). A line
+ * that opens "<name> says," has the tag left out of its word count: the cap
+ * counts spoken words (T, 2026-11-12).
+ */
+export const NARRATOR_SPEAKERS = [
+  'Ann Greave', 'Abel Corse', 'Enoch Marrable', 'Serjeant Dunmore',
+  'Tolliver Pease', 'Hob Lathe', 'Verity Scole', 'Osric Kell',
+]
+const SPEAKER_TAG_RE = new RegExp(`^\\s*(?:${NARRATOR_SPEAKERS.join('|')}) says,\\s+`)
+
+/** Words in `value`, not counting a leading "<Cast name> says," tag. */
+export const spokenWordCount = (value) => wordCount(value.replace(SPEAKER_TAG_RE, ''))
+
 /** The Narrator's rules. `ctx` is `{ surface }`, one of NARRATOR_SURFACES. */
 export const NARRATOR_RULES = [
   {
@@ -236,13 +250,13 @@ export const NARRATOR_RULES = [
     id: 'narrator-line-cap',
     fix: 'Narrator: this line is over its surface\'s word cap (NARRATOR.md rule 2) — cut it',
     since: 'NARRATOR.md rule 2',
-    test: (value, ctx) => ctx.surface.cap != null && wordCount(value) > ctx.surface.cap,
+    test: (value, ctx) => ctx.surface.cap != null && spokenWordCount(value) > ctx.surface.cap,
   },
   {
     id: 'narrator-panel-words',
     fix: `Narrator: a story panel holds at most ${NARRATOR_MAX_PANEL_WORDS} words — split the panel`,
     since: 'NARRATOR.md rule 3',
-    test: (value, ctx) => ctx.surface.panels === true && wordCount(value) > NARRATOR_MAX_PANEL_WORDS,
+    test: (value, ctx) => ctx.surface.panels === true && spokenWordCount(value) > NARRATOR_MAX_PANEL_WORDS,
   },
   {
     id: 'narrator-quote',

@@ -26,6 +26,7 @@ One PNG per route, named after the route's stable `name` in
 | `village.png` | `/exploration` + fixture `wanderer-staged-village` → `/village` | `app/village/index.tsx` |
 | `cutscene.png` | `/exploration` + fixture `wanderer-staged-cutscene` → `/cutscene` | `app/cutscene/index.tsx` |
 | `quest-locked.png` | `/exploration` + fixture `wanderer-bw-keep-gate-locked` → `/quest`, the gate warden turning the player away (only step 1 turned in), waits on `quest-locked` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` |
+| `quest-two-lines.png` | `/exploration` + fixture `wanderer-bw-lighthouse-paid` → `/quest`, the lighthouse card after step 2 paid on arrival with step 3 on offer: the turn-in line, a blank line, then the offer line; waits on `quest-giver-line` | `app/quest/index.tsx`, `state/presenters/quest.engine.ts` |
 | `quest-paid.png` | `/exploration` + fixture `wanderer-bw-bridge-paid` → `/quest`, the chain's last card marked paid (all four steps turned in), waits on `quest-card-paid` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` |
 | `quest.png` | `/exploration` + fixture `wanderer-bw-keep-gate-offer` → `/quest`, the gate warden's offer (steps 1 to 3 turned in), waits on `quest-offer` | `app/quest/index.tsx`, `components/quest/QuestCard.tsx` (the quest card, spec 173) |
 | `travel.png` | `/exploration` + fixture `wanderer-bw-door-arrive` → `/travel` | `app/travel/index.tsx` (the river bridge's "Move to The Charcoal Wood?") |

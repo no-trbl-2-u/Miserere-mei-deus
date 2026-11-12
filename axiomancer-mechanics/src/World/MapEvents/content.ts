@@ -253,28 +253,32 @@ export const BREAKWATER_CHAPTER_KINDS: Readonly<Record<string, { kind: Breakwate
 };
 
 /** The four quest nodes: their place in the chain and their refusal line. */
-const QUEST_NODES: Readonly<Record<string, { node: number; description: string; lockedLine: string; giver: QuestGiver }>> = {
+const QUEST_NODES: Readonly<Record<string, { node: number; description: string; turnInLine?: string; lockedLine: string; giver: QuestGiver }>> = {
     'bw-c2': {
         node: 2,
         description: 'Abel Corse says, Ask the man in the tower who lit it. The master would know that much.',
+        turnInLine: 'Abel Corse says, Seven living. Tell her that her brother is one of the seven. Tell her the master is not.',
         lockedLine: 'The men by the fire look past you. You were not sent, and they have nothing for one who was not sent.',
         giver: { name: 'Abel Corse', portrait: 'fishermen-elder' },
     },
     'bw-l5': {
         node: 3,
         description: 'Enoch Marrable says, Take it. I will enter it as lost overboard.',
+        turnInLine: 'Enoch Marrable says, Entered as lit. It was not lit. Your man saw the sea door under the keep, standing open, and the light of it laid along the head. They paid me a key when they took the lamp. I have not used it.',
         lockedLine: 'Enoch Marrable is at his log and does not lift his head. He has no word for one who brings him no question.',
         giver: { name: 'Enoch Marrable', portrait: 'lighthouse-keeper' },
     },
     'bw-k1': {
         node: 4,
         description: '[content] The keep gate, barred from the inside.',
+        turnInLine: 'Serjeant Dunmore says, None to pass without the key. That is the key. Then those are the orders. If he knows you in there, tell him. No. Tell him nothing. Pass.',
         lockedLine: 'The serjeant does not move from the gate. None to pass without the key, he says, and you have no key.',
         giver: { name: 'Serjeant Dunmore', portrait: 'gate-warden' },
     },
     'bw-b1': {
         node: 5,
-        description: 'Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow\'s purse. Cross. No charge. There is no one left to charge it to.',
+        description: '[content] The River Bridge.',
+        turnInLine: 'Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow\'s purse. Cross. No charge. There is no one left to charge it to.',
         lockedLine: 'Tolliver Pease pats the chain as he would a dog. Not while he sits in that house, he says, and offers you the stool.',
         giver: { name: 'Tolliver Pease', portrait: 'bridge-keeper' },
     },
@@ -404,6 +408,7 @@ function poolFor(nodeId: string): MapEventPool | null {
             return single(nodeId, {
                 kind: 'quest', questline: BREAKWATER_CHAPTER_QUESTLINE_ID,
                 node: q.node, description: q.description, lockedLine: q.lockedLine, giver: q.giver,
+                ...(q.turnInLine !== undefined ? { turnInLine: q.turnInLine } : {}),
             });
         }
     }

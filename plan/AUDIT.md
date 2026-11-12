@@ -623,8 +623,9 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
     Breakwater's mismatches: bw-m3, bw-h8 and bw-d2 (loot caches on the shared `COAST_LOOT_CACHES`), and the two
     villages bw-t4 and bw-m5 (the shared `ANVIL_LINE`). T's flavour follow-up for Chapter 1 settles them.
   - [ ] BW1e (116.5, 2026-11-12) put T's ruled quest lines on the Chapter 1 quest nodes. Their event copy no longer
-    shares a word with the map blurb: bw-c2 (Fishermen's Camp), bw-b1 (River Bridge), bw-l5 (Lighthouse). The test
-    pins all three here until T rewrites the blurbs or rules the pairs fine.
+    shares a word with the map blurb: bw-c2 (Fishermen's Camp) and bw-l5 (Lighthouse). The test pins both here until
+    T rewrites the blurbs or rules the pairs fine. bw-b1 (River Bridge) was unpinned by 177.13: its description is
+    now the placeholder `[content] The River Bridge.`, which shares words with its blurb.
 - next: T's call per node (map copy, D88): rewrite the blurb, give the node event copy of its own, or rule the pair fine. The test's pin for a node goes in the same change, or the stale-pin case fails.
 
 ### [content] map copy: Charcoal Wood node blurb that does not match its event (AW1b, 2026-10-26)
