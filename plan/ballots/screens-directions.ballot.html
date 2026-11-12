@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The three worst screens: three directions each</title>
+<!--
+  A screen ballot (copied from ballot-shell.html; the model is
+  screens.ballot.html and the three-direction page deck-directions.html).
+  Spec 156, chunk 156.5 (TY1e): the three worst screens of the design audit
+  (docs/reports/design-audit-2026-11-12.md), three directions each, each from a
+  different named reference. One tick per screen, a note per screen, a general
+  note. The ledger is screens-directions.md; the stills are in screens-directions/.
+  Candidates carry no colour (D110).
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+  .jump { display: flex; gap: 6px; flex-wrap: wrap; position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; max-width: 1100px; margin: 0 auto; }
+  .jump a { color: var(--ink); border: 2px solid var(--edge); border-radius: 6px; padding: 4px 10px; text-decoration: none; font-size: .9rem; }
+  .jump a.done { background: var(--btn); color: var(--btn-ink); }
+
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); scroll-margin-top: 56px; }
+  .slot h2 { font-size: 1.15rem; margin: 0; }
+  .slot h2 small { color: var(--muted); font-weight: normal; margin-left: 6px; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; max-width: 900px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; align-items: start; }
+  .note { width: 100%; margin-top: 10px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  label.card {
+    position: relative; display: block; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px; padding: 8px;
+  }
+  label.card.wide { grid-column: span 2; }
+  @media (max-width: 560px) { label.card.wide { grid-column: span 1; } }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  label.card img { display: block; width: 100%; height: auto; border-radius: 4px; background: #090706; }
+  .top { padding-right: 28px; margin-bottom: 6px; }
+  .name { font-weight: bold; }
+  .bold { display: inline-block; font-size: .7rem; font-weight: bold; letter-spacing: .08em; padding: 1px 5px;
+          border-radius: 3px; margin-left: 6px; background: var(--accent); color: var(--card); vertical-align: 1px; }
+  .ref { font-size: .88rem; color: var(--muted); margin-top: 2px; }
+  .full { display: inline-block; font-size: .8rem; margin-top: 4px; color: var(--muted); }
+  .pick { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; accent-color: var(--sel); }
+
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+  <h1>The three worst screens: three directions each</h1>
+  <p class="sub">The hazard board, the fight with a card opened from the hand, and the Satchel: the design audit's three worst. Each has three directions, each from a different named reference.</p>
+  <p class="legend">
+    <b>Tick one direction per screen.</b> To mix two, tick the nearer and say what to borrow in the note; a mix gets a second round.<br>
+    Every picture is a phone screen at 390 x 844, drawn as a static mock from the game's own art. Text in the stills is stand-in copy, not final (the words are T's). Type is a stand-in serif: the real build uses the type roles of docs/design-direction.md. No direction changes a rule. The audit's shots of today's screens are in docs/reports/design-audit-2026-11-12/.<br>
+    "Full size" opens the still on its own.
+  </p>
+</header>
+
+<nav class="jump" id="jump" aria-label="Screens"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything across the three screens…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Save and submit or Mark complete, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA: three screens, three directions each. id = slot + direction letter.
+   w / h: the render's size in CSS pixels (the webp is 2x); wide: two frames.
+   ===================================================================== */
+const BALLOT_ID = 'screens-directions-2026-11-12';
+
+const SLOTS = [
+  {
+    "slot": "H-01",
+    "label": "The hazard board",
+    "role": "The three-round puzzle board of a hazard node: the two meters (force and escape), the mana dice, the play area and the hand. Emotional job (audit): pressed by the clock, choosing what to spend."
+  },
+  {
+    "slot": "F-01",
+    "label": "The fight, with a card opened from the hand",
+    "role": "The combat board with one card lifted from the hand: what it is, its keyword, and what it does with and without a die. Emotional job (audit): cornered, counting what you have left."
+  },
+  {
+    "slot": "S-01",
+    "label": "The Satchel",
+    "role": "The tab where you see what you wear and what you carry: five worn slots, the purse, the potions. Emotional job (audit): burdened, a pilgrim's few things and the weight of them."
+  }
+];
+
+const CARDS = [
+  {"id": "H-01a", "name": "Ruled ledger", "text": "Vellum page, each meter one inked rule with nine ticks, only the dice you hold, the hand dark on the page, PLAY in a dock. Reference: a medieval account roll (the Exchequer tally and ledger).", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "H-01b", "name": "Cliff plate", "text": "The cliff engraving is the ground; the meters are two ropes down the page you climb, one line each, the hand rising from the dark. Reference: Gustave Dore's plates for the Divine Comedy.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "H-01c", "name": "The table", "text": "Black ground, each meter a row of tally strokes, one die set down on a lit patch, no box anywhere. Reference: Inscryption (Daniel Mullins), cards and dice on a dark table.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "F-01a", "name": "Gloss on the page", "text": "Vellum page, the card large, its keyword set as a drop-capital gloss under it and the two die lines in plain rules text; two buttons in the dock. Reference: a Book of Hours, text with a rubricated initial.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "F-01b", "name": "The lifted card", "text": "The foe stays on the ground above, a quiet line for intent and for Conviction; the card lifts from its hand, rules as two lines under it. Reference: Slay the Spire, the card held up over the board.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "F-01c", "name": "The tarot plate", "text": "One framed card plate, the name over it, the value and one rules line in its caption; the foe small above; the hand a quiet strip. Reference: the Rider-Waite tarot, one plate with a cartouche.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "S-01a", "name": "The inventory list", "text": "The figure on the ground at the left, worn slots as plain lines beside it, the carried things as lines below; no frames, no tabs. Reference: a medieval probate inventory, the dead man's goods listed.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "S-01b", "name": "The case", "text": "A leather case holding what you carry, items drawn as objects with a count; wearing is dragging up out of it. Reference: the Resident Evil 4 attache case.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+  {"id": "S-01c", "name": "The labelled plate", "text": "The figure in the middle of a vellum page, each worn slot a leader line to a label; carried things under a heavy rule. Reference: Vesalius's Fabrica, an anatomical plate with leader lines.", "bold": 0, "w": 390, "h": 844, "wide": 0},
+];
+
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const letter = (id) => id.slice(-1).toUpperCase();
+
+const cardHtml = (c) => `
+  <label class="card${c.wide ? ' wide' : ''}" data-id="${c.id}">
+    <input class="pick" type="checkbox" value="${c.id}" aria-label="Keep ${c.id}: ${esc(c.name)}">
+    <div class="top">
+      <div class="name">${letter(c.id)}. ${esc(c.name)}${c.bold ? '<span class="bold">BOLD</span>' : ''}</div>
+      <div class="ref">${esc(c.text)}</div>
+      <a class="full" href="screens-directions/${c.id}.webp" target="_blank" rel="noopener">${c.id} · full size</a>
+    </div>
+    <img src="screens-directions/${c.id}.webp" alt="${c.id}: ${esc(c.name)}" loading="lazy" width="${c.w}" height="${c.h}">
+  </label>`;
+
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}" id="${s.slot}">
+    <h2>${esc(s.label)} <small>${s.slot}</small></h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map(cardHtml).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: what to change, or what to borrow from another look (optional)">
+  </section>`;
+
+document.getElementById('slots').innerHTML = SLOTS.map(slotHtml).join('');
+document.getElementById('jump').innerHTML = SLOTS.map((s) => `<a href="#${s.slot}" data-jump="${s.slot}">${s.slot} ${esc(s.label)}</a>`).join('');
+
+/* One tick per screen: ticking a look unticks the others in its row. */
+document.getElementById('slots').addEventListener('change', (e) => {
+  const box = e.target.closest('.pick');
+  if (box && box.checked) {
+    box.closest('.slot').querySelectorAll('.pick').forEach((o) => { if (o !== box) o.checked = false; });
+  }
+  refresh();
+});
+
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) => l.classList.toggle('on', l.querySelector('.pick').checked));
+  SLOTS.forEach((s) => document.querySelector(`[data-jump="${s.slot}"]`).classList.toggle('done', k.some((id) => id.startsWith(s.slot))));
+  document.getElementById('count').textContent = `${k.length} of ${SLOTS.length} answered`;
+};
+refresh();
+
+/* The verdict sheet: one line per screen. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: the three worst screens, three directions each (${BALLOT_ID})`,
+    `answered ${k.length} of ${SLOTS.length}`,
+    ...SLOTS.map((s) => {
+      const id = k.find((x) => x.startsWith(s.slot));
+      const c = CARDS.find((x) => x.id === id);
+      const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+      return `${s.slot} ${s.label}: ${c ? `KEEP ${c.id} (${c.name})` : 'no answer'}` + (note ? ` | note: ${note}` : '');
+    }),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
