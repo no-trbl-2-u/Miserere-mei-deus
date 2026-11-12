@@ -71,7 +71,7 @@ const EFFECT_GLYPHS: Record<string, string> = {
     // ── Stat-down / marks ──
     debuff_mark: '◉',
     debuff_quarter: '☙',
-    // A Plain Word's affliction: the foe's guard is open.
+    // Word's affliction: the foe's guard is open.
     debuff_vulnerable: '▼',
     // A foe's SHOCK: every hit on the bearer lands harder.
     debuff_shock: '↯',

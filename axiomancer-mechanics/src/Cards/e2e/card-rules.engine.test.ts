@@ -252,7 +252,7 @@ describe('the Spell law (T, 2026-10-24)', () => {
     const spells = cardLibrary.filter(c => c.cardType === 'spell');
     const held = new Set(EXEMPTIONS.filter(e => e.rule === 'spell-law').map(e => e.id));
 
-    it('reads every Spell: the grey Word and the four trial lanes; A Plain Word, one Defender Spell and three Merciful Spells are held, for T', () => {
+    it('reads every Spell: the grey Word and the four trial lanes; Word, one Defender Spell and three Merciful Spells are held, for T', () => {
         expect(spells.length).toBe(26);
         expect(held.size).toBe(5);
         expect(held.has('grey-word')).toBe(true);

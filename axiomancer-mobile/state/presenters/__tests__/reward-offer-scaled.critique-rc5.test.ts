@@ -1,7 +1,7 @@
 /**
  * The post-combat reward offer prints a card at the numbers the hand will
  * print once it is taken: the player's stats scale it the same way. The RC
- * walk (2026-10-02, item 5) saw A Plain Blow read "Deal 6" in hand and
+ * walk (2026-10-02, item 5) saw Blow read "Deal 6" in hand and
  * "Deal 5" on SPOILS.
  */
 import { describe, it, expect } from '@jest/globals';

@@ -32,7 +32,7 @@ const CARD_EFFECT_SET = new Set([
     'debuff_bleed',
     'debuff_mark',
     'debuff_quarter',
-    // VULNERABLE, carried by the grey office's A Plain Word.
+    // VULNERABLE, carried by the grey office's Word.
     'debuff_vulnerable',
     // SHOCK: foes place it first; future lanes give it to cards.
     'debuff_shock',

@@ -54,7 +54,7 @@ describe('sandbox registry — register / lookup / clear', () => {
         expect(listSandboxCards()).toEqual([]);
         expect(getSandboxCard('grey-word')).toBeUndefined();
         // Library lookups are untouched when the sandbox is empty.
-        expect(getCardById('grey-word')?.name).toBe('A Plain Word');
+        expect(getCardById('grey-word')?.name).toBe('Word');
         expect(getCardById('no-such-card')).toBeUndefined();
     });
 

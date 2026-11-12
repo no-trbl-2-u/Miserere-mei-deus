@@ -33,7 +33,7 @@
   {
     "sha": "f0b58df3",
     "date": "2026-10-14T04:21:46-04:00",
-    "subject": "fix: A Plain Blow wears its FREE pill (CRITIQUE pass 85 Blow FREE pill)",
+    "subject": "fix: Blow wears its FREE pill (CRITIQUE pass 85 Blow FREE pill)",
     "files": [
       "axiomancer-mobile/components/combat/glyphShapes.ts",
       "axiomancer-mobile/state/presenters/__tests__/card-program.engine.test.ts",

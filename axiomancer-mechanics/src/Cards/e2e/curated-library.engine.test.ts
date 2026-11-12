@@ -69,7 +69,7 @@ describe('profane canon — id hygiene and provenance', () => {
     it('the starting set resolves, teaches a mechanic each, and is the 5/3/2 grey recipe', () => {
         // The grey office — a brand-new player's first ten cards are three
         // colourless shapes: 'any' means every die powers every starter.
-        // Blow 5, Ward 3, A Plain Word 2.
+        // Blow 5, Ward 3, Word 2.
         expect(STARTING_CARD_IDS).toEqual([
             'grey-strike', 'grey-strike', 'grey-strike', 'grey-strike', 'grey-strike',
             'grey-ward', 'grey-ward', 'grey-ward',

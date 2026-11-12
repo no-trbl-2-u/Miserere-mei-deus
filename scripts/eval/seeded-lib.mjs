@@ -14,7 +14,7 @@ export const SECTION_END = '<!-- eval:seeded:end -->'
 
 /** The real bugs, each by the commit that fixed it. Reverting a fix's source plants its bug. */
 export const SEEDS = Object.freeze([
-  { id: 'D1', pr: 534, fix: '4080f4a0', bug: '`riderPairs` ignored damage riders, so A Plain Blow drew no FREE pill' },
+  { id: 'D1', pr: 534, fix: '4080f4a0', bug: '`riderPairs` ignored damage riders, so Blow drew no FREE pill' },
   { id: 'D2', pr: 523, fix: 'cfadbf7a', bug: "a loose die drop refused at the SACRIFICE floor showed no VITAE ring callout (#523's own follow-up)" },
   { id: 'D3', pr: 529, fix: '9d44ca5e', bug: "the leftmost hand card's FREE pill was clipped at the screen edge (#529's final head)" },
   { id: 'D4', pr: 543, fix: '80ea6f44', bug: 'the `pr-resolve` union merge split moved queue rows' },

@@ -8,9 +8,9 @@
  * card fixture could agree with a hand-written expectation while both
  * disagreed with the shipped data.
  *
- *   grey-strike   A Plain Blow  rank 1 'any' attack
- *   grey-ward     A Plain Ward  rank 1 'any' skill
- *   grey-word     A Plain Word  rank 1 'any' spell
+ *   grey-strike   Blow  rank 1 'any' attack
+ *   grey-ward     Ward  rank 1 'any' skill
+ *   grey-word     Word  rank 1 'any' spell
  *
  * The grey office is the whole library: one card per type and one rarity
  * band (common). Rank-ordering and multi-band tests return when guided
@@ -342,7 +342,7 @@ describe('selectDeckViewModel: the open card (155.1)', () => {
         expect(card.lines.some((_, i) => joined(i) === detail.outcomeLine)).toBe(false);
     });
 
-    it('presses the same keyword in the free and the paid line of A Plain Word', () => {
+    it('presses the same keyword in the free and the paid line of Word', () => {
         const card = findCard(selectDeckViewModel(runWith([WORD])), WORD);
         const kwRuns = (i: number) => card.lines[i].runs.filter((r) => r.kind === 'keyword');
         expect(card.lines.length).toBe(2);

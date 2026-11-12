@@ -154,7 +154,7 @@ describe('the spikes in the log', () => {
 
     it('names the card a RETRIEVE brings back', () => {
         const s = free({ ...encounter(['sb-retrieve']), discard: ['grey-strike'] }, 'h0');
-        expect(selectCombatLogHistory(s).map((l) => l.text)).toContain('You RETRIEVE A Plain Blow.');
+        expect(selectCombatLogHistory(s).map((l) => l.text)).toContain('You RETRIEVE Blow.');
     });
 
     it('narrates each THORNS hit back from a real foe turn', () => {

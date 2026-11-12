@@ -19,7 +19,7 @@ import { createCharacter } from '../../Character';
 import { FloatEye } from '../../Enemy/enemy.library';
 
 // The grey office is the whole library, so its three cards hold the fixture
-// seats (A Plain Blow / Ward / Word).
+// seats (Blow / Ward / Word).
 const CARD_A = 'grey-strike';
 const CARD_B = 'grey-ward';
 

@@ -32,7 +32,7 @@ import { FLOATING_DICE_CAP } from '../combat.dice';
 import { runHazardCombatAutoEncounter } from '../../test-utils/combat-autoplay';
 import type { CombatEncounterState } from '../combat.encounter.types';
 
-// A Plain Blow (colourless) — any die,
+// Blow (colourless) — any die,
 // a wild float included, powers it.
 const DOT = 'grey-strike';
 

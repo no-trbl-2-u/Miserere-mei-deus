@@ -239,8 +239,8 @@ describe('card upgrades — purity', () => {
 
     it('shares no object with the input card', () => {
         // After the card purge (P1, 2026-09-27) no library card carries all
-        // three payload shapes at once, so the witness joins A Plain Blow's
-        // mechanic + FREE line with A Plain Word's status.
+        // three payload shapes at once, so the witness joins Blow's
+        // mechanic + FREE line with Word's status.
         const strike = LIBRARY.find(c => c.id === 'grey-strike');
         const word = LIBRARY.find(c => c.id === 'grey-word');
         expect(strike?.specialMechanics?.length).toBeGreaterThan(0);

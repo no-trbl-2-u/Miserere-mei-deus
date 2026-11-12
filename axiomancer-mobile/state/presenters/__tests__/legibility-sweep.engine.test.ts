@@ -70,8 +70,8 @@ describe('CombatViewModel.discardCards — discard-pile names (phase 28)', () =>
         s = { ...s, discard: ['grey-strike', 'grey-word'] };
         const vm = buildCombatViewModel(s);
         expect(vm.discardCards).toEqual([
-            { id: 'grey-strike', name: 'A Plain Blow' },
-            { id: 'grey-word', name: 'A Plain Word' },
+            { id: 'grey-strike', name: 'Blow' },
+            { id: 'grey-word', name: 'Word' },
         ]);
     });
 });

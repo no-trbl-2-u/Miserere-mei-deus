@@ -193,7 +193,7 @@ describe('S1-board-C32 — compactFree never prints a chopped fragment', () => {
         expect(compactFree(null)).toBe('');
     });
 
-    it('keeps the unit on a percent intensity (A Plain Word’s VULNERABLE)', () => {
+    it('keeps the unit on a percent intensity (Word’s VULNERABLE)', () => {
         expect(compactFree('+24%')).toBe('24%');
         expect(compactFree('+24% · 1t')).toBe('24%');
     });

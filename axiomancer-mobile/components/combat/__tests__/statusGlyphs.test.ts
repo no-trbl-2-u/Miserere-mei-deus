@@ -36,7 +36,7 @@ describe('statusGlyphs — resolution', () => {
         // Mark/Quarter/Vulnerable ARE the keyword system — no generic category icons.
         expect(effectGlyph({ id: 'debuff_mark', type: 'debuff' }).glyph).toBe('◉');
         expect(effectGlyph({ id: 'debuff_quarter', type: 'debuff' }).glyph).toBe('☙');
-        // A Plain Word's VULNERABLE is curated, not left to the category ▼
+        // Word's VULNERABLE is curated, not left to the category ▼
         // fallback (the same arrow, on purpose).
         expect(effectGlyph({ id: 'debuff_vulnerable', type: 'debuff' }).glyph).toBe('▼');
     });

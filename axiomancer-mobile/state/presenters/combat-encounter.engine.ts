@@ -159,7 +159,7 @@ function riderPairs(r: CardRider): [string, string][] {
         // De-abbreviated: '×1 · 1t', never the 'i1 d1' code.
         pairs.push([kw.toUpperCase(), `${percentIntensity(r.applyEffect.effectId, i) ?? `×${i}`}${d ? ` · ${d}t` : ''}`]);
     }
-    // Damage leads, as riderText leads with "Deal N": A Plain Blow's FREE
+    // Damage leads, as riderText leads with "Deal N": Blow's FREE
     // "Deal 2" is a DEAL pill, never a face with no pill.
     if (r.damage) pairs.unshift(['DEAL', `${r.damage}`]);
     return pairs;
@@ -2457,7 +2457,7 @@ function signaturesVM(state: CombatEncounterState): CombatSignatureVM[] {
  * A player committing a card to their deck for the rest of the run reads the
  * same face they will read in combat, so the reward screen never builds its
  * own slice of face logic. With the player's `stats` the numbers are scaled
- * exactly as the hand scales them (A Plain Blow reads Deal 6 on both); without
+ * exactly as the hand scales them (Blow reads Deal 6 on both); without
  * them the face prints the card's authored numbers.
  *
  * There is no encounter state here (the reward is post-combat), so there is no

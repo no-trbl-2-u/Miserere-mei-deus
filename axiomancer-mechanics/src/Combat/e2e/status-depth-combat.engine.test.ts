@@ -197,7 +197,7 @@ describe('INVARIANT — no new behavior fires without its marker', () => {
 // ── Projection / verbClass / reward-pool contract ────────────────────────────
 
 describe('card projection — the grey office classifies + advertises sensibly', () => {
-    // The library is the grey office. A Plain Blow is deliberately
+    // The library is the grey office. Blow is deliberately
     // NOT pinned here: `classifyVerbClass` has no branch for a plain `deal`,
     // so it reads 'buff-self' — a classification gap reported for a source
     // fix rather than frozen into this contract.
@@ -220,7 +220,7 @@ describe('card projection — the grey office classifies + advertises sensibly',
         });
     }
 
-    it('A Plain Blow previews its printed DEAL and is reachable via COMBAT_REWARD_POOL', () => {
+    it('Blow previews its printed DEAL and is reachable via COMBAT_REWARD_POOL', () => {
         const card = toCombatCard('grey-strike', getCardById, lookupEffect)!;
         expect(card.bottomDamagePreview).toBe(5);
         expect(COMBAT_REWARD_POOL).toContain('grey-strike');

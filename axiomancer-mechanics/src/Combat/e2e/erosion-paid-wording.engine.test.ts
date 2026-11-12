@@ -1,7 +1,7 @@
 /**
  * Wording guard — the complete live starter paid-line surface.
  *
- * Every fresh run opens on the grey deck (A Plain Blow / Ward / Word). Its
+ * Every fresh run opens on the grey deck (Blow / Ward / Word). Its
  * paid lines are the
  * first player-facing wording surface of every run, so they carry the audit.
  * This test pins the production projection, not merely the authored fragments.

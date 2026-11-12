@@ -25,7 +25,7 @@ import { RESERVE_MAX, RESERVE_PIP_CAP } from '../../../axiomancer-mechanics/src/
 const EFFECT_KEYWORD: Record<string, string> = {
     // ── The effect-backed keywords ──
     debuff_bleed: 'Bleed',
-    // Printed by the grey office's A Plain Word.
+    // Printed by the grey office's Word.
     debuff_vulnerable: 'Vulnerable',
     // Placed by a foe's move; the status row reads it.
     debuff_shock: 'Shock',

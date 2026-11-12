@@ -99,7 +99,7 @@ describe('floating-die APPLY (the snap-back bug)', () => {
         }
         const heartMana = (): CombatManaDie => ({ id: 'u-heart', color: 'heart', face: 'mana', state: 'available', temporary: false });
 
-        it('a heart tray die COMMITS A Plain Blow paid — the paid DEAL lands, die spends, card leaves hand, no fizzle', () => {
+        it('a heart tray die COMMITS Blow paid — the paid DEAL lands, die spends, card leaves hand, no fizzle', () => {
             const s = openHeartEncounter();
             s.dice = [heartMana()];
             const uid = findHand(s, 'grey-strike');

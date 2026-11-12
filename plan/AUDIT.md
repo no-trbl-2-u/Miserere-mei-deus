@@ -41,7 +41,7 @@
 The bias banner above reads "until RC ships"; RC shipped 2026-10-02, so this
 pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
-### [3.6] CRITIQUE pass 100 [MED]: covered hand-fan names at 375 all read "A PLAIN …"
+### [3.6] CRITIQUE pass 100 [MED]: covered hand-fan names at 375 all read "A PLAIN …" (shipped on `loop/iterate-grey-rename`)
 - category: external-critique
 - impact: 6
 - ease: 6
@@ -468,7 +468,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - evidence 2026-10-28: body-mind 0.25 -> 0.00 at 6ba3c34
 - evidence 2026-10-28: body 0.25 -> 0.00 at 6ba3c34
 
-### [ ] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
+### [x] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
 - category: content
 - impact: 6
 - ease: 6

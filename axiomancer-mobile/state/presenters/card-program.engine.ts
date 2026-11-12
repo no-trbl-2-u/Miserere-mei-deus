@@ -50,7 +50,7 @@ export const VARIES = 'varies';
  * The ordered headline patterns: the first that matches a line is its face.
  * A registry keyword headlines as KEYWORD · value; DEAL, Conviction, "the foe
  * loses" and Curses read as a plain hero line with no keyword badge, the way
- * A Plain Blow's "Deal 5" does.
+ * Blow's "Deal 5" does.
  */
 const HEADLINES: readonly { re: RegExp; keyword: string | null; value: (m: RegExpMatchArray) => string }[] = [
     { re: /\+X\b.*\bnext DEAL this turn\b/, keyword: null, value: () => 'Next Deal +X' },

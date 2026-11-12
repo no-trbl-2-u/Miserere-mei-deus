@@ -152,7 +152,7 @@ up with `lookupEffect` (`Effects/effects.library.ts`). `applyEffect` and
 `resolveEffectApplication` (`Combat/resist.ts`) decides whether one lands.
 
 The one status a live card applies is VULNERABLE (`debuff_vulnerable`, from
-A Plain Word). `getDamageTakenMultiplier` (`Combat/effects.ts`) turns it into
+Word). `getDamageTakenMultiplier` (`Combat/effects.ts`) turns it into
 the foe's incoming-damage multiplier, which the PAID hit reads and
 `processBetweenPhases` applies to damage over time. The debuff library
 holds other entries that no live card or enemy card applies.
