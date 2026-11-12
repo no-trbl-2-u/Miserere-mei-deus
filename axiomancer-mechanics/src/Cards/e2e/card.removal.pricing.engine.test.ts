@@ -8,6 +8,7 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, it, expect } from 'vitest';
 import { BREAKWATER_SHILLINGS_FLOOR } from '../card.removal.pricing';
 import { fightWage } from '../../Combat/combat.mercy-check';
@@ -50,7 +51,7 @@ describe('Breakwater shillings floor', () => {
     it('is the figure both price comments state', () => {
         const { caches: c, wages: w, total } = BREAKWATER_SHILLINGS_FLOOR;
         for (const rel of ['../card.removal.pricing.ts', '../../World/Blacksmith/blacksmith.engine.ts']) {
-            const src = readFileSync(new URL(rel, import.meta.url), 'utf8');
+            const src = readFileSync(resolve(__dirname, rel), 'utf8');
             expect(src, rel).toContain(`${total} shillings`);
             expect(src, rel).toContain(`${c} `);
             expect(src, rel).toContain(`${w} `);
