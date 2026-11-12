@@ -52,6 +52,11 @@ const PINNED_MISMATCHES: Readonly<Record<string, string>> = {
     'bw-d2': AUDIT_ROW.breakwater,
     'bw-t4': AUDIT_ROW.breakwater,
     'bw-m5': AUDIT_ROW.breakwater,
+    // The Chapter 1 quest nodes (BW1e, 116.5): their event copy is T's
+    // ruled quest line; the map blurb is T's too, so the pair waits on T.
+    'bw-c2': AUDIT_ROW.breakwater,
+    'bw-b1': AUDIT_ROW.breakwater,
+    'bw-l5': AUDIT_ROW.breakwater,
     'cw-18': AUDIT_ROW.charcoalWood,
     'bc-12': AUDIT_ROW.beaconCrags,
 };
