@@ -44,6 +44,7 @@ export const CONTENT_PATHS = Object.freeze([
   /^axiomancer-mechanics\/src\/Enemy\/enemy\.library\.ts$/,
   /^axiomancer-mechanics\/src\/Cards\/(cards\.library\.ts|library\/[^/]+\.cards\.ts)$/,
   /^axiomancer-mobile\/state\/presenters\/[^/]+\.copy\.ts$/,
+  /^axiomancer-mobile\/components\/combat\/encounter\/[^/]+\.copy\.ts$/,
   /^axiomancer-mobile\/state\/exploration-maps\/[^/]+\.layout\.ts$/,
 ])
 
