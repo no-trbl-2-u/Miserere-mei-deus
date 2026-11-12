@@ -729,3 +729,4 @@
 - 2026-11-12 · 178.2 (alias: SS1b) · The phone plays a node's scene, then its own screen · 0d64e0ea..0d64e0ea (#1632)
 - 2026-11-12 · 156.4 (alias: TY1d) · Design audit of every screen, three worst named · b3044641..e105a1fb (#1634)
 - 2026-11-12 · 178.4 (alias: SS1d) · Charcoal Wood, Beacon Crags, Lantern Deep open on a slot scene · 74d33b1c..e3ee09c3 (#1633)
+- 2026-11-12 · 116.4 (alias: BW1d) · Chapter 1's quest lines and rewards are approved · 9c251a1b..9c251a1b (#1635)
