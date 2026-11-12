@@ -46,6 +46,9 @@ needs are done):
 
 
 - **177.2** · NV1b: the prose lint learns the Narrator's fields (T, `/plot`, 2026-11-11)
+- **178.1** · SS1a: the scene slot in the engine, a node's scene then its event (T, `/plot`, 2026-11-12)
+- **178.2** · SS1b: the phone plays a node's scene, then the node's own screen (T, `/plot`, 2026-11-12; needs 178.1)
+- **178.3** · SS1c: the Breakwater's cutscene nodes become a fight and two caches, their scenes in slots (T, `/plot`, 2026-11-12; needs 178.1, 178.2)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -90,6 +93,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 178 | A scene before any node, and no more cutscene nodes | [178-ss1-scene-slots.md](178-ss1-scene-slots.md) | planned (**Asap**: 178.1-178.3) | 4 left |
 | 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 8 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
