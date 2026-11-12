@@ -1,6 +1,6 @@
 ---
 name: narrate
-description: Draft narration for the game in the Narrator's voice, at a cruelty stop T picks. Use when T asks for a piece of new narration content - a place line, an arrival line, a hazard, rest, dream, cutscene or travel line, quest log text, an enemy description or journal, screen narration - or says "/narrate", "write this in the narrator voice", "narration for X", "redo M-07 at 2". Always asks "How cruel?" first unless T already gave a stop. Never for cards, rules text or anything an NPC says.
+description: Draft narration for the game in the Narrator's voice, at a cruelty stop T picks. Use when T asks for a piece of new narration content - a place line, an arrival line, a hazard, rest, dream, cutscene or travel line, quest log text, an enemy description or journal, screen narration - or says "/narrate", "write this in the narrator voice", "narration for X", "redo M-07 at 2". Always asks "How cruel?" first unless T already gave a stop. Never for cards or rules text, or for a speaker with no cast entry.
 argument-hint: "[--stop 1-5] <what to write: a surface and its subject, or a ledger id to redraw>"
 ---
 
