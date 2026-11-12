@@ -106,8 +106,13 @@ describe('the Lantern Deep\'s events (D29)', () => {
                 'Below, a lake, and lanterns on the far shore. Somebody carried every one of them down.',
             ],
         });
+        // Only a slot leaves the node owed: the scene is seen, the node unspent.
+        expect(first.state.world.currentMap.consumedNodes).not.toContain('ld-1');
+        expect(first.state.world.currentMap.seenScenes).toContain('ld-1');
         expect(getNodeEventPool('northern-continent', 'lantern-deep', 'ld-1')).toBeUndefined();
-        expect(resolveMapEvent(first.state).event.kind).toBe('none');
+        const second = resolveMapEvent(first.state);
+        expect(second.event.kind).toBe('none');
+        expect(second.state.world.currentMap.consumedNodes).toContain('ld-1');
     });
 
     it('pins every fight low: 3 above the aqueducts, 4 below them', () => {
