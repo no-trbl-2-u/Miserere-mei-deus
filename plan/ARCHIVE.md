@@ -721,3 +721,4 @@
 - 2026-11-11 · 169.3 (alias: DL3c) · A T Item's proof (pr, spec, file) ticks it · b4227729..d1f19951 (#1614)
 - 2026-11-11 · 173.3 (alias: QS1c) · Quest turn-in lights the card; chain end and refusal shown · 4253746f..84f5c0ea (#1615)
 - 2026-11-11 · 173 · spec complete: The quest as one card · none · deleted in (this commit)
+- 2026-11-12 · 177.1 (alias: NV1a) · The Narrator exemption and voice bible are written down · a21c137a..a21c137a (#1620)

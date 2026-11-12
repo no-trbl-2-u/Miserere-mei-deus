@@ -45,8 +45,7 @@ needs are done):
 
 
 
-- **177.1** · NV1a: the Narrator exemption and the voice bible (T, `/plot`, 2026-11-11: "plot them first")
-- **177.2** · NV1b: the prose lint learns the Narrator's fields (T, `/plot`, 2026-11-11; needs 177.1)
+- **177.2** · NV1b: the prose lint learns the Narrator's fields (T, `/plot`, 2026-11-11)
 
 **Held** (waits on a person's word; never picked until the
 line goes; each line is a lock that times out:
@@ -91,7 +90,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned (**Asap**: 177.1-177.2) | 9 left |
+| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 8 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |

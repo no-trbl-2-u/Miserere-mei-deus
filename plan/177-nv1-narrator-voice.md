@@ -29,7 +29,7 @@
 - **The Narrator's rules** (lintable ones marked):
   - A sentence runs at most 40 words (lint).
   - Each surface has a word cap for the whole line (lint): map blurb 18, arrival line 32, loot cache action 30, hazard, rest, dream, travel, quest and description lines 45, screen copy 40, journal 110. A story screen or a cutscene has no cap on the whole: see the next rule.
-  - **Story screens and cutscenes tell their part of the story** (T, 2026-11-11: "When we have a story screen, it shouldn't be so short ... set it to 40 ... Let's actually tell the part of the story, not just an ambiguous line or two"). Their sentence ceiling is 40 words where MB-1 says 20 (lint). Each is told in panels, one paragraph a panel, and says what happens, to whom and what it costs, as the Act 1 story rules it (review). **[T to confirm #3]** A panel holds at most 80 words and a screen at most six panels.
+  - **Story screens and cutscenes tell their part of the story** (T, 2026-11-11: "When we have a story screen, it shouldn't be so short ... set it to 40 ... Let's actually tell the part of the story, not just an ambiguous line or two"). Their sentence ceiling is 40 words where MB-1 says 20 (lint). Each is told in panels, one paragraph a panel, and says what happens, to whom and what it costs, as the Act 1 story rules it (review). A panel holds at most 80 words and a screen at most six panels (T, 2026-11-12: "80 words, 6 panels").
   - No quotation marks; reported speech is set off with a comma (lint). No exclamation marks and no semicolons (lint, as today).
   - Canonical player terms keep their spelling (`VITAE`, `GUARD`) (review).
   - No sentence of McCarthy's or of Elden Ring's is reused, and no name, place or character of theirs (review; the lint cannot see this).
@@ -38,8 +38,8 @@
 - **Only approved lines land.** T reviews the drafts on the review page (tick to approve, note to change). The verdict is recorded in the ledger's `## Verdicts`. A content chunk lands the approved text exactly; a rejected or unreviewed line keeps its `[content]` tag and is listed in the chunk's PR body.
 - **Fit.** The drafts are longer than the placeholders. Each content chunk checks its screen at phone width with its longest approved line and fixes the layout (wrap, scroll or type size from the existing scale) if it clips. No line is shortened to fit without T.
 - **Spoken lines stay out.** The four lines marked `[NPC Content Needed]` (village host, innkeeper, shopkeeper, blacksmith) keep their placeholders. They belong to the People voice.
-- **[T to confirm #1]** The word caps above are the drafts' own. Default: keep them. Or: a tighter map blurb (12 words) if 18 crowds the map sheet.
-- **[T to confirm #2]** The six enemy descriptions marked `DRAFT (Claude)` are replaced by the approved drafts. Default: yes. Or: leave them for the enemy sessions.
+- The word caps above are settled (T, 2026-11-12: "Keep the caps").
+- The six enemy descriptions marked `DRAFT (Claude)` are replaced by the approved drafts, and T's own description of the saint beneath is kept as he wrote it (T, 2026-11-12: "Yes, replace, but make sure my description for the saint beneath is kept"). This binds 177.8.
 
 ### Decisions made upfront (do not ask)
 
@@ -57,7 +57,6 @@
 
 ## Acceptance
 
-- **A1** The exemption is written down. `NARRATOR.md` exists with the scope, the rules, the five stops and the calibration set; the three older narrative docs point at it; the decision is recorded.
 - **A2** The lint knows the Narrator. On a Narrator field, a 41-word sentence, a line over its surface cap and a quotation mark each fail, and a 30-word sentence with "yet" or "bade" passes. On every other field the old rules still fail what they failed. The files the drafts touch are in the content list.
 - **A3** T's verdict on the drafts is in `plan/ballots/narrator-chapter1.md` (attended).
 - **A4** Map blurbs. Every approved map blurb is in `breakwater.layout.ts`; the map sheet shows the longest one unclipped at phone width.
@@ -70,19 +69,13 @@
 
 ## Open questions
 
-1. **[T to confirm #1]** Keep the drafts' word caps? Default: yes. Or: a 12-word map blurb.
-2. **[T to confirm #2]** Replace the six `DRAFT (Claude)` enemy descriptions with approved drafts? Default: yes. Or: leave them for the enemy sessions.
-3. **[T to confirm #3]** A story panel holds at most 80 words and a screen at most six panels? Default: yes. Or: no cap, review only.
+None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claude)` enemy descriptions are replaced, T's saint beneath description kept; a panel holds 80 words and a screen six panels.
 
 ## Chunks
 
-Measure: 10 open · 0 closed · next A11
+Measure: 9 open · 1 closed · next A11
 
-- [ ] **177.1** The Narrator exemption and the voice bible · S · closes A1 · needs — · alias: NV1a
-  - `axiomancer-mechanics/docs/narrative/NARRATOR.md` (new); one pointer paragraph each in `ANTI_IMITATION.md`, `DELIVERY_REGISTER.md`, `VOICE_REGISTERS.md`.
-  - The calibration set is copied from `plan/ballots/narrator-voice.md` (locked passages, T's reasons) as it stands on the day; a later verdict adds to it.
-  - Measure: the docs exist and `scripts/check-lexicon.mjs` passes.
-- [ ] **177.2** The prose lint learns the Narrator's fields · M · closes A2 · needs 177.1 · alias: NV1b
+- [ ] **177.2** The prose lint learns the Narrator's fields · M · closes A2 · needs — · alias: NV1b
   - `scripts/check-prose.mjs`: the Narrator field table and its rules; the new content files; `--list` prints both rule sets.
   - `scripts/check-prose.test.mjs`: the cases of A2, and one per old rule on a non-Narrator field.
   - Measure: the new tests pass; root `npm test` passes with every `[content]` placeholder still in place.

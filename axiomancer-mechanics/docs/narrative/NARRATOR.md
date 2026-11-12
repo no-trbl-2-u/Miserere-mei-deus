@@ -1,7 +1,7 @@
 # The Narrator
 
 The voice bible for the Narrator, one of the game's three player-facing voices
-(T, 2026-11-08). It is the exemption D?narrator-exemption grants: on the surfaces listed
+(T, 2026-11-08). It is the exemption D189 grants: on the surfaces listed
 below, and only there, the Narrator may calibrate against Cormac McCarthy
 (the register of Blood Meridian) and Elden Ring, borrowing manner and never a
 sentence. Every other voice keeps [`ANTI_IMITATION.md`](ANTI_IMITATION.md) and

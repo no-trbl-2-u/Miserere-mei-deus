@@ -125,4 +125,4 @@ This separation is mandatory for localization, accessibility, and play clarity.
 
 ## The Narrator
 
-A third voice sits beside these registers: the Narrator, written to its own rules, caps and cruelty stops in [`NARRATOR.md`](NARRATOR.md) (D?narrator-exemption). Where a surface in that file overlaps a register here, NARRATOR.md wins for that surface.
+A third voice sits beside these registers: the Narrator, written to its own rules, caps and cruelty stops in [`NARRATOR.md`](NARRATOR.md) (D189). Where a surface in that file overlaps a register here, NARRATOR.md wins for that surface.
