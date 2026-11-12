@@ -197,7 +197,7 @@ const aliasIds = (text) => {
 /**
  * A spec's chunk lines, each with its wrapped header joined (continuation lines
  * indented two spaces that are not sub-bullets, as v2's plan-check joins them).
- * @returns {{chunk: string, ticked: boolean, aliases: string[], needs: string[], attended: boolean}[]}
+ * @returns {{chunk: string, title: string, ticked: boolean, aliases: string[], needs: string[], attended: boolean}[]}
  */
 export const parseSpecChunks = (md) => {
     const lines = md.split('\n')
@@ -213,6 +213,7 @@ export const parseSpecChunks = (md) => {
         const needsField = fields.find((f) => f.startsWith('needs '))?.slice(6).trim() ?? ''
         out.push({
             chunk: m[2],
+            title: fields[0],
             ticked: m[1] === 'x',
             aliases: aliasIds(text),
             needs: needsField === '—' || needsField === '-' ? [] : needsField.split(',').map((s) => s.trim()).filter(Boolean),
@@ -295,6 +296,23 @@ export const planRows = ({ buildPlan = null, specs = [], readme = null, archive 
         .filter(([, where]) => where.length > 1)
         .map(([id, where]) => `${id} is named ${where.length} times (${where.join(', ')}); an id has one home: keep one alias.`)
     return { phases, errors }
+}
+
+/**
+ * The open chunks on the roadmap's Held lane (spec 169): a chunk only T can do. Open means its
+ * line is still in a spec and no plan/pending/ file closes it. `title` is the chunk line's text
+ * up to its first ` · `, which is where an `(N h)` lives; `aliases` are the ids an Item may name
+ * it by; `requires` are its needs still open.
+ * @returns {{chunk: string, title: string, aliases: string[], requires: string[]}[]}
+ */
+export const openHeldChunks = ({ specs = [], readme = null, pending = new Set() }) => {
+    const held = parseHeld(readme)
+    const chunks = specs.flatMap(({ md }) => parseSpecChunks(md)).filter((c) => !c.ticked && !pending.has(c.chunk))
+    const live = new Set(chunks.map((c) => c.chunk))
+    const needOpen = (need) => (need.includes('.') ? live.has(need) : [...live].some((id) => id.startsWith(`${need}.`)))
+    return chunks
+        .filter((c) => held.has(c.chunk))
+        .map((c) => ({ chunk: c.chunk, title: c.title, aliases: c.aliases, requires: c.needs.filter(needOpen) }))
 }
 
 // The last "Requires …." clause: a row's prose can say "Requires" before the clause
@@ -581,10 +599,26 @@ const round1 = (n) => Math.round(n * 10) / 10
  * first always shows). `later`: how many more T can do now. `waiting`: open acts whose
  * `Waits on` rows the loop has not shipped. `noHours`: open acts that state no hours.
  */
-export const queuePlan = (items, phases, today, hoursPerWeek) => {
+export const queuePlan = (items, phases, today, hoursPerWeek, held = []) => {
     const open = items
         .map((item) => ({ item, need: itemNeed(item, phases), hours: itemHours(item.name) }))
         .filter(({ need }) => need)
+    const handTicked = open.filter(({ item }) => item.rows === 'T' && !item.proof).length
+    // An open Held chunk no Item names is an act of the first milestone, after the written ones.
+    const named = new Set(items.flatMap((i) => (Array.isArray(i.rows) ? i.rows : [])))
+    const first = [...open.map(({ item }) => item.due), ...items.map((i) => i.due)].sort()[0] ?? today
+    const lastFirst = open.reduce((at, { item }, i) => (item.due === first ? i : at), open.length - 1)
+    const placed = held
+        .filter((h) => ![h.chunk, ...h.aliases].some((id) => named.has(id)))
+        .map((h) => ({
+            item: { name: h.title, due: first, rows: [], fromPlan: true },
+            need: h.requires.length
+                ? { kind: 'waiting on the loop', detail: `the loop still owes ${h.requires.join(', ')}` }
+                : { kind: 'needs you', detail: `chunk ${h.chunk}` },
+            hours: itemHours(h.title),
+            fromPlan: true,
+        }))
+    open.splice(lastFirst + 1, 0, ...placed)
     const dues = [...new Set(open.map(({ item }) => item.due))].sort()
     const milestones = dues.map((due) => {
         const upTo = open.filter(({ item }) => item.due <= due)
@@ -609,15 +643,17 @@ export const queuePlan = (items, phases, today, hoursPerWeek) => {
     for (const o of ready) {
         if (week.length && spent + (o.hours ?? 0) > hoursPerWeek) break
         spent += o.hours ?? 0
-        week.push({ name: o.item.name, due: o.item.due, kind: o.need.kind, detail: o.need.detail, hours: o.hours })
+        week.push({ name: o.item.name, due: o.item.due, kind: o.need.kind, detail: o.need.detail, hours: o.hours, ...(o.fromPlan ? { fromPlan: true } : {}) })
     }
     return {
         hoursPerWeek,
         milestones,
         week,
         later: ready.length - week.length,
-        waiting: open.filter(blocked).map((o) => ({ name: o.item.name, owes: owesOf(o, phases) })),
+        waiting: open.filter(blocked).map((o) => ({ name: o.item.name, owes: o.fromPlan ? o.need.detail.match(/owes (.+)$/)?.[1].split(', ') ?? [] : owesOf(o, phases), ...(o.fromPlan ? { fromPlan: true } : {}) })),
         noHours: open.filter(({ hours }) => hours === null).map(({ item }) => item.name),
+        handTicked,
+        fromPlan: placed.map((o) => o.item.name),
     }
 }
 
@@ -630,6 +666,12 @@ const milestoneLine = (m) =>
     `${dayName(m.due)} (${whenText(m.days)}): ${m.acts} act${m.acts === 1 ? '' : 's'} open (${m.openHours} h), ${m.cumHours} h queued up to it, ${m.available} h available: ${fitText(m)}.`
 
 const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
+
+const planMark = (name, fromPlan) => (fromPlan ? `${name} (from the build plan)` : name)
+
+const planText = (queue) => (queue.fromPlan.length ? `From the build plan (Held chunks no Item names): ${queue.fromPlan.map(shortName).join('; ')}.` : '')
+
+const handText = (queue) => `Open acts only a hand can tick: ${queue.handTicked}.`
 
 const owedList = (waiting) => {
     const ids = [...new Set(waiting.flatMap((w) => w.owes))]
@@ -644,7 +686,7 @@ const queueReminderText = (queue, today) => {
         `Milestones, at ${queue.hoursPerWeek} h a week:`,
         ...queue.milestones.map((m) => `- ${milestoneLine(m)}`),
         `This week's acts, in order (${queue.hoursPerWeek} h):`,
-        ...queue.week.map((w) => `- ${w.name} — ${w.kind} (${w.detail}).`),
+        ...queue.week.map((w) => `- ${planMark(w.name, w.fromPlan)} — ${w.kind} (${w.detail}).`),
     ]
     if (!queue.week.length) lines.push('- Nothing is ready for T: every open act waits on the loop.')
     const tail = [
@@ -653,6 +695,8 @@ const queueReminderText = (queue, today) => {
         queue.noHours.length ? `${queue.noHours.length} state no hours` : '',
     ].filter(Boolean)
     if (tail.length) lines.push(`Then: ${tail.join('; ')}.`)
+    if (queue.fromPlan.length) lines.push(planText(queue))
+    lines.push(handText(queue))
     return lines.join('\n')
 }
 
@@ -670,10 +714,13 @@ const queueLiveMarkdown = (queue, today) => [
     `## This week (${queue.hoursPerWeek} h)`,
     '',
     ...(queue.week.length
-        ? ['| # | Act | Hours | What it needs |', '|---|---|---|---|', ...queue.week.map((w, i) => `| ${i + 1} | ${w.name} | ${w.hours ?? '-'} | ${w.kind}: ${w.detail} |`)]
+        ? ['| # | Act | Hours | What it needs |', '|---|---|---|---|', ...queue.week.map((w, i) => `| ${i + 1} | ${planMark(w.name, w.fromPlan)} | ${w.hours ?? '-'} | ${w.kind}: ${w.detail} |`)]
         : ['Nothing is ready for T.']),
     '',
     ...(queue.later ? [`${queue.later} more acts are ready after these.`, ''] : []),
-    ...(queue.waiting.length ? ['## Waiting on the loop', '', ...queue.waiting.map((w) => `- ${shortName(w.name)} — the loop still owes ${w.owes.join(', ') || 'its rows'}`), ''] : []),
+    ...(queue.waiting.length ? ['## Waiting on the loop', '', ...queue.waiting.map((w) => `- ${planMark(shortName(w.name), w.fromPlan)} — the loop still owes ${w.owes.join(', ') || 'its rows'}`), ''] : []),
     ...(queue.noHours.length ? ['## No hours stated', '', ...queue.noHours.map((n) => `- ${shortName(n)}`), ''] : []),
+    ...(queue.fromPlan.length ? [planText(queue), ''] : []),
+    handText(queue),
+    '',
 ].join('\n')

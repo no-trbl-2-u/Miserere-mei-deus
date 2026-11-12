@@ -363,7 +363,7 @@ where each kept deviation lives). It is live at the repo root:
   dated row outside it). `LIVE_DEADLINES.md` at the root is the queue's forecast and this week's acts, generated
   from it daily by `.github/workflows/deadlines.yml` (never edit it by hand). A `/plot` of a queue act replaces
   its `needs plot` with the new chunks' aliases when they wait on T. Loop rows are not listed there and take
-  their order from `plan/README.md`. The lint also fails an open Item naming a `PR #N` that `main` has merged: tick the Item or drop the number.
+  their order from `plan/README.md`. An open Held chunk no Item names joins the queue by itself, marked "from the build plan", so a plot does not copy a Held chunk into the queue unless T wants it placed. The lint also fails an open Item naming a `PR #N` that `main` has merged: tick the Item or drop the number.
 - `scripts/` — the kit's `plan-check.mjs`, `plan/*.mjs` (order, lanes,
   locks, settle) and `cloud/*.mjs`; ours: `deploy-check.mjs` (CI-green
   deploy gate), `notify.mjs` (pager), `loop-issue.mjs` (GitHub issue
