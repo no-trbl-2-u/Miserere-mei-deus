@@ -40,6 +40,7 @@ import {
     selectEventArtSlug,
     type EventArtSlug,
 } from './event-assets';
+import { paginateLines } from './cutscene-pages';
 import { freezeViewModel } from './freeze';
 import { toRomanLower } from './roman';
 
@@ -183,7 +184,8 @@ export interface CutsceneView {
  * images and the one narrator (`assets/images/cutscenes`).
  */
 export function cutsceneView(event: ResolvedEvent | null | undefined): CutsceneView {
-    const lines = event && event.kind === 'cutscene' ? event.lines : [];
+    // NV1o: a long panel is shown as pages, and the count counts pages.
+    const lines = paginateLines(event && event.kind === 'cutscene' ? event.lines : []);
     const sceneId = event && event.kind === 'cutscene' ? event.scene : undefined;
     const scene = cutsceneScene(sceneId);
     return {
