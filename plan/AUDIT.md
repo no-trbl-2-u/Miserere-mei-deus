@@ -758,7 +758,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   verdict: read any medium or high `loop:pr` PR's verdict after the merge).
 - next: `/iterate` (a measurement run, plan-only diff under `docs/reports/`).
 
-### [ ] [tooling] The guard's post-write lexicon check reports false findings in a worktree (2026-10-11)
+### [x] [tooling] The guard's post-write lexicon check reports false findings in a worktree (2026-10-11) — CLOSED 2026-11-12 (iterate: already fixed in a68039899; `lexiconTargetFor` lints from the written file's own git toplevel, pinned by `guard.mjs self-test`, which passes)
 - category: tooling
 - impact: 4
 - ease: 7
