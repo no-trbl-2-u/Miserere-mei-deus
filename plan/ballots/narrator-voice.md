@@ -172,8 +172,8 @@ cruel?" before drafting, unless the request already names a stop. The page
 | 4 | Cruelty at 11 | Shared, habitual, enjoyed or administered. | cruel |
 | 5 | Grief | It lands on someone the reader cares for, or is the subject's own doing. | grief |
 
-Stops 2 and 3 were not on any ballot. Their samples in the skill are Claude's
-and not yet T's.
+Stops 2 and 3 were not on any ballot. T approved them as written, with their
+samples in the skill (T, 2026-11-12: "approve stops 2 and 3 as written").
 
 ## Verdicts
 

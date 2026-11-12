@@ -83,8 +83,9 @@ never more gore, and the prologue's assault stays off-screen at every stop.
 | 4 | Cruelty at 11 | Shared, habitual, enjoyed or administered; it has a ledger, a custom or an audience. One detail makes it worse than it needed to be. |
 | 5 | Grief | It lands on someone the reader cares for, or is the subject's own doing. It ends on a small plain thing. Written to hurt. |
 
-Stops 2 and 3 were not on any ballot; their samples are Claude's and not yet
-T's. When T asks for many pieces and says `mix`, the rotation (T, 2026-11-11)
+Stops 2 and 3 were not on any ballot. T approved them as written, with their
+samples in `.claude/skills/narrate/SKILL.md` (T, 2026-11-12: "approve stops 2
+and 3 as written"). When T asks for many pieces and says `mix`, the rotation (T, 2026-11-11)
 is plain, cruel, plain, grief, and round again.
 
 ## The calibration set
