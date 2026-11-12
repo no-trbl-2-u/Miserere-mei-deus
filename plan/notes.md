@@ -524,3 +524,7 @@ Defaults taken: a scene with no picture shows the picture of the nearest of the 
 
 - Defaults taken: scroll cue is a foot fade with a chevron that shows while more column lies below and drops at the foot; the relic banner moved from over the card's foot into the column under the card.
 - Retro: clean.
+
+The mobile Stryker config computed its related-test set once from the two combat presenters, so a PR that mutated any other mobile file ran no test ("no test relates to these lines"). `mutation-pr.mjs` now passes the changed files in `EVAL_STRYKER_MUTATE` and the config reads it. Checked by hand: for `app/cutscene/index.tsx` the set now holds `cutscene-leaves-first.test.tsx`.
+
+The line-96 survivor in the fixture builder is the `target.node !== undefined` operand, which is equivalent (a lookup on an undefined node finds no scene). The new per-node test kills the other mutants of that line.

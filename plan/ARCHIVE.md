@@ -745,3 +745,4 @@
 - 2026-11-12 · 177.9 (alias: NV1i) · Twenty-two approved scenes play from the Breakwater's slots · a85244f5..1b301b1d (#1647)
 - 2026-11-12 · 177.15 (alias: NV1o) · The cutscene screen pages a long panel at sentence ends · 55d7f38a..d5bd27f6 (#1652)
 - 2026-11-12 · 177.16 (alias: NV1p) · Quest card scrolls to its buttons, with a cue; relic clear · 6f6b3af8..3295c556 (#1653)
+- 2026-11-12 · 177.17 (alias: NV1q) · Sea keep lord matches his portrait; test gaps closed · 70a9b7eb..70a9b7eb (#1651)

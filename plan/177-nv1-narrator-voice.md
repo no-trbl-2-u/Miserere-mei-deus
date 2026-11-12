@@ -64,7 +64,6 @@
 - **A7** Screen copy. Every approved defeat, withdraw, death return, game over, quest screen and village counter line, and each approved reward eyebrow, is in its copy file; each screen shows it unclipped.
 - **A8** Enemy descriptions. Every approved description is in `enemy.library.ts` with its `DRAFT (Claude)` comment removed.
 - **A9** No approved line is left as a placeholder, and no unapproved draft is in the game: a test reads the ledger's verdicts and the sources and fails on either.
-- **A18** The sea keep's lord matches his portrait, and the pilot's test gaps are closed. S-17 panel 2 is T's redraw of 2026-11-12 in the ledger and in `BW_NODE_SCENES` (`bw-k2`), word for word. Tests cover the fixture builder's seen-scene line, the R-02 refusal through an engine walk, the `/narrate` skill's description, and the cutscene screen's leave-first fix.
 
 ## Open questions
 
@@ -76,7 +75,7 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 
 ## Chunks
 
-Measure: 8 open · 10 closed · next A19
+Measure: 7 open · 11 closed · next A19
 
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
   - T approved the 22 scenes, the quest names and lines, the four refusals and the two gate lines on 2026-11-12; they are in `plan/ballots/narrator-chapter1.md` and need no further review. What is left for this chunk is every other Chapter 1 surface, none of it drafted from the new story yet: the map blurbs, the arrival lines, the hazard, rest, dream, travel, village and loot lines, the screen copy and the enemy descriptions. They are drafted with `/narrate` from `axiomancer-mechanics/content/story/story-overview.md` once 177.11 has amended the voice rules, added to that ledger, and reviewed by T there (a review page is redrawn only if T asks for one); the session writes each verdict under `## Verdicts`.
@@ -98,9 +97,3 @@ Measure: 8 open · 10 closed · next A19
 - [ ] **177.8** Enemy descriptions in the game · S · closes A8 · needs 177.3 · alias: NV1h
   - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions, each `DRAFT (Claude)` comment removed with it. The Saint Beneath's description and journal are among them since T's word of 2026-11-12 ("Adjust the saint beneath's entry to fit the new story"): both land as the ledger's E-01, and `Enemy/e2e/saint-beneath.engine.test.ts`, which asserts the old journal word for word, changes with them.
   - Measure: the verdicts test passes for this surface; the enemy library tests pass.
-- [ ] **177.17** The sea keep matches the portrait, and the pilot's test gaps close · S · closes A18 · needs — · alias: NV1q
-  - Source: T, 2026-11-12, "Portrait wins" (the Saint Beneath is a great fish with an old man's face, ledger "The Saint Beneath", E-01), and T approved this redraw of S-17 panel 2 through `/narrate` at stop 1, verbatim: "The lord of the place lies beyond the lamp. Thirty years in that light have taken the edges from him, and he is grown long and pale and scaled, with an old man's face still set in the front of him, its eyes shut. About him on the floor lie the tithes of all those years, laid out in rows, and not one of them has been let to rot."
-  - Content: that text replaces S-17 panel 2 in `plan/ballots/narrator-chapter1.md` and the second line of `bw-k2` in `BW_NODE_SCENES` (`axiomancer-mechanics/src/World/MapEvents/content.ts`) in the same commit, because `scripts/narrator-verdicts.test.mjs` reads both. Panels 1 and 3 are unchanged. The ledger gets a dated note under S-17 naming T's ruling.
-  - Canon: the story overview (`axiomancer-mechanics/content/story/story-overview.md`, `## Rulings`) gains ruling 13, in T's words of 2026-11-12: "Portrait wins". A creature's or person's approved portrait is canon for how it looks, and a scene or description that disagrees is redrawn through `/narrate`.
-  - Tests (the gaps left by pilot vega, 2026-11-12): kill the mutation survivor at `state-fixture.builder.ts` (the line that marks the staged node's scene seen); pin R-02 exactly through an engine walk; a root test that reads `.claude/skills/narrate/SKILL.md`'s front-matter description and asserts its last sentence; make the cutscene leave-first fix (`app/cutscene/index.tsx`) visible to the mutation report's test map, or say in the PR why the tool cannot see `state/e2e/cutscene-leaves-first.test.tsx`.
-  - Measure: `node scripts/narrator-verdicts.test.mjs` passes with the new panel; changing one character of it in either file turns it red; `npm run verify -w axiomancer-mechanics`, mobile jest and the root `npm test` pass.
