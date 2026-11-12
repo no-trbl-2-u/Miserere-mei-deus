@@ -58,6 +58,19 @@ export const CONTENT_SURFACES = [
   'axiomancer-mobile/state/presenters/rest.copy.ts',
   'axiomancer-mobile/state/presenters/cache.copy.ts',
   'axiomancer-mobile/state/presenters/mercy-check.copy.ts',
+  // Spec 177 (NV1b): the files the Chapter 1 drafts touch, so a line added
+  // there cannot ship unlinted. Their narration fields are in NARRATOR_FIELDS.
+  'axiomancer-mechanics/src/World/MapEvents/arrival-lines.ts',
+  'axiomancer-mechanics/src/World/breakwater-chapter.questline.ts',
+  'axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater-chapter.ts',
+  'axiomancer-mobile/state/exploration-maps/breakwater.layout.ts',
+  'axiomancer-mobile/components/combat/encounter/combat-summary.copy.ts',
+  'axiomancer-mobile/components/combat/encounter/reveal.copy.ts',
+  'axiomancer-mobile/state/presenters/death-return.copy.ts',
+  'axiomancer-mobile/state/presenters/game-over.copy.ts',
+  'axiomancer-mobile/state/presenters/quest.copy.ts',
+  'axiomancer-mobile/state/presenters/village.copy.ts',
+  'axiomancer-mobile/state/presenters/relic-source.copy.ts',
 ]
 
 /**
@@ -134,6 +147,235 @@ export const wordCount = (s) => s.trim().split(/\s+/).filter(Boolean).length
 export const sentencesOf = (value) =>
   value.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter((s) => s.length > 3)
 
+/**
+ * THE NARRATOR (spec 177, `axiomancer-mechanics/docs/narrative/NARRATOR.md`).
+ *
+ * One of the game's three voices. On the fields listed in NARRATOR_FIELDS the
+ * Narrator's rules replace `mb1-long-sentence` (20 words) and `faux-archaic`;
+ * every other field is linted exactly as before. `mb1-semicolon`, `exclamation`
+ * and the retired-term and filler rules still apply to Narrator fields.
+ */
+
+/** Surface names mapped to their whole-line word cap. `story` has no cap on the whole: it is panels. */
+export const NARRATOR_SURFACES = {
+  'map-blurb':    { cap: 18, label: 'map blurb' },
+  'arrival-line': { cap: 32, label: 'arrival line' },
+  'cache-action': { cap: 30, label: 'loot cache action' },
+  'line':         { cap: 45, label: 'hazard, rest, dream, travel, quest and description line' },
+  'screen':       { cap: 40, label: 'screen copy' },
+  'journal':      { cap: 110, label: 'journal' },
+  'story':        { cap: null, label: 'story screen or cutscene panel', panels: true },
+}
+
+/** A sentence ceiling for every Narrator surface (NARRATOR.md rules 1 and 3). */
+export const NARRATOR_MAX_SENTENCE_WORDS = 40
+/** A story panel holds at most this many words; a story screen at most this many panels (T, 2026-11-12). */
+export const NARRATOR_MAX_PANEL_WORDS = 80
+export const NARRATOR_MAX_PANELS = 6
+
+/**
+ * Where the Narrator writes. `fields` maps a name to a surface; a literal is a
+ * Narrator literal when the object key it sits under, or else the top-level
+ * `const`/`function` that holds it, is named here. Literals joined with `+`
+ * are one line. Enemy journal bodies are deliberately absent: T's own page for
+ * the saint beneath is longer than the journal cap, so it stays on the old
+ * rules until T rules (spec 177 PARKED).
+ */
+export const NARRATOR_FIELDS = [
+  { file: 'axiomancer-mechanics/src/World/MapEvents/content.ts', fields: {
+    description: 'line', prompt: 'line', lockedLine: 'line', BREAKWATER_REST_DREAMS: 'line',
+    card: 'cache-action', item: 'cache-action', lines: 'story',
+  } },
+  { file: 'axiomancer-mechanics/src/World/MapEvents/arrival-lines.ts', fields: {
+    BREAKWATER_ARRIVAL_LINES: 'arrival-line',
+  } },
+  { file: 'axiomancer-mechanics/src/World/breakwater-chapter.questline.ts', fields: {
+    description: 'line', BREAKWATER_CHAPTER_STEPS: 'line',
+  } },
+  { file: 'axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater-chapter.ts', fields: {
+    KEEP_GATE_REASON: 'line', BRIDGE_GATE_REASON: 'line',
+  } },
+  { file: 'axiomancer-mobile/state/exploration-maps/breakwater.layout.ts', fields: {
+    description: 'map-blurb',
+  } },
+  { file: 'axiomancer-mobile/components/combat/encounter/combat-summary.copy.ts', fields: {
+    DEFEAT_CAUSE_LINES: 'screen',
+  } },
+  { file: 'axiomancer-mobile/components/combat/encounter/reveal.copy.ts', fields: {
+    WITHDRAW_COST: 'screen',
+  } },
+  { file: 'axiomancer-mobile/state/presenters/death-return.copy.ts', fields: {
+    DEATH_RETURN_BODY: 'screen', DEATH_RETURN_KEPT: 'screen',
+  } },
+  { file: 'axiomancer-mobile/state/presenters/game-over.copy.ts', fields: {
+    GAME_OVER_BODY: 'screen',
+  } },
+  { file: 'axiomancer-mobile/state/presenters/quest.copy.ts', fields: {
+    QUEST_GIVER_FALLBACK: 'line', QUEST_LOCKED_LINE: 'line',
+  } },
+  // The three counter lines only; the host, innkeeper and shopkeeper lines are spoken (the People).
+  { file: 'axiomancer-mobile/state/presenters/village.copy.ts', fields: {
+    VILLAGE_REST_LINE: 'screen', VILLAGE_CARD_SHOP_LINE: 'screen', VILLAGE_EQUIPMENT_LINE: 'screen',
+  } },
+  { file: 'axiomancer-mobile/state/presenters/relic-source.copy.ts', fields: {
+    questRewardSource: 'screen', spareGearSource: 'screen', eliteDropSource: 'screen',
+  } },
+  { file: 'axiomancer-mechanics/src/Enemy/enemy.library.ts', fields: {
+    description: 'line',
+  } },
+]
+
+/** The Narrator's rules. `ctx` is `{ surface }`, one of NARRATOR_SURFACES. */
+export const NARRATOR_RULES = [
+  {
+    id: 'narrator-long-sentence',
+    fix: `Narrator: a sentence runs at most ${NARRATOR_MAX_SENTENCE_WORDS} words — split it`,
+    since: 'NARRATOR.md rule 1',
+    test: (value) => sentencesOf(value).some((s) => wordCount(s) > NARRATOR_MAX_SENTENCE_WORDS),
+  },
+  {
+    id: 'narrator-line-cap',
+    fix: 'Narrator: this line is over its surface\'s word cap (NARRATOR.md rule 2) — cut it',
+    since: 'NARRATOR.md rule 2',
+    test: (value, ctx) => ctx.surface.cap != null && wordCount(value) > ctx.surface.cap,
+  },
+  {
+    id: 'narrator-panel-words',
+    fix: `Narrator: a story panel holds at most ${NARRATOR_MAX_PANEL_WORDS} words — split the panel`,
+    since: 'NARRATOR.md rule 3',
+    test: (value, ctx) => ctx.surface.panels === true && wordCount(value) > NARRATOR_MAX_PANEL_WORDS,
+  },
+  {
+    id: 'narrator-quote',
+    fix: 'Narrator: no quotation marks; set reported speech off with a comma',
+    since: 'NARRATOR.md rule 4',
+    test: (value) => /["“”]/.test(value),
+  },
+  {
+    id: 'narrator-archaic',
+    fix: 'Narrator: "thee", "thou", "hath" and their kin are never used (a "yet" or a "bade" is fine, sparingly)',
+    since: 'NARRATOR.md rule 8',
+    test: (value) => /\b(thee|thou|thy|thine|hath|doth)\b/i.test(value),
+  },
+]
+
+/** The array-level rule: a story screen is at most NARRATOR_MAX_PANELS panels. */
+export const NARRATOR_PANEL_COUNT_RULE = {
+  id: 'narrator-panel-count',
+  fix: `Narrator: a story screen holds at most ${NARRATOR_MAX_PANELS} panels — cut or split the scene`,
+  since: 'NARRATOR.md rule 3',
+}
+
+/** Rules the Narrator's replace on a Narrator field. */
+const REPLACED_ON_NARRATOR_FIELDS = new Set(['mb1-long-sentence', 'faux-archaic'])
+
+const PLACEHOLDER_RE = /^\s*\[(?:content|NPC Content Needed)\]/
+
+/** The file's `fields` table, `{ name: surface }`, or null when the file has no Narrator fields. */
+export function narratorFieldsFor(file) {
+  const row = NARRATOR_FIELDS.find((r) => r.file === file)
+  return row ? row.fields : null
+}
+
+/**
+ * Lex `text` into the Narrator view of its string literals.
+ *
+ * Returns `{ scopes, panelCounts }`. `scopes` maps a literal's start index to
+ * `{ name, surface, group }` for each literal under a Narrator field (`group`
+ * holds the whole `+`-joined line and the start index of its first literal);
+ * `panelCounts` lists `{ index, name, count }` for each `story` array.
+ * Comments are skipped here, so an apostrophe in one cannot hide a field.
+ */
+export function narratorScopes(text, fields) {
+  const tokens = []
+  let i = 0
+  const n = text.length
+  while (i < n) {
+    const c = text[i]
+    if (c === '/' && text[i + 1] === '/') { while (i < n && text[i] !== '\n') i++; continue }
+    if (c === '/' && text[i + 1] === '*') { const e = text.indexOf('*/', i + 2); i = e < 0 ? n : e + 2; continue }
+    if (c === "'" || c === '"' || c === '`') {
+      const start = i
+      i++
+      while (i < n && text[i] !== c) {
+        if (text[i] === '\\') i++
+        else if (c !== '`' && text[i] === '\n') break
+        i++
+      }
+      tokens.push({ t: 's', index: start, value: text.slice(start + 1, i) })
+      i++
+      continue
+    }
+    if (/[A-Za-z_$]/.test(c)) {
+      const m = /^[\w$]+/.exec(text.slice(i, i + 80))
+      tokens.push({ t: 'i', value: m[0], index: i })
+      i += m[0].length
+      continue
+    }
+    if (c === '?' && (text[i + 1] === '.' || text[i + 1] === '?')) { i += 2; continue }
+    if ('()[]{}:,+?;'.includes(c)) tokens.push({ t: 'p', value: c, index: i })
+    i++
+  }
+
+  const scopes = new Map()
+  const panelCounts = []
+  const frames = [{ open: null, key: null, curKey: null, tern: 0, count: 0, index: 0 }]
+  let decl = null
+  let group = null
+  for (let k = 0; k < tokens.length; k++) {
+    const tok = tokens[k]
+    const top = frames[frames.length - 1]
+    if (tok.t === 'i') {
+      const prev = tokens[k - 1]
+      if (frames.length === 1 && prev?.t === 'i' && ['const', 'let', 'var', 'function', 'class'].includes(prev.value)) {
+        decl = tok.value
+      }
+    } else if (tok.t === 'p') {
+      const v = tok.value
+      if (v === '(' || v === '[' || v === '{') {
+        frames.push({
+          open: v, key: v === '{' ? null : (top.curKey ?? top.key), curKey: null, tern: 0, count: 0, index: tok.index,
+        })
+      } else if (v === ')' || v === ']' || v === '}') {
+        if (frames.length > 1) {
+          const f = frames.pop()
+          const surface = f.open === '[' && f.key != null && Object.hasOwn(fields, f.key) ? fields[f.key] : null
+          if (surface && NARRATOR_SURFACES[surface]?.panels) panelCounts.push({ index: f.index, name: f.key, count: f.count })
+        }
+      } else if (v === ',' || v === ';') {
+        top.curKey = null
+        top.tern = 0
+      } else if (v === '?') {
+        top.tern++
+      } else if (v === ':') {
+        if (top.tern > 0) top.tern--
+        else {
+          const prev = tokens[k - 1]
+          if (prev && (prev.t === 'i' || prev.t === 's')) top.curKey = prev.value
+        }
+      }
+    } else {
+      const next = tokens[k + 1]
+      if (next?.t === 'p' && next.value === ':' && top.tern === 0) continue // a quoted key, not a value
+      const prev = tokens[k - 1]
+      const continues = Boolean(group) && prev?.t === 'p' && prev.value === '+' && tokens[k - 2]?.t === 's'
+      const key = top.curKey ?? top.key
+      let name = null
+      if (continues) name = group.name
+      else if (key != null && Object.hasOwn(fields, key)) name = key
+      else if (decl != null && Object.hasOwn(fields, decl)) name = decl
+      if (!continues) {
+        group = name == null ? null : { name, head: tok.index, value: tok.value }
+        top.count++
+      } else {
+        group.value += tok.value
+      }
+      if (name != null) scopes.set(tok.index, { name, surface: NARRATOR_SURFACES[fields[name]], group })
+    }
+  }
+  return { scopes, panelCounts }
+}
+
 const PRAGMA_RE = /\/\/\s*(lexicon-ok|prose-ok):\s*([^\n]+)/g
 
 /** File-level exemptions, as `{ lexicon: Set, prose: Set }`. */
@@ -163,7 +405,7 @@ export function stringLiterals(text) {
     const value = m[1] ?? m[2] ?? m[3]
     if (value == null) continue
     const line = text.slice(0, m.index).split(/\r?\n/).length
-    out.push({ value, line, field: fieldFor(lines, line) })
+    out.push({ value, line, index: m.index, field: fieldFor(lines, line) })
   }
   return out
 }
@@ -186,25 +428,46 @@ export function fieldFor(lines, line) {
 /** Ids, keys, and enum values are not prose. */
 const MIN_PROSE_LENGTH = 12
 
-/** Findings for one file's text: `{ rule, line, fix, excerpt }`. */
-export function scanSource(text, retiredRows) {
+/**
+ * Findings for one file's text: `{ rule, line, fix, excerpt }`.
+ *
+ * `opts.file` (repo-relative) selects the file's Narrator fields from
+ * NARRATOR_FIELDS; `opts.fields` passes a `{ name: surface }` table directly
+ * (tests). With neither, every field is linted by the old rules.
+ */
+export function scanSource(text, retiredRows, opts = {}) {
   const exempt = exemptionsIn(text)
   const findings = []
-  for (const { value, line, field } of stringLiterals(text)) {
+  const fields = opts.fields ?? (opts.file ? narratorFieldsFor(opts.file) : null)
+  const narrator = fields ? narratorScopes(text, fields) : null
+  const push = (rule, line, value) => findings.push({ rule: rule.id, line, fix: rule.fix, excerpt: value.slice(0, 80) })
+
+  for (const { value, line, index, field } of stringLiterals(text)) {
+    // A placeholder is authored later; the lint reads the words that replace it.
+    if (PLACEHOLDER_RE.test(value)) continue
+    const scope = narrator?.scopes.get(index)
+    if (scope?.group.head === index) {
+      // The whole `+`-joined line, judged once, at its first literal.
+      const whole = scope.group.value
+      if (!PLACEHOLDER_RE.test(whole)) {
+        for (const rule of NARRATOR_RULES) {
+          if (!exempt.prose.has(rule.id) && rule.test(whole, scope)) push(rule, line, whole)
+        }
+        const semi = PROSE_RULES.find((r) => r.id === 'mb1-semicolon')
+        if (!exempt.prose.has(semi.id) && semi.test(whole)) push(semi, line, whole)
+      }
+    }
     if (value.length < MIN_PROSE_LENGTH) continue
-    if (PROSE_FIELDS.has(field)) {
+    if (!scope && PROSE_FIELDS.has(field)) {
       for (const rule of PROSE_RULES) {
         if (exempt.prose.has(rule.id)) continue
-        if (rule.test(value)) {
-          findings.push({ rule: rule.id, line, fix: rule.fix, excerpt: value.slice(0, 80) })
-        }
+        if (rule.test(value)) push(rule, line, value)
       }
     }
     for (const rule of VOICE_RULES) {
       if (exempt.prose.has(rule.id)) continue
-      if (rule.re.test(value)) {
-        findings.push({ rule: rule.id, line, fix: rule.fix, excerpt: value.slice(0, 80) })
-      }
+      if (scope && REPLACED_ON_NARRATOR_FIELDS.has(rule.id)) continue
+      if (rule.re.test(value)) push(rule, line, value)
     }
     for (const row of retiredRows) {
       if (exempt.lexicon.has(row.id)) continue
@@ -219,6 +482,14 @@ export function scanSource(text, retiredRows) {
       }
     }
   }
+  if (narrator && !exempt.prose.has(NARRATOR_PANEL_COUNT_RULE.id)) {
+    for (const p of narrator.panelCounts) {
+      if (p.count > NARRATOR_MAX_PANELS) {
+        const line = text.slice(0, p.index).split(/\r?\n/).length
+        push(NARRATOR_PANEL_COUNT_RULE, line, `${p.name}: ${p.count} panels`)
+      }
+    }
+  }
   return findings
 }
 
@@ -229,7 +500,19 @@ function main() {
 
   if (process.argv.includes('--list')) {
     for (const r of VOICE_RULES) console.log(`${r.id}: /${r.re.source}/ — ${r.fix} (${r.since})`)
-    for (const r of PROSE_RULES) console.log(`${r.id}: [narration fields only] — ${r.fix} (${r.since})`)
+    for (const r of PROSE_RULES) console.log(`${r.id}: [narration fields; mb1-long-sentence and faux-archaic not on Narrator fields] — ${r.fix} (${r.since})`)
+    console.log('\nThe Narrator (spec 177); these replace mb1-long-sentence and faux-archaic on its fields:')
+    for (const r of NARRATOR_RULES) console.log(`${r.id}: [Narrator fields only] — ${r.fix} (${r.since})`)
+    console.log(`${NARRATOR_PANEL_COUNT_RULE.id}: [story arrays only] — ${NARRATOR_PANEL_COUNT_RULE.fix} (${NARRATOR_PANEL_COUNT_RULE.since})`)
+    console.log('\nNarrator surfaces (word cap on the whole line):')
+    for (const [id, sf] of Object.entries(NARRATOR_SURFACES)) {
+      console.log(`  ${id}: ${sf.cap ?? `none; panels of ${NARRATOR_MAX_PANEL_WORDS} words, ${NARRATOR_MAX_PANELS} a screen`} (${sf.label})`)
+    }
+    console.log('\nNarrator fields:')
+    for (const row of NARRATOR_FIELDS) {
+      console.log(`  ${row.file}`)
+      for (const [name, surface] of Object.entries(row.fields)) console.log(`    ${name} -> ${surface}`)
+    }
     console.log(`\n${CONTENT_SURFACES.length} content surfaces:`)
     for (const s of CONTENT_SURFACES) console.log(`  ${s}`)
     process.exit(0)
@@ -254,7 +537,7 @@ function main() {
     const literals = stringLiterals(text)
     if (args.length === 0 && literals.length === 0) empty.push(`${rel} (no string literals)`)
     scanned++
-    for (const f of scanSource(text, retired)) {
+    for (const f of scanSource(text, retired, { file: rel })) {
       findings.push(`${rel}:${f.line}: ${f.rule} — ${f.fix}\n      ${JSON.stringify(f.excerpt)}`)
     }
   }
@@ -277,7 +560,7 @@ function main() {
   }
   console.log(
     `check-prose: ${scanned} content surface(s) clean against `
-      + `${VOICE_RULES.length} voice + ${PROSE_RULES.length} register rule(s) `
+      + `${VOICE_RULES.length} voice + ${PROSE_RULES.length} register + ${NARRATOR_RULES.length + 1} Narrator rule(s) `
       + `+ ${retired.length} retired term(s)`,
   )
 }
