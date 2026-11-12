@@ -16,7 +16,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { mainSubjects, readPlanSources } from './check-deadlines.mjs'
-import { dueNeeds, hasBudgetSection, liveMarkdown, nextNeed, parseBudget, parseItems, planRows, queuePlan, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
+import { dueNeeds, hasBudgetSection, liveMarkdown, nextNeed, parseBudget, parseItems, openHeldChunks, planRows, queuePlan, reminderText, rewriteItemStatus } from './deadlines-lib.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const args = process.argv.slice(2)
@@ -35,7 +35,8 @@ const main = () => {
     // Chats T starts only: the loop's runs in GitHub Actions stay clean.
     if (flag('remind') && (process.env.GITHUB_ACTIONS || process.env.CI)) return
     const today = todayArg ?? localToday()
-    const { phases } = planRows(readPlanSources(ROOT))
+    const sources = readPlanSources(ROOT)
+    const { phases } = planRows(sources)
     let deadlinesMd = read('plan/deadlines.md')
     if (flag('write')) {
         const rewrite = rewriteItemStatus(deadlinesMd, phases, { subjects: mainSubjects(ROOT), exists: (rel) => fs.existsSync(path.join(ROOT, rel)) })
@@ -51,7 +52,7 @@ const main = () => {
     const next = nextNeed(items, phases, today)
     // The queue model (a `## Budget` section): forecast per milestone and this week's acts.
     const budget = parseBudget(deadlinesMd)
-    const queue = budget ? queuePlan(items, phases, today, budget) : null
+    const queue = budget ? queuePlan(items, phases, today, budget, openHeldChunks(sources)) : null
     if (!budget && hasBudgetSection(deadlinesMd)) process.stderr.write('deadlines: ## Budget states no hours a week ("Hours a week: <number>"); showing the dated reminder until it does.\n')
     if (flag('write')) {
         fs.writeFileSync(path.join(ROOT, 'LIVE_DEADLINES.md'), liveMarkdown(needs, next, today, queue))

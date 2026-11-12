@@ -24,12 +24,12 @@ import { takeTravel } from '../MapEvents/travel';
 
 import {
     createStartingWorld, STARTING_MAP, STARTABLE_MAPS,
-    getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool,
+    getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool, getNodeScene, isBeforeScene,
 } from '../index';
 import { auditRoadReachability } from '../road-reachability';
 import { AUTHORED_QUESTLINES } from '../quest.library';
 import { BREAKWATER_CHAPTER_QUESTLINE_ID } from '../breakwater-chapter.questline';
-import { BW_DOOR_LEVEL } from '../MapEvents/content';
+import { BREAKWATER_CHAPTER_KINDS, BW_DOOR_LEVEL, BW_ENCOUNTER_FOES, COAST_LOOT_CACHES } from '../MapEvents/content';
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import { scaleEnemyToLevel } from '../encounter';
 import { createNewGameState } from '../../Game/game.reducer';
@@ -120,23 +120,61 @@ describe('the Breakwater map', () => {
     });
 });
 
+/** A node's own event: a node's before-scene plays first, so resolve past it. */
+function ownEvent(state: GameState) {
+    const first = resolveMapEvent(state);
+    return isBeforeScene(first.event) ? resolveMapEvent(first.state) : first;
+}
+
 describe('the Breakwater\'s events (D29)', () => {
     const kinds = Object.fromEntries(
-        breakwater.nodes.map(n => [n.id, resolveMapEvent(standingOn(n.id)).event.kind]),
+        breakwater.nodes.map(n => [n.id, ownEvent(standingOn(n.id)).event.kind]),
     );
 
-    it('resolves an authored event on every node: no waypoint, nothing empty', () => {
+    it('resolves an authored event on every node but the windmill, whose own event is none', () => {
         expect(Object.keys(kinds)).toHaveLength(43);
         expect(Object.values(kinds)).not.toContain('empty');
-        expect(Object.values(kinds)).not.toContain('none');
+        expect(Object.entries(kinds).filter(([, k]) => k === 'none').map(([id]) => id)).toEqual(['bw-w1']);
     });
 
-    it('spreads 18 fights, 3 camps, 3 loot caches, 6 hazards, 2 villages, 4 cutscenes, 3 travels and 4 quest nodes', () => {
+    it('spreads 18 fights, 3 camps, 5 loot caches, 7 hazards, 2 villages, 3 travels and 4 quest nodes', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 18, rest: 3, 'loot-cache': 3, hazard: 6, village: 2, cutscene: 4, travel: 3, quest: 4,
+            encounter: 18, rest: 3, 'loot-cache': 5, hazard: 7, village: 2, none: 1, travel: 3, quest: 4,
         });
+    });
+
+    it('has no node whose own kind is a cutscene: not in the pools, not in the board kinds', () => {
+        expect(Object.values(kinds)).not.toContain('cutscene');
+        for (const n of breakwater.nodes) {
+            const pool = getNodeEventPool('coastal-continent', 'breakwater', n.id);
+            for (const e of pool?.entries ?? []) expect(e.payload.kind, n.id).not.toBe('cutscene');
+            expect(BREAKWATER_CHAPTER_KINDS[n.id]!.kind as string, n.id).not.toBe('cutscene');
+        }
+    });
+
+    it('makes the chapel a hazard, and the watchtower and the high pass caches, with no fight row for the chapel (A6)', () => {
+        expect(kinds['bw-l2']).toBe('hazard');
+        expect(BW_ENCOUNTER_FOES['bw-l2']).toBeUndefined();
+        expect(getNodeEventPool('coastal-continent', 'breakwater', 'bw-d5')!.entries[0]!.payload)
+            .toMatchObject({ kind: 'loot-cache', currency: 12, description: COAST_LOOT_CACHES[3]!.description });
+        expect(getNodeEventPool('coastal-continent', 'breakwater', 'bw-p3')!.entries[0]!.payload)
+            .toMatchObject({ kind: 'loot-cache', currency: 6, description: COAST_LOOT_CACHES[4]!.description });
+        for (const c of COAST_LOOT_CACHES.slice(3)) expect(c.description).toMatch(/^\[content\] /);
+    });
+
+    it.each([
+        ['bw-l2', 'clifftop-chapel', '[content] Clifftop chapel.', 'hazard'],
+        ['bw-d5', 'old-watchtower', '[content] Old watchtower.', 'loot-cache'],
+        ['bw-p3', 'high-pass', '[content] High pass.', 'loot-cache'],
+    ] as const)('%s plays its scene (%s) before its own event (A8)', (nodeId, scene, line, own) => {
+        const first = resolveMapEvent(standingOn(nodeId));
+        expect(isBeforeScene(first.event)).toBe(true);
+        expect(first.event).toEqual({ kind: 'cutscene', lines: [line], scene, slot: 'before' });
+        expect(first.state.world.currentMap.consumedNodes).not.toContain(nodeId);
+        expect(first.state.world.currentMap.seenScenes).toContain(nodeId);
+        expect(resolveMapEvent(first.state).event.kind).toBe(own);
     });
 
     it('puts the chain\'s quest nodes on the camp, the lighthouse, the keep gate and the bridge', () => {
@@ -154,12 +192,18 @@ describe('the Breakwater\'s events (D29)', () => {
         }
     });
 
-    it('opens on an arrival scene at the windmill, not a rest screen, that gives the chain\'s first quest (D31)', () => {
-        expect(kinds['bw-w1']).toBe('cutscene');
-        const payload = getNodeEventPool('coastal-continent', 'breakwater', 'bw-w1')!.entries[0]!.payload;
-        expect(payload).toMatchObject({
-            kind: 'cutscene', effect: { giveQuestStep: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, step: 1 } },
+    it('opens on an arrival scene at the windmill, from its slot, that gives the chain\'s first quest (D31, A7)', () => {
+        const scene = getNodeScene('coastal-continent', 'breakwater', 'bw-w1')!.before;
+        expect(scene).toMatchObject({
+            kind: 'cutscene', scene: 'windmill-headland',
+            effect: { giveQuestStep: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, step: 1 } },
         });
+        const first = resolveMapEvent(standingOn('bw-w1'));
+        expect(first.event).toMatchObject({ kind: 'cutscene', lines: scene.lines, scene: 'windmill-headland', slot: 'before' });
+        expect(first.state.quests.active).toHaveLength(1);
+        const second = resolveMapEvent(first.state);
+        expect(second.event.kind).toBe('none');
+        expect(second.state.world.currentMap.consumedNodes).toContain('bw-w1');
     });
 
     it('fights the Saint Beneath (EN3b) in the sea keep at level 8, its full 320 VITAE, as the chapter boss (D61)', () => {

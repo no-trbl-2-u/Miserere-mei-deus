@@ -14,12 +14,15 @@
  *   - quest screen open → dismissed as LEAVE does.
  *   - nothing active, nothing owed → `nothing-to-skip`, no seq bump.
  *   - owed arrival (fixture with a rest node) → fired then resolved.
+ *   - a start node with only a slot scene owes its arrival too, as the map
+ *     presenter reads it; a before-scene skip continues to the node's own event.
  *   - every skip writes an `action/dev-skip-event` log line.
  *   - `installDevSkipHook` installs / removes `__AXM_SKIP_EVENT__`.
  */
 
 import {
-    ENEMY_REGISTRY, HAZARD_CRACK_CARD, configureLogging, getLogger, placeOnNode, resetLoggingForTests,
+    ENEMY_REGISTRY, HAZARD_CRACK_CARD, configureLogging, createStartingWorld, getLogger, getNodeEventPool, placeOnNode,
+    resetLoggingForTests,
     type GameState,
 } from '@mechanics';
 
@@ -28,6 +31,8 @@ import { clearDeathReturn, isDeathReturnArmed } from '@/state/death-return';
 import { stageEncounter, listEnemies } from '@/state/dev/enemy-picker';
 import { installDevSkipHook, SKIP_EVENT_LOG_KIND, skipCurrentEvent } from '@/state/dev/skip-event';
 import { createAppStore, EMPTY_EVENT_SLICE } from '@/state/store';
+import { selectExplorationViewModel } from '@/state/presenters/exploration.engine';
+import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
 import {
     FIXTURE_NODES, fixtureQuestline, registerFixtureQuestline, startFixtureStep, unregisterFixtureQuestline,
@@ -336,6 +341,27 @@ describe('skipCurrentEvent — paced events and idle', () => {
         expect(store.getState().rest.session).toBeNull();
         expect(player(store).health).toBeGreaterThan(hurt);
         expect(store.getState().world.currentMap.consumedNodes).toContain(map.currentNode);
+    });
+});
+
+describe('skipCurrentEvent — a start node with only a slot scene', () => {
+    it.each([
+        ['charcoal-wood', 'coastal-continent', 'cw-1'],
+        ['breakwater', 'coastal-continent', 'bw-w1'],
+    ] as const)('%s: owes the arrival the map presenter owes, and one skip plays the scene through to the node', (map, continent, startId) => {
+        const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld(map) } });
+        const actions = createAppActions(store);
+        expect(getNodeEventPool(continent, map, startId)).toBeUndefined();
+        expect(selectExplorationViewModel(store.getState()).startNodePending).toBe(true);
+
+        const result = skipCurrentEvent(store, actions, DEV);
+
+        expect(result).toMatchObject({ kind: 'cutscene', nodeId: startId, outcome: 'continued', detail: { firedArrival: true } });
+        const m = store.getState().world.currentMap;
+        expect(m.seenScenes).toContain(startId);
+        expect(m.consumedNodes).toContain(startId);
+        expect(store.getState().event.pending?.event.kind ?? 'none').toBe('none');
+        expect(selectExplorationViewModel(store.getState()).startNodePending).toBe(false);
     });
 });
 

@@ -500,3 +500,10 @@ through the stops 1, 2, 1, 3, 1, 4, 1, 5. The withdrawn prologue is gone; a
 child's death is named, never shown. Default taken: the build ran inline (a
 docs edit of two files, no builder subagent). `scripts/check-prose.mjs` and its
 test: no rule there contradicted the above, so neither changed.
+
+Defaults taken (pilot worker, no questions asked; built inline, no builder subagent):
+- T's rulings at the gate, recorded on the spec: #1 overridden by T (`bw-l2` a hazard, not the Brine-Widow fight), #2 the windmill keeps its scene then nothing, #4 the three scenes carry over.
+- `bw-l2`'s puzzle is hand-pinned to curve rank 19 (`cand-cost-hard-06`, `BREAKWATER_PINNED_HAZARD_RANKS`), the middle third's free rank between `bw-t5` (18) and `bw-d4` (20): asking the curve rule for seven would move four of the six (ranks 11, 13, 14, 16, 17, 19, 20). The picks are derived from the curve at the pinned rank, so the drift test still covers it; a placeholder until T's hazard swap.
+- The two new caches' descriptions are `[content]` placeholders; their pictures fall to the cache picture table's default (D185).
+- The atlas's node kind stays the node's own kind (`none` for a start node whose only content is a scene).
+- The dev SKIP EVENT now owes a start node's arrival when it has a pool or a scene (as the map presenter does), and a before-scene skip continues to the node's own event instead of dismissing it.

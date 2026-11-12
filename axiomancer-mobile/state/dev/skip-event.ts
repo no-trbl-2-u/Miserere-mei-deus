@@ -34,7 +34,9 @@
  *               dismissed — the slice clears and the screen pops itself
  *               (each paced screen already does `router.back()` when its
  *               event goes inactive). Mid-tree dialogue effects not yet
- *               chosen are forfeited, exactly as a dismiss would.
+ *               chosen are forfeited, exactly as a dismiss would. A scene
+               before a node's own event continues to that event instead,
+               as the cutscene screen's end does (`continued`).
  *   item-reward every queued item confirmed into the satchel.
  *   travel      the open "Move to X?" answered YES: a crossing reports
  *               the map it reached, a passage the node; a shut way is
@@ -61,6 +63,8 @@ import {
     getLogger,
     getMapDefinition,
     getNodeEventPool,
+    getNodeScene,
+    isBeforeScene,
     type Character,
     type Enemy,
     type GameState,
@@ -138,7 +142,7 @@ export interface SkipEventResult {
 }
 
 /** The two app actions the skip needs beyond raw store access. */
-export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'beginHazardEncounter' | 'playerDied'>;
+export type SkipEventActions = Pick<AppActions, 'resolveCurrentMapEvent' | 'continueToNode' | 'beginHazardEncounter' | 'playerDied'>;
 
 export interface SkipEventOptions {
     /** Override the gate (tests). Defaults to `isDevToolsEnabled()`. */
@@ -269,7 +273,8 @@ function arrivalOwed(store: AppStore): boolean {
         const def = getMapDefinition(map.continent, map.name);
         return nodeId === def.startingNode.id
             && !(map.consumedNodes ?? []).includes(nodeId)
-            && getNodeEventPool(map.continent, map.name, nodeId) !== undefined;
+            && (getNodeEventPool(map.continent, map.name, nodeId) !== undefined
+                || getNodeScene(map.continent, map.name, nodeId) !== undefined);
     } catch {
         return false;
     }
@@ -326,6 +331,12 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
                 return { kind: 'encounter', nodeId, outcome: 'dismissed:no-foe' };
             }
             return skipCombat(store, enemy, nodeId, options, 'prelude');
+        }
+        if (isBeforeScene(pending.event)) {
+            // A scene before the node's own event: end it as the cutscene
+            // screen does, so the node's own event opens (the next skip takes it).
+            actions.continueToNode();
+            return { kind: 'cutscene', nodeId, outcome: 'continued', detail: pacedDetail(pending.event) };
         }
         store.setState({ event: EMPTY_EVENT_SLICE });
         if (kind === 'none') return null;
