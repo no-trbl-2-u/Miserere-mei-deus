@@ -730,3 +730,6 @@
 - 2026-11-12 · 156.4 (alias: TY1d) · Design audit of every screen, three worst named · b3044641..e105a1fb (#1634)
 - 2026-11-12 · 178.4 (alias: SS1d) · Charcoal Wood, Beacon Crags, Lantern Deep open on a slot scene · 74d33b1c..e3ee09c3 (#1633)
 - 2026-11-12 · 116.4 (alias: BW1d) · Chapter 1's quest lines and rewards are approved · 9c251a1b..9c251a1b (#1635)
+- 2026-11-12 · 116.5 (alias: BW1e) · T's Chapter 1 quest lines now in the game · 103b5076..0afed2ae (#1637)
+- 2026-11-12 · 177.11 (alias: NV1k) · Voice rules take the Keeper and speaking cast · aeafbf0e..aeafbf0e (#1636)
+- 2026-11-12 · 116 · spec complete: The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node · none · deleted in (this commit)
