@@ -476,3 +476,9 @@ Defaults taken (pilot worker, no questions asked):
 - The sim driver (`sim/run-screens.ts`, `resolvePacedEvent`) calls `continueToNode` on a before-scene, so a scripted run reaches the node's own event instead of dropping it.
 - A fight node walked in animate mode still plays its ink spread before the scene (the resolve is deferred to the ink's cover); the scene then opens over the covered map. Left as is: the ink belongs to the walk onto a fight, and the scene is that fight's first beat.
 - The test registers its fixture scene and pool in the file's module registry (no registry clear), last-write-wins per test, as `quest-node-map.engine.test.ts` does.
+
+Defaults taken: the emotional jobs are drafted for T to confirm (open question 4); the audit ran on today's palette (no colour pick); the village, blacksmith and item reward are out of scope.
+
+The three worst screens, for 156.5: the hazard board, the fight with the hand open, the Satchel.
+
+Defects seen outside scope, not fixed: relic name breaks mid-word on character select; hazard hand card names break mid-word and the CONFIRM disc covers the rightmost card; Spoils card text is cut off ("VULNERABL"); `components/experience/looks.ts` still marks C-02 (cutscene SKIP) `normal` though the screen shows a brass SKIP; the eyebrow role is set on whole sentences on Rest, Self and Ledger.
