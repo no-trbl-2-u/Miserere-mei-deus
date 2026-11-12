@@ -98,9 +98,7 @@ describe('the Beacon Crags\' events (D29)', () => {
         expect(isBeforeScene(first.event)).toBe(true);
         expect(first.event).toMatchObject({
             kind: 'cutscene', slot: 'before',
-            lines: [
-                '[content] The Top Pass.',
-            ],
+            lines: ['[content] The Top Pass.'],
         });
         expect(getNodeEventPool('northern-continent', 'beacon-crags', 'bc-1')).toBeUndefined();
         expect(resolveMapEvent(first.state).event.kind).toBe('none');

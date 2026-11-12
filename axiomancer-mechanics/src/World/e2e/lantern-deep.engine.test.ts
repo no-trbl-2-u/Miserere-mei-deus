@@ -101,9 +101,7 @@ describe('the Lantern Deep\'s events (D29)', () => {
         expect(isBeforeScene(first.event)).toBe(true);
         expect(first.event).toMatchObject({
             kind: 'cutscene', slot: 'before',
-            lines: [
-                '[content] The Surface Stair.',
-            ],
+            lines: ['[content] The Surface Stair.'],
         });
         expect(getNodeEventPool('northern-continent', 'lantern-deep', 'ld-1')).toBeUndefined();
         expect(resolveMapEvent(first.state).event.kind).toBe('none');
