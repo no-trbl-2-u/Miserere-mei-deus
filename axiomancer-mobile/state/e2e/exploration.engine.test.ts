@@ -531,7 +531,7 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
         actions.moveTo('bw-m3');
         const before = store.getState().world.currentMap.consumedNodes.length;
 
-        const produced = actions.resolveCurrentMapEvent();
+        const produced = resolvePastScene(store, actions);
 
         const after = store.getState().world.currentMap.consumedNodes;
         // If an event was produced, consumedNodes grew by 1; if 'none'
@@ -552,7 +552,7 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
         // fires above, this second test re-runs with a different
         // node and checks the negative branch's invariant.
         const before = store.getState().world.currentMap.consumedNodes.length;
-        const produced = actions.resolveCurrentMapEvent();
+        const produced = resolvePastScene(store, actions);
         const after = store.getState().world.currentMap.consumedNodes;
         if (!produced) {
             expect(after.length).toBe(before);
@@ -564,7 +564,7 @@ describe('resolveCurrentMapEvent: engine consumedNodes population (Phase 27)', (
         const actions = createAppActions(store);
         actions.moveTo('bw-w2');
 
-        expect(actions.resolveCurrentMapEvent()).toBe(true);
+        expect(resolvePastScene(store, actions)).toBe(true);
         expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-w2');
 
         actions.beginHazardEncounter();
@@ -686,6 +686,7 @@ import {
     selectHasActivePacedEvent,
     selectHasActiveCombatPrelude,
 } from '@/state/presenters/event.engine';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 describe('encounter seam (Tick D)', () => {
     function moveToFirstEncounter(): {
@@ -716,7 +717,7 @@ describe('encounter seam (Tick D)', () => {
         // Pre-resolve: pending event slice may or may not exist; the
         // contract is that AFTER resolveCurrentMapEvent fires, the
         // event VM kind is 'combat-prelude' for an encounter node.
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
         const state = store.getState();
         const hasEvent = selectHasActiveEvent(state as never);
         const vm = selectEventViewModel(state as never);
@@ -733,7 +734,7 @@ describe('encounter seam (Tick D)', () => {
     it('fight choice dispatches startCombat + clears the pending event slice', () => {
         const { store, actions, encounterNodeId } = moveToFirstEncounter();
         if (encounterNodeId === null) return;
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
 
         expect(selectHasActiveEvent(store.getState() as never)).toBe(true);
         // The engine records the fight via `currentEncounter`.
@@ -750,7 +751,7 @@ describe('encounter seam (Tick D)', () => {
     it('flee choice clears the pending event slice without entering combat', () => {
         const { store, actions, encounterNodeId } = moveToFirstEncounter();
         if (encounterNodeId === null) return;
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
 
         const vm = selectEventViewModel(store.getState() as never);
         const fleeChoice = vm.choices.find((c) => c.id === 'flee');
@@ -766,7 +767,7 @@ describe('encounter seam (Tick D)', () => {
     it('overlay mount condition is false when combat is already active (seam never re-opens mid-fight)', () => {
         const { store, actions, encounterNodeId } = moveToFirstEncounter();
         if (encounterNodeId === null) return;
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
         actions.pickEventChoice('fight');
 
         // After fight commits, `pickEventChoice('fight')` has cleared the
@@ -881,7 +882,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         const store = createAppStore({ adapter, overrides: { world: bwWorld() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-w2');
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
         expect(selectExplorationViewModel(store.getState()).arrivalPending).toBe(true);
         actions.beginHazardEncounter();
         store.getState().endCombat('victory');
@@ -945,7 +946,7 @@ describe('selectExplorationViewModel: arrivalPending', () => {
 
         expect(selectExplorationViewModel(store.getState()).arrivalPending).toBe(true);
 
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
 
         // The door OFFERS its trip (phase NK1d): resolving it answered the
         // arrival, so a reload re-offers nothing; YES crosses, and the
@@ -994,7 +995,7 @@ describe('walking the roads: the map offers the open roads out of the node under
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: createStartingWorld('breakwater') } });
         const actions = createAppActions(store);
         actions.moveTo('bw-w2');
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
         fightOut(store);
         actions.moveTo('bw-w4');
         const vm = selectExplorationViewModel(store.getState());

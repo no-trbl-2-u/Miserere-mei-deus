@@ -16,7 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createNewGameState } from '../../../Game/game.reducer';
 import { applyPayload, resolveVillage } from '../handlers';
-import { resolveMapEvent, getNodePrimaryEventKind } from '../resolve-map-event';
+import { getNodePrimaryEventKind } from '../resolve-map-event';
 import { ACT1_ANVIL_NODES, BREAKWATER_ANVIL_NODES, breakwaterVillagePool } from '../content';
 import { MAP_REGISTRY, createMapState } from '../../map.registry';
 import { BLACKSMITH_WITNESS_VARIANTS } from '../../Blacksmith/blacksmith.content';
@@ -26,6 +26,7 @@ import type { GameState } from '../../../Game/types';
 import {
     FRESH_VILLAGE_VISIT, VILLAGE_TUNING, restAtVillage, villageCardShopFor, villageRestQuote,
 } from '../../Village';
+import { resolvePastScene } from '../../../test-utils/past-scene';
 
 /** A local fixture: the shipped variant list is empty (EQ4a), the counter still carries what it is given. */
 const FIXTURE_VARIANT = {
@@ -135,7 +136,7 @@ describe('the regional Anvils — one per later Act 1 map, two on the Breakwater
         '%s: %s resolves to a village whose Anvil offers no swap (the witness list is empty)',
         (mapName, nodeId) => {
             const def = act1Map(mapName);
-            const result = resolveMapEvent(standingOn(def, nodeId), () => 0.5);
+            const result = resolvePastScene(standingOn(def, nodeId), () => 0.5);
             expect(result.event.kind).toBe('village');
             if (result.event.kind !== 'village') return;
             expect(result.event.anvil?.variants).toEqual(BLACKSMITH_WITNESS_VARIANTS);
@@ -182,11 +183,11 @@ describe("MapEvents 'village' kind, the rest and card-shop counters (NK1c)", () 
     it('a card shop resolves the seeded offer for the node the player stands on, the same each time this run', () => {
         const def = act1Map('breakwater');
         const state = standingOn(def, 'bw-t4');
-        const result = resolveMapEvent(state, () => 0.5);
+        const result = resolvePastScene(state, () => 0.5);
         if (result.event.kind !== 'village') throw new Error('not a village');
         expect(result.event.cardShop).toEqual(villageCardShopFor(state, 'bw-t4'));
         expect(result.event.cardShop?.price).toBe(VILLAGE_TUNING.cardPrice);
-        const again = resolveMapEvent({ ...standingOn(def, 'bw-t4'), runId: state.runId }, () => 0.1);
+        const again = resolvePastScene({ ...standingOn(def, 'bw-t4'), runId: state.runId }, () => 0.1);
         if (again.event.kind !== 'village') throw new Error('not a village');
         expect(again.event.cardShop).toEqual(result.event.cardShop);
     });
@@ -199,7 +200,7 @@ describe("MapEvents 'village' kind, the rest and card-shop counters (NK1c)", () 
     it.each(ANVIL_VILLAGES)(
         '%s: the %s village carries all three counters',
         (mapName, nodeId) => {
-            const result = resolveMapEvent(standingOn(act1Map(mapName), nodeId), () => 0.5);
+            const result = resolvePastScene(standingOn(act1Map(mapName), nodeId), () => 0.5);
             if (result.event.kind !== 'village') throw new Error('not a village');
             expect(result.event.rest).toBeDefined();
             expect(result.event.cardShop?.cardIds.length).toBeGreaterThan(0);

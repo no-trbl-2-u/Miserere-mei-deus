@@ -24,6 +24,7 @@ import {
     registerFixtureQuestline,
     unregisterFixtureQuestline,
 } from '@/test-utils/questlineFixture';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 beforeAll(() => {
     registerFixtureQuestline();
@@ -107,7 +108,7 @@ describe('walking onto a quest node does not spend it', () => {
         const store = breakwater();
         const actions = createAppActions(store);
         expect(actions.moveTo('bw-w2').moved).toBe(true);
-        actions.resolveCurrentMapEvent('quest');
+        resolvePastScene(store, actions, 'quest');
         const map = store.getState().world.currentMap;
         expect(map.completedNodes).not.toContain('bw-w2');
         expect(map.consumedNodes).not.toContain('bw-w2');

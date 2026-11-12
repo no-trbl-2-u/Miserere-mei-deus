@@ -23,6 +23,7 @@ import { createAppActions } from '@/state/actions';
 import { equipItemRewardAction } from '@/state/item-reward/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 const LINE = BREAKWATER_CHAPTER_QUESTLINE;
 const LAST = LINE.steps[3]!;
@@ -72,7 +73,7 @@ function winTheBoss(store: AppStore, boss: ReturnType<typeof atTheSeaKeep>['boss
 /** Stands the player on the river bridge and opens its quest node, as an arrival does. */
 function atTheBridge(store: AppStore, actions: ReturnType<typeof createAppActions>): void {
     store.setState({ world: placeOnNode(gs(store).world, 'bw-b1') } as never);
-    expect(actions.resolveCurrentMapEvent('quest')).toBe(true);
+    expect(resolvePastScene(store, actions, 'quest')).toBe(true);
 }
 
 describe('the chapter boss fills step 4; the bridge turns it in', () => {

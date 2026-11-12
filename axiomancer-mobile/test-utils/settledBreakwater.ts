@@ -13,13 +13,19 @@
  * The player walks the roads (phase WR1a): `standingOn` stands the player on
  * that node (bw-k1 has the chapter boss bw-k2 a road away). Omitted, the
  * player stands on the windmill (bw-w1), the first fight bw-w2 a road away.
+ *
+ * The scenes in the nodes' slots are seen, bar the windmill's
+ * opening: a test that walks to a node gets the node's own event. A test about
+ * a scene starts from `createStartingWorld('breakwater')` itself.
  */
 
 import { createStartingWorld, settleQuestNodes, syncMoveLists, type WorldState } from '@mechanics';
+import { BW_NODE_SCENES } from '@mechanics/World/MapEvents/content';
 
 export function settledBreakwater(standingOn?: string): WorldState {
     const world = createStartingWorld('breakwater');
-    const settled = settleQuestNodes(world.currentMap);
+    const seen = BW_NODE_SCENES.map(e => e.nodeId).filter(id => id !== 'bw-w1');
+    const settled = settleQuestNodes({ ...world.currentMap, seenScenes: [...(world.currentMap.seenScenes ?? []), ...seen] });
     const currentMap = standingOn === undefined ? settled : syncMoveLists({ ...settled, currentNode: standingOn });
     return { ...world, currentMap };
 }

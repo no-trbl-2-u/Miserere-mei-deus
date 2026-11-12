@@ -33,6 +33,7 @@ import type { WorldState } from '../types';
 // Import for side effect — registers the Breakwater pools (bw-w3 encounter,
 // bw-b2 door) that the dispatcher rolls from.
 import '../MapEvents/content';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -153,7 +154,7 @@ describe('resolving the arrival is what answers it', () => {
         const walked = { ...before, world: moveToNode(before.world, 'bw-b2') };
         expect(walked.world.currentMap.pendingArrival).toBe('bw-b2');
 
-        const { state: offered, event } = resolveMapEvent(walked);
+        const { state: offered, event } = resolvePastScene(walked);
         expect(event.kind).toBe('travel');
         expect(offered.world.currentMap.pendingArrival ?? null).toBeNull();
         const state = takeTravel(offered);

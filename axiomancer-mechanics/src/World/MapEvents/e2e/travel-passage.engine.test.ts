@@ -20,6 +20,7 @@ import type { ResolvedEvent } from '../types';
 import {
     registerTravelPassageFixture, PASSAGE_MAP, PASSAGE_POOLS,
 } from '../../../Game/fixtures/travel-passage.fixture';
+import { resolvePastScene } from '../../../test-utils/past-scene';
 
 beforeAll(registerTravelPassageFixture);
 
@@ -37,7 +38,7 @@ function walk(state: GameState, nodeId: string): { state: GameState; event: Reso
 
 /** Resolves the node underfoot again (the tap on the node the player stands on). */
 function tapHere(state: GameState): { state: GameState; event: ResolvedEvent } {
-    return resolveMapEvent(state, fixed);
+    return resolvePastScene(state, fixed);
 }
 
 /** A game standing on the cave mouth, its offer answered. */

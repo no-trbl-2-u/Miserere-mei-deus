@@ -23,6 +23,7 @@ import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { SaveSlotsProvider } from '@/state/SaveSlotsProvider';
 import { createMemorySlotStore } from '@/state/persistence/memorySlotStore';
 import type { SaveSlotStore } from '@/state/persistence/saveSlots';
+import { createAppActions } from '@/state/actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 
@@ -86,8 +87,11 @@ describe('DebugWorldTravel: travel', () => {
         fireEvent.press(tree.getByTestId(`debug-travel-node-${target.id}`));
         const state = store.getState();
         expect(state.world.currentMap.currentNode).toBe('bw-k1');
-        expect(state.quest.open).toMatchObject({ node: 4 });
-        expect(state.event.pending).toBeNull();
+        // The keep gate's scene plays first; the quest screen follows it.
+        expect(state.event.pending?.event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+        createAppActions(store).continueToNode();
+        expect(store.getState().quest.open).toMatchObject({ node: 4 });
+        expect(store.getState().event.pending).toBeNull();
         expect(state.hazard.session).toBeNull();
         expect(state.rest.session).toBeNull();
         expect(state.cache.session).toBeNull();

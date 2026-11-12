@@ -39,6 +39,9 @@ import { settledBreakwater } from '@/test-utils/settledBreakwater';
 const C = 'coastal-continent';
 const M = 'breakwater';
 const NODE = 'bw-w2';
+
+/** The settled Breakwater marks the real scenes seen (177.9); this file plays its own fixture scene on bw-w2. */
+const withNoScenesSeen = (w: ReturnType<typeof settledBreakwater>) => ({ ...w, currentMap: { ...w.currentMap, seenScenes: [] } });
 const LINES = ['The chapel bell rings with no rope.', 'Something below the floor answers it.'] as const;
 
 let poolSeq = 0;
@@ -56,7 +59,7 @@ function fixtureNode(payload: MapEventPayload | null): void {
 }
 
 function makeStore(): { store: AppStore; actions: AppActions } {
-    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
+    const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: withNoScenesSeen(settledBreakwater()) } });
     return { store, actions: createAppActions(store) };
 }
 

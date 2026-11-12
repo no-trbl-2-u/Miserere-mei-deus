@@ -40,6 +40,7 @@ import { selectExplorationViewModel } from '@/state/presenters/exploration.engin
 import { createAppActions } from '@/state/actions';
 import ExplorationScreen from '@/app/(tabs)/exploration';
 import { CombatGate } from '@/components/CombatGate';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 beforeEach(() => { jest.useFakeTimers(); });
 afterEach(() => {
@@ -137,7 +138,7 @@ describe("the prelude's FLEE leaves the node incomplete", () => {
         const store = makeStore();
         const actions = createAppActions(store);
         actions.moveTo('bw-w2');
-        actions.resolveCurrentMapEvent('encounter');
+        resolvePastScene(store, actions, 'encounter');
         expect(store.getState().event.pending?.event.kind).toBe('encounter');
 
         actions.pickEventChoice('flee');

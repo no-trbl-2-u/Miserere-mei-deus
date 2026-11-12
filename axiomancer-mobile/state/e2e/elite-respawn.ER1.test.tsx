@@ -50,6 +50,7 @@ import {
 } from '@/state/rest/store-actions';
 import { createAppStore, type AppStore } from '@/state/store';
 import { createMemoryAdapter, type MemoryAdapter } from '@/test-utils/memoryAdapter';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 jest.mock('@/lib/platform/router', () => ({
     useRouter: () => ({ replace: jest.fn(), push: jest.fn(), back: jest.fn(), canGoBack: () => true }),
@@ -111,7 +112,7 @@ function winElite(store: AppStore, node: string, drop: boolean): { xp: number; o
     resetCombatRewardAction(store);
     walkOnto(store, node);
     const actions = createAppActions(store);
-    expect(actions.resolveCurrentMapEvent()).toBe(true);
+    expect(resolvePastScene(store, actions)).toBe(true);
     const enemy = actions.beginHazardEncounter();
     if (!enemy) throw new Error(`no fight at ${node}`);
     expect(enemy.difficulty).toBe('elite');
@@ -227,7 +228,7 @@ describe('a relic drop is the whole reward, and retires the elite (A9, A11)', ()
         const store = makeStore();
         walkOnto(store, 'bw-w5');
         const actions = createAppActions(store);
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
         const enemy = actions.beginHazardEncounter()!;
         const finalState = initializeCombatEncounter(gs(store).player, enemy, ['grey-strike'], 7);
         jest.spyOn(Math, 'random').mockReturnValue(0);

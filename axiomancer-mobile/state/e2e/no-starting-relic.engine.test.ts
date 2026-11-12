@@ -17,6 +17,7 @@ import { createAppStore } from '@/state/store';
 import { createMemoryAdapter } from '@/test-utils/memoryAdapter';
 import { settledBreakwater } from '@/test-utils/settledBreakwater';
 import { selectHasPendingItemReward } from '@/state/presenters/item-reward.engine';
+import { resolvePastScene } from '../../test-utils/pastScene';
 
 afterEach(() => {
     jest.restoreAllMocks();
@@ -29,9 +30,9 @@ describe('a fresh run starts with no relic (SG1 A1)', () => {
         const actions = createAppActions(store);
 
         // The first node: resolve whatever bw-w1 offers, then walk to the first fight.
-        actions.resolveCurrentMapEvent();
+        resolvePastScene(store, actions);
         actions.moveTo('bw-w2');
-        expect(actions.resolveCurrentMapEvent()).toBe(true);
+        expect(resolvePastScene(store, actions)).toBe(true);
         const enemy = actions.beginHazardEncounter();
         expect(enemy).not.toBeNull();
 

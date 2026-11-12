@@ -165,13 +165,14 @@ describe('the Breakwater\'s events (D29)', () => {
     });
 
     it.each([
-        ['bw-l2', 'clifftop-chapel', '[content] Clifftop chapel.', 'hazard'],
-        ['bw-d5', 'old-watchtower', '[content] Old watchtower.', 'loot-cache'],
-        ['bw-p3', 'high-pass', '[content] High pass.', 'loot-cache'],
-    ] as const)('%s plays its scene (%s) before its own event (A8)', (nodeId, scene, line, own) => {
+        ['bw-l2', 'clifftop-chapel', 'hazard'],
+        ['bw-d5', 'old-watchtower', 'loot-cache'],
+        ['bw-p3', 'high-pass', 'loot-cache'],
+    ] as const)('%s plays its scene (%s) before its own event (A8)', (nodeId, scene, own) => {
+        const line = getNodeScene('coastal-continent', 'breakwater', nodeId)!.before.lines;
         const first = resolveMapEvent(standingOn(nodeId));
         expect(isBeforeScene(first.event)).toBe(true);
-        expect(first.event).toEqual({ kind: 'cutscene', lines: [line], scene, slot: 'before' });
+        expect(first.event).toEqual({ kind: 'cutscene', lines: line, scene, slot: 'before' });
         expect(first.state.world.currentMap.consumedNodes).not.toContain(nodeId);
         expect(first.state.world.currentMap.seenScenes).toContain(nodeId);
         expect(resolveMapEvent(first.state).event.kind).toBe(own);
@@ -229,7 +230,9 @@ describe('the Breakwater\'s events (D29)', () => {
     });
 
     it('crosses the far bank into the Charcoal Wood (Act 1, map 2)', () => {
-        const offer = resolveMapEvent(standingOn('bw-b2'));
+        const scene = resolveMapEvent(standingOn('bw-b2'));
+        expect(isBeforeScene(scene.event)).toBe(true);
+        const offer = resolveMapEvent(scene.state);
         expect(offer.event.kind).toBe('travel');
         const r = { state: takeTravel(offer.state) };
         expect(r.state.world.currentMap.name).toBe('charcoal-wood');

@@ -15,7 +15,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
     payCompletedQuests, payQuestReward, settleKill, startQuest, emptyQuestLog, newlyCompletedQuests,
 } from '../quest.engine';
-import { resolveMapEvent, applyDialogueChoice, getMapDefinition, createMapState } from '../index';
+import { applyDialogueChoice, getMapDefinition, createMapState } from '../index';
 import { playerWithWinQuestItems, winQuestItems } from '../questline';
 import { getRng } from '../../Utils/rng';
 import { createNewGameState, gameReducer } from '../../Game/game.reducer';
@@ -25,6 +25,7 @@ import { FIXTURE_QUEST, FIXTURE_QUEST_RELIC } from '../../Game/fixtures/fixture-
 import { ENEMY_REGISTRY } from '../../Enemy/enemy.library';
 import type { Quest, QuestObjective, Reward } from '../types';
 import type { DialogueChoice, DialogueTree } from '../../NPCs/types';
+import { resolvePastScene } from '../../test-utils/past-scene';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -134,7 +135,7 @@ describe('every completion path pays the quest reward', () => {
     it('resolveMapEvent: a reach objective completed on arrival pays', () => {
         mockSequentialRng(0.5);
         const reach = quest({ id: 'reach-bw-w2', type: 'reach', target: 'bw-w2' });
-        const result = resolveMapEvent(stateWith(reach, 'bw-w2'));
+        const result = resolvePastScene(stateWith(reach, 'bw-w2'));
         expect(result.state.quests.completed).toContain(reach.name);
         expect(relicCount(result.state)).toBe(1);
     });
