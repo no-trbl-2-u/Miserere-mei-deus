@@ -248,7 +248,7 @@ describe('A5: a quest node reached too early refuses, and opens nothing', () => 
         expect(early.event.kind).toBe('quest');
         if (early.event.kind !== 'quest') return;
         expect(early.event.stage).toBe('locked');
-        expect(early.event.lockedLine).toMatch(/^\[content\] The lighthouse keeper/);
+        expect(early.event.lockedLine).toMatch(/^Enoch Marrable is at his log/);
         expect(early.state.quests).toEqual(before.quests);
         expect(early.state.player.inventory).toEqual(before.player.inventory);
         expect(carriedCount(early.state.player.inventory, BREAKWATER_KEEP_KEY.id)).toBe(0);
@@ -261,7 +261,7 @@ describe('A5: a quest node reached too early refuses, and opens nothing', () => 
         for (const id of ['bw-w2', 'bw-w3', 'bw-h1', 'bw-t1', 'bw-t2']) s = win(s, id);
         const early = arrive(s, 'bw-b1');
         expect(early.event.kind === 'quest' && early.event.stage).toBe('locked');
-        expect(early.event.kind === 'quest' && early.event.lockedLine).toMatch(/^\[content\] The bridge-keeper/);
+        expect(early.event.kind === 'quest' && early.event.lockedLine).toMatch(/^Tolliver Pease pats the chain/);
         expectGated(early.state, 'bw-b2', BRIDGE_GATE_REASON);
     });
 

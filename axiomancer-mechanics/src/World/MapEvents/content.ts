@@ -258,27 +258,27 @@ export const BW_CUTSCENE_SCENES: Readonly<Record<string, string>> = {
 const QUEST_NODES: Readonly<Record<string, { node: number; description: string; lockedLine: string; giver: QuestGiver }>> = {
     'bw-c2': {
         node: 2,
-        description: '[content] The fishermen huddle round a driftwood fire.',
-        lockedLine: '[content] The fishermen do not know you. They keep to their fire.',
-        giver: { name: '[content] The fishermen elder', portrait: 'fishermen-elder' },
+        description: 'Abel Corse says, Ask the man in the tower who lit it. The master would know that much.',
+        lockedLine: 'The men by the fire look past you. You were not sent, and they have nothing for one who was not sent.',
+        giver: { name: 'Abel Corse', portrait: 'fishermen-elder' },
     },
     'bw-l5': {
         node: 3,
-        description: '[content] The lighthouse door stands open.',
-        lockedLine: '[content] The lighthouse keeper sends you back down the path. No one told him to expect you.',
-        giver: { name: '[content] The lighthouse keeper', portrait: 'lighthouse-keeper' },
+        description: 'Enoch Marrable says, Take it. I will enter it as lost overboard.',
+        lockedLine: 'Enoch Marrable is at his log and does not lift his head. He has no word for one who brings him no question.',
+        giver: { name: 'Enoch Marrable', portrait: 'lighthouse-keeper' },
     },
     'bw-k1': {
         node: 4,
         description: '[content] The keep gate, barred from the inside.',
-        lockedLine: '[content] The keep gate does not open for strangers.',
-        giver: { name: '[content] The gate warden', portrait: 'gate-warden' },
+        lockedLine: 'The serjeant does not move from the gate. None to pass without the key, he says, and you have no key.',
+        giver: { name: 'Serjeant Dunmore', portrait: 'gate-warden' },
     },
     'bw-b1': {
         node: 5,
-        description: '[content] The river bridge. The far bank is close.',
-        lockedLine: '[content] The bridge-keeper will not lift the bar while the sea keep stands.',
-        giver: { name: '[content] The bridge-keeper', portrait: 'bridge-keeper' },
+        description: 'Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow\'s purse. Cross. No charge. There is no one left to charge it to.',
+        lockedLine: 'Tolliver Pease pats the chain as he would a dog. Not while he sits in that house, he says, and offers you the stool.',
+        giver: { name: 'Tolliver Pease', portrait: 'bridge-keeper' },
     },
 };
 
