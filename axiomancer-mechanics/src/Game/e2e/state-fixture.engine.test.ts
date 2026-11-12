@@ -323,6 +323,7 @@ describe('the staged node scene is marked seen, node by node (builder line: scen
     const sceneNodes = BW_NODE_SCENES.map(e => e.nodeId);
     const allNodes = getMapDefinition('coastal-continent', 'breakwater').nodes.map(n => n.id);
 
+    // guard-test: mutation-kill test for the sceneSeen line, which already behaves this way on main.
     it('marks exactly the staged node seen on every Breakwater node that has a scene', () => {
         expect(sceneNodes.length).toBeGreaterThan(10);
         for (const id of sceneNodes) {
@@ -330,6 +331,7 @@ describe('the staged node scene is marked seen, node by node (builder line: scen
         }
     });
 
+    // guard-test: mutation-kill test for the sceneSeen line, which already behaves this way on main.
     it('marks nothing seen on every Breakwater node that has none', () => {
         const bare = allNodes.filter(id => !sceneNodes.includes(id));
         expect(bare.length).toBeGreaterThan(0);

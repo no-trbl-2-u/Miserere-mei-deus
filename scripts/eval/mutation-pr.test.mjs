@@ -7,8 +7,9 @@ import assert from 'node:assert/strict'
 
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { execFileSync } from 'node:child_process'
+import { dirname, join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { PR_MARKER, mutatedFiles, parseChangedLines, prOutcome, rangeConfigSource, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
 
@@ -29,6 +30,26 @@ test('rangeConfigSource hands the changed files to the base config through EVAL_
     else process.env.EVAL_STRYKER_MUTATE = before
     rmSync(dir, { recursive: true, force: true })
   }
+})
+
+test('the mobile config relates its jest tests to the files in EVAL_STRYKER_MUTATE, else to the two presenters', () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
+  const config = pathToFileURL(join(root, 'scripts/eval/stryker/mobile.config.mjs')).href
+  const tests = (env) => {
+    const code = `const { default: c } = await import(${JSON.stringify(config)}); console.log(JSON.stringify(c.jest.config.testMatch))`
+    const out = execFileSync(process.execPath, ['--input-type=module', '-e', code], {
+      cwd: join(root, 'axiomancer-mobile'),
+      env: { ...process.env, EVAL_STRYKER_MUTATE: env },
+      encoding: 'utf8',
+      maxBuffer: 16 * 1024 * 1024,
+    })
+    return JSON.parse(out.trim().split('\n').at(-1))
+  }
+  const set = tests(JSON.stringify(['app/cutscene/index.tsx:10-20']))
+  assert.ok(set.some((t) => t.endsWith('state/e2e/cutscene-leaves-first.test.tsx')), 'the changed file\'s own test is run')
+  const fixed = tests('')
+  assert.ok(!fixed.some((t) => t.endsWith('state/e2e/cutscene-leaves-first.test.tsx')), 'unset, only the presenters\' tests are run')
+  assert.ok(fixed.length > 0)
 })
 
 test('mutatedFiles strips the line ranges from EVAL_STRYKER_MUTATE and falls back to the fixed list when it is unset', () => {

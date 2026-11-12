@@ -17,7 +17,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    IllegalMoveError, legalMovesFrom, moveToNode, roadReachable, walkRoadTo,
+    IllegalMoveError, legalMovesFrom, moveToNode, placeOnNode, roadReachable, walkRoadTo,
 } from '../world.reducer';
 import { isBeforeScene, resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { takeTravel } from '../MapEvents/travel';
@@ -265,6 +265,7 @@ describe('A5: a quest node reached too early refuses, and opens nothing', () => 
         expect(acceptQuestStep(early.state, LINE, 3)).toBe(early.state);
     });
 
+    // guard-test: pins the R-02 line already on main (ledger Refusals); it had no engine-walk test.
     it('pins R-02 whole when walked to', () => {
         const early = arrive(toTheLighthouse(), 'bw-l5');
         expect(early.event.kind === 'quest' && early.event.stage).toBe('locked');
@@ -300,6 +301,17 @@ describe('the gate lines and R-04 are pinned exactly (ledger plan/ballots/narrat
     it('pins G-01 and G-02 as literals', () => {
         expect(KEEP_GATE_REASON).toBe("The keep gate is barred and the serjeant has his orders.");
         expect(BRIDGE_GATE_REASON).toBe("The chain is drawn across the bridge while the lord of the keep lives.");
+    });
+
+    it('plays the sea keep scene from its slot, and panel 2 is the approved redraw (S-17, "Portrait wins")', () => {
+        const staged: GameState = { ...newGame().state, world: placeOnNode(newGame().state.world, 'bw-k2') };
+        const first = resolveMapEvent(staged, seededRng(1)).event;
+        expect(first.kind).toBe('cutscene');
+        if (first.kind !== 'cutscene') return;
+        expect(first.lines).toHaveLength(3);
+        expect(first.lines[1]).toBe(
+            "The lord of the place lies beyond the lamp. Thirty years in that light have taken the edges from him, and he is grown long and pale and scaled, with an old man's face still set in the front of him, its eyes shut. About him on the floor lie the tithes of all those years, laid out in rows, and not one of them has been let to rot.",
+        );
     });
 
     it('pins R-04 whole when walked to', () => {
