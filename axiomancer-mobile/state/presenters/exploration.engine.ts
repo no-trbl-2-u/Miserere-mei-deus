@@ -10,7 +10,7 @@
  */
 
 import type { GameStore, MapEventKind } from '@mechanics';
-import { getMapDefinition, isRoadHeld, getNodePrimaryEventKind, getNodeEventPool, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING, isEliteNode } from '@mechanics';
+import { getMapDefinition, isRoadHeld, getNodePrimaryEventKind, getNodeEventPool, getNodeScene, legalMovesFrom, forwardEdges, actsOnRevisit, ANVIL_VERB_PRICING, isEliteNode } from '@mechanics';
 
 import { readCurrentNodeId } from '../actions';
 import { getMapLayout } from '@/state/exploration-maps';
@@ -834,7 +834,8 @@ function computeExplorationViewModel(state: GameStore): ExplorationViewModel {
     const startNodePending =
         currentNodeId === def.startingNode.id
         && !consumedNodes.includes(currentNodeId)
-        && getNodeEventPool(continent, mapName, currentNodeId) !== undefined;
+        && (getNodeEventPool(continent, mapName, currentNodeId) !== undefined
+            || getNodeScene(continent, mapName, currentNodeId) !== undefined);
 
     const options = buildOptions(metaById, orderById, reachable, currentNodeId, layout.sheet, readCurrency(state));
     const actions = buildActions(options);

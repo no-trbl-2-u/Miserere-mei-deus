@@ -473,8 +473,11 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   The Labyrinth and the other continents' maps are parked and unreachable.
 - **Nodes** in play: encounter, hazard, rest, village (one per region, with
   the Anvil), loot-cache, cutscene, travel, quest (the Breakwater only) and
-  the empty waypoint. Act 1 has no NPCs; that plumbing is kept and tested
-  with fixtures.
+  the empty waypoint. Any node can also carry a scene in its slot: a
+  cutscene that plays once a run, before the node's own event (the Charcoal
+  Wood, Beacon Crags and Lantern Deep start nodes open on one, then are empty
+  waypoints; the Breakwater follows). Act 1 has no
+  NPCs; that plumbing is kept and tested with fixtures.
 - **The Breakwater questline** (`World/quest.library.ts`, phase QL1d): four
   quest nodes, bw-19..bw-22. Node 1 (off the windmill) offers step 1; nodes
   2-4 turn in the step before and offer the next. Placeholder steps and

@@ -17,7 +17,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool } from '../index';
+import { getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool, isBeforeScene } from '../index';
 import { takeTravel } from '../MapEvents/travel';
 import { auditMapTraversal } from '../world.reducer';
 import { createNewGameState } from '../../Game/game.reducer';
@@ -61,9 +61,15 @@ describe('the Beacon Crags map', () => {
     });
 });
 
+/** A node's own event: a start node's scene plays first, so resolve past it. */
+function ownEvent(state: GameState) {
+    const first = resolveMapEvent(state);
+    return isBeforeScene(first.event) ? resolveMapEvent(first.state) : first;
+}
+
 describe('the Beacon Crags\' events (D29)', () => {
     const kinds = Object.fromEntries(
-        beaconCrags.nodes.map(n => [n.id, resolveMapEvent(standingOn(n.id)).event.kind]),
+        beaconCrags.nodes.map(n => [n.id, ownEvent(standingOn(n.id)).event.kind]),
     );
     /** Each pooled node's authored payload (every Beacon Crags pool has one entry). */
     const payloads = beaconCrags.nodes.flatMap(
@@ -75,11 +81,11 @@ describe('the Beacon Crags\' events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(17);
     });
 
-    it('spreads 6 encounters, 3 rests, 2 loot caches, 1 waypoint, 2 hazards, 1 Anvil, an arrival and a door', () => {
+    it('spreads 6 encounters, 3 rests, 2 loot caches, 1 waypoint, 2 hazards, 1 Anvil, an arrival scene and a door', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 6, rest: 3, 'loot-cache': 2, none: 1, hazard: 2, village: 1, cutscene: 1, travel: 1,
+            encounter: 6, rest: 3, 'loot-cache': 2, none: 2, hazard: 2, village: 1, travel: 1,
         });
     });
 
@@ -87,8 +93,12 @@ describe('the Beacon Crags\' events (D29)', () => {
         expect(kinds['bc-12']).toBe('village');
     });
 
-    it('opens on the arrival up the stair, at the top pass', () => {
-        expect(kinds['bc-1']).toBe('cutscene');
+    it('opens on the arrival up the stair, at the top pass: a slot scene, then an empty waypoint', () => {
+        const first = resolveMapEvent(standingOn('bc-1'));
+        expect(isBeforeScene(first.event)).toBe(true);
+        expect(first.event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+        expect(getNodeEventPool('northern-continent', 'beacon-crags', 'bc-1')).toBeUndefined();
+        expect(resolveMapEvent(first.state).event.kind).toBe('none');
     });
 
     it('pins every fight low: 3 on the upper mountain, 4 below the gorge', () => {

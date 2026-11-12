@@ -20,7 +20,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool,
+    getMapDefinition, createMapState, resolveMapEvent, getNodeEventPool, isBeforeScene,
 } from '../index';
 import { auditMapTraversal } from '../world.reducer';
 import { createNewGameState } from '../../Game/game.reducer';
@@ -64,9 +64,15 @@ describe('the Lantern Deep map', () => {
     });
 });
 
+/** A node's own event: a start node's scene plays first, so resolve past it. */
+function ownEvent(state: GameState) {
+    const first = resolveMapEvent(state);
+    return isBeforeScene(first.event) ? resolveMapEvent(first.state) : first;
+}
+
 describe('the Lantern Deep\'s events (D29)', () => {
     const kinds = Object.fromEntries(
-        lanternDeep.nodes.map(n => [n.id, resolveMapEvent(standingOn(n.id)).event.kind]),
+        lanternDeep.nodes.map(n => [n.id, ownEvent(standingOn(n.id)).event.kind]),
     );
     /** Each node's authored payload (every Lantern Deep pool has one entry). */
     const payloads = lanternDeep.nodes.flatMap(
@@ -78,11 +84,11 @@ describe('the Lantern Deep\'s events (D29)', () => {
         expect(Object.keys(kinds)).toHaveLength(18);
     });
 
-    it('spreads 7 encounters, 3 rests, a loot cache, 1 waypoint, 2 hazards, 1 Anvil, an arrival and two sealed doors', () => {
+    it('spreads 7 encounters, 3 rests, a loot cache, 1 waypoint, 2 hazards, 1 Anvil, an arrival scene and two sealed doors', () => {
         const tally: Record<string, number> = {};
         for (const k of Object.values(kinds)) tally[k] = (tally[k] ?? 0) + 1;
         expect(tally).toEqual({
-            encounter: 7, rest: 3, 'loot-cache': 1, none: 1, hazard: 2, village: 1, cutscene: 3,
+            encounter: 7, rest: 3, 'loot-cache': 1, none: 2, hazard: 2, village: 1, cutscene: 2,
         });
     });
 
@@ -90,8 +96,12 @@ describe('the Lantern Deep\'s events (D29)', () => {
         expect(kinds['ld-14']).toBe('village');
     });
 
-    it('opens on the arrival down the stair, at the surface stair (D31)', () => {
-        expect(kinds['ld-1']).toBe('cutscene');
+    it('opens on the arrival down the stair, at the surface stair (D31): a slot scene, then an empty waypoint', () => {
+        const first = resolveMapEvent(standingOn('ld-1'));
+        expect(isBeforeScene(first.event)).toBe(true);
+        expect(first.event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+        expect(getNodeEventPool('northern-continent', 'lantern-deep', 'ld-1')).toBeUndefined();
+        expect(resolveMapEvent(first.state).event.kind).toBe('none');
     });
 
     it('pins every fight low: 3 above the aqueducts, 4 below them', () => {

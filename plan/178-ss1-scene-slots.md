@@ -53,7 +53,7 @@ Built from what exists, the slot is the cutscene payload and screen already ship
 
 ### The other Act 1 maps (178.4)
 
-- **[T to confirm #5]** The three arrival scenes (`cw-1`, `bc-1`, `ld-1`) move into their start nodes' slots, as the windmill's; each start node's own event is then none. The sealed doors `ld-15` and `ld-18` stay sealed cutscenes: they stand in for doors, not story, and their nodes are redrawn when Chapters 2 to 4's maps are designed (that act's node lists carry no cutscene kind). The Labyrinth is parked and untouched.
+- **(T, 2026-11-12)** The three arrival scenes (`cw-1`, `bc-1`, `ld-1`) move into their start nodes' slots, as the windmill's; each start node's own event is then none. The sealed doors `ld-15` and `ld-18` stay sealed cutscenes: they stand in for doors, not story, and their nodes are redrawn when Chapters 2 to 4's maps are designed (that act's node lists carry no cutscene kind). The Labyrinth is parked and untouched.
 
 ### Decisions made upfront (do not ask)
 
@@ -84,7 +84,6 @@ Built from what exists, the slot is the cutscene payload and screen already ship
 - **A6** No Breakwater node's own kind is `cutscene`: `bw-l2` is a fight (Brine-Widow, level 6), `bw-d5` and `bw-p3` are loot caches; the map shows their fight and treasure tokens; the plate marks are unchanged; the chapter's foe and cache tables have a row for each.
 - **A7** The windmill plays its opening scene from its slot and gives quest step 1; `World/e2e/breakwater-chapter.engine.test.ts` walks `bw-w1` to `bw-b2` green.
 - **A8** `bw-l2`, `bw-d5` and `bw-p3` play their scene (today's line and picture) before their own event.
-- **A9** `cw-1`, `bc-1` and `ld-1` play their arrival scene from their start node's slot; their map e2e tests pass; `ld-15` and `ld-18` are unchanged.
 
 ## Open questions
 
@@ -92,18 +91,14 @@ Built from what exists, the slot is the cutscene payload and screen already ship
 2. **[T to confirm #2]** Does the windmill keep a scene? Default: yes, the opening scene moves into its slot and still gives quest 1. Or: the windmill becomes a fight after its scene.
 3. Settled (T, 2026-11-12): a node's scene plays once a run, on first arrival.
 4. **[T to confirm #4]** Do the removed nodes' scenes and pictures carry over? Default: yes, each converted node plays its old scene before its own event. Or: their slots start empty until the Act 1 story places scenes.
-5. **[T to confirm #5]** Do the other Act 1 maps change now? Default: their three arrival scenes move into start-node slots; the sealed doors wait for the Chapters 2-4 map design. Or: leave those maps until that design.
+5. Settled (T, 2026-11-12): the three arrival scenes move into start-node slots now; the sealed doors stay untouched.
 6. Settled (T, 2026-11-12): the map does not mark a node that carries a scene.
 
 ## Chunks
 
-Measure: 4 open · 5 closed · next A10
+Measure: 3 open · 6 closed · next A10
 
 - [ ] **178.3** The Breakwater: no cutscene nodes, and its scenes in slots · M · closes A6, A7, A8 · needs — · alias: SS1c
   - `axiomancer-mechanics/src/World/MapEvents/content.ts`: `BREAKWATER_CHAPTER_KINDS` (`bw-l2` fight, `bw-d5` and `bw-p3` loot; `'cutscene'` out of `BreakwaterChapterKind`), `BW_ENCOUNTER_FOES` (`bw-l2`), `COAST_LOOT_CACHES` and `LOOT_NODES` (two caches), `BW_NODE_SCENES` (the windmill and the three converted nodes) registered beside the pools; `bw-w1`'s own pool goes.
   - Tests that name the old kinds: `chapter1-content.test.ts`, `World/e2e/breakwater.engine.test.ts`, `breakwater-chapter.engine.test.ts` (the windmill: scene, then nothing), `cutscene-scene.CU1a.engine.test.ts`, the mobile `start-node-arrival` and `cutscene-view.CU1a` tests, and `scripts/fixtures/sim-runs.json` where a seeded run changes. A test fails if any Breakwater node's own kind is `cutscene`.
   - Measure: the chapter e2e walks `bw-w1` to `bw-b2` green; `npm run verify` (both workspaces) and root `npm test` pass; a phone-width screenshot of the map with the three new tokens, and of the chapel's scene then its fight reveal, is in the PR.
-- [ ] **178.4** The other Act 1 maps open on a slot scene · S · closes A9 · needs — · alias: SS1d
-  - `axiomancer-mechanics/src/World/MapEvents/content.ts`: `cwArrival`, `bcArrival` and `ldArrival` move into their start nodes' slots; the start nodes' pools go. `ld-15` and `ld-18` are untouched.
-  - `World/e2e/charcoal-wood.engine.test.ts`, `beacon-crags.engine.test.ts`, `lantern-deep.engine.test.ts`: the arrival is a slot scene, then nothing; `docs/game-model.md`'s kind list says the scene slot.
-  - Measure: the three map e2e tests pass; `npm run verify` (both workspaces) and root `npm test` pass.
