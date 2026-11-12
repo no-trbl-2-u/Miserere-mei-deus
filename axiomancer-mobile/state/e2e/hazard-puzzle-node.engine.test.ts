@@ -85,6 +85,8 @@ describe('a puzzle hazard node: the walk into the wreck', () => {
                     ...store.getState().world.currentMap,
                     completedNodes: [...store.getState().world.currentMap.completedNodes, 'bw-l1'],
                     consumedNodes: [...store.getState().world.currentMap.consumedNodes, 'bw-l1'],
+                    // The settled Breakwater has the scenes seen; this case plays the chapel's.
+                    seenScenes: (store.getState().world.currentMap.seenScenes ?? []).filter(id => id !== 'bw-l2'),
                 }),
             },
         } as never);

@@ -285,3 +285,30 @@ describe('createFixtureGameStore (src/test-utils/fixture-store.ts)', () => {
         expect(result.state.world.currentMap.consumedNodes).not.toContain(f.world?.node);
     });
 });
+
+describe('a fixture on a node with a scene in its slot', () => {
+    const at = (node?: string): StateFixture => ({
+        id: 'scene-seen-probe',
+        seed: 'scene-seen-probe',
+        world: { continent: 'coastal-continent', map: 'breakwater', ...(node === undefined ? {} : { node }) },
+    });
+
+    it('marks that scene seen, so the staged node opens on its own event', () => {
+        const state = buildStateFromFixture(at('bw-w2'));
+        expect(state.world.currentMap.seenScenes).toEqual(['bw-w2']);
+        expect(resolveMapEvent(state, () => 0.5).event.kind).toBe('encounter');
+    });
+
+    it('leaves seenScenes alone on a node with no scene in its slot', () => {
+        const state = buildStateFromFixture(at('bw-m3'));
+        expect(state.world.currentMap.seenScenes ?? []).toEqual([]);
+        expect(resolveMapEvent(state, () => 0.5).event.kind).toBe('loot-cache');
+    });
+
+    it('leaves the start node\'s scene unseen when the fixture names no node', () => {
+        const state = buildStateFromFixture(at());
+        expect(state.world.currentMap.currentNode).toBe('bw-w1');
+        expect(state.world.currentMap.seenScenes ?? []).toEqual([]);
+        expect(resolveMapEvent(state, () => 0.5).event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+    });
+});
