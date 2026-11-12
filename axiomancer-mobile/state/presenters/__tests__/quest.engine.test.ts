@@ -119,7 +119,8 @@ describe('selectQuestVM', () => {
         expect(selectQuestVM({ quest: withLines(), quests: held }).giverLine).toBe('Wait for it.');
         expect(selectQuestVM({ quest: withLines(), quests: ready }).giverLine).toBe('It is done.');
         const paid = { step: 1, questName: 'Cross the Gallows', experience: 40, currency: 0, itemNames: [] };
-        expect(selectQuestVM({ quest: withLines({ paid }), quests: completeQuest(ready, 'Cross the Gallows') }).giverLine).toBe('It is done.');
+        // Paid with the next step on offer: the turn-in line, a blank line, then the offer line.
+        expect(selectQuestVM({ quest: withLines({ paid }), quests: completeQuest(ready, 'Cross the Gallows') }).giverLine).toBe('It is done.\n\nWait for it.');
 
         const plain = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' };
         expect(selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open: plain }, quests: ready }).giverLine).toBe('Wait for it.');

@@ -52,6 +52,9 @@ Lintable ones are marked; `scripts/check-prose.mjs` learns them in chunk 177.2.
    | Screen copy (defeat, death return, game over) | 40 |
    | Journal | 200 (T, 2026-11-12: "Raise the journal cap") |
 
+   The cap counts spoken words: a leading "<Cast name> says," tag is not
+   counted (Confirmed by T, 2026-11-12).
+
 3. Story screens and cutscenes have no cap on the whole. They tell their part
    of the story: what happens, to whom, and what it costs, as the Act 1 story
    rules it (review). Their sentence ceiling is 40 words where MB-1 says 20

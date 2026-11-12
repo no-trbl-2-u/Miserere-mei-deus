@@ -16,8 +16,8 @@ import { fileURLToPath } from 'node:url'
 import { loadRegistry } from './check-lexicon.mjs'
 import {
   CONTENT_SURFACES, MB1_MAX_WORDS, NARRATOR_FIELDS, NARRATOR_MAX_PANEL_WORDS, NARRATOR_MAX_PANELS,
-  NARRATOR_MAX_SENTENCE_WORDS, NARRATOR_RULES, NARRATOR_SURFACES, PROSE_FIELDS, PROSE_RULES, VOICE_RULES,
-  exemptionsIn, fieldFor, scanSource, stringLiterals,
+  NARRATOR_MAX_SENTENCE_WORDS, NARRATOR_RULES, NARRATOR_SPEAKERS, NARRATOR_SURFACES, PROSE_FIELDS, PROSE_RULES, VOICE_RULES,
+  exemptionsIn, fieldFor, scanSource, spokenWordCount, stringLiterals,
 } from './check-prose.mjs'
 
 const retired = loadRegistry().filter((r) => r.type === 'identifier')
@@ -177,6 +177,36 @@ test('Narrator field: a line over its surface cap fails, at the cap passes', () 
   assert.deepEqual(rules(onField('description', 'cache-action', short(31))), ['narrator-line-cap'])
   assert.deepEqual(rules(onField('description', 'journal', short(201))), ['narrator-line-cap'])
   assert.deepEqual(onField('description', 'journal', short(200)), [])
+})
+
+test('the line cap counts spoken words: a leading "<Cast name> says," tag is not counted (T, 2026-11-12)', () => {
+  const body = 'Entered as lit. It was not lit. Your man saw the sea door under the keep, standing open, and the light of it laid along the head. They paid me a key when they took the lamp. I have not used it.'
+  const tagged = `Enoch Marrable says, ${body}`
+  // bw-l5's turn-in line: 45 words with the tag, 42 spoken.
+  assert.equal(body.split(/\s+/).length, 42)
+  assert.equal(tagged.split(/\s+/).length, 45)
+  assert.equal(spokenWordCount(tagged), 42)
+  assert.deepEqual(onField('turnInLine', 'line', tagged), [])
+  // Three more spoken words reach 45 spoken (48 with the tag): the tag is what is exempt.
+  assert.deepEqual(onField('turnInLine', 'line', `${tagged} Not once today.`), [])
+  // One more spoken word past the cap fails.
+  assert.deepEqual(rules(onField('turnInLine', 'line', `${tagged} Not once today, ever.`)), ['narrator-line-cap'])
+  // "says" mid-sentence, or after a name not on the cast sheet, earns no exemption.
+  const over = `${body} Not once today, ever.`
+  assert.equal(spokenWordCount(`Then Enoch Marrable says, ${body}`), 46)
+  assert.deepEqual(rules(onField('turnInLine', 'line', `Then Enoch Marrable says, ${body}`)), ['narrator-line-cap'])
+  assert.deepEqual(rules(onField('turnInLine', 'line', `The warden says, ${body} Not once.`)), ['narrator-line-cap'])
+  assert.equal(spokenWordCount(`Enoch Marrable says, ${over}`), 46)
+})
+
+test('every speaker the lint exempts is on the story overview cast sheet', () => {
+  const overview = fs.readFileSync(path.join(ROOT, 'axiomancer-mechanics/content/story/story-overview.md'), 'utf8')
+  for (const name of NARRATOR_SPEAKERS) assert.ok(overview.includes(name), name)
+})
+
+test('the content.ts Narrator fields cover the quest turn-in line', () => {
+  const row = NARRATOR_FIELDS.find((r) => r.file.endsWith('MapEvents/content.ts'))
+  assert.equal(row.fields.turnInLine, 'line')
 })
 
 test('the surface caps are the ones T kept (2026-11-12)', () => {

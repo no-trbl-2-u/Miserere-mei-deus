@@ -232,9 +232,19 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
     // this visit's ledger, or the step it turns in completed with nothing after it (the
     // chain's end seen again, after a reload or a return, where no ledger is kept).
     const paidHere = paid !== null || (stage === 'offer' && ahead === null && behind?.status === 'completed');
-    const giverLine = open.turnInLine !== undefined && (stage === 'turn-in' || paidHere)
-        ? open.turnInLine
-        : open.description ?? QUEST_GIVER_FALLBACK;
+    const offerLine = open.description ?? QUEST_GIVER_FALLBACK;
+    const canAccept = stage === 'offer' && ahead?.status === 'unaccepted';
+    // Turn-in line, then (T: both) the offer line when a next step is on offer with ACCEPT live.
+    // A step already accepted here speaks the offer line alone; a step handed in with nothing
+    // on offer (the chain's end), or still being handed in, speaks the turn-in line alone.
+    const turnedHere = stage === 'turn-in' || paidHere;
+    const giverLine = open.turnInLine === undefined || !turnedHere
+        ? offerLine
+        : canAccept
+            ? `${open.turnInLine}\n\n${offerLine}`
+            : ahead !== null && stage !== 'turn-in'
+                ? offerLine
+                : open.turnInLine;
     return {
         active: true,
         giver: open.giver ? { name: open.giver.name, portrait: open.giver.portrait } : null,
@@ -246,7 +256,7 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         giverLine,
         behind,
         ahead,
-        canAccept: stage === 'offer' && ahead?.status === 'unaccepted',
+        canAccept,
         canTurnIn: stage === 'turn-in',
         paid,
         cardOffers,
