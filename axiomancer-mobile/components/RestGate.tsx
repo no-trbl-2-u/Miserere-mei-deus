@@ -15,7 +15,11 @@ export function RestGate() {
     const router = useRouter();
 
     useEffect(() => {
-        if (hasRest) router.push('/rest' as never);
+        if (!hasRest) return;
+        // Deferred like <HazardGate>: a rest that follows a node's scene opens as the
+        // scene screen backs out, and an immediate push would be popped by that back.
+        const timeoutId = setTimeout(() => router.push('/rest' as never), 0);
+        return () => clearTimeout(timeoutId);
     }, [hasRest, router]);
 
     return null;

@@ -6,7 +6,7 @@
  * a Reliquary session starts (`selectHasActiveCache` flips true).
  */
 
-import { afterEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import React from 'react';
 import type { LootCacheChoiceSession } from '@mechanics';
@@ -35,9 +35,14 @@ jest.mock('@/lib/platform/router', () => ({
     useRouter: () => mockRouter,
 }));
 
-afterEach(() => {
-    mockPush.mockClear();
-});
+beforeEach(() => { jest.useFakeTimers(); });
+
+/** The push is deferred one tick (like HazardGate), so the scene screen's back cannot pop it. */
+function flushPush() {
+    act(() => { jest.runOnlyPendingTimers(); });
+}
+
+afterEach(() => { jest.useRealTimers(); mockPush.mockClear(); });
 
 function makeStore(): AppStore {
     return createAppStore({ adapter: createMemoryAdapter() });
@@ -72,6 +77,7 @@ describe('CacheGate: active cache sessions route to /cache', () => {
     it('does not push when there is no active cache session (fresh store)', () => {
         const store = makeStore();
         render(withProvider(store, <CacheGate />));
+        flushPush();
         expect(mockPush).not.toHaveBeenCalled();
     });
 
@@ -79,19 +85,24 @@ describe('CacheGate: active cache sessions route to /cache', () => {
         const store = makeStore();
         setActiveSession(store);
         render(withProvider(store, <CacheGate />));
+        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
+        flushPush();
         expect(mockPush).toHaveBeenCalledWith('/cache');
     });
 
     it('pushes /cache when the state flips from no-session to active', () => {
         const store = makeStore();
         render(withProvider(store, <CacheGate />));
+        flushPush();
         expect(mockPush).not.toHaveBeenCalled();
 
         act(() => {
             setActiveSession(store);
         });
+        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
+        flushPush();
         expect(mockPush).toHaveBeenCalledWith('/cache');
     });
 
@@ -99,6 +110,7 @@ describe('CacheGate: active cache sessions route to /cache', () => {
         const store = makeStore();
         setActiveSession(store);
         const tree = render(withProvider(store, <CacheGate />));
+        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
 
         // Force a re-render of the gate without changing the selector value.
@@ -107,6 +119,7 @@ describe('CacheGate: active cache sessions route to /cache', () => {
         });
         // The useEffect dep is the boolean from the selector, which is
         // stable across this re-render — no additional push.
+        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
     });
 
@@ -120,6 +133,7 @@ describe('CacheGate: active cache sessions route to /cache', () => {
         const store = makeStore();
         setActiveSession(store);
         render(withProvider(store, <CacheGate />));
+        flushPush();
         expect(mockPush).toHaveBeenCalledTimes(1);
         mockPush.mockClear();
 
@@ -131,6 +145,7 @@ describe('CacheGate: active cache sessions route to /cache', () => {
         });
         
         // Should not push again when going from active to inactive
+        flushPush();
         expect(mockPush).not.toHaveBeenCalled();
     });
 });

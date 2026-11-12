@@ -226,6 +226,19 @@ async function travelTo(page, nodeId) {
     await waitFor(page, 'node-confirm-go', `${nodeId} confirm panel`, 5000)
     await page.evaluate(() => document.querySelector('[data-testid="node-confirm-go"]').click())
     log(`travelling to ${nodeId} (${label})`)
+    // A node with a scene in its slot plays it first, once a run: tap it through, then the node's own screen follows.
+    const scene = await page.getByTestId('cutscene-advance').first().waitFor({ state: 'visible', timeout: 2000 }).then(() => true, () => false)
+    if (scene) {
+        log(`${nodeId}: scene played through`)
+        // Tap panel by panel, as a player does (SKIP and a last tap racing would dismiss twice).
+        for (let k = 0; k < 8 && (await page.getByTestId('cutscene-advance').count()); k++) {
+            await tap(page, 'cutscene-advance')
+            await sleep(900)
+        }
+        // The node's own screen replaces the scene: wait for the scene to go before the caller looks.
+        await page.getByTestId('cutscene-advance').first().waitFor({ state: 'detached', timeout: 5000 })
+            .catch(() => fail(`${nodeId}: the scene never closed`))
+    }
 }
 
 async function expectHere(page, nodeId) {
@@ -270,8 +283,19 @@ async function newGame(page, baseUrl) {
 
     // D31: a new game opens on the windmill's arrival scene, not a rest.
     await waitFor(page, 'cutscene-advance', 'the windmill arrival scene')
-    const scene = await page.innerText('body')
-    if (!/windmill/i.test(scene)) fail('the opening scene is not the windmill arrival')
+    // S-01 is four panels ("1 of 4" .. "4 of 4"); the windmill is named in the third, Ann Greave in the fourth.
+    const panels = []
+    for (let k = 0; k < 4; k++) {
+        await waitFor(page, `cutscene-line-${k}`, `the windmill scene, panel ${k + 1}`, 5000)
+        panels.push(await page.getByTestId(`cutscene-line-${k}`).innerText())
+        const count = await page.getByTestId('cutscene-count').innerText()
+        if (count.trim() !== `${k + 1} of 4`) fail(`the opening scene is not the windmill arrival (panel ${k + 1} reads "${count}")`)
+        if (k < 3) {
+            await tap(page, 'cutscene-advance')
+            await sleep(900)
+        }
+    }
+    if (!/windmill/i.test(panels[2]) || !/Ann Greave/.test(panels[3])) fail('the opening scene is not the windmill arrival')
     log('new game: windmill arrival scene')
     await playOutCutscene(page)
 

@@ -35,7 +35,13 @@ export function EventGate() {
     }
     if (pushedRoute.current === route) return;
     pushedRoute.current = route;
-    router.push(route as never);
+    if (route === '/cutscene') {
+      router.push(route as never);
+      return;
+    }
+    // Any other paced screen (a village, a dialogue) may follow a node's scene: it opens as
+    // the scene screen backs out, and an immediate push would be popped by that back.
+    setTimeout(() => router.push(route as never), 0);
   }, [route, router]);
 
   return null;

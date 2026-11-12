@@ -92,6 +92,30 @@ function makeCutsceneResult(): ResolveMapEventResult {
 }
 
 describe('EventGate: paced events route to their screen', () => {
+    it('pushes a cutscene at once but a village one tick later, so a scene screen backing out cannot pop it', () => {
+        jest.useFakeTimers();
+        try {
+            const store = makeStore();
+            setPending(store, makeCutsceneResult());
+            render(withProvider(store, <EventGate />));
+            expect(mockPush).toHaveBeenCalledWith('/cutscene');
+            mockPush.mockClear();
+
+            const villageStore = makeStore();
+            setPending(villageStore, {
+                state: undefined as never,
+                event: { kind: 'village', villageName: 'V', merchants: [], rest: true },
+            } as never);
+            render(withProvider(villageStore, <EventGate />));
+            expect(mockPush).not.toHaveBeenCalled();
+            act(() => { jest.runOnlyPendingTimers(); });
+            expect(mockPush).toHaveBeenCalledTimes(1);
+            expect(mockPush).toHaveBeenCalledWith('/village');
+        } finally {
+            jest.useRealTimers();
+        }
+    });
+
     it('does not push when there is no pending event (fresh store)', () => {
         const store = makeStore();
         render(withProvider(store, <EventGate />));

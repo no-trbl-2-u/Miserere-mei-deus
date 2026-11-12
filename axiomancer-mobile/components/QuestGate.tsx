@@ -24,7 +24,9 @@ export function QuestGate() {
         }
         if (pushed.current) return;
         pushed.current = true;
-        router.push('/quest' as never);
+        // Deferred like <HazardGate>: a quest screen that follows a node's scene opens as the
+        // scene screen backs out, and an immediate push would be popped by that back.
+        setTimeout(() => router.push('/quest' as never), 0);
     }, [hasQuest, router]);
 
     return null;
