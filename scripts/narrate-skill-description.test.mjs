@@ -1,3 +1,4 @@
+// guard-test: pins the /narrate description sentence landed in #1644 (177.14); it had no test (pilot gap, spec 177 A18).
 // The /narrate skill's front-matter description ends on its refusal: it never
 // writes cards or rules text, nor a speaker with no cast entry (T, 2026-11-12;
 // plan/177-nv1-narrator-voice.md, A18). The sentence is pinned exactly so a
