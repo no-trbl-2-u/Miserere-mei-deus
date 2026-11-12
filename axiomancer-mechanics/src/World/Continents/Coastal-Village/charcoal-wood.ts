@@ -35,7 +35,7 @@ import { MapDefinition } from '../../types';
 const charcoalWood: MapDefinition = {
     name: 'charcoal-wood',
     continent: 'coastal-continent',
-    description: 'Burners work the clearings and sell the smoke by the sack. Three caves open in the south cliff; nobody sells the way back.',
+    description: '[content] The Charcoal Wood.',
     startingNode: {
         id: 'cw-1',
         location: [0, 0],

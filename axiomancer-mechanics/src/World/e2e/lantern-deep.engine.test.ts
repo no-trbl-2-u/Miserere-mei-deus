@@ -127,7 +127,7 @@ describe('the Lantern Deep\'s events (D29)', () => {
 
     it('seals the vault door: the Labyrinth never opens in play (THE REVAMP R3a, D54)', () => {
         const r = resolveMapEvent(standingOn('ld-15'));
-        expect(r.event).toEqual({ kind: 'cutscene', lines: ['The round door is sealed.'] });
+        expect(r.event).toEqual({ kind: 'cutscene', lines: ['[content] The Vault Door.'] });
         expect(r.state.world.currentMap.name).toBe('lantern-deep');
         expect(r.state.world.currentMap.currentNode).toBe('ld-15');
     });
@@ -141,10 +141,27 @@ describe('the Lantern Deep\'s events (D29)', () => {
 
     it('seals the deep stair: it leads nowhere and the map stays put (D61)', () => {
         const r = resolveMapEvent(standingOn('ld-18'));
-        expect(r.event).toEqual({ kind: 'cutscene', lines: ['The deep stair is sealed.'] });
+        expect(r.event).toEqual({ kind: 'cutscene', lines: ['[content] The Deep Stair.'] });
         expect(r.state.world.currentContinent.name).toBe('northern-continent');
         expect(r.state.world.currentMap.name).toBe('lantern-deep');
         expect(r.state.world.currentMap.currentNode).toBe('ld-18');
+    });
+});
+
+describe('the removed story is gone from Chapters 2 to 4 (177.12, A13)', () => {
+    it('reads each map description as its placeholder', () => {
+        expect(getMapDefinition('coastal-continent', 'charcoal-wood').description).toBe('[content] The Charcoal Wood.');
+        expect(getMapDefinition('northern-continent', 'beacon-crags').description).toBe('[content] The Beacon Crags.');
+        expect(lanternDeep.description).toBe('[content] The Lantern Deep.');
+    });
+
+    it('reads the rest, hazard and loot lines as their placeholders', () => {
+        const rest = getNodeEventPool('northern-continent', 'lantern-deep', 'ld-2')!;
+        expect(rest.entries[0]!.payload).toMatchObject({ kind: 'rest', description: '[content] The Ferry Landing.' });
+        const hazard = getNodeEventPool('northern-continent', 'lantern-deep', 'ld-4')!;
+        expect(hazard.entries[0]!.payload).toMatchObject({ kind: 'hazard', description: '[content] The North Aqueduct.' });
+        const loot = getNodeEventPool('northern-continent', 'lantern-deep', 'ld-6')!;
+        expect(loot.entries[0]!.payload).toMatchObject({ kind: 'loot-cache', description: '[content] The West Tunnel.' });
     });
 });
 
