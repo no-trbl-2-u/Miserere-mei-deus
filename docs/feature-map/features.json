@@ -4701,6 +4701,12 @@
       "kind": "coupling",
       "from": "route:cutscene",
       "to": "area:World",
+      "file": "axiomancer-mobile/app/cutscene/index.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:cutscene",
+      "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/event.engine.ts"
     },
     {
