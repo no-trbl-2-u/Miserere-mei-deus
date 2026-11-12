@@ -65,6 +65,7 @@
 - **A8** Enemy descriptions. Every approved description is in `enemy.library.ts` with its `DRAFT (Claude)` comment removed.
 - **A10** Story screens and cutscenes. Each Chapter 1 scene tells its part of the Act 1 story as T ruled it, in panels, with no sentence past 40 words; none is a one-line hint. Every scene plays from a node's scene slot (spec 178), on the node the story places it on; no node is a cutscene by kind. The cutscene screen shows a six-panel scene unclipped.
 - **A9** No approved line is left as a placeholder, and no unapproved draft is in the game: a test reads the ledger's verdicts and the sources and fails on either.
+- **A11** The prose workflow runs when a Narrator file changes. `.github/workflows/verify-prose.yml` lists `axiomancer-mobile/state/exploration-maps/*.layout.ts` and `axiomancer-mobile/components/combat/encounter/*.copy.ts` under both `push` and `pull_request` paths, beside the existing `axiomancer-mobile/state/presenters/*.copy.ts`.
 
 ## Open questions
 
@@ -72,12 +73,12 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 
 ## Chunks
 
-Measure: 8 open · 2 closed · next A11
+Measure: 9 open · 2 closed · next A12
 
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
   - T ticks and notes on the review page, presses Generate and pastes the sheet; the session writes the verdict under `## Verdicts` in `plan/ballots/narrator-chapter1.md`, redraws any line T asks for at another stop, and repeats until T is done.
   - Measure: every line in the ledger is approved (with its final text), rejected, or left for later, by T's word.
-- [ ] **177.4** Map blurbs in the game · S · closes A4, A9 · needs 177.3 · alias: NV1d
+- [ ] **177.4** Map blurbs in the game · S · closes A4, A9 · needs 177.3, 177.10 · alias: NV1d
   - `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`, 33 lines.
   - `scripts/narrator-verdicts.test.mjs` (new, in root `npm test`): reads the ledger's verdicts and fails on an approved line still tagged `[content]` in a surface a closed chunk owns, and on an unapproved draft found in any source.
   - Measure: the test passes; a phone-width screenshot of the map sheet with the longest blurb is in the PR.
@@ -87,7 +88,7 @@ Measure: 8 open · 2 closed · next A11
 - [ ] **177.6** Hazard, rest, dream, travel, village and loot lines in the game · M · closes A6 · needs 177.3 · alias: NV1f
   - `axiomancer-mechanics/src/World/MapEvents/content.ts`: per-node tables for the hazard and rest lines (they are built from the place name today), the three dreams, the two cave travel prompts, a village line each for `bw-t4` and `bw-m5`, and the two action lines of each of the five caches (spec 178's 178.3 makes the old watchtower and the high pass caches).
   - Measure: the verdicts test passes for these surfaces; `cache-action-lines.engine.test.ts` and the chapter e2e pass; one screenshot per event screen with its longest line is in the PR.
-- [ ] **177.7** Screen copy in the game · S · closes A7 · needs 177.3 · alias: NV1g
+- [ ] **177.7** Screen copy in the game · S · closes A7 · needs 177.3, 177.10 · alias: NV1g
   - Mobile: `combat-summary.copy.ts`, `reveal.copy.ts`, `death-return.copy.ts`, `game-over.copy.ts`, `quest.copy.ts`, `village.copy.ts` (the three counter lines only), `relic-source.copy.ts`.
   - `VITAE` keeps its spelling in the defeat line. The four spoken lines keep their placeholders.
   - Measure: the verdicts test passes for these surfaces; one screenshot per screen is in the PR.
@@ -98,3 +99,8 @@ Measure: 8 open · 2 closed · next A11
   - Waits on T's Act 1 story (T, 2026-11-11: "let's actually write the ACT 1 story together"). The three cutscene drafts in the ledger (`bw-l2`, `bw-d5`, `bw-p3`) and the windmill's opening were written before the story and are redrawn from it, then approved by T. Since spec 178 (T, 2026-11-12) there are no cutscene nodes: each scene sits in a node's scene slot and plays before that node's own event, so the story may place a scene on any node, and the three drafts' nodes are now a fight and two loot caches that keep their old scene until this chunk rewrites or moves it.
   - `axiomancer-mechanics/src/World/MapEvents/content.ts`: each scene the story places, as panels (`lines`), in the Breakwater's slot table (`BW_NODE_SCENES`, spec 178), keyed by the node it plays before; the windmill's opening keeps its `giveQuestStep` effect; a slot the story leaves empty is removed. The cutscene screen's fit at six panels.
   - Measure: the verdicts test passes for these surfaces; a screenshot of the longest scene is in the PR.
+- [ ] **177.10** The prose workflow watches the mobile files the Narrator lint now reads · S · closes A11 · needs — · alias: NV1j
+  - `.github/workflows/verify-prose.yml`: add the two globs to the `push` and `pull_request` path lists (four lines). 177.2 puts those files in `scripts/check-prose.mjs`'s content list, so without this a line added there triggers no `verify-prose` run; 177.4 and 177.7 wait on this so their lines are linted in CI.
+  - The paths were checked against the tree: `breakwater.layout.ts` sits in `axiomancer-mobile/state/exploration-maps/`, and `combat-summary.copy.ts` and `reveal.copy.ts` in `axiomancer-mobile/components/combat/encounter/`. T approved the paths, 2026-11-12: "Add the paths, plot it".
+  - A workflow file edit: T merges it by hand (a change to `.github/workflows/` is a pipeline path); the build does not auto-merge.
+  - Measure: the workflow's `paths` lists name both globs under `push` and `pull_request`; `node scripts/check-prose.mjs` and the root `npm test` still pass.
