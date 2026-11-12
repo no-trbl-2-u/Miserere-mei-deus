@@ -22,7 +22,7 @@ import {
 import { isBeforeScene, resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { takeTravel } from '../MapEvents/travel';
 import { respawnElites } from '../elite-respawn';
-import { acceptQuestStep, stepQuest, turnInQuestStep } from '../questline';
+import { acceptQuestStep, resolveQuestNodeEvent, stepQuest, turnInQuestStep } from '../questline';
 import { carriedCount } from '../quest.engine';
 import { eliteRelicPool } from '../../Combat/combat.rewards';
 import { relicLibrary } from '../../Items/relic.library';
@@ -332,6 +332,14 @@ describe('A14: the bridge speaks by stage', () => {
         expect(turnIn.stage).toBe('turn-in');
         expect(turnIn.turnInLine).toBe(waiting.turnInLine);
         expect(turnIn.description).not.toBe(turnIn.turnInLine);
+    });
+
+    it('carries no turn-in line for a node that has none, and passes one through when it has one', () => {
+        const log = createNewGameState({ startMap: 'breakwater' }).quests;
+        const bare = resolveQuestNodeEvent(log, { kind: 'quest', questline: LINE, node: 2, description: 'A line.' });
+        expect('turnInLine' in bare).toBe(false);
+        const lined = resolveQuestNodeEvent(log, { kind: 'quest', questline: LINE, node: 2, description: 'A line.', turnInLine: 'Done.' });
+        expect(lined.turnInLine).toBe('Done.');
     });
 });
 

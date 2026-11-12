@@ -5,7 +5,10 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-import { completeQuest, emptyQuestLog, getQuestline, progressQuest, questlineStep, type Reward } from '@mechanics';
+import {
+    buildStateFromFixture, completeQuest, emptyQuestLog, getQuestline, getStateFixtureById, progressQuest,
+    questlineStep, resolveMapEvent, type Reward,
+} from '@mechanics';
 
 import { selectHasActiveQuest, selectQuestVM, questRewardLine } from '@/state/presenters/quest.engine';
 import {
@@ -119,6 +122,36 @@ describe('selectQuestVM', () => {
 
         const plain = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' };
         expect(selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open: plain }, quests: ready }).giverLine).toBe('Wait for it.');
+    });
+
+    it("the staged quest-paid state (wanderer-bw-bridge-paid, no ledger) speaks C-04's turn-in line at the bridge", () => {
+        const fixture = getStateFixtureById('wanderer-bw-bridge-paid')!;
+        const result = resolveMapEvent(buildStateFromFixture(fixture));
+        const event = result.event;
+        if (event.kind !== 'quest') throw new Error('expected a quest node at bw-b1');
+        expect(event.stage).toBe('offer');
+        const vm = selectQuestVM({
+            quest: {
+                ...EMPTY_QUEST_SLICE,
+                open: {
+                    questline: event.questline, node: event.node, description: event.description,
+                    turnInLine: event.turnInLine, giver: event.giver,
+                },
+            },
+            quests: result.state.quests,
+        });
+        expect(vm.paid).toBeNull();
+        expect(vm.giverLine).toBe(
+            "Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow's purse. Cross. No charge. There is no one left to charge it to.",
+        );
+    });
+
+    it('a node without a turn-in line keeps its description at every stage', () => {
+        const plain = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' };
+        const ready = progressQuest(startFixtureStep(base, 1), 'Cross the Gallows', 'goal').log;
+        for (const quests of [base.quests, startFixtureStep(base, 1), ready, completeQuest(ready, 'Cross the Gallows')]) {
+            expect(selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open: plain }, quests }).giverLine).toBe('Wait for it.');
+        }
     });
 
     it('a card pick waiting with no node open still reaches the screen', () => {

@@ -228,8 +228,11 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
             }
             : null;
     const paid = state.quest?.paid ?? arrivalPaid;
-    // A node that has a turn-in line speaks it while its step is handed over and once paid.
-    const giverLine = open.turnInLine !== undefined && (stage === 'turn-in' || paid !== null)
+    // A node that has a turn-in line speaks it while its step is handed over and once paid:
+    // this visit's ledger, or the step it turns in completed with nothing after it (the
+    // chain's end seen again, after a reload or a return, where no ledger is kept).
+    const paidHere = paid !== null || (stage === 'offer' && ahead === null && behind?.status === 'completed');
+    const giverLine = open.turnInLine !== undefined && (stage === 'turn-in' || paidHere)
         ? open.turnInLine
         : open.description ?? QUEST_GIVER_FALLBACK;
     return {
