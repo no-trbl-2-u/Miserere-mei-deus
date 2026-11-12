@@ -265,6 +265,14 @@ describe('A5: a quest node reached too early refuses, and opens nothing', () => 
         expect(acceptQuestStep(early.state, LINE, 3)).toBe(early.state);
     });
 
+    it('pins R-02 whole when walked to', () => {
+        const early = arrive(toTheLighthouse(), 'bw-l5');
+        expect(early.event.kind === 'quest' && early.event.stage).toBe('locked');
+        expect(early.event.kind === 'quest' && early.event.lockedLine).toBe(
+            "Enoch Marrable is at his log and does not lift his head. He has no word for one who brings him no question.",
+        );
+    });
+
     it('turns the player away at the bridge, whose gate stays shut', () => {
         let s = newGame().state;
         for (const id of ['bw-w2', 'bw-w3', 'bw-h1', 'bw-t1', 'bw-t2']) s = win(s, id);

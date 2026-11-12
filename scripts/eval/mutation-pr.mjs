@@ -45,7 +45,10 @@ function scopeOf(base, head) {
 function rangeConfig(dir, scope) {
   const file = join(dir, `stryker-pr-${scope.key}.config.mjs`)
   const base = pathToFileURL(resolve(ROOT, scope.config)).href
-  writeFileSync(file, `import base from ${JSON.stringify(base)}\nexport default { ...base, mutate: ${JSON.stringify(scope.mutate)} }\n`)
+  // The env is set before the base config loads: the mobile config reads it to
+  // relate tests to the changed files, not to its fixed presenter list.
+  const mutate = JSON.stringify(scope.mutate)
+  writeFileSync(file, `process.env.EVAL_STRYKER_MUTATE = ${JSON.stringify(mutate)}\nconst { default: base } = await import(${JSON.stringify(base)})\nexport default { ...base, mutate: ${mutate} }\n`)
   return file
 }
 

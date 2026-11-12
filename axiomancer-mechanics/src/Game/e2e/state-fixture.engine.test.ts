@@ -19,6 +19,7 @@ import { migrate } from '../game.migrate';
 import { setSeed } from '../../Utils/rng';
 import { getMapDefinition } from '../../World/map.registry';
 import { resolveMapEvent } from '../../World/MapEvents/resolve-map-event';
+import { BW_NODE_SCENES } from '../../World/MapEvents/content';
 import { legalMovesFrom } from '../../World/world.reducer';
 import { getQuestline, _unregisterQuestline } from '../../World/questline';
 import {
@@ -310,5 +311,30 @@ describe('a fixture on a node with a scene in its slot', () => {
         expect(state.world.currentMap.currentNode).toBe('bw-w1');
         expect(state.world.currentMap.seenScenes ?? []).toEqual([]);
         expect(resolveMapEvent(state, () => 0.5).event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+    });
+});
+
+describe('the staged node scene is marked seen, node by node (builder line: sceneSeen)', () => {
+    const stage = (node: string): StateFixture => ({
+        id: 'scene-seen-every-node',
+        seed: 'scene-seen-every-node',
+        world: { continent: 'coastal-continent', map: 'breakwater', node },
+    });
+    const sceneNodes = BW_NODE_SCENES.map(e => e.nodeId);
+    const allNodes = getMapDefinition('coastal-continent', 'breakwater').nodes.map(n => n.id);
+
+    it('marks exactly the staged node seen on every Breakwater node that has a scene', () => {
+        expect(sceneNodes.length).toBeGreaterThan(10);
+        for (const id of sceneNodes) {
+            expect(buildStateFromFixture(stage(id)).world.currentMap.seenScenes).toEqual([id]);
+        }
+    });
+
+    it('marks nothing seen on every Breakwater node that has none', () => {
+        const bare = allNodes.filter(id => !sceneNodes.includes(id));
+        expect(bare.length).toBeGreaterThan(0);
+        for (const id of bare) {
+            expect(buildStateFromFixture(stage(id)).world.currentMap.seenScenes).toBeUndefined();
+        }
     });
 });

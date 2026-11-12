@@ -20,12 +20,25 @@ const MUTATE = [
   'state/presenters/card-program.engine.ts',
 ]
 
-/** Absolute, forward-slash paths of the test files jest relates to MUTATE. */
+/**
+ * The files the related-test search starts from. `mutation-pr.mjs` sets
+ * EVAL_STRYKER_MUTATE (a JSON array of Stryker `mutate` entries, each maybe
+ * `file:from-to`) to the PR's changed files, so the related tests are those
+ * of the changed files and not of the two presenters above (else a PR that
+ * mutates `app/...` ran no test: "No tests were executed").
+ */
+function mutatedFiles() {
+  const env = process.env.EVAL_STRYKER_MUTATE
+  if (!env) return MUTATE
+  return JSON.parse(env).map((m) => m.replace(/:\d+-\d+$/, ''))
+}
+
+/** Absolute, forward-slash paths of the test files jest relates to the mutated files. */
 function relatedTests() {
   const jestBin = createRequire(import.meta.url).resolve('jest/bin/jest')
   const out = execFileSync(
     process.execPath,
-    [jestBin, '--listTests', '--findRelatedTests', ...MUTATE.map((f) => resolve(f))],
+    [jestBin, '--listTests', '--findRelatedTests', ...mutatedFiles().map((f) => resolve(f))],
     { cwd: process.cwd(), encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 },
   )
   return out
