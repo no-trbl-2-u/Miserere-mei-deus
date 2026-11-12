@@ -24,7 +24,7 @@
 
 ## Design
 
-- **The Narrator exemption.** One decision (`D?narrator-voice`, proposed) says: the Narrator may calibrate against Cormac McCarthy and Elden Ring, borrowing manner and never a sentence, on the surfaces listed in the voice bible. Every other voice keeps `ANTI_IMITATION.md` and MB-1 to MB-8 unchanged.
+- **The Narrator exemption.** One decision (`D188`, proposed) says: the Narrator may calibrate against Cormac McCarthy and Elden Ring, borrowing manner and never a sentence, on the surfaces listed in the voice bible. Every other voice keeps `ANTI_IMITATION.md` and MB-1 to MB-8 unchanged.
 - **The voice bible.** A new `axiomancer-mechanics/docs/narrative/NARRATOR.md`: the scope (what the Narrator writes and what it never writes), the rules below, the five cruelty stops, and the calibration set (T's locked passages and T's rejections with reasons, copied from the ledgers). `ANTI_IMITATION.md`, `DELIVERY_REGISTER.md` and `VOICE_REGISTERS.md` each gain one paragraph pointing at it.
 - **The Narrator's rules** (lintable ones marked):
   - A sentence runs at most 40 words (lint).
