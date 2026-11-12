@@ -19,7 +19,7 @@ import { describe, expect, it } from 'vitest';
 import {
     IllegalMoveError, legalMovesFrom, moveToNode, roadReachable, walkRoadTo,
 } from '../world.reducer';
-import { resolveMapEvent } from '../MapEvents/resolve-map-event';
+import { isBeforeScene, resolveMapEvent } from '../MapEvents/resolve-map-event';
 import { takeTravel } from '../MapEvents/travel';
 import { respawnElites } from '../elite-respawn';
 import { acceptQuestStep, turnInQuestStep } from '../questline';
@@ -52,9 +52,14 @@ const spent = (s: GameState, id: string) =>
 const relicsCarried = (s: GameState) =>
     s.player.inventory.filter(i => i.category === 'equipment' && i.id !== 'weapon-opening-blade' && i.id !== 'armor-bracing-coat').map(i => i.id);
 
-/** A new game on the Breakwater, its arrival played (the windmill's cutscene). */
-function newGame(): { state: GameState; event: ResolvedEvent } {
-    return resolveMapEvent(createNewGameState({ startMap: 'breakwater' }), seededRng(1));
+/**
+ * A new game on the Breakwater, its arrival played: the windmill's scene from
+ * its slot, then the node's own event (none).
+ */
+function newGame(): { scene: ResolvedEvent; state: GameState; event: ResolvedEvent } {
+    const first = resolveMapEvent(createNewGameState({ startMap: 'breakwater' }), seededRng(1));
+    const own = resolveMapEvent(first.state, seededRng(1));
+    return { scene: first.event, ...own };
 }
 
 /** Walks the roads to `nodeId` and answers the arrival there. */
@@ -98,7 +103,10 @@ describe('the chapter, windmill to far bank', () => {
         // ── The windmill: the arrival gives quest 1 ─────────────────────
         const start = newGame();
         let s = start.state;
-        expect(start.event.kind).toBe('cutscene');
+        expect(isBeforeScene(start.scene)).toBe(true);
+        expect(start.scene).toMatchObject({ kind: 'cutscene', scene: 'windmill-headland', slot: 'before' });
+        expect(start.event.kind).toBe('none');
+        expect(s.world.currentMap.consumedNodes).toContain('bw-w1');
         expect(here(s)).toBe('bw-w1');
         expect(s.quests.active.map(q => q.name)).toEqual([STEPS.fishermen]);
         expect(legal(s)).toEqual(['bw-w2']);

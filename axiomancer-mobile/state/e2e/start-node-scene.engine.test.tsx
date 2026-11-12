@@ -1,8 +1,8 @@
 /**
  * A start node that holds only a slot scene.
  *
- * The Charcoal Wood, Beacon Crags and Lantern Deep open on a scene in their
- * start node's slot and have no pool. The map screen still resolves that node
+ * Every Act 1 map (the Breakwater, Charcoal Wood, Beacon Crags and Lantern
+ * Deep) opens on a scene in its start node's slot and has no pool there. The map screen still resolves that node
  * on entry: the scene opens `/cutscene` (node unspent), and its end resolves the
  * node again to `none`, with the roads open. Generic over any start node that
  * carries a scene and no pool.
@@ -67,6 +67,7 @@ function mountExploration(store: AppStore) {
 }
 
 const STARTS: Array<[string, string, string, string]> = [
+    ['breakwater', 'coastal-continent', 'bw-w1', 'bw-w2'],
     ['charcoal-wood', 'coastal-continent', 'cw-1', 'cw-2'],
     ['beacon-crags', 'northern-continent', 'bc-1', 'bc-2'],
     ['lantern-deep', 'northern-continent', 'ld-1', 'ld-2'],
@@ -100,9 +101,17 @@ describe.each(STARTS)('%s: a slot-only start node', (map, continent, startId, ne
         const store = makeStore();
         mountExploration(store);
 
+        // Before: the scene is up and the node is unspent, so each check
+        // below can only pass because continueToNode resolved the node.
+        const scene = store.getState().event?.pending?.event;
+        expect(scene && isBeforeScene(scene)).toBe(true);
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain(startId);
+        expect(selectExplorationViewModel(store.getState()).startNodePending).toBe(true);
+
         createAppActions(store).continueToNode();
 
         expect(store.getState().event?.pending?.event.kind ?? 'none').toBe('none');
+        expect(store.getState().world.currentMap.seenScenes).toContain(startId);
         const m = store.getState().world.currentMap;
         expect(m.consumedNodes).toContain(startId);
         expect(m.availableNodes).toContain(nextId);

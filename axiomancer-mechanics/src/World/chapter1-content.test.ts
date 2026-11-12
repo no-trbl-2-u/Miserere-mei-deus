@@ -34,7 +34,10 @@ describe('chapter1Content', () => {
         expect(node('bw-c2')).toMatchObject({ kind: 'quest', role: 'story', gate: false });
         expect(node('bw-b2')).toMatchObject({ kind: 'travel', exit: true, role: 'story' });
         expect(node('bw-t4')).toMatchObject({ kind: 'village', role: 'side', gate: false });
-        expect(node('bw-p3')).toMatchObject({ kind: 'cutscene', role: 'side' });
+        expect(node('bw-p3')).toMatchObject({ kind: 'loot-cache', role: 'side' });
+        expect(node('bw-l2')).toMatchObject({ kind: 'hazard', role: 'side' });
+        // The windmill's own event is none: its scene plays from its slot.
+        expect(node('bw-w1').kind).toBeNull();
     });
 
     it('lists the gates in story order: wreck, cove elite, lighthouse elite, keep causeway, keep gate, bridge', () => {

@@ -2,7 +2,7 @@
 
 Written by `npm run puzzle:sim -w axiomancer-mechanics` (phase HP6a). Do not edit by hand; re-run the script.
 
-- **Commit:** `bf5efda9e`
+- **Commit:** `4117e6eb4`
 - **Seed:** 1031
 - **Plays per bot, per candidate:** 1000
 - **Candidates:** 30, each played on its graded route with no unlock.
@@ -48,11 +48,12 @@ measurement (D57), not a gated baseline, and not calibrated against human solve 
 | 29 | `cand-cost-medium-05` | two tithes, one held back | medium | risk 6F + 12E | 0.0% | 0.4% | 0.2% | `....................` | 6 | 50.0% |
 | 30 | `cand-cost-medium-07` | an oath in hand, a pawn beside it | medium | risk 15F + 8E | 0.0% | 0.0% | 0.0% | `....................` | 5 | 58.3% |
 
-## The Breakwater six
+## The Breakwater seven
 
 Phase HP6b. `pickChapterHazardPuzzles` takes the middle third of the ranking (ranks 11-20 of 30), picks six
-evenly spaced ranks and gives them to the six hazard nodes in story order, so each is harder than the one
-before. `BREAKWATER_HAZARD_PUZZLES` holds this table; a test fails if the two drift.
+evenly spaced ranks and gives them to the six curve hazard nodes in story order, so each is harder than the one
+before. The clifftop chapel (`bw-l2`) is pinned to a free rank of the same third (`BREAKWATER_PINNED_HAZARD_RANKS`),
+a placeholder until T picks its puzzle. `BREAKWATER_HAZARD_PUZZLES` holds this table; a test fails if the two drift.
 
 | order | node | place | candidate | label | rank | score | curve |
 |---|---|---|---|---|---|---|---|
@@ -61,4 +62,5 @@ before. `BREAKWATER_HAZARD_PUZZLES` holds this table; a test fails if the two dr
 | 3 | `bw-p1` | Foothills | `cand-cost-hard-08` | the stones wait in reserve | 15 | 21.1% | `####................` |
 | 4 | `bw-m4` | Manor road | `cand-cost-medium-09` | four costs and a wind | 16 | 20.1% | `####................` |
 | 5 | `bw-t5` | Back lanes | `cand-hard-10` | a blank, a purple, two purple cards | 18 | 4.7% | `#...................` |
-| 6 | `bw-d4` | Tower switchbacks | `cand-cost-medium-01` | two pawns and a wild die | 20 | 4.1% | `#...................` |
+| 6 | `bw-l2` | Clifftop chapel | `cand-cost-hard-06` | three red cards, two red dice | 19 (pinned) | 4.4% | `#...................` |
+| 7 | `bw-d4` | Tower switchbacks | `cand-cost-medium-01` | two pawns and a wild die | 20 | 4.1% | `#...................` |

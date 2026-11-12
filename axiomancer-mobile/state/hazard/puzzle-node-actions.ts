@@ -1,5 +1,5 @@
 /**
- * A hazard node that plays a puzzle (phase HP6c, A6-A8): the Breakwater's six
+ * A hazard node that plays a puzzle (phase HP6c, A6-A8): the Breakwater's seven
  * hazard nodes each name one candidate (`BREAKWATER_HAZARD_PUZZLES`), and
  * entering one opens that candidate's one-round board on its graded route,
  * with no route choice. Every other hazard node still runs the three-round
@@ -78,7 +78,7 @@ function setPlay(store: AppStore, puzzle: HazardPuzzleNodePlay | null): void {
 }
 
 /**
- * Opens the node's puzzle when the player stands on one of the six. Returns
+ * Opens the node's puzzle when the player stands on one of the seven. Returns
  * false (and changes nothing) on any other node, or while a hazard of either
  * kind is already open.
  */
