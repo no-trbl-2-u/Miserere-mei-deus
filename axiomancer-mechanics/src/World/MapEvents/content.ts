@@ -812,8 +812,9 @@ const LANTERN_DEEP_POOLS: ReadonlyArray<{ nodeId: string; pool: MapEventPool }> 
 // ─── node scenes (the slot before a node's own event) ───────────────────────
 //
 // A scene is registered per (continent, map, node) and plays once a run before
-// the node's own event. Each Act 1 map opens on one at its start node; the
-// start node has no pool, so the scene is followed by an empty waypoint.
+// the node's own event. The Charcoal Wood, Beacon Crags and Lantern Deep open
+// on one at their start nodes; those have no pool, so the scene is followed by
+// an empty waypoint.
 // Add a map's scenes as rows of this table: `registerMapEventContent` walks it.
 
 interface NodeSceneEntry { continent: string; map: string; nodeId: string; scene: NodeScene }
