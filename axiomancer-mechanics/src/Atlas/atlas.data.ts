@@ -98,6 +98,7 @@ function rewardLabel(r: Reward): string {
     return (r as { name?: string }).name ?? 'item';
 }
 
+/** A node's own event kind; a scene in its slot is not its kind, so a start node with only a scene reads `none`. */
 function nodeKind(continent: string, map: string, nodeId: string): string {
     return getNodeEventPool(continent, map, nodeId)?.entries[0]?.kind ?? 'none';
 }

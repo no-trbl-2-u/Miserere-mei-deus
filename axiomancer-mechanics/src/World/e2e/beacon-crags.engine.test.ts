@@ -96,7 +96,13 @@ describe('the Beacon Crags\' events (D29)', () => {
     it('opens on the arrival up the stair, at the top pass: a slot scene, then an empty waypoint', () => {
         const first = resolveMapEvent(standingOn('bc-1'));
         expect(isBeforeScene(first.event)).toBe(true);
-        expect(first.event).toMatchObject({ kind: 'cutscene', slot: 'before' });
+        expect(first.event).toMatchObject({
+            kind: 'cutscene', slot: 'before',
+            lines: [
+                'The stair comes up into wind and snow, on a road over the crags.',
+                'On the summit to the west, a fire is burning. Someone down in the valley can see it.',
+            ],
+        });
         expect(getNodeEventPool('northern-continent', 'beacon-crags', 'bc-1')).toBeUndefined();
         expect(resolveMapEvent(first.state).event.kind).toBe('none');
     });

@@ -45,7 +45,6 @@ needs are done):
 
 
 
-- **178.3** · SS1c: the Breakwater's cutscene nodes become a fight and two caches, their scenes in slots (T, `/plot`, 2026-11-12)
 
 
 **Held** (waits on a person's word; never picked until the
@@ -88,8 +87,8 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 178 | A scene before any node, and no more cutscene nodes | [178-ss1-scene-slots.md](178-ss1-scene-slots.md) | planned | 1 left |
-| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 8 left |
+| 179 | Seven hazards, a true shillings floor, and tests that can fail | [179-sl1-scene-slot-followups.md](179-sl1-scene-slot-followups.md) | planned | 1 left |
+| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 10 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |

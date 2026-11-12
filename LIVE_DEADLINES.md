@@ -6,7 +6,7 @@
 
 ## Milestones
 
-- **2026-11-30** — Mon, Nov 30 (in 18 days): 13 acts open (14 h), 14 h queued up to it, 25.7 h available: fits, with 11.7 h to spare.
+- **2026-11-30** — Mon, Nov 30 (in 18 days): 32 acts open (14 h), 14 h queued up to it, 25.7 h available: fits, with 11.7 h to spare.
 - **2026-12-26** — Sat, Dec 26 (in 44 days): 25 acts open (31.5 h), 45.5 h queued up to it, 62.9 h available: fits, with 17.4 h to spare.
 
 ## This week (10 h)
@@ -23,15 +23,39 @@
 | 8 | Buffer: fixes from the event-screen reviews (1 h) | 1 | needs you: your task |
 | 9 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | 0.5 | needs you: your task |
 
-25 more acts are ready after these.
+43 more acts are ready after these.
 
 ## Waiting on the loop
 
 - Mid-release check: Chapter 1 on the preview build, file what broke (1 h) — the loop still owes NV1d, NV1e, NV1f, NV1g, NV1h
-- Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
-- Chapter 1 release check: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards,... — the loop still owes SS1c
+- First builds on real iPhones (attended) (from the build plan) — the loop still owes 129.2
+- Card sessions (owner-led) (from the build plan) — the loop still owes 134.3
+- Labyrinth re-theme (owner-led) (from the build plan) — the loop still owes 134.5
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
 
 ## No hours stated
 
+- The site goes up, and T's first verdict (attended)
+- Combat SVG rasterisation: T's Android measurement and the gate call (attended)
+- Apple enrollment and the credentials (attended)
+- First builds on real iPhones (attended)
+- Set bonuses (attended)
+- The loop back on (attended)
+- Card-creator workflow (owner-led)
+- Card sessions (owner-led)
+- Enemy revamp: Chapters 2-4 and the Act Boss (owner-led)
+- Dev menu revamp (owner-led)
+- Deck tab UI revamp (owner-led)
+- Card art revamp (owner-led)
+- Labyrinth re-theme (owner-led)
+- T picks node plates (owner-led)
+- T rotates both tokens (attended)
+- T reads the human-versus-sim comparison (attended)
+- T checks the play log on a preview APK (attended)
+- T proves the vault's conflict test (attended)
+- T looks at the feature map (attended)
 - Plot how a foe's attack is shown on screen: hide all the UI except the animated foe, make the screen look l...
+
+From the build plan (Held chunks no Item names): The site goes up, and T's first verdict (attended); Combat SVG rasterisation: T's Android measurement and the gate call (attended); Apple enrollment and the credentials (attended); First builds on real iPhones (attended); Set bonuses (attended); The loop back on (attended); Card-creator workflow (owner-led); Card sessions (owner-led); Enemy revamp: Chapters 2-4 and the Act Boss (owner-led); Dev menu revamp (owner-led); Deck tab UI revamp (owner-led); Card art revamp (owner-led); Labyrinth re-theme (owner-led); T picks node plates (owner-led); T rotates both tokens (attended); T reads the human-versus-sim comparison (attended); T checks the play log on a preview APK (attended); T proves the vault's conflict test (attended); T looks at the feature map (attended).
+
+Open acts only a hand can tick: 27.
