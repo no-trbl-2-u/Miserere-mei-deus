@@ -23,7 +23,8 @@
  * ACCESSIBILITY: reduce motion collapses every fade to 0; taps are unchanged.
  *
  * STATE OWNERSHIP: component-local cursor only. What the screen draws comes
- * from the `cutsceneView` presenter; the only store call is `dismissEvent()`.
+ * from the `cutsceneView` presenter; the only store calls are `dismissEvent()`
+ * and, for a node's before-scene, `continueToNode()`.
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -37,6 +38,7 @@ import { KitBackdrop } from '@/components/experience/KitBackdrop';
 import { ScreenBg } from '@/components/ScreenBg';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Image } from '@/lib/platform/image';
+import { isBeforeScene } from '@mechanics';
 import { useGameActions, useGameState } from '@/state/GameStoreProvider';
 import { cutsceneView } from '@/state/presenters/event.engine';
 import { TYPE_ROLES } from '@/theme/axm';
@@ -108,10 +110,15 @@ export default function CutsceneScreen() {
         return () => anim.stop();
     }, [active, index, opacity, reducedMotion]);
 
-    /** Leave the scene entirely (last line consumed, or SKIP pressed). */
+    /**
+     * Leave the scene entirely (last line consumed, or SKIP pressed). A node's
+     * before-scene hands on to the node's own screen; any other cutscene just ends.
+     */
     const dismiss = useCallback(() => {
-        actions.dismissEvent();
-    }, [actions]);
+        const event = slice?.pending?.event;
+        if (event && isBeforeScene(event)) actions.continueToNode();
+        else actions.dismissEvent();
+    }, [actions, slice]);
 
     /**
      * Tap handler: fade the current line out, then either step to the next
