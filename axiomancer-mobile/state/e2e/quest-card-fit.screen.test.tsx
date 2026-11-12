@@ -64,6 +64,15 @@ describe('/quest - the paid lighthouse card on a small phone', () => {
         expect(selectQuestVM(store.getState()).canAccept).toBe(false);
     });
 
+    it('lets ACCEPT press while the cue is mounted: the cue takes no touches', () => {
+        const { store } = openLighthouse();
+        layOut(360, 740, 1000);
+        const cue = screen.getByTestId('quest-scroll-cue');
+        expect(cue.props.pointerEvents).toBe('none');
+        fireEvent.press(screen.getByTestId('quest-accept-button'));
+        expect(selectQuestVM(store.getState()).canAccept).toBe(false);
+    });
+
     it('seats the relic banner outside the card, so it covers none of its rows', () => {
         openLighthouse();
         const relic = screen.getByTestId('quest-relic-rise');
@@ -112,6 +121,10 @@ describe('buttonsBelowFold', () => {
         expect(buttonsBelowFold(740, 1000, 0, 56)).toBe(true);
         // The row's top is at 926; scrolled 187 it sits at 739, inside the 740 view.
         expect(buttonsBelowFold(740, 1000, 187, 56)).toBe(false);
+        // The edge: a row whose top is exactly on the foot is below it, one point higher is in view.
+        // Row top = content - 18 (foot padding) - 56 (row height).
+        expect(buttonsBelowFold(740, 814, 0, 56)).toBe(true);
+        expect(buttonsBelowFold(740, 813, 0, 56)).toBe(false);
         // Cut off by a few points only: the row is partly in view.
         expect(buttonsBelowFold(844, 864, 0, 56)).toBe(false);
     });

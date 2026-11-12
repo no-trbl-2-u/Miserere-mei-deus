@@ -26,7 +26,7 @@ export interface RelicRiseProps {
     reducedMotion: boolean;
 }
 
-/** The turned-in step's relic, rising into view off the card's foot. */
+/** The turned-in step's relic, rising into view in the column under the card. */
 export function RelicRise({ itemId, name, reducedMotion }: RelicRiseProps) {
     const styles = useStyles();
     const instant = resolveJuiceMode({ reducedMotion }) === 'instant';
