@@ -47,7 +47,7 @@ Lintable ones are marked; `scripts/check-prose.mjs` learns them in chunk 177.2.
    | Loot cache action | 30 |
    | Hazard, rest, dream, travel, quest and description lines | 45 |
    | Screen copy (defeat, death return, game over) | 40 |
-   | Journal | 110 |
+   | Journal | 200 (T, 2026-11-12: "Raise the journal cap") |
 
 3. Story screens and cutscenes have no cap on the whole. They tell their part
    of the story: what happens, to whom, and what it costs, as the Act 1 story
