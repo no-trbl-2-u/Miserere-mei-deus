@@ -5,7 +5,11 @@
 
 import { afterAll, beforeAll, describe, expect, it } from '@jest/globals';
 
-import { completeQuest, emptyQuestLog, getQuestline, progressQuest, questlineStep, type Reward } from '@mechanics';
+import {
+    BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, startQuest, stepQuest,
+    buildStateFromFixture, completeQuest, emptyQuestLog, getQuestline, getStateFixtureById, progressQuest,
+    questlineStep, resolveMapEvent, type Reward,
+} from '@mechanics';
 
 import { selectHasActiveQuest, selectQuestVM, questRewardLine } from '@/state/presenters/quest.engine';
 import {
@@ -103,6 +107,103 @@ describe('selectQuestVM', () => {
         expect(vm.paid).toBe(paid);
         expect(vm.cardOffers).toEqual(['grey-ward']);
         expect(selectHasActiveQuest({ quest: { ...EMPTY_QUEST_SLICE, cardOffers: ['grey-ward'] } })).toBe(true);
+    });
+
+    it('speaks the turn-in line at turn-in and once paid, and the description at the other stages', () => {
+        const open = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.', turnInLine: 'It is done.' };
+        const withLines = (extra: Partial<MobileQuestSlice> = {}): MobileQuestSlice => ({ ...EMPTY_QUEST_SLICE, open, ...extra });
+        const held = startFixtureStep(base, 1);
+        const ready = progressQuest(held, 'Cross the Gallows', 'goal').log;
+
+        expect(selectQuestVM({ quest: withLines(), quests: base.quests }).giverLine).toBe('Wait for it.');
+        expect(selectQuestVM({ quest: withLines(), quests: held }).giverLine).toBe('Wait for it.');
+        expect(selectQuestVM({ quest: withLines(), quests: ready }).giverLine).toBe('It is done.');
+        const paid = { step: 1, questName: 'Cross the Gallows', experience: 40, currency: 0, itemNames: [] };
+        // Paid with the next step on offer: the turn-in line, a blank line, then the offer line.
+        expect(selectQuestVM({ quest: withLines({ paid }), quests: completeQuest(ready, 'Cross the Gallows') }).giverLine).toBe('It is done.\n\nWait for it.');
+
+        const plain = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' };
+        expect(selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open: plain }, quests: ready }).giverLine).toBe('Wait for it.');
+    });
+
+    it("the staged quest-paid state (wanderer-bw-bridge-paid, no ledger) speaks C-04's turn-in line at the bridge", () => {
+        const fixture = getStateFixtureById('wanderer-bw-bridge-paid')!;
+        const result = resolveMapEvent(buildStateFromFixture(fixture));
+        const event = result.event;
+        if (event.kind !== 'quest') throw new Error('expected a quest node at bw-b1');
+        expect(event.stage).toBe('offer');
+        const vm = selectQuestVM({
+            quest: {
+                ...EMPTY_QUEST_SLICE,
+                open: {
+                    questline: event.questline, node: event.node, description: event.description,
+                    turnInLine: event.turnInLine, giver: event.giver,
+                },
+            },
+            quests: result.state.quests,
+        });
+        expect(vm.paid).toBeNull();
+        expect(vm.giverLine).toBe(
+            "Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow's purse. Cross. No charge. There is no one left to charge it to.",
+        );
+    });
+
+    it('(a) keeps the description at stage offer while a step is ahead, even with a turn-in line and no ledger', () => {
+        const line = BREAKWATER_CHAPTER_QUESTLINE;
+        const quests = completeQuest(emptyQuestLog(), line.steps[0]!.quest.name);
+        const vm = selectQuestVM({
+            quest: {
+                ...EMPTY_QUEST_SLICE,
+                open: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, node: 2, description: 'Given line.', turnInLine: 'Ends line.' },
+            },
+            quests,
+        });
+        expect(vm.stage).toBe('offer');
+        expect(vm.ahead).not.toBeNull();
+        expect(vm.paid).toBeNull();
+        expect(vm.giverLine).toBe('Given line.');
+    });
+
+    it('(b) keeps the description at the chain end while the step behind is unmet (waiting)', () => {
+        const line = BREAKWATER_CHAPTER_QUESTLINE;
+        const quests = startQuest(emptyQuestLog(), stepQuest(line, line.steps[3]!));
+        const vm = selectQuestVM({
+            quest: {
+                ...EMPTY_QUEST_SLICE,
+                open: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, node: 5, description: '[content] The River Bridge.', turnInLine: 'Ends line.' },
+            },
+            quests,
+        });
+        expect(vm.stage).toBe('waiting');
+        expect(vm.giverLine).toBe('[content] The River Bridge.');
+    });
+
+    it('(c) with no quest slice it does not throw and shows nothing; with a slice and no ledger it shows the description', () => {
+        const none = selectQuestVM({ quest: undefined as never, quests: base.quests });
+        expect(none.active).toBe(false);
+        expect(none.giverLine).toBe('');
+        const open = { questline: FIXTURE_LINE, node: 1, description: 'Take it.', turnInLine: 'Done.' };
+        const vm = selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open, paid: null }, quests: base.quests });
+        expect(vm.paid).toBeNull();
+        expect(vm.giverLine).toBe('Take it.');
+    });
+
+    it('(d) a node with no turn-in line shows its description at stage turn-in', () => {
+        const ready = progressQuest(startFixtureStep(base, 1), 'Cross the Gallows', 'goal').log;
+        const vm = selectQuestVM({
+            quest: { ...EMPTY_QUEST_SLICE, open: { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' } },
+            quests: ready,
+        });
+        expect(vm.stage).toBe('turn-in');
+        expect(vm.giverLine).toBe('Wait for it.');
+    });
+
+    it('a node without a turn-in line keeps its description at every stage', () => {
+        const plain = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' };
+        const ready = progressQuest(startFixtureStep(base, 1), 'Cross the Gallows', 'goal').log;
+        for (const quests of [base.quests, startFixtureStep(base, 1), ready, completeQuest(ready, 'Cross the Gallows')]) {
+            expect(selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open: plain }, quests }).giverLine).toBe('Wait for it.');
+        }
     });
 
     it('a card pick waiting with no node open still reaches the screen', () => {

@@ -130,7 +130,7 @@ export interface MobileQuestPaid {
  * shown on the spoils tiles until taken or skipped. `null` outside a quest node.
  */
 export interface MobileQuestSlice {
-    open: { questline: string; node: number; description?: string; lockedLine?: string; giver?: { name: string; portrait: string } } | null;
+    open: { questline: string; node: number; description?: string; lockedLine?: string; turnInLine?: string; giver?: { name: string; portrait: string } } | null;
     paid: MobileQuestPaid | null;
     cardOffers: readonly string[];
 }

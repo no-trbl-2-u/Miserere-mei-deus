@@ -213,6 +213,7 @@ export function resolveQuestNodeEvent(log: QuestLog, payload: QuestPayload): Ext
     };
     if (payload.giver !== undefined) event.giver = payload.giver;
     if (event.stage === 'locked' && payload.lockedLine !== undefined) event.lockedLine = payload.lockedLine;
+    if (payload.turnInLine !== undefined) event.turnInLine = payload.turnInLine;
     const questline = getQuestline(payload.questline);
     if (!questline) return event;
     const behind = questlineStep(questline, payload.node - 1);
