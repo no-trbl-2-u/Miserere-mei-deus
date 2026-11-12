@@ -96,3 +96,7 @@ should scan as flatly as a receipt.
 **MB-8 — vocabulary discipline** *(lintable — wired)*. The six lexicons,
 the V-bans and the retired-term lexicon (`docs/lexicon.json`) govern word
 choice. The delivery rules shape sentences on top of them.
+
+## The Narrator exemption
+
+MB-1 (the 20-word sentence cap) and the faux-archaic ban do not bind the Narrator voice (D?narrator-exemption). Its sentences run to 40 words, each of its surfaces has its own word cap, and it may use "yet" and "bade" sparingly; see [`NARRATOR.md`](NARRATOR.md). Every other rule here binds all voices, the Narrator included.

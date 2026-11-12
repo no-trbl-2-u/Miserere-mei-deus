@@ -96,3 +96,7 @@ Prompts name Axiomancer registers and functional goals only. Safe: “Use the
 choice register; show a repaired ferry pin and state each VITAE consequence.”
 Unsafe: naming an author, asking for a comparable passage, supplying source
 prose, or asking for a synonymized transformation.
+
+## The Narrator exemption
+
+The Narrator voice (map, arrival, hazard, rest, dream, travel and quest lines, screen narration, enemy descriptions, journals and cutscenes) is exempt from the bans above under D?narrator-exemption. It may calibrate against a named author and an existing game, borrowing manner and never a sentence, on the surfaces and under the rules in [`NARRATOR.md`](NARRATOR.md). Every other voice keeps this file unchanged.
