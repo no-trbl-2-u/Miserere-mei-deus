@@ -17,8 +17,9 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from '@/lib/platform/router';
-import { ScrollView, Text, View } from 'react-native';
-import type { LayoutChangeEvent } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
 import { ScreenBg } from '@/components/ScreenBg';
 import { BrassButton } from '@/components/experience/BrassButton';
@@ -39,13 +40,68 @@ import {
     questXpLine,
 } from '@/state/presenters/quest.copy';
 import { TYPE_ROLES } from '@/theme/axm';
-import { makeStyles } from '@/theme/runtime';
+import { makeStyles, usePalette } from '@/theme/runtime';
 
 /** The card's shape: width over height, and its widest extent in points. */
 const CARD_RATIO = 0.62;
 const CARD_MAX_WIDTH = 340;
+/** The card's height is this share of the screen's height, held between the two bounds (points). */
+const CARD_HEIGHT_SHARE = 0.57;
+const CARD_MIN_HEIGHT = 280;
+const CARD_MAX_HEIGHT = 450;
+/** The scroll content's side and foot padding, in points (the `scroll` style). */
+const SCROLL_PAD_X = 14;
+const SCROLL_PAD_BOTTOM = 18;
+
+/**
+ * The card's size from the screen alone: a share of its height, so the card
+ * never depends on how tall the text under it turns out (which settles as the
+ * fonts and the portrait load).
+ */
+export function cardSizeFor(viewWidth: number, viewHeight: number): { width: number; height: number } {
+    const height = Math.round(Math.min(CARD_MAX_HEIGHT, Math.max(CARD_MIN_HEIGHT, viewHeight * CARD_HEIGHT_SHARE)));
+    const room = Math.max(0, viewWidth - SCROLL_PAD_X * 2);
+    return { width: Math.round(Math.min(room, QUEST_COLUMN_MAX_WIDTH, CARD_MAX_WIDTH, height * CARD_RATIO)), height };
+}
 /** Before the first layout pass (and in a test, which never lays out). */
 const CARD_FALLBACK = { width: 260, height: 420 };
+/**
+ * True while the button row lies wholly below the screen's foot. Only then does
+ * the cue show: once any of the buttons is in view (even cut off) the cue
+ * would sit over it, and the cut-off button is cue enough.
+ */
+export function buttonsBelowFold(viewHeight: number, contentHeight: number, offsetY: number, buttonsHeight: number): boolean {
+    if (viewHeight <= 0 || contentHeight <= 0 || buttonsHeight <= 0) return false;
+    const buttonsTop = contentHeight - SCROLL_PAD_BOTTOM - buttonsHeight;
+    return buttonsTop - offsetY >= viewHeight;
+}
+
+/**
+ * The cue that the column scrolls: a fade up from the screen's foot with a
+ * chevron on it, shown while buttons or rows sit below the edge. It takes no touches.
+ */
+function ScrollCue() {
+    const AXM = usePalette();
+    return (
+        <View style={cueStyles.cue} pointerEvents="none" testID="quest-scroll-cue">
+            <Svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" pointerEvents="none" style={StyleSheet.absoluteFill}>
+                <Defs>
+                    <LinearGradient id="axmQuestCue" x1="0" y1="0" x2="0" y2="1">
+                        <Stop offset="0" stopColor={AXM.bg} stopOpacity={0} />
+                        <Stop offset="1" stopColor={AXM.bg} stopOpacity={0.96} />
+                    </LinearGradient>
+                </Defs>
+                <Rect x={0} y={0} width={100} height={100} fill="url(#axmQuestCue)" />
+            </Svg>
+            <Text style={[cueStyles.chevron, { color: AXM.sulfur }]} accessibilityElementsHidden>{'▾'}</Text>
+        </View>
+    );
+}
+
+const cueStyles = StyleSheet.create({
+    cue: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 56, alignItems: 'center', justifyContent: 'flex-end' },
+    chevron: { fontSize: 22, lineHeight: 24, marginBottom: 4 },
+});
 
 export default function QuestScreen() {
     const styles = useStyles();
@@ -58,6 +114,8 @@ export default function QuestScreen() {
     const router = useRouter();
     const reducedMotion = useReducedMotion();
     const [size, setSize] = useState(CARD_FALLBACK);
+    // The column's scroll: the screen's height, the column's height and how far it is scrolled.
+    const [scrollBox, setScrollBox] = useState({ view: 0, content: 0, y: 0, buttons: 0 });
 
     useEffect(() => {
         if (!active && router.canGoBack()) router.back();
@@ -73,12 +131,26 @@ export default function QuestScreen() {
         );
     }
 
-    const onWrapLayout = (e: LayoutChangeEvent) => {
+    const onButtonsLayout = (e: LayoutChangeEvent) => {
+        const buttons = Math.round(e.nativeEvent.layout.height);
+        setScrollBox(prev => (prev.buttons === buttons ? prev : { ...prev, buttons }));
+    };
+
+    const onScrollLayout = (e: LayoutChangeEvent) => {
         const { width, height } = e.nativeEvent.layout;
         if (width <= 0 || height <= 0) return;
-        const w = Math.round(Math.min(width, CARD_MAX_WIDTH, height * CARD_RATIO));
-        const h = Math.round(height);
-        setSize(prev => (prev.width === w && prev.height === h ? prev : { width: w, height: h }));
+        const view = Math.round(height);
+        setScrollBox(prev => (prev.view === view ? prev : { ...prev, view }));
+        const next = cardSizeFor(width, height);
+        setSize(prev => (prev.width === next.width && prev.height === next.height ? prev : next));
+    };
+    const onContentSize = (_w: number, content: number) => {
+        const next = Math.round(content);
+        setScrollBox(prev => (prev.content === next ? prev : { ...prev, content: next }));
+    };
+    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const y = Math.round(e.nativeEvent.contentOffset.y);
+        setScrollBox(prev => (prev.y === y ? prev : { ...prev, y }));
     };
 
     // An offer already accepted reads as the work in progress.
@@ -93,7 +165,16 @@ export default function QuestScreen() {
 
     return (
         <ScreenBg scrollable={false}>
-            <ScrollView style={styles.scrollOuter} contentContainerStyle={styles.scroll}>
+            <View style={styles.scrollFrame}>
+            <ScrollView
+                style={styles.scrollOuter}
+                contentContainerStyle={styles.scroll}
+                onLayout={onScrollLayout}
+                onContentSizeChange={onContentSize}
+                onScroll={onScroll}
+                scrollEventThrottle={32}
+                testID="quest-scroll"
+            >
                 {vm.active && (
                     <View style={styles.column} testID="quest-column">
                         {vm.paid && (
@@ -106,7 +187,7 @@ export default function QuestScreen() {
                             </Text>
                         )}
 
-                        <View style={styles.cardWrap} onLayout={onWrapLayout}>
+                        <View style={[styles.cardWrap, { height: size.height }]}>
                             {vm.card && (
                                 <QuestCard
                                     step={vm.card}
@@ -121,17 +202,18 @@ export default function QuestScreen() {
                                     testID={cardTestID}
                                 />
                             )}
-                            {vm.paid && vm.paid.itemNames.length > 0 && (
-                                <View style={styles.relicFoot} pointerEvents="none">
-                                    <RelicRise
-                                        key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
-                                        itemId={vm.paid.itemIds?.[0] ?? null}
-                                        name={vm.paid.itemNames[0]!}
-                                        reducedMotion={reducedMotion}
-                                    />
-                                </View>
-                            )}
                         </View>
+
+                        {vm.paid && vm.paid.itemNames.length > 0 && (
+                            <View style={styles.relicRow} pointerEvents="none">
+                                <RelicRise
+                                    key={`${vm.paid.step}-${vm.paid.itemNames[0]}`}
+                                    itemId={vm.paid.itemIds?.[0] ?? null}
+                                    name={vm.paid.itemNames[0]!}
+                                    reducedMotion={reducedMotion}
+                                />
+                            </View>
+                        )}
 
                         {vm.giver && (
                             <Text style={styles.giverName} testID="quest-giver-name">{vm.giver.name}</Text>
@@ -144,7 +226,7 @@ export default function QuestScreen() {
 
                         <QuestBeads beads={vm.beads} />
 
-                        <View style={styles.buttons}>
+                        <View style={styles.buttons} onLayout={onButtonsLayout} testID="quest-buttons">
                             <BrassButton
                                 label={QUEST_LEAVE_LABEL}
                                 accessibilityLabel="Leave"
@@ -177,6 +259,8 @@ export default function QuestScreen() {
                     </View>
                 )}
             </ScrollView>
+            {buttonsBelowFold(scrollBox.view, scrollBox.content, scrollBox.y, scrollBox.buttons) && <ScrollCue />}
+            </View>
 
             {vm.cardOffers.length > 0 && (
                 <CombatRewardsOverlay
@@ -192,11 +276,12 @@ export default function QuestScreen() {
 export const QUEST_COLUMN_MAX_WIDTH = 520;
 
 const useStyles = makeStyles((AXM) => ({
+    scrollFrame: { flex: 1 },
     scrollOuter: { flex: 1 },
     scroll: { padding: 14, paddingBottom: 18, flexGrow: 1 },
     column: { flex: 1, width: '100%', maxWidth: QUEST_COLUMN_MAX_WIDTH, alignSelf: 'center' },
-    // The card takes whatever height the name, line, beads and buttons leave.
-    cardWrap: { flex: 1, minHeight: 280, alignItems: 'center', justifyContent: 'center' },
+    // The card's height is set from the screen's (`cardSizeFor`), never from what is under it.
+    cardWrap: { alignItems: 'center', justifyContent: 'center' },
     giverName: {
         fontFamily: TYPE_ROLES.title.fontFamily,
         fontSize: 24,
@@ -223,7 +308,8 @@ const useStyles = makeStyles((AXM) => ({
         textAlign: 'center',
         marginBottom: 8,
     },
-    relicFoot: { position: 'absolute', left: 0, right: 0, bottom: 8, alignItems: 'center' },
+    // The turned-in relic sits in the column under the card, never over its rows.
+    relicRow: { alignItems: 'center', marginTop: 10 },
     inactiveWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
     inactiveText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 16, lineHeight: 22, color: AXM.parchment, opacity: 0.55, textAlign: 'center' },
 }));
