@@ -1,6 +1,6 @@
 /**
  * A fled fight leaves its node incomplete and sends the player back to the node
- * they came from (phase QL1c, A24; spec 181, A1).
+ * they came from (phase QL1c, A24).
  *
  * WITHDRAW (`fleeEncounter`) and the prelude's FLEE (`pickEventChoice`)
  * answer the arrival through the engine (`retreatFromArrival`) and no

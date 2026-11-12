@@ -262,7 +262,7 @@ describe('a save taken mid-fight survives a reload', () => {
         // fight, and the map reads it as unspent.
         expect(map.consumedNodes ?? []).not.toContain('bw-w2');
         expect(map.completedNodes).not.toContain('bw-w2');
-        // The player is back on the node they came from (spec 181), and may walk onto the
+        // The player is back on the node they came from, and may walk onto the
         // fight node again: the arrival is owed afresh.
         expect(map.currentNode).toBe('bw-w1');
         expect(actions.moveTo('bw-w2').moved).toBe(true);

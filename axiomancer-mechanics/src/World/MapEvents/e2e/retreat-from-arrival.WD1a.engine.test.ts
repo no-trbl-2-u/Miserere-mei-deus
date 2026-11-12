@@ -1,5 +1,5 @@
 /**
- * Spec 181, A1 (phase WD1a): a flee sends the player back to the node they
+ * Phase WD1a: a flee sends the player back to the node they
  * came from, the fight node stays unspent, and the way past it stays shut.
  *
  * The map is the Breakwater's first three roads: bw-w1 (the start) -> bw-w2

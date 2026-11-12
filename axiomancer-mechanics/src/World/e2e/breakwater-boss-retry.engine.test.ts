@@ -200,7 +200,7 @@ describe('A23: the chapter boss fought again after the death rule', () => {
         const fled = endFight(staged, encounter, 'flee');
 
         expect(fled.dying).toBeUndefined();
-        // A flee goes back to the node they came from (spec 181).
+        // A flee goes back to the node they came from.
         expect(map(fled).currentNode).toBe(KEEP_GATE);
         expect(isNodeSpent(map(fled), BOSS_NODE)).toBe(false);
         expect(step4(fled)).toBe('active');

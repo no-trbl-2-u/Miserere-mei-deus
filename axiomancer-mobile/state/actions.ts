@@ -1726,7 +1726,7 @@ function fleeEncounterAction(store: AppStore): void {
  * nothing: the engine's `retreatFromArrival` clears the debt (so the
  * exploration screen does not re-fire the fight), leaves the node unspent, with
  * nothing opened from it, and sends the player back to the node they came from
- * (spec 181), so the way past the fight stays shut.
+ *, so the way past the fight stays shut.
  */
 function answerArrivalAction(store: AppStore): void {
     const answered = retreatFromArrival(store.getState() as unknown as GameState);
