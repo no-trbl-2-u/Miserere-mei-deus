@@ -102,8 +102,7 @@ describe('the Lantern Deep\'s events (D29)', () => {
         expect(first.event).toMatchObject({
             kind: 'cutscene', slot: 'before',
             lines: [
-                'The stair comes down out of the ice and through a hole in a cavern roof. The daylight stops at the last step.',
-                'Below, a lake, and lanterns on the far shore. Somebody carried every one of them down.',
+                '[content] The Surface Stair.',
             ],
         });
         expect(getNodeEventPool('northern-continent', 'lantern-deep', 'ld-1')).toBeUndefined();

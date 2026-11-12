@@ -180,7 +180,7 @@ export interface NodeSceneEntry { continent: string; map: string; nodeId: string
 //
 // T's Chapter 1 map (`Continents/Coastal-Village/breakwater-chapter.ts`): 43
 // nodes, one pool each but the windmill, by the node list's board kind
-// (`braindump/2026-10-28-breakwater-chapter-1-map.md`, "The node list").
+// (`plan/116-bw1-breakwater-rebuild.md`).
 //
 // Each fight node binds one foe at one level (`BW_ENCOUNTER_FOES`, T's
 // Breakwater table). Placeholders until T's sessions: the elites are the

@@ -99,8 +99,7 @@ describe('the Beacon Crags\' events (D29)', () => {
         expect(first.event).toMatchObject({
             kind: 'cutscene', slot: 'before',
             lines: [
-                'The stair comes up into wind and snow, on a road over the crags.',
-                'On the summit to the west, a fire is burning. Someone down in the valley can see it.',
+                '[content] The Top Pass.',
             ],
         });
         expect(getNodeEventPool('northern-continent', 'beacon-crags', 'bc-1')).toBeUndefined();
