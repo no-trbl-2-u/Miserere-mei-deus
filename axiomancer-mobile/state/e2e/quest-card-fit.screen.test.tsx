@@ -5,15 +5,18 @@
  * line and the offer line, the relic banner) is the tallest card. Jest cannot
  * measure layout, so this pins what the fit rests on: LEAVE and ACCEPT live in
  * the column's scroll container (reached by scrolling, ACCEPT pressable), the
- * relic banner sits beside the card and not inside it, and a cue shows while
- * the column hides more below. The 360x740 reach is proved in the PR's shots.
+ * relic banner sits beside the card and not inside it, the card's size comes
+ * from the screen alone, and the cue shows only while the buttons lie wholly
+ * below the fold, so it never sits over one. The 360x740 reach is proved in
+ * the PR's shots.
  */
 
 import { describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 
-import QuestScreen, { hasMoreBelow } from '@/app/quest/index';
+import QuestScreen, { buttonsBelowFold, cardSizeFor } from '@/app/quest/index';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
 import { selectQuestVM } from '@/state/presenters/quest.engine';
 import { arriveFromFixture, createFixtureStore } from '@/test-utils/fixtureStore';
@@ -41,6 +44,15 @@ function within(node: { parent: unknown; props: { testID?: string } } | null, te
     return false;
 }
 
+/** Lay the screen out: the scroll area `w` x `h`, its column `content` tall, the button row `buttons` tall. */
+function layOut(w: number, h: number, content: number, buttons = 56) {
+    act(() => {
+        fireEvent(screen.getByTestId('quest-scroll'), 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: w, height: h } } });
+        fireEvent(screen.getByTestId('quest-scroll'), 'contentSizeChange', w, content);
+        fireEvent(screen.getByTestId('quest-buttons'), 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: w, height: buttons } } });
+    });
+}
+
 describe('/quest - the paid lighthouse card on a small phone', () => {
     it('keeps LEAVE and ACCEPT inside the scrolling column, and ACCEPT presses', () => {
         const { store } = openLighthouse();
@@ -59,30 +71,57 @@ describe('/quest - the paid lighthouse card on a small phone', () => {
         expect(within(relic, 'quest-scroll')).toBe(true);
     });
 
-    it('shows a cue while more column lies below, and drops it at the foot', () => {
+    it('sizes the card from the screen, whatever the column under it measures', () => {
         openLighthouse();
-        const scroll = screen.getByTestId('quest-scroll');
+        const cardSize = () => StyleSheet.flatten(screen.getByTestId('quest-offer').props.style);
+        layOut(360, 740, 900);
+        const first = cardSize();
+        expect(first).toMatchObject(cardSizeFor(360, 740));
+        layOut(360, 740, 1300);
+        expect(cardSize()).toEqual(first);
+        layOut(390, 844, 1000);
+        expect(cardSize()).toMatchObject(cardSizeFor(390, 844));
+    });
+
+    it('shows the cue while the buttons lie below the fold, and drops it once they are in view', () => {
+        openLighthouse();
         expect(screen.queryByTestId('quest-scroll-cue')).toBeNull();
-        act(() => {
-            fireEvent(scroll, 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 360, height: 740 } } });
-            fireEvent(scroll, 'contentSizeChange', 360, 1000);
-        });
+        layOut(360, 740, 1000);
         expect(screen.getByTestId('quest-scroll-cue')).toBeTruthy();
         act(() => {
-            fireEvent.scroll(scroll, { nativeEvent: { contentOffset: { x: 0, y: 260 } } });
+            fireEvent.scroll(screen.getByTestId('quest-scroll'), { nativeEvent: { contentOffset: { x: 0, y: 260 } } });
         });
+        expect(screen.queryByTestId('quest-scroll-cue')).toBeNull();
+    });
+
+    it('shows no cue when the column overflows a little and the buttons are on screen', () => {
+        openLighthouse();
+        layOut(390, 844, 864);
         expect(screen.queryByTestId('quest-scroll-cue')).toBeNull();
     });
 });
 
-describe('hasMoreBelow', () => {
-    it('is false before a layout, when the column fits, and near the foot', () => {
-        expect(hasMoreBelow(0, 1000, 0)).toBe(false);
-        expect(hasMoreBelow(740, 700, 0)).toBe(false);
-        expect(hasMoreBelow(740, 1000, 258)).toBe(false);
+describe('buttonsBelowFold', () => {
+    it('is false before a layout and when the column fits', () => {
+        expect(buttonsBelowFold(0, 1000, 0, 56)).toBe(false);
+        expect(buttonsBelowFold(740, 0, 0, 56)).toBe(false);
+        expect(buttonsBelowFold(740, 1000, 0, 0)).toBe(false);
+        expect(buttonsBelowFold(740, 700, 0, 56)).toBe(false);
     });
-    it('is true while more than a few points hide below', () => {
-        expect(hasMoreBelow(740, 1000, 0)).toBe(true);
-        expect(hasMoreBelow(740, 1000, 200)).toBe(true);
+    it('is true only while the whole button row lies past the foot', () => {
+        expect(buttonsBelowFold(740, 1000, 0, 56)).toBe(true);
+        // The row's top is at 926; scrolled 187 it sits at 739, inside the 740 view.
+        expect(buttonsBelowFold(740, 1000, 187, 56)).toBe(false);
+        // Cut off by a few points only: the row is partly in view.
+        expect(buttonsBelowFold(844, 864, 0, 56)).toBe(false);
+    });
+});
+
+describe('cardSizeFor', () => {
+    it('is a share of the screen height within bounds, and never wider than the room', () => {
+        expect(cardSizeFor(390, 844)).toEqual({ width: 279, height: 450 });
+        expect(cardSizeFor(360, 740)).toMatchObject({ height: 422 });
+        expect(cardSizeFor(360, 300).height).toBe(280);
+        expect(cardSizeFor(200, 844).width).toBe(172);
     });
 });
