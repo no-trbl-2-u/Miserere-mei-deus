@@ -465,3 +465,9 @@ Defaults: the chapter name is the map region without its leading "The", uppercas
 - Defaults taken: a `[content]` or `[NPC Content Needed]` literal is skipped by every rule (the arrival-lines placeholder template carried a `!` that tripped the exclamation rule once the file was listed). The Narrator's archaic ban is thee, thou, thy, thine, hath, doth; `ye` is not banned there. Narrator fields keep the semicolon, exclamation and retired-term rules.
 - T raised the journal cap to 200 words (2026-11-12) so his saint beneath page, about 190 words, passes unchanged. Enemy journal `body` fields are in the Narrator table at `journal`; every shipped journal passes.
 - The Narrator table lists the cutscene `lines` (panel 80 words, six panels a screen, sentence 40) but the existing cutscenes in `content.ts` are short; 177.9 redraws them.
+
+Defaults taken (pilot worker, no questions asked):
+- The before-scene is read after the spent check, so a spent node (a walk back, an old save's consumed node) plays no scene.
+- A staged payload (`StateFixture.stagedEvent`) skips the scene slot: it stands in for the whole node.
+- `_clearMapEventPoolRegistry()` also clears the scene table, so `registerMapEventContent()` replays both.
+- The CLIs resolve again after a before-scene in code; their A4 proof is the reducer case in the SS1a e2e (the CLIs run no in-process route test).

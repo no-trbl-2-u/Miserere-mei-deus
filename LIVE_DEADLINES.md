@@ -29,8 +29,8 @@
 
 ## Waiting on the loop
 
-- Review the reworked travel, loot cache and cutscene screens (1.5 h) — the loop still owes SS1a, SS1b
-- Mid-release check: Chapter 1 on the preview build, file what broke (1 h) — the loop still owes NV1d, NV1e, NV1f, NV1g, NV1h, NV1j
+- Review the reworked travel, loot cache and cutscene screens (1.5 h) — the loop still owes SS1b
+- Mid-release check: Chapter 1 on the preview build, file what broke (1 h) — the loop still owes NV1d, NV1e, NV1f, NV1g, NV1h
 - Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
 - Chapter 1 release check: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards,... — the loop still owes SS1c
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
