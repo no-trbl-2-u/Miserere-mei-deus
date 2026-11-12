@@ -180,7 +180,7 @@ export interface NodeSceneEntry { continent: string; map: string; nodeId: string
 //
 // T's Chapter 1 map (`Continents/Coastal-Village/breakwater-chapter.ts`): 43
 // nodes, one pool each but the windmill, by the node list's board kind
-// (`braindump/2026-10-28-breakwater-chapter-1-map.md`, "The node list").
+// (`plan/116-bw1-breakwater-rebuild.md`).
 //
 // Each fight node binds one foe at one level (`BW_ENCOUNTER_FOES`, T's
 // Breakwater table). Placeholders until T's sessions: the elites are the
@@ -766,11 +766,8 @@ const CW_DOOR_LEVEL = 2;
 const cwArrival: CutscenePayload = {
     kind: 'cutscene',
     scene: 'charcoal-wood-arrival',
-    lines: [
-        'The bridge ends in pine. Smoke hangs under the branches and does not lift.',
-        'Somewhere ahead, the burners are working the clearings.',
-    ],
-    description: 'You cross into the Charcoal Wood.',
+    lines: ['[content] The River Bridge.'],
+    description: '[content] The River Bridge.',
 };
 
 export function cwEncounterPool(nodeId: string, foe: ActOneFoe): MapEventPool {
@@ -807,20 +804,20 @@ const CW_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
  * wood has none (the hunting lodge is shut; you sleep on its porch).
  */
 const CW_CAMP_NODES: Record<string, string> = {
-    'cw-9':  'The hunting lodge is shut for the season. Its porch is dry, and nobody collects for it.',
-    'cw-11': 'An empty cottage on stilts over the bog. The boardwalk is the only way in, and the only way out.',
-    'cw-15': 'An open shelter over stacked logs. The fire is someone else\'s. You sit by it anyway.',
+    'cw-9':  '[content] The Hunting Lodge.',
+    'cw-11': '[content] The Stilt Cottage.',
+    'cw-15': '[content] The Woodcutters’ Camp.',
 };
 
 const CW_HAZARD_NODES: Record<string, string> = {
-    'cw-3':  'The shrine floor is rotten over the crypt. It gives under you.',
+    'cw-3':  '[content] The Ruined Shrine.',
 };
 
 const CW_LOOT_NODES: Record<string, AuthoredLootCache> = {
-    'cw-2':  { currency: 8,  description: 'A strongbox under the tower\'s fallen stair. The lock rusted before its owner came back.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    'cw-2':  { currency: 8,  description: '[content] The Ruined Tower.', actions: PLACEHOLDER_CACHE_ACTIONS },
     // The cave cache — the one cache whose action lines T has written.
-    'cw-6':  { currency: 6,  description: 'Shillings in a niche at the cave mouth. Someone paid the dark and left.', actions: CAVE_CACHE_ACTIONS },
-    'cw-13': { currency: 12, description: 'The hermit is gone. His purse is under the hearthstone, where they all keep it.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    'cw-6':  { currency: 6,  description: '[content] The West Cave.', actions: CAVE_CACHE_ACTIONS },
+    'cw-13': { currency: 12, description: '[content] The Hermit’s Hut.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };
 
 /**
@@ -835,7 +832,7 @@ const cwStairCave: MapEventPool = {
         payload: {
             kind: 'travel',
             destination: { map: 'beacon-crags', continent: 'northern-continent' },
-            prompt: 'A stair cut down into the cliff. It runs under the hills and comes up, a long way on, on a mountain road.',
+            prompt: '[content] The Stair Cave.',
         },
     }],
 };
@@ -889,11 +886,8 @@ const BC_DOOR_LEVEL = 3;
 /** Arrival up the Charcoal Wood's stair, on the crag road. */
 const bcArrival: CutscenePayload = {
     kind: 'cutscene',
-    lines: [
-        'The stair comes up into wind and snow, on a road over the crags.',
-        'On the summit to the west, a fire is burning. Someone down in the valley can see it.',
-    ],
-    description: 'You come up into the Beacon Crags.',
+    lines: ['[content] The Top Pass.'],
+    description: '[content] The Top Pass.',
 };
 
 /** Every Beacon Crags fight, pinned (`cwEncounterPool` builds the pool). */
@@ -912,19 +906,19 @@ const BC_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
 
 /** All three rests are CAMPS: inns live inside settlements. */
 const BC_CAMP_NODES: Record<string, string> = {
-    'bc-4':  'The shepherds let you sleep in the fold. They charge for the straw, not the wind.',
-    'bc-6':  'The monks sell a blanket and lend a bench. You take the bench.',
-    'bc-14': 'The inn is shut and the cart outside it is not. You sleep in the cart.',
+    'bc-4':  '[content] The Shepherds’ Village.',
+    'bc-6':  '[content] The Cliff Monastery.',
+    'bc-14': '[content] The Mountain Inn.',
 };
 
 const BC_HAZARD_NODES: Record<string, { damage: number; description: string }> = {
-    'bc-3':  { damage: 2, description: 'The spray from the falls freezes on the path. The lake is a long way down.' },
-    'bc-9':  { damage: 3, description: 'The rope bridge charges for the crossing. Halfway over, a plank charges again.' },
+    'bc-3':  { damage: 2, description: '[content] The Hanging Lake.' },
+    'bc-9':  { damage: 3, description: '[content] The Rope Bridge.' },
 };
 
 const BC_LOOT_NODES: Record<string, AuthoredLootCache> = {
-    'bc-5':  { currency: 12, description: 'A strongbox in the castle gatehouse. The garrison left in a hurry and paid nobody.', actions: PLACEHOLDER_CACHE_ACTIONS },
-    'bc-16': { currency: 14, description: 'A toll-box at the tunnel mouth, pried open. Whoever pried it did not come back out.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    'bc-5':  { currency: 12, description: '[content] The Crag Castle.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    'bc-16': { currency: 14, description: '[content] The Tunnel Bridge.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };
 
 /**
@@ -939,7 +933,7 @@ const bcGlacierShrine: MapEventPool = {
         payload: {
             kind: 'travel',
             destination: { map: 'lantern-deep', continent: 'northern-continent' },
-            prompt: 'A stair goes down under the shrine, into the ice, and on below it. Someone has hung a lantern on every turn.',
+            prompt: '[content] The Glacier Shrine.',
         },
     }],
 };
@@ -996,11 +990,8 @@ const LD_DOOR_LEVEL = 4;
 /** Arrival down the Beacon Crags' stair, through the cavern roof. */
 const ldArrival: CutscenePayload = {
     kind: 'cutscene',
-    lines: [
-        'The stair comes down out of the ice and through a hole in a cavern roof. The daylight stops at the last step.',
-        'Below, a lake, and lanterns on the far shore. Somebody carried every one of them down.',
-    ],
-    description: 'You come down into the Lantern Deep.',
+    lines: ['[content] The Surface Stair.'],
+    description: '[content] The Surface Stair.',
 };
 
 /** Every Lantern Deep fight, pinned (`cwEncounterPool` builds the pool). */
@@ -1021,18 +1012,18 @@ const LD_ENCOUNTER_FOES: Record<string, ActOneFoe> = {
 
 /** All three rests are CAMPS: inns live inside settlements. */
 const LD_CAMP_NODES: Record<string, string> = {
-    'ld-2':  'The ferryman lets you sleep under his lantern. He charges for the oil, not the floor.',
-    'ld-10': 'The traders let you sleep behind the stalls. They sell lamp oil by the drop.',
-    'ld-17': 'A landing on the stairway, dry and out of the draught. Someone left a lantern. It is out.',
+    'ld-2':  '[content] The Ferry Landing.',
+    'ld-10': '[content] The Market Grotto.',
+    'ld-17': '[content] The East Stairs.',
 };
 
 const LD_HAZARD_NODES: Record<string, { damage: number; description: string }> = {
-    'ld-4':  { damage: 2, description: 'The aqueduct leaks. The walkway is slick, and the lake is a long way down.' },
-    'ld-9':  { damage: 3, description: 'The giant turns in its sleep. The dais is not wide enough for the both of you.' },
+    'ld-4':  { damage: 2, description: '[content] The North Aqueduct.' },
+    'ld-9':  { damage: 3, description: '[content] The Sleeping Giant.' },
 };
 
 const LD_LOOT_NODES: Record<string, AuthoredLootCache> = {
-    'ld-6':  { currency: 12, description: 'A torch-bearer\'s purse, dropped in the west tunnel. The torches are still lit.', actions: PLACEHOLDER_CACHE_ACTIONS },
+    'ld-6':  { currency: 12, description: '[content] The West Tunnel.', actions: PLACEHOLDER_CACHE_ACTIONS },
 };
 
 /**
@@ -1045,8 +1036,8 @@ const ldVaultDoor: MapEventPool = {
         kind: 'cutscene', weight: 1,
         payload: {
             kind: 'cutscene',
-            lines: ['The round door is sealed.'],
-            description: 'The sealed vault door.',
+            lines: ['[content] The Vault Door.'],
+            description: '[content] The Vault Door.',
         },
     }],
 };
@@ -1061,8 +1052,8 @@ const ldDeepStair: MapEventPool = {
         kind: 'cutscene', weight: 1,
         payload: {
             kind: 'cutscene',
-            lines: ['The deep stair is sealed.'],
-            description: 'The sealed deep stair.',
+            lines: ['[content] The Deep Stair.'],
+            description: '[content] The Deep Stair.',
         },
     }],
 };
