@@ -27,7 +27,7 @@ const GAUNTLET_MAPS: MapDefinition[] = Object.values(MAP_REGISTRY)
 
 /**
  * Maps drawn as a tree of places rather than a gauntlet of columns: the
- * Breakwater, T's Chapter 1 map (`plan/revamp/breakwater-vision.md`). Its
+ * Breakwater, T's Chapter 1 map (`plan/116-bw1-breakwater-rebuild.md`). Its
  * roads branch from the windmill to dead ends that are destinations (the sea
  * keep, the lighthouse, the fishermen's camp, the far bank), each walked back
  * from under the road rule, and the cove is reached only through a same-map

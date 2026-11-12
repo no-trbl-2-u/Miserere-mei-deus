@@ -10,13 +10,19 @@
  * The counter is PER RUN (`Character.cardRemovals`), not per node and not
  * lifetime-across-runs.
  *
- * PRICES ARE RATIFIED against MEASURED income: a map's three
- * authored loot-cache nodes grant a guaranteed 26 shillings on a full walk
- * (`src/World/MapEvents/content.ts`'s `COAST_LOOT_CACHES`, the Breakwater's), and shop
- * wares run ~1-12. `base` sits well under a single loot-cache find so the
- * first cut is obviously affordable early; `step` is sized so the fourth/fifth
- * cut (20 / 25) approaches a full act's income — a real sacrifice, not a
- * lockout. Do not fork copies of these numbers: read the constant.
+ * PRICES ARE RATIFIED against MEASURED income: a full Breakwater walk
+ * guarantees 296 shillings (`BREAKWATER_SHILLINGS_FLOOR`): 44 from its five
+ * loot caches (`COAST_LOOT_CACHES`: 8 + 12 + 6 + 12 + 6) and 252 in fight
+ * wages (`fightWage(level)`, 3 a level, paid by the reducer on every win: 14
+ * fights at 56 levels = 168, three elites at levels 5, 7 and 8 = 60, the door
+ * boss at level 8 = 24). Hazard purses are upside, not floor, and a spared
+ * foe pays more than its wage. Shop wares run ~1-12. `base` sits well under a
+ * single loot-cache find so the first cut is obviously affordable early. The
+ * old reasoning that the fourth/fifth cut (20 / 25) "approaches a full act's
+ * income" no longer holds against that floor: the five cuts total 75, about a
+ * quarter of it. The prices stay as T set them; whether they are still right
+ * is T's call at a tuning pass. Do not fork copies of these numbers: read the
+ * constant.
  *
  * This module charges nothing. `removeCardFromCombatDeck` deliberately does
  * not spend currency — pricing is the CALLER's transaction (the rest-choice
@@ -25,6 +31,19 @@
  */
 
 import type { Character } from '../Character/types';
+
+/**
+ * What a full Breakwater walk guarantees, in shillings, with its parts. A test
+ * (`card.removal.pricing.engine.test.ts`) recomputes both parts from the tables
+ * and fails when this and the comments quoting it drift.
+ */
+export const BREAKWATER_SHILLINGS_FLOOR = Object.freeze({
+    /** The five loot-cache purses (`COAST_LOOT_CACHES`). */
+    caches: 44,
+    /** `fightWage(level)` on every fight, elite and boss node. */
+    wages: 252,
+    total: 296,
+});
 
 /**
  * The removal curve, ratified against measured income. Currency

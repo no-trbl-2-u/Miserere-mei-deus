@@ -66,28 +66,28 @@ export const beaconCragsLayout: MapLayout = {
     sheet,
     nodes: [
         // ── c0 — the top pass: arrival up the Charcoal Wood's stair ──
-        { id: 'bc-1',  ...at('bc-1'),  label: 'The Top Pass', description: 'The stair comes up on the crag road. A fire burns to the west.' },
+        { id: 'bc-1',  ...at('bc-1'),  label: 'The Top Pass', description: '[content] The Top Pass.' },
         // ── c1 ──
-        { id: 'bc-2',  ...at('bc-2'),  label: 'The Summit Beacon', description: 'The fire that tells the valley who is coming. Something keeps it.' },
-        { id: 'bc-3',  ...at('bc-3'),  label: 'The Hanging Lake', description: 'The falls spill over the lip. The path is iced with their spray.' },
-        { id: 'bc-4',  ...at('bc-4'),  label: 'The Shepherds’ Village', description: 'A chapel and a fold. They charge for the straw.' },
+        { id: 'bc-2',  ...at('bc-2'),  label: 'The Summit Beacon', description: '[content] The Summit Beacon.' },
+        { id: 'bc-3',  ...at('bc-3'),  label: 'The Hanging Lake', description: '[content] The Hanging Lake.' },
+        { id: 'bc-4',  ...at('bc-4'),  label: 'The Shepherds’ Village', description: '[content] The Shepherds’ Village.' },
         // ── c2 ──
-        { id: 'bc-5',  ...at('bc-5'),  label: 'The Crag Castle', description: 'The garrison left in a hurry. The gatehouse did not.' },
-        { id: 'bc-6',  ...at('bc-6'),  label: 'The Cliff Monastery', description: 'The monks sell a blanket and lend a bench.' },
-        { id: 'bc-7',  ...at('bc-7'),  label: 'The Mine Entrance', description: 'Rails into the rock. Nobody weighs the spoil heap.' },
+        { id: 'bc-5',  ...at('bc-5'),  label: 'The Crag Castle', description: '[content] The Crag Castle.' },
+        { id: 'bc-6',  ...at('bc-6'),  label: 'The Cliff Monastery', description: '[content] The Cliff Monastery.' },
+        { id: 'bc-7',  ...at('bc-7'),  label: 'The Mine Entrance', description: '[content] The Mine Entrance.' },
         // ── c3 ──
-        { id: 'bc-8',  ...at('bc-8'),  label: 'The Ruined Chapel', description: 'The bell rings for a master who never comes.' },
-        { id: 'bc-9',  ...at('bc-9'),  label: 'The Rope Bridge', description: 'It charges for the crossing, and again for the fall.' },
-        { id: 'bc-10', ...at('bc-10'), label: 'The Toll Gate', description: 'A collar in the road. Something under the arch.' },
+        { id: 'bc-8',  ...at('bc-8'),  label: 'The Ruined Chapel', description: '[content] The Ruined Chapel.' },
+        { id: 'bc-9',  ...at('bc-9'),  label: 'The Rope Bridge', description: '[content] The Rope Bridge.' },
+        { id: 'bc-10', ...at('bc-10'), label: 'The Toll Gate', description: '[content] The Toll Gate.' },
         // ── c4 ──
-        { id: 'bc-11', ...at('bc-11'), label: 'The Arch Bridge', description: 'Something hangs under the arch. You have to cross.' },
-        { id: 'bc-12', ...at('bc-12'), label: 'The Gorge Falls', description: 'The water has cut the seam open. The iron is free.' },
-        { id: 'bc-13', ...at('bc-13'), label: 'The Quarry', description: 'Cut blocks and a rotten crane. Something holds it up.' },
+        { id: 'bc-11', ...at('bc-11'), label: 'The Arch Bridge', description: '[content] The Arch Bridge.' },
+        { id: 'bc-12', ...at('bc-12'), label: 'The Gorge Falls', description: '[content] The Gorge Falls.' },
+        { id: 'bc-13', ...at('bc-13'), label: 'The Quarry', description: '[content] The Quarry.' },
         // ── c5 ──
-        { id: 'bc-14', ...at('bc-14'), label: 'The Mountain Inn', description: 'Shut. The cart outside is not.' },
-        { id: 'bc-15', ...at('bc-15'), label: 'The Stone Gate', description: 'Carved statues and a duelist between them.' },
-        { id: 'bc-16', ...at('bc-16'), label: 'The Tunnel Bridge', description: 'A pried toll-box at the tunnel mouth.' },
+        { id: 'bc-14', ...at('bc-14'), label: 'The Mountain Inn', description: '[content] The Mountain Inn.' },
+        { id: 'bc-15', ...at('bc-15'), label: 'The Stone Gate', description: '[content] The Stone Gate.' },
+        { id: 'bc-16', ...at('bc-16'), label: 'The Tunnel Bridge', description: '[content] The Tunnel Bridge.' },
         // ── c6 — the door ──
-        { id: 'bc-17', ...at('bc-17'), label: 'The Glacier Shrine', description: 'A stair goes down into the ice, and on below it. A lantern on every turn.' },
+        { id: 'bc-17', ...at('bc-17'), label: 'The Glacier Shrine', description: '[content] The Glacier Shrine.' },
     ],
 };

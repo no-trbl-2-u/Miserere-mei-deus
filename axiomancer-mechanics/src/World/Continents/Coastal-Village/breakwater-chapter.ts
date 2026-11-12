@@ -6,8 +6,8 @@
  *
  * Node ids are T's board codes in lower case (`bw-w1` .. `bw-p3`, plus the
  * cave face `bw-c0`). The node list, kinds and plate positions are the table
- * in `braindump/2026-10-28-breakwater-chapter-1-map.md` ("The node list");
- * T's vision is `plan/revamp/breakwater-vision.md`.
+ * in `plan/116-bw1-breakwater-rebuild.md` (the node list);
+ * T's vision is `plan/116-bw1-breakwater-rebuild.md`.
  *
  * The roads form a tree rooted at the windmill. Each road is authored once,
  * on the node nearer the windmill (`connectedNodes` points away from the
@@ -111,7 +111,7 @@ export const BRIDGE_GATE_REASON = 'The chain is drawn across the bridge while th
 const breakwaterChapter: MapDefinition = {
     name: 'breakwater',
     continent: 'coastal-continent',
-    description: 'A walled harbour on a storm coast. Every pier charges for the calm. The wreck under the lighthouse did not pay.',
+    description: '[content] The Breakwater.',
     startingNode: NODES[0]!,
     nodes: NODES,
     initialBlockedRoutes: [

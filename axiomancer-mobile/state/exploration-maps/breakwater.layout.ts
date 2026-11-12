@@ -20,7 +20,7 @@ import type { MapLayout, MapSheet } from './types';
  * Chapter 1 map: 43 nodes branching out from the windmill to the sea keep in
  * the west, the cove through the sea cave, the lighthouse in the north and the
  * river bridge in the east. Each node sits on its own coast mark, the board's
- * plate position (`braindump/2026-10-28-breakwater-chapter-1-map.md`).
+ * plate position (`plan/116-bw1-breakwater-rebuild.md`).
  * Positions only; kind + edges come from the engine (`@mechanics`).
  */
 

@@ -135,6 +135,8 @@ describe('hermeticity guard: isolation (no disk / network / subprocess)', () => 
         'Items/e2e/no-old-slot-words.engine.test.ts',
         // Read-only source scan: the run policies name no card id.
         'Game/run-sim/run-policy.no-card-id.test.ts',
+        // Read-only source scan: the price comments quote the recounted shillings floor.
+        'Cards/e2e/card.removal.pricing.engine.test.ts',
     ]);
 
     const IO_PATTERN =

@@ -3,7 +3,7 @@
  * half, A4's pairing, A12's quest relics).
  *
  * `NODE_LIST` below is the board v4 table of
- * `braindump/2026-10-28-breakwater-chapter-1-map.md` ("The node list"): code,
+ * `plan/116-bw1-breakwater-rebuild.md` (the node list): code,
  * kind and roads, copied by hand so the map is checked against T's table and
  * not against itself. A change T makes on the board edits both.
  */
