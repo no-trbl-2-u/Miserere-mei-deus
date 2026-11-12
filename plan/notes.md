@@ -509,3 +509,5 @@ Defaults taken (pilot worker, no questions asked; built inline, no builder subag
 - The dev SKIP EVENT now owes a start node's arrival when it has a pool or a scene (as the map presenter does), and a before-scene skip continues to the node's own event instead of dismissing it.
 
 Tests only plus the narrate skill's last description sentence. Every landed string already matched the ledger, so no game string changed. Giver lines (`description` of bw-c2, bw-l5, bw-b1) left unpinned for 177.13.
+
+- Defaults taken: the Breakwater's map description also became `[content] The Breakwater.` (the spec says the four maps); the shared Anvil village line and T's cave cache action lines stay (villages and action lines are 177.6's); a cutscene's `description` took the same placeholder as its `lines`.

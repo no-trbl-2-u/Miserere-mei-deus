@@ -736,3 +736,4 @@
 - 2026-11-12 · 178.3 (alias: SS1c) · The Breakwater has no cutscene nodes; four scenes play from slots · 101e9903..b1ff67a7 (#1638)
 - 2026-11-12 · 178 · spec complete: A scene before any node, and no more cutscene nodes · D192 · deleted in (this commit)
 - 2026-11-12 · 177.14 (alias: NV1n) · Chapter 1's quest lines are pinned exactly in tests · 8894ce57..8894ce57 (#1644)
+- 2026-11-12 · 177.12 (alias: NV1l) · Removed story's lines in Chapters 2 to 4 are placeholders · 580b0e3e..f8c6c129 (#1642)
