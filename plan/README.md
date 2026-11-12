@@ -62,7 +62,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **177.3** · attended: T reviews the Chapter 1 drafts, after the Act 1 story is written (NV1c) · since: 2026-11-11 · until: T's word · max_age: 30d
 - **177.9** · waits on T's Act 1 story (NV1i) · since: 2026-11-11 · until: T's word · max_age: 30d
 
-- **156.7** · waits on T's colour ballot verdict (TY1g; built by TY1f) · since: 2026-11-06 · until: T's word · max_age: 60d
 - **116.4** · attended: T does this one (BW1d) · since: 2026-11-01 · until: 2026-11-10 · max_age: 16d
 - **119.3** · attended: T does this one (BV1c) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **122.2** · attended: T does this one (R12) · since: 2026-11-01 · until: 2026-12-12 · max_age: 48d
@@ -98,7 +97,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
-| 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 3 left |
+| 156 | Type and colour by T's ballots, then a design audit of every screen against the AI-design tells | [156-ty1-type-and-design-audit.md](156-ty1-type-and-design-audit.md) | planned | 2 left |
 | 116 | The Breakwater rebuilt to T's Chapter 1 vision, and kind icons on every node | [116-bw1-breakwater-rebuild.md](116-bw1-breakwater-rebuild.md) | planned | 2 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
 | 122 | New combat-playtest | [122-r12-new-combat-playtest.md](122-r12-new-combat-playtest.md) | planned | 1 left |

@@ -64,7 +64,6 @@
   .count { color:var(--muted); margin-left:6px; }
   button:focus-visible, .pick:focus-visible, .note:focus-visible { outline:2px solid var(--sel); outline-offset:2px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
@@ -187,7 +186,7 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed (T, 2026-11-12): the ballot kit (Generate, Copy, autosave, Save, Submit, Mark complete) is no longer loaded. */
 
 document.getElementById('themeBtn').addEventListener('click', () => {
   const root = document.documentElement;

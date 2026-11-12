@@ -8,7 +8,7 @@ The ledger for the colour ballot (`colours.ballot.html`, ballot id
 A friend of T's said the screens read as made with Claude design, and the
 near-black warm brown ground with a muted gold accent on everything is the
 tell they named. T chose a colour ballot after the fonts and the UI rounds
-landed (2026-11-06). 156.7 reads the verdict from here.
+landed (2026-11-06). 156.7 was to read the verdict from here; it was dropped on 2026-11-12 (Verdicts).
 
 ## The ballot
 
@@ -20,7 +20,7 @@ Self, the Deck, and a dialogue node), from a web export with that palette
 swapped in. The kit pieces are art, so the brass and vellum stay as drawn in
 every shot; each palette's line on the page says what it would do with brass.
 The accent shows where the app uses the accent token today, which is on many
-things; tightening it to each screen's one bold element is 156.7.
+things; tightening it to each screen's one bold element was 156.7, dropped on 2026-11-12.
 
 P-02 asks one thing apart from the palette: how the brass pieces sit in the
 winner (kept as the one bold metal, toned to the palette, or kept to fewer
@@ -33,7 +33,7 @@ theme was added to `theme/palette.ts` and the default is unchanged.
 
 ## The ThemeSpecs
 
-156.7 pastes the winner into `THEME_SPECS` and makes it `DEFAULT_THEME_ID`.
+156.7 would have pasted the winner into `THEME_SPECS` and made it `DEFAULT_THEME_ID`; it was dropped on 2026-11-12 and today's palette stays the default.
 The kind tokens (`kind*`) derive from these hues in `makePalette`.
 
 ### P-01b Night of the Hours
@@ -203,4 +203,4 @@ The Rossano Gospels (6th century). Ground `#150e1c`, panel `#1d1428`, ink `#ebe7
 
 ## Verdicts
 
-Open. T has not voted. 156.7 writes the verdict here and closes the ballot.
+Closed unvoted by T, 2026-11-12: "the current coloring is fine." Today's palette stays the default; 156.7 (TY1g), which waited on this verdict, is dropped.

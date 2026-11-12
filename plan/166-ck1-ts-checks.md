@@ -13,7 +13,7 @@
 
 - The eight chunks are each the last in specs 113, 115, 117, 118, 125, 126, 128 and 130, and each is Held.
 - Emptying a spec is what settle refuses today, so this spec's work waits for spec 164 (SR1a), which lets a close retire its spec.
-- Attended and owner-led chunks that are real work rather than checks stay where they are: 116.4, 119.3, 122.2, 123.1, 129.2, 129.4, 131.1, 133.9, spec 134, 146.7 and 156.7.
+- Attended and owner-led chunks that are real work rather than checks stay where they are: 116.4, 119.3, 122.2, 123.1, 129.2, 129.4, 131.1, 133.9, spec 134 and 146.7 (156.7 was dropped on 2026-11-12).
 
 ## Design
 

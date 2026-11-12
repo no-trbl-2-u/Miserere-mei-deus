@@ -15,6 +15,8 @@
 - T, the same session, after a second outside read of one of T's pages named the tells (near-black warm brown background, muted gold accent on everything, blackletter titles, condensed capital buttons, tiny letter-spaced mono labels): asked whether this work covers them, then chose a colour ballot "but only after 1) The new fonts are chosen and landed and 2) All UI treatment from today land in main".
 - The research: five web-research passes the same day. Their findings, with sources, are the Design section's "The direction". Evidence is thin across the field: almost no controlled comparisons. The firmest sources are Anthropic's frontend-design skill, its frontend-aesthetics cookbook, and the Claude Design blog post by the designer who built it.
 
+- T, 2026-11-12: "close the color one because the current coloring is fine. (Also, close the chunk that relied on that color ballot)." The colour ballot closed unvoted; 156.7 (TY1g) and A7 are dropped, and today's palette stays the default.
+
 ### What exists today (read 2026-11-06, at origin/main)
 
 - **The type system** (`axiomancer-mobile/theme/axm.ts`): five faces in `FONTS` (`gothic` Pirata One, `serif` and `serifItalic` IM Fell English, `sans` Bebas Neue, `mono` JetBrains Mono) and six `TYPE` sizes. Components mostly set `fontFamily: FONTS.<face>` directly, not through `TYPE`. Counts over `app/` and `components/`: `FONTS.sans` about 243, `FONTS.mono` about 220, `FONTS.gothic` about 181, `FONTS.serif` and `serifItalic` about 177. `letterSpacing` of 1 to 2 is set on about 290 styles, nearly always on Bebas capitals.
@@ -103,7 +105,6 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 
 - **A4** The audit report `docs/reports/design-audit-<date>.md` covers every screen in the list, each with its emotional job, its tells table, its bold thing and its top three fixes. It also carries the tell count before and after the UI rounds, and the copy flagged by screen.
 - **A5** A mock page offers three directions for each of the audit's three worst screens, under the ballot index, and T's picks come back through the ballot kit.
-- **A7** T's palette is the default theme. The accent appears only on each screen's bold element and the controls that need it, and the audit's gold-accent count drops against its before figure.
 
 ## Open questions
 
@@ -111,15 +112,14 @@ What the audit checks against. 156.1 writes it as `docs/design-direction.md` so 
 2. A face no role uses after T's picks leaves the app entirely. T's picks keep none of today's four: Pirata One, IM Fell English, Bebas Neue and JetBrains Mono would all go (EMBARK is an image and is unaffected). Confirmed by T (2026-11-09, at the pilot gate): yes, package and all.
 3. The audit waits for every UI chunk of specs 152 to 155 and the type. Default: yes, all of them. Or: start once 152 to 154 land and leave the Deck to a second pass. [T to confirm #3]
 4. The audit proposes each screen's emotional job for T to confirm. Default: yes, the loop drafts and T edits. Or: T writes them before the audit runs. [T to confirm #4]
-5. The audit runs after the colour pick lands, so it audits the finished look. Default: yes. Or: run the audit right after the fonts, before colour. [T to confirm #5]
+5. The audit runs after the colour pick lands, so it audits the finished look. Moot (T, 2026-11-12): today's colouring stays, there is no colour pick, and the audit runs on today's palette.
 
 ## Chunks
 
-Measure: 3 open · 4 closed · next A8
+Measure: 2 open · 5 closed · next A8
 
-- [ ] **156.4** The design audit of every screen · M · closes A4 · needs 156.7 · alias: TY1d
+- [ ] **156.4** The design audit of every screen · M · closes A4 · needs — · alias: TY1d
 - [ ] **156.5** Three directions for the three worst screens · M · closes A5 · needs 156.4 · alias: TY1e
-- [ ] **156.7** T's palette, the default theme · M · closes A7 · needs — · alias: TY1g
 
 ### 156.1 (TY1a) — The design direction, written down · S · closes A1 · requires —
 
@@ -145,7 +145,7 @@ Measure: 3 open · 4 closed · next A8
 - Waits for the UI rounds so it does not fight their diffs.
 - Measure: the lint test, then `npm run verify -w axiomancer-mobile`. The PR carries before and after shots of the Wilds, the fight, Spoils, Self and the Deck.
 
-### 156.4 (TY1d) — The design audit of every screen · M · closes A4 · requires 156.1, 156.7
+### 156.4 (TY1d) — The design audit of every screen · M · closes A4 · requires 156.1
 
 - Screenshot every screen in the audit's list at 390×844, with the e2e drivers (`enterLiveFight` stops on the reveal card: press `combat-enter`).
 - Write `docs/reports/design-audit-<date>.md` per the Design section. The tell count is taken at the commit before spec 152's first chunk and at this chunk's base.
@@ -165,8 +165,3 @@ Measure: 3 open · 4 closed · next A8
 - Build `plan/ballots/colours.ballot.html` with the kit, an index entry and a ledger `colours.md`. It takes one pick, plus a note on how the brass pieces are treated.
 - Measure: `node --test scripts/ballot-kit.test.mjs`. The PR links the page's branch preview.
 
-### 156.7 (TY1g) — T's palette, the default theme · M · closes A7 · requires 156.6
-
-- Held until T submits the colour ballot. Read the verdict into `colours.md` and close the ballot.
-- Add T's palette to `THEME_SPECS` and make it `DEFAULT_THEME_ID`. Move the accent off every place but each screen's bold element and the controls that need it.
-- Measure: the palette tests, then `npm run verify -w axiomancer-mobile`. The PR carries before and after shots of the five ballot screens.

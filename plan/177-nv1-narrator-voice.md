@@ -20,7 +20,7 @@
 - **Already planned, not replanned here.** Spec 116 owns the quest chain: 116.4 (BW1d) is T writing the chain's lines and 116.5 (BW1e) puts them in the game. The drafts' Quest nodes, Quest chain and Names sections are options for BW1d. This spec adds only a note to 116 (see the pending file).
 - **Where the ledgers are.** `plan/ballots/` arrives on `main` with PR #1617 (the one ballots folder), and the drafts' ledger and review page with the PR stacked on it. Until both merge, the `plan/ballots/narrator-*` paths this spec names are not on `main`; 177.1 and 177.2 do not read them, and 177.3 onward wait on T's review, which needs them merged.
 - **The review is on hold** (T, 2026-11-11: "hold that ballot", then "let's actually write the ACT 1 story together"). The drafts were written before the story. T reviews them (177.3) after the Act 1 story is written; lines the story changes are redrawn first.
-- **The voice is not voted.** Round 5 of the voice ballot is open. The rules below do not depend on which take T picks; the voice bible's examples do.
+- **The voice is round 5's** (T, 2026-11-12: "Leave on the most recent narrator voice"). Rounds 4 and 5 closed with no per-slot picks; round 5's three takes (plain, cruel, grief) are the voice, and the cruelty stop is picked per line.
 
 ## Design
 

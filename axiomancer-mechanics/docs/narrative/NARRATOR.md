@@ -90,7 +90,7 @@ is plain, cruel, plain, grief, and round again.
 ## The calibration set
 
 Copied from `plan/ballots/narrator-voice.md` as it stood on 2026-11-12. A later
-verdict adds to it. Round 4 and round 5 of the voice ballot are not yet voted.
+verdict adds to it. Rounds 4 and 5 of the voice ballot closed on 2026-11-12 with no per-slot picks; T: "Leave on the most recent narrator voice", so round 5 (plain, cruel, grief) is the voice.
 
 ### Locked (T, 2026-11-08, with T's edits)
 
