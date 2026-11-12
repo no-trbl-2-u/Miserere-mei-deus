@@ -177,6 +177,16 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect(bw1Event).toMatchObject({ slot: 'before' });
         expect(bw1Event?.lines?.length ?? 0).toBeGreaterThan(0);
 
+        // The scene leaves the node owed; the second resolve reaches the node's
+        // own event, none, and only then is the start node spent.
+        type Resolved = { world: { currentMap: { consumedNodes: string[] } } };
+        const resolves = onLogs.filter(r => r.action === 'resolveMapEvent');
+        expect(resolves.length).toBeGreaterThanOrEqual(2);
+        expect((resolves[0]!.event as { kind: string; slot?: string })).toMatchObject({ kind: 'cutscene', slot: 'before' });
+        expect((resolves[1]!.event as { kind: string }).kind).toBe('none');
+        expect((resolves[0]!.after as Resolved).world.currentMap.consumedNodes).not.toContain('bw-w1');
+        expect((resolves[1]!.after as Resolved).world.currentMap.consumedNodes).toContain('bw-w1');
+
         const withoutFlag = tmpPath('resolve-start-off');
         await runGameCli([
             '--start-map', 'breakwater', '--route', 'bw-w2',

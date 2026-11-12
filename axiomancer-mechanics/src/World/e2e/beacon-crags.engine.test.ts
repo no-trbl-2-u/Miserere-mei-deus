@@ -100,8 +100,13 @@ describe('the Beacon Crags\' events (D29)', () => {
             kind: 'cutscene', slot: 'before',
             lines: ['[content] The Top Pass.'],
         });
+        // Only a slot leaves the node owed: the scene is seen, the node unspent.
+        expect(first.state.world.currentMap.consumedNodes).not.toContain('bc-1');
+        expect(first.state.world.currentMap.seenScenes).toContain('bc-1');
         expect(getNodeEventPool('northern-continent', 'beacon-crags', 'bc-1')).toBeUndefined();
-        expect(resolveMapEvent(first.state).event.kind).toBe('none');
+        const second = resolveMapEvent(first.state);
+        expect(second.event.kind).toBe('none');
+        expect(second.state.world.currentMap.consumedNodes).toContain('bc-1');
     });
 
     it('pins every fight low: 3 on the upper mountain, 4 below the gorge', () => {

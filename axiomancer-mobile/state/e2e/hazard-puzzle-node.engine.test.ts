@@ -74,6 +74,38 @@ describe('a puzzle hazard node: the walk into the wreck', () => {
         expect(legalMovesFrom(map)).toContain('bw-h5');
     });
 
+    it('the chapel\'s scene plays first, and on continue its puzzle opens with no route select', () => {
+        const { store, actions } = storeOn(settledBreakwater('bw-l1'));
+        // The chapel's fight neighbour is won; its road is open.
+        store.setState({
+            world: {
+                ...store.getState().world,
+                currentMap: syncMoveLists({
+                    ...store.getState().world.currentMap,
+                    completedNodes: [...store.getState().world.currentMap.completedNodes, 'bw-l1'],
+                    consumedNodes: [...store.getState().world.currentMap.consumedNodes, 'bw-l1'],
+                }),
+            },
+        } as never);
+        expect(actions.moveTo('bw-l2').moved).toBe(true);
+        actions.resolveCurrentMapEvent('hazard');
+
+        // The scene first: the slot cutscene, the node unspent, no board yet.
+        const scene = store.getState().event?.pending?.event;
+        expect(scene).toMatchObject({ kind: 'cutscene', scene: 'clifftop-chapel', slot: 'before' });
+        expect(store.getState().world.currentMap.consumedNodes).not.toContain('bw-l2');
+        expect(store.getState().hazard.puzzle ?? null).toBeNull();
+        expect(store.getState().hazard.session ?? null).toBeNull();
+
+        // On continue, the node's own event: the pinned puzzle, no route select.
+        actions.continueToNode();
+        const play = store.getState().hazard.puzzle;
+        expect(play?.nodeId).toBe('bw-l2');
+        expect(play?.candidateId).toBe('cand-cost-hard-06');
+        expect(play?.session.phase).toBe('playing');
+        expect(store.getState().hazard.session).toBeNull();
+    });
+
     it('a confirm with no move resolves short, still claims, and the board closes', () => {
         const { store, actions } = storeOn(settledBreakwater('bw-h4'));
         expect(actions.beginHazard()).toBe(true);
