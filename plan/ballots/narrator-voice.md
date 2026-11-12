@@ -200,8 +200,8 @@ Everything else is redrawn in round 4.
 
 ### Round 4
 
-Not voted yet.
+Closed unvoted by T, 2026-11-12.
 
 ### Round 5
 
-Not voted yet.
+Closed unvoted by T, 2026-11-12.

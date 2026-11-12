@@ -110,7 +110,6 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
@@ -432,7 +431,7 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed (T, 2026-11-12): the ballot kit (Generate, Copy, autosave, Save, Submit, Mark complete) is no longer loaded. */
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {
