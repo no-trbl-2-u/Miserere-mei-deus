@@ -36,7 +36,7 @@ import { MapDefinition } from '../../types';
 const lanternDeep: MapDefinition = {
     name: 'lantern-deep',
     continent: 'northern-continent',
-    description: 'Every light below the stair was carried down and paid for. Past the drowned temple, the lanterns stop.',
+    description: '[content] The Lantern Deep.',
     startingNode: {
         id: 'ld-1',
         location: [0, 0],

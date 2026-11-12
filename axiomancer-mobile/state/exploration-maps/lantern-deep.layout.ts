@@ -71,29 +71,29 @@ export const lanternDeepLayout: MapLayout = {
     sheet,
     nodes: [
         // ── c0 — the surface stair: arrival down from the glacier shrine ──
-        { id: 'ld-1',  ...at('ld-1'),  label: 'The Surface Stair', description: 'The stair comes down through the cavern roof. The daylight stops at the last step.' },
+        { id: 'ld-1',  ...at('ld-1'),  label: 'The Surface Stair', description: '[content] The Surface Stair.' },
         // ── c1 ──
-        { id: 'ld-2',  ...at('ld-2'),  label: 'The Ferry Landing', description: 'A lantern on a post and a ferryman under it. He charges for the oil.' },
-        { id: 'ld-3',  ...at('ld-3'),  label: 'The Drowned Temple', description: 'The dome stands out of the lake. Something waits in the nave.' },
-        { id: 'ld-4',  ...at('ld-4'),  label: 'The North Aqueduct', description: 'The arches leak. The walkway is slick.' },
-        { id: 'ld-5',  ...at('ld-5'),  label: 'The Cathedral', description: 'Carved into the rock. Something has hatched in the font.' },
+        { id: 'ld-2',  ...at('ld-2'),  label: 'The Ferry Landing', description: '[content] The Ferry Landing.' },
+        { id: 'ld-3',  ...at('ld-3'),  label: 'The Drowned Temple', description: '[content] The Drowned Temple.' },
+        { id: 'ld-4',  ...at('ld-4'),  label: 'The North Aqueduct', description: '[content] The North Aqueduct.' },
+        { id: 'ld-5',  ...at('ld-5'),  label: 'The Cathedral', description: '[content] The Cathedral.' },
         // ── c2 ──
-        { id: 'ld-6',  ...at('ld-6'),  label: 'The West Tunnel', description: 'The torches are still lit. Whoever lit them dropped a purse.' },
-        { id: 'ld-7',  ...at('ld-7'),  label: 'The Crystal Grotto', description: 'Pale crystal, worth nothing. The iron in it is worth something.' },
-        { id: 'ld-8',  ...at('ld-8'),  label: 'The Central Aqueduct', description: 'A long bridge over the chasm. Something knocks on the stones.' },
-        { id: 'ld-9',  ...at('ld-9'),  label: 'The Sleeping Giant', description: 'It sleeps on a stone dais. The dais is narrow.' },
+        { id: 'ld-6',  ...at('ld-6'),  label: 'The West Tunnel', description: '[content] The West Tunnel.' },
+        { id: 'ld-7',  ...at('ld-7'),  label: 'The Crystal Grotto', description: '[content] The Crystal Grotto.' },
+        { id: 'ld-8',  ...at('ld-8'),  label: 'The Central Aqueduct', description: '[content] The Central Aqueduct.' },
+        { id: 'ld-9',  ...at('ld-9'),  label: 'The Sleeping Giant', description: '[content] The Sleeping Giant.' },
         // ── c3 ──
-        { id: 'ld-10', ...at('ld-10'), label: 'The Market Grotto', description: 'Tents and traders. Lamp oil by the drop.' },
-        { id: 'ld-11', ...at('ld-11'), label: 'The Mushroom Forest', description: 'Stalks taller than houses. Something watches between them.' },
-        { id: 'ld-12', ...at('ld-12'), label: 'The Ossuary', description: 'A giant’s bones among standing stones. Something tends them.' },
+        { id: 'ld-10', ...at('ld-10'), label: 'The Market Grotto', description: '[content] The Market Grotto.' },
+        { id: 'ld-11', ...at('ld-11'), label: 'The Mushroom Forest', description: '[content] The Mushroom Forest.' },
+        { id: 'ld-12', ...at('ld-12'), label: 'The Ossuary', description: '[content] The Ossuary.' },
         // ── c4 ──
-        { id: 'ld-13', ...at('ld-13'), label: 'The Fortress Gate', description: 'A portcullis, and something hanging in it.' },
-        { id: 'ld-14', ...at('ld-14'), label: 'The Forge', description: 'A forge by the lava channel. The slag is full of ore.' },
-        { id: 'ld-15', ...at('ld-15'), label: 'The Vault Door', description: 'A round door in the rock.' },
+        { id: 'ld-13', ...at('ld-13'), label: 'The Fortress Gate', description: '[content] The Fortress Gate.' },
+        { id: 'ld-14', ...at('ld-14'), label: 'The Forge', description: '[content] The Forge.' },
+        { id: 'ld-15', ...at('ld-15'), label: 'The Vault Door', description: '[content] The Vault Door.' },
         // ── c5 ──
-        { id: 'ld-16', ...at('ld-16'), label: 'The Ruined City', description: 'A city standing in water. Something reads in the square.' },
-        { id: 'ld-17', ...at('ld-17'), label: 'The East Stairs', description: 'Arched stairways going down. A dry landing, and a lantern that is out.' },
+        { id: 'ld-16', ...at('ld-16'), label: 'The Ruined City', description: '[content] The Ruined City.' },
+        { id: 'ld-17', ...at('ld-17'), label: 'The East Stairs', description: '[content] The East Stairs.' },
         // ── c6 — the door ──
-        { id: 'ld-18', ...at('ld-18'), label: 'The Deep Stair', description: 'The stair goes down past the last lantern.' },
+        { id: 'ld-18', ...at('ld-18'), label: 'The Deep Stair', description: '[content] The Deep Stair.' },
     ],
 };

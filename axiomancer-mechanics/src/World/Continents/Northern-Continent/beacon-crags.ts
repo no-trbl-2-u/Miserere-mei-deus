@@ -35,7 +35,7 @@ import { MapDefinition } from '../../types';
 const beaconCrags: MapDefinition = {
     name: 'beacon-crags',
     continent: 'northern-continent',
-    description: 'A fire on the summit tells the valley who is coming. The rope bridge charges for the crossing, and again for the fall.',
+    description: '[content] The Beacon Crags.',
     startingNode: {
         id: 'bc-1',
         location: [0, 0],
