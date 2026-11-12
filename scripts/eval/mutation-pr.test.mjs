@@ -5,7 +5,37 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { PR_MARKER, parseChangedLines, prOutcome, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
+
+import { PR_MARKER, mutatedFiles, parseChangedLines, prOutcome, rangeConfigSource, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
+
+test('rangeConfigSource hands the changed files to the base config through EVAL_STRYKER_MUTATE, then replaces mutate', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'range-config-'))
+  const before = process.env.EVAL_STRYKER_MUTATE
+  try {
+    // A base config that records the env it saw while loading.
+    writeFileSync(join(dir, 'base.mjs'), 'export default { seen: process.env.EVAL_STRYKER_MUTATE, mutate: ["old.ts"], keep: 1 }\n')
+    const entries = ['app/cutscene/index.tsx:10-20', 'state/x.ts:3-3']
+    writeFileSync(join(dir, 'range.mjs'), rangeConfigSource(pathToFileURL(join(dir, 'base.mjs')).href, entries))
+    const config = (await import(pathToFileURL(join(dir, 'range.mjs')).href)).default
+    assert.deepEqual(JSON.parse(config.seen), entries)
+    assert.deepEqual(config.mutate, entries)
+    assert.equal(config.keep, 1)
+  } finally {
+    if (before === undefined) delete process.env.EVAL_STRYKER_MUTATE
+    else process.env.EVAL_STRYKER_MUTATE = before
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('mutatedFiles strips the line ranges from EVAL_STRYKER_MUTATE and falls back to the fixed list when it is unset', () => {
+  assert.deepEqual(mutatedFiles(['fixed.ts'], '["app/cutscene/index.tsx:10-20","state/x.ts:3-3","bare.ts"]'), ['app/cutscene/index.tsx', 'state/x.ts', 'bare.ts'])
+  assert.deepEqual(mutatedFiles(['fixed.ts'], undefined), ['fixed.ts'])
+  assert.deepEqual(mutatedFiles(['fixed.ts'], ''), ['fixed.ts'])
+})
 
 const DIFF = [
   'diff --git a/axiomancer-mechanics/src/Combat/health.ts b/axiomancer-mechanics/src/Combat/health.ts',
