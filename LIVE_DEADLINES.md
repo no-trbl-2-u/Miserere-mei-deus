@@ -23,13 +23,11 @@
 | 8 | Buffer: fixes from the event-screen reviews (1 h) | 1 | needs you: your task |
 | 9 | Decide the stat scaling: whether +20% per stat point (one-shot) and +10% (repeating) runs too high, after playing the first character (0.5 h) | 0.5 | needs you: your task |
 
-25 more acts are ready after these.
+27 more acts are ready after these.
 
 ## Waiting on the loop
 
 - Mid-release check: Chapter 1 on the preview build, file what broke (1 h) — the loop still owes NV1d, NV1e, NV1f, NV1g, NV1h
-- Play your quest line on the preview build and rule on its lines (0.5 h) — the loop still owes BW1e
-- Chapter 1 release check: Act 1, Chapter 1 complete, a full Breakwater run on the phone with puzzle hazards,... — the loop still owes SS1c
 - Demo: an Act 1 clear ending at the Act Boss (2 h) — the loop still owes UP1h
 
 ## No hours stated
