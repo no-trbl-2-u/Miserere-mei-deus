@@ -482,3 +482,8 @@ Defaults taken: the emotional jobs are drafted for T to confirm (open question 4
 The three worst screens, for 156.5: the hazard board, the fight with the hand open, the Satchel.
 
 Defects seen outside scope, not fixed: relic name breaks mid-word on character select; hazard hand card names break mid-word and the CONFIRM disc covers the rightmost card; Spoils card text is cut off ("VULNERABL"); `components/experience/looks.ts` still marks C-02 (cutscene SKIP) `normal` though the screen shows a brass SKIP; the eyebrow role is set on whole sentences on Rest, Self and Ledger.
+
+Defaults taken (pilot worker, no questions asked):
+- The three arrivals are `CutscenePayload` constants now, not pools; a `NODE_SCENES` table in `content.ts` lists each map's start-node scene and `registerMapEventContent()` walks it after the pool loops. Their start nodes have no pool, so the scene is followed by an empty waypoint (`none`).
+- The map e2e tests compute each node's kind past its scene (`ownEvent`), so the kind tallies count the start node as `none` and the Lantern Deep keeps only its two sealed-door cutscenes.
+- `ld-15` and `ld-18` are untouched.
