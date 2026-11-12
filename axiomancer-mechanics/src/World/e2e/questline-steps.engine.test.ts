@@ -470,7 +470,8 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
         'a %s at the held boss answers the arrival, leaves it unspent and opens no road',
         (outcome) => {
             const s = fightAt(atTheWatchtower(), 'boss', outcome);
-            expect(map(s).currentNode).toBe('boss');
+            // A flee goes back to the node they came from (spec 181, `q4`); a defeat stays for the death rule.
+            expect(map(s).currentNode).toBe(outcome === 'flee' ? 'q4' : 'boss');
             expect(map(s).pendingArrival ?? null).toBeNull();
             expect(map(s).consumedNodes).not.toContain('boss');
             expect(map(s).completedNodes).not.toContain('boss');
@@ -519,8 +520,9 @@ describe('A9: incomplete nodes, held roads and the retry', () => {
         s = fightAt(s, 'f1', 'flee');
         expect(map(s).consumedNodes).not.toContain('f1');
         expect(s.quests.active.find(q => q.name === 'ql1b-step-2')!.objectives[0]!.currentCount).toBe(0);
-        // f1 is not held: standing on it, the road past it is open.
-        expect(roadReachable(map(s))).toContain('past');
+        // The player is back on q2, so the road past f1 stays shut behind the fight (spec 181).
+        expect(map(s).currentNode).toBe('q2');
+        expect(roadReachable(map(s))).not.toContain('past');
         s = arrive(s, 'f2').state;
         s = gameReducer(s, { type: 'END_COMBAT', payload: { outcome: 'flee' } });
         expect(roadReachable(map(s))).toContain('f1');

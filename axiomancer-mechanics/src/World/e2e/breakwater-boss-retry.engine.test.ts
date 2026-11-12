@@ -194,13 +194,14 @@ describe('A23: the chapter boss fought again after the death rule', () => {
         expect(isNodeSpent(map(over), BOSS_NODE)).toBe(false);
     });
 
-    it('a fled boss fight leaves the same open, unspent node and the player is not dying', () => {
+    it('a fled boss fight sends the player back to the keep gate, the boss node unspent, and the player is not dying', () => {
         const road = atTheKeepGate();
         const { staged, encounter } = engageBoss(road);
         const fled = endFight(staged, encounter, 'flee');
 
         expect(fled.dying).toBeUndefined();
-        expect(map(fled).currentNode).toBe(BOSS_NODE);
+        // A flee goes back to the node they came from (spec 181).
+        expect(map(fled).currentNode).toBe(KEEP_GATE);
         expect(isNodeSpent(map(fled), BOSS_NODE)).toBe(false);
         expect(step4(fled)).toBe('active');
         expect(bossKills(fled)).toBe(0);

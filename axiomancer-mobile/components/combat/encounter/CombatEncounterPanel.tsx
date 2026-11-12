@@ -50,7 +50,7 @@ import { nodeArenaFor } from '@/state/exploration-maps';
 import { Image } from '@/lib/platform/image';
 import { INK_DRAW_MS, INK_HOLD_MS, InkCurtain } from '@/components/combat/encounter/InkCurtain';
 import { clearMapInk } from '@/state/map-ink';
-import { BOSS_CARD_HINT, WITHDRAW_COST } from '@/components/combat/encounter/reveal.copy';
+import { BOSS_CARD_HINT } from '@/components/combat/encounter/reveal.copy';
 import { BossTitleCard } from '@/components/combat/encounter/BossTitleCard';
 import { RevealGround } from '@/components/combat/encounter/RevealGround';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -911,7 +911,6 @@ export function CombatEncounterPanel({
                             >
                                 {revealBrass ? <KitBackdrop piece="action-button-idle" /> : null}
                                 <Text style={[styles.withdrawBtnText, { color: AXM.bone }]}>WITHDRAW</Text>
-                                <Text style={styles.withdrawSub}>{WITHDRAW_COST}</Text>
                             </Pressable>
                         )}
                     </View>
@@ -1484,7 +1483,6 @@ const useStyles = makeStyles((AXM) => ({
     withdrawBtnText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing},
     // The only line that says what withdrawing costs: readable bone (AA on
     // every theme's bg), kept under WITHDRAW by size alone. Never `ash`.
-    withdrawSub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.bone, marginTop: 3 },
 
     ghost: { position: 'absolute', top: 0, left: 0, zIndex: 999 },
     // ✕ badge riding the die ghost while it hovers an illegal target.

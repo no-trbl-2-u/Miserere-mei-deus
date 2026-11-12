@@ -247,7 +247,7 @@ describe('a save taken mid-fight survives a reload', () => {
         expect(reloaded.getState().currentEncounter).toBeDefined();
     });
 
-    it('a fight walked away from leaves its node unspent, and tapping it tries it again', () => {
+    it('a fight walked away from leaves its node unspent, sends the player back, and walking onto it tries it again', () => {
         const store = createAppStore({ adapter: createMemoryAdapter(), overrides: { world: settledBreakwater() } });
         const actions = createAppActions(store);
         actions.moveTo('bw-w2');
@@ -262,8 +262,9 @@ describe('a save taken mid-fight survives a reload', () => {
         // fight, and the map reads it as unspent.
         expect(map.consumedNodes ?? []).not.toContain('bw-w2');
         expect(map.completedNodes).not.toContain('bw-w2');
-        expect(map.currentNode).toBe('bw-w2');
-        // Standing on it, the player may try it again: the arrival is owed afresh.
+        // The player is back on the node they came from (spec 181), and may walk onto the
+        // fight node again: the arrival is owed afresh.
+        expect(map.currentNode).toBe('bw-w1');
         expect(actions.moveTo('bw-w2').moved).toBe(true);
         expect(store.getState().world.currentMap.pendingArrival).toBe('bw-w2');
     });

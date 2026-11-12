@@ -200,9 +200,6 @@ export const NARRATOR_FIELDS = [
   { file: 'axiomancer-mobile/components/combat/encounter/combat-summary.copy.ts', fields: {
     DEFEAT_CAUSE_LINES: 'screen',
   } },
-  { file: 'axiomancer-mobile/components/combat/encounter/reveal.copy.ts', fields: {
-    WITHDRAW_COST: 'screen',
-  } },
   { file: 'axiomancer-mobile/state/presenters/death-return.copy.ts', fields: {
     DEATH_RETURN_BODY: 'screen', DEATH_RETURN_KEPT: 'screen',
   } },
