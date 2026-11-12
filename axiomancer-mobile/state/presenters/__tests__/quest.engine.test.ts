@@ -105,6 +105,22 @@ describe('selectQuestVM', () => {
         expect(selectHasActiveQuest({ quest: { ...EMPTY_QUEST_SLICE, cardOffers: ['grey-ward'] } })).toBe(true);
     });
 
+    it('speaks the turn-in line at turn-in and once paid, and the description at the other stages', () => {
+        const open = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.', turnInLine: 'It is done.' };
+        const withLines = (extra: Partial<MobileQuestSlice> = {}): MobileQuestSlice => ({ ...EMPTY_QUEST_SLICE, open, ...extra });
+        const held = startFixtureStep(base, 1);
+        const ready = progressQuest(held, 'Cross the Gallows', 'goal').log;
+
+        expect(selectQuestVM({ quest: withLines(), quests: base.quests }).giverLine).toBe('Wait for it.');
+        expect(selectQuestVM({ quest: withLines(), quests: held }).giverLine).toBe('Wait for it.');
+        expect(selectQuestVM({ quest: withLines(), quests: ready }).giverLine).toBe('It is done.');
+        const paid = { step: 1, questName: 'Cross the Gallows', experience: 40, currency: 0, itemNames: [] };
+        expect(selectQuestVM({ quest: withLines({ paid }), quests: completeQuest(ready, 'Cross the Gallows') }).giverLine).toBe('It is done.');
+
+        const plain = { questline: FIXTURE_LINE, node: 2, description: 'Wait for it.' };
+        expect(selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, open: plain }, quests: ready }).giverLine).toBe('Wait for it.');
+    });
+
     it('a card pick waiting with no node open still reaches the screen', () => {
         const vm = selectQuestVM({ quest: { ...EMPTY_QUEST_SLICE, cardOffers: ['grey-ward'] }, quests: base.quests });
         expect(vm.active).toBe(false);

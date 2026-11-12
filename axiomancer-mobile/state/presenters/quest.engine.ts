@@ -227,6 +227,11 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
                 }),
             }
             : null;
+    const paid = state.quest?.paid ?? arrivalPaid;
+    // A node that has a turn-in line speaks it while its step is handed over and once paid.
+    const giverLine = open.turnInLine !== undefined && (stage === 'turn-in' || paid !== null)
+        ? open.turnInLine
+        : open.description ?? QUEST_GIVER_FALLBACK;
     return {
         active: true,
         giver: open.giver ? { name: open.giver.name, portrait: open.giver.portrait } : null,
@@ -235,12 +240,12 @@ export function selectQuestVM(state: Pick<AppStoreState, 'quest' | 'quests'>): Q
         card,
         pay: cardStep ? questStepPay(cardStep) : null,
         beads,
-        giverLine: open.description ?? QUEST_GIVER_FALLBACK,
+        giverLine,
         behind,
         ahead,
         canAccept: stage === 'offer' && ahead?.status === 'unaccepted',
         canTurnIn: stage === 'turn-in',
-        paid: state.quest?.paid ?? arrivalPaid,
+        paid,
         cardOffers,
     };
 }

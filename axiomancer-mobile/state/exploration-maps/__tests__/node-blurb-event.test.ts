@@ -44,9 +44,10 @@ const PINNED_MISMATCHES: Readonly<Record<string, string>> = {
     // rotation and its villages open the shared Anvil line.
     // BW1e (116.5) put T's approved giver lines on the quest nodes; their map
     // blurbs are rewritten from the new story in chunk 177.3 (T's review).
+    // bw-b1 is unpinned (177.13): its description is now `[content] The River
+    // Bridge.`, which shares words with its blurb.
     'bw-c2': AUDIT_ROW.breakwater,
     'bw-l5': AUDIT_ROW.breakwater,
-    'bw-b1': AUDIT_ROW.breakwater,
     'bw-m3': AUDIT_ROW.breakwater,
     'bw-h8': AUDIT_ROW.breakwater,
     'bw-d2': AUDIT_ROW.breakwater,

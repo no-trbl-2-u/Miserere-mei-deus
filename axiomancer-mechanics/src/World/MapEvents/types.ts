@@ -270,6 +270,12 @@ export interface QuestPayload {
      * content, never saved.
      */
     lockedLine?: string;
+    /**
+     * The giver's line once the step this node turns in is being handed over
+     * (stage `turn-in`) or has been paid. `description` speaks the other
+     * stages. Authored content, never saved.
+     */
+    turnInLine?: string;
     /** The person who speaks this node's lines. */
     giver?: QuestGiver;
 }
@@ -358,6 +364,8 @@ export type ResolvedEvent =
         description?: string;
         /** The node's refusal line, present only while the stage is `locked` and one is authored. */
         lockedLine?: string;
+        /** The node's turn-in line, when it has one (authored, never saved). */
+        turnInLine?: string;
         giver?: QuestGiver;
     }
     | { kind: 'none' };

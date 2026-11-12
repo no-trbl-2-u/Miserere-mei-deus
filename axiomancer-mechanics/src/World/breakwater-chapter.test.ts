@@ -341,3 +341,25 @@ describe('Chapter 1 quest lines are pinned exactly (ledger plan/ballots/narrator
         expect(BREAKWATER_KEEP_KEY.description).toBe("An iron key, never turned. Enoch Marrable was paid it for the lamp of the harbour.");
     });
 });
+
+describe('Chapter 1 quest nodes speak by stage (A14, ledger plan/ballots/narrator-chapter1.md)', () => {
+    const questPayload = (id: string) => {
+        const p = payloadOf(id);
+        if (p.kind !== 'quest') throw new Error(`${id} is not a quest node`);
+        return p;
+    };
+
+    it("pins the Ends lines of C-01, C-02 and C-03 and C-04's as turn-in lines", () => {
+        expect(questPayload('bw-c2').turnInLine).toBe("Abel Corse says, Seven living. Tell her that her brother is one of the seven. Tell her the master is not.");
+        expect(questPayload('bw-l5').turnInLine).toBe("Enoch Marrable says, Entered as lit. It was not lit. Your man saw the sea door under the keep, standing open, and the light of it laid along the head. They paid me a key when they took the lamp. I have not used it.");
+        expect(questPayload('bw-k1').turnInLine).toBe("Serjeant Dunmore says, None to pass without the key. That is the key. Then those are the orders. If he knows you in there, tell him. No. Tell him nothing. Pass.");
+        expect(questPayload('bw-b1').turnInLine).toBe("Tolliver Pease says, Well. He is done, then. I heard it in the chain, it has gone slack as a widow's purse. Cross. No charge. There is no one left to charge it to.");
+    });
+
+    it('pins the given lines of C-02 and C-03 at bw-c2 and bw-l5, and the other descriptions', () => {
+        expect(questPayload('bw-c2').description).toBe("Abel Corse says, Ask the man in the tower who lit it. The master would know that much.");
+        expect(questPayload('bw-l5').description).toBe("Enoch Marrable says, Take it. I will enter it as lost overboard.");
+        expect(questPayload('bw-b1').description).toBe("[content] The River Bridge.");
+        expect(questPayload('bw-k1').description).toBe("[content] The keep gate, barred from the inside.");
+    });
+});

@@ -1653,6 +1653,7 @@ function resolveCurrentMapEventInner(store: AppStore, sourceNodeType?: string, s
                 node: result.event.node,
                 description: result.event.description,
                 lockedLine: result.event.lockedLine,
+                turnInLine: result.event.turnInLine,
                 giver: result.event.giver,
             });
             return true;

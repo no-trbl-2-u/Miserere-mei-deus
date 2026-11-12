@@ -30,6 +30,7 @@ export interface OpenQuestInput {
     node: number;
     description?: string;
     lockedLine?: string;
+    turnInLine?: string;
     giver?: { name: string; portrait: string };
 }
 
@@ -42,6 +43,7 @@ export function openQuestScreenAction(store: AppStore, input: OpenQuestInput): v
                 node: input.node,
                 description: input.description,
                 ...(input.lockedLine !== undefined ? { lockedLine: input.lockedLine } : {}),
+                ...(input.turnInLine !== undefined ? { turnInLine: input.turnInLine } : {}),
                 ...(input.giver !== undefined ? { giver: input.giver } : {}),
             },
             paid: null,
