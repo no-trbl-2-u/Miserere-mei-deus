@@ -26,11 +26,11 @@
 
 ## The story route
 
-1. **Start, the windmill (W1).** The player is given a quest: find the fishermen whose boat capsized.
+1. **Start, the windmill (W1).** The player is given the first quest (its story was removed on 2026-11-12; the text is open).
 2. **The wreck hazard (H4, blue).** Completing it opens the path to the sea cave.
 3. **The sea cave (H6)** is a travel node down to the cove below.
 4. **The cove elite (C1, green)** blocks the quest node behind it. Killing it reaches **the quest node (C2, red)**: the
-   fishermen quest completes and a new quest is given (flavour not decided yet).
+   first quest completes and a new quest is given (flavour not decided yet).
 5. The new quest leads to **the lighthouse (L5, red)** at the top of the map, also blocked by **an elite (L4,
    green)**. Reaching the lighthouse completes the quest and gives the player **a key**.
 6. The key is needed for **the keep's quest node (K1, red)**, just before **the chapter boss (K2, pink)**. Completing

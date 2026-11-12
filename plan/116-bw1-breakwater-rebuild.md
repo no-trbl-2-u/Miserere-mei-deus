@@ -170,7 +170,7 @@ and the questline library test pass.
 
 ### The Narrator's drafts for the chain (spec 177, 2026-11-11)
 
-`plan/ballots/narrator-chapter1.md` holds drafted options for BW1d: its Quest nodes (Q), Quest chain (C) and Names (N-01 to N-10) sections cover each quest node's description and refusal line, the four steps' names, asks and objectives, the key, and the two gate reasons. They are options for T, not T's text. Lines T approves there run past MB-1's 20 words, so BW1e lands after spec 177's lint chunk (alias NV1b), which gives Narrator fields their own caps. Giver and turn-in lines someone speaks are not drafted there; they belong to the People voice.
+**Withdrawn 2026-11-12 (T: the story is rewritten from scratch); the drafts are redrawn from the new Act 1 story.** `plan/ballots/narrator-chapter1.md` held drafted options for BW1d: its Quest nodes (Q), Quest chain (C) and Names (N-01 to N-10) sections cover each quest node's description and refusal line, the four steps' names, asks and objectives, the key, and the two gate reasons. They are options for T, not T's text. Lines T approves there run past MB-1's 20 words, so BW1e lands after spec 177's lint chunk (alias NV1b), which gives Narrator fields their own caps. Giver and turn-in lines someone speaks are not drafted there; they belong to the People voice.
 
 ## Contracts
 

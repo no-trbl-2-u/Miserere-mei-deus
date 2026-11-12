@@ -6,7 +6,7 @@
 
 > **NARRATIVE FRAMING VOID (THE BLANK PAGE, T direct 2026-09-18).**
 > There is no story canon — see `plan/bearings.md` and
-> `content/story/README.md`. Every story claim in this spec is
+> `content/story/story-overview.md`. Every story claim in this spec is
 > therefore **void, not canon**: that the Aporia is "the game's thesis
 > made spatial," that it gates an endgame, that it is a proving ground
 > for a philosophy, and every reference to the Sophist as a narrator or
@@ -25,11 +25,7 @@
 
 A MAZE-style puzzle labyrinth continent (after Christopher Manson's
 1985 book): three acts, ~47 rooms, one-way descent, ~6h of play —
-about a third of the whole game. It is pivotal, not next: the Aporia
-is the only passage to the last continent, and its mechanic
-(backtracking, revising, laying down carried words) is the game's
-thesis made spatial. Without it the endgame has no gate and the
-philosophy has no proving ground.
+about a third of the whole game.
 
 ## Dependencies
 
@@ -69,14 +65,7 @@ A building in the shape of a country: masonry that predates its own
 foundations, lamplit cellars, archives that shelve what was
 surrendered at the door. Rooms are premises, doors are inferences,
 wrong turns are fallacies — the Loop realms are circular reasoning,
-the Trap is a conclusion you can enter but not leave. Voice lock
-(the Sophist narrates every room, terse and cold and old):
-
-> "Thirteen, they said, is an unlucky count, and hurried. They
-> counted four ways out of this cellar. I count five."
-
-> "The house numbers its bones once. If two rooms argue over a
-> name, the one arguing is lying."
+the Trap is a conclusion you can enter but not leave. (Voice-lock lines removed 2026-11-12 with the story wipe.)
 
 ## Access (per T, binding for v1)
 

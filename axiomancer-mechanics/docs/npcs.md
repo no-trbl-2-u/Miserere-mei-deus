@@ -141,20 +141,6 @@ Following T-specified guidance for diverse outcome types:
 - **Self-interested consequences** — Gain advantage through others' situations (`grantCurrency: +N`)
 - **Balanced consequences** — Mixed outcomes reflecting complex moral choices
 
-### Phase 128 NPCs
-
-**Coastal Village:**
-- **Village Healer** — Medical ethics dilemmas around obtaining supplies for the needy
-- **Dockworker's Union Leader** — Labor rights tensions between collective action and individual survival
-- **Merchant's Widow** — Grief and justice choices between forgiveness and retribution
-
-**Northern Forest:**
-- **Forest Ranger** — Conservation vs. exploitation balancing environmental and human needs
-- **Hermit Sage** — Isolation vs. community obligation around sharing wisdom
-- **Lost Trader** — Trust and deception in crisis situations requiring mutual aid
-
-Each NPC puts a hard choice in a different life situation, with character conflicts designed for replayability.
-
 ## Pending
 
 - **Dialogue-driven combat triggers** — currently choices can start quests

@@ -5,19 +5,16 @@ doctrine). This file exists so the load-bearing doctrine is always in context.
 
 ## The story is the overview
 
-**The story is `content/story/story-overview.md` and nothing else.** It holds
-numbered rulings, T's prologue, a per-map place-and-theme table and ordered
-open questions, and it grows only in attended sessions with T.
+**The story is `content/story/story-overview.md` and nothing else.** T blanked
+it on 2026-11-12: it holds no rulings today, and it grows only in attended
+sessions with T.
 
-- **Read the overview before writing anything narrative.** Its numbered
-  rulings are canon. Its open questions are not decided. A story fact it
-  does not carry **does not exist yet**.
-- **The player is X** — no name. `X` is scaffolding, never shipped text,
-  never a stand-in for a name to be picked later. T's prologue gives X a
-  sex, a past, a station and a habit; take those from the overview and add
-  nothing.
-- **Shipped narrative is not canon.** The `boy-*` flags and any shipped
-  line are evidence of an old draft, not of what the story is.
+- **Read the overview before writing anything narrative.** What it rules is
+  canon. A story fact it does not carry **does not exist yet**, and that
+  includes every ruling, the prologue and the player figure `X` of the
+  overview it replaced.
+- **Shipped narrative is not canon.** The `boy-*` flags, any shipped
+  line and the pre-2026-11-12 overview are evidence of an old draft, not of what the story is.
 - **Do not invent canon.** Need a story fact the overview does not carry?
   Say it does not exist and stop.
 - `docs/narrative/` (style, voice, lexicon, the delivery register) is

@@ -371,9 +371,10 @@ ambiguity.)
 - **Story canon (THE BLANK PAGE, T direct, 2026-09-18, amended
   2026-09-24).** Canon is whatever
   `axiomancer-mechanics/content/story/story-overview.md` says, and nothing
-  more. The overview grows only in attended sessions with T. The player is
-  X: no name, and `X` is scaffolding, never shipped text; the overview is
-  the only source for who X is. Shipped narrative is not canon. The loop
+  more. T blanked the overview on 2026-11-12 to rewrite the story from
+  scratch: it holds no rulings today, and the rulings, prologue and player
+  figure `X` it held before are not canon. The overview grows only in
+  attended sessions with T. Shipped narrative is not canon. The loop
   does not invent canon: if a tick needs a story fact the overview does
   not hold, it says so and stops. `docs/narrative/` (style constitution,
   voice registers, lexicon, anti-imitation, the delivery register) is craft

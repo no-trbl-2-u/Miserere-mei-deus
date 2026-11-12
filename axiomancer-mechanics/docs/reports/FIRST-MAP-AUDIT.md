@@ -81,53 +81,9 @@ nodes, every run exactly 10 nodes.
 
 ---
 
-## F2 — The boss and the quest board are mutually exclusive · **Critical**
+## F2, F3 — removed
 
-Across all 260 pre-fix routes:
-
-- `fv-6` (the King of Revenge, the region climax) was reached by **216 (83%)**
-- `fv-15` (the `build-the-boat` quest board — the map's story hook) by **3 (1.2%)**
-- **both, in one life: 0.**
-
-`fv-15`'s only edge is to `fv-14`, so arriving there means `fv-14` is already
-completed and the run ends on the spot. The single most content-dense node on
-the first map was a 1-in-83 trap that terminated the game.
-
-### Fix
-
-`fv-6` now sits alone in column 5, so **every** route fights it. `fv-15` sits
-in the column before, reachable from all three lanes. Both are pinned by
-tests. The pre-boss rest (`fv-20`) also sits on the spine with every
-column-3 node opening onto it, restoring as a *guarantee* what the content
-file had only claimed as intent ("Rest sits at fv-3 … so the player can heal
-before the climax" — which the topology did not deliver).
-
----
-
-## F3 — Kill objectives never fire in the app · **High**
-
-`starting-quest`'s only objective is `kill / The King of Revenge`. The engine
-advances kill objectives in `game.reducer.endCombat`. The live hazard-pattern
-combat (Spec 26b) never calls `endCombat` — its exit path is
-`CombatEncounterPanel.handleExit` → `EncounterModalOverlay.handleHazardExit`,
-which resets the run on defeat and tears down the modal, and nothing else. No
-caller of `endCombat` exists anywhere under `app/` or `components/`.
-
-Consequence chain: the boss dies → the objective stays at 0/1 forever →
-`starting-quest` never completes → every one of Old Marrow's reward branches
-(all four gated on `questCompleted: 'starting-quest'`) is unreachable →
-`get-to-forest`, which is only granted from inside one of those branches, can
-never be started.
-
-The objective's `target` is a display name (`"The King of Revenge"`), matched
-against `Enemy.name`. That coupling is correct and load-bearing; it is now
-pinned by a test, because a drift to the slug would silently reproduce this
-exact failure.
-
-### Fix
-
-`advanceKillObjectives(log, enemyName)` added to the quest engine; called from
-the combat write-back (`applyHazardOutcome`) on victory and the merciful wins.
+Removed 2026-11-12 with the story wipe (T): both findings were about the purged fishing-village quest chain and are closed.
 
 ---
 

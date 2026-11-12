@@ -18,16 +18,7 @@
 > beyond what's already shipped scenery (the wall, the ledger, the court),
 > and it invents no new canon about X, the second guard, or anyone's fate.
 >
-> **Addendum, 2026-09-23 (same day, later in this session).** T set a new
-> `story-overview.md` fact after this spec shipped (now ruling 6 of the
-> over-arching story, which replaced the road the same day): the capital is
-> commonly believed to be the annexation's last unconquered ground, and
-> that belief is wrong — not because it fell, but because it was never a
-> refuge; its coldness is its own nature. T confirmed this reads as
-> **compatible** with this spec's "relief cut short" door beat, not a
-> contradiction — no revision made. Left here as the cross-reference for
-> whoever authors the-capital's *arrival* side (`cap-1`/`cap-2`) next,
-> since that Standing Fact is the belief that arrival beat should undercut.
+> **Story wipe (T, 2026-11-12).** The addendum that cross-referenced a story ruling and this spec's voice-lock lines were removed; the story is being rewritten from a blank page.
 
 ## Goal
 
@@ -62,14 +53,7 @@ isn't safety — and a single node can't carry both halves of that beat.
 The cutscene names only what's gone (the wall, the ledger, the tally); it
 does not acknowledge anything on the other side, and the hazard that
 follows carries no capital-flavored language at all — nameless, immediate,
-the harshest of the three structural options T was offered. Voice lock:
-
-> "The wall goes small behind you before it goes gone. Nobody is counting
-> what leaves through here."
-
-> (hazard node, no capital reference — authored fresh against whatever
-> terrain kind implementation picks, e.g. exposure/weather-class rather
-> than anything ledger- or court-themed)
+the harshest of the three structural options T was offered. (Voice-lock lines removed 2026-11-12.)
 
 ## Region state
 

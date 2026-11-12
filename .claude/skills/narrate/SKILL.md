@@ -72,9 +72,9 @@ it a journal.
    5). If T asked for options, draft the same piece at the stops asked for.
 5. **Check it** against section 7 before showing it.
 6. **Show it** as in section 8, with what it invented and a confidence score.
-7. **On T's word**, record the approved text. A Chapter 1 line goes in
-   `plan/ballots/narrator-chapter1.md` under `## Verdicts`; anything else
-   goes in the ledger T names. Putting it in the game is a plotted chunk's
+7. **On T's word**, record the approved text. It goes in the ledger T names (the Chapter 1
+   ledger `plan/ballots/narrator-chapter1.md` was withdrawn on 2026-11-12
+   and is redrawn once the Act 1 story is written). Putting it in the game is a plotted chunk's
    job (spec 177), never this skill's.
 
 ## 4. The five stops

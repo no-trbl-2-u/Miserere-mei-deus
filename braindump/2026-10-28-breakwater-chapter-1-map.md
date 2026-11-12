@@ -58,7 +58,7 @@ look that tells the player each node's kind at a glance, on every node, not only
 
 ## Rulings (T, this session)
 - Backtracking allowed; several quests at once; a quest node blocks passage until its quest is complete.
-- The story route: W1 start (fishermen quest) -> H4 wreck hazard opens the sea cave -> H6 sea cave travels to the
+- The story route: W1 start (first quest) -> H4 wreck hazard opens the sea cave -> H6 sea cave travels to the
   cove -> C1 elite -> C2 quest (done, quest 2 given) -> L4 elite -> L5 lighthouse (arrival completes, gives a key)
   -> K1 keep quest (needs the key) -> K2 chapter boss -> B1 bridge quest -> B2 travel out.
 - Two villages: T4 harbour town, M5 walled manor.
@@ -169,7 +169,7 @@ Acceptance:
 - A1 The Breakwater graph has exactly the 44 nodes, 42 roads and one travel pair of the node list above (A1 as plotted); engine node ids are the
   board codes (`bw-w1` .. `bw-p3`); each node has its listed kind; the plate has one mark per node at the listed
   position.
-- A2 The quest chain runs on MQ1's rules: W1 gives the fishermen quest; C2 completes it and gives the next; L5
+- A2 The quest chain runs on MQ1's rules: W1 gives the first quest; C2 completes it and gives the next; L5
   completes on arrival and pays the key; K1 needs the key and opens K2; B1 is gated until K2 is beaten and opens B2.
 - A3 Gates hold: H4's far road (to H5) opens only once H4 is crossed; C1, L4 and W5 hold their far roads until
   beaten; a fled or lost fight leaves them shut; `questGateProblems` finds no bypass.

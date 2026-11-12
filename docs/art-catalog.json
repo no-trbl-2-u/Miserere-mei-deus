@@ -59,7 +59,7 @@
         "collapse"
       ]
     },
-    "how_to_use": "For a story outline: read `storySeeds` across every entry first — they are written to be combinable. `boundTo` says where in the world each plate already renders, so a beat set in that region already has its backdrop. `coherenceFlag` records an oddity worth knowing before a close-up or a promotional shot — currently `ludgate-hill` and `arena-desolation`, both legible 1872 text; entries with nothing flagged carry it as `null` or omit the key, and neither form means more than that; `crossCutting.gaps` is where to look for what the art CANNOT currently stage."
+    "how_to_use": "The `storySeeds` hooks were removed on 2026-11-12 with the story wipe (T); each entry now says only what the plate depicts. `boundTo` says where in the world each plate already renders, so a beat set in that region already has its backdrop. `coherenceFlag` records an oddity worth knowing before a close-up or a promotional shot — currently `ludgate-hill` and `arena-desolation`, both legible 1872 text; entries with nothing flagged carry it as `null` or omit the key, and neither form means more than that; `crossCutting.gaps` is where to look for what the art CANNOT currently stage."
   },
   "plates": [
     {
@@ -83,11 +83,6 @@
         "congregation",
         "industry",
         "poverty"
-      ],
-      "storySeeds": [
-        "Everyone in the frame is looking at the same off-frame thing. Whatever the parish is watching, it arrives by water.",
-        "A congregation that is also a workforce: the people who owe the parish their labour are the same people who fill its services.",
-        "The masts read as a drowned forest. A place that thinks of its boats as trees, or its trees as wrecks."
       ]
     },
     {
@@ -114,12 +109,7 @@
         "deep-water"
       ],
       "coherenceFlag": "Carries LEGIBLE PERIOD SIGNAGE: the frieze of the columned building at the right edge reads COMMERCIAL WHAR[F], running off the plate mid-word (x 784-894, y 447-460 of 894x1120; cap height ~13px). A denser inscription band sits directly above it and does not resolve at any brightness — it is texture, and no string is claimed for it. At backdrop scale the frieze reads as texture too: `contentFit=\"cover\"` anchored bottom-centre leaves roughly 4 device px of cap height on a phone and crops it off a wide viewport entirely. But it is real English text from 1872 and a close reader or a promotional crop will see it. Same class as `ludgate-hill`. Recorded rather than cropped: the right-edge dark mass it sits in is the reason this plate was chosen for the fallback slot (see `composition`), and `buildPlatePage`'s `inset` trims all four sides, so there is no asymmetric crop to reach for. Found in the burn-day audit of 2026-09-19.",
-      "notes": "Replaced `arena-ruined-city.jpg` in phase 103. That plate was owner-supplied pixel art of modern high-rises with licence UNRESOLVED, and being the fallback it was the most-seen arena in the game. Retired under THE OPEN GATE ¶6. Because THIS plate is now the fallback, it is the arena a player sees for any region the game has not keyed — so it is deliberately general, and a story beat may lean on its mood but should not treat its specific ruins as a named place.",
-      "storySeeds": [
-        "The observer who outlives the subject. Someone is sitting in the wreckage DRAWING it — which makes a record, and a record implies a reader who was not there. Who is the drawing for?",
-        "A city that ended without a battle. Nothing in the frame says war; the ruin is simply older than the viewer. A world where the catastrophe is already in the past and nobody present remembers causing it.",
-        "The water is the boundary. The figure is on this side, the dead city on the far one, and there is no bridge in frame. Crossing is a choice someone has not yet made."
-      ]
+      "notes": "Replaced `arena-ruined-city.jpg` in phase 103. That plate was owner-supplied pixel art of modern high-rises with licence UNRESOLVED, and being the fallback it was the most-seen arena in the game. Retired under THE OPEN GATE ¶6. Because THIS plate is now the fallback, it is the arena a player sees for any region the game has not keyed — so it is deliberately general, and a story beat may lean on its mood but should not treat its specific ruins as a named place."
     },
     {
       "id": "the-pit",
@@ -145,11 +135,6 @@
         "deep-water",
         "scale",
         "judgement"
-      ],
-      "storySeeds": [
-        "The giants are CHAINED, which means someone chained them and someone maintains the chains. The caverns have a warden, or had one.",
-        "Two travellers at the size of insects. Whatever the player's business is down here, the place was not built to their scale and does not notice them.",
-        "A well implies a bottom. The giants are standing AROUND it, not in it — they are the guards, not the prisoners."
       ]
     },
     {
@@ -175,11 +160,6 @@
         "toll",
         "passage",
         "judgement"
-      ],
-      "storySeeds": [
-        "The boat is EMPTY. He is either coming to collect or has just delivered — both are story states.",
-        "The ferryman is the game's clearest statement of its own thesis: passage is not free, and the price is set by somebody who will not negotiate.",
-        "He is old and still rowing. Nobody has relieved him."
       ]
     },
     {
@@ -203,11 +183,6 @@
         "solitary-figure",
         "abandonment",
         "threshold"
-      ],
-      "storySeeds": [
-        "The figure is looking BACK. The forest is the point at which the road behind stops being an option.",
-        "The trees are drawn as architecture — trunks as columns, canopy as vault. A wood that was a building, or a building the wood took.",
-        "The light finds the figure rather than the path. Being illuminated here is being exposed, not guided."
       ]
     },
     {
@@ -235,12 +210,7 @@
         "scale"
       ],
       "coherenceFlag": "Carries LEGIBLE PERIOD ADVERTISING on the bridge hoardings (newspaper mastheads and a company name). It is small in frame and reads as texture at backdrop scale, but it is real English text from 1872 and a close reader will see it. Worth knowing before using this plate in a close-up or a promotional shot.",
-      "tags_note": "Bound to the generic city|citadel|capital family, so it currently serves BOTH the northern city and the capital on the map screen.",
-      "storySeeds": [
-        "The cathedral is visible from the jam and cannot be reached through it. Proximity to power without access to it.",
-        "Everything in the frame is trying to move and nothing is moving. A capital whose actual condition is deadlock.",
-        "The train crosses above the jam, unaffected. Two classes of traffic, one of which is never stuck."
-      ]
+      "tags_note": "Bound to the generic city|citadel|capital family, so it currently serves BOTH the northern city and the capital on the map screen."
     },
     {
       "id": "wentworth-street",
@@ -267,11 +237,6 @@
         "poverty",
         "debt",
         "surveillance"
-      ],
-      "storySeeds": [
-        "The children look straight out of the frame at the player. The only plate in the set where the world looks back.",
-        "A market that is also a home — people are selling in the room they live in. No separation between what you owe and where you sleep.",
-        "This is the same street family as the Sweetheart's Village arena. The map and the fight are the same place seen twice, which can be used deliberately: arrive here, then fight here."
       ]
     },
     {
@@ -292,10 +257,6 @@
         "deep-water",
         "toll",
         "surveillance"
-      ],
-      "storySeeds": [
-        "The gallows stands on open ground in sight of the harbour: the law here is meant to be seen from the water.",
-        "A lighthouse, a wreck just past it, and a smugglers' cove the light does not reach."
       ]
     },
     {
@@ -315,10 +276,6 @@
         "threshold",
         "corpse",
         "abandonment"
-      ],
-      "storySeeds": [
-        "The dead are buried among the great tree's roots. The wood grows on its graveyard.",
-        "Three ways down at the forest's foot, and only one of them has a stair."
       ]
     },
     {
@@ -339,10 +296,6 @@
         "collapse",
         "scale",
         "labourers"
-      ],
-      "storySeeds": [
-        "A toll gate, a castle and a beacon: the pass is held, and the fire says so to anyone below.",
-        "The mountain is being taken apart: a quarry, a mine and spoil heaps on the same slope as a monastery."
       ]
     },
     {
@@ -363,10 +316,6 @@
         "deep-water",
         "threshold",
         "congregation"
-      ],
-      "storySeeds": [
-        "A giant sleeps above the skeleton of another giant. The underworld keeps its dead where the living can see them.",
-        "A sealed vault door among the ruins: the only thing down here still shut."
       ]
     },
     {
