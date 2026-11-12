@@ -344,6 +344,7 @@ test('the reminder and the live file mark a Held act "from the build plan" and s
     assert.match(text, /T reviews the opening \(attended\) \(2 h\) \(from the build plan\)/)
     assert.match(text, /Open acts only a hand can tick: 4\./, 'Play the lines, Review it, Decide a thing and The last session')
     assert.equal(q.handTicked, 4)
+    assert.match(text, /From the build plan \(Held chunks no Item names\): T reviews the opening/)
     const live = liveMarkdown([], null, '2026-11-10', q)
     assert.match(live, /T reviews the opening \(attended\) \(2 h\) \(from the build plan\)/)
     assert.match(live, /Open acts only a hand can tick: 4\./)

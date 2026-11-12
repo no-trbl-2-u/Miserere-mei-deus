@@ -653,6 +653,7 @@ export const queuePlan = (items, phases, today, hoursPerWeek, held = []) => {
         waiting: open.filter(blocked).map((o) => ({ name: o.item.name, owes: o.fromPlan ? o.need.detail.match(/owes (.+)$/)?.[1].split(', ') ?? [] : owesOf(o, phases), ...(o.fromPlan ? { fromPlan: true } : {}) })),
         noHours: open.filter(({ hours }) => hours === null).map(({ item }) => item.name),
         handTicked,
+        fromPlan: placed.map((o) => o.item.name),
     }
 }
 
@@ -664,11 +665,13 @@ const fitText = (m) =>
 const milestoneLine = (m) =>
     `${dayName(m.due)} (${whenText(m.days)}): ${m.acts} act${m.acts === 1 ? '' : 's'} open (${m.openHours} h), ${m.cumHours} h queued up to it, ${m.available} h available: ${fitText(m)}.`
 
+const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
+
 const planMark = (name, fromPlan) => (fromPlan ? `${name} (from the build plan)` : name)
 
-const handText = (queue) => `Open acts only a hand can tick: ${queue.handTicked}.`
+const planText = (queue) => (queue.fromPlan.length ? `From the build plan (Held chunks no Item names): ${queue.fromPlan.map(shortName).join('; ')}.` : '')
 
-const shortName = (name) => (name.length > 110 ? `${name.slice(0, 107).trimEnd()}...` : name)
+const handText = (queue) => `Open acts only a hand can tick: ${queue.handTicked}.`
 
 const owedList = (waiting) => {
     const ids = [...new Set(waiting.flatMap((w) => w.owes))]
@@ -692,6 +695,7 @@ const queueReminderText = (queue, today) => {
         queue.noHours.length ? `${queue.noHours.length} state no hours` : '',
     ].filter(Boolean)
     if (tail.length) lines.push(`Then: ${tail.join('; ')}.`)
+    if (queue.fromPlan.length) lines.push(planText(queue))
     lines.push(handText(queue))
     return lines.join('\n')
 }
@@ -716,6 +720,7 @@ const queueLiveMarkdown = (queue, today) => [
     ...(queue.later ? [`${queue.later} more acts are ready after these.`, ''] : []),
     ...(queue.waiting.length ? ['## Waiting on the loop', '', ...queue.waiting.map((w) => `- ${planMark(shortName(w.name), w.fromPlan)} — the loop still owes ${w.owes.join(', ') || 'its rows'}`), ''] : []),
     ...(queue.noHours.length ? ['## No hours stated', '', ...queue.noHours.map((n) => `- ${shortName(n)}`), ''] : []),
+    ...(queue.fromPlan.length ? [planText(queue), ''] : []),
     handText(queue),
     '',
 ].join('\n')
