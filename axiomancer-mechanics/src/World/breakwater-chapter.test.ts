@@ -16,7 +16,7 @@ import {
     BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_QUESTLINE_ID, BREAKWATER_CHAPTER_PIECES, BREAKWATER_KEEP_KEY,
 } from './breakwater-chapter.questline';
 import { getMapDefinition } from './map.registry';
-import { getNodeEventPool } from './MapEvents/resolve-map-event';
+import { getNodeEventPool, getNodeScene } from './MapEvents/resolve-map-event';
 import { isEliteNode } from './elite-respawn';
 import { questGateProblems } from './quest-gates';
 import { getQuestline } from './questline';
@@ -54,7 +54,7 @@ T6|fight|T5, L1
 B1|quest|T2, B2
 B2|travel|B1
 L1|fight|T6, L2, L3, D1
-L2|cutscene|L1
+L2|hazard|L1
 L3|rest|L1, L4
 L4|elite fight|L3, L5
 L5|quest|L4
@@ -62,14 +62,14 @@ D1|fight|L1, D2, D3
 D2|loot cache|D1
 D3|fight|D1, D4
 D4|hazard|D3, D5
-D5|cutscene|D4
+D5|loot cache|D4
 M1|fight|W2, M2, P1
 M2|hazard|M1, M3, M4
 M3|loot cache|M2
 M4|hazard|M2, M5
 M5|village|M4
 P1|hazard|M1, P3
-P3|cutscene|P1
+P3|loot cache|P1
 `.trim().split('\n').map(line => {
     const [code, kind, roads] = line.split('|') as [string, string, string];
     const id = (c: string) => `bw-${c.trim().toLowerCase()}`;
@@ -124,8 +124,11 @@ describe('A1: the graph is T\'s node list', () => {
     });
 
     it('gives every node its listed kind, through its one-entry pool (an elite node, one per foe it draws)', () => {
-        expect(BREAKWATER_CHAPTER_POOLS).toHaveLength(43);
+        // Every node but the windmill: its own event is none, after its scene.
+        expect(BREAKWATER_CHAPTER_POOLS).toHaveLength(42);
+        expect(getNodeEventPool('coastal-continent', 'breakwater', 'bw-w1')).toBeUndefined();
         for (const n of NODE_LIST) {
+            if (n.kind === 'start') continue;
             expect(getNodeEventPool('coastal-continent', 'breakwater', n.id)!.entries, n.id).toHaveLength(BW_ELITE_DRAWS[n.id]?.length ?? 1);
             expect(boardKindOf(n.id), n.id).toBe(n.kind);
         }
@@ -152,14 +155,14 @@ describe('A1: the graph is T\'s node list', () => {
         const tally: Record<string, number> = {};
         for (const n of NODE_LIST) tally[n.kind] = (tally[n.kind] ?? 0) + 1;
         expect(tally).toEqual({
-            start: 1, village: 2, quest: 4, 'chapter boss': 1, 'elite fight': 3, hazard: 6,
-            fight: 14, rest: 3, 'loot cache': 3, cutscene: 3, travel: 3,
+            start: 1, village: 2, quest: 4, 'chapter boss': 1, 'elite fight': 3, hazard: 7,
+            fight: 14, rest: 3, 'loot cache': 5, travel: 3,
         });
         const kinds: Record<string, number> = {};
         for (const { kind } of Object.values(BREAKWATER_CHAPTER_KINDS)) kinds[kind] = (kinds[kind] ?? 0) + 1;
         expect(kinds).toEqual({
-            start: 1, village: 2, quest: 4, boss: 1, elite: 3, hazard: 6,
-            fight: 14, rest: 3, loot: 3, cutscene: 3, travel: 3,
+            start: 1, village: 2, quest: 4, boss: 1, elite: 3, hazard: 7,
+            fight: 14, rest: 3, loot: 5, travel: 3,
         });
     });
 
@@ -228,8 +231,8 @@ describe('A2: the chain', () => {
     it('is registered, gives step 1 from the windmill\'s arrival and puts steps 2-4 on the quest nodes', () => {
         expect(AUTHORED_QUESTLINES).toEqual([BREAKWATER_CHAPTER_QUESTLINE]);
         expect(getQuestline(BREAKWATER_CHAPTER_QUESTLINE_ID)).toBe(BREAKWATER_CHAPTER_QUESTLINE);
-        const w1 = payloadOf('bw-w1');
-        expect(w1.kind === 'cutscene' && w1.effect).toEqual({
+        const w1 = getNodeScene('coastal-continent', 'breakwater', 'bw-w1')!.before;
+        expect(w1.effect).toEqual({
             giveQuestStep: { questline: BREAKWATER_CHAPTER_QUESTLINE_ID, step: 1 },
         });
         const quests = NODE_LIST.filter(n => n.kind === 'quest').map(n => {

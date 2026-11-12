@@ -48,13 +48,15 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         expect((summary.resolvedNodeIds as string[]).length).toBe(43);
         expect(summary.combatOutcomes).toEqual({});
 
-        // bw-k2 is the Death Beholder's chapter-boss fight; bw-w1 is the
-        // arrival cutscene — the audit inspects wiring, it never fights
+        // bw-k2 is the Death Beholder's chapter-boss fight; bw-w1's own event
+        // is none (its arrival plays from its scene slot) — the audit inspects wiring, it never fights
         // anyone. bw-b2 is the door to charcoal-wood — the read-only audit
         // sees its kind without walking through it. bw-t4 is a village with
         // the region's Anvil.
         const eventKinds = summary.eventKinds as Record<string, string>;
-        expect(eventKinds['bw-w1']).toBe('cutscene');
+        expect(eventKinds['bw-w1']).toBe('none');
+        // No Breakwater node's own kind is a cutscene.
+        expect(Object.values(eventKinds)).not.toContain('cutscene');
         expect(eventKinds['bw-k2']).toBe('encounter');
         expect(eventKinds['bw-b2']).toBe('travel');
         expect(eventKinds['bw-t4']).toBe('village');
@@ -161,17 +163,18 @@ describe('Phase 14 — route survivorship vs coverage-audit classification', () 
         ]);
         const onSummary = routeEnd(withFlag);
         expect(onSummary.startNode).toMatchObject({ nodeId: 'bw-w1', resolved: true });
-        expect(onSummary.resolvedNodeIds).toContain('bw-w1');
+        // Its own event is none, so it resolves nothing a route counts.
+        expect(onSummary.resolvedNodeIds).not.toContain('bw-w1');
 
-        // bw-w1 is the Breakwater's arrival cutscene — the start node holds a
-        // kind that is safe to fire the moment the map opens (events fire on
-        // ARRIVAL, and the map places the player ON bw-w1).
+        // bw-w1 plays the Breakwater's arrival scene from its slot — safe to
+        // fire the moment the map opens (events fire on ARRIVAL, and the map
+        // places the player ON bw-w1).
         const onLogs = readLog(withFlag);
         const bw1Event = onLogs
             .filter(r => r.action === 'resolveMapEvent')
             .map(r => r.event as { kind?: string; lines?: readonly string[] })
             .find(e => e.kind === 'cutscene');
-        expect(bw1Event).toBeDefined();
+        expect(bw1Event).toMatchObject({ slot: 'before' });
         expect(bw1Event?.lines?.length ?? 0).toBeGreaterThan(0);
 
         const withoutFlag = tmpPath('resolve-start-off');

@@ -6,7 +6,13 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { BREAKWATER_HAZARD_NODES, BREAKWATER_HAZARD_PUZZLES } from '../../../Continents/Coastal-Village/breakwater-puzzles';
+import {
+    BREAKWATER_CURVE_HAZARD_NODES,
+    BREAKWATER_HAZARD_NODES,
+    BREAKWATER_HAZARD_PUZZLES,
+    BREAKWATER_PINNED_HAZARD_RANKS,
+    pickBreakwaterHazardPuzzles,
+} from '../../../Continents/Coastal-Village/breakwater-puzzles';
 import { breakwaterChapter } from '../../../Continents/Coastal-Village/breakwater-chapter';
 import { BREAKWATER_CHAPTER_KINDS } from '../../../MapEvents/content';
 import { HAZARD_PUZZLE_CANDIDATES, getHazardPuzzleCandidate } from '../hazard-puzzle.candidates';
@@ -85,15 +91,33 @@ describe('pickChapterHazardPuzzles (A4)', () => {
 describe('BREAKWATER_HAZARD_PUZZLES (A5)', () => {
     it('matches the rule at the pinned seed and plays', () => {
         const curve = buildHazardPuzzleCurve(HAZARD_PUZZLE_CANDIDATES, { seed: HAZARD_PUZZLE_SIM.seed, plays: HAZARD_PUZZLE_SIM.plays });
-        const picks = pickChapterHazardPuzzles(curve, BREAKWATER_HAZARD_NODES);
+        const six = pickChapterHazardPuzzles(curve, BREAKWATER_CURVE_HAZARD_NODES);
+        expect(six.map((p) => p.rank)).toEqual([11, 13, 15, 16, 18, 20]);
+        const picks = pickBreakwaterHazardPuzzles(curve);
         expect(Object.fromEntries(picks.map((p) => [p.nodeId, p.candidateId]))).toEqual(BREAKWATER_HAZARD_PUZZLES);
-        expect(picks.map((p) => p.rank)).toEqual([11, 13, 15, 16, 18, 20]);
+        // The pinned chapel sits in story order between the back lanes and the
+        // tower switchbacks, so the seven still rise strictly in rank.
+        expect(picks.map((p) => p.rank)).toEqual([11, 13, 15, 16, 18, 19, 20]);
+        for (const p of six) expect(BREAKWATER_HAZARD_PUZZLES[p.nodeId]).toBe(p.candidateId);
     }, 60_000);
 
-    it('names a real candidate for each of the six hazard nodes, with no repeats', () => {
+    it('pins each extra hazard to a rank the six do not use, inside the middle third', () => {
+        const { lo, hi } = hazardPuzzleMiddleThird(HAZARD_PUZZLE_CANDIDATES.length);
+        const sixRanks = hazardPuzzlePickRanks(BREAKWATER_CURVE_HAZARD_NODES.length, lo, hi);
+        for (const [nodeId, rank] of Object.entries(BREAKWATER_PINNED_HAZARD_RANKS)) {
+            expect(rank, nodeId).toBeGreaterThanOrEqual(lo);
+            expect(rank, nodeId).toBeLessThanOrEqual(hi);
+            expect(sixRanks, nodeId).not.toContain(rank);
+            expect(BREAKWATER_CURVE_HAZARD_NODES as readonly string[]).not.toContain(nodeId);
+        }
+        expect([...BREAKWATER_HAZARD_NODES].sort()).toEqual(
+            [...BREAKWATER_CURVE_HAZARD_NODES, ...Object.keys(BREAKWATER_PINNED_HAZARD_RANKS)].sort());
+    });
+
+    it('names a real candidate for each of the seven hazard nodes, with no repeats', () => {
         expect(Object.keys(BREAKWATER_HAZARD_PUZZLES)).toEqual([...BREAKWATER_HAZARD_NODES]);
         const ids = Object.values(BREAKWATER_HAZARD_PUZZLES);
-        expect(new Set(ids).size).toBe(6);
+        expect(new Set(ids).size).toBe(7);
         ids.forEach((id) => expect(getHazardPuzzleCandidate(id), id).toBeDefined());
     });
 
