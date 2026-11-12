@@ -287,6 +287,22 @@ describe('A5: a quest node reached too early refuses, and opens nothing', () => 
     });
 });
 
+describe('the gate lines and R-04 are pinned exactly (ledger plan/ballots/narrator-chapter1.md)', () => {
+    it('pins G-01 and G-02 as literals', () => {
+        expect(KEEP_GATE_REASON).toBe("The keep gate is barred and the serjeant has his orders.");
+        expect(BRIDGE_GATE_REASON).toBe("The chain is drawn across the bridge while the lord of the keep lives.");
+    });
+
+    it('pins R-04 whole when walked to', () => {
+        let s = newGame().state;
+        for (const id of ['bw-w2', 'bw-w3', 'bw-h1', 'bw-t1', 'bw-t2']) s = win(s, id);
+        const early = arrive(s, 'bw-b1');
+        expect(early.event.kind === 'quest' && early.event.lockedLine).toBe(
+            "Tolliver Pease pats the chain as he would a dog. Not while he sits in that house, he says, and offers you the stool.",
+        );
+    });
+});
+
 describe('A12: the elite drop is unchanged', () => {
     it('still draws only the elite-drop relics when a fight lists none', () => {
         const player = createNewGameState({ startMap: 'breakwater' }).player;
