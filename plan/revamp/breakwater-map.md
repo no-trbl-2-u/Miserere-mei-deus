@@ -4,7 +4,7 @@
 > `axiomancer-mechanics/src/World/Continents/Coastal-Village/breakwater-chapter.ts` (graph),
 > `MapEvents/content.ts` (its 44 pools), `World/breakwater-chapter.questline.ts` (the chain), and
 > `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts` (its 44 coast marks). The node list is
-> `braindump/2026-10-28-breakwater-chapter-1-map.md` (board v4); T's vision is `plan/revamp/breakwater-vision.md`.
+> in `plan/116-bw1-breakwater-rebuild.md` (board v4); the pitch and T's vision file were deleted on 2026-11-12.
 > The 22-node map, its four quest markers and QL1's questline described below are gone; this page is history.
 
 > A rough map of every Breakwater node, read from the current tree on 2026-10-26: the graph in
@@ -17,7 +17,7 @@
 ## T's vision for Chapter 1 (T, 2026-10-28)
 
 > **The full record, with T's later rulings (44 nodes, the cove's travel pair, a relic per quest), is
-> `plan/revamp/breakwater-vision.md`; the rebuild is phase BW1 (D114).**
+> `plan/116-bw1-breakwater-rebuild.md`; the rebuild is phase BW1 (D114).**
 >
 > **Important: T's vision for the chapter. The Breakwater rebuild follows it.** Recorded from T's message of
 > 2026-10-28 (sent to `/pitch` to start mapping every node, and shared in the MQ1 plot session) with T's marked-up
