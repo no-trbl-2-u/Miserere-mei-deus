@@ -178,7 +178,7 @@ async function nodeLabel(page, nodeId) {
 /** Play out an arrival cutscene: SKIP reveals the rest, a tap on the body ends it. */
 async function playOutCutscene(page) {
     await tap(page, 'cutscene-skip')
-    for (let k = 0; k < 12; k++) {
+    for (let k = 0; k < 30; k++) {
         if (!(await tap(page, 'cutscene-advance'))) break
         await sleep(250)
     }
@@ -231,7 +231,7 @@ async function travelTo(page, nodeId) {
     if (scene) {
         log(`${nodeId}: scene played through`)
         // Tap panel by panel, as a player does (SKIP and a last tap racing would dismiss twice).
-        for (let k = 0; k < 8 && (await page.getByTestId('cutscene-advance').count()); k++) {
+        for (let k = 0; k < 24 && (await page.getByTestId('cutscene-advance').count()); k++) {
             await tap(page, 'cutscene-advance')
             await sleep(900)
         }
@@ -283,19 +283,21 @@ async function newGame(page, baseUrl) {
 
     // D31: a new game opens on the windmill's arrival scene, not a rest.
     await waitFor(page, 'cutscene-advance', 'the windmill arrival scene')
-    // S-01 is four panels ("1 of 4" .. "4 of 4"); the windmill is named in the third, Ann Greave in the fourth.
+    // S-01 is four panels, each over 240 characters, so eight pages ("1 of 8" .. "8 of 8", NV1o): the windmill
+    // is named on the fifth page (the third panel's first), Ann Greave on the seventh (the fourth panel's first).
+    const PAGES = 8
     const panels = []
-    for (let k = 0; k < 4; k++) {
-        await waitFor(page, `cutscene-line-${k}`, `the windmill scene, panel ${k + 1}`, 5000)
+    for (let k = 0; k < PAGES; k++) {
+        await waitFor(page, `cutscene-line-${k}`, `the windmill scene, page ${k + 1}`, 5000)
         panels.push(await page.getByTestId(`cutscene-line-${k}`).innerText())
         const count = await page.getByTestId('cutscene-count').innerText()
-        if (count.trim() !== `${k + 1} of 4`) fail(`the opening scene is not the windmill arrival (panel ${k + 1} reads "${count}")`)
-        if (k < 3) {
+        if (count.trim() !== `${k + 1} of ${PAGES}`) fail(`the opening scene is not the windmill arrival (page ${k + 1} reads "${count}")`)
+        if (k < PAGES - 1) {
             await tap(page, 'cutscene-advance')
             await sleep(900)
         }
     }
-    if (!/windmill/i.test(panels[2]) || !/Ann Greave/.test(panels[3])) fail('the opening scene is not the windmill arrival')
+    if (!/windmill/i.test(panels[4]) || !/Ann Greave/.test(panels[6])) fail('the opening scene is not the windmill arrival')
     log('new game: windmill arrival scene')
     await playOutCutscene(page)
 

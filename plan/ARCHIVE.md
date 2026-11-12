@@ -743,3 +743,4 @@
 - 2026-11-12 · 156.5 (alias: TY1e) · Three-direction ballot for the three worst screens, nine stills · e1675102..e1675102 (#1648)
 - 2026-11-12 · 156 · spec complete: Type and colour by T's ballots, then a design audit of every screen against the AI-design tells · none · deleted in (this commit)
 - 2026-11-12 · 177.9 (alias: NV1i) · Twenty-two approved scenes play from the Breakwater's slots · a85244f5..1b301b1d (#1647)
+- 2026-11-12 · 177.15 (alias: NV1o) · The cutscene screen pages a long panel at sentence ends · 55d7f38a..d5bd27f6 (#1652)
