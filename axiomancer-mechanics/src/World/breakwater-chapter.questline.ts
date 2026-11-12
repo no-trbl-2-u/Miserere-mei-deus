@@ -15,7 +15,8 @@
  * "one quest is a relic, another is a weapon, etc."): steps 1 and 3 pay a
  * relic, step 2 pays a weapon and step 4 an armor of the lane of the relic the
  * step before paid. The relics are placeholders from the relic library until
- * T names them (BW1d, BW1e). Every line is `[content]`.
+ * T names them (BW1d). The names and quest log lines are T's (BW1e, from
+ * `plan/ballots/narrator-chapter1.md`); the four objective lines stay `[content]`.
  *
  * Registered on load by `quest.library.ts` (`AUTHORED_QUESTLINES`).
  */
@@ -33,17 +34,17 @@ export const BREAKWATER_CHAPTER_QUESTLINE_ID = 'breakwater-chapter-1';
 
 /** The four steps' quest names (the quest log's keys). */
 export const BREAKWATER_CHAPTER_STEPS = {
-    fishermen:  '[content] Chapter 1: the capsized boat',
-    lighthouse: '[content] Chapter 1: the lighthouse',
-    keep:       '[content] Chapter 1: the keep key',
-    boss:       '[content] Chapter 1: the sea keep',
+    fishermen:  'The Boat on the Rocks',
+    lighthouse: 'The Light He Saw',
+    keep:       'The Paid Key',
+    boss:       'The Saint Beneath',
 } as const;
 
 /** The keep key: step 2 pays it, step 3 carries it to the keep gate. */
 export const BREAKWATER_KEEP_KEY: QuestItem = {
     id: 'bw-keep-key',
-    name: '[content] Keep key',
-    description: '[content] An iron key from the lighthouse. It opens the keep gate.',
+    name: 'The Paid Key',
+    description: 'An iron key, never turned. Enoch Marrable was paid it for the lamp of the harbour.',
     category: 'quest-item',
     questId: BREAKWATER_CHAPTER_STEPS.keep,
 };
@@ -105,13 +106,13 @@ function quest(name: string, description: string, objective: Omit<QuestObjective
 /** The chain: the four steps of the file header. */
 export const BREAKWATER_CHAPTER_QUESTLINE: Questline = {
     id: BREAKWATER_CHAPTER_QUESTLINE_ID,
-    name: '[content] Chapter 1',
+    name: 'The Breakwater',
     mapName: 'breakwater',
     steps: [
         {
             step: 1,
             nodeId: 'bw-w1',
-            quest: quest(BREAKWATER_CHAPTER_STEPS.fishermen, '[content] Find the fishermen whose boat capsized.', {
+            quest: quest(BREAKWATER_CHAPTER_STEPS.fishermen, 'A town boat went onto the outer reef in the night. Her men are not aboard and the town will not look. Find them.', {
                 id: 'camp', type: 'reach', target: 'bw-c2', description: '[content] Find the fishermen.',
             }),
             rewards: [{ kind: 'experience', amount: STEP_XP }, relicReward(1)],
@@ -120,7 +121,7 @@ export const BREAKWATER_CHAPTER_QUESTLINE: Questline = {
         {
             step: 2,
             nodeId: 'bw-c2',
-            quest: quest(BREAKWATER_CHAPTER_STEPS.lighthouse, '[content] Climb to the lighthouse.', {
+            quest: quest(BREAKWATER_CHAPTER_STEPS.lighthouse, 'Abel Corse steered for a light on the head. No lamp has burned in that tower for thirty years. Ask its warden who lit it.', {
                 id: 'lighthouse', type: 'reach', target: 'bw-l5', description: '[content] Reach the lighthouse.',
             }),
             rewards: [{ kind: 'experience', amount: STEP_XP }, BREAKWATER_KEEP_KEY, pieceReward(2)],
@@ -129,7 +130,7 @@ export const BREAKWATER_CHAPTER_QUESTLINE: Questline = {
         {
             step: 3,
             nodeId: 'bw-l5',
-            quest: quest(BREAKWATER_CHAPTER_STEPS.keep, '[content] Bring the key to the keep gate.', {
+            quest: quest(BREAKWATER_CHAPTER_STEPS.keep, 'No one lit the tower. A sea door stands open under the keep on certain nights, and the light is there. The key Marrable was paid fits the keep gate.', {
                 id: 'key', type: 'carry', target: BREAKWATER_KEEP_KEY.id, description: '[content] Bring the keep key.',
             }),
             rewards: [{ kind: 'experience', amount: STEP_XP }, relicReward(3)],
@@ -139,7 +140,7 @@ export const BREAKWATER_CHAPTER_QUESTLINE: Questline = {
         {
             step: 4,
             nodeId: 'bw-k1',
-            quest: quest(BREAKWATER_CHAPTER_STEPS.boss, '[content] Beat what holds the sea keep, then cross the bridge.', {
+            quest: quest(BREAKWATER_CHAPTER_STEPS.boss, 'The lamp of the harbour burns under the keep, and the lord who bought it sits beside it. Go down.', {
                 id: 'boss', type: 'kill', foeClass: 'boss', description: '[content] Beat the sea keep\'s master.',
             }),
             rewards: [{ kind: 'experience', amount: STEP_XP }, pieceReward(4)],
