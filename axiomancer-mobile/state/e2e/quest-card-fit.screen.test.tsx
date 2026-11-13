@@ -116,6 +116,10 @@ describe('buttonsBelowFold', () => {
         expect(buttonsBelowFold(740, 0, 0, 56)).toBe(false);
         expect(buttonsBelowFold(740, 1000, 0, 0)).toBe(false);
         expect(buttonsBelowFold(740, 700, 0, 56)).toBe(false);
+        // Each unmeasured box keeps the cue off, even scrolled (an overscroll bounce reads negative).
+        expect(buttonsBelowFold(0, 1000, -1000, 56)).toBe(false);
+        expect(buttonsBelowFold(740, 0, -1000, 56)).toBe(false);
+        expect(buttonsBelowFold(740, 1000, -1000, 0)).toBe(false);
     });
     it('is true only while the whole button row lies past the foot', () => {
         expect(buttonsBelowFold(740, 1000, 0, 56)).toBe(true);

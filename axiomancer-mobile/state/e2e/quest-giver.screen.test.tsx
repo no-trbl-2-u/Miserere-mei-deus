@@ -7,16 +7,15 @@
  * its reduced-motion answer from its caller, as the combat frames do.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
+import { AccessibilityInfo } from 'react-native';
 
 import QuestScreen from '@/app/quest/index';
 import { RelicRise } from '@/components/quest/QuestGiverScene';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
+import { selectQuestVM } from '@/state/presenters/quest.engine';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
 import {
     FIXTURE_LINE,
@@ -26,6 +25,20 @@ import {
     registerFixtureQuestline,
     unregisterFixtureQuestline,
 } from '@/test-utils/questlineFixture';
+
+// The relic rise's motion answer is watched, not read from its source: the
+// mutation run rewrites the source in place, so a test of its text cannot run
+// there. Both wrap the real functions, so the screen behaves as it ships.
+const mockResolveJuiceMode = jest.fn();
+jest.mock('@/lib/juice/instant', () => {
+    const actual = jest.requireActual<typeof import('@/lib/juice/instant')>('@/lib/juice/instant');
+    return { ...actual, resolveJuiceMode: (...args: Parameters<typeof actual.resolveJuiceMode>) => { mockResolveJuiceMode(...args); return actual.resolveJuiceMode(...args); } };
+});
+const mockAskPlatform = jest.fn();
+jest.mock('@/hooks/useReducedMotion', () => {
+    const actual = jest.requireActual<typeof import('@/hooks/useReducedMotion')>('@/hooks/useReducedMotion');
+    return { ...actual, useReducedMotion: () => { mockAskPlatform(); return actual.useReducedMotion(); } };
+});
 
 jest.mock('@/lib/platform/router', () => ({
     useRouter: () => ({ replace: jest.fn(), push: jest.fn(), back: jest.fn(), canGoBack: () => true }),
@@ -103,6 +116,49 @@ describe('/quest - the giver scene', () => {
     });
 });
 
+describe('/quest - the relic under a turned-in card', () => {
+    it('a turn-in that pays no item shows what it paid and raises no relic', () => {
+        const { store, resolve, view } = open(2);
+        acceptFixtureStep(store, 1);
+        fillFixtureStep(store, 1);
+        resolve();
+        view();
+        fireEvent.press(screen.getByTestId('quest-turn-in-button'));
+        expect(selectQuestVM(store.getState()).paid?.itemNames).toEqual([]);
+        expect(screen.getByTestId('quest-paid')).toBeTruthy();
+        expect(screen.queryByTestId('quest-relic-rise')).toBeNull();
+    });
+
+    it('the relic wears the first paid item\'s id, for its icon', () => {
+        const { store, resolve, view } = open(4);
+        acceptFixtureStep(store, 3);
+        fillFixtureStep(store, 3);
+        resolve();
+        view();
+        fireEvent.press(screen.getByTestId('quest-turn-in-button'));
+        const paid = selectQuestVM(store.getState()).paid!;
+        expect(paid.itemIds?.[0]).toEqual(expect.any(String));
+        const rise = screen.UNSAFE_getByType(RelicRise);
+        expect(rise.props.itemId).toBe(paid.itemIds![0]);
+        expect(rise.props.name).toBe(paid.itemNames[0]);
+    });
+
+    it('an older ledger with no item ids still raises the relic, with no id', () => {
+        const { store, resolve, view } = open(1);
+        resolve();
+        store.setState({
+            quest: {
+                ...store.getState().quest,
+                paid: { step: 1, questName: 'Cross the Gallows', experience: 0, currency: 0, itemNames: ['[content] An Old Relic'] },
+            },
+        } as never);
+        view();
+        const rise = screen.UNSAFE_getByType(RelicRise);
+        expect(rise.props.itemId).toBeNull();
+        expect(screen.getByTestId('quest-relic-name').props.children).toBe('[content] An Old Relic');
+    });
+});
+
 describe('/quest - the relic rise, reduced motion', () => {
     it('lands shown at once with reduced motion on', () => {
         render(<RelicRise itemId={null} name="The Tide Relic" reducedMotion />);
@@ -110,9 +166,15 @@ describe('/quest - the relic rise, reduced motion', () => {
     });
 
     it('takes the answer from its caller and never asks the platform', () => {
-        const text = fs.readFileSync(path.join(__dirname, '../../components/quest/QuestGiverScene.tsx'), 'utf8')
-            .replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
-        expect(text).not.toMatch(/AccessibilityInfo|useReducedMotion\s*\(/);
-        expect(text).toMatch(/resolveJuiceMode\(\{ reducedMotion/);
+        const reduceMotionAsked = jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled');
+        for (const reducedMotion of [true, false]) {
+            mockResolveJuiceMode.mockClear();
+            mockAskPlatform.mockClear();
+            render(<RelicRise itemId={null} name="The Tide Relic" reducedMotion={reducedMotion} />);
+            expect(mockResolveJuiceMode).toHaveBeenCalledWith({ reducedMotion });
+            expect(mockAskPlatform).not.toHaveBeenCalled();
+        }
+        expect(reduceMotionAsked).not.toHaveBeenCalled();
+        reduceMotionAsked.mockRestore();
     });
 });

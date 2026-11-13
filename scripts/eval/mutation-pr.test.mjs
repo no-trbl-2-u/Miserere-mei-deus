@@ -11,7 +11,7 @@ import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { PR_MARKER, mutatedFiles, parseChangedLines, prOutcome, rangeConfigSource, renderPrReport, scopeChangedLines } from './mutation-lib.mjs'
+import { NARROW_OVER, PR_MARKER, mutatedFiles, narrowRelated, ownTests, parseChangedLines, prOutcome, rangeConfigSource, renderPrReport, scopeChangedLines, sourceReadingTests } from './mutation-lib.mjs'
 
 test('rangeConfigSource hands the changed files to the base config through EVAL_STRYKER_MUTATE, then replaces mutate', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'range-config-'))
@@ -56,6 +56,58 @@ test('mutatedFiles strips the line ranges from EVAL_STRYKER_MUTATE and falls bac
   assert.deepEqual(mutatedFiles(['fixed.ts'], '["app/cutscene/index.tsx:10-20","state/x.ts:3-3","bare.ts"]'), ['app/cutscene/index.tsx', 'state/x.ts', 'bare.ts'])
   assert.deepEqual(mutatedFiles(['fixed.ts'], undefined), ['fixed.ts'])
   assert.deepEqual(mutatedFiles(['fixed.ts'], ''), ['fixed.ts'])
+})
+
+test('ownTests: the tests named after a file or importing it, not those that only mock it', () => {
+  const texts = {
+    '/m/state/e2e/cutscene-pages.NV1o.test.ts': "import { x } from '../somewhere'",
+    '/m/state/e2e/scene.test.tsx': "import { pageCutscene } from '@/state/presenters/cutscene-pages'",
+    '/m/state/e2e/mocked.test.tsx': "jest.mock('@/state/presenters/cutscene-pages', () => ({}))",
+    '/m/state/e2e/other.test.tsx': "import { y } from '@/state/presenters/event.engine'",
+    '/m/state/e2e/quest.screen.test.tsx': "import QuestScreen from '@/app/quest/index'",
+    '/m/state/e2e/q2.test.tsx': "const Q = require('../../app/quest')",
+  }
+  const read = (t) => texts[t]
+  const all = Object.keys(texts)
+  assert.deepEqual(ownTests('state/presenters/cutscene-pages.ts', all, read), ['/m/state/e2e/cutscene-pages.NV1o.test.ts', '/m/state/e2e/scene.test.tsx'])
+  assert.deepEqual(ownTests('app/quest/index.tsx', all, read), ['/m/state/e2e/quest.screen.test.tsx', '/m/state/e2e/q2.test.tsx'])
+})
+
+test('narrowRelated keeps a small related set, narrows a large one to the own tests, and keeps a large one with none', () => {
+  const big = Array.from({ length: NARROW_OVER + 1 }, (_, i) => `/m/s${i}.test.ts`)
+  const read = (t) => (t === '/m/s3.test.ts' ? "import { a } from '@/state/presenters/cutscene-pages'" : '')
+  assert.deepEqual(narrowRelated('state/presenters/cutscene-pages.ts', big.slice(0, NARROW_OVER), read), { tests: big.slice(0, NARROW_OVER), narrowed: false })
+  assert.deepEqual(narrowRelated('state/presenters/cutscene-pages.ts', big, read), { tests: ['/m/s3.test.ts'], narrowed: true })
+  assert.deepEqual(narrowRelated('state/presenters/lonely.ts', big, read), { tests: big, narrowed: false })
+})
+
+test('sourceReadingTests: a test that reads a mutated file from disk is left out; an index file is named with its folder', () => {
+  const texts = {
+    '/m/a.test.tsx': "fs.readFileSync(path.join(__dirname, '../../components/quest/QuestGiverScene.tsx'), 'utf8')",
+    '/m/b.test.tsx': "import { RelicRise } from '@/components/quest/QuestGiverScene'",
+    '/m/c.test.tsx': "readFileSync(join(root, 'app/cutscene/index.tsx'))",
+    '/m/d.test.tsx': "readFileSync(join(root, 'app/quest/index.tsx'))",
+  }
+  const read = (t) => texts[t]
+  const all = Object.keys(texts)
+  assert.deepEqual(sourceReadingTests(all, ['components/quest/QuestGiverScene.tsx'], read), ['/m/a.test.tsx'])
+  assert.deepEqual(sourceReadingTests(all, ['app/quest/index.tsx'], read), ['/m/d.test.tsx'])
+})
+
+test('the mobile config narrows a PR file with a large related set to its own tests (cutscene-pages)', () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
+  const config = pathToFileURL(join(root, 'scripts/eval/stryker/mobile.config.mjs')).href
+  const code = `const { default: c } = await import(${JSON.stringify(config)}); console.log(JSON.stringify(c.jest.config.testMatch))`
+  const out = execFileSync(process.execPath, ['--input-type=module', '-e', code], {
+    cwd: join(root, 'axiomancer-mobile'),
+    env: { ...process.env, EVAL_STRYKER_MUTATE: JSON.stringify(['state/presenters/cutscene-pages.ts:1-47']) },
+    encoding: 'utf8',
+    maxBuffer: 16 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })
+  const set = JSON.parse(out.trim().split('\n').at(-1))
+  assert.ok(set.length > 0 && set.length <= NARROW_OVER, `narrowed, got ${set.length}`)
+  assert.ok(set.every((t) => /cutscene-pages/.test(t.split('/').at(-1))), set.join(', '))
 })
 
 const DIFF = [

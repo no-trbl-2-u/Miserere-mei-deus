@@ -265,15 +265,25 @@ function reportRouterFault(event: string, payload: Record<string, unknown>): voi
   }
 }
 
-export function useRouter() {
-  return {
-    push: (href: string) => dispatchTo(href, 'push'),
-    replace: (href: string) => dispatchTo(href, 'replace'),
-    back: () => {
-      if (navigationRef.isReady()) navigationRef.goBack();
-    },
-    canGoBack: () => navigationRef.isReady() && navigationRef.canGoBack(),
-  };
+/**
+ * The one router handle every `useRouter()` returns. It must keep one identity
+ * across renders, as expo-router's does: the gates (`<CacheGate>`, `<RestGate>`,
+ * ...) list `router` in their effect deps, so a fresh object per render re-ran
+ * a gate's push whenever the root layout re-rendered with a session still open
+ * (the secondary fonts settling, say), and a second copy of the screen was
+ * stacked over the first.
+ */
+const ROUTER = Object.freeze({
+  push: (href: string) => dispatchTo(href, 'push'),
+  replace: (href: string) => dispatchTo(href, 'replace'),
+  back: () => {
+    if (navigationRef.isReady()) navigationRef.goBack();
+  },
+  canGoBack: () => navigationRef.isReady() && navigationRef.canGoBack(),
+});
+
+export function useRouter(): typeof ROUTER {
+  return ROUTER;
 }
 
 export function useLocalSearchParams<T extends Record<string, unknown> = Record<string, string>>(): T {
