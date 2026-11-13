@@ -1065,16 +1065,23 @@ test('the visual re-stamp runs only on same-repo pull_request runs with routes t
   }
 })
 
-test('the visual re-stamp stages and pushes only baseline PNGs, to the PR head, never main', () => {
+test('the visual re-stamp stages only baseline PNGs and the CI screen log, to the PR head, never main', () => {
   const body = code(restamp)
   const adds = body.match(/git add[^\n]*/g) ?? []
-  assert.deepEqual(adds, ['git add -- axiomancer-mobile/screenshots/baseline/'])
+  assert.deepEqual(adds, ['git add -- axiomancer-mobile/screenshots/baseline/', 'git add -- docs/reports/ci-screens.md'])
   assert.match(body, /grep -Ev '\^axiomancer-mobile\/screenshots\/baseline\/\[a-z0-9-\]\+\\\.png\$'/, 'a stray staged path refuses the commit')
   const pushes = body.match(/git push[^\n]*/g) ?? []
   assert.deepEqual(pushes, ['git push origin "HEAD:refs/heads/$HEAD_REF"'])
   assert.match(body, /HEAD_REF: \$\{\{ github\.head_ref \}\}/)
   assert.equal((body.match(/'' \| main\) echo "visual-restamp: refusing/g) ?? []).length, 2, 'commit and push both refuse main')
   assert.match(body, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \}\}/, 'commits on the head the run shot, so a moved head rejects the push')
+  // The screen log's write token path: the recorder comes from the base branch, never the PR head.
+  assert.match(body, /node base\/scripts\/ci-screens\.mjs record/, 'the recorder runs from the base checkout')
+  const recorder = body.split(/\n {6}- name: /).find((s) => s.startsWith("Check out the base branch's recorder")) ?? ''
+  assert.ok(recorder, 'a base-branch recorder checkout step exists')
+  assert.match(recorder, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/, 'the recorder is checked out at the base sha')
+  assert.match(recorder, /persist-credentials: false/, 'the base checkout keeps no credentials')
+  assert.doesNotMatch(recorder, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \}\}/, 'the recorder never comes from the PR head')
 })
 
 test('the visual step is report-only and the re-stamp never turns a verify run red', () => {
@@ -1089,7 +1096,7 @@ test('the visual step is report-only and the re-stamp never turns a verify run r
     assert.match(text, /key: playwright-\$\{\{ runner\.os \}\}-\$\{\{ steps\.stamp\.outputs\.playwright \}\}/, `${wf} caches the browsers on the Playwright version`)
   }
   const steps = restamp.split(/\n {6}- name: /).slice(1)
-  assert.equal(steps.length, 5)
+  assert.equal(steps.length, 7)
   for (const s of steps) assert.match(s, /continue-on-error: true/, s.split('\n')[0])
 })
 
