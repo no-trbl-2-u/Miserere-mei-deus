@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-11-11 at commit 7f54beaf
-> Pass count: 117
+> Last pass: 2026-11-13 at commit 5957cc2de
+> Pass count: 118
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
