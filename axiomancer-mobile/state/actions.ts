@@ -37,7 +37,7 @@ import {
     markNodeConsumed,
     resolveMapEvent,
     moveToNode,
-    answerUnsettledArrival,
+    retreatFromArrival,
     revealAdjacent,
     STARTING_CARD_IDS,
     legalMovesFrom,
@@ -1723,12 +1723,13 @@ function fleeEncounterAction(store: AppStore): void {
 /**
  * Answer the fight's arrival when the player walks away from it. A fight that
  * runs to a win settles through the engine's `END_COMBAT`; a flee settles
- * nothing: the engine's `answerUnsettledArrival` clears the debt (so the
- * exploration screen does not re-fire the fight) and leaves the node unspent,
- * with nothing opened or revealed from it, so the player can try it again.
+ * nothing: the engine's `retreatFromArrival` clears the debt (so the
+ * exploration screen does not re-fire the fight), leaves the node unspent, with
+ * nothing opened from it, and sends the player back to the node they came from
+ *, so the way past the fight stays shut.
  */
 function answerArrivalAction(store: AppStore): void {
-    const answered = answerUnsettledArrival(store.getState() as unknown as GameState);
+    const answered = retreatFromArrival(store.getState() as unknown as GameState);
     store.setState({ world: answered.world });
 }
 

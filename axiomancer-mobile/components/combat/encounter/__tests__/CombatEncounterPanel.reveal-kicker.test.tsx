@@ -9,7 +9,6 @@ import { render, screen } from '@testing-library/react-native';
 import { describe, expect, it } from '@jest/globals';
 
 import { CombatEncounterPanel } from '@/components/combat/encounter/CombatEncounterPanel';
-import { WITHDRAW_COST } from '@/components/combat/encounter/reveal.copy';
 import { buildRevealFrame } from '@/state/presenters/encounter-reveal.engine';
 import { REAL_FIGHT_FIXTURE, startRealFight } from '@/test-utils/realFight';
 import { withAllProviders } from '@/test-utils/withAllProviders';
@@ -44,10 +43,11 @@ describe('FR1a: the fight reveal', () => {
         expect(screen.queryByTestId('combat-reveal-arrival')).toBeNull();
     });
 
-    it('prints what withdrawing costs inside the WITHDRAW plate', () => {
+    it('the WITHDRAW plate holds its label alone, with no second line (spec 181, A2)', () => {
         mount();
         expect(screen.getByTestId('combat-withdraw')).toBeTruthy();
-        expect(screen.getByText(WITHDRAW_COST)).toBeTruthy();
+        expect(screen.getByText('WITHDRAW')).toBeTruthy();
+        expect(screen.queryByText(/No reward|try again|\[content\]/i)).toBeNull();
     });
 
     it('the reveal frame no longer carries a kicker for any tier', () => {

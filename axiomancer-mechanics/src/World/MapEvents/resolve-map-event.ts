@@ -434,6 +434,28 @@ export function answerUnsettledArrival(state: GameState): GameState {
 }
 
 /**
+ * A flee (the reveal's WITHDRAW, the prelude's FLEE): answers the arrival as
+ * `answerUnsettledArrival` does, then sends the player back to the node they
+ * came from (`map.arrivedFrom`), the rule a death's return uses
+ * (`Game/death.ts`). The fight node stays unspent, so walking onto it again is a
+ * fresh arrival and a fresh fight, and the way past it stays shut until the fight
+ * is won. A fight is never on a start node, so it always has a node behind it; with
+ * none (or the same node) the player stays where they are. Idempotent: the
+ * second call finds `arrivedFrom` cleared and changes nothing.
+ */
+export function retreatFromArrival(state: GameState): GameState {
+    const answered = answerUnsettledArrival(state);
+    const map = answered.world.currentMap;
+    const from = map.arrivedFrom;
+    const def = getMapDefinition(map.continent, map.name);
+    if (!from || from === map.currentNode || !def.nodes.some(n => n.id === from)) return answered;
+    const back = syncMoveLists(
+        revealAdjacent({ ...map, currentNode: from, pendingArrival: null, arrivedFrom: null }, from),
+    );
+    return { ...answered, world: { ...answered.world, currentMap: back } };
+}
+
+/**
  * Resolves the MapEvent for the player's current node. See file header.
  *
  * `staged` resolves that payload in place of the node's pool. It exists for

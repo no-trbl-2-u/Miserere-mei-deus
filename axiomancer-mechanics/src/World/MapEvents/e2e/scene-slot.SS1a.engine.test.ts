@@ -20,12 +20,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
     _clearMapEventPoolRegistry,
-    answerUnsettledArrival,
     getNodeScene,
     isBeforeScene,
     registerMapEventPool,
     registerNodeScene,
     resolveMapEvent,
+    retreatFromArrival,
     setNodeEventPoolOverride,
     settleArrival,
 } from '../resolve-map-event';
@@ -205,7 +205,7 @@ describe('A3: a scene plays once a run', () => {
         const owed = move(pastTheWindmill(), 'bw-w2');
         const fight = resolveMapEvent(resolveMapEvent(owed).state);
         expect(fight.event.kind).toBe('encounter');
-        const fled = answerUnsettledArrival(fight.state);
+        const fled = retreatFromArrival(fight.state);
         expect(map(fled).consumedNodes).not.toContain('bw-w2');
 
         const retry = move(fled, 'bw-w2');

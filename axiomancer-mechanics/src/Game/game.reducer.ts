@@ -40,7 +40,7 @@ import { createStartingWorld, emptyQuestLog } from '../World';
 import type { MapName } from '../World/map.library';
 import { moveToNode as moveWorld } from '../World/world.reducer';
 import { resolveMapEvent, settleArrival, isBeforeScene } from '../World';
-import { answerUnsettledArrival } from '../World/MapEvents/resolve-map-event';
+import { answerUnsettledArrival, retreatFromArrival } from '../World/MapEvents/resolve-map-event';
 import { applyDialogueChoice as applyDialogueRuntime } from '../World/dialogue.runtime';
 import { acceptQuestStep, advanceEncounterKills, settleQuestLog, turnInQuestStep } from '../World/questline';
 import { calculateMaxHealth } from '../Utils';
@@ -425,9 +425,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             // taken mid-fight re-offers it. A flee or a defeat only answers
             // the arrival: the node stays unspent, opens nothing it holds,
             // and can be tried again.
-            return outcome === 'victory'
-                ? settleArrival(over)
-                : answerUnsettledArrival(over);
+            // A flee also sends the player back to the node they came from
+            // (`retreatFromArrival`); a defeat is the death rule's to move.
+            if (outcome === 'victory') return settleArrival(over);
+            return outcome === 'flee' ? retreatFromArrival(over) : answerUnsettledArrival(over);
         }
 
         case 'ACCEPT_QUEST_STEP': {

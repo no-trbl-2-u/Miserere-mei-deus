@@ -213,9 +213,10 @@ describe('A3: held roads and quest gates still gate on the Breakwater', () => {
         let s = fightAt(freshGame(), 'bw-w2');
         s = arrive(s, 'bw-w4').state;
         const fled = fightAt(s, 'bw-w5', 'flee');
-        expect(map(fled).currentNode).toBe('bw-w5');
-        expect(legalMovesFrom(map(fled))).toEqual(['bw-w4']);
-        expect(() => moveToNode(fled.world, 'bw-k1')).toThrow(/held/);
+        // A flee goes back to the node they came from, so bw-k1 is not even adjacent.
+        expect(map(fled).currentNode).toBe('bw-w4');
+        expect(legalMovesFrom(map(fled))).toContain('bw-w5');
+        expect(() => moveToNode(fled.world, 'bw-k1')).toThrow();
         const won = fightAt(fled, 'bw-w5', 'victory');
         expect(legalMovesFrom(map(won))).toContain('bw-k1');
     });

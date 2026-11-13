@@ -1,11 +1,12 @@
 /**
- * A fled fight leaves its node incomplete in the app (phase QL1c, A24).
+ * A fled fight leaves its node incomplete and sends the player back to the node
+ * they came from (phase QL1c, A24).
  *
  * WITHDRAW (`fleeEncounter`) and the prelude's FLEE (`pickEventChoice`)
- * answer the arrival through the engine (`answerUnsettledArrival`) and no
+ * answer the arrival through the engine (`retreatFromArrival`) and no
  * longer settle the node: the node is neither consumed nor completed, the
  * exploration screen does not re-fire the fight, the next arrival there is a
- * fresh prelude, and tapping the node the player stands on tries it again.
+ * fresh prelude, and walking back onto the node tries it again.
  * A won fight still settles it (the control).
  */
 
@@ -81,7 +82,8 @@ function expectUnspentAndAnswered(store: AppStore) {
     expect(map(store).pendingArrival ?? null).toBeNull();
     expect(map(store).consumedNodes ?? []).not.toContain('bw-w2');
     expect(map(store).completedNodes).not.toContain('bw-w2');
-    expect(map(store).currentNode).toBe('bw-w2');
+    // The player is back on the node they came from (bw-w1, the start), not on the fight.
+    expect(map(store).currentNode).toBe('bw-w1');
 }
 
 describe('WITHDRAW leaves the node incomplete', () => {
@@ -98,25 +100,25 @@ describe('WITHDRAW leaves the node incomplete', () => {
         expectUnspentAndAnswered(store);
     });
 
-    it('the node reads as unspent and retryable on the map', () => {
+    it('the player stands on the node they came from, and the way past the fight stays shut', () => {
         const { store, actions } = engage();
         actions.fleeEncounter();
         actions.endCombat('flee');
         const vm = selectExplorationViewModel(store.getState());
-        expect(vm.currentNodeId).toBe('bw-w2');
+        expect(vm.currentNodeId).toBe('bw-w1');
         expect(vm.arrivalPending).toBe(false);
-        expect(vm.retryable).toBe(true);
-        expect(vm.nodes.find(n => n.id === 'bw-w2')?.kind).toBe('current');
+        // bw-w3 lies past the fight node: it is not reachable from where they stand.
+        expect(actions.moveTo('bw-w3').moved).toBe(false);
+        expect(map(store).currentNode).toBe('bw-w1');
     });
 
-    it('tapping the node the player stands on tries it again: a fresh arrival, a fresh fight', () => {
+    it('moving back onto the fight node is a fresh arrival and a fresh fight', () => {
         const { store, actions } = engage();
         actions.fleeEncounter();
         actions.endCombat('flee');
 
         expect(actions.moveTo('bw-w2').moved).toBe(true);
         expect(map(store).pendingArrival).toBe('bw-w2');
-        expect(selectExplorationViewModel(store.getState()).retryable).toBe(false);
         mountExploration(store);
         expect(store.getState().currentEncounter).toBeDefined();
     });

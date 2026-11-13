@@ -132,7 +132,7 @@ describe('the chapter, windmill to far bank', () => {
 
         // ── The cove elite: a fled attempt leaves it shut (A3) ──────────
         s = fight(s, 'bw-c1', 'flee');
-        expect(here(s)).toBe('bw-c1');
+        expect(here(s)).toBe('bw-c0'); // back on the node they came from
         expect(spent(s, 'bw-c1')).toBe(false);
         expect(legal(s)).not.toContain('bw-c2');
         s = win(s, 'bw-c1');

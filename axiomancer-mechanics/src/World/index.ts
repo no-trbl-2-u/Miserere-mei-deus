@@ -72,6 +72,7 @@ export {
     resolveMapEvent,
     settleArrival,
     answerUnsettledArrival,
+    retreatFromArrival,
     getNodeEventPool,
     getNodePrimaryEventKind,
     actsOnRevisit,
