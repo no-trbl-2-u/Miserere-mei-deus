@@ -359,7 +359,7 @@ test('the shipped files are clean under their Narrator fields, placeholders and 
 test('the saint beneath description passes the Narrator rules unchanged', () => {
   const file = 'axiomancer-mechanics/src/Enemy/enemy.library.ts'
   const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
-  assert.match(text, /A great fish with an old man/)
+  assert.match(text, /He bought the harbour/)
   assert.deepEqual(scanSource(text, retired, { file }), [])
 })
 
@@ -367,7 +367,7 @@ test('the saint beneath journal page passes the journal surface unchanged, and e
   const file = 'axiomancer-mechanics/src/Enemy/enemy.library.ts'
   const text = fs.readFileSync(path.join(ROOT, file), 'utf8')
   assert.equal(NARRATOR_FIELDS.find((r) => r.file === file).fields.body, 'journal')
-  assert.match(text, /Something in the dark took up his anger/)
+  assert.match(text, /They called him a saint because the ships still came/)
   assert.deepEqual(scanSource(text, retired, { file }), [])
   // The page is far past the old 110 cap, so the pin is real.
   const page = text.slice(text.indexOf("id: 'codex-saint-beneath'"), text.indexOf("addedIn: RECAST_ADDED", text.indexOf("id: 'codex-saint-beneath'")))

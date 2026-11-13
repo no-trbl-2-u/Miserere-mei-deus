@@ -1143,11 +1143,10 @@ export const SaintBeneath = createEnemy({
     id: 'enemy-saint-beneath',
     portraitAsset: 'saint-beneath',
     name: 'The Saint Beneath',
-    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
     description:
-        'A great fish with an old man\'s face grown into the front of it, eyes shut, mouth open ' +
-        'on a double row of teeth. It has been down there long enough to be prayed to, and long ' +
-        'enough to have started answering.',
+        'He bought the harbour\'s lamp and sat down beside it to keep it safe. Thirty years ' +
+        'have done to him what the sea does to anything left in it. The town still prays to ' +
+        'him. They no longer remember his name, and neither does he.',
     level: 8,
     baseStats: enemyStatBudget(8, { heart: 1, body: 3, mind: 2 }),
     mapName: 'breakwater',
@@ -1183,20 +1182,21 @@ export const SaintBeneath = createEnemy({
             moves: [COMMUNION, THE_FAITHFUL_GATHER, HEAR_ME],
         },
     ],
-    // T's page (2026-11-08), word for word.
+    // J-01, T's approved journal (narrator-chapter1.md, 2026-11-12), word for word.
     journalEntry: {
         id: 'codex-saint-beneath',
         title: 'The Saint Beneath',
         body:
-            'He was a fisherman once and he stood up in the square against the men who held the ' +
-            'town and he asked the others to stand with him and they did not. They watched from ' +
-            'their doorways. The gang held him under at the foot of the quay until the bubbles ' +
-            'quit and then they put what was left of him in the river and the river carried him ' +
-            'down to the sea. He did not go easy into it. Something in the dark took up his anger ' +
-            'and made a body for it, a great length of scale and gristle with the old man\'s face ' +
-            'set in the front of it like a mask nailed to a prow. Now it lies beneath the ' +
-            'Breakwater with its mouth open and no boat leaves and no one walks out and the town ' +
-            'keeps the vigil it once refused him. They call it a saint. It has never forgiven anyone.',
+            'He was lord of the sea keep and no worse than the lords before him. When the council ' +
+            'of the town came to sell the lamp from the tower he paid what they asked. He had it ' +
+            'carried across the causeway at the ebb and set on the floor of a room with no ' +
+            'window, and he sat down beside it to see what a man looked like who cast no shadow. ' +
+            'He did not get up. The light took the edges from him year by year. It took his hands ' +
+            'first and then his name, and it lengthened him and paled him and set scale upon him ' +
+            'as the sea does with what it is given. The town fed him its drowned through the sea ' +
+            'door and he kept each one whole, laid out in rows, and looked upon them with his ' +
+            'eyes shut. They called him a saint because the ships still came. He never asked for ' +
+            'anything. He never refused anything either.',
     },
     addedIn: RECAST_ADDED,
     tags: ['early-game', 'boss', 'enemy'],
@@ -1332,10 +1332,10 @@ export const SaltwickSwarm = createEnemy({
     id: 'enemy-saltwick-swarm',
     portraitAsset: 'saltwick-swarm',
     name: 'Saltwick Swarm',
-    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
     description:
-        'Five lit jellies drifting as one body, the largest the size of a cart wheel and the ' +
-        'smallest no bigger than a thumb. Nothing in the cluster is in charge. It all stings the same.',
+        'The cold glow in the cove weed, risen off the water. Fishermen once set their pots ' +
+        'by it on nights the harbour showed no lamp. The cove took the pots and the men in a ' +
+        'winter of storms.',
     level: 5,
     baseStats: enemyStatBudget(5, { heart: 4, body: 1, mind: 2 }),
     mapName: 'breakwater',
@@ -1355,10 +1355,10 @@ export const Wreckmaster = createEnemy({
     id: 'enemy-wreckmaster',
     portraitAsset: 'wreckmaster',
     name: 'The Wreckmaster',
-    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
     description:
-        'A drowned captain in a good coat, sabre out and pistol up, still giving orders to a crew ' +
-        'the sea has already finished with.',
+        'The sea gives back what it takes, and not as it took it. He came ashore on the keep ' +
+        'causeway with his orders still in him. He stands among the offerings on the tide ' +
+        'line as though they were left for him.',
     level: 8,
     baseStats: enemyStatBudget(8),
     mapName: 'breakwater',
@@ -1378,10 +1378,10 @@ export const QuayCrab = createEnemy({
     id: 'enemy-quay-crab',
     portraitAsset: 'quay-crab',
     name: 'Quay-Crab',
-    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
     description:
-        'A dark green crab the size of a dog, one claw grown huge from a life of holding on to ' +
-        'things that wanted to leave.',
+        'It works the mud under the gallows and the mud under the quays, and it is not ' +
+        'particular. What came down from the last rope came down to it. Nothing on this coast ' +
+        'lets go of a thing once it has hold.',
     level: 3,
     baseStats: enemyStatBudget(3),
     mapName: 'breakwater',
@@ -1405,10 +1405,10 @@ export const BilgeStalker = createEnemy({
     id: 'enemy-bilge-stalker',
     portraitAsset: 'bilge-stalker',
     name: 'Bilge-Stalker',
-    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
     description:
-        'A green thing that learned to stand — finned along the spine, bright-eyed, built low and ' +
-        'quiet for the dark under a deck.',
+        'It came up out of the hulls the town drags ashore. This has been a year of poor ' +
+        'wrecks, and the town is thin and polite about it. This thing is neither. It hunts ' +
+        'the roads to the chained bridge.',
     level: 6,
     baseStats: enemyStatBudget(6),
     mapName: 'breakwater',
@@ -1432,10 +1432,10 @@ export const Coralback = createEnemy({
     id: 'enemy-coralback',
     portraitAsset: 'coralback',
     name: 'Coralback',
-    // DRAFT (Claude): one line read off the portrait, for T to rewrite.
     description:
-        'A pale crab wearing a crown of coral it did not grow. The colours are a warning, and ' +
-        'the warning is honest.',
+        'It climbs the harbour steps toward the upper town, where every window faces the ' +
+        'keep. Its crown is the colour of fire, but warms nothing. The hard winters take the ' +
+        'old ones at those windows, still looking at the keep.',
     level: 4,
     baseStats: enemyStatBudget(4),
     mapName: 'breakwater',
