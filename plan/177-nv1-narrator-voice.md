@@ -62,7 +62,6 @@
 - **A5** Arrival lines. Every approved arrival line is in `arrival-lines.ts`, keyed by node; the fight reveal shows the longest one unclipped.
 - **A6** Event lines. Every approved hazard, rest, dream, travel, village and loot cache action line is in `content.ts`; each event screen shows its longest line unclipped.
 - **A7** Screen copy. Every approved defeat, withdraw, death return, game over, quest screen and village counter line, and each approved reward eyebrow, is in its copy file; each screen shows it unclipped.
-- **A8** Enemy descriptions. Every approved description is in `enemy.library.ts` with its `DRAFT (Claude)` comment removed.
 - **A9** No approved line is left as a placeholder, and no unapproved draft is in the game: a test reads the ledger's verdicts and the sources and fails on either.
 
 ## Open questions
@@ -75,7 +74,7 @@ None open. Settled by T on 2026-11-12: the word caps stay; the six `DRAFT (Claud
 
 ## Chunks
 
-Measure: 7 open · 11 closed · next A19
+Measure: 6 open · 12 closed · next A19
 
 - [ ] **177.3** T reviews the Chapter 1 drafts (attended) · S · closes A3 · needs — · alias: NV1c
   - T approved the 22 scenes, the quest names and lines, the four refusals and the two gate lines on 2026-11-12; they are in `plan/ballots/narrator-chapter1.md` and need no further review. What is left for this chunk is every other Chapter 1 surface, none of it drafted from the new story yet: the map blurbs, the arrival lines, the hazard, rest, dream, travel, village and loot lines, the screen copy and the enemy descriptions. They are drafted with `/narrate` from `axiomancer-mechanics/content/story/story-overview.md` once 177.11 has amended the voice rules, added to that ledger, and reviewed by T there (a review page is redrawn only if T asks for one); the session writes each verdict under `## Verdicts`.
@@ -94,9 +93,3 @@ Measure: 7 open · 11 closed · next A19
   - Mobile: `combat-summary.copy.ts`, `reveal.copy.ts`, `death-return.copy.ts`, `game-over.copy.ts`, `quest.copy.ts`, `village.copy.ts` (the three counter lines only), `relic-source.copy.ts`.
   - `VITAE` keeps its spelling in the defeat line. The four spoken lines keep their placeholders.
   - Measure: the verdicts test passes for these surfaces; one screenshot per screen is in the PR.
-- [ ] **177.8** Enemy descriptions in the game · S · closes A8 · needs — · alias: NV1h
-  - The lines are T's verdict of 2026-11-13 on the enemy ballot, not 177.3: `plan/ballots/narrator-enemies.md`, section "Approved", word for word (T, `/plot asap`, 2026-11-13: "plot the other 6 we just did and let's start piloting them"). 177.3 keeps every other surface.
-  - `axiomancer-mechanics/src/Enemy/enemy.library.ts`: the six descriptions (The Saint Beneath E-01, Saltwick Swarm E-02, The Wreckmaster E-03, Quay-Crab E-04, Bilge-Stalker E-05, Coralback E-06), each description's `DRAFT (Claude)` comment removed with it. The three `mercyLines` blocks marked `DRAFT (Claude)` (Quay-Crab, Bilge-Stalker, Coralback) and the Death Beholder's phase line are not approved and keep their comments.
-  - The Saint Beneath's journal lands as J-01, which is the ledger `plan/ballots/narrator-chapter1.md` E-01 journal word for word; its description is E-01 of `narrator-enemies.md`, which replaces the portrait line (T's verdict of 2026-11-13 supersedes the 2026-11-12 "keep my description" note in Design). `Enemy/e2e/saint-beneath.engine.test.ts`, which asserts the old journal word for word, changes with it.
-  - The seven other Chapter 1 foes (Net-Mender, Brine-Widow, Cave Choir, Tithe-Collector, Lamplighter, Wrecker, Tide-Gate) are not in this chunk: their round 3 is on a ballot, and a later plot adds them.
-  - Measure: the enemy library tests and the Saint Beneath engine test pass, and a test pins each of the six descriptions to its Approved line (the verdicts test of A9 is 177.4's and may not exist yet).

@@ -539,3 +539,5 @@ Built inline, no builder subagent (one S chunk). Defaults taken:
 useRouter in the router shim now returns one frozen handle, so gates with `router` in their effect deps push their screen once. The mobile mutation run drops related tests that read a mutated file's source and narrows large related sets in PR mode. Three quest relic and scroll-cue mutants are pinned.
 
 Defaults taken: `NARROW_OVER = 20`, PR mode only. Open question #1 and #2 are untouched; the log file lands with 180.1.
+
+Defaults taken: a new test file `Enemy/e2e/enemy-descriptions.engine.test.ts` pins the six lines; the mercy-line drafts and the Death Beholder phase line keep their DRAFT comments.
