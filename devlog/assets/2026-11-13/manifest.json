@@ -1,0 +1,79 @@
+{
+  "generated_by": "scripts/devlog-shots.mjs",
+  "date": "2026-11-13",
+  "since": "9ffe53efc",
+  "sinceDate": "2026-11-11",
+  "shots": [
+    {
+      "screen": "cache-card",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "cache-goods",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "cache",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "combat-elite",
+      "before": true,
+      "ratio": 0.12677421314862072
+    },
+    {
+      "screen": "combat-encounter",
+      "before": true,
+      "ratio": 0.1178909952606635
+    },
+    {
+      "screen": "cutscene",
+      "before": true,
+      "ratio": 0.5316016526917001
+    },
+    {
+      "screen": "exploration",
+      "before": true,
+      "ratio": 0.749286061489853
+    },
+    {
+      "screen": "quest-locked",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "quest-paid",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "quest-two-lines",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "quest",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "travel",
+      "before": true,
+      "ratio": 0.1353870458135861
+    },
+    {
+      "screen": "victory-levelled",
+      "before": false,
+      "ratio": null
+    },
+    {
+      "screen": "victory-plain",
+      "before": false,
+      "ratio": null
+    }
+  ],
+  "catalogEvidence": true
+}
