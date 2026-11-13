@@ -11,7 +11,7 @@
  *   - CARD TEXT      keywords on a card face as words (default) or glyphs;
  *   - REDUCED MOTION follow the OS, or force on / off;
  *   - HAPTICS        the pulses on drags and dice;
- *   - MUSIC / SOUND  volumes kept for the audio build (nothing plays yet);
+ *   - MUSIC / SOUND  the theme's volume (MU1); sound effects are still to come;
  *   - RULES GLOSSARY the rules a card's short lines lean on, read from the shared glossary;
  *   - STORY MODE     coming soon — listed so its absence is not a mystery.
  *
