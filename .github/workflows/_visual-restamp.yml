@@ -99,6 +99,42 @@ jobs:
             -m "CI's Linux Playwright Chromium is the renderer of record. Captures from $RUN_URL; read the image diff before merging."
           echo "committed=true" >> "$GITHUB_OUTPUT"
 
+      # The screen log (phase CW1a). The recorder comes from the base branch,
+      # never the PR head, because this job holds a write token. It adds the
+      # incidents to docs/reports/ci-screens.md, folds the file into the
+      # re-stamp commit, and leaves a "flapping: <route>" line for the comment.
+      - name: Check out the base branch's recorder
+        if: steps.commit.outputs.committed == 'true'
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+          persist-credentials: false
+          sparse-checkout: scripts/ci-screens.mjs
+          sparse-checkout-cone-mode: false
+
+      - name: Log the screens CI hung on
+        id: screens
+        if: steps.commit.outputs.committed == 'true'
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMENT: ${{ inputs.comment }}
+          ROUTES: ${{ inputs.routes }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$COMMENT" > "$RUNNER_TEMP/visual-new.md"
+          node base/scripts/ci-screens.mjs record --pr "$PR" --file docs/reports/ci-screens.md \
+            --restamping "$ROUTES" --comment-file "$RUNNER_TEMP/visual-new.md" \
+            --flag-out "$RUNNER_TEMP/visual-flags.txt"
+          git add -- docs/reports/ci-screens.md
+          if ! git diff --cached --quiet; then
+            git commit --amend --no-edit
+          fi
+
       # Before the push: the push starts a run on the new head, and its
       # concurrency group cancels this one.
       - name: Post or update the visual-smoke comment
@@ -113,6 +149,9 @@ jobs:
           set -euo pipefail
           body="$RUNNER_TEMP/visual-comment.md"
           printf '%s' "$COMMENT" > "$body"
+          if [ -s "$RUNNER_TEMP/visual-flags.txt" ]; then
+            { echo; cat "$RUNNER_TEMP/visual-flags.txt"; } >> "$body"
+          fi
           id="$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
             --jq '.[] | select(.body | startswith("<!-- visual-smoke -->")) | .id' | tail -n1)"
           if [ -n "$id" ]; then
