@@ -256,6 +256,84 @@ export function mutatedFiles(fallback, env) {
   return env ? JSON.parse(env).map((m) => m.replace(/:\d+-\d+$/, '')) : fallback
 }
 
+/** A mutated file's related set over this many suites is narrowed to its own tests (see `narrowRelated`). */
+export const NARROW_OVER = 20
+
+const baseName = (p) => p.split('/').at(-1)
+
+/** The import tails that name `file`: `presenters/cutscene-pages`, or for an index file `app/quest` and `quest/index`. */
+function importTails(file) {
+  const parts = file.replace(/\.[cm]?[jt]sx?$/, '').split('/')
+  if (parts.at(-1) !== 'index') return [parts.slice(-2).join('/')]
+  const dir = parts.slice(0, -1)
+  return [dir.slice(-2).join('/'), `${dir.at(-1)}/index`]
+}
+
+/** The stem a test of `file` is named after: `cutscene-pages`, or the folder of an index file. */
+function testStem(file) {
+  const parts = file.replace(/\.[cm]?[jt]sx?$/, '').split('/')
+  return parts.at(-1) === 'index' ? parts.at(-2) : parts.at(-1)
+}
+
+const IMPORT_SPEC = /(?:\bfrom\s+|\bimport\s*\(\s*|\brequire\s*\(\s*)['"]([^'"]+)['"]/g
+
+/**
+ * The tests of `tests` that are `file`'s own: named after it (`cutscene-pages.NV1o.test.ts`) or importing it
+ * directly. A `jest.mock` of it is not an import of it.
+ *
+ * @param {string} file the mutated file, workspace-relative.
+ * @param {string[]} tests test paths.
+ * @param {(path: string) => string} readText a test file's text.
+ * @returns {string[]} the own tests, in the order given.
+ */
+export function ownTests(file, tests, readText) {
+  const stem = testStem(file)
+  const tails = importTails(file)
+  return tests.filter((t) => {
+    if (baseName(t).startsWith(`${stem}.`)) return true
+    for (const [, spec] of readText(t).matchAll(IMPORT_SPEC)) {
+      if (tails.some((tail) => spec === tail || spec.endsWith(`/${tail}`))) return true
+    }
+    return false
+  })
+}
+
+/**
+ * The related test set for one mutated file. Jest relates a file to every test that reaches it through any
+ * import, and a mutant run loads every suite of that set (Stryker's per-test filter only skips tests by name),
+ * so a presenter the store imports pulls in every screen suite: on `state/presenters/cutscene-pages.ts` that
+ * was 56 suites and a minute a mutant. Over `NARROW_OVER` suites, a file with own tests keeps only those.
+ *
+ * @param {string} file the mutated file, workspace-relative.
+ * @param {string[]} related jest's related tests for it.
+ * @param {(path: string) => string} readText a test file's text.
+ * @returns {{ tests: string[], narrowed: boolean }} the set and whether it was narrowed.
+ */
+export function narrowRelated(file, related, readText) {
+  if (related.length <= NARROW_OVER) return { tests: related, narrowed: false }
+  const own = ownTests(file, related, readText)
+  return own.length > 0 ? { tests: own, narrowed: true } : { tests: related, narrowed: false }
+}
+
+/**
+ * The tests that read a mutated file's source from disk. Stryker runs in place, so such a test reads the
+ * instrumented text, fails the dry run ("One or more tests failed in the initial test run") and stops the
+ * whole report; they are left out of the set.
+ *
+ * @param {string[]} tests test paths.
+ * @param {string[]} files the mutated files, workspace-relative.
+ * @param {(path: string) => string} readText a test file's text.
+ * @returns {string[]} the tests to leave out.
+ */
+export function sourceReadingTests(tests, files, readText) {
+  // An index file is named with its folder: a bare `index.tsx` names half the app.
+  const names = files.map((f) => (baseName(f).startsWith('index.') ? f.split('/').slice(-2).join('/') : baseName(f)))
+  return tests.filter((t) => {
+    const text = readText(t)
+    return /\breadFile(?:Sync)?\s*\(/.test(text) && names.some((n) => text.includes(n))
+  })
+}
+
 /**
  * A run outcome fit for a table cell: colour codes stripped, and Stryker's
  * refusal to run with no related test said plainly.
