@@ -89,7 +89,10 @@ This is the one place T is asked before work starts, after the waves
 are mapped and before any write. Print the waves as a table (wave,
 chunk or PR, verb, model and why, what it waits on, files it owns)
 and `node scripts/plan/progress.mjs <specs> --ref origin/main` as it
-is. Propose **three improvements** to the strategy (a chunk to split,
+is. Mark every chunk whose files pr-merge holds for T (a content PR, e.g.
+anything under `World/MapEvents/content.ts`: "T approves game writing
+by merging it") and say in the same message that its wave starts on T's
+hand merge. Propose **three improvements** to the strategy (a chunk to split,
 a wave to reorder, a model to change, a held chunk to unhold by a
 call).
 
@@ -448,6 +451,16 @@ is not a push, so it keeps the push-once rule.
   `$var` in option positions, `sed -i` on a variable path, and
   heredoc python that contains "git". One plain command per call;
   write scripts with Write and run them with node.
+- **Manual worktree fallback.** When the Agent tool's `isolation:
+  "worktree"` fails ("Could not read the repository git config to
+  neutralize filter drivers") while git reads the config fine, cut the
+  worktree by hand: `git worktree add -b loop/next-<id> ../wt-<id>
+  origin/main`, launch the worker without `isolation`, and put the
+  absolute worktree path in its brief. Beat `worktree` and `branch`
+  into the ledger yourself.
+- **Free RAM.** A UI worker skips its shots when RAM is short. Before
+  each wave launch check free memory (`free -g`); under 6 GB, say so in
+  the wave note and launch fewer workers at once.
 - **Fresh worktrees have no `node_modules`.** Run `npm install` at
   the root first, or the root `npm test` shows false failures; revert
   any `package-lock.json` churn before committing.

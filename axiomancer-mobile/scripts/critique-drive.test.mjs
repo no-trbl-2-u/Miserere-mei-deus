@@ -112,3 +112,12 @@ test('the cache, satchel, quest and death-return screens are in the set', async 
     assert.equal(byName['death-return'].path, '/death-return?preview=1')
     assert.equal(byName['death-return'].devTools, true)
 })
+
+// CRITIQUE pass 114: no pass could see /settings (MU1's MUSIC row).
+test('the settings screen is in the set, cold-enterable', async () => {
+    const { SCREENS } = await import('./critique-drive.mjs')
+    const settings = SCREENS.find((s) => s.name === 'settings')
+    assert.ok(settings)
+    assert.equal(settings.path, '/settings')
+    assert.equal(settings.fixture, undefined)
+})
