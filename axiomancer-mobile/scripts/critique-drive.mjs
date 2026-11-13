@@ -270,6 +270,12 @@ export const SCREENS = [
         why: "A quest node — the giver's line, the step on offer and what accepting it costs.",
     },
     {
+        name: 'settings',
+        // Pushed straight from the title menu with no game-state gate (door 1).
+        path: '/settings',
+        why: 'The settings screen — theme, motion, text, and the MUSIC volume row MU1 added.',
+    },
+    {
         name: 'death-return',
         // An unarmed open leaves for the map; the dev preview shows the screen.
         path: '/death-return?preview=1',
