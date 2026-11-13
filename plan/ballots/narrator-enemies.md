@@ -5,7 +5,8 @@
 > overview, ruling 12), and a second draft one stop up. The portrait is canon
 > for how a foe looks (ruling 13, plot PR #1649). Ballots:
 > `narrator-enemies.ballot.html` (round 1, closed) and
-> `narrator-enemies-2.ballot.html` (round 2, closed). This ledger is separate from
+> `narrator-enemies-2.ballot.html` (round 2, closed) and
+> `narrator-enemies-3.ballot.html` (round 3, open: the seven other foes). This ledger is separate from
 > `narrator-chapter1.md` (T, 2026-11-12: #1649 edits S-17 there). Nothing here
 > is in the game: 177.8 (NV1h) lands the approved lines.
 
@@ -52,6 +53,27 @@ with T's two edits applied (E-01b, E-06b).
 - **E-05 Bilge-Stalker** (stop 2): It came up out of the hulls the town drags ashore. This has been a year of poor wrecks, and the town is thin and polite about it. This thing is neither. It hunts the roads to the chained bridge.
 - **E-06 Coralback** (stop 2): It climbs the harbour steps toward the upper town, where every window faces the keep. Its crown is the colour of fire, but warms nothing. The hard winters take the old ones at those windows, still looking at the keep.
 - **J-01 The Saint Beneath, journal**: the E-01 journal in `narrator-chapter1.md`, as written there.
+
+## Round 3 (2026-11-13)
+
+The seven other Chapter 1 foes, whose lines predate the 2026-11-12 story.
+T asked for them in session ("what about all the other enemies in Chapter
+1?") and chose a round 3 ballot, then a plot that widens NV1h to land them.
+Written the round 2 way. a is at the stop of the scene nearest the foe's
+first node, b one stop up. The old lines' clashes are dropped: the
+Tithe-Collector's ledger (the Keeper's), the Lamplighter's trade (the
+Keeper is the last lamplighter) and the Wrecker's false light (the light
+the master steered for came from under the keep).
+
+| Slot | Foe | Where | a | b |
+|---|---|---|---|---|
+| E-07 | Net-Mender | `bw-h1` S-03 (1), `bw-h3`, `bw-d1` | 1 | 2 |
+| E-08 | Brine-Widow | `bw-h7` past S-06 (4), `bw-t3` | 4 | 5 |
+| E-09 | The Cave Choir | `bw-c1` (1, as the Swarm) | 1 | 2 |
+| E-10 | The Tithe-Collector | `bw-c1` | 1 | 2 |
+| E-11 | The Lamplighter | `bw-l4` after S-13 (1) | 1 | 2 |
+| E-12 | The Wrecker | `bw-l4` | 1 | 2 |
+| E-13 | The Tide-Gate | `bw-w5` S-15 (1) | 1 | 2 |
 
 ## Checks
 
