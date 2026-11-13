@@ -989,11 +989,11 @@
       },
       "driven": {
         "value": true,
-        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, axiomancer-mobile/scripts/exploration-combat-roundtrip-e2e.mjs, ..."
+        "source": "axiomancer-mobile/scripts/combat-round-e2e.mjs, axiomancer-mobile/scripts/critique-drive.mjs, axiomancer-mobile/scripts/encounter-routing-e2e.mjs, ..."
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/components/settings/__tests__/SettingsBody.test.tsx, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, axiomancer-mobile/state/e2e/settings.screen.test.tsx"
+        "source": "axiomancer-mobile/components/settings/__tests__/SettingsBody.test.tsx, axiomancer-mobile/scripts/critique-drive.test.mjs, axiomancer-mobile/state/e2e/app-routes.engine.test.tsx, ..."
       },
       "needsPitch": {
         "value": false,
