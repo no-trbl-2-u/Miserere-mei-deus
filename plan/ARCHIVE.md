@@ -746,3 +746,5 @@
 - 2026-11-12 · 177.15 (alias: NV1o) · The cutscene screen pages a long panel at sentence ends · 55d7f38a..d5bd27f6 (#1652)
 - 2026-11-12 · 177.16 (alias: NV1p) · Quest card scrolls to its buttons, with a cue; relic clear · 6f6b3af8..3295c556 (#1653)
 - 2026-11-12 · 177.17 (alias: NV1q) · Sea keep lord matches his portrait; test gaps closed · 70a9b7eb..70a9b7eb (#1651)
+- 2026-11-12 · 181.1 (alias: WD1a) · Withdraw and flee return to the previous node; WITHDRAW's second line gone · f34b7d6e..f7aa2b05 (#1656)
+- 2026-11-12 · 181 · spec complete: Withdraw sends the player back · axiomancer-mechanics/src/World/MapEvents/e2e/retreat-from-arrival.WD1a.engine.test.ts · deleted in (this commit)

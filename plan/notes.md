@@ -528,3 +528,10 @@ Defaults taken: a scene with no picture shows the picture of the nearest of the 
 The mobile Stryker config computed its related-test set once from the two combat presenters, so a PR that mutated any other mobile file ran no test ("no test relates to these lines"). `mutation-pr.mjs` now passes the changed files in `EVAL_STRYKER_MUTATE` and the config reads it. Checked by hand: for `app/cutscene/index.tsx` the set now holds `cutscene-leaves-first.test.tsx`.
 
 The line-96 survivor in the fixture builder is the `target.node !== undefined` operand, which is equivalent (a lookup on an undefined node finds no scene). The new per-node test kills the other mutants of that line.
+
+Built inline, no builder subagent (one S chunk). Defaults taken:
+- `retreatFromArrival` is a new engine function beside `answerUnsettledArrival`; `END_COMBAT` runs it for a flee outcome only (a defeat is still the death rule's to move), and the app's `answerArrivalAction` runs it for both the reveal's WITHDRAW and the prelude's FLEE. The reveal's WITHDRAW runs it twice (`fleeEncounter`, then `endCombat('flee')`): the second call finds `arrivedFrom` cleared and changes nothing, pinned by a test.
+- `retryable` in the exploration view model is now reached only by a loaded old save; it was left alone.
+- The hazard-free sim (`sim/run-fight.ts`) takes a road after a withdraw as before; from the previous node its next road may be the same fight again, which its once-per-node flee cap already bounds.
+- The `withdraw-sub` style guard test (CRITIQUE pass 101) and its hermeticity-audit exemption are deleted with the line they guarded; `WITHDRAW_COST` left the prose lint's table.
+- Visual baselines of the fight reveal (`combat-encounter.png`, `combat-elite.png`) change by the missing second line and are re-stamped by CI.
