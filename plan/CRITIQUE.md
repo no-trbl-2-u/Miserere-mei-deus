@@ -1138,15 +1138,6 @@
 - source: antagonist, PR #526
 
 
-### [LOW] docs — `plan/revamp/card-rules-inventory.md` §17 still says a Global is "unique in play"
-- pass: antagonist on PR #520 (GS1, commit fc4aa159)
-- viewport: n/a
-- category: comprehension
-- observation: GS1 marks the stacking rule experimental in `cards.md`, `card-spec.md`, `game-model.md`, the atlas and the gloss. The B4 inventory's "Ratified, not built" table still lists "Global: FREE 3 turns, PAID rest of combat, unique in play". The inventory is a dated snapshot, so this may be intended, but it is the one remaining line that states the old rule.
-- evidence: `plan/revamp/card-rules-inventory.md:343`
-- suggested fix: either annotate the row "(superseded by GS1, experimental)" or leave it as history and say so in the file header.
-- source: antagonist, PR #520
-
 ### [LOW] combat / die tap — a die tapped onto a card refused at the SACRIFICE floor flags the VITAE ring, but gets no haptic or reject line
 - pass: antagonist on PR #523 (SF1, commit 04e5ebb6)
 - viewport: mobile
@@ -1419,6 +1410,15 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] docs — `plan/revamp/card-rules-inventory.md` §17 still says a Global is "unique in play" — RESOLVED 2026-11-13 (annotated "superseded by GS1" in the inventory row)
+- pass: antagonist on PR #520 (GS1, commit fc4aa159)
+- viewport: n/a
+- category: comprehension
+- observation: GS1 marks the stacking rule experimental in `cards.md`, `card-spec.md`, `game-model.md`, the atlas and the gloss. The B4 inventory's "Ratified, not built" table still lists "Global: FREE 3 turns, PAID rest of combat, unique in play". The inventory is a dated snapshot, so this may be intended, but it is the one remaining line that states the old rule.
+- evidence: `plan/revamp/card-rules-inventory.md:343`
+- suggested fix: either annotate the row "(superseded by GS1, experimental)" or leave it as history and say so in the file header.
+- source: antagonist, PR #520
 
 ### [x] [LOW] critique / coverage — MU1 shipped the background music and its Settings MUSIC slider, but no critique pass can see `/settings`: the screen set never opens it — RESOLVED 2026-11-13 (critique-drive.mjs: a cold-enterable `settings` entry)
 - pass: 114 (commit ef02913e)
