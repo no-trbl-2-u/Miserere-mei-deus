@@ -25,6 +25,7 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const LOG_FILE = 'docs/reports/ci-screens.md'
+const BOT_LOGIN = 'github-actions[bot]'
 export const VISUAL_MARKER = '<!-- visual-smoke -->'
 export const MUTATION_MARKER = '<!-- eval:mutation-pr -->'
 export const COLUMNS = ['date', 'PR', 'run', 'route or file', 'symptom', 'cause', 'fix PR']
@@ -204,10 +205,16 @@ const ghJson = (path) => JSON.parse(gh([path, '--paginate', '--slurp'])).flat()
 
 /** Fetch a PR's comments, commit subjects (oldest first) and cancelled runs. */
 function fetchPr(repo, pr) {
-  const comments = ghJson(`repos/${repo}/issues/${pr}/comments`).map((c) => c.body ?? '')
+  // Only the workflows' own token posts the markers; a stranger's comment must never reach the log.
+  const comments = ghJson(`repos/${repo}/issues/${pr}/comments`).filter((c) => c.user?.login === BOT_LOGIN).map((c) => c.body ?? '')
   const commits = ghJson(`repos/${repo}/pulls/${pr}/commits`).map((c) => ({ sha: c.sha, subject: c.commit.message.split('\n')[0] }))
   const branch = JSON.parse(gh([`repos/${repo}/pulls/${pr}`])).head.ref
-  const runs = JSON.parse(gh([`repos/${repo}/actions/runs?event=pull_request&branch=${encodeURIComponent(branch)}&per_page=100`])).workflow_runs ?? []
+  let runs = []
+  try {
+    runs = JSON.parse(gh([`repos/${repo}/actions/runs?event=pull_request&branch=${encodeURIComponent(branch)}&per_page=100`])).workflow_runs ?? []
+  } catch (err) {
+    console.error(`ci-screens: could not list runs (${err.message}); skipping cancelled-run rows`)
+  }
   return { comments, commits, runs }
 }
 
