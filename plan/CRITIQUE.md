@@ -1016,16 +1016,6 @@
 
 ## Pending
 
-### [MED] general — /pilot: worktree fallback, content-PR holds, RAM
-- pass: user-jot (commit 4421cbd8)
-- viewport: unspecified
-- auth_state: anonymous
-- category: observation
-- observation: /pilot 178 (2026-11-12) hit three gaps skills/pilot.md does not cover. (1) The Agent tool's isolation: "worktree" failed twice ("Could not read the repository git config to neutralize filter drivers") while git read the config fine; the run went on with a hand-made `git worktree add -b loop/next-<id> ../wt-<id> origin/main` and an absolute-path brief, which §4 and §5 never mention. (2) Every chunk touching `World/MapEvents/content.ts` was held by pr-merge for T's hand merge (content PR), so wave 3 waited hours on #1633 and #1638 too; the Step 3 gate never told T which chunks would need a hand merge. (3) A UI worker skipped its shots at 0.2 GB free RAM, and was sent back once RAM freed; pilot launches workers with no RAM check.
-- evidence: pilot 178 ledger and digest (PRs #1628, #1632, #1633, #1638); the pr-merge notice "PR 1633 not merged: content PR (changes axiomancer-mechanics/src/World/MapEvents/content.ts): T approves game writing by merging it"
-- suggested fix: in skills/pilot.md, add the manual-worktree fallback to §5; have the Step 3 table mark chunks whose files pr-merge holds for T (content paths), and tell T at the gate that those waves start on T's merge; add a free-RAM check before each wave launch (under 6 GB, say so and launch fewer workers).
-- source: user
-
 ### [LOW] critique / coverage — MU1 shipped the background music and its Settings MUSIC slider, but no critique pass can see `/settings`: the screen set never opens it
 - pass: 114 (commit ef02913e)
 - viewport: mobile (375x812) and desktop (1280x800)
@@ -1447,6 +1437,16 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] general — /pilot: worktree fallback, content-PR holds, RAM — RESOLVED 2026-11-13 (skills/pilot.md: Step 3 marks content-PR chunks that wait on T's merge; §5 gains the manual-worktree fallback and a free-RAM check)
+- pass: user-jot (commit 4421cbd8)
+- viewport: unspecified
+- auth_state: anonymous
+- category: observation
+- observation: /pilot 178 (2026-11-12) hit three gaps skills/pilot.md does not cover. (1) The Agent tool's isolation: "worktree" failed twice ("Could not read the repository git config to neutralize filter drivers") while git read the config fine; the run went on with a hand-made `git worktree add -b loop/next-<id> ../wt-<id> origin/main` and an absolute-path brief, which §4 and §5 never mention. (2) Every chunk touching `World/MapEvents/content.ts` was held by pr-merge for T's hand merge (content PR), so wave 3 waited hours on #1633 and #1638 too; the Step 3 gate never told T which chunks would need a hand merge. (3) A UI worker skipped its shots at 0.2 GB free RAM, and was sent back once RAM freed; pilot launches workers with no RAM check.
+- evidence: pilot 178 ledger and digest (PRs #1628, #1632, #1633, #1638); the pr-merge notice "PR 1633 not merged: content PR (changes axiomancer-mechanics/src/World/MapEvents/content.ts): T approves game writing by merging it"
+- suggested fix: in skills/pilot.md, add the manual-worktree fallback to §5; have the Step 3 table mark chunks whose files pr-merge holds for T (content paths), and tell T at the gate that those waves start on T's merge; add a free-RAM check before each wave launch (under 6 GB, say so and launch fewer workers).
+- source: user
 
 ### [x] [LOW] /cache / determinism — the card offer is rolled from `Math.random`, not the cache seed, so the same fixture offered A Plain Ward at 375 and A Plain Word at 1280 — RESOLVED 2026-10-30 (branch loop/iterate-cache-card-seed, 789abec5e: the card draws from `cacheCardRng(seed)`, a mulberry32 stream of the cache seed offset from the goods' stream, so one seed reproduces the whole cache; pinned in `cache.flow.engine.test.ts`)
 - pass: 109 (commit 1250f1d9)
