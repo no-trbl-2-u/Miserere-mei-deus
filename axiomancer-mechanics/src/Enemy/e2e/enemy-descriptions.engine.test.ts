@@ -1,5 +1,5 @@
 /**
- * Hermetic E2E (NV1h, spec 177.8): six Chapter 1 foes carry the descriptions T
+ * Hermetic E2E (NV1h): six Chapter 1 foes carry the descriptions T
  * approved on 2026-11-13 (plan/ballots/narrator-enemies.md, "Approved"), word
  * for word, and each stays inside the narrator's prose rules.
  */
