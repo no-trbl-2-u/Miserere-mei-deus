@@ -117,12 +117,12 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
-    <h1>Chapter 1: what the foes are</h1>
+    <p class="banner" role="note"><b>CLOSED</b>: T redrew every slot on 2026-11-13 (less literal, more story and region). Round 2 is narrator-enemies-2.ballot.html; the verdict is in narrator-enemies.md.</p>
+  <h1>Chapter 1: what the foes are</h1>
   <p class="sub">Enemy descriptions for NV1c (177.3). Six foes, two drafts each. Cap 45 words. Lands in the game with NV1h (177.8).</p>
   <p class="legend">
     <b>Tick</b> the draft you keep. Ticking both means "merge" (say how in the note). <b>Nothing ticked = redraw</b>; say why in the note.<br>
@@ -297,7 +297,7 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed: the kit is not loaded (scripts/ballot-kit.test.mjs). */
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {
