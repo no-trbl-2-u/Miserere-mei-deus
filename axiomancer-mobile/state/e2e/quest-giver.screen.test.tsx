@@ -15,6 +15,7 @@ import { AccessibilityInfo } from 'react-native';
 import QuestScreen from '@/app/quest/index';
 import { RelicRise } from '@/components/quest/QuestGiverScene';
 import { GameStoreProvider } from '@/state/GameStoreProvider';
+import { selectQuestVM } from '@/state/presenters/quest.engine';
 import { createFixtureStore } from '@/test-utils/fixtureStore';
 import {
     FIXTURE_LINE,
@@ -112,6 +113,49 @@ describe('/quest - the giver scene', () => {
         handle.actions.resolveCurrentMapEvent(undefined, { kind: 'quest', questline: FIXTURE_LINE, node: 1 });
         render(<GameStoreProvider store={handle.store}><QuestScreen /></GameStoreProvider>);
         expect(screen.queryByTestId('quest-giver')).toBeNull();
+    });
+});
+
+describe('/quest - the relic under a turned-in card', () => {
+    it('a turn-in that pays no item shows what it paid and raises no relic', () => {
+        const { store, resolve, view } = open(2);
+        acceptFixtureStep(store, 1);
+        fillFixtureStep(store, 1);
+        resolve();
+        view();
+        fireEvent.press(screen.getByTestId('quest-turn-in-button'));
+        expect(selectQuestVM(store.getState()).paid?.itemNames).toEqual([]);
+        expect(screen.getByTestId('quest-paid')).toBeTruthy();
+        expect(screen.queryByTestId('quest-relic-rise')).toBeNull();
+    });
+
+    it('the relic wears the first paid item\'s id, for its icon', () => {
+        const { store, resolve, view } = open(4);
+        acceptFixtureStep(store, 3);
+        fillFixtureStep(store, 3);
+        resolve();
+        view();
+        fireEvent.press(screen.getByTestId('quest-turn-in-button'));
+        const paid = selectQuestVM(store.getState()).paid!;
+        expect(paid.itemIds?.[0]).toEqual(expect.any(String));
+        const rise = screen.UNSAFE_getByType(RelicRise);
+        expect(rise.props.itemId).toBe(paid.itemIds![0]);
+        expect(rise.props.name).toBe(paid.itemNames[0]);
+    });
+
+    it('an older ledger with no item ids still raises the relic, with no id', () => {
+        const { store, resolve, view } = open(1);
+        resolve();
+        store.setState({
+            quest: {
+                ...store.getState().quest,
+                paid: { step: 1, questName: 'Cross the Gallows', experience: 0, currency: 0, itemNames: ['[content] An Old Relic'] },
+            },
+        } as never);
+        view();
+        const rise = screen.UNSAFE_getByType(RelicRise);
+        expect(rise.props.itemId).toBeNull();
+        expect(screen.getByTestId('quest-relic-name').props.children).toBe('[content] An Old Relic');
     });
 });
 
