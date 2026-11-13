@@ -28,7 +28,7 @@
 
 ## Waiting on the loop
 
-- Mid-release check: Chapter 1 on the preview build, file what broke (1 h) — the loop still owes NV1d, NV1e, NV1f, NV1g, NV1h
+- Mid-release check: Chapter 1 on the preview build, file what broke (1 h) — the loop still owes NV1d, NV1e, NV1f, NV1g
 - First builds on real iPhones (attended) (from the build plan) — the loop still owes 129.2
 - Card sessions (owner-led) (from the build plan) — the loop still owes 134.3
 - Labyrinth re-theme (owner-led) (from the build plan) — the loop still owes 134.5
