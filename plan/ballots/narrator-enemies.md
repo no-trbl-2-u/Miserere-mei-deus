@@ -6,7 +6,8 @@
 > for how a foe looks (ruling 13, plot PR #1649). Ballots:
 > `narrator-enemies.ballot.html` (round 1, closed) and
 > `narrator-enemies-2.ballot.html` (round 2, closed) and
-> `narrator-enemies-3.ballot.html` (round 3, open: the seven other foes). This ledger is separate from
+> `narrator-enemies-3.ballot.html` (round 3, closed: the seven other foes) and
+> `narrator-enemies-4.ballot.html` (round 4, open: E-08, E-10, E-13 redrawn). This ledger is separate from
 > `narrator-chapter1.md` (T, 2026-11-12: #1649 edits S-17 there). Nothing here
 > is in the game: 177.8 (NV1h) lands the approved lines.
 
@@ -75,6 +76,27 @@ the master steered for came from under the keep).
 | E-12 | The Wrecker | `bw-l4` | 1 | 2 |
 | E-13 | The Tide-Gate | `bw-w5` S-15 (1) | 1 | 2 |
 
+## Approved, round 3 (T, 2026-11-13)
+
+Word for word, with T's edits applied (E-09b, E-11b). A later plot widens
+NV1h to land them.
+
+- **E-07 Net-Mender** (stop 1): The harbour works in the dark, and so does he. He mends by feel as the living do along the quay, and he has not noticed that he went down with the last net he mended. The knots are still good.
+- **E-09 The Cave Choir** (stop 2): The sea took them as they rowed home from the chapel on the cliff, the whole congregation in one boat in one squall. Under the cliff they hold the service still. The hymn is heard but ignored by those who know better.
+- **E-11 The Lamplighter** (stop 2): He climbs the lighthouse path each night with a lantern, as though the tower were lit and he were late to it. He swept the lamp room before the lamp was sold, and the winters since have taken all of him but the habit.
+- **E-12 The Wrecker** (stop 1): The town has lived on what the rocks bring in for longer than it has had a name. Out on the lighthouse path that living has taken a shape of its own, and it walks the cliff and watches the sea for sails.
+
+E-08 (Brine-Widow), E-10 (Tithe-Collector) and E-13 (the Tide-Gate, to be
+renamed) go to round 4.
+
+## Round 4 (2026-11-13)
+
+| Slot | Foe | Drafts |
+|---|---|---|
+| E-08 | Brine-Widow | a, b: E-08b with the custom said plainly (stop 5) |
+| E-10 | The Tithe-Collector | a: T's sentence as written; b: the same, grammar smoothed (stop 1) |
+| E-13 | the Tide-Gate, renamed | a THE HALF-TAKEN (3), b THE LOW-WATER MAN (2), c THE CAUSEWAY WARDEN (2): a name and its line each |
+
 ## Checks
 
 Every description is 45 words or fewer and every sentence 40 or fewer. There is
@@ -109,3 +131,23 @@ descriptions.
   The `*` marks T's changed words: E-01b's "It no longer remembers his name"
   becomes "They no longer remember his name", and E-06b's "and warms nothing"
   becomes "but warms nothing". Both are applied under Approved.
+- **2026-11-13, T, attended, round 3 (`narrator-enemies-3-2026-11-13`):**
+  complete, and marked complete in session. The paste, verbatim:
+
+  ```
+  BALLOT: narrator-enemies-3-2026-11-13 (NV1c enemy descriptions)
+  kept 5 of 14
+  -- Descriptions --
+  E-07: KEEP E-07a | cut: E-07b
+  E-08: KEEP E-08b | cut: E-08a | note: I'm not sure what calling the custom is here in this context. Could we be a little more explicit here?
+  E-09: KEEP E-09b | cut: E-09a | note: Instead: The hymn is heard but ignored by those who know better.
+  E-10: REDRAW | note: After collect: He remembers not why he must, but he's lost control of his will many moons ago. (Replace the sea cave line)
+  E-11: KEEP E-11b | cut: E-11a | note: It's a him
+  E-12: KEEP E-12a | cut: E-12b
+  E-13: REDRAW | note: This guy needs a new name and a new story. I don't know what a "Tide Gate" is. It's an otherworldly man missing his arm and leg
+  ```
+
+  Applied: E-09b's last sentence is T's; E-11b is "he" throughout. E-08b is
+  kept in direction but redrawn to say plainly what the custom is (round 4).
+  E-10 and E-13 are redrawn on round 4; for E-13, T asked Claude to
+  propose three names, each with its line.

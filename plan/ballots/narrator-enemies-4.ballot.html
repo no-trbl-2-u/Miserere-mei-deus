@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 Enemy Lines 4</title>
+<!--
+  NV1c (chunk 177.3), surface: enemy descriptions (T, 2026-11-12). Six
+  Chapter 1 foes. Candidate a is drafted at the stop of the scene nearest the
+  foe's node (story overview ruling 12); candidate b is the same foe one stop
+  up. The Saint Beneath's a is the ledger's E-01, which T delegated and has
+  not read. Verdicts go in narrator-enemies.md, never narrator-chapter1.md.
+  Runs on ballot-kit.js. Tick what you keep; a slot's note is a redraw ask.
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .hue { font-weight: bold; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art img { max-height: 150px; max-width: 100%; object-fit: contain; }
+  .art {
+    margin: 8px 0; height: 160px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+    <h1>Chapter 1: what the foes are, round 4</h1>
+  <p class="sub">Round 4: E-08, E-10 and E-13, sent back from round 3. Cap 45 words. A later plot lands them with NV1h.</p>
+  <p class="legend">
+    <b>Tick</b> the draft you keep. Ticking both means "merge" (say how in the note). <b>Nothing ticked = redraw</b>; say why in the note.<br>
+    <b>E-13</b>: each draft is a name and its line (the name comes first, in capitals, and is not part of the line).
+    Stops: 1 plain, 2 hard (weather or time did it), 3 cruel (someone chose it), 4 cruelty at 11, 5 grief.
+    The portrait is canon for how a foe looks (ruling 13).
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Surfaces"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about the three as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Save and submit or Mark complete, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   ===================================================================== */
+const BALLOT_ID = 'narrator-enemies-4-2026-11-13';
+
+const STOPS = { 1: 'plain', 2: 'hard', 3: 'cruel', 4: 'cruelty at 11', 5: 'grief' };
+
+const TABS = [
+  { key: 'E', name: 'Descriptions', blurb: 'Round 4: the three you sent back. E-08 says the custom plainly, E-10 is built on your sentence, E-13 is a new man with a new name.' },
+];
+
+const SLOTS = [
+  { slot: 'E-08', foe: 'Brine-Widow', portrait: 'brine-widow', role: 'Your E-08b, with the custom said plainly: on the long pier no swimmer is pulled out until the cargo is in (S-06).' },
+  { slot: 'E-10', foe: 'The Tithe-Collector', portrait: 'tithe-collector', role: 'Your sentence after "collect", the sea cave line gone. a keeps your words as written, b smooths the grammar.' },
+  { slot: 'E-13', foe: 'Tide-Gate, renamed', portrait: 'tide-gate', role: 'Keep causeway (bw-w5, S-15): under water at high tide, offerings on the tide line. An otherworldly man missing an arm and a leg. Each draft is a name and its line: tick one.' },
+];
+
+const CARDS = [
+  { id: 'E-08a', stop: 5, text: 'The custom on the long pier is cargo first, and no swimmer is pulled out until it is ashore. The night her husband went in, she gave the word herself. She walks the pier yet, and every swimmer she meets is him.', invented: 'she gave the word the night he drowned.' },
+  { id: 'E-08b', stop: 5, text: 'The pier keeps one rule: the cargo comes in before any man in the water. The night her husband went over the side, she held the rope and kept to the rule. She walks the pier yet, and every swimmer she meets is him.', invented: 'she held the rope and kept the rule.' },
+  { id: 'E-10a', stop: 1, text: 'Every light on this coast is owed for, and someone must call to collect. He remembers not why he must, but he\'s lost control of his will many moons ago.', invented: 'nothing; your words.' },
+  { id: 'E-10b', stop: 1, text: 'Every light on this coast is owed for, and someone must call to collect. He no longer remembers why he must. His will went from him many moons ago, and the collecting did not.', invented: 'nothing past your note.' },
+  { id: 'E-13a', stop: 3, text: 'THE HALF-TAKEN. He was left on the tide line as an offering for the one in the keep, and the sea came for him and took only half. It comes back each tide for the rest. He waits on the causeway to be finished.', invented: 'he was an offering the sea half took.' },
+  { id: 'E-13b', stop: 2, text: 'THE LOW-WATER MAN. When the causeway comes up out of the sea he comes up with it, and when it goes under he goes under. Some tide took an arm and a leg and did not want the rest. He is never far from the water.', invented: 'he rises and sinks with the causeway.' },
+  { id: 'E-13c', stop: 2, text: 'THE CAUSEWAY WARDEN. He held the causeway for the keep before the lamp was bought, and the lord inside had no more use for him after. The tides have taken an arm and a leg since. He holds it still, for no one told him to stop.', invented: 'he was the keep\'s warden.' },
+];
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Words in a line, as the prose lint counts them. */
+const words = (s) => s.split(/\s+/).filter(Boolean).length;
+
+/** Build one draft as an HTML string: portrait, stop, the line, its count. */
+const cardHtml = (card, s) => `
+  <label class="card" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span><span class="type">stop ${card.stop} · ${STOPS[card.stop]}</span></div>
+    <div class="art"><img src="narrator-enemies/${s.portrait}.webp" alt="${esc(s.foe)} portrait"></div>
+    <div class="line">${esc(card.text)}</div>
+    <div class="why">${words(card.text)} of ${card.id.startsWith("J") ? 200 : 45} words. Invented: ${esc(card.invented)}</div>
+  </label>`;
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot} · ${esc(s.foe)}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c, s)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: redraw ask, merge rule, a word to change (optional)">
+  </section>`;
+
+/** One tab panel: blurb and its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** Update the selected-card ring and the running counts. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'REDRAW'
+    : keep.length === 1 ? `KEEP ${keep[0]}`
+    : `MERGE ${keep.join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the kept count, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: ${BALLOT_ID} (NV1c enemy descriptions)`,
+    `kept ${k.length} of ${CARDS.length}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>

@@ -117,12 +117,12 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
-    <h1>Chapter 1: what the foes are, round 3</h1>
+    <p class="banner" role="note"><b>CLOSED</b>: T voted on 2026-11-13 (E-07a, E-09b, E-11b, E-12a kept with edits; E-08, E-10, E-13 to round 4). The verdict is in narrator-enemies.md.</p>
+  <h1>Chapter 1: what the foes are, round 3</h1>
   <p class="sub">Round 3: the seven other Chapter 1 foes, two drafts each. Cap 45 words. A later plot lands them with NV1h.</p>
   <p class="legend">
     <b>Tick</b> the draft you keep. Ticking both means "merge" (say how in the note). <b>Nothing ticked = redraw</b>; say why in the note.<br>
@@ -137,7 +137,7 @@
 
 <footer>
   <label for="general"><b>General notes</b> (optional)</label>
-  <textarea id="general" placeholder="Anything about the six as a whole…"></textarea>
+  <textarea id="general" placeholder="Anything about the seven as a whole…"></textarea>
   <button id="gen" type="button">Generate</button>
   <button id="copy" type="button">Copy</button>
   <span class="count" id="count"></span>
@@ -297,7 +297,7 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed: the kit is not loaded (scripts/ballot-kit.test.mjs). */
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {
