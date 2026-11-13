@@ -7,12 +7,10 @@
  * its reduced-motion answer from its caller, as the combat frames do.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import React from 'react';
+import { AccessibilityInfo } from 'react-native';
 
 import QuestScreen from '@/app/quest/index';
 import { RelicRise } from '@/components/quest/QuestGiverScene';
@@ -26,6 +24,20 @@ import {
     registerFixtureQuestline,
     unregisterFixtureQuestline,
 } from '@/test-utils/questlineFixture';
+
+// The relic rise's motion answer is watched, not read from its source: the
+// mutation run rewrites the source in place, so a test of its text cannot run
+// there. Both wrap the real functions, so the screen behaves as it ships.
+const mockResolveJuiceMode = jest.fn();
+jest.mock('@/lib/juice/instant', () => {
+    const actual = jest.requireActual<typeof import('@/lib/juice/instant')>('@/lib/juice/instant');
+    return { ...actual, resolveJuiceMode: (...args: Parameters<typeof actual.resolveJuiceMode>) => { mockResolveJuiceMode(...args); return actual.resolveJuiceMode(...args); } };
+});
+const mockAskPlatform = jest.fn();
+jest.mock('@/hooks/useReducedMotion', () => {
+    const actual = jest.requireActual<typeof import('@/hooks/useReducedMotion')>('@/hooks/useReducedMotion');
+    return { ...actual, useReducedMotion: () => { mockAskPlatform(); return actual.useReducedMotion(); } };
+});
 
 jest.mock('@/lib/platform/router', () => ({
     useRouter: () => ({ replace: jest.fn(), push: jest.fn(), back: jest.fn(), canGoBack: () => true }),
@@ -110,9 +122,15 @@ describe('/quest - the relic rise, reduced motion', () => {
     });
 
     it('takes the answer from its caller and never asks the platform', () => {
-        const text = fs.readFileSync(path.join(__dirname, '../../components/quest/QuestGiverScene.tsx'), 'utf8')
-            .replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
-        expect(text).not.toMatch(/AccessibilityInfo|useReducedMotion\s*\(/);
-        expect(text).toMatch(/resolveJuiceMode\(\{ reducedMotion/);
+        const reduceMotionAsked = jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled');
+        for (const reducedMotion of [true, false]) {
+            mockResolveJuiceMode.mockClear();
+            mockAskPlatform.mockClear();
+            render(<RelicRise itemId={null} name="The Tide Relic" reducedMotion={reducedMotion} />);
+            expect(mockResolveJuiceMode).toHaveBeenCalledWith({ reducedMotion });
+            expect(mockAskPlatform).not.toHaveBeenCalled();
+        }
+        expect(reduceMotionAsked).not.toHaveBeenCalled();
+        reduceMotionAsked.mockRestore();
     });
 });
