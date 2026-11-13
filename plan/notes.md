@@ -535,3 +535,7 @@ Built inline, no builder subagent (one S chunk). Defaults taken:
 - The hazard-free sim (`sim/run-fight.ts`) takes a road after a withdraw as before; from the previous node its next road may be the same fight again, which its once-per-node flee cap already bounds.
 - The `withdraw-sub` style guard test (CRITIQUE pass 101) and its hermeticity-audit exemption are deleted with the line they guarded; `WITHDRAW_COST` left the prose lint's table.
 - Visual baselines of the fight reveal (`combat-encounter.png`, `combat-elite.png`) change by the missing second line and are re-stamped by CI.
+
+useRouter in the router shim now returns one frozen handle, so gates with `router` in their effect deps push their screen once. The mobile mutation run drops related tests that read a mutated file's source and narrows large related sets in PR mode. Three quest relic and scroll-cue mutants are pinned.
+
+Defaults taken: `NARROW_OVER = 20`, PR mode only. Open question #1 and #2 are untouched; the log file lands with 180.1.

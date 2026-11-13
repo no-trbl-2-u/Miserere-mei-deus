@@ -748,3 +748,4 @@
 - 2026-11-12 · 177.17 (alias: NV1q) · Sea keep lord matches his portrait; test gaps closed · 70a9b7eb..70a9b7eb (#1651)
 - 2026-11-12 · 181.1 (alias: WD1a) · Withdraw and flee return to the previous node; WITHDRAW's second line gone · f34b7d6e..f7aa2b05 (#1656)
 - 2026-11-12 · 181 · spec complete: Withdraw sends the player back · axiomancer-mechanics/src/World/MapEvents/e2e/retreat-from-arrival.WD1a.engine.test.ts · deleted in (this commit)
+- 2026-11-13 · 180.2 (alias: CW1b) · Cache routes load once; quest and cutscene mutation runs finish · 03b93e68..0be0859f (#1660)

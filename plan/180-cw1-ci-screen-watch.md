@@ -31,7 +31,6 @@
 ## Acceptance
 
 - **A1** `docs/reports/ci-screens.md` exists, is seeded with every incident under Sources, and `node scripts/ci-screens.mjs record --pr <n>` appends one row per new incident from a PR's comments and never duplicates one. CI runs it after the `visual-smoke` comment, and a route re-stamped twice on one PR without a source change is logged `flapping` and named in the comment.
-- **A2** `cache`, `cache-goods` and `cache-card` load in CI and are identical across `SMOKE_RUNS=3`; the mutation report runs to completion on `app/quest/index.tsx` and on `state/presenters/cutscene-pages.ts`; the three quest logic lines named under Sources have killing tests.
 
 ## Open questions
 
@@ -40,11 +39,8 @@
 
 ## Chunks
 
-Measure: 2 open · 0 closed · next A3
+Measure: 1 open · 1 closed · next A3
 
 - [ ] **180.1** CI screen log and its recorder · M · closes A1 · needs — · alias: CW1a
   - The file, the seed rows (every incident under Sources, with its run and PR), `scripts/ci-screens.mjs` with a test that feeds it saved comment bodies (a `load-failed`, a re-stamp, a flapping pair, a mutation over budget, a dry-run failure) and checks the rows and the no-duplicate rule, wired into the root `npm test`. The workflow step after the `visual-smoke` comment. No game code changes.
   - Measure: the script's test passes; running it twice on the same PR adds nothing the second time; the seeded file lists the #1651 `quest-two-lines` flapping and the #1652 `cache*` load failures.
-- [ ] **180.2** The pilot's CI gaps close · M · closes A2 · needs — · alias: CW1b
-  - The four fixes under Design, "The cleanup", each with its cause written in the PR body and as a row's cause in `docs/reports/ci-screens.md` if 180.1 has landed (otherwise in the PR body only, for 180.1's seed).
-  - Measure: `SMOKE_RUNS=3` on `cache`, `cache-goods`, `cache-card` exits 0; the mutation report on the PR shows a score for `app/quest/index.tsx` and finishes for `state/presenters/cutscene-pages.ts`; the three quest lines' mutants are killed.
