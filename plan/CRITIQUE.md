@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-11-11 at commit 7f54beaf
-> Pass count: 117
+> Last pass: 2026-11-13 at commit 5957cc2de
+> Pass count: 118
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -1016,34 +1016,6 @@
 
 ## Pending
 
-### [MED] general — /pilot: worktree fallback, content-PR holds, RAM
-- pass: user-jot (commit 4421cbd8)
-- viewport: unspecified
-- auth_state: anonymous
-- category: observation
-- observation: /pilot 178 (2026-11-12) hit three gaps skills/pilot.md does not cover. (1) The Agent tool's isolation: "worktree" failed twice ("Could not read the repository git config to neutralize filter drivers") while git read the config fine; the run went on with a hand-made `git worktree add -b loop/next-<id> ../wt-<id> origin/main` and an absolute-path brief, which §4 and §5 never mention. (2) Every chunk touching `World/MapEvents/content.ts` was held by pr-merge for T's hand merge (content PR), so wave 3 waited hours on #1633 and #1638 too; the Step 3 gate never told T which chunks would need a hand merge. (3) A UI worker skipped its shots at 0.2 GB free RAM, and was sent back once RAM freed; pilot launches workers with no RAM check.
-- evidence: pilot 178 ledger and digest (PRs #1628, #1632, #1633, #1638); the pr-merge notice "PR 1633 not merged: content PR (changes axiomancer-mechanics/src/World/MapEvents/content.ts): T approves game writing by merging it"
-- suggested fix: in skills/pilot.md, add the manual-worktree fallback to §5; have the Step 3 table mark chunks whose files pr-merge holds for T (content paths), and tell T at the gate that those waves start on T's merge; add a free-RAM check before each wave launch (under 6 GB, say so and launch fewer workers).
-- source: user
-
-### [LOW] critique / coverage — MU1 shipped the background music and its Settings MUSIC slider, but no critique pass can see `/settings`: the screen set never opens it
-- pass: 114 (commit ef02913e)
-- viewport: mobile (375x812) and desktop (1280x800)
-- category: navigation
-- observation: the only player-facing change since pass 113 is MU1, whose single control is the MUSIC volume row on the Settings screen (`musicVolume`, default 70). The title menu offers SETTINGS ("theme · motion · text · sound", `02-onboarding.txt`), and `/settings` is pushed straight from it (`app/index.tsx:53`) with no game-state gate. Even so, none of the 15 `critique:drive` entries opens it. So the music and sound rows, the theme and text-size steps and the reset copy have never been looked at by an unattended pass. The SOUND EFFECTS note ("sound effects are still to come") now sits beside a MUSIC slider that does play sound, and no pass has checked how the two rows read together.
-- evidence: `axiomancer-mobile/scripts/critique-drive.mjs:154` (`SCREENS`, no `settings` entry); `.critique-artifacts/manifest.json` (15 screens per viewport, none `/settings`); `axiomancer-mobile/state/presenters/settings.engine.ts:42-44` (`music: 'MUSIC'`, `sfx`, `soundNote`).
-- suggested fix: add a cold-enterable `{ name: 'settings', path: '/settings' }` entry to `SCREENS` (door 1 in the file's own header comment) that captures after fonts settle, and list it in `skills/critique.md` §3. This is tooling only and changes no game code.
-- source: critique:drive (unattended)
-
-### [LOW] settings presenter — the header still says the music volume is "kept for the audio build (nothing plays yet)", one tick after MU1 made it play the theme
-- pass: 114 (commit ef02913e)
-- viewport: n/a (source)
-- category: voice
-- observation: `settings.engine.ts` opens with the list of what a new player can change, and why each row exists. Its MUSIC / SOUND line says both volumes are kept for a future audio build and that nothing plays yet. Since MU1, `components/BackgroundMusic.tsx` loops the theme at `musicVolume` and pauses it for fights and hazards. Only the sound-effects half is still to come, which the player-facing `soundNote` already says correctly. The next tick that reads this header to change a settings row will take the music slider for a dead control.
-- evidence: `axiomancer-mobile/state/presenters/settings.engine.ts:13`; `axiomancer-mobile/state/settings.ts:52` (`musicVolume` doc names `BackgroundMusic.tsx`); `axiomancer-mobile/components/BackgroundMusic.tsx`.
-- suggested fix: rewrite the line as "MUSIC / SOUND  the theme's volume (MU1); sound effects are still to come". This is a comment only.
-- source: critique:drive (unattended)
-
 ### [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30%
 - pass: 113 (commit 594a0d81)
 - viewport: mobile (375x812) and desktop (1280x800)
@@ -1447,6 +1419,34 @@
 - source: loop
 
 ## Done
+
+### [x] [LOW] critique / coverage — MU1 shipped the background music and its Settings MUSIC slider, but no critique pass can see `/settings`: the screen set never opens it — RESOLVED 2026-11-13 (critique-drive.mjs: a cold-enterable `settings` entry)
+- pass: 114 (commit ef02913e)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: navigation
+- observation: the only player-facing change since pass 113 is MU1, whose single control is the MUSIC volume row on the Settings screen (`musicVolume`, default 70). The title menu offers SETTINGS ("theme · motion · text · sound", `02-onboarding.txt`), and `/settings` is pushed straight from it (`app/index.tsx:53`) with no game-state gate. Even so, none of the 15 `critique:drive` entries opens it. So the music and sound rows, the theme and text-size steps and the reset copy have never been looked at by an unattended pass. The SOUND EFFECTS note ("sound effects are still to come") now sits beside a MUSIC slider that does play sound, and no pass has checked how the two rows read together.
+- evidence: `axiomancer-mobile/scripts/critique-drive.mjs:154` (`SCREENS`, no `settings` entry); `.critique-artifacts/manifest.json` (15 screens per viewport, none `/settings`); `axiomancer-mobile/state/presenters/settings.engine.ts:42-44` (`music: 'MUSIC'`, `sfx`, `soundNote`).
+- suggested fix: add a cold-enterable `{ name: 'settings', path: '/settings' }` entry to `SCREENS` (door 1 in the file's own header comment) that captures after fonts settle, and list it in `skills/critique.md` §3. This is tooling only and changes no game code.
+- source: critique:drive (unattended)
+
+### [x] [LOW] settings presenter — the header still says the music volume is "kept for the audio build (nothing plays yet)", one tick after MU1 made it play the theme — RESOLVED 2026-11-13 (618361ae5, header rewritten)
+- pass: 114 (commit ef02913e)
+- viewport: n/a (source)
+- category: voice
+- observation: `settings.engine.ts` opens with the list of what a new player can change, and why each row exists. Its MUSIC / SOUND line says both volumes are kept for a future audio build and that nothing plays yet. Since MU1, `components/BackgroundMusic.tsx` loops the theme at `musicVolume` and pauses it for fights and hazards. Only the sound-effects half is still to come, which the player-facing `soundNote` already says correctly. The next tick that reads this header to change a settings row will take the music slider for a dead control.
+- evidence: `axiomancer-mobile/state/presenters/settings.engine.ts:13`; `axiomancer-mobile/state/settings.ts:52` (`musicVolume` doc names `BackgroundMusic.tsx`); `axiomancer-mobile/components/BackgroundMusic.tsx`.
+- suggested fix: rewrite the line as "MUSIC / SOUND  the theme's volume (MU1); sound effects are still to come". This is a comment only.
+- source: critique:drive (unattended)
+
+### [x] [MED] general — /pilot: worktree fallback, content-PR holds, RAM — RESOLVED 2026-11-13 (skills/pilot.md: Step 3 marks content-PR chunks that wait on T's merge; §5 gains the manual-worktree fallback and a free-RAM check)
+- pass: user-jot (commit 4421cbd8)
+- viewport: unspecified
+- auth_state: anonymous
+- category: observation
+- observation: /pilot 178 (2026-11-12) hit three gaps skills/pilot.md does not cover. (1) The Agent tool's isolation: "worktree" failed twice ("Could not read the repository git config to neutralize filter drivers") while git read the config fine; the run went on with a hand-made `git worktree add -b loop/next-<id> ../wt-<id> origin/main` and an absolute-path brief, which §4 and §5 never mention. (2) Every chunk touching `World/MapEvents/content.ts` was held by pr-merge for T's hand merge (content PR), so wave 3 waited hours on #1633 and #1638 too; the Step 3 gate never told T which chunks would need a hand merge. (3) A UI worker skipped its shots at 0.2 GB free RAM, and was sent back once RAM freed; pilot launches workers with no RAM check.
+- evidence: pilot 178 ledger and digest (PRs #1628, #1632, #1633, #1638); the pr-merge notice "PR 1633 not merged: content PR (changes axiomancer-mechanics/src/World/MapEvents/content.ts): T approves game writing by merging it"
+- suggested fix: in skills/pilot.md, add the manual-worktree fallback to §5; have the Step 3 table mark chunks whose files pr-merge holds for T (content paths), and tell T at the gate that those waves start on T's merge; add a free-RAM check before each wave launch (under 6 GB, say so and launch fewer workers).
+- source: user
 
 ### [x] [LOW] /cache / determinism — the card offer is rolled from `Math.random`, not the cache seed, so the same fixture offered A Plain Ward at 375 and A Plain Word at 1280 — RESOLVED 2026-10-30 (branch loop/iterate-cache-card-seed, 789abec5e: the card draws from `cacheCardRng(seed)`, a mulberry32 stream of the cache seed offset from the goods' stream, so one seed reproduces the whole cache; pinned in `cache.flow.engine.test.ts`)
 - pass: 109 (commit 1250f1d9)
