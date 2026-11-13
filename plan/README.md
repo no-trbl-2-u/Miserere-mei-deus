@@ -39,6 +39,7 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
+- **177.8** · NV1h: the six approved Chapter 1 enemy descriptions, and the Saint Beneath's journal, in the game (T, `/plot asap`, 2026-11-13)
 - **180.1** · CW1a: a log of the screens CI hangs on, written by a recorder script (T, `/plot`, 2026-11-12)
 
 
