@@ -117,7 +117,7 @@ describe('Pay the toll (n)', () => {
 describe('the keep causeway stages the Tide-Gate', () => {
     it('with its stand-in portrait', () => {
         const vm = buildCombatViewModel(fightAt('enemy-tide-gate'));
-        expect(vm.enemy.name).toBe('The Tide-Gate');
+        expect(vm.enemy.name).toBe('The Half-Taken');
         expect(vm.enemy.artKey).toBe('tide-gate');
     });
 

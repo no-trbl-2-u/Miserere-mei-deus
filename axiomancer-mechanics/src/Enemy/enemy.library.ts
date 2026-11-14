@@ -674,7 +674,8 @@ export const NetMender = createEnemy({
     id: 'enemy-net-mender',
     portraitAsset: 'net-mender',
     name: 'Net-Mender',
-    description: 'A drowned fisherman still mending the net he went down in.',
+    description:
+        'The harbour works in the dark, and so does he. He mends by feel as the living do along the quay, and he has not noticed that he went down with the last net he mended. The knots are still good.',
     level: 3,
     baseStats: enemyStatBudget(3),
     mapName: 'breakwater',
@@ -736,7 +737,8 @@ export const BrineWidow = createEnemy({
     id: 'enemy-brine-widow',
     portraitAsset: 'brine-widow',
     name: 'Brine-Widow',
-    description: 'She waits at the pier end with a fist of salt for whoever comes back.',
+    description:
+        'The pier keeps one rule: the cargo comes in before any man in the water. The night her husband went over the side, she held the rope and kept to the rule. She walks the pier yet, and every swimmer she meets is him.',
     level: 4,
     baseStats: enemyStatBudget(4),
     mapName: 'breakwater',
@@ -895,7 +897,8 @@ export const TitheCollector = createEnemy({
     id: 'enemy-tithe-collector',
     portraitAsset: 'tithe-collector',
     name: 'The Tithe-Collector',
-    description: 'The town\'s tithe is due, and he has followed you down to the sea cave to collect it. Your name is already in the ledger.',
+    description:
+        'Every light on this coast is owed for, and someone must call to collect. He no longer remembers why he must. His will went from him many moons ago, but the collecting did not.',
     level: 5,
     baseStats: enemyStatBudget(5),
     mapName: 'breakwater',
@@ -931,7 +934,8 @@ export const CaveChoir = createEnemy({
     id: 'enemy-cave-choir',
     portraitAsset: 'cave-choir',
     name: 'The Cave Choir',
-    description: 'The drowned congregation, still at service under the cliff.',
+    description:
+        'The sea took them as they rowed home from the chapel on the cliff, the whole congregation in one boat in one squall. Under the cliff they hold the service still. The hymn is heard but ignored by those who know better.',
     level: 5,
     baseStats: enemyStatBudget(5),
     mapName: 'breakwater',
@@ -999,8 +1003,9 @@ export const TollKeeper = createEnemy({
 export const TideGate = createEnemy({
     id: 'enemy-tide-gate',
     portraitAsset: 'tide-gate',
-    name: 'The Tide-Gate',
-    description: 'The causeway floods twice a day. The gate decides when.',
+    name: 'The Half-Taken',
+    description:
+        'He was left on the tide line as an offering for the one in the keep, and the sea came for him and took only half. It comes back each tide for the rest. He waits on the causeway to be finished.',
     level: 8,
     baseStats: enemyStatBudget(8),
     mapName: 'breakwater',
@@ -1034,7 +1039,8 @@ export const Lamplighter = createEnemy({
     id: 'enemy-lamplighter',
     portraitAsset: 'lamplighter',
     name: 'The Lamplighter',
-    description: 'Kept the light until it went out. Now he lights lures.',
+    description:
+        'He climbs the lighthouse path each night with a lantern, as though the tower were lit and he were late to it. He swept the lamp room before the lamp was sold, and the winters since have taken all of him but the habit.',
     level: 7,
     baseStats: enemyStatBudget(7),
     mapName: 'breakwater',
@@ -1068,7 +1074,8 @@ export const Wrecker = createEnemy({
     id: 'enemy-wrecker',
     portraitAsset: 'wrecker',
     name: 'The Wrecker',
-    description: 'Swings a false light on the rocks so ships come in wrong.',
+    description:
+        'The town has lived on what the rocks bring in for longer than it has had a name. Out on the lighthouse path that living has taken a shape of its own, and it walks the cliff and watches the sea for sails.',
     level: 7,
     baseStats: enemyStatBudget(7),
     mapName: 'breakwater',

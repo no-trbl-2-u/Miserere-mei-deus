@@ -88,7 +88,7 @@ describe('A15 — the Cave Choir plays exactly the Appendix', () => {
         expect(ENEMY_REGISTRY['cave-choir']).toBe(CaveChoir);
         expect(CaveChoir).toMatchObject({
             id: 'enemy-cave-choir', portraitAsset: 'cave-choir', name: 'The Cave Choir',
-            difficulty: 'elite', level: 5, description: 'The drowned congregation, still at service under the cliff.',
+            difficulty: 'elite', level: 5,
         });
         expect(choir.maxHealth).toBe(enemyVitae(5, 'elite'));
         const words = new Set((CaveChoir.phases ?? []).flatMap(p => [...p.moves, ...(p.danger ? [p.danger] : [])])

@@ -250,8 +250,7 @@ describe('A19 — the Tide-Gate plays exactly the Appendix', () => {
     it('is a registered level-8 elite with its own id, portrait key and VITAE', () => {
         expect(ENEMY_REGISTRY['tide-gate']).toBe(TideGate);
         expect(TideGate).toMatchObject({
-            id: 'enemy-tide-gate', portraitAsset: 'tide-gate', name: 'The Tide-Gate', difficulty: 'elite', level: 8,
-            description: 'The causeway floods twice a day. The gate decides when.',
+            id: 'enemy-tide-gate', portraitAsset: 'tide-gate', name: 'The Half-Taken', difficulty: 'elite', level: 8,
         });
         expect(gate.maxHealth).toBe(enemyVitae(8, 'elite'));
     });

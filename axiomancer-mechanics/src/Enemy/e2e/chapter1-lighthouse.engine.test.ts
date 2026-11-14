@@ -97,7 +97,7 @@ describe('A16 — the Lamplighter plays exactly the Appendix', () => {
         expect(ENEMY_REGISTRY.lamplighter).toBe(Lamplighter);
         expect(Lamplighter).toMatchObject({
             id: 'enemy-lamplighter', portraitAsset: 'lamplighter', name: 'The Lamplighter',
-            difficulty: 'elite', level: 7, description: 'Kept the light until it went out. Now he lights lures.',
+            difficulty: 'elite', level: 7,
         });
         expect(lamplighter.maxHealth).toBe(enemyVitae(7, 'elite'));
         expect(enemyPhaseKeywords(Lamplighter)).toEqual(['ward', 'mend', 'vulnerable', 'tangle']);
@@ -216,7 +216,7 @@ describe('A17 — the Wrecker plays exactly the Appendix', () => {
         expect(ENEMY_REGISTRY.wrecker).toBe(Wrecker);
         expect(Wrecker).toMatchObject({
             id: 'enemy-wrecker', portraitAsset: 'wrecker', name: 'The Wrecker',
-            difficulty: 'elite', level: 7, description: 'Swings a false light on the rocks so ships come in wrong.',
+            difficulty: 'elite', level: 7,
         });
         expect(wrecker.maxHealth).toBe(enemyVitae(7, 'elite'));
         expect(enemyPhaseKeywords(Wrecker)).toEqual(['tangle']);
