@@ -11,6 +11,73 @@
 
 ## Pending
 
+> **Nine `[owner]` candidates from T's `/messy` of the Chapter 1 gap audit (2026-11-14).** Part plan
+> `plan/chapter1-gaps.md`; promote each with `/plot`. Four more themes of the same dump were plotted the
+> same day as specs 182 to 185. Text gaps are not here (T's other session).
+
+### [ ] [owner] [score 5.0] Scene pictures for the Breakwater: 18 scenes have none, and the five that exist are TEMP
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 5
+- trigger: T supplies pictures, or rules how many the chapter needs.
+- source signals: `BW_NODE_SCENES` names four pictures for 22 scenes; `cutscenes/provenance.json` and `travel/provenance.json` mark the five pictures, the narrator and the bridge image TEMP.
+- proposed scope: 1 phase per batch of T's art: wire each picture to its scene, update provenance, re-stamp baselines. Art is T's (D88).
+- conflicts: none. Open question 1 of the part plan.
+
+### [ ] [owner] [score 4.5] Foe and cast portraits: seven Chapter 1 foes and all eight people wear stand-ins
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 6
+- trigger: T's portrait swap; sooner for the lighthouse keeper, who shares the host's image file.
+- source signals: `enemies/provenance.json` ("until T's portrait swap"); `givers/lighthouse-keeper.webp` is a copy of `keepers/host.webp`.
+- proposed scope: 1 phase per swap batch: the portrait, its 24 animation frames and backing, provenance, and a description redrawn where the new portrait disagrees (story ruling 13).
+- conflicts: 134.5 (B2) covers Chapters 2 to 4's enemies only.
+
+### [ ] [owner] [score 3.0] Smaller stand-ins: map fog, cache and chest pictures, a hazard picture, player portraits, two relic icons
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 7
+- trigger: the release check finds one of them on screen.
+- source signals: `map-fog/provenance.json`, `treasure/provenance.json`, `portraits/provenance.json`, `items/index.ts`; the hazard screen draws no picture.
+- proposed scope: 1 phase once T picks the art; each is a file swap and a provenance line.
+- conflicts: grey starter card art is 134.8's.
+
+### [ ] [owner] [score 4.0] Sound: no effect plays, and combat and hazards have no music
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 8
+- trigger: T rules sound into Chapter 1's scope and names a source for the files.
+- source signals: `state/settings.ts` (the SFX volume setting, "no sound effect plays yet"); `music.engine.ts` (combat and hazard tracks null).
+- proposed scope: 2 phases. An effect player on the existing audio module with a short list of moments (card played, die rolled, hit, VITAE lost, reward); tracks for combat and hazards.
+- conflicts: none. Open question 3 of the part plan.
+
+### [ ] [owner] [score 5.0] Chapter 1 is too easy: the sim reaches the Saint Beneath at level 14 to 18
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 9
+- trigger: before the Chapter 1 release check.
+- source signals: `docs/reports/sim/latest.md` (2026-11-14, 20 of 20 clears); `docs/reports/measured/latest.md` (stamp c45ddb8, 92 to 100% wins); the level 5 Coralback at `bw-t6`.
+- proposed scope: 1 measuring phase the loop can build (where each level comes from, and the XP curve that reaches the boss at a level T names), then T's tuning pass (D88).
+- conflicts: no balance baseline is gated (D57); this stays a measurement.
+
+### [ ] [owner] [score 4.5] Nothing teaches a first fight, dice or a hazard
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 10
+- trigger: a first-time player on the preview build.
+- source signals: R10d removed every tutorial window; open readability rows in `plan/CRITIQUE.md` and this file (PHASE labels, hand names at 375 px, printed numbers against landed ones).
+- proposed scope: T pitches the manner first (a guided first fight, or hints as needed), then 1 to 2 phases.
+- conflicts: none. Open question 5 of the part plan.
+
+### [ ] [owner] [score 3.5] The spare-or-finish choice: how often, for whom, and where the finish line shows
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 11
+- trigger: T's text session lands the spare and finish lines.
+- source signals: story ruling 4 ("each time"); the engine's 15% roll on normal foes (phase MR1c); the finish line has no screen.
+- proposed scope: 1 phase after T rules the frequency. The lines are text and stay with T's text work.
+- conflicts: the game model's "no alternate wins" stands; a spare is still a win.
+
+### [ ] [owner] [score 3.0] A restart mid-fight starts the fight over
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 12
+- trigger: a tester loses a fight's progress to an app close.
+- source signals: `axiomancer-mobile/state/e2e/mid-fight-resume.engine.test.tsx` asserts the restart.
+- proposed scope: 1 phase: check resume in a hazard puzzle and on each event screen, then either restore the fight or say on screen that it restarted.
+- conflicts: save compatibility (AGENTS.md § Building a phase).
+
+### [ ] [owner] [score 3.0] Release marks: the version reads 1.0.0 and 1.9.0, and the Clifftop chapel's hazard is a placeholder pick
+- proposed: 2026-11-14, T's `/messy` of the Chapter 1 gap audit; part plan `plan/chapter1-gaps.md` theme 13
+- trigger: Chapter 1 complete (the plan names v0.9.0 for it).
+- source signals: `axiomancer-mobile/app.json`, `axiomancer-mobile/package.json`; `World/Hazard/puzzle/breakwater-puzzles.ts` ("a placeholder pick until T chooses").
+- proposed scope: 1 small phase for the version, with a test that the two files agree; the hazard pick is T's.
+- conflicts: none.
+
 > **Four `[owner]` loop-doctrine candidates (T, 2026-10-11; a fifth, claims, was plotted as HW1b on 2026-10-30), held until the
 > R11 watch ends (on or after 2026-11-11, `skills/oversight.md` §3 item 10).**
 > Filed from the hunt-loop comparison that produced the R11 rewrite (PR #498).
