@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 1 Lines 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Marcellus+SC&family=MedievalSharp&family=Rosarivo&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+<!--
+  NV1c (chunk 177.3), round 5 of the Chapter 1 lines (T, 2026-11-14): the
+  33 map blurbs, the spare and finish lines of three foes, and three new
+  phase lines for the Saint Beneath. Candidate a is at the stop of the
+  nearest scene (story overview, ruling 12), b one stop up (one down where a
+  is already 5). Each card shows a mocked screen with the draft where it
+  appears; a map blurb the panel would cut at two lines is marked CLIPS.
+  Verdicts go in narrator-chapter1-5.md, never narrator-chapter1.md.
+  Runs on ballot-kit.js. Tick what you keep; a slot's note is a redraw ask.
+-->
+<style>
+  /* ---- Colour tokens (light default, dark via media query or toggle) ---- */
+  :root {
+    --bg: #efe9dc;          /* page: aged paper */
+    --ink: #1b1714;         /* body text */
+    --muted: #6b6259;       /* secondary text */
+    --card: #fbf7ee;        /* card face */
+    --edge: #2a2420;        /* card border */
+    --accent: #8e1b1b;      /* banner accent */
+    --free: #3d5a40;        /* FREE line accent */
+    --paid: #7a5a12;        /* PAID line accent */
+    --art: #d9cfbd;         /* art box fill */
+    --sel: #1b1714;         /* selected card ring */
+    --btn: #1b1714;
+    --btn-ink: #fbf7ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+      --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+      --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141110; --ink: #ece4d6; --muted: #a39887; --card: #1f1a17;
+    --edge: #ece4d6; --accent: #e0504a; --free: #8fbf8f; --paid: #e0b54a;
+    --art: #2c2521; --sel: #ece4d6; --btn: #ece4d6; --btn-ink: #141110;
+  }
+
+  /* ---- Layout ---- */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 Georgia, "Times New Roman", serif;
+  }
+  header, main, footer { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: .02em; }
+  .sub { color: var(--muted); margin: 0 0 12px; }
+  .legend { font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+  .theme { float: right; }
+
+  /* One slot = heading + role + row of candidate cards + note field */
+  .slot { margin: 22px 0 8px; padding-top: 10px; border-top: 2px solid var(--edge); }
+  .slot h2 { font-size: 1.1rem; margin: 0; }
+  .slot .role { color: var(--muted); margin: 2px 0 10px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .note { width: 100%; margin-top: 8px; padding: 6px 8px; font: inherit;
+          background: var(--card); color: var(--ink); border: 1px solid var(--muted); border-radius: 4px; }
+
+  /* ---- Card face ---- */
+  label.card {
+    display: flex; flex-direction: column; cursor: pointer;
+    background: var(--card); border: 2px solid var(--edge); border-radius: 10px;
+    padding: 10px; min-height: 300px; position: relative;
+    transition: box-shadow .12s, transform .12s;
+  }
+  label.card:hover { transform: translateY(-2px); }
+  label.card.on { box-shadow: 0 0 0 4px var(--sel); }
+  .hue { font-weight: bold; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .name { font-weight: bold; }
+  .type { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); text-align: right; }
+  .art {
+    margin: 8px 0; height: 96px; border: 1px solid var(--edge); border-radius: 6px;
+    background: repeating-linear-gradient(45deg, var(--art) 0 6px, transparent 6px 12px);
+    display: grid; place-items: center; font-size: 2.6rem;
+  }
+  .line { margin: 4px 0; font-size: .92rem; }
+  .tag { display: inline-block; min-width: 42px; font-size: .7rem; font-weight: bold;
+         letter-spacing: .08em; padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+         color: var(--card); vertical-align: 1px; }
+  .tag.free { background: var(--free); }
+  .tag.paid { background: var(--paid); }
+  .kw { font-variant: small-caps; font-weight: bold; }
+  .dur { display: flex; gap: 4px; margin: 2px 0 4px; }
+  .dur .tag { min-width: 0; }
+  .trig .ticon { display: inline-block; width: 1.3em; }
+  .why { margin-top: auto; padding-top: 8px; font-size: .8rem; color: var(--muted); font-style: italic; }
+  .pick { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; accent-color: var(--sel); }
+  .top { padding-right: 26px; }
+
+  .banner { margin: 0 0 10px; padding: 8px 10px; border: 2px dashed var(--accent); border-radius: 6px; color: var(--accent); }
+  /* ---- Mocked screens (phone width 390; the node panel wears the vellum look, W-02) ---- */
+  .fit { overflow: hidden; margin: 8px 0; border-radius: 6px; }
+  .mock { width: 390px; box-sizing: border-box; background: #0b0907; color: #ece0c8; padding: 10px; transform-origin: top left; }
+  .mock.map { padding: 10px 8px 8px; }
+  .mock.map .panel { background: radial-gradient(ellipse at 50% 40%, #e8dcc0, #cdb98f 85%); box-shadow: inset 0 0 0 2px #8f7a52, inset 0 0 0 5px #e8dcc0, inset 0 0 0 6px #8f7a52; padding: 20px 30px; border-radius: 2px; }
+  .mock .mbody { display: flex; align-items: center; gap: 10px; }
+  .mock .micon { width: 34px; text-align: center; color: #2b1f14; font-size: 20px; }
+  .mock .mtext { flex: 1; min-width: 0; }
+  .mock .mkind { font-family: 'Marcellus SC', serif; font-size: 9px; letter-spacing: .2px; color: #6e1a10; }
+  .mock .mname { font-family: 'Uncial Antiqua', serif; font-size: 16px; color: #2b1f14; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mock .mblurb { font-family: 'Eagle Lake', serif; font-size: 12px; line-height: 16px; color: #4a3624; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .mock .mact { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+  .mock .mbtn { font-family: 'Uncial Antiqua', serif; font-size: 11px; letter-spacing: 1px; color: #2b1f14; min-width: 92px; text-align: center; padding: 8px 20px; background: radial-gradient(ellipse, #efe4c9, #cfbb90); border-radius: 3px; box-shadow: inset 0 0 0 1px #8f7a52; }
+  .mock .mbtn.go { color: #6e1a10; }
+  .mock .mapbg { height: 70px; background: radial-gradient(circle at 30% 40%, #2a241b 0 6px, transparent 7px), radial-gradient(circle at 62% 55%, #2a241b 0 6px, transparent 7px), linear-gradient(#1a1610, #0b0907); margin-bottom: 8px; }
+  .mock.sum { background: #0b0907; padding: 18px 16px; text-align: center; }
+  .mock .shead { font-family: 'MedievalSharp', serif; font-size: 20px; margin-bottom: 10px; }
+  .mock .stot { font-family: 'Rosarivo', serif; font-size: 12px; color: #9c937f; margin-bottom: 8px; }
+  .mock .sline { font-family: 'Eagle Lake', serif; font-style: italic; font-size: 13px; line-height: 18px; color: #ece0c8; margin-bottom: 12px; }
+  .mock .sbtn { display: inline-block; font-family: 'Uncial Antiqua', serif; font-size: 16px; color: #2a1d08; background: linear-gradient(#e0bf6a, #a8802e); padding: 8px 34px; border-radius: 3px; }
+  .mock .ghost { border: 1px dashed #9c937f; padding: 6px; }
+  .mock .gtag { font-family: 'Rosarivo', serif; font-size: 10px; color: #9c937f; margin-bottom: 4px; }
+  .mock.log { padding: 0; background: #0b0907; }
+  .mock .board { height: 110px; display: grid; place-items: center; background: radial-gradient(ellipse at center, #1f2a26, #0b0907 70%); }
+  .mock .float { font-family: 'MedievalSharp', serif; font-size: 20px; color: #e07a4a; letter-spacing: 1px; text-align: center; padding: 0 8px; }
+  .mock .logbox { border-top: 1px solid #46403a; background: #15110c; padding: 8px 12px; }
+  .mock .logrow { font-family: 'Rosarivo', serif; font-size: 12px; line-height: 17px; color: #9c937f; }
+  .mock .logrow.stage { color: #e07a4a; }
+  .clipflag[hidden] { display: none; }
+  .clipflag { display: inline-block; font-size: .72rem; font-weight: bold; letter-spacing: .06em; color: #fff; background: #8e1b1b; padding: 1px 6px; border-radius: 3px; margin-top: 4px; }
+  .text { font-size: .92rem; margin: 4px 0; }
+  .row { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+  label.card { min-height: 0; }
+  /* ---- Tabs ---- */
+  .tabs { max-width: 1100px; margin: 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+          position: sticky; top: 0; background: var(--bg); padding: 8px 0; z-index: 2; }
+  .tabs button { margin: 0; background: transparent; color: var(--ink); border: 2px solid var(--edge); }
+  .tabs button[aria-selected="true"] { background: var(--btn); color: var(--btn-ink); }
+  .tabs .n { font-size: .8rem; opacity: .8; margin-left: 4px; }
+  .family { font-size: .85rem; color: var(--muted); margin-left: auto; }
+  .panel[hidden] { display: none; }
+  .blurb { color: var(--muted); margin: 10px 0 0; }
+  .tally { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+  /* ---- Footer / output ---- */
+  footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid var(--edge); }
+  textarea { width: 100%; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+             background: var(--card); color: var(--ink); border: 1px solid var(--muted);
+             border-radius: 4px; padding: 8px; }
+  #general { min-height: 60px; }
+  #out { min-height: 220px; margin-top: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 0;
+           background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
+  .count { color: var(--muted); margin-left: 6px; }
+</style>
+<script src="ballot-kit.js"></script>
+</head>
+<body>
+<header>
+  <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
+    <h1>Chapter 1: the map, the mercy and the Saint</h1>
+  <p class="sub">Round 5 of the Chapter 1 lines for NV1c (177.3). Three tabs: 33 map blurbs, the spare and finish lines of three foes, and three phase lines for the Saint Beneath. Two drafts each, shown on a mock of the screen they appear on.</p>
+  <p class="legend">
+    <b>Tick</b> the draft you keep. Ticking both means "merge" (say how in the note). <b>Nothing ticked = redraw</b>; say why in the note.<br>
+    <b>a</b> is at the stop of the nearest scene, <b>b</b> one stop crueler (one gentler where a is already 5).
+    Stops: 1 plain, 2 hard (weather or time did it), 3 cruel (someone chose it), 4 cruelty at 11, 5 grief.
+    The mocks follow the real screens' layout, type and colours at phone width; they are close, not exact.
+  </p>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist" aria-label="Sub-lanes"></nav>
+<main id="slots"></main>
+
+<footer>
+  <label for="general"><b>General notes</b> (optional)</label>
+  <textarea id="general" placeholder="Anything about this round as a whole…"></textarea>
+  <button id="gen" type="button">Generate</button>
+  <button id="copy" type="button">Copy</button>
+  <span class="count" id="count"></span>
+  <textarea id="out" readonly placeholder="Press Save and submit or Mark complete, or Generate and copy this text back to Claude."></textarea>
+</footer>
+
+<script>
+/* =====================================================================
+   DATA — the ballot. One entry per candidate card.
+   slot: slot code; role: the slot's one-line job (shown once per slot);
+   el: optional family tag shown in the card header (an element, a sub-theme);
+   id: slot + candidate letter; type: Attack | Skill | Spell | Global;
+   free / paid: the two rules lines (plain text);
+   why: the drafter's one-line rationale.
+   ===================================================================== */
+const BALLOT_ID = 'narrator-chapter1-5-2026-11-14';
+
+const STOPS = { 1: 'plain', 2: 'hard', 3: 'cruel', 4: 'cruelty at 11', 5: 'grief' };
+
+const TABS = [
+  { key: 'M', name: 'Map blurbs', blurb: 'The line under a place name when you tap a node on the map (cap 18 words). The panel cuts the blurb at two lines: a card marked CLIPS loses words on the phone.' },
+  { key: 'S', name: 'Spare and finish', blurb: 'The line under a fight that ends in mercy, and the line for a foe you finish. Today only the spare line is shown, on the spared screen; a finished foe goes to the victory screen, which shows no line yet.' },
+  { key: 'P', name: 'Saint Beneath phases', blurb: 'A title and a line at each of his phase breaks (75%, 50%, 25%), the way the Death Beholder has them. Today these would show in the fight log as the mock shows, and only once a small plot lets a foe with phases carry them.' },
+];
+
+// kind: the panel's kind label. loc: the node id and why its stop.
+const SLOTS = [
+  { slot: 'M-01', node: 'bw-w2', name: 'The Gallows Crossroads', kind: 'BATTLE', role: 'S-02 is here (stop 2).' },
+  { slot: 'M-02', node: 'bw-w3', name: 'The Field Road', kind: 'BATTLE', role: 'Fields by the windmill (S-01, stop 1).' },
+  { slot: 'M-03', node: 'bw-w4', name: 'The West Cliff Road', kind: 'REST', role: 'Toward the causeway (S-15, stop 1).' },
+  { slot: 'M-04', node: 'bw-w5', name: 'The Keep Causeway', kind: 'ELITE · BATTLE', role: 'S-15 is here (stop 1).' },
+  { slot: 'M-05', node: 'bw-k1', name: 'The Keep Gate', kind: 'QUEST', role: 'S-16 is here (stop 5). b is one stop down, since 5 is the top.' },
+  { slot: 'M-06', node: 'bw-k2', name: 'The Sea Keep', kind: 'BOSS · BATTLE', role: 'S-17 is here (stop 1).' },
+  { slot: 'M-07', node: 'bw-h1', name: 'The Quay End', kind: 'BATTLE', role: 'S-03 is here (stop 1).' },
+  { slot: 'M-08', node: 'bw-h3', name: 'The Harbour Light Pier', kind: 'BATTLE', role: 'S-04 is here (stop 3).' },
+  { slot: 'M-09', node: 'bw-h5', name: 'The Moored Ship', kind: 'REST', role: 'S-06 is here (stop 4).' },
+  { slot: 'M-10', node: 'bw-h6', name: 'The Sea Cave Mouth', kind: 'PATH ONWARD', role: 'The way to the cove (S-07, stop 1).' },
+  { slot: 'M-11', node: 'bw-h7', name: 'The Long Pier', kind: 'BATTLE', role: 'Past the moored ship (S-06, stop 4), the Brine-Widow\'s pier.' },
+  { slot: 'M-12', node: 'bw-h8', name: 'The Pier End', kind: 'TREASURE', role: 'Past the moored ship (S-06, stop 4).' },
+  { slot: 'M-13', node: 'bw-c0', name: 'The Cave Face', kind: 'PATH ONWARD', role: 'S-07 is here (stop 1).' },
+  { slot: 'M-14', node: 'bw-c2', name: 'The Fishermen’s Camp', kind: 'QUEST', role: 'S-08 is here (stop 5). b is one stop down.' },
+  { slot: 'M-15', node: 'bw-t1', name: 'The Harbour Steps', kind: 'BATTLE', role: 'Up from the quay end (S-03, stop 1).' },
+  { slot: 'M-16', node: 'bw-t2', name: 'The Bridge Approach', kind: 'BATTLE', role: 'S-09 is here (stop 1).' },
+  { slot: 'M-17', node: 'bw-t3', name: 'The Town Gate', kind: 'BATTLE', role: 'Before the harbour town (S-10, stop 2).' },
+  { slot: 'M-18', node: 'bw-t5', name: 'The Back Lanes', kind: 'HAZARD', role: 'Behind the harbour town (S-10, stop 2).' },
+  { slot: 'M-19', node: 'bw-t6', name: 'The Upper Town', kind: 'BATTLE', role: 'S-11 is here (stop 1).' },
+  { slot: 'M-20', node: 'bw-b2', name: 'The Far Bank', kind: 'PATH ONWARD', role: 'S-22 is here (stop 4).' },
+  { slot: 'M-21', node: 'bw-l1', name: 'The Cliff Crossroads', kind: 'BATTLE', role: 'Toward the cliff road (S-13, stop 1).' },
+  { slot: 'M-22', node: 'bw-l3', name: 'The Cliff Road', kind: 'REST', role: 'S-13 is here (stop 1). The Keeper gives the count of the steps (S-13).' },
+  { slot: 'M-23', node: 'bw-l4', name: 'The Lighthouse Path', kind: 'ELITE · BATTLE', role: 'After the cliff road (S-13, stop 1).' },
+  { slot: 'M-24', node: 'bw-d2', name: 'The Boat Sheds', kind: 'TREASURE', role: 'The fishing hamlet (no scene; stop 1).' },
+  { slot: 'M-25', node: 'bw-d3', name: 'The Hamlet Rise', kind: 'BATTLE', role: 'The fishing hamlet (no scene; stop 1).' },
+  { slot: 'M-26', node: 'bw-d4', name: 'The Tower Switchbacks', kind: 'HAZARD', role: 'Up to the old watchtower (S-18, stop 2).' },
+  { slot: 'M-27', node: 'bw-d5', name: 'The Old Watchtower', kind: 'TREASURE', role: 'S-18 is here (stop 2).' },
+  { slot: 'M-28', node: 'bw-m1', name: 'The South Fork', kind: 'BATTLE', role: 'Toward the walled manor (S-21, stop 1).' },
+  { slot: 'M-29', node: 'bw-m2', name: 'The River Meadow', kind: 'HAZARD', role: 'Toward the walled manor (S-21, stop 1).' },
+  { slot: 'M-30', node: 'bw-m3', name: 'The Riverbank', kind: 'TREASURE', role: 'Toward the walled manor (S-21, stop 1).' },
+  { slot: 'M-31', node: 'bw-m4', name: 'The Manor Road', kind: 'HAZARD', role: 'Before the walled manor (S-21, stop 1).' },
+  { slot: 'M-32', node: 'bw-p1', name: 'The Foothills', kind: 'HAZARD', role: 'Up to the high pass (S-20, stop 3).' },
+  { slot: 'M-33', node: 'bw-p3', name: 'The High Pass', kind: 'TREASURE', role: 'S-20 is here (stop 3).' },
+
+  { slot: 'S-01', foe: 'Quay-Crab', portrait: 'quay-crab', which: 'spare', role: 'Spared. Its approved line: the gallows mud and the quay mud, nothing lets go (E-04, stop 2).' },
+  { slot: 'S-02', foe: 'Quay-Crab', portrait: 'quay-crab', which: 'finish', role: 'Finished. Not shown on any screen today.' },
+  { slot: 'S-03', foe: 'Bilge-Stalker', portrait: 'bilge-stalker', which: 'spare', role: 'Spared. Its approved line: the shuttered town, a year of poor wrecks (E-05, stop 2).' },
+  { slot: 'S-04', foe: 'Bilge-Stalker', portrait: 'bilge-stalker', which: 'finish', role: 'Finished. Not shown on any screen today.' },
+  { slot: 'S-05', foe: 'Coralback', portrait: 'coralback', which: 'spare', role: 'Spared. Its approved line: the upper town, the crown that warms nothing (E-06, stop 2).' },
+  { slot: 'S-06', foe: 'Coralback', portrait: 'coralback', which: 'finish', role: 'Finished. Not shown on any screen today.' },
+
+  { slot: 'P-01', at: '75%', role: 'His first break, opening on Swell. a is at S-17\'s stop (1), b one up.' },
+  { slot: 'P-02', at: '50%', role: 'His second break, opening on Tithe of the Drowned.' },
+  { slot: 'P-03', at: '25%', role: 'His last break, opening on Pull Under.' },
+];
+
+const CARDS = [
+  { id: 'M-01a', stop: 2, text: 'No one remembers the law it served. The last rope rotted through on its own.' },
+  { id: 'M-01b', stop: 3, text: 'The town paid its hangman by the neck. He was never short of work.' },
+  { id: 'M-02a', stop: 1, text: 'Barley flattened by the wind. The road goes on to the sea regardless.' },
+  { id: 'M-02b', stop: 2, text: 'The barley rotted in the ear this wet year. Nobody has come to cut it.' },
+  { id: 'M-03a', stop: 1, text: 'A ledge out of the wind, above water that has never once been still.' },
+  { id: 'M-03b', stop: 2, text: 'A ledge out of the wind. The gulls below have picked the last sleeper clean.' },
+  { id: 'M-04a', stop: 1, text: 'Under water twice a day. The tide line is a row of offerings for the keep.' },
+  { id: 'M-04b', stop: 2, text: 'Under water twice a day. Some who crossed on the turn are on it still.' },
+  { id: 'M-05a', stop: 5, text: 'A father passes bread through the grate. Nothing inside thanks him.' },
+  { id: 'M-05b', stop: 4, text: 'The gate keeps its hours by the book. The book forgets those within.' },
+  { id: 'M-06a', stop: 1, text: 'A room with no windows and a light in it. Nothing in there casts a shadow.' },
+  { id: 'M-06b', stop: 2, text: 'The harbour\'s lamp on a bare floor. Thirty years of it wore him thin.' },
+  { id: 'M-07a', stop: 1, text: 'Men coil line in the dark by feel. No boat here carries a lamp.' },
+  { id: 'M-07b', stop: 2, text: 'Men coil line in the dark by feel. Two of them lost fingers to the winter.' },
+  { id: 'M-08a', stop: 3, text: 'An empty cradle at the tower\'s top. The town sold its light by a show of hands.' },
+  { id: 'M-08b', stop: 4, text: 'Each house that voted took its share. They drink to the sale each year.' },
+  { id: 'M-09a', stop: 4, text: 'The hulk where the town keeps its tally. Cargo first, then the swimmers.' },
+  { id: 'M-09b', stop: 5, text: 'In the tally, a boy\'s name with his boots beside it, and the house that took them.' },
+  { id: 'M-10a', stop: 1, text: 'The sea runs into the cliff here and comes out some other way.' },
+  { id: 'M-10b', stop: 2, text: 'The sea runs into the cliff, and does not always bring back what it took.' },
+  { id: 'M-11a', stop: 4, text: 'The pier keeps one rule, cargo first. The town comes out to watch.' },
+  { id: 'M-11b', stop: 5, text: 'A widow walks the pier by night. Each swimmer is the one she let go.' },
+  { id: 'M-12a', stop: 4, text: 'What the pier lets go washes up here. The cargo is counted first.' },
+  { id: 'M-12b', stop: 5, text: 'What the pier lets go washes up here. Mothers look, and do not stay.' },
+  { id: 'M-13a', stop: 1, text: 'Still water under the cliff, and a cold glow in the weed that belongs to no one.' },
+  { id: 'M-13b', stop: 2, text: 'Still water under the cliff. Its fishermen went down with their pots.' },
+  { id: 'M-14a', stop: 5, text: 'The master keeps a coil of line by his fire that no one is to touch.' },
+  { id: 'M-14b', stop: 4, text: 'The camp tallies its drowned on a board. Each winter it runs short.' },
+  { id: 'M-15a', stop: 1, text: 'Steps worn hollow by the town going down to see what the sea has brought.' },
+  { id: 'M-15b', stop: 2, text: 'Steps worn hollow by a town going down to the sea. Fewer go each year.' },
+  { id: 'M-16a', stop: 1, text: 'The bridge is shut with a chain. Smoke stands over the far bank.' },
+  { id: 'M-16b', stop: 2, text: 'The bridge is shut with a chain. Those who waited for it sleep under it.' },
+  { id: 'M-17a', stop: 2, text: 'The gate stands open. A year of poor wrecks left nothing to keep out.' },
+  { id: 'M-17b', stop: 3, text: 'The gate shuts on strangers at dark. The town prefers to find you at dawn.' },
+  { id: 'M-18a', stop: 2, text: 'Lanes behind the shutters. The hungry here are polite about it.' },
+  { id: 'M-18b', stop: 3, text: 'Lanes behind the shutters, where those who cannot pay are put out.' },
+  { id: 'M-19a', stop: 1, text: 'Good houses, every window turned to the keep. None looks at the sea.' },
+  { id: 'M-19b', stop: 2, text: 'Houses turned from the sea that took their sons, toward the keep.' },
+  { id: 'M-20a', stop: 4, text: 'The lighthouse is still dark. The town has lit its own fire and watches.' },
+  { id: 'M-20b', stop: 5, text: 'The lighthouse is still dark. You did all this, and nothing changed.' },
+  { id: 'M-21a', stop: 1, text: 'Three ways over the cliff. The wind takes the same one every time.' },
+  { id: 'M-21b', stop: 2, text: 'Three ways over the cliff. The wind has taken a walker off each of them.' },
+  { id: 'M-22a', stop: 1, text: 'The dark tower ahead. I could tell you the number of its steps, and I will.' },
+  { id: 'M-22b', stop: 2, text: 'The dark tower ahead. Men have rested here for the cold and not got up.' },
+  { id: 'M-23a', stop: 1, text: 'The path to a tower whose lamp was sold. Someone walks it with a lantern.' },
+  { id: 'M-23b', stop: 2, text: 'The path to a tower whose lamp was sold. The rocks below wait for a ship.' },
+  { id: 'M-24a', stop: 1, text: 'Boats turned over against the weather. Some not righted in years.' },
+  { id: 'M-24b', stop: 2, text: 'Boats turned keel up for winter. Some wait on men the sea has kept.' },
+  { id: 'M-25a', stop: 1, text: 'A rise above the hamlet. The whole coast below, and nothing moving on it.' },
+  { id: 'M-25b', stop: 2, text: 'A rise above the hamlet. From here the women watch for boats a season late.' },
+  { id: 'M-26a', stop: 2, text: 'The path doubles back up to the tower. Rain has taken the edge in places.' },
+  { id: 'M-26b', stop: 3, text: 'The path doubles back. The relief was told it was the shorter road.' },
+  { id: 'M-27a', stop: 2, text: 'The tower watched for a relief that never came. Its log ends in weather.' },
+  { id: 'M-27b', stop: 3, text: 'No one ever sent the tower its relief. The men were left to log the weather.' },
+  { id: 'M-28a', stop: 1, text: 'The road splits for the river and the manor. Both were here before the town.' },
+  { id: 'M-28b', stop: 2, text: 'The road forks for river and manor. The sign went for firewood one winter.' },
+  { id: 'M-29a', stop: 1, text: 'Grass to the knee and a river slow enough to look like sleep.' },
+  { id: 'M-29b', stop: 2, text: 'Each spring the river floods here and takes the lambs that cannot climb.' },
+  { id: 'M-30a', stop: 1, text: 'The river comes down to the sea here and gives up whatever it carried.' },
+  { id: 'M-30b', stop: 2, text: 'The river gives up what it carried here. Sometimes a man from upstream.' },
+  { id: 'M-31a', stop: 1, text: 'A walled road to the manor. Its candles show from far off.' },
+  { id: 'M-31b', stop: 2, text: 'A walled road to lit windows. A candle costs a week of bread.' },
+  { id: 'M-32a', stop: 3, text: 'The foothills climb to the pass. The men at the top keep fee and boots.' },
+  { id: 'M-32b', stop: 4, text: 'Toward the pass, where the boots of those who could not pay hang.' },
+  { id: 'M-33a', stop: 3, text: 'Those who tried to leave the coast were turned back here for want of the toll.' },
+  { id: 'M-33b', stop: 4, text: 'The toll men keep a tally of the boots they took, read aloud at feasts.' },
+
+  { id: 'S-01a', stop: 2, text: 'It lets go of the mud and backs under the quay. It will find something else to hold.' },
+  { id: 'S-01b', stop: 3, text: 'It backs under the quay. The custom will feed it again before the week is out.' },
+  { id: 'S-02a', stop: 2, text: 'The claw opens at last. What it held goes back to the mud.' },
+  { id: 'S-02b', stop: 3, text: 'The claw opens at last. The quay men will not miss it, only find the mud fuller.' },
+  { id: 'S-03a', stop: 2, text: 'It goes back into the dark under the hulls. The hunger goes with it.' },
+  { id: 'S-03b', stop: 3, text: 'It slips back under the hulls. The town will feed it a stranger before it starves.' },
+  { id: 'S-04a', stop: 2, text: 'It goes down in the bilge water it came up out of, and the street is quiet again.' },
+  { id: 'S-04b', stop: 3, text: 'It goes down in the bilge water. Nobody behind the shutters opens one to look.' },
+  { id: 'S-05a', stop: 2, text: 'It climbs on toward the upper town, crown first, as if it were expected.' },
+  { id: 'S-05b', stop: 3, text: 'It climbs on toward the good houses. They will take it in for the crown.' },
+  { id: 'S-06a', stop: 2, text: 'The crown goes grey before the crab does. Nothing in the coral was ever alight.' },
+  { id: 'S-06b', stop: 3, text: 'The crown goes grey. Someone in the upper town will have it on a mantel by morning.' },
+
+  { id: 'P-01a', stop: 1, title: 'HE OPENS HIS EYES', text: 'For the first time in thirty years he looks at something other than the lamp.' },
+  { id: 'P-01b', stop: 2, title: 'THE SEA REMEMBERS HIM', text: 'The tide comes up through the floor at his call, as it came for everything he was given.' },
+  { id: 'P-02a', stop: 1, title: 'THE ROWS STIR', text: 'The drowned he kept laid out in rows turn their faces toward you.' },
+  { id: 'P-02b', stop: 2, title: 'THE TITHE COMES DUE', text: 'Everything the town ever rowed to the sea door rises to pay for him.' },
+  { id: 'P-03a', stop: 1, title: 'NO SHADOW FALLS', text: 'He leaves the lamp at last. Nothing in the room casts a shadow, and now neither do you.' },
+  { id: 'P-03b', stop: 2, title: 'WHAT HE BOUGHT', text: 'He bought the light to keep it safe. He will not let it go, and he takes you down with it.' },
+];
+
+const CAPS = { M: 18, S: 45, P: 45 };
+
+/* =====================================================================
+   RENDER — pure helpers that turn data into DOM nodes.
+   ===================================================================== */
+
+/** Escape text for safe insertion as HTML. */
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/** Words in a line, as the prose lint counts them. */
+const words = (s) => s.split(/\s+/).filter(Boolean).length;
+
+/** The node confirm panel (NodeConfirmPanel.tsx, vellum look) with the draft as its blurb. */
+const mapMock = (card, s) => `
+  <div class="mock map"><div class="mapbg" aria-hidden="true"></div><div class="panel">
+    <div class="mbody"><div class="micon" aria-hidden="true">&#9670;</div>
+      <div class="mtext"><div class="mkind">${esc(s.kind)}</div><div class="mname">${esc(s.name)}</div>
+      <div class="mblurb">${esc(card.text)}</div></div></div>
+    <div class="mact"><span class="mbtn">BACK</span><span class="mbtn go">TRAVEL HERE</span></div>
+  </div></div>`;
+
+/** The spared summary (CombatSummaryModal.tsx, the house look), or the victory screen for a finish. */
+const mercyMock = (card, s) => s.which === 'spare' ? `
+  <div class="mock sum"><div class="shead" style="color:#ece0c8">Mercy \u2014 the enemy is spared</div>
+    <div class="stot">Direct damage: 14</div>
+    <div class="sline">${esc(card.text)}</div>
+    <span class="sbtn">CONTINUE</span></div>` : `
+  <div class="mock sum"><div class="shead" style="color:#dcb04a">Victory \u2014 the enemy falls</div>
+    <div class="stot">Shillings +15 \u00b7 XP +40</div>
+    <div class="ghost"><div class="gtag">not shown today: where a finish line would sit</div>
+    <div class="sline" style="margin:0">${esc(card.text)}</div></div></div>`;
+
+/** The fight's float and log line for a stage (combat-encounter.engine.ts, stage-entered). */
+const phaseMock = (card) => `
+  <div class="mock log"><div class="board"><div class="float">\u2021 ${esc(card.title)} \u2021</div></div>
+    <div class="logbox"><div class="logrow">The Saint Beneath plays its DANGER.</div>
+    <div class="logrow stage">\u2021 ${esc(card.title)} \u2021 ${esc(card.text)}</div></div></div>`;
+
+/** Build one draft as an HTML string: the mocked screen, the stop, the count. */
+const cardHtml = (card, s) => {
+  const tab = card.id[0];
+  const mock = tab === 'M' ? mapMock(card, s) : tab === 'S' ? mercyMock(card, s) : phaseMock(card);
+  const shown = card.title ? card.title + '. ' + card.text : card.text;
+  return `
+  <label class="card" data-id="${card.id}">
+    <input class="pick" type="checkbox" value="${card.id}" aria-label="Keep ${card.id}">
+    <div class="top"><span class="name">${card.id}</span><span class="type">stop ${card.stop} \u00b7 ${STOPS[card.stop]}</span></div>
+    <div class="fit"><div class="zoom">${mock}</div></div>
+    <div class="text">${esc(shown)}</div>
+    <div class="why">${words(card.text)} of ${CAPS[tab]} words.${tab === 'M' ? ' <span class="clipflag" hidden>CLIPS at two lines</span>' : ''}</div>
+  </label>`;
+};
+
+/** The slot heading: the place, the foe and which line, or the phase break. */
+const slotTitle = (s) => s.name ? s.name : s.foe ? `${s.foe}, ${s.which}` : `The Saint Beneath at ${s.at}`;
+
+/** Build one slot section: heading, role, its candidate cards, a note box. */
+const slotHtml = (s) => `
+  <section class="slot" data-slot="${s.slot}">
+    <h2>${s.slot} · ${esc(slotTitle(s))}</h2>
+    <p class="role">${esc(s.role)}</p>
+    <div class="row">${CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => cardHtml(c, s)).join('')}</div>
+    <input class="note" type="text" data-note="${s.slot}" placeholder="Note for ${s.slot}: redraw ask, merge rule, a word to change (optional)">
+  </section>`;
+
+/** One tab panel: blurb and its slots. Hidden unless it is the active tab. */
+const panelHtml = (t, i) => `
+  <div class="panel" id="panel-${t.key}" role="tabpanel" ${i ? 'hidden' : ''}>
+    <p class="blurb"><b>${t.name}</b>: ${esc(t.blurb)}</p>
+    ${SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map(slotHtml).join('')}
+  </div>`;
+
+/** Tab button with a live "kept / total" counter. */
+const tabHtml = (t, i) =>
+  `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${i === 0}">${t.name}<span class="n" data-n="${t.key}"></span></button>`;
+
+document.getElementById('slots').innerHTML = TABS.map(panelHtml).join('');
+document.getElementById('tabs').innerHTML = TABS.map(tabHtml).join('');
+
+/** Show one tab's panel, hide the others. */
+const showTab = (key) => {
+  document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  TABS.forEach((t) => { document.getElementById(`panel-${t.key}`).hidden = t.key !== key; });
+};
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+/* =====================================================================
+   STATE — read straight from the DOM (the kit saves and restores it).
+   ===================================================================== */
+
+/** Ids of every ticked card. */
+const kept = () => [...document.querySelectorAll('.pick:checked')].map((i) => i.value);
+
+/** Update the selected-card ring and the running counts. */
+const refresh = () => {
+  const k = kept();
+  document.querySelectorAll('label.card').forEach((l) =>
+    l.classList.toggle('on', l.querySelector('.pick').checked));
+  document.getElementById('count').textContent = `${k.length} kept of ${CARDS.length}`;
+  TABS.forEach((t) => {
+    const cards = CARDS.filter((c) => c.id.startsWith(t.key + '-'));
+    const here = k.filter((id) => id.startsWith(t.key + '-'));
+    document.querySelector(`[data-n="${t.key}"]`).textContent = `${here.length}/${cards.length}`;
+  });
+};
+document.getElementById('slots').addEventListener('change', refresh);
+refresh();
+
+/* =====================================================================
+   OUTPUT — build the plain-text verdict sheet from the current picks.
+   ===================================================================== */
+
+/** One line per slot: KEEP / MERGE / CUT, the cut candidates, the note. */
+const slotLine = (s, keptIds) => {
+  const ids = CARDS.filter((c) => c.id.startsWith(s.slot)).map((c) => c.id);
+  const keep = ids.filter((id) => keptIds.includes(id));
+  const cut = ids.filter((id) => !keptIds.includes(id));
+  const note = document.querySelector(`[data-note="${s.slot}"]`).value.trim();
+  const verdict = keep.length === 0 ? 'REDRAW'
+    : keep.length === 1 ? `KEEP ${keep[0]}`
+    : `MERGE ${keep.join(' + ')}`;
+  return `${s.slot}: ${verdict}` +
+    (keep.length ? ` | cut: ${cut.join(', ') || '-'}` : '') +
+    (note ? ` | note: ${note}` : '');
+};
+
+/** The whole sheet: header, the kept count, one line per slot, general notes. */
+const sheet = () => {
+  const k = kept();
+  const general = document.getElementById('general').value.trim();
+  return [
+    `BALLOT: ${BALLOT_ID} (NV1c Chapter 1 lines, round 5)`,
+    `kept ${k.length} of ${CARDS.length}`,
+    ...TABS.flatMap((t) => [
+      `-- ${t.name} --`,
+      ...SLOTS.filter((s) => s.slot.startsWith(t.key + '-')).map((s) => slotLine(s, k)),
+    ]),
+    general ? `general: ${general}` : null,
+  ].filter(Boolean).join('\n');
+};
+
+/* Fit each 390px mock to its card, then flag a map blurb the two-line clamp cuts. */
+const fitMocks = () => document.querySelectorAll('.fit').forEach((f) => {
+  if (!f.clientWidth) return; const z = f.querySelector('.zoom'); const s = Math.min(1, f.clientWidth / 390);
+  z.style.transform = 'scale(' + s + ')'; z.style.transformOrigin = 'top left';
+  f.style.height = (z.firstElementChild.offsetHeight * s) + 'px';
+});
+const flagClips = () => document.querySelectorAll('label.card').forEach((l) => {
+  const b = l.querySelector('.mblurb'); const flag = l.querySelector('.clipflag');
+  if (b && flag && b.clientHeight) { const r = document.createRange(); r.selectNodeContents(b); const tops = new Set([...r.getClientRects()].map((q) => Math.round(q.top))); flag.hidden = tops.size <= 2; }
+});
+const layout = () => { fitMocks(); flagClips(); };
+addEventListener('resize', layout);
+document.getElementById('tabs').addEventListener('click', () => setTimeout(layout, 0));
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(layout);
+if (document.fonts) document.fonts.addEventListener('loadingdone', layout);
+layout();
+
+/* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
+BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+
+/* Theme toggle: flips data-theme on <html>; no storage. */
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+});
+</script>
+</body>
+</html>
