@@ -28,7 +28,7 @@ const SET = ENEMY_FRAME_SETS['tide-gate'];
 
 function enemyVM(): CombatEnemyPaneVM {
     return {
-        name: 'The Tide-Gate', artKey: 'tide-gate', isBoss: false, artNonce: 3,
+        name: 'The Half-Taken', artKey: 'tide-gate', isBoss: false, artNonce: 3,
         hp: 30, maxHp: 34, hpPct: 0.88, effects: [],
         intent: {
             type: 'attack', icon: 'blade', label: 'lets the tide in', damage: 6, branch: null, next: null,
