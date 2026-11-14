@@ -541,3 +541,5 @@ useRouter in the router shim now returns one frozen handle, so gates with `route
 Defaults taken: `NARROW_OVER = 20`, PR mode only. Open question #1 and #2 are untouched; the log file lands with 180.1.
 
 Defaults taken: a new test file `Enemy/e2e/enemy-descriptions.engine.test.ts` pins the six lines; the mercy-line drafts and the Death Beholder phase line keep their DRAFT comments.
+
+The seven descriptions are word for word from rounds 3 and 4 of `plan/ballots/narrator-enemies.md`. The Tide-Gate's player-facing name is now The Half-Taken; its id, portrait key, slug, moves and TIDE are unchanged. Three chapter e2e tests (cave choir, lighthouse, keep causeway) pinned old descriptions inside `toMatchObject`; the description now lives only in `enemy-descriptions.engine.test.ts`, which covers all thirteen. Two mobile tests that assert or fixture the name were updated. The three DRAFT mercy-line blocks and the Death Beholder's DRAFT phase line are untouched.
