@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chapter 1 Enemy Lines 4</title>
 <!--
-  NV1c (chunk 177.3), surface: enemy descriptions (T, 2026-11-12). Six
-  Chapter 1 foes. Candidate a is drafted at the stop of the scene nearest the
+  NV1c (chunk 177.3), surface: enemy descriptions (T, 2026-11-13). Round 4:
+  three Chapter 1 foes. Candidate a is drafted at the stop of the scene nearest the
   foe's node (story overview ruling 12); candidate b is the same foe one stop
   up. The Saint Beneath's a is the ledger's E-01, which T delegated and has
   not read. Verdicts go in narrator-enemies.md, never narrator-chapter1.md.
@@ -117,12 +117,12 @@
            background: var(--btn); color: var(--btn-ink); cursor: pointer; margin: 8px 8px 0 0; }
   .count { color: var(--muted); margin-left: 6px; }
 </style>
-<script src="ballot-kit.js"></script>
 </head>
 <body>
 <header>
   <button class="theme" id="themeBtn" type="button" aria-label="Toggle colour theme">◐</button>
-    <h1>Chapter 1: what the foes are, round 4</h1>
+    <p class="banner" role="note"><b>CLOSED</b>: T voted on 2026-11-13 (E-08b, E-10b with one edit, E-13a: the Tide-Gate becomes The Half-Taken). The verdict is in narrator-enemies.md.</p>
+  <h1>Chapter 1: what the foes are, round 4</h1>
   <p class="sub">Round 4: E-08, E-10 and E-13, sent back from round 3. Cap 45 words. A later plot lands them with NV1h.</p>
   <p class="legend">
     <b>Tick</b> the draft you keep. Ticking both means "merge" (say how in the note). <b>Nothing ticked = redraw</b>; say why in the note.<br>
@@ -286,7 +286,7 @@ const sheet = () => {
 };
 
 /* Generate, Copy, autosave, Clear, Save and submit and Mark complete come from the ballot kit. */
-BallotKit.mount({ ballotId: BALLOT_ID, sheet, onChange: refresh });
+/* Closed: the kit is not loaded (scripts/ballot-kit.test.mjs). */
 
 /* Theme toggle: flips data-theme on <html>; no storage. */
 document.getElementById('themeBtn').addEventListener('click', () => {

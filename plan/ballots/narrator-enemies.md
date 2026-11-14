@@ -7,7 +7,7 @@
 > `narrator-enemies.ballot.html` (round 1, closed) and
 > `narrator-enemies-2.ballot.html` (round 2, closed) and
 > `narrator-enemies-3.ballot.html` (round 3, closed: the seven other foes) and
-> `narrator-enemies-4.ballot.html` (round 4, open: E-08, E-10, E-13 redrawn). This ledger is separate from
+> `narrator-enemies-4.ballot.html` (round 4, closed: E-08, E-10, E-13 redrawn). This ledger is separate from
 > `narrator-chapter1.md` (T, 2026-11-12: #1649 edits S-17 there). Nothing here
 > is in the game: 177.8 (NV1h) lands the approved lines.
 
@@ -97,6 +97,15 @@ renamed) go to round 4.
 | E-10 | The Tithe-Collector | a: T's sentence as written; b: the same, grammar smoothed (stop 1) |
 | E-13 | the Tide-Gate, renamed | a THE HALF-TAKEN (3), b THE LOW-WATER MAN (2), c THE CAUSEWAY WARDEN (2): a name and its line each |
 
+## Approved, round 4 (T, 2026-11-13)
+
+With round 4 every Chapter 1 foe has an approved line. E-13 renames the
+Tide-Gate: its in-game name becomes The Half-Taken.
+
+- **E-08 Brine-Widow** (stop 5): The pier keeps one rule: the cargo comes in before any man in the water. The night her husband went over the side, she held the rope and kept to the rule. She walks the pier yet, and every swimmer she meets is him.
+- **E-10 The Tithe-Collector** (stop 1): Every light on this coast is owed for, and someone must call to collect. He no longer remembers why he must. His will went from him many moons ago, but the collecting did not.
+- **E-13 The Half-Taken** (was The Tide-Gate; stop 3): He was left on the tide line as an offering for the one in the keep, and the sea came for him and took only half. It comes back each tide for the rest. He waits on the causeway to be finished.
+
 ## Checks
 
 Every description is 45 words or fewer and every sentence 40 or fewer. There is
@@ -151,3 +160,18 @@ descriptions.
   kept in direction but redrawn to say plainly what the custom is (round 4).
   E-10 and E-13 are redrawn on round 4; for E-13, T asked Claude to
   propose three names, each with its line.
+- **2026-11-13, T, attended, round 4 (`narrator-enemies-4-2026-11-13`):**
+  complete, and marked complete in session. The paste, verbatim:
+
+  ```
+  BALLOT: narrator-enemies-4-2026-11-13 (NV1c enemy descriptions)
+  kept 3 of 7
+  -- Descriptions --
+  E-08: KEEP E-08b | cut: E-08a
+  E-10: KEEP E-10b | cut: E-10a | note: Perfect, except "but, the collecting did not"
+  E-13: KEEP E-13a | cut: E-13b, E-13c
+  ```
+
+  Applied: E-10b's last clause reads ", but the collecting did not" (T
+  picked this form in session over "but, the"). E-13a's name, THE
+  HALF-TAKEN, is the Tide-Gate's new name.
