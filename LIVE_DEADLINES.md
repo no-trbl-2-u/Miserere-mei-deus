@@ -1,13 +1,13 @@
 # Live deadlines — the queue
 
-> Generated 2026-11-13 by `node scripts/deadlines.mjs --write` from `plan/deadlines.md` (the whole plan) and the
+> Generated 2026-11-14 by `node scripts/deadlines.mjs --write` from `plan/deadlines.md` (the whole plan) and the
 > build plan. Do not edit by hand: change `plan/deadlines.md`. An act has no date of its own: it serves a
 > milestone, and the queue's order is its priority. The forecast assumes 10 h a week.
 
 ## Milestones
 
-- **2026-11-30** — Mon, Nov 30 (in 17 days): 31 acts open (11.5 h), 11.5 h queued up to it, 24.3 h available: fits, with 12.8 h to spare.
-- **2026-12-26** — Sat, Dec 26 (in 43 days): 25 acts open (31.5 h), 43 h queued up to it, 61.4 h available: fits, with 18.4 h to spare.
+- **2026-11-30** — Mon, Nov 30 (in 16 days): 31 acts open (11.5 h), 11.5 h queued up to it, 22.9 h available: fits, with 11.4 h to spare.
+- **2026-12-26** — Sat, Dec 26 (in 42 days): 25 acts open (31.5 h), 43 h queued up to it, 60 h available: fits, with 17 h to spare.
 
 ## This week (10 h)
 
@@ -15,7 +15,7 @@
 |---|---|---|---|
 | 1 | Find your art to replace the temp stand-ins: the bridge travel image (Chapter 1 to Chapter 2; the cave shortcut uses the Breakwater map, zoomed), the five cutscene pictures (windmill headland, clifftop chapel, old watchtower, high pass, Charcoal Wood arrival) and the narrator figure. Public-domain stand-ins shipped in TV1b and CU1c, marked TEMP in their provenance (T, 2026-11-11) (1 h) | 1 | needs you: your task |
 | 2 | Fix the title and combat image cut with a light fog blur (1 h). The combat half was picked on 2026-11-08 (a fog gradient over the plate's foot, never covering the foe) and plotted as TU1a; the title screen's half is still open | 1 | needs you: your task |
-| 3 | Answer Chapter 1's `[content]` rows: approve, reject or redraw the Narrator's drafts of the lines still unwritten from the new story (map blurbs, arrival lines, hazard, rest, dream, travel, village and loot lines, screen copy). The 22 scenes and the quest lines were approved on 2026-11-12, and six enemy descriptions on 2026-11-13 (`plan/ballots/narrator-enemies.md`); the other seven Chapter 1 foes are on a round 3 ballot (1 h) | 1 | needs you: NV1c ready for you |
+| 3 | Answer Chapter 1's `[content]` rows: approve, reject or redraw the Narrator's drafts of the lines still unwritten from the new story (map blurbs, arrival lines, hazard, rest, dream, travel, village and loot lines, screen copy). The 22 scenes and the quest lines were approved on 2026-11-12, and all thirteen Chapter 1 enemy descriptions on 2026-11-13 (`plan/ballots/narrator-enemies.md`, rounds 2 to 4; NV1h landed six, NV1r lands the other seven) (1 h) | 1 | needs you: NV1c ready for you |
 | 4 | Review the reworked quest screen (with NPC art), village screen (rest, shop, Anvil, with NPCs) and card upgrade screen (the string of beads) (1.5 h) | 1.5 | needs you: your task |
 | 5 | Review the reworked travel, loot cache and cutscene screens (1.5 h) | 1.5 | needs you: your task |
 | 6 | Review the reworked ends of a fight (victory with the animated XP bar and level line, death return) against the settled shot (1 h) | 1 | needs you: your task |
