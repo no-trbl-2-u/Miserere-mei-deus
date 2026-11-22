@@ -443,6 +443,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   18:59:49 with zero progress until the ceiling force-cancelled it at
   20:14:33, another total loss. Second confirmed occurrence in 12 hours;
   still unfixed, still `/iterate`-shaped, not re-scored.
+
 ### [x] [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25) — CLOSED 2026-11-22 (this PR: `MapState.hazardOutcomes` / `HazardNodeOutcome` / `HazardModifierEntry` removed from the shape and the new-map seed; the load-time cleanup `dropRetiredMapFields` strips the key from every map an old save holds, no version bump since only the current version loads; the `buff_all_stats_up` / `debuff_curse` half was already stale, both now only on the deprecated-effects list)
 - **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
 - **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
