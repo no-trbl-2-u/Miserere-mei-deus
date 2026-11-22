@@ -637,43 +637,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   unpeopled, and that ruling gets recorded as a D-row so the steward stops
   re-flagging them.
 
-### [debt] Source comments still name the retired `/deck-tuning` loop (2026-09-25)
-- category: debt
-- impact: 2
-- ease: 8
-- detail: D10 retired `/deck-tuning` in T5 (#378). The instruction surfaces
-  were repointed to `/adjust-cards`, but about 30 provenance comments in
-  `axiomancer-mechanics/src/` still name it as the tuning loop. They were
-  left alone deliberately to keep the T5 PRs collision-free. Examples:
-  `combat.engine.ts:147-215`, `combat.playtest.ts`, `cards.pricing.ts`,
-  `cards.sandbox.ts`, `combat.objective.ts`, and the e2e headers.
-- next: `/iterate`, bundled with the next mechanics-source PR that
-  re-stamps the baseline anyway. Reword to `/adjust-cards`, or to "the
-  tuning loop (rebuild pending, jot `1fc33003`)" where the old loop's
-  A/B surface is meant.
-
-### [debt] T2b dice-flag collapse — live content the OFF path was carrying (2026-09-25)
-- **Context:** D7 deleted the Upgradeable-Dice OFF path (stance draft, hidden read, STAKE, v1 wheel, fate-X powering). The shipped model already ignored all of these; the items below were already inert in players' builds and are now visibly so.
-- **Fate cards — RESOLVED (adjust-cards pass 20, 2026-09-26):** `the-note-falls-due`, `miserere`, `dead-pledge` folded `fate` -> off-colour `dieBonus` (recoil moved into the rider). Still open: the `fate` field has zero carriers but remains in `types.ts`, `cards.pricing.ts`, `combat.cards.ts`, `card-upgrades.ts`, `combat.card-complexity.ts`, `card-keywords.ts` and the tests. Deleting it is a small cross-surface cleanup. Also `it-gets-up-again` (`float_x_die`) is priced at 4.5 but almost always pays only its +1 Conviction fallback; that is an owner call alongside the `reroll_spent` item below.
-- **Advantage buffs:** `buff_haste`, `buff_accuracy_up`, `buff_critical_damage_up` and kin grant advantage through the deleted read, so they do nothing in combat. Retire or re-hook (`/adjust-keywords`).
-- **`reroll_spent` relic mechanic** still rerolls from the legacy face bag (`rerollSpentDice`/`COMBAT_DIE_FACES`), so it can mint X or faceless dice. `float_x_die` always pays +1◆ now.
-- **Sim:** the `blind` policy now plays identically to `greedy` (kept so the matrix keeps its column); retire or redefine it at the next `/combat-playtest`.
-- **Stale copy — RESOLVED (adjust-cards pass 20):** "drafted die" in `the-unpaid-sexton`'s face now reads "rolled dice". *(The FORGE, GHOST and WILD/X atlas rows were synced to `KEYWORD_GLOSS` by adjust-keywords pass 19, 2026-09-26.)*
-- **Vestigial params:** `card-played.advantage` is always `'neutral'`; `scalePlayerHit`'s `readMult` is always 1.
-- **Card faces print a dead read:** status card faces still show ▲/▼ read numbers, but every play lands at read `'none'`. Mobile froze `READ_ADVANTAGE_INTENSITY_BONUS` / `READ_DISADVANTAGE_DURATION_PENALTY` (both 1) as local constants atop `combat-encounter.engine.ts` so it compiles; delete them with a card-face pass.
-- **CLARITY is inert:** its `forceWildOnNextDie` flag was only read on the deleted OFF path.
-- **Wrong copy (predates T2b):** the dead-tray END line says unusable dice "are discarded" (`endTurn` banks one unspent die when the Reserve has room); the CONVICTION ◆ glossary says it is banked "from unspent dice" (unspent dice earn nothing); the momentum info popup still describes the v1 wheel ("light all three").
-- **Coverage gap:** `upgradeable-dice-e2e.mjs` was the only browser run walking Press Fate, the momentum chip and blacksmith HONE; it was deleted with the flag. The other e2e scripts boot the model but do not walk those steps.
-- **`MAX_PERMANENT_WILD_DICE`** (`Combat/combat.dice.ts`) is documented as the cap on `permanentWildDice` but nothing enforces it — missing clamp or dead constant (T3 barrel pass kept it).
-- **adjust-keywords pass 19 (2026-09-26) — more trim fallout, filed not shipped:**
-  - *Fate re-hook option:* Dawncaster's Blood ("sacrifice your own blood instead of Energy", `kb:dawncaster/keywords/blood.okf.md`) is the design `fate` was reaching for: a dead X die plus `recoilHp` as a substitute payment. It only works if X dice exist in ordinary play, and the Spec 33 tray never rolls one (only `reroll_spent` can mint one). So the card fold (`fate` -> `dieBonus`, `/adjust-cards`) is still the honest small fix.
-  - *Nine inert support buffs:* besides the three named above, `buff_critical_rate_up`, `buff_liars_gambit` and `buff_abyssal_presence` (advantage-only, fed to `advantageGrants`, which nothing reads), plus `buff_haste`, `buff_haste_surge`, `buff_all_stats_up` and `buff_status_chance_up` (a positive roll modifier, which is only ever read as a penalty on the enemy). They are unobtainable and pinned for old saves. Stale copy reachable from a legacy save: `tooltip.engine.ts:349-358` and `village.engine.ts:175-176`, and `SUPPORT_KEYWORD` maps them to unrelated glosses.
-  - *`debuff_curse` has no live applier* (its only source, the threat-clock enchant, was trimmed). It was also the only negative roll modifier, so the enemy roll-penalty deny path (`combat.engine.ts` ~3415/4913/5057), `isStatDebuff` and mobile's 'weaken' class never see any input. Retire it (about six test fixtures to repoint), or give the path a new feeder. `debuff_nettle_sting` has also been orphaned since `84ef85bd`.
-  - *`resistedBy` / `resistDR` are dead data.* They are copied at `card.engine.ts:330`, `Effects/index.ts:81` and `game.reducer.ts:329`, and nothing reads them. Removing them touches exported types and saved state. (The `docs/effects.md` resist-roll prose was fixed in pass 19.)
-  - *Tier-1 leftovers:* `MIND_MARK_ID = 'tier1_mind_mark'` / `getStudyMarkIntensity` (`Combat/effects.ts:21-27`, barrel-exported) point at an id in neither library. There is also a matching glyph at `statusGlyphs.ts:117`.
-  - *Seven player mechanic kinds have zero carriers:* `strip_random_buff`, `befriend_attempt`, `refresh_die`, `convert_die_color`, `overheat`, `spend_all_pips`, `echo_next_spell`. These are wired but unused, so they are remove candidates. Retiring one touches the union, pricing, engine, mobile, editor and tests, so each is large. `befriend_attempt` sits on the befriend path and needs an owner call.
-  - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
-
 ### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
 - **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
 - **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
@@ -699,50 +662,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   What each memory *says* waits on the prologue's delivery plan. Route to
   `/expand` as phase candidates. The Covenant roster waits on the Drowned
   Parish session deciding who pressures X.
-
-### [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23)
-- category: debt
-- impact: 4
-- ease: 6
-- detail: comment-vs-code mismatches where the CODE is the stale side. Each
-  was left untouched by the docs PR (the two one-liners it did fix:
-  `verify-drift.yml` now triggers on `enemy-keywords.ts`;
-  `check-naming-law.mjs` now sweeps `apocrypha.cards.ts`).
-  1. `axiomancer-mechanics/scripts/export-catalog.ts:106-113` —
-     `parsePricingComments` reads `src/Cards/cards.library.ts`, which is the
-     aggregator since THE BIG NUMBERS REWRITE; the `// pts:` blocks live in
-     `src/Cards/library/*.cards.ts`, so catalog pricing is always empty.
-     Confidence 60.
-  2. `axiomancer-mechanics/src/CLI/combat-sim.cli.ts:11-13,43-45` — usage
-     text and default loadout name `slippery-slope`, `brace-for-impact`,
-     `festering-argument`, `soft-word`; none exist in the card library.
-     Confidence 50 that the default path is broken (may fall through).
-  3. `axiomancer-mechanics/src/Effects/world-tick.ts` —
-     `processWorldEffectTick` has no caller outside tests in mechanics or
-     mobile; `World/world.reducer.ts:206` used to point at a
-     `Game/world.orchestrator.ts` that does not exist. Either wire it into
-     `moveToNode` or delete it. Confidence 60.
-  4. `axiomancer-mechanics/src/Effects/index.ts:167-190` —
-     `TIER1_EFFECT_MAP` maps to `tier1_*` ids absent from both effect
-     libraries (the deprecated-effects test bans them), so
-     `applyTier1CombatEffect` always returns `noChange`; likewise
-     `Enemy/enemy.library.ts:89-92` `T1_DEFAULT`. Delete or re-point.
-     Confidence 80.
-  5. `scripts/axio-mcp-server.mjs:39-62` — `ensureFresh` stats only
-     `Cards/cards.library.ts` and `Effects/effects.library.ts`; an edit to
-     `Cards/library/*.cards.ts` does not bump the mtime, so the "mid-session
-     edit is caught" claim in its header is false for card edits.
-     Confidence 50.
-  Also observed: `scripts/check-baseline-freshness.mjs:33-41` says
-  `World/Continents/**` is import-disjoint from Combat/Cards/Enemy/Character,
-  but `Enemy/index.ts` and `Enemy/types.ts` type-import `MapName` from
-  `../World/map.library` (runtime-erased, so the sweep numbers are unaffected).
-- next: `/iterate` — verify each with a failing test first (1, 4 and 5 are
-  cheap to witness), then fix or delete; 3 is a design call (wire or remove)
-  and needs a `[loop-call]` note in the commit body.
-- note 2026-09-25 (T4 compaction): items 3 (`Effects/world-tick.ts`) and 4
-  (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
-  and 5 re-read live at `d615a35d`.
 
 ### [content] 30 of 73 roster enemies (41%) carry no aftermath prose (`finalBlowLines`/`causeLines`) (2026-09-05)
 - category: content (found during `/adjust-enemies` pass 1's structural
@@ -771,34 +690,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   purely executional — so filed here as `[content]`, not `[loop-call]`.
 - score: impact 4 x ease 5 / 10 = 2.0
 
-### [content] Engine-generated "the enemy" strings survived the phase-40 card-text grammar pass
-- category: content
-- impact: 3
-- ease: 5
-- detail: filed 2026-08-23 by phase 40 (card-text grammar + full copy
-  pass). That phase fixed the FIXED VOCABULARY rule ("the foe", not "the
-  enemy") across every AUTHORED string: `cards.library.ts`
-  `paidSummary`/`persistentEffect` (31 cards) and mobile
-  `state/combat/keywords.ts` `KEYWORD_GLOSS`/`SYSTEM_GLOSSARY` (17
-  entries), each now lint-enforced. Two adjacent surfaces still say "the
-  enemy" and were deliberately left out of that pass (bounded scope, not
-  an oversight): the ENGINE's own generated strings in
-  `axiomancer-mechanics/src/Combat/combat.cards.ts`
-  (`statePredicateText`'s `UNMOVED`/`enemy-drew-blood` clauses, the hex
-  `Attaches to the enemy.` suffix, the `lock_stance` and
-  `boost_all_dots` mechanic-text lines — 7 total sites) and the mobile
-  presenter's per-mechanic `verbLine` prose in
-  `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
-  (`mechanicHeadline`, ~30 entries, several also carrying stray em
-  dashes/semicolons the phase-40 lint never reached). Neither surface has
-  a lint today. A future pass: rename the 7 mechanics sites (cheap,
-  bounded — plus its `choir-card-wording.engine.test.ts` assertions that
-  pin `UNMOVED (the enemy dealt you no damage last round)` / `the enemy
-  drew blood since your last turn` / `Attaches to the enemy.` literally),
-  then decide whether `mechanicHeadline`'s much larger prose set is worth
-  a dedicated sweep or a standing lint of its own.
-- next: /iterate
-
 ### The Phase-169 loadout path is dead in the shipped runtime
 - category: debt
 - impact: 5
@@ -808,25 +699,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
   with no flags at all. 52a's loadout reconciliation is correct and tested,
   but nothing exercises it end to end. Pairs with the row above.
-
-### Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095
-- category: debt
-- impact: 4
-- ease: 7
-- detail: surfaced 2026-07-17 during the starter-deck-presets rename.
-  `npm run verify` in `axiomancer-mechanics` fails from any
-  `.claude/worktrees/*` checkout with `TS5095: Option 'bundler' can
-  only be used when 'module' is set to 'preserve' or es2015+`. Root
-  cause: the mechanics tsconfig (module `commonjs` +
-  moduleResolution `bundler`) is accepted by TypeScript 6.0.3
-  (installed at `axiomancer-mechanics/node_modules`) but rejected by
-  5.9.3 (repo-root `node_modules`); worktrees have no local install,
-  so Node walks up past the worktree into the root and picks 5.9.3.
-  Every worktree session must hand-invoke the 6.0.3 `tsc.js` to run
-  the gate. Fix options: align the root TypeScript devDependency to
-  6.x, make the tsconfig valid under both (e.g. module `preserve` or
-  moduleResolution `node`), or install per-worktree. A task chip was
-  also filed from the session.
 
 ### Telemetry attribution is best-effort; CI logging path unverified
 - category: debt
@@ -882,7 +754,52 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   length outliers. Extract sub-components with their own tests.
 - next: /iterate
 
-### [2.1] Two agent-e2e walkthroughs describe a deleted engine surface
+### [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules
+- category: tooling
+- impact: 4
+- ease: 5
+- detail: three confirmed instances of one shape. The 2026-08-22 content-pipelines
+  audit found two: an emoji inside quoted CARD TEXT read as a commit-trailer
+  violation, and `backgroundedGate`'s regex catching any command containing the
+  word "test". A third hit 2026-08-27 during Phase 72: a `git commit` was
+  rejected for a forbidden push flag that appeared only as QUOTED PROSE inside
+  the heredoc message — the brief was documenting which verbs stay denied. The
+  guard cannot tell a command from text inside a command.
+- why it matters: each instance costs a retry and teaches the loop to avoid
+  writing about the rules it enforces, which is the opposite of what the plan
+  files are for. The failure is silent-ish (a blocked tool call, not a wrong
+  result), so it accumulates rather than being fixed.
+- next: parse before matching. The push-flag and trailer rules should apply to
+  the command's own argv, not to heredoc bodies or `-m` message contents; the
+  `-m` body already has its own dedicated lint pass, so the general grep can
+  exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+
+### [debt] T2b dice-flag collapse — live content the OFF path was carrying (2026-09-25)
+- **Context:** D7 deleted the Upgradeable-Dice OFF path (stance draft, hidden read, STAKE, v1 wheel, fate-X powering). The shipped model already ignored all of these; the items below were already inert in players' builds and are now visibly so.
+- **Fate cards — RESOLVED (adjust-cards pass 20, 2026-09-26):** `the-note-falls-due`, `miserere`, `dead-pledge` folded `fate` -> off-colour `dieBonus` (recoil moved into the rider). Still open: the `fate` field has zero carriers but remains in `types.ts`, `cards.pricing.ts`, `combat.cards.ts`, `card-upgrades.ts`, `combat.card-complexity.ts`, `card-keywords.ts` and the tests. Deleting it is a small cross-surface cleanup. Also `it-gets-up-again` (`float_x_die`) is priced at 4.5 but almost always pays only its +1 Conviction fallback; that is an owner call alongside the `reroll_spent` item below.
+- **Advantage buffs:** `buff_haste`, `buff_accuracy_up`, `buff_critical_damage_up` and kin grant advantage through the deleted read, so they do nothing in combat. Retire or re-hook (`/adjust-keywords`).
+- **`reroll_spent` relic mechanic** still rerolls from the legacy face bag (`rerollSpentDice`/`COMBAT_DIE_FACES`), so it can mint X or faceless dice. `float_x_die` always pays +1◆ now.
+- **Sim:** the `blind` policy now plays identically to `greedy` (kept so the matrix keeps its column); retire or redefine it at the next `/combat-playtest`.
+- **Stale copy — RESOLVED (adjust-cards pass 20):** "drafted die" in `the-unpaid-sexton`'s face now reads "rolled dice". *(The FORGE, GHOST and WILD/X atlas rows were synced to `KEYWORD_GLOSS` by adjust-keywords pass 19, 2026-09-26.)*
+- **Vestigial params:** `card-played.advantage` is always `'neutral'`; `scalePlayerHit`'s `readMult` is always 1.
+- **Card faces print a dead read:** status card faces still show ▲/▼ read numbers, but every play lands at read `'none'`. Mobile froze `READ_ADVANTAGE_INTENSITY_BONUS` / `READ_DISADVANTAGE_DURATION_PENALTY` (both 1) as local constants atop `combat-encounter.engine.ts` so it compiles; delete them with a card-face pass.
+- **CLARITY is inert:** its `forceWildOnNextDie` flag was only read on the deleted OFF path.
+- **Wrong copy (predates T2b):** the dead-tray END line says unusable dice "are discarded" (`endTurn` banks one unspent die when the Reserve has room); the CONVICTION ◆ glossary says it is banked "from unspent dice" (unspent dice earn nothing); the momentum info popup still describes the v1 wheel ("light all three").
+- **Coverage gap:** `upgradeable-dice-e2e.mjs` was the only browser run walking Press Fate, the momentum chip and blacksmith HONE; it was deleted with the flag. The other e2e scripts boot the model but do not walk those steps.
+- **`MAX_PERMANENT_WILD_DICE`** (`Combat/combat.dice.ts`) is documented as the cap on `permanentWildDice` but nothing enforces it — missing clamp or dead constant (T3 barrel pass kept it).
+- **adjust-keywords pass 19 (2026-09-26) — more trim fallout, filed not shipped:**
+  - *Fate re-hook option:* Dawncaster's Blood ("sacrifice your own blood instead of Energy", `kb:dawncaster/keywords/blood.okf.md`) is the design `fate` was reaching for: a dead X die plus `recoilHp` as a substitute payment. It only works if X dice exist in ordinary play, and the Spec 33 tray never rolls one (only `reroll_spent` can mint one). So the card fold (`fate` -> `dieBonus`, `/adjust-cards`) is still the honest small fix.
+  - *Nine inert support buffs:* besides the three named above, `buff_critical_rate_up`, `buff_liars_gambit` and `buff_abyssal_presence` (advantage-only, fed to `advantageGrants`, which nothing reads), plus `buff_haste`, `buff_haste_surge`, `buff_all_stats_up` and `buff_status_chance_up` (a positive roll modifier, which is only ever read as a penalty on the enemy). They are unobtainable and pinned for old saves. Stale copy reachable from a legacy save: `tooltip.engine.ts:349-358` and `village.engine.ts:175-176`, and `SUPPORT_KEYWORD` maps them to unrelated glosses.
+  - *`debuff_curse` has no live applier* (its only source, the threat-clock enchant, was trimmed). It was also the only negative roll modifier, so the enemy roll-penalty deny path (`combat.engine.ts` ~3415/4913/5057), `isStatDebuff` and mobile's 'weaken' class never see any input. Retire it (about six test fixtures to repoint), or give the path a new feeder. `debuff_nettle_sting` has also been orphaned since `84ef85bd`.
+  - *`resistedBy` / `resistDR` are dead data.* They are copied at `card.engine.ts:330`, `Effects/index.ts:81` and `game.reducer.ts:329`, and nothing reads them. Removing them touches exported types and saved state. (The `docs/effects.md` resist-roll prose was fixed in pass 19.)
+  - *Tier-1 leftovers:* `MIND_MARK_ID = 'tier1_mind_mark'` / `getStudyMarkIntensity` (`Combat/effects.ts:21-27`, barrel-exported) point at an id in neither library. There is also a matching glyph at `statusGlyphs.ts:117`.
+  - *Seven player mechanic kinds have zero carriers:* `strip_random_buff`, `befriend_attempt`, `refresh_die`, `convert_die_color`, `overheat`, `spend_all_pips`, `echo_next_spell`. These are wired but unused, so they are remove candidates. Retiring one touches the union, pricing, engine, mobile, editor and tests, so each is large. `befriend_attempt` sits on the befriend path and needs an owner call.
+  - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
+- 2026-11-22: deleted the unreferenced `MAX_PERMANENT_WILD_DICE`; the sim `blind` policy still plays identically to `greedy` (left as is, a retire-or-redefine call); the other bullets remain open.
+
+## Done
+
+### [x] [2.1] Two agent-e2e walkthroughs describe a deleted engine surface — CLOSED 2026-11-22 (this PR: deleted `skill-learning` and `tier2-skill-chain` (goal.md and json) and their two README rows)
 - category: gap
 - impact: 3
 - ease: 7
@@ -924,25 +841,52 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the automation-file deletion and the README/specs rewrite as two
   separate scoped fixes, not one.
 
-### [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules
-- category: tooling
+### [x] Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095 — CLOSED 2026-11-22 (this PR: mechanics `tsconfig.json` uses `module`/`moduleResolution` `node16`, valid under TS 5.9 and 6; `ts-node` keeps commonjs+bundler via its own override; `game.cli.ts` lazy loads use `require` and one test import gains `.js`; `tsc`, cli, tests and build pass under both)
+- category: debt
 - impact: 4
+- ease: 7
+- detail: surfaced 2026-07-17 during the starter-deck-presets rename.
+  `npm run verify` in `axiomancer-mechanics` fails from any
+  `.claude/worktrees/*` checkout with `TS5095: Option 'bundler' can
+  only be used when 'module' is set to 'preserve' or es2015+`. Root
+  cause: the mechanics tsconfig (module `commonjs` +
+  moduleResolution `bundler`) is accepted by TypeScript 6.0.3
+  (installed at `axiomancer-mechanics/node_modules`) but rejected by
+  5.9.3 (repo-root `node_modules`); worktrees have no local install,
+  so Node walks up past the worktree into the root and picks 5.9.3.
+  Every worktree session must hand-invoke the 6.0.3 `tsc.js` to run
+  the gate. Fix options: align the root TypeScript devDependency to
+  6.x, make the tsconfig valid under both (e.g. module `preserve` or
+  moduleResolution `node`), or install per-worktree. A task chip was
+  also filed from the session.
+
+### [x] [content] Engine-generated "the enemy" strings survived the phase-40 card-text grammar pass — CLOSED 2026-11-22 (this PR: `mechanicHeadline` now says "the foe"; the seven `combat.cards.ts` sites were already fixed earlier; no test pinned the old prose)
+- category: content
+- impact: 3
 - ease: 5
-- detail: three confirmed instances of one shape. The 2026-08-22 content-pipelines
-  audit found two: an emoji inside quoted CARD TEXT read as a commit-trailer
-  violation, and `backgroundedGate`'s regex catching any command containing the
-  word "test". A third hit 2026-08-27 during Phase 72: a `git commit` was
-  rejected for a forbidden push flag that appeared only as QUOTED PROSE inside
-  the heredoc message — the brief was documenting which verbs stay denied. The
-  guard cannot tell a command from text inside a command.
-- why it matters: each instance costs a retry and teaches the loop to avoid
-  writing about the rules it enforces, which is the opposite of what the plan
-  files are for. The failure is silent-ish (a blocked tool call, not a wrong
-  result), so it accumulates rather than being fixed.
-- next: parse before matching. The push-flag and trailer rules should apply to
-  the command's own argv, not to heredoc bodies or `-m` message contents; the
-  `-m` body already has its own dedicated lint pass, so the general grep can
-  exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+- detail: filed 2026-08-23 by phase 40 (card-text grammar + full copy
+  pass). That phase fixed the FIXED VOCABULARY rule ("the foe", not "the
+  enemy") across every AUTHORED string: `cards.library.ts`
+  `paidSummary`/`persistentEffect` (31 cards) and mobile
+  `state/combat/keywords.ts` `KEYWORD_GLOSS`/`SYSTEM_GLOSSARY` (17
+  entries), each now lint-enforced. Two adjacent surfaces still say "the
+  enemy" and were deliberately left out of that pass (bounded scope, not
+  an oversight): the ENGINE's own generated strings in
+  `axiomancer-mechanics/src/Combat/combat.cards.ts`
+  (`statePredicateText`'s `UNMOVED`/`enemy-drew-blood` clauses, the hex
+  `Attaches to the enemy.` suffix, the `lock_stance` and
+  `boost_all_dots` mechanic-text lines — 7 total sites) and the mobile
+  presenter's per-mechanic `verbLine` prose in
+  `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
+  (`mechanicHeadline`, ~30 entries, several also carrying stray em
+  dashes/semicolons the phase-40 lint never reached). Neither surface has
+  a lint today. A future pass: rename the 7 mechanics sites (cheap,
+  bounded — plus its `choir-card-wording.engine.test.ts` assertions that
+  pin `UNMOVED (the enemy dealt you no damage last round)` / `the enemy
+  drew blood since your last turn` / `Attaches to the enemy.` literally),
+  then decide whether `mechanicHeadline`'s much larger prose set is worth
+  a dedicated sweep or a standing lint of its own.
+- next: /iterate
 
 ### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
 - category: process
@@ -959,7 +903,64 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
-## Done
+### [x] [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23) — CLOSED 2026-11-22 (this PR: `parsePricingComments` and its `pricing` field deleted from `export-catalog.ts`; `combat-sim.cli.ts` usage already matched its real flags (grey-strike, grey-ward); `axio-mcp-server.mjs` `ensureFresh` now stats the Cards, Effects, Enemy and Atlas trees plus `combat.cards.ts` and `combat.rewards.ts`; items 3 and 4 were already gone)
+- category: debt
+- impact: 4
+- ease: 6
+- detail: comment-vs-code mismatches where the CODE is the stale side. Each
+  was left untouched by the docs PR (the two one-liners it did fix:
+  `verify-drift.yml` now triggers on `enemy-keywords.ts`;
+  `check-naming-law.mjs` now sweeps `apocrypha.cards.ts`).
+  1. `axiomancer-mechanics/scripts/export-catalog.ts:106-113` —
+     `parsePricingComments` reads `src/Cards/cards.library.ts`, which is the
+     aggregator since THE BIG NUMBERS REWRITE; the `// pts:` blocks live in
+     `src/Cards/library/*.cards.ts`, so catalog pricing is always empty.
+     Confidence 60.
+  2. `axiomancer-mechanics/src/CLI/combat-sim.cli.ts:11-13,43-45` — usage
+     text and default loadout name `slippery-slope`, `brace-for-impact`,
+     `festering-argument`, `soft-word`; none exist in the card library.
+     Confidence 50 that the default path is broken (may fall through).
+  3. `axiomancer-mechanics/src/Effects/world-tick.ts` —
+     `processWorldEffectTick` has no caller outside tests in mechanics or
+     mobile; `World/world.reducer.ts:206` used to point at a
+     `Game/world.orchestrator.ts` that does not exist. Either wire it into
+     `moveToNode` or delete it. Confidence 60.
+  4. `axiomancer-mechanics/src/Effects/index.ts:167-190` —
+     `TIER1_EFFECT_MAP` maps to `tier1_*` ids absent from both effect
+     libraries (the deprecated-effects test bans them), so
+     `applyTier1CombatEffect` always returns `noChange`; likewise
+     `Enemy/enemy.library.ts:89-92` `T1_DEFAULT`. Delete or re-point.
+     Confidence 80.
+  5. `scripts/axio-mcp-server.mjs:39-62` — `ensureFresh` stats only
+     `Cards/cards.library.ts` and `Effects/effects.library.ts`; an edit to
+     `Cards/library/*.cards.ts` does not bump the mtime, so the "mid-session
+     edit is caught" claim in its header is false for card edits.
+     Confidence 50.
+  Also observed: `scripts/check-baseline-freshness.mjs:33-41` says
+  `World/Continents/**` is import-disjoint from Combat/Cards/Enemy/Character,
+  but `Enemy/index.ts` and `Enemy/types.ts` type-import `MapName` from
+  `../World/map.library` (runtime-erased, so the sweep numbers are unaffected).
+- next: `/iterate` — verify each with a failing test first (1, 4 and 5 are
+  cheap to witness), then fix or delete; 3 is a design call (wire or remove)
+  and needs a `[loop-call]` note in the commit body.
+- note 2026-09-25 (T4 compaction): items 3 (`Effects/world-tick.ts`) and 4
+  (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
+  and 5 re-read live at `d615a35d`.
+
+### [x] [debt] Source comments still name the retired `/deck-tuning` loop (2026-09-25) — CLOSED 2026-11-22 (this PR: reworded all 16 mentions in 8 mechanics src files to "the card-tuning loop" (no `/adjust-cards` command exists now; it is paused/retired too))
+- category: debt
+- impact: 2
+- ease: 8
+- detail: D10 retired `/deck-tuning` in T5 (#378). The instruction surfaces
+  were repointed to `/adjust-cards`, but about 30 provenance comments in
+  `axiomancer-mechanics/src/` still name it as the tuning loop. They were
+  left alone deliberately to keep the T5 PRs collision-free. Examples:
+  `combat.engine.ts:147-215`, `combat.playtest.ts`, `cards.pricing.ts`,
+  `cards.sandbox.ts`, `combat.objective.ts`, and the e2e headers.
+- next: `/iterate`, bundled with the next mechanics-source PR that
+  re-stamps the baseline anyway. Reword to `/adjust-cards`, or to "the
+  tuning loop (rebuild pending, jot `1fc33003`)" where the old loop's
+  A/B surface is meant.
 
 ### [x] [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick — CLOSED 2026-11-22 (this PR: step-level timeout-minutes: 10 on every playwright --with-deps install step)
 - category: gap
