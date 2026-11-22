@@ -264,26 +264,12 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - evidence 2026-11-09: body-mind 5.4 -> 8.2 at a2fcf7b
 - evidence 2026-11-09: body 5.5 -> 8.1 at a2fcf7b
 
-### [ ] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06)
-- category: content
-- impact: 9
-- ease: 2
-- detail: `c2842354e` ("Add six Breakwater enemy portraits", PR #1406) added `bilge-stalker.webp`, `coralback.webp`, `quay-crab.webp`, `saint-beneath.webp`, `saltwick-swarm.webp` and `wreckmaster.webp` directly under `axiomancer-mobile/assets/images/enemies/`, with no registry or provenance entries — the PR's own body says this was deliberate ("This image-only PR leaves those entries for integration"). That alone fails `asset-provenance.test.mjs`'s "every art file is reachable from a registry" (6 orphans) — cheap to fix: an `ENEMY_ART_BY_KEY` entry per file plus a `provenance.json` record (verified locally, both go green). But `scripts/bake-backings.mjs`'s `rosterKeys()` treats every `<key>.webp` beside the registry as a foe that must draw its cells, and `scripts/enemy-backings.test.mjs`'s "the sweep found the roster and its cells" asserts `foe.planes.length === 24` for literally every roster key, unconditionally — it has no `FRAME_SET_EXEMPTIONS` awareness at all (confirmed: that name appears nowhere in `bake-backings.mjs` or `enemy-backings.test.mjs`). Phase AN5e closed the "every portrait animates" invariant for the prior 17 foes (each has an `anim/<key>/` set of 24 cells); these six have none, so they fall back to their single still (`drawnFiles()`), i.e. 1 cell, not 24. Registering them in `ENEMY_ART_BY_KEY` without a frame set also fails the jest suite `every-portrait-has-a-set.test.ts` (`ENEMY_ART_KEYS.length` goes 17 -> 23, and the new keys have neither a set nor an explicit `FRAME_SET_EXEMPTIONS` entry) — verified locally, 5 failures. Adding an explicit exemption would close that jest suite (it's designed for exactly this: "install a set, or exempt it explicitly") but does nothing for `enemy-backings.test.mjs`, which has no exemption path to honor it. So there is no change on the CI side alone that gets `npm run verify -w axiomancer-mobile` green: the real fix is a 24-cell animated frame set per foe (144 new cells total), which is new art content — out of scope for an autonomous CI fix (fix-ci hard rule 3) and owner-led per D58's content bias. Reverting the six files was considered and rejected for this run: pulling already-merged content back out unilaterally, with no T present to confirm, is a bigger call than this skill is meant to make unattended.
-- next: a content/process call, not a code fix: either (a) author the six frame sets as a normal "AN"-phase content chunk (`AN5a`-`AN5e` is the precedent) so the roster invariant holds the way it does for every other foe, or (b) teach `enemy-backings.test.mjs`/`bake-backings.mjs` to honor `FRAME_SET_EXEMPTIONS` so a still-only portrait can be declared exempt (a deliberate design relaxation, not a CI patch), or (c) T decides to pull the six files back out of `axiomancer-mobile/assets/images/enemies/` until their sets are ready. Until one of those lands, `main`'s `verify-mobile` stays red and blocks every other tick; this row is the record of why a code-only fix-ci pass could not close it. **Answered by spec 157 (plot, 2026-11-06):** T's enemy recast makes the six portraits six real library foes, which is route (a) with the sets already authored in PR #1409. Chunk **157.3 (EN3c)** closes this row — it wires the art registry, the provenance records, the six frame sets and the baked backings, and takes `asset-provenance.test.mjs`, `enemy-backings.test.mjs` and the one-enemy-per-installed-set guard green together. It requires 157.1 (EN3a), which creates the entries. Routes (b) and (c) are dropped: no set is retired by this recast, so `FRAME_SET_EXEMPTIONS` stays empty and nothing is pulled back out.
-
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5
 - ease: 5
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
 - next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
-
-### [ ] [content] BUG1j's universal befriend collapses the greedy sim policy's chapter-clear rate from ~85% to ~12% (fix-ci, verify-mobile run 41245913757, 2026-10-31)
-- category: content
-- impact: 6
-- ease: 4
-- detail: `sim/run-driver.test.ts`'s "every Breakwater node kind" case (seed 1) went red on `main` after BUG1j (`b23c5f768`, "every foe can be befriended... no XP"): `isEnemyBefriendable` now holds for every foe (previously only the Green Jelly carried a `friendshipReward`), and the `greedy`/`blind` combat sim policy (`combat.sim-policies.ts`) already scored Befriend highest whenever a foe's VITAE was at or below 30% (`BAND_BEFRIEND_LOW_HP`, `LOW_HP_FRACTION`) — a threshold that happens to equal `BEFRIEND_TUNING.defaultHpGate` (also 0.3). Pre-BUG1j, that scoring never fired outside the Green Jelly; post-BUG1j it fires on nearly every winnable fight, so the `wanderer`/`greedy` headless run spares instead of finishing almost every fight it would have won, earning no XP or loot and dying well short of the Breakwater's villages. Measured over seeds 1-40 with `WANDERER_POLICY`: 34/40 `chapter-clear` before BUG1j (`950074f58`), 5/40 after (`0afc538bf`); most runs now die around `bw-t1`/`bw-h3`/`bw-h7`/`bw-c1`, never reaching `bw-t4`/`bw-m5`. Fixed the red run by repointing the test at seed 8 (also full node-kind coverage, `chapter-clear`) — a seed choice, not a balance assertion (the test's own docstring: "the tests check the driver, never the game's balance") — but the underlying survival-rate collapse of the designated "tuned balance witness" is a real content change worth a deliberate look, not an incidental one.
-- next: a design call on whether `greedy`'s Befriend-at-low-VITAE preference should still fire against every foe now that it pays no XP/loot (tune `BAND_BEFRIEND_LOW_HP` down, gate it to foes that still carry a `friendshipReward`-like marker, or accept the new survival curve and let `/iterate` or a measured-truth run re-baseline against it).
 
 ### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
 - category: process
@@ -515,14 +501,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - [ ] bc-12 The Gorge Falls (blacksmith). Blurb: "The water has cut the seam open. The iron is free." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
 - next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the falls, or the pair ruled fine. The pin goes in the same change.
 
-### [content] map content: the seven Act 1 gathering nodes grant materials nothing spends (AW1b, 2026-10-26)
-- category: content
-- impact: 4
-- ease: -
-- source: Phase AW1b (A10); `plan/phases/phase_AW1_act1_walk.md` Sources; `plan/playtest-harness.md` "Where things stand".
-- detail: `kind: 'gathering'` is live, not minigame residue: it replaced the retired Gleaning minigame (save v18 to v19), grants one named material through the paced `/event` receipt, advances `collect` quest objectives and feeds the hazard puzzle outcome and the labyrinth pools. Seven Act 1 nodes carry it: bw-4, bw-11 (Breakwater), cw-4, cw-8, cw-14 (Charcoal Wood), bc-7 (Beacon Crags), ld-7 (Lantern Deep). But no code in mechanics or mobile spends a material, so every grant is a dead end for the player.
-- next: T's call (map content, D88), one of: (a) keep the nodes as they are; (b) give materials a use (a brief T approves: the Anvil, a quest, a shop); (c) re-point the seven nodes to another kind. The plot's leading option is (a) with (b) to follow.
-
 ### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
 - category: content
 - impact: 4
@@ -599,40 +577,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   preceding routes (`SMOKE_ONLY` with growing prefixes) to find the one that leaves state behind, and fix that
   leak or give the live fight a fresh browser.
 
-### [ ] [tests] Run the seeded review replay on the three-lens reviewer once RV1c is on `main` (2026-10-17)
-- category: tests
-- impact: 6
-- ease: 8
-- detail: phase RV1c (#610) shipped `node scripts/eval/seeded-replay.mjs
-  --judge review` and the three lenses in `skills/review.md`, but the
-  `review` job runs `main`'s copy of the skill (its `pre_run`), so neither
-  the fan-out nor its replay can be measured before T merges RV1c. The
-  seeded-review section of `docs/reports/eval/latest.md` reads "not
-  measured" until then. Once RV1c is on `main`: run the command (it pushes
-  eight `eval/*` branches, opens them as `eval:seed` drafts, dispatches
-  `pr-review.yml` on each, waits up to 35 min, then closes every PR and
-  deletes every branch), commit `docs/reports/eval/seeded.json` and
-  `latest.md`, and check `gh pr list --label eval:seed` is empty. This
-  also proves brief RV1 A7 and the RV1c Measure line (lens tags on a
-  verdict: read any medium or high `loop:pr` PR's verdict after the merge).
-- next: `/iterate` (a measurement run, plan-only diff under `docs/reports/`).
-
-### [bug] "SACRIFICE any amount" never asks the player for an amount (RC2 walk, 2026-10-11)
-- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
-- category: bug
-- impact: 6
-- ease: 5
-- detail: Leg 1: Blood Price E-10d ("SACRIFICE any amount (max 15)") played with a die sacrificed 1 with no prompt (log seq 78, `vitae-sacrificed amount:1`), and Blood for Blood chose its X itself. The card's main decision is taken from the player.
-- next (`/iterate`): add an amount picker (a stepper or slider, 1..max, capped by VITAE) when a card has a variable SACRIFICE, and feed the chosen amount to the engine; engine test that the amount is honoured, mobile test for the picker.
-
-### [balance] The Brine Hag keeps 152 VITAE in every region (RC2 walk, 2026-10-11)
-- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
-- category: balance
-- impact: 5
-- ease: 6
-- detail: All four walk Hags had 152 VITAE (Breakwater to Lantern Deep), while Float-Eye scaled 92 to 108 to 124 and the Doorwarden 258 to 312 to 368 to 422 as the pilgrim went from level 1 to 6. Honest Hag fights averaged 3.25 turns against D82's target of about 5; three of four ended through mercy at about 30%.
-- next (`/iterate`): check `scaleEnemyToLevel` and the map pins: is the elite missing its region scale (a bug: fix it and re-run the lane pacing sim), or is 152 pinned on purpose? Any retune of the Hag's numbers is T's call (attended, as D82 was); file a `[loop-call]` if it is ambiguous.
-
 ### [perf] Map SVG fix is unproven on a device (perf audit, 2026-10-03)
 - category: bug
 - impact: 8
@@ -663,71 +607,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next: before any map ships with `chartTexture: true`, draw the texture as
   a tiled image or drop it; extend the raster test to the fallback sheet.
 
-### [contract] Pre-purge saves keep purged card ids; combat throws on them (B4 F2, 2026-10-01) — RESOLVED 2026-10-02 (b09e1de0, RC session: `dropUnknownCardIds` runs on every load, mobile and CLI, with tests)
-- category: contract
-- impact: 6
-- ease: 6
-- detail: no `game.migrate.ts` hop drops player card ids the P1 purge
-  deleted. A pre-purge save keeps them in `knownCards` /
-  `combatRewardCards`; `buildCombatDeck` (`combat.deck.ts:71`) deals them
-  and `executeCard` throws `not found in library` (`card.engine.ts:105`).
-  Traced by reading, not run. `plan/revamp/card-rules-inventory.md` §14.
-- next (`/iterate`): reproduce with a v26-era fixture save; add a hop that
-  filters both lists through `getCardById` (re-seed `STARTING_CARD_IDS` if
-  `knownCards` empties), with a migration test.
-
-### [tests] The carrier rule (D45) has no enforcer; BLEED has no carrier (B4 F1, 2026-10-01)
-- category: tests
-- impact: 5
-- ease: 5
-- detail: nothing checks that an atlas row, gloss, silhouette or status
-  glyph has a live carrier. BLEED is registered in all four with none (the
-  "Bleeding" hazard never applies `debuff_bleed`). Dead rows also sit in
-  `KEYWORD_FAMILY`, `EFFECT_GLYPHS` and `FREE_KW_GLYPH`. Inventory §8, §9.
-- next (`/iterate`): add a carrier walk to `scripts/content-drift.mjs`
-  (cards, enemy decks, items, hazards, map events, dice, anvil), delete
-  the rows it fails (deletion only, D58), and keep it in root `npm test`.
-
-### [infra] A reconciled merge commit reached main with no verify-* run, tripping the deploy gate fail-closed (2026-09-29)
-- category: infra
-- impact: 5
-- ease: 5
-- detail: HEAD `19446f42` ("merge: reconcile with concurrent skip-comment
-  gate fix", #417) touches gated paths but no `verify-mechanics` /
-  `verify-mobile` workflow ever ran for it — only `ci-autofix` (skipped),
-  `deploy-comment` and `close-trailers` did. `npm run deploy:check` fails
-  closed against it ("grace window" expired, no gated workflow found),
-  with its own hint: a push made with the default `GITHUB_TOKEN` (as
-  opposed to the repo's `GH_PAT`) never triggers further workflow runs.
-  Not new to tonight — `709d6c2d` (PR #412's merge commit) shows the same
-  gap in `gh run list`, while `9dd4512e` (PR #411) got a full verify set —
-  so this looks like an intermittent gap around merge commits specifically
-  (a manual `git merge` conflict-resolution push, per the root CLAUDE.md's
-  PR check-in convention, rather than a `gh pr merge`), not a one-off.
-  The underlying commits (`aa12ff58`, `f47fb4c9`) were each verified green
-  before the merge, and this digest's own `npm run verify` (§3 step 6)
-  covers the same tree, so nothing is unverified in substance — only the
-  merge commit's own CI record is missing.
-- next (`/iterate` or `/fix-ci`): find why some merge-commit pushes don't
-  trigger `verify-*` (token identity used for the push, branch-protection
-  required-checks config, or a workflow trigger filter) and either fix the
-  trigger or teach `deploy:check` to treat a merge commit whose parents
-  are both already green as satisfied without its own run.
-
-### [content] Consumable buffs borrow unrelated keyword glosses on their status chips (2026-09-28)
-- category: content
-- impact: 3
-- ease: 6
-- detail: `SUPPORT_KEYWORD` in `axiomancer-mobile/state/combat/keywords.ts`
-  maps consumable and engine buffs to the closest live keyword, so a crit
-  or status-chance buff shows a MARK chip with Mark's gloss, and haste
-  shows DRAW. The chip then explains a mechanic the buff does not have.
-  The keyword purge (D45) removed the FORETELL label from
-  `buff_accuracy_up`, which now shows its own effect name.
-- next (`/iterate` or `/adjust-equipment`): give each mapped buff its own
-  effect-name label (as `buff_accuracy_up` now does) unless it really
-  applies the keyword, and pin the mapping with a test.
-
 ### [debt] Engine faces still print RIPOSTE / FORETELL / PIERCE words that have no gloss (2026-09-28)
 - category: debt
 - impact: 2
@@ -742,141 +621,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   undefined word.
 - next (guided card session): treat as part of re-admitting the keyword;
   no loop action while no card carries it.
-
-### [balance] Post-purge: the level-3 King of Revenge is 0/40 against the grey deck (2026-09-27)
-- category: balance
-- impact: 6
-- ease: 4
-- detail: measured in the P1 matrix (baseline stamp `c6fd758c`: early
-  60%, mid 83%, late 99%, impossible 67%). fishing-village's boss, reached
-  around level 3 with Blow 5 / Ward 3 / Word 2 and at most a few grey
-  rewards, wins 0 of 40 sims. The stage bands are healthy, so this is one
-  foe, not the curve. The fix is enemy-side (its phase count or VITAE) or
-  waits for the card agent's library (D37). Do not shrink numbers (pillar
-  1); buff the neighbours or re-pin the foe.
-- next: `/adjust-enemies`. Re-run the King's cell with `npm run
-  baseline:check` fresh, then decide re-pin vs wait. Record the choice here.
-
-### [content] Post-purge: the colour systems are dormant, but the Momentum tutorial still teaches them (2026-09-27)
-- category: content
-- impact: 4
-- ease: 5
-- detail: every live card is grey ("Any die can power this card"), so
-  momentum, surge and colour yields never fire for the player. The
-  first-combat Momentum tutorial still explains that system, so a new
-  player learns a rule they cannot use. The systems stay (the card agent
-  may bring colour back, D37). The copy is the problem.
-- next: gate the Momentum tutorial on the deck holding a coloured card,
-  and leave the system code alone. Revisit when coloured cards return.
-
-### [gap] Old Marrow's quest payoff can never be reached: no choice leads to `thanks`, and he stands before the boss on a forward-only map
-- category: gap
-- impact: 5
-- ease: 5
-- detail: filed 2026-09-28 by `/adjust-npcs` pass 21, from a reachability
-  walk over every staged tree (root to `nextNodeId`). The `thanks` node on
-  Old Marrow's tree (`Coastal-Village/maps.ts`, ~line 86) has four
-  `questCompleted: 'starting-quest'` replies. They pay 25 or 12 gold, set
-  `marrow_pressed`, or start `get-to-forest` via `next_steps`. No choice
-  anywhere points at `thanks`, and a pickaxe search of the history
-  (`-S"nextNodeId: 'thanks'"`) finds that none ever did. The map rules out a
-  simple link as a fix. Marrow is staged only at `fv-2` (column 1). The King
-  of Revenge is at `fv-6` (column 8), and fishing-village's graph only moves
-  forward, so the player never meets Marrow after the kill. The knock-on
-  effects: `marrow_pressed` is never set, so Captain Blackwater's Phase 53e
-  read-back (`marrow_pressed_recognition`) never shows. `get-to-forest` is
-  granted by the `fv-10` travel door instead, as `content.ts` ~990 notes.
-  The quest's own `reward` still pays on completion, so the player loses no
-  money, only the beat. This is related to pass 58's pending "the village
-  still points at the breakwater" row: Marrow's `offer` line is part of the
-  same rework.
-- why not shipped in the steward tick: this is not a small fix. It needs a
-  post-boss Marrow node on fishing-village's graph, which displaces a node
-  and changes the map's kind spread and its e2e pins. It also needs a
-  `questCompleted`-gated greet reply into `thanks` and new prose, so it is
-  cross-surface and "large" under THE GROWTH FLOOR ¶2. The alternative is
-  to retire `thanks`/`next_steps` and the Blackwater read-back as dead
-  content. Pick one once the fishing-village breakwater-line row is worked,
-  because both edit Marrow's tree.
-- next (`/iterate`): either (a) re-stage Marrow at a column-9 node beside
-  the `fv-10` door and add a gated greet reply into `thanks`
-  (`content-curator` for the line), or (b) retire `thanks`, `next_steps`
-  and `marrow_pressed_recognition` as unreachable. Pin whichever you choose
-  with a reachability test.
-
-### [gap] Act 1 has no shop, so the relic kit the 2026-09-23 owner call put "on the road" is five maps away
-- category: gap
-- impact: 6
-- ease: 6
-- detail: filed 2026-09-27 by `/adjust-equipment` pass 21. The owner call of
-  2026-09-23 (THE VERY START) made a fresh run seed no relics. Only the
-  Suppliant's Ring comes at the first node, and "the markets sell them".
-  `nfForestMarket` (`MapEvents/content.ts` ~129, Glen Market, `nf-8`) says
-  in its comment that "the first market on the road stocks the Phase-19
-  starter kit's weapon, armor and charm, so the intended opening loadout is
-  buyable before the forest deepens". The map revamp moved that road. Across
-  the Breakwater, the Charcoal Wood, the Beacon Crags, the Lantern Deep
-  (M3a–M3d) and fishing-village, there is no `village` node and no `shop:`
-  (the only `shop:` payloads are northern-forest's and later maps'). So a
-  new game plays all of Act 1 plus fishing-village with one signature
-  (the ring). It has nowhere in Act 1 to spend its loot-cache and fight
-  currency; fishing-village's blacksmith swaps gear variants but sells no
-  relic. Glen Market is the sixth map. The Lantern Deep even has a "market grotto"
-  landmark (`ld-10`), but it is staged as a camp: "The traders let you sleep
-  behind the stalls."
-  Prior art: `kb:slay-the-spire-the-board-game/rules/actions` (src-006).
-  Shops that sell potions and relics are part of every act's map there, not
-  something saved for later acts.
-- why not shipped in the steward tick: the fix changes the kind spread of
-  maps authored under T's D21–D35 rulings, along with their e2e kind pins. That
-  makes it a cross-surface change, which is "large" under THE GROWTH FLOOR
-  ¶2. No new item, keyword or art is needed.
-- next (`/iterate`): stage one Act 1 `village` node with a merchant-less
-  `shop:` (`VillagePayload.merchants` may be empty, so D29 and the Act 1
-  people session (rows below) aren't touched). Stock it with the starter
-  kit (`relic-overwhelming`, `relic-read`, `relic-press-the-point`) plus
-  `minor-healing-potion`. There are two readings. (a) `ld-10`, the market
-  grotto: this is truest to the plate, but it comes late (map 4) and turns
-  one of three camps into a village. (b) A node in the Charcoal Wood (map 2):
-  the kit comes early, but no landmark there is named for a market. Pick
-  (a) unless a playtest shows the kit arriving too late. Update Glen
-  Market's comment and the map's kind-spread comment and test, and add an
-  e2e that pins a `shop:` reachable in Act 1 from the default start.
-
-### [content] A pinned unique pays a full level of XP in Act 1 (the Charcoal Wood's kudan)
-- category: content
-- impact: 3
-- ease: 5
-- detail: filed 2026-09-26 (M3e residue). `cw-7` stages `kudan`, a `unique`
-  foe (native level 10), pinned at level 2. `scaleEnemyToLevel` rescales its
-  default XP to 2 x 500 = 1,000, so this one fight is worth a full level:
-  more than the rest of the Charcoal Wood (410) and about a third of all of
-  Act 1 (~2,870). Every other Act 1 fight is `simple`/`normal`/`elite` (10 to
-  200 XP). D30 allows one elite per region; it says nothing about uniques, so
-  `act1-elites.engine.test.ts` does not catch it.
-- next: `/adjust-enemies` (enemies are in the steward rotation): swap cw-7 to
-  a `normal` foe from the northern forest roster, or pin its XP; then add a
-  "no `unique` in Act 1" case to `act1-elites.engine.test.ts`.
-
-### [gap] The Breakwater has no people of its own — an attended story-spec session (D34) [parked: R11 — via /oversight 2026-09-28]
-- parked: people, story and art are content (D58). T parked this legacy
-  `[needs-user-call]` row via `/oversight` 2026-09-28; it returns with R11
-  (people, story) or B8 (art), after RC. `/iterate` skips it.
-- category: gap
-- impact: 5
-- ease: 4
-- detail: filed 2026-09-26. T chose (D34) to give the Breakwater NPCs of its
-  own rather than move fishing-village's there. Until then a new game meets
-  its first NPC and first quest (Old Marrow's starting quest, Phase 53c)
-  only after all of Act 1, in fishing-village, and
-  `quest-giver-reachable.engine.test.ts` pins `startMap: 'fishing-village'`,
-  so nothing checks the default start. The Breakwater's "What happens here"
-  in `content/story/story-overview.md` is still open, and hard rule 3 forbids
-  inventing a named character alone, so this is not a loop phase.
-- next: an attended `story-spec`/`character-spec` session with T: settle what
-  happens at the Breakwater, draft 1–2 people for T's sign-off, then stage
-  them (`npcs:` on the map, dialogue via `content-curator`) and point
-  `quest-giver-reachable` at the default start.
 
 ### [gap] The rest of Act 1 has no people either: the Charcoal Wood, the Beacon Crags, the Lantern Deep [parked: R11 — via /oversight 2026-09-28]
 - parked: people, story and art are content (D58). T parked this legacy
@@ -921,7 +665,610 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   tuning loop (rebuild pending, jot `1fc33003`)" where the old loop's
   A/B surface is meant.
 
-### [debt] T5 Tier 2 docs — named for archive but still have consumers (2026-09-25; archive part resolved, effects/enemy rewrite open)
+### [debt] T2b dice-flag collapse — live content the OFF path was carrying (2026-09-25)
+- **Context:** D7 deleted the Upgradeable-Dice OFF path (stance draft, hidden read, STAKE, v1 wheel, fate-X powering). The shipped model already ignored all of these; the items below were already inert in players' builds and are now visibly so.
+- **Fate cards — RESOLVED (adjust-cards pass 20, 2026-09-26):** `the-note-falls-due`, `miserere`, `dead-pledge` folded `fate` -> off-colour `dieBonus` (recoil moved into the rider). Still open: the `fate` field has zero carriers but remains in `types.ts`, `cards.pricing.ts`, `combat.cards.ts`, `card-upgrades.ts`, `combat.card-complexity.ts`, `card-keywords.ts` and the tests. Deleting it is a small cross-surface cleanup. Also `it-gets-up-again` (`float_x_die`) is priced at 4.5 but almost always pays only its +1 Conviction fallback; that is an owner call alongside the `reroll_spent` item below.
+- **Advantage buffs:** `buff_haste`, `buff_accuracy_up`, `buff_critical_damage_up` and kin grant advantage through the deleted read, so they do nothing in combat. Retire or re-hook (`/adjust-keywords`).
+- **`reroll_spent` relic mechanic** still rerolls from the legacy face bag (`rerollSpentDice`/`COMBAT_DIE_FACES`), so it can mint X or faceless dice. `float_x_die` always pays +1◆ now.
+- **Sim:** the `blind` policy now plays identically to `greedy` (kept so the matrix keeps its column); retire or redefine it at the next `/combat-playtest`.
+- **Stale copy — RESOLVED (adjust-cards pass 20):** "drafted die" in `the-unpaid-sexton`'s face now reads "rolled dice". *(The FORGE, GHOST and WILD/X atlas rows were synced to `KEYWORD_GLOSS` by adjust-keywords pass 19, 2026-09-26.)*
+- **Vestigial params:** `card-played.advantage` is always `'neutral'`; `scalePlayerHit`'s `readMult` is always 1.
+- **Card faces print a dead read:** status card faces still show ▲/▼ read numbers, but every play lands at read `'none'`. Mobile froze `READ_ADVANTAGE_INTENSITY_BONUS` / `READ_DISADVANTAGE_DURATION_PENALTY` (both 1) as local constants atop `combat-encounter.engine.ts` so it compiles; delete them with a card-face pass.
+- **CLARITY is inert:** its `forceWildOnNextDie` flag was only read on the deleted OFF path.
+- **Wrong copy (predates T2b):** the dead-tray END line says unusable dice "are discarded" (`endTurn` banks one unspent die when the Reserve has room); the CONVICTION ◆ glossary says it is banked "from unspent dice" (unspent dice earn nothing); the momentum info popup still describes the v1 wheel ("light all three").
+- **Coverage gap:** `upgradeable-dice-e2e.mjs` was the only browser run walking Press Fate, the momentum chip and blacksmith HONE; it was deleted with the flag. The other e2e scripts boot the model but do not walk those steps.
+- **`MAX_PERMANENT_WILD_DICE`** (`Combat/combat.dice.ts`) is documented as the cap on `permanentWildDice` but nothing enforces it — missing clamp or dead constant (T3 barrel pass kept it).
+- **adjust-keywords pass 19 (2026-09-26) — more trim fallout, filed not shipped:**
+  - *Fate re-hook option:* Dawncaster's Blood ("sacrifice your own blood instead of Energy", `kb:dawncaster/keywords/blood.okf.md`) is the design `fate` was reaching for: a dead X die plus `recoilHp` as a substitute payment. It only works if X dice exist in ordinary play, and the Spec 33 tray never rolls one (only `reroll_spent` can mint one). So the card fold (`fate` -> `dieBonus`, `/adjust-cards`) is still the honest small fix.
+  - *Nine inert support buffs:* besides the three named above, `buff_critical_rate_up`, `buff_liars_gambit` and `buff_abyssal_presence` (advantage-only, fed to `advantageGrants`, which nothing reads), plus `buff_haste`, `buff_haste_surge`, `buff_all_stats_up` and `buff_status_chance_up` (a positive roll modifier, which is only ever read as a penalty on the enemy). They are unobtainable and pinned for old saves. Stale copy reachable from a legacy save: `tooltip.engine.ts:349-358` and `village.engine.ts:175-176`, and `SUPPORT_KEYWORD` maps them to unrelated glosses.
+  - *`debuff_curse` has no live applier* (its only source, the threat-clock enchant, was trimmed). It was also the only negative roll modifier, so the enemy roll-penalty deny path (`combat.engine.ts` ~3415/4913/5057), `isStatDebuff` and mobile's 'weaken' class never see any input. Retire it (about six test fixtures to repoint), or give the path a new feeder. `debuff_nettle_sting` has also been orphaned since `84ef85bd`.
+  - *`resistedBy` / `resistDR` are dead data.* They are copied at `card.engine.ts:330`, `Effects/index.ts:81` and `game.reducer.ts:329`, and nothing reads them. Removing them touches exported types and saved state. (The `docs/effects.md` resist-roll prose was fixed in pass 19.)
+  - *Tier-1 leftovers:* `MIND_MARK_ID = 'tier1_mind_mark'` / `getStudyMarkIntensity` (`Combat/effects.ts:21-27`, barrel-exported) point at an id in neither library. There is also a matching glyph at `statusGlyphs.ts:117`.
+  - *Seven player mechanic kinds have zero carriers:* `strip_random_buff`, `befriend_attempt`, `refresh_die`, `convert_die_color`, `overheat`, `spend_all_pips`, `echo_next_spell`. These are wired but unused, so they are remove candidates. Retiring one touches the union, pricing, engine, mobile, editor and tests, so each is large. `befriend_attempt` sits on the befriend path and needs an owner call.
+  - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
+
+### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
+- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
+- **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
+- **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
+
+### [content] Story systems the new rulings require that the game does not have (2026-09-24)
+- category: content
+- impact: 7
+- ease: 3
+- detail: `story-overview.md` rulings name five things with no representation
+  in the build:
+  - the opening world-framing (ruling 11: The Covenant occupies nearly the
+    whole world; the capital is the last bastion of hope);
+  - a **memories** section in the Memoir tab, organized chronologically
+    (ruling 12; `axiomancer-mobile/app/(tabs)/memoir/` lists quests only),
+    through which the prologue reaches the player;
+  - The Covenant itself (rulings 13–14) — no faction, guard enemies or
+    Covenant roster exists (`src/Enemy/enemy.library.ts`);
+  - X's inherited money debt (ruling 8);
+  - the pursuing guards (ruling 7).
+- next: the memories section and the opening framing are systems work that
+  can be designed now (what triggers a memory, the chronological scheme).
+  What each memory *says* waits on the prologue's delivery plan. Route to
+  `/expand` as phase candidates. The Covenant roster waits on the Drowned
+  Parish session deciding who pressures X.
+
+### [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23)
+- category: debt
+- impact: 4
+- ease: 6
+- detail: comment-vs-code mismatches where the CODE is the stale side. Each
+  was left untouched by the docs PR (the two one-liners it did fix:
+  `verify-drift.yml` now triggers on `enemy-keywords.ts`;
+  `check-naming-law.mjs` now sweeps `apocrypha.cards.ts`).
+  1. `axiomancer-mechanics/scripts/export-catalog.ts:106-113` —
+     `parsePricingComments` reads `src/Cards/cards.library.ts`, which is the
+     aggregator since THE BIG NUMBERS REWRITE; the `// pts:` blocks live in
+     `src/Cards/library/*.cards.ts`, so catalog pricing is always empty.
+     Confidence 60.
+  2. `axiomancer-mechanics/src/CLI/combat-sim.cli.ts:11-13,43-45` — usage
+     text and default loadout name `slippery-slope`, `brace-for-impact`,
+     `festering-argument`, `soft-word`; none exist in the card library.
+     Confidence 50 that the default path is broken (may fall through).
+  3. `axiomancer-mechanics/src/Effects/world-tick.ts` —
+     `processWorldEffectTick` has no caller outside tests in mechanics or
+     mobile; `World/world.reducer.ts:206` used to point at a
+     `Game/world.orchestrator.ts` that does not exist. Either wire it into
+     `moveToNode` or delete it. Confidence 60.
+  4. `axiomancer-mechanics/src/Effects/index.ts:167-190` —
+     `TIER1_EFFECT_MAP` maps to `tier1_*` ids absent from both effect
+     libraries (the deprecated-effects test bans them), so
+     `applyTier1CombatEffect` always returns `noChange`; likewise
+     `Enemy/enemy.library.ts:89-92` `T1_DEFAULT`. Delete or re-point.
+     Confidence 80.
+  5. `scripts/axio-mcp-server.mjs:39-62` — `ensureFresh` stats only
+     `Cards/cards.library.ts` and `Effects/effects.library.ts`; an edit to
+     `Cards/library/*.cards.ts` does not bump the mtime, so the "mid-session
+     edit is caught" claim in its header is false for card edits.
+     Confidence 50.
+  Also observed: `scripts/check-baseline-freshness.mjs:33-41` says
+  `World/Continents/**` is import-disjoint from Combat/Cards/Enemy/Character,
+  but `Enemy/index.ts` and `Enemy/types.ts` type-import `MapName` from
+  `../World/map.library` (runtime-erased, so the sweep numbers are unaffected).
+- next: `/iterate` — verify each with a failing test first (1, 4 and 5 are
+  cheap to witness), then fix or delete; 3 is a design call (wire or remove)
+  and needs a `[loop-call]` note in the commit body.
+- note 2026-09-25 (T4 compaction): items 3 (`Effects/world-tick.ts`) and 4
+  (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
+  and 5 re-read live at `d615a35d`.
+
+### [content] 30 of 73 roster enemies (41%) carry no aftermath prose (`finalBlowLines`/`causeLines`) (2026-09-05)
+- category: content (found during `/adjust-enemies` pass 1's structural
+  audit — Step 1's "aftermath prose missing" signal)
+- detail: Phase 71 (GH#65 ask 1) added `finalBlowLines`/`causeLines`/
+  `pactLines` to the `Enemy` schema and authored them for most of the
+  roster, but 30 of the original 2026-07-06 52-painting batch never got a
+  pass (GraveLarva, ChatteringSkull, FootStealer, CursedHead, Ghast,
+  DoomEgg, TheButcher, Wichtlein, BullBegger, WeepingHead, GoblinShaman,
+  Sugata, PaleBrood, Mabadi, FrayedOne, BoneTotem, BoneWizard, CursedPaladin,
+  VampireThrall, JeweledTree, OgreNaga, Sidelle, AshenBoneDrake, Zoma,
+  MabadiUndrowned, TriEyesHollowed, BlackDeath, TheUnnameable, FireGiant,
+  GreaterDevil — grep `finalBlowLines:`/`causeLines:` absence in
+  `enemy.library.ts` to reproduce). Not a crash or a broken invariant —
+  `types.ts` documents the field as optional with a consumer-side fallback
+  (mobile presenter's `derive*Phrase` helpers render a generic line) — so
+  verify stays green and nothing is silently wrong in play. It is a real
+  flavor-completeness gap spanning nearly half the roster, including
+  several elites/mid-roster names (Sugata, CursedPaladin, VampireThrall,
+  FireGiant, GreaterDevil) that deserve a unique kill/death line as much as
+  their siblings that already have one. Sized at ~30 enemies x 6 lines
+  (brutal/quiet/ironic x2) in house voice (spec 34 §2.5) — a `content-curator`
+  job, not a routine single-enemy edit, and too large to fold into this
+  pass alongside its other two findings (the caverns CREATE and the Aporia
+  portrait backfill) without diluting quality. No owner decision needed —
+  purely executional — so filed here as `[content]`, not `[loop-call]`.
+- score: impact 4 x ease 5 / 10 = 2.0
+
+### [content] Engine-generated "the enemy" strings survived the phase-40 card-text grammar pass
+- category: content
+- impact: 3
+- ease: 5
+- detail: filed 2026-08-23 by phase 40 (card-text grammar + full copy
+  pass). That phase fixed the FIXED VOCABULARY rule ("the foe", not "the
+  enemy") across every AUTHORED string: `cards.library.ts`
+  `paidSummary`/`persistentEffect` (31 cards) and mobile
+  `state/combat/keywords.ts` `KEYWORD_GLOSS`/`SYSTEM_GLOSSARY` (17
+  entries), each now lint-enforced. Two adjacent surfaces still say "the
+  enemy" and were deliberately left out of that pass (bounded scope, not
+  an oversight): the ENGINE's own generated strings in
+  `axiomancer-mechanics/src/Combat/combat.cards.ts`
+  (`statePredicateText`'s `UNMOVED`/`enemy-drew-blood` clauses, the hex
+  `Attaches to the enemy.` suffix, the `lock_stance` and
+  `boost_all_dots` mechanic-text lines — 7 total sites) and the mobile
+  presenter's per-mechanic `verbLine` prose in
+  `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
+  (`mechanicHeadline`, ~30 entries, several also carrying stray em
+  dashes/semicolons the phase-40 lint never reached). Neither surface has
+  a lint today. A future pass: rename the 7 mechanics sites (cheap,
+  bounded — plus its `choir-card-wording.engine.test.ts` assertions that
+  pin `UNMOVED (the enemy dealt you no damage last round)` / `the enemy
+  drew blood since your last turn` / `Attaches to the enemy.` literally),
+  then decide whether `mechanicHeadline`'s much larger prose set is worth
+  a dedicated sweep or a standing lint of its own.
+- next: /iterate
+
+### [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick
+- category: gap
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
+  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
+  `_claude-skill.yml` setup step (`npx playwright install chromium
+  --with-deps`, used by both `march` and `night`) — its underlying
+  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
+  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
+  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
+  force-cancelled it. No commit resulted; the tick is a total loss, not
+  a partial one — distinct from the already-filed "march ticks are
+  creeping toward the job timeout" row above (that one is real work
+  outgrowing the ceiling; this one is an idle apt-mirror hang eating
+  the whole budget while nothing runs). `verify-mechanics.yml` and
+  `verify-mobile.yml` carry their own copy of the same install command,
+  so the exposure isn't march-specific, just unluckiest there because
+  that job runs unattended on the longest cadence.
+- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
+  install` on every invocation with no cache and no timeout around the
+  network call; caching the installed apt packages (or the Playwright
+  browser + its system deps together, keyed on the pinned Playwright
+  version) removes the network dependency from the common path
+  entirely. A cheaper interim fix: wrap the install step in a short
+  step-level `timeout-minutes` so a mirror hang fails fast and loud
+  instead of silently eating the whole job ceiling.
+- recurrence (2026-08-21 digest pulse): run `32290461478` (the
+  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
+  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
+  18:59:49 with zero progress until the ceiling force-cancelled it at
+  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
+  still unfixed, still `/iterate`-shaped, not re-scored.
+
+### The Phase-169 loadout path is dead in the shipped runtime
+- category: debt
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-08 by Phase 52a. `createNewGameState` seeds only the
+  2 `STARTING_CARD_IDS` loadout flags and mobile never writes loadout flags
+  afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
+  with no flags at all. 52a's loadout reconciliation is correct and tested,
+  but nothing exercises it end to end. Pairs with the row above.
+
+### `deploy:check` is unusable from remote web sessions — 401 "Token rejected"
+- category: debt
+- impact: 4
+- ease: 5
+- detail: filed 2026-07-18 (oversight session residue). Running
+  `npm run deploy:check` from a Claude Code web session fails with
+  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
+  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
+  gitignored and absent in remote containers. The session fell back to
+  the GitHub MCP Actions API (which authenticates fine) to confirm
+  CI-green, but nothing records that fallback, so every skill step that
+  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
+  bearings' deploy gate) silently dead-ends in web sessions. Fix
+  options: teach `scripts/deploy-check.mjs` to fall back to a
+  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
+  the MCP fallback in bearings' deploy-gate section so remote sessions
+  know the sanctioned path.
+- next: /iterate (deploy-check.mjs env fallback + a bearings note)
+
+### Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095
+- category: debt
+- impact: 4
+- ease: 7
+- detail: surfaced 2026-07-17 during the starter-deck-presets rename.
+  `npm run verify` in `axiomancer-mechanics` fails from any
+  `.claude/worktrees/*` checkout with `TS5095: Option 'bundler' can
+  only be used when 'module' is set to 'preserve' or es2015+`. Root
+  cause: the mechanics tsconfig (module `commonjs` +
+  moduleResolution `bundler`) is accepted by TypeScript 6.0.3
+  (installed at `axiomancer-mechanics/node_modules`) but rejected by
+  5.9.3 (repo-root `node_modules`); worktrees have no local install,
+  so Node walks up past the worktree into the root and picks 5.9.3.
+  Every worktree session must hand-invoke the 6.0.3 `tsc.js` to run
+  the gate. Fix options: align the root TypeScript devDependency to
+  6.x, make the tsconfig valid under both (e.g. module `preserve` or
+  moduleResolution `node`), or install per-worktree. A task chip was
+  also filed from the session.
+
+### Telemetry attribution is best-effort; CI logging path unverified
+- category: debt
+- impact: 3
+- ease: 4
+- detail: TELEMETRY.md (shipped 2026-07-17, commit 03969cea) scrapes
+  model and main-vs-subagent from the transcript tail because hooks
+  don't expose either directly — expect `unknown` cells and possible
+  misattribution near sidechain boundaries; a call racing a sidechain
+  boundary can be attributed to the wrong side. Also unverified: in
+  cloud ticks, skills arrive as '/command' prompts and should land as
+  slash-prompt rows via UserPromptSubmit — confirm rows appear (and
+  ride the tick's commit) after the first few cloud runs. If the
+  harness later exposes agent id / model in hook input, replace the
+  transcript-tail scrape in .claude/hooks/telemetry.mjs.
+- next: /iterate (verify after next cloud tick; upgrade when harness
+  allows)
+
+### kb-query MCP could surface kb/ sync age
+- category: gap
+- impact: 2
+- ease: 8
+- detail: kb-sync.mjs now stamps kb/.sync-meta.json (2026-07-17) and
+  the session-start hook reports age, but design sessions that go
+  straight to the kb-query MCP server / skill never see it. Adding the
+  stamp's age to kb_overview output (and a staleness warning >14d)
+  would put corpus freshness in front of the consumer that actually
+  cites it.
+- next: /iterate
+
+### [1.6] Mobile accessibility gaps
+- category: a11y
+- impact: 4
+- ease: 4
+- detail: focus management + a11y labels surfaced repeatedly in
+  prior critique. Ongoing drain.
+- next: /iterate
+
+### [1.5] Unbounded keepsake/death flag growth on long saves
+- category: debt
+- impact: 3
+- ease: 5
+- detail: `night-keepsake:`, `hazard-scar:`, `hazard-death:`,
+  `gleaning-token-banked:` accumulate with no consumer/cap. A
+  long-save soak test could trip on this.
+- next: /iterate
+
+### [1.5] `HazardBoard.tsx` file-length outlier (~815 lines)
+- category: debt
+- impact: 3
+- ease: 5
+- detail: extraction candidate; several other mobile files are
+  length outliers. Extract sub-components with their own tests.
+- next: /iterate
+
+### [2.1] Two agent-e2e walkthroughs describe a deleted engine surface
+- category: gap
+- impact: 3
+- ease: 7
+- detail: spotted 2026-07-10 during the `/consolidate` terminology
+  sweep design (phase 25). `axiomancer-mechanics/automation/scripts/
+  walkthroughs/skill-learning.goal.md` names
+  `learnSkill(character, skillId)` from `src/Skills/skill.engine.ts`;
+  `tier2-skill-chain.goal.md` narrates `executeSkill`/`basePower` in
+  the same retired vocabulary (`base-power` and `src-skills-path` are
+  both live `lexicon.json` rows for exactly this concept). Neither
+  `src/Skills/` nor `learnSkill` exist in `axiomancer-mechanics/src`
+  today. Both files sit in `automation/`, a lexicon-exempt
+  dated-record zone, so `check-lexicon` never sees them, and their
+  paired `.json` scripts may already be dead too (`node
+  automation/agent-e2e.mjs skill-learning` / `tier2-skill-chain`
+  would confirm). Left un-deleted per the janitor mandate's
+  suspected-dead-file rule — the automation/README.md inventory
+  table and the harness owner should confirm dead-vs-superseded
+  before removal.
+- next: /iterate
+- update (`/iterate` investigation, 2026-09-11, no code shipped — this
+  tick's one fix went to the [1.8] tray-die a11y row instead): confirmed
+  dead, not superseded — `axiomancer-mechanics/docs/lexicon.json`'s own
+  `retired` registry (`src-skills-path`, since "2026-07 (PR #48 deleted
+  the dead src/Skills/ ability system; see CHANGELOG 'De-conflation')")
+  already rules this: the whole `src/Skills/` tier-ability system
+  (`learnSkill`, `executeSkill`, `SkillLookup`, `skillLibrary`) is gone
+  from `src/`, replaced by the SignatureSkill family (a separate living
+  concept). Both goal.md/json walkthrough pairs are safe to delete next
+  pick, per the row's own scoped ask. **Wider scope found while
+  checking:** `learnSkill`/`executeSkill` are NOT confined to these two
+  automation files — `README.md`'s Skills feature-table row,
+  `docs/testing.md`, `docs/oaths.md`, and specs 06/14/25/31 all still
+  describe the retired system in detail, several citing Phase
+  30-66-numbered work as if current. That is a much larger, higher-risk
+  doc-rewrite than this row's "two automation files" framing (touches
+  the canonical feature-table, not a lexicon-exempt dated-record zone)
+  — filed here rather than attempted blind; a future pick should treat
+  the automation-file deletion and the README/specs rewrite as two
+  separate scoped fixes, not one.
+
+### [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules
+- category: tooling
+- impact: 4
+- ease: 5
+- detail: three confirmed instances of one shape. The 2026-08-22 content-pipelines
+  audit found two: an emoji inside quoted CARD TEXT read as a commit-trailer
+  violation, and `backgroundedGate`'s regex catching any command containing the
+  word "test". A third hit 2026-08-27 during Phase 72: a `git commit` was
+  rejected for a forbidden push flag that appeared only as QUOTED PROSE inside
+  the heredoc message — the brief was documenting which verbs stay denied. The
+  guard cannot tell a command from text inside a command.
+- why it matters: each instance costs a retry and teaches the loop to avoid
+  writing about the rules it enforces, which is the opposite of what the plan
+  files are for. The failure is silent-ish (a blocked tool call, not a wrong
+  result), so it accumulates rather than being fixed.
+- next: parse before matching. The push-flag and trailer rules should apply to
+  the command's own argv, not to heredoc bodies or `-m` message contents; the
+  `-m` body already has its own dedicated lint pass, so the general grep can
+  exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+
+## Done
+
+### [x] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06) — CLOSED 2026-11-22 (stale: all six portraits have anim/backing sets and provenance; `FRAME_SET_EXEMPTIONS` is empty; AUDIT drain triage)
+- category: content
+- impact: 9
+- ease: 2
+- detail: `c2842354e` ("Add six Breakwater enemy portraits", PR #1406) added `bilge-stalker.webp`, `coralback.webp`, `quay-crab.webp`, `saint-beneath.webp`, `saltwick-swarm.webp` and `wreckmaster.webp` directly under `axiomancer-mobile/assets/images/enemies/`, with no registry or provenance entries — the PR's own body says this was deliberate ("This image-only PR leaves those entries for integration"). That alone fails `asset-provenance.test.mjs`'s "every art file is reachable from a registry" (6 orphans) — cheap to fix: an `ENEMY_ART_BY_KEY` entry per file plus a `provenance.json` record (verified locally, both go green). But `scripts/bake-backings.mjs`'s `rosterKeys()` treats every `<key>.webp` beside the registry as a foe that must draw its cells, and `scripts/enemy-backings.test.mjs`'s "the sweep found the roster and its cells" asserts `foe.planes.length === 24` for literally every roster key, unconditionally — it has no `FRAME_SET_EXEMPTIONS` awareness at all (confirmed: that name appears nowhere in `bake-backings.mjs` or `enemy-backings.test.mjs`). Phase AN5e closed the "every portrait animates" invariant for the prior 17 foes (each has an `anim/<key>/` set of 24 cells); these six have none, so they fall back to their single still (`drawnFiles()`), i.e. 1 cell, not 24. Registering them in `ENEMY_ART_BY_KEY` without a frame set also fails the jest suite `every-portrait-has-a-set.test.ts` (`ENEMY_ART_KEYS.length` goes 17 -> 23, and the new keys have neither a set nor an explicit `FRAME_SET_EXEMPTIONS` entry) — verified locally, 5 failures. Adding an explicit exemption would close that jest suite (it's designed for exactly this: "install a set, or exempt it explicitly") but does nothing for `enemy-backings.test.mjs`, which has no exemption path to honor it. So there is no change on the CI side alone that gets `npm run verify -w axiomancer-mobile` green: the real fix is a 24-cell animated frame set per foe (144 new cells total), which is new art content — out of scope for an autonomous CI fix (fix-ci hard rule 3) and owner-led per D58's content bias. Reverting the six files was considered and rejected for this run: pulling already-merged content back out unilaterally, with no T present to confirm, is a bigger call than this skill is meant to make unattended.
+- next: a content/process call, not a code fix: either (a) author the six frame sets as a normal "AN"-phase content chunk (`AN5a`-`AN5e` is the precedent) so the roster invariant holds the way it does for every other foe, or (b) teach `enemy-backings.test.mjs`/`bake-backings.mjs` to honor `FRAME_SET_EXEMPTIONS` so a still-only portrait can be declared exempt (a deliberate design relaxation, not a CI patch), or (c) T decides to pull the six files back out of `axiomancer-mobile/assets/images/enemies/` until their sets are ready. Until one of those lands, `main`'s `verify-mobile` stays red and blocks every other tick; this row is the record of why a code-only fix-ci pass could not close it. **Answered by spec 157 (plot, 2026-11-06):** T's enemy recast makes the six portraits six real library foes, which is route (a) with the sets already authored in PR #1409. Chunk **157.3 (EN3c)** closes this row — it wires the art registry, the provenance records, the six frame sets and the baked backings, and takes `asset-provenance.test.mjs`, `enemy-backings.test.mjs` and the one-enemy-per-installed-set guard green together. It requires 157.1 (EN3a), which creates the entries. Routes (b) and (c) are dropped: no set is retired by this recast, so `FRAME_SET_EXEMPTIONS` stays empty and nothing is pulled back out.
+
+### [x] [content] BUG1j's universal befriend collapses the greedy sim policy's chapter-clear rate from ~85% to ~12% (fix-ci, verify-mobile run 41245913757, 2026-10-31) — CLOSED 2026-11-22 (stale: BUG1j was retired 2026-11-03 and befriending removed (spec 144); AUDIT drain triage)
+- category: content
+- impact: 6
+- ease: 4
+- detail: `sim/run-driver.test.ts`'s "every Breakwater node kind" case (seed 1) went red on `main` after BUG1j (`b23c5f768`, "every foe can be befriended... no XP"): `isEnemyBefriendable` now holds for every foe (previously only the Green Jelly carried a `friendshipReward`), and the `greedy`/`blind` combat sim policy (`combat.sim-policies.ts`) already scored Befriend highest whenever a foe's VITAE was at or below 30% (`BAND_BEFRIEND_LOW_HP`, `LOW_HP_FRACTION`) — a threshold that happens to equal `BEFRIEND_TUNING.defaultHpGate` (also 0.3). Pre-BUG1j, that scoring never fired outside the Green Jelly; post-BUG1j it fires on nearly every winnable fight, so the `wanderer`/`greedy` headless run spares instead of finishing almost every fight it would have won, earning no XP or loot and dying well short of the Breakwater's villages. Measured over seeds 1-40 with `WANDERER_POLICY`: 34/40 `chapter-clear` before BUG1j (`950074f58`), 5/40 after (`0afc538bf`); most runs now die around `bw-t1`/`bw-h3`/`bw-h7`/`bw-c1`, never reaching `bw-t4`/`bw-m5`. Fixed the red run by repointing the test at seed 8 (also full node-kind coverage, `chapter-clear`) — a seed choice, not a balance assertion (the test's own docstring: "the tests check the driver, never the game's balance") — but the underlying survival-rate collapse of the designated "tuned balance witness" is a real content change worth a deliberate look, not an incidental one.
+- next: a design call on whether `greedy`'s Befriend-at-low-VITAE preference should still fire against every foe now that it pays no XP/loot (tune `BAND_BEFRIEND_LOW_HP` down, gate it to foes that still carry a `friendshipReward`-like marker, or accept the new survival curve and let `/iterate` or a measured-truth run re-baseline against it).
+
+### [x] [content] map content: the seven Act 1 gathering nodes grant materials nothing spends (AW1b, 2026-10-26) — CLOSED 2026-11-22 (stale: the gathering kind was cut (NK1a); no layout references it; AUDIT drain triage)
+- category: content
+- impact: 4
+- ease: -
+- source: Phase AW1b (A10); `plan/phases/phase_AW1_act1_walk.md` Sources; `plan/playtest-harness.md` "Where things stand".
+- detail: `kind: 'gathering'` is live, not minigame residue: it replaced the retired Gleaning minigame (save v18 to v19), grants one named material through the paced `/event` receipt, advances `collect` quest objectives and feeds the hazard puzzle outcome and the labyrinth pools. Seven Act 1 nodes carry it: bw-4, bw-11 (Breakwater), cw-4, cw-8, cw-14 (Charcoal Wood), bc-7 (Beacon Crags), ld-7 (Lantern Deep). But no code in mechanics or mobile spends a material, so every grant is a dead end for the player.
+- next: T's call (map content, D88), one of: (a) keep the nodes as they are; (b) give materials a use (a brief T approves: the Anvil, a quest, a shop); (c) re-point the seven nodes to another kind. The plot's leading option is (a) with (b) to follow.
+
+### [x] [tests] Run the seeded review replay on the three-lens reviewer once RV1c is on `main` (2026-10-17) — CLOSED 2026-11-22 (stale: RV1c merged (#610); `docs/reports/eval/latest.md` carries the seeded-review section; AUDIT drain triage)
+- category: tests
+- impact: 6
+- ease: 8
+- detail: phase RV1c (#610) shipped `node scripts/eval/seeded-replay.mjs
+  --judge review` and the three lenses in `skills/review.md`, but the
+  `review` job runs `main`'s copy of the skill (its `pre_run`), so neither
+  the fan-out nor its replay can be measured before T merges RV1c. The
+  seeded-review section of `docs/reports/eval/latest.md` reads "not
+  measured" until then. Once RV1c is on `main`: run the command (it pushes
+  eight `eval/*` branches, opens them as `eval:seed` drafts, dispatches
+  `pr-review.yml` on each, waits up to 35 min, then closes every PR and
+  deletes every branch), commit `docs/reports/eval/seeded.json` and
+  `latest.md`, and check `gh pr list --label eval:seed` is empty. This
+  also proves brief RV1 A7 and the RV1c Measure line (lens tags on a
+  verdict: read any medium or high `loop:pr` PR's verdict after the merge).
+- next: `/iterate` (a measurement run, plan-only diff under `docs/reports/`).
+
+### [x] [bug] "SACRIFICE any amount" never asks the player for an amount (RC2 walk, 2026-10-11) — CLOSED 2026-11-22 (stale: CombatBoard renders an xRange picker (`programXRange`); the blood-price test covers the amount; AUDIT drain triage)
+- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
+- category: bug
+- impact: 6
+- ease: 5
+- detail: Leg 1: Blood Price E-10d ("SACRIFICE any amount (max 15)") played with a die sacrificed 1 with no prompt (log seq 78, `vitae-sacrificed amount:1`), and Blood for Blood chose its X itself. The card's main decision is taken from the player.
+- next (`/iterate`): add an amount picker (a stepper or slider, 1..max, capped by VITAE) when a card has a variable SACRIFICE, and feed the chosen amount to the engine; engine test that the amount is honoured, mobile test for the picker.
+
+### [x] [balance] The Brine Hag keeps 152 VITAE in every region (RC2 walk, 2026-10-11) — CLOSED 2026-11-22 (stale: the Brine Hag is gone from the library (replaced by the Green Jelly); AUDIT drain triage)
+- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
+- category: balance
+- impact: 5
+- ease: 6
+- detail: All four walk Hags had 152 VITAE (Breakwater to Lantern Deep), while Float-Eye scaled 92 to 108 to 124 and the Doorwarden 258 to 312 to 368 to 422 as the pilgrim went from level 1 to 6. Honest Hag fights averaged 3.25 turns against D82's target of about 5; three of four ended through mercy at about 30%.
+- next (`/iterate`): check `scaleEnemyToLevel` and the map pins: is the elite missing its region scale (a bug: fix it and re-run the lane pacing sim), or is 152 pinned on purpose? Any retune of the Hag's numbers is T's call (attended, as D82 was); file a `[loop-call]` if it is ambiguous.
+
+### [x] [contract] Pre-purge saves keep purged card ids; combat throws on them (B4 F2, 2026-10-01) — RESOLVED 2026-10-02 (b09e1de0, RC session: `dropUnknownCardIds` runs on every load, mobile and CLI, with tests) — CLOSED 2026-11-22 (stale: already RESOLVED in b09e1de0 (`dropUnknownCardIds`); AUDIT drain triage)
+- category: contract
+- impact: 6
+- ease: 6
+- detail: no `game.migrate.ts` hop drops player card ids the P1 purge
+  deleted. A pre-purge save keeps them in `knownCards` /
+  `combatRewardCards`; `buildCombatDeck` (`combat.deck.ts:71`) deals them
+  and `executeCard` throws `not found in library` (`card.engine.ts:105`).
+  Traced by reading, not run. `plan/revamp/card-rules-inventory.md` §14.
+- next (`/iterate`): reproduce with a v26-era fixture save; add a hop that
+  filters both lists through `getCardById` (re-seed `STARTING_CARD_IDS` if
+  `knownCards` empties), with a migration test.
+
+### [x] [tests] The carrier rule (D45) has no enforcer; BLEED has no carrier (B4 F1, 2026-10-01) — CLOSED 2026-11-22 (stale: CS1's `card-rules.engine.test.ts` enforces the carrier rule; BLEED residue stays in the atlas-words row; AUDIT drain triage)
+- category: tests
+- impact: 5
+- ease: 5
+- detail: nothing checks that an atlas row, gloss, silhouette or status
+  glyph has a live carrier. BLEED is registered in all four with none (the
+  "Bleeding" hazard never applies `debuff_bleed`). Dead rows also sit in
+  `KEYWORD_FAMILY`, `EFFECT_GLYPHS` and `FREE_KW_GLYPH`. Inventory §8, §9.
+- next (`/iterate`): add a carrier walk to `scripts/content-drift.mjs`
+  (cards, enemy decks, items, hazards, map events, dice, anvil), delete
+  the rows it fails (deletion only, D58), and keep it in root `npm test`.
+
+### [x] [infra] A reconciled merge commit reached main with no verify-* run, tripping the deploy gate fail-closed (2026-09-29) — CLOSED 2026-11-22 (stale: the loop lands by PR now; deploy-check prints the diagnostic and pat-probe/deploy-comment cover the token case; AUDIT drain triage)
+- category: infra
+- impact: 5
+- ease: 5
+- detail: HEAD `19446f42` ("merge: reconcile with concurrent skip-comment
+  gate fix", #417) touches gated paths but no `verify-mechanics` /
+  `verify-mobile` workflow ever ran for it — only `ci-autofix` (skipped),
+  `deploy-comment` and `close-trailers` did. `npm run deploy:check` fails
+  closed against it ("grace window" expired, no gated workflow found),
+  with its own hint: a push made with the default `GITHUB_TOKEN` (as
+  opposed to the repo's `GH_PAT`) never triggers further workflow runs.
+  Not new to tonight — `709d6c2d` (PR #412's merge commit) shows the same
+  gap in `gh run list`, while `9dd4512e` (PR #411) got a full verify set —
+  so this looks like an intermittent gap around merge commits specifically
+  (a manual `git merge` conflict-resolution push, per the root CLAUDE.md's
+  PR check-in convention, rather than a `gh pr merge`), not a one-off.
+  The underlying commits (`aa12ff58`, `f47fb4c9`) were each verified green
+  before the merge, and this digest's own `npm run verify` (§3 step 6)
+  covers the same tree, so nothing is unverified in substance — only the
+  merge commit's own CI record is missing.
+- next (`/iterate` or `/fix-ci`): find why some merge-commit pushes don't
+  trigger `verify-*` (token identity used for the push, branch-protection
+  required-checks config, or a workflow trigger filter) and either fix the
+  trigger or teach `deploy:check` to treat a merge commit whose parents
+  are both already green as satisfied without its own run.
+
+### [x] [content] Consumable buffs borrow unrelated keyword glosses on their status chips (2026-09-28) — CLOSED 2026-11-22 (stale: `SUPPORT_KEYWORD` is empty; no support effect borrows a keyword gloss; AUDIT drain triage)
+- category: content
+- impact: 3
+- ease: 6
+- detail: `SUPPORT_KEYWORD` in `axiomancer-mobile/state/combat/keywords.ts`
+  maps consumable and engine buffs to the closest live keyword, so a crit
+  or status-chance buff shows a MARK chip with Mark's gloss, and haste
+  shows DRAW. The chip then explains a mechanic the buff does not have.
+  The keyword purge (D45) removed the FORETELL label from
+  `buff_accuracy_up`, which now shows its own effect name.
+- next (`/iterate` or `/adjust-equipment`): give each mapped buff its own
+  effect-name label (as `buff_accuracy_up` now does) unless it really
+  applies the keyword, and pin the mapping with a test.
+
+### [x] [balance] Post-purge: the level-3 King of Revenge is 0/40 against the grey deck (2026-09-27) — CLOSED 2026-11-22 (stale: the King of Revenge appears nowhere in source; the fishing village was recast; AUDIT drain triage)
+- category: balance
+- impact: 6
+- ease: 4
+- detail: measured in the P1 matrix (baseline stamp `c6fd758c`: early
+  60%, mid 83%, late 99%, impossible 67%). fishing-village's boss, reached
+  around level 3 with Blow 5 / Ward 3 / Word 2 and at most a few grey
+  rewards, wins 0 of 40 sims. The stage bands are healthy, so this is one
+  foe, not the curve. The fix is enemy-side (its phase count or VITAE) or
+  waits for the card agent's library (D37). Do not shrink numbers (pillar
+  1); buff the neighbours or re-pin the foe.
+- next: `/adjust-enemies`. Re-run the King's cell with `npm run
+  baseline:check` fresh, then decide re-pin vs wait. Record the choice here.
+
+### [x] [content] Post-purge: the colour systems are dormant, but the Momentum tutorial still teaches them (2026-09-27) — CLOSED 2026-11-22 (stale: no first-combat Momentum tutorial exists any more; only the momentum info popup; AUDIT drain triage)
+- category: content
+- impact: 4
+- ease: 5
+- detail: every live card is grey ("Any die can power this card"), so
+  momentum, surge and colour yields never fire for the player. The
+  first-combat Momentum tutorial still explains that system, so a new
+  player learns a rule they cannot use. The systems stay (the card agent
+  may bring colour back, D37). The copy is the problem.
+- next: gate the Momentum tutorial on the deck holding a coloured card,
+  and leave the system code alone. Revisit when coloured cards return.
+
+### [x] [gap] Old Marrow's quest payoff can never be reached: no choice leads to `thanks`, and he stands before the boss on a forward-only map — CLOSED 2026-11-22 (stale: Old Marrow and its map are gone from source; AUDIT drain triage)
+- category: gap
+- impact: 5
+- ease: 5
+- detail: filed 2026-09-28 by `/adjust-npcs` pass 21, from a reachability
+  walk over every staged tree (root to `nextNodeId`). The `thanks` node on
+  Old Marrow's tree (`Coastal-Village/maps.ts`, ~line 86) has four
+  `questCompleted: 'starting-quest'` replies. They pay 25 or 12 gold, set
+  `marrow_pressed`, or start `get-to-forest` via `next_steps`. No choice
+  anywhere points at `thanks`, and a pickaxe search of the history
+  (`-S"nextNodeId: 'thanks'"`) finds that none ever did. The map rules out a
+  simple link as a fix. Marrow is staged only at `fv-2` (column 1). The King
+  of Revenge is at `fv-6` (column 8), and fishing-village's graph only moves
+  forward, so the player never meets Marrow after the kill. The knock-on
+  effects: `marrow_pressed` is never set, so Captain Blackwater's Phase 53e
+  read-back (`marrow_pressed_recognition`) never shows. `get-to-forest` is
+  granted by the `fv-10` travel door instead, as `content.ts` ~990 notes.
+  The quest's own `reward` still pays on completion, so the player loses no
+  money, only the beat. This is related to pass 58's pending "the village
+  still points at the breakwater" row: Marrow's `offer` line is part of the
+  same rework.
+- why not shipped in the steward tick: this is not a small fix. It needs a
+  post-boss Marrow node on fishing-village's graph, which displaces a node
+  and changes the map's kind spread and its e2e pins. It also needs a
+  `questCompleted`-gated greet reply into `thanks` and new prose, so it is
+  cross-surface and "large" under THE GROWTH FLOOR ¶2. The alternative is
+  to retire `thanks`/`next_steps` and the Blackwater read-back as dead
+  content. Pick one once the fishing-village breakwater-line row is worked,
+  because both edit Marrow's tree.
+- next (`/iterate`): either (a) re-stage Marrow at a column-9 node beside
+  the `fv-10` door and add a gated greet reply into `thanks`
+  (`content-curator` for the line), or (b) retire `thanks`, `next_steps`
+  and `marrow_pressed_recognition` as unreachable. Pin whichever you choose
+  with a reachability test.
+
+### [x] [gap] Act 1 has no shop, so the relic kit the 2026-09-23 owner call put "on the road" is five maps away — CLOSED 2026-11-22 (stale: Act 1 villages sell cards, rest and the Anvil (NK1c, VL1b); AUDIT drain triage)
+- category: gap
+- impact: 6
+- ease: 6
+- detail: filed 2026-09-27 by `/adjust-equipment` pass 21. The owner call of
+  2026-09-23 (THE VERY START) made a fresh run seed no relics. Only the
+  Suppliant's Ring comes at the first node, and "the markets sell them".
+  `nfForestMarket` (`MapEvents/content.ts` ~129, Glen Market, `nf-8`) says
+  in its comment that "the first market on the road stocks the Phase-19
+  starter kit's weapon, armor and charm, so the intended opening loadout is
+  buyable before the forest deepens". The map revamp moved that road. Across
+  the Breakwater, the Charcoal Wood, the Beacon Crags, the Lantern Deep
+  (M3a–M3d) and fishing-village, there is no `village` node and no `shop:`
+  (the only `shop:` payloads are northern-forest's and later maps'). So a
+  new game plays all of Act 1 plus fishing-village with one signature
+  (the ring). It has nowhere in Act 1 to spend its loot-cache and fight
+  currency; fishing-village's blacksmith swaps gear variants but sells no
+  relic. Glen Market is the sixth map. The Lantern Deep even has a "market grotto"
+  landmark (`ld-10`), but it is staged as a camp: "The traders let you sleep
+  behind the stalls."
+  Prior art: `kb:slay-the-spire-the-board-game/rules/actions` (src-006).
+  Shops that sell potions and relics are part of every act's map there, not
+  something saved for later acts.
+- why not shipped in the steward tick: the fix changes the kind spread of
+  maps authored under T's D21–D35 rulings, along with their e2e kind pins. That
+  makes it a cross-surface change, which is "large" under THE GROWTH FLOOR
+  ¶2. No new item, keyword or art is needed.
+- next (`/iterate`): stage one Act 1 `village` node with a merchant-less
+  `shop:` (`VillagePayload.merchants` may be empty, so D29 and the Act 1
+  people session (rows below) aren't touched). Stock it with the starter
+  kit (`relic-overwhelming`, `relic-read`, `relic-press-the-point`) plus
+  `minor-healing-potion`. There are two readings. (a) `ld-10`, the market
+  grotto: this is truest to the plate, but it comes late (map 4) and turns
+  one of three camps into a village. (b) A node in the Charcoal Wood (map 2):
+  the kit comes early, but no landmark there is named for a market. Pick
+  (a) unless a playtest shows the kit arriving too late. Update Glen
+  Market's comment and the map's kind-spread comment and test, and add an
+  e2e that pins a `shop:` reachable in Act 1 from the default start.
+
+### [x] [content] A pinned unique pays a full level of XP in Act 1 (the Charcoal Wood's kudan) — CLOSED 2026-11-22 (stale: the Kudan is in no source file; cw-7 is the Stone Circle; AUDIT drain triage)
+- category: content
+- impact: 3
+- ease: 5
+- detail: filed 2026-09-26 (M3e residue). `cw-7` stages `kudan`, a `unique`
+  foe (native level 10), pinned at level 2. `scaleEnemyToLevel` rescales its
+  default XP to 2 x 500 = 1,000, so this one fight is worth a full level:
+  more than the rest of the Charcoal Wood (410) and about a third of all of
+  Act 1 (~2,870). Every other Act 1 fight is `simple`/`normal`/`elite` (10 to
+  200 XP). D30 allows one elite per region; it says nothing about uniques, so
+  `act1-elites.engine.test.ts` does not catch it.
+- next: `/adjust-enemies` (enemies are in the steward rotation): swap cw-7 to
+  a `normal` foe from the northern forest roster, or pin its XP; then add a
+  "no `unique` in Act 1" case to `act1-elites.engine.test.ts`.
+
+### [x] [gap] The Breakwater has no people of its own — an attended story-spec session (D34) [parked: R11 — via /oversight 2026-09-28] — CLOSED 2026-11-22 (stale: the Breakwater was rebuilt (BW1a-e) with quest givers at bw-c2 and bw-l5; AUDIT drain triage)
+- parked: people, story and art are content (D58). T parked this legacy
+  `[needs-user-call]` row via `/oversight` 2026-09-28; it returns with R11
+  (people, story) or B8 (art), after RC. `/iterate` skips it.
+- category: gap
+- impact: 5
+- ease: 4
+- detail: filed 2026-09-26. T chose (D34) to give the Breakwater NPCs of its
+  own rather than move fishing-village's there. Until then a new game meets
+  its first NPC and first quest (Old Marrow's starting quest, Phase 53c)
+  only after all of Act 1, in fishing-village, and
+  `quest-giver-reachable.engine.test.ts` pins `startMap: 'fishing-village'`,
+  so nothing checks the default start. The Breakwater's "What happens here"
+  in `content/story/story-overview.md` is still open, and hard rule 3 forbids
+  inventing a named character alone, so this is not a loop phase.
+- next: an attended `story-spec`/`character-spec` session with T: settle what
+  happens at the Breakwater, draft 1–2 people for T's sign-off, then stage
+  them (`npcs:` on the map, dialogue via `content-curator`) and point
+  `quest-giver-reachable` at the default start.
+
+### [x] [debt] T5 Tier 2 docs — named for archive but still have consumers (2026-09-25; archive part resolved, effects/enemy rewrite open) — CLOSED 2026-11-22 (stale: the Tier 2 docs (`docs/effects.md`, `docs/enemy.md`) no longer exist; AUDIT drain triage)
 - **Context:** trim T5 archived the Tier 2 docs rows
   (`archive-pre-revamp:plan/archive/2026-09-25-trim-t5/`). Six files the spec named have inbound
   pointers the trim could not repoint, because the pointers live under
@@ -952,34 +1299,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   distinct mobile-UX docs that already point at the mechanics rules docs;
   kept.
 
-### [debt] T2b dice-flag collapse — live content the OFF path was carrying (2026-09-25)
-- **Context:** D7 deleted the Upgradeable-Dice OFF path (stance draft, hidden read, STAKE, v1 wheel, fate-X powering). The shipped model already ignored all of these; the items below were already inert in players' builds and are now visibly so.
-- **Fate cards — RESOLVED (adjust-cards pass 20, 2026-09-26):** `the-note-falls-due`, `miserere`, `dead-pledge` folded `fate` -> off-colour `dieBonus` (recoil moved into the rider). Still open: the `fate` field has zero carriers but remains in `types.ts`, `cards.pricing.ts`, `combat.cards.ts`, `card-upgrades.ts`, `combat.card-complexity.ts`, `card-keywords.ts` and the tests. Deleting it is a small cross-surface cleanup. Also `it-gets-up-again` (`float_x_die`) is priced at 4.5 but almost always pays only its +1 Conviction fallback; that is an owner call alongside the `reroll_spent` item below.
-- **Advantage buffs:** `buff_haste`, `buff_accuracy_up`, `buff_critical_damage_up` and kin grant advantage through the deleted read, so they do nothing in combat. Retire or re-hook (`/adjust-keywords`).
-- **`reroll_spent` relic mechanic** still rerolls from the legacy face bag (`rerollSpentDice`/`COMBAT_DIE_FACES`), so it can mint X or faceless dice. `float_x_die` always pays +1◆ now.
-- **Sim:** the `blind` policy now plays identically to `greedy` (kept so the matrix keeps its column); retire or redefine it at the next `/combat-playtest`.
-- **Stale copy — RESOLVED (adjust-cards pass 20):** "drafted die" in `the-unpaid-sexton`'s face now reads "rolled dice". *(The FORGE, GHOST and WILD/X atlas rows were synced to `KEYWORD_GLOSS` by adjust-keywords pass 19, 2026-09-26.)*
-- **Vestigial params:** `card-played.advantage` is always `'neutral'`; `scalePlayerHit`'s `readMult` is always 1.
-- **Card faces print a dead read:** status card faces still show ▲/▼ read numbers, but every play lands at read `'none'`. Mobile froze `READ_ADVANTAGE_INTENSITY_BONUS` / `READ_DISADVANTAGE_DURATION_PENALTY` (both 1) as local constants atop `combat-encounter.engine.ts` so it compiles; delete them with a card-face pass.
-- **CLARITY is inert:** its `forceWildOnNextDie` flag was only read on the deleted OFF path.
-- **Wrong copy (predates T2b):** the dead-tray END line says unusable dice "are discarded" (`endTurn` banks one unspent die when the Reserve has room); the CONVICTION ◆ glossary says it is banked "from unspent dice" (unspent dice earn nothing); the momentum info popup still describes the v1 wheel ("light all three").
-- **Coverage gap:** `upgradeable-dice-e2e.mjs` was the only browser run walking Press Fate, the momentum chip and blacksmith HONE; it was deleted with the flag. The other e2e scripts boot the model but do not walk those steps.
-- **`MAX_PERMANENT_WILD_DICE`** (`Combat/combat.dice.ts`) is documented as the cap on `permanentWildDice` but nothing enforces it — missing clamp or dead constant (T3 barrel pass kept it).
-- **adjust-keywords pass 19 (2026-09-26) — more trim fallout, filed not shipped:**
-  - *Fate re-hook option:* Dawncaster's Blood ("sacrifice your own blood instead of Energy", `kb:dawncaster/keywords/blood.okf.md`) is the design `fate` was reaching for: a dead X die plus `recoilHp` as a substitute payment. It only works if X dice exist in ordinary play, and the Spec 33 tray never rolls one (only `reroll_spent` can mint one). So the card fold (`fate` -> `dieBonus`, `/adjust-cards`) is still the honest small fix.
-  - *Nine inert support buffs:* besides the three named above, `buff_critical_rate_up`, `buff_liars_gambit` and `buff_abyssal_presence` (advantage-only, fed to `advantageGrants`, which nothing reads), plus `buff_haste`, `buff_haste_surge`, `buff_all_stats_up` and `buff_status_chance_up` (a positive roll modifier, which is only ever read as a penalty on the enemy). They are unobtainable and pinned for old saves. Stale copy reachable from a legacy save: `tooltip.engine.ts:349-358` and `village.engine.ts:175-176`, and `SUPPORT_KEYWORD` maps them to unrelated glosses.
-  - *`debuff_curse` has no live applier* (its only source, the threat-clock enchant, was trimmed). It was also the only negative roll modifier, so the enemy roll-penalty deny path (`combat.engine.ts` ~3415/4913/5057), `isStatDebuff` and mobile's 'weaken' class never see any input. Retire it (about six test fixtures to repoint), or give the path a new feeder. `debuff_nettle_sting` has also been orphaned since `84ef85bd`.
-  - *`resistedBy` / `resistDR` are dead data.* They are copied at `card.engine.ts:330`, `Effects/index.ts:81` and `game.reducer.ts:329`, and nothing reads them. Removing them touches exported types and saved state. (The `docs/effects.md` resist-roll prose was fixed in pass 19.)
-  - *Tier-1 leftovers:* `MIND_MARK_ID = 'tier1_mind_mark'` / `getStudyMarkIntensity` (`Combat/effects.ts:21-27`, barrel-exported) point at an id in neither library. There is also a matching glyph at `statusGlyphs.ts:117`.
-  - *Seven player mechanic kinds have zero carriers:* `strip_random_buff`, `befriend_attempt`, `refresh_die`, `convert_die_color`, `overheat`, `spend_all_pips`, `echo_next_spell`. These are wired but unused, so they are remove candidates. Retiring one touches the union, pricing, engine, mobile, editor and tests, so each is large. `befriend_attempt` sits on the befriend path and needs an owner call.
-  - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
-
-### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
-- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
-- **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
-- **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
-
-### [content] The shipped Drowned Parish opening contradicts the ruled story — attended session needed (2026-09-24)
+### [x] [content] The shipped Drowned Parish opening contradicts the ruled story — attended session needed (2026-09-24) — CLOSED 2026-11-22 (stale: `fvArrival` is gone; Chapter 1 opens on the Breakwater, so the premise no longer holds; AUDIT drain triage)
 - category: content
 - impact: 8
 - ease: 3
@@ -1001,7 +1321,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   and what `fv-1` shows. Not loop-drainable: THE STORY IS THE ROAD forbids
   inventing canon the overview does not carry.
 
-### [content] Legacy story threads that likely contradict the new rulings: `boy-*` flags and the ribbon/advisor-selection rite (2026-09-24)
+### [x] [content] Legacy story threads that likely contradict the new rulings: `boy-*` flags and the ribbon/advisor-selection rite (2026-09-24) — CLOSED 2026-11-22 (stale: `boy-*` and the ribbon-rite flag are absent from source; AUDIT drain triage)
 - category: content
 - impact: 5
 - ease: 3
@@ -1019,28 +1339,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   session. The flag rename follows whatever the Drowned Parish rewrite
   decides.
 
-### [content] Story systems the new rulings require that the game does not have (2026-09-24)
-- category: content
-- impact: 7
-- ease: 3
-- detail: `story-overview.md` rulings name five things with no representation
-  in the build:
-  - the opening world-framing (ruling 11: The Covenant occupies nearly the
-    whole world; the capital is the last bastion of hope);
-  - a **memories** section in the Memoir tab, organized chronologically
-    (ruling 12; `axiomancer-mobile/app/(tabs)/memoir/` lists quests only),
-    through which the prologue reaches the player;
-  - The Covenant itself (rulings 13–14) — no faction, guard enemies or
-    Covenant roster exists (`src/Enemy/enemy.library.ts`);
-  - X's inherited money debt (ruling 8);
-  - the pursuing guards (ruling 7).
-- next: the memories section and the opening framing are systems work that
-  can be designed now (what triggers a memory, the chronological scheme).
-  What each memory *says* waits on the prologue's delivery plan. Route to
-  `/expand` as phase candidates. The Covenant roster waits on the Drowned
-  Parish session deciding who pressures X.
-
-### [docs] Live docs whose bodies describe retired systems — banner-only pass, rewrites owed (2026-09-23)
+### [x] [docs] Live docs whose bodies describe retired systems — banner-only pass, rewrites owed (2026-09-23) — CLOSED 2026-11-22 (stale: the docs were closed per the row; playtester.md describes the dice-and-cards flow; AUDIT drain triage)
 - category: docs
 - impact: 5
 - ease: 4
@@ -1104,51 +1403,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   "all 8 MapEventKind" (union is eleven); `docs/hazard-minigame-api.md`
   names a `HazardCardEffect` type that does not exist.
 
-### [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23)
-- category: debt
-- impact: 4
-- ease: 6
-- detail: comment-vs-code mismatches where the CODE is the stale side. Each
-  was left untouched by the docs PR (the two one-liners it did fix:
-  `verify-drift.yml` now triggers on `enemy-keywords.ts`;
-  `check-naming-law.mjs` now sweeps `apocrypha.cards.ts`).
-  1. `axiomancer-mechanics/scripts/export-catalog.ts:106-113` —
-     `parsePricingComments` reads `src/Cards/cards.library.ts`, which is the
-     aggregator since THE BIG NUMBERS REWRITE; the `// pts:` blocks live in
-     `src/Cards/library/*.cards.ts`, so catalog pricing is always empty.
-     Confidence 60.
-  2. `axiomancer-mechanics/src/CLI/combat-sim.cli.ts:11-13,43-45` — usage
-     text and default loadout name `slippery-slope`, `brace-for-impact`,
-     `festering-argument`, `soft-word`; none exist in the card library.
-     Confidence 50 that the default path is broken (may fall through).
-  3. `axiomancer-mechanics/src/Effects/world-tick.ts` —
-     `processWorldEffectTick` has no caller outside tests in mechanics or
-     mobile; `World/world.reducer.ts:206` used to point at a
-     `Game/world.orchestrator.ts` that does not exist. Either wire it into
-     `moveToNode` or delete it. Confidence 60.
-  4. `axiomancer-mechanics/src/Effects/index.ts:167-190` —
-     `TIER1_EFFECT_MAP` maps to `tier1_*` ids absent from both effect
-     libraries (the deprecated-effects test bans them), so
-     `applyTier1CombatEffect` always returns `noChange`; likewise
-     `Enemy/enemy.library.ts:89-92` `T1_DEFAULT`. Delete or re-point.
-     Confidence 80.
-  5. `scripts/axio-mcp-server.mjs:39-62` — `ensureFresh` stats only
-     `Cards/cards.library.ts` and `Effects/effects.library.ts`; an edit to
-     `Cards/library/*.cards.ts` does not bump the mtime, so the "mid-session
-     edit is caught" claim in its header is false for card edits.
-     Confidence 50.
-  Also observed: `scripts/check-baseline-freshness.mjs:33-41` says
-  `World/Continents/**` is import-disjoint from Combat/Cards/Enemy/Character,
-  but `Enemy/index.ts` and `Enemy/types.ts` type-import `MapName` from
-  `../World/map.library` (runtime-erased, so the sweep numbers are unaffected).
-- next: `/iterate` — verify each with a failing test first (1, 4 and 5 are
-  cheap to witness), then fix or delete; 3 is a design call (wire or remove)
-  and needs a `[loop-call]` note in the commit body.
-- note 2026-09-25 (T4 compaction): items 3 (`Effects/world-tick.ts`) and 4
-  (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
-  and 5 re-read live at `d615a35d`.
-
-### [content][gap] Three of four Northern-Continent maps carry only 1 staged NPC — DECIDED, needs an attended character-spec/story-spec session (2026-09-05)
+### [x] [content][gap] Three of four Northern-Continent maps carry only 1 staged NPC — DECIDED, needs an attended character-spec/story-spec session (2026-09-05) — CLOSED 2026-11-22 (stale: the Northern-Continent maps the row named are gone; AUDIT drain triage)
 - category: content (found during `/adjust-npcs` pass 1's structural audit —
   Step 1's "map with fewer than 2 staged NPCs → CREATE" signal)
 - detail: `caverns` (`theDelver` only), `connecting-river` (`theBoatwoman`
@@ -1184,34 +1439,7 @@ changed from `[needs-user-call]` to `[gap]`, ready for `/march` to dispatch
 to an interactive `character-spec`/`story-spec` session next time T is
 present. Row stays open until that session runs.
 
-### [content] 30 of 73 roster enemies (41%) carry no aftermath prose (`finalBlowLines`/`causeLines`) (2026-09-05)
-- category: content (found during `/adjust-enemies` pass 1's structural
-  audit — Step 1's "aftermath prose missing" signal)
-- detail: Phase 71 (GH#65 ask 1) added `finalBlowLines`/`causeLines`/
-  `pactLines` to the `Enemy` schema and authored them for most of the
-  roster, but 30 of the original 2026-07-06 52-painting batch never got a
-  pass (GraveLarva, ChatteringSkull, FootStealer, CursedHead, Ghast,
-  DoomEgg, TheButcher, Wichtlein, BullBegger, WeepingHead, GoblinShaman,
-  Sugata, PaleBrood, Mabadi, FrayedOne, BoneTotem, BoneWizard, CursedPaladin,
-  VampireThrall, JeweledTree, OgreNaga, Sidelle, AshenBoneDrake, Zoma,
-  MabadiUndrowned, TriEyesHollowed, BlackDeath, TheUnnameable, FireGiant,
-  GreaterDevil — grep `finalBlowLines:`/`causeLines:` absence in
-  `enemy.library.ts` to reproduce). Not a crash or a broken invariant —
-  `types.ts` documents the field as optional with a consumer-side fallback
-  (mobile presenter's `derive*Phrase` helpers render a generic line) — so
-  verify stays green and nothing is silently wrong in play. It is a real
-  flavor-completeness gap spanning nearly half the roster, including
-  several elites/mid-roster names (Sugata, CursedPaladin, VampireThrall,
-  FireGiant, GreaterDevil) that deserve a unique kill/death line as much as
-  their siblings that already have one. Sized at ~30 enemies x 6 lines
-  (brutal/quiet/ironic x2) in house voice (spec 34 §2.5) — a `content-curator`
-  job, not a routine single-enemy edit, and too large to fold into this
-  pass alongside its other two findings (the caverns CREATE and the Aporia
-  portrait backfill) without diluting quality. No owner decision needed —
-  purely executional — so filed here as `[content]`, not `[loop-call]`.
-- score: impact 4 x ease 5 / 10 = 2.0
-
-### [gap] Art pipeline: two queued owner calls block everything [parked: B8 — via /oversight 2026-09-28]
+### [x] [gap] Art pipeline: two queued owner calls block everything [parked: B8 — via /oversight 2026-09-28] — CLOSED 2026-11-22 (stale: both calls were RESOLVED 2026-08-22; `Potential Assets/` is not in the repo; AUDIT drain triage)
 - parked: people, story and art are content (D58). T parked this legacy
   `[needs-user-call]` row via `/oversight` 2026-09-28; it returns with R11
   (people, story) or B8 (art), after RC. `/iterate` skips it.
@@ -1246,7 +1474,7 @@ present. Row stays open until that session runs.
   site / asset-pack name — the loop may trace them itself and wire any
   image whose license it can evidence. See the bearings row.
 
-### [contract] Cross-package impact checklist misses the world/enemy surfaces mobile consumes
+### [x] [contract] Cross-package impact checklist misses the world/enemy surfaces mobile consumes — CLOSED 2026-11-22 (stale: AGENTS.md's impact checklist lists Enemy, NPCs and World; `ci-e2e-scope.mjs` covers them; AUDIT drain triage)
 - category: contract
 - impact: 8
 - ease: 7
@@ -1269,35 +1497,7 @@ present. Row stays open until that session runs.
   test cases in `ci-e2e-scope.test.mjs`, runnable via the new root
   `npm test`.
 
-### [content] Engine-generated "the enemy" strings survived the phase-40 card-text grammar pass
-- category: content
-- impact: 3
-- ease: 5
-- detail: filed 2026-08-23 by phase 40 (card-text grammar + full copy
-  pass). That phase fixed the FIXED VOCABULARY rule ("the foe", not "the
-  enemy") across every AUTHORED string: `cards.library.ts`
-  `paidSummary`/`persistentEffect` (31 cards) and mobile
-  `state/combat/keywords.ts` `KEYWORD_GLOSS`/`SYSTEM_GLOSSARY` (17
-  entries), each now lint-enforced. Two adjacent surfaces still say "the
-  enemy" and were deliberately left out of that pass (bounded scope, not
-  an oversight): the ENGINE's own generated strings in
-  `axiomancer-mechanics/src/Combat/combat.cards.ts`
-  (`statePredicateText`'s `UNMOVED`/`enemy-drew-blood` clauses, the hex
-  `Attaches to the enemy.` suffix, the `lock_stance` and
-  `boost_all_dots` mechanic-text lines — 7 total sites) and the mobile
-  presenter's per-mechanic `verbLine` prose in
-  `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
-  (`mechanicHeadline`, ~30 entries, several also carrying stray em
-  dashes/semicolons the phase-40 lint never reached). Neither surface has
-  a lint today. A future pass: rename the 7 mechanics sites (cheap,
-  bounded — plus its `choir-card-wording.engine.test.ts` assertions that
-  pin `UNMOVED (the enemy dealt you no damage last round)` / `the enemy
-  drew blood since your last turn` / `Attaches to the enemy.` literally),
-  then decide whether `mechanicHeadline`'s much larger prose set is worth
-  a dedicated sweep or a standing lint of its own.
-- next: /iterate
-
-### [contract] Allowlist omits the commands the skills instruct — attended ticks prompt-wall
+### [x] [contract] Allowlist omits the commands the skills instruct — attended ticks prompt-wall — CLOSED 2026-11-22 (stale: `.claude/settings.json` now allows baseline:check, branch, push and pr create; AUDIT drain triage)
 - category: contract
 - impact: 6
 - ease: 8
@@ -1322,41 +1522,7 @@ present. Row stays open until that session runs.
   from an attended/local session. The root `npm test` script (part of
   the gap) DID ship.
 
-### [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick
-- category: gap
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
-  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
-  `_claude-skill.yml` setup step (`npx playwright install chromium
-  --with-deps`, used by both `march` and `night`) — its underlying
-  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
-  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
-  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
-  force-cancelled it. No commit resulted; the tick is a total loss, not
-  a partial one — distinct from the already-filed "march ticks are
-  creeping toward the job timeout" row above (that one is real work
-  outgrowing the ceiling; this one is an idle apt-mirror hang eating
-  the whole budget while nothing runs). `verify-mechanics.yml` and
-  `verify-mobile.yml` carry their own copy of the same install command,
-  so the exposure isn't march-specific, just unluckiest there because
-  that job runs unattended on the longest cadence.
-- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
-  install` on every invocation with no cache and no timeout around the
-  network call; caching the installed apt packages (or the Playwright
-  browser + its system deps together, keyed on the pinned Playwright
-  version) removes the network dependency from the common path
-  entirely. A cheaper interim fix: wrap the install step in a short
-  step-level `timeout-minutes` so a mirror hang fails fast and loud
-  instead of silently eating the whole job ceiling.
-- recurrence (2026-08-21 digest pulse): run `32290461478` (the
-  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
-  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
-  18:59:49 with zero progress until the ceiling force-cancelled it at
-  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
-  still unfixed, still `/iterate`-shaped, not re-scored.
-
-### [divergence] Bearings says there is no hosted web surface; Cloudflare Pages has been publishing one — RULED via /oversight 2026-08-10: incidental, scope it down — CONFIRMED LIVE EXPOSURE via /oversight 2026-08-12, impact raised
+### [x] [divergence] Bearings says there is no hosted web surface; Cloudflare Pages has been publishing one — RULED via /oversight 2026-08-10: incidental, scope it down — CONFIRMED LIVE EXPOSURE via /oversight 2026-08-12, impact raised — CLOSED 2026-11-22 (stale: `plan/bearings.md` now names the one hosted web surface, the public DevLog; AUDIT drain triage)
 - category: divergence
 - impact: 8
 - ease: 6
@@ -1498,24 +1664,14 @@ present. Row stays open until that session runs.
   That proof is now unmanned. Worth a loop-call: an export step inside
   `verify-gate` that builds the web bundle and publishes nothing.
 
-### The Phase-169 loadout path is dead in the shipped runtime
-- category: debt
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-08 by Phase 52a. `createNewGameState` seeds only the
-  2 `STARTING_CARD_IDS` loadout flags and mobile never writes loadout flags
-  afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
-  with no flags at all. 52a's loadout reconciliation is correct and tested,
-  but nothing exercises it end to end. Pairs with the row above.
-
-### `specs/README.md` has no row for spec 34
+### [x] `specs/README.md` has no row for spec 34 — CLOSED 2026-11-22 (stale: `axiomancer-mechanics/specs/README.md` has the spec 34 row (RETIRED); AUDIT drain triage)
 - category: docs
 - impact: 3
 - ease: 10
 - detail: filed 2026-08-08 by Phase 42; the authoring agent's file ownership
   forbade editing the index. One-line add.
 
-### Fixture player rebuild seeds the relic kit a real new game no longer has
+### [x] Fixture player rebuild seeds the relic kit a real new game no longer has — CLOSED 2026-11-22 (stale: `seedStartingRelics` is absent from the fixture builder; AUDIT drain triage)
 - category: divergence
 - impact: 3
 - ease: 7
@@ -1536,7 +1692,7 @@ present. Row stays open until that session runs.
   (no kit unless the preset supplied one) and add a builder test
   pinning the choice. Not fixed in the docs pass (code, out of scope).
 
-### 2026-07-20 missing-layers survey — unpromoted findings (audio, settings, a11y, perf, flags, save export)
+### [x] 2026-07-20 missing-layers survey — unpromoted findings (audio, settings, a11y, perf, flags, save export) — CLOSED 2026-11-22 (stale: audio (`expo-audio`) and settings (`app/settings`) shipped; the survey's headline gaps are closed; AUDIT drain triage)
 - category: gap
 - impact: 5
 - ease: 3
@@ -1579,7 +1735,7 @@ present. Row stays open until that session runs.
   export/backup is still absent. (4) and (5) unchanged. Row stays open
   for (1), (4), (5), (6).
 
-### hazard/gathering "paradox-token" reward vocabulary outlives the card category — OWNER CALL MADE 2026-08-08: rename to QUANDARY
+### [x] hazard/gathering "paradox-token" reward vocabulary outlives the card category — OWNER CALL MADE 2026-08-08: rename to QUANDARY — CLOSED 2026-11-22 (stale: the hazard/gathering token system was removed with the gathering kind; AUDIT drain triage)
 - category: divergence
 - impact: 2
 - ease: 4
@@ -1630,74 +1786,7 @@ present. Row stays open until that session runs.
   `arrow-paradox` card id (unrelated) and `Item.category` (unrelated).
 - next: /iterate — the owner call is made (rename → QUANDARY); execute it.
 
-### `deploy:check` is unusable from remote web sessions — 401 "Token rejected"
-- category: debt
-- impact: 4
-- ease: 5
-- detail: filed 2026-07-18 (oversight session residue). Running
-  `npm run deploy:check` from a Claude Code web session fails with
-  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
-  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
-  gitignored and absent in remote containers. The session fell back to
-  the GitHub MCP Actions API (which authenticates fine) to confirm
-  CI-green, but nothing records that fallback, so every skill step that
-  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
-  bearings' deploy gate) silently dead-ends in web sessions. Fix
-  options: teach `scripts/deploy-check.mjs` to fall back to a
-  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
-  the MCP fallback in bearings' deploy-gate section so remote sessions
-  know the sanctioned path.
-- next: /iterate (deploy-check.mjs env fallback + a bearings note)
-
-### Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095
-- category: debt
-- impact: 4
-- ease: 7
-- detail: surfaced 2026-07-17 during the starter-deck-presets rename.
-  `npm run verify` in `axiomancer-mechanics` fails from any
-  `.claude/worktrees/*` checkout with `TS5095: Option 'bundler' can
-  only be used when 'module' is set to 'preserve' or es2015+`. Root
-  cause: the mechanics tsconfig (module `commonjs` +
-  moduleResolution `bundler`) is accepted by TypeScript 6.0.3
-  (installed at `axiomancer-mechanics/node_modules`) but rejected by
-  5.9.3 (repo-root `node_modules`); worktrees have no local install,
-  so Node walks up past the worktree into the root and picks 5.9.3.
-  Every worktree session must hand-invoke the 6.0.3 `tsc.js` to run
-  the gate. Fix options: align the root TypeScript devDependency to
-  6.x, make the tsconfig valid under both (e.g. module `preserve` or
-  moduleResolution `node`), or install per-worktree. A task chip was
-  also filed from the session.
-
-### Telemetry attribution is best-effort; CI logging path unverified
-- category: debt
-- impact: 3
-- ease: 4
-- detail: TELEMETRY.md (shipped 2026-07-17, commit 03969cea) scrapes
-  model and main-vs-subagent from the transcript tail because hooks
-  don't expose either directly — expect `unknown` cells and possible
-  misattribution near sidechain boundaries; a call racing a sidechain
-  boundary can be attributed to the wrong side. Also unverified: in
-  cloud ticks, skills arrive as '/command' prompts and should land as
-  slash-prompt rows via UserPromptSubmit — confirm rows appear (and
-  ride the tick's commit) after the first few cloud runs. If the
-  harness later exposes agent id / model in hook input, replace the
-  transcript-tail scrape in .claude/hooks/telemetry.mjs.
-- next: /iterate (verify after next cloud tick; upgrade when harness
-  allows)
-
-### kb-query MCP could surface kb/ sync age
-- category: gap
-- impact: 2
-- ease: 8
-- detail: kb-sync.mjs now stamps kb/.sync-meta.json (2026-07-17) and
-  the session-start hook reports age, but design sessions that go
-  straight to the kb-query MCP server / skill never see it. Adding the
-  stamp's age to kb_overview output (and a staleness warning >14d)
-  would put corpus freshness in front of the consumer that actually
-  cites it.
-- next: /iterate
-
-### [1.2] Skipped enemy stat-budget test (content decision — RESOLVED via oversight 2026-07-08)
+### [x] [1.2] Skipped enemy stat-budget test (content decision — RESOLVED via oversight 2026-07-08) — CLOSED 2026-11-22 (stale: the candidate was rejected via /oversight 2026-09-28; the skipped test file is gone; AUDIT drain triage)
 - category: content
 - impact: 4
 - ease: 3
@@ -1714,7 +1803,7 @@ present. Row stays open until that session runs.
 - next: /oversight (promote candidate to a build-plan phase when
   queue has room)
 
-### [2.0] Mobile `as any` clusters at the state boundary
+### [x] [2.0] Mobile `as any` clusters at the state boundary — CLOSED 2026-11-22 (stale: two non-test `as any` remain in mobile state; the drain is done; AUDIT drain triage)
 - category: debt
 - impact: 4
 - ease: 5
@@ -1732,74 +1821,7 @@ present. Row stays open until that session runs.
   cited example is still broken.
 - next: /iterate
 
-### [1.6] Mobile accessibility gaps
-- category: a11y
-- impact: 4
-- ease: 4
-- detail: focus management + a11y labels surfaced repeatedly in
-  prior critique. Ongoing drain.
-- next: /iterate
-
-### [1.5] Unbounded keepsake/death flag growth on long saves
-- category: debt
-- impact: 3
-- ease: 5
-- detail: `night-keepsake:`, `hazard-scar:`, `hazard-death:`,
-  `gleaning-token-banked:` accumulate with no consumer/cap. A
-  long-save soak test could trip on this.
-- next: /iterate
-
-### [1.5] `HazardBoard.tsx` file-length outlier (~815 lines)
-- category: debt
-- impact: 3
-- ease: 5
-- detail: extraction candidate; several other mobile files are
-  length outliers. Extract sub-components with their own tests.
-- next: /iterate
-
-### [2.1] Two agent-e2e walkthroughs describe a deleted engine surface
-- category: gap
-- impact: 3
-- ease: 7
-- detail: spotted 2026-07-10 during the `/consolidate` terminology
-  sweep design (phase 25). `axiomancer-mechanics/automation/scripts/
-  walkthroughs/skill-learning.goal.md` names
-  `learnSkill(character, skillId)` from `src/Skills/skill.engine.ts`;
-  `tier2-skill-chain.goal.md` narrates `executeSkill`/`basePower` in
-  the same retired vocabulary (`base-power` and `src-skills-path` are
-  both live `lexicon.json` rows for exactly this concept). Neither
-  `src/Skills/` nor `learnSkill` exist in `axiomancer-mechanics/src`
-  today. Both files sit in `automation/`, a lexicon-exempt
-  dated-record zone, so `check-lexicon` never sees them, and their
-  paired `.json` scripts may already be dead too (`node
-  automation/agent-e2e.mjs skill-learning` / `tier2-skill-chain`
-  would confirm). Left un-deleted per the janitor mandate's
-  suspected-dead-file rule — the automation/README.md inventory
-  table and the harness owner should confirm dead-vs-superseded
-  before removal.
-- next: /iterate
-- update (`/iterate` investigation, 2026-09-11, no code shipped — this
-  tick's one fix went to the [1.8] tray-die a11y row instead): confirmed
-  dead, not superseded — `axiomancer-mechanics/docs/lexicon.json`'s own
-  `retired` registry (`src-skills-path`, since "2026-07 (PR #48 deleted
-  the dead src/Skills/ ability system; see CHANGELOG 'De-conflation')")
-  already rules this: the whole `src/Skills/` tier-ability system
-  (`learnSkill`, `executeSkill`, `SkillLookup`, `skillLibrary`) is gone
-  from `src/`, replaced by the SignatureSkill family (a separate living
-  concept). Both goal.md/json walkthrough pairs are safe to delete next
-  pick, per the row's own scoped ask. **Wider scope found while
-  checking:** `learnSkill`/`executeSkill` are NOT confined to these two
-  automation files — `README.md`'s Skills feature-table row,
-  `docs/testing.md`, `docs/oaths.md`, and specs 06/14/25/31 all still
-  describe the retired system in detail, several citing Phase
-  30-66-numbered work as if current. That is a much larger, higher-risk
-  doc-rewrite than this row's "two automation files" framing (touches
-  the canonical feature-table, not a lexicon-exempt dated-record zone)
-  — filed here rather than attempted blind; a future pick should treat
-  the automation-file deletion and the README/specs rewrite as two
-  separate scoped fixes, not one.
-
-### [content] "Blank Indenture" violates NL-8 and is grandfathered, not renamed
+### [x] [content] "Blank Indenture" violates NL-8 and is grandfathered, not renamed — CLOSED 2026-11-22 (stale: the name appears in no source file; `check-naming-law.mjs` is gone; AUDIT drain triage)
 - category: content
 - impact: 2
 - ease: 7
@@ -1817,27 +1839,7 @@ present. Row stays open until that session runs.
   ("Unwritten Indenture", "Unsigned Indenture") rather than reach for a new
   image. Removing the entry from GRANDFATHERED_NAMES is what closes this row.
 
-### [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules
-- category: tooling
-- impact: 4
-- ease: 5
-- detail: three confirmed instances of one shape. The 2026-08-22 content-pipelines
-  audit found two: an emoji inside quoted CARD TEXT read as a commit-trailer
-  violation, and `backgroundedGate`'s regex catching any command containing the
-  word "test". A third hit 2026-08-27 during Phase 72: a `git commit` was
-  rejected for a forbidden push flag that appeared only as QUOTED PROSE inside
-  the heredoc message — the brief was documenting which verbs stay denied. The
-  guard cannot tell a command from text inside a command.
-- why it matters: each instance costs a retry and teaches the loop to avoid
-  writing about the rules it enforces, which is the opposite of what the plan
-  files are for. The failure is silent-ish (a blocked tool call, not a wrong
-  result), so it accumulates rather than being fixed.
-- next: parse before matching. The push-flag and trailer rules should apply to
-  the command's own argv, not to heredoc bodies or `-m` message contents; the
-  `-m` body already has its own dedicated lint pass, so the general grep can
-  exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
-
-### [tooling] Concurrent `/march` ticks race for the same build-plan phase
+### [x] [tooling] Concurrent `/march` ticks race for the same build-plan phase — CLOSED 2026-11-22 (stale: nexus v2 claims (`claims.mjs`) replace the pick-without-claim premise; AUDIT drain triage)
 - category: tooling
 - impact: 5
 - ease: 6
@@ -1862,8 +1864,6 @@ present. Row stays open until that session runs.
   opened BEFORE the brief is written and treated as a lock. Left open: the
   cheap fix covers the observed failure, and a real lock is a bigger change to
   a flow that is otherwise working.
-
-## Done
 
 ### [x] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01) — CLOSED 2026-11-01 (fix-ci, verify-root run 41298604682: reworded all ten lines in `combat.card-program.ts`, `combat.encounter.types.ts`, `combat.engine.ts`, `combat.equipment-effects.ts`, `e2e/equipment-effects.engine.test.ts` and `Items/types.ts` to drop the "spec 136"/"A10"/"chunk 136.4" narration; `check-comments.mjs` reports clean, root `npm test` and mobile `npm run verify` both pass)
 - category: debt
