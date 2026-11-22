@@ -565,3 +565,7 @@ The three relics are `relicSource: 'elite'`; the elite pool holds seven. `orphan
 T (2026-11-22): those three go into the spare reward pool, dropping 5% from a spared normal foe and 15% from a spared elite. That is new work for `/plot`, not this chunk.
 
 Outside scope, unfixed: the test title "no live relic is elite-only yet" in `elite-relic-drop.engine.test.ts` is stale (its assertion holds).
+
+`takeTravelAction` on the crossing out of `STARTING_MAP` records the node, fires `recordRunClosed(..., 'chapter-clear')` once and sets the transient `travel.chapterComplete`; it does not move the world, toast or save. `TravelGate` replaces `/travel` with `/chapter-complete` once; `CONTINUE` (`actions.continueChapter`) moves the world into the Charcoal Wood and saves. A save reopened on the screen stands on the far bank with the crossing still to take. The cave shortcut and later crossings open no screen. The sim's run driver and `skip-event` call `continueChapter()` after the held crossing, so the sim still ends at `chapter-clear`.
+
+Defaults (heads down): CONTINUE walks on (T, 2026-11-22). No baseline PNG is committed for the new smoke route: CI's re-stamp makes it on the renderer of record. The screenshot is 390 px wide (the smoke size); rows cap at 340 px, so 375 does not clip.
