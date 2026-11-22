@@ -245,6 +245,15 @@ describe('roster health — each orphan lens fires', () => {
             .filter(f => f.subject === 'relic').map(f => f.id);
         // No elite fight at all: nothing drops either relic.
         expect(orphans([])).toEqual(['relic-elite-a', 'relic-elite-b']);
+        // A normal fight, even one naming a drop list, and a non-fight entry drop nothing.
+        const normal: MapEventPool[] = [{
+            id: 'x-normal.encounter',
+            entries: [
+                { kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly', eliteRelicDrops: ['relic-elite-a'] } },
+                { kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly', difficulty: 'normal' } },
+            ],
+        }, merchantPool('x-village', { id: 't', rootNodeId: 'r', nodes: {} } as unknown as DialogueTree)];
+        expect(orphans(normal)).toEqual(['relic-elite-a', 'relic-elite-b']);
         // An elite with its own drop list reaches only the relics it names.
         expect(orphans(elitePools(['relic-elite-a']))).toEqual(['relic-elite-b']);
         // An elite with no list draws from the whole elite pool.
