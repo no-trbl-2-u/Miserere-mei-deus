@@ -1,3 +1,4 @@
+// guard-test: no writer adds these flags any more, so the bound already holds on the base; this pins that a future rest or cache cannot start piling them up.
 /**
  * Hermetic E2E soak — a long save's flags stay bounded across many nights.
  *
