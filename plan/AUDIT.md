@@ -96,13 +96,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
 
-### [ ] [tests] No state fixture wears a relic or boots a dying board, so the critique drive cannot see the relic icons or the DY1d skull (iterate 2026-10-28)
-- category: tests
-- impact: 4
-- ease: 6
-- detail: The critique drive now opens the satchel (`sage-bw-door-gate`) and `/death-return`, but every preset's `equipment` resolves to nothing (`Character/presets.ts`, "a run starts with none"), so the satchel shows only phials and IT1b's relic icons stay unseen; and no fixture stages a fight with the player dying, so DY1d's skull on the combat panes has no capture. Fix: a registry fixture with a `player.equipment` (or relic) override wearing one live relic, and one whose fight boots at 1 VITAE with `dying` set; then point the drive's `satchel` entry at the first and add a `combat-dying` entry. Fixture test data only, no roster change.
-- source: iterate (CRITIQUE pass 107 HIGH, follow-up)
-
 ### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
 - category: finding
 - impact: 4
@@ -1032,6 +1025,21 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: one Beacon Crags node shares no content word between its map blurb (`beacon-crags.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
   - [ ] bc-12 The Gorge Falls (blacksmith). Blurb: "The water has cut the seam open. The iron is free." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
 - next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the falls, or the pair ruled fine. The pin goes in the same change.
+
+### [x] [tests] No state fixture wears a relic or boots a dying board, so the critique drive cannot see the relic icons or the DY1d skull (iterate 2026-10-28) — CLOSED 2026-11-22 (this PR: fixtures `wanderer-relic-satchel` (player.relics wears the Suppliant's Ring) and `wanderer-bw-fight-dying` (1 VITAE, `dying`, arrive on a fight); the drive's `satchel` entry uses the first and `combat-dying` the second; fixture tests added)
+- category: tests
+- impact: 4
+- ease: 6
+- detail: The critique drive now opens the satchel (`sage-bw-door-gate`) and `/death-return`, but every preset's `equipment` resolves to nothing (`Character/presets.ts`, "a run starts with none"), so the satchel shows only phials and IT1b's relic icons stay unseen; and no fixture stages a fight with the player dying, so DY1d's skull on the combat panes has no capture. Fix: a registry fixture with a `player.equipment` (or relic) override wearing one live relic, and one whose fight boots at 1 VITAE with `dying` set; then point the drive's `satchel` entry at the first and add a `combat-dying` entry. Fixture test data only, no roster change.
+- source: iterate (CRITIQUE pass 107 HIGH, follow-up)
+
+### [x] `HazardBoard.tsx` file-length outlier (~815 lines) — CLOSED 2026-11-22 (this PR: `HazardMeters.tsx` (SegBar, LiveMeter) and `HazardControls.tsx` (TrayDie, ApplyButton, PlayButton) extracted with their own styles, no behaviour change; HazardBoard.tsx 776 to 502 lines; a small test file each)
+- category: debt
+- impact: 3
+- ease: 5
+- detail: extraction candidate; several other mobile files are
+  length outliers. Extract sub-components with their own tests.
+- next: /iterate
 
 ### [x] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06) — CLOSED 2026-11-22 (stale: all six portraits have anim/backing sets and provenance; `FRAME_SET_EXEMPTIONS` is empty; AUDIT drain triage)
 - category: content
