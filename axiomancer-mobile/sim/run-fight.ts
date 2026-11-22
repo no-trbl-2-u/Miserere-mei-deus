@@ -100,7 +100,7 @@ export class FightStuckError extends Error {}
 
 function runDeck(store: AppStore): string[] {
     const s = store.getState() as unknown as GameState;
-    return buildCombatDeck(s.player, s.flags);
+    return buildCombatDeck(s.player);
 }
 
 /** The fight seam's view of the staged foe. */
@@ -139,11 +139,10 @@ export function answerMercyCheck(live: CombatEncounterState, witness: CombatSimP
 /** Play the fight until the foe falls, or the player does. */
 function playToVictory(store: AppStore, enemy: Enemy, witness: CombatSimPolicy): CombatEncounterState {
     const state = store.getState();
-    const flags = (state as unknown as GameState).flags;
     const seed = Math.floor(Math.random() * 0xffffffff);
     const rng = (): number => getRng().random();
     // The player fights as they stand: a new run wears the grey pair, so the sim plays a fresh run as it is.
-    let live = initializeCombatEncounter(state.player, enemy, undefined, seed, flags);
+    let live = initializeCombatEncounter(state.player, enemy, undefined, seed);
     live = rollEncounterDice(live).state;
     // The panel hands every state it renders to the fight recorder; so does the driver.
     fightRecorder.observe(live);

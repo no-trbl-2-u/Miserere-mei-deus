@@ -101,8 +101,8 @@ import { resolveDeath, freshRunKeepingCharacter, runOverState, createShellPlayer
  *   `MIN_COMBAT_DECK_SIZE` and every rest-node CUT was refused, and a card
  *   outside the bundle could be dealt and then rejected by `executeCard`'s
  *   `knownCards` ownership guard mid-combat. `knownCards` +
- *   `combatRewardCards` is the deck. The loadout codec stays (dev/e2e
- *   harnesses pin decks through it); it is never seeded.
+ *   `combatRewardCards` is the deck. The loadout codec has since been
+ *   deleted (nothing wrote the flags); a stray flag is inert, so no hop is needed.
  * - v24: the Suppliant's Ring was handed over at the run's first node, not in
  *   `createCharacter`. The hop stamps `first-node-relic-granted` on every
  *   existing save, which already owned the ring, so no save was offered it

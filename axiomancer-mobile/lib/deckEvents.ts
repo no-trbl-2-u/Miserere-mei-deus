@@ -55,9 +55,9 @@ export interface DeckEventPosterDeps {
     fetcher?: PuzzleFetch;
 }
 
-/** The deck the run would fight with now (the loadout, or every known card, plus rewards). */
+/** The deck the run would fight with now (every known card, plus rewards). */
 export function runDeck(state: DeckEventState): string[] {
-    return state.player ? buildCombatDeck(state.player, state.flags) : [];
+    return state.player ? buildCombatDeck(state.player) : [];
 }
 
 /** Where a deck change happened: the node the player stands on (null off the map) and the screen. */

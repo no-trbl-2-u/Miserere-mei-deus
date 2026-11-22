@@ -250,7 +250,7 @@ export function selectVillageVM(
                 nextPrice: removalQuote.nextPrice,
                 enabled: removalQuote.refusal === null,
                 refusal: removalQuote.refusal,
-                cards: removableCards(buildCombatDeck(player, state.flags ?? [])),
+                cards: removableCards(buildCombatDeck(player)),
             },
         };
     }
