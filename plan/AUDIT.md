@@ -67,203 +67,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Pending
 
-### [ ] [content] measured drift: bw-k2/saint-beneath blood-price lowestVitaeFractionP10 0.66 -> 0.11 (even, 2026-11-09)
-- issue: #1516
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the blood-price deck (even spread) from 0.66 at 72b245d to 0.11 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 0.69 -> 0.21 at a2fcf7b
-- evidence 2026-11-09: body 0.67 -> 0.23 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath elementalist lowestVitaeFractionP10 0.91 -> 0.75 (even, 2026-11-09)
-- issue: #1517
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the elementalist deck (even spread) from 0.91 at 72b245d to 0.75 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-k2/saint-beneath elementalist meanRounds 4.8 -> 7.8 (even, 2026-11-09)
-- issue: #1518
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the elementalist deck (even spread) from 4.8 at 72b245d to 7.8 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 4.5 -> 7.2 at a2fcf7b
-- evidence 2026-11-09: body 4.4 -> 7.4 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath blood-price+half lowestVitaeFractionP10 0.70 -> 0.33 (even, 2026-11-09)
-- issue: #1519
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the blood-price+half deck (even spread) from 0.70 at 72b245d to 0.33 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 0.73 -> 0.36 at a2fcf7b
-- evidence 2026-11-09: body 0.75 -> 0.37 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath blood-price+half meanRounds 4.9 -> 7.8 (even, 2026-11-09)
-- issue: #1520
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the blood-price+half deck (even spread) from 4.9 at 72b245d to 7.8 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 4.5 -> 7.6 at a2fcf7b
-- evidence 2026-11-09: body 4.3 -> 7.1 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath elementalist~20of30 meanRounds 5.2 -> 8.8 (even, 2026-11-09)
-- issue: #1521
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the elementalist~20of30 deck (even spread) from 5.2 at 72b245d to 8.8 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 4.9 -> 8.0 at a2fcf7b
-- evidence 2026-11-09: body 4.8 -> 8.0 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath mixed~20of60 lowestVitaeFractionP10 0.74 -> 0.48 (even, 2026-11-09)
-- issue: #1522
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the mixed~20of60 deck (even spread) from 0.74 at 72b245d to 0.48 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 0.75 -> 0.49 at a2fcf7b
-- evidence 2026-11-09: body 0.76 -> 0.48 at a2fcf7b
-
-### [ ] [content] measured drift: cw-17/death-beholder grey+bare lowestVitaeFractionP10 0.28 -> 0.52 (even, 2026-11-09)
-- issue: #1523
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-17/death-beholder with the grey+bare deck (even spread) from 0.28 at 72b245d to 0.52 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body 0.62 -> 0.77 at a2fcf7b
-
-### [ ] [content] measured drift: ld-16/death-beholder grey+bare lowestVitaeFractionP10 0.00 -> 0.22 (even, 2026-11-09)
-- issue: #1524
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for ld-16/death-beholder with the grey+bare deck (even spread) from 0.00 at 72b245d to 0.22 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-w5/wreckmaster grey meanRounds 8.9 -> 11.2 (even, 2026-11-09)
-- issue: #1493
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-w5/wreckmaster with the grey deck (even spread) from 8.9 at 587ec54 to 11.2 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 8.9 -> 11.2 at beb11aa
-- evidence 2026-11-09: body 8.9 -> 11.2 at beb11aa
-
-### [ ] [content] measured drift: bw-w5/wreckmaster grey+bare lowestVitaeFractionP10 0.08 -> 0.42 (even, 2026-11-09)
-- issue: #1494
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/wreckmaster with the grey+bare deck (even spread) from 0.08 at 587ec54 to 0.42 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 0.08 -> 0.42 at beb11aa
-- evidence 2026-11-09: body 0.08 -> 0.42 at beb11aa
-
-### [ ] [content] measured drift: bw-w5/wreckmaster grey+bare meanRounds 11.0 -> 13.3 (even, 2026-11-09)
-- issue: #1495
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-w5/wreckmaster with the grey+bare deck (even spread) from 11.0 at 587ec54 to 13.3 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 11.0 -> 13.3 at beb11aa
-- evidence 2026-11-09: body 11.0 -> 13.3 at beb11aa
-
-### [ ] [content] measured drift: bw-k2/saint-beneath grey lowestVitaeFractionP10 0.38 -> 0.70 (even, 2026-11-09)
-- issue: #1485
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the grey deck (even spread) from 0.38 at 0105f1f to 0.70 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 0.44 -> 0.69 at 587ec54
-- evidence 2026-11-09: even 0.70 -> 0.54 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath grey meanRounds 6.0 -> 10.0 (even, 2026-11-09)
-- issue: #1486
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the grey deck (even spread) from 6.0 at 0105f1f to 10.0 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 5.5 -> 9.6 at 587ec54
-- evidence 2026-11-09: body 5.0 -> 9.4 at 587ec54
-- evidence 2026-11-09: even 10.0 -> 23.5 at a2fcf7b
-- evidence 2026-11-09: body-mind 9.6 -> 20.4 at a2fcf7b
-- evidence 2026-11-09: body 9.4 -> 17.8 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath grey+bare winRate 84% -> 98% (even, 2026-11-09)
-- issue: #1487
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved winRate for bw-k2/saint-beneath with the grey+bare deck (even spread) from 84% at 0105f1f to 98% at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-k2/saint-beneath grey+bare lowestVitaeFractionP10 0.00 -> 0.65 (even, 2026-11-09)
-- issue: #1488
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the grey+bare deck (even spread) from 0.00 at 0105f1f to 0.65 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 0.16 -> 0.68 at 587ec54
-- evidence 2026-11-09: body 0.40 -> 0.69 at 587ec54
-- evidence 2026-11-09: even 0.65 -> 0.49 at a2fcf7b
-- evidence 2026-11-09: body-mind 0.68 -> 0.51 at a2fcf7b
-- evidence 2026-11-09: body 0.69 -> 0.54 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath grey+bare meanRounds 7.0 -> 12.4 (even, 2026-11-09)
-- issue: #1489
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the grey+bare deck (even spread) from 7.0 at 0105f1f to 12.4 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 6.4 -> 10.8 at 587ec54
-- evidence 2026-11-09: body 5.8 -> 10.2 at 587ec54
-- evidence 2026-11-09: even 12.4 -> 32.6 at a2fcf7b
-- evidence 2026-11-09: body-mind 10.8 -> 25.8 at a2fcf7b
-- evidence 2026-11-09: body 10.2 -> 22.7 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath mixed~20of60 meanRounds 4.5 -> 7.0 (even, 2026-11-09)
-- issue: #1490
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the mixed~20of60 deck (even spread) from 4.5 at 0105f1f to 7.0 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body-mind 4.2 -> 6.6 at 587ec54
-- evidence 2026-11-09: body 4.0 -> 6.3 at 587ec54
-- evidence 2026-11-09: even 7.0 -> 11.7 at a2fcf7b
-- evidence 2026-11-09: body-mind 6.6 -> 11.0 at a2fcf7b
-- evidence 2026-11-09: body 6.3 -> 10.8 at a2fcf7b
-
-### [ ] [content] measured drift: bw-k2/saint-beneath blood-price meanRounds 3.1 -> 5.4 (body-mind, 2026-11-09)
-- issue: #1491
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the blood-price deck (body-mind spread) from 3.1 at 0105f1f to 5.4 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-11-09: body 2.9 -> 5.5 at 587ec54
-- evidence 2026-11-09: even 5.0 -> 8.8 at a2fcf7b
-- evidence 2026-11-09: body-mind 5.4 -> 8.2 at a2fcf7b
-- evidence 2026-11-09: body 5.5 -> 8.1 at a2fcf7b
-
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5
@@ -271,167 +74,12 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
 - next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
 
-### [ ] [content] measured drift: bw-w5/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.90 (even, 2026-10-30)
-- issue: #1141
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/green-jelly with the grey deck (even spread) from 0.25 at e36c9b8 to 0.90 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: body-mind 0.25 -> 0.90 at 00e0876
-- evidence 2026-10-30: body 0.25 -> 0.90 at 00e0876
-
-### [ ] [content] measured drift: bw-w5/green-jelly mixed~20of60 lowestVitaeFractionP10 0.72 -> 0.88 (even, 2026-10-30)
-- issue: #1142
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/green-jelly with the mixed~20of60 deck (even spread) from 0.72 at e36c9b8 to 0.88 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: body-mind 0.72 -> 0.88 at 00e0876
-- evidence 2026-10-30: body 0.72 -> 0.88 at 00e0876
-
-### [ ] [content] measured drift: bw-k2/death-beholder grey lowestVitaeFractionP10 0.00 -> 0.23 (body-mind, 2026-10-30)
-- issue: #1143
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/death-beholder with the grey deck (body-mind spread) from 0.00 at e36c9b8 to 0.23 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-c1/green-jelly grey lowestVitaeFractionP10 0.76 -> 0.96 (even, 2026-10-30)
-- issue: #1144
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-c1/green-jelly with the grey deck (even spread) from 0.76 at e36c9b8 to 0.96 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: body-mind 0.76 -> 0.96 at 00e0876
-
-### [ ] [content] measured drift: bw-l4/green-jelly grey lowestVitaeFractionP10 0.78 -> 0.96 (even, 2026-10-30)
-- issue: #1145
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-l4/green-jelly with the grey deck (even spread) from 0.78 at e36c9b8 to 0.96 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-w2/float-eye grey lowestVitaeFractionP10 0.74 -> 0.95 (even, 2026-10-30)
-- issue: #1127
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w2/float-eye with the grey deck (even spread) from 0.74 at 368f4f2 to 0.95 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: body-mind 0.74 -> 0.95 at 79c5899
-- evidence 2026-10-30: body 0.74 -> 0.95 at 79c5899
-
-### [ ] [content] measured drift: bw-m1/float-eye grey lowestVitaeFractionP10 0.75 -> 0.96 (even, 2026-10-30)
-- issue: #1128
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-m1/float-eye with the grey deck (even spread) from 0.75 at 368f4f2 to 0.96 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: body-mind 0.75 -> 0.96 at 79c5899
-- evidence 2026-10-30: body 0.75 -> 0.96 at 79c5899
-
-### [ ] [content] measured drift: bw-t1/float-eye grey lowestVitaeFractionP10 0.78 -> 0.97 (even, 2026-10-30)
-- issue: #1129
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-t1/float-eye with the grey deck (even spread) from 0.78 at 368f4f2 to 0.97 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-t2/float-eye grey lowestVitaeFractionP10 0.79 -> 0.97 (even, 2026-10-30)
-- issue: #1130
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-t2/float-eye with the grey deck (even spread) from 0.79 at 368f4f2 to 0.97 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-
-### [ ] [content] measured drift: bw-k2/death-beholder grey winRate 35% -> 45% (even, 2026-10-30)
-- issue: #1131
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved winRate for bw-k2/death-beholder with the grey deck (even spread) from 35% at 368f4f2 to 45% at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: even 45% -> 85% at 00e0876
-- evidence 2026-10-30: body-mind 80% -> 98% at 00e0876
-
-### [ ] [content] measured drift: ld-16/death-beholder grey lowestVitaeFractionP10 0.31 -> 0.50 (body-mind, 2026-10-30)
-- issue: #1132
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for ld-16/death-beholder with the grey deck (body-mind spread) from 0.31 at 368f4f2 to 0.50 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-31: even 0.07 -> 0.28 at cf431a4
-- evidence 2026-11-01: even 0.28 -> 0.05 at 431ed71
-
-### [ ] [content] measured drift: cw-12/green-jelly grey lowestVitaeFractionP10 0.55 -> 0.78 (even, 2026-10-29)
-- issue: #1081
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-12/green-jelly with the grey deck (even spread) from 0.55 at 62912e3 to 0.78 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-29: body-mind 0.73 -> 0.89 at 3993f2a
-- evidence 2026-10-30: even 0.78 -> 0.96 at 00e0876
-
-### [ ] [content] measured drift: cw-17/death-beholder grey winRate 50% -> 85% (even, 2026-10-29)
-- issue: #1082
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved winRate for cw-17/death-beholder with the grey deck (even spread) from 50% at 62912e3 to 85% at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-29: body-mind 83% -> 100% at 3993f2a
-- evidence 2026-10-30: even 85% -> 100% at 00e0876
-
-### [ ] [content] measured drift: cw-17/death-beholder grey lowestVitaeFractionP10 0.00 -> 0.45 (body-mind, 2026-10-29)
-- issue: #1083
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-17/death-beholder with the grey deck (body-mind spread) from 0.00 at 62912e3 to 0.45 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-29: body 0.37 -> 0.60 at 3993f2a
-- evidence 2026-10-30: even 0.00 -> 0.35 at 00e0876
-- evidence 2026-10-30: body-mind 0.45 -> 0.61 at 00e0876
-- evidence 2026-11-01: even 0.55 -> 0.35 at 431ed71
-
-### [ ] [content] measured drift: bc-15/death-beholder grey lowestVitaeFractionP10 0.23 -> 0.48 (body-mind, 2026-10-29)
-- issue: #1084
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bc-15/death-beholder with the grey deck (body-mind spread) from 0.23 at 62912e3 to 0.48 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-30: even 0.04 -> 0.27 at 79c5899
-
-### [ ] [content] measured drift: bw-8/green-jelly grey winRate 100% -> 83% (even, 2026-10-28)
-- issue: #1029
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved winRate for bw-8/green-jelly with the grey deck (even spread) from 100% at 160385b to 83% at 6ba3c34 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-28: body-mind 100% -> 83% at 6ba3c34
-- evidence 2026-10-28: body 100% -> 83% at 6ba3c34
-
-### [ ] [content] measured drift: bw-8/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.00 (even, 2026-10-28)
-- issue: #1030
-- category: content
-- impact: 4
-- ease: 3
-- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-8/green-jelly with the grey deck (even spread) from 0.25 at 160385b to 0.00 at 6ba3c34 (`docs/reports/measured/history.jsonl`, `latest.md`).
-- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
-- evidence 2026-10-28: body-mind 0.25 -> 0.00 at 6ba3c34
-- evidence 2026-10-28: body 0.25 -> 0.00 at 6ba3c34
+### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
+- category: process
+- impact: 6
+- ease: 6
+- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
+- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
 
 ### [ ] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27)
 - category: ci
@@ -455,38 +103,11 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: The critique drive now opens the satchel (`sage-bw-door-gate`) and `/death-return`, but every preset's `equipment` resolves to nothing (`Character/presets.ts`, "a run starts with none"), so the satchel shows only phials and IT1b's relic icons stay unseen; and no fixture stages a fight with the player dying, so DY1d's skull on the combat panes has no capture. Fix: a registry fixture with a `player.equipment` (or relic) override wearing one live relic, and one whose fight boots at 1 VITAE with `dying` set; then point the drive's `satchel` entry at the first and add a `combat-dying` entry. Fixture test data only, no roster change.
 - source: iterate (CRITIQUE pass 107 HIGH, follow-up)
 
-### [content] map copy: Breakwater node blurbs that do not match their events (AW1b, 2026-10-26)
-- category: content
-- impact: 3
-- ease: -
-- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`); the swarm's R13 in `docs/reports/playtest-elementalist-act1-2026-10-24.md`.
-- detail: three Breakwater nodes share no content word between the map blurb (`axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`) and the event copy the node opens (`axiomancer-mechanics/src/World/MapEvents/content.ts`). The two caches draw from the shared `COAST_LOOT_CACHES` rotation, not copy written for the place; the Anvil uses the one `ANVIL_LINE` every region shares.
-  - [ ] BW1b (2026-10-29) replaced the map: the 22-node ids above are gone. The test now pins the new
-    Breakwater's mismatches: bw-m3, bw-h8 and bw-d2 (loot caches on the shared `COAST_LOOT_CACHES`), and the two
-    villages bw-t4 and bw-m5 (the shared `ANVIL_LINE`). T's flavour follow-up for Chapter 1 settles them.
-  - [ ] BW1e (116.5, 2026-11-12) put T's ruled quest lines on the Chapter 1 quest nodes. Their event copy no longer
-    shares a word with the map blurb: bw-c2 (Fishermen's Camp) and bw-l5 (Lighthouse). The test pins both here until
-    T rewrites the blurbs or rules the pairs fine. bw-b1 (River Bridge) was unpinned by 177.13: its description is
-    now the placeholder `[content] The River Bridge.`, which shares words with its blurb.
-- next: T's call per node (map copy, D88): rewrite the blurb, give the node event copy of its own, or rule the pair fine. The test's pin for a node goes in the same change, or the stale-pin case fails.
-
-### [content] map copy: Charcoal Wood node blurb that does not match its event (AW1b, 2026-10-26)
-- category: content
-- impact: 3
-- ease: -
-- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`).
-- detail: one Charcoal Wood node shares no content word between its map blurb (`charcoal-wood.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
-  - [ ] cw-18 The Well (blacksmith). Blurb: "A covered well. The cover is rotten." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
-- next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the well, or the pair ruled fine. The pin goes in the same change.
-
-### [content] map copy: Beacon Crags node blurb that does not match its event (AW1b, 2026-10-26)
-- category: content
-- impact: 3
-- ease: -
-- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`).
-- detail: one Beacon Crags node shares no content word between its map blurb (`beacon-crags.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
-  - [ ] bc-12 The Gorge Falls (blacksmith). Blurb: "The water has cut the seam open. The iron is free." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
-- next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the falls, or the pair ruled fine. The pin goes in the same change.
+### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
+- category: finding
+- impact: 4
+- ease: 5
+- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
 
 ### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
 - category: content
@@ -499,6 +120,18 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
 - next: needs a brief T approves: stage it, grant it, or retire it (D88).
   The pin changes in the same change.
+
+- category: ci
+- impact: 5
+- ease: 6
+
+- category: tests
+- impact: 4
+- ease: 6
+
+- category: content
+- impact: 4
+- ease: -
 
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
@@ -888,19 +521,13 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   a dedicated sweep or a standing lint of its own.
 - next: /iterate
 
-### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
 - category: process
 - impact: 6
 - ease: 6
-- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
-- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
 - 2026-11-22: left open, no sound automated guard built. The Retro's outcome is not recorded anywhere a lint can read: a clean retro is the words "retro: clean" in the run report (`skills/next.md` Step 6), a lesson lands as an edit to `plan/lessons.md` or a pending-file footgun, and `skills/march.md` no longer carries a §3 "Retro". The `lessons: retro` commit prefix and `plan: phase X shipped` subject this row counts no longer match the current closers (`plan: close N` / `plan: settle N`, and no `lessons: retro` in the 101-commit shallow history), so a commit-pair lint would fail on every close or pass vacuously, and a clean retro writes no artifact to pair with. A real guard needs the retro outcome recorded first (a `retro:` field on the pending file or on the `tick-end` row, which is hook-owned under `.claude/`), then a lint on that; that is a design call for `/plot`, not an `/iterate` slice.
 
-### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
-- category: finding
 - impact: 4
 - ease: 5
-- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ### [x] [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23) — CLOSED 2026-11-22 (this PR: `parsePricingComments` and its `pricing` field deleted from `export-catalog.ts`; `combat-sim.cli.ts` usage already matched its real flags (grey-strike, grey-ward); `axio-mcp-server.mjs` `ensureFresh` now stats the Cards, Effects, Enemy and Atlas trees plus `combat.cards.ts` and `combat.rewards.ts`; items 3 and 4 were already gone)
@@ -1014,6 +641,397 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the MCP fallback in bearings' deploy-gate section so remote sessions
   know the sanctioned path.
 - next: /iterate (deploy-check.mjs env fallback + a bearings note)
+### [x] [content] measured drift: bw-k2/saint-beneath blood-price lowestVitaeFractionP10 0.66 -> 0.11 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1516
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the blood-price deck (even spread) from 0.66 at 72b245d to 0.11 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.69 -> 0.21 at a2fcf7b
+- evidence 2026-11-09: body 0.67 -> 0.23 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath elementalist lowestVitaeFractionP10 0.91 -> 0.75 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1517
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the elementalist deck (even spread) from 0.91 at 72b245d to 0.75 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-k2/saint-beneath elementalist meanRounds 4.8 -> 7.8 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1518
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the elementalist deck (even spread) from 4.8 at 72b245d to 7.8 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 4.5 -> 7.2 at a2fcf7b
+- evidence 2026-11-09: body 4.4 -> 7.4 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath blood-price+half lowestVitaeFractionP10 0.70 -> 0.33 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1519
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the blood-price+half deck (even spread) from 0.70 at 72b245d to 0.33 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.73 -> 0.36 at a2fcf7b
+- evidence 2026-11-09: body 0.75 -> 0.37 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath blood-price+half meanRounds 4.9 -> 7.8 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1520
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the blood-price+half deck (even spread) from 4.9 at 72b245d to 7.8 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 4.5 -> 7.6 at a2fcf7b
+- evidence 2026-11-09: body 4.3 -> 7.1 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath elementalist~20of30 meanRounds 5.2 -> 8.8 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1521
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the elementalist~20of30 deck (even spread) from 5.2 at 72b245d to 8.8 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 4.9 -> 8.0 at a2fcf7b
+- evidence 2026-11-09: body 4.8 -> 8.0 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath mixed~20of60 lowestVitaeFractionP10 0.74 -> 0.48 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1522
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the mixed~20of60 deck (even spread) from 0.74 at 72b245d to 0.48 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.75 -> 0.49 at a2fcf7b
+- evidence 2026-11-09: body 0.76 -> 0.48 at a2fcf7b
+
+### [x] [content] measured drift: cw-17/death-beholder grey+bare lowestVitaeFractionP10 0.28 -> 0.52 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1523
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-17/death-beholder with the grey+bare deck (even spread) from 0.28 at 72b245d to 0.52 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body 0.62 -> 0.77 at a2fcf7b
+
+### [x] [content] measured drift: ld-16/death-beholder grey+bare lowestVitaeFractionP10 0.00 -> 0.22 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1524
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for ld-16/death-beholder with the grey+bare deck (even spread) from 0.00 at 72b245d to 0.22 at a2fcf7b (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-w5/wreckmaster grey meanRounds 8.9 -> 11.2 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1493
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-w5/wreckmaster with the grey deck (even spread) from 8.9 at 587ec54 to 11.2 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 8.9 -> 11.2 at beb11aa
+- evidence 2026-11-09: body 8.9 -> 11.2 at beb11aa
+
+### [x] [content] measured drift: bw-w5/wreckmaster grey+bare lowestVitaeFractionP10 0.08 -> 0.42 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1494
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/wreckmaster with the grey+bare deck (even spread) from 0.08 at 587ec54 to 0.42 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.08 -> 0.42 at beb11aa
+- evidence 2026-11-09: body 0.08 -> 0.42 at beb11aa
+
+### [x] [content] measured drift: bw-w5/wreckmaster grey+bare meanRounds 11.0 -> 13.3 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1495
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-w5/wreckmaster with the grey+bare deck (even spread) from 11.0 at 587ec54 to 13.3 at beb11aa (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 11.0 -> 13.3 at beb11aa
+- evidence 2026-11-09: body 11.0 -> 13.3 at beb11aa
+
+### [x] [content] measured drift: bw-k2/saint-beneath grey lowestVitaeFractionP10 0.38 -> 0.70 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1485
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the grey deck (even spread) from 0.38 at 0105f1f to 0.70 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.44 -> 0.69 at 587ec54
+- evidence 2026-11-09: even 0.70 -> 0.54 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath grey meanRounds 6.0 -> 10.0 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1486
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the grey deck (even spread) from 6.0 at 0105f1f to 10.0 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 5.5 -> 9.6 at 587ec54
+- evidence 2026-11-09: body 5.0 -> 9.4 at 587ec54
+- evidence 2026-11-09: even 10.0 -> 23.5 at a2fcf7b
+- evidence 2026-11-09: body-mind 9.6 -> 20.4 at a2fcf7b
+- evidence 2026-11-09: body 9.4 -> 17.8 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath grey+bare winRate 84% -> 98% (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1487
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved winRate for bw-k2/saint-beneath with the grey+bare deck (even spread) from 84% at 0105f1f to 98% at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-k2/saint-beneath grey+bare lowestVitaeFractionP10 0.00 -> 0.65 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1488
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/saint-beneath with the grey+bare deck (even spread) from 0.00 at 0105f1f to 0.65 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 0.16 -> 0.68 at 587ec54
+- evidence 2026-11-09: body 0.40 -> 0.69 at 587ec54
+- evidence 2026-11-09: even 0.65 -> 0.49 at a2fcf7b
+- evidence 2026-11-09: body-mind 0.68 -> 0.51 at a2fcf7b
+- evidence 2026-11-09: body 0.69 -> 0.54 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath grey+bare meanRounds 7.0 -> 12.4 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1489
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the grey+bare deck (even spread) from 7.0 at 0105f1f to 12.4 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 6.4 -> 10.8 at 587ec54
+- evidence 2026-11-09: body 5.8 -> 10.2 at 587ec54
+- evidence 2026-11-09: even 12.4 -> 32.6 at a2fcf7b
+- evidence 2026-11-09: body-mind 10.8 -> 25.8 at a2fcf7b
+- evidence 2026-11-09: body 10.2 -> 22.7 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath mixed~20of60 meanRounds 4.5 -> 7.0 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1490
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the mixed~20of60 deck (even spread) from 4.5 at 0105f1f to 7.0 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body-mind 4.2 -> 6.6 at 587ec54
+- evidence 2026-11-09: body 4.0 -> 6.3 at 587ec54
+- evidence 2026-11-09: even 7.0 -> 11.7 at a2fcf7b
+- evidence 2026-11-09: body-mind 6.6 -> 11.0 at a2fcf7b
+- evidence 2026-11-09: body 6.3 -> 10.8 at a2fcf7b
+
+### [x] [content] measured drift: bw-k2/saint-beneath blood-price meanRounds 3.1 -> 5.4 (body-mind, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1491
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved meanRounds for bw-k2/saint-beneath with the blood-price deck (body-mind spread) from 3.1 at 0105f1f to 5.4 at 587ec54 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-11-09: body 2.9 -> 5.5 at 587ec54
+- evidence 2026-11-09: even 5.0 -> 8.8 at a2fcf7b
+- evidence 2026-11-09: body-mind 5.4 -> 8.2 at a2fcf7b
+- evidence 2026-11-09: body 5.5 -> 8.1 at a2fcf7b
+
+### [x] [content] measured drift: bw-w5/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.90 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1141
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/green-jelly with the grey deck (even spread) from 0.25 at e36c9b8 to 0.90 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: body-mind 0.25 -> 0.90 at 00e0876
+- evidence 2026-10-30: body 0.25 -> 0.90 at 00e0876
+
+### [x] [content] measured drift: bw-w5/green-jelly mixed~20of60 lowestVitaeFractionP10 0.72 -> 0.88 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1142
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w5/green-jelly with the mixed~20of60 deck (even spread) from 0.72 at e36c9b8 to 0.88 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: body-mind 0.72 -> 0.88 at 00e0876
+- evidence 2026-10-30: body 0.72 -> 0.88 at 00e0876
+
+### [x] [content] measured drift: bw-k2/death-beholder grey lowestVitaeFractionP10 0.00 -> 0.23 (body-mind, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1143
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-k2/death-beholder with the grey deck (body-mind spread) from 0.00 at e36c9b8 to 0.23 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-c1/green-jelly grey lowestVitaeFractionP10 0.76 -> 0.96 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1144
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-c1/green-jelly with the grey deck (even spread) from 0.76 at e36c9b8 to 0.96 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: body-mind 0.76 -> 0.96 at 00e0876
+
+### [x] [content] measured drift: bw-l4/green-jelly grey lowestVitaeFractionP10 0.78 -> 0.96 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1145
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-l4/green-jelly with the grey deck (even spread) from 0.78 at e36c9b8 to 0.96 at 00e0876 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-w2/float-eye grey lowestVitaeFractionP10 0.74 -> 0.95 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1127
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-w2/float-eye with the grey deck (even spread) from 0.74 at 368f4f2 to 0.95 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: body-mind 0.74 -> 0.95 at 79c5899
+- evidence 2026-10-30: body 0.74 -> 0.95 at 79c5899
+
+### [x] [content] measured drift: bw-m1/float-eye grey lowestVitaeFractionP10 0.75 -> 0.96 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1128
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-m1/float-eye with the grey deck (even spread) from 0.75 at 368f4f2 to 0.96 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: body-mind 0.75 -> 0.96 at 79c5899
+- evidence 2026-10-30: body 0.75 -> 0.96 at 79c5899
+
+### [x] [content] measured drift: bw-t1/float-eye grey lowestVitaeFractionP10 0.78 -> 0.97 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1129
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-t1/float-eye with the grey deck (even spread) from 0.78 at 368f4f2 to 0.97 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-t2/float-eye grey lowestVitaeFractionP10 0.79 -> 0.97 (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1130
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-t2/float-eye with the grey deck (even spread) from 0.79 at 368f4f2 to 0.97 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+
+### [x] [content] measured drift: bw-k2/death-beholder grey winRate 35% -> 45% (even, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1131
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved winRate for bw-k2/death-beholder with the grey deck (even spread) from 35% at 368f4f2 to 45% at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: even 45% -> 85% at 00e0876
+- evidence 2026-10-30: body-mind 80% -> 98% at 00e0876
+
+### [x] [content] measured drift: ld-16/death-beholder grey lowestVitaeFractionP10 0.31 -> 0.50 (body-mind, 2026-10-30) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1132
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for ld-16/death-beholder with the grey deck (body-mind spread) from 0.31 at 368f4f2 to 0.50 at 79c5899 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-31: even 0.07 -> 0.28 at cf431a4
+- evidence 2026-11-01: even 0.28 -> 0.05 at 431ed71
+
+### [x] [content] measured drift: cw-12/green-jelly grey lowestVitaeFractionP10 0.55 -> 0.78 (even, 2026-10-29) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1081
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-12/green-jelly with the grey deck (even spread) from 0.55 at 62912e3 to 0.78 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-29: body-mind 0.73 -> 0.89 at 3993f2a
+- evidence 2026-10-30: even 0.78 -> 0.96 at 00e0876
+
+### [x] [content] measured drift: cw-17/death-beholder grey winRate 50% -> 85% (even, 2026-10-29) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1082
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved winRate for cw-17/death-beholder with the grey deck (even spread) from 50% at 62912e3 to 85% at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-29: body-mind 83% -> 100% at 3993f2a
+- evidence 2026-10-30: even 85% -> 100% at 00e0876
+
+### [x] [content] measured drift: cw-17/death-beholder grey lowestVitaeFractionP10 0.00 -> 0.45 (body-mind, 2026-10-29) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1083
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for cw-17/death-beholder with the grey deck (body-mind spread) from 0.00 at 62912e3 to 0.45 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-29: body 0.37 -> 0.60 at 3993f2a
+- evidence 2026-10-30: even 0.00 -> 0.35 at 00e0876
+- evidence 2026-10-30: body-mind 0.45 -> 0.61 at 00e0876
+- evidence 2026-11-01: even 0.55 -> 0.35 at 431ed71
+
+### [x] [content] measured drift: bc-15/death-beholder grey lowestVitaeFractionP10 0.23 -> 0.48 (body-mind, 2026-10-29) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1084
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bc-15/death-beholder with the grey deck (body-mind spread) from 0.23 at 62912e3 to 0.48 at 3993f2a (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-30: even 0.04 -> 0.27 at 79c5899
+
+### [x] [content] measured drift: bw-8/green-jelly grey winRate 100% -> 83% (even, 2026-10-28) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1029
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved winRate for bw-8/green-jelly with the grey deck (even spread) from 100% at 160385b to 83% at 6ba3c34 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-28: body-mind 100% -> 83% at 6ba3c34
+- evidence 2026-10-28: body 100% -> 83% at 6ba3c34
+
+### [x] [content] measured drift: bw-8/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.00 (even, 2026-10-28) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
+- issue: #1030
+- category: content
+- impact: 4
+- ease: 3
+- detail: the measured-truth run moved lowestVitaeFractionP10 for bw-8/green-jelly with the grey deck (even spread) from 0.25 at 160385b to 0.00 at 6ba3c34 (`docs/reports/measured/history.jsonl`, `latest.md`).
+- next: T's call. A balance drift is fixed by retuning a card, deck or enemy, which `/iterate` may not do (D88, D99); this row waits for a brief T approves. `/iterate` may bisect the commits between the two history lines and add what it finds here, nothing more.
+- evidence 2026-10-28: body-mind 0.25 -> 0.00 at 6ba3c34
+- evidence 2026-10-28: body 0.25 -> 0.00 at 6ba3c34
+
+### [x] [content] map copy: Breakwater node blurbs that do not match their events (AW1b, 2026-10-26) — CLOSED 2026-11-22 (T folded the six Breakwater blurbs into 177.3, the Chapter 1 line review, via /oversight)
+- category: content
+- impact: 3
+- ease: -
+- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`); the swarm's R13 in `docs/reports/playtest-elementalist-act1-2026-10-24.md`.
+- detail: three Breakwater nodes share no content word between the map blurb (`axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`) and the event copy the node opens (`axiomancer-mechanics/src/World/MapEvents/content.ts`). The two caches draw from the shared `COAST_LOOT_CACHES` rotation, not copy written for the place; the Anvil uses the one `ANVIL_LINE` every region shares.
+  - [ ] BW1b (2026-10-29) replaced the map: the 22-node ids above are gone. The test now pins the new
+    Breakwater's mismatches: bw-m3, bw-h8 and bw-d2 (loot caches on the shared `COAST_LOOT_CACHES`), and the two
+    villages bw-t4 and bw-m5 (the shared `ANVIL_LINE`). T's flavour follow-up for Chapter 1 settles them.
+  - [ ] BW1e (116.5, 2026-11-12) put T's ruled quest lines on the Chapter 1 quest nodes. Their event copy no longer
+    shares a word with the map blurb: bw-c2 (Fishermen's Camp) and bw-l5 (Lighthouse). The test pins both here until
+    T rewrites the blurbs or rules the pairs fine. bw-b1 (River Bridge) was unpinned by 177.13: its description is
+    now the placeholder `[content] The River Bridge.`, which shares words with its blurb.
+- next: T's call per node (map copy, D88): rewrite the blurb, give the node event copy of its own, or rule the pair fine. The test's pin for a node goes in the same change, or the stale-pin case fails.
+
+### [x] [content] map copy: Charcoal Wood node blurb that does not match its event (AW1b, 2026-10-26) — CLOSED 2026-11-22 (T ruled the pair fine (pin stays as an accepted mismatch), via /oversight)
+- category: content
+- impact: 3
+- ease: -
+- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`).
+- detail: one Charcoal Wood node shares no content word between its map blurb (`charcoal-wood.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
+  - [ ] cw-18 The Well (blacksmith). Blurb: "A covered well. The cover is rotten." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
+- next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the well, or the pair ruled fine. The pin goes in the same change.
+
+### [x] [content] map copy: Beacon Crags node blurb that does not match its event (AW1b, 2026-10-26) — CLOSED 2026-11-22 (T ruled the pair fine (pin stays as an accepted mismatch), via /oversight)
+- category: content
+- impact: 3
+- ease: -
+- source: Phase AW1b, `axiomancer-mobile/state/exploration-maps/__tests__/node-blurb-event.test.ts` (`PINNED_MISMATCHES`).
+- detail: one Beacon Crags node shares no content word between its map blurb (`beacon-crags.layout.ts`) and its event copy (`World/MapEvents/content.ts`, the shared `ANVIL_LINE`).
+  - [ ] bc-12 The Gorge Falls (blacksmith). Blurb: "The water has cut the seam open. The iron is free." Event: "A lean-to forge, coals still breathing. The smith looks up from the anvil and nods at your dice."
+- next: T's call (map copy, D88): a blurb that names the forge, an Anvil line of its own for the falls, or the pair ruled fine. The pin goes in the same change.
 
 ### [x] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06) — CLOSED 2026-11-22 (stale: all six portraits have anim/backing sets and provenance; `FRAME_SET_EXEMPTIONS` is empty; AUDIT drain triage)
 - category: content
@@ -1901,7 +1919,6 @@ present. Row stays open until that session runs.
 - next: `/iterate` (rename + tests + a 375 capture).
 
 ### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
-- category: ci
 - impact: 4
 - ease: 5
 - detail: run 40262955599 (`verify-mobile`, head 8a810580, branch
@@ -2073,7 +2090,6 @@ present. Row stays open until that session runs.
 ### [x] [loop-call] A hazard scar mends at any rest; the inn keeps only its wording (2026-10-15) — RATIFIED via /oversight 2026-10-17
 - category: contract
 - impact: 4
-- ease: -
 - detail: fixing "Scarred never clears" (issue #561) the loop ruled that
   every rest, inn or camp, mends banked hazard scars. The options were
   (a) any rest mends, (b) keep the mend inn-only and word the gloss as
@@ -2247,7 +2263,6 @@ present. Row stays open until that session runs.
 
 ### [x] [ui] Post-purge: a staged A Plain Word wraps "+25%" mid-token to "+2/5%" (2026-09-27) — CLOSED 2026-10-10 (8d579f67: the PAID value keeps one line at a computed size on every small face, `paidLedgerFit`; CRITIQUE pass 74 MED, issue #479)
 - category: ui
-- impact: 4
 - ease: 6
 - detail: found in the P1 playtest (browser pane, 375 wide). The PAID
   hero value on the narrow staged card breaks inside the token. This is
@@ -2289,7 +2304,6 @@ present. Row stays open until that session runs.
   action until the triggering event (Pages project creation).
 
 ### [x] [loop-call] The local verify gate and CI disagree about what green means: the Playwright journeys run only in CI (2026-09-20) — DECIDED via /oversight 2026-09-23
-- category: process
 - impact: 7
 - ease: 6
 - detail: filed by the burn-day audit 2026-09-19, found by the audit running
@@ -2398,7 +2412,6 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
-- category: content
 - impact: 6
 - ease: 2
 - detail: filed 2026-08-27 by Phase 67. The rename to "Miserere Mei, Deus"
@@ -2426,7 +2439,6 @@ present. Row stays open until that session runs.
 ### [x] combat — user crash on ACCEPTING post-combat card reward (unreproduced, PR #216) — CLOSED 2026-10-11 via /oversight (blind)
 - category: external-critique
 - impact: 9
-- ease: 6
 - next: body says "LIKELY THE SAME BUG — RESOLVED 2026-09-04 (verify
   before closing)" (the rune-column/worklet fix may already cover it) —
   get the owner's device log (SELF -> dev tools -> DIAGNOSTICS -> PREV
@@ -2504,7 +2516,6 @@ present. Row stays open until that session runs.
 
 ### [x] [docs] Phase 44a deferred its `lexicon.json` registrations to the phases that actually rename each concept
 - category: docs
-- impact: 4
 - ease: 8
 - detail: filed 2026-08-09 by Phase 44a. The build-plan row and spec 34 §5.9
   item 2 both ask 44a to register the fifteen §5.2 renames, the six rank
@@ -2585,7 +2596,6 @@ present. Row stays open until that session runs.
 ### [x] [contract] New-keyword wiring drifts silently across seven surfaces — CLOSED 2026-09-28 (R0)
 - category: contract
 - impact: 6
-- ease: 6
 - detail: filed 2026-08-22 by the content-pipelines audit. The two
   switches that matter (`combat.engine.ts` mech switch,
   `combat.cards.ts` mechanicText) carry explicit defaults so a new kind
@@ -2607,7 +2617,6 @@ present. Row stays open until that session runs.
 - **CLOSED 2026-09-28 (R0):** moot. The loop no longer adds keywords (D37, D58); the card editor and its `wx.ts` vocabulary are deleted (D56); R7 deletes the carrier-less kinds the silent defaults guarded (D50). Keyword wiring is recorded for the card sessions in the B4 inventory (`plan/revamp/cards.md`).
 
 ### [x] [tests] No growth doctrine for pinned content counts [needs-user-call] — CLOSED 2026-09-28 (R0)
-- category: tests
 - impact: 6
 - ease: 8
 - detail: filed 2026-08-22 by the content-pipelines audit. Five
@@ -2676,7 +2685,6 @@ present. Row stays open until that session runs.
 ### [x] `dominantCardShare` is broken post-strike-death — CLOSED 2026-09-28 (R0)
 - category: debt
 - impact: 7
-- ease: 5
 - detail: filed 2026-08-08 by Phase 43. The raw attribution ledger's
   `dotDamage` is filled at SUMMARY time, so the ledger itself carries direct
   damage only and collapses onto whichever signature burst last — it reads
@@ -2711,7 +2719,6 @@ present. Row stays open until that session runs.
 
 ### [x] `/combat-playtest` still names `statusEngagement` as the objective function — HALF-RESOLVED via Phase 66 (2026-08-27) — CLOSED 2026-09-28 (R0)
 - category: docs
-- impact: 6
 - ease: 9
 - detail: filed 2026-08-08 by Phase 43. The skill files in `skills/` and
   `.claude/commands/` were outside that phase's ownership. They should be
@@ -2731,8 +2738,6 @@ present. Row stays open until that session runs.
 
 ### [x] Dead id-keyed engine hooks survive the retired spec-32 library — CLOSED 2026-09-28 (R0)
 - category: debt
-- impact: 5
-- ease: 6
 - detail: filed 2026-08-08 by Phase 42. Engine hooks still keyed to
   `achilles-and-the-tortoise`, `the-closing-word`, `circular-reasoning` —
   cards the Profane Canon (`84ef85b`) deleted. Dead, and now actively
@@ -2744,7 +2749,6 @@ present. Row stays open until that session runs.
 
 ### [x] Playtest harness has no victory-only rounds-to-victory metric — CLOSED 2026-09-28 (R0)
 - category: gap
-- impact: 4
 - ease: 7
 - detail: surfaced 2026-07-17 by the ultracode price-vs-win-rate
   playtest. `CombatSimStats.avgRounds`
