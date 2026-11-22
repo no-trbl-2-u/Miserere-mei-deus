@@ -455,6 +455,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
 - next: needs a brief T approves: stage it, grant it, or retire it (D88).
   The pin changes in the same change.
+
 ### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
 - category: debt
 - impact: 5
