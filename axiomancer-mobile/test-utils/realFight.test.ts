@@ -35,8 +35,7 @@ describe('startRealFight', () => {
     it('deals from the save\'s own deck when no deck is passed', () => {
         const fight = startRealFight();
         const state = fight.store.getState();
-        const flags = (state as unknown as { flags?: string[] }).flags;
-        const saveDeck = new Set(buildCombatDeck(state.player, flags));
+        const saveDeck = new Set(buildCombatDeck(state.player));
         const dealt = [...fight.combat.hand.map((h) => h.cardId), ...fight.combat.drawPile];
         expect(dealt.length).toBeGreaterThan(0);
         for (const id of dealt) expect(saveDeck.has(id)).toBe(true);

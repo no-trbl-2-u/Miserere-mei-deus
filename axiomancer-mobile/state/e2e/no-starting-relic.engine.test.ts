@@ -43,8 +43,7 @@ describe('a fresh run starts with no relic (SG1 A1)', () => {
         expect(state.itemReward.queue).toEqual([]);
         expect(selectHasPendingItemReward(state)).toBe(false);
 
-        const flags = (state as unknown as { flags?: string[] }).flags;
-        const fight = initializeCombatEncounter(state.player, enemy!, undefined, 7, flags);
+        const fight = initializeCombatEncounter(state.player, enemy!, undefined, 7);
         expect(fight.signatures).toEqual([]);
     });
 

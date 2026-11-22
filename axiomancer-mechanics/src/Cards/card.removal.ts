@@ -6,19 +6,16 @@
  *
  * ## What "the deck" means
  *
- * `buildCombatDeck(player, flags)` is the authority, and it deals from TWO
+ * `buildCombatDeck(player)` is the authority, and it deals from TWO
  * lists with different semantics:
  *
- *   - the CARD BASE — the curated loadout (`combat-loadout-card:` flags) when
- *     any loadout flag exists, otherwise `player.knownCards`. Whichever of the
- *     two is in force contributes ONE deck copy PER ENTRY: a base that lists
- *     an id three times deals three copies (see `buildCombatDeck`).
+ *   - the CARD BASE — `player.knownCards`. It contributes ONE deck copy PER
+ *     ENTRY: a base that lists an id three times deals three copies (see
+ *     `buildCombatDeck`).
  *   - the REWARDS — `player.combatRewardCards`, duplicates KEPT (extra copies
  *     are the whole point of a deckbuilder pickup).
  *
- * Removal therefore has to answer to whichever list actually owns the copy, or
- * it is invisible: strip a card from `knownCards` while a loadout flag still
- * names it and `buildCombatDeck` deals it anyway.
+ * Removal therefore has to answer to whichever list actually owns the copy.
  *
  * ## The rules, in order
  *
@@ -30,13 +27,9 @@
  *   3. `combatRewardCards` gives up ONE copy if it has one. Rewards are the
  *      bloat the player is paying to undo; the unlock set is the base. One
  *      copy, never all of them: a player who removed a 4-of would otherwise
- *      nuke a quarter of their deck for one price. The loadout is NOT touched
- *      on this branch — the reward copy is the copy that left.
+ *      nuke a quarter of their deck for one price.
  *   4. Otherwise the CARD BASE gives up ONE entry — one deck copy, now that
- *      the base keeps its copies. It leaves from whichever list is in force:
- *      one `combat-loadout-card:<id>:*` slot when loadout flags exist (and
- *      `knownCards` is left alone there — un-seating a copy is not
- *      un-learning the card), otherwise one `knownCards` entry. A 3-of loses
+ *      the base keeps its copies. One `knownCards` entry leaves. A 3-of loses
  *      one copy and stays a 2-of, which is what one removal is supposed to
  *      buy. (Both lists really do carry duplicates in shipped data — the
  *      mobile starter-bundle path writes the preset recipe into `knownCards`
@@ -55,7 +48,6 @@
 
 import type { Character } from '../Character/types';
 import { buildCombatDeck } from '../Combat/combat.deck';
-import { decodeCombatLoadout, removeFromLoadout } from '../Combat/combat.loadout';
 import { cardRemovalsOf } from './card.removal.pricing';
 import type {
     CardRemovalRefusalCode,
@@ -105,41 +97,33 @@ function dropOneCopy(list: readonly string[], id: string): string[] {
 /**
  * Removes one copy of `cardId` from the player's combat deck, or refuses.
  *
- * PURE: returns a new `Character` and a new flag array on success; on refusal
- * it returns the SAME `Character` reference it was handed (so a caller can
- * assert nothing moved) plus a copy of the flags.
+ * PURE: returns a new `Character` on success; on refusal it returns the SAME
+ * `Character` reference it was handed (so a caller can assert nothing moved).
  *
  * @param player - The character whose deck is being thinned. Never mutated.
  * @param cardId - The card id to remove one copy of.
- * @param flags  - `GameState.flags`. REQUIRED for loadout reconciliation: when
- *   loadout flags exist, `buildCombatDeck` deals the curated list INSTEAD of
- *   `knownCards`, so a removal that ignores them appears to do nothing.
- *   Defaults to `[]` (the no-loadout, `knownCards` path).
  * @returns A {@link CardRemovalResult} — narrow on `ok`. A refusal is a
  *   first-class value carrying a stable `code` and a loud `reason`; nothing is
  *   thrown, and the floor is never silently clamped.
  *
  * @example
- * const result = removeCardFromCombatDeck(player, 'spoiled-poultice', state.flags);
+ * const result = removeCardFromCombatDeck(player, 'spoiled-poultice');
  * if (!result.ok) return showRefusal(result.refusal.reason);
- * apply({ player: result.player, flags: result.flags });
+ * apply({ player: result.player });
  */
 export function removeCardFromCombatDeck(
     player: Character,
     cardId: string,
-    flags: readonly string[] = [],
 ): CardRemovalResult {
-    const deckBefore = buildCombatDeck(player, flags);
+    const deckBefore = buildCombatDeck(player);
     const deckSizeBefore = deckBefore.length;
     const removals = cardRemovalsOf(player);
 
     const refuse = (code: CardRemovalRefusalCode): CardRemovalResult => ({
         ok: false,
         player,
-        flags: flags.slice(),
         cardId,
         removedFrom: null,
-        loadoutReconciled: false,
         deckSizeBefore,
         deckSizeAfter: deckSizeBefore,
         removals,
@@ -163,12 +147,10 @@ export function removeCardFromCombatDeck(
 
     let nextRewards = rewards;
     let nextKnown = known;
-    let nextFlags = flags.slice();
     let removedFrom: CardRemovalSource;
-    let loadoutReconciled = false;
 
     if (rewards.includes(cardId)) {
-        // Rule 3 — rewards drain first, ONE copy, loadout untouched.
+        // Rule 3 — rewards drain first, ONE copy.
         nextRewards = dropOneCopy(rewards, cardId);
         removedFrom = 'rewards';
     } else {
@@ -176,20 +158,11 @@ export function removeCardFromCombatDeck(
         //
         // The base keeps its copies (see `buildCombatDeck`), which makes
         // entries and deck copies one-for-one — so draining the list would
-        // delete a 3-of for
-        // the price of a single removal. One entry leaves, and it leaves from
-        // whichever list is actually IN FORCE: the loadout when loadout flags
-        // exist (`knownCards` is the unlock set then, not the deck, and
-        // un-seating a copy must not un-learn the card), otherwise
-        // `knownCards`.
+        // delete a 3-of for the price of a single removal. One `knownCards`
+        // entry leaves.
         removedFrom = 'known';
-        if (decodeCombatLoadout(nextFlags).includes(cardId)) {
-            nextFlags = removeFromLoadout(nextFlags, cardId);
-            loadoutReconciled = true;
-        } else {
-            const kept = dropOneCopy(known, cardId);
-            if (kept.length !== known.length) nextKnown = kept;
-        }
+        const kept = dropOneCopy(known, cardId);
+        if (kept.length !== known.length) nextKnown = kept;
     }
 
     // Only write the lists that actually changed, so a sparse-optional
@@ -201,12 +174,10 @@ export function removeCardFromCombatDeck(
     return {
         ok: true,
         player: nextPlayer,
-        flags: nextFlags,
         cardId,
         removedFrom,
-        loadoutReconciled,
         deckSizeBefore,
-        deckSizeAfter: buildCombatDeck(nextPlayer, nextFlags).length,
+        deckSizeAfter: buildCombatDeck(nextPlayer).length,
         removals: removals + 1,
         floor: MIN_COMBAT_DECK_SIZE,
         refusal: null,

@@ -47,8 +47,7 @@ const BLOW = 'grey-strike';
 const WARD = 'grey-ward';
 const WORD = 'grey-word';
 
-/** A run state carrying exactly this deck. `flags` stays empty so
- *  `buildCombatDeck` reads `knownCards` rather than a curated loadout. */
+/** A run state carrying exactly this deck (`knownCards` plus rewards). */
 function runWith(
     knownCards: readonly string[],
     combatRewardCards: readonly string[] = [],
@@ -109,7 +108,7 @@ describe('selectDeckViewModel: the deck it shows', () => {
         const state = runWith([BLOW, BLOW, WARD, WORD], [WORD]);
         const player = (state as unknown as { player: Character }).player;
 
-        expect(selectDeckViewModel(state).totalCards).toBe(buildCombatDeck(player, []).length);
+        expect(selectDeckViewModel(state).totalCards).toBe(buildCombatDeck(player).length);
     });
 
     it('drops an id the card library no longer knows instead of rendering a blank row', () => {

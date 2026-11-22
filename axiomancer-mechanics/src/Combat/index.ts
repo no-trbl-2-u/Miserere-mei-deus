@@ -136,10 +136,6 @@ export {
     type EliteReward, type EliteRewardUpgrade, type RewardLaneSlots,
 } from './combat.rewards';
 
-export {
-    getCombatLoadout, addToLoadout,
-} from './combat.loadout';
-
 // The play-log API contract: the fight and deck change the preview app posts and the Worker stores.
 export {
     PLAY_LOG_FIGHTS_PATH, PLAY_LOG_DECK_EVENTS_PATH, COMBAT_EVENT_KINDS, PLAY_LOG_UI_EVENT_KINDS,
