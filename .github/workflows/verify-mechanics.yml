@@ -160,6 +160,7 @@ jobs:
       # installed either way.
       - name: Install Playwright Chromium
         if: steps.impact.outputs.run_integration == 'true'
+        timeout-minutes: 10
         run: npx playwright install --with-deps chromium
 
       # Report-only visual smoke (phase VE1c): every integration run shoots

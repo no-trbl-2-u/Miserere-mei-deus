@@ -122,6 +122,7 @@ jobs:
 
       - name: Install Playwright Chromium
         if: ${{ inputs.install_playwright }}
+        timeout-minutes: 10
         run: npx playwright install chromium --with-deps
         working-directory: axiomancer-mobile
 
