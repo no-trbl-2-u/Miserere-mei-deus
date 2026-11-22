@@ -214,29 +214,7 @@ export interface MapDefinition {
     readonly unstagedNpcs?: ReadonlyArray<{ readonly name: string; readonly reason: string }>;
 }
 
-// ─── Hazard Persistence ────────────────────────────────────────────────────
-
-/**
- * Hazard modifier effect applied to future encounters at tagged nodes.
- * Used by H08 (supply threshold -2), H12 (stability auto-success ≤6), etc.
- */
-export interface HazardModifierEntry {
-    hazardType: 'supply' | 'stability' | 'escape' | 'force';
-    thresholdAdjustment: number; // negative = easier, positive = harder
-    description: string;
-}
-
-/**
- * Persistent outcome of a completed hazard encounter at a specific node.
- * Enables world-state modifications that affect future hazard encounters.
- */
-export interface HazardNodeOutcome {
-    nodeId: NodeId;
-    hazardId: string;
-    outcome: 'cleared' | 'blocked' | 'modified';
-    appliedDate: string; // ISO timestamp
-    modifierEffects?: HazardModifierEntry[];
-}
+// ─── Route blocks ────────────────────────────────────────────────────────────
 
 /**
  * Blocked route between two connected nodes due to hazard outcome.
@@ -295,8 +273,6 @@ export interface BlockedRoute {
  *                             plays again. Absent = none seen; saves written
  *                             before this field default to that, with no
  *                             migration.
- * @property hazardOutcomes  - Persistent hazard effects applied to this map.
- *                             Tracks modifier effects and cleared/blocked/modified states.
  * @property blockedRoutes    - Routes blocked by hazard outcomes (e.g., collapsed bridge).
  *                             Checked by moveToNode validation for path availability.
  */
@@ -315,7 +291,6 @@ export interface MapState {
     retiredEliteNodes?: NodeId[];
     eliteUpgradeTakenNodes?: NodeId[];
     seenScenes?: NodeId[];
-    hazardOutcomes: HazardNodeOutcome[];
     blockedRoutes: BlockedRoute[];
 }
 

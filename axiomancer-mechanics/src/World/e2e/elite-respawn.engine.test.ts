@@ -197,7 +197,7 @@ describe('respawnElites over a real Act 1 walk (A1, A2)', () => {
         expect(state.world).toEqual(frozen);
     });
 
-    it('changes nothing but the spent lists: position, discovery, hazards, routes and other acts', () => {
+    it('changes nothing but the spent lists: position, discovery, routes and other acts', () => {
         const { state } = walkAct1(new Set(ELITES.map(e => e.node)));
         const otherAct: MapState = {
             ...deepClone(state.world.currentMap),
@@ -207,7 +207,6 @@ describe('respawnElites over a real Act 1 walk (A1, A2)', () => {
             ...state.world,
             currentMap: {
                 ...state.world.currentMap,
-                hazardOutcomes: [{ nodeId: 'ld-2', hazardId: 'h', outcome: 'cleared', appliedDate: '2026-10-27' }],
                 blockedRoutes: [{ from: 'ld-1', to: 'ld-2', reason: 'test' }],
             },
             mapStates: { ...state.world.mapStates, 'aporia-colonnade': otherAct },

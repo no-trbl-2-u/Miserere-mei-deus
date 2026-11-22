@@ -6,10 +6,10 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { migrate, dropCutNodes } from './game.migrate';
+import { migrate, dropCutNodes, dropRetiredMapFields } from './game.migrate';
 import { GAME_STATE_VERSION, createNewGameState } from './game.reducer';
 import { defeatedEnemies } from './defeat-ledger';
-import type { BlockedRoute, HazardNodeOutcome, MapState } from '../World/types';
+import type { BlockedRoute, MapState } from '../World/types';
 import type { MapName } from '../World/map.library';
 
 describe('migrate refuses a save from another version', () => {
@@ -74,7 +74,6 @@ describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
         expect(dropCutNodes(state)).toBe(state);
     });
 
-    const hazard = (nodeId: string): HazardNodeOutcome => ({ nodeId, hazardId: 'h', outcome: 'cleared', appliedDate: '2026-11-01' });
     const route = (from: string, to: string): BlockedRoute => ({ from, to, reason: 'r' });
     const touching = (patch: Partial<MapState>) => {
         const state = createNewGameState();
@@ -88,7 +87,6 @@ describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
             pendingArrival: 'bw-p2',
             retiredEliteNodes: ['bw-p2', 'bw-c1'],
             eliteUpgradeTakenNodes: ['bw-p2'],
-            hazardOutcomes: [hazard('bw-p2'), hazard('bw-p1')],
             blockedRoutes: [route('bw-p1', 'bw-p2'), route('bw-p2', 'bw-p3'), route('bw-m1', 'bw-p1')],
         })).world.currentMap;
         expect(map.currentNode).toBe('bw-p1');
@@ -96,7 +94,6 @@ describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
         expect(map.pendingArrival).toBeNull();
         expect(map.retiredEliteNodes).toEqual(['bw-c1']);
         expect(map.eliteUpgradeTakenNodes).toEqual([]);
-        expect(map.hazardOutcomes.map(o => o.nodeId)).toEqual(['bw-p1']);
         expect(map.blockedRoutes).toEqual([route('bw-m1', 'bw-p1')]);
     });
 
@@ -105,7 +102,6 @@ describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
             { arrivedFrom: 'bw-p2' },
             { pendingArrival: 'bw-p2' },
             { availableNodes: ['bw-p2'] },
-            { hazardOutcomes: [hazard('bw-p2')] },
             { blockedRoutes: [route('bw-p1', 'bw-p2')] },
             { blockedRoutes: [route('bw-p2', 'bw-p3')] },
         ];
@@ -115,8 +111,8 @@ describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
         }
     });
 
-    it('leaves a save untouched whose hazards and routes never name it', () => {
-        const before = touching({ hazardOutcomes: [hazard('bw-p1')], blockedRoutes: [route('bw-m1', 'bw-p1')] });
+    it('leaves a save untouched whose routes never name it', () => {
+        const before = touching({ blockedRoutes: [route('bw-m1', 'bw-p1')] });
         expect(dropCutNodes(before)).toBe(before);
     });
 
@@ -128,5 +124,38 @@ describe('dropCutNodes: a save naming the cut mountain path (bw-p2)', () => {
         const after = dropCutNodes(before);
         expect(after.world.currentMap).toBe(elsewhere);
         expect(after.world.mapStates?.breakwater).toMatchObject({ currentNode: 'bw-p1', completedNodes: ['bw-p1'] });
+    });
+});
+
+describe('dropRetiredMapFields: a save written while maps carried hazardOutcomes', () => {
+    // `MapState.hazardOutcomes` was declared and saved empty but never written
+    // or read (TRIM T2a finish list); the field left the shape on 2026-11-22.
+    const withOutcomes = () => {
+        const state = createNewGameState();
+        const outcome = { nodeId: 'bw-w2', hazardId: 'h', outcome: 'cleared', appliedDate: '2026-11-01' };
+        const map = { ...state.world.currentMap, hazardOutcomes: [outcome] };
+        const other = { ...state.world.currentMap, name: 'charcoal-wood' as MapName, hazardOutcomes: [] };
+        return { ...state, world: { ...state.world, currentMap: map, mapStates: { 'charcoal-wood': other } } };
+    };
+
+    it('a new game no longer writes the field', () => {
+        expect('hazardOutcomes' in createNewGameState().world.currentMap).toBe(false);
+    });
+
+    it('strips it from the current map and every kept map, leaving the rest of each map as it was', () => {
+        const before = withOutcomes();
+        const after = dropRetiredMapFields(before);
+        expect('hazardOutcomes' in after.world.currentMap).toBe(false);
+        expect('hazardOutcomes' in after.world.mapStates!['charcoal-wood']!).toBe(false);
+        const { hazardOutcomes: _a, ...restCurrent } = before.world.currentMap;
+        expect(after.world.currentMap).toEqual(restCurrent);
+        expect(after.player).toBe(before.player);
+    });
+
+    it('returns the state itself when no map carries the field', () => {
+        const state = dropRetiredMapFields(withOutcomes());
+        expect(dropRetiredMapFields(state)).toBe(state);
+        const fresh = createNewGameState();
+        expect(dropRetiredMapFields(fresh)).toBe(fresh);
     });
 });

@@ -473,10 +473,10 @@ function buildSoulsLine(count: number): string {
  * `state.flags` is append-order (oldest first); reversing
  * before de-dup keeps the most-recent occurrence of a repeated label,
  * matching the chronicle section's "most recent first" convention.
- * The writers already guard against literal duplicate flags
- * (`state/rest/store-actions.ts` / `state/cache/store-actions.ts`),
- * but this de-dupes defensively rather than trusting that invariant —
- * consistent with this presenter's existing defensive-parsing style.
+ * Nothing writes either prefix any more (`state/rest/store-actions.ts` /
+ * `state/cache/store-actions.ts`); only old saves carry them, so the list
+ * cannot grow. This de-dupes defensively all the same, consistent with
+ * this presenter's defensive-parsing style.
  */
 function extractKeepsakes(flags: unknown): ReadonlyArray<string> {
     if (!Array.isArray(flags)) return Object.freeze([]) as readonly string[];
