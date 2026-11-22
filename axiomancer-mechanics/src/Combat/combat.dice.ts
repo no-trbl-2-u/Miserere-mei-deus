@@ -116,14 +116,3 @@ export function refreshOneDie(
 export function stanceToDieColor(stance: Stance): CombatDieColor {
     return stance;
 }
-
-// ---------------------------------------------------------------------------
-// Wild-die permanent-growth mechanic
-// ---------------------------------------------------------------------------
-
-/**
- * Hard cap on `CombatEncounterState.permanentWildDice` (the
- * `grant_permanent_wild_die` card mechanic). Any non-zero pool
- * materializes as the single gold+lead pair (`rollGoldLeadPair`).
- */
-export const MAX_PERMANENT_WILD_DICE = 3;

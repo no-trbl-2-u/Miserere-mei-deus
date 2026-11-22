@@ -149,6 +149,24 @@ describe('buildStateFromFixture', () => {
         expect(withFlags.flags.filter(f => f === base.flags[0])).toHaveLength(1);
     });
 
+    it('player.relics wears live relics in position order; a preset wears none', () => {
+        expect(buildStateFromFixture({ id: 'x', preset: 'wanderer' }).player.equipment.relics.filter(Boolean)).toHaveLength(0);
+        const worn = buildStateFromFixture(getStateFixtureById('wanderer-relic-satchel')!).player.equipment.relics;
+        expect(worn[0]?.id).toBe('relic-disarming-plea');
+        expect(worn.filter(Boolean)).toHaveLength(1);
+        expect(() => validateStateFixture({ id: 'x', player: { relics: ['nope'] } })).toThrow(/player\.relics/);
+    });
+
+    it('"wanderer-bw-fight-dying" boots at 1 VITAE with dying set, arriving on a fight node', () => {
+        const f = getStateFixtureById('wanderer-bw-fight-dying')!;
+        const state = buildStateFromFixture(f);
+        expect(state.dying).toBe(true);
+        expect(state.player.health).toBe(1);
+        expect(f.arrive).toBe(true);
+        expect(buildStateFromFixture({ id: 'x', preset: 'wanderer' }).dying).toBeUndefined();
+        expect(() => validateStateFixture({ id: 'x', dying: false })).toThrow(/dying/);
+    });
+
     it('boots a store through createGameStore as full overrides', () => {
         const initial = buildStateFromFixture(getStateFixtureById('l30-bw-hazard')!);
         const store = createGameStore(nullAdapter, initial);

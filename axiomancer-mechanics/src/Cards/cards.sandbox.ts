@@ -1,7 +1,7 @@
 /**
  * Sandbox card registry — the deck-forge experimentation surface.
  *
- * A module-level mutable registry that lets balance loops (the `/deck-tuning`
+ * A module-level mutable registry that lets balance loops (the card-tuning loop
  * card, the playtest CLI) trial NEW experimental cards and numeric OVERRIDES
  * of library cards without touching `cards.library.ts`. The library's
  * `getCardById` consults this registry FIRST, so a registered sandbox card is
