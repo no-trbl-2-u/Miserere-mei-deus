@@ -331,8 +331,7 @@ describe('the app bridges', () => {
             expect(enemy!.maxHealth).toBe(scaled.maxHealth);
             expect(enemy!.maxHealth).toBe(Math.round(arrival.nodeEnemy.maxHealth * mult));
             expect(preview).toBe(enemy!.health);
-            const state = arrival.store.getState();
-            const combat = initializeCombatEncounter(state.player, enemy!, undefined, 7);
+            const combat = initializeCombatEncounter(arrival.store.getState().player, enemy!, undefined, 7);
             expect(combat.enemy.health).toBe(preview);
             expect(combat.enemy.maxHealth).toBe(enemy!.maxHealth);
 
