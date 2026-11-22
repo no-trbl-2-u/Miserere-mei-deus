@@ -10,7 +10,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    auditRosterHealth, collectRosterSources,
+    auditRosterHealth, collectRosterSources, eliteDropIds,
     danglingDialogue, danglingEnemySlugs, danglingItems, danglingRelicSignatures,
     orphanDialogueNodes, orphanEnemies, orphanItems, orphanNpcs, orphanQuests,
     type RosterSources,
@@ -129,6 +129,17 @@ function sources(over: Partial<RosterSources> = {}): RosterSources {
     };
 }
 
+/** One elite encounter pool; `drops` is its own `eliteRelicDrops` list, if any. */
+function elitePools(drops?: string[]): MapEventPool[] {
+    return [{
+        id: 'x-elite.encounter',
+        entries: [{
+            kind: 'encounter', weight: 1,
+            payload: { kind: 'encounter', enemySlug: 'green-jelly', difficulty: 'elite', ...(drops ? { eliteRelicDrops: drops } : {}) },
+        }],
+    }];
+}
+
 /** A village whose one merchant carries `dialogue`: the pools' only dialogue carrier. */
 function merchantPool(id: string, dialogue: DialogueTree): MapEventPool {
     return {
@@ -223,8 +234,22 @@ describe('roster health — each orphan lens fires', () => {
     it('item-ungranted: an elite-source relic is granted by the elite drop; a quest-source one is not', () => {
         const elite = { ...ring, id: 'relic-elite', relicSource: 'elite' } as Equipment;
         const quest = { ...ring, id: 'relic-quest', relicSource: 'quest' } as Equipment;
-        const found = orphanItems(sources({ relics: [elite, quest], startingItemIds: [], cacheItemIds: [] }));
+        const found = orphanItems(sources({ relics: [elite, quest], pools: elitePools(), startingItemIds: [], cacheItemIds: [] }));
         expect(found.filter(f => f.subject === 'relic').map(f => f.id)).toEqual(['relic-quest']);
+    });
+
+    it('item-ungranted: an elite-source relic counts only when a registered elite fight can drop it', () => {
+        const a = { ...ring, id: 'relic-elite-a', relicSource: 'elite' } as Equipment;
+        const b = { ...ring, id: 'relic-elite-b', relicSource: 'elite' } as Equipment;
+        const orphans = (pools: MapEventPool[]) => orphanItems(sources({ relics: [a, b], pools, startingItemIds: [], cacheItemIds: [] }))
+            .filter(f => f.subject === 'relic').map(f => f.id);
+        // No elite fight at all: nothing drops either relic.
+        expect(orphans([])).toEqual(['relic-elite-a', 'relic-elite-b']);
+        // An elite with its own drop list reaches only the relics it names.
+        expect(orphans(elitePools(['relic-elite-a']))).toEqual(['relic-elite-b']);
+        // An elite with no list draws from the whole elite pool.
+        expect(orphans(elitePools())).toEqual([]);
+        expect(eliteDropIds(sources({ relics: [a, b], pools: elitePools(['relic-elite-b']) }))).toEqual(['relic-elite-b']);
     });
 
     it('npc-unreached: a rostered NPC with a tree no node reaches', () => {

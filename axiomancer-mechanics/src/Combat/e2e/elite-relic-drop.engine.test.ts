@@ -1,8 +1,8 @@
 /**
  * The elite-only relic drop (phase LR1c, A8 and A9 of the LR1 brief).
  *
- * The contract this file pins, over the fixture elite relics (no live relic
- * is elite-only until LR1d/LR1e):
+ * The contract this file pins, over the fixture elite relics (the live
+ * elite relics, including the three lane relics of 183.1, are checked below):
  *   · `rollEliteRelicDrop` drops one relic with probability
  *     `ELITE_RELIC_DROP_CHANCE`: over 10,000 seeds the rate is within one
  *     point of the constant;

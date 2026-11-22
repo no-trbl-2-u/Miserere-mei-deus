@@ -89,12 +89,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
 
-### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
-- category: finding
-- impact: 4
-- ease: 5
-- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
-
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
 - impact: 4
@@ -376,8 +370,11 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
 - 2026-11-22: left open, no sound automated guard built. The Retro's outcome is not recorded anywhere a lint can read: a clean retro is the words "retro: clean" in the run report (`skills/next.md` Step 6), a lesson lands as an edit to `plan/lessons.md` or a pending-file footgun, and `skills/march.md` no longer carries a §3 "Retro". The `lessons: retro` commit prefix and `plan: phase X shipped` subject this row counts no longer match the current closers (`plan: close N` / `plan: settle N`, and no `lessons: retro` in the 101-commit shallow history), so a commit-pair lint would fail on every close or pass vacuously, and a clean retro writes no artifact to pair with. A real guard needs the retro outcome recorded first (a `retro:` field on the pending file or on the `tick-end` row, which is hook-owned under `.claude/`), then a lint on that; that is a design call for `/plot`, not an `/iterate` slice.
 
+### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
+- category: finding
 - impact: 4
 - ease: 5
+- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ## Done
@@ -393,6 +390,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
 - next: needs a brief T approves: stage it, grant it, or retire it (D88).
   The pin changes in the same change.
+
 ### [x] `deploy:check` is unusable from remote web sessions — 401 "Token rejected" — CLOSED 2026-11-22 (this PR: deploy-check.mjs token falls back GH_TOKEN, GITHUB_TOKEN, GH_PAT; bearings note; scripts/deploy-check-token.test.mjs)
 - category: debt
 - impact: 4
@@ -2686,6 +2684,7 @@ present. Row stays open until that session runs.
 ### [x] `dominantCardShare` is broken post-strike-death — CLOSED 2026-09-28 (R0)
 - category: debt
 - impact: 7
+- ease: 5
 - detail: filed 2026-08-08 by Phase 43. The raw attribution ledger's
   `dotDamage` is filled at SUMMARY time, so the ledger itself carries direct
   damage only and collapses onto whichever signature burst last — it reads
@@ -2753,6 +2752,7 @@ present. Row stays open until that session runs.
 
 ### [x] Playtest harness has no victory-only rounds-to-victory metric — CLOSED 2026-09-28 (R0)
 - category: gap
+- impact: 4
 - ease: 7
 - detail: surfaced 2026-07-17 by the ultracode price-vs-win-rate
   playtest. `CombatSimStats.avgRounds`
