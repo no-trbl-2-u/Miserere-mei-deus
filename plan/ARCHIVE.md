@@ -753,3 +753,7 @@
 - 2026-11-14 · 177.18 (alias: NV1r) · Seven more foes carry T's lines; Tide-Gate is The Half-Taken · 7f03d6c3..7f03d6c3 (#1674)
 - 2026-11-22 · 185.1 (alias: GM1a) · Game model matches the tree; stale "until phase" lines fail · 8ae5d8ed..8ae5d8ed (#1678)
 - 2026-11-22 · 185 · spec complete: The game model says what the tree does today · scripts/check-game-model-phases.test.mjs · deleted in (this commit)
+- 2026-11-12 · 169.2 (alias: DL3b) · Open Held chunks join the deadline queue; hand-ticked count shown · 5963b14f..2c10e245 (#1640)
+- 2026-11-13 · 180.1 (alias: CW1a) · CI keeps a log of screens it hangs on, written by a recorder · 1ba0cc0c..0223ffc7 (#1658)
+- 2026-11-12 · 169 · spec complete: An open deadline Item that names a merged pull request fails the lint · scripts/deadlines-queue.test.mjs · deleted in (this commit)
+- 2026-11-13 · 180 · spec complete: CI screen watch: a log of the screens CI hangs on, and the first cleanup · scripts/ci-screens.test.mjs · deleted in (this commit)
