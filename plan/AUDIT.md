@@ -654,18 +654,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: `kind: 'gathering'` is live, not minigame residue: it replaced the retired Gleaning minigame (save v18 to v19), grants one named material through the paced `/event` receipt, advances `collect` quest objectives and feeds the hazard puzzle outcome and the labyrinth pools. Seven Act 1 nodes carry it: bw-4, bw-11 (Breakwater), cw-4, cw-8, cw-14 (Charcoal Wood), bc-7 (Beacon Crags), ld-7 (Lantern Deep). But no code in mechanics or mobile spends a material, so every grant is a dead end for the player.
 - next: T's call (map content, D88), one of: (a) keep the nodes as they are; (b) give materials a use (a brief T approves: the Anvil, a quest, a shop); (c) re-point the seven nodes to another kind. The plot's leading option is (a) with (b) to follow.
 
-### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
-- category: content
-- impact: 4
-- ease: -
-- detail: `npm run roster-health -w axiomancer-mechanics` reports
-  `relic-bleeding-signet` (`Items/relic.library.ts`) as an orphan: no
-  cache, shop, loot table, starting loadout or reward carries it; only the
-  dev menu's GET ALL RELICS hands it over. Pinned in
-  `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
-- next: needs a brief T approves: stage it, grant it, or retire it (D88).
-  The pin changes in the same change.
-
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
 - impact: 4
@@ -2393,6 +2381,18 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ## Done
+
+### [x] [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13) — CLOSED 2026-11-22 (183.1: the Signet is an elite drop; roster health no longer pins it)
+- category: content
+- impact: 4
+- ease: -
+- detail: `npm run roster-health -w axiomancer-mechanics` reports
+  `relic-bleeding-signet` (`Items/relic.library.ts`) as an orphan: no
+  cache, shop, loot table, starting loadout or reward carries it; only the
+  dev menu's GET ALL RELICS hands it over. Pinned in
+  `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
+- next: needs a brief T approves: stage it, grant it, or retire it (D88).
+  The pin changes in the same change.
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content
