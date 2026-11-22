@@ -158,8 +158,9 @@ describe('node blurb ↔ event copy: the four Act 1 maps', () => {
 
     it('every pin names a [content] row present in plan/AUDIT.md', () => {
         const audit = readFileSync(path.resolve(__dirname, '../../../../plan/AUDIT.md'), 'utf8');
+        // A row may be open (`[ ]`) or closed by T (`[x]`); the pin only needs it to exist.
         const missing = [...new Set(Object.values(PINNED_MISMATCHES))]
-            .filter(row => !audit.includes(`### [content] ${row}`));
+            .filter(row => !audit.includes(`### [ ] [content] ${row}`) && !audit.includes(`### [x] [content] ${row}`));
         expect(missing).toEqual([]);
     });
 
