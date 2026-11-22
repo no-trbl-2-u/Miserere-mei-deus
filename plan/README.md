@@ -39,7 +39,6 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
-- **180.1** · CW1a: a log of the screens CI hangs on, written by a recorder script (T, `/plot`, 2026-11-12)
 - **182.1** · CE1a: the chapter summary, the run's stats read from the state (T, `/plot`, 2026-11-14)
 - **182.2** · CE1b: crossing the bridge out of the Breakwater opens a chapter complete screen with the stats (T, `/plot`, 2026-11-14; needs 182.1)
 - **183.1** · LR2a: the Bleeding Signet, the Elementalist's Brooch and the Elementalist's Belt join the elite drop pool (T, `/plot`, 2026-11-14)
@@ -94,9 +93,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 182 | Chapter 1 ends on a chapter complete screen with the run's stats | [182-ce1-chapter-complete.md](182-ce1-chapter-complete.md) | planned (**Asap**: 182.1, 182.2) | 2 left |
 | 183 | The three unearnable lane relics join the elite drop pool | [183-lr2-lane-relics-elite-pool.md](183-lr2-lane-relics-elite-pool.md) | planned (**Asap**: 183.1) | 1 left |
 | 184 | The sim report counts the hazards the Breakwater plays | [184-sc1-sim-hazard-coverage.md](184-sc1-sim-hazard-coverage.md) | planned | 1 left |
-| 180 | CI screen watch: a log of the screens CI hangs on, and the first cleanup | [180-cw1-ci-screen-watch.md](180-cw1-ci-screen-watch.md) | planned (**Asap**: 180.1) | 1 left |
 | 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 5 left |
-| 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
