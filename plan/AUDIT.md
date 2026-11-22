@@ -2253,14 +2253,6 @@ present. Row stays open until that session runs.
   long-save soak test could trip on this.
 - next: /iterate
 
-### [1.5] `HazardBoard.tsx` file-length outlier (~815 lines)
-- category: debt
-- impact: 3
-- ease: 5
-- detail: extraction candidate; several other mobile files are
-  length outliers. Extract sub-components with their own tests.
-- next: /iterate
-
 ### [2.1] Two agent-e2e walkthroughs describe a deleted engine surface
 - category: gap
 - impact: 3
@@ -2386,6 +2378,14 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ## Done
+
+### [x] `HazardBoard.tsx` file-length outlier (~815 lines) — CLOSED 2026-11-22 (this PR: `HazardMeters.tsx` (SegBar, LiveMeter) and `HazardControls.tsx` (TrayDie, ApplyButton, PlayButton) extracted with their own styles, no behaviour change; HazardBoard.tsx 776 to 502 lines; a small test file each)
+- category: debt
+- impact: 3
+- ease: 5
+- detail: extraction candidate; several other mobile files are
+  length outliers. Extract sub-components with their own tests.
+- next: /iterate
 
 ### [x] [tests] No state fixture wears a relic or boots a dying board, so the critique drive cannot see the relic icons or the DY1d skull (iterate 2026-10-28) — CLOSED 2026-11-22 (this PR: fixtures `wanderer-relic-satchel` (player.relics wears the Suppliant's Ring) and `wanderer-bw-fight-dying` (1 VITAE, `dying`, arrive on a fight); the drive's `satchel` entry uses the first and `combat-dying` the second; fixture tests added)
 - category: tests
