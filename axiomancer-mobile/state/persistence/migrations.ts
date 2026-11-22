@@ -5,6 +5,7 @@ import {
     dropRetiredFlags,
     refreshRelicText,
     dropCutNodes,
+    dropRetiredMapFields,
     syncWorldMoveLists,
     GAME_STATE_VERSION,
 } from '@mechanics';
@@ -163,11 +164,11 @@ export function unwrap(
     // Every engine-shaped load, current version included: a save can name
     // cards the library no longer holds (`dropUnknownCardIds`) and flags no
     // code reads (`dropRetiredFlags`) and nodes a map has since cut
-    // (`dropCutNodes`) and relics in old words (`refreshRelicText`), and a save written under the frontier
+    // (`dropCutNodes`) and map fields the shape has dropped (`dropRetiredMapFields`) and relics in old words (`refreshRelicText`), and a save written under the frontier
     // rule carries the frontier in its move lists, which the road rule
     // rewrites from where the player stands (`syncWorldMoveLists`).
     if (typeof engineVersion === 'number') {
-        const cleaned = refreshRelicText(dropCutNodes(dropRetiredFlags(dropUnknownCardIds(state as GameState))));
+        const cleaned = refreshRelicText(dropRetiredMapFields(dropCutNodes(dropRetiredFlags(dropUnknownCardIds(state as GameState)))));
         const world = cleaned.world ? syncWorldMoveLists(cleaned.world) : cleaned.world;
         state = world === cleaned.world ? cleaned : { ...cleaned, world };
     }
