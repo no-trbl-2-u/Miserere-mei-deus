@@ -457,6 +457,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   18:59:49 with zero progress until the ceiling force-cancelled it at
   20:14:33, another total loss. Second confirmed occurrence in 12 hours;
   still unfixed, still `/iterate`-shaped, not re-scored.
+
 ### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
 - category: debt
 - impact: 5
