@@ -54,6 +54,12 @@ test('the exploration tab selects the fixture shots that boot through it', () =>
     for (const n of ['exploration', 'dialogue', 'village', 'cutscene', 'hazard-board']) assert.ok(routes.includes(n), n)
 })
 
+test('the chapter complete screen selects its own shot, and the exploration tab boots it (CE1b)', () => {
+    // guard-test: pins #1683's merged chapter-complete route rule and VIA_EXPLORATION entry, which had no case; review MED on #1683
+    assert.deepEqual(routesForPaths(['axiomancer-mobile/app/chapter-complete/index.tsx'], names).routes, ['chapter-complete'])
+    assert.ok(routesForPaths(['axiomancer-mobile/app/(tabs)/exploration/index.tsx'], names).routes.includes('chapter-complete'))
+})
+
 test('several paths select the union', () => {
     const { routes } = routesForPaths([
         'axiomancer-mobile/app/(tabs)/memoir/index.tsx',

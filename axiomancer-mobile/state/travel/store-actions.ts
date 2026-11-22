@@ -29,7 +29,9 @@ export function closeTravelAction(store: AppStore): void {
 /**
  * YES: takes the trip the open screen offers. A map destination crosses the
  * world (a toast names the region, and the crossing is a checkpoint save); a
- * passage stands the player on its far node. Returns true when the player
+ * passage stands the player on its far node. The crossing out of the
+ * Breakwater instead opens the chapter complete screen and moves no one:
+ * CONTINUE (`continueChapterAction`) crosses, without a toast. Returns true when the player
  * moved; a shut way moves no one and leaves the screen open. `toast` is the
  * host's one-shot toast.
  */
