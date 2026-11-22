@@ -990,7 +990,9 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the automation-file deletion and the README/specs rewrite as two
   separate scoped fixes, not one.
 
-### [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules
+## Done
+
+### [x] [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules — CLOSED 2026-11-22 (T approved the attended rewrite via /oversight; this PR: argv matching)
 - category: tooling
 - impact: 4
 - ease: 5
@@ -1009,8 +1011,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the command's own argv, not to heredoc bodies or `-m` message contents; the
   `-m` body already has its own dedicated lint pass, so the general grep can
   exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
-
-## Done
 
 ### [x] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06) — CLOSED 2026-11-22 (stale: all six portraits have anim/backing sets and provenance; `FRAME_SET_EXEMPTIONS` is empty; AUDIT drain triage)
 - category: content
