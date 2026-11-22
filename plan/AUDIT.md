@@ -456,6 +456,16 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 
 ## Done
 
+### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
+- category: debt
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-08 by Phase 52a. `createNewGameState` seeds only the
+  2 `STARTING_CARD_IDS` loadout flags and mobile never writes loadout flags
+  afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
+  with no flags at all. 52a's loadout reconciliation is correct and tested,
+  but nothing exercises it end to end. Pairs with the row above.
+
 ### [x] [2.1] Two agent-e2e walkthroughs describe a deleted engine surface — CLOSED 2026-11-22 (this PR: deleted `skill-learning` and `tier2-skill-chain` (goal.md and json) and their two README rows)
 - category: gap
 - impact: 3
@@ -1010,16 +1020,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: extraction candidate; several other mobile files are
   length outliers. Extract sub-components with their own tests.
 - next: /iterate
-
-### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
-- category: debt
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-08 by Phase 52a. `createNewGameState` seeds only the
-  2 `STARTING_CARD_IDS` loadout flags and mobile never writes loadout flags
-  afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
-  with no flags at all. 52a's loadout reconciliation is correct and tested,
-  but nothing exercises it end to end. Pairs with the row above.
 
 ### [x] [content] Six Breakwater enemy portraits break `verify-mobile` on `main`, and no CI-side fix closes it (fix-ci, verify-mobile run 42305194119, 2026-11-06) — CLOSED 2026-11-22 (stale: all six portraits have anim/backing sets and provenance; `FRAME_SET_EXEMPTIONS` is empty; AUDIT drain triage)
 - category: content
