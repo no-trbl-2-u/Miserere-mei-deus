@@ -546,7 +546,7 @@ async function villageLoop(
             continue;
         }
         if (action === 'remove') {
-            const deck = buildCombatDeck(before.player, before.flags);
+            const deck = buildCombatDeck(before.player);
             const { cardId } = await prompt<{ cardId: string }>([{
                 type: 'rawlist', name: 'cardId', message: 'Remove which card?',
                 choices: [...new Set(deck)].map(id => ({ name: getCardById(id)?.name ?? id, value: id }))
