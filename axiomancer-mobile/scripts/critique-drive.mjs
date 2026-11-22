@@ -257,10 +257,24 @@ export const SCREENS = [
     {
         name: 'satchel',
         path: '/inventory',
-        // No preset wears a relic yet, so this shows the sage's consumables;
-        // the relic icons wait on a relic-holding fixture (AUDIT row).
-        fixture: 'sage-bw-door-gate',
-        why: 'The satchel tab — item icons and what a carried item does.',
+        // No preset wears a relic, so this fixture seats one (player.relics):
+        // the satchel shows the worn relic's icon beside the consumables.
+        fixture: 'wanderer-relic-satchel',
+        why: 'The satchel tab — item icons, the worn relic and what a carried item does.',
+    },
+    {
+        name: 'combat-dying',
+        path: '/(tabs)/exploration',
+        // 1 VITAE with `dying` set, arriving on a fight: the combat panes
+        // wear DY1d's skull portrait. ENTER COMBAT shows the board's pane.
+        fixture: 'wanderer-bw-fight-dying',
+        waitForPath: '/combat-encounter',
+        why: 'The combat panes as a dying player sees them — the skull portrait at 1 VITAE, one death from the end of the run.',
+        prepare: async (page) => {
+            await page.getByTestId('combat-enter').click({ timeout: 8000, force: true }).catch(() => {})
+            await page.getByTestId('combat-board').waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+        },
+        settle: diceSettled,
     },
     {
         name: 'quest',

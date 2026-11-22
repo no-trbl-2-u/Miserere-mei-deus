@@ -221,6 +221,24 @@ export const STATE_FIXTURES: readonly StateFixture[] = Object.freeze([
         world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-h6' },
         arrive: true,
     },
+    {
+        id: 'wanderer-relic-satchel',
+        description: 'Wanderer (L8) on the Breakwater\'s keep gate (bw-k1) wearing the Suppliant\'s Ring (a live relic, since no preset wears one). The satchel and equip surfaces show a worn relic icon.',
+        seed: 'fixture-wanderer-relic-satchel',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-k1' },
+        player: { relics: ['relic-disarming-plea'] },
+    },
+    {
+        id: 'wanderer-bw-fight-dying',
+        description: 'Wanderer (L8) on the Breakwater\'s first fight (bw-w2) at 1 VITAE with `dying` set (the state after a first death); `arrive` stages the fight -> /combat-encounter, the combat panes wearing the dying skull portrait.',
+        seed: 'fixture-wanderer-bw-fight-dying',
+        preset: 'wanderer',
+        world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-w2' },
+        player: { health: 1 },
+        dying: true,
+        arrive: true,
+    },
 ]);
 
 /** Lookup by id; `undefined` when unknown. */
