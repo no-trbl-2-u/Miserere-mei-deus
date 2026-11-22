@@ -75,13 +75,12 @@ export function beginRestAction(store: AppStore, options: BeginRestOptions = {})
     if (store.getState().rest?.session) return false;
     const seed = resolveMinigameSeed('rest', options.seed, globalThis.__AXM_REST_SEED__);
     const player = state.player;
-    const flags = state.flags ?? [];
     setSession(store, createRestChoiceSession(seed, {
         shelter: options.shelter ?? DEFAULT_REST_SHELTER,
         maxHealth: player.maxHealth,
         health: player.health,
         currency: player.currency,
-        deckCardIds: buildCombatDeck(player, flags),
+        deckCardIds: buildCombatDeck(player),
         description: options.description,
         dream: options.dream,
     }));

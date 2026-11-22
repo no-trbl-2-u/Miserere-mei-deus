@@ -233,7 +233,7 @@ describe('the card shop (A9, A10)', () => {
 
 describe('removableCards', () => {
     it('counts each card\'s copies, first-seen order', () => {
-        const deck = buildCombatDeck({ knownCards: [...STARTING_CARD_IDS], combatRewardCards: [] } as never, []);
+        const deck = buildCombatDeck({ knownCards: [...STARTING_CARD_IDS], combatRewardCards: [] } as never);
         const rows = removableCards(deck);
         expect(rows.reduce((n, r) => n + r.count, 0)).toBe(deck.length);
         expect(new Set(rows.map(r => r.cardId)).size).toBe(rows.length);

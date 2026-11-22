@@ -19,7 +19,6 @@
 
 import { getRng } from '../Utils/rng';
 import type { Character } from '../Character/types';
-import { getCombatLoadout } from './combat.loadout';
 
 /** Hand-size target. The opening hand draws this many; every round boundary
  *  REFILLS the hand up to this target (keep-hand rule): unplayed
@@ -41,9 +40,7 @@ export function shuffleCombatDeck<T>(items: readonly T[], rng: () => number = de
 }
 
 /**
- * Builds the player's combat deck from the curated loadout when `flags`
- * contains loadout entries, or falls back to the full `knownCards` list for
- * saves that carry no loadout.
+ * Builds the player's combat deck from `knownCards` plus the reward cards.
  *
  * Card ids are card ids (kebab-case). Reward cards stack on top of the card
  * base. No escape card is appended — see the file header.
@@ -59,12 +56,9 @@ export function shuffleCombatDeck<T>(items: readonly T[], rng: () => number = de
  * authored order before the shuffle touches them.
  *
  * @param player - Character whose `knownCards` / `combatRewardCards` supply the base.
- * @param flags  - `GameState.flags` — when non-empty loadout flags are present
- *                 the curated list is used instead of all `knownCards`.
  */
-export function buildCombatDeck(player: Character, flags?: readonly string[]): string[] {
-    const loadout = flags && flags.length > 0 ? getCombatLoadout(flags) : [];
-    const base = loadout.length > 0 ? loadout : (player.knownCards ?? []);
+export function buildCombatDeck(player: Character): string[] {
+    const base = player.knownCards ?? [];
     // The card base keeps its copies (see the note above) and its order.
     const deck: string[] = [...base];
     // Reward cards stack on top (DUPLICATES kept: extra
