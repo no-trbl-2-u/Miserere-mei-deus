@@ -42,9 +42,15 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import * as shell from './guard-shell.mjs'
-
 // Loaded fail-open: a missing or broken sibling must not disable the other rules.
+// Without the shell reader every pre-bash rule runs its legacy regex alone,
+// which is the stricter reading, so a broken reader can only block more.
+let shell = null
+try {
+  shell = await import('./guard-shell.mjs')
+} catch {
+  /* legacy regexes only */
+}
 let scratch = null
 try {
   scratch = await import('./scratchpad-resolve.mjs')
@@ -57,15 +63,26 @@ const DEFAULT_BRANCH = 'main'
 
 // --- forbidden-command rules ------------------------------------------
 //
-// The rules read the command through guard-shell.mjs, which splits it into
-// the segments the shell executes and their argv (plan/AUDIT.md: the old
-// whole-string grep tripped on heredoc bodies, quoted -m messages and file
-// paths). A rule about what RUNS (--no-verify, force-push, resets, pkill,
-// -F, the backgrounded gate) matches executed argv only. The one rule about
-// CONTENT (trailer-or-emoji-in-commit) reads the commit message arguments
-// themselves. If the reader cannot parse a command (an unclosed quote or
-// substitution), every rule falls back to its old whole-string regex, so a
-// reader gap fails closed, never open.
+// Each rule has two checks, and it can never be weaker than its legacy one:
+//
+//   legacy(cmd)  the old whole-string regex. It is the PRIMARY check: no
+//                match, no block (as before).
+//   run(parsed)  the same rule on the argv of the segments the shell
+//                executes (guard-shell.mjs). A hit always blocks, even where
+//                the legacy regex misses (`git clean --force`, `pkill -xf`).
+//
+// A legacy match is waved through only when the command is PROVEN INERT
+// (provenInert below): the reader parsed it with no ambiguity, run() found
+// nothing, every executed segment (substitutions, backticks, process
+// substitutions and heredoc consumers included) runs a program on a short
+// allowlist of programs that never execute their arguments, and nothing is
+// written to a file that could later run. Then the legacy match can only
+// have come from data: a heredoc body, a quoted -m message, an echo or grep
+// argument (plan/AUDIT.md: the whole-string grep tripped on those). A shell,
+// an interpreter with inline code, a wrapper (sudo, env, timeout, xargs,
+// find, ssh, ...) or any unknown program means "not proven", and the legacy
+// result stands. The content rule (trailer-or-emoji-in-commit) adds one more
+// condition: every commit's message must be one the guard can read.
 
 // git commit: short options that take a value, and long ones.
 const COMMIT_SHORT_VALUE = 'mFCct'
@@ -106,10 +123,148 @@ function bannedInMessage(text) {
   return /Co-Authored-By/i.test(text) || /[\u{1F000}-\u{1FAFF}\u{2705}\u{2728}\u{FE0F}]/u.test(text)
 }
 
+// Can the guard see every byte of this text as the shell will expand it?
+// Plain text, `$NAME` / `${NAME}` that the command itself assigns (read in
+// turn), positional and special parameters (empty here), and the one
+// substitution Claude Code writes for messages, `$(cat <<'EOF' ... EOF)`.
+// Anything else (`$(cat m.txt)`, backticks, `${x:-...}`, a variable from
+// `read` or the environment) could carry text the guard never sees.
+function textReadable(text, parsed, depth = 0) {
+  if (depth > 4) return false
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]
+    if (c === '`') return false
+    if (c !== '$') continue
+    const rest = text.slice(i)
+    const hd = /^\$\(\s*cat\s+<<(-?)\s*(['"]?)([A-Za-z_][\w-]*)\2[ \t]*\n/.exec(rest)
+    if (hd) {
+      const lines = rest.slice(hd[0].length).split('\n')
+      const at = lines.findIndex((l) => (hd[1] ? l.replace(/^\t+/, '') : l) === hd[3])
+      if (at < 0) return false
+      const body = lines.slice(0, at).join('\n')
+      if (!hd[2] && /[$`\\]/.test(body)) return false // an unquoted body expands
+      const tail = lines.slice(at + 1).join('\n')
+      const close = /^\s*\)/.exec(tail)
+      if (!close) return false
+      i += hd[0].length + lines.slice(0, at + 1).join('\n').length + 1 + close[0].length - 1
+      continue
+    }
+    const v = /^\$([A-Za-z_]\w*)/.exec(rest) ?? /^\$\{([A-Za-z_]\w*)\}/.exec(rest)
+    if (v) {
+      const values = parsed.assignments.get(v[1])
+      if (!values || !values.every((val) => textReadable(val, parsed, depth + 1))) return false
+      i += v[0].length - 1
+      continue
+    }
+    if (/^\$[0-9@*#?$!-]/.test(rest)) {
+      i++
+      continue
+    }
+    if (rest[1] === '(' || rest[1] === '{' || rest[1] === '[') return false
+  }
+  return true
+}
+
+// A commit whose message the content rule can read: given by -m/--message
+// (and --trailer) values alone, every one readable. A message from a file,
+// another commit, a template or the editor is invisible to the guard.
+function messageReadable(o, parsed) {
+  if (['c', 'C', 't', 'F'].some((ch) => o.short.has(ch))) return false
+  if (['file', 'template', 'reuse-message', 'reedit-message', 'fixup', 'squash'].some((k) => o.long.has(k))) {
+    return false
+  }
+  const parts = o.values.filter((v) => ['-m', '--message', '--trailer'].includes(v.opt))
+  if (!parts.some((v) => v.opt !== '--trailer')) return false // no -m: the editor writes it
+  return parts.every((v) => textReadable(v.value, parsed))
+}
+
+// --- proven inert: the legacy match came only from data ---------------------
+
+// Programs that never execute their arguments, input or a file named in them.
+// Deliberately short: a program missing here only means its legacy match
+// stands. sed (e/w), sort (--compress-program), xargs, find, env and every
+// shell, interpreter and runner are left out on purpose.
+const DATA_PROGRAMS = new Set([
+  'echo', 'cat', 'grep', 'egrep', 'fgrep', 'head', 'tail', 'wc', 'ls', 'cd', 'pwd', 'true', 'false', 'mkdir', 'sleep',
+])
+// git subcommands that run nothing named on their command line (hooks are the
+// repo's own). rebase (--exec), bisect, submodule, grep (-O), config, merge
+// (-s) and aliases are left out, so they keep their legacy result.
+const GIT_INERT_SUBS = new Set([
+  'add', 'commit', 'status', 'log', 'diff', 'show', 'push', 'fetch', 'branch', 'checkout', 'switch', 'reset', 'clean',
+  'restore', 'rm', 'mv', 'tag', 'rev-parse', 'ls-files', 'stash',
+])
+// Variables that make an allowlisted program run something else (git's
+// editor, ssh command and config, a preload, the PATH it is found on).
+const DANGEROUS_VAR =
+  /^(GIT_\w*|EDITOR|VISUAL|PAGER|MANPAGER|LESS\w*|LD_\w+|DYLD_\w+|BASH_ENV|ENV|NODE_OPTIONS|NODE_PATH|PS4|PROMPT_COMMAND|SHELLOPTS|BASHOPTS|PATH|IFS|HOME|XDG_CONFIG_HOME|CDPATH|SHELL|PYTHON\w*|PERL\w*|RUBY\w*|npm_config_\w+)$/i
+const ASSIGNMENT = /^([A-Za-z_][A-Za-z0-9_]*)=/
+
+// A file the command may write: one nothing will execute later (a note, a
+// log), never a script, a hook or anything under .git.
+function safeWriteTarget(p) {
+  if (/^\/dev\/(null|stdout|stderr)$/.test(p)) return true
+  return /^[\w./~@+-]+$/.test(p) && /\.(md|txt|log|csv|out)$/i.test(p) && !/(^|\/)\.git/.test(p)
+}
+
+function gitInert(args) {
+  let k = 0
+  while (k < args.length && args[k].startsWith('-')) {
+    if (args[k] === '-C') k += 2
+    else if (args[k] === '--no-pager') k++
+    else return false // -c, --exec-path, --git-dir, --config-env, ...: may run or redirect anything
+  }
+  if (!GIT_INERT_SUBS.has(args[k])) return false
+  return !args.slice(k + 1).some((a) => /^--(receive-pack|upload-pack|exec)(=|$)/.test(a))
+}
+
+function programInert(name, args, ruleName) {
+  if (DATA_PROGRAMS.has(name)) return true
+  if (name === 'printf') return !args.some((a) => a.startsWith('-v'))
+  if (name === 'rg') return !args.some((a) => /^--pre(-glob)?(=|$)/.test(a))
+  if (name === 'tee') return args.filter((a) => !a.startsWith('-')).every(safeWriteTarget)
+  if (name === 'git') return gitInert(args)
+  // node running a script file (no -e/-p/--eval, no option at all): the
+  // script is in the tree, not in this command. Never for the gate rule: a
+  // script may be the gate.
+  if (name === 'node') return ruleName !== 'backgrounded-gate' && args.length > 0 && !args[0].startsWith('-')
+  return false
+}
+
+function segmentInert(seg, ruleName) {
+  for (const r of seg.redirects) {
+    if (!r.op.includes('>')) continue // a read, heredoc or here-string: its consumer is checked below
+    if (/&$/.test(r.op) && /^(\d+|-)$/.test(r.text)) continue // 2>&1: an fd, not a file
+    if (!safeWriteTarget(r.text)) return false
+  }
+  const ws = seg.words.map((w) => w.text)
+  let k = 0
+  for (; k < ws.length; k++) {
+    const m = ASSIGNMENT.exec(ws[k])
+    if (!m) break
+    if (DANGEROUS_VAR.test(m[1])) return false
+  }
+  if (k >= ws.length) return true // only assignments, redirections or a heredoc: no program runs
+  const name = ws[k]
+  if (name.includes('/')) return false // a path is not the allowlisted program
+  return programInert(name, ws.slice(k + 1), ruleName)
+}
+
+/**
+ * True when a legacy regex match on this command can only have come from data.
+ * `ruleName` picks the per-rule allowlist; `readable` is a content rule's
+ * extra test. The caller has already found no argv hit for the rule.
+ */
+function provenInert(parsed, ruleName, readable) {
+  if (!parsed || parsed.ambiguous) return false
+  if (!parsed.segments.every((seg) => segmentInert(seg, ruleName))) return false
+  return readable ? readable(parsed) : true
+}
+
 // Each rule: name, run(parsed) → true = block (on argv), legacy(cmd) → the
-// pre-reader whole-string regex (used only when the reader throws), message
-// for the agent. Messages say WHY and what to do instead, so a blocked call
-// self-corrects instead of retrying.
+// whole-string regex (primary; see above), readable(parsed) for a content
+// rule, message for the agent. Messages say WHY and what to do instead, so a
+// blocked call self-corrects instead of retrying.
 const RULES = [
   {
     name: 'no-verify',
@@ -198,6 +353,7 @@ const RULES = [
     // commit body).
     name: 'trailer-or-emoji-in-commit',
     run: (p) => commits(p).some((o) => bannedInMessage(commitMessage(o, p))),
+    readable: (p) => commits(p).every((o) => messageReadable(o, p)),
     legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b/.test(cmd) && bannedInMessage(cmd),
     message:
       'guard: commit bodies are plain (AGENTS.md standing rule 2) — ' +
@@ -255,8 +411,7 @@ function gateWords(seg) {
   return words
 }
 
-function isGateCommand(cmd, parsed) {
-  if (!parsed) return GATE_WORD.test(cmd)
+function isGateCommand(parsed) {
   return parsed.segments.some((seg) => gateWords(seg).some((w) => GATE_WORD.test(w)))
 }
 
@@ -267,10 +422,21 @@ const BACKGROUND_MESSAGE =
   'too slow, run its legs as sequential foreground calls.'
 
 function parseOrNull(cmd) {
+  if (!shell) return null
   try {
     return shell.parseShell(cmd)
   } catch {
-    return null // reader gap: rules fall back to their legacy regex
+    return null // reader gap: nothing is proven inert, so the legacy regexes decide
+  }
+}
+
+// run() on the parsed argv; a reader bug there must not cost the legacy check.
+function argvHit(fn, parsed) {
+  if (!parsed) return false
+  try {
+    return !!fn(parsed)
+  } catch {
+    return false
   }
 }
 
@@ -283,9 +449,20 @@ export function checkCommand(cmd, { background = false } = {}) {
   cmd = String(cmd ?? '')
   if (!cmd) return null
   const parsed = parseOrNull(cmd)
-  if (background && isGateCommand(cmd, parsed)) return { name: 'backgrounded-gate', message: BACKGROUND_MESSAGE }
+  const blocks = (name, run, legacy, readable) => {
+    if (argvHit(run, parsed)) return true
+    if (!legacy(cmd)) return false
+    try {
+      return !provenInert(parsed, name, readable)
+    } catch {
+      return true // the legacy match stands
+    }
+  }
+  if (background && blocks('backgrounded-gate', isGateCommand, (c) => GATE_WORD.test(c))) {
+    return { name: 'backgrounded-gate', message: BACKGROUND_MESSAGE }
+  }
   for (const rule of RULES) {
-    const hit = rule.raw ? rule.raw(cmd) : parsed ? rule.run(parsed) : rule.legacy(cmd)
+    const hit = rule.raw ? rule.raw(cmd) : blocks(rule.name, rule.run, rule.legacy, rule.readable)
     if (hit) return { name: rule.name, message: rule.message }
   }
   return null
@@ -643,6 +820,11 @@ function selfTest() {
     ['git commit -m "docs: why --no-verify and git push --force stay denied"', null],
     ["cat > x.md <<'EOF'\ngit reset --hard; Co-Authored-By\nEOF", null],
     ['echo "$(git push -f)"', 'force-push'],
+    // fail closed: a legacy match stands unless every program is a known data program
+    ["echo 'git push -f' | sh", 'force-push'],
+    ["bash <<'EOF'\ngit reset --hard\nEOF", 'destructive-reset'],
+    ['find . -exec git push -f {} \\;', 'force-push'],
+    ['git clean --force', 'destructive-reset'],
   ]
   // scratchpad-script-no-resolve needs a real file: one that imports a package nothing holds.
   const scratchDir = fs.mkdtempSync(path.join(os.tmpdir(), 'guard-selftest-'))

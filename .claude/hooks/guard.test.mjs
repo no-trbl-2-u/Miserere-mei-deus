@@ -1,9 +1,14 @@
 // Pins the guard's pre-bash rules (.claude/hooks/guard.mjs) and the shell
 // reader they match on (guard-shell.mjs). Each rule must still block its real
-// target, and the old whole-string false positives (plan/AUDIT.md: a word in a
-// heredoc body, a quoted -m message or a file path) must now pass.
+// target and everything its legacy regex blocked unless the command is proven
+// inert (fail closed), and the old whole-string false positives that are
+// proven inert (plan/AUDIT.md: a word in a heredoc body, a quoted -m message,
+// an echo or grep argument) must now pass.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import { describe, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
@@ -187,13 +192,134 @@ describe('formerly false positives are now allowed', () => {
       'git add .claude/hooks/guard.test.mjs scripts/verify-notes.md',
       'cat docs/test-plan.md',
       'npm run dev',
-      'npx wrangler dev --test-scheduled-off',
       "cat > x.md <<'EOF'\nrun npm test and npm run verify\nEOF",
       'sleep 30 && echo "e2e done"',
     ]) {
       assert.equal(bg(cmd), null, cmd)
     }
   })
+})
+
+// The PR review (not-pass) listed commands the argv reader allowed although the
+// legacy regex blocked them. The legacy regex is now primary: each of these
+// must block, because some program in it is not a known data program, or the
+// reader cannot read it with certainty.
+describe('fail closed: never weaker than the legacy regex', () => {
+  const cases = [
+    // 1. programs that run their arguments: wrappers, finders, remote and inline interpreters
+    ['find . -exec git push -f {} \\;', 'force-push'],
+    ["su -c 'git push -f'", 'force-push'],
+    ['setsid git push -f', 'force-push'],
+    ['ionice -c3 git push -f', 'force-push'],
+    ['flock /tmp/lock git push -f', 'force-push'],
+    ["watch -n 5 'git push -f'", 'force-push'],
+    ['ssh host git push -f', 'force-push'],
+    ['time -p git push -f', 'force-push'],
+    ["echo 'git push -f' | sh", 'force-push'],
+    [`node -e "require('child_process').execSync('git push -f')"`, 'force-push'],
+    [`python -c "import os; os.system('git push -f')"`, 'force-push'],
+    ['xargs -I{} git push -f {} < remotes.txt', 'force-push'],
+    // 2. a heredoc or here-string fed to a shell; a shell's options before -c
+    ["bash <<'EOF'\ngit push -f\nEOF", 'force-push'],
+    ['cat <<EOF | bash\ngit push -f\nEOF', 'force-push'],
+    ['sh <<<"git reset --hard"', 'destructive-reset'],
+    ['bash -c -x "git push -f"', 'force-push'],
+    ["bash -o pipefail -c 'git push -f'", 'force-push'],
+    ["node <<'EOF'\nrequire('child_process').execSync('git push -f')\nEOF", 'force-push'],
+    // 3. wrappers with long options or split strings
+    ['sudo --user root git push -f', 'force-push'],
+    ['timeout --signal KILL 10 git push -f', 'force-push'],
+    ["env -S 'git push -f'", 'force-push'],
+    // 4. `<<` that is a shift, not a heredoc, must not swallow the next line
+    ['(( x = 1 << 2 ))\ngit push -f', 'force-push'],
+    ['let x=1<<3\ngit push -f', 'force-push'],
+    ['echo $[1<<2]\ngit push -f', 'force-push'],
+    ['echo $((1<<2))\ngit push -f', 'force-push'],
+    // 5. substitutions the reader does not read as segments
+    ['echo ${x:-$(git push -f)}', 'force-push'],
+    ['echo $((git push -f); echo)', 'force-push'],
+    ['cat <<EOF\n$((git push -f); echo)\nEOF', 'force-push'],
+    // 7. widenings: the argv check blocks what the legacy regex missed
+    ['git clean --force', 'destructive-reset'],
+    ['git clean -d --force', 'destructive-reset'],
+    ['git checkout HEAD -- .', 'destructive-reset'],
+    ['pkill -xf vite', 'pkill-self-match'],
+    ['pkill -fx vite', 'pkill-self-match'],
+    // 8. eval, backticks, nested quotes, heredoc-to-shell, pipe-to-shell
+    ['eval "git push -f"', 'force-push'],
+    ['eval git commit --no-verify -m x', 'no-verify'],
+    ['echo `git push -f`', 'force-push'],
+    ['echo "$(git commit -m "x" --no-verify)"', 'no-verify'],
+    [`bash -c "git commit -m 'x' --no-verify"`, 'no-verify'],
+    [`bash -c "echo \\"$(git reset --hard)\\""`, 'destructive-reset'],
+    ["sh <<'EOF'\ngit commit --no-verify -m x\nEOF", 'no-verify'],
+    ["printf 'git reset --hard\\n' | bash", 'destructive-reset'],
+    ["echo 'git commit -m x --no-verify' | sh -s", 'no-verify'],
+    ["bash -c 'pkill -f vite'", 'pkill-self-match'],
+    // data that reaches something that runs: a variable, a written script, a hook
+    ["GIT_SSH_COMMAND='git push -f' git push", 'force-push'],
+    ["git -c alias.p='!git push -f' p", 'force-push'],
+    ["cat > x.mjs <<'EOF'\nrequire('child_process').execSync('git push -f')\nEOF\nnode x.mjs", 'force-push'],
+    ["cat > .githooks/pre-commit <<'EOF'\ngit push -f\nEOF\ngit commit -m x", 'force-push'],
+    ['rg --pre sh "git push -f" .', 'force-push'],
+    // the content rule: a message the guard cannot read keeps the legacy result
+    ['echo "Co-Authored-By: x" > m.md; git commit -m "$(cat m.md)"', 'trailer-or-emoji-in-commit'],
+    ['read M <<<"Co-Authored-By: x"; git commit -m "$M"', 'trailer-or-emoji-in-commit'],
+    ['M=$(cat m.md); echo "Co-Authored-By: x" > m.md; git commit -m "$M"', 'trailer-or-emoji-in-commit'],
+    ["sh <<<'git commit -m \"Co-Authored-By: x\"'", 'trailer-or-emoji-in-commit'],
+    ['grep -rn "Co-Authored-By" . && git commit', 'trailer-or-emoji-in-commit'],
+    ['grep -rn "Co-Authored-By" . && git commit -C HEAD', 'trailer-or-emoji-in-commit'],
+    // the backgrounded gate: a runner or interpreter keeps the legacy result
+    ['npx wrangler dev --test-scheduled-off', 'backgrounded-gate', true],
+    ['node scripts/run.mjs verify', 'backgrounded-gate', true],
+    ["echo 'npm test' | sh", 'backgrounded-gate', true],
+  ]
+  for (const [cmd, expected, background] of cases) {
+    test(`${JSON.stringify(cmd).slice(0, 70)} → ${expected}`, () =>
+      assert.equal(rule(cmd, { background: !!background }), expected))
+  }
+
+  test('the reader flags what it cannot read with certainty', () => {
+    for (const cmd of ['(( x = 1 << 2 ))', 'let x=1<<3', 'echo $[1<<2]', 'echo $((1))', 'echo ${x:-$(id)}', 'cat <<\n']) {
+      assert.equal(parseShell(cmd).ambiguous, true, cmd)
+    }
+    for (const cmd of ["cat <<'EOF'\nx\nEOF", 'echo "$(git status)"', 'echo ${HOME}']) {
+      assert.equal(parseShell(cmd).ambiguous, false, cmd)
+    }
+  })
+})
+
+// guard.mjs loads guard-shell.mjs dynamically: when the reader is missing or
+// broken, every rule runs its legacy regex alone (and so blocks more, never less).
+describe('without the shell reader', () => {
+  const runCopy = (shellSource, command) => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'guard-noshell-'))
+    try {
+      fs.copyFileSync(GUARD, path.join(dir, 'guard.mjs'))
+      if (shellSource !== null) fs.writeFileSync(path.join(dir, 'guard-shell.mjs'), shellSource)
+      return spawnSync(process.execPath, [path.join(dir, 'guard.mjs'), 'pre-bash'], {
+        input: JSON.stringify({ tool_input: { command } }),
+        encoding: 'utf-8',
+        cwd: dir,
+      })
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
+  }
+  for (const [label, source] of [
+    ['missing', null],
+    ['throwing on load', "throw new Error('broken reader')\n"],
+    ['a syntax error', 'export function parseShell( {\n'],
+  ]) {
+    test(`reader ${label}: legacy rules still block, plain commands still pass`, () => {
+      const push = runCopy(source, 'git push --force origin main')
+      assert.equal(push.status, 2, push.stderr)
+      assert.match(push.stderr, /force-push is forbidden/)
+      // legacy-only reading: a flag named in a message blocks again (stricter, not weaker)
+      assert.equal(runCopy(source, 'git commit -m "docs: why --no-verify stays denied"').status, 2)
+      assert.equal(runCopy(source, 'git status').status, 0)
+    })
+  }
 })
 
 describe('the hook end to end (stdin JSON → exit code)', () => {
