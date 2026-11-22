@@ -305,6 +305,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: 6
 - detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
 - next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
+- 2026-11-22: left open, no sound automated guard built. The Retro's outcome is not recorded anywhere a lint can read: a clean retro is the words "retro: clean" in the run report (`skills/next.md` Step 6), a lesson lands as an edit to `plan/lessons.md` or a pending-file footgun, and `skills/march.md` no longer carries a §3 "Retro". The `lessons: retro` commit prefix and `plan: phase X shipped` subject this row counts no longer match the current closers (`plan: close N` / `plan: settle N`, and no `lessons: retro` in the 101-commit shallow history), so a commit-pair lint would fail on every close or pass vacuously, and a clean retro writes no artifact to pair with. A real guard needs the retro outcome recorded first (a `retro:` field on the pending file or on the `tick-end` row, which is hook-owned under `.claude/`), then a lint on that; that is a design call for `/plot`, not an `/iterate` slice.
 
 ### [ ] [content] measured drift: bw-w5/green-jelly grey lowestVitaeFractionP10 0.25 -> 0.90 (even, 2026-10-30)
 - issue: #1141
@@ -568,6 +569,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - impact: 4
 - ease: 5
 - detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
+- 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ### [x] [debt] pr-resolve's union merge splits a row one side moved Pending to Done and bloats CRITIQUE.md (iterate 2026-10-14) — CLOSED 2026-10-14 (80ea6f44: line order from `git merge-file --union`, the three-way count trim drops a trimmed heading's body first, blank runs capped; loop-pr.test.mjs pins it; CRITIQUE.md repaired)
 - issue: #542
@@ -2360,7 +2362,6 @@ present. Row stays open until that session runs.
   know the sanctioned path.
 - next: /iterate (deploy-check.mjs env fallback + a bearings note)
 
-
 ### [x] [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick — CLOSED 2026-11-22 (this PR: step-level timeout-minutes: 10 on every playwright --with-deps install step)
 - category: gap
 - impact: 5
@@ -2394,7 +2395,6 @@ present. Row stays open until that session runs.
   18:59:49 with zero progress until the ceiling force-cancelled it at
   20:14:33, another total loss. Second confirmed occurrence in 12 hours;
   still unfixed, still `/iterate`-shaped, not re-scored.
-
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content
