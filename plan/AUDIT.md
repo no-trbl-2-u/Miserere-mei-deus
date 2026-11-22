@@ -102,17 +102,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: 5
 - detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
 
-- category: ci
-- impact: 5
-- ease: 6
-
-- category: tests
-- impact: 4
-- ease: 6
-
-- impact: 4
-- ease: 5
-
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
 - impact: 4
@@ -464,6 +453,18 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - 2026-11-22: deleted the unreferenced `MAX_PERMANENT_WILD_DICE`; the sim `blind` policy still plays identically to `greedy` (left as is, a retire-or-redefine call); the other bullets remain open.
 
 ## Done
+
+### [x] [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13) — CLOSED 2026-11-22 (183.1: the Signet is an elite drop; roster health no longer pins it)
+- category: content
+- impact: 4
+- ease: -
+- detail: `npm run roster-health -w axiomancer-mechanics` reports
+  `relic-bleeding-signet` (`Items/relic.library.ts`) as an orphan: no
+  cache, shop, loot table, starting loadout or reward carries it; only the
+  dev menu's GET ALL RELICS hands it over. Pinned in
+  `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
+- next: needs a brief T approves: stage it, grant it, or retire it (D88).
+  The pin changes in the same change.
 
 ### [x] [2.1] Two agent-e2e walkthroughs describe a deleted engine surface — CLOSED 2026-11-22 (this PR: deleted `skill-learning` and `tier2-skill-chain` (goal.md and json) and their two README rows)
 - category: gap
@@ -1906,6 +1907,7 @@ present. Row stays open until that session runs.
 - next: `/iterate` (rename + tests + a 375 capture).
 
 ### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
+- category: ci
 - impact: 4
 - ease: 5
 - detail: run 40262955599 (`verify-mobile`, head 8a810580, branch
@@ -2401,18 +2403,6 @@ present. Row stays open until that session runs.
   (seed each CPU once), or keep budgets everywhere and raise the headroom to
   cover the slower runner.
 
-### [x] [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13) — CLOSED 2026-11-22 (183.1: the Signet is an elite drop; roster health no longer pins it)
-- category: content
-- impact: 4
-- ease: -
-- detail: `npm run roster-health -w axiomancer-mechanics` reports
-  `relic-bleeding-signet` (`Items/relic.library.ts`) as an orphan: no
-  cache, shop, loot table, starting loadout or reward carries it; only the
-  dev menu's GET ALL RELICS hands it over. Pinned in
-  `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
-- next: needs a brief T approves: stage it, grant it, or retire it (D88).
-  The pin changes in the same change.
-
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content
 - impact: 6
@@ -2520,6 +2510,7 @@ present. Row stays open until that session runs.
 
 ### [x] [docs] Phase 44a deferred its `lexicon.json` registrations to the phases that actually rename each concept
 - category: docs
+- impact: 4
 - ease: 8
 - detail: filed 2026-08-09 by Phase 44a. The build-plan row and spec 34 §5.9
   item 2 both ask 44a to register the fifteen §5.2 renames, the six rank
@@ -2600,6 +2591,7 @@ present. Row stays open until that session runs.
 ### [x] [contract] New-keyword wiring drifts silently across seven surfaces — CLOSED 2026-09-28 (R0)
 - category: contract
 - impact: 6
+- ease: 6
 - detail: filed 2026-08-22 by the content-pipelines audit. The two
   switches that matter (`combat.engine.ts` mech switch,
   `combat.cards.ts` mechanicText) carry explicit defaults so a new kind
@@ -2621,6 +2613,7 @@ present. Row stays open until that session runs.
 - **CLOSED 2026-09-28 (R0):** moot. The loop no longer adds keywords (D37, D58); the card editor and its `wx.ts` vocabulary are deleted (D56); R7 deletes the carrier-less kinds the silent defaults guarded (D50). Keyword wiring is recorded for the card sessions in the B4 inventory (`plan/revamp/cards.md`).
 
 ### [x] [tests] No growth doctrine for pinned content counts [needs-user-call] — CLOSED 2026-09-28 (R0)
+- category: tests
 - impact: 6
 - ease: 8
 - detail: filed 2026-08-22 by the content-pipelines audit. Five
@@ -2689,6 +2682,7 @@ present. Row stays open until that session runs.
 ### [x] `dominantCardShare` is broken post-strike-death — CLOSED 2026-09-28 (R0)
 - category: debt
 - impact: 7
+- ease: 5
 - detail: filed 2026-08-08 by Phase 43. The raw attribution ledger's
   `dotDamage` is filled at SUMMARY time, so the ledger itself carries direct
   damage only and collapses onto whichever signature burst last — it reads
@@ -2743,6 +2737,8 @@ present. Row stays open until that session runs.
 
 ### [x] Dead id-keyed engine hooks survive the retired spec-32 library — CLOSED 2026-09-28 (R0)
 - category: debt
+- impact: 5
+- ease: 6
 - detail: filed 2026-08-08 by Phase 42. Engine hooks still keyed to
   `achilles-and-the-tortoise`, `the-closing-word`, `circular-reasoning` —
   cards the Profane Canon (`84ef85b`) deleted. Dead, and now actively
@@ -2754,6 +2750,7 @@ present. Row stays open until that session runs.
 
 ### [x] Playtest harness has no victory-only rounds-to-victory metric — CLOSED 2026-09-28 (R0)
 - category: gap
+- impact: 4
 - ease: 7
 - detail: surfaced 2026-07-17 by the ultracode price-vs-win-rate
   playtest. `CombatSimStats.avgRounds`
