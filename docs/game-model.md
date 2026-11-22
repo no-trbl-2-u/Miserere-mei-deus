@@ -298,12 +298,17 @@ the Expo app (`axiomancer-mobile`) presents it.
   `THREAT_ESCALATION_MAX` = ×2, and `THREAT_ESCALATION_BOSS_MULT` = 1.6×
   faster against a boss. A normal or elite foe that declares `phases` is
   exempt; the HP phases carry its ramp.
-- **Live foes have double VITAE.** The app doubles every live encounter's
-  foe VITAE (`LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER` = 2,
-  `Combat/live-encounter.ts`), a testing knob; the engine's own fights use
-  the authored VITAE. The pacing sim (`Combat/combat.pacing.sim.ts`,
-  `npm run lane-pacing`) applies the same knob so its turn counts compare
-  with play.
+- **Live foes have scaled VITAE.** The app scales every live encounter's
+  foe VITAE by the player's level when the fight starts
+  (`liveEncounterHpMultiplier`, `Combat/live-encounter.ts`), a testing knob:
+  ×1.5 at levels 1 to 3 (`EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER`,
+  `EARLY_ENCOUNTER_MAX_LEVEL` = 3), so the opening fights end sooner, and the
+  base ×2 (`LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER`) past them, the boss's fight
+  among them. The prelude preview, the VITAE bar and the play log's
+  `enemyHpMultiplier` read the same value. The engine's own fights use the
+  authored VITAE. The pacing sim (`Combat/combat.pacing.sim.ts`) applies the
+  same rule by its player's level; `npm run lane-pacing`, the Atlas and the
+  Chapter 1 tuning table show the base ×2.
 - **Ending:** the player wins when the foe's VITAE reaches 0, and only then. The
   player loses a fight at 0 VITAE or after `MAX_PHASES`
   = 60. A first loss does not end the run; the next one does (see Death under
