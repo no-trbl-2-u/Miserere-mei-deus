@@ -400,6 +400,9 @@ const SEAMS = {
     // The travel screen is provoked by the state fixture that arrives on the
     // far bank (bw-b2), whose offer opens "Move to The Charcoal Wood?".
     'route:travel': { fixture: 'wanderer-bw-door-arrive', landing: 'travel-question' },
+    // The chapter complete screen (CE1b) opens on the first crossing out of the
+    // starting map: the same far-bank fixture, then MOVE on its travel offer.
+    'route:chapter-complete': { fixture: 'wanderer-bw-door-arrive', hub: 'travel-move', landing: 'chapter-complete-continue' },
     // No run hands out a relic yet (phase SG1 cut the first-node ring), so the
     // reward screen is provoked by the dev REWARDS row's RELIC REWARD.
     'route:item-reward': { section: 'rewards', leaf: 'debug-relic-reward-button', landing: 'item-reward-card' },
