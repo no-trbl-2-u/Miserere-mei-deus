@@ -73,7 +73,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 - **134.2** · owner-led: T's session 2026-09-28 (B1) · since: 2026-11-01 · until: 2026-12-05 · max_age: 41d
 - **134.3** · owner-led: T's session 2026-09-28 (B5) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.4** · owner-led: T's session 2026-09-28 (B6) · since: 2026-11-01 · until: T's word · max_age: 30d
-- **134.5** · owner-led: T's session 2026-09-28 (B2) · since: 2026-11-03 · until: 2026-11-23 · max_age: 21d
+- **134.5** · owner-led: T's session 2026-09-28 (B2) · since: 2026-11-03 · until: 2026-12-05 · max_age: 33d
 - **134.6** · owner-led: T's session 2026-09-28 (B10) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.7** · owner-led: T's session 2026-09-28 (B7) · since: 2026-11-01 · until: T's word · max_age: 30d
 - **134.8** · owner-led: T's session 2026-09-28 (B8) · since: 2026-11-01 · until: T's word · max_age: 30d
@@ -248,3 +248,4 @@ adds a line here in the same commit. The v1 build plan's log, through
   does is a Held line; every shipped, skipped and pre-revamp partial row is an
   `ARCHIVE.md` line carrying its alias. Nothing reordered: the spec table follows the v1
   queue's order.
+- **2026-11-22** — actor: **T, via `/oversight`**. Action: **extended Held 134.5's lock** (`until:` 2026-11-23 to 2026-12-05, `max_age` 21d to 33d, matching 134.2). Confirmed T's request (answered "Extend"). Reason: not stated. No commit hash yet (this commit).
