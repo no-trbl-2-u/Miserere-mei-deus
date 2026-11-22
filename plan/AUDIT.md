@@ -74,13 +74,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
 - next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
 
-### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
-- category: process
-- impact: 6
-- ease: 6
-- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
-- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
-
 ### [ ] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27)
 - category: ci
 - impact: 5
@@ -96,12 +89,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
 
-### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
-- category: finding
-- impact: 4
-- ease: 5
-- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
-
 ### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
 - category: content
 - impact: 4
@@ -113,18 +100,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
 - next: needs a brief T approves: stage it, grant it, or retire it (D88).
   The pin changes in the same change.
-
-- category: ci
-- impact: 5
-- ease: 6
-
-- category: tests
-- impact: 4
-- ease: 6
-
-- category: content
-- impact: 4
-- ease: -
 
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
@@ -423,7 +398,75 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
 - 2026-11-22: deleted the unreferenced `MAX_PERMANENT_WILD_DICE`; the sim `blind` policy still plays identically to `greedy` (left as is, a retire-or-redefine call); the other bullets remain open.
 
+### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
+- category: process
+- impact: 6
+- ease: 6
+- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
+- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
+- 2026-11-22: left open, no sound automated guard built. The Retro's outcome is not recorded anywhere a lint can read: a clean retro is the words "retro: clean" in the run report (`skills/next.md` Step 6), a lesson lands as an edit to `plan/lessons.md` or a pending-file footgun, and `skills/march.md` no longer carries a §3 "Retro". The `lessons: retro` commit prefix and `plan: phase X shipped` subject this row counts no longer match the current closers (`plan: close N` / `plan: settle N`, and no `lessons: retro` in the 101-commit shallow history), so a commit-pair lint would fail on every close or pass vacuously, and a clean retro writes no artifact to pair with. A real guard needs the retro outcome recorded first (a `retro:` field on the pending file or on the `tick-end` row, which is hook-owned under `.claude/`), then a lint on that; that is a design call for `/plot`, not an `/iterate` slice.
+
+### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
+- category: finding
+- impact: 4
+- ease: 5
+- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
+- 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
+
 ## Done
+
+### [x] `deploy:check` is unusable from remote web sessions — 401 "Token rejected" — CLOSED 2026-11-22 (this PR: deploy-check.mjs token falls back GH_TOKEN, GITHUB_TOKEN, GH_PAT; bearings note; scripts/deploy-check-token.test.mjs)
+- category: debt
+- impact: 4
+- ease: 5
+- detail: filed 2026-07-18 (oversight session residue). Running
+  `npm run deploy:check` from a Claude Code web session fails with
+  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
+  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
+  gitignored and absent in remote containers. The session fell back to
+  the GitHub MCP Actions API (which authenticates fine) to confirm
+  CI-green, but nothing records that fallback, so every skill step that
+  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
+  bearings' deploy gate) silently dead-ends in web sessions. Fix
+  options: teach `scripts/deploy-check.mjs` to fall back to a
+  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
+  the MCP fallback in bearings' deploy-gate section so remote sessions
+  know the sanctioned path.
+- next: /iterate (deploy-check.mjs env fallback + a bearings note)
+
+### [x] [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick — CLOSED 2026-11-22 (this PR: step-level timeout-minutes: 10 on every playwright --with-deps install step)
+- category: gap
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
+  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
+  `_claude-skill.yml` setup step (`npx playwright install chromium
+  --with-deps`, used by both `march` and `night`) — its underlying
+  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
+  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
+  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
+  force-cancelled it. No commit resulted; the tick is a total loss, not
+  a partial one — distinct from the already-filed "march ticks are
+  creeping toward the job timeout" row above (that one is real work
+  outgrowing the ceiling; this one is an idle apt-mirror hang eating
+  the whole budget while nothing runs). `verify-mechanics.yml` and
+  `verify-mobile.yml` carry their own copy of the same install command,
+  so the exposure isn't march-specific, just unluckiest there because
+  that job runs unattended on the longest cadence.
+- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
+  install` on every invocation with no cache and no timeout around the
+  network call; caching the installed apt packages (or the Playwright
+  browser + its system deps together, keyed on the pinned Playwright
+  version) removes the network dependency from the common path
+  entirely. A cheaper interim fix: wrap the install step in a short
+  step-level `timeout-minutes` so a mirror hang fails fast and loud
+  instead of silently eating the whole job ceiling.
+- recurrence (2026-08-21 digest pulse): run `32290461478` (the
+  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
+  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
+  18:59:49 with zero progress until the ceiling force-cancelled it at
+  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
+  still unfixed, still `/iterate`-shaped, not re-scored.
 
 ### [x] [2.1] Two agent-e2e walkthroughs describe a deleted engine surface — CLOSED 2026-11-22 (this PR: deleted `skill-learning` and `tier2-skill-chain` (goal.md and json) and their two README rows)
 - category: gap
@@ -514,15 +557,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   a dedicated sweep or a standing lint of its own.
 - next: /iterate
 
-- category: process
-- impact: 6
-- ease: 6
-- 2026-11-22: left open, no sound automated guard built. The Retro's outcome is not recorded anywhere a lint can read: a clean retro is the words "retro: clean" in the run report (`skills/next.md` Step 6), a lesson lands as an edit to `plan/lessons.md` or a pending-file footgun, and `skills/march.md` no longer carries a §3 "Retro". The `lessons: retro` commit prefix and `plan: phase X shipped` subject this row counts no longer match the current closers (`plan: close N` / `plan: settle N`, and no `lessons: retro` in the 101-commit shallow history), so a commit-pair lint would fail on every close or pass vacuously, and a clean retro writes no artifact to pair with. A real guard needs the retro outcome recorded first (a `retro:` field on the pending file or on the `tick-end` row, which is hook-owned under `.claude/`), then a lint on that; that is a design call for `/plot`, not an `/iterate` slice.
-
-- impact: 4
-- ease: 5
-- 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
-
 ### [x] [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23) — CLOSED 2026-11-22 (this PR: `parsePricingComments` and its `pricing` field deleted from `export-catalog.ts`; `combat-sim.cli.ts` usage already matched its real flags (grey-strike, grey-ward); `axio-mcp-server.mjs` `ensureFresh` now stats the Cards, Effects, Enemy and Atlas trees plus `combat.cards.ts` and `combat.rewards.ts`; items 3 and 4 were already gone)
 - category: debt
 - impact: 4
@@ -582,58 +616,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   tuning loop (rebuild pending, jot `1fc33003`)" where the old loop's
   A/B surface is meant.
 
-### [x] [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick — CLOSED 2026-11-22 (this PR: step-level timeout-minutes: 10 on every playwright --with-deps install step)
-- category: gap
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
-  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
-  `_claude-skill.yml` setup step (`npx playwright install chromium
-  --with-deps`, used by both `march` and `night`) — its underlying
-  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
-  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
-  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
-  force-cancelled it. No commit resulted; the tick is a total loss, not
-  a partial one — distinct from the already-filed "march ticks are
-  creeping toward the job timeout" row above (that one is real work
-  outgrowing the ceiling; this one is an idle apt-mirror hang eating
-  the whole budget while nothing runs). `verify-mechanics.yml` and
-  `verify-mobile.yml` carry their own copy of the same install command,
-  so the exposure isn't march-specific, just unluckiest there because
-  that job runs unattended on the longest cadence.
-- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
-  install` on every invocation with no cache and no timeout around the
-  network call; caching the installed apt packages (or the Playwright
-  browser + its system deps together, keyed on the pinned Playwright
-  version) removes the network dependency from the common path
-  entirely. A cheaper interim fix: wrap the install step in a short
-  step-level `timeout-minutes` so a mirror hang fails fast and loud
-  instead of silently eating the whole job ceiling.
-- recurrence (2026-08-21 digest pulse): run `32290461478` (the
-  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
-  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
-  18:59:49 with zero progress until the ceiling force-cancelled it at
-  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
-  still unfixed, still `/iterate`-shaped, not re-scored.
-
-### [x] `deploy:check` is unusable from remote web sessions — 401 "Token rejected" — CLOSED 2026-11-22 (this PR: deploy-check.mjs token falls back GH_TOKEN, GITHUB_TOKEN, GH_PAT; bearings note; scripts/deploy-check-token.test.mjs)
-- category: debt
-- impact: 4
-- ease: 5
-- detail: filed 2026-07-18 (oversight session residue). Running
-  `npm run deploy:check` from a Claude Code web session fails with
-  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
-  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
-  gitignored and absent in remote containers. The session fell back to
-  the GitHub MCP Actions API (which authenticates fine) to confirm
-  CI-green, but nothing records that fallback, so every skill step that
-  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
-  bearings' deploy gate) silently dead-ends in web sessions. Fix
-  options: teach `scripts/deploy-check.mjs` to fall back to a
-  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
-  the MCP fallback in bearings' deploy-gate section so remote sessions
-  know the sanctioned path.
-- next: /iterate (deploy-check.mjs env fallback + a bearings note)
 ### [x] [content] measured drift: bw-k2/saint-beneath blood-price lowestVitaeFractionP10 0.66 -> 0.11 (even, 2026-11-09) — CLOSED 2026-11-22 (T accepted the shift as the intended result of the Oct-Nov enemy recasts, via /oversight; the measured report keeps the current numbers)
 - issue: #1516
 - category: content
@@ -1927,6 +1909,7 @@ present. Row stays open until that session runs.
 - next: `/iterate` (rename + tests + a 375 capture).
 
 ### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
+- category: ci
 - impact: 4
 - ease: 5
 - detail: run 40262955599 (`verify-mobile`, head 8a810580, branch
@@ -2098,6 +2081,7 @@ present. Row stays open until that session runs.
 ### [x] [loop-call] A hazard scar mends at any rest; the inn keeps only its wording (2026-10-15) — RATIFIED via /oversight 2026-10-17
 - category: contract
 - impact: 4
+- ease: -
 - detail: fixing "Scarred never clears" (issue #561) the loop ruled that
   every rest, inn or camp, mends banked hazard scars. The options were
   (a) any rest mends, (b) keep the mend inn-only and word the gloss as
@@ -2271,6 +2255,7 @@ present. Row stays open until that session runs.
 
 ### [x] [ui] Post-purge: a staged A Plain Word wraps "+25%" mid-token to "+2/5%" (2026-09-27) — CLOSED 2026-10-10 (8d579f67: the PAID value keeps one line at a computed size on every small face, `paidLedgerFit`; CRITIQUE pass 74 MED, issue #479)
 - category: ui
+- impact: 4
 - ease: 6
 - detail: found in the P1 playtest (browser pane, 375 wide). The PAID
   hero value on the narrow staged card breaks inside the token. This is
@@ -2312,6 +2297,7 @@ present. Row stays open until that session runs.
   action until the triggering event (Pages project creation).
 
 ### [x] [loop-call] The local verify gate and CI disagree about what green means: the Playwright journeys run only in CI (2026-09-20) — DECIDED via /oversight 2026-09-23
+- category: process
 - impact: 7
 - ease: 6
 - detail: filed by the burn-day audit 2026-09-19, found by the audit running
@@ -2420,6 +2406,7 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
+- category: content
 - impact: 6
 - ease: 2
 - detail: filed 2026-08-27 by Phase 67. The rename to "Miserere Mei, Deus"
@@ -2447,6 +2434,7 @@ present. Row stays open until that session runs.
 ### [x] combat — user crash on ACCEPTING post-combat card reward (unreproduced, PR #216) — CLOSED 2026-10-11 via /oversight (blind)
 - category: external-critique
 - impact: 9
+- ease: 6
 - next: body says "LIKELY THE SAME BUG — RESOLVED 2026-09-04 (verify
   before closing)" (the rune-column/worklet fix may already cover it) —
   get the owner's device log (SELF -> dev tools -> DIAGNOSTICS -> PREV
@@ -2524,6 +2512,7 @@ present. Row stays open until that session runs.
 
 ### [x] [docs] Phase 44a deferred its `lexicon.json` registrations to the phases that actually rename each concept
 - category: docs
+- impact: 4
 - ease: 8
 - detail: filed 2026-08-09 by Phase 44a. The build-plan row and spec 34 §5.9
   item 2 both ask 44a to register the fifteen §5.2 renames, the six rank
@@ -2604,6 +2593,7 @@ present. Row stays open until that session runs.
 ### [x] [contract] New-keyword wiring drifts silently across seven surfaces — CLOSED 2026-09-28 (R0)
 - category: contract
 - impact: 6
+- ease: 6
 - detail: filed 2026-08-22 by the content-pipelines audit. The two
   switches that matter (`combat.engine.ts` mech switch,
   `combat.cards.ts` mechanicText) carry explicit defaults so a new kind
@@ -2625,6 +2615,7 @@ present. Row stays open until that session runs.
 - **CLOSED 2026-09-28 (R0):** moot. The loop no longer adds keywords (D37, D58); the card editor and its `wx.ts` vocabulary are deleted (D56); R7 deletes the carrier-less kinds the silent defaults guarded (D50). Keyword wiring is recorded for the card sessions in the B4 inventory (`plan/revamp/cards.md`).
 
 ### [x] [tests] No growth doctrine for pinned content counts [needs-user-call] — CLOSED 2026-09-28 (R0)
+- category: tests
 - impact: 6
 - ease: 8
 - detail: filed 2026-08-22 by the content-pipelines audit. Five
@@ -2693,6 +2684,7 @@ present. Row stays open until that session runs.
 ### [x] `dominantCardShare` is broken post-strike-death — CLOSED 2026-09-28 (R0)
 - category: debt
 - impact: 7
+- ease: 5
 - detail: filed 2026-08-08 by Phase 43. The raw attribution ledger's
   `dotDamage` is filled at SUMMARY time, so the ledger itself carries direct
   damage only and collapses onto whichever signature burst last — it reads
@@ -2727,6 +2719,7 @@ present. Row stays open until that session runs.
 
 ### [x] `/combat-playtest` still names `statusEngagement` as the objective function — HALF-RESOLVED via Phase 66 (2026-08-27) — CLOSED 2026-09-28 (R0)
 - category: docs
+- impact: 6
 - ease: 9
 - detail: filed 2026-08-08 by Phase 43. The skill files in `skills/` and
   `.claude/commands/` were outside that phase's ownership. They should be
@@ -2746,6 +2739,8 @@ present. Row stays open until that session runs.
 
 ### [x] Dead id-keyed engine hooks survive the retired spec-32 library — CLOSED 2026-09-28 (R0)
 - category: debt
+- impact: 5
+- ease: 6
 - detail: filed 2026-08-08 by Phase 42. Engine hooks still keyed to
   `achilles-and-the-tortoise`, `the-closing-word`, `circular-reasoning` —
   cards the Profane Canon (`84ef85b`) deleted. Dead, and now actively
@@ -2757,6 +2752,7 @@ present. Row stays open until that session runs.
 
 ### [x] Playtest harness has no victory-only rounds-to-victory metric — CLOSED 2026-09-28 (R0)
 - category: gap
+- impact: 4
 - ease: 7
 - detail: surfaced 2026-07-17 by the ultracode price-vs-win-rate
   playtest. `CombatSimStats.avgRounds`

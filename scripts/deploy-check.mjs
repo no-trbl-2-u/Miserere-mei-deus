@@ -161,7 +161,7 @@ else if (PROVIDER === 'github-actions') {
     .split(',')
     .map((w) => w.trim())
     .filter(Boolean)
-  if (!TOKEN) configFail('GH_TOKEN', 'https://github.com/settings/tokens')
+  if (!TOKEN) configFail('GH_TOKEN (or GITHUB_TOKEN, GH_PAT)', 'https://github.com/settings/tokens')
 
   const auth = {
     Authorization: `Bearer ${TOKEN}`,
