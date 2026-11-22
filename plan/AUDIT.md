@@ -271,26 +271,12 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: `c2842354e` ("Add six Breakwater enemy portraits", PR #1406) added `bilge-stalker.webp`, `coralback.webp`, `quay-crab.webp`, `saint-beneath.webp`, `saltwick-swarm.webp` and `wreckmaster.webp` directly under `axiomancer-mobile/assets/images/enemies/`, with no registry or provenance entries — the PR's own body says this was deliberate ("This image-only PR leaves those entries for integration"). That alone fails `asset-provenance.test.mjs`'s "every art file is reachable from a registry" (6 orphans) — cheap to fix: an `ENEMY_ART_BY_KEY` entry per file plus a `provenance.json` record (verified locally, both go green). But `scripts/bake-backings.mjs`'s `rosterKeys()` treats every `<key>.webp` beside the registry as a foe that must draw its cells, and `scripts/enemy-backings.test.mjs`'s "the sweep found the roster and its cells" asserts `foe.planes.length === 24` for literally every roster key, unconditionally — it has no `FRAME_SET_EXEMPTIONS` awareness at all (confirmed: that name appears nowhere in `bake-backings.mjs` or `enemy-backings.test.mjs`). Phase AN5e closed the "every portrait animates" invariant for the prior 17 foes (each has an `anim/<key>/` set of 24 cells); these six have none, so they fall back to their single still (`drawnFiles()`), i.e. 1 cell, not 24. Registering them in `ENEMY_ART_BY_KEY` without a frame set also fails the jest suite `every-portrait-has-a-set.test.ts` (`ENEMY_ART_KEYS.length` goes 17 -> 23, and the new keys have neither a set nor an explicit `FRAME_SET_EXEMPTIONS` entry) — verified locally, 5 failures. Adding an explicit exemption would close that jest suite (it's designed for exactly this: "install a set, or exempt it explicitly") but does nothing for `enemy-backings.test.mjs`, which has no exemption path to honor it. So there is no change on the CI side alone that gets `npm run verify -w axiomancer-mobile` green: the real fix is a 24-cell animated frame set per foe (144 new cells total), which is new art content — out of scope for an autonomous CI fix (fix-ci hard rule 3) and owner-led per D58's content bias. Reverting the six files was considered and rejected for this run: pulling already-merged content back out unilaterally, with no T present to confirm, is a bigger call than this skill is meant to make unattended.
 - next: a content/process call, not a code fix: either (a) author the six frame sets as a normal "AN"-phase content chunk (`AN5a`-`AN5e` is the precedent) so the roster invariant holds the way it does for every other foe, or (b) teach `enemy-backings.test.mjs`/`bake-backings.mjs` to honor `FRAME_SET_EXEMPTIONS` so a still-only portrait can be declared exempt (a deliberate design relaxation, not a CI patch), or (c) T decides to pull the six files back out of `axiomancer-mobile/assets/images/enemies/` until their sets are ready. Until one of those lands, `main`'s `verify-mobile` stays red and blocks every other tick; this row is the record of why a code-only fix-ci pass could not close it. **Answered by spec 157 (plot, 2026-11-06):** T's enemy recast makes the six portraits six real library foes, which is route (a) with the sets already authored in PR #1409. Chunk **157.3 (EN3c)** closes this row — it wires the art registry, the provenance records, the six frame sets and the baked backings, and takes `asset-provenance.test.mjs`, `enemy-backings.test.mjs` and the one-enemy-per-installed-set guard green together. It requires 157.1 (EN3a), which creates the entries. Routes (b) and (c) are dropped: no set is retired by this recast, so `FRAME_SET_EXEMPTIONS` stays empty and nothing is pulled back out.
 
-### [x] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01) — CLOSED 2026-11-01 (fix-ci, verify-root run 41298604682: reworded all ten lines in `combat.card-program.ts`, `combat.encounter.types.ts`, `combat.engine.ts`, `combat.equipment-effects.ts`, `e2e/equipment-effects.engine.test.ts` and `Items/types.ts` to drop the "spec 136"/"A10"/"chunk 136.4" narration; `check-comments.mjs` reports clean, root `npm test` and mobile `npm run verify` both pass)
-- category: debt
-- impact: 5
-- ease: 8
-- detail: `npm test`'s `check-comments.test.mjs` fails on `main` (HEAD `bc3a49000` at filing time) with 10 history-narrating comment lines, all from the EQ3d/136.4-136.5 equipment-effects work (`3f76fd9d4`, `c9ec5c21b`): `combat.card-program.ts:260,345`, `combat.encounter.types.ts:525`, `combat.engine.ts:320,834,1111`, `combat.equipment-effects.ts:2`, `e2e/equipment-effects.engine.test.ts:2`, `Items/types.ts:81,100` — each names "(spec 136, A10)" or similar. `verify-root` run 41295273531 reported a different failure first (`feature-map` staleness, fixed separately this same tick) because the npm script chain (`plan-check && feature-map --check && feature-map-render --check && node --test ...`) short-circuits before reaching `node --test`; this is the next thing that chain will hit once that earlier gate is green, so it will still block merges to `main` until fixed.
-- next: reword each flagged line to state what the code does, not its phase/spec history (git blame already keeps that); `check-comments.mjs`'s own docstring explains the two guarded kinds (history, retired lexicon terms) and the `lexicon-ok` escape hatch for a line that must legitimately name a deleted thing.
-
 ### [ ] [process] The queue-only verbs still push `main` themselves after NX1e (D119 says every change lands by PR; 2026-11-01)
 - category: process
 - impact: 5
 - ease: 5
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
 - next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
-
-### [x] [debt] Carry-overs of the ten pre-revamp partial rows, archived as dropped at the nexus v2 cut-over (NX1d, ruling R7, 2026-11-01)
-- category: debt
-- impact: 2
-- ease: 5
-- detail: the v1 build plan's `[-]` rows 90 (summoner half), 52b (the inn as a first-class rest), 47c-47e (Expo decouple: assets, device APIs, build and CI), V2 (map scene: torn frame, region-accent theming, legend refresh), V3 (shared eyebrow header, panel-furniture pass), V6 (glyph unification remainders), V7 (procedural illustrations; art is T's), W5 (per-map roster growth; enemies are T's B2) and the V1 residue bullet (the PixelHeartEmblem / PixelEmblem pair; the orphaned BodyDiagram, MindMark and FriendshipMeter) left the plan as `dropped` lines in `plan/ARCHIVE.md`. Most predate THE REVAMP and may be moot: verify each against current code before acting. Full text: `git show fd21d04ab:plan/steps/01_build_plan.md`.
-- next: /iterate checks the code-only ones (the emblem pair, the three orphans) and closes what the revamp already removed; anything that is content or art (V7, W5) is T's, filed only as a `/plot` candidate. — CLOSED 2026-11-12 (iterate: `PixelHeartEmblem`, `BodyDiagram`, `MindMark` and `FriendshipMeter` have no source left and `PixelEmblem` survives only in a test comment, so the code-only part is moot; V7 and W5 are T's art and enemies, left to B2/B8 and a `/plot` candidate if T wants them)
 
 ### [ ] [content] BUG1j's universal befriend collapses the greedy sim policy's chapter-clear rate from ~85% to ~12% (fix-ci, verify-mobile run 41245913757, 2026-10-31)
 - category: content
@@ -468,24 +454,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - evidence 2026-10-28: body-mind 0.25 -> 0.00 at 6ba3c34
 - evidence 2026-10-28: body 0.25 -> 0.00 at 6ba3c34
 
-### [x] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
-- category: content
-- impact: 6
-- ease: 6
-- detail: CRITIQUE pass 100 [MED]: at 375 the hand fan covers every card but the
-  last, and BT2a A3 (one-line names, T 2026-10-13) leaves only "A PLAIN W…"
-  visible, so Blow, Word and Ward look the same. T's call: keep A3 and rename
-  the cards instead, dropping the "A Plain" prefix (`A Plain Blow` -> `Blow`,
-  `A Plain Ward` -> `Ward`, `A Plain Word` -> `Word`, and any other "A Plain"
-  card). Source: `axiomancer-mechanics/src/Cards/library/starters.cards.ts`;
-  pinned at least in `cards-sandbox.engine.test.ts`. Grep the tree (mobile
-  copy, glossary, guides, ballots, critique fixtures) for the old names. T
-  authored this content call, so D58 does not block it; the bias banner's
-  `[content]` skip does not apply to an owner-ruled rename. "Let's try this":
-  re-capture the 375 hand fan after the rename and note in the Done line
-  whether the covered names now read apart.
-- next: `/iterate` (rename + tests + a 375 capture).
-
 ### [ ] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27)
 - category: ci
 - impact: 5
@@ -501,61 +469,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
 
-### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
-- category: ci
-- impact: 4
-- ease: 5
-- detail: run 40262955599 (`verify-mobile`, head 8a810580, branch
-  `loop/ship-SG1-no-starting-ring`) and `verify-mechanics` fail the
-  `e2e:feature-map` drive: `reachable route not reached: route:item-reward`
-  ("no play path and no dev seam reaches route:item-reward"). Root cause:
-  the reward screen was reached only through the first-node relic hand-over
-  (`ItemRewardGate` first-node arm), which SG1 deleted. The screen now opens
-  only for equipment with a signature or modifiers (`qualifiesForItemRewardScreen`),
-  and the cache, gathering, fight and hazard in the drive's play walk queue
-  none. The dev chips wear relics directly (SG1), so no `SEAMS` entry in
-  `scripts/feature-map-e2e.mjs` can open it. Fix needs a seam decision: a dev
-  control that offers a signature relic through `offerItemRewardAction`, or a
-  state-fixture field that stages a pending reward with `arrive` → `/item-reward`
-  (the fixture builder cannot stage the transient `itemReward` slice today).
-  Not a one-line fix, so it is filed here, not suppressed. Note the SEAMS
-  table and the feature map `driven` / `reachable` values for item-reward
-  must move with whichever seam lands.
-- proposed: add the dev seam, add a `SEAMS['route:item-reward']` entry, rerun
-  `npm run e2e:feature-map -w axiomancer-mobile` and `npm run verify -w axiomancer-mobile`.
-
-### [x] [contract] The Blood Price art index breaks the trial-set-removal contract (UP1a art, 2026-10-22) — CLOSED 2026-10-25 (already fixed in 3b4e618c, phase UP1b: `trial-set-removal.engine.test.ts` allowlists `axiomancer-mobile/assets/images/cards/index.ts`, since Metro needs a literal id per painting and an unmapped id falls back; the test passes on main; found unticked this pass)
-- category: contract
-- impact: 5
-- ease: 6
-- detail: `src/Cards/e2e/trial-set-removal.engine.test.ts` pins that no code
-  outside `blood-price.cards.ts` and its own test names a `bp-` card id, so
-  deleting that one file and its `TRIAL_SETS` line is a clean removal.
-  `feat(art): torio paintings for the 30 Blood Price cards` (7726a5730,
-  2026-10-22) added a `'bp-e-01n': require(...)` style dictionary to
-  `axiomancer-mobile/assets/images/cards/index.ts`, one entry per card, which
-  the test's whole-repo scan now flags: `npm run verify` is red on `main`
-  (confirmed on a clean checkout, unrelated to anything else). The PR that
-  shipped this only touched `axiomancer-mobile/assets/**`, so it never
-  triggered `verify-mechanics` (the workflow that runs this test) and
-  nothing caught it before merge — the mobile-vs-mechanics path-filter gap
-  LG1b was built to close, from the other direction (a mechanics-owned test
-  reads a mobile-owned path).
-- next: `/iterate` — decide whether the art index should key off a card's
-  art lookup type instead of its literal id string (so the scan stops
-  matching it), or whether the trial-set contract now only needs to hold for
-  `axiomancer-mechanics/src` since the Blood Price set is no longer slated
-  for removal post-D99; either way, read `plan/revamp/cards.md` ("The trial
-  set") before changing the rule, not just the index.
-
-### [x] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22) — CLOSED 2026-10-25 (iterate: `escape-ledger.mjs` classifies each PR against `verifyWorkflowsAt(mergeCommit)`, the merge tree's `verify-*` files parsed by the new pure `verifyWorkflowsFrom` in `ledger-lib.mjs`; the ledger header and the Android seed keep today's filters; seed S4, which read unconfirmed once verify-root covered #526's paths, confirms again; `escape-ledger.test.mjs` pins it)
-- issue: #909
-- category: debt
-- impact: 4
-- ease: 7
-- detail: `scripts/eval/escape-ledger.mjs` reads the live `.github/workflows/verify-*.yml` filters once and classifies every merged PR in the window with them (`classifyPaths`, then `expectedNotRun`). Phase LG1b added `verify-root.yml`, which owns `scripts/`, `.github/`, `skills/` and the top-level files, so the next ledger run lists `verify-root.yml` as triggered but not run on every PR merged before it existed (#526 among them) and stops counting those paths as uncovered. Any earlier filter change had the same skew, just smaller. Reading each workflow's filter at the PR's merge commit (`git show <sha>:.github/workflows/<file>`, skipping a file that did not exist there) keeps the history as it was. The seeded replay should keep the live filters: it measures today's gate.
-- next: `/iterate` — a `verifyWorkflowsAt(sha)` in `escape-ledger.mjs` with a fixture test in `scripts/eval/escape-ledger.test.mjs`.
-
 ### [ ] [tests] No state fixture wears a relic or boots a dying board, so the critique drive cannot see the relic icons or the DY1d skull (iterate 2026-10-28)
 - category: tests
 - impact: 4
@@ -568,50 +481,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - impact: 4
 - ease: 5
 - detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
-
-### [x] [debt] pr-resolve's union merge splits a row one side moved Pending to Done and bloats CRITIQUE.md (iterate 2026-10-14) — CLOSED 2026-10-14 (80ea6f44: line order from `git merge-file --union`, the three-way count trim drops a trimmed heading's body first, blank runs capped; loop-pr.test.mjs pins it; CRITIQUE.md repaired)
-- issue: #542
-- category: debt
-- impact: 8
-- ease: 8
-- detail: `unionMerge` placed theirs' lines by an anchor walk, so shared generic lines jumped the anchor ahead. Every pr-resolve merge with clean inputs left a headerless body in Pending, appended its header near the end of the file and added about 85 blank lines; one AUDIT.md merge (5790525d) spliced a `[loop-call]` row into another row. Reproduced byte for byte on beac7799.
-
-### [x] [infra] pr-resolve never resolves a non-union conflict: its Claude job fails "Unsupported event type: push" every time (expand pass 33, 2026-10-14) — CLOSED 2026-10-14 (761da24c: the push run's scan starts one workflow_dispatch run of pr-resolve.yml per conflicted PR, and the Claude resolve runs only there; loop-pr.test.mjs pins it. First live proof is the next non-union conflict)
-- issue: #524
-- category: infra
-- impact: 7
-- ease: 7
-- detail: `pr-resolve.yml` runs on `push` to `main`. Its `scan` job merges
-  main into conflicting `loop:pr` branches and hands any non-union conflict
-  to the `resolve` job, which calls `_claude-skill.yml`
-  (`anthropics/claude-code-action@v1` with a `prompt`). That step exits in
-  about 0.3s with `Action failed with error: Unsupported event type: push`.
-  All 6 failed runs in the last 45 are this (runs 38494524908 and
-  38502443273 checked: PRs #520 and #523), so no conflict has ever been
-  resolved by the Claude step; #520's was settled by hand (`fc4aa159`).
-  `ci-autofix` and `pr-autofix` work because they run on `workflow_run`.
-- next: give the resolve step an event the action accepts (have `scan`
-  start one `workflow_dispatch` run per item, or move `resolve` into a
-  `workflow_run` workflow keyed on pr-resolve), then prove it on a staged
-  conflict. Infra only; nothing about merging, closing or force-pushing
-  changes (D86).
-
-### [x] [bug] The hazard dice cast's springs inherit Reanimated 4's mass 4, so they swing for many seconds (2026-10-14) — CLOSED 2026-10-14 (784d6a1e: TumblingDie uses DICE_ROLL_TIMING's springs; the stamp gets STAMP_SPRING, mass 1, threshold 0.01; HazardOverlays.test.tsx pins it under a second. The cast's 1700ms timer never waited on the springs)
-- issue: #544
-- category: bug
-- impact: 4
-- ease: 8
-- source: iterate (found while fixing the combat tray's dice springs, branch loop/iterate-drive-settle)
-- detail: `components/hazard/HazardOverlays.tsx` `TumblingDie` (~:49-50, :113)
-  calls `withSpring` with only damping and stiffness, the same configs the
-  combat tray used. Reanimated 4.1 fills an unset `mass` with 4 and
-  `energyThreshold` with 6e-9, so a damping-6 spring takes about 12s to
-  finish. On the combat tray this hung each die tilted above the tray and
-  kept the tap-to-skip layer over the dice for about 20s (fixed by naming
-  `mass: 1, energyThreshold: 0.01` in `DICE_ROLL_TIMING`). Whether the
-  hazard cast's interstitial waits on these callbacks is unchecked.
-- next: name mass and energyThreshold on the three hazard springs (or share
-  `DiceSpring` values), then check the cast's timing on the built app.
 
 ### [content] map copy: Breakwater node blurbs that do not match their events (AW1b, 2026-10-26)
 - category: content
@@ -730,16 +599,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   preceding routes (`SMOKE_ONLY` with growing prefixes) to find the one that leaves state behind, and fix that
   leak or give the live fight a fresh browser.
 
-### [x] [loop-call] RV1 A7's seeded-branch push is still `[T to confirm]` (2026-10-19) — RATIFIED via /oversight 2026-10-27 (T confirmed the eval/* draft pushes as written; the brief records it, and the seeded-replay row below is unblocked on that side)
-- category: loop-call
-- impact: 3
-- ease: 9
-- detail: brief `plan/phases/phase_RV1_pr_review_pipeline.md` (Decisions, "A7 pushes seeded branches, as drafts,
-  and deletes them") amends EV1's "planted defects never leave the machine" for the review judge and is marked
-  `[T to confirm]`. RV1c shipped (#610). T's 2026-10-19 decision round confirmed every other open default but
-  was not asked this one. The seeded replay row below depends on it, since it pushes eight `eval/*` branches.
-- next: `/oversight` asks T once; record the answer in the brief (`(T confirmed <date>)` or the change).
-
 ### [ ] [tests] Run the seeded review replay on the three-lens reviewer once RV1c is on `main` (2026-10-17)
 - category: tests
 - impact: 6
@@ -758,82 +617,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   verdict: read any medium or high `loop:pr` PR's verdict after the merge).
 - next: `/iterate` (a measurement run, plan-only diff under `docs/reports/`).
 
-### [x] [tooling] The guard's post-write lexicon check reports false findings in a worktree (2026-10-11) — CLOSED 2026-11-12 (iterate: already fixed in a68039899; `lexiconTargetFor` lints from the written file's own git toplevel, pinned by `guard.mjs self-test`, which passes)
-- category: tooling
-- impact: 4
-- ease: 7
-- detail: editing `plan/revamp/loop.md`, `plan/revamp/README.md` and
-  `plan/steps/01_build_plan.md` from a `.claude/worktrees/*` session made
-  the `post-write` hook (`.claude/hooks/guard.mjs` `postWrite`) block with
-  28 retired-term findings, all on lines the edit did not touch, printed as
-  `../.claude/Axiomancer/<worktree>/plan/...`. `node
-  scripts/check-lexicon.mjs` run inside the worktree on the same files is
-  clean. Likely cause: the hook runs from the main checkout
-  (`$CLAUDE_PROJECT_DIR`), so `check-lexicon`'s `ROOT` is the main
-  checkout and the worktree file's repo-relative path starts with `../`,
-  which no dated-record zone matches. Every worktree edit to a zoned file
-  trips it, and the noise trains sessions to ignore a real gate.
-- next: in `postWrite`, run `check-lexicon` with `cwd` set to the git
-  toplevel of the written file (`git -C <dir> rev-parse --show-toplevel`),
-  and pass the path relative to that root; add a `guard.mjs self-test`
-  case for a worktree path. R11's first retro is a natural home.
-
-### [x] [bug] P-07b's printed "(max 30)" does not cap its paid line (RC2 walk, 2026-10-11) — CLOSED 2026-10-13 (0cd35985: DEAL body-scaled the resolved VITAE lost, 30 became 114; both lines now DEAL it `exact`, unscaled, like "HEAL the damage dealt"; blood-price.engine.test.ts pins the caps at body 19)
-- issue: #513
-- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
-- category: bug
-- impact: 8
-- ease: 7
-- detail: Leg 4 logged P-07b ("DEAL all the VITAE you lost this combat (max 30). EXILE.") paid plays dealing 114 (seq 3063, a Float-Eye at ld-11, after far less than 114 VITAE lost), 114 again on the Doorwarden (seq 3428), 48 and 32. Printed numbers elsewhere scale with stats, but the cap does not scale and 114 is not a scaled 30 either. Printed must equal applied.
-- next (`/iterate`): find where the card program resolves "VITAE lost this combat" and its cap in `axiomancer-mechanics/src/Combat/` (P-07b in the Blood Price library); check whether the cap is skipped on the paid line or scaled after capping; pin it with an engine test at the printed cap. Card numbers are D37-held: fix the code to match the printed card, never the card text.
-
-### [x] [loop-call] A DEAL of VITAE lost lands unscaled; other derived DEALs still body-scale (2026-10-13) — RATIFIED via /oversight 2026-10-17
-- category: contract
-- impact: 4
-- ease: -
-- detail: fixing P-07b (0cd35985) the loop ruled that a DEAL whose amount is
-  VITAE already lost ("DEAL all the VITAE you lost") lands that number
-  unscaled, matching "HEAL the damage dealt" and TETHER's hit, so the
-  printed max holds. Two other derived DEALs still body-scale: Blood for
-  Blood's "DEAL 2X" (pinned "body-scaled" in blood-price.engine.test.ts)
-  and P-10c PAID's "DEAL n instead" (n = the VITAE sacrificed). Neither
-  prints a cap the scaling breaks, so they were left alone.
-- next: T confirms the ruling, or says derived DEALs should all scale (then
-  P-07b caps after scaling instead). A card-number question, so T's call (D37).
-
-### [x] [bug] A die is spent on a staged card that cannot be played (RC2 walk, 2026-10-11) — CLOSED 2026-10-13 (8efb0375: the die drop, die tap and loose drop skip a card whose PAID line is blocked and refuse loudly with the engine's reason; a card neither of whose lines can be played now, a second copy of a Global included, is refused at the stage)
-- issue: #515
-- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
-- category: bug
-- impact: 7
-- ease: 7
-- detail: Leg 3: above half VITAE, stage Blood Price P-04C (marked "ONLY AT HALF VITAE OR LESS") and drag the WILD die onto it. The die is accepted and goes "spent" with no rejection flash, APPLY does nothing, and the card stayed staged from turn 2 to turn 7 of the Doorwarden fight while every END logged "Refused - only at half VITAE or less." A wrong-colour drop is refused loudly; this one loses the die. Same root as a second copy of a Global staging.
-- next (`/iterate`): refuse the die drop (and the stage) when the card's play condition fails, with the same loud reject flash as the colour rule (owner UI doctrine: illegal actions prevented loudly); unstaged cards return to the hand. Mobile combat drop handlers in `axiomancer-mobile/components/combat/`; add a test.
-
-### [x] [bug] Scarred ("until you next rest at an inn") never clears (RC2 walk, 2026-10-11) — CLOSED 2026-10-15 (3d953081: every rest, inn or camp, mends banked scars; the gloss reads "until you next rest"; hazard-scar-rest-recovery.engine.test.ts pins camp and unmarked rests mending. See the [loop-call] below)
-- issue: #561
-- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
-- category: bug
-- impact: 6
-- ease: 7
-- detail: Leg 4: a lost hazard (ld-4 North Aqueduct) applied Scarred (-5 max VITAE, 302 to 297). Act 1 has no inn. Two rest nodes (ld-10, ld-2) and a reload left max VITAE at 297. In practice the scar is permanent, and the gloss names a place the game does not have.
-- next (`/iterate`): decide in code what lifts a scar in Act 1 (any REST node is the reading closest to the gloss), make it so and update the gloss to match; test it. If lifting it needs a design call, file a `[loop-call]` with the choice made.
-
-### [x] [loop-call] A hazard scar mends at any rest; the inn keeps only its wording (2026-10-15) — RATIFIED via /oversight 2026-10-17
-- category: contract
-- impact: 4
-- ease: -
-- detail: fixing "Scarred never clears" (issue #561) the loop ruled that
-  every rest, inn or camp, mends banked hazard scars. The options were
-  (a) any rest mends, (b) keep the mend inn-only and word the gloss as
-  permanent past the Breakwater, (c) author inns in later regions
-  (content, D88). Picked (a): `docs/game-model.md` already says "until the
-  next rest", Act 1's only inns are the Breakwater's, and a -5 scar on a
-  ~300 pool is small. It retires Phase 52b's "inn-only privilege"; the
-  `shelter` marker stays and still words an inn night as a bed.
-- next: T confirms, or rules scars inn-only (then the gloss must say a
-  scar outlives every camp, or later regions get an inn by brief).
-
 ### [bug] "SACRIFICE any amount" never asks the player for an amount (RC2 walk, 2026-10-11)
 - source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
 - category: bug
@@ -849,90 +632,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: 6
 - detail: All four walk Hags had 152 VITAE (Breakwater to Lantern Deep), while Float-Eye scaled 92 to 108 to 124 and the Doorwarden 258 to 312 to 368 to 422 as the pilgrim went from level 1 to 6. Honest Hag fights averaged 3.25 turns against D82's target of about 5; three of four ended through mercy at about 30%.
 - next (`/iterate`): check `scaleEnemyToLevel` and the map pins: is the elite missing its region scale (a bug: fix it and re-run the lane pacing sim), or is 152 pinned on purpose? Any retune of the Hag's numbers is T's call (attended, as D82 was); file a `[loop-call]` if it is ambiguous.
-
-### [x] [perf] firstScreenMs budget breach: 306 ms vs 303 ms (2026-10-11) — CLOSED 2026-10-11 (afcd727c: a runner artifact. The run was on an Intel Xeon 8573C and the budgets were seeded on an AMD EPYC 9V74. Re-measured on the AMD at 52fabfbf: firstScreenMs 248, lcpMs 288, tbtMs 81, all under budget. Timing budgets now apply only on the seeding CPU)
-- issue: #489
-- category: perf
-- impact: 5
-- ease: 5
-- detail: the weekly performance audit measured firstScreenMs at 306 ms against a budget of 303 ms. Commit 9ae519f; previous history line at ca2e13d (`docs/reports/perf/history.jsonl`).
-- next (`/iterate`): bisect the commits between the two history lines; fix or raise the budget with T.
-
-### [x] [perf] lcpMs budget breach: 352 ms vs 351 ms (2026-10-11) — CLOSED 2026-10-11 (afcd727c: a runner artifact. The run was on an Intel Xeon 8573C and the budgets were seeded on an AMD EPYC 9V74. Re-measured on the AMD at 52fabfbf: firstScreenMs 248, lcpMs 288, tbtMs 81, all under budget. Timing budgets now apply only on the seeding CPU)
-- issue: #490
-- category: perf
-- impact: 5
-- ease: 5
-- detail: the weekly performance audit measured lcpMs at 352 ms against a budget of 351 ms. Commit 9ae519f; previous history line at ca2e13d (`docs/reports/perf/history.jsonl`).
-- next (`/iterate`): bisect the commits between the two history lines; fix or raise the budget with T.
-
-### [x] [perf] tbtMs budget breach: 112 ms vs 100 ms (2026-10-11) — CLOSED 2026-10-11 (afcd727c: a runner artifact. The run was on an Intel Xeon 8573C and the budgets were seeded on an AMD EPYC 9V74. Re-measured on the AMD at 52fabfbf: firstScreenMs 248, lcpMs 288, tbtMs 81, all under budget. Timing budgets now apply only on the seeding CPU)
-- issue: #491
-- category: perf
-- impact: 5
-- ease: 5
-- detail: the weekly performance audit measured tbtMs at 112 ms against a budget of 100 ms. Commit 9ae519f; previous history line at ca2e13d (`docs/reports/perf/history.jsonl`).
-- next (`/iterate`): bisect the commits between the two history lines; fix or raise the budget with T.
-
-### [x] [tests] Root `npm test` is red on main: `check-comments` flags two "D41" decision-number comments (2026-10-10) — CLOSED 2026-10-10 (cbe0fa47: both comments state the rule without the decision number; check-comments clean, root `npm test` 224/224)
-- category: tests
-- issue: #480
-- impact: 5
-- ease: 9
-- detail: 9ccba038 added comments citing a decision number to
-  `axiomancer-mechanics/src/Combat/combat.engine.ts:941` ("Card statuses
-  land uncapped (D41)") and `src/Combat/e2e/fate-engine.engine.test.ts:46`
-  ("VULNERABLE is uncapped (D41)"). `node scripts/check-comments.mjs`
-  exits 1 on both, so the root `npm test` fails. CI's `verify-*` legs do
-  not run the guard, so `main` shows green.
-- next (`/iterate`): state the rule without the decision number (or move
-  the citation to `docs/game-model.md`), then run `node
-  scripts/check-comments.mjs` and the root `npm test`.
-
-### [x] [tooling] `tick-end` telemetry rows never land for any `/march`-dispatched tick (digest, 2026-10-09) — CLOSED 2026-10-09 (53a0c39b: `_claude-skill.yml` commits whatever the tick left in `telemetry/` in a best-effort step after Claude exits; the first CI tick after it should show a `telemetry: tick-end rows` commit)
-- issue: #476
-- category: debt
-- impact: 7
-- ease: 6
-- detail: `CLAUDE.md` and the hook's own header describe `tick-end` as
-  reliable modulo a rare edge case — "it only strands rows when a session
-  ends," landing in the next tick's commit otherwise. In practice, no
-  shard ever produced by a `/march` dispatch has a `tick-end` row, going
-  back at least to 2026-09-24 (every `slash-prompt | /march` shard checked
-  has exactly one row, the prompt itself). The 14 `tick-end` rows that do
-  exist in `telemetry/*.md` all sit after a `subagent`/`subagent-end` pair
-  from attended, interactive sessions — none follow a bare `/march`
-  dispatch.
-  Root cause: `.claude/settings.json`'s `Stop` hooks run `guard.mjs stop`
-  before `telemetry.mjs tick-end` (lines 218-231). `guard.mjs`'s
-  `stopCheck` (guard.mjs:245) only blocks the stop (forcing a continuation
-  turn that could commit a straggler row) when `NEXUS_STRICT_STOP=1`; that
-  env var is set nowhere in the repo (checked every `.yml`/`.md`), so in
-  CI `stopCheck` always just warns and returns 0. By the time
-  `telemetry.mjs tick-end` appends its row, the turn's last commit has
-  already happened and the GH Actions runner is torn down at job end with
-  no later step that commits stragglers (`_claude-skill.yml` has no
-  post-Claude git step). The row is written to a shard file that is never
-  pushed, on infrastructure that has been GH-Actions-per-tick since
-  `march.yml`'s introduction — this is not a recent regression, it is
-  true of every tick the workflow has ever run. `node
-  .claude/hooks/telemetry.test.mjs` is green throughout (16/16): it tests
-  the hook's local file-append logic in isolation and never models
-  whether that write reaches a commit, so it cannot see this gap.
-  Consequence: nobody can use `tick-end`/leaked-row detection to tell a
-  crashed `/march` tick from a clean one, and this digest's own "While you
-  were out" pulse (skills/digest.md §3.2) has to reconstruct tick outcomes
-  from `git log` and `gh run list` instead of reading the ledger it was
-  told to trust.
-- next: the Stop-hook ordering can't fix this alone (swapping it still
-  only warns, never blocks, without strict mode). The workable fix likely
-  lives in the skills themselves: have `/march` (and other verb-dispatch
-  points) write and commit their own `tick-end` row as part of their
-  existing final commit, rather than relying on a post-hoc Stop hook that
-  structurally always fires one commit too late on ephemeral CI runners.
-  Re-verify against both the CI cadence and an attended session before
-  shipping, since the latter's `tick-end` rows currently work by accident
-  of session continuity, not by design, and must not regress.
 
 ### [perf] Map SVG fix is unproven on a device (perf audit, 2026-10-03)
 - category: bug
@@ -964,50 +663,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next: before any map ships with `chartTexture: true`, draw the texture as
   a tiled image or drop it; extend the raster test to the fallback sheet.
 
-### [x] [tooling] `npm ci` in a fresh worktree leaves mobile typecheck red (perf audit, 2026-10-03) — CLOSED 2026-10-11 (911cacb4: `@types/react` 19.2.17 is a root devDependency, so npm 11 no longer skips it as an optional peer; a fresh worktree `npm ci` + mobile `tsc --noEmit` is green under npm 11.21.0, red before, and under npm 10.9.9)
-- issue: #495
-- category: debt
-- impact: 4
-- ease: 6
-- detail: the lockfile marks the hoisted `node_modules/@types/react`
-  (19.2.17) `optional` and `peer`, and npm 11.16 skips it on a clean install.
-  `react-native` is hoisted to the root and then resolves `react` with no
-  types, so `tsc --noEmit` reports 4138 errors (`'View' cannot be used as a
-  JSX component`) on untouched files. `AGENTS.md` says to `npm install` in a
-  worktree first; that does not fix it. Copying the package from the main
-  checkout does.
-- next: make `@types/react` resolvable from the root in a clean install (a
-  root devDependency or an override pinned to mobile's 19.1 line), then
-  confirm `npm ci && npm run verify -w axiomancer-mobile` is green in a
-  fresh worktree.
-
-### [x] [copy] Combat die a11y label still says "SPECIAL face" (R10c3, 2026-10-02) — CLOSED 2026-10-10 (already fixed in bcb76681, issue #466: `combatDieA11yLabel` speaks "BOON face", matching the lexicon; found unticked this pass)
-- category: copy
-- impact: 2
-- ease: 9
-- detail: `combatDieA11yLabel` in
-  `components/combat/encounter/CombatDie.tsx` (~69) speaks "SPECIAL" for a
-  special face. `axiomancer-mechanics/docs/lexicon.json` retires "SPECIAL
-  face" for BOON, and the board's comments now say BOON. A screen reader
-  hears the retired word.
-- next: decide the spoken word (BOON per the lexicon, or "special" per
-  `docs/game-model.md` § Dice, which still writes it lowercase) and make the
-  label, its test and the game model agree.
-
-### [x] [tooling] `combat-sim`'s default loadout names two deleted cards (R10c, 2026-10-02) — CLOSED 2026-10-09 (the default is `DEFAULT_LOADOUT`, the `GREY_OFFICE_CARDS` ids; a docs-examples test resolves it and every documented `--loadout` id through `getCardById`)
-- issue: #472
-- category: tooling
-- impact: 4
-- ease: 8
-- detail: the default `--loadout` in `src/CLI/combat-sim.cli.ts` is
-  `slippery-slope,brace-for-impact`; neither id is in the card library, so
-  `npm run combat-sim` with no flag plays no real card and every column
-  reads 0. Found writing `docs/cli.md`, which tells readers to pass a
-  loadout for now.
-- next (`/iterate`): default to the grey cards (`GREY_OFFICE_CARDS` ids),
-  with a test that the default loadout resolves through `getCardById`; then
-  drop the caveat from `docs/cli.md`.
-
 ### [contract] Pre-purge saves keep purged card ids; combat throws on them (B4 F2, 2026-10-01) — RESOLVED 2026-10-02 (b09e1de0, RC session: `dropUnknownCardIds` runs on every load, mobile and CLI, with tests)
 - category: contract
 - impact: 6
@@ -1020,18 +675,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next (`/iterate`): reproduce with a v26-era fixture save; add a hop that
   filters both lists through `getCardById` (re-seed `STARTING_CARD_IDS` if
   `knownCards` empties), with a migration test.
-
-### [x] [contract] The pip pass caps VULNERABLE at 30, cutting a stack above it (B4 F3, 2026-10-01) — CLOSED 2026-10-10 (9ccba038: the pip pass adds with no clamp, card statuses land uncapped per D41; fate-engine.engine.test.ts pins a printed 40 + 2 pips at 42)
-- issue: #477
-- category: contract
-- impact: 5
-- ease: 7
-- detail: `combat.engine.ts:977` clamps the pip intensity bonus to
-  `MAX_EFFECT_INTENSITY = 30`. A Plain Word at heart >= 7 lands VULNERABLE
-  above 30 (uncapped, D41), so a pipped play would lower it to 30. Traced
-  by reading; no test covers pips on VULNERABLE. Inventory §7.
-- next (`/iterate`): write the failing test first, then skip the clamp for
-  uncapped effects (the FREE path already passes `uncapped: true`, `:762`).
 
 ### [tests] The carrier rule (D45) has no enforcer; BLEED has no carrier (B4 F1, 2026-10-01)
 - category: tests
@@ -1071,26 +714,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   trigger or teach `deploy:check` to treat a merge commit whose parents
   are both already green as satisfied without its own run.
 
-### [x] [tests] Root `npm test` is red on main: the DevLog marginalia assertion (2026-09-28) — CLOSED 2026-09-29 (confirmed by this digest)
-- category: tests
-- impact: 4
-- ease: 6
-- detail: `scripts/build-devlog-public.test.mjs:117` ("nothing that
-  carries meaning sits behind a script") fails on a clean `main` worktree
-  at `3c7e897`: the built post it picks has no `<details class="marg">`.
-  No CI workflow runs this file, so no check goes red; only the root
-  `npm test` shows it. Found by the keyword-purge PR's gate run (D45); not
-  caused by it.
-- next (`/iterate`): decide whether the newest DevLog entry should carry
-  marginalia or the test should pick a post that has them, then add the
-  file to a CI job so it cannot rot silently again.
-- **CLOSED 2026-09-29:** fixed as a side effect of phase R1 (`0cfea70c`,
-  "the marginalia case picked the front page ... instead of a post");
-  this digest re-ran root `npm test` clean on current `main` (213 pass, 0
-  fail) to confirm before closing. The "add it to a CI job" half of
-  `next:` is still undone — no workflow runs the root suite, so a similar
-  regression would rot silently again.
-
 ### [content] Consumable buffs borrow unrelated keyword glosses on their status chips (2026-09-28)
 - category: content
 - impact: 3
@@ -1120,20 +743,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next (guided card session): treat as part of re-admitting the keyword;
   no loop action while no card carries it.
 
-### [x] [ui] Post-purge: a staged A Plain Word wraps "+25%" mid-token to "+2/5%" (2026-09-27) — CLOSED 2026-10-10 (8d579f67: the PAID value keeps one line at a computed size on every small face, `paidLedgerFit`; CRITIQUE pass 74 MED, issue #479)
-- category: ui
-- impact: 4
-- ease: 6
-- detail: found in the P1 playtest (browser pane, 375 wide). The PAID
-  hero value on the narrow staged card breaks inside the token. This is
-  the same family as CRITIQUE pass 49's DoT chip wrap ("8/p"/"ay"), now
-  on a card every run deals. (Its FREE rail also read "×10" for a
-  percent status. That was fixed in the residue PR: `percentIntensity`,
-  `combat-encounter.engine.ts`.)
-- next (`/iterate`): give the hero value text `numberOfLines={1}` with
-  `adjustsFontSizeToFit` (or a min width) on the staged card, and pin it
-  with a visual capture of a staged grey-word.
-
 ### [balance] Post-purge: the level-3 King of Revenge is 0/40 against the grey deck (2026-09-27)
 - category: balance
 - impact: 6
@@ -1147,19 +756,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   1); buff the neighbours or re-pin the foe.
 - next: `/adjust-enemies`. Re-run the King's cell with `npm run
   baseline:check` fresh, then decide re-pin vs wait. Record the choice here.
-
-### [x] [debt] Post-purge: WOUNDING has no payload — 13 foes carry it, its gloss promises a WOUND card that no longer exists (2026-09-27) — CLOSED 2026-10-11 (stale: the enemy keyword code went in R2b, 872de5a7; no `wounding` remains in `axiomancer-mechanics/src`; found unticked this pass)
-- category: debt
-- impact: 5
-- ease: 6
-- detail: D17 made WOUNDING's payload the curse card `the-wound`, and P1
-  purged every curse. The enemy keyword (`Enemy/enemy-keywords.ts` ~147,
-  gloss "puts a WOUND in your deck") still prints on 13 foes and does
-  nothing. That breaks the bug-detector law (a keyword with no effect).
-- next: `/adjust-enemies`. Either strip `wounding` from those foes and
-  retire the keyword with its gloss, or give it a non-card payload (for
-  example a short BLEED). The first is loop-shippable; the second is a
-  keyword design call for the card agent's session (D37).
 
 ### [content] Post-purge: the colour systems are dormant, but the Momentum tutorial still teaches them (2026-09-27)
 - category: content
@@ -1552,98 +1148,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
   and 5 re-read live at `d615a35d`.
 
-### [x] [loop-call] `plan/bearings.md` still says there is no hosted web surface, and a second Pages project is about to exist (2026-09-20) — RATIFIED via /oversight 2026-09-23
-- category: divergence
-- impact: 5
-- ease: 9
-- detail: bearings L35-37 states "**No hosted web surface.**" as a standing
-  decision. It was already in tension with the game's Cloudflare project (the
-  open divergence row above); T's 2026-09-20 reversal makes a SECOND project
-  deliberate policy. The sentence was not edited in this branch because the
-  project does not exist yet and editing a record ahead of the tree is the
-  precise fault the burn-day audit was called to clean up.
-- next: when the Pages project is created (`docs/devlog-public-deploy.md` step
-  8), correct bearings' sentence and the § Surface paragraph in the same commit
-  that records the URL. Not before.
-- **RATIFIED via /oversight 2026-09-23:** correctly deferred as filed. No
-  action until the triggering event (Pages project creation).
-
-### [x] [loop-call] The local verify gate and CI disagree about what green means: the Playwright journeys run only in CI (2026-09-20) — DECIDED via /oversight 2026-09-23
-- category: process
-- impact: 7
-- ease: 6
-- detail: filed by the burn-day audit 2026-09-19, found by the audit running
-  against itself. `npm run verify --workspace axiomancer-mobile` does not run
-  the Playwright journeys; `e2e:fixture`, `e2e:combat`, `e2e:encounters`,
-  `e2e:exploration-roundtrip` and the rest are separate scripts that only the
-  `verify + affected Playwright journeys` and `mechanics + affected consumers`
-  workflows invoke. Row 3.1 shipped behind a green foreground mobile gate
-  (308 suites / 2950 tests) and turned CI red on `e2e:fixture` case A: the
-  generalised arrival derivation treated a fixture placement as an unanswered
-  arrival, so `node-fv-9` never rendered. Five consecutive fix agents each ran
-  the full package gate before committing and none could have caught it. The
-  fix (`9f2bf6c`) is unrelated to this row; the gap is that a contributor's
-  definition of "gate green" excludes a suite that can reject their push.
-  This is the mirror of the existing observation that five root `npm test`
-  files run in no workflow (burn-day audit section 4, B-7): there, guards that
-  CI never runs; here, guards that only CI runs. Phase 57's own guard had the
-  same shape until row 3.6 wired `check-baseline-freshness` and
-  `regen-deck-matrix-baseline` into `verify-mechanics.yml` (`d8428d5`).
-- options: (a) add an opt-in `verify:journeys` script and name it in AGENTS.md
-  alongside the standing gate, so the reachable local command exists even if it
-  is not run every time; (b) fold the journeys into `npm run verify` and accept
-  the added minutes plus the browser dependency on every contributor run;
-  (c) leave the split and document it loudly in AGENTS.md so nobody again reads
-  a green package gate as a green tree. The audit did not choose — the cost of
-  (b) is a real change to every contributor's inner loop and is the loop's call
-  to weigh, not this session's to impose while shipping fourteen other rows.
-- source: burn-day audit 2026-09-19, section 9 residue
-- **DECIDED via /oversight 2026-09-23:** option (a) — add an opt-in
-  `verify:journeys` script, named in AGENTS.md alongside the standing gate,
-  so the reachable local command exists without adding minutes/a browser
-  dependency to every contributor's default `npm run verify`. Ready to ship;
-  routing to the next `/iterate` pass, tag dropped.
-
-### [x] [loop-call] Two layers own save policy: the engine's DURABLE_ACTIONS allowlist and mobile's hand-placed checkpoints behind a deflecting adapter (2026-09-20) — DECIDED via /oversight 2026-09-23
-- category: contract
-- impact: 6
-- ease: 5
-- detail: filed by the burn-day audit 2026-09-19, row 3.7. The engine gates
-  autosave to a curated `DURABLE_ACTIONS` set (`axiomancer-mechanics/src/
-  Game/store.ts`, Phase 51 `4972f9a`). Mobile then makes that gate
-  unreachable: `wrapDeflectingAdapter` (`axiomancer-mobile/state/store.ts`)
-  swallows every engine autosave — durable actions included — unless it is
-  inside the passthrough that the explicit `store.save()` verb opens. So no
-  durable action has ever written on mobile, and persistence there is
-  carried entirely by hand-placed checkpoints: 15 `getState().save()` call
-  sites outside tests — `components/SaveOnExit.tsx`, `state/actions.ts`
-  (the exposed verb, the move checkpoint, the map crossing),
-  `state/combat/store-actions.ts` ×3, `state/hazard/store-actions.ts` ×3,
-  `state/blacksmith/store-actions.ts` ×2, `state/cache/store-actions.ts`,
-  `state/labyrinth/store-actions.ts`, `state/rest/store-actions.ts`. That
-  is 13 checkpoints plus the verb plus the exit flush. Neither layer knows
-  about the other, and nothing written down says which wins or where a new
-  checkpoint belongs — which is how Phase 99 came to justify a correct fix
-  with a rationale that named the wrong owner (PLAYTEST_BUGS_2026-09-18
-  BUG-03). The call: pick one owner (add the mobile verbs to the engine
-  allowlist and drop the wrapper, or keep the wrapper and say so in the
-  engine docs), or keep both and write the rule. Whichever way it goes, the
-  ownership as it stands today is now guarded — `axiomancer-mobile/state/
-  e2e/exploration.engine.test.ts`, "mobile owns save timing" — so the
-  decision has to be taken deliberately rather than drifted into.
-- next: /oversight
-- **DECIDED via /oversight 2026-09-23:** keep `wrapDeflectingAdapter`; mobile
-  stays the sole owner of save timing via its hand-placed checkpoints — least
-  churn, matches the already-shipped guard test
-  (`axiomancer-mobile/state/e2e/exploration.engine.test.ts`, "mobile owns
-  save timing"). Write this down explicitly as the ratified rule in the
-  engine's own docs (where `DURABLE_ACTIONS` is defined) so the next reader
-  doesn't mistake the allowlist for live behavior on mobile. Ready to ship
-  as a docs-only fix; routing to the next `/iterate` pass, tag dropped. The
-  companion mid-encounter persistence fix (`plan/PHASE_CANDIDATES.md`'s
-  "No single owner for save/persistence policy" row, second phase) stays
-  open — this decision unblocks it but does not implement it.
-
 ### [content][gap] Three of four Northern-Continent maps carry only 1 staged NPC — DECIDED, needs an attended character-spec/story-spec session (2026-09-05)
 - category: content (found during `/adjust-npcs` pass 1's structural audit —
   Step 1's "map with fewer than 2 staged NPCs → CREATE" signal)
@@ -1993,21 +1497,6 @@ present. Row stays open until that session runs.
   sealing was confirmed on hardware that never had the directory (PR #645).
   That proof is now unmanned. Worth a loop-call: an export step inside
   `verify-gate` that builds the web bundle and publishes nothing.
-
-### [x] The loop's own docs still call the `Closes #N` trailer the closing mechanism — RESOLVED 2026-10-06 (9d86edbe)
-- category: docs
-- issue: #449
-- impact: 6
-- ease: 9
-- detail: filed 2026-08-08 by Phase 48. `skills/ship-a-phase.md:325`,
-  `skills/iterate.md:315` and `scripts/loop-issue.mjs:10` describe the
-  trailer as a "belt-and-suspenders backup", and `skills/iterate.md:193`'s
-  issue-body template promises "this issue auto-closes when the commit
-  pushes to main". Phase 48 proved the trailer is inert here and has never
-  closed anything. Those sentences are now TRUE for the first time — but
-  because `close-trailers.yml` runs the sweep, not because GitHub parses the
-  trailer. Reword them to name the sweep, or the next reader re-derives the
-  same wrong mental model this row's parent already cost five days to.
 
 ### The Phase-169 loadout path is dead in the shipped runtime
 - category: debt
@@ -2374,6 +1863,519 @@ present. Row stays open until that session runs.
   cheap fix covers the observed failure, and a real lock is a bigger change to
   a flow that is otherwise working.
 
+## Done
+
+### [x] [debt] `check-comments` is red on `main`: ten lines narrate spec/chunk history (fix-ci, verify-root run 41295273531, 2026-11-01) — CLOSED 2026-11-01 (fix-ci, verify-root run 41298604682: reworded all ten lines in `combat.card-program.ts`, `combat.encounter.types.ts`, `combat.engine.ts`, `combat.equipment-effects.ts`, `e2e/equipment-effects.engine.test.ts` and `Items/types.ts` to drop the "spec 136"/"A10"/"chunk 136.4" narration; `check-comments.mjs` reports clean, root `npm test` and mobile `npm run verify` both pass)
+- category: debt
+- impact: 5
+- ease: 8
+- detail: `npm test`'s `check-comments.test.mjs` fails on `main` (HEAD `bc3a49000` at filing time) with 10 history-narrating comment lines, all from the EQ3d/136.4-136.5 equipment-effects work (`3f76fd9d4`, `c9ec5c21b`): `combat.card-program.ts:260,345`, `combat.encounter.types.ts:525`, `combat.engine.ts:320,834,1111`, `combat.equipment-effects.ts:2`, `e2e/equipment-effects.engine.test.ts:2`, `Items/types.ts:81,100` — each names "(spec 136, A10)" or similar. `verify-root` run 41295273531 reported a different failure first (`feature-map` staleness, fixed separately this same tick) because the npm script chain (`plan-check && feature-map --check && feature-map-render --check && node --test ...`) short-circuits before reaching `node --test`; this is the next thing that chain will hit once that earlier gate is green, so it will still block merges to `main` until fixed.
+- next: reword each flagged line to state what the code does, not its phase/spec history (git blame already keeps that); `check-comments.mjs`'s own docstring explains the two guarded kinds (history, retired lexicon terms) and the `lexicon-ok` escape hatch for a line that must legitimately name a deleted thing.
+
+### [x] [debt] Carry-overs of the ten pre-revamp partial rows, archived as dropped at the nexus v2 cut-over (NX1d, ruling R7, 2026-11-01)
+- category: debt
+- impact: 2
+- ease: 5
+- detail: the v1 build plan's `[-]` rows 90 (summoner half), 52b (the inn as a first-class rest), 47c-47e (Expo decouple: assets, device APIs, build and CI), V2 (map scene: torn frame, region-accent theming, legend refresh), V3 (shared eyebrow header, panel-furniture pass), V6 (glyph unification remainders), V7 (procedural illustrations; art is T's), W5 (per-map roster growth; enemies are T's B2) and the V1 residue bullet (the PixelHeartEmblem / PixelEmblem pair; the orphaned BodyDiagram, MindMark and FriendshipMeter) left the plan as `dropped` lines in `plan/ARCHIVE.md`. Most predate THE REVAMP and may be moot: verify each against current code before acting. Full text: `git show fd21d04ab:plan/steps/01_build_plan.md`.
+- next: /iterate checks the code-only ones (the emblem pair, the three orphans) and closes what the revamp already removed; anything that is content or art (V7, W5) is T's, filed only as a `/plot` candidate. — CLOSED 2026-11-12 (iterate: `PixelHeartEmblem`, `BodyDiagram`, `MindMark` and `FriendshipMeter` have no source left and `PixelEmblem` survives only in a test comment, so the code-only part is moot; V7 and W5 are T's art and enemies, left to B2/B8 and a `/plot` candidate if T wants them)
+
+### [x] [content] Rename the grey starters: drop "A Plain" from every name (T, via /oversight 2026-10-27)
+- category: content
+- impact: 6
+- ease: 6
+- detail: CRITIQUE pass 100 [MED]: at 375 the hand fan covers every card but the
+  last, and BT2a A3 (one-line names, T 2026-10-13) leaves only "A PLAIN W…"
+  visible, so Blow, Word and Ward look the same. T's call: keep A3 and rename
+  the cards instead, dropping the "A Plain" prefix (`A Plain Blow` -> `Blow`,
+  `A Plain Ward` -> `Ward`, `A Plain Word` -> `Word`, and any other "A Plain"
+  card). Source: `axiomancer-mechanics/src/Cards/library/starters.cards.ts`;
+  pinned at least in `cards-sandbox.engine.test.ts`. Grep the tree (mobile
+  copy, glossary, guides, ballots, critique fixtures) for the old names. T
+  authored this content call, so D58 does not block it; the bias banner's
+  `[content]` skip does not apply to an owner-ruled rename. "Let's try this":
+  re-capture the 375 hand fan after the rename and note in the Done line
+  whether the covered names now read apart.
+- next: `/iterate` (rename + tests + a 375 capture).
+
+### [x] [ci] SG1 leaves `route:item-reward` with no play path and no dev seam (feature-map drive red on PR #928) — CLOSED 2026-10-26 (fixed on the PR in e7a1033c8: the dev REWARDS row's RELIC REWARD offers the Bleeding Signet through `offerItemRewardAction`, and `SEAMS['route:item-reward']` reaches the route through it; `e2e:feature-map` passes locally)
+- category: ci
+- impact: 4
+- ease: 5
+- detail: run 40262955599 (`verify-mobile`, head 8a810580, branch
+  `loop/ship-SG1-no-starting-ring`) and `verify-mechanics` fail the
+  `e2e:feature-map` drive: `reachable route not reached: route:item-reward`
+  ("no play path and no dev seam reaches route:item-reward"). Root cause:
+  the reward screen was reached only through the first-node relic hand-over
+  (`ItemRewardGate` first-node arm), which SG1 deleted. The screen now opens
+  only for equipment with a signature or modifiers (`qualifiesForItemRewardScreen`),
+  and the cache, gathering, fight and hazard in the drive's play walk queue
+  none. The dev chips wear relics directly (SG1), so no `SEAMS` entry in
+  `scripts/feature-map-e2e.mjs` can open it. Fix needs a seam decision: a dev
+  control that offers a signature relic through `offerItemRewardAction`, or a
+  state-fixture field that stages a pending reward with `arrive` → `/item-reward`
+  (the fixture builder cannot stage the transient `itemReward` slice today).
+  Not a one-line fix, so it is filed here, not suppressed. Note the SEAMS
+  table and the feature map `driven` / `reachable` values for item-reward
+  must move with whichever seam lands.
+- proposed: add the dev seam, add a `SEAMS['route:item-reward']` entry, rerun
+  `npm run e2e:feature-map -w axiomancer-mobile` and `npm run verify -w axiomancer-mobile`.
+
+### [x] [contract] The Blood Price art index breaks the trial-set-removal contract (UP1a art, 2026-10-22) — CLOSED 2026-10-25 (already fixed in 3b4e618c, phase UP1b: `trial-set-removal.engine.test.ts` allowlists `axiomancer-mobile/assets/images/cards/index.ts`, since Metro needs a literal id per painting and an unmapped id falls back; the test passes on main; found unticked this pass)
+- category: contract
+- impact: 5
+- ease: 6
+- detail: `src/Cards/e2e/trial-set-removal.engine.test.ts` pins that no code
+  outside `blood-price.cards.ts` and its own test names a `bp-` card id, so
+  deleting that one file and its `TRIAL_SETS` line is a clean removal.
+  `feat(art): torio paintings for the 30 Blood Price cards` (7726a5730,
+  2026-10-22) added a `'bp-e-01n': require(...)` style dictionary to
+  `axiomancer-mobile/assets/images/cards/index.ts`, one entry per card, which
+  the test's whole-repo scan now flags: `npm run verify` is red on `main`
+  (confirmed on a clean checkout, unrelated to anything else). The PR that
+  shipped this only touched `axiomancer-mobile/assets/**`, so it never
+  triggered `verify-mechanics` (the workflow that runs this test) and
+  nothing caught it before merge — the mobile-vs-mechanics path-filter gap
+  LG1b was built to close, from the other direction (a mechanics-owned test
+  reads a mobile-owned path).
+- next: `/iterate` — decide whether the art index should key off a card's
+  art lookup type instead of its literal id string (so the scan stops
+  matching it), or whether the trial-set contract now only needs to hold for
+  `axiomancer-mechanics/src` since the Blood Price set is no longer slated
+  for removal post-D99; either way, read `plan/revamp/cards.md` ("The trial
+  set") before changing the rule, not just the index.
+
+### [x] [debt] The escape ledger classifies past PRs against today's verify-* filters, so verify-root reads as expected-but-not-run on every older scripts/ PR (LG1b, 2026-10-22) — CLOSED 2026-10-25 (iterate: `escape-ledger.mjs` classifies each PR against `verifyWorkflowsAt(mergeCommit)`, the merge tree's `verify-*` files parsed by the new pure `verifyWorkflowsFrom` in `ledger-lib.mjs`; the ledger header and the Android seed keep today's filters; seed S4, which read unconfirmed once verify-root covered #526's paths, confirms again; `escape-ledger.test.mjs` pins it)
+- issue: #909
+- category: debt
+- impact: 4
+- ease: 7
+- detail: `scripts/eval/escape-ledger.mjs` reads the live `.github/workflows/verify-*.yml` filters once and classifies every merged PR in the window with them (`classifyPaths`, then `expectedNotRun`). Phase LG1b added `verify-root.yml`, which owns `scripts/`, `.github/`, `skills/` and the top-level files, so the next ledger run lists `verify-root.yml` as triggered but not run on every PR merged before it existed (#526 among them) and stops counting those paths as uncovered. Any earlier filter change had the same skew, just smaller. Reading each workflow's filter at the PR's merge commit (`git show <sha>:.github/workflows/<file>`, skipping a file that did not exist there) keeps the history as it was. The seeded replay should keep the live filters: it measures today's gate.
+- next: `/iterate` — a `verifyWorkflowsAt(sha)` in `escape-ledger.mjs` with a fixture test in `scripts/eval/escape-ledger.test.mjs`.
+
+### [x] [debt] pr-resolve's union merge splits a row one side moved Pending to Done and bloats CRITIQUE.md (iterate 2026-10-14) — CLOSED 2026-10-14 (80ea6f44: line order from `git merge-file --union`, the three-way count trim drops a trimmed heading's body first, blank runs capped; loop-pr.test.mjs pins it; CRITIQUE.md repaired)
+- issue: #542
+- category: debt
+- impact: 8
+- ease: 8
+- detail: `unionMerge` placed theirs' lines by an anchor walk, so shared generic lines jumped the anchor ahead. Every pr-resolve merge with clean inputs left a headerless body in Pending, appended its header near the end of the file and added about 85 blank lines; one AUDIT.md merge (5790525d) spliced a `[loop-call]` row into another row. Reproduced byte for byte on beac7799.
+
+### [x] [infra] pr-resolve never resolves a non-union conflict: its Claude job fails "Unsupported event type: push" every time (expand pass 33, 2026-10-14) — CLOSED 2026-10-14 (761da24c: the push run's scan starts one workflow_dispatch run of pr-resolve.yml per conflicted PR, and the Claude resolve runs only there; loop-pr.test.mjs pins it. First live proof is the next non-union conflict)
+- issue: #524
+- category: infra
+- impact: 7
+- ease: 7
+- detail: `pr-resolve.yml` runs on `push` to `main`. Its `scan` job merges
+  main into conflicting `loop:pr` branches and hands any non-union conflict
+  to the `resolve` job, which calls `_claude-skill.yml`
+  (`anthropics/claude-code-action@v1` with a `prompt`). That step exits in
+  about 0.3s with `Action failed with error: Unsupported event type: push`.
+  All 6 failed runs in the last 45 are this (runs 38494524908 and
+  38502443273 checked: PRs #520 and #523), so no conflict has ever been
+  resolved by the Claude step; #520's was settled by hand (`fc4aa159`).
+  `ci-autofix` and `pr-autofix` work because they run on `workflow_run`.
+- next: give the resolve step an event the action accepts (have `scan`
+  start one `workflow_dispatch` run per item, or move `resolve` into a
+  `workflow_run` workflow keyed on pr-resolve), then prove it on a staged
+  conflict. Infra only; nothing about merging, closing or force-pushing
+  changes (D86).
+
+### [x] [bug] The hazard dice cast's springs inherit Reanimated 4's mass 4, so they swing for many seconds (2026-10-14) — CLOSED 2026-10-14 (784d6a1e: TumblingDie uses DICE_ROLL_TIMING's springs; the stamp gets STAMP_SPRING, mass 1, threshold 0.01; HazardOverlays.test.tsx pins it under a second. The cast's 1700ms timer never waited on the springs)
+- issue: #544
+- category: bug
+- impact: 4
+- ease: 8
+- source: iterate (found while fixing the combat tray's dice springs, branch loop/iterate-drive-settle)
+- detail: `components/hazard/HazardOverlays.tsx` `TumblingDie` (~:49-50, :113)
+  calls `withSpring` with only damping and stiffness, the same configs the
+  combat tray used. Reanimated 4.1 fills an unset `mass` with 4 and
+  `energyThreshold` with 6e-9, so a damping-6 spring takes about 12s to
+  finish. On the combat tray this hung each die tilted above the tray and
+  kept the tap-to-skip layer over the dice for about 20s (fixed by naming
+  `mass: 1, energyThreshold: 0.01` in `DICE_ROLL_TIMING`). Whether the
+  hazard cast's interstitial waits on these callbacks is unchecked.
+- next: name mass and energyThreshold on the three hazard springs (or share
+  `DiceSpring` values), then check the cast's timing on the built app.
+
+### [x] [loop-call] RV1 A7's seeded-branch push is still `[T to confirm]` (2026-10-19) — RATIFIED via /oversight 2026-10-27 (T confirmed the eval/* draft pushes as written; the brief records it, and the seeded-replay row below is unblocked on that side)
+- category: loop-call
+- impact: 3
+- ease: 9
+- detail: brief `plan/phases/phase_RV1_pr_review_pipeline.md` (Decisions, "A7 pushes seeded branches, as drafts,
+  and deletes them") amends EV1's "planted defects never leave the machine" for the review judge and is marked
+  `[T to confirm]`. RV1c shipped (#610). T's 2026-10-19 decision round confirmed every other open default but
+  was not asked this one. The seeded replay row below depends on it, since it pushes eight `eval/*` branches.
+- next: `/oversight` asks T once; record the answer in the brief (`(T confirmed <date>)` or the change).
+
+### [x] [tooling] The guard's post-write lexicon check reports false findings in a worktree (2026-10-11) — CLOSED 2026-11-12 (iterate: already fixed in a68039899; `lexiconTargetFor` lints from the written file's own git toplevel, pinned by `guard.mjs self-test`, which passes)
+- category: tooling
+- impact: 4
+- ease: 7
+- detail: editing `plan/revamp/loop.md`, `plan/revamp/README.md` and
+  `plan/steps/01_build_plan.md` from a `.claude/worktrees/*` session made
+  the `post-write` hook (`.claude/hooks/guard.mjs` `postWrite`) block with
+  28 retired-term findings, all on lines the edit did not touch, printed as
+  `../.claude/Axiomancer/<worktree>/plan/...`. `node
+  scripts/check-lexicon.mjs` run inside the worktree on the same files is
+  clean. Likely cause: the hook runs from the main checkout
+  (`$CLAUDE_PROJECT_DIR`), so `check-lexicon`'s `ROOT` is the main
+  checkout and the worktree file's repo-relative path starts with `../`,
+  which no dated-record zone matches. Every worktree edit to a zoned file
+  trips it, and the noise trains sessions to ignore a real gate.
+- next: in `postWrite`, run `check-lexicon` with `cwd` set to the git
+  toplevel of the written file (`git -C <dir> rev-parse --show-toplevel`),
+  and pass the path relative to that root; add a `guard.mjs self-test`
+  case for a worktree path. R11's first retro is a natural home.
+
+### [x] [bug] P-07b's printed "(max 30)" does not cap its paid line (RC2 walk, 2026-10-11) — CLOSED 2026-10-13 (0cd35985: DEAL body-scaled the resolved VITAE lost, 30 became 114; both lines now DEAL it `exact`, unscaled, like "HEAL the damage dealt"; blood-price.engine.test.ts pins the caps at body 19)
+- issue: #513
+- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
+- category: bug
+- impact: 8
+- ease: 7
+- detail: Leg 4 logged P-07b ("DEAL all the VITAE you lost this combat (max 30). EXILE.") paid plays dealing 114 (seq 3063, a Float-Eye at ld-11, after far less than 114 VITAE lost), 114 again on the Doorwarden (seq 3428), 48 and 32. Printed numbers elsewhere scale with stats, but the cap does not scale and 114 is not a scaled 30 either. Printed must equal applied.
+- next (`/iterate`): find where the card program resolves "VITAE lost this combat" and its cap in `axiomancer-mechanics/src/Combat/` (P-07b in the Blood Price library); check whether the cap is skipped on the paid line or scaled after capping; pin it with an engine test at the printed cap. Card numbers are D37-held: fix the code to match the printed card, never the card text.
+
+### [x] [loop-call] A DEAL of VITAE lost lands unscaled; other derived DEALs still body-scale (2026-10-13) — RATIFIED via /oversight 2026-10-17
+- category: contract
+- impact: 4
+- ease: -
+- detail: fixing P-07b (0cd35985) the loop ruled that a DEAL whose amount is
+  VITAE already lost ("DEAL all the VITAE you lost") lands that number
+  unscaled, matching "HEAL the damage dealt" and TETHER's hit, so the
+  printed max holds. Two other derived DEALs still body-scale: Blood for
+  Blood's "DEAL 2X" (pinned "body-scaled" in blood-price.engine.test.ts)
+  and P-10c PAID's "DEAL n instead" (n = the VITAE sacrificed). Neither
+  prints a cap the scaling breaks, so they were left alone.
+- next: T confirms the ruling, or says derived DEALs should all scale (then
+  P-07b caps after scaling instead). A card-number question, so T's call (D37).
+
+### [x] [bug] A die is spent on a staged card that cannot be played (RC2 walk, 2026-10-11) — CLOSED 2026-10-13 (8efb0375: the die drop, die tap and loose drop skip a card whose PAID line is blocked and refuse loudly with the engine's reason; a card neither of whose lines can be played now, a second copy of a Global included, is refused at the stage)
+- issue: #515
+- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
+- category: bug
+- impact: 7
+- ease: 7
+- detail: Leg 3: above half VITAE, stage Blood Price P-04C (marked "ONLY AT HALF VITAE OR LESS") and drag the WILD die onto it. The die is accepted and goes "spent" with no rejection flash, APPLY does nothing, and the card stayed staged from turn 2 to turn 7 of the Doorwarden fight while every END logged "Refused - only at half VITAE or less." A wrong-colour drop is refused loudly; this one loses the die. Same root as a second copy of a Global staging.
+- next (`/iterate`): refuse the die drop (and the stage) when the card's play condition fails, with the same loud reject flash as the colour rule (owner UI doctrine: illegal actions prevented loudly); unstaged cards return to the hand. Mobile combat drop handlers in `axiomancer-mobile/components/combat/`; add a test.
+
+### [x] [bug] Scarred ("until you next rest at an inn") never clears (RC2 walk, 2026-10-11) — CLOSED 2026-10-15 (3d953081: every rest, inn or camp, mends banked scars; the gloss reads "until you next rest"; hazard-scar-rest-recovery.engine.test.ts pins camp and unmarked rests mending. See the [loop-call] below)
+- issue: #561
+- source: RC2 walk 2026-10-11 (eb75f451, Blood Price test deck, attended; accepted for the v0.2.0 tag by T, D83)
+- category: bug
+- impact: 6
+- ease: 7
+- detail: Leg 4: a lost hazard (ld-4 North Aqueduct) applied Scarred (-5 max VITAE, 302 to 297). Act 1 has no inn. Two rest nodes (ld-10, ld-2) and a reload left max VITAE at 297. In practice the scar is permanent, and the gloss names a place the game does not have.
+- next (`/iterate`): decide in code what lifts a scar in Act 1 (any REST node is the reading closest to the gloss), make it so and update the gloss to match; test it. If lifting it needs a design call, file a `[loop-call]` with the choice made.
+
+### [x] [loop-call] A hazard scar mends at any rest; the inn keeps only its wording (2026-10-15) — RATIFIED via /oversight 2026-10-17
+- category: contract
+- impact: 4
+- ease: -
+- detail: fixing "Scarred never clears" (issue #561) the loop ruled that
+  every rest, inn or camp, mends banked hazard scars. The options were
+  (a) any rest mends, (b) keep the mend inn-only and word the gloss as
+  permanent past the Breakwater, (c) author inns in later regions
+  (content, D88). Picked (a): `docs/game-model.md` already says "until the
+  next rest", Act 1's only inns are the Breakwater's, and a -5 scar on a
+  ~300 pool is small. It retires Phase 52b's "inn-only privilege"; the
+  `shelter` marker stays and still words an inn night as a bed.
+- next: T confirms, or rules scars inn-only (then the gloss must say a
+  scar outlives every camp, or later regions get an inn by brief).
+
+### [x] [perf] firstScreenMs budget breach: 306 ms vs 303 ms (2026-10-11) — CLOSED 2026-10-11 (afcd727c: a runner artifact. The run was on an Intel Xeon 8573C and the budgets were seeded on an AMD EPYC 9V74. Re-measured on the AMD at 52fabfbf: firstScreenMs 248, lcpMs 288, tbtMs 81, all under budget. Timing budgets now apply only on the seeding CPU)
+- issue: #489
+- category: perf
+- impact: 5
+- ease: 5
+- detail: the weekly performance audit measured firstScreenMs at 306 ms against a budget of 303 ms. Commit 9ae519f; previous history line at ca2e13d (`docs/reports/perf/history.jsonl`).
+- next (`/iterate`): bisect the commits between the two history lines; fix or raise the budget with T.
+
+### [x] [perf] lcpMs budget breach: 352 ms vs 351 ms (2026-10-11) — CLOSED 2026-10-11 (afcd727c: a runner artifact. The run was on an Intel Xeon 8573C and the budgets were seeded on an AMD EPYC 9V74. Re-measured on the AMD at 52fabfbf: firstScreenMs 248, lcpMs 288, tbtMs 81, all under budget. Timing budgets now apply only on the seeding CPU)
+- issue: #490
+- category: perf
+- impact: 5
+- ease: 5
+- detail: the weekly performance audit measured lcpMs at 352 ms against a budget of 351 ms. Commit 9ae519f; previous history line at ca2e13d (`docs/reports/perf/history.jsonl`).
+- next (`/iterate`): bisect the commits between the two history lines; fix or raise the budget with T.
+
+### [x] [perf] tbtMs budget breach: 112 ms vs 100 ms (2026-10-11) — CLOSED 2026-10-11 (afcd727c: a runner artifact. The run was on an Intel Xeon 8573C and the budgets were seeded on an AMD EPYC 9V74. Re-measured on the AMD at 52fabfbf: firstScreenMs 248, lcpMs 288, tbtMs 81, all under budget. Timing budgets now apply only on the seeding CPU)
+- issue: #491
+- category: perf
+- impact: 5
+- ease: 5
+- detail: the weekly performance audit measured tbtMs at 112 ms against a budget of 100 ms. Commit 9ae519f; previous history line at ca2e13d (`docs/reports/perf/history.jsonl`).
+- next (`/iterate`): bisect the commits between the two history lines; fix or raise the budget with T.
+
+### [x] [tests] Root `npm test` is red on main: `check-comments` flags two "D41" decision-number comments (2026-10-10) — CLOSED 2026-10-10 (cbe0fa47: both comments state the rule without the decision number; check-comments clean, root `npm test` 224/224)
+- category: tests
+- issue: #480
+- impact: 5
+- ease: 9
+- detail: 9ccba038 added comments citing a decision number to
+  `axiomancer-mechanics/src/Combat/combat.engine.ts:941` ("Card statuses
+  land uncapped (D41)") and `src/Combat/e2e/fate-engine.engine.test.ts:46`
+  ("VULNERABLE is uncapped (D41)"). `node scripts/check-comments.mjs`
+  exits 1 on both, so the root `npm test` fails. CI's `verify-*` legs do
+  not run the guard, so `main` shows green.
+- next (`/iterate`): state the rule without the decision number (or move
+  the citation to `docs/game-model.md`), then run `node
+  scripts/check-comments.mjs` and the root `npm test`.
+
+### [x] [tooling] `tick-end` telemetry rows never land for any `/march`-dispatched tick (digest, 2026-10-09) — CLOSED 2026-10-09 (53a0c39b: `_claude-skill.yml` commits whatever the tick left in `telemetry/` in a best-effort step after Claude exits; the first CI tick after it should show a `telemetry: tick-end rows` commit)
+- issue: #476
+- category: debt
+- impact: 7
+- ease: 6
+- detail: `CLAUDE.md` and the hook's own header describe `tick-end` as
+  reliable modulo a rare edge case — "it only strands rows when a session
+  ends," landing in the next tick's commit otherwise. In practice, no
+  shard ever produced by a `/march` dispatch has a `tick-end` row, going
+  back at least to 2026-09-24 (every `slash-prompt | /march` shard checked
+  has exactly one row, the prompt itself). The 14 `tick-end` rows that do
+  exist in `telemetry/*.md` all sit after a `subagent`/`subagent-end` pair
+  from attended, interactive sessions — none follow a bare `/march`
+  dispatch.
+  Root cause: `.claude/settings.json`'s `Stop` hooks run `guard.mjs stop`
+  before `telemetry.mjs tick-end` (lines 218-231). `guard.mjs`'s
+  `stopCheck` (guard.mjs:245) only blocks the stop (forcing a continuation
+  turn that could commit a straggler row) when `NEXUS_STRICT_STOP=1`; that
+  env var is set nowhere in the repo (checked every `.yml`/`.md`), so in
+  CI `stopCheck` always just warns and returns 0. By the time
+  `telemetry.mjs tick-end` appends its row, the turn's last commit has
+  already happened and the GH Actions runner is torn down at job end with
+  no later step that commits stragglers (`_claude-skill.yml` has no
+  post-Claude git step). The row is written to a shard file that is never
+  pushed, on infrastructure that has been GH-Actions-per-tick since
+  `march.yml`'s introduction — this is not a recent regression, it is
+  true of every tick the workflow has ever run. `node
+  .claude/hooks/telemetry.test.mjs` is green throughout (16/16): it tests
+  the hook's local file-append logic in isolation and never models
+  whether that write reaches a commit, so it cannot see this gap.
+  Consequence: nobody can use `tick-end`/leaked-row detection to tell a
+  crashed `/march` tick from a clean one, and this digest's own "While you
+  were out" pulse (skills/digest.md §3.2) has to reconstruct tick outcomes
+  from `git log` and `gh run list` instead of reading the ledger it was
+  told to trust.
+- next: the Stop-hook ordering can't fix this alone (swapping it still
+  only warns, never blocks, without strict mode). The workable fix likely
+  lives in the skills themselves: have `/march` (and other verb-dispatch
+  points) write and commit their own `tick-end` row as part of their
+  existing final commit, rather than relying on a post-hoc Stop hook that
+  structurally always fires one commit too late on ephemeral CI runners.
+  Re-verify against both the CI cadence and an attended session before
+  shipping, since the latter's `tick-end` rows currently work by accident
+  of session continuity, not by design, and must not regress.
+
+### [x] [tooling] `npm ci` in a fresh worktree leaves mobile typecheck red (perf audit, 2026-10-03) — CLOSED 2026-10-11 (911cacb4: `@types/react` 19.2.17 is a root devDependency, so npm 11 no longer skips it as an optional peer; a fresh worktree `npm ci` + mobile `tsc --noEmit` is green under npm 11.21.0, red before, and under npm 10.9.9)
+- issue: #495
+- category: debt
+- impact: 4
+- ease: 6
+- detail: the lockfile marks the hoisted `node_modules/@types/react`
+  (19.2.17) `optional` and `peer`, and npm 11.16 skips it on a clean install.
+  `react-native` is hoisted to the root and then resolves `react` with no
+  types, so `tsc --noEmit` reports 4138 errors (`'View' cannot be used as a
+  JSX component`) on untouched files. `AGENTS.md` says to `npm install` in a
+  worktree first; that does not fix it. Copying the package from the main
+  checkout does.
+- next: make `@types/react` resolvable from the root in a clean install (a
+  root devDependency or an override pinned to mobile's 19.1 line), then
+  confirm `npm ci && npm run verify -w axiomancer-mobile` is green in a
+  fresh worktree.
+
+### [x] [copy] Combat die a11y label still says "SPECIAL face" (R10c3, 2026-10-02) — CLOSED 2026-10-10 (already fixed in bcb76681, issue #466: `combatDieA11yLabel` speaks "BOON face", matching the lexicon; found unticked this pass)
+- category: copy
+- impact: 2
+- ease: 9
+- detail: `combatDieA11yLabel` in
+  `components/combat/encounter/CombatDie.tsx` (~69) speaks "SPECIAL" for a
+  special face. `axiomancer-mechanics/docs/lexicon.json` retires "SPECIAL
+  face" for BOON, and the board's comments now say BOON. A screen reader
+  hears the retired word.
+- next: decide the spoken word (BOON per the lexicon, or "special" per
+  `docs/game-model.md` § Dice, which still writes it lowercase) and make the
+  label, its test and the game model agree.
+
+### [x] [tooling] `combat-sim`'s default loadout names two deleted cards (R10c, 2026-10-02) — CLOSED 2026-10-09 (the default is `DEFAULT_LOADOUT`, the `GREY_OFFICE_CARDS` ids; a docs-examples test resolves it and every documented `--loadout` id through `getCardById`)
+- issue: #472
+- category: tooling
+- impact: 4
+- ease: 8
+- detail: the default `--loadout` in `src/CLI/combat-sim.cli.ts` is
+  `slippery-slope,brace-for-impact`; neither id is in the card library, so
+  `npm run combat-sim` with no flag plays no real card and every column
+  reads 0. Found writing `docs/cli.md`, which tells readers to pass a
+  loadout for now.
+- next (`/iterate`): default to the grey cards (`GREY_OFFICE_CARDS` ids),
+  with a test that the default loadout resolves through `getCardById`; then
+  drop the caveat from `docs/cli.md`.
+
+### [x] [contract] The pip pass caps VULNERABLE at 30, cutting a stack above it (B4 F3, 2026-10-01) — CLOSED 2026-10-10 (9ccba038: the pip pass adds with no clamp, card statuses land uncapped per D41; fate-engine.engine.test.ts pins a printed 40 + 2 pips at 42)
+- issue: #477
+- category: contract
+- impact: 5
+- ease: 7
+- detail: `combat.engine.ts:977` clamps the pip intensity bonus to
+  `MAX_EFFECT_INTENSITY = 30`. A Plain Word at heart >= 7 lands VULNERABLE
+  above 30 (uncapped, D41), so a pipped play would lower it to 30. Traced
+  by reading; no test covers pips on VULNERABLE. Inventory §7.
+- next (`/iterate`): write the failing test first, then skip the clamp for
+  uncapped effects (the FREE path already passes `uncapped: true`, `:762`).
+
+### [x] [tests] Root `npm test` is red on main: the DevLog marginalia assertion (2026-09-28) — CLOSED 2026-09-29 (confirmed by this digest)
+- category: tests
+- impact: 4
+- ease: 6
+- detail: `scripts/build-devlog-public.test.mjs:117` ("nothing that
+  carries meaning sits behind a script") fails on a clean `main` worktree
+  at `3c7e897`: the built post it picks has no `<details class="marg">`.
+  No CI workflow runs this file, so no check goes red; only the root
+  `npm test` shows it. Found by the keyword-purge PR's gate run (D45); not
+  caused by it.
+- next (`/iterate`): decide whether the newest DevLog entry should carry
+  marginalia or the test should pick a post that has them, then add the
+  file to a CI job so it cannot rot silently again.
+- **CLOSED 2026-09-29:** fixed as a side effect of phase R1 (`0cfea70c`,
+  "the marginalia case picked the front page ... instead of a post");
+  this digest re-ran root `npm test` clean on current `main` (213 pass, 0
+  fail) to confirm before closing. The "add it to a CI job" half of
+  `next:` is still undone — no workflow runs the root suite, so a similar
+  regression would rot silently again.
+
+### [x] [ui] Post-purge: a staged A Plain Word wraps "+25%" mid-token to "+2/5%" (2026-09-27) — CLOSED 2026-10-10 (8d579f67: the PAID value keeps one line at a computed size on every small face, `paidLedgerFit`; CRITIQUE pass 74 MED, issue #479)
+- category: ui
+- impact: 4
+- ease: 6
+- detail: found in the P1 playtest (browser pane, 375 wide). The PAID
+  hero value on the narrow staged card breaks inside the token. This is
+  the same family as CRITIQUE pass 49's DoT chip wrap ("8/p"/"ay"), now
+  on a card every run deals. (Its FREE rail also read "×10" for a
+  percent status. That was fixed in the residue PR: `percentIntensity`,
+  `combat-encounter.engine.ts`.)
+- next (`/iterate`): give the hero value text `numberOfLines={1}` with
+  `adjustsFontSizeToFit` (or a min width) on the staged card, and pin it
+  with a visual capture of a staged grey-word.
+
+### [x] [debt] Post-purge: WOUNDING has no payload — 13 foes carry it, its gloss promises a WOUND card that no longer exists (2026-09-27) — CLOSED 2026-10-11 (stale: the enemy keyword code went in R2b, 872de5a7; no `wounding` remains in `axiomancer-mechanics/src`; found unticked this pass)
+- category: debt
+- impact: 5
+- ease: 6
+- detail: D17 made WOUNDING's payload the curse card `the-wound`, and P1
+  purged every curse. The enemy keyword (`Enemy/enemy-keywords.ts` ~147,
+  gloss "puts a WOUND in your deck") still prints on 13 foes and does
+  nothing. That breaks the bug-detector law (a keyword with no effect).
+- next: `/adjust-enemies`. Either strip `wounding` from those foes and
+  retire the keyword with its gloss, or give it a non-card payload (for
+  example a short BLEED). The first is loop-shippable; the second is a
+  keyword design call for the card agent's session (D37).
+
+### [x] [loop-call] `plan/bearings.md` still says there is no hosted web surface, and a second Pages project is about to exist (2026-09-20) — RATIFIED via /oversight 2026-09-23
+- category: divergence
+- impact: 5
+- ease: 9
+- detail: bearings L35-37 states "**No hosted web surface.**" as a standing
+  decision. It was already in tension with the game's Cloudflare project (the
+  open divergence row above); T's 2026-09-20 reversal makes a SECOND project
+  deliberate policy. The sentence was not edited in this branch because the
+  project does not exist yet and editing a record ahead of the tree is the
+  precise fault the burn-day audit was called to clean up.
+- next: when the Pages project is created (`docs/devlog-public-deploy.md` step
+  8), correct bearings' sentence and the § Surface paragraph in the same commit
+  that records the URL. Not before.
+- **RATIFIED via /oversight 2026-09-23:** correctly deferred as filed. No
+  action until the triggering event (Pages project creation).
+
+### [x] [loop-call] The local verify gate and CI disagree about what green means: the Playwright journeys run only in CI (2026-09-20) — DECIDED via /oversight 2026-09-23
+- category: process
+- impact: 7
+- ease: 6
+- detail: filed by the burn-day audit 2026-09-19, found by the audit running
+  against itself. `npm run verify --workspace axiomancer-mobile` does not run
+  the Playwright journeys; `e2e:fixture`, `e2e:combat`, `e2e:encounters`,
+  `e2e:exploration-roundtrip` and the rest are separate scripts that only the
+  `verify + affected Playwright journeys` and `mechanics + affected consumers`
+  workflows invoke. Row 3.1 shipped behind a green foreground mobile gate
+  (308 suites / 2950 tests) and turned CI red on `e2e:fixture` case A: the
+  generalised arrival derivation treated a fixture placement as an unanswered
+  arrival, so `node-fv-9` never rendered. Five consecutive fix agents each ran
+  the full package gate before committing and none could have caught it. The
+  fix (`9f2bf6c`) is unrelated to this row; the gap is that a contributor's
+  definition of "gate green" excludes a suite that can reject their push.
+  This is the mirror of the existing observation that five root `npm test`
+  files run in no workflow (burn-day audit section 4, B-7): there, guards that
+  CI never runs; here, guards that only CI runs. Phase 57's own guard had the
+  same shape until row 3.6 wired `check-baseline-freshness` and
+  `regen-deck-matrix-baseline` into `verify-mechanics.yml` (`d8428d5`).
+- options: (a) add an opt-in `verify:journeys` script and name it in AGENTS.md
+  alongside the standing gate, so the reachable local command exists even if it
+  is not run every time; (b) fold the journeys into `npm run verify` and accept
+  the added minutes plus the browser dependency on every contributor run;
+  (c) leave the split and document it loudly in AGENTS.md so nobody again reads
+  a green package gate as a green tree. The audit did not choose — the cost of
+  (b) is a real change to every contributor's inner loop and is the loop's call
+  to weigh, not this session's to impose while shipping fourteen other rows.
+- source: burn-day audit 2026-09-19, section 9 residue
+- **DECIDED via /oversight 2026-09-23:** option (a) — add an opt-in
+  `verify:journeys` script, named in AGENTS.md alongside the standing gate,
+  so the reachable local command exists without adding minutes/a browser
+  dependency to every contributor's default `npm run verify`. Ready to ship;
+  routing to the next `/iterate` pass, tag dropped.
+
+### [x] [loop-call] Two layers own save policy: the engine's DURABLE_ACTIONS allowlist and mobile's hand-placed checkpoints behind a deflecting adapter (2026-09-20) — DECIDED via /oversight 2026-09-23
+- category: contract
+- impact: 6
+- ease: 5
+- detail: filed by the burn-day audit 2026-09-19, row 3.7. The engine gates
+  autosave to a curated `DURABLE_ACTIONS` set (`axiomancer-mechanics/src/
+  Game/store.ts`, Phase 51 `4972f9a`). Mobile then makes that gate
+  unreachable: `wrapDeflectingAdapter` (`axiomancer-mobile/state/store.ts`)
+  swallows every engine autosave — durable actions included — unless it is
+  inside the passthrough that the explicit `store.save()` verb opens. So no
+  durable action has ever written on mobile, and persistence there is
+  carried entirely by hand-placed checkpoints: 15 `getState().save()` call
+  sites outside tests — `components/SaveOnExit.tsx`, `state/actions.ts`
+  (the exposed verb, the move checkpoint, the map crossing),
+  `state/combat/store-actions.ts` ×3, `state/hazard/store-actions.ts` ×3,
+  `state/blacksmith/store-actions.ts` ×2, `state/cache/store-actions.ts`,
+  `state/labyrinth/store-actions.ts`, `state/rest/store-actions.ts`. That
+  is 13 checkpoints plus the verb plus the exit flush. Neither layer knows
+  about the other, and nothing written down says which wins or where a new
+  checkpoint belongs — which is how Phase 99 came to justify a correct fix
+  with a rationale that named the wrong owner (PLAYTEST_BUGS_2026-09-18
+  BUG-03). The call: pick one owner (add the mobile verbs to the engine
+  allowlist and drop the wrapper, or keep the wrapper and say so in the
+  engine docs), or keep both and write the rule. Whichever way it goes, the
+  ownership as it stands today is now guarded — `axiomancer-mobile/state/
+  e2e/exploration.engine.test.ts`, "mobile owns save timing" — so the
+  decision has to be taken deliberately rather than drifted into.
+- next: /oversight
+- **DECIDED via /oversight 2026-09-23:** keep `wrapDeflectingAdapter`; mobile
+  stays the sole owner of save timing via its hand-placed checkpoints — least
+  churn, matches the already-shipped guard test
+  (`axiomancer-mobile/state/e2e/exploration.engine.test.ts`, "mobile owns
+  save timing"). Write this down explicitly as the ratified rule in the
+  engine's own docs (where `DURABLE_ACTIONS` is defined) so the next reader
+  doesn't mistake the allowlist for live behavior on mobile. Ready to ship
+  as a docs-only fix; routing to the next `/iterate` pass, tag dropped. The
+  companion mid-encounter persistence fix (`plan/PHASE_CANDIDATES.md`'s
+  "No single owner for save/persistence policy" row, second phase) stays
+  open — this decision unblocks it but does not implement it.
+
+### [x] The loop's own docs still call the `Closes #N` trailer the closing mechanism — RESOLVED 2026-10-06 (9d86edbe)
+- category: docs
+- issue: #449
+- impact: 6
+- ease: 9
+- detail: filed 2026-08-08 by Phase 48. `skills/ship-a-phase.md:325`,
+  `skills/iterate.md:315` and `scripts/loop-issue.mjs:10` describe the
+  trailer as a "belt-and-suspenders backup", and `skills/iterate.md:193`'s
+  issue-body template promises "this issue auto-closes when the commit
+  pushes to main". Phase 48 proved the trailer is inert here and has never
+  closed anything. Those sentences are now TRUE for the first time — but
+  because `close-trailers.yml` runs the sweep, not because GitHub parses the
+  trailer. Reword them to name the sweep, or the next reader re-derives the
+  same wrong mental model this row's parent already cost five days to.
+
 ### [x] [loop-call] Timing perf budgets hold only on the CPU they were seeded on (2026-10-11) — RATIFIED via /oversight 2026-10-17
 - category: perf
 - impact: 5
@@ -2391,8 +2393,6 @@ present. Row stays open until that session runs.
 - next: `/oversight` ratifies or reverses. Alternatives: per-CPU budget sets
   (seed each CPU once), or keep budgets everywhere and raise the headroom to
   cover the slower runner.
-
-## Done
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content
