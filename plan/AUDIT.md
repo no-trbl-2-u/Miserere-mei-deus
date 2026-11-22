@@ -238,11 +238,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   unpeopled, and that ruling gets recorded as a D-row so the steward stops
   re-flagging them.
 
-### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
-- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
-- **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
-- **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
-
 ### [content] Story systems the new rulings require that the game does not have (2026-09-24)
 - category: content
 - impact: 7
@@ -326,15 +321,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - ease: 4
 - detail: focus management + a11y labels surfaced repeatedly in
   prior critique. Ongoing drain.
-- next: /iterate
-
-### [1.5] Unbounded keepsake/death flag growth on long saves
-- category: debt
-- impact: 3
-- ease: 5
-- detail: `night-keepsake:`, `hazard-scar:`, `hazard-death:`,
-  `gleaning-token-banked:` accumulate with no consumer/cap. A
-  long-save soak test could trip on this.
 - next: /iterate
 
 ### [1.5] `HazardBoard.tsx` file-length outlier (~815 lines)
@@ -457,6 +443,19 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   18:59:49 with zero progress until the ceiling force-cancelled it at
   20:14:33, another total loss. Second confirmed occurrence in 12 hours;
   still unfixed, still `/iterate`-shaped, not re-scored.
+### [x] [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25) — CLOSED 2026-11-22 (this PR: `MapState.hazardOutcomes` / `HazardNodeOutcome` / `HazardModifierEntry` removed from the shape and the new-map seed; the load-time cleanup `dropRetiredMapFields` strips the key from every map an old save holds, no version bump since only the current version loads; the `buff_all_stats_up` / `debuff_curse` half was already stale, both now only on the deprecated-effects list)
+- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
+- **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
+- **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
+
+### [x] [1.5] Unbounded keepsake/death flag growth on long saves — CLOSED 2026-11-22 (this PR: measured stale, no cap needed; the soak test `axiomancer-mobile/state/e2e/rest-flag-soak.engine.test.ts` runs 200 rest + loot-cache nights with a scarring cliff every tenth and pins the record flags at or under the new-game count. `night-keepsake:`, `cache-keepsake:` and `gleaning-token-banked:` have no writer left (memoir reads only what old saves carry, already de-duplicated); `hazard-scar:` is cleared by every rest; `hazard-death:` is one tombstone per survived hazard death that `hazardDeathCount` counts, and a run over empties `flags`, so a cap would change the memoir's count and none was added. The growth the soak did find, `hazard-card:` flags, is the hazard deck itself (one per CRACK dealt by a failed cliff), counted not capped)
+- category: debt
+- impact: 3
+- ease: 5
+- detail: `night-keepsake:`, `hazard-scar:`, `hazard-death:`,
+  `gleaning-token-banked:` accumulate with no consumer/cap. A
+  long-save soak test could trip on this.
+- next: /iterate
 
 ### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
 - category: debt

@@ -17,7 +17,7 @@ import { getRelicById, getSignaturesForLoadout } from '../../Items/relic.library
 import { createGameStore } from '../store';
 import { nullAdapter } from '../persistence/null.adapter';
 import { createNewGameState, GAME_STATE_VERSION } from '../game.reducer';
-import { dropCutNodes, dropRetiredFlags, dropUnknownCardIds, migrate, refreshRelicText } from '../game.migrate';
+import { dropCutNodes, dropRetiredFlags, dropRetiredMapFields, dropUnknownCardIds, migrate, refreshRelicText } from '../game.migrate';
 import type { GameState } from '../types';
 
 /** The version such a save carries. A bump would turn it away (`migrate`), so the shape stays. */
@@ -49,7 +49,7 @@ function oldSave(): unknown {
 function load(raw: unknown): GameState {
     const version = (raw as { version: number }).version;
     const state = migrate(raw, version);
-    return refreshRelicText(dropCutNodes(dropRetiredFlags(dropUnknownCardIds(state))));
+    return refreshRelicText(dropRetiredMapFields(dropCutNodes(dropRetiredFlags(dropUnknownCardIds(state)))));
 }
 
 describe('a save made before the mercy check', () => {

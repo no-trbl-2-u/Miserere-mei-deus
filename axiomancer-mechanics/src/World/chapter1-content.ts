@@ -36,6 +36,9 @@ import type { EnemyDifficulty } from '../Enemy/types';
 import { relicLibrary } from '../Items/relic.library';
 import type { Item } from '../Items/types';
 import { HAZARD_LIBRARY } from './Hazard/hazard.content';
+import { getHazardPuzzleCandidate } from './Hazard/puzzle/hazard-puzzle.candidates';
+import { BREAKWATER_HAZARD_PUZZLES } from './Continents/Coastal-Village/breakwater-puzzles';
+import { breakwaterChapter } from './Continents/Coastal-Village/breakwater-chapter';
 import { getNodeEventPool, getNodePrimaryEventKind } from './MapEvents/resolve-map-event';
 import type { MapEventKind } from './MapEvents/types';
 import { payloadDifficulty } from './encounter-tier';
@@ -122,12 +125,12 @@ export interface ChapterEnemy {
     readonly stagings: readonly ChapterStaging[];
 }
 
-/** One hazard a crossing on the chapter can draw. */
+/** One hazard a crossing on the chapter can play (a Breakwater puzzle, at its one node). */
 export interface ChapterHazard {
     /** The hazard's id, as the run log's `hazard-ended` records it. */
     readonly id: string;
     readonly title: string;
-    /** The hazard nodes it can be crossed at (any hazard node draws any hazard). */
+    /** The hazard nodes it can be crossed at (a puzzle has one; a library hazard draws at any). */
     readonly nodeIds: readonly NodeId[];
 }
 
@@ -314,6 +317,15 @@ function chapterEnemies(def: MapDefinition): ChapterEnemy[] {
 function chapterHazards(def: MapDefinition): ChapterHazard[] {
     const nodeIds = def.nodes.filter(n => getNodePrimaryEventKind(def.continent, def.name, n.id) === 'hazard').map(n => n.id);
     if (nodeIds.length === 0) return [];
+    // The Breakwater's hazard nodes each open one puzzle; its end is logged under the candidate's id.
+    if (def.name === breakwaterChapter.name) {
+        return nodeIds.map(nodeId => {
+            const candidateId = BREAKWATER_HAZARD_PUZZLES[nodeId];
+            if (!candidateId) throw new Error(`chapter1-content: hazard node ${nodeId} has no puzzle in BREAKWATER_HAZARD_PUZZLES`);
+            return { id: candidateId, title: getHazardPuzzleCandidate(candidateId).title, nodeIds: [nodeId] };
+        });
+    }
+    // A chapter whose hazard nodes still run the three-round board draws any library hazard at any of them.
     return HAZARD_LIBRARY.map(h => ({ id: h.id, title: h.title, nodeIds }));
 }
 

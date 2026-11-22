@@ -757,3 +757,6 @@
 - 2026-11-13 · 180.1 (alias: CW1a) · CI keeps a log of screens it hangs on, written by a recorder · 1ba0cc0c..0223ffc7 (#1658)
 - 2026-11-12 · 169 · spec complete: An open deadline Item that names a merged pull request fails the lint · scripts/deadlines-queue.test.mjs · deleted in (this commit)
 - 2026-11-13 · 180 · spec complete: CI screen watch: a log of the screens CI hangs on, and the first cleanup · scripts/ci-screens.test.mjs · deleted in (this commit)
+- 2026-11-22 · 182.1 (alias: CE1a) · A pure presenter reads the chapter's stats from the state · 776b4031..776b4031 (#1679)
+- 2026-11-22 · 184.1 (alias: SC1a) · The sim report counts the seven Breakwater puzzle hazards · ffe2afa6..ffe2afa6 (#1681)
+- 2026-11-22 · 184 · spec complete: The sim report counts the hazards the Breakwater plays · axiomancer-mechanics/src/World/chapter1-content.test.ts · deleted in (this commit)
