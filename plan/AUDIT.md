@@ -1818,40 +1818,6 @@ present. Row stays open until that session runs.
   from an attended/local session. The root `npm test` script (part of
   the gap) DID ship.
 
-### [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick
-- category: gap
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
-  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
-  `_claude-skill.yml` setup step (`npx playwright install chromium
-  --with-deps`, used by both `march` and `night`) — its underlying
-  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
-  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
-  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
-  force-cancelled it. No commit resulted; the tick is a total loss, not
-  a partial one — distinct from the already-filed "march ticks are
-  creeping toward the job timeout" row above (that one is real work
-  outgrowing the ceiling; this one is an idle apt-mirror hang eating
-  the whole budget while nothing runs). `verify-mechanics.yml` and
-  `verify-mobile.yml` carry their own copy of the same install command,
-  so the exposure isn't march-specific, just unluckiest there because
-  that job runs unattended on the longest cadence.
-- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
-  install` on every invocation with no cache and no timeout around the
-  network call; caching the installed apt packages (or the Playwright
-  browser + its system deps together, keyed on the pinned Playwright
-  version) removes the network dependency from the common path
-  entirely. A cheaper interim fix: wrap the install step in a short
-  step-level `timeout-minutes` so a mirror hang fails fast and loud
-  instead of silently eating the whole job ceiling.
-- recurrence (2026-08-21 digest pulse): run `32290461478` (the
-  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
-  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
-  18:59:49 with zero progress until the ceiling force-cancelled it at
-  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
-  still unfixed, still `/iterate`-shaped, not re-scored.
-
 ### [divergence] Bearings says there is no hosted web surface; Cloudflare Pages has been publishing one — RULED via /oversight 2026-08-10: incidental, scope it down — CONFIRMED LIVE EXPOSURE via /oversight 2026-08-12, impact raised
 - category: divergence
 - impact: 8
@@ -2141,25 +2107,6 @@ present. Row stays open until that session runs.
   `arrow-paradox` card id (unrelated) and `Item.category` (unrelated).
 - next: /iterate — the owner call is made (rename → QUANDARY); execute it.
 
-### `deploy:check` is unusable from remote web sessions — 401 "Token rejected"
-- category: debt
-- impact: 4
-- ease: 5
-- detail: filed 2026-07-18 (oversight session residue). Running
-  `npm run deploy:check` from a Claude Code web session fails with
-  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
-  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
-  gitignored and absent in remote containers. The session fell back to
-  the GitHub MCP Actions API (which authenticates fine) to confirm
-  CI-green, but nothing records that fallback, so every skill step that
-  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
-  bearings' deploy gate) silently dead-ends in web sessions. Fix
-  options: teach `scripts/deploy-check.mjs` to fall back to a
-  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
-  the MCP fallback in bearings' deploy-gate section so remote sessions
-  know the sanctioned path.
-- next: /iterate (deploy-check.mjs env fallback + a bearings note)
-
 ### Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095
 - category: debt
 - impact: 4
@@ -2393,6 +2340,61 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ## Done
+
+### [x] `deploy:check` is unusable from remote web sessions — 401 "Token rejected" — CLOSED 2026-11-22 (this PR: deploy-check.mjs token falls back GH_TOKEN, GITHUB_TOKEN, GH_PAT; bearings note; scripts/deploy-check-token.test.mjs)
+- category: debt
+- impact: 4
+- ease: 5
+- detail: filed 2026-07-18 (oversight session residue). Running
+  `npm run deploy:check` from a Claude Code web session fails with
+  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
+  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
+  gitignored and absent in remote containers. The session fell back to
+  the GitHub MCP Actions API (which authenticates fine) to confirm
+  CI-green, but nothing records that fallback, so every skill step that
+  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
+  bearings' deploy gate) silently dead-ends in web sessions. Fix
+  options: teach `scripts/deploy-check.mjs` to fall back to a
+  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
+  the MCP fallback in bearings' deploy-gate section so remote sessions
+  know the sanctioned path.
+- next: /iterate (deploy-check.mjs env fallback + a bearings note)
+
+
+### [x] [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick — CLOSED 2026-11-22 (this PR: step-level timeout-minutes: 10 on every playwright --with-deps install step)
+- category: gap
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
+  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
+  `_claude-skill.yml` setup step (`npx playwright install chromium
+  --with-deps`, used by both `march` and `night`) — its underlying
+  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
+  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
+  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
+  force-cancelled it. No commit resulted; the tick is a total loss, not
+  a partial one — distinct from the already-filed "march ticks are
+  creeping toward the job timeout" row above (that one is real work
+  outgrowing the ceiling; this one is an idle apt-mirror hang eating
+  the whole budget while nothing runs). `verify-mechanics.yml` and
+  `verify-mobile.yml` carry their own copy of the same install command,
+  so the exposure isn't march-specific, just unluckiest there because
+  that job runs unattended on the longest cadence.
+- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
+  install` on every invocation with no cache and no timeout around the
+  network call; caching the installed apt packages (or the Playwright
+  browser + its system deps together, keyed on the pinned Playwright
+  version) removes the network dependency from the common path
+  entirely. A cheaper interim fix: wrap the install step in a short
+  step-level `timeout-minutes` so a mirror hang fails fast and loud
+  instead of silently eating the whole job ceiling.
+- recurrence (2026-08-21 digest pulse): run `32290461478` (the
+  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
+  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
+  18:59:49 with zero progress until the ceiling force-cancelled it at
+  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
+  still unfixed, still `/iterate`-shaped, not re-scored.
+
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content

@@ -18,6 +18,7 @@
 
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
+import { resolveGithubToken } from './deploy-check-token.mjs'
 
 // --- load .env if present (Node has no built-in .env loader) ---
 if (fs.existsSync('.env')) {
@@ -151,7 +152,7 @@ else if (PROVIDER === 'vercel') {
 // are workflow_dispatch and deliberately NOT part of this gate.
 // =====================================================================
 else if (PROVIDER === 'github-actions') {
-  const TOKEN = process.env.GH_TOKEN
+  const TOKEN = resolveGithubToken()
   const REPO = process.env.GH_REPO ?? 'no-trbl-2-u/Miserere-mei-deus'
   const WORKFLOWS = (
     process.env.DEPLOY_WORKFLOWS ??
