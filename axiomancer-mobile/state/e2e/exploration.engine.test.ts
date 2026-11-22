@@ -954,6 +954,8 @@ describe('selectExplorationViewModel: arrivalPending', () => {
         expect(store.getState().world.currentMap.pendingArrival ?? null).toBeNull();
         expect(store.getState().travel.open?.nodeId).toBe('bw-b2');
         expect(actions.takeTravel()).toBe(true);
+        // The far bank stops at the chapter complete screen (CE1b); CONTINUE crosses.
+        expect(actions.continueChapter()).toBe(true);
         const after = store.getState().world;
         expect(after.currentMap.name).not.toBe('breakwater');
         expect(after.mapStates?.['breakwater']?.pendingArrival ?? null).toBeNull();
