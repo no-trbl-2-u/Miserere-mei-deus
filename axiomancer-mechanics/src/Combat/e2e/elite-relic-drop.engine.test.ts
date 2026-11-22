@@ -54,7 +54,7 @@ describe('the elite relic pool', () => {
             .toEqual([FIXTURE_ELITE_RELICS[0]!.id]);
     });
 
-    it('is empty over the live library today (no live relic is elite-only yet)', () => {
+    it('holds every live elite-source relic for a player who carries none', () => {
         const live = relicLibrary.filter(r => r.relicSource === 'elite');
         expect(eliteRelicPool(bare()).length).toBe(live.length);
     });

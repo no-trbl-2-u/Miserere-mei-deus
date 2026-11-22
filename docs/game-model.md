@@ -451,9 +451,10 @@ elites and bosses are pinned per node. Three of them in detail:
   read from the library by id, so a saved copy takes the current ones; Heart,
   Body and Mind lines join the fighter's stats for each fight, `maxHp` folds
   onto `maxHealth`. The elite drop (`rollEliteRelicDrop`) draws from the
-  three elite-drop relics (the Circlet and the two Signets) the player does
-  not carry and no quest pays in that same fight, unless the fight lists drops of its own; no relic is elite-only: a quest may pay any of them; the Breakwater questline's last step pays the Belt (through
-  `/item-reward`); the dev menu's relic chips, which wear the relic while a
+  seven elite-drop relics (every `relicSource: 'elite'` one: the Circlet, the
+  Bleeding Signet, the Elementalist's Signet, Brooch and Belt, the Thornback
+  Signet and the Suppliant's Ring) the player does not carry and no quest pays
+  in that same fight, unless the fight lists drops of its own; the dev menu's relic chips, which wear the relic while a
   position is free, hand over the rest; a relic
   carried unworn shows NOT WORN in the satchel, its signature off until the
   player taps WEAR. A new run also wears the grey pair, the Opening Blade and

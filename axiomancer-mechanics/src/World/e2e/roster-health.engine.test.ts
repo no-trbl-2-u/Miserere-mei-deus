@@ -38,8 +38,6 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'enemy-unpooled', id: 'enemy-wreck-picker' },
     { lens: 'enemy-unpooled', id: 'enemy-smokehouse-gutter' },
     { lens: 'enemy-unpooled', id: 'enemy-toll-keeper' },
-    // No run starts with the ring or is handed it any more; old saves and
-    // the dev menu hold it until it gets a lane.
     // The Breakwater chain pays two relics (the Ruby Signet and the Mirror
     // Brooch). Every `relicSource: 'elite'` relic drops from elites and is not
     // an orphan; these three wait on a quest or a spare-reward pool that hands
