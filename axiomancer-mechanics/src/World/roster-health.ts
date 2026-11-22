@@ -336,9 +336,28 @@ export function orphanEnemies(src: RosterSources): RosterFinding[] {
         }));
 }
 
+/**
+ * The relic ids a registered elite fight can drop: an elite encounter's own `eliteRelicDrops` list,
+ * or, for an elite with no list, every `relicSource: 'elite'` relic (`eliteRelicPool`).
+ */
+export function eliteDropIds(src: RosterSources): string[] {
+    const ids = new Set<string>();
+    for (const pool of src.pools) {
+        for (const { payload } of pool.entries) {
+            if (payload.kind !== 'encounter' || payload.difficulty !== 'elite') continue;
+            const drops = payload.eliteRelicDrops
+                ?? src.relics.filter(r => r.relicSource === 'elite').map(r => r.id);
+            for (const id of drops) ids.add(id);
+        }
+    }
+    return [...ids];
+}
+
 /** A consumable or relic no cache, shop, starting loadout or reward grants. */
 export function orphanItems(src: RosterSources): RosterFinding[] {
-    const granted = new Set<string>([...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id)]);
+    const granted = new Set<string>([
+        ...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id), ...eliteDropIds(src),
+    ]);
     const out: RosterFinding[] = [];
     for (const c of src.consumables) {
         if (!granted.has(c.id)) {

@@ -10,7 +10,7 @@
  * choose REST, claim.
  *
  * `Math.random` is pinned per fight: 0 forces the elite relic drop (the
- * fixture elite relics stand in for the live pool, which has none yet), 0.99
+ * fixture elite relics stand in for the live pool, so the drop is pinned), 0.99
  * forces a miss.
  */
 

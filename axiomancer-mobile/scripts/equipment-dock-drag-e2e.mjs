@@ -74,12 +74,12 @@ const BROOCH = {
     id: 'relic-elementalist-brooch', name: "Elementalist's Brooch", category: 'equipment', slot: 'relic',
     description: "+5 Mind while worn. Turn the foe's own INFERNO into STORM; INFERNO that burns you too stays.",
     statModifiers: [{ stat: 'mind', value: 5 }], grantsSignature: 'sig-elementalist-brooch',
-    laneId: 'elementalist', relicSource: 'quest',
+    laneId: 'elementalist', relicSource: 'elite',
 }
 const BELT = {
     id: 'relic-elementalist-belt', name: "Elementalist's Belt", category: 'equipment', slot: 'relic',
     description: '+5 Body while worn.', statModifiers: [{ stat: 'body', value: 5 }],
-    grantsSignature: 'sig-elementalist-belt', laneId: 'elementalist', relicSource: 'quest',
+    grantsSignature: 'sig-elementalist-belt', laneId: 'elementalist', relicSource: 'elite',
 }
 
 async function fileCandidate(p) {
