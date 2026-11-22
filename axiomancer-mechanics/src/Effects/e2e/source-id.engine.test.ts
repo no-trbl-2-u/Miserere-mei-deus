@@ -129,7 +129,7 @@ describe('Phase 38 — sourceId round-trips through JSON serialization (save/loa
 
 describe('Phase 20 — equipment applies no effect, so equipment never sources an ActiveEffect', () => {
     it('equipping an item with passiveEffects adds no ActiveEffect (no sourceId leak from equipment)', async () => {
-        const { equipItem } = await import('../../Character/equipment.reducer');
+        const { equipItem } = await import('../../Character/equipment.reducer.js');
         const player = fixturePlayer();
         const passiveEquipment = {
             id: 'eq_regen_band',
