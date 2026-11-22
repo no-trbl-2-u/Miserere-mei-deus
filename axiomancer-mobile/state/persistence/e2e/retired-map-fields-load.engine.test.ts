@@ -1,3 +1,4 @@
+// guard-test: the load-time strip already ships on main (#1689); this pins that the mobile unwrap path keeps calling it.
 /**
  * Hermetic e2e: a save written while `MapState.hazardOutcomes` existed loads
  * through the mobile `unwrap` path with the field gone from the current map
