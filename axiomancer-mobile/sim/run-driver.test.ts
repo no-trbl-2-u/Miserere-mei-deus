@@ -137,7 +137,8 @@ describe('the headless run driver', () => {
     });
 
     it('reads how much of the boss a run took when it fell to it, from the last fight with it', () => {
-        const result = playRun({ policy: getRunPolicy('merciful')!, seed: 1, tuning: { bossLevel: 30 } });
+        // A boss far past the run's reach (level 50: since EP1a's lighter opening fights a seed-1 run beats a level-30 one).
+        const result = playRun({ policy: getRunPolicy('merciful')!, seed: 1, tuning: { bossLevel: 50 } });
         expect(result.outcome).toBe('run-over');
         expect(result.endNodeId).toBe('bw-k2');
         expect(result.bossDamagePct).toBeGreaterThan(0);
