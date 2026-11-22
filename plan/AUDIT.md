@@ -378,6 +378,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the command's own argv, not to heredoc bodies or `-m` message contents; the
   `-m` body already has its own dedicated lint pass, so the general grep can
   exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+
 ### [x] [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13) — CLOSED 2026-11-22 (183.1: the Signet is an elite drop; roster health no longer pins it)
 - category: content
 - impact: 4
