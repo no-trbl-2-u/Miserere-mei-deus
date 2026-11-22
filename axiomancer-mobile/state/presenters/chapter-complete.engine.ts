@@ -9,12 +9,16 @@
  *
  * "Fights won" is the defeat ledger's length: each foe beaten once, by slug.
  * It is absent for a save with no ledger.
+ *
+ * "Relics acquired" counts the chapter's relics the player owns (carried or
+ * worn, each once) out of every relic the chapter grants (`chapter1Content`'s
+ * items: caches, elite drops, quest rewards). A relic from outside the chapter
+ * does not count (T, 2026-11-22).
  */
 
-import { BREAKWATER_CHAPTER_QUESTLINE, buildCombatDeck, defeatedEnemies, questStepState } from '@mechanics';
+import { BREAKWATER_CHAPTER_QUESTLINE, buildCombatDeck, chapter1Content, defeatedEnemies, questStepState, relicLibrary } from '@mechanics';
 import type { GameState } from '@mechanics';
 import { countResolvedNodes } from '@/state/run-log';
-import { wornInSlot } from './loadout';
 import { CHAPTER_COMPLETE_STAT_LABELS, chapterStatOf, type ChapterStatId } from './chapter-complete.copy';
 
 /** The slice of the game state the summary reads. */
@@ -41,6 +45,25 @@ function row(id: ChapterStatId, count: number, of?: number): ChapterStatRow {
     };
 }
 
+let chapterRelics: ReadonlySet<string> | null = null;
+
+/** Every relic id Chapter 1 grants, read once from the chapter content. */
+export function chapterRelicIds(): ReadonlySet<string> {
+    if (chapterRelics === null) {
+        const relicIds = new Set(relicLibrary.map((r) => r.id));
+        chapterRelics = new Set(chapter1Content().items.map((i) => i.id).filter((id) => relicIds.has(id)));
+    }
+    return chapterRelics;
+}
+
+/** The chapter's relics the player owns, carried or worn, each counted once. */
+function acquiredChapterRelics(player: NonNullable<ChapterCompleteState['player']>, chapter: ReadonlySet<string>): number {
+    const owned = new Set<string>();
+    for (const item of player.inventory ?? []) if (chapter.has(item.id)) owned.add(item.id);
+    for (const r of player.equipment.relics) if (r && chapter.has(r.id)) owned.add(r.id);
+    return owned.size;
+}
+
 /** The chapter's stats in screen order; empty for a state with no player. */
 export function selectChapterCompleteSummary(state: Partial<ChapterCompleteState>): ChapterStatRow[] {
     const player = state.player;
@@ -57,6 +80,7 @@ export function selectChapterCompleteSummary(state: Partial<ChapterCompleteState
     }
     rows.push(row('shillings', player.currency));
     rows.push(row('deck', buildCombatDeck(player, state.flags).length));
-    rows.push(row('relics', wornInSlot(player.equipment, 'relic').length));
+    const chapter = chapterRelicIds();
+    rows.push(row('relics', acquiredChapterRelics(player, chapter), chapter.size));
     return rows;
 }

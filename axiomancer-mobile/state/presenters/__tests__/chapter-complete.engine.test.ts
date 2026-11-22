@@ -7,10 +7,10 @@
 
 import { describe, expect, it } from '@jest/globals';
 
-import { BREAKWATER_CHAPTER_QUESTLINE, createCharacter, getRelicById } from '@mechanics';
+import { BREAKWATER_CHAPTER_QUESTLINE, chapter1Content, createCharacter, getRelicById, relicLibrary } from '@mechanics';
 import type { Character, GameState } from '@mechanics';
 
-import { selectChapterCompleteSummary, type ChapterCompleteState } from '@/state/presenters/chapter-complete.engine';
+import { chapterRelicIds, selectChapterCompleteSummary, type ChapterCompleteState } from '@/state/presenters/chapter-complete.engine';
 import { CHAPTER_COMPLETE_STAT_LABELS } from '@/state/presenters/chapter-complete.copy';
 
 const stepNames = BREAKWATER_CHAPTER_QUESTLINE.steps.map((s) => s.quest.name);
@@ -67,7 +67,24 @@ describe('selectChapterCompleteSummary', () => {
         expect(rows.quests!.value).toBe('3 / 4');
         expect(rows.shillings!.value).toBe('63');
         expect(rows.deck!.value).toBe('5');
-        expect(rows.relics!.value).toBe('1');
+        expect(rows.relics!.value).toBe(`1 / ${chapterRelicIds().size}`);
+    });
+
+    it('relics acquired: the chapter relics carried or worn, each once, out of every relic the chapter grants', () => {
+        const relicIds = new Set(relicLibrary.map((r) => r.id));
+        const total = chapter1Content().items.filter((i) => relicIds.has(i.id)).length;
+        expect(total).toBeGreaterThan(1);
+        expect(chapterRelicIds().has('relic-disarming-plea')).toBe(true);
+        expect(chapterRelicIds().has('relic-carapace-belt')).toBe(false);
+        const worn = getRelicById('relic-disarming-plea')!;
+        const carried = getRelicById([...chapterRelicIds()].find((id) => id !== worn.id)!)!;
+        const outside = getRelicById('relic-carapace-belt')!;
+        const s = fixture();
+        s.player = player({ inventory: [worn, carried, outside] } as Partial<Character>);
+        const relics = byId(s).relics!;
+        expect(relics.label).toBe('RELICS ACQUIRED');
+        expect([relics.count, relics.of]).toEqual([2, total]);
+        expect(relics.value).toBe(`2 / ${total}`);
     });
 
     it('counts only the Breakwater questline steps, not side quests', () => {
