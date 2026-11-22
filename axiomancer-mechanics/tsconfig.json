@@ -7,10 +7,10 @@
     ],
     "types": ["node"],
     /* Modules */
-    "module": "commonjs",
+    "module": "node16",
     "rootDir": "./src",
     "paths": {},
-    "moduleResolution": "bundler",
+    "moduleResolution": "node16",
     "resolveJsonModule": true,
     /* Emit */
     "outDir": "./dist",
@@ -32,6 +32,10 @@
     "noImplicitAny": true
   },
   "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "bundler"
+    },
     "require": ["tsconfig-paths/register"]
   },
   "include": [
