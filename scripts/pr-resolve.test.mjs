@@ -580,3 +580,53 @@ test('AUDIT: a clean diff3 merge doubles a row; a plain git merge with merge.aud
     fs.rmSync(dir, { recursive: true, force: true })
   }
 })
+
+test('AUDIT: the merge rules that decide data loss', () => {
+  const edit = (rowFn, next) => [...rowFn().slice(0, -1), `- next: ${next}`]
+  const base = auditFile([rowA(), rowB(), rowC()], [rowZ()])
+  // Both sides edit the same row: ours' edit wins, once.
+  const both = mergeAudit(base, auditFile([edit(rowA, 'ours'), rowB(), rowC()], [rowZ()]), auditFile([edit(rowA, 'theirs'), rowB(), rowC()], [rowZ()]))
+  assert.deepEqual(auditFindings(both), [])
+  assert.equal(count(both, '- next: ours'), 1)
+  assert.equal(count(both, '- next: theirs'), 0)
+  assert.equal(count(both, rowA()[0]), 1)
+  // Theirs edits a row ours deleted: theirs' edit is kept (no work lost).
+  const kept = mergeAudit(base, auditFile([rowA(), rowC()], [rowZ()]), auditFile([rowA(), edit(rowB, 'theirs'), rowC()], [rowZ()]))
+  assert.deepEqual(headers(kept), [rowA()[0], rowB()[0], rowC()[0], rowZ()[0]])
+  assert.ok(kept.includes('- next: theirs'))
+  // Ours deletes a row theirs left alone: it goes.
+  assert.deepEqual(headers(mergeAudit(base, auditFile([rowA(), rowC()], [rowZ()]), base)), [rowA()[0], rowC()[0], rowZ()[0]])
+  // Both sides add a row at the same spot: both survive, each once.
+  const rowD = () => auditRow('row D', 1)
+  const rowE = () => auditRow('row E', 1)
+  const added = mergeAudit(base, auditFile([rowA(), rowB(), rowC(), rowD()], [rowZ()]), auditFile([rowA(), rowB(), rowC(), rowE()], [rowZ()]))
+  assert.deepEqual(auditFindings(added), [])
+  assert.deepEqual(headers(added).sort(), [rowA()[0], rowB()[0], rowC()[0], rowD()[0], rowE()[0], rowZ()[0]].sort())
+  // Both sides add the same row: one copy.
+  const same = mergeAudit(base, auditFile([rowA(), rowB(), rowC(), rowD()], [rowZ()]), auditFile([rowA(), rowB(), rowC(), rowD()], [rowZ()]))
+  assert.equal(count(same, rowD()[0]), 1)
+})
+
+test('AUDIT: text outside rows is taken from the side that changed it, or unioned when both did', () => {
+  const withIntro = (lines) => auditFile([rowA()], [rowZ()]).replace('## Pending\n', `## Pending\n\n${lines.join('\n')}\n`)
+  const base = withIntro(['> intro'])
+  assert.ok(mergeAudit(base, withIntro(['> intro, ours']), base).includes('> intro, ours'), 'only ours changed it')
+  assert.ok(mergeAudit(base, base, withIntro(['> intro, theirs'])).includes('> intro, theirs'), 'only theirs changed it')
+  const both = mergeAudit(base, withIntro(['> intro', '> ours adds']), withIntro(['> intro', '> theirs adds']))
+  assert.deepEqual(auditFindings(both), [])
+  for (const l of ['> intro', '> ours adds', '> theirs adds']) assert.equal(count(both, `${l}\n`), 1, l)
+})
+
+test('AUDIT: a CRLF file merges by row and keeps its CRLF line ends', () => {
+  const crlf = (text) => text.replace(/\n/g, '\r\n')
+  const out = mergeAudit(crlf(AUDIT_BASE), crlf(AUDIT_OURS), crlf(AUDIT_THEIRS))
+  assert.equal(out, crlf(mergeAudit(AUDIT_BASE, AUDIT_OURS, AUDIT_THEIRS)))
+  assert.doesNotMatch(out, /[^\r]\n/, 'no bare LF')
+})
+
+test('AUDIT: audit-merge.mjs is pipeline code, held for T like pr-resolve.mjs that imports it', async () => {
+  const { PIPELINE_PATHS } = await import('./pr-policy.mjs')
+  assert.match(read(ROOT, 'scripts/pr-resolve.mjs'), /^import \{ mergeAudit \} from '\.\/audit-merge\.mjs'$/m)
+  assert.ok(PIPELINE_PATHS.includes('scripts/pr-resolve.mjs'))
+  assert.ok(PIPELINE_PATHS.includes('scripts/audit-merge.mjs'))
+})

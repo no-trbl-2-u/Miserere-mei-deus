@@ -28,7 +28,8 @@
 //     (a close is never undone by the branch);
 //   - the text outside rows (preamble, section intros) is taken from the side
 //     that changed it, or line-unioned when both did;
-//   - rows are written with exactly one blank line between them.
+//   - rows are written with exactly one blank line between them, in the
+//     line ending (LF or CRLF) theirs uses.
 // Pure apart from the CLI; deterministic.
 //
 // Exit codes: 0 merged.
@@ -180,6 +181,15 @@ function unionIntro(base, ours, theirs) {
  * @returns {string}
  */
 export function mergeAudit(base, ours, theirs) {
+  // Merge on LF; a CRLF file (theirs', else ours') gets its line ends back.
+  const crlf = /\r\n/.test(theirs || ours)
+  const lf = (text) => text.replace(/\r\n/g, '\n')
+  const out = mergeRows(lf(base), lf(ours), lf(theirs))
+  return crlf ? out.replace(/\n/g, '\r\n') : out
+}
+
+/** mergeAudit on LF text. */
+function mergeRows(base, ours, theirs) {
   const B = parseRows(base)
   const O = parseRows(ours)
   const T = parseRows(theirs)
