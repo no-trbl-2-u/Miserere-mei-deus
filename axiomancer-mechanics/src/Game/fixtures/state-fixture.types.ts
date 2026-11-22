@@ -34,6 +34,12 @@ export interface StateFixturePlayer {
     currency?: number;
     /** Extra card ids learned on top of the preset's known set (deduped). */
     knownCards?: string[];
+    /**
+     * Live relic ids (`relicLibrary`) worn after the rebuild, filling the relic
+     * positions in order (at most three). A preset starts with none ("a run
+     * starts with none"), so this is how a fixture shows a worn relic.
+     */
+    relics?: string[];
 }
 
 /** Where the player stands. `map` must belong to `continent`. */
@@ -83,6 +89,11 @@ export interface StateFixture {
      * the CLI honours it via `--resolve-start`, mobile via `<FixtureBoot>`.
      */
     arrive?: boolean;
+    /**
+     * Boot with `GameState.dying` set (the state a first death leaves), so the
+     * combat board shows its dying portrait. Pair with `player.health: 1`.
+     */
+    dying?: true;
     /**
      * An event staged on the fixture's node: `arrive` resolves this payload
      * in place of the node's own pool (`resolveMapEvent`'s `staged`). How a

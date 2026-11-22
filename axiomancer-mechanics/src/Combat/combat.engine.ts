@@ -133,7 +133,7 @@ export const SCRAP_CONVICTION_CAP_PER_TURN = 2;
  * unloseable. The counters are on-vision: race the foe down (DoT) before the ramp
  * bites, OR deny its turns (control) to skip the escalated hits. This is also what
  * gives the threat ledger teeth — every round the clock advances is a round
- * the 'overwhelmed' marks were paid for. Tuned by /combat-playtest (engine constants) and /deck-tuning.
+ * the 'overwhelmed' marks were paid for. Tuned by /combat-playtest (engine constants) and the card-tuning loop.
  */
 export const THREAT_ESCALATION_PER_ROUND = 0.22;
 /** Rounds of grace before the clock starts — a fast clean kill is unpunished. */
@@ -141,7 +141,7 @@ export const THREAT_ESCALATION_GRACE = 1;
 /** Cap on the escalation multiplier so a long grind ramps but never runs away into a
  *  one-shot — keeps the clock tense, not a hard wall. Calibrated conservatively: the
  *  optimal witness bot still wins (combat stays fair, not broken) while human-paced
- *  play feels real pressure. Sharpening the bands further is a /combat-playtest (engine constants) and /deck-tuning job that
+ *  play feels real pressure. Sharpening the bands further is a /combat-playtest (engine constants) and the card-tuning loop job that
  *  hinges on the denial/kill-speed economy (the optimal bot kills in ~2-4 rounds and
  *  barely feels the clock). */
 export const THREAT_ESCALATION_MAX = 2.0;
@@ -151,7 +151,7 @@ export const THREAT_ESCALATION_MAX = 2.0;
  * the "steeper curve for bosses" doctrine: a boss fight that drags becomes
  * qualitatively more lethal than a normal fight dragging just as long. The
  * counters (finish fast via DoT, deny turns via control) are unchanged — they
- * are simply more urgent facing a boss. Tuned by /combat-playtest (engine constants) and /deck-tuning.
+ * are simply more urgent facing a boss. Tuned by /combat-playtest (engine constants) and the card-tuning loop.
  */
 export const THREAT_ESCALATION_BOSS_MULT = 1.6;
 /**
@@ -161,13 +161,13 @@ export const THREAT_ESCALATION_BOSS_MULT = 1.6;
  * scaled and already capped at THREAT_ESCALATION_MAX) adds +1 intensity to
  * whatever status the enemy's telegraphed hit applies this phase. Reuses the
  * damage clock's numbers instead of a second independent tuning knob, so it
- * ramps and caps on exactly the same schedule. Tuned by /combat-playtest (engine constants) and /deck-tuning.
+ * ramps and caps on exactly the same schedule. Tuned by /combat-playtest (engine constants) and the card-tuning loop.
  */
 export const THREAT_EFFECT_ESCALATION_STEP = 0.34;
 // ── Fate Engine — the dice get a second read ─────────────────────────────────
 
 /** Each pip on a spent Reserve die adds this much intensity to the status
- *  the play lands (the ripened die hits harder). Tuned by /combat-playtest (engine constants) and /deck-tuning. */
+ *  the play lands (the ripened die hits harder). Tuned by /combat-playtest (engine constants) and the card-tuning loop. */
 export const PIP_INTENSITY_BONUS = 2;
 /** Each pip on a spent Reserve die adds this much Guard on a defend card,
  *  so a ripened die is worth banking against GUARD lines from 8 to 60. */
