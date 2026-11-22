@@ -169,7 +169,7 @@ import {
     openQuestScreenAction,
     turnInQuestStepAction,
 } from './quest/store-actions';
-import { closeTravelAction, openTravelScreenAction, takeTravelAction } from './travel/store-actions';
+import { closeTravelAction, continueChapterAction, openTravelScreenAction, takeTravelAction } from './travel/store-actions';
 import { travelPayloadAt } from '@mechanics';
 import { endCombatOutcome, fightRecorder } from '@/lib/fightRecorder';
 import { deckEventPoster, deckEventRunId, deckEventWhere, runDeck, type DeckEventState } from '@/lib/deckEvents';
@@ -550,6 +550,11 @@ export interface AppActions {
 
     /** YES: take the trip the open travel screen offers. True when the player moved. */
     takeTravel: () => boolean;
+    /**
+     * CONTINUE on the chapter complete screen (phase CE1b): `takeTravel` out of
+     * the Breakwater opens that screen and holds the crossing back; this takes it.
+     */
+    continueChapter: () => boolean;
     /** NO: close the travel screen; the player stays on the node. */
     closeTravel: () => void;
     /**
@@ -970,6 +975,7 @@ export function createAppActions(store: AppStore): AppActions {
         closeQuest: () => closeQuestAction(store),
         claimQuestCard: (cardId) => claimQuestCardAction(store, cardId),
         takeTravel: () => takeTravelAction(store, (text) => pushToast(store, text)),
+        continueChapter: () => continueChapterAction(store),
         closeTravel: () => closeTravelAction(store),
         offerTravelHere: () => {
             if (!travelPayloadAt(store.getState() as unknown as GameState)) return false;

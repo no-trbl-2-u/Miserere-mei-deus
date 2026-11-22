@@ -112,6 +112,8 @@ export const ROUTES = [
     // The lighthouse after step 2 paid on arrival with step 3 on offer: the turn-in line, then the offer line.
     { name: 'quest-two-lines', path: '/exploration', fixture: 'wanderer-bw-lighthouse-paid', waitForPath: '/quest', waitForTestId: 'quest-giver-line' },
     { name: 'travel', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel' },
+    // The far bank's MOVE tapped (`tapTestId`): the chapter complete screen opens in place of the toast (CE1b).
+    { name: 'chapter-complete', path: '/exploration', fixture: 'wanderer-bw-door-arrive', waitForPath: '/travel', tapTestId: 'travel-move', waitForTestId: 'chapter-complete', expectTestIds: ['chapter-complete-title', 'chapter-complete-stats', 'chapter-complete-continue'] },
     // The cave shortcut: the map zoomed on the Cave Face.
     { name: 'travel-cave', path: '/exploration', fixture: 'wanderer-bw-cave-mouth-arrive', waitForPath: '/travel' },
     // The live hazard on its board, the parity baseline for the puzzle

@@ -220,6 +220,7 @@ function takeRoad(store: AppStore, actions: AppActions, policy: RunPolicy, step:
         if (!actions.offerTravelHere() || !actions.takeTravel()) {
             throw stuck(`the trip from ${here} to ${choice} would not go`, store.getState(), step);
         }
+        if (store.getState().travel?.chapterComplete) actions.continueChapter();
         return 0;
     }
     if (option.via === 'retry') {

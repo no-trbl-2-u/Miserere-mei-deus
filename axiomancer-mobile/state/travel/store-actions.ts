@@ -34,8 +34,11 @@ export function closeTravelAction(store: AppStore): void {
  * host's one-shot toast.
  */
 export function takeTravelAction(store: AppStore, toast: (text: string) => void): boolean {
-    const open = store.getState().travel?.open;
+    const slice = store.getState().travel;
+    const open = slice?.open;
     if (!open || !open.open) return false;
+    // The chapter complete screen already stands in front of this crossing.
+    if (slice?.chapterComplete) return false;
     const before = store.getState() as unknown as GameState;
     if (before.world.currentMap.currentNode !== open.nodeId) {
         closeTravelAction(store);
@@ -48,10 +51,41 @@ export function takeTravelAction(store: AppStore, toast: (text: string) => void)
     recordNodeResolved(store, 'travel');
     if (before.world.currentMap.name === STARTING_MAP && after.world.currentMap.name !== STARTING_MAP) {
         recordRunClosed(before, 'chapter-clear');
+        // The far bank opens the chapter complete screen in place of the toast. The world has not
+        // moved: CONTINUE (`continueChapterAction`) takes the crossing.
+        store.setState({ travel: { open, chapterComplete: true } } as never);
+        return true;
     }
+    return finishCrossing(store, open, after, toast);
+}
+
+/**
+ * CONTINUE on the chapter complete screen: takes the crossing out of the
+ * Breakwater the screen held back. No toast; the checkpoint save is made.
+ * Returns true when the player crossed.
+ */
+export function continueChapterAction(store: AppStore): boolean {
+    const slice = store.getState().travel;
+    const open = slice?.open;
+    if (!open || !slice?.chapterComplete) return false;
+    const before = store.getState() as unknown as GameState;
+    const after = takeTravel(before);
+    if (after === before) {
+        closeTravelAction(store);
+        return false;
+    }
+    return finishCrossing(store, open, after, null);
+}
+
+function finishCrossing(
+    store: AppStore,
+    open: Extract<ResolvedEvent, { kind: 'travel' }>,
+    after: GameState,
+    toast: ((text: string) => void) | null,
+): boolean {
     store.setState({ world: after.world, travel: EMPTY_TRAVEL_SLICE } as never);
     const destination = open.destination;
-    if ('map' in destination) {
+    if (toast && 'map' in destination) {
         const region = getMapLayout(destination.map)?.region ?? destination.map;
         toast(TRAVEL_COPY.crossedToast(region));
     }

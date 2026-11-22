@@ -145,6 +145,12 @@ export interface MobileQuestSlice {
  */
 export interface MobileTravelSlice {
     open: Extract<ResolvedEvent, { kind: 'travel' }> | null;
+    /**
+     * The player said YES to the crossing out of the Breakwater and the chapter
+     * complete screen (phase CE1b) stands in front of it: the world has not
+     * moved. CONTINUE takes the crossing. Transient, like the rest of the slice.
+     */
+    chapterComplete?: boolean;
 }
 
 /**

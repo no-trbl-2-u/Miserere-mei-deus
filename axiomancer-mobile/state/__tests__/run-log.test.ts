@@ -695,6 +695,7 @@ describe('travel', () => {
         const runId = gs(store).runId;
         expect(actions.resolveCurrentMapEvent('travel')).toBe(true);
         expect(actions.takeTravel()).toBe(true);
+        expect(actions.continueChapter()).toBe(true);
         expect(gs(store).world.currentMap.name).not.toBe('breakwater');
         await landed();
         expect(eventsOf('node-resolved').map((e) => e.payload)).toEqual([
@@ -714,6 +715,7 @@ describe('travel', () => {
         const runId = gs(store).runId;
         actions.resolveCurrentMapEvent('travel');
         actions.takeTravel();
+        actions.continueChapter();
         walkOn(store, actions);
         actions.resetRun({ keepCharacter: true });
         await landed();

@@ -142,7 +142,11 @@ export function resolveTravel(
         destinationVisited: toNodeId !== null && visited.has(toNodeId),
         unfinishedReachable: unfinishedReachable(store.getState() as unknown as GameState),
     });
-    if (take && actions.takeTravel()) return true;
+    if (take && actions.takeTravel()) {
+        // The crossing out of the Breakwater stops at the chapter complete screen: the run presses CONTINUE.
+        if (store.getState().travel?.chapterComplete) actions.continueChapter();
+        return true;
+    }
     actions.closeTravel();
     return true;
 }

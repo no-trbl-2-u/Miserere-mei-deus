@@ -80,18 +80,19 @@ describe('inter-map travel doors ask before they cross', () => {
         expect(vm.open).toBe(true);
     });
 
-    it('YES crosses onto the Charcoal Wood with a toast and a checkpoint save', () => {
+    it('YES then CONTINUE crosses onto the Charcoal Wood with a checkpoint save (CE1b: no toast)', () => {
         const adapter = createMemoryAdapter();
         const { store, actions } = seatAt('coastal-continent', 'breakwater', 'bw-b2', adapter);
         resolvePastScene(store, actions, 'travel');
         const savesBefore = adapter.saveCount;
 
         expect(actions.takeTravel()).toBe(true);
+        expect(actions.continueChapter()).toBe(true);
 
         const after = store.getState();
         expect(after.world.currentMap.name).toBe('charcoal-wood');
         expect(selectHasActiveTravel(after)).toBe(false);
-        expect(after.notifications?.toast?.text).toMatch(/You cross into/);
+        expect(after.notifications?.toast?.text ?? null).toBeNull();
         expect(adapter.saveCount).toBe(savesBefore + 1);
         // The arrival map's start node is not consumed by the crossing.
         expect(after.world.currentMap.consumedNodes ?? []).not.toContain(after.world.currentMap.currentNode);

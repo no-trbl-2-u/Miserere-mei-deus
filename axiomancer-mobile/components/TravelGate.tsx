@@ -13,7 +13,21 @@ import { selectHasActiveTravel } from '@/state/presenters/travel.engine';
 export function TravelGate() {
     const hasTravel = useGameState(selectHasActiveTravel);
     const router = useRouter();
+    const chapterComplete = useGameState((s) => s.travel?.chapterComplete === true);
     const pushed = useRef(false);
+    const chapterPushed = useRef(false);
+
+    // The crossing out of the Breakwater stands at the chapter complete screen (CE1b): it takes
+    // the travel screen's place, so CONTINUE has one screen to leave.
+    useEffect(() => {
+        if (!chapterComplete) {
+            chapterPushed.current = false;
+            return;
+        }
+        if (chapterPushed.current) return;
+        chapterPushed.current = true;
+        router.replace('/chapter-complete' as never);
+    }, [chapterComplete, router]);
 
     useEffect(() => {
         if (!hasTravel) {

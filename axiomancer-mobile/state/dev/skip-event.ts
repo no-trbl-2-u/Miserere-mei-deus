@@ -98,7 +98,7 @@ import { leaveHazardPuzzleNodeAction, playHazardPuzzleNodeBotAction } from '@/st
 import { confirmItemRewardAction } from '@/state/item-reward/store-actions';
 import { selectHasActiveQuest } from '@/state/presenters/quest.engine';
 import { closeQuestAction, offerCompletedQuestExtrasAction } from '@/state/quest/store-actions';
-import { closeTravelAction, takeTravelAction } from '@/state/travel/store-actions';
+import { closeTravelAction, continueChapterAction, takeTravelAction } from '@/state/travel/store-actions';
 import {
     chooseRestChoiceOfferAction,
     claimRestChoiceOutcomeAction,
@@ -310,6 +310,8 @@ function skipActive(store: AppStore, actions: SkipEventActions, options: SkipEve
     if (travel) {
         const mapBefore = currentMapName(store);
         if (travel.open && takeTravelAction(store, () => {})) {
+            // The Breakwater's far bank holds the crossing at the chapter complete screen: walk on.
+            if (store.getState().travel?.chapterComplete) continueChapterAction(store);
             const mapAfter = currentMapName(store);
             const outcome = mapAfter !== mapBefore ? `crossed:${mapAfter}` : `passage:${currentNodeId(store)}`;
             return { kind: 'travel', nodeId, outcome, detail: { from: mapBefore } };

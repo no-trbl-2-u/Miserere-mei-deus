@@ -477,6 +477,31 @@
       }
     },
     {
+      "id": "route:chapter-complete",
+      "name": "Chapter Complete",
+      "kind": "route",
+      "group": "world",
+      "source": "axiomancer-mobile/app/chapter-complete/index.tsx",
+      "named": false,
+      "reachable": {
+        "value": true,
+        "source": "flow path from route:index: route:index -> route:chapter-complete"
+      },
+      "driven": {
+        "value": true,
+        "source": "axiomancer-mobile/scripts/act1-walk-e2e.mjs"
+      },
+      "tested": {
+        "value": true,
+        "source": "axiomancer-mobile/app/__tests__/chapter-complete.screen.test.tsx, axiomancer-mobile/components/__tests__/TravelGate.test.tsx, axiomancer-mobile/state/presenters/__tests__/chapter-complete.engine.test.ts"
+      },
+      "needsPitch": {
+        "value": true,
+        "missing": "no braindump/ pitch file and no plan/*.decisions.md D-number names it (\"Chapter Complete\")",
+        "source": null
+      }
+    },
+    {
       "id": "route:character-select",
       "name": "Character Select",
       "kind": "route",
@@ -1018,7 +1043,7 @@
       },
       "tested": {
         "value": true,
-        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/assets/images/travel/__tests__/travel-scenes.test.ts"
+        "source": "axiomancer-mobile/app/__tests__/travel.screen.test.tsx, axiomancer-mobile/assets/images/travel/__tests__/travel-scenes.test.ts, axiomancer-mobile/components/__tests__/TravelGate.test.tsx"
       },
       "needsPitch": {
         "value": false,
@@ -3820,6 +3845,72 @@
       "from": "route:cache",
       "to": "area:World",
       "file": "axiomancer-mobile/state/presenters/tooltip.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Character",
+      "file": "axiomancer-mobile/state/run-log.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/presenters/chapter-complete.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Combat",
+      "file": "axiomancer-mobile/state/run-log.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/GameStoreProvider.tsx"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/presenters/chapter-complete.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Game",
+      "file": "axiomancer-mobile/state/run-log.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/presenters/chapter-complete.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Items",
+      "file": "axiomancer-mobile/state/run-log.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:Log",
+      "file": "axiomancer-mobile/lib/platform/router.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/presenters/chapter-complete.engine.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "route:chapter-complete",
+      "to": "area:World",
+      "file": "axiomancer-mobile/state/run-log.ts"
     },
     {
       "kind": "coupling",
@@ -6998,6 +7089,12 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/character",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/character",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -7096,6 +7193,12 @@
       "from": "route:(tabs)/deck",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/deck",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -7208,6 +7311,12 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/exploration",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/exploration",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -7306,6 +7415,12 @@
       "from": "route:(tabs)/inventory",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/inventory",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -7412,6 +7527,12 @@
     {
       "kind": "flow",
       "from": "route:(tabs)/memoir",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/memoir",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -7510,6 +7631,12 @@
       "from": "route:(tabs)/settings",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:(tabs)/settings",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -7592,6 +7719,12 @@
     {
       "kind": "flow",
       "from": "route:blacksmith",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:blacksmith",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -7658,6 +7791,12 @@
     {
       "kind": "flow",
       "from": "route:cache",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:cache",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -7712,6 +7851,78 @@
     {
       "kind": "flow",
       "from": "route:cache",
+      "to": "route:village",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:blacksmith",
+      "file": "axiomancer-mobile/components/BlacksmithGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:cache",
+      "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:combat-encounter",
+      "file": "axiomancer-mobile/components/CombatGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:cutscene",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:dialogue",
+      "file": "axiomancer-mobile/components/EventGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:hazard",
+      "file": "axiomancer-mobile/components/HazardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:item-reward",
+      "file": "axiomancer-mobile/components/item-reward/ItemRewardGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:labyrinth",
+      "file": "axiomancer-mobile/components/LabyrinthGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:quest",
+      "file": "axiomancer-mobile/components/QuestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:rest",
+      "file": "axiomancer-mobile/components/RestGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
+      "to": "route:travel",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:chapter-complete",
       "to": "route:village",
       "file": "axiomancer-mobile/components/EventGate.tsx"
     },
@@ -7756,6 +7967,12 @@
       "from": "route:character-select",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:character-select",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -7840,6 +8057,12 @@
       "from": "route:combat-encounter",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:combat-encounter",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -7922,6 +8145,12 @@
     {
       "kind": "flow",
       "from": "route:cutscene",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:cutscene",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -7990,6 +8219,12 @@
       "from": "route:death-return",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:death-return",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8086,6 +8321,12 @@
       "from": "route:dev",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:dev",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8204,6 +8445,12 @@
     {
       "kind": "flow",
       "from": "route:devart",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devart",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -8276,6 +8523,12 @@
     {
       "kind": "flow",
       "from": "route:devart/rooms",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devart/rooms",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -8344,6 +8597,12 @@
       "from": "route:devdefeat",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devdefeat",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8416,6 +8675,12 @@
       "from": "route:devframes",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devframes",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8488,6 +8753,12 @@
       "from": "route:devpuzzle",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devpuzzle",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8560,6 +8831,12 @@
       "from": "route:devvictory",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:devvictory",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8632,6 +8909,12 @@
       "from": "route:dialogue",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:dialogue",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8698,6 +8981,12 @@
       "from": "route:game-over",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:game-over",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8776,6 +9065,12 @@
       "from": "route:hazard",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:hazard",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -8888,6 +9183,12 @@
     {
       "kind": "flow",
       "from": "route:index",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:index",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -8972,6 +9273,12 @@
     {
       "kind": "flow",
       "from": "route:item-reward",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:item-reward",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -9034,6 +9341,12 @@
       "from": "route:labyrinth",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:labyrinth",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -9104,6 +9417,12 @@
     {
       "kind": "flow",
       "from": "route:quest",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:quest",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -9166,6 +9485,12 @@
       "from": "route:rest",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:rest",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -9232,6 +9557,12 @@
       "from": "route:saves",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:saves",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -9310,6 +9641,12 @@
       "from": "route:settings",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:settings",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -9398,6 +9735,12 @@
     {
       "kind": "flow",
       "from": "route:travel",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:travel",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -9460,6 +9803,12 @@
       "from": "route:village",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
@@ -9542,6 +9891,12 @@
     {
       "kind": "flow",
       "from": "route:village/rest",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/rest",
       "to": "route:combat-encounter",
       "file": "axiomancer-mobile/components/CombatGate.tsx"
     },
@@ -9616,6 +9971,12 @@
       "from": "route:village/shop",
       "to": "route:cache",
       "file": "axiomancer-mobile/components/CacheGate.tsx"
+    },
+    {
+      "kind": "flow",
+      "from": "route:village/shop",
+      "to": "route:chapter-complete",
+      "file": "axiomancer-mobile/components/TravelGate.tsx"
     },
     {
       "kind": "flow",
