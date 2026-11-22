@@ -2073,6 +2073,18 @@
       "kind": "coupling",
       "from": "area:Game",
       "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Game/fixtures/state-fixture.builder.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Items",
+      "file": "axiomancer-mechanics/src/Game/fixtures/state-fixture.validate.ts"
+    },
+    {
+      "kind": "coupling",
+      "from": "area:Game",
+      "to": "area:Items",
       "file": "axiomancer-mechanics/src/Game/game.migrate.ts"
     },
     {
