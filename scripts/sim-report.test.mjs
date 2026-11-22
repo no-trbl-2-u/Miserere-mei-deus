@@ -517,3 +517,26 @@ test('a break whose issue was closed links it as closed, and as not planned when
     assert.match(md, /\[#9\]\(https:\/\/github\.test\/i\/9\) closed as not planned \|/)
   } finally { t.cleanup() }
 })
+
+test('puzzle hazards the Breakwater plays count as reached, out of seven', async () => {
+  const t = setup()
+  try {
+    const ids = ['cand-cost-hard-10', 'cand-hard-08', 'cand-cost-hard-08', 'cand-cost-medium-09', 'cand-hard-10', 'cand-cost-hard-06', 'cand-cost-medium-01']
+    const content = {
+      ...CONTENT,
+      hazards: ids.map((id, i) => ({ id, title: id, nodeIds: [`h${i}`] })),
+    }
+    const base = reports()
+    // A run that clears the chapter resolves five of the seven hazard nodes, under the ids the run log records.
+    const hazardRows = ids.slice(0, 5).map((id) => ({ source: 'sim', policyId: 'cautious', kind: 'hazard', id, runs: 4, count: 4, cleared: 3 }))
+    base.coverage.coverage = [...base.coverage.coverage, ...hazardRows, { source: 'sim', policyId: 'cautious', kind: 'hazard', id: 'pit', runs: 1, count: 1, cleared: 1 }]
+    assert.deepEqual(universeOf(content).hazard, ids)
+    assert.equal((await run(['--build', BUILD, '--out', t.out], { fetchImpl: worker(base), content: () => content })).code, 0)
+    const md = fs.readFileSync(path.join(t.out, 'latest.md'), 'utf-8')
+    const cov = md.slice(md.indexOf('## Coverage'), md.indexOf('## Since'))
+    assert.match(cov, /\| hazards \| 7 \| 5 \| 71% \|/)
+    assert.match(cov, /- hazards: `cand-cost-hard-06`, `cand-cost-medium-01`/)
+    const h = JSON.parse(fs.readFileSync(path.join(t.out, 'history.jsonl'), 'utf-8').trim())
+    assert.deepEqual(h.reached.hazard, ids.slice(0, 5))
+  } finally { t.cleanup() }
+})
