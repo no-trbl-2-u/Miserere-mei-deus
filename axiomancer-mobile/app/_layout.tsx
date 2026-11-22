@@ -56,6 +56,7 @@ import HazardScreen from './hazard/index';
 import CombatEncounterScreen from './combat-encounter/index';
 import ItemRewardScreen from './item-reward/index';
 import RestScreen from './rest/index';
+import ChapterCompleteScreen from './chapter-complete/index';
 import DeathReturnScreen from './death-return/index';
 import GameOverScreen from './game-over/index';
 import CacheScreen from './cache/index';
@@ -353,6 +354,11 @@ function RootLayout() {
             <Stack.Screen
               name="death-return/index"
               component={DeathReturnScreen}
+              options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
+            />
+            <Stack.Screen
+              name="chapter-complete/index"
+              component={ChapterCompleteScreen}
               options={{ headerShown: false, presentation: 'fullScreenModal', gestureEnabled: false }}
             />
             <Stack.Screen

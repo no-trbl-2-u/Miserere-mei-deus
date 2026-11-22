@@ -70,11 +70,24 @@ describe('/travel - "Move to X?"', () => {
         expect(screen.queryByText(/YES|NO ·/)).toBeNull();
     });
 
-    it('MOVE moves the player', () => {
+    it('MOVE on the far bank holds the crossing for the chapter complete screen (CE1b)', () => {
         const { store } = onTheBridge();
         fireEvent.press(screen.getByTestId('travel-move'));
-        expect(store.getState().world.currentMap.name).toBe('charcoal-wood');
+        expect(store.getState().world.currentMap.name).toBe('breakwater');
+        expect(store.getState().travel.chapterComplete).toBe(true);
+    });
+
+    it('MOVE through the sea cave moves the player and opens no chapter screen', () => {
+        const handle = createFixtureStore({
+            id: 'ce1b-cave', seed: 'ce1b-cave',
+            world: { continent: 'coastal-continent', map: 'breakwater', node: 'bw-h6' },
+        });
+        handle.actions.resolveCurrentMapEvent('travel');
+        mount(handle.store);
+        const { store } = handle;
+        fireEvent.press(screen.getByTestId('travel-move'));
         expect(store.getState().travel.open).toBeNull();
+        expect(store.getState().travel.chapterComplete ?? false).toBe(false);
     });
 
     it('STAY keeps the player on the node', () => {
