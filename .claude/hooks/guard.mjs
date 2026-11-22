@@ -75,11 +75,12 @@ const DEFAULT_BRANCH = 'main'
 // (provenInert below): the reader parsed it with no ambiguity, run() found
 // nothing, every executed segment (substitutions, backticks, process
 // substitutions and heredoc consumers included) runs a program on a short
-// allowlist of programs that never execute their arguments, and nothing is
-// written to a file that could later run. Then the legacy match can only
+// allowlist of programs that never execute their arguments, and a command
+// that writes a file (a note, never a script or anything under .git) runs
+// nothing but cat, tee, echo and printf. Then the legacy match can only
 // have come from data: a heredoc body, a quoted -m message, an echo or grep
 // argument (plan/AUDIT.md: the whole-string grep tripped on those). A shell,
-// an interpreter with inline code, a wrapper (sudo, env, timeout, xargs,
+// any interpreter (node included), a wrapper (sudo, env, timeout, xargs,
 // find, ssh, ...) or any unknown program means "not proven", and the legacy
 // result stands. The content rule (trailer-or-emoji-in-commit) adds one more
 // condition: every commit's message must be one the guard can read.
@@ -93,17 +94,33 @@ const COMMIT_LONG_VALUE = [
 const PUSH_SHORT_VALUE = 'o'
 const PUSH_LONG_VALUE = ['repo', 'push-option', 'receive-pack', 'exec']
 
+// git takes any unique prefix of a long option (`--tr` is --trailer,
+// `--no-v` is --no-verify). For the options the rules care about, every
+// prefix is read as the option itself; a prefix of two of them is read as the
+// first listed (no-verify and file first, so an ambiguous one blocks).
+const COMMIT_PREFIXED = [
+  'no-verify', 'file', 'trailer', 'message', 'template', 'reuse-message', 'reedit-message', 'fixup', 'squash',
+]
+function expandPrefix(args, names) {
+  return args.map((w) => {
+    const m = /^--([^=]+)(=[\s\S]*)?$/.exec(w.text)
+    if (!m) return w
+    const full = names.find((n) => n.startsWith(m[1]))
+    return full && full !== m[1] ? { ...w, text: '--' + full + (m[2] ?? '') } : w
+  })
+}
+
 // Every executed `git <sub>` segment, with its options parsed.
-function gitSegments(parsed, sub, shortValue = '', longValue = []) {
+function gitSegments(parsed, sub, shortValue = '', longValue = [], prefixed = []) {
   const out = []
   for (const seg of parsed.segments) {
     const g = shell.gitCall(seg)
-    if (g && g.sub === sub) out.push(shell.parseOpts(g.args, shortValue, longValue))
+    if (g && g.sub === sub) out.push(shell.parseOpts(expandPrefix(g.args, prefixed), shortValue, longValue))
   }
   return out
 }
 
-const commits = (p) => gitSegments(p, 'commit', COMMIT_SHORT_VALUE, COMMIT_LONG_VALUE)
+const commits = (p) => gitSegments(p, 'commit', COMMIT_SHORT_VALUE, COMMIT_LONG_VALUE, COMMIT_PREFIXED)
 const hasLong = (o, pred) => [...o.long.keys()].some(pred)
 
 // The text a commit's message is made of: every -m/--message and --trailer
@@ -207,6 +224,18 @@ function safeWriteTarget(p) {
   return /^[\w./~@+-]+$/.test(p) && /\.(md|txt|log|csv|out)$/i.test(p) && !/(^|\/)\.git/.test(p)
 }
 
+// Long options an inert git call may carry, by exact name only: git takes
+// any unique prefix, so `--tr` could be --trailer and `--exe` --exec. Any
+// other long option (or an abbreviation of one of these) means not inert.
+const GIT_SAFE_LONG = new Set([
+  'all', 'amend', 'no-edit', 'signoff', 'allow-empty', 'quiet', 'verbose', 'message', 'author', 'date', 'short',
+  'porcelain', 'branch', 'oneline', 'stat', 'name-only', 'name-status', 'cached', 'staged', 'graph', 'decorate',
+  'format', 'pretty', 'abbrev-ref', 'show-toplevel', 'show-current', 'list', 'delete', 'hard', 'soft', 'mixed',
+  'keep', 'force', 'force-with-lease', 'force-if-includes', 'set-upstream', 'tags', 'prune', 'ff-only',
+  'untracked-files', 'max-count', 'since', 'until', 'reverse', 'no-merges', 'follow', 'dry-run', 'update',
+  'exit-code', 'no-color', 'trailer',
+])
+
 function gitInert(args) {
   let k = 0
   while (k < args.length && args[k].startsWith('-')) {
@@ -215,23 +244,25 @@ function gitInert(args) {
     else return false // -c, --exec-path, --git-dir, --config-env, ...: may run or redirect anything
   }
   if (!GIT_INERT_SUBS.has(args[k])) return false
-  return !args.slice(k + 1).some((a) => /^--(receive-pack|upload-pack|exec)(=|$)/.test(a))
+  for (const a of args.slice(k + 1)) {
+    if (a === '--') break
+    if (a.startsWith('--') && !GIT_SAFE_LONG.has(a.slice(2).split('=')[0])) return false
+  }
+  return true
 }
 
-function programInert(name, args, ruleName) {
+function programInert(name, args) {
   if (DATA_PROGRAMS.has(name)) return true
   if (name === 'printf') return !args.some((a) => a.startsWith('-v'))
   if (name === 'rg') return !args.some((a) => /^--pre(-glob)?(=|$)/.test(a))
   if (name === 'tee') return args.filter((a) => !a.startsWith('-')).every(safeWriteTarget)
   if (name === 'git') return gitInert(args)
-  // node running a script file (no -e/-p/--eval, no option at all): the
-  // script is in the tree, not in this command. Never for the gate rule: a
-  // script may be the gate.
-  if (name === 'node') return ruleName !== 'backgrounded-gate' && args.length > 0 && !args[0].startsWith('-')
+  // No interpreter at all, node included: a script's args or stdin can carry
+  // the very command the rule forbids.
   return false
 }
 
-function segmentInert(seg, ruleName) {
+function segmentInert(seg) {
   for (const r of seg.redirects) {
     if (!r.op.includes('>')) continue // a read, heredoc or here-string: its consumer is checked below
     if (/&$/.test(r.op) && /^(\d+|-)$/.test(r.text)) continue // 2>&1: an fd, not a file
@@ -247,17 +278,35 @@ function segmentInert(seg, ruleName) {
   if (k >= ws.length) return true // only assignments, redirections or a heredoc: no program runs
   const name = ws[k]
   if (name.includes('/')) return false // a path is not the allowlisted program
-  return programInert(name, ws.slice(k + 1), ruleName)
+  return programInert(name, ws.slice(k + 1))
+}
+
+// A command that writes a file runs nothing else: only the writers and
+// echo/cat/printf may sit beside a write, so no later step can execute what
+// was written (a note naming `git push -f` stays a note).
+const WRITERS = new Set(['cat', 'tee', 'echo', 'printf'])
+function writesFile(seg) {
+  const fileRedirect = seg.redirects.some(
+    (r) => r.op.includes('>') && !(/&$/.test(r.op) && /^(\d+|-)$/.test(r.text)) && !/^\/dev\/(null|stdout|stderr)$/.test(r.text),
+  )
+  const ws = seg.words.map((w) => w.text).filter((t) => !ASSIGNMENT.test(t))
+  const teeFile = ws[0] === 'tee' && ws.slice(1).some((a) => !a.startsWith('-') && !/^\/dev\/(null|stdout|stderr)$/.test(a))
+  return fileRedirect || teeFile
+}
+function onlyWriters(seg) {
+  const ws = seg.words.map((w) => w.text).filter((t) => !ASSIGNMENT.test(t))
+  return !ws.length || WRITERS.has(ws[0])
 }
 
 /**
  * True when a legacy regex match on this command can only have come from data.
- * `ruleName` picks the per-rule allowlist; `readable` is a content rule's
- * extra test. The caller has already found no argv hit for the rule.
+ * `readable` is a content rule's extra test. The caller has already found no
+ * argv hit for the rule.
  */
-function provenInert(parsed, ruleName, readable) {
+function provenInert(parsed, readable) {
   if (!parsed || parsed.ambiguous) return false
-  if (!parsed.segments.every((seg) => segmentInert(seg, ruleName))) return false
+  if (!parsed.segments.every(segmentInert)) return false
+  if (parsed.segments.some(writesFile) && !parsed.segments.every(onlyWriters)) return false
   return readable ? readable(parsed) : true
 }
 
@@ -296,8 +345,8 @@ const RULES = [
   {
     name: 'destructive-reset',
     run: (p) =>
-      gitSegments(p, 'reset').some((o) => o.long.has('hard')) ||
-      gitSegments(p, 'clean', 'e', ['exclude']).some((o) => o.short.has('f') || o.long.has('force')) ||
+      gitSegments(p, 'reset', '', [], ['hard']).some((o) => o.long.has('hard')) ||
+      gitSegments(p, 'clean', 'e', ['exclude'], ['force']).some((o) => o.short.has('f') || o.long.has('force')) ||
       gitSegments(p, 'checkout', 'bB', ['orphan']).some((o) => o.positional.some((w) => w.text === '.')) ||
       gitSegments(p, 'branch', 'u', ['set-upstream-to']).some(
         (o) => o.short.has('D') && o.positional.some((w) => w.text === DEFAULT_BRANCH),
@@ -449,20 +498,20 @@ export function checkCommand(cmd, { background = false } = {}) {
   cmd = String(cmd ?? '')
   if (!cmd) return null
   const parsed = parseOrNull(cmd)
-  const blocks = (name, run, legacy, readable) => {
+  const blocks = (run, legacy, readable) => {
     if (argvHit(run, parsed)) return true
     if (!legacy(cmd)) return false
     try {
-      return !provenInert(parsed, name, readable)
+      return !provenInert(parsed, readable)
     } catch {
       return true // the legacy match stands
     }
   }
-  if (background && blocks('backgrounded-gate', isGateCommand, (c) => GATE_WORD.test(c))) {
+  if (background && blocks(isGateCommand, (c) => GATE_WORD.test(c))) {
     return { name: 'backgrounded-gate', message: BACKGROUND_MESSAGE }
   }
   for (const rule of RULES) {
-    const hit = rule.raw ? rule.raw(cmd) : blocks(rule.name, rule.run, rule.legacy, rule.readable)
+    const hit = rule.raw ? rule.raw(cmd) : blocks(rule.run, rule.legacy, rule.readable)
     if (hit) return { name: rule.name, message: rule.message }
   }
   return null
@@ -899,7 +948,8 @@ function invokedDirectly() {
   try {
     return !!process.argv[1] && fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url))
   } catch {
-    return false
+    // realpath failed: judge by name, so the hook still runs (the old behaviour)
+    return !!process.argv[1] && path.basename(process.argv[1]) === path.basename(fileURLToPath(import.meta.url))
   }
 }
 

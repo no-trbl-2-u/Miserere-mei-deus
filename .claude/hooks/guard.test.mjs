@@ -154,7 +154,7 @@ describe('formerly false positives are now allowed', () => {
     // a heredoc body is data
     "cat > notes.md <<'EOF'\nNever run git push --force or git commit --no-verify.\nEOF",
     'cat > notes.md <<EOF\ngit reset --hard is forbidden; so is pkill -f x\nEOF',
-    "cat > plan/x.md <<'EOF'\nCo-Authored-By trailers are banned \u{1F680}\nEOF\ngit add plan/x.md && git commit -m \"plan: note\"",
+    "cat > plan/x.md <<'EOF'\nCo-Authored-By trailers are banned \u{1F680}\nEOF\necho written",
     // a quoted -m message is a message, not flags
     'git commit -m "docs: say why --no-verify and git push --force stay denied"',
     'git commit -m "docs: git commit -F msg.txt is refused"',
@@ -167,7 +167,6 @@ describe('formerly false positives are now allowed', () => {
     'rg -- "--no-verify" skills/',
     'printf "%s\\n" "pkill -f x"',
     // content rule: the emoji / trailer is not in the commit message
-    'node scripts/card.mjs --text "\u{1F525} burns" && git commit -m "content: card text"',
     'grep -rn "Co-Authored-By" .github && git commit -m "ci: check trailers"',
     // near misses on argv itself
     'git push origin main',
@@ -269,6 +268,36 @@ describe('fail closed: never weaker than the legacy regex', () => {
     ["sh <<<'git commit -m \"Co-Authored-By: x\"'", 'trailer-or-emoji-in-commit'],
     ['grep -rn "Co-Authored-By" . && git commit', 'trailer-or-emoji-in-commit'],
     ['grep -rn "Co-Authored-By" . && git commit -C HEAD', 'trailer-or-emoji-in-commit'],
+    // second review: ANSI-C and locale quoting hide where a quote ends
+    ["echo $'\\''; git push origin main --force # '", 'force-push'],
+    ["echo $'a\\'b' 'git push -f'", 'force-push'],
+    ['echo $"git push -f"', 'force-push'],
+    // second review: git takes any unique prefix of a long option
+    ['git commit -m x --trail "Co-Authored-By: bot"', 'trailer-or-emoji-in-commit'],
+    ['git commit -m x --tr "Co-Authored-By: bot"', 'trailer-or-emoji-in-commit'],
+    ['git commit --mes="feat: x\n\nCo-Authored-By: bot"', 'trailer-or-emoji-in-commit'],
+    ['git commit --messa "feat \u{1F680}"', 'trailer-or-emoji-in-commit'],
+    ['git commit --no-veri -m x', 'no-verify'],
+    ['git commit --no-v -m x', 'no-verify'],
+    ['git commit --fil msg.txt', 'commit-message-from-file'],
+    ['git reset --har HEAD~1', 'destructive-reset'],
+    ['git clean --forc -d', 'destructive-reset'],
+    ['git commit --templ t.txt -m "note: git push -f"', 'force-push'],
+    // second review: no interpreter is inert, node included (args or stdin can carry the command)
+    ['node scripts/card.mjs --text "\u{1F525} burns" && git commit -m "content: card text"', 'trailer-or-emoji-in-commit'],
+    ['node scripts/run.mjs "git push -f"', 'force-push'],
+    ["node scripts/run.mjs <<'EOF'\ngit push -f\nEOF", 'force-push'],
+    // second review: a file write sits only beside writers and echo/cat/printf
+    ["cat > plan/x.md <<'EOF'\nCo-Authored-By trailers are banned\nEOF\ngit add plan/x.md && git commit -m \"plan: note\"", 'trailer-or-emoji-in-commit'],
+    ["cat > notes.md <<'EOF'\ngit push -f\nEOF\ngrep -c push notes.md", 'force-push'],
+    ["echo 'git reset --hard' | tee run.txt && ls", 'destructive-reset'],
+    // second review: variables and git config that make an allowlisted program run something else
+    ['PATH=/tmp/bin git commit -m "docs: why --no-verify stays"', 'no-verify'],
+    ['EDITOR=vi git commit -m "docs: why --no-verify stays"', 'no-verify'],
+    ['VISUAL=sh git commit -m "docs: never git push -f"', 'force-push'],
+    ['git --exec-path=/tmp/x commit -m "docs: why --no-verify stays"', 'no-verify'],
+    ['git -c core.pager=sh log --grep "git push -f"', 'force-push'],
+    ['git -c core.editor=sh commit -m "docs: git reset --hard"', 'destructive-reset'],
     // the backgrounded gate: a runner or interpreter keeps the legacy result
     ['npx wrangler dev --test-scheduled-off', 'backgrounded-gate', true],
     ['node scripts/run.mjs verify', 'backgrounded-gate', true],
