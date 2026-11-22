@@ -40,6 +40,9 @@ import { execSync, spawn, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+import * as shell from './guard-shell.mjs'
 
 // Loaded fail-open: a missing or broken sibling must not disable the other rules.
 let scratch = null
@@ -53,14 +56,65 @@ let hookCwd = process.cwd()
 const DEFAULT_BRANCH = 'main'
 
 // --- forbidden-command rules ------------------------------------------
+//
+// The rules read the command through guard-shell.mjs, which splits it into
+// the segments the shell executes and their argv (plan/AUDIT.md: the old
+// whole-string grep tripped on heredoc bodies, quoted -m messages and file
+// paths). A rule about what RUNS (--no-verify, force-push, resets, pkill,
+// -F, the backgrounded gate) matches executed argv only. The one rule about
+// CONTENT (trailer-or-emoji-in-commit) reads the commit message arguments
+// themselves. If the reader cannot parse a command (an unclosed quote or
+// substitution), every rule falls back to its old whole-string regex, so a
+// reader gap fails closed, never open.
 
-// Each rule: name, test(command) → true = block, message for the
-// agent. Messages say WHY and what to do instead, so a blocked
-// call self-corrects instead of retrying.
+// git commit: short options that take a value, and long ones.
+const COMMIT_SHORT_VALUE = 'mFCct'
+const COMMIT_LONG_VALUE = [
+  'message', 'file', 'reuse-message', 'reedit-message', 'fixup', 'squash', 'author', 'date',
+  'template', 'cleanup', 'pathspec-from-file', 'trailer',
+]
+const PUSH_SHORT_VALUE = 'o'
+const PUSH_LONG_VALUE = ['repo', 'push-option', 'receive-pack', 'exec']
+
+// Every executed `git <sub>` segment, with its options parsed.
+function gitSegments(parsed, sub, shortValue = '', longValue = []) {
+  const out = []
+  for (const seg of parsed.segments) {
+    const g = shell.gitCall(seg)
+    if (g && g.sub === sub) out.push(shell.parseOpts(g.args, shortValue, longValue))
+  }
+  return out
+}
+
+const commits = (p) => gitSegments(p, 'commit', COMMIT_SHORT_VALUE, COMMIT_LONG_VALUE)
+const hasLong = (o, pred) => [...o.long.keys()].some(pred)
+
+// The text a commit's message is made of: every -m/--message and --trailer
+// value (a `$(cat <<'EOF' ... EOF)` message keeps its heredoc text), plus the
+// value of any $NAME it expands that the command itself assigns.
+function commitMessage(o, parsed) {
+  const parts = o.values
+    .filter((v) => ['-m', '--message', '--trailer'].includes(v.opt))
+    .map((v) => v.value)
+  const text = parts.join('\n')
+  const vars = [...text.matchAll(/\$\{?([A-Za-z_][A-Za-z0-9_]*)/g)].map((m) => m[1])
+  for (const name of vars) parts.push(...(parsed.assignments.get(name) ?? []))
+  return parts.join('\n')
+}
+
+function bannedInMessage(text) {
+  return /Co-Authored-By/i.test(text) || /[\u{1F000}-\u{1FAFF}\u{2705}\u{2728}\u{FE0F}]/u.test(text)
+}
+
+// Each rule: name, run(parsed) → true = block (on argv), legacy(cmd) → the
+// pre-reader whole-string regex (used only when the reader throws), message
+// for the agent. Messages say WHY and what to do instead, so a blocked call
+// self-corrects instead of retrying.
 const RULES = [
   {
     name: 'no-verify',
-    test: (cmd) => /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--no-verify\b|\s-n\b)/.test(cmd),
+    run: (p) => commits(p).some((o) => o.short.has('n') || hasLong(o, (k) => k.startsWith('no-veri'))),
+    legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--no-verify\b|\s-n\b)/.test(cmd),
     message:
       'guard: --no-verify is forbidden (AGENTS.md standing rule 3). ' +
       'The verify gate is non-negotiable — fix the root cause of the ' +
@@ -68,7 +122,14 @@ const RULES = [
   },
   {
     name: 'force-push',
-    test: (cmd) =>
+    run: (p) =>
+      gitSegments(p, 'push', PUSH_SHORT_VALUE, PUSH_LONG_VALUE).some(
+        (o) =>
+          o.short.has('f') ||
+          hasLong(o, (k) => k.startsWith('forc')) ||
+          o.positional.some((w) => w.text.startsWith('+')),
+      ),
+    legacy: (cmd) =>
       /\bgit\b[^|;&]*\bpush\b[^|;&]*(\s--force(-with-lease)?\b|\s-f\b)/.test(cmd) ||
       /\bgit\b[^|;&]*\bpush\b[^|;&]*\s\+\S/.test(cmd),
     message:
@@ -79,7 +140,14 @@ const RULES = [
   },
   {
     name: 'destructive-reset',
-    test: (cmd) =>
+    run: (p) =>
+      gitSegments(p, 'reset').some((o) => o.long.has('hard')) ||
+      gitSegments(p, 'clean', 'e', ['exclude']).some((o) => o.short.has('f') || o.long.has('force')) ||
+      gitSegments(p, 'checkout', 'bB', ['orphan']).some((o) => o.positional.some((w) => w.text === '.')) ||
+      gitSegments(p, 'branch', 'u', ['set-upstream-to']).some(
+        (o) => o.short.has('D') && o.positional.some((w) => w.text === DEFAULT_BRANCH),
+      ),
+    legacy: (cmd) =>
       /\bgit\b[^|;&]*\breset\b[^|;&]*\s--hard\b/.test(cmd) ||
       /\bgit\b[^|;&]*\bclean\b[^|;&]*\s-[a-zA-Z]*f/.test(cmd) ||
       /\bgit\b[^|;&]*\bcheckout\b\s+(--\s+)?\.(\s|$)/.test(cmd) ||
@@ -91,8 +159,8 @@ const RULES = [
   },
   {
     name: 'commit-message-from-file',
-    test: (cmd) =>
-      /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--file\b|\s-[a-zA-Z]*F\b)/.test(cmd),
+    run: (p) => commits(p).some((o) => o.short.has('F') || o.long.has('file')),
+    legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--file\b|\s-[a-zA-Z]*F\b)/.test(cmd),
     message:
       'guard: git commit -F/--file is forbidden — the guard lints commit ' +
       'messages from the command string (AGENTS.md standing rule 2), and a ' +
@@ -106,8 +174,15 @@ const RULES = [
     // one shell, so `pkill -f <pattern>` finds that shell (its argv holds
     // the pattern) and kills the call itself.
     name: 'pkill-self-match',
-    test: (cmd) => {
-      // In command position only, so prose naming pkill (a commit body) passes.
+    run: (p) =>
+      p.segments.some((seg) => {
+        const ws = shell.effectiveWords(seg)
+        if (!ws.length || shell.basename(ws[0].text) !== 'pkill') return false
+        const args = ws.slice(1).map((w) => w.text)
+        const full = args.some((a) => /^-[a-zA-Z]*f[a-zA-Z]*$/.test(a) || a === '--full')
+        return full && !/\[[^\]]+\]/.test(args.join(' '))
+      }),
+    legacy: (cmd) => {
       const m = cmd.match(/(?:^|[;&|(\n])\s*(?:sudo\s+)?pkill\b([^|;&\n]*)/)
       return !!m && /\s-[a-zA-Z]*f\b|\s--full\b/.test(m[1]) && !/\[[^\]]+\]/.test(m[1])
     },
@@ -118,11 +193,12 @@ const RULES = [
       '`ps aux | grep "[h]ttp.server"`.',
   },
   {
+    // CONTENT rule: reads the commit message itself, not the rest of the
+    // command (an emoji in card text written by an earlier segment is not a
+    // commit body).
     name: 'trailer-or-emoji-in-commit',
-    test: (cmd) =>
-      /\bgit\b[^|;&]*\bcommit\b/.test(cmd) &&
-      (/Co-Authored-By/i.test(cmd) ||
-        /[\u{1F000}-\u{1FAFF}\u{2705}\u{2728}\u{FE0F}]/u.test(cmd)),
+    run: (p) => commits(p).some((o) => bannedInMessage(commitMessage(o, p))),
+    legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b/.test(cmd) && bannedInMessage(cmd),
     message:
       'guard: commit bodies are plain (AGENTS.md standing rule 2) — ' +
       'no Co-Authored-By trailers, no emojis. The only sanctioned ' +
@@ -131,8 +207,9 @@ const RULES = [
   {
     // footgun scratchpad-script-no-resolve: a script outside the repo resolves
     // packages from its own folder, so a bare import dies ERR_MODULE_NOT_FOUND.
+    // scratchpad-resolve.mjs reads the command itself (it masks literals).
     name: 'scratchpad-script-no-resolve',
-    test: (cmd) => {
+    raw: (cmd) => {
       trap = scratch?.findScratchpadTrap(cmd, hookCwd) ?? null
       return !!trap
     },
@@ -146,10 +223,41 @@ let trap = null
 // Backgrounding the gate is its own rule because it needs the
 // run_in_background flag, not just the command string. This is
 // the "post-result exit hang" — see AGENTS.md standing rule 3.
-function backgroundedGate(input) {
-  const cmd = String(input?.tool_input?.command ?? '')
-  const bg = input?.tool_input?.run_in_background === true
-  return bg && /\b(verify|deploy:check|e2e|test)\b/.test(cmd)
+// It matches a gate COMMAND that runs (npm test, npm run verify, node --test,
+// npx playwright test, scripts/verify.sh, ...), not the word anywhere.
+const GATE_WORD = /\b(verify|deploy:check|e2e|test)\b/
+const PACKAGE_RUNNERS = new Set([
+  'npm', 'pnpm', 'yarn', 'bun', 'npx', 'pnpx', 'bunx', 'make', 'turbo', 'nx', 'playwright', 'maestro', 'detox',
+])
+const INTERPRETERS = new Set(['node', 'bash', 'sh', 'zsh', 'python', 'python3', 'tsx', 'ts-node', 'deno'])
+
+// The words of a segment that name what it runs: the program, a package
+// runner's script/bin/target names, an interpreter's script (and node --test).
+function gateWords(seg) {
+  const ws = shell.effectiveWords(seg)
+  if (!ws.length) return []
+  const name = shell.basename(ws[0].text)
+  const words = [name]
+  const rest = ws.slice(1)
+  if (PACKAGE_RUNNERS.has(name)) {
+    for (const w of rest) {
+      if (w.text === '--') break
+      if (!w.text.startsWith('-')) words.push(w.text)
+    }
+  } else if (INTERPRETERS.has(name)) {
+    for (const w of rest) {
+      if (name === 'node' && /^--test(=|-|$)/.test(w.text)) words.push('test')
+      if (w.text.startsWith('-')) continue
+      words.push(shell.basename(w.text))
+      break
+    }
+  }
+  return words
+}
+
+function isGateCommand(cmd, parsed) {
+  if (!parsed) return GATE_WORD.test(cmd)
+  return parsed.segments.some((seg) => gateWords(seg).some((w) => GATE_WORD.test(w)))
 }
 
 const BACKGROUND_MESSAGE =
@@ -157,6 +265,38 @@ const BACKGROUND_MESSAGE =
   '(AGENTS.md standing rule 3 — the post-result exit hang). Run it ' +
   'as a foreground, blocking call and wait for it. If the gate is ' +
   'too slow, run its legs as sequential foreground calls.'
+
+function parseOrNull(cmd) {
+  try {
+    return shell.parseShell(cmd)
+  } catch {
+    return null // reader gap: rules fall back to their legacy regex
+  }
+}
+
+/**
+ * The rule a Bash call breaks, or null. `background` is the tool call's
+ * run_in_background flag. Pure apart from the scratchpad rule's file reads.
+ * @returns {{ name: string, message: string } | null}
+ */
+export function checkCommand(cmd, { background = false } = {}) {
+  cmd = String(cmd ?? '')
+  if (!cmd) return null
+  const parsed = parseOrNull(cmd)
+  if (background && isGateCommand(cmd, parsed)) return { name: 'backgrounded-gate', message: BACKGROUND_MESSAGE }
+  for (const rule of RULES) {
+    const hit = rule.raw ? rule.raw(cmd) : parsed ? rule.run(parsed) : rule.legacy(cmd)
+    if (hit) return { name: rule.name, message: rule.message }
+  }
+  return null
+}
+
+/** The hook payload's view: tool_input.command and tool_input.run_in_background. */
+export function checkBash(input) {
+  return checkCommand(input?.tool_input?.command, { background: input?.tool_input?.run_in_background === true })
+}
+
+export { RULES }
 
 // --- modes --------------------------------------------------------------
 
@@ -243,20 +383,11 @@ function markHooked(input, env = process.env) {
 function preBash() {
   const input = readStdinJson()
   markHooked(input)
-  const cmd = String(input?.tool_input?.command ?? '')
-  if (!cmd) return 0
   if (typeof input?.cwd === 'string' && input.cwd) hookCwd = input.cwd
-  if (backgroundedGate(input)) {
-    process.stderr.write(BACKGROUND_MESSAGE + '\n')
-    return 2
-  }
-  for (const rule of RULES) {
-    if (rule.test(cmd)) {
-      process.stderr.write(rule.message + '\n')
-      return 2
-    }
-  }
-  return 0
+  const hit = checkBash(input)
+  if (!hit) return 0
+  process.stderr.write(hit.message + '\n')
+  return 2
 }
 
 // --- write guards --------------------------------------------------------
@@ -508,6 +639,10 @@ function selfTest() {
     ['pkill -f "[h]ttp.server 8931"', null],
     ['pkill node', null],
     ['git commit -m "guard refuses an unbracketed pkill -f now"', null],
+    // argv matching (plan/AUDIT.md): text in a message or heredoc body is not a flag
+    ['git commit -m "docs: why --no-verify and git push --force stay denied"', null],
+    ["cat > x.md <<'EOF'\ngit reset --hard; Co-Authored-By\nEOF", null],
+    ['echo "$(git push -f)"', 'force-push'],
   ]
   // scratchpad-script-no-resolve needs a real file: one that imports a package nothing holds.
   const scratchDir = fs.mkdtempSync(path.join(os.tmpdir(), 'guard-selftest-'))
@@ -519,7 +654,7 @@ function selfTest() {
   )
   let failed = 0
   for (const [cmd, expected] of cases) {
-    const hit = RULES.find((r) => r.test(cmd))?.name ?? null
+    const hit = checkCommand(cmd)?.name ?? null
     const ok = hit === expected
     if (!ok) failed++
     process.stdout.write(
@@ -577,19 +712,30 @@ function selfTest() {
 
 // --- entry ---------------------------------------------------------------
 
-try {
-  const mode = process.argv[2]
-  const code =
-    mode === 'pre-bash' ? preBash()
-    : mode === 'pre-write' ? preWrite()
-    : mode === 'post-write' ? postWrite()
-    : mode === 'session-start' ? sessionStart()
-    : mode === 'stop' ? stopCheck()
-    : mode === 'self-test' ? selfTest()
-    : (process.stderr.write(`guard: unknown mode "${mode}"\n`), 0)
-  process.exit(code)
-} catch (err) {
-  // Fail-open: a guard bug must not wedge the loop.
-  process.stderr.write(`guard: internal error (fail-open): ${err?.message}\n`)
-  process.exit(0)
+// Run as a hook only when invoked directly; guard.test.mjs imports the rules.
+function invokedDirectly() {
+  try {
+    return !!process.argv[1] && fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    return false
+  }
+}
+
+if (invokedDirectly()) {
+  try {
+    const mode = process.argv[2]
+    const code =
+      mode === 'pre-bash' ? preBash()
+      : mode === 'pre-write' ? preWrite()
+      : mode === 'post-write' ? postWrite()
+      : mode === 'session-start' ? sessionStart()
+      : mode === 'stop' ? stopCheck()
+      : mode === 'self-test' ? selfTest()
+      : (process.stderr.write(`guard: unknown mode "${mode}"\n`), 0)
+    process.exit(code)
+  } catch (err) {
+    // Fail-open: a guard bug must not wedge the loop.
+    process.stderr.write(`guard: internal error (fail-open): ${err?.message}\n`)
+    process.exit(0)
+  }
 }
