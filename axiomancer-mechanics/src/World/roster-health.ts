@@ -344,7 +344,10 @@ export function eliteDropIds(src: RosterSources): string[] {
     const ids = new Set<string>();
     for (const pool of src.pools) {
         for (const { payload } of pool.entries) {
-            if (payload.kind !== 'encounter' || payload.difficulty !== 'elite') continue;
+            if (payload.kind !== 'encounter') continue;
+            // The game's own tier rule (`payloadDifficulty`): the payload's tier, else the foe's registry tier.
+            const tier = payload.difficulty ?? (payload.enemySlug ? src.enemyRegistry[payload.enemySlug]?.difficulty : undefined);
+            if (tier !== 'elite') continue;
             const drops = payload.eliteRelicDrops
                 ?? src.relics.filter(r => r.relicSource === 'elite').map(r => r.id);
             for (const id of drops) ids.add(id);
