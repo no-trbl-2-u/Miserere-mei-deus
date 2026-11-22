@@ -760,3 +760,5 @@
 - 2026-11-22 · 182.1 (alias: CE1a) · A pure presenter reads the chapter's stats from the state · 776b4031..776b4031 (#1679)
 - 2026-11-22 · 184.1 (alias: SC1a) · The sim report counts the seven Breakwater puzzle hazards · ffe2afa6..ffe2afa6 (#1681)
 - 2026-11-22 · 184 · spec complete: The sim report counts the hazards the Breakwater plays · axiomancer-mechanics/src/World/chapter1-content.test.ts · deleted in (this commit)
+- 2026-11-22 · 183.1 (alias: LR2a) · Bleeding Signet, Elementalist's Brooch and Belt drop from elites · d7326e20..189536e4 (#1680)
+- 2026-11-22 · 183 · spec complete: The three unearnable lane relics join the elite drop pool · axiomancer-mechanics/src/Combat/e2e/elite-relic-drop.engine.test.ts · deleted in (this commit)

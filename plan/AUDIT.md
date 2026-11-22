@@ -89,18 +89,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
 
-### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
-- category: content
-- impact: 4
-- ease: -
-- detail: `npm run roster-health -w axiomancer-mechanics` reports
-  `relic-bleeding-signet` (`Items/relic.library.ts`) as an orphan: no
-  cache, shop, loot table, starting loadout or reward carries it; only the
-  dev menu's GET ALL RELICS hands it over. Pinned in
-  `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
-- next: needs a brief T approves: stage it, grant it, or retire it (D88).
-  The pin changes in the same change.
-
 ### [content] Card-rules fence: 18 Blood Price cards pinned over the complexity budget (Phase CS1, 2026-10-13)
 - category: content
 - impact: 4
@@ -390,6 +378,17 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the command's own argv, not to heredoc bodies or `-m` message contents; the
   `-m` body already has its own dedicated lint pass, so the general grep can
   exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+### [x] [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13) — CLOSED 2026-11-22 (183.1: the Signet is an elite drop; roster health no longer pins it)
+- category: content
+- impact: 4
+- ease: -
+- detail: `npm run roster-health -w axiomancer-mechanics` reports
+  `relic-bleeding-signet` (`Items/relic.library.ts`) as an orphan: no
+  cache, shop, loot table, starting loadout or reward carries it; only the
+  dev menu's GET ALL RELICS hands it over. Pinned in
+  `World/e2e/roster-health.engine.test.ts` (`PINNED_ORPHANS`).
+- next: needs a brief T approves: stage it, grant it, or retire it (D88).
+  The pin changes in the same change.
 
 ### [x] `deploy:check` is unusable from remote web sessions — 401 "Token rejected" — CLOSED 2026-11-22 (this PR: deploy-check.mjs token falls back GH_TOKEN, GITHUB_TOKEN, GH_PAT; bearings note; scripts/deploy-check-token.test.mjs)
 - category: debt

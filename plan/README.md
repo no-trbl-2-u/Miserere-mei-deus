@@ -42,7 +42,6 @@ needs are done):
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
 - **182.2** · CE1b: crossing the bridge out of the Breakwater opens a chapter complete screen with the stats (T, `/plot`, 2026-11-14)
-- **183.1** · LR2a: the Bleeding Signet, the Elementalist's Brooch and the Elementalist's Belt join the elite drop pool (T, `/plot`, 2026-11-14)
 
 
 
@@ -93,7 +92,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 |---|---|---|---|---|
 | 186 | The opening fights end sooner: lower foe VITAE at levels 1 to 3 | [186-ep1-early-foe-vitae.md](186-ep1-early-foe-vitae.md) | planned (**Asap**: 186.1) | 1 left |
 | 182 | Chapter 1 ends on a chapter complete screen with the run's stats | [182-ce1-chapter-complete.md](182-ce1-chapter-complete.md) | planned (**Asap**: 182.2) | 1 left |
-| 183 | The three unearnable lane relics join the elite drop pool | [183-lr2-lane-relics-elite-pool.md](183-lr2-lane-relics-elite-pool.md) | planned (**Asap**: 183.1) | 1 left |
 | 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 5 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |

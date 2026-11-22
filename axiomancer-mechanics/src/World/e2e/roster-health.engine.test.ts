@@ -10,7 +10,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    auditRosterHealth, collectRosterSources,
+    auditRosterHealth, collectRosterSources, eliteDropIds,
     danglingDialogue, danglingEnemySlugs, danglingItems, danglingRelicSignatures,
     orphanDialogueNodes, orphanEnemies, orphanItems, orphanNpcs, orphanQuests,
     type RosterSources,
@@ -38,25 +38,22 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'enemy-unpooled', id: 'enemy-wreck-picker' },
     { lens: 'enemy-unpooled', id: 'enemy-smokehouse-gutter' },
     { lens: 'enemy-unpooled', id: 'enemy-toll-keeper' },
-    // No run starts with the ring or is handed it any more; old saves and
-    // the dev menu hold it until it gets a lane.
-    { lens: 'item-ungranted', id: 'relic-disarming-plea' },
     // The Breakwater chain pays two relics (the Ruby Signet and the Mirror
-    // Brooch; its other two steps pay a weapon and an armor). The rest drop from
-    // elites (`rollEliteRelicDrop`, a source this audit does not read) or wait on
-    // a quest that hands them out; until then only the dev menu hands them over.
-    { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
-    { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
-    { lens: 'item-ungranted', id: 'relic-thornback-signet' },
+    // Brooch). Every `relicSource: 'elite'` relic drops from elites and is not
+    // an orphan; these three wait on a quest or a spare-reward pool that hands
+    // them out; until then only the dev menu hands them over.
     { lens: 'item-ungranted', id: 'relic-carapace-belt' },
     { lens: 'item-ungranted', id: 'relic-brimming-locket' },
     { lens: 'item-ungranted', id: 'relic-penitents-brooch' },
 ];
 
 describe('roster health — live tree', () => {
+    it('183.1 A1: none of the six lane relics of Blood Price and the Elementalist is an orphan', () => {
+        const six = ['relic-crimson-circlet', 'relic-ruby-signet', 'relic-bleeding-signet',
+            'relic-elementalist-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt'];
+        expect(LIVE.orphans.filter(o => six.includes(o.id))).toEqual([]);
+    });
+
     it('has no dangling reference', () => {
         expect(LIVE.dangling, JSON.stringify(LIVE.dangling, null, 2)).toEqual([]);
     });
@@ -130,6 +127,17 @@ function sources(over: Partial<RosterSources> = {}): RosterSources {
         cacheItemIds: [potion.id],
         ...over,
     };
+}
+
+/** One elite encounter pool; `drops` is its own `eliteRelicDrops` list, if any. */
+function elitePools(drops?: string[]): MapEventPool[] {
+    return [{
+        id: 'x-elite.encounter',
+        entries: [{
+            kind: 'encounter', weight: 1,
+            payload: { kind: 'encounter', enemySlug: 'green-jelly', difficulty: 'elite', ...(drops ? { eliteRelicDrops: drops } : {}) },
+        }],
+    }];
 }
 
 /** A village whose one merchant carries `dialogue`: the pools' only dialogue carrier. */
@@ -221,6 +229,36 @@ describe('roster health — each orphan lens fires', () => {
     it('item-ungranted: a consumable and a relic nothing grants', () => {
         const found = orphanItems(sources({ startingItemIds: [], cacheItemIds: [] }));
         expect(found.map(f => [f.subject, f.id])).toEqual([['consumable', 'healing-potion'], ['relic', 'relic-test']]);
+    });
+
+    it('item-ungranted: an elite-source relic is granted by the elite drop; a quest-source one is not', () => {
+        const elite = { ...ring, id: 'relic-elite', relicSource: 'elite' } as Equipment;
+        const quest = { ...ring, id: 'relic-quest', relicSource: 'quest' } as Equipment;
+        const found = orphanItems(sources({ relics: [elite, quest], pools: elitePools(), startingItemIds: [], cacheItemIds: [] }));
+        expect(found.filter(f => f.subject === 'relic').map(f => f.id)).toEqual(['relic-quest']);
+    });
+
+    it('item-ungranted: an elite-source relic counts only when a registered elite fight can drop it', () => {
+        const a = { ...ring, id: 'relic-elite-a', relicSource: 'elite' } as Equipment;
+        const b = { ...ring, id: 'relic-elite-b', relicSource: 'elite' } as Equipment;
+        const orphans = (pools: MapEventPool[]) => orphanItems(sources({ relics: [a, b], pools, startingItemIds: [], cacheItemIds: [] }))
+            .filter(f => f.subject === 'relic').map(f => f.id);
+        // No elite fight at all: nothing drops either relic.
+        expect(orphans([])).toEqual(['relic-elite-a', 'relic-elite-b']);
+        // A normal fight, even one naming a drop list, and a non-fight entry drop nothing.
+        const normal: MapEventPool[] = [{
+            id: 'x-normal.encounter',
+            entries: [
+                { kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly', eliteRelicDrops: ['relic-elite-a'] } },
+                { kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly', difficulty: 'normal' } },
+            ],
+        }, merchantPool('x-village', { id: 't', rootNodeId: 'r', nodes: {} } as unknown as DialogueTree)];
+        expect(orphans(normal)).toEqual(['relic-elite-a', 'relic-elite-b']);
+        // An elite with its own drop list reaches only the relics it names.
+        expect(orphans(elitePools(['relic-elite-a']))).toEqual(['relic-elite-b']);
+        // An elite with no list draws from the whole elite pool.
+        expect(orphans(elitePools())).toEqual([]);
+        expect(eliteDropIds(sources({ relics: [a, b], pools: elitePools(['relic-elite-b']) }))).toEqual(['relic-elite-b']);
     });
 
     it('npc-unreached: a rostered NPC with a tree no node reaches', () => {

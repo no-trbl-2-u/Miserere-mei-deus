@@ -1,8 +1,8 @@
 /**
  * The elite-only relic drop (phase LR1c, A8 and A9 of the LR1 brief).
  *
- * The contract this file pins, over the fixture elite relics (no live relic
- * is elite-only until LR1d/LR1e):
+ * The contract this file pins, over the fixture elite relics (the live
+ * elite relics, including the three lane relics of 183.1, are checked below):
  *   · `rollEliteRelicDrop` drops one relic with probability
  *     `ELITE_RELIC_DROP_CHANCE`: over 10,000 seeds the rate is within one
  *     point of the constant;
@@ -54,9 +54,19 @@ describe('the elite relic pool', () => {
             .toEqual([FIXTURE_ELITE_RELICS[0]!.id]);
     });
 
-    it('is empty over the live library today (no live relic is elite-only yet)', () => {
+    it('holds every live elite-source relic for a player who carries none', () => {
         const live = relicLibrary.filter(r => r.relicSource === 'elite');
         expect(eliteRelicPool(bare()).length).toBe(live.length);
+    });
+});
+
+describe('183.1 A1: the three lane relics join the live elite pool', () => {
+    it('Bleeding Signet, Elementalist Brooch and Belt are in eliteRelicPool for a player who carries none', () => {
+        const ids = eliteRelicPool(bare()).map(r => r.id);
+        for (const id of ['relic-bleeding-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt']) {
+            expect(ids, id).toContain(id);
+        }
+        expect(ids).toHaveLength(7);
     });
 });
 

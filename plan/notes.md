@@ -559,3 +559,9 @@ Defaults (heads down; T confirmed the stat list 2026-11-22): the state counts ne
 T (2026-11-22, on the screenshot): the last row is RELICS ACQUIRED, the chapter's relics the player carries or wears (each once) out of every relic `chapter1Content` grants; a relic from outside the chapter does not count.
 
 `chapterHazards` lists one entry per Breakwater hazard node, its id the puzzle candidate id that `claimHazardPuzzleAction` logs (`BREAKWATER_HAZARD_PUZZLES`), and throws when a hazard node has no entry. Other maps still list `HAZARD_LIBRARY`. No change to `scripts/sim-report.mjs` or the Worker's `reports.ts` (the universe's shape is unchanged); `sim-report.test.mjs` pins `| hazards | 7 | 5 | 71% |` on a fixture.
+
+The three relics are `relicSource: 'elite'`; the elite pool holds seven. `orphanItems` in `World/roster-health.ts` now counts every elite-source relic as granted (an elite fight with no drop list draws from them), so Crimson Circlet, the Elementalist's Signet, Thornback Signet and the Suppliant's Ring lose their orphan pins too. The pins left are the Carapace Belt, Brimming Locket and Penitent's Brooch.
+
+T (2026-11-22): those three go into the spare reward pool, dropping 5% from a spared normal foe and 15% from a spared elite. That is new work for `/plot`, not this chunk.
+
+Outside scope, unfixed: the test title "no live relic is elite-only yet" in `elite-relic-drop.engine.test.ts` is stale (its assertion holds).
