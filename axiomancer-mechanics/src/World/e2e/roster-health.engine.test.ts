@@ -222,6 +222,13 @@ describe('roster health — each orphan lens fires', () => {
         expect(found.map(f => [f.subject, f.id])).toEqual([['consumable', 'healing-potion'], ['relic', 'relic-test']]);
     });
 
+    it('item-ungranted: an elite-source relic is granted by the elite drop; a quest-source one is not', () => {
+        const elite = { ...ring, id: 'relic-elite', relicSource: 'elite' } as Equipment;
+        const quest = { ...ring, id: 'relic-quest', relicSource: 'quest' } as Equipment;
+        const found = orphanItems(sources({ relics: [elite, quest], startingItemIds: [], cacheItemIds: [] }));
+        expect(found.filter(f => f.subject === 'relic').map(f => f.id)).toEqual(['relic-quest']);
+    });
+
     it('npc-unreached: a rostered NPC with a tree no node reaches', () => {
         const tree: DialogueTree = { rootId: 'r', nodes: { r: { id: 'r', text: '' } } };
         const maps = [mapDef({ name: 'rh-lonely' as never, npcs: [{ name: 'Hermit', dialogueTree: tree }] })];
