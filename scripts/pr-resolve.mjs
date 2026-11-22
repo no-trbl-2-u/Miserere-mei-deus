@@ -37,13 +37,16 @@
 // ours, theirs) so an edited row keeps only its edited form. The line order
 // comes from git's own three-way merge, so a row one side moved (Pending to
 // Done) moves whole; an anchor walk split such rows (lesson
-// `union-anchor-split`).
+// `union-anchor-split`). plan/AUDIT.md is merged by row instead
+// (`mergeAudit`, scripts/audit-merge.mjs), also as the `merge.audit` driver.
 
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import { mergeAudit } from './audit-merge.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const FILES_LIST = path.join(ROOT, '.git', 'pr-resolve-files.txt')
@@ -246,6 +249,7 @@ function stage(n, file, cwd = ROOT) {
 export const MERGE_DRIVERS = [
   { key: 'lessons', name: 'lessons.md and NEEDS_T.md by slug', driver: 'node scripts/lessons-merge.mjs %O %A %B %P' },
   { key: 'deadlines', name: 'plan/deadlines.md, insertions unioned and rows by cell', driver: 'node scripts/deadlines-merge.mjs %O %A %B %P' },
+  { key: 'audit', name: 'plan/AUDIT.md by row', driver: 'node scripts/audit-merge.mjs %O %A %B %P' },
 ]
 
 /**
@@ -344,9 +348,13 @@ export function mergeMain(branch, cwd = ROOT, scriptsRoot = null) {
       rest.push(file)
       continue
     }
-    const merged = unionMerge(stage(1, file, cwd), stage(2, file, cwd), stage(3, file, cwd), {
-      telemetry: file.startsWith('telemetry/'),
-    })
+    // AUDIT.md merges by row (scripts/audit-merge.mjs): a line union glued a
+    // closed row to the next header when both sides moved rows to Done.
+    const merged = file === 'plan/AUDIT.md'
+      ? mergeAudit(stage(1, file, cwd), stage(2, file, cwd), stage(3, file, cwd))
+      : unionMerge(stage(1, file, cwd), stage(2, file, cwd), stage(3, file, cwd), {
+        telemetry: file.startsWith('telemetry/'),
+      })
     fs.writeFileSync(path.join(cwd, file), merged)
     git(['add', '--', file], { cwd })
   }

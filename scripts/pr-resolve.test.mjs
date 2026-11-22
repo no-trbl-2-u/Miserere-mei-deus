@@ -16,13 +16,16 @@ import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { lintTree, treeVerdict } from './pr-merge.mjs'
-import { driverCommand, MERGE_DRIVERS, mergeMain, updateBranch } from './pr-resolve.mjs'
+import { mergeAudit } from './audit-merge.mjs'
+import { lintQueue } from './check-plan-queues.mjs'
+import { driverCommand, MERGE_DRIVERS, mergeMain, unionMerge, updateBranch } from './pr-resolve.mjs'
 import { reportSettle, settleMain } from './pr-settle.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ARCHIVE = 'plan/ARCHIVE.md'
 const DEADLINES = 'plan/deadlines.md'
 const COPIED_SCRIPTS = [
+  'audit-merge.mjs',
   'build-plan-merge.mjs',
   'check-deadlines.mjs',
   'check-lessons.mjs',
@@ -427,6 +430,86 @@ test('a spec\'s last close without absorb: fails the run, and the failure names 
     assert.match(failure, /held back plan\/pending\/904\.1\.md: it would leave plan\/904-fixture-zc\.md with no chunk: absorb the spec by hand/)
     assert.match(failure, /or give this close the missing "absorb:" key \(where the spec's lasting rules went: D\?<slug> decisions in this file, a file named, or none\)/)
     assert.match(lines.at(-1), /^::error::pr-settle: .*held back plan\/pending\/904\.1\.md/, 'the run goes red on it')
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+// --- plan/AUDIT.md merges by row (2026-11-22: PRs #1680, #1686, #1689, #1695) ---
+//
+// Main closed one AUDIT row (Pending to Done) while a PR branch closed another.
+// The line union glued the PR's closed row to the next header, and
+// check-plan-queues failed with "header follows line N-1 with no blank line".
+
+const AUDIT = 'plan/AUDIT.md'
+const auditRow = (title, impact, closed = false) => [
+  `### ${closed ? '[x] ' : ''}[debt] ${title}${closed ? ' — CLOSED 2026-11-22 (fixed)' : ''}`,
+  '- category: debt',
+  `- impact: ${impact}`,
+  '- ease: 5',
+  `- detail: ${title} detail.`,
+  '- next: /iterate',
+]
+const auditFile = (pending, done) =>
+  ['# Audit', '', '## Pending', ...pending.flatMap((r) => ['', ...r]), '', '## Done', ...done.flatMap((r) => ['', ...r]), ''].join('\n')
+const rowA = (c) => auditRow('row A', 3, c)
+const rowB = (c) => auditRow('row B', 4, c)
+const rowC = () => auditRow('row C', 2)
+const rowZ = () => auditRow('old row Z', 1, true)
+// Each side moves a different row to the top of Done.
+const AUDIT_BASE = auditFile([rowA(), rowB(), rowC()], [rowZ()])
+const AUDIT_OURS = auditFile([rowB(), rowC()], [rowA(true), rowZ()])
+const AUDIT_THEIRS = auditFile([rowA(), rowC()], [rowB(true), rowZ()])
+const auditFindings = (text) => lintQueue(text, 'audit').findings
+const headers = (text) => text.split('\n').filter((l) => l.startsWith('### '))
+
+/** Both closes in Done once, row C still open, and the file lints clean. */
+function assertBothClosed(text) {
+  assert.deepEqual(auditFindings(text), [])
+  const [pending, done] = text.split('\n## Done\n')
+  assert.deepEqual(headers(pending), [rowC()[0]])
+  assert.deepEqual(headers(done).sort(), [rowA(true)[0], rowB(true)[0], rowZ()[0]].sort())
+}
+
+test('AUDIT: the line union of two different closes cuts a row short (the 2026-11-22 defect)', () => {
+  for (const f of [AUDIT_BASE, AUDIT_OURS, AUDIT_THEIRS]) assert.deepEqual(auditFindings(f), [], 'each side lints clean')
+  const findings = auditFindings(unionMerge(AUDIT_BASE, AUDIT_OURS, AUDIT_THEIRS))
+  assert.ok(findings.some((f) => /header follows line \d+ with no blank line \(the row above was cut short\)/.test(f)), findings.join('\n'))
+})
+
+test('AUDIT: the row merge keeps both closes in Done, one blank line between rows', () => {
+  assertBothClosed(mergeAudit(AUDIT_BASE, AUDIT_OURS, AUDIT_THEIRS))
+})
+
+test('AUDIT: the row merge adds, edits and deletes ours\' rows, and never reopens a row theirs closed', () => {
+  const rowD = () => auditRow('row D', 1)
+  const editedC = () => [...rowC().slice(0, -1), '- next: /iterate (edited)']
+  const base = auditFile([rowA(), rowB(), rowC()], [rowZ()])
+  // Ours: adds D after C, edits C, deletes B, and edits A's body while it is open.
+  const ours = auditFile([[...rowA().slice(0, -1), '- next: ours'], editedC(), rowD()], [rowZ()])
+  // Theirs: closes A.
+  const theirs = auditFile([rowB(), rowC()], [rowA(true), rowZ()])
+  const out = mergeAudit(base, ours, theirs)
+  assert.deepEqual(auditFindings(out), [])
+  const [pending, done] = out.split('\n## Done\n')
+  assert.deepEqual(headers(pending), [rowC()[0], rowD()[0]], 'B deleted, D added after C')
+  assert.ok(pending.includes('- next: /iterate (edited)'), 'ours\' edit of C')
+  assert.deepEqual(headers(done), [rowA(true)[0], rowZ()[0]], 'A stays closed')
+  assert.equal(mergeAudit(base, base, theirs), theirs, 'an untouched branch takes main as it is')
+  assert.equal(mergeAudit(base, ours, base), ours, 'an untouched main takes the branch as it is')
+})
+
+test('AUDIT: mergeMain settles a branch that closed a different row than main, check-plan-queues green', () => {
+  const { dir, work } = scratch((d) => write(d, AUDIT, AUDIT_BASE))
+  try {
+    branchWith(work, 'pr-audit', (d) => write(d, AUDIT, AUDIT_OURS))
+    write(work, AUDIT, AUDIT_THEIRS)
+    git(work, 'commit', '-q', '-am', 'main closes row B')
+    git(work, 'push', '-q', 'origin', 'main')
+    const r = mergeMain('pr-audit', work)
+    assert.deepEqual(r.rest, [], 'no Haiku entry')
+    if (!r.merged) git(work, 'commit', '-q', '--no-edit')
+    assertBothClosed(read(work, AUDIT))
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
