@@ -184,7 +184,7 @@ export type {
 
 // ─── Sandbox cards — the deck-forge experimentation surface ───────────────────
 // New experimental cards + numeric overrides of library cards, live everywhere
-// `getCardById` is consulted; the `/deck-tuning` loop A/Bs them here before a
+// `getCardById` is consulted; the card-tuning loop A/Bs them here before a
 // literal is promoted into the library.
 export {
     registerSandboxCards,

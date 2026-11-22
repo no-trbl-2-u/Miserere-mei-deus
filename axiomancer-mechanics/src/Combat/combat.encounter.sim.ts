@@ -108,7 +108,7 @@ export interface CombatSimStats {
      *  aggregated across runs), by id. '' when nothing dealt damage. */
     dominantCardId: string;
     /** `dominantCardId`'s share of total attributed enemy-HP damage (0–1). The
-     *  single-card-spam witness: deck-tuning §4 flags any card > 0.70. */
+     *  single-card-spam witness: the card-tuning loop §4 flags any card > 0.70. */
     dominantCardShare: number;
     /** Mean over the runs of the lowest player VITAE reached, as a fraction of
      *  max VITAE (sampled after every enemy action and at the fight's end). A

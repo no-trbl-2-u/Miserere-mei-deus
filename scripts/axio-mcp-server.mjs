@@ -37,7 +37,18 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DATA = path.join(ROOT, 'devlog', 'data')
 const MECH = path.join(ROOT, 'axiomancer-mechanics')
 const CARDS_LIB = path.join(MECH, 'src', 'Cards', 'cards.library.ts')
-const EFFECTS_LIB = path.join(MECH, 'src', 'Effects', 'effects.library.ts')
+// What `catalog:export` (axiomancer-mechanics/scripts/export-catalog.ts) builds
+// its JSON from: the card, effect, enemy and atlas source trees (cards live in
+// `Cards/library/*.cards.ts`, behind the `cards.library.ts` aggregator) plus the
+// two Combat files it renders card text and the starter set from.
+const SOURCE_PATHS = [
+  path.join(MECH, 'src', 'Cards'),
+  path.join(MECH, 'src', 'Effects'),
+  path.join(MECH, 'src', 'Enemy'),
+  path.join(MECH, 'src', 'Atlas'),
+  path.join(MECH, 'src', 'Combat', 'combat.cards.ts'),
+  path.join(MECH, 'src', 'Combat', 'combat.rewards.ts'),
+]
 const KEYWORD_ATLAS = path.join(MECH, 'docs', 'keyword-atlas.md')
 
 const CARDS_JSON = path.join(DATA, 'cards.json')
@@ -48,7 +59,14 @@ const EFFECTS_JSON = path.join(DATA, 'effects.json')
 function newestMtime(paths) {
   let max = 0
   for (const p of paths) {
-    try { max = Math.max(max, fs.statSync(p).mtimeMs) }
+    try {
+      const st = fs.statSync(p)
+      if (st.isDirectory()) {
+        const kids = fs.readdirSync(p).map((k) => path.join(p, k))
+        max = Math.max(max, newestMtime(kids))
+      }
+      else max = Math.max(max, st.mtimeMs)
+    }
     catch { /* missing source is fine — just doesn't push the bar up */ }
   }
   return max
@@ -59,7 +77,7 @@ let staleWarning = null
 function ensureFresh() {
   const exportsExist = [CARDS_JSON, ENEMIES_JSON, EFFECTS_JSON].every((p) => fs.existsSync(p))
   const exportsMtime = exportsExist ? newestMtime([CARDS_JSON, ENEMIES_JSON, EFFECTS_JSON]) : 0
-  const sourcesMtime = newestMtime([CARDS_LIB, EFFECTS_LIB])
+  const sourcesMtime = newestMtime(SOURCE_PATHS)
   if (exportsExist && exportsMtime >= sourcesMtime) { staleWarning = null; return }
   try {
     execSync('npm run catalog:export', { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'] })
