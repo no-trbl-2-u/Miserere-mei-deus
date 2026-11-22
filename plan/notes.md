@@ -543,3 +543,19 @@ Defaults taken: `NARROW_OVER = 20`, PR mode only. Open question #1 and #2 are un
 Defaults taken: a new test file `Enemy/e2e/enemy-descriptions.engine.test.ts` pins the six lines; the mercy-line drafts and the Death Beholder phase line keep their DRAFT comments.
 
 The seven descriptions are word for word from rounds 3 and 4 of `plan/ballots/narrator-enemies.md`. The Tide-Gate's player-facing name is now The Half-Taken; its id, portrait key, slug, moves and TIDE are unchanged. Three chapter e2e tests (cave choir, lighthouse, keep causeway) pinned old descriptions inside `toMatchObject`; the description now lives only in `enemy-descriptions.engine.test.ts`, which covers all thirteen. Two mobile tests that assert or fixture the name were updated. The three DRAFT mercy-line blocks and the Death Beholder's DRAFT phase line are untouched.
+
+Four of the five points were wrong in the doc and are corrected against the code: the lethal hazard (a first fatal crossing returns the player, one while dying resets the run), the foe roster (23 foes, every one but the Death Beholder carries enemy words, 11 `ENEMY_KEYWORDS`), the Breakwater questline (four steps from `breakwater-chapter.questline.ts`, 40 XP each) and the scenes (22, played from node slots). The hazard count (seven) already agreed. The spec's "thirteen foes" was the audit's count; the doc follows the code. The relic-source lines (Brooch, Belt) were left for 183.1.
+
+Outside scope, unfixed: the `ACT1_POOL` comment in `axiomancer-mechanics/src/Enemy/enemy.library.ts` says six named normals and seventeen foes; the pool holds five and the library 23.
+
+Defaults taken: a Held chunk is "named" when an Item's Rows lists its id or alias; an act's name is the chunk line up to its first ` · `; a Held chunk whose needs are open counts as waiting on the loop.
+
+Defaults taken: the log lives in `docs/reports/ci-screens.md`; a flapping route is logged and named in the comment, and CI still re-stamps it. The recorder runs from the base branch's copy inside the re-stamp job, so it does nothing until this merges. A load-failed-only run, or a mutation comment on a PR with no re-stamp, is not recorded until someone runs the recorder by hand.
+
+`selectChapterCompleteSummary(state)` in `axiomancer-mobile/state/presenters/chapter-complete.engine.ts` returns ordered rows (`level`, `vitae`, `nodes`, `fights`, `quests`, `shillings`, `deck`, `relics`), each `{ id, label, value, count, of? }`; the labels and the screen strings 182.2 needs are in `chapter-complete.copy.ts`. A stat the state lacks has no row.
+
+Defaults (heads down; T confirmed the stat list 2026-11-22): the state counts neither deaths nor foes spared, so neither has a row. Fights won is the codex's `defeatedEnemies` length (each distinct foe once). Nodes resolved is a bare count. Quest steps read "n / 4" over the Breakwater questline only.
+
+T (2026-11-22, on the screenshot): the last row is RELICS ACQUIRED, the chapter's relics the player carries or wears (each once) out of every relic `chapter1Content` grants; a relic from outside the chapter does not count.
+
+`chapterHazards` lists one entry per Breakwater hazard node, its id the puzzle candidate id that `claimHazardPuzzleAction` logs (`BREAKWATER_HAZARD_PUZZLES`), and throws when a hazard node has no entry. Other maps still list `HAZARD_LIBRARY`. No change to `scripts/sim-report.mjs` or the Worker's `reports.ts` (the universe's shape is unchanged); `sim-report.test.mjs` pins `| hazards | 7 | 5 | 71% |` on a fixture.

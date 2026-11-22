@@ -164,7 +164,7 @@ export interface PlaytestDeckSummary {
     /** **THE OBJECTIVE FUNCTION** for this deck across every stage
      *  it was measured on, scored from the deck's POOLED telemetry. One deck,
      *  so the IDENTITY component is meaningful here (see `combat.objective.ts`)
-     *  — this is the row `/deck-tuning` should rank decks by. */
+     *  — this is the row the card-tuning loop should rank decks by. */
     combatQuality: CombatQualityScore;
     /** Mean |doctrineDelta| over the measured stages — one number for "how far
      *  off the doctrine curve is this deck?" (0 = every stage in-band). */
@@ -184,7 +184,7 @@ export interface PlaytestReport {
     cells: PlaytestCellResult[];
     /** **THE OBJECTIVE FUNCTION** for the WHOLE sweep — scored from
      *  every cell's pooled objective telemetry. This is the headline number
-     *  `/deck-tuning` and `/combat-playtest` optimise; `statusEngagement` is
+     *  the card-tuning loop and `/combat-playtest` optimise; `statusEngagement` is
      *  kept beside it as a warning light. */
     combatQuality: CombatQualityScore;
     /** Aggregated over cells, weighted by runs. */
@@ -476,7 +476,7 @@ const pct = (n: number): string => `${(n * 100).toFixed(0).padStart(3)}%`;
 /**
  * Renders the report as aligned text tables in the combat-sim CLI's visual
  * style. `opts.perCard` appends the per-card usage table (aggregated over all
- * cells) — the dead-card detector for `/deck-tuning`.
+ * cells) — the dead-card detector for the card-tuning loop.
  */
 export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: boolean }): string {
     const lines: string[] = [];
@@ -487,7 +487,7 @@ export function formatPlaytestReport(report: PlaytestReport, opts?: { perCard?: 
     lines.push(' util=deck utilization, H=play entropy, dom=dominant-card HP share (>70% = spam))');
     lines.push('');
     // ── THE OBJECTIVE FUNCTION, printed first because it is what
-    //    /deck-tuning and /combat-playtest are supposed to be optimising. ─────
+    //    the card-tuning loop and /combat-playtest are supposed to be optimising. ─────
     lines.push('OBJECTIVE FUNCTION v2 — Combat Quality Index (see Combat/combat.objective.ts)');
     lines.push('  "good combat" = the deck\'s engine runs: it assembles across turns (arc), offers');
     lines.push('  more than one line at each powering die (width), has a lead card without becoming');

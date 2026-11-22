@@ -11,7 +11,6 @@
  *   - `combatRewardCards` drains BEFORE `knownCards`, one copy at a time;
  *   - the `knownCards` fall-through, including the duplicate-entry case the
  *     mobile starter-bundle path produces;
- *   - loadout reconciliation ACTUALLY shrinks `buildCombatDeck`'s output;
  *   - refusals are first-class values (unknown card, deck at the floor) that
  *     leave the character byte-identical and never advance the counter;
  *   - the floor's DERIVATION from the shipped Profane Canon lineage;
@@ -31,8 +30,6 @@ import {
 } from '../card.removal';
 import {
     buildCombatDeck,
-    addToLoadout,
-    getCombatLoadout,
     COMBAT_HAND_SIZE,
     STARTING_CARD_IDS,
 } from '../../Combat';
@@ -106,7 +103,6 @@ describe('Phase 52a — removeCardFromCombatDeck: source ordering', () => {
         expect(result.ok).toBe(true);
         if (!result.ok) return;
         expect(result.removedFrom).toBe('known');
-        expect(result.loadoutReconciled).toBe(false);
         expect(result.player.knownCards).not.toContain('threadbare-cope');
         expect(buildCombatDeck(result.player)).not.toContain('threadbare-cope');
         expect(result.deckSizeAfter).toBe(result.deckSizeBefore - 1);
@@ -144,113 +140,6 @@ describe('Phase 52a — removeCardFromCombatDeck: source ordering', () => {
     });
 });
 
-describe('Phase 52a — loadout reconciliation', () => {
-    /** Flags seating a curated loadout over the Office + one earned card. */
-    function loadoutFlags(ids: readonly string[]): string[] {
-        let flags: string[] = [];
-        for (const id of ids) flags = addToLoadout(flags, id);
-        return flags;
-    }
-
-    it('drops the loadout slot so buildCombatDeck ACTUALLY shrinks', () => {
-        const seated = [...OFFICE, ...EARNED.slice(0, 6)];
-        const flags = loadoutFlags(seated);
-        const player = fixture(OFFICE, EARNED.slice(0, 6));
-
-        const deckBefore = buildCombatDeck(player, flags);
-        expect(deckBefore).toContain('grandmothers-psalter');
-
-        const result = removeCardFromCombatDeck(player, 'grandmothers-psalter', flags);
-        expect(result.ok).toBe(true);
-        if (!result.ok) return;
-        expect(result.removedFrom).toBe('known');
-        expect(result.loadoutReconciled).toBe(true);
-        expect(getCombatLoadout(result.flags)).not.toContain('grandmothers-psalter');
-
-        const deckAfter = buildCombatDeck(result.player, result.flags);
-        expect(deckAfter).not.toContain('grandmothers-psalter');
-        expect(deckAfter.length).toBe(deckBefore.length - 1);
-    });
-
-    it('without reconciliation the removal would be INVISIBLE (the regression this guards)', () => {
-        const flags = loadoutFlags([...OFFICE, ...EARNED.slice(0, 6)]);
-        const player = fixture(OFFICE, EARNED.slice(0, 6));
-
-        // Strip the id from `knownCards` only — what a naive removal would do.
-        const naive: Character = {
-            ...player,
-            knownCards: player.knownCards.filter(id => id !== 'grandmothers-psalter'),
-        };
-        expect(buildCombatDeck(naive, flags)).toContain('grandmothers-psalter');
-
-        const result = removeCardFromCombatDeck(player, 'grandmothers-psalter', flags);
-        expect(result.ok).toBe(true);
-        if (!result.ok) return;
-        expect(buildCombatDeck(result.player, result.flags)).not.toContain('grandmothers-psalter');
-    });
-
-    it('a multi-slot loadout entry gives up ONE slot — and knownCards is left alone', () => {
-        // `buildCombatDeck` keeps the copies of whichever base is in force,
-        // loadout included: three `combat-loadout-card:thin-hymn:*` slots deal
-        // THREE copies. One removal un-seats one slot. `knownCards` is the
-        // unlock set while a loadout is in force, so it must not be touched —
-        // un-seating a copy is not un-learning the card.
-        const seated = [...OFFICE, 'thin-hymn', 'thin-hymn', ...EARNED.slice(0, 5)];
-        const flags = loadoutFlags(seated);
-        expect(getCombatLoadout(flags).filter(id => id === 'thin-hymn')).toHaveLength(3);
-        const player = fixture(OFFICE, EARNED.slice(0, 5));
-        expect(buildCombatDeck(player, flags).filter(id => id === 'thin-hymn')).toHaveLength(3);
-
-        const result = removeCardFromCombatDeck(player, 'thin-hymn', flags);
-        expect(result.ok).toBe(true);
-        if (!result.ok) return;
-        expect(result.removedFrom).toBe('known');
-        expect(result.loadoutReconciled).toBe(true);
-        expect(getCombatLoadout(result.flags).filter(id => id === 'thin-hymn')).toHaveLength(2);
-        expect(result.player.knownCards).toContain('thin-hymn');
-        // Exactly ONE deck copy left.
-        expect(buildCombatDeck(result.player, result.flags).filter(id => id === 'thin-hymn'))
-            .toHaveLength(2);
-        expect(buildCombatDeck(result.player, result.flags).length)
-            .toBe(result.deckSizeBefore - 1);
-    });
-
-    it('other cards\' loadout slots are untouched by the eviction', () => {
-        const flags = loadoutFlags([...OFFICE, 'thin-hymn', ...EARNED.slice(0, 5)]);
-        const player = fixture(OFFICE, EARNED.slice(0, 5));
-        const result = removeCardFromCombatDeck(player, 'thin-hymn', flags);
-
-        expect(result.ok).toBe(true);
-        if (!result.ok) return;
-        // The seated list names `thin-hymn` twice (once inside OFFICE, once
-        // appended). Exactly ONE slot is dropped — the FIRST — and every other
-        // slot, this card's second copy included, keeps its place and order.
-        const survivors = getCombatLoadout(result.flags);
-        const seated = [...OFFICE, 'thin-hymn', ...EARNED.slice(0, 5)];
-        const firstHymn = seated.indexOf('thin-hymn');
-        expect(survivors).toEqual(seated.filter((_, i) => i !== firstHymn));
-        // Non-loadout flags in the array are preserved verbatim.
-        const withNoise = ['starter-bundle-chosen', ...flags, 'bundle:threadbare'];
-        const noisy = removeCardFromCombatDeck(player, 'thin-hymn', withNoise);
-        expect(noisy.ok).toBe(true);
-        expect(noisy.flags).toContain('starter-bundle-chosen');
-        expect(noisy.flags).toContain('bundle:threadbare');
-    });
-
-    it('a reward removal leaves the loadout alone — the reward copy is the one that left', () => {
-        const flags = loadoutFlags([...OFFICE, ...EARNED.slice(0, 6)]);
-        const player = fixture(OFFICE, [...EARNED.slice(0, 6), 'thin-hymn']);
-
-        const result = removeCardFromCombatDeck(player, 'thin-hymn', flags);
-        expect(result.ok).toBe(true);
-        if (!result.ok) return;
-        expect(result.removedFrom).toBe('rewards');
-        expect(result.loadoutReconciled).toBe(false);
-        expect(result.flags).toEqual(flags);
-        expect(getCombatLoadout(result.flags)).toContain('thin-hymn');
-    });
-});
-
 describe('Phase 52a — refusals are first-class, loud, and inert', () => {
     it('refuses a card that is not in the deck at all', () => {
         const player = fixture(OFFICE, EARNED);
@@ -265,22 +154,6 @@ describe('Phase 52a — refusals are first-class, loud, and inert', () => {
         expect(result.player).toBe(player);
         expect(result.removedFrom).toBeNull();
         expect(result.deckSizeAfter).toBe(result.deckSizeBefore);
-    });
-
-    it('refuses a known-but-benched card the loadout does not seat', () => {
-        let flags: string[] = [];
-        for (const id of [...OFFICE.slice(0, 7), ...EARNED]) flags = addToLoadout(flags, id);
-        const player = fixture(OFFICE, EARNED);
-
-        // 'threadbare-cope' is known, but the curated loadout never seats it —
-        // so it is not in the deck, and benching it was already free.
-        expect(buildCombatDeck(player, flags)).not.toContain('threadbare-cope');
-        const result = removeCardFromCombatDeck(player, 'threadbare-cope', flags);
-
-        expect(result.ok).toBe(false);
-        if (result.ok) return;
-        expect(result.refusal.code).toBe('not-in-deck');
-        expect(result.player).toBe(player);
     });
 
     it('refuses AT the floor — refused, never clamped', () => {
@@ -307,9 +180,7 @@ describe('Phase 52a — refusals are first-class, loud, and inert', () => {
         if (!first.ok) return;
         expect(first.deckSizeAfter).toBe(MIN_COMBAT_DECK_SIZE);
 
-        const second = removeCardFromCombatDeck(
-            first.player, buildCombatDeck(first.player)[0], first.flags,
-        );
+        const second = removeCardFromCombatDeck(first.player, buildCombatDeck(first.player)[0]);
         expect(second.ok).toBe(false);
         if (second.ok) return;
         expect(second.refusal.code).toBe('deck-at-floor');

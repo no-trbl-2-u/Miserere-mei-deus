@@ -74,8 +74,7 @@ describe('the Bleeding Signet from the dev chip reaches the board (SG1 A4)', () 
     it('with Conviction at the cost, a press casts it and spends the cost', () => {
         const { store, actions } = pressSignetChip();
         const enemy = actions.beginHazardEncounter()!;
-        const flags = (store.getState() as unknown as { flags?: string[] }).flags;
-        const opening = initializeCombatEncounter(store.getState().player, enemy, CARDS, 7, flags);
+        const opening = initializeCombatEncounter(store.getState().player, enemy, CARDS, 7);
         expect(opening.signatures).toEqual([VEIN]);
         const combat = { ...rollEncounterDice(opening).state, conviction: VEIN_COST };
 

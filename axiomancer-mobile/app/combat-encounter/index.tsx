@@ -65,7 +65,6 @@ export default function CombatEncounterScreen() {
     const slot = useActiveSlot();
     const { inCombat, enterCombat, exitCombat, resetRunStats } = useCombatMode();
     const player = useGameState((s) => s.player);
-    const flags = useGameState((s) => (s as unknown as { flags?: string[] }).flags);
 
     const [fight] = useState(() => selectResumableFight(store.getState()));
     const [region] = useState(() => regionOf(store.getState()));
@@ -154,7 +153,6 @@ export default function CombatEncounterScreen() {
                 key={fight.enemy.id}
                 enemy={fight.enemy}
                 bootstrapPlayer={player}
-                flags={flags}
                 seed={seed}
                 persistOutcome
                 onWithdraw={fight.fleeAllowed ? onWithdraw : undefined}

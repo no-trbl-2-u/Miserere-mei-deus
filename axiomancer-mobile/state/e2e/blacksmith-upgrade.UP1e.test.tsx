@@ -101,11 +101,10 @@ describe('blacksmith: upgrade a card (Phase UP1e)', () => {
         fireEvent.press(r.getByTestId('blacksmith-leave'));
         fireEvent.press(r.getByTestId('blacksmith-claim'));
 
-        const { player, flags } = store.getState() as unknown as {
+        const { player } = store.getState() as unknown as {
             player: { currency: number; knownCards: string[]; combatRewardCards?: string[] };
-            flags: string[];
         };
-        const deck = buildCombatDeck(player as never, flags);
+        const deck = buildCombatDeck(player as never);
         expect(count(deck, 'grey-strike+')).toBe(1);
         expect(count(deck, 'grey-strike')).toBe(4);
         expect(deck).toHaveLength(KNOWN.length);

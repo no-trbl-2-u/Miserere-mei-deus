@@ -22,6 +22,8 @@
  */
 
 import { createCharacter } from '../../Character';
+import { equipItem } from '../../Character/equipment.reducer';
+import { cloneRelic, getRelicById } from '../../Items/relic.library';
 import { buildCharacterFromPreset, getPresetById, DEV_PRESET_LANE_IDS } from '../../Character/presets';
 import type { Character } from '../../Character/types';
 import { getRng, setSeed } from '../../Utils/rng';
@@ -78,7 +80,16 @@ const applyPlayer = (overrides: StateFixturePlayer | undefined) => (state: GameS
     const health = overrides.health === undefined
         ? rebuilt.health
         : clamp(Math.floor(overrides.health), 1, rebuilt.maxHealth);
-    return { ...state, player: { ...rebuilt, knownCards, currency, health } };
+    const wornRelics = (overrides.relics ?? []).reduce<Character>((c, id) => {
+        const relic = getRelicById(id);
+        if (!relic) throw new Error(`buildStateFromFixture: unknown relic '${id}'.`);
+        return equipItem(c, cloneRelic(relic));
+    }, rebuilt);
+    // Equipping can lift max VITAE; the health override clamps against the worn max.
+    const clampedHealth = overrides.health === undefined
+        ? health
+        : clamp(Math.floor(overrides.health), 1, wornRelics.maxHealth);
+    return { ...state, player: { ...wornRelics, knownCards, currency, health: clampedHealth } };
 };
 
 /** Continent → map (unlocked + fresh `MapState`) → completed maps → node. */
@@ -102,6 +113,9 @@ const applyWorld = (target: StateFixtureWorld | undefined) => (state: GameState)
         : placed;
     return { ...state, world: settled };
 };
+
+const applyDying = (dying: true | undefined) => (state: GameState): GameState =>
+    dying ? { ...state, dying: true } : state;
 
 const applyFlags = (flags: readonly string[] | undefined) => (state: GameState): GameState =>
     flags ? { ...state, flags: dedupe([...state.flags, ...flags]) } : state;
@@ -139,6 +153,7 @@ export function buildStateFromFixture(fixture: StateFixture): GameState {
         applyPreset(fixture),
         applyPlayer(fixture.player),
         applyWorld(fixture.world),
+        applyDying(fixture.dying),
         applyFlags(fixture.flags),
         applyQuestsCompleted(fixture.questsCompleted),
         withRewardLanes,

@@ -40,7 +40,7 @@ export class ScreenStuckError extends Error {}
 
 function deckOf(store: AppStore): string[] {
     const s = store.getState() as unknown as GameState;
-    return buildCombatDeck(s.player, s.flags);
+    return buildCombatDeck(s.player);
 }
 
 /** `/item-reward`: EQUIP or CONFIRM the head of the queue. */

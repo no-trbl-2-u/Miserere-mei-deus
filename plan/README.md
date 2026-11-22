@@ -22,6 +22,8 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
+- **186.1** · EP1a: foes at player levels 1 to 3 take a lower VITAE multiplier, so the opening fights end sooner (T, `/plot`, 2026-11-22)
+
 
 
 
@@ -39,9 +41,7 @@ needs are done):
 
 
 - **163.3** · TK1c: preview builds refuse the owner token, and a release can carry its APK (T, `/plot asap`, 2026-11-09; needs 163.2)
-- **180.1** · CW1a: a log of the screens CI hangs on, written by a recorder script (T, `/plot`, 2026-11-12)
-- **182.1** · CE1a: the chapter summary, the run's stats read from the state (T, `/plot`, 2026-11-14)
-- **182.2** · CE1b: crossing the bridge out of the Breakwater opens a chapter complete screen with the stats (T, `/plot`, 2026-11-14; needs 182.1)
+- **182.2** · CE1b: crossing the bridge out of the Breakwater opens a chapter complete screen with the stats (T, `/plot`, 2026-11-14)
 - **183.1** · LR2a: the Bleeding Signet, the Elementalist's Brooch and the Elementalist's Belt join the elite drop pool (T, `/plot`, 2026-11-14)
 
 
@@ -91,13 +91,10 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 182 | Chapter 1 ends on a chapter complete screen with the run's stats | [182-ce1-chapter-complete.md](182-ce1-chapter-complete.md) | planned (**Asap**: 182.1, 182.2) | 2 left |
+| 186 | The opening fights end sooner: lower foe VITAE at levels 1 to 3 | [186-ep1-early-foe-vitae.md](186-ep1-early-foe-vitae.md) | planned (**Asap**: 186.1) | 1 left |
+| 182 | Chapter 1 ends on a chapter complete screen with the run's stats | [182-ce1-chapter-complete.md](182-ce1-chapter-complete.md) | planned (**Asap**: 182.2) | 1 left |
 | 183 | The three unearnable lane relics join the elite drop pool | [183-lr2-lane-relics-elite-pool.md](183-lr2-lane-relics-elite-pool.md) | planned (**Asap**: 183.1) | 1 left |
-| 184 | The sim report counts the hazards the Breakwater plays | [184-sc1-sim-hazard-coverage.md](184-sc1-sim-hazard-coverage.md) | planned | 1 left |
-| 185 | The game model says what the tree does today | [185-gm1-game-model-refresh.md](185-gm1-game-model-refresh.md) | planned | 1 left |
-| 180 | CI screen watch: a log of the screens CI hangs on, and the first cleanup | [180-cw1-ci-screen-watch.md](180-cw1-ci-screen-watch.md) | planned (**Asap**: 180.1) | 1 left |
 | 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 5 left |
-| 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
@@ -109,6 +106,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 133 | Miserere on nexus v2, and kept current with it | [133-nx1-nexus-v2.md](133-nx1-nexus-v2.md) | planned | 1 left |
 | 134 | The owner-led rebuild sessions (B-track) | [134-owner-led-rebuild-sessions.md](134-owner-led-rebuild-sessions.md) | planned | 8 left |
 | 146 | Arena plates: twelve engravings behind the foe, a default per region, a plate per node | [146-ap1-arena-plates.md](146-ap1-arena-plates.md) | planned | 1 left |
+| 187 | Mercy at the killing blow: normals and elites stop at 1 VITAE and ask | [187-mr6-mercy-at-the-blow.md](187-mr6-mercy-at-the-blow.md) | planned | 2 left |
 
 ## How the loop reads this folder
 

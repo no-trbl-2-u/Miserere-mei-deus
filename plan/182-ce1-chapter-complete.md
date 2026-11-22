@@ -52,7 +52,6 @@ The facts are already in the state and the run log already knows the moment. The
 
 ## Acceptance
 
-- **A1** A pure summary function returns the chapter's stats from a game state, each one read from the state and none estimated; a test pins every stat on a fixture run and shows a stat the state lacks is absent.
 - **A2** Crossing the bridge out of the Breakwater opens `/chapter-complete` with the title, the chapter's name, the stats and `CONTINUE`, and no toast; `CONTINUE` lands the player in the Charcoal Wood with the save made, as today. The cave shortcut opens no such screen. A phone-width screenshot is in the PR.
 
 ## Open questions
@@ -62,12 +61,8 @@ The facts are already in the state and the run log already knows the moment. The
 
 ## Chunks
 
-Measure: 2 open · 0 closed · next A3
-- [ ] **182.1** The chapter summary: the run's stats from the state · S · closes A1 · needs — · alias: CE1a
-  - Mobile: a presenter `state/presenters/chapter-complete.ts` (pure, no store) and its copy file with the labels; reuse `countResolvedNodes` and the quest log's readers. Check first whether the state counts deaths and foes spared; add each only if it does.
-  - Tests: a presenter test on a fixture state for every stat, red first.
-  - Measure: mobile `npx tsc --noEmit`, lint and the whole jest suite pass.
-- [ ] **182.2** The chapter complete screen at the far bank · M · closes A2 · needs 182.1 · alias: CE1b
+Measure: 1 open · 1 closed · next A3
+- [ ] **182.2** The chapter complete screen at the far bank · M · closes A2 · needs — · alias: CE1b
   - Mobile: `app/chapter-complete/index.tsx`; `takeTravelAction` (or the travel screen that calls it) opens the screen on the crossing out of `STARTING_MAP` in place of the toast, and `CONTINUE` completes the crossing. Keep `recordRunClosed` firing once.
   - Tests: a screen test (the rows, the button, no toast), an e2e from the far bank through `CONTINUE` into the Charcoal Wood, and the cave shortcut opening no screen. Check siblings: the sim's run driver still ends at `chapter-clear`; the travel screen's tests; a smoke route and visual baseline for the new screen.
   - Measure: mobile `npx tsc --noEmit`, lint and the whole jest suite, and the root `npm test` pass; the screenshot is in the PR.

@@ -79,7 +79,7 @@ export function selectChapterCompleteSummary(state: Partial<ChapterCompleteState
         rows.push(row('quests', done, steps.length));
     }
     rows.push(row('shillings', player.currency));
-    rows.push(row('deck', buildCombatDeck(player, state.flags).length));
+    rows.push(row('deck', buildCombatDeck(player).length));
     const chapter = chapterRelicIds();
     rows.push(row('relics', acquiredChapterRelics(player, chapter), chapter.size));
     return rows;

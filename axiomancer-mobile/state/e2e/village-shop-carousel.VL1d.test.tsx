@@ -81,7 +81,7 @@ function renderShop(store: AppStore) {
 }
 
 const playerOf = (store: AppStore) => (store.getState() as unknown as GameState).player;
-const deckOf = (store: AppStore) => buildCombatDeck(playerOf(store), (store.getState() as unknown as GameState).flags);
+const deckOf = (store: AppStore) => buildCombatDeck(playerOf(store));
 const counter = () => screen.getByTestId('village-shop-counter').props.children;
 const next = () => fireEvent.press(screen.getByTestId('village-shop-peek-next'));
 

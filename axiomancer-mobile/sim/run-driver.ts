@@ -163,7 +163,7 @@ function checkOwed(store: AppStore, tally: Tally, tap: EventTap, step: number): 
 
 function deckSizeOf(state: AppStoreState): number {
     const game = state as unknown as GameState;
-    return buildCombatDeck(game.player, game.flags).length;
+    return buildCombatDeck(game.player).length;
 }
 
 function depthOf(state: AppStoreState, nodeId: string): number {
@@ -187,7 +187,7 @@ function standOn(tally: Tally, state: AppStoreState, startMap: string): void {
 function deckByLane(state: AppStoreState): Record<string, number> {
     const game = state as unknown as GameState;
     const out: Record<string, number> = {};
-    for (const cardId of buildCombatDeck(game.player, game.flags)) {
+    for (const cardId of buildCombatDeck(game.player)) {
         const lane = deckLaneIds([cardId])[0] ?? 'none';
         out[lane] = (out[lane] ?? 0) + 1;
     }
@@ -314,7 +314,7 @@ function summarize(
         nodesResolved: tally.nodesResolved,
         steps,
         deckByLane: deckByLane(end),
-        endDeck: buildCombatDeck(game.player, game.flags),
+        endDeck: buildCombatDeck(game.player),
         findings,
         arrivals: { ...tally.arrivals },
         money: { ...tally.money, spent: { ...tally.money.spent } },
