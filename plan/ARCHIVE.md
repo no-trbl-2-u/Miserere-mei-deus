@@ -751,3 +751,5 @@
 - 2026-11-13 · 180.2 (alias: CW1b) · Cache routes load once; quest and cutscene mutation runs finish · 03b93e68..0be0859f (#1660)
 - 2026-11-13 · 177.8 (alias: NV1h) · Six foes carry T's approved lines; Saint Beneath journal is J-01 · da5ffc62..b0cc7077 (#1670)
 - 2026-11-14 · 177.18 (alias: NV1r) · Seven more foes carry T's lines; Tide-Gate is The Half-Taken · 7f03d6c3..7f03d6c3 (#1674)
+- 2026-11-22 · 185.1 (alias: GM1a) · Game model matches the tree; stale "until phase" lines fail · 8ae5d8ed..8ae5d8ed (#1678)
+- 2026-11-22 · 185 · spec complete: The game model says what the tree does today · scripts/check-game-model-phases.test.mjs · deleted in (this commit)

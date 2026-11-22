@@ -249,9 +249,9 @@ the Expo app (`axiomancer-mobile`) presents it.
   name shows only once the foe is in the defeat ledger
   (`codex.defeatedEnemies`, written on a win, spared or finished); before that the
   DANGER icon shows with no name, and it stays unnamed when it fires.
-- **Enemy words (D116).** A foe's move may carry the five enemy words (WARD,
-  MEND and SCOUR count as one, then BRINE, TANGLE, SEIZED, BARNACLE), and
-  may land the player's own VULNERABLE and LEECH on you. Each is a field on
+- **Enemy words (D116).** A foe's move may carry the enemy words (WARD,
+  MEND and SCOUR count as one, then BRINE, TANGLE, SEIZED, BARNACLE, SHOCK,
+  UNBROKEN), and may land the player's own VULNERABLE and LEECH on you. Each is a field on
   `EnemyMove` with a counter its gloss names
   (`Enemy/enemy-keywords.ts`, resolved in `Combat/combat.enemy-words.ts` and
   `combat.enemy-words.resolve.ts`). They land after the move's hits.
@@ -291,8 +291,8 @@ the Expo app (`axiomancer-mobile`) presents it.
     turn left, then BARRIER, soak them. A foe dead before your turn starts pays
     nothing. Counter: break the WARD.
   A foe-only counter (the Tithe-Collector's LEDGER, a hoard) is fight state
-  on the pane, not a word. No live foe carries a word until the Breakwater
-  foes land.
+  on the pane, not a word. Every foe in the library but the Death Beholder
+  carries at least one word.
 - **Escalation:** enemy damage rises `THREAT_ESCALATION_PER_ROUND` = 0.22 per
   round after `THREAT_ESCALATION_GRACE` = 1 round, up to
   `THREAT_ESCALATION_MAX` = ×2, and `THREAT_ESCALATION_BOSS_MULT` = 1.6×
@@ -340,9 +340,13 @@ the Expo app (`axiomancer-mobile`) presents it.
 
 ## The foes
 
-Three enemies (`EnemyLibrary`, `Enemy/enemy.library.ts`). None carries a
-word yet (`ENEMY_KEYWORDS` lists nine ids: D116's five enemy words with MEND
-and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
+Twenty-three enemies (`EnemyLibrary`, `Enemy/enemy.library.ts`): Chapter 1's
+foes, the cut ones that stay for the other regions, and the Death Beholder.
+Every one but the Death Beholder carries enemy words on its phase moves
+(`ENEMY_KEYWORDS` lists eleven ids: WARD, MEND, SCOUR, BRINE, VULNERABLE, LEECH,
+TANGLE, SEIZED, BARNACLE, SHOCK and UNBROKEN, see A fight; `enemyPhaseKeywords`
+reads a foe's words back). The wandering pool draws the Chapter 1 normals;
+elites and bosses are pinned per node. Three of them in detail:
 
 - **Float-Eye:** level 1, normal, 38 VITAE. The only foe drawn at random,
   in every region.
@@ -476,18 +480,19 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   the empty waypoint. Any node can also carry a scene in its slot: a
   cutscene that plays once a run, before the node's own event (the Charcoal
   Wood, Beacon Crags and Lantern Deep start nodes open on one, then are empty
-  waypoints; the Breakwater follows). Act 1 has no
+  waypoints). The Breakwater has no cutscene node of its own: its 22 scenes
+  play from node slots (`BW_NODE_SCENES`, `World/MapEvents/content.ts`). Act 1 has no
   NPCs; that plumbing is kept and tested with fixtures.
-- **The Breakwater questline** (`World/quest.library.ts`, phase QL1d): four
-  quest nodes, bw-19..bw-22. Node 1 (off the windmill) offers step 1; nodes
-  2-4 turn in the step before and offer the next. Placeholder steps and
-  rewards until T's sitting (`[content]`): cross 1 hazard (40 XP, 10
-  shillings), win 2 fights (40 XP, a minor healing potion), beat the elite
-  (40 XP, a card pick of three), beat the watchtower boss (40 XP, 15
-  shillings, the Elementalist's Belt). Every fight and hazard sits in a
-  pocket behind its step's quest node, with one spare; the roads into nodes
-  2-4 are locked until the step before is met; the quest nodes and the
-  watchtower open their roads only once spent, so the bridge needs the boss.
+- **The Breakwater questline** (`World/breakwater-chapter.questline.ts`, phases
+  BW1a, BW1e): one questline of four steps, each paying 40 XP and one reward.
+  Step 1 (given by the windmill's cutscene) is to find the fishermen, turned in
+  at their camp, and pays the Ruby Signet. Step 2 is to reach the lighthouse,
+  paid on arrival: the keep key and a Blood Price weapon. Step 3 is to carry
+  the key to the keep gate, and pays the Mirror Brooch and opens the gate.
+  Step 4 is to beat the sea keep's master, turned in at the river bridge: a
+  Defender armor, and it opens the bridge. The weapon and the armor are of the
+  lane of the relic paid before. The quest names and log lines are T's; the
+  four objective lines are still `[content]`.
 - **Several quests at once** (`World/questline.ts`, phase MQ1a): any number
   of questlines run side by side, each reading only its own steps off the
   one quest log; a side quest is a one-step questline turned in at its own
@@ -525,7 +530,9 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   fight on the map calls it: a first death shows a full-screen return moment
   (`/death-return`) and then the map on the node walked from; a death while
   dying resets the run. A defeat inside the Labyrinth still resets the run.
-  A lethal hazard crossing in the app still resets the run until phase DY1c.
+  A lethal hazard crossing runs the same rule: the claim path calls
+  `playerDied('hazard')` (`state/hazard/store-actions.ts`), so a first one
+  returns the player and one while dying resets the run.
   While dying, the combat board shows a skull in place of the player's
   portrait (the footer-dock medallion and the pilgrim modal head); the
   character tab keeps the portrait. This is dying's visible effect so far; the
@@ -638,7 +645,7 @@ without a ruling from T.
   counters and the Anvil. The trial cards keep their printed numbers, untuned.
 - No themes or synergy. The only reward steering is the elite reward's one
   card from the deck's lanes (UP1f).
-- No enemy keywords beyond D116's five enemy words and the player's VULNERABLE
+- No enemy keywords beyond the enemy words and the player's VULNERABLE
   and LEECH landing on you (see A fight), and no summons.
 - No alternate wins: no befriending, no Exploit, no RELENT, no CONDEMN, no capitulation. Emptying VITAE is the only win.
 - No alignment, GRACE or faction reputation.
