@@ -540,6 +540,13 @@ async function crossExit(page, region, next) {
         await waitFor(page, 'travel-move', `${region.exit} travel screen`)
         await expectPath(page, '/travel', `${region.exit} travel screen`)
         await page.evaluate(() => document.querySelector('[data-testid="travel-move"]').click())
+        // The crossing out of the starting map opens the chapter complete screen first (phase CE1b); CONTINUE takes it.
+        const first = await waitForAny(page, ['chapter-complete-continue', 'cutscene-advance'], 15000)
+        if (first === 'chapter-complete-continue') {
+            await expectPath(page, '/chapter-complete', `${region.exit} chapter complete`)
+            await tap(page, 'chapter-complete-continue')
+            log(`${region.exit}: chapter complete screen, CONTINUE`)
+        }
         await waitFor(page, 'cutscene-advance', `${region.exit} crossing to ${next.map}`)
         await expectPath(page, '/cutscene', `${next.map} arrival`)
         await playOutCutscene(page)
