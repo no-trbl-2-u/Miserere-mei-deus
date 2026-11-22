@@ -100,8 +100,6 @@ export function createMapState(def: MapDefinition): MapState {
         // the map opens owing no arrival. The start node's own content is the
         // screen's `startNodePending` affair.
         pendingArrival: null,
-        // Hazard persistence extensions, initialized as empty.
-        hazardOutcomes: [],
         // Secret doors, act gates and quest locks arrive pre-blocked.
         blockedRoutes,
     };

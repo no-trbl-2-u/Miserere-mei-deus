@@ -1378,11 +1378,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - *Seven player mechanic kinds have zero carriers:* `strip_random_buff`, `befriend_attempt`, `refresh_die`, `convert_die_color`, `overheat`, `spend_all_pips`, `echo_next_spell`. These are wired but unused, so they are remove candidates. Retiring one touches the union, pricing, engine, mobile, editor and tests, so each is large. `befriend_attempt` sits on the befriend path and needs an owner call.
   - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
 
-### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
-- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
-- **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
-- **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
-
 ### [content] The shipped Drowned Parish opening contradicts the ruled story — attended session needed (2026-09-24)
 - category: content
 - impact: 8
@@ -2393,6 +2388,11 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ## Done
+
+### [x] [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25) — CLOSED 2026-11-22 (this PR: `MapState.hazardOutcomes` / `HazardNodeOutcome` / `HazardModifierEntry` removed from the shape and the new-map seed; the load-time cleanup `dropRetiredMapFields` strips the key from every map an old save holds, no version bump since only the current version loads; the `buff_all_stats_up` / `debuff_curse` half was already stale, both now only on the deprecated-effects list)
+- **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
+- **Still open:** write-never `MapState.hazardOutcomes` / `HazardNodeOutcome` — left in place (a v26 hop to strip a harmless field is churn; strip it the next time a save hop lands for another reason). `buff_all_stats_up` / `debuff_curse` carry only an inert `rollModifier` and nothing applies them — `/adjust-keywords` call (deprecated-effects list).
+- **Deviation from the spec, kept deliberately:** `combat.autoplay` moved to `src/test-utils/` (three surviving tests use it); `isRouteBlocked` kept (live movement check); `validateInteractions` kept (guards the live interaction registry).
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content

@@ -288,7 +288,7 @@ export {
 // ─── Game (state, store, persistence, constants) ──────────────────────────────
 export {
     createGameStore, createNewGameState, GAME_STATE_VERSION,
-    migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes, refreshRelicText, createEventEmitter,
+    migrate, dropUnknownCardIds, dropRetiredFlags, dropCutNodes, dropRetiredMapFields, refreshRelicText, createEventEmitter,
     selectPlayer, selectIsInCombat,
     selectVersion,
     nullAdapter,
