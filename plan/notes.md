@@ -547,3 +547,7 @@ The seven descriptions are word for word from rounds 3 and 4 of `plan/ballots/na
 Four of the five points were wrong in the doc and are corrected against the code: the lethal hazard (a first fatal crossing returns the player, one while dying resets the run), the foe roster (23 foes, every one but the Death Beholder carries enemy words, 11 `ENEMY_KEYWORDS`), the Breakwater questline (four steps from `breakwater-chapter.questline.ts`, 40 XP each) and the scenes (22, played from node slots). The hazard count (seven) already agreed. The spec's "thirteen foes" was the audit's count; the doc follows the code. The relic-source lines (Brooch, Belt) were left for 183.1.
 
 Outside scope, unfixed: the `ACT1_POOL` comment in `axiomancer-mechanics/src/Enemy/enemy.library.ts` says six named normals and seventeen foes; the pool holds five and the library 23.
+
+Defaults taken: a Held chunk is "named" when an Item's Rows lists its id or alias; an act's name is the chunk line up to its first ` · `; a Held chunk whose needs are open counts as waiting on the loop.
+
+Defaults taken: the log lives in `docs/reports/ci-screens.md`; a flapping route is logged and named in the comment, and CI still re-stamps it. The recorder runs from the base branch's copy inside the re-stamp job, so it does nothing until this merges. A load-failed-only run, or a mutation comment on a PR with no re-stamp, is not recorded until someone runs the recorder by hand.
