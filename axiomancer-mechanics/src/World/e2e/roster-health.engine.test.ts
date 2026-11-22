@@ -261,6 +261,19 @@ describe('roster health — each orphan lens fires', () => {
         expect(eliteDropIds(sources({ relics: [a, b], pools: elitePools(['relic-elite-b']) }))).toEqual(['relic-elite-b']);
     });
 
+    it('item-ungranted: an encounter is elite by the foe\'s registry tier when the payload names none', () => {
+        const a = { ...ring, id: 'relic-elite-a', relicSource: 'elite' } as Equipment;
+        const eliteFoe = { ...GreenJelly, difficulty: 'elite' } as typeof GreenJelly;
+        const pools: MapEventPool[] = [{
+            id: 'x-registry-elite.encounter',
+            entries: [{ kind: 'encounter', weight: 1, payload: { kind: 'encounter', enemySlug: 'green-jelly', eliteRelicDrops: ['relic-elite-a'] } }],
+        }];
+        const src = (registry: Record<string, typeof GreenJelly>) =>
+            sources({ relics: [a], pools, enemyRegistry: registry, startingItemIds: [], cacheItemIds: [] });
+        expect(eliteDropIds(src({ 'green-jelly': eliteFoe }))).toEqual(['relic-elite-a']);
+        expect(eliteDropIds(src({ 'green-jelly': { ...GreenJelly, difficulty: 'normal' } as typeof GreenJelly }))).toEqual([]);
+    });
+
     it('npc-unreached: a rostered NPC with a tree no node reaches', () => {
         const tree: DialogueTree = { rootId: 'r', nodes: { r: { id: 'r', text: '' } } };
         const maps = [mapDef({ name: 'rh-lonely' as never, npcs: [{ name: 'Hermit', dialogueTree: tree }] })];
