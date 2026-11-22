@@ -103,7 +103,7 @@ export function beginBlacksmithAction(store: AppStore, options: BeginBlacksmithO
     const rail = playerRail(gameState);
     const budget = options.budget ?? gameState.player?.currency ?? 0;
     const variants = options.variants ?? [];
-    const deck = gameState.player ? buildCombatDeck(gameState.player, gameState.flags ?? []) : [];
+    const deck = gameState.player ? buildCombatDeck(gameState.player) : [];
 
     store.setState({
         blacksmith: {

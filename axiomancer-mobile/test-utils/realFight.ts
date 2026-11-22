@@ -123,7 +123,6 @@ export function startRealFight(ref: FixtureRef = REAL_FIGHT_FIXTURE, options: Re
     const enemy = arrival.actions.beginHazardEncounter();
     if (!enemy) throw new Error(`startRealFight: fixture '${arrival.fixture.id}' staged no foe.`);
     const state = arrival.store.getState();
-    const flags = (state as unknown as { flags?: string[] }).flags;
-    const combat = initializeCombatEncounter(state.player, enemy, options.deck, options.seed ?? 7, flags);
+    const combat = initializeCombatEncounter(state.player, enemy, options.deck, options.seed ?? 7);
     return { ...arrival, enemy, combat };
 }

@@ -88,13 +88,13 @@ describe('buying a card (A9)', () => {
 
     it('takes 6 shillings and the card joins the combat deck', () => {
         const state = game(10);
-        const before = buildCombatDeck(state.player, state.flags);
+        const before = buildCombatDeck(state.player);
         const r = buyVillageCard(state, FRESH_VILLAGE_VISIT, shop, 'grey-ward');
         expect(r.ok).toBe(true);
         if (!r.ok) return;
         expect(r.spent).toBe(6);
         expect(r.state.player.currency).toBe(4);
-        const after = buildCombatDeck(r.state.player, r.state.flags);
+        const after = buildCombatDeck(r.state.player);
         expect(after).toHaveLength(before.length + 1);
         expect(after.filter(id => id === 'grey-ward').length)
             .toBe(before.filter(id => id === 'grey-ward').length + 1);
@@ -133,14 +133,14 @@ describe('removing a card (A10)', () => {
     it('costs the removal price (5 + 5 x removals) and bumps the count', () => {
         expect(villageRemovalQuote({ currency: 50, cardRemovals: 0 })).toEqual({ price: 5, nextPrice: 10, refusal: null });
         const state = thick(50, 2);
-        const before = buildCombatDeck(state.player, state.flags);
+        const before = buildCombatDeck(state.player);
         const r = removeVillageCard(state, FRESH_VILLAGE_VISIT, 'grey-ward');
         expect(r.ok).toBe(true);
         if (!r.ok) return;
         expect(r.spent).toBe(cardRemovalPrice(2));
         expect(r.state.player.currency).toBe(50 - 15);
         expect(r.state.player.cardRemovals).toBe(3);
-        expect(buildCombatDeck(r.state.player, r.state.flags)).toHaveLength(before.length - 1);
+        expect(buildCombatDeck(r.state.player)).toHaveLength(before.length - 1);
     });
 
     it('a short purse is refused before the deck is touched', () => {

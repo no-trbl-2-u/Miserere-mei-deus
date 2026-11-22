@@ -138,12 +138,11 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         // The heal is still there to take, and it pays.
         fireEvent.press(r.getByTestId('rest-choice-offer-rest'));
         fireEvent.press(r.getByTestId('rest-claim'));
-        const { player, flags } = store.getState() as unknown as {
+        const { player } = store.getState() as unknown as {
             player: { health: number; knownCards: string[]; combatRewardCards?: string[] };
-            flags: string[];
         };
         expect(player.health).toBe(130);
-        const deck = buildCombatDeck(player as never, flags);
+        const deck = buildCombatDeck(player as never);
         expect(deck.some((id) => id.endsWith('+'))).toBe(false);
     });
 
@@ -179,11 +178,10 @@ describe('rest site: upgrade a card (Phase UP1d)', () => {
         expect(String(r.getByTestId('rest-outcome-upgraded').props.children)).toBe(`${before.name} upgraded`);
 
         fireEvent.press(r.getByTestId('rest-claim'));
-        const { player, flags } = store.getState() as unknown as {
+        const { player } = store.getState() as unknown as {
             player: { health: number; currency: number; knownCards: string[]; combatRewardCards?: string[] };
-            flags: string[];
         };
-        const deck = buildCombatDeck(player as never, flags);
+        const deck = buildCombatDeck(player as never);
         expect(count(deck, 'grey-strike+')).toBe(1);
         expect(count(deck, 'grey-strike')).toBe(4);
         expect(deck).toHaveLength(KNOWN.length + 1);
