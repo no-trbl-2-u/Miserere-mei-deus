@@ -17,7 +17,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Settings | route | yes | no | yes | no |
 | The Anvil | route | yes | yes | yes | no |
 | Loot cache | route | yes | yes | yes | no |
-| Chapter Complete | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Chapter Complete") |
+| Chapter Complete | route | yes | yes | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Chapter Complete") |
 | Character Select | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Character Select") |
 | Encounter | route | yes | yes | yes | no |
 | Cutscene | route | yes | yes | yes | no |
