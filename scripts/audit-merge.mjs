@@ -21,6 +21,9 @@
 //     base (added, edited, closed or moved) is applied: replaced in place, or
 //     moved to ours' section next to the row ours put it beside; a row ours
 //     deleted and theirs left alone is removed;
+//   - a row one side retitled (its old header gone, a new header over the
+//     same body) is still the same row, so the other side's edit or close
+//     lands on it and the new title is kept;
 //   - a row both sides changed takes ours, unless only theirs closed it
 //     (a close is never undone by the branch);
 //   - the text outside rows (preamble, section intros) is taken from the side
@@ -120,6 +123,36 @@ function rowIndex(doc) {
   return m
 }
 
+const title = (lines) => rowKey(lines[0])
+const body = (lines) => lines.slice(1).join('\n')
+
+/** `lines` with its header's title swapped for `to`; the checkbox and close suffix stay. */
+function retitle(lines, to) {
+  const from = title(lines)
+  if (from === to) return lines
+  return [lines[0].replace(from, () => to), ...lines.slice(1)]
+}
+
+/**
+ * Give a side's retitled rows their base key: a base row the side no longer
+ * has and a row only the side has, over the same body, are one row renamed.
+ * Matches only when the body is unique on both ends. Mutates `side`.
+ * @param {ReturnType<typeof parseRows>} base  @param {ReturnType<typeof parseRows>} side
+ */
+function adoptRenames(base, side) {
+  const bRows = rowIndex(base)
+  const sRows = rowIndex(side)
+  const added = side.sections.flatMap((s) => s.rows).filter((r) => !bRows.has(r.key))
+  const baseBodies = [...bRows.values()].map((b) => body(b.lines))
+  for (const [key, b] of bRows) {
+    if (sRows.has(key)) continue
+    const want = body(b.lines)
+    if (baseBodies.filter((x) => x === want).length !== 1) continue
+    const hits = added.filter((r) => body(r.lines) === want)
+    if (hits.length === 1) hits[0].key = key
+  }
+}
+
 const isClosed = (lines, head) => /^### \[x\] /.test(lines[0]) || / — CLOSED\b/.test(lines[0]) || /^## Done\b/.test(head ?? '')
 
 /** Line-union of two intros that both changed: theirs, then ours' new lines in place. */
@@ -150,6 +183,8 @@ export function mergeAudit(base, ours, theirs) {
   const B = parseRows(base)
   const O = parseRows(ours)
   const T = parseRows(theirs)
+  adoptRenames(B, O)
+  adoptRenames(B, T)
   const bRows = rowIndex(B)
   const tRows = rowIndex(T)
   const result = { eol: T.eol, sections: T.sections.map((s) => ({ ...s, intro: [...s.intro], rows: s.rows.map((r) => ({ ...r })) })) }
@@ -196,11 +231,19 @@ export function mergeAudit(base, ours, theirs) {
       if (b && b.text === text && b.head === o.head) return // ours left it alone
       const t = tRows.get(row.key)
       const theirsChanged = t && b && (t.text !== b.text || t.head !== b.head)
-      if (theirsChanged && isClosed(t.lines, t.head) && !isClosed(row.lines, o.head)) return // keep theirs' close
-      if (t && t.text === text && t.head === o.head) return // already the same
+      const oursRetitled = b && title(row.lines) !== title(b.lines)
+      if (theirsChanged && isClosed(t.lines, t.head) && !isClosed(row.lines, o.head)) {
+        // Keep theirs' close, with ours' new title if ours retitled the row.
+        const at = oursRetitled && locate(row.key)
+        if (at) at.s.rows[at.i] = { key: row.key, lines: retitle(t.lines, title(row.lines)) }
+        return
+      }
+      // Ours' change, with theirs' new title if only theirs retitled the row.
+      const lines = t && b && !oursRetitled && title(t.lines) !== title(b.lines) ? retitle(row.lines, title(t.lines)) : [...row.lines]
+      if (t && t.text === lines.join('\n') && t.head === o.head) return // already the same
       const at = locate(row.key)
       if (at && at.s.head === o.head) {
-        at.s.rows[at.i] = { key: row.key, lines: [...row.lines] }
+        at.s.rows[at.i] = { key: row.key, lines }
         return
       }
       if (at) at.s.rows.splice(at.i, 1)
@@ -222,7 +265,7 @@ export function mergeAudit(base, ours, theirs) {
         if (j >= 0) pos = j
       }
       if (pos < 0) pos = idx === 0 ? 0 : sec.rows.length
-      sec.rows.splice(pos, 0, { key: row.key, lines: [...row.lines] })
+      sec.rows.splice(pos, 0, { key: row.key, lines })
     })
   }
   return renderRows(result)

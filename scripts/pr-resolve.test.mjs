@@ -514,3 +514,69 @@ test('AUDIT: mergeMain settles a branch that closed a different row than main, c
     fs.rmSync(dir, { recursive: true, force: true })
   }
 })
+
+test('AUDIT: a row one side retitled is the same row: the other side\'s close or edit lands on it', () => {
+  const retitled = (closed) => [rowA(closed)[0].replace('row A', 'row A, renamed'), ...rowA(closed).slice(1)]
+  const base = auditFile([rowA(), rowC()], [rowZ()])
+  // Ours retitles A while theirs closes it: one row, closed, with ours' title.
+  const closedByTheirs = mergeAudit(base, auditFile([retitled(), rowC()], [rowZ()]), auditFile([rowC()], [rowA(true), rowZ()]))
+  assert.deepEqual(auditFindings(closedByTheirs), [])
+  assert.deepEqual(headers(closedByTheirs), [rowC()[0], retitled(true)[0], rowZ()[0]])
+  // Theirs retitles A while ours closes it: one row, closed, with theirs' title.
+  const closedByOurs = mergeAudit(base, auditFile([rowC()], [rowA(true), rowZ()]), auditFile([retitled(), rowC()], [rowZ()]))
+  assert.deepEqual(auditFindings(closedByOurs), [])
+  assert.deepEqual(headers(closedByOurs), [rowC()[0], retitled(true)[0], rowZ()[0]])
+})
+
+// Both sides close row A but file it at different places in Done: a plain diff3 merges that with
+// no conflict, so pr-resolve's union never runs, and the file carries row A twice (the shape of the
+// clean merge 1365ad0e). Only the `merge.audit` driver sees it.
+const SAME_BASE = auditFile([rowA(), rowB()], [rowZ(), auditRow('old row Y', 1, true)])
+const SAME_OURS = auditFile([rowB()], [rowA(true), rowZ(), auditRow('old row Y', 1, true)])
+const SAME_THEIRS = auditFile([rowB()], [rowZ(), rowA(true), auditRow('old row Y', 1, true)])
+
+test('AUDIT: the merge.audit driver CLI reads %O %A %B and writes the merge to %A', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'audit-driver-'))
+  try {
+    const [o, a, b] = ['base', 'ours', 'theirs'].map((n) => path.join(dir, n))
+    write(dir, 'base', AUDIT_BASE)
+    write(dir, 'ours', AUDIT_OURS)
+    write(dir, 'theirs', AUDIT_THEIRS)
+    const d = MERGE_DRIVERS.find((x) => x.key === 'audit')
+    assert.equal(d.driver, 'node scripts/audit-merge.mjs %O %A %B %P')
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'audit-merge.mjs'), o, a, b, AUDIT], { encoding: 'utf8' })
+    assert.equal(r.status, 0, r.stderr)
+    assert.equal(read(dir, 'ours'), mergeAudit(AUDIT_BASE, AUDIT_OURS, AUDIT_THEIRS))
+    assertBothClosed(read(dir, 'ours'))
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('AUDIT: a clean diff3 merge doubles a row; a plain git merge with merge.audit registered keeps it once', () => {
+  const { dir, work } = scratch((d) => write(d, AUDIT, SAME_BASE))
+  try {
+    branchWith(work, 'pr-same', (d) => write(d, AUDIT, SAME_OURS))
+    write(work, AUDIT, SAME_THEIRS)
+    git(work, 'commit', '-q', '-am', 'main files row A lower in Done')
+    /** Merge main into a fresh copy of the PR branch; git throws on a conflict. */
+    const mergeOnto = (name) => {
+      git(work, 'switch', '-q', '-C', name, 'pr-same')
+      git(work, 'merge', '-q', '--no-edit', 'main')
+      const text = read(work, AUDIT)
+      git(work, 'switch', '-q', 'main')
+      return text
+    }
+    // .gitattributes names merge=audit, but the scratch repo has no driver yet: git's own merge.
+    assert.throws(() => git(work, 'config', 'merge.audit.driver'))
+    const without = mergeOnto('try-plain')
+    assert.ok(auditFindings(without).some((f) => /repeats/.test(f)), 'git\'s own merge writes row A twice')
+    git(work, 'config', 'merge.audit.driver', `"${process.execPath}" scripts/audit-merge.mjs %O %A %B %P`)
+    const merged = mergeOnto('try-driver')
+    assert.deepEqual(auditFindings(merged), [])
+    assert.equal(count(merged, rowA(true)[0]), 1)
+    assert.equal(count(merged, rowA()[0]), 0)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+})
