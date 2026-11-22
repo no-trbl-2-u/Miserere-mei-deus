@@ -60,6 +60,16 @@ describe('the elite relic pool', () => {
     });
 });
 
+describe('183.1 A1: the three lane relics join the live elite pool', () => {
+    it('Bleeding Signet, Elementalist Brooch and Belt are in eliteRelicPool for a player who carries none', () => {
+        const ids = eliteRelicPool(bare()).map(r => r.id);
+        for (const id of ['relic-bleeding-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt']) {
+            expect(ids, id).toContain(id);
+        }
+        expect(ids).toHaveLength(7);
+    });
+});
+
 describe('rollEliteRelicDrop', () => {
     it(`drops at ELITE_RELIC_DROP_CHANCE (${ELITE_RELIC_DROP_CHANCE}) over ${SEED_COUNT} seeds, within one point`, () => {
         const player = bare();

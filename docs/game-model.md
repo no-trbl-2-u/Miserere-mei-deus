@@ -429,12 +429,12 @@ and SCOUR split from WARD, plus VULNERABLE and LEECH, see A fight).
   load (`refreshRelicText`). Blood Price's three (phase LR1d), all opening the
   `blood-price` lane while worn: the Crimson Circlet (the elite drop's; +5 Body,
   +20 max VITAE; Crimson Return), the Ruby Signet (a quest's; +5 Heart; Ruby
-  Tithe) and the Bleeding Signet (a quest's; +5 Mind; Open Vein: HEAL 5,
+  Tithe) and the Bleeding Signet (the elite drop's; +5 Mind; Open Vein: HEAL 5,
   then trigger the foe's LEECH, which loses its potency now and heals you
   that, no turn ticking off). The Elementalist's three (phase LR1e), opening
   the `elementalist` lane: the Signet (the elite drop's; +5 Heart, +20 max VITAE; Eye
-  of the Storm), the Brooch (a quest's; +5 Mind; Kindle the Gale) and the Belt
-  (a quest's; +5 Body; Thaw into Thunder). The Defender's three (phase DF1),
+  of the Storm), the Brooch (the elite drop's; +5 Mind; Kindle the Gale) and the Belt
+  (the elite drop's; +5 Body; Thaw into Thunder). The Defender's three (phase DF1),
   opening the `defender` lane: the Thornback Signet (the elite drop's; +5
   Heart, +20 max VITAE; Thorn Mantle: THORNS equal to your GUARD), the Mirror
   Brooch (a quest's; +5 Mind; Mirror Ward: REFLECT 50%) and the Carapace Belt

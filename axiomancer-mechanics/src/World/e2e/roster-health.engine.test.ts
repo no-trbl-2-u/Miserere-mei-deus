@@ -40,23 +40,22 @@ const PINNED_ORPHANS: ReadonlyArray<{ lens: string; id: string }> = [
     { lens: 'enemy-unpooled', id: 'enemy-toll-keeper' },
     // No run starts with the ring or is handed it any more; old saves and
     // the dev menu hold it until it gets a lane.
-    { lens: 'item-ungranted', id: 'relic-disarming-plea' },
     // The Breakwater chain pays two relics (the Ruby Signet and the Mirror
-    // Brooch; its other two steps pay a weapon and an armor). The rest drop from
-    // elites (`rollEliteRelicDrop`, a source this audit does not read) or wait on
-    // a quest that hands them out; until then only the dev menu hands them over.
-    { lens: 'item-ungranted', id: 'relic-crimson-circlet' },
-    { lens: 'item-ungranted', id: 'relic-bleeding-signet' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-signet' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-brooch' },
-    { lens: 'item-ungranted', id: 'relic-elementalist-belt' },
-    { lens: 'item-ungranted', id: 'relic-thornback-signet' },
+    // Brooch). Every `relicSource: 'elite'` relic drops from elites and is not
+    // an orphan; these three wait on a quest or a spare-reward pool that hands
+    // them out; until then only the dev menu hands them over.
     { lens: 'item-ungranted', id: 'relic-carapace-belt' },
     { lens: 'item-ungranted', id: 'relic-brimming-locket' },
     { lens: 'item-ungranted', id: 'relic-penitents-brooch' },
 ];
 
 describe('roster health — live tree', () => {
+    it('183.1 A1: none of the six lane relics of Blood Price and the Elementalist is an orphan', () => {
+        const six = ['relic-crimson-circlet', 'relic-ruby-signet', 'relic-bleeding-signet',
+            'relic-elementalist-signet', 'relic-elementalist-brooch', 'relic-elementalist-belt'];
+        expect(LIVE.orphans.filter(o => six.includes(o.id))).toEqual([]);
+    });
+
     it('has no dangling reference', () => {
         expect(LIVE.dangling, JSON.stringify(LIVE.dangling, null, 2)).toEqual([]);
     });

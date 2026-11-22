@@ -51,7 +51,7 @@ describe('relic library — roster', () => {
             [{ stat: 'body', value: 5 }, { stat: 'maxHp', value: 20 }], 'sig-crimson-circlet', 'relic']);
         expect(row(RUBY_ID)).toEqual(['Ruby Signet', 'blood-price', 'quest',
             [{ stat: 'heart', value: 5 }], 'sig-ruby-signet', 'relic']);
-        expect(row(SIGNET_ID)).toEqual(['Bleeding Signet', 'blood-price', 'quest',
+        expect(row(SIGNET_ID)).toEqual(['Bleeding Signet', 'blood-price', 'elite',
             [{ stat: 'mind', value: 5 }], 'sig-bleeding-signet', 'relic']);
     });
 
@@ -134,9 +134,9 @@ describe('A15 · the Elementalist\'s three relics', () => {
         };
         expect(row(E_SIGNET)).toEqual(["Elementalist's Signet", 'elementalist', 'elite',
             [{ stat: 'heart', value: 5 }, { stat: 'maxHp', value: 20 }], 'sig-elementalist-signet', 'relic']);
-        expect(row(BROOCH)).toEqual(["Elementalist's Brooch", 'elementalist', 'quest',
+        expect(row(BROOCH)).toEqual(["Elementalist's Brooch", 'elementalist', 'elite',
             [{ stat: 'mind', value: 5 }], 'sig-elementalist-brooch', 'relic']);
-        expect(row(BELT)).toEqual(["Elementalist's Belt", 'elementalist', 'quest',
+        expect(row(BELT)).toEqual(["Elementalist's Belt", 'elementalist', 'elite',
             [{ stat: 'body', value: 5 }], 'sig-elementalist-belt', 'relic']);
     });
 
@@ -181,13 +181,14 @@ describe('DF1e · A10 · the Defender\'s three relics', () => {
 });
 
 describe('A16 · every lane relic resolves to a registered lane', () => {
-    it('the twelve lane relics name a registered lane; each of the four lanes has one elite-drop relic and two quest relics', () => {
+    it('the twelve lane relics name a registered lane and the elite and quest counts per lane hold', () => {
         const laneRelics = relicLibrary.filter(r => r.laneId);
         expect(laneRelics).toHaveLength(12);
         for (const r of laneRelics) expect(getCardLane(relicLaneId(r)!), r.id).toBeDefined();
         for (const lane of ['blood-price', 'elementalist', 'defender', 'merciful']) {
-            expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'elite')).toHaveLength(1);
-            expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'quest')).toHaveLength(2);
+            const elite = lane === 'elementalist' ? 3 : lane === 'blood-price' ? 2 : 1;
+            expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'elite'), lane).toHaveLength(elite);
+            expect(laneRelics.filter(r => r.laneId === lane && r.relicSource === 'quest'), lane).toHaveLength(3 - elite);
         }
         // The Merciful: the Ring is its elite drop; the Locket and the Brooch are its quest relics (MF1f).
         expect(laneRelics.filter(r => r.laneId === 'merciful').map(r => [r.id, r.relicSource])).toEqual([

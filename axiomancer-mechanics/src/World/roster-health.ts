@@ -338,7 +338,11 @@ export function orphanEnemies(src: RosterSources): RosterFinding[] {
 
 /** A consumable or relic no cache, shop, starting loadout or reward grants. */
 export function orphanItems(src: RosterSources): RosterFinding[] {
-    const granted = new Set<string>([...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id)]);
+    // An elite fight with no drop list draws from every `relicSource: 'elite'` relic (`eliteRelicPool`), so those are reachable.
+    const granted = new Set<string>([
+        ...src.startingItemIds, ...src.cacheItemIds, ...itemRefs(src).map(r => r.id),
+        ...src.relics.filter(r => r.relicSource === 'elite').map(r => r.id),
+    ]);
     const out: RosterFinding[] = [];
     for (const c of src.consumables) {
         if (!granted.has(c.id)) {

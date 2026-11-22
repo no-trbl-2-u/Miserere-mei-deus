@@ -11,10 +11,10 @@
  *   Suppliant's Ring (The Open Hand)  Merciful    elite drop
  *   Crimson Circlet (Crimson Return)  Blood Price elite drop
  *   Ruby Signet (Ruby Tithe)          Blood Price quest
- *   Bleeding Signet (Open Vein)       Blood Price quest
+ *   Bleeding Signet (Open Vein)       Blood Price elite drop
  *   Elementalist's Signet             Elementalist elite drop
- *   Elementalist's Brooch             Elementalist quest
- *   Elementalist's Belt               Elementalist quest
+ *   Elementalist's Brooch             Elementalist elite drop
+ *   Elementalist's Belt               Elementalist elite drop
  *   Thornback Signet                  Defender      elite drop
  *   Mirror Brooch                     Defender      quest
  *   Carapace Belt                     Defender      quest
@@ -94,7 +94,7 @@ const RUBY_SIGNET: Equipment = {
 
 /**
  * The Bleeding Signet (T's rework): +5 Mind (its old +20 max VITAE is gone),
- * and Open Vein (◆4): HEAL 5, then trigger the foe's LEECH. A quest's reward.
+ * and Open Vein (◆4): HEAL 5, then trigger the foe's LEECH. The elite drop's; a quest may pay it too.
  */
 const BLEEDING_SIGNET: Equipment = {
     id: 'relic-bleeding-signet',
@@ -105,7 +105,7 @@ const BLEEDING_SIGNET: Equipment = {
     statModifiers: [{ stat: 'mind', value: 5 }],
     grantsSignature: 'sig-bleeding-signet',
     laneId: 'blood-price',
-    relicSource: 'quest',
+    relicSource: 'elite',
 };
 
 /**
@@ -126,7 +126,7 @@ const ELEMENTALIST_SIGNET: Equipment = {
 
 /**
  * The Elementalist's Brooch (T's): +5 Mind, and Kindle the Gale (◆4): the
- * foe-only INFERNO becomes STORM; the shared stack stays. A quest's reward.
+ * foe-only INFERNO becomes STORM; the shared stack stays. The elite drop's; a quest may pay it too.
  */
 const ELEMENTALIST_BROOCH: Equipment = {
     id: 'relic-elementalist-brooch',
@@ -137,12 +137,12 @@ const ELEMENTALIST_BROOCH: Equipment = {
     statModifiers: [{ stat: 'mind', value: 5 }],
     grantsSignature: 'sig-elementalist-brooch',
     laneId: 'elementalist',
-    relicSource: 'quest',
+    relicSource: 'elite',
 };
 
 /**
  * The Elementalist's Belt (T's): +5 Body, and Thaw into Thunder (◆3): all
- * BLIZZARD becomes STORM. A quest's reward.
+ * BLIZZARD becomes STORM. The elite drop's; a quest may pay it too.
  */
 const ELEMENTALIST_BELT: Equipment = {
     id: 'relic-elementalist-belt',
@@ -153,7 +153,7 @@ const ELEMENTALIST_BELT: Equipment = {
     statModifiers: [{ stat: 'body', value: 5 }],
     grantsSignature: 'sig-elementalist-belt',
     laneId: 'elementalist',
-    relicSource: 'quest',
+    relicSource: 'elite',
 };
 
 /**
