@@ -2,7 +2,7 @@
  * Enemy library — the roster.
  *
  * Act 1's foes, plus the `sandbag-01` dev dummy:
- *   - Float-Eye (L1, normal) — every Act 1 map's wandering fight; HP phases.
+ *   - Float-Eye (L1, normal) — out of Chapter 1; the later Act 1 maps stage it; HP phases.
  *   - The Gallows Crow, the Net-Mender and the Crane-Hook (normals) —
  *     Chapter 1's fields and quays, bound per node in `MapEvents/content.ts`;
  *     HP phases.
@@ -1497,7 +1497,7 @@ export const EnemyLibrary = [
 ] as const;
 
 /**
- * An Act 1 region's wandering pool: the six named normals of Chapter 1's
+ * An Act 1 region's wandering pool: the five named normals of Chapter 1's
  * recast roster (EN3b, 2026-11-07). The elites and the boss are pinned
  * per-node in `MapEvents/content.ts`, not drawn.
  *
@@ -1516,7 +1516,7 @@ export const EnemyLibrary = [
 const ACT1_POOL = [QuayCrab, NetMender, Coralback, BrineWidow, BilgeStalker];
 
 /**
- * Per-map enemy pools used by the encounter generator. Act 1 draws the six Chapter 1 normals;
+ * Per-map enemy pools used by the encounter generator. Act 1 draws the five Chapter 1 normals;
  * the parked Labyrinth keeps that pool so its parked tests run.
  */
 export const EnemiesByMap = {

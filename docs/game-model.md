@@ -346,10 +346,10 @@ Every one but the Death Beholder carries enemy words on its phase moves
 (`ENEMY_KEYWORDS` lists eleven ids: WARD, MEND, SCOUR, BRINE, VULNERABLE, LEECH,
 TANGLE, SEIZED, BARNACLE, SHOCK and UNBROKEN, see A fight; `enemyPhaseKeywords`
 reads a foe's words back). The wandering pool draws the Chapter 1 normals;
-elites and bosses are pinned per node. Three of them in detail:
+elites and bosses are pinned per node. Some of them in detail:
 
-- **Float-Eye:** level 1, normal, 38 VITAE. The only foe drawn at random,
-  in every region.
+- **Float-Eye:** level 1, normal, 38 VITAE. Out of Chapter 1 and its wandering
+  pool; the Charcoal Wood, Beacon Crags and Lantern Deep still stage it.
 - **Green Jelly:** level 5, a normal with HP phases (EN1g): it holds the
   next cards you play inside it, shows you your own face and throws your last
   status back. Placed on no Breakwater node since MV1d; an elite slot stages it at the elite
