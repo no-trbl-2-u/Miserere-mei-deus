@@ -19,7 +19,8 @@
 // It is not a full shell grammar. It throws ShellParseError on an unclosed
 // quote or substitution (bash refuses those too), and it sets `ambiguous` on
 // any construct it cannot read with certainty: arithmetic (`((`, `$((`,
-// `$[`, `let`, where `<<` is a shift, not a heredoc), a `${...}` holding a
+// `$[`, `let`, where `<<` is a shift, not a heredoc), ANSI-C `$'...'` and
+// locale `$"..."` quoting, a `${...}` holding a
 // substitution or quotes, an empty heredoc delimiter, an unreadable `$(...)`
 // in a heredoc body. The guard treats both as "not proven inert", so its
 // legacy whole-string regexes decide: a reader gap never opens a hole.
@@ -144,6 +145,9 @@ function parseList(ctx, src, i, stopAtParen) {
       continue
     }
     if (c === '$' && src[i + 1] === '[') ctx.ambiguous = true // old arithmetic: `<<` inside is a shift
+    // ANSI-C `$'...'` (where \' does not close) and locale `$"..."`: their
+    // escapes are not read here, so a quote can end where this reader thinks it does not
+    if (c === '$' && (src[i + 1] === "'" || src[i + 1] === '"')) ctx.ambiguous = true
     if ((c === '<' || c === '>') && src[i + 1] === '(') {
       // process substitution: executed, and its text stays one word
       const w = ensureWord()
