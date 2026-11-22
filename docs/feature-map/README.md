@@ -17,6 +17,7 @@ Briefs: `plan/phases/phase_FM1_feature_map.md`, `plan/phases/phase_FM2_modular_f
 | Settings | route | yes | no | yes | no |
 | The Anvil | route | yes | yes | yes | no |
 | Loot cache | route | yes | yes | yes | no |
+| Chapter Complete | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Chapter Complete") |
 | Character Select | route | yes | no | yes | yes: no braindump/ pitch file and no plan/*.decisions.md D-number names it ("Character Select") |
 | Encounter | route | yes | yes | yes | no |
 | Cutscene | route | yes | yes | yes | no |
@@ -69,6 +70,7 @@ Routes with no outgoing player-flow edge to another feature, not counting the sh
 
 - The Anvil (`route:blacksmith`)
 - Loot cache (`route:cache`)
+- Chapter Complete (`route:chapter-complete`)
 - Cutscene (`route:cutscene`)
 - Dialogue (`route:dialogue`)
 - Reward (`route:item-reward`)
@@ -95,6 +97,7 @@ Features with no name from `game-model.md` vocabulary; each keeps its path-deriv
 - Inventory (`route:(tabs)/inventory`)
 - Memoir (`route:(tabs)/memoir`)
 - Settings (`route:(tabs)/settings`)
+- Chapter Complete (`route:chapter-complete`)
 - Character Select (`route:character-select`)
 - Death Return (`route:death-return`)
 - Game Over (`route:game-over`)
