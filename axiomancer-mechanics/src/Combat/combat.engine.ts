@@ -221,18 +221,12 @@ function intensityMap(effects: readonly ActiveEffect[]): Record<string, number> 
  * stay inside the encounter). Dice are NOT rolled yet — the state opens in the
  * `reveal` phase with an opening hand drawn, mirroring Hazard's route-select →
  * rolling → playing flow. Call `rollEncounterDice` to advance.
- *
- * `flags` is `GameState.flags` (the curated-loadout codec, see
- * `combat.loadout.ts`) — forwarded to `buildCombatDeck` only when `playerDeck`
- * is omitted; an explicit `playerDeck` always wins. Omitted/empty `flags`
- * falls back to `player.knownCards`.
  */
 export function initializeCombatEncounter(
     player: Character,
     enemy: Enemy,
     playerDeck?: string[],
     seed?: number,
-    flags?: readonly string[],
 ): CombatEncounterState {
     if (seed !== undefined) setSeed(seed);
 
@@ -241,7 +235,7 @@ export function initializeCombatEncounter(
     // only; the fight writes back VITAE, never stats.
     clonedPlayer.baseStats = statsWithWorn(clonedPlayer);
     const clonedEnemy = deepClone(enemy);
-    const deck = playerDeck && playerDeck.length > 0 ? playerDeck.slice() : buildCombatDeck(clonedPlayer, flags);
+    const deck = playerDeck && playerDeck.length > 0 ? playerDeck.slice() : buildCombatDeck(clonedPlayer);
 
     let threatPhases = getThreatSequence(clonedEnemy);
     // A branch on the OPENING phase commits at combat

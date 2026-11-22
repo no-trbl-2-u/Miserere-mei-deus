@@ -338,16 +338,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   20:14:33, another total loss. Second confirmed occurrence in 12 hours;
   still unfixed, still `/iterate`-shaped, not re-scored.
 
-### The Phase-169 loadout path is dead in the shipped runtime
-- category: debt
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-08 by Phase 52a. `createNewGameState` seeds only the
-  2 `STARTING_CARD_IDS` loadout flags and mobile never writes loadout flags
-  afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
-  with no flags at all. 52a's loadout reconciliation is correct and tested,
-  but nothing exercises it end to end. Pairs with the row above.
-
 ### `deploy:check` is unusable from remote web sessions — 401 "Token rejected"
 - category: debt
 - impact: 4
@@ -465,6 +455,16 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - 2026-11-22: deleted the unreferenced `MAX_PERMANENT_WILD_DICE`; the sim `blind` policy still plays identically to `greedy` (left as is, a retire-or-redefine call); the other bullets remain open.
 
 ## Done
+
+### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
+- category: debt
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-08 by Phase 52a. `createNewGameState` seeds only the
+  2 `STARTING_CARD_IDS` loadout flags and mobile never writes loadout flags
+  afterward, while `initializeCombatEncounter` calls `buildCombatDeck(player)`
+  with no flags at all. 52a's loadout reconciliation is correct and tested,
+  but nothing exercises it end to end. Pairs with the row above.
 
 ### [x] [2.1] Two agent-e2e walkthroughs describe a deleted engine surface — CLOSED 2026-11-22 (this PR: deleted `skill-learning` and `tier2-skill-chain` (goal.md and json) and their two README rows)
 - category: gap

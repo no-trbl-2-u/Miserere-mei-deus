@@ -84,7 +84,7 @@ function renderShop(store: AppStore) {
 }
 
 const playerOf = (store: AppStore) => (store.getState() as unknown as GameState).player;
-const deckOf = (store: AppStore) => buildCombatDeck(playerOf(store), (store.getState() as unknown as GameState).flags);
+const deckOf = (store: AppStore) => buildCombatDeck(playerOf(store));
 
 describe('the village paid rest (NK1c A8)', () => {
     it('heals 25% of max VITAE for 6 shillings, once per visit', () => {
