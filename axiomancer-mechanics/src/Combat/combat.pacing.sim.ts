@@ -15,8 +15,10 @@
  *                enabler-first chaining), and never a SACRIFICE that would
  *                leave VITAE at or below the telegraphed hit.
  *
- * Foes are scaled by {@link LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER}, the knob the
- * app applies to every live encounter, so the turn counts compare with play.
+ * Foes are scaled by {@link liveEncounterHpMultiplier} at the player's level
+ * (the early multiplier at levels 1 to 3, the base
+ * {@link LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER} past them), the knob the app
+ * applies to every live encounter, so the turn counts compare with play.
  * A measurement instrument: nothing here grades the game.
  */
 
@@ -32,9 +34,9 @@ import { OPEN_VEIN_HEAL } from './combat.signature';
 import { upgradeablePlayPhase } from './combat.encounter.sim';
 import { COMBAT_SIM_POLICIES } from './combat.sim-policies';
 import { getRng } from '../Utils/rng';
-import { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER } from './live-encounter';
+import { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, liveEncounterHpMultiplier } from './live-encounter';
 
-export { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER };
+export { LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, liveEncounterHpMultiplier };
 import type { CombatEncounterState, CombatManaDie } from './combat.encounter.types';
 
 
@@ -227,7 +229,7 @@ export interface PacingOptions {
     policy: PacingPolicy;
     runs?: number;
     startSeed?: number;
-    /** Foe VITAE multiplier; defaults to the live one. */
+    /** Foe VITAE multiplier; defaults to the live one for the player's level (`liveEncounterHpMultiplier`). */
     enemyHpMultiplier?: number;
     /** Human-like only: the most cards played per turn (default: no cap). */
     maxPlaysPerTurn?: number;
@@ -239,7 +241,7 @@ export interface PacingOptions {
 export function simulatePacing(o: PacingOptions): PacingSummary {
     const runs = o.runs ?? 200;
     const start = o.startSeed ?? 1;
-    const enemy = scaleEnemyVitae(o.enemy, o.enemyHpMultiplier ?? LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER);
+    const enemy = scaleEnemyVitae(o.enemy, o.enemyHpMultiplier ?? liveEncounterHpMultiplier(o.player.level));
     const all: PacingRun[] = [];
     for (let i = 0; i < runs; i++) {
         all.push(runPacingEncounter(o.player, enemy, o.deck, start + i, o.policy, { maxPlaysPerTurn: o.maxPlaysPerTurn, mercy: o.mercy }));

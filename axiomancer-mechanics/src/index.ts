@@ -94,7 +94,8 @@ export {
     programLineBlock, freeLineBlock, playLimitBlock, programLineShortfall, programLineDiscardShortfall, programXChoice, isProgramCard, isCurseCard,
     GLOBAL_FREE_TURNS, DISCARD_SHORTFALL_REASON,
     programFaceText, GLOBAL_TRIGGER_TEXT, GLOBAL_TRIGGER_FACE, paidFaceLine,
-    LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER,
+    LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER, EARLY_ENCOUNTER_MAX_LEVEL,
+    liveEncounterHpMultiplier,
     // The keep causeway (phase EN1l): the toll, TOLL and TIDE
     payTheToll, tollPayBlock, tollPayShortfall, tollPayCost, TOLL_SOURCE,
     tollOwed, tideOf, carriesToll, carriesTide, TIDE_MAX, LOW_TIDE, LOW_TIDE_VULNERABLE_PCT,

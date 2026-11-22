@@ -43,6 +43,8 @@ const FIXTURE = {
     PLAYER_VITAE_BASE: 40,
     RESOURCE_MULTIPLIERS: { VITAE_PER_BODY: 11, VITAE_PER_MIND: 5, VITAE_PER_HEART: 4 },
     LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER: 2,
+    EARLY_ENCOUNTER_ENEMY_HP_MULTIPLIER: 1.5,
+    EARLY_ENCOUNTER_MAX_LEVEL: 3,
     scalingBase: 10,
     scaling: Array.from({ length: 6 }, (_, s) => ({ stat: s, oneShot: s * 2 + 1, repeating: s + 5 })),
   },
@@ -50,6 +52,11 @@ const FIXTURE = {
 }
 
 const page = renderAtlas(FIXTURE)
+
+test('the live VITAE multiplier reads as the base, beside the early one (phase EP1a)', () => {
+  assert.match(page, /LIVE_ENCOUNTER_ENEMY_HP_MULTIPLIER<\/code> = 2, the base for fights past level 3; fights at levels 1 to 3 take 1\.5\)/)
+  assert.match(page, /multiplied by 2 in live encounters, the base for fights past level 3; fights at levels 1 to 3 take 1\.5\./)
+})
 
 test('every generated plate is present', () => {
   for (const id of ['cards', 'relics', 'stats', 'world']) {
