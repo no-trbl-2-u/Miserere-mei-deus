@@ -94,7 +94,6 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 | 182 | Chapter 1 ends on a chapter complete screen with the run's stats | [182-ce1-chapter-complete.md](182-ce1-chapter-complete.md) | planned (**Asap**: 182.1, 182.2) | 2 left |
 | 183 | The three unearnable lane relics join the elite drop pool | [183-lr2-lane-relics-elite-pool.md](183-lr2-lane-relics-elite-pool.md) | planned (**Asap**: 183.1) | 1 left |
 | 184 | The sim report counts the hazards the Breakwater plays | [184-sc1-sim-hazard-coverage.md](184-sc1-sim-hazard-coverage.md) | planned | 1 left |
-| 185 | The game model says what the tree does today | [185-gm1-game-model-refresh.md](185-gm1-game-model-refresh.md) | planned | 1 left |
 | 180 | CI screen watch: a log of the screens CI hangs on, and the first cleanup | [180-cw1-ci-screen-watch.md](180-cw1-ci-screen-watch.md) | planned (**Asap**: 180.1) | 1 left |
 | 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 5 left |
 | 169 | An open deadline Item that names a merged pull request fails the lint | [169-dl3-merged-pr-items.md](169-dl3-merged-pr-items.md) | planned | 1 left |
