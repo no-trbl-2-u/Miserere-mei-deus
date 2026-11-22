@@ -1310,21 +1310,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   unpeopled, and that ruling gets recorded as a D-row so the steward stops
   re-flagging them.
 
-### [debt] Source comments still name the retired `/deck-tuning` loop (2026-09-25)
-- category: debt
-- impact: 2
-- ease: 8
-- detail: D10 retired `/deck-tuning` in T5 (#378). The instruction surfaces
-  were repointed to `/adjust-cards`, but about 30 provenance comments in
-  `axiomancer-mechanics/src/` still name it as the tuning loop. They were
-  left alone deliberately to keep the T5 PRs collision-free. Examples:
-  `combat.engine.ts:147-215`, `combat.playtest.ts`, `cards.pricing.ts`,
-  `cards.sandbox.ts`, `combat.objective.ts`, and the e2e headers.
-- next: `/iterate`, bundled with the next mechanics-source PR that
-  re-stamps the baseline anyway. Reword to `/adjust-cards`, or to "the
-  tuning loop (rebuild pending, jot `1fc33003`)" where the old loop's
-  A/B surface is meant.
-
 ### [debt] T5 Tier 2 docs — named for archive but still have consumers (2026-09-25; archive part resolved, effects/enemy rewrite open)
 - **Context:** trim T5 archived the Tier 2 docs rows
   (`archive-pre-revamp:plan/archive/2026-09-25-trim-t5/`). Six files the spec named have inbound
@@ -1377,6 +1362,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - *Tier-1 leftovers:* `MIND_MARK_ID = 'tier1_mind_mark'` / `getStudyMarkIntensity` (`Combat/effects.ts:21-27`, barrel-exported) point at an id in neither library. There is also a matching glyph at `statusGlyphs.ts:117`.
   - *Seven player mechanic kinds have zero carriers:* `strip_random_buff`, `befriend_attempt`, `refresh_die`, `convert_die_color`, `overheat`, `spend_all_pips`, `echo_next_spell`. These are wired but unused, so they are remove candidates. Retiring one touches the union, pricing, engine, mobile, editor and tests, so each is large. `befriend_attempt` sits on the befriend path and needs an owner call.
   - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
+- 2026-11-22: deleted the unreferenced `MAX_PERMANENT_WILD_DICE`; the sim `blind` policy still plays identically to `greedy` (left as is, a retire-or-redefine call); the other bullets remain open.
 
 ### [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25)
 - **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
@@ -1507,50 +1493,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   12a485d; `axiomancer-mechanics/docs/world.md:306,393,414` still says
   "all 8 MapEventKind" (union is eleven); `docs/hazard-minigame-api.md`
   names a `HazardCardEffect` type that does not exist.
-
-### [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23)
-- category: debt
-- impact: 4
-- ease: 6
-- detail: comment-vs-code mismatches where the CODE is the stale side. Each
-  was left untouched by the docs PR (the two one-liners it did fix:
-  `verify-drift.yml` now triggers on `enemy-keywords.ts`;
-  `check-naming-law.mjs` now sweeps `apocrypha.cards.ts`).
-  1. `axiomancer-mechanics/scripts/export-catalog.ts:106-113` —
-     `parsePricingComments` reads `src/Cards/cards.library.ts`, which is the
-     aggregator since THE BIG NUMBERS REWRITE; the `// pts:` blocks live in
-     `src/Cards/library/*.cards.ts`, so catalog pricing is always empty.
-     Confidence 60.
-  2. `axiomancer-mechanics/src/CLI/combat-sim.cli.ts:11-13,43-45` — usage
-     text and default loadout name `slippery-slope`, `brace-for-impact`,
-     `festering-argument`, `soft-word`; none exist in the card library.
-     Confidence 50 that the default path is broken (may fall through).
-  3. `axiomancer-mechanics/src/Effects/world-tick.ts` —
-     `processWorldEffectTick` has no caller outside tests in mechanics or
-     mobile; `World/world.reducer.ts:206` used to point at a
-     `Game/world.orchestrator.ts` that does not exist. Either wire it into
-     `moveToNode` or delete it. Confidence 60.
-  4. `axiomancer-mechanics/src/Effects/index.ts:167-190` —
-     `TIER1_EFFECT_MAP` maps to `tier1_*` ids absent from both effect
-     libraries (the deprecated-effects test bans them), so
-     `applyTier1CombatEffect` always returns `noChange`; likewise
-     `Enemy/enemy.library.ts:89-92` `T1_DEFAULT`. Delete or re-point.
-     Confidence 80.
-  5. `scripts/axio-mcp-server.mjs:39-62` — `ensureFresh` stats only
-     `Cards/cards.library.ts` and `Effects/effects.library.ts`; an edit to
-     `Cards/library/*.cards.ts` does not bump the mtime, so the "mid-session
-     edit is caught" claim in its header is false for card edits.
-     Confidence 50.
-  Also observed: `scripts/check-baseline-freshness.mjs:33-41` says
-  `World/Continents/**` is import-disjoint from Combat/Cards/Enemy/Character,
-  but `Enemy/index.ts` and `Enemy/types.ts` type-import `MapName` from
-  `../World/map.library` (runtime-erased, so the sweep numbers are unaffected).
-- next: `/iterate` — verify each with a failing test first (1, 4 and 5 are
-  cheap to witness), then fix or delete; 3 is a design call (wire or remove)
-  and needs a `[loop-call]` note in the commit body.
-- note 2026-09-25 (T4 compaction): items 3 (`Effects/world-tick.ts`) and 4
-  (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
-  and 5 re-read live at `d615a35d`.
 
 ### [x] [loop-call] `plan/bearings.md` still says there is no hosted web surface, and a second Pages project is about to exist (2026-09-20) — RATIFIED via /oversight 2026-09-23
 - category: divergence
@@ -1764,34 +1706,6 @@ present. Row stays open until that session runs.
   encounters; NPCs + all remaining World/** → encounters) with new
   test cases in `ci-e2e-scope.test.mjs`, runnable via the new root
   `npm test`.
-
-### [content] Engine-generated "the enemy" strings survived the phase-40 card-text grammar pass
-- category: content
-- impact: 3
-- ease: 5
-- detail: filed 2026-08-23 by phase 40 (card-text grammar + full copy
-  pass). That phase fixed the FIXED VOCABULARY rule ("the foe", not "the
-  enemy") across every AUTHORED string: `cards.library.ts`
-  `paidSummary`/`persistentEffect` (31 cards) and mobile
-  `state/combat/keywords.ts` `KEYWORD_GLOSS`/`SYSTEM_GLOSSARY` (17
-  entries), each now lint-enforced. Two adjacent surfaces still say "the
-  enemy" and were deliberately left out of that pass (bounded scope, not
-  an oversight): the ENGINE's own generated strings in
-  `axiomancer-mechanics/src/Combat/combat.cards.ts`
-  (`statePredicateText`'s `UNMOVED`/`enemy-drew-blood` clauses, the hex
-  `Attaches to the enemy.` suffix, the `lock_stance` and
-  `boost_all_dots` mechanic-text lines — 7 total sites) and the mobile
-  presenter's per-mechanic `verbLine` prose in
-  `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
-  (`mechanicHeadline`, ~30 entries, several also carrying stray em
-  dashes/semicolons the phase-40 lint never reached). Neither surface has
-  a lint today. A future pass: rename the 7 mechanics sites (cheap,
-  bounded — plus its `choir-card-wording.engine.test.ts` assertions that
-  pin `UNMOVED (the enemy dealt you no damage last round)` / `the enemy
-  drew blood since your last turn` / `Attaches to the enemy.` literally),
-  then decide whether `mechanicHeadline`'s much larger prose set is worth
-  a dedicated sweep or a standing lint of its own.
-- next: /iterate
 
 ### [contract] Allowlist omits the commands the skills instruct — attended ticks prompt-wall
 - category: contract
@@ -2160,25 +2074,6 @@ present. Row stays open until that session runs.
   know the sanctioned path.
 - next: /iterate (deploy-check.mjs env fallback + a bearings note)
 
-### Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095
-- category: debt
-- impact: 4
-- ease: 7
-- detail: surfaced 2026-07-17 during the starter-deck-presets rename.
-  `npm run verify` in `axiomancer-mechanics` fails from any
-  `.claude/worktrees/*` checkout with `TS5095: Option 'bundler' can
-  only be used when 'module' is set to 'preserve' or es2015+`. Root
-  cause: the mechanics tsconfig (module `commonjs` +
-  moduleResolution `bundler`) is accepted by TypeScript 6.0.3
-  (installed at `axiomancer-mechanics/node_modules`) but rejected by
-  5.9.3 (repo-root `node_modules`); worktrees have no local install,
-  so Node walks up past the worktree into the root and picks 5.9.3.
-  Every worktree session must hand-invoke the 6.0.3 `tsc.js` to run
-  the gate. Fix options: align the root TypeScript devDependency to
-  6.x, make the tsconfig valid under both (e.g. module `preserve` or
-  moduleResolution `node`), or install per-worktree. A task chip was
-  also filed from the session.
-
 ### Telemetry attribution is best-effort; CI logging path unverified
 - category: debt
 - impact: 3
@@ -2268,48 +2163,6 @@ present. Row stays open until that session runs.
   length outliers. Extract sub-components with their own tests.
 - next: /iterate
 
-### [2.1] Two agent-e2e walkthroughs describe a deleted engine surface
-- category: gap
-- impact: 3
-- ease: 7
-- detail: spotted 2026-07-10 during the `/consolidate` terminology
-  sweep design (phase 25). `axiomancer-mechanics/automation/scripts/
-  walkthroughs/skill-learning.goal.md` names
-  `learnSkill(character, skillId)` from `src/Skills/skill.engine.ts`;
-  `tier2-skill-chain.goal.md` narrates `executeSkill`/`basePower` in
-  the same retired vocabulary (`base-power` and `src-skills-path` are
-  both live `lexicon.json` rows for exactly this concept). Neither
-  `src/Skills/` nor `learnSkill` exist in `axiomancer-mechanics/src`
-  today. Both files sit in `automation/`, a lexicon-exempt
-  dated-record zone, so `check-lexicon` never sees them, and their
-  paired `.json` scripts may already be dead too (`node
-  automation/agent-e2e.mjs skill-learning` / `tier2-skill-chain`
-  would confirm). Left un-deleted per the janitor mandate's
-  suspected-dead-file rule — the automation/README.md inventory
-  table and the harness owner should confirm dead-vs-superseded
-  before removal.
-- next: /iterate
-- update (`/iterate` investigation, 2026-09-11, no code shipped — this
-  tick's one fix went to the [1.8] tray-die a11y row instead): confirmed
-  dead, not superseded — `axiomancer-mechanics/docs/lexicon.json`'s own
-  `retired` registry (`src-skills-path`, since "2026-07 (PR #48 deleted
-  the dead src/Skills/ ability system; see CHANGELOG 'De-conflation')")
-  already rules this: the whole `src/Skills/` tier-ability system
-  (`learnSkill`, `executeSkill`, `SkillLookup`, `skillLibrary`) is gone
-  from `src/`, replaced by the SignatureSkill family (a separate living
-  concept). Both goal.md/json walkthrough pairs are safe to delete next
-  pick, per the row's own scoped ask. **Wider scope found while
-  checking:** `learnSkill`/`executeSkill` are NOT confined to these two
-  automation files — `README.md`'s Skills feature-table row,
-  `docs/testing.md`, `docs/oaths.md`, and specs 06/14/25/31 all still
-  describe the retired system in detail, several citing Phase
-  30-66-numbered work as if current. That is a much larger, higher-risk
-  doc-rewrite than this row's "two automation files" framing (touches
-  the canonical feature-table, not a lexicon-exempt dated-record zone)
-  — filed here rather than attempted blind; a future pick should treat
-  the automation-file deletion and the README/specs rewrite as two
-  separate scoped fixes, not one.
-
 ### [content] "Blank Indenture" violates NL-8 and is grandfathered, not renamed
 - category: content
 - impact: 2
@@ -2393,6 +2246,154 @@ present. Row stays open until that session runs.
   cover the slower runner.
 
 ## Done
+
+### [x] [debt] Source comments still name the retired `/deck-tuning` loop (2026-09-25) — CLOSED 2026-11-22 (this PR: reworded all 16 mentions in 8 mechanics src files to "the card-tuning loop" (no `/adjust-cards` command exists now; it is paused/retired too))
+- category: debt
+- impact: 2
+- ease: 8
+- detail: D10 retired `/deck-tuning` in T5 (#378). The instruction surfaces
+  were repointed to `/adjust-cards`, but about 30 provenance comments in
+  `axiomancer-mechanics/src/` still name it as the tuning loop. They were
+  left alone deliberately to keep the T5 PRs collision-free. Examples:
+  `combat.engine.ts:147-215`, `combat.playtest.ts`, `cards.pricing.ts`,
+  `cards.sandbox.ts`, `combat.objective.ts`, and the e2e headers.
+- next: `/iterate`, bundled with the next mechanics-source PR that
+  re-stamps the baseline anyway. Reword to `/adjust-cards`, or to "the
+  tuning loop (rebuild pending, jot `1fc33003`)" where the old loop's
+  A/B surface is meant.
+
+### [x] [debt] Five code-side defects surfaced by the 2026-09-23 comments audit (2026-09-23) — CLOSED 2026-11-22 (this PR: `parsePricingComments` and its `pricing` field deleted from `export-catalog.ts`; `combat-sim.cli.ts` usage already matched its real flags (grey-strike, grey-ward); `axio-mcp-server.mjs` `ensureFresh` now stats the Cards, Effects, Enemy and Atlas trees plus `combat.cards.ts` and `combat.rewards.ts`; items 3 and 4 were already gone)
+- category: debt
+- impact: 4
+- ease: 6
+- detail: comment-vs-code mismatches where the CODE is the stale side. Each
+  was left untouched by the docs PR (the two one-liners it did fix:
+  `verify-drift.yml` now triggers on `enemy-keywords.ts`;
+  `check-naming-law.mjs` now sweeps `apocrypha.cards.ts`).
+  1. `axiomancer-mechanics/scripts/export-catalog.ts:106-113` —
+     `parsePricingComments` reads `src/Cards/cards.library.ts`, which is the
+     aggregator since THE BIG NUMBERS REWRITE; the `// pts:` blocks live in
+     `src/Cards/library/*.cards.ts`, so catalog pricing is always empty.
+     Confidence 60.
+  2. `axiomancer-mechanics/src/CLI/combat-sim.cli.ts:11-13,43-45` — usage
+     text and default loadout name `slippery-slope`, `brace-for-impact`,
+     `festering-argument`, `soft-word`; none exist in the card library.
+     Confidence 50 that the default path is broken (may fall through).
+  3. `axiomancer-mechanics/src/Effects/world-tick.ts` —
+     `processWorldEffectTick` has no caller outside tests in mechanics or
+     mobile; `World/world.reducer.ts:206` used to point at a
+     `Game/world.orchestrator.ts` that does not exist. Either wire it into
+     `moveToNode` or delete it. Confidence 60.
+  4. `axiomancer-mechanics/src/Effects/index.ts:167-190` —
+     `TIER1_EFFECT_MAP` maps to `tier1_*` ids absent from both effect
+     libraries (the deprecated-effects test bans them), so
+     `applyTier1CombatEffect` always returns `noChange`; likewise
+     `Enemy/enemy.library.ts:89-92` `T1_DEFAULT`. Delete or re-point.
+     Confidence 80.
+  5. `scripts/axio-mcp-server.mjs:39-62` — `ensureFresh` stats only
+     `Cards/cards.library.ts` and `Effects/effects.library.ts`; an edit to
+     `Cards/library/*.cards.ts` does not bump the mtime, so the "mid-session
+     edit is caught" claim in its header is false for card edits.
+     Confidence 50.
+  Also observed: `scripts/check-baseline-freshness.mjs:33-41` says
+  `World/Continents/**` is import-disjoint from Combat/Cards/Enemy/Character,
+  but `Enemy/index.ts` and `Enemy/types.ts` type-import `MapName` from
+  `../World/map.library` (runtime-erased, so the sweep numbers are unaffected).
+- next: `/iterate` — verify each with a failing test first (1, 4 and 5 are
+  cheap to witness), then fix or delete; 3 is a design call (wire or remove)
+  and needs a `[loop-call]` note in the commit body.
+- note 2026-09-25 (T4 compaction): items 3 (`Effects/world-tick.ts`) and 4
+  (`TIER1_EFFECT_MAP`, `T1_DEFAULT`) no longer exist — deleted in T2a. Items 1, 2
+  and 5 re-read live at `d615a35d`.
+
+### [x] [content] Engine-generated "the enemy" strings survived the phase-40 card-text grammar pass — CLOSED 2026-11-22 (this PR: `mechanicHeadline` now says "the foe"; the seven `combat.cards.ts` sites were already fixed earlier; no test pinned the old prose)
+- category: content
+- impact: 3
+- ease: 5
+- detail: filed 2026-08-23 by phase 40 (card-text grammar + full copy
+  pass). That phase fixed the FIXED VOCABULARY rule ("the foe", not "the
+  enemy") across every AUTHORED string: `cards.library.ts`
+  `paidSummary`/`persistentEffect` (31 cards) and mobile
+  `state/combat/keywords.ts` `KEYWORD_GLOSS`/`SYSTEM_GLOSSARY` (17
+  entries), each now lint-enforced. Two adjacent surfaces still say "the
+  enemy" and were deliberately left out of that pass (bounded scope, not
+  an oversight): the ENGINE's own generated strings in
+  `axiomancer-mechanics/src/Combat/combat.cards.ts`
+  (`statePredicateText`'s `UNMOVED`/`enemy-drew-blood` clauses, the hex
+  `Attaches to the enemy.` suffix, the `lock_stance` and
+  `boost_all_dots` mechanic-text lines — 7 total sites) and the mobile
+  presenter's per-mechanic `verbLine` prose in
+  `axiomancer-mobile/state/presenters/combat-encounter.engine.ts`
+  (`mechanicHeadline`, ~30 entries, several also carrying stray em
+  dashes/semicolons the phase-40 lint never reached). Neither surface has
+  a lint today. A future pass: rename the 7 mechanics sites (cheap,
+  bounded — plus its `choir-card-wording.engine.test.ts` assertions that
+  pin `UNMOVED (the enemy dealt you no damage last round)` / `the enemy
+  drew blood since your last turn` / `Attaches to the enemy.` literally),
+  then decide whether `mechanicHeadline`'s much larger prose set is worth
+  a dedicated sweep or a standing lint of its own.
+- next: /iterate
+
+### [x] Worktree sessions resolve the wrong TypeScript — mechanics verify gate fails with TS5095 — CLOSED 2026-11-22 (this PR: mechanics `tsconfig.json` uses `module`/`moduleResolution` `node16`, valid under TS 5.9 and 6; `ts-node` keeps commonjs+bundler via its own override; `game.cli.ts` lazy loads use `require` and one test import gains `.js`; `tsc`, cli, tests and build pass under both)
+- category: debt
+- impact: 4
+- ease: 7
+- detail: surfaced 2026-07-17 during the starter-deck-presets rename.
+  `npm run verify` in `axiomancer-mechanics` fails from any
+  `.claude/worktrees/*` checkout with `TS5095: Option 'bundler' can
+  only be used when 'module' is set to 'preserve' or es2015+`. Root
+  cause: the mechanics tsconfig (module `commonjs` +
+  moduleResolution `bundler`) is accepted by TypeScript 6.0.3
+  (installed at `axiomancer-mechanics/node_modules`) but rejected by
+  5.9.3 (repo-root `node_modules`); worktrees have no local install,
+  so Node walks up past the worktree into the root and picks 5.9.3.
+  Every worktree session must hand-invoke the 6.0.3 `tsc.js` to run
+  the gate. Fix options: align the root TypeScript devDependency to
+  6.x, make the tsconfig valid under both (e.g. module `preserve` or
+  moduleResolution `node`), or install per-worktree. A task chip was
+  also filed from the session.
+
+### [x] [2.1] Two agent-e2e walkthroughs describe a deleted engine surface — CLOSED 2026-11-22 (this PR: deleted `skill-learning` and `tier2-skill-chain` (goal.md and json) and their two README rows)
+- category: gap
+- impact: 3
+- ease: 7
+- detail: spotted 2026-07-10 during the `/consolidate` terminology
+  sweep design (phase 25). `axiomancer-mechanics/automation/scripts/
+  walkthroughs/skill-learning.goal.md` names
+  `learnSkill(character, skillId)` from `src/Skills/skill.engine.ts`;
+  `tier2-skill-chain.goal.md` narrates `executeSkill`/`basePower` in
+  the same retired vocabulary (`base-power` and `src-skills-path` are
+  both live `lexicon.json` rows for exactly this concept). Neither
+  `src/Skills/` nor `learnSkill` exist in `axiomancer-mechanics/src`
+  today. Both files sit in `automation/`, a lexicon-exempt
+  dated-record zone, so `check-lexicon` never sees them, and their
+  paired `.json` scripts may already be dead too (`node
+  automation/agent-e2e.mjs skill-learning` / `tier2-skill-chain`
+  would confirm). Left un-deleted per the janitor mandate's
+  suspected-dead-file rule — the automation/README.md inventory
+  table and the harness owner should confirm dead-vs-superseded
+  before removal.
+- next: /iterate
+- update (`/iterate` investigation, 2026-09-11, no code shipped — this
+  tick's one fix went to the [1.8] tray-die a11y row instead): confirmed
+  dead, not superseded — `axiomancer-mechanics/docs/lexicon.json`'s own
+  `retired` registry (`src-skills-path`, since "2026-07 (PR #48 deleted
+  the dead src/Skills/ ability system; see CHANGELOG 'De-conflation')")
+  already rules this: the whole `src/Skills/` tier-ability system
+  (`learnSkill`, `executeSkill`, `SkillLookup`, `skillLibrary`) is gone
+  from `src/`, replaced by the SignatureSkill family (a separate living
+  concept). Both goal.md/json walkthrough pairs are safe to delete next
+  pick, per the row's own scoped ask. **Wider scope found while
+  checking:** `learnSkill`/`executeSkill` are NOT confined to these two
+  automation files — `README.md`'s Skills feature-table row,
+  `docs/testing.md`, `docs/oaths.md`, and specs 06/14/25/31 all still
+  describe the retired system in detail, several citing Phase
+  30-66-numbered work as if current. That is a much larger, higher-risk
+  doc-rewrite than this row's "two automation files" framing (touches
+  the canonical feature-table, not a lexicon-exempt dated-record zone)
+  — filed here rather than attempted blind; a future pick should treat
+  the automation-file deletion and the README/specs rewrite as two
+  separate scoped fixes, not one.
 
 ### [x] [content] The title screen still shows the painted "AxiomanceR" wordmark after the Phase 67 rename — CLOSED 2026-10-11 (T, attended)
 - category: content
