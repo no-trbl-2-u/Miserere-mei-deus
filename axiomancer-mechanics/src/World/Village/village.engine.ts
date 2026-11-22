@@ -322,7 +322,7 @@ export function villageRemovalQuote(player: Pick<Character, 'currency' | 'cardRe
 /**
  * Removes one copy of a card from the deck for the removal price.
  *
- * @returns the new state (deck, flags, purse and removal count moved), or the
+ * @returns the new state (deck, purse and removal count moved), or the
  *   refusal: a short purse, or the primitive's own (not in the deck, the floor).
  */
 export function removeVillageCard<S extends VillageHost>(
@@ -332,12 +332,12 @@ export function removeVillageCard<S extends VillageHost>(
 ): VillageRemoveResult<S> {
     const quote = villageRemovalQuote(state.player);
     if (quote.refusal !== null) return { ok: false, refusal: quote.refusal };
-    const removal = removeCardFromCombatDeck(state.player, cardId, state.flags ?? []);
+    const removal = removeCardFromCombatDeck(state.player, cardId);
     if (!removal.ok) return { ok: false, refusal: removal.refusal.reason };
     const player: Character = { ...removal.player, currency: removal.player.currency - quote.price };
     return {
         ok: true,
-        state: { ...state, player, flags: removal.flags },
+        state: { ...state, player },
         visit,
         spent: quote.price,
         cardId,

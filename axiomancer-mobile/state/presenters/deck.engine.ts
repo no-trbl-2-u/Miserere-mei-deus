@@ -15,8 +15,8 @@
  * Nothing here derives card text: text hand-assembled beside the data instead
  * of generated from it drifts from the actual card. So:
  *
- * - the DECK LIST is `buildCombatDeck(player, flags)`, the engine function the
- *   fight itself deals from — loadout-aware, copies preserved;
+ * - the DECK LIST is `buildCombatDeck(player)`, the engine function the
+ *   fight itself deals from, copies preserved;
  * - every printed LINE is the engine's own card projection, `toCombatCard`
  *   (`axiomancer-mechanics/src/Combat/combat.cards.ts`);
  * - the ◇ NO DIE / ◆ +DIE shorthand and the KEYWORD ledger come from
@@ -42,7 +42,6 @@ import {
     type CardRarity,
     type CardType,
     type CombatCard,
-    type GameState,
 } from '@mechanics';
 
 import { cardArtFor } from '@/assets/images/cards';
@@ -373,21 +372,16 @@ function deckCardVM(cardId: string, count: number): DeckCardVM | null {
 // ---------------------------------------------------------------------------
 
 /**
- * Build the DECK view-model from the run's character and flags.
- *
- * The store spreads the engine `GameState` at its root, so `flags` is read off
- * the same `AppStoreState`. `flags` matters: `buildCombatDeck` prefers a curated loadout when the
- * save carries loadout flags, and a deck screen that ignored them would show a
- * different deck than the one the next fight deals.
+ * Build the DECK view-model from the run's character: the deck is
+ * `buildCombatDeck(player)`, the same list the next fight deals.
  */
 export function selectDeckViewModel(
-    state: Pick<AppStoreState, 'player'> & { flags?: readonly string[] },
+    state: Pick<AppStoreState, 'player'>,
 ): DeckViewModel {
     const player = state.player;
     if (!player) return EMPTY_VM;
 
-    const flags = (state as unknown as GameState).flags ?? [];
-    const deck = buildCombatDeck(player, flags);
+    const deck = buildCombatDeck(player);
     if (deck.length === 0) return EMPTY_VM;
 
     // Copies are real (the engine preserves them), so count them rather than
