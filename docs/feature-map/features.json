@@ -2877,12 +2877,6 @@
       "kind": "coupling",
       "from": "route:(tabs)/deck",
       "to": "area:Game",
-      "file": "axiomancer-mobile/state/presenters/deck.engine.ts"
-    },
-    {
-      "kind": "coupling",
-      "from": "route:(tabs)/deck",
-      "to": "area:Game",
       "file": "axiomancer-mobile/state/store.ts"
     },
     {

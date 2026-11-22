@@ -41,8 +41,7 @@ export interface CardRemovalRefusal {
  *
  * - `'rewards'` — one copy left `combatRewardCards` (drained FIRST: rewards are
  *   the bloat the player is paying to undo).
- * - `'known'`   — the card base gave it up: the loadout dropped a slot and/or
- *   the id left `knownCards`. See `loadoutReconciled`.
+ * - `'known'`   — the card base gave it up: the id left `knownCards`.
  */
 export type CardRemovalSource = 'rewards' | 'known';
 
@@ -60,16 +59,12 @@ interface CardRemovalLedger {
     floor: number;
 }
 
-/** A removal that happened. `player`/`flags` are new values — apply both. */
+/** A removal that happened. `player` is a new value. */
 export interface CardRemovalAccepted extends CardRemovalLedger {
     ok: true;
     /** New character: one deck copy gone, `cardRemovals` incremented. */
     player: Character;
-    /** New flags: loadout reconciled when it named the removed card. */
-    flags: string[];
     removedFrom: CardRemovalSource;
-    /** True when a `combat-loadout-card:` flag was dropped. */
-    loadoutReconciled: boolean;
     refusal: null;
 }
 
@@ -78,10 +73,7 @@ export interface CardRemovalRefused extends CardRemovalLedger {
     ok: false;
     /** The SAME `Character` reference that was passed in — provably untouched. */
     player: Character;
-    /** A copy of the flags passed in — provably unreconciled. */
-    flags: string[];
     removedFrom: null;
-    loadoutReconciled: false;
     refusal: CardRemovalRefusal;
 }
 

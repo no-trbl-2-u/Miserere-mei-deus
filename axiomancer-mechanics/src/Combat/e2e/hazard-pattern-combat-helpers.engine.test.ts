@@ -156,6 +156,14 @@ describe('Spec 25 §4.3 — buildCombatDeck', () => {
     it('yields an empty deck for a player with no cards (unreachable via any real preset)', () => {
         expect(buildCombatDeck(makePlayer([]))).toEqual([]);
     });
+
+    it('ignores a stray combat-loadout-card flag: the deck is knownCards plus rewards only', () => {
+        // The curated-loadout path was deleted. Old saves cannot carry the flag
+        // (the v23 hop strips it), and a stray one reaches nothing.
+        const player = makePlayer([DOT_BODY, CONTROL_HEART]);
+        const legacy = buildCombatDeck as unknown as (p: typeof player, flags: string[]) => string[];
+        expect(legacy(player, ['combat-loadout-card:slippery-slope:1'])).toEqual(buildCombatDeck(player));
+    });
 });
 
 // ── Card adapters (§6) ───────────────────────────────────────────────────────
