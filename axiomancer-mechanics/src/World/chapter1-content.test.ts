@@ -9,7 +9,8 @@ import { describe, expect, it } from 'vitest';
 
 import { ENEMY_REGISTRY } from '../Enemy/enemy.library';
 import { renderContent } from '../CLI/chapter1-content.cli';
-import { HAZARD_LIBRARY } from './Hazard/hazard.content';
+import { getHazardPuzzleCandidate } from './Hazard/puzzle/hazard-puzzle.candidates';
+import { BREAKWATER_HAZARD_PUZZLES } from './Continents/Coastal-Village/breakwater-puzzles';
 import { BW_ELITE_DRAWS, BW_ENCOUNTER_FOES } from './MapEvents/content';
 import { BREAKWATER_CHAPTER_QUESTLINE, BREAKWATER_CHAPTER_RELICS, BREAKWATER_CHAPTER_PIECES, BREAKWATER_KEEP_KEY } from './breakwater-chapter.questline';
 import { chapter1Content } from './chapter1-content';
@@ -87,10 +88,19 @@ describe('chapter1Content', () => {
         expect(staged('saint-beneath', 'bw-k2')).toBe(true);
     });
 
-    it('lists every hazard a crossing can draw once, at every hazard node', () => {
-        expect(c.hazards.map((h) => h.id)).toEqual(HAZARD_LIBRARY.map((h) => h.id));
+    it('lists the seven puzzle hazards, one per hazard node, with the ids the run log records', () => {
         const hazardNodes = c.nodes.filter((n) => n.kind === 'hazard').map((n) => n.id);
-        for (const h of c.hazards) expect(h.nodeIds).toEqual(hazardNodes);
+        expect(hazardNodes).toHaveLength(7);
+        expect(c.hazards).toHaveLength(7);
+        // The run log's hazard-ended id is the puzzle candidate's id (claimHazardPuzzleAction logs layout.id).
+        expect(c.hazards.map((h) => h.id).sort()).toEqual(Object.values(BREAKWATER_HAZARD_PUZZLES).sort());
+        expect(unique(c.hazards.map((h) => h.id))).toBe(true);
+        for (const h of c.hazards) expect(getHazardPuzzleCandidate(h.id).title).toBe(h.title);
+        // No hazard node without an entry, and no entry off a hazard node.
+        for (const node of hazardNodes) {
+            expect(c.hazards.filter((h) => h.nodeIds.includes(node)).map((h) => h.id), node).toEqual([BREAKWATER_HAZARD_PUZZLES[node]]);
+        }
+        for (const h of c.hazards) expect(h.nodeIds).toHaveLength(1);
     });
 
     it('lists every item the chapter can pay once, with its sources', () => {

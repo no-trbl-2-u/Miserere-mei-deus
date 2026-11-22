@@ -9,8 +9,9 @@
  * NEW GAME starts on the windmill (`bw-w1`). There is no hop chain: the
  * earlier hops (v11 .. v40) went with the saves they served.
  *
- * Four load-time cleanups run on every load after `migrate`, at any version:
- * `dropUnknownCardIds`, `dropRetiredFlags`, `dropCutNodes` and `refreshRelicText`.
+ * Five load-time cleanups run on every load after `migrate`, at any version:
+ * `dropUnknownCardIds`, `dropRetiredFlags`, `dropCutNodes`, `dropRetiredMapFields`
+ * and `refreshRelicText`.
  */
 
 import { GameState } from './types';
@@ -169,7 +170,6 @@ function scrubMap(map: MapState): MapState {
     ];
     const touched = gone(map.currentNode) || gone(map.pendingArrival) || gone(map.arrivedFrom)
         || lists.some(l => l.some(gone))
-        || map.hazardOutcomes.some(o => gone(o.nodeId))
         || map.blockedRoutes.some(r => gone(r.from) || gone(r.to));
     if (!touched) return map;
     const keep = (l: NodeId[]): NodeId[] => l.filter(id => !gone(id));
@@ -186,7 +186,6 @@ function scrubMap(map: MapState): MapState {
         ...(map.seenScenes ? { seenScenes: keep(map.seenScenes) } : {}),
         ...(gone(map.pendingArrival) ? { pendingArrival: null } : {}),
         ...(gone(map.arrivedFrom) ? { arrivedFrom: cut[map.arrivedFrom!]! } : {}),
-        hazardOutcomes: map.hazardOutcomes.filter(o => !gone(o.nodeId)),
         blockedRoutes: map.blockedRoutes.filter(r => !gone(r.from) && !gone(r.to)),
     };
 }
@@ -211,6 +210,48 @@ export function dropCutNodes(state: GameState): GameState {
         let changed = false;
         for (const [name, m] of Object.entries(mapStates) as [MapName, MapState | undefined][]) {
             const s = m ? scrubMap(m) : m;
+            if (s !== m) changed = true;
+            next[name] = s;
+        }
+        if (changed) mapStates = next;
+    }
+    if (currentMap === world.currentMap && mapStates === world.mapStates) return state;
+    return { ...state, world: { ...world, currentMap, ...(mapStates ? { mapStates } : {}) } };
+}
+
+/**
+ * `MapState` keys a save may still carry that the shape no longer has.
+ * `hazardOutcomes` was declared and saved (always empty in play) but nothing
+ * ever wrote or read it; it left the shape on 2026-11-22.
+ */
+const RETIRED_MAP_FIELDS: readonly string[] = ['hazardOutcomes'];
+
+function stripMapFields(map: MapState): MapState {
+    if (!RETIRED_MAP_FIELDS.some(k => k in map)) return map;
+    const next = { ...map } as Record<string, unknown>;
+    for (const k of RETIRED_MAP_FIELDS) delete next[k];
+    return next as unknown as MapState;
+}
+
+/**
+ * Drop the `RETIRED_MAP_FIELDS` keys from every map a save holds, on every
+ * load.
+ *
+ * Not a version hop: only a save at the current version loads, and a hop
+ * would refuse every live save to strip a field nothing reads. Like
+ * `dropCutNodes`, the load paths call it after `migrate`. Returns `state`
+ * itself when nothing changes.
+ */
+export function dropRetiredMapFields(state: GameState): GameState {
+    const world = state.world;
+    if (!world?.currentMap) return state;
+    const currentMap = stripMapFields(world.currentMap);
+    let mapStates = world.mapStates;
+    if (mapStates) {
+        const next: Partial<Record<MapName, MapState>> = {};
+        let changed = false;
+        for (const [name, m] of Object.entries(mapStates) as [MapName, MapState | undefined][]) {
+            const s = m ? stripMapFields(m) : m;
             if (s !== m) changed = true;
             next[name] = s;
         }
