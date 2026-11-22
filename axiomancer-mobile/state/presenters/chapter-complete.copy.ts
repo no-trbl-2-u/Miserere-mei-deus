@@ -17,7 +17,7 @@ export const CHAPTER_COMPLETE_STAT_LABELS: Record<ChapterStatId, string> = {
     quests: 'QUEST STEPS',
     shillings: 'SHILLINGS',
     deck: 'CARDS IN DECK',
-    relics: 'RELICS WORN',
+    relics: 'RELICS ACQUIRED',
 };
 
 /** "n of m" figure: the value column's text for a count out of a total. */
