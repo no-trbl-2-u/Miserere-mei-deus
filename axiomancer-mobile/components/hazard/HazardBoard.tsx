@@ -14,8 +14,8 @@
  * up through the `drag` controller.
  */
 
-import React, { useCallback, useMemo, useRef } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { Haptics } from '@/lib/platform/haptics';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -23,30 +23,24 @@ import Animated, {
     FadeInDown,
     LinearTransition,
     runOnJS,
-    useAnimatedStyle,
-    useSharedValue,
-    withRepeat,
-    withSequence,
-    withTiming,
 } from 'react-native-reanimated';
 
 import type {
     HazardCardVM,
     HazardDieRoll,
     HazardDieVM,
-    HazardMeterVM,
     HazardViewModel,
 } from '@/state/presenters/hazard.engine';
-import { hazardMeterSpokenLabel, hazardStagedValueLabel } from '@/state/presenters/hazard.engine';
+import { hazardStagedValueLabel } from '@/state/presenters/hazard.engine';
 import { HAZARD_TUNING } from '@mechanics';
 import { HUE, TYPE_ROLES } from '@/theme/axm';
 import { makeStyles, usePalette } from '@/theme/runtime';
 
 import { HazardCard } from './HazardCard';
-import { HazardDie } from './HazardDie';
-import { DieTumble } from './HazardOverlays';
-import { Cracks, LedgerMark, ProgGlyph, TrashGlyph } from './glyphs';
-import { DEBT_ACCENT, HZ, routeAccent, TYPE_ACCENT } from './palette';
+import { ApplyButton, PlayButton, TrayDie } from './HazardControls';
+import { LiveMeter } from './HazardMeters';
+import { Cracks, LedgerMark, TrashGlyph } from './glyphs';
+import { HZ, routeAccent } from './palette';
 
 // ---------------------------------------------------------------------------
 // Drag plumbing
@@ -104,240 +98,6 @@ function measureRect(ref: MeasurableRef): Promise<Rect | null> {
         // card missed every die drop.
         node.measure((_x, _y, width, height, pageX, pageY) => resolve({ x: pageX, y: pageY, width, height }));
     });
-}
-
-// ---------------------------------------------------------------------------
-// Meters
-// ---------------------------------------------------------------------------
-
-function SegBar({ meter }: { meter: HazardMeterVM }) {
-    const AXM = usePalette();
-    const styles = useStyles();
-    const accent = TYPE_ACCENT[meter.key];
-    const segs = Math.max(1, meter.need);
-    return (
-        <View
-            accessible
-            accessibilityRole="progressbar"
-            accessibilityLabel={hazardMeterSpokenLabel(meter)}
-            accessibilityValue={{ min: Math.min(0, meter.value), max: meter.need, now: meter.value }}
-            testID={`hazard-meter-${meter.key}`}
-        >
-            <View style={styles.meterHead}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                    <ProgGlyph kind={meter.key} size={13} color={accent} />
-                    <Text style={[styles.meterLabel, { color: accent }]}>{meter.label}</Text>
-                    {meter.debt && (
-                        <Text testID={`hazard-meter-${meter.key}-debt`} style={[styles.debtTag, { borderColor: DEBT_ACCENT, color: DEBT_ACCENT }]}>
-                            DEBT
-                        </Text>
-                    )}
-                </View>
-                <Text style={[styles.meterValue, { color: meter.debt ? DEBT_ACCENT : meter.met ? accent : AXM.parchment }]}>
-                    {meter.valueLabel}
-                    <Text style={{ color: AXM.bone }}> / {meter.need}</Text>
-                    {meter.met ? ' ✓' : ''}
-                </Text>
-            </View>
-            <View style={styles.segRow}>
-                {Array.from({ length: segs }, (_, i) => {
-                    const filled = i < meter.value;
-                    return (
-                        <Animated.View
-                            key={i}
-                            layout={LinearTransition.duration(140)}
-                            style={[
-                                styles.seg,
-                                {
-                                    borderColor: filled ? accent : meter.debt ? DEBT_ACCENT : AXM.ash,
-                                    backgroundColor: filled ? accent : 'rgba(0,0,0,0.45)',
-                                },
-                            ]}
-                        />
-                    );
-                })}
-            </View>
-        </View>
-    );
-}
-
-function LiveMeter({ vm }: { vm: HazardViewModel }) {
-    const styles = useStyles();
-    // Memoized expensive calculation for threshold ladder text
-    const ladderText = useMemo(() => {
-        return vm.thresholdLadder
-            .map((row) => `${row.label} ${row.values.map((v, i) => (i === 0 ? `${v}` : `·${v}`)).join('')}`)
-            .join('   ');
-    }, [vm.thresholdLadder]);
-    return (
-        <View style={styles.meterPanel} testID="hazard-meters">
-            {vm.meters.map((meter, i) => (
-                <React.Fragment key={meter.key}>
-                    <SegBar meter={meter} />
-                    {vm.bothRequired && i === 0 && (
-                        <View style={styles.bothRow}>
-                            <View style={styles.bothLine} />
-                            <Text style={styles.bothText}>BOTH REQUIRED</Text>
-                            <View style={styles.bothLine} />
-                        </View>
-                    )}
-                </React.Fragment>
-            ))}
-            {vm.meterDetail !== null && <Text style={styles.meterDetail}>{vm.meterDetail}</Text>}
-            {/* full ladder + momentum (REC#1 / REC#2) */}
-            <View style={styles.metaRow}>
-                <Text style={styles.ladderText}>
-                    {ladderText}
-                </Text>
-                {vm.momentumNote !== null && <Text style={styles.momentum}>⟜ {vm.momentumNote}</Text>}
-            </View>
-        </View>
-    );
-}
-
-// ---------------------------------------------------------------------------
-// Dice tray
-// ---------------------------------------------------------------------------
-
-function TrayDie({
-    die,
-    drag,
-    ghosted,
-    roll,
-}: {
-    die: HazardDieVM;
-    drag: DragController;
-    ghosted: boolean;
-    roll?: HazardDieRoll;
-}) {
-    const styles = useStyles();
-    const pan = Gesture.Pan()
-        .enabled(die.usable)
-        .minDistance(6)
-        .onStart((e) => {
-            runOnJS(drag.begin)({ type: 'die', dieId: die.id, die }, e.absoluteX, e.absoluteY);
-        })
-        .onUpdate((e) => {
-            runOnJS(drag.move)(e.absoluteX, e.absoluteY);
-        })
-        .onEnd((e) => {
-            runOnJS(drag.end)(e.absoluteX, e.absoluteY);
-        })
-        .onFinalize((e, success) => {
-            if (!success) runOnJS(drag.end)(-1, -1);
-        });
-    return (
-        <GestureDetector gesture={pan}>
-            <Animated.View
-                layout={LinearTransition.duration(180)}
-                entering={FadeIn.duration(220)}
-                style={{ opacity: ghosted ? 0.25 : 1 }}
-                testID={`hazard-die-${die.id}`}
-                accessible
-                accessibilityLabel={die.accessibilityLabel}
-            >
-                {roll ? (
-                    <DieTumble key={roll.count} index={roll.order} testID={`hazard-die-roll-${die.id}-${roll.count}`}>
-                        <HazardDie kind={die.kind} size={42} state={die.state} glow={die.usable} temporary={die.temporary} />
-                    </DieTumble>
-                ) : (
-                    <HazardDie kind={die.kind} size={42} state={die.state} glow={die.usable} temporary={die.temporary} />
-                )}
-                {die.temporary && <Text style={styles.dieTag}>CONJURED</Text>}
-            </Animated.View>
-        </GestureDetector>
-    );
-}
-
-// ---------------------------------------------------------------------------
-// APPLY button — under each staged card. Commits the card (fires its
-// utility, locks it). Once applied it reads LOCKED and can't be undone.
-// ---------------------------------------------------------------------------
-
-function ApplyButton({ card, onApply }: { card: HazardCardVM; onApply: (uid: string) => void }) {
-    const AXM = usePalette();
-    const styles = useStyles();
-    if (card.applied) {
-        return (
-            <View style={[styles.applyBtn, styles.applyLocked]} testID={`hazard-applied-${card.uid}`}>
-                <Text style={styles.applyLockedText}>✓ LOCKED</Text>
-            </View>
-        );
-    }
-    const armed = card.dieAvailable || card.poweredByDieId !== null;
-    return (
-        <Pressable
-            onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid).catch(() => undefined);
-                onApply(card.uid);
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={`Apply ${card.name} — locks it in${card.poweredByDieId ? ', powered' : ''}`}
-            testID={`hazard-apply-${card.uid}`}
-            style={[styles.applyBtn, { borderColor: armed ? HZ.acid : AXM.bone }]}
-        >
-            <Text style={[styles.applyText, { color: armed ? HZ.acid : AXM.parchment }]}>APPLY</Text>
-        </Pressable>
-    );
-}
-
-// ---------------------------------------------------------------------------
-// PLAY button — translucent sulfur glow, pulsing when armed.
-// ---------------------------------------------------------------------------
-
-/** "PLAY" → "Play": the resolve label as the screen reader speaks it. */
-function spokenLabel(label: string): string {
-    return label.charAt(0) + label.slice(1).toLowerCase();
-}
-
-function PlayButton({
-    enabled,
-    label,
-    subLabel,
-    onPress,
-}: {
-    enabled: boolean;
-    label: string;
-    subLabel: string;
-    onPress: () => void;
-}) {
-    const AXM = usePalette();
-    const styles = useStyles();
-    const pulse = useSharedValue(0);
-    React.useEffect(() => {
-        pulse.value = enabled
-            ? withRepeat(withSequence(withTiming(1, { duration: 900 }), withTiming(0, { duration: 900 })), -1)
-            : withTiming(0, { duration: 200 });
-    }, [enabled, pulse]);
-    const glow = useAnimatedStyle(() => ({
-        shadowOpacity: enabled ? 0.35 + pulse.value * 0.45 : 0,
-    }));
-    return (
-        <Animated.View style={[styles.playWrap, glow]}>
-            <Pressable
-                disabled={!enabled}
-                onPress={onPress}
-                accessibilityRole="button"
-                accessibilityState={{ disabled: !enabled }}
-                accessibilityLabel={
-                    enabled
-                        ? `${spokenLabel(label)} — commit every staged card and resolve the round`
-                        : `${spokenLabel(label)}, disabled. Stage at least one card first.`
-                }
-                testID="hazard-play-button"
-                style={[
-                    styles.playBtn,
-                    {
-                        borderColor: enabled ? AXM.sulfur : AXM.ash,
-                        backgroundColor: enabled ? 'rgba(212,192,38,0.16)' : 'rgba(0,0,0,0.4)',
-                    },
-                ]}
-            >
-                <Text style={[styles.playText, { color: enabled ? AXM.sulfur : AXM.bone }]}>{label}</Text>
-                <Text style={[styles.playSub, { color: enabled ? AXM.sulfur : AXM.bone }]}>{subLabel}</Text>
-            </Pressable>
-        </Animated.View>
-    );
 }
 
 // ---------------------------------------------------------------------------
@@ -701,26 +461,11 @@ const useStyles = makeStyles((AXM) => ({
     scene: { height: 64, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: AXM.ash, backgroundColor: HZ.stone, alignItems: 'center', justifyContent: 'center' },
     sceneTitle: { fontFamily: TYPE_ROLES.title.fontFamily, fontSize: 19, color: AXM.parchment, letterSpacing: TYPE_ROLES.title.letterSpacing, textShadowColor: HUE.black, textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 0 },
     sceneNote: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 12, color: AXM.bone, marginTop: 1 },
-    meterPanel: { paddingHorizontal: 12, paddingVertical: 7, backgroundColor: 'rgba(6,5,4,0.82)', borderBottomWidth: 1, borderBottomColor: AXM.ash },
-    meterHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 3 },
-    meterLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing},
-    meterValue: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 14 },
-    debtTag: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 11, borderWidth: 1, paddingHorizontal: 4, lineHeight: 13 },
-    segRow: { flexDirection: 'row', gap: 2, height: 13 },
-    seg: { flex: 1, borderWidth: 1 },
-    bothRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginVertical: 5 },
-    bothLine: { flex: 1, height: 1, backgroundColor: AXM.ash },
-    bothText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.sulfur },
-    meterDetail: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 11, color: AXM.bone, marginTop: 3 },
-    metaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
-    ladderText: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.bone},
-    momentum: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11, color: HZ.gold},
     tray: { paddingHorizontal: 12, paddingTop: 8, paddingBottom: 6, backgroundColor: 'rgba(0,0,0,0.35)' },
     trayHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 },
     trayLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone },
     trayCount: { fontFamily: TYPE_ROLES.count.fontFamily, fontSize: 11},
     trayDice: { flexDirection: 'row', gap: 14, justifyContent: 'center', alignItems: 'flex-end', minHeight: 64 },
-    dieTag: { fontFamily: TYPE_ROLES.chip.fontFamily, fontSize: 10, color: AXM.bone, textAlign: 'center', marginTop: 2 },
     playArea: { flex: 1, marginHorizontal: 10, marginVertical: 8, borderWidth: 1.5, borderStyle: 'dashed', backgroundColor: 'rgba(134,168,33,0.04)', paddingHorizontal: 8, paddingVertical: 7 },
     playHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 },
     playLabel: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing},
@@ -729,18 +474,6 @@ const useStyles = makeStyles((AXM) => ({
     playEmptyText: { fontFamily: TYPE_ROLES.narration.fontFamily, fontStyle: 'italic', fontSize: 14, color: AXM.ash },
     playCards: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, justifyContent: 'center', alignContent: 'flex-start' },
     stagedCol: { alignItems: 'center', gap: 3 },
-    applyBtn: {
-        width: 70,
-        borderWidth: 1.5,
-        borderColor: AXM.bone,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        paddingVertical: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    applyText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 12, letterSpacing: TYPE_ROLES.button.letterSpacing, color: AXM.parchment },
-    applyLocked: { borderColor: HZ.acidDim, backgroundColor: 'rgba(134,168,33,0.16)' },
-    applyLockedText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 11, letterSpacing: TYPE_ROLES.button.letterSpacing, color: HZ.acid },
     playHint: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, color: AXM.bone, textAlign: 'center', marginTop: 4 },
     dock: { height: 164, borderTopWidth: 1, borderTopColor: AXM.ash },
     trashBin: {
@@ -760,17 +493,4 @@ const useStyles = makeStyles((AXM) => ({
     },
     trashLabel: { fontFamily: TYPE_ROLES.eyebrow.fontFamily, fontSize: 10, letterSpacing: TYPE_ROLES.eyebrow.letterSpacing, color: AXM.bone, marginTop: 1 },
     fan: { ...StyleSheet.absoluteFillObject, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 8 },
-    playWrap: {
-        position: 'absolute',
-        right: 10,
-        bottom: 12,
-        zIndex: 40,
-        shadowColor: AXM.sulfur,
-        shadowRadius: 16,
-        shadowOffset: { width: 0, height: 0 },
-        elevation: 8,
-    },
-    playBtn: { width: 78, height: 78, borderRadius: 39, borderWidth: 2.5, alignItems: 'center', justifyContent: 'center' },
-    playText: { fontFamily: TYPE_ROLES.button.fontFamily, fontSize: 17, letterSpacing: TYPE_ROLES.button.letterSpacing, lineHeight: 18 },
-    playSub: { fontFamily: TYPE_ROLES.rules.fontFamily, fontSize: 10, marginTop: 2 },
 }));

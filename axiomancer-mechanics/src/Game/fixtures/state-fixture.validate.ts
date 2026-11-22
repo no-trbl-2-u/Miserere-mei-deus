@@ -14,6 +14,7 @@
  */
 
 import { getPresetById } from '../../Character/presets';
+import { getRelicById } from '../../Items/relic.library';
 import { getMapDefinition, MapNotFoundError } from '../../World/map.registry';
 import type { ContinentName, MapName } from '../../World/map.library';
 import type { StateFixture } from './state-fixture.types';
@@ -59,6 +60,12 @@ function playerProblems(player: unknown): string[] {
         ...optional(player.health, v => isFiniteNumber(v) && v >= 1, 'player.health', 'a number ≥ 1'),
         ...optional(player.currency, v => isFiniteNumber(v) && v >= 0, 'player.currency', 'a number ≥ 0'),
         ...optional(player.knownCards, isStringArray, 'player.knownCards', 'an array of card ids'),
+        ...optional(
+            player.relics,
+            v => isStringArray(v) && v.length <= 3 && v.every(id => getRelicById(id) !== undefined),
+            'player.relics',
+            'an array of up to three live relic ids',
+        ),
         ...(stats === undefined
             ? []
             : !isRecord(stats)
@@ -118,6 +125,7 @@ export function problemsFor(raw: unknown): string[] {
         ...worldProblems(raw.world),
         ...optional(raw.flags, isStringArray, 'flags', 'an array of strings'),
         ...optional(raw.questsCompleted, isStringArray, 'questsCompleted', 'an array of strings'),
+        ...optional(raw.dying, v => v === true, 'dying', 'true'),
         ...optional(raw.arrive, v => typeof v === 'boolean', 'arrive', 'a boolean'),
         ...optional(raw.stagedEvent, v => isRecord(v) && typeof v.kind === 'string', 'stagedEvent', 'a map event payload'),
         ...optional(raw.stagedDialogue, v => isRecord(v) && typeof v.rootId === 'string' && isRecord(v.nodes), 'stagedDialogue', 'a dialogue tree'),
