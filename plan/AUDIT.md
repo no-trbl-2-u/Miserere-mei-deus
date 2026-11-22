@@ -455,6 +455,7 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the command's own argv, not to heredoc bodies or `-m` message contents; the
   `-m` body already has its own dedicated lint pass, so the general grep can
   exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+
 ### [x] The Phase-169 loadout path is dead in the shipped runtime — CLOSED 2026-11-22 (T ruled delete, via /oversight; this PR: deleted `combat.loadout.ts` (codec, `addToLoadout`, `removeFromLoadout`), the `flags` read in `buildCombatDeck` and its `flags` parameters (`initializeCombatEncounter`, `removeCardFromCombatDeck`, `CombatEncounterPanel`), the removal loadout reconciliation and their tests; a stray flag is inert and the v23 hop already stripped them, so no migration)
 - category: debt
 - impact: 5
