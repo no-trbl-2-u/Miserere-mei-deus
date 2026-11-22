@@ -108,7 +108,7 @@ export interface CombatQualityWeights {
  *
  * `identity` **0.15** — the smallest, because it is the most confounded by
  * enemy mix and deck size. It exists to keep two measured failure modes
- * visible: single-card spam (`dominantCardShare` > 0.70, the `/deck-tuning` §4
+ * visible: single-card spam (`dominantCardShare` > 0.70, the card-tuning loop §4
  * flag) and its mirror, a fight the generic engine won while the deck watched.
  *
  * The four sum to 1.0 so the index reads as a fraction. Retuning them is a
@@ -177,7 +177,7 @@ export const COMBAT_QUALITY_CALIBRATION = Object.freeze({
      *  a lead card, not a monoculture. */
     identityBand: [0.15, 0.45] as readonly [number, number],
     /** The dominant share at which the deck IS one card and identity reads 0.
-     *  Set above the `/deck-tuning` §4 spam flag (0.70) so a flagged deck
+     *  Set above the card-tuning loop §4 spam flag (0.70) so a flagged deck
      *  already scores badly before it hits zero. */
     identityMonocultureShare: 0.85,
 });

@@ -916,7 +916,8 @@ export async function runGameCli(rawArgs = process.argv.slice(2)): Promise<void>
     // Subcommand: `npm run game -- combat [flags]` hands off to the
     // Hazard-style combat agentic driver.
     if (rawArgs[0] === 'combat') {
-        const { runCombatCli } = await import('./combat.cli');
+        // require, not import(): a node16 CJS import() resolves as ESM (needs an extension) and ts-node loads CJS.
+        const { runCombatCli } = require('./combat.cli') as typeof import('./combat.cli');
         await runCombatCli(rawArgs.slice(1));
         return;
     }
@@ -924,7 +925,8 @@ export async function runGameCli(rawArgs = process.argv.slice(2)): Promise<void>
     // Subcommand: `npm run game -- hazard [flags]` hands off to the standalone
     // hazard mini-game driver, which owns its own flag set.
     if (rawArgs[0] === 'hazard') {
-        const { runHazardCli } = await import('./hazard.cli');
+        // require, not import(): a node16 CJS import() resolves as ESM (needs an extension) and ts-node loads CJS.
+        const { runHazardCli } = require('./hazard.cli') as typeof import('./hazard.cli');
         await runHazardCli(rawArgs.slice(1));
         return;
     }
@@ -932,7 +934,8 @@ export async function runGameCli(rawArgs = process.argv.slice(2)): Promise<void>
     // Subcommand: `npm run game -- labyrinth [flags]` hands off to THE
     // APORIA driver (W-01) — the full labyrinth continent, headless.
     if (rawArgs[0] === 'labyrinth') {
-        const { runLabyrinthCli } = await import('./labyrinth.cli');
+        // require, not import(): a node16 CJS import() resolves as ESM (needs an extension) and ts-node loads CJS.
+        const { runLabyrinthCli } = require('./labyrinth.cli') as typeof import('./labyrinth.cli');
         await runLabyrinthCli(rawArgs.slice(1));
         return;
     }

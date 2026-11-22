@@ -103,25 +103,6 @@ function copyArt(srcDir: string, file: string, subdir: string): string | null {
     return `./assets/catalog/${subdir}/${file}`;
 }
 
-/**
- * Every card ships its point-pricing arithmetic as a `// pts: ...` comment
- * inside its object literal (the point table). It's source-only —
- * never surfaced on the `Card` type — so recover it the same way art gets
- * recovered: parse the declaring file as text, one block per
- * `const <name>: Card = { ... }`, id → first `// pts:` line in the block.
- */
-function parsePricingComments(): Record<string, string> {
-    const src = readFileSync(join(MECH, 'src', 'Cards', 'cards.library.ts'), 'utf8');
-    const blocks = src.split(/\n(?=const \w+: Card = \{)/);
-    const out: Record<string, string> = {};
-    for (const block of blocks) {
-        const id = block.match(/id:\s*'([^']+)'/)?.[1];
-        const pts = block.match(/\/\/\s*pts:\s*(.+)/)?.[1]?.trim();
-        if (id && pts) out[id] = pts;
-    }
-    return out;
-}
-
 // ---------------------------------------------------------------------------
 // How an enemy fights — human blurb per AI logic (Enemy/types.ts).
 // ---------------------------------------------------------------------------
@@ -295,7 +276,6 @@ function payloadLines(p: any): string[] {
 // ---------------------------------------------------------------------------
 function buildCards() {
     const { byId, fallback } = parseCardArt();
-    const pricing = parsePricingComments();
     const seen = new Set<string>();
     return cardLibrary
         .filter((c) => {
@@ -306,7 +286,7 @@ function buildCards() {
         .map((c) => {
             const file = byId[c.id] ?? fallback;
             const image = copyArt(CARD_ART_DIR, file, 'cards');
-            return { id: c.id, name: c.name, image, pricing: pricing[c.id] ?? null, face: cardFace(c), ...cardStats(c) };
+            return { id: c.id, name: c.name, image, face: cardFace(c), ...cardStats(c) };
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 }
