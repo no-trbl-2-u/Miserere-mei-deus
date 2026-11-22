@@ -390,7 +390,7 @@ describe('component arithmetic — IDENTITY', () => {
             .toBeCloseTo(0, 10);
     });
 
-    it('the /deck-tuning spam flag (dominant share > 0.70) already scores badly', () => {
+    it('the card-tuning loop spam flag (dominant share > 0.70) already scores badly', () => {
         expect(scoreDeckIdentity(withShare(0.71)).score).toBeLessThan(0.4);
         expect(scoreDeckIdentity(withShare(0.95)).score).toBe(0);
     });
