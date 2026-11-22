@@ -22,6 +22,8 @@ fd21d04ab:plan/steps/01_build_plan.md`.
 **Asap** (built before the table, in this order, once their
 needs are done):
 
+- **186.1** · EP1a: foes at player levels 1 to 3 take a lower VITAE multiplier, so the opening fights end sooner (T, `/plot`, 2026-11-22)
+
 
 
 
@@ -90,6 +92,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
+| 186 | The opening fights end sooner: lower foe VITAE at levels 1 to 3 | [186-ep1-early-foe-vitae.md](186-ep1-early-foe-vitae.md) | planned (**Asap**: 186.1) | 1 left |
 | 182 | Chapter 1 ends on a chapter complete screen with the run's stats | [182-ce1-chapter-complete.md](182-ce1-chapter-complete.md) | planned (**Asap**: 182.1, 182.2) | 2 left |
 | 183 | The three unearnable lane relics join the elite drop pool | [183-lr2-lane-relics-elite-pool.md](183-lr2-lane-relics-elite-pool.md) | planned (**Asap**: 183.1) | 1 left |
 | 184 | The sim report counts the hazards the Breakwater plays | [184-sc1-sim-hazard-coverage.md](184-sc1-sim-hazard-coverage.md) | planned | 1 left |
