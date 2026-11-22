@@ -570,7 +570,7 @@ polls the Actions API for HEAD's runs:
 - exit 2 — timeout (still running; loop re-checks next tick)
 - exit 3 — config/auth (`GH_TOKEN` missing/rejected)
 
-Needs `GH_TOKEN` (repo-scoped PAT, Actions:read) in `.env`;
+Needs `GH_TOKEN` (repo-scoped PAT, Actions:read) in `.env`, falling back to `GITHUB_TOKEN` then `GH_PAT` from the environment (remote web sessions);
 `GH_REPO` defaults to `no-trbl-2-u/Miserere-mei-deus`. EAS release
 builds (`preview-build.yml`, `npm run deploy:preview/production`)
 stay a deliberate manual step — **not** part of the per-tick

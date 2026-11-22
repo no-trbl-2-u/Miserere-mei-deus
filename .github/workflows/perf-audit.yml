@@ -55,6 +55,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Chromium
+        timeout-minutes: 10
         run: npx playwright install --with-deps chromium
 
       - name: Measure

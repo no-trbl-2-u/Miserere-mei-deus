@@ -74,13 +74,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - detail: NX1e moved `/next`'s close and `/plot`'s rows onto `plan/pending/` files in the PR, settled on main by the merge job (`scripts/pr-settle.mjs`). The bookkeeping commits of `skills/critique.md`, `triage.md`, `expand.md`, `oversight.md`, `consolidate.md`, `digest.md` and `iterate.lanes.md`'s plan-only fix still `git push origin main` (D84). Each as a `loop:pr` PR would count toward the cap of 5 (D85) and wait on the review, so the move needs its own call: a `review:plan-only` PR outside the cap, or a batched bookkeeping PR. AGENTS.md rule 1 names the gap.
 - next: a `[loop-call]` for T before NX1i turns the loop on: decide the PR shape for queue-only commits, then move those verbs onto `scripts/loop-land.mjs` (or the pending files where they edit `plan/README.md` or a spec).
 
-### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
-- category: process
-- impact: 6
-- ease: 6
-- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
-- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
-
 ### [ ] [ci] The shadow review burns runs on cancel-in-progress: 418 of ~1000 `pr-review.yml` runs cancelled (2026-10-17..27) (T, via /oversight 2026-10-27)
 - category: ci
 - impact: 5
@@ -95,12 +88,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   Claude step), skip the review on heads that only merge `main`, or let a run
   finish once Claude has started. File the choice as `[loop-call]` residue.
 - next: `/iterate` (measure, then the workflow change).
-
-### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
-- category: finding
-- impact: 4
-- ease: 5
-- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
 
 ### [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13)
 - category: content
@@ -299,59 +286,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   purely executional — so filed here as `[content]`, not `[loop-call]`.
 - score: impact 4 x ease 5 / 10 = 2.0
 
-### [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick
-- category: gap
-- impact: 5
-- ease: 5
-- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
-  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
-  `_claude-skill.yml` setup step (`npx playwright install chromium
-  --with-deps`, used by both `march` and `night`) — its underlying
-  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
-  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
-  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
-  force-cancelled it. No commit resulted; the tick is a total loss, not
-  a partial one — distinct from the already-filed "march ticks are
-  creeping toward the job timeout" row above (that one is real work
-  outgrowing the ceiling; this one is an idle apt-mirror hang eating
-  the whole budget while nothing runs). `verify-mechanics.yml` and
-  `verify-mobile.yml` carry their own copy of the same install command,
-  so the exposure isn't march-specific, just unluckiest there because
-  that job runs unattended on the longest cadence.
-- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
-  install` on every invocation with no cache and no timeout around the
-  network call; caching the installed apt packages (or the Playwright
-  browser + its system deps together, keyed on the pinned Playwright
-  version) removes the network dependency from the common path
-  entirely. A cheaper interim fix: wrap the install step in a short
-  step-level `timeout-minutes` so a mirror hang fails fast and loud
-  instead of silently eating the whole job ceiling.
-- recurrence (2026-08-21 digest pulse): run `32290461478` (the
-  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
-  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
-  18:59:49 with zero progress until the ceiling force-cancelled it at
-  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
-  still unfixed, still `/iterate`-shaped, not re-scored.
-
-### `deploy:check` is unusable from remote web sessions — 401 "Token rejected"
-- category: debt
-- impact: 4
-- ease: 5
-- detail: filed 2026-07-18 (oversight session residue). Running
-  `npm run deploy:check` from a Claude Code web session fails with
-  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
-  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
-  gitignored and absent in remote containers. The session fell back to
-  the GitHub MCP Actions API (which authenticates fine) to confirm
-  CI-green, but nothing records that fallback, so every skill step that
-  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
-  bearings' deploy gate) silently dead-ends in web sessions. Fix
-  options: teach `scripts/deploy-check.mjs` to fall back to a
-  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
-  the MCP fallback in bearings' deploy-gate section so remote sessions
-  know the sanctioned path.
-- next: /iterate (deploy-check.mjs env fallback + a bearings note)
-
 ### Telemetry attribution is best-effort; CI logging path unverified
 - category: debt
 - impact: 3
@@ -420,6 +354,21 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   - *OMEN's `omenClaim` is never sent by mobile,* so OMEN always falls back to a die-derived stance with a 1-phase window.
 - 2026-11-22: deleted the unreferenced `MAX_PERMANENT_WILD_DICE`; the sim `blind` policy still plays identically to `greedy` (left as is, a retire-or-redefine call); the other bullets remain open.
 
+### [ ] [process] Closing ticks skip the Retro: ~16 `lessons: retro` commits against ~30 shipped phases (R11 watch, 2026-10-31)
+- category: process
+- impact: 6
+- ease: 6
+- detail: R11 watch window 2026-10-28..2026-10-31: `git log --grep='^lessons: retro'` = 16; `plan: phase .* shipped` commits = 30. Other R11 counts in the same window: 3 of 23 march ticks picked nothing; 2 of 70 `loop:pr` PRs went `loop:pr-stuck` (#1148, #1025, both merged); 21 plots, 0 messies; pr-review 196 success / 47 failure / 81 cancelled. T chose "fix the weakest signal now" via /oversight 2026-10-31; the watch itself continues to 2026-11-11.
+- next (`/iterate`): find which closing paths end without the Retro (`skills/march.md` §3 "Retro": ship-a-phase via PR merge, review-fix, fix-ci, heads-down) and tighten the verb so the Retro step is mandatory and checked, e.g. a tick-end telemetry field or a lint that a `plan: phase X shipped` commit has a matching retro commit or a recorded "no lesson" line. Ship the guard with a test.
+- 2026-11-22: left open, no sound automated guard built. The Retro's outcome is not recorded anywhere a lint can read: a clean retro is the words "retro: clean" in the run report (`skills/next.md` Step 6), a lesson lands as an edit to `plan/lessons.md` or a pending-file footgun, and `skills/march.md` no longer carries a §3 "Retro". The `lessons: retro` commit prefix and `plan: phase X shipped` subject this row counts no longer match the current closers (`plan: close N` / `plan: settle N`, and no `lessons: retro` in the 101-commit shallow history), so a commit-pair lint would fail on every close or pass vacuously, and a clean retro writes no artifact to pair with. A real guard needs the retro outcome recorded first (a `retro:` field on the pending file or on the `tick-end` row, which is hook-owned under `.claude/`), then a lint on that; that is a design call for `/plot`, not an `/iterate` slice.
+
+### [ ] [finding] Five reachable routes have no play path from a fresh save, only shell-gate edges (FM1d drive, 2026-10-21)
+- category: finding
+- impact: 4
+- ease: 5
+- detail: The feature map marks blacksmith, rest, village, dialogue and labyrinth reachable because every shell gate (BlacksmithGate, RestGate, EventGate, LabyrinthGate) is mounted at the root layout, so each route gets a flow edge from every other. The FM1d drive reaches all five only through a dev seam or a state fixture: the Act 1 walk does not pass a rest or anvil node, Act 1 stages no NPC and no shop (R7e, the STORY dev section lists 0 NPCs), and the labyrinth is late-game. The map's `reachable` is therefore "a gate exists", not "a player gets there". A finer reachability (node kinds on the start maps, staged events) would make the flag honest; until then the drive report marks these routes "dev seam or state fixture only".
+- 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
+
 ## Done
 
 ### [x] [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules — CLOSED 2026-11-22 (T approved the attended rewrite via /oversight; this PR: argv matching)
@@ -441,6 +390,58 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   the command's own argv, not to heredoc bodies or `-m` message contents; the
   `-m` body already has its own dedicated lint pass, so the general grep can
   exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
+### [x] `deploy:check` is unusable from remote web sessions — 401 "Token rejected" — CLOSED 2026-11-22 (this PR: deploy-check.mjs token falls back GH_TOKEN, GITHUB_TOKEN, GH_PAT; bearings note; scripts/deploy-check-token.test.mjs)
+- category: debt
+- impact: 4
+- ease: 5
+- detail: filed 2026-07-18 (oversight session residue). Running
+  `npm run deploy:check` from a Claude Code web session fails with
+  `GitHub Actions API error: 401 Unauthorized / Token rejected` — the
+  script needs the repo-scoped `GH_TOKEN` from `.env`, which is
+  gitignored and absent in remote containers. The session fell back to
+  the GitHub MCP Actions API (which authenticates fine) to confirm
+  CI-green, but nothing records that fallback, so every skill step that
+  says "run `npm run deploy:check`" (oversight §7, ship-a-phase §10,
+  bearings' deploy gate) silently dead-ends in web sessions. Fix
+  options: teach `scripts/deploy-check.mjs` to fall back to a
+  `GITHUB_TOKEN`-style env var when `GH_TOKEN` is absent, and/or state
+  the MCP fallback in bearings' deploy-gate section so remote sessions
+  know the sanctioned path.
+- next: /iterate (deploy-check.mjs env fallback + a bearings note)
+
+### [x] [gap] `npx playwright install chromium --with-deps` hung on an unreachable apt mirror, killing a full `march` tick — CLOSED 2026-11-22 (this PR: step-level timeout-minutes: 10 on every playwright --with-deps install step)
+- category: gap
+- impact: 5
+- ease: 5
+- detail: filed 2026-08-19 (digest pulse). Run `32226765299` (the
+  2026-08-19 07:12 scheduled `march` tick) hung inside the shared
+  `_claude-skill.yml` setup step (`npx playwright install chromium
+  --with-deps`, used by both `march` and `night`) — its underlying
+  `apt-get update` retried `azure.archive.ubuntu.com` for over an hour
+  (07:13:53 -> 08:27:49, zero progress the entire window, log lines
+  `Ign:2..23` repeating) before the job's `timeout_minutes: 75` ceiling
+  force-cancelled it. No commit resulted; the tick is a total loss, not
+  a partial one — distinct from the already-filed "march ticks are
+  creeping toward the job timeout" row above (that one is real work
+  outgrowing the ceiling; this one is an idle apt-mirror hang eating
+  the whole budget while nothing runs). `verify-mechanics.yml` and
+  `verify-mobile.yml` carry their own copy of the same install command,
+  so the exposure isn't march-specific, just unluckiest there because
+  that job runs unattended on the longest cadence.
+- next: /iterate. `--with-deps` re-runs `apt-get update && apt-get
+  install` on every invocation with no cache and no timeout around the
+  network call; caching the installed apt packages (or the Playwright
+  browser + its system deps together, keyed on the pinned Playwright
+  version) removes the network dependency from the common path
+  entirely. A cheaper interim fix: wrap the install step in a short
+  step-level `timeout-minutes` so a mirror hang fails fast and loud
+  instead of silently eating the whole job ceiling.
+- recurrence (2026-08-21 digest pulse): run `32290461478` (the
+  2026-08-19 18:59 scheduled `march` tick) hit the identical signature —
+  `apt-get update` stuck retrying `azure.archive.ubuntu.com` from
+  18:59:49 with zero progress until the ceiling force-cancelled it at
+  20:14:33, another total loss. Second confirmed occurrence in 12 hours;
+  still unfixed, still `/iterate`-shaped, not re-scored.
 
 ### [x] [debt] TRIM THE FAT T2a merged unverified — finish list (2026-09-25) — CLOSED 2026-11-22 (this PR: `MapState.hazardOutcomes` / `HazardNodeOutcome` / `HazardModifierEntry` removed from the shape and the new-map seed; the load-time cleanup `dropRetiredMapFields` strips the key from every map an old save holds, no version bump since only the current version loads; the `buff_all_stats_up` / `debuff_curse` half was already stale, both now only on the deprecated-effects list)
 - **Context:** owner call 2026-09-25 — T2a merged mid-work without re-running the gates. Full hand-off: the T2a hand-off brief (deleted; see history).
