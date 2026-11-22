@@ -17,8 +17,12 @@
 //     read as executed segments of their own.
 //
 // It is not a full shell grammar. It throws ShellParseError on an unclosed
-// quote or substitution (bash refuses those too), and the guard then falls
-// back to its old whole-string regexes, so a reader gap never opens a hole.
+// quote or substitution (bash refuses those too), and it sets `ambiguous` on
+// any construct it cannot read with certainty: arithmetic (`((`, `$((`,
+// `$[`, `let`, where `<<` is a shift, not a heredoc), a `${...}` holding a
+// substitution or quotes, an empty heredoc delimiter, an unreadable `$(...)`
+// in a heredoc body. The guard treats both as "not proven inert", so its
+// legacy whole-string regexes decide: a reader gap never opens a hole.
 // Zero dependencies, no I/O.
 
 export class ShellParseError extends Error {}
@@ -28,12 +32,13 @@ const WORD_END = new Set([' ', '\t', '\n', ';', '&', '|', '<', '>', '(', ')'])
 
 /**
  * Read a command into its executed segments.
- * @returns {{ segments: Segment[], assignments: Map<string, string[]> }}
- *   Segment: { words: { text: string, quoted: boolean }[], argv: string[], heredocs: string[] }
+ * @returns {{ segments: Segment[], assignments: Map<string, string[]>, ambiguous: boolean }}
+ *   Segment: { words: { text: string, quoted: boolean }[], argv: string[], heredocs: string[],
+ *              redirects: { text: string, op: string }[] }
  *   assignments: every `NAME=value` the command sets, by name (for `$NAME` in a message).
  */
 export function parseShell(src) {
-  const ctx = { segments: [], depth: 0 }
+  const ctx = { segments: [], depth: 0, ambiguous: false }
   parseInto(ctx, String(src))
   // `bash -c '...'` / `eval ...`: the string argument is itself a command.
   for (let k = 0; k < ctx.segments.length; k++) {
@@ -49,7 +54,7 @@ export function parseShell(src) {
       assignments.get(m[1]).push(m[2])
     }
   }
-  return { segments: ctx.segments, assignments }
+  return { segments: ctx.segments, assignments, ambiguous: ctx.ambiguous }
 }
 
 function parseInto(ctx, src) {
@@ -71,7 +76,7 @@ function parseList(ctx, src, i, stopAtParen) {
   const n = src.length
   let seg = newSeg()
   let word = null
-  let redirNext = false // the next word is a redirection target or here-string, not argv
+  let redirNext = '' // the operator whose target the next word is (a redirection or here-string), not argv
   let depth = 0
   const pending = [] // heredocs whose bodies start at the next newline
 
@@ -81,18 +86,20 @@ function parseList(ctx, src, i, stopAtParen) {
   }
   const endWord = () => {
     if (!word) return
-    if (word.redir) seg.redirects.push(word)
+    if (word.redir) seg.redirects.push({ text: word.text, op: word.redir })
     else {
       seg.words.push({ text: word.text, quoted: word.quoted })
       seg.argv.push(word.text)
     }
-    if (word.redir) redirNext = false
+    if (word.redir) redirNext = ''
     word = null
   }
   const endSeg = () => {
     endWord()
-    redirNext = false
-    if (seg.words.length || seg.heredocs.length) ctx.segments.push(seg)
+    redirNext = ''
+    // `let x=1<<3`: the << is a shift, which this reader would take for a heredoc
+    if (seg.words[0]?.text === 'let') ctx.ambiguous = true
+    if (seg.words.length || seg.heredocs.length || seg.redirects.length) ctx.segments.push(seg)
     seg = newSeg()
   }
 
@@ -133,9 +140,10 @@ function parseList(ctx, src, i, stopAtParen) {
       continue
     }
     if (c === '$' && src[i + 1] === '{') {
-      i = readBrace(src, i, ensureWord())
+      i = readBrace(ctx, src, i, ensureWord())
       continue
     }
+    if (c === '$' && src[i + 1] === '[') ctx.ambiguous = true // old arithmetic: `<<` inside is a shift
     if ((c === '<' || c === '>') && src[i + 1] === '(') {
       // process substitution: executed, and its text stays one word
       const w = ensureWord()
@@ -165,7 +173,7 @@ function parseList(ctx, src, i, stopAtParen) {
       else endWord()
       if (src.startsWith('<<<', i)) {
         i += 3
-        redirNext = true // here-string: data, not argv
+        redirNext = '<<<' // here-string: data, not argv
         continue
       }
       if (src.startsWith('<<', i)) {
@@ -176,13 +184,15 @@ function parseList(ctx, src, i, stopAtParen) {
         const d = readDelimiter(src, i)
         i = d.end
         if (d.text) pending.push({ delim: d.text, quoted: d.quoted, strip, seg })
+        else ctx.ambiguous = true // bash: syntax error; this reader cannot say what runs
         continue
       }
+      const from = i
       if (c === '&') i++
       i++ // < or >
       if (src[i] === '>' || src[i] === '<') i++
       if (src[i] === '&' || src[i] === '|') i++
-      redirNext = true
+      redirNext = src.slice(from, i)
       continue
     }
     if (c === ';' || c === '&' || c === '|') {
@@ -191,6 +201,7 @@ function parseList(ctx, src, i, stopAtParen) {
       continue
     }
     if (c === '(') {
+      if (src[i + 1] === '(') ctx.ambiguous = true // `((`: arithmetic or a nested subshell
       endSeg()
       if (stopAtParen) depth++
       i++
@@ -243,7 +254,7 @@ function readDouble(ctx, src, i, w) {
       continue
     }
     if (c === '$' && src[i + 1] === '{') {
-      i = readBrace(src, i, w)
+      i = readBrace(ctx, src, i, w)
       continue
     }
     if (c === '`') {
@@ -260,6 +271,8 @@ function readDouble(ctx, src, i, w) {
 // text stays in the word, so a content rule still sees what it holds.
 function readDollarParen(ctx, src, i, w) {
   if (src[i + 2] === '(') {
+    // `$((` is arithmetic or `$( (cmd); ...)`; bash decides by lookahead this reader lacks
+    ctx.ambiguous = true
     let d = 0
     for (let j = i + 1; j < src.length; j++) {
       if (src[j] === '(') d++
@@ -280,11 +293,14 @@ function readDollarParen(ctx, src, i, w) {
   }
 }
 
-function readBrace(src, i, w) {
+function readBrace(ctx, src, i, w) {
   let d = 0
   for (let j = i + 1; j < src.length; j++) {
     if (src[j] === '{') d++
     else if (src[j] === '}' && --d === 0) {
+      // `${x:-$(cmd)}` runs cmd, and quotes inside move the closing brace:
+      // only a plain `${...}` is read with certainty
+      if (/[$`'"(){}<>\\]/.test(src.slice(i + 2, j))) ctx.ambiguous = true
       w.text += src.slice(i, j + 1)
       return j + 1
     }
@@ -363,11 +379,14 @@ function runsInBody(ctx, body) {
       k++
       continue
     }
-    if (body[k] === '$' && body[k + 1] === '(' && body[k + 2] !== '(') {
+    if (body[k] === '$' && (body[k + 1] === '[' || (body[k + 1] === '(' && body[k + 2] === '('))) {
+      ctx.ambiguous = true
+    } else if (body[k] === '$' && body[k + 1] === '(') {
       const sink = { text: '' }
       try {
         k = readDollarParen(ctx, body, k, sink) - 1
       } catch {
+        ctx.ambiguous = true // something in the body runs, and this reader cannot say what
         return
       }
     } else if (body[k] === '`') {
@@ -375,6 +394,7 @@ function runsInBody(ctx, body) {
       try {
         k = readBacktick(ctx, body, k + 1, sink) - 1
       } catch {
+        ctx.ambiguous = true
         return
       }
     }
@@ -456,13 +476,19 @@ function innerCommand(seg) {
   const name = basename(ws[0].text)
   if (name === 'eval') return ws.length > 1 ? ws.slice(1).map((w) => w.text).join(' ') : null
   if (!['bash', 'sh', 'zsh', 'dash', 'ksh'].includes(name)) return null
+  let inline = false
   for (let k = 1; k < ws.length; k++) {
     const t = ws[k].text
-    if (!t.startsWith('-') || t.startsWith('--')) {
-      if (t.startsWith('--')) continue
-      return null // a script path: not inline text
+    if (/^[-+][oO]$/.test(t)) {
+      k++ // `-o pipefail`: the option's value
+      continue
     }
-    if (t.slice(1).includes('c')) return ws[k + 1]?.text ?? null
+    if (t.startsWith('--')) continue
+    if (/^[-+]/.test(t) && t.length > 1) {
+      if (t.startsWith('-') && t.slice(1).includes('c')) inline = true
+      continue
+    }
+    return inline ? t : null // the first operand: -c's text, else a script path
   }
   return null
 }
