@@ -92,7 +92,8 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - impact: 5
 - ease: 5
 - detail: the CI visual step shoots every route twice (`SMOKE_RUNS=2`). Across the 30 newest unexpired `visual-smoke-<sha>` artifacts on 2026-11-23 (main and loop branches), 26 runs have no nondeterministic route and 4 flag `cutscene` alone (e.g. artifact 14862273168, `loop/next-187.2` at 79fb2c6). It stays report-only, but a route whose two shots disagree cannot be judged by the gate, and it blocks a "0 nondeterministic routes" claim.
-- next: download one flagged run's `screenshots/current` and `diff`, find the differing region (the narrator cut-out, the vellum panel's entrance, or the scene picture's fade), and settle that animation before the ready signal.
+- traced 2026-11-23: all four flagged CI runs differ in the same 588 pixels, box (298,27)-(366,36) at 390x844: the SKIP `BrassButton` label's glyphs, max channel delta 12, and nothing else. It reproduces locally (`SMOKE_ONLY=cutscene SMOKE_RUNS=5 SMOKE_CHROME=/opt/pw-browsers/chromium npm run verify:visual`): runs 1, 3 and 5 match, runs 2 and 4 match each other, so the label rasterizes in one of two fixed states. Ruled out: an animation on `BrassButton` (it has none), and LCD text antialiasing (`--disable-lcd-text` in `BROWSER_ARGS` still gave 1 nondeterministic route in 2 tries of 5 runs).
+- next: test whether the label's x position is fractional (log the SKIP plate's `getBoundingClientRect` across runs; `styles.skip` is absolutely placed at the top right), and if so round it or snap the button to whole pixels; otherwise check whether the line's opacity fade (`FADE_IN_MS`) shares a composited layer with the button at the ready signal.
 
 ### [perf] Map SVG fix is unproven on a device (perf audit, 2026-10-03)
 - category: bug
