@@ -319,26 +319,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
   length outliers. Extract sub-components with their own tests.
 - next: /iterate
 
-### [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules
-- category: tooling
-- impact: 4
-- ease: 5
-- detail: three confirmed instances of one shape. The 2026-08-22 content-pipelines
-  audit found two: an emoji inside quoted CARD TEXT read as a commit-trailer
-  violation, and `backgroundedGate`'s regex catching any command containing the
-  word "test". A third hit 2026-08-27 during Phase 72: a `git commit` was
-  rejected for a forbidden push flag that appeared only as QUOTED PROSE inside
-  the heredoc message — the brief was documenting which verbs stay denied. The
-  guard cannot tell a command from text inside a command.
-- why it matters: each instance costs a retry and teaches the loop to avoid
-  writing about the rules it enforces, which is the opposite of what the plan
-  files are for. The failure is silent-ish (a blocked tool call, not a wrong
-  result), so it accumulates rather than being fixed.
-- next: parse before matching. The push-flag and trailer rules should apply to
-  the command's own argv, not to heredoc bodies or `-m` message contents; the
-  `-m` body already has its own dedicated lint pass, so the general grep can
-  exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
-
 ### [debt] T2b dice-flag collapse — live content the OFF path was carrying (2026-09-25)
 - **Context:** D7 deleted the Upgradeable-Dice OFF path (stance draft, hidden read, STAKE, v1 wheel, fate-X powering). The shipped model already ignored all of these; the items below were already inert in players' builds and are now visibly so.
 - **Fate cards — RESOLVED (adjust-cards pass 20, 2026-09-26):** `the-note-falls-due`, `miserere`, `dead-pledge` folded `fate` -> off-colour `dieBonus` (recoil moved into the rider). Still open: the `fate` field has zero carriers but remains in `types.ts`, `cards.pricing.ts`, `combat.cards.ts`, `card-upgrades.ts`, `combat.card-complexity.ts`, `card-keywords.ts` and the tests. Deleting it is a small cross-surface cleanup. Also `it-gets-up-again` (`float_x_die`) is priced at 4.5 but almost always pays only its +1 Conviction fallback; that is an owner call alongside the `reroll_spent` item below.
@@ -378,6 +358,26 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - 2026-11-22: left open. The honest flag needs data the map builder does not read today (node kinds on the start maps and staged events, in `axiomancer-mechanics`), and the shell-gate test (`isShellGateEdge`) lives in `feature-map-render.mjs`, not in `feature-map.evidence.mjs` `reachability`. Flipping gate-only routes to `reachable: false` would change the committed map, the render and the drive report together, and would mark routes a player does reach (by gate) as unreachable. Not a modest change; wants a spec that says what `reachable` means (a gate exists, or a play path exists) before code.
 
 ## Done
+
+### [x] [tooling] `guard.mjs` greps the whole command string, so quoted text trips its rules — CLOSED 2026-11-22 (T approved the attended rewrite via /oversight; this PR: argv matching)
+- category: tooling
+- impact: 4
+- ease: 5
+- detail: three confirmed instances of one shape. The 2026-08-22 content-pipelines
+  audit found two: an emoji inside quoted CARD TEXT read as a commit-trailer
+  violation, and `backgroundedGate`'s regex catching any command containing the
+  word "test". A third hit 2026-08-27 during Phase 72: a `git commit` was
+  rejected for a forbidden push flag that appeared only as QUOTED PROSE inside
+  the heredoc message — the brief was documenting which verbs stay denied. The
+  guard cannot tell a command from text inside a command.
+- why it matters: each instance costs a retry and teaches the loop to avoid
+  writing about the rules it enforces, which is the opposite of what the plan
+  files are for. The failure is silent-ish (a blocked tool call, not a wrong
+  result), so it accumulates rather than being fixed.
+- next: parse before matching. The push-flag and trailer rules should apply to
+  the command's own argv, not to heredoc bodies or `-m` message contents; the
+  `-m` body already has its own dedicated lint pass, so the general grep can
+  exclude it. `backgroundedGate` should match a test COMMAND, not the substring.
 
 ### [x] [content] roster: the Bleeding Signet is granted by nothing (item-ungranted, RH1, 2026-10-13) — CLOSED 2026-11-22 (183.1: the Signet is an elite drop; roster health no longer pins it)
 - category: content

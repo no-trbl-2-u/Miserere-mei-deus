@@ -40,8 +40,17 @@ import { execSync, spawn, spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 // Loaded fail-open: a missing or broken sibling must not disable the other rules.
+// Without the shell reader every pre-bash rule runs its legacy regex alone,
+// which is the stricter reading, so a broken reader can only block more.
+let shell = null
+try {
+  shell = await import('./guard-shell.mjs')
+} catch {
+  /* legacy regexes only */
+}
 let scratch = null
 try {
   scratch = await import('./scratchpad-resolve.mjs')
@@ -53,14 +62,263 @@ let hookCwd = process.cwd()
 const DEFAULT_BRANCH = 'main'
 
 // --- forbidden-command rules ------------------------------------------
+//
+// Each rule has two checks, and it can never be weaker than its legacy one:
+//
+//   legacy(cmd)  the old whole-string regex. It is the PRIMARY check: no
+//                match, no block (as before).
+//   run(parsed)  the same rule on the argv of the segments the shell
+//                executes (guard-shell.mjs). A hit always blocks, even where
+//                the legacy regex misses (`git clean --force`, `pkill -xf`).
+//
+// A legacy match is waved through only when the command is PROVEN INERT
+// (provenInert below): the reader parsed it with no ambiguity, run() found
+// nothing, every executed segment (substitutions, backticks, process
+// substitutions and heredoc consumers included) runs a program on a short
+// allowlist of programs that never execute their arguments, and a command
+// that writes a file (a note, never a script or anything under .git) runs
+// nothing but cat, tee, echo and printf. Then the legacy match can only
+// have come from data: a heredoc body, a quoted -m message, an echo or grep
+// argument (plan/AUDIT.md: the whole-string grep tripped on those). A shell,
+// any interpreter (node included), a wrapper (sudo, env, timeout, xargs,
+// find, ssh, ...) or any unknown program means "not proven", and the legacy
+// result stands. The content rule (trailer-or-emoji-in-commit) adds one more
+// condition: every commit's message must be one the guard can read.
 
-// Each rule: name, test(command) → true = block, message for the
-// agent. Messages say WHY and what to do instead, so a blocked
-// call self-corrects instead of retrying.
+// git commit: short options that take a value, and long ones.
+const COMMIT_SHORT_VALUE = 'mFCct'
+const COMMIT_LONG_VALUE = [
+  'message', 'file', 'reuse-message', 'reedit-message', 'fixup', 'squash', 'author', 'date',
+  'template', 'cleanup', 'pathspec-from-file', 'trailer',
+]
+const PUSH_SHORT_VALUE = 'o'
+const PUSH_LONG_VALUE = ['repo', 'push-option', 'receive-pack', 'exec']
+
+// git takes any unique prefix of a long option (`--tr` is --trailer,
+// `--no-v` is --no-verify). For the options the rules care about, every
+// prefix is read as the option itself; a prefix of two of them is read as the
+// first listed (no-verify and file first, so an ambiguous one blocks).
+const COMMIT_PREFIXED = [
+  'no-verify', 'file', 'trailer', 'message', 'template', 'reuse-message', 'reedit-message', 'fixup', 'squash',
+]
+function expandPrefix(args, names) {
+  return args.map((w) => {
+    const m = /^--([^=]+)(=[\s\S]*)?$/.exec(w.text)
+    if (!m) return w
+    const full = names.find((n) => n.startsWith(m[1]))
+    return full && full !== m[1] ? { ...w, text: '--' + full + (m[2] ?? '') } : w
+  })
+}
+
+// Every executed `git <sub>` segment, with its options parsed.
+function gitSegments(parsed, sub, shortValue = '', longValue = [], prefixed = []) {
+  const out = []
+  for (const seg of parsed.segments) {
+    const g = shell.gitCall(seg)
+    if (g && g.sub === sub) out.push(shell.parseOpts(expandPrefix(g.args, prefixed), shortValue, longValue))
+  }
+  return out
+}
+
+const commits = (p) => gitSegments(p, 'commit', COMMIT_SHORT_VALUE, COMMIT_LONG_VALUE, COMMIT_PREFIXED)
+const hasLong = (o, pred) => [...o.long.keys()].some(pred)
+
+// The text a commit's message is made of: every -m/--message and --trailer
+// value (a `$(cat <<'EOF' ... EOF)` message keeps its heredoc text), plus the
+// value of any $NAME it expands that the command itself assigns.
+function commitMessage(o, parsed) {
+  const parts = o.values
+    .filter((v) => ['-m', '--message', '--trailer'].includes(v.opt))
+    .map((v) => v.value)
+  const text = parts.join('\n')
+  const vars = [...text.matchAll(/\$\{?([A-Za-z_][A-Za-z0-9_]*)/g)].map((m) => m[1])
+  for (const name of vars) parts.push(...(parsed.assignments.get(name) ?? []))
+  return parts.join('\n')
+}
+
+function bannedInMessage(text) {
+  return /Co-Authored-By/i.test(text) || /[\u{1F000}-\u{1FAFF}\u{2705}\u{2728}\u{FE0F}]/u.test(text)
+}
+
+// Can the guard see every byte of this text as the shell will expand it?
+// Plain text, `$NAME` / `${NAME}` that the command itself assigns (read in
+// turn), positional and special parameters (empty here), and the one
+// substitution Claude Code writes for messages, `$(cat <<'EOF' ... EOF)`.
+// Anything else (`$(cat m.txt)`, backticks, `${x:-...}`, a variable from
+// `read` or the environment) could carry text the guard never sees.
+function textReadable(text, parsed, depth = 0) {
+  if (depth > 4) return false
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]
+    if (c === '`') return false
+    if (c !== '$') continue
+    const rest = text.slice(i)
+    const hd = /^\$\(\s*cat\s+<<(-?)\s*(['"]?)([A-Za-z_][\w-]*)\2[ \t]*\n/.exec(rest)
+    if (hd) {
+      const lines = rest.slice(hd[0].length).split('\n')
+      const at = lines.findIndex((l) => (hd[1] ? l.replace(/^\t+/, '') : l) === hd[3])
+      if (at < 0) return false
+      const body = lines.slice(0, at).join('\n')
+      if (!hd[2] && /[$`\\]/.test(body)) return false // an unquoted body expands
+      const tail = lines.slice(at + 1).join('\n')
+      const close = /^\s*\)/.exec(tail)
+      if (!close) return false
+      i += hd[0].length + lines.slice(0, at + 1).join('\n').length + 1 + close[0].length - 1
+      continue
+    }
+    const v = /^\$([A-Za-z_]\w*)/.exec(rest) ?? /^\$\{([A-Za-z_]\w*)\}/.exec(rest)
+    if (v) {
+      const values = parsed.assignments.get(v[1])
+      if (!values || !values.every((val) => textReadable(val, parsed, depth + 1))) return false
+      i += v[0].length - 1
+      continue
+    }
+    if (/^\$[0-9@*#?$!-]/.test(rest)) {
+      i++
+      continue
+    }
+    if (rest[1] === '(' || rest[1] === '{' || rest[1] === '[') return false
+  }
+  return true
+}
+
+// A commit whose message the content rule can read: given by -m/--message
+// (and --trailer) values alone, every one readable. A message from a file,
+// another commit, a template or the editor is invisible to the guard.
+function messageReadable(o, parsed) {
+  if (['c', 'C', 't', 'F'].some((ch) => o.short.has(ch))) return false
+  if (['file', 'template', 'reuse-message', 'reedit-message', 'fixup', 'squash'].some((k) => o.long.has(k))) {
+    return false
+  }
+  const parts = o.values.filter((v) => ['-m', '--message', '--trailer'].includes(v.opt))
+  if (!parts.some((v) => v.opt !== '--trailer')) return false // no -m: the editor writes it
+  return parts.every((v) => textReadable(v.value, parsed))
+}
+
+// --- proven inert: the legacy match came only from data ---------------------
+
+// Programs that never execute their arguments, input or a file named in them.
+// Deliberately short: a program missing here only means its legacy match
+// stands. sed (e/w), sort (--compress-program), xargs, find, env and every
+// shell, interpreter and runner are left out on purpose.
+const DATA_PROGRAMS = new Set([
+  'echo', 'cat', 'grep', 'egrep', 'fgrep', 'head', 'tail', 'wc', 'ls', 'cd', 'pwd', 'true', 'false', 'mkdir', 'sleep',
+])
+// git subcommands that run nothing named on their command line (hooks are the
+// repo's own). rebase (--exec), bisect, submodule, grep (-O), config, merge
+// (-s) and aliases are left out, so they keep their legacy result.
+const GIT_INERT_SUBS = new Set([
+  'add', 'commit', 'status', 'log', 'diff', 'show', 'push', 'fetch', 'branch', 'checkout', 'switch', 'reset', 'clean',
+  'restore', 'rm', 'mv', 'tag', 'rev-parse', 'ls-files', 'stash',
+])
+// Variables that make an allowlisted program run something else (git's
+// editor, ssh command and config, a preload, the PATH it is found on).
+const DANGEROUS_VAR =
+  /^(GIT_\w*|EDITOR|VISUAL|PAGER|MANPAGER|LESS\w*|LD_\w+|DYLD_\w+|BASH_ENV|ENV|NODE_OPTIONS|NODE_PATH|PS4|PROMPT_COMMAND|SHELLOPTS|BASHOPTS|PATH|IFS|HOME|XDG_CONFIG_HOME|CDPATH|SHELL|PYTHON\w*|PERL\w*|RUBY\w*|npm_config_\w+)$/i
+const ASSIGNMENT = /^([A-Za-z_][A-Za-z0-9_]*)=/
+
+// A file the command may write: one nothing will execute later (a note, a
+// log), never a script, a hook or anything under .git.
+function safeWriteTarget(p) {
+  if (/^\/dev\/(null|stdout|stderr)$/.test(p)) return true
+  return /^[\w./~@+-]+$/.test(p) && /\.(md|txt|log|csv|out)$/i.test(p) && !/(^|\/)\.git/.test(p)
+}
+
+// Long options an inert git call may carry, by exact name only: git takes
+// any unique prefix, so `--tr` could be --trailer and `--exe` --exec. Any
+// other long option (or an abbreviation of one of these) means not inert.
+const GIT_SAFE_LONG = new Set([
+  'all', 'amend', 'no-edit', 'signoff', 'allow-empty', 'quiet', 'verbose', 'message', 'author', 'date', 'short',
+  'porcelain', 'branch', 'oneline', 'stat', 'name-only', 'name-status', 'cached', 'staged', 'graph', 'decorate',
+  'format', 'pretty', 'abbrev-ref', 'show-toplevel', 'show-current', 'list', 'delete', 'hard', 'soft', 'mixed',
+  'keep', 'force', 'force-with-lease', 'force-if-includes', 'set-upstream', 'tags', 'prune', 'ff-only',
+  'untracked-files', 'max-count', 'since', 'until', 'reverse', 'no-merges', 'follow', 'dry-run', 'update',
+  'exit-code', 'no-color', 'trailer',
+])
+
+function gitInert(args) {
+  let k = 0
+  while (k < args.length && args[k].startsWith('-')) {
+    if (args[k] === '-C') k += 2
+    else if (args[k] === '--no-pager') k++
+    else return false // -c, --exec-path, --git-dir, --config-env, ...: may run or redirect anything
+  }
+  if (!GIT_INERT_SUBS.has(args[k])) return false
+  for (const a of args.slice(k + 1)) {
+    if (a === '--') break
+    if (a.startsWith('--') && !GIT_SAFE_LONG.has(a.slice(2).split('=')[0])) return false
+  }
+  return true
+}
+
+function programInert(name, args) {
+  if (DATA_PROGRAMS.has(name)) return true
+  if (name === 'printf') return !args.some((a) => a.startsWith('-v'))
+  if (name === 'rg') return !args.some((a) => /^--pre(-glob)?(=|$)/.test(a))
+  if (name === 'tee') return args.filter((a) => !a.startsWith('-')).every(safeWriteTarget)
+  if (name === 'git') return gitInert(args)
+  // No interpreter at all, node included: a script's args or stdin can carry
+  // the very command the rule forbids.
+  return false
+}
+
+function segmentInert(seg) {
+  for (const r of seg.redirects) {
+    if (!r.op.includes('>')) continue // a read, heredoc or here-string: its consumer is checked below
+    if (/&$/.test(r.op) && /^(\d+|-)$/.test(r.text)) continue // 2>&1: an fd, not a file
+    if (!safeWriteTarget(r.text)) return false
+  }
+  const ws = seg.words.map((w) => w.text)
+  let k = 0
+  for (; k < ws.length; k++) {
+    const m = ASSIGNMENT.exec(ws[k])
+    if (!m) break
+    if (DANGEROUS_VAR.test(m[1])) return false
+  }
+  if (k >= ws.length) return true // only assignments, redirections or a heredoc: no program runs
+  const name = ws[k]
+  if (name.includes('/')) return false // a path is not the allowlisted program
+  return programInert(name, ws.slice(k + 1))
+}
+
+// A command that writes a file runs nothing else: only the writers and
+// echo/cat/printf may sit beside a write, so no later step can execute what
+// was written (a note naming `git push -f` stays a note).
+const WRITERS = new Set(['cat', 'tee', 'echo', 'printf'])
+function writesFile(seg) {
+  const fileRedirect = seg.redirects.some(
+    (r) => r.op.includes('>') && !(/&$/.test(r.op) && /^(\d+|-)$/.test(r.text)) && !/^\/dev\/(null|stdout|stderr)$/.test(r.text),
+  )
+  const ws = seg.words.map((w) => w.text).filter((t) => !ASSIGNMENT.test(t))
+  const teeFile = ws[0] === 'tee' && ws.slice(1).some((a) => !a.startsWith('-') && !/^\/dev\/(null|stdout|stderr)$/.test(a))
+  return fileRedirect || teeFile
+}
+function onlyWriters(seg) {
+  const ws = seg.words.map((w) => w.text).filter((t) => !ASSIGNMENT.test(t))
+  return !ws.length || WRITERS.has(ws[0])
+}
+
+/**
+ * True when a legacy regex match on this command can only have come from data.
+ * `readable` is a content rule's extra test. The caller has already found no
+ * argv hit for the rule.
+ */
+function provenInert(parsed, readable) {
+  if (!parsed || parsed.ambiguous) return false
+  if (!parsed.segments.every(segmentInert)) return false
+  if (parsed.segments.some(writesFile) && !parsed.segments.every(onlyWriters)) return false
+  return readable ? readable(parsed) : true
+}
+
+// Each rule: name, run(parsed) → true = block (on argv), legacy(cmd) → the
+// whole-string regex (primary; see above), readable(parsed) for a content
+// rule, message for the agent. Messages say WHY and what to do instead, so a
+// blocked call self-corrects instead of retrying.
 const RULES = [
   {
     name: 'no-verify',
-    test: (cmd) => /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--no-verify\b|\s-n\b)/.test(cmd),
+    run: (p) => commits(p).some((o) => o.short.has('n') || hasLong(o, (k) => k.startsWith('no-veri'))),
+    legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--no-verify\b|\s-n\b)/.test(cmd),
     message:
       'guard: --no-verify is forbidden (AGENTS.md standing rule 3). ' +
       'The verify gate is non-negotiable — fix the root cause of the ' +
@@ -68,7 +326,14 @@ const RULES = [
   },
   {
     name: 'force-push',
-    test: (cmd) =>
+    run: (p) =>
+      gitSegments(p, 'push', PUSH_SHORT_VALUE, PUSH_LONG_VALUE).some(
+        (o) =>
+          o.short.has('f') ||
+          hasLong(o, (k) => k.startsWith('forc')) ||
+          o.positional.some((w) => w.text.startsWith('+')),
+      ),
+    legacy: (cmd) =>
       /\bgit\b[^|;&]*\bpush\b[^|;&]*(\s--force(-with-lease)?\b|\s-f\b)/.test(cmd) ||
       /\bgit\b[^|;&]*\bpush\b[^|;&]*\s\+\S/.test(cmd),
     message:
@@ -79,7 +344,14 @@ const RULES = [
   },
   {
     name: 'destructive-reset',
-    test: (cmd) =>
+    run: (p) =>
+      gitSegments(p, 'reset', '', [], ['hard']).some((o) => o.long.has('hard')) ||
+      gitSegments(p, 'clean', 'e', ['exclude'], ['force']).some((o) => o.short.has('f') || o.long.has('force')) ||
+      gitSegments(p, 'checkout', 'bB', ['orphan']).some((o) => o.positional.some((w) => w.text === '.')) ||
+      gitSegments(p, 'branch', 'u', ['set-upstream-to']).some(
+        (o) => o.short.has('D') && o.positional.some((w) => w.text === DEFAULT_BRANCH),
+      ),
+    legacy: (cmd) =>
       /\bgit\b[^|;&]*\breset\b[^|;&]*\s--hard\b/.test(cmd) ||
       /\bgit\b[^|;&]*\bclean\b[^|;&]*\s-[a-zA-Z]*f/.test(cmd) ||
       /\bgit\b[^|;&]*\bcheckout\b\s+(--\s+)?\.(\s|$)/.test(cmd) ||
@@ -91,8 +363,8 @@ const RULES = [
   },
   {
     name: 'commit-message-from-file',
-    test: (cmd) =>
-      /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--file\b|\s-[a-zA-Z]*F\b)/.test(cmd),
+    run: (p) => commits(p).some((o) => o.short.has('F') || o.long.has('file')),
+    legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b[^|;&]*(\s--file\b|\s-[a-zA-Z]*F\b)/.test(cmd),
     message:
       'guard: git commit -F/--file is forbidden — the guard lints commit ' +
       'messages from the command string (AGENTS.md standing rule 2), and a ' +
@@ -106,8 +378,15 @@ const RULES = [
     // one shell, so `pkill -f <pattern>` finds that shell (its argv holds
     // the pattern) and kills the call itself.
     name: 'pkill-self-match',
-    test: (cmd) => {
-      // In command position only, so prose naming pkill (a commit body) passes.
+    run: (p) =>
+      p.segments.some((seg) => {
+        const ws = shell.effectiveWords(seg)
+        if (!ws.length || shell.basename(ws[0].text) !== 'pkill') return false
+        const args = ws.slice(1).map((w) => w.text)
+        const full = args.some((a) => /^-[a-zA-Z]*f[a-zA-Z]*$/.test(a) || a === '--full')
+        return full && !/\[[^\]]+\]/.test(args.join(' '))
+      }),
+    legacy: (cmd) => {
       const m = cmd.match(/(?:^|[;&|(\n])\s*(?:sudo\s+)?pkill\b([^|;&\n]*)/)
       return !!m && /\s-[a-zA-Z]*f\b|\s--full\b/.test(m[1]) && !/\[[^\]]+\]/.test(m[1])
     },
@@ -118,11 +397,13 @@ const RULES = [
       '`ps aux | grep "[h]ttp.server"`.',
   },
   {
+    // CONTENT rule: reads the commit message itself, not the rest of the
+    // command (an emoji in card text written by an earlier segment is not a
+    // commit body).
     name: 'trailer-or-emoji-in-commit',
-    test: (cmd) =>
-      /\bgit\b[^|;&]*\bcommit\b/.test(cmd) &&
-      (/Co-Authored-By/i.test(cmd) ||
-        /[\u{1F000}-\u{1FAFF}\u{2705}\u{2728}\u{FE0F}]/u.test(cmd)),
+    run: (p) => commits(p).some((o) => bannedInMessage(commitMessage(o, p))),
+    readable: (p) => commits(p).every((o) => messageReadable(o, p)),
+    legacy: (cmd) => /\bgit\b[^|;&]*\bcommit\b/.test(cmd) && bannedInMessage(cmd),
     message:
       'guard: commit bodies are plain (AGENTS.md standing rule 2) — ' +
       'no Co-Authored-By trailers, no emojis. The only sanctioned ' +
@@ -131,8 +412,9 @@ const RULES = [
   {
     // footgun scratchpad-script-no-resolve: a script outside the repo resolves
     // packages from its own folder, so a bare import dies ERR_MODULE_NOT_FOUND.
+    // scratchpad-resolve.mjs reads the command itself (it masks literals).
     name: 'scratchpad-script-no-resolve',
-    test: (cmd) => {
+    raw: (cmd) => {
       trap = scratch?.findScratchpadTrap(cmd, hookCwd) ?? null
       return !!trap
     },
@@ -146,10 +428,40 @@ let trap = null
 // Backgrounding the gate is its own rule because it needs the
 // run_in_background flag, not just the command string. This is
 // the "post-result exit hang" — see AGENTS.md standing rule 3.
-function backgroundedGate(input) {
-  const cmd = String(input?.tool_input?.command ?? '')
-  const bg = input?.tool_input?.run_in_background === true
-  return bg && /\b(verify|deploy:check|e2e|test)\b/.test(cmd)
+// It matches a gate COMMAND that runs (npm test, npm run verify, node --test,
+// npx playwright test, scripts/verify.sh, ...), not the word anywhere.
+const GATE_WORD = /\b(verify|deploy:check|e2e|test)\b/
+const PACKAGE_RUNNERS = new Set([
+  'npm', 'pnpm', 'yarn', 'bun', 'npx', 'pnpx', 'bunx', 'make', 'turbo', 'nx', 'playwright', 'maestro', 'detox',
+])
+const INTERPRETERS = new Set(['node', 'bash', 'sh', 'zsh', 'python', 'python3', 'tsx', 'ts-node', 'deno'])
+
+// The words of a segment that name what it runs: the program, a package
+// runner's script/bin/target names, an interpreter's script (and node --test).
+function gateWords(seg) {
+  const ws = shell.effectiveWords(seg)
+  if (!ws.length) return []
+  const name = shell.basename(ws[0].text)
+  const words = [name]
+  const rest = ws.slice(1)
+  if (PACKAGE_RUNNERS.has(name)) {
+    for (const w of rest) {
+      if (w.text === '--') break
+      if (!w.text.startsWith('-')) words.push(w.text)
+    }
+  } else if (INTERPRETERS.has(name)) {
+    for (const w of rest) {
+      if (name === 'node' && /^--test(=|-|$)/.test(w.text)) words.push('test')
+      if (w.text.startsWith('-')) continue
+      words.push(shell.basename(w.text))
+      break
+    }
+  }
+  return words
+}
+
+function isGateCommand(parsed) {
+  return parsed.segments.some((seg) => gateWords(seg).some((w) => GATE_WORD.test(w)))
 }
 
 const BACKGROUND_MESSAGE =
@@ -157,6 +469,60 @@ const BACKGROUND_MESSAGE =
   '(AGENTS.md standing rule 3 — the post-result exit hang). Run it ' +
   'as a foreground, blocking call and wait for it. If the gate is ' +
   'too slow, run its legs as sequential foreground calls.'
+
+function parseOrNull(cmd) {
+  if (!shell) return null
+  try {
+    return shell.parseShell(cmd)
+  } catch {
+    return null // reader gap: nothing is proven inert, so the legacy regexes decide
+  }
+}
+
+// run() on the parsed argv; a reader bug there must not cost the legacy check.
+function argvHit(fn, parsed) {
+  if (!parsed) return false
+  try {
+    return !!fn(parsed)
+  } catch {
+    return false
+  }
+}
+
+/**
+ * The rule a Bash call breaks, or null. `background` is the tool call's
+ * run_in_background flag. Pure apart from the scratchpad rule's file reads.
+ * @returns {{ name: string, message: string } | null}
+ */
+export function checkCommand(cmd, { background = false } = {}) {
+  cmd = String(cmd ?? '')
+  if (!cmd) return null
+  const parsed = parseOrNull(cmd)
+  const blocks = (run, legacy, readable) => {
+    if (argvHit(run, parsed)) return true
+    if (!legacy(cmd)) return false
+    try {
+      return !provenInert(parsed, readable)
+    } catch {
+      return true // the legacy match stands
+    }
+  }
+  if (background && blocks(isGateCommand, (c) => GATE_WORD.test(c))) {
+    return { name: 'backgrounded-gate', message: BACKGROUND_MESSAGE }
+  }
+  for (const rule of RULES) {
+    const hit = rule.raw ? rule.raw(cmd) : blocks(rule.run, rule.legacy, rule.readable)
+    if (hit) return { name: rule.name, message: rule.message }
+  }
+  return null
+}
+
+/** The hook payload's view: tool_input.command and tool_input.run_in_background. */
+export function checkBash(input) {
+  return checkCommand(input?.tool_input?.command, { background: input?.tool_input?.run_in_background === true })
+}
+
+export { RULES }
 
 // --- modes --------------------------------------------------------------
 
@@ -243,20 +609,11 @@ function markHooked(input, env = process.env) {
 function preBash() {
   const input = readStdinJson()
   markHooked(input)
-  const cmd = String(input?.tool_input?.command ?? '')
-  if (!cmd) return 0
   if (typeof input?.cwd === 'string' && input.cwd) hookCwd = input.cwd
-  if (backgroundedGate(input)) {
-    process.stderr.write(BACKGROUND_MESSAGE + '\n')
-    return 2
-  }
-  for (const rule of RULES) {
-    if (rule.test(cmd)) {
-      process.stderr.write(rule.message + '\n')
-      return 2
-    }
-  }
-  return 0
+  const hit = checkBash(input)
+  if (!hit) return 0
+  process.stderr.write(hit.message + '\n')
+  return 2
 }
 
 // --- write guards --------------------------------------------------------
@@ -508,6 +865,15 @@ function selfTest() {
     ['pkill -f "[h]ttp.server 8931"', null],
     ['pkill node', null],
     ['git commit -m "guard refuses an unbracketed pkill -f now"', null],
+    // argv matching (plan/AUDIT.md): text in a message or heredoc body is not a flag
+    ['git commit -m "docs: why --no-verify and git push --force stay denied"', null],
+    ["cat > x.md <<'EOF'\ngit reset --hard; Co-Authored-By\nEOF", null],
+    ['echo "$(git push -f)"', 'force-push'],
+    // fail closed: a legacy match stands unless every program is a known data program
+    ["echo 'git push -f' | sh", 'force-push'],
+    ["bash <<'EOF'\ngit reset --hard\nEOF", 'destructive-reset'],
+    ['find . -exec git push -f {} \\;', 'force-push'],
+    ['git clean --force', 'destructive-reset'],
   ]
   // scratchpad-script-no-resolve needs a real file: one that imports a package nothing holds.
   const scratchDir = fs.mkdtempSync(path.join(os.tmpdir(), 'guard-selftest-'))
@@ -519,7 +885,7 @@ function selfTest() {
   )
   let failed = 0
   for (const [cmd, expected] of cases) {
-    const hit = RULES.find((r) => r.test(cmd))?.name ?? null
+    const hit = checkCommand(cmd)?.name ?? null
     const ok = hit === expected
     if (!ok) failed++
     process.stdout.write(
@@ -577,19 +943,31 @@ function selfTest() {
 
 // --- entry ---------------------------------------------------------------
 
-try {
-  const mode = process.argv[2]
-  const code =
-    mode === 'pre-bash' ? preBash()
-    : mode === 'pre-write' ? preWrite()
-    : mode === 'post-write' ? postWrite()
-    : mode === 'session-start' ? sessionStart()
-    : mode === 'stop' ? stopCheck()
-    : mode === 'self-test' ? selfTest()
-    : (process.stderr.write(`guard: unknown mode "${mode}"\n`), 0)
-  process.exit(code)
-} catch (err) {
-  // Fail-open: a guard bug must not wedge the loop.
-  process.stderr.write(`guard: internal error (fail-open): ${err?.message}\n`)
-  process.exit(0)
+// Run as a hook only when invoked directly; guard.test.mjs imports the rules.
+function invokedDirectly() {
+  try {
+    return !!process.argv[1] && fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    // realpath failed: judge by name, so the hook still runs (the old behaviour)
+    return !!process.argv[1] && path.basename(process.argv[1]) === path.basename(fileURLToPath(import.meta.url))
+  }
+}
+
+if (invokedDirectly()) {
+  try {
+    const mode = process.argv[2]
+    const code =
+      mode === 'pre-bash' ? preBash()
+      : mode === 'pre-write' ? preWrite()
+      : mode === 'post-write' ? postWrite()
+      : mode === 'session-start' ? sessionStart()
+      : mode === 'stop' ? stopCheck()
+      : mode === 'self-test' ? selfTest()
+      : (process.stderr.write(`guard: unknown mode "${mode}"\n`), 0)
+    process.exit(code)
+  } catch (err) {
+    // Fail-open: a guard bug must not wedge the loop.
+    process.stderr.write(`guard: internal error (fail-open): ${err?.message}\n`)
+    process.exit(0)
+  }
 }
