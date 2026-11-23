@@ -129,6 +129,7 @@ export {
 
 export {
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
+    CARD_REWARD_RARITY_WEIGHTS, rewardRarityOrder,
     unlockedLaneIds, laneSlotCount, rewardLaneSlots,
     unlockCardViaDilemma,
     isEliteEnemy, rollEliteReward, rollEliteCardRewards, rollEliteUpgrade,

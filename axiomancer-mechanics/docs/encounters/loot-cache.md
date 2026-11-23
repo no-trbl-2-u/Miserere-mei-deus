@@ -30,7 +30,7 @@ of three offers:
    items/currency directly onto `state.player` — a decoy, immediately
    undone by the mobile host (same shape `resolveRest`'s passive heal has).
 2. The host rolls the `card` candidate (`rollCombatCardRewards(player, rng,
-   1)[0]`) and the `item` candidates (`rollCacheReward(...)`, tier derived
+   1)[0]`, rarity drawn first, 60/30/10) and the `item` candidates (`rollCacheReward(...)`, tier derived
    from the current map) and opens a `LootCacheChoiceSession` in the
    `offer` phase.
 3. The player commits ONE offer — `chooseLootCacheChoiceOffer` seals the

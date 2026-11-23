@@ -289,8 +289,9 @@ T's call (ballot, 2026-10-13):
 ## 11. Rewards and lanes
 
 **Live rule.** The reward pool is the whole library (D44); BT keeps the
-Curses out of it. The roll is uniform, with no repeats, capped at the pool
-size. The post-fight draft offers 3 (pick or skip). A loot cache offers
+Curses out of it. Each offer draws its rarity first (common 60, uncommon 30,
+rare 10; an empty band falls to the next band down, then up), then a card of
+that rarity, with no repeats, capped at the pool size. The post-fight draft offers 3 (pick or skip). A loot cache offers
 one random library card. Shops sell no cards. Pointers:
 `COMBAT_REWARD_POOL` `M/Combat/combat.rewards.ts:25`;
 `rollCombatCardRewards` `:53-66`;

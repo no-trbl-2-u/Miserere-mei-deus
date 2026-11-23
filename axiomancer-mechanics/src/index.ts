@@ -101,6 +101,7 @@ export {
     tollOwed, tideOf, carriesToll, carriesTide, TIDE_MAX, LOW_TIDE, LOW_TIDE_VULNERABLE_PCT,
     // Card rewards and the starting deck
     COMBAT_REWARD_POOL, STARTING_CARD_IDS, rollCombatCardRewards, rewardPoolFor, addRewardCard,
+    CARD_REWARD_RARITY_WEIGHTS, rewardRarityOrder,
     // The reward rule: worn relics' lanes feed the pool and the lane slots
     unlockedLaneIds, laneSlotCount, rewardLaneSlots,
     unlockCardViaDilemma,
