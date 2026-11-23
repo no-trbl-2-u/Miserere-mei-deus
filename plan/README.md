@@ -88,7 +88,7 @@ that names the chunk (`plan/deadlines.md`); past it, or past
 
 | # | Initiative | Spec | Status | Progress |
 |---|---|---|---|---|
-| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 5 left |
+| 177 | The Narrator's voice, and Chapter 1's unwritten lines in it | [177-nv1-narrator-voice.md](177-nv1-narrator-voice.md) | planned | 6 left |
 | 163 | The published APK carries a tester token that can only post | [163-tk1-tester-api-token.md](163-tk1-tester-api-token.md) | planned (**Asap**: 163.3) | 2 left |
 | 166 | T's checks, in one place | [166-ck1-ts-checks.md](166-ck1-ts-checks.md) | planned | 5 left |
 | 119 | Ballots on the phone, verdicts in D1 | [119-bv1-ballot-verdicts.md](119-bv1-ballot-verdicts.md) | planned | 1 left |
