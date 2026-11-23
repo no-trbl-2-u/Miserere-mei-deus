@@ -1034,15 +1034,6 @@
 - suggested fix: at phone width drop the letter spacing and the plate's side ornaments (or let the row scroll), so each label clears the frame; pin the fit in the inventory screen test.
 - source: critique:drive (unattended)
 
-### [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30%
-- pass: 113 (commit 594a0d81)
-- viewport: mobile (375x812) and desktop (1280x800)
-- category: comprehension
-- observation: since EN1a/EN1f, Float-Eye is a `phases` foe: it loops Long Look, Afterimage, Shut Lid and Stare until its VITAE crosses 30%, then plays its DANGER and loops its second phase (D116; brief `phase_EN1_chapter1_enemies.md`, "normals 2 phases"). The screens instead show the engine's flat move list as numbered phases. The THREAT SEQUENCE preview lists "PHASE 1 · ATTACK · LONG LOOK" through "PHASE 8 · STATUS · STARE", with "PHASE 5 · DANGER" in the middle as though it were the fifth turn. The board header reads "PHASE 1/8 · ROUND 1 · TURN 1", and the dock ledger under VITAE draws 8 pips. A first-time player plans around a DANGER on turn 5 and a fight that ends at phase 8. In fact the loop repeats, so the header goes back to "PHASE 1/8" after Stare, and the DANGER fires only when the foe reaches its HP line. The word "phase" now means two different things on one screen.
-- evidence: `.critique-artifacts/mobile/03-combat.png`, `desktop/03-combat.png` (8 rows, DANGER at row 5); `mobile/04-combat-board.png` (header "PHASE 1/8", 8 ledger pips); `axiomancer-mechanics/src/Combat/combat.threat.ts:404-424` (`resolveEnemyPhases` flattens the loops plus DANGERs, numbering `index: out.length + 1`) and `:434` (`nextEnemyPhaseIndex` loops and jumps); `axiomancer-mobile/state/presenters/combat-encounter.engine.ts:1058` (`PHASE ${phase.index}`) and `:2317-2320` (`PHASE ${idx + 1}/${total}`).
-- suggested fix: for a `phases` foe, label from `enemyMove`, not the list index. Group the preview under one header per real phase ("PHASE 1 · loops", then "PHASE 2 · below 30%" led by its DANGER row), and have the board header and ledger count `enemyMove.phase + 1` of the foe's phase count. Leave the boss and deck foes on today's labels. Presentation only, no number shown (A4); pin it in `threat-phase-header.test.ts` and `combat-encounter.screen.test.tsx`.
-- source: critique:drive (unattended)
-
 ### [LOW] combat preview — a `phases` foe's threat rows open to repeat the move name already in the header, and an unbeaten DANGER row opens to nothing
 - pass: 113 (commit 594a0d81)
 - viewport: mobile (375x812) and desktop (1280x800)
@@ -1428,6 +1419,15 @@
 - source: loop
 
 ## Done
+
+### [x] [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30% — RESOLVED 2026-11-23 (stale: no component renders the THREAT SEQUENCE preview, `phaseBadge` or the dock ledger pips since the board and reveal redesign; `threatPhaseHeader` and `revealDangers` are read only by tests and `CombatFooterDock.tsx` prints no phase count. A view-model fix with per-phase sections was built on branch loop/iterate-phase-labels (7909f292f) and kept unmerged, since nothing on screen would read it; reopen if a phase preview returns)
+- pass: 113 (commit 594a0d81)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: comprehension
+- observation: since EN1a/EN1f, Float-Eye is a `phases` foe: it loops Long Look, Afterimage, Shut Lid and Stare until its VITAE crosses 30%, then plays its DANGER and loops its second phase (D116; brief `phase_EN1_chapter1_enemies.md`, "normals 2 phases"). The screens instead show the engine's flat move list as numbered phases. The THREAT SEQUENCE preview lists "PHASE 1 · ATTACK · LONG LOOK" through "PHASE 8 · STATUS · STARE", with "PHASE 5 · DANGER" in the middle as though it were the fifth turn. The board header reads "PHASE 1/8 · ROUND 1 · TURN 1", and the dock ledger under VITAE draws 8 pips. A first-time player plans around a DANGER on turn 5 and a fight that ends at phase 8. In fact the loop repeats, so the header goes back to "PHASE 1/8" after Stare, and the DANGER fires only when the foe reaches its HP line. The word "phase" now means two different things on one screen.
+- evidence: `.critique-artifacts/mobile/03-combat.png`, `desktop/03-combat.png` (8 rows, DANGER at row 5); `mobile/04-combat-board.png` (header "PHASE 1/8", 8 ledger pips); `axiomancer-mechanics/src/Combat/combat.threat.ts:404-424` (`resolveEnemyPhases` flattens the loops plus DANGERs, numbering `index: out.length + 1`) and `:434` (`nextEnemyPhaseIndex` loops and jumps); `axiomancer-mobile/state/presenters/combat-encounter.engine.ts:1058` (`PHASE ${phase.index}`) and `:2317-2320` (`PHASE ${idx + 1}/${total}`).
+- suggested fix: for a `phases` foe, label from `enemyMove`, not the list index. Group the preview under one header per real phase ("PHASE 1 · loops", then "PHASE 2 · below 30%" led by its DANGER row), and have the board header and ledger count `enemyMove.phase + 1` of the foe's phase count. Leave the boss and deck foes on today's labels. Presentation only, no number shown (A4); pin it in `threat-phase-header.test.ts` and `combat-encounter.screen.test.tsx`.
+- source: critique:drive (unattended)
 
 ### [x] [MED] combat rewards / mobile — at 375 wide the reward card face clips its keyword line, so the Word card reads "VULNERABL" over "25% for 2 turn" — RESOLVED 2026-11-23 (branch loop/iterate-reward-keyword-fit: faces narrower than the hand (reward tiles, the compact staged card) fit the paid line by the faces' measured font advances, half-pixel steps to a floor of 7, never clipping a word; the Word tile reads VULNERABLE / 25% for 2 turns at 375; pinned in paid-line.engine.test.ts and CombatRewardsOverlay.test.tsx)
 - pass: 119 (commit 4ab7d18d)
