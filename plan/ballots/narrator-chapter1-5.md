@@ -52,6 +52,24 @@ The ten Breakwater blurbs that already have text were written before the
 | `bw-d1` Fishing Hamlet | Fish dry on the racks. Nobody is watching them. | No clash |
 | `bw-w1` Windmill | Sails lashed down. The sea is loud below. | No clash |
 
+## In the game meanwhile (T, 2026-11-23)
+
+T: "leave the ballot open, but in-game, use a random suggestion from each of
+them". The ballot stays open and nothing below is a verdict. One candidate per
+slot was drawn at random:
+
+M-01a M-02b M-03b M-04b M-05b M-06b M-07b M-08b M-09b M-10b M-11a M-12b M-13b M-14b M-15a M-16b M-17a M-18a M-19a M-20b M-21a M-22b M-23a M-24b M-25b M-26a M-27a M-28a M-29b M-30b M-31b M-32a M-33a S-01a S-02b S-03b S-04b S-05b S-06b P-01b P-02a P-03b
+
+- M-01 to M-33 are the node blurbs in
+  `axiomancer-mobile/state/exploration-maps/breakwater.layout.ts`.
+- S-01 to S-06 are the `mercyLines` of Quay-Crab, Bilge-Stalker and Coralback
+  in `axiomancer-mechanics/src/Enemy/enemy.library.ts`. The finish lines still
+  show on no screen.
+- P-01 to P-03 were drawn but are not in the game. A foe with HP phases never
+  enters a stage, so they need a plot first.
+
+When T's verdicts land, they replace these draws (NV1d for the map blurbs).
+
 ## Verdicts
 
 None yet.

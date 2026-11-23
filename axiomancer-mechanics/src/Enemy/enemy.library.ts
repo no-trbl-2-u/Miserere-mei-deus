@@ -1394,9 +1394,9 @@ export const QuayCrab = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     mercyLines: {
-        // DRAFT (Claude): for T to rewrite.
-        spare: 'It backs into the stones with the big claw still raised.',
-        finish: 'The big claw opens, and does not close again.',
+        // Ballot pick (random a/b, S-01 and S-02, open ballot narrator-chapter1-5; T's word 2026-11-23).
+        spare: 'It lets go of the mud and backs under the quay. It will find something else to hold.',
+        finish: 'The claw opens at last. The quay men will not miss it, only find the mud fuller.',
     },
     logic: 'balanced',
     phases: [
@@ -1421,9 +1421,9 @@ export const BilgeStalker = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     mercyLines: {
-        // DRAFT (Claude): for T to rewrite.
-        spare: 'It drops back under the deck boards and waits for quieter feet.',
-        finish: 'It goes down in the bilge water it came up out of.',
+        // Ballot pick (random a/b, S-03 and S-04, open ballot narrator-chapter1-5; T's word 2026-11-23).
+        spare: 'It slips back under the hulls. The town will feed it a stranger before it starves.',
+        finish: 'It goes down in the bilge water. Nobody behind the shutters opens one to look.',
     },
     logic: 'balanced',
     phases: [
@@ -1448,9 +1448,9 @@ export const Coralback = createEnemy({
     mapName: 'breakwater',
     difficulty: 'normal',
     mercyLines: {
-        // DRAFT (Claude): for T to rewrite.
-        spare: 'It sidles off crown-first, still warning you.',
-        finish: 'The crown goes grey a long moment before the crab does.',
+        // Ballot pick (random a/b, S-05 and S-06, open ballot narrator-chapter1-5; T's word 2026-11-23).
+        spare: 'It climbs on toward the good houses. They will take it in for the crown.',
+        finish: 'The crown goes grey. Someone in the upper town will have it on a mantel by morning.',
     },
     logic: 'balanced',
     phases: [
