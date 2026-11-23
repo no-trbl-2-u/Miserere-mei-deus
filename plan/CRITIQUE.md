@@ -1,7 +1,7 @@
 # Critique log
 
-> Last pass: 2026-11-13 at commit 5957cc2de
-> Pass count: 118
+> Last pass: 2026-11-23 at commit 4ab7d18d3
+> Pass count: 119
 
 > External-observer feedback for Axiomancer. Populated by
 > `/critique` (which drives the local expo-web build with the
@@ -1015,6 +1015,33 @@
 > the hub's "tap a trodden one", the quest pay's two cases.
 
 ## Pending
+
+### [HIGH] ci / critique-drive — the `combat-board` and `combat-dying` captures stop on the pre-fight preview, and `combat` captures a blank frame, so no pass since 2e1050b91 has seen the live board, the hand or the DY1d skull
+- pass: 119 (commit 4ab7d18d)
+- viewport: mobile (375x812) and desktop (1280x800)
+- category: performance
+- observation: `mobile/04-combat-board.png` and `mobile/14-combat-dying.png` (and both desktop copies) show the Quay-Crab preview with ENTER COMBAT and WITHDRAW, where the entries say they show the live board and the dying player's skull portrait. Their `.txt` holds only the preview text ("Quay-Crab / LEVEL 2 92 VITAE / ENTER COMBAT / WITHDRAW"). `03-combat.png` is an all-black frame at both viewports while its `.txt` holds the preview text, so it was taken mid-fade. The manifest marks all three "captured, 0 errors": the drive cannot tell.
+- evidence: `axiomancer-mobile/scripts/critique-drive.mjs:186-187` and `:274-275` (the `combat-enter` click and the `combat-board` wait each end in `.catch(() => {})`, so a missed click or a board that never shows is swallowed); the `combat` entry (`:172-178`) has no `settle`.
+- suggested fix: drop the two `.catch`es so a board that never shows marks the entry `navError`; wait for the preview to be opaque before the click (the `menuSettled` pattern) and give `combat` the same settle; pin it in `critique-drive.test.mjs`.
+- source: critique:drive (unattended)
+
+### [MED] combat rewards / mobile — at 375 wide the reward card face clips its keyword line, so the Word card reads "VULNERABL" over "25% for 2 turn"
+- pass: 119 (commit 4ab7d18d)
+- viewport: mobile (375x812)
+- category: mobile
+- observation: on the victory screen (`18-victory-levelled`, `19-victory-plain`) the three reward cards sit side by side; the third card's keyword line is cut at the right edge to "VULNERABL" and its line under it to "25% for 2 turn". The Blow and Ward lines fit. The player chooses a card it cannot read in full; desktop shows the whole line.
+- evidence: `.critique-artifacts/mobile/18-victory-levelled.png`, `mobile/19-victory-plain.png` (third card); copy from `state/presenters/combat-reward.copy.ts`.
+- suggested fix: let the reward face's keyword and detail lines shrink or wrap to the face width (`adjustsFontSizeToFit` with a floor, or two lines) at phone width, as the hand faces already fit their names; pin the 375 case in the reward screen test.
+- source: critique:drive (unattended)
+
+### [LOW] satchel / mobile — at 375 wide the filter tabs clip their own labels: PHIALS reads "HIALS" and SEALED reads "EALED" under the frame's corner filigree
+- pass: 119 (commit 4ab7d18d)
+- viewport: mobile (375x812)
+- category: visual
+- observation: the five filter tabs (ALL, GEAR, PHIALS, STUFF, SEALED) are each about 70px wide; the label plus its count overruns the plate, the first letters of PHIALS and SEALED sit under the left corner ornament and the counts touch the right edge. Desktop is fine.
+- evidence: `.critique-artifacts/mobile/13-satchel.png` (tab row at y ~510); tab labels from `state/presenters/inventory.engine.ts`, plate from `components/experience/looks.ts`.
+- suggested fix: at phone width drop the letter spacing and the plate's side ornaments (or let the row scroll), so each label clears the frame; pin the fit in the inventory screen test.
+- source: critique:drive (unattended)
 
 ### [MED] combat / phases foe — the preview and board number each loop move as a "PHASE", so Float-Eye reads as an 8-step fight whose DANGER lands on turn 5, where the rule gives it 2 phases and a DANGER at 30%
 - pass: 113 (commit 594a0d81)
