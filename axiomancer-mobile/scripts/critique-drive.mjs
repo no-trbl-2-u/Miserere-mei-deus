@@ -119,8 +119,8 @@ export function entranceSettled(testId) {
 }
 
 // The critique screen set (skill §3). Each entry navigates a route and captures
-// what renders. `prepare` is a best-effort interaction to reach a downstream
-// state; if it throws, we capture whatever is on screen and move on.
+// what renders. `prepare` reaches a downstream state; if it throws, the entry
+// gets a `navError` and we still capture whatever is on screen.
 //
 // Three ways a screen gets reached:
 //
