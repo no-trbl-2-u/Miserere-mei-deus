@@ -321,9 +321,12 @@ ambiguity.)
 - **Combat:** Hazard-Pattern Combat (`initializeCombatEncounter`,
   `simulateHazardPatternCombat`) is the only combat engine. The rules are
   in `docs/game-model.md`.
-- **Win condition:** VITAE is the one bar and emptying it is the only way
-  to win (D47, D63, spec 144). A blind spare-or-finish check on some normal
-  foes decides what the win pays; it is no second ending. Never reintroduce
+- **Win condition:** VITAE is the one bar and emptying it wins (D47, D63,
+  spec 144). The mercy check fires on the lethal blow, not after the win
+  (D?mercy-at-the-blow, spec 187): on 15% of the blows that would kill a
+  normal or elite foe, it stands at 1 VITAE and asks spare or finish. Finish
+  is the kill; spare is a win that leaves it at 1 VITAE. The check gives
+  neither side a turn or an effect, and a boss never asks. Never reintroduce
   RELENT, CONDEMN, Pressure Tracks or `CombatPressureTracks`.
   <!-- lexicon-ok: pressure-tracks -->
 - **No governing objective function.** Combat is not graded against a

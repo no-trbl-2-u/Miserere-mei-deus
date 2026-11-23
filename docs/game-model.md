@@ -133,11 +133,16 @@ the Expo app (`axiomancer-mobile`) presents it.
   the lead foe's level (`fightWage`, `Combat/combat.mercy-check.ts`), on every
   difficulty, even when an elite's relic drop withholds the XP. A foe carries no
   loot table and pays no loot.
-- **The mercy check:** when a foe of `difficulty: 'normal'` falls to 0 VITAE, the
-  combat rng rolls `MERCY_CHECK_CHANCE` = 15% (`rollMercyCheck`,
-  `Combat/combat.mercy-check.ts`). On a hit the fight asks spare or finish and
-  shows no reward; on a miss it pays as Finish. Elites, bosses and every other
-  difficulty are always finished. Finish pays as any win. Spare pays no XP and no
+- **The mercy check:** a blow that would take a foe of `difficulty: 'normal'` or
+  `'elite'` to 0 VITAE (a card, a die's line or payload, a status tick) draws
+  `MERCY_CHECK_CHANCE` = 15% from the combat rng (`offerMercyAtBlow`, called from
+  the engine's `endCombat`, `Combat/combat.mercy-check.ts`). On a hit the foe
+  stands at 1 VITAE, the fight pauses (`phase: 'mercy-check'`, `mercyCheck:
+  'offered'`, `finalOutcome` null) and asks spare or finish with no reward shown;
+  nothing else resolves, no side takes a turn and the only input is the answer
+  (`chooseMercyCheck`). On a miss the blow kills. Bosses, `simple` and `unique`
+  foes never ask. Finish ends the fight exactly as the kill would have and pays
+  as any win. Spare ends it as a `victory` with the foe at 1 VITAE and pays no XP and no
   card reward: `spareWage` (1.5 x the wage, rounded up) and one roll on the Spare
   table (`MERCY_TUNING.spareTable`, `Combat/combat.spare-reward.ts`), revealed on
   the end screen. A spared foe is still a `victory`: it counts for quests, the

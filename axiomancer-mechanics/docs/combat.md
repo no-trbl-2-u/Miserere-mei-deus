@@ -166,9 +166,12 @@ holds other entries that no live card or enemy card applies.
   and between-phases steps.
 - **Defeat:** the player's VITAE reaches 0, or the round passes
   `MAX_PHASES` (a private constant in `combat.engine.ts`).
-- **The mercy check:** a win over a `normal` foe may then ask spare or finish
-  (`rollMercyCheck`, `chooseMercyCheck`, `Combat/combat.mercy-check.ts`). The
-  outcome stays `victory`; only what it pays differs.
+- **The mercy check:** a win over a `normal` or `elite` foe is first a lethal
+  blow, and `endCombat` may pause it instead (`offerMercyAtBlow`,
+  `Combat/combat.mercy-check.ts`): the foe stands at 1 VITAE, `phase` is
+  `mercy-check`, `finalOutcome` stays null and every engine step refuses until
+  `chooseMercyCheck` answers. FINISH ends it exactly as the kill would have;
+  SPARE ends it as a `victory` with the foe at 1 VITAE.
 
 `buildCombatSummary` (`Combat/combat.attribution.ts`) turns the finished
 state into a `CombatSummary`. Rules:
