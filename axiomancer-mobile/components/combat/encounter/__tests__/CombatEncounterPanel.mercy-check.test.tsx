@@ -133,6 +133,24 @@ describe('the prompt, before the choice', () => {
         expect(screen.getByTestId('combat-mercy')).toBeTruthy();
     });
 
+    it('ends no turn and takes no scrap, signature or toll, and the board is not resolving', () => {
+        fellTheFoe('normal');
+        const handBefore = board().vm.hand.map((c) => c.uid);
+        const card = board().vm.hand[0];
+        act(() => { board().onEndPhase(); });
+        expect(board().resolving).toBeFalsy();
+        act(() => { jest.advanceTimersByTime(5000); });
+        act(() => { board().onDiscard(card.uid); });
+        act(() => { board().onSignature('sig-crimson-circlet'); });
+        act(() => { board().onPayToll?.(); });
+        act(() => { jest.advanceTimersByTime(5000); });
+        expect(board().resolving).toBeFalsy();
+        expect(board().vm.hand.map((c) => c.uid)).toEqual(handBefore);
+        expect(board().vm.enemy.hp).toBe(1);
+        expect(screen.getByTestId('combat-mercy')).toBeTruthy();
+        expect(screen.queryByTestId('combat-summary')).toBeNull();
+    });
+
     it('has paid nothing yet', () => {
         const { store, before } = fellTheFoe('normal');
         const player = store.getState().player;
