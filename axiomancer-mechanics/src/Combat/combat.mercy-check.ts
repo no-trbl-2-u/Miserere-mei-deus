@@ -15,7 +15,9 @@ import { isLoggingEnabled, forwardCombatEventsToLog } from '../Log';
  *   up (a level-5 foe's 15 becomes 23).
  * - `extraShillingsMultiplier`: the table's extra shillings result is this
  *   times the normal wage, on top of Spare's own.
- * - `spareTable`: the weights of the one roll a Spare pays, out of 100.
+ * - `spareTable`: the weights of the one roll a spared normal foe pays, out of 100.
+ * - `eliteSpareTable`: the same roll for a spared elite foe; the relic result
+ *   takes 10 from shillings.
  */
 export const MERCY_TUNING = {
     mercyCheckChance: 0.15,
@@ -30,7 +32,20 @@ export const MERCY_TUNING = {
         gear: 10,
         relic: 5,
     },
+    eliteSpareTable: {
+        shillings: 20,
+        consumable: 30,
+        upgrade: 15,
+        transform: 10,
+        gear: 10,
+        relic: 15,
+    },
 } as const;
+
+/** The spare table a spared foe of `difficulty` rolls: the elite table for an elite, else the normal one. */
+export function spareTableFor(difficulty: Enemy['difficulty']): Record<keyof typeof MERCY_TUNING.spareTable, number> {
+    return difficulty === 'elite' ? MERCY_TUNING.eliteSpareTable : MERCY_TUNING.spareTable;
+}
 
 /** The chance a lethal blow on a normal or elite foe asks spare or finish. */
 export const MERCY_CHECK_CHANCE = MERCY_TUNING.mercyCheckChance;

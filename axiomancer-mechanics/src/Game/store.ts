@@ -426,7 +426,7 @@ export function createGameStore(
                 // The roll reads the player as the fight left them (a quest the
                 // kill completed may have paid a relic it must not offer again).
                 if (spared) {
-                    const reward = rollSpareReward(get().player, () => getRng().random(), encounterWage(encounter));
+                    const reward = rollSpareReward(get().player, () => getRng().random(), encounterWage(encounter), foe.difficulty);
                     report.spareReward = reward;
                     dispatch({ type: 'APPLY_SPARE_REWARD', payload: { reward } });
                 }
