@@ -5,8 +5,8 @@
 > shown on the screen it appears on ("Please provide the screen they'd be on
 > so I can see the text in context"; mocked screens, T's pick). T skipped the
 > 19 arrival lines, because no screen shows them since the 2026-11-12 reveal
-> ruling. Ballot: `narrator-chapter1-5.ballot.html`. Nothing here is in the
-> game. A later plot lands the approved lines (NV1d for the map blurbs; the
+> ruling. Ballot: `narrator-chapter1-5.ballot.html`. No verdict is in the
+> game yet; random draws stand in meanwhile (see "In the game meanwhile"). A later plot lands the approved lines (NV1d for the map blurbs; the
 > others need chunks of their own).
 
 ## What is on it
