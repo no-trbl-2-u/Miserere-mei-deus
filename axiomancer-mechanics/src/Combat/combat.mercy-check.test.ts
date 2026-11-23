@@ -23,10 +23,21 @@ import {
 import type { CombatEncounterState, CombatManaDie } from './combat.encounter.types';
 import type { ActiveEffect } from '../Effects/types';
 import type { EnemyDifficulty } from '../Enemy/types';
+import { initProgramLedger } from './combat.card-program';
+import { initElementState } from './combat.elements';
+import { registerSandboxCards } from '../Cards/cards.sandbox';
 import { buildFixtureState } from '../test-utils/card-fixture';
 import { mockSequentialRng } from '../test-utils/rng';
 
 afterEach(() => vi.restoreAllMocks());
+
+registerSandboxCards([
+    {
+        id: 'qa-mercy-heart', name: 'QA Mercy Heart', color: 'heart', description: 'mercy-check momentum fixture',
+        tier: 1, targetType: 'enemy', rank: 1, cardType: 'attack',
+        free: { damage: 2 }, specialMechanics: [{ kind: 'deal', amount: 5 }],
+    },
+]);
 
 const DIE = 'fx-mercy-die';
 
@@ -181,6 +192,28 @@ describe('while the check is open, nothing moves (A1)', () => {
         expect(overheatSpentDie(asked, DIE).state).toBe(asked);
     });
 
+    it('a lethal PAID play pays no BOON and moves no momentum', () => {
+        mockSequentialRng(0.5);
+        const base = fight(5, 'normal', 1, 'qa-mercy-heart');
+        const armed: CombatEncounterState = {
+            ...base,
+            conviction: 0,
+            player: { ...base.player, knownCards: [...(base.player.knownCards ?? []), 'qa-mercy-heart'] },
+            dice: [{ id: DIE, color: 'heart', state: 'available', temporary: false, face: 'special' }],
+            equipmentDice: { dieChanges: [], special: { kind: 'conviction', amount: 2 }, specialSource: { itemId: 'w', itemName: 'W' } },
+        };
+        const r = playCombatCard(armed, { uid: 'under-test' }, true, DIE);
+        expect(mercyCheckOpen(r.state)).toBe(true);
+        expect(r.state.conviction).toBe(0);
+        expect(r.state.momentumV2 ?? null).toBeNull();
+        expect(r.events.some(e => e.kind === 'special-fired' || e.kind === 'momentum-advanced')).toBe(false);
+        // The same play that leaves the foe standing pays the BOON and starts the chain.
+        mockSequentialRng(0.5);
+        const standing = playCombatCard({ ...armed, enemy: { ...armed.enemy, health: 50 } }, { uid: 'under-test' }, true, DIE);
+        expect(standing.state.conviction).toBe(2);
+        expect(standing.state.momentumV2).toEqual({ color: 'heart', length: 1 });
+    });
+
     it('the foe takes no turn and no tick fires on either side', () => {
         const asked = withStatus(open(), 'debuff_creeping_doom', 2);
         expect(resolveThreatPhase(asked).state).toBe(asked);
@@ -205,6 +238,44 @@ describe('while the check is open, nothing moves (A1)', () => {
         expect(chooseMercyCheck(spared, 'finish')).toBe(spared);
         const killed = playCombatCard(fight(2, 'normal', 0), { uid: 'under-test' }, false).state;
         expect(chooseMercyCheck(killed, 'spare')).toBe(killed);
+    });
+});
+
+describe('the check at the foe-turn kill sites in resolveThreatPhase', () => {
+    /** A fight at the foe's turn: the foe at `vitae` with a foe-turn source primed to kill it. */
+    function foeTurn(
+        vitae: number, chance: number, prime: (s: CombatEncounterState) => CombatEncounterState,
+    ): CombatEncounterState {
+        return prime({ ...fight(vitae, 'normal', chance), hand: [] });
+    }
+    const leech = (s: CombatEncounterState): CombatEncounterState => ({
+        ...s, program: { ...initProgramLedger(), leechTurns: 2, leechPotency: 5, leechCardId: 'leech' },
+    });
+    const weather = (s: CombatEncounterState): CombatEncounterState => ({
+        ...s, program: { ...initProgramLedger(), el: { ...initElementState(), infFoe: 5 } },
+    });
+    const mercyClock = (s: CombatEncounterState): CombatEncounterState => ({
+        ...s, program: { ...initProgramLedger(), mercy: { ...initProgramLedger().mercy, total: 5, clock: 1 } },
+    });
+
+    describe.each([
+        ['LEECH at the foe\'s turn start', leech],
+        ['the weather (INFERNO) at the foe\'s turn start', weather],
+        ['the MERCY clock bursting', mercyClock],
+    ] as const)('%s', (_name, prime) => {
+        it('asks at the blow with the foe at 1 VITAE and ends nothing', () => {
+            const asked = resolveThreatPhase(foeTurn(2, 1, prime), () => 0.5).state;
+            expect(mercyCheckOpen(asked)).toBe(true);
+            expect(asked.enemy.health).toBe(1);
+            expect(asked.finalOutcome).toBeNull();
+            expect(asked.phase).toBe('mercy-check');
+        });
+
+        it('kills when the check is not drawn', () => {
+            const killed = resolveThreatPhase(foeTurn(2, 0, prime), () => 0.5).state;
+            expect(killed.finalOutcome).toBe('victory');
+            expect(killed.mercyCheck).toBe('none');
+        });
     });
 });
 
