@@ -322,7 +322,6 @@ pass scores without its 1.5x. The banner stays until `/oversight reset`.
 - next: `/iterate` (measure, then the workflow change).
 - measured 2026-11-23: the last 100 `pr-review.yml` runs (2026-11-22T20:42Z to 2026-11-23T21:40Z) are 60 success, 23 failure, 16 cancelled, 1 blank, so the cancel share fell from 42% to 16%. Of the 16 cancelled runs, 15 were cancelled before the Claude step: in `verify-gate`'s free wait for the head's `verify-*` runs (11), in checkout or setup (4), or in the report-only mutation job. Only 1 reached "Run Claude Code", and it was cancelled after 2 minutes. The workflow now gates the review behind `verify-gate` (its own `pr-review-gate-<PR>` group), so a head that is superseded mid-CI is dropped before the paid step. No debounce is needed; reopen if a later window shows more than 2 cancels in 100 at the Claude step.
 
-
 ### [x] [tests] HIGH: the defender lane bot's end deck ties merciful on seed 7 after the mercy check moved to the lethal blow (fix-ci, verify-mechanics run 45254682167, 2026-11-23) — CLOSED 2026-11-23 (f98c0d02b took the row's second option: the lane-lead check reads only cleared runs, so a run that dies early is exempt; the bot's drafting rule and its policy test are unchanged; `jest sim/` green on main)
 - category: tests
 - impact: 7
